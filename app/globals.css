@@ -1,15 +1,9 @@
 @import "tailwindcss";
 
+/* Base styles from your working version */
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,4 +17,73 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* --- Custom Modern Range Slider Styles --- */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 5px;
+  outline: none;
+  background: linear-gradient(to right, #0d9488 var(--value-percent, 0%), #e5e7eb var(--value-percent, 0%));
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #ffffff;
+  border: 2px solid #d1d5db;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -5px;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: #ffffff;
+  border: 2px solid #d1d5db;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+/* CHANGE: Glow effect now on hover and active, not focus */
+input[type="range"]:hover::-webkit-slider-thumb,
+input[type="range"]:active::-webkit-slider-thumb {
+  background: #0d9488;
+  border-color: #0d9488;
+  box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.2);
+}
+
+input[type="range"]:hover::-moz-range-thumb,
+input[type="range"]:active::-moz-range-thumb {
+  background: #0d9488;
+  border-color: #0d9488;
+  box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.2);
+}
+
+
+/* --- Custom Modern Scrollbar Styles --- */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #0d9488;
+  border-radius: 10px;
+  border: 2px solid #F0FAF8;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0f766e;
 }
