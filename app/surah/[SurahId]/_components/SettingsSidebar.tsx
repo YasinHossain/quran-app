@@ -1,10 +1,11 @@
 // app/surah/[surahId]/_components/SettingsSidebar.tsx
 import { FaBookReader, FaFontSetting, FaChevronDown } from '@/app/components/SvgIcons';
 import { CollapsibleSection } from './CollapsibleSection';
+import { Settings } from '@/types';
 
 interface SettingsSidebarProps {
-  settings: any;
-  onSettingsChange: (newSettings: any) => void;
+  settings: Settings;
+  onSettingsChange: (newSettings: Settings) => void;
   onTranslationPanelOpen: () => void;
   selectedTranslationName: string;
   arabicFonts: { name: string; value: string; }[];

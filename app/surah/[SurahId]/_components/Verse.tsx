@@ -1,8 +1,9 @@
 // app/surah/[surahId]/_components/Verse.tsx
 import { FaPlay, FaPause, FaBookmark, FaEllipsisH, FaBookReader } from '@/app/components/SvgIcons'; // Added FaBookReader back
+import { Verse as VerseType, Translation } from '@/types';
 
 interface VerseProps {
-  verse: any;
+  verse: VerseType;
   playingId: number | null;
   onPlayToggle: (id: number) => void;
   arabicFontFace: string;
@@ -33,7 +34,7 @@ export const Verse = ({ verse, playingId, onPlayToggle, arabicFontFace, arabicFo
         <p className="text-right leading-loose text-gray-800" style={{ fontFamily: arabicFontFace, fontSize: `${arabicFontSize}px`, lineHeight: 2.2 }}>
           {verse.text_uthmani}
         </p>
-        {verse.translations?.map((t: any) => (
+        {verse.translations?.map((t: Translation) => (
           <div key={t.resource_id}>
             <p className="text-left leading-relaxed text-gray-600" style={{ fontSize: `${translationFontSize}px` }} dangerouslySetInnerHTML={{ __html: t.text }} />
           </div>

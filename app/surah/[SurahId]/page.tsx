@@ -5,10 +5,9 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Verse } from './_components/Verse';
 import { SettingsSidebar } from './_components/SettingsSidebar';
 import { TranslationPanel } from './_components/TranslationPanel';
+import { Verse as VerseType, TranslationResource, Settings } from '@/types';
 
 // --- Interfaces & Data ---
-interface TranslationResource { id: number; name: string; language_name: string; }
-interface Settings { translationId: number; arabicFontSize: number; translationFontSize: number; arabicFontFace: string; }
 const arabicFonts = [
     { name: 'KFGQ', value: '"KFGQPC Uthman Taha Naskh", serif' },
     { name: 'Me Quran', value: '"Me Quran", sans-serif' },
@@ -16,7 +15,7 @@ const arabicFonts = [
 ];
 
 export default function SurahPage({ params }: { params: { surahId: string } }) {
-  const [verses, setVerses] = useState<any[]>([]);
+  const [verses, setVerses] = useState<VerseType[]>([]);
   const [playingId, setPlayingId] = useState<number | null>(null);
   const [translationOptions, setTranslationOptions] = useState<TranslationResource[]>([]);
   const [isLoading, setIsLoading] = useState(true);

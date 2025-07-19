@@ -1,14 +1,15 @@
 // app/surah/[surahId]/_components/TranslationPanel.tsx
 import { FaArrowLeft, FaSearch } from '@/app/components/SvgIcons';
+import { Settings, TranslationResource } from '@/types';
 
 interface TranslationPanelProps {
   isOpen: boolean;
   onClose: () => void;
-  groupedTranslations: Record<string, any[]>;
+  groupedTranslations: Record<string, TranslationResource[]>;
   searchTerm: string;
   onSearchTermChange: (term: string) => void;
-  settings: any;
-  onSettingsChange: (newSettings: any) => void;
+  settings: Settings;
+  onSettingsChange: (newSettings: Settings) => void;
 }
 
 export const TranslationPanel = ({ isOpen, onClose, groupedTranslations, searchTerm, onSearchTermChange, settings, onSettingsChange }: TranslationPanelProps) => {
