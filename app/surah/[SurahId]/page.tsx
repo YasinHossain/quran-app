@@ -6,6 +6,7 @@ import { Verse } from './_components/Verse';
 import { SettingsSidebar } from './_components/SettingsSidebar';
 import { TranslationPanel } from './_components/TranslationPanel';
 import { Verse as VerseType, TranslationResource, Settings } from '@/types';
+import { getTranslations, getVersesByChapter } from '@/lib/api';
 
 // --- Interfaces & Data ---
 const arabicFonts = [
@@ -32,24 +33,17 @@ export default function SurahPage({ params }: { params: { surahId: string } }) {
   // --- Data Fetching Effect ---
   useEffect(() => {
     // Fetch all available translations once
-    fetch('https://api.quran.com/api/v4/resources/translations')
-      .then(res => res.json())
-      .then(json => setTranslationOptions(json.translations || []))
+    getTranslations()
+      .then(setTranslationOptions)
       .catch(err => console.error('Translations load error:', err));
   }, []);
   
   useEffect(() => {
     if (!params.surahId) return;
     setIsLoading(true);
-    const url = `https://api.quran.com/api/v4/verses/by_chapter/${params.surahId}?language=en&words=true&translations=${settings.translationId}&fields=text_uthmani,audio&per_page=300`;
-    
-    fetch(url)
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        return res.json();
-      })
-      .then(json => {
-        setVerses(json.verses || []);
+    getVersesByChapter(params.surahId, settings.translationId)
+      .then(vs => {
+        setVerses(vs);
         setError(null);
       })
       .catch(err => {
