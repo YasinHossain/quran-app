@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { FaSearch } from './SvgIcons';
 import { Chapter } from '@/types';
+import { getChapters } from '@/lib/api';
 
 const SurahListSidebar = () => {
   const [chapters, setChapters] = useState<Chapter[]>([]);
@@ -14,10 +15,9 @@ const SurahListSidebar = () => {
   const activeSurahId = params.surahId;
 
   useEffect(() => {
-    fetch('https://api.quran.com/api/v4/chapters?language=en')
-      .then(res => res.json())
-      .then(data => setChapters(data.chapters))
-      .catch(err => console.error("Failed to fetch chapters:", err));
+    getChapters()
+      .then(setChapters)
+      .catch(err => console.error('Failed to fetch chapters:', err));
   }, []);
 
   const filteredChapters = useMemo(() =>

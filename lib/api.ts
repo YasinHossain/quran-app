@@ -1,0 +1,36 @@
+const API_BASE_URL = process.env.NEXT_PUBLIC_QURAN_API_BASE_URL ?? 'https://api.quran.com/api/v4';
+
+import { Chapter, TranslationResource, Verse } from '@/types';
+
+export async function getChapters(): Promise<Chapter[]> {
+  const res = await fetch(`${API_BASE_URL}/chapters?language=en`);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch chapters: ${res.status}`);
+  }
+  const data = await res.json();
+  return data.chapters as Chapter[];
+}
+
+export async function getTranslations(): Promise<TranslationResource[]> {
+  const res = await fetch(`${API_BASE_URL}/resources/translations`);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch translations: ${res.status}`);
+  }
+  const data = await res.json();
+  return data.translations as TranslationResource[];
+}
+
+export async function getVersesByChapter(
+  chapterId: string | number,
+  translationId: number
+): Promise<Verse[]> {
+  const url = `${API_BASE_URL}/verses/by_chapter/${chapterId}?language=en&words=true&translations=${translationId}&fields=text_uthmani,audio&per_page=300`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch verses: ${res.status}`);
+  }
+  const data = await res.json();
+  return data.verses as Verse[];
+}
+
+export { API_BASE_URL };
