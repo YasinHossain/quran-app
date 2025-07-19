@@ -1,7 +1,7 @@
 // app/surah/[surahId]/layout.tsx
-import Header from '@/app/components/Header';
-import IconSidebar from '@/app/components/IconSidebar';
-import SurahListSidebar from '@/app/components/SurahListSidebar';
+import Header from '@/app/components/common/Header';
+import IconSidebar from '@/app/components/common/IconSidebar';
+import SurahListSidebar from '@/app/components/common/SurahListSidebar';
 import { SettingsProvider } from '@/app/context/SettingsContext';
 import { AudioProvider } from '@/app/context/AudioContext';
 
