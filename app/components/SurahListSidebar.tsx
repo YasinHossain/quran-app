@@ -4,14 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { FaSearch } from './SvgIcons';
-
-interface Chapter {
-  id: number;
-  name_simple: string;
-  name_arabic: string;
-  revelation_place: string;
-  verses_count: number;
-}
+import { Chapter } from '@/types';
 
 const SurahListSidebar = () => {
   const [chapters, setChapters] = useState<Chapter[]>([]);
