@@ -1,6 +1,7 @@
 // app/components/SurahListSidebar.tsx
 'use client';
 import React, { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { FaSearch } from './SvgIcons';
@@ -8,6 +9,7 @@ import { Chapter } from '@/types';
 import { getChapters } from '@/lib/api';
 
 const SurahListSidebar = () => {
+  const { t } = useTranslation();
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('Surah');
@@ -31,7 +33,7 @@ const SurahListSidebar = () => {
     <aside className="w-80 bg-[#F0FAF8] flex flex-col flex-shrink-0 shadow-[5px_0px_15px_-5px_rgba(0,0,0,0.05)] z-10">
       <div className="p-4 border-b border-gray-200/80">
         <div className="flex bg-gray-200 rounded-full p-1">
-          {['Surah', 'Juz', 'Page'].map(tab => (
+          {[t('surah_tab'), t('juz_tab'), t('page_tab')].map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -49,7 +51,7 @@ const SurahListSidebar = () => {
           <FaSearch size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
-            placeholder="Search Surah"
+            placeholder={t('search_surah')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full bg-white border border-gray-200/80 rounded-lg py-2 pl-9 pr-3 focus:ring-2 focus:ring-teal-500 outline-none transition"
@@ -87,7 +89,7 @@ const SurahListSidebar = () => {
           </nav>
         ) : (
             <div className="p-6 text-center text-gray-500">
-                {activeTab} view is not implemented yet.
+                {t('view_not_implemented', { tab: activeTab })}
             </div>
         )}
       </div>

@@ -1,12 +1,14 @@
 // app/components/IconSidebar.tsx
 'use client';
 import { FaHome, FaRegBookmark, FaTh } from './SvgIcons';
+import { useTranslation } from 'react-i18next';
 
 const IconSidebar = () => {
+    const { t } = useTranslation();
     const navItems = [
-        { icon: FaHome, label: 'Home' },
-        { icon: FaTh, label: 'All Surahs' },
-        { icon: FaRegBookmark, label: 'Bookmarks' }
+        { icon: FaHome, label: t('home') },
+        { icon: FaTh, label: t('all_surahs') },
+        { icon: FaRegBookmark, label: t('bookmarks') }
     ];
 
     return (

@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
+import nextI18NextConfig from "./next-i18next.config.mjs";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  ...nextI18NextConfig,
 };
 
 export default nextConfig;
