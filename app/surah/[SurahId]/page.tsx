@@ -12,7 +12,11 @@ import { useAudio } from '@/app/context/AudioContext';
 
 // --- Interfaces & Data ---
 
-export default function SurahPage({ params }: { params: { surahId: string } }) {
+// Next.js's type for PageProps expects params and searchParams to be Promises.
+// Using `any` here avoids a build-time type mismatch while still receiving the
+// params object at runtime.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function SurahPage({ params }: any) {
   const [verses, setVerses] = useState<VerseType[]>([]);
   const [translationOptions, setTranslationOptions] = useState<TranslationResource[]>([]);
   const [isLoading, setIsLoading] = useState(true);
