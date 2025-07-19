@@ -5,28 +5,20 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Verse } from './_components/Verse';
 import { SettingsSidebar } from './_components/SettingsSidebar';
 import { TranslationPanel } from './_components/TranslationPanel';
-import { Verse as VerseType, TranslationResource, Settings } from '@/types';
+import { Verse as VerseType, TranslationResource } from '@/types';
 import { getTranslations, getVersesByChapter } from '@/lib/api';
+import { useSettings } from '@/app/context/SettingsContext';
+import { useAudio } from '@/app/context/AudioContext';
 
 // --- Interfaces & Data ---
-const arabicFonts = [
-    { name: 'KFGQ', value: '"KFGQPC Uthman Taha Naskh", serif' },
-    { name: 'Me Quran', value: '"Me Quran", sans-serif' },
-    { name: 'Al Mushaf', value: '"Al Mushaf", serif' },
-];
 
 export default function SurahPage({ params }: { params: { surahId: string } }) {
   const [verses, setVerses] = useState<VerseType[]>([]);
-  const [playingId, setPlayingId] = useState<number | null>(null);
   const [translationOptions, setTranslationOptions] = useState<TranslationResource[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [settings, setSettings] = useState<Settings>({
-    translationId: 20, // Sahih International
-    arabicFontSize: 28,
-    translationFontSize: 16,
-    arabicFontFace: arabicFonts[0].value,
-  });
+  const { settings } = useSettings();
+  const { playingId, setPlayingId } = useAudio();
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [translationSearchTerm, setTranslationSearchTerm] = useState('');
 
@@ -59,10 +51,7 @@ export default function SurahPage({ params }: { params: { surahId: string } }) {
   const selectedTranslationName = useMemo(() => translationOptions.find(o => o.id === settings.translationId)?.name || 'Select Translation', [settings.translationId, translationOptions]);
   const groupedTranslations = useMemo(() => translationOptions.filter(o => o.name.toLowerCase().includes(translationSearchTerm.toLowerCase())).reduce<Record<string, TranslationResource[]>>((acc, t) => { (acc[t.language_name] ||= []).push(t); return acc; }, {}), [translationOptions, translationSearchTerm]);
   
-  // --- Handlers ---
-  const handlePlayToggle = (id: number) => {
-    setPlayingId(currentId => (currentId === id ? null : id));
-  };
+
 
   return (
     <div className="flex flex-grow bg-white font-sans overflow-hidden">
@@ -75,16 +64,17 @@ export default function SurahPage({ params }: { params: { surahId: string } }) {
           ) : verses.length > 0 ? (
             verses.map(v => (
               <React.Fragment key={v.id}>
-                <Verse
-                  verse={v}
-                  playingId={playingId}
-                  onPlayToggle={handlePlayToggle}
-                  arabicFontFace={settings.arabicFontFace}
-                  arabicFontSize={settings.arabicFontSize}
-                  translationFontSize={settings.translationFontSize}
-                />
+                <Verse verse={v} />
                 {playingId === v.id && v.audio?.url && (
-                  <audio src={`https://verses.quran.com/${v.audio.url}`} autoPlay onEnded={() => setPlayingId(null)} onError={() => { setError("Could not play audio."); setPlayingId(null); }} />
+                  <audio
+                    src={`https://verses.quran.com/${v.audio.url}`}
+                    autoPlay
+                    onEnded={() => setPlayingId(null)}
+                    onError={() => {
+                      setError('Could not play audio.');
+                      setPlayingId(null);
+                    }}
+                  />
                 )}
               </React.Fragment>
             ))
@@ -95,11 +85,8 @@ export default function SurahPage({ params }: { params: { surahId: string } }) {
       </main>
 
       <SettingsSidebar
-        settings={settings}
-        onSettingsChange={setSettings}
         onTranslationPanelOpen={() => setIsTranslationPanelOpen(true)}
         selectedTranslationName={selectedTranslationName}
-        arabicFonts={arabicFonts}
       />
       
       <TranslationPanel
@@ -108,8 +95,6 @@ export default function SurahPage({ params }: { params: { surahId: string } }) {
         groupedTranslations={groupedTranslations}
         searchTerm={translationSearchTerm}
         onSearchTermChange={setTranslationSearchTerm}
-        settings={settings}
-        onSettingsChange={setSettings}
       />
     </div>
   );

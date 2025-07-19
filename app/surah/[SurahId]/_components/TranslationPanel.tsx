@@ -1,6 +1,7 @@
 // app/surah/[surahId]/_components/TranslationPanel.tsx
 import { FaArrowLeft, FaSearch } from '@/app/components/SvgIcons';
-import { Settings, TranslationResource } from '@/types';
+import { TranslationResource } from '@/types';
+import { useSettings } from '@/app/context/SettingsContext';
 
 interface TranslationPanelProps {
   isOpen: boolean;
@@ -8,11 +9,10 @@ interface TranslationPanelProps {
   groupedTranslations: Record<string, TranslationResource[]>;
   searchTerm: string;
   onSearchTermChange: (term: string) => void;
-  settings: Settings;
-  onSettingsChange: (newSettings: Settings) => void;
 }
 
-export const TranslationPanel = ({ isOpen, onClose, groupedTranslations, searchTerm, onSearchTermChange, settings, onSettingsChange }: TranslationPanelProps) => {
+export const TranslationPanel = ({ isOpen, onClose, groupedTranslations, searchTerm, onSearchTermChange }: TranslationPanelProps) => {
+  const { settings, setSettings } = useSettings();
   return (
     <>
       {isOpen && <div onClick={onClose} className="fixed inset-0 bg-black/20 z-40"></div>}
@@ -35,7 +35,16 @@ export const TranslationPanel = ({ isOpen, onClose, groupedTranslations, searchT
               <div className="p-2 space-y-1">
                 {groupedTranslations[lang].map(opt => (
                   <label key={opt.id} className="flex items-center space-x-3 p-2 rounded-md hover:bg-teal-50 cursor-pointer">
-                    <input type="radio" name="translation" className="form-radio h-4 w-4 text-teal-600" checked={settings.translationId === opt.id} onChange={() => { onSettingsChange({ ...settings, translationId: opt.id }); onClose(); }} />
+                    <input
+                      type="radio"
+                      name="translation"
+                      className="form-radio h-4 w-4 text-teal-600"
+                      checked={settings.translationId === opt.id}
+                      onChange={() => {
+                        setSettings({ ...settings, translationId: opt.id });
+                        onClose();
+                      }}
+                    />
                     <span className="text-sm text-gray-700">{opt.name}</span>
                   </label>
                 ))}

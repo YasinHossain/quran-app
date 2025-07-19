@@ -2,16 +2,22 @@
 import Header from '@/app/components/Header';
 import IconSidebar from '@/app/components/IconSidebar';
 import SurahListSidebar from '@/app/components/SurahListSidebar';
+import { SettingsProvider } from '@/app/context/SettingsContext';
+import { AudioProvider } from '@/app/context/AudioContext';
 
 export default function SurahLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="h-screen flex flex-col">
-      <Header />
-      <div className="flex flex-grow overflow-hidden">
-        <IconSidebar />
-        <SurahListSidebar />
-        {children}
-      </div>
-    </div>
+    <SettingsProvider>
+      <AudioProvider>
+        <div className="h-screen flex flex-col">
+          <Header />
+          <div className="flex flex-grow overflow-hidden">
+            <IconSidebar />
+            <SurahListSidebar />
+            {children}
+          </div>
+        </div>
+      </AudioProvider>
+    </SettingsProvider>
   );
 }

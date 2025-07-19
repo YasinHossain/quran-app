@@ -1,17 +1,15 @@
 // app/surah/[surahId]/_components/SettingsSidebar.tsx
 import { FaBookReader, FaFontSetting, FaChevronDown } from '@/app/components/SvgIcons';
 import { CollapsibleSection } from './CollapsibleSection';
-import { Settings } from '@/types';
+import { useSettings } from '@/app/context/SettingsContext';
 
 interface SettingsSidebarProps {
-  settings: Settings;
-  onSettingsChange: (newSettings: Settings) => void;
   onTranslationPanelOpen: () => void;
   selectedTranslationName: string;
-  arabicFonts: { name: string; value: string; }[];
 }
 
-export const SettingsSidebar = ({ settings, onSettingsChange, onTranslationPanelOpen, selectedTranslationName, arabicFonts }: SettingsSidebarProps) => {
+export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationName }: SettingsSidebarProps) => {
+  const { settings, setSettings, arabicFonts } = useSettings();
   
   // Helper function to calculate the slider's progress percentage
   const getPercentage = (value: number, min: number, max: number) => {
@@ -43,7 +41,7 @@ export const SettingsSidebar = ({ settings, onSettingsChange, onTranslationPanel
                 min="16"
                 max="48"
                 value={settings.arabicFontSize}
-                onChange={e => onSettingsChange({ ...settings, arabicFontSize: +e.target.value })}
+                onChange={e => setSettings({ ...settings, arabicFontSize: +e.target.value })}
                 // CHANGE: Apply the percentage as a CSS variable
                 style={{ '--value-percent': `${arabicSizePercent}%` } as React.CSSProperties}
               />
@@ -55,14 +53,14 @@ export const SettingsSidebar = ({ settings, onSettingsChange, onTranslationPanel
                 min="12"
                 max="28"
                 value={settings.translationFontSize}
-                onChange={e => onSettingsChange({ ...settings, translationFontSize: +e.target.value })}
+                onChange={e => setSettings({ ...settings, translationFontSize: +e.target.value })}
                 // CHANGE: Apply the percentage as a CSS variable
                 style={{ '--value-percent': `${translationSizePercent}%` } as React.CSSProperties}
               />
             </div>
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">Arabic Font Face</label>
-              <select onChange={e => onSettingsChange({ ...settings, arabicFontFace: e.target.value })} value={settings.arabicFontFace} className="w-full bg-white border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-teal-500 focus:border-teal-500 text-gray-800">
+              <select onChange={e => setSettings({ ...settings, arabicFontFace: e.target.value })} value={settings.arabicFontFace} className="w-full bg-white border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-teal-500 focus:border-teal-500 text-gray-800">
                 {arabicFonts.map(font => (<option key={font.name} value={font.value}>{font.name}</option>))}
               </select>
             </div>
