@@ -1,24 +1,24 @@
 // app/components/SurahListSidebar.tsx
 'use client';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { FaSearch } from './SvgIcons';
 import { Chapter } from '@/types';
 import { getChapters } from '@/lib/api';
+import useSWR from 'swr';
 
-const SurahListSidebar = () => {
-  const [chapters, setChapters] = useState<Chapter[]>([]);
+interface Props {
+  initialChapters?: Chapter[];
+}
+
+const SurahListSidebar = ({ initialChapters = [] }: Props) => {
+  const { data } = useSWR('chapters', getChapters, { fallbackData: initialChapters });
+  const chapters = data || [];
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('Surah');
   const params = useParams();
   const activeSurahId = params.surahId;
-
-  useEffect(() => {
-    getChapters()
-      .then(setChapters)
-      .catch(err => console.error('Failed to fetch chapters:', err));
-  }, []);
 
   const filteredChapters = useMemo(() =>
     chapters.filter(chapter =>

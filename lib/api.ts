@@ -20,17 +20,25 @@ export async function getTranslations(): Promise<TranslationResource[]> {
   return data.translations as TranslationResource[];
 }
 
+export interface PaginatedVerses {
+  verses: Verse[];
+  totalPages: number;
+}
+
 export async function getVersesByChapter(
   chapterId: string | number,
-  translationId: number
-): Promise<Verse[]> {
-  const url = `${API_BASE_URL}/verses/by_chapter/${chapterId}?language=en&words=true&translations=${translationId}&fields=text_uthmani,audio&per_page=300`;
+  translationId: number,
+  page = 1,
+  perPage = 20
+): Promise<PaginatedVerses> {
+  const url = `${API_BASE_URL}/verses/by_chapter/${chapterId}?language=en&words=true&translations=${translationId}&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(`Failed to fetch verses: ${res.status}`);
   }
   const data = await res.json();
-  return data.verses as Verse[];
+  const totalPages = data.meta?.total_pages || data.pagination?.total_pages || 1;
+  return { verses: data.verses as Verse[], totalPages };
 }
 
 export { API_BASE_URL };
