@@ -1,6 +1,9 @@
 // app/features/surah/[SurahId]/page.tsx
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
+
+interface SurahPageProps {
+  params: { surahId: string };
+}
 
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,7 +22,7 @@ import useSWRInfinite from 'swr/infinite';
 // Using a specific type for params is good practice.
 // If you encounter build errors, you may need to revert to `any` as Next.js's
 // type for PageProps can sometimes cause mismatches.
-export default function SurahPage({ params }: { params: { surahId: string } }) {
+export default function SurahPage({ params }: SurahPageProps) {
   const [error, setError] = useState<string | null>(null);
   const { settings } = useSettings();
   const { t } = useTranslation();
