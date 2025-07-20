@@ -1,5 +1,5 @@
 // app/surah/[surahId]/_components/Verse.tsx
-import { FaPlay, FaPause, FaBookmark, FaEllipsisH, FaBookReader } from '@/app/components/SvgIcons'; // Added FaBookReader back
+import { FaPlay, FaPause, FaBookmark, FaEllipsisH, FaBookReader } from '@/app/components/common/SvgIcons';
 import { Verse as VerseType, Translation } from '@/types';
 import { useAudio } from '@/app/context/AudioContext';
 import { useSettings } from '@/app/context/SettingsContext';

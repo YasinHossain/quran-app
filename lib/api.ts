@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_QURAN_API_BASE_URL ?? 'https://api.quran.com/api/v4';
+const API_BASE_URL = process.env.QURAN_API_BASE_URL ?? 'https://api.quran.com/api/v4';
 
 import { Chapter, TranslationResource, Verse } from '@/types';
 

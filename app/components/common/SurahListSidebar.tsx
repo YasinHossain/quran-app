@@ -64,7 +64,7 @@ const SurahListSidebar = () => {
             {filteredChapters.map(chapter => {
               const isActive = activeSurahId === String(chapter.id);
               return (
-                <Link href={`/surah/${chapter.id}`} key={chapter.id}
+                <Link href={`/features/surah/${chapter.id}`} key={chapter.id}
                   className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors ${
                       isActive ? 'bg-teal-50' : 'hover:bg-white'
                   }`}>

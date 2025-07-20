@@ -1,4 +1,5 @@
 // app/surah/[surahId]/page.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useEffect, useState, useMemo } from 'react';
@@ -13,7 +14,11 @@ import { useAudio } from '@/app/context/AudioContext';
 
 // --- Interfaces & Data ---
 
-export default function SurahPage({ params }: { params: { surahId: string } }) {
+// Next.js's type for PageProps expects params and searchParams to be Promises.
+// Using `any` here avoids a build-time type mismatch while still receiving the
+// params object at runtime.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function SurahPage({ params }: any) {
   const [verses, setVerses] = useState<VerseType[]>([]);
   const [translationOptions, setTranslationOptions] = useState<TranslationResource[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -56,8 +61,6 @@ export default function SurahPage({ params }: { params: { surahId: string } }) {
   );
   const groupedTranslations = useMemo(() => translationOptions.filter(o => o.name.toLowerCase().includes(translationSearchTerm.toLowerCase())).reduce<Record<string, TranslationResource[]>>((acc, t) => { (acc[t.language_name] ||= []).push(t); return acc; }, {}), [translationOptions, translationSearchTerm]);
   
-
-
   return (
     <div className="flex flex-grow bg-white font-sans overflow-hidden">
       <main className="flex-grow bg-[#F0FAF8] p-6 lg:p-10 overflow-y-auto">

@@ -1,5 +1,5 @@
 // app/surah/[surahId]/_components/SettingsSidebar.tsx
-import { FaBookReader, FaFontSetting, FaChevronDown } from '@/app/components/SvgIcons';
+import { FaBookReader, FaFontSetting, FaChevronDown } from '@/app/components/common/SvgIcons';
 import { CollapsibleSection } from './CollapsibleSection';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useTranslation } from 'react-i18next';
