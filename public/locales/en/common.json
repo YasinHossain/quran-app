@@ -20,5 +20,6 @@
   "arabic_font_face": "Arabic Font Face",
   "search": "Search",
   "translations_panel_title": "Translations",
-  "could_not_play_audio": "Could not play audio."
+  "could_not_play_audio": "Could not play audio.",
+  "error_loading_tafsir": "Could not load tafsir."
 }

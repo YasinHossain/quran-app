@@ -1,8 +1,10 @@
 // app/surah/[surahId]/_components/Verse.tsx
 import { FaPlay, FaPause, FaBookmark, FaRegBookmark, FaEllipsisH, FaBookReader } from '@/app/components/common/SvgIcons';
+import { TafsirModal } from './TafsirModal';
 import { Verse as VerseType, Translation } from '@/types';
 import { useAudio } from '@/app/context/AudioContext';
 import { useSettings } from '@/app/context/SettingsContext';
+import { useState } from 'react';
 
 interface VerseProps {
   verse: VerseType;
@@ -11,10 +13,12 @@ interface VerseProps {
 export const Verse = ({ verse }: VerseProps) => {
   const { playingId, setPlayingId } = useAudio();
   const { settings, bookmarkedVerses, toggleBookmark } = useSettings(); // Get bookmarkedVerses and toggleBookmark
+  const [showTafsir, setShowTafsir] = useState(false);
   const isPlaying = playingId === verse.id;
   const isBookmarked = bookmarkedVerses.includes(verse.id); // Check if verse is bookmarked
 
   return (
+    <>
     <div className="flex items-start gap-x-6 mb-12 border-b pb-8 border-gray-200">
       <div className="w-16 text-center pt-1 space-y-2 flex-shrink-0">
         <p className="font-semibold text-teal-600 text-sm">{verse.verse_key}</p>
@@ -37,8 +41,14 @@ export const Verse = ({ verse }: VerseProps) => {
             {isBookmarked ? <FaBookmark size={18} /> : <FaRegBookmark size={18} />} {/* Change icon based on bookmark status */}
           </button>
           
-          {/* This is the Tafsir icon that was missing */}
-          <button title="Tafsir" className="p-1.5 rounded-full hover:bg-gray-100 hover:text-teal-600 transition"><FaBookReader size={18} /></button>
+          {/* Tafsir button opens modal */}
+          <button
+            title="Tafsir"
+            onClick={() => setShowTafsir(true)}
+            className="p-1.5 rounded-full hover:bg-gray-100 hover:text-teal-600 transition"
+          >
+            <FaBookReader size={18} />
+          </button>
           
           <button title="More" className="p-1.5 rounded-full hover:bg-gray-100 hover:text-teal-600 transition"><FaEllipsisH size={18} /></button>
         </div>
@@ -61,5 +71,11 @@ export const Verse = ({ verse }: VerseProps) => {
         ))}
       </div>
     </div>
+    <TafsirModal
+      isOpen={showTafsir}
+      verseKey={verse.verse_key}
+      onClose={() => setShowTafsir(false)}
+    />
+    </>
   );
 };

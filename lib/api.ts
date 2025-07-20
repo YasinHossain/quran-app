@@ -41,4 +41,20 @@ export async function getVersesByChapter(
   return { verses: data.verses as Verse[], totalPages };
 }
 
+// Fetch tafsir text for a specific verse
+export async function getTafsirByVerse(
+  verseKey: string,
+  tafsirId = 169
+): Promise<string> {
+  const url = `${API_BASE_URL}/tafsirs/${tafsirId}/by_ayah/${encodeURIComponent(
+    verseKey
+  )}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch tafsir: ${res.status}`);
+  }
+  const data = await res.json();
+  return data.tafsir?.text as string;
+}
+
 export { API_BASE_URL };
