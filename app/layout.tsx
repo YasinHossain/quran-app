@@ -1,6 +1,7 @@
 // app/layout.tsx
 import './globals.css';
 import TranslationProvider from './providers/TranslationProvider';
+import { ThemeProvider } from './context/ThemeContext';
 
 export const metadata = {
   title: 'Quran Mazid',
@@ -17,7 +18,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="font-sans">
         <TranslationProvider>
-          {children}
+          <ThemeProvider>
+            {children}
+          </ThemeProvider>
         </TranslationProvider>
       </body>
     </html>

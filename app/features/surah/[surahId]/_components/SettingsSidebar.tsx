@@ -5,6 +5,7 @@ import { useSettings } from '@/app/context/SettingsContext';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react'; // Import useState
 import { ArabicFontPanel } from './ArabicFontPanel'; // Import ArabicFontPanel
+import { useTheme } from '@/app/context/ThemeContext';
 
 interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;
@@ -15,6 +16,7 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
   const { settings, setSettings, arabicFonts } = useSettings();
   const { t } = useTranslation();
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false); // State for ArabicFontPanel
+  const { theme, setTheme } = useTheme();
 
   // Helper function to calculate the slider's progress percentage
   const getPercentage = (value: number, min: number, max: number) => {
@@ -74,6 +76,14 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
             </div>
           </div>
         </CollapsibleSection>
+      </div>
+      <div className="p-4 border-t border-gray-200/80">
+        <button
+          onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+          className="w-full bg-white border border-gray-300 rounded-lg p-2.5 text-sm hover:border-teal-500 transition"
+        >
+          {theme === 'light' ? 'Switch to Dark' : 'Switch to Light'}
+        </button>
       </div>
       {/* Arabic Font Panel */}
       <ArabicFontPanel isOpen={isArabicFontPanelOpen} onClose={() => setIsArabicFontPanelOpen(false)} />
