@@ -5,6 +5,7 @@ import { useSettings } from '@/app/context/SettingsContext';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react'; // Import useState
 import { ArabicFontPanel } from './ArabicFontPanel'; // Import ArabicFontPanel
+import { useSidebar } from '@/app/context/SidebarContext';
 
 interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;
@@ -15,6 +16,7 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
   const { settings, setSettings, arabicFonts } = useSettings();
   const { t } = useTranslation();
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false); // State for ArabicFontPanel
+  const { isSettingsOpen, setSettingsOpen } = useSidebar();
 
   // Helper function to calculate the slider's progress percentage
   const getPercentage = (value: number, min: number, max: number) => {
@@ -29,7 +31,14 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
   const selectedArabicFont = arabicFonts.find(font => font.value === settings.arabicFontFace)?.name || t('select_font');
 
   return (
-    <aside className="w-80 bg-[#F0FAF8] flex-col hidden lg:flex flex-shrink-0 overflow-y-auto shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)]">
+    <>
+      <div
+        className={`fixed inset-0 bg-black/30 z-40 lg:hidden ${isSettingsOpen ? '' : 'hidden'}`}
+        onClick={() => setSettingsOpen(false)}
+      />
+      <aside
+        className={`fixed lg:static inset-y-0 right-0 w-80 bg-[#F0FAF8] flex-col flex-shrink-0 overflow-y-auto shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-transform duration-300 z-50 lg:z-auto ${isSettingsOpen ? 'translate-x-0' : 'translate-x-full'} lg:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} lg:flex`}
+      >
       <div className="flex-grow">
         <CollapsibleSection title={t('reading_setting')} icon={<FaBookReader size={20} className="text-teal-700" />}>
           <div className="space-y-2">
@@ -77,6 +86,7 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
       </div>
       {/* Arabic Font Panel */}
       <ArabicFontPanel isOpen={isArabicFontPanelOpen} onClose={() => setIsArabicFontPanelOpen(false)} />
-    </aside>
+      </aside>
+    </>
   );
 };

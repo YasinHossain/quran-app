@@ -8,6 +8,7 @@ import { FaSearch } from './SvgIcons';
 import { Chapter } from '@/types';
 import { getChapters } from '@/lib/api';
 import useSWR from 'swr';
+import { useSidebar } from '@/app/context/SidebarContext';
 
 interface Props {
   initialChapters?: Chapter[];
@@ -21,6 +22,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const [activeTab, setActiveTab] = useState('Surah');
   const params = useParams();
   const activeSurahId = params.surahId;
+  const { isSurahListOpen, setSurahListOpen } = useSidebar();
 
   const filteredChapters = useMemo(() =>
     chapters.filter(chapter =>
@@ -30,7 +32,14 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   );
 
   return (
-    <aside className="w-80 bg-[#F0FAF8] flex flex-col flex-shrink-0 shadow-[5px_0px_15px_-5px_rgba(0,0,0,0.05)] z-10">
+    <>
+      <div
+        className={`fixed inset-0 bg-black/30 z-40 md:hidden ${isSurahListOpen ? '' : 'hidden'}`}
+        onClick={() => setSurahListOpen(false)}
+      />
+      <aside
+        className={`fixed md:static inset-y-0 left-0 w-80 bg-[#F0FAF8] flex flex-col flex-shrink-0 shadow-[5px_0px_15px_-5px_rgba(0,0,0,0.05)] z-50 md:z-10 transition-transform duration-300 ${isSurahListOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
+      >
       <div className="p-4 border-b border-gray-200/80"> {/* Added bottom border */}
         <div className="flex bg-gray-200 rounded-full p-1">
           {[t('surah_tab'), t('juz_tab'), t('page_tab')].map(tab => (
@@ -93,6 +102,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
         )}
       </div>
     </aside>
+    </>
   );
 };
 

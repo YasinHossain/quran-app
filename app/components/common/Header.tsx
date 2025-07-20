@@ -1,16 +1,24 @@
 // app/components/Header.tsx
 'use client';
-import { FaSearch } from './SvgIcons';
+import { FaSearch, FaBars, FaFontSetting } from './SvgIcons';
 import { useTranslation } from 'react-i18next';
+import { useSidebar } from '@/app/context/SidebarContext';
 
 const Header = () => {
   const { t } = useTranslation();
+  const { setSurahListOpen, setSettingsOpen } = useSidebar();
   return (
     // CHANGE: Adjusted background, padding, and grid layout for cleaner look
-    <header className="h-16 grid grid-cols-3 items-center px-8 bg-white shadow-sm sticky top-0 z-30">
+    <header className="h-16 grid grid-cols-3 items-center px-4 sm:px-8 bg-white shadow-sm sticky top-0 z-30">
       {/* Column 1: Title */}
-      <div className="flex items-center">
-        <h1 className="text-xl font-semibold text-gray-800">{t('title')}</h1> {/* Adjusted text color and font weight */}
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => setSurahListOpen(true)}
+          className="p-2 rounded-md hover:bg-gray-100 lg:hidden"
+        >
+          <FaBars size={20} />
+        </button>
+        <h1 className="text-xl font-semibold text-gray-800">{t('title')}</h1>
       </div>
 
       {/* Column 2: Centered Search Bar */}
@@ -26,8 +34,15 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Column 3: Empty div for spacing, keeps search bar centered */}
-      <div></div>
+      {/* Column 3: Settings button on small screens */}
+      <div className="flex justify-end">
+        <button
+          onClick={() => setSettingsOpen(true)}
+          className="p-2 rounded-md hover:bg-gray-100 lg:hidden"
+        >
+          <FaFontSetting size={20} />
+        </button>
+      </div>
     </header>
   );
 };
