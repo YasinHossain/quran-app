@@ -1,5 +1,5 @@
 // app/surah/[surahId]/_components/TranslationPanel.tsx
-import { FaArrowLeft, FaSearch } from '@/app/components/SvgIcons';
+import { FaArrowLeft, FaSearch } from '@/app/components/common/SvgIcons';
 import { TranslationResource } from '@/types';
 import { useSettings } from '@/app/context/SettingsContext';
 

@@ -1,4 +1,5 @@
 // app/surah/[surahId]/page.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useEffect, useState, useMemo } from 'react';
@@ -55,8 +56,6 @@ export default function SurahPage({ params }: any) {
   const selectedTranslationName = useMemo(() => translationOptions.find(o => o.id === settings.translationId)?.name || 'Select Translation', [settings.translationId, translationOptions]);
   const groupedTranslations = useMemo(() => translationOptions.filter(o => o.name.toLowerCase().includes(translationSearchTerm.toLowerCase())).reduce<Record<string, TranslationResource[]>>((acc, t) => { (acc[t.language_name] ||= []).push(t); return acc; }, {}), [translationOptions, translationSearchTerm]);
   
-
-
   return (
     <div className="flex flex-grow bg-white font-sans overflow-hidden">
       <main className="flex-grow bg-[#F0FAF8] p-6 lg:p-10 overflow-y-auto">

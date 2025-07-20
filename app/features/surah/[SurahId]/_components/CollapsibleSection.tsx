@@ -1,7 +1,7 @@
 // app/surah/[surahId]/_components/CollapsibleSection.tsx
 'use client';
 import { useState } from 'react';
-import { FaChevronDown } from '@/app/components/SvgIcons';
+import { FaChevronDown } from '@/app/components/common/SvgIcons';
 
 export const CollapsibleSection = ({ title, icon, children }: { title: string, icon: React.ReactNode, children: React.ReactNode }) => {
     const [isOpen, setIsOpen] = useState(true);
