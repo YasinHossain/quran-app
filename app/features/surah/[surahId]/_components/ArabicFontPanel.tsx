@@ -33,7 +33,13 @@ export const ArabicFontPanel = ({ isOpen, onClose }: ArabicFontPanelProps) => {
       {/* No overlay div */}
       <div className={`fixed top-0 right-0 w-80 h-full bg-[#F7F9F9] flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="flex items-center justify-between p-4 border-b border-gray-200/80">
-          <button onClick={onClose} className="p-2 rounded-full hover:bg-gray-200"><FaArrowLeft size={18} /></button>
+          <button
+            aria-label="Back"
+            onClick={onClose}
+            className="p-2 rounded-full hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+          >
+            <FaArrowLeft size={18} />
+          </button>
           <h2 className="font-bold text-lg text-gray-800">{t('select_font_face')}</h2> {/* Assuming a translation key for the title */}
           <div className="w-8"></div>
         </div>

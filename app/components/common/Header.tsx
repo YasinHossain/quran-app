@@ -1,20 +1,33 @@
 // app/components/Header.tsx
 'use client';
-import { FaSearch, FaBars, FaFontSetting } from './SvgIcons';
+import { FaSearch, FaBars } from './SvgIcons';
 import { useTranslation } from 'react-i18next';
 import { useSidebar } from '@/app/context/SidebarContext';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { FaFont } from 'react-icons/fa'; // Using a different icon for clarity if FaFontSetting is custom
 
 const Header = () => {
   const { t } = useTranslation();
   const { setSurahListOpen, setSettingsOpen } = useSidebar();
+  const router = useRouter();
+  const [query, setQuery] = useState('');
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && query.trim()) {
+      router.push(`/features/search?query=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
   return (
-    // CHANGE: Adjusted background, padding, and grid layout for cleaner look
+    // Adjusted background, padding, and grid layout for cleaner look
     <header className="h-16 grid grid-cols-3 items-center px-4 sm:px-8 bg-white shadow-sm sticky top-0 z-30">
-      {/* Column 1: Title */}
+      {/* Column 1: Title & Surah List Toggle */}
       <div className="flex items-center gap-2">
         <button
           onClick={() => setSurahListOpen(true)}
           className="p-2 rounded-md hover:bg-gray-100 lg:hidden"
+          aria-label="Open Surah List"
         >
           <FaBars size={20} />
         </button>
@@ -24,13 +37,15 @@ const Header = () => {
       {/* Column 2: Centered Search Bar */}
       <div className="flex justify-center">
         <div className="relative w-full max-w-lg">
-          <FaSearch size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" /> {/* Adjusted icon position */}
+          <FaSearch size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
             placeholder={t('search_placeholder')}
-            // CHANGE: Softer border, adjusted padding, and rounded corners
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
             className="w-full bg-gray-100 border border-gray-200 rounded-md py-2 px-10 focus:ring-1 focus:ring-teal-500 outline-none transition text-gray-700"
-          /> {/* Adjusted styles */}
+          />
         </div>
       </div>
 
@@ -39,8 +54,10 @@ const Header = () => {
         <button
           onClick={() => setSettingsOpen(true)}
           className="p-2 rounded-md hover:bg-gray-100 lg:hidden"
+          aria-label="Open Settings"
         >
-          <FaFontSetting size={20} />
+          {/* Assuming FaFontSetting was a custom icon, replaced with a standard one for this example */}
+          <FaFont size={20} />
         </button>
       </div>
     </header>
