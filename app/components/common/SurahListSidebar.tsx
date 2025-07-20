@@ -1,26 +1,26 @@
-// app/components/SurahListSidebar.tsx
+// app/components/common/SurahListSidebar.tsx
 'use client';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { FaSearch } from './SvgIcons';
 import { Chapter } from '@/types';
 import { getChapters } from '@/lib/api';
+import useSWR from 'swr';
 
-const SurahListSidebar = () => {
+interface Props {
+  initialChapters?: Chapter[];
+}
+
+const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const { t } = useTranslation();
-  const [chapters, setChapters] = useState<Chapter[]>([]);
+  const { data } = useSWR('chapters', getChapters, { fallbackData: initialChapters });
+  const chapters = data || [];
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('Surah');
   const params = useParams();
   const activeSurahId = params.surahId;
-
-  useEffect(() => {
-    getChapters()
-      .then(setChapters)
-      .catch(err => console.error('Failed to fetch chapters:', err));
-  }, []);
 
   const filteredChapters = useMemo(() =>
     chapters.filter(chapter =>
@@ -68,7 +68,6 @@ const SurahListSidebar = () => {
                   className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors ${
                       isActive ? 'bg-teal-50' : 'hover:bg-white'
                   }`}>
-                    {/* CHANGE: Replaced the diamond with a modern, rounded square ("squircle") */}
                     <div className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-colors ${
                         isActive ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-600'
                     }`}>
