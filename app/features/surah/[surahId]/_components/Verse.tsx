@@ -3,6 +3,7 @@ import { FaPlay, FaPause, FaBookmark, FaRegBookmark, FaEllipsisH, FaBookReader }
 import { TafsirModal } from './TafsirModal';
 import { Verse as VerseType, Translation } from '@/types';
 import { useAudio } from '@/app/context/AudioContext';
+import Spinner from '@/app/components/common/Spinner';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useState } from 'react';
 
@@ -11,10 +12,11 @@ interface VerseProps {
 }
 
 export const Verse = ({ verse }: VerseProps) => {
-  const { playingId, setPlayingId } = useAudio();
+  const { playingId, setPlayingId, loadingId } = useAudio();
   const { settings, bookmarkedVerses, toggleBookmark } = useSettings(); // Get bookmarkedVerses and toggleBookmark
   const [showTafsir, setShowTafsir] = useState(false);
   const isPlaying = playingId === verse.id;
+  const isLoadingAudio = loadingId === verse.id;
   const isBookmarked = bookmarkedVerses.includes(verse.id); // Check if verse is bookmarked
 
   return (
@@ -30,7 +32,13 @@ export const Verse = ({ verse }: VerseProps) => {
             title="Play/Pause"
             className={`p-1.5 rounded-full hover:bg-gray-100 transition ${isPlaying ? 'text-teal-600' : 'hover:text-teal-600'}`}
           >
-            {isPlaying ? <FaPause size={18} /> : <FaPlay size={18} />}
+            {isLoadingAudio ? (
+              <Spinner className="h-4 w-4 text-teal-600" />
+            ) : isPlaying ? (
+              <FaPause size={18} />
+            ) : (
+              <FaPlay size={18} />
+            )}
           </button>
           {/* Bookmark button */}
           <button

@@ -14,6 +14,7 @@ import { Verse as VerseType, TranslationResource } from '@/types';
 import { getTranslations, getVersesByChapter } from '@/lib/api';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useAudio } from '@/app/context/AudioContext';
+import Spinner from '@/app/components/common/Spinner';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
@@ -26,7 +27,7 @@ export default function SurahPage({ params }: SurahPageProps) {
   const [error, setError] = useState<string | null>(null);
   const { settings } = useSettings();
   const { t } = useTranslation();
-  const { playingId, setPlayingId } = useAudio();
+  const { playingId, setPlayingId, setLoadingId } = useAudio();
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [translationSearchTerm, setTranslationSearchTerm] = useState('');
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -93,7 +94,9 @@ export default function SurahPage({ params }: SurahPageProps) {
       <main className="flex-grow bg-[#F0FAF8] p-6 lg:p-10 overflow-y-auto">
         <div className="max-w-4xl mx-auto relative">
           {isLoading ? (
-            <div className="text-center py-20 text-teal-600">{t('loading_surah')}</div>
+            <div className="flex justify-center py-20">
+              <Spinner className="h-8 w-8 text-teal-600" />
+            </div>
           ) : error ? (
             <div className="text-center py-20 text-red-600 bg-red-50 p-4 rounded-lg">{error}</div>
           ) : verses.length > 0 ? (
@@ -105,10 +108,18 @@ export default function SurahPage({ params }: SurahPageProps) {
                     <audio
                       src={`https://verses.quran.com/${v.audio.url}`}
                       autoPlay
-                      onEnded={() => setPlayingId(null)}
+                      onLoadStart={() => setLoadingId(v.id)}
+                      onWaiting={() => setLoadingId(v.id)}
+                      onPlaying={() => setLoadingId(null)}
+                      onCanPlay={() => setLoadingId(null)}
+                      onEnded={() => {
+                        setPlayingId(null);
+                        setLoadingId(null);
+                      }}
                       onError={() => {
                         setError(t('could_not_play_audio'));
                         setPlayingId(null);
+                        setLoadingId(null);
                       }}
                     >
                       <track kind="captions" />
@@ -116,8 +127,8 @@ export default function SurahPage({ params }: SurahPageProps) {
                   )}
                 </React.Fragment>
               ))}
-              <div ref={loadMoreRef} className="py-4 text-center">
-                {isValidating && <span className="text-teal-600">{t('loading')}</span>}
+              <div ref={loadMoreRef} className="py-4 text-center space-x-2">
+                {isValidating && <Spinner className="inline h-5 w-5 text-teal-600" />}
                 {isReachingEnd && <span className="text-gray-500">{t('end_of_surah')}</span>}
               </div>
             </>
