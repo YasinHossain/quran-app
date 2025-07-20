@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import nextI18NextConfig from "./next-i18next.config.mjs";
 
 // Define commonly recommended security headers
 const securityHeaders = [
@@ -29,11 +30,16 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  // Expose the Quran API base URL to the app
+  // --- MERGED CONFIGURATIONS ---
+  // 1. Add i18n configuration
+  ...nextI18NextConfig,
+
+  // 2. Expose the Quran API base URL to the app
   env: {
     QURAN_API_BASE_URL: process.env.QURAN_API_BASE_URL,
   },
 
+  // 3. Add security headers
   async headers() {
     return [
       {

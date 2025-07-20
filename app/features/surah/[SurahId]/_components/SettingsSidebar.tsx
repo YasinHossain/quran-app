@@ -2,6 +2,7 @@
 import { FaBookReader, FaFontSetting, FaChevronDown } from '@/app/components/common/SvgIcons';
 import { CollapsibleSection } from './CollapsibleSection';
 import { useSettings } from '@/app/context/SettingsContext';
+import { useTranslation } from 'react-i18next';
 
 interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;
@@ -10,6 +11,7 @@ interface SettingsSidebarProps {
 
 export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationName }: SettingsSidebarProps) => {
   const { settings, setSettings, arabicFonts } = useSettings();
+  const { t } = useTranslation();
   
   // Helper function to calculate the slider's progress percentage
   const getPercentage = (value: number, min: number, max: number) => {
@@ -23,19 +25,19 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
   return (
     <aside className="w-80 bg-[#F0FAF8] flex-col hidden lg:flex flex-shrink-0 overflow-y-auto shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)]">
       <div className="flex-grow">
-        <CollapsibleSection title="Reading Setting" icon={<FaBookReader size={20} className="text-teal-700" />}>
+        <CollapsibleSection title={t('reading_setting')} icon={<FaBookReader size={20} className="text-teal-700" />}>
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">Translations</label>
+            <label className="block text-sm font-medium text-gray-700">{t('translations')}</label>
             <button onClick={onTranslationPanelOpen} className="w-full flex justify-between items-center bg-white border border-gray-300 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition">
               <span className="truncate text-gray-800">{selectedTranslationName}</span>
               <FaChevronDown className="text-gray-500" />
             </button>
           </div>
         </CollapsibleSection>
-        <CollapsibleSection title="Font Setting" icon={<FaFontSetting size={20} className="text-teal-700" />}>
+        <CollapsibleSection title={t('font_setting')} icon={<FaFontSetting size={20} className="text-teal-700" />}>
           <div className="space-y-4">
             <div>
-              <div className="flex justify-between mb-1 text-sm"><label className="text-gray-700">Arabic Font Size</label><span className="font-semibold text-teal-700">{settings.arabicFontSize}</span></div>
+              <div className="flex justify-between mb-1 text-sm"><label className="text-gray-700">{t('arabic_font_size')}</label><span className="font-semibold text-teal-700">{settings.arabicFontSize}</span></div>
               <input
                 type="range"
                 min="16"
@@ -47,7 +49,7 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
               />
             </div>
             <div>
-              <div className="flex justify-between mb-1 text-sm"><label className="text-gray-700">Translation Font Size</label><span className="font-semibold text-teal-700">{settings.translationFontSize}</span></div>
+              <div className="flex justify-between mb-1 text-sm"><label className="text-gray-700">{t('translation_font_size')}</label><span className="font-semibold text-teal-700">{settings.translationFontSize}</span></div>
               <input
                 type="range"
                 min="12"
@@ -59,7 +61,7 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
               />
             </div>
             <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700">Arabic Font Face</label>
+              <label className="block mb-2 text-sm font-medium text-gray-700">{t('arabic_font_face')}</label>
               <select onChange={e => setSettings({ ...settings, arabicFontFace: e.target.value })} value={settings.arabicFontFace} className="w-full bg-white border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-teal-500 focus:border-teal-500 text-gray-800">
                 {arabicFonts.map(font => (<option key={font.name} value={font.value}>{font.name}</option>))}
               </select>

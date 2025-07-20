@@ -3,6 +3,7 @@
 'use client';
 
 import React, { useEffect, useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Verse } from './_components/Verse';
 import { SettingsSidebar } from './_components/SettingsSidebar';
 import { TranslationPanel } from './_components/TranslationPanel';
@@ -23,6 +24,7 @@ export default function SurahPage({ params }: any) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { settings } = useSettings();
+  const { t } = useTranslation();
   const { playingId, setPlayingId } = useAudio();
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [translationSearchTerm, setTranslationSearchTerm] = useState('');
@@ -53,7 +55,10 @@ export default function SurahPage({ params }: any) {
   }, [params.surahId, settings.translationId]);
 
   // --- Memoized Values ---
-  const selectedTranslationName = useMemo(() => translationOptions.find(o => o.id === settings.translationId)?.name || 'Select Translation', [settings.translationId, translationOptions]);
+  const selectedTranslationName = useMemo(
+    () => translationOptions.find(o => o.id === settings.translationId)?.name || t('select_translation'),
+    [settings.translationId, translationOptions, t]
+  );
   const groupedTranslations = useMemo(() => translationOptions.filter(o => o.name.toLowerCase().includes(translationSearchTerm.toLowerCase())).reduce<Record<string, TranslationResource[]>>((acc, t) => { (acc[t.language_name] ||= []).push(t); return acc; }, {}), [translationOptions, translationSearchTerm]);
   
   return (
@@ -61,7 +66,7 @@ export default function SurahPage({ params }: any) {
       <main className="flex-grow bg-[#F0FAF8] p-6 lg:p-10 overflow-y-auto">
         <div className="max-w-4xl mx-auto relative">
           {isLoading ? (
-            <div className="text-center py-20 text-teal-600">Loading Surah...</div>
+            <div className="text-center py-20 text-teal-600">{t('loading_surah')}</div>
           ) : error ? (
             <div className="text-center py-20 text-red-600 bg-red-50 p-4 rounded-lg">{error}</div>
           ) : verses.length > 0 ? (
@@ -74,15 +79,17 @@ export default function SurahPage({ params }: any) {
                     autoPlay
                     onEnded={() => setPlayingId(null)}
                     onError={() => {
-                      setError('Could not play audio.');
+                      setError(t('could_not_play_audio'));
                       setPlayingId(null);
                     }}
-                  />
+                  >
+                    <track kind="captions" />
+                  </audio>
                 )}
               </React.Fragment>
             ))
           ) : (
-            <div className="text-center py-20 text-gray-500">No verses found.</div>
+            <div className="text-center py-20 text-gray-500">{t('no_verses_found')}</div>
           )}
         </div>
       </main>
