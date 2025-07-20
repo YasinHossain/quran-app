@@ -12,8 +12,12 @@ export default function SurahLayout({ children }: { children: React.ReactNode })
         <div className="h-screen flex flex-col">
           <Header />
           <div className="flex flex-grow overflow-hidden">
-            <IconSidebar />
-            <SurahListSidebar />
+            <nav aria-label="Primary navigation">
+              <IconSidebar />
+            </nav>
+            <nav aria-label="Surah navigation">
+              <SurahListSidebar />
+            </nav>
             {children}
           </div>
         </div>

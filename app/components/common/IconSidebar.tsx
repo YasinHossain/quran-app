@@ -17,8 +17,11 @@ const IconSidebar = () => {
         <aside className="w-20 bg-[#F0FAF8] flex flex-col justify-center py-4">
             <nav className="flex flex-col items-center space-y-2">
                 {navItems.map((item, index) => (
-                    <Link key={index} href={item.href} title={item.label}> {/* Use Link component */}
-                        <button className="p-3 rounded-lg hover:bg-gray-200 text-gray-600 hover:text-teal-600 transition-colors duration-200">
+                    <Link key={index} href={item.href} title={item.label}>
+                        <button
+                            aria-label={item.label}
+                            className="p-3 rounded-lg hover:bg-gray-200 text-gray-600 hover:text-teal-600 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+                        >
                             <item.icon className="h-6 w-6" />
                         </button>
                     </Link>
