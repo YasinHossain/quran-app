@@ -1,5 +1,9 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Setup
+
+Copy `.env.example` to `.env` and adjust the values if necessary. The default configuration includes the Quran API base URL.
+
 ## Getting Started
 
 First, run the development server:
