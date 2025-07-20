@@ -16,7 +16,7 @@ interface Props {
 const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const { t } = useTranslation();
   const { data } = useSWR('chapters', getChapters, { fallbackData: initialChapters });
-  const chapters = data || [];
+  const chapters = useMemo(() => data || [], [data]);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('Surah');
   const params = useParams();
