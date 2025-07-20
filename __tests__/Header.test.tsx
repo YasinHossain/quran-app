@@ -8,6 +8,10 @@ jest.mock('react-i18next', () => ({
   }),
 }));
 
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({ push: jest.fn() }),
+}));
+
 describe('Header', () => {
   it('renders the title', () => {
     render(<Header />);

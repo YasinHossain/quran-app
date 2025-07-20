@@ -2,9 +2,20 @@
 'use client';
 import { FaSearch } from './SvgIcons';
 import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const Header = () => {
   const { t } = useTranslation();
+  const router = useRouter();
+  const [query, setQuery] = useState('');
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && query.trim()) {
+      router.push(`/features/search?query=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
   return (
     // CHANGE: Adjusted background, padding, and grid layout for cleaner look
     <header className="h-16 grid grid-cols-3 items-center px-8 bg-white shadow-sm sticky top-0 z-30">
@@ -20,7 +31,9 @@ const Header = () => {
           <input
             type="text"
             placeholder={t('search_placeholder')}
-            // CHANGE: Softer border, adjusted padding, and rounded corners
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
             className="w-full bg-gray-100 border border-gray-200 rounded-md py-2 px-10 focus:ring-1 focus:ring-teal-500 outline-none transition text-gray-700"
           /> {/* Adjusted styles */}
         </div>

@@ -25,6 +25,13 @@ export interface PaginatedVerses {
   totalPages: number;
 }
 
+interface SearchApiResult {
+  verse_key: string;
+  verse_id: number;
+  text: string;
+  translations?: Verse['translations'];
+}
+
 export async function getVersesByChapter(
   chapterId: string | number,
   translationId: number,
@@ -39,6 +46,22 @@ export async function getVersesByChapter(
   const data = await res.json();
   const totalPages = data.meta?.total_pages || data.pagination?.total_pages || 1;
   return { verses: data.verses as Verse[], totalPages };
+}
+
+export async function searchVerses(query: string): Promise<Verse[]> {
+  const url = `${API_BASE_URL}/search?q=${encodeURIComponent(query)}&size=20&translations=20`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Failed to search verses: ${res.status}`);
+  }
+  const data = await res.json();
+  const results: SearchApiResult[] = data.search?.results || [];
+  return results.map(r => ({
+    id: r.verse_id,
+    verse_key: r.verse_key,
+    text_uthmani: r.text,
+    translations: r.translations,
+  })) as Verse[];
 }
 
 // Fetch tafsir text for a specific verse
