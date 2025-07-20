@@ -1,6 +1,6 @@
 // app/components/common/SurahListSidebar.tsx
 'use client';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
@@ -17,16 +17,34 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const { t } = useTranslation();
   const { data } = useSWR('chapters', getChapters, { fallbackData: initialChapters });
   const chapters = useMemo(() => data || [], [data]);
+  const juzs = useMemo(() => Array.from({ length: 30 }, (_, i) => i + 1), []);
+  const pages = useMemo(() => Array.from({ length: 604 }, (_, i) => i + 1), []);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('Surah');
   const params = useParams();
   const activeSurahId = params.surahId;
+  const activeJuzId = params.juzId;
+  const activePageId = params.pageId;
+
+  useEffect(() => {
+    if (params.juzId) setActiveTab('Juz');
+    else if (params.pageId) setActiveTab('Page');
+    else if (params.surahId) setActiveTab('Surah');
+  }, [params.juzId, params.pageId, params.surahId]);
 
   const filteredChapters = useMemo(() =>
     chapters.filter(chapter =>
       chapter.name_simple.toLowerCase().includes(searchTerm.toLowerCase()) ||
       chapter.id.toString().includes(searchTerm)
     ), [chapters, searchTerm]
+  );
+  const filteredJuzs = useMemo(
+    () => juzs.filter(j => j.toString().includes(searchTerm)),
+    [juzs, searchTerm]
+  );
+  const filteredPages = useMemo(
+    () => pages.filter(p => p.toString().includes(searchTerm)),
+    [pages, searchTerm]
   );
 
   return (
@@ -67,7 +85,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                 <Link href={`/features/surah/${chapter.id}`} key={chapter.id}
                   className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors border-l-2 ${
                       isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-white'
-                  }` /* Changed border-l-4 to border-l-2 */}>
+                  }`}>
                     <div className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-colors ${
                         isActive ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-600'
                     }`}>
@@ -86,10 +104,44 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
               )
             })}
           </nav>
+        ) : activeTab === 'Juz' ? (
+          <nav className="space-y-1">
+            {filteredJuzs.map(j => {
+              const isActive = activeJuzId === String(j);
+              return (
+                <Link href={`/features/juz/${j}`} key={j}
+                  className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors border-l-2 ${
+                      isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-white'
+                  }`}>
+                    <div className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-colors ${
+                        isActive ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-600'
+                    }`}>
+                      <span>{j}</span>
+                    </div>
+                    <p className={`font-semibold ${isActive ? 'text-teal-800' : 'text-gray-800'}`}>Juz {j}</p>
+                </Link>
+              );
+            })}
+          </nav>
         ) : (
-            <div className="p-6 text-center text-gray-500">
-                {t('view_not_implemented', { tab: activeTab })}
-            </div>
+          <nav className="space-y-1">
+            {filteredPages.map(p => {
+              const isActive = activePageId === String(p);
+              return (
+                <Link href={`/features/page/${p}`} key={p}
+                  className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors border-l-2 ${
+                      isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-white'
+                  }`}>
+                    <div className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-colors ${
+                        isActive ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-600'
+                    }`}>
+                      <span>{p}</span>
+                    </div>
+                    <p className={`font-semibold ${isActive ? 'text-teal-800' : 'text-gray-800'}`}>Page {p}</p>
+                </Link>
+              );
+            })}
+          </nav>
         )}
       </div>
     </aside>

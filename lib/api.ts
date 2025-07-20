@@ -64,4 +64,52 @@ export async function searchVerses(query: string): Promise<Verse[]> {
   })) as Verse[];
 }
 
+// Fetch tafsir text for a specific verse
+export async function getTafsirByVerse(
+  verseKey: string,
+  tafsirId = 169
+): Promise<string> {
+  const url = `${API_BASE_URL}/tafsirs/${tafsirId}/by_ayah/${encodeURIComponent(
+    verseKey
+  )}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch tafsir: ${res.status}`);
+  }
+  const data = await res.json();
+  return data.tafsir?.text as string;
+}
+
+export async function getVersesByJuz(
+  juzId: string | number,
+  translationId: number,
+  page = 1,
+  perPage = 20
+): Promise<PaginatedVerses> {
+  const url = `${API_BASE_URL}/verses/by_juz/${juzId}?language=en&words=true&translations=${translationId}&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch verses: ${res.status}`);
+  }
+  const data = await res.json();
+  const totalPages = data.meta?.total_pages || data.pagination?.total_pages || 1;
+  return { verses: data.verses as Verse[], totalPages };
+}
+
+export async function getVersesByPage(
+  pageId: string | number,
+  translationId: number,
+  page = 1,
+  perPage = 20
+): Promise<PaginatedVerses> {
+  const url = `${API_BASE_URL}/verses/by_page/${pageId}?language=en&words=true&translations=${translationId}&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch verses: ${res.status}`);
+  }
+  const data = await res.json();
+  const totalPages = data.meta?.total_pages || data.pagination?.total_pages || 1;
+  return { verses: data.verses as Verse[], totalPages };
+}
+
 export { API_BASE_URL };
