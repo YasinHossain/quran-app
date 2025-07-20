@@ -31,7 +31,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
 
   return (
     <aside className="w-80 bg-[#F0FAF8] flex flex-col flex-shrink-0 shadow-[5px_0px_15px_-5px_rgba(0,0,0,0.05)] z-10">
-      <div className="p-4 border-b border-gray-200/80">
+      <div className="p-4 border-b border-gray-200/80"> {/* Added bottom border */}
         <div className="flex bg-gray-200 rounded-full p-1">
           {[t('surah_tab'), t('juz_tab'), t('page_tab')].map(tab => (
             <button
@@ -46,7 +46,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
           ))}
         </div>
       </div>
-      <div className="p-4 border-b border-gray-200/80">
+      <div className="p-4 border-b border-gray-200/80"> {/* Added bottom border */}
         <div className="relative">
           <FaSearch size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
@@ -58,16 +58,16 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
           />
         </div>
       </div>
-      <div className="flex-grow overflow-y-auto p-2">
+      <div className="flex-grow overflow-y-auto p-2"> {/* Adjusted padding */}
         {activeTab === 'Surah' ? (
           <nav className="space-y-1">
             {filteredChapters.map(chapter => {
               const isActive = activeSurahId === String(chapter.id);
               return (
                 <Link href={`/features/surah/${chapter.id}`} key={chapter.id}
-                  className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors ${
-                      isActive ? 'bg-teal-50' : 'hover:bg-white'
-                  }`}>
+                  className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors border-l-2 ${
+                      isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-white'
+                  }` /* Changed border-l-4 to border-l-2 */}>
                     <div className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-colors ${
                         isActive ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-600'
                     }`}>

@@ -3,6 +3,8 @@ import { FaBookReader, FaFontSetting, FaChevronDown } from '@/app/components/com
 import { CollapsibleSection } from './CollapsibleSection';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useTranslation } from 'react-i18next';
+import { useState } from 'react'; // Import useState
+import { ArabicFontPanel } from './ArabicFontPanel'; // Import ArabicFontPanel
 
 interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;
@@ -12,7 +14,8 @@ interface SettingsSidebarProps {
 export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationName }: SettingsSidebarProps) => {
   const { settings, setSettings, arabicFonts } = useSettings();
   const { t } = useTranslation();
-  
+  const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false); // State for ArabicFontPanel
+
   // Helper function to calculate the slider's progress percentage
   const getPercentage = (value: number, min: number, max: number) => {
     return ((value - min) / (max - min)) * 100;
@@ -21,6 +24,9 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
   // Calculate percentages for each slider
   const arabicSizePercent = getPercentage(settings.arabicFontSize, 16, 48);
   const translationSizePercent = getPercentage(settings.translationFontSize, 12, 28);
+
+  // Find the selected Arabic font name for display
+  const selectedArabicFont = arabicFonts.find(font => font.value === settings.arabicFontFace)?.name || t('select_font');
 
   return (
     <aside className="w-80 bg-[#F0FAF8] flex-col hidden lg:flex flex-shrink-0 overflow-y-auto shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)]">
@@ -44,7 +50,6 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
                 max="48"
                 value={settings.arabicFontSize}
                 onChange={e => setSettings({ ...settings, arabicFontSize: +e.target.value })}
-                // CHANGE: Apply the percentage as a CSS variable
                 style={{ '--value-percent': `${arabicSizePercent}%` } as React.CSSProperties}
               />
             </div>
@@ -56,20 +61,22 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
                 max="28"
                 value={settings.translationFontSize}
                 onChange={e => setSettings({ ...settings, translationFontSize: +e.target.value })}
-                // CHANGE: Apply the percentage as a CSS variable
                 style={{ '--value-percent': `${translationSizePercent}%` } as React.CSSProperties}
               />
             </div>
+            {/* Arabic Font Face Selection Button */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-700">{t('arabic_font_face')}</label>
-              <select onChange={e => setSettings({ ...settings, arabicFontFace: e.target.value })} value={settings.arabicFontFace} className="w-full bg-white border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-teal-500 focus:border-teal-500 text-gray-800">
-                {arabicFonts.map(font => (<option key={font.name} value={font.value}>{font.name}</option>))}
-              </select>
+              <button onClick={() => setIsArabicFontPanelOpen(true)} className="w-full flex justify-between items-center bg-white border border-gray-300 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition">
+                <span className="truncate text-gray-800">{selectedArabicFont}</span>
+                <FaChevronDown className="text-gray-500" />
+              </button>
             </div>
           </div>
         </CollapsibleSection>
       </div>
+      {/* Arabic Font Panel */}
+      <ArabicFontPanel isOpen={isArabicFontPanelOpen} onClose={() => setIsArabicFontPanelOpen(false)} />
     </aside>
   );
 };
-

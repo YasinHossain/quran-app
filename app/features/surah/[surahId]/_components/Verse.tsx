@@ -1,5 +1,5 @@
 // app/surah/[surahId]/_components/Verse.tsx
-import { FaPlay, FaPause, FaBookmark, FaEllipsisH, FaBookReader } from '@/app/components/common/SvgIcons';
+import { FaPlay, FaPause, FaBookmark, FaRegBookmark, FaEllipsisH, FaBookReader } from '@/app/components/common/SvgIcons';
 import { Verse as VerseType, Translation } from '@/types';
 import { useAudio } from '@/app/context/AudioContext';
 import { useSettings } from '@/app/context/SettingsContext';
@@ -10,8 +10,9 @@ interface VerseProps {
 
 export const Verse = ({ verse }: VerseProps) => {
   const { playingId, setPlayingId } = useAudio();
-  const { settings } = useSettings();
+  const { settings, bookmarkedVerses, toggleBookmark } = useSettings(); // Get bookmarkedVerses and toggleBookmark
   const isPlaying = playingId === verse.id;
+  const isBookmarked = bookmarkedVerses.includes(verse.id); // Check if verse is bookmarked
 
   return (
     <div className="flex items-start gap-x-6 mb-12 border-b pb-8 border-gray-200">
@@ -27,7 +28,14 @@ export const Verse = ({ verse }: VerseProps) => {
           >
             {isPlaying ? <FaPause size={18} /> : <FaPlay size={18} />}
           </button>
-          <button title="Bookmark" className="p-1.5 rounded-full hover:bg-gray-100 hover:text-teal-600 transition"><FaBookmark size={18} /></button>
+          {/* Bookmark button */}
+          <button
+            title="Bookmark"
+            onClick={() => toggleBookmark(verse.id)} // Call toggleBookmark on click
+            className={`p-1.5 rounded-full hover:bg-gray-100 transition ${isBookmarked ? 'text-teal-600' : 'hover:text-teal-600'}`}
+          >
+            {isBookmarked ? <FaBookmark size={18} /> : <FaRegBookmark size={18} />} {/* Change icon based on bookmark status */}
+          </button>
           
           {/* This is the Tafsir icon that was missing */}
           <button title="Tafsir" className="p-1.5 rounded-full hover:bg-gray-100 hover:text-teal-600 transition"><FaBookReader size={18} /></button>

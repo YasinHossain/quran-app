@@ -1,22 +1,34 @@
 @import "tailwindcss";
 
-/* Base styles from your working version */
+/* Base styles */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #F7F9F9; /* Lighter background color */
+  --foreground: #374151; /* Softer foreground color */
+  --border-color: #e5e7eb; /* Subtle border color */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #1a202c; /* Darker background for dark mode */
+    --foreground: #d1d5db; /* Lighter foreground for dark mode */
+    --border-color: #4b5563; /* Darker border for dark mode */
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, Helvetica, sans-serif; /* You might want to change this to a more modern font */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #111827; /* Darker heading color */
+}
+
+@media (prefers-color-scheme: dark) {
+  h1, h2, h3, h4, h5, h6 {
+    color: #f3f4f6; /* Lighter heading color for dark mode */
+  }
 }
 
 /* --- Custom Modern Range Slider Styles --- */
@@ -27,7 +39,7 @@ input[type="range"] {
   height: 6px;
   border-radius: 5px;
   outline: none;
-  background: linear-gradient(to right, #0d9488 var(--value-percent, 0%), #e5e7eb var(--value-percent, 0%));
+  background: linear-gradient(to right, #0d9488 var(--value-percent, 0%), var(--border-color) var(--value-percent, 0%)); /* Use border-color variable */
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -35,8 +47,8 @@ input[type="range"]::-webkit-slider-thumb {
   appearance: none;
   width: 16px;
   height: 16px;
-  background: #ffffff;
-  border: 2px solid #d1d5db;
+  background: var(--background); /* Use background variable */
+  border: 2px solid var(--border-color); /* Use border-color variable */
   border-radius: 50%;
   cursor: pointer;
   margin-top: -5px;
@@ -46,8 +58,8 @@ input[type="range"]::-webkit-slider-thumb {
 input[type="range"]::-moz-range-thumb {
   width: 16px;
   height: 16px;
-  background: #ffffff;
-  border: 2px solid #d1d5db;
+  background: var(--background); /* Use background variable */
+  border: 2px solid var(--border-color); /* Use border-color variable */
   border-radius: 50%;
   cursor: pointer;
   transition: background 0.3s, box-shadow 0.3s;
@@ -81,7 +93,7 @@ input[type="range"]:active::-moz-range-thumb {
 ::-webkit-scrollbar-thumb {
   background: #0d9488;
   border-radius: 10px;
-  border: 2px solid #F0FAF8;
+  border: 2px solid var(--background); /* Use background variable */
 }
 
 ::-webkit-scrollbar-thumb:hover {
