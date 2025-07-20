@@ -32,7 +32,7 @@ export default function SurahPage({ params }: SurahPageProps) {
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const { data: translationOptionsData } = useSWR('translations', getTranslations);
-  const translationOptions = translationOptionsData || [];
+  const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
 
   const {
     data,
@@ -51,7 +51,7 @@ export default function SurahPage({ params }: SurahPageProps) {
       })
   );
 
-  const verses = data ? data.flatMap(d => d.verses) : [];
+  const verses: VerseType[] = data ? data.flatMap(d => d.verses) : [];
   const totalPages = data ? data[data.length - 1]?.totalPages : 1;
   const isLoading = !data && !error;
   const isReachingEnd = size >= totalPages;
