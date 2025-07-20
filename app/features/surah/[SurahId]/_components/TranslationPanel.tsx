@@ -1,5 +1,6 @@
-// app/surah/[surahId]/_components/TranslationPanel.tsx
-import { FaArrowLeft, FaSearch } from '@/app/components/SvgIcons';
+// app/features/surah/[SurahId]/_components/TranslationPanel.tsx
+import { FaArrowLeft, FaSearch } from '@/app/components/common/SvgIcons';
+import { useTranslation } from 'react-i18next';
 import { TranslationResource } from '@/types';
 import { useSettings } from '@/app/context/SettingsContext';
 
@@ -13,19 +14,28 @@ interface TranslationPanelProps {
 
 export const TranslationPanel = ({ isOpen, onClose, groupedTranslations, searchTerm, onSearchTermChange }: TranslationPanelProps) => {
   const { settings, setSettings } = useSettings();
+  const { t } = useTranslation();
   return (
     <>
-      {isOpen && <div onClick={onClose} className="fixed inset-0 bg-black/20 z-40"></div>}
+      {isOpen && (
+        <div
+          onClick={onClose}
+          onKeyDown={e => e.key === 'Escape' && onClose()}
+          role="button"
+          tabIndex={0}
+          className="fixed inset-0 bg-black/20 z-40"
+        ></div>
+      )}
       <div className={`fixed top-0 right-0 w-80 h-full bg-[#F7F9F9] flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="flex items-center justify-between p-4 border-b border-gray-200/80">
           <button onClick={onClose} className="p-2 rounded-full hover:bg-gray-200"><FaArrowLeft size={18} /></button>
-          <h2 className="font-bold text-lg text-gray-800">Translations</h2>
+          <h2 className="font-bold text-lg text-gray-800">{t('translations_panel_title')}</h2>
           <div className="w-8"></div>
         </div>
         <div className="p-3 border-b border-gray-200/80">
           <div className="relative">
             <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input type="text" placeholder="Search" value={searchTerm} onChange={e => onSearchTermChange(e.target.value)} className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none" />
+            <input type="text" placeholder={t('search')} value={searchTerm} onChange={e => onSearchTermChange(e.target.value)} className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none" />
           </div>
         </div>
         <div className="flex-grow overflow-y-auto">

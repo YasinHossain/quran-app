@@ -1,7 +1,9 @@
-// app/surah/[surahId]/page.tsx
+// app/features/surah/[SurahId]/page.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useEffect, useState, useMemo, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Verse } from './_components/Verse';
 import { SettingsSidebar } from './_components/SettingsSidebar';
 import { TranslationPanel } from './_components/TranslationPanel';
@@ -14,15 +16,20 @@ import useSWRInfinite from 'swr/infinite';
 
 // --- Interfaces & Data ---
 
+// Using a specific type for params is good practice.
+// If you encounter build errors, you may need to revert to `any` as Next.js's
+// type for PageProps can sometimes cause mismatches.
 export default function SurahPage({ params }: { params: { surahId: string } }) {
   const [error, setError] = useState<string | null>(null);
   const { settings } = useSettings();
+  const { t } = useTranslation();
   const { playingId, setPlayingId } = useAudio();
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [translationSearchTerm, setTranslationSearchTerm] = useState('');
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-  const { data: translationOptions } = useSWR('translations', getTranslations);
+  const { data: translationOptionsData } = useSWR('translations', getTranslations);
+  const translationOptions = translationOptionsData || [];
 
   const {
     data,
@@ -61,13 +68,13 @@ export default function SurahPage({ params }: { params: { surahId: string } }) {
   // --- Memoized Values ---
   const selectedTranslationName = useMemo(
     () =>
-      translationOptions?.find(o => o.id === settings.translationId)?.name ||
-      'Select Translation',
-    [settings.translationId, translationOptions]
+      translationOptions.find(o => o.id === settings.translationId)?.name ||
+      t('select_translation'),
+    [settings.translationId, translationOptions, t]
   );
   const groupedTranslations = useMemo(
     () =>
-      (translationOptions || [])
+      translationOptions
         .filter(o =>
           o.name.toLowerCase().includes(translationSearchTerm.toLowerCase())
         )
@@ -78,14 +85,12 @@ export default function SurahPage({ params }: { params: { surahId: string } }) {
     [translationOptions, translationSearchTerm]
   );
   
-
-
   return (
     <div className="flex flex-grow bg-white font-sans overflow-hidden">
       <main className="flex-grow bg-[#F0FAF8] p-6 lg:p-10 overflow-y-auto">
         <div className="max-w-4xl mx-auto relative">
           {isLoading ? (
-            <div className="text-center py-20 text-teal-600">Loading Surah...</div>
+            <div className="text-center py-20 text-teal-600">{t('loading_surah')}</div>
           ) : error ? (
             <div className="text-center py-20 text-red-600 bg-red-50 p-4 rounded-lg">{error}</div>
           ) : verses.length > 0 ? (
@@ -99,20 +104,22 @@ export default function SurahPage({ params }: { params: { surahId: string } }) {
                       autoPlay
                       onEnded={() => setPlayingId(null)}
                       onError={() => {
-                        setError('Could not play audio.');
+                        setError(t('could_not_play_audio'));
                         setPlayingId(null);
                       }}
-                    />
+                    >
+                      <track kind="captions" />
+                    </audio>
                   )}
                 </React.Fragment>
               ))}
               <div ref={loadMoreRef} className="py-4 text-center">
-                {isValidating && <span className="text-teal-600">Loading...</span>}
-                {isReachingEnd && <span className="text-gray-500">End of Surah</span>}
+                {isValidating && <span className="text-teal-600">{t('loading')}</span>}
+                {isReachingEnd && <span className="text-gray-500">{t('end_of_surah')}</span>}
               </div>
             </>
           ) : (
-            <div className="text-center py-20 text-gray-500">No verses found.</div>
+            <div className="text-center py-20 text-gray-500">{t('no_verses_found')}</div>
           )}
         </div>
       </main>

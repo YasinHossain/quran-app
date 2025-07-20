@@ -1,6 +1,7 @@
-// app/components/SurahListSidebar.tsx
+// app/components/common/SurahListSidebar.tsx
 'use client';
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { FaSearch } from './SvgIcons';
@@ -13,6 +14,7 @@ interface Props {
 }
 
 const SurahListSidebar = ({ initialChapters = [] }: Props) => {
+  const { t } = useTranslation();
   const { data } = useSWR('chapters', getChapters, { fallbackData: initialChapters });
   const chapters = data || [];
   const [searchTerm, setSearchTerm] = useState('');
@@ -31,7 +33,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     <aside className="w-80 bg-[#F0FAF8] flex flex-col flex-shrink-0 shadow-[5px_0px_15px_-5px_rgba(0,0,0,0.05)] z-10">
       <div className="p-4 border-b border-gray-200/80">
         <div className="flex bg-gray-200 rounded-full p-1">
-          {['Surah', 'Juz', 'Page'].map(tab => (
+          {[t('surah_tab'), t('juz_tab'), t('page_tab')].map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -49,7 +51,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
           <FaSearch size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
-            placeholder="Search Surah"
+            placeholder={t('search_surah')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full bg-white border border-gray-200/80 rounded-lg py-2 pl-9 pr-3 focus:ring-2 focus:ring-teal-500 outline-none transition"
@@ -62,11 +64,10 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
             {filteredChapters.map(chapter => {
               const isActive = activeSurahId === String(chapter.id);
               return (
-                <Link href={`/surah/${chapter.id}`} key={chapter.id}
+                <Link href={`/features/surah/${chapter.id}`} key={chapter.id}
                   className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors ${
                       isActive ? 'bg-teal-50' : 'hover:bg-white'
                   }`}>
-                    {/* CHANGE: Replaced the diamond with a modern, rounded square ("squircle") */}
                     <div className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-colors ${
                         isActive ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-600'
                     }`}>
@@ -87,7 +88,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
           </nav>
         ) : (
             <div className="p-6 text-center text-gray-500">
-                {activeTab} view is not implemented yet.
+                {t('view_not_implemented', { tab: activeTab })}
             </div>
         )}
       </div>
