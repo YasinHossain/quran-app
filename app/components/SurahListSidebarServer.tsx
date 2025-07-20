@@ -1,4 +1,4 @@
-import SurahListSidebar from './SurahListSidebar';
+import SurahListSidebar from './common/SurahListSidebar';
 import { getChapters } from '@/lib/api';
 
 export default async function SurahListSidebarServer() {
