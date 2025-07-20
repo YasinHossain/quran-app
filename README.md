@@ -20,6 +20,25 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+
+## Environment Variables
+
+- `QURAN_API_BASE_URL` – overrides the Quran API endpoint. Defaults to `https://api.quran.com/api/v4`.
+
+## Development
+
+Run linting:
+
+```bash
+npm run lint
+```
+
+Run tests:
+
+```bash
+npm test
+```
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
