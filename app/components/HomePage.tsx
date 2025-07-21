@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useMemo, useEffect } from 'react';
+import Link from 'next/link';
 
 // --- Data for all 114 Surahs with English meanings ---
 const allSurahs = [
@@ -219,7 +220,7 @@ export default function HomePage() {
         <div className="relative z-10 flex flex-col min-h-screen px-4 sm:px-6 lg:px-8">
           <header className="w-full py-4">
             <nav className="flex justify-between items-center max-w-7xl mx-auto p-3 bg-white/50 dark:bg-slate-800/50 border border-white/60 dark:border-slate-700/60 rounded-2xl shadow-lg backdrop-blur-xl">
-              <h1 className="text-2xl font-bold tracking-wider text-slate-900 dark:text-white">Al Qur'an</h1>
+              <h1 className="text-2xl font-bold tracking-wider text-slate-900 dark:text-white">Al Qur&apos;an</h1>
               <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} className="p-2 bg-black/5 dark:bg-white/10 rounded-full hover:bg-black/10 dark:hover:bg-white/20 transition-colors">
                 {theme === 'light' ? <Moon className="w-5 h-5 text-slate-700" /> : <Sun className="w-5 h-5 text-yellow-400" />}
               </button>
@@ -229,7 +230,7 @@ export default function HomePage() {
           <main className="flex-grow flex flex-col items-center justify-center text-center pt-20 pb-10">
             <div className="content-visibility-auto animate-fade-in-up">
               <h2 className="text-5xl md:text-7xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-slate-900 to-slate-600 dark:from-white dark:to-slate-400">
-                The Noble Qur'an
+                The Noble Qur&apos;an
               </h2>
               <p className="mt-4 text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
                 Read! In the name of your Lord
@@ -264,7 +265,7 @@ export default function HomePage() {
               <h3 className="font-amiri text-3xl md:text-4xl text-emerald-600 dark:text-emerald-400 leading-relaxed text-right" dir="rtl">
                 فَإِنَّ مَعَ ٱلْعُسْرِ يُسْرًا
               </h3>
-              <p className="mt-4 text-left text-slate-600 dark:text-slate-400 text-sm">"So, surely with hardship comes ease." - [Surah Ash-Sharh, 94:5]</p>
+              <p className="mt-4 text-left text-slate-600 dark:text-slate-400 text-sm">&ldquo;So, surely with hardship comes ease.&rdquo; - [Surah Ash-Sharh, 94:5]</p>
             </div>
           </main>
 
@@ -281,8 +282,8 @@ export default function HomePage() {
             {activeTab === 'Surah' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredSurahs.map((surah, index) => (
-                  <a
-                    href="#"
+                  <Link
+                    href="/"
                     key={surah.number}
                     className="group p-5 bg-white/40 dark:bg-slate-800/40 border border-white/50 dark:border-slate-700/50 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl hover:bg-white/60 dark:hover:bg-slate-700/60 hover:border-emerald-500/60 dark:hover:border-emerald-500/60 transition-all duration-300 content-visibility-auto animate-fade-in-up"
                     style={{ animationDelay: `${600 + index * 15}ms` }}
@@ -304,15 +305,15 @@ export default function HomePage() {
                         <p className="text-sm text-slate-500 dark:text-slate-400">{surah.verses} Verses</p>
                       </div>
                     </div>
-                  </a>
+                  </Link>
                 ))}
               </div>
             )}
             {activeTab === 'Juz' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {allJuz.map((juz, index) => (
-                  <a
-                    href="#"
+                  <Link
+                    href="/"
                     key={juz.number}
                     className="group p-5 bg-white/40 dark:bg-slate-800/40 border border-white/50 dark:border-slate-700/50 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl hover:bg-white/60 dark:hover:bg-slate-700/60 hover:border-emerald-500/60 dark:hover:border-emerald-500/60 transition-all duration-300 content-visibility-auto animate-fade-in-up"
                     style={{ animationDelay: `${100 + index * 15}ms` }}
@@ -328,7 +329,7 @@ export default function HomePage() {
                         </div>
                       </div>
                     </div>
-                  </a>
+                  </Link>
                 ))}
               </div>
             )}
