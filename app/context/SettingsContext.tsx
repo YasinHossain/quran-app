@@ -3,17 +3,14 @@ import React, { createContext, useContext, useState, useEffect } from 'react'; /
 import { Settings } from '@/types';
 
 export const ARABIC_FONTS = [
-  { name: 'KFGQ', value: '"KFGQPC Uthman Taha Naskh", serif', category: 'Indopak' },
-  { name: 'KFGQ V2', value: '"KFGQPC Uthman Taha Naskh V2", serif', category: 'Indopak' }, // Added new font (assuming font family name)
-  { name: 'Me Quran', value: '"Me Quran", sans-serif', category: 'Indopak' },
-  { name: 'Al Mushaf', value: '"Al Mushaf", serif', category: 'Indopak' },
-  { name: 'PDMS Saleem Quran', value: '"PDMS Saleem Quran", serif', category: 'Indopak' }, // Added new font (assuming font family name)
-  { name: 'PDMS Islamic', value: '"PDMS Islamic", serif', category: 'Indopak' }, // Added new font (assuming font family name)
-  { name: 'Al Qalam Quran Majeed', value: '"Al Qalam Quran Majeed", serif', category: 'Indopak' }, // Added new font (assuming font family name)
-  { name: 'Amiri Quran', value: '"Amiri Quran", serif', category: 'Uthmani' }, // Added new font (assuming font family name)
-  { name: 'Noor E Huda', value: '"Noor E Huda", serif', category: 'Uthmani' },
-  { name: 'Noor E Hedayet', value: '"Noor E Hedayet", serif', category: 'Uthmani' },
-  { name: 'Noor E Hira', value: '"Noor E Hira", serif', category: 'Uthmani' },
+  { name: 'KFGQPC Uthman Taha', value: '"KFGQPC-Uthman-Taha", serif', category: 'Uthmani' },
+  { name: 'Al Mushaf', value: '"Al-Mushaf", serif', category: 'Uthmani' },
+  { name: 'Amiri', value: '"Amiri", serif', category: 'Uthmani' },
+  { name: 'Scheherazade New', value: '"Scheherazade New", serif', category: 'Uthmani' },
+  { name: 'Noto Naskh Arabic', value: '"Noto Naskh Arabic", serif', category: 'Uthmani' },
+  { name: 'Noto Nastaliq Urdu', value: '"Noto Nastaliq Urdu", serif', category: 'IndoPak' },
+  { name: 'Noor-e-Hira', value: '"Noor-e-Hira", serif', category: 'IndoPak' },
+  { name: 'Lateef', value: '"Lateef", serif', category: 'IndoPak' },
 ];
 
 // Define default settings

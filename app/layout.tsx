@@ -8,25 +8,19 @@ import { SidebarProvider } from './context/SidebarContext'; // Import SidebarPro
 import localFont from 'next/font/local';
 
 const kfgqpc = localFont({
-  src: [
-    { path: '../public/fonts/hafs.18.woff2', weight: '400', style: 'normal' },
-    { path: '../public/fonts/hafs.18.ttf', weight: '400', style: 'normal' },
-  ],
+  src: '../public/fonts/KFGQPC-Uthman-Taha.ttf',
   variable: '--font-kfgqpc',
   display: 'swap',
 });
 
-const pdms = localFont({
-  src: '../public/fonts/PDMS_Saleem_Quran.ttf',
-  variable: '--font-pdms',
+const nastaliq = localFont({
+  src: '../public/fonts/Noto Nastaliq Urdu.ttf',
+  variable: '--font-nastaliq',
   display: 'swap',
 });
 
 const amiri = localFont({
-  src: [
-    { path: '../public/fonts/AmiriQuran-regular.woff2', weight: '400', style: 'normal' },
-    { path: '../public/fonts/AmiriQuran-regular.woff', weight: '400', style: 'normal' },
-  ],
+  src: '../public/fonts/Amiri.ttf',
   variable: '--font-amiri',
   display: 'swap',
 });
@@ -44,7 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
-      <body className={`font-sans ${kfgqpc.variable} ${pdms.variable} ${amiri.variable}`}>
+      <body className={`font-sans ${kfgqpc.variable} ${nastaliq.variable} ${amiri.variable}`}>
         <TranslationProvider>
           <ThemeProvider>
             <SettingsProvider> {/* Wrap with SettingsProvider */}
