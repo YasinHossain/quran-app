@@ -1,5 +1,6 @@
 'use client';
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
+import { useTheme } from '@/app/context/ThemeContext';
 
 // --- Data for all 114 Surahs with English meanings ---
 const allSurahs = [
@@ -157,15 +158,7 @@ const Moon = (props: React.SVGProps<SVGSVGElement>) => (
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'Surah' | 'Juz' | 'Page'>('Surah');
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
-
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [theme]);
+  const { theme, setTheme } = useTheme();
 
   const customStyles = `
     @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@300;400;500;600;700&display=swap');
@@ -176,7 +169,7 @@ export default function HomePage() {
       transition: background-color 0.3s ease;
     }
 
-    .dark body {
+    [data-theme='dark'] body {
       background-color: #020617;
     }
 
