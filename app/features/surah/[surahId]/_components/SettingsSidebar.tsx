@@ -36,7 +36,14 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
     <>
       <div
         className={`fixed inset-0 bg-black/30 z-40 lg:hidden ${isSettingsOpen ? '' : 'hidden'}`}
+        role="button"
+        tabIndex={0}
         onClick={() => setSettingsOpen(false)}
+        onKeyDown={e => {
+          if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+            setSettingsOpen(false);
+          }
+        }}
       />
       <aside
         className={`fixed lg:static inset-y-0 right-0 w-80 bg-[#F0FAF8] flex-col flex-shrink-0 overflow-y-auto shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-transform duration-300 z-50 lg:z-auto ${isSettingsOpen ? 'translate-x-0' : 'translate-x-full'} lg:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} lg:flex`}

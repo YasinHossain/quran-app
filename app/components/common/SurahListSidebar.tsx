@@ -65,7 +65,14 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
       {/* Overlay for mobile view */}
       <div
         className={`fixed inset-0 bg-black/30 z-40 md:hidden ${isSurahListOpen ? '' : 'hidden'}`}
+        role="button"
+        tabIndex={0}
         onClick={() => setSurahListOpen(false)}
+        onKeyDown={e => {
+          if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+            setSurahListOpen(false);
+          }
+        }}
       />
       {/* Sidebar */}
       <aside
