@@ -24,6 +24,7 @@ body {
   font-family: Inter, sans-serif;
   margin: 0;
   overflow-x: hidden;
+  transition: background-color 0.3s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -137,4 +138,9 @@ input[type="range"]:active::-moz-range-thumb {
 
 .content-visibility-auto {
   opacity: 0;
+}
+
+/* Utility class for Arabic font */
+.font-amiri {
+  font-family: var(--font-amiri), 'Amiri', serif;
 }
