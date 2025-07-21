@@ -1,3 +1,4 @@
+@import './fonts.css';
 @import "tailwindcss";
 
 /* Base styles */
@@ -80,7 +81,6 @@ input[type="range"]:active::-moz-range-thumb {
   border-color: #0d9488;
   box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.2);
 }
-
 
 /* --- Custom Modern Scrollbar Styles --- */
 ::-webkit-scrollbar {

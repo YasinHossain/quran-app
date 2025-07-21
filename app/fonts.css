@@ -1,0 +1,25 @@
+@font-face {
+  font-family: 'KFGQPC Uthman Taha Naskh';
+  src: url('/fonts/hafs.18.woff2') format('woff2'),
+       url('/fonts/hafs.18.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PDMS Saleem Quran';
+  src: url('/fonts/PDMS_Saleem_Quran.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Amiri Quran';
+  src: url('/fonts/AmiriQuran-regular.woff2') format('woff2'),
+       url('/fonts/AmiriQuran-regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
