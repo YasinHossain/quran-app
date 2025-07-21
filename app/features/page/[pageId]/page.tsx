@@ -17,15 +17,11 @@ interface QuranPageProps {
   params: { pageId: string };
 }
 
-export default function QuranPage({ params }: QuranPageProps) {
-  const [currentPageId, setCurrentPageId] = useState<string | null>(null); // Use state to store pageId
-
-  useEffect(() => {
-    // Access params.pageId in useEffect on the client side
-    if (params?.pageId) {
-      setCurrentPageId(params.pageId);
-    }
-  }, [params]); // Re-run effect if params changes
+export default function QuranPage(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  { params }: any
+) {
+  const { pageId } = params as QuranPageProps['params'];
 
   const [error, setError] = useState<string | null>(null);
   const { settings } = useSettings();
@@ -45,8 +41,8 @@ export default function QuranPage({ params }: QuranPageProps) {
     isValidating
   } = useSWRInfinite(
     index =>
-      currentPageId
-        ? ['verses', currentPageId, settings.translationId, index + 1]
+      pageId
+        ? ['verses', pageId, settings.translationId, index + 1]
         : null,
     ([, pageId, translationId, page]) =>
       getVersesByPage(pageId, translationId, page).catch(err => {
@@ -96,8 +92,8 @@ export default function QuranPage({ params }: QuranPageProps) {
     <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden">
       <main className="flex-grow bg-[var(--background)] p-6 lg:p-10 overflow-y-auto">
         <div className="max-w-4xl mx-auto relative">
-          {/* Only render content when currentPageId is available */}
-          {currentPageId ? (
+          {/* Only render content when pageId is available */}
+          {pageId ? (
             isLoading ? (
               <div className="text-center py-20 text-teal-600">{t('loading')}</div>
             ) : error ? (

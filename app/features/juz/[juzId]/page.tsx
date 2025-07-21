@@ -17,15 +17,11 @@ interface JuzPageProps {
   params: { juzId: string };
 }
 
-export default function JuzPage({ params }: JuzPageProps) {
-  const [currentJuzId, setCurrentJuzId] = useState<string | null>(null); // Use state to store juzId
-
-  useEffect(() => {
-    // Access params.juzId in useEffect on the client side
-    if (params?.juzId) {
-      setCurrentJuzId(params.juzId);
-    }
-  }, [params]); // Re-run effect if params changes
+export default function JuzPage(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  { params }: any
+) {
+  const { juzId } = params as JuzPageProps['params'];
 
   const [error, setError] = useState<string | null>(null);
   const { settings } = useSettings();
@@ -35,9 +31,9 @@ export default function JuzPage({ params }: JuzPageProps) {
   const [translationSearchTerm, setTranslationSearchTerm] = useState('');
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-  // Fetch Juz information using currentJuzId
+  // Fetch Juz information using juzId
   const { data: juzData, error: juzError } = useSWR(
-    currentJuzId ? ['juz', currentJuzId] : null,
+    juzId ? ['juz', juzId] : null,
     ([, id]) => getJuz(id)
   );
   const juz: Juz | undefined = juzData;
@@ -52,8 +48,8 @@ export default function JuzPage({ params }: JuzPageProps) {
     isValidating
   } = useSWRInfinite(
     index =>
-      currentJuzId
-        ? ['verses', currentJuzId, settings.translationId, index + 1]
+      juzId
+        ? ['verses', juzId, settings.translationId, index + 1]
         : null,
     ([, juzId, translationId, page]) =>
       getVersesByJuz(juzId, translationId, page).catch(err => {
@@ -103,8 +99,8 @@ export default function JuzPage({ params }: JuzPageProps) {
     <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden">
       <main className="flex-grow bg-[var(--background)] p-6 lg:p-10 overflow-y-auto">
         <div className="max-w-4xl mx-auto relative">
-          {/* Only render content when currentJuzId is available */}
-          {currentJuzId ? (
+          {/* Only render content when juzId is available */}
+          {juzId ? (
             isLoading ? (
               <div className="text-center py-20 text-teal-600">{t('loading')}</div>
             ) : error ? (
