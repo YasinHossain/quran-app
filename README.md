@@ -28,6 +28,20 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 - `QURAN_API_BASE_URL` sets the Quran API endpoint. It defaults to `https://api.quran.com/api/v4` if not provided.
 
+## Custom Arabic Fonts
+
+Font files should be placed in `public/fonts/`. Add your `.woff2`, `.woff`, `.otf`, or `.ttf` files there so they are served by Next.js.
+
+To make a font selectable in the application, edit `ARABIC_FONTS` in `app/context/SettingsContext.tsx` and add a new entry, for example:
+
+```ts
+{ name: "My Font", value: '"My Font", serif', category: "Uthmani" }
+```
+
+`name` determines the label shown in the UI, `value` is the CSS `font-family`, and `category` controls which tab the font appears under.
+
+Only include fonts you are licensed to distribute. Keep any required attribution or license files with the font files inside `public/fonts/`.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
