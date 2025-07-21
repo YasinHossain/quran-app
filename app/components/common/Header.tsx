@@ -21,7 +21,7 @@ const Header = () => {
 
   return (
     // Adjusted background, padding, and grid layout for cleaner look
-    <header className="h-16 grid grid-cols-3 items-center px-4 sm:px-8 bg-white shadow-sm sticky top-0 z-30">
+    <header className="h-16 grid grid-cols-3 items-center px-4 sm:px-8 bg-[var(--background)] text-[var(--foreground)] shadow-sm sticky top-0 z-30">
       {/* Column 1: Title & Surah List Toggle */}
       <div className="flex items-center gap-2">
         <button
@@ -31,7 +31,7 @@ const Header = () => {
         >
           <FaBars size={20} />
         </button>
-        <h1 className="text-xl font-semibold text-gray-800">{t('title')}</h1>
+        <h1 className="text-xl font-semibold text-[var(--foreground)]">{t('title')}</h1>
       </div>
 
       {/* Column 2: Centered Search Bar */}
@@ -44,7 +44,7 @@ const Header = () => {
             value={query}
             onChange={e => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="w-full bg-gray-100 border border-gray-200 rounded-md py-2 px-10 focus:ring-1 focus:ring-teal-500 outline-none transition text-gray-700"
+            className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md py-2 px-10 focus:ring-1 focus:ring-teal-500 outline-none transition text-gray-700 dark:text-gray-200"
           />
         </div>
       </div>

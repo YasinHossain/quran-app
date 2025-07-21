@@ -24,14 +24,14 @@ export const Verse = ({ verse }: VerseProps) => {
       <div className="flex items-start gap-x-6 mb-12 border-b pb-8 border-gray-200">
         <div className="w-16 text-center pt-1 space-y-2 flex-shrink-0">
           <p className="font-semibold text-teal-600 text-sm">{verse.verse_key}</p>
-          <div className="flex flex-col items-center space-y-1 text-gray-400">
+          <div className="flex flex-col items-center space-y-1 text-gray-400 dark:text-gray-500">
             <button
               aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
               onClick={() =>
                 setPlayingId(currentId => (currentId === verse.id ? null : verse.id))
               }
               title="Play/Pause"
-              className={`p-1.5 rounded-full hover:bg-gray-100 transition ${isPlaying ? 'text-teal-600' : 'hover:text-teal-600'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500`}
+              className={`p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition ${isPlaying ? 'text-teal-600' : 'hover:text-teal-600'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500`}
             >
               {isLoadingAudio ? (
                 <Spinner className="h-4 w-4 text-teal-600" />
@@ -46,7 +46,7 @@ export const Verse = ({ verse }: VerseProps) => {
               aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
               title="Bookmark"
               onClick={() => toggleBookmark(String(verse.id))}
-              className={`p-1.5 rounded-full hover:bg-gray-100 transition ${isBookmarked ? 'text-teal-600' : 'hover:text-teal-600'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500`}
+              className={`p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition ${isBookmarked ? 'text-teal-600' : 'hover:text-teal-600'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500`}
             >
               {isBookmarked ? <FaBookmark size={18} /> : <FaRegBookmark size={18} />}
             </button>
@@ -56,7 +56,7 @@ export const Verse = ({ verse }: VerseProps) => {
               aria-label="Tafsir"
               title="Tafsir"
               onClick={() => setShowTafsir(true)}
-              className="p-1.5 rounded-full hover:bg-gray-100 hover:text-teal-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+              className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-teal-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
             >
               <FaBookReader size={18} />
             </button>
@@ -64,7 +64,7 @@ export const Verse = ({ verse }: VerseProps) => {
             <button
               aria-label="More options"
               title="More"
-              className="p-1.5 rounded-full hover:bg-gray-100 hover:text-teal-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+              className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-teal-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
             >
               <FaEllipsisH size={18} />
             </button>
@@ -72,7 +72,7 @@ export const Verse = ({ verse }: VerseProps) => {
         </div>
         <div className="flex-grow space-y-6">
           <p
-            className="text-right leading-loose text-gray-800"
+            className="text-right leading-loose text-[var(--foreground)]"
             style={{ fontFamily: settings.arabicFontFace, fontSize: `${settings.arabicFontSize}px`, lineHeight: 2.2 }}
           >
             {verse.text_uthmani}
@@ -80,7 +80,7 @@ export const Verse = ({ verse }: VerseProps) => {
           {verse.translations?.map((t: Translation) => (
             <div key={t.resource_id}>
               <p
-                className="text-left leading-relaxed text-gray-600"
+                className="text-left leading-relaxed text-[var(--foreground)]"
                 style={{ fontSize: `${settings.translationFontSize}px` }}
                 dangerouslySetInnerHTML={{ __html: t.text }}
               />

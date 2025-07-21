@@ -6,11 +6,11 @@ import { FaChevronDown } from '@/app/components/common/SvgIcons';
 export const CollapsibleSection = ({ title, icon, children }: { title: string, icon: React.ReactNode, children: React.ReactNode }) => {
     const [isOpen, setIsOpen] = useState(true);
     return (
-        <div className="border-b border-gray-200/80">
+        <div className="border-b border-gray-200/80 dark:border-gray-600">
             <button onClick={() => setIsOpen(!isOpen)} className="w-full flex items-center justify-between p-4 text-left">
                 <div className="flex items-center space-x-3">
                     {icon}
-                    <span className="font-semibold text-gray-800">{title}</span>
+                    <span className="font-semibold text-[var(--foreground)]">{title}</span>
                 </div>
                 <FaChevronDown size={16} className={`text-gray-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
             </button>

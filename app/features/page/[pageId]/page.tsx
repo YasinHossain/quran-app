@@ -89,8 +89,8 @@ export default function QuranPage({ params }: QuranPageProps) {
   );
   
   return (
-    <div className="flex flex-grow bg-white font-sans overflow-hidden">
-      <main className="flex-grow bg-[#F0FAF8] p-6 lg:p-10 overflow-y-auto">
+    <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden">
+      <main className="flex-grow bg-[var(--background)] p-6 lg:p-10 overflow-y-auto">
         <div className="max-w-4xl mx-auto relative">
           {isLoading ? (
             <div className="text-center py-20 text-teal-600">{t('loading_surah')}</div>
