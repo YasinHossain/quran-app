@@ -17,11 +17,8 @@ interface JuzPageProps {
   params: { juzId: string };
 }
 
-export default function JuzPage(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  { params }: any
-) {
-  const { juzId } = React.use(params) as JuzPageProps['params'];
+export default function JuzPage({ params }: JuzPageProps) {
+  const { juzId } = params;
 
   const [error, setError] = useState<string | null>(null);
   const { settings } = useSettings();

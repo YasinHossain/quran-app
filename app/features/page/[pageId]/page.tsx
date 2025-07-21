@@ -17,11 +17,8 @@ interface QuranPageProps {
   params: { pageId: string };
 }
 
-export default function QuranPage(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  { params }: any
-) {
-  const { pageId } = React.use(params) as QuranPageProps['params'];
+export default function QuranPage({ params }: QuranPageProps) {
+  const { pageId } = params;
 
   const [error, setError] = useState<string | null>(null);
   const { settings } = useSettings();
