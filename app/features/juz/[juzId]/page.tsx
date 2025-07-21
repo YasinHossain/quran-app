@@ -21,7 +21,7 @@ export default function JuzPage(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   { params }: any
 ) {
-  const { juzId } = params as JuzPageProps['params'];
+  const { juzId } = React.use(params) as JuzPageProps['params'];
 
   const [error, setError] = useState<string | null>(null);
   const { settings } = useSettings();

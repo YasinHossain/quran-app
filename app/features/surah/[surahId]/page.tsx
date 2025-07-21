@@ -27,7 +27,7 @@ export default function SurahPage(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   { params }: any
 ) {
-  const { surahId } = params as SurahPageProps['params'];
+  const { surahId } = React.use(params) as SurahPageProps['params'];
   const [error, setError] = useState<string | null>(null);
   const { settings } = useSettings();
   const { t } = useTranslation();
