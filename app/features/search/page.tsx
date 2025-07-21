@@ -1,11 +1,11 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { searchVerses } from '@/lib/api';
 import { Verse as VerseType } from '@/types';
 import { Verse } from '@/app/features/surah/[surahId]/_components/Verse';
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams();
   const query = searchParams.get('query') || '';
   const [verses, setVerses] = useState<VerseType[]>([]);
@@ -43,5 +43,13 @@ export default function SearchPage() {
         ))}
       </div>
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="p-6 max-w-4xl mx-auto">Loading...</div>}>
+      <SearchContent />
+    </Suspense>
   );
 }
