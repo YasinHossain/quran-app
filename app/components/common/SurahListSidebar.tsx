@@ -22,8 +22,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const pages = useMemo(() => Array.from({ length: 604 }, (_, i) => i + 1), []);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('Surah'); // Canonical state: 'Surah', 'Juz', 'Page'
-  const paramsPromise = useParams();
-  const { surahId, juzId, pageId } = React.use(paramsPromise as any);
+  const { surahId, juzId, pageId } = useParams();
 
   // --- MERGED AND CORRECTED SECTION ---
   const { isSurahListOpen, setSurahListOpen } = useSidebar();
