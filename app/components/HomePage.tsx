@@ -167,34 +167,6 @@ export default function HomePage() {
     }
   }, [theme]);
 
-  const customStyles = `
-    @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@300;400;500;600;700&display=swap');
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f8fafc;
-      transition: background-color 0.3s ease;
-    }
-
-    .dark body {
-      background-color: #020617;
-    }
-
-    .font-amiri {
-      font-family: 'Amiri', serif;
-    }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
-    .animation-delay-200 { animation-delay: 200ms; }
-    .animation-delay-400 { animation-delay: 400ms; }
-    .animation-delay-600 { animation-delay: 600ms; }
-    .content-visibility-auto { opacity: 0; }
-  `;
 
   const filteredSurahs = useMemo(() => {
     if (!searchQuery) return allSurahs;
@@ -208,7 +180,6 @@ export default function HomePage() {
 
   return (
     <>
-      <style>{customStyles}</style>
       <div className="min-h-screen w-full text-slate-800 dark:text-slate-200 bg-gradient-to-br from-cyan-50/20 via-white to-emerald-50/20 dark:bg-gray-900 dark:from-gray-900 dark:to-slate-900 overflow-x-hidden">
         <div className="absolute top-0 left-0 w-full h-full z-0">
           <div className="absolute top-[-10rem] right-[-10rem] w-72 h-72 bg-emerald-400/10 dark:bg-emerald-500/10 rounded-full filter blur-3xl opacity-50" />
