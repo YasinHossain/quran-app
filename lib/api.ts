@@ -112,15 +112,14 @@ export async function getVersesByPage(
   return { verses: data.verses as Verse[], totalPages };
 }
 
-// Placeholder for fetching Juz information
+// Fetch information about a specific Juz
 export async function getJuz(juzId: string | number): Promise<Juz> {
-  // TODO: Implement actual API call to fetch Juz information
-  console.warn(`getJuz(${juzId}) not implemented. Returning placeholder data.`);
-  return {
-    id: Number(juzId),
-    juz_number: Number(juzId),
-    // Add other placeholder properties as needed
-  };
+  const res = await fetch(`${API_BASE_URL}/juzs/${juzId}`);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch juz: ${res.status}`);
+  }
+  const data = await res.json();
+  return data.juz as Juz;
 }
 
 export { API_BASE_URL };
