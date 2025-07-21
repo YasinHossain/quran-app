@@ -1,9 +1,9 @@
 // app/components/common/SurahListSidebar.tsx
 'use client';
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react'; // Import useRef
 import { useTranslation } from 'react-i18next';
-import Link from 'next/link'; // Keep Link for prefetching and styling
-import { useParams, useRouter } from 'next/navigation'; // Import useRouter
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { FaSearch } from './SvgIcons';
 import { Chapter } from '@/types';
 import { getChapters } from '@/lib/api';
@@ -23,7 +23,9 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('Surah'); // Canonical state: 'Surah', 'Juz', 'Page'
   const { surahId, juzId, pageId } = useParams();
-  const router = useRouter(); // Initialize useRouter
+
+  // Ref for the sidebar container
+  const sidebarRef = useRef<HTMLElement>(null);
 
   // --- MERGED AND CORRECTED SECTION ---
   const { isSurahListOpen, setSurahListOpen } = useSidebar();
@@ -38,6 +40,25 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     else if (surahId) setActiveTab('Surah');
   }, [juzId, pageId, surahId]);
   // --- END MERGED AND CORRECTED SECTION ---
+
+  // Effect to scroll to the active item when the active tab or item changes
+  useEffect(() => {
+    if (sidebarRef.current) {
+      // Find the active link element within the sidebar
+      const activeLink = sidebarRef.current.querySelector(
+        `[data-active="true"]`
+      );
+
+      if (activeLink) {
+        // Scroll the active link into view
+        activeLink.scrollIntoView({
+          behavior: 'smooth', // Use smooth scrolling
+          block: 'center', // Align the item to the center of the view
+        });
+      }
+    }
+  }, [activeTab, activeSurahId, activeJuzId, activePageId]); // Re-run effect when active tab or item changes
+
 
   const filteredChapters = useMemo(() =>
     chapters.filter(chapter =>
@@ -61,11 +82,6 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     { key: 'Page', label: t('page_tab') }
   ];
 
-  // Function to handle navigation and prevent scrolling
-  const handleNavigation = (href: string) => {
-    router.push(href, { scroll: false }); // Use router.push with scroll: false
-  };
-
   return (
     <>
       {/* Overlay for mobile view */}
@@ -82,6 +98,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
       />
       {/* Sidebar */}
       <aside
+        ref={sidebarRef} // Assign the ref to the aside element
         className={`fixed md:static inset-y-0 left-0 w-80 h-full overflow-y-auto bg-[var(--background)] text-[var(--foreground)] flex flex-col flex-shrink-0 shadow-[5px_0px_15px_-5px_rgba(0,0,0,0.05)] z-50 md:z-10 transition-transform duration-300 ${isSurahListOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
       >
         <div className="p-4 border-b border-gray-200/80">
@@ -120,12 +137,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                   <Link
                     href={`/features/surah/${chapter.id}`}
                     key={chapter.id}
-                    data-active={isActive}
-                    scroll={false} // Keep scroll={false} on Link for prefetching
-                    onClick={(e) => {
-                      e.preventDefault(); // Prevent default Link behavior
-                      handleNavigation(`/features/surah/${chapter.id}`); // Use handleNavigation
-                    }}
+                    data-active={isActive} // Add data-active attribute
                     className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors border-l-2 ${
                       isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-[var(--background)] dark:hover:bg-gray-800'
                     }`}
@@ -155,12 +167,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                   <Link
                     href={`/features/juz/${j}`}
                     key={j}
-                    data-active={isActive}
-                    scroll={false} // Keep scroll={false} on Link for prefetching
-                    onClick={(e) => {
-                      e.preventDefault(); // Prevent default Link behavior
-                      handleNavigation(`/features/juz/${j}`); // Use handleNavigation
-                    }}
+                    data-active={isActive} // Add data-active attribute
                     className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors border-l-2 ${
                       isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-[var(--background)] dark:hover:bg-gray-800'
                     }`}
@@ -184,12 +191,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                   <Link
                     href={`/features/page/${p}`}
                     key={p}
-                    data-active={isActive}
-                    scroll={false} // Keep scroll={false} on Link for prefetching
-                    onClick={(e) => {
-                      e.preventDefault(); // Prevent default Link behavior
-                      handleNavigation(`/features/page/${p}`); // Use handleNavigation
-                    }}
+                    data-active={isActive} // Add data-active attribute
                     className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors border-l-2 ${
                       isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-[var(--background)] dark:hover:bg-gray-800'
                     }`}

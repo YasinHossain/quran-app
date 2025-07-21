@@ -18,9 +18,14 @@ interface JuzPageProps {
 }
 
 export default function JuzPage({ params }: JuzPageProps) {
-  // Correctly unwrap params using React.use()
-  const unwrappedParams = React.use(Promise.resolve(params));
-  const { juzId } = unwrappedParams;
+  const [currentJuzId, setCurrentJuzId] = useState<string | null>(null); // Use state to store juzId
+
+  useEffect(() => {
+    // Access params.juzId in useEffect on the client side
+    if (params?.juzId) {
+      setCurrentJuzId(params.juzId);
+    }
+  }, [params]); // Re-run effect if params changes
 
   const [error, setError] = useState<string | null>(null);
   const { settings } = useSettings();
@@ -30,9 +35,9 @@ export default function JuzPage({ params }: JuzPageProps) {
   const [translationSearchTerm, setTranslationSearchTerm] = useState('');
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-  // Fetch Juz information
+  // Fetch Juz information using currentJuzId
   const { data: juzData, error: juzError } = useSWR(
-    juzId ? ['juz', juzId] : null,
+    currentJuzId ? ['juz', currentJuzId] : null,
     ([, id]) => getJuz(id)
   );
   const juz: Juz | undefined = juzData;
@@ -47,8 +52,8 @@ export default function JuzPage({ params }: JuzPageProps) {
     isValidating
   } = useSWRInfinite(
     index =>
-      juzId
-        ? ['verses', juzId, settings.translationId, index + 1]
+      currentJuzId
+        ? ['verses', currentJuzId, settings.translationId, index + 1]
         : null,
     ([, juzId, translationId, page]) =>
       getVersesByJuz(juzId, translationId, page).catch(err => {
@@ -98,51 +103,57 @@ export default function JuzPage({ params }: JuzPageProps) {
     <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden">
       <main className="flex-grow bg-[var(--background)] p-6 lg:p-10 overflow-y-auto">
         <div className="max-w-4xl mx-auto relative">
-          {isLoading ? (
-            <div className="text-center py-20 text-teal-600">{t('loading')}</div>
-          ) : error ? (
-            <div className="text-center py-20 text-red-600 bg-red-50 p-4 rounded-lg">{error}</div>
-          ) : juzError ? (
-            <div className="text-center py-20 text-red-600 bg-red-50 p-4 rounded-lg">{t('failed_to_load_juz_info')}</div>
-          ) : (
-            <>
-              {/* Display Juz information */}
-              {juz && (
-                <div className="mb-8 text-center">
-                  <h1 className="text-3xl font-bold text-[var(--foreground)]">{t('juz_number', { number: juz.juz_number })}</h1>
-                  {/* Add more Juz information here if available in your API response */}
-                </div>
-              )}
-
-              {verses.length > 0 ? (
-                <>
-                  {verses.map(v => (
-                    <React.Fragment key={v.id}>
-                      <Verse verse={v} />
-                      {playingId === v.id && v.audio?.url && (
-                        <audio
-                          src={`https://verses.quran.com/${v.audio.url}`}
-                          autoPlay
-                          onEnded={() => setPlayingId(null)}
-                          onError={() => {
-                            setError(t('could_not_play_audio'));
-                            setPlayingId(null);
-                          }}
-                        >
-                          <track kind="captions" />
-                        </audio>
-                      )}
-                    </React.Fragment>
-                  ))}
-                  <div ref={loadMoreRef} className="py-4 text-center">
-                    {isValidating && <span className="text-teal-600">{t('loading')}</span>}
-                    {isReachingEnd && <span className="text-gray-500">{t('end_of_juz')}</span>}
+          {/* Only render content when currentJuzId is available */}
+          {currentJuzId ? (
+            isLoading ? (
+              <div className="text-center py-20 text-teal-600">{t('loading')}</div>
+            ) : error ? (
+              <div className="text-center py-20 text-red-600 bg-red-50 p-4 rounded-lg">{error}</div>
+            ) : juzError ? (
+              <div className="text-center py-20 text-red-600 bg-red-50 p-4 rounded-lg">{t('failed_to_load_juz_info')}</div>
+            ) : (
+              <>
+                {/* Display Juz information */}
+                {juz && (
+                  <div className="mb-8 text-center">
+                    <h1 className="text-3xl font-bold text-[var(--foreground)]">{t('juz_number', { number: juz.juz_number })}</h1>
+                    {/* Add more Juz information here if available in your API response */}
                   </div>
-                </>
-              ) : (
-                <div className="text-center py-20 text-gray-500">{t('no_verses_found_in_juz')}</div>
-              )}
-            </>
+                )}
+
+                {verses.length > 0 ? (
+                  <>
+                    {verses.map(v => (
+                      <React.Fragment key={v.id}>
+                        <Verse verse={v} />
+                        {playingId === v.id && v.audio?.url && (
+                          <audio
+                            src={`https://verses.quran.com/${v.audio.url}`}
+                            autoPlay
+                            onEnded={() => setPlayingId(null)}
+                            onError={() => {
+                              setError(t('could_not_play_audio'));
+                              setPlayingId(null);
+                            }}
+                          >
+                            <track kind="captions" />
+                          </audio>
+                        )}
+                      </React.Fragment>
+                    ))}
+                    <div ref={loadMoreRef} className="py-4 text-center">
+                      {isValidating && <span className="text-teal-600">{t('loading')}</span>}
+                      {isReachingEnd && <span className="text-gray-500">{t('end_of_juz')}</span>}
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center py-20 text-gray-500">{t('no_verses_found_in_juz')}</div>
+                )}
+              </>
+            )
+          ) : (
+            // Optionally, show a loading or waiting message while juzId is not available
+            <div className="text-center py-20 text-teal-600">{t('loading')}</div>
           )}
         </div>
       </main>
@@ -154,7 +165,7 @@ export default function JuzPage({ params }: JuzPageProps) {
 
       <TranslationPanel
         isOpen={isTranslationPanelOpen}
-        onClose={() => setIsTranslationPanelPanelOpen(false)}
+        onClose={() => setIsTranslationPanelOpen(false)}
         groupedTranslations={groupedTranslations}
         searchTerm={translationSearchTerm}
         onSearchTermChange={setTranslationSearchTerm}
