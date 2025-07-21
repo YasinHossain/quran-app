@@ -3,7 +3,6 @@
 import { useSettings } from '@/app/context/SettingsContext';
 // You will likely need to fetch verse data based on the bookmarkedVerseIds
 // import { fetchVerseById } from '@/lib/api'; // Assuming you have an API function to fetch verse data
-import { useEffect, useState } from 'react';
 // import { Verse } from '@/types'; // Assuming you have a Verse type
 
 const BookmarkedVersesList = () => {
