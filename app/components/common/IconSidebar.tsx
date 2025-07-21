@@ -8,8 +8,8 @@ const IconSidebar = () => {
     const { t } = useTranslation();
     const navItems = [
         { icon: FaHome, label: t('home'), href: '/' }, // Added href
-        { icon: FaTh, label: t('all_surahs'), href: '/surahs' }, // Added href (assuming /surahs is the path for all surahs)
-        { icon: FaRegBookmark, label: t('bookmarks'), href: '/bookmarks' } // Added href
+        { icon: FaTh, label: t('all_surahs'), href: '/features/surah/1' },
+        { icon: FaRegBookmark, label: t('bookmarks'), href: '/features/bookmarks' }
     ];
 
     return (
