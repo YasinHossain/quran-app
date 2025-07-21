@@ -22,20 +22,21 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const pages = useMemo(() => Array.from({ length: 604 }, (_, i) => i + 1), []);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('Surah'); // Canonical state: 'Surah', 'Juz', 'Page'
-  const params = useParams();
+  const paramsPromise = useParams();
+  const { surahId, juzId, pageId } = React.use(paramsPromise as any);
 
   // --- MERGED AND CORRECTED SECTION ---
   const { isSurahListOpen, setSurahListOpen } = useSidebar();
-  const activeSurahId = params.surahId;
-  const activeJuzId = params.juzId;
-  const activePageId = params.pageId;
+  const activeSurahId = surahId;
+  const activeJuzId = juzId;
+  const activePageId = pageId;
 
   // Effect to set the active tab based on the current route parameters
   useEffect(() => {
-    if (params.juzId) setActiveTab('Juz');
-    else if (params.pageId) setActiveTab('Page');
-    else if (params.surahId) setActiveTab('Surah');
-  }, [params.juzId, params.pageId, params.surahId]);
+    if (juzId) setActiveTab('Juz');
+    else if (pageId) setActiveTab('Page');
+    else if (surahId) setActiveTab('Surah');
+  }, [juzId, pageId, surahId]);
   // --- END MERGED AND CORRECTED SECTION ---
 
   const filteredChapters = useMemo(() =>
