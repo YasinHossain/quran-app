@@ -2,8 +2,8 @@
 'use client';
 import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import Link from 'next/link'; // Keep Link for prefetching and styling
+import { useParams, useRouter } from 'next/navigation'; // Import useRouter
 import { FaSearch } from './SvgIcons';
 import { Chapter } from '@/types';
 import { getChapters } from '@/lib/api';
@@ -23,6 +23,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('Surah'); // Canonical state: 'Surah', 'Juz', 'Page'
   const { surahId, juzId, pageId } = useParams();
+  const router = useRouter(); // Initialize useRouter
 
   // --- MERGED AND CORRECTED SECTION ---
   const { isSurahListOpen, setSurahListOpen } = useSidebar();
@@ -59,6 +60,11 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     { key: 'Juz', label: t('juz_tab') },
     { key: 'Page', label: t('page_tab') }
   ];
+
+  // Function to handle navigation and prevent scrolling
+  const handleNavigation = (href: string) => {
+    router.push(href, { scroll: false }); // Use router.push with scroll: false
+  };
 
   return (
     <>
@@ -111,10 +117,19 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
               {filteredChapters.map(chapter => {
                 const isActive = activeSurahId === String(chapter.id);
                 return (
-                  <Link href={`/features/surah/${chapter.id}`} key={chapter.id}
+                  <Link
+                    href={`/features/surah/${chapter.id}`}
+                    key={chapter.id}
+                    data-active={isActive}
+                    scroll={false} // Keep scroll={false} on Link for prefetching
+                    onClick={(e) => {
+                      e.preventDefault(); // Prevent default Link behavior
+                      handleNavigation(`/features/surah/${chapter.id}`); // Use handleNavigation
+                    }}
                     className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors border-l-2 ${
                       isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-[var(--background)] dark:hover:bg-gray-800'
-                    }`}>
+                    }`}
+                  >
                       <div className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-colors ${
                         isActive ? 'bg-teal-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
                       }`}>
@@ -137,10 +152,19 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
               {filteredJuzs.map(j => {
                 const isActive = activeJuzId === String(j);
                 return (
-                  <Link href={`/features/juz/${j}`} key={j}
+                  <Link
+                    href={`/features/juz/${j}`}
+                    key={j}
+                    data-active={isActive}
+                    scroll={false} // Keep scroll={false} on Link for prefetching
+                    onClick={(e) => {
+                      e.preventDefault(); // Prevent default Link behavior
+                      handleNavigation(`/features/juz/${j}`); // Use handleNavigation
+                    }}
                     className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors border-l-2 ${
                       isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-[var(--background)] dark:hover:bg-gray-800'
-                    }`}>
+                    }`}
+                  >
                       <div className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-colors ${
                         isActive ? 'bg-teal-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
                       }`}>
@@ -157,10 +181,19 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
               {filteredPages.map(p => {
                 const isActive = activePageId === String(p);
                 return (
-                  <Link href={`/features/page/${p}`} key={p}
+                  <Link
+                    href={`/features/page/${p}`}
+                    key={p}
+                    data-active={isActive}
+                    scroll={false} // Keep scroll={false} on Link for prefetching
+                    onClick={(e) => {
+                      e.preventDefault(); // Prevent default Link behavior
+                      handleNavigation(`/features/page/${p}`); // Use handleNavigation
+                    }}
                     className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors border-l-2 ${
                       isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-[var(--background)] dark:hover:bg-gray-800'
-                    }`}>
+                    }`}
+                  >
                       <div className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-colors ${
                         isActive ? 'bg-teal-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
                       }`}>

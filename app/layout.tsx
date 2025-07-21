@@ -2,6 +2,8 @@
 import './globals.css';
 import TranslationProvider from './providers/TranslationProvider';
 import { ThemeProvider } from './context/ThemeContext';
+import { SettingsProvider } from './context/SettingsContext'; // Import SettingsProvider
+import { SidebarProvider } from './context/SidebarContext'; // Import SidebarProvider
 
 export const metadata = {
   title: 'Quran Mazid',
@@ -19,7 +21,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="font-sans">
         <TranslationProvider>
           <ThemeProvider>
-            {children}
+            <SettingsProvider> {/* Wrap with SettingsProvider */}
+              <SidebarProvider> {/* Wrap with SidebarProvider */}
+                {children}
+              </SidebarProvider>
+            </SettingsProvider>
           </ThemeProvider>
         </TranslationProvider>
       </body>

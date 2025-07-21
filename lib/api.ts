@@ -1,6 +1,6 @@
 const API_BASE_URL = process.env.QURAN_API_BASE_URL ?? 'https://api.quran.com/api/v4';
 
-import { Chapter, TranslationResource, Verse } from '@/types';
+import { Chapter, TranslationResource, Verse, Juz } from '@/types';
 
 export async function getChapters(): Promise<Chapter[]> {
   const res = await fetch(`${API_BASE_URL}/chapters?language=en`);
@@ -110,6 +110,17 @@ export async function getVersesByPage(
   const data = await res.json();
   const totalPages = data.meta?.total_pages || data.pagination?.total_pages || 1;
   return { verses: data.verses as Verse[], totalPages };
+}
+
+// Placeholder for fetching Juz information
+export async function getJuz(juzId: string | number): Promise<Juz> {
+  // TODO: Implement actual API call to fetch Juz information
+  console.warn(`getJuz(${juzId}) not implemented. Returning placeholder data.`);
+  return {
+    id: Number(juzId),
+    juz_number: Number(juzId),
+    // Add other placeholder properties as needed
+  };
 }
 
 export { API_BASE_URL };

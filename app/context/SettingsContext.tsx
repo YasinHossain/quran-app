@@ -32,47 +32,47 @@ interface SettingsContextType {
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 export const SettingsProvider = ({ children }: { children: React.ReactNode }) => {
-  // Initialize settings from localStorage or use defaults
-  const [settings, setSettings] = useState<Settings>(() => {
-    if (typeof window !== 'undefined') { // Check if window is defined (client-side)
+  // Initialize settings with default values
+  const [settings, setSettings] = useState<Settings>(defaultSettings);
+
+  const [bookmarkedVerses, setBookmarkedVerses] = useState<string[]>([]);
+
+  // Effect to load settings from localStorage on the client side after initial render
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
       const savedSettings = localStorage.getItem('quranAppSettings');
       if (savedSettings) {
         try {
-          return JSON.parse(savedSettings);
+          setSettings(JSON.parse(savedSettings));
         } catch (error) {
           console.error('Error parsing settings from localStorage:', error);
-          return defaultSettings; // Return default settings if parsing fails
+          // Optionally, clear localStorage if corrupted
+          // localStorage.removeItem('quranAppSettings');
         }
       }
-    }
-    return defaultSettings; // Return default settings if not in browser or no saved settings
-  });
-
-  const [bookmarkedVerses, setBookmarkedVerses] = useState<string[]>(() => {
-    if (typeof window !== 'undefined') { // Check if window is defined (client-side)
       const savedBookmarks = localStorage.getItem('quranAppBookmarks');
       if (savedBookmarks) {
         try {
-          return JSON.parse(savedBookmarks);
+          setBookmarkedVerses(JSON.parse(savedBookmarks));
         } catch (error) {
           console.error('Error parsing bookmarks from localStorage:', error);
-          return []; // Return empty array if parsing fails
+          // Optionally, clear localStorage if corrupted
+          // localStorage.removeItem('quranAppBookmarks');
         }
       }
     }
-    return []; // Return empty array if not in browser or no saved bookmarks
-  });
+  }, []); // Empty dependency array ensures this effect runs only once on mount
 
   // Effect to save settings to localStorage whenever they change
   useEffect(() => {
-    if (typeof window !== 'undefined') { // Check if window is defined (client-side)
+    if (typeof window !== 'undefined') {
       localStorage.setItem('quranAppSettings', JSON.stringify(settings));
     }
   }, [settings]);
 
   // Effect to save bookmarks to localStorage whenever they change
   useEffect(() => {
-    if (typeof window !== 'undefined') { // Check if window is defined (client-side)
+    if (typeof window !== 'undefined') {
       localStorage.setItem('quranAppBookmarks', JSON.stringify(bookmarkedVerses));
     }
   }, [bookmarkedVerses]);
