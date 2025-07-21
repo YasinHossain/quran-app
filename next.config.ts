@@ -49,8 +49,6 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // 4. Add allowed development origins for cross-origin requests
-  allowedDevOrigins: ['https://3000-firebase-quran-app-v1-1753035302321.cluster-ubrd2huk7jh6otbgyei4h62ope.cloudworkstations.dev'],
 };
 
 export default nextConfig;
