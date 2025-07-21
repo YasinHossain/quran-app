@@ -1,6 +1,7 @@
-// app/page.tsx
-import { redirect } from 'next/navigation';
+import HomePage from './components/HomePage';
+import { getChapters } from '@/lib/api';
 
-export default function HomePage() {
-  redirect('/features/surah/1');
+export default async function Page() {
+  const chapters = await getChapters().catch(() => []);
+  return <HomePage chapters={chapters} />;
 }
