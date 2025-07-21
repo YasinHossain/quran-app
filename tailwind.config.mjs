@@ -2,6 +2,7 @@ import designTokens from './design-system.json' assert { type: 'json' };
 
 /** @type {import('tailwindcss').Config} */
 const config = {
+  darkMode: ['class', '[data-theme="dark"]'],
   content: [
     './app/**/*.{ts,tsx,js,jsx}',
     './lib/**/*.{ts,tsx,js,jsx}',
