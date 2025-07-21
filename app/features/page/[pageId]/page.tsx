@@ -7,9 +7,9 @@ interface QuranPageProps {
 
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Verse } from './_components/Verse';
-import { SettingsSidebar } from './_components/SettingsSidebar';
-import { TranslationPanel } from './_components/TranslationPanel';
+import { Verse } from '@/app/features/surah/[surahId]/_components/Verse';
+import { SettingsSidebar } from '@/app/features/surah/[surahId]/_components/SettingsSidebar';
+import { TranslationPanel } from '@/app/features/surah/[surahId]/_components/TranslationPanel';
 import { Verse as VerseType, TranslationResource } from '@/types';
 import { getTranslations, getVersesByPage } from '@/lib/api';
 import { useSettings } from '@/app/context/SettingsContext';
