@@ -18,6 +18,8 @@
   "arabic_font_size": "Arabic Font Size",
   "translation_font_size": "Translation Font Size",
   "arabic_font_face": "Arabic Font Face",
+  "select_font_face": "Select Arabic Font",
+  "select_font": "Select font",
   "search": "Search",
   "translations_panel_title": "Translations",
   "could_not_play_audio": "Could not play audio.",
@@ -26,5 +28,7 @@
   "failed_to_load_juz_info": "Failed to load Juz information.",
   "juz_number": "Juz {{number}}",
   "end_of_juz": "End of Juz.",
-  "no_verses_found_in_juz": "No verses found in this Juz."
+  "no_verses_found_in_juz": "No verses found in this Juz.",
+  "switch_to_dark": "Switch to dark mode",
+  "switch_to_light": "Switch to light mode"
 }
