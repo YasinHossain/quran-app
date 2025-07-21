@@ -2,7 +2,7 @@
 'use client';
 
 interface SurahPageProps {
-  params: { surahId: string };
+  params: Promise<{ surahId: string }>;
 }
 
 import React, { useEffect, useState, useMemo, useRef } from 'react';
@@ -24,6 +24,7 @@ import useSWRInfinite from 'swr/infinite';
 // If you encounter build errors, you may need to revert to `any` as Next.js's
 // type for PageProps can sometimes cause mismatches.
 export default function SurahPage({ params }: SurahPageProps) {
+  const { surahId } = React.use(params);
   const [error, setError] = useState<string | null>(null);
   const { settings } = useSettings();
   const { t } = useTranslation();
@@ -42,8 +43,8 @@ export default function SurahPage({ params }: SurahPageProps) {
     isValidating
   } = useSWRInfinite(
     index =>
-      params.surahId
-        ? ['verses', params.surahId, settings.translationId, index + 1]
+      surahId
+        ? ['verses', surahId, settings.translationId, index + 1]
         : null,
     ([, surahId, translationId, page]) =>
       getVersesByChapter(surahId, translationId, page).catch(err => {

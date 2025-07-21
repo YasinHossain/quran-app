@@ -2,7 +2,7 @@
 'use client';
 
 interface JuzPageProps {
-  params: { juzId: string };
+  params: Promise<{ juzId: string }>;
 }
 
 import React, { useEffect, useState, useMemo, useRef } from 'react';
@@ -23,6 +23,7 @@ import useSWRInfinite from 'swr/infinite';
 // If you encounter build errors, you may need to revert to `any` as Next.js's
 // type for PageProps can sometimes cause mismatches.
 export default function JuzPage({ params }: JuzPageProps) {
+  const { juzId } = React.use(params);
   const [error, setError] = useState<string | null>(null);
   const { settings } = useSettings();
   const { t } = useTranslation();
@@ -41,8 +42,8 @@ export default function JuzPage({ params }: JuzPageProps) {
     isValidating
   } = useSWRInfinite(
     index =>
-      params.juzId
-        ? ['verses', params.juzId, settings.translationId, index + 1]
+      juzId
+        ? ['verses', juzId, settings.translationId, index + 1]
         : null,
     ([, juzId, translationId, page]) =>
       getVersesByJuz(juzId, translationId, page).catch(err => {
