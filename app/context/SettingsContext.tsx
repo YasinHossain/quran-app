@@ -3,14 +3,14 @@ import React, { createContext, useContext, useState, useEffect } from 'react'; /
 import { Settings } from '@/types';
 
 export const ARABIC_FONTS = [
-  { name: 'KFGQ', value: '"KFGQPC Uthman Taha Naskh", serif', category: 'Uthmani' },
-  { name: 'KFGQ V2', value: '"KFGQPC Uthman Taha Naskh V2", serif', category: 'Uthmani' }, // Added new font (assuming font family name)
-  { name: 'Me Quran', value: '"Me Quran", sans-serif', category: 'Uthmani' },
-  { name: 'Al Mushaf', value: '"Al Mushaf", serif', category: 'Uthmani' },
+  { name: 'KFGQ', value: '"KFGQPC Uthman Taha Naskh", serif', category: 'Indopak' },
+  { name: 'KFGQ V2', value: '"KFGQPC Uthman Taha Naskh V2", serif', category: 'Indopak' }, // Added new font (assuming font family name)
+  { name: 'Me Quran', value: '"Me Quran", sans-serif', category: 'Indopak' },
+  { name: 'Al Mushaf', value: '"Al Mushaf", serif', category: 'Indopak' },
   { name: 'PDMS Saleem Quran', value: '"PDMS Saleem Quran", serif', category: 'Indopak' }, // Added new font (assuming font family name)
   { name: 'PDMS Islamic', value: '"PDMS Islamic", serif', category: 'Indopak' }, // Added new font (assuming font family name)
   { name: 'Al Qalam Quran Majeed', value: '"Al Qalam Quran Majeed", serif', category: 'Indopak' }, // Added new font (assuming font family name)
-  { name: 'Amiri Quran', value: '"Amiri Quran", serif', category: 'Uthmani' }, // Added new font (assuming font family name)
+  { name: 'Amiri Quran', value: '"Amiri Quran", serif', category: 'Indopak' }, // Added new font (assuming font family name)
 ];
 
 // Define default settings
