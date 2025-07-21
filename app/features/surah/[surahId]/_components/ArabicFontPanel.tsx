@@ -31,7 +31,7 @@ export const ArabicFontPanel = ({ isOpen, onClose }: ArabicFontPanelProps) => {
   return (
     <>
       {/* No overlay div */}
-      <div className={`fixed top-0 right-0 w-80 h-full bg-[#F7F9F9] flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      <div className={`fixed top-0 right-0 w-80 h-full bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="flex items-center justify-between p-4 border-b border-gray-200/80">
           <button
             aria-label="Back"
@@ -40,16 +40,16 @@ export const ArabicFontPanel = ({ isOpen, onClose }: ArabicFontPanelProps) => {
           >
             <FaArrowLeft size={18} />
           </button>
-          <h2 className="font-bold text-lg text-gray-800">{t('select_font_face')}</h2> {/* Assuming a translation key for the title */}
+          <h2 className="font-bold text-lg text-[var(--foreground)]">{t('select_font_face')}</h2> {/* Assuming a translation key for the title */}
           <div className="w-8"></div>
         </div>
         
         {/* Tab Buttons */}
-        <div className="flex justify-center p-3 space-x-2 bg-gray-100 border-b border-gray-200/80">
+        <div className="flex justify-center p-3 space-x-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200/80 dark:border-gray-600">
           {Object.keys(groupedFonts).map(category => (
             <button
               key={category}
-              className={`px-4 py-2 text-sm font-medium rounded-full transition-colors duration-200 ${activeTab === category ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-600'}`}
+              className={`px-4 py-2 text-sm font-medium rounded-full transition-colors duration-200 ${activeTab === category ? 'bg-teal-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'}`}
               onClick={() => setActiveTab(category)}
             >
               {category}
@@ -65,7 +65,7 @@ export const ArabicFontPanel = ({ isOpen, onClose }: ArabicFontPanelProps) => {
                 className={`flex items-center justify-between w-full p-2 rounded-md hover:bg-teal-50 cursor-pointer ${settings.arabicFontFace === font.value ? 'bg-teal-100' : ''}`}
                 onClick={() => handleFontSelect(font.value)}
               >
-                <span className="text-sm text-gray-700" style={{ fontFamily: font.value }}>{font.name}</span> {/* Apply font family for preview */}
+                <span className="text-sm text-[var(--foreground)]" style={{ fontFamily: font.value }}>{font.name}</span> {/* Apply font family for preview */}
                 {settings.arabicFontFace === font.value && <FaCheck size={16} className="text-teal-600" />} {/* Checkmark for selected font */}
               </button>
             ))}
