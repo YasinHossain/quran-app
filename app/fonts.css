@@ -1,24 +1,70 @@
 @font-face {
-  font-family: 'KFGQPC Uthman Taha Naskh';
-  src: url('/fonts/hafs.18.woff2') format('woff2'),
-       url('/fonts/hafs.18.ttf') format('truetype');
+  font-family: 'KFGQPC-Uthman-Taha';
+  src: url('/fonts/KFGQPC-Uthman-Taha.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'PDMS Saleem Quran';
-  src: url('/fonts/PDMS_Saleem_Quran.ttf') format('truetype');
+  font-family: 'KFGQPC-Uthman-Taha';
+  src: url('/fonts/KFGQPC-Uthman-Taha-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Al-Mushaf';
+  src: url('/fonts/Al-Mushaf.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Amiri Quran';
-  src: url('/fonts/AmiriQuran-regular.woff2') format('woff2'),
-       url('/fonts/AmiriQuran-regular.woff') format('woff');
+  font-family: 'Amiri';
+  src: url('/fonts/Amiri.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Scheherazade New';
+  src: url('/fonts/Scheherazade-New.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Naskh Arabic';
+  src: url('/fonts/Noto-Naskh-Arabic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Nastaliq Urdu';
+  src: url('/fonts/Noto Nastaliq Urdu.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noor-e-Hira';
+  src: url('/fonts/Noor-e-Hira.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lateef';
+  src: url('/fonts/Lateef.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
