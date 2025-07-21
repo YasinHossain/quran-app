@@ -11,6 +11,9 @@ export const ARABIC_FONTS = [
   { name: 'PDMS Islamic', value: '"PDMS Islamic", serif', category: 'Indopak' }, // Added new font (assuming font family name)
   { name: 'Al Qalam Quran Majeed', value: '"Al Qalam Quran Majeed", serif', category: 'Indopak' }, // Added new font (assuming font family name)
   { name: 'Amiri Quran', value: '"Amiri Quran", serif', category: 'Uthmani' }, // Added new font (assuming font family name)
+  { name: 'Noor E Huda', value: '"Noor E Huda", serif', category: 'Uthmani' },
+  { name: 'Noor E Hedayet', value: '"Noor E Hedayet", serif', category: 'Uthmani' },
+  { name: 'Noor E Hira', value: '"Noor E Hira", serif', category: 'Uthmani' },
 ];
 
 // Define default settings
