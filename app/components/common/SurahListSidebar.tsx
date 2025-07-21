@@ -65,11 +65,18 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
       {/* Overlay for mobile view */}
       <div
         className={`fixed inset-0 bg-black/30 z-40 md:hidden ${isSurahListOpen ? '' : 'hidden'}`}
+        role="button"
+        tabIndex={0}
         onClick={() => setSurahListOpen(false)}
+        onKeyDown={e => {
+          if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+            setSurahListOpen(false);
+          }
+        }}
       />
       {/* Sidebar */}
       <aside
-        className={`fixed md:static inset-y-0 left-0 w-80 h-full overflow-y-auto bg-[#F0FAF8] flex flex-col flex-shrink-0 shadow-[5px_0px_15px_-5px_rgba(0,0,0,0.05)] z-50 md:z-10 transition-transform duration-300 ${isSurahListOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
+        className={`fixed md:static inset-y-0 left-0 w-80 h-full overflow-y-auto bg-[var(--background)] text-[var(--foreground)] flex flex-col flex-shrink-0 shadow-[5px_0px_15px_-5px_rgba(0,0,0,0.05)] z-50 md:z-10 transition-transform duration-300 ${isSurahListOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
       >
         <div className="p-4 border-b border-gray-200/80">
           <div className="flex bg-gray-200 rounded-full p-1">
@@ -78,7 +85,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
                 className={`w-full py-2 text-sm font-semibold rounded-full transition-colors ${
-                  activeTab === tab.key ? 'bg-white text-teal-700 shadow' : 'text-gray-600 hover:bg-white'
+                  activeTab === tab.key ? 'bg-[var(--background)] text-teal-700 shadow' : 'text-gray-600 dark:text-gray-300 hover:bg-[var(--background)]'
                 }`}
               >
                 {tab.label}
@@ -94,7 +101,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
               placeholder={t('search_surah')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-white border border-gray-200/80 rounded-lg py-2 pl-9 pr-3 focus:ring-2 focus:ring-teal-500 outline-none transition"
+              className="w-full bg-[var(--background)] border border-gray-200/80 dark:border-gray-600 rounded-lg py-2 pl-9 pr-3 focus:ring-2 focus:ring-teal-500 outline-none transition"
             />
           </div>
         </div>
@@ -106,15 +113,15 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                 return (
                   <Link href={`/features/surah/${chapter.id}`} key={chapter.id}
                     className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors border-l-2 ${
-                      isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-white'
+                      isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-[var(--background)] dark:hover:bg-gray-800'
                     }`}>
                       <div className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-colors ${
-                        isActive ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-600'
+                        isActive ? 'bg-teal-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
                       }`}>
                         <span>{chapter.id}</span>
                       </div>
                       <div className="flex-grow">
-                        <p className={`font-semibold ${isActive ? 'text-teal-800' : 'text-gray-800'}`}>{chapter.name_simple}</p>
+                        <p className={`font-semibold ${isActive ? 'text-teal-800' : 'text-[var(--foreground)]'}`}>{chapter.name_simple}</p>
                         <p className="text-xs text-gray-500">{chapter.revelation_place}</p>
                       </div>
                       <p className={`font-mono text-xl ${isActive ? 'text-teal-800' : 'text-gray-500'}`}>
@@ -132,14 +139,14 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                 return (
                   <Link href={`/features/juz/${j}`} key={j}
                     className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors border-l-2 ${
-                      isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-white'
+                      isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-[var(--background)] dark:hover:bg-gray-800'
                     }`}>
                       <div className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-colors ${
-                        isActive ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-600'
+                        isActive ? 'bg-teal-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
                       }`}>
                         <span>{j}</span>
                       </div>
-                      <p className={`font-semibold ${isActive ? 'text-teal-800' : 'text-gray-800'}`}>Juz {j}</p>
+                      <p className={`font-semibold ${isActive ? 'text-teal-800' : 'text-[var(--foreground)]'}`}>Juz {j}</p>
                   </Link>
                 );
               })}
@@ -152,14 +159,14 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                 return (
                   <Link href={`/features/page/${p}`} key={p}
                     className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors border-l-2 ${
-                      isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-white'
+                      isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-[var(--background)] dark:hover:bg-gray-800'
                     }`}>
                       <div className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-colors ${
-                        isActive ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-600'
+                        isActive ? 'bg-teal-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
                       }`}>
                         <span>{p}</span>
                       </div>
-                      <p className={`font-semibold ${isActive ? 'text-teal-800' : 'text-gray-800'}`}>Page {p}</p>
+                      <p className={`font-semibold ${isActive ? 'text-teal-800' : 'text-[var(--foreground)]'}`}>Page {p}</p>
                   </Link>
                 );
               })}

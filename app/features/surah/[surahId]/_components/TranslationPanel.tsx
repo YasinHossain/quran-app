@@ -18,7 +18,7 @@ export const TranslationPanel = ({ isOpen, onClose, groupedTranslations, searchT
   return (
     <>
       {/* Removed the overlay div */}
-      <div className={`fixed top-0 right-0 w-80 h-full bg-[#F7F9F9] flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      <div className={`fixed top-0 right-0 w-80 h-full bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="flex items-center justify-between p-4 border-b border-gray-200/80">
           <button
             aria-label="Back"
@@ -27,13 +27,13 @@ export const TranslationPanel = ({ isOpen, onClose, groupedTranslations, searchT
           >
             <FaArrowLeft size={18} />
           </button>
-          <h2 className="font-bold text-lg text-gray-800">{t('translations_panel_title')}</h2>
+          <h2 className="font-bold text-lg text-[var(--foreground)]">{t('translations_panel_title')}</h2>
           <div className="w-8"></div>
         </div>
         <div className="p-3 border-b border-gray-200/80">
           <div className="relative">
             <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input type="text" placeholder={t('search')} value={searchTerm} onChange={e => onSearchTermChange(e.target.value)} className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none" />
+            <input type="text" placeholder={t('search')} value={searchTerm} onChange={e => onSearchTermChange(e.target.value)} className="w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none bg-[var(--background)] text-[var(--foreground)]" />
           </div>
         </div>
         <div className="flex-grow overflow-y-auto">
@@ -53,7 +53,7 @@ export const TranslationPanel = ({ isOpen, onClose, groupedTranslations, searchT
                         onClose();
                       }}
                     />
-                    <span className="text-sm text-gray-700">{opt.name}</span>
+                    <span className="text-sm text-[var(--foreground)]">{opt.name}</span>
                   </label>
                 ))}
               </div>

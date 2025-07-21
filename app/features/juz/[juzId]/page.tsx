@@ -7,9 +7,9 @@ interface JuzPageProps {
 
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Verse } from './_components/Verse';
-import { SettingsSidebar } from './_components/SettingsSidebar';
-import { TranslationPanel } from './_components/TranslationPanel';
+import { Verse } from '@/app/features/surah/[surahId]/_components/Verse';
+import { SettingsSidebar } from '@/app/features/surah/[surahId]/_components/SettingsSidebar';
+import { TranslationPanel } from '@/app/features/surah/[surahId]/_components/TranslationPanel';
 import { Verse as VerseType, TranslationResource } from '@/types';
 import { getTranslations, getVersesByJuz } from '@/lib/api';
 import { useSettings } from '@/app/context/SettingsContext';
@@ -89,8 +89,8 @@ export default function JuzPage({ params }: JuzPageProps) {
   );
   
   return (
-    <div className="flex flex-grow bg-white font-sans overflow-hidden">
-      <main className="flex-grow bg-[#F0FAF8] p-6 lg:p-10 overflow-y-auto">
+    <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden">
+      <main className="flex-grow bg-[var(--background)] p-6 lg:p-10 overflow-y-auto">
         <div className="max-w-4xl mx-auto relative">
           {isLoading ? (
             <div className="text-center py-20 text-teal-600">{t('loading_surah')}</div>
