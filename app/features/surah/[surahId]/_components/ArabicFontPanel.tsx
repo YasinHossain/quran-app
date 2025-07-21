@@ -1,6 +1,6 @@
 // app/features/surah/[SurahId]/_components/ArabicFontPanel.tsx
 'use client';
-import { FaArrowLeft, FaCheck } from '@/app/components/common/SvgIcons'; // Import FaCheck
+import { FaArrowLeft } from '@/app/components/common/SvgIcons';
 import { useTranslation } from 'react-i18next';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useState } from 'react'; // Import useState
@@ -60,14 +60,19 @@ export const ArabicFontPanel = ({ isOpen, onClose }: ArabicFontPanelProps) => {
         <div className="flex-grow overflow-y-auto">
           <div className="p-2 space-y-1">
             {filteredFonts.map(font => (
-              <button
+              <label
                 key={font.value}
-                className={`flex items-center justify-between w-full p-2 rounded-md hover:bg-teal-50 cursor-pointer ${settings.arabicFontFace === font.value ? 'bg-teal-100' : ''}`}
-                onClick={() => handleFontSelect(font.value)}
+                className="flex items-center space-x-3 p-2 rounded-md hover:bg-teal-50 cursor-pointer"
               >
-                <span className="text-sm text-[var(--foreground)]" style={{ fontFamily: font.value }}>{font.name}</span> {/* Apply font family for preview */}
-                {settings.arabicFontFace === font.value && <FaCheck size={16} className="text-teal-600" />} {/* Checkmark for selected font */}
-              </button>
+                <input
+                  type="radio"
+                  name="arabicFont"
+                  className="form-radio h-4 w-4 text-teal-600"
+                  checked={settings.arabicFontFace === font.value}
+                  onChange={() => handleFontSelect(font.value)}
+                />
+                <span className="text-sm text-[var(--foreground)]">{font.name}</span>
+              </label>
             ))}
           </div>
         </div>
