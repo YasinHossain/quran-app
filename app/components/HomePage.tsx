@@ -1,8 +1,8 @@
 'use client';
 import React, { useState, useMemo } from 'react';
-import { useTheme } from '@/app/context/ThemeContext';
 import Link from 'next/link';
-import { Search, Sun, Moon } from '@/app/components/common/SvgIcons';
+import { Search } from '@/app/components/common/SvgIcons';
+import ThemeToggle from '@/app/components/common/ThemeToggle';
 import surahsData from '@/data/surahs.json';
 import juzData from '@/data/juz.json';
 import VerseOfDay from './VerseOfDay';
@@ -23,7 +23,6 @@ const allPages = Array.from({ length: 604 }, (_, i) => i + 1);
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'Surah' | 'Juz' | 'Page'>('Surah');
-  const { theme, setTheme } = useTheme();
 
   const filteredSurahs = useMemo(() => {
     if (!searchQuery) return allSurahs;
@@ -47,16 +46,7 @@ export default function HomePage() {
               <h1 className="text-2xl font-bold tracking-wider text-slate-900 dark:text-white">
                 Al Qur&apos;an
               </h1>
-              <button
-                onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-                className="p-2 bg-white/40 dark:bg-white/10 rounded-full hover:bg-white/60 dark:hover:bg-white/20 transition-colors"
-              >
-                {theme === 'light' ? (
-                  <Moon className="w-5 h-5 text-slate-700" />
-                ) : (
-                  <Sun className="w-5 h-5 text-yellow-400" />
-                )}
-              </button>
+              <ThemeToggle />
             </nav>
           </header>
 
