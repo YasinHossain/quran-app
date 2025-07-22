@@ -6,6 +6,7 @@ import { Search, Sun, Moon } from '@/app/components/common/SvgIcons';
 import surahsData from '@/data/surahs.json';
 import juzData from '@/data/juz.json';
 import VerseOfDay from './VerseOfDay';
+import HomePageBackground from './HomePageBackground';
 import type { Surah } from '@/types';
 
 interface JuzSummary {
@@ -37,12 +38,8 @@ export default function HomePage() {
 
   return (
     <>
-      <div className="min-h-screen w-full text-slate-800 dark:text-slate-200 bg-gradient-to-br from-cyan-50/20 via-white to-emerald-50/20 dark:bg-gradient-to-br dark:from-gray-900 dark:to-slate-900 overflow-x-hidden">
-        <div className="absolute top-0 left-0 w-full h-full z-0">
-          <div className="absolute top-[-10rem] right-[-10rem] w-72 h-72 bg-emerald-400/10 dark:bg-emerald-500/10 rounded-full filter blur-3xl opacity-50" />
-          <div className="absolute bottom-[-5rem] left-[-10rem] w-80 h-80 bg-cyan-400/10 dark:bg-cyan-500/10 rounded-full filter blur-3xl opacity-40" />
-          <div className="absolute bottom-[20rem] right-[-15rem] w-96 h-96 bg-sky-400/10 dark:bg-sky-500/10 rounded-full filter blur-3xl opacity-30" />
-        </div>
+      <main className="relative min-h-screen w-full text-slate-800 dark:text-slate-200 overflow-x-hidden">
+        <HomePageBackground />
 
         <div className="relative z-10 flex flex-col min-h-screen px-4 sm:px-6 lg:px-8">
           <header className="w-full py-4">
@@ -220,7 +217,7 @@ export default function HomePage() {
             )}
           </section>
         </div>
-      </div>
+      </main>
     </>
   );
 }
