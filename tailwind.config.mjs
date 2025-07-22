@@ -18,7 +18,7 @@ const config = {
       },
       spacing: designTokens.spacing,
       fontFamily: {
-        base: [designTokens.typography.fontFamilyBase, 'sans-serif'],
+        base: [designTokens.typography.fontFamily, 'sans-serif'],
       },
       fontSize: {
         base: designTokens.typography.fontSizeBase,
