@@ -1,7 +1,6 @@
 // app/features/juz/[juzId]/page.tsx
 'use client';
 
-/* eslint-disable react-hooks/rules-of-hooks, @next/next/no-async-client-component */
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Verse } from '@/app/features/surah/[surahId]/_components/Verse';
@@ -15,12 +14,11 @@ import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
 interface JuzPageProps {
-  params: Promise<{ juzId: string }>;
+  params: { juzId: string };
 }
 
-// eslint-disable-next-line @next/next/no-async-client-component, react-hooks/rules-of-hooks
-export default async function JuzPage({ params }: JuzPageProps) {
-  const { juzId } = await params;
+export default function JuzPage({ params }: JuzPageProps) {
+  const { juzId } = params;
 
   const [error, setError] = useState<string | null>(null);
   const { settings } = useSettings();
