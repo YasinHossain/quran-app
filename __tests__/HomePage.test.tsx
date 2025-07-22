@@ -67,7 +67,7 @@ it('tab switching between “Surah,” “Juz,” and “Page” changes rendere
   expect(screen.getByText('Juz 1')).toBeInTheDocument();
 
   await userEvent.click(screen.getByRole('button', { name: 'Page' }));
-  expect(screen.getByText(/Page view is not yet implemented/i)).toBeInTheDocument();
+  expect(screen.getByText('Page 1')).toBeInTheDocument();
 
   await userEvent.click(screen.getByRole('button', { name: 'Surah' }));
   expect(screen.getByText('Al-Fatihah')).toBeInTheDocument();
