@@ -3,6 +3,21 @@ import userEvent from '@testing-library/user-event';
 import HomePage from '@/app/components/HomePage';
 import { ThemeProvider } from '@/app/context/ThemeContext';
 import { SettingsProvider } from '@/app/context/SettingsContext';
+import { Verse } from '@/types';
+
+jest.mock('@/lib/api', () => ({
+  getRandomVerse: jest.fn().mockResolvedValue({
+    id: 1,
+    verse_key: '1:1',
+    text_uthmani: 'بِسْمِ اللّهِ',
+    translations: [
+      {
+        resource_id: 1,
+        text: 'In the name of Allah',
+      },
+    ],
+  } as Verse),
+}));
 
 // Mock next/link to simply render an anchor tag
 jest.mock('next/link', () => {

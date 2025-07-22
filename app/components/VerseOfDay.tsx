@@ -49,7 +49,7 @@ export default function VerseOfDay() {
         </h3>
         {verse.translations?.[0] && (
           <p className="mt-4 text-left text-slate-600 dark:text-slate-400 text-sm">
-            "{verse.translations[0].text}" - [Surah {surahName ?? surahNum}, {verse.verse_key}]
+            &quot;{verse.translations[0].text}&quot; - [Surah {surahName ?? surahNum}, {verse.verse_key}]
           </p>
         )}
       </>
