@@ -6,10 +6,16 @@ import { Search, Sun, Moon } from '@/app/components/common/SvgIcons';
 import surahsData from '@/data/surahs.json';
 import juzData from '@/data/juz.json';
 import VerseOfDay from './VerseOfDay';
-import type { Surah, Juz } from '@/types';
+import type { Surah } from '@/types';
+
+interface JuzSummary {
+  number: number;
+  name: string;
+  surahRange: string;
+}
 
 const allSurahs: Surah[] = surahsData;
-const allJuz: Juz[] = juzData;
+const allJuz: JuzSummary[] = juzData;
 const allPages = Array.from({ length: 604 }, (_, i) => i + 1);
 
 // --- Main Page Component ---
