@@ -44,12 +44,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const theme = stored && (stored.value === 'light' || stored.value === 'dark') ? stored.value as 'light' | 'dark' : 'light';
 
   return (
-    <html lang="en" className={theme}>
+    <html lang="en" data-theme={theme}>
       <body
         className={`font-sans ${kfgqpc.variable} ${nastaliq.variable} ${amiri.variable} ${inter.className}`}
       >
         <TranslationProvider>
-          <ThemeProvider initialTheme={theme}>
+          <ThemeProvider>
             <SettingsProvider> {/* Wrap with SettingsProvider */}
               <SidebarProvider> {/* Wrap with SidebarProvider */}
                 {children}
