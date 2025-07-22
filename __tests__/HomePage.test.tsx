@@ -45,7 +45,7 @@ beforeAll(() => {
 
 const renderHome = () =>
   render(
-    <ThemeProvider>
+    <ThemeProvider initialTheme="light">
       <SettingsProvider>
         <HomePage />
       </SettingsProvider>
@@ -54,7 +54,7 @@ const renderHome = () =>
 
 beforeEach(() => {
   localStorage.clear();
-  document.documentElement.dataset.theme = '';
+  // This ensures each test starts in a clean state (light mode).
   document.documentElement.classList.remove('dark');
 });
 
@@ -70,10 +70,20 @@ it('theme toggle updates the dark class', async () => {
   renderHome();
   const nav = screen.getByRole('navigation');
   const themeButton = within(nav).getByRole('button');
+  
+  // Starts in light mode
   expect(document.documentElement.classList.contains('dark')).toBe(false);
+
+  // Click to switch to dark mode
   await userEvent.click(themeButton);
   await waitFor(() => {
     expect(document.documentElement.classList.contains('dark')).toBe(true);
+  });
+
+  // Click again to switch back to light mode
+  await userEvent.click(themeButton);
+    await waitFor(() => {
+    expect(document.documentElement.classList.contains('dark')).toBe(false);
   });
 });
 

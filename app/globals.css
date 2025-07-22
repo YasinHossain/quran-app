@@ -2,27 +2,14 @@
 @import "tailwindcss";
 
 /* Base styles */
-:root {
-  --background: #F7F9F9; /* Lighter background color */
-  --foreground: #374151; /* Softer foreground color */
-  --border-color: #e5e7eb; /* Subtle border color */
-  --accent: #0d9488;
-  --accent-hover: #0f766e;
-}
-
-[data-theme='dark'] {
-  --background: #1a202c; /* Darker background for dark mode */
-  --foreground: #d1d5db; /* Lighter foreground for dark mode */
-  --border-color: #4b5563; /* Darker border for dark mode */
-  --accent: #0d9488;
-  --accent-hover: #0f766e;
-}
-
-body {
-  font-family: Inter, sans-serif;
-  margin: 0;
-  overflow-x: hidden;
-  transition: background-color 0.3s ease;
+@layer base {
+  body {
+    @apply bg-white dark:bg-slate-900;
+    font-family: Inter, sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease;
+  }
 }
 
 
