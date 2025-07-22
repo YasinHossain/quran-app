@@ -10,9 +10,15 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  // Initialize theme with a default value
-  const [theme, setTheme] = useState<Theme>('light');
+export const ThemeProvider = ({
+  children,
+  initialTheme,
+}: {
+  children: React.ReactNode;
+  initialTheme: Theme;
+}) => {
+  // Initialize theme with the value provided by the server
+  const [theme, setTheme] = useState<Theme>(initialTheme);
 
   // Effect to load theme from localStorage on the client side after initial render
   useEffect(() => {
@@ -26,11 +32,11 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []); // Empty dependency array ensures this effect runs only once on mount
 
-  // Effect to save theme to localStorage and update data attribute whenever theme changes
+  // Persist theme and toggle the `dark` class whenever it changes
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      document.documentElement.classList.toggle('dark', theme === 'dark');
       localStorage.setItem('theme', theme);
-      document.documentElement.dataset.theme = theme;
       document.cookie = `theme=${theme}; path=/; max-age=31536000`;
     }
   }, [theme]);

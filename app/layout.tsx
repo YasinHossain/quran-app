@@ -2,7 +2,7 @@
 import './globals.css';
 import './fonts.css';
 import TranslationProvider from './providers/TranslationProvider';
-import { ThemeProvider } from './context/ThemeContext';
+import { ThemeProvider, type Theme } from './context/ThemeContext';
 import { SettingsProvider } from './context/SettingsContext'; // Import SettingsProvider
 import { SidebarProvider } from './context/SidebarContext'; // Import SidebarProvider
 import localFont from 'next/font/local';
@@ -41,7 +41,7 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = cookies();
   const stored = cookieStore.get('theme');
-  const theme = stored && (stored.value === 'light' || stored.value === 'dark') ? stored.value as 'light' | 'dark' : 'light';
+  const theme = stored && (stored.value === 'light' || stored.value === 'dark') ? (stored.value as Theme) : 'light';
 
   return (
     <html lang="en" data-theme={theme}>
@@ -49,7 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className={`font-sans ${kfgqpc.variable} ${nastaliq.variable} ${amiri.variable} ${inter.className}`}
       >
         <TranslationProvider>
-          <ThemeProvider>
+          <ThemeProvider initialTheme={theme}>
             <SettingsProvider> {/* Wrap with SettingsProvider */}
               <SidebarProvider> {/* Wrap with SidebarProvider */}
                 {children}
