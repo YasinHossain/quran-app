@@ -31,6 +31,8 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('theme', theme);
       document.documentElement.dataset.theme = theme;
+      // Ensure the dark class is toggled for Tailwind's class strategy
+      document.documentElement.classList.toggle('dark', theme === 'dark');
       document.cookie = `theme=${theme}; path=/; max-age=31536000`;
     }
   }, [theme]);
