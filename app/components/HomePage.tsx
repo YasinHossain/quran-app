@@ -80,7 +80,7 @@ export default function HomePage() {
                   placeholder="What do you want to read?"
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  className="w-full px-4 sm:px-5 py-4 pr-12 text-lg bg-white/40 dark:bg-slate-800/40 border-white/20 dark:border-slate-700/50 rounded-xl backdrop-blur-md focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all shadow-lg text-slate-800 dark:text-slate-200 placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                  className="w-full px-4 sm:px-5 py-4 pr-12 text-lg bg-white/40 dark:bg-slate-800/40 border-white/20 dark:border-slate-700/50 rounded-xl backdrop-blur-md focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all shadow-lg placeholder:text-slate-500 dark:placeholder:text-slate-400"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 sm:pr-4 text-slate-500 dark:text-slate-400">
                   <Search className="w-6 h-6" />
