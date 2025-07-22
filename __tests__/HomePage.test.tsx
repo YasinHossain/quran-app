@@ -3,6 +3,21 @@ import userEvent from '@testing-library/user-event';
 import HomePage from '@/app/components/HomePage';
 import { ThemeProvider } from '@/app/context/ThemeContext';
 import { SettingsProvider } from '@/app/context/SettingsContext';
+import { Verse } from '@/types';
+
+jest.mock('@/lib/api', () => ({
+  getRandomVerse: jest.fn().mockResolvedValue({
+    id: 1,
+    verse_key: '1:1',
+    text_uthmani: 'بِسْمِ اللّهِ',
+    translations: [
+      {
+        resource_id: 1,
+        text: 'In the name of Allah',
+      },
+    ],
+  } as Verse),
+}));
 
 // Mock next/link to simply render an anchor tag
 jest.mock('next/link', () => {
@@ -67,7 +82,7 @@ it('tab switching between “Surah,” “Juz,” and “Page” changes rendere
   expect(screen.getByText('Juz 1')).toBeInTheDocument();
 
   await userEvent.click(screen.getByRole('button', { name: 'Page' }));
-  expect(screen.getByText(/Page view is not yet implemented/i)).toBeInTheDocument();
+  expect(screen.getByText('Page 1')).toBeInTheDocument();
 
   await userEvent.click(screen.getByRole('button', { name: 'Surah' }));
   expect(screen.getByText('Al-Fatihah')).toBeInTheDocument();
