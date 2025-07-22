@@ -31,6 +31,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('theme', theme);
       document.documentElement.dataset.theme = theme;
+      document.cookie = `theme=${theme}; path=/; max-age=31536000`;
     }
   }, [theme]);
 

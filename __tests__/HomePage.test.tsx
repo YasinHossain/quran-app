@@ -24,8 +24,8 @@ jest.mock('next/link', () => {
   return ({ children, href }: any) => <a href={href}>{children}</a>;
 });
 
-// Avoid network requests from VerseOfDay during tests
-jest.mock('@/app/components/VerseOfDay', () => () => <div />);
+// Mock VerseOfDay to avoid fetch during tests
+jest.mock('@/app/components/VerseOfDay', () => () => <div>VerseOfDay</div>);
 
 beforeAll(() => {
   Object.defineProperty(window, 'matchMedia', {
