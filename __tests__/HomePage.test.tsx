@@ -45,7 +45,7 @@ beforeAll(() => {
 
 const renderHome = () =>
   render(
-    <ThemeProvider initialTheme="light">
+    <ThemeProvider>
       <SettingsProvider>
         <HomePage />
       </SettingsProvider>
@@ -54,7 +54,7 @@ const renderHome = () =>
 
 beforeEach(() => {
   localStorage.clear();
-  document.documentElement.classList.remove('dark');
+  document.documentElement.dataset.theme = '';
 });
 
 it('search filtering returns only matching Surahs', async () => {
@@ -65,14 +65,14 @@ it('search filtering returns only matching Surahs', async () => {
   expect(screen.queryByText('Al-Fatihah')).not.toBeInTheDocument();
 });
 
-it('theme toggle toggles the dark class', async () => {
+it('theme toggle updates the data-theme attribute', async () => {
   renderHome();
   const nav = screen.getByRole('navigation');
   const themeButton = within(nav).getByRole('button');
-  expect(document.documentElement.classList.contains('dark')).toBe(false);
+  expect(document.documentElement.dataset.theme).toBe('light');
   await userEvent.click(themeButton);
   await waitFor(() => {
-    expect(document.documentElement.classList.contains('dark')).toBe(true);
+    expect(document.documentElement.dataset.theme).toBe('dark');
   });
 });
 
