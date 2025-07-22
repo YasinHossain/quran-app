@@ -15,28 +15,22 @@ export const ThemeProvider = ({
   initialTheme,
 }: {
   children: React.ReactNode;
-  initialTheme?: Theme;
+  // The initialTheme is required and comes from the server-side layout.
+  initialTheme: Theme;
 }) => {
-  // Initialize theme with a default value or provided initial theme
-  const [theme, setTheme] = useState<Theme>(initialTheme ?? 'light');
+  // Initialize the theme state with the value provided by the server.
+  // This is the correct way to prevent client/server mismatches.
+  const [theme, setTheme] = useState<Theme>(initialTheme);
 
-  // Effect to load theme from localStorage on the client side after initial render
-  useEffect(() => {
-    if (typeof window !== 'undefined' && initialTheme === undefined) {
-      const stored = localStorage.getItem('theme');
-      if (stored === 'light' || stored === 'dark') {
-        setTheme(stored as Theme);
-      } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        setTheme('dark');
-      }
-    }
-  }, [initialTheme]); // Run once on mount unless initialTheme changes
-
-  // Effect to save theme to localStorage and update data attribute whenever theme changes
+  // This effect runs whenever the theme state changes (e.g., when the user clicks the button).
+  // It updates the class on the <html> element, localStorage, and cookies.
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      // Use classList.toggle for a cleaner way to add/remove the 'dark' class.
+      document.documentElement.classList.toggle('dark', theme === 'dark');
+      
+      // Persist the new theme choice for future visits.
       localStorage.setItem('theme', theme);
-      document.documentElement.dataset.theme = theme;
       document.cookie = `theme=${theme}; path=/; max-age=31536000`;
     }
   }, [theme]);
