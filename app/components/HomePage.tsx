@@ -65,7 +65,7 @@ export default function HomePage() {
               <h2 className="text-5xl md:text-7xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-slate-900 to-slate-600 dark:from-white dark:to-slate-400">
                 The Noble Qur&apos;an
               </h2>
-              <p className="mt-4 text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+              <p className="mt-4 text-lg md:text-xl text-slate-800 dark:text-slate-400 max-w-2xl mx-auto">
                 Read! In the name of your Lord
               </p>
             </div>
@@ -89,7 +89,7 @@ export default function HomePage() {
               {shortcutSurahs.map(name => (
                 <button
                   key={name}
-                  className="px-4 sm:px-5 py-2 bg-white/40 dark:bg-slate-800/40 border border-white/50 dark:border-slate-700/50 rounded-full backdrop-blur-md hover:bg-white/60 dark:hover:bg-slate-700/60 hover:scale-105 transform transition-all duration-200 text-slate-700 dark:text-slate-300 font-medium shadow-sm hover:shadow-md"
+                  className="px-4 sm:px-5 py-2 bg-white/40 dark:bg-slate-800/40 border border-white/50 dark:border-slate-700/50 rounded-full backdrop-blur-md hover:bg-white/60 dark:hover:bg-slate-700/60 hover:scale-105 transform transition-all duration-200 text-slate-800 dark:text-slate-300 font-medium shadow-sm hover:shadow-md"
                 >
                   {name}
                 </button>
@@ -101,7 +101,7 @@ export default function HomePage() {
 
           <section id="surahs" className="py-20 max-w-7xl mx-auto w-full">
             <div className="flex justify-between items-center mb-8 content-visibility-auto animate-fade-in-up animation-delay-600">
-              <h2 className="text-3xl font-bold dark:text-white">All Surahs</h2>
+              <h2 className="text-3xl font-bold text-slate-900 dark:text-white">All Surahs</h2>
               <div className="flex items-center bg-black/5 dark:bg-slate-800/60 p-1 sm:p-2 rounded-full">
                 <button
                   onClick={() => setActiveTab('Surah')}

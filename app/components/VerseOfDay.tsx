@@ -57,7 +57,7 @@ export default function VerseOfDay() {
   }
 
   return (
-    <div className="mt-12 w-full max-w-3xl p-4 sm:p-6 md:p-8 bg-white/30 dark:bg-slate-800/30 border border-white/50 dark:border-slate-700/50 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400">
+    <div className="mt-12 w-full max-w-3xl p-4 sm:p-6 md:p-8 bg-white/40 dark:bg-slate-800/30 border border-white/50 dark:border-slate-700/50 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400">
       {content}
     </div>
   );
