@@ -123,10 +123,12 @@ const allSurahs = [
 ];
 
 const allJuz = Array.from({ length: 30 }, (_, i) => ({
-  number: i + 1,
-  name: `Juz ${i + 1}`,
-  surahRange: 'Al-Fatihah 1 - Al-Baqarah 141',
+  number: i + 1,
+  name: `Juz ${i + 1}`,
+  surahRange: 'Al-Fatihah 1 - Al-Baqarah 141',
 }));
+
+const allPages = Array.from({ length: 604 }, (_, i) => i + 1);
 
 // --- Main Page Component ---
 export default function HomePage() {
@@ -270,11 +272,25 @@ export default function HomePage() {
                 ))}
               </div>
             )}
-            {activeTab === 'Page' && (
-              <div className="text-center py-20 bg-white/30 dark:bg-slate-800/30 border border-white/50 dark:border-slate-700/50 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up">
-                <p className="text-slate-500 dark:text-slate-400 text-lg">Page view is not yet implemented.</p>
-              </div>
-            )}
+          {activeTab === 'Page' && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {allPages.map((page, index) => (
+                  <Link
+                    href={`/features/page/${page}`}
+                    key={page}
+                    className="group p-4 sm:p-5 bg-white/40 dark:bg-slate-800/40 border border-white/50 dark:border-slate-700/50 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl hover:bg-white/60 dark:hover:bg-slate-700/60 hover:border-emerald-500/60 dark:hover:border-emerald-500/60 transition-all duration-300 content-visibility-auto animate-fade-in-up"
+                    style={{ animationDelay: `${100 + index * 15}ms` }}
+                  >
+                    <div className="flex items-center space-x-4">
+                      <div className="flex items-center justify-center w-12 h-12 bg-black/5 dark:bg-slate-700/50 rounded-xl text-emerald-600 dark:text-emerald-400 font-bold text-lg group-hover:bg-emerald-500/10 dark:group-hover:bg-emerald-500/20 transition-colors">
+                        {page}
+                      </div>
+                      <h3 className="font-semibold text-slate-800 dark:text-white text-lg">Page {page}</h3>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
 
             {filteredSurahs.length === 0 && activeTab === 'Surah' && (
               <div className="text-center py-10 col-span-full content-visibility-auto animate-fade-in-up">
