@@ -21,7 +21,7 @@ export const TafsirModal = ({ verseKey, isOpen, onClose }: TafsirModalProps) => 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-      <div className="bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 relative max-w-lg w-full max-h-[80vh] overflow-y-auto rounded-lg shadow-lg p-6">
+      <div className="bg-[var(--background)] text-[var(--foreground)] relative max-w-lg w-full max-h-[80vh] overflow-y-auto rounded-lg shadow-lg p-6">
         <button
           onClick={onClose}
           className="absolute left-3 top-3 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"

@@ -72,7 +72,7 @@ export const Verse = ({ verse }: VerseProps) => {
         </div>
         <div className="flex-grow space-y-6">
           <p
-            className="text-right leading-loose text-slate-800 dark:text-slate-200"
+            className="text-right leading-loose text-[var(--foreground)]"
             style={{ fontFamily: settings.arabicFontFace, fontSize: `${settings.arabicFontSize}px`, lineHeight: 2.2 }}
           >
             {verse.text_uthmani}
@@ -80,7 +80,7 @@ export const Verse = ({ verse }: VerseProps) => {
           {verse.translations?.map((t: Translation) => (
             <div key={t.resource_id}>
               <p
-                className="text-left leading-relaxed text-slate-800 dark:text-slate-200"
+                className="text-left leading-relaxed text-[var(--foreground)]"
                 style={{ fontSize: `${settings.translationFontSize}px` }}
                 dangerouslySetInnerHTML={{ __html: t.text }}
               />

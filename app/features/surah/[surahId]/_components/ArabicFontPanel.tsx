@@ -31,7 +31,7 @@ export const ArabicFontPanel = ({ isOpen, onClose }: ArabicFontPanelProps) => {
   return (
     <>
       {/* No overlay div */}
-      <div className={`fixed top-0 right-0 w-80 h-full bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      <div className={`fixed top-0 right-0 w-80 h-full bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="flex items-center justify-between p-4 border-b border-gray-200/80">
           <button
             aria-label="Back"
@@ -40,7 +40,7 @@ export const ArabicFontPanel = ({ isOpen, onClose }: ArabicFontPanelProps) => {
           >
             <FaArrowLeft size={18} />
           </button>
-          <h2 className="font-bold text-lg text-slate-800 dark:text-slate-200">{t('select_font_face')}</h2> {/* Assuming a translation key for the title */}
+          <h2 className="font-bold text-lg text-[var(--foreground)]">{t('select_font_face')}</h2> {/* Assuming a translation key for the title */}
           <div className="w-8"></div>
         </div>
         
@@ -71,7 +71,7 @@ export const ArabicFontPanel = ({ isOpen, onClose }: ArabicFontPanelProps) => {
                   checked={settings.arabicFontFace === font.value}
                   onChange={() => handleFontSelect(font.value)}
                 />
-                <span className="text-sm text-slate-800 dark:text-slate-200">{font.name}</span>
+                <span className="text-sm text-[var(--foreground)]">{font.name}</span>
               </label>
             ))}
           </div>
