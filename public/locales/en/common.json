@@ -29,6 +29,9 @@
   "juz_number": "Juz {{number}}",
   "end_of_juz": "End of Juz.",
   "no_verses_found_in_juz": "No verses found in this Juz.",
+  "end_of_surah": "End of Surah.",
+  "end_of_page": "End of Page.",
+  "no_verses_found_on_page": "No verses found on this page.",
   "switch_to_dark": "Switch to dark mode",
   "switch_to_light": "Switch to light mode"
 }
