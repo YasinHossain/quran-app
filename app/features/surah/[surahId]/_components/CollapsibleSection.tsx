@@ -10,7 +10,7 @@ export const CollapsibleSection = ({ title, icon, children }: { title: string, i
             <button onClick={() => setIsOpen(!isOpen)} className="w-full flex items-center justify-between p-4 text-left">
                 <div className="flex items-center space-x-3">
                     {icon}
-                    <span className="font-semibold text-slate-800 dark:text-slate-200">{title}</span>
+                    <span className="font-semibold text-[var(--foreground)]">{title}</span>
                 </div>
                 <FaChevronDown size={16} className={`text-gray-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
             </button>

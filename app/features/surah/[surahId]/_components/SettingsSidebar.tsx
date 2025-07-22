@@ -46,14 +46,14 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
         }}
       />
       <aside
-        className={`fixed lg:static inset-y-0 right-0 w-80 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 flex-col flex-shrink-0 overflow-y-auto shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-transform duration-300 z-50 lg:z-auto ${isSettingsOpen ? 'translate-x-0' : 'translate-x-full'} lg:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} lg:flex`}
+        className={`fixed lg:static inset-y-0 right-0 w-80 bg-[var(--background)] text-[var(--foreground)] flex-col flex-shrink-0 overflow-y-auto shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-transform duration-300 z-50 lg:z-auto ${isSettingsOpen ? 'translate-x-0' : 'translate-x-full'} lg:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} lg:flex`}
       >
         <div className="flex-grow">
           <CollapsibleSection title={t('reading_setting')} icon={<FaBookReader size={20} className="text-teal-700" />}>
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-slate-800 dark:text-slate-200">{t('translations')}</label>
-              <button onClick={onTranslationPanelOpen} className="w-full flex justify-between items-center bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition">
-                <span className="truncate text-slate-800 dark:text-slate-200">{selectedTranslationName}</span>
+              <label className="block text-sm font-medium text-[var(--foreground)]">{t('translations')}</label>
+              <button onClick={onTranslationPanelOpen} className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition">
+                <span className="truncate text-[var(--foreground)]">{selectedTranslationName}</span>
                 <FaChevronDown className="text-gray-500" />
               </button>
             </div>
@@ -61,7 +61,7 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
           <CollapsibleSection title={t('font_setting')} icon={<FaFontSetting size={20} className="text-teal-700" />}>
             <div className="space-y-4">
               <div>
-                <div className="flex justify-between mb-1 text-sm"><label className="text-slate-800 dark:text-slate-200">{t('arabic_font_size')}</label><span className="font-semibold text-teal-700">{settings.arabicFontSize}</span></div>
+                <div className="flex justify-between mb-1 text-sm"><label className="text-[var(--foreground)]">{t('arabic_font_size')}</label><span className="font-semibold text-teal-700">{settings.arabicFontSize}</span></div>
                 <input
                   type="range"
                   min="16"
@@ -72,7 +72,7 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
                 />
               </div>
               <div>
-                <div className="flex justify-between mb-1 text-sm"><label className="text-slate-800 dark:text-slate-200">{t('translation_font_size')}</label><span className="font-semibold text-teal-700">{settings.translationFontSize}</span></div>
+                <div className="flex justify-between mb-1 text-sm"><label className="text-[var(--foreground)]">{t('translation_font_size')}</label><span className="font-semibold text-teal-700">{settings.translationFontSize}</span></div>
                 <input
                   type="range"
                   min="12"
@@ -84,9 +84,9 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
               </div>
               {/* Arabic Font Face Selection Button */}
               <div>
-                <label className="block mb-2 text-sm font-medium text-slate-800 dark:text-slate-200">{t('arabic_font_face')}</label>
-                <button onClick={() => setIsArabicFontPanelOpen(true)} className="w-full flex justify-between items-center bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition">
-                  <span className="truncate text-slate-800 dark:text-slate-200">{selectedArabicFont}</span>
+                <label className="block mb-2 text-sm font-medium text-[var(--foreground)]">{t('arabic_font_face')}</label>
+                <button onClick={() => setIsArabicFontPanelOpen(true)} className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition">
+                  <span className="truncate text-[var(--foreground)]">{selectedArabicFont}</span>
                   <FaChevronDown className="text-gray-500" />
                 </button>
               </div>
@@ -96,7 +96,7 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
         <div className="p-4 border-t border-gray-200/80 dark:border-gray-600">
           <button
             onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-            className="w-full bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-600 rounded-lg p-2.5 text-sm hover:border-teal-500 transition"
+            className="w-full bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-lg p-2.5 text-sm hover:border-teal-500 transition"
           >
             {theme === 'light' ? t('switch_to_dark') : t('switch_to_light')}
           </button>
