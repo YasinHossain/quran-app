@@ -2,7 +2,7 @@ import designTokens from './design-system.json' assert { type: 'json' };
 
 /** @type {import('tailwindcss').Config} */
 const config = {
-  darkMode: 'class',
+  darkMode: ['class', '[data-theme="dark"]'],
   content: [
     './app/**/*.{ts,tsx,js,jsx}',
     './lib/**/*.{ts,tsx,js,jsx}',
@@ -10,6 +10,9 @@ const config = {
   theme: {
     extend: {
       colors: {
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
+        border: 'var(--border-color)',
         accent: designTokens.colors.accent,
         'accent-hover': designTokens.colors.accentHover,
       },
