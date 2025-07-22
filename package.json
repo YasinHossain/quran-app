@@ -39,6 +39,7 @@
     "node-fetch": "^3.3.2",
     "tailwindcss": "^4",
     "ts-jest": "^29.4.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "whatwg-fetch": "^3.6.20"
   }
 }
