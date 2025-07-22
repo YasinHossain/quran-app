@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Search, Sun, Moon } from '@/app/components/common/SvgIcons';
 import surahsData from '@/data/surahs.json';
 import juzData from '@/data/juz.json';
+import VerseOfDay from './VerseOfDay';
 import type { Surah, Juz } from '@/types';
 
 const allSurahs: Surah[] = surahsData;
@@ -92,18 +93,7 @@ export default function HomePage() {
               ))}
             </div>
 
-            <div className="mt-12 w-full max-w-3xl p-4 sm:p-6 md:p-8 bg-white/30 dark:bg-slate-800/30 border border-white/50 dark:border-slate-700/50 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400">
-              <p className="text-slate-500 dark:text-slate-400 mb-4 text-sm">Verse of the Day</p>
-              <h3
-                className="font-amiri text-3xl md:text-4xl text-emerald-600 dark:text-emerald-400 leading-relaxed text-right"
-                dir="rtl"
-              >
-                فَإِنَّ مَعَ ٱلْعُسْرِ يُسْرًا
-              </h3>
-              <p className="mt-4 text-left text-slate-600 dark:text-slate-400 text-sm">
-                &quot;So, surely with hardship comes ease.&quot; - [Surah Ash-Sharh, 94:5]
-              </p>
-            </div>
+            <VerseOfDay />
           </main>
 
           <section id="surahs" className="py-20 max-w-7xl mx-auto w-full">

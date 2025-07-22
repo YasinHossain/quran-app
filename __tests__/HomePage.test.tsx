@@ -2,6 +2,7 @@ import { render, screen, within, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import HomePage from '@/app/components/HomePage';
 import { ThemeProvider } from '@/app/context/ThemeContext';
+import { SettingsProvider } from '@/app/context/SettingsContext';
 
 // Mock next/link to simply render an anchor tag
 jest.mock('next/link', () => {
@@ -27,7 +28,9 @@ beforeAll(() => {
 const renderHome = () =>
   render(
     <ThemeProvider>
-      <HomePage />
+      <SettingsProvider>
+        <HomePage />
+      </SettingsProvider>
     </ThemeProvider>
   );
 
