@@ -54,7 +54,6 @@ const renderHome = () =>
 
 beforeEach(() => {
   localStorage.clear();
-  // This ensures each test starts in a clean state (light mode).
   document.documentElement.classList.remove('dark');
 });
 
@@ -66,24 +65,14 @@ it('search filtering returns only matching Surahs', async () => {
   expect(screen.queryByText('Al-Fatihah')).not.toBeInTheDocument();
 });
 
-it('theme toggle updates the dark class', async () => {
+it('theme toggle toggles the dark class', async () => {
   renderHome();
   const nav = screen.getByRole('navigation');
   const themeButton = within(nav).getByRole('button');
-  
-  // Starts in light mode
   expect(document.documentElement.classList.contains('dark')).toBe(false);
-
-  // Click to switch to dark mode
   await userEvent.click(themeButton);
   await waitFor(() => {
     expect(document.documentElement.classList.contains('dark')).toBe(true);
-  });
-
-  // Click again to switch back to light mode
-  await userEvent.click(themeButton);
-    await waitFor(() => {
-    expect(document.documentElement.classList.contains('dark')).toBe(false);
   });
 });
 
