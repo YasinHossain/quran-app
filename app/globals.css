@@ -19,26 +19,12 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
   font-family: Inter, sans-serif;
   margin: 0;
   overflow-x: hidden;
   transition: background-color 0.3s ease;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  color: #111827; /* Darker heading color */
-}
-
-[data-theme='dark'] h1,
-[data-theme='dark'] h2,
-[data-theme='dark'] h3,
-[data-theme='dark'] h4,
-[data-theme='dark'] h5,
-[data-theme='dark'] h6 {
-  color: #f3f4f6; /* Lighter heading color for dark mode */
-}
 
 /* --- Custom Modern Range Slider Styles --- */
 input[type="range"] {
