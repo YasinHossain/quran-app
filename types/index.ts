@@ -2,6 +2,7 @@ export * from './verse';
 export * from './chapter';
 export * from './translation';
 export * from './settings';
+export * from './surah';
 
 export interface Juz {
   id: number;
