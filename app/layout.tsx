@@ -7,6 +7,7 @@ import { SettingsProvider } from './context/SettingsContext'; // Import Settings
 import { SidebarProvider } from './context/SidebarContext'; // Import SidebarProvider
 import localFont from 'next/font/local';
 import { Inter } from 'next/font/google';
+import { cookies } from 'next/headers';
 
 const kfgqpc = localFont({
   src: '../public/fonts/KFGQPC-Uthman-Taha.ttf',
@@ -38,8 +39,12 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = cookies();
+  const stored = cookieStore.get('theme');
+  const theme = stored && (stored.value === 'light' || stored.value === 'dark') ? stored.value as 'light' | 'dark' : 'light';
+
   return (
-    <html lang="en">
+    <html lang="en" data-theme={theme}>
       <body
         className={`font-sans ${kfgqpc.variable} ${nastaliq.variable} ${amiri.variable} ${inter.className}`}
       >

@@ -9,6 +9,9 @@ jest.mock('next/link', () => {
   return ({ children, href }: any) => <a href={href}>{children}</a>;
 });
 
+// Mock VerseOfDay to avoid fetch during tests
+jest.mock('@/app/components/VerseOfDay', () => () => <div>VerseOfDay</div>);
+
 beforeAll(() => {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
@@ -67,7 +70,7 @@ it('tab switching between “Surah,” “Juz,” and “Page” changes rendere
   expect(screen.getByText('Juz 1')).toBeInTheDocument();
 
   await userEvent.click(screen.getByRole('button', { name: 'Page' }));
-  expect(screen.getByText(/Page view is not yet implemented/i)).toBeInTheDocument();
+  expect(screen.getByText('Page 1')).toBeInTheDocument();
 
   await userEvent.click(screen.getByRole('button', { name: 'Surah' }));
   expect(screen.getByText('Al-Fatihah')).toBeInTheDocument();
