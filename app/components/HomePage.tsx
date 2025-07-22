@@ -38,7 +38,7 @@ export default function HomePage() {
 
   return (
     <>
-      <div className="relative h-screen flex flex-col bg-[var(--background)] text-[var(--foreground)] overflow-hidden">
+      <div className="relative h-screen flex flex-col bg-[var(--background)] text-slate-900 dark:text-[var(--foreground)] overflow-hidden">
         <HomePageBackground />
 
         <div className="relative z-10 flex flex-col h-full overflow-y-auto px-4 sm:px-6 lg:px-8">
@@ -49,7 +49,7 @@ export default function HomePage() {
               </h1>
               <button
                 onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-                className="p-2 bg-black/5 dark:bg-white/10 rounded-full hover:bg-black/10 dark:hover:bg-white/20 transition-colors"
+                className="p-2 bg-white/40 dark:bg-white/10 rounded-full hover:bg-white/60 dark:hover:bg-white/20 transition-colors"
               >
                 {theme === 'light' ? (
                   <Moon className="w-5 h-5 text-slate-700" />
@@ -65,7 +65,7 @@ export default function HomePage() {
               <h2 className="text-5xl md:text-7xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-slate-900 to-slate-600 dark:from-white dark:to-slate-400">
                 The Noble Qur&apos;an
               </h2>
-              <p className="mt-4 text-lg md:text-xl text-slate-800 dark:text-slate-400 max-w-2xl mx-auto">
+              <p className="mt-4 text-lg md:text-xl text-slate-900 dark:text-slate-400 max-w-2xl mx-auto">
                 Read! In the name of your Lord
               </p>
             </div>
@@ -102,7 +102,7 @@ export default function HomePage() {
           <section id="surahs" className="py-20 max-w-7xl mx-auto w-full">
             <div className="flex justify-between items-center mb-8 content-visibility-auto animate-fade-in-up animation-delay-600">
               <h2 className="text-3xl font-bold text-slate-900 dark:text-white">All Surahs</h2>
-              <div className="flex items-center bg-black/5 dark:bg-slate-800/60 p-1 sm:p-2 rounded-full">
+              <div className="flex items-center bg-white/40 dark:bg-slate-800/60 p-1 sm:p-2 rounded-full">
                 <button
                   onClick={() => setActiveTab('Surah')}
                   className={`px-4 sm:px-5 py-2 rounded-full text-sm font-semibold transition-colors ${
@@ -147,7 +147,7 @@ export default function HomePage() {
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-4">
-                        <div className="flex items-center justify-center w-12 h-12 bg-black/5 dark:bg-slate-700/50 rounded-xl text-emerald-600 dark:text-emerald-400 font-bold text-lg group-hover:bg-emerald-500/10 dark:group-hover:bg-emerald-500/20 transition-colors">
+                        <div className="flex items-center justify-center w-12 h-12 bg-white/40 dark:bg-slate-700/50 rounded-xl text-emerald-600 dark:text-emerald-400 font-bold text-lg group-hover:bg-emerald-500/10 dark:group-hover:bg-emerald-500/20 transition-colors">
                           {surah.number}
                         </div>
                         <div>
@@ -177,7 +177,7 @@ export default function HomePage() {
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-4">
-                        <div className="flex items-center justify-center w-12 h-12 bg-black/5 dark:bg-slate-700/50 rounded-xl text-emerald-600 dark:text-emerald-400 font-bold text-lg group-hover:bg-emerald-500/10 dark:group-hover:bg-emerald-500/20 transition-colors">
+                        <div className="flex items-center justify-center w-12 h-12 bg-white/40 dark:bg-slate-700/50 rounded-xl text-emerald-600 dark:text-emerald-400 font-bold text-lg group-hover:bg-emerald-500/10 dark:group-hover:bg-emerald-500/20 transition-colors">
                           {juz.number}
                         </div>
                         <div>
@@ -200,7 +200,7 @@ export default function HomePage() {
                     style={{ animationDelay: `${100 + index * 15}ms` }}
                   >
                     <div className="flex items-center space-x-4">
-                      <div className="flex items-center justify-center w-12 h-12 bg-black/5 dark:bg-slate-700/50 rounded-xl text-emerald-600 dark:text-emerald-400 font-bold text-lg group-hover:bg-emerald-500/10 dark:group-hover:bg-emerald-500/20 transition-colors">
+                      <div className="flex items-center justify-center w-12 h-12 bg-white/40 dark:bg-slate-700/50 rounded-xl text-emerald-600 dark:text-emerald-400 font-bold text-lg group-hover:bg-emerald-500/10 dark:group-hover:bg-emerald-500/20 transition-colors">
                         {page}
                       </div>
                       <h3 className="font-semibold text-slate-800 dark:text-white text-lg">Page {page}</h3>
