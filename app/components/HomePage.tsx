@@ -38,10 +38,10 @@ export default function HomePage() {
 
   return (
     <>
-      <main className="relative min-h-screen w-full text-slate-800 dark:text-slate-200 overflow-x-hidden">
+      <div className="relative h-screen flex flex-col bg-[var(--background)] text-[var(--foreground)] overflow-hidden">
         <HomePageBackground />
 
-        <div className="relative z-10 flex flex-col min-h-screen px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10 flex flex-col h-full overflow-y-auto px-4 sm:px-6 lg:px-8">
           <header className="w-full py-4">
             <nav className="flex justify-between items-center max-w-7xl mx-auto p-3 sm:p-4 bg-white/50 dark:bg-slate-800/50 border border-white/60 dark:border-slate-700/60 rounded-2xl shadow-lg backdrop-blur-xl">
               <h1 className="text-2xl font-bold tracking-wider text-slate-900 dark:text-white">
@@ -217,7 +217,7 @@ export default function HomePage() {
             )}
           </section>
         </div>
-      </main>
+      </div>
     </>
   );
 }
