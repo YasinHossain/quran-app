@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Verse } from '@/types';
 import { getRandomVerse } from '@/lib/api';
 import { useSettings } from '@/app/context/SettingsContext';
@@ -14,28 +14,62 @@ export default function VerseOfDay() {
   const { settings } = useSettings();
   const { theme } = useTheme();
   const [verse, setVerse] = useState<Verse | null>(null);
+  const [verseQueue, setVerseQueue] = useState<Verse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const prefetchVerse = useCallback(async () => {
+    try {
+      const v = await getRandomVerse(settings.translationId);
+      setVerseQueue(q => [...q, v]);
+    } catch (err) {
+      console.error(err);
+      setError('Failed to load verse.');
+    }
+  }, [settings.translationId]);
+
   useEffect(() => {
-    const fetchVerse = () => {
-      setLoading(true);
-      getRandomVerse(settings.translationId)
-        .then(v => {
-          setVerse(v);
-          setError(null);
-        })
-        .catch(err => {
-          console.error(err);
-          setError('Failed to load verse.');
-        })
-        .finally(() => setLoading(false));
+    let isMounted = true;
+    setVerse(null);
+    setVerseQueue([]);
+    setError(null);
+    setLoading(true);
+
+    const init = async () => {
+      await Promise.all([prefetchVerse(), prefetchVerse(), prefetchVerse()]);
     };
 
-    fetchVerse();
-    const intervalId = setInterval(fetchVerse, 10000);
-    return () => clearInterval(intervalId);
-  }, [settings.translationId]);
+    init().then(() => {
+      if (!isMounted) return;
+      setVerseQueue(q => {
+        if (q.length === 0) return q;
+        const [first, ...rest] = q;
+        setVerse(first);
+        return rest;
+      });
+      setLoading(false);
+    });
+
+    const intervalId = setInterval(() => {
+      setVerseQueue(q => {
+        if (q.length === 0) return q;
+        const [next, ...rest] = q;
+        setVerse(next);
+        return rest;
+      });
+    }, 10000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(intervalId);
+    };
+  }, [prefetchVerse]);
+
+  useEffect(() => {
+    if (verseQueue.length < 2) {
+      prefetchVerse();
+    }
+  }, [verseQueue, prefetchVerse]);
 
   let content: React.ReactNode = null;
   if (loading) {
