@@ -142,7 +142,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                       isActive && 'bg-teal-50 border-teal-600'
                     }`}
                   >
-                      <div className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-colors ${isActive ? 'bg-teal-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 group-hover:bg-emerald-100 group-hover:text-emerald-600'}`}>
+                      <div className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors ${isActive ? 'bg-teal-600 text-white' : 'bg-gray-100 dark:bg-slate-700/50 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-500/20'}`}>
                         <span>{chapter.id}</span>
                       </div>
                       <div className="flex-grow">
@@ -170,8 +170,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                       isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-[var(--background)] dark:hover:bg-gray-800'
                     }`}
                   >
-                      <div className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-colors ${
-                        isActive ? 'bg-teal-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+                      <div className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors ${
+                        isActive ? 'bg-teal-600 text-white' : 'bg-gray-100 dark:bg-slate-700/50 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-500/20'
                       }`}>
                         <span>{j}</span>
                       </div>
@@ -194,8 +194,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                       isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-[var(--background)] dark:hover:bg-gray-800'
                     }`}
                   >
-                      <div className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-colors ${
-                        isActive ? 'bg-teal-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+                      <div className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors ${
+                        isActive ? 'bg-teal-600 text-white' : 'bg-gray-100 dark:bg-slate-700/50 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-500/20'
                       }`}>
                         <span>{p}</span>
                       </div>

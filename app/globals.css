@@ -36,6 +36,11 @@ input[type="range"] {
   height: 6px;
   border-radius: 5px;
   outline: none;
+  background: var(--subtle-grey);
+}
+
+input[type="range"]:hover,
+input[type="range"]:focus {
   background: linear-gradient(
     to right,
     var(--accent) var(--value-percent, 0%),
