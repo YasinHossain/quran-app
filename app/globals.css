@@ -6,6 +6,7 @@
   --foreground: #374151;
   --border-color: #e5e7eb;
   --accent: #0d9488; /* Added accent color variable */
+  --subtle-grey: #d1d5db; /* Added subtle grey variable */
 }
 
 [data-theme='dark'] {
@@ -13,6 +14,7 @@
   --foreground: #d1d5db;
   --border-color: #4b5563;
   --accent: #0d9488; /* Added accent color variable */
+  --subtle-grey: #4b5563; /* Added subtle grey variable for dark mode */
 }
 
 @layer base {
@@ -39,7 +41,7 @@ input[type="range"] {
   height: 6px;
   border-radius: 5px;
   outline: none;
-  background: linear-gradient(to right, #0d9488 var(--value-percent, 0%), #e5e7eb var(--value-percent, 0%));
+  background: linear-gradient(to right, var(--accent) var(--value-percent, 0%), var(--border-color) var(--value-percent, 0%));
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -47,28 +49,51 @@ input[type="range"]::-webkit-slider-thumb {
   appearance: none;
   width: 16px;
   height: 16px;
-  background: #F7F9F9;
-  border: 2px solid #e5e7eb;
+  background: var(--background); /* Use background variable */
+  border: 2px solid var(--border-color); /* Use border-color variable */
   border-radius: 50%;
   cursor: pointer;
   margin-top: -5px;
   transition: background 0.3s, box-shadow 0.3s;
 }
 
-/* Styles for the custom scrollbar - applied only to the homepage-scrollable-area */
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: var(--accent); /* Light up on hover */
+  border-color: var(--accent); /* Change border color on hover */
+}
+
+/* Global scrollbar styles */
+::-webkit-scrollbar {
+  width: 4px; /* Made scrollbar slimmer */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* transparent track */
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--subtle-grey); /* subtle grey color by default */
+  border-radius: 2px; /* Made corners slightly less rounded */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent); /* accent color on hover */
+}
+
+/* Simple scroll stick style for homepage-scrollable-area */
 .homepage-scrollable-area::-webkit-scrollbar {
-  width: 8px; /* width of the scrollbar */
+  width: 4px; /* Made scrollbar slimmer */
 }
 
 .homepage-scrollable-area::-webkit-scrollbar-track {
-  background: var(--background); /* color of the track */
+  background: transparent; /* transparent track */
 }
 
 .homepage-scrollable-area::-webkit-scrollbar-thumb {
-  background: var(--border-color); /* color of the scroll thumb */
-  border-radius: 4px; /* roundness of the scroll thumb */
+  background: var(--subtle-grey); /* subtle grey color by default */
+  border-radius: 2px; /* Made corners slightly less rounded */
 }
 
 .homepage-scrollable-area::-webkit-scrollbar-thumb:hover {
-  background: var(--accent); /* color of the scroll thumb on hover */
+  background: var(--accent); /* accent color on hover */
 }

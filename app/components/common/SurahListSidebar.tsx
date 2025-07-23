@@ -128,7 +128,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
             />
           </div>
         </div>
-        <div className="flex-grow overflow-y-auto p-2"> {/* Removed custom-scrollbar class */}
+        <div className="flex-grow overflow-y-auto p-2 homepage-scrollable-area"> {/* Added homepage-scrollable-area class */}
           {activeTab === 'Surah' && (
             <nav className="space-y-1">
               {filteredChapters.map(chapter => {
