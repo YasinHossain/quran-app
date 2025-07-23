@@ -90,16 +90,32 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
                   <FaChevronDown className="text-gray-500" />
                 </button>
               </div>
+              <div className="pt-2">
+                <div className={`flex items-center p-1 rounded-full ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'}`}> 
+                  <button
+                    onClick={() => setTheme('light')}
+                    className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                      theme === 'light'
+                        ? 'bg-white shadow text-slate-900'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    {t('light_mode')}
+                  </button>
+                  <button
+                    onClick={() => setTheme('dark')}
+                    className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                      theme === 'dark'
+                        ? 'bg-slate-700 text-white shadow'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    {t('dark_mode')}
+                  </button>
+                </div>
+              </div>
             </div>
           </CollapsibleSection>
-        </div>
-        <div className="p-4 border-t border-gray-200/80 dark:border-gray-600">
-          <button
-            onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-            className="w-full bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-lg p-2.5 text-sm hover:border-teal-500 transition"
-          >
-            {theme === 'light' ? t('switch_to_dark') : t('switch_to_light')}
-          </button>
         </div>
         {/* Arabic Font Panel */}
         <ArabicFontPanel isOpen={isArabicFontPanelOpen} onClose={() => setIsArabicFontPanelOpen(false)} />

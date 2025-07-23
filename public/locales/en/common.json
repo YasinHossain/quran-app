@@ -33,5 +33,7 @@
   "end_of_page": "End of Page.",
   "no_verses_found_on_page": "No verses found on this page.",
   "switch_to_dark": "Switch to dark mode",
-  "switch_to_light": "Switch to light mode"
+  "switch_to_light": "Switch to light mode",
+  "light_mode": "Light",
+  "dark_mode": "Dark"
 }

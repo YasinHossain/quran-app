@@ -18,17 +18,23 @@ export default function VerseOfDay() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setLoading(true);
-    getRandomVerse(settings.translationId)
-      .then(v => {
-        setVerse(v);
-        setError(null);
-      })
-      .catch(err => {
-        console.error(err);
-        setError('Failed to load verse.');
-      })
-      .finally(() => setLoading(false));
+    const fetchVerse = () => {
+      setLoading(true);
+      getRandomVerse(settings.translationId)
+        .then(v => {
+          setVerse(v);
+          setError(null);
+        })
+        .catch(err => {
+          console.error(err);
+          setError('Failed to load verse.');
+        })
+        .finally(() => setLoading(false));
+    };
+
+    fetchVerse();
+    const intervalId = setInterval(fetchVerse, 10000);
+    return () => clearInterval(intervalId);
   }, [settings.translationId]);
 
   let content: React.ReactNode = null;
