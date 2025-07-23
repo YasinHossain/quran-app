@@ -28,6 +28,16 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 - `QURAN_API_BASE_URL` sets the Quran API endpoint. It defaults to `https://api.quran.com/api/v4` if not provided.
 
+## Updating Data
+
+Regenerate the bundled Quran metadata with:
+
+```bash
+npx ts-node scripts/fetchData.ts
+```
+
+This downloads the latest surah and juz information into `data/surahs.json` and `data/juz.json`.
+
 ## Custom Arabic Fonts
 
 Font files should be placed in `public/fonts/`. Add your `.woff2`, `.woff`, `.otf`, or `.ttf` files there so they are served by Next.js.
