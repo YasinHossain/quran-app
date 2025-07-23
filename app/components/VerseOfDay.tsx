@@ -59,7 +59,7 @@ export default function VerseOfDay() {
   }
 
   return (
-    <div className={`mt-12 w-full max-w-3xl p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400 ${theme === 'light' ? 'bg-white/60 border border-gray-200' : 'bg-slate-800/30 border-slate-700/50'}`}>
+    <div className={`mt-12 w-full max-w-3xl p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400 ${theme === 'light' ? 'bg-white/60' : 'bg-slate-800/30'}`}>
       {content}
     </div>
   );

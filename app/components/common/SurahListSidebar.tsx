@@ -138,20 +138,18 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     href={`/features/surah/${chapter.id}`}
                     key={chapter.id}
                     data-active={isActive} // Add data-active attribute
-                    className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors border-l-2 ${
-                      isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-[var(--background)] dark:hover:bg-gray-800'
+                    className={`group flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors border-l-2 border-transparent hover:border-teal-600 ${
+                      isActive && 'bg-teal-50 border-teal-600'
                     }`}
                   >
-                      <div className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-colors ${
-                        isActive ? 'bg-teal-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
-                      }`}>
+                      <div className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-colors ${isActive ? 'bg-teal-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 group-hover:bg-emerald-100 group-hover:text-emerald-600'}`}>
                         <span>{chapter.id}</span>
                       </div>
                       <div className="flex-grow">
                         <p className={`font-semibold ${isActive ? 'text-teal-800' : 'text-[var(--foreground)]'}`}>{chapter.name_simple}</p>
                         <p className="text-xs text-gray-500">{chapter.revelation_place}</p>
                       </div>
-                      <p className={`font-mono text-xl ${isActive ? 'text-teal-800' : 'text-gray-500'}`}>
+                      <p className={`font-amiri text-xl ${isActive ? 'text-teal-800' : 'text-gray-500 group-hover:text-emerald-600'}`}>
                         {chapter.name_arabic}
                       </p>
                   </Link>

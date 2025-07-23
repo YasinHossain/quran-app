@@ -42,8 +42,8 @@ export default function HomePage() {
         <HomePageBackground />
 
         <div className="relative z-10 flex flex-col h-full overflow-y-auto px-4 sm:px-6 lg:px-8">
-          <header className={`w-full py-4 ${theme === 'light' ? 'bg-white border-b border-gray-200' : 'bg-transparent border-transparent'}`}>
-            <nav className={`flex justify-between items-center max-w-7xl mx-auto p-3 sm:p-4 ${theme === 'light' ? 'bg-transparent' : 'bg-slate-800/50'} rounded-2xl`}>
+          <header className="w-full py-4">
+            <nav className={`flex justify-between items-center max-w-7xl mx-auto p-3 sm:p-4 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 ${theme === 'light' ? 'bg-white/60' : 'bg-slate-800/50'}`}>
               <h1 className={`text-2xl font-bold tracking-wider ${theme === 'light' ? 'text-slate-900' : 'text-white'}`}>
                 Al Qur&apos;an
               </h1>
@@ -107,35 +107,32 @@ export default function HomePage() {
           <section id="surahs" className="py-20 max-w-7xl mx-auto w-full">
             <div className="flex justify-between items-center mb-8 content-visibility-auto animate-fade-in-up animation-delay-600">
               <h2 className="text-3xl font-bold text-slate-900 dark:text-white">All Surahs</h2>
-              <div className="flex items-center bg-white/40 dark:bg-slate-800/60 p-1 sm:p-2 rounded-full">
+              <div className={`flex items-center p-1 sm:p-2 rounded-full ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'}`}>
                 <button
                   onClick={() => setActiveTab('Surah')}
                   className={`px-4 sm:px-5 py-2 rounded-full text-sm font-semibold transition-colors ${
                     activeTab === 'Surah'
-                      ? 'bg-white dark:bg-slate-700 shadow text-slate-900'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
-                  }`}
-                >
+                      ? theme === 'light' ? 'bg-white shadow text-slate-900' : 'bg-slate-700 text-white shadow'
+                      : theme === 'light' ? 'text-slate-500 hover:text-slate-800' : 'text-slate-400 hover:text-white'
+                  }`}>
                   Surah
                 </button>
                 <button
                   onClick={() => setActiveTab('Juz')}
                   className={`px-4 sm:px-5 py-2 rounded-full text-sm font-semibold transition-colors ${
                     activeTab === 'Juz'
-                      ? 'bg-white dark:bg-slate-700 shadow text-slate-900'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
-                  }`}
-                >
+                      ? theme === 'light' ? 'bg-white shadow text-slate-900' : 'bg-slate-700 text-white shadow'
+                      : theme === 'light' ? 'text-slate-500 hover:text-slate-800' : 'text-slate-400 hover:text-white'
+                  }`}>
                   Juz
                 </button>
                 <button
                   onClick={() => setActiveTab('Page')}
                   className={`px-4 sm:px-5 py-2 rounded-full text-sm font-semibold transition-colors ${
                     activeTab === 'Page'
-                      ? 'bg-white dark:bg-slate-700 shadow text-slate-900'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
-                  }`}
-                >
+                      ? theme === 'light' ? 'bg-white shadow text-slate-900' : 'bg-slate-700 text-white shadow'
+                      : theme === 'light' ? 'text-slate-500 hover:text-slate-800' : 'text-slate-400 hover:text-white'
+                  }`}>
                   Page
                 </button>
               </div>
@@ -147,12 +144,10 @@ export default function HomePage() {
                   <Link
                     href={`/features/surah/${surah.number}`}
                     key={surah.number}
-                    className={`group p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 content-visibility-auto animate-fade-in-up ${theme === 'light' ? 'bg-white border border-gray-200 hover:bg-gray-100' : 'bg-slate-800/40 border-slate-700/50 hover:bg-slate-700/60'}`}
-                    style={{ animationDelay: `${600 + index * 15}ms` }}
-                  >
+                    className={`group p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 content-visibility-auto animate-fade-in-up ${theme === 'light' ? 'bg-white/60' : 'bg-slate-800/40'}`}>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-4">
-                        <div className={`flex items-center justify-center w-12 h-12 rounded-xl font-bold text-lg transition-colors ${theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-50/50' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}`}>
+                        <div className={`flex items-center justify-center w-12 h-12 rounded-xl font-bold text-lg transition-colors ${theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}`}>
                           {surah.number}
                         </div>
                         <div>
@@ -161,7 +156,7 @@ export default function HomePage() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className={`font-amiri text-2xl ${theme === 'light' ? 'text-slate-800' : 'text-slate-300 group-hover:text-emerald-400'} transition-colors`} >
+                        <p className={`font-amiri text-2xl ${theme === 'light' ? 'text-slate-800 group-hover:text-emerald-600' : 'text-slate-300 group-hover:text-emerald-400'} transition-colors`} >
                           {surah.arabicName}
                         </p>
                         <p className={`text-sm ${theme === 'light' ? 'text-slate-600' : 'text-slate-400'}`}>{surah.verses} Verses</p>
@@ -177,9 +172,7 @@ export default function HomePage() {
                   <Link
                     href={`/features/juz/${juz.number}`}
                     key={juz.number}
-                    className={`group p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 content-visibility-auto animate-fade-in-up ${theme === 'light' ? 'bg-white border border-gray-200 hover:bg-gray-100' : 'bg-slate-800/40 border-slate-700/50 hover:bg-slate-700/60'}`}
-                    style={{ animationDelay: `${100 + index * 15}ms` }}
-                  >
+                    className={`group p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 content-visibility-auto animate-fade-in-up ${theme === 'light' ? 'bg-white/60' : 'bg-slate-800/40'}`}>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-4">
                         <div className={`flex items-center justify-center w-12 h-12 rounded-xl font-bold text-lg transition-colors ${theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-50/50' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}`}>
@@ -201,9 +194,7 @@ export default function HomePage() {
                   <Link
                     href={`/features/page/${page}`}
                     key={page}
-                    className={`group p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 content-visibility-auto animate-fade-in-up ${theme === 'light' ? 'bg-white border border-gray-200 hover:bg-gray-100' : 'bg-slate-800/40 border-slate-700/50 hover:bg-slate-700/60'}`}
-                    style={{ animationDelay: `${100 + index * 15}ms` }}
-                  >
+                    className={`group p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 content-visibility-auto animate-fade-in-up ${theme === 'light' ? 'bg-white/60' : 'bg-slate-800/40'}`}>
                     <div className="flex items-center space-x-4">
                       <div className={`flex items-center justify-center w-12 h-12 rounded-xl font-bold text-lg transition-colors ${theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-50/50' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}`}>
                         {page}
