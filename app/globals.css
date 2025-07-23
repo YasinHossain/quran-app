@@ -5,12 +5,14 @@
   --background: #F7F9F9;
   --foreground: #374151;
   --border-color: #e5e7eb;
+  --accent: #0d9488; /* Added accent color variable */
 }
 
 [data-theme='dark'] {
   --background: #1a202c;
   --foreground: #d1d5db;
   --border-color: #4b5563;
+  --accent: #0d9488; /* Added accent color variable */
 }
 
 @layer base {
@@ -53,4 +55,20 @@ input[type="range"]::-webkit-slider-thumb {
   transition: background 0.3s, box-shadow 0.3s;
 }
 
-/* ... other custom styles ... */
+/* Styles for the custom scrollbar - applied only to the homepage-scrollable-area */
+.homepage-scrollable-area::-webkit-scrollbar {
+  width: 8px; /* width of the scrollbar */
+}
+
+.homepage-scrollable-area::-webkit-scrollbar-track {
+  background: var(--background); /* color of the track */
+}
+
+.homepage-scrollable-area::-webkit-scrollbar-thumb {
+  background: var(--border-color); /* color of the scroll thumb */
+  border-radius: 4px; /* roundness of the scroll thumb */
+}
+
+.homepage-scrollable-area::-webkit-scrollbar-thumb:hover {
+  background: var(--accent); /* color of the scroll thumb on hover */
+}

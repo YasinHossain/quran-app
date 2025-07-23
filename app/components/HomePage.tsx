@@ -41,7 +41,8 @@ export default function HomePage() {
       <div className={`relative h-screen flex flex-col ${theme === 'light' ? 'bg-white text-slate-900' : 'bg-transparent dark:text-[var(--foreground)]'} overflow-hidden`}>
         <HomePageBackground />
 
-        <div className="relative z-10 flex flex-col h-full overflow-y-auto px-4 sm:px-6 lg:px-8">
+        {/* Added homepage-scrollable-area class */}
+        <div className="relative z-10 flex flex-col h-full overflow-y-auto px-4 sm:px-6 lg:px-8 homepage-scrollable-area">
           <header className="w-full py-4">
             <nav className={`flex justify-between items-center max-w-7xl mx-auto p-3 sm:p-4 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 ${theme === 'light' ? 'bg-white/60' : 'bg-slate-800/50'}`}>
               <h1 className={`text-2xl font-bold tracking-wider ${theme === 'light' ? 'text-slate-900' : 'text-white'}`}>

@@ -92,7 +92,7 @@ export default function SurahPage({ params }: SurahPageProps) {
   
   return (
     <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden">
-      <main className="flex-grow bg-[var(--background)] p-6 lg:p-10 overflow-y-auto">
+      <main className="flex-grow bg-[var(--background)] p-6 lg:p-10 overflow-y-auto"> {/* Removed custom-scrollbar class */}
         <div className="max-w-4xl mx-auto relative">
           {isLoading ? (
             <div className="flex justify-center py-20">

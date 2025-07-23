@@ -14,13 +14,14 @@ const IconSidebar = () => {
 
     return (
         // CHANGE: Removed the border-r class for a cleaner look and centered content vertically
-        <aside className="w-20 bg-[var(--background)] text-[var(--foreground)] flex flex-col justify-center py-4">
+        // Added h-full to make the sidebar take full height for vertical centering
+        <aside className="w-20 bg-[var(--background)] text-[var(--foreground)] flex flex-col justify-center py-4 h-full">
             <nav className="flex flex-col items-center space-y-2">
                 {navItems.map((item, index) => (
                     <Link key={index} href={item.href} title={item.label}>
                         <button
                             aria-label={item.label}
-                            className="p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 text-[var(--foreground)] hover:text-teal-600 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+                            className="p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 text-[var(--foreground)] hover:text-teal-600 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 border-0"
                         >
                             <item.icon className="h-6 w-6" />
                         </button>
