@@ -19,7 +19,7 @@ const allSurahs: Surah[] = surahsData;
 const allJuz: JuzSummary[] = juzData;
 const allPages = Array.from({ length: 604 }, (_, i) => i + 1);
 
-// --- Main Page Component --िन्कMain Page Component ---
+// --- Main Page Component ---
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'Surah' | 'Juz' | 'Page'>('Surah');
@@ -70,14 +70,14 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="mt-10 w-full max-w-xl mx-auto content-visibility-auto animate-fade-in-up animation-delay-200">
+            <div className="mt-10 w-full max-w-xl mx-auto content-visibility-auto animate-fade-in-up animation-delay-200 p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300">
               <div className="relative">
                 <input
                   type="text"
                   placeholder="What do you want to read?"
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  className="w-full px-4 sm:px-5 py-4 pr-12 text-lg bg-white/40 dark:bg-slate-800/40 border-white/20 dark:border-slate-700/50 rounded-xl backdrop-blur-md focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all shadow-lg placeholder:text-slate-500 dark:placeholder:text-slate-400 text-slate-900"
+                  className={`w-full text-lg bg-transparent border-none focus:ring-0 focus:outline-none placeholder:text-slate-500 dark:placeholder:text-slate-400 ${theme === 'light' ? 'text-slate-900' : 'text-white'}`}
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 sm:pr-4 text-slate-500 dark:text-slate-400">
                   <Search className="w-6 h-6" />
