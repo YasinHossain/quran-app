@@ -1,7 +1,17 @@
 /* Keep the original Tailwind import to avoid breaking the structure */
 @import "tailwindcss";
 
-/* --- The conflicting :root and [data-theme] blocks have been removed --- */
+:root {
+  --background: #F7F9F9;
+  --foreground: #374151;
+  --border-color: #e5e7eb;
+}
+
+[data-theme='dark'] {
+  --background: #1a202c;
+  --foreground: #d1d5db;
+  --border-color: #4b5563;
+}
 
 @layer base {
   body {
