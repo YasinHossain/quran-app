@@ -89,7 +89,11 @@ export default function HomePage() {
               {shortcutSurahs.map(name => (
                 <button
                   key={name}
-                  className="px-4 sm:px-5 py-2 bg-white/40 dark:bg-slate-800/40 border border-white/50 dark:border-slate-700/50 rounded-full backdrop-blur-md hover:bg-white/60 dark:hover:bg-slate-700/60 hover:scale-105 transform transition-all duration-200 text-slate-800 dark:text-slate-300 font-medium shadow-sm hover:shadow-md"
+                  className={`px-4 sm:px-5 py-2 rounded-full font-medium shadow-sm transition-all duration-200 ${
+                    theme === 'light'
+                      ? 'bg-white border border-gray-200 text-slate-800 hover:bg-gray-100 hover:shadow-md'
+                      : 'bg-slate-800/40 border-slate-700/50 text-slate-300 backdrop-blur-md hover:bg-slate-700/60 hover:scale-105 transform hover:shadow-md'
+                  }`}
                 >
                   {name}
                 </button>
