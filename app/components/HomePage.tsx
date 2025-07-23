@@ -42,8 +42,8 @@ export default function HomePage() {
         <HomePageBackground />
 
         <div className="relative z-10 flex flex-col h-full overflow-y-auto px-4 sm:px-6 lg:px-8">
-          <header className={`w-full py-4 ${theme === 'light' ? 'bg-white/50 border border-white/60 backdrop-blur-xl' : 'bg-transparent border-transparent'}`}>
-            <nav className={`flex justify-between items-center max-w-7xl mx-auto p-3 sm:p-4 ${theme === 'light' ? 'bg-transparent' : 'bg-slate-800/50'} rounded-2xl`}>
+          <header className="w-full py-4">
+            <nav className={`flex justify-between items-center max-w-7xl mx-auto p-3 sm:p-4 bg-white/40 dark:bg-slate-800/40 border border-white/20 dark:border-slate-700/50 rounded-xl shadow-lg backdrop-blur-md`}>
               <h1 className={`text-2xl font-bold tracking-wider ${theme === 'light' ? 'text-slate-900' : 'text-white'}`}>
                 Al Qur&apos;an
               </h1>
@@ -142,12 +142,11 @@ export default function HomePage() {
                   <Link
                     href={`/features/surah/${surah.number}`}
                     key={surah.number}
-                    className={`group p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 content-visibility-auto animate-fade-in-up ${theme === 'light' ? 'bg-white/60 border border-gray-200 hover:bg-white/80 hover:border-emerald-500/60' : 'bg-slate-800/40 border-slate-700/50 hover:bg-slate-700/60 hover:border-emerald-500/60'}`}
+                    className="group p-4 sm:p-5 rounded-2xl shadow-lg"
                     style={{ animationDelay: `${600 + index * 15}ms` }}
                   >
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className={`flex items-center justify-center w-12 h-12 rounded-xl font-bold text-lg transition-colors ${theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-500/10' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}`}>
+                      <div className={`flex items-center justify-center w-12 h-12 rounded-xl font-bold text-lg transition-colors ${theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-500/10' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}`}>
                           {surah.number}
                         </div>
                         <div>
