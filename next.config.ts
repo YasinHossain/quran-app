@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 import nextI18NextConfig from "./next-i18next.config.mjs";
+import nextPwa from "next-pwa";
+import pwaConfig from "./next-pwa.config.mjs";
 
 // Define commonly recommended security headers
 const securityHeaders = [
@@ -51,4 +53,6 @@ const nextConfig: NextConfig = {
 
 };
 
-export default nextConfig;
+const withPWA = nextPwa(pwaConfig);
+
+export default withPWA(nextConfig);
