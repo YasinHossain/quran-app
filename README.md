@@ -53,6 +53,8 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Development
 
+Before running tests or linting, execute `npm install` to install dev dependencies.
+
 Run the linter:
 
 ```bash
