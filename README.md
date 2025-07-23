@@ -42,6 +42,19 @@ To make a font selectable in the application, edit `ARABIC_FONTS` in `app/contex
 
 Only include fonts you are licensed to distribute. Keep any required attribution or license files with the font files inside `public/fonts/`.
 
+## Progressive Web App
+
+This project uses [`next-pwa`](https://github.com/shadowwalker/next-pwa) to add a service worker. When enabled, API responses for surahs, juz, and page requests as well as custom fonts from `public/fonts/` are cached so the Quran can be read offline.
+
+The service worker is active in production builds by default. Set the environment variable `NEXT_DISABLE_PWA=true` during the build or runtime to disable it.
+
+```bash
+# disable the service worker
+NEXT_DISABLE_PWA=true npm run build
+```
+
+Remove the variable to re-enable it.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
