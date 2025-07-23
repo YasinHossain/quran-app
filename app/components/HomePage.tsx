@@ -38,7 +38,7 @@ export default function HomePage() {
 
   return (
     <>
-      <div className="relative h-screen flex flex-col bg-[var(--background)] text-slate-900 dark:text-[var(--foreground)] overflow-hidden">
+      <div className="relative h-screen flex flex-col bg-transparent text-slate-900 dark:text-[var(--foreground)] overflow-hidden">
         <HomePageBackground />
 
         <div className="relative z-10 flex flex-col h-full overflow-y-auto px-4 sm:px-6 lg:px-8">
