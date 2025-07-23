@@ -25,75 +25,44 @@
     @apply bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200;
     font-family: Inter, sans-serif;
     margin: 0;
-    overflow-x: hidden;
   }
 }
 
-/* --- The custom styles below are preserved --- */
-
-/* --- Custom Modern Range Slider Styles --- */
-/* Note: These styles may need to be updated to use Tailwind's theme colors
-   if they don't look right, but for now we will keep them as-is. */
-input[type="range"] {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 6px;
-  border-radius: 5px;
-  outline: none;
-  background: linear-gradient(to right, var(--accent) var(--value-percent, 0%), var(--border-color) var(--value-percent, 0%));
-}
-
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  background: var(--background); /* Use background variable */
-  border: 2px solid var(--border-color); /* Use border-color variable */
-  border-radius: 50%;
-  cursor: pointer;
-  margin-top: -5px;
-  transition: background 0.3s, box-shadow 0.3s;
-}
-
-input[type="range"]::-webkit-slider-thumb:hover {
-  background: var(--accent); /* Light up on hover */
-  border-color: var(--accent); /* Change border color on hover */
-}
-
-/* Global scrollbar styles */
+/* Add custom scrollbar styles */
+/* Target Webkit browsers (Chrome, Safari) */
 ::-webkit-scrollbar {
-  width: 4px; /* Made scrollbar slimmer */
+  width: 6px; /* Width of the scrollbar - Made slimmer */
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent; /* transparent track */
+  background: var(--background); /* Color of the track */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--subtle-grey); /* subtle grey color by default */
-  border-radius: 2px; /* Made corners slightly less rounded */
+  background: var(--subtle-grey); /* Color of the scrollbar thumb */
+  border-radius: 3px; /* Round the corners of the thumb - Adjusted for slimmer size */
+  border: 1px solid var(--background); /* Add a border around the thumb - Adjusted for slimmer size */
 }
 
+/* Add a hover effect to the scrollbar thumb */
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent); /* accent color on hover */
+  background: var(--accent); /* Change thumb color on hover */
 }
 
-/* Simple scroll stick style for homepage-scrollable-area */
-.homepage-scrollable-area::-webkit-scrollbar {
-  width: 4px; /* Made scrollbar slimmer */
+/* Remove scrollbar buttons (up and down arrows) */
+::-webkit-scrollbar-button:vertical:decrement,
+::-webkit-scrollbar-button:vertical:increment {
+  display: none;
 }
 
-.homepage-scrollable-area::-webkit-scrollbar-track {
-  background: transparent; /* transparent track */
+/* Target Firefox */
+/* Note: Firefox scrollbar styling is limited */
+* {
+  scrollbar-width: thin; /* "auto" or "thin" */
+  scrollbar-color: var(--subtle-grey) var(--background); /* thumb color track color */
 }
 
-.homepage-scrollable-area::-webkit-scrollbar-thumb {
-  background: var(--subtle-grey); /* subtle grey color by default */
-  border-radius: 2px; /* Made corners slightly less rounded */
-}
-
-.homepage-scrollable-area::-webkit-scrollbar-thumb:hover {
-  background: var(--accent); /* accent color on hover */
+/* Add a hover effect to the scrollbar thumb for Firefox (limited support) */
+* {
+  scrollbar-color: var(--accent) var(--background); /* thumb color track color */
 }
