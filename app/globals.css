@@ -63,6 +63,6 @@
 }
 
 /* Add a hover effect to the scrollbar thumb for Firefox (limited support) */
-* {
+*:hover {
   scrollbar-color: var(--accent) var(--background); /* thumb color track color */
 }
