@@ -88,6 +88,25 @@ input[type="range"]::-webkit-slider-thumb:hover {
   display: none;
 }
 
+/* Simple scroll stick style for homepage-scrollable-area */
+.homepage-scrollable-area::-webkit-scrollbar {
+  width: 4px; /* Made scrollbar slimmer */
+}
+
+.homepage-scrollable-area::-webkit-scrollbar-track {
+  background: var(--background); /* Color of the track */
+}
+
+.homepage-scrollable-area::-webkit-scrollbar-thumb {
+  background: var(--subtle-grey); /* subtle grey color by default */
+  border-radius: 2px; /* Made corners slightly less rounded */
+  border: 1px solid var(--background); /* Add a border around the thumb */
+}
+
+.homepage-scrollable-area::-webkit-scrollbar-thumb:hover {
+  background: var(--accent); /* accent color on hover */
+}
+
 /* Target Firefox */
 /* Note: Firefox scrollbar styling is limited */
 * {
