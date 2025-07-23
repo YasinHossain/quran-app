@@ -10,7 +10,7 @@ export const allSurahs = [
     { number: 7, name: 'Al-Araf', arabicName: 'ٱلْأَعْرَاف', verses: 206, meaning: 'The Heights' },
     { number: 8, name: 'Al-Anfal', arabicName: 'ٱلْأَنْفَال', verses: 75, meaning: 'The Spoils of War' },
     { number: 9, name: 'At-Tawbah', arabicName: 'ٱلتَّوْبَة', verses: 129, meaning: 'The Repentance' },
-    { number: 10, name: 'Yunus', arabicName: 'يُونُs', verses: 109, meaning: 'Jonah' },
+    { number: 10, name: 'Yunus', arabicName: 'يُونُس', verses: 109, meaning: 'Jonah' },
     { number: 11, name: 'Hud', arabicName: 'هُود', verses: 123, meaning: 'Hud' },
     { number: 12, name: 'Yusuf', arabicName: 'يُوسُف', verses: 111, meaning: 'Joseph' },
     { number: 13, name: 'Ar-Rad', arabicName: 'ٱلرَّعْد', verses: 43, meaning: 'The Thunder' },
