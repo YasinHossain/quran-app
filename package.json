@@ -53,6 +53,8 @@
     "ts-jest": "^29.4.0",
     "typescript": "^5",
     "whatwg-fetch": "^3.6.20",
-    "husky": "^9"
+    "husky": "^9",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1"
   }
 }
