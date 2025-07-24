@@ -9,10 +9,7 @@ Run the following commands before pushing changes:
 ```bash
 npm install
 npm audit --omit=dev
-npm run format
-npm run lint
-npm run type-check
-npm test
+npm run check
 ```
 
 ## Commit Messages
