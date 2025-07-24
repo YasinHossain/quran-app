@@ -17,6 +17,7 @@ npm run check
 - Use a short summary in the imperative mood ("Add feature" not "Added" or "Adds").
 - Keep the first line under 50 characters.
 - Separate the summary from any additional details with a blank line.
+- Commit messages are automatically checked by Husky's `commit-msg` hook using commitlint.
 
 ## Code Style
 
