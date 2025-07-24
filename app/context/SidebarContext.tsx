@@ -15,7 +15,9 @@ export const SidebarProvider = ({ children }: { children: React.ReactNode }) => 
   const [isSettingsOpen, setSettingsOpen] = useState(false);
 
   return (
-    <SidebarContext.Provider value={{ isSurahListOpen, setSurahListOpen, isSettingsOpen, setSettingsOpen }}>
+    <SidebarContext.Provider
+      value={{ isSurahListOpen, setSurahListOpen, isSettingsOpen, setSettingsOpen }}
+    >
       {children}
     </SidebarContext.Provider>
   );

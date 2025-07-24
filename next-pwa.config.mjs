@@ -3,7 +3,8 @@ export default {
   disable: process.env.NEXT_DISABLE_PWA === 'true' || process.env.NODE_ENV === 'development',
   runtimeCaching: [
     {
-      urlPattern: /^https:\/\/api\.quran\.com\/api\/v4\/(chapters|juzs|verses\/by_(chapter|juz|page))/,
+      urlPattern:
+        /^https:\/\/api\.quran\.com\/api\/v4\/(chapters|juzs|verses\/by_(chapter|juz|page))/,
       handler: 'NetworkFirst',
       options: {
         cacheName: 'api-cache',

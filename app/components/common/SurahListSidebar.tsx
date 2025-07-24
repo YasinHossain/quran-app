@@ -45,9 +45,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   useEffect(() => {
     if (sidebarRef.current) {
       // Find the active link element within the sidebar
-      const activeLink = sidebarRef.current.querySelector(
-        `[data-active="true"]`
-      );
+      const activeLink = sidebarRef.current.querySelector(`[data-active="true"]`);
 
       if (activeLink) {
         // Scroll the active link into view
@@ -59,19 +57,21 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     }
   }, [activeTab, activeSurahId, activeJuzId, activePageId]); // Re-run effect when active tab or item changes
 
-
-  const filteredChapters = useMemo(() =>
-    chapters.filter(chapter =>
-      chapter.name_simple.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      chapter.id.toString().includes(searchTerm)
-    ), [chapters, searchTerm]
+  const filteredChapters = useMemo(
+    () =>
+      chapters.filter(
+        (chapter) =>
+          chapter.name_simple.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          chapter.id.toString().includes(searchTerm)
+      ),
+    [chapters, searchTerm]
   );
   const filteredJuzs = useMemo(
-    () => juzs.filter(j => j.toString().includes(searchTerm)),
+    () => juzs.filter((j) => j.toString().includes(searchTerm)),
     [juzs, searchTerm]
   );
   const filteredPages = useMemo(
-    () => pages.filter(p => p.toString().includes(searchTerm)),
+    () => pages.filter((p) => p.toString().includes(searchTerm)),
     [pages, searchTerm]
   );
 
@@ -79,7 +79,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const TABS = [
     { key: 'Surah', label: t('surah_tab') },
     { key: 'Juz', label: t('juz_tab') },
-    { key: 'Page', label: t('page_tab') }
+    { key: 'Page', label: t('page_tab') },
   ];
 
   return (
@@ -90,7 +90,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
         role="button"
         tabIndex={0}
         onClick={() => setSurahListOpen(false)}
-        onKeyDown={e => {
+        onKeyDown={(e) => {
           if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
             setSurahListOpen(false);
           }
@@ -103,12 +103,14 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
       >
         <div className="p-4 border-b border-gray-200/80">
           <div className="flex bg-gray-200 rounded-full p-1">
-            {TABS.map(tab => (
+            {TABS.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
                 className={`w-full py-2 text-sm font-semibold rounded-full transition-colors ${
-                  activeTab === tab.key ? 'bg-[var(--background)] text-teal-700 shadow' : 'text-gray-600 dark:text-gray-300 hover:bg-[var(--background)]'
+                  activeTab === tab.key
+                    ? 'bg-[var(--background)] text-teal-700 shadow'
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-[var(--background)]'
                 }`}
               >
                 {tab.label}
@@ -118,7 +120,10 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
         </div>
         <div className="p-4 border-b border-gray-200/80">
           <div className="relative">
-            <FaSearch size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <FaSearch
+              size={16}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            />
             <input
               type="text"
               placeholder={t('search_surah')}
@@ -128,10 +133,12 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
             />
           </div>
         </div>
-        <div className="flex-grow overflow-y-auto p-2 homepage-scrollable-area"> {/* Added homepage-scrollable-area class */}
+        <div className="flex-grow overflow-y-auto p-2 homepage-scrollable-area">
+          {' '}
+          {/* Added homepage-scrollable-area class */}
           {activeTab === 'Surah' && (
             <nav className="space-y-1">
-              {filteredChapters.map(chapter => {
+              {filteredChapters.map((chapter) => {
                 const isActive = activeSurahId === String(chapter.id);
                 return (
                   <Link
@@ -142,24 +149,32 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                       isActive && 'bg-teal-50 border-teal-600'
                     }`}
                   >
-                      <div className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors ${isActive ? 'bg-teal-600 text-white' : 'bg-gray-100 dark:bg-slate-700/50 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-500/20'}`}>
-                        <span>{chapter.id}</span>
-                      </div>
-                      <div className="flex-grow">
-                        <p className={`font-semibold ${isActive ? 'text-teal-800' : 'text-[var(--foreground)]'}`}>{chapter.name_simple}</p>
-                        <p className="text-xs text-gray-500">{chapter.revelation_place}</p>
-                      </div>
-                      <p className={`font-amiri text-xl ${isActive ? 'text-teal-800' : 'text-gray-500 group-hover:text-emerald-600'}`}>
-                        {chapter.name_arabic}
+                    <div
+                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors ${isActive ? 'bg-teal-600 text-white' : 'bg-gray-100 dark:bg-slate-700/50 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-500/20'}`}
+                    >
+                      <span>{chapter.id}</span>
+                    </div>
+                    <div className="flex-grow">
+                      <p
+                        className={`font-semibold ${isActive ? 'text-teal-800' : 'text-[var(--foreground)]'}`}
+                      >
+                        {chapter.name_simple}
                       </p>
+                      <p className="text-xs text-gray-500">{chapter.revelation_place}</p>
+                    </div>
+                    <p
+                      className={`font-amiri text-xl ${isActive ? 'text-teal-800' : 'text-gray-500 group-hover:text-emerald-600'}`}
+                    >
+                      {chapter.name_arabic}
+                    </p>
                   </Link>
-                )
+                );
               })}
             </nav>
           )}
           {activeTab === 'Juz' && (
             <nav className="space-y-1">
-              {filteredJuzs.map(j => {
+              {filteredJuzs.map((j) => {
                 const isActive = activeJuzId === String(j);
                 return (
                   <Link
@@ -167,15 +182,25 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     key={j}
                     data-active={isActive} // Add data-active attribute
                     className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors border-l-2 ${
-                      isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-[var(--background)] dark:hover:bg-gray-800'
+                      isActive
+                        ? 'border-teal-600 bg-teal-50'
+                        : 'border-transparent hover:bg-[var(--background)] dark:hover:bg-gray-800'
                     }`}
                   >
-                      <div className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors ${
-                        isActive ? 'bg-teal-600 text-white' : 'bg-gray-100 dark:bg-slate-700/50 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-500/20'
-                      }`}>
-                        <span>{j}</span>
-                      </div>
-                      <p className={`font-semibold ${isActive ? 'text-teal-800' : 'text-[var(--foreground)]'}`}>Juz {j}</p>
+                    <div
+                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors ${
+                        isActive
+                          ? 'bg-teal-600 text-white'
+                          : 'bg-gray-100 dark:bg-slate-700/50 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-500/20'
+                      }`}
+                    >
+                      <span>{j}</span>
+                    </div>
+                    <p
+                      className={`font-semibold ${isActive ? 'text-teal-800' : 'text-[var(--foreground)]'}`}
+                    >
+                      Juz {j}
+                    </p>
                   </Link>
                 );
               })}
@@ -183,7 +208,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
           )}
           {activeTab === 'Page' && (
             <nav className="space-y-1">
-              {filteredPages.map(p => {
+              {filteredPages.map((p) => {
                 const isActive = activePageId === String(p);
                 return (
                   <Link
@@ -191,15 +216,25 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     key={p}
                     data-active={isActive} // Add data-active attribute
                     className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors border-l-2 ${
-                      isActive ? 'border-teal-600 bg-teal-50' : 'border-transparent hover:bg-[var(--background)] dark:hover:bg-gray-800'
+                      isActive
+                        ? 'border-teal-600 bg-teal-50'
+                        : 'border-transparent hover:bg-[var(--background)] dark:hover:bg-gray-800'
                     }`}
                   >
-                      <div className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors ${
-                        isActive ? 'bg-teal-600 text-white' : 'bg-gray-100 dark:bg-slate-700/50 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-500/20'
-                      }`}>
-                        <span>{p}</span>
-                      </div>
-                      <p className={`font-semibold ${isActive ? 'text-teal-800' : 'text-[var(--foreground)]'}`}>Page {p}</p>
+                    <div
+                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors ${
+                        isActive
+                          ? 'bg-teal-600 text-white'
+                          : 'bg-gray-100 dark:bg-slate-700/50 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-500/20'
+                      }`}
+                    >
+                      <span>{p}</span>
+                    </div>
+                    <p
+                      className={`font-semibold ${isActive ? 'text-teal-800' : 'text-[var(--foreground)]'}`}
+                    >
+                      Page {p}
+                    </p>
                   </Link>
                 );
               })}

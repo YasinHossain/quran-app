@@ -1,5 +1,12 @@
 // app/surah/[surahId]/_components/Verse.tsx
-import { FaPlay, FaPause, FaBookmark, FaRegBookmark, FaEllipsisH, FaBookReader } from '@/app/components/common/SvgIcons';
+import {
+  FaPlay,
+  FaPause,
+  FaBookmark,
+  FaRegBookmark,
+  FaEllipsisH,
+  FaBookReader,
+} from '@/app/components/common/SvgIcons';
 import { TafsirModal } from './TafsirModal';
 import { Verse as VerseType, Translation, Word } from '@/types';
 import { useAudio } from '@/app/context/AudioContext';
@@ -31,7 +38,7 @@ export const Verse = ({ verse }: VerseProps) => {
             <button
               aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
               onClick={() =>
-                setPlayingId(currentId => (currentId === verse.id ? null : verse.id))
+                setPlayingId((currentId) => (currentId === verse.id ? null : verse.id))
               }
               title="Play/Pause"
               className={`p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition ${isPlaying ? 'text-teal-600' : 'hover:text-teal-600'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500`}
@@ -53,7 +60,7 @@ export const Verse = ({ verse }: VerseProps) => {
             >
               {isBookmarked ? <FaBookmark size={18} /> : <FaRegBookmark size={18} />}
             </button>
-            
+
             {/* Tafsir button opens modal */}
             <button
               aria-label="Tafsir"
@@ -92,9 +99,7 @@ export const Verse = ({ verse }: VerseProps) => {
                       {/* Tajweed coloring for each word */}
                       <span
                         dangerouslySetInnerHTML={{
-                          __html: settings.tajweed
-                            ? applyTajweed(word.uthmani)
-                            : word.uthmani,
+                          __html: settings.tajweed ? applyTajweed(word.uthmani) : word.uthmani,
                         }}
                       />
                       {/* Tooltip translation (when not showByWords) */}
@@ -116,15 +121,11 @@ export const Verse = ({ verse }: VerseProps) => {
                   </span>
                 ))}
               </span>
+            ) : // If no word data, show whole verse with or without Tajweed
+            settings.tajweed ? (
+              <span dangerouslySetInnerHTML={{ __html: applyTajweed(verse.text_uthmani) }} />
             ) : (
-              // If no word data, show whole verse with or without Tajweed
-              settings.tajweed ? (
-                <span
-                  dangerouslySetInnerHTML={{ __html: applyTajweed(verse.text_uthmani) }}
-                />
-              ) : (
-                verse.text_uthmani
-              )
+              verse.text_uthmani
             )}
           </p>
           {/* TRANSLATIONS */}

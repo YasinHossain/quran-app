@@ -15,7 +15,7 @@ interface ApiVerse extends Verse {
 function normalizeVerse(raw: ApiVerse, wordLang = 'en'): Verse {
   return {
     ...raw,
-    words: raw.words?.map(w => ({
+    words: raw.words?.map((w) => ({
       ...w,
       uthmani: (w as ApiWord).text_uthmani ?? w.text,
       [wordLang]: w.translation?.text,
@@ -71,7 +71,7 @@ export async function getVersesByChapter(
   }
   const data = await res.json();
   const totalPages = data.meta?.total_pages || data.pagination?.total_pages || 1;
-  const verses = (data.verses as ApiVerse[]).map(v => normalizeVerse(v, wordLang));
+  const verses = (data.verses as ApiVerse[]).map((v) => normalizeVerse(v, wordLang));
   return { verses, totalPages };
 }
 
@@ -83,7 +83,7 @@ export async function searchVerses(query: string): Promise<Verse[]> {
   }
   const data = await res.json();
   const results: SearchApiResult[] = data.search?.results || [];
-  return results.map(r => ({
+  return results.map((r) => ({
     id: r.verse_id,
     verse_key: r.verse_key,
     text_uthmani: r.text,
@@ -92,10 +92,7 @@ export async function searchVerses(query: string): Promise<Verse[]> {
 }
 
 // Fetch tafsir text for a specific verse
-export async function getTafsirByVerse(
-  verseKey: string,
-  tafsirId = 169
-): Promise<string> {
+export async function getTafsirByVerse(verseKey: string, tafsirId = 169): Promise<string> {
   const url = `${API_BASE_URL}/tafsirs/${tafsirId}/by_ayah/${encodeURIComponent(verseKey)}`;
   const res = await fetch(url);
   if (!res.ok) {
@@ -119,7 +116,7 @@ export async function getVersesByJuz(
   }
   const data = await res.json();
   const totalPages = data.meta?.total_pages || data.pagination?.total_pages || 1;
-  const verses = (data.verses as ApiVerse[]).map(v => normalizeVerse(v, wordLang));
+  const verses = (data.verses as ApiVerse[]).map((v) => normalizeVerse(v, wordLang));
   return { verses, totalPages };
 }
 
@@ -137,7 +134,7 @@ export async function getVersesByPage(
   }
   const data = await res.json();
   const totalPages = data.meta?.total_pages || data.pagination?.total_pages || 1;
-  const verses = (data.verses as ApiVerse[]).map(v => normalizeVerse(v, wordLang));
+  const verses = (data.verses as ApiVerse[]).map((v) => normalizeVerse(v, wordLang));
   return { verses, totalPages };
 }
 
@@ -152,9 +149,7 @@ export async function getJuz(juzId: string | number): Promise<Juz> {
 }
 
 // Fetch a random verse with translation
-export async function getRandomVerse(
-  translationId: number
-): Promise<Verse> {
+export async function getRandomVerse(translationId: number): Promise<Verse> {
   const url = `${API_BASE_URL}/verses/random?translations=${translationId}&fields=text_uthmani`;
   const res = await fetch(url);
   if (!res.ok) {

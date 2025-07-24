@@ -20,7 +20,7 @@ function SearchContent() {
     setLoading(true);
     searchVerses(query)
       .then(setVerses)
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
         setError('Failed to load results.');
       })
@@ -29,16 +29,14 @@ function SearchContent() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      {query && (
-        <h1 className="text-2xl font-bold mb-6">Search results for: {query}</h1>
-      )}
+      {query && <h1 className="text-2xl font-bold mb-6">Search results for: {query}</h1>}
       {loading && <p className="text-teal-600">Loading...</p>}
       {error && <p className="text-red-600 mb-4">{error}</p>}
       {!loading && verses.length === 0 && !error && query && (
         <p className="text-gray-500">No verses found.</p>
       )}
       <div className="space-y-8">
-        {verses.map(v => (
+        {verses.map((v) => (
           <Verse key={v.id} verse={v} />
         ))}
       </div>

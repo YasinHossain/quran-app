@@ -25,13 +25,13 @@ async function main() {
       name,
       arabicName: meta.name,
       verses: meta.ayahCount,
-      meaning
+      meaning,
     });
   }
   await writeFile('data/surahs.json', JSON.stringify(surahs, null, 2) + '\n');
 
   const surahNames: Record<number, string> = {};
-  surahs.forEach(s => {
+  surahs.forEach((s) => {
     surahNames[s.number] = s.name;
   });
 
@@ -46,7 +46,7 @@ async function main() {
   await writeFile('data/juz.json', JSON.stringify(juzData, null, 2) + '\n');
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error(err);
   process.exit(1);
 });

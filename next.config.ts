@@ -1,33 +1,33 @@
-import type { NextConfig } from "next";
-import nextI18NextConfig from "./next-i18next.config.mjs";
-import nextPwa from "next-pwa";
-import pwaConfig from "./next-pwa.config.mjs";
+import type { NextConfig } from 'next';
+import nextI18NextConfig from './next-i18next.config.mjs';
+import nextPwa from 'next-pwa';
+import pwaConfig from './next-pwa.config.mjs';
 
 // Define commonly recommended security headers
 const securityHeaders = [
   {
-    key: "X-DNS-Prefetch-Control",
-    value: "on",
+    key: 'X-DNS-Prefetch-Control',
+    value: 'on',
   },
   {
-    key: "X-Frame-Options",
-    value: "SAMEORIGIN",
+    key: 'X-Frame-Options',
+    value: 'SAMEORIGIN',
   },
   {
-    key: "X-Content-Type-Options",
-    value: "nosniff",
+    key: 'X-Content-Type-Options',
+    value: 'nosniff',
   },
   {
-    key: "Referrer-Policy",
-    value: "origin-when-cross-origin",
+    key: 'Referrer-Policy',
+    value: 'origin-when-cross-origin',
   },
   {
-    key: "Strict-Transport-Security",
-    value: "max-age=63072000; includeSubDomains; preload",
+    key: 'Strict-Transport-Security',
+    value: 'max-age=63072000; includeSubDomains; preload',
   },
   {
-    key: "Permissions-Policy",
-    value: "camera=(), microphone=(), geolocation=()",
+    key: 'Permissions-Policy',
+    value: 'camera=(), microphone=(), geolocation=()',
   },
 ];
 
@@ -45,12 +45,11 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: "/(.*)",
+        source: '/(.*)',
         headers: securityHeaders,
       },
     ];
   },
-
 };
 
 const withPWA = nextPwa(pwaConfig);

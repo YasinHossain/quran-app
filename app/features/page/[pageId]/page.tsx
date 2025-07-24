@@ -30,24 +30,17 @@ export default function QuranPage({ params }: QuranPageProps) {
   const { data: translationOptionsData } = useSWR('translations', getTranslations);
   const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
 
-  const {
-    data,
-    size,
-    setSize,
-    isValidating
-  } = useSWRInfinite(
-    index =>
-      pageId
-        ? ['verses', pageId, settings.translationId, settings.wordLang, index + 1]
-        : null,
+  const { data, size, setSize, isValidating } = useSWRInfinite(
+    (index) =>
+      pageId ? ['verses', pageId, settings.translationId, settings.wordLang, index + 1] : null,
     ([, pageId, translationId, wordLang, page]) =>
-      getVersesByPage(pageId, translationId, page, 20, wordLang).catch(err => {
+      getVersesByPage(pageId, translationId, page, 20, wordLang).catch((err) => {
         setError(`Failed to load content. ${err.message}`);
         return { verses: [], totalPages: 1 };
       })
   );
 
-  const verses: VerseType[] = data ? data.flatMap(d => d.verses) : [];
+  const verses: VerseType[] = data ? data.flatMap((d) => d.verses) : [];
   const totalPages = data ? data[data.length - 1]?.totalPages : 1;
   const isLoading = !data && !error;
   const isReachingEnd = size >= totalPages;
@@ -55,7 +48,7 @@ export default function QuranPage({ params }: QuranPageProps) {
   // --- Infinite Scroll Effect ---
   useEffect(() => {
     if (!loadMoreRef.current) return;
-    const observer = new IntersectionObserver(entries => {
+    const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && !isReachingEnd && !isValidating) {
         setSize(size + 1);
       }
@@ -67,16 +60,14 @@ export default function QuranPage({ params }: QuranPageProps) {
   // --- Memoized Values ---
   const selectedTranslationName = useMemo(
     () =>
-      translationOptions.find(o => o.id === settings.translationId)?.name ||
+      translationOptions.find((o) => o.id === settings.translationId)?.name ||
       t('select_translation'),
     [settings.translationId, translationOptions, t]
   );
   const groupedTranslations = useMemo(
     () =>
       translationOptions
-        .filter(o =>
-          o.name.toLowerCase().includes(translationSearchTerm.toLowerCase())
-        )
+        .filter((o) => o.name.toLowerCase().includes(translationSearchTerm.toLowerCase()))
         .reduce<Record<string, TranslationResource[]>>((acc, t) => {
           (acc[t.language_name] ||= []).push(t);
           return acc;
@@ -96,7 +87,7 @@ export default function QuranPage({ params }: QuranPageProps) {
               <div className="text-center py-20 text-red-600 bg-red-50 p-4 rounded-lg">{error}</div>
             ) : verses.length > 0 ? (
               <>
-                {verses.map(v => (
+                {verses.map((v) => (
                   <React.Fragment key={v.id}>
                     <Verse verse={v} />
                     {playingId === v.id && v.audio?.url && (
