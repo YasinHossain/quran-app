@@ -8,10 +8,17 @@ export interface Audio {
   url: string;
 }
 
+export interface Word {
+  id: number;
+  uthmani: string;
+  [key: string]: unknown;
+}
+
 export interface Verse {
   id: number;
   verse_key: string;
   text_uthmani: string;
   audio?: Audio;
   translations?: Translation[];
+  words?: Word[];
 }

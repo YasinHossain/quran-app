@@ -21,6 +21,8 @@ const defaultSettings: Settings = {
   arabicFontSize: 28,
   translationFontSize: 16,
   arabicFontFace: ARABIC_FONTS[0].value,
+  showByWords: false,
+  wordLang: 'en',
 };
 
 interface SettingsContextType {
