@@ -20,6 +20,7 @@ npm test
 - Use a short summary in the imperative mood ("Add feature" not "Added" or "Adds").
 - Keep the first line under 50 characters.
 - Separate the summary from any additional details with a blank line.
+- Commit messages are validated by commitlint.
 
 ## Code Style
 
