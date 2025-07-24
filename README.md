@@ -102,6 +102,10 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
+## Contributing
+
+We welcome contributions from the community. Please read our [CONTRIBUTING.md](CONTRIBUTING.md) guide to get started.
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
