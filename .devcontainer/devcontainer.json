@@ -1,0 +1,9 @@
+{
+  "name": "Quran App",
+  "image": "mcr.microsoft.com/devcontainers/node:20",
+  "customizations": {
+    "vscode": {
+      "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+    }
+  }
+}
