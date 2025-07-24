@@ -75,6 +75,9 @@ describe('SettingsContext settings state', () => {
     arabicFontSize: 28,
     translationFontSize: 16,
     arabicFontFace: '"KFGQPC-Uthman-Taha", serif',
+    wordLang: 'en',
+    showByWords: false,
+    tajweed: false,
   };
 
   it('defaults to expected values', () => {

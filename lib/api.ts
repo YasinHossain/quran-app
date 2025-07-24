@@ -1,6 +1,26 @@
 const API_BASE_URL = process.env.QURAN_API_BASE_URL ?? 'https://api.quran.com/api/v4';
 
-import { Chapter, TranslationResource, Verse, Juz } from '@/types';
+import { Chapter, TranslationResource, Verse, Juz, Word } from '@/types';
+
+interface ApiWord extends Record<string, unknown> {
+  text: string;
+  translation?: { text?: string };
+}
+
+interface ApiVerse extends Verse {
+  words?: ApiWord[];
+}
+
+function normalizeVerse(raw: ApiVerse): Verse {
+  return {
+    ...raw,
+    words: raw.words?.map(w => ({
+      ...w,
+      uthmani: w.text,
+      en: w.translation?.text,
+    })) as Word[],
+  };
+}
 
 export async function getChapters(): Promise<Chapter[]> {
   const res = await fetch(`${API_BASE_URL}/chapters?language=en`);
@@ -45,7 +65,8 @@ export async function getVersesByChapter(
   }
   const data = await res.json();
   const totalPages = data.meta?.total_pages || data.pagination?.total_pages || 1;
-  return { verses: data.verses as Verse[], totalPages };
+  const verses = (data.verses as ApiVerse[]).map(normalizeVerse);
+  return { verses, totalPages };
 }
 
 export async function searchVerses(query: string): Promise<Verse[]> {
@@ -93,7 +114,8 @@ export async function getVersesByJuz(
   }
   const data = await res.json();
   const totalPages = data.meta?.total_pages || data.pagination?.total_pages || 1;
-  return { verses: data.verses as Verse[], totalPages };
+  const verses = (data.verses as ApiVerse[]).map(normalizeVerse);
+  return { verses, totalPages };
 }
 
 export async function getVersesByPage(
@@ -109,7 +131,8 @@ export async function getVersesByPage(
   }
   const data = await res.json();
   const totalPages = data.meta?.total_pages || data.pagination?.total_pages || 1;
-  return { verses: data.verses as Verse[], totalPages };
+  const verses = (data.verses as ApiVerse[]).map(normalizeVerse);
+  return { verses, totalPages };
 }
 
 // Fetch information about a specific Juz
@@ -132,7 +155,7 @@ export async function getRandomVerse(
     throw new Error(`Failed to fetch random verse: ${res.status}`);
   }
   const data = await res.json();
-  return data.verse as Verse;
+  return normalizeVerse(data.verse);
 }
 
 export { API_BASE_URL };
