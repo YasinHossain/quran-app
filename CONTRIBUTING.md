@@ -22,6 +22,7 @@ npx husky install
 ## Commit Message Style
 
 This project uses Conventional Commits. Messages are linted automatically by the `commit-msg` hook using commitlint.
+The summary line must not exceed **50** characters.
 
 Example:
 
