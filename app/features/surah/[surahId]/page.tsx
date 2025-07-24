@@ -1,9 +1,4 @@
-// app/features/surah/[SurahId]/page.tsx
 'use client';
-
-interface SurahPageProps {
-  params: { surahId: string };
-}
 
 import React, { useEffect, useState, useMemo, useRef, use } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,11 +13,10 @@ import Spinner from '@/app/components/common/Spinner';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
-// --- Interfaces & Data ---
+interface SurahPageProps {
+  params: { surahId: string };
+}
 
-// Using a specific type for params is good practice.
-// If you encounter build errors, you may need to revert to `any` as Next.js's
-// type for PageProps can sometimes cause mismatches.
 export default function SurahPage({ params }: SurahPageProps) {
   const { surahId } = use(params);
   const [error, setError] = useState<string | null>(null);
@@ -44,10 +38,10 @@ export default function SurahPage({ params }: SurahPageProps) {
   } = useSWRInfinite(
     index =>
       surahId
-        ? ['verses', surahId, settings.translationId, index + 1]
+        ? ['verses', surahId, settings.translationId, settings.wordLang, index + 1]
         : null,
-    ([, surahId, translationId, page]) =>
-      getVersesByChapter(surahId, translationId, page, 20, settings.wordLang).catch(err => {
+    ([, surahId, translationId, wordLang, page]) =>
+      getVersesByChapter(surahId, translationId, page, 20, wordLang).catch(err => {
         setError(`Failed to load content. ${err.message}`);
         return { verses: [], totalPages: 1 };
       })
@@ -92,7 +86,7 @@ export default function SurahPage({ params }: SurahPageProps) {
   
   return (
     <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden">
-      <main className="flex-grow bg-[var(--background)] p-6 lg:p-10 overflow-y-auto homepage-scrollable-area"> {/* Added homepage-scrollable-area class */}
+      <main className="flex-grow bg-[var(--background)] p-6 lg:p-10 overflow-y-auto homepage-scrollable-area">
         <div className="max-w-4xl mx-auto relative">
           {isLoading ? (
             <div className="flex justify-center py-20">
