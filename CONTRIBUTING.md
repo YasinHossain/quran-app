@@ -12,6 +12,13 @@ This project also provides an `.editorconfig` file. Ensure your editor respects
 it so that files use UTF-8 encoding, two spaces for indentation, and always end
 with a newline.
 
+Install dependencies and initialize Git hooks with:
+
+```bash
+npm install
+npx husky install
+```
+
 ## Running the Development Server
 
 Start the development server with:
@@ -39,6 +46,13 @@ Before committing, format and lint the code:
 ```bash
 npm run format
 npm run lint
+```
+
+Husky runs `npm run check` automatically on every commit. If you want to run it
+manually, execute:
+
+```bash
+npm run check
 ```
 
 ## Testing
