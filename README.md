@@ -6,6 +6,8 @@ Copy `.env.example` to `.env` and adjust the values if necessary. The default co
 
 This project supports word-by-word translations in multiple languages, including a newly added Bengali option.
 
+Run `npm run format` after installing dependencies to ensure consistent code style.
+
 ## Getting Started
 
 First, run the development server:
@@ -101,4 +103,3 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
