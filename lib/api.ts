@@ -60,7 +60,7 @@ export async function getVersesByChapter(
   perPage = 20,
   wordLang = 'en'
 ): Promise<PaginatedVerses> {
-  const url = `${API_BASE_URL}/verses/by_chapter/${chapterId}?language=${wordLang}&words=true&word_fields=text_uthmani&translations=${translationId}&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
+  const url = `${API_BASE_URL}/verses/by_chapter/${chapterId}?language=${wordLang}&words=true&word_translation_language=${wordLang}&word_fields=text_uthmani&translations=${translationId}&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(`Failed to fetch verses: ${res.status}`);
@@ -92,9 +92,7 @@ export async function getTafsirByVerse(
   verseKey: string,
   tafsirId = 169
 ): Promise<string> {
-  const url = `${API_BASE_URL}/tafsirs/${tafsirId}/by_ayah/${encodeURIComponent(
-    verseKey
-  )}`;
+  const url = `${API_BASE_URL}/tafsirs/${tafsirId}/by_ayah/${encodeURIComponent(verseKey)}`;
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(`Failed to fetch tafsir: ${res.status}`);
@@ -110,7 +108,7 @@ export async function getVersesByJuz(
   perPage = 20,
   wordLang = 'en'
 ): Promise<PaginatedVerses> {
-  const url = `${API_BASE_URL}/verses/by_juz/${juzId}?language=${wordLang}&words=true&word_fields=text_uthmani&translations=${translationId}&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
+  const url = `${API_BASE_URL}/verses/by_juz/${juzId}?language=${wordLang}&words=true&word_translation_language=${wordLang}&word_fields=text_uthmani&translations=${translationId}&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(`Failed to fetch verses: ${res.status}`);
@@ -128,7 +126,7 @@ export async function getVersesByPage(
   perPage = 20,
   wordLang = 'en'
 ): Promise<PaginatedVerses> {
-  const url = `${API_BASE_URL}/verses/by_page/${pageId}?language=${wordLang}&words=true&word_fields=text_uthmani&translations=${translationId}&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
+  const url = `${API_BASE_URL}/verses/by_page/${pageId}?language=${wordLang}&words=true&word_translation_language=${wordLang}&word_fields=text_uthmani&translations=${translationId}&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(`Failed to fetch verses: ${res.status}`);

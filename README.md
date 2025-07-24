@@ -4,6 +4,8 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 Copy `.env.example` to `.env` and adjust the values if necessary. The default configuration includes the Quran API base URL.
 
+This project supports word-by-word translations in multiple languages, including a newly added Bengali option.
+
 ## Getting Started
 
 First, run the development server:

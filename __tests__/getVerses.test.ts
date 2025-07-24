@@ -21,7 +21,7 @@ describe('getVersesByChapter', () => {
 
     await getVersesByChapter(1, 20, 1, 1, 'en');
     expect(global.fetch).toHaveBeenCalledWith(
-      `${API_BASE_URL}/verses/by_chapter/1?language=en&words=true&word_fields=text_uthmani&translations=20&fields=text_uthmani,audio&per_page=1&page=1`
+      `${API_BASE_URL}/verses/by_chapter/1?language=en&words=true&word_translation_language=en&word_fields=text_uthmani&translations=20&fields=text_uthmani,audio&per_page=1&page=1`
     );
   });
 

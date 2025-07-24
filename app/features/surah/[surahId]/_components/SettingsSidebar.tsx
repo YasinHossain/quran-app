@@ -24,6 +24,7 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
     { value: 'en', label: 'English' },
     { value: 'id', label: 'Bahasa Indonesia' },
     { value: 'tr', label: 'Türkçe' },
+    { value: 'bn', label: 'Bengali' },
   ];
 
   // Helper function to calculate the slider's progress percentage

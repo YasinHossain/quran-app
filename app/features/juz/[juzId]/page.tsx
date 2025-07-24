@@ -12,12 +12,9 @@ import { useSettings } from '@/app/context/SettingsContext';
 import { useAudio } from '@/app/context/AudioContext';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
-// Removed PageProps import
 
 interface JuzPageProps {
   params: { juzId: string };
-  // You might need to add 'searchParams' here if you use them
-  // searchParams: { [key: string]: string | string[] | undefined };
 }
 
 export default function JuzPage({ params }: JuzPageProps) {
@@ -41,6 +38,7 @@ export default function JuzPage({ params }: JuzPageProps) {
   const { data: translationOptionsData } = useSWR('translations', getTranslations);
   const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
 
+  // Infinite loading for verses
   const {
     data,
     size,
