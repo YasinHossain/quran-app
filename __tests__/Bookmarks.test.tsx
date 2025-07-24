@@ -24,9 +24,7 @@ describe('Bookmarked verses components', () => {
         <BookmarkedVersesList />
       </SettingsProvider>
     );
-    expect(
-      screen.getByText('Displaying bookmarked verses: 1:1, 2:3')
-    ).toBeInTheDocument();
+    expect(screen.getByText('Displaying bookmarked verses: 1:1, 2:3')).toBeInTheDocument();
   });
 
   test('BookmarksPage renders heading', () => {
