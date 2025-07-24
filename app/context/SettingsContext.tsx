@@ -21,6 +21,9 @@ const defaultSettings: Settings = {
   arabicFontSize: 28,
   translationFontSize: 16,
   arabicFontFace: ARABIC_FONTS[0].value,
+  showByWords: false,
+  tajweed: false,
+  wordLang: 'en',
 };
 
 interface SettingsContextType {
@@ -29,6 +32,9 @@ interface SettingsContextType {
   arabicFonts: { name: string; value: string; category: string }[]; // Updated type to include category
   bookmarkedVerses: string[];
   toggleBookmark: (verseId: string) => void;
+  setShowByWords: (val: boolean) => void;
+  setTajweed: (val: boolean) => void;
+  setWordLang: (lang: string) => void;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -45,7 +51,8 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
       const savedSettings = localStorage.getItem('quranAppSettings');
       if (savedSettings) {
         try {
-          setSettings(JSON.parse(savedSettings));
+          const parsed = JSON.parse(savedSettings);
+          setSettings({ ...defaultSettings, ...parsed });
         } catch (error) {
           console.error('Error parsing settings from localStorage:', error);
           // Optionally, clear localStorage if corrupted
@@ -87,8 +94,28 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
     );
   };
 
+  const setShowByWords = (val: boolean) =>
+    setSettings(prev => ({ ...prev, showByWords: val }));
+
+  const setTajweed = (val: boolean) =>
+    setSettings(prev => ({ ...prev, tajweed: val }));
+
+  const setWordLang = (lang: string) =>
+    setSettings(prev => ({ ...prev, wordLang: lang }));
+
   return (
-    <SettingsContext.Provider value={{ settings, setSettings, arabicFonts: ARABIC_FONTS, bookmarkedVerses, toggleBookmark }}>
+    <SettingsContext.Provider
+      value={{
+        settings,
+        setSettings,
+        arabicFonts: ARABIC_FONTS,
+        bookmarkedVerses,
+        toggleBookmark,
+        setShowByWords,
+        setTajweed,
+        setWordLang,
+      }}
+    >
       {children}
     </SettingsContext.Provider>
   );
