@@ -105,3 +105,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+## Code of Conduct
+
+Please read our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing to ensure a welcoming and inclusive environment.

@@ -48,3 +48,7 @@ npm test
 ## Continuous Integration
 
 GitHub Actions run linting and tests automatically for every push and pull request. See [.github/workflows/ci.yml](.github/workflows/ci.yml) for details.
+
+## Code of Conduct
+
+Please read our [Code of Conduct](CODE_OF_CONDUCT.md) to understand the expectations for participants in this project.

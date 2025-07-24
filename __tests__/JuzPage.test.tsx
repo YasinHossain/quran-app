@@ -13,7 +13,7 @@ jest.mock('react', () => {
 });
 
 jest.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (key: string) => key })
+  useTranslation: () => ({ t: (key: string) => key }),
 }));
 
 const mockVerse: Verse = {
@@ -43,7 +43,7 @@ beforeAll(() => {
 
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
-    value: jest.fn().mockImplementation(query => ({
+    value: jest.fn().mockImplementation((query) => ({
       matches: false,
       media: query,
       onchange: null,
