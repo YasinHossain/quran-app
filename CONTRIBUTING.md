@@ -17,3 +17,14 @@ Install dependencies and initialize Git hooks with:
 ```bash
 npm install
 npx husky install
+```
+
+## Commit Message Style
+
+This project uses Conventional Commits. Messages are linted automatically by the `commit-msg` hook using commitlint.
+
+Example:
+
+```text
+feat: add audio player
+```
