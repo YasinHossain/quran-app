@@ -49,10 +49,10 @@ export default function JuzPage({ params }: JuzPageProps) {
   } = useSWRInfinite(
     index =>
       juzId
-        ? ['verses', juzId, settings.translationId, index + 1]
+        ? ['verses', juzId, settings.translationId, settings.wordLang, index + 1]
         : null,
-    ([, juzId, translationId, page]) =>
-      getVersesByJuz(juzId, translationId, page).catch(err => {
+    ([, juzId, translationId, wordLang, page]) =>
+      getVersesByJuz(juzId, translationId, page, 20, wordLang).catch(err => {
         setError(`Failed to load content. ${err.message}`);
         return { verses: [], totalPages: 1 };
       })

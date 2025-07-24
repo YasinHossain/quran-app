@@ -44,10 +44,10 @@ export default function SurahPage({ params }: SurahPageProps) {
   } = useSWRInfinite(
     index =>
       surahId
-        ? ['verses', surahId, settings.translationId, index + 1]
+        ? ['verses', surahId, settings.translationId, settings.wordLang, index + 1]
         : null,
-    ([, surahId, translationId, page]) =>
-      getVersesByChapter(surahId, translationId, page).catch(err => {
+    ([, surahId, translationId, wordLang, page]) =>
+      getVersesByChapter(surahId, translationId, page, 20, wordLang).catch(err => {
         setError(`Failed to load content. ${err.message}`);
         return { verses: [], totalPages: 1 };
       })
