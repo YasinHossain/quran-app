@@ -12,9 +12,8 @@ interface TafsirModalProps {
 
 export const TafsirModal = ({ verseKey, isOpen, onClose }: TafsirModalProps) => {
   const { t } = useTranslation();
-  const { data, error } = useSWR(
-    isOpen ? ['tafsir', verseKey] : null,
-    () => getTafsirByVerse(verseKey)
+  const { data, error } = useSWR(isOpen ? ['tafsir', verseKey] : null, () =>
+    getTafsirByVerse(verseKey)
   );
 
   if (!isOpen) return null;
@@ -28,10 +27,12 @@ export const TafsirModal = ({ verseKey, isOpen, onClose }: TafsirModalProps) => 
         >
           <FaArrowLeft size={18} />
         </button>
-        {(!data && !error) ? (
+        {!data && !error ? (
           <div className="text-center text-teal-600">{t('loading')}</div>
         ) : error ? (
-          <div className="text-center text-red-600">{t('error_loading_tafsir') || 'Error loading tafsir.'}</div>
+          <div className="text-center text-red-600">
+            {t('error_loading_tafsir') || 'Error loading tafsir.'}
+          </div>
         ) : (
           <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: data || '' }} />
         )}

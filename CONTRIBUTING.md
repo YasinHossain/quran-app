@@ -45,4 +45,3 @@ npm test
 ## Continuous Integration
 
 GitHub Actions run linting and tests automatically for every push and pull request. See [.github/workflows/ci.yml](.github/workflows/ci.yml) for details.
-

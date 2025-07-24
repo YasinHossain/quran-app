@@ -50,17 +50,17 @@ async function fetchJuz(num: number): Promise<JuzApi> {
 
 async function main() {
   const chapters = await fetchSurahs();
-  const surahs: SurahMeta[] = chapters.map(ch => ({
+  const surahs: SurahMeta[] = chapters.map((ch) => ({
     number: ch.id,
     name: ch.name_simple,
     arabicName: ch.name_arabic,
     verses: ch.verses_count,
-    meaning: ch.translated_name?.name ?? ''
+    meaning: ch.translated_name?.name ?? '',
   }));
   await writeFile('data/surahs.json', JSON.stringify(surahs, null, 2) + '\n');
 
   const surahNames: Record<number, string> = {};
-  surahs.forEach(s => {
+  surahs.forEach((s) => {
     surahNames[s.number] = s.name;
   });
 
@@ -78,7 +78,7 @@ async function main() {
   await writeFile('data/juz.json', JSON.stringify(juzData, null, 2) + '\n');
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error(err);
   process.exit(1);
 });

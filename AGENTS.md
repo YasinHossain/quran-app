@@ -21,4 +21,3 @@ npm test
 - Follow the project's ESLint configuration. Run `npm run lint` and fix warnings when possible.
 - Use two spaces for indentation.
 - Write clear, descriptive variable and function names.
-

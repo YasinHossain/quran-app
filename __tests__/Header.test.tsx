@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react'
-import Header from '@/app/components/common/Header'
-import { SidebarProvider } from '@/app/context/SidebarContext'
+import { render, screen } from '@testing-library/react';
+import Header from '@/app/components/common/Header';
+import { SidebarProvider } from '@/app/context/SidebarContext';
 
 // Mock the useTranslation hook
 jest.mock('react-i18next', () => ({

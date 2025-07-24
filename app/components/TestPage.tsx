@@ -19,11 +19,10 @@ export default function TestPage() {
     // This is the main container. It ONLY has background classes.
     <div className="min-h-screen w-full bg-gradient-to-br from-emerald-200 to-cyan-300 dark:bg-gradient-to-br dark:from-slate-800 dark:to-slate-900">
       <div className="p-10">
-        <h1 className="text-4xl font-bold text-black dark:text-white">
-          This is a test page.
-        </h1>
+        <h1 className="text-4xl font-bold text-black dark:text-white">This is a test page.</h1>
         <p className="mt-4 text-black dark:text-white">
-          The background of this page should be a green/cyan gradient in light mode, and a dark gray gradient in dark mode.
+          The background of this page should be a green/cyan gradient in light mode, and a dark gray
+          gradient in dark mode.
         </p>
         <button
           onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}

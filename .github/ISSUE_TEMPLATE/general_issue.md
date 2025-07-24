@@ -15,4 +15,3 @@ about: General issue or request
 
 - [ ] I've searched existing issues
 - [ ] I've provided all necessary information
-

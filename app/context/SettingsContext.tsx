@@ -81,21 +81,16 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
   }, [bookmarkedVerses]);
 
   const toggleBookmark = (verseId: string) => {
-    setBookmarkedVerses(prev =>
-      prev.includes(verseId)
-        ? prev.filter(id => id !== verseId)
-        : [...prev, verseId]
+    setBookmarkedVerses((prev) =>
+      prev.includes(verseId) ? prev.filter((id) => id !== verseId) : [...prev, verseId]
     );
   };
 
-  const setShowByWords = (val: boolean) =>
-    setSettings(prev => ({ ...prev, showByWords: val }));
+  const setShowByWords = (val: boolean) => setSettings((prev) => ({ ...prev, showByWords: val }));
 
-  const setTajweed = (val: boolean) =>
-    setSettings(prev => ({ ...prev, tajweed: val }));
+  const setTajweed = (val: boolean) => setSettings((prev) => ({ ...prev, tajweed: val }));
 
-  const setWordLang = (lang: string) =>
-    setSettings(prev => ({ ...prev, wordLang: lang }));
+  const setWordLang = (lang: string) => setSettings((prev) => ({ ...prev, wordLang: lang }));
 
   return (
     <SettingsContext.Provider
