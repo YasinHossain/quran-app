@@ -1,7 +1,7 @@
 // app/features/juz/[juzId]/page.tsx
 'use client';
 
-import React, { useEffect, useState, useMemo, useRef } from 'react';
+import React, { useEffect, useState, useMemo, useRef, use } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Verse } from '@/app/features/surah/[surahId]/_components/Verse';
 import { SettingsSidebar } from '@/app/features/surah/[surahId]/_components/SettingsSidebar';
@@ -21,7 +21,7 @@ interface JuzPageProps {
 }
 
 export default function JuzPage({ params }: JuzPageProps) {
-  const { juzId } = params;
+  const { juzId } = use(params);
 
   const [error, setError] = useState<string | null>(null);
   const { settings } = useSettings();

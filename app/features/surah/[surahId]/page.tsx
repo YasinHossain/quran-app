@@ -5,7 +5,7 @@ interface SurahPageProps {
   params: { surahId: string };
 }
 
-import React, { useEffect, useState, useMemo, useRef } from 'react';
+import React, { useEffect, useState, useMemo, useRef, use } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Verse } from './_components/Verse';
 import { SettingsSidebar } from './_components/SettingsSidebar';
@@ -24,7 +24,7 @@ import useSWRInfinite from 'swr/infinite';
 // If you encounter build errors, you may need to revert to `any` as Next.js's
 // type for PageProps can sometimes cause mismatches.
 export default function SurahPage({ params }: SurahPageProps) {
-  const { surahId } = params;
+  const { surahId } = use(params);
   const [error, setError] = useState<string | null>(null);
   const { settings } = useSettings();
   const { t } = useTranslation();
