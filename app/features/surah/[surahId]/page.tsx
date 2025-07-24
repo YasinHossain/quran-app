@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useMemo, useRef, use } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Verse } from './_components/Verse';
 import { SettingsSidebar } from './_components/SettingsSidebar';
@@ -18,7 +18,7 @@ interface SurahPageProps {
 }
 
 export default function SurahPage({ params }: SurahPageProps) {
-  const { surahId } = use(params);
+  const { surahId } = params;
   const [error, setError] = useState<string | null>(null);
   const { settings } = useSettings();
   const { t } = useTranslation();

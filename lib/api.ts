@@ -2,13 +2,15 @@ const API_BASE_URL = process.env.QURAN_API_BASE_URL ?? 'https://api.quran.com/ap
 
 import { Chapter, TranslationResource, Verse, Juz, Word } from '@/types';
 
-interface ApiWord extends Record<string, unknown> {
+interface ApiWord {
+  id: number;
   text: string;
   text_uthmani?: string;
   translation?: { text?: string };
+  [key: string]: unknown;
 }
 
-interface ApiVerse extends Verse {
+interface ApiVerse extends Omit<Verse, 'words'> {
   words?: ApiWord[];
 }
 
@@ -17,7 +19,7 @@ function normalizeVerse(raw: ApiVerse, wordLang = 'en'): Verse {
     ...raw,
     words: raw.words?.map((w) => ({
       ...w,
-      uthmani: (w as ApiWord).text_uthmani ?? w.text,
+      uthmani: w.text_uthmani ?? w.text,
       [wordLang]: w.translation?.text,
     })) as Word[],
   };
