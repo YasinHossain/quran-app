@@ -6,6 +6,8 @@ Thank you for your interest in contributing to this project!
 
 Copy `.env.example` to `.env` and adjust the values if necessary. The default configuration includes the Quran API base URL.
 
+An `.nvmrc` file pins Node.js to version **20**. Run `nvm use` to match this version before contributing.
+
 ## Running the Development Server
 
 Start the development server with:
@@ -26,11 +28,12 @@ npx ts-node scripts/fetchData.ts
 
 This updates `data/surahs.json` and `data/juz.json`.
 
-## Linting
+## Formatting and Linting
 
-Before committing, run the linter:
+Before committing, format and lint the code:
 
 ```bash
+npm run format
 npm run lint
 ```
 

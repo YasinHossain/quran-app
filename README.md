@@ -4,7 +4,11 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 Copy `.env.example` to `.env` and adjust the values if necessary. The default configuration includes the Quran API base URL.
 
+This repository includes an `.nvmrc` file that pins the Node.js version to **20**. Run `nvm use` after cloning to ensure you're using the correct version.
+
 This project supports word-by-word translations in multiple languages, including a newly added Bengali option.
+
+Run `npm run format` after installing dependencies to ensure consistent code style.
 
 ## Getting Started
 
