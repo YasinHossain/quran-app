@@ -38,5 +38,6 @@
   "switch_to_dark": "Switch to dark mode",
   "switch_to_light": "Switch to light mode",
   "light_mode": "Light",
-  "dark_mode": "Dark"
+  "dark_mode": "Dark",
+  "page_not_found": "Page not found"
 }
