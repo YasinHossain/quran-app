@@ -35,5 +35,8 @@
   "switch_to_dark": "Switch to dark mode",
   "switch_to_light": "Switch to light mode",
   "light_mode": "Light",
-  "dark_mode": "Dark"
+  "dark_mode": "Dark",
+  "word_by_word": "Word-by-word translations",
+  "show_words": "Show words",
+  "tajweed": "Tajweed coloring"
 }
