@@ -12,6 +12,18 @@ const BookmarkTest = () => {
   );
 };
 
+const SettingsTest = () => {
+  const { settings, setSettings } = useSettings();
+  return (
+    <div>
+      <div data-testid="settings">{JSON.stringify(settings)}</div>
+      <button onClick={() => setSettings({ ...settings, arabicFontSize: settings.arabicFontSize + 2 })}>
+        Update
+      </button>
+    </div>
+  );
+};
+
 describe('SettingsContext bookmarks', () => {
   beforeEach(() => {
     localStorage.clear();
@@ -49,6 +61,56 @@ describe('SettingsContext bookmarks', () => {
     );
     await waitFor(() => {
       expect(screen.getByTestId('bookmarks').textContent).toBe(JSON.stringify(['1:1']));
+    });
+  });
+});
+
+describe('SettingsContext settings state', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  const defaultSettings = {
+    translationId: 20,
+    arabicFontSize: 28,
+    translationFontSize: 16,
+    arabicFontFace: '"KFGQPC-Uthman-Taha", serif',
+  };
+
+  it('defaults to expected values', () => {
+    render(
+      <SettingsProvider>
+        <SettingsTest />
+      </SettingsProvider>
+    );
+    expect(screen.getByTestId('settings').textContent).toBe(
+      JSON.stringify(defaultSettings)
+    );
+  });
+
+  it('persists settings changes in localStorage across renders', async () => {
+    const { unmount } = render(
+      <SettingsProvider>
+        <SettingsTest />
+      </SettingsProvider>
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Update' }));
+    await waitFor(() => {
+      expect(
+        JSON.parse(localStorage.getItem('quranAppSettings') || '{}').arabicFontSize
+      ).toBe(30);
+    });
+    unmount();
+
+    render(
+      <SettingsProvider>
+        <SettingsTest />
+      </SettingsProvider>
+    );
+    await waitFor(() => {
+      expect(screen.getByTestId('settings').textContent).toBe(
+        JSON.stringify({ ...defaultSettings, arabicFontSize: 30 })
+      );
     });
   });
 });
