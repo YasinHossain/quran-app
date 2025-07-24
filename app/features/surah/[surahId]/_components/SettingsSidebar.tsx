@@ -138,7 +138,7 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
                 </button>
               </div>
               <div className="pt-2">
-                <div className={`flex items-center p-1 rounded-full ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'}`}> 
+                <div className={`flex items-center p-1 rounded-full ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'}`}>
                   <button
                     onClick={() => setTheme('light')}
                     className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
