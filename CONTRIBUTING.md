@@ -12,6 +12,8 @@ This project also provides an `.editorconfig` file. Ensure your editor respects
 it so that files use UTF-8 encoding, two spaces for indentation, and always end
 with a newline.
 
+For the full workflow requirements, read [AGENTS.md](AGENTS.md).
+
 ## Running the Development Server
 
 Start the development server with:

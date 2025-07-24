@@ -107,6 +107,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ## Contributing
 
 We welcome contributions from the community. Please read our [CONTRIBUTING.md](CONTRIBUTING.md) guide to get started.
+For a summary of the required workflow, see [AGENTS.md](AGENTS.md).
 
 ## License
 
