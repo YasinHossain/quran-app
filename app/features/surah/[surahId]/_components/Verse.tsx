@@ -1,7 +1,7 @@
 // app/surah/[surahId]/_components/Verse.tsx
 import { FaPlay, FaPause, FaBookmark, FaRegBookmark, FaEllipsisH, FaBookReader } from '@/app/components/common/SvgIcons';
 import { TafsirModal } from './TafsirModal';
-import { Verse as VerseType, Translation } from '@/types';
+import { Verse as VerseType, Translation, Word } from '@/types';
 import { useAudio } from '@/app/context/AudioContext';
 import Spinner from '@/app/components/common/Spinner';
 import { useSettings } from '@/app/context/SettingsContext';
@@ -75,7 +75,18 @@ export const Verse = ({ verse }: VerseProps) => {
             className="text-right leading-loose text-[var(--foreground)]"
             style={{ fontFamily: settings.arabicFontFace, fontSize: `${settings.arabicFontSize}px`, lineHeight: 2.2 }}
           >
-            {verse.text_uthmani}
+            {verse.words
+              ? verse.words.map((w: Word) => (
+                  <span key={w.id} className="inline-block mx-0.5 relative group">
+                    {w.uthmani}
+                    {w.en && (
+                      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-1 py-0.5 rounded bg-gray-800 text-white text-xs whitespace-nowrap opacity-0 group-hover:opacity-100">
+                        {w.en}
+                      </span>
+                    )}
+                  </span>
+                ))
+              : verse.text_uthmani}
           </p>
           {verse.translations?.map((t: Translation) => (
             <div key={t.resource_id}>
