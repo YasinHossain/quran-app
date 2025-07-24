@@ -15,6 +15,8 @@ export const Verse = ({ verse }: VerseProps) => {
   const { playingId, setPlayingId, loadingId } = useAudio();
   const { settings, bookmarkedVerses, toggleBookmark } = useSettings();
   const [showTafsir, setShowTafsir] = useState(false);
+  const showByWords = settings.showByWords ?? false;
+  const wordLang = settings.wordLang ?? 'en';
   const isPlaying = playingId === verse.id;
   const isLoadingAudio = loadingId === verse.id;
   const isBookmarked = bookmarkedVerses.includes(String(verse.id)); // Check if verse is bookmarked (using string ID)
@@ -75,18 +77,27 @@ export const Verse = ({ verse }: VerseProps) => {
             className="text-right leading-loose text-[var(--foreground)]"
             style={{ fontFamily: settings.arabicFontFace, fontSize: `${settings.arabicFontSize}px`, lineHeight: 2.2 }}
           >
-            {verse.words
-              ? verse.words.map((w: Word) => (
-                  <span key={w.id} className="inline-block mx-0.5 relative group">
-                    {w.uthmani}
-                    {w.en && (
-                      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-1 py-0.5 rounded bg-gray-800 text-white text-xs whitespace-nowrap opacity-0 group-hover:opacity-100">
-                        {w.en}
-                      </span>
+            {verse.words && verse.words.length > 0 ? (
+              <span className="flex flex-wrap gap-x-2 gap-y-1 justify-end">
+                {verse.words.map((word: Word) => (
+                  <span key={word.id} className="text-center">
+                    <span className="relative group cursor-pointer">
+                      <span>{word.uthmani}</span>
+                      {!showByWords && (
+                        <span className="absolute left-1/2 -translate-x-1/2 -top-7 hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow z-10 whitespace-nowrap">
+                          {word[wordLang] as string}
+                        </span>
+                      )}
+                    </span>
+                    {showByWords && (
+                      <span className="block mt-1 text-xs text-gray-500">{word[wordLang] as string}</span>
                     )}
                   </span>
-                ))
-              : verse.text_uthmani}
+                ))}
+              </span>
+            ) : (
+              verse.text_uthmani
+            )}
           </p>
           {verse.translations?.map((t: Translation) => (
             <div key={t.resource_id}>
