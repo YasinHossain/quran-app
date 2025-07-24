@@ -52,7 +52,7 @@ export default function JuzPage({ params }: JuzPageProps) {
         ? ['verses', juzId, settings.translationId, index + 1]
         : null,
     ([, juzId, translationId, page]) =>
-      getVersesByJuz(juzId, translationId, page).catch(err => {
+      getVersesByJuz(juzId, translationId, page, 20, settings.wordLang).catch(err => {
         setError(`Failed to load content. ${err.message}`);
         return { verses: [], totalPages: 1 };
       })

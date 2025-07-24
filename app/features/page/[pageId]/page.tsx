@@ -42,7 +42,7 @@ export default function QuranPage({ params }: QuranPageProps) {
         ? ['verses', pageId, settings.translationId, index + 1]
         : null,
     ([, pageId, translationId, page]) =>
-      getVersesByPage(pageId, translationId, page).catch(err => {
+      getVersesByPage(pageId, translationId, page, 20, settings.wordLang).catch(err => {
         setError(`Failed to load content. ${err.message}`);
         return { verses: [], totalPages: 1 };
       })
