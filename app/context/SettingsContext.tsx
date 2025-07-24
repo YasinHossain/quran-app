@@ -21,9 +21,9 @@ const defaultSettings: Settings = {
   arabicFontSize: 28,
   translationFontSize: 16,
   arabicFontFace: ARABIC_FONTS[0].value,
+  wordLang: 'en',
   showByWords: false,
   tajweed: false,
-  wordLang: 'en',
 };
 
 interface SettingsContextType {
@@ -54,6 +54,78 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
           const parsed = JSON.parse(savedSettings);
           setSettings({ ...defaultSettings, ...parsed });
         } catch (error) {
+          console.error('Error parsing settings from localStorage:', error);
+          // Optionally, clear localStorage if corrupted
+          // localStorage.removeItem('quranAppSettings');
+        }
+      }
+      const savedBookmarks = localStorage.getItem('quranAppBookmarks');
+      if (savedBookmarks) {
+        try {
+          setBookmarkedVerses(JSON.parse(savedBookmarks));
+        } catch (error) {
+          console.error('Error parsing bookmarks from localStorage:', error);
+          // Optionally, clear localStorage if corrupted
+          // localStorage.removeItem('quranAppBookmarks');
+        }
+      }
+    }
+  }, []); // Empty dependency array ensures this effect runs only once on mount
+
+  // Effect to save settings to localStorage whenever they change
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('quranAppSettings', JSON.stringify(settings));
+    }
+  }, [settings]);
+
+  // Effect to save bookmarks to localStorage whenever they change
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('quranAppBookmarks', JSON.stringify(bookmarkedVerses));
+    }
+  }, [bookmarkedVerses]);
+
+  const toggleBookmark = (verseId: string) => {
+    setBookmarkedVerses(prevBookmarks =>
+      prevBookmarks.includes(verseId)
+        ? prevBookmarks.filter(id => id !== verseId)
+        : [...prevBookmarks, verseId]
+    );
+  };
+
+  const setShowByWords = (val: boolean) =>
+    setSettings(prev => ({ ...prev, showByWords: val }));
+
+  const setTajweed = (val: boolean) =>
+    setSettings(prev => ({ ...prev, tajweed: val }));
+
+  const setWordLang = (lang: string) =>
+    setSettings(prev => ({ ...prev, wordLang: lang }));
+
+  return (
+    <SettingsContext.Provider
+      value={{
+        settings,
+        setSettings,
+        arabicFonts: ARABIC_FONTS,
+        bookmarkedVerses,
+        toggleBookmark,
+        setShowByWords,
+        setTajweed,
+        setWordLang,
+      }}
+    >
+      {children}
+    </SettingsContext.Provider>
+  );
+};
+
+export const useSettings = () => {
+  const ctx = useContext(SettingsContext);
+  if (!ctx) throw new Error('useSettings must be used within SettingsProvider');
+  return ctx;
+};
           console.error('Error parsing settings from localStorage:', error);
           // Optionally, clear localStorage if corrupted
           // localStorage.removeItem('quranAppSettings');
