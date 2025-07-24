@@ -61,9 +61,7 @@ export async function getVersesByChapter(
   wordLang = 'en'
 ): Promise<PaginatedVerses> {
   let url = `${API_BASE_URL}/verses/by_chapter/${chapterId}?language=${wordLang}&words=true`;
-  if (wordLang === 'en') {
-    url += `&word_translation_language=${wordLang}`;
-  }
+  url += `&word_translation_language=${wordLang}`;
   url += `&word_fields=text_uthmani&translations=${translationId}&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
   const res = await fetch(url);
   if (!res.ok) {
