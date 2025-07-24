@@ -20,6 +20,9 @@
   "arabic_font_face": "Arabic Font Face",
   "select_font_face": "Select Arabic Font",
   "select_font": "Select font",
+  "word_by_word_language": "Word-by-Word Language",
+  "show_word_by_word": "Show Word-by-Word",
+  "apply_tajweed": "Tajweed Colors",
   "search": "Search",
   "translations_panel_title": "Translations",
   "could_not_play_audio": "Could not play audio.",
@@ -35,8 +38,5 @@
   "switch_to_dark": "Switch to dark mode",
   "switch_to_light": "Switch to light mode",
   "light_mode": "Light",
-  "dark_mode": "Dark",
-  "word_by_word": "Word-by-word translations",
-  "show_words": "Show words",
-  "tajweed": "Tajweed coloring"
+  "dark_mode": "Dark"
 }

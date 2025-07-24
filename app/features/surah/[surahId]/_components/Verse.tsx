@@ -1,11 +1,12 @@
 // app/surah/[surahId]/_components/Verse.tsx
 import { FaPlay, FaPause, FaBookmark, FaRegBookmark, FaEllipsisH, FaBookReader } from '@/app/components/common/SvgIcons';
 import { TafsirModal } from './TafsirModal';
-import { Verse as VerseType, Translation } from '@/types';
+import { Verse as VerseType, Translation, Word } from '@/types';
 import { useAudio } from '@/app/context/AudioContext';
 import Spinner from '@/app/components/common/Spinner';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useState } from 'react';
+import { applyTajweed } from '@/lib/tajweed';
 
 interface VerseProps {
   verse: VerseType;
@@ -15,6 +16,8 @@ export const Verse = ({ verse }: VerseProps) => {
   const { playingId, setPlayingId, loadingId } = useAudio();
   const { settings, bookmarkedVerses, toggleBookmark } = useSettings();
   const [showTafsir, setShowTafsir] = useState(false);
+  const showByWords = settings.showByWords ?? false;
+  const wordLang = settings.wordLang ?? 'en';
   const isPlaying = playingId === verse.id;
   const isLoadingAudio = loadingId === verse.id;
   const isBookmarked = bookmarkedVerses.includes(String(verse.id)); // Check if verse is bookmarked (using string ID)
@@ -71,12 +74,55 @@ export const Verse = ({ verse }: VerseProps) => {
           </div>
         </div>
         <div className="flex-grow space-y-6">
+          {/* ARABIC VERSE DISPLAY, WITH TAJWEED + WORD TRANSLATIONS */}
           <p
             className="text-right leading-loose text-[var(--foreground)]"
-            style={{ fontFamily: settings.arabicFontFace, fontSize: `${settings.arabicFontSize}px`, lineHeight: 2.2 }}
+            style={{
+              fontFamily: settings.arabicFontFace,
+              fontSize: `${settings.arabicFontSize}px`,
+              lineHeight: 2.2,
+            }}
           >
-            {verse.text_uthmani}
+            {/* Use words if available, else fall back to plain text */}
+            {verse.words && verse.words.length > 0 ? (
+              <span className="flex flex-wrap gap-x-2 gap-y-1 justify-end">
+                {verse.words.map((word: Word) => (
+                  <span key={word.id} className="text-center">
+                    <span className="relative group cursor-pointer">
+                      {/* Tajweed coloring for each word */}
+                      <span
+                        dangerouslySetInnerHTML={{
+                          __html: settings.tajweed
+                            ? applyTajweed(word.uthmani)
+                            : word.uthmani,
+                        }}
+                      />
+                      {/* Tooltip translation (when not showByWords) */}
+                      {!showByWords && (
+                        <span className="absolute left-1/2 -translate-x-1/2 -top-7 hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow z-10 whitespace-nowrap">
+                          {word[wordLang] as string}
+                        </span>
+                      )}
+                    </span>
+                    {/* Inline translation below the word (when showByWords) */}
+                    {showByWords && (
+                      <span className="block mt-1 text-xs text-gray-500">{word[wordLang] as string}</span>
+                    )}
+                  </span>
+                ))}
+              </span>
+            ) : (
+              // If no word data, show whole verse with or without Tajweed
+              settings.tajweed ? (
+                <span
+                  dangerouslySetInnerHTML={{ __html: applyTajweed(verse.text_uthmani) }}
+                />
+              ) : (
+                verse.text_uthmani
+              )
+            )}
           </p>
+          {/* TRANSLATIONS */}
           {verse.translations?.map((t: Translation) => (
             <div key={t.resource_id}>
               <p
