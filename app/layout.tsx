@@ -38,8 +38,8 @@ export const metadata = {
   description: 'Read, Study, and Learn The Holy Quran',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const cookieStore = cookies();
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
   const stored = cookieStore.get('theme');
   const theme =
     stored && (stored.value === 'light' || stored.value === 'dark')
