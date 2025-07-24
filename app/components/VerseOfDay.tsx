@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState, useCallback } from 'react';
-import { Verse } from '@/types';
+import { Verse, Word } from '@/types';
 import { getRandomVerse } from '@/lib/api';
 import { useSettings } from '@/app/context/SettingsContext';
 import Spinner from '@/app/components/common/Spinner';
@@ -94,13 +94,29 @@ export default function VerseOfDay() {
     const surahName = surahs.find(s => s.number === Number(surahNum))?.name;
     content = (
       <>
-        {/* <p className={`mb-4 text-sm ${theme === 'light' ? 'text-slate-600' : 'text-slate-400'}`}>Verse of the Day</p> */}
-        <h3 className={`font-amiri text-3xl md:text-4xl leading-relaxed text-right ${theme === 'light' ? 'text-emerald-700' : 'text-emerald-400'}`} dir="rtl">
-          {settings.tajweed ? (
-            <span dangerouslySetInnerHTML={{ __html: applyTajweed(verse.text_uthmani) }} />
-          ) : (
-            verse.text_uthmani
-          )}
+        <h3
+          className={`font-amiri text-3xl md:text-4xl leading-relaxed text-right ${theme === 'light' ? 'text-emerald-700' : 'text-emerald-400'}`}
+          dir="rtl"
+        >
+          {verse.words && verse.words.length > 0
+            ? verse.words.map((w: Word) => (
+                <span key={w.id} className="inline-block mx-0.5 relative group">
+                  {settings.tajweed ? (
+                    <span dangerouslySetInnerHTML={{ __html: applyTajweed(w.uthmani) }} />
+                  ) : (
+                    w.uthmani
+                  )}
+                  {w.en && (
+                    <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-1 py-0.5 rounded bg-gray-800 text-white text-xs whitespace-nowrap opacity-0 group-hover:opacity-100">
+                      {w.en}
+                    </span>
+                  )}
+                </span>
+              ))
+            : settings.tajweed
+              ? <span dangerouslySetInnerHTML={{ __html: applyTajweed(verse.text_uthmani) }} />
+              : verse.text_uthmani
+          }
         </h3>
         {verse.translations?.[0] && (
           <p className={`mt-4 text-left text-sm ${theme === 'light' ? 'text-slate-800' : 'text-slate-400'}`}>

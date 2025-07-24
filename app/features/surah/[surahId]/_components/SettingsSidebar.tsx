@@ -20,6 +20,12 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
   const { isSettingsOpen, setSettingsOpen } = useSidebar();
   const { theme, setTheme } = useTheme();
 
+  const wordByWordLangs = [
+    { value: 'en', label: 'English' },
+    { value: 'id', label: 'Bahasa Indonesia' },
+    { value: 'tr', label: 'Türkçe' },
+  ];
+
   // Helper function to calculate the slider's progress percentage
   const getPercentage = (value: number, min: number, max: number) => {
     return ((value - min) / (max - min)) * 100;
@@ -50,21 +56,53 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
       >
         <div className="flex-grow">
           <CollapsibleSection title={t('reading_setting')} icon={<FaBookReader size={20} className="text-teal-700" />}>
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-[var(--foreground)]">{t('translations')}</label>
-              <button onClick={onTranslationPanelOpen} className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition">
-                <span className="truncate text-[var(--foreground)]">{selectedTranslationName}</span>
-                <FaChevronDown className="text-gray-500" />
-              </button>
-              <label className="inline-flex items-center space-x-2 pt-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={settings.tajweed}
-                  onChange={e => setSettings({ ...settings, tajweed: e.target.checked })}
-                  className="form-checkbox text-teal-600"
-                />
-                <span>{t('show_tajweed')}</span>
-              </label>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-[var(--foreground)]">{t('translations')}</label>
+                <button onClick={onTranslationPanelOpen} className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition">
+                  <span className="truncate text-[var(--foreground)]">{selectedTranslationName}</span>
+                  <FaChevronDown className="text-gray-500" />
+                </button>
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-[var(--foreground)]">{t('word_by_word_language')}</label>
+                <select
+                  className="w-full bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-lg p-2.5 text-sm"
+                  value={settings.wordLang}
+                  onChange={e => setSettings({ ...settings, wordLang: e.target.value })}
+                >
+                  {wordByWordLangs.map(lang => (
+                    <option key={lang.value} value={lang.value}>
+                      {lang.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex items-center justify-between pt-2">
+                <span className="text-sm text-[var(--foreground)]">{t('show_word_by_word')}</span>
+                <button
+                  onClick={() => setSettings({ ...settings, showByWords: !settings.showByWords })}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full ${settings.showByWords ? 'bg-teal-600' : 'bg-gray-200'}`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${settings.showByWords ? 'translate-x-6' : 'translate-x-1'}`}
+                  />
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-[var(--foreground)]">{t('apply_tajweed')}</span>
+                <button
+                  onClick={() => setSettings({ ...settings, tajweed: !settings.tajweed })}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full ${settings.tajweed ? 'bg-teal-600' : 'bg-gray-200'}`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${settings.tajweed ? 'translate-x-6' : 'translate-x-1'}`}
+                  />
+                </button>
+              </div>
             </div>
           </CollapsibleSection>
           <CollapsibleSection title={t('font_setting')} icon={<FaFontSetting size={20} className="text-teal-700" />}>
@@ -100,7 +138,7 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
                 </button>
               </div>
               <div className="pt-2">
-                <div className={`flex items-center p-1 rounded-full ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'}`}> 
+                <div className={`flex items-center p-1 rounded-full ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'}`}>
                   <button
                     onClick={() => setTheme('light')}
                     className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
