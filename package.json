@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest"
+    "test": "jest",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "i18next": "^25.3.2",
@@ -34,10 +35,13 @@
     "cross-fetch": "^4.1.0",
     "eslint": "^9",
     "eslint-config-next": "15.4.1",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-prettier": "^5.5.3",
     "jest": "^30.0.4",
     "jest-environment-jsdom": "^30.0.4",
     "node-fetch": "^3.3.2",
+    "prettier": "^3.6.2",
     "tailwindcss": "^4",
     "ts-jest": "^29.4.0",
     "typescript": "^5",
