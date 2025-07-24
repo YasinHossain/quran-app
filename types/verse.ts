@@ -8,11 +8,7 @@ export interface Audio {
   url: string;
 }
 
-export interface Word {
-  id: number;
-  uthmani: string;
-  [key: string]: unknown;
-}
+import type { Word } from './word';
 
 export interface Verse {
   id: number;

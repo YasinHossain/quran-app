@@ -3,6 +3,7 @@ export interface Settings {
   arabicFontSize: number;
   translationFontSize: number;
   arabicFontFace: string;
-  showByWords?: boolean;
-  wordLang?: string;
+  wordLang: string;
+  showByWords: boolean;
+  tajweed: boolean;
 }
