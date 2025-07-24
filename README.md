@@ -114,3 +114,7 @@ This project is licensed under the [MIT License](LICENSE).
 ## Code of Conduct
 
 Please read our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing to ensure a welcoming and inclusive environment.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for recent updates.
