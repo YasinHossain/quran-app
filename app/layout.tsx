@@ -41,21 +41,24 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = cookies();
   const stored = cookieStore.get('theme');
-  const theme = stored && (stored.value === 'light' || stored.value === 'dark') ? stored.value as 'light' | 'dark' : 'light';
+  const theme =
+    stored && (stored.value === 'light' || stored.value === 'dark')
+      ? (stored.value as 'light' | 'dark')
+      : 'light';
 
   return (
-    <html
-      lang="en"
-      data-theme={theme}
-      className={theme === 'dark' ? 'dark' : undefined}
-    >
+    <html lang="en" data-theme={theme} className={theme === 'dark' ? 'dark' : undefined}>
       <body
         className={`font-sans ${kfgqpc.variable} ${nastaliq.variable} ${amiri.variable} ${inter.className}`}
       >
         <TranslationProvider>
           <ThemeProvider>
-            <SettingsProvider> {/* Wrap with SettingsProvider */}
-              <SidebarProvider> {/* Wrap with SidebarProvider */}
+            <SettingsProvider>
+              {' '}
+              {/* Wrap with SettingsProvider */}
+              <SidebarProvider>
+                {' '}
+                {/* Wrap with SidebarProvider */}
                 {children}
               </SidebarProvider>
             </SettingsProvider>

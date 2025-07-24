@@ -1,8 +1,8 @@
 /* Keep the original Tailwind import to avoid breaking the structure */
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
-  --background: #F7F9F9;
+  --background: #f7f9f9;
   --foreground: #374151;
   --border-color: #e5e7eb;
   --accent: #0d9488; /* Added accent color variable */
@@ -29,7 +29,7 @@
 }
 
 /* --- Custom Range Slider Styles --- */
-input[type="range"] {
+input[type='range'] {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
@@ -39,8 +39,8 @@ input[type="range"] {
   background: var(--subtle-grey);
 }
 
-input[type="range"]:hover,
-input[type="range"]:focus {
+input[type='range']:hover,
+input[type='range']:focus {
   background: linear-gradient(
     to right,
     var(--accent) var(--value-percent, 0%),
@@ -48,7 +48,7 @@ input[type="range"]:focus {
   );
 }
 
-input[type="range"]::-webkit-slider-thumb {
+input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 16px;
@@ -58,10 +58,12 @@ input[type="range"]::-webkit-slider-thumb {
   border-radius: 50%;
   cursor: pointer;
   margin-top: -5px;
-  transition: background 0.3s, box-shadow 0.3s;
+  transition:
+    background 0.3s,
+    box-shadow 0.3s;
 }
 
-input[type="range"]::-webkit-slider-thumb:hover {
+input[type='range']::-webkit-slider-thumb:hover {
   background: var(--accent);
   border-color: var(--accent);
 }

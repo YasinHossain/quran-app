@@ -17,7 +17,9 @@ const SettingsTest = () => {
   return (
     <div>
       <div data-testid="settings">{JSON.stringify(settings)}</div>
-      <button onClick={() => setSettings({ ...settings, arabicFontSize: settings.arabicFontSize + 2 })}>
+      <button
+        onClick={() => setSettings({ ...settings, arabicFontSize: settings.arabicFontSize + 2 })}
+      >
         Update
       </button>
     </div>
@@ -86,9 +88,7 @@ describe('SettingsContext settings state', () => {
         <SettingsTest />
       </SettingsProvider>
     );
-    expect(screen.getByTestId('settings').textContent).toBe(
-      JSON.stringify(defaultSettings)
-    );
+    expect(screen.getByTestId('settings').textContent).toBe(JSON.stringify(defaultSettings));
   });
 
   it('persists settings changes in localStorage across renders', async () => {
@@ -99,9 +99,7 @@ describe('SettingsContext settings state', () => {
     );
     await userEvent.click(screen.getByRole('button', { name: 'Update' }));
     await waitFor(() => {
-      expect(
-        JSON.parse(localStorage.getItem('quranAppSettings') || '{}').arabicFontSize
-      ).toBe(30);
+      expect(JSON.parse(localStorage.getItem('quranAppSettings') || '{}').arabicFontSize).toBe(30);
     });
     unmount();
 
