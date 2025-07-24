@@ -7,6 +7,8 @@ Copy `.env.example` to `.env` and adjust the values if necessary. The default co
 This repository includes an `.nvmrc` file that pins the Node.js version to **20**. Run `nvm use` after cloning to ensure you're using the correct version.
 The application requires **Node.js 20 or higher**.
 
+You can also develop using a [Dev Container](https://containers.dev/). Open the project in a Dev Container to automatically use Node.js 20 with ESLint and Prettier extensions installed.
+
 This project supports word-by-word translations in multiple languages, including a newly added Bengali option.
 
 Run `npm run format` after installing dependencies to ensure consistent code style.
