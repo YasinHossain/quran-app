@@ -12,6 +12,7 @@ You can also develop using a [Dev Container](https://containers.dev/). Open the 
 This project supports word-by-word translations in multiple languages, including a newly added Bengali option.
 
 Run `npm run format` after installing dependencies to ensure consistent code style.
+An `.editorconfig` file defines UTF-8 encoding, two-space indentation, and a newline at the end of files.
 
 ## Getting Started
 
