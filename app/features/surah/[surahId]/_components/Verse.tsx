@@ -6,6 +6,7 @@ import { useAudio } from '@/app/context/AudioContext';
 import Spinner from '@/app/components/common/Spinner';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useState } from 'react';
+import { applyTajweed } from '@/lib/tajweed';
 
 interface VerseProps {
   verse: VerseType;
@@ -75,7 +76,11 @@ export const Verse = ({ verse }: VerseProps) => {
             className="text-right leading-loose text-[var(--foreground)]"
             style={{ fontFamily: settings.arabicFontFace, fontSize: `${settings.arabicFontSize}px`, lineHeight: 2.2 }}
           >
-            {verse.text_uthmani}
+            {settings.tajweed ? (
+              <span dangerouslySetInnerHTML={{ __html: applyTajweed(verse.text_uthmani) }} />
+            ) : (
+              verse.text_uthmani
+            )}
           </p>
           {verse.translations?.map((t: Translation) => (
             <div key={t.resource_id}>

@@ -21,6 +21,7 @@ const defaultSettings: Settings = {
   arabicFontSize: 28,
   translationFontSize: 16,
   arabicFontFace: ARABIC_FONTS[0].value,
+  tajweed: false,
 };
 
 interface SettingsContextType {
@@ -45,7 +46,8 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
       const savedSettings = localStorage.getItem('quranAppSettings');
       if (savedSettings) {
         try {
-          setSettings(JSON.parse(savedSettings));
+          const parsed = JSON.parse(savedSettings);
+          setSettings({ ...defaultSettings, ...parsed });
         } catch (error) {
           console.error('Error parsing settings from localStorage:', error);
           // Optionally, clear localStorage if corrupted

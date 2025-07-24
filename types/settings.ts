@@ -3,4 +3,5 @@ export interface Settings {
   arabicFontSize: number;
   translationFontSize: number;
   arabicFontFace: string;
+  tajweed: boolean;
 }

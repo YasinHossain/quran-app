@@ -56,6 +56,15 @@ export const SettingsSidebar = ({ onTranslationPanelOpen, selectedTranslationNam
                 <span className="truncate text-[var(--foreground)]">{selectedTranslationName}</span>
                 <FaChevronDown className="text-gray-500" />
               </button>
+              <label className="inline-flex items-center space-x-2 pt-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={settings.tajweed}
+                  onChange={e => setSettings({ ...settings, tajweed: e.target.checked })}
+                  className="form-checkbox text-teal-600"
+                />
+                <span>{t('show_tajweed')}</span>
+              </label>
             </div>
           </CollapsibleSection>
           <CollapsibleSection title={t('font_setting')} icon={<FaFontSetting size={20} className="text-teal-700" />}>

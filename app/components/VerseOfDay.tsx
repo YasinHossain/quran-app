@@ -7,6 +7,7 @@ import Spinner from '@/app/components/common/Spinner';
 import surahsData from '@/data/surahs.json';
 import type { Surah } from '@/types';
 import { useTheme } from '@/app/context/ThemeContext';
+import { applyTajweed } from '@/lib/tajweed';
 
 const surahs: Surah[] = surahsData;
 
@@ -95,7 +96,11 @@ export default function VerseOfDay() {
       <>
         {/* <p className={`mb-4 text-sm ${theme === 'light' ? 'text-slate-600' : 'text-slate-400'}`}>Verse of the Day</p> */}
         <h3 className={`font-amiri text-3xl md:text-4xl leading-relaxed text-right ${theme === 'light' ? 'text-emerald-700' : 'text-emerald-400'}`} dir="rtl">
-          {verse.text_uthmani}
+          {settings.tajweed ? (
+            <span dangerouslySetInnerHTML={{ __html: applyTajweed(verse.text_uthmani) }} />
+          ) : (
+            verse.text_uthmani
+          )}
         </h3>
         {verse.translations?.[0] && (
           <p className={`mt-4 text-left text-sm ${theme === 'light' ? 'text-slate-800' : 'text-slate-400'}`}>
