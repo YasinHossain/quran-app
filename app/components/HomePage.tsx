@@ -141,7 +141,7 @@ export default function HomePage() {
 
             {activeTab === 'Surah' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredSurahs.map((surah, index) => (
+                {filteredSurahs.map(surah => (
                   <Link
                     href={`/features/surah/${surah.number}`}
                     key={surah.number}
@@ -169,7 +169,7 @@ export default function HomePage() {
             )}
             {activeTab === 'Juz' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {allJuz.map((juz, index) => (
+                {allJuz.map(juz => (
                   <Link
                     href={`/features/juz/${juz.number}`}
                     key={juz.number}
@@ -191,7 +191,7 @@ export default function HomePage() {
             )}
             {activeTab === 'Page' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {allPages.map((page, index) => (
+                {allPages.map(page => (
                   <Link
                     href={`/features/page/${page}`}
                     key={page}
