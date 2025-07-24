@@ -39,10 +39,10 @@ export default function QuranPage({ params }: QuranPageProps) {
   } = useSWRInfinite(
     index =>
       pageId
-        ? ['verses', pageId, settings.translationId, index + 1]
+        ? ['verses', pageId, settings.translationId, settings.wordLang, index + 1]
         : null,
-    ([, pageId, translationId, page]) =>
-      getVersesByPage(pageId, translationId, page).catch(err => {
+    ([, pageId, translationId, wordLang, page]) =>
+      getVersesByPage(pageId, translationId, page, 20, wordLang).catch(err => {
         setError(`Failed to load content. ${err.message}`);
         return { verses: [], totalPages: 1 };
       })

@@ -12,13 +12,13 @@ interface ApiVerse extends Verse {
   words?: ApiWord[];
 }
 
-function normalizeVerse(raw: ApiVerse): Verse {
+function normalizeVerse(raw: ApiVerse, wordLang = 'en'): Verse {
   return {
     ...raw,
     words: raw.words?.map(w => ({
       ...w,
       uthmani: (w as ApiWord).text_uthmani ?? w.text,
-      en: w.translation?.text,
+      [wordLang]: w.translation?.text,
     })) as Word[],
   };
 }
@@ -57,16 +57,17 @@ export async function getVersesByChapter(
   chapterId: string | number,
   translationId: number,
   page = 1,
-  perPage = 20
+  perPage = 20,
+  wordLang = 'en'
 ): Promise<PaginatedVerses> {
-  const url = `${API_BASE_URL}/verses/by_chapter/${chapterId}?language=en&words=true&word_fields=text_uthmani&translations=${translationId}&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
+  const url = `${API_BASE_URL}/verses/by_chapter/${chapterId}?language=${wordLang}&words=true&word_fields=text_uthmani&translations=${translationId}&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(`Failed to fetch verses: ${res.status}`);
   }
   const data = await res.json();
   const totalPages = data.meta?.total_pages || data.pagination?.total_pages || 1;
-  const verses = (data.verses as ApiVerse[]).map(normalizeVerse);
+  const verses = (data.verses as ApiVerse[]).map(v => normalizeVerse(v, wordLang));
   return { verses, totalPages };
 }
 
@@ -106,16 +107,17 @@ export async function getVersesByJuz(
   juzId: string | number,
   translationId: number,
   page = 1,
-  perPage = 20
+  perPage = 20,
+  wordLang = 'en'
 ): Promise<PaginatedVerses> {
-  const url = `${API_BASE_URL}/verses/by_juz/${juzId}?language=en&words=true&word_fields=text_uthmani&translations=${translationId}&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
+  const url = `${API_BASE_URL}/verses/by_juz/${juzId}?language=${wordLang}&words=true&word_fields=text_uthmani&translations=${translationId}&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(`Failed to fetch verses: ${res.status}`);
   }
   const data = await res.json();
   const totalPages = data.meta?.total_pages || data.pagination?.total_pages || 1;
-  const verses = (data.verses as ApiVerse[]).map(normalizeVerse);
+  const verses = (data.verses as ApiVerse[]).map(v => normalizeVerse(v, wordLang));
   return { verses, totalPages };
 }
 
@@ -123,16 +125,17 @@ export async function getVersesByPage(
   pageId: string | number,
   translationId: number,
   page = 1,
-  perPage = 20
+  perPage = 20,
+  wordLang = 'en'
 ): Promise<PaginatedVerses> {
-  const url = `${API_BASE_URL}/verses/by_page/${pageId}?language=en&words=true&word_fields=text_uthmani&translations=${translationId}&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
+  const url = `${API_BASE_URL}/verses/by_page/${pageId}?language=${wordLang}&words=true&word_fields=text_uthmani&translations=${translationId}&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(`Failed to fetch verses: ${res.status}`);
   }
   const data = await res.json();
   const totalPages = data.meta?.total_pages || data.pagination?.total_pages || 1;
-  const verses = (data.verses as ApiVerse[]).map(normalizeVerse);
+  const verses = (data.verses as ApiVerse[]).map(v => normalizeVerse(v, wordLang));
   return { verses, totalPages };
 }
 
