@@ -2,6 +2,8 @@
 
 ## Setup
 
+Make sure you are using Node.js 20. Run `nvm use` to load the version specified in `.nvmrc`.
+
 Run the following commands before pushing changes:
 
 ```bash
