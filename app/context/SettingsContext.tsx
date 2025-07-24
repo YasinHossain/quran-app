@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useState, useEffect } from 'react'; // Import useEffect
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Settings } from '@/types';
 
 export const ARABIC_FONTS = [
@@ -29,7 +29,7 @@ const defaultSettings: Settings = {
 interface SettingsContextType {
   settings: Settings;
   setSettings: React.Dispatch<React.SetStateAction<Settings>>;
-  arabicFonts: { name: string; value: string; category: string }[]; // Updated type to include category
+  arabicFonts: { name: string; value: string; category: string }[];
   bookmarkedVerses: string[];
   toggleBookmark: (verseId: string) => void;
   setShowByWords: (val: boolean) => void;
@@ -40,12 +40,10 @@ interface SettingsContextType {
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 export const SettingsProvider = ({ children }: { children: React.ReactNode }) => {
-  // Initialize settings with default values
   const [settings, setSettings] = useState<Settings>(defaultSettings);
-
   const [bookmarkedVerses, setBookmarkedVerses] = useState<string[]>([]);
 
-  // Effect to load settings from localStorage on the client side after initial render
+  // Load settings & bookmarks from localStorage on mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedSettings = localStorage.getItem('quranAppSettings');
@@ -55,8 +53,6 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
           setSettings({ ...defaultSettings, ...parsed });
         } catch (error) {
           console.error('Error parsing settings from localStorage:', error);
-          // Optionally, clear localStorage if corrupted
-          // localStorage.removeItem('quranAppSettings');
         }
       }
       const savedBookmarks = localStorage.getItem('quranAppBookmarks');
@@ -65,21 +61,19 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
           setBookmarkedVerses(JSON.parse(savedBookmarks));
         } catch (error) {
           console.error('Error parsing bookmarks from localStorage:', error);
-          // Optionally, clear localStorage if corrupted
-          // localStorage.removeItem('quranAppBookmarks');
         }
       }
     }
-  }, []); // Empty dependency array ensures this effect runs only once on mount
+  }, []);
 
-  // Effect to save settings to localStorage whenever they change
+  // Save settings when changed
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('quranAppSettings', JSON.stringify(settings));
     }
   }, [settings]);
 
-  // Effect to save bookmarks to localStorage whenever they change
+  // Save bookmarks when changed
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('quranAppBookmarks', JSON.stringify(bookmarkedVerses));
@@ -87,10 +81,10 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
   }, [bookmarkedVerses]);
 
   const toggleBookmark = (verseId: string) => {
-    setBookmarkedVerses(prevBookmarks =>
-      prevBookmarks.includes(verseId)
-        ? prevBookmarks.filter(id => id !== verseId)
-        : [...prevBookmarks, verseId]
+    setBookmarkedVerses(prev =>
+      prev.includes(verseId)
+        ? prev.filter(id => id !== verseId)
+        : [...prev, verseId]
     );
   };
 
