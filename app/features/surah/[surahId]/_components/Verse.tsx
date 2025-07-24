@@ -106,7 +106,12 @@ export const Verse = ({ verse }: VerseProps) => {
                     </span>
                     {/* Inline translation below the word (when showByWords) */}
                     {showByWords && (
-                      <span className="block mt-1 text-xs text-gray-500">{word[wordLang] as string}</span>
+                      <span
+                        className="block mt-1 text-gray-500"
+                        style={{ fontSize: `${settings.arabicFontSize * 0.5}px` }}
+                      >
+                        {word[wordLang] as string}
+                      </span>
                     )}
                   </span>
                 ))}
