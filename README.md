@@ -58,6 +58,7 @@ To make a font selectable in the application, edit `ARABIC_FONTS` in `app/contex
 `name` determines the label shown in the UI, `value` is the CSS `font-family`, and `category` controls which tab the font appears under.
 
 Only include fonts you are licensed to distribute. Keep any required attribution or license files with the font files inside `public/fonts/`.
+Font licenses for the fonts shipped with this project are documented in [public/fonts/LICENSES.md](public/fonts/LICENSES.md).
 
 ## Progressive Web App
 
@@ -110,6 +111,7 @@ We welcome contributions from the community. Please read our [CONTRIBUTING.md](C
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+All bundled fonts are licensed separately; see [public/fonts/LICENSES.md](public/fonts/LICENSES.md) for details.
 
 ## Code of Conduct
 
