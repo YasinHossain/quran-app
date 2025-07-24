@@ -13,7 +13,7 @@
     "test": "jest",
     "format": "prettier --write .",
     "type-check": "tsc --noEmit",
-    "check": "npm run lint && npm run type-check && npm test",
+    "check": "npm run format -- --check && npm run lint && npm run type-check && npm test",
     "prepare": "husky install"
   },
   "dependencies": {
