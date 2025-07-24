@@ -29,3 +29,6 @@ Example:
 ```text
 feat: add audio player
 ```
+
+Before submitting a pull request, run `npm run check` to lint, type-check and
+test your changes. See [AGENTS.md](AGENTS.md) for the full workflow.
