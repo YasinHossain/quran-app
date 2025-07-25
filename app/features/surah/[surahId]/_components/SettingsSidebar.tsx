@@ -64,29 +64,42 @@ export const SettingsSidebar = ({
           isSettingsOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
         } lg:static lg:block`}
       >
-        <header className="flex items-center justify-between p-4 border-b border-gray-200/80">
-          <button
-            aria-label="Back"
-            onClick={() => setSettingsOpen(false)}
-            className="p-2 rounded-full hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
-          >
-            <FaArrowLeft size={18} />
-          </button>
-          <div className="flex space-x-4">
+        <header className="p-4 border-b border-gray-200/80">
+          <div className="flex items-center justify-between">
             <button
-              onClick={() => setActiveTab('translation')}
-              className={`text-sm font-semibold pb-1 border-b-2 transition-colors ${activeTab === 'translation' ? 'text-teal-600 border-teal-600' : 'text-gray-500 border-transparent'}`}
+              aria-label="Back"
+              onClick={() => setSettingsOpen(false)}
+              className="p-2 rounded-full hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
             >
-              Translation
+              <FaArrowLeft size={18} />
             </button>
-            <button
-              onClick={() => setActiveTab('reading')}
-              className={`text-sm font-semibold pb-1 border-b-2 transition-colors ${activeTab === 'reading' ? 'text-teal-600 border-teal-600' : 'text-gray-500 border-transparent'}`}
-            >
-              Reading
-            </button>
+            <h2 className="text-lg font-semibold">{t('settings')}</h2>
+            <div className="w-8" />
           </div>
-          <div className="w-8" />
+          <div className="mt-4 flex justify-center">
+            <div className="flex items-center p-1 rounded-full bg-gray-100 dark:bg-slate-800/60">
+              <button
+                onClick={() => setActiveTab('translation')}
+                className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                  activeTab === 'translation'
+                    ? 'bg-white shadow text-slate-900 dark:bg-slate-700 dark:text-white'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Translation
+              </button>
+              <button
+                onClick={() => setActiveTab('reading')}
+                className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                  activeTab === 'reading'
+                    ? 'bg-white shadow text-slate-900 dark:bg-slate-700 dark:text-white'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Reading
+              </button>
+            </div>
+          </div>
         </header>
         <div className="flex-grow">
           {activeTab === 'translation' ? (

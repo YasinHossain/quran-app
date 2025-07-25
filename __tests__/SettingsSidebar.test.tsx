@@ -58,7 +58,7 @@ describe('SettingsSidebar interactions', () => {
     );
 
     const aside = document.querySelector('aside');
-    expect(aside?.className).toContain('hidden');
+    expect(aside?.className).toContain('translate-x-full');
 
     await userEvent.click(screen.getByLabelText('Open Settings'));
     expect(screen.getByText('reading_setting')).toBeInTheDocument();
