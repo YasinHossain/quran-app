@@ -4,6 +4,7 @@ import { FaArrowLeft, FaSearch } from '@/app/components/common/SvgIcons';
 import { useTranslation } from 'react-i18next';
 import { TranslationResource } from '@/types';
 import { useSettings } from '@/app/context/SettingsContext';
+import { LANGUAGE_CODES } from '@/lib/languageCodes';
 
 interface WordTranslationPanelProps {
   isOpen: boolean;
@@ -72,11 +73,15 @@ export const WordTranslationPanel = ({
                       className="form-radio h-4 w-4 text-teal-600"
                       checked={settings.wordTranslationId === opt.id}
                       onChange={() => {
-                        setSettings({ ...settings, wordTranslationId: opt.id });
+                        setSettings({
+                          ...settings,
+                          wordTranslationId: opt.id,
+                          wordLang: LANGUAGE_CODES[opt.language_name] ?? settings.wordLang,
+                        });
                         onClose();
                       }}
                     />
-                    <span className="text-sm text-[var(--foreground)]">{opt.name}</span>
+                    <span className="text-sm text-[var(--foreground)]">{opt.language_name}</span>
                   </label>
                 ))}
               </div>
