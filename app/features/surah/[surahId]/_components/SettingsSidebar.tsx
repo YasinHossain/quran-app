@@ -118,6 +118,38 @@ export const SettingsSidebar = ({
                   />
                 </button>
               </div>
+
+              {/* Translation selection */}
+              <div>
+                <label className="block mb-2 text-sm font-medium text-[var(--foreground)]">
+                  {t('translations')}
+                </label>
+                <button
+                  onClick={onTranslationPanelOpen}
+                  className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition"
+                >
+                  <span className="truncate text-[var(--foreground)]">
+                    {selectedTranslationName}
+                  </span>
+                  <FaChevronDown className="text-gray-500" />
+                </button>
+              </div>
+
+              {/* Word-by-word language selection */}
+              <div>
+                <label className="block mb-2 text-sm font-medium text-[var(--foreground)]">
+                  {t('word_by_word_language')}
+                </label>
+                <button
+                  onClick={onWordTranslationPanelOpen}
+                  className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition"
+                >
+                  <span className="truncate text-[var(--foreground)]">
+                    {selectedWordTranslationName}
+                  </span>
+                  <FaChevronDown className="text-gray-500" />
+                </button>
+              </div>
             </div>
           </CollapsibleSection>
           <CollapsibleSection
