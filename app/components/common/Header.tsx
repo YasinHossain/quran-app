@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useSidebar } from '@/app/context/SidebarContext';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaFont } from 'react-icons/fa'; // Using a different icon for clarity if FaFontSetting is custom
+import { FaCog } from 'react-icons/fa';
 
 const Header = () => {
   const { t } = useTranslation();
@@ -49,15 +49,14 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Column 3: Settings button on small screens */}
+      {/* Column 3: Settings button */}
       <div className="flex justify-end">
         <button
           onClick={() => setSettingsOpen(true)}
-          className="p-2 rounded-md hover:bg-gray-100 lg:hidden"
+          className="p-2 rounded-md hover:bg-gray-100"
           aria-label="Open Settings"
         >
-          {/* Assuming FaFontSetting was a custom icon, replaced with a standard one for this example */}
-          <FaFont size={20} />
+          <FaCog size={20} />
         </button>
       </div>
     </header>
