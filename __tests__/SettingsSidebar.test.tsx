@@ -1,7 +1,9 @@
+import React, { useState } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Header from '@/app/components/common/Header';
 import { SettingsSidebar } from '@/app/features/surah/[surahId]/_components/SettingsSidebar';
+import { WordTranslationPanel } from '@/app/features/surah/[surahId]/_components/WordTranslationPanel';
 import { SettingsProvider } from '@/app/context/SettingsContext';
 import { SidebarProvider } from '@/app/context/SidebarContext';
 import { ThemeProvider } from '@/app/context/ThemeContext';
@@ -53,7 +55,7 @@ describe('SettingsSidebar interactions', () => {
           onTranslationPanelOpen={() => {}}
           onWordTranslationPanelOpen={() => {}}
           selectedTranslationName="English"
-          selectedWordTranslationName="Bengali"
+          selectedWordTranslationName="English"
         />
       </Wrapper>
     );
@@ -78,5 +80,40 @@ describe('SettingsSidebar interactions', () => {
     const backButtons = screen.getAllByRole('button', { name: 'Back' });
     await userEvent.click(backButtons[1]);
     expect(panel?.className).toContain('translate-x-full');
+  });
+
+  it('opens the word translation panel and shows languages', async () => {
+    const groupedTranslations = {
+      Bengali: [{ id: 1, name: 'Bengali', language_name: 'Bengali' }],
+    };
+
+    const TestComponent = () => {
+      const [open, setOpen] = useState(false);
+      return (
+        <Wrapper>
+          <Header />
+          <SettingsSidebar
+            onTranslationPanelOpen={() => {}}
+            onWordTranslationPanelOpen={() => setOpen(true)}
+            selectedTranslationName="English"
+            selectedWordTranslationName="Bengali"
+          />
+          <WordTranslationPanel
+            isOpen={open}
+            onClose={() => setOpen(false)}
+            groupedTranslations={groupedTranslations}
+            searchTerm=""
+            onSearchTermChange={() => {}}
+            onReset={() => {}}
+          />
+        </Wrapper>
+      );
+    };
+
+    render(<TestComponent />);
+
+    await userEvent.click(screen.getByLabelText('Open Settings'));
+    await userEvent.click(screen.getByRole('button', { name: 'Bengali' }));
+    expect(screen.getAllByText('Bengali').length).toBeGreaterThan(1);
   });
 });
