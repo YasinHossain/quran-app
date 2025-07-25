@@ -22,6 +22,7 @@ const defaultSettings: Settings = {
   translationFontSize: 16,
   arabicFontFace: ARABIC_FONTS[0].value,
   wordLang: 'en',
+  wordTranslationId: 85,
   showByWords: false,
   tajweed: false,
 };
@@ -35,6 +36,7 @@ interface SettingsContextType {
   setShowByWords: (val: boolean) => void;
   setTajweed: (val: boolean) => void;
   setWordLang: (lang: string) => void;
+  setWordTranslationId: (id: number) => void;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -92,6 +94,9 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
 
   const setWordLang = (lang: string) => setSettings((prev) => ({ ...prev, wordLang: lang }));
 
+  const setWordTranslationId = (id: number) =>
+    setSettings((prev) => ({ ...prev, wordTranslationId: id }));
+
   return (
     <SettingsContext.Provider
       value={{
@@ -103,6 +108,7 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
         setShowByWords,
         setTajweed,
         setWordLang,
+        setWordTranslationId,
       }}
     >
       {children}

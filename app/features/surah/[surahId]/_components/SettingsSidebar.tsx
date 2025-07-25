@@ -10,25 +10,22 @@ import { useTheme } from '@/app/context/ThemeContext';
 
 interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;
+  onWordTranslationPanelOpen: () => void;
   selectedTranslationName: string;
+  selectedWordTranslationName: string;
 }
 
 export const SettingsSidebar = ({
   onTranslationPanelOpen,
+  onWordTranslationPanelOpen,
   selectedTranslationName,
+  selectedWordTranslationName,
 }: SettingsSidebarProps) => {
   const { settings, setSettings, arabicFonts } = useSettings();
   const { t } = useTranslation();
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
   const { isSettingsOpen, setSettingsOpen } = useSidebar();
   const { theme, setTheme } = useTheme();
-
-  const wordByWordLangs = [
-    { value: 'en', label: 'English' },
-    { value: 'id', label: 'Bahasa Indonesia' },
-    { value: 'tr', label: 'Türkçe' },
-    { value: 'bn', label: 'Bengali' },
-  ];
 
   // Helper function to calculate the slider's progress percentage
   const getPercentage = (value: number, min: number, max: number) => {
@@ -80,21 +77,19 @@ export const SettingsSidebar = ({
                 </button>
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <label className="block text-sm font-medium text-[var(--foreground)]">
-                  {t('word_by_word_language')}
+                  {t('word_by_word_translation')}
                 </label>
-                <select
-                  className="w-full bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-lg p-2.5 text-sm"
-                  value={settings.wordLang}
-                  onChange={(e) => setSettings({ ...settings, wordLang: e.target.value })}
+                <button
+                  onClick={onWordTranslationPanelOpen}
+                  className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition"
                 >
-                  {wordByWordLangs.map((lang) => (
-                    <option key={lang.value} value={lang.value}>
-                      {lang.label}
-                    </option>
-                  ))}
-                </select>
+                  <span className="truncate text-[var(--foreground)]">
+                    {selectedWordTranslationName}
+                  </span>
+                  <FaChevronDown className="text-gray-500" />
+                </button>
               </div>
 
               <div className="flex items-center justify-between pt-2">
