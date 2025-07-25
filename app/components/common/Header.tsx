@@ -49,7 +49,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Column 3: Settings button on small screens */}
+      {/* Column 3: Settings button */}
       <div className="flex justify-end">
         <button
           onClick={() => setSettingsOpen(true)}
