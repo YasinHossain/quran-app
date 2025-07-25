@@ -23,7 +23,8 @@ export const TafsirModal = ({ verseKey, isOpen, onClose }: TafsirModalProps) => 
       <div className="bg-[var(--background)] text-[var(--foreground)] relative max-w-lg w-full max-h-[80vh] overflow-y-auto rounded-lg shadow-lg p-6">
         <button
           onClick={onClose}
-          className="absolute left-3 top-3 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+          className="absolute left-3 top-3 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+          aria-label="Close"
         >
           <FaArrowLeft size={18} />
         </button>

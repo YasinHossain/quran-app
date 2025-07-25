@@ -53,7 +53,7 @@ const Header = () => {
       <div className="flex justify-end">
         <button
           onClick={() => setSettingsOpen(true)}
-          className="p-2 rounded-md hover:bg-gray-100"
+          className="p-2 rounded-md hover:bg-gray-100 lg:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
           aria-label="Open Settings"
         >
           <FaCog size={20} />

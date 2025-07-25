@@ -56,7 +56,8 @@ export default function HomePage() {
               </h1>
               <button
                 onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-                className="p-2 bg-white/40 dark:bg-white/10 rounded-full hover:bg-white/60 dark:hover:bg-white/20 transition-colors"
+                className="p-2 bg-white/40 dark:bg-white/10 rounded-full hover:bg-white/60 dark:hover:bg-white/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+                aria-label="Toggle Theme"
               >
                 {theme === 'light' ? (
                   <Moon className="w-5 h-5 text-slate-700" />
