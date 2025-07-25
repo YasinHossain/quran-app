@@ -48,7 +48,12 @@ describe('SettingsSidebar interactions', () => {
     render(
       <Wrapper>
         <Header />
-        <SettingsSidebar onTranslationPanelOpen={() => {}} selectedTranslationName="English" />
+        <SettingsSidebar
+          onTranslationPanelOpen={() => {}}
+          onWordTranslationPanelOpen={() => {}}
+          selectedTranslationName="English"
+          selectedWordTranslationName="English"
+        />
       </Wrapper>
     );
 
@@ -64,7 +69,8 @@ describe('SettingsSidebar interactions', () => {
     expect(screen.getByText('Noto Nastaliq Urdu')).toBeInTheDocument();
 
     const panel = screen.getByText('select_font_face').parentElement?.parentElement as HTMLElement;
-    await userEvent.click(screen.getByRole('button', { name: 'Back' }));
+    const backButtons = screen.getAllByRole('button', { name: 'Back' });
+    await userEvent.click(backButtons[1]);
     expect(panel?.className).toContain('translate-x-full');
   });
 });

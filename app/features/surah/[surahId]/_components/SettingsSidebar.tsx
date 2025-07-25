@@ -60,7 +60,7 @@ export const SettingsSidebar = ({
         }}
       />
       <aside
-        className={`fixed inset-y-0 right-0 w-80 bg-[var(--background)] text-[var(--foreground)] flex flex-col overflow-y-auto shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-transform duration-300 z-50 rounded-l-[20px] ${isSettingsOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed inset-y-0 right-0 w-80 bg-[var(--background)] text-[var(--foreground)] flex flex-col overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-transform duration-300 z-50 rounded-l-[20px] ${isSettingsOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <header className="flex items-center justify-between p-4 border-b border-gray-200/80">
           <button
