@@ -53,7 +53,7 @@ describe('SettingsSidebar interactions', () => {
           onTranslationPanelOpen={() => {}}
           onWordTranslationPanelOpen={() => {}}
           selectedTranslationName="English"
-          selectedWordTranslationName="English"
+          selectedWordTranslationName="Bengali"
         />
       </Wrapper>
     );
