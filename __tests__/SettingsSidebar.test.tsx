@@ -48,12 +48,17 @@ describe('SettingsSidebar interactions', () => {
     render(
       <Wrapper>
         <Header />
-        <SettingsSidebar onTranslationPanelOpen={() => {}} selectedTranslationName="English" />
+        <SettingsSidebar
+          onTranslationPanelOpen={() => {}}
+          onWordTranslationPanelOpen={() => {}}
+          selectedTranslationName="English"
+          selectedWordTranslationName="English"
+        />
       </Wrapper>
     );
 
     const aside = document.querySelector('aside');
-    expect(aside?.className).toContain('hidden');
+    expect(aside?.className).toContain('translate-x-full');
 
     await userEvent.click(screen.getByLabelText('Open Settings'));
     expect(screen.getByText('reading_setting')).toBeInTheDocument();
@@ -64,7 +69,7 @@ describe('SettingsSidebar interactions', () => {
     expect(screen.getByText('Noto Nastaliq Urdu')).toBeInTheDocument();
 
     const panel = screen.getByText('select_font_face').parentElement?.parentElement as HTMLElement;
-    await userEvent.click(screen.getByRole('button', { name: 'Back' }));
+    await userEvent.click(screen.getAllByRole('button', { name: 'Back' })[1]);
     expect(panel?.className).toContain('translate-x-full');
   });
 });
