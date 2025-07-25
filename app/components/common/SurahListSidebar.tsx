@@ -155,7 +155,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                   >
                     <div
                       className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow group-hover:bg-gray-100 dark:group-hover:bg-gray-700 group-hover:text-teal-600 transition`}
-                       style={{ backgroundColor: bgColor, color: textColor }}
+                      style={{ backgroundColor: bgColor, color: textColor }}
                     >
                       <span>{chapter.id}</span>
                     </div>
