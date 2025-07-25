@@ -76,7 +76,7 @@ export default function QuranPage({ params }: QuranPageProps) {
   );
   const selectedWordTranslationName = useMemo(
     () =>
-      wordTranslationOptions.find((o) => o.id === settings.wordTranslationId)?.name ||
+      wordTranslationOptions.find((o) => o.id === settings.wordTranslationId)?.language_name ||
       t('select_word_translation'),
     [settings.wordTranslationId, wordTranslationOptions, t]
   );
@@ -93,7 +93,9 @@ export default function QuranPage({ params }: QuranPageProps) {
   const groupedWordTranslations = useMemo(
     () =>
       wordTranslationOptions
-        .filter((o) => o.name.toLowerCase().includes(wordTranslationSearchTerm.toLowerCase()))
+        .filter((o) =>
+          o.language_name.toLowerCase().includes(wordTranslationSearchTerm.toLowerCase())
+        )
         .reduce<Record<string, TranslationResource[]>>((acc, t) => {
           (acc[t.language_name] ||= []).push(t);
           return acc;
