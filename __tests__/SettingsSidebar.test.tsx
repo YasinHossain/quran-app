@@ -1,7 +1,9 @@
+import React, { useState } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Header from '@/app/components/common/Header';
 import { SettingsSidebar } from '@/app/features/surah/[surahId]/_components/SettingsSidebar';
+import { WordTranslationPanel } from '@/app/features/surah/[surahId]/_components/WordTranslationPanel';
 import { SettingsProvider } from '@/app/context/SettingsContext';
 import { SidebarProvider } from '@/app/context/SidebarContext';
 import { ThemeProvider } from '@/app/context/ThemeContext';
@@ -48,12 +50,17 @@ describe('SettingsSidebar interactions', () => {
     render(
       <Wrapper>
         <Header />
-        <SettingsSidebar onTranslationPanelOpen={() => {}} selectedTranslationName="English" />
+        <SettingsSidebar
+          onTranslationPanelOpen={() => {}}
+          onWordTranslationPanelOpen={() => {}}
+          selectedTranslationName="English"
+          selectedWordTranslationName="English"
+        />
       </Wrapper>
     );
 
     const aside = document.querySelector('aside');
-    expect(aside?.className).toContain('hidden');
+    expect(aside?.className).toContain('translate-x-full');
 
     await userEvent.click(screen.getByLabelText('Open Settings'));
     expect(screen.getByText('reading_setting')).toBeInTheDocument();
@@ -64,7 +71,42 @@ describe('SettingsSidebar interactions', () => {
     expect(screen.getByText('Noto Nastaliq Urdu')).toBeInTheDocument();
 
     const panel = screen.getByText('select_font_face').parentElement?.parentElement as HTMLElement;
-    await userEvent.click(screen.getByRole('button', { name: 'Back' }));
+    await userEvent.click(screen.getAllByRole('button', { name: 'Back' })[1]);
     expect(panel?.className).toContain('translate-x-full');
+  });
+
+  it('opens the word translation panel and shows languages', async () => {
+    const groupedTranslations = {
+      Bengali: [{ id: 1, name: 'Bengali', language_name: 'Bengali' }],
+    };
+
+    const TestComponent = () => {
+      const [open, setOpen] = useState(false);
+      return (
+        <Wrapper>
+          <Header />
+          <SettingsSidebar
+            onTranslationPanelOpen={() => {}}
+            onWordTranslationPanelOpen={() => setOpen(true)}
+            selectedTranslationName="English"
+            selectedWordTranslationName="Bengali"
+          />
+          <WordTranslationPanel
+            isOpen={open}
+            onClose={() => setOpen(false)}
+            groupedTranslations={groupedTranslations}
+            searchTerm=""
+            onSearchTermChange={() => {}}
+            onReset={() => {}}
+          />
+        </Wrapper>
+      );
+    };
+
+    render(<TestComponent />);
+
+    await userEvent.click(screen.getByLabelText('Open Settings'));
+    await userEvent.click(screen.getByRole('button', { name: 'Bengali' }));
+    expect(screen.getAllByText('Bengali').length).toBeGreaterThan(1);
   });
 });
