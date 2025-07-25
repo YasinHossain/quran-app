@@ -36,16 +36,39 @@ input[type='range'] {
   height: 6px;
   border-radius: 5px;
   outline: none;
-  background: var(--subtle-grey);
-}
-
-input[type='range']:hover,
-input[type='range']:focus {
   background: linear-gradient(
     to right,
     var(--accent) var(--value-percent, 0%),
     var(--subtle-grey) var(--value-percent, 0%)
   );
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--background);
+  border: 2px solid var(--border-color);
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -5px;
+  transition:
+    background 0.3s,
+    box-shadow 0.3s;
+}
+
+input[type='range']::-webkit-slider-thumb:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+input[type='range'] {
+  background: linear-gradient(
+    to right,
+    var(--accent) var(--value-percent, 0%),
+    var(--subtle-grey) var(--value-percent, 0%)
+  ) !important;
 }
 
 input[type='range']::-webkit-slider-thumb {
@@ -124,4 +147,12 @@ input[type='range']::-webkit-slider-thumb:hover {
 /* Add a hover effect to the scrollbar thumb for Firefox (limited support) */
 *:hover {
   scrollbar-color: var(--accent) var(--background); /* thumb color track color */
+}
+/* Hide horizontal scrollbar for elements with overflow-x: auto */
+* {
+  scrollbar-width: none; /* For Firefox */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
 }
