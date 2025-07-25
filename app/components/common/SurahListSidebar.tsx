@@ -9,6 +9,7 @@ import { Chapter } from '@/types';
 import { getChapters } from '@/lib/api';
 import useSWR from 'swr';
 import { useSidebar } from '@/app/context/SidebarContext';
+import { useTheme } from '@/app/context/ThemeContext';
 
 interface Props {
   initialChapters?: Chapter[];
@@ -23,6 +24,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('Surah'); // Canonical state: 'Surah', 'Juz', 'Page'
   const { surahId, juzId, pageId } = useParams();
+  const { theme } = useTheme(); // Use the useTheme hook
 
   // Ref for the sidebar container
   const sidebarRef = useRef<HTMLElement>(null);
@@ -140,6 +142,10 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
             <nav className="space-y-1">
               {filteredChapters.map((chapter) => {
                 const isActive = activeSurahId === String(chapter.id);
+                // Determine background and text color based on active state and theme
+                const bgColor = isActive ? '#047857' : theme === 'light' ? '#F3F4F6' : '#1F2937';
+                const textColor = isActive ? '#FFFFFF' : theme === 'light' ? '#059669' : '#6EE7B7';
+
                 return (
                   <Link
                     href={`/features/surah/${chapter.id}`}
@@ -150,13 +156,14 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     }`}
                   >
                     <div
-                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors ${isActive ? 'bg-teal-600 text-white' : 'bg-gray-100 dark:bg-slate-700/50 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-500/20'}`}
+                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow group-hover:bg-gray-100 dark:group-hover:bg-gray-700 group-hover:text-teal-600 transition`}
+                       style={{ backgroundColor: bgColor, color: textColor }}
                     >
                       <span>{chapter.id}</span>
                     </div>
                     <div className="flex-grow">
                       <p
-                        className={`font-semibold ${isActive ? 'text-teal-800' : 'text-[var(--foreground)]'}`}
+                        className={`font-semibold ${isActive ? 'text-teal-800' : 'text-[var(--foreground)] group-hover:text-teal-600'}`}
                       >
                         {chapter.name_simple}
                       </p>
@@ -188,10 +195,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     }`}
                   >
                     <div
-                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors ${
-                        isActive
-                          ? 'bg-teal-600 text-white'
-                          : 'bg-gray-100 dark:bg-slate-700/50 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-500/20'
+                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors ${isActive ? 'bg-teal-600 text-white' : 'bg-gray-100 dark:bg-slate-700/50 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-500/20'}
                       }`}
                     >
                       <span>{j}</span>
@@ -222,10 +226,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     }`}
                   >
                     <div
-                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors ${
-                        isActive
-                          ? 'bg-teal-600 text-white'
-                          : 'bg-gray-100 dark:bg-slate-700/50 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-500/20'
+                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors ${isActive ? 'bg-teal-600 text-white' : 'bg-gray-100 dark:bg-slate-700/50 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-500/20'}
                       }`}
                     >
                       <span>{p}</span>

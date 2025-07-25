@@ -70,57 +70,29 @@ export const SettingsSidebar = ({
           >
             <FaArrowLeft size={18} />
           </button>
-          <div className="flex space-x-4">
+          <h2 className="flex-grow text-center text-lg font-bold">Settings</h2>
+          <div className="w-8" />
+        </header>
+        <div className="flex-grow p-4">
+         <div className={`flex items-center p-1 rounded-full mb-4 ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'}`}>
             <button
-              onClick={() => setActiveTab('translation')}
-              className={`text-sm font-semibold pb-1 border-b-2 transition-colors ${activeTab === 'translation' ? 'text-teal-600 border-teal-600' : 'text-gray-500 border-transparent'}`}
+              onClick={onTranslationPanelOpen}
+              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${activeTab === 'translation' ? (theme === 'light' ? 'bg-white shadow text-slate-900' : 'bg-slate-700 text-white shadow') : (theme === 'light' ? 'text-slate-400 hover:text-slate-700' : 'text-slate-400 hover:text-white')}`}
             >
               Translation
             </button>
             <button
-              onClick={() => setActiveTab('reading')}
-              className={`text-sm font-semibold pb-1 border-b-2 transition-colors ${activeTab === 'reading' ? 'text-teal-600 border-teal-600' : 'text-gray-500 border-transparent'}`}
+              onClick={onWordTranslationPanelOpen}
+              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${activeTab === 'reading' ? (theme === 'light' ? 'bg-white shadow text-slate-900' : 'bg-slate-700 text-white shadow') : (theme === 'light' ? 'text-slate-400 hover:text-slate-700' : 'text-slate-400 hover:text-white')}`}
             >
               Reading
             </button>
           </div>
-          <div className="w-8" />
-        </header>
-        <div className="flex-grow">
           <CollapsibleSection
             title={t('reading_setting')}
             icon={<FaBookReader size={20} className="text-teal-700" />}
           >
             <div className="space-y-4">
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-[var(--foreground)]">
-                  {t('translations')}
-                </label>
-                <button
-                  onClick={onTranslationPanelOpen}
-                  className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition"
-                >
-                  <span className="truncate text-[var(--foreground)]">
-                    {selectedTranslationName}
-                  </span>
-                  <FaChevronDown className="text-gray-500" />
-                </button>
-              </div>
-
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-[var(--foreground)]">
-                  {t('word_by_word_translation')}
-                </label>
-                <button
-                  onClick={onWordTranslationPanelOpen}
-                  className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition"
-                >
-                  <span className="truncate text-[var(--foreground)]">
-                    {selectedWordTranslationName}
-                  </span>
-                  <FaChevronDown className="text-gray-500" />
-                </button>
-              </div>
 
               <div className="flex items-center justify-between pt-2">
                 <span className="text-sm text-[var(--foreground)]">{t('show_word_by_word')}</span>
