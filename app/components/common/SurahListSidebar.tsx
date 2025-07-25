@@ -50,7 +50,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
       const activeLink = sidebarRef.current.querySelector(`[data-active="true"]`);
 
       if (activeLink) {
-        // Scroll the active link into view
+        // Scroll the activeLink into view
         activeLink.scrollIntoView({
           behavior: 'smooth', // Use smooth scrolling
           block: 'center', // Align the item to the center of the view
@@ -151,9 +151,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     href={`/features/surah/${chapter.id}`}
                     key={chapter.id}
                     data-active={isActive} // Add data-active attribute
-                    className={`group flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors border-l-2 border-transparent hover:border-teal-600 ${
-                      isActive && 'bg-teal-50 border-teal-600'
-                    }`}
+                    className={`group flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors ${isActive && 'bg-teal-50'}`}
                   >
                     <div
                       className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow group-hover:bg-gray-100 dark:group-hover:bg-gray-700 group-hover:text-teal-600 transition`}

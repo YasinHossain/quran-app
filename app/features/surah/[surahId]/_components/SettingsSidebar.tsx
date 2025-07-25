@@ -74,16 +74,18 @@ export const SettingsSidebar = ({
           <div className="w-8" />
         </header>
         <div className="flex-grow p-4">
-         <div className={`flex items-center p-1 rounded-full mb-4 ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'}`}>
+          <div
+            className={`flex items-center p-1 rounded-full mb-4 ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'}`}
+          >
             <button
               onClick={onTranslationPanelOpen}
-              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${activeTab === 'translation' ? (theme === 'light' ? 'bg-white shadow text-slate-900' : 'bg-slate-700 text-white shadow') : (theme === 'light' ? 'text-slate-400 hover:text-slate-700' : 'text-slate-400 hover:text-white')}`}
+              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${activeTab === 'translation' ? (theme === 'light' ? 'bg-white shadow text-slate-900' : 'bg-slate-700 text-white shadow') : theme === 'light' ? 'text-slate-400 hover:text-slate-700' : 'text-slate-400 hover:text-white'}`}
             >
               Translation
             </button>
             <button
               onClick={onWordTranslationPanelOpen}
-              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${activeTab === 'reading' ? (theme === 'light' ? 'bg-white shadow text-slate-900' : 'bg-slate-700 text-white shadow') : (theme === 'light' ? 'text-slate-400 hover:text-slate-700' : 'text-slate-400 hover:text-white')}`}
+              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${activeTab === 'reading' ? (theme === 'light' ? 'bg-white shadow text-slate-900' : 'bg-slate-700 text-white shadow') : theme === 'light' ? 'text-slate-400 hover:text-slate-700' : 'text-slate-400 hover:text-white'}`}
             >
               Reading
             </button>
@@ -93,7 +95,6 @@ export const SettingsSidebar = ({
             icon={<FaBookReader size={20} className="text-teal-700" />}
           >
             <div className="space-y-4">
-
               <div className="flex items-center justify-between pt-2">
                 <span className="text-sm text-[var(--foreground)]">{t('show_word_by_word')}</span>
                 <button
