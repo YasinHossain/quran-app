@@ -40,6 +40,7 @@ describe('SettingsSidebar interactions', () => {
       })),
     });
   });
+
   beforeEach(() => {
     localStorage.clear();
   });
@@ -58,16 +59,21 @@ describe('SettingsSidebar interactions', () => {
     );
 
     const aside = document.querySelector('aside');
-    expect(aside?.className).toContain('hidden');
+    expect(aside?.className).toContain('translate-x-full');
 
+    // Open settings sidebar
     await userEvent.click(screen.getByLabelText('Open Settings'));
     expect(screen.getByText('reading_setting')).toBeInTheDocument();
 
+    // Switch font tab
     await userEvent.click(screen.getByRole('button', { name: 'KFGQPC Uthman Taha' }));
     expect(screen.getByText('select_font_face')).toBeInTheDocument();
+
+    // Change font option
     await userEvent.click(screen.getByRole('button', { name: 'IndoPak' }));
     expect(screen.getByText('Noto Nastaliq Urdu')).toBeInTheDocument();
 
+    // Close with back button
     const panel = screen.getByText('select_font_face').parentElement?.parentElement as HTMLElement;
     const backButtons = screen.getAllByRole('button', { name: 'Back' });
     await userEvent.click(backButtons[1]);
