@@ -5,13 +5,16 @@ import { useTranslation } from 'react-i18next';
 import { Verse } from './_components/Verse';
 import { SettingsSidebar } from './_components/SettingsSidebar';
 import { TranslationPanel } from './_components/TranslationPanel';
+import { WordTranslationPanel } from './_components/WordTranslationPanel';
 import { Verse as VerseType, TranslationResource } from '@/types';
-import { getTranslations, getVersesByChapter } from '@/lib/api';
+import { getTranslations, getWordTranslations, getVersesByChapter } from '@/lib/api';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useAudio } from '@/app/context/AudioContext';
 import Spinner from '@/app/components/common/Spinner';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
+
+const DEFAULT_WORD_TRANSLATION_ID = 85;
 
 interface SurahPageProps {
   params: { surahId: string };
@@ -20,15 +23,23 @@ interface SurahPageProps {
 export default function SurahPage({ params }: SurahPageProps) {
   const { surahId } = params;
   const [error, setError] = useState<string | null>(null);
-  const { settings } = useSettings();
+  const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
   const { playingId, setPlayingId, setLoadingId } = useAudio();
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [translationSearchTerm, setTranslationSearchTerm] = useState('');
+  const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
+  const [wordTranslationSearchTerm, setWordTranslationSearchTerm] = useState('');
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const { data: translationOptionsData } = useSWR('translations', getTranslations);
   const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
+
+  const { data: wordTranslationOptionsData } = useSWR('wordTranslations', getWordTranslations);
+  const wordTranslationOptions = useMemo(
+    () => wordTranslationOptionsData || [],
+    [wordTranslationOptionsData]
+  );
 
   const { data, size, setSize, isValidating } = useSWRInfinite(
     (index) =>
@@ -64,6 +75,12 @@ export default function SurahPage({ params }: SurahPageProps) {
       t('select_translation'),
     [settings.translationId, translationOptions, t]
   );
+  const selectedWordTranslationName = useMemo(
+    () =>
+      wordTranslationOptions.find((o) => o.id === settings.wordTranslationId)?.name ||
+      t('select_word_translation'),
+    [settings.wordTranslationId, wordTranslationOptions, t]
+  );
   const groupedTranslations = useMemo(
     () =>
       translationOptions
@@ -73,6 +90,16 @@ export default function SurahPage({ params }: SurahPageProps) {
           return acc;
         }, {}),
     [translationOptions, translationSearchTerm]
+  );
+  const groupedWordTranslations = useMemo(
+    () =>
+      wordTranslationOptions
+        .filter((o) => o.name.toLowerCase().includes(wordTranslationSearchTerm.toLowerCase()))
+        .reduce<Record<string, TranslationResource[]>>((acc, t) => {
+          (acc[t.language_name] ||= []).push(t);
+          return acc;
+        }, {}),
+    [wordTranslationOptions, wordTranslationSearchTerm]
   );
 
   return (
@@ -126,7 +153,9 @@ export default function SurahPage({ params }: SurahPageProps) {
 
       <SettingsSidebar
         onTranslationPanelOpen={() => setIsTranslationPanelOpen(true)}
+        onWordTranslationPanelOpen={() => setIsWordPanelOpen(true)}
         selectedTranslationName={selectedTranslationName}
+        selectedWordTranslationName={selectedWordTranslationName}
       />
 
       <TranslationPanel
@@ -135,6 +164,17 @@ export default function SurahPage({ params }: SurahPageProps) {
         groupedTranslations={groupedTranslations}
         searchTerm={translationSearchTerm}
         onSearchTermChange={setTranslationSearchTerm}
+      />
+      <WordTranslationPanel
+        isOpen={isWordPanelOpen}
+        onClose={() => setIsWordPanelOpen(false)}
+        groupedTranslations={groupedWordTranslations}
+        searchTerm={wordTranslationSearchTerm}
+        onSearchTermChange={setWordTranslationSearchTerm}
+        onReset={() => {
+          setWordTranslationSearchTerm('');
+          setSettings({ ...settings, wordTranslationId: DEFAULT_WORD_TRANSLATION_ID });
+        }}
       />
     </div>
   );

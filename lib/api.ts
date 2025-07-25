@@ -43,6 +43,15 @@ export async function getTranslations(): Promise<TranslationResource[]> {
   return data.translations as TranslationResource[];
 }
 
+export async function getWordTranslations(): Promise<TranslationResource[]> {
+  const res = await fetch(`${API_BASE_URL}/resources/translations?resource_type=word_by_word`);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch translations: ${res.status}`);
+  }
+  const data = await res.json();
+  return data.translations as TranslationResource[];
+}
+
 export interface PaginatedVerses {
   verses: Verse[];
   totalPages: number;

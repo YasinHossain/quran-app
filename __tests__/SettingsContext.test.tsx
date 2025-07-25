@@ -78,6 +78,7 @@ describe('SettingsContext settings state', () => {
     translationFontSize: 16,
     arabicFontFace: '"KFGQPC-Uthman-Taha", serif',
     wordLang: 'en',
+    wordTranslationId: 85,
     showByWords: false,
     tajweed: false,
   };
