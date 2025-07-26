@@ -1,30 +1,38 @@
-// app/features/surah/[surahId]/_components/WordTranslationPanel.tsx
 'use client';
 import { FaArrowLeft, FaSearch } from '@/app/components/common/SvgIcons';
 import { useTranslation } from 'react-i18next';
-import { TranslationResource } from '@/types';
 import { useSettings } from '@/app/context/SettingsContext';
 import { LANGUAGE_CODES } from '@/lib/languageCodes';
 
-interface WordTranslationPanelProps {
+interface LanguageOption {
+  name: string;
+  id: number;
+}
+
+interface WordLanguagePanelProps {
   isOpen: boolean;
   onClose: () => void;
-  groupedTranslations: Record<string, TranslationResource[]>;
+  languages: LanguageOption[];
   searchTerm: string;
   onSearchTermChange: (term: string) => void;
   onReset: () => void;
 }
 
-export const WordTranslationPanel = ({
+export const WordLanguagePanel = ({
   isOpen,
   onClose,
-  groupedTranslations,
+  languages,
   searchTerm,
   onSearchTermChange,
   onReset,
-}: WordTranslationPanelProps) => {
+}: WordLanguagePanelProps) => {
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
+
+  const filtered = languages.filter((lang) =>
+    lang.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div
       className={`fixed top-0 right-0 w-80 h-full bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
@@ -55,39 +63,28 @@ export const WordTranslationPanel = ({
         </div>
       </div>
       <div className="flex-grow overflow-y-auto">
-        {groupedTranslations &&
-          Object.keys(groupedTranslations).map((lang) => (
-            <div key={lang}>
-              <h3 className="sticky top-0 bg-gray-100 px-4 py-2 font-bold text-teal-800 text-sm">
-                {lang}
-              </h3>
-              <div className="p-2 space-y-1">
-                {groupedTranslations[lang].map((opt) => (
-                  <label
-                    key={opt.id}
-                    className="flex items-center space-x-3 p-2 rounded-md hover:bg-teal-50 cursor-pointer"
-                  >
-                    <input
-                      type="radio"
-                      name="wordTranslation"
-                      className="form-radio h-4 w-4 text-teal-600"
-                      checked={settings.wordTranslationId === opt.id}
-                      onChange={() => {
-                        setSettings({
-                          ...settings,
-                          wordTranslationId: opt.id,
-                          wordLang:
-                            LANGUAGE_CODES[opt.language_name.toLowerCase()] ?? settings.wordLang,
-                        });
-                        onClose();
-                      }}
-                    />
-                    <span className="text-sm text-[var(--foreground)]">{opt.name}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          ))}
+        {filtered.map((lang) => (
+          <label
+            key={lang.id}
+            className="flex items-center space-x-3 p-2 rounded-md hover:bg-teal-50 cursor-pointer"
+          >
+            <input
+              type="radio"
+              name="wordLanguage"
+              className="form-radio h-4 w-4 text-teal-600"
+              checked={settings.wordLang === LANGUAGE_CODES[lang.name.toLowerCase()]}
+              onChange={() => {
+                setSettings({
+                  ...settings,
+                  wordLang: LANGUAGE_CODES[lang.name.toLowerCase()] ?? settings.wordLang,
+                  wordTranslationId: lang.id,
+                });
+                onClose();
+              }}
+            />
+            <span className="text-sm text-[var(--foreground)]">{lang.name}</span>
+          </label>
+        ))}
       </div>
       <div className="p-4 border-t border-gray-200/80">
         <button

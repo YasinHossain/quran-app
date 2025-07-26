@@ -15,23 +15,22 @@ import { useTheme } from '@/app/context/ThemeContext';
 
 interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;
-  onWordTranslationPanelOpen: () => void;
+  onWordLanguagePanelOpen: () => void;
   selectedTranslationName: string;
-  selectedWordTranslationName: string;
+  selectedWordLanguageName: string;
 }
 
 export const SettingsSidebar = ({
   onTranslationPanelOpen,
-  onWordTranslationPanelOpen,
+  onWordLanguagePanelOpen,
   selectedTranslationName,
-  selectedWordTranslationName,
+  selectedWordLanguageName,
 }: SettingsSidebarProps) => {
   const { settings, setSettings, arabicFonts } = useSettings();
   const { t } = useTranslation();
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
   const { isSettingsOpen, setSettingsOpen } = useSidebar();
   const { theme, setTheme } = useTheme();
-  const [activeTab, setActiveTab] = useState<'translation' | 'reading'>('translation');
 
   // Helper function to calculate the slider's progress percentage
   const getPercentage = (value: number, min: number, max: number) => {
@@ -79,13 +78,13 @@ export const SettingsSidebar = ({
           >
             <button
               onClick={onTranslationPanelOpen}
-              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${activeTab === 'translation' ? (theme === 'light' ? 'bg-white shadow text-slate-900' : 'bg-slate-700 text-white shadow') : theme === 'light' ? 'text-slate-400 hover:text-slate-700' : 'text-slate-400 hover:text-white'}`}
+              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${theme === 'light' ? 'bg-white shadow text-slate-900' : 'bg-slate-700 text-white shadow'}`}
             >
               Translation
             </button>
             <button
-              onClick={onWordTranslationPanelOpen}
-              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${activeTab === 'reading' ? (theme === 'light' ? 'bg-white shadow text-slate-900' : 'bg-slate-700 text-white shadow') : theme === 'light' ? 'text-slate-400 hover:text-slate-700' : 'text-slate-400 hover:text-white'}`}
+              onClick={onWordLanguagePanelOpen}
+              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${theme === 'light' ? 'text-slate-400 hover:text-slate-700' : 'text-slate-400 hover:text-white'}`}
             >
               Reading
             </button>
@@ -141,11 +140,11 @@ export const SettingsSidebar = ({
                   {t('word_by_word_language')}
                 </label>
                 <button
-                  onClick={onWordTranslationPanelOpen}
+                  onClick={onWordLanguagePanelOpen}
                   className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition"
                 >
                   <span className="truncate text-[var(--foreground)]">
-                    {selectedWordTranslationName}
+                    {selectedWordLanguageName}
                   </span>
                   <FaChevronDown className="text-gray-500" />
                 </button>
