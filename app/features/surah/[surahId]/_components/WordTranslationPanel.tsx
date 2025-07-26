@@ -81,7 +81,7 @@ export const WordTranslationPanel = ({
                         onClose();
                       }}
                     />
-                    <span className="text-sm text-[var(--foreground)]">{opt.language_name}</span>
+                    <span className="text-sm text-[var(--foreground)]">{opt.name}</span>
                   </label>
                 ))}
               </div>
