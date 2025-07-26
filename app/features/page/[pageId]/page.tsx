@@ -16,6 +16,11 @@ import useSWRInfinite from 'swr/infinite';
 const DEFAULT_WORD_TRANSLATION_ID = 85;
 const ALLOWED_WORD_LANGUAGES = ['english', 'bengali', 'indonesian', 'turkish', 'hindi'];
 
+interface LanguageOption {
+  language_name: string;
+  id: number;
+}
+
 interface QuranPageProps {
   params: { pageId: string };
 }
@@ -94,18 +99,19 @@ export default function QuranPage({ params }: QuranPageProps) {
         }, {}),
     [translationOptions, translationSearchTerm]
   );
-  const groupedWordTranslations = useMemo(
-    () =>
-      wordTranslationOptions
-        .filter((o) =>
-          o.language_name.toLowerCase().includes(wordTranslationSearchTerm.toLowerCase())
-        )
-        .reduce<Record<string, TranslationResource[]>>((acc, t) => {
-          (acc[t.language_name] ||= []).push(t);
-          return acc;
-        }, {}),
-    [wordTranslationOptions, wordTranslationSearchTerm]
-  );
+  const wordLanguageOptions = useMemo(() => {
+    const filtered = wordTranslationOptions.filter((o) =>
+      o.language_name.toLowerCase().includes(wordTranslationSearchTerm.toLowerCase())
+    );
+    const seen = new Set<string>();
+    return filtered.reduce<LanguageOption[]>((acc, t) => {
+      if (!seen.has(t.language_name)) {
+        seen.add(t.language_name);
+        acc.push({ language_name: t.language_name, id: t.id });
+      }
+      return acc;
+    }, []);
+  }, [wordTranslationOptions, wordTranslationSearchTerm]);
 
   return (
     <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden">
@@ -169,7 +175,7 @@ export default function QuranPage({ params }: QuranPageProps) {
       <WordTranslationPanel
         isOpen={isWordPanelOpen}
         onClose={() => setIsWordPanelOpen(false)}
-        groupedTranslations={groupedWordTranslations}
+        languages={wordLanguageOptions}
         searchTerm={wordTranslationSearchTerm}
         onSearchTermChange={setWordTranslationSearchTerm}
         onReset={() => {
