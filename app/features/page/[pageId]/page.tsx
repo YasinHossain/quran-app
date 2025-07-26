@@ -40,8 +40,9 @@ export default function QuranPage({ params }: QuranPageProps) {
   const wordLanguageMap = useMemo(() => {
     const map: Record<string, number> = {};
     (wordTranslationOptionsData || []).forEach((o) => {
-      if (!map[o.language_name]) {
-        map[o.language_name] = o.id;
+      const name = o.language_name.toLowerCase();
+      if (!map[name]) {
+        map[name] = o.id;
       }
     });
     return map;
@@ -182,7 +183,7 @@ export default function QuranPage({ params }: QuranPageProps) {
           setSettings({
             ...settings,
             wordLang: 'en',
-            wordTranslationId: wordLanguageMap['English'] ?? DEFAULT_WORD_TRANSLATION_ID,
+            wordTranslationId: wordLanguageMap['english'] ?? DEFAULT_WORD_TRANSLATION_ID,
           });
         }}
       />
