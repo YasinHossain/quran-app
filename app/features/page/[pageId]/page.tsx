@@ -161,6 +161,7 @@ export default function QuranPage({ params }: QuranPageProps) {
       <SettingsSidebar
         onTranslationPanelOpen={() => setIsTranslationPanelOpen(true)}
         onWordLanguagePanelOpen={() => setIsWordPanelOpen(true)}
+        onReadingPanelOpen={() => {}}
         selectedTranslationName={selectedTranslationName}
         selectedWordLanguageName={selectedWordLanguageName}
       />

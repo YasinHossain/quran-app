@@ -8,8 +8,8 @@ import { AudioProvider } from '@/app/context/AudioContext';
 export default function SurahLayout({ children }: { children: React.ReactNode }) {
   return (
     <AudioProvider>
-      <div className="h-screen flex flex-col">
-        <Header />
+      <Header />
+      <div className="h-screen flex flex-col pt-16">
         <div className="flex flex-grow overflow-hidden">
           <nav aria-label="Primary navigation">
             <IconSidebar />
