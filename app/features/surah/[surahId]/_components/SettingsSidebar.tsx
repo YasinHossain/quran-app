@@ -90,13 +90,13 @@ export const SettingsSidebar = ({
           >
             <button
               onClick={() => handleTabClick('translation')}
-              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${activeTab === 'translation' ? (theme === 'light' ? 'bg-white shadow text-slate-900' : 'bg-slate-700 text-white shadow') : (theme === 'light' ? 'text-slate-400 hover:text-slate-700' : 'text-slate-400 hover:text-white')}`}
+              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${activeTab === 'translation' ? (theme === 'light' ? 'bg-white shadow text-slate-900' : 'bg-slate-700 text-white shadow') : theme === 'light' ? 'text-slate-400 hover:text-slate-700' : 'text-slate-400 hover:text-white'}`}
             >
               Translation
             </button>
             <button
               onClick={() => handleTabClick('reading')}
-              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${activeTab === 'reading' ? (theme === 'light' ? 'bg-white shadow text-slate-900' : 'bg-slate-700 text-white shadow') : (theme === 'light' ? 'text-slate-400 hover:text-slate-700' : 'text-slate-400 hover:text-white')}`}
+              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${activeTab === 'reading' ? (theme === 'light' ? 'bg-white shadow text-slate-900' : 'bg-slate-700 text-white shadow') : theme === 'light' ? 'text-slate-400 hover:text-slate-700' : 'text-slate-400 hover:text-white'}`}
             >
               Reading
             </button>
@@ -202,7 +202,9 @@ export const SettingsSidebar = ({
                     onChange={(e) =>
                       setSettings({ ...settings, translationFontSize: +e.target.value })
                     }
-                    style={{ '--value-percent': `${translationSizePercent}%` } as React.CSSProperties}
+                    style={
+                      { '--value-percent': `${translationSizePercent}%` } as React.CSSProperties
+                    }
                   />
                 </div>
                 {/* Arabic Font Face Selection Button */}
@@ -221,10 +223,8 @@ export const SettingsSidebar = ({
               </div>
             </CollapsibleSection>
           )}
-           {activeTab === 'reading' && (
-            <div className="text-center py-20 text-gray-500">
-              Coming soon...
-            </div>
+          {activeTab === 'reading' && (
+            <div className="text-center py-20 text-gray-500">Coming soon...</div>
           )}
         </div>
         {/* Theme Toggle */}
