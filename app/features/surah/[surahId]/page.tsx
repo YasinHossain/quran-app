@@ -15,6 +15,7 @@ import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;
+const ALLOWED_WORD_LANGUAGES = ['english', 'bengali', 'indonesian', 'turkish', 'hindi'];
 
 interface SurahPageProps {
   params: { surahId: string };
@@ -37,7 +38,10 @@ export default function SurahPage({ params }: SurahPageProps) {
 
   const { data: wordTranslationOptionsData } = useSWR('wordTranslations', getWordTranslations);
   const wordTranslationOptions = useMemo(
-    () => wordTranslationOptionsData || [],
+    () =>
+      (wordTranslationOptionsData || []).filter((o) =>
+        ALLOWED_WORD_LANGUAGES.includes(o.language_name.toLowerCase())
+      ),
     [wordTranslationOptionsData]
   );
 
