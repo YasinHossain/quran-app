@@ -9,7 +9,7 @@ The application requires **Node.js 20 or higher**.
 
 You can also develop using a [Dev Container](https://containers.dev/). Open the project in a Dev Container to automatically use Node.js 20 with ESLint and Prettier extensions installed.
 
-This project supports word-by-word translations in multiple languages, including a newly added Bengali option.
+This project supports word-by-word translations in multiple languages. In addition to English, the app now offers Bengali, Indonesian, Turkish and Hindi word-by-word translations.
 
 Run `npm run format` after installing dependencies to ensure consistent code style.
 An `.editorconfig` file defines UTF-8 encoding, two-space indentation, and a newline at the end of files.
