@@ -21,7 +21,7 @@ const Header = () => {
 
   return (
     // Adjusted background, padding, and grid layout for cleaner look
-    <header className="h-16 grid grid-cols-3 items-center px-4 sm:px-8 bg-[var(--background)] text-[var(--foreground)] shadow-sm sticky top-0 z-30">
+    <header className="h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 bg-[var(--background)] text-[var(--foreground)] shadow-sm sticky top-0 z-30">
       {/* Column 1: Title & Surah List Toggle */}
       <div className="flex items-center gap-2">
         <button
