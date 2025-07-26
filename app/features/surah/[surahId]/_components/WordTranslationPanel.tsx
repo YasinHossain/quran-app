@@ -76,7 +76,8 @@ export const WordTranslationPanel = ({
                         setSettings({
                           ...settings,
                           wordTranslationId: opt.id,
-                          wordLang: LANGUAGE_CODES[opt.language_name] ?? settings.wordLang,
+                          wordLang:
+                            LANGUAGE_CODES[opt.language_name.toLowerCase()] ?? settings.wordLang,
                         });
                         onClose();
                       }}
