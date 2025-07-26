@@ -5,9 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { Verse } from './_components/Verse';
 import { SettingsSidebar } from './_components/SettingsSidebar';
 import { TranslationPanel } from './_components/TranslationPanel';
-import { WordTranslationPanel } from './_components/WordTranslationPanel';
+import { WordLanguagePanel } from './_components/WordLanguagePanel';
 import { Verse as VerseType, TranslationResource } from '@/types';
 import { getTranslations, getWordTranslations, getVersesByChapter } from '@/lib/api';
+import { LANGUAGE_CODES } from '@/lib/languageCodes';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useAudio } from '@/app/context/AudioContext';
 import Spinner from '@/app/components/common/Spinner';
@@ -15,7 +16,6 @@ import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;
-const ALLOWED_WORD_LANGUAGES = ['english', 'bengali', 'indonesian', 'turkish', 'hindi'];
 
 interface SurahPageProps {
   params: { surahId: string };
@@ -37,12 +37,18 @@ export default function SurahPage({ params }: SurahPageProps) {
   const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
 
   const { data: wordTranslationOptionsData } = useSWR('wordTranslations', getWordTranslations);
-  const wordTranslationOptions = useMemo(
-    () =>
-      (wordTranslationOptionsData || []).filter((o) =>
-        ALLOWED_WORD_LANGUAGES.includes(o.language_name.toLowerCase())
-      ),
-    [wordTranslationOptionsData]
+  const wordLanguageMap = useMemo(() => {
+    const map: Record<string, number> = {};
+    (wordTranslationOptionsData || []).forEach((o) => {
+      if (!map[o.language_name]) {
+        map[o.language_name] = o.id;
+      }
+    });
+    return map;
+  }, [wordTranslationOptionsData]);
+  const wordLanguageOptions = useMemo(
+    () => Object.keys(wordLanguageMap).map((name) => ({ name, id: wordLanguageMap[name] })),
+    [wordLanguageMap]
   );
 
   const { data, size, setSize, isValidating } = useSWRInfinite(
@@ -79,11 +85,11 @@ export default function SurahPage({ params }: SurahPageProps) {
       t('select_translation'),
     [settings.translationId, translationOptions, t]
   );
-  const selectedWordTranslationName = useMemo(
+  const selectedWordLanguageName = useMemo(
     () =>
-      wordTranslationOptions.find((o) => o.id === settings.wordTranslationId)?.language_name ||
-      t('select_word_translation'),
-    [settings.wordTranslationId, wordTranslationOptions, t]
+      wordLanguageOptions.find((o) => LANGUAGE_CODES[o.name.toLowerCase()] === settings.wordLang)
+        ?.name || t('select_word_translation'),
+    [settings.wordLang, wordLanguageOptions, t]
   );
   const groupedTranslations = useMemo(
     () =>
@@ -95,17 +101,12 @@ export default function SurahPage({ params }: SurahPageProps) {
         }, {}),
     [translationOptions, translationSearchTerm]
   );
-  const groupedWordTranslations = useMemo(
+  const filteredWordLanguages = useMemo(
     () =>
-      wordTranslationOptions
-        .filter((o) =>
-          o.language_name.toLowerCase().includes(wordTranslationSearchTerm.toLowerCase())
-        )
-        .reduce<Record<string, TranslationResource[]>>((acc, t) => {
-          (acc[t.language_name] ||= []).push(t);
-          return acc;
-        }, {}),
-    [wordTranslationOptions, wordTranslationSearchTerm]
+      wordLanguageOptions.filter((o) =>
+        o.name.toLowerCase().includes(wordTranslationSearchTerm.toLowerCase())
+      ),
+    [wordLanguageOptions, wordTranslationSearchTerm]
   );
 
   return (
@@ -159,9 +160,9 @@ export default function SurahPage({ params }: SurahPageProps) {
 
       <SettingsSidebar
         onTranslationPanelOpen={() => setIsTranslationPanelOpen(true)}
-        onWordTranslationPanelOpen={() => setIsWordPanelOpen(true)}
+        onWordLanguagePanelOpen={() => setIsWordPanelOpen(true)}
         selectedTranslationName={selectedTranslationName}
-        selectedWordTranslationName={selectedWordTranslationName}
+        selectedWordLanguageName={selectedWordLanguageName}
       />
 
       <TranslationPanel
@@ -171,15 +172,19 @@ export default function SurahPage({ params }: SurahPageProps) {
         searchTerm={translationSearchTerm}
         onSearchTermChange={setTranslationSearchTerm}
       />
-      <WordTranslationPanel
+      <WordLanguagePanel
         isOpen={isWordPanelOpen}
         onClose={() => setIsWordPanelOpen(false)}
-        groupedTranslations={groupedWordTranslations}
+        languages={filteredWordLanguages}
         searchTerm={wordTranslationSearchTerm}
         onSearchTermChange={setWordTranslationSearchTerm}
         onReset={() => {
           setWordTranslationSearchTerm('');
-          setSettings({ ...settings, wordTranslationId: DEFAULT_WORD_TRANSLATION_ID });
+          setSettings({
+            ...settings,
+            wordLang: 'en',
+            wordTranslationId: wordLanguageMap['English'] ?? DEFAULT_WORD_TRANSLATION_ID,
+          });
         }}
       />
     </div>

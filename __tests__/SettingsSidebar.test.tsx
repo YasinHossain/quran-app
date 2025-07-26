@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Header from '@/app/components/common/Header';
 import { SettingsSidebar } from '@/app/features/surah/[surahId]/_components/SettingsSidebar';
-import { WordTranslationPanel } from '@/app/features/surah/[surahId]/_components/WordTranslationPanel';
+import { WordLanguagePanel } from '@/app/features/surah/[surahId]/_components/WordLanguagePanel';
 import { SettingsProvider } from '@/app/context/SettingsContext';
 import { SidebarProvider } from '@/app/context/SidebarContext';
 import { ThemeProvider } from '@/app/context/ThemeContext';
@@ -53,9 +53,9 @@ describe('SettingsSidebar interactions', () => {
         <Header />
         <SettingsSidebar
           onTranslationPanelOpen={() => {}}
-          onWordTranslationPanelOpen={() => {}}
+          onWordLanguagePanelOpen={() => {}}
           selectedTranslationName="English"
-          selectedWordTranslationName="English"
+          selectedWordLanguageName="English"
         />
       </Wrapper>
     );
@@ -83,10 +83,6 @@ describe('SettingsSidebar interactions', () => {
   });
 
   it('opens the word translation panel and shows languages', async () => {
-    const groupedTranslations = {
-      Bengali: [{ id: 1, name: 'Bengali', language_name: 'Bengali' }],
-    };
-
     const TestComponent = () => {
       const [open, setOpen] = useState(false);
       return (
@@ -94,14 +90,14 @@ describe('SettingsSidebar interactions', () => {
           <Header />
           <SettingsSidebar
             onTranslationPanelOpen={() => {}}
-            onWordTranslationPanelOpen={() => setOpen(true)}
+            onWordLanguagePanelOpen={() => setOpen(true)}
             selectedTranslationName="English"
-            selectedWordTranslationName="Bengali"
+            selectedWordLanguageName="Bengali"
           />
-          <WordTranslationPanel
+          <WordLanguagePanel
             isOpen={open}
             onClose={() => setOpen(false)}
-            groupedTranslations={groupedTranslations}
+            languages={[{ id: 1, name: 'Bengali' }]}
             searchTerm=""
             onSearchTermChange={() => {}}
             onReset={() => {}}
