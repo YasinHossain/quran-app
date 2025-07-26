@@ -7,6 +7,10 @@
   --border-color: #e5e7eb;
   --accent: #0d9488; /* Added accent color variable */
   --subtle-grey: #d1d5db; /* Added subtle grey variable */
+
+  /* Header specific variables for light mode */
+  --header-background: rgba(255, 255, 255, 0.8); /* White with 80% opacity */
+  --header-text-color: #1f2937; /* Dark gray */
 }
 
 [data-theme='dark'] {
@@ -15,6 +19,10 @@
   --border-color: #4b5563;
   --accent: #0d9488; /* Added accent color variable */
   --subtle-grey: #4b5563; /* Added subtle grey variable for dark mode */
+
+  /* Header specific variables for dark mode */
+  --header-background: rgba(31, 41, 55, 0.8); /* Dark gray with 80% opacity */
+  --header-text-color: #f9fafb; /* White */
 }
 
 @layer base {

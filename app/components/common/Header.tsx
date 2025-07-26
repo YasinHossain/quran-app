@@ -6,12 +6,14 @@ import { useSidebar } from '@/app/context/SidebarContext';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaCog } from 'react-icons/fa';
+import { useTheme } from '@/app/context/ThemeContext';
 
 const Header = () => {
   const { t } = useTranslation();
   const { setSurahListOpen, setSettingsOpen } = useSidebar();
   const router = useRouter();
   const [query, setQuery] = useState('');
+  const { theme } = useTheme(); // Use the theme context to determine search bar background
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && query.trim()) {
@@ -19,9 +21,18 @@ const Header = () => {
     }
   };
 
+  // Determine search bar background class based on theme
+  const searchBarBgClass = theme === 'light' ? 'bg-white' : 'bg-gray-800';
+
   return (
     // Adjusted background, padding, and grid layout for cleaner look
-    <header className="fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 bg-[var(--background)] text-[var(--foreground)] shadow-sm z-30">
+    <header
+      className="fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 backdrop-blur-sm shadow-sm z-30"
+      style={{
+        backgroundColor: 'var(--header-background)',
+        color: 'var(--header-text-color)',
+      }}
+    >
       {/* Column 1: Title & Surah List Toggle */}
       <div className="flex items-center gap-2">
         <button
@@ -31,7 +42,7 @@ const Header = () => {
         >
           <FaBars size={20} />
         </button>
-        <h1 className="text-xl font-semibold text-[var(--foreground)]">{t('title')}</h1>
+        <h1 className="text-xl font-semibold">{t('title')}</h1>
       </div>
 
       {/* Column 2: Centered Search Bar */}
@@ -44,7 +55,7 @@ const Header = () => {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md py-2 px-10 focus:ring-1 focus:ring-teal-500 outline-none transition text-gray-700 dark:text-gray-200"
+            className={`w-full ${searchBarBgClass} border border-gray-200 dark:border-gray-600 rounded-md py-2 px-10 focus:ring-1 focus:ring-teal-500 outline-none transition text-gray-700 dark:text-gray-200 placeholder-gray-400`}
           />
         </div>
       </div>
@@ -53,7 +64,7 @@ const Header = () => {
       <div className="flex justify-end">
         <button
           onClick={() => setSettingsOpen(true)}
-          className="p-2 rounded-md hover:bg-gray-100 lg:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+          className="p-2 rounded-md hover:bg-gray-100 lg:hidden"
           aria-label="Open Settings"
         >
           <FaCog size={20} />

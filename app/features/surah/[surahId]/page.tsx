@@ -1,3 +1,4 @@
+// app/features/surah/[surahId]/page.tsx
 'use client';
 
 import React, { useEffect, useState, useMemo, useRef } from 'react';
@@ -15,6 +16,8 @@ import { useAudio } from '@/app/context/AudioContext';
 import Spinner from '@/app/components/common/Spinner';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
+import { useTheme } from '@/app/context/ThemeContext'; // Import useTheme
+import Header from '@/app/components/common/Header';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;
 
@@ -114,8 +117,13 @@ export default function SurahPage({ params }: SurahPageProps) {
     [wordLanguageOptions, wordTranslationSearchTerm]
   );
 
+  const { theme } = useTheme(); // Get theme from context
+
   return (
     <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden">
+      {/* Pass theme to Header */}
+      <Header theme={theme} />
+
       <main className="flex-grow bg-[var(--background)] p-6 lg:p-10 overflow-y-auto homepage-scrollable-area">
         <div className="max-w-4xl mx-auto relative">
           {isLoading ? (
