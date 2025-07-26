@@ -103,7 +103,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
         ref={sidebarRef} // Assign the ref to the aside element
         className={`fixed md:static inset-y-0 left-0 w-80 h-full overflow-y-auto overflow-x-hidden bg-[var(--background)] text-[var(--foreground)] flex flex-col flex-shrink-0 shadow-[5px_0px_15px_-5px_rgba(0,0,0,0.05)] z-50 md:z-10 transition-transform duration-300 ${isSurahListOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
       >
-        <div className="p-4 border-b border-gray-200/80">
+        <div className="p-4 border-b border-[var(--border-color)]">
           <div
             className={`flex items-center p-1 rounded-full ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'}`}
           >
@@ -118,7 +118,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
             ))}
           </div>
         </div>
-        <div className="p-4 border-b border-gray-200/80">
+        <div className="p-4 border-b border-[var(--border-color)]">
           <div className="relative">
             <FaSearch
               size={16}
@@ -149,7 +149,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     className={`group flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors ${isActive && 'bg-teal-50'}`}
                   >
                     <div
-                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${isActive ? 'bg-emerald-600 text-white' : theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}`}
+                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${isActive ? 'bg-emerald-600 text-white' : theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}
+                      }`}
                     >
                       <span>{chapter.id}</span>
                     </div>
@@ -180,14 +181,10 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     href={`/features/juz/${j}`}
                     key={j}
                     data-active={isActive} // Add data-active attribute
-                    className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors border-l-2 ${
-                      isActive
-                        ? 'border-teal-600 bg-teal-50'
-                        : 'border-transparent hover:bg-[var(--background)] dark:hover:bg-gray-800'
-                    }`}
+                    className={`group flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors ${isActive && 'bg-teal-50'}`}
                   >
                     <div
-                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors ${isActive ? 'bg-teal-600 text-white' : 'bg-gray-100 dark:bg-slate-700/50 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-500/20'}
+                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${isActive ? 'bg-emerald-600 text-white' : theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}
                       }`}
                     >
                       <span>{j}</span>
@@ -211,14 +208,10 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     href={`/features/page/${p}`}
                     key={p}
                     data-active={isActive} // Add data-active attribute
-                    className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors border-l-2 ${
-                      isActive
-                        ? 'border-teal-600 bg-teal-50'
-                        : 'border-transparent hover:bg-[var(--background)] dark:hover:bg-gray-800'
-                    }`}
+                    className={`group flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors ${isActive && 'bg-teal-50'}`}
                   >
                     <div
-                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors ${isActive ? 'bg-teal-600 text-white' : 'bg-gray-100 dark:bg-slate-700/50 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-500/20'}
+                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${isActive ? 'bg-emerald-600 text-white' : theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}
                       }`}
                     >
                       <span>{p}</span>

@@ -4,6 +4,7 @@ import { FaArrowLeft } from '@/app/components/common/SvgIcons';
 import { useTranslation } from 'react-i18next';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useState } from 'react'; // Import useState
+import { useTheme } from '@/app/context/ThemeContext';
 
 interface ArabicFontPanelProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ export const ArabicFontPanel = ({ isOpen, onClose }: ArabicFontPanelProps) => {
   const { settings, setSettings, arabicFonts } = useSettings();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('Uthmani'); // State for active tab
+  const { theme } = useTheme();
 
   // Group fonts by category
   const groupedFonts = arabicFonts.reduce(
@@ -26,7 +28,6 @@ export const ArabicFontPanel = ({ isOpen, onClose }: ArabicFontPanelProps) => {
 
   const handleFontSelect = (fontValue: string) => {
     setSettings({ ...settings, arabicFontFace: fontValue });
-    // onClose(); // Keep panel open after selection for better user experience
   };
 
   const filteredFonts = groupedFonts[activeTab] || [];
@@ -46,16 +47,25 @@ export const ArabicFontPanel = ({ isOpen, onClose }: ArabicFontPanelProps) => {
             <FaArrowLeft size={18} />
           </button>
           <h2 className="font-bold text-lg text-[var(--foreground)]">{t('select_font_face')}</h2>{' '}
-          {/* Assuming a translation key for the title */}
           <div className="w-8"></div>
         </div>
 
-        {/* Tab Buttons */}
-        <div className="flex justify-center p-3 space-x-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200/80 dark:border-gray-600">
+        {/* Tab Buttons with updated styling */}
+        <div
+          className={`flex items-center p-1 rounded-full m-3 ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'}`}
+        >
           {Object.keys(groupedFonts).map((category) => (
             <button
               key={category}
-              className={`px-4 py-2 text-sm font-medium rounded-full transition-colors duration-200 ${activeTab === category ? 'bg-teal-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'}`}
+              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                activeTab === category
+                  ? theme === 'light'
+                    ? 'bg-white shadow text-slate-900'
+                    : 'bg-slate-700 text-white shadow'
+                  : theme === 'light'
+                    ? 'text-slate-400 hover:text-slate-700'
+                    : 'text-slate-400 hover:text-white'
+              }`}
               onClick={() => setActiveTab(category)}
             >
               {category}

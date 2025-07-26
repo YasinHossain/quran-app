@@ -31,7 +31,7 @@ export const Verse = ({ verse }: VerseProps) => {
 
   return (
     <>
-      <div className="flex items-start gap-x-6 mb-12 border-b pb-8 border-gray-200">
+      <div className="flex items-start gap-x-6 mb-12 pb-8 border-b border-[var(--border-color)]">
         <div className="w-16 text-center pt-1 space-y-2 flex-shrink-0">
           <p className="font-semibold text-teal-600 text-sm">{verse.verse_key}</p>
           <div className="flex flex-col items-center space-y-1 text-gray-400 dark:text-gray-500">
