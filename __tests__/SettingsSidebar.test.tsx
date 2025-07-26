@@ -83,7 +83,9 @@ describe('SettingsSidebar interactions', () => {
   });
 
   it('opens the word translation panel and shows languages', async () => {
-    const languageOptions = [{ id: 1, language_name: 'Bengali' }];
+    const groupedTranslations = {
+      Bengali: [{ id: 1, name: 'Bengali', language_name: 'Bengali' }],
+    };
 
     const TestComponent = () => {
       const [open, setOpen] = useState(false);
@@ -99,7 +101,7 @@ describe('SettingsSidebar interactions', () => {
           <WordTranslationPanel
             isOpen={open}
             onClose={() => setOpen(false)}
-            languages={languageOptions}
+            groupedTranslations={groupedTranslations}
             searchTerm=""
             onSearchTermChange={() => {}}
             onReset={() => {}}
