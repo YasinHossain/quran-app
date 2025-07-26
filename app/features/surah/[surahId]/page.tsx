@@ -9,6 +9,7 @@ import { WordLanguagePanel } from './_components/WordLanguagePanel';
 import { Verse as VerseType, TranslationResource } from '@/types';
 import { getTranslations, getWordTranslations, getVersesByChapter } from '@/lib/api';
 import { LANGUAGE_CODES } from '@/lib/languageCodes';
+import { WORD_LANGUAGE_LABELS } from '@/lib/wordLanguages';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useAudio } from '@/app/context/AudioContext';
 import Spinner from '@/app/components/common/Spinner';
@@ -47,7 +48,10 @@ export default function SurahPage({ params }: SurahPageProps) {
     return map;
   }, [wordTranslationOptionsData]);
   const wordLanguageOptions = useMemo(
-    () => Object.keys(wordLanguageMap).map((name) => ({ name, id: wordLanguageMap[name] })),
+    () =>
+      Object.keys(wordLanguageMap)
+        .filter((name) => WORD_LANGUAGE_LABELS[name])
+        .map((name) => ({ name: WORD_LANGUAGE_LABELS[name], id: wordLanguageMap[name] })),
     [wordLanguageMap]
   );
 

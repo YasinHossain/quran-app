@@ -10,6 +10,7 @@ import { WordLanguagePanel } from '@/app/features/surah/[surahId]/_components/Wo
 import { Verse as VerseType, TranslationResource, Juz } from '@/types';
 import { getTranslations, getWordTranslations, getVersesByJuz, getJuz } from '@/lib/api';
 import { LANGUAGE_CODES } from '@/lib/languageCodes';
+import { WORD_LANGUAGE_LABELS } from '@/lib/wordLanguages';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useAudio } from '@/app/context/AudioContext';
 import useSWR from 'swr';
@@ -53,7 +54,10 @@ export default function JuzPage({ params }: JuzPageProps) {
     return map;
   }, [wordTranslationOptionsData]);
   const wordLanguageOptions = useMemo(
-    () => Object.keys(wordLanguageMap).map((name) => ({ name, id: wordLanguageMap[name] })),
+    () =>
+      Object.keys(wordLanguageMap)
+        .filter((name) => WORD_LANGUAGE_LABELS[name])
+        .map((name) => ({ name: WORD_LANGUAGE_LABELS[name], id: wordLanguageMap[name] })),
     [wordLanguageMap]
   );
 

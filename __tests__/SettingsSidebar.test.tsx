@@ -92,12 +92,12 @@ describe('SettingsSidebar interactions', () => {
             onTranslationPanelOpen={() => {}}
             onWordLanguagePanelOpen={() => setOpen(true)}
             selectedTranslationName="English"
-            selectedWordLanguageName="Bengali"
+            selectedWordLanguageName="Bangla"
           />
           <WordLanguagePanel
             isOpen={open}
             onClose={() => setOpen(false)}
-            languages={[{ id: 1, name: 'Bengali' }]}
+            languages={[{ id: 1, name: 'Bangla' }]}
             searchTerm=""
             onSearchTermChange={() => {}}
             onReset={() => {}}
@@ -109,7 +109,7 @@ describe('SettingsSidebar interactions', () => {
     render(<TestComponent />);
 
     await userEvent.click(screen.getByLabelText('Open Settings'));
-    await userEvent.click(screen.getByRole('button', { name: 'Bengali' }));
-    expect(screen.getAllByText('Bengali').length).toBeGreaterThan(1);
+    await userEvent.click(screen.getByRole('button', { name: 'Bangla' }));
+    expect(screen.getAllByText('Bangla').length).toBeGreaterThan(1);
   });
 });
