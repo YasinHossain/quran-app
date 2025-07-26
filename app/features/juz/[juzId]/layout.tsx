@@ -7,8 +7,8 @@ import { AudioProvider } from '@/app/context/AudioContext';
 export default function JuzLayout({ children }: { children: React.ReactNode }) {
   return (
     <AudioProvider>
-      <div className="h-screen flex flex-col">
-        <Header />
+      <Header />
+      <div className="h-screen flex flex-col pt-16">
         <div className="flex flex-grow overflow-hidden">
           <IconSidebar />
           <SurahListSidebar />

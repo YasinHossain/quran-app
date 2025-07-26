@@ -16,7 +16,7 @@ import { useTheme } from '@/app/context/ThemeContext';
 interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;
   onWordLanguagePanelOpen: () => void;
-  onReadingPanelOpen: () => void;
+  onReadingPanelOpen?: () => void;
   selectedTranslationName: string;
   selectedWordLanguageName: string;
 }
@@ -53,7 +53,7 @@ export const SettingsSidebar = ({
     if (tab === 'translation') {
       onTranslationPanelOpen();
     } else {
-      onReadingPanelOpen();
+      onReadingPanelOpen?.();
     }
   };
 
