@@ -32,3 +32,14 @@ feat: add audio player
 
 Before submitting a pull request, run `npm run check` to lint, type-check and
 test your changes. See [AGENTS.md](AGENTS.md) for the full workflow.
+
+## Feature Scaffolding
+
+Use the generator to create a new feature folder with a page component and test:
+
+```bash
+npx ts-node scripts/generateFeature.ts my-feature
+```
+
+This produces `app/features/my-feature/page.tsx` and
+`__tests__/MyFeaturePage.test.tsx` ready for further development.
