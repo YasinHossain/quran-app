@@ -2,8 +2,10 @@ const API_BASE_URL = process.env.QURAN_API_BASE_URL ?? 'https://api.quran.com/ap
 
 import { Chapter, TranslationResource, Verse, Juz, Word } from '@/types';
 
+// Caching tafsir responses for efficiency
 const tafsirCache = new Map<string, string>();
 
+// API response word shape
 interface ApiWord {
   id: number;
   text: string;
@@ -12,10 +14,12 @@ interface ApiWord {
   [key: string]: unknown;
 }
 
+// API response verse shape, with optional words array
 interface ApiVerse extends Omit<Verse, 'words'> {
   words?: ApiWord[];
 }
 
+// Normalize API verse to app shape
 function normalizeVerse(raw: ApiVerse, wordLang = 'en'): Verse {
   return {
     ...raw,
@@ -27,6 +31,7 @@ function normalizeVerse(raw: ApiVerse, wordLang = 'en'): Verse {
   };
 }
 
+// Fetch all chapters
 export async function getChapters(): Promise<Chapter[]> {
   const res = await fetch(`${API_BASE_URL}/chapters?language=en`);
   if (!res.ok) {
@@ -36,6 +41,7 @@ export async function getChapters(): Promise<Chapter[]> {
   return data.chapters as Chapter[];
 }
 
+// Fetch all translations
 export async function getTranslations(): Promise<TranslationResource[]> {
   const res = await fetch(`${API_BASE_URL}/resources/translations`);
   if (!res.ok) {
@@ -45,6 +51,7 @@ export async function getTranslations(): Promise<TranslationResource[]> {
   return data.translations as TranslationResource[];
 }
 
+// Fetch all word-by-word translation resources
 export async function getWordTranslations(): Promise<TranslationResource[]> {
   const res = await fetch(`${API_BASE_URL}/resources/translations?resource_type=word_by_word`);
   if (!res.ok) {
@@ -54,6 +61,7 @@ export async function getWordTranslations(): Promise<TranslationResource[]> {
   return data.translations as TranslationResource[];
 }
 
+// Fetch all tafsir resources (RESOLVED CONFLICT)
 export async function getTafsirResources(): Promise<TafsirResource[]> {
   const res = await fetch(`${API_BASE_URL}/resources/tafsirs`);
   if (!res.ok) {
@@ -63,6 +71,7 @@ export async function getTafsirResources(): Promise<TafsirResource[]> {
   return data.tafsirs as TafsirResource[];
 }
 
+// Types for paginated results and tafsir
 export interface PaginatedVerses {
   verses: Verse[];
   totalPages: number;
@@ -82,6 +91,7 @@ interface SearchApiResult {
   translations?: Verse['translations'];
 }
 
+// Get paginated verses by chapter
 export async function getVersesByChapter(
   chapterId: string | number,
   translationId: number,
@@ -102,6 +112,7 @@ export async function getVersesByChapter(
   return { verses, totalPages };
 }
 
+// Search verses by query
 export async function searchVerses(query: string): Promise<Verse[]> {
   const url = `${API_BASE_URL}/search?q=${encodeURIComponent(query)}&size=20&translations=20`;
   const res = await fetch(url);
@@ -118,7 +129,7 @@ export async function searchVerses(query: string): Promise<Verse[]> {
   })) as Verse[];
 }
 
-// Fetch tafsir text for a specific verse
+// Fetch tafsir text for a specific verse (quick, without cache)
 export async function getTafsirByVerse(verseKey: string, tafsirId = 169): Promise<string> {
   const url = `${API_BASE_URL}/tafsirs/${tafsirId}/by_ayah/${encodeURIComponent(verseKey)}`;
   const res = await fetch(url);
@@ -129,6 +140,7 @@ export async function getTafsirByVerse(verseKey: string, tafsirId = 169): Promis
   return data.tafsir?.text as string;
 }
 
+// Fetch tafsir with cache (for repeated access)
 export async function getTafsirCached(verseKey: string, id: string): Promise<string> {
   const key = `${id}:${verseKey}`;
   if (tafsirCache.has(key)) {
@@ -146,6 +158,7 @@ export async function getTafsirCached(verseKey: string, id: string): Promise<str
   return text;
 }
 
+// Get verses by Juz (section)
 export async function getVersesByJuz(
   juzId: string | number,
   translationId: number,
@@ -164,6 +177,7 @@ export async function getVersesByJuz(
   return { verses, totalPages };
 }
 
+// Get verses by Mushaf page
 export async function getVersesByPage(
   pageId: string | number,
   translationId: number,
@@ -203,4 +217,5 @@ export async function getRandomVerse(translationId: number): Promise<Verse> {
   return normalizeVerse(data.verse);
 }
 
+// Export base URL for use elsewhere
 export { API_BASE_URL };
