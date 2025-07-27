@@ -5,6 +5,8 @@ export * from './settings';
 export * from './surah';
 export * from './word';
 
+export type { TafsirResource } from '../lib/api';
+
 export interface Juz {
   id: number;
   juz_number: number;

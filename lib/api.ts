@@ -2,6 +2,8 @@ const API_BASE_URL = process.env.QURAN_API_BASE_URL ?? 'https://api.quran.com/ap
 
 import { Chapter, TranslationResource, Verse, Juz, Word } from '@/types';
 
+const tafsirCache = new Map<string, string>();
+
 interface ApiWord {
   id: number;
   text: string;
@@ -52,9 +54,25 @@ export async function getWordTranslations(): Promise<TranslationResource[]> {
   return data.translations as TranslationResource[];
 }
 
+export async function getTafsirResources(): Promise<TafsirResource[]> {
+  const res = await fetch(`${API_BASE_URL}/resources/tafsirs`);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch tafsir resources: ${res.status}`);
+  }
+  const data = await res.json();
+  return data.tafsirs as TafsirResource[];
+}
+
 export interface PaginatedVerses {
   verses: Verse[];
   totalPages: number;
+}
+
+export interface TafsirResource {
+  id: number;
+  slug: string;
+  name: string;
+  language_name: string;
 }
 
 interface SearchApiResult {
@@ -109,6 +127,23 @@ export async function getTafsirByVerse(verseKey: string, tafsirId = 169): Promis
   }
   const data = await res.json();
   return data.tafsir?.text as string;
+}
+
+export async function getTafsirCached(verseKey: string, id: string): Promise<string> {
+  const key = `${id}:${verseKey}`;
+  if (tafsirCache.has(key)) {
+    return tafsirCache.get(key)!;
+  }
+  const res = await fetch(
+    `${API_BASE_URL}/tafsirs/${id}?verse_key=${encodeURIComponent(verseKey)}`
+  );
+  if (!res.ok) {
+    throw new Error(`Failed to fetch tafsir: ${res.status}`);
+  }
+  const data = await res.json();
+  const text = data.tafsir?.text as string;
+  tafsirCache.set(key, text);
+  return text;
 }
 
 export async function getVersesByJuz(
