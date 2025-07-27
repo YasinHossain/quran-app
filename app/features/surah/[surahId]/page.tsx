@@ -1,4 +1,3 @@
-// app/features/surah/[surahId]/page.tsx
 'use client';
 
 import React, { useEffect, useState, useMemo, useRef } from 'react';
@@ -16,6 +15,7 @@ import { useAudio } from '@/app/context/AudioContext';
 import Spinner from '@/app/components/common/Spinner';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
+import { useTheme } from '@/app/context/ThemeContext';
 import Header from '@/app/components/common/Header';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;
@@ -35,6 +35,9 @@ export default function SurahPage({ params }: SurahPageProps) {
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
   const [wordTranslationSearchTerm, setWordTranslationSearchTerm] = useState('');
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  // Ensure theme context initialization (for css var setup)
+  useTheme();
 
   const { data: translationOptionsData } = useSWR('translations', getTranslations);
   const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
@@ -119,7 +122,6 @@ export default function SurahPage({ params }: SurahPageProps) {
   return (
     <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden">
       <Header />
-
       <main className="flex-grow bg-[var(--background)] p-6 lg:p-10 overflow-y-auto homepage-scrollable-area">
         <div className="max-w-4xl mx-auto relative">
           {isLoading ? (
@@ -166,7 +168,6 @@ export default function SurahPage({ params }: SurahPageProps) {
           )}
         </div>
       </main>
-
       <SettingsSidebar
         onTranslationPanelOpen={() => setIsTranslationPanelOpen(true)}
         onWordLanguagePanelOpen={() => setIsWordPanelOpen(true)}
@@ -174,7 +175,6 @@ export default function SurahPage({ params }: SurahPageProps) {
         selectedTranslationName={selectedTranslationName}
         selectedWordLanguageName={selectedWordLanguageName}
       />
-
       <TranslationPanel
         isOpen={isTranslationPanelOpen}
         onClose={() => setIsTranslationPanelOpen(false)}
