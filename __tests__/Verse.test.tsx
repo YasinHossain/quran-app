@@ -5,6 +5,10 @@ import { AudioProvider } from '@/app/context/AudioContext';
 import TranslationProvider from '@/app/providers/TranslationProvider';
 import { Verse } from '@/types';
 
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({ push: jest.fn() }),
+}));
+
 const verse: Verse = {
   id: 1,
   verse_key: '1:1',

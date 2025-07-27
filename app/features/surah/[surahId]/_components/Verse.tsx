@@ -7,12 +7,11 @@ import {
   FaEllipsisH,
   FaBookReader,
 } from '@/app/components/common/SvgIcons';
-import { TafsirModal } from './TafsirModal';
+import { useRouter } from 'next/navigation';
 import { Verse as VerseType, Translation, Word } from '@/types';
 import { useAudio } from '@/app/context/AudioContext';
 import Spinner from '@/app/components/common/Spinner';
 import { useSettings } from '@/app/context/SettingsContext';
-import { useState } from 'react';
 import { applyTajweed } from '@/lib/tajweed';
 
 interface VerseProps {
@@ -22,12 +21,13 @@ interface VerseProps {
 export const Verse = ({ verse }: VerseProps) => {
   const { playingId, setPlayingId, loadingId } = useAudio();
   const { settings, bookmarkedVerses, toggleBookmark } = useSettings();
-  const [showTafsir, setShowTafsir] = useState(false);
+  const router = useRouter();
   const showByWords = settings.showByWords ?? false;
   const wordLang = settings.wordLang ?? 'en';
   const isPlaying = playingId === verse.id;
   const isLoadingAudio = loadingId === verse.id;
   const isBookmarked = bookmarkedVerses.includes(String(verse.id)); // Check if verse is bookmarked (using string ID)
+  const [surahId, ayahId] = verse.verse_key.split(':');
 
   return (
     <>
@@ -61,11 +61,11 @@ export const Verse = ({ verse }: VerseProps) => {
               {isBookmarked ? <FaBookmark size={18} /> : <FaRegBookmark size={18} />}
             </button>
 
-            {/* Tafsir button opens modal */}
+            {/* Tafsir button navigates to tafsir page */}
             <button
               aria-label="Tafsir"
               title="Tafsir"
-              onClick={() => setShowTafsir(true)}
+              onClick={() => router.push(`/features/tafsir/${surahId}/${ayahId}`)}
               className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-teal-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
             >
               <FaBookReader size={18} />
@@ -140,11 +140,6 @@ export const Verse = ({ verse }: VerseProps) => {
           ))}
         </div>
       </div>
-      <TafsirModal
-        isOpen={showTafsir}
-        verseKey={verse.verse_key}
-        onClose={() => setShowTafsir(false)}
-      />
     </>
   );
 };
