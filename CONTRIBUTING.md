@@ -8,6 +8,8 @@ Copy `.env.example` to `.env` and adjust the values if necessary. The default co
 
 An `.nvmrc` file pins Node.js to version **20**. Run `nvm use` to match this version before contributing.
 
+For a directory overview see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
 This project also provides an `.editorconfig` file. Ensure your editor respects
 it so that files use UTF-8 encoding, two spaces for indentation, and always end
 with a newline.
