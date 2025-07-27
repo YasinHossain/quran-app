@@ -155,7 +155,7 @@ export default function TafsirVersePage() {
   return (
     <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] overflow-hidden">
       <div className="flex-grow overflow-y-auto p-6 lg:p-10">
-        <div className="max-w-3xl mx-auto space-y-6">
+        <div className="w-full space-y-6">
           <div className="flex justify-between">
             <button
               disabled={!prev}
