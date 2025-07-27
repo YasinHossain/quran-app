@@ -52,6 +52,15 @@ export async function getWordTranslations(): Promise<TranslationResource[]> {
   return data.translations as TranslationResource[];
 }
 
+export async function getTafsirResources() {
+  const res = await fetch(`${API_BASE_URL}/resources/tafsirs`);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch tafsirs: ${res.status}`);
+  }
+  const data = await res.json();
+  return data.tafsirs as import('@/types').TafsirResource[];
+}
+
 export interface PaginatedVerses {
   verses: Verse[];
   totalPages: number;
