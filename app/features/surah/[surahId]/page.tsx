@@ -117,12 +117,11 @@ export default function SurahPage({ params }: SurahPageProps) {
     [wordLanguageOptions, wordTranslationSearchTerm]
   );
 
-  const { theme } = useTheme(); // Get theme from context
+  useTheme(); // Ensure theme context initialization
 
   return (
     <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden">
-      {/* Pass theme to Header */}
-      <Header theme={theme} />
+      <Header />
 
       <main className="flex-grow bg-[var(--background)] p-6 lg:p-10 overflow-y-auto homepage-scrollable-area">
         <div className="max-w-4xl mx-auto relative">
