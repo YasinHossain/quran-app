@@ -15,7 +15,8 @@
     "format": "prettier --write .",
     "type-check": "tsc --noEmit",
     "check": "npm run format -- --check && npm run lint && npm run type-check && npm test",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "generate-feature": "ts-node scripts/generateFeature.ts"
   },
   "dependencies": {
     "i18next": "^25.3.2",
@@ -52,6 +53,7 @@
     "prettier": "^3.6.2",
     "tailwindcss": "^4",
     "ts-jest": "^29.4.0",
+    "ts-node": "^10.9.1",
     "typescript": "^5",
     "whatwg-fetch": "^3.6.20",
     "husky": "^9",
