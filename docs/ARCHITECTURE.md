@@ -23,4 +23,6 @@ Feature components typically reside in an `_components` subfolder. They import h
 3. Add new utilities to `lib/` and shared types to `types/` when appropriate.
 4. Write tests in `__tests__/` mirroring the feature name. Wrap tested components with any required providers from `app/context`.
 
+You can also run `npm run generate-feature <name>` to scaffold a feature folder and matching test automatically.
+
 Following this structure keeps the application organized and ensures new pages work smoothly with the existing contexts.

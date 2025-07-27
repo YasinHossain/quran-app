@@ -40,7 +40,7 @@ test your changes. See [AGENTS.md](AGENTS.md) for the full workflow.
 Use the generator to create a new feature folder with a page component and test:
 
 ```bash
-npx ts-node scripts/generateFeature.ts my-feature
+npm run generate-feature my-feature
 ```
 
 This produces `app/features/my-feature/page.tsx` and
