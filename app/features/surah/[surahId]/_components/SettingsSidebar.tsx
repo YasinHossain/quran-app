@@ -47,6 +47,7 @@ export const SettingsSidebar = ({
   // Calculate percentages for each slider
   const arabicSizePercent = getPercentage(settings.arabicFontSize, 16, 48);
   const translationSizePercent = getPercentage(settings.translationFontSize, 12, 28);
+  const tafsirSizePercent = getPercentage(settings.tafsirFontSize, 12, 28);
 
   // Find the selected Arabic font name for display
   const selectedArabicFont =
@@ -174,17 +175,33 @@ export const SettingsSidebar = ({
               icon={<FaBookReader size={20} className="text-teal-700" />}
               isLast={false}
             >
-              <div>
-                <label className="block mb-2 text-sm font-medium text-[var(--foreground)]">
-                  {t('select_tafsir')}
-                </label>
-                <button
-                  onClick={onTafsirPanelOpen}
-                  className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition"
-                >
-                  <span className="truncate text-[var(--foreground)]">{selectedTafsirName}</span>
-                  <FaChevronDown className="text-gray-500" />
-                </button>
+              <div className="space-y-4">
+                <div>
+                  <label className="block mb-2 text-sm font-medium text-[var(--foreground)]">
+                    {t('select_tafsir')}
+                  </label>
+                  <button
+                    onClick={onTafsirPanelOpen}
+                    className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition"
+                  >
+                    <span className="truncate text-[var(--foreground)]">{selectedTafsirName}</span>
+                    <FaChevronDown className="text-gray-500" />
+                  </button>
+                </div>
+                <div>
+                  <div className="flex justify-between mb-1 text-sm">
+                    <label className="text-[var(--foreground)]">{t('tafsir_font_size')}</label>
+                    <span className="font-semibold text-teal-700">{settings.tafsirFontSize}</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="12"
+                    max="28"
+                    value={settings.tafsirFontSize}
+                    onChange={(e) => setSettings({ ...settings, tafsirFontSize: +e.target.value })}
+                    style={{ '--value-percent': `${tafsirSizePercent}%` } as React.CSSProperties}
+                  />
+                </div>
               </div>
             </CollapsibleSection>
           )}

@@ -21,6 +21,7 @@ const defaultSettings: Settings = {
   tafsirIds: [169],
   arabicFontSize: 28,
   translationFontSize: 16,
+  tafsirFontSize: 16,
   arabicFontFace: ARABIC_FONTS[0].value,
   wordLang: 'en',
   wordTranslationId: 85,

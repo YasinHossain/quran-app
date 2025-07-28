@@ -3,6 +3,7 @@ import { FaArrowLeft } from '@/app/components/common/SvgIcons';
 import { getTafsirByVerse } from '@/lib/api';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
+import { useSettings } from '@/app/context/SettingsContext';
 
 interface TafsirModalProps {
   verseKey: string;
@@ -12,6 +13,7 @@ interface TafsirModalProps {
 
 export const TafsirModal = ({ verseKey, isOpen, onClose }: TafsirModalProps) => {
   const { t } = useTranslation();
+  const { settings } = useSettings();
   const { data, error } = useSWR(isOpen ? ['tafsir', verseKey] : null, () =>
     getTafsirByVerse(verseKey)
   );
@@ -35,7 +37,14 @@ export const TafsirModal = ({ verseKey, isOpen, onClose }: TafsirModalProps) => 
             {t('error_loading_tafsir') || 'Error loading tafsir.'}
           </div>
         ) : (
-          <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: data || '' }} />
+          <div
+            className="prose max-w-none"
+            style={{
+              fontSize: `${settings.tafsirFontSize}px`,
+              fontFamily: settings.arabicFontFace,
+            }}
+            dangerouslySetInnerHTML={{ __html: data || '' }}
+          />
         )}
       </div>
     </div>
