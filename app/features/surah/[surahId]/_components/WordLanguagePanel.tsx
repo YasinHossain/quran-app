@@ -3,6 +3,7 @@ import { FaArrowLeft, FaSearch } from '@/app/components/common/SvgIcons';
 import { useTranslation } from 'react-i18next';
 import { useSettings } from '@/app/context/SettingsContext';
 import { LANGUAGE_CODES } from '@/lib/languageCodes';
+import type { LanguageCode } from '@/lib/languageCodes';
 
 interface LanguageOption {
   name: string;
@@ -72,11 +73,16 @@ export const WordLanguagePanel = ({
               type="radio"
               name="wordLanguage"
               className="form-radio h-4 w-4 text-teal-600"
-              checked={settings.wordLang === LANGUAGE_CODES[lang.name.toLowerCase()]}
+              checked={
+                settings.wordLang ===
+                (LANGUAGE_CODES as Record<string, LanguageCode>)[lang.name.toLowerCase()]
+              }
               onChange={() => {
                 setSettings({
                   ...settings,
-                  wordLang: LANGUAGE_CODES[lang.name.toLowerCase()] ?? settings.wordLang,
+                  wordLang:
+                    (LANGUAGE_CODES as Record<string, LanguageCode>)[lang.name.toLowerCase()] ??
+                    settings.wordLang,
                   wordTranslationId: lang.id,
                 });
                 onClose();

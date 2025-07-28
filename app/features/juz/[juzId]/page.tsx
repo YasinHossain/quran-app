@@ -12,6 +12,7 @@ import { Verse as VerseType, TranslationResource, Juz } from '@/types';
 import { getTranslations, getWordTranslations, getVersesByJuz, getJuz } from '@/lib/api';
 import { getTafsirResources } from '@/lib/api';
 import { LANGUAGE_CODES } from '@/lib/languageCodes';
+import type { LanguageCode } from '@/lib/languageCodes';
 import { WORD_LANGUAGE_LABELS } from '@/lib/wordLanguages';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useAudio } from '@/app/context/AudioContext';
@@ -111,8 +112,11 @@ export default function JuzPage({ params }: JuzPageProps) {
   }, [settings.tafsirIds, tafsirOptions, t]);
   const selectedWordLanguageName = useMemo(
     () =>
-      wordLanguageOptions.find((o) => LANGUAGE_CODES[o.name.toLowerCase()] === settings.wordLang)
-        ?.name || t('select_word_translation'),
+      wordLanguageOptions.find(
+        (o) =>
+          (LANGUAGE_CODES as Record<string, LanguageCode>)[o.name.toLowerCase()] ===
+          settings.wordLang
+      )?.name || t('select_word_translation'),
     [settings.wordLang, wordLanguageOptions, t]
   );
   const groupedTranslations = useMemo(

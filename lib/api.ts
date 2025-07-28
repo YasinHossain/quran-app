@@ -1,6 +1,7 @@
 const API_BASE_URL = process.env.QURAN_API_BASE_URL ?? 'https://api.quran.com/api/v4';
 
 import { Chapter, TranslationResource, Verse, Juz, Word } from '@/types';
+import type { LanguageCode } from '@/lib/languageCodes';
 
 // Caching tafsir responses for efficiency
 const tafsirCache = new Map<string, string>();
@@ -20,14 +21,16 @@ interface ApiVerse extends Omit<Verse, 'words'> {
 }
 
 // Normalize API verse to app shape
-function normalizeVerse(raw: ApiVerse, wordLang = 'en'): Verse {
+function normalizeVerse(raw: ApiVerse, wordLang: LanguageCode = 'en'): Verse {
   return {
     ...raw,
-    words: raw.words?.map((w) => ({
-      ...w,
-      uthmani: w.text_uthmani ?? w.text,
-      [wordLang]: w.translation?.text,
-    })) as Word[],
+    words: raw.words?.map(
+      (w): Word => ({
+        id: w.id,
+        uthmani: w.text_uthmani ?? w.text,
+        [wordLang]: w.translation?.text,
+      })
+    ),
   };
 }
 
@@ -108,7 +111,9 @@ export async function getVersesByChapter(
   }
   const data = await res.json();
   const totalPages = data.meta?.total_pages || data.pagination?.total_pages || 1;
-  const verses = (data.verses as ApiVerse[]).map((v) => normalizeVerse(v, wordLang));
+  const verses = (data.verses as ApiVerse[]).map((v) =>
+    normalizeVerse(v, wordLang as LanguageCode)
+  );
   return { verses, totalPages };
 }
 
@@ -173,7 +178,9 @@ export async function getVersesByJuz(
   }
   const data = await res.json();
   const totalPages = data.meta?.total_pages || data.pagination?.total_pages || 1;
-  const verses = (data.verses as ApiVerse[]).map((v) => normalizeVerse(v, wordLang));
+  const verses = (data.verses as ApiVerse[]).map((v) =>
+    normalizeVerse(v, wordLang as LanguageCode)
+  );
   return { verses, totalPages };
 }
 
@@ -192,7 +199,9 @@ export async function getVersesByPage(
   }
   const data = await res.json();
   const totalPages = data.meta?.total_pages || data.pagination?.total_pages || 1;
-  const verses = (data.verses as ApiVerse[]).map((v) => normalizeVerse(v, wordLang));
+  const verses = (data.verses as ApiVerse[]).map((v) =>
+    normalizeVerse(v, wordLang as LanguageCode)
+  );
   return { verses, totalPages };
 }
 
