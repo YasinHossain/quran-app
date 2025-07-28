@@ -253,10 +253,7 @@ export default function TafsirVersePage() {
                 >
                   <div
                     className="prose max-w-none"
-                    style={{
-                      fontSize: `${settings.tafsirFontSize}px`,
-                      fontFamily: settings.arabicFontFace,
-                    }}
+                    style={{ fontSize: `${settings.tafsirFontSize}px` }}
                     dangerouslySetInnerHTML={{ __html: tafsirHtml || '' }}
                   />
                 </CollapsibleSection>
