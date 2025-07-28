@@ -9,6 +9,7 @@ import {
 } from '@/app/components/common/SvgIcons';
 import { useRouter } from 'next/navigation';
 import { Verse as VerseType, Translation, Word } from '@/types';
+import type { LanguageCode } from '@/lib/languageCodes';
 import { useAudio } from '@/app/context/AudioContext';
 import Spinner from '@/app/components/common/Spinner';
 import { useSettings } from '@/app/context/SettingsContext';
@@ -105,7 +106,7 @@ export const Verse = ({ verse }: VerseProps) => {
                       {/* Tooltip translation (when not showByWords) */}
                       {!showByWords && (
                         <span className="absolute left-1/2 -translate-x-1/2 -top-7 hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow z-10 whitespace-nowrap">
-                          {word[wordLang] as string}
+                          {word[wordLang as LanguageCode] as string}
                         </span>
                       )}
                     </span>
@@ -115,7 +116,7 @@ export const Verse = ({ verse }: VerseProps) => {
                         className="block mt-1 text-gray-500"
                         style={{ fontSize: `${settings.arabicFontSize * 0.5}px` }}
                       >
-                        {word[wordLang] as string}
+                        {word[wordLang as LanguageCode] as string}
                       </span>
                     )}
                   </span>
