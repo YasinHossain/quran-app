@@ -3,6 +3,7 @@ import { useEffect, useState, useMemo } from 'react';
 import Spinner from '@/app/components/common/Spinner';
 import { getTafsirCached } from '@/lib/tafsirCache';
 import { getTafsirResources } from '@/lib/api';
+import { applyArabicFont } from '@/lib/applyArabicFont';
 import useSWR from 'swr';
 import { useTheme } from '@/app/context/ThemeContext';
 import { useSettings } from '@/app/context/SettingsContext';
@@ -86,7 +87,9 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
             style={{
               fontSize: `${settings.tafsirFontSize}px`,
             }}
-            dangerouslySetInnerHTML={{ __html: contents[activeId] || '' }}
+            dangerouslySetInnerHTML={{
+              __html: applyArabicFont(contents[activeId] || '', settings.arabicFontFace),
+            }}
           />
         )}
       </div>

@@ -15,6 +15,7 @@ import { useState } from 'react';
 import Spinner from '@/app/components/common/Spinner';
 import { applyTajweed } from '@/lib/tajweed';
 import { getTafsirCached } from '@/lib/tafsirCache';
+import { applyArabicFont } from '@/lib/applyArabicFont';
 
 interface TafsirVerseProps {
   verse: VerseType;
@@ -181,7 +182,9 @@ export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps) => {
                       style={{
                         fontSize: `${settings.tafsirFontSize}px`,
                       }}
-                      dangerouslySetInnerHTML={{ __html: tafseerTexts[id] || '' }}
+                      dangerouslySetInnerHTML={{
+                        __html: applyArabicFont(tafseerTexts[id] || '', settings.arabicFontFace),
+                      }}
                     />
                   )}
                 </div>
