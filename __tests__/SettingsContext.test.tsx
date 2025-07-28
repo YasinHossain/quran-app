@@ -78,6 +78,7 @@ describe('SettingsContext settings state', () => {
     tafsirIds: [169],
     arabicFontSize: 28,
     translationFontSize: 16,
+    tafsirFontSize: 16,
     arabicFontFace: '"KFGQPC-Uthman-Taha", serif',
     wordLang: 'en',
     wordTranslationId: 85,

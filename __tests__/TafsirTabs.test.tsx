@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import TafsirTabs from '@/app/features/tafsir/[surahId]/[ayahId]/_components/TafsirTabs';
 import { ThemeProvider } from '@/app/context/ThemeContext';
+import { SettingsProvider } from '@/app/context/SettingsContext';
 import { getTafsirCached } from '@/lib/tafsirCache';
 import useSWR from 'swr';
 
@@ -41,9 +42,11 @@ beforeEach(() => {
 
 it('shows tabs and switches content on click', async () => {
   render(
-    <ThemeProvider>
-      <TafsirTabs verseKey="1:1" tafsirIds={[1, 2]} />
-    </ThemeProvider>
+    <SettingsProvider>
+      <ThemeProvider>
+        <TafsirTabs verseKey="1:1" tafsirIds={[1, 2]} />
+      </ThemeProvider>
+    </SettingsProvider>
   );
   expect(screen.getByRole('button', { name: 'Tafsir One' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Tafsir Two' })).toBeInTheDocument();

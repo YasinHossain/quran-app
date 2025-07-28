@@ -5,6 +5,7 @@ import { getTafsirCached } from '@/lib/tafsirCache';
 import { getTafsirResources } from '@/lib/api';
 import useSWR from 'swr';
 import { useTheme } from '@/app/context/ThemeContext';
+import { useSettings } from '@/app/context/SettingsContext';
 
 interface TafsirTabsProps {
   verseKey: string;
@@ -13,6 +14,7 @@ interface TafsirTabsProps {
 
 export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
   const { data } = useSWR('tafsirs', getTafsirResources);
+  const { settings } = useSettings();
 
   // Compute tabs only when data or tafsirIds change
   const tabs = useMemo(() => {
@@ -81,6 +83,10 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
         ) : (
           <div
             className="prose max-w-none"
+            style={{
+              fontSize: `${settings.tafsirFontSize}px`,
+              fontFamily: settings.arabicFontFace,
+            }}
             dangerouslySetInnerHTML={{ __html: contents[activeId] || '' }}
           />
         )}
