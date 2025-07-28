@@ -1,6 +1,6 @@
 export interface Settings {
   translationId: number;
-  tafsirId: number;
+  tafsirIds: number[];
   arabicFontSize: number;
   translationFontSize: number;
   arabicFontFace: string;

@@ -102,10 +102,13 @@ export default function JuzPage({ params }: JuzPageProps) {
       t('select_translation'),
     [settings.translationId, translationOptions, t]
   );
-  const selectedTafsirName = useMemo(
-    () => tafsirOptions.find((o) => o.id === settings.tafsirId)?.name || t('select_tafsir'),
-    [settings.tafsirId, tafsirOptions, t]
-  );
+  const selectedTafsirName = useMemo(() => {
+    const names = settings.tafsirIds
+      .map((id) => tafsirOptions.find((o) => o.id === id)?.name)
+      .filter(Boolean)
+      .slice(0, 3);
+    return names.length ? names.join(', ') : t('select_tafsir');
+  }, [settings.tafsirIds, tafsirOptions, t]);
   const selectedWordLanguageName = useMemo(
     () =>
       wordLanguageOptions.find((o) => LANGUAGE_CODES[o.name.toLowerCase()] === settings.wordLang)

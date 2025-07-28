@@ -1,11 +1,13 @@
 'use client';
-import React, { useMemo } from 'react';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams, useRouter } from 'next/navigation';
 import AyahNavigation from './_components/AyahNavigation';
 import VerseCard from './_components/VerseCard';
 import TafsirTabs from './_components/TafsirTabs';
-import { getVersesByChapter, getTafsirResources } from '@/lib/api';
-import { Verse as VerseType, TafsirResource } from '@/types';
+import { TafsirPanel } from '@/app/features/surah/[surahId]/_components/TafsirPanel';
+import { getVersesByChapter } from '@/lib/api';
+import { Verse as VerseType } from '@/types';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useSidebar } from '@/app/context/SidebarContext';
 import useSWR from 'swr';
@@ -16,15 +18,11 @@ export default function TafsirVersePage() {
   const router = useRouter();
   const { settings } = useSettings();
   const { setSurahListOpen } = useSidebar();
+  const { t } = useTranslation();
   const surahId = params.surahId;
   const ayahId = params.ayahId;
   // state for translation ID selection if needed in future
-
-  const { data: tafsirOptionsData } = useSWR('tafsirs', getTafsirResources);
-  const tafsirOptions: TafsirResource[] = useMemo(
-    () => tafsirOptionsData || [],
-    [tafsirOptionsData]
-  );
+  const [isTafsirPanelOpen, setIsTafsirPanelOpen] = useState(false);
 
   // translation id from settings
   const translationId = settings.translationId;
@@ -60,11 +58,6 @@ export default function TafsirVersePage() {
     router.push(`/features/tafsir/${target.surahId}/${target.ayahId}`);
   };
 
-  const tabInfos = useMemo(() => {
-    const selected = tafsirOptions.filter((t) => [settings.tafsirId].includes(t.id)).slice(0, 3);
-    return selected.map((t) => ({ id: t.id, name: t.name }));
-  }, [tafsirOptions, settings.tafsirId]);
-
   return (
     <div className="flex flex-grow bg-slate-50 overflow-auto">
       <div className="flex-grow p-6 lg:p-10">
@@ -79,12 +72,19 @@ export default function TafsirVersePage() {
           />
 
           {verse && <VerseCard verse={verse} />}
+          <button
+            onClick={() => setIsTafsirPanelOpen(true)}
+            className="text-sm text-emerald-600 underline"
+          >
+            {t('select_tafsir')}
+          </button>
 
-          {verse && tabInfos.length > 0 && (
-            <TafsirTabs verseKey={verse.verse_key} tabs={tabInfos} />
+          {verse && settings.tafsirIds.length > 0 && (
+            <TafsirTabs verseKey={verse.verse_key} tafsirIds={settings.tafsirIds} />
           )}
         </div>
       </div>
+      <TafsirPanel isOpen={isTafsirPanelOpen} onClose={() => setIsTafsirPanelOpen(false)} />
     </div>
   );
 }

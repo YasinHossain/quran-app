@@ -22,6 +22,7 @@ const SettingsTest = () => {
       >
         Update
       </button>
+      <button onClick={() => setSettings({ ...settings, tafsirIds: [1, 2, 3] })}>Tafsirs</button>
     </div>
   );
 };
@@ -74,7 +75,7 @@ describe('SettingsContext settings state', () => {
 
   const defaultSettings = {
     translationId: 20,
-    tafsirId: 169,
+    tafsirIds: [169],
     arabicFontSize: 28,
     translationFontSize: 16,
     arabicFontFace: '"KFGQPC-Uthman-Taha", serif',
@@ -114,6 +115,20 @@ describe('SettingsContext settings state', () => {
       expect(screen.getByTestId('settings').textContent).toBe(
         JSON.stringify({ ...defaultSettings, arabicFontSize: 30 })
       );
+    });
+  });
+
+  it('saves multiple tafsir selections', async () => {
+    render(
+      <SettingsProvider>
+        <SettingsTest />
+      </SettingsProvider>
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Tafsirs' }));
+    await waitFor(() => {
+      expect(JSON.parse(localStorage.getItem('quranAppSettings') || '{}').tafsirIds).toEqual([
+        1, 2, 3,
+      ]);
     });
   });
 });

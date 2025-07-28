@@ -70,13 +70,17 @@ export const TafsirPanel = ({ isOpen, onClose }: TafsirPanelProps) => {
                   className="flex items-center space-x-3 p-2 rounded-md hover:bg-teal-50 cursor-pointer"
                 >
                   <input
-                    type="radio"
-                    name="tafsir"
-                    className="form-radio h-4 w-4 text-teal-600"
-                    checked={settings.tafsirId === opt.id}
+                    type="checkbox"
+                    className="form-checkbox h-4 w-4 text-teal-600"
+                    checked={settings.tafsirIds.includes(opt.id)}
                     onChange={() => {
-                      setSettings({ ...settings, tafsirId: opt.id });
-                      onClose();
+                      const exists = settings.tafsirIds.includes(opt.id);
+                      const ids = exists
+                        ? settings.tafsirIds.filter((id) => id !== opt.id)
+                        : settings.tafsirIds.length < 3
+                          ? [...settings.tafsirIds, opt.id]
+                          : settings.tafsirIds;
+                      setSettings({ ...settings, tafsirIds: ids });
                     }}
                   />
                   <span className="text-sm text-[var(--foreground)]">{opt.name}</span>

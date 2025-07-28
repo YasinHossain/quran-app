@@ -1,19 +1,25 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import Spinner from '@/app/components/common/Spinner';
 import { getTafsirCached } from '@/lib/tafsirCache';
-
-interface TabInfo {
-  id: number;
-  name: string;
-}
+import { getTafsirResources } from '@/lib/api';
+import useSWR from 'swr';
 
 interface TafsirTabsProps {
   verseKey: string;
-  tabs: TabInfo[];
+  tafsirIds: number[];
 }
 
-export default function TafsirTabs({ verseKey, tabs }: TafsirTabsProps) {
+export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
+  const { data } = useSWR('tafsirs', getTafsirResources);
+  const tabs = useMemo(() => {
+    const resources = data || [];
+    return tafsirIds
+      .map((id) => resources.find((r) => r.id === id))
+      .filter(Boolean)
+      .slice(0, 3) as { id: number; name: string }[];
+  }, [tafsirIds, data]);
+
   const [activeId, setActiveId] = useState(tabs[0]?.id);
   const [contents, setContents] = useState<Record<number, string>>({});
   const [loading, setLoading] = useState<Record<number, boolean>>({});
