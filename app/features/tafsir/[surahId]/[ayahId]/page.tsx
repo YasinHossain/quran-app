@@ -142,7 +142,7 @@ export default function TafsirVersePage() {
   );
 
   // Ayah navigation helpers
-  const totalSurahs = (surahs as { number: number; verses: number }[]).length;
+  const totalSurahs = (surahs as { number: number; verses: number, englishName: string }[]).length;
   const currentSurahIndex = Number(surahId) - 1;
   const currentAyahNum = Number(ayahId);
 
@@ -166,44 +166,50 @@ export default function TafsirVersePage() {
     router.push(`/features/tafsir/${target.surahId}/${target.ayahId}`);
   };
 
+  const currentSurah = surahs.find(surah => surah.number === Number(surahId));
+  const prevSurah = surahs.find(surah => surah.number === Number(prev?.surahId));
+  const nextSurah = surahs.find(surah => surah.number === Number(next?.surahId));
+
   return (
     <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] overflow-hidden">
       <div className="flex-grow overflow-y-auto p-6 lg:p-10">
         <div className="w-full space-y-6">
           {/* Ayah Navigation */}
-          <div className="flex justify-between">
+          <div className="flex items-center justify-between rounded-full bg-teal-600 text-white p-2">
             <button
               aria-label="Previous"
               disabled={!prev}
               onClick={() => navigate(prev)}
-              className="px-3 py-1 rounded bg-teal-600 text-white disabled:opacity-50"
+              className="flex items-center px-4 py-2 rounded-full bg-teal-600 text-white disabled:opacity-50 font-bold"
             >
-              {t('previous_ayah')}
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-teal-600" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M11.707 15.293a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L8.414 10l3.293 3.293a1 1 0 010 1.414z" clipRule="evenodd" />
+                </svg>
+              </div>
+              {prev && prevSurah ? `${prevSurah.englishName} : ${prev.ayahId}` : t('previous_ayah')}
             </button>
+            <div className="text-white font-bold">
+              {currentSurah ? `${currentSurah.englishName} : ${ayahId}` : ''}
+            </div>
             <button
               aria-label="Next"
               disabled={!next}
               onClick={() => navigate(next)}
-              className="px-3 py-1 rounded bg-teal-600 text-white disabled:opacity-50"
+              className="flex items-center px-4 py-2 rounded-full bg-teal-600 text-white disabled:opacity-50 font-bold"
             >
-              {t('next_ayah')}
+              {next && nextSurah ? `${nextSurah.englishName} : ${next.ayahId}` : t('next_ayah')}
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white ml-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-teal-600" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M8.293 4.707a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L11.586 10l-3.293-3.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </div>
             </button>
           </div>
 
           {/* Translation selection */}
           <div className="space-y-4">
             <div className="flex flex-wrap gap-4">
-              <select
-                className="border p-2 rounded"
-                value={translationId}
-                onChange={(e) => setTranslationId(Number(e.target.value))}
-              >
-                {translationOptions.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.name}
-                  </option>
-                ))}
-              </select>
             </div>
 
             {/* Ayah display */}

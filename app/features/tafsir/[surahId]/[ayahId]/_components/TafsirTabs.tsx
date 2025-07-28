@@ -53,15 +53,13 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
   return (
     <div>
       <div
-        className={`flex items-center p-1 rounded-full ${
-          theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'
-        }`}
+        className={`flex w-full items-center p-1 rounded-full ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'} ml-4`}
       >
         {tabs.map((t) => (
           <button
             key={t.id}
             onClick={() => setActiveId(t.id)}
-            className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors whitespace-nowrap ${
+            className={`flex-1 text-center py-3 px-5 rounded-full text-sm font-semibold transition-colors whitespace-nowrap ${
               activeId === t.id
                 ? theme === 'light'
                   ? 'bg-white shadow text-slate-900'
