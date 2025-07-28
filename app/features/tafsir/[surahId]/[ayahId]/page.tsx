@@ -136,7 +136,7 @@ export default function TafsirVersePage() {
   );
   const verse: VerseType | undefined = verseData;
 
-  const { data: tafsirText } = useSWR(
+  const { data: tafsirHtml } = useSWR(
     verse && tafsirResource ? ['tafsir', verse.verse_key, tafsirResource.id] : null,
     ([, key, id]) => getTafsirByVerse(key as string, id as number)
   );
@@ -222,7 +222,7 @@ export default function TafsirVersePage() {
                 >
                   <div
                     className="prose max-w-none"
-                    dangerouslySetInnerHTML={{ __html: tafsirText || '' }}
+                    dangerouslySetInnerHTML={{ __html: tafsirHtml || '' }}
                   />
                 </CollapsibleSection>
               )
