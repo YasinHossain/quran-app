@@ -1,4 +1,4 @@
-export const LANGUAGE_CODES: Record<string, string> = {
+export const LANGUAGE_CODES = {
   english: 'en',
   urdu: 'ur',
   bengali: 'bn',
@@ -71,4 +71,6 @@ export const LANGUAGE_CODES: Record<string, string> = {
   'uighur, uyghur': 'ug',
   ukrainian: 'uk',
   yoruba: 'yo',
-};
+} as const;
+
+export type LanguageCode = (typeof LANGUAGE_CODES)[keyof typeof LANGUAGE_CODES];
