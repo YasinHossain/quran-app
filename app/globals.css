@@ -156,11 +156,8 @@ input[type='range']::-webkit-slider-thumb:hover {
 *:hover {
   scrollbar-color: var(--accent) var(--background); /* thumb color track color */
 }
-/* Hide horizontal scrollbar for elements with overflow-x: auto */
-* {
-  scrollbar-width: none; /* For Firefox */
-}
-
-*::-webkit-scrollbar {
-  display: none; /* For Chrome, Safari, and Opera */
+/* Hide horizontal scrollbar without affecting vertical scrollbars */
+*::-webkit-scrollbar:horizontal {
+  display: none; /* Hide horizontal scrollbar */
+  height: 0; /* Remove extra space */
 }
