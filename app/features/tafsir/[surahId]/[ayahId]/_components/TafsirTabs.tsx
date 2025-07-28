@@ -49,17 +49,13 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
   if (!tabs.length || !activeId) return null;
 
   return (
-    <div className="bg-white rounded-md border shadow">
-      <div className="p-4 border-b">
-        <h2 className="font-bold text-lg text-gray-800">Tafsir</h2>
-        <p className="text-sm text-gray-500">Commentary and explanation of the verse.</p>
-      </div>
-      <div className="flex border-b">
+    <div>
+      <div className="flex overflow-x-auto text-sm bg-gray-100 dark:bg-slate-800/40">
         {tabs.map((t) => (
           <button
             key={t.id}
             onClick={() => setActiveId(t.id)}
-            className={`flex-1 p-3 text-sm font-medium focus:outline-none ${
+            className={`px-4 py-2 whitespace-nowrap font-medium transition-colors focus:outline-none ${
               activeId === t.id ? 'border-b-2 border-emerald-600 text-emerald-600' : 'text-gray-500'
             }`}
           >
