@@ -4,6 +4,7 @@ import Spinner from '@/app/components/common/Spinner';
 import { getTafsirCached } from '@/lib/tafsirCache';
 import { getTafsirResources } from '@/lib/api';
 import useSWR from 'swr';
+import { useTheme } from '@/app/context/ThemeContext';
 
 interface TafsirTabsProps {
   verseKey: string;
@@ -46,17 +47,28 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
       .finally(() => setLoading((l) => ({ ...l, [activeId]: false })));
   }, [activeId, verseKey, contents]);
 
+  const { theme } = useTheme();
   if (!tabs.length || !activeId) return null;
 
   return (
     <div>
-      <div className="flex overflow-x-auto text-sm bg-gray-100 dark:bg-slate-800/40">
+      <div
+        className={`flex items-center p-1 rounded-full ${
+          theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'
+        }`}
+      >
         {tabs.map((t) => (
           <button
             key={t.id}
             onClick={() => setActiveId(t.id)}
-            className={`px-4 py-2 whitespace-nowrap font-medium transition-colors focus:outline-none ${
-              activeId === t.id ? 'border-b-2 border-emerald-600 text-emerald-600' : 'text-gray-500'
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors whitespace-nowrap ${
+              activeId === t.id
+                ? theme === 'light'
+                  ? 'bg-white shadow text-slate-900'
+                  : 'bg-slate-700 text-white shadow'
+                : theme === 'light'
+                  ? 'text-slate-500 hover:text-slate-800'
+                  : 'text-slate-400 hover:text-white'
             }`}
           >
             {t.name}

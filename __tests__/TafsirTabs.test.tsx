@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import TafsirTabs from '@/app/features/tafsir/[surahId]/[ayahId]/_components/TafsirTabs';
+import { ThemeProvider } from '@/app/context/ThemeContext';
 import { getTafsirCached } from '@/lib/tafsirCache';
 import useSWR from 'swr';
 
@@ -15,6 +16,22 @@ const resources = [
   { id: 2, name: 'Tafsir Two' },
 ];
 
+beforeAll(() => {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation((query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
+});
+
 beforeEach(() => {
   mockUseSWR.mockReturnValue({ data: resources });
   mockGetTafsirCached.mockImplementation((key: string, id: number) =>
@@ -23,7 +40,11 @@ beforeEach(() => {
 });
 
 it('shows tabs and switches content on click', async () => {
-  render(<TafsirTabs verseKey="1:1" tafsirIds={[1, 2]} />);
+  render(
+    <ThemeProvider>
+      <TafsirTabs verseKey="1:1" tafsirIds={[1, 2]} />
+    </ThemeProvider>
+  );
   expect(screen.getByRole('button', { name: 'Tafsir One' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Tafsir Two' })).toBeInTheDocument();
 
