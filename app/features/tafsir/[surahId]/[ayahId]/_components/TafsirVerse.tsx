@@ -177,7 +177,7 @@ export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps) => {
                     </div>
                   ) : (
                     <div
-                      className="prose max-w-none text-[var(--foreground)]"
+                      className="prose max-w-none text-[var(--foreground)] whitespace-pre-wrap"
                       style={{
                         fontSize: `${settings.tafsirFontSize}px`,
                         fontFamily: settings.arabicFontFace,
