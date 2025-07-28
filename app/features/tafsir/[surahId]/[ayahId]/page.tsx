@@ -24,6 +24,7 @@ import { LANGUAGE_CODES } from '@/lib/languageCodes';
 import type { LanguageCode } from '@/lib/languageCodes';
 import useSWR from 'swr';
 import surahs from '@/data/surahs.json';
+import type { Surah } from '@/types';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;
 
@@ -142,7 +143,8 @@ export default function TafsirVersePage() {
   );
 
   // Ayah navigation helpers
-  const totalSurahs = (surahs as { number: number; verses: number; englishName: string }[]).length;
+  const surahList = surahs as Surah[];
+  const totalSurahs = surahList.length;
   const currentSurahIndex = Number(surahId) - 1;
   const currentAyahNum = Number(ayahId);
 
@@ -150,11 +152,11 @@ export default function TafsirVersePage() {
     currentAyahNum > 1
       ? { surahId, ayahId: currentAyahNum - 1 }
       : currentSurahIndex > 0
-        ? { surahId: String(Number(surahId) - 1), ayahId: surahs[currentSurahIndex - 1].verses }
+        ? { surahId: String(Number(surahId) - 1), ayahId: surahList[currentSurahIndex - 1].verses }
         : null;
 
   const next =
-    currentAyahNum < surahs[currentSurahIndex].verses
+    currentAyahNum < surahList[currentSurahIndex].verses
       ? { surahId, ayahId: currentAyahNum + 1 }
       : currentSurahIndex < totalSurahs - 1
         ? { surahId: String(Number(surahId) + 1), ayahId: 1 }
@@ -166,9 +168,9 @@ export default function TafsirVersePage() {
     router.push(`/features/tafsir/${target.surahId}/${target.ayahId}`);
   };
 
-  const currentSurah = surahs.find((surah) => surah.number === Number(surahId));
-  const prevSurah = surahs.find((surah) => surah.number === Number(prev?.surahId));
-  const nextSurah = surahs.find((surah) => surah.number === Number(next?.surahId));
+  const currentSurah = surahList.find((surah) => surah.number === Number(surahId));
+  const prevSurah = surahList.find((surah) => surah.number === Number(prev?.surahId));
+  const nextSurah = surahList.find((surah) => surah.number === Number(next?.surahId));
 
   return (
     <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] overflow-hidden">
@@ -196,10 +198,16 @@ export default function TafsirVersePage() {
                   />
                 </svg>
               </div>
-              {prev && prevSurah ? `${prevSurah.englishName} : ${prev.ayahId}` : t('previous_ayah')}
+              {prev && prevSurah ? `${prevSurah.name} : ${prev.ayahId}` : t('previous_ayah')}
             </button>
             <div className="text-white font-bold">
-              {currentSurah ? `${currentSurah.englishName} : ${ayahId}` : ''}
+              {currentSurah ? (
+                <>
+                  <span className="font-bold">{currentSurah.name}</span> : {ayahId}
+                </>
+              ) : (
+                ''
+              )}
             </div>
             <button
               aria-label="Next"
@@ -207,7 +215,7 @@ export default function TafsirVersePage() {
               onClick={() => navigate(next)}
               className="flex items-center px-4 py-2 rounded-full bg-teal-600 text-white disabled:opacity-50 font-bold"
             >
-              {next && nextSurah ? `${nextSurah.englishName} : ${next.ayahId}` : t('next_ayah')}
+              {next && nextSurah ? `${nextSurah.name} : ${next.ayahId}` : t('next_ayah')}
               <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white ml-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
