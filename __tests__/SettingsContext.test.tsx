@@ -74,6 +74,7 @@ describe('SettingsContext settings state', () => {
 
   const defaultSettings = {
     translationId: 20,
+    tafsirId: 169,
     arabicFontSize: 28,
     translationFontSize: 16,
     arabicFontFace: '"KFGQPC-Uthman-Taha", serif',

@@ -5,9 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { Verse } from './_components/Verse';
 import { SettingsSidebar } from './_components/SettingsSidebar';
 import { TranslationPanel } from './_components/TranslationPanel';
+import { TafsirPanel } from './_components/TafsirPanel';
 import { WordLanguagePanel } from './_components/WordLanguagePanel';
 import { Verse as VerseType, TranslationResource } from '@/types';
 import { getTranslations, getWordTranslations, getVersesByChapter } from '@/lib/api';
+import { getTafsirResources } from '@/lib/api';
 import { LANGUAGE_CODES } from '@/lib/languageCodes';
 import { WORD_LANGUAGE_LABELS } from '@/lib/wordLanguages';
 import { useSettings } from '@/app/context/SettingsContext';
@@ -31,6 +33,7 @@ export default function SurahPage({ params }: SurahPageProps) {
   const { playingId, setPlayingId, setLoadingId } = useAudio();
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [translationSearchTerm, setTranslationSearchTerm] = useState('');
+  const [isTafsirPanelOpen, setIsTafsirPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
   const [wordTranslationSearchTerm, setWordTranslationSearchTerm] = useState('');
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -40,6 +43,9 @@ export default function SurahPage({ params }: SurahPageProps) {
 
   const { data: translationOptionsData } = useSWR('translations', getTranslations);
   const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
+
+  const { data: tafsirOptionsData } = useSWR('tafsirs', getTafsirResources);
+  const tafsirOptions = useMemo(() => tafsirOptionsData || [], [tafsirOptionsData]);
 
   const { data: wordTranslationOptionsData } = useSWR('wordTranslations', getWordTranslations);
   const wordLanguageMap = useMemo(() => {
@@ -93,6 +99,10 @@ export default function SurahPage({ params }: SurahPageProps) {
       translationOptions.find((o) => o.id === settings.translationId)?.name ||
       t('select_translation'),
     [settings.translationId, translationOptions, t]
+  );
+  const selectedTafsirName = useMemo(
+    () => tafsirOptions.find((o) => o.id === settings.tafsirId)?.name || t('select_tafsir'),
+    [settings.tafsirId, tafsirOptions, t]
   );
   const selectedWordLanguageName = useMemo(
     () =>
@@ -169,8 +179,10 @@ export default function SurahPage({ params }: SurahPageProps) {
       <SettingsSidebar
         onTranslationPanelOpen={() => setIsTranslationPanelOpen(true)}
         onWordLanguagePanelOpen={() => setIsWordPanelOpen(true)}
+        onTafsirPanelOpen={() => setIsTafsirPanelOpen(true)}
         onReadingPanelOpen={() => {}}
         selectedTranslationName={selectedTranslationName}
+        selectedTafsirName={selectedTafsirName}
         selectedWordLanguageName={selectedWordLanguageName}
       />
       <TranslationPanel
@@ -195,6 +207,7 @@ export default function SurahPage({ params }: SurahPageProps) {
           });
         }}
       />
+      <TafsirPanel isOpen={isTafsirPanelOpen} onClose={() => setIsTafsirPanelOpen(false)} />
     </div>
   );
 }

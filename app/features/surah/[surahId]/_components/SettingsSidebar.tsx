@@ -16,16 +16,20 @@ import { useTheme } from '@/app/context/ThemeContext';
 interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;
   onWordLanguagePanelOpen: () => void;
+  onTafsirPanelOpen: () => void;
   onReadingPanelOpen?: () => void;
   selectedTranslationName: string;
+  selectedTafsirName: string;
   selectedWordLanguageName: string;
 }
 
 export const SettingsSidebar = ({
   onTranslationPanelOpen,
   onWordLanguagePanelOpen,
+  onTafsirPanelOpen,
   onReadingPanelOpen,
   selectedTranslationName,
+  selectedTafsirName,
   selectedWordLanguageName,
 }: SettingsSidebarProps) => {
   const { settings, setSettings, arabicFonts } = useSettings();
@@ -163,6 +167,26 @@ export const SettingsSidebar = ({
                     <FaChevronDown className="text-gray-500" />
                   </button>
                 </div>
+              </div>
+            </CollapsibleSection>
+          )}
+          {activeTab === 'translation' && (
+            <CollapsibleSection
+              title={t('tafsir_setting')}
+              icon={<FaBookReader size={20} className="text-teal-700" />}
+              isLast={false}
+            >
+              <div>
+                <label className="block mb-2 text-sm font-medium text-[var(--foreground)]">
+                  {t('select_tafsir')}
+                </label>
+                <button
+                  onClick={onTafsirPanelOpen}
+                  className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition"
+                >
+                  <span className="truncate text-[var(--foreground)]">{selectedTafsirName}</span>
+                  <FaChevronDown className="text-gray-500" />
+                </button>
               </div>
             </CollapsibleSection>
           )}
