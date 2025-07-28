@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import Header from '@/app/components/common/Header';
 import { SettingsSidebar } from '@/app/features/surah/[surahId]/_components/SettingsSidebar';
 import { WordLanguagePanel } from '@/app/features/surah/[surahId]/_components/WordLanguagePanel';
+import { TranslationPanel } from '@/app/features/surah/[surahId]/_components/TranslationPanel';
 import { SettingsProvider } from '@/app/context/SettingsContext';
 import { SidebarProvider } from '@/app/context/SidebarContext';
 import { ThemeProvider } from '@/app/context/ThemeContext';
@@ -80,6 +81,40 @@ describe('SettingsSidebar interactions', () => {
     const backButtons = screen.getAllByRole('button', { name: 'Back' });
     await userEvent.click(backButtons[1]);
     expect(panel?.className).toContain('translate-x-full');
+  });
+
+  it("translation tab doesn't open translation panel", async () => {
+    const TestComponent = () => {
+      const [open, setOpen] = useState(false);
+      return (
+        <Wrapper>
+          <Header />
+          <SettingsSidebar
+            onTranslationPanelOpen={() => setOpen(true)}
+            onWordLanguagePanelOpen={() => {}}
+            selectedTranslationName="English"
+            selectedWordLanguageName="English"
+          />
+          <TranslationPanel
+            isOpen={open}
+            onClose={() => setOpen(false)}
+            groupedTranslations={{}}
+            searchTerm=""
+            onSearchTermChange={() => {}}
+          />
+        </Wrapper>
+      );
+    };
+
+    render(<TestComponent />);
+
+    await userEvent.click(screen.getByLabelText('Open Settings'));
+    // Click translation tab while sidebar is open
+    await userEvent.click(screen.getByRole('button', { name: 'Translation' }));
+    // Translation panel should remain hidden
+    const panel = screen.getByText('translations_panel_title').parentElement
+      ?.parentElement as HTMLElement;
+    expect(panel.className).toContain('translate-x-full');
   });
 
   it('opens the word translation panel and shows languages', async () => {
