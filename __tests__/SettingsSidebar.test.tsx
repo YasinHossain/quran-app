@@ -94,6 +94,7 @@ describe('SettingsSidebar interactions', () => {
           <SettingsSidebar
             onTranslationPanelOpen={() => setOpen(true)}
             onWordLanguagePanelOpen={() => {}}
+            onTafsirPanelOpen={() => {}}
             selectedTranslationName="English"
             selectedTafsirName="English, Urdu"
             selectedWordLanguageName="English"

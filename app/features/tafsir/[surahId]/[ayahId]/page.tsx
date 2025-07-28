@@ -8,6 +8,7 @@ import { SettingsSidebar } from '@/app/features/surah/[surahId]/_components/Sett
 import { TranslationPanel } from '@/app/features/surah/[surahId]/_components/TranslationPanel';
 import { TafsirPanel } from '@/app/features/surah/[surahId]/_components/TafsirPanel';
 import { WordLanguagePanel } from '@/app/features/surah/[surahId]/_components/WordLanguagePanel';
+import TafsirTabs from './_components/TafsirTabs';
 import {
   getVersesByChapter,
   getTranslations,
@@ -20,6 +21,7 @@ import { useSettings } from '@/app/context/SettingsContext';
 import { useSidebar } from '@/app/context/SidebarContext';
 import { WORD_LANGUAGE_LABELS } from '@/lib/wordLanguages';
 import { LANGUAGE_CODES } from '@/lib/languageCodes';
+import type { LanguageCode } from '@/lib/languageCodes';
 import useSWR from 'swr';
 import surahs from '@/data/surahs.json';
 
@@ -79,14 +81,20 @@ export default function TafsirVersePage() {
       t('select_translation'),
     [settings.translationId, translationOptions, t]
   );
-  const selectedTafsirName = useMemo(
-    () => tafsirOptions.find((o) => o.id === settings.tafsirId)?.name || t('select_tafsir'),
-    [settings.tafsirId, tafsirOptions, t]
-  );
+  const selectedTafsirName = useMemo(() => {
+    const names = settings.tafsirIds
+      .map((id) => tafsirOptions.find((o) => o.id === id)?.name)
+      .filter(Boolean)
+      .slice(0, 3);
+    return names.length ? names.join(', ') : t('select_tafsir');
+  }, [settings.tafsirIds, tafsirOptions, t]);
   const selectedWordLanguageName = useMemo(
     () =>
-      wordLanguageOptions.find((o) => LANGUAGE_CODES[o.name.toLowerCase()] === settings.wordLang)
-        ?.name || t('select_word_translation'),
+      wordLanguageOptions.find(
+        (o) =>
+          (LANGUAGE_CODES as Record<string, LanguageCode>)[o.name.toLowerCase()] ===
+          settings.wordLang
+      )?.name || t('select_word_translation'),
     [settings.wordLang, wordLanguageOptions, t]
   );
 
@@ -116,8 +124,8 @@ export default function TafsirVersePage() {
 
   // Tafsir resource selection
   const tafsirResource = useMemo(
-    () => tafsirOptions.find((t) => t.id === settings.tafsirId),
-    [tafsirOptions, settings.tafsirId]
+    () => tafsirOptions.find((t) => t.id === settings.tafsirIds[0]),
+    [tafsirOptions, settings.tafsirIds]
   );
 
   // Verse and tafsir text data fetching
@@ -127,11 +135,6 @@ export default function TafsirVersePage() {
       getVersesByChapter(s, trId, Number(a), 1, wordLang).then((d) => d.verses[0])
   );
   const verse: VerseType | undefined = verseData;
-
-  const { data: tafsirText } = useSWR(
-    verse && tafsirResource ? ['tafsir', verse.verse_key, tafsirResource.id] : null,
-    ([, key, id]) => getTafsirByVerse(key as string, id as number)
-  );
 
   const { data: tafsirText } = useSWR(
     verse && tafsirResource ? ['tafsir', verse.verse_key, tafsirResource.id] : null,
@@ -170,6 +173,7 @@ export default function TafsirVersePage() {
           {/* Ayah Navigation */}
           <div className="flex justify-between">
             <button
+              aria-label="Previous"
               disabled={!prev}
               onClick={() => navigate(prev)}
               className="px-3 py-1 rounded bg-teal-600 text-white disabled:opacity-50"
@@ -177,6 +181,7 @@ export default function TafsirVersePage() {
               {t('previous_ayah')}
             </button>
             <button
+              aria-label="Next"
               disabled={!next}
               onClick={() => navigate(next)}
               className="px-3 py-1 rounded bg-teal-600 text-white disabled:opacity-50"
@@ -204,19 +209,23 @@ export default function TafsirVersePage() {
             {/* Ayah display */}
             {verse && <VerseComponent verse={verse} />}
 
-            {/* Tafsir display (collapsible) */}
-            {tafsirResource && (
-              <CollapsibleSection
-                key={verse?.verse_key}
-                title={tafsirResource.name}
-                icon={<></>}
-                isLast
-              >
-                <div
-                  className="prose max-w-none"
-                  dangerouslySetInnerHTML={{ __html: tafsirText || '' }}
-                />
-              </CollapsibleSection>
+            {/* Tafsir display */}
+            {verse && settings.tafsirIds.length > 1 ? (
+              <TafsirTabs verseKey={verse.verse_key} tafsirIds={settings.tafsirIds} />
+            ) : (
+              tafsirResource && (
+                <CollapsibleSection
+                  key={verse?.verse_key}
+                  title={tafsirResource.name}
+                  icon={<></>}
+                  isLast
+                >
+                  <div
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{ __html: tafsirText || '' }}
+                  />
+                </CollapsibleSection>
+              )
             )}
           </div>
         </div>
