@@ -12,6 +12,8 @@ interface TafsirTabsProps {
 
 export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
   const { data } = useSWR('tafsirs', getTafsirResources);
+
+  // Compute tabs only when data or tafsirIds change
   const tabs = useMemo(() => {
     const resources = data || [];
     return tafsirIds
@@ -20,7 +22,17 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
       .slice(0, 3) as { id: number; name: string }[];
   }, [tafsirIds, data]);
 
-  const [activeId, setActiveId] = useState(tabs[0]?.id);
+  // -- Fix 1: activeId needs to track the tabs --
+  const [activeId, setActiveId] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    // If tabs exist and activeId is not in them, set to first tab
+    if (tabs.length && !tabs.find((t) => t.id === activeId)) {
+      setActiveId(tabs[0].id);
+    }
+  }, [tabs, activeId]);
+
+  // -- Caching and loading state --
   const [contents, setContents] = useState<Record<number, string>>({});
   const [loading, setLoading] = useState<Record<number, boolean>>({});
 
@@ -34,7 +46,7 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
       .finally(() => setLoading((l) => ({ ...l, [activeId]: false })));
   }, [activeId, verseKey, contents]);
 
-  if (!tabs.length) return null;
+  if (!tabs.length || !activeId) return null;
 
   return (
     <div className="bg-white rounded-md border shadow">
@@ -47,7 +59,11 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
           <button
             key={t.id}
             onClick={() => setActiveId(t.id)}
-            className={`flex-1 p-3 text-sm font-medium focus:outline-none ${activeId === t.id ? 'border-b-2 border-emerald-600 text-emerald-600' : 'text-gray-500'}`}
+            className={`flex-1 p-3 text-sm font-medium focus:outline-none ${
+              activeId === t.id
+                ? 'border-b-2 border-emerald-600 text-emerald-600'
+                : 'text-gray-500'
+            }`}
           >
             {t.name}
           </button>
