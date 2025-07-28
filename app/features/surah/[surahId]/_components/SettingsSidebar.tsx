@@ -50,9 +50,7 @@ export const SettingsSidebar = ({
 
   const handleTabClick = (tab: 'translation' | 'reading') => {
     setActiveTab(tab);
-    if (tab === 'translation') {
-      onTranslationPanelOpen();
-    } else {
+    if (tab === 'reading') {
       onReadingPanelOpen?.();
     }
   };
