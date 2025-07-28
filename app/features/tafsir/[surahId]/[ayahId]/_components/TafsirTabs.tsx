@@ -85,7 +85,6 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
             className="prose max-w-none whitespace-pre-wrap"
             style={{
               fontSize: `${settings.tafsirFontSize}px`,
-              fontFamily: settings.arabicFontFace,
             }}
             dangerouslySetInnerHTML={{ __html: contents[activeId] || '' }}
           />

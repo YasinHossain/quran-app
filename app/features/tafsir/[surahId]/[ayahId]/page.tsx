@@ -255,7 +255,6 @@ export default function TafsirVersePage() {
                     className="prose max-w-none whitespace-pre-wrap"
                     style={{
                       fontSize: `${settings.tafsirFontSize}px`,
-                      fontFamily: settings.arabicFontFace,
                     }}
                     dangerouslySetInnerHTML={{ __html: tafsirHtml || '' }}
                   />
