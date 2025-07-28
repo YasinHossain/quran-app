@@ -18,6 +18,7 @@ export const ARABIC_FONTS = [
 // Define default settings
 const defaultSettings: Settings = {
   translationId: 20,
+  tafsirId: 169,
   arabicFontSize: 28,
   translationFontSize: 16,
   arabicFontFace: ARABIC_FONTS[0].value,
@@ -37,6 +38,7 @@ interface SettingsContextType {
   setTajweed: (val: boolean) => void;
   setWordLang: (lang: string) => void;
   setWordTranslationId: (id: number) => void;
+  setTafsirId: (id: number) => void;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -97,6 +99,8 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
   const setWordTranslationId = (id: number) =>
     setSettings((prev) => ({ ...prev, wordTranslationId: id }));
 
+  const setTafsirId = (id: number) => setSettings((prev) => ({ ...prev, tafsirId: id }));
+
   return (
     <SettingsContext.Provider
       value={{
@@ -109,6 +113,7 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
         setTajweed,
         setWordLang,
         setWordTranslationId,
+        setTafsirId,
       }}
     >
       {children}

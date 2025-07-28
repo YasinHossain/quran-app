@@ -6,9 +6,11 @@ import { useTranslation } from 'react-i18next';
 import { Verse } from '@/app/features/surah/[surahId]/_components/Verse';
 import { SettingsSidebar } from '@/app/features/surah/[surahId]/_components/SettingsSidebar';
 import { TranslationPanel } from '@/app/features/surah/[surahId]/_components/TranslationPanel';
+import { TafsirPanel } from '@/app/features/surah/[surahId]/_components/TafsirPanel';
 import { WordLanguagePanel } from '@/app/features/surah/[surahId]/_components/WordLanguagePanel';
 import { Verse as VerseType, TranslationResource, Juz } from '@/types';
 import { getTranslations, getWordTranslations, getVersesByJuz, getJuz } from '@/lib/api';
+import { getTafsirResources } from '@/lib/api';
 import { LANGUAGE_CODES } from '@/lib/languageCodes';
 import { WORD_LANGUAGE_LABELS } from '@/lib/wordLanguages';
 import { useSettings } from '@/app/context/SettingsContext';
@@ -31,6 +33,7 @@ export default function JuzPage({ params }: JuzPageProps) {
   const { playingId, setPlayingId } = useAudio();
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [translationSearchTerm, setTranslationSearchTerm] = useState('');
+  const [isTafsirPanelOpen, setIsTafsirPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
   const [wordTranslationSearchTerm, setWordTranslationSearchTerm] = useState('');
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -43,6 +46,8 @@ export default function JuzPage({ params }: JuzPageProps) {
 
   const { data: translationOptionsData } = useSWR('translations', getTranslations);
   const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
+  const { data: tafsirOptionsData } = useSWR('tafsirs', getTafsirResources);
+  const tafsirOptions = useMemo(() => tafsirOptionsData || [], [tafsirOptionsData]);
   const { data: wordTranslationOptionsData } = useSWR('wordTranslations', getWordTranslations);
   const wordLanguageMap = useMemo(() => {
     const map: Record<string, number> = {};
@@ -96,6 +101,10 @@ export default function JuzPage({ params }: JuzPageProps) {
       translationOptions.find((o) => o.id === settings.translationId)?.name ||
       t('select_translation'),
     [settings.translationId, translationOptions, t]
+  );
+  const selectedTafsirName = useMemo(
+    () => tafsirOptions.find((o) => o.id === settings.tafsirId)?.name || t('select_tafsir'),
+    [settings.tafsirId, tafsirOptions, t]
   );
   const selectedWordLanguageName = useMemo(
     () =>
@@ -189,8 +198,10 @@ export default function JuzPage({ params }: JuzPageProps) {
       <SettingsSidebar
         onTranslationPanelOpen={() => setIsTranslationPanelOpen(true)}
         onWordLanguagePanelOpen={() => setIsWordPanelOpen(true)}
+        onTafsirPanelOpen={() => setIsTafsirPanelOpen(true)}
         onReadingPanelOpen={() => {}}
         selectedTranslationName={selectedTranslationName}
+        selectedTafsirName={selectedTafsirName}
         selectedWordLanguageName={selectedWordLanguageName}
       />
 
@@ -216,6 +227,7 @@ export default function JuzPage({ params }: JuzPageProps) {
           });
         }}
       />
+      <TafsirPanel isOpen={isTafsirPanelOpen} onClose={() => setIsTafsirPanelOpen(false)} />
     </div>
   );
 }
