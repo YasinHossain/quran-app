@@ -33,12 +33,15 @@ export default function TafsirVersePage() {
   const { setSurahListOpen } = useSidebar();
   const surahId = params.surahId;
   const ayahId = params.ayahId;
+
+  // Panels state
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [translationSearchTerm, setTranslationSearchTerm] = useState('');
   const [isTafsirPanelOpen, setIsTafsirPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
   const [wordTranslationSearchTerm, setWordTranslationSearchTerm] = useState('');
 
+  // Options and memoized helpers
   const { data: translationOptionsData } = useSWR('translations', getTranslations);
   const translationOptions: TranslationResource[] = useMemo(
     () => translationOptionsData || [],
@@ -91,8 +94,8 @@ export default function TafsirVersePage() {
     () =>
       translationOptions
         .filter((o) => o.name.toLowerCase().includes(translationSearchTerm.toLowerCase()))
-        .reduce<Record<string, TranslationResource[]>>((acc, t) => {
-          (acc[t.language_name] ||= []).push(t);
+        .reduce<Record<string, TranslationResource[]>>((acc, tr) => {
+          (acc[tr.language_name] ||= []).push(tr);
           return acc;
         }, {}),
     [translationOptions, translationSearchTerm]
@@ -105,17 +108,19 @@ export default function TafsirVersePage() {
     [wordLanguageOptions, wordTranslationSearchTerm]
   );
 
+  // Translation selection and sync
   const [translationId, setTranslationId] = useState(settings.translationId);
-
   useEffect(() => {
     setTranslationId(settings.translationId);
   }, [settings.translationId]);
 
+  // Tafsir resource selection
   const tafsirResource = useMemo(
     () => tafsirOptions.find((t) => t.id === settings.tafsirId),
     [tafsirOptions, settings.tafsirId]
   );
 
+  // Verse and tafsir text data fetching
   const { data: verseData } = useSWR(
     surahId && ayahId ? ['verse', surahId, ayahId, translationId, settings.wordLang] : null,
     ([, s, a, trId, wordLang]) =>
@@ -128,6 +133,12 @@ export default function TafsirVersePage() {
     ([, key, id]) => getTafsirByVerse(key as string, id as number)
   );
 
+  const { data: tafsirText } = useSWR(
+    verse && tafsirResource ? ['tafsir', verse.verse_key, tafsirResource.id] : null,
+    ([, key, id]) => getTafsirByVerse(key as string, id as number)
+  );
+
+  // Ayah navigation helpers
   const totalSurahs = (surahs as { number: number; verses: number }[]).length;
   const currentSurahIndex = Number(surahId) - 1;
   const currentAyahNum = Number(ayahId);
@@ -156,6 +167,7 @@ export default function TafsirVersePage() {
     <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] overflow-hidden">
       <div className="flex-grow overflow-y-auto p-6 lg:p-10">
         <div className="w-full space-y-6">
+          {/* Ayah Navigation */}
           <div className="flex justify-between">
             <button
               disabled={!prev}
@@ -173,6 +185,7 @@ export default function TafsirVersePage() {
             </button>
           </div>
 
+          {/* Translation selection */}
           <div className="space-y-4">
             <div className="flex flex-wrap gap-4">
               <select
@@ -188,8 +201,10 @@ export default function TafsirVersePage() {
               </select>
             </div>
 
+            {/* Ayah display */}
             {verse && <VerseComponent verse={verse} />}
 
+            {/* Tafsir display (collapsible) */}
             {tafsirResource && (
               <CollapsibleSection
                 key={verse?.verse_key}
@@ -206,6 +221,8 @@ export default function TafsirVersePage() {
           </div>
         </div>
       </div>
+
+      {/* Sidebars and Panels */}
       <SettingsSidebar
         onTranslationPanelOpen={() => setIsTranslationPanelOpen(true)}
         onWordLanguagePanelOpen={() => setIsWordPanelOpen(true)}

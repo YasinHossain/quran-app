@@ -57,7 +57,7 @@ describe('SettingsSidebar interactions', () => {
           onWordLanguagePanelOpen={() => {}}
           onTafsirPanelOpen={() => {}}
           selectedTranslationName="English"
-          selectedTafsirName="English"
+          selectedTafsirName="English, Urdu"
           selectedWordLanguageName="English"
         />
       </Wrapper>
@@ -95,6 +95,7 @@ describe('SettingsSidebar interactions', () => {
             onTranslationPanelOpen={() => setOpen(true)}
             onWordLanguagePanelOpen={() => {}}
             selectedTranslationName="English"
+            selectedTafsirName="English, Urdu"
             selectedWordLanguageName="English"
           />
           <TranslationPanel
@@ -130,7 +131,7 @@ describe('SettingsSidebar interactions', () => {
             onWordLanguagePanelOpen={() => setOpen(true)}
             onTafsirPanelOpen={() => {}}
             selectedTranslationName="English"
-            selectedTafsirName="English"
+            selectedTafsirName="English, Urdu"
             selectedWordLanguageName="Bangla"
           />
           <WordLanguagePanel
