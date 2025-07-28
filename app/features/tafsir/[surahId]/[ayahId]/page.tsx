@@ -1,134 +1,26 @@
 'use client';
-import React, { useState, useMemo, useEffect } from 'react';
+import React from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { useTranslation } from 'react-i18next';
-import { Verse as VerseComponent } from '@/app/features/surah/[surahId]/_components/Verse';
-import { CollapsibleSection } from '@/app/features/surah/[surahId]/_components/CollapsibleSection';
-import { SettingsSidebar } from '@/app/features/surah/[surahId]/_components/SettingsSidebar';
-import { TranslationPanel } from '@/app/features/surah/[surahId]/_components/TranslationPanel';
-import { TafsirPanel } from '@/app/features/surah/[surahId]/_components/TafsirPanel';
-import { WordLanguagePanel } from '@/app/features/surah/[surahId]/_components/WordLanguagePanel';
+import AyahNavigation from './_components/AyahNavigation';
+import VerseCard from './_components/VerseCard';
 import TafsirTabs from './_components/TafsirTabs';
-import {
-  getVersesByChapter,
-  getTranslations,
-  getWordTranslations,
-  getTafsirResources,
-  getTafsirByVerse,
-} from '@/lib/api';
-import { Verse as VerseType, TranslationResource, TafsirResource } from '@/types';
+import { getVersesByChapter } from '@/lib/api';
+import { Verse as VerseType } from '@/types';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useSidebar } from '@/app/context/SidebarContext';
-import { WORD_LANGUAGE_LABELS } from '@/lib/wordLanguages';
-import { LANGUAGE_CODES } from '@/lib/languageCodes';
-import type { LanguageCode } from '@/lib/languageCodes';
 import useSWR from 'swr';
 import surahs from '@/data/surahs.json';
-
-const DEFAULT_WORD_TRANSLATION_ID = 85;
 
 export default function TafsirVersePage() {
   const params = useParams<{ surahId: string; ayahId: string }>();
   const router = useRouter();
-  const { t } = useTranslation();
-  const { settings, setSettings } = useSettings();
+  const { settings } = useSettings();
   const { setSurahListOpen } = useSidebar();
   const surahId = params.surahId;
   const ayahId = params.ayahId;
 
-  // Panels state
-  const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
-  const [translationSearchTerm, setTranslationSearchTerm] = useState('');
-  const [isTafsirPanelOpen, setIsTafsirPanelOpen] = useState(false);
-  const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
-  const [wordTranslationSearchTerm, setWordTranslationSearchTerm] = useState('');
+  const translationId = settings.translationId;
 
-  // Options and memoized helpers
-  const { data: translationOptionsData } = useSWR('translations', getTranslations);
-  const translationOptions: TranslationResource[] = useMemo(
-    () => translationOptionsData || [],
-    [translationOptionsData]
-  );
-
-  const { data: tafsirOptionsData } = useSWR('tafsirs', getTafsirResources);
-  const tafsirOptions: TafsirResource[] = useMemo(
-    () => tafsirOptionsData || [],
-    [tafsirOptionsData]
-  );
-
-  const { data: wordTranslationOptionsData } = useSWR('wordTranslations', getWordTranslations);
-  const wordLanguageMap = useMemo(() => {
-    const map: Record<string, number> = {};
-    (wordTranslationOptionsData || []).forEach((o) => {
-      const name = o.language_name.toLowerCase();
-      if (!map[name]) {
-        map[name] = o.id;
-      }
-    });
-    return map;
-  }, [wordTranslationOptionsData]);
-  const wordLanguageOptions = useMemo(
-    () =>
-      Object.keys(wordLanguageMap)
-        .filter((name) => WORD_LANGUAGE_LABELS[name])
-        .map((name) => ({ name: WORD_LANGUAGE_LABELS[name], id: wordLanguageMap[name] })),
-    [wordLanguageMap]
-  );
-
-  const selectedTranslationName = useMemo(
-    () =>
-      translationOptions.find((o) => o.id === settings.translationId)?.name ||
-      t('select_translation'),
-    [settings.translationId, translationOptions, t]
-  );
-  const selectedTafsirName = useMemo(() => {
-    const names = settings.tafsirIds
-      .map((id) => tafsirOptions.find((o) => o.id === id)?.name)
-      .filter(Boolean)
-      .slice(0, 3);
-    return names.length ? names.join(', ') : t('select_tafsir');
-  }, [settings.tafsirIds, tafsirOptions, t]);
-  const selectedWordLanguageName = useMemo(
-    () =>
-      wordLanguageOptions.find(
-        (o) =>
-          (LANGUAGE_CODES as Record<string, LanguageCode>)[o.name.toLowerCase()] ===
-          settings.wordLang
-      )?.name || t('select_word_translation'),
-    [settings.wordLang, wordLanguageOptions, t]
-  );
-
-  const groupedTranslations = useMemo(
-    () =>
-      translationOptions
-        .filter((o) => o.name.toLowerCase().includes(translationSearchTerm.toLowerCase()))
-        .reduce<Record<string, TranslationResource[]>>((acc, tr) => {
-          (acc[tr.language_name] ||= []).push(tr);
-          return acc;
-        }, {}),
-    [translationOptions, translationSearchTerm]
-  );
-  const filteredWordLanguages = useMemo(
-    () =>
-      wordLanguageOptions.filter((o) =>
-        o.name.toLowerCase().includes(wordTranslationSearchTerm.toLowerCase())
-      ),
-    [wordLanguageOptions, wordTranslationSearchTerm]
-  );
-
-  // Translation selection and sync
-  const [translationId, setTranslationId] = useState(settings.translationId);
-  useEffect(() => {
-    setTranslationId(settings.translationId);
-  }, [settings.translationId]);
-
-  // Tafsir resource selection
-  const tafsirResource = useMemo(
-    () => tafsirOptions.find((t) => t.id === settings.tafsirIds[0]),
-    [tafsirOptions, settings.tafsirIds]
-  );
-
-  // Verse and tafsir text data fetching
   const { data: verseData } = useSWR(
     surahId && ayahId ? ['verse', surahId, ayahId, translationId, settings.wordLang] : null,
     ([, s, a, trId, wordLang]) =>
@@ -136,12 +28,6 @@ export default function TafsirVersePage() {
   );
   const verse: VerseType | undefined = verseData;
 
-  const { data: tafsirHtml } = useSWR(
-    verse && tafsirResource ? ['tafsir', verse.verse_key, tafsirResource.id] : null,
-    ([, key, id]) => getTafsirByVerse(key as string, id as number)
-  );
-
-  // Ayah navigation helpers
   const totalSurahs = (surahs as { number: number; verses: number }[]).length;
   const currentSurahIndex = Number(surahId) - 1;
   const currentAyahNum = Number(ayahId);
@@ -167,102 +53,25 @@ export default function TafsirVersePage() {
   };
 
   return (
-    <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] overflow-hidden">
-      <div className="flex-grow overflow-y-auto p-6 lg:p-10">
-        <div className="w-full space-y-6">
-          {/* Ayah Navigation */}
-          <div className="flex justify-between">
-            <button
-              aria-label="Previous"
-              disabled={!prev}
-              onClick={() => navigate(prev)}
-              className="px-3 py-1 rounded bg-teal-600 text-white disabled:opacity-50"
-            >
-              {t('previous_ayah')}
-            </button>
-            <button
-              aria-label="Next"
-              disabled={!next}
-              onClick={() => navigate(next)}
-              className="px-3 py-1 rounded bg-teal-600 text-white disabled:opacity-50"
-            >
-              {t('next_ayah')}
-            </button>
-          </div>
+    <div className="flex flex-grow bg-slate-50 overflow-auto">
+      <div className="flex-grow p-6 lg:p-10">
+        <div className="max-w-4xl mx-auto space-y-6">
+          <AyahNavigation
+            surahName={surahs[currentSurahIndex].name}
+            verseNumber={currentAyahNum}
+            onPrev={() => navigate(prev)}
+            onNext={() => navigate(next)}
+            prevDisabled={!prev}
+            nextDisabled={!next}
+          />
 
-          {/* Translation selection */}
-          <div className="space-y-4">
-            <div className="flex flex-wrap gap-4">
-              <select
-                className="border p-2 rounded"
-                value={translationId}
-                onChange={(e) => setTranslationId(Number(e.target.value))}
-              >
-                {translationOptions.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+          {verse && <VerseCard verse={verse} />}
 
-            {/* Ayah display */}
-            {verse && <VerseComponent verse={verse} />}
-
-            {/* Tafsir display */}
-            {verse && settings.tafsirIds.length > 1 ? (
-              <TafsirTabs verseKey={verse.verse_key} tafsirIds={settings.tafsirIds} />
-            ) : (
-              tafsirResource && (
-                <CollapsibleSection
-                  key={verse?.verse_key}
-                  title={tafsirResource.name}
-                  icon={<></>}
-                  isLast
-                >
-                  <div
-                    className="prose max-w-none"
-                    dangerouslySetInnerHTML={{ __html: tafsirHtml || '' }}
-                  />
-                </CollapsibleSection>
-              )
-            )}
-          </div>
+          {verse && settings.tafsirIds.length > 0 && (
+            <TafsirTabs verseKey={verse.verse_key} tafsirIds={settings.tafsirIds} />
+          )}
         </div>
       </div>
-
-      {/* Sidebars and Panels */}
-      <SettingsSidebar
-        onTranslationPanelOpen={() => setIsTranslationPanelOpen(true)}
-        onWordLanguagePanelOpen={() => setIsWordPanelOpen(true)}
-        onTafsirPanelOpen={() => setIsTafsirPanelOpen(true)}
-        selectedTranslationName={selectedTranslationName}
-        selectedTafsirName={selectedTafsirName}
-        selectedWordLanguageName={selectedWordLanguageName}
-      />
-      <TranslationPanel
-        isOpen={isTranslationPanelOpen}
-        onClose={() => setIsTranslationPanelOpen(false)}
-        groupedTranslations={groupedTranslations}
-        searchTerm={translationSearchTerm}
-        onSearchTermChange={setTranslationSearchTerm}
-      />
-      <WordLanguagePanel
-        isOpen={isWordPanelOpen}
-        onClose={() => setIsWordPanelOpen(false)}
-        languages={filteredWordLanguages}
-        searchTerm={wordTranslationSearchTerm}
-        onSearchTermChange={setWordTranslationSearchTerm}
-        onReset={() => {
-          setWordTranslationSearchTerm('');
-          setSettings({
-            ...settings,
-            wordLang: 'en',
-            wordTranslationId: wordLanguageMap['english'] ?? DEFAULT_WORD_TRANSLATION_ID,
-          });
-        }}
-      />
-      <TafsirPanel isOpen={isTafsirPanelOpen} onClose={() => setIsTafsirPanelOpen(false)} />
     </div>
   );
 }
