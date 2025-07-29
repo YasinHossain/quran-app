@@ -153,22 +153,36 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-colors duration-300 ${isActive ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
                     <div
-                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}`}
+                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${
+                        isActive
+                          ? 'bg-white/20 text-white'
+                          : theme === 'light'
+                            ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100'
+                            : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'
+                      }`}
                     >
                       <span>{chapter.id}</span>
                     </div>
                     <div className="flex-grow">
                       <p
-                        className={`font-bold ${theme === 'light' ? 'text-slate-700 group-hover:text-emerald-600' : 'text-[var(--foreground)] group-hover:text-emerald-400'} ${isActive ? 'text-white' : ''}`}
+                        className={`font-bold ${
+                          theme === 'light'
+                            ? 'text-slate-700 group-hover:text-emerald-600'
+                            : 'text-[var(--foreground)] group-hover:text-emerald-400'
+                        } ${isActive ? 'text-white group-hover:text-white' : ''}`}
                       >
                         {chapter.name_simple}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className={`text-xs ${isActive ? 'text-white' : 'text-gray-500'}`}>
                         {chapter.revelation_place} • {chapter.verses_count} verses
                       </p>
                     </div>
                     <p
-                      className={`font-amiri text-xl font-bold ${theme === 'light' ? 'text-gray-500 group-hover:text-emerald-600' : 'text-gray-500 group-hover:text-emerald-400'} ${isActive ? 'text-white' : ''}`}
+                      className={`font-amiri text-xl font-bold ${
+                        theme === 'light'
+                          ? 'text-gray-500 group-hover:text-emerald-600'
+                          : 'text-gray-500 group-hover:text-emerald-400'
+                      } ${isActive ? 'text-white group-hover:text-white' : ''}`}
                     >
                       {chapter.name_arabic}
                     </p>
@@ -196,7 +210,13 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                       <span>{j}</span>
                     </div>
                     <p
-                      className={`font-semibold ${isActive ? 'text-teal-800' : theme === 'light' ? 'text-slate-700 group-hover:text-emerald-600' : 'text-[var(--foreground)] group-hover:text-emerald-400'}`}
+                      className={`font-semibold ${
+                        isActive
+                          ? 'text-white group-hover:text-white'
+                          : theme === 'light'
+                            ? 'text-slate-700 group-hover:text-emerald-600'
+                            : 'text-[var(--foreground)] group-hover:text-emerald-400'
+                      }`}
                     >
                       Juz {j}
                     </p>
@@ -224,7 +244,13 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                       <span>{p}</span>
                     </div>
                     <p
-                      className={`font-semibold ${isActive ? 'text-teal-800' : theme === 'light' ? 'text-slate-700 group-hover:text-emerald-600' : 'text-[var(--foreground)] group-hover:text-emerald-400'}`}
+                      className={`font-semibold ${
+                        isActive
+                          ? 'text-white group-hover:text-white'
+                          : theme === 'light'
+                            ? 'text-slate-700 group-hover:text-emerald-600'
+                            : 'text-[var(--foreground)] group-hover:text-emerald-400'
+                      }`}
                     >
                       Page {p}
                     </p>
