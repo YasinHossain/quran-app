@@ -1,35 +1,32 @@
-/* Keep the original Tailwind import to avoid breaking the structure */
+/* ===== Tailwind Import (Required for Tailwind classes) ===== */
 @import 'tailwindcss';
 
 :root {
   --background: #f7f9f9;
   --foreground: #374151;
   --border-color: #e5e7eb;
-  --accent: #0d9488; /* Added accent color variable */
-  --subtle-grey: #d1d5db; /* Added subtle grey variable */
+  --accent: #0d9488;
+  --subtle-grey: #d1d5db;
 
-  /* Header specific variables for light mode */
-  --header-background: rgba(255, 255, 255, 0.8); /* White with 80% opacity */
-  --header-text-color: #1f2937; /* Dark gray */
+  /* Header variables for light mode */
+  --header-background: rgba(255, 255, 255, 0.8);
+  --header-text-color: #1f2937;
 }
 
 [data-theme='dark'] {
   --background: #1a202c;
   --foreground: #d1d5db;
   --border-color: #4b5563;
-  --accent: #0d9488; /* Added accent color variable */
-  --subtle-grey: #4b5563; /* Added subtle grey variable for dark mode */
+  --accent: #0d9488;
+  --subtle-grey: #4b5563;
 
-  /* Header specific variables for dark mode */
-  --header-background: rgba(31, 41, 55, 0.8); /* Dark gray with 80% opacity */
-  --header-text-color: #f9fafb; /* White */
+  /* Header variables for dark mode */
+  --header-background: rgba(31, 41, 55, 0.8);
+  --header-text-color: #f9fafb;
 }
 
 @layer base {
   body {
-    /* FIX: Apply a default background using Tailwind's system.
-       This will be the background for pages like the Surah page.
-       The HomePage will override this with its own gradient. */
     @apply bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200;
     font-family: Inter, sans-serif;
     margin: 0;
@@ -55,7 +52,7 @@
   }
 }
 
-/* --- Custom Range Slider Styles --- */
+/* ===== Custom Range Slider Styles ===== */
 input[type='range'] {
   -webkit-appearance: none;
   appearance: none;
@@ -80,9 +77,7 @@ input[type='range']::-webkit-slider-thumb {
   border-radius: 50%;
   cursor: pointer;
   margin-top: -5px;
-  transition:
-    background 0.3s,
-    box-shadow 0.3s;
+  transition: background 0.3s, box-shadow 0.3s;
 }
 
 input[type='range']::-webkit-slider-thumb:hover {
@@ -108,9 +103,7 @@ input[type='range']::-webkit-slider-thumb {
   border-radius: 50%;
   cursor: pointer;
   margin-top: -5px;
-  transition:
-    background 0.3s,
-    box-shadow 0.3s;
+  transition: background 0.3s, box-shadow 0.3s;
 }
 
 input[type='range']::-webkit-slider-thumb:hover {
@@ -118,65 +111,30 @@ input[type='range']::-webkit-slider-thumb:hover {
   border-color: var(--accent);
 }
 
-/* Add custom scrollbar styles */
-/* Target Webkit browsers (Chrome, Safari) */
+/* ===== Custom Scrollbar Styles ===== */
+/* Chrome, Edge, Safari */
 ::-webkit-scrollbar {
-  width: 6px; /* Width of the scrollbar - Made slimmer */
+  width: 12px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--background); /* Color of the track */
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--subtle-grey); /* Color of the scrollbar thumb */
-  border-radius: 3px; /* Round the corners of the thumb - Adjusted for slimmer size */
-  border: 1px solid var(--background); /* Add a border around the thumb - Adjusted for slimmer size */
+  background-color: #e5e7eb;  /* Light grey for default */
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+  transition: background-color 0.2s ease-in-out;
 }
 
-/* Add a hover effect to the scrollbar thumb */
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent); /* Change thumb color on hover */
+  background-color: #10b981;  /* Emerald on hover */
 }
 
-/* Remove scrollbar buttons (up and down arrows) */
-::-webkit-scrollbar-button:vertical:decrement,
-::-webkit-scrollbar-button:vertical:increment {
-  display: none;
-}
-
-/* Simple scroll stick style for homepage-scrollable-area */
-.homepage-scrollable-area::-webkit-scrollbar {
-  width: 4px; /* Made scrollbar slimmer */
-}
-
-.homepage-scrollable-area::-webkit-scrollbar-track {
-  background: var(--background); /* Color of the track */
-}
-
-.homepage-scrollable-area::-webkit-scrollbar-thumb {
-  background: var(--subtle-grey); /* subtle grey color by default */
-  border-radius: 2px; /* Made corners slightly less rounded */
-  border: 1px solid var(--background); /* Add a border around the thumb */
-}
-
-.homepage-scrollable-area::-webkit-scrollbar-thumb:hover {
-  background: var(--accent); /* accent color on hover */
-}
-
-/* Target Firefox */
-/* Note: Firefox scrollbar styling is limited */
+/* Firefox */
 * {
-  scrollbar-width: thin; /* "auto" or "thin" */
-  scrollbar-color: var(--subtle-grey) var(--background); /* thumb color track color */
-}
-
-/* Add a hover effect to the scrollbar thumb for Firefox (limited support) */
-*:hover {
-  scrollbar-color: var(--accent) var(--background); /* thumb color track color */
-}
-/* Hide horizontal scrollbar without affecting vertical scrollbars */
-*::-webkit-scrollbar:horizontal {
-  display: none; /* Hide horizontal scrollbar */
-  height: 0; /* Remove extra space */
+  scrollbar-width: thin;
+  scrollbar-color: #e5e7eb transparent;
 }
