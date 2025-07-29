@@ -1,6 +1,5 @@
-// app/components/common/SurahListSidebar.tsx
 'use client';
-import React, { useState, useMemo, useEffect, useRef } from 'react'; // Import useRef
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
@@ -24,42 +23,36 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const juzs = useMemo(() => Array.from({ length: 30 }, (_, i) => i + 1), []);
   const pages = useMemo(() => Array.from({ length: 604 }, (_, i) => i + 1), []);
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeTab, setActiveTab] = useState('Surah'); // Canonical state: 'Surah', 'Juz', 'Page'
+  const [activeTab, setActiveTab] = useState('Surah'); // 'Surah', 'Juz', 'Page'
   const { surahId, juzId, pageId } = useParams();
-  const { theme } = useTheme(); // Use the useTheme hook
+  const currentSurahId = Array.isArray(surahId) ? surahId[0] : surahId;
+  const currentJuzId = Array.isArray(juzId) ? juzId[0] : juzId;
+  const currentPageId = Array.isArray(pageId) ? pageId[0] : pageId;
+  const { theme } = useTheme();
 
-  // Ref for the sidebar container
+  const [selectedSurahId, setSelectedSurahId] = useState<string | null>(currentSurahId ?? null);
+  const [selectedJuzId, setSelectedJuzId] = useState<string | null>(currentJuzId ?? null);
+  const [selectedPageId, setSelectedPageId] = useState<string | null>(currentPageId ?? null);
+
+  useEffect(() => {
+    if (currentSurahId) setSelectedSurahId(currentSurahId);
+  }, [currentSurahId]);
+  useEffect(() => {
+    if (currentJuzId) setSelectedJuzId(currentJuzId);
+  }, [currentJuzId]);
+  useEffect(() => {
+    if (currentPageId) setSelectedPageId(currentPageId);
+  }, [currentPageId]);
+
   const sidebarRef = useRef<HTMLElement>(null);
 
-  // --- MERGED AND CORRECTED SECTION ---
   const { isSurahListOpen, setSurahListOpen } = useSidebar();
-  const activeSurahId = surahId;
-  const activeJuzId = juzId;
-  const activePageId = pageId;
 
-  // Effect to set the active tab based on the current route parameters
   useEffect(() => {
     if (juzId) setActiveTab('Juz');
     else if (pageId) setActiveTab('Page');
     else if (surahId) setActiveTab('Surah');
   }, [juzId, pageId, surahId]);
-  // --- END MERGED AND CORRECTED SECTION ---
-
-  // Effect to scroll to the active item when the active tab or item changes
-  useEffect(() => {
-    if (sidebarRef.current) {
-      // Find the active link element within the sidebar
-      const activeLink = sidebarRef.current.querySelector(`[data-active="true"]`);
-
-      if (activeLink) {
-        // Scroll the activeLink into view
-        activeLink.scrollIntoView({
-          behavior: 'smooth', // Use smooth scrolling
-          block: 'center', // Align the item to the center of the view
-        });
-      }
-    }
-  }, [activeTab, activeSurahId, activeJuzId, activePageId]); // Re-run effect when active tab or item changes
 
   const filteredChapters = useMemo(
     () =>
@@ -79,7 +72,6 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     [pages, searchTerm]
   );
 
-  // Tab configuration for consistent state management
   const TABS = [
     { key: 'Surah', label: t('surah_tab') },
     { key: 'Juz', label: t('juz_tab') },
@@ -102,7 +94,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
       />
       {/* Sidebar */}
       <aside
-        ref={sidebarRef} // Assign the ref to the aside element
+        ref={sidebarRef}
         className={`fixed md:static inset-y-0 left-0 w-[23rem] h-full overflow-y-auto overflow-x-hidden bg-[var(--background)] text-[var(--foreground)] flex flex-col flex-shrink-0 shadow-[5px_0px_15px_-5px_rgba(0,0,0,0.05)] z-50 md:z-10 transition-transform duration-300 ${isSurahListOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
       >
         <div className="p-4 border-b border-[var(--border-color)]">
@@ -136,29 +128,28 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
           </div>
         </div>
         <div className="flex-grow overflow-y-auto p-2 homepage-scrollable-area">
-          {' '}
-          {/* Added homepage-scrollable-area class */}
           {activeTab === 'Surah' && (
             <nav className="space-y-2">
               {filteredChapters.map((chapter) => {
-                const isActive = activeSurahId === String(chapter.id);
-
+                const isSelected = selectedSurahId === String(chapter.id);
                 return (
                   <MotionLink
+                    layout
                     href={`/features/surah/${chapter.id}`}
                     key={chapter.id}
-                    data-active={isActive}
+                    data-active={isSelected}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-colors duration-300 ${isActive ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
+                    onClick={() => setSelectedSurahId(String(chapter.id))}
+                    className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-[background-color,box-shadow] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
                     <div
                       className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${
-                        isActive
-                          ? 'bg-white text-emerald-600'
+                        isSelected
+                          ? 'bg-white/20 text-white'
                           : theme === 'light'
-                            ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100'
-                            : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'
+                          ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100'
+                          : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'
                       }`}
                     >
                       <span>{chapter.id}</span>
@@ -169,11 +160,11 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                           theme === 'light'
                             ? 'text-slate-700 group-hover:text-emerald-600'
                             : 'text-[var(--foreground)] group-hover:text-emerald-400'
-                        } ${isActive ? 'text-white group-hover:text-white' : ''}`}
+                        } ${isSelected ? 'text-white group-hover:text-white' : ''}`}
                       >
                         {chapter.name_simple}
                       </p>
-                      <p className={`text-xs ${isActive ? 'text-white' : 'text-gray-500'}`}>
+                      <p className={`text-xs ${isSelected ? 'text-white' : 'text-gray-500'}`}>
                         {chapter.revelation_place} • {chapter.verses_count} verses
                       </p>
                     </div>
@@ -182,7 +173,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                         theme === 'light'
                           ? 'text-gray-500 group-hover:text-emerald-600'
                           : 'text-gray-500 group-hover:text-emerald-400'
-                      } ${isActive ? 'text-white group-hover:text-white' : ''}`}
+                      } ${isSelected ? 'text-white group-hover:text-white' : ''}`}
                     >
                       {chapter.name_arabic}
                     </p>
@@ -194,28 +185,36 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
           {activeTab === 'Juz' && (
             <nav className="space-y-2">
               {filteredJuzs.map((j) => {
-                const isActive = activeJuzId === String(j);
+                const isSelected = selectedJuzId === String(j);
                 return (
                   <MotionLink
+                    layout
                     href={`/features/juz/${j}`}
                     key={j}
-                    data-active={isActive}
+                    data-active={isSelected}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-colors duration-300 ${isActive ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
+                    onClick={() => setSelectedJuzId(String(j))}
+                    className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-[background-color,box-shadow] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
                     <div
-                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${isActive ? 'bg-white text-emerald-600' : theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}`}
+                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${
+                        isSelected
+                          ? 'bg-white/20 text-white'
+                          : theme === 'light'
+                          ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100'
+                          : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'
+                      }`}
                     >
                       <span>{j}</span>
                     </div>
                     <p
                       className={`font-semibold ${
-                        isActive
+                        isSelected
                           ? 'text-white group-hover:text-white'
                           : theme === 'light'
-                            ? 'text-slate-700 group-hover:text-emerald-600'
-                            : 'text-[var(--foreground)] group-hover:text-emerald-400'
+                          ? 'text-slate-700 group-hover:text-emerald-600'
+                          : 'text-[var(--foreground)] group-hover:text-emerald-400'
                       }`}
                     >
                       Juz {j}
@@ -228,28 +227,36 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
           {activeTab === 'Page' && (
             <nav className="space-y-2">
               {filteredPages.map((p) => {
-                const isActive = activePageId === String(p);
+                const isSelected = selectedPageId === String(p);
                 return (
                   <MotionLink
+                    layout
                     href={`/features/page/${p}`}
                     key={p}
-                    data-active={isActive}
+                    data-active={isSelected}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-colors duration-300 ${isActive ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
+                    onClick={() => setSelectedPageId(String(p))}
+                    className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-[background-color,box-shadow] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
                     <div
-                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${isActive ? 'bg-white text-emerald-600' : theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}`}
+                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${
+                        isSelected
+                          ? 'bg-white/20 text-white'
+                          : theme === 'light'
+                          ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100'
+                          : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'
+                      }`}
                     >
                       <span>{p}</span>
                     </div>
                     <p
                       className={`font-semibold ${
-                        isActive
+                        isSelected
                           ? 'text-white group-hover:text-white'
                           : theme === 'light'
-                            ? 'text-slate-700 group-hover:text-emerald-600'
-                            : 'text-[var(--foreground)] group-hover:text-emerald-400'
+                          ? 'text-slate-700 group-hover:text-emerald-600'
+                          : 'text-[var(--foreground)] group-hover:text-emerald-400'
                       }`}
                     >
                       Page {p}
