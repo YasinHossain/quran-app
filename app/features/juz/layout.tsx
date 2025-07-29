@@ -1,10 +1,10 @@
-// app/features/page/[pageId]/layout.tsx
+// app/features/juz/layout.tsx
 import Header from '@/app/components/common/Header';
 import IconSidebar from '@/app/components/common/IconSidebar';
 import SurahListSidebar from '@/app/components/common/SurahListSidebar';
 import { AudioProvider } from '@/app/context/AudioContext';
 
-export default function PageLayout({ children }: { children: React.ReactNode }) {
+export default function JuzLayout({ children }: { children: React.ReactNode }) {
   return (
     <AudioProvider>
       <Header />
