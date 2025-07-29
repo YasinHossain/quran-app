@@ -46,7 +46,14 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
 
   const sidebarRef = useRef<HTMLElement>(null);
 
-  const { isSurahListOpen, setSurahListOpen } = useSidebar();
+  const { isSurahListOpen, setSurahListOpen, surahListScrollTop, setSurahListScrollTop } =
+    useSidebar();
+
+  useEffect(() => {
+    if (sidebarRef.current) {
+      sidebarRef.current.scrollTop = surahListScrollTop;
+    }
+  }, [surahListScrollTop]);
 
   useEffect(() => {
     if (juzId) setActiveTab('Juz');
@@ -95,6 +102,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
       {/* Sidebar */}
       <aside
         ref={sidebarRef}
+        onScroll={() => setSurahListScrollTop(sidebarRef.current?.scrollTop ?? 0)}
         className={`fixed md:static inset-y-0 left-0 w-[23rem] h-full overflow-y-auto overflow-x-hidden bg-[var(--background)] text-[var(--foreground)] flex flex-col flex-shrink-0 shadow-[5px_0px_15px_-5px_rgba(0,0,0,0.05)] z-50 md:z-10 transition-transform duration-300 ${isSurahListOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
       >
         <div className="p-4 border-b border-[var(--border-color)]">
@@ -140,7 +148,10 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     data-active={isSelected}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => setSelectedSurahId(String(chapter.id))}
+                    onClick={() => {
+                      setSelectedSurahId(String(chapter.id));
+                      setSurahListScrollTop(sidebarRef.current?.scrollTop ?? 0);
+                    }}
                     className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-[background-color,box-shadow] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
                     <div
@@ -148,8 +159,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                         isSelected
                           ? 'bg-white/20 text-white'
                           : theme === 'light'
-                          ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100'
-                          : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'
+                            ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100'
+                            : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'
                       }`}
                     >
                       <span>{chapter.id}</span>
@@ -194,7 +205,10 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     data-active={isSelected}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => setSelectedJuzId(String(j))}
+                    onClick={() => {
+                      setSelectedJuzId(String(j));
+                      setSurahListScrollTop(sidebarRef.current?.scrollTop ?? 0);
+                    }}
                     className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-[background-color,box-shadow] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
                     <div
@@ -202,8 +216,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                         isSelected
                           ? 'bg-white/20 text-white'
                           : theme === 'light'
-                          ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100'
-                          : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'
+                            ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100'
+                            : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'
                       }`}
                     >
                       <span>{j}</span>
@@ -213,8 +227,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                         isSelected
                           ? 'text-white group-hover:text-white'
                           : theme === 'light'
-                          ? 'text-slate-700 group-hover:text-emerald-600'
-                          : 'text-[var(--foreground)] group-hover:text-emerald-400'
+                            ? 'text-slate-700 group-hover:text-emerald-600'
+                            : 'text-[var(--foreground)] group-hover:text-emerald-400'
                       }`}
                     >
                       Juz {j}
@@ -236,7 +250,10 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     data-active={isSelected}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => setSelectedPageId(String(p))}
+                    onClick={() => {
+                      setSelectedPageId(String(p));
+                      setSurahListScrollTop(sidebarRef.current?.scrollTop ?? 0);
+                    }}
                     className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-[background-color,box-shadow] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
                     <div
@@ -244,8 +261,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                         isSelected
                           ? 'bg-white/20 text-white'
                           : theme === 'light'
-                          ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100'
-                          : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'
+                            ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100'
+                            : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'
                       }`}
                     >
                       <span>{p}</span>
@@ -255,8 +272,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                         isSelected
                           ? 'text-white group-hover:text-white'
                           : theme === 'light'
-                          ? 'text-slate-700 group-hover:text-emerald-600'
-                          : 'text-[var(--foreground)] group-hover:text-emerald-400'
+                            ? 'text-slate-700 group-hover:text-emerald-600'
+                            : 'text-[var(--foreground)] group-hover:text-emerald-400'
                       }`}
                     >
                       Page {p}
