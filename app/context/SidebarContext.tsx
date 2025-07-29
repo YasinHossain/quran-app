@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 interface SidebarContextType {
   isSurahListOpen: boolean;
@@ -15,7 +15,14 @@ const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 export const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
   const [isSurahListOpen, setSurahListOpen] = useState(false);
   const [isSettingsOpen, setSettingsOpen] = useState(false);
-  const [surahListScrollTop, setSurahListScrollTop] = useState(0);
+  const [surahListScrollTop, setSurahListScrollTop] = useState(() => {
+    const stored = sessionStorage.getItem('surahListScrollTop');
+    return stored ? Number(stored) : 0;
+  });
+
+  useEffect(() => {
+    sessionStorage.setItem('surahListScrollTop', surahListScrollTop.toString());
+  }, [surahListScrollTop]);
 
   return (
     <SidebarContext.Provider
