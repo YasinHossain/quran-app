@@ -103,7 +103,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
       {/* Sidebar */}
       <aside
         ref={sidebarRef} // Assign the ref to the aside element
-        className={`fixed md:static inset-y-0 left-0 w-80 h-full overflow-y-auto overflow-x-hidden bg-[var(--background)] text-[var(--foreground)] flex flex-col flex-shrink-0 shadow-[5px_0px_15px_-5px_rgba(0,0,0,0.05)] z-50 md:z-10 transition-transform duration-300 ${isSurahListOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
+        className={`fixed md:static inset-y-0 left-0 w-[23rem] h-full overflow-y-auto overflow-x-hidden bg-[var(--background)] text-[var(--foreground)] flex flex-col flex-shrink-0 shadow-[5px_0px_15px_-5px_rgba(0,0,0,0.05)] z-50 md:z-10 transition-transform duration-300 ${isSurahListOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
       >
         <div className="p-4 border-b border-[var(--border-color)]">
           <div
@@ -153,20 +153,22 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-colors duration-300 ${isActive ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
                     <div
-                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${isActive ? 'bg-white/20 text-white' : theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}`}
+                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}`}
                     >
                       <span>{chapter.id}</span>
                     </div>
                     <div className="flex-grow">
                       <p
-                        className={`font-semibold ${isActive ? 'text-teal-800' : theme === 'light' ? 'text-slate-700 group-hover:text-emerald-600' : 'text-[var(--foreground)] group-hover:text-emerald-400'}`}
+                        className={`font-bold ${theme === 'light' ? 'text-slate-700 group-hover:text-emerald-600' : 'text-[var(--foreground)] group-hover:text-emerald-400'} ${isActive ? 'text-white' : ''}`}
                       >
                         {chapter.name_simple}
                       </p>
-                      <p className="text-xs text-gray-500">{chapter.revelation_place}</p>
+                      <p className="text-xs text-gray-500">
+                        {chapter.revelation_place} • {chapter.verses_count} verses
+                      </p>
                     </div>
                     <p
-                      className={`font-amiri text-xl ${isActive ? 'text-teal-800' : theme === 'light' ? 'text-gray-500 group-hover:text-emerald-600' : 'text-gray-500 group-hover:text-emerald-400'}`}
+                      className={`font-amiri text-xl font-bold ${theme === 'light' ? 'text-gray-500 group-hover:text-emerald-600' : 'text-gray-500 group-hover:text-emerald-400'} ${isActive ? 'text-white' : ''}`}
                     >
                       {chapter.name_arabic}
                     </p>
