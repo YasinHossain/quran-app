@@ -2,9 +2,7 @@
 import './globals.css';
 import './fonts.css';
 import TranslationProvider from './providers/TranslationProvider';
-import { ThemeProvider } from './context/ThemeContext';
-import { SettingsProvider } from './context/SettingsContext'; // Import SettingsProvider
-import { SidebarProvider } from './context/SidebarContext'; // Import SidebarProvider
+import ClientProviders from './providers/ClientProviders';
 import localFont from 'next/font/local';
 import { Inter, Noto_Sans_Arabic, Noto_Sans_Bengali } from 'next/font/google';
 import { cookies } from 'next/headers';
@@ -66,17 +64,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         className={`font-sans ${kfgqpc.variable} ${nastaliq.variable} ${amiri.variable} ${arabic.variable} ${bengali.variable} ${inter.className}`}
       >
         <TranslationProvider>
-          <ThemeProvider>
-            <SettingsProvider>
-              {' '}
-              {/* Wrap with SettingsProvider */}
-              <SidebarProvider>
-                {' '}
-                {/* Wrap with SidebarProvider */}
-                {children}
-              </SidebarProvider>
-            </SettingsProvider>
-          </ThemeProvider>
+          <ClientProviders initialTheme={theme}>{children}</ClientProviders>
         </TranslationProvider>
       </body>
     </html>
