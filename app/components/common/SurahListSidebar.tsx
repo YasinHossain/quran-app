@@ -155,7 +155,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     <div
                       className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${
                         isActive
-                          ? 'bg-white/20 text-white'
+                          ? 'bg-white text-emerald-600'
                           : theme === 'light'
                             ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100'
                             : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'
@@ -205,7 +205,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-colors duration-300 ${isActive ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
                     <div
-                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${isActive ? 'bg-white/20 text-white' : theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}`}
+                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${isActive ? 'bg-white text-emerald-600' : theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}`}
                     >
                       <span>{j}</span>
                     </div>
@@ -239,7 +239,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-colors duration-300 ${isActive ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
                     <div
-                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${isActive ? 'bg-white/20 text-white' : theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}`}
+                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${isActive ? 'bg-white text-emerald-600' : theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}`}
                     >
                       <span>{p}</span>
                     </div>
