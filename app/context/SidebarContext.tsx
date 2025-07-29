@@ -6,6 +6,8 @@ interface SidebarContextType {
   setSurahListOpen: (open: boolean) => void;
   isSettingsOpen: boolean;
   setSettingsOpen: (open: boolean) => void;
+  surahListScrollTop: number;
+  setSurahListScrollTop: (top: number) => void;
 }
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
@@ -13,10 +15,18 @@ const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 export const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
   const [isSurahListOpen, setSurahListOpen] = useState(false);
   const [isSettingsOpen, setSettingsOpen] = useState(false);
+  const [surahListScrollTop, setSurahListScrollTop] = useState(0);
 
   return (
     <SidebarContext.Provider
-      value={{ isSurahListOpen, setSurahListOpen, isSettingsOpen, setSettingsOpen }}
+      value={{
+        isSurahListOpen,
+        setSurahListOpen,
+        isSettingsOpen,
+        setSettingsOpen,
+        surahListScrollTop,
+        setSurahListScrollTop,
+      }}
     >
       {children}
     </SidebarContext.Provider>
