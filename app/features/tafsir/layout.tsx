@@ -1,4 +1,5 @@
 'use client';
+// app/features/tafsir/layout.tsx
 import Header from '@/app/components/common/Header';
 import IconSidebar from '@/app/components/common/IconSidebar';
 import SurahListSidebar from '@/app/components/common/SurahListSidebar';
