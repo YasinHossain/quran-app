@@ -6,7 +6,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { SettingsProvider } from './context/SettingsContext'; // Import SettingsProvider
 import { SidebarProvider } from './context/SidebarContext'; // Import SidebarProvider
 import localFont from 'next/font/local';
-import { Inter } from 'next/font/google';
+import { Inter, Noto_Sans_Arabic, Noto_Sans_Bengali } from 'next/font/google';
 import { cookies } from 'next/headers';
 
 const kfgqpc = localFont({
@@ -33,6 +33,20 @@ const inter = Inter({
   display: 'swap',
 });
 
+const arabic = Noto_Sans_Arabic({
+  subsets: ['arabic'],
+  weight: ['400', '700'],
+  variable: '--font-noto-sans-arabic',
+  display: 'swap',
+});
+
+const bengali = Noto_Sans_Bengali({
+  subsets: ['bengali'],
+  weight: ['400', '700'],
+  variable: '--font-noto-sans-bengali',
+  display: 'swap',
+});
+
 export const metadata = {
   title: 'Quran Mazid',
   description: 'Read, Study, and Learn The Holy Quran',
@@ -49,7 +63,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" data-theme={theme} className={theme === 'dark' ? 'dark' : undefined}>
       <body
-        className={`font-sans ${kfgqpc.variable} ${nastaliq.variable} ${amiri.variable} ${inter.className}`}
+        className={`font-sans ${kfgqpc.variable} ${nastaliq.variable} ${amiri.variable} ${arabic.variable} ${bengali.variable} ${inter.className}`}
       >
         <TranslationProvider>
           <ThemeProvider>
