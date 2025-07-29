@@ -1,6 +1,7 @@
 // app/components/common/SurahListSidebar.tsx
 'use client';
 import React, { useState, useMemo, useEffect, useRef } from 'react'; // Import useRef
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
@@ -17,6 +18,7 @@ interface Props {
 
 const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const { t } = useTranslation();
+  const MotionLink = motion(Link);
   const { data } = useSWR('chapters', getChapters, { fallbackData: initialChapters });
   const chapters = useMemo(() => data || [], [data]);
   const juzs = useMemo(() => Array.from({ length: 30 }, (_, i) => i + 1), []);
@@ -137,20 +139,21 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
           {' '}
           {/* Added homepage-scrollable-area class */}
           {activeTab === 'Surah' && (
-            <nav className="space-y-1">
+            <nav className="space-y-2">
               {filteredChapters.map((chapter) => {
                 const isActive = activeSurahId === String(chapter.id);
 
                 return (
-                  <Link
+                  <MotionLink
                     href={`/features/surah/${chapter.id}`}
                     key={chapter.id}
-                    data-active={isActive} // Add data-active attribute
-                    className={`group flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors ${isActive && 'bg-teal-50'}`}
+                    data-active={isActive}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-colors duration-300 ${isActive ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
                     <div
-                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${isActive ? 'bg-emerald-600 text-white' : theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}
-                      }`}
+                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${isActive ? 'bg-white/20 text-white' : theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}`}
                     >
                       <span>{chapter.id}</span>
                     </div>
@@ -167,25 +170,26 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     >
                       {chapter.name_arabic}
                     </p>
-                  </Link>
+                  </MotionLink>
                 );
               })}
             </nav>
           )}
           {activeTab === 'Juz' && (
-            <nav className="space-y-1">
+            <nav className="space-y-2">
               {filteredJuzs.map((j) => {
                 const isActive = activeJuzId === String(j);
                 return (
-                  <Link
+                  <MotionLink
                     href={`/features/juz/${j}`}
                     key={j}
-                    data-active={isActive} // Add data-active attribute
-                    className={`group flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors ${isActive && 'bg-teal-50'}`}
+                    data-active={isActive}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-colors duration-300 ${isActive ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
                     <div
-                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${isActive ? 'bg-emerald-600 text-white' : theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}
-                      }`}
+                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${isActive ? 'bg-white/20 text-white' : theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}`}
                     >
                       <span>{j}</span>
                     </div>
@@ -194,25 +198,26 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     >
                       Juz {j}
                     </p>
-                  </Link>
+                  </MotionLink>
                 );
               })}
             </nav>
           )}
           {activeTab === 'Page' && (
-            <nav className="space-y-1">
+            <nav className="space-y-2">
               {filteredPages.map((p) => {
                 const isActive = activePageId === String(p);
                 return (
-                  <Link
+                  <MotionLink
                     href={`/features/page/${p}`}
                     key={p}
-                    data-active={isActive} // Add data-active attribute
-                    className={`group flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors ${isActive && 'bg-teal-50'}`}
+                    data-active={isActive}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-colors duration-300 ${isActive ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
                     <div
-                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${isActive ? 'bg-emerald-600 text-white' : theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}
-                      }`}
+                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${isActive ? 'bg-white/20 text-white' : theme === 'light' ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100' : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'}`}
                     >
                       <span>{p}</span>
                     </div>
@@ -221,7 +226,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     >
                       Page {p}
                     </p>
-                  </Link>
+                  </MotionLink>
                 );
               })}
             </nav>
