@@ -10,9 +10,15 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  // Initialize theme with a default value
-  const [theme, setTheme] = useState<Theme>('light');
+export const ThemeProvider = ({
+  children,
+  initialTheme = 'light',
+}: {
+  children: React.ReactNode;
+  initialTheme?: Theme;
+}) => {
+  // Initialize theme with a default value or provided value
+  const [theme, setTheme] = useState<Theme>(initialTheme);
 
   // Effect to load theme from localStorage on the client side after initial render
   useEffect(() => {
