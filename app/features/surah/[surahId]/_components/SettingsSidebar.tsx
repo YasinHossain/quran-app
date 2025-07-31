@@ -74,8 +74,7 @@ export const SettingsSidebar = ({
         }}
       />
       <aside
-        className={`fixed lg:static inset-y-0 right-0 bg-[var(--background)] text-[var(--foreground)] flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-transform duration-300 z-50 lg:z-auto ${isSettingsOpen ? 'translate-x-0' : 'translate-x-full'} lg:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} lg:flex`}
-        style={{ width: 'var(--settings-sidebar-width)' }}
+        className={`fixed lg:static inset-y-0 right-0 w-80 bg-[var(--background)] text-[var(--foreground)] flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-transform duration-300 z-50 lg:z-auto ${isSettingsOpen ? 'translate-x-0' : 'translate-x-full'} lg:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} lg:flex`}
       >
         <header className="flex items-center justify-between p-4 border-b border-[var(--border-color)]">
           <button
