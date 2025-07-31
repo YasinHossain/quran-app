@@ -85,6 +85,27 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     pageScrollTop,
     setPageScrollTop,
   } = useSidebar();
+  const shouldCenterRef = useRef<Record<'Surah' | 'Juz' | 'Page', boolean>>({
+    Surah: true,
+    Juz: true,
+    Page: true,
+  });
+
+  useEffect(() => {
+    shouldCenterRef.current[activeTab] = true;
+  }, [activeTab]);
+
+  useEffect(() => {
+    if (activeTab !== 'Surah') shouldCenterRef.current.Surah = true;
+  }, [selectedSurahId, activeTab]);
+
+  useEffect(() => {
+    if (activeTab !== 'Juz') shouldCenterRef.current.Juz = true;
+  }, [selectedJuzId, activeTab]);
+
+  useEffect(() => {
+    if (activeTab !== 'Page') shouldCenterRef.current.Page = true;
+  }, [selectedPageId, activeTab]);
 
   useLayoutEffect(() => {
     if (!sidebarRef.current) return;
@@ -102,10 +123,11 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
       const sidebarRect = sidebar.getBoundingClientRect();
       const activeRect = activeEl.getBoundingClientRect();
       const isOutside = activeRect.top < sidebarRect.top || activeRect.bottom > sidebarRect.bottom;
-      if (top === 0 || isOutside) {
+      if (shouldCenterRef.current[activeTab] && (top === 0 || isOutside)) {
         activeEl.scrollIntoView({ block: 'center' });
       }
     }
+    shouldCenterRef.current[activeTab] = false;
   }, [
     activeTab,
     surahScrollTop,
