@@ -40,7 +40,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const currentSurahId = Array.isArray(surahId) ? surahId[0] : surahId;
   const currentJuzId = Array.isArray(juzId) ? juzId[0] : juzId;
   const currentPageId = Array.isArray(pageId) ? pageId[0] : pageId;
-  const [activeTab, setActiveTab] = useState(() => {
+  const [activeTab, setActiveTab] = useState<'Surah' | 'Juz' | 'Page'>(() => {
     if (currentJuzId) return 'Juz';
     if (currentPageId) return 'Page';
     return 'Surah';
@@ -85,13 +85,76 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     pageScrollTop,
     setPageScrollTop,
   } = useSidebar();
+  const shouldCenterRef = useRef<Record<'Surah' | 'Juz' | 'Page', boolean>>({
+    Surah: true,
+    Juz: true,
+    Page: true,
+  });
+
+  useLayoutEffect(() => {
+    const surah = sessionStorage.getItem('skipCenterSurah') === '1';
+    const juz = sessionStorage.getItem('skipCenterJuz') === '1';
+    const page = sessionStorage.getItem('skipCenterPage') === '1';
+    if (surah) {
+      shouldCenterRef.current.Surah = false;
+      sessionStorage.removeItem('skipCenterSurah');
+    }
+    if (juz) {
+      shouldCenterRef.current.Juz = false;
+      sessionStorage.removeItem('skipCenterJuz');
+    }
+    if (page) {
+      shouldCenterRef.current.Page = false;
+      sessionStorage.removeItem('skipCenterPage');
+    }
+  }, []);
+
+  useEffect(() => {
+    shouldCenterRef.current[activeTab] = true;
+  }, [activeTab]);
+
+  useEffect(() => {
+    if (activeTab !== 'Surah') shouldCenterRef.current.Surah = true;
+  }, [selectedSurahId, activeTab]);
+
+  useEffect(() => {
+    if (activeTab !== 'Juz') shouldCenterRef.current.Juz = true;
+  }, [selectedJuzId, activeTab]);
+
+  useEffect(() => {
+    if (activeTab !== 'Page') shouldCenterRef.current.Page = true;
+  }, [selectedPageId, activeTab]);
 
   useLayoutEffect(() => {
     if (!sidebarRef.current) return;
-    if (activeTab === 'Surah') sidebarRef.current.scrollTop = surahScrollTop;
-    else if (activeTab === 'Juz') sidebarRef.current.scrollTop = juzScrollTop;
-    else if (activeTab === 'Page') sidebarRef.current.scrollTop = pageScrollTop;
-  }, [activeTab, surahScrollTop, juzScrollTop, pageScrollTop]);
+    const sidebar = sidebarRef.current;
+
+    let top = 0;
+    if (activeTab === 'Surah') top = surahScrollTop;
+    else if (activeTab === 'Juz') top = juzScrollTop;
+    else if (activeTab === 'Page') top = pageScrollTop;
+
+    sidebar.scrollTop = top;
+
+    const activeEl = sidebar.querySelector<HTMLElement>('[data-active="true"]');
+    if (activeEl) {
+      const sidebarRect = sidebar.getBoundingClientRect();
+      const activeRect = activeEl.getBoundingClientRect();
+      const isOutside = activeRect.top < sidebarRect.top || activeRect.bottom > sidebarRect.bottom;
+      if (shouldCenterRef.current[activeTab] && (top === 0 || isOutside)) {
+        activeEl.scrollIntoView({ block: 'center' });
+      }
+    }
+    shouldCenterRef.current[activeTab] = false;
+  }, [
+    activeTab,
+    surahScrollTop,
+    juzScrollTop,
+    pageScrollTop,
+    selectedSurahId,
+    selectedJuzId,
+    selectedPageId,
+  ]);
 
   const filteredChapters = useMemo(
     () =>
@@ -111,7 +174,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     [pages, searchTerm]
   );
 
-  const TABS = [
+  const TABS: { key: 'Surah' | 'Juz' | 'Page'; label: string }[] = [
     { key: 'Surah', label: t('surah_tab') },
     { key: 'Juz', label: t('juz_tab') },
     { key: 'Page', label: t('page_tab') },
@@ -195,6 +258,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                       setSelectedPageId(String(page));
                       setSelectedJuzId(String(getJuzByPage(page)));
                       setSurahScrollTop(sidebarRef.current?.scrollTop ?? 0);
+                      shouldCenterRef.current.Surah = false;
+                      sessionStorage.setItem('skipCenterSurah', '1');
                     }}
                     className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transform hover:scale-[1.02] transition-[background-color,box-shadow,transform] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
@@ -254,6 +319,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                       const chapter = getSurahByPage(page, chapters);
                       if (chapter) setSelectedSurahId(String(chapter.id));
                       setJuzScrollTop(sidebarRef.current?.scrollTop ?? 0);
+                      shouldCenterRef.current.Juz = false;
+                      sessionStorage.setItem('skipCenterJuz', '1');
                     }}
                     className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transform hover:scale-[1.02] transition-[background-color,box-shadow,transform] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
@@ -300,6 +367,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                       const chapter = getSurahByPage(p, chapters);
                       if (chapter) setSelectedSurahId(String(chapter.id));
                       setPageScrollTop(sidebarRef.current?.scrollTop ?? 0);
+                      shouldCenterRef.current.Page = false;
+                      sessionStorage.setItem('skipCenterPage', '1');
                     }}
                     className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transform hover:scale-[1.02] transition-[background-color,box-shadow,transform] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
