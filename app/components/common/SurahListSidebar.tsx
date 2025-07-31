@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useLayoutEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
@@ -86,7 +86,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     setPageScrollTop,
   } = useSidebar();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!sidebarRef.current) return;
     if (activeTab === 'Surah') sidebarRef.current.scrollTop = surahScrollTop;
     else if (activeTab === 'Juz') sidebarRef.current.scrollTop = juzScrollTop;
