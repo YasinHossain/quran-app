@@ -142,7 +142,6 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                 const isSelected = selectedSurahId === String(chapter.id);
                 return (
                   <MotionLink
-                    layout
                     href={`/features/surah/${chapter.id}`}
                     key={chapter.id}
                     data-active={isSelected}
@@ -198,7 +197,6 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                 const isSelected = selectedJuzId === String(j);
                 return (
                   <MotionLink
-                    layout
                     href={`/features/juz/${j}`}
                     key={j}
                     data-active={isSelected}
@@ -242,7 +240,6 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                 const isSelected = selectedPageId === String(p);
                 return (
                   <MotionLink
-                    layout
                     href={`/features/page/${p}`}
                     key={p}
                     data-active={isSelected}
