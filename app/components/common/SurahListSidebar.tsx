@@ -91,6 +91,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     Page: true,
   });
 
+  // ----- SESSION STORAGE SKIP-CENTER LOGIC -----
   useLayoutEffect(() => {
     const surah = sessionStorage.getItem('skipCenterSurah') === '1';
     const juz = sessionStorage.getItem('skipCenterJuz') === '1';
@@ -108,6 +109,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
       sessionStorage.removeItem('skipCenterPage');
     }
   }, []);
+  // ---------------------------------------------
 
   useEffect(() => {
     shouldCenterRef.current[activeTab] = true;
