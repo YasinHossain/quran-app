@@ -10,6 +10,21 @@ import useSWR from 'swr';
 import { useSidebar } from '@/app/context/SidebarContext';
 import { useTheme } from '@/app/context/ThemeContext';
 
+const JUZ_START_PAGES = [
+  1, 22, 42, 62, 82, 102, 121, 142, 162, 182, 201, 222, 242, 262, 282, 302, 322, 342, 362, 382, 402,
+  422, 442, 462, 482, 502, 522, 542, 562, 582,
+];
+
+const getJuzByPage = (page: number) => {
+  for (let i = JUZ_START_PAGES.length - 1; i >= 0; i--) {
+    if (page >= JUZ_START_PAGES[i]) return i + 1;
+  }
+  return 1;
+};
+
+const getSurahByPage = (page: number, chapters: Chapter[]) =>
+  chapters.find((c) => c.pages && page >= c.pages[0] && page <= c.pages[1]);
+
 interface Props {
   initialChapters?: Chapter[];
 }
@@ -21,11 +36,15 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const juzs = useMemo(() => Array.from({ length: 30 }, (_, i) => i + 1), []);
   const pages = useMemo(() => Array.from({ length: 604 }, (_, i) => i + 1), []);
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeTab, setActiveTab] = useState('Surah'); // 'Surah', 'Juz', 'Page'
   const { surahId, juzId, pageId } = useParams();
   const currentSurahId = Array.isArray(surahId) ? surahId[0] : surahId;
   const currentJuzId = Array.isArray(juzId) ? juzId[0] : juzId;
   const currentPageId = Array.isArray(pageId) ? pageId[0] : pageId;
+  const [activeTab, setActiveTab] = useState(() => {
+    if (currentJuzId) return 'Juz';
+    if (currentPageId) return 'Page';
+    return 'Surah';
+  });
   const { theme } = useTheme();
 
   const [selectedSurahId, setSelectedSurahId] = useState<string | null>(currentSurahId ?? null);
@@ -33,14 +52,26 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const [selectedPageId, setSelectedPageId] = useState<string | null>(currentPageId ?? null);
 
   useEffect(() => {
-    if (currentSurahId) setSelectedSurahId(currentSurahId);
-  }, [currentSurahId]);
-  useEffect(() => {
-    if (currentJuzId) setSelectedJuzId(currentJuzId);
-  }, [currentJuzId]);
-  useEffect(() => {
-    if (currentPageId) setSelectedPageId(currentPageId);
-  }, [currentPageId]);
+    if (currentSurahId) {
+      setSelectedSurahId(currentSurahId);
+      const chapter = chapters.find((c) => c.id === Number(currentSurahId));
+      const page = chapter?.pages?.[0] ?? 1;
+      setSelectedPageId(String(page));
+      setSelectedJuzId(String(getJuzByPage(page)));
+    } else if (currentJuzId) {
+      setSelectedJuzId(currentJuzId);
+      const page = JUZ_START_PAGES[Number(currentJuzId) - 1];
+      setSelectedPageId(String(page));
+      const chapter = getSurahByPage(page, chapters);
+      if (chapter) setSelectedSurahId(String(chapter.id));
+    } else if (currentPageId) {
+      setSelectedPageId(currentPageId);
+      const page = Number(currentPageId);
+      setSelectedJuzId(String(getJuzByPage(page)));
+      const chapter = getSurahByPage(page, chapters);
+      if (chapter) setSelectedSurahId(String(chapter.id));
+    }
+  }, [currentSurahId, currentJuzId, currentPageId, chapters]);
 
   const sidebarRef = useRef<HTMLElement>(null);
 
@@ -61,12 +92,6 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     else if (activeTab === 'Juz') sidebarRef.current.scrollTop = juzScrollTop;
     else if (activeTab === 'Page') sidebarRef.current.scrollTop = pageScrollTop;
   }, [activeTab, surahScrollTop, juzScrollTop, pageScrollTop]);
-
-  useEffect(() => {
-    if (juzId) setActiveTab('Juz');
-    else if (pageId) setActiveTab('Page');
-    else if (surahId) setActiveTab('Surah');
-  }, [juzId, pageId, surahId]);
 
   const filteredChapters = useMemo(
     () =>
@@ -165,7 +190,10 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     key={chapter.id}
                     data-active={isSelected}
                     onClick={() => {
+                      const page = chapter.pages?.[0] ?? 1;
                       setSelectedSurahId(String(chapter.id));
+                      setSelectedPageId(String(page));
+                      setSelectedJuzId(String(getJuzByPage(page)));
                       setSurahScrollTop(sidebarRef.current?.scrollTop ?? 0);
                     }}
                     className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transform hover:scale-[1.02] transition-[background-color,box-shadow,transform] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
@@ -221,6 +249,10 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     data-active={isSelected}
                     onClick={() => {
                       setSelectedJuzId(String(j));
+                      const page = JUZ_START_PAGES[j - 1];
+                      setSelectedPageId(String(page));
+                      const chapter = getSurahByPage(page, chapters);
+                      if (chapter) setSelectedSurahId(String(chapter.id));
                       setJuzScrollTop(sidebarRef.current?.scrollTop ?? 0);
                     }}
                     className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transform hover:scale-[1.02] transition-[background-color,box-shadow,transform] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
@@ -264,6 +296,9 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     data-active={isSelected}
                     onClick={() => {
                       setSelectedPageId(String(p));
+                      setSelectedJuzId(String(getJuzByPage(p)));
+                      const chapter = getSurahByPage(p, chapters);
+                      if (chapter) setSelectedSurahId(String(chapter.id));
                       setPageScrollTop(sidebarRef.current?.scrollTop ?? 0);
                     }}
                     className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transform hover:scale-[1.02] transition-[background-color,box-shadow,transform] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
