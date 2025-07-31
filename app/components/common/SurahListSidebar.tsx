@@ -40,7 +40,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const currentSurahId = Array.isArray(surahId) ? surahId[0] : surahId;
   const currentJuzId = Array.isArray(juzId) ? juzId[0] : juzId;
   const currentPageId = Array.isArray(pageId) ? pageId[0] : pageId;
-  const [activeTab, setActiveTab] = useState(() => {
+  const [activeTab, setActiveTab] = useState<'Surah' | 'Juz' | 'Page'>(() => {
     if (currentJuzId) return 'Juz';
     if (currentPageId) return 'Page';
     return 'Surah';
@@ -90,6 +90,26 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     Juz: true,
     Page: true,
   });
+
+  // ----- SESSION STORAGE SKIP-CENTER LOGIC -----
+  useLayoutEffect(() => {
+    const surah = sessionStorage.getItem('skipCenterSurah') === '1';
+    const juz = sessionStorage.getItem('skipCenterJuz') === '1';
+    const page = sessionStorage.getItem('skipCenterPage') === '1';
+    if (surah) {
+      shouldCenterRef.current.Surah = false;
+      sessionStorage.removeItem('skipCenterSurah');
+    }
+    if (juz) {
+      shouldCenterRef.current.Juz = false;
+      sessionStorage.removeItem('skipCenterJuz');
+    }
+    if (page) {
+      shouldCenterRef.current.Page = false;
+      sessionStorage.removeItem('skipCenterPage');
+    }
+  }, []);
+  // ---------------------------------------------
 
   useEffect(() => {
     shouldCenterRef.current[activeTab] = true;
@@ -156,7 +176,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     [pages, searchTerm]
   );
 
-  const TABS = [
+  const TABS: { key: 'Surah' | 'Juz' | 'Page'; label: string }[] = [
     { key: 'Surah', label: t('surah_tab') },
     { key: 'Juz', label: t('juz_tab') },
     { key: 'Page', label: t('page_tab') },
@@ -240,6 +260,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                       setSelectedPageId(String(page));
                       setSelectedJuzId(String(getJuzByPage(page)));
                       setSurahScrollTop(sidebarRef.current?.scrollTop ?? 0);
+                      shouldCenterRef.current.Surah = false;
+                      sessionStorage.setItem('skipCenterSurah', '1');
                     }}
                     className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transform hover:scale-[1.02] transition-[background-color,box-shadow,transform] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
@@ -299,6 +321,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                       const chapter = getSurahByPage(page, chapters);
                       if (chapter) setSelectedSurahId(String(chapter.id));
                       setJuzScrollTop(sidebarRef.current?.scrollTop ?? 0);
+                      shouldCenterRef.current.Juz = false;
+                      sessionStorage.setItem('skipCenterJuz', '1');
                     }}
                     className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transform hover:scale-[1.02] transition-[background-color,box-shadow,transform] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
@@ -345,6 +369,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                       const chapter = getSurahByPage(p, chapters);
                       if (chapter) setSelectedSurahId(String(chapter.id));
                       setPageScrollTop(sidebarRef.current?.scrollTop ?? 0);
+                      shouldCenterRef.current.Page = false;
+                      sessionStorage.setItem('skipCenterPage', '1');
                     }}
                     className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transform hover:scale-[1.02] transition-[background-color,box-shadow,transform] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
