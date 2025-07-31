@@ -147,7 +147,6 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     key={chapter.id}
                     data-active={isSelected}
                     whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
                     onClick={() => {
                       setSelectedSurahId(String(chapter.id));
                       setSurahListScrollTop(sidebarRef.current?.scrollTop ?? 0);
@@ -204,7 +203,6 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     key={j}
                     data-active={isSelected}
                     whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
                     onClick={() => {
                       setSelectedJuzId(String(j));
                       setSurahListScrollTop(sidebarRef.current?.scrollTop ?? 0);
@@ -249,7 +247,6 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     key={p}
                     data-active={isSelected}
                     whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
                     onClick={() => {
                       setSelectedPageId(String(p));
                       setSurahListScrollTop(sidebarRef.current?.scrollTop ?? 0);
