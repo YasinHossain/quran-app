@@ -6,8 +6,12 @@ interface SidebarContextType {
   setSurahListOpen: (open: boolean) => void;
   isSettingsOpen: boolean;
   setSettingsOpen: (open: boolean) => void;
-  surahListScrollTop: number;
-  setSurahListScrollTop: (top: number) => void;
+  surahScrollTop: number;
+  setSurahScrollTop: (top: number) => void;
+  juzScrollTop: number;
+  setJuzScrollTop: (top: number) => void;
+  pageScrollTop: number;
+  setPageScrollTop: (top: number) => void;
 }
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
@@ -15,14 +19,28 @@ const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 export const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
   const [isSurahListOpen, setSurahListOpen] = useState(false);
   const [isSettingsOpen, setSettingsOpen] = useState(false);
-  const [surahListScrollTop, setSurahListScrollTop] = useState(() => {
-    const stored = sessionStorage.getItem('surahListScrollTop');
+  const [surahScrollTop, setSurahScrollTop] = useState(() => {
+    const stored = sessionStorage.getItem('surahScrollTop');
+    return stored ? Number(stored) : 0;
+  });
+  const [juzScrollTop, setJuzScrollTop] = useState(() => {
+    const stored = sessionStorage.getItem('juzScrollTop');
+    return stored ? Number(stored) : 0;
+  });
+  const [pageScrollTop, setPageScrollTop] = useState(() => {
+    const stored = sessionStorage.getItem('pageScrollTop');
     return stored ? Number(stored) : 0;
   });
 
   useEffect(() => {
-    sessionStorage.setItem('surahListScrollTop', surahListScrollTop.toString());
-  }, [surahListScrollTop]);
+    sessionStorage.setItem('surahScrollTop', surahScrollTop.toString());
+  }, [surahScrollTop]);
+  useEffect(() => {
+    sessionStorage.setItem('juzScrollTop', juzScrollTop.toString());
+  }, [juzScrollTop]);
+  useEffect(() => {
+    sessionStorage.setItem('pageScrollTop', pageScrollTop.toString());
+  }, [pageScrollTop]);
 
   return (
     <SidebarContext.Provider
@@ -31,8 +49,12 @@ export const SidebarProvider = ({ children }: { children: React.ReactNode }) => 
         setSurahListOpen,
         isSettingsOpen,
         setSettingsOpen,
-        surahListScrollTop,
-        setSurahListScrollTop,
+        surahScrollTop,
+        setSurahScrollTop,
+        juzScrollTop,
+        setJuzScrollTop,
+        pageScrollTop,
+        setPageScrollTop,
       }}
     >
       {children}
