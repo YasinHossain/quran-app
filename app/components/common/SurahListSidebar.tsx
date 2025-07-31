@@ -1,6 +1,5 @@
 'use client';
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
@@ -17,7 +16,6 @@ interface Props {
 
 const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const { t } = useTranslation();
-  const MotionLink = motion(Link);
   const { data } = useSWR('chapters', getChapters, { fallbackData: initialChapters });
   const chapters = useMemo(() => data || [], [data]);
   const juzs = useMemo(() => Array.from({ length: 30 }, (_, i) => i + 1), []);
@@ -141,16 +139,15 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
               {filteredChapters.map((chapter) => {
                 const isSelected = selectedSurahId === String(chapter.id);
                 return (
-                  <MotionLink
+                  <Link
                     href={`/features/surah/${chapter.id}`}
                     key={chapter.id}
                     data-active={isSelected}
-                    whileHover={{ scale: 1.02 }}
                     onClick={() => {
                       setSelectedSurahId(String(chapter.id));
                       setSurahListScrollTop(sidebarRef.current?.scrollTop ?? 0);
                     }}
-                    className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-[background-color,box-shadow] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
+                    className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transform hover:scale-[1.02] transition-[background-color,box-shadow,transform] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
                     <div
                       className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${
@@ -186,7 +183,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     >
                       {chapter.name_arabic}
                     </p>
-                  </MotionLink>
+                  </Link>
                 );
               })}
             </nav>
@@ -196,16 +193,15 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
               {filteredJuzs.map((j) => {
                 const isSelected = selectedJuzId === String(j);
                 return (
-                  <MotionLink
+                  <Link
                     href={`/features/juz/${j}`}
                     key={j}
                     data-active={isSelected}
-                    whileHover={{ scale: 1.02 }}
                     onClick={() => {
                       setSelectedJuzId(String(j));
                       setSurahListScrollTop(sidebarRef.current?.scrollTop ?? 0);
                     }}
-                    className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-[background-color,box-shadow] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
+                    className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transform hover:scale-[1.02] transition-[background-color,box-shadow,transform] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
                     <div
                       className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${
@@ -229,7 +225,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     >
                       Juz {j}
                     </p>
-                  </MotionLink>
+                  </Link>
                 );
               })}
             </nav>
@@ -239,16 +235,15 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
               {filteredPages.map((p) => {
                 const isSelected = selectedPageId === String(p);
                 return (
-                  <MotionLink
+                  <Link
                     href={`/features/page/${p}`}
                     key={p}
                     data-active={isSelected}
-                    whileHover={{ scale: 1.02 }}
                     onClick={() => {
                       setSelectedPageId(String(p));
                       setSurahListScrollTop(sidebarRef.current?.scrollTop ?? 0);
                     }}
-                    className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-[background-color,box-shadow] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
+                    className={`group flex items-center gap-4 p-4 rounded-xl cursor-pointer transform hover:scale-[1.02] transition-[background-color,box-shadow,transform] duration-300 ease-in-out ${isSelected ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : theme === 'light' ? 'bg-white hover:bg-slate-50' : 'bg-slate-800 hover:bg-slate-700'}`}
                   >
                     <div
                       className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg transition-colors shadow ${
@@ -272,7 +267,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     >
                       Page {p}
                     </p>
-                  </MotionLink>
+                  </Link>
                 );
               })}
             </nav>
