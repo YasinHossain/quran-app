@@ -95,7 +95,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     Page: true,
   });
 
-  // ----- SESSION STORAGE SKIP-CENTER LOGIC -----
+  // Read sessionStorage to decide if we should skip centering on initial load
   useLayoutEffect(() => {
     const surahSkipped = sessionStorage.getItem('skipCenterSurah') === '1';
     const juzSkipped = sessionStorage.getItem('skipCenterJuz') === '1';
@@ -114,9 +114,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
       sessionStorage.removeItem('skipCenterPage');
     }
   }, []);
-  // ---------------------------------------------
 
-  // Reset centering for inactive tabs when their selection changes
+  // Reset centering for inactive tabs when their selection changes, ensuring they re-center if switched to
   useEffect(() => {
     if (activeTab !== 'Surah') shouldCenterRef.current.Surah = true;
   }, [selectedSurahId, activeTab]);
@@ -129,27 +128,30 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     if (activeTab !== 'Page') shouldCenterRef.current.Page = true;
   }, [selectedPageId, activeTab]);
 
-  // Handle scroll & centering
+  // Handle scroll restoration and centering logic
   useLayoutEffect(() => {
     if (!sidebarRef.current) return;
     const sidebar = sidebarRef.current;
 
-    // Restore previous scroll position
-    const scrollTop =
-      activeTab === 'Surah'
-        ? surahScrollTop
-        : activeTab === 'Juz'
-        ? juzScrollTop
-        : pageScrollTop;
-    sidebar.scrollTop = scrollTop;
+    // Restore scroll position from sessionStorage first, then fallback to context state
+    let top = 0;
+    if (activeTab === 'Surah')
+      top = Number(sessionStorage.getItem('surahScrollTop')) || surahScrollTop;
+    else if (activeTab === 'Juz')
+      top = Number(sessionStorage.getItem('juzScrollTop')) || juzScrollTop;
+    else if (activeTab === 'Page')
+      top = Number(sessionStorage.getItem('pageScrollTop')) || pageScrollTop;
 
-    // Center active item if needed
+    sidebar.scrollTop = top;
+
+    // Center the active item if necessary
     const activeEl = sidebar.querySelector<HTMLElement>('[data-active="true"]');
     if (activeEl) {
-      const { top: sbTop, bottom: sbBottom } = sidebar.getBoundingClientRect();
-      const { top: elTop, bottom: elBottom } = activeEl.getBoundingClientRect();
-      const isOutside = elTop < sbTop || elBottom > sbBottom;
-      if (shouldCenterRef.current[activeTab] && (scrollTop === 0 || isOutside)) {
+      const sidebarRect = sidebar.getBoundingClientRect();
+      const activeRect = activeEl.getBoundingClientRect();
+      const isOutside = activeRect.top < sidebarRect.top || activeRect.bottom > sidebarRect.bottom;
+      
+      if (shouldCenterRef.current[activeTab] && (top === 0 || isOutside)) {
         activeEl.scrollIntoView({ block: 'center' });
       }
     }
@@ -163,13 +165,14 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     selectedJuzId,
     selectedPageId,
   ]);
-
-  // Filtering lists
+  
+  // Filtering lists based on search term
   const filteredChapters = useMemo(
     () =>
-      chapters.filter((c) =>
-        c.name_simple.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        c.id.toString().includes(searchTerm)
+      chapters.filter(
+        (c) =>
+          c.name_simple.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          c.id.toString().includes(searchTerm)
       ),
     [chapters, searchTerm]
   );
@@ -182,10 +185,10 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     [pages, searchTerm]
   );
 
-  const TABS = [
-    { key: 'Surah' as const, label: t('surah_tab') },
-    { key: 'Juz' as const, label: t('juz_tab') },
-    { key: 'Page' as const, label: t('page_tab') },
+  const TABS: { key: 'Surah' | 'Juz' | 'Page'; label: string }[] = [
+    { key: 'Surah', label: t('surah_tab') },
+    { key: 'Juz', label: t('juz_tab') },
+    { key: 'Page', label: t('page_tab') },
   ];
 
   return (
@@ -207,9 +210,16 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
         ref={sidebarRef}
         onScroll={() => {
           const top = sidebarRef.current?.scrollTop ?? 0;
-          if (activeTab === 'Surah') setSurahScrollTop(top);
-          else if (activeTab === 'Juz') setJuzScrollTop(top);
-          else setPageScrollTop(top);
+          if (activeTab === 'Surah') {
+            setSurahScrollTop(top);
+            sessionStorage.setItem('surahScrollTop', String(top));
+          } else if (activeTab === 'Juz') {
+            setJuzScrollTop(top);
+            sessionStorage.setItem('juzScrollTop', String(top));
+          } else {
+            setPageScrollTop(top);
+            sessionStorage.setItem('pageScrollTop', String(top));
+          }
         }}
         className={`fixed md:static inset-y-0 left-0 w-[23rem] h-full overflow-y-auto bg-[var(--background)] text-[var(--foreground)] flex flex-col shadow-lg z-50 md:z-10 transform transition-transform duration-300 ${
           isSurahListOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
@@ -220,14 +230,12 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
             className={`flex items-center p-1 rounded-full ${{
               light: 'bg-gray-100',
               dark: 'bg-slate-800/60',
-            }[theme]}`
-          }
+            }[theme]}`}
           >
             {TABS.map(({ key, label }) => (
               <button
                 key={key}
                 onClick={() => {
-                  // save current scroll
                   const top = sidebarRef.current?.scrollTop ?? 0;
                   if (activeTab === 'Surah') setSurahScrollTop(top);
                   else if (activeTab === 'Juz') setJuzScrollTop(top);
@@ -279,7 +287,9 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                       const firstPage = chapter.pages?.[0] ?? 1;
                       setSelectedPageId(String(firstPage));
                       setSelectedJuzId(String(getJuzByPage(firstPage)));
-                      setSurahScrollTop(sidebarRef.current?.scrollTop ?? 0);
+                      const scrollTop = sidebarRef.current?.scrollTop ?? 0;
+                      setSurahScrollTop(scrollTop);
+                      sessionStorage.setItem('surahScrollTop', String(scrollTop));
                       sessionStorage.setItem('skipCenterSurah', '1');
                     }}
                     className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
@@ -332,7 +342,9 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                       setSelectedPageId(String(page));
                       const chap = getSurahByPage(page, chapters);
                       if (chap) setSelectedSurahId(String(chap.id));
-                      setJuzScrollTop(sidebarRef.current?.scrollTop ?? 0);
+                      const scrollTop = sidebarRef.current?.scrollTop ?? 0;
+                      setJuzScrollTop(scrollTop);
+                      sessionStorage.setItem('juzScrollTop', String(scrollTop));
                       sessionStorage.setItem('skipCenterJuz', '1');
                     }}
                     className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
@@ -376,7 +388,9 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                       setSelectedJuzId(String(getJuzByPage(p)));
                       const chap = getSurahByPage(p, chapters);
                       if (chap) setSelectedSurahId(String(chap.id));
-                      setPageScrollTop(sidebarRef.current?.scrollTop ?? 0);
+                      const scrollTop = sidebarRef.current?.scrollTop ?? 0;
+                      setPageScrollTop(scrollTop);
+                      sessionStorage.setItem('pageScrollTop', String(scrollTop));
                       sessionStorage.setItem('skipCenterPage', '1');
                     }}
                     className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
