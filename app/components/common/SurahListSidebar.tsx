@@ -88,10 +88,33 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
 
   useLayoutEffect(() => {
     if (!sidebarRef.current) return;
-    if (activeTab === 'Surah') sidebarRef.current.scrollTop = surahScrollTop;
-    else if (activeTab === 'Juz') sidebarRef.current.scrollTop = juzScrollTop;
-    else if (activeTab === 'Page') sidebarRef.current.scrollTop = pageScrollTop;
-  }, [activeTab, surahScrollTop, juzScrollTop, pageScrollTop]);
+    const sidebar = sidebarRef.current;
+
+    let top = 0;
+    if (activeTab === 'Surah') top = surahScrollTop;
+    else if (activeTab === 'Juz') top = juzScrollTop;
+    else if (activeTab === 'Page') top = pageScrollTop;
+
+    sidebar.scrollTop = top;
+
+    const activeEl = sidebar.querySelector<HTMLElement>('[data-active="true"]');
+    if (activeEl) {
+      const sidebarRect = sidebar.getBoundingClientRect();
+      const activeRect = activeEl.getBoundingClientRect();
+      const isOutside = activeRect.top < sidebarRect.top || activeRect.bottom > sidebarRect.bottom;
+      if (top === 0 || isOutside) {
+        activeEl.scrollIntoView({ block: 'center' });
+      }
+    }
+  }, [
+    activeTab,
+    surahScrollTop,
+    juzScrollTop,
+    pageScrollTop,
+    selectedSurahId,
+    selectedJuzId,
+    selectedPageId,
+  ]);
 
   const filteredChapters = useMemo(
     () =>
