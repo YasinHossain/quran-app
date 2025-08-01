@@ -109,10 +109,10 @@ export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps) => {
             }}
           >
             {verse.words && verse.words.length > 0 ? (
-              <span className="flex flex-wrap gap-x-2 gap-y-1 justify-end">
+              <span className="flex flex-wrap gap-x-1 gap-y-1 justify-end">
                 {verse.words.map((word: Word) => (
                   <span key={word.id} className="text-center">
-                    <span className="relative group cursor-pointer inline-block border-b border-gray-300">
+                    <span className="relative group cursor-pointer inline-block">
                       <span
                         dangerouslySetInnerHTML={{
                           __html: settings.tajweed ? applyTajweed(word.uthmani) : word.uthmani,
@@ -126,7 +126,7 @@ export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps) => {
                     </span>
                     {showByWords && (
                       <span
-                        className="mt-1 inline-block text-gray-500 border-b border-gray-300"
+                        className="mt-0.5 block text-gray-500"
                         style={{ fontSize: `${settings.arabicFontSize * 0.5}px` }}
                       >
                         {word[wordLang as LanguageCode] as string}
