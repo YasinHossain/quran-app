@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { usePathname } from 'next/navigation';
 
 interface TafsirSwitchProps {
   tafsirs: { id: number; name: string }[];
@@ -12,7 +11,6 @@ interface TafsirSwitchProps {
 
 export default function TafsirSwitch({ tafsirs, activeId, verseKey }: TafsirSwitchProps) {
   const router = useRouter();
-  const pathname = usePathname();
 
   const handleSwitchTafsir = (id: number) => {
     const [surahId, ayahId] = verseKey.split(':');
