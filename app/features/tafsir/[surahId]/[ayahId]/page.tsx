@@ -3,7 +3,6 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { Verse as VerseComponent } from '@/app/features/surah/[surahId]/_components/Verse';
-import { CollapsibleSection } from '@/app/features/surah/[surahId]/_components/CollapsibleSection';
 import { SettingsSidebar } from '@/app/features/surah/[surahId]/_components/SettingsSidebar';
 import { TranslationPanel } from '@/app/features/surah/[surahId]/_components/TranslationPanel';
 import { TafsirPanel } from '@/app/features/surah/[surahId]/_components/TafsirPanel';
@@ -169,8 +168,6 @@ export default function TafsirVersePage() {
   };
 
   const currentSurah = surahList.find((surah) => surah.number === Number(surahId));
-  const prevSurah = surahList.find((surah) => surah.number === Number(prev?.surahId));
-  const nextSurah = surahList.find((surah) => surah.number === Number(next?.surahId));
 
   return (
     <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] overflow-hidden">
@@ -245,12 +242,10 @@ export default function TafsirVersePage() {
               <TafsirTabs verseKey={verse.verse_key} tafsirIds={settings.tafsirIds} />
             ) : (
               tafsirResource && (
-                <CollapsibleSection
-                  key={verse?.verse_key}
-                  title={tafsirResource.name}
-                  icon={<></>}
-                  isLast
-                >
+                <div key={verse?.verse_key} className="p-4">
+                  <h2 className="mb-4 text-center text-xl font-bold text-[var(--foreground)]">
+                    {tafsirResource.name}
+                  </h2>
                   <div
                     className="prose max-w-none whitespace-pre-wrap"
                     style={{
@@ -258,7 +253,7 @@ export default function TafsirVersePage() {
                     }}
                     dangerouslySetInnerHTML={{ __html: tafsirHtml || '' }}
                   />
-                </CollapsibleSection>
+                </div>
               )
             )}
           </div>

@@ -53,6 +53,8 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
   const { theme } = useTheme();
   if (!tabs.length || !activeId) return null;
 
+  const activeTab = tabs.find((t) => t.id === activeId);
+
   return (
     <div>
       <div
@@ -77,6 +79,9 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
         ))}
       </div>
       <div className="p-4">
+        <h2 className="mb-4 text-center text-xl font-bold text-[var(--foreground)]">
+          {activeTab?.name}
+        </h2>
         {loading[activeId] ? (
           <div className="flex justify-center py-4">
             <Spinner className="h-5 w-5 text-emerald-600" />
