@@ -168,7 +168,7 @@ export default function HomePage() {
             </div>
 
             {activeTab === 'Surah' && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {filteredSurahs.map((surah) => (
                   <Link
                     href={`/features/surah/${surah.number}`}
@@ -213,7 +213,7 @@ export default function HomePage() {
               </div>
             )}
             {activeTab === 'Juz' && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {allJuz.map((juz) => (
                   <Link
                     href={`/features/juz/${juz.number}`}
@@ -246,7 +246,7 @@ export default function HomePage() {
               </div>
             )}
             {activeTab === 'Page' && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {allPages.map((page) => (
                   <Link
                     href={`/features/page/${page}`}
