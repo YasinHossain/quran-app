@@ -1,6 +1,7 @@
 // app/features/surah/[SurahId]/_components/TranslationPanel.tsx
 import { FaArrowLeft, FaSearch } from '@/app/components/common/SvgIcons';
 import { useTranslation } from 'react-i18next';
+import { useMemo } from 'react';
 import { TranslationResource } from '@/types';
 import { useSettings } from '@/app/context/SettingsContext';
 
@@ -21,6 +22,13 @@ export const TranslationPanel = ({
 }: TranslationPanelProps) => {
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
+  const sortedLanguages = useMemo(() => {
+    return Object.keys(groupedTranslations).sort((a, b) => {
+      if (a.toLowerCase() === 'english') return -1;
+      if (b.toLowerCase() === 'english') return 1;
+      return a.localeCompare(b);
+    });
+  }, [groupedTranslations]);
   return (
     <>
       {/* Removed the overlay div */}
@@ -54,7 +62,7 @@ export const TranslationPanel = ({
         </div>
         <div className="flex-grow overflow-y-auto">
           {groupedTranslations &&
-            Object.keys(groupedTranslations).map((lang) => (
+            sortedLanguages.map((lang) => (
               <div key={lang}>
                 <h3 className="sticky top-0 bg-gray-100 px-4 py-2 font-bold text-teal-800 text-sm">
                   {lang}
