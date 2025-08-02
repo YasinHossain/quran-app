@@ -1,6 +1,7 @@
 'use client';
 import { FaArrowLeft, FaSearch } from '@/app/components/common/SvgIcons';
 import { useTranslation } from 'react-i18next';
+import { useMemo } from 'react';
 import { useSettings } from '@/app/context/SettingsContext';
 import { LANGUAGE_CODES } from '@/lib/languageCodes';
 import type { LanguageCode } from '@/lib/languageCodes';
@@ -30,8 +31,14 @@ export const WordLanguagePanel = ({
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
 
-  const filtered = languages.filter((lang) =>
-    lang.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const sortedLanguages = useMemo(
+    () => [...languages].sort((a, b) => a.name.localeCompare(b.name)),
+    [languages]
+  );
+  const filtered = useMemo(
+    () =>
+      sortedLanguages.filter((lang) => lang.name.toLowerCase().includes(searchTerm.toLowerCase())),
+    [sortedLanguages, searchTerm]
   );
 
   return (
