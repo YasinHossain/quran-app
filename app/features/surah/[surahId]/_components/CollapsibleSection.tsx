@@ -1,6 +1,5 @@
 // app/surah/[surahId]/_components/CollapsibleSection.tsx
 'use client';
-import { useState } from 'react';
 import { FaChevronDown } from '@/app/components/common/SvgIcons';
 
 interface CollapsibleSectionProps {
@@ -8,6 +7,8 @@ interface CollapsibleSectionProps {
   icon: React.ReactNode;
   children: React.ReactNode;
   isLast?: boolean; // Optional prop to indicate if it's the last section
+  isOpen: boolean;
+  onToggle: () => void;
 }
 
 export const CollapsibleSection = ({
@@ -15,16 +16,14 @@ export const CollapsibleSection = ({
   icon,
   children,
   isLast = false,
+  isOpen,
+  onToggle,
 }: CollapsibleSectionProps) => {
-  const [isOpen, setIsOpen] = useState(true);
   return (
     <div className={isLast ? '' : 'border-b border-[var(--border-color)]'}>
       {' '}
       {/* Apply border only if not the last section */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-4 text-left"
-      >
+      <button onClick={onToggle} className="w-full flex items-center justify-between p-4 text-left">
         <div className="flex items-center space-x-3">
           {icon}
           <span className="font-semibold text-[var(--foreground)]">{title}</span>

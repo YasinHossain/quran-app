@@ -268,6 +268,7 @@ export default function TafsirVersePage() {
         selectedTranslationName={selectedTranslationName}
         selectedTafsirName={selectedTafsirName}
         selectedWordLanguageName={selectedWordLanguageName}
+        showTafsirSetting
       />
       <TranslationPanel
         isOpen={isTranslationPanelOpen}
