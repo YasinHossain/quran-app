@@ -4,6 +4,7 @@ import {
   FaFontSetting,
   FaChevronDown,
   FaArrowLeft,
+  FaTranslation,
 } from '@/app/components/common/SvgIcons';
 import { CollapsibleSection } from './CollapsibleSection';
 import { useSettings } from '@/app/context/SettingsContext';
@@ -16,11 +17,12 @@ import { useTheme } from '@/app/context/ThemeContext';
 interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;
   onWordLanguagePanelOpen: () => void;
-  onTafsirPanelOpen: () => void;
+  onTafsirPanelOpen?: () => void;
   onReadingPanelOpen?: () => void;
   selectedTranslationName: string;
-  selectedTafsirName: string;
+  selectedTafsirName?: string;
   selectedWordLanguageName: string;
+  showTafsirSetting?: boolean;
 }
 
 export const SettingsSidebar = ({
@@ -31,6 +33,7 @@ export const SettingsSidebar = ({
   selectedTranslationName,
   selectedTafsirName,
   selectedWordLanguageName,
+  showTafsirSetting = false,
 }: SettingsSidebarProps) => {
   const { settings, setSettings, arabicFonts } = useSettings();
   const { t } = useTranslation();
@@ -38,6 +41,7 @@ export const SettingsSidebar = ({
   const { isSettingsOpen, setSettingsOpen } = useSidebar();
   const { theme, setTheme } = useTheme();
   const [activeTab, setActiveTab] = useState('translation');
+  const [openPanels, setOpenPanels] = useState<string[]>(['reading', 'font']);
 
   // Helper function to calculate the slider's progress percentage
   const getPercentage = (value: number, min: number, max: number) => {
@@ -59,6 +63,22 @@ export const SettingsSidebar = ({
       onReadingPanelOpen?.();
     }
   };
+
+  const togglePanel = (panel: string) => {
+    setOpenPanels((prev) => {
+      if (prev.includes(panel)) {
+        return prev.filter((p) => p !== panel);
+      }
+      if (prev.length >= 2) {
+        return [prev[0], panel];
+      }
+      return [...prev, panel];
+    });
+  };
+
+  const isReadingOpen = openPanels.includes('reading');
+  const isTafsirOpen = openPanels.includes('tafsir');
+  const isFontOpen = openPanels.includes('font');
 
   return (
     <>
@@ -107,8 +127,10 @@ export const SettingsSidebar = ({
           {activeTab === 'translation' && (
             <CollapsibleSection
               title={t('reading_setting')}
-              icon={<FaBookReader size={20} className="text-teal-700" />}
+              icon={<FaTranslation size={20} className="text-teal-700" />}
               isLast={false}
+              isOpen={isReadingOpen}
+              onToggle={() => togglePanel('reading')}
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between pt-2">
@@ -169,11 +191,13 @@ export const SettingsSidebar = ({
               </div>
             </CollapsibleSection>
           )}
-          {activeTab === 'translation' && (
+          {activeTab === 'translation' && showTafsirSetting && (
             <CollapsibleSection
               title={t('tafsir_setting')}
               icon={<FaBookReader size={20} className="text-teal-700" />}
               isLast={false}
+              isOpen={isTafsirOpen}
+              onToggle={() => togglePanel('tafsir')}
             >
               <div className="space-y-4">
                 <div>
@@ -210,6 +234,8 @@ export const SettingsSidebar = ({
               title={t('font_setting')}
               icon={<FaFontSetting size={20} className="text-teal-700" />}
               isLast={true}
+              isOpen={isFontOpen}
+              onToggle={() => togglePanel('font')}
             >
               <div className="space-y-4">
                 <div>

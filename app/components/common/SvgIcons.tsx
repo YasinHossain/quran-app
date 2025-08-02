@@ -30,6 +30,26 @@ export const FaBookReader = ({ size = 18, className = '' }) => (
     <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
   </svg>
 );
+export const FaTranslation = ({ size = 20, className = '' }) => (
+  <svg
+    className={className}
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="m5 8 6 6" />
+    <path d="m4 14 6-6 2-3" />
+    <path d="M2 5h12" />
+    <path d="M7 2h1" />
+    <path d="m22 22-5-10-5 10" />
+    <path d="M14 18h6" />
+  </svg>
+);
 export const FaBars = ({ size = 20, className = '' }) => (
   <svg className={className} width={size} height={size} viewBox="0 0 448 512" fill="currentColor">
     <path d="M16 132h416v56H16zm0 96h416v56H16zm0 96h416v56H16z" />
