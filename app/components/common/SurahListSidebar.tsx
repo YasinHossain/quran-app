@@ -379,12 +379,12 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     }`}
                   >
                     <div
-                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg shadow ${
+                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg shadow transition-colors ${
                         isActive
                           ? 'bg-white/20 text-white'
                           : theme === 'light'
-                            ? 'bg-gray-100 text-emerald-600'
-                            : 'bg-slate-700 text-emerald-400'
+                            ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100'
+                            : 'bg-slate-700 text-emerald-400 group-hover:bg-emerald-500/20'
                       }`}
                     >
                       {j}
@@ -435,12 +435,12 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     }`}
                   >
                     <div
-                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg shadow ${
+                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg shadow transition-colors ${
                         isActive
                           ? 'bg-white/20 text-white'
                           : theme === 'light'
-                            ? 'bg-gray-100 text-emerald-600'
-                            : 'bg-slate-700 text-emerald-400'
+                            ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100'
+                            : 'bg-slate-700 text-emerald-400 group-hover:bg-emerald-500/20'
                       }`}
                     >
                       {p}
