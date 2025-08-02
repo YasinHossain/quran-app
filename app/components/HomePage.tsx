@@ -47,7 +47,7 @@ export default function HomePage() {
         <div className="relative z-10 flex flex-col h-full overflow-y-auto px-4 sm:px-6 lg:px-8 homepage-scrollable-area">
           <header className="w-full py-4">
             <nav
-              className={`flex justify-between items-center max-w-7xl mx-auto p-3 sm:p-4 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 ${theme === 'light' ? 'bg-white/60' : 'bg-slate-800/50'}`}
+              className={`flex justify-between items-center max-w-screen-2xl mx-auto p-3 sm:p-4 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 ${theme === 'light' ? 'bg-white/60' : 'bg-slate-800/50'}`}
             >
               <h1
                 className={`text-2xl font-bold tracking-wider ${theme === 'light' ? 'text-slate-900' : 'text-white'}`}
@@ -82,7 +82,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="mt-10 w-full max-w-xl mx-auto content-visibility-auto animate-fade-in-up animation-delay-200 p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="mt-10 w-full max-w-2xl mx-auto content-visibility-auto animate-fade-in-up animation-delay-200 p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300">
               <div className="relative">
                 <input
                   type="text"
@@ -116,7 +116,7 @@ export default function HomePage() {
             <VerseOfDay />
           </main>
 
-          <section id="surahs" className="py-20 max-w-7xl mx-auto w-full">
+          <section id="surahs" className="py-20 max-w-screen-2xl mx-auto w-full">
             <div className="flex justify-between items-center mb-8 content-visibility-auto animate-fade-in-up animation-delay-600">
               <h2 className="text-3xl font-bold text-slate-900 dark:text-white">All Surahs</h2>
               <div
