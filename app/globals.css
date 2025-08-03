@@ -9,7 +9,7 @@
   --subtle-grey: #d1d5db;
 
   /* Header variables for light mode */
-  --header-background: rgba(255, 255, 255, 0.3);
+  --header-background: rgba(255, 255, 255, 0.6);
   --header-text-color: #1f2937;
 }
 
@@ -21,7 +21,7 @@
   --subtle-grey: #4b5563;
 
   /* Header variables for dark mode */
-  --header-background: rgba(31, 41, 55, 0.3);
+  --header-background: rgba(31, 41, 55, 0.6);
   --header-text-color: #f9fafb;
 }
 
