@@ -126,7 +126,7 @@ export default function JuzPage({ params }: JuzPageProps) {
   );
 
   return (
-    <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden">
+    <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden min-h-0">
       <main className="flex-grow bg-[var(--background)] p-6 lg:p-10 overflow-y-auto homepage-scrollable-area">
         <div className="w-full relative">
           {/* Only render content when juzId is available */}

@@ -155,8 +155,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     if (activeEl) {
       const sidebarRect = sidebar.getBoundingClientRect();
       const activeRect = activeEl.getBoundingClientRect();
-      const isOutside =
-        activeRect.top < sidebarRect.top || activeRect.bottom > sidebarRect.bottom;
+      const isOutside = activeRect.top < sidebarRect.top || activeRect.bottom > sidebarRect.bottom;
 
       if (shouldCenterRef.current[activeTab] && (top === 0 || isOutside)) {
         activeEl.scrollIntoView({ block: 'center' });
@@ -214,7 +213,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
         }}
       />
       <aside
-        className={`fixed md:static top-16 md:top-0 bottom-0 left-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col shadow-lg z-50 md:z-10 transform transition-transform duration-300 ${
+        className={`fixed md:static top-16 md:top-0 bottom-0 left-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col shadow-lg z-50 md:z-10 md:h-full transform transition-transform duration-300 ${
           isSurahListOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
       >
@@ -245,8 +244,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                       ? 'bg-white text-slate-900 shadow'
                       : 'bg-slate-700 text-white shadow'
                     : theme === 'light'
-                    ? 'text-slate-400 hover:text-slate-700'
-                    : 'text-slate-400 hover:text-white'
+                      ? 'text-slate-400 hover:text-slate-700'
+                      : 'text-slate-400 hover:text-white'
                 }`}
               >
                 {label}
@@ -314,8 +313,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                         isActive
                           ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/30'
                           : theme === 'light'
-                          ? 'bg-white shadow hover:bg-slate-50'
-                          : 'bg-slate-800 shadow hover:bg-slate-700'
+                            ? 'bg-white shadow hover:bg-slate-50'
+                            : 'bg-slate-800 shadow hover:bg-slate-700'
                       }`}
                     >
                       <div
@@ -323,8 +322,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                           isActive
                             ? 'bg-white/20 text-white'
                             : theme === 'light'
-                            ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
-                            : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
+                              ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
+                              : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
                         }`}
                       >
                         {chapter.id}
@@ -335,8 +334,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                             isActive
                               ? 'text-white'
                               : theme === 'light'
-                              ? 'text-slate-700'
-                              : 'text-[var(--foreground)]'
+                                ? 'text-slate-700'
+                                : 'text-[var(--foreground)]'
                           }`}
                         >
                           {chapter.name_simple}
@@ -350,8 +349,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                           isActive
                             ? 'text-white'
                             : theme === 'light'
-                            ? 'text-gray-500 group-hover:text-teal-600'
-                            : 'text-gray-500 group-hover:text-teal-400'
+                              ? 'text-gray-500 group-hover:text-teal-600'
+                              : 'text-gray-500 group-hover:text-teal-400'
                         }`}
                       >
                         {chapter.name_arabic}
@@ -388,8 +387,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                         isActive
                           ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/30'
                           : theme === 'light'
-                          ? 'bg-white shadow hover:bg-slate-50'
-                          : 'bg-slate-800 shadow hover:bg-slate-700'
+                            ? 'bg-white shadow hover:bg-slate-50'
+                            : 'bg-slate-800 shadow hover:bg-slate-700'
                       }`}
                     >
                       <div
@@ -397,8 +396,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                           isActive
                             ? 'bg-white/20 text-white'
                             : theme === 'light'
-                            ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
-                            : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
+                              ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
+                              : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
                         }`}
                       >
                         {juz.number}
@@ -409,8 +408,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                             isActive
                               ? 'text-white'
                               : theme === 'light'
-                              ? 'text-slate-700'
-                              : 'text-[var(--foreground)]'
+                                ? 'text-slate-700'
+                                : 'text-[var(--foreground)]'
                           }`}
                         >
                           Juz {juz.number}
@@ -420,8 +419,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                             isActive
                               ? 'text-white/90'
                               : theme === 'light'
-                              ? 'text-slate-600'
-                              : 'text-slate-400'
+                                ? 'text-slate-600'
+                                : 'text-slate-400'
                           }`}
                         >
                           {juz.surahRange}
@@ -458,8 +457,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                         isActive
                           ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/30'
                           : theme === 'light'
-                          ? 'bg-white shadow hover:bg-slate-50'
-                          : 'bg-slate-800 shadow hover:bg-slate-700'
+                            ? 'bg-white shadow hover:bg-slate-50'
+                            : 'bg-slate-800 shadow hover:bg-slate-700'
                       }`}
                     >
                       <div
@@ -467,8 +466,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                           isActive
                             ? 'bg-white/20 text-white'
                             : theme === 'light'
-                            ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
-                            : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
+                              ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
+                              : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
                         }`}
                       >
                         {p}
@@ -478,8 +477,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                           isActive
                             ? 'text-white'
                             : theme === 'light'
-                            ? 'text-slate-700'
-                            : 'text-[var(--foreground)]'
+                              ? 'text-slate-700'
+                              : 'text-[var(--foreground)]'
                         }`}
                       >
                         Page {p}
