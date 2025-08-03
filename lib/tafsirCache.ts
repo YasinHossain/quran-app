@@ -45,6 +45,9 @@ export function getTafsirCached(verseKey: string, tafsirId = 169): Promise<strin
   return value;
 }
 
+/**
+ * Empties the in-memory tafsir cache.
+ */
 export function clearTafsirCache() {
   cache.clear();
 }
