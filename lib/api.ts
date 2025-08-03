@@ -97,7 +97,18 @@ interface SearchApiResult {
   translations?: Verse['translations'];
 }
 
-// Internal helper to fetch verses for various endpoints
+/**
+ * Fetches paginated verses from the API and normalizes any word data.
+ *
+ * @param {'by_chapter'|'by_juz'|'by_page'} type - Endpoint to query: chapter, juz, or page.
+ * @param {string|number} id - Identifier for the chosen endpoint.
+ * @param {number} translationId - Translation resource to include for each verse.
+ * @param {number} [page=1] - Page of results to retrieve.
+ * @param {number} [perPage=20] - Number of verses to return per page.
+ * @param {LanguageCode|string} [wordLang='en'] - Language code for word translations.
+ * @returns {Promise<{ verses: Verse[]; totalPages: number }>} Object containing the
+ * normalized verses array and total available pages.
+ */
 export async function fetchVerses(
   type: 'by_chapter' | 'by_juz' | 'by_page',
   id: string | number,
