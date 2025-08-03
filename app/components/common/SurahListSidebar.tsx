@@ -286,7 +286,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
               sessionStorage.setItem('pageScrollTop', String(top));
             }
           }}
-          className="flex-grow overflow-y-auto p-2"
+          className="flex-1 overflow-y-auto p-2"
         >
           {activeTab === 'Surah' && (
             <ul className="space-y-2">
@@ -314,10 +314,10 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                       }}
                       className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
                         isActive
-                          ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/30'
+                          ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/30'
                           : theme === 'light'
-                            ? 'bg-white hover:bg-slate-50'
-                            : 'bg-slate-800 hover:bg-slate-700'
+                            ? 'bg-white shadow hover:bg-slate-50'
+                            : 'bg-slate-800 shadow hover:bg-slate-700'
                       }`}
                     >
                       <div
@@ -326,7 +326,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                             ? 'bg-white/20 text-white'
                             : theme === 'light'
                               ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
-                              : 'bg-slate-700 text-teal-400 group-hover:bg-teal-500/20'
+                              : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
                         }`}
                       >
                         {chapter.id}
@@ -388,10 +388,10 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                       }}
                       className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
                         isActive
-                          ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/30'
+                          ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/30'
                           : theme === 'light'
-                            ? 'bg-white hover:bg-slate-50'
-                            : 'bg-slate-800 hover:bg-slate-700'
+                            ? 'bg-white shadow hover:bg-slate-50'
+                            : 'bg-slate-800 shadow hover:bg-slate-700'
                       }`}
                     >
                       <div
@@ -400,7 +400,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                             ? 'bg-white/20 text-white'
                             : theme === 'light'
                               ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
-                              : 'bg-slate-700 text-teal-400 group-hover:bg-teal-500/20'
+                              : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
                         }`}
                       >
                         {juz.number}
@@ -458,10 +458,10 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                       }}
                       className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
                         isActive
-                          ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/30'
+                          ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/30'
                           : theme === 'light'
-                            ? 'bg-white hover:bg-slate-50'
-                            : 'bg-slate-800 hover:bg-slate-700'
+                            ? 'bg-white shadow hover:bg-slate-50'
+                            : 'bg-slate-800 shadow hover:bg-slate-700'
                       }`}
                     >
                       <div
@@ -470,7 +470,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                             ? 'bg-white/20 text-white'
                             : theme === 'light'
                               ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
-                              : 'bg-slate-700 text-teal-400 group-hover:bg-teal-500/20'
+                              : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
                         }`}
                       >
                         {p}
