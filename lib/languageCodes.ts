@@ -1,3 +1,11 @@
+/**
+ * Maps supported language names to their ISO codes.
+ *
+ * @example
+ * ```ts
+ * const code = LANGUAGE_CODES['english']; // 'en'
+ * ```
+ */
 export const LANGUAGE_CODES = {
   english: 'en',
   urdu: 'ur',
