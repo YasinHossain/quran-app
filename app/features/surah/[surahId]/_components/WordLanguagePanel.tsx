@@ -43,7 +43,9 @@ export const WordLanguagePanel = ({
 
   return (
     <div
-      className={`fixed top-0 bottom-0 lg:top-16 right-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+      className={`fixed top-16 bottom-0 right-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
+        isOpen ? 'translate-x-0' : 'translate-x-full'
+      }`}
     >
       <div className="flex items-center justify-between p-4 border-b border-gray-200/80">
         <button
