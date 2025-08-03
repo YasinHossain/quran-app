@@ -11,10 +11,10 @@ export default function SurahLayout({ children }: { children: React.ReactNode })
       <Header />
       <div className="h-screen flex flex-col pt-16">
         <div className="flex flex-grow overflow-hidden">
-          <nav aria-label="Primary navigation">
+          <nav aria-label="Primary navigation" className="flex-shrink-0">
             <IconSidebar />
           </nav>
-          <nav aria-label="Surah navigation">
+          <nav aria-label="Surah navigation" className="flex-shrink-0">
             <SurahListSidebar />
           </nav>
           {children}
