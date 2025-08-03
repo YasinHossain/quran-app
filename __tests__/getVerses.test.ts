@@ -41,6 +41,13 @@ describe('fetchVerses', () => {
       ],
     });
   });
+
+  it('throws an error when the response is not ok', async () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: false, status: 500 }) as jest.Mock;
+    await expect(fetchVerses('by_chapter', 1, 20, 1, 1, 'en')).rejects.toThrow(
+      'Failed to fetch verses: 500'
+    );
+  });
 });
 
 describe('getVersesByChapter', () => {
