@@ -2,7 +2,7 @@
 import React, { useState, useMemo, useEffect, useLayoutEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { FaSearch } from './SvgIcons';
 import { Chapter } from '@/types';
 import { getChapters } from '@/lib/api';
@@ -45,6 +45,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const { surahId, juzId, pageId } = useParams();
+  const pathname = usePathname();
   const currentSurahId = Array.isArray(surahId) ? surahId[0] : surahId;
   const currentJuzId = Array.isArray(juzId) ? juzId[0] : juzId;
   const currentPageId = Array.isArray(pageId) ? pageId[0] : pageId;
@@ -56,6 +57,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   });
 
   const { theme } = useTheme();
+  const isTafsirPath = pathname?.includes('/tafsir');
   const [selectedSurahId, setSelectedSurahId] = useState<string | null>(currentSurahId ?? null);
   const [selectedJuzId, setSelectedJuzId] = useState<string | null>(currentJuzId ?? null);
   const [selectedPageId, setSelectedPageId] = useState<string | null>(currentPageId ?? null);
@@ -291,7 +293,11 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                 return (
                   <Link
                     key={chapter.id}
-                    href={`/features/surah/${chapter.id}`}
+                    href={
+                      isTafsirPath
+                        ? `/features/tafsir/${chapter.id}/1`
+                        : `/features/surah/${chapter.id}`
+                    }
                     scroll={false}
                     data-active={isActive}
                     onClick={() => {
