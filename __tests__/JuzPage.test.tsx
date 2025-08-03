@@ -42,8 +42,9 @@ beforeAll(() => {
     observe() {}
     disconnect() {}
   }
-  // @ts-ignore
-  global.IntersectionObserver = IO;
+  (
+    global as unknown as { IntersectionObserver: typeof IntersectionObserver }
+  ).IntersectionObserver = IO as unknown as typeof IntersectionObserver;
 
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
