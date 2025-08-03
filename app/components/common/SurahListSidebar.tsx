@@ -9,6 +9,13 @@ import { getChapters } from '@/lib/api';
 import useSWR from 'swr';
 import { useSidebar } from '@/app/context/SidebarContext';
 import { useTheme } from '@/app/context/ThemeContext';
+import juzData from '@/data/juz.json';
+
+interface JuzSummary {
+  number: number;
+  name: string;
+  surahRange: string;
+}
 
 const JUZ_START_PAGES = [
   1, 22, 42, 62, 82, 102, 121, 142, 162, 182, 201, 222, 242, 262, 282, 302, 322, 342, 362, 382, 402,
@@ -33,7 +40,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const { t } = useTranslation();
   const { data } = useSWR('chapters', getChapters, { fallbackData: initialChapters });
   const chapters = useMemo(() => data || [], [data]);
-  const juzs = useMemo(() => Array.from({ length: 30 }, (_, i) => i + 1), []);
+  const juzs = useMemo(() => juzData as JuzSummary[], []);
   const pages = useMemo(() => Array.from({ length: 604 }, (_, i) => i + 1), []);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -177,7 +184,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     [chapters, searchTerm]
   );
   const filteredJuzs = useMemo(
-    () => juzs.filter((j) => j.toString().includes(searchTerm)),
+    () => juzs.filter((j) => j.number.toString().includes(searchTerm)),
     [juzs, searchTerm]
   );
   const filteredPages = useMemo(
@@ -351,17 +358,17 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
 
           {activeTab === 'Juz' && (
             <nav className="space-y-2">
-              {filteredJuzs.map((j) => {
-                const isActive = String(j) === selectedJuzId;
+              {filteredJuzs.map((juz) => {
+                const isActive = String(juz.number) === selectedJuzId;
                 return (
                   <Link
-                    key={j}
-                    href={`/features/juz/${j}`}
+                    key={juz.number}
+                    href={`/features/juz/${juz.number}`}
                     scroll={false}
                     data-active={isActive}
                     onClick={() => {
-                      setSelectedJuzId(String(j));
-                      const page = JUZ_START_PAGES[j - 1];
+                      setSelectedJuzId(String(juz.number));
+                      const page = JUZ_START_PAGES[juz.number - 1];
                       setSelectedPageId(String(page));
                       const chap = getSurahByPage(page, chapters);
                       if (chap) setSelectedSurahId(String(chap.id));
@@ -387,19 +394,32 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                             : 'bg-slate-700 text-emerald-400 group-hover:bg-emerald-500/20'
                       }`}
                     >
-                      {j}
+                      {juz.number}
                     </div>
-                    <p
-                      className={`font-semibold ${
-                        isActive
-                          ? 'text-white'
-                          : theme === 'light'
-                            ? 'text-slate-700'
-                            : 'text-[var(--foreground)]'
-                      }`}
-                    >
-                      Juz {j}
-                    </p>
+                    <div>
+                      <p
+                        className={`font-semibold ${
+                          isActive
+                            ? 'text-white'
+                            : theme === 'light'
+                              ? 'text-slate-700'
+                              : 'text-[var(--foreground)]'
+                        }`}
+                      >
+                        Juz {juz.number}
+                      </p>
+                      <p
+                        className={`text-sm ${
+                          isActive
+                            ? 'text-white/90'
+                            : theme === 'light'
+                              ? 'text-slate-600'
+                              : 'text-slate-400'
+                        }`}
+                      >
+                        {juz.surahRange}
+                      </p>
+                    </div>
                   </Link>
                 );
               })}
