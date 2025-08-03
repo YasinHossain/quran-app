@@ -44,6 +44,14 @@ interface SettingsContextType {
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
+/**
+ * Provides global access to user-configurable settings such as fonts, font sizes,
+ * translation and tafsīr selections, word-by-word preferences, tajweed display and
+ * verse bookmarks. Settings and bookmarks are persisted to `localStorage`.
+ *
+ * Wrap parts of the application that need these values with this provider and use
+ * the {@link useSettings} hook to read or update them.
+ */
 export const SettingsProvider = ({ children }: { children: React.ReactNode }) => {
   const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [bookmarkedVerses, setBookmarkedVerses] = useState<string[]>([]);
