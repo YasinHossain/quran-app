@@ -35,6 +35,19 @@ describe('getTafsirCached', () => {
     spy.mockRestore();
   });
 
+  it('forces subsequent fetch after cache is cleared', async () => {
+    (getTafsirByVerse as jest.Mock).mockResolvedValue('text1');
+    await getTafsirCached('1:1', 1);
+    expect(getTafsirByVerse).toHaveBeenCalledTimes(1);
+
+    clearTafsirCache();
+
+    (getTafsirByVerse as jest.Mock).mockResolvedValue('text2');
+    await getTafsirCached('1:1', 1);
+
+    expect(getTafsirByVerse).toHaveBeenCalledTimes(2);
+  });
+
   it('removes oldest when max size exceeded', async () => {
     const spy = jest.spyOn(Date, 'now').mockReturnValue(0);
     for (let i = 0; i < MAX_CACHE_SIZE; i++) {
