@@ -306,7 +306,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     }}
                     className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
                       isActive
-                        ? 'bg-emerald-500 text-white shadow-lg'
+                        ? 'bg-teal-600 text-white shadow-lg'
                         : theme === 'light'
                           ? 'bg-white hover:bg-slate-50'
                           : 'bg-slate-800 hover:bg-slate-700'
@@ -317,8 +317,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                         isActive
                           ? 'bg-white/20 text-white'
                           : theme === 'light'
-                            ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100'
-                            : 'bg-slate-700 text-emerald-400 group-hover:bg-emerald-500/20'
+                            ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
+                            : 'bg-slate-700 text-teal-400 group-hover:bg-teal-500/20'
                       }`}
                     >
                       {chapter.id}
@@ -344,8 +344,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                         isActive
                           ? 'text-white'
                           : theme === 'light'
-                            ? 'text-gray-500 group-hover:text-emerald-600'
-                            : 'text-gray-500 group-hover:text-emerald-400'
+                            ? 'text-gray-500 group-hover:text-teal-600'
+                            : 'text-gray-500 group-hover:text-teal-400'
                       }`}
                     >
                       {chapter.name_arabic}
@@ -379,7 +379,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     }}
                     className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
                       isActive
-                        ? 'bg-emerald-500 text-white shadow-lg'
+                        ? 'bg-teal-600 text-white shadow-lg'
                         : theme === 'light'
                           ? 'bg-white hover:bg-slate-50'
                           : 'bg-slate-800 hover:bg-slate-700'
@@ -390,8 +390,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                         isActive
                           ? 'bg-white/20 text-white'
                           : theme === 'light'
-                            ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100'
-                            : 'bg-slate-700 text-emerald-400 group-hover:bg-emerald-500/20'
+                            ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
+                            : 'bg-slate-700 text-teal-400 group-hover:bg-teal-500/20'
                       }`}
                     >
                       {juz.number}
@@ -448,7 +448,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                     }}
                     className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
                       isActive
-                        ? 'bg-emerald-500 text-white shadow-lg'
+                        ? 'bg-teal-600 text-white shadow-lg'
                         : theme === 'light'
                           ? 'bg-white hover:bg-slate-50'
                           : 'bg-slate-800 hover:bg-slate-700'
@@ -459,8 +459,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                         isActive
                           ? 'bg-white/20 text-white'
                           : theme === 'light'
-                            ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-100'
-                            : 'bg-slate-700 text-emerald-400 group-hover:bg-emerald-500/20'
+                            ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
+                            : 'bg-slate-700 text-teal-400 group-hover:bg-teal-500/20'
                       }`}
                     >
                       {p}
