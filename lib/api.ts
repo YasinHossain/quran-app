@@ -20,7 +20,13 @@ interface ApiVerse extends Omit<Verse, 'words'> {
   words?: ApiWord[];
 }
 
-// Normalize API verse to app shape
+/**
+ * Converts API verse and word objects into the internal {@link Verse} format.
+ *
+ * @param raw - Verse object returned from the API. May include word entries.
+ * @param wordLang - Language to use for each word's translation. Defaults to English.
+ * @returns The normalized verse with translated words.
+ */
 function normalizeVerse(raw: ApiVerse, wordLang: LanguageCode = 'en'): Verse {
   return {
     ...raw,
