@@ -97,17 +97,21 @@ interface SearchApiResult {
   translations?: Verse['translations'];
 }
 
-// Get paginated verses by chapter
-export async function getVersesByChapter(
-  chapterId: string | number,
+// Internal helper to fetch verses for various endpoints
+export async function fetchVerses(
+  type: 'by_chapter' | 'by_juz' | 'by_page',
+  id: string | number,
   translationId: number,
   page = 1,
   perPage = 20,
-  wordLang = 'en'
+  wordLang: LanguageCode | string = 'en'
 ): Promise<PaginatedVerses> {
-  let url = `${API_BASE_URL}/verses/by_chapter/${chapterId}?language=${wordLang}&words=true`;
-  url += `&word_translation_language=${wordLang}`;
-  url += `&word_fields=text_uthmani&translations=${translationId}&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
+  const url =
+    `${API_BASE_URL}/verses/${type}/${id}?language=${wordLang}&words=true` +
+    `&word_translation_language=${wordLang}` +
+    `&word_fields=text_uthmani&translations=${translationId}` +
+    `&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
+
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(`Failed to fetch verses: ${res.status}`);
@@ -118,6 +122,17 @@ export async function getVersesByChapter(
     normalizeVerse(v, wordLang as LanguageCode)
   );
   return { verses, totalPages };
+}
+
+// Get paginated verses by chapter
+export function getVersesByChapter(
+  chapterId: string | number,
+  translationId: number,
+  page = 1,
+  perPage = 20,
+  wordLang = 'en'
+): Promise<PaginatedVerses> {
+  return fetchVerses('by_chapter', chapterId, translationId, page, perPage, wordLang);
 }
 
 // Search verses by query
@@ -149,45 +164,25 @@ export async function getTafsirByVerse(verseKey: string, tafsirId = 169): Promis
 }
 
 // Get verses by Juz (section)
-export async function getVersesByJuz(
+export function getVersesByJuz(
   juzId: string | number,
   translationId: number,
   page = 1,
   perPage = 20,
   wordLang = 'en'
 ): Promise<PaginatedVerses> {
-  const url = `${API_BASE_URL}/verses/by_juz/${juzId}?language=${wordLang}&words=true&word_translation_language=${wordLang}&word_fields=text_uthmani&translations=${translationId}&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch verses: ${res.status}`);
-  }
-  const data = await res.json();
-  const totalPages = data.meta?.total_pages || data.pagination?.total_pages || 1;
-  const verses = (data.verses as ApiVerse[]).map((v) =>
-    normalizeVerse(v, wordLang as LanguageCode)
-  );
-  return { verses, totalPages };
+  return fetchVerses('by_juz', juzId, translationId, page, perPage, wordLang);
 }
 
 // Get verses by Mushaf page
-export async function getVersesByPage(
+export function getVersesByPage(
   pageId: string | number,
   translationId: number,
   page = 1,
   perPage = 20,
   wordLang = 'en'
 ): Promise<PaginatedVerses> {
-  const url = `${API_BASE_URL}/verses/by_page/${pageId}?language=${wordLang}&words=true&word_translation_language=${wordLang}&word_fields=text_uthmani&translations=${translationId}&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch verses: ${res.status}`);
-  }
-  const data = await res.json();
-  const totalPages = data.meta?.total_pages || data.pagination?.total_pages || 1;
-  const verses = (data.verses as ApiVerse[]).map((v) =>
-    normalizeVerse(v, wordLang as LanguageCode)
-  );
-  return { verses, totalPages };
+  return fetchVerses('by_page', pageId, translationId, page, perPage, wordLang);
 }
 
 // Fetch information about a specific Juz
