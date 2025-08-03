@@ -1,5 +1,37 @@
-import { getJuz, API_BASE_URL, getRandomVerse, searchVerses } from '@/lib/api';
-import { Juz, Verse } from '@/types';
+import { getJuz, API_BASE_URL, getRandomVerse, searchVerses, getChapters } from '@/lib/api';
+import { Juz, Verse, Chapter } from '@/types';
+
+describe('getChapters', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('fetches chapter data', async () => {
+    const mockChapters: Chapter[] = [
+      {
+        id: 1,
+        name_simple: 'Al-Fatihah',
+        name_arabic: 'الفاتحة',
+        revelation_place: 'makkah',
+        verses_count: 7,
+      },
+    ];
+
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ chapters: mockChapters }),
+    }) as jest.Mock;
+
+    const result = await getChapters();
+    expect(global.fetch).toHaveBeenCalledWith(`${API_BASE_URL}/chapters?language=en`);
+    expect(result).toEqual(mockChapters);
+  });
+
+  it('throws on fetch error', async () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: false, status: 500 }) as jest.Mock;
+    await expect(getChapters()).rejects.toThrow('Failed to fetch chapters: 500');
+  });
+});
 
 describe('getJuz', () => {
   afterEach(() => {
