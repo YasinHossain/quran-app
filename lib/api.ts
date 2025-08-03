@@ -61,7 +61,7 @@ export async function getWordTranslations(): Promise<TranslationResource[]> {
   return data.translations as TranslationResource[];
 }
 
-// Fetch all tafsir resources (RESOLVED CONFLICT)
+// Fetch all tafsir resources
 export async function getTafsirResources(): Promise<TafsirResource[]> {
   const res = await fetch(`${API_BASE_URL}/resources/tafsirs`);
   if (!res.ok) {
