@@ -124,7 +124,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     }
   }, []);
 
-  // Reset centering for inactive tabs when their selection changes, ensuring they re-center if switched to
+  // Reset centering for inactive tabs when their selection changes
   useEffect(() => {
     if (activeTab !== 'Surah') shouldCenterRef.current.Surah = true;
   }, [selectedSurahId, activeTab]);
@@ -141,24 +141,22 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   useLayoutEffect(() => {
     if (!scrollRef.current) return;
     const sidebar = scrollRef.current;
-
-    // Restore scroll position from sessionStorage first, then fallback to context state
     let top = 0;
-    if (activeTab === 'Surah')
+    if (activeTab === 'Surah') {
       top = Number(sessionStorage.getItem('surahScrollTop')) || surahScrollTop;
-    else if (activeTab === 'Juz')
+    } else if (activeTab === 'Juz') {
       top = Number(sessionStorage.getItem('juzScrollTop')) || juzScrollTop;
-    else if (activeTab === 'Page')
+    } else {
       top = Number(sessionStorage.getItem('pageScrollTop')) || pageScrollTop;
-
+    }
     sidebar.scrollTop = top;
 
-    // Center the active item if necessary
     const activeEl = sidebar.querySelector<HTMLElement>('[data-active="true"]');
     if (activeEl) {
       const sidebarRect = sidebar.getBoundingClientRect();
       const activeRect = activeEl.getBoundingClientRect();
-      const isOutside = activeRect.top < sidebarRect.top || activeRect.bottom > sidebarRect.bottom;
+      const isOutside =
+        activeRect.top < sidebarRect.top || activeRect.bottom > sidebarRect.bottom;
 
       if (shouldCenterRef.current[activeTab] && (top === 0 || isOutside)) {
         activeEl.scrollIntoView({ block: 'center' });
@@ -247,8 +245,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                       ? 'bg-white text-slate-900 shadow'
                       : 'bg-slate-700 text-white shadow'
                     : theme === 'light'
-                      ? 'text-slate-400 hover:text-slate-700'
-                      : 'text-slate-400 hover:text-white'
+                    ? 'text-slate-400 hover:text-slate-700'
+                    : 'text-slate-400 hover:text-white'
                 }`}
               >
                 {label}
@@ -286,7 +284,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
               sessionStorage.setItem('pageScrollTop', String(top));
             }
           }}
-          className="flex-1 overflow-y-auto p-2"
+          className="flex-1 min-h-0 overflow-y-auto p-2"
         >
           {activeTab === 'Surah' && (
             <ul className="space-y-2">
@@ -316,8 +314,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                         isActive
                           ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/30'
                           : theme === 'light'
-                            ? 'bg-white shadow hover:bg-slate-50'
-                            : 'bg-slate-800 shadow hover:bg-slate-700'
+                          ? 'bg-white shadow hover:bg-slate-50'
+                          : 'bg-slate-800 shadow hover:bg-slate-700'
                       }`}
                     >
                       <div
@@ -325,8 +323,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                           isActive
                             ? 'bg-white/20 text-white'
                             : theme === 'light'
-                              ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
-                              : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
+                            ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
+                            : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
                         }`}
                       >
                         {chapter.id}
@@ -337,8 +335,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                             isActive
                               ? 'text-white'
                               : theme === 'light'
-                                ? 'text-slate-700'
-                                : 'text-[var(--foreground)]'
+                              ? 'text-slate-700'
+                              : 'text-[var(--foreground)]'
                           }`}
                         >
                           {chapter.name_simple}
@@ -352,8 +350,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                           isActive
                             ? 'text-white'
                             : theme === 'light'
-                              ? 'text-gray-500 group-hover:text-teal-600'
-                              : 'text-gray-500 group-hover:text-teal-400'
+                            ? 'text-gray-500 group-hover:text-teal-600'
+                            : 'text-gray-500 group-hover:text-teal-400'
                         }`}
                       >
                         {chapter.name_arabic}
@@ -390,8 +388,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                         isActive
                           ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/30'
                           : theme === 'light'
-                            ? 'bg-white shadow hover:bg-slate-50'
-                            : 'bg-slate-800 shadow hover:bg-slate-700'
+                          ? 'bg-white shadow hover:bg-slate-50'
+                          : 'bg-slate-800 shadow hover:bg-slate-700'
                       }`}
                     >
                       <div
@@ -399,8 +397,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                           isActive
                             ? 'bg-white/20 text-white'
                             : theme === 'light'
-                              ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
-                              : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
+                            ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
+                            : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
                         }`}
                       >
                         {juz.number}
@@ -411,8 +409,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                             isActive
                               ? 'text-white'
                               : theme === 'light'
-                                ? 'text-slate-700'
-                                : 'text-[var(--foreground)]'
+                              ? 'text-slate-700'
+                              : 'text-[var(--foreground)]'
                           }`}
                         >
                           Juz {juz.number}
@@ -422,8 +420,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                             isActive
                               ? 'text-white/90'
                               : theme === 'light'
-                                ? 'text-slate-600'
-                                : 'text-slate-400'
+                              ? 'text-slate-600'
+                              : 'text-slate-400'
                           }`}
                         >
                           {juz.surahRange}
@@ -460,8 +458,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                         isActive
                           ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/30'
                           : theme === 'light'
-                            ? 'bg-white shadow hover:bg-slate-50'
-                            : 'bg-slate-800 shadow hover:bg-slate-700'
+                          ? 'bg-white shadow hover:bg-slate-50'
+                          : 'bg-slate-800 shadow hover:bg-slate-700'
                       }`}
                     >
                       <div
@@ -469,8 +467,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                           isActive
                             ? 'bg-white/20 text-white'
                             : theme === 'light'
-                              ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
-                              : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
+                            ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
+                            : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
                         }`}
                       >
                         {p}
@@ -480,8 +478,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                           isActive
                             ? 'text-white'
                             : theme === 'light'
-                              ? 'text-slate-700'
-                              : 'text-[var(--foreground)]'
+                            ? 'text-slate-700'
+                            : 'text-[var(--foreground)]'
                         }`}
                       >
                         Page {p}
