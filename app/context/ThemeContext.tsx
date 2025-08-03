@@ -10,6 +10,11 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+/**
+ * Provides global color theme state.
+ * Wrap your app with this provider to share and persist the current
+ * light or dark theme preference across components.
+ */
 export const ThemeProvider = ({
   children,
   initialTheme = 'light',
@@ -46,6 +51,11 @@ export const ThemeProvider = ({
   return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;
 };
 
+/**
+ * Hook for accessing and updating the theme.
+ * Use inside components to read or change the current theme managed by
+ * `ThemeProvider`.
+ */
 export const useTheme = () => {
   const ctx = useContext(ThemeContext);
   if (!ctx) throw new Error('useTheme must be used within ThemeProvider');

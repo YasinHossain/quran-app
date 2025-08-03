@@ -16,6 +16,11 @@ interface SidebarContextType {
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
+/**
+ * Provides global sidebar UI state.
+ * Wrap components needing access to sidebar visibility and scroll
+ * positions with this provider to synchronize their behavior.
+ */
 export const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
   const [isSurahListOpen, setSurahListOpen] = useState(false);
   const [isSettingsOpen, setSettingsOpen] = useState(false);
@@ -65,6 +70,11 @@ export const SidebarProvider = ({ children }: { children: React.ReactNode }) => 
   );
 };
 
+/**
+ * Hook for interacting with sidebar state.
+ * Call within components to read or update sidebar visibility and
+ * scroll positions managed by `SidebarProvider`.
+ */
 export const useSidebar = () => {
   const ctx = useContext(SidebarContext);
   if (!ctx) throw new Error('useSidebar must be used within SidebarProvider');
