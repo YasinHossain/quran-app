@@ -78,8 +78,8 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
           </button>
         ))}
       </div>
-      <div className="p-4">
-        <h2 className="mb-4 text-center text-xl font-bold text-[var(--foreground)]">
+      <div className="p-4 mt-4">
+        <h2 className="mb-8 text-center text-xl font-bold text-[var(--foreground)]">
           {activeTab?.name}
         </h2>
         {loading[activeId] ? (
