@@ -9,8 +9,8 @@ export default function SurahLayout({ children }: { children: React.ReactNode })
   return (
     <AudioProvider>
       <Header />
-      <div className="h-screen flex flex-col pt-16">
-        <div className="flex flex-grow overflow-hidden">
+      <div className="h-screen flex flex-col">
+        <div className="flex flex-grow overflow-hidden mt-16">
           <nav aria-label="Primary navigation" className="flex-shrink-0">
             <IconSidebar />
           </nav>
