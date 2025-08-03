@@ -27,7 +27,7 @@ const Header = () => {
   return (
     // Adjusted background, padding, and grid layout for cleaner look
     <header
-      className="fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 backdrop-blur-md shadow-sm z-30"
+      className="fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 backdrop-blur-md shadow-sm z-60"
       style={{
         backgroundColor: 'var(--header-background)',
         color: 'var(--header-text-color)',

@@ -1,3 +1,10 @@
+/**
+ * Generates JSON files with metadata for all surahs and juz of the Quran.
+ *
+ * This script has no arguments and writes the following files:
+ * - `data/surahs.json` — surah numbers, names, verse counts, and meanings.
+ * - `data/juz.json` — juz numbers with corresponding surah ranges.
+ */
 import { writeFile } from 'fs/promises';
 import { getJuzMeta, getSurahMeta, surahNamesEn } from 'quran-meta';
 
