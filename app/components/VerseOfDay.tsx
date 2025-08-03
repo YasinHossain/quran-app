@@ -8,16 +8,9 @@ import surahsData from '@/data/surahs.json';
 import type { Surah } from '@/types';
 import { useTheme } from '@/app/context/ThemeContext';
 import { applyTajweed } from '@/lib/tajweed';
+import { stripHtml } from '@/lib/stripHtml';
 
 const surahs: Surah[] = surahsData;
-
-function stripHtml(html: string): string {
-  if (typeof window !== 'undefined') {
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    return doc.body.textContent || '';
-  }
-  return html.replace(/<[^>]*>/g, '');
-}
 
 export default function VerseOfDay() {
   const { settings } = useSettings();
