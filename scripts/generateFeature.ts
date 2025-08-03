@@ -1,3 +1,10 @@
+/**
+ * Scaffolds a new feature page along with a basic test file.
+ *
+ * Expects a kebab-case feature name as the first CLI argument and generates:
+ * - `app/features/<name>/page.tsx`
+ * - `__tests__/<Pascal>Page.test.tsx`
+ */
 import { mkdir, writeFile } from 'fs/promises';
 
 function toPascalCase(name: string): string {
