@@ -24,11 +24,26 @@ export const TranslationPanel = ({
   const { t } = useTranslation();
   const sortedLanguages = useMemo(() => {
     return Object.keys(groupedTranslations).sort((a, b) => {
-      if (a.toLowerCase() === 'english') return -1;
-      if (b.toLowerCase() === 'english') return 1;
+      const aLower = a.toLowerCase();
+      const bLower = b.toLowerCase();
+
+      const getRank = (lang: string) => {
+        if (lang === 'english') return 0;
+        if (lang === 'bengali' || lang === 'bangla') return 1;
+        return 2;
+      };
+
+      const rankA = getRank(aLower);
+      const rankB = getRank(bLower);
+
+      if (rankA !== rankB) {
+        return rankA - rankB;
+      }
+
       return a.localeCompare(b);
     });
   }, [groupedTranslations]);
+
   return (
     <>
       {/* Removed the overlay div */}
@@ -65,7 +80,7 @@ export const TranslationPanel = ({
             sortedLanguages.map((lang) => (
               <div key={lang}>
                 <h3 className="sticky top-0 bg-gray-100 px-4 py-2 font-bold text-teal-800 text-sm">
-                  {lang}
+                  {lang.charAt(0).toUpperCase() + lang.slice(1)}
                 </h3>
                 <div className="p-2 space-y-1">
                   {groupedTranslations[lang].map((opt) => (
