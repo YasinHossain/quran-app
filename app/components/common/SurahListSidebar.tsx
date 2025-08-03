@@ -289,122 +289,192 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
           className="flex-grow overflow-y-auto p-2"
         >
           {activeTab === 'Surah' && (
-            <nav className="space-y-2">
+            <ul className="space-y-2">
               {filteredChapters.map((chapter) => {
                 const isActive = String(chapter.id) === selectedSurahId;
                 return (
-                  <Link
-                    key={chapter.id}
-                    href={
-                      isTafsirPath
-                        ? `/features/tafsir/${chapter.id}/1`
-                        : `/features/surah/${chapter.id}`
-                    }
-                    scroll={false}
-                    data-active={isActive}
-                    onClick={() => {
-                      setSelectedSurahId(String(chapter.id));
-                      const firstPage = chapter.pages?.[0] ?? 1;
-                      setSelectedPageId(String(firstPage));
-                      setSelectedJuzId(String(getJuzByPage(firstPage)));
-                      const scrollTop = scrollRef.current?.scrollTop ?? 0;
-                      setSurahScrollTop(scrollTop);
-                      sessionStorage.setItem('surahScrollTop', String(scrollTop));
-                      sessionStorage.setItem('skipCenterSurah', '1');
-                    }}
-                    className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
-                      isActive
-                        ? 'bg-teal-600 text-white shadow-lg'
-                        : theme === 'light'
-                          ? 'bg-white hover:bg-slate-50'
-                          : 'bg-slate-800 hover:bg-slate-700'
-                    }`}
-                  >
-                    <div
-                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg shadow transition-colors ${
+                  <li key={chapter.id}>
+                    <Link
+                      href={
+                        isTafsirPath
+                          ? `/features/tafsir/${chapter.id}/1`
+                          : `/features/surah/${chapter.id}`
+                      }
+                      scroll={false}
+                      data-active={isActive}
+                      onClick={() => {
+                        setSelectedSurahId(String(chapter.id));
+                        const firstPage = chapter.pages?.[0] ?? 1;
+                        setSelectedPageId(String(firstPage));
+                        setSelectedJuzId(String(getJuzByPage(firstPage)));
+                        const scrollTop = scrollRef.current?.scrollTop ?? 0;
+                        setSurahScrollTop(scrollTop);
+                        sessionStorage.setItem('surahScrollTop', String(scrollTop));
+                        sessionStorage.setItem('skipCenterSurah', '1');
+                      }}
+                      className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
                         isActive
-                          ? 'bg-white/20 text-white'
+                          ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/30'
                           : theme === 'light'
-                            ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
-                            : 'bg-slate-700 text-teal-400 group-hover:bg-teal-500/20'
+                            ? 'bg-white hover:bg-slate-50'
+                            : 'bg-slate-800 hover:bg-slate-700'
                       }`}
                     >
-                      {chapter.id}
-                    </div>
-                    <div className="flex-grow">
+                      <div
+                        className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg shadow transition-colors ${
+                          isActive
+                            ? 'bg-white/20 text-white'
+                            : theme === 'light'
+                              ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
+                              : 'bg-slate-700 text-teal-400 group-hover:bg-teal-500/20'
+                        }`}
+                      >
+                        {chapter.id}
+                      </div>
+                      <div className="flex-grow">
+                        <p
+                          className={`font-bold ${
+                            isActive
+                              ? 'text-white'
+                              : theme === 'light'
+                                ? 'text-slate-700'
+                                : 'text-[var(--foreground)]'
+                          }`}
+                        >
+                          {chapter.name_simple}
+                        </p>
+                        <p className={`text-xs ${isActive ? 'text-white/80' : 'text-gray-500'}`}>
+                          {chapter.revelation_place} • {chapter.verses_count} verses
+                        </p>
+                      </div>
                       <p
-                        className={`font-bold ${
+                        className={`font-amiri text-xl font-bold transition-colors ${
                           isActive
                             ? 'text-white'
                             : theme === 'light'
-                              ? 'text-slate-700'
-                              : 'text-[var(--foreground)]'
+                              ? 'text-gray-500 group-hover:text-teal-600'
+                              : 'text-gray-500 group-hover:text-teal-400'
                         }`}
                       >
-                        {chapter.name_simple}
+                        {chapter.name_arabic}
                       </p>
-                      <p className={`text-xs ${isActive ? 'text-white/80' : 'text-gray-500'}`}>
-                        {chapter.revelation_place} • {chapter.verses_count} verses
-                      </p>
-                    </div>
-                    <p
-                      className={`font-amiri text-xl font-bold transition-colors ${
-                        isActive
-                          ? 'text-white'
-                          : theme === 'light'
-                            ? 'text-gray-500 group-hover:text-teal-600'
-                            : 'text-gray-500 group-hover:text-teal-400'
-                      }`}
-                    >
-                      {chapter.name_arabic}
-                    </p>
-                  </Link>
+                    </Link>
+                  </li>
                 );
               })}
-            </nav>
+            </ul>
           )}
 
           {activeTab === 'Juz' && (
-            <nav className="space-y-2">
+            <ul className="space-y-2">
               {filteredJuzs.map((juz) => {
                 const isActive = String(juz.number) === selectedJuzId;
                 return (
-                  <Link
-                    key={juz.number}
-                    href={`/features/juz/${juz.number}`}
-                    scroll={false}
-                    data-active={isActive}
-                    onClick={() => {
-                      setSelectedJuzId(String(juz.number));
-                      const page = JUZ_START_PAGES[juz.number - 1];
-                      setSelectedPageId(String(page));
-                      const chap = getSurahByPage(page, chapters);
-                      if (chap) setSelectedSurahId(String(chap.id));
-                      const scrollTop = scrollRef.current?.scrollTop ?? 0;
-                      setJuzScrollTop(scrollTop);
-                      sessionStorage.setItem('juzScrollTop', String(scrollTop));
-                      sessionStorage.setItem('skipCenterJuz', '1');
-                    }}
-                    className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
-                      isActive
-                        ? 'bg-teal-600 text-white shadow-lg'
-                        : theme === 'light'
-                          ? 'bg-white hover:bg-slate-50'
-                          : 'bg-slate-800 hover:bg-slate-700'
-                    }`}
-                  >
-                    <div
-                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg shadow transition-colors ${
+                  <li key={juz.number}>
+                    <Link
+                      href={`/features/juz/${juz.number}`}
+                      scroll={false}
+                      data-active={isActive}
+                      onClick={() => {
+                        setSelectedJuzId(String(juz.number));
+                        const page = JUZ_START_PAGES[juz.number - 1];
+                        setSelectedPageId(String(page));
+                        const chap = getSurahByPage(page, chapters);
+                        if (chap) setSelectedSurahId(String(chap.id));
+                        const scrollTop = scrollRef.current?.scrollTop ?? 0;
+                        setJuzScrollTop(scrollTop);
+                        sessionStorage.setItem('juzScrollTop', String(scrollTop));
+                        sessionStorage.setItem('skipCenterJuz', '1');
+                      }}
+                      className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
                         isActive
-                          ? 'bg-white/20 text-white'
+                          ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/30'
                           : theme === 'light'
-                            ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
-                            : 'bg-slate-700 text-teal-400 group-hover:bg-teal-500/20'
+                            ? 'bg-white hover:bg-slate-50'
+                            : 'bg-slate-800 hover:bg-slate-700'
                       }`}
                     >
-                      {juz.number}
-                    </div>
-                    <div>
+                      <div
+                        className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg shadow transition-colors ${
+                          isActive
+                            ? 'bg-white/20 text-white'
+                            : theme === 'light'
+                              ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
+                              : 'bg-slate-700 text-teal-400 group-hover:bg-teal-500/20'
+                        }`}
+                      >
+                        {juz.number}
+                      </div>
+                      <div>
+                        <p
+                          className={`font-semibold ${
+                            isActive
+                              ? 'text-white'
+                              : theme === 'light'
+                                ? 'text-slate-700'
+                                : 'text-[var(--foreground)]'
+                          }`}
+                        >
+                          Juz {juz.number}
+                        </p>
+                        <p
+                          className={`text-sm ${
+                            isActive
+                              ? 'text-white/90'
+                              : theme === 'light'
+                                ? 'text-slate-600'
+                                : 'text-slate-400'
+                          }`}
+                        >
+                          {juz.surahRange}
+                        </p>
+                      </div>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+
+          {activeTab === 'Page' && (
+            <ul className="space-y-2">
+              {filteredPages.map((p) => {
+                const isActive = String(p) === selectedPageId;
+                return (
+                  <li key={p}>
+                    <Link
+                      href={`/features/page/${p}`}
+                      scroll={false}
+                      data-active={isActive}
+                      onClick={() => {
+                        setSelectedPageId(String(p));
+                        setSelectedJuzId(String(getJuzByPage(p)));
+                        const chap = getSurahByPage(p, chapters);
+                        if (chap) setSelectedSurahId(String(chap.id));
+                        const scrollTop = scrollRef.current?.scrollTop ?? 0;
+                        setPageScrollTop(scrollTop);
+                        sessionStorage.setItem('pageScrollTop', String(scrollTop));
+                        sessionStorage.setItem('skipCenterPage', '1');
+                      }}
+                      className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
+                        isActive
+                          ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/30'
+                          : theme === 'light'
+                            ? 'bg-white hover:bg-slate-50'
+                            : 'bg-slate-800 hover:bg-slate-700'
+                      }`}
+                    >
+                      <div
+                        className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg shadow transition-colors ${
+                          isActive
+                            ? 'bg-white/20 text-white'
+                            : theme === 'light'
+                              ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
+                              : 'bg-slate-700 text-teal-400 group-hover:bg-teal-500/20'
+                        }`}
+                      >
+                        {p}
+                      </div>
                       <p
                         className={`font-semibold ${
                           isActive
@@ -414,80 +484,13 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                               : 'text-[var(--foreground)]'
                         }`}
                       >
-                        Juz {juz.number}
+                        Page {p}
                       </p>
-                      <p
-                        className={`text-sm ${
-                          isActive
-                            ? 'text-white/90'
-                            : theme === 'light'
-                              ? 'text-slate-600'
-                              : 'text-slate-400'
-                        }`}
-                      >
-                        {juz.surahRange}
-                      </p>
-                    </div>
-                  </Link>
+                    </Link>
+                  </li>
                 );
               })}
-            </nav>
-          )}
-
-          {activeTab === 'Page' && (
-            <nav className="space-y-2">
-              {filteredPages.map((p) => {
-                const isActive = String(p) === selectedPageId;
-                return (
-                  <Link
-                    key={p}
-                    href={`/features/page/${p}`}
-                    scroll={false}
-                    data-active={isActive}
-                    onClick={() => {
-                      setSelectedPageId(String(p));
-                      setSelectedJuzId(String(getJuzByPage(p)));
-                      const chap = getSurahByPage(p, chapters);
-                      if (chap) setSelectedSurahId(String(chap.id));
-                      const scrollTop = scrollRef.current?.scrollTop ?? 0;
-                      setPageScrollTop(scrollTop);
-                      sessionStorage.setItem('pageScrollTop', String(scrollTop));
-                      sessionStorage.setItem('skipCenterPage', '1');
-                    }}
-                    className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
-                      isActive
-                        ? 'bg-teal-600 text-white shadow-lg'
-                        : theme === 'light'
-                          ? 'bg-white hover:bg-slate-50'
-                          : 'bg-slate-800 hover:bg-slate-700'
-                    }`}
-                  >
-                    <div
-                      className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg shadow transition-colors ${
-                        isActive
-                          ? 'bg-white/20 text-white'
-                          : theme === 'light'
-                            ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
-                            : 'bg-slate-700 text-teal-400 group-hover:bg-teal-500/20'
-                      }`}
-                    >
-                      {p}
-                    </div>
-                    <p
-                      className={`font-semibold ${
-                        isActive
-                          ? 'text-white'
-                          : theme === 'light'
-                            ? 'text-slate-700'
-                            : 'text-[var(--foreground)]'
-                      }`}
-                    >
-                      Page {p}
-                    </p>
-                  </Link>
-                );
-              })}
-            </nav>
+            </ul>
           )}
         </div>
       </aside>
