@@ -7,13 +7,9 @@
   --border-color: #e5e7eb;
   --accent: #0d9488;
   --subtle-grey: #d1d5db;
-
-  /* Shared header translucent backgrounds */
-  /* Light mode: glassy white overlay */
-  /* Dark mode: glassy slate overlay */
 }
 
-data-theme='dark' {
+[data-theme='dark'] {
   --background: #1a202c;
   --foreground: #d1d5db;
   --border-color: #4b5563;
