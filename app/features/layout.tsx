@@ -8,8 +8,8 @@ export default function FeaturesLayout({ children }: { children: React.ReactNode
   return (
     <>
       <Header />
-      <div className="h-[calc(100vh-64px)] pt-16 flex flex-col">
-        <div className="flex flex-grow overflow-hidden min-h-0">
+      <div className="flex flex-col h-screen">
+        <div className="flex flex-grow overflow-hidden min-h-0 pt-16">
           <nav aria-label="Primary navigation" className="flex-shrink-0 h-full">
             <IconSidebar />
           </nav>
