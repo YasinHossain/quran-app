@@ -171,7 +171,7 @@ export default function TafsirVersePage() {
 
   return (
     <div className="flex flex-grow bg-white dark:bg-[var(--background)] text-[var(--foreground)] overflow-hidden min-h-0">
-      <main className="flex-grow bg-white dark:bg-[var(--background)] overflow-y-auto p-6 lg:p-10 pt-16 homepage-scrollable-area">
+      <main className="flex-grow bg-white dark:bg-[var(--background)] overflow-y-auto p-6 lg:p-10 homepage-scrollable-area">
         <div className="w-full space-y-6">
           {/* Ayah Navigation */}
           <div className="flex items-center justify-between rounded-full bg-teal-600 text-white p-2">

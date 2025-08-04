@@ -1,5 +1,14 @@
 'use client';
-import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
+
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+} from 'react';
 import { Settings } from '@/types';
 
 export const ARABIC_FONTS = [
@@ -137,41 +146,67 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
     };
   }, []);
 
-  const toggleBookmark = (verseId: string) => {
-    setBookmarkedVerses((prev) =>
-      prev.includes(verseId) ? prev.filter((id) => id !== verseId) : [...prev, verseId]
-    );
-  };
-
-  const setShowByWords = (val: boolean) => setSettings((prev) => ({ ...prev, showByWords: val }));
-
-  const setTajweed = (val: boolean) => setSettings((prev) => ({ ...prev, tajweed: val }));
-
-  const setWordLang = (lang: string) => setSettings((prev) => ({ ...prev, wordLang: lang }));
-
-  const setWordTranslationId = (id: number) =>
-    setSettings((prev) => ({ ...prev, wordTranslationId: id }));
-
-  const setTafsirIds = (ids: number[]) => setSettings((prev) => ({ ...prev, tafsirIds: ids }));
-
-  return (
-    <SettingsContext.Provider
-      value={{
-        settings,
-        setSettings,
-        arabicFonts: ARABIC_FONTS,
-        bookmarkedVerses,
-        toggleBookmark,
-        setShowByWords,
-        setTajweed,
-        setWordLang,
-        setWordTranslationId,
-        setTafsirIds,
-      }}
-    >
-      {children}
-    </SettingsContext.Provider>
+  const toggleBookmark = useCallback(
+    (verseId: string) => {
+      setBookmarkedVerses((prev) =>
+        prev.includes(verseId) ? prev.filter((id) => id !== verseId) : [...prev, verseId]
+      );
+    },
+    [setBookmarkedVerses]
   );
+
+  const setShowByWords = useCallback(
+    (val: boolean) => setSettings((prev) => ({ ...prev, showByWords: val })),
+    [setSettings]
+  );
+
+  const setTajweed = useCallback(
+    (val: boolean) => setSettings((prev) => ({ ...prev, tajweed: val })),
+    [setSettings]
+  );
+
+  const setWordLang = useCallback(
+    (lang: string) => setSettings((prev) => ({ ...prev, wordLang: lang })),
+    [setSettings]
+  );
+
+  const setWordTranslationId = useCallback(
+    (id: number) => setSettings((prev) => ({ ...prev, wordTranslationId: id })),
+    [setSettings]
+  );
+
+  const setTafsirIds = useCallback(
+    (ids: number[]) => setSettings((prev) => ({ ...prev, tafsirIds: ids })),
+    [setSettings]
+  );
+
+  const value = useMemo(
+    () => ({
+      settings,
+      setSettings,
+      arabicFonts: ARABIC_FONTS,
+      bookmarkedVerses,
+      toggleBookmark,
+      setShowByWords,
+      setTajweed,
+      setWordLang,
+      setWordTranslationId,
+      setTafsirIds,
+    }),
+    [
+      settings,
+      setSettings,
+      bookmarkedVerses,
+      toggleBookmark,
+      setShowByWords,
+      setTajweed,
+      setWordLang,
+      setWordTranslationId,
+      setTafsirIds,
+    ]
+  );
+
+  return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;
 };
 
 export const useSettings = () => {

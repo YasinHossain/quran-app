@@ -13,6 +13,7 @@ import { useSettings } from '@/app/context/SettingsContext';
 import { ArabicFontPanel } from './ArabicFontPanel';
 import { useSidebar } from '@/app/context/SidebarContext';
 import { useTheme } from '@/app/context/ThemeContext';
+import { useHeaderVisibility } from '@/app/context/HeaderVisibilityContext';
 
 interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;
@@ -42,6 +43,7 @@ export const SettingsSidebar = ({
   const { theme, setTheme } = useTheme();
   const [activeTab, setActiveTab] = useState('translation');
   const [openPanels, setOpenPanels] = useState<string[]>(['reading', 'font']);
+  const { isHidden } = useHeaderVisibility();
 
   // Helper function to calculate the slider's progress percentage
   const getPercentage = (value: number, min: number, max: number) => {
@@ -96,7 +98,7 @@ export const SettingsSidebar = ({
       />
       {/* This is the main settings sidebar container. */}
       <aside
-        className={`fixed lg:static top-16 bottom-0 right-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-transform duration-300 z-40 lg:z-40 lg:h-full ${
+        className={`fixed lg:static ${isHidden ? 'top-0' : 'top-16'} bottom-0 right-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 z-40 lg:z-40 lg:h-full ${
           isSettingsOpen ? 'translate-x-0' : 'translate-x-full'
         } lg:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} lg:flex`}
       >

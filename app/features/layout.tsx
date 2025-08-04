@@ -3,13 +3,20 @@
 import Header from '@/app/components/common/Header';
 import IconSidebar from '@/app/components/common/IconSidebar';
 import SurahListSidebar from '@/app/components/common/SurahListSidebar';
+import {
+  HeaderVisibilityProvider,
+  useHeaderVisibility,
+} from '@/app/context/HeaderVisibilityContext';
 
-export default function FeaturesLayout({ children }: { children: React.ReactNode }) {
+function LayoutContent({ children }: { children: React.ReactNode }) {
+  const { isHidden } = useHeaderVisibility();
   return (
     <>
-      <Header />
+      <Header isHidden={isHidden} />
       <div className="flex flex-col h-screen">
-        <div className="flex flex-grow overflow-hidden min-h-0 pt-16">
+        <div
+          className={`flex flex-grow overflow-hidden min-h-0 transition-[padding-top] duration-300 ${isHidden ? 'pt-0' : 'pt-16'}`}
+        >
           <nav aria-label="Primary navigation" className="flex-shrink-0 h-full">
             <IconSidebar />
           </nav>
@@ -20,5 +27,13 @@ export default function FeaturesLayout({ children }: { children: React.ReactNode
         </div>
       </div>
     </>
+  );
+}
+
+export default function FeaturesLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <HeaderVisibilityProvider>
+      <LayoutContent>{children}</LayoutContent>
+    </HeaderVisibilityProvider>
   );
 }
