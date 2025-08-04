@@ -4,6 +4,13 @@ interface SpinnerProps {
   className?: string;
 }
 
+/**
+ * Renders a spinning SVG to indicate loading state.
+ *
+ * @param props - Component properties.
+ * @param props.className - Optional CSS classes applied to the spinner.
+ * @returns The spinner SVG element.
+ */
 const Spinner = ({ className = '' }: SpinnerProps) => (
   <svg
     className={`animate-spin ${className}`}
