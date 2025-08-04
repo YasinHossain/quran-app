@@ -229,5 +229,19 @@ export async function getRandomVerse(translationId: number): Promise<Verse> {
   return normalizeVerse(data.verse);
 }
 
+// Fetch a single verse by its ID
+export async function getVerseById(
+  verseId: string | number,
+  translationId: number
+): Promise<Verse> {
+  const url = `${API_BASE_URL}/verses/${verseId}?translations=${translationId}&fields=text_uthmani`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch verse: ${res.status}`);
+  }
+  const data = await res.json();
+  return normalizeVerse(data.verse);
+}
+
 // Export base URL for use elsewhere
 export { API_BASE_URL };

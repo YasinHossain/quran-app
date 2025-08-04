@@ -1,39 +1,56 @@
 // app/features/bookmarks/_components/BookmarkedVersesList.tsx
 'use client';
+import { useEffect, useState } from 'react';
 import { useSettings } from '@/app/context/SettingsContext';
-// You will likely need to fetch verse data based on the bookmarkedVerseIds
-// import { fetchVerseById } from '@/lib/api'; // Assuming you have an API function to fetch verse data
-// import { Verse } from '@/types'; // Assuming you have a Verse type
+import { getVerseById } from '@/lib/api';
+import { Verse } from '@/types';
 
 const BookmarkedVersesList = () => {
-  const { bookmarkedVerses } = useSettings();
-  // const [verses, setVerses] = useState<Verse[]>([]); // State to hold fetched verse data
+  const { bookmarkedVerses, settings } = useSettings();
+  const [verses, setVerses] = useState<Verse[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  // useEffect(() => {
-  //   const fetchBookmarkedVerses = async () => {
-  //     const fetchedVerses = await Promise.all(
-  //       bookmarkedVerses.map(verseId => fetchVerseById(verseId))
-  //     );
-  //     setVerses(fetchedVerses);
-  //   };
+  useEffect(() => {
+    if (bookmarkedVerses.length === 0) {
+      setVerses([]);
+      setError(null);
+      return;
+    }
 
-  //   fetchBookmarkedVerses();
-  // }, [bookmarkedVerses]);
+    const fetchBookmarkedVerses = async () => {
+      try {
+        const fetched = await Promise.all(
+          bookmarkedVerses.map((id) => getVerseById(id, settings.translationId))
+        );
+        setVerses(fetched);
+        setError(null);
+      } catch (err) {
+        setError((err as Error).message);
+      }
+    };
+
+    fetchBookmarkedVerses();
+  }, [bookmarkedVerses, settings.translationId]);
+
+  if (bookmarkedVerses.length === 0) {
+    return <p>No verses bookmarked yet.</p>;
+  }
+
+  if (error) {
+    return <p>Failed to load bookmarked verses. {error}</p>;
+  }
 
   return (
     <div className="space-y-4">
-      {bookmarkedVerses.length === 0 ? (
-        <p>No verses bookmarked yet.</p>
-      ) : (
-        // Render your bookmarked verses here
-        // {verses.map(verse => (
-        //   <div key={verse.id}>
-        //     {/* Render individual verse details */}
-        //     <p>{verse.text}</p>
-        //   </div>
-        // ))}
-        <p>Displaying bookmarked verses: {bookmarkedVerses.join(', ')}</p> // Placeholder
-      )}
+      {verses.map((verse) => (
+        <div key={verse.id}>
+          <p className="font-semibold">{verse.verse_key}</p>
+          <p className="text-right" dangerouslySetInnerHTML={{ __html: verse.text_uthmani }} />
+          {verse.translations?.map((t) => (
+            <p key={t.resource_id} dangerouslySetInnerHTML={{ __html: t.text }} />
+          ))}
+        </div>
+      ))}
     </div>
   );
 };
