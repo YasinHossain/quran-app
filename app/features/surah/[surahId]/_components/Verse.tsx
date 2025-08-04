@@ -1,4 +1,5 @@
 // app/surah/[surahId]/_components/Verse.tsx
+import { memo, useCallback } from 'react';
 import {
   FaPlay,
   FaPause,
@@ -19,7 +20,11 @@ interface VerseProps {
   verse: VerseType;
 }
 
-export const Verse = ({ verse }: VerseProps) => {
+/**
+ * Memoized to prevent unnecessary rerenders when `verse` prop
+ * and context values are stable.
+ */
+export const Verse = memo(function Verse({ verse }: VerseProps) {
   const { playingId, setPlayingId, loadingId } = useAudio();
   const { settings, bookmarkedVerses, toggleBookmark } = useSettings();
   const router = useRouter();
@@ -30,6 +35,18 @@ export const Verse = ({ verse }: VerseProps) => {
   const isBookmarked = bookmarkedVerses.includes(String(verse.id)); // Check if verse is bookmarked (using string ID)
   const [surahId, ayahId] = verse.verse_key.split(':');
 
+  const handlePlayPause = useCallback(() => {
+    setPlayingId((currentId) => (currentId === verse.id ? null : verse.id));
+  }, [setPlayingId, verse.id]);
+
+  const handleBookmark = useCallback(() => {
+    toggleBookmark(String(verse.id));
+  }, [toggleBookmark, verse.id]);
+
+  const handleTafsir = useCallback(() => {
+    router.push(`/features/tafsir/${surahId}/${ayahId}`);
+  }, [router, surahId, ayahId]);
+
   return (
     <>
       <div className="flex items-start gap-x-6 mb-12 pb-8 border-b border-[var(--border-color)]">
@@ -38,9 +55,7 @@ export const Verse = ({ verse }: VerseProps) => {
           <div className="flex flex-col items-center space-y-1 text-gray-400 dark:text-gray-500">
             <button
               aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
-              onClick={() =>
-                setPlayingId((currentId) => (currentId === verse.id ? null : verse.id))
-              }
+              onClick={handlePlayPause}
               title="Play/Pause"
               className={`p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition ${isPlaying ? 'text-teal-600' : 'hover:text-teal-600'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500`}
             >
@@ -56,7 +71,7 @@ export const Verse = ({ verse }: VerseProps) => {
             <button
               aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
               title="Bookmark"
-              onClick={() => toggleBookmark(String(verse.id))}
+              onClick={handleBookmark}
               className={`p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition ${isBookmarked ? 'text-teal-600' : 'hover:text-teal-600'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500`}
             >
               {isBookmarked ? <FaBookmark size={18} /> : <FaRegBookmark size={18} />}
@@ -66,7 +81,7 @@ export const Verse = ({ verse }: VerseProps) => {
             <button
               aria-label="Tafsir"
               title="Tafsir"
-              onClick={() => router.push(`/features/tafsir/${surahId}/${ayahId}`)}
+              onClick={handleTafsir}
               className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-teal-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
             >
               <FaBookReader size={18} />
@@ -143,4 +158,4 @@ export const Verse = ({ verse }: VerseProps) => {
       </div>
     </>
   );
-};
+});
