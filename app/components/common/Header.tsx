@@ -57,8 +57,8 @@ const Header = ({ isHidden = false }: HeaderProps) => {
 
   // Determine background classes based on the current theme
   const searchBarBgClass = theme === 'light' ? 'bg-white' : 'bg-gray-800';
-  // Use a transparent header background to avoid tinting underlying content
-  const headerBgClass = 'bg-transparent';
+  // Use a stable header background based on the current theme
+  const headerBgClass = theme === 'light' ? 'bg-white' : 'bg-[var(--background)]';
 
   return (
     <header
