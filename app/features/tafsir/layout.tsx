@@ -9,12 +9,12 @@ export default function TafsirLayout({ children }: { children: React.ReactNode }
   return (
     <AudioProvider>
       <Header />
-      <div className="h-screen flex flex-col">
+      <div className="h-[calc(100vh-64px)] pt-16 flex flex-col">
         <div className="flex flex-grow overflow-hidden min-h-0">
-          <nav aria-label="Primary navigation" className="flex-shrink-0 h-full pt-16">
+          <nav aria-label="Primary navigation" className="flex-shrink-0 h-full">
             <IconSidebar />
           </nav>
-          <nav aria-label="Surah navigation" className="flex-shrink-0 h-full pt-16">
+          <nav aria-label="Surah navigation" className="flex-shrink-0 h-full">
             <SurahListSidebar />
           </nav>
           {children}
