@@ -2,6 +2,10 @@ import { render, screen } from '@testing-library/react';
 import { SettingsProvider } from '@/app/context/SettingsContext';
 import BookmarkedVersesList from '@/app/features/bookmarks/_components/BookmarkedVersesList';
 import BookmarksPage from '@/app/features/bookmarks/page';
+import * as api from '@/lib/api';
+import { Verse } from '@/types';
+
+jest.mock('@/lib/api');
 
 describe('Bookmarked verses components', () => {
   beforeEach(() => {
@@ -17,14 +21,32 @@ describe('Bookmarked verses components', () => {
     expect(screen.getByText('No verses bookmarked yet.')).toBeInTheDocument();
   });
 
-  test('BookmarkedVersesList displays saved bookmarks', () => {
-    localStorage.setItem('quranAppBookmarks', JSON.stringify(['1:1', '2:3']));
+  test('BookmarkedVersesList renders fetched verses', async () => {
+    const mockVerse: Verse = {
+      id: 1,
+      verse_key: '1:1',
+      text_uthmani: 'verse text',
+      translations: [{ resource_id: 20, text: 'translation' }],
+    } as Verse;
+    (api.getVerseById as jest.Mock).mockResolvedValue(mockVerse);
+    localStorage.setItem('quranAppBookmarks', JSON.stringify(['1']));
     render(
       <SettingsProvider>
         <BookmarkedVersesList />
       </SettingsProvider>
     );
-    expect(screen.getByText('Displaying bookmarked verses: 1:1, 2:3')).toBeInTheDocument();
+    expect(await screen.findByText('translation')).toBeInTheDocument();
+  });
+
+  test('BookmarkedVersesList shows error message on failure', async () => {
+    (api.getVerseById as jest.Mock).mockRejectedValue(new Error('boom'));
+    localStorage.setItem('quranAppBookmarks', JSON.stringify(['1']));
+    render(
+      <SettingsProvider>
+        <BookmarkedVersesList />
+      </SettingsProvider>
+    );
+    expect(await screen.findByText('Failed to load bookmarked verses. boom')).toBeInTheDocument();
   });
 
   test('BookmarksPage renders heading', () => {
