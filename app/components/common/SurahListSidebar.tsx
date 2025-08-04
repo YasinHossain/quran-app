@@ -36,6 +36,11 @@ interface Props {
   initialChapters?: Chapter[];
 }
 
+/**
+ * Sidebar with tabs for browsing Surahs, Juzs and pages.
+ * Includes a search input for filtering and remembers scroll position
+ * between tabs via session storage and the sidebar context.
+ */
 const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const { t } = useTranslation();
   const { data } = useSWR('chapters', getChapters, { fallbackData: initialChapters });
