@@ -199,6 +199,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
 
   return (
     <>
+      {/* This is the overlay for mobile view, which closes the sidebar when clicked. */}
       <div
         className={`fixed inset-0 bg-black/30 z-40 md:hidden ${isSurahListOpen ? '' : 'hidden'}`}
         role="button"
@@ -210,8 +211,9 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
           }
         }}
       />
+      {/* This is the main sidebar container. */}
       <aside
-        className={`fixed md:static top-0 bottom-0 left-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col shadow-lg pt-0 md:pt-16 z-50 md:z-10 md:h-full transform transition-transform duration-300 ${
+        className={`fixed md:static top-0 bottom-0 left-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col shadow-lg pt-16 md:pt-0 z-50 md:z-10 md:h-full transform transition-transform duration-300 ${
           isSurahListOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
       >
