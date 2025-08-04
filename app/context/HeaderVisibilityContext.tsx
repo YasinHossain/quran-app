@@ -1,5 +1,6 @@
 'use client';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 interface HeaderVisibilityState {
   isHidden: boolean;
@@ -10,6 +11,7 @@ const HeaderVisibilityContext = createContext<HeaderVisibilityState>({ isHidden:
 export const HeaderVisibilityProvider = ({ children }: { children: React.ReactNode }) => {
   const [isHidden, setIsHidden] = useState(false);
   const lastScrollY = useRef(0);
+  const pathname = usePathname();
 
   useEffect(() => {
     const scrollEl = document.querySelector('.homepage-scrollable-area');
@@ -26,8 +28,12 @@ export const HeaderVisibilityProvider = ({ children }: { children: React.ReactNo
     };
 
     scrollEl.addEventListener('scroll', handleScroll);
+    // Reset scroll tracking and ensure header is visible on navigation
+    lastScrollY.current = 0;
+    setIsHidden(false);
+
     return () => scrollEl.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [pathname]);
 
   return (
     <HeaderVisibilityContext.Provider value={{ isHidden }}>
