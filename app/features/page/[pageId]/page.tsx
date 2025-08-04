@@ -126,7 +126,7 @@ export default function QuranPage({ params }: QuranPageProps) {
 
   return (
     <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden min-h-0">
-      <main className="flex-grow bg-[var(--background)] p-6 lg:p-10 overflow-y-auto homepage-scrollable-area">
+      <main className="flex-grow bg-[var(--background)] p-6 lg:p-10 pt-16 overflow-y-auto homepage-scrollable-area">
         <div className="w-full relative">
           {/* Only render content when pageId is available */}
           {pageId ? (
