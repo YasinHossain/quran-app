@@ -1,4 +1,3 @@
-// app/components/Header.tsx
 'use client';
 import { FaSearch, FaBars } from './SvgIcons';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +12,7 @@ const Header = () => {
   const { setSurahListOpen, setSettingsOpen } = useSidebar();
   const router = useRouter();
   const [query, setQuery] = useState('');
-  const { theme } = useTheme(); // Use the theme context to determine search bar background
+  const { theme } = useTheme(); // Determine search bar bg
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && query.trim()) {
@@ -21,12 +20,13 @@ const Header = () => {
     }
   };
 
-  // Determine search bar background class based on theme
+  // Search bar background by theme
   const searchBarBgClass = theme === 'light' ? 'bg-white' : 'bg-gray-800';
 
   return (
-    // Adjusted background, padding, and grid layout for cleaner look
-    <header className="fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 backdrop-blur-md bg-white/40 dark:bg-gray-900/40 text-gray-800 dark:text-gray-100 shadow-sm z-30">
+    <header
+      className="fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 backdrop-blur-md bg-white/40 dark:bg-gray-900/40 text-gray-800 dark:text-gray-100 shadow-sm z-30"
+    >
       {/* Column 1: Title & Surah List Toggle */}
       <div className="flex items-center gap-2">
         <button
@@ -42,7 +42,10 @@ const Header = () => {
       {/* Column 2: Centered Search Bar */}
       <div className="flex justify-center">
         <div className="relative w-full max-w-lg">
-          <FaSearch size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+          <FaSearch
+            size={18}
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+          />
           <input
             type="text"
             placeholder={t('search_placeholder')}
@@ -54,7 +57,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Column 3: Settings button */}
+      {/* Column 3: Settings Button */}
       <div className="flex justify-end">
         <button
           onClick={() => setSettingsOpen(true)}

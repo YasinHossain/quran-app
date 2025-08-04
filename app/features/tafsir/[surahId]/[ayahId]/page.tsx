@@ -170,7 +170,7 @@ export default function TafsirVersePage() {
   const currentSurah = surahList.find((surah) => surah.number === Number(surahId));
 
   return (
-    <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] overflow-hidden">
+    <div className="flex flex-grow bg-[var(--background)] text-[var(--foreground)] overflow-hidden min-h-0">
       <div className="flex-grow overflow-y-auto p-6 lg:p-10">
         <div className="w-full space-y-6">
           {/* Ayah Navigation */}

@@ -76,7 +76,6 @@ export default function SurahPage({ params }: SurahPageProps) {
   const isLoading = !data && !error;
   const isReachingEnd = size >= totalPages;
 
-  // --- Infinite Scroll Effect ---
   useEffect(() => {
     if (!loadMoreRef.current) return;
     const observer = new IntersectionObserver((entries) => {
@@ -88,7 +87,6 @@ export default function SurahPage({ params }: SurahPageProps) {
     return () => observer.disconnect();
   }, [isReachingEnd, isValidating, size, setSize]);
 
-  // --- Memoized Values ---
   const selectedTranslationName = useMemo(
     () =>
       translationOptions.find((o) => o.id === settings.translationId)?.name ||
@@ -123,7 +121,7 @@ export default function SurahPage({ params }: SurahPageProps) {
   );
 
   return (
-    <div className="flex flex-grow bg-white dark:bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden">
+    <div className="flex flex-grow bg-white dark:bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden min-h-0">
       <main className="flex-grow bg-white dark:bg-[var(--background)] p-6 lg:p-10 pt-16 overflow-y-auto homepage-scrollable-area">
         <div className="w-full relative">
           {isLoading ? (

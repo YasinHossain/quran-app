@@ -1,5 +1,5 @@
-// app/features/surah/layout.tsx
 'use client';
+
 import Header from '@/app/components/common/Header';
 import IconSidebar from '@/app/components/common/IconSidebar';
 import SurahListSidebar from '@/app/components/common/SurahListSidebar';
@@ -9,12 +9,12 @@ export default function SurahLayout({ children }: { children: React.ReactNode })
   return (
     <AudioProvider>
       <Header />
-      <div className="h-screen flex flex-col">
-        <div className="flex flex-grow overflow-hidden">
-          <nav aria-label="Primary navigation" className="flex-shrink-0 pt-16">
+      <div className="h-screen flex flex-col pt-16">
+        <div className="flex flex-grow overflow-hidden min-h-0">
+          <nav aria-label="Primary navigation" className="flex-shrink-0 h-full">
             <IconSidebar />
           </nav>
-          <nav aria-label="Surah navigation" className="flex-shrink-0 pt-16">
+          <nav aria-label="Surah navigation" className="flex-shrink-0 h-full">
             <SurahListSidebar />
           </nav>
           {children}
