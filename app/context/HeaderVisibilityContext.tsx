@@ -1,5 +1,6 @@
 'use client';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 interface HeaderVisibilityState {
   isHidden: boolean;
@@ -10,8 +11,18 @@ const HeaderVisibilityContext = createContext<HeaderVisibilityState>({ isHidden:
 export const HeaderVisibilityProvider = ({ children }: { children: React.ReactNode }) => {
   const [isHidden, setIsHidden] = useState(false);
   const lastScrollY = useRef(0);
+  let pathname = '';
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    pathname = usePathname();
+  } catch {
+    // no-op in non-navigation environments (e.g., tests)
+  }
 
   useEffect(() => {
+    lastScrollY.current = 0;
+    setIsHidden(false);
+
     const scrollEl = document.querySelector('.homepage-scrollable-area');
     if (!scrollEl) return;
 
@@ -27,7 +38,7 @@ export const HeaderVisibilityProvider = ({ children }: { children: React.ReactNo
 
     scrollEl.addEventListener('scroll', handleScroll);
     return () => scrollEl.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [pathname]);
 
   return (
     <HeaderVisibilityContext.Provider value={{ isHidden }}>
