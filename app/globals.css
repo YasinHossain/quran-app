@@ -19,7 +19,7 @@
 
 @layer base {
   body {
-    @apply bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200;
+    @apply bg-[var(--background)] text-[var(--foreground)];
     font-family: Inter, sans-serif;
     margin: 0;
     -webkit-font-smoothing: antialiased;
