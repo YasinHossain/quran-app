@@ -38,16 +38,16 @@ describe('IconSidebar', () => {
       </Wrapper>
     );
 
-    const homeBtn = screen.getByRole('button', { name: 'home' });
-    expect(homeBtn).toBeInTheDocument();
-    expect(homeBtn.closest('a')).toHaveAttribute('href', '/');
+    const homeLink = screen.getByRole('link', { name: 'home' });
+    expect(homeLink).toBeInTheDocument();
+    expect(homeLink).toHaveAttribute('href', '/');
 
-    const surahBtn = screen.getByRole('button', { name: 'all_surahs' });
-    expect(surahBtn).toBeInTheDocument();
-    expect(surahBtn.closest('a')).toHaveAttribute('href', '/features/surah/1');
+    const surahLink = screen.getByRole('link', { name: 'all_surahs' });
+    expect(surahLink).toBeInTheDocument();
+    expect(surahLink).toHaveAttribute('href', '/features/surah/1');
 
-    const bookmarksBtn = screen.getByRole('button', { name: 'bookmarks' });
-    expect(bookmarksBtn).toBeInTheDocument();
-    expect(bookmarksBtn.closest('a')).toHaveAttribute('href', '/features/bookmarks');
+    const bookmarksLink = screen.getByRole('link', { name: 'bookmarks' });
+    expect(bookmarksLink).toBeInTheDocument();
+    expect(bookmarksLink).toHaveAttribute('href', '/features/bookmarks');
   });
 });

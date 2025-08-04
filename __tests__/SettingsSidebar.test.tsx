@@ -8,6 +8,7 @@ import { TranslationPanel } from '@/app/features/surah/[surahId]/_components/Tra
 import { SettingsProvider } from '@/app/context/SettingsContext';
 import { SidebarProvider } from '@/app/context/SidebarContext';
 import { ThemeProvider } from '@/app/context/ThemeContext';
+import { HeaderVisibilityProvider } from '@/app/context/HeaderVisibilityContext';
 
 // mock translation hook
 jest.mock('react-i18next', () => ({
@@ -17,13 +18,16 @@ jest.mock('react-i18next', () => ({
 // mock next/navigation for Header
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: jest.fn() }),
+  usePathname: () => '/',
 }));
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (
   <ThemeProvider>
-    <SettingsProvider>
-      <SidebarProvider>{children}</SidebarProvider>
-    </SettingsProvider>
+    <HeaderVisibilityProvider>
+      <SettingsProvider>
+        <SidebarProvider>{children}</SidebarProvider>
+      </SettingsProvider>
+    </HeaderVisibilityProvider>
   </ThemeProvider>
 );
 

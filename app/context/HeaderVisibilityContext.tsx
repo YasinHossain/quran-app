@@ -11,15 +11,10 @@ const HeaderVisibilityContext = createContext<HeaderVisibilityState>({ isHidden:
 export const HeaderVisibilityProvider = ({ children }: { children: React.ReactNode }) => {
   const [isHidden, setIsHidden] = useState(false);
   const lastScrollY = useRef(0);
-  let pathname = '';
-  try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    pathname = usePathname();
-  } catch {
-    // no-op in non-navigation environments (e.g., tests)
-  }
+  const pathname = usePathname();
 
   useEffect(() => {
+    // Reset state on every page navigation
     lastScrollY.current = 0;
     setIsHidden(false);
 
@@ -28,6 +23,7 @@ export const HeaderVisibilityProvider = ({ children }: { children: React.ReactNo
 
     const handleScroll = () => {
       const currentY = (scrollEl as HTMLElement).scrollTop;
+      // Hide header when scrolling down past a 50px threshold
       if (currentY > lastScrollY.current && currentY > 50) {
         setIsHidden(true);
       } else {
@@ -37,8 +33,10 @@ export const HeaderVisibilityProvider = ({ children }: { children: React.ReactNo
     };
 
     scrollEl.addEventListener('scroll', handleScroll);
+
+    // Cleanup by removing the event listener
     return () => scrollEl.removeEventListener('scroll', handleScroll);
-  }, [pathname]);
+  }, [pathname]); // This effect re-runs on every route change
 
   return (
     <HeaderVisibilityContext.Provider value={{ isHidden }}>

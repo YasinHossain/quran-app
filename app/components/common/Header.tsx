@@ -2,52 +2,19 @@
 import { FaSearch, FaBars } from './SvgIcons';
 import { useTranslation } from 'react-i18next';
 import { useSidebar } from '@/app/context/SidebarContext';
-import { useState, useEffect, useRef } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { FaCog } from 'react-icons/fa';
 import { useTheme } from '@/app/context/ThemeContext';
+import { useHeaderVisibility } from '@/app/context/HeaderVisibilityContext';
 
-interface HeaderProps {
-  isHidden?: boolean;
-}
-
-const Header = ({ isHidden = false }: HeaderProps) => {
+const Header = () => {
   const { t } = useTranslation();
   const { setSurahListOpen, setSettingsOpen } = useSidebar();
   const router = useRouter();
   const [query, setQuery] = useState('');
   const { theme } = useTheme(); // Use the theme context to determine colors
-  const [scrollHidden, setScrollHidden] = useState(false);
-  const lastScrollY = useRef(0);
-  let pathname = '';
-  try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    pathname = usePathname();
-  } catch {
-    // no-op in non-navigation environments (e.g., tests)
-  }
-
-  useEffect(() => {
-    const scrollEl = document.querySelector('.homepage-scrollable-area');
-    if (!scrollEl) return;
-
-    const handleScroll = () => {
-      const currentY = (scrollEl as HTMLElement).scrollTop;
-      if (currentY > lastScrollY.current && currentY > 50) {
-        setScrollHidden(true);
-      } else {
-        setScrollHidden(false);
-      }
-      lastScrollY.current = currentY;
-    };
-
-    scrollEl.addEventListener('scroll', handleScroll);
-    // Reset scroll tracking and ensure header is visible on navigation
-    lastScrollY.current = 0;
-    setScrollHidden(false);
-
-    return () => scrollEl.removeEventListener('scroll', handleScroll);
-  }, [pathname]);
+  const { isHidden } = useHeaderVisibility();
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && query.trim()) {
@@ -57,12 +24,12 @@ const Header = ({ isHidden = false }: HeaderProps) => {
 
   // Determine background classes based on the current theme
   const searchBarBgClass = theme === 'light' ? 'bg-white' : 'bg-gray-800';
-  // Use a transparent header background to avoid tinting underlying content
-  const headerBgClass = 'bg-transparent';
+  // Use a stable header background based on the current theme
+  const headerBgClass = theme === 'light' ? 'bg-white' : 'bg-[var(--background)]';
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 ${headerBgClass} text-gray-800 dark:text-gray-100 shadow-sm z-50 transform transition-transform duration-300 ${isHidden || scrollHidden ? '-translate-y-full' : 'translate-y-0'}`}
+      className={`fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 ${headerBgClass} text-gray-800 dark:text-gray-100 shadow-sm z-50 transform transition-transform duration-300 ${isHidden ? '-translate-y-full' : 'translate-y-0'}`}
     >
       {/* Column 1: Title & Surah List Toggle */}
       <div className="flex items-center gap-2">

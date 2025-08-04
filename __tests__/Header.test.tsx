@@ -2,10 +2,13 @@ import { render, screen } from '@testing-library/react';
 import Header from '@/app/components/common/Header';
 import { SidebarProvider } from '@/app/context/SidebarContext';
 import { ThemeProvider } from '@/app/context/ThemeContext';
+import { HeaderVisibilityProvider } from '@/app/context/HeaderVisibilityContext';
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (
   <ThemeProvider>
-    <SidebarProvider>{children}</SidebarProvider>
+    <HeaderVisibilityProvider>
+      <SidebarProvider>{children}</SidebarProvider>
+    </HeaderVisibilityProvider>
   </ThemeProvider>
 );
 
@@ -18,6 +21,7 @@ jest.mock('react-i18next', () => ({
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: jest.fn() }),
+  usePathname: () => '/',
 }));
 
 beforeAll(() => {
