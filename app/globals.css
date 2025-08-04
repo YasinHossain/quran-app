@@ -8,21 +8,17 @@
   --accent: #0d9488;
   --subtle-grey: #d1d5db;
 
-  /* Header variables for light mode */
-  --header-background: rgba(255, 255, 255, 0.6);
-  --header-text-color: #1f2937;
+  /* Shared header translucent backgrounds */
+  /* Light mode: glassy white overlay */
+  /* Dark mode: glassy slate overlay */
 }
 
-[data-theme='dark'] {
+data-theme='dark' {
   --background: #1a202c;
   --foreground: #d1d5db;
   --border-color: #4b5563;
   --accent: #0d9488;
   --subtle-grey: #4b5563;
-
-  /* Header variables for dark mode */
-  --header-background: rgba(31, 41, 55, 0.6);
-  --header-text-color: #f9fafb;
 }
 
 @layer base {
@@ -65,34 +61,6 @@ input[type='range'] {
     var(--accent) var(--value-percent, 0%),
     var(--subtle-grey) var(--value-percent, 0%)
   );
-}
-
-input[type='range']::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  background: var(--background);
-  border: 2px solid var(--border-color);
-  border-radius: 50%;
-  cursor: pointer;
-  margin-top: -5px;
-  transition:
-    background 0.3s,
-    box-shadow 0.3s;
-}
-
-input[type='range']::-webkit-slider-thumb:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
-input[type='range'] {
-  background: linear-gradient(
-    to right,
-    var(--accent) var(--value-percent, 0%),
-    var(--subtle-grey) var(--value-percent, 0%)
-  ) !important;
 }
 
 input[type='range']::-webkit-slider-thumb {
