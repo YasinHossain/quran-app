@@ -7,10 +7,6 @@
   --border-color: #e5e7eb;
   --accent: #0d9488;
   --subtle-grey: #d1d5db;
-
-  /* Header variables for light mode */
-  --header-background: rgba(255, 255, 255, 0.3);
-  --header-text-color: #1f2937;
 }
 
 [data-theme='dark'] {
@@ -19,10 +15,6 @@
   --border-color: #4b5563;
   --accent: #0d9488;
   --subtle-grey: #4b5563;
-
-  /* Header variables for dark mode */
-  --header-background: rgba(31, 41, 55, 0.3);
-  --header-text-color: #f9fafb;
 }
 
 @layer base {
