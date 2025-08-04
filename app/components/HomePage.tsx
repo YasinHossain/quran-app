@@ -20,6 +20,19 @@ const allJuz: JuzSummary[] = juzData;
 const allPages = Array.from({ length: 604 }, (_, i) => i + 1);
 
 // --- Main Page Component ---
+/**
+ * Home page for the Qur'an application.
+ *
+ * Features:
+ * - Search bar for filtering Surahs, Juz, and pages.
+ * - Tab navigation to switch between Surah, Juz, and Page views.
+ * - Theme toggle to switch between light and dark modes.
+ *
+ * Internal state:
+ * - `searchQuery` stores the user's search input.
+ * - `activeTab` tracks which tab is selected.
+ * - `theme` is managed via `useTheme` and toggled with `setTheme`.
+ */
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'Surah' | 'Juz' | 'Page'>('Surah');
