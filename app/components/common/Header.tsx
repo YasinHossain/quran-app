@@ -22,11 +22,12 @@ const Header = () => {
 
   // Determine background classes based on the current theme
   const searchBarBgClass = theme === 'light' ? 'bg-white' : 'bg-gray-800';
-  const headerBgClass = theme === 'light' ? 'bg-white/40' : 'bg-gray-900/40';
+  // Use a transparent header background to avoid tinting underlying content
+  const headerBgClass = 'bg-transparent';
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 backdrop-blur-md ${headerBgClass} text-gray-800 dark:text-gray-100 shadow-sm z-50`}
+      className={`fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 ${headerBgClass} text-gray-800 dark:text-gray-100 shadow-sm z-50`}
     >
       {/* Column 1: Title & Surah List Toggle */}
       <div className="flex items-center gap-2">
