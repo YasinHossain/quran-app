@@ -24,6 +24,14 @@ interface SurahPageProps {
   params: { surahId: string };
 }
 
+/**
+ * Surah page component.
+ *
+ * - Loads verses for the specified chapter and fetches more as the user scrolls.
+ * - Provides translation and word language panels for customization.
+ *
+ * @param {{ params: { surahId: string } }} props Route parameters including the Surah ID.
+ */
 export default function SurahPage({ params }: SurahPageProps) {
   const { surahId } = params;
   const [error, setError] = useState<string | null>(null);
