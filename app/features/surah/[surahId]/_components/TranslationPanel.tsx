@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';
 import { TranslationResource } from '@/types';
 import { useSettings } from '@/app/context/SettingsContext';
+import { useHeaderVisibility } from '@/app/context/HeaderVisibilityContext';
 
 interface TranslationPanelProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ export const TranslationPanel = ({
 }: TranslationPanelProps) => {
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
+  const { isHidden } = useHeaderVisibility();
   const sortedLanguages = useMemo(() => {
     return Object.keys(groupedTranslations).sort((a, b) => {
       const aLower = a.toLowerCase();
@@ -48,7 +50,7 @@ export const TranslationPanel = ({
     <>
       {/* Removed the overlay div */}
       <div
-        className={`fixed top-16 bottom-0 right-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
+        className={`fixed ${isHidden ? 'top-0' : 'top-16'} bottom-0 right-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-all duration-300 ease-in-out z-50 shadow-lg ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useState } from 'react'; // Import useState
 import { useTheme } from '@/app/context/ThemeContext';
+import { useHeaderVisibility } from '@/app/context/HeaderVisibilityContext';
 
 interface ArabicFontPanelProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ export const ArabicFontPanel = ({ isOpen, onClose }: ArabicFontPanelProps) => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('Uthmani'); // State for active tab
   const { theme } = useTheme();
+  const { isHidden } = useHeaderVisibility();
 
   // Group fonts by category
   const groupedFonts = arabicFonts.reduce(
@@ -36,7 +38,7 @@ export const ArabicFontPanel = ({ isOpen, onClose }: ArabicFontPanelProps) => {
     <>
       {/* No overlay div */}
       <div
-        className={`fixed top-16 bottom-0 right-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
+        className={`fixed ${isHidden ? 'top-0' : 'top-16'} bottom-0 right-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-all duration-300 ease-in-out z-50 shadow-lg ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >

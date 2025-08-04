@@ -1,0 +1,39 @@
+'use client';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
+
+interface HeaderVisibilityState {
+  isHidden: boolean;
+}
+
+const HeaderVisibilityContext = createContext<HeaderVisibilityState>({ isHidden: false });
+
+export const HeaderVisibilityProvider = ({ children }: { children: React.ReactNode }) => {
+  const [isHidden, setIsHidden] = useState(false);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const scrollEl = document.querySelector('.homepage-scrollable-area');
+    if (!scrollEl) return;
+
+    const handleScroll = () => {
+      const currentY = (scrollEl as HTMLElement).scrollTop;
+      if (currentY > lastScrollY.current && currentY > 50) {
+        setIsHidden(true);
+      } else {
+        setIsHidden(false);
+      }
+      lastScrollY.current = currentY;
+    };
+
+    scrollEl.addEventListener('scroll', handleScroll);
+    return () => scrollEl.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <HeaderVisibilityContext.Provider value={{ isHidden }}>
+      {children}
+    </HeaderVisibilityContext.Provider>
+  );
+};
+
+export const useHeaderVisibility = () => useContext(HeaderVisibilityContext);
