@@ -14,11 +14,16 @@ export const HeaderVisibilityProvider = ({ children }: { children: React.ReactNo
   const pathname = usePathname();
 
   useEffect(() => {
+    // Reset state on every page navigation
+    lastScrollY.current = 0;
+    setIsHidden(false);
+
     const scrollEl = document.querySelector('.homepage-scrollable-area');
     if (!scrollEl) return;
 
     const handleScroll = () => {
       const currentY = (scrollEl as HTMLElement).scrollTop;
+      // Hide header when scrolling down past a 50px threshold
       if (currentY > lastScrollY.current && currentY > 50) {
         setIsHidden(true);
       } else {
@@ -28,12 +33,10 @@ export const HeaderVisibilityProvider = ({ children }: { children: React.ReactNo
     };
 
     scrollEl.addEventListener('scroll', handleScroll);
-    // Reset scroll tracking and ensure header is visible on navigation
-    lastScrollY.current = 0;
-    setIsHidden(false);
 
+    // Cleanup by removing the event listener
     return () => scrollEl.removeEventListener('scroll', handleScroll);
-  }, [pathname]);
+  }, [pathname]); // This effect re-runs on every route change
 
   return (
     <HeaderVisibilityContext.Provider value={{ isHidden }}>
