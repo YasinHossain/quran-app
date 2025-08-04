@@ -13,7 +13,7 @@ const Header = () => {
   const { setSurahListOpen, setSettingsOpen } = useSidebar();
   const router = useRouter();
   const [query, setQuery] = useState('');
-  const { theme } = useTheme(); // Use the theme context to determine search bar background
+  const { theme } = useTheme(); // Use the theme context to determine colors
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && query.trim()) {
@@ -21,17 +21,14 @@ const Header = () => {
     }
   };
 
-  // Determine search bar background class based on theme
+  // Determine background classes based on theme
   const searchBarBgClass = theme === 'light' ? 'bg-white' : 'bg-gray-800';
+  const headerBgClass = theme === 'light' ? 'bg-white/40' : 'bg-gray-900/40';
 
   return (
     // Adjusted background, padding, and grid layout for cleaner look
     <header
-      className="fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 backdrop-blur-md shadow-sm z-30"
-      style={{
-        backgroundColor: 'var(--header-background)',
-        color: 'var(--header-text-color)',
-      }}
+      className={`fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 backdrop-blur-md ${headerBgClass} text-gray-800 dark:text-gray-100 shadow-sm z-30`}
     >
       {/* Column 1: Title & Surah List Toggle */}
       <div className="flex items-center gap-2">
