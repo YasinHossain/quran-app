@@ -22,6 +22,13 @@ interface QuranPageProps {
   params: { pageId: string };
 }
 
+/**
+ * Displays Quran verses for a specific page.
+ *
+ * Loads verses, manages translation and word panels, and supports infinite scrolling.
+ *
+ * @param {{ params: { pageId: string } }} props Route parameters including `pageId`.
+ */
 export default function QuranPage({ params }: QuranPageProps) {
   const { pageId } = params;
 
