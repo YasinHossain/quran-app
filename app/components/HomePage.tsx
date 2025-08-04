@@ -285,7 +285,7 @@ export default function HomePage() {
 
             {filteredSurahs.length === 0 && activeTab === 'Surah' && (
               <div className="text-center py-10 col-span-full content-visibility-auto animate-fade-in-up">
-                <p className="text-slate-500 dark:text-slate-400 text-slate-900">
+                <p className="text-slate-500 dark:text-slate-400">
                   No Surahs found for your search.
                 </p>
               </div>
