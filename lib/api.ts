@@ -3,6 +3,25 @@ const API_BASE_URL = process.env.QURAN_API_BASE_URL ?? 'https://api.quran.com/ap
 import { Chapter, TranslationResource, Verse, Juz, Word } from '@/types';
 import type { LanguageCode } from '@/lib/languageCodes';
 
+// Internal helper to fetch from the API with query parameters
+async function apiFetch<T>(
+  path: string,
+  params: Record<string, string> = {},
+  errorPrefix = 'Failed to fetch'
+): Promise<T> {
+  const base = API_BASE_URL.endsWith('/') ? API_BASE_URL : `${API_BASE_URL}/`;
+  const url = new URL(path.replace(/^\//, ''), base);
+  if (Object.keys(params).length) {
+    const search = new URLSearchParams(params).toString().replace(/%2C/g, ',');
+    url.search = search;
+  }
+  const res = await fetch(url.toString());
+  if (!res.ok) {
+    throw new Error(`${errorPrefix}: ${res.status}`);
+  }
+  return (await res.json()) as T;
+}
+
 // API response word shape
 interface ApiWord {
   id: number;
@@ -39,41 +58,41 @@ function normalizeVerse(raw: ApiVerse, wordLang: LanguageCode = 'en'): Verse {
 
 // Fetch all chapters
 export async function getChapters(): Promise<Chapter[]> {
-  const res = await fetch(`${API_BASE_URL}/chapters?language=en`);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch chapters: ${res.status}`);
-  }
-  const data = await res.json();
+  const data = await apiFetch<{ chapters: Chapter[] }>(
+    'chapters',
+    { language: 'en' },
+    'Failed to fetch chapters'
+  );
   return data.chapters as Chapter[];
 }
 
 // Fetch all translations
 export async function getTranslations(): Promise<TranslationResource[]> {
-  const res = await fetch(`${API_BASE_URL}/resources/translations`);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch translations: ${res.status}`);
-  }
-  const data = await res.json();
+  const data = await apiFetch<{ translations: TranslationResource[] }>(
+    'resources/translations',
+    {},
+    'Failed to fetch translations'
+  );
   return data.translations as TranslationResource[];
 }
 
 // Fetch all word-by-word translation resources
 export async function getWordTranslations(): Promise<TranslationResource[]> {
-  const res = await fetch(`${API_BASE_URL}/resources/translations?resource_type=word_by_word`);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch translations: ${res.status}`);
-  }
-  const data = await res.json();
+  const data = await apiFetch<{ translations: TranslationResource[] }>(
+    'resources/translations',
+    { resource_type: 'word_by_word' },
+    'Failed to fetch translations'
+  );
   return data.translations as TranslationResource[];
 }
 
 // Fetch all tafsir resources
 export async function getTafsirResources(): Promise<TafsirResource[]> {
-  const res = await fetch(`${API_BASE_URL}/resources/tafsirs`);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch tafsir resources: ${res.status}`);
-  }
-  const data = await res.json();
+  const data = await apiFetch<{ tafsirs: TafsirResource[] }>(
+    'resources/tafsirs',
+    {},
+    'Failed to fetch tafsir resources'
+  );
   return data.tafsirs as TafsirResource[];
 }
 
@@ -117,17 +136,24 @@ export async function fetchVerses(
   perPage = 20,
   wordLang: LanguageCode | string = 'en'
 ): Promise<PaginatedVerses> {
-  const url =
-    `${API_BASE_URL}/verses/${type}/${id}?language=${wordLang}&words=true` +
-    `&word_translation_language=${wordLang}` +
-    `&word_fields=text_uthmani&translations=${translationId}` +
-    `&fields=text_uthmani,audio&per_page=${perPage}&page=${page}`;
-
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch verses: ${res.status}`);
-  }
-  const data = await res.json();
+  const data = await apiFetch<{
+    verses: ApiVerse[];
+    meta?: { total_pages?: number };
+    pagination?: { total_pages?: number };
+  }>(
+    `verses/${type}/${id}`,
+    {
+      language: String(wordLang),
+      words: 'true',
+      word_translation_language: String(wordLang),
+      word_fields: 'text_uthmani',
+      translations: translationId.toString(),
+      fields: 'text_uthmani,audio',
+      per_page: perPage.toString(),
+      page: page.toString(),
+    },
+    'Failed to fetch verses'
+  );
   const totalPages = data.meta?.total_pages || data.pagination?.total_pages || 1;
   const verses = (data.verses as ApiVerse[]).map((v) =>
     normalizeVerse(v, wordLang as LanguageCode)
@@ -148,12 +174,11 @@ export function getVersesByChapter(
 
 // Search verses by query
 export async function searchVerses(query: string): Promise<Verse[]> {
-  const url = `${API_BASE_URL}/search?q=${encodeURIComponent(query)}&size=20&translations=20`;
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Failed to search verses: ${res.status}`);
-  }
-  const data = await res.json();
+  const data = await apiFetch<{ search?: { results: SearchApiResult[] } }>(
+    'search',
+    { q: query, size: '20', translations: '20' },
+    'Failed to search verses'
+  );
   const results: SearchApiResult[] = data.search?.results || [];
   return results.map((r) => ({
     id: r.verse_id,
@@ -165,12 +190,11 @@ export async function searchVerses(query: string): Promise<Verse[]> {
 
 // Fetch tafsir text for a specific verse (quick, without cache)
 export async function getTafsirByVerse(verseKey: string, tafsirId = 169): Promise<string> {
-  const url = `${API_BASE_URL}/tafsirs/${tafsirId}/by_ayah/${encodeURIComponent(verseKey)}`;
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch tafsir: ${res.status}`);
-  }
-  const data = await res.json();
+  const data = await apiFetch<{ tafsir?: { text: string } }>(
+    `tafsirs/${tafsirId}/by_ayah/${encodeURIComponent(verseKey)}`,
+    {},
+    'Failed to fetch tafsir'
+  );
   return data.tafsir?.text as string;
 }
 
@@ -204,11 +228,7 @@ export function getVersesByPage(
  * verse mapping and verse boundaries.
  */
 export async function getJuz(juzId: string | number): Promise<Juz> {
-  const res = await fetch(`${API_BASE_URL}/juzs/${juzId}`);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch juz: ${res.status}`);
-  }
-  const data = await res.json();
+  const data = await apiFetch<{ juz: Juz }>(`juzs/${juzId}`, {}, 'Failed to fetch juz');
   return data.juz as Juz;
 }
 
@@ -220,12 +240,11 @@ export async function getJuz(juzId: string | number): Promise<Juz> {
  * containing the requested translation.
  */
 export async function getRandomVerse(translationId: number): Promise<Verse> {
-  const url = `${API_BASE_URL}/verses/random?translations=${translationId}&fields=text_uthmani`;
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch random verse: ${res.status}`);
-  }
-  const data = await res.json();
+  const data = await apiFetch<{ verse: ApiVerse }>(
+    'verses/random',
+    { translations: translationId.toString(), fields: 'text_uthmani' },
+    'Failed to fetch random verse'
+  );
   return normalizeVerse(data.verse);
 }
 
@@ -240,12 +259,11 @@ export async function getVerseById(
   verseId: string | number,
   translationId: number
 ): Promise<Verse> {
-  const url = `${API_BASE_URL}/verses/${verseId}?translations=${translationId}&fields=text_uthmani`;
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch verse: ${res.status}`);
-  }
-  const data = await res.json();
+  const data = await apiFetch<{ verse: ApiVerse }>(
+    `verses/${verseId}`,
+    { translations: translationId.toString(), fields: 'text_uthmani' },
+    'Failed to fetch verse'
+  );
   return normalizeVerse(data.verse);
 }
 
