@@ -23,6 +23,13 @@ interface JuzPageProps {
   params: { juzId: string };
 }
 
+/**
+ * Displays Quran verses for a specific Juz.
+ *
+ * Loads verses, manages translation and word panels, and supports infinite scrolling.
+ *
+ * @param {{ params: { juzId: string } }} props Route parameters including `juzId`.
+ */
 export default function JuzPage({ params }: JuzPageProps) {
   const { juzId } = params;
 

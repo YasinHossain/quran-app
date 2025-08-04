@@ -229,7 +229,13 @@ export async function getRandomVerse(translationId: number): Promise<Verse> {
   return normalizeVerse(data.verse);
 }
 
-// Fetch a single verse by its ID
+/**
+ * Fetches a single verse by its identifier and normalizes the result.
+ *
+ * @param {string|number} verseId - Identifier of the verse to retrieve.
+ * @param {number} translationId - Translation resource to include.
+ * @returns {Promise<Verse>} Promise resolving to the normalized verse.
+ */
 export async function getVerseById(
   verseId: string | number,
   translationId: number
