@@ -62,6 +62,10 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   });
 
   const { theme } = useTheme();
+  const searchBarClasses =
+    theme === 'light'
+      ? 'bg-white text-gray-700 border border-gray-200 placeholder-gray-400'
+      : 'bg-gray-800 text-gray-200 border border-gray-600 placeholder-gray-400';
   const isTafsirPath = pathname?.includes('/tafsir');
   const [selectedSurahId, setSelectedSurahId] = useState<string | null>(currentSurahId ?? null);
   const [selectedJuzId, setSelectedJuzId] = useState<string | null>(currentJuzId ?? null);
@@ -210,11 +214,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
       >
         <div className="p-4 border-b border-[var(--border-color)]">
           <div
-            className={`flex items-center p-1 rounded-full ${
-              {
-                light: 'bg-gray-100',
-                dark: 'bg-slate-800/60',
-              }[theme]
+            className={`flex items-center p-1 rounded-full border ${
+              theme === 'light' ? 'bg-white border-gray-200' : 'bg-gray-800 border-gray-600'
             }`}
           >
             {TABS.map(({ key, label }) => (
@@ -255,7 +256,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
               placeholder={t('search_surah')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 border rounded-lg bg-[var(--background)] focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className={`w-full pl-9 pr-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 ${searchBarClasses}`}
             />
           </div>
         </div>

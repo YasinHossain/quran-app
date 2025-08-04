@@ -3,7 +3,7 @@ import { FaSearch, FaBars } from './SvgIcons';
 import { useTranslation } from 'react-i18next';
 import { useSidebar } from '@/app/context/SidebarContext';
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { FaCog } from 'react-icons/fa';
 import { useTheme } from '@/app/context/ThemeContext';
 
@@ -17,8 +17,15 @@ const Header = ({ isHidden = false }: HeaderProps) => {
   const router = useRouter();
   const [query, setQuery] = useState('');
   const { theme } = useTheme(); // Use the theme context to determine colors
-  const [isHidden, setIsHidden] = useState(false);
+  const [scrollHidden, setScrollHidden] = useState(false);
   const lastScrollY = useRef(0);
+  let pathname = '';
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    pathname = usePathname();
+  } catch {
+    // no-op in non-navigation environments (e.g., tests)
+  }
 
   useEffect(() => {
     const scrollEl = document.querySelector('.homepage-scrollable-area');
@@ -27,16 +34,20 @@ const Header = ({ isHidden = false }: HeaderProps) => {
     const handleScroll = () => {
       const currentY = (scrollEl as HTMLElement).scrollTop;
       if (currentY > lastScrollY.current && currentY > 50) {
-        setIsHidden(true);
+        setScrollHidden(true);
       } else {
-        setIsHidden(false);
+        setScrollHidden(false);
       }
       lastScrollY.current = currentY;
     };
 
     scrollEl.addEventListener('scroll', handleScroll);
+    // Reset scroll tracking and ensure header is visible on navigation
+    lastScrollY.current = 0;
+    setScrollHidden(false);
+
     return () => scrollEl.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [pathname]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && query.trim()) {
@@ -51,7 +62,7 @@ const Header = ({ isHidden = false }: HeaderProps) => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 ${headerBgClass} text-gray-800 dark:text-gray-100 shadow-sm z-50 transform transition-transform duration-300 ${isHidden ? '-translate-y-full' : 'translate-y-0'}`}
+      className={`fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 ${headerBgClass} text-gray-800 dark:text-gray-100 shadow-sm z-50 transform transition-transform duration-300 ${isHidden || scrollHidden ? '-translate-y-full' : 'translate-y-0'}`}
     >
       {/* Column 1: Title & Surah List Toggle */}
       <div className="flex items-center gap-2">
