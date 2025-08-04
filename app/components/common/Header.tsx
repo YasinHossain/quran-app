@@ -43,10 +43,7 @@ const Header = () => {
       {/* Column 2: Centered Search Bar */}
       <div className="flex justify-center">
         <div className="relative w-full max-w-lg">
-          <FaSearch
-            size={18}
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-          />
+          <FaSearch size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
             placeholder={t('search_placeholder')}
