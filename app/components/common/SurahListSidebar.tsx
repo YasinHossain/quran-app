@@ -230,7 +230,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                   shouldCenterRef.current[key] = true;
                   setActiveTab(key);
                 }}
-                className={`w-1/3 px-4 py-2 text-sm font-semibold rounded-full transition-colors ${
+                className={`w-1/3 px-4 py-2 text-xs font-semibold rounded-full transition-colors ${
                   activeTab === key
                     ? theme === 'light'
                       ? 'bg-white text-slate-900 shadow'
@@ -407,7 +407,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                           Juz {juz.number}
                         </p>
                         <p
-                          className={`text-sm ${
+                          className={`text-xs ${
                             isActive
                               ? 'text-white/90'
                               : theme === 'light'
