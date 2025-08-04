@@ -26,7 +26,7 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 backdrop-blur-md ${headerBgClass} text-gray-800 dark:text-gray-100 shadow-sm z-30`}
+      className={`fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 backdrop-blur-md ${headerBgClass} text-gray-800 dark:text-gray-100 shadow-sm z-50`}
     >
       {/* Column 1: Title & Surah List Toggle */}
       <div className="flex items-center gap-2">

@@ -9,12 +9,12 @@ export default function PageLayout({ children }: { children: React.ReactNode }) 
   return (
     <AudioProvider>
       <Header />
-      <div className="h-screen flex flex-col pt-16">
+      <div className="h-screen flex flex-col">
         <div className="flex flex-grow overflow-hidden min-h-0">
-          <nav aria-label="Primary navigation" className="flex-shrink-0 h-full">
+          <nav aria-label="Primary navigation" className="flex-shrink-0 h-full pt-16">
             <IconSidebar />
           </nav>
-          <nav aria-label="Surah navigation" className="flex-shrink-0 h-full">
+          <nav aria-label="Surah navigation" className="flex-shrink-0 h-full pt-16">
             <SurahListSidebar />
           </nav>
           {children}
