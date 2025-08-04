@@ -17,7 +17,7 @@ const Header = ({ isHidden = false }: HeaderProps) => {
   const router = useRouter();
   const [query, setQuery] = useState('');
   const { theme } = useTheme(); // Use the theme context to determine colors
-  const [isHidden, setIsHidden] = useState(false);
+  const [scrollHidden, setScrollHidden] = useState(false);
   const lastScrollY = useRef(0);
 
   useEffect(() => {
@@ -27,9 +27,9 @@ const Header = ({ isHidden = false }: HeaderProps) => {
     const handleScroll = () => {
       const currentY = (scrollEl as HTMLElement).scrollTop;
       if (currentY > lastScrollY.current && currentY > 50) {
-        setIsHidden(true);
+        setScrollHidden(true);
       } else {
-        setIsHidden(false);
+        setScrollHidden(false);
       }
       lastScrollY.current = currentY;
     };
@@ -51,7 +51,7 @@ const Header = ({ isHidden = false }: HeaderProps) => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 ${headerBgClass} text-gray-800 dark:text-gray-100 shadow-sm z-50 transform transition-transform duration-300 ${isHidden ? '-translate-y-full' : 'translate-y-0'}`}
+      className={`fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 ${headerBgClass} text-gray-800 dark:text-gray-100 shadow-sm z-50 transform transition-transform duration-300 ${isHidden || scrollHidden ? '-translate-y-full' : 'translate-y-0'}`}
     >
       {/* Column 1: Title & Surah List Toggle */}
       <div className="flex items-center gap-2">
