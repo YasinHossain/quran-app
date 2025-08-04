@@ -297,7 +297,7 @@ export const SettingsSidebar = ({
           )}
         </div>
         {/* Theme Toggle */}
-        <div className="pt-2 p-4">
+        <div className="p-4">
           <div
             className={`flex items-center p-1 rounded-full ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'}`}
           >
