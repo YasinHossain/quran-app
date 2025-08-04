@@ -177,14 +177,13 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   ]);
 
   // Filtering lists based on search term
+  const term = searchTerm.toLowerCase();
   const filteredChapters = useMemo(
     () =>
       chapters.filter(
-        (c) =>
-          c.name_simple.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          c.id.toString().includes(searchTerm)
+        (c) => c.name_simple.toLowerCase().includes(term) || c.id.toString().includes(searchTerm)
       ),
-    [chapters, searchTerm]
+    [chapters, searchTerm, term]
   );
   const filteredJuzs = useMemo(
     () => juzs.filter((j) => j.number.toString().includes(searchTerm)),
