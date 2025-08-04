@@ -214,11 +214,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
       >
         <div className="p-4 border-b border-[var(--border-color)]">
           <div
-            className={`flex items-center p-1 rounded-full ${
-              {
-                light: 'bg-gray-100',
-                dark: 'bg-slate-800/60',
-              }[theme]
+            className={`flex items-center p-1 rounded-full border ${
+              theme === 'light' ? 'bg-white border-gray-200' : 'bg-gray-800 border-gray-600'
             }`}
           >
             {TABS.map(({ key, label }) => (

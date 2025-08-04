@@ -3,7 +3,7 @@ import { FaSearch, FaBars } from './SvgIcons';
 import { useTranslation } from 'react-i18next';
 import { useSidebar } from '@/app/context/SidebarContext';
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { FaCog } from 'react-icons/fa';
 import { useTheme } from '@/app/context/ThemeContext';
 
@@ -19,6 +19,13 @@ const Header = ({ isHidden = false }: HeaderProps) => {
   const { theme } = useTheme(); // Use the theme context to determine colors
   const [scrollHidden, setScrollHidden] = useState(false);
   const lastScrollY = useRef(0);
+  let pathname = '';
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    pathname = usePathname();
+  } catch {
+    // no-op in non-navigation environments (e.g., tests)
+  }
 
   useEffect(() => {
     const scrollEl = document.querySelector('.homepage-scrollable-area');
@@ -35,8 +42,12 @@ const Header = ({ isHidden = false }: HeaderProps) => {
     };
 
     scrollEl.addEventListener('scroll', handleScroll);
+    // Reset scroll tracking and ensure header is visible on navigation
+    lastScrollY.current = 0;
+    setScrollHidden(false);
+
     return () => scrollEl.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [pathname]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && query.trim()) {
