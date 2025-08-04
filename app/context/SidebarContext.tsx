@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
 interface SidebarContextType {
   isSurahListOpen: boolean;
@@ -40,37 +40,56 @@ export const SidebarProvider = ({ children }: { children: React.ReactNode }) => 
     return stored ? Number(stored) : 0;
   });
 
-  const setSurahScrollTop = (top: number) => {
-    _setSurahScrollTop(top);
-    sessionStorage.setItem('surahScrollTop', top.toString());
-  };
-  const setJuzScrollTop = (top: number) => {
-    _setJuzScrollTop(top);
-    sessionStorage.setItem('juzScrollTop', top.toString());
-  };
-  const setPageScrollTop = (top: number) => {
-    _setPageScrollTop(top);
-    sessionStorage.setItem('pageScrollTop', top.toString());
-  };
-
-  return (
-    <SidebarContext.Provider
-      value={{
-        isSurahListOpen,
-        setSurahListOpen,
-        isSettingsOpen,
-        setSettingsOpen,
-        surahScrollTop,
-        setSurahScrollTop,
-        juzScrollTop,
-        setJuzScrollTop,
-        pageScrollTop,
-        setPageScrollTop,
-      }}
-    >
-      {children}
-    </SidebarContext.Provider>
+  const setSurahScrollTop = useCallback(
+    (top: number) => {
+      _setSurahScrollTop(top);
+      sessionStorage.setItem('surahScrollTop', top.toString());
+    },
+    [_setSurahScrollTop]
   );
+  const setJuzScrollTop = useCallback(
+    (top: number) => {
+      _setJuzScrollTop(top);
+      sessionStorage.setItem('juzScrollTop', top.toString());
+    },
+    [_setJuzScrollTop]
+  );
+  const setPageScrollTop = useCallback(
+    (top: number) => {
+      _setPageScrollTop(top);
+      sessionStorage.setItem('pageScrollTop', top.toString());
+    },
+    [_setPageScrollTop]
+  );
+
+  const value = useMemo(
+    () => ({
+      isSurahListOpen,
+      setSurahListOpen,
+      isSettingsOpen,
+      setSettingsOpen,
+      surahScrollTop,
+      setSurahScrollTop,
+      juzScrollTop,
+      setJuzScrollTop,
+      pageScrollTop,
+      setPageScrollTop,
+    }),
+    [
+      isSurahListOpen,
+      setSurahListOpen,
+      isSettingsOpen,
+      setSettingsOpen,
+      surahScrollTop,
+      setSurahScrollTop,
+      juzScrollTop,
+      setJuzScrollTop,
+      pageScrollTop,
+      setPageScrollTop,
+    ]
+  );
+
+  return <SidebarContext.Provider value={value}>{children}</SidebarContext.Provider>;
 };
 
 /**

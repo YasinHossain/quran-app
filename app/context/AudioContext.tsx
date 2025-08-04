@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 
 interface AudioContextType {
   playingId: number | null;
@@ -19,11 +19,12 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
   const [playingId, setPlayingId] = useState<number | null>(null);
   const [loadingId, setLoadingId] = useState<number | null>(null);
 
-  return (
-    <AudioContext.Provider value={{ playingId, setPlayingId, loadingId, setLoadingId }}>
-      {children}
-    </AudioContext.Provider>
+  const value = useMemo(
+    () => ({ playingId, setPlayingId, loadingId, setLoadingId }),
+    [playingId, setPlayingId, loadingId, setLoadingId]
   );
+
+  return <AudioContext.Provider value={value}>{children}</AudioContext.Provider>;
 };
 
 /**
