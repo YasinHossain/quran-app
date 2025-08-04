@@ -2,7 +2,7 @@
 import { FaSearch, FaBars } from './SvgIcons';
 import { useTranslation } from 'react-i18next';
 import { useSidebar } from '@/app/context/SidebarContext';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaCog } from 'react-icons/fa';
 import { useTheme } from '@/app/context/ThemeContext';
@@ -13,6 +13,26 @@ const Header = () => {
   const router = useRouter();
   const [query, setQuery] = useState('');
   const { theme } = useTheme(); // Use the theme context to determine colors
+  const [isHidden, setIsHidden] = useState(false);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const scrollEl = document.querySelector('.homepage-scrollable-area');
+    if (!scrollEl) return;
+
+    const handleScroll = () => {
+      const currentY = (scrollEl as HTMLElement).scrollTop;
+      if (currentY > lastScrollY.current && currentY > 50) {
+        setIsHidden(true);
+      } else {
+        setIsHidden(false);
+      }
+      lastScrollY.current = currentY;
+    };
+
+    scrollEl.addEventListener('scroll', handleScroll);
+    return () => scrollEl.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && query.trim()) {
@@ -27,7 +47,7 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 ${headerBgClass} text-gray-800 dark:text-gray-100 shadow-sm z-50`}
+      className={`fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 ${headerBgClass} text-gray-800 dark:text-gray-100 shadow-sm z-50 transform transition-transform duration-300 ${isHidden ? '-translate-y-full' : 'translate-y-0'}`}
     >
       {/* Column 1: Title & Surah List Toggle */}
       <div className="flex items-center gap-2">
