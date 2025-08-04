@@ -96,7 +96,7 @@ export const SettingsSidebar = ({
       />
       {/* This is the main settings sidebar container. */}
       <aside
-        className={`fixed lg:static top-0 bottom-0 right-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-transform duration-300 z-40 lg:z-40 lg:h-full pt-16 ${
+        className={`fixed lg:static top-16 bottom-0 right-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-transform duration-300 z-40 lg:z-40 lg:h-full ${
           isSettingsOpen ? 'translate-x-0' : 'translate-x-full'
         } lg:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} lg:flex`}
       >
