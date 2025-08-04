@@ -1,4 +1,3 @@
-// app/components/Header.tsx
 'use client';
 import { FaSearch, FaBars } from './SvgIcons';
 import { useTranslation } from 'react-i18next';
@@ -21,12 +20,11 @@ const Header = () => {
     }
   };
 
-  // Determine background classes based on theme
+  // Determine background classes based on the current theme
   const searchBarBgClass = theme === 'light' ? 'bg-white' : 'bg-gray-800';
   const headerBgClass = theme === 'light' ? 'bg-white/40' : 'bg-gray-900/40';
 
   return (
-    // Adjusted background, padding, and grid layout for cleaner look
     <header
       className={`fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 backdrop-blur-md ${headerBgClass} text-gray-800 dark:text-gray-100 shadow-sm z-30`}
     >
@@ -45,7 +43,10 @@ const Header = () => {
       {/* Column 2: Centered Search Bar */}
       <div className="flex justify-center">
         <div className="relative w-full max-w-lg">
-          <FaSearch size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+          <FaSearch
+            size={18}
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+          />
           <input
             type="text"
             placeholder={t('search_placeholder')}
@@ -57,7 +58,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Column 3: Settings button */}
+      {/* Column 3: Settings Button */}
       <div className="flex justify-end">
         <button
           onClick={() => setSettingsOpen(true)}

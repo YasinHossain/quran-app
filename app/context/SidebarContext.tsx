@@ -25,14 +25,17 @@ export const SidebarProvider = ({ children }: { children: React.ReactNode }) => 
   const [isSurahListOpen, setSurahListOpen] = useState(false);
   const [isSettingsOpen, setSettingsOpen] = useState(false);
   const [surahScrollTop, _setSurahScrollTop] = useState(() => {
+    if (typeof window === 'undefined') return 0;
     const stored = sessionStorage.getItem('surahScrollTop');
     return stored ? Number(stored) : 0;
   });
   const [juzScrollTop, _setJuzScrollTop] = useState(() => {
+    if (typeof window === 'undefined') return 0;
     const stored = sessionStorage.getItem('juzScrollTop');
     return stored ? Number(stored) : 0;
   });
   const [pageScrollTop, _setPageScrollTop] = useState(() => {
+    if (typeof window === 'undefined') return 0;
     const stored = sessionStorage.getItem('pageScrollTop');
     return stored ? Number(stored) : 0;
   });

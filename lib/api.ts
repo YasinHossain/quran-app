@@ -196,7 +196,13 @@ export function getVersesByPage(
   return fetchVerses('by_page', pageId, translationId, page, perPage, wordLang);
 }
 
-// Fetch information about a specific Juz
+/**
+ * Fetches metadata for a given Juz (one of thirty sections of the Qur'an).
+ *
+ * @param {string|number} juzId - Numeric identifier of the Juz to retrieve.
+ * @returns {Promise<Juz>} Promise resolving to the Juz data including its
+ * verse mapping and verse boundaries.
+ */
 export async function getJuz(juzId: string | number): Promise<Juz> {
   const res = await fetch(`${API_BASE_URL}/juzs/${juzId}`);
   if (!res.ok) {
@@ -206,7 +212,13 @@ export async function getJuz(juzId: string | number): Promise<Juz> {
   return data.juz as Juz;
 }
 
-// Fetch a random verse with translation
+/**
+ * Retrieves a random verse along with a specified translation.
+ *
+ * @param {number} translationId - Translation resource identifier to include.
+ * @returns {Promise<Verse>} Promise resolving to a normalized verse object
+ * containing the requested translation.
+ */
 export async function getRandomVerse(translationId: number): Promise<Verse> {
   const url = `${API_BASE_URL}/verses/random?translations=${translationId}&fields=text_uthmani`;
   const res = await fetch(url);
