@@ -1,5 +1,14 @@
 'use client';
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+} from 'react';
 import { Settings } from '@/types';
 
 export const ARABIC_FONTS = [
@@ -29,6 +38,10 @@ const defaultSettings: Settings = {
   tajweed: false,
 };
 
+// Debounce interval for persisting to localStorage.
+// Shorter intervals save sooner but risk more writes; longer ones delay persistence.
+const PERSIST_DEBOUNCE_MS = 300;
+
 interface SettingsContextType {
   settings: Settings;
   setSettings: React.Dispatch<React.SetStateAction<Settings>>;
@@ -55,6 +68,11 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 export const SettingsProvider = ({ children }: { children: React.ReactNode }) => {
   const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [bookmarkedVerses, setBookmarkedVerses] = useState<string[]>([]);
+
+  const settingsTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const bookmarksTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const latestSettings = useRef(settings);
+  const latestBookmarks = useRef(bookmarkedVerses);
 
   // Load settings & bookmarks from localStorage on mount
   useEffect(() => {
@@ -83,19 +101,50 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
     }
   }, []);
 
-  // Save settings when changed
+  // Save settings when changed (debounced)
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    latestSettings.current = settings;
+    if (typeof window === 'undefined') return;
+
+    settingsTimeoutRef.current = setTimeout(() => {
       localStorage.setItem('quranAppSettings', JSON.stringify(settings));
-    }
+      settingsTimeoutRef.current = null;
+    }, PERSIST_DEBOUNCE_MS);
+
+    return () => {
+      if (settingsTimeoutRef.current) clearTimeout(settingsTimeoutRef.current);
+    };
   }, [settings]);
 
-  // Save bookmarks when changed
+  // Save bookmarks when changed (debounced)
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    latestBookmarks.current = bookmarkedVerses;
+    if (typeof window === 'undefined') return;
+
+    bookmarksTimeoutRef.current = setTimeout(() => {
       localStorage.setItem('quranAppBookmarks', JSON.stringify(bookmarkedVerses));
-    }
+      bookmarksTimeoutRef.current = null;
+    }, PERSIST_DEBOUNCE_MS);
+
+    return () => {
+      if (bookmarksTimeoutRef.current) clearTimeout(bookmarksTimeoutRef.current);
+    };
   }, [bookmarkedVerses]);
+
+  // Flush any pending writes on unmount
+  useEffect(() => {
+    return () => {
+      if (typeof window === 'undefined') return;
+      if (settingsTimeoutRef.current) {
+        clearTimeout(settingsTimeoutRef.current);
+        localStorage.setItem('quranAppSettings', JSON.stringify(latestSettings.current));
+      }
+      if (bookmarksTimeoutRef.current) {
+        clearTimeout(bookmarksTimeoutRef.current);
+        localStorage.setItem('quranAppBookmarks', JSON.stringify(latestBookmarks.current));
+      }
+    };
+  }, []);
 
   const toggleBookmark = useCallback(
     (verseId: string) => {
