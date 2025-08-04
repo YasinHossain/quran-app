@@ -83,9 +83,7 @@ export const SettingsSidebar = ({
   return (
     <>
       <div
-        className={`fixed inset-0 top-16 bg-black/30 z-40 lg:hidden ${
-          isSettingsOpen ? '' : 'hidden'
-        }`}
+        className={`fixed inset-0 bg-black/30 z-40 lg:hidden ${isSettingsOpen ? '' : 'hidden'}`}
         role="button"
         tabIndex={0}
         onClick={() => setSettingsOpen(false)}
@@ -96,7 +94,7 @@ export const SettingsSidebar = ({
         }}
       />
       <aside
-        className={`fixed lg:static top-16 lg:top-0 bottom-0 right-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-transform duration-300 z-50 lg:z-auto lg:h-full ${
+        className={`fixed lg:static top-0 lg:top-0 bottom-0 right-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-transform duration-300 z-50 lg:z-auto lg:h-full ${
           isSettingsOpen ? 'translate-x-0' : 'translate-x-full'
         } lg:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} lg:flex`}
       >

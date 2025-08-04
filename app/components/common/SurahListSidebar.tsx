@@ -200,7 +200,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   return (
     <>
       <div
-        className={`fixed inset-0 top-16 bg-black/30 z-40 md:hidden ${
+        className={`fixed inset-0 top-16 bg-black/30 z-10 md:hidden ${
           isSurahListOpen ? '' : 'hidden'
         }`}
         role="button"
@@ -213,7 +213,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
         }}
       />
       <aside
-        className={`fixed md:static top-16 md:top-0 bottom-0 left-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col shadow-lg z-50 md:z-10 md:h-full transform transition-transform duration-300 ${
+        className={`fixed md:static top-0 md:top-0 bottom-0 left-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col shadow-lg pt-16 md:pt-0 z-20 md:z-10 md:h-full transform transition-transform duration-300 ${
           isSurahListOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
       >
