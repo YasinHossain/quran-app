@@ -208,7 +208,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     <>
       {/* This is the main sidebar container. */}
       <aside
-        className={`fixed md:static top-16 md:top-0 bottom-0 left-0 w-[23rem] bg-white dark:bg-[var(--background)] text-[var(--foreground)] flex flex-col shadow-lg z-40 md:z-10 md:h-full transform transition-transform duration-300 ${
+        className={`fixed md:static top-16 md:top-0 bottom-0 left-0 w-[20.7rem] bg-white dark:bg-[var(--background)] text-[var(--foreground)] flex flex-col shadow-lg z-40 md:z-10 md:h-full transform transition-transform duration-300 ${
           isSurahListOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
       >
