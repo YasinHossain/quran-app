@@ -122,7 +122,7 @@ export default function SurahPage({ params }: SurahPageProps) {
 
   return (
     <div className="flex flex-grow bg-white dark:bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden">
-      <main className="flex-grow bg-white dark:bg-[var(--background)] p-6 lg:p-10 pt-16 overflow-y-auto homepage-scrollable-area">
+      <main className="flex-grow bg-white dark:bg-[var(--background)] p-6 lg:p-10 overflow-y-auto homepage-scrollable-area">
         <div className="w-full relative">
           {isLoading ? (
             <div className="flex justify-center py-20">

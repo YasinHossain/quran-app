@@ -7,7 +7,11 @@ import { useRouter } from 'next/navigation';
 import { FaCog } from 'react-icons/fa';
 import { useTheme } from '@/app/context/ThemeContext';
 
-const Header = () => {
+interface HeaderProps {
+  isHidden?: boolean;
+}
+
+const Header = ({ isHidden = false }: HeaderProps) => {
   const { t } = useTranslation();
   const { setSurahListOpen, setSettingsOpen } = useSidebar();
   const router = useRouter();

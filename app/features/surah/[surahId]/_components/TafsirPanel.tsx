@@ -6,6 +6,7 @@ import { TafsirResource } from '@/types';
 import { getTafsirResources } from '@/lib/api';
 import useSWR from 'swr';
 import { useMemo, useState } from 'react';
+import { useHeaderVisibility } from '@/app/context/HeaderVisibilityContext';
 
 interface TafsirPanelProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export const TafsirPanel = ({ isOpen, onClose }: TafsirPanelProps) => {
   const { t } = useTranslation();
   const { data } = useSWR('tafsirs', getTafsirResources);
   const [searchTerm, setSearchTerm] = useState('');
+  const { isHidden } = useHeaderVisibility();
 
   const grouped = useMemo(() => {
     const filtered = (data || []).filter(
@@ -32,7 +34,7 @@ export const TafsirPanel = ({ isOpen, onClose }: TafsirPanelProps) => {
 
   return (
     <div
-      className={`fixed top-16 bottom-0 right-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
+      className={`fixed ${isHidden ? 'top-0' : 'top-16'} bottom-0 right-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-all duration-300 ease-in-out z-50 shadow-lg ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
     >

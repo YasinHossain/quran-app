@@ -5,6 +5,7 @@ import { useMemo } from 'react';
 import { useSettings } from '@/app/context/SettingsContext';
 import { LANGUAGE_CODES } from '@/lib/languageCodes';
 import type { LanguageCode } from '@/lib/languageCodes';
+import { useHeaderVisibility } from '@/app/context/HeaderVisibilityContext';
 
 interface LanguageOption {
   name: string;
@@ -30,6 +31,7 @@ export const WordLanguagePanel = ({
 }: WordLanguagePanelProps) => {
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
+  const { isHidden } = useHeaderVisibility();
 
   const sortedLanguages = useMemo(
     () => [...languages].sort((a, b) => a.name.localeCompare(b.name)),
@@ -43,7 +45,7 @@ export const WordLanguagePanel = ({
 
   return (
     <div
-      className={`fixed top-16 bottom-0 right-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
+      className={`fixed ${isHidden ? 'top-0' : 'top-16'} bottom-0 right-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-all duration-300 ease-in-out z-50 shadow-lg ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
