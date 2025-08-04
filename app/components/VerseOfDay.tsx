@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Verse, Word } from '@/types';
 import { getRandomVerse } from '@/lib/api';
 import { useSettings } from '@/app/context/SettingsContext';
@@ -20,18 +20,22 @@ export default function VerseOfDay() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const abortRef = useRef(false);
+
   const prefetchVerse = useCallback(async () => {
     try {
       const v = await getRandomVerse(settings.translationId);
+      if (abortRef.current) return;
       setVerseQueue((q) => [...q, v]);
     } catch (err) {
       console.error(err);
+      if (abortRef.current) return;
       setError('Failed to load verse.');
     }
   }, [settings.translationId]);
 
   useEffect(() => {
-    let isMounted = true;
+    abortRef.current = false;
     setVerse(null);
     setVerseQueue([]);
     setError(null);
@@ -42,7 +46,7 @@ export default function VerseOfDay() {
     };
 
     init().then(() => {
-      if (!isMounted) return;
+      if (abortRef.current) return;
       setVerseQueue((q) => {
         if (q.length === 0) return q;
         const [first, ...rest] = q;
@@ -62,7 +66,7 @@ export default function VerseOfDay() {
     }, 10000);
 
     return () => {
-      isMounted = false;
+      abortRef.current = true;
       clearInterval(intervalId);
     };
   }, [prefetchVerse]);
