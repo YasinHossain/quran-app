@@ -62,3 +62,24 @@ it('bookmarks verse when icon clicked', async () => {
   await userEvent.click(bookmarkButton);
   expect(bookmarkButton).toHaveAttribute('aria-label', 'Remove bookmark');
 });
+
+it('strips malicious tags from content', () => {
+  const maliciousVerse: Verse = {
+    id: 2,
+    verse_key: '1:2',
+    text_uthmani: 'م<script>alert(1)</script>',
+    words: [{ id: 1, uthmani: 'م<script>alert(1)</script>', en: 'In' }],
+    translations: [{ resource_id: 20, text: '<script>alert(1)</script>Safe' }],
+  };
+
+  render(
+    <AudioProvider>
+      <SettingsProvider>
+        <VerseCard verse={maliciousVerse} />
+      </SettingsProvider>
+    </AudioProvider>
+  );
+
+  expect(document.querySelector('script')).toBeNull();
+  expect(screen.getByText('Safe')).toBeInTheDocument();
+});
