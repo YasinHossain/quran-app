@@ -1,3 +1,6 @@
+/**
+ * Renders the fixed gradient background and decorative blobs for the home page.
+ */
 export default function HomePageBackground() {
   return (
     <div className="fixed inset-0 -z-10 bg-white bg-gradient-to-br from-cyan-50 via-white to-emerald-50 dark:bg-gray-900 dark:from-gray-900 dark:via-gray-900 dark:to-slate-900">
