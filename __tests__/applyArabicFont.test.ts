@@ -10,8 +10,19 @@ describe('applyArabicFont', () => {
     );
     const spans = container.querySelectorAll('span');
     expect(spans).toHaveLength(2);
-    spans.forEach((s) => expect(s).toHaveStyle('font-family:Amiri;'));
+    spans.forEach((s) => expect(s).toHaveStyle('font-family: "Amiri";'));
     expect(container.textContent).toBe('السلام عليكم');
+  });
+
+  it('quotes font names with spaces', () => {
+    const font = 'Noto Naskh Arabic';
+    const html = applyArabicFont('السلام عليكم', font);
+    const { container } = render(
+      React.createElement('div', { dangerouslySetInnerHTML: { __html: html } })
+    );
+    const spans = container.querySelectorAll('span');
+    expect(spans).toHaveLength(2);
+    spans.forEach((s) => expect(s).toHaveStyle(`font-family: "${font}";`));
   });
 
   it('leaves non-Arabic text unchanged', () => {

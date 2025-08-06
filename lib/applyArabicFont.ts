@@ -6,5 +6,8 @@
  * @returns Modified HTML with font applied to Arabic text.
  */
 export function applyArabicFont(html: string, font: string): string {
-  return html.replace(/([\u0600-\u06FF]+)/g, `<span style="font-family:${font};">$1</span>`);
+  return html.replace(
+    /([\u0600-\u06FF]+)/g,
+    `<span style="font-family:&quot;${font}&quot;;">$1</span>`
+  );
 }
