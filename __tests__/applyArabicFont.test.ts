@@ -23,4 +23,11 @@ describe('applyArabicFont', () => {
     expect(container.querySelector('span')).toBeNull();
     expect(container.textContent).toBe(text);
   });
+
+  it('does not wrap text multiple times when called repeatedly', () => {
+    const input = 'السلام عليكم';
+    const once = applyArabicFont(input, 'Amiri');
+    const twice = applyArabicFont(once, 'Amiri');
+    expect(twice).toBe(once);
+  });
 });
