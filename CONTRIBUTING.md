@@ -14,11 +14,10 @@ This project also provides an `.editorconfig` file. Ensure your editor respects
 it so that files use UTF-8 encoding, two spaces for indentation, and always end
 with a newline.
 
-Install dependencies and initialize Git hooks with:
+Install dependencies. Husky Git hooks are installed automatically by the `prepare` script:
 
 ```bash
 npm install
-npx husky install
 ```
 
 ## Commit Message Style
