@@ -9,12 +9,16 @@ describe('language mappings', () => {
 
   it('has non-empty keys and values for all mappings', () => {
     Object.entries(LANGUAGE_CODES).forEach(([key, value]) => {
-      expect(key).toBeTruthy();
-      expect(value).toBeTruthy();
+      expect(typeof key).toBe('string');
+      expect(key).not.toHaveLength(0);
+      expect(typeof value).toBe('string');
+      expect(value).not.toHaveLength(0);
     });
     Object.entries(WORD_LANGUAGE_LABELS).forEach(([key, value]) => {
-      expect(key).toBeTruthy();
-      expect(value).toBeTruthy();
+      expect(typeof key).toBe('string');
+      expect(key).not.toHaveLength(0);
+      expect(typeof value).toBe('string');
+      expect(value).not.toHaveLength(0);
     });
   });
 });
