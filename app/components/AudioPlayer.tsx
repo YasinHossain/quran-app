@@ -23,6 +23,7 @@ export default function AudioPlayer({ onError }: AudioPlayerProps) {
 
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [playbackRate, setPlaybackRate] = useState(1);
 
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
@@ -48,6 +49,24 @@ export default function AudioPlayer({ onError }: AudioPlayerProps) {
     setCurrentTime(0);
     setDuration(0);
   }, [activeVerse]);
+
+  useEffect(() => {
+    const savedRate = localStorage.getItem('audioPlaybackRate');
+    if (savedRate) {
+      const rate = parseFloat(savedRate);
+      if (!Number.isNaN(rate)) {
+        setPlaybackRate(rate);
+        if (audioRef.current) audioRef.current.playbackRate = rate;
+      }
+    }
+  }, [audioRef]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.playbackRate = playbackRate;
+    }
+    localStorage.setItem('audioPlaybackRate', playbackRate.toString());
+  }, [playbackRate, audioRef]);
 
   if (!activeVerse) return null;
 
@@ -130,6 +149,18 @@ export default function AudioPlayer({ onError }: AudioPlayerProps) {
           >
             <FaArrowLeft size={20} className="rotate-180" />
           </button>
+          <select
+            aria-label="Playback speed"
+            value={playbackRate}
+            onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
+            className="border border-gray-300 dark:border-gray-600 rounded text-sm p-1"
+          >
+            {[0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2].map((rate) => (
+              <option key={rate} value={rate}>
+                {rate}×
+              </option>
+            ))}
+          </select>
         </div>
         <button
           aria-label="Close"
