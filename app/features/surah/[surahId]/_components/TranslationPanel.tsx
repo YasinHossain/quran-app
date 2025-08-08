@@ -83,7 +83,7 @@ export const TranslationPanel = ({
           {groupedTranslations &&
             sortedLanguages.map((lang) => (
               <div key={lang}>
-                <h3 className="sticky top-0 bg-gray-100 px-4 py-2 font-bold text-teal-800 text-sm">
+                <h3 className="sticky top-0 px-4 py-2 font-bold text-gray-700 text-sm bg-gray-100 dark:bg-gray-700 dark:text-teal-300">
                   {lang.charAt(0).toUpperCase() + lang.slice(1)}
                 </h3>
                 <div className="p-2 space-y-1">
