@@ -14,6 +14,7 @@ import type { LanguageCode } from '@/lib/languageCodes';
 import { WORD_LANGUAGE_LABELS } from '@/lib/wordLanguages';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useAudio } from '@/app/context/AudioContext';
+import { useTheme } from '@/app/context/ThemeContext';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
@@ -37,10 +38,12 @@ export default function JuzPage({ params }: JuzPageProps) {
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
   const { playingId, setPlayingId } = useAudio();
+  const { theme } = useTheme();
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [translationSearchTerm, setTranslationSearchTerm] = useState('');
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
   const [wordTranslationSearchTerm, setWordTranslationSearchTerm] = useState('');
+  
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   // Fetch Juz information using juzId
@@ -154,10 +157,10 @@ export default function JuzPage({ params }: JuzPageProps) {
                     <h1 className="text-3xl font-bold text-[var(--foreground)]">
                       {t('juz_number', { number: juz.juz_number })}
                     </h1>
-                    {/* Add more Juz information here if available in your API response */}
                   </div>
                 )}
 
+                {/* Tab Content */}
                 {verses.length > 0 ? (
                   <>
                     {verses.map((v) => (

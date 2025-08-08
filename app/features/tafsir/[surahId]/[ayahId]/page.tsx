@@ -195,7 +195,6 @@ export default function TafsirVersePage() {
                   />
                 </svg>
               </div>
-              {t('previous_ayah')}
             </button>
             <div className="text-white font-bold">
               {currentSurah ? (
@@ -212,7 +211,6 @@ export default function TafsirVersePage() {
               onClick={() => navigate(next)}
               className="flex items-center px-4 py-2 rounded-full bg-teal-600 text-white disabled:opacity-50 font-bold"
             >
-              {t('next_ayah')}
               <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white ml-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
