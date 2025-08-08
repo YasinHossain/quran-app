@@ -12,11 +12,11 @@ import { LANGUAGE_CODES } from '@/lib/languageCodes';
 import type { LanguageCode } from '@/lib/languageCodes';
 import { WORD_LANGUAGE_LABELS } from '@/lib/wordLanguages';
 import { useSettings } from '@/app/context/SettingsContext';
-import { useAudio } from '@/app/context/AudioContext';
 import Spinner from '@/app/components/common/Spinner';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 import { useTheme } from '@/app/context/ThemeContext';
+import AudioPlayer from '@/app/components/AudioPlayer';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;
 
@@ -29,7 +29,6 @@ export default function SurahPage({ params }: SurahPageProps) {
   const [error, setError] = useState<string | null>(null);
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
-  const { playingId, setPlayingId, setLoadingId } = useAudio();
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [translationSearchTerm, setTranslationSearchTerm] = useState('');
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
@@ -135,27 +134,6 @@ export default function SurahPage({ params }: SurahPageProps) {
               {verses.map((v) => (
                 <React.Fragment key={v.id}>
                   <Verse verse={v} />
-                  {playingId === v.id && v.audio?.url && (
-                    <audio
-                      src={`https://verses.quran.com/${v.audio.url}`}
-                      autoPlay
-                      onLoadStart={() => setLoadingId(v.id)}
-                      onWaiting={() => setLoadingId(v.id)}
-                      onPlaying={() => setLoadingId(null)}
-                      onCanPlay={() => setLoadingId(null)}
-                      onEnded={() => {
-                        setPlayingId(null);
-                        setLoadingId(null);
-                      }}
-                      onError={() => {
-                        setError(t('could_not_play_audio'));
-                        setPlayingId(null);
-                        setLoadingId(null);
-                      }}
-                    >
-                      <track kind="captions" />
-                    </audio>
-                  )}
                 </React.Fragment>
               ))}
               <div ref={loadMoreRef} className="py-4 text-center space-x-2">
@@ -197,6 +175,7 @@ export default function SurahPage({ params }: SurahPageProps) {
           });
         }}
       />
+      <AudioPlayer onError={(msg) => setError(msg)} />
     </div>
   );
 }

@@ -25,7 +25,7 @@ interface VerseProps {
  * and context values are stable.
  */
 export const Verse = memo(function Verse({ verse }: VerseProps) {
-  const { playingId, setPlayingId, loadingId } = useAudio();
+  const { playingId, setPlayingId, loadingId, setLoadingId, setActiveVerse, audioRef } = useAudio();
   const { settings, bookmarkedVerses, toggleBookmark } = useSettings();
   const router = useRouter();
   const showByWords = settings.showByWords ?? false;
@@ -36,8 +36,15 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
   const [surahId, ayahId] = verse.verse_key.split(':');
 
   const handlePlayPause = useCallback(() => {
-    setPlayingId((currentId) => (currentId === verse.id ? null : verse.id));
-  }, [setPlayingId, verse.id]);
+    if (playingId === verse.id) {
+      audioRef.current?.pause();
+      setPlayingId(null);
+      setLoadingId(null);
+      setActiveVerse(null);
+    } else {
+      setActiveVerse(verse);
+    }
+  }, [playingId, verse, audioRef, setActiveVerse, setPlayingId, setLoadingId]);
 
   const handleBookmark = useCallback(() => {
     toggleBookmark(String(verse.id));
