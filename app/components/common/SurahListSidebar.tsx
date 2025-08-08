@@ -214,8 +214,8 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
       >
         <div className="p-4 border-b border-[var(--border-color)]">
           <div
-            className={`flex items-center p-1 rounded-full border ${
-              theme === 'light' ? 'bg-white border-gray-200' : 'bg-gray-800 border-gray-600'
+            className={`flex items-center p-1 rounded-full ${
+              theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'
             }`}
           >
             {TABS.map(({ key, label }) => (
@@ -230,7 +230,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                   shouldCenterRef.current[key] = true;
                   setActiveTab(key);
                 }}
-                className={`w-1/3 px-4 py-2 text-xs font-semibold rounded-full transition-colors ${
+                className={`w-1/3 px-4 py-2 text-sm font-semibold rounded-full transition-colors ${
                   activeTab === key
                     ? theme === 'light'
                       ? 'bg-white text-slate-900 shadow'
