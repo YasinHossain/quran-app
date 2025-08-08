@@ -50,7 +50,7 @@ export const TranslationPanel = ({
     <>
       {/* Removed the overlay div */}
       <div
-        className={`fixed ${isHidden ? 'top-0' : 'top-16'} bottom-0 right-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-all duration-300 ease-in-out z-50 shadow-lg ${
+        className={`fixed ${isHidden ? 'top-0' : 'top-16'} bottom-0 right-0 w-[20.7rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-all duration-300 ease-in-out z-50 shadow-lg ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -83,7 +83,7 @@ export const TranslationPanel = ({
           {groupedTranslations &&
             sortedLanguages.map((lang) => (
               <div key={lang}>
-                <h3 className="sticky top-0 bg-gray-100 px-4 py-2 font-bold text-teal-800 text-sm">
+                <h3 className="sticky top-0 px-4 py-2 font-bold text-teal-800 text-sm bg-teal-50 dark:bg-gray-700 dark:text-teal-300">
                   {lang.charAt(0).toUpperCase() + lang.slice(1)}
                 </h3>
                 <div className="p-2 space-y-1">

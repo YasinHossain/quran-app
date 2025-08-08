@@ -26,7 +26,7 @@ export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps) => {
   const { playingId, setPlayingId, loadingId } = useAudio();
   const { settings, bookmarkedVerses, toggleBookmark } = useSettings();
   const [openPanels, setOpenPanels] = useState<Record<number, boolean>>({});
-  const [tafseerTexts, setTafseerTexts] = useState<Record<number, string>>({});
+  const [tafsirTexts, setTafsirTexts] = useState<Record<number, string>>({});
   const [loadingTafsir, setLoadingTafsir] = useState<Record<number, boolean>>({});
 
   const showByWords = settings.showByWords ?? false;
@@ -37,13 +37,13 @@ export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps) => {
 
   const togglePanel = async (id: number) => {
     setOpenPanels((p) => ({ ...p, [id]: !p[id] }));
-    if (!openPanels[id] && !tafseerTexts[id]) {
+    if (!openPanels[id] && !tafsirTexts[id]) {
       setLoadingTafsir((l) => ({ ...l, [id]: true }));
       try {
         const text = await getTafsirCached(verse.verse_key, id);
-        setTafseerTexts((t) => ({ ...t, [id]: text }));
+        setTafsirTexts((t) => ({ ...t, [id]: text }));
       } catch {
-        setTafseerTexts((t) => ({ ...t, [id]: 'Error loading tafsir.' }));
+        setTafsirTexts((t) => ({ ...t, [id]: 'Error loading tafsir.' }));
       } finally {
         setLoadingTafsir((l) => ({ ...l, [id]: false }));
       }
@@ -197,7 +197,7 @@ export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps) => {
                         fontSize: `${settings.tafsirFontSize}px`,
                       }}
                       dangerouslySetInnerHTML={{
-                        __html: applyArabicFont(tafseerTexts[id] || '', settings.arabicFontFace),
+                        __html: applyArabicFont(tafsirTexts[id] || '', settings.arabicFontFace),
                       }}
                     />
                   )}{' '}

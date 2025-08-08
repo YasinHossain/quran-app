@@ -18,6 +18,7 @@ npm run check
 - Keep the first line under 50 characters.
 - Separate the summary from any additional details with a blank line.
 - Commit messages are automatically checked by Husky's `commit-msg` hook using commitlint.
+- To bypass this check when necessary, set `SKIP_COMMITLINT=1` before committing.
 
 ## Code Style
 

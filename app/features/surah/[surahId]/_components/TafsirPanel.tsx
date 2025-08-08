@@ -34,7 +34,7 @@ export const TafsirPanel = ({ isOpen, onClose }: TafsirPanelProps) => {
 
   return (
     <div
-      className={`fixed ${isHidden ? 'top-0' : 'top-16'} bottom-0 right-0 w-[23rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-all duration-300 ease-in-out z-50 shadow-lg ${
+      className={`fixed ${isHidden ? 'top-0' : 'top-16'} bottom-0 right-0 w-[20.7rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-all duration-300 ease-in-out z-50 shadow-lg ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
@@ -64,7 +64,7 @@ export const TafsirPanel = ({ isOpen, onClose }: TafsirPanelProps) => {
       <div className="flex-grow overflow-y-auto">
         {Object.keys(grouped).map((lang) => (
           <div key={lang}>
-            <h3 className="sticky top-0 bg-gray-100 px-4 py-2 font-bold text-teal-800 text-sm my-4">
+            <h3 className="sticky top-0 px-4 py-2 font-bold text-teal-800 text-sm my-4 bg-teal-50 dark:bg-gray-700 dark:text-teal-300">
               {lang}
             </h3>
             <div className="p-2 space-y-1">
