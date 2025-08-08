@@ -1,4 +1,4 @@
-// app/features/surah/[SurahId]/_components/TranslationPanel.tsx
+'use client';
 import { FaArrowLeft, FaSearch } from '@/app/components/common/SvgIcons';
 import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';
