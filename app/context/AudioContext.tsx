@@ -1,11 +1,15 @@
 'use client';
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, { createContext, useContext, useMemo, useRef, useState } from 'react';
+import { Verse } from '@/types';
 
 interface AudioContextType {
   playingId: number | null;
   setPlayingId: React.Dispatch<React.SetStateAction<number | null>>;
   loadingId: number | null;
   setLoadingId: React.Dispatch<React.SetStateAction<number | null>>;
+  activeVerse: Verse | null;
+  setActiveVerse: React.Dispatch<React.SetStateAction<Verse | null>>;
+  audioRef: React.MutableRefObject<HTMLAudioElement | null>;
 }
 
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
@@ -18,10 +22,20 @@ const AudioContext = createContext<AudioContextType | undefined>(undefined);
 export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
   const [playingId, setPlayingId] = useState<number | null>(null);
   const [loadingId, setLoadingId] = useState<number | null>(null);
+  const [activeVerse, setActiveVerse] = useState<Verse | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const value = useMemo(
-    () => ({ playingId, setPlayingId, loadingId, setLoadingId }),
-    [playingId, setPlayingId, loadingId, setLoadingId]
+    () => ({
+      playingId,
+      setPlayingId,
+      loadingId,
+      setLoadingId,
+      activeVerse,
+      setActiveVerse,
+      audioRef,
+    }),
+    [playingId, loadingId, activeVerse]
   );
 
   return <AudioContext.Provider value={value}>{children}</AudioContext.Provider>;
