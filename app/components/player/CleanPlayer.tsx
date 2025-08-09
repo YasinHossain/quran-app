@@ -1,8 +1,9 @@
 'use client';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { SlidersHorizontal, X } from 'lucide-react';
 import { useAudio } from '@/app/context/AudioContext';
 import { useTheme } from '@/app/context/ThemeContext';
+import useAudioPlayer from '@/app/hooks/useAudioPlayer';
 import TrackInfo from './components/TrackInfo';
 import TransportControls from './components/TransportControls';
 import Timeline from './components/Timeline';
@@ -96,12 +97,25 @@ export default function CleanPlayer({
 }: Props) {
   const { theme } = useTheme();
   const { isPlayerVisible, closePlayer } = useAudio();
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [isPlaying, setIsPlaying] = useState(state?.isPlaying ?? false);
   const [current, setCurrent] = useState(state?.currentTimeSec ?? 0);
   const [duration, setDuration] = useState<number>(track?.durationSec ?? 0);
   const [volume, setVolume] = useState(state?.volume ?? 0.9);
   const [playbackRate, setPlaybackRate] = useState(1);
+
+  const {
+    audioRef,
+    isPlaying,
+    play,
+    pause,
+    seek,
+    setVolume: setPlayerVolume,
+    setPlaybackRate: setPlayerPlaybackRate,
+  } = useAudioPlayer({
+    src: track?.src,
+    defaultDuration: track?.durationSec,
+    onTimeUpdate: setCurrent,
+    onLoadedMetadata: setDuration,
+  });
 
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'reciter' | 'repeat'>('reciter');
@@ -124,67 +138,35 @@ export default function CleanPlayer({
 
   // Sync with parent state
   useEffect(() => {
-    if (state?.isPlaying !== undefined) {
-      setIsPlaying(state.isPlaying);
-    }
-  }, [state?.isPlaying]);
+    if (state?.isPlaying === true) play();
+    if (state?.isPlaying === false) pause();
+  }, [state?.isPlaying, play, pause]);
 
   useEffect(() => {
-    const a = audioRef.current;
-    if (!a) return;
-    if (isPlaying) {
-      a.play().catch(() => {});
-    } else {
-      a.pause();
-    }
-  }, [isPlaying, track?.src]);
+    setPlayerVolume(volume);
+  }, [volume, setPlayerVolume]);
 
-  // Sync audio element volume
   useEffect(() => {
-    const a = audioRef.current;
-    if (!a) return;
-    a.volume = volume;
-  }, [volume]);
-
-  // Sync audio element playback rate
-  useEffect(() => {
-    const a = audioRef.current;
-    if (!a) return;
-    a.playbackRate = playbackRate;
-  }, [playbackRate]);
-
-  // Wire up time/metadata listeners. Guard against missing track.
-  useEffect(() => {
-    const a = audioRef.current;
-    if (!a) return;
-    const onTime = () => setCurrent(a.currentTime || 0);
-    const onMeta = () => setDuration((a.duration || track?.durationSec || 0) as number);
-    a.addEventListener('timeupdate', onTime);
-    a.addEventListener('loadedmetadata', onMeta);
-    onMeta();
-    return () => {
-      a.removeEventListener('timeupdate', onTime);
-      a.removeEventListener('loadedmetadata', onMeta);
-    };
-  }, [track?.src, track?.durationSec]);
+    setPlayerPlaybackRate(playbackRate);
+  }, [playbackRate, setPlayerPlaybackRate]);
 
   const togglePlay = useCallback(() => {
     if (!interactable) return;
     const newPlaying = !isPlaying;
-    setIsPlaying(newPlaying);
+    if (newPlaying) {
+      play();
+    } else {
+      pause();
+    }
     onTogglePlay?.(newPlaying);
-  }, [interactable, isPlaying, onTogglePlay]);
+  }, [interactable, isPlaying, onTogglePlay, pause, play]);
 
   const setSeek = useCallback(
     (sec: number) => {
-      const a = audioRef.current;
-      if (!a) return;
-      const max = a.duration || duration || 0;
-      a.currentTime = Math.max(0, Math.min(max, sec));
-      setCurrent(a.currentTime || 0);
-      onSeek?.(a.currentTime || 0);
+      const t = seek(sec);
+      onSeek?.(t);
     },
-    [duration, onSeek]
+    [seek, onSeek]
   );
 
   // Keyboard interactions
@@ -290,7 +272,7 @@ export default function CleanPlayer({
         onEnded={() => {
           // Basic repeat functionality can be handled in the parent via onNext
           onNext?.();
-          setIsPlaying(false);
+          pause();
         }}
       >
         <track kind="captions" />
