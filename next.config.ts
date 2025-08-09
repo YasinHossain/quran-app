@@ -34,7 +34,7 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   // --- MERGED CONFIGURATIONS ---
   // 1. Add i18n configuration
-  ...nextI18NextConfig,
+  i18n: nextI18NextConfig.i18n,
 
   // 2. Expose the Quran API base URL to the app
   env: {
