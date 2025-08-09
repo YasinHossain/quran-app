@@ -14,24 +14,19 @@ import { WORD_LANGUAGE_LABELS } from '@/lib/wordLanguages';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useAudio } from '@/app/context/AudioContext';
 import { buildAudioUrl } from '@/lib/reciters';
+import { useParams } from 'next/navigation';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;
 
-interface QuranPageProps {
-  params: { pageId: string };
-}
-
 /**
  * Displays Quran verses for a specific page.
  *
  * Loads verses, manages translation and word panels, and supports infinite scrolling.
- *
- * @param {{ params: { pageId: string } }} props Route parameters including `pageId`.
  */
-export default function QuranPage({ params }: QuranPageProps) {
-  const { pageId } = params;
+export default function QuranPage() {
+  const { pageId } = useParams<{ pageId: string }>();
 
   const [error, setError] = useState<string | null>(null);
   const { settings, setSettings } = useSettings();
