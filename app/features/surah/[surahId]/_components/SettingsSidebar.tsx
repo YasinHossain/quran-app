@@ -170,7 +170,7 @@ export const SettingsSidebar = ({
                   </label>
                   <button
                     onClick={onTranslationPanelOpen}
-                    className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-sm text-left hover:border-teal-500 transition-shadow shadow-sm hover:shadow-md"
+                    className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-200 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition-shadow shadow-sm hover:shadow-md"
                   >
                     <span className="truncate text-[var(--foreground)]">
                       {selectedTranslationName}
@@ -186,7 +186,7 @@ export const SettingsSidebar = ({
                   </label>
                   <button
                     onClick={onWordLanguagePanelOpen}
-                    className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-sm text-left hover:border-teal-500 transition-shadow shadow-sm hover:shadow-md"
+                    className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-200 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition-shadow shadow-sm hover:shadow-md"
                   >
                     <span className="truncate text-[var(--foreground)]">
                       {selectedWordLanguageName}
@@ -212,7 +212,7 @@ export const SettingsSidebar = ({
                   </label>
                   <button
                     onClick={onTafsirPanelOpen}
-                    className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-sm text-left hover:border-teal-500 transition-shadow shadow-sm hover:shadow-md"
+                    className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-200 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition-shadow shadow-sm hover:shadow-md"
                   >
                     <span className="truncate text-[var(--foreground)]">{selectedTafsirName}</span>
                     <FaChevronDown className="text-gray-500" />
@@ -285,7 +285,7 @@ export const SettingsSidebar = ({
                   </label>
                   <button
                     onClick={() => setIsArabicFontPanelOpen(true)}
-                    className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-300 dark:border-gray-600 rounded-xl p-2.5 text-sm text-left hover:border-teal-500 transition-shadow shadow-sm hover:shadow-md"
+                    className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-200 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition-shadow shadow-sm hover:shadow-md"
                   >
                     <span className="truncate text-[var(--foreground)]">{selectedArabicFont}</span>
                     <FaChevronDown className="text-gray-500" />

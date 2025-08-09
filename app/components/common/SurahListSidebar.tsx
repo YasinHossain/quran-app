@@ -256,7 +256,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
               placeholder={t('search_surah')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className={`w-full pl-9 pr-3 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 transition-shadow shadow-sm hover:shadow-md ${searchBarClasses}`}
+              className={`w-full pl-9 pr-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition-shadow shadow-sm hover:shadow-md ${searchBarClasses}`}
             />
           </div>
         </div>
