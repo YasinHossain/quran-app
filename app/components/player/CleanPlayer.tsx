@@ -85,9 +85,9 @@ export default function CleanPlayer({
   onSeek,
   onVolume,
   reciters = [
-    { id: 'afasy', name: 'Mishary Al‑Afasy' },
-    { id: 'husary', name: 'Mahmoud Khalil Al‑Husary' },
-    { id: 'minshawi', name: 'Mohammad Al‑Minshawi' },
+    { id: 'afasy', name: 'Mishary Al-Afasy' },
+    { id: 'husary', name: 'Mahmoud Khalil Al-Husary' },
+    { id: 'minshawi', name: 'Mohammad Al-Minshawi' },
     { id: 'sudais', name: 'Abdul Rahman Al-Sudais' },
     { id: 'shuraim', name: 'Saud Al-Shuraim' },
     { id: 'ghamdi', name: 'Saad Al Ghamdi' },
@@ -339,7 +339,9 @@ export default function CleanPlayer({
                       setPlaybackRate(speed);
                       setSpeedMenuOpen(false);
                     }}
-                    className={`w-full text-center text-sm p-1.5 rounded-md ${playbackRate === speed ? 'bg-[#0E2A47] text-white' : 'hover:bg-slate-100'}`}
+                    className={`w-full text-center text-sm p-1.5 rounded-md ${
+                      playbackRate === speed ? 'bg-[#0E2A47] text-white' : 'hover:bg-slate-100'
+                    }`}
                   >
                     {speed}x
                   </button>
@@ -590,7 +592,6 @@ function IconBtn({ children, className = '', disabled, ...rest }: React.Componen
     </button>
   );
 }
-
 
 function NumberField({
   label,
