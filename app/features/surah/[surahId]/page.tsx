@@ -17,6 +17,8 @@ import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 import { useTheme } from '@/app/context/ThemeContext';
 import { CleanPlayer } from '@/app/components/player';
+import { useAudio } from '@/app/context/AudioContext';
+import { RECITERS, buildAudioUrl } from '@/lib/reciters';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;
 
@@ -34,6 +36,19 @@ export default function SurahPage({ params }: SurahPageProps) {
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
   const [wordTranslationSearchTerm, setWordTranslationSearchTerm] = useState('');
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  const {
+    activeVerse,
+    setActiveVerse,
+    isPlaying,
+    setIsPlaying,
+    reciter,
+    setReciter,
+    repeatOptions,
+    setRepeatOptions,
+    setVolume,
+    setPlayingId,
+  } = useAudio();
 
   // Ensure theme context initialization (for css var setup)
   useTheme();
@@ -119,6 +134,49 @@ export default function SurahPage({ params }: SurahPageProps) {
     [wordLanguageOptions, wordTranslationSearchTerm]
   );
 
+  const handleNext = () => {
+    if (!activeVerse) return;
+    const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
+    if (currentIndex < verses.length - 1) {
+      setActiveVerse(verses[currentIndex + 1]);
+    }
+  };
+
+  const handlePrev = () => {
+    if (!activeVerse) return;
+    const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
+    if (currentIndex > 0) {
+      setActiveVerse(verses[currentIndex - 1]);
+    }
+  };
+
+  const handleTogglePlay = (playing: boolean) => {
+    setIsPlaying(playing);
+    if (playing && activeVerse) {
+      setPlayingId(activeVerse.id);
+    }
+  };
+
+  const handleReciterChange = (id: string) => {
+    const newReciter = RECITERS.find((r) => r.id.toString() === id);
+    if (newReciter) {
+      setReciter(newReciter);
+    }
+  };
+
+  const track = activeVerse
+    ? {
+        id: activeVerse.id.toString(),
+        title: `Verse ${activeVerse.verse_key}`,
+        artist: reciter.name,
+        coverUrl: '', // No cover art available in this app
+        durationSec: 0, // Player will determine from metadata
+        src: buildAudioUrl(activeVerse.verse_key, reciter.path),
+      }
+    : null;
+
+  const playerReciters = RECITERS.map((r) => ({ id: r.id.toString(), name: r.name }));
+
   return (
     <div className="flex flex-grow bg-white dark:bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden">
       <main className="flex-grow bg-white dark:bg-[var(--background)] p-6 lg:p-10 overflow-y-auto homepage-scrollable-area">
@@ -175,7 +233,23 @@ export default function SurahPage({ params }: SurahPageProps) {
           });
         }}
       />
-      <CleanPlayer onError={(msg) => setError(msg)} />
+      {activeVerse && (
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-transparent z-50">
+          <CleanPlayer
+            track={track}
+            state={{ isPlaying }}
+            onTogglePlay={handleTogglePlay}
+            onNext={handleNext}
+            onPrev={handlePrev}
+            onVolume={setVolume}
+            reciters={playerReciters}
+            selectedReciterId={reciter.id.toString()}
+            onReciterChange={handleReciterChange}
+            repeatOptions={repeatOptions}
+            onRepeatChange={setRepeatOptions}
+          />
+        </div>
+      )}
     </div>
   );
 }

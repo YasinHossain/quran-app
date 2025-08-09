@@ -20,18 +20,12 @@ import useSWRInfinite from 'swr/infinite';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;
 
-interface JuzPageProps {
+export default function JuzPage({
+  params,
+}: {
   params: { juzId: string };
-}
-
-/**
- * Displays Quran verses for a specific Juz.
- *
- * Loads verses, manages translation and word panels, and supports infinite scrolling.
- *
- * @param {{ params: { juzId: string } }} props Route parameters including `juzId`.
- */
-export default function JuzPage({ params }: JuzPageProps) {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   const { juzId } = params;
 
   const [error, setError] = useState<string | null>(null);
