@@ -12,9 +12,7 @@ import {
   VolumeX,
   SlidersHorizontal,
   Mic2,
-  X,
 } from 'lucide-react';
-import { useAudio } from '@/app/context/AudioContext';
 
 /**
  * Clean minimal music/Quran player – Tailwind CSS + Next.js + TypeScript
@@ -99,7 +97,6 @@ export default function CleanPlayer({
   repeatOptions,
   onRepeatChange,
 }: Props) {
-  const { isPlayerVisible, closePlayer } = useAudio();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(state?.isPlaying ?? false);
   const [current, setCurrent] = useState(state?.currentTimeSec ?? 0);
@@ -226,13 +223,11 @@ export default function CleanPlayer({
     setOptionsOpen(false);
   };
 
-  if (!isPlayerVisible) return null;
-
   return (
     <div className="relative w-full">
       {/* Card */}
       <div
-        className="mx-auto w-full bg-white dark:bg-slate-800 rounded-2xl shadow-[0_10px_30px_rgba(2,6,23,0.06),0_1px_2px_rgba(2,6,23,0.04)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.1),0_1px_2px_rgba(0,0,0,0.06)] border border-slate-200/80 dark:border-slate-700/60 px-4 py-4 flex items-center gap-4"
+        className="mx-auto w-full bg-white rounded-2xl shadow-[0_10px_30px_rgba(2,6,23,0.06),0_1px_2px_rgba(2,6,23,0.04)] border border-slate-200/80 px-4 py-4 flex items-center gap-4"
         role="region"
         aria-label="Player"
       >
@@ -249,14 +244,12 @@ export default function CleanPlayer({
           />
           <div className="min-w-0 hidden sm:block">
             <div
-              className="text-sm font-semibold tracking-[-0.01em] text-slate-800 dark:text-slate-200 truncate"
+              className="text-sm font-semibold tracking-[-0.01em] text-slate-800 truncate"
               aria-label="current track title"
             >
               {title}
             </div>
-            <div className="text-xs text-slate-500 dark:text-slate-400 -mt-0.5 truncate">
-              {artist}
-            </div>
+            <div className="text-xs text-slate-500 -mt-0.5 truncate">{artist}</div>
           </div>
         </div>
 
@@ -271,9 +264,7 @@ export default function CleanPlayer({
             disabled={!interactable}
             className={
               'h-10 w-10 grid place-items-center rounded-full text-white hover:opacity-90 active:scale-95 transition ' +
-              (interactable
-                ? 'bg-[#0E2A47] dark:bg-sky-500'
-                : 'bg-slate-300 dark:bg-slate-600 cursor-not-allowed opacity-60')
+              (interactable ? 'bg-[#0E2A47]' : 'bg-slate-300 cursor-not-allowed opacity-60')
             }
           >
             {isPlaying ? <Pause /> : <Play />}
@@ -297,30 +288,30 @@ export default function CleanPlayer({
                 onValueChange={([v]) => setSeek(v)}
                 aria-label="Seek"
               >
-                <Slider.Track className="bg-[rgba(14,42,71,0.18)] dark:bg-slate-500/30 h-0.5 rounded-full relative w-full grow">
-                  <Slider.Range className="bg-[#0E2A47] dark:bg-sky-500 h-full rounded-full absolute" />
+                <Slider.Track className="bg-[rgba(14,42,71,0.18)] h-0.5 rounded-full relative w-full grow">
+                  <Slider.Range className="bg-[#0E2A47] h-full rounded-full absolute" />
                 </Slider.Track>
                 <Tooltip.Root>
                   <Tooltip.Trigger asChild>
                     <Slider.Thumb
-                      className="block h-3 w-3 rounded-full bg-white dark:bg-slate-900 ring-2 ring-[#0E2A47] dark:ring-sky-500 shadow-[0_1px_2px_rgba(2,6,23,0.15)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0E2A47]/35 dark:focus:ring-sky-500/35"
+                      className="block h-3 w-3 rounded-full bg-white ring-2 ring-[#0E2A47] shadow-[0_1px_2px_rgba(2,6,23,0.15)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0E2A47]/35"
                       aria-label="Position"
                     />
                   </Tooltip.Trigger>
                   <Tooltip.Portal>
                     <Tooltip.Content
                       sideOffset={8}
-                      className="rounded-md bg-slate-900 dark:bg-slate-700 text-white text-xs px-2 py-1 shadow"
+                      className="rounded-md bg-slate-900 text-white text-xs px-2 py-1 shadow"
                     >
                       {elapsed}
-                      <Tooltip.Arrow className="fill-slate-900 dark:fill-slate-700" />
+                      <Tooltip.Arrow className="fill-slate-900" />
                     </Tooltip.Content>
                   </Tooltip.Portal>
                 </Tooltip.Root>
               </Slider.Root>
             </Tooltip.Provider>
           </div>
-          <div className="hidden md:flex min-w-[88px] justify-between text-[11px] text-slate-500 dark:text-slate-400 tabular-nums">
+          <div className="hidden md:flex min-w-[88px] justify-between text-[11px] text-slate-500 tabular-nums">
             <span aria-label="elapsed">{elapsed}</span>
             <span aria-label="duration">{total}</span>
           </div>
@@ -332,13 +323,13 @@ export default function CleanPlayer({
           <div className="relative hidden sm:block">
             <button
               onClick={() => setSpeedMenuOpen((s) => !s)}
-              className="h-9 w-14 grid place-items-center rounded-full text-xs font-bold text-[#0E2A47]/80 dark:text-sky-500/90 transition focus:outline-none focus:ring-2 focus:ring-[#0E2A47]/35 dark:focus:ring-sky-500/35 hover:bg-slate-900/5 dark:hover:bg-white/10"
+              className="h-9 w-14 grid place-items-center rounded-full text-xs font-bold text-[#0E2A47]/80 transition focus:outline-none focus:ring-2 focus:ring-[#0E2A47]/35 hover:bg-slate-900/5"
             >
               {playbackRate}x
             </button>
             {speedMenuOpen && (
               <div
-                className="absolute bottom-full mb-2 w-28 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 p-1"
+                className="absolute bottom-full mb-2 w-28 bg-white rounded-lg shadow-lg border border-slate-200 p-1"
                 onMouseLeave={() => setSpeedMenuOpen(false)}
               >
                 {speedOptions.map((speed) => (
@@ -349,9 +340,7 @@ export default function CleanPlayer({
                       setSpeedMenuOpen(false);
                     }}
                     className={`w-full text-center text-sm p-1.5 rounded-md ${
-                      playbackRate === speed
-                        ? 'bg-[#0E2A47] dark:bg-sky-500 text-white'
-                        : 'hover:bg-slate-100 dark:hover:bg-slate-700'
+                      playbackRate === speed ? 'bg-[#0E2A47] text-white' : 'hover:bg-slate-100'
                     }`}
                   >
                     {speed}x
@@ -364,9 +353,9 @@ export default function CleanPlayer({
           {/* Volume */}
           <div className="hidden lg:flex items-center gap-2 w-28">
             {volume === 0 ? (
-              <VolumeX className="opacity-80 text-slate-600 dark:text-slate-400" />
+              <VolumeX className="opacity-80 text-slate-600" />
             ) : (
-              <Volume2 className="opacity-80 text-slate-600 dark:text-slate-400" />
+              <Volume2 className="opacity-80 text-slate-600" />
             )}
             <Slider.Root
               className="relative w-full h-2.5 group flex items-center"
@@ -379,10 +368,10 @@ export default function CleanPlayer({
               }}
               aria-label="Volume"
             >
-              <Slider.Track className="h-0.5 rounded-full bg-[rgba(14,42,71,0.2)] dark:bg-slate-500/40 relative w-full grow">
-                <Slider.Range className="h-full rounded-full bg-[#0E2A47] dark:bg-sky-500 absolute" />
+              <Slider.Track className="h-0.5 rounded-full bg-[rgba(14,42,71,0.2)] relative w-full grow">
+                <Slider.Range className="h-full rounded-full bg-[#0E2A47] absolute" />
               </Slider.Track>
-              <Slider.Thumb className="block h-3 w-3 rounded-full bg-white dark:bg-slate-900 ring-2 ring-[#0E2A47] dark:ring-sky-500 focus:outline-none" />
+              <Slider.Thumb className="block h-3 w-3 rounded-full bg-white ring-2 ring-[#0E2A47] focus:outline-none" />
             </Slider.Root>
           </div>
           <IconBtn
@@ -393,9 +382,6 @@ export default function CleanPlayer({
             }}
           >
             <SlidersHorizontal />
-          </IconBtn>
-          <IconBtn aria-label="Close player" onClick={closePlayer}>
-            <X />
           </IconBtn>
         </div>
       </div>
@@ -424,7 +410,7 @@ export default function CleanPlayer({
           tabIndex={0}
         >
           <div
-          className="w-full max-w-3xl rounded-2xl bg-white dark:bg-slate-800 border border-transparent dark:border-slate-700/80 shadow-[0_10px_30px_rgba(2,6,23,0.12),0_1px_2px_rgba(2,6,23,0.06)] dark:shadow-2xl p-4 md:p-6"
+            className="w-full max-w-3xl rounded-2xl bg-white border border-transparent shadow-[0_10px_30px_rgba(2,6,23,0.12),0_1px_2px_rgba(2,6,23,0.06)] p-4 md:p-6"
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') e.stopPropagation();
@@ -434,13 +420,13 @@ export default function CleanPlayer({
             tabIndex={-1}
           >
             {/* Header */}
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="h-10 w-10 rounded-xl bg-[#0E2A47]/10 dark:bg-sky-500/10 text-[#0E2A47] dark:text-sky-500 grid place-items-center">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-10 w-10 rounded-xl bg-[#0E2A47]/10 text-[#0E2A47] grid place-items-center">
                 <SlidersHorizontal />
               </div>
-              <div className="font-semibold dark:text-slate-200">Playback Options</div>
+              <div className="font-semibold">Playback Options</div>
               <button
-                className="ml-auto text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+                className="ml-auto text-slate-500 hover:text-slate-900"
                 onClick={() => setOptionsOpen(false)}
               >
                 ✕
@@ -448,13 +434,13 @@ export default function CleanPlayer({
             </div>
 
             {/* Tabs */}
-            <div className="mb-4 flex justify-center gap-2">
+            <div className="mb-4 flex gap-2">
               <button
                 onClick={() => setActiveTab('reciter')}
                 className={`px-3 py-1.5 rounded-full text-sm ${
                   activeTab === 'reciter'
-                    ? 'bg-[#0E2A47]/10 dark:bg-sky-500/20 text-[#0E2A47] dark:text-sky-400'
-                    : 'hover:bg-slate-900/5 dark:hover:bg-white/10'
+                    ? 'bg-[#0E2A47]/10 text-[#0E2A47]'
+                    : 'hover:bg-slate-900/5'
                 }`}
               >
                 <span className="inline-flex items-center gap-2">
@@ -465,9 +451,7 @@ export default function CleanPlayer({
               <button
                 onClick={() => setActiveTab('repeat')}
                 className={`px-3 py-1.5 rounded-full text-sm ${
-                  activeTab === 'repeat'
-                    ? 'bg-[#0E2A47]/10 dark:bg-sky-500/20 text-[#0E2A47] dark:text-sky-400'
-                    : 'hover:bg-slate-900/5 dark:hover:bg-white/10'
+                  activeTab === 'repeat' ? 'bg-[#0E2A47]/10 text-[#0E2A47]' : 'hover:bg-slate-900/5'
                 }`}
               >
                 <span className="inline-flex items-center gap-2">
@@ -488,25 +472,17 @@ export default function CleanPlayer({
                         onClick={() => setLocalReciter(r.id)}
                         className={`flex items-center justify-between gap-3 rounded-xl border px-3 py-2 text-left transition ${
                           localReciter === r.id
-                            ? 'border-[#0E2A47] dark:border-sky-500 bg-[#0E2A47]/5 dark:bg-sky-500/10'
-                            : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50'
+                            ? 'border-[#0E2A47] bg-[#0E2A47]/5'
+                            : 'border-slate-200 hover:bg-slate-50'
                         }`}
                       >
                         <div className="min-w-0">
-                          <div className="text-sm font-medium truncate dark:text-slate-200">
-                            {r.name}
-                          </div>
-                          {r.locale && (
-                            <div className="text-xs text-slate-500 dark:text-slate-400">
-                              {r.locale}
-                            </div>
-                          )}
+                          <div className="text-sm font-medium truncate">{r.name}</div>
+                          {r.locale && <div className="text-xs text-slate-500">{r.locale}</div>}
                         </div>
                         <div
                           className={`h-4 w-4 rounded-full ${
-                            localReciter === r.id
-                              ? 'bg-[#0E2A47] dark:bg-sky-500'
-                              : 'border border-slate-300 dark:border-slate-600'
+                            localReciter === r.id ? 'bg-[#0E2A47]' : 'border border-slate-300'
                           }`}
                         />
                       </button>
@@ -518,8 +494,8 @@ export default function CleanPlayer({
               {/* Repeat panel */}
               {activeTab === 'repeat' && (
                 <div className="md:col-span-2 grid md:grid-cols-2 gap-4">
-                  <div className="rounded-xl border border-slate-200 dark:border-slate-700 p-4">
-                    <div className="font-medium mb-3 dark:text-slate-200">Mode</div>
+                  <div className="rounded-xl border border-slate-200 p-4">
+                    <div className="font-medium mb-3">Mode</div>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                       {(['off', 'single', 'range', 'surah'] as const).map((m) => (
                         <button
@@ -527,8 +503,8 @@ export default function CleanPlayer({
                           onClick={() => setLocalRepeat({ ...localRepeat, mode: m })}
                           className={`px-3 py-2 rounded-xl text-sm capitalize ${
                             localRepeat.mode === m
-                              ? 'bg-[#0E2A47] dark:bg-sky-500 text-white'
-                              : 'bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600'
+                              ? 'bg-[#0E2A47] text-white'
+                              : 'bg-slate-50 hover:bg-slate-100'
                           }`}
                         >
                           {m}
@@ -536,7 +512,7 @@ export default function CleanPlayer({
                       ))}
                     </div>
                   </div>
-                  <div className="rounded-xl border border-slate-200 dark:border-slate-700 p-4 grid grid-cols-2 gap-3">
+                  <div className="rounded-xl border border-slate-200 p-4 grid grid-cols-2 gap-3">
                     <NumberField
                       label="Start"
                       value={localRepeat.start ?? 1}
@@ -575,18 +551,16 @@ export default function CleanPlayer({
             </div>
 
             <div className="mt-5 flex items-center justify-between text-sm">
-              <div className="text-slate-500 dark:text-slate-400">
-                Tips: Space • ←/→ seek • ↑/↓ volume
-              </div>
+              <div className="text-slate-500">Tips: Space • ←/→ seek • ↑/↓ volume</div>
               <div className="flex gap-2">
                 <button
-                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-slate-200"
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200"
                   onClick={() => setOptionsOpen(false)}
                 >
                   Cancel
                 </button>
                 <button
-                  className="px-4 py-2 rounded-xl bg-[#0E2A47] dark:bg-sky-500 text-white hover:opacity-90"
+                  className="px-4 py-2 rounded-xl bg-[#0E2A47] text-white hover:opacity-90"
                   onClick={commitOptions}
                 >
                   Apply
@@ -606,10 +580,10 @@ function IconBtn({ children, className = '', disabled, ...rest }: React.Componen
       {...rest}
       disabled={disabled}
       className={
-        'h-9 w-9 grid place-items-center rounded-full text-[#0E2A47]/80 dark:text-sky-500/90 transition focus:outline-none focus:ring-2 focus:ring-[#0E2A47]/35 dark:focus:ring-sky-500/35 ' +
+        'h-9 w-9 grid place-items-center rounded-full text-[#0E2A47]/80 transition focus:outline-none focus:ring-2 focus:ring-[#0E2A47]/35 ' +
         (disabled
           ? 'opacity-40 cursor-not-allowed'
-          : 'hover:text-[#0E2A47] dark:hover:text-sky-400 hover:-translate-y-px active:scale-95 hover:bg-slate-900/5 dark:hover:bg-white/10 active:bg-slate-900/10') +
+          : 'hover:text-[#0E2A47] hover:-translate-y-px active:scale-95 hover:bg-slate-900/5 active:bg-slate-900/10') +
         ' ' +
         className
       }
@@ -632,13 +606,13 @@ function NumberField({
 }) {
   return (
     <label className="text-sm">
-      <span className="block mb-1 text-slate-600 dark:text-slate-400">{label}</span>
+      <span className="block mb-1 text-slate-600">{label}</span>
       <input
         type="number"
         value={Number.isFinite(value) ? value : 0}
         min={min}
         onChange={(e) => onChange(parseFloat(e.target.value))}
-        className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0E2A47]/35 dark:focus:ring-sky-500/35"
+        className="w-full rounded-xl border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0E2A47]/35"
       />
     </label>
   );

@@ -18,7 +18,6 @@ jest.mock('react-i18next', () => ({
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: jest.fn() }),
-  useParams: () => ({ pageId: '1' }),
 }));
 
 const mockVerse: Verse = {
