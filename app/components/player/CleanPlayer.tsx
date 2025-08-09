@@ -85,9 +85,9 @@ export default function CleanPlayer({
   onSeek,
   onVolume,
   reciters = [
-    { id: 'afasy', name: 'Mishary Al‑Afasy' },
-    { id: 'husary', name: 'Mahmoud Khalil Al‑Husary' },
-    { id: 'minshawi', name: 'Mohammad Al‑Minshawi' },
+    { id: 'afasy', name: 'Mishary Al-Afasy' },
+    { id: 'husary', name: 'Mahmoud Khalil Al-Husary' },
+    { id: 'minshawi', name: 'Mohammad Al-Minshawi' },
     { id: 'sudais', name: 'Abdul Rahman Al-Sudais' },
     { id: 'shuraim', name: 'Saud Al-Shuraim' },
     { id: 'ghamdi', name: 'Saad Al Ghamdi' },
@@ -236,7 +236,7 @@ export default function CleanPlayer({
           <img
             src={cover}
             alt="cover"
-            className="h-12 w-12 rounded-xl shadow-sm object-cover"
+            className="h-12 w-12 rounded-full shadow-sm object-cover"
             onError={(e) => {
               e.currentTarget.src =
                 "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96'><rect width='100%' height='100%' rx='12' ry='12' fill='%23e5e7eb'/><text x='50%' y='52%' dominant-baseline='middle' text-anchor='middle' font-family='Inter, system-ui, sans-serif' font-size='12' fill='%239ca3af'>No cover</text></svg>";
@@ -339,7 +339,9 @@ export default function CleanPlayer({
                       setPlaybackRate(speed);
                       setSpeedMenuOpen(false);
                     }}
-                    className={`w-full text-center text-sm p-1.5 rounded-md ${playbackRate === speed ? 'bg-[#0E2A47] text-white' : 'hover:bg-slate-100'}`}
+                    className={`w-full text-center text-sm p-1.5 rounded-md ${
+                      playbackRate === speed ? 'bg-[#0E2A47] text-white' : 'hover:bg-slate-100'
+                    }`}
                   >
                     {speed}x
                   </button>
@@ -407,11 +409,12 @@ export default function CleanPlayer({
           role="button"
           tabIndex={0}
         >
-          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
           <div
             className="w-full max-w-3xl rounded-2xl bg-white border border-transparent shadow-[0_10px_30px_rgba(2,6,23,0.12),0_1px_2px_rgba(2,6,23,0.06)] p-4 md:p-6"
             onClick={(e) => e.stopPropagation()}
-            onKeyDown={(e) => e.stopPropagation()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') e.stopPropagation();
+            }}
             role="dialog"
             aria-modal="true"
             tabIndex={-1}
