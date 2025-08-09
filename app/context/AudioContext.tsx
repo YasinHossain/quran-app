@@ -31,6 +31,8 @@ interface AudioContextType {
   setVolume: React.Dispatch<React.SetStateAction<number>>;
   playbackRate: number;
   setPlaybackRate: React.Dispatch<React.SetStateAction<number>>;
+  isPlayerVisible: boolean;
+  closePlayer: () => void;
 }
 
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
@@ -57,6 +59,16 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
   const [reciter, setReciter] = useState<Reciter>(RECITERS[0]);
   const [volume, setVolume] = useState(0.9);
   const [playbackRate, setPlaybackRate] = useState(1);
+  const [isPlayerVisible, setPlayerVisible] = useState(true);
+
+  const closePlayer = () => {
+    setIsPlaying(false);
+    setPlayingId(null);
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    setPlayerVisible(false);
+  };
 
   const value = useMemo(
     () => ({
@@ -77,8 +89,10 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
       setVolume,
       playbackRate,
       setPlaybackRate,
+      isPlayerVisible,
+      closePlayer,
     }),
-    [playingId, isPlaying, loadingId, activeVerse, repeatOptions, reciter, volume, playbackRate]
+    [playingId, isPlaying, loadingId, activeVerse, repeatOptions, reciter, volume, playbackRate, isPlayerVisible]
   );
 
   return <AudioContext.Provider value={value}>{children}</AudioContext.Provider>;
