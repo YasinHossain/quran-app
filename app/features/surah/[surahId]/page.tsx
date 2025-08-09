@@ -20,8 +20,7 @@ import { useSettings } from '@/app/context/SettingsContext';
 import Spinner from '@/app/components/common/Spinner';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
-import { useTheme } from '@/app/context/ThemeContext';
-import { CleanPlayer } from '@/app/components/player';
+import { AudioPlayer } from '@/app/components/player';
 import { useAudio } from '@/app/context/AudioContext';
 import { RECITERS, buildAudioUrl } from '@/lib/reciters';
 
@@ -55,8 +54,6 @@ export default function SurahPage({ params }: SurahPageProps) {
     setVolume,
     setPlayingId,
   } = useAudio();
-
-  const { theme } = useTheme();
 
   const { data: translationOptionsData } = useSWR('translations', getTranslations);
   const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
@@ -247,10 +244,9 @@ export default function SurahPage({ params }: SurahPageProps) {
       />
       {activeVerse && (
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-transparent z-50">
-          <CleanPlayer
+          <AudioPlayer
             track={track}
             state={{ isPlaying }}
-            theme={theme}
             onTogglePlay={handleTogglePlay}
             onNext={handleNext}
             onPrev={handlePrev}

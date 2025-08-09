@@ -79,7 +79,7 @@ type Props = {
   onRepeatChange?: (opts: RepeatOptions) => void;
 };
 
-export default function CleanPlayer({
+export default function AudioPlayer({
   track,
   state,
   onPrev,
@@ -244,6 +244,7 @@ export default function CleanPlayer({
       >
         {/* Left media block */}
         <div className="flex items-center gap-3 min-w-0 sm:min-w-[220px] flex-shrink-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={cover}
             alt="cover"
@@ -292,8 +293,8 @@ export default function CleanPlayer({
                   ? 'bg-sky-500'
                   : 'bg-[#0E2A47]'
                 : theme === 'dark'
-                ? 'bg-slate-600 cursor-not-allowed opacity-60'
-                : 'bg-slate-300 cursor-not-allowed opacity-60'
+                  ? 'bg-slate-600 cursor-not-allowed opacity-60'
+                  : 'bg-slate-300 cursor-not-allowed opacity-60'
             }`}
           >
             {isPlaying ? <Pause /> : <Play />}
@@ -383,9 +384,7 @@ export default function CleanPlayer({
             {speedMenuOpen && (
               <div
                 className={`absolute bottom-full mb-2 w-28 rounded-lg shadow-lg border p-1 ${
-                  theme === 'dark'
-                    ? 'bg-slate-800 border-slate-700'
-                    : 'bg-white border-slate-200'
+                  theme === 'dark' ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'
                 }`}
                 onMouseLeave={() => setSpeedMenuOpen(false)}
               >
@@ -402,8 +401,8 @@ export default function CleanPlayer({
                           ? 'bg-sky-500 text-white'
                           : 'bg-[#0E2A47] text-white'
                         : theme === 'dark'
-                        ? 'hover:bg-slate-700'
-                        : 'hover:bg-slate-100'
+                          ? 'hover:bg-slate-700'
+                          : 'hover:bg-slate-100'
                     }`}
                   >
                     {speed}x
@@ -492,6 +491,7 @@ export default function CleanPlayer({
           role="button"
           tabIndex={0}
         >
+          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
           <div
             className={`w-full max-w-3xl rounded-2xl border p-4 md:p-6 ${
               theme === 'dark'
@@ -540,8 +540,8 @@ export default function CleanPlayer({
                       ? 'bg-sky-500/20 text-sky-400'
                       : 'bg-[#0E2A47]/10 text-[#0E2A47]'
                     : theme === 'dark'
-                    ? 'hover:bg-white/10'
-                    : 'hover:bg-slate-900/5'
+                      ? 'hover:bg-white/10'
+                      : 'hover:bg-slate-900/5'
                 }`}
               >
                 <span className="inline-flex items-center gap-2">
@@ -557,8 +557,8 @@ export default function CleanPlayer({
                       ? 'bg-sky-500/20 text-sky-400'
                       : 'bg-[#0E2A47]/10 text-[#0E2A47]'
                     : theme === 'dark'
-                    ? 'hover:bg-white/10'
-                    : 'hover:bg-slate-900/5'
+                      ? 'hover:bg-white/10'
+                      : 'hover:bg-slate-900/5'
                 }`}
               >
                 <span className="inline-flex items-center gap-2">
@@ -583,8 +583,8 @@ export default function CleanPlayer({
                               ? 'border-sky-500 bg-sky-500/10'
                               : 'border-[#0E2A47] bg-[#0E2A47]/5'
                             : theme === 'dark'
-                            ? 'border-slate-700 hover:bg-slate-700/50'
-                            : 'border-slate-200 hover:bg-slate-50'
+                              ? 'border-slate-700 hover:bg-slate-700/50'
+                              : 'border-slate-200 hover:bg-slate-50'
                         }`}
                       >
                         <div className="min-w-0">
@@ -612,8 +612,8 @@ export default function CleanPlayer({
                                 ? 'bg-sky-500'
                                 : 'bg-[#0E2A47]'
                               : theme === 'dark'
-                              ? 'border-slate-600'
-                              : 'border-slate-300'
+                                ? 'border-slate-600'
+                                : 'border-slate-300'
                           } border`}
                         />
                       </button>
@@ -630,9 +630,7 @@ export default function CleanPlayer({
                       theme === 'dark' ? 'border-slate-700' : 'border-slate-200'
                     }`}
                   >
-                    <div
-                      className={`font-medium mb-3 ${theme === 'dark' ? 'text-slate-200' : ''}`}
-                    >
+                    <div className={`font-medium mb-3 ${theme === 'dark' ? 'text-slate-200' : ''}`}>
                       Mode
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -646,8 +644,8 @@ export default function CleanPlayer({
                                 ? 'bg-sky-500 text-white'
                                 : 'bg-[#0E2A47] text-white'
                               : theme === 'dark'
-                              ? 'bg-slate-700 hover:bg-slate-600'
-                              : 'bg-slate-50 hover:bg-slate-100'
+                                ? 'bg-slate-700 hover:bg-slate-600'
+                                : 'bg-slate-50 hover:bg-slate-100'
                           }`}
                         >
                           {m}

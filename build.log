@@ -22,7 +22,7 @@ Learn more about internationalization in App Router: https://nextjs.org/docs/app
 
 Failed to compile.
 
-./app/components/player/CleanPlayer.tsx
+./app/components/player/AudioPlayer.tsx
 236:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
 410:11  Error: Non-interactive elements should not be assigned mouse or keyboard event listeners.  jsx-a11y/no-noninteractive-element-interactions
 594:1  Error: Delete `⏎`  prettier/prettier
