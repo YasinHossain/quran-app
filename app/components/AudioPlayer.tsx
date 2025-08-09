@@ -1,6 +1,8 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useAudio } from '@/app/context/AudioContext';
+import { API_BASE_URL } from '@/lib/api';
+import type { Verse } from '@/types';
 import Spinner from '@/app/components/common/Spinner';
 import { FaArrowLeft, FaPlay, FaPause, FaTimes } from '@/app/components/common/SvgIcons';
 import { useTranslation } from 'react-i18next';
@@ -19,11 +21,14 @@ export default function AudioPlayer({ onError }: AudioPlayerProps) {
     setPlayingId,
     loadingId,
     setLoadingId,
+    repeatSettings,
   } = useAudio();
 
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
+  const [currentRepeat, setCurrentRepeat] = useState(1);
+  const [currentPlay, setCurrentPlay] = useState(1);
 
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
@@ -48,6 +53,8 @@ export default function AudioPlayer({ onError }: AudioPlayerProps) {
   useEffect(() => {
     setCurrentTime(0);
     setDuration(0);
+    setCurrentRepeat(1);
+    setCurrentPlay(1);
   }, [activeVerse]);
 
   useEffect(() => {
@@ -93,6 +100,83 @@ export default function AudioPlayer({ onError }: AudioPlayerProps) {
     setPlayingId(null);
     setLoadingId(null);
     setActiveVerse(null);
+    setCurrentRepeat(1);
+    setCurrentPlay(1);
+  };
+
+  const fetchVerse = async (key: string): Promise<Verse | null> => {
+    try {
+      const res = await fetch(
+        `${API_BASE_URL}/verses/by_key/${encodeURIComponent(key)}?fields=text_uthmani,audio`
+      );
+      const data = await res.json();
+      return data.verse as Verse;
+    } catch {
+      return null;
+    }
+  };
+
+  const handleEnded = async () => {
+    const { mode, start, end, playCount, repeatEach, delay } = repeatSettings;
+    const [surah, ayah] = activeVerse.verse_key.split(':').map(Number);
+
+    if (mode === 'single') {
+      if (currentRepeat < repeatEach) {
+        setCurrentRepeat(currentRepeat + 1);
+        setTimeout(() => audioRef.current?.play(), delay * 1000);
+        return;
+      }
+      if (currentPlay < playCount) {
+        setCurrentRepeat(1);
+        setCurrentPlay(currentPlay + 1);
+        setTimeout(() => audioRef.current?.play(), delay * 1000);
+        return;
+      }
+      close();
+      return;
+    }
+
+    const nextVerseNumber = ayah;
+
+    if (mode === 'range') {
+      if (currentRepeat < repeatEach) {
+        setCurrentRepeat(currentRepeat + 1);
+        setTimeout(() => audioRef.current?.play(), delay * 1000);
+        return;
+      }
+      if (nextVerseNumber < end) {
+        const next = await fetchVerse(`${surah}:${nextVerseNumber + 1}`);
+        if (next) {
+          setCurrentRepeat(1);
+          setActiveVerse(next);
+        } else {
+          close();
+        }
+        return;
+      }
+      if (currentPlay < playCount) {
+        const first = await fetchVerse(`${surah}:${start}`);
+        if (first) {
+          setCurrentRepeat(1);
+          setCurrentPlay(currentPlay + 1);
+          setActiveVerse(first);
+        } else {
+          close();
+        }
+        return;
+      }
+      close();
+      return;
+    }
+
+    if (mode === 'surah') {
+      const next = await fetchVerse(`${surah}:${nextVerseNumber + 1}`);
+      if (next) {
+        setActiveVerse(next);
+      } else {
+        close();
+      }
+    }
   };
 
   return (
@@ -173,7 +257,7 @@ export default function AudioPlayer({ onError }: AudioPlayerProps) {
       <audio
         ref={audioRef}
         className="hidden"
-        onEnded={close}
+        onEnded={handleEnded}
         onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime || 0)}
         onLoadedMetadata={() => setDuration(audioRef.current?.duration || 0)}
         onLoadStart={() => setLoadingId(activeVerse.id)}
