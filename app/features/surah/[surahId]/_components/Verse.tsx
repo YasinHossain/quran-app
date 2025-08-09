@@ -97,6 +97,7 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
         <div className="flex-grow space-y-6">
           {/* ARABIC VERSE DISPLAY, WITH TAJWEED + WORD TRANSLATIONS */}
           <p
+            dir="rtl"
             className="text-right leading-loose text-[var(--foreground)]"
             style={{
               fontFamily: settings.arabicFontFace,

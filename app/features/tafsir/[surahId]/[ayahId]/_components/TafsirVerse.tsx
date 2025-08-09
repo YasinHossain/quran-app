@@ -106,6 +106,7 @@ export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps) => {
         <div className="flex-grow space-y-6">
           {' '}
           <p
+            dir="rtl"
             className="text-right leading-loose text-[var(--foreground)]"
             style={{
               fontFamily: settings.arabicFontFace,

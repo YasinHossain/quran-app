@@ -400,7 +400,6 @@ export default function CleanPlayer({
 
       {/* Options Sheet (Reciter + Repeat) */}
       {optionsOpen && (
-        // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
         <div
           className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4"
           onClick={() => setOptionsOpen(false)}
@@ -408,12 +407,14 @@ export default function CleanPlayer({
           role="button"
           tabIndex={0}
         >
-          {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events */}
+          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
           <div
             className="w-full max-w-3xl rounded-2xl bg-white border border-transparent shadow-[0_10px_30px_rgba(2,6,23,0.12),0_1px_2px_rgba(2,6,23,0.06)] p-4 md:p-6"
             onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
+            tabIndex={-1}
           >
             {/* Header */}
             <div className="flex items-center gap-3 mb-4">
@@ -588,7 +589,6 @@ function IconBtn({ children, className = '', disabled, ...rest }: React.Componen
     </button>
   );
 }
-
 
 function NumberField({
   label,
