@@ -10,6 +10,17 @@ interface AudioContextType {
   activeVerse: Verse | null;
   setActiveVerse: React.Dispatch<React.SetStateAction<Verse | null>>;
   audioRef: React.MutableRefObject<HTMLAudioElement | null>;
+  repeatSettings: RepeatSettings;
+  setRepeatSettings: React.Dispatch<React.SetStateAction<RepeatSettings>>;
+}
+
+export interface RepeatSettings {
+  mode: 'single' | 'range' | 'surah';
+  start: number;
+  end: number;
+  playCount: number;
+  repeatEach: number;
+  delay: number;
 }
 
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
@@ -24,6 +35,14 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const [activeVerse, setActiveVerse] = useState<Verse | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [repeatSettings, setRepeatSettings] = useState<RepeatSettings>({
+    mode: 'single',
+    start: 1,
+    end: 1,
+    playCount: 1,
+    repeatEach: 1,
+    delay: 0,
+  });
 
   const value = useMemo(
     () => ({
@@ -34,8 +53,10 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
       activeVerse,
       setActiveVerse,
       audioRef,
+      repeatSettings,
+      setRepeatSettings,
     }),
-    [playingId, loadingId, activeVerse]
+    [playingId, loadingId, activeVerse, repeatSettings]
   );
 
   return <AudioContext.Provider value={value}>{children}</AudioContext.Provider>;

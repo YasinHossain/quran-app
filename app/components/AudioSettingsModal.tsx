@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { FaTimes } from '@/app/components/common/SvgIcons';
+import { useAudio, RepeatSettings } from '@/app/context/AudioContext';
 
 interface AudioSettingsModalProps {
   isOpen: boolean;
@@ -9,6 +10,11 @@ interface AudioSettingsModalProps {
 
 export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsModalProps) {
   const [activeTab, setActiveTab] = useState<'repeat' | 'reciter'>('repeat');
+  const { repeatSettings, setRepeatSettings } = useAudio();
+
+  const handleChange = (field: keyof RepeatSettings, value: string | number) => {
+    setRepeatSettings({ ...repeatSettings, [field]: value });
+  };
 
   if (!isOpen) return null;
 
@@ -38,7 +44,103 @@ export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsMod
             <FaTimes size={16} />
           </button>
         </div>
-        {activeTab === 'repeat' ? <div>Repeat settings</div> : <div>Reciter settings</div>}
+        {activeTab === 'repeat' ? (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1" htmlFor="repeat-mode">
+                Mode
+              </label>
+              <select
+                id="repeat-mode"
+                value={repeatSettings.mode}
+                onChange={(e) => handleChange('mode', e.target.value)}
+                className="w-full border border-gray-300 dark:border-gray-600 rounded p-2 text-sm"
+              >
+                <option value="single">Single Verse</option>
+                <option value="range">Verse Range</option>
+                <option value="surah">Full Surah</option>
+              </select>
+            </div>
+            {repeatSettings.mode !== 'surah' && (
+              <div className="space-y-2">
+                <div className="flex space-x-2">
+                  <div className="flex-1">
+                    <label className="block text-sm" htmlFor="repeat-start">
+                      Start
+                    </label>
+                    <input
+                      id="repeat-start"
+                      type="number"
+                      min={1}
+                      value={repeatSettings.start}
+                      onChange={(e) => handleChange('start', parseInt(e.target.value, 10))}
+                      className="w-full border border-gray-300 dark:border-gray-600 rounded p-2 text-sm"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-sm" htmlFor="repeat-end">
+                      End
+                    </label>
+                    <input
+                      id="repeat-end"
+                      type="number"
+                      min={repeatSettings.start}
+                      value={repeatSettings.end}
+                      onChange={(e) => handleChange('end', parseInt(e.target.value, 10))}
+                      className="w-full border border-gray-300 dark:border-gray-600 rounded p-2 text-sm"
+                    />
+                  </div>
+                </div>
+                <div className="flex space-x-2">
+                  <div className="flex-1">
+                    <label className="block text-sm" htmlFor="repeat-playcount">
+                      Play count
+                    </label>
+                    <input
+                      id="repeat-playcount"
+                      type="number"
+                      min={1}
+                      value={repeatSettings.playCount}
+                      onChange={(e) => handleChange('playCount', parseInt(e.target.value, 10))}
+                      className="w-full border border-gray-300 dark:border-gray-600 rounded p-2 text-sm"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-sm" htmlFor="repeat-each">
+                      Repeat each
+                    </label>
+                    <input
+                      id="repeat-each"
+                      type="number"
+                      min={1}
+                      value={repeatSettings.repeatEach}
+                      onChange={(e) => handleChange('repeatEach', parseInt(e.target.value, 10))}
+                      className="w-full border border-gray-300 dark:border-gray-600 rounded p-2 text-sm"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm" htmlFor="repeat-delay">
+                    Delay (s)
+                  </label>
+                  <input
+                    id="repeat-delay"
+                    type="number"
+                    min={0}
+                    value={repeatSettings.delay}
+                    onChange={(e) => handleChange('delay', parseInt(e.target.value, 10))}
+                    className="w-full border border-gray-300 dark:border-gray-600 rounded p-2 text-sm"
+                  />
+                </div>
+              </div>
+            )}
+            {repeatSettings.mode === 'surah' && (
+              <p className="text-sm">Play the entire surah continuously.</p>
+            )}
+          </div>
+        ) : (
+          <div>Reciter settings</div>
+        )}
       </div>
     </div>
   );
