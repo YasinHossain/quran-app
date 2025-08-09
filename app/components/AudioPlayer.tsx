@@ -211,13 +211,13 @@ export default function AudioPlayer({ onError }: AudioPlayerProps) {
         <span className="font-semibold text-sm">{activeVerse.verse_key}</span>
         <div className="flex items-center space-x-4">
           <button
-            aria-label="Previous"
+            aria-label={t('previous')}
             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
           >
             <FaArrowLeft size={20} />
           </button>
           <button
-            aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
+            aria-label={isPlaying ? t('pause_audio') : t('play_audio')}
             onClick={togglePlay}
             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
           >
@@ -230,26 +230,26 @@ export default function AudioPlayer({ onError }: AudioPlayerProps) {
             )}
           </button>
           <button
-            aria-label="Next"
+            aria-label={t('next')}
             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
           >
             <FaArrowLeft size={20} className="rotate-180" />
           </button>
           <select
-            aria-label="Playback speed"
+            aria-label={t('playback_speed')}
             value={playbackRate}
             onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
             className="border border-gray-300 dark:border-gray-600 rounded text-sm p-1"
           >
             {[0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2].map((rate) => (
               <option key={rate} value={rate}>
-                {rate}×
+                {t('speed_option', { rate })}
               </option>
             ))}
           </select>
         </div>
         <button
-          aria-label="Close"
+          aria-label={t('close')}
           onClick={close}
           className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
         >
