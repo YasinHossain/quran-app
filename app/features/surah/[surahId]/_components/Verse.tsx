@@ -24,7 +24,15 @@ interface VerseProps {
  * and context values are stable.
  */
 export const Verse = memo(function Verse({ verse }: VerseProps) {
-  const { playingId, setPlayingId, loadingId, setLoadingId, setActiveVerse, audioRef } = useAudio();
+  const {
+    playingId,
+    setPlayingId,
+    loadingId,
+    setLoadingId,
+    setActiveVerse,
+    audioRef,
+    setIsPlaying,
+  } = useAudio();
   const { settings, bookmarkedVerses, toggleBookmark } = useSettings();
   const router = useRouter();
   const showByWords = settings.showByWords ?? false;
@@ -40,10 +48,14 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
       setPlayingId(null);
       setLoadingId(null);
       setActiveVerse(null);
+      setIsPlaying(false);
     } else {
       setActiveVerse(verse);
+      setPlayingId(verse.id);
+      setLoadingId(verse.id);
+      setIsPlaying(true);
     }
-  }, [playingId, verse, audioRef, setActiveVerse, setPlayingId, setLoadingId]);
+  }, [playingId, verse, audioRef, setActiveVerse, setPlayingId, setLoadingId, setIsPlaying]);
 
   const handleBookmark = useCallback(() => {
     toggleBookmark(String(verse.id));

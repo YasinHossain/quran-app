@@ -117,7 +117,16 @@ export default function Page() {
           {JSON.stringify({ reciter: track.reciter, repeat }, null, 2)}
         </pre>
       </div>
-      <CleanPlayer src={track.url} title={track.title} />
+      <CleanPlayer
+        track={{
+          id: track.id,
+          title: track.title ?? '',
+          artist: track.reciter?.name ?? '',
+          coverUrl: '',
+          durationSec: 0,
+          src: track.url,
+        }}
+      />
     </div>
   );
 }

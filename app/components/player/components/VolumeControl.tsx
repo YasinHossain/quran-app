@@ -1,15 +1,14 @@
 import React from 'react';
 import * as Slider from '@radix-ui/react-slider';
 import { Volume2, VolumeX } from 'lucide-react';
+import { useAudio } from '@/app/context/AudioContext';
 
 interface Props {
-  volume: number;
-  setVolume: (v: number) => void;
-  onVolume?: (v: number) => void;
   theme: 'light' | 'dark';
 }
 
-export default function VolumeControl({ volume, setVolume, onVolume, theme }: Props) {
+export default function VolumeControl({ theme }: Props) {
+  const { volume, setVolume } = useAudio();
   return (
     <div className="hidden lg:flex items-center gap-2 w-28">
       {volume === 0 ? (
@@ -28,7 +27,6 @@ export default function VolumeControl({ volume, setVolume, onVolume, theme }: Pr
         step={0.01}
         onValueChange={([v]) => {
           setVolume(v);
-          onVolume?.(v);
         }}
         aria-label="Volume"
       >

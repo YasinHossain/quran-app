@@ -20,10 +20,9 @@ import { useSettings } from '@/app/context/SettingsContext';
 import Spinner from '@/app/components/common/Spinner';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
-import { useTheme } from '@/app/context/ThemeContext';
 import { CleanPlayer } from '@/app/components/player';
 import { useAudio } from '@/app/context/AudioContext';
-import { RECITERS, buildAudioUrl } from '@/lib/reciters';
+import { buildAudioUrl } from '@/lib/reciters';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;
 
@@ -43,20 +42,7 @@ export default function SurahPage({ params }: SurahPageProps) {
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-  const {
-    activeVerse,
-    setActiveVerse,
-    isPlaying,
-    setIsPlaying,
-    reciter,
-    setReciter,
-    repeatOptions,
-    setRepeatOptions,
-    setVolume,
-    setPlayingId,
-  } = useAudio();
-
-  const { theme } = useTheme();
+  const { activeVerse, setActiveVerse, reciter } = useAudio();
 
   const { data: translationOptionsData } = useSWR('translations', getTranslations);
   const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
@@ -162,20 +148,6 @@ export default function SurahPage({ params }: SurahPageProps) {
     }
   };
 
-  const handleTogglePlay = (playing: boolean) => {
-    setIsPlaying(playing);
-    if (playing && activeVerse) {
-      setPlayingId(activeVerse.id);
-    }
-  };
-
-  const handleReciterChange = (id: string) => {
-    const newReciter = RECITERS.find((r) => r.id.toString() === id);
-    if (newReciter) {
-      setReciter(newReciter);
-    }
-  };
-
   const track = activeVerse
     ? {
         id: activeVerse.id.toString(),
@@ -186,8 +158,6 @@ export default function SurahPage({ params }: SurahPageProps) {
         src: buildAudioUrl(activeVerse.verse_key, reciter.path),
       }
     : null;
-
-  const playerReciters = RECITERS.map((r) => ({ id: r.id.toString(), name: r.name }));
 
   return (
     <div className="flex flex-grow bg-white dark:bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden">
@@ -247,20 +217,7 @@ export default function SurahPage({ params }: SurahPageProps) {
       />
       {activeVerse && (
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-transparent z-50">
-          <CleanPlayer
-            track={track}
-            state={{ isPlaying }}
-            theme={theme}
-            onTogglePlay={handleTogglePlay}
-            onNext={handleNext}
-            onPrev={handlePrev}
-            onVolume={setVolume}
-            reciters={playerReciters}
-            selectedReciterId={reciter.id.toString()}
-            onReciterChange={handleReciterChange}
-            repeatOptions={repeatOptions}
-            onRepeatChange={setRepeatOptions}
-          />
+          <CleanPlayer track={track} onNext={handleNext} onPrev={handlePrev} />
         </div>
       )}
     </div>

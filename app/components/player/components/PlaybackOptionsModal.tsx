@@ -1,7 +1,9 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SlidersHorizontal, Mic2, Repeat } from 'lucide-react';
-import type { Reciter, RepeatOptions } from '../CleanPlayer';
+import { useAudio } from '@/app/context/AudioContext';
+import { RECITERS } from '@/lib/reciters';
+import type { RepeatOptions } from '@/app/context/AudioContext';
 
 interface Props {
   open: boolean;
@@ -9,12 +11,6 @@ interface Props {
   theme: 'light' | 'dark';
   activeTab: 'reciter' | 'repeat';
   setActiveTab: (tab: 'reciter' | 'repeat') => void;
-  reciters: Reciter[];
-  localReciter: string;
-  setLocalReciter: (id: string) => void;
-  localRepeat: RepeatOptions;
-  setLocalRepeat: (opts: RepeatOptions) => void;
-  commitOptions: () => void;
 }
 
 export default function PlaybackOptionsModal({
@@ -23,13 +19,25 @@ export default function PlaybackOptionsModal({
   theme,
   activeTab,
   setActiveTab,
-  reciters,
-  localReciter,
-  setLocalReciter,
-  localRepeat,
-  setLocalRepeat,
-  commitOptions,
 }: Props) {
+  const { reciter, setReciter, repeatOptions, setRepeatOptions } = useAudio();
+  const [localReciter, setLocalReciter] = useState(reciter.id.toString());
+  const [localRepeat, setLocalRepeat] = useState<RepeatOptions>(repeatOptions);
+
+  useEffect(() => {
+    setLocalReciter(reciter.id.toString());
+  }, [reciter]);
+
+  useEffect(() => {
+    setLocalRepeat(repeatOptions);
+  }, [repeatOptions]);
+
+  const commitOptions = () => {
+    const newReciter = RECITERS.find((r) => r.id.toString() === localReciter);
+    if (newReciter) setReciter(newReciter);
+    setRepeatOptions(localRepeat);
+    onClose();
+  };
   if (!open) return null;
 
   return (
@@ -121,12 +129,12 @@ export default function PlaybackOptionsModal({
           {activeTab === 'reciter' && (
             <div className="md:col-span-2">
               <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-80 overflow-auto pr-1">
-                {reciters.map((r) => (
+                {RECITERS.map((r) => (
                   <button
                     key={r.id}
-                    onClick={() => setLocalReciter(r.id)}
+                    onClick={() => setLocalReciter(r.id.toString())}
                     className={`flex items-center justify-between gap-3 rounded-xl border px-3 py-2 text-left transition ${
-                      localReciter === r.id
+                      localReciter === r.id.toString()
                         ? theme === 'dark'
                           ? 'border-sky-500 bg-sky-500/10'
                           : 'border-[#0E2A47] bg-[#0E2A47]/5'
@@ -155,7 +163,7 @@ export default function PlaybackOptionsModal({
                     </div>
                     <div
                       className={`h-4 w-4 rounded-full ${
-                        localReciter === r.id
+                        localReciter === r.id.toString()
                           ? theme === 'dark'
                             ? 'bg-sky-500'
                             : 'bg-[#0E2A47]'

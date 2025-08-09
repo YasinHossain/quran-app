@@ -92,7 +92,17 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
       isPlayerVisible,
       closePlayer,
     }),
-    [playingId, isPlaying, loadingId, activeVerse, repeatOptions, reciter, volume, playbackRate, isPlayerVisible]
+    [
+      playingId,
+      isPlaying,
+      loadingId,
+      activeVerse,
+      repeatOptions,
+      reciter,
+      volume,
+      playbackRate,
+      isPlayerVisible,
+    ]
   );
 
   return <AudioContext.Provider value={value}>{children}</AudioContext.Provider>;
