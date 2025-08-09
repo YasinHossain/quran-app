@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { FaTimes } from '@/app/components/common/SvgIcons';
 import { useAudio, RepeatSettings } from '@/app/context/AudioContext';
 import { RECITERS } from '@/lib/reciters';
+import { useTranslation } from 'react-i18next';
 
 interface AudioSettingsModalProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsMod
   const [activeTab, setActiveTab] = useState<'repeat' | 'reciter'>('repeat');
   const { repeatSettings, setRepeatSettings, reciter, setReciter } = useAudio();
   const [search, setSearch] = useState('');
+  const { t } = useTranslation();
 
   const handleChange = (field: keyof RepeatSettings, value: string | number) => {
     setRepeatSettings({ ...repeatSettings, [field]: value });
@@ -29,17 +31,17 @@ export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsMod
               className={`pb-1 border-b-2 ${activeTab === 'repeat' ? 'border-teal-600 text-teal-600' : 'border-transparent'}`}
               onClick={() => setActiveTab('repeat')}
             >
-              Repeat
+              {t('repeat')}
             </button>
             <button
               className={`pb-1 border-b-2 ${activeTab === 'reciter' ? 'border-teal-600 text-teal-600' : 'border-transparent'}`}
               onClick={() => setActiveTab('reciter')}
             >
-              Reciter
+              {t('reciter')}
             </button>
           </div>
           <button
-            aria-label="Close"
+            aria-label={t('close')}
             onClick={onClose}
             className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
           >
@@ -50,7 +52,7 @@ export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsMod
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-1" htmlFor="repeat-mode">
-                Mode
+                {t('mode')}
               </label>
               <select
                 id="repeat-mode"
@@ -58,9 +60,9 @@ export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsMod
                 onChange={(e) => handleChange('mode', e.target.value)}
                 className="w-full border border-gray-300 dark:border-gray-600 rounded p-2 text-sm"
               >
-                <option value="single">Single Verse</option>
-                <option value="range">Verse Range</option>
-                <option value="surah">Full Surah</option>
+                <option value="single">{t('single_verse')}</option>
+                <option value="range">{t('verse_range')}</option>
+                <option value="surah">{t('full_surah')}</option>
               </select>
             </div>
             {repeatSettings.mode !== 'surah' && (
@@ -68,7 +70,7 @@ export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsMod
                 <div className="flex space-x-2">
                   <div className="flex-1">
                     <label className="block text-sm" htmlFor="repeat-start">
-                      Start
+                      {t('start')}
                     </label>
                     <input
                       id="repeat-start"
@@ -81,7 +83,7 @@ export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsMod
                   </div>
                   <div className="flex-1">
                     <label className="block text-sm" htmlFor="repeat-end">
-                      End
+                      {t('end')}
                     </label>
                     <input
                       id="repeat-end"
@@ -96,7 +98,7 @@ export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsMod
                 <div className="flex space-x-2">
                   <div className="flex-1">
                     <label className="block text-sm" htmlFor="repeat-playcount">
-                      Play count
+                      {t('play_count')}
                     </label>
                     <input
                       id="repeat-playcount"
@@ -109,7 +111,7 @@ export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsMod
                   </div>
                   <div className="flex-1">
                     <label className="block text-sm" htmlFor="repeat-each">
-                      Repeat each
+                      {t('repeat_each')}
                     </label>
                     <input
                       id="repeat-each"
@@ -123,7 +125,7 @@ export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsMod
                 </div>
                 <div>
                   <label className="block text-sm" htmlFor="repeat-delay">
-                    Delay (s)
+                    {t('delay_seconds')}
                   </label>
                   <input
                     id="repeat-delay"
@@ -137,14 +139,14 @@ export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsMod
               </div>
             )}
             {repeatSettings.mode === 'surah' && (
-              <p className="text-sm">Play the entire surah continuously.</p>
+              <p className="text-sm">{t('play_entire_surah_continuously')}</p>
             )}
           </div>
         ) : (
           <div className="space-y-4">
             <input
               type="text"
-              placeholder="Search reciter"
+              placeholder={t('search_reciter')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full border border-gray-300 dark:border-gray-600 rounded p-2 text-sm"
