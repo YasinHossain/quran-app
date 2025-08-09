@@ -13,6 +13,7 @@ import type { LanguageCode } from '@/lib/languageCodes';
 import { WORD_LANGUAGE_LABELS } from '@/lib/wordLanguages';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useAudio } from '@/app/context/AudioContext';
+import { buildAudioUrl } from '@/lib/reciters';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
@@ -35,7 +36,7 @@ export default function QuranPage({ params }: QuranPageProps) {
   const [error, setError] = useState<string | null>(null);
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
-  const { playingId, setPlayingId } = useAudio();
+  const { playingId, setPlayingId, reciter } = useAudio();
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [translationSearchTerm, setTranslationSearchTerm] = useState('');
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
@@ -139,9 +140,9 @@ export default function QuranPage({ params }: QuranPageProps) {
                 {verses.map((v) => (
                   <React.Fragment key={v.id}>
                     <Verse verse={v} />
-                    {playingId === v.id && v.audio?.url && (
+                    {playingId === v.id && (
                       <audio
-                        src={`https://verses.quran.com/${v.audio.url}`}
+                        src={buildAudioUrl(v.verse_key, reciter.path)}
                         autoPlay
                         onEnded={() => setPlayingId(null)}
                         onError={() => {

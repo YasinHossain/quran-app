@@ -14,7 +14,7 @@ import type { LanguageCode } from '@/lib/languageCodes';
 import { WORD_LANGUAGE_LABELS } from '@/lib/wordLanguages';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useAudio } from '@/app/context/AudioContext';
-import { useTheme } from '@/app/context/ThemeContext';
+import { buildAudioUrl } from '@/lib/reciters';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
@@ -37,13 +37,12 @@ export default function JuzPage({ params }: JuzPageProps) {
   const [error, setError] = useState<string | null>(null);
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
-  const { playingId, setPlayingId } = useAudio();
-  const { theme } = useTheme();
+  const { playingId, setPlayingId, reciter } = useAudio();
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [translationSearchTerm, setTranslationSearchTerm] = useState('');
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
   const [wordTranslationSearchTerm, setWordTranslationSearchTerm] = useState('');
-  
+
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   // Fetch Juz information using juzId
@@ -166,9 +165,9 @@ export default function JuzPage({ params }: JuzPageProps) {
                     {verses.map((v) => (
                       <React.Fragment key={v.id}>
                         <Verse verse={v} />
-                        {playingId === v.id && v.audio?.url && (
+                        {playingId === v.id && (
                           <audio
-                            src={`https://verses.quran.com/${v.audio.url}`}
+                            src={buildAudioUrl(v.verse_key, reciter.path)}
                             autoPlay
                             onEnded={() => setPlayingId(null)}
                             onError={() => {

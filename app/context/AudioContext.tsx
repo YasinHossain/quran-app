@@ -1,6 +1,7 @@
 'use client';
 import React, { createContext, useContext, useMemo, useRef, useState } from 'react';
 import { Verse } from '@/types';
+import { RECITERS, Reciter } from '@/lib/reciters';
 
 interface AudioContextType {
   playingId: number | null;
@@ -12,6 +13,8 @@ interface AudioContextType {
   audioRef: React.MutableRefObject<HTMLAudioElement | null>;
   repeatSettings: RepeatSettings;
   setRepeatSettings: React.Dispatch<React.SetStateAction<RepeatSettings>>;
+  reciter: Reciter;
+  setReciter: React.Dispatch<React.SetStateAction<Reciter>>;
 }
 
 export interface RepeatSettings {
@@ -43,6 +46,7 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
     repeatEach: 1,
     delay: 0,
   });
+  const [reciter, setReciter] = useState<Reciter>(RECITERS[0]);
 
   const value = useMemo(
     () => ({
@@ -55,8 +59,10 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
       audioRef,
       repeatSettings,
       setRepeatSettings,
+      reciter,
+      setReciter,
     }),
-    [playingId, loadingId, activeVerse, repeatSettings]
+    [playingId, loadingId, activeVerse, repeatSettings, reciter]
   );
 
   return <AudioContext.Provider value={value}>{children}</AudioContext.Provider>;
