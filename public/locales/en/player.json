@@ -1,0 +1,11 @@
+{
+  "skip_back": "Skip back 10 seconds",
+  "skip_forward": "Skip forward 10 seconds",
+  "pause_audio": "Pause audio",
+  "play_audio": "Play audio",
+  "toggle_repeat": "Toggle repeat",
+  "toggle_mute": "Toggle mute",
+  "audio_settings": "Audio Settings",
+  "microphone": "Microphone",
+  "could_not_play_audio": "Could not play audio."
+}

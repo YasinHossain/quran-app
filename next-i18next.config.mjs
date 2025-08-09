@@ -3,4 +3,6 @@ export default {
     defaultLocale: 'en',
     locales: ['en', 'bn'],
   },
+  ns: ['common', 'player'],
+  defaultNS: 'common',
 };
