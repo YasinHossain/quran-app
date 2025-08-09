@@ -3,27 +3,34 @@ import React, { createContext, useContext, useMemo, useRef, useState } from 'rea
 import { Verse } from '@/types';
 import { RECITERS, Reciter } from '@/lib/reciters';
 
+// This is from the new CleanPlayer component.
+export type RepeatOptions = {
+  mode: 'off' | 'single' | 'range' | 'surah';
+  start?: number;
+  end?: number;
+  playCount?: number;
+  repeatEach?: number;
+  delay?: number;
+};
+
 interface AudioContextType {
   playingId: number | null;
   setPlayingId: React.Dispatch<React.SetStateAction<number | null>>;
+  isPlaying: boolean;
+  setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
   loadingId: number | null;
   setLoadingId: React.Dispatch<React.SetStateAction<number | null>>;
   activeVerse: Verse | null;
   setActiveVerse: React.Dispatch<React.SetStateAction<Verse | null>>;
   audioRef: React.MutableRefObject<HTMLAudioElement | null>;
-  repeatSettings: RepeatSettings;
-  setRepeatSettings: React.Dispatch<React.SetStateAction<RepeatSettings>>;
+  repeatOptions: RepeatOptions;
+  setRepeatOptions: React.Dispatch<React.SetStateAction<RepeatOptions>>;
   reciter: Reciter;
   setReciter: React.Dispatch<React.SetStateAction<Reciter>>;
-}
-
-export interface RepeatSettings {
-  mode: 'single' | 'range' | 'surah';
-  start: number;
-  end: number;
-  playCount: number;
-  repeatEach: number;
-  delay: number;
+  volume: number;
+  setVolume: React.Dispatch<React.SetStateAction<number>>;
+  playbackRate: number;
+  setPlaybackRate: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
@@ -35,10 +42,11 @@ const AudioContext = createContext<AudioContextType | undefined>(undefined);
  */
 export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
   const [playingId, setPlayingId] = useState<number | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const [activeVerse, setActiveVerse] = useState<Verse | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [repeatSettings, setRepeatSettings] = useState<RepeatSettings>({
+  const [repeatOptions, setRepeatOptions] = useState<RepeatOptions>({
     mode: 'single',
     start: 1,
     end: 1,
@@ -47,22 +55,30 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
     delay: 0,
   });
   const [reciter, setReciter] = useState<Reciter>(RECITERS[0]);
+  const [volume, setVolume] = useState(0.9);
+  const [playbackRate, setPlaybackRate] = useState(1);
 
   const value = useMemo(
     () => ({
       playingId,
       setPlayingId,
+      isPlaying,
+      setIsPlaying,
       loadingId,
       setLoadingId,
       activeVerse,
       setActiveVerse,
       audioRef,
-      repeatSettings,
-      setRepeatSettings,
+      repeatOptions,
+      setRepeatOptions,
       reciter,
       setReciter,
+      volume,
+      setVolume,
+      playbackRate,
+      setPlaybackRate,
     }),
-    [playingId, loadingId, activeVerse, repeatSettings, reciter]
+    [playingId, isPlaying, loadingId, activeVerse, repeatOptions, reciter, volume, playbackRate]
   );
 
   return <AudioContext.Provider value={value}>{children}</AudioContext.Provider>;
