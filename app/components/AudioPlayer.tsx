@@ -5,8 +5,15 @@ import { API_BASE_URL } from '@/lib/api';
 import { buildAudioUrl } from '@/lib/reciters';
 import type { Verse } from '@/types';
 import Spinner from '@/app/components/common/Spinner';
-import { FaArrowLeft, FaPlay, FaPause, FaTimes } from '@/app/components/common/SvgIcons';
+import {
+  FaArrowLeft,
+  FaPlay,
+  FaPause,
+  FaTimes,
+  FaEllipsisH,
+} from '@/app/components/common/SvgIcons';
 import { useTranslation } from 'react-i18next';
+import AudioSettingsModal from '@/app/components/AudioSettingsModal';
 
 interface AudioPlayerProps {
   onError?: (msg: string) => void;
@@ -31,6 +38,7 @@ export default function AudioPlayer({ onError }: AudioPlayerProps) {
   const [playbackRate, setPlaybackRate] = useState(1);
   const [currentRepeat, setCurrentRepeat] = useState(1);
   const [currentPlay, setCurrentPlay] = useState(1);
+  const [showAudioSettings, setShowAudioSettings] = useState(false);
 
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
@@ -182,100 +190,110 @@ export default function AudioPlayer({ onError }: AudioPlayerProps) {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-[var(--background)] border-t border-[var(--border-color)] p-4 z-50">
-      <input
-        type="range"
-        min="0"
-        max={duration || 0}
-        step="0.1"
-        value={currentTime}
-        onChange={(e) => {
-          const value = +e.target.value;
-          if (audioRef.current) {
-            audioRef.current.currentTime = value;
+    <>
+      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-[var(--background)] border-t border-[var(--border-color)] p-4 z-50">
+        <input
+          type="range"
+          min="0"
+          max={duration || 0}
+          step="0.1"
+          value={currentTime}
+          onChange={(e) => {
+            const value = +e.target.value;
+            if (audioRef.current) {
+              audioRef.current.currentTime = value;
+            }
+            setCurrentTime(value);
+          }}
+          className="w-full mb-2"
+          style={
+            {
+              '--value-percent': duration ? `${(currentTime / duration) * 100}%` : '0%',
+            } as React.CSSProperties
           }
-          setCurrentTime(value);
-        }}
-        className="w-full mb-2"
-        style={
-          {
-            '--value-percent': duration ? `${(currentTime / duration) * 100}%` : '0%',
-          } as React.CSSProperties
-        }
-      />
-      <div className="flex justify-between text-xs mb-2">
-        <span>{formatTime(currentTime)}</span>
-        <span>{formatTime(duration)}</span>
-      </div>
-      <div className="flex items-center justify-between">
-        <span className="font-semibold text-sm">{activeVerse.verse_key}</span>
-        <div className="flex items-center space-x-4">
-          <button
-            aria-label={t('previous')}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
-          >
-            <FaArrowLeft size={20} />
-          </button>
-          <button
-            aria-label={isPlaying ? t('pause_audio') : t('play_audio')}
-            onClick={togglePlay}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
-          >
-            {isLoading ? (
-              <Spinner className="h-5 w-5 text-teal-600" />
-            ) : isPlaying ? (
-              <FaPause size={20} />
-            ) : (
-              <FaPlay size={20} />
-            )}
-          </button>
-          <button
-            aria-label={t('next')}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
-          >
-            <FaArrowLeft size={20} className="rotate-180" />
-          </button>
-          <select
-            aria-label={t('playback_speed')}
-            value={playbackRate}
-            onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
-            className="border border-gray-300 dark:border-gray-600 rounded text-sm p-1"
-          >
-            {[0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2].map((rate) => (
-              <option key={rate} value={rate}>
-                {t('speed_option', { rate })}
-              </option>
-            ))}
-          </select>
+        />
+        <div className="flex justify-between text-xs mb-2">
+          <span>{formatTime(currentTime)}</span>
+          <span>{formatTime(duration)}</span>
         </div>
-        <button
-          aria-label={t('close')}
-          onClick={close}
-          className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+        <div className="flex items-center justify-between">
+          <span className="font-semibold text-sm">{activeVerse.verse_key}</span>
+          <div className="flex items-center space-x-4">
+            <button
+              aria-label={t('audio_settings')}
+              onClick={() => setShowAudioSettings(true)}
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+            >
+              <FaEllipsisH size={20} />
+            </button>
+            <button
+              aria-label={t('previous')}
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+            >
+              <FaArrowLeft size={20} />
+            </button>
+            <button
+              aria-label={isPlaying ? t('pause_audio') : t('play_audio')}
+              onClick={togglePlay}
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+            >
+              {isLoading ? (
+                <Spinner className="h-5 w-5 text-teal-600" />
+              ) : isPlaying ? (
+                <FaPause size={20} />
+              ) : (
+                <FaPlay size={20} />
+              )}
+            </button>
+            <button
+              aria-label={t('next')}
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+            >
+              <FaArrowLeft size={20} className="rotate-180" />
+            </button>
+            <select
+              aria-label={t('playback_speed')}
+              value={playbackRate}
+              onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
+              className="border border-gray-300 dark:border-gray-600 rounded text-sm p-1"
+            >
+              {[0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2].map((rate) => (
+                <option key={rate} value={rate}>
+                  {t('speed_option', { rate })}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button
+            aria-label={t('close')}
+            onClick={close}
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+          >
+            <FaTimes size={20} />
+          </button>
+        </div>
+        <audio
+          ref={audioRef}
+          className="hidden"
+          onEnded={handleEnded}
+          onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime || 0)}
+          onLoadedMetadata={() => setDuration(audioRef.current?.duration || 0)}
+          onLoadStart={() => setLoadingId(activeVerse.id)}
+          onWaiting={() => setLoadingId(activeVerse.id)}
+          onPlaying={() => {
+            setPlayingId(activeVerse.id);
+            setLoadingId(null);
+          }}
+          onCanPlay={() => setLoadingId(null)}
+          onError={() => {
+            onError?.(t('could_not_play_audio'));
+            close();
+          }}
         >
-          <FaTimes size={20} />
-        </button>
+          <track kind="captions" />
+        </audio>
       </div>
-      <audio
-        ref={audioRef}
-        className="hidden"
-        onEnded={handleEnded}
-        onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime || 0)}
-        onLoadedMetadata={() => setDuration(audioRef.current?.duration || 0)}
-        onLoadStart={() => setLoadingId(activeVerse.id)}
-        onWaiting={() => setLoadingId(activeVerse.id)}
-        onPlaying={() => {
-          setPlayingId(activeVerse.id);
-          setLoadingId(null);
-        }}
-        onCanPlay={() => setLoadingId(null)}
-        onError={() => {
-          onError?.(t('could_not_play_audio'));
-          close();
-        }}
-      >
-        <track kind="captions" />
-      </audio>
-    </div>
+      <AudioSettingsModal isOpen={showAudioSettings} onClose={() => setShowAudioSettings(false)} />
+    </>
   );
 }

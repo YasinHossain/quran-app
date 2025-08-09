@@ -64,6 +64,7 @@
   "next": "Next",
   "pause_audio": "Pause audio",
   "play_audio": "Play audio",
+  "audio_settings": "Audio Settings",
   "playback_speed": "Playback speed",
   "close": "Close",
   "speed_option": "{{rate}}×",
