@@ -16,7 +16,7 @@ import Spinner from '@/app/components/common/Spinner';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 import { useTheme } from '@/app/context/ThemeContext';
-import AudioPlayer from '@/app/components/AudioPlayer';
+import { CleanPlayer } from '@/app/components/player';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;
 
@@ -175,7 +175,7 @@ export default function SurahPage({ params }: SurahPageProps) {
           });
         }}
       />
-      <AudioPlayer onError={(msg) => setError(msg)} />
+      <CleanPlayer onError={(msg) => setError(msg)} />
     </div>
   );
 }
