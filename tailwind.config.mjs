@@ -12,6 +12,7 @@ const config = {
         border: 'var(--border-color)',
         accent: designTokens.colors.accent,
         'accent-hover': designTokens.colors.accentHover,
+        brand: '#009688',
       },
       spacing: designTokens.spacing,
       fontFamily: {
@@ -25,9 +26,13 @@ const config = {
       },
       borderRadius: {
         DEFAULT: designTokens.components.borderRadius,
+        xl: '1rem',
+        '2xl': '1.5rem',
       },
       boxShadow: {
         default: designTokens.components.shadow,
+        card: '0 1px 3px rgba(0, 0, 0, 0.1)',
+        modal: '0 4px 6px rgba(0, 0, 0, 0.15)',
       },
     },
   },
