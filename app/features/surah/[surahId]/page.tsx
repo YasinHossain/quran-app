@@ -56,8 +56,7 @@ export default function SurahPage({ params }: SurahPageProps) {
     setPlayingId,
   } = useAudio();
 
-  // Ensure theme context initialization (for css var setup)
-  useTheme();
+  const { theme } = useTheme();
 
   const { data: translationOptionsData } = useSWR('translations', getTranslations);
   const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
@@ -251,6 +250,7 @@ export default function SurahPage({ params }: SurahPageProps) {
           <CleanPlayer
             track={track}
             state={{ isPlaying }}
+            theme={theme}
             onTogglePlay={handleTogglePlay}
             onNext={handleNext}
             onPrev={handlePrev}

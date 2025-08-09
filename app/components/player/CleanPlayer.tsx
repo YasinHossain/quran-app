@@ -15,6 +15,7 @@ import {
   X,
 } from 'lucide-react';
 import { useAudio } from '@/app/context/AudioContext';
+import { useTheme } from '@/app/context/ThemeContext';
 
 /**
  * Clean minimal music/Quran player – Tailwind CSS + Next.js + TypeScript
@@ -99,6 +100,7 @@ export default function CleanPlayer({
   repeatOptions,
   onRepeatChange,
 }: Props) {
+  const { theme } = useTheme();
   const { isPlayerVisible, closePlayer } = useAudio();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(state?.isPlaying ?? false);
@@ -232,7 +234,11 @@ export default function CleanPlayer({
     <div className="relative w-full">
       {/* Card */}
       <div
-        className="mx-auto w-full bg-white dark:bg-slate-800 rounded-2xl shadow-[0_10px_30px_rgba(2,6,23,0.06),0_1px_2px_rgba(2,6,23,0.04)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.1),0_1px_2px_rgba(0,0,0,0.06)] border border-slate-200/80 dark:border-slate-700/60 px-4 py-4 flex items-center gap-4"
+        className={`mx-auto w-full rounded-2xl px-4 py-4 flex items-center gap-4 ${
+          theme === 'dark'
+            ? 'bg-slate-800 shadow-[0_10px_30px_rgba(0,0,0,0.1),0_1px_2px_rgba(0,0,0,0.06)] border-slate-700/60'
+            : 'bg-white shadow-[0_10px_30px_rgba(2,6,23,0.06),0_1px_2px_rgba(2,6,23,0.04)] border-slate-200/80'
+        } border`}
         role="region"
         aria-label="Player"
       >
@@ -249,12 +255,18 @@ export default function CleanPlayer({
           />
           <div className="min-w-0 hidden sm:block">
             <div
-              className="text-sm font-semibold tracking-[-0.01em] text-slate-800 dark:text-slate-200 truncate"
+              className={`text-sm font-semibold tracking-[-0.01em] truncate ${
+                theme === 'dark' ? 'text-slate-200' : 'text-slate-800'
+              }`}
               aria-label="current track title"
             >
               {title}
             </div>
-            <div className="text-xs text-slate-500 dark:text-slate-400 -mt-0.5 truncate">
+            <div
+              className={`text-xs -mt-0.5 truncate ${
+                theme === 'dark' ? 'text-slate-400' : 'text-slate-500'
+              }`}
+            >
               {artist}
             </div>
           </div>
@@ -262,23 +274,31 @@ export default function CleanPlayer({
 
         {/* Transport controls */}
         <div className="flex items-center gap-2">
-          <IconBtn aria-label="Previous track" onClick={onPrev} disabled={!interactable}>
+          <IconBtn
+            aria-label="Previous track"
+            onClick={onPrev}
+            disabled={!interactable}
+            theme={theme}
+          >
             <SkipBack />
           </IconBtn>
           <button
             aria-label={isPlaying ? 'Pause' : 'Play'}
             onClick={togglePlay}
             disabled={!interactable}
-            className={
-              'h-10 w-10 grid place-items-center rounded-full text-white hover:opacity-90 active:scale-95 transition ' +
-              (interactable
-                ? 'bg-[#0E2A47] dark:bg-sky-500'
-                : 'bg-slate-300 dark:bg-slate-600 cursor-not-allowed opacity-60')
-            }
+            className={`h-10 w-10 grid place-items-center rounded-full text-white hover:opacity-90 active:scale-95 transition ${
+              interactable
+                ? theme === 'dark'
+                  ? 'bg-sky-500'
+                  : 'bg-[#0E2A47]'
+                : theme === 'dark'
+                ? 'bg-slate-600 cursor-not-allowed opacity-60'
+                : 'bg-slate-300 cursor-not-allowed opacity-60'
+            }`}
           >
             {isPlaying ? <Pause /> : <Play />}
           </button>
-          <IconBtn aria-label="Next track" onClick={onNext} disabled={!interactable}>
+          <IconBtn aria-label="Next track" onClick={onNext} disabled={!interactable} theme={theme}>
             <SkipForward />
           </IconBtn>
         </div>
@@ -297,30 +317,50 @@ export default function CleanPlayer({
                 onValueChange={([v]) => setSeek(v)}
                 aria-label="Seek"
               >
-                <Slider.Track className="bg-[rgba(14,42,71,0.18)] dark:bg-slate-500/30 h-0.5 rounded-full relative w-full grow">
-                  <Slider.Range className="bg-[#0E2A47] dark:bg-sky-500 h-full rounded-full absolute" />
+                <Slider.Track
+                  className={`h-0.5 rounded-full relative w-full grow ${
+                    theme === 'dark' ? 'bg-slate-500/30' : 'bg-[rgba(14,42,71,0.18)]'
+                  }`}
+                >
+                  <Slider.Range
+                    className={`h-full rounded-full absolute ${
+                      theme === 'dark' ? 'bg-sky-500' : 'bg-[#0E2A47]'
+                    }`}
+                  />
                 </Slider.Track>
                 <Tooltip.Root>
                   <Tooltip.Trigger asChild>
                     <Slider.Thumb
-                      className="block h-3 w-3 rounded-full bg-white dark:bg-slate-900 ring-2 ring-[#0E2A47] dark:ring-sky-500 shadow-[0_1px_2px_rgba(2,6,23,0.15)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0E2A47]/35 dark:focus:ring-sky-500/35"
+                      className={`block h-3 w-3 rounded-full shadow-[0_1px_2px_rgba(2,6,23,0.15)] focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                        theme === 'dark'
+                          ? 'bg-slate-900 ring-sky-500 focus:ring-sky-500/35'
+                          : 'bg-white ring-[#0E2A47] focus:ring-[#0E2A47]/35'
+                      }`}
                       aria-label="Position"
                     />
                   </Tooltip.Trigger>
                   <Tooltip.Portal>
                     <Tooltip.Content
                       sideOffset={8}
-                      className="rounded-md bg-slate-900 dark:bg-slate-700 text-white text-xs px-2 py-1 shadow"
+                      className={`rounded-md text-white text-xs px-2 py-1 shadow ${
+                        theme === 'dark' ? 'bg-slate-700' : 'bg-slate-900'
+                      }`}
                     >
                       {elapsed}
-                      <Tooltip.Arrow className="fill-slate-900 dark:fill-slate-700" />
+                      <Tooltip.Arrow
+                        className={theme === 'dark' ? 'fill-slate-700' : 'fill-slate-900'}
+                      />
                     </Tooltip.Content>
                   </Tooltip.Portal>
                 </Tooltip.Root>
               </Slider.Root>
             </Tooltip.Provider>
           </div>
-          <div className="hidden md:flex min-w-[88px] justify-between text-[11px] text-slate-500 dark:text-slate-400 tabular-nums">
+          <div
+            className={`hidden md:flex min-w-[88px] justify-between text-[11px] tabular-nums ${
+              theme === 'dark' ? 'text-slate-400' : 'text-slate-500'
+            }`}
+          >
             <span aria-label="elapsed">{elapsed}</span>
             <span aria-label="duration">{total}</span>
           </div>
@@ -332,13 +372,21 @@ export default function CleanPlayer({
           <div className="relative hidden sm:block">
             <button
               onClick={() => setSpeedMenuOpen((s) => !s)}
-              className="h-9 w-14 grid place-items-center rounded-full text-xs font-bold text-[#0E2A47]/80 dark:text-sky-500/90 transition focus:outline-none focus:ring-2 focus:ring-[#0E2A47]/35 dark:focus:ring-sky-500/35 hover:bg-slate-900/5 dark:hover:bg-white/10"
+              className={`h-9 w-14 grid place-items-center rounded-full text-xs font-bold transition focus:outline-none focus:ring-2 ${
+                theme === 'dark'
+                  ? 'text-sky-500/90 focus:ring-sky-500/35 hover:bg-white/10'
+                  : 'text-[#0E2A47]/80 focus:ring-[#0E2A47]/35 hover:bg-slate-900/5'
+              }`}
             >
               {playbackRate}x
             </button>
             {speedMenuOpen && (
               <div
-                className="absolute bottom-full mb-2 w-28 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 p-1"
+                className={`absolute bottom-full mb-2 w-28 rounded-lg shadow-lg border p-1 ${
+                  theme === 'dark'
+                    ? 'bg-slate-800 border-slate-700'
+                    : 'bg-white border-slate-200'
+                }`}
                 onMouseLeave={() => setSpeedMenuOpen(false)}
               >
                 {speedOptions.map((speed) => (
@@ -350,8 +398,12 @@ export default function CleanPlayer({
                     }}
                     className={`w-full text-center text-sm p-1.5 rounded-md ${
                       playbackRate === speed
-                        ? 'bg-[#0E2A47] dark:bg-sky-500 text-white'
-                        : 'hover:bg-slate-100 dark:hover:bg-slate-700'
+                        ? theme === 'dark'
+                          ? 'bg-sky-500 text-white'
+                          : 'bg-[#0E2A47] text-white'
+                        : theme === 'dark'
+                        ? 'hover:bg-slate-700'
+                        : 'hover:bg-slate-100'
                     }`}
                   >
                     {speed}x
@@ -364,9 +416,13 @@ export default function CleanPlayer({
           {/* Volume */}
           <div className="hidden lg:flex items-center gap-2 w-28">
             {volume === 0 ? (
-              <VolumeX className="opacity-80 text-slate-600 dark:text-slate-400" />
+              <VolumeX
+                className={`opacity-80 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}
+              />
             ) : (
-              <Volume2 className="opacity-80 text-slate-600 dark:text-slate-400" />
+              <Volume2
+                className={`opacity-80 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}
+              />
             )}
             <Slider.Root
               className="relative w-full h-2.5 group flex items-center"
@@ -379,10 +435,22 @@ export default function CleanPlayer({
               }}
               aria-label="Volume"
             >
-              <Slider.Track className="h-0.5 rounded-full bg-[rgba(14,42,71,0.2)] dark:bg-slate-500/40 relative w-full grow">
-                <Slider.Range className="h-full rounded-full bg-[#0E2A47] dark:bg-sky-500 absolute" />
+              <Slider.Track
+                className={`h-0.5 rounded-full relative w-full grow ${
+                  theme === 'dark' ? 'bg-slate-500/40' : 'bg-[rgba(14,42,71,0.2)]'
+                }`}
+              >
+                <Slider.Range
+                  className={`h-full rounded-full absolute ${
+                    theme === 'dark' ? 'bg-sky-500' : 'bg-[#0E2A47]'
+                  }`}
+                />
               </Slider.Track>
-              <Slider.Thumb className="block h-3 w-3 rounded-full bg-white dark:bg-slate-900 ring-2 ring-[#0E2A47] dark:ring-sky-500 focus:outline-none" />
+              <Slider.Thumb
+                className={`block h-3 w-3 rounded-full focus:outline-none ring-2 ${
+                  theme === 'dark' ? 'bg-slate-900 ring-sky-500' : 'bg-white ring-[#0E2A47]'
+                }`}
+              />
             </Slider.Root>
           </div>
           <IconBtn
@@ -391,10 +459,11 @@ export default function CleanPlayer({
               setActiveTab('reciter');
               setOptionsOpen(true);
             }}
+            theme={theme}
           >
             <SlidersHorizontal />
           </IconBtn>
-          <IconBtn aria-label="Close player" onClick={closePlayer}>
+          <IconBtn aria-label="Close player" onClick={closePlayer} theme={theme}>
             <X />
           </IconBtn>
         </div>
@@ -424,7 +493,11 @@ export default function CleanPlayer({
           tabIndex={0}
         >
           <div
-          className="w-full max-w-3xl rounded-2xl bg-white dark:bg-slate-800 border border-transparent dark:border-slate-700/80 shadow-[0_10px_30px_rgba(2,6,23,0.12),0_1px_2px_rgba(2,6,23,0.06)] dark:shadow-2xl p-4 md:p-6"
+            className={`w-full max-w-3xl rounded-2xl border p-4 md:p-6 ${
+              theme === 'dark'
+                ? 'bg-slate-800 border-slate-700/80 shadow-2xl'
+                : 'bg-white border-transparent shadow-[0_10px_30px_rgba(2,6,23,0.12),0_1px_2px_rgba(2,6,23,0.06)]'
+            }`}
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') e.stopPropagation();
@@ -435,12 +508,22 @@ export default function CleanPlayer({
           >
             {/* Header */}
             <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="h-10 w-10 rounded-xl bg-[#0E2A47]/10 dark:bg-sky-500/10 text-[#0E2A47] dark:text-sky-500 grid place-items-center">
+              <div
+                className={`h-10 w-10 rounded-xl grid place-items-center ${
+                  theme === 'dark' ? 'bg-sky-500/10 text-sky-500' : 'bg-[#0E2A47]/10 text-[#0E2A47]'
+                }`}
+              >
                 <SlidersHorizontal />
               </div>
-              <div className="font-semibold dark:text-slate-200">Playback Options</div>
+              <div className={`font-semibold ${theme === 'dark' ? 'text-slate-200' : ''}`}>
+                Playback Options
+              </div>
               <button
-                className="ml-auto text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+                className={`ml-auto ${
+                  theme === 'dark'
+                    ? 'text-slate-400 hover:text-white'
+                    : 'text-slate-500 hover:text-slate-900'
+                }`}
                 onClick={() => setOptionsOpen(false)}
               >
                 ✕
@@ -453,8 +536,12 @@ export default function CleanPlayer({
                 onClick={() => setActiveTab('reciter')}
                 className={`px-3 py-1.5 rounded-full text-sm ${
                   activeTab === 'reciter'
-                    ? 'bg-[#0E2A47]/10 dark:bg-sky-500/20 text-[#0E2A47] dark:text-sky-400'
-                    : 'hover:bg-slate-900/5 dark:hover:bg-white/10'
+                    ? theme === 'dark'
+                      ? 'bg-sky-500/20 text-sky-400'
+                      : 'bg-[#0E2A47]/10 text-[#0E2A47]'
+                    : theme === 'dark'
+                    ? 'hover:bg-white/10'
+                    : 'hover:bg-slate-900/5'
                 }`}
               >
                 <span className="inline-flex items-center gap-2">
@@ -466,8 +553,12 @@ export default function CleanPlayer({
                 onClick={() => setActiveTab('repeat')}
                 className={`px-3 py-1.5 rounded-full text-sm ${
                   activeTab === 'repeat'
-                    ? 'bg-[#0E2A47]/10 dark:bg-sky-500/20 text-[#0E2A47] dark:text-sky-400'
-                    : 'hover:bg-slate-900/5 dark:hover:bg-white/10'
+                    ? theme === 'dark'
+                      ? 'bg-sky-500/20 text-sky-400'
+                      : 'bg-[#0E2A47]/10 text-[#0E2A47]'
+                    : theme === 'dark'
+                    ? 'hover:bg-white/10'
+                    : 'hover:bg-slate-900/5'
                 }`}
               >
                 <span className="inline-flex items-center gap-2">
@@ -488,16 +579,28 @@ export default function CleanPlayer({
                         onClick={() => setLocalReciter(r.id)}
                         className={`flex items-center justify-between gap-3 rounded-xl border px-3 py-2 text-left transition ${
                           localReciter === r.id
-                            ? 'border-[#0E2A47] dark:border-sky-500 bg-[#0E2A47]/5 dark:bg-sky-500/10'
-                            : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50'
+                            ? theme === 'dark'
+                              ? 'border-sky-500 bg-sky-500/10'
+                              : 'border-[#0E2A47] bg-[#0E2A47]/5'
+                            : theme === 'dark'
+                            ? 'border-slate-700 hover:bg-slate-700/50'
+                            : 'border-slate-200 hover:bg-slate-50'
                         }`}
                       >
                         <div className="min-w-0">
-                          <div className="text-sm font-medium truncate dark:text-slate-200">
+                          <div
+                            className={`text-sm font-medium truncate ${
+                              theme === 'dark' ? 'text-slate-200' : ''
+                            }`}
+                          >
                             {r.name}
                           </div>
                           {r.locale && (
-                            <div className="text-xs text-slate-500 dark:text-slate-400">
+                            <div
+                              className={`text-xs ${
+                                theme === 'dark' ? 'text-slate-400' : 'text-slate-500'
+                              }`}
+                            >
                               {r.locale}
                             </div>
                           )}
@@ -505,9 +608,13 @@ export default function CleanPlayer({
                         <div
                           className={`h-4 w-4 rounded-full ${
                             localReciter === r.id
-                              ? 'bg-[#0E2A47] dark:bg-sky-500'
-                              : 'border border-slate-300 dark:border-slate-600'
-                          }`}
+                              ? theme === 'dark'
+                                ? 'bg-sky-500'
+                                : 'bg-[#0E2A47]'
+                              : theme === 'dark'
+                              ? 'border-slate-600'
+                              : 'border-slate-300'
+                          } border`}
                         />
                       </button>
                     ))}
@@ -518,8 +625,16 @@ export default function CleanPlayer({
               {/* Repeat panel */}
               {activeTab === 'repeat' && (
                 <div className="md:col-span-2 grid md:grid-cols-2 gap-4">
-                  <div className="rounded-xl border border-slate-200 dark:border-slate-700 p-4">
-                    <div className="font-medium mb-3 dark:text-slate-200">Mode</div>
+                  <div
+                    className={`rounded-xl border p-4 ${
+                      theme === 'dark' ? 'border-slate-700' : 'border-slate-200'
+                    }`}
+                  >
+                    <div
+                      className={`font-medium mb-3 ${theme === 'dark' ? 'text-slate-200' : ''}`}
+                    >
+                      Mode
+                    </div>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                       {(['off', 'single', 'range', 'surah'] as const).map((m) => (
                         <button
@@ -527,8 +642,12 @@ export default function CleanPlayer({
                           onClick={() => setLocalRepeat({ ...localRepeat, mode: m })}
                           className={`px-3 py-2 rounded-xl text-sm capitalize ${
                             localRepeat.mode === m
-                              ? 'bg-[#0E2A47] dark:bg-sky-500 text-white'
-                              : 'bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600'
+                              ? theme === 'dark'
+                                ? 'bg-sky-500 text-white'
+                                : 'bg-[#0E2A47] text-white'
+                              : theme === 'dark'
+                              ? 'bg-slate-700 hover:bg-slate-600'
+                              : 'bg-slate-50 hover:bg-slate-100'
                           }`}
                         >
                           {m}
@@ -536,30 +655,38 @@ export default function CleanPlayer({
                       ))}
                     </div>
                   </div>
-                  <div className="rounded-xl border border-slate-200 dark:border-slate-700 p-4 grid grid-cols-2 gap-3">
+                  <div
+                    className={`rounded-xl border p-4 grid grid-cols-2 gap-3 ${
+                      theme === 'dark' ? 'border-slate-700' : 'border-slate-200'
+                    }`}
+                  >
                     <NumberField
                       label="Start"
                       value={localRepeat.start ?? 1}
                       min={1}
                       onChange={(v) => setLocalRepeat({ ...localRepeat, start: v })}
+                      theme={theme}
                     />
                     <NumberField
                       label="End"
                       value={localRepeat.end ?? localRepeat.start ?? 1}
                       min={localRepeat.start ?? 1}
                       onChange={(v) => setLocalRepeat({ ...localRepeat, end: v })}
+                      theme={theme}
                     />
                     <NumberField
                       label="Play count"
                       value={localRepeat.playCount ?? 1}
                       min={1}
                       onChange={(v) => setLocalRepeat({ ...localRepeat, playCount: v })}
+                      theme={theme}
                     />
                     <NumberField
                       label="Repeat each"
                       value={localRepeat.repeatEach ?? 1}
                       min={1}
                       onChange={(v) => setLocalRepeat({ ...localRepeat, repeatEach: v })}
+                      theme={theme}
                     />
                     <div className="col-span-2">
                       <NumberField
@@ -567,6 +694,7 @@ export default function CleanPlayer({
                         value={localRepeat.delay ?? 0}
                         min={0}
                         onChange={(v) => setLocalRepeat({ ...localRepeat, delay: v })}
+                        theme={theme}
                       />
                     </div>
                   </div>
@@ -575,18 +703,24 @@ export default function CleanPlayer({
             </div>
 
             <div className="mt-5 flex items-center justify-between text-sm">
-              <div className="text-slate-500 dark:text-slate-400">
+              <div className={`text-slate-500 ${theme === 'dark' ? 'text-slate-400' : ''}`}>
                 Tips: Space • ←/→ seek • ↑/↓ volume
               </div>
               <div className="flex gap-2">
                 <button
-                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-slate-200"
+                  className={`px-4 py-2 rounded-xl ${
+                    theme === 'dark'
+                      ? 'bg-slate-700 hover:bg-slate-600 text-slate-200'
+                      : 'bg-slate-100 hover:bg-slate-200'
+                  }`}
                   onClick={() => setOptionsOpen(false)}
                 >
                   Cancel
                 </button>
                 <button
-                  className="px-4 py-2 rounded-xl bg-[#0E2A47] dark:bg-sky-500 text-white hover:opacity-90"
+                  className={`px-4 py-2 rounded-xl text-white hover:opacity-90 ${
+                    theme === 'dark' ? 'bg-sky-500' : 'bg-[#0E2A47]'
+                  }`}
                   onClick={commitOptions}
                 >
                   Apply
@@ -600,19 +734,26 @@ export default function CleanPlayer({
   );
 }
 
-function IconBtn({ children, className = '', disabled, ...rest }: React.ComponentProps<'button'>) {
+function IconBtn({
+  children,
+  className = '',
+  disabled,
+  theme,
+  ...rest
+}: React.ComponentProps<'button'> & { theme: 'light' | 'dark' }) {
   return (
     <button
       {...rest}
       disabled={disabled}
-      className={
-        'h-9 w-9 grid place-items-center rounded-full text-[#0E2A47]/80 dark:text-sky-500/90 transition focus:outline-none focus:ring-2 focus:ring-[#0E2A47]/35 dark:focus:ring-sky-500/35 ' +
-        (disabled
+      className={`h-9 w-9 grid place-items-center rounded-full transition focus:outline-none focus:ring-2 ${
+        disabled
           ? 'opacity-40 cursor-not-allowed'
-          : 'hover:text-[#0E2A47] dark:hover:text-sky-400 hover:-translate-y-px active:scale-95 hover:bg-slate-900/5 dark:hover:bg-white/10 active:bg-slate-900/10') +
-        ' ' +
-        className
-      }
+          : `hover:-translate-y-px active:scale-95 active:bg-slate-900/10 ${
+              theme === 'dark'
+                ? 'text-sky-500/90 focus:ring-sky-500/35 hover:text-sky-400 hover:bg-white/10'
+                : 'text-[#0E2A47]/80 focus:ring-[#0E2A47]/35 hover:text-[#0E2A47] hover:bg-slate-900/5'
+            }`
+      } ${className}`}
     >
       <span className="[&>*]:h-[18px] [&>*]:w-[18px] [&>*]:stroke-[1.75]">{children}</span>
     </button>
@@ -624,21 +765,29 @@ function NumberField({
   value,
   onChange,
   min = 0,
+  theme,
 }: {
   label: string;
   value: number;
   onChange: (v: number) => void;
   min?: number;
+  theme: 'light' | 'dark';
 }) {
   return (
     <label className="text-sm">
-      <span className="block mb-1 text-slate-600 dark:text-slate-400">{label}</span>
+      <span className={`block mb-1 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
+        {label}
+      </span>
       <input
         type="number"
         value={Number.isFinite(value) ? value : 0}
         min={min}
         onChange={(e) => onChange(parseFloat(e.target.value))}
-        className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0E2A47]/35 dark:focus:ring-sky-500/35"
+        className={`w-full rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 ${
+          theme === 'dark'
+            ? 'border-slate-600 bg-slate-800 focus:ring-sky-500/35'
+            : 'border-slate-300 bg-white focus:ring-[#0E2A47]/35'
+        }`}
       />
     </label>
   );
