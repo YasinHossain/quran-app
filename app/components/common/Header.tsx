@@ -53,7 +53,7 @@ const Header = () => {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            className={`w-full ${searchBarBgClass} border border-gray-200 dark:border-gray-600 rounded-full py-2 px-10 focus:ring-1 focus:ring-teal-500 outline-none transition text-gray-700 dark:text-gray-200 placeholder-gray-400`}
+            className={`w-full ${searchBarBgClass} border border-gray-200 dark:border-gray-600 rounded-xl py-2 px-10 focus:ring-1 focus:ring-teal-500 outline-none transition-shadow shadow-sm hover:shadow-md text-gray-700 dark:text-gray-200 placeholder-gray-400`}
           />
         </div>
       </div>
