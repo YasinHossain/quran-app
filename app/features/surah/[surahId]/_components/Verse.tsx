@@ -107,7 +107,7 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
           >
             {/* Use words if available, else fall back to plain text */}
             {verse.words && verse.words.length > 0 ? (
-              <span className="flex flex-wrap gap-x-3 gap-y-1 justify-end">
+              <span className="flex flex-wrap gap-x-3 gap-y-1 justify-start">
                 {verse.words.map((word: Word) => (
                   <span key={word.id} className="text-center">
                     <span className="relative group cursor-pointer inline-block">

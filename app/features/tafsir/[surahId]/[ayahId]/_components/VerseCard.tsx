@@ -77,6 +77,7 @@ export default function VerseCard({ verse }: VerseCardProps) {
       <div className="flex-grow space-y-6">
         {' '}
         <p
+          dir="rtl"
           className="text-right leading-loose"
           style={{
             fontFamily: settings.arabicFontFace,
@@ -86,7 +87,7 @@ export default function VerseCard({ verse }: VerseCardProps) {
         >
           {' '}
           {verse.words && verse.words.length > 0 ? (
-            <span className="flex flex-wrap gap-x-1 gap-y-1 justify-end">
+            <span className="flex flex-wrap gap-x-1 gap-y-1 justify-start">
               {' '}
               {verse.words.map((word: Word) => (
                 <span key={word.id} className="text-center">
