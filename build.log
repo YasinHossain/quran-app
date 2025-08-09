@@ -17,14 +17,15 @@ Learn more about internationalization in App Router: https://nextjs.org/docs/app
 > [PWA] Service worker: /app/public/sw.js
 > [PWA]   url: /sw.js
 > [PWA]   scope: /
- ✓ Compiled successfully in 7.0s
-   Skipping linting
-   Checking validity of types ...
+ ✓ Compiled successfully in 10.0s
+   Linting and checking validity of types ...
+
 Failed to compile.
 
-app/features/page/[pageId]/page.tsx
-Type error: Type 'QuranPageProps' does not satisfy the constraint 'PageProps'.
-  Types of property 'params' are incompatible.
-    Type '{ pageId: string; }' is missing the following properties from type 'Promise<any>': then, catch, finally, [Symbol.toStringTag]
+./app/components/player/CleanPlayer.tsx
+236:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+410:11  Error: Non-interactive elements should not be assigned mouse or keyboard event listeners.  jsx-a11y/no-noninteractive-element-interactions
+594:1  Error: Delete `⏎`  prettier/prettier
+629:2  Error: Insert `⏎`  prettier/prettier
 
-Next.js build worker exited with code: 1 and signal: null
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules

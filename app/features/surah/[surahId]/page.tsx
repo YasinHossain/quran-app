@@ -7,7 +7,12 @@ import { SettingsSidebar } from './_components/SettingsSidebar';
 import { TranslationPanel } from './_components/TranslationPanel';
 import { WordLanguagePanel } from './_components/WordLanguagePanel';
 import { Verse as VerseType, TranslationResource } from '@/types';
-import { getTranslations, getWordTranslations, getVersesByChapter } from '@/lib/api';
+import {
+  getTranslations,
+  getWordTranslations,
+  getVersesByChapter,
+  getSurahCoverUrl,
+} from '@/lib/api';
 import { LANGUAGE_CODES } from '@/lib/languageCodes';
 import type { LanguageCode } from '@/lib/languageCodes';
 import { WORD_LANGUAGE_LABELS } from '@/lib/wordLanguages';
@@ -35,6 +40,7 @@ export default function SurahPage({ params }: SurahPageProps) {
   const [translationSearchTerm, setTranslationSearchTerm] = useState('');
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
   const [wordTranslationSearchTerm, setWordTranslationSearchTerm] = useState('');
+  const [coverUrl, setCoverUrl] = useState<string | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const {
@@ -134,6 +140,13 @@ export default function SurahPage({ params }: SurahPageProps) {
     [wordLanguageOptions, wordTranslationSearchTerm]
   );
 
+  useEffect(() => {
+    if (activeVerse) {
+      const surahNumber = parseInt(activeVerse.verse_key.split(':')[0], 10);
+      getSurahCoverUrl(surahNumber).then(setCoverUrl);
+    }
+  }, [activeVerse]);
+
   const handleNext = () => {
     if (!activeVerse) return;
     const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
@@ -169,7 +182,7 @@ export default function SurahPage({ params }: SurahPageProps) {
         id: activeVerse.id.toString(),
         title: `Verse ${activeVerse.verse_key}`,
         artist: reciter.name,
-        coverUrl: '', // No cover art available in this app
+        coverUrl: coverUrl || '',
         durationSec: 0, // Player will determine from metadata
         src: buildAudioUrl(activeVerse.verse_key, reciter.path),
       }
