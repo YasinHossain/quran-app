@@ -60,51 +60,29 @@ export type RepeatOptions = {
 
 type Props = {
   track?: Track | null;
-  state?: Partial<PlayerState>;
   onPrev?: () => void;
   onNext?: () => void;
-  onTogglePlay?: (playing: boolean) => void;
-  onSeek?: (sec: number) => void;
-  onVolume?: (vol: number) => void;
-  // Quran specific
-  reciters?: Reciter[];
-  selectedReciterId?: string;
-  onReciterChange?: (id: string) => void;
-  repeatOptions?: RepeatOptions;
-  onRepeatChange?: (opts: RepeatOptions) => void;
 };
 
-export default function CleanPlayer({
-  track,
-  state,
-  onPrev,
-  onNext,
-  onTogglePlay,
-  onSeek,
-  onVolume,
-  reciters = [
-    { id: 'afasy', name: 'Mishary Al-Afasy' },
-    { id: 'husary', name: 'Mahmoud Khalil Al-Husary' },
-    { id: 'minshawi', name: 'Mohammad Al-Minshawi' },
-    { id: 'sudais', name: 'Abdul Rahman Al-Sudais' },
-    { id: 'shuraim', name: 'Saud Al-Shuraim' },
-    { id: 'ghamdi', name: 'Saad Al Ghamdi' },
-  ],
-  selectedReciterId,
-  onReciterChange,
-  repeatOptions,
-  onRepeatChange,
-}: Props) {
+export default function CleanPlayer({ track, onPrev, onNext }: Props) {
   const { theme } = useTheme();
-  const { isPlayerVisible, closePlayer } = useAudio();
-  const [current, setCurrent] = useState(state?.currentTimeSec ?? 0);
-  const [duration, setDuration] = useState<number>(track?.durationSec ?? 0);
-  const [volume, setVolume] = useState(state?.volume ?? 0.9);
-  const [playbackRate, setPlaybackRate] = useState(1);
-
   const {
+    isPlayerVisible,
+    closePlayer,
     audioRef,
     isPlaying,
+    setIsPlaying,
+    setPlayingId,
+    activeVerse,
+    volume,
+    setVolume,
+    playbackRate,
+  } = useAudio();
+  const [current, setCurrent] = useState(0);
+  const [duration, setDuration] = useState<number>(track?.durationSec ?? 0);
+
+  const {
+    audioRef: internalAudioRef,
     play,
     pause,
     seek,
@@ -117,30 +95,19 @@ export default function CleanPlayer({
     onLoadedMetadata: setDuration,
   });
 
+  useEffect(() => {
+    audioRef.current = internalAudioRef.current;
+  }, [audioRef, internalAudioRef]);
+
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'reciter' | 'repeat'>('reciter');
-  // local mirrors
-  const [localReciter, setLocalReciter] = useState<string>(
-    selectedReciterId ?? reciters[0]?.id ?? ''
-  );
-  const [localRepeat, setLocalRepeat] = useState<RepeatOptions>(
-    repeatOptions ?? {
-      mode: 'single',
-      start: 1,
-      end: 1,
-      playCount: 1,
-      repeatEach: 1,
-      delay: 0,
-    }
-  );
 
   const interactable = Boolean(track?.src);
 
-  // Sync with parent state
   useEffect(() => {
-    if (state?.isPlaying === true) play();
-    if (state?.isPlaying === false) pause();
-  }, [state?.isPlaying, play, pause]);
+    if (isPlaying) play();
+    if (!isPlaying) pause();
+  }, [isPlaying, play, pause]);
 
   useEffect(() => {
     setPlayerVolume(volume);
@@ -153,20 +120,19 @@ export default function CleanPlayer({
   const togglePlay = useCallback(() => {
     if (!interactable) return;
     const newPlaying = !isPlaying;
+    setIsPlaying(newPlaying);
     if (newPlaying) {
-      play();
+      if (activeVerse) setPlayingId(activeVerse.id);
     } else {
-      pause();
+      setPlayingId(null);
     }
-    onTogglePlay?.(newPlaying);
-  }, [interactable, isPlaying, onTogglePlay, pause, play]);
+  }, [activeVerse, interactable, isPlaying, setIsPlaying, setPlayingId]);
 
   const setSeek = useCallback(
     (sec: number) => {
-      const t = seek(sec);
-      onSeek?.(t);
+      seek(sec);
     },
-    [seek, onSeek]
+    [seek]
   );
 
   // Keyboard interactions
@@ -184,7 +150,7 @@ export default function CleanPlayer({
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [current, duration, interactable, isPlaying, setSeek, togglePlay]);
+  }, [current, duration, interactable, isPlaying, setSeek, togglePlay, setVolume]);
 
   const elapsed = useMemo(() => mmss(current), [current]);
   const total = useMemo(() => mmss(duration || 0), [duration]);
@@ -194,13 +160,6 @@ export default function CleanPlayer({
   const cover =
     track?.coverUrl ??
     "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96'><rect width='100%' height='100%' rx='12' ry='12' fill='%23e5e7eb'/><text x='50%' y='52%' dominant-baseline='middle' text-anchor='middle' font-family='Inter, system-ui, sans-serif' font-size='12' fill='%239ca3af'>No cover</text></svg>";
-
-  // when options modal closes, commit selections outward
-  const commitOptions = () => {
-    onReciterChange?.(localReciter);
-    onRepeatChange?.(localRepeat);
-    setOptionsOpen(false);
-  };
 
   if (!isPlayerVisible) return null;
 
@@ -242,12 +201,8 @@ export default function CleanPlayer({
 
         {/* Utilities */}
         <div className="flex items-center gap-2">
-          <SpeedControl
-            playbackRate={playbackRate}
-            setPlaybackRate={setPlaybackRate}
-            theme={theme}
-          />
-          <VolumeControl volume={volume} setVolume={setVolume} onVolume={onVolume} theme={theme} />
+          <SpeedControl theme={theme} />
+          <VolumeControl theme={theme} />
           <IconBtn
             aria-label="Options"
             onClick={() => {
@@ -266,13 +221,14 @@ export default function CleanPlayer({
 
       {/* Hidden audio element */}
       <audio
-        ref={audioRef}
+        ref={internalAudioRef}
         src={track?.src || ''}
         preload="metadata"
         onEnded={() => {
-          // Basic repeat functionality can be handled in the parent via onNext
           onNext?.();
           pause();
+          setIsPlaying(false);
+          setPlayingId(null);
         }}
       >
         <track kind="captions" />
@@ -285,12 +241,6 @@ export default function CleanPlayer({
         theme={theme}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        reciters={reciters}
-        localReciter={localReciter}
-        setLocalReciter={setLocalReciter}
-        localRepeat={localRepeat}
-        setLocalRepeat={setLocalRepeat}
-        commitOptions={commitOptions}
       />
     </div>
   );

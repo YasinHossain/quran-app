@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
+import { useAudio } from '@/app/context/AudioContext';
 
 interface Props {
-  playbackRate: number;
-  setPlaybackRate: (rate: number) => void;
   theme: 'light' | 'dark';
 }
 
-export default function SpeedControl({ playbackRate, setPlaybackRate, theme }: Props) {
+export default function SpeedControl({ theme }: Props) {
+  const { playbackRate, setPlaybackRate } = useAudio();
   const [open, setOpen] = useState(false);
   const speedOptions = [0.75, 1, 1.25, 1.5, 2];
 
