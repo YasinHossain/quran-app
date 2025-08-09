@@ -236,7 +236,7 @@ export default function CleanPlayer({
       <div
         className={`mx-auto w-full rounded-2xl px-4 py-4 flex items-center gap-4 ${
           theme === 'dark'
-            ? 'bg-slate-800 shadow-[0_10px_30px_rgba(0,0,0,0.1),0_1px_2px_rgba(0,0,0,0.06)] border-slate-700/60'
+            ? 'bg-slate-800 shadow-[0_10px_30px_rgba(0,0,0,0.1),0_1px_2px_rgba(0,0,0,0.06)] border-slate-700'
             : 'bg-white shadow-[0_10px_30px_rgba(2,6,23,0.06),0_1px_2px_rgba(2,6,23,0.04)] border-slate-200/80'
         } border`}
         role="region"
@@ -319,7 +319,7 @@ export default function CleanPlayer({
               >
                 <Slider.Track
                   className={`h-0.5 rounded-full relative w-full grow ${
-                    theme === 'dark' ? 'bg-slate-500/30' : 'bg-[rgba(14,42,71,0.18)]'
+                    theme === 'dark' ? 'bg-slate-600' : 'bg-[rgba(14,42,71,0.18)]'
                   }`}
                 >
                   <Slider.Range
@@ -374,7 +374,7 @@ export default function CleanPlayer({
               onClick={() => setSpeedMenuOpen((s) => !s)}
               className={`h-9 w-14 grid place-items-center rounded-full text-xs font-bold transition focus:outline-none focus:ring-2 ${
                 theme === 'dark'
-                  ? 'text-sky-500/90 focus:ring-sky-500/35 hover:bg-white/10'
+                  ? 'text-slate-300 focus:ring-sky-500/35 hover:bg-white/10'
                   : 'text-[#0E2A47]/80 focus:ring-[#0E2A47]/35 hover:bg-slate-900/5'
               }`}
             >
@@ -384,7 +384,7 @@ export default function CleanPlayer({
               <div
                 className={`absolute bottom-full mb-2 w-28 rounded-lg shadow-lg border p-1 ${
                   theme === 'dark'
-                    ? 'bg-slate-800 border-slate-700'
+                    ? 'bg-slate-700 border-slate-700'
                     : 'bg-white border-slate-200'
                 }`}
                 onMouseLeave={() => setSpeedMenuOpen(false)}
@@ -402,7 +402,7 @@ export default function CleanPlayer({
                           ? 'bg-sky-500 text-white'
                           : 'bg-[#0E2A47] text-white'
                         : theme === 'dark'
-                        ? 'hover:bg-slate-700'
+                        ? 'hover:bg-slate-600'
                         : 'hover:bg-slate-100'
                     }`}
                   >
@@ -437,7 +437,7 @@ export default function CleanPlayer({
             >
               <Slider.Track
                 className={`h-0.5 rounded-full relative w-full grow ${
-                  theme === 'dark' ? 'bg-slate-500/40' : 'bg-[rgba(14,42,71,0.2)]'
+                  theme === 'dark' ? 'bg-slate-600' : 'bg-[rgba(14,42,71,0.2)]'
                 }`}
               >
                 <Slider.Range
@@ -495,7 +495,7 @@ export default function CleanPlayer({
           <div
             className={`w-full max-w-3xl rounded-2xl border p-4 md:p-6 ${
               theme === 'dark'
-                ? 'bg-slate-800 border-slate-700/80 shadow-2xl'
+                ? 'bg-slate-800 border-slate-700 shadow-2xl'
                 : 'bg-white border-transparent shadow-[0_10px_30px_rgba(2,6,23,0.12),0_1px_2px_rgba(2,6,23,0.06)]'
             }`}
             onClick={(e) => e.stopPropagation()}
@@ -537,7 +537,7 @@ export default function CleanPlayer({
                 className={`px-3 py-1.5 rounded-full text-sm ${
                   activeTab === 'reciter'
                     ? theme === 'dark'
-                      ? 'bg-sky-500/20 text-sky-400'
+                      ? 'bg-sky-500/10 text-sky-400'
                       : 'bg-[#0E2A47]/10 text-[#0E2A47]'
                     : theme === 'dark'
                     ? 'hover:bg-white/10'
@@ -554,7 +554,7 @@ export default function CleanPlayer({
                 className={`px-3 py-1.5 rounded-full text-sm ${
                   activeTab === 'repeat'
                     ? theme === 'dark'
-                      ? 'bg-sky-500/20 text-sky-400'
+                      ? 'bg-sky-500/10 text-sky-400'
                       : 'bg-[#0E2A47]/10 text-[#0E2A47]'
                     : theme === 'dark'
                     ? 'hover:bg-white/10'
@@ -750,7 +750,7 @@ function IconBtn({
           ? 'opacity-40 cursor-not-allowed'
           : `hover:-translate-y-px active:scale-95 active:bg-slate-900/10 ${
               theme === 'dark'
-                ? 'text-sky-500/90 focus:ring-sky-500/35 hover:text-sky-400 hover:bg-white/10'
+                ? 'text-slate-300 focus:ring-sky-500/35 hover:bg-white/10'
                 : 'text-[#0E2A47]/80 focus:ring-[#0E2A47]/35 hover:text-[#0E2A47] hover:bg-slate-900/5'
             }`
       } ${className}`}
@@ -785,7 +785,7 @@ function NumberField({
         onChange={(e) => onChange(parseFloat(e.target.value))}
         className={`w-full rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 ${
           theme === 'dark'
-            ? 'border-slate-600 bg-slate-800 focus:ring-sky-500/35'
+            ? 'border-slate-700 bg-slate-700 focus:ring-sky-500/35'
             : 'border-slate-300 bg-white focus:ring-[#0E2A47]/35'
         }`}
       />
