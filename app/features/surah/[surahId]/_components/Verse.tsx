@@ -1,11 +1,10 @@
 // app/surah/[surahId]/_components/Verse.tsx
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback } from 'react';
 import {
   FaPlay,
   FaPause,
   FaBookmark,
   FaRegBookmark,
-  FaEllipsisH,
   FaBookReader,
 } from '@/app/components/common/SvgIcons';
 import { useRouter } from 'next/navigation';
@@ -15,7 +14,6 @@ import { useAudio } from '@/app/context/AudioContext';
 import Spinner from '@/app/components/common/Spinner';
 import { useSettings } from '@/app/context/SettingsContext';
 import { applyTajweed } from '@/lib/tajweed';
-import AudioSettingsModal from '@/app/components/AudioSettingsModal';
 
 interface VerseProps {
   verse: VerseType;
@@ -35,7 +33,6 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
   const isLoadingAudio = loadingId === verse.id;
   const isBookmarked = bookmarkedVerses.includes(String(verse.id)); // Check if verse is bookmarked (using string ID)
   const [surahId, ayahId] = verse.verse_key.split(':');
-  const [showAudioSettings, setShowAudioSettings] = useState(false);
 
   const handlePlayPause = useCallback(() => {
     if (playingId === verse.id) {
@@ -55,14 +52,6 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
   const handleTafsir = useCallback(() => {
     router.push(`/features/tafsir/${surahId}/${ayahId}`);
   }, [router, surahId, ayahId]);
-
-  const handleAudioSettings = useCallback(() => {
-    setShowAudioSettings(true);
-  }, []);
-
-  const closeAudioSettings = useCallback(() => {
-    setShowAudioSettings(false);
-  }, []);
 
   return (
     <>
@@ -102,15 +91,6 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
               className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-teal-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
             >
               <FaBookReader size={18} />
-            </button>
-
-            <button
-              aria-label="More options"
-              title="More"
-              onClick={handleAudioSettings}
-              className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-teal-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
-            >
-              <FaEllipsisH size={18} />
             </button>
           </div>
         </div>
@@ -174,7 +154,6 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
           ))}
         </div>
       </div>
-      <AudioSettingsModal isOpen={showAudioSettings} onClose={closeAudioSettings} />
     </>
   );
 });
