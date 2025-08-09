@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAudio } from '@/app/context/AudioContext';
 import { API_BASE_URL } from '@/lib/api';
+import { buildAudioUrl } from '@/lib/reciters';
 import type { Verse } from '@/types';
 import Spinner from '@/app/components/common/Spinner';
 import { FaArrowLeft, FaPlay, FaPause, FaTimes } from '@/app/components/common/SvgIcons';
@@ -22,6 +23,7 @@ export default function AudioPlayer({ onError }: AudioPlayerProps) {
     loadingId,
     setLoadingId,
     repeatSettings,
+    reciter,
   } = useAudio();
 
   const [currentTime, setCurrentTime] = useState(0);
@@ -37,8 +39,8 @@ export default function AudioPlayer({ onError }: AudioPlayerProps) {
   };
 
   useEffect(() => {
-    if (!audioRef.current || !activeVerse?.audio?.url) return;
-    audioRef.current.src = `https://verses.quran.com/${activeVerse.audio.url}`;
+    if (!audioRef.current || !activeVerse) return;
+    audioRef.current.src = buildAudioUrl(activeVerse.verse_key, reciter.path);
     setLoadingId(activeVerse.id);
     audioRef.current
       .play()
@@ -48,7 +50,7 @@ export default function AudioPlayer({ onError }: AudioPlayerProps) {
         setPlayingId(null);
         setLoadingId(null);
       });
-  }, [activeVerse, audioRef, onError, setLoadingId, setPlayingId, t]);
+  }, [activeVerse, audioRef, onError, setLoadingId, setPlayingId, t, reciter]);
 
   useEffect(() => {
     setCurrentTime(0);
@@ -107,7 +109,7 @@ export default function AudioPlayer({ onError }: AudioPlayerProps) {
   const fetchVerse = async (key: string): Promise<Verse | null> => {
     try {
       const res = await fetch(
-        `${API_BASE_URL}/verses/by_key/${encodeURIComponent(key)}?fields=text_uthmani,audio`
+        `${API_BASE_URL}/verses/by_key/${encodeURIComponent(key)}?fields=text_uthmani`
       );
       const data = await res.json();
       return data.verse as Verse;

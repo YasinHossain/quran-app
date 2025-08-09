@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { FaTimes } from '@/app/components/common/SvgIcons';
 import { useAudio, RepeatSettings } from '@/app/context/AudioContext';
+import { RECITERS } from '@/lib/reciters';
 
 interface AudioSettingsModalProps {
   isOpen: boolean;
@@ -10,7 +11,8 @@ interface AudioSettingsModalProps {
 
 export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsModalProps) {
   const [activeTab, setActiveTab] = useState<'repeat' | 'reciter'>('repeat');
-  const { repeatSettings, setRepeatSettings } = useAudio();
+  const { repeatSettings, setRepeatSettings, reciter, setReciter } = useAudio();
+  const [search, setSearch] = useState('');
 
   const handleChange = (field: keyof RepeatSettings, value: string | number) => {
     setRepeatSettings({ ...repeatSettings, [field]: value });
@@ -139,7 +141,32 @@ export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsMod
             )}
           </div>
         ) : (
-          <div>Reciter settings</div>
+          <div className="space-y-4">
+            <input
+              type="text"
+              placeholder="Search reciter"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full border border-gray-300 dark:border-gray-600 rounded p-2 text-sm"
+            />
+            <ul className="max-h-48 overflow-y-auto divide-y divide-gray-200 dark:divide-gray-700">
+              {RECITERS.filter((r) => r.name.toLowerCase().includes(search.toLowerCase())).map(
+                (r) => (
+                  <li key={r.id}>
+                    <button
+                      onClick={() => setReciter(r)}
+                      className={
+                        'w-full text-left p-2 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 ' +
+                        (reciter.id === r.id ? 'bg-teal-100 dark:bg-teal-800' : '')
+                      }
+                    >
+                      {r.name}
+                    </button>
+                  </li>
+                )
+              )}
+            </ul>
+          </div>
         )}
       </div>
     </div>
