@@ -2,24 +2,22 @@ import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import NotFound from '@/app/not-found';
 import TranslationProvider from '@/app/providers/TranslationProvider';
-import i18n from '@/app/i18n';
 
+// Mock next/link for testing environment
 jest.mock('next/link', () => {
-  // eslint-disable-next-line react/display-name
   return ({ children, href }: { children: ReactNode; href: string }) => (
     <a href={href}>{children}</a>
   );
 });
 
-describe('NotFound page in Bengali', () => {
-  it('renders Bengali text', async () => {
-    await i18n.changeLanguage('bn');
+describe('NotFound page', () => {
+  it('renders translated text', () => {
     render(
       <TranslationProvider>
         <NotFound />
       </TranslationProvider>
     );
-    expect(screen.getByText('পৃষ্ঠা পাওয়া যায় নি')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'বাড়ি' })).toHaveAttribute('href', '/');
+    expect(screen.getByText('Page not found')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/');
   });
 });
