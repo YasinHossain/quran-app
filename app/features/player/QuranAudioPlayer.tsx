@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { SlidersHorizontal, X } from 'lucide-react';
 import { useAudio } from '@/app/features/player/context/AudioContext';
-import { useTheme } from '@/app/context/ThemeContext';
+import { useTheme } from '@/app/providers/ThemeContext';
 import useAudioPlayer from '@/app/features/player/hooks/useAudioPlayer';
 import TrackInfo from './components/TrackInfo';
 import TransportControls from './components/TransportControls';

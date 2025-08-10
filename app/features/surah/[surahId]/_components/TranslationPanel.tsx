@@ -3,8 +3,8 @@ import { FaArrowLeft, FaSearch } from '@/app/components/shared/SvgIcons';
 import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';
 import { TranslationResource } from '@/types';
-import { useSettings } from '@/app/context/SettingsContext';
-import { useHeaderVisibility } from '@/app/context/HeaderVisibilityContext';
+import { useSettings } from '@/app/providers/SettingsContext';
+import { useHeaderVisibility } from '@/app/features/layout/context/HeaderVisibilityContext';
 
 interface TranslationPanelProps {
   isOpen: boolean;

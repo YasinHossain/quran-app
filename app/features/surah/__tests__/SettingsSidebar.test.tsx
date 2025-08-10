@@ -5,10 +5,10 @@ import Header from '@/app/components/shared/Header';
 import { SettingsSidebar } from '@/app/features/surah/[surahId]/_components/SettingsSidebar';
 import { WordLanguagePanel } from '@/app/features/surah/[surahId]/_components/WordLanguagePanel';
 import { TranslationPanel } from '@/app/features/surah/[surahId]/_components/TranslationPanel';
-import { SettingsProvider } from '@/app/context/SettingsContext';
-import { SidebarProvider } from '@/app/context/SidebarContext';
-import { ThemeProvider } from '@/app/context/ThemeContext';
-import { HeaderVisibilityProvider } from '@/app/context/HeaderVisibilityContext';
+import { SettingsProvider } from '@/app/providers/SettingsContext';
+import { SidebarProvider } from '@/app/providers/SidebarContext';
+import { ThemeProvider } from '@/app/providers/ThemeContext';
+import { HeaderVisibilityProvider } from '@/app/features/layout/context/HeaderVisibilityContext';
 
 // mock translation hook
 jest.mock('react-i18next', () => ({

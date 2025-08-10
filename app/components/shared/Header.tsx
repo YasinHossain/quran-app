@@ -1,12 +1,12 @@
 'use client';
 import { FaSearch, FaBars } from './SvgIcons';
 import { useTranslation } from 'react-i18next';
-import { useSidebar } from '@/app/context/SidebarContext';
+import { useSidebar } from '@/app/providers/SidebarContext';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaCog } from 'react-icons/fa';
-import { useTheme } from '@/app/context/ThemeContext';
-import { useHeaderVisibility } from '@/app/context/HeaderVisibilityContext';
+import { useTheme } from '@/app/providers/ThemeContext';
+import { useHeaderVisibility } from '@/app/features/layout/context/HeaderVisibilityContext';
 
 const Header = () => {
   const { t } = useTranslation();

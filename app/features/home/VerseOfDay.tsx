@@ -2,13 +2,14 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Verse, Word } from '@/types';
 import { getRandomVerse } from '@/lib/api';
-import { useSettings } from '@/app/context/SettingsContext';
+import { useSettings } from '@/app/providers/SettingsContext';
 import Spinner from '@/app/components/shared/Spinner';
 import surahsData from '@/data/surahs.json';
 import type { Surah } from '@/types';
-import { useTheme } from '@/app/context/ThemeContext';
+import { useTheme } from '@/app/providers/ThemeContext';
 import { applyTajweed } from '@/lib/text/tajweed';
 import { stripHtml } from '@/lib/text/stripHtml';
+import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 
 const surahs: Surah[] = surahsData;
 
@@ -99,7 +100,11 @@ export default function VerseOfDay() {
             verse.words.map((w: Word) => (
               <span key={w.id} className="inline-block mx-0.5 relative group">
                 {settings.tajweed ? (
-                  <span dangerouslySetInnerHTML={{ __html: applyTajweed(w.uthmani) }} />
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizeHtml(applyTajweed(w.uthmani)),
+                    }}
+                  />
                 ) : (
                   w.uthmani
                 )}
@@ -111,7 +116,11 @@ export default function VerseOfDay() {
               </span>
             ))
           ) : settings.tajweed ? (
-            <span dangerouslySetInnerHTML={{ __html: applyTajweed(verse.text_uthmani) }} />
+            <span
+              dangerouslySetInnerHTML={{
+                __html: sanitizeHtml(applyTajweed(verse.text_uthmani)),
+              }}
+            />
           ) : (
             verse.text_uthmani
           )}

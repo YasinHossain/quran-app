@@ -1,12 +1,12 @@
 'use client';
 import { FaArrowLeft, FaSearch } from '@/app/components/shared/SvgIcons';
 import { useTranslation } from 'react-i18next';
-import { useSettings } from '@/app/context/SettingsContext';
+import { useSettings } from '@/app/providers/SettingsContext';
 import { TafsirResource } from '@/types';
 import { getTafsirResources } from '@/lib/api';
 import useSWR from 'swr';
 import { useMemo, useState } from 'react';
-import { useHeaderVisibility } from '@/app/context/HeaderVisibilityContext';
+import { useHeaderVisibility } from '@/app/features/layout/context/HeaderVisibilityContext';
 
 interface TafsirPanelProps {
   isOpen: boolean;
