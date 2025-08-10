@@ -44,7 +44,7 @@ describe('IconSidebar', () => {
 
     const surahLink = screen.getByRole('link', { name: 'all_surahs' });
     expect(surahLink).toBeInTheDocument();
-    expect(surahLink).toHaveAttribute('href', '/features/surah/1');
+    expect(surahLink).toHaveAttribute('href', '/surah/1');
 
     const bookmarksLink = screen.getByRole('link', { name: 'bookmarks' });
     expect(bookmarksLink).toBeInTheDocument();

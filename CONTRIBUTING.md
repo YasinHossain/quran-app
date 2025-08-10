@@ -42,5 +42,5 @@ Use the generator to create a new feature folder with a page component and test:
 npm run generate-feature my-feature
 ```
 
-This produces `app/features/my-feature/page.tsx` and
+This produces `app/(features)/my-feature/page.tsx` and
 `__tests__/MyFeaturePage.test.tsx` ready for further development.
