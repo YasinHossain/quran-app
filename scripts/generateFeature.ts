@@ -38,7 +38,7 @@ async function main() {
   const page = `// ${dir}/page.tsx
 'use client';
 import { useEffect, useState } from 'react';
-import { useSettings } from '@/app/context/SettingsContext';
+import { useSettings } from '@/app/providers/SettingsContext';
 import { getRandomVerse } from '@/lib/api';
 import { Verse } from '@/types';
 
@@ -64,7 +64,7 @@ export default function ${pascal}Page() {
   await writeFile(`${dir}/page.tsx`, page);
 
   const test = `import { render, screen } from '@testing-library/react';
-import { SettingsProvider } from '@/app/context/SettingsContext';
+import { SettingsProvider } from '@/app/providers/SettingsContext';
 import * as api from '@/lib/api';
 import { Verse } from '@/types';
 import ${pascal}Page from '@/app/features/${name}/page';

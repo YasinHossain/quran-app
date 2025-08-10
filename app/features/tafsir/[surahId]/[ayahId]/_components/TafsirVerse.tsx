@@ -10,7 +10,7 @@ import {
 import { Verse as VerseType, Translation, Word } from '@/types';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import { useAudio } from '@/app/features/player/context/AudioContext';
-import { useSettings } from '@/app/context/SettingsContext';
+import { useSettings } from '@/app/providers/SettingsContext';
 import { useState } from 'react';
 import Spinner from '@/app/components/shared/Spinner';
 import { applyTajweed } from '@/lib/text/tajweed';

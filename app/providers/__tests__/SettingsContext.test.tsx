@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { SettingsProvider, useSettings } from '@/app/context/SettingsContext';
+import { SettingsProvider, useSettings } from '@/app/providers/SettingsContext';
 
 const BookmarkTest = () => {
   const { bookmarkedVerses, toggleBookmark } = useSettings();

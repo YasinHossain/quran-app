@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { SidebarProvider, useSidebar } from '@/app/context/SidebarContext';
+import { SidebarProvider, useSidebar } from '@/app/providers/SidebarContext';
 
 const ScrollTest = () => {
   const {

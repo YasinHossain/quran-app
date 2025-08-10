@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useMemo } from 'react';
-import { useTheme } from '@/app/context/ThemeContext';
+import { useTheme } from '@/app/providers/ThemeContext';
 import Link from 'next/link';
 import { Search, Sun, Moon } from '@/app/components/shared/SvgIcons';
 import surahsData from '@/data/surahs.json';

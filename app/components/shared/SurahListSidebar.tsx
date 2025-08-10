@@ -7,8 +7,8 @@ import { FaSearch } from './SvgIcons';
 import { Chapter } from '@/types';
 import { getChapters } from '@/lib/api';
 import useSWR from 'swr';
-import { useSidebar } from '@/app/context/SidebarContext';
-import { useTheme } from '@/app/context/ThemeContext';
+import { useSidebar } from '@/app/providers/SidebarContext';
+import { useTheme } from '@/app/providers/ThemeContext';
 import juzData from '@/data/juz.json';
 
 interface JuzSummary {

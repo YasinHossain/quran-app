@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ThemeProvider, useTheme } from '@/app/context/ThemeContext';
+import { ThemeProvider, useTheme } from '@/app/providers/ThemeContext';
 
 const ThemeTest = () => {
   const { theme, setTheme } = useTheme();

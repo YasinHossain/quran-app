@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import Header from '@/app/components/shared/Header';
-import { SidebarProvider } from '@/app/context/SidebarContext';
-import { ThemeProvider } from '@/app/context/ThemeContext';
-import { HeaderVisibilityProvider } from '@/app/context/HeaderVisibilityContext';
+import { SidebarProvider } from '@/app/providers/SidebarContext';
+import { ThemeProvider } from '@/app/providers/ThemeContext';
+import { HeaderVisibilityProvider } from '@/app/features/layout/context/HeaderVisibilityContext';
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (
   <ThemeProvider>

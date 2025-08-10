@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { SettingsProvider } from '@/app/context/SettingsContext';
+import { SettingsProvider } from '@/app/providers/SettingsContext';
 import BookmarkedVersesList from '@/app/features/bookmarks/_components/BookmarkedVersesList';
 import BookmarksPage from '@/app/features/bookmarks/page';
 import * as api from '@/lib/api';

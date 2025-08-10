@@ -5,8 +5,8 @@ import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 import { getTafsirResources } from '@/lib/api';
 import { applyArabicFont } from '@/lib/tafsir/applyArabicFont';
 import useSWR from 'swr';
-import { useTheme } from '@/app/context/ThemeContext';
-import { useSettings } from '@/app/context/SettingsContext';
+import { useTheme } from '@/app/providers/ThemeContext';
+import { useSettings } from '@/app/providers/SettingsContext';
 
 interface TafsirTabsProps {
   verseKey: string;
