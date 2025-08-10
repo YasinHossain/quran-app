@@ -56,7 +56,10 @@ beforeAll(() => {
 
 beforeEach(() => {
   (api.getTranslations as jest.Mock).mockResolvedValue([]);
-  (api.getVersesByPage as jest.Mock).mockResolvedValue({ verses: [mockVerse], totalPages: 1 });
+  (api.getVersesByPage as jest.Mock).mockResolvedValue({
+    verses: [mockVerse],
+    totalPages: 1,
+  });
 });
 
 const renderPage = () =>
