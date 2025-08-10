@@ -2,11 +2,11 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Verse, Word } from '@/types';
 import { getRandomVerse } from '@/lib/api';
-import { useSettings } from '@/app/context/SettingsContext';
+import { useSettings } from '@/app/providers/SettingsContext';
 import Spinner from '@/app/components/shared/Spinner';
 import surahsData from '@/data/surahs.json';
 import type { Surah } from '@/types';
-import { useTheme } from '@/app/context/ThemeContext';
+import { useTheme } from '@/app/providers/ThemeContext';
 import { applyTajweed } from '@/lib/text/tajweed';
 import { stripHtml } from '@/lib/text/stripHtml';
 

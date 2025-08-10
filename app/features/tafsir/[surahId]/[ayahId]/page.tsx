@@ -16,8 +16,8 @@ import {
   getTafsirByVerse,
 } from '@/lib/api';
 import { Verse as VerseType, TranslationResource, TafsirResource } from '@/types';
-import { useSettings } from '@/app/context/SettingsContext';
-import { useSidebar } from '@/app/context/SidebarContext';
+import { useSettings } from '@/app/providers/SettingsContext';
+import { useSidebar } from '@/app/providers/SidebarContext';
 import { WORD_LANGUAGE_LABELS } from '@/lib/text/wordLanguages';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';

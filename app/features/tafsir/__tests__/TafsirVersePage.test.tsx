@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import TafsirVersePage from '@/app/features/tafsir/[surahId]/[ayahId]/page';
-import { SettingsProvider } from '@/app/context/SettingsContext';
+import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { AudioProvider } from '@/app/features/player/context/AudioContext';
-import { SidebarProvider } from '@/app/context/SidebarContext';
-import { ThemeProvider } from '@/app/context/ThemeContext';
+import { SidebarProvider } from '@/app/providers/SidebarContext';
+import { ThemeProvider } from '@/app/providers/ThemeContext';
 import { Verse } from '@/types';
 import useSWR from 'swr';
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';

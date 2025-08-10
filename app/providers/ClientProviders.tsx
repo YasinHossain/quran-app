@@ -1,8 +1,8 @@
 'use client';
 import React from 'react';
-import { ThemeProvider, Theme } from '../context/ThemeContext';
-import { SettingsProvider } from '../context/SettingsContext';
-import { SidebarProvider } from '../context/SidebarContext';
+import { ThemeProvider, Theme } from './ThemeContext';
+import { SettingsProvider } from './SettingsContext';
+import { SidebarProvider } from './SidebarContext';
 
 /**
  * Groups client-side providers including `ThemeProvider`, `SettingsProvider`,

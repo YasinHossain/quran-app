@@ -6,7 +6,7 @@ import SurahListSidebar from '@/app/components/shared/SurahListSidebar';
 import {
   HeaderVisibilityProvider,
   useHeaderVisibility,
-} from '@/app/context/HeaderVisibilityContext';
+} from '@/app/features/layout/context/HeaderVisibilityContext';
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
   const { isHidden } = useHeaderVisibility();

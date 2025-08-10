@@ -1,7 +1,7 @@
 // app/features/bookmarks/_components/BookmarkedVersesList.tsx
 'use client';
 import { useEffect, useState } from 'react';
-import { useSettings } from '@/app/context/SettingsContext';
+import { useSettings } from '@/app/providers/SettingsContext';
 import { getVerseById } from '@/lib/api';
 import { Verse } from '@/types';
 

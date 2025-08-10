@@ -1,4 +1,4 @@
-import { ARABIC_FONTS } from '@/app/context/SettingsContext';
+import { ARABIC_FONTS } from '@/app/providers/SettingsContext';
 
 describe('ARABIC_FONTS', () => {
   it('contains expected font names', () => {
