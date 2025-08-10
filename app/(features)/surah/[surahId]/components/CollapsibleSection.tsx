@@ -1,4 +1,4 @@
-// app/features/surah/[surahId]/components/CollapsibleSection.tsx
+// app/surah/[surahId]/components/CollapsibleSection.tsx
 'use client';
 import { FaChevronDown } from '@/app/shared/SvgIcons';
 

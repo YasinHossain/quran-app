@@ -1,19 +1,19 @@
-// app/features/juz/[juzId]/page.tsx
+// app/(features)/juz/[juzId]/page.tsx
 'use client';
 
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Verse } from '@/app/features/surah/[surahId]/components/Verse';
-import { SettingsSidebar } from '@/app/features/surah/[surahId]/components/SettingsSidebar';
-import { TranslationPanel } from '@/app/features/surah/[surahId]/components/TranslationPanel';
-import { WordLanguagePanel } from '@/app/features/surah/[surahId]/components/WordLanguagePanel';
+import { Verse } from '@/app/(features)/surah/[surahId]/components/Verse';
+import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
+import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/TranslationPanel';
+import { WordLanguagePanel } from '@/app/(features)/surah/[surahId]/components/WordLanguagePanel';
 import { Verse as VerseType, TranslationResource, Juz } from '@/types';
 import { getTranslations, getWordTranslations, getVersesByJuz, getJuz } from '@/lib/api';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import { WORD_LANGUAGE_LABELS } from '@/lib/text/wordLanguages';
 import { useSettings } from '@/app/providers/SettingsContext';
-import { useAudio } from '@/app/features/player/context/AudioContext';
+import { useAudio } from '@/app/(features)/player/context/AudioContext';
 import { buildAudioUrl } from '@/lib/audio/reciters';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';

@@ -11,7 +11,7 @@ jest.mock('@/lib/api', () => ({
   searchVerses: jest.fn(),
 }));
 
-jest.mock('@/app/features/surah/[surahId]/components/Verse', () => ({
+jest.mock('@/app/(features)/surah/[surahId]/components/Verse', () => ({
   Verse: ({ verse }: any) => <div>{verse.text_uthmani}</div>,
 }));
 
