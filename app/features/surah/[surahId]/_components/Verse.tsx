@@ -14,6 +14,7 @@ import { useAudio } from '@/app/features/player/context/AudioContext';
 import Spinner from '@/app/components/shared/Spinner';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { applyTajweed } from '@/lib/text/tajweed';
+import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 
 interface VerseProps {
   verse: VerseType;
@@ -126,7 +127,9 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
                       {/* Tajweed coloring for each word */}
                       <span
                         dangerouslySetInnerHTML={{
-                          __html: settings.tajweed ? applyTajweed(word.uthmani) : word.uthmani,
+                          __html: sanitizeHtml(
+                            settings.tajweed ? applyTajweed(word.uthmani) : word.uthmani
+                          ),
                         }}
                       />
                       {/* Tooltip translation (when not showByWords) */}
@@ -150,7 +153,11 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
               </span>
             ) : // If no word data, show whole verse with or without Tajweed
             settings.tajweed ? (
-              <span dangerouslySetInnerHTML={{ __html: applyTajweed(verse.text_uthmani) }} />
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: sanitizeHtml(applyTajweed(verse.text_uthmani)),
+                }}
+              />
             ) : (
               verse.text_uthmani
             )}
@@ -161,7 +168,7 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
               <p
                 className="text-left leading-relaxed text-[var(--foreground)]"
                 style={{ fontSize: `${settings.translationFontSize}px` }}
-                dangerouslySetInnerHTML={{ __html: t.text }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.text) }}
               />
             </div>
           ))}

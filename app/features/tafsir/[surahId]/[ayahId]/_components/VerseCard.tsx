@@ -12,7 +12,7 @@ import { useAudio } from '@/app/features/player/context/AudioContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import Spinner from '@/app/components/shared/Spinner';
 import { applyTajweed } from '@/lib/text/tajweed';
-import DOMPurify from 'dompurify';
+import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 
 interface VerseCardProps {
   verse: VerseType;
@@ -96,7 +96,7 @@ export default function VerseCard({ verse }: VerseCardProps) {
                     {' '}
                     <span
                       dangerouslySetInnerHTML={{
-                        __html: DOMPurify.sanitize(
+                        __html: sanitizeHtml(
                           settings.tajweed ? applyTajweed(word.uthmani) : word.uthmani
                         ),
                       }}
@@ -121,7 +121,7 @@ export default function VerseCard({ verse }: VerseCardProps) {
           ) : settings.tajweed ? (
             <span
               dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(applyTajweed(verse.text_uthmani)),
+                __html: sanitizeHtml(applyTajweed(verse.text_uthmani)),
               }}
             />
           ) : (
@@ -134,7 +134,7 @@ export default function VerseCard({ verse }: VerseCardProps) {
             <p
               className="text-left leading-relaxed"
               style={{ fontSize: `${settings.translationFontSize}px` }}
-              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(t.text) }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.text) }}
             />{' '}
           </div>
         ))}{' '}

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { getVerseById } from '@/lib/api';
+import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { Verse } from '@/types';
 
 const BookmarkedVersesList = () => {
@@ -45,9 +46,12 @@ const BookmarkedVersesList = () => {
       {verses.map((verse) => (
         <div key={verse.id}>
           <p className="font-semibold">{verse.verse_key}</p>
-          <p className="text-right" dangerouslySetInnerHTML={{ __html: verse.text_uthmani }} />
+          <p
+            className="text-right"
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(verse.text_uthmani) }}
+          />
           {verse.translations?.map((t) => (
-            <p key={t.resource_id} dangerouslySetInnerHTML={{ __html: t.text }} />
+            <p key={t.resource_id} dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.text) }} />
           ))}
         </div>
       ))}
