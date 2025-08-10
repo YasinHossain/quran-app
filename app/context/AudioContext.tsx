@@ -3,7 +3,7 @@ import React, { createContext, useContext, useMemo, useRef, useState } from 'rea
 import { Verse } from '@/types';
 import { RECITERS, Reciter } from '@/lib/reciters';
 
-// This is from the new CleanPlayer component.
+// This is from the new QuranAudioPlayer component.
 export type RepeatOptions = {
   mode: 'off' | 'single' | 'range' | 'surah';
   start?: number;
