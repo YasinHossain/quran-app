@@ -8,7 +8,7 @@ import {
 } from '@/app/components/common/SvgIcons';
 import { Verse as VerseType, Translation, Word } from '@/types';
 import type { LanguageCode } from '@/lib/languageCodes';
-import { useAudio } from '@/app/context/AudioContext';
+import { useAudio } from '@/app/features/player/context/AudioContext';
 import { useSettings } from '@/app/context/SettingsContext';
 import Spinner from '@/app/components/common/Spinner';
 import { applyTajweed } from '@/lib/tajweed';
