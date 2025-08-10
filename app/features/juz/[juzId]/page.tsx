@@ -13,7 +13,7 @@ import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import { WORD_LANGUAGE_LABELS } from '@/lib/text/wordLanguages';
 import { useSettings } from '@/app/providers/SettingsContext';
-import { useAudio } from '@/app/features/player/context/AudioContext';
+import { useAudio } from '@/app/(features)/player/context/AudioContext';
 import { buildAudioUrl } from '@/lib/audio/reciters';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';

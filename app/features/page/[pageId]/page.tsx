@@ -15,8 +15,8 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import Spinner from '@/app/shared/Spinner';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
-import { QuranAudioPlayer } from '@/app/features/player';
-import { useAudio } from '@/app/features/player/context/AudioContext';
+import { QuranAudioPlayer } from '@/app/(features)/player';
+import { useAudio } from '@/app/(features)/player/context/AudioContext';
 import { buildAudioUrl } from '@/lib/audio/reciters';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;

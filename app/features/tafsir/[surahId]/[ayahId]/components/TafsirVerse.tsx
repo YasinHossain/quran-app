@@ -9,7 +9,7 @@ import {
 } from '@/app/shared/SvgIcons';
 import { Verse as VerseType, Translation, Word } from '@/types';
 import type { LanguageCode } from '@/lib/text/languageCodes';
-import { useAudio } from '@/app/features/player/context/AudioContext';
+import { useAudio } from '@/app/(features)/player/context/AudioContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useState } from 'react';
 import Spinner from '@/app/shared/Spinner';
