@@ -7,8 +7,8 @@ import Link from 'next/link'; // Import Link
 const IconSidebar = () => {
   const { t } = useTranslation();
   const navItems = [
-    { icon: FaHome, label: t('home'), href: '/' }, // Added href
-    { icon: FaTh, label: t('all_surahs'), href: '/surah/1' },
+    { icon: FaHome, label: t('home'), href: '/' },
+    { icon: FaTh, label: t('all_surahs'), href: '/features/surah/1' },
     { icon: FaRegBookmark, label: t('bookmarks'), href: '/features/bookmarks' },
   ];
 
