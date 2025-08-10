@@ -284,11 +284,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                 return (
                   <li key={chapter.id}>
                     <Link
-                      href={
-                        isTafsirPath
-                          ? `/features/tafsir/${chapter.id}/1`
-                          : `/features/surah/${chapter.id}`
-                      }
+                      href={isTafsirPath ? `/tafsir/${chapter.id}/1` : `/surah/${chapter.id}`}
                       scroll={false}
                       data-active={isActive}
                       onClick={() => {
@@ -361,7 +357,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                 return (
                   <li key={juz.number}>
                     <Link
-                      href={`/features/juz/${juz.number}`}
+                      href={`/juz/${juz.number}`}
                       scroll={false}
                       data-active={isActive}
                       onClick={() => {
@@ -432,7 +428,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                 return (
                   <li key={p}>
                     <Link
-                      href={`/features/page/${p}`}
+                      href={`/page/${p}`}
                       scroll={false}
                       data-active={isActive}
                       onClick={() => {
