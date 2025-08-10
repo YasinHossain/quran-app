@@ -48,6 +48,6 @@ describe('IconSidebar', () => {
 
     const bookmarksLink = screen.getByRole('link', { name: 'bookmarks' });
     expect(bookmarksLink).toBeInTheDocument();
-    expect(bookmarksLink).toHaveAttribute('href', '/features/bookmarks');
+    expect(bookmarksLink).toHaveAttribute('href', '/bookmarks');
   });
 });
