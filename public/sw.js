@@ -222,7 +222,7 @@ define(['./workbox-8232f3e4'], function (e) {
       'GET'
     ),
     e.registerRoute(
-      /^https:\/\/api\.quran\.com\/api\/v4\/(chapters|juzs|verses\/by_(chapter|juz|page))\//,
+      /^https:\/\/api\.quran\.com\/api\/v4\/(chapters|juzs|verses\/by_(chapter|juz|page))/, // no trailing slash to match both
       new e.NetworkFirst({
         cacheName: 'api-cache',
         plugins: [
