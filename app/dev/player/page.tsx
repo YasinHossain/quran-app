@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { CleanPlayer } from '@/app/components/player';
+import { QuranAudioPlayer } from '@/app/components/player';
 import type { Track, RepeatOptions } from '@/app/components/player/types';
 
 const DEMO_TRACKS: Track[] = [
@@ -117,7 +117,7 @@ export default function Page() {
           {JSON.stringify({ reciter: track.reciter, repeat }, null, 2)}
         </pre>
       </div>
-      <CleanPlayer
+      <QuranAudioPlayer
         track={{
           id: track.id,
           title: track.title ?? '',

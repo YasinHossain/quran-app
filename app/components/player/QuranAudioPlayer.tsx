@@ -64,7 +64,7 @@ type Props = {
   onNext?: () => void;
 };
 
-export default function CleanPlayer({ track, onPrev, onNext }: Props) {
+export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
   const { theme } = useTheme();
   const {
     isPlayerVisible,

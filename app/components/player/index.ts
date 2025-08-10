@@ -1,2 +1,2 @@
-export { default as CleanPlayer } from './CleanPlayer';
+export { default as QuranAudioPlayer } from './QuranAudioPlayer';
 export * from './types';

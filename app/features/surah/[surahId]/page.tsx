@@ -20,7 +20,7 @@ import { useSettings } from '@/app/context/SettingsContext';
 import Spinner from '@/app/components/common/Spinner';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
-import { CleanPlayer } from '@/app/components/player';
+import { QuranAudioPlayer } from '@/app/components/player';
 import { useAudio } from '@/app/context/AudioContext';
 import { buildAudioUrl } from '@/lib/reciters';
 
@@ -217,7 +217,7 @@ export default function SurahPage({ params }: SurahPageProps) {
       />
       {activeVerse && (
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-transparent z-50">
-          <CleanPlayer track={track} onNext={handleNext} onPrev={handlePrev} />
+          <QuranAudioPlayer track={track} onNext={handleNext} onPrev={handlePrev} />
         </div>
       )}
     </div>
