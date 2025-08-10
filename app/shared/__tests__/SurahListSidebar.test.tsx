@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import SurahListSidebar from '@/app/components/shared/SurahListSidebar';
+import SurahListSidebar from '@/app/shared/SurahListSidebar';
 import { SidebarProvider } from '@/app/providers/SidebarContext';
 import { ThemeProvider } from '@/app/providers/ThemeContext';
 import useSWR from 'swr';

@@ -6,13 +6,13 @@ import {
   FaRegBookmark,
   FaShare,
   FaChevronDown,
-} from '@/app/components/shared/SvgIcons';
+} from '@/app/shared/SvgIcons';
 import { Verse as VerseType, Translation, Word } from '@/types';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import { useAudio } from '@/app/features/player/context/AudioContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useState } from 'react';
-import Spinner from '@/app/components/shared/Spinner';
+import Spinner from '@/app/shared/Spinner';
 import { applyTajweed } from '@/lib/text/tajweed';
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 import { applyArabicFont } from '@/lib/tafsir/applyArabicFont';

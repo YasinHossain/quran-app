@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Verse, Word } from '@/types';
 import { getRandomVerse } from '@/lib/api';
 import { useSettings } from '@/app/providers/SettingsContext';
-import Spinner from '@/app/components/shared/Spinner';
+import Spinner from '@/app/shared/Spinner';
 import surahsData from '@/data/surahs.json';
 import type { Surah } from '@/types';
 import { useTheme } from '@/app/providers/ThemeContext';

@@ -1,5 +1,5 @@
 'use client';
-import { FaArrowLeft, FaSearch } from '@/app/components/shared/SvgIcons';
+import { FaArrowLeft, FaSearch } from '@/app/shared/SvgIcons';
 import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';
 import { TranslationResource } from '@/types';
