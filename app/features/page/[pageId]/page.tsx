@@ -1,320 +1,224 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import React, { useEffect, useState } from 'react';
-import { SlidersHorizontal, Mic2, Repeat } from 'lucide-react';
+'use client';
+
+import React, { useEffect, useState, useMemo, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Verse } from '@/app/features/surah/[surahId]/components/Verse';
+import { SettingsSidebar } from '@/app/features/surah/[surahId]/components/SettingsSidebar';
+import { TranslationPanel } from '@/app/features/surah/[surahId]/components/TranslationPanel';
+import { WordLanguagePanel } from '@/app/features/surah/[surahId]/components/WordLanguagePanel';
+import { Verse as VerseType, TranslationResource } from '@/types';
+import { getTranslations, getWordTranslations, getVersesByPage, getSurahCoverUrl } from '@/lib/api';
+import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
+import type { LanguageCode } from '@/lib/text/languageCodes';
+import { WORD_LANGUAGE_LABELS } from '@/lib/text/wordLanguages';
+import { useSettings } from '@/app/providers/SettingsContext';
+import Spinner from '@/app/shared/Spinner';
+import useSWR from 'swr';
+import useSWRInfinite from 'swr/infinite';
+import { QuranAudioPlayer } from '@/app/features/player';
 import { useAudio } from '@/app/features/player/context/AudioContext';
-import { RECITERS } from '@/lib/audio/reciters';
-import type { RepeatOptions } from '@/app/features/player/context/AudioContext';
+import { buildAudioUrl } from '@/lib/audio/reciters';
 
-interface Props {
-  open: boolean;
-  onClose: () => void;
-  theme: 'light' | 'dark';
-  activeTab: 'reciter' | 'repeat';
-  setActiveTab: (tab: 'reciter' | 'repeat') => void;
+const DEFAULT_WORD_TRANSLATION_ID = 85;
+
+interface PagePageProps {
+  params: Promise<{ pageId: string }>;
 }
 
-export default function PlaybackOptionsModal({
-  open,
-  onClose,
-  theme,
-  activeTab,
-  setActiveTab,
-}: Props) {
-  const { reciter, setReciter, repeatOptions, setRepeatOptions } = useAudio();
-  const [localReciter, setLocalReciter] = useState(reciter.id.toString());
-  const [localRepeat, setLocalRepeat] = useState<RepeatOptions>(repeatOptions);
+export default function PagePage({ params }: PagePageProps) {
+  const { pageId } = React.use(params);
 
-  useEffect(() => {
-    setLocalReciter(reciter.id.toString());
-  }, [reciter]);
+  const [error, setError] = useState<string | null>(null);
+  const { settings, setSettings } = useSettings();
+  const { t } = useTranslation();
+  const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
+  const [translationSearchTerm, setTranslationSearchTerm] = useState('');
+  const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
+  const [wordTranslationSearchTerm, setWordTranslationSearchTerm] = useState('');
+  const [coverUrl, setCoverUrl] = useState<string | null>(null);
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    setLocalRepeat(repeatOptions);
-  }, [repeatOptions]);
+  const { activeVerse, setActiveVerse, reciter } = useAudio();
 
-  const commitOptions = () => {
-    const newReciter = RECITERS.find((r) => r.id.toString() === localReciter);
-    if (newReciter) setReciter(newReciter);
-    setRepeatOptions(localRepeat);
-    onClose();
-  };
-  if (!open) return null;
+  const { data: translationOptionsData } = useSWR('translations', getTranslations);
+  const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
 
-  return (
-    <div
-      className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4"
-      onClick={onClose}
-      onKeyDown={(e) => e.key === 'Enter' && onClose()}
-      role="button"
-      tabIndex={0}
-    >
-      <div
-        className={`w-full max-w-3xl rounded-2xl border p-4 md:p-6 ${
-          theme === 'dark'
-            ? 'bg-slate-800 border-slate-700 shadow-2xl'
-            : 'bg-white border-transparent shadow-[0_10px_30px_rgba(2,6,23,0.12),0_1px_2px_rgba(2,6,23,0.06)]'
-        }`}
-        onClick={(e) => e.stopPropagation()}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') e.stopPropagation();
-        }}
-        role="dialog"
-        aria-modal="true"
-        tabIndex={-1}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <div
-            className={`h-10 w-10 rounded-xl grid place-items-center ${
-              theme === 'dark' ? 'bg-sky-500/10 text-sky-500' : 'bg-[#0E2A47]/10 text-[#0E2A47]'
-            }`}
-          >
-            <SlidersHorizontal />
-          </div>
-          <div className={`font-semibold ${theme === 'dark' ? 'text-slate-200' : ''}`}>
-            Playback Options
-          </div>
-          <button
-            className={`ml-auto ${
-              theme === 'dark'
-                ? 'text-slate-400 hover:text-white'
-                : 'text-slate-500 hover:text-slate-900'
-            }`}
-            onClick={onClose}
-          >
-            ✕
-          </button>
-        </div>
-
-        {/* Tabs */}
-        <div className="mb-4 flex justify-center gap-2">
-          <button
-            onClick={() => setActiveTab('reciter')}
-            className={`px-3 py-1.5 rounded-full text-sm ${
-              activeTab === 'reciter'
-                ? theme === 'dark'
-                  ? 'bg-sky-500/10 text-sky-400'
-                  : 'bg-[#0E2A47]/10 text-[#0E2A47]'
-                : theme === 'dark'
-                  ? 'hover:bg-white/10'
-                  : 'hover:bg-slate-900/5'
-            }`}
-          >
-            <span className="inline-flex items-center gap-2">
-              <Mic2 className="h-4 w-4" />
-              Reciter
-            </span>
-          </button>
-          <button
-            onClick={() => setActiveTab('repeat')}
-            className={`px-3 py-1.5 rounded-full text-sm ${
-              activeTab === 'repeat'
-                ? theme === 'dark'
-                  ? 'bg-sky-500/10 text-sky-400'
-                  : 'bg-[#0E2A47]/10 text-[#0E2A47]'
-                : theme === 'dark'
-                  ? 'hover:bg-white/10'
-                  : 'hover:bg-slate-900/5'
-            }`}
-          >
-            <span className="inline-flex items-center gap-2">
-              <Repeat className="h-4 w-4" />
-              Verse Repeat
-            </span>
-          </button>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-4">
-          {/* Reciter list */}
-          {activeTab === 'reciter' && (
-            <div className="md:col-span-2">
-              <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-80 overflow-auto pr-1">
-                {RECITERS.map((r) => (
-                  <button
-                    key={r.id}
-                    onClick={() => setLocalReciter(r.id.toString())}
-                    className={`flex items-center justify-between gap-3 rounded-xl border px-3 py-2 text-left transition ${
-                      localReciter === r.id.toString()
-                        ? theme === 'dark'
-                          ? 'border-sky-500 bg-sky-500/10'
-                          : 'border-[#0E2A47] bg-[#0E2A47]/5'
-                        : theme === 'dark'
-                          ? 'border-slate-700 hover:bg-slate-700/50'
-                          : 'border-slate-200 hover:bg-slate-50'
-                    }`}
-                  >
-                    <div className="min-w-0">
-                      <div
-                        className={`text-sm font-medium truncate ${
-                          theme === 'dark' ? 'text-slate-200' : ''
-                        }`}
-                      >
-                        {r.name}
-                      </div>
-                      {r.locale && (
-                        <div
-                          className={`text-xs ${
-                            theme === 'dark' ? 'text-slate-400' : 'text-slate-500'
-                          }`}
-                        >
-                          {r.locale}
-                        </div>
-                      )}
-                    </div>
-                    <div
-                      className={`h-4 w-4 rounded-full ${
-                        localReciter === r.id.toString()
-                          ? theme === 'dark'
-                            ? 'bg-sky-500'
-                            : 'bg-[#0E2A47]'
-                          : theme === 'dark'
-                            ? 'border-slate-600'
-                            : 'border-slate-300'
-                      } border`}
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Repeat panel */}
-          {activeTab === 'repeat' && (
-            <div className="md:col-span-2 grid md:grid-cols-2 gap-4">
-              <div
-                className={`rounded-xl border p-4 ${
-                  theme === 'dark' ? 'border-slate-700' : 'border-slate-200'
-                }`}
-              >
-                <div className={`font-medium mb-3 ${theme === 'dark' ? 'text-slate-200' : ''}`}>
-                  Mode
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {(['off', 'single', 'range', 'surah'] as const).map((m) => (
-                    <button
-                      key={m}
-                      onClick={() => setLocalRepeat({ ...localRepeat, mode: m })}
-                      className={`px-3 py-2 rounded-xl text-sm capitalize ${
-                        localRepeat.mode === m
-                          ? theme === 'dark'
-                            ? 'bg-sky-500 text-white'
-                            : 'bg-[#0E2A47] text-white'
-                          : theme === 'dark'
-                            ? 'bg-slate-700 hover:bg-slate-600'
-                            : 'bg-slate-50 hover:bg-slate-100'
-                      }`}
-                    >
-                      {m}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div
-                className={`rounded-xl border p-4 grid grid-cols-2 gap-3 ${
-                  theme === 'dark' ? 'border-slate-700' : 'border-slate-200'
-                }`}
-              >
-                <NumberField
-                  label="Start"
-                  value={localRepeat.start ?? 1}
-                  min={1}
-                  onChange={(v) => setLocalRepeat({ ...localRepeat, start: v })}
-                  theme={theme}
-                />
-                <NumberField
-                  label="End"
-                  value={localRepeat.end ?? localRepeat.start ?? 1}
-                  min={1}
-                  onChange={(v) => setLocalRepeat({ ...localRepeat, end: v })}
-                  theme={theme}
-                />
-                <NumberField
-                  label="Play count"
-                  value={localRepeat.playCount ?? 1}
-                  min={1}
-                  onChange={(v) => setLocalRepeat({ ...localRepeat, playCount: v })}
-                  theme={theme}
-                />
-                <NumberField
-                  label="Repeat each"
-                  value={localRepeat.repeatEach ?? 1}
-                  min={1}
-                  onChange={(v) => setLocalRepeat({ ...localRepeat, repeatEach: v })}
-                  theme={theme}
-                />
-                <div className="col-span-2">
-                  <NumberField
-                    label="Delay (s)"
-                    value={localRepeat.delay ?? 0}
-                    min={0}
-                    onChange={(v) => setLocalRepeat({ ...localRepeat, delay: v })}
-                    theme={theme}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="mt-5 flex items-center justify-between text-sm">
-          <div className={`text-slate-500 ${theme === 'dark' ? 'text-slate-400' : ''}`}>
-            Tips: Space • ←/→ seek • ↑/↓ volume
-          </div>
-          <div className="flex gap-2">
-            <button
-              className={`px-4 py-2 rounded-xl ${
-                theme === 'dark'
-                  ? 'bg-slate-700 hover:bg-slate-600 text-slate-200'
-                  : 'bg-slate-100 hover:bg-slate-200'
-              }`}
-              onClick={onClose}
-            >
-              Cancel
-            </button>
-            <button
-              className={`px-4 py-2 rounded-xl text-white hover:opacity-90 ${
-                theme === 'dark' ? 'bg-sky-500' : 'bg-[#0E2A47]'
-              }`}
-              onClick={commitOptions}
-            >
-              Apply
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+  const { data: wordTranslationOptionsData } = useSWR('wordTranslations', getWordTranslations);
+  const wordLanguageMap = useMemo(() => {
+    const map: Record<string, number> = {};
+    (wordTranslationOptionsData || []).forEach((o) => {
+      const name = o.language_name.toLowerCase();
+      if (!map[name]) {
+        map[name] = o.id;
+      }
+    });
+    return map;
+  }, [wordTranslationOptionsData]);
+  const wordLanguageOptions = useMemo(
+    () =>
+      Object.keys(wordLanguageMap)
+        .filter((name) => WORD_LANGUAGE_LABELS[name])
+        .map((name) => ({
+          name: WORD_LANGUAGE_LABELS[name],
+          id: wordLanguageMap[name],
+        })),
+    [wordLanguageMap]
   );
-}
 
-function NumberField({
-  label,
-  value,
-  onChange,
-  min = 0,
-  theme,
-}: {
-  label: string;
-  value: number;
-  onChange: (v: number) => void;
-  min?: number;
-  theme: 'light' | 'dark';
-}) {
+  const { data, size, setSize, isValidating } = useSWRInfinite(
+    (index) =>
+      pageId ? ['verses', pageId, settings.translationId, settings.wordLang, index + 1] : null,
+    ([, pId, translationId, wordLang, page]) =>
+      getVersesByPage(pId, translationId, page, 20, wordLang).catch((err) => {
+        setError(`Failed to load content. ${err.message}`);
+        return { verses: [], totalPages: 1 };
+      })
+  );
+
+  const verses: VerseType[] = data ? data.flatMap((d) => d.verses) : [];
+  const totalPages = data ? data[data.length - 1]?.totalPages : 1;
+  const isLoading = !data && !error;
+  const isReachingEnd = size >= totalPages;
+
+  useEffect(() => {
+    if (!loadMoreRef.current) return;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !isReachingEnd && !isValidating) {
+        setSize(size + 1);
+      }
+    });
+    observer.observe(loadMoreRef.current);
+    return () => observer.disconnect();
+  }, [isReachingEnd, isValidating, size, setSize]);
+
+  const selectedTranslationName = useMemo(
+    () =>
+      translationOptions.find((o) => o.id === settings.translationId)?.name ||
+      t('select_translation'),
+    [settings.translationId, translationOptions, t]
+  );
+  const selectedWordLanguageName = useMemo(
+    () =>
+      wordLanguageOptions.find(
+        (o) =>
+          (LANGUAGE_CODES as Record<string, LanguageCode>)[o.name.toLowerCase()] ===
+          settings.wordLang
+      )?.name || t('select_word_translation'),
+    [settings.wordLang, wordLanguageOptions, t]
+  );
+  const groupedTranslations = useMemo(
+    () =>
+      translationOptions
+        .filter((o) => o.name.toLowerCase().includes(translationSearchTerm.toLowerCase()))
+        .reduce<Record<string, TranslationResource[]>>((acc, tr) => {
+          (acc[tr.language_name] ||= []).push(tr);
+          return acc;
+        }, {}),
+    [translationOptions, translationSearchTerm]
+  );
+  const filteredWordLanguages = useMemo(
+    () =>
+      wordLanguageOptions.filter((o) =>
+        o.name.toLowerCase().includes(wordTranslationSearchTerm.toLowerCase())
+      ),
+    [wordLanguageOptions, wordTranslationSearchTerm]
+  );
+
+  useEffect(() => {
+    if (activeVerse) {
+      const surahNumber = parseInt(activeVerse.verse_key.split(':')[0], 10);
+      getSurahCoverUrl(surahNumber).then(setCoverUrl);
+    }
+  }, [activeVerse]);
+
+  const handleNext = () => {
+    if (!activeVerse) return;
+    const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
+    if (currentIndex < verses.length - 1) {
+      setActiveVerse(verses[currentIndex + 1]);
+    }
+  };
+
+  const handlePrev = () => {
+    if (!activeVerse) return;
+    const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
+    if (currentIndex > 0) {
+      setActiveVerse(verses[currentIndex - 1]);
+    }
+  };
+
+  const track = activeVerse
+    ? {
+        id: activeVerse.id.toString(),
+        title: `Verse ${activeVerse.verse_key}`,
+        artist: reciter.name,
+        coverUrl: coverUrl || '',
+        durationSec: 0,
+        src: buildAudioUrl(activeVerse.verse_key, reciter.path),
+      }
+    : null;
+
   return (
-    <label className="text-sm">
-      <span className={`block mb-1 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
-        {label}
-      </span>
-      <input
-        type="number"
-        value={Number.isFinite(value) ? value : 0}
-        min={min}
-        onChange={(e) => onChange(parseFloat(e.target.value))}
-        className={`w-full rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 ${
-          theme === 'dark'
-            ? 'border-slate-700 bg-slate-700 focus:ring-sky-500/35'
-            : 'border-slate-300 bg-white focus:ring-[#0E2A47]/35'
-        }`}
+    <div className="flex flex-grow bg-white dark:bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden">
+      <main className="flex-grow bg-white dark:bg-[var(--background)] p-6 lg:p-10 overflow-y-auto homepage-scrollable-area">
+        <div className="w-full relative">
+          {isLoading ? (
+            <div className="flex justify-center py-20">
+              <Spinner className="h-8 w-8 text-teal-600" />
+            </div>
+          ) : error ? (
+            <div className="text-center py-20 text-red-600 bg-red-50 p-4 rounded-lg">{error}</div>
+          ) : verses.length > 0 ? (
+            <>
+              {verses.map((v) => (
+                <React.Fragment key={v.id}>
+                  <Verse verse={v} />
+                </React.Fragment>
+              ))}
+              <div ref={loadMoreRef} className="py-4 text-center space-x-2">
+                {isValidating && <Spinner className="inline h-5 w-5 text-teal-600" />}
+                {isReachingEnd && <span className="text-gray-500">{t('end_of_page')}</span>}
+              </div>
+            </>
+          ) : (
+            <div className="text-center py-20 text-gray-500">{t('no_verses_found_on_page')}</div>
+          )}
+        </div>
+      </main>
+      <SettingsSidebar
+        onTranslationPanelOpen={() => setIsTranslationPanelOpen(true)}
+        onWordLanguagePanelOpen={() => setIsWordPanelOpen(true)}
+        onReadingPanelOpen={() => {}}
+        selectedTranslationName={selectedTranslationName}
+        selectedWordLanguageName={selectedWordLanguageName}
       />
-    </label>
+      <TranslationPanel
+        isOpen={isTranslationPanelOpen}
+        onClose={() => setIsTranslationPanelOpen(false)}
+        groupedTranslations={groupedTranslations}
+        searchTerm={translationSearchTerm}
+        onSearchTermChange={setTranslationSearchTerm}
+      />
+      <WordLanguagePanel
+        isOpen={isWordPanelOpen}
+        onClose={() => setIsWordPanelOpen(false)}
+        languages={filteredWordLanguages}
+        searchTerm={wordTranslationSearchTerm}
+        onSearchTermChange={setWordTranslationSearchTerm}
+        onReset={() => {
+          setWordTranslationSearchTerm('');
+          setSettings({
+            ...settings,
+            wordLang: 'en',
+            wordTranslationId: wordLanguageMap['english'] ?? DEFAULT_WORD_TRANSLATION_ID,
+          });
+        }}
+      />
+      {activeVerse && (
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-transparent z-50">
+          <QuranAudioPlayer track={track} onNext={handleNext} onPrev={handlePrev} />
+        </div>
+      )}
+    </div>
   );
 }
