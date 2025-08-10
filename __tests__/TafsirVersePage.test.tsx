@@ -2,15 +2,15 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import TafsirVersePage from '@/app/features/tafsir/[surahId]/[ayahId]/page';
 import { SettingsProvider } from '@/app/context/SettingsContext';
-import { AudioProvider } from '@/app/context/AudioContext';
+import { AudioProvider } from '@/app/features/player/context/AudioContext';
 import { SidebarProvider } from '@/app/context/SidebarContext';
 import { ThemeProvider } from '@/app/context/ThemeContext';
 import { Verse } from '@/types';
 import useSWR from 'swr';
-import { getTafsirCached } from '@/lib/tafsirCache';
+import { getTafsirCached } from '@/app/features/tafsir/lib/tafsirCache';
 
 jest.mock('swr');
-jest.mock('@/lib/tafsirCache');
+jest.mock('@/app/features/tafsir/lib/tafsirCache');
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),

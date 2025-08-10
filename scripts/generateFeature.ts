@@ -24,6 +24,16 @@ async function main() {
   const pascal = toPascalCase(name);
   const dir = `app/features/${name}`;
   await mkdir(dir, { recursive: true });
+  await Promise.all([
+    mkdir(`${dir}/context`, { recursive: true }),
+    mkdir(`${dir}/hooks`, { recursive: true }),
+    mkdir(`${dir}/lib`, { recursive: true }),
+  ]);
+  await Promise.all([
+    writeFile(`${dir}/context/.gitkeep`, ''),
+    writeFile(`${dir}/hooks/.gitkeep`, ''),
+    writeFile(`${dir}/lib/.gitkeep`, ''),
+  ]);
 
   const page = `// ${dir}/page.tsx
 'use client';

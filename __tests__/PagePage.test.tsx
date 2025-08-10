@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { SettingsProvider } from '@/app/context/SettingsContext';
-import { AudioProvider } from '@/app/context/AudioContext';
+import { AudioProvider } from '@/app/features/player/context/AudioContext';
 import { SidebarProvider } from '@/app/context/SidebarContext';
 import { ThemeProvider } from '@/app/context/ThemeContext';
 import QuranPage from '@/app/features/page/[pageId]/page';
@@ -56,7 +56,10 @@ beforeAll(() => {
 
 beforeEach(() => {
   (api.getTranslations as jest.Mock).mockResolvedValue([]);
-  (api.getVersesByPage as jest.Mock).mockResolvedValue({ verses: [mockVerse], totalPages: 1 });
+  (api.getVersesByPage as jest.Mock).mockResolvedValue({
+    verses: [mockVerse],
+    totalPages: 1,
+  });
 });
 
 const renderPage = () =>
@@ -65,7 +68,8 @@ const renderPage = () =>
       <SettingsProvider>
         <ThemeProvider>
           <SidebarProvider>
-            <QuranPage params={{ pageId: '1' }} />
+            {/* @ts-expect-error Async Server Component */}
+            <QuranPage params={{ pageId: '1' }} searchParams={{}} />
           </SidebarProvider>
         </ThemeProvider>
       </SettingsProvider>

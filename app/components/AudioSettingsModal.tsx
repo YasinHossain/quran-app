@@ -1,8 +1,8 @@
 'use client';
 import { useState } from 'react';
-import { FaTimes } from '@/app/components/shared/SvgIcons';
-import { useAudio, RepeatSettings } from '@/app/context/AudioContext';
-import { RECITERS } from '@/lib/reciters';
+import { FaTimes } from '@/app/components/common/SvgIcons';
+import { useAudio, RepeatOptions } from '@/app/features/player/context/AudioContext';
+import { RECITERS } from '@/app/features/player/lib/reciters';
 import { useTranslation } from 'react-i18next';
 
 interface AudioSettingsModalProps {
@@ -12,12 +12,12 @@ interface AudioSettingsModalProps {
 
 export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsModalProps) {
   const [activeTab, setActiveTab] = useState<'repeat' | 'reciter'>('repeat');
-  const { repeatSettings, setRepeatSettings, reciter, setReciter } = useAudio();
+  const { repeatOptions, setRepeatOptions, reciter, setReciter } = useAudio();
   const [search, setSearch] = useState('');
   const { t } = useTranslation();
 
-  const handleChange = (field: keyof RepeatSettings, value: string | number) => {
-    setRepeatSettings({ ...repeatSettings, [field]: value });
+  const handleChange = (field: keyof RepeatOptions, value: string | number) => {
+    setRepeatOptions({ ...repeatOptions, [field]: value });
   };
 
   if (!isOpen) return null;
@@ -56,7 +56,7 @@ export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsMod
               </label>
               <select
                 id="repeat-mode"
-                value={repeatSettings.mode}
+                value={repeatOptions.mode}
                 onChange={(e) => handleChange('mode', e.target.value)}
                 className="w-full border border-gray-300 dark:border-gray-600 rounded p-2 text-sm"
               >
@@ -65,7 +65,7 @@ export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsMod
                 <option value="surah">{t('full_surah')}</option>
               </select>
             </div>
-            {repeatSettings.mode !== 'surah' && (
+            {repeatOptions.mode !== 'surah' && (
               <div className="space-y-2">
                 <div className="flex space-x-2">
                   <div className="flex-1">
@@ -76,7 +76,7 @@ export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsMod
                       id="repeat-start"
                       type="number"
                       min={1}
-                      value={repeatSettings.start}
+                      value={repeatOptions.start}
                       onChange={(e) => handleChange('start', parseInt(e.target.value, 10))}
                       className="w-full border border-gray-300 dark:border-gray-600 rounded p-2 text-sm"
                     />
@@ -88,8 +88,8 @@ export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsMod
                     <input
                       id="repeat-end"
                       type="number"
-                      min={repeatSettings.start}
-                      value={repeatSettings.end}
+                      min={repeatOptions.start}
+                      value={repeatOptions.end}
                       onChange={(e) => handleChange('end', parseInt(e.target.value, 10))}
                       className="w-full border border-gray-300 dark:border-gray-600 rounded p-2 text-sm"
                     />
@@ -104,7 +104,7 @@ export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsMod
                       id="repeat-playcount"
                       type="number"
                       min={1}
-                      value={repeatSettings.playCount}
+                      value={repeatOptions.playCount}
                       onChange={(e) => handleChange('playCount', parseInt(e.target.value, 10))}
                       className="w-full border border-gray-300 dark:border-gray-600 rounded p-2 text-sm"
                     />
@@ -117,7 +117,7 @@ export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsMod
                       id="repeat-each"
                       type="number"
                       min={1}
-                      value={repeatSettings.repeatEach}
+                      value={repeatOptions.repeatEach}
                       onChange={(e) => handleChange('repeatEach', parseInt(e.target.value, 10))}
                       className="w-full border border-gray-300 dark:border-gray-600 rounded p-2 text-sm"
                     />
@@ -131,14 +131,14 @@ export default function AudioSettingsModal({ isOpen, onClose }: AudioSettingsMod
                     id="repeat-delay"
                     type="number"
                     min={0}
-                    value={repeatSettings.delay}
+                    value={repeatOptions.delay}
                     onChange={(e) => handleChange('delay', parseInt(e.target.value, 10))}
                     className="w-full border border-gray-300 dark:border-gray-600 rounded p-2 text-sm"
                   />
                 </div>
               </div>
             )}
-            {repeatSettings.mode === 'surah' && (
+            {repeatOptions.mode === 'surah' && (
               <p className="text-sm">{t('play_entire_surah_continuously')}</p>
             )}
           </div>

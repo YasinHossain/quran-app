@@ -36,6 +36,18 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Dev Pages
+
+Experimental development pages live under `app/(dev)` and are not included in production builds.
+Start the development server and navigate to the desired path:
+
+```bash
+npm run dev
+# open http://localhost:3000/dev/player
+```
+
+These routes are intended for local testing and may change without notice.
+
 ## Environment Variables
 
 - `QURAN_API_BASE_URL` sets the Quran API endpoint. It defaults to `https://api.quran.com/api/v4` if not provided.

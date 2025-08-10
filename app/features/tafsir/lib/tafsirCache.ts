@@ -1,4 +1,4 @@
-import { getTafsirByVerse } from './api';
+import { getTafsirByVerse } from '@/lib/api';
 
 export const CACHE_TTL = 60 * 60 * 1000; // 1 hour in ms
 export const MAX_CACHE_SIZE = 50;
