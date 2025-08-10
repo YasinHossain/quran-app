@@ -3,7 +3,7 @@ import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { AudioProvider } from '@/app/features/player/context/AudioContext';
 import { ThemeProvider } from '@/app/providers/ThemeContext';
 import { SidebarProvider } from '@/app/providers/SidebarContext';
-import SurahPage from '@/app/features/surah/[surahId]/page';
+import SurahPage from '@/app/(features)/surah/[surahId]/page';
 import { Verse } from '@/types';
 import * as api from '@/lib/api';
 import useSWRInfinite from 'swr/infinite';

@@ -97,13 +97,13 @@ const renderPage = (surahId = '1', ayahId = '1') =>
 test('navigates to next verse', async () => {
   renderPage('1', '1');
   await userEvent.click(screen.getByLabelText('Next'));
-  expect(push).toHaveBeenCalledWith('/features/tafsir/1/2');
+  expect(push).toHaveBeenCalledWith('/tafsir/1/2');
 });
 
 test('navigates to previous surah when prev pressed', async () => {
   renderPage('2', '1');
   await userEvent.click(screen.getByLabelText('Previous'));
-  expect(push).toHaveBeenCalledWith('/features/tafsir/1/7');
+  expect(push).toHaveBeenCalledWith('/tafsir/1/7');
 });
 
 test('switches tafsir tabs', async () => {

@@ -2,11 +2,11 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
-import { Verse as VerseComponent } from '@/app/features/surah/[surahId]/components/Verse';
-import { SettingsSidebar } from '@/app/features/surah/[surahId]/components/SettingsSidebar';
-import { TranslationPanel } from '@/app/features/surah/[surahId]/components/TranslationPanel';
-import { TafsirPanel } from '@/app/features/surah/[surahId]/components/TafsirPanel';
-import { WordLanguagePanel } from '@/app/features/surah/[surahId]/components/WordLanguagePanel';
+import { Verse as VerseComponent } from '@/app/(features)/surah/[surahId]/components/Verse';
+import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
+import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/TranslationPanel';
+import { TafsirPanel } from '@/app/(features)/surah/[surahId]/components/TafsirPanel';
+import { WordLanguagePanel } from '@/app/(features)/surah/[surahId]/components/WordLanguagePanel';
 import TafsirTabs from './components/TafsirTabs';
 import {
   getVersesByChapter,
@@ -166,7 +166,7 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps) {
   const navigate = (target: { surahId: string; ayahId: number } | null) => {
     if (!target) return;
     setSurahListOpen(false);
-    router.push(`/features/tafsir/${target.surahId}/${target.ayahId}`);
+    router.push(`/tafsir/${target.surahId}/${target.ayahId}`);
   };
 
   const currentSurah = surahList.find((surah) => surah.number === Number(surahId));

@@ -1,4 +1,4 @@
-// app/features/surah/[surahId]/components/Verse.tsx
+// app/(features)/surah/[surahId]/components/Verse.tsx
 import { memo, useCallback } from 'react';
 import { FaPlay, FaPause, FaBookmark, FaRegBookmark, FaBookReader } from '@/app/shared/SvgIcons';
 import { useRouter } from 'next/navigation';
@@ -57,7 +57,7 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
   }, [toggleBookmark, verse.id]);
 
   const handleTafsir = useCallback(() => {
-    router.push(`/features/tafsir/${surahId}/${ayahId}`);
+    router.push(`/tafsir/${surahId}/${ayahId}`);
   }, [router, surahId, ayahId]);
 
   return (
