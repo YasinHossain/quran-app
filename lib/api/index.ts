@@ -267,7 +267,7 @@ export async function getVerseById(
   return normalizeVerse(data.verse);
 }
 
-import { surahImageMap } from '@/app/features/surah/lib/surahImageMap';
+import { surahImageMap } from '@/app/surah/lib/surahImageMap';
 
 export async function getSurahCoverUrl(surahNumber: number): Promise<string | null> {
   const filename = surahImageMap[surahNumber];
