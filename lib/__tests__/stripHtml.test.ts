@@ -1,20 +1,25 @@
-/**
- * stripHtml — removes HTML tags and collapses whitespace.
- * Note: This is not a sanitizer; it's for producing plain text from small HTML snippets.
- */
-export function stripHtml(input: string): string {
-  if (input == null) return '';
-  const str = String(input);
+import { stripHtml } from '../text/stripHtml';
 
-  // Remove comments, script/style blocks, then any remaining tags
-  const withoutTags = str
-    .replace(/<!--[\s\S]*?-->/g, '')
-    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
-    .replace(/<style[\s\S]*?>[\s\S]*?<\/style>/gi, '')
-    .replace(/<[^>]+>/g, ' ');
+describe('stripHtml', () => {
+  it('should remove simple HTML tags', () => {
+    const input = '<p>Hello, <b>World</b>!</p>';
+    const expected = 'Hello, World!';
+    expect(stripHtml(input)).toBe(expected);
+  });
 
-  // Normalize whitespace and trim
-  return withoutTags.replace(/\s+/g, ' ').trim();
-}
+  it('should return an empty string for null or undefined input', () => {
+    expect(stripHtml(null as any)).toBe('');
+    expect(stripHtml(undefined as any)).toBe('');
+  });
 
-export default stripHtml;
+  it('should handle strings with no HTML', () => {
+    const input = 'This is a plain string.';
+    expect(stripHtml(input)).toBe(input);
+  });
+
+  it('should handle complex HTML', () => {
+    const input = '<div><span>Some text</span><a href="#"> and a link</a></div>';
+    const expected = 'Some text and a link';
+    expect(stripHtml(input)).toBe(expected);
+  });
+});

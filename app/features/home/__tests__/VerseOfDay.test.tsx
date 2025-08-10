@@ -1,7 +1,7 @@
 import { render, screen, act, waitFor } from '@testing-library/react';
 import VerseOfDay from '@/app/features/home/VerseOfDay';
-import { SettingsProvider } from '@/app/context/SettingsContext';
-import { ThemeProvider } from '@/app/context/ThemeContext';
+import { SettingsProvider } from '@/app/providers/SettingsContext';
+import { ThemeProvider } from '@/app/providers/ThemeContext';
 import { Verse } from '@/types';
 import { getRandomVerse } from '@/lib/api';
 
