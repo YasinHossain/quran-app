@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import SearchPage from '@/app/features/search/page';
+import SearchPage from '@/app/(features)/search/page';
 import { searchVerses } from '@/lib/api';
 import { useSearchParams } from 'next/navigation';
 
