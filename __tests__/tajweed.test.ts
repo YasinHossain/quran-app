@@ -1,4 +1,4 @@
-import { applyTajweed } from '@/lib/tajweed';
+import { applyTajweed } from '@/lib/text/tajweed';
 
 describe('applyTajweed', () => {
   it('wraps meem with red span', () => {

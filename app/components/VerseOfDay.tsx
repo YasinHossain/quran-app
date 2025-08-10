@@ -7,8 +7,8 @@ import Spinner from '@/app/components/shared/Spinner';
 import surahsData from '@/data/surahs.json';
 import type { Surah } from '@/types';
 import { useTheme } from '@/app/context/ThemeContext';
-import { applyTajweed } from '@/lib/tajweed';
-import { stripHtml } from '@/lib/stripHtml';
+import { applyTajweed } from '@/lib/text/tajweed';
+import { stripHtml } from '@/lib/text/stripHtml';
 
 const surahs: Surah[] = surahsData;
 

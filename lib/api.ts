@@ -1,7 +1,7 @@
 const API_BASE_URL = process.env.QURAN_API_BASE_URL ?? 'https://api.quran.com/api/v4';
 
 import { Chapter, TranslationResource, Verse, Juz, Word } from '@/types';
-import type { LanguageCode } from '@/lib/languageCodes';
+import type { LanguageCode } from '@/lib/text/languageCodes';
 
 // Internal helper to fetch from the API with query parameters
 async function apiFetch<T>(

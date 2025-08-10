@@ -1,8 +1,8 @@
 'use client';
 import { useState } from 'react';
-import { FaTimes } from '@/app/components/common/SvgIcons';
+import { FaTimes } from '@/app/components/shared/SvgIcons';
 import { useAudio, RepeatOptions } from '@/app/features/player/context/AudioContext';
-import { RECITERS } from '@/app/features/player/lib/reciters';
+import { RECITERS } from '@/lib/audio/reciters';
 import { useTranslation } from 'react-i18next';
 
 interface AudioSettingsModalProps {

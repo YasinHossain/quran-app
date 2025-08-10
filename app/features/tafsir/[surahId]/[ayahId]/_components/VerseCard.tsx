@@ -7,11 +7,11 @@ import {
   FaShare,
 } from '@/app/components/shared/SvgIcons';
 import { Verse as VerseType, Translation, Word } from '@/types';
-import type { LanguageCode } from '@/lib/languageCodes';
+import type { LanguageCode } from '@/lib/text/languageCodes';
 import { useAudio } from '@/app/features/player/context/AudioContext';
 import { useSettings } from '@/app/context/SettingsContext';
 import Spinner from '@/app/components/shared/Spinner';
-import { applyTajweed } from '@/lib/tajweed';
+import { applyTajweed } from '@/lib/text/tajweed';
 import DOMPurify from 'dompurify';
 
 interface VerseCardProps {

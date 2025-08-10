@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { applyArabicFont } from '@/app/features/tafsir/lib/applyArabicFont';
+import { applyArabicFont } from '@/lib/tafsir/applyArabicFont';
 
 describe('applyArabicFont', () => {
   it('wraps Arabic text in a span with the given font', () => {

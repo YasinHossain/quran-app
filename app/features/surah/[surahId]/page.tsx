@@ -13,16 +13,16 @@ import {
   getVersesByChapter,
   getSurahCoverUrl,
 } from '@/lib/api';
-import { LANGUAGE_CODES } from '@/lib/languageCodes';
-import type { LanguageCode } from '@/lib/languageCodes';
-import { WORD_LANGUAGE_LABELS } from '@/lib/wordLanguages';
+import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
+import type { LanguageCode } from '@/lib/text/languageCodes';
+import { WORD_LANGUAGE_LABELS } from '@/lib/text/wordLanguages';
 import { useSettings } from '@/app/context/SettingsContext';
 import Spinner from '@/app/components/shared/Spinner';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 import { QuranAudioPlayer } from '@/app/features/player';
 import { useAudio } from '@/app/features/player/context/AudioContext';
-import { buildAudioUrl } from '@/app/features/player/lib/reciters';
+import { buildAudioUrl } from '@/lib/audio/reciters';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;
 
