@@ -1,6 +1,6 @@
 import { render, screen, within, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import HomePage from '@/app/features/home/components/HomePage';
+import HomePage from '@/app/(features)/home/components/HomePage';
 import { ThemeProvider } from '@/app/providers/ThemeContext';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { Verse } from '@/types';
@@ -25,7 +25,7 @@ jest.mock('next/link', () => {
 });
 
 // Mock VerseOfDay to avoid fetch during tests
-jest.mock('@/app/features/home/components/VerseOfDay', () => () => <div>VerseOfDay</div>);
+jest.mock('@/app/(features)/home/components/VerseOfDay', () => () => <div>VerseOfDay</div>);
 
 beforeAll(() => {
   Object.defineProperty(window, 'matchMedia', {
@@ -76,16 +76,19 @@ it('theme toggle updates the data-theme attribute', async () => {
   });
 });
 
-it('tab switching between “Surah,” “Juz,” and “Page” changes rendered content', async () => {
+it('tab switching between “Surah,” “Juz,” and “Page” changes rendered content and links', async () => {
   renderHome();
   // default tab shows Surahs
-  expect(screen.getByText('Al-Fatihah')).toBeInTheDocument();
+  const surahLink = screen.getByText('Al-Fatihah').closest('a');
+  expect(surahLink).toHaveAttribute('href', '/surah/1');
 
   await userEvent.click(screen.getByRole('button', { name: 'Juz' }));
-  expect(screen.getByText('Juz 1')).toBeInTheDocument();
+  const juzLink = screen.getByText('Juz 1').closest('a');
+  expect(juzLink).toHaveAttribute('href', '/juz/1');
 
   await userEvent.click(screen.getByRole('button', { name: 'Page' }));
-  expect(screen.getByText('Page 1')).toBeInTheDocument();
+  const pageLink = screen.getByText('Page 1').closest('a');
+  expect(pageLink).toHaveAttribute('href', '/page/1');
 
   await userEvent.click(screen.getByRole('button', { name: 'Surah' }));
   expect(screen.getByText('Al-Fatihah')).toBeInTheDocument();
