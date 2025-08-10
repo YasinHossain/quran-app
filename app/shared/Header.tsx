@@ -18,7 +18,7 @@ const Header = () => {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && query.trim()) {
-      router.push(`/features/search?query=${encodeURIComponent(query.trim())}`);
+      router.push(`/search?query=${encodeURIComponent(query.trim())}`);
     }
   };
 
