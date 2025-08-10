@@ -1,4 +1,4 @@
-import { stripHtml } from '../lib/stripHtml';
+import { stripHtml } from '../stripHtml';
 
 describe('stripHtml', () => {
   it('removes HTML tags and returns plain text', () => {

@@ -16,6 +16,14 @@ const eslintConfig = [
     'plugin:jsx-a11y/recommended',
     'plugin:prettier/recommended'
   ),
+  {
+    files: ['**/__tests__/**'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      'react/display-name': 'off',
+      '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
 ];
 
 export default eslintConfig;
