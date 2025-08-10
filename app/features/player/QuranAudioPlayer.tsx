@@ -158,7 +158,7 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
   const title = track?.title ?? 'No track selected';
   const artist = track?.artist ?? '';
   const cover =
-    track?.coverUrl ??
+    track?.coverUrl ||
     "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96'><rect width='100%' height='100%' rx='12' ry='12' fill='%23e5e7eb'/><text x='50%' y='52%' dominant-baseline='middle' text-anchor='middle' font-family='Inter, system-ui, sans-serif' font-size='12' fill='%239ca3af'>No cover</text></svg>";
 
   if (!isPlayerVisible) return null;

@@ -73,7 +73,10 @@ const renderPage = () =>
       <SettingsProvider>
         <ThemeProvider>
           <SidebarProvider>
-            <JuzPage params={{ juzId: '1' }} searchParams={{}} />
+            <JuzPage
+              params={{ juzId: '1' } as unknown as Promise<{ juzId: string }>}
+              searchParams={{}}
+            />
           </SidebarProvider>
         </ThemeProvider>
       </SettingsProvider>

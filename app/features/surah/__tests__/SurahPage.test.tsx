@@ -75,7 +75,7 @@ const renderPage = () =>
         <SettingsProvider>
           <ThemeProvider>
             <SidebarProvider>
-              <SurahPage params={{ surahId: '1' }} />
+              <SurahPage params={{ surahId: '1' } as unknown as Promise<{ surahId: string }>} />
             </SidebarProvider>
           </ThemeProvider>
         </SettingsProvider>
