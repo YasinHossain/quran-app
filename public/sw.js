@@ -61,23 +61,23 @@ define(['./workbox-8232f3e4'], function (e) {
           revision: 'f66df22863c9e05d',
         },
         {
-          url: '/_next/static/chunks/app/bookmarks/page-999f0065a2113899.js',
+          url: '/_next/static/chunks/app/features/bookmarks/page-999f0065a2113899.js',
           revision: '999f0065a2113899',
         },
         {
-          url: '/_next/static/chunks/app/layout-132f8d351a3dc573.js',
+          url: '/_next/static/chunks/app/features/layout-132f8d351a3dc573.js',
           revision: '132f8d351a3dc573',
         },
         {
-          url: '/_next/static/chunks/app/search/page-cc58c354cf7e8dc2.js',
+          url: '/_next/static/chunks/app/features/search/page-cc58c354cf7e8dc2.js',
           revision: 'cc58c354cf7e8dc2',
         },
         {
-          url: '/_next/static/chunks/app/surah/%5BsurahId%5D/page-48f6ad9453baef57.js',
+          url: '/_next/static/chunks/app/features/surah/%5BsurahId%5D/page-48f6ad9453baef57.js',
           revision: '48f6ad9453baef57',
         },
         {
-          url: '/_next/static/chunks/app/surah/layout-8294ba5ad7664ca4.js',
+          url: '/_next/static/chunks/app/features/surah/layout-8294ba5ad7664ca4.js',
           revision: '8294ba5ad7664ca4',
         },
         {
@@ -222,7 +222,7 @@ define(['./workbox-8232f3e4'], function (e) {
       'GET'
     ),
     e.registerRoute(
-      /^https:\/\/api\.quran\.com\/api\/v4\/(chapters|juzs|verses\/by_(chapter|juz|page))/,
+      /^https:\/\/api\.quran\.com\/api\/v4\/(chapters|juzs|verses\/by_(chapter|juz|page))\//,
       new e.NetworkFirst({
         cacheName: 'api-cache',
         plugins: [

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import TafsirTabs from '@/app/features/tafsir/[surahId]/[ayahId]/components/TafsirTabs';
+import TafsirTabs from '@/app/(features)/tafsir/[surahId]/[ayahId]/components/TafsirTabs';
 import { ThemeProvider } from '@/app/providers/ThemeContext';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
