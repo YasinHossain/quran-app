@@ -9,11 +9,11 @@ import {
   FaTranslation,
 } from '@/app/components/shared/SvgIcons';
 import { CollapsibleSection } from './CollapsibleSection';
-import { useSettings } from '@/app/context/SettingsContext';
+import { useSettings } from '@/app/providers/SettingsContext';
 import { ArabicFontPanel } from './ArabicFontPanel';
-import { useSidebar } from '@/app/context/SidebarContext';
-import { useTheme } from '@/app/context/ThemeContext';
-import { useHeaderVisibility } from '@/app/context/HeaderVisibilityContext';
+import { useSidebar } from '@/app/providers/SidebarContext';
+import { useTheme } from '@/app/providers/ThemeContext';
+import { useHeaderVisibility } from '@/app/features/layout/context/HeaderVisibilityContext';
 
 interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;
