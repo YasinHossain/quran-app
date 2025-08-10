@@ -1,5 +1,5 @@
 import { render, screen, act, waitFor } from '@testing-library/react';
-import VerseOfDay from '@/app/components/VerseOfDay';
+import VerseOfDay from '@/app/features/home/VerseOfDay';
 import { SettingsProvider } from '@/app/context/SettingsContext';
 import { ThemeProvider } from '@/app/context/ThemeContext';
 import { Verse } from '@/types';
