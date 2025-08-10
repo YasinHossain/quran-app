@@ -12,6 +12,11 @@ import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 jest.mock('swr');
 jest.mock('@/lib/tafsir/tafsirCache');
 
+jest.mock('react', () => {
+  const actual = jest.requireActual('react');
+  return { ...actual, use: (v: any) => v };
+});
+
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
@@ -20,12 +25,10 @@ const push = jest.fn();
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push }),
-  useParams: jest.fn(),
 }));
 
 const mockUseSWR = useSWR as jest.Mock;
 const mockGetTafsirCached = getTafsirCached as jest.Mock;
-const useParams = require('next/navigation').useParams as jest.Mock;
 
 beforeAll(() => {
   Object.defineProperty(window, 'matchMedia', {
@@ -71,13 +74,20 @@ beforeEach(() => {
   });
 });
 
-const renderPage = () =>
+const renderPage = (surahId = '1', ayahId = '1') =>
   render(
     <AudioProvider>
       <SettingsProvider>
         <ThemeProvider>
           <SidebarProvider>
-            <TafsirVersePage />
+            <TafsirVersePage
+              params={
+                { surahId, ayahId } as unknown as Promise<{
+                  surahId: string;
+                  ayahId: string;
+                }>
+              }
+            />
           </SidebarProvider>
         </ThemeProvider>
       </SettingsProvider>
@@ -85,22 +95,19 @@ const renderPage = () =>
   );
 
 test('navigates to next verse', async () => {
-  useParams.mockReturnValue({ surahId: '1', ayahId: '1' });
-  renderPage();
+  renderPage('1', '1');
   await userEvent.click(screen.getByLabelText('Next'));
   expect(push).toHaveBeenCalledWith('/features/tafsir/1/2');
 });
 
 test('navigates to previous surah when prev pressed', async () => {
-  useParams.mockReturnValue({ surahId: '2', ayahId: '1' });
-  renderPage();
+  renderPage('2', '1');
   await userEvent.click(screen.getByLabelText('Previous'));
   expect(push).toHaveBeenCalledWith('/features/tafsir/1/7');
 });
 
 test('switches tafsir tabs', async () => {
-  useParams.mockReturnValue({ surahId: '1', ayahId: '1' });
-  renderPage();
+  renderPage('1', '1');
   await screen.findByRole('button', { name: 'Tafsir Two' });
   await userEvent.click(screen.getByRole('button', { name: 'Tafsir Two' }));
   expect(await screen.findByText('Text 2')).toBeInTheDocument();
