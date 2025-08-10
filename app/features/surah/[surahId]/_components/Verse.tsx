@@ -1,17 +1,11 @@
 // app/surah/[surahId]/_components/Verse.tsx
 import { memo, useCallback } from 'react';
-import {
-  FaPlay,
-  FaPause,
-  FaBookmark,
-  FaRegBookmark,
-  FaBookReader,
-} from '@/app/components/shared/SvgIcons';
+import { FaPlay, FaPause, FaBookmark, FaRegBookmark, FaBookReader } from '@/app/shared/SvgIcons';
 import { useRouter } from 'next/navigation';
 import { Verse as VerseType, Translation, Word } from '@/types';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import { useAudio } from '@/app/features/player/context/AudioContext';
-import Spinner from '@/app/components/shared/Spinner';
+import Spinner from '@/app/shared/Spinner';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { applyTajweed } from '@/lib/text/tajweed';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';

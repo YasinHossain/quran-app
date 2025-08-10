@@ -1,6 +1,6 @@
 // app/surah/[surahId]/_components/CollapsibleSection.tsx
 'use client';
-import { FaChevronDown } from '@/app/components/shared/SvgIcons';
+import { FaChevronDown } from '@/app/shared/SvgIcons';
 
 interface CollapsibleSectionProps {
   title: string;

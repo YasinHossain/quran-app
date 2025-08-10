@@ -7,7 +7,7 @@ import {
   FaChevronDown,
   FaArrowLeft,
   FaTranslation,
-} from '@/app/components/shared/SvgIcons';
+} from '@/app/shared/SvgIcons';
 import { CollapsibleSection } from './CollapsibleSection';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { ArabicFontPanel } from './ArabicFontPanel';
