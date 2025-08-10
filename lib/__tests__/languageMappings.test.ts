@@ -1,5 +1,5 @@
-import { LANGUAGE_CODES } from '@/lib/languageCodes';
-import { WORD_LANGUAGE_LABELS } from '@/lib/wordLanguages';
+import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
+import { WORD_LANGUAGE_LABELS } from '@/lib/text/wordLanguages';
 
 describe('language mappings', () => {
   it('maps language names to codes and labels', () => {

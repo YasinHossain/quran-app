@@ -1,7 +1,7 @@
 'use client';
 import React, { createContext, useContext, useMemo, useRef, useState } from 'react';
 import { Verse } from '@/types';
-import { RECITERS, Reciter } from '@/app/features/player/lib/reciters';
+import { RECITERS, Reciter } from '@/lib/audio/reciters';
 
 // This is from the new QuranAudioPlayer component.
 export type RepeatOptions = {

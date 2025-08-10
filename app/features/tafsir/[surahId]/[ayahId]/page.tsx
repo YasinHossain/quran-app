@@ -18,9 +18,9 @@ import {
 import { Verse as VerseType, TranslationResource, TafsirResource } from '@/types';
 import { useSettings } from '@/app/context/SettingsContext';
 import { useSidebar } from '@/app/context/SidebarContext';
-import { WORD_LANGUAGE_LABELS } from '@/lib/wordLanguages';
-import { LANGUAGE_CODES } from '@/lib/languageCodes';
-import type { LanguageCode } from '@/lib/languageCodes';
+import { WORD_LANGUAGE_LABELS } from '@/lib/text/wordLanguages';
+import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
+import type { LanguageCode } from '@/lib/text/languageCodes';
 import useSWR from 'swr';
 import surahs from '@/data/surahs.json';
 import type { Surah } from '@/types';

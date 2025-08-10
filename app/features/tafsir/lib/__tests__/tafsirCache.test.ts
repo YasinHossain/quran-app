@@ -3,7 +3,7 @@ import {
   clearTafsirCache,
   CACHE_TTL,
   MAX_CACHE_SIZE,
-} from '@/app/features/tafsir/lib/tafsirCache';
+} from '@/lib/tafsir/tafsirCache';
 import { getTafsirByVerse } from '@/lib/api';
 
 jest.mock('@/lib/api', () => ({

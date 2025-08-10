@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { SlidersHorizontal, Mic2, Repeat } from 'lucide-react';
 import { useAudio } from '@/app/features/player/context/AudioContext';
-import { RECITERS } from '@/app/features/player/lib/reciters';
+import { RECITERS } from '@/lib/audio/reciters';
 import type { RepeatOptions } from '@/app/features/player/context/AudioContext';
 
 interface Props {

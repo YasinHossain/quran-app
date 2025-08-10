@@ -3,8 +3,8 @@ import { FaArrowLeft, FaSearch } from '@/app/components/shared/SvgIcons';
 import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';
 import { useSettings } from '@/app/context/SettingsContext';
-import { LANGUAGE_CODES } from '@/lib/languageCodes';
-import type { LanguageCode } from '@/lib/languageCodes';
+import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
+import type { LanguageCode } from '@/lib/text/languageCodes';
 import { useHeaderVisibility } from '@/app/context/HeaderVisibilityContext';
 
 interface LanguageOption {
