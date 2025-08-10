@@ -432,7 +432,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                 return (
                   <li key={p}>
                     <Link
-                      href={`/features/page/${p}`}
+                      href={`/page/${p}`}
                       scroll={false}
                       data-active={isActive}
                       onClick={() => {

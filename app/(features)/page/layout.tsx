@@ -1,4 +1,4 @@
-// app/features/page/layout.tsx
+// app/(features)/page/layout.tsx
 'use client';
 import { AudioProvider } from '@/app/features/player/context/AudioContext';
 

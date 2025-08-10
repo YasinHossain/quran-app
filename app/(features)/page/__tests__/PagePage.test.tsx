@@ -3,7 +3,7 @@ import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { AudioProvider } from '@/app/features/player/context/AudioContext';
 import { SidebarProvider } from '@/app/providers/SidebarContext';
 import { ThemeProvider } from '@/app/providers/ThemeContext';
-import QuranPage from '@/app/features/page/[pageId]/page';
+import QuranPage from '@/app/(features)/page/[pageId]/page';
 import { Verse } from '@/types';
 import * as api from '@/lib/api';
 
