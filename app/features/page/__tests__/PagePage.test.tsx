@@ -18,7 +18,6 @@ jest.mock('react-i18next', () => ({
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: jest.fn() }),
-  useParams: () => ({ pageId: '1' }),
 }));
 
 const mockVerse: Verse = {
@@ -68,8 +67,7 @@ const renderPage = () =>
       <SettingsProvider>
         <ThemeProvider>
           <SidebarProvider>
-            {/* @ts-expect-error Async Server Component */}
-            <QuranPage params={{ pageId: '1' }} searchParams={{}} />
+            <QuranPage params={{ pageId: '1' } as unknown as Promise<{ pageId: string }>} />
           </SidebarProvider>
         </ThemeProvider>
       </SettingsProvider>

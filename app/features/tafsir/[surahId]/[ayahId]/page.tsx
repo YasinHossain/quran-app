@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useMemo, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { Verse as VerseComponent } from '@/app/features/surah/[surahId]/components/Verse';
 import { SettingsSidebar } from '@/app/features/surah/[surahId]/components/SettingsSidebar';
@@ -27,14 +27,16 @@ import type { Surah } from '@/types';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;
 
-export default function TafsirVersePage() {
-  const params = useParams<{ surahId: string; ayahId: string }>();
+interface TafsirVersePageProps {
+  params: Promise<{ surahId: string; ayahId: string }>;
+}
+
+export default function TafsirVersePage({ params }: TafsirVersePageProps) {
+  const { surahId, ayahId } = React.use(params);
   const router = useRouter();
   const { t } = useTranslation();
   const { settings, setSettings } = useSettings();
   const { setSurahListOpen } = useSidebar();
-  const surahId = params.surahId;
-  const ayahId = params.ayahId;
 
   // Panels state
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
