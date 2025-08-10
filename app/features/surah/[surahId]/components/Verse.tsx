@@ -57,7 +57,7 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
   }, [toggleBookmark, verse.id]);
 
   const handleTafsir = useCallback(() => {
-    router.push(`/features/tafsir/${surahId}/${ayahId}`);
+    router.push(`/tafsir/${surahId}/${ayahId}`);
   }, [router, surahId, ayahId]);
 
   return (

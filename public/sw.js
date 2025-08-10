@@ -69,7 +69,7 @@ define(['./workbox-8232f3e4'], function (e) {
           revision: '132f8d351a3dc573',
         },
         {
-          url: '/_next/static/chunks/app/search/page-cc58c354cf7e8dc2.js',
+          url: '/_next/static/chunks/app/features/search/page-cc58c354cf7e8dc2.js',
           revision: 'cc58c354cf7e8dc2',
         },
         {
@@ -81,11 +81,11 @@ define(['./workbox-8232f3e4'], function (e) {
           revision: '8294ba5ad7664ca4',
         },
         {
-          url: '/_next/static/chunks/app/features/tafsir/%5BsurahId%5D/%5BayahId%5D/page-f718e95d089d0ac2.js',
+          url: '/_next/static/chunks/app/tafsir/%5BsurahId%5D/%5BayahId%5D/page-f718e95d089d0ac2.js',
           revision: 'f718e95d089d0ac2',
         },
         {
-          url: '/_next/static/chunks/app/features/tafsir/layout-f6fa1dd66d67c73d.js',
+          url: '/_next/static/chunks/app/tafsir/layout-f6fa1dd66d67c73d.js',
           revision: 'f6fa1dd66d67c73d',
         },
         {
@@ -222,7 +222,7 @@ define(['./workbox-8232f3e4'], function (e) {
       'GET'
     ),
     e.registerRoute(
-      /^https:\/\/api\.quran\.com\/api\/v4\/(chapters|juzs|verses\/by_(chapter|juz|page))/,
+      /^https:\/\/api\.quran\.com\/api\/v4\/(chapters|juzs|verses\/by_(chapter|juz|page))/, // no trailing slash to match both
       new e.NetworkFirst({
         cacheName: 'api-cache',
         plugins: [

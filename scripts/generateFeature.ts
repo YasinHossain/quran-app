@@ -2,9 +2,9 @@
  * Scaffolds a new feature page along with a basic test file.
  *
  * Expects a kebab-case feature name as the first CLI argument and generates:
- * - `app/features/<name>/page.tsx`
- * - `app/features/<name>/components/.gitkeep`
- * - `app/features/<name>/__tests__/<Pascal>Page.test.tsx`
+ * - `app/(features)/<name>/page.tsx`
+ * - `app/(features)/<name>/components/.gitkeep`
+ * - `app/(features)/<name>/__tests__/<Pascal>Page.test.tsx`
  */
 import { mkdir, writeFile } from 'fs/promises';
 
@@ -23,7 +23,7 @@ async function main() {
   }
 
   const pascal = toPascalCase(name);
-  const dir = `app/features/${name}`;
+  const dir = `app/(features)/${name}`;
   await mkdir(dir, { recursive: true });
   await Promise.all([
     mkdir(`${dir}/context`, { recursive: true }),
@@ -71,7 +71,7 @@ export default function ${pascal}Page() {
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 import * as api from '@/lib/api';
 import { Verse } from '@/types';
-import ${pascal}Page from '@/app/features/${name}/page';
+import ${pascal}Page from '@/app/(features)/${name}/page';
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
 jest.mock('@/lib/api');

@@ -166,7 +166,7 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps) {
   const navigate = (target: { surahId: string; ayahId: number } | null) => {
     if (!target) return;
     setSurahListOpen(false);
-    router.push(`/features/tafsir/${target.surahId}/${target.ayahId}`);
+    router.push(`/tafsir/${target.surahId}/${target.ayahId}`);
   };
 
   const currentSurah = surahList.find((surah) => surah.number === Number(surahId));
