@@ -11,7 +11,7 @@ export default function TrackInfo({ cover, title, artist, theme }: Props) {
   return (
     <div className="flex items-center gap-3 min-w-0 sm:min-w-[220px] flex-shrink-0">
       <img
-        src={cover}
+        src={cover || undefined}
         alt="cover"
         className="h-12 w-12 rounded-full shadow-sm object-cover"
         onError={(e) => {

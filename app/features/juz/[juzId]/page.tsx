@@ -23,10 +23,10 @@ const DEFAULT_WORD_TRANSLATION_ID = 85;
 export default function JuzPage({
   params,
 }: {
-  params: { juzId: string };
+  params: Promise<{ juzId: string }>;
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const { juzId } = params;
+  const { juzId } = React.use(params);
 
   const [error, setError] = useState<string | null>(null);
   const { settings, setSettings } = useSettings();

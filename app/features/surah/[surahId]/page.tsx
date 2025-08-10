@@ -27,11 +27,11 @@ import { buildAudioUrl } from '@/lib/audio/reciters';
 const DEFAULT_WORD_TRANSLATION_ID = 85;
 
 interface SurahPageProps {
-  params: { surahId: string };
+  params: Promise<{ surahId: string }>;
 }
 
 export default function SurahPage({ params }: SurahPageProps) {
-  const { surahId } = params;
+  const { surahId } = React.use(params);
   const [error, setError] = useState<string | null>(null);
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
