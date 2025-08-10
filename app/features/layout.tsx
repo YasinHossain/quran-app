@@ -1,8 +1,8 @@
 'use client';
 
-import Header from '@/app/components/common/Header';
-import IconSidebar from '@/app/components/common/IconSidebar';
-import SurahListSidebar from '@/app/components/common/SurahListSidebar';
+import Header from '@/app/components/shared/Header';
+import IconSidebar from '@/app/components/shared/IconSidebar';
+import SurahListSidebar from '@/app/components/shared/SurahListSidebar';
 import {
   HeaderVisibilityProvider,
   useHeaderVisibility,

@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import Spinner from '@/app/components/common/Spinner';
+import Spinner from '@/app/components/shared/Spinner';
 
 describe('Spinner', () => {
   it('renders an SVG element', () => {

@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { FaTimes } from '@/app/components/common/SvgIcons';
+import { FaTimes } from '@/app/components/shared/SvgIcons';
 import { useAudio, RepeatSettings } from '@/app/context/AudioContext';
 import { RECITERS } from '@/lib/reciters';
 import { useTranslation } from 'react-i18next';
