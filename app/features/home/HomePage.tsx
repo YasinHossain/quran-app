@@ -7,7 +7,7 @@ import surahsData from '@/data/surahs.json';
 import juzData from '@/data/juz.json';
 import VerseOfDay from './VerseOfDay';
 import HomePageBackground from './HomePageBackground';
-import type { Surah } from '@/types';
+import type { Surah } from '@/data/types';
 
 interface JuzSummary {
   number: number;

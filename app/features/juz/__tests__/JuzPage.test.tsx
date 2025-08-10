@@ -4,7 +4,8 @@ import { AudioProvider } from '@/app/features/player/context/AudioContext';
 import { SidebarProvider } from '@/app/providers/SidebarContext';
 import { ThemeProvider } from '@/app/providers/ThemeContext';
 import JuzPage from '@/app/features/juz/[juzId]/page';
-import { Verse, Juz } from '@/types';
+import { Verse } from '@/types';
+import type { Juz } from '@/lib/api';
 import * as api from '@/lib/api';
 
 jest.mock('react', () => {

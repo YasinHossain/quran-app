@@ -5,7 +5,7 @@ import { getRandomVerse } from '@/lib/api';
 import { useSettings } from '@/app/providers/SettingsContext';
 import Spinner from '@/app/shared/Spinner';
 import surahsData from '@/data/surahs.json';
-import type { Surah } from '@/types';
+import type { Surah } from '@/data/types';
 import { useTheme } from '@/app/providers/ThemeContext';
 import { applyTajweed } from '@/lib/text/tajweed';
 import { stripHtml } from '@/lib/text/stripHtml';

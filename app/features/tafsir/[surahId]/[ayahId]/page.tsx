@@ -15,7 +15,8 @@ import {
   getTafsirResources,
   getTafsirByVerse,
 } from '@/lib/api';
-import { Verse as VerseType, TranslationResource, TafsirResource } from '@/types';
+import { Verse as VerseType } from '@/types';
+import type { TranslationResource, TafsirResource } from '@/lib/api';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { WORD_LANGUAGE_LABELS } from '@/lib/text/wordLanguages';
@@ -23,7 +24,7 @@ import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import useSWR from 'swr';
 import surahs from '@/data/surahs.json';
-import type { Surah } from '@/types';
+import type { Surah } from '@/data/types';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;
 

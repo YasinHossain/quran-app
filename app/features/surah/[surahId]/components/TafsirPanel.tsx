@@ -2,7 +2,7 @@
 import { FaArrowLeft, FaSearch } from '@/app/shared/SvgIcons';
 import { useTranslation } from 'react-i18next';
 import { useSettings } from '@/app/providers/SettingsContext';
-import { TafsirResource } from '@/types';
+import type { TafsirResource } from '@/lib/api';
 import { getTafsirResources } from '@/lib/api';
 import useSWR from 'swr';
 import { useMemo, useState } from 'react';

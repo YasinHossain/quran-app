@@ -6,7 +6,8 @@ import { Verse } from './components/Verse';
 import { SettingsSidebar } from './components/SettingsSidebar';
 import { TranslationPanel } from './components/TranslationPanel';
 import { WordLanguagePanel } from './components/WordLanguagePanel';
-import { Verse as VerseType, TranslationResource } from '@/types';
+import { Verse as VerseType } from '@/types';
+import type { TranslationResource } from '@/lib/api';
 import {
   getTranslations,
   getWordTranslations,

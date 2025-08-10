@@ -2,7 +2,7 @@
 import { FaArrowLeft, FaSearch } from '@/app/shared/SvgIcons';
 import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';
-import { TranslationResource } from '@/types';
+import type { TranslationResource } from '@/lib/api';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useHeaderVisibility } from '@/app/features/layout/context/HeaderVisibilityContext';
 

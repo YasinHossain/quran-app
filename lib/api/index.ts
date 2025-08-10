@@ -1,6 +1,7 @@
 const API_BASE_URL = process.env.QURAN_API_BASE_URL ?? 'https://api.quran.com/api/v4';
 
-import { Chapter, TranslationResource, Verse, Juz, Word } from '@/types';
+import type { Verse, Word } from '@/types';
+import type { Chapter, TranslationResource, TafsirResource, Juz } from './types';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 
 // Internal helper to fetch from the API with query parameters
@@ -96,17 +97,10 @@ export async function getTafsirResources(): Promise<TafsirResource[]> {
   return data.tafsirs as TafsirResource[];
 }
 
-// Types for paginated results and tafsir
+// Type for paginated verse results
 export interface PaginatedVerses {
   verses: Verse[];
   totalPages: number;
-}
-
-export interface TafsirResource {
-  id: number;
-  slug: string;
-  name: string;
-  language_name: string;
 }
 
 interface SearchApiResult {
@@ -288,3 +282,4 @@ export async function getSurahCoverUrl(surahNumber: number): Promise<string | nu
 
 // Export base URL for use elsewhere
 export { API_BASE_URL };
+export type { Chapter, TranslationResource, TafsirResource, Juz } from './types';

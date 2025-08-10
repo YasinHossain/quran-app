@@ -9,7 +9,7 @@ import React, {
   useState,
   useRef,
 } from 'react';
-import { Settings } from '@/types';
+import type { Settings } from './settings';
 
 export const ARABIC_FONTS = [
   { name: 'KFGQPC Uthman Taha', value: '"KFGQPC-Uthman-Taha", serif', category: 'Uthmani' },

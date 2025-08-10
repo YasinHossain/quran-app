@@ -6,7 +6,8 @@ import {
   getChapters,
   getVerseById,
 } from '@/lib/api';
-import { Juz, Verse, Chapter } from '@/types';
+import { Verse } from '@/types';
+import type { Juz, Chapter } from '@/lib/api';
 
 describe('getChapters', () => {
   afterEach(() => {

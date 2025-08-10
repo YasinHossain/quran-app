@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { FaSearch } from './SvgIcons';
-import { Chapter } from '@/types';
+import type { Chapter } from '@/lib/api';
 import { getChapters } from '@/lib/api';
 import useSWR from 'swr';
 import { useSidebar } from '@/app/providers/SidebarContext';
