@@ -1,16 +1,10 @@
 'use client';
-import {
-  FaPlay,
-  FaPause,
-  FaBookmark,
-  FaRegBookmark,
-  FaShare,
-} from '@/app/components/shared/SvgIcons';
+import { FaPlay, FaPause, FaBookmark, FaRegBookmark, FaShare } from '@/app/shared/SvgIcons';
 import { Verse as VerseType, Translation, Word } from '@/types';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import { useAudio } from '@/app/features/player/context/AudioContext';
 import { useSettings } from '@/app/providers/SettingsContext';
-import Spinner from '@/app/components/shared/Spinner';
+import Spinner from '@/app/shared/Spinner';
 import { applyTajweed } from '@/lib/text/tajweed';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 
