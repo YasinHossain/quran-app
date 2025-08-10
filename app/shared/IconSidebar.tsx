@@ -9,7 +9,7 @@ const IconSidebar = () => {
   const navItems = [
     { icon: FaHome, label: t('home'), href: '/' },
     { icon: FaTh, label: t('all_surahs'), href: '/features/surah/1' },
-    { icon: FaRegBookmark, label: t('bookmarks'), href: '/bookmarks' },
+    { icon: FaRegBookmark, label: t('bookmarks'), href: '/features/bookmarks' },
   ];
 
   return (

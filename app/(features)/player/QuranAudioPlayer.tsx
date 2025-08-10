@@ -1,9 +1,9 @@
 'use client';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { SlidersHorizontal, X } from 'lucide-react';
-import { useAudio } from '@/app/features/player/context/AudioContext';
+import { useAudio } from '@/app/(features)/player/context/AudioContext';
 import { useTheme } from '@/app/providers/ThemeContext';
-import useAudioPlayer from '@/app/features/player/hooks/useAudioPlayer';
+import useAudioPlayer from '@/app/(features)/player/hooks/useAudioPlayer';
 import TrackInfo from './components/TrackInfo';
 import TransportControls from './components/TransportControls';
 import Timeline from './components/Timeline';
