@@ -3,10 +3,10 @@
 
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Verse } from '@/app/features/surah/[surahId]/_components/Verse';
-import { SettingsSidebar } from '@/app/features/surah/[surahId]/_components/SettingsSidebar';
-import { TranslationPanel } from '@/app/features/surah/[surahId]/_components/TranslationPanel';
-import { WordLanguagePanel } from '@/app/features/surah/[surahId]/_components/WordLanguagePanel';
+import { Verse } from '@/app/features/surah/[surahId]/components/Verse';
+import { SettingsSidebar } from '@/app/features/surah/[surahId]/components/SettingsSidebar';
+import { TranslationPanel } from '@/app/features/surah/[surahId]/components/TranslationPanel';
+import { WordLanguagePanel } from '@/app/features/surah/[surahId]/components/WordLanguagePanel';
 import { Verse as VerseType, TranslationResource, Juz } from '@/types';
 import { getTranslations, getWordTranslations, getVersesByJuz, getJuz } from '@/lib/api';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';

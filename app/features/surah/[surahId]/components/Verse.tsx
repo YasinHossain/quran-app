@@ -1,4 +1,4 @@
-// app/surah/[surahId]/_components/Verse.tsx
+// app/features/surah/[surahId]/components/Verse.tsx
 import { memo, useCallback } from 'react';
 import {
   FaPlay,

@@ -14,12 +14,12 @@ This document explains the main folders in the repository and how pages use the 
 
 Pages inside `app/features/` define user-facing routes. Many of these routes wrap their content with providers from `app/context` such as `AudioProvider` or `SettingsProvider`. The root `app/layout.tsx` applies `ThemeProvider`, `SettingsProvider` and `SidebarProvider` so any component can access theme, settings and sidebar state via the corresponding hooks.
 
-Feature components typically reside in an `_components` subfolder. They import hooks like `useSettings`, `useAudio` or `useSidebar` to read and update context values.
+Feature components typically reside in a `components` subfolder. They import hooks like `useSettings`, `useAudio` or `useSidebar` to read and update context values.
 
 ## Adding a New Feature
 
 1. Create a folder under `app/features/` for the route. Add `page.tsx` and optionally `layout.tsx` inside it. Use `[param]` syntax for dynamic segments.
-2. Place any feature specific components in an `_components` directory within that folder.
+2. Place any feature specific components in a `components` directory within that folder.
 3. Add new utilities to `lib/` and shared types to `types/` when appropriate.
 4. Write tests in `__tests__/` mirroring the feature name. Wrap tested components with any required providers from `app/context`.
 

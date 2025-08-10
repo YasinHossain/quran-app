@@ -3,7 +3,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { searchVerses } from '@/lib/api';
 import { Verse as VerseType } from '@/types';
-import { Verse } from '@/app/features/surah/[surahId]/_components/Verse';
+import { Verse } from '@/app/features/surah/[surahId]/components/Verse';
 
 function SearchContent() {
   const searchParams = useSearchParams();

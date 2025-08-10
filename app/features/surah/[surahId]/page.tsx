@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Verse } from './_components/Verse';
-import { SettingsSidebar } from './_components/SettingsSidebar';
-import { TranslationPanel } from './_components/TranslationPanel';
-import { WordLanguagePanel } from './_components/WordLanguagePanel';
+import { Verse } from './components/Verse';
+import { SettingsSidebar } from './components/SettingsSidebar';
+import { TranslationPanel } from './components/TranslationPanel';
+import { WordLanguagePanel } from './components/WordLanguagePanel';
 import { Verse as VerseType, TranslationResource } from '@/types';
 import {
   getTranslations,

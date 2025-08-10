@@ -1,6 +1,6 @@
 // app/features/bookmarks/page.tsx
 'use client';
-import BookmarkedVersesList from './_components/BookmarkedVersesList';
+import BookmarkedVersesList from './components/BookmarkedVersesList';
 
 const BookmarksPage = () => {
   return (
