@@ -2,6 +2,7 @@ export interface Reciter {
   id: number;
   name: string;
   path: string;
+  locale?: string;
 }
 
 export const RECITERS: Reciter[] = [

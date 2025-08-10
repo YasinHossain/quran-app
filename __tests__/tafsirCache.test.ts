@@ -1,4 +1,9 @@
-import { getTafsirCached, clearTafsirCache, CACHE_TTL, MAX_CACHE_SIZE } from '@/lib/tafsirCache';
+import {
+  getTafsirCached,
+  clearTafsirCache,
+  CACHE_TTL,
+  MAX_CACHE_SIZE,
+} from '@/app/features/tafsir/lib/tafsirCache';
 import { getTafsirByVerse } from '@/lib/api';
 
 jest.mock('@/lib/api', () => ({

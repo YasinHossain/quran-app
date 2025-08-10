@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { SettingsProvider } from '@/app/context/SettingsContext';
-import { AudioProvider } from '@/app/context/AudioContext';
+import { AudioProvider } from '@/app/features/player/context/AudioContext';
 import { SidebarProvider } from '@/app/context/SidebarContext';
 import { ThemeProvider } from '@/app/context/ThemeContext';
 import JuzPage from '@/app/features/juz/[juzId]/page';
@@ -73,7 +73,7 @@ const renderPage = () =>
       <SettingsProvider>
         <ThemeProvider>
           <SidebarProvider>
-            <JuzPage params={{ juzId: '1' }} />
+            <JuzPage params={{ juzId: '1' }} searchParams={{}} />
           </SidebarProvider>
         </ThemeProvider>
       </SettingsProvider>

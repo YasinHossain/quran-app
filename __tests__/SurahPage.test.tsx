@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { SettingsProvider } from '@/app/context/SettingsContext';
-import { AudioProvider } from '@/app/context/AudioContext';
+import { AudioProvider } from '@/app/features/player/context/AudioContext';
 import { ThemeProvider } from '@/app/context/ThemeContext';
 import { SidebarProvider } from '@/app/context/SidebarContext';
 import SurahPage from '@/app/features/surah/[surahId]/page';
