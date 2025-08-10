@@ -1,8 +1,8 @@
 import { render, screen, within, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import HomePage from '@/app/features/home/HomePage';
-import { ThemeProvider } from '@/app/context/ThemeContext';
-import { SettingsProvider } from '@/app/context/SettingsContext';
+import { ThemeProvider } from '@/app/providers/ThemeContext';
+import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { Verse } from '@/types';
 
 jest.mock('@/lib/api', () => ({
