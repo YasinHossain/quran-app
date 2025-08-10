@@ -3,7 +3,7 @@
  *
  * Expects a kebab-case feature name as the first CLI argument and generates:
  * - `app/features/<name>/page.tsx`
- * - `__tests__/<Pascal>Page.test.tsx`
+ * - `app/features/<name>/__tests__/<Pascal>Page.test.tsx`
  */
 import { mkdir, writeFile } from 'fs/promises';
 
@@ -28,6 +28,7 @@ async function main() {
     mkdir(`${dir}/context`, { recursive: true }),
     mkdir(`${dir}/hooks`, { recursive: true }),
     mkdir(`${dir}/lib`, { recursive: true }),
+    mkdir(`${dir}/__tests__`, { recursive: true }),
   ]);
   await Promise.all([
     writeFile(`${dir}/context/.gitkeep`, ''),
@@ -88,7 +89,7 @@ test('renders API data', async () => {
 });
 `;
 
-  await writeFile(`__tests__/${pascal}Page.test.tsx`, test);
+  await writeFile(`${dir}/__tests__/${pascal}Page.test.tsx`, test);
   console.log(`Generated feature '${name}' at ${dir}`);
 }
 

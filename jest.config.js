@@ -10,7 +10,7 @@ const customJestConfig = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
   },
-  testMatch: ['<rootDir>/**/__tests__/**/*.test.ts?(x)'],
+  testMatch: ['<rootDir>/**/*.test.ts?(x)'],
   testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
 };
 

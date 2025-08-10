@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { Search, Sun, Moon } from '@/app/components/shared/SvgIcons';
 import surahsData from '@/data/surahs.json';
 import juzData from '@/data/juz.json';
-import VerseOfDay from './VerseOfDay';
-import HomePageBackground from './HomePageBackground';
+import VerseOfDay from '../VerseOfDay';
+import HomePageBackground from '../HomePageBackground';
 import type { Surah } from '@/types';
 
 interface JuzSummary {
