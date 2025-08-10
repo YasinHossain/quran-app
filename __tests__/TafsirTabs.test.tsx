@@ -3,11 +3,11 @@ import userEvent from '@testing-library/user-event';
 import TafsirTabs from '@/app/features/tafsir/[surahId]/[ayahId]/_components/TafsirTabs';
 import { ThemeProvider } from '@/app/context/ThemeContext';
 import { SettingsProvider } from '@/app/context/SettingsContext';
-import { getTafsirCached } from '@/lib/tafsirCache';
+import { getTafsirCached } from '@/app/features/tafsir/lib/tafsirCache';
 import useSWR from 'swr';
 
 jest.mock('swr');
-jest.mock('@/lib/tafsirCache');
+jest.mock('@/app/features/tafsir/lib/tafsirCache');
 
 const mockUseSWR = useSWR as jest.Mock;
 const mockGetTafsirCached = getTafsirCached as jest.Mock;

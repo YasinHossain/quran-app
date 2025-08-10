@@ -7,10 +7,10 @@ import { SidebarProvider } from '@/app/context/SidebarContext';
 import { ThemeProvider } from '@/app/context/ThemeContext';
 import { Verse } from '@/types';
 import useSWR from 'swr';
-import { getTafsirCached } from '@/lib/tafsirCache';
+import { getTafsirCached } from '@/app/features/tafsir/lib/tafsirCache';
 
 jest.mock('swr');
-jest.mock('@/lib/tafsirCache');
+jest.mock('@/app/features/tafsir/lib/tafsirCache');
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),

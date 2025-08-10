@@ -41,6 +41,9 @@ const nextConfig: NextConfig = {
     QURAN_API_BASE_URL: process.env.QURAN_API_BASE_URL,
   },
 
+  outputFileTracingExcludes:
+    process.env.NODE_ENV === 'production' ? { '*': ['app/(dev)/**'] } : undefined,
+
   // 3. Add security headers
   async headers() {
     return [

@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { FaTimes } from '@/app/components/common/SvgIcons';
 import { useAudio, RepeatOptions } from '@/app/features/player/context/AudioContext';
-import { RECITERS } from '@/lib/reciters';
+import { RECITERS } from '@/app/features/player/lib/reciters';
 import { useTranslation } from 'react-i18next';
 
 interface AudioSettingsModalProps {
