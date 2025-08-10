@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import { useTheme } from '@/app/context/ThemeContext';
 import Link from 'next/link';
-import { Search, Sun, Moon } from '@/app/components/common/SvgIcons';
+import { Search, Sun, Moon } from '@/app/components/shared/SvgIcons';
 import surahsData from '@/data/surahs.json';
 import juzData from '@/data/juz.json';
 import VerseOfDay from './VerseOfDay';

@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import IconSidebar from '@/app/components/common/IconSidebar';
+import IconSidebar from '@/app/components/shared/IconSidebar';
 import { SidebarProvider } from '@/app/context/SidebarContext';
 import { ThemeProvider } from '@/app/context/ThemeContext';
 

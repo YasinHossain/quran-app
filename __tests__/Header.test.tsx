@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import Header from '@/app/components/common/Header';
+import Header from '@/app/components/shared/Header';
 import { SidebarProvider } from '@/app/context/SidebarContext';
 import { ThemeProvider } from '@/app/context/ThemeContext';
 import { HeaderVisibilityProvider } from '@/app/context/HeaderVisibilityContext';

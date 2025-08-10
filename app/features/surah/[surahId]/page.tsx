@@ -17,7 +17,7 @@ import { LANGUAGE_CODES } from '@/lib/languageCodes';
 import type { LanguageCode } from '@/lib/languageCodes';
 import { WORD_LANGUAGE_LABELS } from '@/lib/wordLanguages';
 import { useSettings } from '@/app/context/SettingsContext';
-import Spinner from '@/app/components/common/Spinner';
+import Spinner from '@/app/components/shared/Spinner';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 import { QuranAudioPlayer } from '@/app/features/player';

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Header from '@/app/components/common/Header';
+import Header from '@/app/components/shared/Header';
 import { SettingsSidebar } from '@/app/features/surah/[surahId]/_components/SettingsSidebar';
 import { WordLanguagePanel } from '@/app/features/surah/[surahId]/_components/WordLanguagePanel';
 import { TranslationPanel } from '@/app/features/surah/[surahId]/_components/TranslationPanel';
