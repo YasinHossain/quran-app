@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { Verse as VerseComponent } from '@/app/features/surah/[surahId]/_components/Verse';
 import { SettingsProvider } from '@/app/context/SettingsContext';
-import { AudioProvider } from '@/app/context/AudioContext';
+import { AudioProvider } from '@/app/features/player/context/AudioContext';
 import TranslationProvider from '@/app/providers/TranslationProvider';
 import { Verse } from '@/types';
 

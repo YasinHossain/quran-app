@@ -20,8 +20,8 @@ import { useSettings } from '@/app/context/SettingsContext';
 import Spinner from '@/app/components/common/Spinner';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
-import { QuranAudioPlayer } from '@/app/components/player';
-import { useAudio } from '@/app/context/AudioContext';
+import { QuranAudioPlayer } from '@/app/features/player';
+import { useAudio } from '@/app/features/player/context/AudioContext';
 import { buildAudioUrl } from '@/lib/reciters';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;

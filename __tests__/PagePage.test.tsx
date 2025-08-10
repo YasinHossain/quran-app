@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { SettingsProvider } from '@/app/context/SettingsContext';
-import { AudioProvider } from '@/app/context/AudioContext';
+import { AudioProvider } from '@/app/features/player/context/AudioContext';
 import { SidebarProvider } from '@/app/context/SidebarContext';
 import { ThemeProvider } from '@/app/context/ThemeContext';
 import QuranPage from '@/app/features/page/[pageId]/page';
@@ -65,7 +65,7 @@ const renderPage = () =>
       <SettingsProvider>
         <ThemeProvider>
           <SidebarProvider>
-            <QuranPage params={{ pageId: '1' }} />
+            <QuranPage />
           </SidebarProvider>
         </ThemeProvider>
       </SettingsProvider>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAudio } from '@/app/context/AudioContext';
+import { useAudio } from '@/app/features/player/context/AudioContext';
 
 interface Props {
   theme: 'light' | 'dark';

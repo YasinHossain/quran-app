@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import VerseCard from '@/app/features/tafsir/[surahId]/[ayahId]/_components/VerseCard';
 import { SettingsProvider } from '@/app/context/SettingsContext';
-import { AudioProvider } from '@/app/context/AudioContext';
+import { AudioProvider } from '@/app/features/player/context/AudioContext';
 import { Verse } from '@/types';
 
 const verse: Verse = {
