@@ -203,7 +203,10 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
         src={track?.src || ''}
         preload="metadata"
         onEnded={() => {
-          onNext?.();
+          if (onNext) {
+            onNext();
+            return;
+          }
           pause();
           setIsPlaying(false);
           setPlayingId(null);
