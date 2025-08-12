@@ -8,13 +8,20 @@ import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/Set
 import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/TranslationPanel';
 import { WordLanguagePanel } from '@/app/(features)/surah/[surahId]/components/WordLanguagePanel';
 import { Verse as VerseType, TranslationResource, Juz } from '@/types';
-import { getTranslations, getWordTranslations, getVersesByJuz, getJuz } from '@/lib/api';
+import {
+  getTranslations,
+  getWordTranslations,
+  getVersesByJuz,
+  getJuz,
+  getSurahCoverUrl,
+} from '@/lib/api';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import { WORD_LANGUAGE_LABELS } from '@/lib/text/wordLanguages';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useAudio } from '@/app/(features)/player/context/AudioContext';
 import { buildAudioUrl } from '@/lib/audio/reciters';
+import { QuranAudioPlayer } from '@/app/(features)/player';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
@@ -31,7 +38,8 @@ export default function JuzPage({
   const [error, setError] = useState<string | null>(null);
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
-  const { playingId, setPlayingId, reciter } = useAudio();
+  const { activeVerse, setActiveVerse, reciter, isPlayerVisible, openPlayer } = useAudio();
+  const [coverUrl, setCoverUrl] = useState<string | null>(null);
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [translationSearchTerm, setTranslationSearchTerm] = useState('');
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
@@ -82,6 +90,10 @@ export default function JuzPage({
   const isLoading = !data && !error && !juzData && !juzError;
   const isReachingEnd = size >= totalPages;
 
+  useEffect(() => {
+    setSize(1);
+  }, [juzId, settings.translationId, settings.wordLang, setSize]);
+
   // --- Infinite Scroll Effect ---
   useEffect(() => {
     if (!loadMoreRef.current) return;
@@ -128,6 +140,46 @@ export default function JuzPage({
     [wordLanguageOptions, wordTranslationSearchTerm]
   );
 
+  useEffect(() => {
+    if (activeVerse) {
+      const surahNumber = parseInt(activeVerse.verse_key.split(':')[0], 10);
+      getSurahCoverUrl(surahNumber).then(setCoverUrl);
+    }
+  }, [activeVerse]);
+
+  const handleNext = () => {
+    if (!activeVerse) return false;
+    const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
+    if (currentIndex < verses.length - 1) {
+      setActiveVerse(verses[currentIndex + 1]);
+      openPlayer();
+      return true;
+    }
+    return false;
+  };
+
+  const handlePrev = () => {
+    if (!activeVerse) return false;
+    const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
+    if (currentIndex > 0) {
+      setActiveVerse(verses[currentIndex - 1]);
+      openPlayer();
+      return true;
+    }
+    return false;
+  };
+
+  const track = activeVerse
+    ? {
+        id: activeVerse.id.toString(),
+        title: `Verse ${activeVerse.verse_key}`,
+        artist: reciter.name,
+        coverUrl: coverUrl || '',
+        durationSec: 0,
+        src: buildAudioUrl(activeVerse.verse_key, reciter.path),
+      }
+    : null;
+
   return (
     <div className="flex flex-grow bg-white dark:bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden min-h-0">
       <main className="flex-grow bg-white dark:bg-[var(--background)] p-6 lg:p-10 overflow-y-auto homepage-scrollable-area">
@@ -157,22 +209,7 @@ export default function JuzPage({
                 {verses.length > 0 ? (
                   <>
                     {verses.map((v) => (
-                      <React.Fragment key={v.id}>
-                        <Verse verse={v} />
-                        {playingId === v.id && (
-                          <audio
-                            src={buildAudioUrl(v.verse_key, reciter.path)}
-                            autoPlay
-                            onEnded={() => setPlayingId(null)}
-                            onError={() => {
-                              setError(t('could_not_play_audio'));
-                              setPlayingId(null);
-                            }}
-                          >
-                            <track kind="captions" />
-                          </audio>
-                        )}
-                      </React.Fragment>
+                      <Verse key={v.id} verse={v} />
                     ))}
                     <div ref={loadMoreRef} className="py-4 text-center">
                       {isValidating && <span className="text-teal-600">{t('loading')}</span>}
@@ -223,6 +260,11 @@ export default function JuzPage({
           });
         }}
       />
+      {activeVerse && isPlayerVisible && (
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-transparent z-50">
+          <QuranAudioPlayer track={track} onNext={handleNext} onPrev={handlePrev} />
+        </div>
+      )}
     </div>
   );
 }

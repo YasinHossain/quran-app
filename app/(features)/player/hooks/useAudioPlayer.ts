@@ -17,6 +17,7 @@ export default function useAudioPlayer(options: Options = {}) {
     const a = audioRef.current;
     if (!a) return;
     a.play().catch((err) => {
+      if (err instanceof DOMException && err.name === 'AbortError') return;
       if (onError) onError(err);
       else console.error(err);
     });
@@ -60,6 +61,7 @@ export default function useAudioPlayer(options: Options = {}) {
     if (!a) return;
     if (isPlaying) {
       a.play().catch((err) => {
+        if (err instanceof DOMException && err.name === 'AbortError') return;
         if (onError) onError(err);
         else console.error(err);
       });
