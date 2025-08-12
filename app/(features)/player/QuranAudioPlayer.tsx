@@ -128,7 +128,7 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [current, duration, interactable, isPlaying, setSeek, togglePlay, setVolume]);
+  }, [current, duration, setSeek, togglePlay, setVolume]);
 
   const elapsed = useMemo(() => mmss(current), [current]);
   const total = useMemo(() => mmss(duration || 0), [duration]);
