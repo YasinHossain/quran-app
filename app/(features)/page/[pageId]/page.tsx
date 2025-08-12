@@ -39,7 +39,7 @@ export default function PagePage({ params }: PagePageProps) {
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-  const { activeVerse, setActiveVerse, reciter } = useAudio();
+  const { activeVerse, setActiveVerse, reciter, isPlayerVisible, openPlayer } = useAudio();
 
   const { data: translationOptionsData } = useSWR('translations', getTranslations);
   const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
@@ -137,6 +137,7 @@ export default function PagePage({ params }: PagePageProps) {
     const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
     if (currentIndex < verses.length - 1) {
       setActiveVerse(verses[currentIndex + 1]);
+      openPlayer();
     }
   };
 
@@ -145,6 +146,7 @@ export default function PagePage({ params }: PagePageProps) {
     const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
     if (currentIndex > 0) {
       setActiveVerse(verses[currentIndex - 1]);
+      openPlayer();
     }
   };
 
@@ -215,7 +217,7 @@ export default function PagePage({ params }: PagePageProps) {
           });
         }}
       />
-      {activeVerse && (
+      {activeVerse && isPlayerVisible && (
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-transparent z-50">
           <QuranAudioPlayer track={track} onNext={handleNext} onPrev={handlePrev} />
         </div>

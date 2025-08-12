@@ -27,6 +27,7 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
     setActiveVerse,
     audioRef,
     setIsPlaying,
+    openPlayer,
   } = useAudio();
   const { settings, bookmarkedVerses, toggleBookmark } = useSettings();
   const router = useRouter();
@@ -49,8 +50,18 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
       setPlayingId(verse.id);
       setLoadingId(verse.id);
       setIsPlaying(true);
+      openPlayer();
     }
-  }, [playingId, verse, audioRef, setActiveVerse, setPlayingId, setLoadingId, setIsPlaying]);
+  }, [
+    playingId,
+    verse,
+    audioRef,
+    setActiveVerse,
+    setPlayingId,
+    setLoadingId,
+    setIsPlaying,
+    openPlayer,
+  ]);
 
   const handleBookmark = useCallback(() => {
     toggleBookmark(String(verse.id));

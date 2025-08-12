@@ -23,6 +23,7 @@ interface AudioContextType {
   playbackRate: number;
   setPlaybackRate: React.Dispatch<React.SetStateAction<number>>;
   isPlayerVisible: boolean;
+  openPlayer: () => void;
   closePlayer: () => void;
 }
 
@@ -40,7 +41,7 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
   const [activeVerse, setActiveVerse] = useState<Verse | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [repeatOptions, setRepeatOptions] = useState<RepeatOptions>({
-    mode: 'single',
+    mode: 'off',
     start: 1,
     end: 1,
     playCount: 1,
@@ -51,6 +52,10 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
   const [volume, setVolume] = useState(0.9);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [isPlayerVisible, setPlayerVisible] = useState(true);
+
+  const openPlayer = () => {
+    setPlayerVisible(true);
+  };
 
   const closePlayer = () => {
     setIsPlaying(false);
@@ -81,6 +86,7 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
       playbackRate,
       setPlaybackRate,
       isPlayerVisible,
+      openPlayer,
       closePlayer,
     }),
     [

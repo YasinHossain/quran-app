@@ -308,7 +308,10 @@ function NumberField({
         type="number"
         value={Number.isFinite(value) ? value : 0}
         min={min}
-        onChange={(e) => onChange(parseFloat(e.target.value))}
+        onChange={(e) => {
+          const v = parseFloat(e.target.value);
+          onChange(Number.isNaN(v) ? (min ?? value) : v);
+        }}
         className={`w-full rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 ${
           theme === 'dark'
             ? 'border-slate-700 bg-slate-700 focus:ring-sky-500/35'
