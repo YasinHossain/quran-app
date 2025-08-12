@@ -42,7 +42,15 @@ export default function SurahPage({ params }: SurahPageProps) {
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-  const { activeVerse, setActiveVerse, reciter, isPlayerVisible, openPlayer } = useAudio();
+  const {
+    activeVerse,
+    setActiveVerse,
+    reciter,
+    isPlayerVisible,
+    openPlayer,
+    setPlayingId,
+    setLoadingId,
+  } = useAudio();
 
   const { data: translationOptionsData } = useSWR('translations', getTranslations);
   const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
@@ -136,8 +144,11 @@ export default function SurahPage({ params }: SurahPageProps) {
     if (!activeVerse) return false;
     const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
     if (currentIndex < verses.length - 1) {
-      setActiveVerse(verses[currentIndex + 1]);
+      const newVerse = verses[currentIndex + 1];
+      setActiveVerse(newVerse);
       openPlayer();
+      setPlayingId(newVerse.id);
+      setLoadingId(newVerse.id);
       return true;
     }
     return false;
@@ -147,8 +158,11 @@ export default function SurahPage({ params }: SurahPageProps) {
     if (!activeVerse) return false;
     const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
     if (currentIndex > 0) {
-      setActiveVerse(verses[currentIndex - 1]);
+      const newVerse = verses[currentIndex - 1];
+      setActiveVerse(newVerse);
       openPlayer();
+      setPlayingId(newVerse.id);
+      setLoadingId(newVerse.id);
       return true;
     }
     return false;
