@@ -51,9 +51,9 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
 
   const { surahId, juzId, pageId } = useParams();
   const pathname = usePathname();
-  const currentSurahId = Array.isArray(surahId) ? surahId[0] : surahId;
-  const currentJuzId = Array.isArray(juzId) ? juzId[0] : juzId;
-  const currentPageId = Array.isArray(pageId) ? pageId[0] : pageId;
+  const currentSurahId = Array.isArray(surahId) ? surahId[0] : (surahId as string | undefined);
+  const currentJuzId = Array.isArray(juzId) ? juzId[0] : (juzId as string | undefined);
+  const currentPageId = Array.isArray(pageId) ? pageId[0] : (pageId as string | undefined);
 
   const [activeTab, setActiveTab] = useState<'Surah' | 'Juz' | 'Page'>(() => {
     if (currentJuzId) return 'Juz';
@@ -284,11 +284,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                 return (
                   <li key={chapter.id}>
                     <Link
-                      href={
-                        isTafsirPath
-                          ? `/features/tafsir/${chapter.id}/1`
-                          : `/features/surah/${chapter.id}`
-                      }
+                      href={isTafsirPath ? `/tafsir/${chapter.id}/1` : `/surah/${chapter.id}`}
                       scroll={false}
                       data-active={isActive}
                       onClick={() => {
@@ -361,7 +357,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                 return (
                   <li key={juz.number}>
                     <Link
-                      href={`/features/juz/${juz.number}`}
+                      href={`/juz/${juz.number}`}
                       scroll={false}
                       data-active={isActive}
                       onClick={() => {
@@ -432,7 +428,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                 return (
                   <li key={p}>
                     <Link
-                      href={`/features/page/${p}`}
+                      href={`/page/${p}`}
                       scroll={false}
                       data-active={isActive}
                       onClick={() => {
