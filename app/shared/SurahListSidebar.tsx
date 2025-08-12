@@ -284,9 +284,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
                 return (
                   <li key={chapter.id}>
                     <Link
-                      href={
-                        isTafsirPath ? `/features/tafsir/${chapter.id}/1` : `/features/surah/${chapter.id}`
-                      }
+                      href={isTafsirPath ? `/tafsir/${chapter.id}/1` : `/surah/${chapter.id}`}
                       scroll={false}
                       data-active={isActive}
                       onClick={() => {

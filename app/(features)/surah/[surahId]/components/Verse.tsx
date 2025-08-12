@@ -1,4 +1,4 @@
-// app/surah/[surahId]/components/Verse.tsx
+// app/(features)/surah/[surahId]/components/Verse.tsx
 import { memo, useCallback } from 'react';
 import { FaPlay, FaPause, FaBookmark, FaRegBookmark, FaBookReader } from '@/app/shared/SvgIcons';
 import { useRouter } from 'next/navigation';

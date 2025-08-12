@@ -1,4 +1,4 @@
-// app/surah/[surahId]/components/ArabicFontPanel.tsx
+// app/(features)/surah/[surahId]/components/ArabicFontPanel.tsx
 'use client';
 import { FaArrowLeft } from '@/app/shared/SvgIcons';
 import { useTranslation } from 'react-i18next';
