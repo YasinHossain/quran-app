@@ -33,8 +33,8 @@ import type { Track } from './types';
 
 type Props = {
   track?: Track | null;
-  onPrev?: () => void;
-  onNext?: () => void;
+  onPrev?: () => boolean;
+  onNext?: () => boolean;
 };
 
 export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
@@ -203,13 +203,14 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
         src={track?.src || ''}
         preload="metadata"
         onEnded={() => {
-          if (onNext) {
-            onNext();
-            return;
-          }
-          pause();
-          setIsPlaying(false);
-          setPlayingId(null);
+          const hasNext = onNext?.() ?? false;
+          setTimeout(() => {
+            if (!hasNext || !internalAudioRef.current?.src) {
+              pause();
+              setIsPlaying(false);
+              setPlayingId(null);
+            }
+          }, 0);
         }}
       >
         <track kind="captions" />
