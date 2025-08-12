@@ -82,6 +82,10 @@ export default function PagePage({ params }: PagePageProps) {
   const isReachingEnd = size >= totalPages;
 
   useEffect(() => {
+    setSize(1);
+  }, [pageId, settings.translationId, settings.wordLang, setSize]);
+
+  useEffect(() => {
     if (!loadMoreRef.current) return;
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && !isReachingEnd && !isValidating) {

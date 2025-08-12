@@ -82,6 +82,10 @@ export default function JuzPage({
   const isLoading = !data && !error && !juzData && !juzError;
   const isReachingEnd = size >= totalPages;
 
+  useEffect(() => {
+    setSize(1);
+  }, [juzId, settings.translationId, settings.wordLang, setSize]);
+
   // --- Infinite Scroll Effect ---
   useEffect(() => {
     if (!loadMoreRef.current) return;
