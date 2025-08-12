@@ -7,13 +7,13 @@ import type { Track, RepeatOptions } from '@/app/(features)/player/types';
 const DEMO_TRACKS: Track[] = [
   {
     id: 'alafasy-001',
-    url: 'https://download.quranicaudio.com/quran/mishaari_raashid_al_afasy/001.mp3',
+    src: 'https://download.quranicaudio.com/quran/mishaari_raashid_al_afasy/001.mp3',
     title: 'Al-Fātiḥah - Mishary Alafasy',
     reciter: { id: 1, name: 'Mishary Alafasy', path: 'mishaari_raashid_al_afasy' },
   },
   {
     id: 'minshawi-001',
-    url: 'https://download.quranicaudio.com/quran/muhammad_siddeeq_al-minshaawee/mujawwad/001.mp3',
+    src: 'https://download.quranicaudio.com/quran/muhammad_siddeeq_al-minshaawee/mujawwad/001.mp3',
     title: 'Al-Fātiḥah - Minshawi',
     reciter: { id: 2, name: 'Minshawi (Mujawwad)', path: 'muhammad_siddeeq_al-minshaawee' },
   },
@@ -22,7 +22,7 @@ const DEMO_TRACKS: Track[] = [
 export default function Page() {
   const [track, setTrack] = useState<Track>(DEMO_TRACKS[0]);
   const [repeat, setRepeat] = useState<RepeatOptions>({
-    mode: 'none',
+    mode: 'off',
     start: 0,
     end: 0,
     repeatEach: 1,
@@ -66,7 +66,7 @@ export default function Page() {
             }
             className="border p-1 rounded"
           >
-            <option value="none">None</option>
+            <option value="off">None</option>
             <option value="single">Single</option>
             <option value="range">Range</option>
           </select>
@@ -124,7 +124,7 @@ export default function Page() {
           artist: track.reciter?.name ?? '',
           coverUrl: '',
           durationSec: 0,
-          src: track.url,
+          src: track.src,
         }}
       />
     </div>

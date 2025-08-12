@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AudioSettingsModal from '@/app/(features)/player/components/AudioSettingsModal';
+import type { RepeatOptions, Reciter } from '@/app/(features)/player/types';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
@@ -8,12 +9,21 @@ jest.mock('react-i18next', () => ({
 
 const mockSetRepeatOptions = jest.fn();
 const mockSetReciter = jest.fn();
+const mockRepeatOptions: RepeatOptions = {
+  mode: 'single',
+  start: 1,
+  end: 1,
+  playCount: 1,
+  repeatEach: 1,
+  delay: 0,
+};
+const mockReciter: Reciter = { id: 1, name: 'Reciter 1', path: '' };
 
 jest.mock('@/app/(features)/player/context/AudioContext', () => ({
   useAudio: () => ({
-    repeatOptions: { mode: 'single', start: 1, end: 1, playCount: 1, repeatEach: 1, delay: 0 },
+    repeatOptions: mockRepeatOptions,
     setRepeatOptions: mockSetRepeatOptions,
-    reciter: { id: 1, name: 'Reciter 1' },
+    reciter: mockReciter,
     setReciter: mockSetReciter,
   }),
 }));

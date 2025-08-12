@@ -2,6 +2,7 @@ export interface Reciter {
   id: number;
   name: string;
   path: string;
+  locale?: string;
 }
 
 export interface AyahTiming {
@@ -12,25 +13,20 @@ export interface AyahTiming {
 
 export interface Track {
   id: string;
-  url: string;
+  src: string;
   title?: string;
+  artist?: string;
+  coverUrl?: string;
+  durationSec?: number;
   reciter?: Reciter;
   timings?: AyahTiming[];
 }
 
 export interface RepeatOptions {
-  mode: 'none' | 'single' | 'range';
-  start: number;
-  end: number;
-  repeatEach: number;
-  playCount: number;
-  delay: number;
-}
-
-export interface PlayerState {
-  track: Track | null;
-  isPlaying: boolean;
-  progress: number;
-  duration: number;
-  repeat: RepeatOptions;
+  mode: 'off' | 'single' | 'range' | 'surah';
+  start?: number;
+  end?: number;
+  playCount?: number;
+  repeatEach?: number;
+  delay?: number;
 }
