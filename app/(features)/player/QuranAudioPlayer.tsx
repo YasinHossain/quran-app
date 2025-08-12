@@ -50,6 +50,7 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
     volume,
     setVolume,
     playbackRate,
+    repeatOptions,
   } = useAudio();
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState<number>(track?.durationSec ?? 0);
@@ -71,6 +72,14 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
   useEffect(() => {
     audioRef.current = internalAudioRef.current;
   }, [audioRef, internalAudioRef]);
+
+  const [verseRepeatsLeft, setVerseRepeatsLeft] = useState(repeatOptions.repeatEach ?? 1);
+  const [playRepeatsLeft, setPlayRepeatsLeft] = useState(repeatOptions.playCount ?? 1);
+
+  useEffect(() => {
+    setVerseRepeatsLeft(repeatOptions.repeatEach ?? 1);
+    setPlayRepeatsLeft(repeatOptions.playCount ?? 1);
+  }, [activeVerse, repeatOptions.repeatEach, repeatOptions.playCount]);
 
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'reciter' | 'repeat'>('reciter');
@@ -203,6 +212,54 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
         src={track?.src || ''}
         preload="metadata"
         onEnded={() => {
+          const mode = repeatOptions.mode;
+          const start = repeatOptions.start ?? 1;
+          const end = repeatOptions.end ?? start;
+          const delay = (repeatOptions.delay ?? 0) * 1000;
+          const currentAyah = activeVerse
+            ? parseInt(activeVerse.verse_key.split(':')[1], 10)
+            : null;
+
+          if (mode === 'single') {
+            if (verseRepeatsLeft > 1) {
+              setVerseRepeatsLeft(verseRepeatsLeft - 1);
+              seek(0);
+              play();
+              return;
+            }
+            if (playRepeatsLeft > 1) {
+              setPlayRepeatsLeft(playRepeatsLeft - 1);
+              setVerseRepeatsLeft(repeatOptions.repeatEach ?? 1);
+              seek(0);
+              play();
+              return;
+            }
+          }
+
+          if (mode === 'range') {
+            if (verseRepeatsLeft > 1) {
+              setVerseRepeatsLeft(verseRepeatsLeft - 1);
+              seek(0);
+              play();
+              return;
+            }
+            setVerseRepeatsLeft(repeatOptions.repeatEach ?? 1);
+            if (currentAyah && currentAyah < end) {
+              onNext?.();
+              return;
+            }
+            if (playRepeatsLeft > 1) {
+              setPlayRepeatsLeft(playRepeatsLeft - 1);
+              const steps = end - start;
+              setTimeout(() => {
+                for (let i = 0; i < steps; i++) {
+                  onPrev?.();
+                }
+              }, delay);
+              return;
+            }
+          }
+
           const hasNext = onNext?.() ?? false;
           setTimeout(() => {
             if (!hasNext || !internalAudioRef.current?.src) {
