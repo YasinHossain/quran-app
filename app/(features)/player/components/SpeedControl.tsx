@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import * as Popover from '@radix-ui/react-popover';
 import { useAudio } from '@/app/(features)/player/context/AudioContext';
 
 interface Props {
@@ -7,31 +8,45 @@ interface Props {
 
 export default function SpeedControl({ theme }: Props) {
   const { playbackRate, setPlaybackRate } = useAudio();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = React.useState(false);
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
+  const firstOptionRef = React.useRef<HTMLButtonElement>(null);
   const speedOptions = [0.75, 1, 1.25, 1.5, 2];
 
   return (
     <div className="relative hidden sm:block">
-      <button
-        onClick={() => setOpen((s) => !s)}
-        className={`h-9 w-14 grid place-items-center rounded-full text-xs font-bold transition focus:outline-none focus:ring-2 ${
-          theme === 'dark'
-            ? 'text-slate-300 focus:ring-sky-500/35 hover:bg-white/10'
-            : 'text-[#0E2A47]/80 focus:ring-[#0E2A47]/35 hover:bg-slate-900/5'
-        }`}
-      >
-        {playbackRate}x
-      </button>
-      {open && (
-        <div
-          className={`absolute bottom-full mb-2 w-28 rounded-lg shadow-lg border p-1 ${
+      <Popover.Root open={open} onOpenChange={setOpen}>
+        <Popover.Trigger asChild ref={triggerRef}>
+          <button
+            className={`h-9 w-14 grid place-items-center rounded-full text-xs font-bold transition focus:outline-none focus:ring-2 ${
+              theme === 'dark'
+                ? 'text-slate-300 focus:ring-sky-500/35 hover:bg-white/10'
+                : 'text-[#0E2A47]/80 focus:ring-[#0E2A47]/35 hover:bg-slate-900/5'
+            }`}
+          >
+            {playbackRate}x
+          </button>
+        </Popover.Trigger>
+        <Popover.Content
+          side="top"
+          align="center"
+          sideOffset={8}
+          className={`w-28 rounded-lg shadow-lg border p-1 ${
             theme === 'dark' ? 'bg-slate-700 border-slate-700' : 'bg-white border-slate-200'
           }`}
-          onMouseLeave={() => setOpen(false)}
+          onOpenAutoFocus={(e) => {
+            e.preventDefault();
+            firstOptionRef.current?.focus();
+          }}
+          onCloseAutoFocus={(e) => {
+            e.preventDefault();
+            triggerRef.current?.focus();
+          }}
         >
-          {speedOptions.map((speed) => (
+          {speedOptions.map((speed, idx) => (
             <button
               key={speed}
+              ref={idx === 0 ? firstOptionRef : undefined}
               onClick={() => {
                 setPlaybackRate(speed);
                 setOpen(false);
@@ -49,8 +64,8 @@ export default function SpeedControl({ theme }: Props) {
               {speed}x
             </button>
           ))}
-        </div>
-      )}
+        </Popover.Content>
+      </Popover.Root>
     </div>
   );
 }
