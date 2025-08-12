@@ -37,6 +37,22 @@ export default function PlaybackOptionsModal({
   }, [open]);
 
   const commitOptions = () => {
+    const numericKeys: (keyof RepeatOptions)[] = [
+      'start',
+      'end',
+      'playCount',
+      'repeatEach',
+      'delay',
+    ];
+    if (
+      numericKeys.some((key) => {
+        const val = localRepeat[key];
+        return val !== undefined && !Number.isInteger(val);
+      })
+    ) {
+      setRangeWarning('Please enter whole numbers only.');
+      return;
+    }
     const newReciter = RECITERS.find((r) => r.id.toString() === localReciter);
     if (newReciter) setReciter(newReciter);
     const start = Math.max(1, localRepeat.start ?? 1);
@@ -335,8 +351,9 @@ function NumberField({
         type="number"
         value={Number.isFinite(value) ? value : 0}
         min={min}
+        step={1}
         onChange={(e) => {
-          const v = parseFloat(e.target.value);
+          const v = parseInt(e.target.value, 10);
           onChange(Number.isNaN(v) ? (min ?? value) : v);
         }}
         className={`w-full rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 ${
