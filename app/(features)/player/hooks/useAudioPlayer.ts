@@ -5,19 +5,23 @@ type Options = {
   defaultDuration?: number;
   onTimeUpdate?: (time: number) => void;
   onLoadedMetadata?: (duration: number) => void;
+  onError?: (error: unknown) => void;
 };
 
 export default function useAudioPlayer(options: Options = {}) {
-  const { src, defaultDuration, onTimeUpdate, onLoadedMetadata } = options;
+  const { src, defaultDuration, onTimeUpdate, onLoadedMetadata, onError } = options;
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
   const play = useCallback(() => {
     const a = audioRef.current;
     if (!a) return;
-    a.play().catch(() => {});
+    a.play().catch((err) => {
+      if (onError) onError(err);
+      else console.error(err);
+    });
     setIsPlaying(true);
-  }, []);
+  }, [onError]);
 
   const pause = useCallback(() => {
     const a = audioRef.current;
@@ -55,11 +59,14 @@ export default function useAudioPlayer(options: Options = {}) {
     const a = audioRef.current;
     if (!a) return;
     if (isPlaying) {
-      a.play().catch(() => {});
+      a.play().catch((err) => {
+        if (onError) onError(err);
+        else console.error(err);
+      });
     } else {
       a.pause();
     }
-  }, [isPlaying, src]);
+  }, [isPlaying, src, onError]);
 
   useEffect(() => {
     const a = audioRef.current;
