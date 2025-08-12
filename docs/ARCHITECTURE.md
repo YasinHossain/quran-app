@@ -1,6 +1,6 @@
 # Architecture Overview
 
-This document explains the main folders in the repository and how pages use the React contexts provided in `app/context`. It also lists steps for adding new features.
+This document explains the main folders in the repository and how pages use the React contexts provided in `app/providers`. It also lists steps for adding new features.
 
 ## Directory Purpose
 
@@ -8,11 +8,11 @@ This document explains the main folders in the repository and how pages use the 
 - **`lib/`** – Utility modules and API helpers.
 - **`types/`** – TypeScript type definitions shared across the project.
 - **`scripts/`** – Stand-alone Node.js scripts such as `fetchData.ts` used for data preparation.
-- **`__tests__/`** – Test suite powered by Jest and React Testing Library.
+- **Tests** – Jest and React Testing Library suites live in `__tests__` folders next to their code (for example, `app/__tests__`, `app/(features)/*/__tests__`, `data/__tests__` and `lib/*/__tests__`).
 
 ## Feature Pages and Contexts
 
-Pages inside `app/(features)/` define user-facing routes. Many of these routes wrap their content with providers from `app/context` such as `AudioProvider` or `SettingsProvider`. The root `app/layout.tsx` applies `ThemeProvider`, `SettingsProvider` and `SidebarProvider` so any component can access theme, settings and sidebar state via the corresponding hooks.
+Pages inside `app/(features)/` define user-facing routes. Many of these routes wrap their content with providers from `app/providers` such as `AudioProvider` or `SettingsProvider`. The root `app/layout.tsx` applies `ThemeProvider`, `SettingsProvider` and `SidebarProvider` so any component can access theme, settings and sidebar state via the corresponding hooks.
 
 Feature components typically reside in a `components` subfolder. They import hooks like `useSettings`, `useAudio` or `useSidebar` to read and update context values.
 
@@ -21,7 +21,7 @@ Feature components typically reside in a `components` subfolder. They import hoo
 1. Create a folder under `app/(features)/` for the route. Add `page.tsx` and optionally `layout.tsx` inside it. Use `[param]` syntax for dynamic segments.
 2. Place any feature specific components in a `components` directory within that folder.
 3. Add new utilities to `lib/` and shared types to `types/` when appropriate.
-4. Write tests in `__tests__/` mirroring the feature name. Wrap tested components with any required providers from `app/context`.
+4. Write tests in the relevant `__tests__` folder mirroring the feature name (for example, `app/(features)/<feature>/__tests__/`). Wrap tested components with any required providers from `app/providers`.
 
 You can also run `npm run generate-feature <name>` to scaffold a feature folder and matching test automatically.
 
