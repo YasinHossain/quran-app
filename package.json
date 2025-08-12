@@ -18,20 +18,20 @@
     "generate-feature": "ts-node scripts/generateFeature.ts"
   },
   "dependencies": {
+    "@radix-ui/react-slider": "latest",
+    "@radix-ui/react-tooltip": "latest",
     "dompurify": "^3.2.6",
     "framer-motion": "^12.23.12",
     "i18next": "^25.3.2",
     "lucide-react": "latest",
-    "next": "15.4.6",
+    "next": "^15.4.6",
     "next-i18next": "^15.4.2",
     "next-pwa": "^5.6.0",
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "react-i18next": "^15.6.1",
     "react-icons": "^5.5.0",
-    "swr": "^2.3.4",
-    "@radix-ui/react-slider": "latest",
-    "@radix-ui/react-tooltip": "latest"
+    "swr": "^2.3.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
