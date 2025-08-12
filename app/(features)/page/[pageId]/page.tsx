@@ -3,10 +3,10 @@
 
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Verse } from '@/app/features/surah/[surahId]/components/Verse';
-import { SettingsSidebar } from '@/app/features/surah/[surahId]/components/SettingsSidebar';
-import { TranslationPanel } from '@/app/features/surah/[surahId]/components/TranslationPanel';
-import { WordLanguagePanel } from '@/app/features/surah/[surahId]/components/WordLanguagePanel';
+import { Verse } from '@/app/(features)/surah/[surahId]/components/Verse';
+import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
+import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/TranslationPanel';
+import { WordLanguagePanel } from '@/app/(features)/surah/[surahId]/components/WordLanguagePanel';
 import { Verse as VerseType, TranslationResource } from '@/types';
 import { getTranslations, getWordTranslations, getVersesByPage, getSurahCoverUrl } from '@/lib/api';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
@@ -16,8 +16,8 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import Spinner from '@/app/shared/Spinner';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
-import { QuranAudioPlayer } from '@/app/features/player';
-import { useAudio } from '@/app/features/player/context/AudioContext';
+import { QuranAudioPlayer } from '@/app/(features)/player';
+import { useAudio } from '@/app/(features)/player/context/AudioContext';
 import { buildAudioUrl } from '@/lib/audio/reciters';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;

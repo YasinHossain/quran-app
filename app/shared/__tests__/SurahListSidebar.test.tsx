@@ -66,7 +66,7 @@ beforeEach(() => {
   localStorage.clear();
   mockUseSWR.mockReturnValue({ data: chapters });
   useParams.mockReturnValue({});
-  usePathname.mockReturnValue('/features/surah');
+  usePathname.mockReturnValue('/surah');
 });
 
 describe('SurahListSidebar', () => {
