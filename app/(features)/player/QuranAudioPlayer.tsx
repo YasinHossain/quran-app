@@ -11,6 +11,7 @@ import SpeedControl from './components/SpeedControl';
 import VolumeControl from './components/VolumeControl';
 import PlaybackOptionsModal from './components/PlaybackOptionsModal';
 import IconBtn from './components/IconBtn';
+import type { Track } from './types';
 
 /**
  * Clean minimal music/Quran player – Tailwind CSS + Next.js + TypeScript
@@ -29,34 +30,6 @@ import IconBtn from './components/IconBtn';
  * - ADDED: Playback speed control directly in the player bar.
  * - REMOVED: Shuffle and Repeat icons from main bar for a cleaner look.
  */
-
-export type Track = {
-  id: string;
-  title: string;
-  artist: string;
-  coverUrl: string;
-  durationSec: number;
-  src: string;
-};
-
-export type PlayerState = {
-  currentTimeSec: number;
-  isPlaying: boolean;
-  volume: number; // 0..1
-  isShuffle: boolean;
-  repeatMode: 'off' | 'one' | 'all';
-};
-
-export type Reciter = { id: string; name: string; locale?: string };
-
-export type RepeatOptions = {
-  mode: 'off' | 'single' | 'range' | 'surah';
-  start?: number;
-  end?: number;
-  playCount?: number;
-  repeatEach?: number;
-  delay?: number;
-};
 
 type Props = {
   track?: Track | null;

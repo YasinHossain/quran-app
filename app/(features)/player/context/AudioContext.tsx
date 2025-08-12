@@ -1,17 +1,8 @@
 'use client';
 import React, { createContext, useContext, useMemo, useRef, useState } from 'react';
 import { Verse } from '@/types';
-import { RECITERS, Reciter } from '@/lib/audio/reciters';
-
-// This is from the new QuranAudioPlayer component.
-export type RepeatOptions = {
-  mode: 'off' | 'single' | 'range' | 'surah';
-  start?: number;
-  end?: number;
-  playCount?: number;
-  repeatEach?: number;
-  delay?: number;
-};
+import { RECITERS } from '@/lib/audio/reciters';
+import type { Reciter, RepeatOptions } from '@/app/(features)/player/types';
 
 interface AudioContextType {
   playingId: number | null;
@@ -50,7 +41,7 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
   const [activeVerse, setActiveVerse] = useState<Verse | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [repeatOptions, setRepeatOptions] = useState<RepeatOptions>({
-    mode: 'single',
+    mode: 'off',
     start: 1,
     end: 1,
     playCount: 1,

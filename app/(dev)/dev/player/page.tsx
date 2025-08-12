@@ -1,10 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import QuranAudioPlayer, {
-  type Track,
-  type RepeatOptions,
-} from '@/app/(features)/player/QuranAudioPlayer';
+import QuranAudioPlayer from '@/app/(features)/player/QuranAudioPlayer';
+import type { Track, RepeatOptions } from '@/app/(features)/player/types';
 
 const DEMO_TRACKS: Track[] = [
   {

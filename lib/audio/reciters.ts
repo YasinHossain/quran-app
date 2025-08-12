@@ -1,9 +1,4 @@
-export interface Reciter {
-  id: number;
-  name: string;
-  path: string;
-  locale?: string;
-}
+import type { Reciter } from '@/app/(features)/player/types';
 
 export const RECITERS: Reciter[] = [
   { id: 2, name: 'Abdul Basit (Murattal)', path: 'AbdulBaset/Murattal' },
