@@ -18,6 +18,7 @@
     "generate-feature": "ts-node scripts/generateFeature.ts"
   },
   "dependencies": {
+    "@radix-ui/react-popover": "latest",
     "@radix-ui/react-slider": "latest",
     "@radix-ui/react-tooltip": "latest",
     "dompurify": "^3.2.6",
