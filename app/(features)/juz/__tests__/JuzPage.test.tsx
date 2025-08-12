@@ -1,10 +1,10 @@
-import { render, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { AudioProvider } from '@/app/(features)/player/context/AudioContext';
 import { SidebarProvider } from '@/app/providers/SidebarContext';
 import { ThemeProvider } from '@/app/providers/ThemeContext';
-import QuranPage from '@/app/features/page/[pageId]/page';
-import { Verse } from '@/types';
+import JuzPage from '@/app/(features)/juz/[juzId]/page';
+import { Verse, Juz } from '@/types';
 import * as api from '@/lib/api';
 
 jest.mock('react', () => {
@@ -23,9 +23,17 @@ jest.mock('next/navigation', () => ({
 const mockVerse: Verse = {
   id: 1,
   verse_key: '1:1',
-  text_uthmani: 'page verse',
+  text_uthmani: 'verse text',
   words: [],
 } as Verse;
+const mockJuz: Juz = {
+  id: 1,
+  juz_number: 1,
+  verse_mapping: {},
+  first_verse_id: 1,
+  last_verse_id: 1,
+  verses_count: 1,
+};
 
 jest.mock('@/lib/api');
 
@@ -55,10 +63,8 @@ beforeAll(() => {
 
 beforeEach(() => {
   (api.getTranslations as jest.Mock).mockResolvedValue([]);
-  (api.getVersesByPage as jest.Mock).mockResolvedValue({
-    verses: [mockVerse],
-    totalPages: 1,
-  });
+  (api.getVersesByJuz as jest.Mock).mockResolvedValue({ verses: [mockVerse], totalPages: 1 });
+  (api.getJuz as jest.Mock).mockResolvedValue(mockJuz);
 });
 
 const renderPage = () =>
@@ -67,16 +73,18 @@ const renderPage = () =>
       <SettingsProvider>
         <ThemeProvider>
           <SidebarProvider>
-            <QuranPage params={{ pageId: '1' } as unknown as Promise<{ pageId: string }>} />
+            <JuzPage
+              params={{ juzId: '1' } as unknown as Promise<{ juzId: string }>}
+              searchParams={{}}
+            />
           </SidebarProvider>
         </ThemeProvider>
       </SettingsProvider>
     </AudioProvider>
   );
 
-test('renders page without crashing', async () => {
-  await act(async () => {
-    renderPage();
-  });
-  expect(api.getVersesByPage).toBeDefined();
+test('renders juz info and verses', async () => {
+  renderPage();
+  expect(await screen.findByText('juz_number')).toBeInTheDocument();
+  expect(await screen.findByText('verse text')).toBeInTheDocument();
 });

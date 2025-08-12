@@ -1,4 +1,4 @@
-// app/features/bookmarks/components/BookmarkedVersesList.tsx
+// app/(features)/bookmarks/components/BookmarkedVersesList.tsx
 'use client';
 import { useEffect, useState } from 'react';
 import { useSettings } from '@/app/providers/SettingsContext';

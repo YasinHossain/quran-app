@@ -4,7 +4,7 @@ import { FaPlay, FaPause, FaBookmark, FaRegBookmark, FaBookReader } from '@/app/
 import { useRouter } from 'next/navigation';
 import { Verse as VerseType, Translation, Word } from '@/types';
 import type { LanguageCode } from '@/lib/text/languageCodes';
-import { useAudio } from '@/app/features/player/context/AudioContext';
+import { useAudio } from '@/app/(features)/player/context/AudioContext';
 import Spinner from '@/app/shared/Spinner';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { applyTajweed } from '@/lib/text/tajweed';

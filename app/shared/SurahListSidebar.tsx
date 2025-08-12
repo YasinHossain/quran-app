@@ -51,9 +51,9 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
 
   const { surahId, juzId, pageId } = useParams();
   const pathname = usePathname();
-  const currentSurahId = Array.isArray(surahId) ? surahId[0] : surahId;
-  const currentJuzId = Array.isArray(juzId) ? juzId[0] : juzId;
-  const currentPageId = Array.isArray(pageId) ? pageId[0] : pageId;
+  const currentSurahId = Array.isArray(surahId) ? surahId[0] : (surahId as string | undefined);
+  const currentJuzId = Array.isArray(juzId) ? juzId[0] : (juzId as string | undefined);
+  const currentPageId = Array.isArray(pageId) ? pageId[0] : (pageId as string | undefined);
 
   const [activeTab, setActiveTab] = useState<'Surah' | 'Juz' | 'Page'>(() => {
     if (currentJuzId) return 'Juz';
