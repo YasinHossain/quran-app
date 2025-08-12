@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React, { useEffect, useState } from 'react';
 import { SlidersHorizontal, Mic2, Repeat } from 'lucide-react';
 import { useAudio } from '@/app/(features)/player/context/AudioContext';
@@ -56,8 +55,12 @@ export default function PlaybackOptionsModal({
   return (
     <div
       className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4"
-      onClick={onClose}
-      onKeyDown={(e) => e.key === 'Enter' && onClose()}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      onKeyDown={(e) => {
+        if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) onClose();
+      }}
       role="button"
       tabIndex={0}
     >
@@ -67,10 +70,6 @@ export default function PlaybackOptionsModal({
             ? 'bg-slate-800 border-slate-700 shadow-2xl'
             : 'bg-white border-transparent shadow-[0_10px_30px_rgba(2,6,23,0.12),0_1px_2px_rgba(2,6,23,0.06)]'
         }`}
-        onClick={(e) => e.stopPropagation()}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') e.stopPropagation();
-        }}
         role="dialog"
         aria-modal="true"
         tabIndex={-1}
