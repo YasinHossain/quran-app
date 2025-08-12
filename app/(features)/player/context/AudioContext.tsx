@@ -60,11 +60,12 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
   const closePlayer = useCallback(() => {
     setIsPlaying(false);
     setPlayingId(null);
+    setActiveVerse(null);
     if (audioRef.current) {
       audioRef.current.pause();
     }
     setPlayerVisible(false);
-  }, [setIsPlaying, setPlayingId, audioRef, setPlayerVisible]);
+  }, [setIsPlaying, setPlayingId, setActiveVerse, audioRef, setPlayerVisible]);
 
   const value = useMemo(
     () => ({
