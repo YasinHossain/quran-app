@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
-import { useHeaderVisibility } from '@/app/features/layout/context/HeaderVisibilityContext';
+import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
 interface LanguageOption {
   name: string;

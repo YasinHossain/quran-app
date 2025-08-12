@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
-import BookmarkedVersesList from '../components/BookmarkedVersesList';
-import BookmarksPage from '../page';
+import BookmarkedVersesList from '@/app/(features)/bookmarks/components/BookmarkedVersesList';
+import BookmarksPage from '@/app/(features)/bookmarks/page';
 import * as api from '@/lib/api';
 import { Verse } from '@/types';
 

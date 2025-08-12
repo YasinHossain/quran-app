@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaCog } from 'react-icons/fa';
 import { useTheme } from '@/app/providers/ThemeContext';
-import { useHeaderVisibility } from '@/app/features/layout/context/HeaderVisibilityContext';
+import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
 const Header = () => {
   const { t } = useTranslation();

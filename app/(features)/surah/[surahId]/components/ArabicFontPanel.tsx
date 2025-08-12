@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useState } from 'react'; // Import useState
 import { useTheme } from '@/app/providers/ThemeContext';
-import { useHeaderVisibility } from '@/app/features/layout/context/HeaderVisibilityContext';
+import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
 interface ArabicFontPanelProps {
   isOpen: boolean;

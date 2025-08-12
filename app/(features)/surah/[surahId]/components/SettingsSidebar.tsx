@@ -13,7 +13,7 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import { ArabicFontPanel } from './ArabicFontPanel';
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { useTheme } from '@/app/providers/ThemeContext';
-import { useHeaderVisibility } from '@/app/features/layout/context/HeaderVisibilityContext';
+import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
 interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;

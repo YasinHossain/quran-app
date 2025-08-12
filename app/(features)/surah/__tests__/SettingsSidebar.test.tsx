@@ -8,7 +8,7 @@ import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/Tr
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { SidebarProvider } from '@/app/providers/SidebarContext';
 import { ThemeProvider } from '@/app/providers/ThemeContext';
-import { HeaderVisibilityProvider } from '@/app/features/layout/context/HeaderVisibilityContext';
+import { HeaderVisibilityProvider } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
 // mock translation hook
 jest.mock('react-i18next', () => ({

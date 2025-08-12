@@ -6,7 +6,7 @@ import { TafsirResource } from '@/types';
 import { getTafsirResources } from '@/lib/api';
 import useSWR from 'swr';
 import { useMemo, useState } from 'react';
-import { useHeaderVisibility } from '@/app/features/layout/context/HeaderVisibilityContext';
+import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
 interface TafsirPanelProps {
   isOpen: boolean;
