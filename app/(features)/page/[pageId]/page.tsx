@@ -1,24 +1,19 @@
-// app/(features)/page/[pageId]/page.tsx
 'use client';
 
-import React, { useEffect, useState, useMemo, useRef } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Verse } from '@/app/(features)/surah/[surahId]/components/Verse';
 import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
 import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/TranslationPanel';
 import { WordLanguagePanel } from '@/app/(features)/surah/[surahId]/components/WordLanguagePanel';
 import { Verse as VerseType, TranslationResource } from '@/types';
-import { getTranslations, getWordTranslations, getVersesByPage, getSurahCoverUrl } from '@/lib/api';
+import { getVersesByPage, getSurahCoverUrl } from '@/lib/api';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
-import { WORD_LANGUAGE_LABELS } from '@/lib/text/wordLanguages';
-import { useSettings } from '@/app/providers/SettingsContext';
 import Spinner from '@/app/shared/Spinner';
-import useSWR from 'swr';
-import useSWRInfinite from 'swr/infinite';
 import { QuranAudioPlayer } from '@/app/(features)/player';
-import { useAudio } from '@/app/(features)/player/context/AudioContext';
 import { buildAudioUrl } from '@/lib/audio/reciters';
+import useVerseListing from '@/app/(features)/surah/hooks/useVerseListing';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;
 
@@ -28,69 +23,31 @@ interface PagePageProps {
 
 export default function PagePage({ params }: PagePageProps) {
   const { pageId } = React.use(params);
-
-  const [error, setError] = useState<string | null>(null);
-  const { settings, setSettings } = useSettings();
-  const { t } = useTranslation();
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [translationSearchTerm, setTranslationSearchTerm] = useState('');
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
   const [wordTranslationSearchTerm, setWordTranslationSearchTerm] = useState('');
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
-  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const { t } = useTranslation();
 
-  const { activeVerse, setActiveVerse, reciter, isPlayerVisible, openPlayer } = useAudio();
-
-  const { data: translationOptionsData } = useSWR('translations', getTranslations);
-  const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
-
-  const { data: wordTranslationOptionsData } = useSWR('wordTranslations', getWordTranslations);
-  const wordLanguageMap = useMemo(() => {
-    const map: Record<string, number> = {};
-    (wordTranslationOptionsData || []).forEach((o) => {
-      const name = o.language_name.toLowerCase();
-      if (!map[name]) {
-        map[name] = o.id;
-      }
-    });
-    return map;
-  }, [wordTranslationOptionsData]);
-  const wordLanguageOptions = useMemo(
-    () =>
-      Object.keys(wordLanguageMap)
-        .filter((name) => WORD_LANGUAGE_LABELS[name])
-        .map((name) => ({
-          name: WORD_LANGUAGE_LABELS[name],
-          id: wordLanguageMap[name],
-        })),
-    [wordLanguageMap]
-  );
-
-  const { data, size, setSize, isValidating } = useSWRInfinite(
-    (index) =>
-      pageId ? ['verses', pageId, settings.translationId, settings.wordLang, index + 1] : null,
-    ([, pId, translationId, wordLang, page]) =>
-      getVersesByPage(pId, translationId, page, 20, wordLang).catch((err) => {
-        setError(`Failed to load content. ${err.message}`);
-        return { verses: [], totalPages: 1 };
-      })
-  );
-
-  const verses: VerseType[] = data ? data.flatMap((d) => d.verses) : [];
-  const totalPages = data ? data[data.length - 1]?.totalPages : 1;
-  const isLoading = !data && !error;
-  const isReachingEnd = size >= totalPages;
-
-  useEffect(() => {
-    if (!loadMoreRef.current) return;
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !isReachingEnd && !isValidating) {
-        setSize(size + 1);
-      }
-    });
-    observer.observe(loadMoreRef.current);
-    return () => observer.disconnect();
-  }, [isReachingEnd, isValidating, size, setSize]);
+  const {
+    error,
+    isLoading,
+    verses,
+    isValidating,
+    isReachingEnd,
+    loadMoreRef,
+    translationOptions,
+    wordLanguageOptions,
+    wordLanguageMap,
+    settings,
+    setSettings,
+    activeVerse,
+    reciter,
+    isPlayerVisible,
+    handleNext,
+    handlePrev,
+  } = useVerseListing({ id: pageId, lookup: getVersesByPage });
 
   const selectedTranslationName = useMemo(
     () =>
@@ -98,6 +55,7 @@ export default function PagePage({ params }: PagePageProps) {
       t('select_translation'),
     [settings.translationId, translationOptions, t]
   );
+
   const selectedWordLanguageName = useMemo(
     () =>
       wordLanguageOptions.find(
@@ -107,6 +65,7 @@ export default function PagePage({ params }: PagePageProps) {
       )?.name || t('select_word_translation'),
     [settings.wordLang, wordLanguageOptions, t]
   );
+
   const groupedTranslations = useMemo(
     () =>
       translationOptions
@@ -117,6 +76,7 @@ export default function PagePage({ params }: PagePageProps) {
         }, {}),
     [translationOptions, translationSearchTerm]
   );
+
   const filteredWordLanguages = useMemo(
     () =>
       wordLanguageOptions.filter((o) =>
@@ -131,28 +91,6 @@ export default function PagePage({ params }: PagePageProps) {
       getSurahCoverUrl(surahNumber).then(setCoverUrl);
     }
   }, [activeVerse]);
-
-  const handleNext = () => {
-    if (!activeVerse) return false;
-    const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
-    if (currentIndex < verses.length - 1) {
-      setActiveVerse(verses[currentIndex + 1]);
-      openPlayer();
-      return true;
-    }
-    return false;
-  };
-
-  const handlePrev = () => {
-    if (!activeVerse) return false;
-    const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
-    if (currentIndex > 0) {
-      setActiveVerse(verses[currentIndex - 1]);
-      openPlayer();
-      return true;
-    }
-    return false;
-  };
 
   const track = activeVerse
     ? {
@@ -177,7 +115,7 @@ export default function PagePage({ params }: PagePageProps) {
             <div className="text-center py-20 text-red-600 bg-red-50 p-4 rounded-lg">{error}</div>
           ) : verses.length > 0 ? (
             <>
-              {verses.map((v) => (
+              {verses.map((v: VerseType) => (
                 <React.Fragment key={v.id}>
                   <Verse verse={v} />
                 </React.Fragment>
