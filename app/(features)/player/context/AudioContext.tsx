@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useMemo, useRef, useState } from 'react';
+import React, { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { Verse } from '@/types';
 import { RECITERS } from '@/lib/audio/reciters';
 import type { Reciter, RepeatOptions } from '@/app/(features)/player/types';
@@ -53,18 +53,18 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
   const [playbackRate, setPlaybackRate] = useState(1);
   const [isPlayerVisible, setPlayerVisible] = useState(true);
 
-  const openPlayer = () => {
+  const openPlayer = useCallback(() => {
     setPlayerVisible(true);
-  };
+  }, [setPlayerVisible]);
 
-  const closePlayer = () => {
+  const closePlayer = useCallback(() => {
     setIsPlaying(false);
     setPlayingId(null);
     if (audioRef.current) {
       audioRef.current.pause();
     }
     setPlayerVisible(false);
-  };
+  }, [setIsPlaying, setPlayingId, audioRef, setPlayerVisible]);
 
   const value = useMemo(
     () => ({
@@ -99,6 +99,8 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
       volume,
       playbackRate,
       isPlayerVisible,
+      openPlayer,
+      closePlayer,
     ]
   );
 
