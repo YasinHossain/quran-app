@@ -1,28 +1,34 @@
 'use client';
 
 import React, { useState } from 'react';
-import { QuranAudioPlayer } from '@/app/(features)/player';
-import type { Track, RepeatOptions } from '@/app/(features)/player/types';
+import QuranAudioPlayer, {
+  type Track,
+  type RepeatOptions,
+} from '@/app/(features)/player/QuranAudioPlayer';
 
 const DEMO_TRACKS: Track[] = [
   {
     id: 'alafasy-001',
-    url: 'https://download.quranicaudio.com/quran/mishaari_raashid_al_afasy/001.mp3',
+    src: 'https://download.quranicaudio.com/quran/mishaari_raashid_al_afasy/001.mp3',
     title: 'Al-Fātiḥah - Mishary Alafasy',
-    reciter: { id: 1, name: 'Mishary Alafasy', path: 'mishaari_raashid_al_afasy' },
+    artist: 'Mishary Alafasy',
+    coverUrl: '',
+    durationSec: 0,
   },
   {
     id: 'minshawi-001',
-    url: 'https://download.quranicaudio.com/quran/muhammad_siddeeq_al-minshaawee/mujawwad/001.mp3',
+    src: 'https://download.quranicaudio.com/quran/muhammad_siddeeq_al-minshaawee/mujawwad/001.mp3',
     title: 'Al-Fātiḥah - Minshawi',
-    reciter: { id: 2, name: 'Minshawi (Mujawwad)', path: 'muhammad_siddeeq_al-minshaawee' },
+    artist: 'Minshawi (Mujawwad)',
+    coverUrl: '',
+    durationSec: 0,
   },
 ];
 
 export default function Page() {
   const [track, setTrack] = useState<Track>(DEMO_TRACKS[0]);
   const [repeat, setRepeat] = useState<RepeatOptions>({
-    mode: 'none',
+    mode: 'off',
     start: 0,
     end: 0,
     repeatEach: 1,
@@ -49,7 +55,7 @@ export default function Page() {
           >
             {DEMO_TRACKS.map((t) => (
               <option key={t.id} value={t.id}>
-                {t.reciter?.name}
+                {t.artist}
               </option>
             ))}
           </select>
@@ -66,9 +72,10 @@ export default function Page() {
             }
             className="border p-1 rounded"
           >
-            <option value="none">None</option>
+            <option value="off">Off</option>
             <option value="single">Single</option>
             <option value="range">Range</option>
+            <option value="surah">Surah</option>
           </select>
         </div>
         {repeat.mode === 'range' && (
@@ -114,19 +121,10 @@ export default function Page() {
           </label>
         </div>
         <pre className="bg-gray-100 p-2 rounded text-xs">
-          {JSON.stringify({ reciter: track.reciter, repeat }, null, 2)}
+          {JSON.stringify({ track, repeat }, null, 2)}
         </pre>
       </div>
-      <QuranAudioPlayer
-        track={{
-          id: track.id,
-          title: track.title ?? '',
-          artist: track.reciter?.name ?? '',
-          coverUrl: '',
-          durationSec: 0,
-          src: track.url,
-        }}
-      />
+      <QuranAudioPlayer track={track} />
     </div>
   );
 }
