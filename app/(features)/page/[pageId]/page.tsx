@@ -133,21 +133,25 @@ export default function PagePage({ params }: PagePageProps) {
   }, [activeVerse]);
 
   const handleNext = () => {
-    if (!activeVerse) return;
+    if (!activeVerse) return false;
     const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
     if (currentIndex < verses.length - 1) {
       setActiveVerse(verses[currentIndex + 1]);
       openPlayer();
+      return true;
     }
+    return false;
   };
 
   const handlePrev = () => {
-    if (!activeVerse) return;
+    if (!activeVerse) return false;
     const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
     if (currentIndex > 0) {
       setActiveVerse(verses[currentIndex - 1]);
       openPlayer();
+      return true;
     }
+    return false;
   };
 
   const track = activeVerse
