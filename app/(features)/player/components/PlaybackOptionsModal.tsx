@@ -35,7 +35,12 @@ export default function PlaybackOptionsModal({
   const commitOptions = () => {
     const newReciter = RECITERS.find((r) => r.id.toString() === localReciter);
     if (newReciter) setReciter(newReciter);
-    setRepeatOptions(localRepeat);
+    const start = Math.max(1, localRepeat.start ?? 1);
+    const end = Math.max(start, localRepeat.end ?? start);
+    if (start !== localRepeat.start || end !== localRepeat.end) {
+      alert('Start and end values adjusted to a valid range.');
+    }
+    setRepeatOptions({ ...localRepeat, start, end });
     onClose();
   };
   if (!open) return null;
