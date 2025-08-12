@@ -105,6 +105,11 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
   const interactable = Boolean(track?.src);
 
   useEffect(() => {
+    setCurrent(0);
+    setDuration(track?.durationSec ?? 0);
+  }, [track?.src, track?.durationSec]);
+
+  useEffect(() => {
     if (isPlaying) play();
     if (!isPlaying) pause();
   }, [isPlaying, play, pause]);
