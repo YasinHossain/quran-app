@@ -23,6 +23,7 @@ export default function PlaybackOptionsModal({
   const { reciter, setReciter, repeatOptions, setRepeatOptions } = useAudio();
   const [localReciter, setLocalReciter] = useState(reciter.id.toString());
   const [localRepeat, setLocalRepeat] = useState<RepeatOptions>(repeatOptions);
+  const [rangeWarning, setRangeWarning] = useState<string | null>(null);
 
   useEffect(() => {
     setLocalReciter(reciter.id.toString());
@@ -32,14 +33,21 @@ export default function PlaybackOptionsModal({
     setLocalRepeat(repeatOptions);
   }, [repeatOptions]);
 
+  useEffect(() => {
+    if (!open) setRangeWarning(null);
+  }, [open]);
+
   const commitOptions = () => {
     const newReciter = RECITERS.find((r) => r.id.toString() === localReciter);
     if (newReciter) setReciter(newReciter);
     const start = Math.max(1, localRepeat.start ?? 1);
     const end = Math.max(start, localRepeat.end ?? start);
     if (start !== localRepeat.start || end !== localRepeat.end) {
-      alert('Start and end values adjusted to a valid range.');
+      setRangeWarning('Start and end values adjusted to a valid range.');
+      setLocalRepeat({ ...localRepeat, start, end });
+      return;
     }
+    setRangeWarning(null);
     setRepeatOptions({ ...localRepeat, start, end });
     onClose();
   };
@@ -219,18 +227,33 @@ export default function PlaybackOptionsModal({
                   theme === 'dark' ? 'border-slate-700' : 'border-slate-200'
                 }`}
               >
+                {rangeWarning && (
+                  <div
+                    className={`col-span-2 text-sm ${
+                      theme === 'dark' ? 'text-red-400' : 'text-red-600'
+                    }`}
+                  >
+                    {rangeWarning}
+                  </div>
+                )}
                 <NumberField
                   label="Start"
                   value={localRepeat.start ?? 1}
                   min={1}
-                  onChange={(v) => setLocalRepeat({ ...localRepeat, start: v })}
+                  onChange={(v) => {
+                    setLocalRepeat({ ...localRepeat, start: v });
+                    setRangeWarning(null);
+                  }}
                   theme={theme}
                 />
                 <NumberField
                   label="End"
                   value={localRepeat.end ?? localRepeat.start ?? 1}
                   min={1}
-                  onChange={(v) => setLocalRepeat({ ...localRepeat, end: v })}
+                  onChange={(v) => {
+                    setLocalRepeat({ ...localRepeat, end: v });
+                    setRangeWarning(null);
+                  }}
                   theme={theme}
                 />
                 <NumberField
