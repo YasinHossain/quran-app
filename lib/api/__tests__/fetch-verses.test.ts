@@ -16,7 +16,7 @@ describe('fetchVerses', () => {
 
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ meta: { total_pages: 2 }, verses: [mockVerse] }),
+      json: () => Promise.resolve({ pagination: { total_pages: 2 }, verses: [mockVerse] }),
     }) as jest.Mock;
 
     const result = await fetchVerses('by_chapter', 1, 20, 1, 1, 'en');
