@@ -1,4 +1,5 @@
-import { API_BASE_URL, getTafsirByVerse, getTafsirResources, TafsirResource } from '@/lib/api';
+import { getTafsirByVerse, getTafsirResources, TafsirResource } from '@/lib/api/tafsir';
+import { API_BASE_URL } from '@/lib/api';
 
 describe('getTafsirResources', () => {
   afterEach(() => {

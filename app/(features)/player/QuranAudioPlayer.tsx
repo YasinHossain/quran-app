@@ -328,7 +328,6 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
               pause,
               setIsPlaying,
               setPlayingId,
-              internalAudioRef,
               setVerseRepeatsLeft,
               setPlayRepeatsLeft,
             });
