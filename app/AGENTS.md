@@ -3,6 +3,7 @@
 ## Feature Folders
 
 - All user-facing routes live under `app/(features)/*`. Each folder represents a feature and should be named in lowercase.
+- Place non-routing, reusable modules (e.g., the player) in `app/shared` or another shared directory; reserve `app/(features)` strictly for routed features.
 - Every feature folder must include a `page.tsx` entry file and may include a `layout.tsx`. Use `[param]` syntax for dynamic segments.
 - Place feature-specific components in a `components/` subfolder.
 
