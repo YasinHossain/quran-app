@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import JuzIndexPage from '@/app/(features)/juz/page';
 import ClientProviders from '@/app/providers/ClientProviders';
-import { AudioProvider } from '@/app/(features)/player/context/AudioContext';
+import { AudioProvider } from '@/app/shared/player/context/AudioContext';
 
 jest.mock('next/link', () => ({ href, children }: any) => <a href={href}>{children}</a>);
 
