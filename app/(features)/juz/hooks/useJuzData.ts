@@ -11,13 +11,14 @@ export function useJuzData(juzId?: string) {
     ([, id]: [string, string]) => getJuz(id)
   );
 
-  const isLoading = verseListing.isLoading || (!juz && !juzError);
+  const { isLoading: versesLoading, ...rest } = verseListing;
+  const isLoading = versesLoading || (!juz && !juzError);
 
   return {
     juz,
     juzError,
-    ...verseListing,
     isLoading,
+    ...rest,
   } as const;
 }
 
