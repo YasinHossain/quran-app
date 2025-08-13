@@ -1,0 +1,25 @@
+'use client';
+import { useState } from 'react';
+import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
+
+export const useTafsirPanels = (verseKey: string) => {
+  const [openPanels, setOpenPanels] = useState<Record<number, boolean>>({});
+  const [tafsirTexts, setTafsirTexts] = useState<Record<number, string>>({});
+  const [loading, setLoading] = useState<Record<number, boolean>>({});
+
+  const togglePanel = async (id: number) => {
+    setOpenPanels((prev) => {
+      const isOpen = !prev[id];
+      if (isOpen && !tafsirTexts[id]) {
+        setLoading((l) => ({ ...l, [id]: true }));
+        getTafsirCached(verseKey, id)
+          .then((text) => setTafsirTexts((t) => ({ ...t, [id]: text })))
+          .catch(() => setTafsirTexts((t) => ({ ...t, [id]: 'Error loading tafsir.' })))
+          .finally(() => setLoading((l) => ({ ...l, [id]: false })));
+      }
+      return { ...prev, [id]: isOpen };
+    });
+  };
+
+  return { openPanels, tafsirTexts, loading, togglePanel };
+};
