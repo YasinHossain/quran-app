@@ -17,7 +17,7 @@ describe('getVersesByChapter', () => {
 
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ meta: { total_pages: 1 }, verses: [mockVerse] }),
+      json: () => Promise.resolve({ pagination: { total_pages: 1 }, verses: [mockVerse] }),
     }) as jest.Mock;
 
     await getVersesByChapter(1, 20, 1, 1, 'tr');
@@ -42,7 +42,7 @@ describe('getVersesByJuz', () => {
 
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ meta: { total_pages: 1 }, verses: [mockVerse] }),
+      json: () => Promise.resolve({ pagination: { total_pages: 1 }, verses: [mockVerse] }),
     }) as jest.Mock;
 
     await getVersesByJuz(1, 20, 1, 1, 'en');
@@ -67,7 +67,7 @@ describe('getVersesByPage', () => {
 
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ meta: { total_pages: 1 }, verses: [mockVerse] }),
+      json: () => Promise.resolve({ pagination: { total_pages: 1 }, verses: [mockVerse] }),
     }) as jest.Mock;
 
     await getVersesByPage(1, 20, 1, 1, 'en');

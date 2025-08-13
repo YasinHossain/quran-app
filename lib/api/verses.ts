@@ -41,7 +41,11 @@ export async function fetchVerses(
   wordLang: string = 'en'
 ): Promise<PaginatedVerses> {
   const lang = wordLang as LanguageCode;
-  const data = await apiFetch<{ verses: ApiVerse[]; meta: { total_pages: number } }>(
+  const data = await apiFetch<{
+    verses: ApiVerse[];
+    meta?: { total_pages: number };
+    pagination?: { total_pages: number };
+  }>(
     `verses/${type}/${id}`,
     {
       language: lang,
@@ -55,8 +59,9 @@ export async function fetchVerses(
     },
     'Failed to fetch verses'
   );
+  const totalPages = data.meta?.total_pages ?? data.pagination?.total_pages ?? 1;
   return {
-    totalPages: data.meta.total_pages,
+    totalPages,
     verses: data.verses.map((v) => normalizeVerse(v, lang)),
   };
 }
