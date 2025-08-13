@@ -8,6 +8,9 @@ export * from './word';
 
 export type { TafsirResource } from '../lib/api';
 
+/**
+ * Mapping and metadata for a Juz (section) of the Quran.
+ */
 export interface Juz {
   id: number;
   juz_number: number;
