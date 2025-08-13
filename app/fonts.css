@@ -15,14 +15,6 @@
 }
 
 @font-face {
-  font-family: 'Al-Mushaf';
-  src: url('/fonts/Al-Mushaf.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: 'Amiri';
   src: url('/fonts/Amiri.ttf') format('truetype');
   font-weight: normal;
@@ -65,22 +57,6 @@
 @font-face {
   font-family: 'Lateef';
   src: url('/fonts/Lateef.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Me-Quran';
-  src: url('/fonts/Me-Quran.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'PDMS-Saleem-Quran';
-  src: url('/fonts/PDMS-Saleem-Quran.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
