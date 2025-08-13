@@ -1,4 +1,4 @@
-import { handleSurahRepeat } from '@/app/(features)/player/QuranAudioPlayer';
+import { handleSurahRepeat } from '@/app/(features)/player/hooks/useSurahRepeat';
 
 describe('handleSurahRepeat', () => {
   it('cycles through entire surah when repeating', () => {
