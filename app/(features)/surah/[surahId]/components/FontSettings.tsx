@@ -2,10 +2,11 @@
 
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FontSettingIcon, ChevronDownIcon } from '@/app/shared/icons';
+import { FontSettingIcon } from '@/app/shared/icons';
 import { CollapsibleSection } from './CollapsibleSection';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useFontSize } from '../../hooks/useFontSize';
+import SelectionBox from '@/app/shared/SelectionBox';
 
 interface FontSettingsProps {
   onArabicFontPanelOpen: () => void;
@@ -58,18 +59,11 @@ export const FontSettings = ({ onArabicFontPanelOpen }: FontSettingsProps) => {
             style={translationStyle}
           />
         </div>
-        <div>
-          <label className="block mb-2 text-sm font-medium text-[var(--foreground)]">
-            {t('arabic_font_face')}
-          </label>
-          <button
-            onClick={onArabicFontPanelOpen}
-            className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-200 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition-shadow shadow-sm hover:shadow-md"
-          >
-            <span className="truncate text-[var(--foreground)]">{selectedArabicFont}</span>
-            <ChevronDownIcon className="text-gray-500" />
-          </button>
-        </div>
+        <SelectionBox
+          label={t('arabic_font_face')}
+          value={selectedArabicFont}
+          onClick={onArabicFontPanelOpen}
+        />
       </div>
     </CollapsibleSection>
   );

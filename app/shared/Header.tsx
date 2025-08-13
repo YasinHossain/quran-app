@@ -1,5 +1,5 @@
 'use client';
-import { SearchSolidIcon, BarsIcon } from './icons';
+import { BarsIcon } from './icons';
 import { useTranslation } from 'react-i18next';
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { useState } from 'react';
@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { FaCog } from 'react-icons/fa';
 import { useTheme } from '@/app/providers/ThemeContext';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import HeaderSearch from './HeaderSearch';
 
 const Header = () => {
   const { t } = useTranslation();
@@ -22,8 +23,6 @@ const Header = () => {
     }
   };
 
-  // Determine background classes based on the current theme
-  const searchBarBgClass = theme === 'light' ? 'bg-white' : 'bg-gray-800';
   // Use a stable header background based on the current theme
   const headerBgClass = theme === 'light' ? 'bg-white' : 'bg-[var(--background)]';
 
@@ -45,18 +44,12 @@ const Header = () => {
 
       {/* Column 2: Centered Search Bar */}
       <div className="flex justify-center">
-        <div className="relative w-full max-w-lg">
-          <SearchSolidIcon
-            size={18}
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-          />
-          <input
-            type="text"
+        <div className="w-full max-w-lg">
+          <HeaderSearch
+            query={query}
+            setQuery={setQuery}
             placeholder={t('search_placeholder')}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            className={`w-full ${searchBarBgClass} border border-gray-200 dark:border-gray-600 rounded-lg py-2 px-10 focus:outline-none focus:ring-1 focus:ring-teal-500 transition-all duration-300 hover:shadow-lg hover:ring-1 hover:ring-teal-600 text-gray-700 dark:text-gray-200 placeholder-gray-400`}
           />
         </div>
       </div>
