@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
+import { BookmarkProvider } from '@/app/providers/BookmarkContext';
 import BookmarkedVersesList from '@/app/(features)/bookmarks/components/BookmarkedVersesList';
 import BookmarksPage from '@/app/(features)/bookmarks/page';
 import * as api from '@/lib/api';
@@ -15,7 +16,9 @@ describe('Bookmarked verses components', () => {
   test('BookmarkedVersesList shows empty message', () => {
     render(
       <SettingsProvider>
-        <BookmarkedVersesList />
+        <BookmarkProvider>
+          <BookmarkedVersesList />
+        </BookmarkProvider>
       </SettingsProvider>
     );
     expect(screen.getByText('No verses bookmarked yet.')).toBeInTheDocument();
@@ -32,7 +35,9 @@ describe('Bookmarked verses components', () => {
     localStorage.setItem('quranAppBookmarks', JSON.stringify(['1']));
     render(
       <SettingsProvider>
-        <BookmarkedVersesList />
+        <BookmarkProvider>
+          <BookmarkedVersesList />
+        </BookmarkProvider>
       </SettingsProvider>
     );
     expect(await screen.findByText('translation')).toBeInTheDocument();
@@ -43,7 +48,9 @@ describe('Bookmarked verses components', () => {
     localStorage.setItem('quranAppBookmarks', JSON.stringify(['1']));
     render(
       <SettingsProvider>
-        <BookmarkedVersesList />
+        <BookmarkProvider>
+          <BookmarkedVersesList />
+        </BookmarkProvider>
       </SettingsProvider>
     );
     expect(await screen.findByText('Failed to load bookmarked verses. boom')).toBeInTheDocument();
@@ -52,7 +59,9 @@ describe('Bookmarked verses components', () => {
   test('BookmarksPage renders heading', () => {
     render(
       <SettingsProvider>
-        <BookmarksPage />
+        <BookmarkProvider>
+          <BookmarksPage />
+        </BookmarkProvider>
       </SettingsProvider>
     );
     expect(screen.getByText('Bookmarked Verses')).toBeInTheDocument();

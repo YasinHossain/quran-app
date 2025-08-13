@@ -2,6 +2,7 @@
 import React from 'react';
 import { ThemeProvider, Theme } from './ThemeContext';
 import { SettingsProvider } from './SettingsContext';
+import { BookmarkProvider } from './BookmarkContext';
 import { SidebarProvider } from './SidebarContext';
 
 /**
@@ -19,7 +20,9 @@ export default function ClientProviders({
   return (
     <ThemeProvider initialTheme={initialTheme}>
       <SettingsProvider>
-        <SidebarProvider>{children}</SidebarProvider>
+        <BookmarkProvider>
+          <SidebarProvider>{children}</SidebarProvider>
+        </BookmarkProvider>
       </SettingsProvider>
     </ThemeProvider>
   );

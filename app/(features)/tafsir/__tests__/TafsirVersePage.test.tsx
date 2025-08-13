@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import TafsirVersePage from '@/app/(features)/tafsir/[surahId]/[ayahId]/page';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
+import { BookmarkProvider } from '@/app/providers/BookmarkContext';
 import { AudioProvider } from '@/app/(features)/player/context/AudioContext';
 import { SidebarProvider } from '@/app/providers/SidebarContext';
 import { ThemeProvider } from '@/app/providers/ThemeContext';
@@ -78,18 +79,20 @@ const renderPage = (surahId = '1', ayahId = '1') =>
   render(
     <AudioProvider>
       <SettingsProvider>
-        <ThemeProvider>
-          <SidebarProvider>
-            <TafsirVersePage
-              params={
-                { surahId, ayahId } as unknown as Promise<{
-                  surahId: string;
-                  ayahId: string;
-                }>
-              }
-            />
-          </SidebarProvider>
-        </ThemeProvider>
+        <BookmarkProvider>
+          <ThemeProvider>
+            <SidebarProvider>
+              <TafsirVersePage
+                params={
+                  { surahId, ayahId } as unknown as Promise<{
+                    surahId: string;
+                    ayahId: string;
+                  }>
+                }
+              />
+            </SidebarProvider>
+          </ThemeProvider>
+        </BookmarkProvider>
       </SettingsProvider>
     </AudioProvider>
   );

@@ -1,13 +1,15 @@
 // app/(features)/bookmarks/components/BookmarkedVersesList.tsx
 'use client';
 import { useEffect, useState } from 'react';
+import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { getVerseById } from '@/lib/api';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { Verse } from '@/types';
 
 const BookmarkedVersesList = () => {
-  const { bookmarkedVerses, settings } = useSettings();
+  const { bookmarkedVerses } = useBookmarks();
+  const { settings } = useSettings();
   const [verses, setVerses] = useState<Verse[]>([]);
   const [error, setError] = useState<string | null>(null);
 

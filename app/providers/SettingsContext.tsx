@@ -46,8 +46,6 @@ interface SettingsContextType {
   settings: Settings;
   setSettings: React.Dispatch<React.SetStateAction<Settings>>;
   arabicFonts: { name: string; value: string; category: string }[];
-  bookmarkedVerses: string[];
-  toggleBookmark: (verseId: string) => void;
   setShowByWords: (val: boolean) => void;
   setTajweed: (val: boolean) => void;
   setWordLang: (lang: string) => void;
@@ -59,22 +57,19 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 
 /**
  * Provides global access to user-configurable settings such as fonts, font sizes,
- * translation and tafsīr selections, word-by-word preferences, tajweed display and
- * verse bookmarks. Settings and bookmarks are persisted to `localStorage`.
+ * translation and tafsīr selections, word-by-word preferences and tajweed display.
+ * Settings are persisted to `localStorage`.
  *
  * Wrap parts of the application that need these values with this provider and use
  * the {@link useSettings} hook to read or update them.
  */
 export const SettingsProvider = ({ children }: { children: React.ReactNode }) => {
   const [settings, setSettings] = useState<Settings>(defaultSettings);
-  const [bookmarkedVerses, setBookmarkedVerses] = useState<string[]>([]);
 
   const settingsTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const bookmarksTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const latestSettings = useRef(settings);
-  const latestBookmarks = useRef(bookmarkedVerses);
 
-  // Load settings & bookmarks from localStorage on mount
+  // Load settings from localStorage on mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedSettings = localStorage.getItem('quranAppSettings');
@@ -88,14 +83,6 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
           setSettings({ ...defaultSettings, ...parsed });
         } catch (error) {
           console.error('Error parsing settings from localStorage:', error);
-        }
-      }
-      const savedBookmarks = localStorage.getItem('quranAppBookmarks');
-      if (savedBookmarks) {
-        try {
-          setBookmarkedVerses(JSON.parse(savedBookmarks));
-        } catch (error) {
-          console.error('Error parsing bookmarks from localStorage:', error);
         }
       }
     }
@@ -116,21 +103,6 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
     };
   }, [settings]);
 
-  // Save bookmarks when changed (debounced)
-  useEffect(() => {
-    latestBookmarks.current = bookmarkedVerses;
-    if (typeof window === 'undefined') return;
-
-    bookmarksTimeoutRef.current = setTimeout(() => {
-      localStorage.setItem('quranAppBookmarks', JSON.stringify(bookmarkedVerses));
-      bookmarksTimeoutRef.current = null;
-    }, PERSIST_DEBOUNCE_MS);
-
-    return () => {
-      if (bookmarksTimeoutRef.current) clearTimeout(bookmarksTimeoutRef.current);
-    };
-  }, [bookmarkedVerses]);
-
   // Flush any pending writes on unmount
   useEffect(() => {
     return () => {
@@ -139,21 +111,8 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
         clearTimeout(settingsTimeoutRef.current);
         localStorage.setItem('quranAppSettings', JSON.stringify(latestSettings.current));
       }
-      if (bookmarksTimeoutRef.current) {
-        clearTimeout(bookmarksTimeoutRef.current);
-        localStorage.setItem('quranAppBookmarks', JSON.stringify(latestBookmarks.current));
-      }
     };
   }, []);
-
-  const toggleBookmark = useCallback(
-    (verseId: string) => {
-      setBookmarkedVerses((prev) =>
-        prev.includes(verseId) ? prev.filter((id) => id !== verseId) : [...prev, verseId]
-      );
-    },
-    [setBookmarkedVerses]
-  );
 
   const setShowByWords = useCallback(
     (val: boolean) => setSettings((prev) => ({ ...prev, showByWords: val })),
@@ -185,8 +144,6 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
       settings,
       setSettings,
       arabicFonts: ARABIC_FONTS,
-      bookmarkedVerses,
-      toggleBookmark,
       setShowByWords,
       setTajweed,
       setWordLang,
@@ -196,8 +153,6 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
     [
       settings,
       setSettings,
-      bookmarkedVerses,
-      toggleBookmark,
       setShowByWords,
       setTajweed,
       setWordLang,

@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
+import { BookmarkProvider } from '@/app/providers/BookmarkContext';
 import { AudioProvider } from '@/app/(features)/player/context/AudioContext';
 import { SidebarProvider } from '@/app/providers/SidebarContext';
 import { ThemeProvider } from '@/app/providers/ThemeContext';
@@ -71,14 +72,16 @@ const renderPage = () =>
   render(
     <AudioProvider>
       <SettingsProvider>
-        <ThemeProvider>
-          <SidebarProvider>
-            <JuzPage
-              params={{ juzId: '1' } as unknown as Promise<{ juzId: string }>}
-              searchParams={{}}
-            />
-          </SidebarProvider>
-        </ThemeProvider>
+        <BookmarkProvider>
+          <ThemeProvider>
+            <SidebarProvider>
+              <JuzPage
+                params={{ juzId: '1' } as unknown as Promise<{ juzId: string }>}
+                searchParams={{}}
+              />
+            </SidebarProvider>
+          </ThemeProvider>
+        </BookmarkProvider>
       </SettingsProvider>
     </AudioProvider>
   );

@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
+import { BookmarkProvider } from '@/app/providers/BookmarkContext';
 import { AudioProvider } from '@/app/(features)/player/context/AudioContext';
 import { ThemeProvider } from '@/app/providers/ThemeContext';
 import { SidebarProvider } from '@/app/providers/SidebarContext';
@@ -73,11 +74,13 @@ const renderPage = () =>
     <SWRConfig value={{ provider: () => new Map() }}>
       <AudioProvider>
         <SettingsProvider>
-          <ThemeProvider>
-            <SidebarProvider>
-              <SurahPage params={{ surahId: '1' } as unknown as Promise<{ surahId: string }>} />
-            </SidebarProvider>
-          </ThemeProvider>
+          <BookmarkProvider>
+            <ThemeProvider>
+              <SidebarProvider>
+                <SurahPage params={{ surahId: '1' } as unknown as Promise<{ surahId: string }>} />
+              </SidebarProvider>
+            </ThemeProvider>
+          </BookmarkProvider>
         </SettingsProvider>
       </AudioProvider>
     </SWRConfig>
