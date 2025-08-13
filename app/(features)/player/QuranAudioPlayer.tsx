@@ -1,72 +1,16 @@
 'use client';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { SlidersHorizontal, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useAudio } from '@/app/(features)/player/context/AudioContext';
 import { useTheme } from '@/app/providers/ThemeContext';
 import useAudioPlayer from '@/app/(features)/player/hooks/useAudioPlayer';
+import useSurahRepeat from '@/app/(features)/player/hooks/useSurahRepeat';
 import TrackInfo from './components/TrackInfo';
 import TransportControls from './components/TransportControls';
 import Timeline from './components/Timeline';
-import SpeedControl from './components/SpeedControl';
-import VolumeControl from './components/VolumeControl';
-import PlaybackOptionsModal from './components/PlaybackOptionsModal';
+import PlayerOptions from './components/PlayerOptions';
 import IconBtn from './components/IconBtn';
 import type { Track } from './types';
-export function handleSurahRepeat({
-  verseRepeatsLeft,
-  playRepeatsLeft,
-  repeatEach,
-  delay,
-  onNext,
-  onPrev,
-  seek,
-  play,
-  pause,
-  setIsPlaying,
-  setPlayingId,
-  setVerseRepeatsLeft,
-  setPlayRepeatsLeft,
-}: {
-  verseRepeatsLeft: number;
-  playRepeatsLeft: number;
-  repeatEach: number;
-  delay: number;
-  onNext?: () => boolean;
-  onPrev?: () => boolean;
-  seek: (s: number) => void;
-  play: () => void;
-  pause: () => void;
-  setIsPlaying: (v: boolean) => void;
-  setPlayingId: (v: number | null) => void;
-  setVerseRepeatsLeft: (n: number) => void;
-  setPlayRepeatsLeft: (n: number) => void;
-}) {
-  if (verseRepeatsLeft > 1) {
-    setVerseRepeatsLeft(verseRepeatsLeft - 1);
-    seek(0);
-    play();
-    return;
-  }
-  setVerseRepeatsLeft(repeatEach);
-  const hasNext = onNext?.() ?? false;
-  if (hasNext) return;
-  if (playRepeatsLeft > 1) {
-    setPlayRepeatsLeft(playRepeatsLeft - 1);
-    setVerseRepeatsLeft(repeatEach);
-    setTimeout(() => {
-      let hasPrev = true;
-      while (hasPrev) {
-        hasPrev = onPrev?.() ?? false;
-      }
-    }, delay);
-    return;
-  }
-  setTimeout(() => {
-    pause();
-    setIsPlaying(false);
-    setPlayingId(null);
-  }, 0);
-}
 
 /**
  * Clean minimal music/Quran player – Tailwind CSS + Next.js + TypeScript
@@ -136,9 +80,6 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
     setPlayRepeatsLeft(repeatOptions.playCount ?? 1);
   }, [activeVerse, repeatOptions.repeatEach, repeatOptions.playCount]);
 
-  const [optionsOpen, setOptionsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'reciter' | 'repeat'>('reciter');
-
   const interactable = Boolean(track?.src);
 
   useEffect(() => {
@@ -158,6 +99,23 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
   useEffect(() => {
     setPlayerPlaybackRate(playbackRate);
   }, [playbackRate, setPlayerPlaybackRate]);
+
+  const delayMs = (repeatOptions.delay ?? 0) * 1000;
+  const handleSurahRepeat = useSurahRepeat({
+    verseRepeatsLeft,
+    playRepeatsLeft,
+    repeatEach: repeatOptions.repeatEach ?? 1,
+    delay: delayMs,
+    onNext,
+    onPrev,
+    seek,
+    play,
+    pause,
+    setIsPlaying,
+    setPlayingId,
+    setVerseRepeatsLeft,
+    setPlayRepeatsLeft,
+  });
 
   const togglePlay = useCallback(() => {
     if (!interactable) return;
@@ -243,18 +201,7 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
 
         {/* Utilities */}
         <div className="flex items-center gap-2">
-          <SpeedControl theme={theme} />
-          <VolumeControl theme={theme} />
-          <IconBtn
-            aria-label="Options"
-            onClick={() => {
-              setActiveTab('reciter');
-              setOptionsOpen(true);
-            }}
-            theme={theme}
-          >
-            <SlidersHorizontal />
-          </IconBtn>
+          <PlayerOptions theme={theme} />
           <IconBtn aria-label="Close player" onClick={closePlayer} theme={theme}>
             <X />
           </IconBtn>
@@ -270,7 +217,7 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
           const mode = repeatOptions.mode;
           const start = repeatOptions.start ?? 1;
           const end = repeatOptions.end ?? start;
-          const delay = (repeatOptions.delay ?? 0) * 1000;
+          const delay = delayMs;
           const currentAyah = activeVerse
             ? parseInt(activeVerse.verse_key.split(':')[1], 10)
             : null;
@@ -316,22 +263,7 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
           }
 
           if (mode === 'surah') {
-            handleSurahRepeat({
-              verseRepeatsLeft,
-              playRepeatsLeft,
-              repeatEach: repeatOptions.repeatEach ?? 1,
-              delay,
-              onNext,
-              onPrev,
-              seek,
-              play,
-              pause,
-              setIsPlaying,
-              setPlayingId,
-              internalAudioRef,
-              setVerseRepeatsLeft,
-              setPlayRepeatsLeft,
-            });
+            handleSurahRepeat();
             return;
           }
 
@@ -347,15 +279,6 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
       >
         <track kind="captions" />
       </audio>
-
-      {/* Options Sheet (Reciter + Repeat) */}
-      <PlaybackOptionsModal
-        open={optionsOpen}
-        onClose={() => setOptionsOpen(false)}
-        theme={theme}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-      />
     </div>
   );
 }
