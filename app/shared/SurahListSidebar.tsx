@@ -13,7 +13,7 @@ import Surah from './surah-sidebar/Surah';
 import Juz from './surah-sidebar/Juz';
 import Page from './surah-sidebar/Page';
 import SidebarTabs from './surah-sidebar/components/SidebarTabs';
-import SidebarSearch from './surah-sidebar/components/SidebarSearch';
+import { SearchInput } from './components/SearchInput';
 import useSelectionSync from './surah-sidebar/hooks/useSelectionSync';
 
 interface JuzSummary {
@@ -118,11 +118,10 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
           />
         </div>
         <div className="p-4 border-b border-[var(--border-color)]">
-          <SidebarSearch
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
+          <SearchInput
+            value={searchTerm}
+            onChange={setSearchTerm}
             placeholder={t('search_surah')}
-            theme={theme}
           />
         </div>
         <div ref={scrollRef} onScroll={handleScroll} className="flex-1 min-h-0 overflow-y-auto p-2">

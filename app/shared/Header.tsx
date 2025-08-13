@@ -1,5 +1,7 @@
 'use client';
+import type React from 'react';
 import { BarsIcon } from './icons';
+import { SearchInput } from './components/SearchInput';
 import { useTranslation } from 'react-i18next';
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { useState } from 'react';
@@ -7,7 +9,6 @@ import { useRouter } from 'next/navigation';
 import { FaCog } from 'react-icons/fa';
 import { useTheme } from '@/app/providers/ThemeContext';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
-import HeaderSearch from './HeaderSearch';
 
 const Header = () => {
   const { t } = useTranslation();
@@ -44,14 +45,13 @@ const Header = () => {
 
       {/* Column 2: Centered Search Bar */}
       <div className="flex justify-center">
-        <div className="w-full max-w-lg">
-          <HeaderSearch
-            query={query}
-            setQuery={setQuery}
-            placeholder={t('search_placeholder')}
-            onKeyDown={handleKeyDown}
-          />
-        </div>
+        <SearchInput
+          value={query}
+          onChange={setQuery}
+          placeholder={t('search_placeholder')}
+          onKeyDown={handleKeyDown}
+          className="w-full max-w-lg"
+        />
       </div>
 
       {/* Column 3: Settings Button */}
