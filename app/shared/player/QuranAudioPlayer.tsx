@@ -139,7 +139,7 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
 
   return (
     <div className="relative w-full">
-            {/* Card */}     {' '}
+      {/* Card */}
       <div
         className={`mx-auto w-full rounded-2xl px-4 py-4 flex items-center gap-4 ${
           theme === 'dark'
@@ -149,9 +149,9 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
         role="region"
         aria-label="Player"
       >
-                {/* Left media block */}
-                <TrackInfo cover={cover} title={title} artist={artist} theme={theme} />       {' '}
-        {/* Transport controls */}       {' '}
+        {/* Left media block */}
+        <TrackInfo cover={cover} title={title} artist={artist} theme={theme} />
+        {/* Transport controls */}
         <TransportControls
           isPlaying={isPlaying}
           interactable={interactable}
@@ -160,7 +160,7 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
           togglePlay={togglePlay}
           theme={theme}
         />
-                {/* Timeline & Time Labels */}       {' '}
+        {/* Timeline & Time Labels */}
         <Timeline
           current={current}
           duration={duration}
@@ -170,21 +170,18 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
           elapsed={elapsed}
           total={total}
         />
-                {/* Utilities */}       {' '}
+        {/* Utilities */}
         <div className="flex items-center gap-2">
-                    <PlayerOptions theme={theme} />         {' '}
+          <PlayerOptions theme={theme} />
           <IconBtn aria-label="Close player" onClick={closePlayer} theme={theme}>
-                        <X />         {' '}
+            <X />
           </IconBtn>
-                 {' '}
         </div>
-             {' '}
       </div>
-            {/* Hidden audio element */}     {' '}
+      {/* Hidden audio element */}
       <audio ref={internalAudioRef} src={track?.src || ''} preload="metadata" onEnded={handleEnded}>
-                <track kind="captions" />     {' '}
+        <track kind="captions" />
       </audio>
-         {' '}
     </div>
   );
 }
