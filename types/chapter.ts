@@ -1,3 +1,6 @@
+/**
+ * Metadata for a chapter (surah) of the Quran.
+ */
 export interface Chapter {
   id: number;
   name_simple: string;

@@ -1,4 +1,4 @@
-import type { Reciter } from '@/app/(features)/player/types';
+import type { Reciter } from '@/app/shared/player/types';
 
 export const RECITERS: Reciter[] = [
   { id: 2, name: 'Abdul Basit (Murattal)', path: 'AbdulBaset/Murattal' },

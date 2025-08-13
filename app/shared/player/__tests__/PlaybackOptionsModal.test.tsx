@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import PlaybackOptionsModal from '@/app/(features)/player/components/PlaybackOptionsModal';
+import PlaybackOptionsModal from '@/app/shared/player/components/PlaybackOptionsModal';
 import { ThemeProvider } from '@/app/providers/ThemeContext';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { SidebarProvider } from '@/app/providers/SidebarContext';
-import { AudioProvider, useAudio } from '@/app/(features)/player/context/AudioContext';
+import { AudioProvider, useAudio } from '@/app/shared/player/context/AudioContext';
 
 const Providers = ({ children }: { children: React.ReactNode }) => (
   <ThemeProvider>

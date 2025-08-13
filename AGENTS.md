@@ -8,9 +8,10 @@ Run the following commands before pushing changes:
 
 ```bash
 npm install
-npm audit --omit=dev
 npm run check
 ```
+
+Security audits run in CI. Optionally run `npm audit --omit=dev` locally to check for vulnerabilities before pushing.
 
 ## Commit Messages
 
