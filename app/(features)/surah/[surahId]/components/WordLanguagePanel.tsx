@@ -1,5 +1,5 @@
 'use client';
-import { FaArrowLeft, FaSearch } from '@/app/shared/SvgIcons';
+import { ArrowLeftIcon, SearchSolidIcon } from '@/app/shared/icons';
 import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';
 import { useSettings } from '@/app/providers/SettingsContext';
@@ -55,7 +55,7 @@ export const WordLanguagePanel = ({
           onClick={onClose}
           className="p-2 rounded-full hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
         >
-          <FaArrowLeft size={18} />
+          <ArrowLeftIcon size={18} />
         </button>
         <h2 className="font-bold text-lg text-[var(--foreground)]">
           {t('word_by_word_panel_title')}
@@ -64,7 +64,7 @@ export const WordLanguagePanel = ({
       </div>
       <div className="p-3 border-b border-gray-200/80">
         <div className="relative">
-          <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+          <SearchSolidIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
             placeholder={t('search')}

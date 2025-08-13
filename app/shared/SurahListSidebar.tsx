@@ -2,7 +2,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, usePathname } from 'next/navigation';
-import { FaSearch } from './SvgIcons';
+import { SearchSolidIcon } from './icons';
 import { Chapter } from '@/types';
 import { getChapters } from '@/lib/api';
 import useSWR from 'swr';
@@ -153,7 +153,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
         </div>
         <div className="p-4 border-b border-[var(--border-color)]">
           <div className="relative">
-            <FaSearch
+            <SearchSolidIcon
               size={16}
               className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
             />

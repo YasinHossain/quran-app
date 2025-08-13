@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaArrowLeft } from '@/app/shared/SvgIcons';
+import { ArrowLeftIcon } from '@/app/shared/icons';
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { useTheme } from '@/app/providers/ThemeContext';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
@@ -70,7 +70,7 @@ export const SettingsSidebar = ({
             onClick={() => setSettingsOpen(false)}
             className="p-2 rounded-full hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 lg:hidden"
           >
-            <FaArrowLeft size={18} />
+            <ArrowLeftIcon size={18} />
           </button>
           <h2 className="flex-grow text-center text-lg font-bold">Settings</h2>
           <div className="w-8" />

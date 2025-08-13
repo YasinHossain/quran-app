@@ -1,6 +1,6 @@
 'use client';
 import { useTheme } from '@/app/providers/ThemeContext';
-import { Sun, Moon } from '@/app/shared/SvgIcons';
+import { SunIcon, MoonIcon } from '@/app/shared/icons';
 
 export default function HomeHeader() {
   const { theme, setTheme } = useTheme();
@@ -21,9 +21,9 @@ export default function HomeHeader() {
           aria-label="Toggle Theme"
         >
           {theme === 'light' ? (
-            <Moon className="w-5 h-5 text-slate-700" />
+            <MoonIcon className="w-5 h-5 text-slate-700" />
           ) : (
-            <Sun className="w-5 h-5 text-yellow-400" />
+            <SunIcon className="w-5 h-5 text-yellow-400" />
           )}
         </button>
       </nav>

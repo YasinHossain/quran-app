@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaTranslation, FaBookReader, FaChevronDown } from '@/app/shared/SvgIcons';
+import { TranslationIcon, BookReaderIcon, ChevronDownIcon } from '@/app/shared/icons';
 import { CollapsibleSection } from './CollapsibleSection';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useFontSize } from '../../hooks/useFontSize';
@@ -36,7 +36,7 @@ export const TranslationSettings = ({
     <>
       <CollapsibleSection
         title={t('reading_setting')}
-        icon={<FaTranslation size={20} className="text-teal-700" />}
+        icon={<TranslationIcon size={20} className="text-teal-700" />}
         isLast={!showTafsirSetting}
         isOpen={isReadingOpen}
         onToggle={() => setReadingOpen(!isReadingOpen)}
@@ -75,7 +75,7 @@ export const TranslationSettings = ({
               className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-200 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition-shadow shadow-sm hover:shadow-md"
             >
               <span className="truncate text-[var(--foreground)]">{selectedTranslationName}</span>
-              <FaChevronDown className="text-gray-500" />
+              <ChevronDownIcon className="text-gray-500" />
             </button>
           </div>
 
@@ -88,7 +88,7 @@ export const TranslationSettings = ({
               className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-200 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition-shadow shadow-sm hover:shadow-md"
             >
               <span className="truncate text-[var(--foreground)]">{selectedWordLanguageName}</span>
-              <FaChevronDown className="text-gray-500" />
+              <ChevronDownIcon className="text-gray-500" />
             </button>
           </div>
         </div>
@@ -96,7 +96,7 @@ export const TranslationSettings = ({
       {showTafsirSetting && (
         <CollapsibleSection
           title={t('tafsir_setting')}
-          icon={<FaBookReader size={20} className="text-teal-700" />}
+          icon={<BookReaderIcon size={20} className="text-teal-700" />}
           isLast={false}
           isOpen={isTafsirOpen}
           onToggle={() => setTafsirOpen(!isTafsirOpen)}
@@ -111,7 +111,7 @@ export const TranslationSettings = ({
                 className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-200 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition-shadow shadow-sm hover:shadow-md"
               >
                 <span className="truncate text-[var(--foreground)]">{selectedTafsirName}</span>
-                <FaChevronDown className="text-gray-500" />
+                <ChevronDownIcon className="text-gray-500" />
               </button>
             </div>
             <div>
