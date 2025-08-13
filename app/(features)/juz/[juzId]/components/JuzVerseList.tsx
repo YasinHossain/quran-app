@@ -5,7 +5,7 @@ import type { Verse as VerseType } from '@/types';
 
 interface JuzVerseListProps {
   verses: VerseType[];
-  loadMoreRef: React.RefObject<HTMLDivElement>;
+  loadMoreRef: React.RefObject<HTMLDivElement | null>;
   isValidating: boolean;
   isReachingEnd: boolean;
 }
