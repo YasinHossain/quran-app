@@ -1,3 +1,6 @@
+/**
+ * User preferences controlling fonts, translations and reading options.
+ */
 export interface Settings {
   translationId: number;
   tafsirIds: number[];
