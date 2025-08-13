@@ -18,7 +18,7 @@ Feature components typically reside in a `components` subfolder. They import hoo
 
 ## Adding a New Feature
 
-1. Create a folder under `app/(features)/` for the route. Add `page.tsx` and optionally `layout.tsx` inside it. Use `[param]` syntax for dynamic segments.
+1. Create a folder under `app/(features)/` for the route. If the feature exposes a root route (for example, `/surah`), include a `page.tsx` file. Features composed only of dynamic segments (like `/surah/[slug]`) may omit `page.tsx`. Optionally add `layout.tsx`. Use `[param]` syntax for dynamic segments.
 2. Place any feature specific components in a `components` directory within that folder.
 3. Add new utilities to `lib/` and shared types to `types/` when appropriate.
 4. Write tests in the relevant `__tests__` folder mirroring the feature name (for example, `app/(features)/<feature>/__tests__/`). Wrap tested components with any required providers from `app/providers`.
