@@ -1,19 +1,20 @@
 'use client';
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, usePathname } from 'next/navigation';
-import { SearchSolidIcon } from './icons';
 import { Chapter } from '@/types';
 import { getChapters } from '@/lib/api';
 import useSWR from 'swr';
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { useTheme } from '@/app/providers/ThemeContext';
 import juzData from '@/data/juz.json';
-import { getJuzByPage, getSurahByPage, JUZ_START_PAGES } from '@/lib/utils/surah-navigation';
 import useSidebarScroll from './surah-sidebar/useSidebarScroll';
 import Surah from './surah-sidebar/Surah';
 import Juz from './surah-sidebar/Juz';
 import Page from './surah-sidebar/Page';
+import SidebarTabs from './surah-sidebar/components/SidebarTabs';
+import SidebarSearch from './surah-sidebar/components/SidebarSearch';
+import useSelectionSync from './surah-sidebar/hooks/useSelectionSync';
 
 interface JuzSummary {
   number: number;
@@ -51,37 +52,21 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   });
 
   const { theme } = useTheme();
-  const searchBarClasses =
-    theme === 'light'
-      ? 'bg-white text-gray-700 border border-gray-200 placeholder-gray-400'
-      : 'bg-gray-800 text-gray-200 border border-gray-600 placeholder-gray-400';
   const isTafsirPath = pathname?.includes('/tafsir');
-  const [selectedSurahId, setSelectedSurahId] = useState<string | null>(currentSurahId ?? null);
-  const [selectedJuzId, setSelectedJuzId] = useState<string | null>(currentJuzId ?? null);
-  const [selectedPageId, setSelectedPageId] = useState<string | null>(currentPageId ?? null);
 
-  // Sync selection state when URL params change
-  useEffect(() => {
-    if (currentSurahId) {
-      setSelectedSurahId(currentSurahId);
-      const chapter = chapters.find((c) => c.id === Number(currentSurahId));
-      const page = chapter?.pages?.[0] ?? 1;
-      setSelectedPageId(String(page));
-      setSelectedJuzId(String(getJuzByPage(page)));
-    } else if (currentJuzId) {
-      setSelectedJuzId(currentJuzId);
-      const page = JUZ_START_PAGES[Number(currentJuzId) - 1];
-      setSelectedPageId(String(page));
-      const chapter = getSurahByPage(page, chapters);
-      if (chapter) setSelectedSurahId(String(chapter.id));
-    } else if (currentPageId) {
-      setSelectedPageId(currentPageId);
-      const page = Number(currentPageId);
-      setSelectedJuzId(String(getJuzByPage(page)));
-      const chapter = getSurahByPage(page, chapters);
-      if (chapter) setSelectedSurahId(String(chapter.id));
-    }
-  }, [currentSurahId, currentJuzId, currentPageId, chapters]);
+  const {
+    selectedSurahId,
+    setSelectedSurahId,
+    selectedJuzId,
+    setSelectedJuzId,
+    selectedPageId,
+    setSelectedPageId,
+  } = useSelectionSync({
+    currentSurahId,
+    currentJuzId,
+    currentPageId,
+    chapters,
+  });
 
   const { scrollRef, handleScroll, prepareForTabSwitch, rememberScroll } = useSidebarScroll({
     activeTab,
@@ -124,47 +109,21 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
         }`}
       >
         <div className="p-4 border-b border-[var(--border-color)]">
-          <div
-            className={`flex items-center p-1 rounded-full ${
-              theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'
-            }`}
-          >
-            {TABS.map(({ key, label }) => (
-              <button
-                key={key}
-                onClick={() => {
-                  prepareForTabSwitch(key);
-                  setActiveTab(key);
-                }}
-                className={`w-1/3 px-4 py-2 text-sm font-semibold rounded-full transition-colors ${
-                  activeTab === key
-                    ? theme === 'light'
-                      ? 'bg-white text-slate-900 shadow'
-                      : 'bg-slate-700 text-white shadow'
-                    : theme === 'light'
-                      ? 'text-slate-400 hover:text-slate-700'
-                      : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
+          <SidebarTabs
+            tabs={TABS}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            prepareForTabSwitch={prepareForTabSwitch}
+            theme={theme}
+          />
         </div>
         <div className="p-4 border-b border-[var(--border-color)]">
-          <div className="relative">
-            <SearchSolidIcon
-              size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-            />
-            <input
-              type="text"
-              placeholder={t('search_surah')}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className={`w-full pl-9 pr-3 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-teal-500 transition-all duration-300 hover:shadow-lg hover:ring-1 hover:ring-teal-600 ${searchBarClasses}`}
-            />
-          </div>
+          <SidebarSearch
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            placeholder={t('search_surah')}
+            theme={theme}
+          />
         </div>
         <div ref={scrollRef} onScroll={handleScroll} className="flex-1 min-h-0 overflow-y-auto p-2">
           {activeTab === 'Surah' && (
