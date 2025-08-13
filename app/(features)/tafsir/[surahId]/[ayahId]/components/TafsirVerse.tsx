@@ -1,12 +1,12 @@
 'use client';
 import {
-  FaPlay,
-  FaPause,
-  FaBookmark,
-  FaRegBookmark,
-  FaShare,
-  FaChevronDown,
-} from '@/app/shared/SvgIcons';
+  PlayIcon,
+  PauseIcon,
+  BookmarkIcon,
+  BookmarkOutlineIcon,
+  ShareIcon,
+  ChevronDownIcon,
+} from '@/app/shared/icons';
 import { Verse as VerseType, Translation, Word } from '@/types';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import { useAudio } from '@/app/(features)/player/context/AudioContext';
@@ -80,9 +80,9 @@ export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps) => {
               {isLoadingAudio ? (
                 <Spinner className="h-4 w-4 text-teal-600" />
               ) : isPlaying ? (
-                <FaPause size={18} />
+                <PauseIcon size={18} />
               ) : (
-                <FaPlay size={18} />
+                <PlayIcon size={18} />
               )}{' '}
             </button>{' '}
             <button
@@ -91,7 +91,7 @@ export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps) => {
               onClick={() => toggleBookmark(String(verse.id))}
               className={`p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition ${isBookmarked ? 'text-teal-600' : 'hover:text-teal-600'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500`}
             >
-              {isBookmarked ? <FaBookmark size={18} /> : <FaRegBookmark size={18} />}{' '}
+              {isBookmarked ? <BookmarkIcon size={18} /> : <BookmarkOutlineIcon size={18} />}{' '}
             </button>{' '}
             <button
               aria-label="Share"
@@ -99,7 +99,7 @@ export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps) => {
               onClick={handleShare}
               className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-teal-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
             >
-              <FaShare size={18} />{' '}
+              <ShareIcon size={18} />{' '}
             </button>{' '}
           </div>{' '}
         </div>{' '}
@@ -174,7 +174,7 @@ export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps) => {
             >
               {' '}
               <span className="font-semibold text-[var(--foreground)]">Tafsir {id}</span>{' '}
-              <FaChevronDown
+              <ChevronDownIcon
                 size={16}
                 className={`text-gray-500 transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
               />{' '}

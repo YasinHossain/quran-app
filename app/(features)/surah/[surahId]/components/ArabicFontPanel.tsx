@@ -1,6 +1,6 @@
 // app/(features)/surah/[surahId]/components/ArabicFontPanel.tsx
 'use client';
-import { FaArrowLeft } from '@/app/shared/SvgIcons';
+import { ArrowLeftIcon } from '@/app/shared/icons';
 import { useTranslation } from 'react-i18next';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useState } from 'react'; // Import useState
@@ -48,7 +48,7 @@ export const ArabicFontPanel = ({ isOpen, onClose }: ArabicFontPanelProps) => {
             onClick={onClose}
             className="p-2 rounded-full hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
           >
-            <FaArrowLeft size={18} />
+            <ArrowLeftIcon size={18} />
           </button>
           <h2 className="font-bold text-lg text-[var(--foreground)]">{t('select_font_face')}</h2>{' '}
           <div className="w-8"></div>

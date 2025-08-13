@@ -1,5 +1,5 @@
 'use client';
-import { FaSearch, FaBars } from './SvgIcons';
+import { SearchSolidIcon, BarsIcon } from './icons';
 import { useTranslation } from 'react-i18next';
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { useState } from 'react';
@@ -38,7 +38,7 @@ const Header = () => {
           className="p-2 rounded-md hover:bg-gray-100 lg:hidden"
           aria-label="Open Surah List"
         >
-          <FaBars size={20} />
+          <BarsIcon size={20} />
         </button>
         <h1 className="text-xl font-semibold">{t('title')}</h1>
       </div>
@@ -46,7 +46,10 @@ const Header = () => {
       {/* Column 2: Centered Search Bar */}
       <div className="flex justify-center">
         <div className="relative w-full max-w-lg">
-          <FaSearch size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+          <SearchSolidIcon
+            size={18}
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+          />
           <input
             type="text"
             placeholder={t('search_placeholder')}

@@ -1,5 +1,5 @@
 'use client';
-import { Search } from '@/app/shared/SvgIcons';
+import { SearchIcon } from '@/app/shared/icons';
 import { useTheme } from '@/app/providers/ThemeContext';
 
 interface HomeSearchProps {
@@ -23,7 +23,7 @@ export default function HomeSearch({ searchQuery, setSearchQuery }: HomeSearchPr
             className={`w-full text-lg bg-transparent border-none focus:ring-0 focus:outline-none placeholder:text-slate-500 dark:placeholder:text-slate-400 ${theme === 'light' ? 'text-slate-900' : 'text-white'}`}
           />
           <div className="absolute inset-y-0 right-0 flex items-center pr-3 sm:pr-4 text-slate-500 dark:text-slate-400">
-            <Search className="w-6 h-6" />
+            <SearchIcon className="w-6 h-6" />
           </div>
         </div>
       </div>

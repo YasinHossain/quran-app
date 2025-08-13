@@ -1,6 +1,12 @@
 // app/(features)/surah/[surahId]/components/Verse.tsx
 import { memo, useCallback } from 'react';
-import { FaPlay, FaPause, FaBookmark, FaRegBookmark, FaBookReader } from '@/app/shared/SvgIcons';
+import {
+  PlayIcon,
+  PauseIcon,
+  BookmarkIcon,
+  BookmarkOutlineIcon,
+  BookReaderIcon,
+} from '@/app/shared/icons';
 import { useRouter } from 'next/navigation';
 import { Verse as VerseType, Translation, Word } from '@/types';
 import type { LanguageCode } from '@/lib/text/languageCodes';
@@ -86,9 +92,9 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
               {isLoadingAudio ? (
                 <Spinner className="h-4 w-4 text-teal-600" />
               ) : isPlaying ? (
-                <FaPause size={18} />
+                <PauseIcon size={18} />
               ) : (
-                <FaPlay size={18} />
+                <PlayIcon size={18} />
               )}
             </button>
             {/* Bookmark button */}
@@ -98,7 +104,7 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
               onClick={handleBookmark}
               className={`p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition ${isBookmarked ? 'text-teal-600' : 'hover:text-teal-600'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500`}
             >
-              {isBookmarked ? <FaBookmark size={18} /> : <FaRegBookmark size={18} />}
+              {isBookmarked ? <BookmarkIcon size={18} /> : <BookmarkOutlineIcon size={18} />}
             </button>
 
             {/* Tafsir button navigates to tafsir page */}
@@ -108,7 +114,7 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
               onClick={handleTafsir}
               className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-teal-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
             >
-              <FaBookReader size={18} />
+              <BookReaderIcon size={18} />
             </button>
           </div>
         </div>

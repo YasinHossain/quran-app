@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaFontSetting, FaChevronDown } from '@/app/shared/SvgIcons';
+import { FontSettingIcon, ChevronDownIcon } from '@/app/shared/icons';
 import { CollapsibleSection } from './CollapsibleSection';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useFontSize } from '../../hooks/useFontSize';
@@ -24,7 +24,7 @@ export const FontSettings = ({ onArabicFontPanelOpen }: FontSettingsProps) => {
   return (
     <CollapsibleSection
       title={t('font_setting')}
-      icon={<FaFontSetting size={20} className="text-teal-700" />}
+      icon={<FontSettingIcon size={20} className="text-teal-700" />}
       isLast
       isOpen={isOpen}
       onToggle={() => setIsOpen(!isOpen)}
@@ -67,7 +67,7 @@ export const FontSettings = ({ onArabicFontPanelOpen }: FontSettingsProps) => {
             className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-200 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition-shadow shadow-sm hover:shadow-md"
           >
             <span className="truncate text-[var(--foreground)]">{selectedArabicFont}</span>
-            <FaChevronDown className="text-gray-500" />
+            <ChevronDownIcon className="text-gray-500" />
           </button>
         </div>
       </div>

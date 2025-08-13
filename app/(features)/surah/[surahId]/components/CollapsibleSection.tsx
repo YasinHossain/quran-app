@@ -1,6 +1,6 @@
 // app/(features)/surah/[surahId]/components/CollapsibleSection.tsx
 'use client';
-import { FaChevronDown } from '@/app/shared/SvgIcons';
+import { ChevronDownIcon } from '@/app/shared/icons';
 
 interface CollapsibleSectionProps {
   title: string;
@@ -28,7 +28,7 @@ export const CollapsibleSection = ({
           {icon}
           <span className="font-semibold text-[var(--foreground)]">{title}</span>
         </div>
-        <FaChevronDown
+        <ChevronDownIcon
           size={16}
           className={`text-gray-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
         />

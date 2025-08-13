@@ -1,15 +1,15 @@
 // app/components/IconSidebar.tsx
 'use client';
-import { FaHome, FaRegBookmark, FaTh } from './SvgIcons';
+import { HomeIcon, BookmarkOutlineIcon, GridIcon } from './icons';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link'; // Import Link
 
 const IconSidebar = () => {
   const { t } = useTranslation();
   const navItems = [
-    { icon: FaHome, label: t('home'), href: '/' },
-    { icon: FaTh, label: t('all_surahs'), href: '/surah/1' },
-    { icon: FaRegBookmark, label: t('bookmarks'), href: '/bookmarks' },
+    { icon: HomeIcon, label: t('home'), href: '/' },
+    { icon: GridIcon, label: t('all_surahs'), href: '/surah/1' },
+    { icon: BookmarkOutlineIcon, label: t('bookmarks'), href: '/bookmarks' },
   ];
 
   return (

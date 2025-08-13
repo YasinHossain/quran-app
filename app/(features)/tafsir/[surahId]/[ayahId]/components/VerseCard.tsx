@@ -1,5 +1,11 @@
 'use client';
-import { FaPlay, FaPause, FaBookmark, FaRegBookmark, FaShare } from '@/app/shared/SvgIcons';
+import {
+  PlayIcon,
+  PauseIcon,
+  BookmarkIcon,
+  BookmarkOutlineIcon,
+  ShareIcon,
+} from '@/app/shared/icons';
 import { Verse as VerseType, Translation, Word } from '@/types';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import { useAudio } from '@/app/(features)/player/context/AudioContext';
@@ -48,9 +54,9 @@ export default function VerseCard({ verse }: VerseCardProps) {
           {isLoadingAudio ? (
             <Spinner className="h-4 w-4 text-emerald-600" />
           ) : isPlaying ? (
-            <FaPause size={18} />
+            <PauseIcon size={18} />
           ) : (
-            <FaPlay size={18} />
+            <PlayIcon size={18} />
           )}{' '}
         </button>{' '}
         <button
@@ -58,14 +64,14 @@ export default function VerseCard({ verse }: VerseCardProps) {
           onClick={() => toggleBookmark(String(verse.id))}
           className={`p-1.5 rounded-full hover:bg-gray-100 transition ${isBookmarked ? 'text-emerald-600' : 'hover:text-emerald-600'}`}
         >
-          {isBookmarked ? <FaBookmark size={18} /> : <FaRegBookmark size={18} />}{' '}
+          {isBookmarked ? <BookmarkIcon size={18} /> : <BookmarkOutlineIcon size={18} />}{' '}
         </button>{' '}
         <button
           aria-label="Share"
           onClick={handleShare}
           className="p-1.5 rounded-full hover:bg-gray-100 hover:text-emerald-600 transition"
         >
-          <FaShare size={18} />{' '}
+          <ShareIcon size={18} />{' '}
         </button>{' '}
       </div>{' '}
       <div className="flex-grow space-y-6">
