@@ -4,7 +4,7 @@ import useSWRInfinite from 'swr/infinite';
 import { getTranslations, getWordTranslations } from '@/lib/api';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { WORD_LANGUAGE_LABELS } from '@/lib/text/wordLanguages';
-import { useAudio } from '@/app/(features)/player/context/AudioContext';
+import { useAudio } from '@/app/shared/player/context/AudioContext';
 import type { Verse, TranslationResource } from '@/types';
 
 interface LookupFn {

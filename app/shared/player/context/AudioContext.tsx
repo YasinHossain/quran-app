@@ -10,7 +10,7 @@ import React, {
 } from 'react';
 import { Verse } from '@/types';
 import { RECITERS } from '@/lib/audio/reciters';
-import type { Reciter, RepeatOptions } from '@/app/(features)/player/types';
+import type { Reciter, RepeatOptions } from '@/app/shared/player/types';
 
 interface AudioContextType {
   playingId: number | null;

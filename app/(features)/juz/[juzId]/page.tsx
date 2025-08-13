@@ -9,7 +9,7 @@ import { WordLanguagePanel } from '@/app/(features)/surah/[surahId]/components/W
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import { buildAudioUrl } from '@/lib/audio/reciters';
-import { QuranAudioPlayer } from '@/app/(features)/player';
+import { QuranAudioPlayer } from '@/app/shared/player';
 import type { TranslationResource } from '@/types';
 import { getSurahCoverUrl } from '@/lib/api';
 import useJuzData from '../hooks/useJuzData';

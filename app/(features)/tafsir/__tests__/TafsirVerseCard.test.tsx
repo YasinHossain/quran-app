@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import VerseCard from '@/app/(features)/tafsir/[surahId]/[ayahId]/components/VerseCard';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { BookmarkProvider } from '@/app/providers/BookmarkContext';
-import { AudioProvider } from '@/app/(features)/player/context/AudioContext';
+import { AudioProvider } from '@/app/shared/player/context/AudioContext';
 import { Verse } from '@/types';
 
 const verse: Verse = {

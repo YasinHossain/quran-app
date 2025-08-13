@@ -6,8 +6,9 @@ import useVerseListing from '@/app/(features)/surah/hooks/useVerseListing';
 export function useJuzData(juzId?: string) {
   const verseListing = useVerseListing({ id: juzId, lookup: getVersesByJuz });
 
-  const { data: juz, error: juzError } = useSWR<Juz>(juzId ? ['juz', juzId] : null, ([, id]) =>
-    getJuz(id)
+  const { data: juz, error: juzError } = useSWR<Juz>(
+    juzId ? ['juz', juzId] : null,
+    ([, id]: [string, string]) => getJuz(id)
   );
 
   const isLoading = verseListing.isLoading || (!juz && !juzError);
@@ -15,8 +16,8 @@ export function useJuzData(juzId?: string) {
   return {
     juz,
     juzError,
-    isLoading,
     ...verseListing,
+    isLoading,
   } as const;
 }
 

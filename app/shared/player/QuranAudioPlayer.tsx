@@ -1,11 +1,11 @@
 'use client';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { X } from 'lucide-react';
-import { useAudio } from '@/app/(features)/player/context/AudioContext';
+import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { useTheme } from '@/app/providers/ThemeContext';
-import useAudioPlayer from '@/app/(features)/player/hooks/useAudioPlayer';
-import usePlayerKeyboard from '@/app/(features)/player/hooks/usePlayerKeyboard';
-import usePlaybackCompletion from '@/app/(features)/player/hooks/usePlaybackCompletion';
+import useAudioPlayer from '@/app/shared/player/hooks/useAudioPlayer';
+import usePlayerKeyboard from '@/app/shared/player/hooks/usePlayerKeyboard';
+import usePlaybackCompletion from '@/app/shared/player/hooks/usePlaybackCompletion';
 import TrackInfo from './components/TrackInfo';
 import TransportControls from './components/TransportControls';
 import Timeline from './components/Timeline';
