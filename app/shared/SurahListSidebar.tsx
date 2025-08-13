@@ -1,7 +1,6 @@
 'use client';
-import React, { useState, useMemo, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { FaSearch } from './SvgIcons';
 import { Chapter } from '@/types';
@@ -10,27 +9,17 @@ import useSWR from 'swr';
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { useTheme } from '@/app/providers/ThemeContext';
 import juzData from '@/data/juz.json';
+import { getJuzByPage, getSurahByPage, JUZ_START_PAGES } from '@/lib/utils/surah-navigation';
+import useSidebarScroll from './surah-sidebar/useSidebarScroll';
+import Surah from './surah-sidebar/Surah';
+import Juz from './surah-sidebar/Juz';
+import Page from './surah-sidebar/Page';
 
 interface JuzSummary {
   number: number;
   name: string;
   surahRange: string;
 }
-
-const JUZ_START_PAGES = [
-  1, 22, 42, 62, 82, 102, 121, 142, 162, 182, 201, 222, 242, 262, 282, 302, 322, 342, 362, 382, 402,
-  422, 442, 462, 482, 502, 522, 542, 562, 582,
-];
-
-const getJuzByPage = (page: number) => {
-  for (let i = JUZ_START_PAGES.length - 1; i >= 0; i--) {
-    if (page >= JUZ_START_PAGES[i]) return i + 1;
-  }
-  return 1;
-};
-
-const getSurahByPage = (page: number, chapters: Chapter[]) =>
-  chapters.find((c) => c.pages && page >= c.pages[0] && page <= c.pages[1]);
 
 interface Props {
   initialChapters?: Chapter[];
@@ -94,91 +83,13 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     }
   }, [currentSurahId, currentJuzId, currentPageId, chapters]);
 
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const {
-    isSurahListOpen,
-    surahScrollTop,
-    setSurahScrollTop,
-    juzScrollTop,
-    setJuzScrollTop,
-    pageScrollTop,
-    setPageScrollTop,
-  } = useSidebar();
-
-  // Centering flags per tab
-  const shouldCenterRef = useRef<Record<'Surah' | 'Juz' | 'Page', boolean>>({
-    Surah: true,
-    Juz: true,
-    Page: true,
-  });
-
-  // Read sessionStorage to decide if we should skip centering on initial load
-  useLayoutEffect(() => {
-    const surahSkipped = sessionStorage.getItem('skipCenterSurah') === '1';
-    const juzSkipped = sessionStorage.getItem('skipCenterJuz') === '1';
-    const pageSkipped = sessionStorage.getItem('skipCenterPage') === '1';
-
-    if (surahSkipped) {
-      shouldCenterRef.current.Surah = false;
-      sessionStorage.removeItem('skipCenterSurah');
-    }
-    if (juzSkipped) {
-      shouldCenterRef.current.Juz = false;
-      sessionStorage.removeItem('skipCenterJuz');
-    }
-    if (pageSkipped) {
-      shouldCenterRef.current.Page = false;
-      sessionStorage.removeItem('skipCenterPage');
-    }
-  }, []);
-
-  // Reset centering for inactive tabs when their selection changes
-  useEffect(() => {
-    if (activeTab !== 'Surah') shouldCenterRef.current.Surah = true;
-  }, [selectedSurahId, activeTab]);
-
-  useEffect(() => {
-    if (activeTab !== 'Juz') shouldCenterRef.current.Juz = true;
-  }, [selectedJuzId, activeTab]);
-
-  useEffect(() => {
-    if (activeTab !== 'Page') shouldCenterRef.current.Page = true;
-  }, [selectedPageId, activeTab]);
-
-  // Handle scroll restoration and centering logic
-  useLayoutEffect(() => {
-    if (!scrollRef.current) return;
-    const sidebar = scrollRef.current;
-    let top = 0;
-    if (activeTab === 'Surah') {
-      top = Number(sessionStorage.getItem('surahScrollTop')) || surahScrollTop;
-    } else if (activeTab === 'Juz') {
-      top = Number(sessionStorage.getItem('juzScrollTop')) || juzScrollTop;
-    } else {
-      top = Number(sessionStorage.getItem('pageScrollTop')) || pageScrollTop;
-    }
-    sidebar.scrollTop = top;
-
-    const activeEl = sidebar.querySelector<HTMLElement>('[data-active="true"]');
-    if (activeEl) {
-      const sidebarRect = sidebar.getBoundingClientRect();
-      const activeRect = activeEl.getBoundingClientRect();
-      const isOutside = activeRect.top < sidebarRect.top || activeRect.bottom > sidebarRect.bottom;
-
-      if (shouldCenterRef.current[activeTab] && (top === 0 || isOutside)) {
-        activeEl.scrollIntoView({ block: 'center' });
-      }
-    }
-    shouldCenterRef.current[activeTab] = false;
-  }, [
+  const { scrollRef, handleScroll, prepareForTabSwitch, rememberScroll } = useSidebarScroll({
     activeTab,
-    surahScrollTop,
-    juzScrollTop,
-    pageScrollTop,
     selectedSurahId,
     selectedJuzId,
     selectedPageId,
-  ]);
+  });
+  const { isSurahListOpen } = useSidebar();
 
   // Filtering lists based on search term
   const term = searchTerm.toLowerCase();
@@ -222,12 +133,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
               <button
                 key={key}
                 onClick={() => {
-                  const top = scrollRef.current?.scrollTop ?? 0;
-                  if (activeTab === 'Surah') setSurahScrollTop(top);
-                  else if (activeTab === 'Juz') setJuzScrollTop(top);
-                  else setPageScrollTop(top);
-
-                  shouldCenterRef.current[key] = true;
+                  prepareForTabSwitch(key);
                   setActiveTab(key);
                 }}
                 className={`w-1/3 px-4 py-2 text-sm font-semibold rounded-full transition-colors ${
@@ -260,222 +166,44 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
             />
           </div>
         </div>
-        <div
-          ref={scrollRef}
-          onScroll={(e: React.UIEvent<HTMLDivElement>) => {
-            const top = e.currentTarget.scrollTop;
-            if (activeTab === 'Surah') {
-              setSurahScrollTop(top);
-              sessionStorage.setItem('surahScrollTop', String(top));
-            } else if (activeTab === 'Juz') {
-              setJuzScrollTop(top);
-              sessionStorage.setItem('juzScrollTop', String(top));
-            } else {
-              setPageScrollTop(top);
-              sessionStorage.setItem('pageScrollTop', String(top));
-            }
-          }}
-          className="flex-1 min-h-0 overflow-y-auto p-2"
-        >
+        <div ref={scrollRef} onScroll={handleScroll} className="flex-1 min-h-0 overflow-y-auto p-2">
           {activeTab === 'Surah' && (
-            <ul className="space-y-2">
-              {filteredChapters.map((chapter) => {
-                const isActive = String(chapter.id) === selectedSurahId;
-                return (
-                  <li key={chapter.id}>
-                    <Link
-                      href={isTafsirPath ? `/tafsir/${chapter.id}/1` : `/surah/${chapter.id}`}
-                      scroll={false}
-                      data-active={isActive}
-                      onClick={() => {
-                        setSelectedSurahId(String(chapter.id));
-                        const firstPage = chapter.pages?.[0] ?? 1;
-                        setSelectedPageId(String(firstPage));
-                        setSelectedJuzId(String(getJuzByPage(firstPage)));
-                        const scrollTop = scrollRef.current?.scrollTop ?? 0;
-                        setSurahScrollTop(scrollTop);
-                        sessionStorage.setItem('surahScrollTop', String(scrollTop));
-                        sessionStorage.setItem('skipCenterSurah', '1');
-                      }}
-                      className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
-                        isActive
-                          ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/30'
-                          : theme === 'light'
-                            ? 'bg-white shadow hover:bg-slate-50'
-                            : 'bg-slate-800 shadow hover:bg-slate-700'
-                      }`}
-                    >
-                      <div
-                        className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg shadow transition-colors ${
-                          isActive
-                            ? 'bg-white/20 text-white'
-                            : theme === 'light'
-                              ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
-                              : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
-                        }`}
-                      >
-                        {chapter.id}
-                      </div>
-                      <div className="flex-grow">
-                        <p
-                          className={`font-bold ${
-                            isActive
-                              ? 'text-white'
-                              : theme === 'light'
-                                ? 'text-slate-700'
-                                : 'text-[var(--foreground)]'
-                          }`}
-                        >
-                          {chapter.name_simple}
-                        </p>
-                        <p className={`text-xs ${isActive ? 'text-white/80' : 'text-gray-500'}`}>
-                          {chapter.revelation_place} • {chapter.verses_count} verses
-                        </p>
-                      </div>
-                      <p
-                        className={`font-amiri text-xl font-bold transition-colors ${
-                          isActive
-                            ? 'text-white'
-                            : theme === 'light'
-                              ? 'text-gray-500 group-hover:text-teal-600'
-                              : 'text-gray-500 group-hover:text-teal-400'
-                        }`}
-                      >
-                        {chapter.name_arabic}
-                      </p>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+            <Surah
+              chapters={filteredChapters}
+              theme={theme}
+              selectedSurahId={selectedSurahId}
+              setSelectedSurahId={setSelectedSurahId}
+              setSelectedPageId={setSelectedPageId}
+              setSelectedJuzId={setSelectedJuzId}
+              rememberScroll={() => rememberScroll('Surah')}
+              isTafsirPath={isTafsirPath}
+            />
           )}
 
           {activeTab === 'Juz' && (
-            <ul className="space-y-2">
-              {filteredJuzs.map((juz) => {
-                const isActive = String(juz.number) === selectedJuzId;
-                return (
-                  <li key={juz.number}>
-                    <Link
-                      href={`/juz/${juz.number}`}
-                      scroll={false}
-                      data-active={isActive}
-                      onClick={() => {
-                        setSelectedJuzId(String(juz.number));
-                        const page = JUZ_START_PAGES[juz.number - 1];
-                        setSelectedPageId(String(page));
-                        const chap = getSurahByPage(page, chapters);
-                        if (chap) setSelectedSurahId(String(chap.id));
-                        const scrollTop = scrollRef.current?.scrollTop ?? 0;
-                        setJuzScrollTop(scrollTop);
-                        sessionStorage.setItem('juzScrollTop', String(scrollTop));
-                        sessionStorage.setItem('skipCenterJuz', '1');
-                      }}
-                      className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
-                        isActive
-                          ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/30'
-                          : theme === 'light'
-                            ? 'bg-white shadow hover:bg-slate-50'
-                            : 'bg-slate-800 shadow hover:bg-slate-700'
-                      }`}
-                    >
-                      <div
-                        className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg shadow transition-colors ${
-                          isActive
-                            ? 'bg-white/20 text-white'
-                            : theme === 'light'
-                              ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
-                              : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
-                        }`}
-                      >
-                        {juz.number}
-                      </div>
-                      <div>
-                        <p
-                          className={`font-semibold ${
-                            isActive
-                              ? 'text-white'
-                              : theme === 'light'
-                                ? 'text-slate-700'
-                                : 'text-[var(--foreground)]'
-                          }`}
-                        >
-                          Juz {juz.number}
-                        </p>
-                        <p
-                          className={`text-xs ${
-                            isActive
-                              ? 'text-white/90'
-                              : theme === 'light'
-                                ? 'text-slate-600'
-                                : 'text-slate-400'
-                          }`}
-                        >
-                          {juz.surahRange}
-                        </p>
-                      </div>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+            <Juz
+              juzs={filteredJuzs}
+              chapters={chapters}
+              theme={theme}
+              selectedJuzId={selectedJuzId}
+              setSelectedJuzId={setSelectedJuzId}
+              setSelectedPageId={setSelectedPageId}
+              setSelectedSurahId={setSelectedSurahId}
+              rememberScroll={() => rememberScroll('Juz')}
+            />
           )}
 
           {activeTab === 'Page' && (
-            <ul className="space-y-2">
-              {filteredPages.map((p) => {
-                const isActive = String(p) === selectedPageId;
-                return (
-                  <li key={p}>
-                    <Link
-                      href={`/page/${p}`}
-                      scroll={false}
-                      data-active={isActive}
-                      onClick={() => {
-                        setSelectedPageId(String(p));
-                        setSelectedJuzId(String(getJuzByPage(p)));
-                        const chap = getSurahByPage(p, chapters);
-                        if (chap) setSelectedSurahId(String(chap.id));
-                        const scrollTop = scrollRef.current?.scrollTop ?? 0;
-                        setPageScrollTop(scrollTop);
-                        sessionStorage.setItem('pageScrollTop', String(scrollTop));
-                        sessionStorage.setItem('skipCenterPage', '1');
-                      }}
-                      className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
-                        isActive
-                          ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/30'
-                          : theme === 'light'
-                            ? 'bg-white shadow hover:bg-slate-50'
-                            : 'bg-slate-800 shadow hover:bg-slate-700'
-                      }`}
-                    >
-                      <div
-                        className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg shadow transition-colors ${
-                          isActive
-                            ? 'bg-white/20 text-white'
-                            : theme === 'light'
-                              ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
-                              : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
-                        }`}
-                      >
-                        {p}
-                      </div>
-                      <p
-                        className={`font-semibold ${
-                          isActive
-                            ? 'text-white'
-                            : theme === 'light'
-                              ? 'text-slate-700'
-                              : 'text-[var(--foreground)]'
-                        }`}
-                      >
-                        Page {p}
-                      </p>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+            <Page
+              pages={filteredPages}
+              chapters={chapters}
+              theme={theme}
+              selectedPageId={selectedPageId}
+              setSelectedPageId={setSelectedPageId}
+              setSelectedJuzId={setSelectedJuzId}
+              setSelectedSurahId={setSelectedSurahId}
+              rememberScroll={() => rememberScroll('Page')}
+            />
           )}
         </div>
       </aside>
