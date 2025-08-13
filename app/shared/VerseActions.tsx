@@ -1,5 +1,13 @@
 'use client';
-import { PlayIcon, PauseIcon, BookmarkIcon, BookmarkOutlineIcon, ShareIcon } from './icons';
+import Link from 'next/link';
+import {
+  PlayIcon,
+  PauseIcon,
+  BookmarkIcon,
+  BookmarkOutlineIcon,
+  ShareIcon,
+  BookReaderIcon,
+} from './icons';
 import Spinner from './Spinner';
 
 interface VerseActionsProps {
@@ -51,6 +59,14 @@ const VerseActions = ({
             <PlayIcon size={18} />
           )}
         </button>
+        <Link
+          href={`/tafsir/${verseKey.replace(':', '/')}`}
+          aria-label="View tafsir"
+          title="Tafsir"
+          className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-teal-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+        >
+          <BookReaderIcon size={18} />
+        </Link>
         <button
           aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
           title="Bookmark"
