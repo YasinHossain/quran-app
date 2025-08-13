@@ -1,4 +1,5 @@
-import { getTranslations, getWordTranslations, API_BASE_URL } from '@/lib/api';
+import { getTranslations, getWordTranslations } from '@/lib/api/translations';
+import { API_BASE_URL } from '@/lib/api';
 import { TranslationResource } from '@/types';
 
 describe('getTranslations', () => {
