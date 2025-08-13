@@ -12,7 +12,7 @@ This document explains the main folders in the repository and how pages use the 
 
 ## Feature Pages and Contexts
 
-Pages inside `app/(features)/` define user-facing routes. Many of these routes wrap their content with providers from `app/providers` such as `AudioProvider` or `SettingsProvider`. The root `app/layout.tsx` applies `ThemeProvider`, `SettingsProvider` and `SidebarProvider` so any component can access theme, settings and sidebar state via the corresponding hooks.
+Pages inside `app/(features)/` define user-facing routes. Many of these routes wrap their content with providers from `app/providers` such as `BookmarkProvider`, `TranslationProvider`, or `SettingsProvider`. Audio-related context lives under `app/(features)/player` rather than in `app/providers`. The root `app/layout.tsx` applies `TranslationProvider` and `ClientProviders` (which sets up `ThemeProvider`, `SettingsProvider`, `SidebarProvider`, and `BookmarkProvider`) so any component can access translation, theme, settings, sidebar, and bookmark state via the corresponding hooks.
 
 Feature components typically reside in a `components` subfolder. They import hooks like `useSettings`, `useAudio` or `useSidebar` to read and update context values.
 
