@@ -11,7 +11,7 @@ import { getVersesByPage, getSurahCoverUrl } from '@/lib/api';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import Spinner from '@/app/shared/Spinner';
-import { QuranAudioPlayer } from '@/app/(features)/player';
+import { QuranAudioPlayer } from '@/app/shared/player';
 import { buildAudioUrl } from '@/lib/audio/reciters';
 import useVerseListing from '@/app/(features)/surah/hooks/useVerseListing';
 

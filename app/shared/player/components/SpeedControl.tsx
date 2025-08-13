@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
-import { useAudio } from '@/app/(features)/player/context/AudioContext';
+import { useAudio } from '@/app/shared/player/context/AudioContext';
 
 interface Props {
   theme: 'light' | 'dark';

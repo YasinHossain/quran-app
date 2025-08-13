@@ -28,7 +28,7 @@ jest.mock('swr/infinite', () => ({
   })),
 }));
 
-jest.mock('@/app/(features)/player/context/AudioContext', () => ({
+jest.mock('@/app/shared/player/context/AudioContext', () => ({
   useAudio: () => ({
     activeVerse: mockActiveVerse,
     setActiveVerse,

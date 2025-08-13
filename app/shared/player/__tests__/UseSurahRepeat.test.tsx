@@ -1,4 +1,4 @@
-import { handleSurahRepeat } from '@/app/(features)/player/hooks/useSurahRepeat';
+import { handleSurahRepeat } from '@/app/shared/player/hooks/useSurahRepeat';
 
 describe('handleSurahRepeat', () => {
   it('cycles through entire surah when repeating', () => {

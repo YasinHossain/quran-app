@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { Verse as VerseComponent } from '@/app/(features)/surah/[surahId]/components/Verse';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { BookmarkProvider } from '@/app/providers/BookmarkContext';
-import { AudioProvider } from '@/app/(features)/player/context/AudioContext';
+import { AudioProvider } from '@/app/shared/player/context/AudioContext';
 import TranslationProvider from '@/app/providers/TranslationProvider';
 import { Verse } from '@/types';
 

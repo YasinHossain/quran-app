@@ -1,6 +1,6 @@
 'use client';
 import { Verse as VerseType, Translation } from '@/types';
-import { useAudio } from '@/app/(features)/player/context/AudioContext';
+import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import VerseActions from '@/app/shared/VerseActions';
