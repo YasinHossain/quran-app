@@ -13,8 +13,6 @@ The following fonts are licensed under the SIL Open Font License 1.1:
 - **Noto Nastaliq Urdu.ttf** — Source: [Google Noto Fonts](http://www.google.com/get/noto/)
 
 ```
-Copyright 2020 The Open Sans Project Authors (https://github.com/googlefonts/opensans)
-
 -----------------------------------------------------------
 SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
 -----------------------------------------------------------
