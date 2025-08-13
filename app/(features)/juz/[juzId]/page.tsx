@@ -1,29 +1,20 @@
 // app/(features)/juz/[juzId]/page.tsx
 'use client';
 
-import React, { useEffect, useState, useMemo, useRef } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Verse } from '@/app/(features)/surah/[surahId]/components/Verse';
 import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
 import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/TranslationPanel';
 import { WordLanguagePanel } from '@/app/(features)/surah/[surahId]/components/WordLanguagePanel';
-import { Verse as VerseType, TranslationResource, Juz } from '@/types';
-import {
-  getTranslations,
-  getWordTranslations,
-  getVersesByJuz,
-  getJuz,
-  getSurahCoverUrl,
-} from '@/lib/api';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
-import { WORD_LANGUAGE_LABELS } from '@/lib/text/wordLanguages';
-import { useSettings } from '@/app/providers/SettingsContext';
-import { useAudio } from '@/app/(features)/player/context/AudioContext';
 import { buildAudioUrl } from '@/lib/audio/reciters';
 import { QuranAudioPlayer } from '@/app/(features)/player';
-import useSWR from 'swr';
-import useSWRInfinite from 'swr/infinite';
+import type { TranslationResource } from '@/types';
+import { getSurahCoverUrl } from '@/lib/api';
+import useJuzData from '../hooks/useJuzData';
+import { JuzHeader } from './components/JuzHeader';
+import { JuzVerseList } from './components/JuzVerseList';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;
 
@@ -35,84 +26,41 @@ export default function JuzPage({
 }) {
   const { juzId } = React.use(params);
 
-  const [error, setError] = useState<string | null>(null);
-  const { settings, setSettings } = useSettings();
-  const { t } = useTranslation();
-  const { activeVerse, setActiveVerse, reciter, isPlayerVisible, openPlayer } = useAudio();
-  const [coverUrl, setCoverUrl] = useState<string | null>(null);
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [translationSearchTerm, setTranslationSearchTerm] = useState('');
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
   const [wordTranslationSearchTerm, setWordTranslationSearchTerm] = useState('');
+  const [coverUrl, setCoverUrl] = useState<string | null>(null);
+  const { t } = useTranslation();
 
-  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const {
+    juz,
+    juzError,
+    isLoading,
+    error,
+    verses,
+    isValidating,
+    isReachingEnd,
+    loadMoreRef,
+    translationOptions,
+    wordLanguageOptions,
+    wordLanguageMap,
+    settings,
+    setSettings,
+    activeVerse,
+    reciter,
+    isPlayerVisible,
+    handleNext,
+    handlePrev,
+  } = useJuzData(juzId);
 
-  // Fetch Juz information using juzId
-  const { data: juzData, error: juzError } = useSWR(juzId ? ['juz', juzId] : null, ([, id]) =>
-    getJuz(id)
-  );
-  const juz: Juz | undefined = juzData;
-
-  const { data: translationOptionsData } = useSWR('translations', getTranslations);
-  const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
-  const { data: wordTranslationOptionsData } = useSWR('wordTranslations', getWordTranslations);
-  const wordLanguageMap = useMemo(() => {
-    const map: Record<string, number> = {};
-    (wordTranslationOptionsData || []).forEach((o) => {
-      const name = o.language_name.toLowerCase();
-      if (!map[name]) {
-        map[name] = o.id;
-      }
-    });
-    return map;
-  }, [wordTranslationOptionsData]);
-  const wordLanguageOptions = useMemo(
-    () =>
-      Object.keys(wordLanguageMap)
-        .filter((name) => WORD_LANGUAGE_LABELS[name])
-        .map((name) => ({ name: WORD_LANGUAGE_LABELS[name], id: wordLanguageMap[name] })),
-    [wordLanguageMap]
-  );
-
-  // Infinite loading for verses
-  const { data, size, setSize, isValidating } = useSWRInfinite(
-    (index) =>
-      juzId ? ['verses', juzId, settings.translationId, settings.wordLang, index + 1] : null,
-    ([, juzId, translationId, wordLang, page]) =>
-      getVersesByJuz(juzId, translationId, page, 20, wordLang).catch((err) => {
-        setError(`Failed to load content. ${err.message}`);
-        return { verses: [], totalPages: 1 };
-      })
-  );
-
-  const verses: VerseType[] = data ? data.flatMap((d) => d.verses) : [];
-  const totalPages = data ? data[data.length - 1]?.totalPages : 1;
-  const isLoading = !data && !error && !juzData && !juzError;
-  const isReachingEnd = size >= totalPages;
-
-  useEffect(() => {
-    setSize(1);
-  }, [juzId, settings.translationId, settings.wordLang, setSize]);
-
-  // --- Infinite Scroll Effect ---
-  useEffect(() => {
-    if (!loadMoreRef.current) return;
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !isReachingEnd && !isValidating) {
-        setSize(size + 1);
-      }
-    });
-    observer.observe(loadMoreRef.current);
-    return () => observer.disconnect();
-  }, [isReachingEnd, isValidating, size, setSize]);
-
-  // --- Memoized Values ---
   const selectedTranslationName = useMemo(
     () =>
       translationOptions.find((o) => o.id === settings.translationId)?.name ||
       t('select_translation'),
     [settings.translationId, translationOptions, t]
   );
+
   const selectedWordLanguageName = useMemo(
     () =>
       wordLanguageOptions.find(
@@ -122,16 +70,18 @@ export default function JuzPage({
       )?.name || t('select_word_translation'),
     [settings.wordLang, wordLanguageOptions, t]
   );
+
   const groupedTranslations = useMemo(
     () =>
       translationOptions
         .filter((o) => o.name.toLowerCase().includes(translationSearchTerm.toLowerCase()))
-        .reduce<Record<string, TranslationResource[]>>((acc, t) => {
-          (acc[t.language_name] ||= []).push(t);
+        .reduce<Record<string, TranslationResource[]>>((acc, tr) => {
+          (acc[tr.language_name] ||= []).push(tr);
           return acc;
         }, {}),
     [translationOptions, translationSearchTerm]
   );
+
   const filteredWordLanguages = useMemo(
     () =>
       wordLanguageOptions.filter((o) =>
@@ -146,28 +96,6 @@ export default function JuzPage({
       getSurahCoverUrl(surahNumber).then(setCoverUrl);
     }
   }, [activeVerse]);
-
-  const handleNext = () => {
-    if (!activeVerse) return false;
-    const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
-    if (currentIndex < verses.length - 1) {
-      setActiveVerse(verses[currentIndex + 1]);
-      openPlayer();
-      return true;
-    }
-    return false;
-  };
-
-  const handlePrev = () => {
-    if (!activeVerse) return false;
-    const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
-    if (currentIndex > 0) {
-      setActiveVerse(verses[currentIndex - 1]);
-      openPlayer();
-      return true;
-    }
-    return false;
-  };
 
   const track = activeVerse
     ? {
@@ -184,7 +112,6 @@ export default function JuzPage({
     <div className="flex flex-grow bg-white dark:bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden min-h-0">
       <main className="flex-grow bg-white dark:bg-[var(--background)] p-6 lg:p-10 overflow-y-auto homepage-scrollable-area">
         <div className="w-full relative">
-          {/* Only render content when juzId is available */}
           {juzId ? (
             isLoading ? (
               <div className="text-center py-20 text-teal-600">{t('loading')}</div>
@@ -196,35 +123,16 @@ export default function JuzPage({
               </div>
             ) : (
               <>
-                {/* Display Juz information */}
-                {juz && (
-                  <div className="mb-8 text-center">
-                    <h1 className="text-3xl font-bold text-[var(--foreground)]">
-                      {t('juz_number', { number: juz.juz_number })}
-                    </h1>
-                  </div>
-                )}
-
-                {/* Tab Content */}
-                {verses.length > 0 ? (
-                  <>
-                    {verses.map((v) => (
-                      <Verse key={v.id} verse={v} />
-                    ))}
-                    <div ref={loadMoreRef} className="py-4 text-center">
-                      {isValidating && <span className="text-teal-600">{t('loading')}</span>}
-                      {isReachingEnd && <span className="text-gray-500">{t('end_of_juz')}</span>}
-                    </div>
-                  </>
-                ) : (
-                  <div className="text-center py-20 text-gray-500">
-                    {t('no_verses_found_in_juz')}
-                  </div>
-                )}
+                <JuzHeader juz={juz} />
+                <JuzVerseList
+                  verses={verses}
+                  loadMoreRef={loadMoreRef}
+                  isValidating={isValidating}
+                  isReachingEnd={isReachingEnd}
+                />
               </>
             )
           ) : (
-            // Optionally, show a loading or waiting message while juzId is not available
             <div className="text-center py-20 text-teal-600">{t('loading')}</div>
           )}
         </div>
