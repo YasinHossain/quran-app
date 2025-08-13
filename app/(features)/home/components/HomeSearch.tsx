@@ -1,5 +1,5 @@
 'use client';
-import { SearchIcon } from '@/app/shared/icons';
+import { SearchSolidIcon } from '@/app/shared/icons';
 import { useTheme } from '@/app/providers/ThemeContext';
 
 interface HomeSearchProps {
@@ -10,21 +10,27 @@ interface HomeSearchProps {
 export default function HomeSearch({ searchQuery, setSearchQuery }: HomeSearchProps) {
   const { theme } = useTheme();
   const shortcutSurahs = ['Al-Mulk', 'Al-Kahf', 'Ya-Sin', 'Al-Ikhlas'];
+  
+  const searchBarClasses =
+    theme === 'light'
+      ? 'bg-white text-gray-700 border border-gray-200 placeholder-gray-400'
+      : 'bg-gray-800 text-gray-200 border border-gray-600 placeholder-gray-400';
 
   return (
     <>
       <div className="mt-10 w-full max-w-2xl mx-auto content-visibility-auto animate-fade-in-up animation-delay-200 p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300">
         <div className="relative">
+          <SearchSolidIcon
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+            size={20}
+          />
           <input
             type="text"
             placeholder="What do you want to read?"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className={`w-full text-lg bg-transparent border-none focus:ring-0 focus:outline-none placeholder:text-slate-500 dark:placeholder:text-slate-400 ${theme === 'light' ? 'text-slate-900' : 'text-white'}`}
+            className={`w-full pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-1 focus:ring-teal-500 transition-all duration-300 hover:shadow-lg hover:ring-1 hover:ring-teal-600 text-lg ${searchBarClasses}`}
           />
-          <div className="absolute inset-y-0 right-0 flex items-center pr-3 sm:pr-4 text-slate-500 dark:text-slate-400">
-            <SearchIcon className="w-6 h-6" />
-          </div>
         </div>
       </div>
 

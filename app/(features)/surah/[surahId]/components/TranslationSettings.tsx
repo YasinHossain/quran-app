@@ -6,6 +6,7 @@ import { TranslationIcon, BookReaderIcon, ChevronDownIcon } from '@/app/shared/i
 import { CollapsibleSection } from './CollapsibleSection';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useFontSize } from '../../hooks/useFontSize';
+import SelectionBox from '@/app/shared/SelectionBox';
 
 interface TranslationSettingsProps {
   onTranslationPanelOpen: () => void;
@@ -66,31 +67,17 @@ export const TranslationSettings = ({
             </button>
           </div>
 
-          <div>
-            <label className="block mb-2 text-sm font-medium text-[var(--foreground)]">
-              {t('translations')}
-            </label>
-            <button
-              onClick={onTranslationPanelOpen}
-              className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-200 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition-shadow shadow-sm hover:shadow-md"
-            >
-              <span className="truncate text-[var(--foreground)]">{selectedTranslationName}</span>
-              <ChevronDownIcon className="text-gray-500" />
-            </button>
-          </div>
+          <SelectionBox
+            label={t('translations')}
+            value={selectedTranslationName}
+            onClick={onTranslationPanelOpen}
+          />
 
-          <div>
-            <label className="block mb-2 text-sm font-medium text-[var(--foreground)]">
-              {t('word_by_word_language')}
-            </label>
-            <button
-              onClick={onWordLanguagePanelOpen}
-              className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-200 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition-shadow shadow-sm hover:shadow-md"
-            >
-              <span className="truncate text-[var(--foreground)]">{selectedWordLanguageName}</span>
-              <ChevronDownIcon className="text-gray-500" />
-            </button>
-          </div>
+          <SelectionBox
+            label={t('word_by_word_language')}
+            value={selectedWordLanguageName}
+            onClick={onWordLanguagePanelOpen}
+          />
         </div>
       </CollapsibleSection>
       {showTafsirSetting && (
@@ -102,18 +89,11 @@ export const TranslationSettings = ({
           onToggle={() => setTafsirOpen(!isTafsirOpen)}
         >
           <div className="space-y-4">
-            <div>
-              <label className="block mb-2 text-sm font-medium text-[var(--foreground)]">
-                {t('select_tafsir')}
-              </label>
-              <button
-                onClick={onTafsirPanelOpen}
-                className="w-full flex justify-between items-center bg-[var(--background)] border border-gray-200 dark:border-gray-600 rounded-lg p-2.5 text-sm text-left hover:border-teal-500 transition-shadow shadow-sm hover:shadow-md"
-              >
-                <span className="truncate text-[var(--foreground)]">{selectedTafsirName}</span>
-                <ChevronDownIcon className="text-gray-500" />
-              </button>
-            </div>
+            <SelectionBox
+              label={t('select_tafsir')}
+              value={selectedTafsirName || ''}
+              onClick={onTafsirPanelOpen}
+            />
             <div>
               <div className="flex justify-between mb-1 text-sm">
                 <label className="text-[var(--foreground)]">{t('tafsir_font_size')}</label>

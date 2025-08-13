@@ -1,4 +1,5 @@
 'use client';
+import type React from 'react';
 import { BarsIcon } from './icons';
 import { SearchInput } from './components/SearchInput';
 import { useTranslation } from 'react-i18next';

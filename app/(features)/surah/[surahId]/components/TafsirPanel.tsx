@@ -51,13 +51,13 @@ export const TafsirPanel = ({ isOpen, onClose }: TafsirPanelProps) => {
       </div>
       <div className="p-3 border-b border-gray-200/80">
         <div className="relative">
-          <SearchSolidIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+          <SearchSolidIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
           <input
             type="text"
             placeholder={t('search')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none bg-[var(--background)] text-[var(--foreground)]"
+            className="w-full pl-10 pr-4 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-teal-500 transition-all duration-300 hover:shadow-lg hover:ring-1 hover:ring-teal-600 bg-[var(--background)] text-[var(--foreground)] border border-gray-200 dark:border-gray-600 placeholder-gray-400"
           />
         </div>
       </div>
