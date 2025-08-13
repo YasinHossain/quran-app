@@ -10,11 +10,11 @@ interface HomeSearchProps {
 export default function HomeSearch({ searchQuery, setSearchQuery }: HomeSearchProps) {
   const { theme } = useTheme();
   const shortcutSurahs = ['Al-Mulk', 'Al-Kahf', 'Ya-Sin', 'Al-Ikhlas'];
-
+  
   const searchBarClasses =
     theme === 'light'
-      ? 'bg-white text-gray-700 border-none placeholder-gray-400'
-      : 'bg-gray-800 text-gray-200 border-none placeholder-gray-400';
+      ? 'bg-white text-gray-700 border border-gray-200 placeholder-gray-400'
+      : 'bg-gray-800 text-gray-200 border border-gray-600 placeholder-gray-400';
 
   return (
     <>
@@ -29,7 +29,7 @@ export default function HomeSearch({ searchQuery, setSearchQuery }: HomeSearchPr
             placeholder="What do you want to read?"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className={`w-full pl-12 pr-4 py-3 rounded-lg focus:outline-none transition-all duration-300 hover:shadow-lg text-lg ${searchBarClasses}`}
+            className={`w-full pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-1 focus:ring-teal-500 transition-all duration-300 hover:shadow-lg hover:ring-1 hover:ring-teal-600 text-lg ${searchBarClasses}`}
           />
         </div>
       </div>
