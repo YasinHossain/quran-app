@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import VerseCard from '@/app/(features)/tafsir/[surahId]/[ayahId]/components/VerseCard';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
+import { BookmarkProvider } from '@/app/providers/BookmarkContext';
 import { AudioProvider } from '@/app/(features)/player/context/AudioContext';
 import { Verse } from '@/types';
 
@@ -20,7 +21,9 @@ const renderCard = () =>
   render(
     <AudioProvider>
       <SettingsProvider>
-        <VerseCard verse={verse} />
+        <BookmarkProvider>
+          <VerseCard verse={verse} />
+        </BookmarkProvider>
       </SettingsProvider>
     </AudioProvider>
   );
@@ -75,7 +78,9 @@ it('strips malicious tags from content', () => {
   render(
     <AudioProvider>
       <SettingsProvider>
-        <VerseCard verse={maliciousVerse} />
+        <BookmarkProvider>
+          <VerseCard verse={maliciousVerse} />
+        </BookmarkProvider>
       </SettingsProvider>
     </AudioProvider>
   );

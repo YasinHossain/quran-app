@@ -5,7 +5,7 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
-import { FaArrowLeft, FaSearch } from '@/app/shared/SvgIcons';
+import { ArrowLeftIcon, SearchIcon } from '@/app/shared/icons';
 
 interface LanguageOption {
   name: string;
@@ -52,7 +52,7 @@ export const WordTranslationPanel = ({
           onClick={onClose}
           className="p-2 rounded-full hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
         >
-          <FaArrowLeft size={18} />
+          <ArrowLeftIcon size={18} />
         </button>
         <h2 className="font-bold text-lg text-[var(--foreground)]">
           {t('word_by_word_panel_title')}
@@ -61,7 +61,11 @@ export const WordTranslationPanel = ({
       </div>
       <div className="p-3 border-b border-gray-200/80">
         <div className="relative">
-          <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+          <SearchIcon
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
+            width={18}
+            height={18}
+          />
           <input
             type="text"
             placeholder={t('search')}

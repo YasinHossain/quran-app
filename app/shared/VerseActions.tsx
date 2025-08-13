@@ -1,5 +1,5 @@
 'use client';
-import { FaPlay, FaPause, FaBookmark, FaRegBookmark, FaShare } from './SvgIcons';
+import { PlayIcon, PauseIcon, BookmarkIcon, BookmarkOutlineIcon, ShareIcon } from './icons';
 import Spinner from './Spinner';
 
 interface VerseActionsProps {
@@ -46,9 +46,9 @@ const VerseActions = ({
           {isLoadingAudio ? (
             <Spinner className="h-4 w-4 text-teal-600" />
           ) : isPlaying ? (
-            <FaPause size={18} />
+            <PauseIcon size={18} />
           ) : (
-            <FaPlay size={18} />
+            <PlayIcon size={18} />
           )}
         </button>
         <button
@@ -57,7 +57,7 @@ const VerseActions = ({
           onClick={onBookmark}
           className={`p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition ${isBookmarked ? 'text-teal-600' : 'hover:text-teal-600'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500`}
         >
-          {isBookmarked ? <FaBookmark size={18} /> : <FaRegBookmark size={18} />}
+          {isBookmarked ? <BookmarkIcon size={18} /> : <BookmarkOutlineIcon size={18} />}
         </button>
         <button
           aria-label="Share"
@@ -65,7 +65,7 @@ const VerseActions = ({
           onClick={handleShare}
           className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-teal-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
         >
-          <FaShare size={18} />
+          <ShareIcon size={18} />
         </button>
       </div>
     </div>
