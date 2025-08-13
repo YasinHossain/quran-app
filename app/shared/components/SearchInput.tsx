@@ -21,8 +21,8 @@ export const SearchInput = ({
   const { theme } = useTheme();
   const searchBarClasses =
     theme === 'light'
-      ? 'bg-white text-gray-700 border-none placeholder-gray-400'
-      : 'bg-gray-800 text-gray-200 border-none placeholder-gray-400';
+      ? 'bg-white text-gray-700 border border-gray-200 placeholder-gray-400'
+      : 'bg-gray-800 text-gray-200 border border-gray-600 placeholder-gray-400';
 
   return (
     <div className={`relative ${className}`}>
@@ -36,7 +36,7 @@ export const SearchInput = ({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         onKeyDown={onKeyDown}
-        className={`w-full pl-9 pr-3 py-2 rounded-lg focus:outline-none transition-all duration-300 hover:shadow-lg ${searchBarClasses}`}
+        className={`w-full pl-9 pr-3 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-teal-500 transition-all duration-300 hover:shadow-lg hover:ring-1 hover:ring-teal-600 ${searchBarClasses}`}
       />
     </div>
   );
