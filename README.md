@@ -1,4 +1,13 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Quran App
+
+Quran App is a Next.js 14 web reader for Quran surahs and translations.
+
+Features:
+
+- Offline reading with PWA support
+- Multiple translations and word-by-word study
+- Audio playback for recitations
+- Custom Arabic fonts
 
 For an overview of the folder structure see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
