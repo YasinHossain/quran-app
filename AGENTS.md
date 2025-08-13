@@ -16,6 +16,7 @@ Security audits run in CI. Optionally run `npm audit --omit=dev` locally to chec
 ## Commit Messages
 
 - Use a short summary in the imperative mood ("Add feature" not "Added" or "Adds").
+- Prefix the summary with a type such as `feat:` or `fix:` (for example, `feat: add audio player`).
 - Keep the first line under 50 characters.
 - Separate the summary from any additional details with a blank line.
 - Commit messages are automatically checked by Husky's `commit-msg` hook using commitlint.
