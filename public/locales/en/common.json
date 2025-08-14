@@ -80,5 +80,8 @@
   "repeat_each": "Repeat each",
   "delay_seconds": "Delay (s)",
   "play_entire_surah_continuously": "Play the entire surah continuously.",
-  "search_reciter": "Search reciter"
+  "search_reciter": "Search reciter",
+  "my_selections": "My selections",
+  "no_translations_selected": "No translations selected",
+  "no_tafsirs_selected": "No tafsir selected"
 }
