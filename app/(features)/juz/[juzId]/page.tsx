@@ -27,7 +27,6 @@ export default function JuzPage({
   const { juzId } = React.use(params);
 
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
-  const [translationSearchTerm, setTranslationSearchTerm] = useState('');
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
   const [wordTranslationSearchTerm, setWordTranslationSearchTerm] = useState('');
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
@@ -69,17 +68,6 @@ export default function JuzPage({
           settings.wordLang
       )?.name || t('select_word_translation'),
     [settings.wordLang, wordLanguageOptions, t]
-  );
-
-  const groupedTranslations = useMemo(
-    () =>
-      translationOptions
-        .filter((o) => o.name.toLowerCase().includes(translationSearchTerm.toLowerCase()))
-        .reduce<Record<string, TranslationResource[]>>((acc, tr) => {
-          (acc[tr.language_name] ||= []).push(tr);
-          return acc;
-        }, {}),
-    [translationOptions, translationSearchTerm]
   );
 
   const filteredWordLanguages = useMemo(
@@ -149,9 +137,6 @@ export default function JuzPage({
       <TranslationPanel
         isOpen={isTranslationPanelOpen}
         onClose={() => setIsTranslationPanelOpen(false)}
-        groupedTranslations={groupedTranslations}
-        searchTerm={translationSearchTerm}
-        onSearchTermChange={setTranslationSearchTerm}
       />
       <WordLanguagePanel
         isOpen={isWordPanelOpen}

@@ -87,7 +87,7 @@ describe('SettingsSidebar interactions', () => {
     expect(panel?.className).toContain('translate-x-full');
   });
 
-  it("translation tab doesn't open translation panel", async () => {
+  it('clicking translation tab does not open translation panel', async () => {
     const TestComponent = () => {
       const [open, setOpen] = useState(false);
       return (
@@ -99,13 +99,7 @@ describe('SettingsSidebar interactions', () => {
             selectedTranslationName="English"
             selectedWordLanguageName="English"
           />
-          <TranslationPanel
-            isOpen={open}
-            onClose={() => setOpen(false)}
-            groupedTranslations={{}}
-            searchTerm=""
-            onSearchTermChange={() => {}}
-          />
+          <TranslationPanel isOpen={open} onClose={() => setOpen(false)} />
         </Wrapper>
       );
     };
@@ -116,9 +110,7 @@ describe('SettingsSidebar interactions', () => {
     // Click translation tab while sidebar is open
     await userEvent.click(screen.getByRole('button', { name: 'Translation' }));
     // Translation panel should remain hidden
-    const panel = screen.getByText('translations_panel_title').parentElement
-      ?.parentElement as HTMLElement;
-    expect(panel.className).toContain('translate-x-full');
+    expect(screen.queryByText('Manage Translations')).not.toBeInTheDocument();
   });
 
   it('opens the word translation panel and shows languages', async () => {
