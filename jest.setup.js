@@ -11,3 +11,28 @@ if (typeof globalThis.fetch === 'undefined') {
     globalThis.fetch = (...args) => fetch.default(...args);
   }
 }
+
+// Minimal mock that satisfies Next's useIntersection requirements
+class IntersectionObserverMock {
+  constructor(cb) {
+    this.cb = cb;
+  }
+  observe = (el) => {
+    if (this.cb) {
+      this.cb([{ isIntersecting: true, target: el }]);
+    }
+  };
+  unobserve = () => {};
+  disconnect = () => {};
+}
+
+Object.defineProperty(window, 'IntersectionObserver', {
+  writable: true,
+  configurable: true,
+  value: IntersectionObserverMock,
+});
+Object.defineProperty(global, 'IntersectionObserver', {
+  writable: true,
+  configurable: true,
+  value: IntersectionObserverMock,
+});

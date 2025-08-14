@@ -6,7 +6,7 @@ import { Verse } from './components/Verse';
 import { SettingsSidebar } from './components/SettingsSidebar';
 import { TranslationPanel } from './components/TranslationPanel';
 import { WordLanguagePanel } from './components/WordLanguagePanel';
-import { Verse as VerseType, TranslationResource } from '@/types';
+import { Verse as VerseType } from '@/types';
 import { getVersesByChapter, getSurahCoverUrl } from '@/lib/api';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';

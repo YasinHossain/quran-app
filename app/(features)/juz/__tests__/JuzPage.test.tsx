@@ -39,14 +39,6 @@ const mockJuz: Juz = {
 jest.mock('@/lib/api');
 
 beforeAll(() => {
-  class IO {
-    observe() {}
-    disconnect() {}
-  }
-  (
-    global as unknown as { IntersectionObserver: typeof IntersectionObserver }
-  ).IntersectionObserver = IO as unknown as typeof IntersectionObserver;
-
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
     value: jest.fn().mockImplementation((query) => ({

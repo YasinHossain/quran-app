@@ -226,40 +226,41 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
     setDraggedId(null);
   };
 
-  if (!isOpen) {
-    return null;
-  }
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-start justify-center pt-12 overflow-auto">
-      <div className="w-full max-w-md mx-auto bg-white dark:bg-slate-900 rounded-2xl shadow-xl my-8 relative">
-        <header className="flex items-center p-4 border-b border-slate-200 dark:border-slate-700">
-          <button
-            onClick={onClose}
-            className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800"
+    <div
+      data-testid="translation-panel"
+      className={`fixed top-0 bottom-0 right-0 w-[20.7rem] bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
+        isOpen ? 'translate-x-0' : 'translate-x-full'
+      }`}
+    >
+      <header className="flex items-center p-4 border-b border-slate-200 dark:border-slate-700">
+        <button
+          onClick={onClose}
+          className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 text-slate-600 dark:text-slate-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth="2"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-slate-600 dark:text-slate-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <h1 className="text-lg font-semibold text-slate-800 dark:text-slate-200 text-center flex-grow">
-            Manage Translations
-          </h1>
-          <button
-            onClick={toggleDarkMode}
-            className="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none"
-          >
-            {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
-          </button>
-        </header>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <h1 className="text-lg font-semibold text-slate-800 dark:text-slate-200 text-center flex-grow">
+          Manage Translations
+        </h1>
+        <button
+          onClick={toggleDarkMode}
+          className="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none"
+        >
+          {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
+        </button>
+      </header>
 
+      <div className="flex-grow overflow-y-auto">
         <div className="p-4 space-y-4">
           <div>
             <h2 className="text-sm font-semibold text-slate-500 dark:text-slate-400 px-1 mb-2">

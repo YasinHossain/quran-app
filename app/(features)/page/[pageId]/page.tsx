@@ -6,7 +6,7 @@ import { Verse } from '@/app/(features)/surah/[surahId]/components/Verse';
 import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
 import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/TranslationPanel';
 import { WordLanguagePanel } from '@/app/(features)/surah/[surahId]/components/WordLanguagePanel';
-import { Verse as VerseType, TranslationResource } from '@/types';
+import { Verse as VerseType } from '@/types';
 import { getVersesByPage, getSurahCoverUrl } from '@/lib/api';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
