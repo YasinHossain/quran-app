@@ -1,16 +1,26 @@
 'use client';
 
 import React from 'react';
-import { Tafsir } from './tafsirPanel.utils';
 
-interface TafsirItemProps {
-  item: Tafsir;
+interface Resource {
+  id: number;
+  name: string;
+  lang: string;
+}
+
+interface ResourceItemProps<T extends Resource> {
+  item: T;
   isSelected: boolean;
   onToggle: (id: number) => void;
   theme: string;
 }
 
-export const TafsirItem: React.FC<TafsirItemProps> = ({ item, isSelected, onToggle, theme }) => {
+export const ResourceItem = <T extends Resource>({
+  item,
+  isSelected,
+  onToggle,
+  theme,
+}: ResourceItemProps<T>) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {
       onToggle(item.id);
@@ -64,3 +74,5 @@ const CheckIcon: React.FC<{ className?: string }> = ({ className }) => (
     />
   </svg>
 );
+
+export default ResourceItem;

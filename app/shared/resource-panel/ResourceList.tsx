@@ -1,31 +1,36 @@
 'use client';
 
 import React from 'react';
-import { Tafsir } from './tafsirPanel.utils';
-import { TafsirItem } from './TafsirItem';
+import { ResourceItem } from './ResourceItem';
 
-interface TafsirListProps {
-  activeFilter: string;
+interface Resource {
+  id: number;
+  name: string;
+  lang: string;
+}
+
+interface ResourceListProps<T extends Resource> {
   languages: string[];
-  groupedTafsirs: Record<string, Tafsir[]>;
+  groupedResources: Record<string, T[]>;
+  activeFilter: string;
   selectedIds: Set<number>;
   onToggle: (id: number) => void;
   theme: string;
 }
 
-export const TafsirList: React.FC<TafsirListProps> = ({
-  activeFilter,
+export const ResourceList = <T extends Resource>({
   languages,
-  groupedTafsirs,
+  groupedResources,
+  activeFilter,
   selectedIds,
   onToggle,
   theme,
-}) => {
+}: ResourceListProps<T>) => {
   if (activeFilter === 'All') {
     return (
       <div className="space-y-4">
         {languages.slice(1).map((lang) => {
-          const items = groupedTafsirs[lang] || [];
+          const items = groupedResources[lang] || [];
           if (items.length === 0) return null;
           return (
             <div key={lang} className="lang-section" data-lang={lang}>
@@ -39,7 +44,7 @@ export const TafsirList: React.FC<TafsirListProps> = ({
               </h3>
               <div className="space-y-2">
                 {items.map((item) => (
-                  <TafsirItem
+                  <ResourceItem
                     key={item.id}
                     item={item}
                     isSelected={selectedIds.has(item.id)}
@@ -57,8 +62,8 @@ export const TafsirList: React.FC<TafsirListProps> = ({
 
   return (
     <div className="space-y-2">
-      {(groupedTafsirs[activeFilter] || []).map((item) => (
-        <TafsirItem
+      {(groupedResources[activeFilter] || []).map((item) => (
+        <ResourceItem
           key={item.id}
           item={item}
           isSelected={selectedIds.has(item.id)}
@@ -69,3 +74,5 @@ export const TafsirList: React.FC<TafsirListProps> = ({
     </div>
   );
 };
+
+export default ResourceList;

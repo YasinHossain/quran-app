@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import useSWR from 'swr';
 import { useTheme } from '@/app/providers/ThemeContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { getTafsirResources } from '@/lib/api';
+import useSelectableResources from '@/lib/hooks/useSelectableResources';
 import { capitalizeLanguageName, MAX_SELECTIONS, Tafsir } from './tafsirPanel.utils';
 
 export const useTafsirPanel = (isOpen: boolean) => {
@@ -15,24 +16,18 @@ export const useTafsirPanel = (isOpen: boolean) => {
   const [tafsirs, setTafsirs] = useState<Tafsir[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
-  const [orderedSelection, setOrderedSelection] = useState<number[]>([]);
-  const [activeFilter, setActiveFilter] = useState('All');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [draggedId, setDraggedId] = useState<number | null>(null);
   const [showLimitWarning, setShowLimitWarning] = useState(false);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
 
   const stickyHeaderRef = useRef<HTMLDivElement>(null);
   const tabsContainerRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   useEffect(() => {
     const loadTafsirs = async () => {
       try {
         setLoading(true);
         setError(null);
-
         if (data) {
           const formatted: Tafsir[] = data.map((t) => ({
             id: t.id,
@@ -48,21 +43,63 @@ export const useTafsirPanel = (isOpen: boolean) => {
         setLoading(false);
       }
     };
-
     if (isOpen) {
       loadTafsirs();
     }
   }, [isOpen, data]);
 
-  const isUpdatingRef = useRef(false);
+  const languageSort = (a: string, b: string) => {
+    const lower = (lang: string) => lang.toLowerCase();
+    const priority = (lang: string) => {
+      const l = lower(lang);
+      if (l === 'english') return 0;
+      if (l === 'bengali' || l === 'bangla') return 1;
+      if (l === 'arabic') return 2;
+      return 3;
+    };
+    const pa = priority(a);
+    const pb = priority(b);
+    if (pa !== pb) return pa - pb;
+    return a.localeCompare(b);
+  };
 
+  const selectable = useSelectableResources<Tafsir>({
+    resources: tafsirs,
+    selectionLimit: MAX_SELECTIONS,
+    languageSort,
+  });
+
+  const {
+    searchTerm,
+    setSearchTerm,
+    languages,
+    groupedResources,
+    activeFilter,
+    setActiveFilter,
+    selectedIds,
+    orderedSelection,
+    handleSelectionToggle: baseToggle,
+    handleDragStart,
+    handleDragOver,
+    handleDrop,
+    handleDragEnd,
+    draggedId,
+    setSelections,
+  } = selectable;
+
+  const handleSelectionToggle = (id: number) => {
+    const changed = baseToggle(id);
+    setShowLimitWarning(!changed && selectedIds.size >= MAX_SELECTIONS);
+  };
+
+  const isUpdatingRef = useRef(false);
   useEffect(() => {
     if (isUpdatingRef.current) return;
-    const currentSelection = [...orderedSelection];
+    const current = [...orderedSelection];
     const settingsIds = settings.tafsirIds || [];
-    if (JSON.stringify(currentSelection) !== JSON.stringify(settingsIds)) {
+    if (JSON.stringify(current) !== JSON.stringify(settingsIds)) {
       isUpdatingRef.current = true;
-      setTafsirIds(currentSelection);
+      setTafsirIds(current);
       setTimeout(() => {
         isUpdatingRef.current = false;
       }, 50);
@@ -73,74 +110,12 @@ export const useTafsirPanel = (isOpen: boolean) => {
     if (isOpen && tafsirs.length > 0) {
       const settingsIds = settings.tafsirIds || [];
       isUpdatingRef.current = true;
-      setSelectedIds(new Set(settingsIds));
-      setOrderedSelection(settingsIds);
+      setSelections(settingsIds);
       setTimeout(() => {
         isUpdatingRef.current = false;
       }, 50);
     }
-  }, [isOpen, tafsirs.length, settings.tafsirIds]);
-
-  const languages = useMemo(() => {
-    const unique = [...new Set(tafsirs.map((t) => t.lang))];
-    const sorted = unique.sort((a, b) => {
-      const lower = (lang: string) => lang.toLowerCase();
-      const priority = (lang: string) => {
-        const l = lower(lang);
-        if (l === 'english') return 0;
-        if (l === 'bengali' || l === 'bangla') return 1;
-        if (l === 'arabic') return 2;
-        return 3;
-      };
-      const pa = priority(a);
-      const pb = priority(b);
-      if (pa !== pb) return pa - pb;
-      return a.localeCompare(b);
-    });
-    return ['All', ...sorted];
-  }, [tafsirs]);
-
-  const filteredTafsirs = useMemo(() => {
-    if (searchTerm === '') return tafsirs;
-    const searchLower = searchTerm.toLowerCase();
-    return tafsirs.filter(
-      (item) =>
-        item.name.toLowerCase().includes(searchLower) ||
-        item.lang.toLowerCase().includes(searchLower)
-    );
-  }, [tafsirs, searchTerm]);
-
-  const groupedTafsirs = useMemo(() => {
-    return filteredTafsirs.reduce(
-      (acc, item) => {
-        (acc[item.lang] = acc[item.lang] || []).push(item);
-        return acc;
-      },
-      {} as Record<string, Tafsir[]>
-    );
-  }, [filteredTafsirs]);
-
-  const handleSelectionToggle = (id: number) => {
-    const newSelected = new Set(selectedIds);
-    let newOrdered = [...orderedSelection];
-
-    if (newSelected.has(id)) {
-      newSelected.delete(id);
-      newOrdered = newOrdered.filter((sel) => sel !== id);
-      setShowLimitWarning(false);
-    } else {
-      if (selectedIds.size >= MAX_SELECTIONS) {
-        setShowLimitWarning(true);
-        setTimeout(() => setShowLimitWarning(false), 3000);
-        return;
-      }
-      newSelected.add(id);
-      newOrdered.push(id);
-    }
-
-    setSelectedIds(newSelected);
-    setOrderedSelection(newOrdered);
-  };
+  }, [isOpen, tafsirs.length, settings.tafsirIds, setSelections]);
 
   const handleTabClick = (lang: string) => {
     setActiveFilter(lang);
@@ -156,34 +131,6 @@ export const useTafsirPanel = (isOpen: boolean) => {
         window.scrollTo({ top: headerTop, behavior: 'smooth' });
       }
     }
-  };
-
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: number) => {
-    setDraggedId(id);
-    e.dataTransfer.effectAllowed = 'move';
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>, targetId: number) => {
-    e.preventDefault();
-    if (draggedId === null || draggedId === targetId) {
-      setDraggedId(null);
-      return;
-    }
-    const newOrdered = [...orderedSelection];
-    const draggedIndex = newOrdered.indexOf(draggedId);
-    const targetIndex = newOrdered.indexOf(targetId);
-    const [draggedItem] = newOrdered.splice(draggedIndex, 1);
-    newOrdered.splice(targetIndex, 0, draggedItem);
-    setOrderedSelection(newOrdered);
-    setDraggedId(null);
-  };
-
-  const handleDragEnd = () => {
-    setDraggedId(null);
   };
 
   const checkScrollState = useCallback(() => {
@@ -222,10 +169,7 @@ export const useTafsirPanel = (isOpen: boolean) => {
   const handleReset = () => {
     const englishTafsir = tafsirs.find((t) => t.lang.toLowerCase() === 'english');
     if (englishTafsir) {
-      const newSelected = new Set([englishTafsir.id]);
-      const newOrdered = [englishTafsir.id];
-      setSelectedIds(newSelected);
-      setOrderedSelection(newOrdered);
+      setSelections([englishTafsir.id]);
       setShowLimitWarning(false);
     }
   };
@@ -238,11 +182,10 @@ export const useTafsirPanel = (isOpen: boolean) => {
     searchTerm,
     setSearchTerm,
     languages,
-    groupedTafsirs,
+    groupedTafsirs: groupedResources,
     selectedIds,
     orderedSelection,
     handleSelectionToggle,
-    handleTabClick,
     handleDragStart,
     handleDragOver,
     handleDrop,
@@ -250,6 +193,7 @@ export const useTafsirPanel = (isOpen: boolean) => {
     draggedId,
     showLimitWarning,
     activeFilter,
+    handleTabClick,
     stickyHeaderRef,
     tabsContainerRef,
     canScrollLeft,

@@ -3,8 +3,7 @@
 import React from 'react';
 import { Search, GripVertical, X, AlertCircle, RotateCcw } from 'lucide-react';
 import { useTafsirPanel } from './tafsir-panel/useTafsirPanel';
-import { TafsirTabs } from './tafsir-panel/TafsirTabs';
-import { TafsirList } from './tafsir-panel/TafsirList';
+import { ResourceTabs, ResourceList } from '@/app/shared/resource-panel';
 import { MAX_SELECTIONS } from './tafsir-panel/tafsirPanel.utils';
 
 interface TafsirPanelProps {
@@ -232,25 +231,36 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
               </div>
             </div>
 
-            <TafsirTabs
-              languages={languages}
-              activeFilter={activeFilter}
-              theme={theme}
-              stickyHeaderRef={stickyHeaderRef}
-              tabsContainerRef={tabsContainerRef}
-              canScrollLeft={canScrollLeft}
-              canScrollRight={canScrollRight}
-              scrollTabsLeft={scrollTabsLeft}
-              scrollTabsRight={scrollTabsRight}
-              onTabClick={handleTabClick}
-            />
+            <div
+              ref={stickyHeaderRef}
+              className={`sticky top-0 z-10 backdrop-blur-sm pt-2 pb-0 border-b ${
+                theme === 'dark'
+                  ? 'bg-slate-900/95 border-slate-700'
+                  : 'bg-white/95 border-slate-200'
+              }`}
+            >
+              <div className="px-4">
+                <ResourceTabs
+                  languages={languages}
+                  activeFilter={activeFilter}
+                  onTabClick={handleTabClick}
+                  tabsContainerRef={tabsContainerRef}
+                  canScrollLeft={canScrollLeft}
+                  canScrollRight={canScrollRight}
+                  scrollTabsLeft={scrollTabsLeft}
+                  scrollTabsRight={scrollTabsRight}
+                  theme={theme}
+                  className="pb-2"
+                />
+              </div>
+            </div>
 
             <div className="px-4 pb-4">
               <div className="mt-4">
-                <TafsirList
+                <ResourceList
                   activeFilter={activeFilter}
                   languages={languages}
-                  groupedTafsirs={groupedTafsirs}
+                  groupedResources={groupedTafsirs}
                   selectedIds={selectedIds}
                   onToggle={handleSelectionToggle}
                   theme={theme}
