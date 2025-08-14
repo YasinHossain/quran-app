@@ -1,0 +1,26 @@
+import { Translation } from './translationPanel.types';
+
+export const initialTranslationsData: Translation[] = [
+  { id: 1, name: 'M.A.S. Abdel Haleem', lang: 'English' },
+  { id: 2, name: "Fadel Soliman, Bridges' translation", lang: 'English' },
+  { id: 3, name: 'T. Usmani', lang: 'English' },
+  { id: 4, name: 'A. Maududi (Tafhim commentary)', lang: 'English' },
+  { id: 5, name: 'M. Pickthall', lang: 'English' },
+  { id: 6, name: 'A. Yusuf Ali', lang: 'English' },
+  { id: 7, name: 'Saheeh International', lang: 'English' },
+  { id: 8, name: 'Al-Hilali & Khan', lang: 'English' },
+  { id: 9, name: 'Transliteration', lang: 'English' },
+  { id: 10, name: 'Taisirul Quran', lang: 'Bengali' },
+  { id: 11, name: 'Sheikh Mujibur Rahman', lang: 'Bengali' },
+  { id: 12, name: 'Rawai Al-bayan', lang: 'Bengali' },
+  { id: 13, name: 'Dr. Abu Bakr Muhammad Zakaria', lang: 'Bengali' },
+  { id: 16, name: 'Modern Bengali Version', lang: 'Bengali' },
+  { id: 17, name: 'Classical Bengali Notes', lang: 'Bengali' },
+  { id: 18, name: 'Bengali Thematic Study', lang: 'Bengali' },
+  { id: 14, name: 'Hasan Efendi Nahi', lang: 'Albanian' },
+  { id: 15, name: 'Albanian', lang: 'Albanian' },
+  { id: 19, name: 'New Albanian Translation', lang: 'Albanian' },
+  { id: 20, name: 'Albanian Commentary', lang: 'Albanian' },
+  { id: 21, name: 'Albanian Poetic Version', lang: 'Albanian' },
+  { id: 22, name: 'Scholarly Albanian Edition', lang: 'Albanian' },
+];
