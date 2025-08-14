@@ -1,7 +1,6 @@
 'use client';
 import React, { useState } from 'react';
 import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
-import { TafsirPanel } from '@/app/(features)/surah/[surahId]/components/TafsirPanel';
 import { useTafsirVerseData } from '../../hooks/useTafsirVerseData';
 import AyahNavigation from './components/AyahNavigation';
 import TranslationSelector from './components/TranslationSelector';
@@ -56,6 +55,8 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps) {
         selectedTafsirName={selectedTafsirName}
         selectedWordLanguageName={selectedWordLanguageName}
         showTafsirSetting
+        isTafsirPanelOpen={isTafsirPanelOpen}
+        onTafsirPanelClose={() => setIsTafsirPanelOpen(false)}
       />
       <TranslationSelector
         isOpen={isTranslationPanelOpen}
@@ -67,7 +68,6 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps) {
         languages={wordLanguageOptions}
         onReset={resetWordSettings}
       />
-      <TafsirPanel isOpen={isTafsirPanelOpen} onClose={() => setIsTafsirPanelOpen(false)} />
     </div>
   );
 }

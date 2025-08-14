@@ -8,9 +8,11 @@ import { useTheme } from '@/app/providers/ThemeContext';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { ArabicFontPanel } from './ArabicFontPanel';
 import { TranslationSettings } from './TranslationSettings';
+import { TafsirSettings } from './TafsirSettings';
 import { FontSettings } from './FontSettings';
 import { ReadingSettings } from './ReadingSettings';
 import { TranslationPanel } from './TranslationPanel';
+import { TafsirPanel } from './TafsirPanel';
 
 interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;
@@ -23,6 +25,8 @@ interface SettingsSidebarProps {
   showTafsirSetting?: boolean;
   isTranslationPanelOpen?: boolean;
   onTranslationPanelClose?: () => void;
+  isTafsirPanelOpen?: boolean;
+  onTafsirPanelClose?: () => void;
 }
 
 export const SettingsSidebar = ({
@@ -36,6 +40,8 @@ export const SettingsSidebar = ({
   showTafsirSetting = false,
   isTranslationPanelOpen = false,
   onTranslationPanelClose,
+  isTafsirPanelOpen = false,
+  onTafsirPanelClose,
 }: SettingsSidebarProps) => {
   const { t } = useTranslation();
   const { isSettingsOpen, setSettingsOpen } = useSidebar();
@@ -125,6 +131,11 @@ export const SettingsSidebar = ({
                 selectedWordLanguageName={selectedWordLanguageName}
                 showTafsirSetting={showTafsirSetting}
               />
+              <TafsirSettings
+                onTafsirPanelOpen={onTafsirPanelOpen}
+                selectedTafsirName={selectedTafsirName}
+                showTafsirSetting={showTafsirSetting}
+              />
               <FontSettings onArabicFontPanelOpen={() => setIsArabicFontPanelOpen(true)} />
             </>
           )}
@@ -166,6 +177,12 @@ export const SettingsSidebar = ({
           <TranslationPanel
             isOpen={isTranslationPanelOpen}
             onClose={onTranslationPanelClose}
+          />
+        )}
+        {onTafsirPanelClose && (
+          <TafsirPanel
+            isOpen={isTafsirPanelOpen}
+            onClose={onTafsirPanelClose}
           />
         )}
       </aside>

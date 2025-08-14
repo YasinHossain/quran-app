@@ -86,6 +86,8 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [orderedSelection, setOrderedSelection] = useState<number[]>([]);
   const [activeFilter, setActiveFilter] = useState('All');
+  const [highlightedSection, setHighlightedSection] = useState<string | null>(null);
+  const [isAtTop, setIsAtTop] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [draggedId, setDraggedId] = useState<number | null>(null);
   const [showLimitWarning, setShowLimitWarning] = useState(false);
@@ -243,6 +245,11 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
   const handleTabClick = (lang: string) => {
     isUserClickRef.current = true;
     setActiveFilter(lang);
+    
+    // Clear highlighted section when switching to a specific language
+    if (lang !== 'All') {
+      setHighlightedSection(null);
+    }
 
     if (lang === 'All') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -264,51 +271,119 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
   const setupScrollObserver = useCallback(() => {
     if (observerRef.current) observerRef.current.disconnect();
 
+    // Wait for DOM to be ready and find sections
     const sections = document.querySelectorAll('.lang-section');
-    if (sections.length === 0 || !stickyHeaderRef.current) return;
+    console.log('Found sections:', sections.length); // Debug log
+    
+    if (sections.length === 0) {
+      console.log('No sections found, retrying in 500ms');
+      setTimeout(() => setupScrollObserver(), 500);
+      return;
+    }
+
+    if (!stickyHeaderRef.current) return;
 
     const stickyHeaderHeight = stickyHeaderRef.current.offsetHeight;
-    const topMargin = Math.floor(-stickyHeaderHeight);
-    const bottomMargin = Math.floor(-(window.innerHeight - stickyHeaderHeight - 1));
-
+    
     observerRef.current = new IntersectionObserver(
       (entries) => {
-        if (isUserClickRef.current) return;
+        if (isUserClickRef.current || isAtTop) return; // Skip if user clicked or at top
 
-        let activeSection = null;
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            activeSection = entry.target;
-          }
-        });
+        // Only track highlighted section when in "All" view and not at top
+        if (activeFilter === 'All') {
+          // Find the section that's most visible
+          let mostVisibleSection = null;
+          let highestRatio = 0;
+          
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && entry.intersectionRatio > highestRatio) {
+              mostVisibleSection = entry.target;
+              highestRatio = entry.intersectionRatio;
+            }
+          });
 
-        if (activeSection) {
-          const lang = (activeSection as HTMLElement).dataset.lang;
-          if (lang && lang !== activeFilter) {
-            setActiveFilter(lang);
+          if (mostVisibleSection) {
+            const lang = (mostVisibleSection as HTMLElement).dataset.lang;
+            console.log('Most visible section:', lang, 'ratio:', highestRatio); // Debug log
+            
+            if (lang && lang !== highlightedSection) {
+              setHighlightedSection(lang);
+            }
           }
         }
       },
       {
-        root: null,
-        rootMargin: `${topMargin}px 0px ${bottomMargin}px 0px`,
-        threshold: 0,
+        root: document.querySelector('[data-testid="translation-panel"] .flex-1.overflow-y-auto'), // Use the panel's scroll container
+        rootMargin: `-${stickyHeaderHeight + 50}px 0px -40% 0px`, // Adjusted margins
+        threshold: [0, 0.1, 0.3, 0.5, 0.7, 1.0],
       }
     );
 
     sections.forEach((section) => observerRef.current?.observe(section));
-  }, [activeFilter]);
+    console.log('Observer set up for', sections.length, 'sections'); // Debug log
+  }, [activeFilter, highlightedSection, isAtTop]);
+
+  // Track scroll position to detect if we're at the top of the TranslationPanel
+  const handleScroll = useCallback(() => {
+    if (activeFilter !== 'All') return; // Only track when in "All" view
+    
+    // Find the scrollable container within the TranslationPanel
+    const panelScrollContainer = document.querySelector('[data-testid="translation-panel"] .flex-1.overflow-y-auto');
+    if (panelScrollContainer) {
+      const scrollTop = panelScrollContainer.scrollTop;
+      const newIsAtTop = scrollTop <= 50; // Consider "at top" if within 50px of top
+      
+      console.log('Panel scroll position:', scrollTop, 'isAtTop:', newIsAtTop); // Debug log
+      
+      if (newIsAtTop !== isAtTop) {
+        console.log('Changing isAtTop from', isAtTop, 'to', newIsAtTop); // Debug log
+        setIsAtTop(newIsAtTop);
+        
+        // Clear highlighted section when returning to top
+        if (newIsAtTop) {
+          setHighlightedSection(null);
+        }
+      }
+    }
+  }, [isAtTop, activeFilter]);
 
   useEffect(() => {
-    if (activeFilter === 'All') {
-      setupScrollObserver();
+    // Set up scroll listener when panel is open
+    if (isOpen) {
+      const panelScrollContainer = document.querySelector('[data-testid="translation-panel"] .flex-1.overflow-y-auto');
+      if (panelScrollContainer) {
+        // Initial check
+        handleScroll();
+        panelScrollContainer.addEventListener('scroll', handleScroll, { passive: true });
+        
+        return () => {
+          panelScrollContainer.removeEventListener('scroll', handleScroll);
+        };
+      }
     }
-    return () => {
+  }, [isOpen, handleScroll]);
+
+  useEffect(() => {
+    // Only set up scroll observer when viewing 'All' languages and translations are loaded
+    if (activeFilter === 'All' && translations.length > 0) {
+      // Add a small delay to ensure DOM is fully rendered
+      const timeoutId = setTimeout(() => {
+        setupScrollObserver();
+      }, 200); // Increased delay
+      
+      return () => {
+        clearTimeout(timeoutId);
+        if (observerRef.current) {
+          observerRef.current.disconnect();
+        }
+      };
+    } else {
+      // Clean up observer when not in 'All' view
       if (observerRef.current) {
         observerRef.current.disconnect();
       }
-    };
-  }, [activeFilter, groupedTranslations, setupScrollObserver]);
+    }
+  }, [activeFilter, translations.length, setupScrollObserver]);
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: number) => {
     setDraggedId(id);
@@ -379,6 +454,50 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
     }
   }, [languages, checkScrollState]);
 
+  // Auto-scroll tab bar to keep highlighted tab visible
+  const scrollToTab = useCallback((targetLang: string) => {
+    if (!tabsContainerRef.current) return;
+    
+    const container = tabsContainerRef.current;
+    const targetButton = container.querySelector(`button:nth-child(${languages.indexOf(targetLang) + 1})`);
+    
+    if (targetButton) {
+      const containerRect = container.getBoundingClientRect();
+      const buttonRect = targetButton.getBoundingClientRect();
+      
+      // Check if button is outside the visible area
+      const isOutsideLeft = buttonRect.left < containerRect.left;
+      const isOutsideRight = buttonRect.right > containerRect.right;
+      
+      if (isOutsideLeft || isOutsideRight) {
+        // Calculate scroll position to center the button
+        const buttonOffsetLeft = (targetButton as HTMLElement).offsetLeft;
+        const buttonWidth = buttonRect.width;
+        const containerWidth = containerRect.width;
+        
+        const targetScrollLeft = buttonOffsetLeft - (containerWidth / 2) + (buttonWidth / 2);
+        
+        container.scrollTo({
+          left: Math.max(0, targetScrollLeft),
+          behavior: 'smooth'
+        });
+      }
+    }
+  }, [languages]);
+
+  // Auto-scroll when highlighted section changes
+  useEffect(() => {
+    if (activeFilter === 'All') {
+      if (isAtTop) {
+        // Scroll to "All" tab when at top
+        scrollToTab('All');
+      } else if (highlightedSection) {
+        // Scroll to highlighted section when scrolled down
+        scrollToTab(highlightedSection);
+      }
+    }
+  }, [highlightedSection, activeFilter, isAtTop, scrollToTab]);
+
   // Reset to Sahih International translation
   const handleReset = () => {
     const sahihInternational = translations.find(
@@ -399,7 +518,7 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
   return (
     <div
       data-testid="translation-panel"
-      className={`absolute inset-0 w-full h-full flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
+      className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       } ${theme === 'dark' ? 'bg-slate-900 text-slate-200' : 'bg-white text-slate-800'}`}
     >
@@ -444,7 +563,7 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
         </button>
       </header>
 
-      <div className="flex-grow overflow-y-auto">
+      <div className="flex-1 overflow-y-auto min-h-0">
         {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center p-8">
@@ -559,19 +678,37 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
                     ref={tabsContainerRef}
                     className="flex items-center space-x-2 overflow-x-hidden flex-1"
                   >
-                    {languages.map((lang) => (
-                      <button
-                        key={lang}
-                        onClick={() => handleTabClick(lang)}
-                        className={`flex-shrink-0 px-3 py-2 text-sm font-semibold border-b-2 transition-colors ${
-                          activeFilter === lang
-                            ? 'border-blue-600 text-blue-600'
-                            : `border-transparent ${theme === 'dark' ? 'text-slate-400 hover:text-slate-200 hover:border-slate-600' : 'text-slate-500 hover:text-slate-800 hover:border-slate-300'}`
-                        }`}
-                      >
-                        {lang}
-                      </button>
-                    ))}
+                    {languages.map((lang) => {
+                      // Determine if this tab should be highlighted
+                      let isHighlighted = false;
+                      
+                      if (activeFilter === 'All') {
+                        if (isAtTop) {
+                          // At the top: highlight "All" tab
+                          isHighlighted = lang === 'All';
+                        } else {
+                          // Scrolled down: highlight the currently visible section
+                          isHighlighted = lang === highlightedSection;
+                        }
+                      } else {
+                        // In specific language view: only highlight the active filter
+                        isHighlighted = activeFilter === lang;
+                      }
+                      
+                      return (
+                        <button
+                          key={lang}
+                          onClick={() => handleTabClick(lang)}
+                          className={`flex-shrink-0 px-3 py-2 text-sm font-semibold border-b-2 transition-colors ${
+                            isHighlighted
+                              ? 'border-blue-600 text-blue-600'
+                              : `border-transparent ${theme === 'dark' ? 'text-slate-400 hover:text-slate-200 hover:border-slate-600' : 'text-slate-500 hover:text-slate-800 hover:border-slate-300'}`
+                          }`}
+                        >
+                          {lang}
+                        </button>
+                      );
+                    })}
                   </div>
                   
                   {/* Right Arrow */}
@@ -663,15 +800,23 @@ const TranslationItem: React.FC<TranslationItemProps> = ({ item, isSelected, onT
       onKeyDown={handleKeyDown}
       role="button"
       tabIndex={0}
-      className={`flex items-center justify-between px-3 py-2 min-h-[40px] rounded-lg cursor-pointer transition-colors ${
+      className={`flex items-center justify-between px-4 py-3 h-[52px] rounded-lg cursor-pointer transition-all duration-200 border ${
         isSelected
-          ? theme === 'dark' ? 'bg-blue-900/30' : 'bg-blue-50'
-          : theme === 'dark' ? 'bg-slate-800 hover:bg-slate-800/50' : 'bg-white hover:bg-slate-50'
+          ? theme === 'dark' 
+            ? 'bg-blue-900/30 border-blue-700/50 shadow-sm' 
+            : 'bg-blue-50 border-blue-200 shadow-sm'
+          : theme === 'dark' 
+            ? 'bg-slate-800/50 border-slate-700/50 hover:bg-slate-800 hover:border-slate-600' 
+            : 'bg-white border-slate-200 hover:bg-slate-50 hover:border-slate-300'
       }`}
     >
-      <p className={`font-medium flex-1 pr-2 ${theme === 'dark' ? 'text-slate-200' : 'text-slate-800'}`}>{item.name}</p>
-      <div className="h-5 w-5 flex items-center justify-center">
-        {isSelected && <CheckIcon className="h-5 w-5 text-blue-600" />}
+      <div className="flex-1 min-w-0 pr-3">
+        <p className={`font-medium text-sm leading-tight truncate ${theme === 'dark' ? 'text-slate-200' : 'text-slate-800'}`} title={item.name}>
+          {item.name}
+        </p>
+      </div>
+      <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+        {isSelected && <CheckIcon className="h-5 w-5 text-blue-600 dark:text-blue-400" />}
       </div>
     </div>
   );
