@@ -3,8 +3,7 @@
 import React from 'react';
 import { Search, X, GripVertical, RotateCcw } from 'lucide-react';
 import { useTranslationPanel } from './useTranslationPanel';
-import { TranslationTabs } from './TranslationTabs';
-import { TranslationList } from './TranslationList';
+import { ResourceTabs, ResourceList } from '@/app/shared/resource-panel';
 
 interface TranslationPanelProps {
   isOpen: boolean;
@@ -114,25 +113,30 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
         )}
       </div>
 
-      <TranslationTabs
-        languages={languages}
-        activeFilter={activeFilter}
-        onTabClick={setActiveFilter}
-        tabsContainerRef={tabsContainerRef}
-        canScrollLeft={canScrollLeft}
-        canScrollRight={canScrollRight}
-        scrollTabsLeft={scrollTabsLeft}
-        scrollTabsRight={scrollTabsRight}
-        theme={theme}
-      />
+      <div className="sticky top-0 z-10">
+        <ResourceTabs
+          languages={languages}
+          activeFilter={activeFilter}
+          onTabClick={setActiveFilter}
+          tabsContainerRef={tabsContainerRef}
+          canScrollLeft={canScrollLeft}
+          canScrollRight={canScrollRight}
+          scrollTabsLeft={scrollTabsLeft}
+          scrollTabsRight={scrollTabsRight}
+          theme={theme}
+          className={`border-b ${
+            theme === 'dark' ? 'border-slate-700 bg-slate-800' : 'border-slate-200 bg-white'
+          }`}
+        />
+      </div>
 
       <div className="flex-1 overflow-y-auto px-4 pb-4">
         {loading && <p>Loading...</p>}
         {error && <p className="text-red-500">{error}</p>}
         {!loading && !error && (
-          <TranslationList
+          <ResourceList
             languages={languages}
-            groupedTranslations={groupedTranslations}
+            groupedResources={groupedTranslations}
             activeFilter={activeFilter}
             selectedIds={selectedIds}
             onToggle={handleSelectionToggle}

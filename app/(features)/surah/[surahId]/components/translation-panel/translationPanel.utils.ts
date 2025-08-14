@@ -25,45 +25,6 @@ export const saveSelectedTranslations = (ids: number[]) => {
   }
 };
 
-export const handleDragStart = (
-  e: React.DragEvent<HTMLDivElement>,
-  id: number,
-  setDraggedId: (id: number) => void
-) => {
-  setDraggedId(id);
-  e.dataTransfer.effectAllowed = 'move';
-};
-
-export const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-  e.preventDefault();
-};
-
-export const handleDrop = (
-  e: React.DragEvent<HTMLDivElement>,
-  targetId: number,
-  draggedId: number | null,
-  orderedSelection: number[],
-  setOrderedSelection: (ids: number[]) => void,
-  setDraggedId: (id: number | null) => void
-) => {
-  e.preventDefault();
-  if (draggedId === null || draggedId === targetId) {
-    setDraggedId(null);
-    return;
-  }
-  const newOrder = [...orderedSelection];
-  const from = newOrder.indexOf(draggedId);
-  const to = newOrder.indexOf(targetId);
-  const [item] = newOrder.splice(from, 1);
-  newOrder.splice(to, 0, item);
-  setOrderedSelection(newOrder);
-  setDraggedId(null);
-};
-
-export const handleDragEnd = (setDraggedId: (id: number | null) => void) => {
-  setDraggedId(null);
-};
-
 export const scrollTabs = (
   ref: RefObject<HTMLDivElement | null>,
   direction: 'left' | 'right',

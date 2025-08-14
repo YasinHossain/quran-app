@@ -5,20 +5,16 @@ import { useTheme } from '@/app/providers/ThemeContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { getTranslations } from '@/lib/api/translations';
 import { TranslationResource } from '@/types';
-import { Translation } from './translationPanel.types';
+import useSelectableResources from '@/lib/hooks/useSelectableResources';
 import {
   capitalizeLanguageName,
   loadSelectedTranslations,
   saveSelectedTranslations,
-  handleDragStart,
-  handleDragOver,
-  handleDrop,
-  handleDragEnd,
   scrollTabs,
   updateScrollState,
-  scrollToTab,
 } from './translationPanel.utils';
 import { initialTranslationsData } from './translationPanel.data';
+import { Translation } from './translationPanel.types';
 
 export const MAX_SELECTIONS = 5;
 
@@ -28,17 +24,13 @@ export const useTranslationPanel = (isOpen: boolean) => {
   const [translations, setTranslations] = useState<Translation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
-  const [orderedSelection, setOrderedSelection] = useState<number[]>([]);
-  const [activeFilter, setActiveFilter] = useState('All');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [draggedId, setDraggedId] = useState<number | null>(null);
+
   const tabsContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
   useEffect(() => {
-    const loadTranslations = async () => {
+    const loadTranslationsAsync = async () => {
       try {
         setLoading(true);
         setError(null);
@@ -55,8 +47,30 @@ export const useTranslationPanel = (isOpen: boolean) => {
         setLoading(false);
       }
     };
-    if (isOpen) loadTranslations();
+    if (isOpen) loadTranslationsAsync();
   }, [isOpen]);
+
+  const selectable = useSelectableResources<Translation>({
+    resources: translations,
+    selectionLimit: MAX_SELECTIONS,
+  });
+
+  const {
+    searchTerm,
+    setSearchTerm,
+    languages,
+    groupedResources,
+    activeFilter,
+    setActiveFilter,
+    selectedIds,
+    orderedSelection,
+    handleSelectionToggle,
+    handleDragStart,
+    handleDragOver,
+    handleDrop,
+    handleDragEnd,
+    setSelections,
+  } = selectable;
 
   const isUpdatingRef = useRef(false);
   useEffect(() => {
@@ -77,64 +91,12 @@ export const useTranslationPanel = (isOpen: boolean) => {
     if (isOpen && translations.length > 0) {
       const settingsIds = settings.translationIds || loadSelectedTranslations();
       isUpdatingRef.current = true;
-      setSelectedIds(new Set(settingsIds));
-      setOrderedSelection(settingsIds);
+      setSelections(settingsIds);
       setTimeout(() => {
         isUpdatingRef.current = false;
       }, 50);
     }
-  }, [isOpen, translations.length, settings.translationIds]);
-
-  const languages = Array.from(new Set(translations.map((t) => t.lang))).sort((a, b) =>
-    a.localeCompare(b)
-  );
-  languages.unshift('All');
-
-  const filteredTranslations = translations.filter((t) => {
-    if (!searchTerm) return true;
-    const lower = searchTerm.toLowerCase();
-    return t.name.toLowerCase().includes(lower) || t.lang.toLowerCase().includes(lower);
-  });
-
-  const groupedTranslations = filteredTranslations.reduce(
-    (acc, item) => {
-      (acc[item.lang] = acc[item.lang] || []).push(item);
-      return acc;
-    },
-    {} as Record<string, Translation[]>
-  );
-
-  const handleSelectionToggle = (id: number) => {
-    const newSelectedIds = new Set(selectedIds);
-    let newOrder = [...orderedSelection];
-    if (newSelectedIds.has(id)) {
-      newSelectedIds.delete(id);
-      newOrder = newOrder.filter((i) => i !== id);
-    } else {
-      if (newSelectedIds.size >= MAX_SELECTIONS) return;
-      newSelectedIds.add(id);
-      newOrder.push(id);
-    }
-    setSelectedIds(newSelectedIds);
-    setOrderedSelection(newOrder);
-  };
-
-  const onTabClick = (lang: string) => setActiveFilter(lang);
-
-  const resetSelection = () => {
-    const sahih = translations.find(
-      (t) =>
-        t.name.toLowerCase().includes('saheeh international') ||
-        t.name.toLowerCase().includes('sahih international')
-    );
-    if (sahih) {
-      setSelectedIds(new Set([sahih.id]));
-      setOrderedSelection([sahih.id]);
-    } else {
-      setSelectedIds(new Set());
-      setOrderedSelection([]);
-    }
-  };
+  }, [isOpen, translations.length, settings.translationIds, setSelections]);
 
   const handleTabsScroll = useCallback(
     () => updateScrollState(tabsContainerRef, setCanScrollLeft, setCanScrollRight),
@@ -153,32 +115,42 @@ export const useTranslationPanel = (isOpen: boolean) => {
     };
   }, [languages, handleTabsScroll]);
 
+  const resetSelection = () => {
+    const sahih = translations.find(
+      (t) =>
+        t.name.toLowerCase().includes('saheeh international') ||
+        t.name.toLowerCase().includes('sahih international')
+    );
+    if (sahih) {
+      setSelections([sahih.id]);
+    } else {
+      setSelections([]);
+    }
+  };
+
   return {
     theme,
     translations,
     loading,
     error,
     languages,
-    groupedTranslations,
+    groupedTranslations: groupedResources,
     activeFilter,
-    setActiveFilter: onTabClick,
+    setActiveFilter,
     searchTerm,
     setSearchTerm,
     selectedIds,
     handleSelectionToggle,
     orderedSelection,
     resetSelection,
-    handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) =>
-      handleDragStart(e, id, setDraggedId),
+    handleDragStart,
     handleDragOver,
-    handleDrop: (e: React.DragEvent<HTMLDivElement>, id: number) =>
-      handleDrop(e, id, draggedId, orderedSelection, setOrderedSelection, setDraggedId),
-    handleDragEnd: () => handleDragEnd(setDraggedId),
+    handleDrop,
+    handleDragEnd,
     tabsContainerRef,
     canScrollLeft,
     canScrollRight,
     scrollTabsLeft: () => scrollTabs(tabsContainerRef, 'left'),
     scrollTabsRight: () => scrollTabs(tabsContainerRef, 'right'),
-    scrollToTab: (lang: string) => scrollToTab(tabsContainerRef, languages, lang),
   } as const;
 };
