@@ -11,7 +11,7 @@ interface Props {
 
 const HeaderSearch = ({ query, setQuery, placeholder, onKeyDown }: Props) => {
   const { theme } = useTheme();
-  
+
   const searchBarClasses =
     theme === 'light'
       ? 'bg-white text-gray-700 border border-gray-200 placeholder-gray-400'
