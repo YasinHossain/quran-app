@@ -1,12 +1,14 @@
 'use client';
 import React, { useState } from 'react';
 import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
-import { TafsirPanel } from '@/app/(features)/surah/[surahId]/components/TafsirPanel';
 import { useTafsirVerseData } from '../../hooks/useTafsirVerseData';
 import AyahNavigation from './components/AyahNavigation';
-import TranslationSelector from './components/TranslationSelector';
 import TafsirViewer from './components/TafsirViewer';
 import WordTranslationPanel from './components/WordTranslationPanel';
+import { TranslationManager } from '@/app/(features)/surah/[surahId]/components/TranslationManager';
+import { TafsirManager } from '@/app/(features)/surah/[surahId]/components/TafsirManager';
+import useSWR from 'swr';
+import { getTafsirResources } from '@/lib/api';
 
 interface TafsirVersePageProps {
   params: Promise<{ surahId: string; ayahId: string }>;
@@ -33,6 +35,7 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps) {
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [isTafsirPanelOpen, setIsTafsirPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
+  const { data: tafsirResources } = useSWR('tafsirs', getTafsirResources);
 
   return (
     <div className="flex flex-grow bg-white dark:bg-[var(--background)] text-[var(--foreground)] overflow-hidden min-h-0">
@@ -58,10 +61,10 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps) {
         selectedWordLanguageName={selectedWordLanguageName}
         showTafsirSetting
       />
-      <TranslationSelector
+      <TranslationManager
         isOpen={isTranslationPanelOpen}
         onClose={() => setIsTranslationPanelOpen(false)}
-        translationOptions={translationOptions}
+        translations={translationOptions}
       />
       <WordTranslationPanel
         isOpen={isWordPanelOpen}
@@ -69,7 +72,11 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps) {
         languages={wordLanguageOptions}
         onReset={resetWordSettings}
       />
-      <TafsirPanel isOpen={isTafsirPanelOpen} onClose={() => setIsTafsirPanelOpen(false)} />
+      <TafsirManager
+        isOpen={isTafsirPanelOpen}
+        onClose={() => setIsTafsirPanelOpen(false)}
+        tafsirs={tafsirResources || []}
+      />
     </div>
   );
 }
