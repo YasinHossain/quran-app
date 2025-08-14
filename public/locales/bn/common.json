@@ -79,8 +79,5 @@
   "repeat_each": "প্রতিটি পুনরাবৃত্তি",
   "delay_seconds": "বিলম্ব (সেকেন্ড)",
   "play_entire_surah_continuously": "সম্পূর্ণ সূরা ধারাবাহিকভাবে চালান।",
-  "search_reciter": "ক্বারি অনুসন্ধান করুন",
-  "my_selections": "আমার নির্বাচনসমূহ",
-  "no_translations_selected": "কোন অনুবাদ নির্বাচন করা হয়নি",
-  "no_tafsirs_selected": "কোন তাফসির নির্বাচন করা হয়নি"
+  "search_reciter": "ক্বারি অনুসন্ধান করুন"
 }
