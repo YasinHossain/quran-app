@@ -4,9 +4,9 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Verse } from './components/Verse';
 import { SettingsSidebar } from './components/SettingsSidebar';
-import { TranslationManager } from './components/TranslationManager';
+import { TranslationPanel } from './components/TranslationPanel';
 import { WordLanguagePanel } from './components/WordLanguagePanel';
-import { Verse as VerseType } from '@/types';
+import { Verse as VerseType, TranslationResource } from '@/types';
 import { getVersesByChapter, getSurahCoverUrl } from '@/lib/api';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
@@ -24,6 +24,7 @@ interface SurahPageProps {
 export default function SurahPage({ params }: SurahPageProps) {
   const { surahId } = React.use(params);
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
+  const [translationSearchTerm, setTranslationSearchTerm] = useState('');
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
   const [wordTranslationSearchTerm, setWordTranslationSearchTerm] = useState('');
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
@@ -63,6 +64,17 @@ export default function SurahPage({ params }: SurahPageProps) {
           settings.wordLang
       )?.name || t('select_word_translation'),
     [settings.wordLang, wordLanguageOptions, t]
+  );
+
+  const groupedTranslations = useMemo(
+    () =>
+      translationOptions
+        .filter((o) => o.name.toLowerCase().includes(translationSearchTerm.toLowerCase()))
+        .reduce<Record<string, TranslationResource[]>>((acc, tr) => {
+          (acc[tr.language_name] ||= []).push(tr);
+          return acc;
+        }, {}),
+    [translationOptions, translationSearchTerm]
   );
 
   const filteredWordLanguages = useMemo(
@@ -125,10 +137,12 @@ export default function SurahPage({ params }: SurahPageProps) {
         selectedTranslationName={selectedTranslationName}
         selectedWordLanguageName={selectedWordLanguageName}
       />
-      <TranslationManager
+      <TranslationPanel
         isOpen={isTranslationPanelOpen}
         onClose={() => setIsTranslationPanelOpen(false)}
-        translations={translationOptions}
+        groupedTranslations={groupedTranslations}
+        searchTerm={translationSearchTerm}
+        onSearchTermChange={setTranslationSearchTerm}
       />
       <WordLanguagePanel
         isOpen={isWordPanelOpen}
