@@ -10,7 +10,7 @@ interface SelectionBoxProps {
 
 const SelectionBox = ({ label, value, onClick }: SelectionBoxProps) => {
   const { theme } = useTheme();
-  
+
   const boxClasses =
     theme === 'light'
       ? 'bg-white border border-gray-200 text-gray-700'
@@ -18,9 +18,7 @@ const SelectionBox = ({ label, value, onClick }: SelectionBoxProps) => {
 
   return (
     <div>
-      <label className="block mb-2 text-sm font-medium text-[var(--foreground)]">
-        {label}
-      </label>
+      <label className="block mb-2 text-sm font-medium text-[var(--foreground)]">{label}</label>
       <button
         onClick={onClick}
         className={`w-full flex justify-between items-center ${boxClasses} rounded-lg p-2.5 text-sm text-left focus:outline-none focus:ring-1 focus:ring-teal-500 transition-all duration-300 hover:shadow-lg hover:ring-1 hover:ring-teal-600`}

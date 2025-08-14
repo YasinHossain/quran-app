@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TranslationIcon, BookReaderIcon, ChevronDownIcon } from '@/app/shared/icons';
+import { TranslationIcon, BookReaderIcon } from '@/app/shared/icons';
 import { CollapsibleSection } from './CollapsibleSection';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useFontSize } from '../../hooks/useFontSize';
@@ -92,7 +92,7 @@ export const TranslationSettings = ({
             <SelectionBox
               label={t('select_tafsir')}
               value={selectedTafsirName || ''}
-              onClick={onTafsirPanelOpen}
+              onClick={() => onTafsirPanelOpen?.()}
             />
             <div>
               <div className="flex justify-between mb-1 text-sm">
