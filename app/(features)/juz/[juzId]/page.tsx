@@ -10,7 +10,6 @@ import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import { buildAudioUrl } from '@/lib/audio/reciters';
 import { QuranAudioPlayer } from '@/app/shared/player';
-import type { TranslationResource } from '@/types';
 import { getSurahCoverUrl } from '@/lib/api';
 import useJuzData from '../hooks/useJuzData';
 import { JuzHeader } from './components/JuzHeader';

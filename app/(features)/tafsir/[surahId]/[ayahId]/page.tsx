@@ -18,7 +18,6 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps) {
     verse,
     tafsirHtml,
     tafsirResource,
-    translationOptions,
     wordLanguageOptions,
     selectedTranslationName,
     selectedTafsirName,
@@ -61,7 +60,6 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps) {
       <TranslationSelector
         isOpen={isTranslationPanelOpen}
         onClose={() => setIsTranslationPanelOpen(false)}
-        translationOptions={translationOptions}
       />
       <WordTranslationPanel
         isOpen={isWordPanelOpen}

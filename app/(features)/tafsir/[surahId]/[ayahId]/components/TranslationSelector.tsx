@@ -1,6 +1,4 @@
 'use client';
-import { useMemo, useState } from 'react';
-import { TranslationResource } from '@/types';
 import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/TranslationPanel';
 
 interface TranslationSelectorProps {

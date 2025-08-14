@@ -110,7 +110,8 @@ describe('SettingsSidebar interactions', () => {
     // Click translation tab while sidebar is open
     await userEvent.click(screen.getByRole('button', { name: 'Translation' }));
     // Translation panel should remain hidden
-    expect(screen.queryByText('Manage Translations')).not.toBeInTheDocument();
+    const panel = screen.getByTestId('translation-panel');
+    expect(panel).toHaveClass('translate-x-full');
   });
 
   it('opens the word translation panel and shows languages', async () => {

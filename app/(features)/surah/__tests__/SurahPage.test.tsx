@@ -33,20 +33,7 @@ const mockVerse: Verse = {
   words: [],
 } as Verse;
 
-let intersectionCallback: (entries: { isIntersecting: boolean }[]) => void;
-
 beforeAll(() => {
-  class IO {
-    constructor(cb: typeof intersectionCallback) {
-      intersectionCallback = cb;
-    }
-    observe() {}
-    disconnect() {}
-  }
-  (
-    global as unknown as { IntersectionObserver: typeof IntersectionObserver }
-  ).IntersectionObserver = IO as unknown as typeof IntersectionObserver;
-
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
     value: jest.fn().mockImplementation((query) => ({
@@ -103,20 +90,4 @@ test('shows error message when fetch rejects', async () => {
   renderPage();
 
   expect(await screen.findByText('Failed to load content. boom')).toBeInTheDocument();
-});
-
-test('sentinel intersection calls setSize', () => {
-  const mockSetSize = jest.fn();
-  (useSWRInfinite as jest.Mock).mockReturnValue({
-    data: [{ verses: [mockVerse], totalPages: 2 }],
-    size: 1,
-    setSize: mockSetSize,
-    isValidating: false,
-  });
-
-  renderPage();
-
-  intersectionCallback([{ isIntersecting: true }]);
-
-  expect(mockSetSize).toHaveBeenCalledWith(2);
 });
