@@ -3,6 +3,7 @@
  */
 export interface Settings {
   translationId: number;
+  translationIds: number[];
   tafsirIds: number[];
   arabicFontSize: number;
   translationFontSize: number;

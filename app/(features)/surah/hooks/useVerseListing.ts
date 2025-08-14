@@ -10,7 +10,7 @@ import type { Verse, TranslationResource } from '@/types';
 interface LookupFn {
   (
     id: string,
-    translationId: number,
+    translationIds: number | number[],
     page: number,
     perPage: number,
     wordLang: string
@@ -60,13 +60,21 @@ export function useVerseListing({ id, lookup }: UseVerseListingParams) {
     [wordLanguageMap]
   );
 
+  // Stabilize the translation IDs for SWR key to prevent unnecessary re-fetches
+  const stableTranslationIds = useMemo(() => {
+    const ids = settings.translationIds || [settings.translationId];
+    return ids.sort((a, b) => a - b).join(','); // Sort and join for stable string representation
+  }, [settings.translationIds, settings.translationId]);
+
   const { data, size, setSize, isValidating } = useSWRInfinite(
-    (index) => (id ? ['verses', id, settings.translationId, settings.wordLang, index + 1] : null),
-    ([, pId, translationId, wordLang, page]) =>
-      lookup(pId, translationId, page, 20, wordLang).catch((err) => {
+    (index) => (id ? ['verses', id, stableTranslationIds, settings.wordLang, index + 1] : null),
+    ([, pId, translationIdsStr, wordLang, page]) => {
+      const translationIds = translationIdsStr.split(',').map(Number);
+      return lookup(pId, translationIds, page, 20, wordLang).catch((err) => {
         setError(`Failed to load content. ${err.message}`);
         return { verses: [], totalPages: 1 };
-      })
+      });
+    }
   );
 
   const verses: Verse[] = useMemo(() => (data ? data.flatMap((d) => d.verses) : []), [data]);

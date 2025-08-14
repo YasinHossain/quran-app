@@ -4,7 +4,6 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Verse } from './components/Verse';
 import { SettingsSidebar } from './components/SettingsSidebar';
-import { TranslationPanel } from './components/TranslationPanel';
 import { WordLanguagePanel } from './components/WordLanguagePanel';
 import { Verse as VerseType } from '@/types';
 import { getVersesByChapter, getSurahCoverUrl } from '@/lib/api';
@@ -124,10 +123,8 @@ export default function SurahPage({ params }: SurahPageProps) {
         onReadingPanelOpen={() => {}}
         selectedTranslationName={selectedTranslationName}
         selectedWordLanguageName={selectedWordLanguageName}
-      />
-      <TranslationPanel
-        isOpen={isTranslationPanelOpen}
-        onClose={() => setIsTranslationPanelOpen(false)}
+        isTranslationPanelOpen={isTranslationPanelOpen}
+        onTranslationPanelClose={() => setIsTranslationPanelOpen(false)}
       />
       <WordLanguagePanel
         isOpen={isWordPanelOpen}

@@ -35,12 +35,15 @@ export interface PaginatedVerses {
 export async function fetchVerses(
   type: 'by_chapter' | 'by_juz' | 'by_page',
   id: string | number,
-  translationId: number,
+  translationIds: number | number[],
   page = 1,
   perPage = 20,
   wordLang: string = 'en'
 ): Promise<PaginatedVerses> {
   const lang = wordLang as LanguageCode;
+  const translationIdsArray = Array.isArray(translationIds) ? translationIds : [translationIds];
+  const translationParam = translationIdsArray.join(',');
+  
   const data = await apiFetch<{
     verses: ApiVerse[];
     meta?: { total_pages: number };
@@ -52,7 +55,7 @@ export async function fetchVerses(
       words: 'true',
       word_translation_language: lang,
       word_fields: 'text_uthmani',
-      translations: translationId.toString(),
+      translations: translationParam,
       fields: 'text_uthmani,audio',
       per_page: perPage.toString(),
       page: page.toString(),
@@ -68,32 +71,32 @@ export async function fetchVerses(
 
 export function getVersesByChapter(
   chapterId: string | number,
-  translationId: number,
+  translationIds: number | number[],
   page = 1,
   perPage = 20,
   wordLang: string = 'en'
 ): Promise<PaginatedVerses> {
-  return fetchVerses('by_chapter', chapterId, translationId, page, perPage, wordLang);
+  return fetchVerses('by_chapter', chapterId, translationIds, page, perPage, wordLang);
 }
 
 export function getVersesByJuz(
   juzId: string | number,
-  translationId: number,
+  translationIds: number | number[],
   page = 1,
   perPage = 20,
   wordLang: string = 'en'
 ): Promise<PaginatedVerses> {
-  return fetchVerses('by_juz', juzId, translationId, page, perPage, wordLang);
+  return fetchVerses('by_juz', juzId, translationIds, page, perPage, wordLang);
 }
 
 export function getVersesByPage(
   pageId: string | number,
-  translationId: number,
+  translationIds: number | number[],
   page = 1,
   perPage = 20,
   wordLang: string = 'en'
 ): Promise<PaginatedVerses> {
-  return fetchVerses('by_page', pageId, translationId, page, perPage, wordLang);
+  return fetchVerses('by_page', pageId, translationIds, page, perPage, wordLang);
 }
 
 export async function searchVerses(query: string): Promise<Verse[]> {

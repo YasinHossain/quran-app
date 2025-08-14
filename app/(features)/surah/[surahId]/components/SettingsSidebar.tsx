@@ -10,6 +10,7 @@ import { ArabicFontPanel } from './ArabicFontPanel';
 import { TranslationSettings } from './TranslationSettings';
 import { FontSettings } from './FontSettings';
 import { ReadingSettings } from './ReadingSettings';
+import { TranslationPanel } from './TranslationPanel';
 
 interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;
@@ -20,6 +21,8 @@ interface SettingsSidebarProps {
   selectedTafsirName?: string;
   selectedWordLanguageName: string;
   showTafsirSetting?: boolean;
+  isTranslationPanelOpen?: boolean;
+  onTranslationPanelClose?: () => void;
 }
 
 export const SettingsSidebar = ({
@@ -31,6 +34,8 @@ export const SettingsSidebar = ({
   selectedTafsirName,
   selectedWordLanguageName,
   showTafsirSetting = false,
+  isTranslationPanelOpen = false,
+  onTranslationPanelClose,
 }: SettingsSidebarProps) => {
   const { t } = useTranslation();
   const { isSettingsOpen, setSettingsOpen } = useSidebar();
@@ -60,9 +65,10 @@ export const SettingsSidebar = ({
         }}
       />
       <aside
-        className={`fixed lg:static ${isHidden ? 'top-0' : 'top-16'} bottom-0 right-0 w-[20.7rem] bg-[var(--background)] text-[var(--foreground)] flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 z-40 lg:z-40 lg:h-full ${
+        className={`fixed lg:static top-16 lg:top-0 bottom-0 right-0 w-[20.7rem] bg-[var(--background)] text-[var(--foreground)] flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 z-40 lg:z-40 lg:h-full ${
           isSettingsOpen ? 'translate-x-0' : 'translate-x-full'
         } lg:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} lg:flex`}
+        style={{ position: 'relative' }}
       >
         <header className="flex items-center justify-between p-4 border-b border-[var(--border-color)]">
           <button
@@ -156,6 +162,12 @@ export const SettingsSidebar = ({
           isOpen={isArabicFontPanelOpen}
           onClose={() => setIsArabicFontPanelOpen(false)}
         />
+        {onTranslationPanelClose && (
+          <TranslationPanel
+            isOpen={isTranslationPanelOpen}
+            onClose={onTranslationPanelClose}
+          />
+        )}
       </aside>
     </>
   );

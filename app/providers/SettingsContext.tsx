@@ -24,6 +24,7 @@ export const ARABIC_FONTS = [
 // Define default settings
 const defaultSettings: Settings = {
   translationId: 20,
+  translationIds: [20],
   tafsirIds: [169],
   arabicFontSize: 28,
   translationFontSize: 16,
@@ -48,6 +49,7 @@ interface SettingsContextType {
   setWordLang: (lang: string) => void;
   setWordTranslationId: (id: number) => void;
   setTafsirIds: (ids: number[]) => void;
+  setTranslationIds: (ids: number[]) => void;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -70,13 +72,36 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedSettings = localStorage.getItem('quranAppSettings');
+      const savedTranslations = localStorage.getItem('selected-translations');
+      
       if (savedSettings) {
         try {
           const parsed = JSON.parse(savedSettings);
+          
+          // Migration: convert old single tafsirId to array
           if (parsed.tafsirId && !parsed.tafsirIds) {
             parsed.tafsirIds = [parsed.tafsirId];
             delete parsed.tafsirId;
           }
+          
+          // Migration: initialize translationIds from TranslationPanel selections if available
+          if (!parsed.translationIds && savedTranslations) {
+            try {
+              const translationIds = JSON.parse(savedTranslations);
+              if (Array.isArray(translationIds) && translationIds.length > 0) {
+                parsed.translationIds = translationIds;
+                parsed.translationId = translationIds[0]; // Keep first as primary
+              }
+            } catch (e) {
+              console.warn('Failed to parse selected-translations:', e);
+            }
+          }
+          
+          // Ensure translationIds is always an array
+          if (!parsed.translationIds) {
+            parsed.translationIds = parsed.translationId ? [parsed.translationId] : [defaultSettings.translationId];
+          }
+          
           setSettings({ ...defaultSettings, ...parsed });
         } catch (error) {
           console.error('Error parsing settings from localStorage:', error);
@@ -136,6 +161,15 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
     [setSettings]
   );
 
+  const setTranslationIds = useCallback(
+    (ids: number[]) => setSettings((prev) => ({ 
+      ...prev, 
+      translationIds: ids,
+      translationId: ids.length > 0 ? ids[0] : prev.translationId
+    })),
+    [setSettings]
+  );
+
   const value = useMemo(
     () => ({
       settings,
@@ -146,6 +180,7 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
       setWordLang,
       setWordTranslationId,
       setTafsirIds,
+      setTranslationIds,
     }),
     [
       settings,
@@ -155,6 +190,7 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
       setWordLang,
       setWordTranslationId,
       setTafsirIds,
+      setTranslationIds,
     ]
   );
 
