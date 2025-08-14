@@ -50,7 +50,9 @@ const Page = ({
             <div
               className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg shadow transition-colors ${
                 isActive
-                  ? 'bg-white/20 text-white'
+                  ? theme === 'light'
+                    ? 'bg-gray-100 text-teal-600'
+                    : 'bg-slate-700 text-teal-400'
                   : theme === 'light'
                     ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
                     : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'

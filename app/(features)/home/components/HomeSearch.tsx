@@ -18,7 +18,7 @@ export default function HomeSearch({ searchQuery, setSearchQuery }: HomeSearchPr
 
   return (
     <>
-      <div className="mt-10 w-full max-w-2xl mx-auto content-visibility-auto animate-fade-in-up animation-delay-200 p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300">
+      <div className="mt-10 w-full max-w-2xl mx-auto content-visibility-auto animate-fade-in-up animation-delay-200">
         <div className="relative">
           <SearchSolidIcon
             className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
@@ -29,7 +29,7 @@ export default function HomeSearch({ searchQuery, setSearchQuery }: HomeSearchPr
             placeholder="What do you want to read?"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className={`w-full pl-12 pr-4 py-3 rounded-lg ring-0 focus:outline-none focus:ring-0 transition-all duration-300 hover:shadow-lg text-lg ${searchBarClasses}`}
+            className={`w-full pl-12 pr-4 py-3 rounded-lg ring-0 focus:outline-none focus:ring-0 transition-all duration-300 hover:shadow-lg text-lg ${searchBarClasses} backdrop-blur-xl shadow-lg hover:shadow-xl ${theme === 'light' ? 'bg-white/60' : 'bg-slate-800/50'} animate-fade-in-up animation-delay-200`}
           />
         </div>
       </div>
