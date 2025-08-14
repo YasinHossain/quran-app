@@ -4,7 +4,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
-import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/TranslationPanel';
+import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/translation-panel';
 import { WordLanguagePanel } from '@/app/(features)/surah/[surahId]/components/WordLanguagePanel';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';

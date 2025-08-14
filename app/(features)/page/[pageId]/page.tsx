@@ -4,7 +4,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Verse } from '@/app/(features)/surah/[surahId]/components/Verse';
 import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
-import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/TranslationPanel';
+import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/translation-panel';
 import { WordLanguagePanel } from '@/app/(features)/surah/[surahId]/components/WordLanguagePanel';
 import { Verse as VerseType } from '@/types';
 import { getVersesByPage, getSurahCoverUrl } from '@/lib/api';

@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import Header from '@/app/shared/Header';
 import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
 import { WordLanguagePanel } from '@/app/(features)/surah/[surahId]/components/WordLanguagePanel';
-import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/TranslationPanel';
+import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/translation-panel';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { SidebarProvider } from '@/app/providers/SidebarContext';
 import { ThemeProvider } from '@/app/providers/ThemeContext';

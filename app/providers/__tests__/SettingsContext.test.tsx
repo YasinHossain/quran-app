@@ -24,6 +24,7 @@ describe('SettingsContext settings state', () => {
 
   const defaultSettings = {
     translationId: 20,
+    translationIds: [20],
     tafsirIds: [169],
     arabicFontSize: 28,
     translationFontSize: 16,

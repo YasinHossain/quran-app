@@ -11,7 +11,7 @@ import { TranslationSettings } from './TranslationSettings';
 import { TafsirSettings } from './TafsirSettings';
 import { FontSettings } from './FontSettings';
 import { ReadingSettings } from './ReadingSettings';
-import { TranslationPanel } from './TranslationPanel';
+import { TranslationPanel } from './translation-panel';
 import { TafsirPanel } from './TafsirPanel';
 
 interface SettingsSidebarProps {
@@ -174,16 +174,10 @@ export const SettingsSidebar = ({
           onClose={() => setIsArabicFontPanelOpen(false)}
         />
         {onTranslationPanelClose && (
-          <TranslationPanel
-            isOpen={isTranslationPanelOpen}
-            onClose={onTranslationPanelClose}
-          />
+          <TranslationPanel isOpen={isTranslationPanelOpen} onClose={onTranslationPanelClose} />
         )}
         {onTafsirPanelClose && (
-          <TafsirPanel
-            isOpen={isTafsirPanelOpen}
-            onClose={onTafsirPanelClose}
-          />
+          <TafsirPanel isOpen={isTafsirPanelOpen} onClose={onTafsirPanelClose} />
         )}
       </aside>
     </>
