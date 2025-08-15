@@ -11,6 +11,14 @@ export async function getChapters(): Promise<Chapter[]> {
   return data.chapters as Chapter[];
 }
 
+/**
+ * Fetch the Wikimedia cover image URL for a given surah.
+ *
+ * @param surahNumber 1-based surah index.
+ *
+ * Returns `null` when the surah has no mapped image, the request fails, or
+ * Wikimedia responds without a usable URL.
+ */
 export async function getSurahCoverUrl(surahNumber: number): Promise<string | null> {
   const filename = surahImageMap[surahNumber];
   if (!filename) return null;

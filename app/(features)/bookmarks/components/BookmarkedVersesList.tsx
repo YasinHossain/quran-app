@@ -20,6 +20,8 @@ const BookmarkedVersesList = () => {
       return;
     }
 
+    // Fetch full verse data for all bookmarks.
+    // Handles network failures by capturing errors and clearing verses.
     const fetchBookmarkedVerses = async () => {
       try {
         const fetched = await Promise.all(

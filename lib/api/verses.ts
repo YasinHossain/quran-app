@@ -14,6 +14,15 @@ interface ApiVerse extends Omit<Verse, 'words'> {
   words?: ApiWord[];
 }
 
+/**
+ * Normalize API verse data into the internal `Verse` shape.
+ *
+ * @param raw       Verse object as returned by the API.
+ * @param wordLang  Key used for word-by-word translations.
+ *
+ * Safely maps optional `words` array, falling back to base text when the
+ * Uthmani script or translations are missing.
+ */
 function normalizeVerse(raw: ApiVerse, wordLang: string = 'en'): Verse {
   return {
     ...raw,
@@ -32,6 +41,19 @@ export interface PaginatedVerses {
   totalPages: number;
 }
 
+/**
+ * Fetch verses grouped by chapter, juz or page and return pagination info.
+ *
+ * @param type            Grouping method for the verses.
+ * @param id              Identifier for the grouping (chapter/juz/page).
+ * @param translationIds  One or more translation IDs.
+ * @param page            Page number (1-indexed).
+ * @param perPage         Number of verses per page.
+ * @param wordLang        Language code for word translations.
+ *
+ * Handles single vs array translation IDs and normalizes API pagination
+ * metadata, defaulting to one page when the server omits totals.
+ */
 export async function fetchVerses(
   type: 'by_chapter' | 'by_juz' | 'by_page',
   id: string | number,
@@ -43,7 +65,7 @@ export async function fetchVerses(
   const lang = wordLang as LanguageCode;
   const translationIdsArray = Array.isArray(translationIds) ? translationIds : [translationIds];
   const translationParam = translationIdsArray.join(',');
-  
+
   const data = await apiFetch<{
     verses: ApiVerse[];
     meta?: { total_pages: number };

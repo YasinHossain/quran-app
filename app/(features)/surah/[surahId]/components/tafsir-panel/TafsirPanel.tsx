@@ -109,7 +109,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
         </h2>
         <button
           onClick={handleReset}
-          className={`p-2 rounded-full focus:outline-none transition-colors ${
+          className={`p-2 rounded-full focus-visible:outline-none transition-colors ${
             theme === 'dark'
               ? 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
               : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
