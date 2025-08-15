@@ -69,6 +69,7 @@ export const useTranslationPanel = (isOpen: boolean) => {
     handleDragOver,
     handleDrop,
     handleDragEnd,
+    draggedId,
     setSelections,
   } = selectable;
 
@@ -115,7 +116,7 @@ export const useTranslationPanel = (isOpen: boolean) => {
     };
   }, [languages, handleTabsScroll]);
 
-  const resetSelection = () => {
+  const handleReset = () => {
     const sahih = translations.find(
       (t) =>
         t.name.toLowerCase().includes('saheeh international') ||
@@ -142,7 +143,8 @@ export const useTranslationPanel = (isOpen: boolean) => {
     selectedIds,
     handleSelectionToggle,
     orderedSelection,
-    resetSelection,
+    handleReset,
+    draggedId,
     handleDragStart,
     handleDragOver,
     handleDrop,
