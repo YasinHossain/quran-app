@@ -37,6 +37,9 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
     scrollTabsRight,
   } = useTranslationPanel(isOpen);
 
+  const resourcesToRender =
+    activeFilter === 'All' ? translations : groupedTranslations[activeFilter] || [];
+
   return (
     <div
       data-testid="translation-panel"
@@ -130,14 +133,13 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
         />
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 pb-4">
+      <div className="flex-1 px-4 pb-4">
         {loading && <p>Loading...</p>}
         {error && <p className="text-red-500">{error}</p>}
         {!loading && !error && (
           <ResourceList
-            languages={languages}
-            groupedResources={groupedTranslations}
-            activeFilter={activeFilter}
+            resources={resourcesToRender}
+            rowHeight={60}
             selectedIds={selectedIds}
             onToggle={handleSelectionToggle}
             theme={theme}
