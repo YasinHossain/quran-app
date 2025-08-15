@@ -18,7 +18,6 @@ export const useTafsirPanel = (isOpen: boolean) => {
   const [error, setError] = useState<string | null>(null);
   const [showLimitWarning, setShowLimitWarning] = useState(false);
 
-  const stickyHeaderRef = useRef<HTMLDivElement>(null);
   const tabsContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -117,22 +116,6 @@ export const useTafsirPanel = (isOpen: boolean) => {
     }
   }, [isOpen, tafsirs.length, settings.tafsirIds, setSelections]);
 
-  const handleTabClick = (lang: string) => {
-    setActiveFilter(lang);
-    if (lang === 'All') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      const header = document.querySelector(`.lang-header[data-lang="${lang}"]`);
-      if (header && stickyHeaderRef.current) {
-        const headerTop =
-          header.getBoundingClientRect().top +
-          window.pageYOffset -
-          stickyHeaderRef.current.offsetHeight;
-        window.scrollTo({ top: headerTop, behavior: 'smooth' });
-      }
-    }
-  };
-
   const checkScrollState = useCallback(() => {
     if (tabsContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = tabsContainerRef.current;
@@ -193,8 +176,7 @@ export const useTafsirPanel = (isOpen: boolean) => {
     draggedId,
     showLimitWarning,
     activeFilter,
-    handleTabClick,
-    stickyHeaderRef,
+    setActiveFilter,
     tabsContainerRef,
     canScrollLeft,
     canScrollRight,

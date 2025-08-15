@@ -33,16 +33,16 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
     draggedId,
     showLimitWarning,
     activeFilter,
-    handleTabClick,
+    setActiveFilter,
     canScrollLeft,
     canScrollRight,
     scrollTabsLeft,
     scrollTabsRight,
-    stickyHeaderRef,
     tabsContainerRef,
     handleReset,
   } = useTafsirPanel(isOpen);
 
+  // Dynamic list container height for virtualized list sizing
   const listContainerRef = useRef<HTMLDivElement>(null);
   const [listHeight, setListHeight] = useState(0);
 
@@ -164,7 +164,6 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
             </div>
 
             <div
-              ref={stickyHeaderRef}
               className={`sticky top-0 z-10 backdrop-blur-sm pt-2 pb-0 border-b ${
                 theme === 'dark'
                   ? 'bg-slate-900/95 border-slate-700'
@@ -175,7 +174,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
                 <ResourceTabs
                   languages={languages}
                   activeFilter={activeFilter}
-                  onTabClick={handleTabClick}
+                  onTabClick={setActiveFilter}
                   tabsContainerRef={tabsContainerRef}
                   canScrollLeft={canScrollLeft}
                   canScrollRight={canScrollRight}
