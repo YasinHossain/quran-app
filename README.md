@@ -75,7 +75,7 @@ This downloads the latest surah and juz information into `data/surahs.json` and 
 
 Font files should be placed in `public/fonts/`. Add your `.woff2`, `.woff`, `.otf`, or `.ttf` files there so they are served by Next.js.
 
-To make a font selectable in the application, edit `ARABIC_FONTS` in `app/providers/SettingsContext.tsx` and add a new entry, for example:
+To make a font selectable in the application, edit `ARABIC_FONTS` in `app/providers/settingsStorage.ts` and add a new entry, for example:
 
 ```ts
 { name: "My Font", value: '"My Font", serif', category: "Uthmani" }

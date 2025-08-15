@@ -6,35 +6,12 @@ import React, {
   useContext,
   useEffect,
   useMemo,
-  useState,
+  useReducer,
   useRef,
 } from 'react';
 import { Settings } from '@/types';
-
-export const ARABIC_FONTS = [
-  { name: 'KFGQPC Uthman Taha', value: '"KFGQPC-Uthman-Taha", serif', category: 'Uthmani' },
-  { name: 'Amiri', value: '"Amiri", serif', category: 'Uthmani' },
-  { name: 'Scheherazade New', value: '"Scheherazade New", serif', category: 'Uthmani' },
-  { name: 'Noto Naskh Arabic', value: '"Noto Naskh Arabic", serif', category: 'Uthmani' },
-  { name: 'Noto Nastaliq Urdu', value: '"Noto Nastaliq Urdu", serif', category: 'IndoPak' },
-  { name: 'Noor-e-Hira', value: '"Noor-e-Hira", serif', category: 'IndoPak' },
-  { name: 'Lateef', value: '"Lateef", serif', category: 'IndoPak' },
-];
-
-// Define default settings
-const defaultSettings: Settings = {
-  translationId: 20,
-  translationIds: [20],
-  tafsirIds: [169],
-  arabicFontSize: 28,
-  translationFontSize: 16,
-  tafsirFontSize: 16,
-  arabicFontFace: ARABIC_FONTS[0].value,
-  wordLang: 'en',
-  wordTranslationId: 85,
-  showByWords: false,
-  tajweed: false,
-};
+import { ARABIC_FONTS, defaultSettings, loadSettings, saveSettings } from './settingsStorage';
+import { reducer } from './settingsReducer';
 
 // Debounce interval for persisting to localStorage.
 // Shorter intervals save sooner but risk more writes; longer ones delay persistence.
@@ -42,7 +19,7 @@ const PERSIST_DEBOUNCE_MS = 300;
 
 interface SettingsContextType {
   settings: Settings;
-  setSettings: React.Dispatch<React.SetStateAction<Settings>>;
+  setSettings: (settings: Settings) => void;
   arabicFonts: { name: string; value: string; category: string }[];
   setShowByWords: (val: boolean) => void;
   setTajweed: (val: boolean) => void;
@@ -63,51 +40,13 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
  * the {@link useSettings} hook to read or update them.
  */
 export const SettingsProvider = ({ children }: { children: React.ReactNode }) => {
-  const [settings, setSettings] = useState<Settings>(defaultSettings);
+  const [settings, dispatch] = useReducer(reducer, defaultSettings, loadSettings);
 
   const settingsTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const latestSettings = useRef(settings);
 
-  // Load settings from localStorage on mount
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedSettings = localStorage.getItem('quranAppSettings');
-      const savedTranslations = localStorage.getItem('selected-translations');
-      
-      if (savedSettings) {
-        try {
-          const parsed = JSON.parse(savedSettings);
-          
-          // Migration: convert old single tafsirId to array
-          if (parsed.tafsirId && !parsed.tafsirIds) {
-            parsed.tafsirIds = [parsed.tafsirId];
-            delete parsed.tafsirId;
-          }
-          
-          // Migration: initialize translationIds from TranslationPanel selections if available
-          if (!parsed.translationIds && savedTranslations) {
-            try {
-              const translationIds = JSON.parse(savedTranslations);
-              if (Array.isArray(translationIds) && translationIds.length > 0) {
-                parsed.translationIds = translationIds;
-                parsed.translationId = translationIds[0]; // Keep first as primary
-              }
-            } catch (e) {
-              console.warn('Failed to parse selected-translations:', e);
-            }
-          }
-          
-          // Ensure translationIds is always an array
-          if (!parsed.translationIds) {
-            parsed.translationIds = parsed.translationId ? [parsed.translationId] : [defaultSettings.translationId];
-          }
-          
-          setSettings({ ...defaultSettings, ...parsed });
-        } catch (error) {
-          console.error('Error parsing settings from localStorage:', error);
-        }
-      }
-    }
+    dispatch({ type: 'SET_SETTINGS', value: loadSettings(defaultSettings) });
   }, []);
 
   // Save settings when changed (debounced)
@@ -116,7 +55,7 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
     if (typeof window === 'undefined') return;
 
     settingsTimeoutRef.current = setTimeout(() => {
-      localStorage.setItem('quranAppSettings', JSON.stringify(settings));
+      saveSettings(settings);
       settingsTimeoutRef.current = null;
     }, PERSIST_DEBOUNCE_MS);
 
@@ -131,43 +70,38 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
       if (typeof window === 'undefined') return;
       if (settingsTimeoutRef.current) {
         clearTimeout(settingsTimeoutRef.current);
-        localStorage.setItem('quranAppSettings', JSON.stringify(latestSettings.current));
+        saveSettings(latestSettings.current);
       }
     };
   }, []);
 
+  const setSettings = useCallback(
+    (s: Settings) => dispatch({ type: 'SET_SETTINGS', value: s }),
+    []
+  );
   const setShowByWords = useCallback(
-    (val: boolean) => setSettings((prev) => ({ ...prev, showByWords: val })),
-    [setSettings]
+    (val: boolean) => dispatch({ type: 'SET_SHOW_BY_WORDS', value: val }),
+    []
   );
-
   const setTajweed = useCallback(
-    (val: boolean) => setSettings((prev) => ({ ...prev, tajweed: val })),
-    [setSettings]
+    (val: boolean) => dispatch({ type: 'SET_TAJWEED', value: val }),
+    []
   );
-
   const setWordLang = useCallback(
-    (lang: string) => setSettings((prev) => ({ ...prev, wordLang: lang })),
-    [setSettings]
+    (lang: string) => dispatch({ type: 'SET_WORD_LANG', value: lang }),
+    []
   );
-
   const setWordTranslationId = useCallback(
-    (id: number) => setSettings((prev) => ({ ...prev, wordTranslationId: id })),
-    [setSettings]
+    (id: number) => dispatch({ type: 'SET_WORD_TRANSLATION_ID', value: id }),
+    []
   );
-
   const setTafsirIds = useCallback(
-    (ids: number[]) => setSettings((prev) => ({ ...prev, tafsirIds: ids })),
-    [setSettings]
+    (ids: number[]) => dispatch({ type: 'SET_TAFSIR_IDS', value: ids }),
+    []
   );
-
   const setTranslationIds = useCallback(
-    (ids: number[]) => setSettings((prev) => ({ 
-      ...prev, 
-      translationIds: ids,
-      translationId: ids.length > 0 ? ids[0] : prev.translationId
-    })),
-    [setSettings]
+    (ids: number[]) => dispatch({ type: 'SET_TRANSLATION_IDS', value: ids }),
+    []
   );
 
   const value = useMemo(
