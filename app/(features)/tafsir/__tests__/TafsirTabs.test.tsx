@@ -57,3 +57,16 @@ it('shows tabs and switches content on click', async () => {
   expect(await screen.findByText('Text 2')).toBeInTheDocument();
   expect(mockGetTafsirCached).toHaveBeenCalledWith('1:1', 2);
 });
+
+it('renders placeholder tabs before metadata loads', async () => {
+  mockUseSWR.mockReturnValue({ data: undefined });
+  render(
+    <SettingsProvider>
+      <ThemeProvider>
+        <TafsirTabs verseKey="1:1" tafsirIds={[1]} />
+      </ThemeProvider>
+    </SettingsProvider>
+  );
+  expect(screen.getByRole('button', { name: 'Tafsir 1' })).toBeInTheDocument();
+  expect(await screen.findByText('Text 1')).toBeInTheDocument();
+});
