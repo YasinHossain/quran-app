@@ -13,6 +13,7 @@ interface ResourceItemProps<T extends Resource> {
   isSelected: boolean;
   onToggle: (id: number) => void;
   theme: string;
+  style?: React.CSSProperties;
 }
 
 export const ResourceItem = <T extends Resource>({
@@ -20,6 +21,7 @@ export const ResourceItem = <T extends Resource>({
   isSelected,
   onToggle,
   theme,
+  style,
 }: ResourceItemProps<T>) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -42,6 +44,7 @@ export const ResourceItem = <T extends Resource>({
             ? 'bg-slate-800/50 border-slate-700/50 hover:bg-slate-800 hover:border-slate-600'
             : 'bg-white border-slate-200 hover:bg-slate-50 hover:border-slate-300'
       }`}
+      style={style}
     >
       <div className="flex-1 min-w-0 pr-3">
         <p
