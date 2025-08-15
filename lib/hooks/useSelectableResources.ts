@@ -80,6 +80,7 @@ export const useSelectableResources = <T extends Resource>({
     const newSelected = new Set(selectedIds);
     let newOrder = [...orderedSelection];
     let changed = false;
+
     if (newSelected.has(id)) {
       newSelected.delete(id);
       newOrder = newOrder.filter((i) => i !== id);
@@ -90,6 +91,7 @@ export const useSelectableResources = <T extends Resource>({
       newOrder.push(id);
       changed = true;
     }
+
     if (changed) {
       setSelectedIds(newSelected);
       setOrderedSelection(newOrder);

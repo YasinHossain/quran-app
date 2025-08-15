@@ -91,11 +91,21 @@ export const useTafsirPanel = (isOpen: boolean) => {
   } = selectable;
 
   const handleSelectionToggle = (id: number) => {
+    // Temporarily disable settings sync during user interaction
+    isUpdatingRef.current = true;
     const changed = baseToggle(id);
     setShowLimitWarning(!changed && selectedIds.size >= MAX_SELECTIONS);
+    
+    // Re-enable settings sync after a short delay
+    setTimeout(() => {
+      isUpdatingRef.current = false;
+    }, 100);
   };
 
   const isUpdatingRef = useRef(false);
+  const prevSettingsIds = useRef<number[]>([]);
+  
+  // Sync selections TO settings (when user changes selections)
   useEffect(() => {
     if (isUpdatingRef.current) return;
     const current = [...orderedSelection];
@@ -103,20 +113,28 @@ export const useTafsirPanel = (isOpen: boolean) => {
     if (JSON.stringify(current) !== JSON.stringify(settingsIds)) {
       isUpdatingRef.current = true;
       setTafsirIds(current);
+      prevSettingsIds.current = current;
       setTimeout(() => {
         isUpdatingRef.current = false;
       }, 50);
     }
   }, [orderedSelection, setTafsirIds, settings.tafsirIds]);
 
+  // Sync selections FROM settings (when settings change externally)
   useEffect(() => {
     if (isOpen && tafsirs.length > 0) {
       const settingsIds = settings.tafsirIds || [];
-      isUpdatingRef.current = true;
-      setSelections(settingsIds);
-      setTimeout(() => {
-        isUpdatingRef.current = false;
-      }, 50);
+      const prevIds = prevSettingsIds.current;
+      
+      // Only update if settings changed from external source (not from our own update)
+      if (!isUpdatingRef.current && JSON.stringify(settingsIds) !== JSON.stringify(prevIds)) {
+        isUpdatingRef.current = true;
+        setSelections(settingsIds);
+        prevSettingsIds.current = settingsIds;
+        setTimeout(() => {
+          isUpdatingRef.current = false;
+        }, 50);
+      }
     }
   }, [isOpen, tafsirs.length, settings.tafsirIds, setSelections]);
 

@@ -41,18 +41,34 @@ export const useTranslationPanel = (isOpen: boolean) => {
           lang: capitalizeLanguageName(t.language_name),
         }));
         setTranslations(formatted);
-      } catch {
+      } catch (error) {
+        console.error('Failed to fetch translations from API:', error);
+        setError('Failed to load translations from API. Using offline data.');
         setTranslations(initialTranslationsData);
       } finally {
         setLoading(false);
       }
     };
-    if (isOpen) loadTranslationsAsync();
-  }, [isOpen]);
+
+    // Load translations immediately on first mount to ensure they're available
+    if (translations.length === 0) {
+      loadTranslationsAsync();
+    }
+  }, [isOpen, translations.length]);
+
+  // Language sort function: English first, Bengali second, then alphabetical
+  const languageSort = (a: string, b: string) => {
+    if (a === 'English') return -1;
+    if (b === 'English') return 1;
+    if (a === 'Bengali') return -1;
+    if (b === 'Bengali') return 1;
+    return a.localeCompare(b);
+  };
 
   const selectable = useSelectableResources<Translation>({
     resources: translations,
     selectionLimit: MAX_SELECTIONS,
+    languageSort,
   });
 
   const {
@@ -74,30 +90,31 @@ export const useTranslationPanel = (isOpen: boolean) => {
   } = selectable;
 
   const isUpdatingRef = useRef(false);
+
+  // Initialize selections once when translations are first loaded
+  const hasInitialized = useRef(false);
+  useEffect(() => {
+    if (translations.length > 0 && !hasInitialized.current && !isUpdatingRef.current) {
+      hasInitialized.current = true;
+      const settingsIds = settings.translationIds || loadSelectedTranslations();
+      if (settingsIds.length > 0) {
+        isUpdatingRef.current = true;
+        setSelections(settingsIds);
+        setTimeout(() => {
+          isUpdatingRef.current = false;
+        }, 100);
+      }
+    }
+  }, [translations.length, setSelections, settings.translationIds]);
+
+  // Save selections when they change
   useEffect(() => {
     if (isUpdatingRef.current) return;
-    const current = [...orderedSelection];
-    const settingsIds = settings.translationIds || [];
-    if (JSON.stringify(current) !== JSON.stringify(settingsIds)) {
-      isUpdatingRef.current = true;
-      setTranslationIds(current);
-      saveSelectedTranslations(current);
-      setTimeout(() => {
-        isUpdatingRef.current = false;
-      }, 50);
-    }
-  }, [orderedSelection, setTranslationIds, settings.translationIds]);
 
-  useEffect(() => {
-    if (isOpen && translations.length > 0) {
-      const settingsIds = settings.translationIds || loadSelectedTranslations();
-      isUpdatingRef.current = true;
-      setSelections(settingsIds);
-      setTimeout(() => {
-        isUpdatingRef.current = false;
-      }, 50);
-    }
-  }, [isOpen, translations.length, settings.translationIds, setSelections]);
+    const current = [...orderedSelection];
+    setTranslationIds(current);
+    saveSelectedTranslations(current);
+  }, [orderedSelection, setTranslationIds]);
 
   const handleTabsScroll = useCallback(
     () => updateScrollState(tabsContainerRef, setCanScrollLeft, setCanScrollRight),

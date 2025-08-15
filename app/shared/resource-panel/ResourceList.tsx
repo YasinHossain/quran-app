@@ -32,14 +32,17 @@ export const ResourceList = <T extends Resource>({
   const Row = ({ index, style }: ListChildComponentProps) => {
     const item = resources[index];
     return (
-      <ResourceItem
-        key={item.id}
-        item={item}
-        isSelected={selectedIds.has(item.id)}
-        onToggle={onToggle}
-        theme={theme}
-        style={style}
-      />
+      <div style={style}>
+        <div className="px-1 pb-2">
+          <ResourceItem
+            key={item.id}
+            item={item}
+            isSelected={selectedIds.has(item.id)}
+            onToggle={onToggle}
+            theme={theme}
+          />
+        </div>
+      </div>
     );
   };
 

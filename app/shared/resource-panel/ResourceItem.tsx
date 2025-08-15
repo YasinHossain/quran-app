@@ -23,33 +23,44 @@ export const ResourceItem = <T extends Resource>({
   theme,
   style,
 }: ResourceItemProps<T>) => {
+  const handleClick = () => {
+    onToggle(item.id);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {
-      onToggle(item.id);
+      e.preventDefault();
+      handleClick();
     }
   };
 
   return (
     <div
-      onClick={() => onToggle(item.id)}
+      onClick={handleClick}
       onKeyDown={handleKeyDown}
       role="button"
       tabIndex={0}
-      className={`flex items-center justify-between px-4 py-3 h-[52px] rounded-lg cursor-pointer transition-all duration-200 border ${
+      className={`flex items-center justify-between px-4 py-2.5 h-[50px] rounded-lg cursor-pointer transition-all duration-200 focus:outline-none focus-visible:outline-none outline-none border-0 focus:border-0 active:outline-none ${
         isSelected
           ? theme === 'dark'
-            ? 'bg-blue-900/30 border-blue-700/50 shadow-sm'
-            : 'bg-blue-50 border-blue-200 shadow-sm'
+            ? 'bg-blue-900/30'
+            : 'bg-blue-50'
           : theme === 'dark'
-            ? 'bg-slate-800/50 border-slate-700/50 hover:bg-slate-800 hover:border-slate-600'
-            : 'bg-white border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+            ? 'bg-slate-700/50 hover:bg-gray-700'
+            : 'bg-white border border-slate-100 hover:bg-slate-50'
       }`}
       style={style}
     >
       <div className="flex-1 min-w-0 pr-3">
         <p
           className={`font-medium text-sm leading-tight truncate ${
-            theme === 'dark' ? 'text-slate-200' : 'text-slate-800'
+            isSelected
+              ? theme === 'dark' 
+                ? 'text-blue-200' 
+                : 'text-blue-800'
+              : theme === 'dark' 
+                ? 'text-[var(--foreground)]' 
+                : 'text-slate-800'
           }`}
           title={item.name}
         >
@@ -57,7 +68,13 @@ export const ResourceItem = <T extends Resource>({
         </p>
       </div>
       <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-        {isSelected && <CheckIcon className="h-5 w-5 text-blue-600 dark:text-blue-400" />}
+        {isSelected && (
+          <CheckIcon 
+            className={`h-5 w-5 ${
+              theme === 'dark' ? 'text-blue-400' : 'text-blue-600'
+            }`} 
+          />
+        )}
       </div>
     </div>
   );

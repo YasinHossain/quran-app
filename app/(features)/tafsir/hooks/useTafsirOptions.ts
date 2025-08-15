@@ -18,6 +18,9 @@ export const useTafsirOptions = () => {
   );
 
   const selectedTafsirName = useMemo(() => {
+    if (!settings.tafsirIds || settings.tafsirIds.length === 0) {
+      return t('select_tafsir');
+    }
     const names = settings.tafsirIds
       .map((id) => tafsirOptions.find((o) => o.id === id)?.name)
       .filter(Boolean)
