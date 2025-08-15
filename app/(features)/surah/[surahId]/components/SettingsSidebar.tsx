@@ -12,7 +12,7 @@ import { TafsirSettings } from './TafsirSettings';
 import { FontSettings } from './FontSettings';
 import { ReadingSettings } from './ReadingSettings';
 import { TranslationPanel } from './translation-panel';
-import { TafsirPanel } from './TafsirPanel';
+import { TafsirPanel } from './tafsir-panel';
 
 interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;
