@@ -11,7 +11,7 @@ import { capitalizeLanguageName, MAX_SELECTIONS, Tafsir } from './tafsirPanel.ut
 export const useTafsirPanel = (isOpen: boolean) => {
   const { theme } = useTheme();
   const { settings, setTafsirIds } = useSettings();
-  const { data } = useSWR('tafsirs', getTafsirResources);
+  const { data, error: fetchError } = useSWR('tafsirs', getTafsirResources);
 
   const [tafsirs, setTafsirs] = useState<Tafsir[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,29 +23,33 @@ export const useTafsirPanel = (isOpen: boolean) => {
   const [canScrollRight, setCanScrollRight] = useState(false);
 
   useEffect(() => {
-    const loadTafsirs = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        if (data) {
-          const formatted: Tafsir[] = data.map((t) => ({
-            id: t.id,
-            name: t.name,
-            lang: capitalizeLanguageName(t.language_name),
-            selected: false,
-          }));
-          setTafsirs(formatted);
-        }
-      } catch {
-        setError('Failed to load tafsirs. Please try again.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (isOpen) {
-      loadTafsirs();
+    if (!isOpen) return;
+    if (data === undefined && !fetchError) return;
+    setLoading(true);
+    if (fetchError || !data) {
+      const cached = localStorage.getItem('tafsirs');
+      if (cached) setTafsirs(JSON.parse(cached));
+      setError('Failed to load tafsirs. Please try again.');
+      setLoading(false);
+      return;
     }
-  }, [isOpen, data]);
+    if (data.length > 0) {
+      const formatted: Tafsir[] = data.map((t) => ({
+        id: t.id,
+        name: t.name,
+        lang: capitalizeLanguageName(t.language_name),
+        selected: false,
+      }));
+      setTafsirs(formatted);
+      localStorage.setItem('tafsirs', JSON.stringify(formatted));
+      setError(null);
+    } else {
+      const cached = localStorage.getItem('tafsirs');
+      if (cached) setTafsirs(JSON.parse(cached));
+      setError('Failed to load tafsirs. Please try again.');
+    }
+    setLoading(false);
+  }, [isOpen, data, fetchError]);
 
   const languageSort = (a: string, b: string) => {
     const lower = (lang: string) => lang.toLowerCase();
