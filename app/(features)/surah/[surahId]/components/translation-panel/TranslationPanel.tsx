@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { ResizeObserver as ResizeObserverPolyfill } from '@juggle/resize-observer';
 import { AlertCircle, RotateCcw } from 'lucide-react';
 import { useTranslationPanel } from './useTranslationPanel';
 import { ResourceTabs, ResourceList } from '@/app/shared/resource-panel';
@@ -45,13 +46,17 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
 
   useEffect(() => {
     const element = listContainerRef.current;
-    if (!element) return;
+    if (!element || !isOpen) return;
 
     const updateHeight = () => setListHeight(element.getBoundingClientRect().height);
+
     updateHeight();
 
-    if (typeof ResizeObserver !== 'undefined') {
-      const observer = new ResizeObserver((entries) => {
+    const ResizeObserverConstructor =
+      typeof ResizeObserver !== 'undefined' ? ResizeObserver : ResizeObserverPolyfill;
+
+    if (ResizeObserverConstructor) {
+      const observer = new ResizeObserverConstructor((entries) => {
         for (const entry of entries) {
           setListHeight(entry.contentRect.height);
         }
@@ -62,7 +67,7 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
 
     window.addEventListener('resize', updateHeight);
     return () => window.removeEventListener('resize', updateHeight);
-  }, []);
+  }, [isOpen]);
 
   const resourcesToRender =
     activeFilter === 'All' ? translations : groupedTranslations[activeFilter] || [];
