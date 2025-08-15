@@ -43,6 +43,8 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
     handleReset,
   } = useTafsirPanel(isOpen);
 
+  const resourcesToRender = groupedTafsirs[activeFilter] || [];
+
   return (
     <div
       data-testid="tafsir-panel"
@@ -164,9 +166,8 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
             <div className="px-4 pb-4">
               <div className="mt-4">
                 <ResourceList
-                  activeFilter={activeFilter}
-                  languages={languages}
-                  groupedResources={groupedTafsirs}
+                  resources={resourcesToRender}
+                  rowHeight={60}
                   selectedIds={selectedIds}
                   onToggle={handleSelectionToggle}
                   theme={theme}

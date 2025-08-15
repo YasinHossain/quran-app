@@ -23,6 +23,8 @@ export default function VerseOfDay() {
 
   const abortRef = useRef(false);
 
+  // Preload a random verse and queue it for display.
+  // Aborts gracefully if the component unmounts mid-fetch.
   const prefetchVerse = useCallback(async () => {
     try {
       const v = await getRandomVerse(settings.translationId);

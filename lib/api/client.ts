@@ -1,5 +1,15 @@
 const API_BASE_URL = process.env.QURAN_API_BASE_URL ?? 'https://api.quran.com/api/v4';
 
+/**
+ * Perform a GET request against the Quran.com API.
+ *
+ * @param path       Relative endpoint path.
+ * @param params     Query parameters appended to the request.
+ * @param errorPrefix Message prefix used if the request fails.
+ *
+ * Handles leading/trailing slashes, encodes query params, and throws when the
+ * response is not OK.
+ */
 async function apiFetch<T>(
   path: string,
   params: Record<string, string> = {},
