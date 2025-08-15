@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { ResizeObserver as ResizeObserverPolyfill } from '@juggle/resize-observer';
 import { AlertCircle, RotateCcw } from 'lucide-react';
 import { ResourceTabs, ResourceList } from '@/app/shared/resource-panel';
 import { useTafsirPanel } from './useTafsirPanel';
@@ -48,13 +49,17 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
 
   useEffect(() => {
     const element = listContainerRef.current;
-    if (!element) return;
+    if (!element || !isOpen) return;
 
     const updateHeight = () => setListHeight(element.getBoundingClientRect().height);
+
     updateHeight();
 
-    if (typeof ResizeObserver !== 'undefined') {
-      const observer = new ResizeObserver((entries) => {
+    const ResizeObserverConstructor =
+      typeof ResizeObserver !== 'undefined' ? ResizeObserver : ResizeObserverPolyfill;
+
+    if (ResizeObserverConstructor) {
+      const observer = new ResizeObserverConstructor((entries) => {
         for (const entry of entries) {
           setListHeight(entry.contentRect.height);
         }
@@ -65,7 +70,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
 
     window.addEventListener('resize', updateHeight);
     return () => window.removeEventListener('resize', updateHeight);
-  }, []);
+  }, [isOpen]);
 
   const resourcesToRender = activeFilter === 'All' ? tafsirs : groupedTafsirs[activeFilter] || [];
 
