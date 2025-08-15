@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AlertCircle, RotateCcw } from 'lucide-react';
 import { ResourceTabs, ResourceList } from '@/app/shared/resource-panel';
 import { useTafsirPanel } from './useTafsirPanel';
@@ -33,17 +33,41 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
     draggedId,
     showLimitWarning,
     activeFilter,
-    handleTabClick,
+    setActiveFilter,
     canScrollLeft,
     canScrollRight,
     scrollTabsLeft,
     scrollTabsRight,
-    stickyHeaderRef,
     tabsContainerRef,
     handleReset,
   } = useTafsirPanel(isOpen);
 
-  const resourcesToRender = groupedTafsirs[activeFilter] || [];
+  // Dynamic list container height for virtualized list sizing
+  const listContainerRef = useRef<HTMLDivElement>(null);
+  const [listHeight, setListHeight] = useState(0);
+
+  useEffect(() => {
+    const element = listContainerRef.current;
+    if (!element) return;
+
+    const updateHeight = () => setListHeight(element.getBoundingClientRect().height);
+    updateHeight();
+
+    if (typeof ResizeObserver !== 'undefined') {
+      const observer = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          setListHeight(entry.contentRect.height);
+        }
+      });
+      observer.observe(element);
+      return () => observer.disconnect();
+    }
+
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
+
+  const resourcesToRender = activeFilter === 'All' ? tafsirs : groupedTafsirs[activeFilter] || [];
 
   return (
     <div
@@ -85,7 +109,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
         </h2>
         <button
           onClick={handleReset}
-          className={`p-2 rounded-full focus:outline-none transition-colors ${
+          className={`p-2 rounded-full focus-visible:outline-none transition-colors ${
             theme === 'dark'
               ? 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
               : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
@@ -96,7 +120,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
         </button>
       </header>
 
-      <div className="flex-1 overflow-y-auto min-h-0">
+      <div className="flex-1 flex flex-col min-h-0">
         {loading && (
           <div className="flex items-center justify-center p-8">
             <div
@@ -140,7 +164,6 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
             </div>
 
             <div
-              ref={stickyHeaderRef}
               className={`sticky top-0 z-10 backdrop-blur-sm pt-2 pb-0 border-b ${
                 theme === 'dark'
                   ? 'bg-slate-900/95 border-slate-700'
@@ -151,7 +174,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
                 <ResourceTabs
                   languages={languages}
                   activeFilter={activeFilter}
-                  onTabClick={handleTabClick}
+                  onTabClick={setActiveFilter}
                   tabsContainerRef={tabsContainerRef}
                   canScrollLeft={canScrollLeft}
                   canScrollRight={canScrollRight}
@@ -163,7 +186,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
               </div>
             </div>
 
-            <div className="px-4 pb-4">
+            <div className="px-4 pb-4 flex-1" ref={listContainerRef}>
               <div className="mt-4">
                 <ResourceList
                   resources={resourcesToRender}
@@ -171,6 +194,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
                   selectedIds={selectedIds}
                   onToggle={handleSelectionToggle}
                   theme={theme}
+                  height={listHeight}
                 />
               </div>
             </div>
