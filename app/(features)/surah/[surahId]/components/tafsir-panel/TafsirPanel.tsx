@@ -51,7 +51,11 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
     const element = listContainerRef.current;
     if (!element || !isOpen) return;
 
-    const updateHeight = () => setListHeight(element.getBoundingClientRect().height);
+    const updateHeight = () => {
+      const rect = element.getBoundingClientRect();
+      const fallback = window.innerHeight - rect.top;
+      setListHeight(rect.height || fallback);
+    };
 
     updateHeight();
 
@@ -61,7 +65,9 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
     if (ResizeObserverConstructor) {
       const observer = new ResizeObserverConstructor((entries) => {
         for (const entry of entries) {
-          setListHeight(entry.contentRect.height);
+          const rect = entry.target.getBoundingClientRect();
+          const fallback = window.innerHeight - rect.top;
+          setListHeight(entry.contentRect.height || fallback);
         }
       });
       observer.observe(element);
