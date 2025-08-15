@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Search, X, GripVertical, RotateCcw } from 'lucide-react';
+import { AlertCircle, RotateCcw } from 'lucide-react';
 import { useTranslationPanel } from './useTranslationPanel';
 import { ResourceTabs, ResourceList } from '@/app/shared/resource-panel';
+import { TranslationSearch } from './TranslationSearch';
+import { TranslationSelectionList } from './TranslationSelectionList';
 
 interface TranslationPanelProps {
   isOpen: boolean;
@@ -25,7 +27,8 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
     selectedIds,
     handleSelectionToggle,
     orderedSelection,
-    resetSelection,
+    handleReset,
+    draggedId,
     handleDragStart,
     handleDragOver,
     handleDrop,
@@ -71,104 +74,131 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
         isOpen ? 'translate-x-0' : 'translate-x-full'
       } ${theme === 'dark' ? 'bg-slate-900 text-slate-200' : 'bg-white text-slate-800'}`}
     >
-      <div
-        className={`flex items-center justify-between p-4 border-b ${
+      <header
+        className={`flex items-center p-4 border-b ${
           theme === 'dark' ? 'border-slate-700' : 'border-slate-200'
         }`}
       >
-        <h2 className="text-lg font-bold">Translations</h2>
         <button
           onClick={onClose}
-          aria-label="Close"
-          className="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700"
+          className={`p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 ${
+            theme === 'dark' ? 'hover:bg-slate-800' : 'hover:bg-gray-200'
+          }`}
         >
-          <X size={20} />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={`h-6 w-6 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
         </button>
-      </div>
+        <h2
+          className={`text-lg font-bold text-center flex-grow ${
+            theme === 'dark' ? 'text-slate-200' : 'text-slate-800'
+          }`}
+        >
+          Manage Translations
+        </h2>
+        <button
+          onClick={handleReset}
+          className={`p-2 rounded-full focus-visible:outline-none transition-colors ${
+            theme === 'dark'
+              ? 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+              : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
+          }`}
+          title="Reset to Default"
+        >
+          <RotateCcw size={20} />
+        </button>
+      </header>
 
-      <div className="p-4 border-b border-slate-200 dark:border-slate-700">
-        <div className="relative">
-          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search translations"
-            className={`w-full pl-10 pr-4 py-2 rounded-lg border focus:outline-none ${
-              theme === 'dark'
-                ? 'bg-slate-800 border-slate-700 text-slate-200 placeholder-slate-400'
-                : 'bg-white border-slate-300 text-slate-800 placeholder-slate-400'
-            }`}
-          />
-        </div>
-        {orderedSelection.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-4">
-            {orderedSelection.map((id) => {
-              const item = translations.find((t) => t.id === id);
-              if (!item) return null;
-              return (
-                <div
-                  key={id}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, id)}
-                  onDragOver={handleDragOver}
-                  onDrop={(e) => handleDrop(e, id)}
-                  onDragEnd={handleDragEnd}
-                  className={`px-2 py-1 rounded-md text-sm flex items-center space-x-1 border cursor-move ${
-                    theme === 'dark'
-                      ? 'bg-slate-700 border-slate-600 text-slate-200'
-                      : 'bg-slate-100 border-slate-200 text-slate-800'
-                  }`}
-                >
-                  <GripVertical size={12} />
-                  <span className="truncate max-w-[120px]">{item.name}</span>
-                </div>
-              );
-            })}
-            <button
-              onClick={resetSelection}
-              className={`ml-auto flex items-center space-x-1 text-sm px-2 py-1 rounded-md border ${
-                theme === 'dark'
-                  ? 'bg-slate-700 border-slate-600 text-slate-200'
-                  : 'bg-slate-50 border-slate-200 text-slate-700'
+      <div className="flex-1 flex flex-col min-h-0">
+        {loading && (
+          <div className="flex items-center justify-center p-8">
+            <div
+              className={`animate-spin rounded-full h-8 w-8 border-b-2 ${
+                theme === 'dark' ? 'border-slate-400' : 'border-slate-600'
               }`}
-            >
-              <RotateCcw size={14} />
-              <span>Reset</span>
-            </button>
+            />
           </div>
         )}
-      </div>
 
-      <div className="sticky top-0 z-10">
-        <ResourceTabs
-          languages={languages}
-          activeFilter={activeFilter}
-          onTabClick={setActiveFilter}
-          tabsContainerRef={tabsContainerRef}
-          canScrollLeft={canScrollLeft}
-          canScrollRight={canScrollRight}
-          scrollTabsLeft={scrollTabsLeft}
-          scrollTabsRight={scrollTabsRight}
-          theme={theme}
-          className={`border-b ${
-            theme === 'dark' ? 'border-slate-700 bg-slate-800' : 'border-slate-200 bg-white'
-          }`}
-        />
-      </div>
+        {error && (
+          <div
+            className={`mx-4 mt-4 p-4 rounded-lg border ${
+              theme === 'dark'
+                ? 'bg-red-900/20 border-red-700 text-red-200'
+                : 'bg-red-50 border-red-200 text-red-800'
+            }`}
+          >
+            <div className="flex items-center space-x-2">
+              <AlertCircle className="h-5 w-5 text-red-500" />
+              <span className="text-sm">{error}</span>
+            </div>
+          </div>
+        )}
 
-      <div className="flex-1 px-4 pb-4" ref={listContainerRef}>
-        {loading && <p>Loading...</p>}
-        {error && <p className="text-red-500">{error}</p>}
         {!loading && !error && (
-          <ResourceList
-            resources={resourcesToRender}
-            rowHeight={60}
-            selectedIds={selectedIds}
-            onToggle={handleSelectionToggle}
-            theme={theme}
-            height={listHeight}
-          />
+          <>
+            <div className="p-4 space-y-4">
+              <TranslationSearch
+                theme={theme}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+              />
+              <TranslationSelectionList
+                theme={theme}
+                orderedSelection={orderedSelection}
+                translations={translations}
+                handleSelectionToggle={handleSelectionToggle}
+                handleDragStart={handleDragStart}
+                handleDragOver={handleDragOver}
+                handleDrop={handleDrop}
+                handleDragEnd={handleDragEnd}
+                draggedId={draggedId}
+              />
+            </div>
+
+            <div
+              className={`sticky top-0 z-10 backdrop-blur-sm pt-2 pb-0 border-b ${
+                theme === 'dark'
+                  ? 'bg-slate-900/95 border-slate-700'
+                  : 'bg-white/95 border-slate-200'
+              }`}
+            >
+              <div className="px-4">
+                <ResourceTabs
+                  languages={languages}
+                  activeFilter={activeFilter}
+                  onTabClick={setActiveFilter}
+                  tabsContainerRef={tabsContainerRef}
+                  canScrollLeft={canScrollLeft}
+                  canScrollRight={canScrollRight}
+                  scrollTabsLeft={scrollTabsLeft}
+                  scrollTabsRight={scrollTabsRight}
+                  theme={theme}
+                  className="pb-2"
+                />
+              </div>
+            </div>
+
+            <div className="px-4 pb-4 flex-1" ref={listContainerRef}>
+              <div className="mt-4">
+                <ResourceList
+                  resources={resourcesToRender}
+                  rowHeight={60}
+                  selectedIds={selectedIds}
+                  onToggle={handleSelectionToggle}
+                  theme={theme}
+                  height={listHeight}
+                />
+              </div>
+            </div>
+          </>
         )}
       </div>
     </div>
