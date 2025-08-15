@@ -48,7 +48,11 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
     const element = listContainerRef.current;
     if (!element || !isOpen) return;
 
-    const updateHeight = () => setListHeight(element.getBoundingClientRect().height);
+    const updateHeight = () => {
+      const rect = element.getBoundingClientRect();
+      const fallback = window.innerHeight - rect.top;
+      setListHeight(rect.height || fallback);
+    };
 
     updateHeight();
 
@@ -58,7 +62,9 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
     if (ResizeObserverConstructor) {
       const observer = new ResizeObserverConstructor((entries) => {
         for (const entry of entries) {
-          setListHeight(entry.contentRect.height);
+          const rect = entry.target.getBoundingClientRect();
+          const fallback = window.innerHeight - rect.top;
+          setListHeight(entry.contentRect.height || fallback);
         }
       });
       observer.observe(element);
