@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 import { ResourceItem } from './ResourceItem';
 
 interface Resource {
@@ -10,68 +11,47 @@ interface Resource {
 }
 
 interface ResourceListProps<T extends Resource> {
-  languages: string[];
-  groupedResources: Record<string, T[]>;
-  activeFilter: string;
+  resources: T[];
+  rowHeight: number;
   selectedIds: Set<number>;
   onToggle: (id: number) => void;
   theme: string;
+  height?: number;
 }
 
 export const ResourceList = <T extends Resource>({
-  languages,
-  groupedResources,
-  activeFilter,
+  resources,
+  rowHeight,
   selectedIds,
   onToggle,
   theme,
+  height = 400,
 }: ResourceListProps<T>) => {
-  if (activeFilter === 'All') {
+  const itemCount = resources.length;
+
+  const Row = ({ index, style }: ListChildComponentProps) => {
+    const item = resources[index];
     return (
-      <div className="space-y-4">
-        {languages.slice(1).map((lang) => {
-          const items = groupedResources[lang] || [];
-          if (items.length === 0) return null;
-          return (
-            <div key={lang} className="lang-section" data-lang={lang}>
-              <h3
-                className={`lang-header text-lg font-bold pb-2 ${
-                  theme === 'dark' ? 'text-slate-200' : 'text-slate-800'
-                }`}
-                data-lang={lang}
-              >
-                {lang}
-              </h3>
-              <div className="space-y-2">
-                {items.map((item) => (
-                  <ResourceItem
-                    key={item.id}
-                    item={item}
-                    isSelected={selectedIds.has(item.id)}
-                    onToggle={onToggle}
-                    theme={theme}
-                  />
-                ))}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      <ResourceItem
+        key={item.id}
+        item={item}
+        isSelected={selectedIds.has(item.id)}
+        onToggle={onToggle}
+        theme={theme}
+        style={style}
+      />
     );
-  }
+  };
 
   return (
-    <div className="space-y-2">
-      {(groupedResources[activeFilter] || []).map((item) => (
-        <ResourceItem
-          key={item.id}
-          item={item}
-          isSelected={selectedIds.has(item.id)}
-          onToggle={onToggle}
-          theme={theme}
-        />
-      ))}
-    </div>
+    <List
+      height={Math.min(height, itemCount * rowHeight)}
+      width="100%"
+      itemCount={itemCount}
+      itemSize={rowHeight}
+    >
+      {Row}
+    </List>
   );
 };
 
