@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Search, X, GripVertical, RotateCcw } from 'lucide-react';
 import { useTranslationPanel } from './useTranslationPanel';
 import { ResourceTabs, ResourceList } from '@/app/shared/resource-panel';
@@ -36,6 +36,30 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
     scrollTabsLeft,
     scrollTabsRight,
   } = useTranslationPanel(isOpen);
+
+  const listContainerRef = useRef<HTMLDivElement>(null);
+  const [listHeight, setListHeight] = useState(0);
+
+  useEffect(() => {
+    const element = listContainerRef.current;
+    if (!element) return;
+
+    const updateHeight = () => setListHeight(element.getBoundingClientRect().height);
+    updateHeight();
+
+    if (typeof ResizeObserver !== 'undefined') {
+      const observer = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          setListHeight(entry.contentRect.height);
+        }
+      });
+      observer.observe(element);
+      return () => observer.disconnect();
+    }
+
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
 
   const resourcesToRender =
     activeFilter === 'All' ? translations : groupedTranslations[activeFilter] || [];
@@ -133,7 +157,7 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
         />
       </div>
 
-      <div className="flex-1 px-4 pb-4">
+      <div className="flex-1 px-4 pb-4" ref={listContainerRef}>
         {loading && <p>Loading...</p>}
         {error && <p className="text-red-500">{error}</p>}
         {!loading && !error && (
@@ -143,6 +167,7 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
             selectedIds={selectedIds}
             onToggle={handleSelectionToggle}
             theme={theme}
+            height={listHeight}
           />
         )}
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AlertCircle, RotateCcw } from 'lucide-react';
 import { ResourceTabs, ResourceList } from '@/app/shared/resource-panel';
 import { useTafsirPanel } from './useTafsirPanel';
@@ -42,6 +42,32 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
     tabsContainerRef,
     handleReset,
   } = useTafsirPanel(isOpen);
+
+  const listContainerRef = useRef<HTMLDivElement>(null);
+  const [listHeight, setListHeight] = useState(0);
+
+  useEffect(() => {
+    const element = listContainerRef.current;
+    if (!element) return;
+
+    const updateHeight = () => setListHeight(element.getBoundingClientRect().height);
+    updateHeight();
+
+    if (typeof ResizeObserver !== 'undefined') {
+      const observer = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          setListHeight(entry.contentRect.height);
+        }
+      });
+      observer.observe(element);
+      return () => observer.disconnect();
+    }
+
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
+
+  const resourcesToRender = activeFilter === 'All' ? tafsirs : groupedTafsirs[activeFilter] || [];
 
   return (
     <div
@@ -94,7 +120,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
         </button>
       </header>
 
-      <div className="flex-1 overflow-y-auto min-h-0">
+      <div className="flex-1 flex flex-col min-h-0">
         {loading && (
           <div className="flex items-center justify-center p-8">
             <div
@@ -161,15 +187,15 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
               </div>
             </div>
 
-            <div className="px-4 pb-4">
+            <div className="px-4 pb-4 flex-1" ref={listContainerRef}>
               <div className="mt-4">
                 <ResourceList
-                  activeFilter={activeFilter}
-                  languages={languages}
-                  groupedResources={groupedTafsirs}
+                  resources={resourcesToRender}
+                  rowHeight={60}
                   selectedIds={selectedIds}
                   onToggle={handleSelectionToggle}
                   theme={theme}
+                  height={listHeight}
                 />
               </div>
             </div>
