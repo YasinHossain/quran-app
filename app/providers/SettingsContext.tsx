@@ -40,7 +40,7 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
  * the {@link useSettings} hook to read or update them.
  */
 export const SettingsProvider = ({ children }: { children: React.ReactNode }) => {
-  const [settings, dispatch] = useReducer(reducer, defaultSettings, loadSettings);
+  const [settings, dispatch] = useReducer(reducer, defaultSettings);
 
   const settingsTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const latestSettings = useRef(settings);
