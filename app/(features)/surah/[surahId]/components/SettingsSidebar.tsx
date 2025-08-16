@@ -50,17 +50,17 @@ export const SettingsSidebar = ({
   const [activeTab, setActiveTab] = useState('translation');
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
   const sidebarRef = useRef<HTMLElement>(null);
-  
+
   // State for collapsible sections
   const [openSections, setOpenSections] = useState<string[]>([]);
-  
+
   // Function to handle section toggle with max 2 open rule
   const handleSectionToggle = (sectionId: string) => {
     console.log('Toggling section:', sectionId, 'Current open:', openSections);
-    setOpenSections(prev => {
+    setOpenSections((prev) => {
       if (prev.includes(sectionId)) {
         // If section is open, close it
-        const newState = prev.filter(id => id !== sectionId);
+        const newState = prev.filter((id) => id !== sectionId);
         console.log('Closing section, new state:', newState);
         return newState;
       } else {
@@ -83,8 +83,12 @@ export const SettingsSidebar = ({
     if (sidebarRef.current) {
       const sidebar = sidebarRef.current;
       // Hide scrollbar with inline styles
-      sidebar.style.msOverflowStyle = 'none';
-      sidebar.style.scrollbarWidth = 'none';
+      const styleDecl = sidebar.style as CSSStyleDeclaration & {
+        msOverflowStyle?: string;
+        scrollbarWidth?: string;
+      };
+      styleDecl.msOverflowStyle = 'none';
+      styleDecl.scrollbarWidth = 'none';
       // Add style tag for webkit scrollbar
       const style = document.createElement('style');
       style.textContent = `
@@ -95,7 +99,9 @@ export const SettingsSidebar = ({
         }
       `;
       document.head.appendChild(style);
-      return () => document.head.removeChild(style);
+      return () => {
+        document.head.removeChild(style);
+      };
     }
   }, []);
 
@@ -124,10 +130,10 @@ export const SettingsSidebar = ({
         className={`settings-sidebar fixed lg:static top-16 lg:top-0 bottom-0 right-0 w-[20.7rem] bg-[var(--background)] text-[var(--foreground)] flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 z-40 lg:z-40 lg:h-full ${
           isSettingsOpen ? 'translate-x-0' : 'translate-x-full'
         } lg:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} lg:flex scrollbar-hide`}
-        style={{ 
+        style={{
           position: 'relative',
           msOverflowStyle: 'none',
-          scrollbarWidth: 'none'
+          scrollbarWidth: 'none',
         }}
       >
         <header className="flex items-center justify-between p-4 border-b border-[var(--border-color)]">
@@ -194,7 +200,7 @@ export const SettingsSidebar = ({
                 isOpen={openSections.includes('tafsir')}
                 onToggle={() => handleSectionToggle('tafsir')}
               />
-              <FontSettings 
+              <FontSettings
                 onArabicFontPanelOpen={() => setIsArabicFontPanelOpen(true)}
                 isOpen={openSections.includes('font')}
                 onToggle={() => handleSectionToggle('font')}
@@ -202,7 +208,7 @@ export const SettingsSidebar = ({
             </>
           )}
           {activeTab === 'reading' && (
-            <ReadingSettings 
+            <ReadingSettings
               isOpen={openSections.includes('reading')}
               onToggle={() => handleSectionToggle('reading')}
             />

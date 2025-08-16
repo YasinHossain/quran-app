@@ -3,6 +3,8 @@
 import Header from '@/app/shared/Header';
 import IconSidebar from '@/app/shared/IconSidebar';
 import SurahListSidebar from '@/app/shared/SurahListSidebar';
+import BookmarkSidebar from './bookmarks/components/BookmarkSidebar';
+import { usePathname } from 'next/navigation';
 import {
   HeaderVisibilityProvider,
   useHeaderVisibility,
@@ -10,6 +12,8 @@ import {
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
   const { isHidden } = useHeaderVisibility();
+  const pathname = usePathname();
+  const isBookmarkRoute = pathname.startsWith('/bookmarks');
   return (
     <>
       <Header />
@@ -21,7 +25,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
             <IconSidebar />
           </nav>
           <nav aria-label="Surah navigation" className="flex-shrink-0 h-full">
-            <SurahListSidebar />
+            {isBookmarkRoute ? <BookmarkSidebar /> : <SurahListSidebar />}
           </nav>
           {children}
         </div>

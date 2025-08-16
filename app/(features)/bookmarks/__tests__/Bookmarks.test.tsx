@@ -1,12 +1,33 @@
 import { render, screen } from '@testing-library/react';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { BookmarkProvider } from '@/app/providers/BookmarkContext';
+import { ThemeProvider } from '@/app/providers/ThemeContext';
+import { SidebarProvider } from '@/app/providers/SidebarContext';
 import BookmarkedVersesList from '@/app/(features)/bookmarks/components/BookmarkedVersesList';
 import BookmarksPage from '@/app/(features)/bookmarks/page';
 import * as api from '@/lib/api';
 import { Verse } from '@/types';
 
 jest.mock('@/lib/api');
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: (key: string) => key }),
+}));
+
+beforeAll(() => {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation((query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
+});
 
 describe('Bookmarked verses components', () => {
   beforeEach(() => {
@@ -58,12 +79,16 @@ describe('Bookmarked verses components', () => {
 
   test('BookmarksPage renders heading', () => {
     render(
-      <SettingsProvider>
-        <BookmarkProvider>
-          <BookmarksPage />
-        </BookmarkProvider>
-      </SettingsProvider>
+      <ThemeProvider>
+        <SettingsProvider>
+          <BookmarkProvider>
+            <SidebarProvider>
+              <BookmarksPage />
+            </SidebarProvider>
+          </BookmarkProvider>
+        </SettingsProvider>
+      </ThemeProvider>
     );
-    expect(screen.getByText('Bookmarked Verses')).toBeInTheDocument();
+    expect(screen.getByText('Bookmarks')).toBeInTheDocument();
   });
 });
