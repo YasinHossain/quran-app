@@ -67,10 +67,7 @@ const renderPage = () =>
         <BookmarkProvider>
           <ThemeProvider>
             <SidebarProvider>
-              <JuzPage
-                params={{ juzId: '1' } as unknown as Promise<{ juzId: string }>}
-                searchParams={{}}
-              />
+              <JuzPage params={{ juzId: '1' } as unknown as Promise<{ juzId: string }>} />
             </SidebarProvider>
           </ThemeProvider>
         </BookmarkProvider>

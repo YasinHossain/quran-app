@@ -12,7 +12,7 @@ interface ReadingSettingsProps {
 
 export const ReadingSettings = ({ isOpen = false, onToggle }: ReadingSettingsProps) => {
   const { t } = useTranslation();
-  
+
   return (
     <CollapsibleSection
       title="Reading Settings"

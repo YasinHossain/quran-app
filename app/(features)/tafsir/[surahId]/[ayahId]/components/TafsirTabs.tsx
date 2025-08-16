@@ -101,7 +101,7 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
           </div>
         ) : (
           <div
-            className="prose max-w-none whitespace-pre-wrap"
+            className="prose max-w-none tafsir-content"
             style={{
               fontSize: `${settings.tafsirFontSize}px`,
             }}

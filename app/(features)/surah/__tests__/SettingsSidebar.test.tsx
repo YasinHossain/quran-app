@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Header from '@/app/shared/Header';
 import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
-import { WordLanguagePanel } from '@/app/(features)/surah/[surahId]/components/WordLanguagePanel';
 import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/translation-panel';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { SidebarProvider } from '@/app/providers/SidebarContext';
@@ -125,14 +124,8 @@ describe('SettingsSidebar interactions', () => {
             onWordLanguagePanelOpen={() => setOpen(true)}
             selectedTranslationName="English"
             selectedWordLanguageName="Bangla"
-          />
-          <WordLanguagePanel
-            isOpen={open}
-            onClose={() => setOpen(false)}
-            languages={[{ id: 1, name: 'Bangla' }]}
-            searchTerm=""
-            onSearchTermChange={() => {}}
-            onReset={() => {}}
+            isWordLanguagePanelOpen={open}
+            onWordLanguagePanelClose={() => setOpen(false)}
           />
         </Wrapper>
       );

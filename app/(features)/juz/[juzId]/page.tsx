@@ -4,8 +4,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
-import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/translation-panel';
-import { WordLanguagePanel } from '@/app/(features)/surah/[surahId]/components/WordLanguagePanel';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import { buildAudioUrl } from '@/lib/audio/reciters';
@@ -17,17 +15,11 @@ import { JuzVerseList } from './components/JuzVerseList';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;
 
-export default function JuzPage({
-  params,
-}: {
-  params: Promise<{ juzId: string }>;
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default function JuzPage({ params }: { params: Promise<{ juzId: string }> }) {
   const { juzId } = React.use(params);
 
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
-  const [wordTranslationSearchTerm, setWordTranslationSearchTerm] = useState('');
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
   const { t } = useTranslation();
 
@@ -67,14 +59,6 @@ export default function JuzPage({
           settings.wordLang
       )?.name || t('select_word_translation'),
     [settings.wordLang, wordLanguageOptions, t]
-  );
-
-  const filteredWordLanguages = useMemo(
-    () =>
-      wordLanguageOptions.filter((o) =>
-        o.name.toLowerCase().includes(wordTranslationSearchTerm.toLowerCase())
-      ),
-    [wordLanguageOptions, wordTranslationSearchTerm]
   );
 
   useEffect(() => {
@@ -131,26 +115,10 @@ export default function JuzPage({
         onReadingPanelOpen={() => {}}
         selectedTranslationName={selectedTranslationName}
         selectedWordLanguageName={selectedWordLanguageName}
-      />
-
-      <TranslationPanel
-        isOpen={isTranslationPanelOpen}
-        onClose={() => setIsTranslationPanelOpen(false)}
-      />
-      <WordLanguagePanel
-        isOpen={isWordPanelOpen}
-        onClose={() => setIsWordPanelOpen(false)}
-        languages={filteredWordLanguages}
-        searchTerm={wordTranslationSearchTerm}
-        onSearchTermChange={setWordTranslationSearchTerm}
-        onReset={() => {
-          setWordTranslationSearchTerm('');
-          setSettings({
-            ...settings,
-            wordLang: 'en',
-            wordTranslationId: wordLanguageMap['english'] ?? DEFAULT_WORD_TRANSLATION_ID,
-          });
-        }}
+        isTranslationPanelOpen={isTranslationPanelOpen}
+        onTranslationPanelClose={() => setIsTranslationPanelOpen(false)}
+        isWordLanguagePanelOpen={isWordPanelOpen}
+        onWordLanguagePanelClose={() => setIsWordPanelOpen(false)}
       />
       {activeVerse && isPlayerVisible && (
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-transparent z-50">

@@ -13,6 +13,8 @@ import { FontSettings } from './FontSettings';
 import { ReadingSettings } from './ReadingSettings';
 import { TranslationPanel } from './translation-panel';
 import { TafsirPanel } from './tafsir-panel';
+import { WordLanguagePanel } from './WordLanguagePanel';
+import { WordLanguageContent } from './WordLanguageContent';
 
 interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;
@@ -27,6 +29,8 @@ interface SettingsSidebarProps {
   onTranslationPanelClose?: () => void;
   isTafsirPanelOpen?: boolean;
   onTafsirPanelClose?: () => void;
+  isWordLanguagePanelOpen?: boolean;
+  onWordLanguagePanelClose?: () => void;
 }
 
 export const SettingsSidebar = ({
@@ -42,6 +46,8 @@ export const SettingsSidebar = ({
   onTranslationPanelClose,
   isTafsirPanelOpen = false,
   onTafsirPanelClose,
+  isWordLanguagePanelOpen = false,
+  onWordLanguagePanelClose,
 }: SettingsSidebarProps) => {
   const { t } = useTranslation();
   const { isSettingsOpen, setSettingsOpen } = useSidebar();
@@ -100,7 +106,9 @@ export const SettingsSidebar = ({
       `;
       document.head.appendChild(style);
       return () => {
-        document.head.removeChild(style);
+        if (document.head.contains(style)) {
+          document.head.removeChild(style);
+        }
       };
     }
   }, []);
@@ -139,81 +147,93 @@ export const SettingsSidebar = ({
         <header className="flex items-center justify-between p-4 border-b border-[var(--border-color)]">
           <button
             aria-label="Back"
-            onClick={() => setSettingsOpen(false)}
+            onClick={() => {
+              if (isWordLanguagePanelOpen) {
+                onWordLanguagePanelClose?.();
+              } else {
+                setSettingsOpen(false);
+              }
+            }}
             className="p-2 rounded-full hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 lg:hidden"
           >
             <ArrowLeftIcon size={18} />
           </button>
-          <h2 className="flex-grow text-center text-lg font-bold">Settings</h2>
+          <h2 className="flex-grow text-center text-lg font-bold">
+            {isWordLanguagePanelOpen ? 'Word-by-Word Languages' : 'Settings'}
+          </h2>
           <div className="w-8" />
         </header>
-        <div className="flex-grow p-4 space-y-4">
-          <div
-            className={`flex items-center p-1 rounded-full mb-4 ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'}`}
-          >
-            <button
-              onClick={() => handleTabClick('translation')}
-              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
-                activeTab === 'translation'
-                  ? theme === 'light'
-                    ? 'bg-white shadow text-slate-900'
-                    : 'bg-slate-700 text-white shadow'
-                  : theme === 'light'
-                    ? 'text-slate-400 hover:text-slate-700'
-                    : 'text-slate-400 hover:text-white'
-              }`}
+        {isWordLanguagePanelOpen ? (
+          <WordLanguageContent onClose={onWordLanguagePanelClose} />
+        ) : (
+          <div className="flex-grow p-4 space-y-4">
+            <div
+              className={`flex items-center p-1 rounded-full mb-4 ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'}`}
             >
-              Translation
-            </button>
-            <button
-              onClick={() => handleTabClick('reading')}
-              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
-                activeTab === 'reading'
-                  ? theme === 'light'
-                    ? 'bg-white shadow text-slate-900'
-                    : 'bg-slate-700 text-white shadow'
-                  : theme === 'light'
-                    ? 'text-slate-400 hover:text-slate-700'
-                    : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Reading
-            </button>
+              <button
+                onClick={() => handleTabClick('translation')}
+                className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                  activeTab === 'translation'
+                    ? theme === 'light'
+                      ? 'bg-white shadow text-slate-900'
+                      : 'bg-slate-700 text-white shadow'
+                    : theme === 'light'
+                      ? 'text-slate-400 hover:text-slate-700'
+                      : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Translation
+              </button>
+              <button
+                onClick={() => handleTabClick('reading')}
+                className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                  activeTab === 'reading'
+                    ? theme === 'light'
+                      ? 'bg-white shadow text-slate-900'
+                      : 'bg-slate-700 text-white shadow'
+                    : theme === 'light'
+                      ? 'text-slate-400 hover:text-slate-700'
+                      : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Reading
+              </button>
+            </div>
+            {activeTab === 'translation' && (
+              <>
+                <TranslationSettings
+                  onTranslationPanelOpen={onTranslationPanelOpen}
+                  onWordLanguagePanelOpen={onWordLanguagePanelOpen}
+                  onTafsirPanelOpen={onTafsirPanelOpen}
+                  selectedTranslationName={selectedTranslationName}
+                  selectedTafsirName={selectedTafsirName}
+                  selectedWordLanguageName={selectedWordLanguageName}
+                  showTafsirSetting={showTafsirSetting}
+                  isOpen={openSections.includes('translation')}
+                  onToggle={() => handleSectionToggle('translation')}
+                />
+                <TafsirSettings
+                  onTafsirPanelOpen={onTafsirPanelOpen}
+                  selectedTafsirName={selectedTafsirName}
+                  showTafsirSetting={showTafsirSetting}
+                  isOpen={openSections.includes('tafsir')}
+                  onToggle={() => handleSectionToggle('tafsir')}
+                />
+                <FontSettings
+                  onArabicFontPanelOpen={() => setIsArabicFontPanelOpen(true)}
+                  isOpen={openSections.includes('font')}
+                  onToggle={() => handleSectionToggle('font')}
+                />
+              </>
+            )}
+            {activeTab === 'reading' && (
+              <ReadingSettings
+                isOpen={openSections.includes('reading')}
+                onToggle={() => handleSectionToggle('reading')}
+              />
+            )}
           </div>
-          {activeTab === 'translation' && (
-            <>
-              <TranslationSettings
-                onTranslationPanelOpen={onTranslationPanelOpen}
-                onWordLanguagePanelOpen={onWordLanguagePanelOpen}
-                onTafsirPanelOpen={onTafsirPanelOpen}
-                selectedTranslationName={selectedTranslationName}
-                selectedTafsirName={selectedTafsirName}
-                selectedWordLanguageName={selectedWordLanguageName}
-                showTafsirSetting={showTafsirSetting}
-                isOpen={openSections.includes('translation')}
-                onToggle={() => handleSectionToggle('translation')}
-              />
-              <TafsirSettings
-                onTafsirPanelOpen={onTafsirPanelOpen}
-                selectedTafsirName={selectedTafsirName}
-                showTafsirSetting={showTafsirSetting}
-                isOpen={openSections.includes('tafsir')}
-                onToggle={() => handleSectionToggle('tafsir')}
-              />
-              <FontSettings
-                onArabicFontPanelOpen={() => setIsArabicFontPanelOpen(true)}
-                isOpen={openSections.includes('font')}
-                onToggle={() => handleSectionToggle('font')}
-              />
-            </>
-          )}
-          {activeTab === 'reading' && (
-            <ReadingSettings
-              isOpen={openSections.includes('reading')}
-              onToggle={() => handleSectionToggle('reading')}
-            />
-          )}
-        </div>
+        )}
         <div className="p-4">
           <div
             className={`flex items-center p-1 rounded-full ${
