@@ -55,11 +55,11 @@ export const ResourceItem = <T extends Resource>({
         <p
           className={`font-medium text-sm leading-tight truncate ${
             isSelected
-              ? theme === 'dark' 
-                ? 'text-blue-200' 
+              ? theme === 'dark'
+                ? 'text-blue-200'
                 : 'text-blue-800'
-              : theme === 'dark' 
-                ? 'text-[var(--foreground)]' 
+              : theme === 'dark'
+                ? 'text-[var(--foreground)]'
                 : 'text-slate-800'
           }`}
           title={item.name}
@@ -69,10 +69,8 @@ export const ResourceItem = <T extends Resource>({
       </div>
       <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
         {isSelected && (
-          <CheckIcon 
-            className={`h-5 w-5 ${
-              theme === 'dark' ? 'text-blue-400' : 'text-blue-600'
-            }`} 
+          <CheckIcon
+            className={`h-5 w-5 ${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}
           />
         )}
       </div>

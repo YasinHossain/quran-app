@@ -44,10 +44,7 @@ export const ResourceTabs: React.FC<ResourceTabsProps> = ({
     >
       <ChevronLeft size={20} />
     </button>
-    <div
-      ref={tabsContainerRef}
-      className="flex items-center space-x-2 overflow-hidden flex-1"
-    >
+    <div ref={tabsContainerRef} className="flex items-center space-x-2 overflow-hidden flex-1">
       {languages.map((lang) => (
         <button
           key={lang}

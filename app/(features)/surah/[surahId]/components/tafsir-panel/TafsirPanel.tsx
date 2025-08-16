@@ -216,9 +216,11 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
                       })
                       .map(([language, items]) => (
                         <div key={language}>
-                          <h3 className={`text-lg font-semibold mb-4 ${
-                            theme === 'dark' ? 'text-[var(--foreground)]' : 'text-slate-800'
-                          }`}>
+                          <h3
+                            className={`text-lg font-semibold mb-4 ${
+                              theme === 'dark' ? 'text-[var(--foreground)]' : 'text-slate-800'
+                            }`}
+                          >
                             {language}
                           </h3>
                           <div className="space-y-2">

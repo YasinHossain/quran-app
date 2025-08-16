@@ -5,6 +5,7 @@
 A modern Quran reading application built with Next.js 15, featuring audio playback, translations, tafsir (commentary), bookmarks, and progressive web app capabilities.
 
 **Tech Stack:**
+
 - Next.js 15 with App Router
 - TypeScript (strict mode)
 - Tailwind CSS
@@ -45,7 +46,7 @@ npm run generate-feature <name>  # Scaffold new feature
 
 1. **Audio Player** (`app/shared/player/`) - Quran recitation with repeat modes
 2. **Surah Reading** (`app/(features)/surah/`) - Main reading interface with settings
-3. **Tafsir** (`app/(features)/tafsir/`) - Commentary viewing
+3. **Tafsir** (`app/(features)/tafsir/`) - Commentary viewing with persistent selections
 4. **Search** (`app/(features)/search/`) - Verse search functionality
 5. **Bookmarks** (`app/(features)/bookmarks/`) - Saved verses
 6. **Navigation** - Juz, Page, and Surah-based browsing
@@ -77,3 +78,9 @@ npm run generate-feature <name>  # Scaffold new feature
 - Maintain TypeScript strict mode compliance
 - Run `npm run check` before commits
 - Use conventional commit messages with `feat:`, `fix:` prefixes
+
+## Recent Updates
+
+- **Tafsir System**: Enhanced with persistent selections, improved UI, and multiple tafsir support
+- **Settings Management**: Streamlined panels with better state management and storage
+- **UI/UX**: Reduced overlapping sliders and improved panel positioning

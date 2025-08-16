@@ -1,4 +1,3 @@
-
 // app/(features)/bookmarks/page.tsx
 'use client';
 import BookmarkedVersesList from './components/BookmarkedVersesList';

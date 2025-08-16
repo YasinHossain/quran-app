@@ -46,7 +46,8 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
   const latestSettings = useRef(settings);
 
   useEffect(() => {
-    dispatch({ type: 'SET_SETTINGS', value: loadSettings(defaultSettings) });
+    const loadedSettings = loadSettings(defaultSettings);
+    dispatch({ type: 'SET_SETTINGS', value: loadedSettings });
   }, []);
 
   // Save settings when changed (debounced)

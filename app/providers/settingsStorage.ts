@@ -60,6 +60,10 @@ export const loadSettings = (defaults: Settings = defaultSettings): Settings => 
         : [defaults.translationId];
     }
 
+    if (!parsed.tafsirIds) {
+      parsed.tafsirIds = defaults.tafsirIds;
+    }
+
     return { ...defaults, ...parsed } as Settings;
   } catch (error) {
     console.error('Error parsing settings from localStorage:', error);

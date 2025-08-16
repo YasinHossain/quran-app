@@ -75,26 +75,28 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
     return () => window.removeEventListener('resize', updateHeight);
   }, [isOpen]);
 
-  const resourcesToRender = activeFilter === 'All' ? translations : groupedTranslations[activeFilter] || [];
-  
+  const resourcesToRender =
+    activeFilter === 'All' ? translations : groupedTranslations[activeFilter] || [];
+
   // Create sections for rendering with headers, ordered as English, Bengali, then alphabetical
-  const sectionsToRender = activeFilter === 'All' 
-    ? Object.entries(groupedTranslations)
-        .sort(([langA], [langB]) => {
-          // English first
-          if (langA === 'English') return -1;
-          if (langB === 'English') return 1;
-          // Bengali second
-          if (langA === 'Bengali') return -1;
-          if (langB === 'Bengali') return 1;
-          // Then alphabetical
-          return langA.localeCompare(langB);
-        })
-        .map(([language, items]) => ({
-          language,
-          items
-        }))
-    : [{ language: activeFilter, items: resourcesToRender }];
+  const sectionsToRender =
+    activeFilter === 'All'
+      ? Object.entries(groupedTranslations)
+          .sort(([langA], [langB]) => {
+            // English first
+            if (langA === 'English') return -1;
+            if (langB === 'English') return 1;
+            // Bengali second
+            if (langA === 'Bengali') return -1;
+            if (langB === 'Bengali') return 1;
+            // Then alphabetical
+            return langA.localeCompare(langB);
+          })
+          .map(([language, items]) => ({
+            language,
+            items,
+          }))
+      : [{ language: activeFilter, items: resourcesToRender }];
 
   return (
     <div
@@ -223,9 +225,11 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
                   <div className="space-y-6">
                     {sectionsToRender.map(({ language, items }) => (
                       <div key={language}>
-                        <h3 className={`text-lg font-semibold mb-4 ${
-                          theme === 'dark' ? 'text-slate-200' : 'text-slate-800'
-                        }`}>
+                        <h3
+                          className={`text-lg font-semibold mb-4 ${
+                            theme === 'dark' ? 'text-slate-200' : 'text-slate-800'
+                          }`}
+                        >
                           {language}
                         </h3>
                         <div className="space-y-2">

@@ -26,12 +26,14 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
       .slice(0, 3) as { id: number; name: string }[];
   }, [tafsirIds, data]);
 
-  // -- Fix 1: activeId needs to track the tabs --
-  const [activeId, setActiveId] = useState<number | undefined>(undefined);
+  // Initialize activeId with the first tab when tabs are available
+  const [activeId, setActiveId] = useState<number | undefined>(() => {
+    return tabs.length > 0 ? tabs[0].id : undefined;
+  });
 
   useEffect(() => {
     // If tabs exist and activeId is not in them, set to first tab
-    if (tabs.length && !tabs.find((t) => t.id === activeId)) {
+    if (tabs.length > 0 && !tabs.find((t) => t.id === activeId)) {
       setActiveId(tabs[0].id);
     }
   }, [tabs, activeId]);
@@ -51,7 +53,18 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
   }, [activeId, verseKey, contents]);
 
   const { theme } = useTheme();
-  if (!tabs.length || !activeId) return null;
+
+  if (!tabs.length) {
+    return (
+      <div className="p-4 text-center text-gray-500">
+        No tafsir resources available. Please check your settings.
+      </div>
+    );
+  }
+
+  if (!activeId) {
+    return <div className="p-4 text-center text-gray-500">Loading tafsir...</div>;
+  }
 
   const activeTab = tabs.find((t) => t.id === activeId);
 
