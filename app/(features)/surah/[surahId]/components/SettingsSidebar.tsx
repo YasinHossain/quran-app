@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeftIcon } from '@/app/shared/icons';
 import { useSidebar } from '@/app/providers/SidebarContext';
@@ -49,6 +49,55 @@ export const SettingsSidebar = ({
   const { isHidden } = useHeaderVisibility();
   const [activeTab, setActiveTab] = useState('translation');
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
+  const sidebarRef = useRef<HTMLElement>(null);
+  
+  // State for collapsible sections
+  const [openSections, setOpenSections] = useState<string[]>([]);
+  
+  // Function to handle section toggle with max 2 open rule
+  const handleSectionToggle = (sectionId: string) => {
+    console.log('Toggling section:', sectionId, 'Current open:', openSections);
+    setOpenSections(prev => {
+      if (prev.includes(sectionId)) {
+        // If section is open, close it
+        const newState = prev.filter(id => id !== sectionId);
+        console.log('Closing section, new state:', newState);
+        return newState;
+      } else {
+        // If section is closed, open it
+        let newState;
+        if (prev.length >= 2) {
+          // If already 2 sections open, remove the oldest one and add the new one
+          newState = [prev[1], sectionId];
+        } else {
+          // If less than 2 sections open, just add the new one
+          newState = [...prev, sectionId];
+        }
+        console.log('Opening section, new state:', newState);
+        return newState;
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (sidebarRef.current) {
+      const sidebar = sidebarRef.current;
+      // Hide scrollbar with inline styles
+      sidebar.style.msOverflowStyle = 'none';
+      sidebar.style.scrollbarWidth = 'none';
+      // Add style tag for webkit scrollbar
+      const style = document.createElement('style');
+      style.textContent = `
+        .settings-sidebar::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
+        }
+      `;
+      document.head.appendChild(style);
+      return () => document.head.removeChild(style);
+    }
+  }, []);
 
   const handleTabClick = (tab: 'translation' | 'reading') => {
     setActiveTab(tab);
@@ -71,10 +120,15 @@ export const SettingsSidebar = ({
         }}
       />
       <aside
-        className={`fixed lg:static top-16 lg:top-0 bottom-0 right-0 w-[20.7rem] bg-[var(--background)] text-[var(--foreground)] flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 z-40 lg:z-40 lg:h-full ${
+        ref={sidebarRef}
+        className={`settings-sidebar fixed lg:static top-16 lg:top-0 bottom-0 right-0 w-[20.7rem] bg-[var(--background)] text-[var(--foreground)] flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 z-40 lg:z-40 lg:h-full ${
           isSettingsOpen ? 'translate-x-0' : 'translate-x-full'
-        } lg:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} lg:flex`}
-        style={{ position: 'relative' }}
+        } lg:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} lg:flex scrollbar-hide`}
+        style={{ 
+          position: 'relative',
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none'
+        }}
       >
         <header className="flex items-center justify-between p-4 border-b border-[var(--border-color)]">
           <button
@@ -130,16 +184,29 @@ export const SettingsSidebar = ({
                 selectedTafsirName={selectedTafsirName}
                 selectedWordLanguageName={selectedWordLanguageName}
                 showTafsirSetting={showTafsirSetting}
+                isOpen={openSections.includes('translation')}
+                onToggle={() => handleSectionToggle('translation')}
               />
               <TafsirSettings
                 onTafsirPanelOpen={onTafsirPanelOpen}
                 selectedTafsirName={selectedTafsirName}
                 showTafsirSetting={showTafsirSetting}
+                isOpen={openSections.includes('tafsir')}
+                onToggle={() => handleSectionToggle('tafsir')}
               />
-              <FontSettings onArabicFontPanelOpen={() => setIsArabicFontPanelOpen(true)} />
+              <FontSettings 
+                onArabicFontPanelOpen={() => setIsArabicFontPanelOpen(true)}
+                isOpen={openSections.includes('font')}
+                onToggle={() => handleSectionToggle('font')}
+              />
             </>
           )}
-          {activeTab === 'reading' && <ReadingSettings />}
+          {activeTab === 'reading' && (
+            <ReadingSettings 
+              isOpen={openSections.includes('reading')}
+              onToggle={() => handleSectionToggle('reading')}
+            />
+          )}
         </div>
         <div className="p-4">
           <div

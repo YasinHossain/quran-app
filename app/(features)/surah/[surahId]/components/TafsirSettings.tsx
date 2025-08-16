@@ -12,16 +12,19 @@ interface TafsirSettingsProps {
   onTafsirPanelOpen?: () => void;
   selectedTafsirName?: string;
   showTafsirSetting?: boolean;
+  isOpen?: boolean;
+  onToggle?: () => void;
 }
 
 export const TafsirSettings = ({
   onTafsirPanelOpen,
   selectedTafsirName,
   showTafsirSetting = false,
+  isOpen = false,
+  onToggle,
 }: TafsirSettingsProps) => {
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
-  const [isTafsirOpen, setTafsirOpen] = useState(false);
   const { style: tafsirStyle } = useFontSize(settings.tafsirFontSize, 12, 28);
 
   return (
@@ -31,8 +34,8 @@ export const TafsirSettings = ({
           title={t('tafsir_setting')}
           icon={<BookReaderIcon size={20} className="text-teal-700" />}
           isLast={true}
-          isOpen={isTafsirOpen}
-          onToggle={() => setTafsirOpen(!isTafsirOpen)}
+          isOpen={isOpen}
+          onToggle={onToggle || (() => {})}
         >
           <div className="space-y-4">
             <SelectionBox

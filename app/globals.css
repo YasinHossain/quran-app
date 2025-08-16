@@ -106,3 +106,24 @@ input[type='range']::-webkit-slider-thumb:hover {
   scrollbar-width: thin;
   scrollbar-color: #e5e7eb transparent;
 }
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  /* WebKit browsers */
+  -ms-overflow-style: none !important; /* IE and Edge */
+  scrollbar-width: none !important; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none !important; /* WebKit browsers */
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.scrollbar-hide::-webkit-scrollbar-track {
+  display: none !important;
+}
+
+.scrollbar-hide::-webkit-scrollbar-thumb {
+  display: none !important;
+}

@@ -15,6 +15,8 @@ interface TranslationSettingsProps {
   selectedTafsirName?: string;
   selectedWordLanguageName: string;
   showTafsirSetting?: boolean;
+  isOpen?: boolean;
+  onToggle?: () => void;
 }
 
 export const TranslationSettings = ({
@@ -25,10 +27,11 @@ export const TranslationSettings = ({
   selectedTafsirName,
   selectedWordLanguageName,
   showTafsirSetting = false,
+  isOpen = false,
+  onToggle,
 }: TranslationSettingsProps) => {
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
-  const [isReadingOpen, setReadingOpen] = useState(true);
 
   return (
     <>
@@ -36,8 +39,8 @@ export const TranslationSettings = ({
         title={t('reading_setting')}
         icon={<TranslationIcon size={20} className="text-teal-700" />}
         isLast={true}
-        isOpen={isReadingOpen}
-        onToggle={() => setReadingOpen(!isReadingOpen)}
+        isOpen={isOpen}
+        onToggle={onToggle || (() => {})}
       >
         <div className="space-y-4">
           <div className="flex items-center justify-between pt-2">

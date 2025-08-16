@@ -10,12 +10,13 @@ import SelectionBox from '@/app/shared/SelectionBox';
 
 interface FontSettingsProps {
   onArabicFontPanelOpen: () => void;
+  isOpen?: boolean;
+  onToggle?: () => void;
 }
 
-export const FontSettings = ({ onArabicFontPanelOpen }: FontSettingsProps) => {
+export const FontSettings = ({ onArabicFontPanelOpen, isOpen = false, onToggle }: FontSettingsProps) => {
   const { settings, setSettings, arabicFonts } = useSettings();
   const { t } = useTranslation();
-  const [isOpen, setIsOpen] = useState(true);
   const { style: arabicStyle } = useFontSize(settings.arabicFontSize, 16, 48);
   const { style: translationStyle } = useFontSize(settings.translationFontSize, 12, 28);
 
@@ -28,7 +29,7 @@ export const FontSettings = ({ onArabicFontPanelOpen }: FontSettingsProps) => {
       icon={<FontSettingIcon size={20} className="text-teal-700" />}
       isLast
       isOpen={isOpen}
-      onToggle={() => setIsOpen(!isOpen)}
+      onToggle={onToggle || (() => {})}
     >
       <div className="space-y-4">
         <div>
