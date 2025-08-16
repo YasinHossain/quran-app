@@ -23,12 +23,37 @@ export const HeaderVisibilityProvider = ({ children }: { children: React.ReactNo
 
     const handleScroll = () => {
       const currentY = (scrollEl as HTMLElement).scrollTop;
-      // Hide header when scrolling down past a 50px threshold
-      if (currentY > lastScrollY.current && currentY > 50) {
-        setIsHidden(true);
-      } else {
-        setIsHidden(false);
+      const scrollHeight = (scrollEl as HTMLElement).scrollHeight;
+      const clientHeight = (scrollEl as HTMLElement).clientHeight;
+      const maxScrollableHeight = scrollHeight - clientHeight;
+      
+      // Calculate scroll delta to prevent rapid toggling
+      const scrollDelta = Math.abs(currentY - lastScrollY.current);
+      
+      // For short content, require larger scroll delta to prevent shaking
+      const minScrollDelta = maxScrollableHeight < 150 ? 20 : 5;
+      
+      // Debug logs (remove after testing)
+      console.log({
+        currentY,
+        lastScrollY: lastScrollY.current,
+        maxScrollableHeight,
+        scrollDelta,
+        minScrollDelta,
+        scrollingDown: currentY > lastScrollY.current
+      });
+      
+      if (scrollDelta > minScrollDelta) {
+        // Hide header when scrolling down past threshold
+        if (currentY > lastScrollY.current && currentY > 50) {
+          console.log('Setting header hidden to true');
+          setIsHidden(true);
+        } else if (currentY < lastScrollY.current) {
+          console.log('Setting header hidden to false');
+          setIsHidden(false);
+        }
       }
+      
       lastScrollY.current = currentY;
     };
 
