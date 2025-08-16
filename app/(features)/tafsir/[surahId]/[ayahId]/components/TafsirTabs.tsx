@@ -20,21 +20,19 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
   // Compute tabs only when data or tafsirIds change
   const tabs = useMemo(() => {
     const resources = data || [];
-    return tafsirIds
-      .map((id) => resources.find((r) => r.id === id))
-      .filter(Boolean)
-      .slice(0, 3) as { id: number; name: string }[];
+    return tafsirIds.slice(0, 3).map((id) => {
+      const resource = resources.find((r) => r.id === id);
+      return resource ? { id: resource.id, name: resource.name } : { id, name: `Tafsir ${id}` };
+    });
   }, [tafsirIds, data]);
 
-  // -- Fix 1: activeId needs to track the tabs --
-  const [activeId, setActiveId] = useState<number | undefined>(undefined);
+  const [activeId, setActiveId] = useState<number | undefined>(tafsirIds[0]);
 
   useEffect(() => {
-    // If tabs exist and activeId is not in them, set to first tab
-    if (tabs.length && !tabs.find((t) => t.id === activeId)) {
-      setActiveId(tabs[0].id);
+    if (!activeId || !tafsirIds.includes(activeId)) {
+      setActiveId(tafsirIds[0]);
     }
-  }, [tabs, activeId]);
+  }, [tafsirIds, activeId]);
 
   // -- Caching and loading state --
   const [contents, setContents] = useState<Record<number, string>>({});
@@ -51,7 +49,13 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
   }, [activeId, verseKey, contents]);
 
   const { theme } = useTheme();
-  if (!tabs.length || !activeId) return null;
+  if (!tabs.length || !activeId) {
+    return (
+      <div className="flex justify-center py-4">
+        <Spinner className="h-5 w-5 text-emerald-600" />
+      </div>
+    );
+  }
 
   const activeTab = tabs.find((t) => t.id === activeId);
 
