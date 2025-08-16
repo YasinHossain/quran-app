@@ -22,18 +22,18 @@ export const TafsirViewer = ({ verse, tafsirResource, tafsirHtml }: TafsirViewer
       {settings.tafsirIds.length > 1 ? (
         <TafsirTabs verseKey={verse.verse_key} tafsirIds={settings.tafsirIds} />
       ) : (
-        <div key={verse.verse_key} className="p-4">
-          {tafsirResource && (
+        tafsirResource && (
+          <div key={verse.verse_key} className="p-4">
             <h2 className="mb-4 text-center text-xl font-bold text-[var(--foreground)]">
               {tafsirResource.name}
             </h2>
-          )}
-          <div
-            className="prose max-w-none whitespace-pre-wrap"
-            style={{ fontSize: `${settings.tafsirFontSize}px` }}
-            dangerouslySetInnerHTML={{ __html: tafsirHtml || '' }}
-          />
-        </div>
+            <div
+              className="prose max-w-none whitespace-pre-wrap"
+              style={{ fontSize: `${settings.tafsirFontSize}px` }}
+              dangerouslySetInnerHTML={{ __html: tafsirHtml || '' }}
+            />
+          </div>
+        )
       )}
     </div>
   );

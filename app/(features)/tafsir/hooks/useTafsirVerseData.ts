@@ -15,7 +15,6 @@ export const useTafsirVerseData = (surahId: string, ayahId: string) => {
   const { wordLanguageOptions, wordLanguageMap, selectedWordLanguageName, resetWordSettings } =
     useWordTranslations();
   const { prev, next, navigate, currentSurah } = useVerseNavigation(surahId, ayahId);
-  const primaryTafsirId = settings.tafsirIds[0];
 
   const { data: verseData } = useSWR(
     surahId && ayahId
@@ -27,7 +26,7 @@ export const useTafsirVerseData = (surahId: string, ayahId: string) => {
   const verse: VerseType | undefined = verseData;
 
   const { data: tafsirHtml } = useSWR(
-    verse && primaryTafsirId ? ['tafsir', verse.verse_key, primaryTafsirId] : null,
+    verse && tafsirResource ? ['tafsir', verse.verse_key, tafsirResource.id] : null,
     ([, key, id]) => getTafsirByVerse(key as string, id as number)
   );
 
