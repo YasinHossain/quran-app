@@ -17,6 +17,22 @@ jest.mock('@/lib/api', () => ({
       },
     ],
   } as Verse),
+  getSurahList: jest.fn().mockResolvedValue([
+    {
+      number: 1,
+      name: 'Al-Fatihah',
+      arabicName: 'الفاتحة',
+      verses: 7,
+      meaning: 'The Opening',
+    },
+    {
+      number: 2,
+      name: 'Al-Baqarah',
+      arabicName: 'البقرة',
+      verses: 286,
+      meaning: 'The Cow',
+    },
+  ]),
 }));
 
 // Mock next/link to simply render an anchor tag
@@ -59,9 +75,10 @@ beforeEach(() => {
 
 it('search filtering returns only matching Surahs', async () => {
   renderHome();
+  await screen.findByText('Al-Fatihah');
   const input = screen.getByPlaceholderText('What do you want to read?');
   await userEvent.type(input, 'Baqarah');
-  expect(screen.getByText('Al-Baqarah')).toBeInTheDocument();
+  expect(await screen.findByText('Al-Baqarah')).toBeInTheDocument();
   expect(screen.queryByText('Al-Fatihah')).not.toBeInTheDocument();
 });
 
@@ -78,18 +95,17 @@ it('theme toggle updates the data-theme attribute', async () => {
 
 it('tab switching between “Surah,” “Juz,” and “Page” changes rendered content and links', async () => {
   renderHome();
-  // default tab shows Surahs
-  const surahLink = screen.getByText('Al-Fatihah').closest('a');
+  const surahLink = (await screen.findByText('Al-Fatihah')).closest('a');
   expect(surahLink).toHaveAttribute('href', '/surah/1');
 
   await userEvent.click(screen.getByRole('button', { name: 'Juz' }));
-  const juzLink = screen.getByText('Juz 1').closest('a');
+  const juzLink = (await screen.findByText('Juz 1')).closest('a');
   expect(juzLink).toHaveAttribute('href', '/juz/1');
 
   await userEvent.click(screen.getByRole('button', { name: 'Page' }));
-  const pageLink = screen.getByText('Page 1').closest('a');
+  const pageLink = (await screen.findByText('Page 1')).closest('a');
   expect(pageLink).toHaveAttribute('href', '/page/1');
 
   await userEvent.click(screen.getByRole('button', { name: 'Surah' }));
-  expect(screen.getByText('Al-Fatihah')).toBeInTheDocument();
+  expect(await screen.findByText('Al-Fatihah')).toBeInTheDocument();
 });

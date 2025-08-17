@@ -10,6 +10,25 @@ import { Verse } from '@/types';
 import useSWR from 'swr';
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 
+jest.mock('@/lib/api', () => ({
+  getSurahList: jest.fn().mockResolvedValue([
+    {
+      number: 1,
+      name: 'Al-Fatihah',
+      arabicName: 'الفاتحة',
+      verses: 7,
+      meaning: 'The Opening',
+    },
+    {
+      number: 2,
+      name: 'Al-Baqarah',
+      arabicName: 'البقرة',
+      verses: 286,
+      meaning: 'The Cow',
+    },
+  ]),
+}));
+
 jest.mock('swr');
 jest.mock('@/lib/tafsir/tafsirCache');
 

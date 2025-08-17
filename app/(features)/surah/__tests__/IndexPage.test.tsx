@@ -4,6 +4,17 @@ import ClientProviders from '@/app/providers/ClientProviders';
 import { AudioProvider } from '@/app/shared/player/context/AudioContext';
 
 jest.mock('next/link', () => ({ href, children }: any) => <a href={href}>{children}</a>);
+jest.mock('@/lib/api', () => ({
+  getSurahList: jest.fn().mockResolvedValue([
+    {
+      number: 1,
+      name: 'Al-Fatihah',
+      arabicName: 'الفاتحة',
+      verses: 7,
+      meaning: 'The Opening',
+    },
+  ]),
+}));
 
 beforeAll(() => {
   Object.defineProperty(window, 'matchMedia', {
@@ -21,17 +32,17 @@ beforeAll(() => {
   });
 });
 
-const renderPage = () =>
+const renderPage = async () => {
+  const ui = await SurahIndexPage();
   render(
     <AudioProvider>
-      <ClientProviders initialTheme="light">
-        <SurahIndexPage />
-      </ClientProviders>
+      <ClientProviders initialTheme="light">{ui}</ClientProviders>
     </AudioProvider>
   );
+};
 
-test('renders list of surah links', () => {
-  renderPage();
+test('renders list of surah links', async () => {
+  await renderPage();
   const link = screen.getByText('Al-Fatihah').closest('a');
   expect(link).toHaveAttribute('href', '/surah/1');
 });
