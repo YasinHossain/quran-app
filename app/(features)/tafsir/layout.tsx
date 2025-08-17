@@ -1,4 +1,5 @@
 'use client';
+import './tafsir.css';
 // app/(features)/tafsir/layout.tsx
 import { AudioProvider } from '@/app/shared/player/context/AudioContext';
 
