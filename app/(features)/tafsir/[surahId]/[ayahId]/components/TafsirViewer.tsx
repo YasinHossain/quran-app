@@ -24,7 +24,7 @@ export const TafsirViewer = ({ verse, tafsirResource, tafsirHtml }: TafsirViewer
       ) : settings.tafsirIds.length === 1 ? (
         <div key={verse.verse_key} className="p-4">
           {tafsirResource && (
-            <h2 className="mb-4 text-center text-xl font-bold text-[var(--foreground)]">
+            <h2 className="mb-4 text-center text-xl font-bold text-primary">
               {tafsirResource.name}
             </h2>
           )}
@@ -35,7 +35,7 @@ export const TafsirViewer = ({ verse, tafsirResource, tafsirHtml }: TafsirViewer
           />
         </div>
       ) : (
-        <div className="p-4 text-center text-gray-500">
+        <div className="p-4 text-center text-muted">
           Please select a tafsir from the settings panel to view commentary.
         </div>
       )}

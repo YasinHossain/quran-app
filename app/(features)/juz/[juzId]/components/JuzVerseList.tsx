@@ -19,7 +19,7 @@ export function JuzVerseList({
   const { t } = useTranslation();
 
   if (verses.length === 0) {
-    return <div className="text-center py-20 text-gray-500">{t('no_verses_found_in_juz')}</div>;
+    return <div className="text-center py-20 text-muted">{t('no_verses_found_in_juz')}</div>;
   }
 
   return (
@@ -29,7 +29,7 @@ export function JuzVerseList({
       ))}
       <div ref={loadMoreRef} className="py-4 text-center">
         {isValidating && <span className="text-teal-600">{t('loading')}</span>}
-        {isReachingEnd && <span className="text-gray-500">{t('end_of_juz')}</span>}
+        {isReachingEnd && <span className="text-muted">{t('end_of_juz')}</span>}
       </div>
     </>
   );

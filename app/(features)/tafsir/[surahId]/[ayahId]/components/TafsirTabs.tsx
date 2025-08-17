@@ -56,14 +56,14 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
 
   if (!tabs.length) {
     return (
-      <div className="p-4 text-center text-gray-500">
+      <div className="p-4 text-center text-muted">
         No tafsir resources available. Please check your settings.
       </div>
     );
   }
 
   if (!activeId) {
-    return <div className="p-4 text-center text-gray-500">Loading tafsir...</div>;
+    return <div className="p-4 text-center text-muted">Loading tafsir...</div>;
   }
 
   const activeTab = tabs.find((t) => t.id === activeId);
@@ -80,7 +80,7 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
             className={`flex-1 text-center py-3 px-5 rounded-full text-sm font-semibold transition-colors whitespace-nowrap ${
               activeId === t.id
                 ? theme === 'light'
-                  ? 'bg-white shadow text-slate-900'
+                  ? 'bg-surface shadow text-slate-900'
                   : 'bg-slate-700 text-white shadow'
                 : theme === 'light'
                   ? 'text-slate-500 hover:text-slate-800'
@@ -92,9 +92,7 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
         ))}
       </div>
       <div className="p-4 mt-4">
-        <h2 className="mb-8 text-center text-xl font-bold text-[var(--foreground)]">
-          {activeTab?.name}
-        </h2>
+        <h2 className="mb-8 text-center text-xl font-bold text-primary">{activeTab?.name}</h2>
         {loading[activeId] ? (
           <div className="flex justify-center py-4">
             <Spinner className="h-5 w-5 text-emerald-600" />

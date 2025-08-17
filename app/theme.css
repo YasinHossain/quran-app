@@ -1,6 +1,7 @@
 :root {
   --color-surface: 247 249 249;
   --color-text: 55 65 81;
+  --color-text-muted: 107 114 128;
   --color-accent: 13 148 136;
   --color-accent-hover: 15 118 110;
   --color-border: 229 231 235;
@@ -16,6 +17,7 @@
 .dark {
   --color-surface: 26 32 44;
   --color-text: 209 213 219;
+  --color-text-muted: 156 163 175;
   --color-accent: 13 148 136;
   --color-accent-hover: 15 118 110;
   --color-border: 75 85 99;

@@ -26,7 +26,7 @@ export default function HomePage() {
 
   return (
     <div
-      className={`relative h-screen flex flex-col ${theme === 'light' ? 'bg-white text-slate-900' : 'bg-transparent dark:text-[var(--foreground)]'} overflow-hidden`}
+      className={`relative h-screen flex flex-col ${theme === 'light' ? 'bg-surface text-slate-900' : 'bg-transparent '} overflow-hidden`}
     >
       <HomePageBackground />
 

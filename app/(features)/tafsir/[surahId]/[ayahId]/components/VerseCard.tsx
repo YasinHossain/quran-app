@@ -67,7 +67,7 @@ export default function VerseCard({ verse }: VerseCardProps) {
   }, [addBookmark, removeBookmark, findBookmark, verse.id]);
 
   return (
-    <div className="relative flex rounded-md border bg-white p-6 shadow">
+    <div className="relative flex rounded-md border bg-surface p-6 shadow">
       <VerseActions
         verseKey={verse.verse_key}
         isPlaying={isPlaying}
@@ -75,7 +75,7 @@ export default function VerseCard({ verse }: VerseCardProps) {
         isBookmarked={isVerseBookmarked}
         onPlayPause={handlePlayPause}
         onBookmark={handleBookmark}
-        className="mr-4 w-14 pt-2 text-gray-500"
+        className="mr-4 w-14 pt-2 text-muted"
       />
            {' '}
       <div className="flex-grow space-y-6">

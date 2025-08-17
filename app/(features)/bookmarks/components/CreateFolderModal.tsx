@@ -37,16 +37,14 @@ export const CreateFolderModal = ({ isOpen, onClose }: CreateFolderModalProps) =
             initial={{ scale: 0.9, y: 20 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.9, y: 20 }}
-            className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800"
+            className="relative w-full max-w-md rounded-lg bg-surface p-6 shadow-xl "
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Create New Folder
-              </h2>
+              <h2 className="text-lg font-semibold text-primary ">Create New Folder</h2>
               <button
                 onClick={onClose}
-                className="rounded-full p-1 text-gray-500 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-700"
+                className="rounded-full p-1 text-muted hover:bg-gray-200  hover:bg-surface/50"
               >
                 <CloseIcon size={20} />
               </button>
@@ -58,8 +56,7 @@ export const CreateFolderModal = ({ isOpen, onClose }: CreateFolderModalProps) =
                 value={folderName}
                 onChange={(e) => setFolderName(e.target.value)}
                 placeholder="Enter folder name"
-                className="w-full rounded-md border-gray-300 bg-gray-100 px-4 py-2 text-sm focus:border-teal-500 focus:ring-teal-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                autoFocus
+                className="w-full rounded-md border-gray-300 bg-gray-100 px-4 py-2 text-sm focus:border-teal-500 focus:ring-teal-500 dark:border-gray-600  "
               />
               <div className="mt-4 flex justify-end">
                 <button

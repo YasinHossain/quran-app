@@ -44,8 +44,8 @@ export default function SurahPage({ params }: SurahPageProps) {
   } = useSurahPanels({ translationOptions, wordLanguageOptions, settings });
 
   return (
-    <div className="flex flex-grow bg-white dark:bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden">
-      <main className="flex-grow bg-white dark:bg-[var(--background)] p-6 lg:p-10 overflow-y-auto homepage-scrollable-area">
+    <div className="flex flex-grow bg-surface text-primary font-sans overflow-hidden">
+      <main className="flex-grow bg-surface section overflow-y-auto homepage-scrollable-area">
         <SurahVerseList
           verses={verses}
           isLoading={isLoading}

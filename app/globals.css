@@ -29,6 +29,16 @@
   }
 }
 
+@layer components {
+  .section {
+    @apply p-6 lg:p-10;
+  }
+
+  .card {
+    @apply rounded-lg bg-surface p-4 shadow-sm;
+  }
+}
+
 /* ===== Custom Range Slider Styles ===== */
 input[type='range'] {
   -webkit-appearance: none;

@@ -59,9 +59,7 @@ export const CleanSectionHeader = ({
             )}
           </div>
           {subtitle && (
-            <p className="text-gray-600 dark:text-gray-300 font-medium text-lg leading-relaxed max-w-2xl">
-              {subtitle}
-            </p>
+            <p className="text-muted  font-medium text-lg leading-relaxed max-w-2xl">{subtitle}</p>
           )}
         </div>
 
@@ -112,22 +110,22 @@ export const CleanFolderCard = ({
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-white dark:bg-teal-900/50 shadow-sm border border-gray-200 dark:border-teal-600">
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-surface dark:bg-teal-900/50 shadow-sm border border-gray-200 dark:border-teal-600">
             <FolderIcon size={24} className="text-teal-600 dark:text-teal-400" />
           </div>
           <div>
             <h3 className="bm-heading text-lg line-clamp-1">{name}</h3>
-            <p className="text-gray-500 dark:text-gray-400 text-sm">
+            <p className="text-muted  text-sm">
               {count} {count === 1 ? 'bookmark' : 'bookmarks'}
             </p>
           </div>
         </div>
 
         <button
-          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-full p-2 hover:bg-white/50 dark:hover:bg-gray-800/50"
+          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-full p-2 hover:bg-surface/50 hover:bg-surface/50"
           onClick={(e) => e.stopPropagation()}
         >
-          <EllipsisHIcon size={18} className="text-gray-500 dark:text-gray-300" />
+          <EllipsisHIcon size={18} className="text-muted " />
         </button>
       </div>
 
@@ -137,7 +135,7 @@ export const CleanFolderCard = ({
           {preview.slice(0, 2).map((text, index) => (
             <div
               key={index}
-              className="text-gray-500 dark:text-gray-400 text-sm line-clamp-1 px-2 py-1 bg-white/50 dark:bg-gray-800/50 rounded"
+              className="text-muted  text-sm line-clamp-1 px-2 py-1 bg-surface/50  rounded"
             >
               {text}
             </div>
@@ -207,7 +205,7 @@ export const CleanBookmarkListView = ({ folder, onBack }: CleanBookmarkListViewP
                   <div className="flex items-center gap-2">
                     <span className="bm-badge bm-badge-general">Verse {bookmark.verseId}</span>
                   </div>
-                  <span className="text-xs text-emerald-600 dark:text-emerald-400 bg-white/50 dark:bg-emerald-900/30 px-2 py-1 rounded">
+                  <span className="text-xs text-emerald-600 dark:text-emerald-400 bg-surface/50 dark:bg-emerald-900/30 px-2 py-1 rounded">
                     {new Date(bookmark.createdAt).toLocaleDateString()}
                   </span>
                 </div>
@@ -227,13 +225,13 @@ export const CleanBookmarkListView = ({ folder, onBack }: CleanBookmarkListViewP
           </motion.ul>
         ) : (
           <div className="bm-section text-center">
-            <div className="bm-card bg-gray-50 dark:bg-gray-800/50 border-dashed border-gray-300 dark:border-gray-600">
+            <div className="bm-card bg-gray-50  border-dashed border-gray-300 dark:border-gray-600">
               <div className="py-12">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                  <FolderIcon size={32} className="text-gray-500 dark:text-gray-300" />
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-200  flex items-center justify-center">
+                  <FolderIcon size={32} className="text-muted " />
                 </div>
                 <h3 className="bm-heading text-lg mb-2">This folder is empty</h3>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-muted ">
                   Start adding verses to this folder while reading. You can bookmark verses by
                   clicking the bookmark icon next to any verse.
                 </p>

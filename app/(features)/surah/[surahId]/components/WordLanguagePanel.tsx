@@ -25,15 +25,15 @@ const WORD_LANGUAGES = [
   { id: 50, name: 'Tamil', code: 'ta' as LanguageCode },
 ];
 
-export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({ 
-  isOpen, 
-  onClose, 
-  renderMode = 'panel' 
+export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
+  isOpen,
+  onClose,
+  renderMode = 'panel',
 }) => {
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
   const { theme } = useTheme();
-  
+
   const listContainerRef = useRef<HTMLDivElement>(null);
   const [listHeight, setListHeight] = useState(0);
 
@@ -47,7 +47,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
 
   useEffect(() => {
     if (renderMode === 'content') return; // Skip resize observer for content mode
-    
+
     const element = listContainerRef.current;
     if (!element || !isOpen) return;
 
@@ -101,7 +101,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
                   : 'bg-teal-50 border-teal-200'
                 : theme === 'dark'
                   ? 'bg-slate-800/50 border-slate-700 hover:bg-slate-700/50'
-                  : 'bg-white border-slate-200 hover:bg-slate-50'
+                  : 'bg-surface border-slate-200 hover:bg-slate-50'
             }`}
           >
             <div className="flex-1 min-w-0 pr-3">
@@ -112,7 +112,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
                       ? 'text-teal-200'
                       : 'text-teal-800'
                     : theme === 'dark'
-                      ? 'text-[var(--foreground)]'
+                      ? 'text-primary'
                       : 'text-slate-800'
                 }`}
                 title={language.name}
@@ -135,11 +135,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
 
   // Content mode - render just the list for use inside SettingsSidebar
   if (renderMode === 'content') {
-    return (
-      <div className="flex-grow p-4 space-y-4">
-        {renderLanguageList()}
-      </div>
-    );
+    return <div className="flex-grow p-4 space-y-4">{renderLanguageList()}</div>;
   }
 
   // Panel mode - render as full slide-over panel
@@ -148,7 +144,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
       data-testid="word-language-panel"
       className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
-      } ${theme === 'dark' ? 'bg-[var(--background)] text-[var(--foreground)]' : 'bg-white text-slate-800'}`}
+      } ${theme === 'dark' ? 'bg-surface text-primary' : 'bg-surface text-slate-800'}`}
     >
       <header
         className={`flex items-center p-4 border-b ${
@@ -163,7 +159,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className={`h-6 w-6 ${theme === 'dark' ? 'text-[var(--foreground)]' : 'text-slate-600'}`}
+            className={`h-6 w-6 ${theme === 'dark' ? 'text-primary' : 'text-slate-600'}`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -174,7 +170,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
         </button>
         <h2
           className={`text-lg font-bold text-center flex-grow ${
-            theme === 'dark' ? 'text-[var(--foreground)]' : 'text-slate-800'
+            theme === 'dark' ? 'text-primary' : 'text-slate-800'
           }`}
         >
           {t('word_by_word_panel_title')}
@@ -183,9 +179,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
 
       <div className="flex-1 flex flex-col min-h-0">
         <div className="flex-1 overflow-y-auto" ref={listContainerRef}>
-          <div className="px-4 pb-4 pt-4">
-            {renderLanguageList()}
-          </div>
+          <div className="px-4 pb-4 pt-4">{renderLanguageList()}</div>
         </div>
       </div>
     </div>

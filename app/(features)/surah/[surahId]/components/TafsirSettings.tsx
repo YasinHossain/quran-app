@@ -45,7 +45,7 @@ export const TafsirSettings = ({
             />
             <div>
               <div className="flex justify-between mb-1 text-sm">
-                <label className="text-[var(--foreground)]">{t('tafsir_font_size')}</label>
+                <label className="text-primary">{t('tafsir_font_size')}</label>
                 <span className="font-semibold text-teal-700">{settings.tafsirFontSize}</span>
               </div>
               <input

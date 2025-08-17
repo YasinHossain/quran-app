@@ -42,11 +42,11 @@ export const SurahVerseList = ({
           ))}
           <div ref={loadMoreRef} className="py-4 text-center space-x-2">
             {isValidating && <Spinner className="inline h-5 w-5 text-teal-600" />}
-            {isReachingEnd && <span className="text-gray-500">{t('end_of_surah')}</span>}
+            {isReachingEnd && <span className="text-muted">{t('end_of_surah')}</span>}
           </div>
         </>
       ) : (
-        <div className="text-center py-20 text-gray-500">{t('no_verses_found')}</div>
+        <div className="text-center py-20 text-muted">{t('no_verses_found')}</div>
       )}
     </div>
   );

@@ -24,24 +24,24 @@ export const TafsirPanels = ({ verseKey, tafsirIds }: TafsirPanelsProps) => {
               onClick={() => togglePanel(id)}
               className="w-full flex items-center justify-between py-3 text-left"
             >
-              <span className="font-semibold text-[var(--foreground)]">Tafsir {id}</span>
+              <span className="font-semibold text-primary">Tafsir {id}</span>
               <ChevronDownIcon
                 size={16}
-                className={`text-gray-500 transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
+                className={`text-muted transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
               />
             </button>
             <div
               className={`grid transition-all duration-300 ease-in-out ${open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
             >
               <div className="overflow-hidden">
-                <div className="bg-teal-50 dark:bg-slate-800 rounded-md p-4 max-h-64 overflow-y-auto">
+                <div className="bg-teal-50  rounded-md p-4 max-h-64 overflow-y-auto">
                   {loading[id] ? (
                     <div className="flex justify-center py-4">
                       <Spinner className="h-5 w-5 text-teal-600" />
                     </div>
                   ) : (
                     <div
-                      className="prose max-w-none text-[var(--foreground)] whitespace-pre-wrap"
+                      className="prose max-w-none text-primary whitespace-pre-wrap"
                       style={{ fontSize: `${settings.tafsirFontSize}px` }}
                       dangerouslySetInnerHTML={{
                         __html: applyArabicFont(tafsirTexts[id] || '', settings.arabicFontFace),

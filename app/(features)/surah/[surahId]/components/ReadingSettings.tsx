@@ -21,7 +21,7 @@ export const ReadingSettings = ({ isOpen = false, onToggle }: ReadingSettingsPro
       isOpen={isOpen}
       onToggle={onToggle || (() => {})}
     >
-      <div className="text-center py-8 text-gray-500">Coming soon...</div>
+      <div className="text-center py-8 text-muted">Coming soon...</div>
     </CollapsibleSection>
   );
 };

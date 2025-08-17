@@ -143,7 +143,7 @@ describe('BookmarkContext with Folders', () => {
       expect(folders).toHaveLength(1);
       expect(folders[0].name).toBe('Uncategorized');
       expect(folders[0].bookmarks).toHaveLength(2);
-      expect(folders[0].bookmarks.map(b => b.verseId)).toEqual(['1:1', '1:2']);
+      expect(folders[0].bookmarks.map((b) => b.verseId)).toEqual(['1:1', '1:2']);
 
       // Check that the old key has been removed
       expect(localStorage.getItem(OLD_BOOKMARKS_STORAGE_KEY)).toBeNull();

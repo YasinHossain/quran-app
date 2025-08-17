@@ -62,7 +62,7 @@ const EmptyStateBase = ({
       transition={{ delay: 0.3, duration: 0.5 }}
       className="max-w-md"
     >
-      <h3 className="text-xl font-semibold text-[var(--foreground)] mb-3">{title}</h3>
+      <h3 className="text-xl font-semibold text-primary mb-3">{title}</h3>
       <p className="text-muted leading-relaxed mb-6">{description}</p>
     </motion.div>
 
@@ -138,7 +138,7 @@ export const EmptyFolderState = () => (
           transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
           className="w-24 h-24 rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600"
         >
-          <BookmarkIcon size={32} className="text-gray-400 dark:text-gray-500" />
+          <BookmarkIcon size={32} className="text-muted " />
         </motion.div>
         {/* Plus indicator */}
         <motion.div

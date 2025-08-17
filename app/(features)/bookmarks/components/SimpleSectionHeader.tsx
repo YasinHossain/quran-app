@@ -49,9 +49,7 @@ export const SimpleSectionHeader = ({
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div className="space-y-2">
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
-              {title}
-            </h1>
+            <h1 className="text-3xl font-bold text-primary  tracking-tight">{title}</h1>
             {count !== undefined && (
               <motion.span
                 initial={{ scale: 0 }}
@@ -63,11 +61,7 @@ export const SimpleSectionHeader = ({
               </motion.span>
             )}
           </div>
-          {subtitle && (
-            <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed max-w-2xl">
-              {subtitle}
-            </p>
-          )}
+          {subtitle && <p className="text-muted  text-lg leading-relaxed max-w-2xl">{subtitle}</p>}
         </div>
 
         {action && (

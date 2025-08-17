@@ -16,7 +16,7 @@ export default function ThemedCard({ href, children, className = '' }: ThemedCar
   return (
     <Link
       href={href}
-      className={`group p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 content-visibility-auto animate-fade-in-up ${theme === 'light' ? 'bg-white/60' : 'bg-slate-800/40'} ${className}`}
+      className={`group p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 content-visibility-auto animate-fade-in-up ${theme === 'light' ? 'bg-surface/60' : 'bg-slate-800/40'} ${className}`}
     >
       {children}
     </Link>
