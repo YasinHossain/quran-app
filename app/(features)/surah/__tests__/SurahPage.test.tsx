@@ -53,6 +53,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   (api.getTranslations as jest.Mock).mockResolvedValue([]);
   (api.getWordTranslations as jest.Mock).mockResolvedValue([]);
+  (api.getSurahCoverUrl as jest.Mock).mockResolvedValue('');
   (useSWRInfinite as jest.Mock).mockImplementation(jest.requireActual('swr/infinite').default);
 });
 

@@ -1,19 +1,12 @@
 'use client';
 
-import React, { useEffect, useState, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Verse } from './components/Verse';
+import React from 'react';
 import { SettingsSidebar } from './components/SettingsSidebar';
-import { Verse as VerseType } from '@/types';
-import { getVersesByChapter, getSurahCoverUrl } from '@/lib/api';
-import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
-import type { LanguageCode } from '@/lib/text/languageCodes';
-import Spinner from '@/app/shared/Spinner';
-import { QuranAudioPlayer } from '@/app/shared/player';
-import { buildAudioUrl } from '@/lib/audio/reciters';
+import { getVersesByChapter } from '@/lib/api';
 import useVerseListing from '@/app/(features)/surah/hooks/useVerseListing';
-
-const DEFAULT_WORD_TRANSLATION_ID = 85;
+import useSurahPanels from '@/app/(features)/surah/hooks/useSurahPanels';
+import SurahAudioPlayer from './components/SurahAudioPlayer';
+import SurahVerseList from './components/SurahVerseList';
 
 interface SurahPageProps {
   params: Promise<{ surahId: string }>;
@@ -21,10 +14,6 @@ interface SurahPageProps {
 
 export default function SurahPage({ params }: SurahPageProps) {
   const { surahId } = React.use(params);
-  const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
-  const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
-  const [coverUrl, setCoverUrl] = useState<string | null>(null);
-  const { t } = useTranslation();
 
   const {
     error,
@@ -35,9 +24,7 @@ export default function SurahPage({ params }: SurahPageProps) {
     loadMoreRef,
     translationOptions,
     wordLanguageOptions,
-    wordLanguageMap,
     settings,
-    setSettings,
     activeVerse,
     reciter,
     isPlayerVisible,
@@ -45,85 +32,48 @@ export default function SurahPage({ params }: SurahPageProps) {
     handlePrev,
   } = useVerseListing({ id: surahId, lookup: getVersesByChapter });
 
-  const selectedTranslationName = useMemo(
-    () =>
-      translationOptions.find((o) => o.id === settings.translationId)?.name ||
-      t('select_translation'),
-    [settings.translationId, translationOptions, t]
-  );
-
-  const selectedWordLanguageName = useMemo(
-    () =>
-      wordLanguageOptions.find(
-        (o) =>
-          (LANGUAGE_CODES as Record<string, LanguageCode>)[o.name.toLowerCase()] ===
-          settings.wordLang
-      )?.name || t('select_word_translation'),
-    [settings.wordLang, wordLanguageOptions, t]
-  );
-
-  useEffect(() => {
-    if (activeVerse) {
-      const surahNumber = parseInt(activeVerse.verse_key.split(':')[0], 10);
-      getSurahCoverUrl(surahNumber).then(setCoverUrl);
-    }
-  }, [activeVerse]);
-
-  const track = activeVerse
-    ? {
-        id: activeVerse.id.toString(),
-        title: `Verse ${activeVerse.verse_key}`,
-        artist: reciter.name,
-        coverUrl: coverUrl || '',
-        durationSec: 0,
-        src: buildAudioUrl(activeVerse.verse_key, reciter.path),
-      }
-    : null;
+  const {
+    isTranslationPanelOpen,
+    openTranslationPanel,
+    closeTranslationPanel,
+    isWordLanguagePanelOpen,
+    openWordLanguagePanel,
+    closeWordLanguagePanel,
+    selectedTranslationName,
+    selectedWordLanguageName,
+  } = useSurahPanels({ translationOptions, wordLanguageOptions, settings });
 
   return (
     <div className="flex flex-grow bg-white dark:bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden">
       <main className="flex-grow bg-white dark:bg-[var(--background)] p-6 lg:p-10 overflow-y-auto homepage-scrollable-area">
-        <div className="w-full relative">
-          {isLoading ? (
-            <div className="flex justify-center py-20">
-              <Spinner className="h-8 w-8 text-teal-600" />
-            </div>
-          ) : error ? (
-            <div className="text-center py-20 text-red-600 bg-red-50 p-4 rounded-lg">{error}</div>
-          ) : verses.length > 0 ? (
-            <>
-              {verses.map((v: VerseType) => (
-                <React.Fragment key={v.id}>
-                  <Verse verse={v} />
-                </React.Fragment>
-              ))}
-              <div ref={loadMoreRef} className="py-4 text-center space-x-2">
-                {isValidating && <Spinner className="inline h-5 w-5 text-teal-600" />}
-                {isReachingEnd && <span className="text-gray-500">{t('end_of_surah')}</span>}
-              </div>
-            </>
-          ) : (
-            <div className="text-center py-20 text-gray-500">{t('no_verses_found')}</div>
-          )}
-        </div>
+        <SurahVerseList
+          verses={verses}
+          isLoading={isLoading}
+          error={error}
+          loadMoreRef={loadMoreRef}
+          isValidating={isValidating}
+          isReachingEnd={isReachingEnd}
+        />
       </main>
       <SettingsSidebar
-        onTranslationPanelOpen={() => setIsTranslationPanelOpen(true)}
-        onWordLanguagePanelOpen={() => setIsWordPanelOpen(true)}
+        onTranslationPanelOpen={openTranslationPanel}
+        onWordLanguagePanelOpen={openWordLanguagePanel}
         onReadingPanelOpen={() => {}}
         selectedTranslationName={selectedTranslationName}
         selectedWordLanguageName={selectedWordLanguageName}
         isTranslationPanelOpen={isTranslationPanelOpen}
-        onTranslationPanelClose={() => setIsTranslationPanelOpen(false)}
-        isWordLanguagePanelOpen={isWordPanelOpen}
-        onWordLanguagePanelClose={() => setIsWordPanelOpen(false)}
+        onTranslationPanelClose={closeTranslationPanel}
+        isWordLanguagePanelOpen={isWordLanguagePanelOpen}
+        onWordLanguagePanelClose={closeWordLanguagePanel}
         pageType="verse"
       />
-      {activeVerse && isPlayerVisible && (
-        <div className="fixed bottom-0 left-0 right-0 p-4 bg-transparent z-50">
-          <QuranAudioPlayer track={track} onNext={handleNext} onPrev={handlePrev} />
-        </div>
-      )}
+      <SurahAudioPlayer
+        activeVerse={activeVerse}
+        reciter={reciter}
+        isVisible={isPlayerVisible}
+        onNext={handleNext}
+        onPrev={handlePrev}
+      />
     </div>
   );
 }
