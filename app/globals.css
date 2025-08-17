@@ -1,9 +1,6 @@
 /* ===== Tailwind Import (Required for Tailwind classes) ===== */
 @import 'tailwindcss';
 
-/* ===== Bookmark Base Styles ===== */
-@import './(features)/bookmarks/styles/bookmark-base.css';
-
 :root {
   --background: #ffffff;
   --foreground: #374151;

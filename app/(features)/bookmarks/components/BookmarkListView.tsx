@@ -50,23 +50,23 @@ export const BookmarkListView = ({ folder, onBack }: BookmarkListViewProps) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="group cursor-pointer rounded-xl border-2 border-emerald-200 dark:border-emerald-700 bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-800/20 dark:to-emerald-700/20 p-6 hover:border-emerald-300 dark:hover:border-emerald-500 hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02]"
+                className="group cursor-pointer rounded-xl border-2 border-bookmark-general bg-card-bg p-6 hover:border-bookmark-general hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02]"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-200 dark:bg-emerald-800/50 text-emerald-800 dark:text-emerald-200">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-card-bg text-bookmark-general border border-bookmark-general">
                       Verse {bookmark.verseId}
                     </span>
                   </div>
-                  <span className="text-xs text-emerald-600 dark:text-emerald-400 bg-white/50 dark:bg-emerald-900/30 px-2 py-1 rounded">
+                  <span className="text-xs text-bookmark-general bg-card-bg px-2 py-1 rounded">
                     {new Date(bookmark.createdAt).toLocaleDateString()}
                   </span>
                 </div>
 
                 {/* Placeholder content - will be replaced with actual verse content */}
                 <div className="space-y-2">
-                  <div className="h-4 bg-emerald-200 dark:bg-emerald-800/30 rounded animate-pulse" />
-                  <div className="h-3 bg-emerald-100 dark:bg-emerald-900/20 rounded animate-pulse w-3/4" />
+                  <div className="h-4 bg-bookmark-general opacity-20 rounded animate-pulse" />
+                  <div className="h-3 bg-bookmark-general opacity-10 rounded animate-pulse w-3/4" />
                 </div>
 
                 <div className="mt-4 flex items-center justify-between text-xs text-emerald-600 dark:text-emerald-400">
