@@ -1,18 +1,24 @@
 'use client';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useTheme } from '@/app/providers/ThemeContext';
-import surahsData from '@/data/surahs.json';
+import { getSurahList } from '@/lib/api';
 import type { Surah } from '@/types';
+import Spinner from '@/app/shared/Spinner';
 
 interface SurahTabProps {
   searchQuery: string;
 }
 
-const allSurahs: Surah[] = surahsData;
-
 export default function SurahTab({ searchQuery }: SurahTabProps) {
   const { theme } = useTheme();
+  const [allSurahs, setAllSurahs] = useState<Surah[]>([]);
+
+  useEffect(() => {
+    getSurahList()
+      .then(setAllSurahs)
+      .catch((err) => console.error(err));
+  }, []);
 
   const filteredSurahs = useMemo(() => {
     if (!searchQuery) return allSurahs;
@@ -21,7 +27,15 @@ export default function SurahTab({ searchQuery }: SurahTabProps) {
         surah.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         surah.number.toString().includes(searchQuery)
     );
-  }, [searchQuery]);
+  }, [searchQuery, allSurahs]);
+
+  if (allSurahs.length === 0) {
+    return (
+      <div className="flex justify-center py-10 col-span-full">
+        <Spinner className="h-6 w-6 text-emerald-600" />
+      </div>
+    );
+  }
 
   if (filteredSurahs.length === 0) {
     return (

@@ -1,13 +1,9 @@
 import Link from 'next/link';
-import surahData from '@/data/surahs.json';
+import { getSurahList } from '@/lib/api';
+import type { Surah } from '@/types';
 
-interface SurahSummary {
-  number: number;
-  name: string;
-}
-
-export default function TafsirIndexPage() {
-  const surahs = surahData as SurahSummary[];
+export default async function TafsirIndexPage() {
+  const surahs: Surah[] = await getSurahList();
   return (
     <div className="p-6">
       <h1 className="text-xl font-bold mb-4">Tafsir</h1>

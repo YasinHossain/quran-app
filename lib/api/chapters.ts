@@ -1,4 +1,4 @@
-import { Chapter } from '@/types';
+import { Chapter, Surah } from '@/types';
 import { apiFetch } from './client';
 import { surahImageMap } from '@/app/(features)/surah/lib/surahImageMap';
 
@@ -9,6 +9,17 @@ export async function getChapters(): Promise<Chapter[]> {
     'Failed to fetch chapters'
   );
   return data.chapters as Chapter[];
+}
+
+export async function getSurahList(): Promise<Surah[]> {
+  const chapters = await getChapters();
+  return chapters.map((c) => ({
+    number: c.id,
+    name: c.name_simple,
+    arabicName: c.name_arabic,
+    verses: c.verses_count,
+    meaning: c.translated_name?.name ?? '',
+  }));
 }
 
 /**

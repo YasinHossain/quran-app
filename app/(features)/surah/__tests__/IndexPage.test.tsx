@@ -2,6 +2,17 @@ import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders
 import SurahIndexPage from '@/app/(features)/surah/page';
 
 jest.mock('next/link', () => ({ href, children }: any) => <a href={href}>{children}</a>);
+jest.mock('@/lib/api', () => ({
+  getSurahList: jest.fn().mockResolvedValue([
+    {
+      number: 1,
+      name: 'Al-Fatihah',
+      arabicName: 'الفاتحة',
+      verses: 7,
+      meaning: 'The Opening',
+    },
+  ]),
+}));
 
 beforeAll(() => {
   Object.defineProperty(window, 'matchMedia', {
@@ -21,8 +32,8 @@ beforeAll(() => {
 
 const renderPage = () => renderWithProviders(<SurahIndexPage />);
 
-test('renders list of surah links', () => {
-  renderPage();
+test('renders list of surah links', async () => {
+  await renderPage();
   const link = screen.getByText('Al-Fatihah').closest('a');
   expect(link).toHaveAttribute('href', '/surah/1');
 });

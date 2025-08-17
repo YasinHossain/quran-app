@@ -2,12 +2,13 @@
 
 This directory stores static Quranic metadata used by the app.
 
-- `surahs.json` lists every surah with its number, Arabic and English names, verse count and meaning.
 - `juz.json` defines the 30 juz divisions and the surah/ayah ranges they cover.
+
+Surah information is fetched from the Quran.com API at runtime and is no longer bundled with the app.
 
 ## Regenerating data
 
-Run `npx ts-node scripts/fetchData.ts` to rebuild both files. The script gathers metadata from the `quran-meta` package and writes updated `surahs.json` and `juz.json` files.
+Run `npx ts-node scripts/fetchData.ts` to rebuild `juz.json`. The script gathers metadata from the `quran-meta` package and writes the updated file.
 
 ## Tests
 

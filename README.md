@@ -69,7 +69,7 @@ Regenerate the bundled Quran metadata with:
 npx ts-node scripts/fetchData.ts
 ```
 
-This downloads the latest surah and juz information into `data/surahs.json` and `data/juz.json`.
+This downloads the latest juz information into `data/juz.json`. Surah metadata is fetched from the Quran.com API at runtime.
 
 ## Custom Arabic Fonts
 

@@ -1,14 +1,21 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSidebar } from '@/app/providers/SidebarContext';
 import type { Surah } from '@/types';
-import surahs from '@/data/surahs.json';
+import { getSurahList } from '@/lib/api';
 
 export const useVerseNavigation = (surahId: string, ayahId: string) => {
   const router = useRouter();
   const { setSurahListOpen } = useSidebar();
 
-  const surahList = surahs as Surah[];
+  const [surahList, setSurahList] = useState<Surah[]>([]);
+
+  useEffect(() => {
+    getSurahList()
+      .then(setSurahList)
+      .catch((err) => console.error(err));
+  }, []);
+
   const totalSurahs = surahList.length;
   const currentSurahIndex = Number(surahId) - 1;
   const currentAyahNum = Number(ayahId);
@@ -16,12 +23,12 @@ export const useVerseNavigation = (surahId: string, ayahId: string) => {
   const prev =
     currentAyahNum > 1
       ? { surahId, ayahId: currentAyahNum - 1 }
-      : currentSurahIndex > 0
+      : currentSurahIndex > 0 && surahList.length > 0
         ? { surahId: String(Number(surahId) - 1), ayahId: surahList[currentSurahIndex - 1].verses }
         : null;
 
   const next =
-    currentAyahNum < surahList[currentSurahIndex].verses
+    surahList.length > 0 && currentAyahNum < surahList[currentSurahIndex].verses
       ? { surahId, ayahId: currentAyahNum + 1 }
       : currentSurahIndex < totalSurahs - 1
         ? { surahId: String(Number(surahId) + 1), ayahId: 1 }

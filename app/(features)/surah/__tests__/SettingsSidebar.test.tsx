@@ -67,9 +67,14 @@ describe('SettingsSidebar interactions', () => {
     await userEvent.click(screen.getByLabelText('Open Settings'));
     expect(await screen.findByText('reading_setting')).toBeInTheDocument();
 
-    await userEvent.click(screen.getAllByRole('button', { name: 'KFGQPC Uthman Taha' })[1]);
-    await userEvent.click(screen.getAllByRole('button', { name: 'IndoPak' })[0]);
+    // Switch font tab
+    const [fontButton] = screen.getAllByRole('button', { name: 'KFGQPC Uthman Taha' });
+    await userEvent.click(fontButton);
 
+    await userEvent.click(screen.getByRole('button', { name: 'IndoPak' }));
+    expect(screen.getByText('Noto Nastaliq Urdu')).toBeInTheDocument();
+    
+    // Close sidebar
     const backButtons = screen.getAllByRole('button', { name: 'Back' });
     await userEvent.click(backButtons[1]);
   });
@@ -120,7 +125,8 @@ describe('SettingsSidebar interactions', () => {
     renderWithProviders(<TestComponent />);
 
     await userEvent.click(screen.getByLabelText('Open Settings'));
-    await userEvent.click(screen.getAllByRole('button', { name: 'Bangla' })[0]);
+    const [banglaButton] = await screen.findAllByRole('button', { name: 'Bangla' });
+    await userEvent.click(banglaButton);
     expect(screen.getAllByText('Bangla').length).toBeGreaterThan(1);
   });
 });

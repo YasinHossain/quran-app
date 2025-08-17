@@ -1,17 +1,14 @@
 'use client';
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Verse, Word } from '@/types';
-import { getRandomVerse } from '@/lib/api';
+import { getRandomVerse, getSurahList } from '@/lib/api';
 import { useSettings } from '@/app/providers/SettingsContext';
 import Spinner from '@/app/shared/Spinner';
-import surahsData from '@/data/surahs.json';
 import type { Surah } from '@/types';
 import { useTheme } from '@/app/providers/ThemeContext';
 import { applyTajweed } from '@/lib/text/tajweed';
 import { stripHtml } from '@/lib/text/stripHtml';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
-
-const surahs: Surah[] = surahsData;
 
 export default function VerseOfDay() {
   const { settings } = useSettings();
@@ -20,6 +17,7 @@ export default function VerseOfDay() {
   const [verseQueue, setVerseQueue] = useState<Verse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [surahs, setSurahs] = useState<Surah[]>([]);
 
   const abortRef = useRef(false);
 
@@ -79,6 +77,12 @@ export default function VerseOfDay() {
       prefetchVerse();
     }
   }, [verseQueue, prefetchVerse]);
+
+  useEffect(() => {
+    getSurahList()
+      .then(setSurahs)
+      .catch((err) => console.error(err));
+  }, []);
 
   let content: React.ReactNode = null;
   if (loading) {

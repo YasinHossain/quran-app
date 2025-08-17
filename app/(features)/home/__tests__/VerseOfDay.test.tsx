@@ -6,6 +6,15 @@ import { getRandomVerse } from '@/lib/api';
 
 jest.mock('@/lib/api', () => ({
   getRandomVerse: jest.fn(),
+  getSurahList: jest.fn().mockResolvedValue([
+    {
+      number: 1,
+      name: 'Al-Fatihah',
+      arabicName: 'الفاتحة',
+      verses: 7,
+      meaning: 'The Opening',
+    },
+  ]),
 }));
 
 const mockedGetRandomVerse = getRandomVerse as jest.MockedFunction<typeof getRandomVerse>;

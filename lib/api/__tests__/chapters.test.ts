@@ -1,6 +1,6 @@
-import { getChapters, getSurahCoverUrl } from '@/lib/api/chapters';
+import { getChapters, getSurahCoverUrl, getSurahList } from '@/lib/api/chapters';
 import { API_BASE_URL } from '@/lib/api';
-import { Chapter } from '@/types';
+import { Chapter, Surah } from '@/types';
 
 jest.mock('@/app/(features)/surah/lib/surahImageMap', () => ({
   surahImageMap: { 1: 'test.jpg' },
@@ -35,6 +35,42 @@ describe('getChapters', () => {
   it('throws on fetch error', async () => {
     global.fetch = jest.fn().mockResolvedValue({ ok: false, status: 500 }) as jest.Mock;
     await expect(getChapters()).rejects.toThrow('Failed to fetch chapters: 500');
+  });
+});
+
+describe('getSurahList', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('maps chapters to surah metadata', async () => {
+    const mockChapters: Chapter[] = [
+      {
+        id: 1,
+        name_simple: 'Al-Fatihah',
+        name_arabic: 'الفاتحة',
+        revelation_place: 'makkah',
+        verses_count: 7,
+        translated_name: { name: 'The Opening' },
+      },
+    ];
+
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ chapters: mockChapters }),
+    }) as jest.Mock;
+
+    const surahs = await getSurahList();
+    const expected: Surah[] = [
+      {
+        number: 1,
+        name: 'Al-Fatihah',
+        arabicName: 'الفاتحة',
+        verses: 7,
+        meaning: 'The Opening',
+      },
+    ];
+    expect(surahs).toEqual(expected);
   });
 });
 
