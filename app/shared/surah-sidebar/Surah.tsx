@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import type { Chapter } from '@/types';
 import { getJuzByPage } from '@/lib/utils/surah-navigation';
+import type { Theme } from '@/app/providers/ThemeContext';
+import { themeClass } from '@/lib/utils/themeClass';
 
 interface Props {
   chapters: Chapter[];
-  theme: string;
+  theme: Theme;
   selectedSurahId: string | null;
   setSelectedSurahId: (id: string) => void;
   setSelectedPageId: (id: string) => void;
@@ -42,20 +44,22 @@ const Surah = ({
             className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
               isActive
                 ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/30'
-                : theme === 'light'
-                  ? 'bg-white shadow hover:bg-slate-50'
-                  : 'bg-slate-800 shadow hover:bg-slate-700'
+                : themeClass(
+                    theme,
+                    'bg-white shadow hover:bg-slate-50',
+                    'bg-slate-800 shadow hover:bg-slate-700'
+                  )
             }`}
           >
             <div
               className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg shadow transition-colors ${
                 isActive
-                  ? theme === 'light'
-                    ? 'bg-gray-100 text-teal-600'
-                    : 'bg-slate-700 text-teal-400'
-                  : theme === 'light'
-                    ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
-                    : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
+                  ? themeClass(theme, 'bg-gray-100 text-teal-600', 'bg-slate-700 text-teal-400')
+                  : themeClass(
+                      theme,
+                      'bg-gray-100 text-teal-600 group-hover:bg-teal-100',
+                      'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
+                    )
               }`}
             >
               {chapter.id}
@@ -65,9 +69,7 @@ const Surah = ({
                 className={`font-bold ${
                   isActive
                     ? 'text-white'
-                    : theme === 'light'
-                      ? 'text-slate-700'
-                      : 'text-[var(--foreground)]'
+                    : themeClass(theme, 'text-slate-700', 'text-[var(--foreground)]')
                 }`}
               >
                 {chapter.name_simple}
@@ -80,9 +82,11 @@ const Surah = ({
               className={`font-amiri text-xl font-bold transition-colors ${
                 isActive
                   ? 'text-white'
-                  : theme === 'light'
-                    ? 'text-gray-500 group-hover:text-teal-600'
-                    : 'text-gray-500 group-hover:text-teal-400'
+                  : themeClass(
+                      theme,
+                      'text-gray-500 group-hover:text-teal-600',
+                      'text-gray-500 group-hover:text-teal-400'
+                    )
               }`}
             >
               {chapter.name_arabic}
