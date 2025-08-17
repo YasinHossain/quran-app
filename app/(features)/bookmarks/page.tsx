@@ -3,14 +3,12 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { FolderIcon, EllipsisHIcon, PlusIcon, PinIcon } from '@/app/shared/icons';
+import { PlusIcon, PinIcon } from '@/app/shared/icons';
 import { CreateFolderModal } from './components/CreateFolderModal';
-import { BookmarkListView } from './components/BookmarkListView';
 import BookmarkSidebar from './components/BookmarkSidebar';
 import styles from './styles';
 import {
   EmptyBookmarksState,
-  EmptyFolderState,
   EmptyPinnedState,
   EmptyLastReadState,
 } from './components/EmptyStates';
@@ -76,7 +74,7 @@ const BookmarksSection = ({
               transition={{ delay: 0.2 }}
             >
               <AnimatePresence>
-                {folders.map((folder, index) => (
+                {folders.map((folder) => (
                   <CleanFolderCard
                     key={folder.id}
                     name={folder.name}
