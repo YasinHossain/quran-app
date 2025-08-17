@@ -1,5 +1,3 @@
-import designTokens from './design-system.json' assert { type: 'json' };
-
 /** @type {import('tailwindcss').Config} */
 const config = {
   darkMode: ['class', '[data-theme="dark"]'],
@@ -11,9 +9,9 @@ const config = {
         foreground: 'var(--foreground)',
         border: 'var(--border-color)',
         accent: 'var(--accent)',
-        'accent-hover': designTokens.colors.accentHover,
+        'accent-hover': 'var(--accent-hover)',
         brand: '#009688',
-        
+
         // Semantic colors for components
         muted: 'var(--text-muted)',
         'card-bg': 'var(--card-background)',
@@ -21,13 +19,13 @@ const config = {
         success: 'var(--success)',
         warning: 'var(--warning)',
         error: 'var(--error)',
-        
+
         // Bookmark-specific colors
         'bookmark-folder': 'var(--bookmark-folder)',
         'bookmark-pinned': 'var(--bookmark-pinned)',
         'bookmark-lastread': 'var(--bookmark-lastread)',
         'bookmark-general': 'var(--bookmark-general)',
-        
+
         // Common UI colors that work with dark/light themes
         gray: {
           50: '#f9fafb',
@@ -90,23 +88,30 @@ const config = {
           900: '#064e3b',
         },
       },
-      spacing: designTokens.spacing,
-      fontFamily: {
-        base: [designTokens.typography.fontFamily, 'sans-serif'],
-      },
-      fontSize: {
-        base: designTokens.typography.fontSizeBase,
-        h1: designTokens.typography.headings.h1,
-        h2: designTokens.typography.headings.h2,
-        h3: designTokens.typography.headings.h3,
+      spacing: {
+        xs: 'var(--space-xs)',
+        sm: 'var(--space-sm)',
+        md: 'var(--space-md)',
+        lg: 'var(--space-lg)',
+        xl: 'var(--space-xl)',
       },
       borderRadius: {
-        DEFAULT: designTokens.components.borderRadius,
-        xl: '1rem',
-        '2xl': '1.5rem',
+        sm: 'var(--radius-sm)',
+        DEFAULT: 'var(--radius-md)',
+        lg: 'var(--radius-lg)',
+        xl: 'var(--radius-xl)',
+      },
+      fontFamily: {
+        base: ['var(--font-base)', 'sans-serif'],
+      },
+      fontSize: {
+        base: 'var(--text-base)',
+        h1: 'var(--text-h1)',
+        h2: 'var(--text-h2)',
+        h3: 'var(--text-h3)',
       },
       boxShadow: {
-        default: designTokens.components.shadow,
+        default: '0 1px 2px rgba(0,0,0,0.05)',
         card: '0 1px 3px rgba(0, 0, 0, 0.1)',
         modal: '0 4px 6px rgba(0, 0, 0, 0.15)',
       },

@@ -2,15 +2,15 @@
 
 /* ===== Layout Base Classes ===== */
 .bookmark-page {
-  @apply bg-white dark:bg-slate-900 min-h-screen;
+  @apply bg-background min-h-screen;
 }
 
 .bookmark-sidebar {
-  @apply bg-white dark:bg-slate-800 border-r border-gray-200 dark:border-gray-700;
+  @apply bg-background border-r border-border;
 }
 
 .bookmark-main-content {
-  @apply bg-gray-50 dark:bg-slate-900 flex-1 overflow-y-auto;
+  @apply bg-background flex-1 overflow-y-auto;
 }
 
 /* ===== Card Base Classes ===== */
@@ -45,23 +45,23 @@
 
 /* ===== Typography Classes ===== */
 .bookmark-heading {
-  @apply text-gray-900 dark:text-white font-bold tracking-tight;
+  @apply text-foreground font-bold tracking-tight;
 }
 
 .bookmark-subheading {
-  @apply text-gray-600 dark:text-gray-300 font-medium;
+  @apply text-muted font-medium;
 }
 
 .bookmark-body-text {
-  @apply text-gray-900 dark:text-white;
+  @apply text-foreground;
 }
 
 .bookmark-muted-text {
-  @apply text-gray-600 dark:text-gray-300;
+  @apply text-muted;
 }
 
 .bookmark-caption {
-  @apply text-gray-500 dark:text-gray-400 text-sm;
+  @apply text-muted text-sm;
 }
 
 /* ===== Badge Classes ===== */

@@ -11,18 +11,23 @@ import {
   EmptyBookmarksState,
   EmptyFolderState,
   EmptyPinnedState,
-  EmptyLastReadState
+  EmptyLastReadState,
 } from './components/EmptyStates';
 import {
   CleanSectionHeader,
   CleanFolderCard,
-  CleanBookmarkListView
+  CleanBookmarkListView,
 } from './components/CleanBookmarkComponents';
 import type { Folder } from '@/types/bookmark';
 
 // ===== Enhanced Card Components =====
 
-const BookmarksSection = ({ onNewFolderClick, folders, selectedFolderId, setSelectedFolderId }: {
+const BookmarksSection = ({
+  onNewFolderClick,
+  folders,
+  selectedFolderId,
+  setSelectedFolderId,
+}: {
   onNewFolderClick: () => void;
   folders: Folder[];
   selectedFolderId: string | null;
@@ -30,7 +35,7 @@ const BookmarksSection = ({ onNewFolderClick, folders, selectedFolderId, setSele
 }) => {
   const selectedFolder = useMemo(() => {
     if (!selectedFolderId) return null;
-    return folders.find(f => f.id === selectedFolderId) || null;
+    return folders.find((f) => f.id === selectedFolderId) || null;
   }, [selectedFolderId, folders]);
 
   return (
@@ -53,17 +58,17 @@ const BookmarksSection = ({ onNewFolderClick, folders, selectedFolderId, setSele
             subtitle="Organize your favorite verses into folders for easy access and study."
             count={folders.length}
             action={{
-              text: "New Folder",
+              text: 'New Folder',
               onClick: onNewFolderClick,
-              icon: PlusIcon
+              icon: PlusIcon,
             }}
             variant="folder"
           />
-          
+
           {folders.length === 0 ? (
             <EmptyBookmarksState onCreateFolder={onNewFolderClick} />
           ) : (
-            <motion.div 
+            <motion.div
               className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -76,8 +81,8 @@ const BookmarksSection = ({ onNewFolderClick, folders, selectedFolderId, setSele
                     name={folder.name}
                     count={folder.bookmarks.length}
                     onClick={() => setSelectedFolderId(folder.id)}
-                    preview={folder.bookmarks.slice(0, 2).map(b => `Verse ${b.verseId}`)}
-                    lastModified={"2 days ago"}
+                    preview={folder.bookmarks.slice(0, 2).map((b) => `Verse ${b.verseId}`)}
+                    lastModified={'2 days ago'}
                   />
                 ))}
               </AnimatePresence>
@@ -136,18 +141,21 @@ const AyahCard = ({ ayah }: { ayah: PinnedAyah }) => (
           <PinIcon size={18} />
         </button>
       </div>
-      
+
       <div className="space-y-3">
-        <p className="text-right text-xl leading-relaxed text-gray-900 dark:text-white font-arabic" dir="rtl">
+        <p
+          className="text-right text-xl leading-relaxed text-gray-900 dark:text-white font-arabic"
+          dir="rtl"
+        >
           {ayah.arabicText}
         </p>
         {ayah.translation && (
-          <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed bg-white/50 dark:bg-gray-800/50 p-3 rounded-lg">
+          <p className="text-sm text-muted leading-relaxed bg-white/50 dark:bg-gray-800/50 p-3 rounded-lg">
             {ayah.translation}
           </p>
         )}
       </div>
-      
+
       <div className="flex items-center justify-between text-xs text-amber-600 dark:text-amber-400">
         <span>Pinned {ayah.pinnedDate}</span>
         <span className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -166,9 +174,11 @@ const PinAyahSection = () => {
       surahNumber: 2,
       surahName: 'Al-Baqarah',
       ayahNumber: 255,
-      arabicText: 'اللّهُ لاَ إِلَـهَ إِلاَّ هُوَ الْحَيُّ الْقَيُّومُ لاَ تَأْخُذُهُ سِنَةٌ وَلاَ نَوْمٌ',
-      translation: 'Allah - there is no deity except Him, the Ever-Living, the Sustainer of existence. Neither drowsiness overtakes Him nor sleep.',
-      pinnedDate: 'Jan 15, 2024'
+      arabicText:
+        'اللّهُ لاَ إِلَـهَ إِلاَّ هُوَ الْحَيُّ الْقَيُّومُ لاَ تَأْخُذُهُ سِنَةٌ وَلاَ نَوْمٌ',
+      translation:
+        'Allah - there is no deity except Him, the Ever-Living, the Sustainer of existence. Neither drowsiness overtakes Him nor sleep.',
+      pinnedDate: 'Jan 15, 2024',
     },
     {
       id: '2',
@@ -177,25 +187,21 @@ const PinAyahSection = () => {
       ayahNumber: 1,
       arabicText: 'بِسْمِ اللّهِ الرَّحْمَنِ الرَّحِيْمِ',
       translation: 'In the name of Allah, the Entirely Merciful, the Especially Merciful.',
-      pinnedDate: 'Jan 14, 2024'
-    }
+      pinnedDate: 'Jan 14, 2024',
+    },
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <CleanSectionHeader
         title="Pinned Verses"
         subtitle="Quick access to your most important and frequently referenced verses."
         count={pinnedAyahs.length}
         variant="pinned"
       />
-      
+
       {pinnedAyahs.length > 0 ? (
-        <motion.div 
+        <motion.div
           className="grid grid-cols-1 gap-6 lg:grid-cols-2"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -241,7 +247,7 @@ const LastReadCard = ({ reading }: { reading: LastReading }) => (
           {reading.readDate}
         </span>
       </div>
-      
+
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-gray-900 dark:text-white">
@@ -252,15 +258,15 @@ const LastReadCard = ({ reading }: { reading: LastReading }) => (
           </span>
         </div>
         <div className="w-full bg-white/60 dark:bg-gray-800/60 rounded-full h-3 overflow-hidden">
-          <motion.div 
-            className="bg-gradient-to-r from-indigo-500 to-indigo-600 h-3 rounded-full" 
+          <motion.div
+            className="bg-gradient-to-r from-indigo-500 to-indigo-600 h-3 rounded-full"
             initial={{ width: 0 }}
             animate={{ width: `${reading.progress}%` }}
-            transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+            transition={{ duration: 1, delay: 0.3, ease: 'easeOut' }}
           />
         </div>
       </div>
-      
+
       <div className="flex items-center justify-between text-xs text-indigo-600 dark:text-indigo-400">
         <span>Last read {reading.timeAgo}</span>
         <span className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -281,7 +287,7 @@ const LastReadSection = () => {
       lastAyah: 150,
       progress: 52,
       readDate: 'Jan 15, 2024',
-      timeAgo: '2 hours ago'
+      timeAgo: '2 hours ago',
     },
     {
       id: '2',
@@ -290,7 +296,7 @@ const LastReadSection = () => {
       lastAyah: 45,
       progress: 41,
       readDate: 'Jan 14, 2024',
-      timeAgo: '1 day ago'
+      timeAgo: '1 day ago',
     },
     {
       id: '3',
@@ -299,25 +305,21 @@ const LastReadSection = () => {
       lastAyah: 83,
       progress: 100,
       readDate: 'Jan 13, 2024',
-      timeAgo: '2 days ago'
-    }
+      timeAgo: '2 days ago',
+    },
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <CleanSectionHeader
         title="Reading History"
         subtitle="Pick up where you left off and track your Quranic reading progress."
         count={lastReadings.length}
         variant="lastRead"
       />
-      
+
       {lastReadings.length > 0 ? (
-        <motion.div 
+        <motion.div
           className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -348,7 +350,7 @@ const BookmarksPage = () => {
     switch (activeSection) {
       case 'bookmarks':
         return (
-          <BookmarksSection 
+          <BookmarksSection
             onNewFolderClick={() => setIsModalOpen(true)}
             folders={folders}
             selectedFolderId={selectedFolderId}
@@ -360,12 +362,14 @@ const BookmarksPage = () => {
       case 'last-read':
         return <LastReadSection />;
       default:
-        return <BookmarksSection 
-          onNewFolderClick={() => setIsModalOpen(true)}
-          folders={folders}
-          selectedFolderId={selectedFolderId}
-          setSelectedFolderId={setSelectedFolderId}
-        />;
+        return (
+          <BookmarksSection
+            onNewFolderClick={() => setIsModalOpen(true)}
+            folders={folders}
+            selectedFolderId={selectedFolderId}
+            setSelectedFolderId={setSelectedFolderId}
+          />
+        );
     }
   };
 
@@ -374,20 +378,15 @@ const BookmarksPage = () => {
       <CreateFolderModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       <div className="bookmark-page flex h-full w-full">
         {/* Collapsible Sidebar */}
-        <BookmarkSidebar 
-          activeSection={activeSection}
-          onSectionChange={setActiveSection}
-        />
+        <BookmarkSidebar activeSection={activeSection} onSectionChange={setActiveSection} />
 
         {/* Main Content Area */}
         <main className="bookmark-main-content p-8">
-          <AnimatePresence mode="wait">
-            {renderContent()}
-          </AnimatePresence>
+          <AnimatePresence mode="wait">{renderContent()}</AnimatePresence>
         </main>
       </div>
     </>
   );
-}
+};
 
 export default BookmarksPage;
