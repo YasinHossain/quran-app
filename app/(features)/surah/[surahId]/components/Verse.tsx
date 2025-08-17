@@ -28,10 +28,10 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
     openPlayer,
   } = useAudio();
   const { settings } = useSettings();
-  const { bookmarkedVerses, toggleBookmark } = useBookmarks();
+  const { addBookmark, removeBookmark, findBookmark, isBookmarked } = useBookmarks();
   const isPlaying = playingId === verse.id;
   const isLoadingAudio = loadingId === verse.id;
-  const isBookmarked = bookmarkedVerses.includes(String(verse.id));
+  const isVerseBookmarked = isBookmarked(String(verse.id));
 
   const handlePlayPause = useCallback(() => {
     if (playingId === verse.id) {
@@ -59,8 +59,14 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
   ]);
 
   const handleBookmark = useCallback(() => {
-    toggleBookmark(String(verse.id));
-  }, [toggleBookmark, verse.id]);
+    const verseId = String(verse.id);
+    const bookmarkInfo = findBookmark(verseId);
+    if (bookmarkInfo) {
+      removeBookmark(verseId, bookmarkInfo.folder.id);
+    } else {
+      addBookmark(verseId);
+    }
+  }, [addBookmark, removeBookmark, findBookmark, verse.id]);
 
   return (
     <>
@@ -71,7 +77,7 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
           verseKey={verse.verse_key}
           isPlaying={isPlaying}
           isLoadingAudio={isLoadingAudio}
-          isBookmarked={isBookmarked}
+          isBookmarked={isVerseBookmarked}
           onPlayPause={handlePlayPause}
           onBookmark={handleBookmark}
           className="w-16 pt-1"

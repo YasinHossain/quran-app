@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import Header from '@/app/shared/Header';
 import IconSidebar from '@/app/shared/IconSidebar';
 import SurahListSidebar from '@/app/shared/SurahListSidebar';
@@ -10,6 +11,9 @@ import {
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
   const { isHidden } = useHeaderVisibility();
+  const pathname = usePathname();
+  const isBookmarkPage = pathname.includes('/bookmarks');
+
   return (
     <>
       <Header />
@@ -20,9 +24,11 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
           <nav aria-label="Primary navigation" className="flex-shrink-0 h-full">
             <IconSidebar />
           </nav>
-          <nav aria-label="Surah navigation" className="flex-shrink-0 h-full">
-            <SurahListSidebar />
-          </nav>
+          {!isBookmarkPage && (
+            <nav aria-label="Surah navigation" className="flex-shrink-0 h-full">
+              <SurahListSidebar />
+            </nav>
+          )}
           {children}
         </div>
       </div>
