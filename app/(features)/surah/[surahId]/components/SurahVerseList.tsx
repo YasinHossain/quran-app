@@ -1,0 +1,55 @@
+'use client';
+
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import Spinner from '@/app/shared/Spinner';
+import { Verse as VerseComponent } from './Verse';
+import type { Verse as VerseType } from '@/types';
+
+interface SurahVerseListProps {
+  verses: VerseType[];
+  isLoading: boolean;
+  error: string | null;
+  loadMoreRef: React.RefObject<HTMLDivElement | null>;
+  isValidating: boolean;
+  isReachingEnd: boolean;
+}
+
+export const SurahVerseList = ({
+  verses,
+  isLoading,
+  error,
+  loadMoreRef,
+  isValidating,
+  isReachingEnd,
+}: SurahVerseListProps) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="w-full relative">
+      {isLoading ? (
+        <div className="flex justify-center py-20">
+          <Spinner className="h-8 w-8 text-teal-600" />
+        </div>
+      ) : error ? (
+        <div className="text-center py-20 text-red-600 bg-red-50 p-4 rounded-lg">{error}</div>
+      ) : verses.length > 0 ? (
+        <>
+          {verses.map((v) => (
+            <React.Fragment key={v.id}>
+              <VerseComponent verse={v} />
+            </React.Fragment>
+          ))}
+          <div ref={loadMoreRef} className="py-4 text-center space-x-2">
+            {isValidating && <Spinner className="inline h-5 w-5 text-teal-600" />}
+            {isReachingEnd && <span className="text-gray-500">{t('end_of_surah')}</span>}
+          </div>
+        </>
+      ) : (
+        <div className="text-center py-20 text-gray-500">{t('no_verses_found')}</div>
+      )}
+    </div>
+  );
+};
+
+export default SurahVerseList;
