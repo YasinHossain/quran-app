@@ -24,9 +24,7 @@ export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps) => {
 
   return (
     <div className="space-y-6">
-           {' '}
       <div className="flex items-start gap-x-6 pb-8 border-b border-[var(--border-color)]">
-               {' '}
         <VerseActions
           verseKey={verse.verse_key}
           isPlaying={isPlaying}
@@ -38,25 +36,20 @@ export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps) => {
           onBookmark={() => toggleBookmark(String(verse.id))}
           className="w-16 pt-1"
         />
-               {' '}
         <div className="flex-grow space-y-6">
-                    <VerseArabic verse={verse} />         {' '}
+          <VerseArabic verse={verse} />
           {verse.translations?.map((t: Translation) => (
             <div key={t.resource_id}>
-                           {' '}
               <p
                 className="text-left leading-relaxed text-[var(--foreground)]"
                 style={{ fontSize: `${settings.translationFontSize}px` }}
                 dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.text) }}
               />
-                         {' '}
             </div>
           ))}
-                 {' '}
         </div>
-             {' '}
       </div>
-            <TafsirPanels verseKey={verse.verse_key} tafsirIds={tafsirIds} />   {' '}
+      <TafsirPanels verseKey={verse.verse_key} tafsirIds={tafsirIds} />
     </div>
   );
 };
