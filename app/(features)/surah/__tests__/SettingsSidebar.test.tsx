@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Header from '@/app/shared/Header';
 import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
 import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/translation-panel';
-import { SettingsProvider } from '@/app/providers/SettingsContext';
-import { SidebarProvider } from '@/app/providers/SidebarContext';
-import { ThemeProvider } from '@/app/providers/ThemeContext';
+import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import { HeaderVisibilityProvider } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
 // mock translation hook
@@ -21,13 +19,7 @@ jest.mock('next/navigation', () => ({
 }));
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (
-  <ThemeProvider>
-    <HeaderVisibilityProvider>
-      <SettingsProvider>
-        <SidebarProvider>{children}</SidebarProvider>
-      </SettingsProvider>
-    </HeaderVisibilityProvider>
-  </ThemeProvider>
+  <HeaderVisibilityProvider>{children}</HeaderVisibilityProvider>
 );
 
 describe('SettingsSidebar interactions', () => {
@@ -45,6 +37,11 @@ describe('SettingsSidebar interactions', () => {
         dispatchEvent: jest.fn(),
       })),
     });
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterAll(() => {
+    (console.error as jest.Mock).mockRestore();
   });
 
   beforeEach(() => {
@@ -52,7 +49,7 @@ describe('SettingsSidebar interactions', () => {
   });
 
   it('opens via header icon, switches font tabs, and closes with back button', async () => {
-    render(
+    renderWithProviders(
       <Wrapper>
         <Header />
         <SettingsSidebar
@@ -67,9 +64,8 @@ describe('SettingsSidebar interactions', () => {
     const aside = document.querySelector('aside');
     expect(aside?.className).toContain('translate-x-full');
 
-    // Open settings sidebar
     await userEvent.click(screen.getByLabelText('Open Settings'));
-    expect(screen.getByText('reading_setting')).toBeInTheDocument();
+    expect(await screen.findByText('reading_setting')).toBeInTheDocument();
 
     // Switch font tab
     const [fontButton] = screen.getAllByRole('button', { name: 'KFGQPC Uthman Taha' });
@@ -77,6 +73,10 @@ describe('SettingsSidebar interactions', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'IndoPak' }));
     expect(screen.getByText('Noto Nastaliq Urdu')).toBeInTheDocument();
+    
+    // Close sidebar
+    const backButtons = screen.getAllByRole('button', { name: 'Back' });
+    await userEvent.click(backButtons[1]);
   });
 
   it('clicking translation tab does not open translation panel', async () => {
@@ -96,12 +96,10 @@ describe('SettingsSidebar interactions', () => {
       );
     };
 
-    render(<TestComponent />);
+    renderWithProviders(<TestComponent />);
 
     await userEvent.click(screen.getByLabelText('Open Settings'));
-    // Click translation tab while sidebar is open
-    await userEvent.click(screen.getByRole('button', { name: 'Translation' }));
-    // Translation panel should remain hidden
+    await userEvent.click(screen.getAllByRole('button', { name: 'Translation' })[0]);
     const panel = screen.getByTestId('translation-panel');
     expect(panel).toHaveClass('translate-x-full');
   });
@@ -124,7 +122,7 @@ describe('SettingsSidebar interactions', () => {
       );
     };
 
-    render(<TestComponent />);
+    renderWithProviders(<TestComponent />);
 
     await userEvent.click(screen.getByLabelText('Open Settings'));
     const [banglaButton] = await screen.findAllByRole('button', { name: 'Bangla' });

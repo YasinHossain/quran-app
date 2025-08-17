@@ -1,21 +1,9 @@
 import React, { useEffect } from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import PlaybackOptionsModal from '@/app/shared/player/components/PlaybackOptionsModal';
-import { ThemeProvider } from '@/app/providers/ThemeContext';
-import { SettingsProvider } from '@/app/providers/SettingsContext';
-import { SidebarProvider } from '@/app/providers/SidebarContext';
-import { AudioProvider, useAudio } from '@/app/shared/player/context/AudioContext';
-
-const Providers = ({ children }: { children: React.ReactNode }) => (
-  <ThemeProvider>
-    <SettingsProvider>
-      <SidebarProvider>
-        <AudioProvider>{children}</AudioProvider>
-      </SidebarProvider>
-    </SettingsProvider>
-  </ThemeProvider>
-);
+import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
+import { useAudio } from '@/app/shared/player/context/AudioContext';
 
 beforeAll(() => {
   Object.defineProperty(window, 'matchMedia', {
@@ -35,16 +23,14 @@ beforeAll(() => {
 
 test('coerces decimal input to integer', async () => {
   const onClose = jest.fn();
-  render(
-    <Providers>
-      <PlaybackOptionsModal
-        open
-        onClose={onClose}
-        theme="light"
-        activeTab="repeat"
-        setActiveTab={() => {}}
-      />
-    </Providers>
+  renderWithProviders(
+    <PlaybackOptionsModal
+      open
+      onClose={onClose}
+      theme="light"
+      activeTab="repeat"
+      setActiveTab={() => {}}
+    />
   );
 
   const startInput = screen.getByLabelText('Start') as HTMLInputElement;
@@ -72,11 +58,7 @@ test('rejects decimal repeat values', async () => {
     );
   };
 
-  render(
-    <Providers>
-      <Wrapper />
-    </Providers>
-  );
+  renderWithProviders(<Wrapper />);
 
   await screen.findByDisplayValue('1.5');
   await userEvent.click(screen.getByRole('button', { name: 'Apply' }));

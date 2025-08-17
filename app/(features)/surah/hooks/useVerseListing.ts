@@ -1,13 +1,11 @@
-import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
-import useSWR from 'swr';
-import useSWRInfinite from 'swr/infinite';
-import { getTranslations, getWordTranslations } from '@/lib/api';
+import { useMemo, useRef, useState, useCallback } from 'react';
 import { useSettings } from '@/app/providers/SettingsContext';
-import { WORD_LANGUAGE_LABELS } from '@/lib/text/wordLanguages';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
-import type { Verse, TranslationResource } from '@/types';
+import type { Verse } from '@/types';
+import useTranslationOptions from './useTranslationOptions';
+import useInfiniteVerseLoader from './useInfiniteVerseLoader';
 
-interface LookupFn {
+export interface LookupFn {
   (
     id: string,
     translationIds: number | number[],
@@ -22,43 +20,13 @@ interface UseVerseListingParams {
   lookup: LookupFn;
 }
 
-interface WordLanguageOption {
-  name: string;
-  id: number;
-}
-
 export function useVerseListing({ id, lookup }: UseVerseListingParams) {
   const [error, setError] = useState<string | null>(null);
   const { settings, setSettings } = useSettings();
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const { activeVerse, setActiveVerse, reciter, isPlayerVisible, openPlayer } = useAudio();
-
-  const { data: translationOptionsData } = useSWR<TranslationResource[]>(
-    'translations',
-    getTranslations
-  );
-  const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
-
-  const { data: wordTranslationOptionsData } = useSWR('wordTranslations', getWordTranslations);
-  const wordLanguageMap = useMemo(() => {
-    const map: Record<string, number> = {};
-    (wordTranslationOptionsData || []).forEach((o) => {
-      const name = o.language_name.toLowerCase();
-      if (!map[name]) {
-        map[name] = o.id;
-      }
-    });
-    return map;
-  }, [wordTranslationOptionsData]);
-
-  const wordLanguageOptions: WordLanguageOption[] = useMemo(
-    () =>
-      Object.keys(wordLanguageMap)
-        .filter((name) => WORD_LANGUAGE_LABELS[name])
-        .map((name) => ({ name: WORD_LANGUAGE_LABELS[name], id: wordLanguageMap[name] })),
-    [wordLanguageMap]
-  );
+  const { translationOptions, wordLanguageOptions, wordLanguageMap } = useTranslationOptions();
 
   // Stabilize the translation IDs for SWR key to prevent unnecessary re-fetches
   const stableTranslationIds = useMemo(() => {
@@ -66,32 +34,15 @@ export function useVerseListing({ id, lookup }: UseVerseListingParams) {
     return ids.sort((a, b) => a - b).join(','); // Sort and join for stable string representation
   }, [settings.translationIds, settings.translationId]);
 
-  const { data, size, setSize, isValidating } = useSWRInfinite(
-    (index) => (id ? ['verses', id, stableTranslationIds, settings.wordLang, index + 1] : null),
-    ([, pId, translationIdsStr, wordLang, page]) => {
-      const translationIds = translationIdsStr.split(',').map(Number);
-      return lookup(pId, translationIds, page, 20, wordLang).catch((err) => {
-        setError(`Failed to load content. ${err.message}`);
-        return { verses: [], totalPages: 1 };
-      });
-    }
-  );
-
-  const verses: Verse[] = useMemo(() => (data ? data.flatMap((d) => d.verses) : []), [data]);
-  const totalPages = useMemo(() => (data ? data[data.length - 1]?.totalPages : 1), [data]);
-  const isLoading = !data && !error;
-  const isReachingEnd = size >= totalPages;
-
-  useEffect(() => {
-    if (!loadMoreRef.current) return;
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !isReachingEnd && !isValidating) {
-        setSize(size + 1);
-      }
-    });
-    observer.observe(loadMoreRef.current);
-    return () => observer.disconnect();
-  }, [isReachingEnd, isValidating, size, setSize]);
+  const { verses, isLoading, isValidating, isReachingEnd } = useInfiniteVerseLoader({
+    id,
+    lookup,
+    stableTranslationIds,
+    wordLang: settings.wordLang,
+    loadMoreRef,
+    error,
+    setError: (e: string) => setError(e),
+  });
 
   const handleNext = useCallback(() => {
     if (!activeVerse) return false;

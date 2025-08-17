@@ -1,7 +1,6 @@
-import { render, screen, act, waitFor } from '@testing-library/react';
+import { screen, act, waitFor } from '@testing-library/react';
+import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import VerseOfDay from '@/app/(features)/home/components/VerseOfDay';
-import { SettingsProvider } from '@/app/providers/SettingsContext';
-import { ThemeProvider } from '@/app/providers/ThemeContext';
 import { Verse } from '@/types';
 import { getRandomVerse } from '@/lib/api';
 
@@ -20,14 +19,7 @@ jest.mock('@/lib/api', () => ({
 
 const mockedGetRandomVerse = getRandomVerse as jest.MockedFunction<typeof getRandomVerse>;
 
-const renderVerseOfDay = () =>
-  render(
-    <ThemeProvider>
-      <SettingsProvider>
-        <VerseOfDay />
-      </SettingsProvider>
-    </ThemeProvider>
-  );
+const renderVerseOfDay = () => renderWithProviders(<VerseOfDay />);
 
 beforeAll(() => {
   Object.defineProperty(window, 'matchMedia', {

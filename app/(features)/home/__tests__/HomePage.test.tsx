@@ -1,8 +1,7 @@
-import { render, screen, within, waitFor } from '@testing-library/react';
+import { screen, within, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import HomePage from '@/app/(features)/home/components/HomePage';
-import { ThemeProvider } from '@/app/providers/ThemeContext';
-import { SettingsProvider } from '@/app/providers/SettingsContext';
+import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import { Verse } from '@/types';
 
 jest.mock('@/lib/api', () => ({
@@ -59,14 +58,7 @@ beforeAll(() => {
   });
 });
 
-const renderHome = () =>
-  render(
-    <ThemeProvider>
-      <SettingsProvider>
-        <HomePage />
-      </SettingsProvider>
-    </ThemeProvider>
-  );
+const renderHome = () => renderWithProviders(<HomePage />);
 
 beforeEach(() => {
   localStorage.clear();

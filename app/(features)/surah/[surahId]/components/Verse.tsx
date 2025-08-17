@@ -69,38 +69,29 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
   }, [addBookmark, removeBookmark, findBookmark, verse.id]);
 
   return (
-    <>
-           {' '}
-      <div className="flex items-start gap-x-6 mb-12 pb-8 border-b border-[var(--border-color)]">
-               {' '}
-        <VerseActions
-          verseKey={verse.verse_key}
-          isPlaying={isPlaying}
-          isLoadingAudio={isLoadingAudio}
-          isBookmarked={isVerseBookmarked}
-          onPlayPause={handlePlayPause}
-          onBookmark={handleBookmark}
-          className="w-16 pt-1"
-        />
-               {' '}
-        <div className="flex-grow space-y-6">
-                    <VerseArabic verse={verse} />          {/* TRANSLATIONS */}         {' '}
-          {verse.translations?.map((t: Translation) => (
-            <div key={t.resource_id}>
-                           {' '}
-              <p
-                className="text-left leading-relaxed text-[var(--foreground)]"
-                style={{ fontSize: `${settings.translationFontSize}px` }}
-                dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.text) }}
-              />
-                         {' '}
-            </div>
-          ))}
-                 {' '}
-        </div>
-             {' '}
+    <div className="flex items-start gap-x-6 mb-12 pb-8 border-b border-[var(--border-color)]">
+      <VerseActions
+        verseKey={verse.verse_key}
+        isPlaying={isPlaying}
+        isLoadingAudio={isLoadingAudio}
+        isBookmarked={isVerseBookmarked}
+        onPlayPause={handlePlayPause}
+        onBookmark={handleBookmark}
+        className="w-16 pt-1"
+      />
+      <div className="flex-grow space-y-6">
+        <VerseArabic verse={verse} />
+        {/* TRANSLATIONS */}
+        {verse.translations?.map((t: Translation) => (
+          <div key={t.resource_id}>
+            <p
+              className="text-left leading-relaxed text-[var(--foreground)]"
+              style={{ fontSize: `${settings.translationFontSize}px` }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.text) }}
+            />
+          </div>
+        ))}
       </div>
-         {' '}
-    </>
+    </div>
   );
 });

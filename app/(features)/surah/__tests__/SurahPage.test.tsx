@@ -1,14 +1,8 @@
-import { render, screen } from '@testing-library/react';
-import { SettingsProvider } from '@/app/providers/SettingsContext';
-import { BookmarkProvider } from '@/app/providers/BookmarkContext';
-import { AudioProvider } from '@/app/shared/player/context/AudioContext';
-import { ThemeProvider } from '@/app/providers/ThemeContext';
-import { SidebarProvider } from '@/app/providers/SidebarContext';
+import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import SurahPage from '@/app/(features)/surah/[surahId]/page';
 import { Verse } from '@/types';
 import * as api from '@/lib/api';
 import useSWRInfinite from 'swr/infinite';
-import { SWRConfig } from 'swr';
 
 jest.mock('react', () => {
   const actual = jest.requireActual('react');
@@ -53,24 +47,13 @@ beforeEach(() => {
   jest.clearAllMocks();
   (api.getTranslations as jest.Mock).mockResolvedValue([]);
   (api.getWordTranslations as jest.Mock).mockResolvedValue([]);
+  (api.getSurahCoverUrl as jest.Mock).mockResolvedValue('');
   (useSWRInfinite as jest.Mock).mockImplementation(jest.requireActual('swr/infinite').default);
 });
 
 const renderPage = () =>
-  render(
-    <SWRConfig value={{ provider: () => new Map() }}>
-      <AudioProvider>
-        <SettingsProvider>
-          <BookmarkProvider>
-            <ThemeProvider>
-              <SidebarProvider>
-                <SurahPage params={{ surahId: '1' } as unknown as Promise<{ surahId: string }>} />
-              </SidebarProvider>
-            </ThemeProvider>
-          </BookmarkProvider>
-        </SettingsProvider>
-      </AudioProvider>
-    </SWRConfig>
+  renderWithProviders(
+    <SurahPage params={{ surahId: '1' } as unknown as Promise<{ surahId: string }>} />
   );
 
 test('renders verses on successful fetch', async () => {

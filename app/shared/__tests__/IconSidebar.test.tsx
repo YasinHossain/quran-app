@@ -1,13 +1,5 @@
-import { render, screen } from '@testing-library/react';
 import IconSidebar from '@/app/shared/IconSidebar';
-import { SidebarProvider } from '@/app/providers/SidebarContext';
-import { ThemeProvider } from '@/app/providers/ThemeContext';
-
-const Wrapper = ({ children }: { children: React.ReactNode }) => (
-  <ThemeProvider>
-    <SidebarProvider>{children}</SidebarProvider>
-  </ThemeProvider>
-);
+import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 
 // mock translation hook
 jest.mock('react-i18next', () => ({
@@ -32,11 +24,7 @@ beforeAll(() => {
 
 describe('IconSidebar', () => {
   it('renders navigation buttons with correct hrefs', () => {
-    render(
-      <Wrapper>
-        <IconSidebar />
-      </Wrapper>
-    );
+    renderWithProviders(<IconSidebar />);
 
     const homeLink = screen.getByRole('link', { name: 'home' });
     expect(homeLink).toBeInTheDocument();

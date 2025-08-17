@@ -1,9 +1,5 @@
-import { render, act } from '@testing-library/react';
-import { SettingsProvider } from '@/app/providers/SettingsContext';
-import { BookmarkProvider } from '@/app/providers/BookmarkContext';
-import { AudioProvider } from '@/app/shared/player/context/AudioContext';
-import { SidebarProvider } from '@/app/providers/SidebarContext';
-import { ThemeProvider } from '@/app/providers/ThemeContext';
+import { act } from '@testing-library/react';
+import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import QuranPage from '@/app/(features)/page/[pageId]/page';
 import { Verse } from '@/types';
 import * as api from '@/lib/api';
@@ -55,18 +51,8 @@ beforeEach(() => {
 });
 
 const renderPage = () =>
-  render(
-    <AudioProvider>
-      <SettingsProvider>
-        <BookmarkProvider>
-          <ThemeProvider>
-            <SidebarProvider>
-              <QuranPage params={{ pageId: '1' } as unknown as Promise<{ pageId: string }>} />
-            </SidebarProvider>
-          </ThemeProvider>
-        </BookmarkProvider>
-      </SettingsProvider>
-    </AudioProvider>
+  renderWithProviders(
+    <QuranPage params={{ pageId: '1' } as unknown as Promise<{ pageId: string }>} />
   );
 
 test('renders page without crashing', async () => {

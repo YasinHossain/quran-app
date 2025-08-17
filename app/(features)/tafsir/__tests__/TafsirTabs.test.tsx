@@ -1,12 +1,13 @@
-import { render, screen } from '@testing-library/react';
+import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import userEvent from '@testing-library/user-event';
 import TafsirTabs from '@/app/(features)/tafsir/[surahId]/[ayahId]/components/TafsirTabs';
-import { ThemeProvider } from '@/app/providers/ThemeContext';
-import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 import useSWR from 'swr';
 
-jest.mock('swr');
+jest.mock('swr', () => {
+  const actual = jest.requireActual('swr');
+  return { __esModule: true, ...actual, default: jest.fn() };
+});
 jest.mock('@/lib/tafsir/tafsirCache');
 
 const mockUseSWR = useSWR as jest.Mock;
@@ -31,6 +32,11 @@ beforeAll(() => {
       dispatchEvent: jest.fn(),
     })),
   });
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+
+afterAll(() => {
+  (console.error as jest.Mock).mockRestore();
 });
 
 beforeEach(() => {
@@ -41,14 +47,8 @@ beforeEach(() => {
 });
 
 it('shows tabs and switches content on click', async () => {
-  render(
-    <SettingsProvider>
-      <ThemeProvider>
-        <TafsirTabs verseKey="1:1" tafsirIds={[1, 2]} />
-      </ThemeProvider>
-    </SettingsProvider>
-  );
-  expect(screen.getByRole('button', { name: 'Tafsir One' })).toBeInTheDocument();
+  renderWithProviders(<TafsirTabs verseKey="1:1" tafsirIds={[1, 2]} />);
+  expect(await screen.findByRole('button', { name: 'Tafsir One' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Tafsir Two' })).toBeInTheDocument();
 
   expect(await screen.findByText('Text 1')).toBeInTheDocument();

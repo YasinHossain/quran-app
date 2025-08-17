@@ -1,9 +1,7 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { Verse as VerseComponent } from '@/app/(features)/surah/[surahId]/components/Verse';
-import { SettingsProvider } from '@/app/providers/SettingsContext';
-import { BookmarkProvider } from '@/app/providers/BookmarkContext';
-import { AudioProvider } from '@/app/shared/player/context/AudioContext';
 import TranslationProvider from '@/app/providers/TranslationProvider';
+import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import { Verse } from '@/types';
 
 jest.mock('next/navigation', () => ({
@@ -21,19 +19,28 @@ const verse: Verse = {
 };
 
 const renderVerse = () =>
-  render(
+  renderWithProviders(
     <TranslationProvider>
-      <AudioProvider>
-        <SettingsProvider>
-          <BookmarkProvider>
-            <VerseComponent verse={verse} />
-          </BookmarkProvider>
-        </SettingsProvider>
-      </AudioProvider>
+      <VerseComponent verse={verse} />
     </TranslationProvider>
   );
 
 describe('Verse word-by-word font size', () => {
+  beforeAll(() => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: jest.fn().mockImplementation((query) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+      })),
+    });
+  });
   beforeEach(() => {
     localStorage.clear();
     localStorage.setItem(
