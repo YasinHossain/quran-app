@@ -59,7 +59,6 @@ export const CreateFolderModal = ({ isOpen, onClose }: CreateFolderModalProps) =
                 onChange={(e) => setFolderName(e.target.value)}
                 placeholder="Enter folder name"
                 className="w-full rounded-md border-gray-300 bg-gray-100 px-4 py-2 text-sm focus:border-teal-500 focus:ring-teal-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                autoFocus
               />
               <div className="mt-4 flex justify-end">
                 <button
