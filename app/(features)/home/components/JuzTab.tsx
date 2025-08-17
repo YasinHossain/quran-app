@@ -1,8 +1,8 @@
 'use client';
-import Link from 'next/link';
 import { useTheme } from '@/app/providers/ThemeContext';
 import { themeClass } from '@/lib/utils/themeClass';
 import juzData from '@/data/juz.json';
+import ThemedCard from './ThemedCard';
 
 interface JuzSummary {
   number: number;
@@ -18,11 +18,7 @@ export default function JuzTab() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {allJuz.map((juz) => (
-        <Link
-          href={`/juz/${juz.number}`}
-          key={juz.number}
-          className={`group p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 content-visibility-auto animate-fade-in-up ${themeClass(theme, 'bg-white/60', 'bg-slate-800/40')}`}
-        >
+        <ThemedCard href={`/juz/${juz.number}`} key={juz.number}>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div
@@ -46,7 +42,7 @@ export default function JuzTab() {
               </div>
             </div>
           </div>
-        </Link>
+        </ThemedCard>
       ))}
     </div>
   );
