@@ -1,14 +1,14 @@
 import { apiFetch } from './client.js';
-import type { 
-  Verse, 
-  Chapter, 
-  Surah, 
-  Juz, 
-  JuzMetadata, 
-  TafsirResource, 
-  TafsirText, 
+import type {
+  Verse,
+  Chapter,
+  Surah,
+  Juz,
+  JuzMetadata,
+  TafsirResource,
+  TafsirText,
   Translation,
-  PaginatedResponse 
+  PaginatedResponse,
 } from '../types.js';
 import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
@@ -41,7 +41,7 @@ interface ApiVerse extends Omit<Verse, 'words'> {
 function normalizeVerse(raw: ApiVerse, wordLang: string = 'en'): Verse {
   return {
     ...raw,
-    words: raw.words?.map(w => ({
+    words: raw.words?.map((w) => ({
       id: w.id,
       uthmani: w.text_uthmani ?? w.text,
       [wordLang]: w.translation?.text,
@@ -61,7 +61,7 @@ export class QuranAPI {
 
   async getSurahList(): Promise<Surah[]> {
     const chapters = await this.getChapters();
-    return chapters.map(c => ({
+    return chapters.map((c) => ({
       number: c.id,
       name: c.name_simple,
       arabicName: c.name_arabic,
@@ -91,7 +91,7 @@ export class QuranAPI {
     wordLang: string = 'en'
   ): Promise<PaginatedResponse<Verse>> {
     const translationParam = translationIds.join(',');
-    
+
     const data = await apiFetch<{
       verses: ApiVerse[];
       meta?: { total_pages: number };
@@ -112,7 +112,7 @@ export class QuranAPI {
     );
 
     const totalPages = data.meta?.total_pages ?? data.pagination?.total_pages ?? 1;
-    const verses = data.verses.map(v => normalizeVerse(v, wordLang));
+    const verses = data.verses.map((v) => normalizeVerse(v, wordLang));
 
     return {
       data: verses,
@@ -131,7 +131,7 @@ export class QuranAPI {
     wordLang: string = 'en'
   ): Promise<PaginatedResponse<Verse>> {
     const translationParam = translationIds.join(',');
-    
+
     const data = await apiFetch<{
       verses: ApiVerse[];
       meta?: { total_pages: number };
@@ -152,7 +152,7 @@ export class QuranAPI {
     );
 
     const totalPages = data.meta?.total_pages ?? data.pagination?.total_pages ?? 1;
-    const verses = data.verses.map(v => normalizeVerse(v, wordLang));
+    const verses = data.verses.map((v) => normalizeVerse(v, wordLang));
 
     return {
       data: verses,
@@ -171,7 +171,7 @@ export class QuranAPI {
     wordLang: string = 'en'
   ): Promise<PaginatedResponse<Verse>> {
     const translationParam = translationIds.join(',');
-    
+
     const data = await apiFetch<{
       verses: ApiVerse[];
       meta?: { total_pages: number };
@@ -192,7 +192,7 @@ export class QuranAPI {
     );
 
     const totalPages = data.meta?.total_pages ?? data.pagination?.total_pages ?? 1;
-    const verses = data.verses.map(v => normalizeVerse(v, wordLang));
+    const verses = data.verses.map((v) => normalizeVerse(v, wordLang));
 
     return {
       data: verses,
@@ -208,11 +208,11 @@ export class QuranAPI {
       const translationParam = translationIds.join(',');
       const data = await apiFetch<{ verse: ApiVerse }>(
         `verses/${verseId}`,
-        { 
-          translations: translationParam, 
+        {
+          translations: translationParam,
           fields: 'text_uthmani,audio',
           words: 'true',
-          word_fields: 'text_uthmani'
+          word_fields: 'text_uthmani',
         },
         'Failed to fetch verse'
       );
@@ -228,9 +228,9 @@ export class QuranAPI {
       { q: query, size: size.toString(), translations: '20' },
       'Failed to search verses'
     );
-    
+
     const results = data.search?.results || [];
-    return results.map(r => ({
+    return results.map((r) => ({
       id: r.verse_id,
       verse_key: r.verse_key,
       text_uthmani: r.text,
@@ -242,10 +242,10 @@ export class QuranAPI {
     try {
       const data = await apiFetch<{ verse: ApiVerse }>(
         'verses/random',
-        { 
-          translations: translationId.toString(), 
+        {
+          translations: translationId.toString(),
           fields: 'text_uthmani,audio',
-          words: 'true'
+          words: 'true',
         },
         'Failed to fetch random verse'
       );
@@ -257,11 +257,7 @@ export class QuranAPI {
 
   async getJuz(juzId: number): Promise<Juz | null> {
     try {
-      const data = await apiFetch<{ juz: Juz }>(
-        `juzs/${juzId}`,
-        {},
-        'Failed to fetch juz'
-      );
+      const data = await apiFetch<{ juz: Juz }>(`juzs/${juzId}`, {}, 'Failed to fetch juz');
       return data.juz;
     } catch {
       return null;

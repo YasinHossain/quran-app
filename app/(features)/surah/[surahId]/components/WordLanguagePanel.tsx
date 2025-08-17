@@ -25,15 +25,15 @@ const WORD_LANGUAGES = [
   { id: 50, name: 'Tamil', code: 'ta' as LanguageCode },
 ];
 
-export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({ 
-  isOpen, 
-  onClose, 
-  renderMode = 'panel' 
+export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
+  isOpen,
+  onClose,
+  renderMode = 'panel',
 }) => {
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
   const { theme } = useTheme();
-  
+
   const listContainerRef = useRef<HTMLDivElement>(null);
   const [listHeight, setListHeight] = useState(0);
 
@@ -47,7 +47,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
 
   useEffect(() => {
     if (renderMode === 'content') return; // Skip resize observer for content mode
-    
+
     const element = listContainerRef.current;
     if (!element || !isOpen) return;
 
@@ -135,11 +135,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
 
   // Content mode - render just the list for use inside SettingsSidebar
   if (renderMode === 'content') {
-    return (
-      <div className="flex-grow p-4 space-y-4">
-        {renderLanguageList()}
-      </div>
-    );
+    return <div className="flex-grow p-4 space-y-4">{renderLanguageList()}</div>;
   }
 
   // Panel mode - render as full slide-over panel
@@ -183,9 +179,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
 
       <div className="flex-1 flex flex-col min-h-0">
         <div className="flex-1 overflow-y-auto" ref={listContainerRef}>
-          <div className="px-4 pb-4 pt-4">
-            {renderLanguageList()}
-          </div>
+          <div className="px-4 pb-4 pt-4">{renderLanguageList()}</div>
         </div>
       </div>
     </div>

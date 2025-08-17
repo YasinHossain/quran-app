@@ -24,7 +24,8 @@ export const bookmarkTools: Tool[] = [
         },
         folderId: {
           type: 'string',
-          description: 'Optional folder ID to add bookmark to (creates default folder if not specified)',
+          description:
+            'Optional folder ID to add bookmark to (creates default folder if not specified)',
         },
       },
       required: ['verseKey'],
@@ -43,7 +44,8 @@ export const bookmarkTools: Tool[] = [
         },
         folderId: {
           type: 'string',
-          description: 'Optional folder ID to remove bookmark from (removes from all folders if not specified)',
+          description:
+            'Optional folder ID to remove bookmark from (removes from all folders if not specified)',
         },
       },
       required: ['verseKey'],
@@ -121,27 +123,39 @@ export async function handleBookmarkTool(name: string, args: any): Promise<any> 
 
     case 'add_bookmark':
       const added = LocalStorage.addBookmark(args.verseKey, args.folderId);
-      return { success: added, message: added ? 'Bookmark added successfully' : 'Failed to add bookmark' };
+      return {
+        success: added,
+        message: added ? 'Bookmark added successfully' : 'Failed to add bookmark',
+      };
 
     case 'remove_bookmark':
       const removed = LocalStorage.removeBookmark(args.verseKey, args.folderId);
-      return { success: removed, message: removed ? 'Bookmark removed successfully' : 'Bookmark not found' };
+      return {
+        success: removed,
+        message: removed ? 'Bookmark removed successfully' : 'Bookmark not found',
+      };
 
     case 'create_bookmark_folder':
       const folderId = LocalStorage.createFolder(args.name);
-      return { 
-        success: !!folderId, 
+      return {
+        success: !!folderId,
         folderId,
-        message: folderId ? 'Folder created successfully' : 'Failed to create folder' 
+        message: folderId ? 'Folder created successfully' : 'Failed to create folder',
       };
 
     case 'delete_bookmark_folder':
       const deleted = LocalStorage.deleteFolder(args.folderId);
-      return { success: deleted, message: deleted ? 'Folder deleted successfully' : 'Folder not found' };
+      return {
+        success: deleted,
+        message: deleted ? 'Folder deleted successfully' : 'Folder not found',
+      };
 
     case 'rename_bookmark_folder':
       const renamed = LocalStorage.renameFolder(args.folderId, args.newName);
-      return { success: renamed, message: renamed ? 'Folder renamed successfully' : 'Folder not found' };
+      return {
+        success: renamed,
+        message: renamed ? 'Folder renamed successfully' : 'Folder not found',
+      };
 
     case 'is_bookmarked':
       const isBookmarked = LocalStorage.isBookmarked(args.verseKey);

@@ -85,11 +85,11 @@ export default function PagePage({ params }: PagePageProps) {
       <main className="flex-grow bg-background p-6 lg:p-10 overflow-y-auto homepage-scrollable-area">
         <div className="w-full relative">
           {isLoading ? (
-              <div className="flex justify-center py-20">
-                <Spinner className="h-8 w-8 text-accent" />
-              </div>
-            ) : error ? (
-              <div className="text-center py-20 text-error bg-red-50 p-4 rounded-lg">{error}</div>
+            <div className="flex justify-center py-20">
+              <Spinner className="h-8 w-8 text-accent" />
+            </div>
+          ) : error ? (
+            <div className="text-center py-20 text-error bg-red-50 p-4 rounded-lg">{error}</div>
           ) : verses.length > 0 ? (
             <>
               {verses.map((v: VerseType) => (

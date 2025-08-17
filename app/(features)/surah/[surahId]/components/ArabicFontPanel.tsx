@@ -140,7 +140,6 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
           <>
             {/* Scrollable Content - Toggle and List */}
             <div className="flex-1 overflow-y-auto" ref={listContainerRef}>
-
               {/* Font Type Toggle - Uthmani/Indopak */}
               <div
                 className={`sticky top-0 z-10 py-4 border-b ${

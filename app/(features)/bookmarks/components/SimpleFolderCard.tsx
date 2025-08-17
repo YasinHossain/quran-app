@@ -11,12 +11,12 @@ interface SimpleFolderCardProps {
   lastModified?: string;
 }
 
-export const SimpleFolderCard = ({ 
-  name, 
-  count, 
-  onClick, 
+export const SimpleFolderCard = ({
+  name,
+  count,
+  onClick,
   preview,
-  lastModified 
+  lastModified,
 }: SimpleFolderCardProps) => {
   return (
     <motion.div
@@ -44,9 +44,9 @@ export const SimpleFolderCard = ({
             </p>
           </div>
         </div>
-        
-        <button 
-          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-full p-2 hover:bg-white/50 dark:hover:bg-gray-800/50" 
+
+        <button
+          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-full p-2 hover:bg-white/50 dark:hover:bg-gray-800/50"
           onClick={(e) => e.stopPropagation()}
         >
           <EllipsisHIcon size={18} className="text-gray-500 dark:text-gray-400" />
@@ -57,7 +57,7 @@ export const SimpleFolderCard = ({
       {preview && preview.length > 0 && (
         <div className="mb-4 space-y-1">
           {preview.slice(0, 2).map((text, index) => (
-            <div 
+            <div
               key={index}
               className="text-xs text-gray-600 dark:text-gray-300 line-clamp-1 px-2 py-1 bg-white/50 dark:bg-gray-800/50 rounded"
             >

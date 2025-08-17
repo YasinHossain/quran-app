@@ -306,10 +306,7 @@ export async function handleQuranTool(name: string, args: any): Promise<any> {
       );
 
     case 'get_verse':
-      return await quranAPI.getVerse(
-        args.verseId,
-        args.translationIds || [20]
-      );
+      return await quranAPI.getVerse(args.verseId, args.translationIds || [20]);
 
     case 'search_verses':
       return await quranAPI.searchVerses(args.query, args.size || 20);

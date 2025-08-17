@@ -71,21 +71,25 @@ Once configured, you can test that the MCP server is working by asking Claude Co
 The MCP server provides Claude Code with:
 
 ### 📖 Quran Data Access
+
 - Get chapters, verses, translations, and tafsir
 - Search verses by text or keywords
 - Access random verses and specific references
 
 ### 🔖 Bookmark Management
+
 - Create, organize, and manage bookmark folders
 - Add/remove verses from bookmarks
 - Check bookmark status of verses
 
 ### ⚙️ Settings Management
+
 - Read and update user preferences
 - Manage translation and tafsir selections
 - Configure audio and display settings
 
 ### 🧭 Navigation Tools
+
 - Get verse context and navigation
 - Find verses by reference (chapter:verse)
 - Navigate between chapters, pages, and juzs
@@ -100,23 +104,26 @@ User: "Help me implement a feature to display verses from Juz 15"
 Claude Code: Let me get information about Juz 15 first.
 [Uses get_juz_metadata and get_verses_by_juz tools]
 
-I can see Juz 15 contains verses from Al-Israa 1 through Al-Kahf 74. 
+I can see Juz 15 contains verses from Al-Israa 1 through Al-Kahf 74.
 Here's how to implement the feature...
 ```
 
 ## Troubleshooting
 
 ### Server Not Starting
+
 - Check that Node.js 18+ is installed
 - Verify the build completed successfully
 - Ensure the path in the configuration is absolute and correct
 
 ### Tools Not Available
+
 - Restart Claude Code after configuration changes
 - Check the configuration file syntax is valid JSON
 - Verify the MCP server path exists and is executable
 
 ### API Errors
+
 - Check internet connection (required for Quran.com API)
 - Verify the server logs for specific error messages
 
@@ -133,6 +140,7 @@ See the [MCP Server README](mcp-server/README.md) for detailed development infor
 ## Storage
 
 The MCP server stores user data in:
+
 - **Location**: `~/.quran-app-mcp/`
 - **Files**: `bookmarks.json`, `settings.json`
 

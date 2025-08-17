@@ -1,6 +1,4 @@
-import { css } from 'tailwindcss';
-
-export default css`
+export default `
   @layer components {
     /* Bookmark Page Base Styles - Prevents Design Breaks */
     .bookmark-page {

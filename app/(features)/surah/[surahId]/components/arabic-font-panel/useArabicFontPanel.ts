@@ -20,7 +20,6 @@ export const useArabicFontPanel = (isOpen: boolean) => {
   const [activeFilter, setActiveFilter] = useState('Uthmani');
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
-
   // Convert arabicFonts to have consistent interface with other resources
   const fonts: ArabicFont[] = useMemo(() => {
     return arabicFonts.map((font, index) => ({
@@ -89,7 +88,6 @@ export const useArabicFontPanel = (isOpen: boolean) => {
       });
     }
   }, [fonts, settings, setSettings]);
-
 
   return {
     theme,
