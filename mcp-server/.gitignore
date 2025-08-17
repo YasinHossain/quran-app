@@ -67,3 +67,5 @@ Thumbs.db
 # MCP Server data (user-specific)
 storage/
 *.storage.json
+!src/storage/
+!src/storage/localStorage.ts

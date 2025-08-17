@@ -18,10 +18,7 @@ export const BookmarkListView = ({ folder, onBack }: BookmarkListViewProps) => {
       transition={{ duration: 0.3 }}
     >
       <div className="mb-6 flex items-center gap-4">
-        <button
-          onClick={onBack}
-          className="rounded-md p-1.5 text-muted hover:bg-gray-200  hover:bg-surface/50"
-        >
+        <button onClick={onBack} className="rounded-md p-1.5 text-muted hover:bg-surface/50">
           <ArrowLeftIcon size={20} />
         </button>
         <h1 className="text-2xl font-bold text-primary ">{folder.name}</h1>
@@ -37,12 +34,10 @@ export const BookmarkListView = ({ folder, onBack }: BookmarkListViewProps) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="cursor-pointer rounded-lg border border-gray-200 bg-surface p-4 hover:bg-slate-50 dark:border-gray-700  hover:bg-surface/50"
+                className="cursor-pointer rounded-lg border border-border bg-surface p-4 hover:bg-surface/50"
               >
                 {/* For now, just display the verse ID. This will be replaced with actual verse content later. */}
-                <p className="font-mono text-sm text-teal-600 dark:text-teal-400">
-                  Verse: {bookmark.verseId}
-                </p>
+                <p className="font-mono text-sm text-accent">Verse: {bookmark.verseId}</p>
                 <p className="text-xs text-muted">
                   Bookmarked on: {new Date(bookmark.createdAt).toLocaleDateString()}
                 </p>

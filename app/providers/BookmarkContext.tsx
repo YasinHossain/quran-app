@@ -14,6 +14,9 @@ interface BookmarkContextType {
   addBookmark: (verseId: string, folderId?: string) => void;
   removeBookmark: (verseId: string, folderId: string) => void;
   isBookmarked: (verseId: string) => boolean;
+  findBookmark: (verseId: string) => { folder: Folder; bookmark: Bookmark } | null;
+  toggleBookmark: (verseId: string, folderId?: string) => void;
+  bookmarkedVerses: string[];
 }
 
 const BookmarkContext = createContext<BookmarkContextType | undefined>(undefined);
@@ -157,6 +160,23 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
     [folders]
   );
 
+  const toggleBookmark = useCallback(
+    (verseId: string, folderId?: string) => {
+      const existing = findBookmark(verseId);
+      if (existing) {
+        removeBookmark(verseId, existing.folder.id);
+      } else {
+        addBookmark(verseId, folderId);
+      }
+    },
+    [findBookmark, removeBookmark, addBookmark]
+  );
+
+  const bookmarkedVerses = useMemo(
+    () => folders.flatMap((f) => f.bookmarks.map((b) => b.verseId)),
+    [folders]
+  );
+
   const value = useMemo(
     () => ({
       folders,
@@ -167,6 +187,8 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
       removeBookmark,
       isBookmarked,
       findBookmark,
+      toggleBookmark,
+      bookmarkedVerses,
     }),
     [
       folders,
@@ -177,6 +199,8 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
       removeBookmark,
       isBookmarked,
       findBookmark,
+      toggleBookmark,
+      bookmarkedVerses,
     ]
   );
 
