@@ -1,9 +1,6 @@
 /* ===== Tailwind Import (Required for Tailwind classes) ===== */
 @import 'tailwindcss';
 
-/* ===== Bookmark Base Styles ===== */
-@import './(features)/bookmarks/styles/bookmark-base.css';
-
 :root {
   --background: #ffffff;
   --foreground: #374151;
@@ -47,7 +44,7 @@
   --text-h3: 1.25rem;
 }
 
-[data-theme='dark'] {
+.dark {
   --background: #1a202c;
   --foreground: #d1d5db;
   --border-color: #4b5563;
@@ -64,6 +61,45 @@
   --error: #ef4444;
 
   /* Dark semantic colors */
+  --bookmark-folder: #14b8a6;
+  --bookmark-pinned: #fbbf24;
+  --bookmark-lastread: #818cf8;
+  --bookmark-general: #34d399;
+}
+
+.theme-alt {
+  --background: #fffbf0;
+  --foreground: #1f2937;
+  --border-color: #e0e7ff;
+  --accent: #6366f1;
+  --accent-hover: #4f46e5;
+  --subtle-grey: #d1d5db;
+
+  --text-muted: #6b7280;
+  --card-background: #ffffff;
+  --hover-color: #f3f4f6;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+
+  --bookmark-folder: #0d9488;
+  --bookmark-pinned: #f59e0b;
+  --bookmark-lastread: #6366f1;
+  --bookmark-general: #10b981;
+}
+
+.theme-alt[data-theme='dark'] {
+  --background: #1e1b4b;
+  --foreground: #e0e7ff;
+  --border-color: #3730a3;
+  --accent: #6366f1;
+  --accent-hover: #4f46e5;
+  --subtle-grey: #4b5563;
+
+  --text-muted: #9ca3af;
+  --card-background: #374151;
+  --hover-color: #4b5563;
+
   --bookmark-folder: #14b8a6;
   --bookmark-pinned: #fbbf24;
   --bookmark-lastread: #818cf8;
@@ -315,12 +351,12 @@ input[type='range']::-webkit-slider-thumb:hover {
 }
 
 /* Dark theme adjustments */
-[data-theme='dark'] .tafsir-content [lang='ar'] {
+.dark .tafsir-content [lang='ar'] {
   background: rgba(13, 148, 136, 0.15);
   border-color: rgba(13, 148, 136, 0.3);
 }
 
-[data-theme='dark'] .tafsir-content p:first-child::first-letter {
+.dark .tafsir-content p:first-child::first-letter {
   color: rgba(13, 148, 136, 0.9);
 }
 

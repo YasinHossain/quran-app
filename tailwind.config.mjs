@@ -1,6 +1,14 @@
+import defaultTokens from './design-system.json' assert { type: 'json' };
+import altTokens from './design-system.alt.json' assert { type: 'json' };
+import plugin from 'tailwindcss/plugin';
+
+const tokenSets = {
+  base: defaultTokens,
+  alt: altTokens,
+};
 /** @type {import('tailwindcss').Config} */
 const config = {
-  darkMode: ['class', '[data-theme="dark"]'],
+  darkMode: 'class',
   content: ['./app/**/*.{ts,tsx,js,jsx}', './lib/**/*.{ts,tsx,js,jsx}'],
   theme: {
     extend: {
@@ -117,7 +125,46 @@ const config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(({ addBase }) => {
+      const variables = {};
+      for (const [name, tokens] of Object.entries(tokenSets)) {
+        const selector = name === 'base' ? ':root' : `.theme-${name}`;
+        variables[selector] = {
+          '--background': tokens.colors.background,
+          '--foreground': tokens.colors.foreground,
+          '--border-color': tokens.colors.border,
+          '--accent': tokens.colors.accent,
+          '--accent-hover': tokens.colors.accentHover,
+          '--subtle-grey': '#d1d5db',
+          '--text-muted': '#6b7280',
+          '--card-background': '#ffffff',
+          '--hover-color': '#f3f4f6',
+          '--success': '#10b981',
+          '--warning': '#f59e0b',
+          '--error': '#ef4444',
+          '--bookmark-folder': '#0d9488',
+          '--bookmark-pinned': '#f59e0b',
+          '--bookmark-lastread': '#6366f1',
+          '--bookmark-general': '#10b981',
+        };
+        variables[`${selector}[data-theme='dark']`] = {
+          '--background': tokens.colors.backgroundDark,
+          '--foreground': tokens.colors.foregroundDark,
+          '--border-color': tokens.colors.borderDark,
+          '--subtle-grey': '#4b5563',
+          '--text-muted': '#9ca3af',
+          '--card-background': '#374151',
+          '--hover-color': '#4b5563',
+          '--bookmark-folder': '#14b8a6',
+          '--bookmark-pinned': '#fbbf24',
+          '--bookmark-lastread': '#818cf8',
+          '--bookmark-general': '#34d399',
+        };
+      }
+      addBase(variables);
+    }),
+  ],
 };
 
 export default config;

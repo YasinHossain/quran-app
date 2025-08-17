@@ -3,13 +3,12 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { FolderIcon, EllipsisHIcon, PlusIcon, PinIcon } from '@/app/shared/icons';
+import { PlusIcon, PinIcon } from '@/app/shared/icons';
 import { CreateFolderModal } from './components/CreateFolderModal';
-import { BookmarkListView } from './components/BookmarkListView';
 import BookmarkSidebar from './components/BookmarkSidebar';
+import styles from './styles';
 import {
   EmptyBookmarksState,
-  EmptyFolderState,
   EmptyPinnedState,
   EmptyLastReadState,
 } from './components/EmptyStates';
@@ -75,7 +74,7 @@ const BookmarksSection = ({
               transition={{ delay: 0.2 }}
             >
               <AnimatePresence>
-                {folders.map((folder, index) => (
+                {folders.map((folder) => (
                   <CleanFolderCard
                     key={folder.id}
                     name={folder.name}
@@ -121,7 +120,7 @@ const AyahCard = ({ ayah }: { ayah: PinnedAyah }) => (
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
     transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-    className="group cursor-pointer rounded-2xl border-2 border-amber-200 dark:border-amber-800 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 p-6 hover:shadow-xl hover:border-amber-300 dark:hover:border-amber-600 transition-all duration-200 transform hover:scale-[1.02]"
+    className="group cursor-pointer rounded-2xl border-2 border-bookmark-pinned bg-card-bg p-6 hover:shadow-xl hover:border-bookmark-pinned transition-all duration-200 transform hover:scale-[1.02]"
     onClick={() => {
       // TODO: Navigate to verse page
       console.log(`Navigate to Surah ${ayah.surahNumber}:${ayah.ayahNumber}`);
@@ -130,14 +129,12 @@ const AyahCard = ({ ayah }: { ayah: PinnedAyah }) => (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <span className="rounded-lg bg-amber-200 dark:bg-amber-800/50 px-3 py-1.5 text-sm font-medium text-amber-800 dark:text-amber-200">
+          <span className="rounded-lg bg-card-bg px-3 py-1.5 text-sm font-medium text-bookmark-pinned border border-bookmark-pinned">
             {ayah.surahName}
           </span>
-          <span className="text-sm text-amber-600 dark:text-amber-400 font-medium">
-            Verse {ayah.ayahNumber}
-          </span>
+          <span className="text-sm text-bookmark-pinned font-medium">Verse {ayah.ayahNumber}</span>
         </div>
-        <button className="rounded-full p-2 text-amber-600 dark:text-amber-400 hover:bg-amber-200 dark:hover:bg-amber-800/50 transition-colors">
+        <button className="rounded-full p-2 text-bookmark-pinned hover:bg-hover transition-colors">
           <PinIcon size={18} />
         </button>
       </div>
@@ -227,7 +224,7 @@ const LastReadCard = ({ reading }: { reading: LastReading }) => (
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
     transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-    className="group cursor-pointer rounded-2xl border-2 border-indigo-200 dark:border-indigo-800 bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 p-6 hover:shadow-xl hover:border-indigo-300 dark:hover:border-indigo-600 transition-all duration-200 transform hover:scale-[1.02]"
+    className="group cursor-pointer rounded-2xl border-2 border-bookmark-lastread bg-card-bg p-6 hover:shadow-xl hover:border-bookmark-lastread transition-all duration-200 transform hover:scale-[1.02]"
     onClick={() => {
       // TODO: Navigate to verse page
       console.log(`Navigate to Surah ${reading.surahNumber}:${reading.lastAyah}`);
@@ -236,26 +233,22 @@ const LastReadCard = ({ reading }: { reading: LastReading }) => (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <span className="rounded-lg bg-indigo-200 dark:bg-indigo-800/50 px-3 py-1.5 text-sm font-medium text-indigo-800 dark:text-indigo-200">
+          <span className="rounded-lg bg-card-bg px-3 py-1.5 text-sm font-medium text-bookmark-lastread border border-bookmark-lastread">
             {reading.surahName}
           </span>
-          <span className="text-sm text-indigo-600 dark:text-indigo-400 font-medium">
+          <span className="text-sm text-bookmark-lastread font-medium">
             Verse {reading.lastAyah}
           </span>
         </div>
-        <span className="text-xs text-indigo-500 dark:text-indigo-400 bg-white/50 dark:bg-gray-800/50 px-2 py-1 rounded">
+        <span className="text-xs text-bookmark-lastread bg-card-bg px-2 py-1 rounded">
           {reading.readDate}
         </span>
       </div>
 
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-900 dark:text-white">
-            Reading Progress
-          </span>
-          <span className="text-sm font-bold text-indigo-600 dark:text-indigo-400">
-            {reading.progress}%
-          </span>
+          <span className="text-sm font-medium text-foreground">Reading Progress</span>
+          <span className="text-sm font-bold text-bookmark-lastread">{reading.progress}%</span>
         </div>
         <div className="w-full bg-white/60 dark:bg-gray-800/60 rounded-full h-3 overflow-hidden">
           <motion.div
@@ -375,8 +368,11 @@ const BookmarksPage = () => {
 
   return (
     <>
+      <style jsx global>
+        {styles}
+      </style>
       <CreateFolderModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-      <div className="bookmark-page flex h-full w-full">
+      <div className="flex h-full w-full bg-white dark:bg-slate-900 min-h-screen">
         {/* Collapsible Sidebar */}
         <BookmarkSidebar activeSection={activeSection} onSectionChange={setActiveSection} />
 
