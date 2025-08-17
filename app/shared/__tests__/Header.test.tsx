@@ -1,16 +1,6 @@
-import { render, screen } from '@testing-library/react';
 import Header from '@/app/shared/Header';
-import { SidebarProvider } from '@/app/providers/SidebarContext';
-import { ThemeProvider } from '@/app/providers/ThemeContext';
+import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import { HeaderVisibilityProvider } from '@/app/(features)/layout/context/HeaderVisibilityContext';
-
-const Wrapper = ({ children }: { children: React.ReactNode }) => (
-  <ThemeProvider>
-    <HeaderVisibilityProvider>
-      <SidebarProvider>{children}</SidebarProvider>
-    </HeaderVisibilityProvider>
-  </ThemeProvider>
-);
 
 // Mock the useTranslation hook
 jest.mock('react-i18next', () => ({
@@ -42,20 +32,20 @@ beforeAll(() => {
 
 describe('Header', () => {
   it('renders the title', () => {
-    render(
-      <Wrapper>
+    renderWithProviders(
+      <HeaderVisibilityProvider>
         <Header />
-      </Wrapper>
+      </HeaderVisibilityProvider>
     );
     // The component uses t('title'), so we expect 'title' to be in the document.
     expect(screen.getByText('title')).toBeInTheDocument();
   });
 
   it('renders the search placeholder', () => {
-    render(
-      <Wrapper>
+    renderWithProviders(
+      <HeaderVisibilityProvider>
         <Header />
-      </Wrapper>
+      </HeaderVisibilityProvider>
     );
     // The component uses t('search_placeholder'), so we check for that key.
     expect(screen.getByPlaceholderText('search_placeholder')).toBeInTheDocument();

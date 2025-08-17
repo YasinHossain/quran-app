@@ -1,12 +1,13 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import userEvent from '@testing-library/user-event';
 import SurahListSidebar from '@/app/shared/SurahListSidebar';
-import { SidebarProvider } from '@/app/providers/SidebarContext';
-import { ThemeProvider } from '@/app/providers/ThemeContext';
 import useSWR from 'swr';
 
-jest.mock('swr');
+jest.mock('swr', () => {
+  const actual = jest.requireActual('swr');
+  return { __esModule: true, ...actual, default: jest.fn() };
+});
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
@@ -20,12 +21,6 @@ jest.mock('next/navigation', () => ({
 const mockUseSWR = useSWR as jest.Mock;
 const useParams = require('next/navigation').useParams as jest.Mock;
 const usePathname = require('next/navigation').usePathname as jest.Mock;
-
-const Wrapper = ({ children }: { children: React.ReactNode }) => (
-  <ThemeProvider>
-    <SidebarProvider>{children}</SidebarProvider>
-  </ThemeProvider>
-);
 
 const chapters = [
   {
@@ -71,46 +66,34 @@ beforeEach(() => {
 
 describe('SurahListSidebar', () => {
   it('switches between Surah, Juz, and Page tabs', async () => {
-    render(
-      <Wrapper>
-        <SurahListSidebar />
-      </Wrapper>
-    );
+    renderWithProviders(<SurahListSidebar />);
 
-    expect(screen.getByText('Al-Fatihah')).toBeInTheDocument();
+    expect(await screen.findByText('Al-Fatihah')).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole('button', { name: 'juz_tab' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'juz_tab' }));
     expect(await screen.findByText('Juz 1')).toBeInTheDocument();
     expect(screen.queryByText('Al-Fatihah')).not.toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole('button', { name: 'page_tab' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'page_tab' }));
     expect(await screen.findByText('Page 1')).toBeInTheDocument();
     expect(screen.queryByText('Juz 1')).not.toBeInTheDocument();
   });
 
   it('filters items when searching', async () => {
-    render(
-      <Wrapper>
-        <SurahListSidebar />
-      </Wrapper>
-    );
+    renderWithProviders(<SurahListSidebar />);
 
-    const input = screen.getByPlaceholderText('search_surah');
+    const input = await screen.findByPlaceholderText('search_surah');
     await userEvent.type(input, '2');
 
-    expect(screen.getByText('Al-Baqarah')).toBeInTheDocument();
+    expect(await screen.findByText('Al-Baqarah')).toBeInTheDocument();
     expect(screen.queryByText('Al-Fatihah')).not.toBeInTheDocument();
   });
 
   it('updates selection state when an item is clicked', async () => {
-    render(
-      <Wrapper>
-        <SurahListSidebar />
-      </Wrapper>
-    );
+    renderWithProviders(<SurahListSidebar />);
 
-    await userEvent.click(screen.getByText('Al-Baqarah'));
-    const link = screen.getByText('Al-Baqarah').closest('a');
+    await userEvent.click(await screen.findByText('Al-Baqarah'));
+    const link = (await screen.findByText('Al-Baqarah')).closest('a');
     expect(link).toHaveAttribute('data-active', 'true');
   });
 });

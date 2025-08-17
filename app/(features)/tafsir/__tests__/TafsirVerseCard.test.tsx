@@ -1,9 +1,6 @@
-import { render, screen } from '@testing-library/react';
+import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import userEvent from '@testing-library/user-event';
 import VerseCard from '@/app/(features)/tafsir/[surahId]/[ayahId]/components/VerseCard';
-import { SettingsProvider } from '@/app/providers/SettingsContext';
-import { BookmarkProvider } from '@/app/providers/BookmarkContext';
-import { AudioProvider } from '@/app/shared/player/context/AudioContext';
 import { Verse } from '@/types';
 
 const verse: Verse = {
@@ -17,16 +14,7 @@ const verse: Verse = {
   translations: [{ resource_id: 20, text: 'In the name of Allah' }],
 };
 
-const renderCard = () =>
-  render(
-    <AudioProvider>
-      <SettingsProvider>
-        <BookmarkProvider>
-          <VerseCard verse={verse} />
-        </BookmarkProvider>
-      </SettingsProvider>
-    </AudioProvider>
-  );
+const renderCard = () => renderWithProviders(<VerseCard verse={verse} />);
 
 beforeAll(() => {
   Object.defineProperty(window, 'matchMedia', {
@@ -75,15 +63,7 @@ it('strips malicious tags from content', () => {
     translations: [{ resource_id: 20, text: '<script>alert(1)</script>Safe' }],
   };
 
-  render(
-    <AudioProvider>
-      <SettingsProvider>
-        <BookmarkProvider>
-          <VerseCard verse={maliciousVerse} />
-        </BookmarkProvider>
-      </SettingsProvider>
-    </AudioProvider>
-  );
+  renderWithProviders(<VerseCard verse={maliciousVerse} />);
 
   expect(document.querySelector('script')).toBeNull();
   expect(screen.getByText('Safe')).toBeInTheDocument();

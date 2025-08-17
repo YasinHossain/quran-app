@@ -1,9 +1,4 @@
-import { render, screen } from '@testing-library/react';
-import { SettingsProvider } from '@/app/providers/SettingsContext';
-import { BookmarkProvider } from '@/app/providers/BookmarkContext';
-import { AudioProvider } from '@/app/shared/player/context/AudioContext';
-import { SidebarProvider } from '@/app/providers/SidebarContext';
-import { ThemeProvider } from '@/app/providers/ThemeContext';
+import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import JuzPage from '@/app/(features)/juz/[juzId]/page';
 import { Verse, Juz } from '@/types';
 import * as api from '@/lib/api';
@@ -61,19 +56,7 @@ beforeEach(() => {
 });
 
 const renderPage = () =>
-  render(
-    <AudioProvider>
-      <SettingsProvider>
-        <BookmarkProvider>
-          <ThemeProvider>
-            <SidebarProvider>
-              <JuzPage params={{ juzId: '1' } as unknown as Promise<{ juzId: string }>} />
-            </SidebarProvider>
-          </ThemeProvider>
-        </BookmarkProvider>
-      </SettingsProvider>
-    </AudioProvider>
-  );
+  renderWithProviders(<JuzPage params={{ juzId: '1' } as unknown as Promise<{ juzId: string }>} />);
 
 test('renders juz info and verses', async () => {
   renderPage();
