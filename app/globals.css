@@ -6,6 +6,7 @@
   --foreground: #374151;
   --border-color: #e5e7eb;
   --accent: #0d9488;
+  --accent-hover: #0f766e;
   --subtle-grey: #d1d5db;
 
   /* Missing variables that components need */
@@ -28,6 +29,7 @@
   --foreground: #d1d5db;
   --border-color: #4b5563;
   --accent: #0d9488;
+  --accent-hover: #0f766e;
   --subtle-grey: #4b5563;
 
   /* Dark mode versions */
@@ -39,6 +41,45 @@
   --error: #ef4444;
 
   /* Dark semantic colors */
+  --bookmark-folder: #14b8a6;
+  --bookmark-pinned: #fbbf24;
+  --bookmark-lastread: #818cf8;
+  --bookmark-general: #34d399;
+}
+
+.theme-alt {
+  --background: #fffbf0;
+  --foreground: #1f2937;
+  --border-color: #e0e7ff;
+  --accent: #6366f1;
+  --accent-hover: #4f46e5;
+  --subtle-grey: #d1d5db;
+
+  --text-muted: #6b7280;
+  --card-background: #ffffff;
+  --hover-color: #f3f4f6;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+
+  --bookmark-folder: #0d9488;
+  --bookmark-pinned: #f59e0b;
+  --bookmark-lastread: #6366f1;
+  --bookmark-general: #10b981;
+}
+
+.theme-alt[data-theme='dark'] {
+  --background: #1e1b4b;
+  --foreground: #e0e7ff;
+  --border-color: #3730a3;
+  --accent: #6366f1;
+  --accent-hover: #4f46e5;
+  --subtle-grey: #4b5563;
+
+  --text-muted: #9ca3af;
+  --card-background: #374151;
+  --hover-color: #4b5563;
+
   --bookmark-folder: #14b8a6;
   --bookmark-pinned: #fbbf24;
   --bookmark-lastread: #818cf8;
