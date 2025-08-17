@@ -19,3 +19,7 @@ export { SearchIcon } from './SearchIcon';
 export { SunIcon } from './SunIcon';
 export { MoonIcon } from './MoonIcon';
 export { ShareIcon } from './ShareIcon';
+export { ClockIcon } from './ClockIcon';
+export { PinIcon } from './PinIcon';
+export { FolderIcon } from './FolderIcon';
+export { PlusIcon } from './PlusIcon';

@@ -11,26 +11,71 @@ interface VerseCardProps {
   verse: VerseType;
 }
 
+import { useCallback } from 'react';
+
 export default function VerseCard({ verse }: VerseCardProps) {
-  const { playingId, setPlayingId, loadingId } = useAudio();
+  const {
+    playingId,
+    setPlayingId,
+    loadingId,
+    setLoadingId,
+    setActiveVerse,
+    audioRef,
+    setIsPlaying,
+    openPlayer,
+  } = useAudio();
   const { settings } = useSettings();
-  const { bookmarkedVerses, toggleBookmark } = useBookmarks();
+  const { addBookmark, removeBookmark, findBookmark, isBookmarked } = useBookmarks();
 
   const isPlaying = playingId === verse.id;
   const isLoadingAudio = loadingId === verse.id;
-  const isBookmarked = bookmarkedVerses.includes(String(verse.id));
+  const isVerseBookmarked = isBookmarked(String(verse.id));
+
+  const handlePlayPause = useCallback(() => {
+    if (playingId === verse.id) {
+      audioRef.current?.pause();
+      setPlayingId(null);
+      setLoadingId(null);
+      setActiveVerse(null);
+      setIsPlaying(false);
+    } else {
+      setActiveVerse(verse);
+      setPlayingId(verse.id);
+      setLoadingId(verse.id);
+      setIsPlaying(true);
+      openPlayer();
+    }
+  }, [
+    playingId,
+    verse,
+    audioRef,
+    setActiveVerse,
+    setPlayingId,
+    setLoadingId,
+    setIsPlaying,
+    openPlayer,
+  ]);
+
+  const handleBookmark = useCallback(() => {
+    const verseId = String(verse.id);
+    const bookmarkInfo = findBookmark(verseId);
+    if (bookmarkInfo) {
+      removeBookmark(verseId, bookmarkInfo.folder.id);
+    } else {
+      addBookmark(verseId);
+    }
+  }, [addBookmark, removeBookmark, findBookmark, verse.id]);
 
   return (
-    <div className="relative flex bg-white rounded-md border shadow p-6">
-           {' '}
+    <div className="relative flex rounded-md border bg-white p-6 shadow">
       <VerseActions
         verseKey={verse.verse_key}
         isPlaying={isPlaying}
         isLoadingAudio={isLoadingAudio}
-        isBookmarked={isBookmarked}
-        onPlayPause={() => setPlayingId((id) => (id === verse.id ? null : verse.id))}
-        onBookmark={() => toggleBookmark(String(verse.id))}
-        className="w-14 mr-4 pt-2 text-gray-500"
+        isBookmarked={isVerseBookmarked}
+        onPlayPause={handlePlayPause}
+        onBookmark={handleBookmark}
+        className="mr-4 w-14 pt-2 text-gray-500"
       />
            {' '}
       <div className="flex-grow space-y-6">
