@@ -22,7 +22,7 @@ export const BookmarkListView = ({ folder, onBack }: BookmarkListViewProps) => {
       <div className="mb-8">
         <button
           onClick={onBack}
-          className="inline-flex items-center gap-2 mb-6 px-3 py-2 text-sm font-medium text-muted hover:text-foreground transition-colors rounded-lg hover:bg-hover"
+          className="inline-flex items-center gap-2 mb-6 px-3 py-2 text-sm font-medium text-muted hover:text-[var(--foreground)] transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
         >
           <ArrowLeftIcon size={16} />
           Back to Folders
@@ -69,7 +69,7 @@ export const BookmarkListView = ({ folder, onBack }: BookmarkListViewProps) => {
                   <div className="h-3 bg-bookmark-general opacity-10 rounded animate-pulse w-3/4" />
                 </div>
 
-                <div className="mt-4 flex items-center justify-between text-xs text-bookmark-general">
+                <div className="mt-4 flex items-center justify-between text-xs text-emerald-600 dark:text-emerald-400">
                   <span>Click to view in context</span>
                   <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                 </div>

@@ -15,6 +15,12 @@
   --success: #10b981;
   --warning: #f59e0b;
   --error: #ef4444;
+
+  /* Semantic color variables for bookmarks */
+  --bookmark-folder: #0d9488;
+  --bookmark-pinned: #f59e0b;
+  --bookmark-lastread: #6366f1;
+  --bookmark-general: #10b981;
 }
 
 [data-theme='dark'] {
@@ -31,6 +37,12 @@
   --success: #10b981;
   --warning: #f59e0b;
   --error: #ef4444;
+
+  /* Dark semantic colors */
+  --bookmark-folder: #14b8a6;
+  --bookmark-pinned: #fbbf24;
+  --bookmark-lastread: #818cf8;
+  --bookmark-general: #34d399;
 }
 
 @layer base {
@@ -61,36 +73,14 @@
 }
 
 /* ===== Component Base Styles ===== */
-.card {
-  background: var(--card-background);
-  border: 1px solid var(--border-color);
-  border-radius: 0.75rem;
-  transition: all 0.2s ease-in-out;
-}
+@layer components {
+  .qa-card {
+    @apply bg-card-bg border border-border rounded-xl transition-all duration-200 ease-in-out hover:shadow-md;
+  }
 
-.card:hover {
-  box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.btn-primary {
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-  transition: all 0.2s ease-in-out;
-}
-
-.btn-primary:hover {
-  background: #0f766e;
-  transform: translateY(-1px);
-}
-
-.text-muted {
-  color: var(--text-muted);
+  .qa-btn-primary {
+    @apply bg-accent text-white border-none rounded-lg px-4 py-2 font-medium transition-all duration-200 ease-in-out hover:bg-teal-700 hover:-translate-y-px;
+  }
 }
 
 /* ===== Custom Range Slider Styles ===== */
