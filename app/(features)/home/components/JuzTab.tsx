@@ -1,5 +1,6 @@
 'use client';
 import { useTheme } from '@/app/providers/ThemeContext';
+import { themeClass } from '@/lib/utils/themeClass';
 import juzData from '@/data/juz.json';
 import ThemedCard from './ThemedCard';
 
@@ -21,21 +22,21 @@ export default function JuzTab() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div
-                className={`flex items-center justify-center w-12 h-12 rounded-xl font-bold text-lg transition-colors ${
-                  theme === 'light'
-                    ? 'bg-gray-100 text-emerald-600 group-hover:bg-emerald-50/50'
-                    : 'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'
-                }`}
+                className={`flex items-center justify-center w-12 h-12 rounded-xl font-bold text-lg transition-colors ${themeClass(
+                  theme,
+                  'bg-gray-100 text-emerald-600 group-hover:bg-emerald-50/50',
+                  'bg-slate-700/50 text-emerald-400 group-hover:bg-emerald-500/20'
+                )}`}
               >
                 {juz.number}
               </div>
               <div>
                 <h3
-                  className={`font-semibold text-lg ${theme === 'light' ? 'text-slate-900' : 'text-white'}`}
+                  className={`font-semibold text-lg ${themeClass(theme, 'text-slate-900', 'text-white')}`}
                 >
                   {juz.name}
                 </h3>
-                <p className={`text-sm ${theme === 'light' ? 'text-slate-600' : 'text-slate-400'}`}>
+                <p className={`text-sm ${themeClass(theme, 'text-slate-600', 'text-slate-400')}`}>
                   {juz.surahRange}
                 </p>
               </div>
