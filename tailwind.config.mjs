@@ -1,4 +1,11 @@
-import designTokens from './design-system.json' assert { type: 'json' };
+import defaultTokens from './design-system.json' assert { type: 'json' };
+import altTokens from './design-system.alt.json' assert { type: 'json' };
+import plugin from 'tailwindcss/plugin';
+
+const tokenSets = {
+  base: defaultTokens,
+  alt: altTokens,
+};
 
 /** @type {import('tailwindcss').Config} */
 const config = {
@@ -11,9 +18,9 @@ const config = {
         foreground: 'var(--foreground)',
         border: 'var(--border-color)',
         accent: 'var(--accent)',
-        'accent-hover': designTokens.colors.accentHover,
+        'accent-hover': 'var(--accent-hover)',
         brand: '#009688',
-        
+
         // Semantic colors for components
         muted: 'var(--text-muted)',
         'card-bg': 'var(--card-background)',
@@ -21,13 +28,13 @@ const config = {
         success: 'var(--success)',
         warning: 'var(--warning)',
         error: 'var(--error)',
-        
+
         // Bookmark-specific colors
         'bookmark-folder': 'var(--bookmark-folder)',
         'bookmark-pinned': 'var(--bookmark-pinned)',
         'bookmark-lastread': 'var(--bookmark-lastread)',
         'bookmark-general': 'var(--bookmark-general)',
-        
+
         // Common UI colors that work with dark/light themes
         gray: {
           50: '#f9fafb',
@@ -90,29 +97,68 @@ const config = {
           900: '#064e3b',
         },
       },
-      spacing: designTokens.spacing,
+      spacing: defaultTokens.spacing,
       fontFamily: {
-        base: [designTokens.typography.fontFamily, 'sans-serif'],
+        base: [defaultTokens.typography.fontFamily, 'sans-serif'],
       },
       fontSize: {
-        base: designTokens.typography.fontSizeBase,
-        h1: designTokens.typography.headings.h1,
-        h2: designTokens.typography.headings.h2,
-        h3: designTokens.typography.headings.h3,
+        base: defaultTokens.typography.fontSizeBase,
+        h1: defaultTokens.typography.headings.h1,
+        h2: defaultTokens.typography.headings.h2,
+        h3: defaultTokens.typography.headings.h3,
       },
       borderRadius: {
-        DEFAULT: designTokens.components.borderRadius,
+        DEFAULT: defaultTokens.components.borderRadius,
         xl: '1rem',
         '2xl': '1.5rem',
       },
       boxShadow: {
-        default: designTokens.components.shadow,
+        default: defaultTokens.components.shadow,
         card: '0 1px 3px rgba(0, 0, 0, 0.1)',
         modal: '0 4px 6px rgba(0, 0, 0, 0.15)',
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(({ addBase }) => {
+      const variables = {};
+      for (const [name, tokens] of Object.entries(tokenSets)) {
+        const selector = name === 'base' ? ':root' : `.theme-${name}`;
+        variables[selector] = {
+          '--background': tokens.colors.background,
+          '--foreground': tokens.colors.foreground,
+          '--border-color': tokens.colors.border,
+          '--accent': tokens.colors.accent,
+          '--accent-hover': tokens.colors.accentHover,
+          '--subtle-grey': '#d1d5db',
+          '--text-muted': '#6b7280',
+          '--card-background': '#ffffff',
+          '--hover-color': '#f3f4f6',
+          '--success': '#10b981',
+          '--warning': '#f59e0b',
+          '--error': '#ef4444',
+          '--bookmark-folder': '#0d9488',
+          '--bookmark-pinned': '#f59e0b',
+          '--bookmark-lastread': '#6366f1',
+          '--bookmark-general': '#10b981',
+        };
+        variables[`${selector}[data-theme='dark']`] = {
+          '--background': tokens.colors.backgroundDark,
+          '--foreground': tokens.colors.foregroundDark,
+          '--border-color': tokens.colors.borderDark,
+          '--subtle-grey': '#4b5563',
+          '--text-muted': '#9ca3af',
+          '--card-background': '#374151',
+          '--hover-color': '#4b5563',
+          '--bookmark-folder': '#14b8a6',
+          '--bookmark-pinned': '#fbbf24',
+          '--bookmark-lastread': '#818cf8',
+          '--bookmark-general': '#34d399',
+        };
+      }
+      addBase(variables);
+    }),
+  ],
 };
 
 export default config;
