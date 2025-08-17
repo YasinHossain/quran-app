@@ -4,9 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ResizeObserver as ResizeObserverPolyfill } from '@juggle/resize-observer';
 import { AlertCircle, RotateCcw } from 'lucide-react';
 import { useArabicFontPanel } from './arabic-font-panel/useArabicFontPanel';
-import { ResourceTabs, ResourceList, ResourceItem } from '@/app/shared/resource-panel';
-import { ArabicFontSearch } from './arabic-font-panel/ArabicFontSearch';
-import { ArabicFontSelectionList } from './arabic-font-panel/ArabicFontSelectionList';
+import { ResourceList } from '@/app/shared/resource-panel';
 
 interface ArabicFontPanelProps {
   isOpen: boolean;
@@ -19,26 +17,12 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
     fonts,
     loading,
     error,
-    fontGroups,
     groupedFonts,
     activeFilter,
     setActiveFilter,
-    searchTerm,
-    setSearchTerm,
     selectedIds,
     handleSelectionToggle,
-    orderedSelection,
     handleReset,
-    draggedId,
-    handleDragStart,
-    handleDragOver,
-    handleDrop,
-    handleDragEnd,
-    tabsContainerRef,
-    canScrollLeft,
-    canScrollRight,
-    scrollTabsLeft,
-    scrollTabsRight,
   } = useArabicFontPanel(isOpen);
 
   const listContainerRef = useRef<HTMLDivElement>(null);
@@ -75,27 +59,7 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
     return () => window.removeEventListener('resize', updateHeight);
   }, [isOpen]);
 
-  const resourcesToRender = activeFilter === 'All' ? fonts : groupedFonts[activeFilter] || [];
-
-  // Create sections for rendering with headers, ordered as Uthmani, Indopak, then alphabetical
-  const sectionsToRender =
-    activeFilter === 'All'
-      ? Object.entries(groupedFonts)
-          .sort(([categoryA], [categoryB]) => {
-            // Uthmani first
-            if (categoryA === 'Uthmani') return -1;
-            if (categoryB === 'Uthmani') return 1;
-            // Indopak second
-            if (categoryA === 'Indopak') return -1;
-            if (categoryB === 'Indopak') return 1;
-            // Then alphabetical
-            return categoryA.localeCompare(categoryB);
-          })
-          .map(([category, items]) => ({
-            category,
-            items,
-          }))
-      : [{ category: activeFilter, items: resourcesToRender }];
+  const resourcesToRender = groupedFonts[activeFilter] || [];
 
   return (
     <div
@@ -174,87 +138,64 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
 
         {!loading && !error && (
           <>
-            {/* Scrollable Content - Search, Selections, Tabs, and List */}
+            {/* Scrollable Content - Toggle and List */}
             <div className="flex-1 overflow-y-auto" ref={listContainerRef}>
-              <div className="p-4 space-y-4">
-                <ArabicFontSearch
-                  theme={theme}
-                  searchTerm={searchTerm}
-                  setSearchTerm={setSearchTerm}
-                />
-                <ArabicFontSelectionList
-                  theme={theme}
-                  orderedSelection={orderedSelection}
-                  fonts={fonts}
-                  handleSelectionToggle={handleSelectionToggle}
-                  handleDragStart={handleDragStart}
-                  handleDragOver={handleDragOver}
-                  handleDrop={handleDrop}
-                  handleDragEnd={handleDragEnd}
-                  draggedId={draggedId}
-                />
-              </div>
 
-              {/* Sticky Tabs - Will stick to top when scrolled to */}
+              {/* Font Type Toggle - Uthmani/Indopak */}
               <div
-                className={`sticky top-0 z-10 py-2 border-b ${
+                className={`sticky top-0 z-10 py-4 border-b ${
                   theme === 'dark'
                     ? 'bg-[var(--background)] border-[var(--border-color)]'
                     : 'bg-white/95 backdrop-blur-sm border-slate-200'
                 }`}
               >
                 <div className="px-4">
-                  <ResourceTabs
-                    languages={fontGroups}
-                    activeFilter={activeFilter}
-                    onTabClick={setActiveFilter}
-                    tabsContainerRef={tabsContainerRef}
-                    canScrollLeft={canScrollLeft}
-                    canScrollRight={canScrollRight}
-                    scrollTabsLeft={scrollTabsLeft}
-                    scrollTabsRight={scrollTabsRight}
-                    theme={theme}
-                    className=""
-                  />
+                  <div
+                    className={`flex items-center p-1 rounded-full ${
+                      theme === 'dark' ? 'bg-slate-800/60' : 'bg-gray-100'
+                    }`}
+                  >
+                    <button
+                      onClick={() => setActiveFilter('Uthmani')}
+                      className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                        activeFilter === 'Uthmani'
+                          ? theme === 'dark'
+                            ? 'bg-slate-700 text-white shadow'
+                            : 'bg-white shadow text-slate-900'
+                          : theme === 'dark'
+                            ? 'text-slate-400 hover:text-white'
+                            : 'text-slate-400 hover:text-slate-700'
+                      }`}
+                    >
+                      Uthmani
+                    </button>
+                    <button
+                      onClick={() => setActiveFilter('IndoPak')}
+                      className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                        activeFilter === 'IndoPak'
+                          ? theme === 'dark'
+                            ? 'bg-slate-700 text-white shadow'
+                            : 'bg-white shadow text-slate-900'
+                          : theme === 'dark'
+                            ? 'text-slate-400 hover:text-white'
+                            : 'text-slate-400 hover:text-slate-700'
+                      }`}
+                    >
+                      IndoPak
+                    </button>
+                  </div>
                 </div>
               </div>
 
               <div className="px-4 pb-4 pt-4">
-                {activeFilter === 'All' ? (
-                  <div className="space-y-6">
-                    {sectionsToRender.map(({ category, items }) => (
-                      <div key={category}>
-                        <h3
-                          className={`text-lg font-semibold mb-4 ${
-                            theme === 'dark' ? 'text-slate-200' : 'text-slate-800'
-                          }`}
-                        >
-                          {category}
-                        </h3>
-                        <div className="space-y-2">
-                          {items.map((item) => (
-                            <ResourceItem
-                              key={item.id}
-                              item={item}
-                              isSelected={selectedIds.has(item.id)}
-                              onToggle={handleSelectionToggle}
-                              theme={theme}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <ResourceList
-                    resources={resourcesToRender}
-                    rowHeight={58}
-                    selectedIds={selectedIds}
-                    onToggle={handleSelectionToggle}
-                    theme={theme}
-                    height={listHeight}
-                  />
-                )}
+                <ResourceList
+                  resources={resourcesToRender}
+                  rowHeight={58}
+                  selectedIds={selectedIds}
+                  onToggle={handleSelectionToggle}
+                  theme={theme}
+                  height={listHeight}
+                />
               </div>
             </div>
           </>

@@ -1,31 +1,41 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSettings } from '@/app/providers/SettingsContext';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import { useTheme } from '@/app/providers/ThemeContext';
-import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { ResizeObserver as ResizeObserverPolyfill } from '@juggle/resize-observer';
 
 interface WordLanguagePanelProps {
   isOpen: boolean;
   onClose: () => void;
+  renderMode?: 'panel' | 'content'; // 'panel' for slide-over, 'content' for inline in sidebar
 }
 
-// Simple predefined list of working word-by-word languages
+// Full list of available word-by-word languages based on WORD_LANGUAGE_LABELS
 const WORD_LANGUAGES = [
   { id: 85, name: 'English', code: 'en' as LanguageCode },
   { id: 13, name: 'Bangla', code: 'bn' as LanguageCode },
   { id: 54, name: 'Urdu', code: 'ur' as LanguageCode },
-  { id: 45, name: 'Indonesian', code: 'id' as LanguageCode },
+  { id: 158, name: 'Hindi', code: 'hi' as LanguageCode },
+  { id: 45, name: 'Bahasa Indonesia', code: 'id' as LanguageCode },
+  { id: 46, name: 'Persian', code: 'fa' as LanguageCode },
   { id: 38, name: 'Turkish', code: 'tr' as LanguageCode },
+  { id: 50, name: 'Tamil', code: 'ta' as LanguageCode },
 ];
 
-export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({ isOpen, onClose }) => {
+export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({ 
+  isOpen, 
+  onClose, 
+  renderMode = 'panel' 
+}) => {
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
   const { theme } = useTheme();
-  const { isHidden } = useHeaderVisibility();
+  
+  const listContainerRef = useRef<HTMLDivElement>(null);
+  const [listHeight, setListHeight] = useState(0);
 
   const handleLanguageSelect = (language: (typeof WORD_LANGUAGES)[0]) => {
     setSettings({
@@ -33,127 +43,152 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({ isOpen, on
       wordLang: language.code,
       wordTranslationId: language.id,
     });
-    onClose();
   };
 
-  return (
-    <>
-      <div
-        className={`fixed inset-0 bg-transparent z-30 lg:hidden ${isOpen ? '' : 'hidden'}`}
-        role="button"
-        tabIndex={0}
-        onClick={onClose}
-        onKeyDown={(e) => {
-          if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
-            onClose();
-          }
-        }}
-      />
-      <aside
-        className={`fixed lg:static top-16 lg:top-0 bottom-0 right-0 w-[20.7rem] bg-[var(--background)] text-[var(--foreground)] flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 z-50 lg:z-40 lg:h-full ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        } ${isOpen ? 'flex' : 'hidden'} lg:flex scrollbar-hide`}
-        style={{
-          position: 'relative',
-          msOverflowStyle: 'none',
-          scrollbarWidth: 'none',
-        }}
-      >
-        <header className="flex items-center justify-between p-4 border-b border-[var(--border-color)]">
-          <button
-            aria-label="Back"
-            onClick={onClose}
-            className="p-2 rounded-full hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 lg:hidden"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className={`h-6 w-6 ${theme === 'dark' ? 'text-[var(--foreground)]' : 'text-slate-600'}`}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <h2 className="flex-grow text-center text-lg font-bold">
-            {t('word_by_word_panel_title')}
-          </h2>
-          <div className="w-8" />
-        </header>
+  useEffect(() => {
+    if (renderMode === 'content') return; // Skip resize observer for content mode
+    
+    const element = listContainerRef.current;
+    if (!element || !isOpen) return;
 
-        <div className="flex-grow p-4 space-y-4">
-          <div className="space-y-2">
-            {WORD_LANGUAGES.map((language) => {
-              const isSelected = settings.wordTranslationId === language.id;
-              return (
-                <div
-                  key={language.id}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => handleLanguageSelect(language)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      handleLanguageSelect(language);
-                    }
-                  }}
-                  className={`flex items-center justify-between px-4 py-2.5 h-[50px] rounded-lg cursor-pointer transition-all duration-200 focus:outline-none focus-visible:outline-none outline-none border-0 focus:border-0 active:outline-none ${
-                    isSelected
-                      ? theme === 'dark'
-                        ? 'bg-blue-900/30'
-                        : 'bg-blue-50'
-                      : theme === 'dark'
-                        ? 'bg-slate-700/50 hover:bg-gray-700'
-                        : 'bg-white border border-slate-100 hover:bg-slate-50'
-                  }`}
-                >
-                  <div className="flex-1 min-w-0 pr-3">
-                    <p
-                      className={`font-medium text-sm leading-tight truncate ${
-                        isSelected
-                          ? theme === 'dark'
-                            ? 'text-blue-200'
-                            : 'text-blue-800'
-                          : theme === 'dark'
-                            ? 'text-[var(--foreground)]'
-                            : 'text-slate-800'
-                      }`}
-                      title={language.name}
-                    >
-                      {language.name}
-                    </p>
-                  </div>
-                  <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-                    {isSelected && (
-                      <CheckIcon
-                        className={`h-5 w-5 ${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}
-                      />
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+    const updateHeight = () => {
+      const rect = element.getBoundingClientRect();
+      const fallback = window.innerHeight - rect.top;
+      setListHeight(rect.height || fallback);
+    };
+
+    updateHeight();
+
+    const ResizeObserverConstructor =
+      typeof ResizeObserver !== 'undefined' ? ResizeObserver : ResizeObserverPolyfill;
+
+    if (ResizeObserverConstructor) {
+      const observer = new ResizeObserverConstructor((entries) => {
+        for (const entry of entries) {
+          const rect = entry.target.getBoundingClientRect();
+          const fallback = window.innerHeight - rect.top;
+          setListHeight(entry.contentRect.height || fallback);
+        }
+      });
+      observer.observe(element);
+      return () => observer.disconnect();
+    }
+
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, [isOpen, renderMode]);
+
+  const renderLanguageList = () => (
+    <div className="space-y-2">
+      {WORD_LANGUAGES.map((language) => {
+        const isSelected = settings.wordTranslationId === language.id;
+        return (
+          <div
+            key={language.id}
+            role="button"
+            tabIndex={0}
+            onClick={() => handleLanguageSelect(language)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleLanguageSelect(language);
+              }
+            }}
+            className={`flex items-center justify-between px-4 py-3 h-[58px] rounded-lg cursor-pointer transition-all duration-200 focus:outline-none focus-visible:outline-none outline-none border ${
+              isSelected
+                ? theme === 'dark'
+                  ? 'bg-teal-800/20 border-teal-600/50'
+                  : 'bg-teal-50 border-teal-200'
+                : theme === 'dark'
+                  ? 'bg-slate-800/50 border-slate-700 hover:bg-slate-700/50'
+                  : 'bg-white border-slate-200 hover:bg-slate-50'
+            }`}
+          >
+            <div className="flex-1 min-w-0 pr-3">
+              <p
+                className={`font-medium text-sm leading-tight truncate ${
+                  isSelected
+                    ? theme === 'dark'
+                      ? 'text-teal-200'
+                      : 'text-teal-800'
+                    : theme === 'dark'
+                      ? 'text-[var(--foreground)]'
+                      : 'text-slate-800'
+                }`}
+                title={language.name}
+              >
+                {language.name}
+              </p>
+            </div>
+            <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+              {isSelected && (
+                <CheckIcon
+                  className={`h-5 w-5 ${theme === 'dark' ? 'text-teal-400' : 'text-teal-600'}`}
+                />
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  // Content mode - render just the list for use inside SettingsSidebar
+  if (renderMode === 'content') {
+    return (
+      <div className="flex-grow p-4 space-y-4">
+        {renderLanguageList()}
+      </div>
+    );
+  }
+
+  // Panel mode - render as full slide-over panel
+  return (
+    <div
+      data-testid="word-language-panel"
+      className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
+        isOpen ? 'translate-x-0' : 'translate-x-full'
+      } ${theme === 'dark' ? 'bg-[var(--background)] text-[var(--foreground)]' : 'bg-white text-slate-800'}`}
+    >
+      <header
+        className={`flex items-center p-4 border-b ${
+          theme === 'dark' ? 'border-[var(--border-color)]' : 'border-slate-200'
+        }`}
+      >
+        <button
+          onClick={onClose}
+          className={`p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 ${
+            theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-200'
+          }`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={`h-6 w-6 ${theme === 'dark' ? 'text-[var(--foreground)]' : 'text-slate-600'}`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <h2
+          className={`text-lg font-bold text-center flex-grow ${
+            theme === 'dark' ? 'text-[var(--foreground)]' : 'text-slate-800'
+          }`}
+        >
+          {t('word_by_word_panel_title')}
+        </h2>
+      </header>
+
+      <div className="flex-1 flex flex-col min-h-0">
+        <div className="flex-1 overflow-y-auto" ref={listContainerRef}>
+          <div className="px-4 pb-4 pt-4">
+            {renderLanguageList()}
           </div>
         </div>
-
-        <div className="p-4">
-          <button
-            onClick={() => {
-              setSettings({
-                ...settings,
-                wordLang: 'en' as LanguageCode,
-                wordTranslationId: 85, // Default to English
-              });
-              onClose();
-            }}
-            className="w-full py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-sm hover:border-teal-500 transition-colors"
-          >
-            {t('reset')}
-          </button>
-        </div>
-      </aside>
-    </>
+      </div>
+    </div>
   );
 };
 

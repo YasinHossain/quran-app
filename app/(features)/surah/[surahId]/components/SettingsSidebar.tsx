@@ -14,7 +14,6 @@ import { ReadingSettings } from './ReadingSettings';
 import { TranslationPanel } from './translation-panel';
 import { TafsirPanel } from './tafsir-panel';
 import { WordLanguagePanel } from './WordLanguagePanel';
-import { WordLanguageContent } from './WordLanguageContent';
 
 interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;
@@ -31,6 +30,7 @@ interface SettingsSidebarProps {
   onTafsirPanelClose?: () => void;
   isWordLanguagePanelOpen?: boolean;
   onWordLanguagePanelClose?: () => void;
+  pageType?: 'verse' | 'tafsir';
 }
 
 export const SettingsSidebar = ({
@@ -48,6 +48,7 @@ export const SettingsSidebar = ({
   onTafsirPanelClose,
   isWordLanguagePanelOpen = false,
   onWordLanguagePanelClose,
+  pageType,
 }: SettingsSidebarProps) => {
   const { t } = useTranslation();
   const { isSettingsOpen, setSettingsOpen } = useSidebar();
@@ -57,21 +58,34 @@ export const SettingsSidebar = ({
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
   const sidebarRef = useRef<HTMLElement>(null);
 
-  // State for collapsible sections
-  const [openSections, setOpenSections] = useState<string[]>([]);
+  // State for collapsible sections with localStorage persistence
+  const [openSections, setOpenSections] = useState<string[]>(() => {
+    // Try to get saved preferences from localStorage
+    try {
+      const saved = localStorage.getItem('settings-sidebar-open-sections');
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch (error) {
+      console.warn('Failed to parse saved sidebar sections:', error);
+    }
+    
+    // Default open sections - both translation and font should be open by default
+    return ['translation', 'font'];
+  });
 
-  // Function to handle section toggle with max 2 open rule
+  // Function to handle section toggle with max 2 open rule and localStorage persistence
   const handleSectionToggle = (sectionId: string) => {
     console.log('Toggling section:', sectionId, 'Current open:', openSections);
     setOpenSections((prev) => {
+      let newState: string[];
+      
       if (prev.includes(sectionId)) {
         // If section is open, close it
-        const newState = prev.filter((id) => id !== sectionId);
+        newState = prev.filter((id) => id !== sectionId);
         console.log('Closing section, new state:', newState);
-        return newState;
       } else {
         // If section is closed, open it
-        let newState;
         if (prev.length >= 2) {
           // If already 2 sections open, remove the oldest one and add the new one
           newState = [prev[1], sectionId];
@@ -80,8 +94,16 @@ export const SettingsSidebar = ({
           newState = [...prev, sectionId];
         }
         console.log('Opening section, new state:', newState);
-        return newState;
       }
+      
+      // Save to localStorage
+      try {
+        localStorage.setItem('settings-sidebar-open-sections', JSON.stringify(newState));
+      } catch (error) {
+        console.warn('Failed to save sidebar sections to localStorage:', error);
+      }
+      
+      return newState;
     });
   };
 
@@ -147,93 +169,82 @@ export const SettingsSidebar = ({
         <header className="flex items-center justify-between p-4 border-b border-[var(--border-color)]">
           <button
             aria-label="Back"
-            onClick={() => {
-              if (isWordLanguagePanelOpen) {
-                onWordLanguagePanelClose?.();
-              } else {
-                setSettingsOpen(false);
-              }
-            }}
+            onClick={() => setSettingsOpen(false)}
             className="p-2 rounded-full hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 lg:hidden"
           >
             <ArrowLeftIcon size={18} />
           </button>
           <h2 className="flex-grow text-center text-lg font-bold">
-            {isWordLanguagePanelOpen ? 'Word-by-Word Languages' : 'Settings'}
+            Settings
           </h2>
           <div className="w-8" />
         </header>
-        {isWordLanguagePanelOpen ? (
-          <WordLanguageContent onClose={onWordLanguagePanelClose} />
-        ) : (
-          <div className="flex-grow p-4 space-y-4">
-            <div
-              className={`flex items-center p-1 rounded-full mb-4 ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'}`}
+        <div className="flex-grow p-4 space-y-4">
+          <div
+            className={`flex items-center p-1 rounded-full mb-4 ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'}`}
+          >
+            <button
+              onClick={() => handleTabClick('translation')}
+              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                activeTab === 'translation'
+                  ? theme === 'light'
+                    ? 'bg-white shadow text-slate-900'
+                    : 'bg-slate-700 text-white shadow'
+                  : theme === 'light'
+                    ? 'text-slate-400 hover:text-slate-700'
+                    : 'text-slate-400 hover:text-white'
+              }`}
             >
-              <button
-                onClick={() => handleTabClick('translation')}
-                className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
-                  activeTab === 'translation'
-                    ? theme === 'light'
-                      ? 'bg-white shadow text-slate-900'
-                      : 'bg-slate-700 text-white shadow'
-                    : theme === 'light'
-                      ? 'text-slate-400 hover:text-slate-700'
-                      : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                Translation
-              </button>
-              <button
-                onClick={() => handleTabClick('reading')}
-                className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
-                  activeTab === 'reading'
-                    ? theme === 'light'
-                      ? 'bg-white shadow text-slate-900'
-                      : 'bg-slate-700 text-white shadow'
-                    : theme === 'light'
-                      ? 'text-slate-400 hover:text-slate-700'
-                      : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                Reading
-              </button>
-            </div>
-            {activeTab === 'translation' && (
-              <>
-                <TranslationSettings
-                  onTranslationPanelOpen={onTranslationPanelOpen}
-                  onWordLanguagePanelOpen={onWordLanguagePanelOpen}
-                  onTafsirPanelOpen={onTafsirPanelOpen}
-                  selectedTranslationName={selectedTranslationName}
-                  selectedTafsirName={selectedTafsirName}
-                  selectedWordLanguageName={selectedWordLanguageName}
-                  showTafsirSetting={showTafsirSetting}
-                  isOpen={openSections.includes('translation')}
-                  onToggle={() => handleSectionToggle('translation')}
-                />
-                <TafsirSettings
-                  onTafsirPanelOpen={onTafsirPanelOpen}
-                  selectedTafsirName={selectedTafsirName}
-                  showTafsirSetting={showTafsirSetting}
-                  isOpen={openSections.includes('tafsir')}
-                  onToggle={() => handleSectionToggle('tafsir')}
-                />
-                <FontSettings
-                  onArabicFontPanelOpen={() => setIsArabicFontPanelOpen(true)}
-                  isOpen={openSections.includes('font')}
-                  onToggle={() => handleSectionToggle('font')}
-                />
-              </>
-            )}
-            {activeTab === 'reading' && (
-              <ReadingSettings
-                isOpen={openSections.includes('reading')}
-                onToggle={() => handleSectionToggle('reading')}
-              />
-            )}
+              Translation
+            </button>
+            <button
+              onClick={() => handleTabClick('reading')}
+              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                activeTab === 'reading'
+                  ? theme === 'light'
+                    ? 'bg-white shadow text-slate-900'
+                    : 'bg-slate-700 text-white shadow'
+                  : theme === 'light'
+                    ? 'text-slate-400 hover:text-slate-700'
+                    : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Mushaf
+            </button>
           </div>
-        )}
+          {activeTab === 'translation' && (
+            <>
+              <TranslationSettings
+                onTranslationPanelOpen={onTranslationPanelOpen}
+                onWordLanguagePanelOpen={onWordLanguagePanelOpen}
+                onTafsirPanelOpen={onTafsirPanelOpen}
+                selectedTranslationName={selectedTranslationName}
+                selectedTafsirName={selectedTafsirName}
+                selectedWordLanguageName={selectedWordLanguageName}
+                showTafsirSetting={showTafsirSetting}
+                isOpen={openSections.includes('translation')}
+                onToggle={() => handleSectionToggle('translation')}
+              />
+              <TafsirSettings
+                onTafsirPanelOpen={onTafsirPanelOpen}
+                selectedTafsirName={selectedTafsirName}
+                showTafsirSetting={showTafsirSetting}
+                isOpen={openSections.includes('tafsir')}
+                onToggle={() => handleSectionToggle('tafsir')}
+              />
+              <FontSettings
+                onArabicFontPanelOpen={() => setIsArabicFontPanelOpen(true)}
+                isOpen={openSections.includes('font')}
+                onToggle={() => handleSectionToggle('font')}
+              />
+            </>
+          )}
+          {activeTab === 'reading' && (
+            <div className="text-center py-8 text-gray-500">
+              Mushaf settings have been moved to the Translation tab.
+            </div>
+          )}
+        </div>
         <div className="p-4">
           <div
             className={`flex items-center p-1 rounded-full ${
@@ -271,6 +282,12 @@ export const SettingsSidebar = ({
         )}
         {onTafsirPanelClose && (
           <TafsirPanel isOpen={isTafsirPanelOpen} onClose={onTafsirPanelClose} />
+        )}
+        {onWordLanguagePanelClose && (
+          <WordLanguagePanel 
+            isOpen={isWordLanguagePanelOpen} 
+            onClose={onWordLanguagePanelClose} 
+          />
         )}
       </aside>
     </>

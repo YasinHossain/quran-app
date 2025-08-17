@@ -117,6 +117,7 @@ export default function SurahPage({ params }: SurahPageProps) {
         onTranslationPanelClose={() => setIsTranslationPanelOpen(false)}
         isWordLanguagePanelOpen={isWordPanelOpen}
         onWordLanguagePanelClose={() => setIsWordPanelOpen(false)}
+        pageType="verse"
       />
       {activeVerse && isPlayerVisible && (
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-transparent z-50">

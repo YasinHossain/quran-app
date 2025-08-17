@@ -17,15 +17,9 @@ interface ArabicFont {
 export const useArabicFontPanel = (isOpen: boolean) => {
   const { theme } = useTheme();
   const { settings, setSettings, arabicFonts } = useSettings();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeFilter, setActiveFilter] = useState('All');
+  const [activeFilter, setActiveFilter] = useState('Uthmani');
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
-  const [orderedSelection, setOrderedSelection] = useState<number[]>([]);
-  const [draggedId, setDraggedId] = useState<number | null>(null);
 
-  const tabsContainerRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
 
   // Convert arabicFonts to have consistent interface with other resources
   const fonts: ArabicFont[] = useMemo(() => {
@@ -42,20 +36,13 @@ export const useArabicFontPanel = (isOpen: boolean) => {
       const selectedFont = fonts.find((font) => font.value === settings.arabicFontFace);
       if (selectedFont) {
         setSelectedIds(new Set([selectedFont.id]));
-        setOrderedSelection([selectedFont.id]);
       }
     }
   }, [settings.arabicFontFace, fonts]);
 
-  // Filter fonts by search term
-  const filteredFonts = useMemo(() => {
-    if (!searchTerm) return fonts;
-    return fonts.filter((font) => font.name.toLowerCase().includes(searchTerm.toLowerCase()));
-  }, [fonts, searchTerm]);
-
   // Group fonts by category
   const groupedFonts = useMemo(() => {
-    const grouped = filteredFonts.reduce(
+    const grouped = fonts.reduce(
       (acc, font) => {
         const group = font.category || 'Other';
         (acc[group] = acc[group] || []).push(font);
@@ -70,19 +57,7 @@ export const useArabicFontPanel = (isOpen: boolean) => {
     });
 
     return grouped;
-  }, [filteredFonts]);
-
-  // Font groups for tabs
-  const fontGroups = useMemo(() => {
-    const groups = Object.keys(groupedFonts).sort((a, b) => {
-      if (a === 'Uthmani') return -1;
-      if (b === 'Uthmani') return 1;
-      if (a === 'Indopak') return -1;
-      if (b === 'Indopak') return 1;
-      return a.localeCompare(b);
-    });
-    return ['All', ...groups];
-  }, [groupedFonts]);
+  }, [fonts]);
 
   // Handle selection toggle
   const handleSelectionToggle = useCallback(
@@ -92,7 +67,6 @@ export const useArabicFontPanel = (isOpen: boolean) => {
 
       // For fonts, only allow single selection
       setSelectedIds(new Set([id]));
-      setOrderedSelection([id]);
 
       // Update settings
       setSettings({
@@ -106,7 +80,6 @@ export const useArabicFontPanel = (isOpen: boolean) => {
   // Handle reset
   const handleReset = useCallback(() => {
     setSelectedIds(new Set());
-    setOrderedSelection([]);
     // Reset to default font (usually the first Uthmani font)
     const defaultFont = fonts.find((font) => font.category === 'Uthmani');
     if (defaultFont) {
@@ -117,77 +90,17 @@ export const useArabicFontPanel = (isOpen: boolean) => {
     }
   }, [fonts, settings, setSettings]);
 
-  // Drag and drop handlers (simplified for single selection)
-  const handleDragStart = useCallback((e: React.DragEvent<HTMLDivElement>, id: number) => {
-    setDraggedId(id);
-    e.dataTransfer.effectAllowed = 'move';
-  }, []);
-
-  const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-  }, []);
-
-  const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>, targetId: number) => {
-    e.preventDefault();
-    // For single selection, no reordering needed
-  }, []);
-
-  const handleDragEnd = useCallback(() => {
-    setDraggedId(null);
-  }, []);
-
-  // Tab scrolling
-  const updateScrollButtons = useCallback(() => {
-    const container = tabsContainerRef.current;
-    if (!container) return;
-
-    setCanScrollLeft(container.scrollLeft > 0);
-    setCanScrollRight(container.scrollLeft < container.scrollWidth - container.clientWidth);
-  }, []);
-
-  const scrollTabsLeft = useCallback(() => {
-    tabsContainerRef.current?.scrollBy({ left: -200, behavior: 'smooth' });
-  }, []);
-
-  const scrollTabsRight = useCallback(() => {
-    tabsContainerRef.current?.scrollBy({ left: 200, behavior: 'smooth' });
-  }, []);
-
-  useEffect(() => {
-    const container = tabsContainerRef.current;
-    if (!container) return;
-
-    container.addEventListener('scroll', updateScrollButtons);
-    updateScrollButtons();
-
-    return () => container.removeEventListener('scroll', updateScrollButtons);
-  }, [updateScrollButtons]);
 
   return {
     theme,
-    fonts: filteredFonts,
+    fonts,
     loading: false,
     error: undefined,
-    fontGroups,
     groupedFonts,
     activeFilter,
     setActiveFilter,
-    searchTerm,
-    setSearchTerm,
     selectedIds,
     handleSelectionToggle,
-    orderedSelection,
     handleReset,
-    draggedId,
-    handleDragStart,
-    handleDragOver,
-    handleDrop,
-    handleDragEnd,
-    tabsContainerRef,
-    canScrollLeft,
-    canScrollRight,
-    scrollTabsLeft,
-    scrollTabsRight,
   };
 };
