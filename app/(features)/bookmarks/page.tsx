@@ -7,6 +7,7 @@ import { FolderIcon, EllipsisHIcon, PlusIcon, PinIcon } from '@/app/shared/icons
 import { CreateFolderModal } from './components/CreateFolderModal';
 import { BookmarkListView } from './components/BookmarkListView';
 import BookmarkSidebar from './components/BookmarkSidebar';
+import styles from './styles';
 import {
   EmptyBookmarksState,
   EmptyFolderState,
@@ -141,7 +142,10 @@ const AyahCard = ({ ayah }: { ayah: PinnedAyah }) => (
       </div>
 
       <div className="space-y-3">
-        <p className="text-right text-xl leading-relaxed text-foreground font-arabic" dir="rtl">
+        <p
+          className="text-right text-xl leading-relaxed text-gray-900 dark:text-white font-arabic"
+          dir="rtl"
+        >
           {ayah.arabicText}
         </p>
         {ayah.translation && (
@@ -151,7 +155,7 @@ const AyahCard = ({ ayah }: { ayah: PinnedAyah }) => (
         )}
       </div>
 
-      <div className="flex items-center justify-between text-xs text-bookmark-pinned">
+      <div className="flex items-center justify-between text-xs text-amber-600 dark:text-amber-400">
         <span>Pinned {ayah.pinnedDate}</span>
         <span className="opacity-0 group-hover:opacity-100 transition-opacity">
           Click to view in context →
@@ -248,9 +252,9 @@ const LastReadCard = ({ reading }: { reading: LastReading }) => (
           <span className="text-sm font-medium text-foreground">Reading Progress</span>
           <span className="text-sm font-bold text-bookmark-lastread">{reading.progress}%</span>
         </div>
-        <div className="w-full bg-card-bg rounded-full h-3 overflow-hidden">
+        <div className="w-full bg-white/60 dark:bg-gray-800/60 rounded-full h-3 overflow-hidden">
           <motion.div
-            className="bg-bookmark-lastread h-3 rounded-full"
+            className="bg-gradient-to-r from-indigo-500 to-indigo-600 h-3 rounded-full"
             initial={{ width: 0 }}
             animate={{ width: `${reading.progress}%` }}
             transition={{ duration: 1, delay: 0.3, ease: 'easeOut' }}
@@ -258,7 +262,7 @@ const LastReadCard = ({ reading }: { reading: LastReading }) => (
         </div>
       </div>
 
-      <div className="flex items-center justify-between text-xs text-bookmark-lastread">
+      <div className="flex items-center justify-between text-xs text-indigo-600 dark:text-indigo-400">
         <span>Last read {reading.timeAgo}</span>
         <span className="opacity-0 group-hover:opacity-100 transition-opacity">
           Continue reading →
@@ -366,13 +370,16 @@ const BookmarksPage = () => {
 
   return (
     <>
+      <style jsx global>
+        {styles}
+      </style>
       <CreateFolderModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-      <div className="bookmark-page flex h-full w-full">
+      <div className="flex h-full w-full bg-white dark:bg-slate-900 min-h-screen">
         {/* Collapsible Sidebar */}
         <BookmarkSidebar activeSection={activeSection} onSectionChange={setActiveSection} />
 
         {/* Main Content Area */}
-        <main className="bookmark-main-content p-8">
+        <main className="p-8 flex-1 overflow-y-auto bg-gray-50 dark:bg-slate-900">
           <AnimatePresence mode="wait">{renderContent()}</AnimatePresence>
         </main>
       </div>
