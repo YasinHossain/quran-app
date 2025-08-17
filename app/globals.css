@@ -1,9 +1,6 @@
 /* ===== Tailwind Import (Required for Tailwind classes) ===== */
 @import 'tailwindcss';
 
-/* ===== Bookmark Base Styles ===== */
-@import './(features)/bookmarks/styles/bookmark-base.css';
-
 :root {
   --background: #ffffff;
   --foreground: #374151;
@@ -27,7 +24,7 @@
   --bookmark-general: #10b981;
 }
 
-[data-theme='dark'] {
+.dark {
   --background: #1a202c;
   --foreground: #d1d5db;
   --border-color: #4b5563;
@@ -114,39 +111,6 @@
   [lang='bn'] {
     font-family: var(--font-noto-sans-bengali), 'Noto Sans Bengali', sans-serif !important;
   }
-}
-
-/* ===== Component Base Styles ===== */
-.card {
-  background: var(--card-background);
-  border: 1px solid var(--border-color);
-  border-radius: 0.75rem;
-  transition: all 0.2s ease-in-out;
-}
-
-.card:hover {
-  box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.btn-primary {
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-  transition: all 0.2s ease-in-out;
-}
-
-.btn-primary:hover {
-  background: #0f766e;
-  transform: translateY(-1px);
-}
-
-.text-muted {
-  color: var(--text-muted);
 }
 
 /* ===== Custom Range Slider Styles ===== */
@@ -338,12 +302,12 @@ input[type='range']::-webkit-slider-thumb:hover {
 }
 
 /* Dark theme adjustments */
-[data-theme='dark'] .tafsir-content [lang='ar'] {
+.dark .tafsir-content [lang='ar'] {
   background: rgba(13, 148, 136, 0.15);
   border-color: rgba(13, 148, 136, 0.3);
 }
 
-[data-theme='dark'] .tafsir-content p:first-child::first-letter {
+.dark .tafsir-content p:first-child::first-letter {
   color: rgba(13, 148, 136, 0.9);
 }
 

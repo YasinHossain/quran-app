@@ -9,7 +9,7 @@ const tokenSets = {
 
 /** @type {import('tailwindcss').Config} */
 const config = {
-  darkMode: ['class', '[data-theme="dark"]'],
+  darkMode: 'class',
   content: ['./app/**/*.{ts,tsx,js,jsx}', './lib/**/*.{ts,tsx,js,jsx}'],
   theme: {
     extend: {
