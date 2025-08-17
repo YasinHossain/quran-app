@@ -1,0 +1,28 @@
+:root {
+  --color-surface: 247 249 249;
+  --color-text: 55 65 81;
+  --color-accent: 13 148 136;
+  --color-accent-hover: 15 118 110;
+  --color-border: 229 231 235;
+
+  /* legacy variables */
+  --background: rgb(var(--color-surface));
+  --foreground: rgb(var(--color-text));
+  --border-color: rgb(var(--color-border));
+  --accent: rgb(var(--color-accent));
+  --subtle-grey: rgb(var(--color-border));
+}
+
+.dark {
+  --color-surface: 26 32 44;
+  --color-text: 209 213 219;
+  --color-accent: 13 148 136;
+  --color-accent-hover: 15 118 110;
+  --color-border: 75 85 99;
+
+  --background: rgb(var(--color-surface));
+  --foreground: rgb(var(--color-text));
+  --border-color: rgb(var(--color-border));
+  --accent: rgb(var(--color-accent));
+  --subtle-grey: rgb(var(--color-border));
+}

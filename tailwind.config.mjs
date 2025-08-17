@@ -7,11 +7,11 @@ const config = {
   theme: {
     extend: {
       colors: {
-        background: 'var(--background)',
-        foreground: 'var(--foreground)',
-        border: 'var(--border-color)',
-        accent: designTokens.colors.accent,
-        'accent-hover': designTokens.colors.accentHover,
+        background: 'rgb(var(--color-surface) / <alpha-value>)',
+        foreground: 'rgb(var(--color-text) / <alpha-value>)',
+        border: 'rgb(var(--color-border) / <alpha-value>)',
+        accent: 'rgb(var(--color-accent) / <alpha-value>)',
+        'accent-hover': 'rgb(var(--color-accent-hover) / <alpha-value>)',
         brand: '#009688',
       },
       spacing: designTokens.spacing,

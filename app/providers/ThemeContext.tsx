@@ -37,11 +37,10 @@ export const ThemeProvider = ({
     }
   }, []); // Empty dependency array ensures this effect runs only once on mount
 
-  // Effect to save theme to localStorage and update data attribute whenever theme changes
+  // Effect to save theme to localStorage and toggle the dark class whenever theme changes
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('theme', theme);
-      document.documentElement.dataset.theme = theme;
       // Ensure the dark class is toggled for Tailwind's class strategy
       document.documentElement.classList.toggle('dark', theme === 'dark');
       document.cookie = `theme=${theme}; path=/; max-age=31536000`;
