@@ -1,16 +1,14 @@
-import { render, screen } from '@testing-library/react';
+import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import userEvent from '@testing-library/user-event';
 import TafsirVersePage from '@/app/(features)/tafsir/[surahId]/[ayahId]/page';
-import { SettingsProvider } from '@/app/providers/SettingsContext';
-import { BookmarkProvider } from '@/app/providers/BookmarkContext';
-import { AudioProvider } from '@/app/shared/player/context/AudioContext';
-import { SidebarProvider } from '@/app/providers/SidebarContext';
-import { ThemeProvider } from '@/app/providers/ThemeContext';
 import { Verse } from '@/types';
 import useSWR from 'swr';
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 
-jest.mock('swr');
+jest.mock('swr', () => {
+  const actual = jest.requireActual('swr');
+  return { __esModule: true, ...actual, default: jest.fn() };
+});
 jest.mock('@/lib/tafsir/tafsirCache');
 
 jest.mock('react', () => {
@@ -45,6 +43,11 @@ beforeAll(() => {
       dispatchEvent: jest.fn(),
     })),
   });
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+
+afterAll(() => {
+  (console.error as jest.Mock).mockRestore();
 });
 
 const verse: Verse = {
@@ -76,36 +79,21 @@ beforeEach(() => {
 });
 
 const renderPage = (surahId = '1', ayahId = '1') =>
-  render(
-    <AudioProvider>
-      <SettingsProvider>
-        <BookmarkProvider>
-          <ThemeProvider>
-            <SidebarProvider>
-              <TafsirVersePage
-                params={
-                  { surahId, ayahId } as unknown as Promise<{
-                    surahId: string;
-                    ayahId: string;
-                  }>
-                }
-              />
-            </SidebarProvider>
-          </ThemeProvider>
-        </BookmarkProvider>
-      </SettingsProvider>
-    </AudioProvider>
+  renderWithProviders(
+    <TafsirVersePage
+      params={{ surahId, ayahId } as unknown as Promise<{ surahId: string; ayahId: string }>}
+    />
   );
 
 test('navigates to next verse', async () => {
   renderPage('1', '1');
-  await userEvent.click(screen.getByLabelText('Next'));
+  await userEvent.click(await screen.findByLabelText('Next'));
   expect(push).toHaveBeenCalledWith('/tafsir/1/2');
 });
 
 test('navigates to previous surah when prev pressed', async () => {
   renderPage('2', '1');
-  await userEvent.click(screen.getByLabelText('Previous'));
+  await userEvent.click(await screen.findByLabelText('Previous'));
   expect(push).toHaveBeenCalledWith('/tafsir/1/7');
 });
 

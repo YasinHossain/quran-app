@@ -1,7 +1,5 @@
-import { render, screen } from '@testing-library/react';
+import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import TafsirIndexPage from '@/app/(features)/tafsir/page';
-import ClientProviders from '@/app/providers/ClientProviders';
-import { AudioProvider } from '@/app/shared/player/context/AudioContext';
 
 jest.mock('next/link', () => ({ href, children }: any) => <a href={href}>{children}</a>);
 
@@ -21,14 +19,7 @@ beforeAll(() => {
   });
 });
 
-const renderPage = () =>
-  render(
-    <AudioProvider>
-      <ClientProviders initialTheme="light">
-        <TafsirIndexPage />
-      </ClientProviders>
-    </AudioProvider>
-  );
+const renderPage = () => renderWithProviders(<TafsirIndexPage />);
 
 test('renders list of tafsir links', () => {
   renderPage();
