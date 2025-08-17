@@ -10,7 +10,7 @@
   --border-color: #e5e7eb;
   --accent: #0d9488;
   --subtle-grey: #d1d5db;
-  
+
   /* Missing variables that components need */
   --text-muted: #6b7280;
   --card-background: #ffffff;
@@ -18,7 +18,7 @@
   --success: #10b981;
   --warning: #f59e0b;
   --error: #ef4444;
-  
+
   /* Semantic color variables for bookmarks */
   --bookmark-folder: #0d9488;
   --bookmark-pinned: #f59e0b;
@@ -26,13 +26,13 @@
   --bookmark-general: #10b981;
 }
 
-[data-theme='dark'] {
+.dark {
   --background: #1a202c;
   --foreground: #d1d5db;
   --border-color: #4b5563;
   --accent: #0d9488;
   --subtle-grey: #4b5563;
-  
+
   /* Dark mode versions */
   --text-muted: #9ca3af;
   --card-background: #374151;
@@ -40,7 +40,7 @@
   --success: #10b981;
   --warning: #f59e0b;
   --error: #ef4444;
-  
+
   /* Dark semantic colors */
   --bookmark-folder: #14b8a6;
   --bookmark-pinned: #fbbf24;
@@ -84,7 +84,9 @@
 }
 
 .card:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .btn-primary {
@@ -295,12 +297,12 @@ input[type='range']::-webkit-slider-thumb:hover {
 }
 
 /* Dark theme adjustments */
-[data-theme='dark'] .tafsir-content [lang='ar'] {
+.dark .tafsir-content [lang='ar'] {
   background: rgba(13, 148, 136, 0.15);
   border-color: rgba(13, 148, 136, 0.3);
 }
 
-[data-theme='dark'] .tafsir-content p:first-child::first-letter {
+.dark .tafsir-content p:first-child::first-letter {
   color: rgba(13, 148, 136, 0.9);
 }
 

@@ -2,7 +2,7 @@ import designTokens from './design-system.json' assert { type: 'json' };
 
 /** @type {import('tailwindcss').Config} */
 const config = {
-  darkMode: ['class', '[data-theme="dark"]'],
+  darkMode: 'class',
   content: ['./app/**/*.{ts,tsx,js,jsx}', './lib/**/*.{ts,tsx,js,jsx}'],
   theme: {
     extend: {
@@ -13,7 +13,7 @@ const config = {
         accent: 'var(--accent)',
         'accent-hover': designTokens.colors.accentHover,
         brand: '#009688',
-        
+
         // Semantic colors for components
         muted: 'var(--text-muted)',
         'card-bg': 'var(--card-background)',
@@ -21,13 +21,13 @@ const config = {
         success: 'var(--success)',
         warning: 'var(--warning)',
         error: 'var(--error)',
-        
+
         // Bookmark-specific colors
         'bookmark-folder': 'var(--bookmark-folder)',
         'bookmark-pinned': 'var(--bookmark-pinned)',
         'bookmark-lastread': 'var(--bookmark-lastread)',
         'bookmark-general': 'var(--bookmark-general)',
-        
+
         // Common UI colors that work with dark/light themes
         gray: {
           50: '#f9fafb',
