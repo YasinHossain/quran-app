@@ -31,7 +31,7 @@ describe('ThemeContext', () => {
 
   beforeEach(() => {
     localStorage.clear();
-    document.documentElement.classList.remove('dark');
+    document.documentElement.dataset.theme = '';
   });
 
   it('useTheme throws when rendered without ThemeProvider', () => {
@@ -47,7 +47,7 @@ describe('ThemeContext', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('theme').textContent).toBe('light');
-      expect(document.documentElement.classList.contains('dark')).toBe(false);
+      expect(document.documentElement.dataset.theme).toBe('light');
       expect(localStorage.getItem('theme')).toBe('light');
     });
 
@@ -55,7 +55,7 @@ describe('ThemeContext', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('theme').textContent).toBe('dark');
-      expect(document.documentElement.classList.contains('dark')).toBe(true);
+      expect(document.documentElement.dataset.theme).toBe('dark');
       expect(localStorage.getItem('theme')).toBe('dark');
     });
   });

@@ -19,15 +19,15 @@ interface SectionHeaderProps {
   colorScheme?: keyof typeof colorSchemes;
 }
 
-export const SectionHeader = ({ 
-  title, 
-  subtitle, 
-  count, 
-  action, 
-  colorScheme = 'folder' 
+export const SectionHeader = ({
+  title,
+  subtitle,
+  count,
+  action,
+  colorScheme = 'folder',
 }: SectionHeaderProps) => {
   const scheme = utils.getColorScheme(colorScheme);
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
@@ -44,10 +44,12 @@ export const SectionHeader = ({
               <motion.span
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
                 className={utils.cn(
                   'inline-flex items-center justify-center px-3 py-1 text-sm font-medium rounded-full border',
-                  scheme.bg, scheme.text, scheme.border
+                  scheme.bg,
+                  scheme.text,
+                  scheme.border
                 )}
               >
                 {count}
@@ -55,12 +57,14 @@ export const SectionHeader = ({
             )}
           </div>
           {subtitle && (
-            <p className={utils.cn(componentClasses.text.muted, 'text-lg leading-relaxed max-w-2xl')}>
+            <p
+              className={utils.cn(componentClasses.text.muted, 'text-lg leading-relaxed max-w-2xl')}
+            >
               {subtitle}
             </p>
           )}
         </div>
-        
+
         {action && (
           <motion.button
             initial={{ opacity: 0, x: 10 }}
@@ -92,13 +96,13 @@ interface EnhancedFolderCardProps {
   lastModified?: string;
 }
 
-export const EnhancedFolderCard = ({ 
-  name, 
-  count, 
-  onClick, 
-  color, 
+export const EnhancedFolderCard = ({
+  name,
+  count,
+  onClick,
+  color,
   preview,
-  lastModified 
+  lastModified,
 }: EnhancedFolderCardProps) => {
   return (
     <motion.div
@@ -126,9 +130,9 @@ export const EnhancedFolderCard = ({
             </p>
           </div>
         </div>
-        
-        <button 
-          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-full p-2 hover:bg-white/50 dark:hover:bg-gray-800/50" 
+
+        <button
+          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-full p-2 hover:bg-white/50 dark:hover:bg-gray-800/50"
           onClick={(e) => e.stopPropagation()}
         >
           <EllipsisHIcon size={18} className="text-gray-500 dark:text-gray-400" />
@@ -139,9 +143,12 @@ export const EnhancedFolderCard = ({
       {preview && preview.length > 0 && (
         <div className="mb-4 space-y-1">
           {preview.slice(0, 2).map((text, index) => (
-            <div 
+            <div
               key={index}
-              className={utils.cn(componentClasses.text.caption, 'line-clamp-1 px-2 py-1 bg-white/50 dark:bg-gray-800/50 rounded')}
+              className={utils.cn(
+                componentClasses.text.caption,
+                'line-clamp-1 px-2 py-1 bg-white/50 dark:bg-gray-800/50 rounded'
+              )}
             >
               {text}
             </div>
@@ -176,13 +183,13 @@ interface SidebarNavItemProps {
   colorScheme?: keyof typeof colorSchemes;
 }
 
-export const SidebarNavItem = ({ 
-  icon: Icon, 
-  label, 
-  isActive, 
-  count, 
-  onClick, 
-  colorScheme = 'folder' 
+export const SidebarNavItem = ({
+  icon: Icon,
+  label,
+  isActive,
+  count,
+  onClick,
+  colorScheme = 'folder',
 }: SidebarNavItemProps) => {
   return (
     <motion.button
@@ -191,36 +198,39 @@ export const SidebarNavItem = ({
       onClick={onClick}
       className={patterns.navItem(isActive, colorScheme)}
     >
-      <div className={utils.cn(
-        'w-10 h-10 rounded-lg flex items-center justify-center transition-colors',
-        isActive 
-          ? 'bg-white dark:bg-gray-800 shadow-sm' 
-          : 'bg-gray-100 dark:bg-gray-700'
-      )}>
-        <Icon 
-          size={20} 
-          className={isActive 
-            ? utils.getColorScheme(colorScheme).icon
-            : 'text-gray-500 dark:text-gray-400'
-          } 
+      <div
+        className={utils.cn(
+          'w-10 h-10 rounded-lg flex items-center justify-center transition-colors',
+          isActive ? 'bg-white dark:bg-gray-800 shadow-sm' : 'bg-gray-100 dark:bg-gray-700'
+        )}
+      >
+        <Icon
+          size={20}
+          className={
+            isActive ? utils.getColorScheme(colorScheme).icon : 'text-gray-500 dark:text-gray-400'
+          }
         />
       </div>
-      
+
       <div className="flex-1 text-left">
         <div className="flex items-center justify-between">
-          <span className={utils.cn(
-            'font-medium', 
-            isActive ? componentClasses.text.body : componentClasses.text.muted
-          )}>
+          <span
+            className={utils.cn(
+              'font-medium',
+              isActive ? componentClasses.text.body : componentClasses.text.muted
+            )}
+          >
             {label}
           </span>
           {count !== undefined && count > 0 && (
-            <span className={utils.cn(
-              'text-xs px-2 py-1 rounded-full',
-              isActive 
-                ? utils.cn(utils.getColorScheme(colorScheme).text, 'bg-white dark:bg-gray-800')
-                : 'text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700'
-            )}>
+            <span
+              className={utils.cn(
+                'text-xs px-2 py-1 rounded-full',
+                isActive
+                  ? utils.cn(utils.getColorScheme(colorScheme).text, 'bg-white dark:bg-gray-800')
+                  : 'text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700'
+              )}
+            >
               {count}
             </span>
           )}

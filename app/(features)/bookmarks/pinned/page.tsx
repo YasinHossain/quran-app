@@ -4,10 +4,10 @@ import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/Set
 
 export default function PinnedAyahPage() {
   return (
-    <div className="flex flex-grow bg-background text-foreground overflow-hidden">
+    <div className="flex flex-grow bg-white dark:bg-[var(--background)] text-[var(--foreground)] overflow-hidden">
       <main className="flex-grow p-6 lg:p-10 overflow-y-auto homepage-scrollable-area">
         <h1 className="text-2xl font-bold mb-6">Pin Ayah</h1>
-        <p className="text-muted">No pinned verses.</p>
+        <p className="text-gray-500">No pinned verses.</p>
       </main>
       <SettingsSidebar
         onTranslationPanelOpen={() => {}}

@@ -6,110 +6,21 @@
   --foreground: #374151;
   --border-color: #e5e7eb;
   --accent: #0d9488;
-  --accent-hover: #0f766e;
   --subtle-grey: #d1d5db;
-
-  /* Missing variables that components need */
-  --text-muted: #6b7280;
-  --card-background: #ffffff;
-  --hover-color: #f3f4f6;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --error: #ef4444;
-
-  /* Semantic color variables for bookmarks */
-  --bookmark-folder: #0d9488;
-  --bookmark-pinned: #f59e0b;
-  --bookmark-lastread: #6366f1;
-  --bookmark-general: #10b981;
-
-  /* Spacing scale */
-  --space-xs: 0.25rem;
-  --space-sm: 0.5rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2rem;
-
-  /* Radius scale */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.375rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
-
-  /* Typography scale */
-  --font-base: Inter, sans-serif;
-  --text-base: 1rem;
-  --text-h1: 2rem;
-  --text-h2: 1.5rem;
-  --text-h3: 1.25rem;
 }
 
-.dark {
+[data-theme='dark'] {
   --background: #1a202c;
   --foreground: #d1d5db;
   --border-color: #4b5563;
   --accent: #0d9488;
-  --accent-hover: #0f766e;
   --subtle-grey: #4b5563;
-
-  /* Dark mode versions */
-  --text-muted: #9ca3af;
-  --card-background: #374151;
-  --hover-color: #4b5563;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --error: #ef4444;
-
-  /* Dark semantic colors */
-  --bookmark-folder: #14b8a6;
-  --bookmark-pinned: #fbbf24;
-  --bookmark-lastread: #818cf8;
-  --bookmark-general: #34d399;
-}
-
-.theme-alt {
-  --background: #fffbf0;
-  --foreground: #1f2937;
-  --border-color: #e0e7ff;
-  --accent: #6366f1;
-  --accent-hover: #4f46e5;
-  --subtle-grey: #d1d5db;
-
-  --text-muted: #6b7280;
-  --card-background: #ffffff;
-  --hover-color: #f3f4f6;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --error: #ef4444;
-
-  --bookmark-folder: #0d9488;
-  --bookmark-pinned: #f59e0b;
-  --bookmark-lastread: #6366f1;
-  --bookmark-general: #10b981;
-}
-
-.theme-alt[data-theme='dark'] {
-  --background: #1e1b4b;
-  --foreground: #e0e7ff;
-  --border-color: #3730a3;
-  --accent: #6366f1;
-  --accent-hover: #4f46e5;
-  --subtle-grey: #4b5563;
-
-  --text-muted: #9ca3af;
-  --card-background: #374151;
-  --hover-color: #4b5563;
-
-  --bookmark-folder: #14b8a6;
-  --bookmark-pinned: #fbbf24;
-  --bookmark-lastread: #818cf8;
-  --bookmark-general: #34d399;
 }
 
 @layer base {
   body {
-    @apply bg-background text-foreground;
-    font-family: var(--font-base);
+    @apply bg-[var(--background)] text-[var(--foreground)];
+    font-family: Inter, sans-serif;
     margin: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -131,35 +42,6 @@
   [lang='bn'] {
     font-family: var(--font-noto-sans-bengali), 'Noto Sans Bengali', sans-serif !important;
   }
-}
-
-/* ===== Component Base Styles ===== */
-.card {
-  background: var(--card-background);
-  border: 1px solid var(--border-color);
-  border-radius: 0.75rem;
-  transition: all 0.2s ease-in-out;
-}
-
-.card:hover {
-  box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.btn-primary {
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-  transition: all 0.2s ease-in-out;
-}
-
-.btn-primary:hover {
-  background: #0f766e;
-  transform: translateY(-1px);
 }
 
 /* ===== Custom Range Slider Styles ===== */
@@ -351,12 +233,12 @@ input[type='range']::-webkit-slider-thumb:hover {
 }
 
 /* Dark theme adjustments */
-.dark .tafsir-content [lang='ar'] {
+[data-theme='dark'] .tafsir-content [lang='ar'] {
   background: rgba(13, 148, 136, 0.15);
   border-color: rgba(13, 148, 136, 0.3);
 }
 
-.dark .tafsir-content p:first-child::first-letter {
+[data-theme='dark'] .tafsir-content p:first-child::first-letter {
   color: rgba(13, 148, 136, 0.9);
 }
 

@@ -1,13 +1,11 @@
 import Link from 'next/link';
 import type { Chapter } from '@/types';
 import { getJuzByPage, getSurahByPage } from '@/lib/utils/surah-navigation';
-import type { Theme } from '@/app/providers/ThemeContext';
-import { themeClass } from '@/lib/utils/themeClass';
 
 interface Props {
   pages: number[];
   chapters: Chapter[];
-  theme: Theme;
+  theme: string;
   selectedPageId: string | null;
   setSelectedPageId: (id: string) => void;
   setSelectedJuzId: (id: string) => void;
@@ -44,22 +42,20 @@ const Page = ({
             className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
               isActive
                 ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/30'
-                : themeClass(
-                    theme,
-                    'bg-white shadow hover:bg-slate-50',
-                    'bg-slate-800 shadow hover:bg-slate-700'
-                  )
+                : theme === 'light'
+                  ? 'bg-white shadow hover:bg-slate-50'
+                  : 'bg-slate-800 shadow hover:bg-slate-700'
             }`}
           >
             <div
               className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg shadow transition-colors ${
                 isActive
-                  ? themeClass(theme, 'bg-gray-100 text-teal-600', 'bg-slate-700 text-teal-400')
-                  : themeClass(
-                      theme,
-                      'bg-gray-100 text-teal-600 group-hover:bg-teal-100',
-                      'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
-                    )
+                  ? theme === 'light'
+                    ? 'bg-gray-100 text-teal-600'
+                    : 'bg-slate-700 text-teal-400'
+                  : theme === 'light'
+                    ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
+                    : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
               }`}
             >
               {p}
@@ -68,7 +64,9 @@ const Page = ({
               className={`font-semibold ${
                 isActive
                   ? 'text-white'
-                  : themeClass(theme, 'text-slate-700', 'text-[var(--foreground)]')
+                  : theme === 'light'
+                    ? 'text-slate-700'
+                    : 'text-[var(--foreground)]'
               }`}
             >
               Page {p}

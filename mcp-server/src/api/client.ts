@@ -13,18 +13,18 @@ export async function apiFetch<T>(
   errorMessage = 'API request failed'
 ): Promise<T> {
   const url = new URL(`${API_BASE_URL}/${endpoint}`);
-  
+
   Object.entries(params).forEach(([key, value]) => {
     if (value) url.searchParams.append(key, value);
   });
 
   try {
     const response = await fetch(url.toString());
-    
+
     if (!response.ok) {
       throw new Error(`${errorMessage}: ${response.status} ${response.statusText}`);
     }
-    
+
     const data = await response.json();
     return data as T;
   } catch (error) {

@@ -109,10 +109,10 @@ export async function handleSettingsTool(name: string, args: any): Promise<any> 
       const currentSettings = LocalStorage.getSettings();
       const updatedSettings = { ...currentSettings, ...args };
       const saved = LocalStorage.saveSettings(updatedSettings);
-      return { 
-        success: saved, 
+      return {
+        success: saved,
         settings: saved ? updatedSettings : currentSettings,
-        message: saved ? 'Settings updated successfully' : 'Failed to update settings' 
+        message: saved ? 'Settings updated successfully' : 'Failed to update settings',
       };
 
     case 'get_arabic_fonts':
@@ -120,12 +120,12 @@ export async function handleSettingsTool(name: string, args: any): Promise<any> 
 
     case 'reset_settings':
       if (!args.confirm) {
-        return { 
-          success: false, 
-          message: 'Settings reset requires confirmation' 
+        return {
+          success: false,
+          message: 'Settings reset requires confirmation',
         };
       }
-      
+
       const defaultSettings = {
         theme: 'system' as const,
         language: 'en',
@@ -137,12 +137,12 @@ export async function handleSettingsTool(name: string, args: any): Promise<any> 
         autoplay: false,
         repeatMode: 'off' as const,
       };
-      
+
       const resetSuccess = LocalStorage.saveSettings(defaultSettings);
-      return { 
-        success: resetSuccess, 
+      return {
+        success: resetSuccess,
         settings: defaultSettings,
-        message: resetSuccess ? 'Settings reset to defaults' : 'Failed to reset settings' 
+        message: resetSuccess ? 'Settings reset to defaults' : 'Failed to reset settings',
       };
 
     default:

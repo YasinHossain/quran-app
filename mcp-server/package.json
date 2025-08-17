@@ -21,7 +21,13 @@
   "engines": {
     "node": ">=18"
   },
-  "keywords": ["mcp", "quran", "ai", "assistant", "islamic"],
+  "keywords": [
+    "mcp",
+    "quran",
+    "ai",
+    "assistant",
+    "islamic"
+  ],
   "author": "Quran App v1",
   "license": "MIT"
 }

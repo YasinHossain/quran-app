@@ -77,18 +77,23 @@ export default function VerseCard({ verse }: VerseCardProps) {
         onBookmark={handleBookmark}
         className="mr-4 w-14 pt-2 text-gray-500"
       />
+           {' '}
       <div className="flex-grow space-y-6">
-        <VerseArabic verse={verse} />
+                <VerseArabic verse={verse} />       {' '}
         {verse.translations?.map((t: Translation) => (
           <div key={t.resource_id}>
+                       {' '}
             <p
               className="text-left leading-relaxed"
               style={{ fontSize: `${settings.translationFontSize}px` }}
               dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.text) }}
             />
+                     {' '}
           </div>
         ))}
+             {' '}
       </div>
+         {' '}
     </div>
   );
 }

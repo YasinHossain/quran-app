@@ -2,10 +2,7 @@
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-} from '@modelcontextprotocol/sdk/types.js';
+import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 
 import { quranTools, handleQuranTool } from './tools/quran-tools.js';
 import { bookmarkTools, handleBookmarkTool } from './tools/bookmark-tools.js';
@@ -34,12 +31,7 @@ class QuranMCPServer {
 
   private setupToolHandlers(): void {
     // Combine all tools
-    const allTools = [
-      ...quranTools,
-      ...bookmarkTools,
-      ...settingsTools,
-      ...navigationTools,
-    ];
+    const allTools = [...quranTools, ...bookmarkTools, ...settingsTools, ...navigationTools];
 
     this.server.setRequestHandler(ListToolsRequestSchema, async () => {
       return {
@@ -52,7 +44,7 @@ class QuranMCPServer {
 
       try {
         // Route to appropriate handler based on tool name
-        if (quranTools.some(tool => tool.name === name)) {
+        if (quranTools.some((tool) => tool.name === name)) {
           return {
             content: [
               {
@@ -63,7 +55,7 @@ class QuranMCPServer {
           };
         }
 
-        if (bookmarkTools.some(tool => tool.name === name)) {
+        if (bookmarkTools.some((tool) => tool.name === name)) {
           return {
             content: [
               {
@@ -74,7 +66,7 @@ class QuranMCPServer {
           };
         }
 
-        if (settingsTools.some(tool => tool.name === name)) {
+        if (settingsTools.some((tool) => tool.name === name)) {
           return {
             content: [
               {
@@ -85,7 +77,7 @@ class QuranMCPServer {
           };
         }
 
-        if (navigationTools.some(tool => tool.name === name)) {
+        if (navigationTools.some((tool) => tool.name === name)) {
           return {
             content: [
               {

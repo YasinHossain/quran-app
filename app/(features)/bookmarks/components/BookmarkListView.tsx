@@ -3,8 +3,6 @@
 import { Folder } from '@/types';
 import { motion } from 'framer-motion';
 import { ArrowLeftIcon } from '@/app/shared/icons';
-import { EmptyFolderState } from './EmptyStates';
-import { SimpleSectionHeader } from './SimpleSectionHeader';
 
 interface BookmarkListViewProps {
   folder: Folder;
@@ -19,65 +17,45 @@ export const BookmarkListView = ({ folder, onBack }: BookmarkListViewProps) => {
       exit={{ opacity: 0, x: -20 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="mb-8">
+      <div className="mb-6 flex items-center gap-4">
         <button
           onClick={onBack}
-          className="inline-flex items-center gap-2 mb-6 px-3 py-2 text-sm font-medium text-muted hover:text-[var(--foreground)] transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+          className="rounded-md p-1.5 text-gray-600 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-700"
         >
-          <ArrowLeftIcon size={16} />
-          Back to Folders
+          <ArrowLeftIcon size={20} />
         </button>
-
-        <SimpleSectionHeader
-          title={folder.name}
-          subtitle={`Manage and read your saved verses from this collection.`}
-          count={folder.bookmarks.length}
-          variant="folder"
-        />
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{folder.name}</h1>
+        <span className="text-sm text-gray-500">
+          {folder.bookmarks.length} bookmarks
+        </span>
       </div>
 
-      <div className="space-y-6">
+      <div>
         {folder.bookmarks.length > 0 ? (
-          <motion.ul
-            className="space-y-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
+          <ul className="space-y-3">
             {folder.bookmarks.map((bookmark, index) => (
               <motion.li
                 key={bookmark.verseId}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="group cursor-pointer rounded-xl border-2 border-bookmark-general bg-card-bg p-6 hover:border-bookmark-general hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02]"
+                className="cursor-pointer rounded-lg border border-gray-200 bg-white p-4 hover:bg-slate-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700/50"
               >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-card-bg text-bookmark-general border border-bookmark-general">
-                      Verse {bookmark.verseId}
-                    </span>
-                  </div>
-                  <span className="text-xs text-bookmark-general bg-card-bg px-2 py-1 rounded">
-                    {new Date(bookmark.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-
-                {/* Placeholder content - will be replaced with actual verse content */}
-                <div className="space-y-2">
-                  <div className="h-4 bg-bookmark-general opacity-20 rounded animate-pulse" />
-                  <div className="h-3 bg-bookmark-general opacity-10 rounded animate-pulse w-3/4" />
-                </div>
-
-                <div className="mt-4 flex items-center justify-between text-xs text-emerald-600 dark:text-emerald-400">
-                  <span>Click to view in context</span>
-                  <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-                </div>
+                {/* For now, just display the verse ID. This will be replaced with actual verse content later. */}
+                <p className="font-mono text-sm text-teal-600 dark:text-teal-400">
+                  Verse: {bookmark.verseId}
+                </p>
+                <p className="text-xs text-gray-400">
+                  Bookmarked on: {new Date(bookmark.createdAt).toLocaleDateString()}
+                </p>
               </motion.li>
             ))}
-          </motion.ul>
+          </ul>
         ) : (
-          <EmptyFolderState />
+          <div className="mt-10 text-center text-gray-500">
+            <p>This folder is empty.</p>
+            <p>You can add verses to it from the main reader.</p>
+          </div>
         )}
       </div>
     </motion.div>

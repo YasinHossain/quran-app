@@ -40,7 +40,7 @@ beforeAll(() => {
 beforeEach(() => {
   jest.useFakeTimers();
   localStorage.clear();
-  document.documentElement.classList.remove('dark');
+  document.documentElement.dataset.theme = '';
   mockedGetRandomVerse.mockReset();
 });
 

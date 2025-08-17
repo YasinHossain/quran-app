@@ -168,15 +168,20 @@ export async function handleNavigationTool(name: string, args: any): Promise<any
       const [chapterStr, verseStr] = args.verseKey.split(':');
       const chapterId = parseInt(chapterStr);
       const verseNumber = parseInt(verseStr);
-      
+
       const chapter = await quranAPI.getChapter(chapterId);
       if (!chapter) {
         return { error: 'Chapter not found' };
       }
 
       // Calculate verse ID (approximate)
-      const verses = await quranAPI.getVersesByChapter(chapterId, args.translationIds || [20], 1, chapter.verses_count);
-      const targetVerse = verses.data.find(v => {
+      const verses = await quranAPI.getVersesByChapter(
+        chapterId,
+        args.translationIds || [20],
+        1,
+        chapter.verses_count
+      );
+      const targetVerse = verses.data.find((v) => {
         const [, vNum] = v.verse_key.split(':');
         return parseInt(vNum) === verseNumber;
       });
@@ -199,7 +204,7 @@ export async function handleNavigationTool(name: string, args: any): Promise<any
       const verseNumber = parseInt(verseStr);
       const contextBefore = args.contextBefore || 2;
       const contextAfter = args.contextAfter || 2;
-      
+
       const chapter = await quranAPI.getChapter(chapterId);
       if (!chapter) {
         return { error: 'Chapter not found' };
@@ -207,9 +212,14 @@ export async function handleNavigationTool(name: string, args: any): Promise<any
 
       const startVerse = Math.max(1, verseNumber - contextBefore);
       const endVerse = Math.min(chapter.verses_count, verseNumber + contextAfter);
-      
-      const verses = await quranAPI.getVersesByChapter(chapterId, args.translationIds || [20], 1, chapter.verses_count);
-      const contextVerses = verses.data.filter(v => {
+
+      const verses = await quranAPI.getVersesByChapter(
+        chapterId,
+        args.translationIds || [20],
+        1,
+        chapter.verses_count
+      );
+      const contextVerses = verses.data.filter((v) => {
         const [, vNum] = v.verse_key.split(':');
         const num = parseInt(vNum);
         return num >= startVerse && num <= endVerse;
@@ -235,8 +245,13 @@ export async function handleNavigationTool(name: string, args: any): Promise<any
         return { error: 'Verse number exceeds chapter length' };
       }
 
-      const verses = await quranAPI.getVersesByChapter(chapterNumber, translationIds || [20], 1, chapter.verses_count);
-      const requestedVerses = verses.data.filter(v => {
+      const verses = await quranAPI.getVersesByChapter(
+        chapterNumber,
+        translationIds || [20],
+        1,
+        chapter.verses_count
+      );
+      const requestedVerses = verses.data.filter((v) => {
         const [, vNum] = v.verse_key.split(':');
         const num = parseInt(vNum);
         return num >= verseStart && num <= endVerse;
@@ -294,7 +309,7 @@ export async function handleNavigationTool(name: string, args: any): Promise<any
 
       // Get verses on this page
       const pageVerses = await quranAPI.getVersesByPage(pageNumber, [20], 1, 50);
-      
+
       return {
         ...navigation,
         verses: pageVerses.data,
@@ -305,8 +320,8 @@ export async function handleNavigationTool(name: string, args: any): Promise<any
     case 'get_juz_navigation': {
       const { juzNumber } = args;
       const juzMetadata = quranAPI.getJuzMetadata();
-      const currentJuz = juzMetadata.find(j => j.number === juzNumber);
-      
+      const currentJuz = juzMetadata.find((j) => j.number === juzNumber);
+
       if (!currentJuz) {
         return { error: 'Juz not found' };
       }
@@ -322,7 +337,7 @@ export async function handleNavigationTool(name: string, args: any): Promise<any
 
       // Get verses in this juz
       const juzVerses = await quranAPI.getVersesByJuz(juzNumber, [20], 1, 50);
-      
+
       return {
         ...navigation,
         verses: juzVerses.data,
@@ -334,13 +349,13 @@ export async function handleNavigationTool(name: string, args: any): Promise<any
       const [chapterStr, verseStr] = args.verseKey.split(':');
       const chapterId = parseInt(chapterStr);
       const verseNumber = parseInt(verseStr);
-      
+
       const chapter = await quranAPI.getChapter(chapterId);
       if (!chapter) {
         return { error: 'Chapter not found' };
       }
 
-      // This is a simplified approach - in a real implementation, 
+      // This is a simplified approach - in a real implementation,
       // you'd have a mapping of verses to pages and juzs
       return {
         verseKey: args.verseKey,

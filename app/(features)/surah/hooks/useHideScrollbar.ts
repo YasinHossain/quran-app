@@ -2,7 +2,7 @@
 
 import { RefObject, useEffect } from 'react';
 
-export const useHideScrollbar = (ref: RefObject<HTMLElement>, className?: string) => {
+export const useHideScrollbar = (ref: RefObject<HTMLElement | null>, className?: string) => {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
