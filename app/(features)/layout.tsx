@@ -4,42 +4,30 @@ import { usePathname } from 'next/navigation';
 import Header from '@/app/shared/Header';
 import IconSidebar from '@/app/shared/IconSidebar';
 import SurahListSidebar from '@/app/shared/SurahListSidebar';
-import {
-  HeaderVisibilityProvider,
-  useHeaderVisibility,
-} from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { HeaderVisibilityProvider } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
-  const { isHidden } = useHeaderVisibility();
   const pathname = usePathname();
-  // This check determines if the current page is the new bookmarks page.
-  // Using startsWith is slightly more robust for routing than includes.
   const isBookmarkPage = pathname.startsWith('/bookmarks');
 
   return (
-    <>
+    <div className="flex min-h-screen flex-col">
       <Header />
-      <div className="flex flex-col h-screen">
-        <div
-          className={`flex flex-grow overflow-hidden min-h-0 transition-[padding-top] duration-300 ${isHidden ? 'pt-0' : 'pt-16'}`}
-        >
-          <nav aria-label="Primary navigation" className="flex-shrink-0 h-full">
-            <IconSidebar />
+      <div className="flex flex-1 overflow-hidden md:gap-4">
+        <nav aria-label="Primary navigation" className="hidden md:block basis-20 shrink-0">
+          <IconSidebar />
+        </nav>
+        {!isBookmarkPage && (
+          <nav
+            aria-label="Surah navigation"
+            className="relative basis-0 md:basis-[20.7rem] shrink-0"
+          >
+            <SurahListSidebar />
           </nav>
-          {/*
-            The SurahListSidebar is now conditionally rendered.
-            It will NOT appear on the bookmarks page, allowing the
-            BookmarksPage component to render its own layout and sidebar without conflict.
-          */}
-          {!isBookmarkPage && (
-            <nav aria-label="Surah navigation" className="flex-shrink-0 h-full">
-              <SurahListSidebar />
-            </nav>
-          )}
-          {children}
-        </div>
+        )}
+        <main className="flex-grow overflow-y-auto">{children}</main>
       </div>
-    </>
+    </div>
   );
 }
 

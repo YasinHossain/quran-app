@@ -82,7 +82,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" className={theme === 'dark' ? 'dark' : undefined}>
       <body
-        className={`font-sans ${kfgqpc.variable} ${nastaliq.variable} ${amiri.variable} ${arabic.variable} ${bengali.variable} ${crimsonText.variable} ${libreBaskerville.variable} ${inter.className}`}
+        className={`font-sans ${kfgqpc.variable} ${nastaliq.variable} ${amiri.variable} ${arabic.variable} ${bengali.variable} ${crimsonText.variable} ${libreBaskerville.variable} ${inter.className} flex min-h-screen flex-col`}
       >
         <TranslationProvider>
           <ClientProviders initialTheme={theme}>{children}</ClientProviders>
