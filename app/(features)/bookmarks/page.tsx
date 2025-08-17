@@ -28,7 +28,7 @@ const SidebarItem = ({
   <button
     type="button"
     className={`flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium ${
-      isActive ? 'bg-teal-100 text-teal-900 dark:bg-teal-900 ' : 'text-primary hover:bg-surface/50'
+      isActive ? 'bg-accent/20 text-accent' : 'text-primary hover:bg-surface/50'
     }`}
   >
     <Icon className="h-5 w-5" />
@@ -39,12 +39,10 @@ const SidebarItem = ({
 const FolderCard = ({
   name,
   count,
-  color,
   onClick,
 }: {
   name: string;
   count: number;
-  color: string;
   onClick: () => void;
 }) => (
   <motion.div
@@ -57,7 +55,7 @@ const FolderCard = ({
     onClick={onClick}
   >
     <div className="flex items-center space-x-3">
-      <FolderIcon size={24} className={color} />
+      <FolderIcon size={24} className="text-accent" />
       <div>
         <h3 className="font-semibold text-primary ">{name}</h3>
         <p className="text-sm text-muted ">{count} Bookmarks</p>
@@ -78,20 +76,17 @@ const ContentHeader = ({ onNewFolderClick }: { onNewFolderClick: () => void }) =
     <div className="flex items-center space-x-2">
       <button
         onClick={onNewFolderClick}
-        className="flex items-center space-x-2 rounded-md bg-teal-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-teal-700"
+        className="flex items-center space-x-2 rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-white hover:bg-accent-hover"
       >
         <PlusIcon size={16} />
         <span>New Folder</span>
       </button>
       <div className="relative">
-        <SearchIcon
-          size={18}
-          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
-        />
+        <SearchIcon className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
         <input
           type="text"
           placeholder="Search Bookmarks"
-          className="w-48 rounded-md border-gray-300 bg-gray-100 py-1.5 pl-9 pr-3 text-sm focus:border-teal-500 focus:ring-teal-500 dark:border-gray-600 "
+          className="w-48 rounded-md border-border bg-surface py-1.5 pl-9 pr-3 text-sm focus:border-accent focus:ring-accent"
         />
       </div>
     </div>
@@ -110,20 +105,12 @@ const BookmarksPage = () => {
     return folders.find((f) => f.id === selectedFolderId) || null;
   }, [selectedFolderId, folders]);
 
-  const colors = [
-    'text-pink-500',
-    'text-indigo-500',
-    'text-green-500',
-    'text-yellow-500',
-    'text-blue-500',
-  ];
-
   return (
     <>
       <CreateFolderModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       <div className="flex h-full w-full bg-surface ">
         {/* Left Sidebar for Bookmark Navigation */}
-        <aside className="w-72 flex-shrink-0 border-r border-gray-200 bg-slate-50 p-4 dark:border-gray-700 ">
+        <aside className="w-72 flex-shrink-0 border-r border-border bg-surface p-4 ">
           <div className="space-y-4">
             <h1 className="px-3 text-xl font-bold text-primary ">Bookmarks</h1>
             <nav className="space-y-1">
@@ -153,12 +140,11 @@ const BookmarksPage = () => {
                 <ContentHeader onNewFolderClick={() => setIsModalOpen(true)} />
                 <motion.div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                   <AnimatePresence>
-                    {folders.map((folder, index) => (
+                    {folders.map((folder) => (
                       <FolderCard
                         key={folder.id}
                         name={folder.name}
                         count={folder.bookmarks.length}
-                        color={colors[index % colors.length]}
                         onClick={() => setSelectedFolderId(folder.id)}
                       />
                     ))}

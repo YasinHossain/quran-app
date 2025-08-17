@@ -42,10 +42,7 @@ export const CreateFolderModal = ({ isOpen, onClose }: CreateFolderModalProps) =
           >
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-primary ">Create New Folder</h2>
-              <button
-                onClick={onClose}
-                className="rounded-full p-1 text-muted hover:bg-gray-200  hover:bg-surface/50"
-              >
+              <button onClick={onClose} className="rounded-full p-1 text-muted hover:bg-surface/50">
                 <CloseIcon size={20} />
               </button>
             </div>
@@ -56,13 +53,13 @@ export const CreateFolderModal = ({ isOpen, onClose }: CreateFolderModalProps) =
                 value={folderName}
                 onChange={(e) => setFolderName(e.target.value)}
                 placeholder="Enter folder name"
-                className="w-full rounded-md border-gray-300 bg-gray-100 px-4 py-2 text-sm focus:border-teal-500 focus:ring-teal-500 dark:border-gray-600  "
+                className="w-full rounded-md border-border bg-surface px-4 py-2 text-sm focus:border-accent focus:ring-accent"
               />
               <div className="mt-4 flex justify-end">
                 <button
                   type="submit"
                   disabled={!folderName.trim()}
-                  className="rounded-md bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   Create Folder
                 </button>

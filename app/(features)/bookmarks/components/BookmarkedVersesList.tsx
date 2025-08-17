@@ -25,7 +25,7 @@ const BookmarkedVersesList = () => {
     const fetchBookmarkedVerses = async () => {
       try {
         const fetched = await Promise.all(
-          bookmarkedVerses.map((id) => getVerseById(id, settings.translationId))
+          bookmarkedVerses.map((id: string) => getVerseById(id, settings.translationId))
         );
         setVerses(fetched);
         setError(null);
@@ -38,18 +38,18 @@ const BookmarkedVersesList = () => {
   }, [bookmarkedVerses, settings.translationId]);
 
   if (bookmarkedVerses.length === 0) {
-    return <p>No verses bookmarked yet.</p>;
+    return <p className="text-muted">No verses bookmarked yet.</p>;
   }
 
   if (error) {
-    return <p>Failed to load bookmarked verses. {error}</p>;
+    return <p className="text-muted">Failed to load bookmarked verses. {error}</p>;
   }
 
   return (
     <div className="space-y-4">
       {verses.map((verse) => (
         <div key={verse.id}>
-          <p className="font-semibold">{verse.verse_key}</p>
+          <p className="font-semibold text-primary">{verse.verse_key}</p>
           <p
             className="text-right"
             dangerouslySetInnerHTML={{ __html: sanitizeHtml(verse.text_uthmani) }}
