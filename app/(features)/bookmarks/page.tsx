@@ -7,32 +7,20 @@ import { FolderIcon, EllipsisHIcon, PlusIcon, PinIcon } from '@/app/shared/icons
 import { CreateFolderModal } from './components/CreateFolderModal';
 import { BookmarkListView } from './components/BookmarkListView';
 import BookmarkSidebar from './components/BookmarkSidebar';
+import {
+  EmptyBookmarksState,
+  EmptyFolderState,
+  EmptyPinnedState,
+  EmptyLastReadState
+} from './components/EmptyStates';
+import {
+  CleanSectionHeader,
+  CleanFolderCard,
+  CleanBookmarkListView
+} from './components/CleanBookmarkComponents';
 import type { Folder } from '@/types/bookmark';
 
-// ===== Reusable Components =====
-
-const FolderCard = ({ name, count, color, onClick }: { name: string, count: number, color: string, onClick: () => void }) => (
-  <motion.div
-    layout
-    initial={{ opacity: 0, scale: 0.8 }}
-    animate={{ opacity: 1, scale: 1 }}
-    exit={{ opacity: 0, scale: 0.8 }}
-    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-    className="group relative cursor-pointer rounded-xl border border-[var(--border-color)] bg-[var(--card-background)] p-4 hover:shadow-md transition transform hover:scale-[1.02]"
-    onClick={onClick}
-  >
-    <div className="flex items-center space-x-3">
-      <FolderIcon size={24} className={color} />
-      <div>
-        <h3 className="font-semibold text-[var(--foreground)]">{name}</h3>
-        <p className="text-sm text-[var(--text-muted)]">{count} Bookmarks</p>
-      </div>
-    </div>
-    <button className="absolute right-2 top-2 rounded-full p-1 text-[var(--text-muted)] hover:bg-[var(--hover-color)] group-hover:opacity-100 md:opacity-0" onClick={(e) => e.stopPropagation()}>
-      <EllipsisHIcon size={20} />
-    </button>
-  </motion.div>
-);
+// ===== Enhanced Card Components =====
 
 const BookmarksSection = ({ onNewFolderClick, folders, selectedFolderId, setSelectedFolderId }: {
   onNewFolderClick: () => void;
@@ -40,8 +28,6 @@ const BookmarksSection = ({ onNewFolderClick, folders, selectedFolderId, setSele
   selectedFolderId: string | null;
   setSelectedFolderId: (id: string | null) => void;
 }) => {
-  const colors = ['text-pink-500', 'text-indigo-500', 'text-green-500', 'text-yellow-500', 'text-blue-500'];
-  
   const selectedFolder = useMemo(() => {
     if (!selectedFolderId) return null;
     return folders.find(f => f.id === selectedFolderId) || null;
@@ -50,7 +36,7 @@ const BookmarksSection = ({ onNewFolderClick, folders, selectedFolderId, setSele
   return (
     <AnimatePresence mode="wait">
       {selectedFolder ? (
-        <BookmarkListView
+        <CleanBookmarkListView
           key={selectedFolder.id}
           folder={selectedFolder}
           onBack={() => setSelectedFolderId(null)}
@@ -62,34 +48,40 @@ const BookmarksSection = ({ onNewFolderClick, folders, selectedFolderId, setSele
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-            <h1 className="text-2xl font-bold text-[var(--foreground)]">Bookmarks</h1>
-            <button
-              onClick={onNewFolderClick}
-              className="flex items-center space-x-2 rounded-md bg-teal-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-teal-700"
+          <CleanSectionHeader
+            title="Bookmarks"
+            subtitle="Organize your favorite verses into folders for easy access and study."
+            count={folders.length}
+            action={{
+              text: "New Folder",
+              onClick: onNewFolderClick,
+              icon: PlusIcon
+            }}
+            variant="folder"
+          />
+          
+          {folders.length === 0 ? (
+            <EmptyBookmarksState onCreateFolder={onNewFolderClick} />
+          ) : (
+            <motion.div 
+              className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
             >
-              <PlusIcon size={16} />
-              <span>New Folder</span>
-            </button>
-          </div>
-          <motion.div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            <AnimatePresence>
-              {folders.map((folder, index) => (
-                <FolderCard
-                  key={folder.id}
-                  name={folder.name}
-                  count={folder.bookmarks.length}
-                  color={colors[index % colors.length]}
-                  onClick={() => setSelectedFolderId(folder.id)}
-                />
-              ))}
-            </AnimatePresence>
-          </motion.div>
-          {folders.length === 0 && (
-            <div className="mt-10 text-center text-[var(--text-muted)]">
-              <p>No folders yet.</p>
-              <p>Click "New Folder" to get started.</p>
-            </div>
+              <AnimatePresence>
+                {folders.map((folder, index) => (
+                  <CleanFolderCard
+                    key={folder.id}
+                    name={folder.name}
+                    count={folder.bookmarks.length}
+                    onClick={() => setSelectedFolderId(folder.id)}
+                    preview={folder.bookmarks.slice(0, 2).map(b => `Verse ${b.verseId}`)}
+                    lastModified={"2 days ago"}
+                  />
+                ))}
+              </AnimatePresence>
+            </motion.div>
           )}
         </motion.div>
       )}
@@ -124,41 +116,43 @@ const AyahCard = ({ ayah }: { ayah: PinnedAyah }) => (
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
     transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-    className="group cursor-pointer rounded-xl border border-[var(--border-color)] bg-[var(--card-background)] p-4 hover:shadow-md transition transform hover:scale-[1.02]"
+    className="group cursor-pointer rounded-2xl border-2 border-amber-200 dark:border-amber-800 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 p-6 hover:shadow-xl hover:border-amber-300 dark:hover:border-amber-600 transition-all duration-200 transform hover:scale-[1.02]"
     onClick={() => {
       // TODO: Navigate to verse page
       console.log(`Navigate to Surah ${ayah.surahNumber}:${ayah.ayahNumber}`);
     }}
   >
-    <div className="space-y-3">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <span className="rounded-md bg-teal-100 px-2 py-1 text-xs font-medium text-teal-800 dark:bg-teal-900 dark:text-teal-200">
+        <div className="flex items-center space-x-3">
+          <span className="rounded-lg bg-amber-200 dark:bg-amber-800/50 px-3 py-1.5 text-sm font-medium text-amber-800 dark:text-amber-200">
             {ayah.surahName}
           </span>
-          <span className="text-sm text-[var(--text-muted)]">
-            {ayah.ayahNumber}
+          <span className="text-sm text-amber-600 dark:text-amber-400 font-medium">
+            Verse {ayah.ayahNumber}
           </span>
         </div>
-        <button className="rounded-full p-1 text-[var(--text-muted)] hover:bg-[var(--hover-color)] hover:text-[var(--foreground)]">
-          <PinIcon size={16} />
+        <button className="rounded-full p-2 text-amber-600 dark:text-amber-400 hover:bg-amber-200 dark:hover:bg-amber-800/50 transition-colors">
+          <PinIcon size={18} />
         </button>
       </div>
       
-      <div className="space-y-2">
-        <p className="text-right text-lg leading-relaxed text-[var(--foreground)]" dir="rtl">
+      <div className="space-y-3">
+        <p className="text-right text-xl leading-relaxed text-gray-900 dark:text-white font-arabic" dir="rtl">
           {ayah.arabicText}
         </p>
         {ayah.translation && (
-          <p className="text-sm text-[var(--text-muted)]">
+          <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed bg-white/50 dark:bg-gray-800/50 p-3 rounded-lg">
             {ayah.translation}
           </p>
         )}
       </div>
       
-      <div className="flex items-center justify-between text-xs text-[var(--text-muted)]">
-        <span>Pinned on {ayah.pinnedDate}</span>
-        <span>Click to view in context</span>
+      <div className="flex items-center justify-between text-xs text-amber-600 dark:text-amber-400">
+        <span>Pinned {ayah.pinnedDate}</span>
+        <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+          Click to view in context →
+        </span>
       </div>
     </div>
   </motion.div>
@@ -193,13 +187,20 @@ const PinAyahSection = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-[var(--foreground)]">Pin Ayah</h1>
-        <p className="text-[var(--text-muted)] mt-1">Your pinned verses for easy access</p>
-      </div>
+      <CleanSectionHeader
+        title="Pinned Verses"
+        subtitle="Quick access to your most important and frequently referenced verses."
+        count={pinnedAyahs.length}
+        variant="pinned"
+      />
       
       {pinnedAyahs.length > 0 ? (
-        <motion.div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <motion.div 
+          className="grid grid-cols-1 gap-6 lg:grid-cols-2"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
           <AnimatePresence>
             {pinnedAyahs.map((ayah) => (
               <AyahCard key={ayah.id} ayah={ayah} />
@@ -207,10 +208,7 @@ const PinAyahSection = () => {
           </AnimatePresence>
         </motion.div>
       ) : (
-        <div className="text-center text-[var(--text-muted)] mt-10">
-          <p>No pinned ayahs yet.</p>
-          <p>Pin verses from any surah to see them here.</p>
-        </div>
+        <EmptyPinnedState />
       )}
     </motion.div>
   );
@@ -223,42 +221,51 @@ const LastReadCard = ({ reading }: { reading: LastReading }) => (
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
     transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-    className="group cursor-pointer rounded-xl border border-[var(--border-color)] bg-[var(--card-background)] p-4 hover:shadow-md transition transform hover:scale-[1.02]"
+    className="group cursor-pointer rounded-2xl border-2 border-indigo-200 dark:border-indigo-800 bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 p-6 hover:shadow-xl hover:border-indigo-300 dark:hover:border-indigo-600 transition-all duration-200 transform hover:scale-[1.02]"
     onClick={() => {
       // TODO: Navigate to verse page
       console.log(`Navigate to Surah ${reading.surahNumber}:${reading.lastAyah}`);
     }}
   >
-    <div className="space-y-3">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <span className="rounded-md bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+        <div className="flex items-center space-x-3">
+          <span className="rounded-lg bg-indigo-200 dark:bg-indigo-800/50 px-3 py-1.5 text-sm font-medium text-indigo-800 dark:text-indigo-200">
             {reading.surahName}
           </span>
-          <span className="text-sm text-[var(--text-muted)]">
+          <span className="text-sm text-indigo-600 dark:text-indigo-400 font-medium">
             Verse {reading.lastAyah}
           </span>
         </div>
-        <span className="text-xs text-[var(--text-muted)]">
+        <span className="text-xs text-indigo-500 dark:text-indigo-400 bg-white/50 dark:bg-gray-800/50 px-2 py-1 rounded">
           {reading.readDate}
         </span>
       </div>
       
-      <div className="space-y-2">
-        <p className="text-sm text-[var(--text-muted)]">
-          Progress: {reading.progress}% complete
-        </p>
-        <div className="w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700">
-          <div 
-            className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
-            style={{ width: `${reading.progress}%` }}
-          ></div>
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-gray-900 dark:text-white">
+            Reading Progress
+          </span>
+          <span className="text-sm font-bold text-indigo-600 dark:text-indigo-400">
+            {reading.progress}%
+          </span>
+        </div>
+        <div className="w-full bg-white/60 dark:bg-gray-800/60 rounded-full h-3 overflow-hidden">
+          <motion.div 
+            className="bg-gradient-to-r from-indigo-500 to-indigo-600 h-3 rounded-full" 
+            initial={{ width: 0 }}
+            animate={{ width: `${reading.progress}%` }}
+            transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+          />
         </div>
       </div>
       
-      <div className="flex items-center justify-between text-xs text-[var(--text-muted)]">
+      <div className="flex items-center justify-between text-xs text-indigo-600 dark:text-indigo-400">
         <span>Last read {reading.timeAgo}</span>
-        <span>Click to continue reading</span>
+        <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+          Continue reading →
+        </span>
       </div>
     </div>
   </motion.div>
@@ -302,13 +309,20 @@ const LastReadSection = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-[var(--foreground)]">Last Read</h1>
-        <p className="text-[var(--text-muted)] mt-1">Continue where you left off</p>
-      </div>
+      <CleanSectionHeader
+        title="Reading History"
+        subtitle="Pick up where you left off and track your Quranic reading progress."
+        count={lastReadings.length}
+        variant="lastRead"
+      />
       
       {lastReadings.length > 0 ? (
-        <motion.div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+        <motion.div 
+          className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
           <AnimatePresence>
             {lastReadings.map((reading) => (
               <LastReadCard key={reading.id} reading={reading} />
@@ -316,10 +330,7 @@ const LastReadSection = () => {
           </AnimatePresence>
         </motion.div>
       ) : (
-        <div className="text-center text-[var(--text-muted)] mt-10">
-          <p>No reading history yet.</p>
-          <p>Start reading to see your last read verses here.</p>
-        </div>
+        <EmptyLastReadState />
       )}
     </motion.div>
   );
@@ -361,7 +372,7 @@ const BookmarksPage = () => {
   return (
     <>
       <CreateFolderModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-      <div className="flex h-full w-full bg-[var(--background)]">
+      <div className="bookmark-page flex h-full w-full">
         {/* Collapsible Sidebar */}
         <BookmarkSidebar 
           activeSection={activeSection}
@@ -369,7 +380,7 @@ const BookmarksPage = () => {
         />
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="bookmark-main-content p-8">
           <AnimatePresence mode="wait">
             {renderContent()}
           </AnimatePresence>
