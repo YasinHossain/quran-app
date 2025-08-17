@@ -23,7 +23,7 @@
   --bookmark-general: #10b981;
 }
 
-[data-theme='dark'] {
+.dark {
   --background: #1a202c;
   --foreground: #d1d5db;
   --border-color: #4b5563;
@@ -272,12 +272,12 @@ input[type='range']::-webkit-slider-thumb:hover {
 }
 
 /* Dark theme adjustments */
-[data-theme='dark'] .tafsir-content [lang='ar'] {
+.dark .tafsir-content [lang='ar'] {
   background: rgba(13, 148, 136, 0.15);
   border-color: rgba(13, 148, 136, 0.3);
 }
 
-[data-theme='dark'] .tafsir-content p:first-child::first-letter {
+.dark .tafsir-content p:first-child::first-letter {
   color: rgba(13, 148, 136, 0.9);
 }
 
