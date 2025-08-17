@@ -135,8 +135,7 @@ export default function VerseOfDay() {
           <p
             className={`mt-4 text-left text-sm ${theme === 'light' ? 'text-slate-800' : 'text-slate-400'}`}
           >
-            &quot;{stripHtml(verse.translations[0].text)}&quot; - [Surah {surahName ?? surahNum},{' '}
-            {verse.verse_key}]
+            {`"${stripHtml(verse.translations[0].text)}" - [Surah ${surahName ?? surahNum}, ${verse.verse_key}]`}
           </p>
         )}
       </>
