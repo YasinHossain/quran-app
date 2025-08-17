@@ -22,12 +22,12 @@ export const BookmarkListView = ({ folder, onBack }: BookmarkListViewProps) => {
       <div className="mb-8">
         <button
           onClick={onBack}
-          className="inline-flex items-center gap-2 mb-6 px-3 py-2 text-sm font-medium text-[var(--text-muted)] hover:text-[var(--foreground)] transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+          className="inline-flex items-center gap-2 mb-6 px-3 py-2 text-sm font-medium text-muted hover:text-[var(--foreground)] transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
         >
           <ArrowLeftIcon size={16} />
           Back to Folders
         </button>
-        
+
         <SimpleSectionHeader
           title={folder.name}
           subtitle={`Manage and read your saved verses from this collection.`}
@@ -38,7 +38,7 @@ export const BookmarkListView = ({ folder, onBack }: BookmarkListViewProps) => {
 
       <div className="space-y-6">
         {folder.bookmarks.length > 0 ? (
-          <motion.ul 
+          <motion.ul
             className="space-y-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -62,18 +62,16 @@ export const BookmarkListView = ({ folder, onBack }: BookmarkListViewProps) => {
                     {new Date(bookmark.createdAt).toLocaleDateString()}
                   </span>
                 </div>
-                
+
                 {/* Placeholder content - will be replaced with actual verse content */}
                 <div className="space-y-2">
                   <div className="h-4 bg-emerald-200 dark:bg-emerald-800/30 rounded animate-pulse" />
                   <div className="h-3 bg-emerald-100 dark:bg-emerald-900/20 rounded animate-pulse w-3/4" />
                 </div>
-                
+
                 <div className="mt-4 flex items-center justify-between text-xs text-emerald-600 dark:text-emerald-400">
                   <span>Click to view in context</span>
-                  <span className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    →
-                  </span>
+                  <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                 </div>
               </motion.li>
             ))}
