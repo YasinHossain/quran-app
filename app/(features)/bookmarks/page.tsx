@@ -143,6 +143,6 @@ const BookmarksPage = () => {
       </div>
     </>
   );
-};
+}
 
 export default BookmarksPage;

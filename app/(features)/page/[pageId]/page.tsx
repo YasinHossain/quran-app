@@ -4,8 +4,6 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Verse } from '@/app/(features)/surah/[surahId]/components/Verse';
 import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
-import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/translation-panel';
-import { WordLanguagePanel } from '@/app/(features)/surah/[surahId]/components/WordLanguagePanel';
 import { Verse as VerseType } from '@/types';
 import { getVersesByPage, getSurahCoverUrl } from '@/lib/api';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
@@ -25,7 +23,6 @@ export default function PagePage({ params }: PagePageProps) {
   const { pageId } = React.use(params);
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
-  const [wordTranslationSearchTerm, setWordTranslationSearchTerm] = useState('');
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
   const { t } = useTranslation();
 
@@ -63,14 +60,6 @@ export default function PagePage({ params }: PagePageProps) {
           settings.wordLang
       )?.name || t('select_word_translation'),
     [settings.wordLang, wordLanguageOptions, t]
-  );
-
-  const filteredWordLanguages = useMemo(
-    () =>
-      wordLanguageOptions.filter((o) =>
-        o.name.toLowerCase().includes(wordTranslationSearchTerm.toLowerCase())
-      ),
-    [wordLanguageOptions, wordTranslationSearchTerm]
   );
 
   useEffect(() => {
@@ -124,25 +113,10 @@ export default function PagePage({ params }: PagePageProps) {
         onReadingPanelOpen={() => {}}
         selectedTranslationName={selectedTranslationName}
         selectedWordLanguageName={selectedWordLanguageName}
-      />
-      <TranslationPanel
-        isOpen={isTranslationPanelOpen}
-        onClose={() => setIsTranslationPanelOpen(false)}
-      />
-      <WordLanguagePanel
-        isOpen={isWordPanelOpen}
-        onClose={() => setIsWordPanelOpen(false)}
-        languages={filteredWordLanguages}
-        searchTerm={wordTranslationSearchTerm}
-        onSearchTermChange={setWordTranslationSearchTerm}
-        onReset={() => {
-          setWordTranslationSearchTerm('');
-          setSettings({
-            ...settings,
-            wordLang: 'en',
-            wordTranslationId: wordLanguageMap['english'] ?? DEFAULT_WORD_TRANSLATION_ID,
-          });
-        }}
+        isTranslationPanelOpen={isTranslationPanelOpen}
+        onTranslationPanelClose={() => setIsTranslationPanelOpen(false)}
+        isWordLanguagePanelOpen={isWordPanelOpen}
+        onWordLanguagePanelClose={() => setIsWordPanelOpen(false)}
       />
       {activeVerse && isPlayerVisible && (
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-transparent z-50">

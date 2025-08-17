@@ -14,7 +14,11 @@ interface FontSettingsProps {
   onToggle?: () => void;
 }
 
-export const FontSettings = ({ onArabicFontPanelOpen, isOpen = false, onToggle }: FontSettingsProps) => {
+export const FontSettings = ({
+  onArabicFontPanelOpen,
+  isOpen = false,
+  onToggle,
+}: FontSettingsProps) => {
   const { settings, setSettings, arabicFonts } = useSettings();
   const { t } = useTranslation();
   const { style: arabicStyle } = useFontSize(settings.arabicFontSize, 16, 48);

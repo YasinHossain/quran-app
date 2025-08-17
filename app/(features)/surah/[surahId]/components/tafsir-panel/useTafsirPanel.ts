@@ -96,7 +96,6 @@ export const useTafsirPanel = (isOpen: boolean) => {
     setShowLimitWarning(!changed && selectedIds.size >= MAX_SELECTIONS);
   };
 
-
   // Sync selections TO settings when user makes changes
   useEffect(() => {
     const current = [...orderedSelection];

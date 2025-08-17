@@ -4,7 +4,6 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Verse } from './components/Verse';
 import { SettingsSidebar } from './components/SettingsSidebar';
-import { WordLanguagePanel } from './components/WordLanguagePanel';
 import { Verse as VerseType } from '@/types';
 import { getVersesByChapter, getSurahCoverUrl } from '@/lib/api';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
@@ -24,7 +23,6 @@ export default function SurahPage({ params }: SurahPageProps) {
   const { surahId } = React.use(params);
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
-  const [wordTranslationSearchTerm, setWordTranslationSearchTerm] = useState('');
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
   const { t } = useTranslation();
 
@@ -62,14 +60,6 @@ export default function SurahPage({ params }: SurahPageProps) {
           settings.wordLang
       )?.name || t('select_word_translation'),
     [settings.wordLang, wordLanguageOptions, t]
-  );
-
-  const filteredWordLanguages = useMemo(
-    () =>
-      wordLanguageOptions.filter((o) =>
-        o.name.toLowerCase().includes(wordTranslationSearchTerm.toLowerCase())
-      ),
-    [wordLanguageOptions, wordTranslationSearchTerm]
   );
 
   useEffect(() => {
@@ -125,21 +115,9 @@ export default function SurahPage({ params }: SurahPageProps) {
         selectedWordLanguageName={selectedWordLanguageName}
         isTranslationPanelOpen={isTranslationPanelOpen}
         onTranslationPanelClose={() => setIsTranslationPanelOpen(false)}
-      />
-      <WordLanguagePanel
-        isOpen={isWordPanelOpen}
-        onClose={() => setIsWordPanelOpen(false)}
-        languages={filteredWordLanguages}
-        searchTerm={wordTranslationSearchTerm}
-        onSearchTermChange={setWordTranslationSearchTerm}
-        onReset={() => {
-          setWordTranslationSearchTerm('');
-          setSettings({
-            ...settings,
-            wordLang: 'en',
-            wordTranslationId: wordLanguageMap['english'] ?? DEFAULT_WORD_TRANSLATION_ID,
-          });
-        }}
+        isWordLanguagePanelOpen={isWordPanelOpen}
+        onWordLanguagePanelClose={() => setIsWordPanelOpen(false)}
+        pageType="verse"
       />
       {activeVerse && isPlayerVisible && (
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-transparent z-50">

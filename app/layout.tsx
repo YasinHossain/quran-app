@@ -4,7 +4,13 @@ import './fonts.css';
 import TranslationProvider from './providers/TranslationProvider';
 import ClientProviders from './providers/ClientProviders';
 import localFont from 'next/font/local';
-import { Inter, Noto_Sans_Arabic, Noto_Sans_Bengali } from 'next/font/google';
+import {
+  Inter,
+  Noto_Sans_Arabic,
+  Noto_Sans_Bengali,
+  Crimson_Text,
+  Libre_Baskerville,
+} from 'next/font/google';
 import { cookies } from 'next/headers';
 
 const kfgqpc = localFont({
@@ -39,9 +45,24 @@ const arabic = Noto_Sans_Arabic({
 });
 
 const bengali = Noto_Sans_Bengali({
-  subsets: ['bengali'],
-  weight: ['400', '700'],
+  subsets: ['bengali', 'latin'],
+  weight: ['400', '500', '600', '700'],
   variable: '--font-noto-sans-bengali',
+  display: 'swap',
+  preload: true,
+});
+
+const crimsonText = Crimson_Text({
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
+  variable: '--font-crimson-text',
+  display: 'swap',
+});
+
+const libreBaskerville = Libre_Baskerville({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-libre-baskerville',
   display: 'swap',
 });
 
@@ -61,7 +82,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" data-theme={theme} className={theme === 'dark' ? 'dark' : undefined}>
       <body
-        className={`font-sans ${kfgqpc.variable} ${nastaliq.variable} ${amiri.variable} ${arabic.variable} ${bengali.variable} ${inter.className}`}
+        className={`font-sans ${kfgqpc.variable} ${nastaliq.variable} ${amiri.variable} ${arabic.variable} ${bengali.variable} ${crimsonText.variable} ${libreBaskerville.variable} ${inter.className}`}
       >
         <TranslationProvider>
           <ClientProviders initialTheme={theme}>{children}</ClientProviders>

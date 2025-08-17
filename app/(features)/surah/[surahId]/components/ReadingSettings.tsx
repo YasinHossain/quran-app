@@ -12,10 +12,10 @@ interface ReadingSettingsProps {
 
 export const ReadingSettings = ({ isOpen = false, onToggle }: ReadingSettingsProps) => {
   const { t } = useTranslation();
-  
+
   return (
     <CollapsibleSection
-      title="Reading Settings"
+      title="Mushaf Settings"
       icon={<BookReaderIcon size={20} className="text-teal-700" />}
       isLast={false}
       isOpen={isOpen}

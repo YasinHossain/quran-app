@@ -13,6 +13,7 @@ import { FontSettings } from './FontSettings';
 import { ReadingSettings } from './ReadingSettings';
 import { TranslationPanel } from './translation-panel';
 import { TafsirPanel } from './tafsir-panel';
+import { WordLanguagePanel } from './WordLanguagePanel';
 
 interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;
@@ -27,6 +28,9 @@ interface SettingsSidebarProps {
   onTranslationPanelClose?: () => void;
   isTafsirPanelOpen?: boolean;
   onTafsirPanelClose?: () => void;
+  isWordLanguagePanelOpen?: boolean;
+  onWordLanguagePanelClose?: () => void;
+  pageType?: 'verse' | 'tafsir';
 }
 
 export const SettingsSidebar = ({
@@ -42,6 +46,9 @@ export const SettingsSidebar = ({
   onTranslationPanelClose,
   isTafsirPanelOpen = false,
   onTafsirPanelClose,
+  isWordLanguagePanelOpen = false,
+  onWordLanguagePanelClose,
+  pageType,
 }: SettingsSidebarProps) => {
   const { t } = useTranslation();
   const { isSettingsOpen, setSettingsOpen } = useSidebar();
@@ -50,22 +57,35 @@ export const SettingsSidebar = ({
   const [activeTab, setActiveTab] = useState('translation');
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
   const sidebarRef = useRef<HTMLElement>(null);
-  
-  // State for collapsible sections
-  const [openSections, setOpenSections] = useState<string[]>([]);
-  
-  // Function to handle section toggle with max 2 open rule
+
+  // State for collapsible sections with localStorage persistence
+  const [openSections, setOpenSections] = useState<string[]>(() => {
+    // Try to get saved preferences from localStorage
+    try {
+      const saved = localStorage.getItem('settings-sidebar-open-sections');
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch (error) {
+      console.warn('Failed to parse saved sidebar sections:', error);
+    }
+    
+    // Default open sections - both translation and font should be open by default
+    return ['translation', 'font'];
+  });
+
+  // Function to handle section toggle with max 2 open rule and localStorage persistence
   const handleSectionToggle = (sectionId: string) => {
     console.log('Toggling section:', sectionId, 'Current open:', openSections);
-    setOpenSections(prev => {
+    setOpenSections((prev) => {
+      let newState: string[];
+      
       if (prev.includes(sectionId)) {
         // If section is open, close it
-        const newState = prev.filter(id => id !== sectionId);
+        newState = prev.filter((id) => id !== sectionId);
         console.log('Closing section, new state:', newState);
-        return newState;
       } else {
         // If section is closed, open it
-        let newState;
         if (prev.length >= 2) {
           // If already 2 sections open, remove the oldest one and add the new one
           newState = [prev[1], sectionId];
@@ -74,8 +94,16 @@ export const SettingsSidebar = ({
           newState = [...prev, sectionId];
         }
         console.log('Opening section, new state:', newState);
-        return newState;
       }
+      
+      // Save to localStorage
+      try {
+        localStorage.setItem('settings-sidebar-open-sections', JSON.stringify(newState));
+      } catch (error) {
+        console.warn('Failed to save sidebar sections to localStorage:', error);
+      }
+      
+      return newState;
     });
   };
 
@@ -83,8 +111,12 @@ export const SettingsSidebar = ({
     if (sidebarRef.current) {
       const sidebar = sidebarRef.current;
       // Hide scrollbar with inline styles
-      sidebar.style.msOverflowStyle = 'none';
-      sidebar.style.scrollbarWidth = 'none';
+      const styleDecl = sidebar.style as CSSStyleDeclaration & {
+        msOverflowStyle?: string;
+        scrollbarWidth?: string;
+      };
+      styleDecl.msOverflowStyle = 'none';
+      styleDecl.scrollbarWidth = 'none';
       // Add style tag for webkit scrollbar
       const style = document.createElement('style');
       style.textContent = `
@@ -95,7 +127,11 @@ export const SettingsSidebar = ({
         }
       `;
       document.head.appendChild(style);
-      return () => document.head.removeChild(style);
+      return () => {
+        if (document.head.contains(style)) {
+          document.head.removeChild(style);
+        }
+      };
     }
   }, []);
 
@@ -124,10 +160,10 @@ export const SettingsSidebar = ({
         className={`settings-sidebar fixed lg:static top-16 lg:top-0 bottom-0 right-0 w-[20.7rem] bg-[var(--background)] text-[var(--foreground)] flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 z-40 lg:z-40 lg:h-full ${
           isSettingsOpen ? 'translate-x-0' : 'translate-x-full'
         } lg:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} lg:flex scrollbar-hide`}
-        style={{ 
+        style={{
           position: 'relative',
           msOverflowStyle: 'none',
-          scrollbarWidth: 'none'
+          scrollbarWidth: 'none',
         }}
       >
         <header className="flex items-center justify-between p-4 border-b border-[var(--border-color)]">
@@ -138,7 +174,9 @@ export const SettingsSidebar = ({
           >
             <ArrowLeftIcon size={18} />
           </button>
-          <h2 className="flex-grow text-center text-lg font-bold">Settings</h2>
+          <h2 className="flex-grow text-center text-lg font-bold">
+            Settings
+          </h2>
           <div className="w-8" />
         </header>
         <div className="flex-grow p-4 space-y-4">
@@ -171,7 +209,7 @@ export const SettingsSidebar = ({
                     : 'text-slate-400 hover:text-white'
               }`}
             >
-              Reading
+              Mushaf
             </button>
           </div>
           {activeTab === 'translation' && (
@@ -194,7 +232,7 @@ export const SettingsSidebar = ({
                 isOpen={openSections.includes('tafsir')}
                 onToggle={() => handleSectionToggle('tafsir')}
               />
-              <FontSettings 
+              <FontSettings
                 onArabicFontPanelOpen={() => setIsArabicFontPanelOpen(true)}
                 isOpen={openSections.includes('font')}
                 onToggle={() => handleSectionToggle('font')}
@@ -202,10 +240,9 @@ export const SettingsSidebar = ({
             </>
           )}
           {activeTab === 'reading' && (
-            <ReadingSettings 
-              isOpen={openSections.includes('reading')}
-              onToggle={() => handleSectionToggle('reading')}
-            />
+            <div className="text-center py-8 text-gray-500">
+              Mushaf settings have been moved to the Translation tab.
+            </div>
           )}
         </div>
         <div className="p-4">
@@ -245,6 +282,12 @@ export const SettingsSidebar = ({
         )}
         {onTafsirPanelClose && (
           <TafsirPanel isOpen={isTafsirPanelOpen} onClose={onTafsirPanelClose} />
+        )}
+        {onWordLanguagePanelClose && (
+          <WordLanguagePanel 
+            isOpen={isWordLanguagePanelOpen} 
+            onClose={onWordLanguagePanelClose} 
+          />
         )}
       </aside>
     </>

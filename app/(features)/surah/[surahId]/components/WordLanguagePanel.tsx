@@ -1,119 +1,208 @@
 'use client';
-import { ArrowLeftIcon, SearchSolidIcon } from '@/app/shared/icons';
-import { useTranslation } from 'react-i18next';
-import { useMemo } from 'react';
-import { useSettings } from '@/app/providers/SettingsContext';
-import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
-import type { LanguageCode } from '@/lib/text/languageCodes';
-import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
-interface LanguageOption {
-  name: string;
-  id: number;
-}
+import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSettings } from '@/app/providers/SettingsContext';
+import type { LanguageCode } from '@/lib/text/languageCodes';
+import { useTheme } from '@/app/providers/ThemeContext';
+import { ResizeObserver as ResizeObserverPolyfill } from '@juggle/resize-observer';
 
 interface WordLanguagePanelProps {
   isOpen: boolean;
   onClose: () => void;
-  languages: LanguageOption[];
-  searchTerm: string;
-  onSearchTermChange: (term: string) => void;
-  onReset: () => void;
+  renderMode?: 'panel' | 'content'; // 'panel' for slide-over, 'content' for inline in sidebar
 }
 
-export const WordLanguagePanel = ({
-  isOpen,
-  onClose,
-  languages,
-  searchTerm,
-  onSearchTermChange,
-  onReset,
-}: WordLanguagePanelProps) => {
+// Full list of available word-by-word languages based on WORD_LANGUAGE_LABELS
+const WORD_LANGUAGES = [
+  { id: 85, name: 'English', code: 'en' as LanguageCode },
+  { id: 13, name: 'Bangla', code: 'bn' as LanguageCode },
+  { id: 54, name: 'Urdu', code: 'ur' as LanguageCode },
+  { id: 158, name: 'Hindi', code: 'hi' as LanguageCode },
+  { id: 45, name: 'Bahasa Indonesia', code: 'id' as LanguageCode },
+  { id: 46, name: 'Persian', code: 'fa' as LanguageCode },
+  { id: 38, name: 'Turkish', code: 'tr' as LanguageCode },
+  { id: 50, name: 'Tamil', code: 'ta' as LanguageCode },
+];
+
+export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({ 
+  isOpen, 
+  onClose, 
+  renderMode = 'panel' 
+}) => {
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
-  const { isHidden } = useHeaderVisibility();
+  const { theme } = useTheme();
+  
+  const listContainerRef = useRef<HTMLDivElement>(null);
+  const [listHeight, setListHeight] = useState(0);
 
-  const sortedLanguages = useMemo(
-    () => [...languages].sort((a, b) => a.name.localeCompare(b.name)),
-    [languages]
-  );
-  const filtered = useMemo(
-    () =>
-      sortedLanguages.filter((lang) => lang.name.toLowerCase().includes(searchTerm.toLowerCase())),
-    [sortedLanguages, searchTerm]
+  const handleLanguageSelect = (language: (typeof WORD_LANGUAGES)[0]) => {
+    setSettings({
+      ...settings,
+      wordLang: language.code,
+      wordTranslationId: language.id,
+    });
+  };
+
+  useEffect(() => {
+    if (renderMode === 'content') return; // Skip resize observer for content mode
+    
+    const element = listContainerRef.current;
+    if (!element || !isOpen) return;
+
+    const updateHeight = () => {
+      const rect = element.getBoundingClientRect();
+      const fallback = window.innerHeight - rect.top;
+      setListHeight(rect.height || fallback);
+    };
+
+    updateHeight();
+
+    const ResizeObserverConstructor =
+      typeof ResizeObserver !== 'undefined' ? ResizeObserver : ResizeObserverPolyfill;
+
+    if (ResizeObserverConstructor) {
+      const observer = new ResizeObserverConstructor((entries) => {
+        for (const entry of entries) {
+          const rect = entry.target.getBoundingClientRect();
+          const fallback = window.innerHeight - rect.top;
+          setListHeight(entry.contentRect.height || fallback);
+        }
+      });
+      observer.observe(element);
+      return () => observer.disconnect();
+    }
+
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, [isOpen, renderMode]);
+
+  const renderLanguageList = () => (
+    <div className="space-y-2">
+      {WORD_LANGUAGES.map((language) => {
+        const isSelected = settings.wordTranslationId === language.id;
+        return (
+          <div
+            key={language.id}
+            role="button"
+            tabIndex={0}
+            onClick={() => handleLanguageSelect(language)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleLanguageSelect(language);
+              }
+            }}
+            className={`flex items-center justify-between px-4 py-3 h-[58px] rounded-lg cursor-pointer transition-all duration-200 focus:outline-none focus-visible:outline-none outline-none border ${
+              isSelected
+                ? theme === 'dark'
+                  ? 'bg-teal-800/20 border-teal-600/50'
+                  : 'bg-teal-50 border-teal-200'
+                : theme === 'dark'
+                  ? 'bg-slate-800/50 border-slate-700 hover:bg-slate-700/50'
+                  : 'bg-white border-slate-200 hover:bg-slate-50'
+            }`}
+          >
+            <div className="flex-1 min-w-0 pr-3">
+              <p
+                className={`font-medium text-sm leading-tight truncate ${
+                  isSelected
+                    ? theme === 'dark'
+                      ? 'text-teal-200'
+                      : 'text-teal-800'
+                    : theme === 'dark'
+                      ? 'text-[var(--foreground)]'
+                      : 'text-slate-800'
+                }`}
+                title={language.name}
+              >
+                {language.name}
+              </p>
+            </div>
+            <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+              {isSelected && (
+                <CheckIcon
+                  className={`h-5 w-5 ${theme === 'dark' ? 'text-teal-400' : 'text-teal-600'}`}
+                />
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
 
+  // Content mode - render just the list for use inside SettingsSidebar
+  if (renderMode === 'content') {
+    return (
+      <div className="flex-grow p-4 space-y-4">
+        {renderLanguageList()}
+      </div>
+    );
+  }
+
+  // Panel mode - render as full slide-over panel
   return (
     <div
-      className={`fixed ${isHidden ? 'top-0' : 'top-16'} bottom-0 right-0 w-[20.7rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-all duration-300 ease-in-out z-50 shadow-lg ${
+      data-testid="word-language-panel"
+      className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
-      }`}
+      } ${theme === 'dark' ? 'bg-[var(--background)] text-[var(--foreground)]' : 'bg-white text-slate-800'}`}
     >
-      <div className="flex items-center justify-between p-4 border-b border-gray-200/80">
+      <header
+        className={`flex items-center p-4 border-b ${
+          theme === 'dark' ? 'border-[var(--border-color)]' : 'border-slate-200'
+        }`}
+      >
         <button
-          aria-label="Back"
           onClick={onClose}
-          className="p-2 rounded-full hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+          className={`p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 ${
+            theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-200'
+          }`}
         >
-          <ArrowLeftIcon size={18} />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={`h-6 w-6 ${theme === 'dark' ? 'text-[var(--foreground)]' : 'text-slate-600'}`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
         </button>
-        <h2 className="font-bold text-lg text-[var(--foreground)]">
+        <h2
+          className={`text-lg font-bold text-center flex-grow ${
+            theme === 'dark' ? 'text-[var(--foreground)]' : 'text-slate-800'
+          }`}
+        >
           {t('word_by_word_panel_title')}
         </h2>
-        <div className="w-8"></div>
-      </div>
-      <div className="p-3 border-b border-gray-200/80">
-        <div className="relative">
-          <SearchSolidIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-          <input
-            type="text"
-            placeholder={t('search')}
-            value={searchTerm}
-            onChange={(e) => onSearchTermChange(e.target.value)}
-            className="w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none bg-[var(--background)] text-[var(--foreground)]"
-          />
+      </header>
+
+      <div className="flex-1 flex flex-col min-h-0">
+        <div className="flex-1 overflow-y-auto" ref={listContainerRef}>
+          <div className="px-4 pb-4 pt-4">
+            {renderLanguageList()}
+          </div>
         </div>
-      </div>
-      <div className="flex-grow overflow-y-auto">
-        {filtered.map((lang) => (
-          <label
-            key={lang.id}
-            className="flex items-center space-x-3 p-2 rounded-md hover:bg-teal-50 cursor-pointer"
-          >
-            <input
-              type="radio"
-              name="wordLanguage"
-              className="form-radio h-4 w-4 text-teal-600"
-              checked={
-                settings.wordLang ===
-                (LANGUAGE_CODES as Record<string, LanguageCode>)[lang.name.toLowerCase()]
-              }
-              onChange={() => {
-                setSettings({
-                  ...settings,
-                  wordLang:
-                    (LANGUAGE_CODES as Record<string, LanguageCode>)[lang.name.toLowerCase()] ??
-                    settings.wordLang,
-                  wordTranslationId: lang.id,
-                });
-                onClose();
-              }}
-            />
-            <span className="text-sm text-[var(--foreground)]">{lang.name}</span>
-          </label>
-        ))}
-      </div>
-      <div className="p-4 border-t border-gray-200/80">
-        <button
-          onClick={() => {
-            onReset();
-            onClose();
-          }}
-          className="w-full py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-sm hover:border-teal-500"
-        >
-          {t('reset')}
-        </button>
       </div>
     </div>
   );
 };
+
+const CheckIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    viewBox="0 0 20 20"
+    fill="currentColor"
+  >
+    <path
+      fillRule="evenodd"
+      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+      clipRule="evenodd"
+    />
+  </svg>
+);

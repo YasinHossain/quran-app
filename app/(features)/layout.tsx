@@ -12,7 +12,9 @@ import {
 function LayoutContent({ children }: { children: React.ReactNode }) {
   const { isHidden } = useHeaderVisibility();
   const pathname = usePathname();
-  const isBookmarkPage = pathname.includes('/bookmarks');
+  // This check determines if the current page is the new bookmarks page.
+  // Using startsWith is slightly more robust for routing than includes.
+  const isBookmarkPage = pathname.startsWith('/bookmarks');
 
   return (
     <>
@@ -24,6 +26,11 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
           <nav aria-label="Primary navigation" className="flex-shrink-0 h-full">
             <IconSidebar />
           </nav>
+          {/*
+            The SurahListSidebar is now conditionally rendered.
+            It will NOT appear on the bookmarks page, allowing the
+            BookmarksPage component to render its own layout and sidebar without conflict.
+          */}
           {!isBookmarkPage && (
             <nav aria-label="Surah navigation" className="flex-shrink-0 h-full">
               <SurahListSidebar />
