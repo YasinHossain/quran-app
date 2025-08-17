@@ -13,18 +13,22 @@ const setActiveVerse = jest.fn((v) => {
 });
 const openPlayer = jest.fn();
 
-jest.mock('swr', () => ({
-  __esModule: true,
-  default: jest.fn(() => ({ data: [] })),
-}));
-
-jest.mock('swr/infinite', () => ({
+jest.mock('@/app/(features)/surah/hooks/useTranslationOptions', () => ({
   __esModule: true,
   default: jest.fn(() => ({
-    data: [{ verses, totalPages: 1 }],
-    size: 1,
-    setSize: jest.fn(),
+    translationOptions: [],
+    wordLanguageOptions: [],
+    wordLanguageMap: {},
+  })),
+}));
+
+jest.mock('@/app/(features)/surah/hooks/useInfiniteVerseLoader', () => ({
+  __esModule: true,
+  default: jest.fn(() => ({
+    verses,
+    isLoading: false,
     isValidating: false,
+    isReachingEnd: false,
   })),
 }));
 
@@ -36,11 +40,6 @@ jest.mock('@/app/shared/player/context/AudioContext', () => ({
     isPlayerVisible: true,
     openPlayer,
   }),
-}));
-
-jest.mock('@/lib/api', () => ({
-  getTranslations: jest.fn().mockResolvedValue([]),
-  getWordTranslations: jest.fn().mockResolvedValue([]),
 }));
 
 jest.mock('@/app/providers/SettingsContext', () => ({
