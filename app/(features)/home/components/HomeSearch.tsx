@@ -13,15 +13,15 @@ export default function HomeSearch({ searchQuery, setSearchQuery }: HomeSearchPr
 
   const searchBarClasses =
     theme === 'light'
-      ? 'bg-white text-gray-700 border-none placeholder-gray-400'
-      : 'bg-gray-800 text-gray-200 border-none placeholder-gray-400';
+      ? 'bg-surface text-primary border-none placeholder-gray-400'
+      : 'bg-gray-800 text-muted border-none placeholder-gray-400';
 
   return (
     <>
       <div className="mt-10 w-full max-w-2xl mx-auto content-visibility-auto animate-fade-in-up animation-delay-200">
         <div className="relative">
           <SearchSolidIcon
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-muted"
             size={20}
           />
           <input
@@ -29,7 +29,7 @@ export default function HomeSearch({ searchQuery, setSearchQuery }: HomeSearchPr
             placeholder="What do you want to read?"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className={`w-full pl-12 pr-4 py-3 rounded-lg ring-0 focus:outline-none focus:ring-0 transition-all duration-300 hover:shadow-lg text-lg ${searchBarClasses} backdrop-blur-xl shadow-lg hover:shadow-xl ${theme === 'light' ? 'bg-white/60' : 'bg-slate-800/50'} animate-fade-in-up animation-delay-200`}
+            className={`w-full pl-12 pr-4 py-3 rounded-lg ring-0 focus:outline-none focus:ring-0 transition-all duration-300 hover:shadow-lg text-lg ${searchBarClasses} backdrop-blur-xl shadow-lg hover:shadow-xl ${theme === 'light' ? 'bg-surface/60' : 'bg-slate-800/50'} animate-fade-in-up animation-delay-200`}
           />
         </div>
       </div>
@@ -40,7 +40,7 @@ export default function HomeSearch({ searchQuery, setSearchQuery }: HomeSearchPr
             key={name}
             className={`px-4 sm:px-5 py-2 rounded-full font-medium shadow-sm transition-all duration-200 ${
               theme === 'light'
-                ? 'bg-white border border-gray-200 text-slate-800 hover:bg-gray-100 hover:shadow-md'
+                ? 'bg-surface border border-gray-200 text-slate-800 hover:bg-gray-100 hover:shadow-md'
                 : 'bg-slate-800/40 border-slate-700/50 text-slate-300 backdrop-blur-md hover:bg-slate-700/60 hover:scale-105 transform hover:shadow-md'
             }`}
           >

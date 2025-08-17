@@ -27,3 +27,10 @@ Security audits run in CI. Optionally run `npm audit --omit=dev` locally to chec
 - Follow the project's ESLint configuration. Run `npm run format` followed by `npm run lint` and fix warnings when possible.
 - Use two spaces for indentation.
 - Write clear, descriptive variable and function names.
+
+## Design Tokens & Utilities
+
+- Use semantic token classes instead of hardcoded colors. Prefer `text-primary`, `text-muted`, and `bg-surface` over `text-gray-*` or `bg-white`. These classes adapt to light and dark themes automatically.
+- Reusable layout helpers live in `app/globals.css` under `@layer components`:
+  - `.section` provides standard page padding.
+  - `.card` applies surface background, padding, rounded corners, and a shadow for basic card layouts.

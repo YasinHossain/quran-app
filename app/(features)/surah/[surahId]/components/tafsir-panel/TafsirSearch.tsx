@@ -24,7 +24,7 @@ export const TafsirSearch: React.FC<TafsirSearchProps> = ({ theme, searchTerm, s
       className={`w-full pl-10 pr-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition border ${
         theme === 'dark'
           ? 'bg-slate-800 border-slate-700 text-slate-200'
-          : 'bg-white border-slate-200 text-slate-900'
+          : 'bg-surface border-slate-200 text-slate-900'
       }`}
     />
   </div>

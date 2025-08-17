@@ -3,7 +3,7 @@ import css from 'styled-jsx/css';
 export default css.global`
   @layer components {
     .bm-heading {
-      @apply text-gray-900 dark:text-white font-bold tracking-tight;
+      @apply text-primary  font-bold tracking-tight;
     }
     .bm-section {
       @apply py-8 space-y-6;
@@ -39,7 +39,7 @@ export default css.global`
       @apply bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl font-medium transition-all duration-200 transform hover:scale-105 focus:scale-105 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 shadow-lg shadow-teal-600/25 hover:shadow-teal-600/40;
     }
     .bm-button-ghost {
-      @apply text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 rounded-lg transition-colors;
+      @apply text-muted  hover:text-primary dark:hover:text-white hover:bg-gray-100 hover:bg-surface/50 px-4 py-2 rounded-lg transition-colors;
     }
   }
 `;

@@ -68,7 +68,7 @@ export const TranslationSelectionList: React.FC<TranslationSelectionListProps> =
               onDragEnd={handleDragEnd}
               className={`flex items-center justify-between p-3 rounded-lg cursor-grab active:cursor-grabbing transition-all duration-200 ${
                 draggedId === id ? 'opacity-50' : 'opacity-100'
-              } ${theme === 'dark' ? 'bg-slate-700 border border-slate-600 hover:bg-slate-600' : 'bg-white border border-slate-200 hover:bg-slate-50'}`}
+              } ${theme === 'dark' ? 'bg-slate-700 border border-slate-600 hover:bg-slate-600' : 'bg-surface border border-slate-200 hover:bg-slate-50'}`}
             >
               <div className="flex items-center min-w-0">
                 <GripVertical

@@ -44,7 +44,7 @@ export const TafsirSelectionList: React.FC<TafsirSelectionListProps> = ({
     </h2>
     <div
       className={`space-y-2 min-h-[40px] rounded-lg p-2 ${
-        theme === 'dark' ? 'bg-slate-800/50 border-slate-700' : 'bg-white border-slate-200'
+        theme === 'dark' ? 'bg-slate-800/50 border-slate-700' : 'bg-surface border-slate-200'
       } border`}
     >
       {orderedSelection.length === 0 ? (
@@ -68,7 +68,9 @@ export const TafsirSelectionList: React.FC<TafsirSelectionListProps> = ({
               className={`flex items-center justify-between p-2 rounded-lg shadow-sm cursor-grab active:cursor-grabbing transition-opacity border ${
                 draggedId === id ? 'opacity-50' : 'opacity-100'
               } ${
-                theme === 'dark' ? 'bg-slate-700/50 border-slate-700' : 'bg-white border-slate-200'
+                theme === 'dark'
+                  ? 'bg-slate-700/50 border-slate-700'
+                  : 'bg-surface border-slate-200'
               }`}
             >
               <div className="flex items-center min-w-0">

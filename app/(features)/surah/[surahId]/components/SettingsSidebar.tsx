@@ -15,7 +15,7 @@ import { TranslationPanel } from './translation-panel';
 import { TafsirPanel } from './tafsir-panel';
 import { WordLanguagePanel } from './WordLanguagePanel';
 
-interface SettingsSidebarProps {
+export interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;
   onWordLanguagePanelOpen: () => void;
   onTafsirPanelOpen?: () => void;
@@ -69,7 +69,7 @@ export const SettingsSidebar = ({
     } catch (error) {
       console.warn('Failed to parse saved sidebar sections:', error);
     }
-    
+
     // Default open sections - both translation and font should be open by default
     return ['translation', 'font'];
   });
@@ -79,7 +79,7 @@ export const SettingsSidebar = ({
     console.log('Toggling section:', sectionId, 'Current open:', openSections);
     setOpenSections((prev) => {
       let newState: string[];
-      
+
       if (prev.includes(sectionId)) {
         // If section is open, close it
         newState = prev.filter((id) => id !== sectionId);
@@ -95,14 +95,14 @@ export const SettingsSidebar = ({
         }
         console.log('Opening section, new state:', newState);
       }
-      
+
       // Save to localStorage
       try {
         localStorage.setItem('settings-sidebar-open-sections', JSON.stringify(newState));
       } catch (error) {
         console.warn('Failed to save sidebar sections to localStorage:', error);
       }
-      
+
       return newState;
     });
   };
@@ -157,7 +157,7 @@ export const SettingsSidebar = ({
       />
       <aside
         ref={sidebarRef}
-        className={`settings-sidebar fixed lg:static top-16 lg:top-0 bottom-0 right-0 w-[20.7rem] bg-[var(--background)] text-[var(--foreground)] flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 z-40 lg:z-40 lg:h-full ${
+        className={`settings-sidebar fixed lg:static top-16 lg:top-0 bottom-0 right-0 w-[20.7rem] bg-surface text-primary flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 z-40 lg:z-40 lg:h-full ${
           isSettingsOpen ? 'translate-x-0' : 'translate-x-full'
         } lg:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} lg:flex scrollbar-hide`}
         style={{
@@ -174,9 +174,7 @@ export const SettingsSidebar = ({
           >
             <ArrowLeftIcon size={18} />
           </button>
-          <h2 className="flex-grow text-center text-lg font-bold">
-            Settings
-          </h2>
+          <h2 className="flex-grow text-center text-lg font-bold">Settings</h2>
           <div className="w-8" />
         </header>
         <div className="flex-grow p-4 space-y-4">
@@ -188,7 +186,7 @@ export const SettingsSidebar = ({
               className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
                 activeTab === 'translation'
                   ? theme === 'light'
-                    ? 'bg-white shadow text-slate-900'
+                    ? 'bg-surface shadow text-slate-900'
                     : 'bg-slate-700 text-white shadow'
                   : theme === 'light'
                     ? 'text-slate-400 hover:text-slate-700'
@@ -202,7 +200,7 @@ export const SettingsSidebar = ({
               className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
                 activeTab === 'reading'
                   ? theme === 'light'
-                    ? 'bg-white shadow text-slate-900'
+                    ? 'bg-surface shadow text-slate-900'
                     : 'bg-slate-700 text-white shadow'
                   : theme === 'light'
                     ? 'text-slate-400 hover:text-slate-700'
@@ -240,7 +238,7 @@ export const SettingsSidebar = ({
             </>
           )}
           {activeTab === 'reading' && (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-muted">
               Mushaf settings have been moved to the Translation tab.
             </div>
           )}
@@ -255,7 +253,7 @@ export const SettingsSidebar = ({
               onClick={() => setTheme('light')}
               className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
                 theme === 'light'
-                  ? 'bg-white shadow text-slate-900'
+                  ? 'bg-surface shadow text-slate-900'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -284,10 +282,7 @@ export const SettingsSidebar = ({
           <TafsirPanel isOpen={isTafsirPanelOpen} onClose={onTafsirPanelClose} />
         )}
         {onWordLanguagePanelClose && (
-          <WordLanguagePanel 
-            isOpen={isWordLanguagePanelOpen} 
-            onClose={onWordLanguagePanelClose} 
-          />
+          <WordLanguagePanel isOpen={isWordLanguagePanelOpen} onClose={onWordLanguagePanelClose} />
         )}
       </aside>
     </>

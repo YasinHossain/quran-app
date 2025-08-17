@@ -16,7 +16,7 @@ export default function HomeTabs({ searchQuery }: HomeTabsProps) {
   return (
     <section id="surahs" className="py-20 max-w-screen-2xl mx-auto w-full">
       <div className="flex justify-between items-center mb-8 content-visibility-auto animate-fade-in-up animation-delay-600">
-        <h2 className="text-3xl font-bold text-slate-900 dark:text-white">All Surahs</h2>
+        <h2 className="text-3xl font-bold text-slate-900 ">All Surahs</h2>
         <div
           className={`flex items-center p-1 sm:p-2 rounded-full ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'}`}
         >
@@ -25,7 +25,7 @@ export default function HomeTabs({ searchQuery }: HomeTabsProps) {
             className={`px-4 sm:px-5 py-2 rounded-full text-sm font-semibold transition-colors ${
               activeTab === 'Surah'
                 ? theme === 'light'
-                  ? 'bg-white shadow text-slate-900'
+                  ? 'bg-surface shadow text-slate-900'
                   : 'bg-slate-700 text-white shadow'
                 : theme === 'light'
                   ? 'text-slate-500 hover:text-slate-800'
@@ -39,7 +39,7 @@ export default function HomeTabs({ searchQuery }: HomeTabsProps) {
             className={`px-4 sm:px-5 py-2 rounded-full text-sm font-semibold transition-colors ${
               activeTab === 'Juz'
                 ? theme === 'light'
-                  ? 'bg-white shadow text-slate-900'
+                  ? 'bg-surface shadow text-slate-900'
                   : 'bg-slate-700 text-white shadow'
                 : theme === 'light'
                   ? 'text-slate-500 hover:text-slate-800'
@@ -53,7 +53,7 @@ export default function HomeTabs({ searchQuery }: HomeTabsProps) {
             className={`px-4 sm:px-5 py-2 rounded-full text-sm font-semibold transition-colors ${
               activeTab === 'Page'
                 ? theme === 'light'
-                  ? 'bg-white shadow text-slate-900'
+                  ? 'bg-surface shadow text-slate-900'
                   : 'bg-slate-700 text-white shadow'
                 : theme === 'light'
                   ? 'text-slate-500 hover:text-slate-800'

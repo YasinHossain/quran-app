@@ -28,7 +28,7 @@ export const AyahNavigation = ({
       onClick={() => navigate(prev)}
       className="flex items-center px-4 py-2 rounded-full bg-teal-600 text-white disabled:opacity-50 font-bold"
     >
-      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white mr-2">
+      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-surface mr-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-5 w-5 text-teal-600"
@@ -58,7 +58,7 @@ export const AyahNavigation = ({
       onClick={() => navigate(next)}
       className="flex items-center px-4 py-2 rounded-full bg-teal-600 text-white disabled:opacity-50 font-bold"
     >
-      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white ml-2">
+      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-surface ml-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-5 w-5 text-teal-600"

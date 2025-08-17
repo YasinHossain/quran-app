@@ -118,24 +118,24 @@ export const EnhancedFolderCard = ({
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700">
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-surface  shadow-sm border border-gray-200 dark:border-gray-700">
             <FolderIcon size={24} className="text-teal-600 dark:text-teal-400" />
           </div>
           <div>
             <h3 className={utils.cn(componentClasses.text.heading, 'text-lg line-clamp-1')}>
               {name}
             </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-muted ">
               {count} {count === 1 ? 'bookmark' : 'bookmarks'}
             </p>
           </div>
         </div>
 
         <button
-          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-full p-2 hover:bg-white/50 dark:hover:bg-gray-800/50"
+          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-full p-2 hover:bg-surface/50 hover:bg-surface/50"
           onClick={(e) => e.stopPropagation()}
         >
-          <EllipsisHIcon size={18} className="text-gray-500 dark:text-gray-400" />
+          <EllipsisHIcon size={18} className="text-muted " />
         </button>
       </div>
 
@@ -147,7 +147,7 @@ export const EnhancedFolderCard = ({
               key={index}
               className={utils.cn(
                 componentClasses.text.caption,
-                'line-clamp-1 px-2 py-1 bg-white/50 dark:bg-gray-800/50 rounded'
+                'line-clamp-1 px-2 py-1 bg-surface/50  rounded'
               )}
             >
               {text}
@@ -158,7 +158,7 @@ export const EnhancedFolderCard = ({
 
       {/* Footer */}
       {lastModified && (
-        <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+        <div className="flex items-center justify-between text-xs text-muted ">
           <span>Updated {lastModified}</span>
           <motion.div
             initial={{ x: 0 }}
@@ -201,14 +201,12 @@ export const SidebarNavItem = ({
       <div
         className={utils.cn(
           'w-10 h-10 rounded-lg flex items-center justify-center transition-colors',
-          isActive ? 'bg-white dark:bg-gray-800 shadow-sm' : 'bg-gray-100 dark:bg-gray-700'
+          isActive ? 'bg-surface  shadow-sm' : 'bg-gray-100 '
         )}
       >
         <Icon
           size={20}
-          className={
-            isActive ? utils.getColorScheme(colorScheme).icon : 'text-gray-500 dark:text-gray-400'
-          }
+          className={isActive ? utils.getColorScheme(colorScheme).icon : 'text-muted '}
         />
       </div>
 
@@ -227,8 +225,8 @@ export const SidebarNavItem = ({
               className={utils.cn(
                 'text-xs px-2 py-1 rounded-full',
                 isActive
-                  ? utils.cn(utils.getColorScheme(colorScheme).text, 'bg-white dark:bg-gray-800')
-                  : 'text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700'
+                  ? utils.cn(utils.getColorScheme(colorScheme).text, 'bg-surface ')
+                  : 'text-muted  bg-gray-100 '
               )}
             >
               {count}

@@ -20,7 +20,7 @@ export default function JuzTab() {
         <Link
           href={`/juz/${juz.number}`}
           key={juz.number}
-          className={`group p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 content-visibility-auto animate-fade-in-up ${theme === 'light' ? 'bg-white/60' : 'bg-slate-800/40'}`}
+          className={`group p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 content-visibility-auto animate-fade-in-up ${theme === 'light' ? 'bg-surface/60' : 'bg-slate-800/40'}`}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">

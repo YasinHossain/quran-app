@@ -7,6 +7,9 @@ const config = {
   theme: {
     extend: {
       colors: {
+        surface: 'rgb(var(--color-surface) / <alpha-value>)',
+        primary: 'rgb(var(--color-text) / <alpha-value>)',
+        muted: 'rgb(var(--color-text-muted) / <alpha-value>)',
         background: 'rgb(var(--color-surface) / <alpha-value>)',
         foreground: 'rgb(var(--color-text) / <alpha-value>)',
         border: 'rgb(var(--color-border) / <alpha-value>)',

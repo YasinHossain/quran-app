@@ -1,14 +1,7 @@
 'use client';
 
 import { Folder, Bookmark } from '@/types';
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 const BOOKMARKS_STORAGE_KEY = 'quranAppBookmarks_v2'; // Use a new key for the new structure
 const OLD_BOOKMARKS_STORAGE_KEY = 'quranAppBookmarks'; // Old key for migration
@@ -44,12 +37,12 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
         if (oldBookmarks) {
           try {
             const verseIds: string[] = JSON.parse(oldBookmarks);
-            if (Array.isArray(verseIds) && verseIds.every(id => typeof id === 'string')) {
+            if (Array.isArray(verseIds) && verseIds.every((id) => typeof id === 'string')) {
               const migratedFolder: Folder = {
                 id: `migrated-${Date.now()}`,
                 name: 'Uncategorized',
                 createdAt: Date.now(),
-                bookmarks: verseIds.map(verseId => ({
+                bookmarks: verseIds.map((verseId) => ({
                   verseId,
                   createdAt: Date.now(),
                 })),
@@ -92,9 +85,7 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
 
   const renameFolder = useCallback((folderId: string, newName: string) => {
     setFolders((prev) =>
-      prev.map((folder) =>
-        folder.id === folderId ? { ...folder, name: newName } : folder
-      )
+      prev.map((folder) => (folder.id === folderId ? { ...folder, name: newName } : folder))
     );
   }, []);
 
@@ -121,7 +112,7 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
       return prev.map((folder) => {
         if (folder.id === targetFolderId) {
           // Avoid adding duplicate bookmarks
-          if (folder.bookmarks.some(b => b.verseId === verseId)) {
+          if (folder.bookmarks.some((b) => b.verseId === verseId)) {
             return folder;
           }
           const newBookmark: Bookmark = { verseId, createdAt: Date.now() };
@@ -146,19 +137,25 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
     );
   }, []);
 
-  const isBookmarked = useCallback((verseId: string) => {
-    return folders.some(folder => folder.bookmarks.some(b => b.verseId === verseId));
-  }, [folders]);
+  const isBookmarked = useCallback(
+    (verseId: string) => {
+      return folders.some((folder) => folder.bookmarks.some((b) => b.verseId === verseId));
+    },
+    [folders]
+  );
 
-  const findBookmark = useCallback((verseId: string): { folder: Folder; bookmark: Bookmark } | null => {
-    for (const folder of folders) {
-      const bookmark = folder.bookmarks.find(b => b.verseId === verseId);
-      if (bookmark) {
-        return { folder, bookmark };
+  const findBookmark = useCallback(
+    (verseId: string): { folder: Folder; bookmark: Bookmark } | null => {
+      for (const folder of folders) {
+        const bookmark = folder.bookmarks.find((b) => b.verseId === verseId);
+        if (bookmark) {
+          return { folder, bookmark };
+        }
       }
-    }
-    return null;
-  }, [folders]);
+      return null;
+    },
+    [folders]
+  );
 
   const value = useMemo(
     () => ({
@@ -171,7 +168,16 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
       isBookmarked,
       findBookmark,
     }),
-    [folders, createFolder, deleteFolder, renameFolder, addBookmark, removeBookmark, isBookmarked, findBookmark]
+    [
+      folders,
+      createFolder,
+      deleteFolder,
+      renameFolder,
+      addBookmark,
+      removeBookmark,
+      isBookmarked,
+      findBookmark,
+    ]
   );
 
   return <BookmarkContext.Provider value={value}>{children}</BookmarkContext.Provider>;

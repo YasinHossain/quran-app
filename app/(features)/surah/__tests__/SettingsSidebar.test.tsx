@@ -73,7 +73,7 @@ describe('SettingsSidebar interactions', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'IndoPak' }));
     expect(screen.getByText('Noto Nastaliq Urdu')).toBeInTheDocument();
-    
+
     // Close sidebar
     const backButtons = screen.getAllByRole('button', { name: 'Back' });
     await userEvent.click(backButtons[1]);

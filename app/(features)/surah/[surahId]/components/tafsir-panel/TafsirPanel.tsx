@@ -85,7 +85,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
       data-testid="tafsir-panel"
       className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
-      } ${theme === 'dark' ? 'bg-[var(--background)] text-[var(--foreground)]' : 'bg-white text-slate-800'}`}
+      } ${theme === 'dark' ? 'bg-surface text-primary' : 'bg-surface text-slate-800'}`}
     >
       <TafsirLimitWarning show={showLimitWarning} theme={theme} />
 
@@ -102,7 +102,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className={`h-6 w-6 ${theme === 'dark' ? 'text-[var(--foreground)]' : 'text-slate-600'}`}
+            className={`h-6 w-6 ${theme === 'dark' ? 'text-primary' : 'text-slate-600'}`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -113,7 +113,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
         </button>
         <h2
           className={`text-lg font-bold text-center flex-grow ${
-            theme === 'dark' ? 'text-[var(--foreground)]' : 'text-slate-800'
+            theme === 'dark' ? 'text-primary' : 'text-slate-800'
           }`}
         >
           Manage Tafsirs
@@ -122,7 +122,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
           onClick={handleReset}
           className={`p-2 rounded-full focus-visible:outline-none transition-colors ${
             theme === 'dark'
-              ? 'text-[var(--foreground)] hover:bg-gray-700'
+              ? 'text-primary hover:bg-gray-700'
               : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
           }`}
           title="Reset to Default"
@@ -180,8 +180,8 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
               <div
                 className={`sticky top-0 z-10 py-2 border-b ${
                   theme === 'dark'
-                    ? 'bg-[var(--background)] border-[var(--border-color)]'
-                    : 'bg-white/95 backdrop-blur-sm border-slate-200'
+                    ? 'bg-surface border-[var(--border-color)]'
+                    : 'bg-surface/95 backdrop-blur-sm border-slate-200'
                 }`}
               >
                 <div className="px-4">
@@ -218,7 +218,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
                         <div key={language}>
                           <h3
                             className={`text-lg font-semibold mb-4 ${
-                              theme === 'dark' ? 'text-[var(--foreground)]' : 'text-slate-800'
+                              theme === 'dark' ? 'text-primary' : 'text-slate-800'
                             }`}
                           >
                             {language}

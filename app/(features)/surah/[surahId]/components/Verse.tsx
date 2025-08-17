@@ -85,7 +85,7 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
         {verse.translations?.map((t: Translation) => (
           <div key={t.resource_id}>
             <p
-              className="text-left leading-relaxed text-[var(--foreground)]"
+              className="text-left leading-relaxed text-primary"
               style={{ fontSize: `${settings.translationFontSize}px` }}
               dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.text) }}
             />

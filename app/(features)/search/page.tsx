@@ -33,7 +33,7 @@ function SearchContent() {
       {loading && <p className="text-teal-600">Loading...</p>}
       {error && <p className="text-red-600 mb-4">{error}</p>}
       {!loading && verses.length === 0 && !error && query && (
-        <p className="text-gray-500">No verses found.</p>
+        <p className="text-muted">No verses found.</p>
       )}
       <div className="space-y-8">
         {verses.map((v) => (

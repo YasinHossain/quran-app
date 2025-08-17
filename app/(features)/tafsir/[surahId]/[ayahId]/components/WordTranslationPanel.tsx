@@ -42,7 +42,7 @@ export const WordTranslationPanel = ({
 
   return (
     <div
-      className={`fixed ${isHidden ? 'top-0' : 'top-16'} bottom-0 right-0 w-[20.7rem] bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-all duration-300 ease-in-out z-50 shadow-lg ${
+      className={`fixed ${isHidden ? 'top-0' : 'top-16'} bottom-0 right-0 w-[20.7rem] bg-surface text-primary flex flex-col transition-all duration-300 ease-in-out z-50 shadow-lg ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
@@ -54,15 +54,13 @@ export const WordTranslationPanel = ({
         >
           <ArrowLeftIcon size={18} />
         </button>
-        <h2 className="font-bold text-lg text-[var(--foreground)]">
-          {t('word_by_word_panel_title')}
-        </h2>
+        <h2 className="font-bold text-lg text-primary">{t('word_by_word_panel_title')}</h2>
         <div className="w-8"></div>
       </div>
       <div className="p-3 border-b border-gray-200/80">
         <div className="relative">
           <SearchIcon
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"
             width={18}
             height={18}
           />
@@ -71,7 +69,7 @@ export const WordTranslationPanel = ({
             placeholder={t('search')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none bg-[var(--background)] text-[var(--foreground)]"
+            className="w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none bg-surface text-primary"
           />
         </div>
       </div>
@@ -100,7 +98,7 @@ export const WordTranslationPanel = ({
                 onClose();
               }}
             />
-            <span className="text-sm text-[var(--foreground)]">{lang.name}</span>
+            <span className="text-sm text-primary">{lang.name}</span>
           </label>
         ))}
       </div>

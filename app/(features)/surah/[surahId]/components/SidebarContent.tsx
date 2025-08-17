@@ -58,7 +58,7 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
     return (
       <aside
         ref={ref}
-        className={`settings-sidebar fixed lg:static top-16 lg:top-0 bottom-0 right-0 w-[20.7rem] bg-[var(--background)] text-[var(--foreground)] flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 z-40 lg:z-40 lg:h-full ${
+        className={`settings-sidebar fixed lg:static top-16 lg:top-0 bottom-0 right-0 w-[20.7rem] bg-surface text-primary flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 z-40 lg:z-40 lg:h-full ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         } lg:translate-x-0 ${isOpen ? 'flex' : 'hidden'} lg:flex scrollbar-hide`}
         style={{ position: 'relative' }}
@@ -85,7 +85,7 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
               className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
                 activeTab === 'translation'
                   ? theme === 'light'
-                    ? 'bg-white shadow text-slate-900'
+                    ? 'bg-surface shadow text-slate-900'
                     : 'bg-slate-700 text-white shadow'
                   : theme === 'light'
                     ? 'text-slate-400 hover:text-slate-700'
@@ -99,7 +99,7 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
               className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
                 activeTab === 'reading'
                   ? theme === 'light'
-                    ? 'bg-white shadow text-slate-900'
+                    ? 'bg-surface shadow text-slate-900'
                     : 'bg-slate-700 text-white shadow'
                   : theme === 'light'
                     ? 'text-slate-400 hover:text-slate-700'
@@ -137,7 +137,7 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
             </>
           )}
           {activeTab === 'reading' && (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-muted">
               Mushaf settings have been moved to the Translation tab.
             </div>
           )}
@@ -152,7 +152,7 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
               onClick={() => setTheme('light')}
               className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
                 theme === 'light'
-                  ? 'bg-white shadow text-slate-900'
+                  ? 'bg-surface shadow text-slate-900'
                   : 'text-slate-400 hover:text-white'
               }`}
             >

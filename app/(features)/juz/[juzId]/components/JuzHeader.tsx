@@ -10,7 +10,7 @@ export function JuzHeader({ juz }: JuzHeaderProps) {
   if (!juz) return null;
   return (
     <div className="mb-8 text-center">
-      <h1 className="text-3xl font-bold text-[var(--foreground)]">
+      <h1 className="text-3xl font-bold text-primary">
         {t('juz_number', { number: juz.juz_number })}
       </h1>
     </div>
