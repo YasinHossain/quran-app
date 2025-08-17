@@ -1,0 +1,193 @@
+import { css } from 'tailwindcss';
+
+export default css`
+  @layer components {
+    /* Bookmark Page Base Styles - Prevents Design Breaks */
+    .bookmark-page {
+      @apply bg-white dark:bg-slate-900 min-h-screen;
+    }
+
+    .bookmark-sidebar {
+      @apply bg-white dark:bg-slate-800 border-r border-gray-200 dark:border-gray-700;
+    }
+
+    .bookmark-main-content {
+      @apply bg-gray-50 dark:bg-slate-900 flex-1 overflow-y-auto;
+    }
+
+    /* ===== Card Base Classes ===== */
+    .bookmark-card-base {
+      @apply rounded-xl border-2 p-6 transition-all duration-200 cursor-pointer;
+      @apply hover:shadow-lg transform hover:scale-[1.02];
+    }
+
+    .bookmark-folder-card {
+      @apply border-teal-200 dark:border-teal-700;
+      @apply bg-gradient-to-br from-teal-50 to-teal-100 dark:from-teal-800/30 dark:to-teal-700/30;
+      @apply hover:border-teal-300 dark:hover:border-teal-500;
+    }
+
+    .bookmark-pinned-card {
+      @apply border-amber-200 dark:border-amber-700;
+      @apply bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-800/30 dark:to-amber-700/30;
+      @apply hover:border-amber-300 dark:hover:border-amber-500;
+    }
+
+    .bookmark-lastread-card {
+      @apply border-indigo-200 dark:border-indigo-700;
+      @apply bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-800/30 dark:to-indigo-700/30;
+      @apply hover:border-indigo-300 dark:hover:border-indigo-500;
+    }
+
+    .bookmark-general-card {
+      @apply border-emerald-200 dark:border-emerald-700;
+      @apply bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-800/20 dark:to-emerald-700/20;
+      @apply hover:border-emerald-300 dark:hover:border-emerald-500;
+    }
+
+    /* ===== Typography Classes ===== */
+    .bookmark-heading {
+      @apply text-gray-900 dark:text-white font-bold tracking-tight;
+    }
+
+    .bookmark-subheading {
+      @apply text-gray-600 dark:text-gray-300 font-medium;
+    }
+
+    .bookmark-body-text {
+      @apply text-gray-900 dark:text-white;
+    }
+
+    .bookmark-muted-text {
+      @apply text-gray-600 dark:text-gray-300;
+    }
+
+    .bookmark-caption {
+      @apply text-gray-500 dark:text-gray-400 text-sm;
+    }
+
+    /* ===== Badge Classes ===== */
+    .bookmark-badge-base {
+      @apply inline-flex items-center justify-center px-3 py-1 text-sm font-medium rounded-full border;
+    }
+
+    .bookmark-badge-folder {
+      @apply bg-teal-100 dark:bg-teal-900/30 text-teal-800 dark:text-teal-200 border-teal-200 dark:border-teal-800;
+    }
+
+    .bookmark-badge-pinned {
+      @apply bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 border-amber-200 dark:border-amber-800;
+    }
+
+    .bookmark-badge-lastread {
+      @apply bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-200 border-indigo-200 dark:border-indigo-800;
+    }
+
+    .bookmark-badge-general {
+      @apply bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-200 border-emerald-200 dark:border-emerald-800;
+    }
+
+    /* ===== Button Classes ===== */
+    .bookmark-button-primary {
+      @apply bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl font-medium;
+      @apply transition-all duration-200 transform hover:scale-105 focus:scale-105;
+      @apply focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2;
+      @apply shadow-lg shadow-teal-600/25 hover:shadow-teal-600/40;
+    }
+
+    .bookmark-button-secondary {
+      @apply bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-lg;
+      @apply hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors;
+    }
+
+    .bookmark-button-ghost {
+      @apply text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white;
+      @apply hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 rounded-lg transition-colors;
+    }
+
+    /* ===== Navigation Classes ===== */
+    .bookmark-nav-item {
+      @apply w-full flex items-center gap-4 p-4 rounded-xl transition-all duration-200;
+    }
+
+    .bookmark-nav-item-active {
+      @apply bg-teal-100 dark:bg-teal-900/30 border-2 border-teal-200 dark:border-teal-700 shadow-md;
+    }
+
+    .bookmark-nav-item-inactive {
+      @apply hover:bg-gray-50 dark:hover:bg-gray-700/50;
+    }
+
+    .bookmark-nav-icon {
+      @apply w-10 h-10 rounded-lg flex items-center justify-center transition-colors;
+    }
+
+    .bookmark-nav-icon-active {
+      @apply bg-white dark:bg-teal-800 shadow-sm;
+    }
+
+    .bookmark-nav-icon-inactive {
+      @apply bg-gray-100 dark:bg-gray-600;
+    }
+
+    /* ===== Icon Color Classes ===== */
+    .bookmark-icon-folder {
+      @apply text-teal-600 dark:text-teal-400;
+    }
+
+    .bookmark-icon-pinned {
+      @apply text-amber-600 dark:text-amber-400;
+    }
+
+    .bookmark-icon-lastread {
+      @apply text-indigo-600 dark:text-indigo-400;
+    }
+
+    .bookmark-icon-general {
+      @apply text-emerald-600 dark:text-emerald-400;
+    }
+
+    .bookmark-icon-muted {
+      @apply text-gray-500 dark:text-gray-300;
+    }
+
+    /* ===== Layout Grid Classes ===== */
+    .bookmark-grid-responsive {
+      @apply grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+    }
+
+    .bookmark-grid-two-col {
+      @apply grid grid-cols-1 gap-6 lg:grid-cols-2;
+    }
+
+    .bookmark-grid-three-col {
+      @apply grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3;
+    }
+
+    /* ===== Container Classes ===== */
+    .bookmark-container {
+      @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    }
+
+    .bookmark-section {
+      @apply py-8 space-y-6;
+    }
+
+    .bookmark-section-header {
+      @apply mb-8 space-y-2;
+    }
+
+    /* ===== Animation Classes ===== */
+    .bookmark-fade-in {
+      @apply animate-in fade-in duration-300;
+    }
+
+    .bookmark-slide-up {
+      @apply animate-in slide-in-from-bottom-4 duration-300;
+    }
+
+    .bookmark-scale-in {
+      @apply animate-in zoom-in-95 duration-200;
+    }
+  }
+`;

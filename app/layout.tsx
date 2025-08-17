@@ -1,6 +1,7 @@
 // app/layout.tsx
 import './globals.css';
 import './fonts.css';
+import './styles.ts';
 import TranslationProvider from './providers/TranslationProvider';
 import ClientProviders from './providers/ClientProviders';
 import localFont from 'next/font/local';

@@ -72,17 +72,6 @@
   }
 }
 
-/* ===== Component Base Styles ===== */
-@layer components {
-  .qa-card {
-    @apply bg-card-bg border border-border rounded-xl transition-all duration-200 ease-in-out hover:shadow-md;
-  }
-
-  .qa-btn-primary {
-    @apply bg-accent text-white border-none rounded-lg px-4 py-2 font-medium transition-all duration-200 ease-in-out hover:bg-teal-700 hover:-translate-y-px;
-  }
-}
-
 /* ===== Custom Range Slider Styles ===== */
 input[type='range'] {
   -webkit-appearance: none;
