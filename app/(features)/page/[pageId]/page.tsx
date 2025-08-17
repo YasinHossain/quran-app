@@ -81,15 +81,15 @@ export default function PagePage({ params }: PagePageProps) {
     : null;
 
   return (
-    <div className="flex flex-grow bg-white dark:bg-[var(--background)] text-[var(--foreground)] font-sans overflow-hidden">
-      <main className="flex-grow bg-white dark:bg-[var(--background)] p-6 lg:p-10 overflow-y-auto homepage-scrollable-area">
+    <div className="flex flex-grow bg-background text-foreground font-sans overflow-hidden">
+      <main className="flex-grow bg-background p-6 lg:p-10 overflow-y-auto homepage-scrollable-area">
         <div className="w-full relative">
           {isLoading ? (
-            <div className="flex justify-center py-20">
-              <Spinner className="h-8 w-8 text-teal-600" />
-            </div>
-          ) : error ? (
-            <div className="text-center py-20 text-red-600 bg-red-50 p-4 rounded-lg">{error}</div>
+              <div className="flex justify-center py-20">
+                <Spinner className="h-8 w-8 text-accent" />
+              </div>
+            ) : error ? (
+              <div className="text-center py-20 text-error bg-red-50 p-4 rounded-lg">{error}</div>
           ) : verses.length > 0 ? (
             <>
               {verses.map((v: VerseType) => (
@@ -98,12 +98,12 @@ export default function PagePage({ params }: PagePageProps) {
                 </React.Fragment>
               ))}
               <div ref={loadMoreRef} className="py-4 text-center space-x-2">
-                {isValidating && <Spinner className="inline h-5 w-5 text-teal-600" />}
-                {isReachingEnd && <span className="text-gray-500">{t('end_of_page')}</span>}
+                {isValidating && <Spinner className="inline h-5 w-5 text-accent" />}
+                {isReachingEnd && <span className="text-muted">{t('end_of_page')}</span>}
               </div>
             </>
           ) : (
-            <div className="text-center py-20 text-gray-500">{t('no_verses_found_on_page')}</div>
+            <div className="text-center py-20 text-muted">{t('no_verses_found_on_page')}</div>
           )}
         </div>
       </main>

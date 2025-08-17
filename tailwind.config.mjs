@@ -6,7 +6,6 @@ const tokenSets = {
   base: defaultTokens,
   alt: altTokens,
 };
-
 /** @type {import('tailwindcss').Config} */
 const config = {
   darkMode: 'class',
@@ -97,23 +96,30 @@ const config = {
           900: '#064e3b',
         },
       },
-      spacing: defaultTokens.spacing,
-      fontFamily: {
-        base: [defaultTokens.typography.fontFamily, 'sans-serif'],
-      },
-      fontSize: {
-        base: defaultTokens.typography.fontSizeBase,
-        h1: defaultTokens.typography.headings.h1,
-        h2: defaultTokens.typography.headings.h2,
-        h3: defaultTokens.typography.headings.h3,
+      spacing: {
+        xs: 'var(--space-xs)',
+        sm: 'var(--space-sm)',
+        md: 'var(--space-md)',
+        lg: 'var(--space-lg)',
+        xl: 'var(--space-xl)',
       },
       borderRadius: {
-        DEFAULT: defaultTokens.components.borderRadius,
-        xl: '1rem',
-        '2xl': '1.5rem',
+        sm: 'var(--radius-sm)',
+        DEFAULT: 'var(--radius-md)',
+        lg: 'var(--radius-lg)',
+        xl: 'var(--radius-xl)',
+      },
+      fontFamily: {
+        base: ['var(--font-base)', 'sans-serif'],
+      },
+      fontSize: {
+        base: 'var(--text-base)',
+        h1: 'var(--text-h1)',
+        h2: 'var(--text-h2)',
+        h3: 'var(--text-h3)',
       },
       boxShadow: {
-        default: defaultTokens.components.shadow,
+        default: '0 1px 2px rgba(0,0,0,0.05)',
         card: '0 1px 3px rgba(0, 0, 0, 0.1)',
         modal: '0 4px 6px rgba(0, 0, 0, 0.15)',
       },

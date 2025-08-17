@@ -7,7 +7,6 @@ import { useSidebar } from '@/app/providers/SidebarContext';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaCog } from 'react-icons/fa';
-import { useTheme } from '@/app/providers/ThemeContext';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
 const Header = () => {
@@ -15,7 +14,6 @@ const Header = () => {
   const { setSurahListOpen, setSettingsOpen } = useSidebar();
   const router = useRouter();
   const [query, setQuery] = useState('');
-  const { theme } = useTheme(); // Use the theme context to determine colors
   const { isHidden } = useHeaderVisibility();
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -24,18 +22,15 @@ const Header = () => {
     }
   };
 
-  // Use a stable header background based on the current theme
-  const headerBgClass = theme === 'light' ? 'bg-white' : 'bg-[var(--background)]';
-
   return (
     <header
-      className={`h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 ${headerBgClass} text-gray-800 dark:text-gray-100 border-b shadow-sm ${isHidden ? 'hidden' : ''}`}
+      className={`fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 bg-background text-foreground z-50 transform transition-transform duration-300 ${isHidden ? '-translate-y-full shadow-none' : 'translate-y-0 shadow-sm'} border-b border-transparent overflow-hidden`}
     >
       {/* Column 1: Title & Surah List Toggle */}
       <div className="flex items-center gap-2">
         <button
           onClick={() => setSurahListOpen(true)}
-          className="p-2 rounded-md hover:bg-gray-100 lg:hidden"
+          className="p-2 rounded-md hover:bg-hover lg:hidden"
           aria-label="Open Surah List"
         >
           <BarsIcon size={20} />
@@ -58,7 +53,7 @@ const Header = () => {
       <div className="flex justify-end">
         <button
           onClick={() => setSettingsOpen(true)}
-          className="p-2 rounded-md hover:bg-gray-100 lg:hidden"
+          className="p-2 rounded-md hover:bg-hover lg:hidden"
           aria-label="Open Settings"
         >
           <FaCog size={20} />

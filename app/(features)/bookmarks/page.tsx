@@ -147,7 +147,7 @@ const AyahCard = ({ ayah }: { ayah: PinnedAyah }) => (
           {ayah.arabicText}
         </p>
         {ayah.translation && (
-          <p className="text-sm text-muted leading-relaxed bg-card-bg p-3 rounded-lg">
+          <p className="text-sm text-muted leading-relaxed bg-white/50 dark:bg-gray-800/50 p-3 rounded-lg">
             {ayah.translation}
           </p>
         )}
@@ -377,7 +377,7 @@ const BookmarksPage = () => {
         <BookmarkSidebar activeSection={activeSection} onSectionChange={setActiveSection} />
 
         {/* Main Content Area */}
-        <main className="p-8 flex-1 overflow-y-auto bg-gray-50 dark:bg-slate-900">
+        <main className="bookmark-main-content p-8">
           <AnimatePresence mode="wait">{renderContent()}</AnimatePresence>
         </main>
       </div>
