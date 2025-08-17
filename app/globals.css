@@ -1,16 +1,13 @@
 /* ===== Tailwind Import (Required for Tailwind classes) ===== */
 @import 'tailwindcss';
 
-/* ===== Bookmark Base Styles ===== */
-@import './(features)/bookmarks/styles/bookmark-base.css';
-
 :root {
   --background: #ffffff;
   --foreground: #374151;
   --border-color: #e5e7eb;
   --accent: #0d9488;
   --subtle-grey: #d1d5db;
-  
+
   /* Missing variables that components need */
   --text-muted: #6b7280;
   --card-background: #ffffff;
@@ -18,12 +15,6 @@
   --success: #10b981;
   --warning: #f59e0b;
   --error: #ef4444;
-  
-  /* Semantic color variables for bookmarks */
-  --bookmark-folder: #0d9488;
-  --bookmark-pinned: #f59e0b;
-  --bookmark-lastread: #6366f1;
-  --bookmark-general: #10b981;
 }
 
 [data-theme='dark'] {
@@ -32,7 +23,7 @@
   --border-color: #4b5563;
   --accent: #0d9488;
   --subtle-grey: #4b5563;
-  
+
   /* Dark mode versions */
   --text-muted: #9ca3af;
   --card-background: #374151;
@@ -40,12 +31,6 @@
   --success: #10b981;
   --warning: #f59e0b;
   --error: #ef4444;
-  
-  /* Dark semantic colors */
-  --bookmark-folder: #14b8a6;
-  --bookmark-pinned: #fbbf24;
-  --bookmark-lastread: #818cf8;
-  --bookmark-general: #34d399;
 }
 
 @layer base {
@@ -84,7 +69,9 @@
 }
 
 .card:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .btn-primary {
