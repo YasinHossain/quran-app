@@ -15,7 +15,6 @@ interface ResourceListProps<T extends Resource> {
   rowHeight: number;
   selectedIds: Set<number>;
   onToggle: (id: number) => void;
-  theme: string;
   height: number;
 }
 
@@ -24,7 +23,6 @@ export const ResourceList = <T extends Resource>({
   rowHeight,
   selectedIds,
   onToggle,
-  theme,
   height,
 }: ResourceListProps<T>) => {
   const itemCount = resources.length;
@@ -39,7 +37,6 @@ export const ResourceList = <T extends Resource>({
             item={item}
             isSelected={selectedIds.has(item.id)}
             onToggle={onToggle}
-            theme={theme}
           />
         </div>
       </div>

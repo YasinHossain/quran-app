@@ -7,18 +7,11 @@ import usePlaybackOptions from '../hooks/usePlaybackOptions';
 interface Props {
   open: boolean;
   onClose: () => void;
-  theme: 'light' | 'dark';
   activeTab: 'reciter' | 'repeat';
   setActiveTab: (tab: 'reciter' | 'repeat') => void;
 }
 
-export default function PlaybackOptionsModal({
-  open,
-  onClose,
-  theme,
-  activeTab,
-  setActiveTab,
-}: Props) {
+export default function PlaybackOptionsModal({ open, onClose, activeTab, setActiveTab }: Props) {
   const {
     localReciter,
     setLocalReciter,
@@ -48,35 +41,18 @@ export default function PlaybackOptionsModal({
       tabIndex={0}
     >
       <div
-        className={`w-full max-w-3xl rounded-2xl border p-4 md:p-6 ${
-          theme === 'dark'
-            ? 'bg-slate-800 border-slate-700 shadow-2xl'
-            : 'bg-white border-transparent shadow-[0_10px_30px_rgba(2,6,23,0.12),0_1px_2px_rgba(2,6,23,0.06)]'
-        }`}
+        className="w-full max-w-3xl rounded-2xl border border-border bg-surface p-4 md:p-6 shadow-2xl"
         role="dialog"
         aria-modal="true"
         tabIndex={-1}
       >
         {/* Header */}
         <div className="flex items-center justify-center gap-3 mb-4">
-          <div
-            className={`h-10 w-10 rounded-xl grid place-items-center ${
-              theme === 'dark' ? 'bg-sky-500/10 text-sky-500' : 'bg-[#0E2A47]/10 text-[#0E2A47]'
-            }`}
-          >
+          <div className="h-10 w-10 rounded-xl grid place-items-center bg-accent/10 text-accent">
             <SlidersHorizontal />
           </div>
-          <div className={`font-semibold ${theme === 'dark' ? 'text-slate-200' : ''}`}>
-            Playback Options
-          </div>
-          <button
-            className={`ml-auto ${
-              theme === 'dark'
-                ? 'text-slate-400 hover:text-white'
-                : 'text-slate-500 hover:text-slate-900'
-            }`}
-            onClick={onClose}
-          >
+          <div className="font-semibold text-foreground">Playback Options</div>
+          <button className="ml-auto text-muted hover:text-foreground" onClick={onClose}>
             ✕
           </button>
         </div>
@@ -86,13 +62,7 @@ export default function PlaybackOptionsModal({
           <button
             onClick={() => setActiveTab('reciter')}
             className={`px-3 py-1.5 rounded-full text-sm ${
-              activeTab === 'reciter'
-                ? theme === 'dark'
-                  ? 'bg-sky-500/10 text-sky-400'
-                  : 'bg-[#0E2A47]/10 text-[#0E2A47]'
-                : theme === 'dark'
-                  ? 'hover:bg-white/10'
-                  : 'hover:bg-slate-900/5'
+              activeTab === 'reciter' ? 'bg-accent/10 text-accent' : 'hover:bg-interactive'
             }`}
           >
             <span className="inline-flex items-center gap-2">
@@ -103,13 +73,7 @@ export default function PlaybackOptionsModal({
           <button
             onClick={() => setActiveTab('repeat')}
             className={`px-3 py-1.5 rounded-full text-sm ${
-              activeTab === 'repeat'
-                ? theme === 'dark'
-                  ? 'bg-sky-500/10 text-sky-400'
-                  : 'bg-[#0E2A47]/10 text-[#0E2A47]'
-                : theme === 'dark'
-                  ? 'hover:bg-white/10'
-                  : 'hover:bg-slate-900/5'
+              activeTab === 'repeat' ? 'bg-accent/10 text-accent' : 'hover:bg-interactive'
             }`}
           >
             <span className="inline-flex items-center gap-2">
@@ -121,15 +85,10 @@ export default function PlaybackOptionsModal({
 
         <div className="grid md:grid-cols-2 gap-4">
           {activeTab === 'reciter' && (
-            <ReciterPanel
-              theme={theme}
-              localReciter={localReciter}
-              setLocalReciter={setLocalReciter}
-            />
+            <ReciterPanel localReciter={localReciter} setLocalReciter={setLocalReciter} />
           )}
           {activeTab === 'repeat' && (
             <RepeatPanel
-              theme={theme}
               localRepeat={localRepeat}
               setLocalRepeat={setLocalRepeat}
               rangeWarning={rangeWarning}
@@ -139,24 +98,16 @@ export default function PlaybackOptionsModal({
         </div>
 
         <div className="mt-5 flex items-center justify-between text-sm">
-          <div className={`text-slate-500 ${theme === 'dark' ? 'text-slate-400' : ''}`}>
-            Tips: Space • ←/→ seek • ↑/↓ volume
-          </div>
+          <div className="text-muted">Tips: Space • ←/→ seek • ↑/↓ volume</div>
           <div className="flex gap-2">
             <button
-              className={`px-4 py-2 rounded-xl ${
-                theme === 'dark'
-                  ? 'bg-slate-700 hover:bg-slate-600 text-slate-200'
-                  : 'bg-slate-100 hover:bg-slate-200'
-              }`}
+              className="px-4 py-2 rounded-xl bg-interactive hover:bg-interactive text-foreground"
               onClick={onClose}
             >
               Cancel
             </button>
             <button
-              className={`px-4 py-2 rounded-xl text-white hover:opacity-90 ${
-                theme === 'dark' ? 'bg-sky-500' : 'bg-[#0E2A47]'
-              }`}
+              className="px-4 py-2 rounded-xl bg-accent text-white hover:opacity-90"
               onClick={commit}
             >
               Apply

@@ -2,7 +2,6 @@ import React from 'react';
 import type { RepeatOptions } from '../types';
 
 interface Props {
-  theme: 'light' | 'dark';
   localRepeat: RepeatOptions;
   setLocalRepeat: React.Dispatch<React.SetStateAction<RepeatOptions>>;
   rangeWarning: string | null;
@@ -10,7 +9,6 @@ interface Props {
 }
 
 export default function RepeatPanel({
-  theme,
   localRepeat,
   setLocalRepeat,
   rangeWarning,
@@ -18,12 +16,8 @@ export default function RepeatPanel({
 }: Props) {
   return (
     <div className="md:col-span-2 grid md:grid-cols-2 gap-4">
-      <div
-        className={`rounded-xl border p-4 ${
-          theme === 'dark' ? 'border-slate-700' : 'border-slate-200'
-        }`}
-      >
-        <div className={`font-medium mb-3 ${theme === 'dark' ? 'text-slate-200' : ''}`}>Mode</div>
+      <div className="rounded-xl border border-border p-4">
+        <div className="font-medium mb-3 text-foreground">Mode</div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {(['off', 'single', 'range', 'surah'] as const).map((m) => (
             <button
@@ -31,12 +25,8 @@ export default function RepeatPanel({
               onClick={() => setLocalRepeat({ ...localRepeat, mode: m })}
               className={`px-3 py-2 rounded-xl text-sm capitalize ${
                 localRepeat.mode === m
-                  ? theme === 'dark'
-                    ? 'bg-sky-500 text-white'
-                    : 'bg-[#0E2A47] text-white'
-                  : theme === 'dark'
-                    ? 'bg-slate-700 hover:bg-slate-600'
-                    : 'bg-slate-50 hover:bg-slate-100'
+                  ? 'bg-accent text-white'
+                  : 'bg-interactive hover:bg-interactive'
               }`}
             >
               {m}
@@ -44,18 +34,8 @@ export default function RepeatPanel({
           ))}
         </div>
       </div>
-      <div
-        className={`rounded-xl border p-4 grid grid-cols-2 gap-3 ${
-          theme === 'dark' ? 'border-slate-700' : 'border-slate-200'
-        }`}
-      >
-        {rangeWarning && (
-          <div
-            className={`col-span-2 text-sm ${theme === 'dark' ? 'text-red-400' : 'text-red-600'}`}
-          >
-            {rangeWarning}
-          </div>
-        )}
+      <div className="rounded-xl border border-border p-4 grid grid-cols-2 gap-3">
+        {rangeWarning && <div className="col-span-2 text-sm text-red-400">{rangeWarning}</div>}
         <NumberField
           label="Start"
           value={localRepeat.start ?? 1}
@@ -64,7 +44,6 @@ export default function RepeatPanel({
             setLocalRepeat({ ...localRepeat, start: v });
             setRangeWarning(null);
           }}
-          theme={theme}
         />
         <NumberField
           label="End"
@@ -74,21 +53,18 @@ export default function RepeatPanel({
             setLocalRepeat({ ...localRepeat, end: v });
             setRangeWarning(null);
           }}
-          theme={theme}
         />
         <NumberField
           label="Play count"
           value={localRepeat.playCount ?? 1}
           min={1}
           onChange={(v) => setLocalRepeat({ ...localRepeat, playCount: v })}
-          theme={theme}
         />
         <NumberField
           label="Repeat each"
           value={localRepeat.repeatEach ?? 1}
           min={1}
           onChange={(v) => setLocalRepeat({ ...localRepeat, repeatEach: v })}
-          theme={theme}
         />
         <div className="col-span-2">
           <NumberField
@@ -96,7 +72,6 @@ export default function RepeatPanel({
             value={localRepeat.delay ?? 0}
             min={0}
             onChange={(v) => setLocalRepeat({ ...localRepeat, delay: v })}
-            theme={theme}
           />
         </div>
       </div>
@@ -109,19 +84,15 @@ function NumberField({
   value,
   onChange,
   min = 0,
-  theme,
 }: {
   label: string;
   value: number;
   onChange: (v: number) => void;
   min?: number;
-  theme: 'light' | 'dark';
 }) {
   return (
     <label className="text-sm">
-      <span className={`block mb-1 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
-        {label}
-      </span>
+      <span className="block mb-1 text-muted">{label}</span>
       <input
         type="number"
         value={Number.isFinite(value) ? value : 0}
@@ -131,11 +102,7 @@ function NumberField({
           const v = parseInt(e.target.value, 10);
           onChange(Number.isNaN(v) ? (min ?? value) : v);
         }}
-        className={`w-full rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 ${
-          theme === 'dark'
-            ? 'border-slate-700 bg-slate-700 focus:ring-sky-500/35'
-            : 'border-slate-300 bg-white focus:ring-[#0E2A47]/35'
-        }`}
+        className="w-full rounded-xl border border-border bg-surface px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent/35"
       />
     </label>
   );

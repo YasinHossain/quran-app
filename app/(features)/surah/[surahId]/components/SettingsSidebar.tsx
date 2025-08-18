@@ -170,7 +170,7 @@ export const SettingsSidebar = ({
           <button
             aria-label="Back"
             onClick={() => setSettingsOpen(false)}
-            className="p-2 rounded-full hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 lg:hidden"
+            className="p-2 rounded-full hover:bg-interactive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 lg:hidden"
           >
             <ArrowLeftIcon size={18} />
           </button>
@@ -178,19 +178,13 @@ export const SettingsSidebar = ({
           <div className="w-8" />
         </header>
         <div className="flex-grow p-4 space-y-4">
-          <div
-            className={`flex items-center p-1 rounded-full mb-4 ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'}`}
-          >
+          <div className="flex items-center p-1 rounded-full mb-4 bg-interactive">
             <button
               onClick={() => handleTabClick('translation')}
               className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
                 activeTab === 'translation'
-                  ? theme === 'light'
-                    ? 'bg-surface shadow text-slate-900'
-                    : 'bg-slate-700 text-white shadow'
-                  : theme === 'light'
-                    ? 'text-slate-400 hover:text-slate-700'
-                    : 'text-slate-400 hover:text-white'
+                  ? 'bg-surface shadow text-primary'
+                  : 'text-muted hover:text-primary'
               }`}
             >
               Translation
@@ -199,12 +193,8 @@ export const SettingsSidebar = ({
               onClick={() => handleTabClick('reading')}
               className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
                 activeTab === 'reading'
-                  ? theme === 'light'
-                    ? 'bg-surface shadow text-slate-900'
-                    : 'bg-slate-700 text-white shadow'
-                  : theme === 'light'
-                    ? 'text-slate-400 hover:text-slate-700'
-                    : 'text-slate-400 hover:text-white'
+                  ? 'bg-surface shadow text-primary'
+                  : 'text-muted hover:text-primary'
               }`}
             >
               Mushaf
@@ -244,17 +234,13 @@ export const SettingsSidebar = ({
           )}
         </div>
         <div className="p-4">
-          <div
-            className={`flex items-center p-1 rounded-full ${
-              theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'
-            }`}
-          >
+          <div className="flex items-center p-1 rounded-full bg-interactive">
             <button
               onClick={() => setTheme('light')}
               className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
                 theme === 'light'
-                  ? 'bg-surface shadow text-slate-900'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-surface shadow text-primary'
+                  : 'text-muted hover:text-primary'
               }`}
             >
               {t('light_mode')}
@@ -263,8 +249,8 @@ export const SettingsSidebar = ({
               onClick={() => setTheme('dark')}
               className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
                 theme === 'dark'
-                  ? 'bg-slate-700 text-white shadow'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-surface shadow text-primary'
+                  : 'text-muted hover:text-primary'
               }`}
             >
               {t('dark_mode')}

@@ -2,7 +2,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { X } from 'lucide-react';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
-import { useTheme } from '@/app/providers/ThemeContext';
 import useAudioPlayer from '@/app/shared/player/hooks/useAudioPlayer';
 import usePlayerKeyboard from '@/app/shared/player/hooks/usePlayerKeyboard';
 import usePlaybackCompletion from '@/app/shared/player/hooks/usePlaybackCompletion';
@@ -38,7 +37,6 @@ type Props = {
 };
 
 export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
-  const { theme } = useTheme();
   const {
     isPlayerVisible,
     closePlayer,
@@ -141,16 +139,12 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
     <div className="relative w-full">
       {/* Card */}
       <div
-        className={`mx-auto w-full rounded-2xl px-4 py-4 flex items-center gap-4 ${
-          theme === 'dark'
-            ? 'bg-slate-800 shadow-[0_10px_30px_rgba(0,0,0,0.1),0_1px_2px_rgba(0,0,0,0.06)] border-slate-700'
-            : 'bg-white shadow-[0_10px_30px_rgba(2,6,23,0.06),0_1px_2px_rgba(2,6,23,0.04)] border-slate-200/80'
-        } border`}
+        className="mx-auto w-full rounded-2xl px-4 py-4 flex items-center gap-4 bg-surface shadow-lg border border-border"
         role="region"
         aria-label="Player"
       >
         {/* Left media block */}
-        <TrackInfo cover={cover} title={title} artist={artist} theme={theme} />
+        <TrackInfo cover={cover} title={title} artist={artist} />
         {/* Transport controls */}
         <TransportControls
           isPlaying={isPlaying}
@@ -158,7 +152,6 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
           onPrev={onPrev}
           onNext={onNext}
           togglePlay={togglePlay}
-          theme={theme}
         />
         {/* Timeline & Time Labels */}
         <Timeline
@@ -166,14 +159,13 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
           duration={duration}
           setSeek={setSeek}
           interactable={interactable}
-          theme={theme}
           elapsed={elapsed}
           total={total}
         />
         {/* Utilities */}
         <div className="flex items-center gap-2">
-          <PlayerOptions theme={theme} />
-          <IconBtn aria-label="Close player" onClick={closePlayer} theme={theme}>
+          <PlayerOptions />
+          <IconBtn aria-label="Close player" onClick={closePlayer}>
             <X />
           </IconBtn>
         </div>

@@ -5,7 +5,6 @@ import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 import { getTafsirResources } from '@/lib/api';
 import { applyArabicFont } from '@/lib/tafsir/applyArabicFont';
 import useSWR from 'swr';
-import { useTheme } from '@/app/providers/ThemeContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 
 interface TafsirTabsProps {
@@ -52,8 +51,6 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
       .finally(() => setLoading((l) => ({ ...l, [activeId]: false })));
   }, [activeId, verseKey, contents]);
 
-  const { theme } = useTheme();
-
   if (!tabs.length) {
     return (
       <div className="p-4 text-center text-muted">
@@ -70,21 +67,15 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
 
   return (
     <div>
-      <div
-        className={`flex w-full items-center p-1 rounded-full ${theme === 'light' ? 'bg-gray-100' : 'bg-slate-800/60'} ml-4`}
-      >
+      <div className="flex w-full items-center p-1 rounded-full bg-interactive ml-4">
         {tabs.map((t) => (
           <button
             key={t.id}
             onClick={() => setActiveId(t.id)}
             className={`flex-1 text-center py-3 px-5 rounded-full text-sm font-semibold transition-colors whitespace-nowrap ${
               activeId === t.id
-                ? theme === 'light'
-                  ? 'bg-surface shadow text-slate-900'
-                  : 'bg-slate-700 text-white shadow'
-                : theme === 'light'
-                  ? 'text-slate-500 hover:text-slate-800'
-                  : 'text-slate-400 hover:text-white'
+                ? 'bg-surface shadow text-primary'
+                : 'text-secondary hover:text-primary'
             }`}
           >
             {t.name}

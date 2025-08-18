@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSettings } from '@/app/providers/SettingsContext';
 import type { LanguageCode } from '@/lib/text/languageCodes';
-import { useTheme } from '@/app/providers/ThemeContext';
 import { ResizeObserver as ResizeObserverPolyfill } from '@juggle/resize-observer';
 
 interface WordLanguagePanelProps {
@@ -32,7 +31,6 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
 }) => {
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
-  const { theme } = useTheme();
 
   const listContainerRef = useRef<HTMLDivElement>(null);
   const [listHeight, setListHeight] = useState(0);
@@ -96,24 +94,14 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
             }}
             className={`flex items-center justify-between px-4 py-3 h-[58px] rounded-lg cursor-pointer transition-all duration-200 focus:outline-none focus-visible:outline-none outline-none border ${
               isSelected
-                ? theme === 'dark'
-                  ? 'bg-teal-800/20 border-teal-600/50'
-                  : 'bg-teal-50 border-teal-200'
-                : theme === 'dark'
-                  ? 'bg-slate-800/50 border-slate-700 hover:bg-slate-700/50'
-                  : 'bg-surface border-slate-200 hover:bg-slate-50'
+                ? 'bg-accent/10 border-accent/20'
+                : 'bg-interactive border-border hover:bg-hover'
             }`}
           >
             <div className="flex-1 min-w-0 pr-3">
               <p
                 className={`font-medium text-sm leading-tight truncate ${
-                  isSelected
-                    ? theme === 'dark'
-                      ? 'text-teal-200'
-                      : 'text-teal-800'
-                    : theme === 'dark'
-                      ? 'text-primary'
-                      : 'text-slate-800'
+                  isSelected ? 'text-accent' : 'text-primary'
                 }`}
                 title={language.name}
               >
@@ -121,11 +109,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
               </p>
             </div>
             <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-              {isSelected && (
-                <CheckIcon
-                  className={`h-5 w-5 ${theme === 'dark' ? 'text-teal-400' : 'text-teal-600'}`}
-                />
-              )}
+              {isSelected && <CheckIcon className="h-5 w-5 text-accent" />}
             </div>
           </div>
         );
@@ -149,13 +133,11 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
       <header className="flex items-center p-4 border-b border-border">
         <button
           onClick={onClose}
-          className={`p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 ${
-            theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-200'
-          }`}
+          className="p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent hover:bg-hover"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className={`h-6 w-6 ${theme === 'dark' ? 'text-primary' : 'text-slate-600'}`}
+            className="h-6 w-6 text-secondary"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

@@ -1,6 +1,5 @@
 'use client';
 import { SearchSolidIcon } from '@/app/shared/icons';
-import { useTheme } from '@/app/providers/ThemeContext';
 
 interface HomeSearchProps {
   searchQuery: string;
@@ -8,13 +7,9 @@ interface HomeSearchProps {
 }
 
 export default function HomeSearch({ searchQuery, setSearchQuery }: HomeSearchProps) {
-  const { theme } = useTheme();
   const shortcutSurahs = ['Al-Mulk', 'Al-Kahf', 'Ya-Sin', 'Al-Ikhlas'];
 
-  const searchBarClasses =
-    theme === 'light'
-      ? 'bg-surface text-primary border-none placeholder-gray-400'
-      : 'bg-gray-800 text-muted border-none placeholder-gray-400';
+  const searchBarClasses = 'bg-surface text-primary border-none placeholder-muted';
 
   return (
     <>
@@ -29,7 +24,7 @@ export default function HomeSearch({ searchQuery, setSearchQuery }: HomeSearchPr
             placeholder="What do you want to read?"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className={`w-full pl-12 pr-4 py-3 rounded-lg ring-0 focus:outline-none focus:ring-0 transition-all duration-300 hover:shadow-lg text-lg ${searchBarClasses} backdrop-blur-xl shadow-lg hover:shadow-xl ${theme === 'light' ? 'bg-surface/60' : 'bg-slate-800/50'} animate-fade-in-up animation-delay-200`}
+            className={`w-full pl-12 pr-4 py-3 rounded-lg ring-0 focus:outline-none focus:ring-0 transition-all duration-300 hover:shadow-lg text-lg ${searchBarClasses} backdrop-blur-xl shadow-lg hover:shadow-xl bg-surface/60 animate-fade-in-up animation-delay-200`}
           />
         </div>
       </div>
@@ -38,11 +33,7 @@ export default function HomeSearch({ searchQuery, setSearchQuery }: HomeSearchPr
         {shortcutSurahs.map((name) => (
           <button
             key={name}
-            className={`px-4 sm:px-5 py-2 rounded-full font-medium shadow-sm transition-all duration-200 ${
-              theme === 'light'
-                ? 'bg-surface border border-gray-200 text-slate-800 hover:bg-gray-100 hover:shadow-md'
-                : 'bg-slate-800/40 border-slate-700/50 text-slate-300 backdrop-blur-md hover:bg-slate-700/60 hover:scale-105 transform hover:shadow-md'
-            }`}
+            className="px-4 sm:px-5 py-2 rounded-full font-medium shadow-sm transition-all duration-200 bg-surface border border-border text-foreground hover:bg-hover hover:shadow-md"
           >
             {name}
           </button>

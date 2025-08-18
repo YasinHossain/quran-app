@@ -87,18 +87,16 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
         isOpen ? 'translate-x-0' : 'translate-x-full'
       } bg-surface text-primary`}
     >
-      <TafsirLimitWarning show={showLimitWarning} theme={theme} />
+      <TafsirLimitWarning show={showLimitWarning} />
 
       <header className="flex items-center p-4 border-b border-border">
         <button
           onClick={onClose}
-          className={`p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 ${
-            theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-200'
-          }`}
+          className="p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent hover:bg-hover"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className={`h-6 w-6 ${theme === 'dark' ? 'text-primary' : 'text-slate-600'}`}
+            className="h-6 w-6 text-secondary"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -110,11 +108,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
         <h2 className="text-lg font-bold text-center flex-grow text-primary">Manage Tafsirs</h2>
         <button
           onClick={handleReset}
-          className={`p-2 rounded-full focus-visible:outline-none transition-colors ${
-            theme === 'dark'
-              ? 'text-primary hover:bg-gray-700'
-              : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
-          }`}
+          className="p-2 rounded-full focus-visible:outline-none transition-colors text-secondary hover:bg-hover hover:text-primary"
           title="Reset to Default"
         >
           <RotateCcw size={20} />
@@ -124,22 +118,12 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
       <div className="flex-1 flex flex-col min-h-0">
         {loading && (
           <div className="flex items-center justify-center p-8">
-            <div
-              className={`animate-spin rounded-full h-8 w-8 border-b-2 ${
-                theme === 'dark' ? 'border-slate-400' : 'border-slate-600'
-              }`}
-            />
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-secondary" />
           </div>
         )}
 
         {error && (
-          <div
-            className={`mx-4 mt-4 p-4 rounded-lg border ${
-              theme === 'dark'
-                ? 'bg-red-900/20 border-red-700 text-red-200'
-                : 'bg-red-50 border-red-200 text-red-800'
-            }`}
-          >
+          <div className="mx-4 mt-4 p-4 rounded-lg border bg-red-900/20 border-red-700 text-red-200">
             <div className="flex items-center space-x-2">
               <AlertCircle className="h-5 w-5 text-red-500" />
               <span className="text-sm">{error}</span>
@@ -152,7 +136,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
             {/* Scrollable Content - Search, Selections, Tabs, and List */}
             <div className="flex-1 overflow-y-auto" ref={listContainerRef}>
               <div className="p-4 space-y-4">
-                <TafsirSearch theme={theme} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+                <TafsirSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
                 <TafsirSelectionList
                   orderedSelection={orderedSelection}
                   tafsirs={tafsirs}
@@ -166,11 +150,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
               </div>
 
               {/* Sticky Tabs - Will stick to top when scrolled to */}
-              <div
-                className={`sticky top-0 z-10 py-2 border-b ${
-                  theme === 'dark' ? 'bg-surface' : 'bg-surface/95 backdrop-blur-sm'
-                } border-border`}
-              >
+              <div className="sticky top-0 z-10 py-2 border-b bg-surface/95 backdrop-blur-sm border-border">
                 <div className="px-4">
                   <ResourceTabs
                     languages={languages}
@@ -181,7 +161,6 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
                     canScrollRight={canScrollRight}
                     scrollTabsLeft={scrollTabsLeft}
                     scrollTabsRight={scrollTabsRight}
-                    theme={theme}
                     className=""
                   />
                 </div>
@@ -203,13 +182,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
                       })
                       .map(([language, items]) => (
                         <div key={language}>
-                          <h3
-                            className={`text-lg font-semibold mb-4 ${
-                              theme === 'dark' ? 'text-primary' : 'text-slate-800'
-                            }`}
-                          >
-                            {language}
-                          </h3>
+                          <h3 className="text-lg font-semibold mb-4 text-primary">{language}</h3>
                           <div className="space-y-2">
                             {items.map((item) => (
                               <ResourceItem
@@ -217,7 +190,6 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
                                 item={item}
                                 isSelected={selectedIds.has(item.id)}
                                 onToggle={handleSelectionToggle}
-                                theme={theme}
                               />
                             ))}
                           </div>
@@ -230,7 +202,6 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
                     rowHeight={58}
                     selectedIds={selectedIds}
                     onToggle={handleSelectionToggle}
-                    theme={theme}
                     height={listHeight}
                   />
                 )}

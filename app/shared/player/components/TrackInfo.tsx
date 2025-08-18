@@ -5,10 +5,9 @@ interface Props {
   cover: string;
   title: string;
   artist: string;
-  theme: 'light' | 'dark';
 }
 
-export default function TrackInfo({ cover, title, artist, theme }: Props) {
+export default function TrackInfo({ cover, title, artist }: Props) {
   const fallback =
     "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96'><rect width='100%' height='100%' rx='12' ry='12' fill='%23e5e7eb'/><text x='50%' y='52%' dominant-baseline='middle' text-anchor='middle' font-family='Inter, system-ui, sans-serif' font-size='12' fill='%239ca3af'>No cover</text></svg>";
   return (
@@ -26,20 +25,12 @@ export default function TrackInfo({ cover, title, artist, theme }: Props) {
       />
       <div className="min-w-0 hidden sm:block">
         <div
-          className={`text-sm font-semibold tracking-[-0.01em] truncate ${
-            theme === 'dark' ? 'text-slate-200' : 'text-slate-800'
-          }`}
+          className="text-sm font-semibold tracking-[-0.01em] truncate text-foreground"
           aria-label="current track title"
         >
           {title}
         </div>
-        <div
-          className={`text-xs -mt-0.5 truncate ${
-            theme === 'dark' ? 'text-slate-400' : 'text-slate-500'
-          }`}
-        >
-          {artist}
-        </div>
+        <div className="text-xs -mt-0.5 truncate text-muted">{artist}</div>
       </div>
     </div>
   );

@@ -8,7 +8,6 @@ interface Props {
   onPrev?: () => void;
   onNext?: () => void;
   togglePlay: () => void;
-  theme: 'light' | 'dark';
 }
 
 export default function TransportControls({
@@ -17,11 +16,10 @@ export default function TransportControls({
   onPrev,
   onNext,
   togglePlay,
-  theme,
 }: Props) {
   return (
     <div className="flex items-center gap-2">
-      <IconBtn aria-label="Previous track" onClick={onPrev} disabled={!interactable} theme={theme}>
+      <IconBtn aria-label="Previous track" onClick={onPrev} disabled={!interactable}>
         <SkipBack />
       </IconBtn>
       <button
@@ -30,17 +28,13 @@ export default function TransportControls({
         disabled={!interactable}
         className={`h-10 w-10 grid place-items-center rounded-full text-white hover:opacity-90 active:scale-95 transition ${
           interactable
-            ? theme === 'dark'
-              ? 'bg-sky-500'
-              : 'bg-[#0E2A47]'
-            : theme === 'dark'
-              ? 'bg-slate-600 cursor-not-allowed opacity-60'
-              : 'bg-slate-300 cursor-not-allowed opacity-60'
+            ? 'bg-accent hover:bg-accent-hover'
+            : 'bg-disabled cursor-not-allowed opacity-60'
         }`}
       >
         {isPlaying ? <Pause /> : <Play />}
       </button>
-      <IconBtn aria-label="Next track" onClick={onNext} disabled={!interactable} theme={theme}>
+      <IconBtn aria-label="Next track" onClick={onNext} disabled={!interactable}>
         <SkipForward />
       </IconBtn>
     </div>

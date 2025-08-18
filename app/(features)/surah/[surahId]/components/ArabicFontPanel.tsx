@@ -13,8 +13,6 @@ interface ArabicFontPanelProps {
 
 export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClose }) => {
   const {
-    theme,
-    fonts,
     loading,
     error,
     groupedFonts,
@@ -71,13 +69,11 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
       <header className="flex items-center p-4 border-b border-border">
         <button
           onClick={onClose}
-          className={`p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 ${
-            theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-200'
-          }`}
+          className="p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 hover:bg-hover"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className={`h-6 w-6 ${theme === 'dark' ? 'text-primary' : 'text-slate-600'}`}
+            className="h-6 w-6 text-primary"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -91,11 +87,7 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
         </h2>
         <button
           onClick={handleReset}
-          className={`p-2 rounded-full focus-visible:outline-none transition-colors ${
-            theme === 'dark'
-              ? 'text-primary hover:bg-gray-700'
-              : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
-          }`}
+          className="p-2 rounded-full focus-visible:outline-none transition-colors text-primary hover:bg-hover"
           title="Reset to Default"
         >
           <RotateCcw size={20} />
@@ -105,22 +97,12 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
       <div className="flex-1 flex flex-col min-h-0">
         {loading && (
           <div className="flex items-center justify-center p-8">
-            <div
-              className={`animate-spin rounded-full h-8 w-8 border-b-2 ${
-                theme === 'dark' ? 'border-slate-400' : 'border-slate-600'
-              }`}
-            />
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-muted" />
           </div>
         )}
 
         {error && (
-          <div
-            className={`mx-4 mt-4 p-4 rounded-lg border ${
-              theme === 'dark'
-                ? 'bg-red-900/20 border-red-700 text-red-200'
-                : 'bg-red-50 border-red-200 text-red-800'
-            }`}
-          >
+          <div className="mx-4 mt-4 p-4 rounded-lg border bg-error/10 border-error/20 text-error">
             <div className="flex items-center space-x-2">
               <AlertCircle className="h-5 w-5 text-red-500" />
               <span className="text-sm">{error}</span>
@@ -133,27 +115,15 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
             {/* Scrollable Content - Toggle and List */}
             <div className="flex-1 overflow-y-auto" ref={listContainerRef}>
               {/* Font Type Toggle - Uthmani/Indopak */}
-              <div
-                className={`sticky top-0 z-10 py-4 border-b ${
-                  theme === 'dark' ? 'bg-surface' : 'bg-surface/95 backdrop-blur-sm'
-                } border-border`}
-              >
+              <div className="sticky top-0 z-10 py-4 border-b bg-surface/95 backdrop-blur-sm border-border">
                 <div className="px-4">
-                  <div
-                    className={`flex items-center p-1 rounded-full ${
-                      theme === 'dark' ? 'bg-slate-800/60' : 'bg-gray-100'
-                    }`}
-                  >
+                  <div className="flex items-center p-1 rounded-full bg-hover">
                     <button
                       onClick={() => setActiveFilter('Uthmani')}
                       className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
                         activeFilter === 'Uthmani'
-                          ? theme === 'dark'
-                            ? 'bg-slate-700 text-white shadow'
-                            : 'bg-surface shadow text-slate-900'
-                          : theme === 'dark'
-                            ? 'text-slate-400 hover:text-white'
-                            : 'text-slate-400 hover:text-slate-700'
+                          ? 'bg-surface shadow text-foreground'
+                          : 'text-muted hover:text-foreground'
                       }`}
                     >
                       Uthmani
@@ -162,12 +132,8 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
                       onClick={() => setActiveFilter('IndoPak')}
                       className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
                         activeFilter === 'IndoPak'
-                          ? theme === 'dark'
-                            ? 'bg-slate-700 text-white shadow'
-                            : 'bg-surface shadow text-slate-900'
-                          : theme === 'dark'
-                            ? 'text-slate-400 hover:text-white'
-                            : 'text-slate-400 hover:text-slate-700'
+                          ? 'bg-surface shadow text-foreground'
+                          : 'text-muted hover:text-foreground'
                       }`}
                     >
                       IndoPak
@@ -182,7 +148,6 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
                   rowHeight={58}
                   selectedIds={selectedIds}
                   onToggle={handleSelectionToggle}
-                  theme={theme}
                   height={listHeight}
                 />
               </div>

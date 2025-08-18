@@ -120,7 +120,7 @@ export default function Page() {
               />
             </label>
           </div>
-          <pre className="bg-gray-100 p-2 rounded text-xs">
+          <pre className="bg-surface p-2 rounded text-xs">
             {JSON.stringify({ track, repeat }, null, 2)}
           </pre>
         </div>

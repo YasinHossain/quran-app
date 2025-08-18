@@ -5,14 +5,12 @@ import { getRandomVerse, getSurahList } from '@/lib/api';
 import { useSettings } from '@/app/providers/SettingsContext';
 import Spinner from '@/app/shared/Spinner';
 import type { Surah } from '@/types';
-import { useTheme } from '@/app/providers/ThemeContext';
 import { applyTajweed } from '@/lib/text/tajweed';
 import { stripHtml } from '@/lib/text/stripHtml';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 
 export default function VerseOfDay() {
   const { settings } = useSettings();
-  const { theme } = useTheme();
   const [verse, setVerse] = useState<Verse | null>(null);
   const [verseQueue, setVerseQueue] = useState<Verse[]>([]);
   const [loading, setLoading] = useState(true);
@@ -99,7 +97,7 @@ export default function VerseOfDay() {
     content = (
       <>
         <h3
-          className={`font-amiri text-3xl md:text-4xl leading-relaxed text-right ${theme === 'light' ? 'text-emerald-700' : 'text-emerald-400'}`}
+          className="font-amiri text-3xl md:text-4xl leading-relaxed text-right text-accent"
           dir="rtl"
         >
           {verse.words && verse.words.length > 0 ? (
@@ -115,7 +113,7 @@ export default function VerseOfDay() {
                   w.uthmani
                 )}
                 {w.en && (
-                  <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-1 py-0.5 rounded bg-gray-800 text-white text-xs whitespace-nowrap opacity-0 group-hover:opacity-100">
+                  <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-1 py-0.5 rounded bg-surface text-white text-xs whitespace-nowrap opacity-0 group-hover:opacity-100">
                     {w.en}
                   </span>
                 )}
@@ -132,9 +130,7 @@ export default function VerseOfDay() {
           )}
         </h3>
         {verse.translations?.[0] && (
-          <p
-            className={`mt-4 text-left text-sm ${theme === 'light' ? 'text-slate-800' : 'text-slate-400'}`}
-          >
+          <p className="mt-4 text-left text-sm text-foreground">
             &quot;{stripHtml(verse.translations[0].text)}&quot; - [Surah {surahName ?? surahNum},{' '}
             {verse.verse_key}]
           </p>
@@ -144,9 +140,7 @@ export default function VerseOfDay() {
   }
 
   return (
-    <div
-      className={`mt-12 w-full max-w-4xl p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400 ${theme === 'light' ? 'bg-surface/60' : 'bg-slate-800/30'}`}
-    >
+    <div className="mt-12 w-full max-w-4xl p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400 bg-surface/60">
       {content}
     </div>
   );

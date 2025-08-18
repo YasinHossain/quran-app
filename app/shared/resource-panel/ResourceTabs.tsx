@@ -12,7 +12,6 @@ interface ResourceTabsProps {
   canScrollRight: boolean;
   scrollTabsLeft: () => void;
   scrollTabsRight: () => void;
-  theme: string;
   className?: string;
 }
 
@@ -25,7 +24,6 @@ export const ResourceTabs: React.FC<ResourceTabsProps> = ({
   canScrollRight,
   scrollTabsLeft,
   scrollTabsRight,
-  theme,
   className = '',
 }) => (
   <div className={`flex items-center overflow-hidden ${className}`}>
@@ -34,12 +32,8 @@ export const ResourceTabs: React.FC<ResourceTabsProps> = ({
       disabled={!canScrollLeft}
       className={`p-1 rounded-full mr-2 transition-colors ${
         canScrollLeft
-          ? theme === 'dark'
-            ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-700'
-            : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
-          : theme === 'dark'
-            ? 'text-slate-600 cursor-not-allowed'
-            : 'text-slate-300 cursor-not-allowed'
+          ? 'text-secondary hover:text-primary hover:bg-hover'
+          : 'text-muted cursor-not-allowed'
       }`}
     >
       <ChevronLeft size={20} />
@@ -51,12 +45,8 @@ export const ResourceTabs: React.FC<ResourceTabsProps> = ({
           onClick={() => onTabClick(lang)}
           className={`flex-shrink-0 px-3 py-1 text-sm font-semibold border-b-2 transition-colors flex items-center justify-center ${
             activeFilter === lang
-              ? 'border-blue-600 text-blue-600'
-              : `border-transparent ${
-                  theme === 'dark'
-                    ? 'text-slate-400 hover:text-slate-200 hover:border-slate-600'
-                    : 'text-slate-500 hover:text-slate-800 hover:border-slate-300'
-                }`
+              ? 'border-accent text-accent'
+              : 'border-transparent text-secondary hover:text-primary hover:border-border'
           }`}
         >
           {lang}
@@ -68,12 +58,8 @@ export const ResourceTabs: React.FC<ResourceTabsProps> = ({
       disabled={!canScrollRight}
       className={`p-1 rounded-full ml-2 transition-colors ${
         canScrollRight
-          ? theme === 'dark'
-            ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-700'
-            : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
-          : theme === 'dark'
-            ? 'text-slate-600 cursor-not-allowed'
-            : 'text-slate-300 cursor-not-allowed'
+          ? 'text-secondary hover:text-primary hover:bg-hover'
+          : 'text-muted cursor-not-allowed'
       }`}
     >
       <ChevronRight size={20} />

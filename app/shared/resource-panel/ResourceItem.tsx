@@ -12,7 +12,6 @@ interface ResourceItemProps<T extends Resource> {
   item: T;
   isSelected: boolean;
   onToggle: (id: number) => void;
-  theme: string;
   style?: React.CSSProperties;
 }
 
@@ -20,7 +19,6 @@ export const ResourceItem = <T extends Resource>({
   item,
   isSelected,
   onToggle,
-  theme,
   style,
 }: ResourceItemProps<T>) => {
   const handleClick = () => {
@@ -41,20 +39,14 @@ export const ResourceItem = <T extends Resource>({
       role="button"
       tabIndex={0}
       className={`flex items-center justify-between px-4 py-2.5 h-[50px] rounded-lg cursor-pointer transition-all duration-200 focus:outline-none focus-visible:outline-none outline-none border-0 focus:border-0 active:outline-none ${
-        isSelected
-          ? theme === 'dark'
-            ? 'bg-blue-900/30'
-            : 'bg-blue-50'
-          : theme === 'dark'
-            ? 'bg-slate-700/50 hover:bg-gray-700'
-            : 'bg-white border border-slate-100 hover:bg-slate-50'
+        isSelected ? 'bg-accent/10' : 'bg-interactive border border-border hover:bg-hover'
       }`}
       style={style}
     >
       <div className="flex-1 min-w-0 pr-3">
         <p
           className={`font-medium text-sm leading-tight truncate ${
-            isSelected ? (theme === 'dark' ? 'text-blue-200' : 'text-blue-800') : 'text-primary'
+            isSelected ? 'text-accent' : 'text-primary'
           }`}
           title={item.name}
         >
@@ -62,11 +54,7 @@ export const ResourceItem = <T extends Resource>({
         </p>
       </div>
       <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-        {isSelected && (
-          <CheckIcon
-            className={`h-5 w-5 ${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}
-          />
-        )}
+        {isSelected && <CheckIcon className="h-5 w-5 text-accent" />}
       </div>
     </div>
   );
