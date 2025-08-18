@@ -37,7 +37,7 @@ export const TranslationSettings = ({
     <>
       <CollapsibleSection
         title={t('reading_setting')}
-        icon={<TranslationIcon size={20} className="text-teal-700" />}
+        icon={<TranslationIcon size={20} className="text-accent" />}
         isLast={true}
         isOpen={isOpen}
         onToggle={onToggle || (() => {})}
@@ -47,7 +47,7 @@ export const TranslationSettings = ({
             <span className="text-sm text-primary">{t('show_word_by_word')}</span>
             <button
               onClick={() => setSettings({ ...settings, showByWords: !settings.showByWords })}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full ${settings.showByWords ? 'bg-teal-600' : 'bg-gray-200'}`}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full ${settings.showByWords ? 'bg-accent' : 'bg-muted'}`}
             >
               <span
                 className={`inline-block h-4 w-4 transform rounded-full bg-surface transition ${settings.showByWords ? 'translate-x-6' : 'translate-x-1'}`}
@@ -59,7 +59,7 @@ export const TranslationSettings = ({
             <span className="text-sm text-primary">{t('apply_tajweed')}</span>
             <button
               onClick={() => setSettings({ ...settings, tajweed: !settings.tajweed })}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full ${settings.tajweed ? 'bg-teal-600' : 'bg-gray-200'}`}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full ${settings.tajweed ? 'bg-accent' : 'bg-muted'}`}
             >
               <span
                 className={`inline-block h-4 w-4 transform rounded-full bg-surface transition ${settings.tajweed ? 'translate-x-6' : 'translate-x-1'}`}
