@@ -34,6 +34,13 @@ feat: add audio player
 Before submitting a pull request, run `npm run check` to lint, type-check and
 test your changes. See [AGENTS.md](AGENTS.md) for the full workflow.
 
+Validate that all `bg-*`, `text-*`, and `border-*` classes map to tokens in
+`design-system.json`:
+
+```bash
+npm run validate:tokens
+```
+
 ## Feature Scaffolding
 
 Use the generator to create a new feature folder with a page component and test:
