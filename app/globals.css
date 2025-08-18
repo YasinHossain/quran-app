@@ -4,8 +4,8 @@
 
 @layer base {
   body {
-    background: var(--background);
-    color: var(--foreground);
+    background: rgb(var(--color-background));
+    color: rgb(var(--color-foreground));
     font-family: Inter, sans-serif;
     margin: 0;
     -webkit-font-smoothing: antialiased;
@@ -37,7 +37,7 @@
 
   .card {
     @apply rounded-lg p-4 shadow-sm;
-    background: var(--background);
+    background: rgb(var(--color-background));
   }
 }
 
@@ -51,8 +51,8 @@ input[type='range'] {
   outline: none;
   background: linear-gradient(
     to right,
-    var(--accent) var(--value-percent, 0%),
-    var(--subtle-grey) var(--value-percent, 0%)
+    rgb(var(--color-accent)) var(--value-percent, 0%),
+    rgb(var(--color-border)) var(--value-percent, 0%)
   );
 }
 
@@ -61,8 +61,8 @@ input[type='range']::-webkit-slider-thumb {
   appearance: none;
   width: 16px;
   height: 16px;
-  background: var(--background);
-  border: 2px solid var(--border-color);
+  background: rgb(var(--color-background));
+  border: 2px solid rgb(var(--color-border));
   border-radius: 50%;
   cursor: pointer;
   margin-top: -5px;
@@ -72,8 +72,8 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 input[type='range']::-webkit-slider-thumb:hover {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: rgb(var(--color-accent));
+  border-color: rgb(var(--color-accent));
 }
 
 /* ===== Custom Scrollbar Styles ===== */
