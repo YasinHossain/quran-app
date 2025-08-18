@@ -40,8 +40,8 @@ export const ResourceItem = <T extends Resource>({
       tabIndex={0}
       className={`flex items-center justify-between px-4 py-2.5 h-[50px] rounded-lg cursor-pointer transition-all duration-200 focus:outline-none focus-visible:outline-none outline-none border-0 focus:border-0 active:outline-none ${
         isSelected
-          ? 'bg-accent/10'
-          : 'bg-surface border border-border hover:bg-interactive active:bg-interactive'
+          ? 'bg-accent/20 border border-accent/30'
+          : 'bg-surface border border-border hover:bg-interactive'
       }`}
       style={style}
     >
