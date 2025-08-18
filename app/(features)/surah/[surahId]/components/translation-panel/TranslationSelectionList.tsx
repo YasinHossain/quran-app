@@ -37,7 +37,7 @@ export const TranslationSelectionList: React.FC<TranslationSelectionListProps> =
         </span>
       )}
     </h2>
-    <div className="space-y-2 min-h-[60px] rounded-lg p-3 bg-interactive border border-border">
+    <div className="space-y-2 min-h-[60px] rounded-lg p-3 bg-surface border border-border">
       {orderedSelection.length === 0 ? (
         <p className="text-center text-sm py-4 text-muted font-medium">No translations selected</p>
       ) : (
