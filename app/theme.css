@@ -1,17 +1,25 @@
 :root {
   --color-background: 247 249 249;
+  --color-surface: 255 255 255;
   --color-foreground: 55 65 81;
+  --color-muted: 107 114 128;
   --color-accent: 13 148 136;
   --color-accent-hover: 15 118 110;
+  --color-interactive: 241 245 249;
+  --color-hover: 229 231 235;
   --color-border: 229 231 235;
   --color-on-accent: 255 255 255;
 }
 
 .dark {
   --color-background: 26 32 44;
+  --color-surface: 30 41 59;
   --color-foreground: 209 213 219;
+  --color-muted: 156 163 175;
   --color-accent: 13 148 136;
   --color-accent-hover: 15 118 110;
+  --color-interactive: 55 65 81;
+  --color-hover: 75 85 99;
   --color-border: 75 85 99;
   --color-on-accent: 255 255 255;
 }

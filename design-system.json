@@ -1,13 +1,22 @@
 {
   "colors": {
     "background": "#F7F9F9",
+    "surface": "#FFFFFF",
     "foreground": "#374151",
+    "muted": "#6B7280",
     "accent": "#0d9488",
     "accentHover": "#0f766e",
+    "interactive": "#F1F5F9",
+    "hover": "#E5E7EB",
     "border": "#e5e7eb",
     "onAccent": "#ffffff",
     "backgroundDark": "#1a202c",
+    "surfaceDark": "#1e293b",
     "foregroundDark": "#d1d5db",
+    "mutedDark": "#9ca3af",
+    "accentHoverDark": "#0f766e",
+    "interactiveDark": "#374151",
+    "hoverDark": "#4b5563",
     "borderDark": "#4b5563",
     "onAccentDark": "#ffffff"
   },
