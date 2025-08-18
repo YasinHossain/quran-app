@@ -69,7 +69,7 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
       <header className="flex items-center p-4 border-b border-border">
         <button
           onClick={onClose}
-          className="p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent hover:bg-hover"
+          className="p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent hover:bg-interactive-hover"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -87,7 +87,7 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
         </h2>
         <button
           onClick={handleReset}
-          className="p-2 rounded-full focus-visible:outline-none transition-colors text-foreground hover:bg-hover"
+          className="p-2 rounded-full focus-visible:outline-none transition-colors text-foreground hover:bg-interactive-hover"
           title="Reset to Default"
         >
           <RotateCcw size={20} />
@@ -117,7 +117,7 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
               {/* Font Type Toggle - Uthmani/Indopak */}
               <div className="sticky top-0 z-10 py-4 border-b bg-surface/95 backdrop-blur-sm border-border">
                 <div className="px-4">
-                  <div className="flex items-center p-1 rounded-full bg-hover">
+                  <div className="flex items-center p-1 rounded-full bg-interactive">
                     <button
                       onClick={() => setActiveFilter('Uthmani')}
                       className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${

@@ -96,7 +96,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
       <header className="flex items-center p-4 border-b border-border">
         <button
           onClick={onClose}
-          className="p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent hover:bg-hover"
+          className="p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent hover:bg-interactive-hover"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

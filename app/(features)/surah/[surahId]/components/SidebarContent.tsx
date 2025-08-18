@@ -75,7 +75,7 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
           <div className="w-8" />
         </header>
         <div className="flex-grow p-4 space-y-4">
-          <div className="flex items-center p-1 rounded-full mb-4 bg-hover">
+          <div className="flex items-center p-1 rounded-full mb-4 bg-interactive">
             <button
               onClick={() => onTabClick('translation')}
               className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
@@ -131,7 +131,7 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
           )}
         </div>
         <div className="p-4">
-          <div className="flex items-center p-1 rounded-full bg-hover">
+          <div className="flex items-center p-1 rounded-full bg-interactive">
             <button
               onClick={() => setTheme('light')}
               className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${

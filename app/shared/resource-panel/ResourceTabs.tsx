@@ -32,7 +32,7 @@ export const ResourceTabs: React.FC<ResourceTabsProps> = ({
       disabled={!canScrollLeft}
       className={`p-1 rounded-full mr-2 transition-colors ${
         canScrollLeft
-          ? 'text-muted hover:text-foreground hover:bg-hover'
+          ? 'text-muted hover:text-foreground hover:bg-interactive-hover'
           : 'text-muted cursor-not-allowed'
       }`}
     >
@@ -58,7 +58,7 @@ export const ResourceTabs: React.FC<ResourceTabsProps> = ({
       disabled={!canScrollRight}
       className={`p-1 rounded-full ml-2 transition-colors ${
         canScrollRight
-          ? 'text-muted hover:text-foreground hover:bg-hover'
+          ? 'text-muted hover:text-foreground hover:bg-interactive-hover'
           : 'text-muted cursor-not-allowed'
       }`}
     >
