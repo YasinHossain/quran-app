@@ -21,7 +21,7 @@ export default function JuzTab() {
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-xl font-bold text-lg transition-colors bg-hover text-accent group-hover:bg-accent/10">
+              <div className="flex items-center justify-center w-12 h-12 rounded-xl font-bold text-lg transition-colors bg-interactive text-accent group-hover:bg-accent/10">
                 {juz.number}
               </div>
               <div>
