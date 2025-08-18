@@ -151,6 +151,14 @@ npm run audit-styles
 - `npm run audit:classes` - Check for raw gray/slate/zinc utility classes
 - `npm run audit-styles` - Run all audits
 
+### Regenerating Theme Tokens
+
+Update the generated CSS variables and Tailwind mappings after editing `design-system.json`:
+
+```bash
+npm run generate:tokens
+```
+
 ### Testing Theme Changes
 
 1. Test both light and dark themes
@@ -206,8 +214,8 @@ npm run audit-styles
 
 ### Adding New Tokens
 
-1. Define in CSS custom properties (`app/theme.css`)
-2. Map to Tailwind config (`tailwind.config.mjs`)
+1. Add values to `design-system.json`
+2. Run `npm run generate:tokens`
 3. Document usage patterns here
 4. Update audit scripts if needed
 

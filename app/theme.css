@@ -1,72 +1,15 @@
 :root {
-  --color-surface: 247 249 249;
-  --color-text: 55 65 81;
-  --color-text-muted: 107 114 128;
+  --color-background: 247 249 249;
+  --color-foreground: 55 65 81;
   --color-accent: 13 148 136;
   --color-accent-hover: 15 118 110;
   --color-border: 229 231 235;
-
-  /* Interactive states */
-  --color-interactive: 59 130 246;
-  --color-hover: 229 231 235;
-  --color-focus: 59 130 246;
-  --color-active: 209 213 219;
-  --color-disabled: 156 163 175;
-
-  /* Feedback colors */
-  --color-success: 34 197 94;
-  --color-warning: 251 191 36;
-  --color-error: 239 68 68;
-  --color-info: 59 130 246;
-
-  /* Component variants */
-  --color-card: 255 255 255;
-  --color-card-hover: 249 250 251;
-  --color-modal-overlay: 0 0 0;
-  --color-input-bg: 255 255 255;
-  --color-button-primary: 13 148 136;
-  --color-button-secondary: 243 244 246;
-
-  /* legacy variables */
-  --background: rgb(var(--color-surface));
-  --foreground: rgb(var(--color-text));
-  --border-color: rgb(var(--color-border));
-  --accent: rgb(var(--color-accent));
-  --subtle-grey: rgb(var(--color-border));
 }
 
 .dark {
-  --color-surface: 26 32 44;
-  --color-text: 209 213 219;
-  --color-text-muted: 156 163 175;
+  --color-background: 26 32 44;
+  --color-foreground: 209 213 219;
   --color-accent: 13 148 136;
   --color-accent-hover: 15 118 110;
   --color-border: 75 85 99;
-
-  /* Interactive states */
-  --color-interactive: 59 130 246;
-  --color-hover: 55 65 81;
-  --color-focus: 59 130 246;
-  --color-active: 75 85 99;
-  --color-disabled: 107 114 128;
-
-  /* Feedback colors */
-  --color-success: 34 197 94;
-  --color-warning: 251 191 36;
-  --color-error: 239 68 68;
-  --color-info: 59 130 246;
-
-  /* Component variants */
-  --color-card: 31 41 55;
-  --color-card-hover: 55 65 81;
-  --color-modal-overlay: 0 0 0;
-  --color-input-bg: 31 41 55;
-  --color-button-primary: 13 148 136;
-  --color-button-secondary: 55 65 81;
-
-  --background: rgb(var(--color-surface));
-  --foreground: rgb(var(--color-text));
-  --border-color: rgb(var(--color-border));
-  --accent: rgb(var(--color-accent));
-  --subtle-grey: rgb(var(--color-border));
 }

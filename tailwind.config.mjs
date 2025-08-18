@@ -7,36 +7,11 @@ const config = {
   theme: {
     extend: {
       colors: {
-        surface: 'rgb(var(--color-surface) / <alpha-value>)',
-        primary: 'rgb(var(--color-text) / <alpha-value>)',
-        muted: 'rgb(var(--color-text-muted) / <alpha-value>)',
-        background: 'rgb(var(--color-surface) / <alpha-value>)',
-        foreground: 'rgb(var(--color-text) / <alpha-value>)',
-        border: 'rgb(var(--color-border) / <alpha-value>)',
+        background: 'rgb(var(--color-background) / <alpha-value>)',
+        foreground: 'rgb(var(--color-foreground) / <alpha-value>)',
         accent: 'rgb(var(--color-accent) / <alpha-value>)',
         'accent-hover': 'rgb(var(--color-accent-hover) / <alpha-value>)',
-        brand: '#009688',
-
-        // Interactive states
-        interactive: 'rgb(var(--color-interactive) / <alpha-value>)',
-        hover: 'rgb(var(--color-hover) / <alpha-value>)',
-        focus: 'rgb(var(--color-focus) / <alpha-value>)',
-        active: 'rgb(var(--color-active) / <alpha-value>)',
-        disabled: 'rgb(var(--color-disabled) / <alpha-value>)',
-
-        // Feedback colors
-        success: 'rgb(var(--color-success) / <alpha-value>)',
-        warning: 'rgb(var(--color-warning) / <alpha-value>)',
-        error: 'rgb(var(--color-error) / <alpha-value>)',
-        info: 'rgb(var(--color-info) / <alpha-value>)',
-
-        // Component variants
-        card: 'rgb(var(--color-card) / <alpha-value>)',
-        'card-hover': 'rgb(var(--color-card-hover) / <alpha-value>)',
-        'modal-overlay': 'rgb(var(--color-modal-overlay) / <alpha-value>)',
-        'input-bg': 'rgb(var(--color-input-bg) / <alpha-value>)',
-        'button-primary': 'rgb(var(--color-button-primary) / <alpha-value>)',
-        'button-secondary': 'rgb(var(--color-button-secondary) / <alpha-value>)',
+        border: 'rgb(var(--color-border) / <alpha-value>)',
       },
       spacing: designTokens.spacing,
       fontFamily: {
