@@ -154,7 +154,6 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
               <div className="p-4 space-y-4">
                 <TafsirSearch theme={theme} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
                 <TafsirSelectionList
-                  theme={theme}
                   orderedSelection={orderedSelection}
                   tafsirs={tafsirs}
                   handleSelectionToggle={handleSelectionToggle}

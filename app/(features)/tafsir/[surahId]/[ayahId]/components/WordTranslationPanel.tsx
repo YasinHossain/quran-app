@@ -46,18 +46,18 @@ export const WordTranslationPanel = ({
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
-      <div className="flex items-center justify-between p-4 border-b border-gray-200/80">
+      <div className="flex items-center justify-between p-4 border-b border-border">
         <button
           aria-label="Back"
           onClick={onClose}
-          className="p-2 rounded-full hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+          className="p-2 rounded-full hover:bg-accent/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           <ArrowLeftIcon size={18} />
         </button>
         <h2 className="font-bold text-lg text-primary">{t('word_by_word_panel_title')}</h2>
         <div className="w-8"></div>
       </div>
-      <div className="p-3 border-b border-gray-200/80">
+      <div className="p-3 border-b border-border">
         <div className="relative">
           <SearchIcon
             className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"
@@ -69,7 +69,7 @@ export const WordTranslationPanel = ({
             placeholder={t('search')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none bg-surface text-primary"
+            className="w-full pl-10 pr-3 py-2.5 border border-border rounded-lg focus:ring-2 focus:ring-accent outline-none bg-surface text-primary"
           />
         </div>
       </div>
@@ -77,12 +77,12 @@ export const WordTranslationPanel = ({
         {filtered.map((lang) => (
           <label
             key={lang.id}
-            className="flex items-center space-x-3 p-2 rounded-md hover:bg-teal-50 cursor-pointer"
+            className="flex items-center space-x-3 p-2 rounded-md hover:bg-accent/10 cursor-pointer"
           >
             <input
               type="radio"
               name="wordLanguage"
-              className="form-radio h-4 w-4 text-teal-600"
+              className="form-radio h-4 w-4 text-accent"
               checked={
                 settings.wordLang ===
                 (LANGUAGE_CODES as Record<string, LanguageCode>)[lang.name.toLowerCase()]
@@ -102,13 +102,13 @@ export const WordTranslationPanel = ({
           </label>
         ))}
       </div>
-      <div className="p-4 border-t border-gray-200/80">
+      <div className="p-4 border-t border-border">
         <button
           onClick={() => {
             onReset();
             onClose();
           }}
-          className="w-full py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-sm hover:border-teal-500"
+          className="w-full py-2.5 rounded-lg border border-border text-sm hover:border-accent"
         >
           {t('reset')}
         </button>
