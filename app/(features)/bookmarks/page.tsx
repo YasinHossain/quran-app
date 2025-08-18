@@ -76,7 +76,7 @@ const ContentHeader = ({ onNewFolderClick }: { onNewFolderClick: () => void }) =
     <div className="flex items-center space-x-2">
       <button
         onClick={onNewFolderClick}
-        className="flex items-center space-x-2 rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-white hover:bg-accent-hover"
+        className="flex items-center space-x-2 rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-on-accent hover:bg-accent-hover"
       >
         <PlusIcon size={16} />
         <span>New Folder</span>

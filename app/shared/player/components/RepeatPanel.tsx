@@ -25,7 +25,7 @@ export default function RepeatPanel({
               onClick={() => setLocalRepeat({ ...localRepeat, mode: m })}
               className={`px-3 py-2 rounded-xl text-sm capitalize ${
                 localRepeat.mode === m
-                  ? 'bg-accent text-white'
+                  ? 'bg-accent text-on-accent'
                   : 'bg-interactive hover:bg-interactive'
               }`}
             >

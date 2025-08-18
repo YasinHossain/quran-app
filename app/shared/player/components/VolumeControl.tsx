@@ -3,9 +3,7 @@ import * as Slider from '@radix-ui/react-slider';
 import { Volume2, VolumeX } from 'lucide-react';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 
-interface Props {}
-
-export default function VolumeControl({}: Props) {
+export default function VolumeControl() {
   const { volume, setVolume } = useAudio();
   return (
     <div className="hidden lg:flex items-center gap-2 w-28">

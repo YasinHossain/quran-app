@@ -1,10 +1,11 @@
+/* styles.css */
 :root {
   --color-surface: 247 249 249;
   --color-text: 55 65 81;
   --color-text-muted: 107 114 128;
   --color-accent: 13 148 136;
   --color-accent-hover: 15 118 110;
-  --color-on-accent: 15 23 42;
+  --color-on-accent: 255 255 255; /* Resolved Conflict: Chose white for better contrast */
   --color-border: 229 231 235;
 
   /* Interactive states */
@@ -42,7 +43,7 @@
   --color-text-muted: 156 163 175;
   --color-accent: 13 148 136;
   --color-accent-hover: 15 118 110;
-  --color-on-accent: 15 23 42;
+  --color-on-accent: 255 255 255; /* Resolved Conflict: Chose white for better contrast */
   --color-border: 75 85 99;
 
   /* Interactive states */

@@ -30,7 +30,7 @@ function SearchContent() {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       {query && <h1 className="text-2xl font-bold mb-6">Search results for: {query}</h1>}
-      {loading && <p className="text-teal-600">Loading...</p>}
+      {loading && <p className="text-accent">Loading...</p>}
       {error && <p className="text-red-600 mb-4">{error}</p>}
       {!loading && verses.length === 0 && !error && query && (
         <p className="text-muted">No verses found.</p>

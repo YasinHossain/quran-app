@@ -16,7 +16,7 @@ export const ReadingSettings = ({ isOpen = false, onToggle }: ReadingSettingsPro
   return (
     <CollapsibleSection
       title="Mushaf Settings"
-      icon={<BookReaderIcon size={20} className="text-teal-700" />}
+      icon={<BookReaderIcon size={20} className="text-accent" />}
       isLast={false}
       isOpen={isOpen}
       onToggle={onToggle || (() => {})}

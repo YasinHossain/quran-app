@@ -28,7 +28,7 @@ export const SearchInput = ({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         onKeyDown={onKeyDown}
-        className={`w-full pl-9 pr-3 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-teal-500 transition-all duration-300 hover:shadow-lg hover:ring-1 hover:ring-teal-600 ${searchBarClasses}`}
+        className={`w-full pl-9 pr-3 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-accent transition-all duration-300 hover:shadow-lg hover:ring-1 hover:ring-accent ${searchBarClasses}`}
       />
     </div>
   );
