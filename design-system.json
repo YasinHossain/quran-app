@@ -15,6 +15,7 @@
     "surfaceDark": "#2d3748",
     "foregroundDark": "#d1d5db",
     "mutedDark": "#9ca3af",
+    "accentHoverDark": "#0f766e",
     "interactiveDark": "#374151",
     "interactiveHoverDark": "#4b5563",
     "borderDark": "#4b5563",
