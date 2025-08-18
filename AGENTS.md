@@ -34,3 +34,29 @@ Security audits run in CI. Optionally run `npm audit --omit=dev` locally to chec
 - Reusable layout helpers live in `app/globals.css` under `@layer components`:
   - `.section` provides standard page padding.
   - `.card` applies surface background, padding, rounded corners, and a shadow for basic card layouts.
+- Common token classes:
+  - `bg-surface` – surface backgrounds.
+  - `text-primary` – primary text color.
+  - `border-border` – neutral border color.
+- Avoid using `useTheme` for styling; tokens handle theme-aware colors.
+- Do not use `dark:` classes in new code.
+
+### Styling examples
+
+```tsx
+// Button
+<button className="bg-surface text-primary border border-border rounded px-4 py-2">
+  Save
+</button>
+
+// Card
+<div className="card bg-surface text-primary border border-border p-4 rounded">
+  Card content
+</div>
+
+// Toggle
+<label className="inline-flex items-center gap-2">
+  <input type="checkbox" className="sr-only peer" />
+  <span className="w-10 h-6 bg-surface border border-border rounded-full peer-checked:bg-accent"></span>
+</label>
+```
