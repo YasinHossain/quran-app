@@ -5,7 +5,6 @@ import { getJuzByPage, getSurahByPage } from '@/lib/utils/surah-navigation';
 interface Props {
   pages: number[];
   chapters: Chapter[];
-  theme: string;
   selectedPageId: string | null;
   setSelectedPageId: (id: string) => void;
   setSelectedJuzId: (id: string) => void;
@@ -16,7 +15,6 @@ interface Props {
 const Page = ({
   pages,
   chapters,
-  theme,
   selectedPageId,
   setSelectedPageId,
   setSelectedJuzId,
@@ -41,21 +39,15 @@ const Page = ({
             }}
             className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
               isActive
-                ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/30'
-                : theme === 'light'
-                  ? 'bg-white shadow hover:bg-slate-50'
-                  : 'bg-slate-800 shadow hover:bg-slate-700'
+                ? 'bg-accent text-white shadow-lg shadow-accent/30'
+                : 'bg-surface text-primary hover:bg-accent/10 shadow'
             }`}
           >
             <div
               className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg shadow transition-colors ${
                 isActive
-                  ? theme === 'light'
-                    ? 'bg-gray-100 text-teal-600'
-                    : 'bg-slate-700 text-teal-400'
-                  : theme === 'light'
-                    ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
-                    : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
+                  ? 'bg-surface text-accent'
+                  : 'bg-surface text-accent group-hover:bg-accent/10'
               }`}
             >
               {p}
