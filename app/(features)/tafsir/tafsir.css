@@ -2,7 +2,7 @@
 .tafsir-content {
   font-family: var(--font-noto-sans-bengali), 'Noto Sans Bengali', sans-serif;
   line-height: 2.3;
-  color: var(--foreground);
+  color: rgb(var(--color-foreground));
   text-align: justify;
   word-spacing: normal;
   letter-spacing: 0.015em;
@@ -34,7 +34,7 @@
 .tafsir-content [lang='ar'] {
   font-size: 1.1em;
   font-weight: 500;
-  color: var(--accent);
+  color: rgb(var(--color-accent));
   background: rgba(13, 148, 136, 0.08);
   padding: 0.25rem 0.5rem;
   border-radius: 0.375rem;
@@ -59,7 +59,7 @@
 .tafsir-content i {
   font-style: normal;
   font-weight: 500;
-  color: var(--accent);
+  color: rgb(var(--color-accent));
   position: relative;
 }
 
@@ -72,7 +72,7 @@
 .tafsir-content strong,
 .tafsir-content b {
   font-weight: 700;
-  color: var(--foreground);
+  color: rgb(var(--color-foreground));
   font-family: var(--font-libre-baskerville), serif;
 }
 
@@ -84,16 +84,16 @@
   margin: 0.1em 0.1em 0 0;
   font-family: var(--font-libre-baskerville), serif;
   font-weight: 700;
-  color: var(--accent);
+  color: rgb(var(--color-accent));
 }
 
 /* Improved quote styling */
 .tafsir-content blockquote {
-  border-left: 4px solid var(--accent);
+  border-left: 4px solid rgb(var(--color-accent));
   padding-left: 1.5rem;
   margin: 2rem 0;
   font-style: italic;
-  color: var(--foreground);
+  color: rgb(var(--color-foreground));
   opacity: 0.9;
 }
 

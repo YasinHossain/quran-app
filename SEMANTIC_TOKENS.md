@@ -13,68 +13,39 @@ The Quran App uses a semantic token-based theming system that automatically adap
 
 ## Token Categories
 
-### Core Text Colors
+### Core Tokens
 
-- `text-foreground` - Main text color
-- `text-muted` - Secondary/muted text
-- `text-primary` - Brand color highlight
-
-### Background Colors
-
-- `bg-surface` - Main surface/background color
-- `bg-background` - Alternative background color
-
-### Interactive States
-
-- `bg-hover` - Hover state background
-- `bg-interactive` - Interactive element background
-- `bg-active` - Active state background
-- `bg-focus` - Focus state background
-- `bg-disabled` - Disabled state background
-
-### Accent Colors
-
-- `text-accent` - Accent text color
-- `text-on-accent` - Text on accent backgrounds
-- `bg-accent` - Accent background
-- `bg-accent-hover` - Accent hover state
-
-### Borders
-
-- `border-border` - Standard border color
-
-### Feedback Colors
-
-- `text-success` / `bg-success` - Success states
-- `text-warning` / `bg-warning` - Warning states
-- `text-error` / `bg-error` - Error states
-- `text-info` / `bg-info` - Info states
-
-### Component-Specific
-
-- `bg-card` - Card background
-- `bg-card-hover` - Card hover state
-- `bg-modal-overlay` - Modal overlay
-- `bg-input-bg` - Input backgrounds
-- `bg-button-primary` / `bg-button-secondary` - Button variants
+- `text-foreground` – Main text color
+- `text-on-accent` – Text on accent backgrounds
+- `text-primary` – Static brand color
+- `bg-background` – Page background
+- `bg-accent` – Accent background
+- `bg-accent-hover` – Accent hover state
+- `border-border` – Standard border color
 
 ## Implementation
 
-### CSS Variables (app/theme.css)
+### CSS Variables (`app/theme.css`)
+
+Tokens are stored as RGB channel values so they can be referenced in raw CSS with `rgb(var(--color-*)))`.
 
 ```css
 :root {
-  --color-surface: 247 249 249;
-  --color-text: 55 65 81;
-  --color-text-muted: 107 114 128;
-  /* ... more tokens */
+  --color-background: 247 249 249;
+  --color-foreground: 55 65 81;
+  --color-accent: 13 148 136;
+  --color-accent-hover: 15 118 110;
+  --color-border: 229 231 235;
+  --color-on-accent: 255 255 255;
 }
 
 .dark {
-  --color-surface: 26 32 44;
-  --color-text: 209 213 219;
-  --color-text-muted: 156 163 175;
-  /* ... dark variants */
+  --color-background: 26 32 44;
+  --color-foreground: 209 213 219;
+  --color-accent: 13 148 136;
+  --color-accent-hover: 15 118 110;
+  --color-border: 75 85 99;
+  --color-on-accent: 255 255 255;
 }
 ```
 
@@ -82,9 +53,12 @@ The Quran App uses a semantic token-based theming system that automatically adap
 
 ```js
 colors: {
-  surface: 'rgb(var(--color-surface) / <alpha-value>)',
-  foreground: 'rgb(var(--color-text) / <alpha-value>)',
-  muted: 'rgb(var(--color-text-muted) / <alpha-value>)',
+  background: 'rgb(var(--color-background) / <alpha-value>)',
+  foreground: 'rgb(var(--color-foreground) / <alpha-value>)',
+  accent: 'rgb(var(--color-accent) / <alpha-value>)',
+  'accent-hover': 'rgb(var(--color-accent-hover) / <alpha-value>)',
+  border: 'rgb(var(--color-border) / <alpha-value>)',
+  'on-accent': 'rgb(var(--color-on-accent) / <alpha-value>)',
   primary: '#009688',
   // ... semantic mappings
 }
@@ -96,8 +70,8 @@ colors: {
 
 ```jsx
 // Use semantic tokens
-<div className="bg-surface text-foreground border-border">
-  <button className="bg-hover hover:bg-active text-primary">Click me</button>
+<div className="bg-background text-foreground border-border">
+  <button className="bg-accent hover:bg-accent-hover text-on-accent">Click me</button>
 </div>
 ```
 
@@ -124,7 +98,7 @@ colors: {
 ```jsx
 // This is acceptable for theme toggles only
 <button
-  className={`px-4 py-2 rounded-full ${theme === 'light' ? 'bg-surface shadow' : 'text-muted'}`}
+  className={`px-4 py-2 rounded-full ${theme === 'light' ? 'bg-background shadow' : 'text-foreground/80'}`}
 >
   Light Mode
 </button>
@@ -169,7 +143,7 @@ When updating existing components:
 
 2. **Replace with semantic tokens**:
    - `theme === 'dark' ? 'text-white' : 'text-black'` → `text-foreground`
-   - `theme === 'light' ? 'bg-gray-100' : 'bg-gray-800'` → `bg-surface`
+   - `theme === 'light' ? 'bg-gray-100' : 'bg-gray-800'` → `bg-background`
 
 3. **Remove unused theme imports**:
    ```js

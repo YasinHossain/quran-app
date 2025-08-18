@@ -138,7 +138,7 @@ Run Storybook to iterate on UI components in isolation:
 npm run storybook
 ```
 
-This launches an interactive component workbench useful for AI-assisted design sessions.
+This launches an interactive component workbench with a light/dark theme toggle driven by semantic tokens. Use it for quick AI-assisted design validation.
 
 The CI workflow uploads this report as an artifact.
 

@@ -20,6 +20,11 @@ const sampleSurah: Surah = {
 };
 
 export const Default: Story = {
+  render: (args) => (
+    <div className="p-4 bg-surface">
+      <SurahCard {...args} />
+    </div>
+  ),
   args: {
     surah: sampleSurah,
   },
