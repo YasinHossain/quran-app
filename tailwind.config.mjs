@@ -7,15 +7,12 @@ const config = {
   theme: {
     extend: {
       colors: {
-        surface: 'rgb(var(--color-surface) / <alpha-value>)',
-        primary: 'rgb(var(--color-text) / <alpha-value>)',
-        muted: 'rgb(var(--color-text-muted) / <alpha-value>)',
-        background: 'rgb(var(--color-surface) / <alpha-value>)',
-        foreground: 'rgb(var(--color-text) / <alpha-value>)',
-        border: 'rgb(var(--color-border) / <alpha-value>)',
+        background: 'rgb(var(--color-background) / <alpha-value>)',
+        foreground: 'rgb(var(--color-foreground) / <alpha-value>)',
         accent: 'rgb(var(--color-accent) / <alpha-value>)',
         'accent-hover': 'rgb(var(--color-accent-hover) / <alpha-value>)',
         'on-accent': 'rgb(var(--color-on-accent) / <alpha-value>)',
+        border: 'rgb(var(--color-border) / <alpha-value>)',
         brand: '#009688',
 
         // Interactive states
