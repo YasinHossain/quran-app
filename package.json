@@ -15,7 +15,7 @@
     "format": "prettier --write .",
     "type-check": "tsc --noEmit",
     "check": "npm run format -- --check && npm run lint && npm run type-check && npm test",
-    "generate:tokens": "ts-node scripts/generate-tokens.ts",
+    "generate:tokens": "ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/generate-tokens.ts",
     "generate-feature": "ts-node scripts/generateFeature.ts",
     "audit-styles": "npm run audit:theme && npm run audit:colors && npm run audit:classes",
     "audit:theme": "grep -r \"theme ===\" app/ && exit 1 || echo \"✅ No theme conditionals found\"",

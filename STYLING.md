@@ -4,6 +4,8 @@
 
 This project uses a token-based theming system with CSS custom properties for consistent theming across light and dark modes. All styling should use semantic tokens defined in the design system.
 
+`design-system.json` is the single source of truth for these tokens. After editing it, run `npm run generate:tokens` to regenerate `app/theme.css`; `tailwind.config.mjs` consumes the same tokens automatically.
+
 ## Theme System Architecture
 
 ### CSS Custom Properties
