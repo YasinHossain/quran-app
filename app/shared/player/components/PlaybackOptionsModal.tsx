@@ -62,7 +62,9 @@ export default function PlaybackOptionsModal({ open, onClose, activeTab, setActi
           <button
             onClick={() => setActiveTab('reciter')}
             className={`px-3 py-1.5 rounded-full text-sm ${
-              activeTab === 'reciter' ? 'bg-accent/10 text-accent' : 'hover:bg-interactive'
+              activeTab === 'reciter'
+                ? 'bg-accent/10 text-accent'
+                : 'bg-surface hover:bg-interactive-hover'
             }`}
           >
             <span className="inline-flex items-center gap-2">
@@ -73,7 +75,9 @@ export default function PlaybackOptionsModal({ open, onClose, activeTab, setActi
           <button
             onClick={() => setActiveTab('repeat')}
             className={`px-3 py-1.5 rounded-full text-sm ${
-              activeTab === 'repeat' ? 'bg-accent/10 text-accent' : 'hover:bg-interactive'
+              activeTab === 'repeat'
+                ? 'bg-accent/10 text-accent'
+                : 'bg-surface hover:bg-interactive-hover'
             }`}
           >
             <span className="inline-flex items-center gap-2">
@@ -101,7 +105,7 @@ export default function PlaybackOptionsModal({ open, onClose, activeTab, setActi
           <div className="text-muted">Tips: Space • ←/→ seek • ↑/↓ volume</div>
           <div className="flex gap-2">
             <button
-              className="px-4 py-2 rounded-xl bg-interactive hover:bg-interactive text-foreground"
+              className="px-4 py-2 rounded-xl bg-surface hover:bg-interactive-hover text-foreground"
               onClick={onClose}
             >
               Cancel

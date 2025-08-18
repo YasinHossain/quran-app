@@ -130,6 +130,10 @@ Primary Button
   Secondary Button
 </button>
 
+Use `bg-surface` for the default state of neutral interactive elements. Apply
+`hover:bg-interactive-hover` or `active:bg-interactive` to provide visual
+feedback on hover or active states.
+
 Form Inputs
 <input className="bg-background border border-border text-foreground placeholder:text-foreground/50 focus:ring-2 focus:ring-accent/20" />
 

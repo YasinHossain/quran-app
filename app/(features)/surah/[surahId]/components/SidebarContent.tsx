@@ -67,7 +67,7 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
           <button
             aria-label="Back"
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-interactive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent lg:hidden"
+            className="p-2 rounded-full hover:bg-interactive-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent lg:hidden"
           >
             <ArrowLeftIcon size={18} />
           </button>
@@ -75,7 +75,7 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
           <div className="w-8" />
         </header>
         <div className="flex-grow p-4 space-y-4">
-          <div className="flex items-center p-1 rounded-full mb-4 bg-interactive">
+          <div className="flex items-center p-1 rounded-full mb-4 bg-surface">
             <button
               onClick={() => onTabClick('translation')}
               className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
@@ -131,7 +131,7 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
           )}
         </div>
         <div className="p-4">
-          <div className="flex items-center p-1 rounded-full bg-interactive">
+          <div className="flex items-center p-1 rounded-full bg-surface">
             <button
               onClick={() => setTheme('light')}
               className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${

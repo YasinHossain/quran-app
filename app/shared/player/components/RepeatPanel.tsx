@@ -26,7 +26,7 @@ export default function RepeatPanel({
               className={`px-3 py-2 rounded-xl text-sm capitalize ${
                 localRepeat.mode === m
                   ? 'bg-accent text-on-accent'
-                  : 'bg-interactive hover:bg-interactive'
+                  : 'bg-surface hover:bg-interactive-hover'
               }`}
             >
               {m}
