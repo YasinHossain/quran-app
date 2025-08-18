@@ -68,15 +68,7 @@ const Juz = ({
               {juz.number}
             </div>
             <div>
-              <p
-                className={`font-semibold ${
-                  isActive
-                    ? 'text-white'
-                    : theme === 'light'
-                      ? 'text-slate-700'
-                      : 'text-[var(--foreground)]'
-                }`}
-              >
+              <p className={`font-semibold ${isActive ? 'text-white' : 'text-primary'}`}>
                 Juz {juz.number}
               </p>
               <p

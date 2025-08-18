@@ -63,7 +63,7 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
         } lg:translate-x-0 ${isOpen ? 'flex' : 'hidden'} lg:flex scrollbar-hide`}
         style={{ position: 'relative' }}
       >
-        <header className="flex items-center justify-between p-4 border-b border-[var(--border-color)]">
+        <header className="flex items-center justify-between p-4 border-b border-border">
           <button
             aria-label="Back"
             onClick={onClose}

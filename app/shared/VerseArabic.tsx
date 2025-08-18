@@ -17,7 +17,7 @@ const VerseArabic = ({ verse }: VerseArabicProps) => {
   return (
     <p
       dir="rtl"
-      className="text-right leading-loose text-[var(--foreground)]"
+      className="text-right leading-loose text-foreground"
       style={{
         fontFamily: settings.arabicFontFace,
         fontSize: `${settings.arabicFontSize}px`,

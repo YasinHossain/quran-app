@@ -25,7 +25,7 @@ export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps) => {
   return (
     <div className="space-y-6">
            {' '}
-      <div className="flex items-start gap-x-6 pb-8 border-b border-[var(--border-color)]">
+      <div className="flex items-start gap-x-6 pb-8 border-b border-border">
                {' '}
         <VerseActions
           verseKey={verse.verse_key}

@@ -69,7 +69,7 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
   }, [addBookmark, removeBookmark, findBookmark, verse.id]);
 
   return (
-    <div className="flex items-start gap-x-6 mb-12 pb-8 border-b border-[var(--border-color)]">
+    <div className="flex items-start gap-x-6 mb-12 pb-8 border-b border-border">
       <VerseActions
         verseKey={verse.verse_key}
         isPlaying={isPlaying}

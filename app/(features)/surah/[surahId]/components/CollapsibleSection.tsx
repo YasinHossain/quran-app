@@ -20,7 +20,7 @@ export const CollapsibleSection = ({
   onToggle,
 }: CollapsibleSectionProps) => {
   return (
-    <div className={isLast ? '' : 'border-b border-[var(--border-color)]'}>
+    <div className={isLast ? '' : 'border-b border-border'}>
       {' '}
       {/* Apply border only if not the last section */}
       <button onClick={onToggle} className="w-full flex items-center justify-between p-4 text-left">
