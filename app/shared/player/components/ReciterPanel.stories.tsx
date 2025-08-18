@@ -1,0 +1,24 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from 'react';
+import ReciterPanel from './ReciterPanel';
+
+const meta: Meta<typeof ReciterPanel> = {
+  title: 'Player/ReciterPanel',
+  component: ReciterPanel,
+};
+export default meta;
+
+type Story = StoryObj<typeof ReciterPanel>;
+
+function ReciterPanelStory() {
+  const [reciter, setReciter] = useState('1');
+  return (
+    <div className="p-4 bg-surface">
+      <ReciterPanel localReciter={reciter} setLocalReciter={setReciter} />
+    </div>
+  );
+}
+
+export const Default: Story = {
+  render: () => <ReciterPanelStory />,
+};
