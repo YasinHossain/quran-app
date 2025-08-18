@@ -76,14 +76,18 @@ export const SettingsSidebar = ({
 
   // Function to handle section toggle with max 2 open rule and localStorage persistence
   const handleSectionToggle = (sectionId: string) => {
-    console.log('Toggling section:', sectionId, 'Current open:', openSections);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Toggling section:', sectionId, 'Current open:', openSections);
+    }
     setOpenSections((prev) => {
       let newState: string[];
 
       if (prev.includes(sectionId)) {
         // If section is open, close it
         newState = prev.filter((id) => id !== sectionId);
-        console.log('Closing section, new state:', newState);
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Closing section, new state:', newState);
+        }
       } else {
         // If section is closed, open it
         if (prev.length >= 2) {
@@ -93,7 +97,9 @@ export const SettingsSidebar = ({
           // If less than 2 sections open, just add the new one
           newState = [...prev, sectionId];
         }
-        console.log('Opening section, new state:', newState);
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Opening section, new state:', newState);
+        }
       }
 
       // Save to localStorage
