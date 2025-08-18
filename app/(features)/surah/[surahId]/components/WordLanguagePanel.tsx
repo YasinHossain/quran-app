@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSettings } from '@/app/providers/SettingsContext';
 import type { LanguageCode } from '@/lib/text/languageCodes';
-import { ResizeObserver as ResizeObserverPolyfill } from '@juggle/resize-observer';
 
 interface WordLanguagePanelProps {
   isOpen: boolean;
@@ -32,9 +31,6 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
 
-  const listContainerRef = useRef<HTMLDivElement>(null);
-  const [listHeight, setListHeight] = useState(0);
-
   const handleLanguageSelect = (language: (typeof WORD_LANGUAGES)[0]) => {
     setSettings({
       ...settings,
@@ -42,39 +38,6 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
       wordTranslationId: language.id,
     });
   };
-
-  useEffect(() => {
-    if (renderMode === 'content') return; // Skip resize observer for content mode
-
-    const element = listContainerRef.current;
-    if (!element || !isOpen) return;
-
-    const updateHeight = () => {
-      const rect = element.getBoundingClientRect();
-      const fallback = window.innerHeight - rect.top;
-      setListHeight(rect.height || fallback);
-    };
-
-    updateHeight();
-
-    const ResizeObserverConstructor =
-      typeof ResizeObserver !== 'undefined' ? ResizeObserver : ResizeObserverPolyfill;
-
-    if (ResizeObserverConstructor) {
-      const observer = new ResizeObserverConstructor((entries) => {
-        for (const entry of entries) {
-          const rect = entry.target.getBoundingClientRect();
-          const fallback = window.innerHeight - rect.top;
-          setListHeight(entry.contentRect.height || fallback);
-        }
-      });
-      observer.observe(element);
-      return () => observer.disconnect();
-    }
-
-    window.addEventListener('resize', updateHeight);
-    return () => window.removeEventListener('resize', updateHeight);
-  }, [isOpen, renderMode]);
 
   const renderLanguageList = () => (
     <div className="space-y-2">
@@ -95,7 +58,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
             className={`flex items-center justify-between px-4 py-3 h-[58px] rounded-lg cursor-pointer transition-all duration-200 focus:outline-none focus-visible:outline-none outline-none border ${
               isSelected
                 ? 'bg-accent/10 border-accent/20'
-                : 'bg-interactive border-border hover:bg-hover'
+                : 'bg-surface border-border hover:bg-interactive active:bg-interactive'
             }`}
           >
             <div className="flex-1 min-w-0 pr-3">
@@ -152,7 +115,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
       </header>
 
       <div className="flex-1 flex flex-col min-h-0">
-        <div className="flex-1 overflow-y-auto" ref={listContainerRef}>
+        <div className="flex-1 overflow-y-auto">
           <div className="px-4 pb-4 pt-4">{renderLanguageList()}</div>
         </div>
       </div>
