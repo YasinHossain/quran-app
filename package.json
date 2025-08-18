@@ -15,7 +15,8 @@
     "format": "prettier --write .",
     "type-check": "tsc --noEmit",
     "check": "npm run format -- --check && npm run lint && npm run type-check && npm test",
-    "generate-feature": "ts-node scripts/generateFeature.ts"
+    "generate-feature": "ts-node scripts/generateFeature.ts",
+    "test:visual": "playwright test"
   },
   "dependencies": {
     "@juggle/resize-observer": "^3.4.0",
@@ -38,6 +39,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.50.1",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.3.0",
@@ -45,6 +47,8 @@
     "@types/jest": "^30.0.0",
     "@types/next-pwa": "^5.6.9",
     "@types/node": "^24",
+    "@types/pixelmatch": "^5.2.6",
+    "@types/pngjs": "^6.0.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-window": "^1.8.8",
@@ -57,6 +61,8 @@
     "jest": "^30.0.5",
     "jest-environment-jsdom": "^30.0.5",
     "node-fetch": "^3.3.2",
+    "pixelmatch": "^5.3.0",
+    "pngjs": "^7.0.0",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",
     "ts-jest": "^29.4.1",
