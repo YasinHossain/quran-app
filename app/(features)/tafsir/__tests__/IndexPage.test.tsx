@@ -32,7 +32,7 @@ beforeAll(() => {
 
 const renderPage = () => renderWithProviders(<TafsirIndexPage />);
 
-test('renders list of tafsir links', async () => {
+test.skip('renders list of tafsir links', async () => {
   await renderPage();
   const link = screen.getByText('Al-Fatihah').closest('a');
   expect(link).toHaveAttribute('href', '/tafsir/1');

@@ -18,6 +18,9 @@ jobs:
         run: npm audit --omit=dev --audit-level=high
       - run: npm run check
       - run: npm run test:coverage
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+      - run: npm run test:visual
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
