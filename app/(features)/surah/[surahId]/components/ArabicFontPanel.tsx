@@ -117,7 +117,7 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
               {/* Font Type Toggle - Uthmani/Indopak */}
               <div className="sticky top-0 z-10 py-4 border-b bg-surface/95 backdrop-blur-sm border-border">
                 <div className="px-4">
-                  <div className="flex items-center p-1 rounded-full bg-interactive">
+                  <div className="flex items-center p-1 rounded-full bg-surface">
                     <button
                       onClick={() => setActiveFilter('Uthmani')}
                       className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${

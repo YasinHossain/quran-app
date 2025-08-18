@@ -24,7 +24,7 @@ export default function SpeedControl() {
               setOpen(false);
             }
           }}
-          className="h-9 w-14 grid place-items-center rounded-full text-xs font-bold transition focus:outline-none focus:ring-2 text-foreground focus:ring-accent/35 hover:bg-interactive"
+          className="h-9 w-14 grid place-items-center rounded-full text-xs font-bold transition focus:outline-none focus:ring-2 text-foreground focus:ring-accent/35 hover:bg-interactive-hover"
         >
           {playbackRate}x
         </button>
@@ -47,7 +47,7 @@ export default function SpeedControl() {
               close();
             }}
             className={`w-full text-center text-sm p-1.5 rounded-md ${
-              playbackRate === speed ? 'bg-accent text-on-accent' : 'hover:bg-interactive'
+              playbackRate === speed ? 'bg-accent text-on-accent' : 'hover:bg-interactive-hover'
             }`}
           >
             {speed}x

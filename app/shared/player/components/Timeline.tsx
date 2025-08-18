@@ -33,7 +33,7 @@ export default function Timeline({
             onValueChange={([v]) => setSeek(v)}
             aria-label="Seek"
           >
-            <Slider.Track className="h-0.5 rounded-full relative w-full grow bg-interactive">
+            <Slider.Track className="h-0.5 rounded-full relative w-full grow bg-surface group-hover:bg-interactive-hover">
               <Slider.Range className="h-full rounded-full absolute bg-accent" />
             </Slider.Track>
             <Tooltip.Root>
