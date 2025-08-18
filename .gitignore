@@ -47,4 +47,3 @@ next-env.d.ts
 
 # generated service worker
 public/sw.js
-public/workbox-*.js
