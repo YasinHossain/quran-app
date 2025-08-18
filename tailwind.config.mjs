@@ -1,14 +1,24 @@
 import designTokens from './design-system.json' assert { type: 'json' };
 
+/**
+ * Converts a camelCase string to kebab-case.
+ * @param {string} str The string to convert.
+ * @returns {string} The kebab-case string.
+ */
 function kebabCase(str) {
   return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 }
 
+// Dynamically generate color mappings from the design system tokens.
+// This creates utilities like `bg-background`, `text-foreground`, etc.
 const colorEntries = Object.keys(designTokens.colors)
   .filter((key) => !key.endsWith('Dark'))
   .reduce((acc, key) => {
     const name = kebabCase(key);
-    acc[name] = `rgb(var(--color-${name}) / <alpha-value>)`;
+    // We exclude 'primary' because it will be set to a static brand color.
+    if (name !== 'primary') {
+      acc[name] = `rgb(var(--color-${name}) / <alpha-value>)`;
+    }
     return acc;
   }, {});
 
@@ -18,7 +28,12 @@ const config = {
   content: ['./app/**/*.{ts,tsx,js,jsx}', './lib/**/*.{ts,tsx,js,jsx}'],
   theme: {
     extend: {
-      colors: colorEntries,
+      colors: {
+        // Spread the dynamically generated, theme-aware colors
+        ...colorEntries,
+        // Statically set the primary brand color. This will not change with the theme.
+        primary: '#009688',
+      },
       spacing: designTokens.spacing,
       fontFamily: {
         base: [designTokens.typography.fontFamily, 'sans-serif'],

@@ -26,7 +26,7 @@ export const CollapsibleSection = ({
       <button onClick={onToggle} className="w-full flex items-center justify-between p-4 text-left">
         <div className="flex items-center space-x-3">
           {icon}
-          <span className="font-semibold text-primary">{title}</span>
+          <span className="font-semibold text-foreground">{title}</span>
         </div>
         <ChevronDownIcon
           size={16}

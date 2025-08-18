@@ -57,12 +57,12 @@ export default function SurahTab({ searchQuery }: SurahTabProps) {
                 {surah.number}
               </div>
               <div>
-                <h3 className="font-semibold text-lg text-primary">{surah.name}</h3>
+                <h3 className="font-semibold text-lg text-foreground">{surah.name}</h3>
                 <p className="text-sm text-muted">{surah.meaning}</p>
               </div>
             </div>
             <div className="text-right">
-              <p className="font-amiri text-2xl text-primary group-hover:text-accent transition-colors">
+              <p className="font-amiri text-2xl text-foreground group-hover:text-accent transition-colors">
                 {surah.arabicName}
               </p>
               <p className="text-sm text-muted">{surah.verses} Verses</p>

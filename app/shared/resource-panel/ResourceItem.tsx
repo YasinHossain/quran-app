@@ -48,7 +48,7 @@ export const ResourceItem = <T extends Resource>({
       <div className="flex-1 min-w-0 pr-3">
         <p
           className={`font-medium text-sm leading-tight truncate ${
-            isSelected ? 'text-accent' : 'text-primary'
+            isSelected ? 'text-accent' : 'text-foreground'
           }`}
           title={item.name}
         >

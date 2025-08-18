@@ -85,7 +85,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
       data-testid="tafsir-panel"
       className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
-      } bg-surface text-primary`}
+      } bg-surface text-foreground`}
     >
       <TafsirLimitWarning show={showLimitWarning} />
 
@@ -105,10 +105,10 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-        <h2 className="text-lg font-bold text-center flex-grow text-primary">Manage Tafsirs</h2>
+        <h2 className="text-lg font-bold text-center flex-grow text-foreground">Manage Tafsirs</h2>
         <button
           onClick={handleReset}
-          className="p-2 rounded-full focus-visible:outline-none transition-colors text-muted hover:bg-hover hover:text-primary"
+          className="p-2 rounded-full focus-visible:outline-none transition-colors text-muted hover:bg-hover hover:text-foreground"
           title="Reset to Default"
         >
           <RotateCcw size={20} />
@@ -182,7 +182,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
                       })
                       .map(([language, items]) => (
                         <div key={language}>
-                          <h3 className="text-lg font-semibold mb-4 text-primary">{language}</h3>
+                          <h3 className="text-lg font-semibold mb-4 text-foreground">{language}</h3>
                           <div className="space-y-2">
                             {items.map((item) => (
                               <ResourceItem

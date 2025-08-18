@@ -13,7 +13,7 @@ const SelectionBox = ({ label, value, onClick }: SelectionBoxProps) => {
       <label className="block mb-2 text-sm font-medium text-foreground">{label}</label>
       <button
         onClick={onClick}
-        className="w-full flex justify-between items-center bg-surface text-primary border border-border rounded-lg p-2.5 text-sm text-left focus:outline-none focus:ring-1 focus:ring-accent transition-all duration-300 hover:bg-accent/10"
+        className="w-full flex justify-between items-center bg-surface text-foreground border border-border rounded-lg p-2.5 text-sm text-left focus:outline-none focus:ring-1 focus:ring-accent transition-all duration-300 hover:bg-accent/10"
       >
         <span className="truncate">{value}</span>
         <ChevronDownIcon className="text-muted" />

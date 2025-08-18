@@ -46,7 +46,7 @@ export default function Timeline({
               <Tooltip.Portal>
                 <Tooltip.Content
                   sideOffset={8}
-                  className="rounded-md text-primary text-xs px-2 py-1 shadow bg-surface"
+                  className="rounded-md text-foreground text-xs px-2 py-1 shadow bg-surface"
                 >
                   {elapsed}
                   <Tooltip.Arrow className="fill-surface" />

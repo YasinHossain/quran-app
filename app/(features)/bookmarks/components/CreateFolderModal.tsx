@@ -41,7 +41,7 @@ export const CreateFolderModal = ({ isOpen, onClose }: CreateFolderModalProps) =
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-primary ">Create New Folder</h2>
+              <h2 className="text-lg font-semibold text-foreground ">Create New Folder</h2>
               <button onClick={onClose} className="rounded-full p-1 text-muted hover:bg-surface/50">
                 <CloseIcon size={20} />
               </button>

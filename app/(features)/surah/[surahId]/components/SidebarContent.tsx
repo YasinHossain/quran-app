@@ -58,7 +58,7 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
     return (
       <aside
         ref={ref}
-        className={`settings-sidebar fixed lg:static top-16 lg:top-0 bottom-0 right-0 w-[20.7rem] bg-surface text-primary flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 z-40 lg:z-40 lg:h-full ${
+        className={`settings-sidebar fixed lg:static top-16 lg:top-0 bottom-0 right-0 w-[20.7rem] bg-surface text-foreground flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 z-40 lg:z-40 lg:h-full ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         } lg:translate-x-0 ${isOpen ? 'flex' : 'hidden'} lg:flex scrollbar-hide`}
         style={{ position: 'relative' }}
@@ -135,6 +135,7 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
             <button
               onClick={() => setTheme('light')}
               className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                // eslint-disable-next-line token-rules/no-raw-color-classes
                 theme === 'light'
                   ? 'bg-surface shadow text-foreground'
                   : 'text-muted hover:text-foreground'
@@ -145,6 +146,7 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
             <button
               onClick={() => setTheme('dark')}
               className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                // eslint-disable-next-line token-rules/no-raw-color-classes
                 theme === 'dark'
                   ? 'bg-surface shadow text-foreground'
                   : 'text-muted hover:text-foreground'

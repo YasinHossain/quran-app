@@ -29,7 +29,7 @@ export default function TransportControls({
         className={`h-10 w-10 grid place-items-center rounded-full hover:opacity-90 active:scale-95 transition ${
           interactable
             ? 'bg-accent text-on-accent hover:bg-accent-hover'
-            : 'bg-disabled cursor-not-allowed opacity-60 text-primary'
+            : 'bg-disabled cursor-not-allowed opacity-60 text-foreground'
         }`}
       >
         {isPlaying ? <Pause /> : <Play />}

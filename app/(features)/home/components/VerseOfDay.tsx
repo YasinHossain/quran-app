@@ -113,7 +113,7 @@ export default function VerseOfDay() {
                   w.uthmani
                 )}
                 {w.en && (
-                  <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-1 py-0.5 rounded bg-surface text-primary text-xs whitespace-nowrap opacity-0 group-hover:opacity-100">
+                  <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-1 py-0.5 rounded bg-surface text-foreground text-xs whitespace-nowrap opacity-0 group-hover:opacity-100">
                     {w.en}
                   </span>
                 )}

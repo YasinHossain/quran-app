@@ -81,7 +81,7 @@ export default function PagePage({ params }: PagePageProps) {
     : null;
 
   return (
-    <div className="flex flex-grow bg-surface text-primary font-sans overflow-hidden">
+    <div className="flex flex-grow bg-surface text-foreground font-sans overflow-hidden">
       <main className="flex-grow bg-surface section overflow-y-auto homepage-scrollable-area">
         <div className="w-full relative">
           {isLoading ? (

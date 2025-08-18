@@ -49,7 +49,7 @@ const BookmarkedVersesList = () => {
     <div className="space-y-4">
       {verses.map((verse) => (
         <div key={verse.id}>
-          <p className="font-semibold text-primary">{verse.verse_key}</p>
+          <p className="font-semibold text-foreground">{verse.verse_key}</p>
           <p
             className="text-right"
             dangerouslySetInnerHTML={{ __html: sanitizeHtml(verse.text_uthmani) }}

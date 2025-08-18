@@ -17,7 +17,7 @@ export const SearchInput = ({
   onKeyDown,
   className = '',
 }: SearchInputProps) => {
-  const searchBarClasses = 'bg-surface text-primary border border-border placeholder:text-muted';
+  const searchBarClasses = 'bg-surface text-foreground border border-border placeholder:text-muted';
 
   return (
     <div className={`relative ${className}`}>

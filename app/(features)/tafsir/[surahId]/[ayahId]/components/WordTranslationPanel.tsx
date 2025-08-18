@@ -42,7 +42,7 @@ export const WordTranslationPanel = ({
 
   return (
     <div
-      className={`fixed ${isHidden ? 'top-0' : 'top-16'} bottom-0 right-0 w-[20.7rem] bg-surface text-primary flex flex-col transition-all duration-300 ease-in-out z-50 shadow-lg ${
+      className={`fixed ${isHidden ? 'top-0' : 'top-16'} bottom-0 right-0 w-[20.7rem] bg-surface text-foreground flex flex-col transition-all duration-300 ease-in-out z-50 shadow-lg ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
@@ -54,7 +54,7 @@ export const WordTranslationPanel = ({
         >
           <ArrowLeftIcon size={18} />
         </button>
-        <h2 className="font-bold text-lg text-primary">{t('word_by_word_panel_title')}</h2>
+        <h2 className="font-bold text-lg text-foreground">{t('word_by_word_panel_title')}</h2>
         <div className="w-8"></div>
       </div>
       <div className="p-3 border-b border-border">
@@ -69,7 +69,7 @@ export const WordTranslationPanel = ({
             placeholder={t('search')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-3 py-2.5 border border-border rounded-lg focus:ring-2 focus:ring-accent outline-none bg-surface text-primary"
+            className="w-full pl-10 pr-3 py-2.5 border border-border rounded-lg focus:ring-2 focus:ring-accent outline-none bg-surface text-foreground"
           />
         </div>
       </div>
@@ -98,7 +98,7 @@ export const WordTranslationPanel = ({
                 onClose();
               }}
             />
-            <span className="text-sm text-primary">{lang.name}</span>
+            <span className="text-sm text-foreground">{lang.name}</span>
           </label>
         ))}
       </div>

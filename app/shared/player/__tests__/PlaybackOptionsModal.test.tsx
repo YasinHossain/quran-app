@@ -24,13 +24,7 @@ beforeAll(() => {
 test('coerces decimal input to integer', async () => {
   const onClose = jest.fn();
   renderWithProviders(
-    <PlaybackOptionsModal
-      open
-      onClose={onClose}
-      theme="light"
-      activeTab="repeat"
-      setActiveTab={() => {}}
-    />
+    <PlaybackOptionsModal open onClose={onClose} activeTab="repeat" setActiveTab={() => {}} />
   );
 
   const startInput = screen.getByLabelText('Start') as HTMLInputElement;
@@ -48,13 +42,7 @@ test('rejects decimal repeat values', async () => {
       setRepeatOptions((prev) => ({ ...prev, start: 1.5 }));
     }, [setRepeatOptions]);
     return (
-      <PlaybackOptionsModal
-        open
-        onClose={onClose}
-        theme="light"
-        activeTab="repeat"
-        setActiveTab={() => {}}
-      />
+      <PlaybackOptionsModal open onClose={onClose} activeTab="repeat" setActiveTab={() => {}} />
     );
   };
 

@@ -28,7 +28,7 @@ const SidebarItem = ({
   <button
     type="button"
     className={`flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium ${
-      isActive ? 'bg-accent/20 text-accent' : 'text-primary hover:bg-surface/50'
+      isActive ? 'bg-accent/20 text-accent' : 'text-foreground hover:bg-surface/50'
     }`}
   >
     <Icon className="h-5 w-5" />
@@ -57,7 +57,7 @@ const FolderCard = ({
     <div className="flex items-center space-x-3">
       <FolderIcon size={24} className="text-accent" />
       <div>
-        <h3 className="font-semibold text-primary ">{name}</h3>
+        <h3 className="font-semibold text-foreground ">{name}</h3>
         <p className="text-sm text-muted ">{count} Bookmarks</p>
       </div>
     </div>
@@ -72,7 +72,7 @@ const FolderCard = ({
 
 const ContentHeader = ({ onNewFolderClick }: { onNewFolderClick: () => void }) => (
   <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-    <h1 className="text-2xl font-bold text-primary ">Bookmarks</h1>
+    <h1 className="text-2xl font-bold text-foreground ">Bookmarks</h1>
     <div className="flex items-center space-x-2">
       <button
         onClick={onNewFolderClick}
@@ -112,7 +112,7 @@ const BookmarksPage = () => {
         {/* Left Sidebar for Bookmark Navigation */}
         <aside className="w-72 flex-shrink-0 border-r border-border bg-surface p-4 ">
           <div className="space-y-4">
-            <h1 className="px-3 text-xl font-bold text-primary ">Bookmarks</h1>
+            <h1 className="px-3 text-xl font-bold text-foreground ">Bookmarks</h1>
             <nav className="space-y-1">
               <SidebarItem icon={PinIcon} label="Bookmarks" isActive={true} />
               <SidebarItem icon={PinIcon} label="Pin Ayah" />
