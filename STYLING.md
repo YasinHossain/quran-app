@@ -1,18 +1,15 @@
-# Styling Guide - Quran App
-
-## Overview
-
+Styling Guide - Quran App
+Overview
 This project uses a token-based theming system with CSS custom properties for consistent theming across light and dark modes. All styling should use semantic tokens defined in the design system.
 
-Use `text-foreground` for standard body text and reserve `text-primary` for brand accents.
+design-system.json is the single source of truth for these tokens. After editing it, run npm run generate:tokens to regenerate app/theme.css; tailwind.config.mjs consumes the same tokens automatically.
 
-## Theme System Architecture
+Use text-foreground for standard body text and reserve text-primary for brand accents.
 
-### CSS Custom Properties
+Theme System Architecture
+CSS Custom Properties
+Semantic tokens are defined in app/globals.css and app/theme.css:
 
-Semantic tokens are defined in `app/globals.css` and `app/theme.css`:
-
-```css
 :root {
   /* Light theme tokens */
   --color-primary: #10b981;
@@ -31,13 +28,10 @@ Semantic tokens are defined in `app/globals.css` and `app/theme.css`:
   --color-surface: #1e293b;
   /* ... other tokens */
 }
-```
 
-### Tailwind Integration
+Tailwind Integration
+Tokens are mapped to Tailwind utilities in tailwind.config.mjs:
 
-Tokens are mapped to Tailwind utilities in `tailwind.config.mjs`:
-
-```js
 colors: {
   primary: 'var(--color-primary)',
   foreground: 'var(--color-foreground)',
@@ -46,81 +40,69 @@ colors: {
   muted: 'var(--color-muted)',
   // ... other mappings
 }
-```
 
-## Available Semantic Tokens
+Available Semantic Tokens
+Core Colors
+primary - Primary brand color (emerald-500)
 
-### Core Colors
+accent - Accent color (emerald-400 in dark mode)
 
-- `primary` - Primary brand color (emerald-500)
-- `accent` - Accent color (emerald-400 in dark mode)
-- `foreground` - Main text color
-- `background` - Page background
-- `surface` - Card/panel backgrounds
-- `muted` - Secondary text and subdued elements
-- `border` - Border colors
-- `interactive` - Interactive element backgrounds
-- `error` - Error/danger states
+foreground - Main text color
 
-### Usage Examples
+background - Page background
 
-#### ✅ Correct Usage
+surface - Card/panel backgrounds
 
-```tsx
+muted - Secondary text and subdued elements
+
+border - Border colors
+
+interactive - Interactive element backgrounds
+
+error - Error/danger states
+
+Usage Examples
+✅ Correct Usage
 // Use semantic tokens
 <div className="bg-surface text-foreground border-border">
   <h1 className="text-primary">Title</h1>
   <p className="text-muted">Subtitle</p>
   <button className="bg-primary text-white hover:bg-primary/90">Action</button>
 </div>
-```
 
-#### ❌ Anti-patterns to Avoid
+❌ Anti-patterns to Avoid
+Theme Conditionals in JSX:
 
-**Theme Conditionals in JSX:**
-
-```tsx
 // DON'T: Theme conditionals in className
 <div className={theme === 'dark' ? 'bg-slate-800' : 'bg-white'}>
 
 // DO: Use semantic tokens
 <div className="bg-surface">
-```
 
-**Hardcoded Colors:**
+Hardcoded Colors:
 
-```tsx
 // DON'T: Hardcoded hex values
 <div style={{ color: '#64748b' }}>
 
 // DO: Use semantic tokens
 <div className="text-muted">
-```
 
-**Raw Utility Classes:**
+Raw Utility Classes:
 
-```tsx
 // DON'T: Raw Tailwind utilities
 <div className="bg-slate-100 text-gray-700">
 
 // DO: Semantic tokens
 <div className="bg-surface text-foreground">
-```
 
-## Component Patterns
-
-### Cards and Panels
-
-```tsx
+Component Patterns
+Cards and Panels
 <div className="bg-surface border border-border rounded-lg p-4">
   <h2 className="text-foreground font-semibold">Card Title</h2>
   <p className="text-muted">Card content</p>
 </div>
-```
 
-### Interactive Elements
-
-```tsx
+Interactive Elements
 <button className="bg-primary text-white hover:bg-primary/90 focus:ring-2 focus:ring-primary/20">
   Primary Button
 </button>
@@ -128,136 +110,115 @@ colors: {
 <button className="bg-surface text-foreground hover:bg-interactive border border-border">
   Secondary Button
 </button>
-```
 
-### Form Inputs
-
-```tsx
+Form Inputs
 <input className="bg-surface border border-border text-foreground placeholder:text-muted focus:ring-2 focus:ring-primary/20" />
-```
 
-## Development Workflow
-
-### Before Making Changes
-
+Development Workflow
+Before Making Changes
 Always run the style audit to ensure no violations:
 
-```bash
 npm run audit-styles
-```
 
-### Available Audit Commands
+Available Audit Commands
+npm run audit:theme - Check for theme conditionals in JSX
 
-- `npm run audit:theme` - Check for theme conditionals in JSX
-- `npm run audit:colors` - Check for hardcoded color values
-- `npm run audit:classes` - Check for raw gray/slate/zinc utility classes
-- `npm run audit-styles` - Run all audits
+npm run audit:colors - Check for hardcoded color values
 
-### Regenerating Theme Tokens
+npm run audit:classes - Check for raw gray/slate/zinc utility classes
 
-Update the generated CSS variables and Tailwind mappings after editing `design-system.json`:
+npm run audit-styles - Run all audits
 
-```bash
+Regenerating Theme Tokens
+Update the generated CSS variables and Tailwind mappings after editing design-system.json:
+
 npm run generate:tokens
-```
 
-### Testing Theme Changes
+Testing Theme Changes
+Test both light and dark themes
 
-1. Test both light and dark themes
-2. Verify semantic meaning of colors remains consistent
-3. Ensure sufficient contrast ratios
-4. Run audit scripts before committing
+Verify semantic meaning of colors remains consistent
 
-## Migration Guidelines
+Ensure sufficient contrast ratios
 
-### From Theme Conditionals
+Run audit scripts before committing
 
-**Before:**
+Migration Guidelines
+From Theme Conditionals
+Before:
 
-```tsx
 <div className={theme === 'dark' ? 'bg-slate-800 text-white' : 'bg-white text-black'}>
-```
 
-**After:**
+After:
 
-```tsx
 <div className="bg-surface text-foreground">
-```
 
-### From Hardcoded Colors
+From Hardcoded Colors
+Before:
 
-**Before:**
-
-```tsx
 <div style={{ backgroundColor: '#1e293b', color: '#f1f5f9' }}>
-```
 
-**After:**
+After:
 
-```tsx
 <div className="bg-surface text-foreground">
-```
 
-### From Raw Utilities
+From Raw Utilities
+Before:
 
-**Before:**
-
-```tsx
 <div className="bg-gray-100 text-gray-800 border-gray-300">
-```
 
-**After:**
+After:
 
-```tsx
 <div className="bg-surface text-foreground border-border">
-```
 
-## Extending the System
+Extending the System
+Adding New Tokens
+Add values to design-system.json
 
-### Adding New Tokens
+Run npm run generate:tokens
 
-1. Add values to `design-system.json`
-2. Run `npm run generate:tokens`
-3. Document usage patterns here
-4. Update audit scripts if needed
+Document usage patterns here
 
-### Token Naming Convention
+Update audit scripts if needed
 
-- Use semantic names (not color names)
-- Follow the pattern: `purpose-variant` (e.g., `surface-elevated`)
-- Ensure names work across all themes
+Token Naming Convention
+Use semantic names (not color names)
 
-## Common Issues
+Follow the pattern: purpose-variant (e.g., surface-elevated)
 
-### Theme Flickering
+Ensure names work across all themes
 
-- Ensure CSS custom properties are defined before React renders
-- Use `data-theme` attribute on `<html>` element
-- Apply theme class in layout component
+Common Issues
+Theme Flickering
+Ensure CSS custom properties are defined before React renders
 
-### Contrast Problems
+Use data-theme attribute on <html> element
 
-- Always test both light and dark themes
-- Use semantic tokens that maintain proper contrast
-- Avoid pure white text on colored backgrounds in dark mode
+Apply theme class in layout component
 
-### Performance
+Contrast Problems
+Always test both light and dark themes
 
-- CSS custom properties are efficiently handled by browsers
-- Prefer Tailwind classes over inline styles
-- Group related utilities for better compression
+Use semantic tokens that maintain proper contrast
 
-## ESLint Rules
+Avoid pure white text on colored backgrounds in dark mode
 
+Performance
+CSS custom properties are efficiently handled by browsers
+
+Prefer Tailwind classes over inline styles
+
+Group related utilities for better compression
+
+ESLint Rules
 The following ESLint rules help enforce the styling system:
 
-```js
 // Prevents theme conditionals in JSX className
 "no-raw-color-classes": "error"
-```
 
-## Resources
+Resources
+CSS Custom Properties (MDN)
 
-- [CSS Custom Properties (MDN)](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
-- [Tailwind CSS Configuration](https://tailwindcss.com/docs/configuration)
-- [Design Tokens Specification](https://design-tokens.github.io/community-group/format/)
+Tailwind CSS Configuration
+
+Design Tokens Specification

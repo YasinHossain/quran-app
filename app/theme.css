@@ -1,11 +1,10 @@
-/* styles.css */
 :root {
   --color-background: 247 249 249;
   --color-foreground: 55 65 81;
   --color-accent: 13 148 136;
   --color-accent-hover: 15 118 110;
-  --color-on-accent: 255 255 255; /* Resolved Conflict: Chose white for better contrast */
   --color-border: 229 231 235;
+  --color-on-accent: 255 255 255;
 }
 
 .dark {
@@ -13,6 +12,6 @@
   --color-foreground: 209 213 219;
   --color-accent: 13 148 136;
   --color-accent-hover: 15 118 110;
-  --color-on-accent: 255 255 255; /* Resolved Conflict: Chose white for better contrast */
   --color-border: 75 85 99;
+  --color-on-accent: 255 255 255;
 }

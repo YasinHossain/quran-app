@@ -5,9 +5,11 @@
     "accent": "#0d9488",
     "accentHover": "#0f766e",
     "border": "#e5e7eb",
+    "onAccent": "#ffffff",
     "backgroundDark": "#1a202c",
     "foregroundDark": "#d1d5db",
-    "borderDark": "#4b5563"
+    "borderDark": "#4b5563",
+    "onAccentDark": "#ffffff"
   },
   "spacing": {
     "xs": "0.25rem",
