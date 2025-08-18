@@ -24,7 +24,7 @@ export const TafsirPanels = ({ verseKey, tafsirIds }: TafsirPanelsProps) => {
               onClick={() => togglePanel(id)}
               className="w-full flex items-center justify-between py-3 text-left"
             >
-              <span className="font-semibold text-primary">Tafsir {id}</span>
+              <span className="font-semibold text-foreground">Tafsir {id}</span>
               <ChevronDownIcon
                 size={16}
                 className={`text-muted transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
@@ -41,7 +41,7 @@ export const TafsirPanels = ({ verseKey, tafsirIds }: TafsirPanelsProps) => {
                     </div>
                   ) : (
                     <div
-                      className="prose max-w-none text-primary whitespace-pre-wrap"
+                      className="prose max-w-none text-foreground whitespace-pre-wrap"
                       style={{ fontSize: `${settings.tafsirFontSize}px` }}
                       dangerouslySetInnerHTML={{
                         __html: applyArabicFont(tafsirTexts[id] || '', settings.arabicFontFace),

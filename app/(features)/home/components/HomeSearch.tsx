@@ -9,7 +9,7 @@ interface HomeSearchProps {
 export default function HomeSearch({ searchQuery, setSearchQuery }: HomeSearchProps) {
   const shortcutSurahs = ['Al-Mulk', 'Al-Kahf', 'Ya-Sin', 'Al-Ikhlas'];
 
-  const searchBarClasses = 'bg-surface text-primary border-none placeholder-muted';
+  const searchBarClasses = 'bg-surface text-foreground border-none placeholder-muted';
 
   return (
     <>

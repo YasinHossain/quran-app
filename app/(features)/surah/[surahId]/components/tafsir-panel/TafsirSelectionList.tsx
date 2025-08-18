@@ -55,7 +55,7 @@ export const TafsirSelectionList: React.FC<TafsirSelectionListProps> = ({
             >
               <div className="flex items-center min-w-0">
                 <GripVertical className="h-5 w-5 mr-2 flex-shrink-0 text-muted" />
-                <span className="font-medium text-sm truncate text-primary">{item.name}</span>
+                <span className="font-medium text-sm truncate text-foreground">{item.name}</span>
               </div>
               <button
                 onClick={() => handleSelectionToggle(id)}

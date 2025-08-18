@@ -24,7 +24,7 @@ export default function SpeedControl() {
               setOpen(false);
             }
           }}
-          className="h-9 w-14 grid place-items-center rounded-full text-xs font-bold transition focus:outline-none focus:ring-2 text-primary focus:ring-accent/35 hover:bg-interactive"
+          className="h-9 w-14 grid place-items-center rounded-full text-xs font-bold transition focus:outline-none focus:ring-2 text-foreground focus:ring-accent/35 hover:bg-interactive"
         >
           {playbackRate}x
         </button>

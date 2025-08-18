@@ -21,7 +21,7 @@ export const BookmarkListView = ({ folder, onBack }: BookmarkListViewProps) => {
         <button onClick={onBack} className="rounded-md p-1.5 text-muted hover:bg-surface/50">
           <ArrowLeftIcon size={20} />
         </button>
-        <h1 className="text-2xl font-bold text-primary ">{folder.name}</h1>
+        <h1 className="text-2xl font-bold text-foreground ">{folder.name}</h1>
         <span className="text-sm text-muted">{folder.bookmarks.length} bookmarks</span>
       </div>
 

@@ -38,7 +38,7 @@ export const FontSettings = ({
       <div className="space-y-4">
         <div>
           <div className="flex justify-between mb-1 text-sm">
-            <label className="text-primary">{t('arabic_font_size')}</label>
+            <label className="text-foreground">{t('arabic_font_size')}</label>
             <span className="font-semibold text-accent">{settings.arabicFontSize}</span>
           </div>
           <input
@@ -52,7 +52,7 @@ export const FontSettings = ({
         </div>
         <div>
           <div className="flex justify-between mb-1 text-sm">
-            <label className="text-primary">{t('translation_font_size')}</label>
+            <label className="text-foreground">{t('translation_font_size')}</label>
             <span className="font-semibold text-accent">{settings.translationFontSize}</span>
           </div>
           <input

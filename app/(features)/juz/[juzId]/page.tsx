@@ -80,7 +80,7 @@ export default function JuzPage({ params }: { params: Promise<{ juzId: string }>
     : null;
 
   return (
-    <div className="flex flex-grow bg-surface text-primary font-sans overflow-hidden min-h-0">
+    <div className="flex flex-grow bg-surface text-foreground font-sans overflow-hidden min-h-0">
       <main className="flex-grow bg-surface section overflow-y-auto homepage-scrollable-area">
         <div className="w-full relative">
           {juzId ? (

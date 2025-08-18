@@ -7,7 +7,7 @@ The Quran App uses a semantic token-based theming system that automatically adap
 ## Design Principles
 
 - **No Theme Conditionals**: Components should never contain `theme === 'light'` or `theme === 'dark'` conditionals for styling
-- **Semantic Naming**: Token names describe purpose, not appearance (`text-primary` not `text-black`)
+- **Semantic Naming**: Token names describe purpose, not appearance (`text-foreground` not `text-black`)
 - **Automatic Theme Switching**: CSS custom properties handle light/dark variations automatically
 - **Single Source of Truth**: All theme values defined in `app/theme.css`
 
@@ -15,9 +15,9 @@ The Quran App uses a semantic token-based theming system that automatically adap
 
 ### Core Text Colors
 
-- `text-primary` - Primary text color (main content)
+- `text-foreground` - Main text color
 - `text-muted` - Secondary/muted text
-- `text-foreground` - Alternative primary text
+- `text-primary` - Brand color highlight
 
 ### Background Colors
 
@@ -83,8 +83,9 @@ The Quran App uses a semantic token-based theming system that automatically adap
 ```js
 colors: {
   surface: 'rgb(var(--color-surface) / <alpha-value>)',
-  primary: 'rgb(var(--color-text) / <alpha-value>)',
+  foreground: 'rgb(var(--color-text) / <alpha-value>)',
   muted: 'rgb(var(--color-text-muted) / <alpha-value>)',
+  primary: '#009688',
   // ... semantic mappings
 }
 ```
@@ -95,8 +96,8 @@ colors: {
 
 ```jsx
 // Use semantic tokens
-<div className="bg-surface text-primary border-border">
-  <button className="bg-hover hover:bg-active text-foreground">Click me</button>
+<div className="bg-surface text-foreground border-border">
+  <button className="bg-hover hover:bg-active text-primary">Click me</button>
 </div>
 ```
 
@@ -167,7 +168,7 @@ When updating existing components:
    ```
 
 2. **Replace with semantic tokens**:
-   - `theme === 'dark' ? 'text-white' : 'text-black'` → `text-primary`
+   - `theme === 'dark' ? 'text-white' : 'text-black'` → `text-foreground`
    - `theme === 'light' ? 'bg-gray-100' : 'bg-gray-800'` → `bg-surface`
 
 3. **Remove unused theme imports**:

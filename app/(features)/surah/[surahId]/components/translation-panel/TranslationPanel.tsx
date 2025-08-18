@@ -103,7 +103,7 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
       data-testid="translation-panel"
       className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
-      } bg-surface text-primary`}
+      } bg-surface text-foreground`}
     >
       <header className="flex items-center p-4 border-b border-border">
         <button
@@ -112,7 +112,7 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 text-primary"
+            className="h-6 w-6 text-foreground"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -121,12 +121,12 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-        <h2 className="text-lg font-bold text-center flex-grow text-primary">
+        <h2 className="text-lg font-bold text-center flex-grow text-foreground">
           Manage Translations
         </h2>
         <button
           onClick={handleReset}
-          className="p-2 rounded-full text-primary hover:bg-interactive hover:text-accent focus-visible:outline-none transition-colors"
+          className="p-2 rounded-full text-foreground hover:bg-interactive hover:text-accent focus-visible:outline-none transition-colors"
           title="Reset to Default"
         >
           <RotateCcw size={20} />
@@ -189,7 +189,7 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
                   <div className="space-y-6">
                     {sectionsToRender.map(({ language, items }) => (
                       <div key={language}>
-                        <h3 className="text-lg font-semibold mb-4 text-primary">{language}</h3>
+                        <h3 className="text-lg font-semibold mb-4 text-foreground">{language}</h3>
                         <div className="space-y-2">
                           {items.map((item) => (
                             <ResourceItem

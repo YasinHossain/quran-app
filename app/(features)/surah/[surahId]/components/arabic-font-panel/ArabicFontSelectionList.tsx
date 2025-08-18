@@ -63,7 +63,7 @@ export const ArabicFontSelectionList: React.FC<ArabicFontSelectionListProps> = (
               <div className="flex items-center min-w-0">
                 <GripVertical className="h-4 w-4 mr-3 flex-shrink-0 text-muted" />
                 <div className="min-w-0">
-                  <span className="font-medium text-sm block truncate text-primary">
+                  <span className="font-medium text-sm block truncate text-foreground">
                     {item.name}
                   </span>
                   <span className="text-xs text-muted">{item.category}</span>

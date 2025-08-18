@@ -11,7 +11,7 @@ interface PageProps {
 export default function BookmarkFolderPage({ params }: PageProps) {
   const { folderId } = React.use(params);
   return (
-    <div className="flex flex-grow bg-surface text-primary overflow-hidden">
+    <div className="flex flex-grow bg-surface text-foreground overflow-hidden">
       <main className="flex-grow section overflow-y-auto homepage-scrollable-area">
         <h1 className="text-2xl font-bold mb-6">{folderId.replace(/-/g, ' ')}</h1>
         <BookmarkedVersesList />

@@ -73,7 +73,9 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
             key={t.id}
             onClick={() => setActiveId(t.id)}
             className={`flex-1 text-center py-3 px-5 rounded-full text-sm font-semibold transition-colors whitespace-nowrap ${
-              activeId === t.id ? 'bg-surface shadow text-primary' : 'text-muted hover:text-primary'
+              activeId === t.id
+                ? 'bg-surface shadow text-foreground'
+                : 'text-muted hover:text-foreground'
             }`}
           >
             {t.name}
@@ -81,7 +83,7 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
         ))}
       </div>
       <div className="p-4 mt-4">
-        <h2 className="mb-8 text-center text-xl font-bold text-primary">{activeTab?.name}</h2>
+        <h2 className="mb-8 text-center text-xl font-bold text-foreground">{activeTab?.name}</h2>
         {loading[activeId] ? (
           <div className="flex justify-center py-4">
             <Spinner className="h-5 w-5 text-accent" />

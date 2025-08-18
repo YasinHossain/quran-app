@@ -163,7 +163,7 @@ export const SettingsSidebar = ({
       />
       <aside
         ref={sidebarRef}
-        className={`settings-sidebar fixed lg:static top-16 lg:top-0 bottom-0 right-0 w-[20.7rem] bg-surface text-primary flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 z-40 lg:z-40 lg:h-full ${
+        className={`settings-sidebar fixed lg:static top-16 lg:top-0 bottom-0 right-0 w-[20.7rem] bg-surface text-foreground flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 z-40 lg:z-40 lg:h-full ${
           isSettingsOpen ? 'translate-x-0' : 'translate-x-full'
         } lg:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} lg:flex scrollbar-hide`}
         style={{
@@ -189,8 +189,8 @@ export const SettingsSidebar = ({
               onClick={() => handleTabClick('translation')}
               className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
                 activeTab === 'translation'
-                  ? 'bg-surface shadow text-primary'
-                  : 'text-muted hover:text-primary'
+                  ? 'bg-surface shadow text-foreground'
+                  : 'text-muted hover:text-foreground'
               }`}
             >
               Translation
@@ -199,8 +199,8 @@ export const SettingsSidebar = ({
               onClick={() => handleTabClick('reading')}
               className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
                 activeTab === 'reading'
-                  ? 'bg-surface shadow text-primary'
-                  : 'text-muted hover:text-primary'
+                  ? 'bg-surface shadow text-foreground'
+                  : 'text-muted hover:text-foreground'
               }`}
             >
               Mushaf
@@ -244,9 +244,10 @@ export const SettingsSidebar = ({
             <button
               onClick={() => setTheme('light')}
               className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                // eslint-disable-next-line token-rules/no-raw-color-classes
                 theme === 'light'
-                  ? 'bg-surface shadow text-primary'
-                  : 'text-muted hover:text-primary'
+                  ? 'bg-surface shadow text-foreground'
+                  : 'text-muted hover:text-foreground'
               }`}
             >
               {t('light_mode')}
@@ -254,9 +255,10 @@ export const SettingsSidebar = ({
             <button
               onClick={() => setTheme('dark')}
               className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                // eslint-disable-next-line token-rules/no-raw-color-classes
                 theme === 'dark'
-                  ? 'bg-surface shadow text-primary'
-                  : 'text-muted hover:text-primary'
+                  ? 'bg-surface shadow text-foreground'
+                  : 'text-muted hover:text-foreground'
               }`}
             >
               {t('dark_mode')}

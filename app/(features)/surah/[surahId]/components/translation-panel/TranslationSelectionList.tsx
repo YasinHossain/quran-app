@@ -27,7 +27,7 @@ export const TranslationSelectionList: React.FC<TranslationSelectionListProps> =
   draggedId,
 }) => (
   <div>
-    <h2 className="text-sm font-semibold px-2 mb-3 flex items-center justify-between text-primary">
+    <h2 className="text-sm font-semibold px-2 mb-3 flex items-center justify-between text-foreground">
       <span>
         MY SELECTIONS ({orderedSelection.length}/{MAX_SELECTIONS})
       </span>
@@ -58,7 +58,7 @@ export const TranslationSelectionList: React.FC<TranslationSelectionListProps> =
             >
               <div className="flex items-center min-w-0">
                 <GripVertical className="h-4 w-4 mr-3 flex-shrink-0 text-muted" />
-                <span className="font-medium text-sm truncate text-primary">{item.name}</span>
+                <span className="font-medium text-sm truncate text-foreground">{item.name}</span>
               </div>
               <button
                 onClick={() => handleSelectionToggle(id)}

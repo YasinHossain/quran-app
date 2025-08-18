@@ -4,6 +4,8 @@
 
 This project uses a token-based theming system with CSS custom properties for consistent theming across light and dark modes. All styling should use semantic tokens defined in the design system.
 
+Use `text-foreground` for standard body text and reserve `text-primary` for brand accents.
+
 ## Theme System Architecture
 
 ### CSS Custom Properties

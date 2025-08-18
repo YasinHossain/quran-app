@@ -40,7 +40,7 @@ const Surah = ({
             className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
               isActive
                 ? 'bg-accent text-on-accent shadow-lg shadow-accent/30'
-                : 'bg-surface text-primary hover:bg-accent/10 shadow'
+                : 'bg-surface text-foreground hover:bg-accent/10 shadow'
             }`}
           >
             <div
@@ -53,7 +53,7 @@ const Surah = ({
               {chapter.id}
             </div>
             <div className="flex-grow">
-              <p className={`font-bold ${isActive ? 'text-on-accent' : 'text-primary'}`}>
+              <p className={`font-bold ${isActive ? 'text-on-accent' : 'text-foreground'}`}>
                 {chapter.name_simple}
               </p>
               <p className={`text-xs ${isActive ? 'text-on-accent/80' : 'text-muted'}`}>

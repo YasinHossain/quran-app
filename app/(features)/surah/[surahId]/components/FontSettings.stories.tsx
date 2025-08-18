@@ -8,7 +8,7 @@ const meta: Meta<typeof FontSettings> = {
   decorators: [
     (Story) => (
       <SettingsProvider>
-        <div className="p-4 bg-surface text-primary">
+        <div className="p-4 bg-surface text-foreground">
           <Story />
         </div>
       </SettingsProvider>

@@ -64,7 +64,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
             <div className="flex-1 min-w-0 pr-3">
               <p
                 className={`font-medium text-sm leading-tight truncate ${
-                  isSelected ? 'text-accent' : 'text-primary'
+                  isSelected ? 'text-accent' : 'text-foreground'
                 }`}
                 title={language.name}
               >
@@ -91,7 +91,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
       data-testid="word-language-panel"
       className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
-      } bg-surface text-primary`}
+      } bg-surface text-foreground`}
     >
       <header className="flex items-center p-4 border-b border-border">
         <button
@@ -109,7 +109,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-        <h2 className="text-lg font-bold text-center flex-grow text-primary">
+        <h2 className="text-lg font-bold text-center flex-grow text-foreground">
           {t('word_by_word_panel_title')}
         </h2>
       </header>

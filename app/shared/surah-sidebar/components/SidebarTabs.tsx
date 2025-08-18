@@ -22,7 +22,7 @@ const SidebarTabs = ({ tabs, activeTab, setActiveTab, prepareForTabSwitch }: Pro
           setActiveTab(key);
         }}
         className={`w-1/3 px-4 py-2 text-sm font-semibold rounded-full transition-colors ${
-          activeTab === key ? 'bg-surface text-primary shadow' : 'text-muted hover:bg-accent/10'
+          activeTab === key ? 'bg-surface text-foreground shadow' : 'text-muted hover:bg-accent/10'
         }`}
       >
         {label}

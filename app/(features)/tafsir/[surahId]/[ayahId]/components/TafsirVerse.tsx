@@ -45,7 +45,7 @@ export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps) => {
             <div key={t.resource_id}>
                            {' '}
               <p
-                className="text-left leading-relaxed text-primary"
+                className="text-left leading-relaxed text-foreground"
                 style={{ fontSize: `${settings.translationFontSize}px` }}
                 dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.text) }}
               />

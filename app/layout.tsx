@@ -80,6 +80,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       : 'light';
 
   return (
+    // eslint-disable-next-line token-rules/no-raw-color-classes
     <html lang="en" className={theme === 'dark' ? 'dark' : undefined}>
       <body
         className={`font-sans ${kfgqpc.variable} ${nastaliq.variable} ${amiri.variable} ${arabic.variable} ${bengali.variable} ${crimsonText.variable} ${libreBaskerville.variable} ${inter.className}`}
