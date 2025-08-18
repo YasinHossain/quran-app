@@ -1,0 +1,32 @@
+# Global code owners
+* @YasinHossain
+
+# Frontend/UI components
+app/shared/ui/ @YasinHossain
+app/(features)/ @YasinHossain
+
+# Core infrastructure
+lib/ @YasinHossain
+types/ @YasinHossain
+
+# Configuration files
+*.config.* @YasinHossain
+package.json @YasinHossain
+tsconfig.json @YasinHossain
+
+# Documentation
+*.md @YasinHossain
+docs/ @YasinHossain
+
+# GitHub workflows and templates
+.github/ @YasinHossain
+
+# AI/Development tools
+.ai/ @YasinHossain
+.cursorrules @YasinHossain
+CLAUDE.md @YasinHossain
+AGENTS.md @YasinHossain
+
+# Security-related files
+SECURITY.md @YasinHossain
+.github/workflows/security.yml @YasinHossain
