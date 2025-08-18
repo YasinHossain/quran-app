@@ -58,7 +58,7 @@ colors: {
 - `muted` - Secondary text and subdued elements
 - `border` - Border colors
 - `interactive` - Interactive element backgrounds
-- `destructive` - Error/danger states
+- `error` - Error/danger states
 
 ### Usage Examples
 
