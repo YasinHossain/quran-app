@@ -84,7 +84,7 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
         <h2 className="mb-8 text-center text-xl font-bold text-primary">{activeTab?.name}</h2>
         {loading[activeId] ? (
           <div className="flex justify-center py-4">
-            <Spinner className="h-5 w-5 text-emerald-600" />
+            <Spinner className="h-5 w-5 text-accent" />
           </div>
         ) : (
           <div

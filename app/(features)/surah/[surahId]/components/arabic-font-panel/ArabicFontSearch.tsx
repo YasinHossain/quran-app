@@ -21,7 +21,7 @@ export const ArabicFontSearch: React.FC<ArabicFontSearchProps> = ({
         placeholder="Search for a font..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full pl-10 pr-4 py-3 rounded-lg border text-sm placeholder-muted focus:outline-none focus:ring-2 focus:ring-teal-500 transition-colors bg-surface border-border text-foreground"
+        className="w-full pl-10 pr-4 py-3 rounded-lg border text-sm placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent transition-colors bg-surface border-border text-foreground"
       />
     </div>
   </div>

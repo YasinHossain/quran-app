@@ -21,17 +21,17 @@ export const AyahNavigation = ({
   currentSurah,
   ayahId,
 }: AyahNavigationProps) => (
-  <div className="flex items-center justify-between rounded-full bg-teal-600 text-white p-2">
+  <div className="flex items-center justify-between rounded-full bg-accent text-on-accent p-2">
     <button
       aria-label="Previous"
       disabled={!prev}
       onClick={() => navigate(prev)}
-      className="flex items-center px-4 py-2 rounded-full bg-teal-600 text-white disabled:opacity-50 font-bold"
+      className="flex items-center px-4 py-2 rounded-full bg-accent text-on-accent disabled:opacity-50 font-bold"
     >
       <div className="flex items-center justify-center w-8 h-8 rounded-full bg-surface mr-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5 text-teal-600"
+          className="h-5 w-5 text-accent"
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -43,7 +43,7 @@ export const AyahNavigation = ({
         </svg>
       </div>
     </button>
-    <div className="text-white font-bold">
+    <div className="text-on-accent font-bold">
       {currentSurah ? (
         <>
           <span className="font-bold">{currentSurah.name}</span> : {ayahId}
@@ -56,12 +56,12 @@ export const AyahNavigation = ({
       aria-label="Next"
       disabled={!next}
       onClick={() => navigate(next)}
-      className="flex items-center px-4 py-2 rounded-full bg-teal-600 text-white disabled:opacity-50 font-bold"
+      className="flex items-center px-4 py-2 rounded-full bg-accent text-on-accent disabled:opacity-50 font-bold"
     >
       <div className="flex items-center justify-center w-8 h-8 rounded-full bg-surface ml-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5 text-teal-600"
+          className="h-5 w-5 text-accent"
           viewBox="0 0 20 20"
           fill="currentColor"
         >

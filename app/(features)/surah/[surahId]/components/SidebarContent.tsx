@@ -67,7 +67,7 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
           <button
             aria-label="Back"
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-interactive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 lg:hidden"
+            className="p-2 rounded-full hover:bg-interactive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent lg:hidden"
           >
             <ArrowLeftIcon size={18} />
           </button>

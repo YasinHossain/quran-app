@@ -32,7 +32,7 @@ export const TafsirSettings = ({
       {showTafsirSetting && (
         <CollapsibleSection
           title={t('tafsir_setting')}
-          icon={<BookReaderIcon size={20} className="text-teal-700" />}
+          icon={<BookReaderIcon size={20} className="text-accent" />}
           isLast={true}
           isOpen={isOpen}
           onToggle={onToggle || (() => {})}
@@ -46,7 +46,7 @@ export const TafsirSettings = ({
             <div>
               <div className="flex justify-between mb-1 text-sm">
                 <label className="text-primary">{t('tafsir_font_size')}</label>
-                <span className="font-semibold text-teal-700">{settings.tafsirFontSize}</span>
+                <span className="font-semibold text-accent">{settings.tafsirFontSize}</span>
               </div>
               <input
                 type="range"

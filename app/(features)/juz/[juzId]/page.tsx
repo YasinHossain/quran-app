@@ -85,7 +85,7 @@ export default function JuzPage({ params }: { params: Promise<{ juzId: string }>
         <div className="w-full relative">
           {juzId ? (
             isLoading ? (
-              <div className="text-center py-20 text-teal-600">{t('loading')}</div>
+              <div className="text-center py-20 text-accent">{t('loading')}</div>
             ) : error ? (
               <div className="text-center py-20 text-red-600 bg-red-50 p-4 rounded-lg">{error}</div>
             ) : juzError ? (
@@ -104,7 +104,7 @@ export default function JuzPage({ params }: { params: Promise<{ juzId: string }>
               </>
             )
           ) : (
-            <div className="text-center py-20 text-teal-600">{t('loading')}</div>
+            <div className="text-center py-20 text-accent">{t('loading')}</div>
           )}
         </div>
       </main>

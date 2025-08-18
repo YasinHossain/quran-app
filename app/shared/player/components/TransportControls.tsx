@@ -26,10 +26,10 @@ export default function TransportControls({
         aria-label={isPlaying ? 'Pause' : 'Play'}
         onClick={togglePlay}
         disabled={!interactable}
-        className={`h-10 w-10 grid place-items-center rounded-full text-white hover:opacity-90 active:scale-95 transition ${
+        className={`h-10 w-10 grid place-items-center rounded-full hover:opacity-90 active:scale-95 transition ${
           interactable
-            ? 'bg-accent hover:bg-accent-hover'
-            : 'bg-disabled cursor-not-allowed opacity-60'
+            ? 'bg-accent text-on-accent hover:bg-accent-hover'
+            : 'bg-disabled cursor-not-allowed opacity-60 text-primary'
         }`}
       >
         {isPlaying ? <Pause /> : <Play />}

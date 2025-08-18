@@ -30,7 +30,7 @@ export const FontSettings = ({
   return (
     <CollapsibleSection
       title={t('font_setting')}
-      icon={<FontSettingIcon size={20} className="text-teal-700" />}
+      icon={<FontSettingIcon size={20} className="text-accent" />}
       isLast
       isOpen={isOpen}
       onToggle={onToggle || (() => {})}
@@ -39,7 +39,7 @@ export const FontSettings = ({
         <div>
           <div className="flex justify-between mb-1 text-sm">
             <label className="text-primary">{t('arabic_font_size')}</label>
-            <span className="font-semibold text-teal-700">{settings.arabicFontSize}</span>
+            <span className="font-semibold text-accent">{settings.arabicFontSize}</span>
           </div>
           <input
             type="range"
@@ -53,7 +53,7 @@ export const FontSettings = ({
         <div>
           <div className="flex justify-between mb-1 text-sm">
             <label className="text-primary">{t('translation_font_size')}</label>
-            <span className="font-semibold text-teal-700">{settings.translationFontSize}</span>
+            <span className="font-semibold text-accent">{settings.translationFontSize}</span>
           </div>
           <input
             type="range"
