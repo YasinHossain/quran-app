@@ -4,115 +4,134 @@ This project uses a token-based theming system with CSS custom properties for co
 
 design-system.json is the single source of truth for these tokens. After editing it, run npm run generate:tokens to regenerate app/theme.css; tailwind.config.mjs consumes the same tokens automatically.
 
-Use text-foreground for standard body text and reserve text-primary for brand accents.
+When writing raw CSS, reference tokens with `rgb(var(--color-*)))` so they remain theme aware. For example:
+
+```css
+button {
+  color: rgb(var(--color-foreground));
+}
+```
+
+Use `text-foreground` for standard body text. Accent tokens (`bg-accent`, `text-on-accent`, etc.) handle interactive highlights while `text-primary` is a static brand color.
 
 Theme System Architecture
 CSS Custom Properties
-Semantic tokens are defined in app/globals.css and app/theme.css:
+Semantic tokens are defined in `app/theme.css`:
 
+```css
 :root {
-  /* Light theme tokens */
-  --color-primary: #10b981;
-  --color-foreground: #0f172a;
-  --color-background: #ffffff;
-  --color-surface: #f8fafc;
-  --color-muted: #64748b;
-  /* ... other tokens */
+  --color-background: 247 249 249;
+  --color-foreground: 55 65 81;
+  --color-accent: 13 148 136;
+  --color-accent-hover: 15 118 110;
+  --color-border: 229 231 235;
+  --color-on-accent: 255 255 255;
 }
 
 [data-theme='dark'],
 .dark {
-  /* Dark theme overrides */
-  --color-foreground: #f1f5f9;
-  --color-background: #0f172a;
-  --color-surface: #1e293b;
-  /* ... other tokens */
+  --color-background: 26 32 44;
+  --color-foreground: 209 213 219;
+  --color-accent: 13 148 136;
+  --color-accent-hover: 15 118 110;
+  --color-border: 75 85 99;
+  --color-on-accent: 255 255 255;
 }
+```
 
 Tailwind Integration
-Tokens are mapped to Tailwind utilities in tailwind.config.mjs:
+Tokens are mapped to Tailwind utilities in `tailwind.config.mjs`:
 
+```js
 colors: {
-  primary: 'var(--color-primary)',
-  foreground: 'var(--color-foreground)',
-  background: 'var(--color-background)',
-  surface: 'var(--color-surface)',
-  muted: 'var(--color-muted)',
+  background: 'rgb(var(--color-background) / <alpha-value>)',
+  foreground: 'rgb(var(--color-foreground) / <alpha-value>)',
+  accent: 'rgb(var(--color-accent) / <alpha-value>)',
+  'accent-hover': 'rgb(var(--color-accent-hover) / <alpha-value>)',
+  border: 'rgb(var(--color-border) / <alpha-value>)',
+  'on-accent': 'rgb(var(--color-on-accent) / <alpha-value>)',
+  primary: '#009688',
   // ... other mappings
 }
+```
 
 Available Semantic Tokens
+
 Core Colors
-primary - Primary brand color (emerald-500)
-
-accent - Accent color (emerald-400 in dark mode)
-
-foreground - Main text color
 
 background - Page background
 
-surface - Card/panel backgrounds
+foreground - Main text color
 
-muted - Secondary text and subdued elements
+accent - Accent color for interactive elements
 
-border - Border colors
+accent-hover - Hover state for accent
 
-interactive - Interactive element backgrounds
+on-accent - Text color on accent backgrounds
 
-error - Error/danger states
+border - Border color
+
+primary - Static brand color
 
 Usage Examples
 ✅ Correct Usage
 // Use semantic tokens
-<div className="bg-surface text-foreground border-border">
+
+<div className="bg-background text-foreground border-border">
   <h1 className="text-primary">Title</h1>
-  <p className="text-muted">Subtitle</p>
-  <button className="bg-primary text-white hover:bg-primary/90">Action</button>
+  <button className="bg-accent text-on-accent hover:bg-accent-hover">Action</button>
 </div>
 
 ❌ Anti-patterns to Avoid
 Theme Conditionals in JSX:
 
 // DON'T: Theme conditionals in className
+
 <div className={theme === 'dark' ? 'bg-slate-800' : 'bg-white'}>
 
 // DO: Use semantic tokens
-<div className="bg-surface">
+
+<div className="bg-background">
 
 Hardcoded Colors:
 
 // DON'T: Hardcoded hex values
+
 <div style={{ color: '#64748b' }}>
 
 // DO: Use semantic tokens
-<div className="text-muted">
+
+<div className="text-foreground/80">
 
 Raw Utility Classes:
 
 // DON'T: Raw Tailwind utilities
+
 <div className="bg-slate-100 text-gray-700">
 
 // DO: Semantic tokens
-<div className="bg-surface text-foreground">
+
+<div className="bg-background text-foreground">
 
 Component Patterns
 Cards and Panels
-<div className="bg-surface border border-border rounded-lg p-4">
+
+<div className="bg-background border border-border rounded-lg p-4">
   <h2 className="text-foreground font-semibold">Card Title</h2>
-  <p className="text-muted">Card content</p>
+  <p className="text-foreground/80">Card content</p>
 </div>
 
 Interactive Elements
-<button className="bg-primary text-white hover:bg-primary/90 focus:ring-2 focus:ring-primary/20">
-  Primary Button
+<button className="bg-accent text-on-accent hover:bg-accent-hover focus:ring-2 focus:ring-accent/20">
+Primary Button
 </button>
 
-<button className="bg-surface text-foreground hover:bg-interactive border border-border">
+<button className="bg-background text-foreground hover:bg-accent/10 border border-border">
   Secondary Button
 </button>
 
 Form Inputs
-<input className="bg-surface border border-border text-foreground placeholder:text-muted focus:ring-2 focus:ring-primary/20" />
+<input className="bg-background border border-border text-foreground placeholder:text-foreground/50 focus:ring-2 focus:ring-accent/20" />
 
 Development Workflow
 Before Making Changes
@@ -151,7 +170,7 @@ Before:
 
 After:
 
-<div className="bg-surface text-foreground">
+<div className="bg-background text-foreground">
 
 From Hardcoded Colors
 Before:
@@ -160,7 +179,7 @@ Before:
 
 After:
 
-<div className="bg-surface text-foreground">
+<div className="bg-background text-foreground">
 
 From Raw Utilities
 Before:
@@ -169,7 +188,7 @@ Before:
 
 After:
 
-<div className="bg-surface text-foreground border-border">
+<div className="bg-background text-foreground border-border">
 
 Extending the System
 Adding New Tokens
@@ -184,7 +203,7 @@ Update audit scripts if needed
 Token Naming Convention
 Use semantic names (not color names)
 
-Follow the pattern: purpose-variant (e.g., surface-elevated)
+Follow the pattern: purpose-variant (e.g., background-secondary)
 
 Ensure names work across all themes
 
