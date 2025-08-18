@@ -39,7 +39,7 @@ const Surah = ({
             }}
             className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
               isActive
-                ? 'bg-accent text-white shadow-lg shadow-accent/30'
+                ? 'bg-accent text-on-accent shadow-lg shadow-accent/30'
                 : 'bg-surface text-primary hover:bg-accent/10 shadow'
             }`}
           >
@@ -53,16 +53,16 @@ const Surah = ({
               {chapter.id}
             </div>
             <div className="flex-grow">
-              <p className={`font-bold ${isActive ? 'text-white' : 'text-primary'}`}>
+              <p className={`font-bold ${isActive ? 'text-on-accent' : 'text-primary'}`}>
                 {chapter.name_simple}
               </p>
-              <p className={`text-xs ${isActive ? 'text-white/80' : 'text-muted'}`}>
+              <p className={`text-xs ${isActive ? 'text-on-accent/80' : 'text-muted'}`}>
                 {chapter.revelation_place} • {chapter.verses_count} verses
               </p>
             </div>
             <p
               className={`font-amiri text-xl font-bold transition-colors ${
-                isActive ? 'text-white' : 'text-muted group-hover:text-accent'
+                isActive ? 'text-on-accent' : 'text-muted group-hover:text-accent'
               }`}
             >
               {chapter.name_arabic}

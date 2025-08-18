@@ -2,9 +2,7 @@ import React, { useRef, useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 
-interface Props {}
-
-export default function SpeedControl({}: Props) {
+export default function SpeedControl() {
   const { playbackRate, setPlaybackRate } = useAudio();
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -49,7 +47,7 @@ export default function SpeedControl({}: Props) {
               close();
             }}
             className={`w-full text-center text-sm p-1.5 rounded-md ${
-              playbackRate === speed ? 'bg-accent text-white' : 'hover:bg-interactive'
+              playbackRate === speed ? 'bg-accent text-on-accent' : 'hover:bg-interactive'
             }`}
           >
             {speed}x

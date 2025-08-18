@@ -34,10 +34,10 @@ export const TafsirPanels = ({ verseKey, tafsirIds }: TafsirPanelsProps) => {
               className={`grid transition-all duration-300 ease-in-out ${open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
             >
               <div className="overflow-hidden">
-                <div className="bg-teal-50  rounded-md p-4 max-h-64 overflow-y-auto">
+                <div className="bg-accent/10  rounded-md p-4 max-h-64 overflow-y-auto">
                   {loading[id] ? (
                     <div className="flex justify-center py-4">
-                      <Spinner className="h-5 w-5 text-teal-600" />
+                      <Spinner className="h-5 w-5 text-accent" />
                     </div>
                   ) : (
                     <div

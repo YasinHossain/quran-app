@@ -28,7 +28,7 @@ export function JuzVerseList({
         <Verse key={v.id} verse={v} />
       ))}
       <div ref={loadMoreRef} className="py-4 text-center">
-        {isValidating && <span className="text-teal-600">{t('loading')}</span>}
+        {isValidating && <span className="text-accent">{t('loading')}</span>}
         {isReachingEnd && <span className="text-muted">{t('end_of_juz')}</span>}
       </div>
     </>

@@ -18,7 +18,7 @@ const HeaderSearch = ({ query, setQuery, placeholder, onKeyDown }: Props) => {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={onKeyDown}
-        className="w-full pl-10 pr-4 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-teal-500 transition-all duration-300 hover:shadow-lg hover:ring-1 hover:ring-teal-600 bg-surface text-primary border border-border placeholder:text-muted"
+        className="w-full pl-10 pr-4 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-accent transition-all duration-300 hover:shadow-lg hover:ring-1 hover:ring-accent bg-surface text-primary border border-border placeholder:text-muted"
       />
     </div>
   );
