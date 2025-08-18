@@ -7,7 +7,10 @@ export default function NotFound() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-6">
       <h1 className="text-2xl font-semibold mb-4">{t('page_not_found')}</h1>
-      <Link href="/" className="text-teal-600 hover:underline">
+      <Link
+        href="/"
+        className="text-accent hover:text-accent-hover focus:text-accent-hover hover:underline"
+      >
         {t('home')}
       </Link>
     </div>
