@@ -141,9 +141,9 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
         )}
 
         {error && (
-          <div className="mx-4 mt-4 p-4 rounded-lg border bg-destructive/10 border-destructive/20 text-destructive">
+          <div className="mx-4 mt-4 p-4 rounded-lg border bg-error/10 border-error/20 text-error">
             <div className="flex items-center space-x-2">
-              <AlertCircle className="h-5 w-5 text-destructive" />
+              <AlertCircle className="h-5 w-5 text-error" />
               <span className="text-sm">{error}</span>
             </div>
           </div>
