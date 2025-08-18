@@ -33,7 +33,7 @@ export default function HomeSearch({ searchQuery, setSearchQuery }: HomeSearchPr
         {shortcutSurahs.map((name) => (
           <button
             key={name}
-            className="px-4 sm:px-5 py-2 rounded-full font-medium shadow-sm transition-all duration-200 bg-surface border border-border text-foreground hover:bg-hover hover:shadow-md"
+            className="px-4 sm:px-5 py-2 rounded-full font-medium shadow-sm transition-all duration-200 bg-surface border border-border text-foreground hover:bg-interactive-hover hover:shadow-md"
           >
             {name}
           </button>
