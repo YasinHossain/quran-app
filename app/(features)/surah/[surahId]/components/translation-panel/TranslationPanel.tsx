@@ -176,7 +176,6 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
                   setSearchTerm={setSearchTerm}
                 />
                 <TranslationSelectionList
-                  theme={theme}
                   orderedSelection={orderedSelection}
                   translations={translations}
                   handleSelectionToggle={handleSelectionToggle}

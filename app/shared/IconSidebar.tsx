@@ -23,7 +23,7 @@ const IconSidebar = () => {
             href={item.href}
             title={item.label}
             aria-label={item.label}
-            className="p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 text-foreground hover:text-teal-600 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 border-0"
+            className="p-3 rounded-lg hover:bg-accent/10 text-foreground hover:text-accent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent border-0"
           >
             <item.icon className="h-6 w-6" />
           </Link>

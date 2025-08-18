@@ -43,16 +43,16 @@ const VerseActions = ({
   const handleShare = onShare || defaultShare;
   return (
     <div className={`text-center space-y-2 flex-shrink-0 ${className}`}>
-      <p className="font-semibold text-teal-600 text-sm">{verseKey}</p>
-      <div className="flex flex-col items-center space-y-1 text-gray-400 dark:text-gray-500">
+      <p className="font-semibold text-accent text-sm">{verseKey}</p>
+      <div className="flex flex-col items-center space-y-1 text-muted">
         <button
           aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
           onClick={onPlayPause}
           title="Play/Pause"
-          className={`p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition ${isPlaying ? 'text-teal-600' : 'hover:text-teal-600'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500`}
+          className={`p-1.5 rounded-full hover:bg-accent/10 transition ${isPlaying ? 'text-accent' : 'hover:text-accent'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent`}
         >
           {isLoadingAudio ? (
-            <Spinner className="h-4 w-4 text-teal-600" />
+            <Spinner className="h-4 w-4 text-accent" />
           ) : isPlaying ? (
             <PauseIcon size={18} />
           ) : (
@@ -63,7 +63,7 @@ const VerseActions = ({
           href={`/tafsir/${verseKey.replace(':', '/')}`}
           aria-label="View tafsir"
           title="Tafsir"
-          className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-teal-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+          className="p-1.5 rounded-full hover:bg-accent/10 hover:text-accent transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           <BookReaderIcon size={18} />
         </Link>
@@ -71,7 +71,7 @@ const VerseActions = ({
           aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
           title="Bookmark"
           onClick={onBookmark}
-          className={`p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition ${isBookmarked ? 'text-teal-600' : 'hover:text-teal-600'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500`}
+          className={`p-1.5 rounded-full hover:bg-accent/10 transition ${isBookmarked ? 'text-accent' : 'hover:text-accent'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent`}
         >
           {isBookmarked ? <BookmarkIcon size={18} /> : <BookmarkOutlineIcon size={18} />}
         </button>
@@ -79,7 +79,7 @@ const VerseActions = ({
           aria-label="Share"
           title="Share"
           onClick={handleShare}
-          className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-teal-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+          className="p-1.5 rounded-full hover:bg-accent/10 hover:text-accent transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           <ShareIcon size={18} />
         </button>
