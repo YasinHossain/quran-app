@@ -15,6 +15,7 @@ const config = {
         border: 'rgb(var(--color-border) / <alpha-value>)',
         accent: 'rgb(var(--color-accent) / <alpha-value>)',
         'accent-hover': 'rgb(var(--color-accent-hover) / <alpha-value>)',
+        'on-accent': 'rgb(var(--color-on-accent) / <alpha-value>)',
         brand: '#009688',
 
         // Interactive states

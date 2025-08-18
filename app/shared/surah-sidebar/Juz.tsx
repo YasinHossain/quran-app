@@ -46,7 +46,7 @@ const Juz = ({
             }}
             className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
               isActive
-                ? 'bg-accent text-white shadow-lg shadow-accent/30'
+                ? 'bg-accent text-on-accent shadow-lg shadow-accent/30'
                 : 'bg-surface text-primary hover:bg-accent/10 shadow'
             }`}
           >
@@ -60,10 +60,10 @@ const Juz = ({
               {juz.number}
             </div>
             <div>
-              <p className={`font-semibold ${isActive ? 'text-white' : 'text-primary'}`}>
+              <p className={`font-semibold ${isActive ? 'text-on-accent' : 'text-primary'}`}>
                 Juz {juz.number}
               </p>
-              <p className={`text-xs ${isActive ? 'text-white/90' : 'text-muted'}`}>
+              <p className={`text-xs ${isActive ? 'text-on-accent/90' : 'text-muted'}`}>
                 {juz.surahRange}
               </p>
             </div>

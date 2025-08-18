@@ -35,6 +35,7 @@ The Quran App uses a semantic token-based theming system that automatically adap
 ### Accent Colors
 
 - `text-accent` - Accent text color
+- `text-on-accent` - Text on accent backgrounds
 - `bg-accent` - Accent background
 - `bg-accent-hover` - Accent hover state
 
