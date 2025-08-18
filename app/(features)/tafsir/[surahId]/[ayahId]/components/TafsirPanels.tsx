@@ -19,7 +19,7 @@ export const TafsirPanels = ({ verseKey, tafsirIds }: TafsirPanelsProps) => {
       {tafsirIds.map((id) => {
         const open = !!openPanels[id];
         return (
-          <div key={id} className="border-b border-[var(--border-color)] last:border-none">
+          <div key={id} className="border-b border-border last:border-none">
             <button
               onClick={() => togglePanel(id)}
               className="w-full flex items-center justify-between py-3 text-left"

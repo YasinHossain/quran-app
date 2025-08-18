@@ -144,13 +144,9 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
       data-testid="word-language-panel"
       className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
-      } ${theme === 'dark' ? 'bg-surface text-primary' : 'bg-surface text-slate-800'}`}
+      } bg-surface text-primary`}
     >
-      <header
-        className={`flex items-center p-4 border-b ${
-          theme === 'dark' ? 'border-[var(--border-color)]' : 'border-slate-200'
-        }`}
-      >
+      <header className="flex items-center p-4 border-b border-border">
         <button
           onClick={onClose}
           className={`p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 ${
@@ -168,11 +164,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-        <h2
-          className={`text-lg font-bold text-center flex-grow ${
-            theme === 'dark' ? 'text-primary' : 'text-slate-800'
-          }`}
-        >
+        <h2 className="text-lg font-bold text-center flex-grow text-primary">
           {t('word_by_word_panel_title')}
         </h2>
       </header>

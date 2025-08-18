@@ -60,17 +60,7 @@ const Page = ({
             >
               {p}
             </div>
-            <p
-              className={`font-semibold ${
-                isActive
-                  ? 'text-white'
-                  : theme === 'light'
-                    ? 'text-slate-700'
-                    : 'text-[var(--foreground)]'
-              }`}
-            >
-              Page {p}
-            </p>
+            <p className={`font-semibold ${isActive ? 'text-white' : 'text-primary'}`}>Page {p}</p>
           </Link>
         </li>
       );

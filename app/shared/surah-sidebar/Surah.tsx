@@ -61,15 +61,7 @@ const Surah = ({
               {chapter.id}
             </div>
             <div className="flex-grow">
-              <p
-                className={`font-bold ${
-                  isActive
-                    ? 'text-white'
-                    : theme === 'light'
-                      ? 'text-slate-700'
-                      : 'text-[var(--foreground)]'
-                }`}
-              >
+              <p className={`font-bold ${isActive ? 'text-white' : 'text-primary'}`}>
                 {chapter.name_simple}
               </p>
               <p className={`text-xs ${isActive ? 'text-white/80' : 'text-gray-500'}`}>

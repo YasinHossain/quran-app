@@ -7,7 +7,6 @@ import { useSidebar } from '@/app/providers/SidebarContext';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaCog } from 'react-icons/fa';
-import { useTheme } from '@/app/providers/ThemeContext';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
 const Header = () => {
@@ -15,7 +14,6 @@ const Header = () => {
   const { setSurahListOpen, setSettingsOpen } = useSidebar();
   const router = useRouter();
   const [query, setQuery] = useState('');
-  const { theme } = useTheme(); // Use the theme context to determine colors
   const { isHidden } = useHeaderVisibility();
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -24,8 +22,7 @@ const Header = () => {
     }
   };
 
-  // Use a stable header background based on the current theme
-  const headerBgClass = theme === 'light' ? 'bg-white' : 'bg-[var(--background)]';
+  const headerBgClass = 'bg-background';
 
   return (
     <header
