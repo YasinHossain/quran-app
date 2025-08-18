@@ -37,14 +37,14 @@ const VerseArabic = ({ verse }: VerseArabicProps) => {
                   }}
                 />
                 {!showByWords && (
-                  <span className="absolute left-1/2 -translate-x-1/2 -top-7 hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow z-10 whitespace-nowrap">
+                  <span className="absolute left-1/2 -translate-x-1/2 -top-7 hidden group-hover:block bg-surface text-primary text-xs px-2 py-1 rounded shadow z-10 whitespace-nowrap">
                     {word[wordLang as LanguageCode] as string}
                   </span>
                 )}
               </span>
               {showByWords && (
                 <span
-                  className="mt-0.5 block text-gray-500 mx-1"
+                  className="mt-0.5 block text-muted mx-1"
                   style={{ fontSize: `${settings.arabicFontSize * 0.5}px` }}
                 >
                   {word[wordLang as LanguageCode] as string}

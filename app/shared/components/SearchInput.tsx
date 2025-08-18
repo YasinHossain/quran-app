@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import { SearchSolidIcon } from '../icons';
-import { useTheme } from '@/app/providers/ThemeContext';
 
 interface SearchInputProps {
   value: string;
@@ -18,18 +17,11 @@ export const SearchInput = ({
   onKeyDown,
   className = '',
 }: SearchInputProps) => {
-  const { theme } = useTheme();
-  const searchBarClasses =
-    theme === 'light'
-      ? 'bg-white text-gray-700 border border-gray-200 placeholder-gray-400'
-      : 'bg-gray-800 text-gray-200 border border-gray-600 placeholder-gray-400';
+  const searchBarClasses = 'bg-surface text-primary border border-border placeholder:text-muted';
 
   return (
     <div className={`relative ${className}`}>
-      <SearchSolidIcon
-        size={18}
-        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-      />
+      <SearchSolidIcon size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
       <input
         type="text"
         value={value}

@@ -64,7 +64,7 @@ const Surah = ({
               <p className={`font-bold ${isActive ? 'text-white' : 'text-primary'}`}>
                 {chapter.name_simple}
               </p>
-              <p className={`text-xs ${isActive ? 'text-white/80' : 'text-gray-500'}`}>
+              <p className={`text-xs ${isActive ? 'text-white/80' : 'text-muted'}`}>
                 {chapter.revelation_place} • {chapter.verses_count} verses
               </p>
             </div>
@@ -73,8 +73,8 @@ const Surah = ({
                 isActive
                   ? 'text-white'
                   : theme === 'light'
-                    ? 'text-gray-500 group-hover:text-teal-600'
-                    : 'text-gray-500 group-hover:text-teal-400'
+                    ? 'text-muted group-hover:text-teal-600'
+                    : 'text-muted group-hover:text-teal-400'
               }`}
             >
               {chapter.name_arabic}
