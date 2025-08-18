@@ -11,7 +11,6 @@ interface JuzSummary {
 interface Props {
   juzs: JuzSummary[];
   chapters: Chapter[];
-  theme: string;
   selectedJuzId: string | null;
   setSelectedJuzId: (id: string) => void;
   setSelectedPageId: (id: string) => void;
@@ -22,7 +21,6 @@ interface Props {
 const Juz = ({
   juzs,
   chapters,
-  theme,
   selectedJuzId,
   setSelectedJuzId,
   setSelectedPageId,
@@ -48,21 +46,15 @@ const Juz = ({
             }}
             className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
               isActive
-                ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/30'
-                : theme === 'light'
-                  ? 'bg-white shadow hover:bg-slate-50'
-                  : 'bg-slate-800 shadow hover:bg-slate-700'
+                ? 'bg-accent text-white shadow-lg shadow-accent/30'
+                : 'bg-surface text-primary hover:bg-accent/10 shadow'
             }`}
           >
             <div
               className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg shadow transition-colors ${
                 isActive
-                  ? theme === 'light'
-                    ? 'bg-gray-100 text-teal-600'
-                    : 'bg-slate-700 text-teal-400'
-                  : theme === 'light'
-                    ? 'bg-gray-100 text-teal-600 group-hover:bg-teal-100'
-                    : 'bg-slate-700 text-teal-400 group-hover:bg-teal-600/20'
+                  ? 'bg-surface text-accent'
+                  : 'bg-surface text-accent group-hover:bg-accent/10'
               }`}
             >
               {juz.number}
@@ -71,15 +63,7 @@ const Juz = ({
               <p className={`font-semibold ${isActive ? 'text-white' : 'text-primary'}`}>
                 Juz {juz.number}
               </p>
-              <p
-                className={`text-xs ${
-                  isActive
-                    ? 'text-white/90'
-                    : theme === 'light'
-                      ? 'text-slate-600'
-                      : 'text-slate-400'
-                }`}
-              >
+              <p className={`text-xs ${isActive ? 'text-white/90' : 'text-muted'}`}>
                 {juz.surahRange}
               </p>
             </div>

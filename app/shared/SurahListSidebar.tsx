@@ -6,7 +6,6 @@ import { Chapter } from '@/types';
 import { getChapters } from '@/lib/api';
 import useSWR from 'swr';
 import { useSidebar } from '@/app/providers/SidebarContext';
-import { useTheme } from '@/app/providers/ThemeContext';
 import juzData from '@/data/juz.json';
 import useSidebarScroll from './surah-sidebar/useSidebarScroll';
 import Surah from './surah-sidebar/Surah';
@@ -51,7 +50,6 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     return 'Surah';
   });
 
-  const { theme } = useTheme();
   const isTafsirPath = pathname?.includes('/tafsir');
 
   const {
@@ -114,7 +112,6 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
             activeTab={activeTab}
             setActiveTab={setActiveTab}
             prepareForTabSwitch={prepareForTabSwitch}
-            theme={theme}
           />
         </div>
         <div className="p-4 border-b border-border">
@@ -128,7 +125,6 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
           {activeTab === 'Surah' && (
             <Surah
               chapters={filteredChapters}
-              theme={theme}
               selectedSurahId={selectedSurahId}
               setSelectedSurahId={setSelectedSurahId}
               setSelectedPageId={setSelectedPageId}
@@ -142,7 +138,6 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
             <Juz
               juzs={filteredJuzs}
               chapters={chapters}
-              theme={theme}
               selectedJuzId={selectedJuzId}
               setSelectedJuzId={setSelectedJuzId}
               setSelectedPageId={setSelectedPageId}
@@ -155,7 +150,6 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
             <Page
               pages={filteredPages}
               chapters={chapters}
-              theme={theme}
               selectedPageId={selectedPageId}
               setSelectedPageId={setSelectedPageId}
               setSelectedJuzId={setSelectedJuzId}
