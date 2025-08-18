@@ -13,7 +13,7 @@ interface Props {
 }
 
 const SidebarTabs = ({ tabs, activeTab, setActiveTab, prepareForTabSwitch }: Props) => (
-  <div className="flex items-center p-1 rounded-full bg-surface">
+  <div className="flex items-center p-1 rounded-full bg-interactive border border-border">
     {tabs.map(({ key, label }) => (
       <button
         key={key}
@@ -22,7 +22,7 @@ const SidebarTabs = ({ tabs, activeTab, setActiveTab, prepareForTabSwitch }: Pro
           setActiveTab(key);
         }}
         className={`w-1/3 px-4 py-2 text-sm font-semibold rounded-full transition-colors ${
-          activeTab === key ? 'bg-surface text-foreground shadow' : 'text-muted hover:bg-accent/10'
+          activeTab === key ? 'bg-surface text-foreground shadow' : 'text-muted hover:text-foreground hover:bg-surface/30'
         }`}
       >
         {label}

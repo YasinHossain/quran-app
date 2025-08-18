@@ -4,6 +4,7 @@ import { ThemeProvider, Theme } from './ThemeContext';
 import { SettingsProvider } from './SettingsContext';
 import { BookmarkProvider } from './BookmarkContext';
 import { SidebarProvider } from './SidebarContext';
+import { UIStateProvider } from './UIStateContext';
 
 /**
  * Groups client-side providers including `ThemeProvider`, `SettingsProvider`,
@@ -21,7 +22,9 @@ export default function ClientProviders({
     <ThemeProvider initialTheme={initialTheme}>
       <SettingsProvider>
         <BookmarkProvider>
-          <SidebarProvider>{children}</SidebarProvider>
+          <UIStateProvider>
+            <SidebarProvider>{children}</SidebarProvider>
+          </UIStateProvider>
         </BookmarkProvider>
       </SettingsProvider>
     </ThemeProvider>

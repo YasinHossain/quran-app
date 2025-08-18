@@ -18,15 +18,15 @@ export default function RepeatPanel({
     <div className="md:col-span-2 grid md:grid-cols-2 gap-4">
       <div className="rounded-xl border border-border p-4">
         <div className="font-medium mb-3 text-foreground">Mode</div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <div className="flex items-center p-1 rounded-full bg-interactive border border-border">
           {(['off', 'single', 'range', 'surah'] as const).map((m) => (
             <button
               key={m}
               onClick={() => setLocalRepeat({ ...localRepeat, mode: m })}
-              className={`px-3 py-2 rounded-xl text-sm capitalize ${
+              className={`flex-1 px-3 py-2 rounded-full text-sm font-semibold capitalize transition-colors ${
                 localRepeat.mode === m
-                  ? 'bg-accent text-on-accent'
-                  : 'bg-surface hover:bg-interactive-hover'
+                  ? 'bg-surface shadow text-foreground'
+                  : 'text-muted hover:text-foreground hover:bg-surface/30'
               }`}
             >
               {m}

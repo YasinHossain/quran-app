@@ -9,11 +9,15 @@ export function SurahCard({ surah }: SurahCardProps) {
   return (
     <Link
       href={`/surah/${surah.number}`}
-      className="group p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 content-visibility-auto animate-fade-in-up bg-surface/60"
+      className="group p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 content-visibility-auto animate-fade-in-up bg-surface/60 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+      aria-label={`Read Surah ${surah.name} (${surah.meaning}) - ${surah.verses} verses`}
     >
-      <div className="flex items-center justify-between">
+      <article className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <div className="flex items-center justify-center w-12 h-12 rounded-xl font-bold text-lg transition-colors bg-surface text-accent group-hover:bg-accent/10">
+          <div
+            className="flex items-center justify-center w-12 h-12 rounded-xl font-bold text-lg transition-colors bg-surface text-accent group-hover:bg-accent/10"
+            aria-hidden="true"
+          >
             {surah.number}
           </div>
           <div>
@@ -22,12 +26,15 @@ export function SurahCard({ surah }: SurahCardProps) {
           </div>
         </div>
         <div className="text-right">
-          <p className="font-amiri text-2xl text-foreground group-hover:text-accent transition-colors">
+          <p
+            className="font-amiri text-2xl text-foreground group-hover:text-accent transition-colors"
+            lang="ar"
+          >
             {surah.arabicName}
           </p>
           <p className="text-sm text-muted">{surah.verses} Verses</p>
         </div>
-      </div>
+      </article>
     </Link>
   );
 }

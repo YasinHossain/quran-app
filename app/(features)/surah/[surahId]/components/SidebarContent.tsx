@@ -10,6 +10,8 @@ import { FontSettings } from './FontSettings';
 import { TranslationPanel } from './translation-panel';
 import { TafsirPanel } from './tafsir-panel';
 import { WordLanguagePanel } from './WordLanguagePanel';
+import { TabToggle } from '@/app/shared/ui/TabToggle';
+import { ThemeSelector } from '@/app/shared/ui/ThemeSelector';
 import type { SettingsSidebarProps } from './SettingsSidebar';
 
 interface SidebarContentProps extends SettingsSidebarProps {
@@ -20,8 +22,6 @@ interface SidebarContentProps extends SettingsSidebarProps {
   onToggleSection: (sectionId: string) => void;
   isArabicFontPanelOpen: boolean;
   setIsArabicFontPanelOpen: (open: boolean) => void;
-  theme: string;
-  setTheme: (theme: 'light' | 'dark') => void;
   onClose: () => void;
 }
 
@@ -35,8 +35,6 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
       onToggleSection,
       isArabicFontPanelOpen,
       setIsArabicFontPanelOpen,
-      theme,
-      setTheme,
       onTranslationPanelOpen,
       onWordLanguagePanelOpen,
       onTafsirPanelOpen,
@@ -75,28 +73,15 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
           <div className="w-8" />
         </header>
         <div className="flex-grow p-4 space-y-4">
-          <div className="flex items-center p-1 rounded-full mb-4 bg-surface">
-            <button
-              onClick={() => onTabClick('translation')}
-              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
-                activeTab === 'translation'
-                  ? 'bg-surface shadow text-foreground'
-                  : 'text-muted hover:text-foreground'
-              }`}
-            >
-              Translation
-            </button>
-            <button
-              onClick={() => onTabClick('reading')}
-              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
-                activeTab === 'reading'
-                  ? 'bg-surface shadow text-foreground'
-                  : 'text-muted hover:text-foreground'
-              }`}
-            >
-              Mushaf
-            </button>
-          </div>
+          <TabToggle
+            options={[
+              { value: 'translation', label: 'Translation' },
+              { value: 'reading', label: 'Mushaf' },
+            ]}
+            value={activeTab}
+            onChange={(tab) => onTabClick(tab as 'translation' | 'reading')}
+            className="mb-4"
+          />
           {activeTab === 'translation' && (
             <>
               <TranslationSettings
@@ -131,30 +116,7 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
           )}
         </div>
         <div className="p-4">
-          <div className="flex items-center p-1 rounded-full bg-surface">
-            <button
-              onClick={() => setTheme('light')}
-              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
-                // eslint-disable-next-line token-rules/no-raw-color-classes
-                theme === 'light'
-                  ? 'bg-surface shadow text-foreground'
-                  : 'text-muted hover:text-foreground'
-              }`}
-            >
-              {t('light_mode')}
-            </button>
-            <button
-              onClick={() => setTheme('dark')}
-              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
-                // eslint-disable-next-line token-rules/no-raw-color-classes
-                theme === 'dark'
-                  ? 'bg-surface shadow text-foreground'
-                  : 'text-muted hover:text-foreground'
-              }`}
-            >
-              {t('dark_mode')}
-            </button>
-          </div>
+          <ThemeSelector />
         </div>
         <ArabicFontPanel
           isOpen={isArabicFontPanelOpen}

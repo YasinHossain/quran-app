@@ -34,7 +34,7 @@ export const TafsirSelectionList: React.FC<TafsirSelectionListProps> = ({
         <span className="text-xs px-2 py-1 rounded-full bg-accent/10 text-accent">MAX</span>
       )}
     </h2>
-    <div className="space-y-2 min-h-[40px] rounded-lg p-2 bg-surface border border-border">
+    <div className="space-y-2 min-h-[40px] rounded-lg p-2 bg-background border border-border">
       {orderedSelection.length === 0 ? (
         <p className="text-center text-sm py-2 text-muted">No tafsirs selected</p>
       ) : (
@@ -51,7 +51,7 @@ export const TafsirSelectionList: React.FC<TafsirSelectionListProps> = ({
               onDragEnd={handleDragEnd}
               className={`flex items-center justify-between p-2 rounded-lg shadow-sm cursor-grab active:cursor-grabbing transition-opacity border ${
                 draggedId === id ? 'opacity-50' : 'opacity-100'
-              } bg-surface border-border`}
+              } bg-background border-border`}
             >
               <div className="flex items-center min-w-0">
                 <GripVertical className="h-5 w-5 mr-2 flex-shrink-0 text-muted" />

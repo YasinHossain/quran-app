@@ -64,7 +64,7 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
       data-testid="arabic-font-panel"
       className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
-      } bg-surface text-foreground`}
+      } bg-background text-foreground`}
     >
       <header className="flex items-center p-4 border-b border-border">
         <button
@@ -115,30 +115,28 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
             {/* Scrollable Content - Toggle and List */}
             <div className="flex-1 overflow-y-auto" ref={listContainerRef}>
               {/* Font Type Toggle - Uthmani/Indopak */}
-              <div className="sticky top-0 z-10 py-4 border-b bg-surface/95 backdrop-blur-sm border-border">
-                <div className="px-4">
-                  <div className="flex items-center p-1 rounded-full bg-surface">
-                    <button
-                      onClick={() => setActiveFilter('Uthmani')}
-                      className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
-                        activeFilter === 'Uthmani'
-                          ? 'bg-surface shadow text-foreground'
-                          : 'text-muted hover:text-foreground'
-                      }`}
-                    >
-                      Uthmani
-                    </button>
-                    <button
-                      onClick={() => setActiveFilter('IndoPak')}
-                      className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
-                        activeFilter === 'IndoPak'
-                          ? 'bg-surface shadow text-foreground'
-                          : 'text-muted hover:text-foreground'
-                      }`}
-                    >
-                      IndoPak
-                    </button>
-                  </div>
+              <div className="px-4 py-4">
+                <div className="flex items-center p-1 rounded-full bg-interactive border border-border">
+                  <button
+                    onClick={() => setActiveFilter('Uthmani')}
+                    className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                      activeFilter === 'Uthmani'
+                        ? 'bg-surface shadow text-foreground'
+                        : 'text-muted hover:text-foreground hover:bg-surface/30'
+                    }`}
+                  >
+                    Uthmani
+                  </button>
+                  <button
+                    onClick={() => setActiveFilter('IndoPak')}
+                    className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                      activeFilter === 'IndoPak'
+                        ? 'bg-surface shadow text-foreground'
+                        : 'text-muted hover:text-foreground hover:bg-surface/30'
+                    }`}
+                  >
+                    IndoPak
+                  </button>
                 </div>
               </div>
 

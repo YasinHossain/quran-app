@@ -67,7 +67,7 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
 
   return (
     <div>
-      <div className="flex w-full items-center p-1 rounded-full bg-interactive ml-4">
+      <div className="flex w-full items-center p-1 rounded-full bg-interactive border border-border ml-4">
         {tabs.map((t) => (
           <button
             key={t.id}
@@ -75,7 +75,7 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
             className={`flex-1 text-center py-3 px-5 rounded-full text-sm font-semibold transition-colors whitespace-nowrap ${
               activeId === t.id
                 ? 'bg-surface shadow text-foreground'
-                : 'text-muted hover:text-foreground'
+                : 'text-muted hover:text-foreground hover:bg-surface/30'
             }`}
           >
             {t.name}

@@ -4,7 +4,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeftIcon } from '@/app/shared/icons';
 import { useSidebar } from '@/app/providers/SidebarContext';
-import { useTheme } from '@/app/providers/ThemeContext';
+import { TabToggle } from '@/app/shared/ui/TabToggle';
+import { ThemeSelector } from '@/app/shared/ui/ThemeSelector';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { ArabicFontPanel } from './ArabicFontPanel';
 import { TranslationSettings } from './TranslationSettings';
@@ -52,7 +53,6 @@ export const SettingsSidebar = ({
 }: SettingsSidebarProps) => {
   const { t } = useTranslation();
   const { isSettingsOpen, setSettingsOpen } = useSidebar();
-  const { theme, setTheme } = useTheme();
   const { isHidden } = useHeaderVisibility();
   const [activeTab, setActiveTab] = useState('translation');
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
@@ -141,7 +141,7 @@ export const SettingsSidebar = ({
     }
   }, []);
 
-  const handleTabClick = (tab: 'translation' | 'reading') => {
+  const handleTabChange = (tab: string) => {
     setActiveTab(tab);
     if (tab === 'reading') {
       onReadingPanelOpen?.();
@@ -163,10 +163,11 @@ export const SettingsSidebar = ({
       />
       <aside
         ref={sidebarRef}
-        className={`settings-sidebar fixed lg:static top-16 lg:top-0 bottom-0 right-0 w-[20.7rem] bg-surface text-foreground flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 z-40 lg:z-40 lg:h-full ${
+        className={`settings-sidebar fixed lg:static top-16 lg:top-0 bottom-0 right-0 w-80 sm:w-[20.7rem] bg-background text-foreground flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 lg:h-full ${
           isSettingsOpen ? 'translate-x-0' : 'translate-x-full'
         } lg:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} lg:flex scrollbar-hide`}
         style={{
+          zIndex: 'var(--z-modal)',
           position: 'relative',
           msOverflowStyle: 'none',
           scrollbarWidth: 'none',
@@ -184,28 +185,15 @@ export const SettingsSidebar = ({
           <div className="w-8" />
         </header>
         <div className="flex-grow p-4 space-y-4">
-          <div className="flex items-center p-1 rounded-full mb-4 bg-surface">
-            <button
-              onClick={() => handleTabClick('translation')}
-              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
-                activeTab === 'translation'
-                  ? 'bg-surface shadow text-foreground'
-                  : 'text-muted hover:text-foreground'
-              }`}
-            >
-              Translation
-            </button>
-            <button
-              onClick={() => handleTabClick('reading')}
-              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
-                activeTab === 'reading'
-                  ? 'bg-surface shadow text-foreground'
-                  : 'text-muted hover:text-foreground'
-              }`}
-            >
-              Mushaf
-            </button>
-          </div>
+          <TabToggle
+            options={[
+              { value: 'translation', label: 'Translation' },
+              { value: 'reading', label: 'Mushaf' },
+            ]}
+            value={activeTab}
+            onChange={handleTabChange}
+            className="mb-4"
+          />
           {activeTab === 'translation' && (
             <>
               <TranslationSettings
@@ -240,30 +228,7 @@ export const SettingsSidebar = ({
           )}
         </div>
         <div className="p-4">
-          <div className="flex items-center p-1 rounded-full bg-surface">
-            <button
-              onClick={() => setTheme('light')}
-              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
-                // eslint-disable-next-line token-rules/no-raw-color-classes
-                theme === 'light'
-                  ? 'bg-surface shadow text-foreground'
-                  : 'text-muted hover:text-foreground'
-              }`}
-            >
-              {t('light_mode')}
-            </button>
-            <button
-              onClick={() => setTheme('dark')}
-              className={`w-1/2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
-                // eslint-disable-next-line token-rules/no-raw-color-classes
-                theme === 'dark'
-                  ? 'bg-surface shadow text-foreground'
-                  : 'text-muted hover:text-foreground'
-              }`}
-            >
-              {t('dark_mode')}
-            </button>
-          </div>
+          <ThemeSelector />
         </div>
         <ArabicFontPanel
           isOpen={isArabicFontPanelOpen}

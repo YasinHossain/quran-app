@@ -91,7 +91,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
       data-testid="word-language-panel"
       className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
-      } bg-surface text-foreground`}
+      } bg-background text-foreground`}
     >
       <header className="flex items-center p-4 border-b border-border">
         <button
