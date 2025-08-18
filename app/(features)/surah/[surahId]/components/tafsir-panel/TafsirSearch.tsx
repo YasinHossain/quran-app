@@ -10,7 +10,7 @@ interface TafsirSearchProps {
 
 export const TafsirSearch: React.FC<TafsirSearchProps> = ({ searchTerm, setSearchTerm }) => (
   <div className="relative">
-    <Search className="h-5 w-5 absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
+    <Search className="h-5 w-5 absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
     <input
       type="text"
       placeholder="Search tafsirs (exact match)..."

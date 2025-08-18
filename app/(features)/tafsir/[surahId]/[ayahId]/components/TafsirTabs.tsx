@@ -73,9 +73,7 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
             key={t.id}
             onClick={() => setActiveId(t.id)}
             className={`flex-1 text-center py-3 px-5 rounded-full text-sm font-semibold transition-colors whitespace-nowrap ${
-              activeId === t.id
-                ? 'bg-surface shadow text-primary'
-                : 'text-secondary hover:text-primary'
+              activeId === t.id ? 'bg-surface shadow text-primary' : 'text-muted hover:text-primary'
             }`}
           >
             {t.name}

@@ -96,7 +96,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 text-secondary"
+            className="h-6 w-6 text-muted"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -108,7 +108,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
         <h2 className="text-lg font-bold text-center flex-grow text-primary">Manage Tafsirs</h2>
         <button
           onClick={handleReset}
-          className="p-2 rounded-full focus-visible:outline-none transition-colors text-secondary hover:bg-hover hover:text-primary"
+          className="p-2 rounded-full focus-visible:outline-none transition-colors text-muted hover:bg-hover hover:text-primary"
           title="Reset to Default"
         >
           <RotateCcw size={20} />
@@ -118,7 +118,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
       <div className="flex-1 flex flex-col min-h-0">
         {loading && (
           <div className="flex items-center justify-center p-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-secondary" />
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-border" />
           </div>
         )}
 

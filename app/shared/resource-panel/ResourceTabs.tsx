@@ -32,7 +32,7 @@ export const ResourceTabs: React.FC<ResourceTabsProps> = ({
       disabled={!canScrollLeft}
       className={`p-1 rounded-full mr-2 transition-colors ${
         canScrollLeft
-          ? 'text-secondary hover:text-primary hover:bg-hover'
+          ? 'text-muted hover:text-primary hover:bg-hover'
           : 'text-muted cursor-not-allowed'
       }`}
     >
@@ -46,7 +46,7 @@ export const ResourceTabs: React.FC<ResourceTabsProps> = ({
           className={`flex-shrink-0 px-3 py-1 text-sm font-semibold border-b-2 transition-colors flex items-center justify-center ${
             activeFilter === lang
               ? 'border-accent text-accent'
-              : 'border-transparent text-secondary hover:text-primary hover:border-border'
+              : 'border-transparent text-muted hover:text-primary hover:border-border'
           }`}
         >
           {lang}
@@ -58,7 +58,7 @@ export const ResourceTabs: React.FC<ResourceTabsProps> = ({
       disabled={!canScrollRight}
       className={`p-1 rounded-full ml-2 transition-colors ${
         canScrollRight
-          ? 'text-secondary hover:text-primary hover:bg-hover'
+          ? 'text-muted hover:text-primary hover:bg-hover'
           : 'text-muted cursor-not-allowed'
       }`}
     >
