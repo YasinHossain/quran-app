@@ -13,7 +13,7 @@ export default function PageTab() {
           className="group p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 content-visibility-auto animate-fade-in-up bg-surface/60"
         >
           <div className="flex items-center space-x-4">
-            <div className="flex items-center justify-center w-12 h-12 rounded-xl font-bold text-lg transition-colors bg-hover text-accent group-hover:bg-accent/10">
+            <div className="flex items-center justify-center w-12 h-12 rounded-xl font-bold text-lg transition-colors bg-interactive text-accent group-hover:bg-accent/10">
               {page}
             </div>
             <h3 className="font-semibold text-lg text-foreground">Page {page}</h3>
