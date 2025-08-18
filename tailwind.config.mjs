@@ -1,41 +1,24 @@
 import designTokens from './design-system.json' assert { type: 'json' };
 
+function kebabCase(str) {
+  return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+}
+
+const colorEntries = Object.keys(designTokens.colors)
+  .filter((key) => !key.endsWith('Dark'))
+  .reduce((acc, key) => {
+    const name = kebabCase(key);
+    acc[name] = `rgb(var(--color-${name}) / <alpha-value>)`;
+    return acc;
+  }, {});
+
 /** @type {import('tailwindcss').Config} */
 const config = {
   darkMode: 'class',
   content: ['./app/**/*.{ts,tsx,js,jsx}', './lib/**/*.{ts,tsx,js,jsx}'],
   theme: {
     extend: {
-      colors: {
-        background: 'rgb(var(--color-background) / <alpha-value>)',
-        foreground: 'rgb(var(--color-foreground) / <alpha-value>)',
-        accent: 'rgb(var(--color-accent) / <alpha-value>)',
-        'accent-hover': 'rgb(var(--color-accent-hover) / <alpha-value>)',
-        'on-accent': 'rgb(var(--color-on-accent) / <alpha-value>)',
-        border: 'rgb(var(--color-border) / <alpha-value>)',
-        brand: '#009688',
-
-        // Interactive states
-        interactive: 'rgb(var(--color-interactive) / <alpha-value>)',
-        hover: 'rgb(var(--color-hover) / <alpha-value>)',
-        focus: 'rgb(var(--color-focus) / <alpha-value>)',
-        active: 'rgb(var(--color-active) / <alpha-value>)',
-        disabled: 'rgb(var(--color-disabled) / <alpha-value>)',
-
-        // Feedback colors
-        success: 'rgb(var(--color-success) / <alpha-value>)',
-        warning: 'rgb(var(--color-warning) / <alpha-value>)',
-        error: 'rgb(var(--color-error) / <alpha-value>)',
-        info: 'rgb(var(--color-info) / <alpha-value>)',
-
-        // Component variants
-        card: 'rgb(var(--color-card) / <alpha-value>)',
-        'card-hover': 'rgb(var(--color-card-hover) / <alpha-value>)',
-        'modal-overlay': 'rgb(var(--color-modal-overlay) / <alpha-value>)',
-        'input-bg': 'rgb(var(--color-input-bg) / <alpha-value>)',
-        'button-primary': 'rgb(var(--color-button-primary) / <alpha-value>)',
-        'button-secondary': 'rgb(var(--color-button-secondary) / <alpha-value>)',
-      },
+      colors: colorEntries,
       spacing: designTokens.spacing,
       fontFamily: {
         base: [designTokens.typography.fontFamily, 'sans-serif'],

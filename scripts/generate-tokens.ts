@@ -15,7 +15,6 @@ function kebabCase(str: string): string {
 }
 
 const designSystemPath = path.resolve('design-system.json');
-const tailwindConfigPath = path.resolve('tailwind.config.mjs');
 const themePath = path.resolve('app/theme.css');
 
 const design = JSON.parse(readFileSync(designSystemPath, 'utf8'));
@@ -37,20 +36,4 @@ const darkVars = baseKeys
 const css = `:root {\n${rootVars}\n}\n\n.dark {\n${darkVars}\n}\n`;
 
 writeFileSync(themePath, css);
-
-const colorEntries = baseKeys
-  .map((key) => {
-    const name = kebabCase(key);
-    const prop = name.includes('-') ? `'${name}'` : name;
-    return `        ${prop}: 'rgb(var(--color-${name}) / <alpha-value>)',`;
-  })
-  .join('\n');
-
-const tailwindConfig = readFileSync(tailwindConfigPath, 'utf8');
-const updatedConfig = tailwindConfig.replace(
-  /colors: {[\s\S]*?},\n      spacing:/,
-  `colors: {\n${colorEntries}\n      },\n      spacing:`
-);
-
-writeFileSync(tailwindConfigPath, updatedConfig);
 console.log('Generated theme tokens.');
