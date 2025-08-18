@@ -26,13 +26,13 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 ${headerBgClass} text-gray-800 dark:text-gray-100 z-50 transform transition-transform duration-300 ${isHidden ? '-translate-y-full shadow-none' : 'translate-y-0 shadow-sm'} border-b border-transparent overflow-hidden`}
+      className={`fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 ${headerBgClass} text-foreground z-50 transform transition-transform duration-300 ${isHidden ? '-translate-y-full shadow-none' : 'translate-y-0 shadow-sm'} border-b border-transparent overflow-hidden`}
     >
       {/* Column 1: Title & Surah List Toggle */}
       <div className="flex items-center gap-2">
         <button
           onClick={() => setSurahListOpen(true)}
-          className="p-2 rounded-md hover:bg-gray-100 lg:hidden"
+          className="p-2 rounded-md hover:bg-surface/60 lg:hidden"
           aria-label="Open Surah List"
         >
           <BarsIcon size={20} />
@@ -55,7 +55,7 @@ const Header = () => {
       <div className="flex justify-end">
         <button
           onClick={() => setSettingsOpen(true)}
-          className="p-2 rounded-md hover:bg-gray-100 lg:hidden"
+          className="p-2 rounded-md hover:bg-surface/60 lg:hidden"
           aria-label="Open Settings"
         >
           <FaCog size={20} />
