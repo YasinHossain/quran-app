@@ -107,7 +107,7 @@ export default function PlaybackOptionsModal({ open, onClose, activeTab, setActi
               Cancel
             </button>
             <button
-              className="px-4 py-2 rounded-xl bg-accent text-white hover:opacity-90"
+              className="px-4 py-2 rounded-xl bg-accent text-on-accent hover:opacity-90"
               onClick={commit}
             >
               Apply

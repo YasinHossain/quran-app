@@ -130,6 +130,16 @@ Generate a coverage report:
 npm run test:coverage
 ```
 
+## Storybook
+
+Run Storybook to iterate on UI components in isolation:
+
+```bash
+npm run storybook
+```
+
+This launches an interactive component workbench useful for AI-assisted design sessions.
+
 The CI workflow uploads this report as an artifact.
 
 ## Deploy on Vercel

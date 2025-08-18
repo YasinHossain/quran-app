@@ -20,7 +20,8 @@
     "audit-styles": "npm run audit:theme && npm run audit:colors && npm run audit:classes",
     "audit:theme": "grep -r \"theme ===\" app/ && exit 1 || echo \"✅ No theme conditionals found\"",
     "audit:colors": "grep -r \"#[0-9a-fA-F]\" app/ --include=\"*.tsx\" --include=\"*.ts\" && exit 1 || echo \"✅ No hardcoded colors found\"",
-    "audit:classes": "grep -r \"gray-\\|slate-\\|zinc-\" app/ --include=\"*.tsx\" && exit 1 || echo \"✅ No raw utility classes found\""
+    "audit:classes": "grep -r \"gray-\\|slate-\\|zinc-\" app/ --include=\"*.tsx\" && exit 1 || echo \"✅ No raw utility classes found\"",
+    "storybook": "storybook dev -p 6006"
   },
   "dependencies": {
     "@juggle/resize-observer": "^3.4.0",
@@ -67,6 +68,9 @@
     "ts-jest": "^29.4.1",
     "ts-node": "^10.9.1",
     "typescript": "^5",
-    "whatwg-fetch": "^3.6.20"
+    "whatwg-fetch": "^3.6.20",
+    "@storybook/nextjs": "^8.4.3",
+    "@storybook/addon-essentials": "^8.4.3",
+    "storybook": "^8.4.3"
   }
 }

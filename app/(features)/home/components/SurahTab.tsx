@@ -30,7 +30,7 @@ export default function SurahTab({ searchQuery }: SurahTabProps) {
   if (allSurahs.length === 0) {
     return (
       <div className="flex justify-center py-10 col-span-full">
-        <Spinner className="h-6 w-6 text-emerald-600" />
+        <Spinner className="h-6 w-6 text-accent" />
       </div>
     );
   }

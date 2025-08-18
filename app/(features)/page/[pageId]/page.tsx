@@ -86,7 +86,7 @@ export default function PagePage({ params }: PagePageProps) {
         <div className="w-full relative">
           {isLoading ? (
             <div className="flex justify-center py-20">
-              <Spinner className="h-8 w-8 text-teal-600" />
+              <Spinner className="h-8 w-8 text-accent" />
             </div>
           ) : error ? (
             <div className="text-center py-20 text-red-600 bg-red-50 p-4 rounded-lg">{error}</div>
@@ -98,7 +98,7 @@ export default function PagePage({ params }: PagePageProps) {
                 </React.Fragment>
               ))}
               <div ref={loadMoreRef} className="py-4 text-center space-x-2">
-                {isValidating && <Spinner className="inline h-5 w-5 text-teal-600" />}
+                {isValidating && <Spinner className="inline h-5 w-5 text-accent" />}
                 {isReachingEnd && <span className="text-muted">{t('end_of_page')}</span>}
               </div>
             </>

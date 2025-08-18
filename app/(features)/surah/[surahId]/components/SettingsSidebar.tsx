@@ -170,7 +170,7 @@ export const SettingsSidebar = ({
           <button
             aria-label="Back"
             onClick={() => setSettingsOpen(false)}
-            className="p-2 rounded-full hover:bg-interactive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 lg:hidden"
+            className="p-2 rounded-full hover:bg-interactive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent lg:hidden"
           >
             <ArrowLeftIcon size={18} />
           </button>

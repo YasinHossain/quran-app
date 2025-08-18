@@ -39,7 +39,7 @@ const Page = ({
             }}
             className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
               isActive
-                ? 'bg-accent text-white shadow-lg shadow-accent/30'
+                ? 'bg-accent text-on-accent shadow-lg shadow-accent/30'
                 : 'bg-surface text-primary hover:bg-accent/10 shadow'
             }`}
           >
@@ -52,7 +52,9 @@ const Page = ({
             >
               {p}
             </div>
-            <p className={`font-semibold ${isActive ? 'text-white' : 'text-primary'}`}>Page {p}</p>
+            <p className={`font-semibold ${isActive ? 'text-on-accent' : 'text-primary'}`}>
+              Page {p}
+            </p>
           </Link>
         </li>
       );
