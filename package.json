@@ -67,7 +67,7 @@
     "@storybook/addon-themes": "^8.4.3",
     "@storybook/nextjs": "^8.4.3",
     "@tailwindcss/postcss": "^4",
-    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/jest-dom": "^6.7.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^30.0.0",
