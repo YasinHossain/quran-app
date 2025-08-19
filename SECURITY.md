@@ -4,10 +4,10 @@
 
 We currently support the following versions with security updates:
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 0.2.x   | ✅                |
-| < 0.2   | ❌                |
+| Version | Supported |
+| ------- | --------- |
+| 0.2.x   | ✅        |
+| < 0.2   | ❌        |
 
 ## Reporting a Vulnerability
 
@@ -22,6 +22,7 @@ Please do not report security vulnerabilities through public GitHub issues, disc
 Send details of the vulnerability to: **[Your Security Email]**
 
 Include the following information:
+
 - Type of issue (e.g. buffer overflow, SQL injection, cross-site scripting, etc.)
 - Full paths of source file(s) related to the manifestation of the issue
 - The location of the affected source code (tag/branch/commit or direct URL)
@@ -66,19 +67,21 @@ Include the following information:
 ### For Contributors
 
 1. **Never commit secrets**:
+
    ```bash
    # ❌ Wrong
    const API_KEY = "sk-1234567890abcdef";
-   
+
    # ✅ Correct
    const API_KEY = process.env.API_KEY;
    ```
 
 2. **Validate inputs**:
+
    ```typescript
    // ❌ Wrong
    const verse = await fetchVerse(params.id);
-   
+
    # ✅ Correct
    const verseId = parseInt(params.id);
    if (isNaN(verseId) || verseId < 1) {
@@ -88,9 +91,10 @@ Include the following information:
    ```
 
 3. **Sanitize HTML**:
+
    ```typescript
    import DOMPurify from 'dompurify';
-   
+
    const cleanHTML = DOMPurify.sanitize(userContent);
    ```
 
@@ -106,6 +110,7 @@ Include the following information:
 ### For Deployment
 
 1. **Environment Variables**:
+
    ```bash
    # Production environment
    NODE_ENV=production
@@ -119,28 +124,28 @@ Include the following information:
    const securityHeaders = [
      {
        key: 'X-DNS-Prefetch-Control',
-       value: 'on'
+       value: 'on',
      },
      {
        key: 'Strict-Transport-Security',
-       value: 'max-age=63072000; includeSubDomains; preload'
+       value: 'max-age=63072000; includeSubDomains; preload',
      },
      {
        key: 'X-XSS-Protection',
-       value: '1; mode=block'
+       value: '1; mode=block',
      },
      {
        key: 'X-Frame-Options',
-       value: 'DENY'
+       value: 'DENY',
      },
      {
        key: 'X-Content-Type-Options',
-       value: 'nosniff'
+       value: 'nosniff',
      },
      {
        key: 'Referrer-Policy',
-       value: 'origin-when-cross-origin'
-     }
+       value: 'origin-when-cross-origin',
+     },
    ];
    ```
 

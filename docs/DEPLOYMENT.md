@@ -15,6 +15,7 @@ This guide covers deployment strategies for the Quran App, including environment
 Create environment files for different stages:
 
 ### `.env.local` (Development)
+
 ```bash
 NEXT_PUBLIC_API_BASE_URL=https://api.quran.com
 NEXT_PUBLIC_ENVIRONMENT=development
@@ -22,6 +23,7 @@ ANALYTICS_ID=your-analytics-id
 ```
 
 ### `.env.production` (Production)
+
 ```bash
 NEXT_PUBLIC_API_BASE_URL=https://api.quran.com
 NEXT_PUBLIC_ENVIRONMENT=production
@@ -31,11 +33,13 @@ ANALYTICS_ID=your-production-analytics-id
 ## Build Process
 
 ### Development Build
+
 ```bash
 npm run dev
 ```
 
 ### Production Build
+
 ```bash
 # Install dependencies
 npm ci
@@ -53,6 +57,7 @@ npm start
 ### Build Optimization
 
 1. **Bundle Analysis**:
+
    ```bash
    npm run build -- --analyze
    ```
@@ -67,12 +72,14 @@ npm start
 ### Vercel (Recommended)
 
 1. **Setup**:
+
    ```bash
    npm i -g vercel
    vercel login
    ```
 
 2. **Deploy**:
+
    ```bash
    vercel --prod
    ```
@@ -96,41 +103,42 @@ npm start
 ### Docker Deployment
 
 1. **Dockerfile**:
+
    ```dockerfile
    FROM node:20-alpine AS base
-   
+
    # Install dependencies only when needed
    FROM base AS deps
    WORKDIR /app
    COPY package.json package-lock.json ./
    RUN npm ci
-   
+
    # Rebuild the source code only when needed
    FROM base AS builder
    WORKDIR /app
    COPY --from=deps /app/node_modules ./node_modules
    COPY . .
    RUN npm run build
-   
+
    # Production image, copy all the files and run next
    FROM base AS runner
    WORKDIR /app
-   
+
    ENV NODE_ENV production
-   
+
    RUN addgroup --system --gid 1001 nodejs
    RUN adduser --system --uid 1001 nextjs
-   
+
    COPY --from=builder /app/public ./public
    COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
    COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-   
+
    USER nextjs
-   
+
    EXPOSE 3000
-   
+
    ENV PORT 3000
-   
+
    CMD ["node", "server.js"]
    ```
 
@@ -143,16 +151,19 @@ npm start
 ## Performance Optimization
 
 ### 1. Image Optimization
+
 - Use Next.js Image component
 - Optimize font files
 - Compress static assets
 
 ### 2. Code Splitting
+
 - Dynamic imports for heavy components
 - Route-based splitting (automatic with Next.js)
 - Component-level splitting for large features
 
 ### 3. Caching Strategy
+
 ```javascript
 // next.config.ts
 const nextConfig = {
@@ -173,6 +184,7 @@ const nextConfig = {
 ## CDN Configuration
 
 ### CloudFlare
+
 1. Add domain to CloudFlare
 2. Configure caching rules:
    - Static assets: 1 year
@@ -180,6 +192,7 @@ const nextConfig = {
    - HTML: No cache
 
 ### AWS CloudFront
+
 ```json
 {
   "Origins": [
@@ -203,6 +216,7 @@ const nextConfig = {
 ## Monitoring & Analytics
 
 ### 1. Error Tracking
+
 ```javascript
 // lib/monitoring.ts
 export const logError = (error: Error, context?: Record<string, any>) => {
@@ -214,11 +228,13 @@ export const logError = (error: Error, context?: Record<string, any>) => {
 ```
 
 ### 2. Performance Monitoring
+
 - Web Vitals tracking
 - Bundle size monitoring
 - API response time tracking
 
 ### 3. Analytics Setup
+
 ```javascript
 // lib/analytics.ts
 export const trackEvent = (event: string, properties?: Record<string, any>) => {
@@ -231,37 +247,39 @@ export const trackEvent = (event: string, properties?: Record<string, any>) => {
 ## Security Considerations
 
 ### 1. Headers Configuration
+
 ```javascript
 // next.config.ts
 const securityHeaders = [
   {
     key: 'X-DNS-Prefetch-Control',
-    value: 'on'
+    value: 'on',
   },
   {
     key: 'Strict-Transport-Security',
-    value: 'max-age=63072000; includeSubDomains; preload'
+    value: 'max-age=63072000; includeSubDomains; preload',
   },
   {
     key: 'X-XSS-Protection',
-    value: '1; mode=block'
+    value: '1; mode=block',
   },
   {
     key: 'X-Frame-Options',
-    value: 'DENY'
+    value: 'DENY',
   },
   {
     key: 'X-Content-Type-Options',
-    value: 'nosniff'
+    value: 'nosniff',
   },
   {
     key: 'Referrer-Policy',
-    value: 'origin-when-cross-origin'
-  }
+    value: 'origin-when-cross-origin',
+  },
 ];
 ```
 
 ### 2. Environment Security
+
 - Never commit secrets to repository
 - Use environment-specific configurations
 - Rotate API keys regularly
@@ -270,6 +288,7 @@ const securityHeaders = [
 ## Rollback Strategy
 
 ### Vercel
+
 1. Use Vercel dashboard to rollback to previous deployment
 2. Or redeploy a specific commit:
    ```bash
@@ -277,6 +296,7 @@ const securityHeaders = [
    ```
 
 ### Manual Rollback
+
 1. Identify last known good commit
 2. Create hotfix branch
 3. Deploy through CI/CD pipeline
@@ -284,18 +304,20 @@ const securityHeaders = [
 ## Health Checks
 
 ### API Health Check
+
 ```javascript
 // pages/api/health.ts
 export default function handler(req, res) {
   res.status(200).json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
-    version: process.env.npm_package_version
+    version: process.env.npm_package_version,
   });
 }
 ```
 
 ### Monitoring Endpoints
+
 - `/api/health` - Basic health check
 - `/api/metrics` - Performance metrics
 - `/api/status` - Detailed system status
@@ -305,6 +327,7 @@ export default function handler(req, res) {
 ### Common Issues
 
 1. **Build Failures**:
+
    ```bash
    # Clear cache
    rm -rf .next
@@ -312,6 +335,7 @@ export default function handler(req, res) {
    ```
 
 2. **Memory Issues**:
+
    ```bash
    # Increase Node.js memory
    NODE_OPTIONS='--max-old-space-size=4096' npm run build
@@ -323,6 +347,7 @@ export default function handler(req, res) {
    - Test font loading in different browsers
 
 ### Debugging Production Issues
+
 1. Enable verbose logging
 2. Check error tracking service
 3. Review performance metrics
@@ -331,6 +356,7 @@ export default function handler(req, res) {
 ## Maintenance
 
 ### Regular Tasks
+
 1. Update dependencies monthly
 2. Monitor performance metrics
 3. Review error logs weekly
@@ -338,6 +364,7 @@ export default function handler(req, res) {
 5. Backup deployment configurations
 
 ### Scheduled Maintenance
+
 1. Database cleanup (if applicable)
 2. Cache invalidation
 3. SSL certificate renewal

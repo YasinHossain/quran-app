@@ -1,0 +1,60 @@
+import { useState, useCallback } from 'react';
+
+const STORAGE_KEY = 'settings-sidebar-open-sections';
+const DEFAULT_OPEN_SECTIONS = ['translation', 'font'];
+const MAX_OPEN_SECTIONS = 2;
+
+export const useSettingsSections = () => {
+  const [openSections, setOpenSections] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch (error) {
+      console.warn('Failed to parse saved sidebar sections:', error);
+    }
+    return DEFAULT_OPEN_SECTIONS;
+  });
+
+  const handleSectionToggle = useCallback(
+    (sectionId: string) => {
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Toggling section:', sectionId, 'Current open:', openSections);
+      }
+
+      setOpenSections((prev) => {
+        let newState: string[];
+
+        if (prev.includes(sectionId)) {
+          // If section is open, close it
+          newState = prev.filter((id) => id !== sectionId);
+        } else {
+          // If section is closed, open it
+          if (prev.length >= MAX_OPEN_SECTIONS) {
+            // If already at max sections, remove the oldest one and add the new one
+            newState = [prev[1], sectionId];
+          } else {
+            // If less than max sections open, just add the new one
+            newState = [...prev, sectionId];
+          }
+        }
+
+        // Save to localStorage
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
+        } catch (error) {
+          console.warn('Failed to save sidebar sections to localStorage:', error);
+        }
+
+        return newState;
+      });
+    },
+    [openSections]
+  );
+
+  return {
+    openSections,
+    handleSectionToggle,
+  };
+};

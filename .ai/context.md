@@ -7,6 +7,7 @@ A modern Quran reading application built with Next.js 15, featuring audio playba
 ## AI Assistant Guidelines
 
 ### Core Principles
+
 1. **Semantic-First**: Always use semantic design tokens over raw colors
 2. **Component Reuse**: Leverage existing UI components before creating new ones
 3. **Type Safety**: Maintain strict TypeScript compliance
@@ -16,6 +17,7 @@ A modern Quran reading application built with Next.js 15, featuring audio playba
 ### Key Architecture Patterns
 
 #### Feature Structure
+
 ```
 app/(features)/[feature-name]/
 ├── components/          # Feature-specific components
@@ -26,11 +28,13 @@ app/(features)/[feature-name]/
 ```
 
 #### State Management
+
 - **UI State**: Use `useUIState()` for panels, modals, sidebars
 - **Settings**: Use `useSettings()` for app configuration
 - **Local State**: Use `useState()` for component-specific state
 
 #### Styling System
+
 - **Colors**: `bg-surface`, `text-foreground`, `bg-accent`, `border-border`
 - **Components**: `Button`, `Panel`, `TabToggle` from `@/app/shared/ui`
 - **Extensions**: Use `className` override or design system extensions
@@ -38,6 +42,7 @@ app/(features)/[feature-name]/
 ### Common Implementation Patterns
 
 #### Adding a New Feature Panel
+
 ```typescript
 const { openPanel, closePanel, isPanelOpen } = useUIState();
 
@@ -52,13 +57,14 @@ const { openPanel, closePanel, isPanelOpen } = useUIState();
 ```
 
 #### Creating Themed Components
+
 ```typescript
 // Use semantic tokens
 <div className="bg-surface text-foreground border border-border">
 
 // Extend with custom styling
-<Button 
-  variant="primary" 
+<Button
+  variant="primary"
   className="bg-gradient-to-r from-blue-500 to-purple-600"
 >
 ```
@@ -82,12 +88,14 @@ const { openPanel, closePanel, isPanelOpen } = useUIState();
 ### Restrictions
 
 ❌ **Avoid**:
+
 - Theme conditionals in JSX (`theme === 'dark' ? ... : ...`)
 - Hardcoded colors (`#1a202c`, `rgb(26, 32, 44)`)
 - Raw utility classes (`bg-gray-100`, `text-slate-800`)
 - Creating new global contexts in feature folders
 
 ✅ **Prefer**:
+
 - Semantic tokens (`bg-surface`, `text-muted`)
 - Component variants (`<Button variant="primary">`)
 - Existing UI components
@@ -96,6 +104,7 @@ const { openPanel, closePanel, isPanelOpen } = useUIState();
 ### Quick Reference
 
 #### Essential Imports
+
 ```typescript
 // UI Components
 import { Button, Panel, TabToggle } from '@/app/shared/ui';
@@ -109,6 +118,7 @@ import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 ```
 
 #### File Locations
+
 - **UI Components**: `app/shared/ui/`
 - **Feature Components**: `app/(features)/[feature]/components/`
 - **Global Providers**: `app/providers/`

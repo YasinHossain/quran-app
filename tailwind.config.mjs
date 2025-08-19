@@ -19,6 +19,22 @@ const config = {
         'on-accent': 'rgb(var(--color-on-accent) / <alpha-value>)',
         primary: 'rgb(var(--color-primary) / <alpha-value>)',
       },
+      boxShadow: {
+        card: 'var(--shadow-card)',
+        'card-hover': 'var(--shadow-card-hover)',
+        modal: 'var(--shadow-modal)',
+      },
+      borderRadius: {
+        sm: 'var(--radius-sm)',
+        md: 'var(--radius-md)',
+        lg: 'var(--radius-lg)',
+        xl: 'var(--radius-xl)',
+        '2xl': 'var(--radius-2xl)',
+      },
+      backgroundImage: {
+        'gradient-emerald': 'var(--gradient-emerald)',
+        'gradient-bg': 'var(--gradient-background)',
+      },
     },
   },
   plugins: [],

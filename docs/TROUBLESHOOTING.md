@@ -5,12 +5,15 @@
 ### Development Environment
 
 #### Node.js Version Issues
+
 **Problem**: Build fails with Node.js version errors
+
 ```bash
 Error: Node.js version 18.x is not supported
 ```
 
 **Solution**:
+
 ```bash
 # Check current version
 node --version
@@ -25,12 +28,15 @@ choco install nodejs  # Windows
 ```
 
 #### Dependency Installation Issues
+
 **Problem**: npm install fails
+
 ```bash
 npm ERR! peer dep missing
 ```
 
 **Solution**:
+
 ```bash
 # Clear cache and reinstall
 npm cache clean --force
@@ -42,12 +48,15 @@ npm ci
 ```
 
 #### Port Already in Use
+
 **Problem**: Development server won't start
+
 ```bash
 Error: Port 3000 is already in use
 ```
 
 **Solution**:
+
 ```bash
 # Find and kill process using port 3000
 lsof -ti:3000 | xargs kill -9  # macOS/Linux
@@ -60,12 +69,15 @@ npm run dev -- --port 3001
 ### Build & Deployment Issues
 
 #### TypeScript Errors
+
 **Problem**: Build fails with type errors
+
 ```bash
 Type 'string | undefined' is not assignable to type 'string'
 ```
 
 **Solution**:
+
 ```typescript
 // Add proper type guards
 if (typeof value === 'string') {
@@ -82,12 +94,15 @@ interface MyInterface {
 ```
 
 #### ESLint/Prettier Conflicts
+
 **Problem**: Formatting conflicts between tools
+
 ```bash
 Error: Delete `␊` prettier/prettier
 ```
 
 **Solution**:
+
 ```bash
 # Fix formatting
 npm run format
@@ -100,12 +115,15 @@ echo {} | npx eslint-config-prettier
 ```
 
 #### Build Memory Issues
+
 **Problem**: Build fails with memory errors
+
 ```bash
 FATAL ERROR: Ineffective mark-compacts near heap limit
 ```
 
 **Solution**:
+
 ```bash
 # Increase Node.js memory
 NODE_OPTIONS='--max-old-space-size=4096' npm run build
@@ -117,9 +135,11 @@ NODE_OPTIONS='--max-old-space-size=4096' npm run build
 ### Styling Issues
 
 #### Dark/Light Theme Not Working
+
 **Problem**: Theme toggle doesn't affect components
 
 **Solution**:
+
 ```typescript
 // ❌ Wrong - theme conditionals in JSX
 <div className={theme === 'dark' ? 'bg-gray-800' : 'bg-white'}>
@@ -132,9 +152,11 @@ NODE_OPTIONS='--max-old-space-size=4096' npm run build
 ```
 
 #### Tailwind Classes Not Applied
+
 **Problem**: Custom classes don't appear
 
 **Solution**:
+
 ```bash
 # Check if class is in safelist
 # Add to tailwind.config.mjs
@@ -150,9 +172,11 @@ const className = color === 'red' ? 'bg-red-500' : 'bg-blue-500'; // ✅ Works
 ```
 
 #### Design System Tokens Not Working
+
 **Problem**: Custom tokens not available
 
 **Solution**:
+
 ```bash
 # Regenerate design tokens
 npm run generate:tokens
@@ -164,12 +188,15 @@ npm run generate:tokens
 ### Component Issues
 
 #### Context Provider Errors
+
 **Problem**: useContext throws error
+
 ```bash
 Error: useSettings must be used within SettingsProvider
 ```
 
 **Solution**:
+
 ```typescript
 // Wrap component with providers in tests
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
@@ -185,9 +212,11 @@ renderWithProviders(<Component />);
 ```
 
 #### Panel/Modal Not Opening
+
 **Problem**: UI state not updating
 
 **Solution**:
+
 ```typescript
 // Use UIState context instead of local state
 const { openPanel, isPanelOpen } = useUIState();
@@ -201,9 +230,11 @@ isPanelOpen('translation-settings'); // Same ID
 ```
 
 #### Component Not Re-rendering
+
 **Problem**: State updates don't trigger re-renders
 
 **Solution**:
+
 ```typescript
 // Check dependencies in useEffect/useMemo
 useEffect(() => {
@@ -219,9 +250,11 @@ const memoizedValue = useMemo(() => {
 ### API & Data Issues
 
 #### SWR Not Fetching
+
 **Problem**: Data not loading with SWR
 
 **Solution**:
+
 ```typescript
 // Check key format
 const { data } = useSWR(
@@ -241,9 +274,11 @@ mutate('/api/verses/1'); // Force revalidation
 ```
 
 #### API Response Issues
+
 **Problem**: API returns unexpected data
 
 **Solution**:
+
 ```typescript
 // Add proper error handling
 try {
@@ -267,9 +302,11 @@ if (!data || !Array.isArray(data.verses)) {
 ### Performance Issues
 
 #### Slow Page Load
+
 **Problem**: Initial page load takes too long
 
 **Solution**:
+
 ```bash
 # Analyze bundle size
 npm run build -- --analyze
@@ -282,15 +319,17 @@ const LazyComponent = lazy(() => import('./LazyComponent'));
 ```
 
 #### Memory Leaks
+
 **Problem**: Browser memory usage increases over time
 
 **Solution**:
+
 ```typescript
 // Clean up event listeners
 useEffect(() => {
   const handleResize = () => {};
   window.addEventListener('resize', handleResize);
-  
+
   return () => {
     window.removeEventListener('resize', handleResize);
   };
@@ -299,7 +338,7 @@ useEffect(() => {
 // Clean up timers
 useEffect(() => {
   const timer = setInterval(() => {}, 1000);
-  
+
   return () => {
     clearInterval(timer);
   };
@@ -309,9 +348,11 @@ useEffect(() => {
 ### Testing Issues
 
 #### Tests Failing
+
 **Problem**: Tests pass locally but fail in CI
 
 **Solution**:
+
 ```bash
 # Run tests with same environment
 NODE_ENV=test npm test
@@ -331,9 +372,11 @@ afterEach(() => {
 ```
 
 #### Test Coverage Issues
+
 **Problem**: Coverage below threshold
 
 **Solution**:
+
 ```bash
 # See uncovered lines
 npm run test:coverage -- --verbose
@@ -348,9 +391,11 @@ npm run test:coverage -- --verbose
 ### Audio Player Issues
 
 #### Audio Not Playing
+
 **Problem**: Audio player doesn't start
 
 **Solution**:
+
 ```typescript
 // Check audio source
 const audio = new Audio();
@@ -363,16 +408,18 @@ audio.addEventListener('error', (e) => {
 });
 
 // Check browser autoplay policy
-audio.play().catch(error => {
+audio.play().catch((error) => {
   console.log('Autoplay prevented:', error);
   // Show user interaction required
 });
 ```
 
 #### Audio Synchronization Issues
+
 **Problem**: Audio and highlighting out of sync
 
 **Solution**:
+
 ```typescript
 // Use audio timeupdate event
 audio.addEventListener('timeupdate', () => {
@@ -384,16 +431,18 @@ audio.addEventListener('timeupdate', () => {
 // Verify word timing arrays
 const wordTimings = [
   { start: 0, end: 1.5, word: 'first' },
-  { start: 1.5, end: 3.0, word: 'second' }
+  { start: 1.5, end: 3.0, word: 'second' },
 ];
 ```
 
 ### Font Issues
 
 #### Arabic Fonts Not Loading
+
 **Problem**: Arabic text shows in fallback font
 
 **Solution**:
+
 ```css
 /* Check font loading in CSS */
 @font-face {
@@ -424,31 +473,35 @@ font.load().then(() => {
 ### PWA Issues
 
 #### Service Worker Not Updating
+
 **Problem**: App doesn't update with new version
 
 **Solution**:
+
 ```javascript
 // Force service worker update
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then(registrations => {
-    registrations.forEach(registration => {
+  navigator.serviceWorker.getRegistrations().then((registrations) => {
+    registrations.forEach((registration) => {
       registration.update();
     });
   });
 }
 
 // Clear cache
-caches.keys().then(names => {
-  names.forEach(name => {
+caches.keys().then((names) => {
+  names.forEach((name) => {
     caches.delete(name);
   });
 });
 ```
 
 #### PWA Not Installing
+
 **Problem**: Install prompt doesn't appear
 
 **Solution**:
+
 ```javascript
 // Check manifest.json
 // Ensure HTTPS
@@ -464,6 +517,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
 ## Debug Tools
 
 ### Browser DevTools
+
 ```javascript
 // React DevTools
 // Install React Developer Tools extension
@@ -481,6 +535,7 @@ console.group('Function execution');
 ```
 
 ### Debugging Commands
+
 ```bash
 # Verbose logging
 DEBUG=* npm run dev
@@ -493,6 +548,7 @@ node --inspect-brk node_modules/.bin/next dev
 ```
 
 ### Performance Monitoring
+
 ```typescript
 // Measure performance
 const start = performance.now();
@@ -512,18 +568,21 @@ const ProfiledComponent = React.memo(Component);
 ## Getting Help
 
 ### Internal Resources
+
 1. Check AGENTS.md files in relevant directories
 2. Review existing similar components
 3. Check test files for usage examples
 4. Look at CLAUDE.md for project context
 
 ### External Resources
+
 1. Next.js documentation
 2. React documentation
 3. Tailwind CSS documentation
 4. TypeScript documentation
 
 ### Debugging Checklist
+
 1. ✅ Check browser console for errors
 2. ✅ Verify environment variables
 3. ✅ Confirm dependencies are installed

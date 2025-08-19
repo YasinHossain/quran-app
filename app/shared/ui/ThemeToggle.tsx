@@ -32,7 +32,9 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
   // Tab-style variant
   if (variant === 'tabs') {
     return (
-      <div className={`flex items-center p-1 rounded-full bg-interactive border border-border ${className || ''}`}>
+      <div
+        className={`flex items-center p-1 rounded-full bg-interactive border border-border ${className || ''}`}
+      >
         <button
           onClick={() => handleThemeChange('light')}
           className={`flex items-center justify-center px-3 py-2 rounded-full text-sm font-semibold transition-colors ${

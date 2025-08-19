@@ -3,6 +3,7 @@
 ## Component Patterns
 
 ### Standard Component Structure
+
 ```typescript
 // ComponentName.tsx
 import { ComponentProps } from './types'; // if needed
@@ -14,7 +15,7 @@ export interface ComponentNameProps {
 
 export const ComponentName = ({ prop1, prop2 }: ComponentNameProps) => {
   // Component logic
-  
+
   return (
     <div className="semantic-classes">
       {/* JSX */}
@@ -27,11 +28,12 @@ export default ComponentName; // Only if required by Next.js
 ```
 
 ### Hook Patterns
+
 ```typescript
 // useFeatureLogic.ts
 export const useFeatureLogic = () => {
   // Hook implementation
-  
+
   return {
     // Public API
   };
@@ -39,6 +41,7 @@ export const useFeatureLogic = () => {
 ```
 
 ### Test Patterns
+
 ```typescript
 // ComponentName.test.tsx
 import { render, screen } from '@testing-library/react';
@@ -56,6 +59,7 @@ describe('ComponentName', () => {
 ## State Management Patterns
 
 ### UI State (Panels, Modals)
+
 ```typescript
 const { openPanel, closePanel, isPanelOpen } = useUIState();
 
@@ -70,6 +74,7 @@ closePanel('feature-settings');
 ```
 
 ### Settings State
+
 ```typescript
 const { settings, setTranslationIds, setTafsirIds } = useSettings();
 
@@ -78,6 +83,7 @@ setTranslationIds(['translation-1', 'translation-2']);
 ```
 
 ### Local Component State
+
 ```typescript
 const [state, setState] = useState(initialValue);
 
@@ -91,18 +97,20 @@ const [persistedState, setPersistedState] = useState(() => {
 ## Styling Patterns
 
 ### Semantic Token Usage
+
 ```typescript
 // Base styling
-const baseClasses = "bg-surface text-foreground border border-border";
+const baseClasses = 'bg-surface text-foreground border border-border';
 
 // Interactive elements
-const interactiveClasses = "bg-interactive hover:bg-interactive-hover";
+const interactiveClasses = 'bg-interactive hover:bg-interactive-hover';
 
 // Accent elements
-const accentClasses = "bg-accent text-on-accent";
+const accentClasses = 'bg-accent text-on-accent';
 ```
 
 ### Component Variants
+
 ```typescript
 // Button usage
 <Button variant="primary" size="md">Primary Action</Button>
@@ -119,10 +127,11 @@ const accentClasses = "bg-accent text-on-accent";
 ```
 
 ### Custom Styling Extensions
+
 ```typescript
 // Method 1: className override
-<Button 
-  variant="primary" 
+<Button
+  variant="primary"
   className="bg-gradient-to-r from-purple-500 to-pink-500"
 >
 
@@ -137,17 +146,16 @@ const accentClasses = "bg-accent text-on-accent";
 ## API Patterns
 
 ### SWR Data Fetching
+
 ```typescript
 import useSWR from 'swr';
 import { fetchVerses } from '@/lib/api';
 
-const { data, error, isLoading } = useSWR(
-  `/api/verses/${surahId}`,
-  () => fetchVerses(surahId)
-);
+const { data, error, isLoading } = useSWR(`/api/verses/${surahId}`, () => fetchVerses(surahId));
 ```
 
 ### API Client Usage
+
 ```typescript
 import { client } from '@/lib/api';
 
@@ -159,6 +167,7 @@ const translations = await client.translations.getAll();
 ## File Organization Patterns
 
 ### Feature Folder Structure
+
 ```
 app/(features)/feature-name/
 ├── components/
@@ -177,6 +186,7 @@ app/(features)/feature-name/
 ```
 
 ### Import/Export Patterns
+
 ```typescript
 // Named exports (preferred)
 export const ComponentName = () => {};
@@ -195,6 +205,7 @@ import { ComponentA, ComponentB } from './components';
 ## Error Handling Patterns
 
 ### Component Error Boundaries
+
 ```typescript
 if (error) {
   return (
@@ -209,6 +220,7 @@ if (error) {
 ```
 
 ### Loading States
+
 ```typescript
 if (isLoading) {
   return (
@@ -222,6 +234,7 @@ if (isLoading) {
 ## Accessibility Patterns
 
 ### Keyboard Navigation
+
 ```typescript
 const handleKeyDown = (event: KeyboardEvent) => {
   if (event.key === 'Escape') {
@@ -241,6 +254,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
 ```
 
 ### ARIA Labels
+
 ```typescript
 <button
   aria-label="Close panel"
@@ -254,24 +268,26 @@ const handleKeyDown = (event: KeyboardEvent) => {
 ## Performance Patterns
 
 ### Memoization
+
 ```typescript
 import { memo, useMemo, useCallback } from 'react';
 
 // Component memoization
 export const ExpensiveComponent = memo(({ data }) => {
-  const processedData = useMemo(() => 
+  const processedData = useMemo(() =>
     expensiveProcessing(data), [data]
   );
-  
+
   const handleClick = useCallback(() => {
     // Handler logic
   }, [dependency]);
-  
+
   return <div onClick={handleClick}>{processedData}</div>;
 });
 ```
 
 ### Lazy Loading
+
 ```typescript
 import { lazy, Suspense } from 'react';
 

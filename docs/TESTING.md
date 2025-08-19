@@ -14,18 +14,21 @@ Comprehensive testing strategy for the Quran App using Jest, React Testing Libra
 ## Test Types
 
 ### 1. Unit Tests
+
 - Utility functions
 - Custom hooks
 - Individual components (isolated)
 - API helpers
 
 ### 2. Integration Tests
+
 - Component interactions
 - Feature workflows
 - Context provider behavior
 - API integration
 
 ### 3. E2E Tests (Future)
+
 - Critical user journeys
 - Cross-browser compatibility
 - Performance testing
@@ -35,6 +38,7 @@ Comprehensive testing strategy for the Quran App using Jest, React Testing Libra
 ### Configuration Files
 
 #### `jest.config.js`
+
 ```javascript
 const nextJest = require('next/jest');
 
@@ -69,6 +73,7 @@ module.exports = createJestConfig(customJestConfig);
 ```
 
 #### `jest.setup.js`
+
 ```javascript
 import '@testing-library/jest-dom';
 import 'whatwg-fetch';
@@ -98,6 +103,7 @@ global.IntersectionObserver = jest.fn(() => ({
 ### Test Utilities
 
 #### `app/testUtils/renderWithProviders.tsx`
+
 ```typescript
 import { render, RenderOptions } from '@testing-library/react';
 import { ReactElement } from 'react';
@@ -136,6 +142,7 @@ export { userEvent } from '@testing-library/user-event';
 ### 1. Component Testing
 
 #### Basic Component Test
+
 ```typescript
 // Button.test.tsx
 import { renderWithProviders, screen, fireEvent } from '@/app/testUtils/renderWithProviders';
@@ -150,7 +157,7 @@ describe('Button', () => {
   it('calls onClick handler when clicked', () => {
     const handleClick = jest.fn();
     renderWithProviders(<Button onClick={handleClick}>Click me</Button>);
-    
+
     fireEvent.click(screen.getByRole('button'));
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
@@ -164,6 +171,7 @@ describe('Button', () => {
 ```
 
 #### Component with Context
+
 ```typescript
 // SettingsPanel.test.tsx
 import { renderWithProviders, screen, fireEvent } from '@/app/testUtils/renderWithProviders';
@@ -176,10 +184,10 @@ describe('SettingsPanel', () => {
     };
 
     renderWithProviders(<SettingsPanel />, { initialSettings });
-    
+
     const checkbox = screen.getByLabelText(/english translation/i);
     fireEvent.click(checkbox);
-    
+
     // Assert setting was updated
     expect(checkbox).toBeChecked();
   });
@@ -196,26 +204,25 @@ import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 
 describe('useVerseListing', () => {
   it('loads verses on mount', async () => {
-    const { result, waitForNextUpdate } = renderHook(
-      () => useVerseListing({ surahId: 1 }),
-      { wrapper: ({ children }) => renderWithProviders(children) }
-    );
+    const { result, waitForNextUpdate } = renderHook(() => useVerseListing({ surahId: 1 }), {
+      wrapper: ({ children }) => renderWithProviders(children),
+    });
 
     expect(result.current.isLoading).toBe(true);
-    
+
     await waitForNextUpdate();
-    
+
     expect(result.current.isLoading).toBe(false);
     expect(result.current.verses).toHaveLength(7); // Al-Fatiha has 7 verses
   });
 
   it('handles pagination correctly', async () => {
     const { result } = renderHook(() => useVerseListing({ surahId: 2 }));
-    
+
     await act(async () => {
       result.current.loadNextPage();
     });
-    
+
     expect(result.current.hasNextPage).toBe(true);
     expect(result.current.verses.length).toBeGreaterThan(10);
   });
@@ -239,14 +246,12 @@ describe('fetchVerses', () => {
   });
 
   it('fetches verses successfully', async () => {
-    const mockVerses = [
-      { id: 1, text: 'In the name of Allah', surahId: 1 },
-    ];
-    
+    const mockVerses = [{ id: 1, text: 'In the name of Allah', surahId: 1 }];
+
     mockedClient.get.mockResolvedValueOnce({ data: { verses: mockVerses } });
-    
+
     const result = await fetchVerses(1);
-    
+
     expect(result).toEqual(mockVerses);
     expect(mockedClient.get).toHaveBeenCalledWith('/verses', {
       params: { surah_id: 1 },
@@ -255,7 +260,7 @@ describe('fetchVerses', () => {
 
   it('handles API errors gracefully', async () => {
     mockedClient.get.mockRejectedValueOnce(new Error('Network error'));
-    
+
     await expect(fetchVerses(1)).rejects.toThrow('Network error');
   });
 });
@@ -280,12 +285,12 @@ describe('HomePage Accessibility', () => {
 
   it('supports keyboard navigation', () => {
     renderWithProviders(<HomePage />);
-    
+
     const firstButton = screen.getAllByRole('button')[0];
     firstButton.focus();
-    
+
     expect(firstButton).toHaveFocus();
-    
+
     // Test Tab navigation
     fireEvent.keyDown(firstButton, { key: 'Tab' });
     // Assert next focusable element is focused
@@ -293,7 +298,7 @@ describe('HomePage Accessibility', () => {
 
   it('has proper ARIA labels', () => {
     renderWithProviders(<HomePage />);
-    
+
     expect(screen.getByLabelText(/search quran/i)).toBeInTheDocument();
     expect(screen.getByRole('main')).toBeInTheDocument();
     expect(screen.getByRole('navigation')).toBeInTheDocument();
@@ -408,7 +413,7 @@ import { createMockVerse } from '@/__fixtures__';
 
 describe('VerseList Performance', () => {
   it('renders large lists efficiently', () => {
-    const manyVerses = Array.from({ length: 1000 }, (_, i) => 
+    const manyVerses = Array.from({ length: 1000 }, (_, i) =>
       createMockVerse({ id: i, verse_key: `1:${i}` })
     );
 
@@ -431,11 +436,11 @@ describe('Memory Management', () => {
     const removeEventListenerSpy = jest.spyOn(window, 'removeEventListener');
 
     const { unmount } = renderWithProviders(<ComponentWithListeners />);
-    
+
     expect(addEventListenerSpy).toHaveBeenCalled();
-    
+
     unmount();
-    
+
     expect(removeEventListenerSpy).toHaveBeenCalledTimes(
       addEventListenerSpy.mock.calls.length
     );
@@ -483,18 +488,21 @@ npm test -- --detectOpenHandles --forceExit
 ## Best Practices
 
 ### 1. Test Structure
+
 - Use descriptive test names
 - Follow Arrange-Act-Assert pattern
 - Group related tests with `describe`
 - Use `it.each` for parameterized tests
 
 ### 2. Test Isolation
+
 - Each test should be independent
 - Clean up after tests (unmount components)
 - Reset mocks between tests
 - Avoid shared state
 
 ### 3. Async Testing
+
 ```typescript
 // Wait for async operations
 await waitFor(() => {
@@ -506,15 +514,16 @@ await waitForElementToBeRemoved(() => screen.queryByText('Loading...'));
 ```
 
 ### 4. Error Testing
+
 ```typescript
 // Test error boundaries
 it('handles errors gracefully', () => {
   const spy = jest.spyOn(console, 'error').mockImplementation();
-  
+
   expect(() => {
     renderWithProviders(<ComponentThatThrows />);
   }).not.toThrow();
-  
+
   spy.mockRestore();
 });
 ```
@@ -522,6 +531,7 @@ it('handles errors gracefully', () => {
 ## Debugging Tests
 
 ### 1. Debug Render Output
+
 ```typescript
 // See what's rendered
 const { debug } = renderWithProviders(<Component />);
@@ -529,6 +539,7 @@ debug(); // Prints DOM to console
 ```
 
 ### 2. Query Debugging
+
 ```typescript
 // Find why queries fail
 screen.getByRole('button'); // Throws if not found
@@ -537,6 +548,7 @@ screen.logTestingPlaygroundURL(); // Interactive playground
 ```
 
 ### 3. Test Environment
+
 ```typescript
 // Check test environment
 console.log('NODE_ENV:', process.env.NODE_ENV);

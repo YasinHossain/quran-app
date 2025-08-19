@@ -12,7 +12,12 @@ interface TabToggleProps {
 
 export const TabToggle: React.FC<TabToggleProps> = ({ options, value, onChange, className }) => {
   return (
-    <div className={cn('flex items-center p-1 rounded-full bg-interactive border border-border', className)}>
+    <div
+      className={cn(
+        'flex items-center p-1 rounded-full bg-interactive border border-border',
+        className
+      )}
+    >
       {options.map((option) => (
         <button
           key={option.value}

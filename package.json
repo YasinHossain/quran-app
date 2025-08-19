@@ -27,6 +27,8 @@
     "reset": "npm run clean && rm -rf node_modules package-lock.json && npm install",
     "generate:tokens": "ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/generate-tokens.ts",
     "generate-feature": "ts-node scripts/generateFeature.ts",
+    "generate-component": "node scripts/generate-component.mjs",
+    "migrate-tokens": "node scripts/migrate-tokens.mjs",
     "validate:tokens": "ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/validate-tokens.ts",
     "audit-styles": "npm run audit:theme && npm run audit:colors && npm run audit:classes",
     "audit:theme": "grep -r \"theme ===\" app/ && exit 1 || echo \"✅ No theme conditionals found\"",
