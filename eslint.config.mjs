@@ -19,6 +19,9 @@ const tokenRules = {
 };
 
 const eslintConfig = [
+  {
+    ignores: ['mcp-server'],
+  },
   ...compat.extends(
     'next/core-web-vitals',
     'next/typescript',
