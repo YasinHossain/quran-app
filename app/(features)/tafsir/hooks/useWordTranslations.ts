@@ -18,7 +18,7 @@ export const useWordTranslations = () => {
   const wordLanguageMap = useMemo(() => {
     const map: Record<string, number> = {};
     (data || []).forEach((o) => {
-      const name = o.language_name.toLowerCase();
+      const name = o.lang.toLowerCase();
       if (!map[name]) {
         map[name] = o.id;
       }

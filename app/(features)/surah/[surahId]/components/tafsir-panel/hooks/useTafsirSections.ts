@@ -1,9 +1,9 @@
-import { Tafsir } from '../tafsirPanel.utils';
+import { TafsirResource } from '@/types';
 
 export const useTafsirSections = (
   activeFilter: string,
-  tafsirs: Tafsir[],
-  groupedTafsirs: Record<string, Tafsir[]>
+  tafsirs: TafsirResource[],
+  groupedTafsirs: Record<string, TafsirResource[]>
 ) => {
   const resourcesToRender = activeFilter === 'All' ? tafsirs : groupedTafsirs[activeFilter] || [];
 

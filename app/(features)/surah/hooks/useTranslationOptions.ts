@@ -20,7 +20,7 @@ export function useTranslationOptions() {
   const wordLanguageMap = useMemo(() => {
     const map: Record<string, number> = {};
     (wordTranslationOptionsData || []).forEach((o) => {
-      const name = o.language_name.toLowerCase();
+      const name = o.lang.toLowerCase();
       if (!map[name]) {
         map[name] = o.id;
       }

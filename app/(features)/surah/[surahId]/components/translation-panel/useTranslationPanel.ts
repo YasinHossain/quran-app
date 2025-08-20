@@ -14,14 +14,13 @@ import {
   updateScrollState,
 } from './translationPanel.utils';
 import { initialTranslationsData } from './translationPanel.data';
-import { Translation } from './translationPanel.types';
 
 export const MAX_SELECTIONS = 5;
 
 export const useTranslationPanel = (isOpen: boolean) => {
   const { theme } = useTheme();
   const { settings, setTranslationIds } = useSettings();
-  const [translations, setTranslations] = useState<Translation[]>([]);
+  const [translations, setTranslations] = useState<TranslationResource[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -35,10 +34,9 @@ export const useTranslationPanel = (isOpen: boolean) => {
         setLoading(true);
         setError(null);
         const apiTranslations = await getTranslations();
-        const formatted: Translation[] = apiTranslations.map((t: TranslationResource) => ({
-          id: t.id,
-          name: t.name,
-          lang: capitalizeLanguageName(t.language_name),
+        const formatted = apiTranslations.map((t) => ({
+          ...t,
+          lang: capitalizeLanguageName(t.lang),
         }));
         setTranslations(formatted);
       } catch (error) {
@@ -65,7 +63,7 @@ export const useTranslationPanel = (isOpen: boolean) => {
     return a.localeCompare(b);
   };
 
-  const selectable = useSelectableResources<Translation>({
+  const selectable = useSelectableResources<TranslationResource>({
     resources: translations,
     selectionLimit: MAX_SELECTIONS,
     languageSort,

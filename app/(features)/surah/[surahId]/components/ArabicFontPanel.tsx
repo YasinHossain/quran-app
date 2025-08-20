@@ -21,7 +21,7 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
     selectedIds,
     handleSelectionToggle,
     handleReset,
-  } = useArabicFontPanel(isOpen);
+  } = useArabicFontPanel();
 
   const listContainerRef = useRef<HTMLDivElement>(null);
   const [listHeight, setListHeight] = useState(0);

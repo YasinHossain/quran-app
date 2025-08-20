@@ -2,11 +2,12 @@
 
 import React from 'react';
 import { GripVertical, X } from 'lucide-react';
-import { Tafsir, MAX_SELECTIONS } from './tafsirPanel.utils';
+import { TafsirResource } from '@/types';
+import { MAX_SELECTIONS } from './tafsirPanel.utils';
 
 interface TafsirSelectionListProps {
   orderedSelection: number[];
-  tafsirs: Tafsir[];
+  tafsirs: TafsirResource[];
   handleSelectionToggle: (id: number) => void;
   handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
   handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;

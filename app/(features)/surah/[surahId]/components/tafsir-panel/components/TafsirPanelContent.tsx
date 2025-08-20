@@ -3,6 +3,7 @@
 import React from 'react';
 import { AlertCircle } from 'lucide-react';
 import { ResourceTabs, ResourceList } from '@/app/shared/resource-panel';
+import { TafsirResource } from '@/types';
 import { TafsirSearch } from '../TafsirSearch';
 import { TafsirSelectionList } from '../TafsirSelectionList';
 import { TafsirLimitWarning } from '../TafsirLimitWarning';
@@ -15,11 +16,11 @@ interface TafsirPanelContentProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   orderedSelection: number[];
-  tafsirs: Tafsir[];
+  tafsirs: TafsirResource[];
   handleSelectionToggle: (id: number) => void;
-  handleDragStart: (id: number) => void;
-  handleDragOver: (event: React.DragEvent) => void;
-  handleDrop: (event: React.DragEvent) => void;
+  handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
+  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
+  handleDrop: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
   handleDragEnd: () => void;
   draggedId: number | null;
   languages: string[];
@@ -30,7 +31,7 @@ interface TafsirPanelContentProps {
   canScrollRight: boolean;
   scrollTabsLeft: () => void;
   scrollTabsRight: () => void;
-  resourcesToRender: Tafsir[];
+  resourcesToRender: TafsirResource[];
   selectedIds: Set<number>;
   listHeight: number;
   listContainerRef: React.RefObject<HTMLDivElement>;

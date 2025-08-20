@@ -1,6 +1,7 @@
+import { TafsirResource } from '@/types';
 import { apiFetch } from './client';
 
-export interface TafsirResource {
+interface ApiTafsirResource {
   id: number;
   slug: string;
   name: string;
@@ -8,12 +9,16 @@ export interface TafsirResource {
 }
 
 export async function getTafsirResources(): Promise<TafsirResource[]> {
-  const data = await apiFetch<{ tafsirs: TafsirResource[] }>(
+  const data = await apiFetch<{ tafsirs: ApiTafsirResource[] }>(
     'resources/tafsirs',
     {},
     'Failed to fetch tafsir resources'
   );
-  return data.tafsirs as TafsirResource[];
+  return data.tafsirs.map((t) => ({
+    id: t.id,
+    name: t.name,
+    lang: t.language_name,
+  }));
 }
 
 export async function getTafsirByVerse(verseKey: string, tafsirId = 169): Promise<string> {

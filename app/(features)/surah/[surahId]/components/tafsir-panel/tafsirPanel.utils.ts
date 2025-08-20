@@ -1,7 +1,6 @@
-export interface Tafsir {
-  id: number;
-  name: string;
-  lang: string;
+import { TafsirResource } from '@/types';
+
+export interface Tafsir extends TafsirResource {
   selected: boolean;
 }
 
