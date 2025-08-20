@@ -19,6 +19,38 @@
     --color-on-accent: 255 255 255;
     --color-primary: 0 150 136;
 
+    /* Content semantic colors */
+    --color-content-primary: 55 65 81; /* slate-700 equivalent */
+    --color-content-secondary: 107 114 128; /* slate-500 equivalent */
+    --color-content-accent: 4 120 87; /* emerald-700 equivalent */
+    --color-content-muted: 156 163 175; /* gray-400 equivalent */
+
+    /* Status colors */
+    --color-status-error: 220 38 38; /* red-600 */
+    --color-status-success: 34 197 94; /* green-500 */
+    --color-status-warning: 251 191 36; /* amber-400 */
+    --color-status-info: 59 130 246; /* blue-500 */
+
+    /* Surface colors */
+    --color-surface-elevated: 255 255 255; /* white */
+    --color-surface-overlay: 255 255 255; /* white with opacity */
+    --color-surface-glass: 255 255 255; /* white with opacity for glass effect */
+
+    /* Button colors */
+    --color-button-primary: 243 244 246; /* gray-100 */
+    --color-button-primary-hover: 229 231 235; /* gray-200 */
+    --color-button-secondary: 255 255 255; /* white */
+    --color-button-secondary-hover: 249 250 251; /* gray-50 */
+
+    /* Input colors */
+    --color-input-background: 255 255 255; /* white */
+    --color-input-border: 209 213 219; /* gray-300 */
+    --color-input-placeholder: 156 163 175; /* gray-400 */
+
+    /* Tooltip colors */
+    --color-tooltip-background: 55 65 81; /* slate-700 */
+    --color-tooltip-text: 255 255 255; /* white */
+
     /* Gradient tokens */
     --color-gradient-from: var(--color-accent);
     --color-gradient-to: var(--color-accent-hover);
@@ -58,6 +90,38 @@
     --color-border: 51 65 85;
     --color-error: 248 113 113;
     --color-on-accent: 255 255 255;
+
+    /* Content semantic colors - Dark Mode */
+    --color-content-primary: 241 245 249; /* slate-100 equivalent */
+    --color-content-secondary: 148 163 184; /* slate-400 equivalent */
+    --color-content-accent: 52 211 153; /* emerald-400 equivalent */
+    --color-content-muted: 148 163 184; /* slate-400 equivalent */
+
+    /* Status colors - Dark Mode */
+    --color-status-error: 248 113 113; /* red-400 */
+    --color-status-success: 52 211 153; /* emerald-400 */
+    --color-status-warning: 251 191 36; /* amber-400 */
+    --color-status-info: 96 165 250; /* blue-400 */
+
+    /* Surface colors - Dark Mode */
+    --color-surface-elevated: 30 41 59; /* slate-700 */
+    --color-surface-overlay: 30 41 59; /* slate-700 with opacity */
+    --color-surface-glass: 30 41 59; /* slate-700 with opacity for glass effect */
+
+    /* Button colors - Dark Mode */
+    --color-button-primary: 51 65 85; /* slate-600 */
+    --color-button-primary-hover: 71 85 105; /* slate-500 */
+    --color-button-secondary: 30 41 59; /* slate-700 */
+    --color-button-secondary-hover: 51 65 85; /* slate-600 */
+
+    /* Input colors - Dark Mode */
+    --color-input-background: 30 41 59; /* slate-700 */
+    --color-input-border: 71 85 105; /* slate-500 */
+    --color-input-placeholder: 148 163 184; /* slate-400 */
+
+    /* Tooltip colors - Dark Mode */
+    --color-tooltip-background: 55 65 81; /* slate-700 */
+    --color-tooltip-text: 255 255 255; /* white */
 
     /* Dark mode gradients */
     --gradient-emerald: linear-gradient(135deg, 20 184 166, 13 148 136);

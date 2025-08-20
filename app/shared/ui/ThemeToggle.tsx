@@ -68,19 +68,17 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
   };
 
   return (
-    <Button
-      variant={variant}
-      size={size}
+    <button
       onClick={toggleTheme}
-      className={className}
+      className={`p-2 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${className || ''}`}
       aria-label="Toggle Theme"
     >
-      <span className="dark:hidden">
-        <MoonIcon className="w-5 h-5" />
-      </span>
-      <span className="hidden dark:block">
-        <SunIcon className="w-5 h-5" />
-      </span>
-    </Button>
+      <div className="dark:hidden">
+        <MoonIcon className="w-5 h-5 text-content-secondary" />
+      </div>
+      <div className="hidden dark:block">
+        <SunIcon className="w-5 h-5 text-status-warning" />
+      </div>
+    </button>
   );
 };

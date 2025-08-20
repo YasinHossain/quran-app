@@ -1,6 +1,6 @@
 'use client';
 import type React from 'react';
-import { BarsIcon } from './icons';
+import { BarsIcon, SunIcon, MoonIcon } from './icons';
 import { SearchInput } from './components/SearchInput';
 import { useTranslation } from 'react-i18next';
 import { useSidebar } from '@/app/providers/SidebarContext';
@@ -8,13 +8,26 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaCog } from 'react-icons/fa';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { useTheme } from '@/app/providers/ThemeContext';
 
 const Header = () => {
   const { t } = useTranslation();
   const { setSurahListOpen, setSettingsOpen } = useSidebar();
+  const { setTheme } = useTheme();
   const router = useRouter();
   const [query, setQuery] = useState('');
   const { isHidden } = useHeaderVisibility();
+
+  const toggleTheme = () => {
+    const html = document.documentElement;
+    if (html.classList.contains('dark')) {
+      html.classList.remove('dark');
+      setTheme('light');
+    } else {
+      html.classList.add('dark');
+      setTheme('dark');
+    }
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && query.trim()) {
@@ -52,8 +65,20 @@ const Header = () => {
         />
       </div>
 
-      {/* Column 3: Settings Button */}
-      <div className="flex justify-end">
+      {/* Column 3: Theme Toggle & Settings Button */}
+      <div className="flex items-center gap-2 justify-end">
+        <button
+          onClick={toggleTheme}
+          className="p-2 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          aria-label="Toggle Theme"
+        >
+          <div className="dark:hidden">
+            <MoonIcon className="w-5 h-5 text-content-secondary" />
+          </div>
+          <div className="hidden dark:block">
+            <SunIcon className="w-5 h-5 text-status-warning" />
+          </div>
+        </button>
         <button
           onClick={() => setSettingsOpen(true)}
           className="p-2 rounded-md hover:bg-surface/60 lg:hidden"

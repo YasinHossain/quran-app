@@ -55,10 +55,10 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
                 handleLanguageSelect(language);
               }
             }}
-            className={`flex items-center justify-between px-4 py-3 h-[58px] rounded-lg cursor-pointer transition-all duration-200 focus:outline-none focus-visible:outline-none outline-none border ${
+            className={`flex items-center justify-between px-4 py-2.5 h-[50px] rounded-lg cursor-pointer transition-all duration-200 focus:outline-none focus-visible:outline-none outline-none border-0 focus:border-0 active:outline-none ${
               isSelected
-                ? 'bg-accent/10 border-accent/20'
-                : 'bg-surface border-border hover:bg-interactive active:bg-interactive'
+                ? 'bg-accent/20 border border-accent/30'
+                : 'bg-surface border border-border hover:bg-interactive'
             }`}
           >
             <div className="flex-1 min-w-0 pr-3">

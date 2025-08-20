@@ -104,7 +104,7 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
         {error && (
           <div className="mx-4 mt-4 p-4 rounded-lg border bg-error/10 border-error/20 text-error">
             <div className="flex items-center space-x-2">
-              <AlertCircle className="h-5 w-5 text-red-500" />
+              <AlertCircle className="h-5 w-5 text-status-error" />
               <span className="text-sm">{error}</span>
             </div>
           </div>

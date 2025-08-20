@@ -10,7 +10,6 @@ import { TranslationPanel } from './translation-panel';
 import { TafsirPanel } from './tafsir-panel';
 import { WordLanguagePanel } from './WordLanguagePanel';
 import { TabToggle } from '@/app/shared/ui/TabToggle';
-import { ThemeSelector } from '@/app/shared/ui/ThemeSelector';
 import type { SettingsSidebarProps } from './SettingsSidebar';
 
 interface SidebarContentProps extends SettingsSidebarProps {
@@ -109,9 +108,6 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
               Mushaf settings have been moved to the Translation tab.
             </div>
           )}
-        </div>
-        <div className="p-4">
-          <ThemeSelector />
         </div>
         <ArabicFontPanel
           isOpen={isArabicFontPanelOpen}

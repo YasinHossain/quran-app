@@ -1,6 +1,7 @@
-import Link from 'next/link';
 import type { Chapter } from '@/types';
 import { getJuzByPage, getSurahByPage } from '@/lib/utils/surah-navigation';
+import { SidebarCard } from '@/app/shared/ui/SidebarCard';
+import { NumberBadge } from '@/app/shared/ui/NumberBadge';
 
 interface Props {
   pages: number[];
@@ -26,10 +27,11 @@ const Page = ({
       const isActive = String(p) === selectedPageId;
       return (
         <li key={p}>
-          <Link
+          <SidebarCard
             href={`/page/${p}`}
             scroll={false}
             data-active={isActive}
+            isActive={isActive}
             onClick={() => {
               setSelectedPageId(String(p));
               setSelectedJuzId(String(getJuzByPage(p)));
@@ -37,25 +39,12 @@ const Page = ({
               if (chap) setSelectedSurahId(String(chap.id));
               rememberScroll();
             }}
-            className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
-              isActive
-                ? 'bg-accent text-on-accent shadow-lg shadow-accent/30'
-                : 'bg-surface text-foreground hover:bg-accent/10 shadow'
-            }`}
           >
-            <div
-              className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg shadow transition-colors ${
-                isActive
-                  ? 'bg-surface text-accent'
-                  : 'bg-surface text-accent group-hover:bg-accent/10'
-              }`}
-            >
-              {p}
-            </div>
+            <NumberBadge number={p} isActive={isActive} />
             <p className={`font-semibold ${isActive ? 'text-on-accent' : 'text-foreground'}`}>
               Page {p}
             </p>
-          </Link>
+          </SidebarCard>
         </li>
       );
     })}

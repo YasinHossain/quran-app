@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useSidebar } from '@/app/providers/SidebarContext';
-import { ThemeSelector } from '@/app/shared/ui/ThemeSelector';
+import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { SettingsHeader } from './SettingsHeader';
 import { SettingsTabs } from './SettingsTabs';
 import { SettingsContent } from './SettingsContent';
@@ -46,6 +46,7 @@ export const SettingsSidebar = ({
   onWordLanguagePanelClose,
 }: SettingsSidebarProps) => {
   const { isSettingsOpen, setSettingsOpen } = useSidebar();
+  const { isHidden } = useHeaderVisibility();
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
 
   const { activeTab, handleTabChange, tabOptions } = useSettingsTabState({
@@ -69,11 +70,11 @@ export const SettingsSidebar = ({
       />
       <aside
         ref={sidebarRef}
-        className={`settings-sidebar fixed md:static top-16 md:top-0 md:mt-16 bottom-0 right-0 w-80 sm:w-[20.7rem] bg-background text-foreground flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 md:h-full ${
+        className={`settings-sidebar fixed lg:static ${isHidden ? 'top-0' : 'top-16'} lg:top-0 bottom-0 right-0 w-80 sm:w-[20.7rem] bg-background text-foreground flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 lg:h-full border-l border-border ${
           isSettingsOpen ? 'translate-x-0' : 'translate-x-full'
         } md:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} md:flex scrollbar-hide`}
         style={{
-          zIndex: 'var(--z-modal)',
+          zIndex: 'var(--z-sticky)',
           position: 'relative',
           msOverflowStyle: 'none',
           scrollbarWidth: 'none',
@@ -101,10 +102,6 @@ export const SettingsSidebar = ({
             selectedWordLanguageName={selectedWordLanguageName}
             showTafsirSetting={showTafsirSetting}
           />
-        </div>
-
-        <div className="p-4">
-          <ThemeSelector />
         </div>
 
         <SettingsPanels

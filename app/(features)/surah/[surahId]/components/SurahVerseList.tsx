@@ -32,7 +32,9 @@ export const SurahVerseList = ({
           <Spinner className="h-8 w-8 text-accent" />
         </div>
       ) : error ? (
-        <div className="text-center py-20 text-red-600 bg-red-50 p-4 rounded-lg">{error}</div>
+        <div className="text-center py-20 text-status-error bg-status-error/10 p-4 rounded-lg">
+          {error}
+        </div>
       ) : verses.length > 0 ? (
         <>
           {verses.map((v) => (

@@ -14,7 +14,7 @@ export default function HomeTabs({ searchQuery }: HomeTabsProps) {
   return (
     <section id="surahs" className="py-20 max-w-screen-2xl mx-auto w-full">
       <div className="flex justify-between items-center mb-8 content-visibility-auto animate-fade-in-up animation-delay-600">
-        <h2 className="text-3xl font-bold text-foreground">All Surahs</h2>
+        <h2 className="text-3xl font-bold text-content-primary">All Surahs</h2>
         <div className="flex items-center p-1 sm:p-2 rounded-full bg-interactive">
           <button
             onClick={() => setActiveTab('Surah')}

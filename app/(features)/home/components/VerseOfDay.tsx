@@ -90,14 +90,14 @@ export default function VerseOfDay() {
       </div>
     );
   } else if (error) {
-    content = <div className="text-center py-8 text-red-600">{error}</div>;
+    content = <div className="text-center py-8 text-status-error">{error}</div>;
   } else if (verse) {
     const [surahNum] = verse.verse_key.split(':');
     const surahName = surahs.find((s) => s.number === Number(surahNum))?.name;
     content = (
       <>
         <h3
-          className="font-amiri text-3xl md:text-4xl leading-relaxed text-right text-accent"
+          className="font-amiri text-3xl md:text-4xl leading-relaxed text-right text-content-accent"
           dir="rtl"
         >
           {verse.words && verse.words.length > 0 ? (
@@ -113,7 +113,7 @@ export default function VerseOfDay() {
                   w.uthmani
                 )}
                 {w.en && (
-                  <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-1 py-0.5 rounded bg-surface text-foreground text-xs whitespace-nowrap opacity-0 group-hover:opacity-100">
+                  <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-1 py-0.5 rounded bg-accent text-on-accent text-xs whitespace-nowrap opacity-0 group-hover:opacity-100">
                     {w.en}
                   </span>
                 )}
@@ -130,7 +130,7 @@ export default function VerseOfDay() {
           )}
         </h3>
         {verse.translations?.[0] && (
-          <p className="mt-4 text-left text-sm text-foreground">
+          <p className="mt-4 text-left text-sm text-content-secondary">
             &quot;{stripHtml(verse.translations[0].text)}&quot; - [Surah {surahName ?? surahNum},{' '}
             {verse.verse_key}]
           </p>
@@ -140,7 +140,7 @@ export default function VerseOfDay() {
   }
 
   return (
-    <div className="mt-12 w-full max-w-4xl p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400 bg-surface/60">
+    <div className="mt-12 w-full max-w-4xl p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400 bg-surface-glass/60">
       {content}
     </div>
   );

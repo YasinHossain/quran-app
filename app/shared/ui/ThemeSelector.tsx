@@ -1,33 +1,39 @@
 'use client';
 
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/app/providers/ThemeContext';
-import { TabToggle } from './TabToggle';
+import { SunIcon, MoonIcon } from '@/app/shared/icons';
 
 interface ThemeSelectorProps {
   className?: string;
 }
 
 export const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className }) => {
-  const { t } = useTranslation();
-  const { theme, setTheme } = useTheme();
+  const { setTheme } = useTheme();
 
-  const themeOptions = [
-    { value: 'light', label: t('light_mode') },
-    { value: 'dark', label: t('dark_mode') },
-  ];
-
-  const handleThemeChange = (value: string) => {
-    setTheme(value as 'light' | 'dark');
+  const toggleTheme = () => {
+    const html = document.documentElement;
+    if (html.classList.contains('dark')) {
+      html.classList.remove('dark');
+      setTheme('light');
+    } else {
+      html.classList.add('dark');
+      setTheme('dark');
+    }
   };
 
   return (
-    <TabToggle
-      options={themeOptions}
-      value={theme}
-      onChange={handleThemeChange}
-      className={className}
-    />
+    <button
+      onClick={toggleTheme}
+      className={`p-2 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${className || ''}`}
+      aria-label="Toggle Theme"
+    >
+      <div className="dark:hidden">
+        <MoonIcon className="w-5 h-5 text-content-secondary" />
+      </div>
+      <div className="hidden dark:block">
+        <SunIcon className="w-5 h-5 text-status-warning" />
+      </div>
+    </button>
   );
 };

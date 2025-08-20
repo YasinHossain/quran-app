@@ -1,6 +1,7 @@
-import Link from 'next/link';
 import type { Chapter } from '@/types';
 import { getJuzByPage } from '@/lib/utils/surah-navigation';
+import { SidebarCard } from '@/app/shared/ui/SidebarCard';
+import { NumberBadge } from '@/app/shared/ui/NumberBadge';
 
 interface Props {
   chapters: Chapter[];
@@ -26,10 +27,11 @@ const Surah = ({
       const isActive = String(chapter.id) === selectedSurahId;
       return (
         <li key={chapter.id}>
-          <Link
+          <SidebarCard
             href={isTafsirPath ? `/tafsir/${chapter.id}/1` : `/surah/${chapter.id}`}
             scroll={false}
             data-active={isActive}
+            isActive={isActive}
             onClick={() => {
               setSelectedSurahId(String(chapter.id));
               const firstPage = chapter.pages?.[0] ?? 1;
@@ -37,23 +39,12 @@ const Surah = ({
               setSelectedJuzId(String(getJuzByPage(firstPage)));
               rememberScroll();
             }}
-            className={`group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] ${
-              isActive
-                ? 'bg-accent text-on-accent shadow-lg shadow-accent/30'
-                : 'bg-surface text-foreground hover:bg-accent/10 shadow'
-            }`}
           >
-            <div
-              className={`w-12 h-12 flex items-center justify-center rounded-xl font-bold text-lg shadow transition-colors ${
-                isActive
-                  ? 'bg-surface text-accent'
-                  : 'bg-surface text-accent group-hover:bg-accent/10'
-              }`}
-            >
-              {chapter.id}
-            </div>
+            <NumberBadge number={chapter.id} isActive={isActive} />
             <div className="flex-grow">
-              <p className={`font-bold ${isActive ? 'text-on-accent' : 'text-foreground'}`}>
+              <p
+                className={`font-bold transition-colors ${isActive ? 'text-on-accent' : 'text-foreground'}`}
+              >
                 {chapter.name_simple}
               </p>
               <p className={`text-xs ${isActive ? 'text-on-accent/80' : 'text-muted'}`}>
@@ -67,7 +58,7 @@ const Surah = ({
             >
               {chapter.name_arabic}
             </p>
-          </Link>
+          </SidebarCard>
         </li>
       );
     })}
