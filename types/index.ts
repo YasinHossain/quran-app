@@ -8,8 +8,6 @@ export * from './word';
 export * from './juz';
 export * from './bookmark';
 
-export type { TafsirResource } from '../lib/api';
-
 /**
  * Mapping and metadata for a Juz (section) of the Quran.
  */

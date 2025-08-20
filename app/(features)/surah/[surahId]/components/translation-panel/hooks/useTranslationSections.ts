@@ -1,7 +1,9 @@
+import { TranslationResource } from '@/types';
+
 export const useTranslationSections = (
   activeFilter: string,
-  translations: any[],
-  groupedTranslations: Record<string, any[]>
+  translations: TranslationResource[],
+  groupedTranslations: Record<string, TranslationResource[]>
 ) => {
   const resourcesToRender =
     activeFilter === 'All' ? translations : groupedTranslations[activeFilter] || [];

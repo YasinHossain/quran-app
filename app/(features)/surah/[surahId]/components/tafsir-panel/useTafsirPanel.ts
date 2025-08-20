@@ -37,7 +37,7 @@ export const useTafsirPanel = (isOpen: boolean) => {
       const formatted: Tafsir[] = data.map((t) => ({
         id: t.id,
         name: t.name,
-        lang: capitalizeLanguageName(t.language_name),
+        lang: capitalizeLanguageName(t.lang),
         selected: false,
       }));
       setTafsirs(formatted);
