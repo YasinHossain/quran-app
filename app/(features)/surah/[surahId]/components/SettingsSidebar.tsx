@@ -69,9 +69,9 @@ export const SettingsSidebar = ({
       />
       <aside
         ref={sidebarRef}
-        className={`settings-sidebar fixed lg:static top-16 lg:top-0 bottom-0 right-0 w-80 sm:w-[20.7rem] bg-background text-foreground flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 lg:h-full ${
+        className={`settings-sidebar fixed md:static top-0 md:top-0 md:mt-16 bottom-0 right-0 w-80 sm:w-[20.7rem] bg-background text-foreground flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 md:h-full ${
           isSettingsOpen ? 'translate-x-0' : 'translate-x-full'
-        } lg:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} lg:flex scrollbar-hide`}
+        } md:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} md:flex scrollbar-hide`}
         style={{
           zIndex: 'var(--z-modal)',
           position: 'relative',
