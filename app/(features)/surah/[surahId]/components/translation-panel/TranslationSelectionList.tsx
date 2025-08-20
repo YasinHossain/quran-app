@@ -3,11 +3,11 @@
 import React from 'react';
 import { GripVertical, X } from 'lucide-react';
 import { MAX_SELECTIONS } from './useTranslationPanel';
-import { Translation } from './translationPanel.types';
+import { TranslationResource } from '@/types';
 
 interface TranslationSelectionListProps {
   orderedSelection: number[];
-  translations: Translation[];
+  translations: TranslationResource[];
   handleSelectionToggle: (id: number) => void;
   handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
   handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;

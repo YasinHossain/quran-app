@@ -3,6 +3,7 @@
 import React from 'react';
 import { AlertCircle } from 'lucide-react';
 import { ResourceTabs, ResourceList, ResourceItem } from '@/app/shared/resource-panel';
+import { TranslationResource } from '@/types';
 import { TranslationSearch } from '../TranslationSearch';
 import { TranslationSelectionList } from '../TranslationSelectionList';
 
@@ -11,8 +12,8 @@ interface TranslationPanelContentProps {
   error: string | null;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  orderedSelection: any[];
-  translations: any[];
+  orderedSelection: number[];
+  translations: TranslationResource[];
   handleSelectionToggle: (id: number) => void;
   handleDragStart: (id: number) => void;
   handleDragOver: (event: React.DragEvent) => void;
@@ -27,8 +28,8 @@ interface TranslationPanelContentProps {
   canScrollRight: boolean;
   scrollTabsLeft: () => void;
   scrollTabsRight: () => void;
-  sectionsToRender: Array<{ language: string; items: any[] }>;
-  resourcesToRender: any[];
+  sectionsToRender: Array<{ language: string; items: TranslationResource[] }>;
+  resourcesToRender: TranslationResource[];
   selectedIds: Set<number>;
   listHeight: number;
   listContainerRef: React.RefObject<HTMLDivElement>;

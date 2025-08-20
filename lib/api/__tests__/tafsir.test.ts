@@ -1,5 +1,6 @@
-import { getTafsirByVerse, getTafsirResources, TafsirResource } from '@/lib/api/tafsir';
+import { getTafsirByVerse, getTafsirResources } from '@/lib/api/tafsir';
 import { API_BASE_URL } from '@/lib/api';
+import { TafsirResource } from '@/types';
 
 describe('getTafsirResources', () => {
   afterEach(() => {
@@ -7,7 +8,7 @@ describe('getTafsirResources', () => {
   });
 
   it('parses tafsir resources', async () => {
-    const mockResource: TafsirResource = {
+    const apiResource = {
       id: 1,
       slug: 'test',
       name: 'Test Tafsir',
@@ -16,12 +17,13 @@ describe('getTafsirResources', () => {
 
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ tafsirs: [mockResource] }),
+      json: () => Promise.resolve({ tafsirs: [apiResource] }),
     }) as jest.Mock;
 
     const result = await getTafsirResources();
     expect(global.fetch).toHaveBeenCalledWith(`${API_BASE_URL}/resources/tafsirs`);
-    expect(result).toEqual([mockResource]);
+    const expected: TafsirResource[] = [{ id: 1, name: 'Test Tafsir', lang: 'English' }];
+    expect(result).toEqual(expected);
   });
 
   it('throws on fetch error', async () => {

@@ -8,18 +8,17 @@ describe('getTranslations', () => {
   });
 
   it('fetches translations', async () => {
-    const mockTranslations: TranslationResource[] = [
-      { id: 1, name: 'Saheeh', language_name: 'English' },
-    ];
+    const apiResponse = [{ id: 1, name: 'Saheeh', language_name: 'English' }];
 
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ translations: mockTranslations }),
+      json: () => Promise.resolve({ translations: apiResponse }),
     }) as jest.Mock;
 
     const result = await getTranslations();
     expect(global.fetch).toHaveBeenCalledWith(`${API_BASE_URL}/resources/translations`);
-    expect(result).toEqual(mockTranslations);
+    const expected: TranslationResource[] = [{ id: 1, name: 'Saheeh', lang: 'English' }];
+    expect(result).toEqual(expected);
   });
 
   it('throws on fetch error', async () => {
@@ -34,20 +33,19 @@ describe('getWordTranslations', () => {
   });
 
   it('fetches word-by-word translations', async () => {
-    const mockTranslations: TranslationResource[] = [
-      { id: 1, name: 'WBW', language_name: 'English' },
-    ];
+    const apiResponse = [{ id: 1, name: 'WBW', language_name: 'English' }];
 
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ translations: mockTranslations }),
+      json: () => Promise.resolve({ translations: apiResponse }),
     }) as jest.Mock;
 
     const result = await getWordTranslations();
     expect(global.fetch).toHaveBeenCalledWith(
       `${API_BASE_URL}/resources/translations?resource_type=word_by_word`
     );
-    expect(result).toEqual(mockTranslations);
+    const expected: TranslationResource[] = [{ id: 1, name: 'WBW', lang: 'English' }];
+    expect(result).toEqual(expected);
   });
 
   it('throws on fetch error', async () => {

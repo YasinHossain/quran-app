@@ -78,8 +78,8 @@ const verse: Verse = {
 };
 
 const resources = [
-  { id: 1, name: 'Tafsir One', language_name: 'english' },
-  { id: 2, name: 'Tafsir Two', language_name: 'english' },
+  { id: 1, name: 'Tafsir One', lang: 'english' },
+  { id: 2, name: 'Tafsir Two', lang: 'english' },
 ];
 
 beforeEach(() => {

@@ -1,6 +1,6 @@
-import { Translation } from './translationPanel.types';
+import { TranslationResource } from '@/types';
 
-export const initialTranslationsData: Translation[] = [
+export const initialTranslationsData: TranslationResource[] = [
   { id: 1, name: 'M.A.S. Abdel Haleem', lang: 'English' },
   { id: 2, name: "Fadel Soliman, Bridges' translation", lang: 'English' },
   { id: 3, name: 'T. Usmani', lang: 'English' },
