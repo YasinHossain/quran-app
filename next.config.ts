@@ -1,5 +1,4 @@
 import type { NextConfig } from 'next';
-import nextI18NextConfig from './next-i18next.config.mjs';
 import nextPwa, { type PWAConfig } from 'next-pwa';
 import pwaConfig from './next-pwa.config.mjs';
 
@@ -32,11 +31,7 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  // --- MERGED CONFIGURATIONS ---
-  // 1. Add i18n configuration
-  i18n: nextI18NextConfig.i18n,
-
-  // 2. Expose the Quran API base URL to the app
+  // Expose the Quran API base URL to the app
   env: {
     QURAN_API_BASE_URL: process.env.QURAN_API_BASE_URL,
   },
@@ -44,7 +39,7 @@ const nextConfig: NextConfig = {
   outputFileTracingExcludes:
     process.env.NODE_ENV === 'production' ? { '*': ['app/(dev)/**'] } : undefined,
 
-  // 3. Add security headers
+  // Add security headers
   async headers() {
     return [
       {
