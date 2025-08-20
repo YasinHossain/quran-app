@@ -31,7 +31,9 @@ export function useVerseListing({ id, lookup }: UseVerseListingParams) {
   // Stabilize the translation IDs for SWR key to prevent unnecessary re-fetches
   const stableTranslationIds = useMemo(() => {
     const ids = settings.translationIds || [settings.translationId];
-    return ids.sort((a, b) => a - b).join(','); // Sort and join for stable string representation
+    // Filter out any undefined/null values and ensure we have valid IDs
+    const validIds = ids.filter(id => id && typeof id === 'number');
+    return validIds.length > 0 ? validIds.sort((a, b) => a - b).join(',') : '20'; // Default to Sahih International
   }, [settings.translationIds, settings.translationId]);
 
   const { verses, isLoading, isValidating, isReachingEnd } = useInfiniteVerseLoader({

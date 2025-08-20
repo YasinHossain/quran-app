@@ -22,12 +22,11 @@ export default function useSurahPanels({
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
 
-  const selectedTranslationName = useMemo(
-    () =>
-      translationOptions.find((o) => o.id === settings.translationId)?.name ||
-      t('select_translation'),
-    [settings.translationId, translationOptions, t]
-  );
+  const selectedTranslationName = useMemo(() => {
+    // Use the first translation from translationIds array, fallback to translationId
+    const primaryId = settings.translationIds?.[0] || settings.translationId;
+    return translationOptions.find((o) => o.id === primaryId)?.name || t('select_translation');
+  }, [settings.translationIds, settings.translationId, translationOptions, t]);
 
   const selectedWordLanguageName = useMemo(
     () =>

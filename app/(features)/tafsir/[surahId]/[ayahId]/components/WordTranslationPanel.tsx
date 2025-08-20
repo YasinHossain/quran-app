@@ -58,24 +58,19 @@ export const WordTranslationPanel = ({
         <div className="w-8"></div>
       </div>
       <div className="p-3 border-b border-border">
-        <div className="relative">
-          <SearchIcon
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"
-            width={18}
-            height={18}
-          />
-          <input
-            type="text"
-            placeholder={t('search')}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-3 py-2.5 border border-border rounded-lg focus:ring-2 focus:ring-accent outline-none bg-surface text-foreground"
-          />
-        </div>
+        <SearchInput
+          value={searchTerm}
+          onChange={setSearchTerm}
+          placeholder={t('search')}
+          variant="default"
+          size="md"
+        />
       </div>
       <div className="flex-grow overflow-y-auto">
         {filtered.map((lang) => {
-          const isSelected = settings.wordLang === (LANGUAGE_CODES as Record<string, LanguageCode>)[lang.name.toLowerCase()];
+          const isSelected =
+            settings.wordLang ===
+            (LANGUAGE_CODES as Record<string, LanguageCode>)[lang.name.toLowerCase()];
           return (
             <div
               key={lang.id}

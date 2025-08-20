@@ -8,8 +8,6 @@ import { TranslationResource } from '@/types';
 import useSelectableResources from '@/lib/hooks/useSelectableResources';
 import {
   capitalizeLanguageName,
-  loadSelectedTranslations,
-  saveSelectedTranslations,
   scrollTabs,
   updateScrollState,
 } from './translationPanel.utils';
@@ -89,15 +87,27 @@ export const useTranslationPanel = (isOpen: boolean) => {
 
   const isUpdatingRef = useRef(false);
 
-  // Initialize selections once when translations are first loaded
+  // Initialize selections once when translations are first loaded  
   const hasInitialized = useRef(false);
   useEffect(() => {
     if (translations.length > 0 && !hasInitialized.current && !isUpdatingRef.current) {
       hasInitialized.current = true;
-      const settingsIds = settings.translationIds || loadSelectedTranslations();
+      
+      // Always use settings.translationIds as the source of truth
+      const settingsIds = settings.translationIds || [];
+      
       if (settingsIds.length > 0) {
         isUpdatingRef.current = true;
         setSelections(settingsIds);
+        setTimeout(() => {
+          isUpdatingRef.current = false;
+        }, 100);
+      } else {
+        // If no translations selected, ensure we have default selections
+        // This will trigger the save effect and update settings
+        const defaultIds = [20]; // Only Sahih International
+        isUpdatingRef.current = true;
+        setSelections(defaultIds);
         setTimeout(() => {
           isUpdatingRef.current = false;
         }, 100);
@@ -105,13 +115,22 @@ export const useTranslationPanel = (isOpen: boolean) => {
     }
   }, [translations.length, setSelections, settings.translationIds]);
 
-  // Save selections when they change
+  // Save selections when they change (only after initialization)
   useEffect(() => {
     if (isUpdatingRef.current) return;
 
+    // Don't save anything until we've properly initialized
+    if (!hasInitialized.current) return;
+
     const current = [...orderedSelection];
+    
+    // Don't save empty selections unless it's intentional
+    if (current.length === 0) {
+      return; // Prevent saving empty array that would wipe out existing settings
+    }
+    
+    // Only use the main settings system, not the separate localStorage key
     setTranslationIds(current);
-    saveSelectedTranslations(current);
   }, [orderedSelection, setTranslationIds]);
 
   const handleTabsScroll = useCallback(

@@ -45,16 +45,17 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
   const settingsTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const latestSettings = useRef(settings);
 
-  useEffect(() => {
-    const loadedSettings = loadSettings(defaultSettings);
-    dispatch({ type: 'SET_SETTINGS', value: loadedSettings });
-  }, []);
+  // Settings are already loaded by the useReducer initializer, no need to load again
 
   // Save settings when changed (debounced)
   useEffect(() => {
     latestSettings.current = settings;
     if (typeof window === 'undefined') return;
 
+    if (settingsTimeoutRef.current) {
+      clearTimeout(settingsTimeoutRef.current);
+    }
+    
     settingsTimeoutRef.current = setTimeout(() => {
       saveSettings(settings);
       settingsTimeoutRef.current = null;

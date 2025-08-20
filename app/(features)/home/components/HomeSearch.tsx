@@ -1,5 +1,4 @@
-'use client';
-import { SearchSolidIcon } from '@/app/shared/icons';
+import { SearchInput } from '@/app/shared/components/SearchInput';
 
 interface HomeSearchProps {
   searchQuery: string;
@@ -12,19 +11,13 @@ export default function HomeSearch({ searchQuery, setSearchQuery }: HomeSearchPr
   return (
     <>
       <div className="mt-10 w-full max-w-2xl mx-auto content-visibility-auto animate-fade-in-up animation-delay-200">
-        <div className="relative">
-          <SearchSolidIcon
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-input-placeholder"
-            size={20}
-          />
-          <input
-            type="text"
-            placeholder="What do you want to read?"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 rounded-lg ring-0 focus:outline-none focus:ring-0 transition-all duration-300 hover:shadow-lg text-lg bg-input-background text-foreground border-none placeholder-input-placeholder backdrop-blur-xl shadow-lg hover:shadow-xl bg-surface-glass/60"
-          />
-        </div>
+        <SearchInput
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="What do you want to read?"
+          size="lg"
+          variant="glass"
+        />
       </div>
 
       <div className="mt-6 flex flex-wrap justify-center gap-3 content-visibility-auto animate-fade-in-up animation-delay-200">

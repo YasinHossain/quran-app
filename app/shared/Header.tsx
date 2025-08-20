@@ -62,6 +62,7 @@ const Header = () => {
           placeholder={t('search_placeholder')}
           onKeyDown={handleKeyDown}
           className="w-full max-w-lg"
+          variant="panel"
         />
       </div>
 

@@ -119,6 +119,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
             value={searchTerm}
             onChange={setSearchTerm}
             placeholder={t('search_surah')}
+            variant="panel"
           />
         </div>
         <div ref={scrollRef} onScroll={handleScroll} className="flex-1 min-h-0 overflow-y-auto p-2">

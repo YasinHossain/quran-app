@@ -8,11 +8,11 @@ import {
   ClockIcon,
   FolderIcon,
   EllipsisHIcon,
-  SearchIcon,
   PlusIcon,
 } from '@/app/shared/icons';
 import { CreateFolderModal } from './components/CreateFolderModal';
 import { BookmarkListView } from './components/BookmarkListView';
+import { SearchInput } from '@/app/shared/components/SearchInput';
 
 // ===== Reusable Components =====
 
@@ -70,7 +70,15 @@ const FolderCard = ({
   </motion.div>
 );
 
-const ContentHeader = ({ onNewFolderClick }: { onNewFolderClick: () => void }) => (
+const ContentHeader = ({
+  onNewFolderClick,
+  searchTerm,
+  setSearchTerm,
+}: {
+  onNewFolderClick: () => void;
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+}) => (
   <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
     <h1 className="text-2xl font-bold text-foreground ">Bookmarks</h1>
     <div className="flex items-center space-x-2">
@@ -81,14 +89,13 @@ const ContentHeader = ({ onNewFolderClick }: { onNewFolderClick: () => void }) =
         <PlusIcon size={16} />
         <span>New Folder</span>
       </button>
-      <div className="relative">
-        <SearchIcon className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
-        <input
-          type="text"
-          placeholder="Search Bookmarks"
-          className="w-48 rounded-md border-border bg-surface py-1.5 pl-9 pr-3 text-sm focus:border-accent focus:ring-accent"
-        />
-      </div>
+      <SearchInput
+        value={searchTerm}
+        onChange={setSearchTerm}
+        placeholder="Search Bookmarks"
+        size="sm"
+        className="w-48"
+      />
     </div>
   </div>
 );
@@ -98,12 +105,19 @@ const ContentHeader = ({ onNewFolderClick }: { onNewFolderClick: () => void }) =
 const BookmarksPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const { folders } = useBookmarks();
 
   const selectedFolder = useMemo(() => {
     if (!selectedFolderId) return null;
     return folders.find((f) => f.id === selectedFolderId) || null;
   }, [selectedFolderId, folders]);
+
+  const filteredFolders = useMemo(() => {
+    return folders.filter((folder) =>
+      folder.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [folders, searchTerm]);
 
   return (
     <>
@@ -137,10 +151,14 @@ const BookmarksPage = () => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
-                <ContentHeader onNewFolderClick={() => setIsModalOpen(true)} />
+                <ContentHeader
+                  onNewFolderClick={() => setIsModalOpen(true)}
+                  searchTerm={searchTerm}
+                  setSearchTerm={setSearchTerm}
+                />
                 <motion.div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                   <AnimatePresence>
-                    {folders.map((folder) => (
+                    {filteredFolders.map((folder) => (
                       <FolderCard
                         key={folder.id}
                         name={folder.name}
@@ -150,10 +168,9 @@ const BookmarksPage = () => {
                     ))}
                   </AnimatePresence>
                 </motion.div>
-                {folders.length === 0 && (
+                {filteredFolders.length === 0 && (
                   <div className="mt-10 text-center text-muted">
-                    <p>No folders yet.</p>
-                    <p>Click &quot;New Folder&quot; to get started.</p>
+                    <p>No folders found for your search.</p>
                   </div>
                 )}
               </motion.div>
