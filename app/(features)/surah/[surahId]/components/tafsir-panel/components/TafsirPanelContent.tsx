@@ -16,9 +16,9 @@ interface TafsirPanelContentProps {
   orderedSelection: any[];
   tafsirs: any[];
   handleSelectionToggle: (id: number) => void;
-  handleDragStart: (id: number) => void;
-  handleDragOver: (event: React.DragEvent) => void;
-  handleDrop: (event: React.DragEvent) => void;
+  handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
+  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
+  handleDrop: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
   handleDragEnd: () => void;
   draggedId: number | null;
   languages: string[];
