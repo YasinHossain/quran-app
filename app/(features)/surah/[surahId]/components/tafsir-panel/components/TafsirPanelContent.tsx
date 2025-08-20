@@ -7,7 +7,6 @@ import { TafsirResource } from '@/types';
 import { TafsirSearch } from '../TafsirSearch';
 import { TafsirSelectionList } from '../TafsirSelectionList';
 import { TafsirLimitWarning } from '../TafsirLimitWarning';
-import { Tafsir } from '../tafsirPanel.utils';
 
 interface TafsirPanelContentProps {
   loading: boolean;

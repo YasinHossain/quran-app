@@ -3,7 +3,7 @@ import React from 'react';
 import { SearchSolidIcon } from '../icons';
 import { Search } from 'lucide-react';
 
-type SearchVariant = 'main' | 'default' | 'glass';
+type SearchVariant = 'main' | 'default' | 'glass' | 'header' | 'panel';
 type SearchSize = 'sm' | 'md' | 'lg';
 
 interface SearchInputProps {

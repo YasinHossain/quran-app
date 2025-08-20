@@ -3,13 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import {
-  PinIcon,
-  ClockIcon,
-  FolderIcon,
-  EllipsisHIcon,
-  PlusIcon,
-} from '@/app/shared/icons';
+import { PinIcon, ClockIcon, FolderIcon, EllipsisHIcon, PlusIcon } from '@/app/shared/icons';
 import { CreateFolderModal } from './components/CreateFolderModal';
 import { BookmarkListView } from './components/BookmarkListView';
 import { SearchInput } from '@/app/shared/components/SearchInput';
@@ -114,9 +108,7 @@ const BookmarksPage = () => {
   }, [selectedFolderId, folders]);
 
   const filteredFolders = useMemo(() => {
-    return folders.filter((folder) =>
-      folder.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    return folders.filter((folder) => folder.name.toLowerCase().includes(searchTerm.toLowerCase()));
   }, [folders, searchTerm]);
 
   return (

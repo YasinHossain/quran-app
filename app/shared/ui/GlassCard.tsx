@@ -45,7 +45,6 @@ export const GlassCard = React.forwardRef<HTMLDivElement | HTMLAnchorElement, Gl
       className,
       href,
       onClick,
-      asChild = false,
       animate = true,
       ...props
     },

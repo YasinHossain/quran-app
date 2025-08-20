@@ -55,7 +55,6 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
     if (settingsTimeoutRef.current) {
       clearTimeout(settingsTimeoutRef.current);
     }
-    
     settingsTimeoutRef.current = setTimeout(() => {
       saveSettings(settings);
       settingsTimeoutRef.current = null;

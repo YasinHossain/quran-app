@@ -6,11 +6,7 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import { getTranslations } from '@/lib/api/translations';
 import { TranslationResource } from '@/types';
 import useSelectableResources from '@/lib/hooks/useSelectableResources';
-import {
-  capitalizeLanguageName,
-  scrollTabs,
-  updateScrollState,
-} from './translationPanel.utils';
+import { capitalizeLanguageName, scrollTabs, updateScrollState } from './translationPanel.utils';
 import { initialTranslationsData } from './translationPanel.data';
 
 export const MAX_SELECTIONS = 5;
@@ -87,15 +83,14 @@ export const useTranslationPanel = (isOpen: boolean) => {
 
   const isUpdatingRef = useRef(false);
 
-  // Initialize selections once when translations are first loaded  
+  // Initialize selections once when translations are first loaded
   const hasInitialized = useRef(false);
   useEffect(() => {
     if (translations.length > 0 && !hasInitialized.current && !isUpdatingRef.current) {
       hasInitialized.current = true;
-      
+
       // Always use settings.translationIds as the source of truth
       const settingsIds = settings.translationIds || [];
-      
       if (settingsIds.length > 0) {
         isUpdatingRef.current = true;
         setSelections(settingsIds);
@@ -123,12 +118,10 @@ export const useTranslationPanel = (isOpen: boolean) => {
     if (!hasInitialized.current) return;
 
     const current = [...orderedSelection];
-    
     // Don't save empty selections unless it's intentional
     if (current.length === 0) {
       return; // Prevent saving empty array that would wipe out existing settings
     }
-    
     // Only use the main settings system, not the separate localStorage key
     setTranslationIds(current);
   }, [orderedSelection, setTranslationIds]);

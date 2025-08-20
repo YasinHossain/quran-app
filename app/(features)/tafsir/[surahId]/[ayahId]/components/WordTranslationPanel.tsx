@@ -5,7 +5,8 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
-import { ArrowLeftIcon, SearchIcon } from '@/app/shared/icons';
+import { ArrowLeftIcon } from '@/app/shared/icons';
+import { SearchInput } from '@/app/shared/components/SearchInput';
 
 interface LanguageOption {
   name: string;

@@ -32,7 +32,7 @@ export function useVerseListing({ id, lookup }: UseVerseListingParams) {
   const stableTranslationIds = useMemo(() => {
     const ids = settings.translationIds || [settings.translationId];
     // Filter out any undefined/null values and ensure we have valid IDs
-    const validIds = ids.filter(id => id && typeof id === 'number');
+    const validIds = ids.filter((id) => id && typeof id === 'number');
     return validIds.length > 0 ? validIds.sort((a, b) => a - b).join(',') : '20'; // Default to Sahih International
   }, [settings.translationIds, settings.translationId]);
 
