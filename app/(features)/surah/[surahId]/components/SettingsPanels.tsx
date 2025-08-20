@@ -35,13 +35,13 @@ export const SettingsPanels = ({
     <>
       <ArabicFontPanel isOpen={isArabicFontPanelOpen} onClose={onArabicFontPanelClose} />
       {onTranslationPanelClose && (
-        <TranslationPanel isOpen={isTranslationPanelOpen} onClose={onTranslationPanelClose} />
+        <TranslationPanel isOpen={!!isTranslationPanelOpen} onClose={onTranslationPanelClose} />
       )}
       {onTafsirPanelClose && (
-        <TafsirPanel isOpen={isTafsirPanelOpen} onClose={onTafsirPanelClose} />
+        <TafsirPanel isOpen={!!isTafsirPanelOpen} onClose={onTafsirPanelClose} />
       )}
       {onWordLanguagePanelClose && (
-        <WordLanguagePanel isOpen={isWordLanguagePanelOpen} onClose={onWordLanguagePanelClose} />
+        <WordLanguagePanel isOpen={!!isWordLanguagePanelOpen} onClose={onWordLanguagePanelClose} />
       )}
     </>
   );

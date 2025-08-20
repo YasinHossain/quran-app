@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:debug": "NODE_OPTIONS='--inspect' next dev --turbopack",
-    "build": "rm -f public/sw.js && next build",
+    "build": "rimraf public/sw.js && next build",
     "build:analyze": "ANALYZE=true npm run build",
     "start": "next start",
     "lint": "next lint",
@@ -23,8 +23,8 @@
     "type-check:watch": "tsc --noEmit --watch",
     "check": "npm run format:check && npm run lint && npm run type-check && npm run test:ci",
     "check:fix": "npm run format && npm run lint:fix && npm run type-check",
-    "clean": "rm -rf .next out coverage",
-    "reset": "npm run clean && rm -rf node_modules package-lock.json && npm install",
+    "clean": "rimraf .next out coverage",
+    "reset": "npm run clean && rimraf node_modules package-lock.json && npm install",
     "generate:tokens": "ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/generate-tokens.ts",
     "generate-feature": "ts-node scripts/generateFeature.ts",
     "generate-component": "node scripts/generate-component.mjs",
@@ -85,6 +85,8 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-prettier": "^5.5.3",
+    "rimraf": "^4",
+    "@rollup/plugin-terser": "^0.4.4",
     "jest": "^30.0.5",
     "jest-environment-jsdom": "^30.0.5",
     "node-fetch": "^3.3.2",
@@ -95,5 +97,9 @@
     "ts-node": "^10.9.1",
     "typescript": "^5",
     "whatwg-fetch": "^3.6.20"
+  },
+  "overrides": {
+    "rollup-plugin-terser": "file:packages/rollup-plugin-terser",
+    "rimraf": "^4"
   }
 }

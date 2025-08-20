@@ -52,7 +52,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
           languages={panelData.languages}
           activeFilter={panelData.activeFilter}
           setActiveFilter={panelData.setActiveFilter}
-          tabsContainerRef={panelData.tabsContainerRef}
+          tabsContainerRef={panelData.tabsContainerRef as React.RefObject<HTMLDivElement>}
           canScrollLeft={panelData.canScrollLeft}
           canScrollRight={panelData.canScrollRight}
           scrollTabsLeft={panelData.scrollTabsLeft}
@@ -60,7 +60,7 @@ export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => 
           resourcesToRender={resourcesToRender}
           selectedIds={panelData.selectedIds}
           listHeight={listHeight}
-          listContainerRef={listContainerRef}
+          listContainerRef={listContainerRef as React.RefObject<HTMLDivElement>}
         />
       </div>
     </div>

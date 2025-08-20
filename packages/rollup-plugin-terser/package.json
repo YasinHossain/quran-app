@@ -1,0 +1,6 @@
+{
+  "name": "rollup-plugin-terser",
+  "version": "0.4.4",
+  "private": true,
+  "main": "index.cjs"
+}

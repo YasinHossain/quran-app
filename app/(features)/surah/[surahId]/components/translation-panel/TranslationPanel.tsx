@@ -47,7 +47,7 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
           languages={panelData.languages}
           activeFilter={panelData.activeFilter}
           setActiveFilter={panelData.setActiveFilter}
-          tabsContainerRef={panelData.tabsContainerRef}
+          tabsContainerRef={panelData.tabsContainerRef as React.RefObject<HTMLDivElement>}
           canScrollLeft={panelData.canScrollLeft}
           canScrollRight={panelData.canScrollRight}
           scrollTabsLeft={panelData.scrollTabsLeft}
@@ -56,7 +56,7 @@ export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onCl
           resourcesToRender={resourcesToRender}
           selectedIds={panelData.selectedIds}
           listHeight={listHeight}
-          listContainerRef={listContainerRef}
+          listContainerRef={listContainerRef as React.RefObject<HTMLDivElement>}
         />
       </div>
     </div>
