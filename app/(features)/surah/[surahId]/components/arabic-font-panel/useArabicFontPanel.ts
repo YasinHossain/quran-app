@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTheme } from '@/app/providers/ThemeContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 
@@ -14,7 +14,7 @@ interface ArabicFont {
   lang: string;
 }
 
-export const useArabicFontPanel = (isOpen: boolean) => {
+export const useArabicFontPanel = () => {
   const { theme } = useTheme();
   const { settings, setSettings, arabicFonts } = useSettings();
   const [activeFilter, setActiveFilter] = useState('Uthmani');

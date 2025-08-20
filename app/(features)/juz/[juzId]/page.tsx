@@ -13,8 +13,6 @@ import useJuzData from '../hooks/useJuzData';
 import { JuzHeader } from './components/JuzHeader';
 import { JuzVerseList } from './components/JuzVerseList';
 
-const DEFAULT_WORD_TRANSLATION_ID = 85;
-
 export default function JuzPage({ params }: { params: Promise<{ juzId: string }> }) {
   const { juzId } = React.use(params);
 
@@ -34,9 +32,7 @@ export default function JuzPage({ params }: { params: Promise<{ juzId: string }>
     loadMoreRef,
     translationOptions,
     wordLanguageOptions,
-    wordLanguageMap,
     settings,
-    setSettings,
     activeVerse,
     reciter,
     isPlayerVisible,

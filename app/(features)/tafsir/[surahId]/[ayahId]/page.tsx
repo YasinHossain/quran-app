@@ -15,7 +15,6 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps) {
     verse,
     tafsirHtml,
     tafsirResource,
-    wordLanguageOptions,
     selectedTranslationName,
     selectedTafsirName,
     selectedWordLanguageName,
@@ -23,7 +22,6 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps) {
     next,
     navigate,
     currentSurah,
-    resetWordSettings,
   } = useTafsirVerseData(surahId, ayahId);
 
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);

@@ -1,7 +1,6 @@
 'use client';
 
 import React, { forwardRef } from 'react';
-import { useTranslation } from 'react-i18next';
 import { ArrowLeftIcon } from '@/app/shared/icons';
 import { ArabicFontPanel } from './ArabicFontPanel';
 import { TranslationSettings } from './TranslationSettings';
@@ -52,7 +51,6 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
     },
     ref
   ) => {
-    const { t } = useTranslation();
     return (
       <aside
         ref={ref}
@@ -87,11 +85,8 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
               <TranslationSettings
                 onTranslationPanelOpen={onTranslationPanelOpen}
                 onWordLanguagePanelOpen={onWordLanguagePanelOpen}
-                onTafsirPanelOpen={onTafsirPanelOpen}
                 selectedTranslationName={selectedTranslationName}
-                selectedTafsirName={selectedTafsirName}
                 selectedWordLanguageName={selectedWordLanguageName}
-                showTafsirSetting={showTafsirSetting}
                 isOpen={openSections.includes('translation')}
                 onToggle={() => onToggleSection('translation')}
               />

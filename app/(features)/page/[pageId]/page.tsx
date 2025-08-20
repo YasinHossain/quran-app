@@ -13,8 +13,6 @@ import { QuranAudioPlayer } from '@/app/shared/player';
 import { buildAudioUrl } from '@/lib/audio/reciters';
 import useVerseListing from '@/app/(features)/surah/hooks/useVerseListing';
 
-const DEFAULT_WORD_TRANSLATION_ID = 85;
-
 interface PagePageProps {
   params: Promise<{ pageId: string }>;
 }
@@ -35,9 +33,7 @@ export default function PagePage({ params }: PagePageProps) {
     loadMoreRef,
     translationOptions,
     wordLanguageOptions,
-    wordLanguageMap,
     settings,
-    setSettings,
     activeVerse,
     reciter,
     isPlayerVisible,

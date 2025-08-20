@@ -42,11 +42,8 @@ export const SettingsContent = ({
         <TranslationSettings
           onTranslationPanelOpen={onTranslationPanelOpen}
           onWordLanguagePanelOpen={onWordLanguagePanelOpen}
-          onTafsirPanelOpen={onTafsirPanelOpen}
           selectedTranslationName={selectedTranslationName}
-          selectedTafsirName={selectedTafsirName}
           selectedWordLanguageName={selectedWordLanguageName}
-          showTafsirSetting={showTafsirSetting}
           isOpen={openSections.includes('translation')}
           onToggle={() => onSectionToggle('translation')}
         />
