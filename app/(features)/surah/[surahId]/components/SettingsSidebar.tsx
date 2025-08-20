@@ -44,7 +44,6 @@ export const SettingsSidebar = ({
   onTafsirPanelClose,
   isWordLanguagePanelOpen = false,
   onWordLanguagePanelClose,
-  pageType,
 }: SettingsSidebarProps) => {
   const { isSettingsOpen, setSettingsOpen } = useSidebar();
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);

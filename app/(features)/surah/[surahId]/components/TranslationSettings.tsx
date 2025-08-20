@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { TranslationIcon } from '@/app/shared/icons';
 import { CollapsibleSection } from './CollapsibleSection';
@@ -10,11 +10,8 @@ import SelectionBox from '@/app/shared/SelectionBox';
 interface TranslationSettingsProps {
   onTranslationPanelOpen: () => void;
   onWordLanguagePanelOpen: () => void;
-  onTafsirPanelOpen?: () => void;
   selectedTranslationName: string;
-  selectedTafsirName?: string;
   selectedWordLanguageName: string;
-  showTafsirSetting?: boolean;
   isOpen?: boolean;
   onToggle?: () => void;
 }
@@ -22,11 +19,8 @@ interface TranslationSettingsProps {
 export const TranslationSettings = ({
   onTranslationPanelOpen,
   onWordLanguagePanelOpen,
-  onTafsirPanelOpen,
   selectedTranslationName,
-  selectedTafsirName,
   selectedWordLanguageName,
-  showTafsirSetting = false,
   isOpen = false,
   onToggle,
 }: TranslationSettingsProps) => {
