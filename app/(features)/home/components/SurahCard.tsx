@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { useTheme } from '@/app/providers/ThemeContext';
 import type { Surah } from '@/types';
 
 export interface SurahCardProps {
@@ -7,8 +6,6 @@ export interface SurahCardProps {
 }
 
 export function SurahCard({ surah }: SurahCardProps) {
-  const { theme } = useTheme();
-
   return (
     <Link
       href={`/surah/${surah.number}`}
@@ -24,26 +21,18 @@ export function SurahCard({ surah }: SurahCardProps) {
             {surah.number}
           </div>
           <div>
-            <h3
-              className={`font-semibold text-lg ${theme === 'light' ? 'text-slate-900' : 'text-white'}`}
-            >
-              {surah.name}
-            </h3>
-            <p className={`text-sm ${theme === 'light' ? 'text-slate-600' : 'text-slate-400'}`}>
-              {surah.meaning}
-            </p>
+            <h3 className="font-semibold text-lg text-foreground">{surah.name}</h3>
+            <p className="text-sm text-muted">{surah.meaning}</p>
           </div>
         </div>
         <div className="text-right">
           <p
-            className={`font-amiri text-2xl ${theme === 'light' ? 'text-slate-800 group-hover:text-accent' : 'text-slate-300 group-hover:text-accent'} transition-colors`}
+            className="font-amiri text-2xl text-foreground group-hover:text-accent transition-colors"
             lang="ar"
           >
             {surah.arabicName}
           </p>
-          <p className={`text-sm ${theme === 'light' ? 'text-slate-600' : 'text-slate-400'}`}>
-            {surah.verses} Verses
-          </p>
+          <p className="text-sm text-muted">{surah.verses} Verses</p>
         </div>
       </article>
     </Link>
