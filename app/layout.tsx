@@ -69,6 +69,7 @@ const libreBaskerville = Libre_Baskerville({
 export const metadata = {
   title: 'Quran Mazid',
   description: 'Read, Study, and Learn The Holy Quran',
+  viewport: { width: 'device-width', initialScale: 1 },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
