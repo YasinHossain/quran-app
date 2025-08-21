@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import Header from '@/app/shared/Header';
 import IconSidebar from '@/app/shared/IconSidebar';
 import SurahListSidebar from '@/app/shared/SurahListSidebar';
+import MobileNav from '@/app/shared/MobileNav';
 import {
   HeaderVisibilityProvider,
   useHeaderVisibility,
@@ -21,9 +22,9 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
       <Header />
       <div className="flex flex-col h-screen">
         <div
-          className={`flex flex-grow overflow-hidden min-h-0 transition-[padding-top] duration-300 ${isHidden ? 'pt-0' : 'pt-16'}`}
+          className={`flex flex-grow overflow-hidden min-h-0 transition-[padding-top] duration-300 ${isHidden ? 'pt-0' : 'pt-16'} pb-16 md:pb-0`}
         >
-          <nav aria-label="Primary navigation" className="flex-shrink-0 h-full">
+          <nav aria-label="Primary navigation" className="hidden md:flex flex-shrink-0 h-full">
             <IconSidebar />
           </nav>
           {/*
@@ -38,6 +39,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
           )}
           {children}
         </div>
+        <MobileNav />
       </div>
     </>
   );
