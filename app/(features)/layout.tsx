@@ -19,7 +19,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Header />
-      <div className="flex flex-col h-screen">
+      <div className="flex flex-col min-h-[100dvh]">
         <div
           className={`flex flex-grow overflow-hidden min-h-0 transition-[padding-top] duration-300 ${isHidden ? 'pt-0' : 'pt-16'}`}
         >
