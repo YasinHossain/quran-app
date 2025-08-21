@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import Header from '@/app/shared/Header';
 import IconSidebar from '@/app/shared/IconSidebar';
 import SurahListSidebar from '@/app/shared/SurahListSidebar';
+import ModernLayout from '@/app/shared/navigation/ModernLayout';
 import {
   HeaderVisibilityProvider,
   useHeaderVisibility,
@@ -17,29 +18,30 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   const isBookmarkPage = pathname.startsWith('/bookmarks');
 
   return (
-    <>
+    <ModernLayout>
       <Header />
       <div className="flex flex-col h-screen">
         <div
           className={`flex flex-grow overflow-hidden min-h-0 transition-[padding-top] duration-300 ${isHidden ? 'pt-0' : 'pt-16'}`}
         >
-          <nav aria-label="Primary navigation" className="flex-shrink-0 h-full">
+          {/* Desktop sidebars - hidden on mobile */}
+          <nav aria-label="Primary navigation" className="hidden lg:flex flex-shrink-0 h-full">
             <IconSidebar />
           </nav>
+
           {/*
-            The SurahListSidebar is now conditionally rendered.
-            It will NOT appear on the bookmarks page, allowing the
-            BookmarksPage component to render its own layout and sidebar without conflict.
+            The SurahListSidebar is now conditionally rendered for desktop only.
+            On mobile, users will use the bottom navigation and floating button.
           */}
           {!isBookmarkPage && (
-            <nav aria-label="Surah navigation" className="flex-shrink-0 h-full">
+            <nav aria-label="Surah navigation" className="hidden lg:flex flex-shrink-0 h-full">
               <SurahListSidebar />
             </nav>
           )}
           {children}
         </div>
       </div>
-    </>
+    </ModernLayout>
   );
 }
 

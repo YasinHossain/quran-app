@@ -5,6 +5,8 @@ import { SettingsProvider } from './SettingsContext';
 import { BookmarkProvider } from './BookmarkContext';
 import { SidebarProvider } from './SidebarContext';
 import { UIStateProvider } from './UIStateContext';
+import { NavigationProvider } from './NavigationContext';
+import GlobalSettingsModal from '@/app/shared/GlobalSettingsModal';
 
 /**
  * Groups client-side providers including `ThemeProvider`, `SettingsProvider`,
@@ -23,7 +25,12 @@ export default function ClientProviders({
       <SettingsProvider>
         <BookmarkProvider>
           <UIStateProvider>
-            <SidebarProvider>{children}</SidebarProvider>
+            <SidebarProvider>
+              <NavigationProvider>
+                {children}
+                <GlobalSettingsModal />
+              </NavigationProvider>
+            </SidebarProvider>
           </UIStateProvider>
         </BookmarkProvider>
       </SettingsProvider>

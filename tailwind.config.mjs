@@ -3,6 +3,15 @@ const config = {
   darkMode: 'class',
   content: ['./app/**/*.{ts,tsx,js,jsx}', './lib/**/*.{ts,tsx,js,jsx}'],
   theme: {
+    // Mobile-first responsive breakpoints
+    screens: {
+      xs: '475px', // Extra small devices (large phones)
+      sm: '640px', // Small devices (tablets)
+      md: '768px', // Medium devices (small laptops)
+      lg: '1024px', // Large devices (laptops/desktops)
+      xl: '1280px', // Extra large devices (large desktops)
+      '2xl': '1536px', // 2X large devices (larger desktops)
+    },
     extend: {
       colors: {
         // Custom theme colors
@@ -71,6 +80,43 @@ const config = {
       backgroundImage: {
         'gradient-emerald': 'var(--gradient-emerald)',
         'gradient-bg': 'var(--gradient-background)',
+      },
+      // Mobile-first spacing and sizing
+      spacing: {
+        18: '4.5rem', // 72px
+        88: '22rem', // 352px
+        112: '28rem', // 448px
+        128: '32rem', // 512px
+      },
+      // Mobile-optimized font sizes
+      fontSize: {
+        xs: ['0.75rem', { lineHeight: '1rem' }],
+        sm: ['0.875rem', { lineHeight: '1.25rem' }],
+        base: ['1rem', { lineHeight: '1.5rem' }],
+        lg: ['1.125rem', { lineHeight: '1.75rem' }],
+        xl: ['1.25rem', { lineHeight: '1.75rem' }],
+        '2xl': ['1.5rem', { lineHeight: '2rem' }],
+        '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
+        '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
+      },
+      // Touch-friendly sizing
+      minHeight: {
+        touch: '44px', // Minimum touch target size (WCAG)
+        'touch-lg': '48px',
+      },
+      minWidth: {
+        touch: '44px',
+        'touch-lg': '48px',
+      },
+      // Mobile-optimized z-index scale
+      zIndex: {
+        dropdown: '10',
+        sticky: '20',
+        fixed: '30',
+        modal: '40',
+        popover: '50',
+        tooltip: '60',
+        max: '9999',
       },
     },
   },

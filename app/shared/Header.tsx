@@ -1,22 +1,25 @@
 'use client';
 import type React from 'react';
-import { BarsIcon, SunIcon, MoonIcon } from './icons';
-import { SearchInput } from './components/SearchInput';
-import { useTranslation } from 'react-i18next';
-import { useSidebar } from '@/app/providers/SidebarContext';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { FaCog } from 'react-icons/fa';
+import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
+import { IconSettings, IconSun, IconMoon } from '@tabler/icons-react';
+import { SearchInput } from './components/SearchInput';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useTheme } from '@/app/providers/ThemeContext';
+import { useSidebar } from '@/app/providers/SidebarContext';
+import { cn } from '@/lib/utils';
 
 const Header = () => {
-  const { t } = useTranslation();
-  const { setSurahListOpen, setSettingsOpen } = useSidebar();
-  const { setTheme } = useTheme();
-  const router = useRouter();
-  const [query, setQuery] = useState('');
   const { isHidden } = useHeaderVisibility();
+  const { theme, setTheme } = useTheme();
+  const { setSettingsOpen } = useSidebar();
+  const router = useRouter();
+  const pathname = usePathname();
+  const [query, setQuery] = useState('');
+
+  // Check if we're on a surah page where settings sidebar is visible on desktop
+  const isOnSurahPage = pathname.startsWith('/surah/') && pathname !== '/surah';
 
   const toggleTheme = () => {
     const html = document.documentElement;
@@ -35,57 +38,73 @@ const Header = () => {
     }
   };
 
-  const headerBgClass = 'bg-background';
-
   return (
     <header
-      className={`fixed top-0 left-0 right-0 h-16 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-8 ${headerBgClass} text-foreground transform transition-transform duration-300 ${isHidden ? '-translate-y-full shadow-none' : 'translate-y-0 shadow-sm'} border-b border-transparent overflow-hidden`}
-      style={{ zIndex: 'var(--z-fixed)' }}
+      className={cn(
+        'fixed top-0 left-0 right-0 h-14 sm:h-16 z-header transition-all duration-300',
+        'flex items-center gap-3 px-3 sm:px-4 lg:px-6',
+        'border-b backdrop-blur-xl',
+        theme === 'dark'
+          ? 'bg-background/70 border-border/20'
+          : 'bg-background/80 border-border/10',
+        isHidden ? '-translate-y-full' : 'translate-y-0'
+      )}
     >
-      {/* Column 1: Title & Surah List Toggle */}
-      <div className="flex items-center gap-2">
-        <button
-          onClick={() => setSurahListOpen(true)}
-          className="p-2 rounded-md hover:bg-surface/60 lg:hidden"
-          aria-label="Open Surah List"
-        >
-          <BarsIcon size={20} />
-        </button>
-        <h1 className="text-xl font-semibold">{t('title')}</h1>
+      {/* Left section - Brand */}
+      <Link
+        href="/"
+        className="flex items-center space-x-2 hover:opacity-80 transition-opacity flex-shrink-0"
+      >
+        <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-sm">
+          <svg className="h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.5 2h-13C4.7 2 4 2.7 4 3.5v17l8-4 8 4v-17C20 2.7 19.3 2 18.5 2z" />
+          </svg>
+        </div>
+        <span className="hidden sm:block font-semibold text-lg text-foreground">Quran Mazid</span>
+      </Link>
+
+      {/* Center section - Search */}
+      <div className="flex-1 flex justify-center mx-2">
+        <div className="w-full max-w-xs sm:max-w-sm">
+          <SearchInput
+            value={query}
+            onChange={setQuery}
+            placeholder="Search verses, surahs..."
+            onKeyDown={handleKeyDown}
+            variant="header"
+            size="sm"
+            className="w-full"
+          />
+        </div>
       </div>
 
-      {/* Column 2: Centered Search Bar */}
-      <div className="flex justify-center">
-        <SearchInput
-          value={query}
-          onChange={setQuery}
-          placeholder={t('search_placeholder')}
-          onKeyDown={handleKeyDown}
-          className="w-full max-w-lg"
-          variant="panel"
-        />
-      </div>
-
-      {/* Column 3: Theme Toggle & Settings Button */}
-      <div className="flex items-center gap-2 justify-end">
+      {/* Right section - Actions */}
+      <div className="flex items-center space-x-1 flex-shrink-0">
+        {/* Theme toggle */}
         <button
           onClick={toggleTheme}
-          className="p-2 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-          aria-label="Toggle Theme"
+          className="btn-touch p-2.5 rounded-xl hover:bg-muted/60 transition-all duration-200 active:scale-95"
+          aria-label="Toggle theme"
         >
-          <div className="dark:hidden">
-            <MoonIcon className="w-5 h-5 text-content-secondary" />
-          </div>
-          <div className="hidden dark:block">
-            <SunIcon className="w-5 h-5 text-status-warning" />
-          </div>
+          {theme === 'dark' ? (
+            <IconSun size={18} className="text-amber-500" />
+          ) : (
+            <IconMoon size={18} className="text-slate-600" />
+          )}
         </button>
+
+        {/* Settings button */}
         <button
           onClick={() => setSettingsOpen(true)}
-          className="p-2 rounded-md hover:bg-surface/60 lg:hidden"
-          aria-label="Open Settings"
+          className={cn(
+            'btn-touch p-2.5 rounded-xl hover:bg-muted/60 transition-all duration-200 active:scale-95',
+            // On surah pages: only show on mobile (when sidebar is hidden)
+            // On other pages: show on all screen sizes
+            isOnSurahPage ? 'lg:hidden' : ''
+          )}
+          aria-label="Settings"
         >
-          <FaCog size={20} />
+          <IconSettings size={18} className="text-muted-foreground" />
         </button>
       </div>
     </header>

@@ -6,6 +6,10 @@ const MAX_OPEN_SECTIONS = 2;
 
 export const useSettingsSections = () => {
   const [openSections, setOpenSections] = useState<string[]>(() => {
+    if (typeof window === 'undefined') {
+      return DEFAULT_OPEN_SECTIONS;
+    }
+
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -41,10 +45,12 @@ export const useSettingsSections = () => {
         }
 
         // Save to localStorage
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
-        } catch (error) {
-          console.warn('Failed to save sidebar sections to localStorage:', error);
+        if (typeof window !== 'undefined') {
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
+          } catch (error) {
+            console.warn('Failed to save sidebar sections to localStorage:', error);
+          }
         }
 
         return newState;

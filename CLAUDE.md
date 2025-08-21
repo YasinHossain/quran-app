@@ -79,8 +79,33 @@ npm run generate-feature <name>  # Scaffold new feature
 - Run `npm run check` before commits
 - Use conventional commit messages with `feat:`, `fix:` prefixes
 
+## Mobile-First Development Guidelines
+
+**Responsive Design Principles:**
+
+- **Mobile-first approach**: Design for mobile, enhance for desktop
+- **Touch-friendly interactions**: 44px minimum touch targets (WCAG guidelines)
+- **Breakpoint strategy**: `sm` (640px), `md` (768px), `lg` (1024px), `xl` (1280px)
+- **Semantic design tokens**: Use design system tokens instead of hardcoded values
+- **Performance-first**: Virtual scrolling, lazy loading, content-visibility
+
+**Component Requirements:**
+
+- All components must be responsive across breakpoints
+- Use drawer pattern for mobile sidebars, desktop sidebar for larger screens
+- Implement proper focus management for mobile accessibility
+- Test on multiple device sizes: iPhone SE (375px), iPhone 12 Pro (390px), iPad (768px), Desktop (1024px+)
+
+**Testing Mobile Responsiveness:**
+
+- Use responsive testing utilities in Jest
+- Test touch interactions and gesture support
+- Verify keyboard navigation and screen reader compatibility
+- Maintain WCAG AA compliance standards
+
 ## Recent Updates
 
+- **Mobile-Responsive Architecture**: Implementing mobile-first design system with responsive breakpoints
 - **Tafsir System**: Enhanced with persistent selections, improved UI, and multiple tafsir support
 - **Settings Management**: Streamlined panels with better state management and storage
 - **UI/UX**: Reduced overlapping sliders and improved panel positioning

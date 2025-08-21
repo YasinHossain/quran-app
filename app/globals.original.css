@@ -73,8 +73,7 @@
     --z-dropdown: 10;
     --z-sticky: 20;
     --z-fixed: 30;
-    /* Modals/overlays should sit above header and bottom nav */
-    --z-modal: 100;
+    --z-modal: 40;
     --z-popover: 50;
     --z-tooltip: 60;
   }
@@ -187,40 +186,6 @@
   .card {
     @apply rounded-lg p-4 shadow-sm;
     background: rgb(var(--color-background));
-  }
-
-  /* Drawer and overlay patterns (for mobile sidebars/modals) */
-  .drawer-overlay {
-    @apply fixed inset-0 bg-black/50 backdrop-blur-sm;
-    @apply transition-opacity duration-300;
-    /* Ensure overlays sit above header/bottom navigation */
-    z-index: var(--z-modal);
-  }
-
-  .drawer-panel {
-    @apply fixed z-50 bg-surface shadow-modal;
-    @apply transition-transform duration-300 ease-in-out;
-  }
-
-  /* Scrollbar hiding for cleaner mobile experience */
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Touch gesture helpers */
-  .touch-pan-y {
-    touch-action: pan-y;
-  }
-}
-
-@layer utilities {
-  /* Z-index utilities using semantic names */
-  .z-modal {
-    z-index: var(--z-modal);
   }
 }
 

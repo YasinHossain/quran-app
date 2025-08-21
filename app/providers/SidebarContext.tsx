@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 interface SidebarContextType {
   isSurahListOpen: boolean;
@@ -22,8 +22,60 @@ const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
  * positions with this provider to synchronize their behavior.
  */
 export const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isSurahListOpen, setSurahListOpen] = useState(false);
-  const [isSettingsOpen, setSettingsOpen] = useState(false);
+  const [isSurahListOpen, _setSurahListOpen] = useState(false);
+  const [isSettingsOpen, _setSettingsOpen] = useState(false);
+
+  // Enhanced mobile-friendly sidebar handlers
+  const setSurahListOpen = useCallback((open: boolean) => {
+    _setSurahListOpen(open);
+
+    // Prevent body scroll when drawer is open (mobile)
+    if (typeof window !== 'undefined') {
+      if (open) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    }
+  }, []);
+
+  const setSettingsOpen = useCallback((open: boolean) => {
+    _setSettingsOpen(open);
+
+    // Prevent body scroll when drawer is open (mobile)
+    if (typeof window !== 'undefined') {
+      if (open) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    }
+  }, []);
+
+  // Keyboard support for closing drawers
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        if (isSurahListOpen) {
+          setSurahListOpen(false);
+        } else if (isSettingsOpen) {
+          setSettingsOpen(false);
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isSurahListOpen, isSettingsOpen, setSurahListOpen, setSettingsOpen]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (typeof window !== 'undefined') {
+        document.body.style.overflow = '';
+      }
+    };
+  }, []);
   const [surahScrollTop, _setSurahScrollTop] = useState(() => {
     if (typeof window === 'undefined') return 0;
     const stored = sessionStorage.getItem('surahScrollTop');

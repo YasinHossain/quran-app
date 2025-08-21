@@ -1,0 +1,434 @@
+/* ===== Tailwind Import (Required for Tailwind classes) ===== */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+  :root {
+    /* RGB space-separated values for opacity support */
+    --color-background: 247 249 249;
+    --color-surface: 255 255 255;
+    --color-foreground: 55 65 81;
+    --color-muted: 107 114 128;
+    --color-accent: 13 148 136;
+    --color-accent-hover: 15 118 110;
+    --color-interactive: 243 244 246;
+    --color-interactive-hover: 229 231 235;
+    --color-border: 229 231 235;
+    --color-error: 220 38 38;
+    --color-on-accent: 255 255 255;
+    --color-primary: 0 150 136;
+
+    /* Content semantic colors */
+    --color-content-primary: 55 65 81; /* slate-700 equivalent */
+    --color-content-secondary: 107 114 128; /* slate-500 equivalent */
+    --color-content-accent: 4 120 87; /* emerald-700 equivalent */
+    --color-content-muted: 156 163 175; /* gray-400 equivalent */
+
+    /* Status colors */
+    --color-status-error: 220 38 38; /* red-600 */
+    --color-status-success: 34 197 94; /* green-500 */
+    --color-status-warning: 251 191 36; /* amber-400 */
+    --color-status-info: 59 130 246; /* blue-500 */
+
+    /* Surface colors */
+    --color-surface-elevated: 255 255 255; /* white */
+    --color-surface-overlay: 255 255 255; /* white with opacity */
+    --color-surface-glass: 255 255 255; /* white with opacity for glass effect */
+
+    /* Button colors */
+    --color-button-primary: 243 244 246; /* gray-100 */
+    --color-button-primary-hover: 229 231 235; /* gray-200 */
+    --color-button-secondary: 255 255 255; /* white */
+    --color-button-secondary-hover: 249 250 251; /* gray-50 */
+
+    /* Input colors */
+    --color-input-background: 255 255 255; /* white */
+    --color-input-border: 209 213 219; /* gray-300 */
+    --color-input-placeholder: 156 163 175; /* gray-400 */
+
+    /* Tooltip colors */
+    --color-tooltip-background: 55 65 81; /* slate-700 */
+    --color-tooltip-text: 255 255 255; /* white */
+
+    /* Gradient tokens */
+    --color-gradient-from: var(--color-accent);
+    --color-gradient-to: var(--color-accent-hover);
+    --gradient-emerald: linear-gradient(135deg, 16 185 129, 5 150 105);
+    --gradient-background: linear-gradient(135deg, 186 230 253, 255 255 255, 16 185 129);
+
+    /* Shadow tokens */
+    --shadow-card: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-card-hover: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-modal: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+    /* Border radius tokens */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    --radius-2xl: 1.5rem;
+
+    /* Z-index scale for consistent layering */
+    --z-dropdown: 10;
+    --z-sticky: 20;
+    --z-fixed: 30;
+    --z-modal: 40;
+    --z-popover: 50;
+    --z-tooltip: 60;
+    --z-header: 100; /* Fixed header */
+
+    /* Mobile-responsive spacing tokens */
+    --spacing-mobile-padding: 1rem; /* 16px mobile padding */
+    --spacing-tablet-padding: 1.5rem; /* 24px tablet padding */
+    --spacing-desktop-padding: 2rem; /* 32px desktop padding */
+
+    /* Touch-friendly sizing */
+    --touch-target-min: 44px; /* WCAG minimum touch target */
+    --touch-target-comfortable: 48px; /* Comfortable touch target */
+
+    /* Mobile-optimized typography */
+    --text-mobile-base: 1rem; /* 16px base mobile text */
+    --text-mobile-small: 0.875rem; /* 14px mobile small text */
+    --text-mobile-large: 1.125rem; /* 18px mobile large text */
+
+    /* Responsive container widths */
+    --container-mobile: 100%;
+    --container-tablet: 768px;
+    --container-desktop: 1024px;
+    --container-wide: 1280px;
+
+    /* Mobile navigation heights */
+    --nav-height-mobile: 4rem; /* 64px */
+    --nav-height-tablet: 4.5rem; /* 72px */
+    --nav-height-desktop: 5rem; /* 80px */
+
+    /* Safe area insets for mobile devices */
+    --safe-area-top: env(safe-area-inset-top);
+    --safe-area-bottom: env(safe-area-inset-bottom);
+    --safe-area-left: env(safe-area-inset-left);
+    --safe-area-right: env(safe-area-inset-right);
+  }
+
+  .dark {
+    --color-background: 15 23 42;
+    --color-surface: 30 41 59;
+    --color-foreground: 226 232 240;
+    --color-muted: 148 163 184;
+    --color-accent: 20 184 166;
+    --color-accent-hover: 13 148 136;
+    --color-interactive: 51 65 85;
+    --color-interactive-hover: 71 85 105;
+    --color-border: 51 65 85;
+    --color-error: 248 113 113;
+    --color-on-accent: 255 255 255;
+    --color-primary: 20 184 166;
+
+    /* Dark mode surface colors */
+    --color-surface-elevated: 30 41 59;
+    --color-surface-overlay: 15 23 42;
+    --color-surface-glass: 15 23 42;
+
+    /* Dark mode button colors */
+    --color-button-primary: 51 65 85;
+    --color-button-primary-hover: 71 85 105;
+    --color-button-secondary: 30 41 59;
+    --color-button-secondary-hover: 51 65 85;
+
+    /* Dark mode input colors */
+    --color-input-background: 30 41 59;
+    --color-input-border: 71 85 105;
+    --color-input-placeholder: 100 116 139;
+
+    /* Dark mode tooltip colors */
+    --color-tooltip-background: 30 41 59;
+    --color-tooltip-text: 226 232 240;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: rgb(var(--color-foreground));
+    background-color: rgb(var(--color-background));
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  /* ===== Unified Responsive Component Classes ===== */
+  
+  /* Container patterns that work at any size */
+  .container-responsive {
+    @apply w-full mx-auto px-3 sm:px-4 lg:px-6 xl:px-8;
+    @apply max-w-sm sm:max-w-2xl lg:max-w-4xl xl:max-w-6xl;
+  }
+
+  .container-full {
+    @apply w-full min-h-screen;
+  }
+
+  /* Grid patterns that adapt naturally */
+  .grid-responsive {
+    @apply grid gap-3 sm:gap-4 lg:gap-6;
+    @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+  }
+
+  .grid-mobile {
+    @apply grid grid-cols-1 gap-3 sm:gap-4;
+  }
+
+  /* Flex patterns that stack on mobile */
+  .flex-mobile-col {
+    @apply flex flex-col gap-3 sm:flex-row sm:gap-4 lg:gap-6;
+  }
+
+  .flex-mobile-row {
+    @apply flex flex-col gap-2 xs:flex-row xs:gap-3 sm:gap-4;
+  }
+
+  /* Touch-friendly interactive elements */
+  .btn-touch {
+    @apply min-h-touch min-w-touch;
+    @apply px-3 py-2 sm:px-4 sm:py-2.5 lg:px-6 lg:py-3;
+    @apply rounded-lg font-medium transition-all duration-200;
+    @apply focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none;
+    @apply active:scale-95 select-none;
+    touch-action: manipulation;
+  }
+
+  .input-responsive {
+    @apply min-h-touch w-full px-3 py-2 sm:px-4 sm:py-2.5;
+    @apply rounded-lg border border-input-border bg-input-background;
+    @apply text-foreground placeholder:text-input-placeholder;
+    @apply transition-all duration-200;
+    @apply focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none;
+  }
+
+  /* Card components that scale appropriately */
+  .card {
+    @apply bg-surface border border-border rounded-lg shadow-card;
+    @apply p-3 sm:p-4 lg:p-6 xl:p-8;
+    @apply transition-all duration-200;
+  }
+
+  .card-hover {
+    @apply hover:shadow-card-hover hover:border-accent/20 cursor-pointer;
+    @apply active:scale-[0.99] transition-all duration-200;
+  }
+
+  /* Typography that remains readable */
+  .text-mobile {
+    @apply text-sm sm:text-base lg:text-lg;
+    @apply leading-relaxed;
+  }
+
+  .text-mobile-sm {
+    @apply text-xs sm:text-sm;
+    @apply leading-relaxed;
+  }
+
+  .text-mobile-lg {
+    @apply text-base sm:text-lg lg:text-xl xl:text-2xl;
+    @apply font-semibold leading-tight;
+  }
+
+  .text-mobile-xl {
+    @apply text-lg sm:text-xl lg:text-2xl xl:text-3xl;
+    @apply font-bold leading-tight;
+  }
+
+  /* Navigation patterns */
+  .nav-item {
+    @apply flex items-center gap-2 sm:gap-3;
+    @apply px-3 py-2 sm:px-4 sm:py-2.5;
+    @apply rounded-lg transition-all duration-200;
+    @apply min-h-touch;
+    @apply focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none;
+    @apply active:scale-95;
+    touch-action: manipulation;
+  }
+
+  /* Drawer and overlay patterns */
+  .drawer-overlay {
+    @apply fixed inset-0 bg-black/50 backdrop-blur-sm z-40;
+    @apply transition-opacity duration-300;
+  }
+
+  .drawer-panel {
+    @apply fixed z-50 bg-surface shadow-modal;
+    @apply transition-transform duration-300 ease-in-out;
+  }
+
+  /* Safe area support for mobile devices */
+  .pb-safe {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .pt-safe {
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
+
+  .pl-safe {
+    padding-left: max(1rem, env(safe-area-inset-left));
+  }
+
+  .pr-safe {
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+
+  /* Bottom navigation spacing */
+  .bottom-nav-space {
+    padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+  }
+
+  /* Header spacing accounting for safe area */
+  .header-space {
+    padding-top: calc(4rem + env(safe-area-inset-top));
+  }
+
+  /* Scrollbar hiding for clean mobile experience */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Touch gesture support */
+  .touch-pan-x {
+    touch-action: pan-x;
+  }
+
+  .touch-pan-y {
+    touch-action: pan-y;
+  }
+
+  .touch-pinch-zoom {
+    touch-action: pinch-zoom;
+  }
+
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+
+  /* Content visibility optimization for performance */
+  .content-visibility-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 500px;
+  }
+
+  /* Focus states for better accessibility */
+  .focus-ring {
+    @apply focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2;
+    @apply focus-visible:ring-offset-background focus-visible:outline-none;
+  }
+
+  /* Responsive glass effect */
+  .glass-effect {
+    @apply bg-surface-glass/95 backdrop-blur-xl;
+    @apply border border-border/20;
+  }
+
+  /* Animation presets */
+  .animate-fade-in {
+    animation: fadeIn 0.2s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.2s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+}
+
+@layer utilities {
+  /* Z-index utilities using semantic names */
+  .z-dropdown { z-index: var(--z-dropdown); }
+  .z-sticky { z-index: var(--z-sticky); }
+  .z-fixed { z-index: var(--z-fixed); }
+  .z-modal { z-index: var(--z-modal); }
+  .z-popover { z-index: var(--z-popover); }
+  .z-tooltip { z-index: var(--z-tooltip); }
+  .z-header { z-index: var(--z-header); }
+
+  /* Responsive text utilities */
+  .text-responsive {
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
+    line-height: 1.6;
+  }
+
+  .text-responsive-lg {
+    font-size: clamp(1rem, 3vw, 1.125rem);
+    line-height: 1.5;
+  }
+
+  .text-responsive-xl {
+    font-size: clamp(1.125rem, 4vw, 1.25rem);
+    line-height: 1.4;
+  }
+
+  /* Responsive spacing utilities */
+  .space-responsive-x > * + * {
+    margin-left: clamp(0.5rem, 2vw, 1rem);
+  }
+
+  .space-responsive-y > * + * {
+    margin-top: clamp(0.5rem, 2vh, 1rem);
+  }
+
+  /* Responsive padding utilities */
+  .p-responsive {
+    padding: clamp(0.75rem, 2vw, 1.5rem);
+  }
+
+  .px-responsive {
+    padding-left: clamp(0.75rem, 2vw, 1.5rem);
+    padding-right: clamp(0.75rem, 2vw, 1.5rem);
+  }
+
+  .py-responsive {
+    padding-top: clamp(0.75rem, 2vh, 1.5rem);
+    padding-bottom: clamp(0.75rem, 2vh, 1.5rem);
+  }
+}

@@ -14,6 +14,7 @@ import Page from './surah-sidebar/Page';
 import SidebarTabs from './surah-sidebar/components/SidebarTabs';
 import { SearchInput } from './components/SearchInput';
 import useSelectionSync from './surah-sidebar/hooks/useSelectionSync';
+import { CloseIcon } from './icons';
 
 interface JuzSummary {
   number: number;
@@ -72,7 +73,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     selectedJuzId,
     selectedPageId,
   });
-  const { isSurahListOpen } = useSidebar();
+  const { isSurahListOpen, setSurahListOpen } = useSidebar();
 
   // Filtering lists based on search term
   const term = searchTerm.toLowerCase();
@@ -100,13 +101,37 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
 
   return (
     <>
-      {/* This is the main sidebar container. */}
+      {/* Mobile drawer overlay */}
+      {isSurahListOpen && (
+        <div
+          className="drawer-overlay md:hidden"
+          onClick={() => setSurahListOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Main sidebar container */}
       <aside
-        className={`fixed md:static top-16 md:top-0 bottom-0 left-0 w-[20.7rem] bg-background text-foreground flex flex-col shadow-lg z-40 md:z-10 md:h-full transform transition-transform duration-300 ${
-          isSurahListOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
-        }`}
+        className={`drawer-panel md:static top-14 sm:top-16 md:top-0 bottom-0 left-0 w-72 sm:w-80 md:w-[20.7rem] bg-background text-foreground flex flex-col shadow-modal md:shadow-lg z-modal md:z-10 md:h-full ${
+          isSurahListOpen ? 'open' : ''
+        } md:translate-x-0`}
+        role="navigation"
+        aria-label="Surah navigation"
       >
-        <div className="p-4 border-b border-border">
+        {/* Mobile header with close button */}
+        <div className="flex items-center justify-between p-3 sm:p-4 border-b border-border md:block">
+          <h2 className="text-lg font-semibold text-foreground md:hidden">{t('navigation')}</h2>
+          <button
+            onClick={() => setSurahListOpen(false)}
+            className="btn-touch p-2 rounded-md hover:bg-surface/60 md:hidden"
+            aria-label="Close navigation"
+          >
+            <CloseIcon size={18} />
+          </button>
+        </div>
+
+        {/* Tabs section */}
+        <div className="p-3 sm:p-4 border-b border-border">
           <SidebarTabs
             tabs={TABS}
             activeTab={activeTab}
@@ -114,15 +139,23 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
             prepareForTabSwitch={prepareForTabSwitch}
           />
         </div>
-        <div className="p-4 border-b border-border">
+        {/* Search section */}
+        <div className="p-3 sm:p-4 border-b border-border">
           <SearchInput
             value={searchTerm}
             onChange={setSearchTerm}
             placeholder={t('search_surah')}
             variant="panel"
+            className="text-mobile"
           />
         </div>
-        <div ref={scrollRef} onScroll={handleScroll} className="flex-1 min-h-0 overflow-y-auto p-2">
+        {/* Content section */}
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-3"
+          style={{ touchAction: 'pan-y' }}
+        >
           {activeTab === 'Surah' && (
             <Surah
               chapters={filteredChapters}

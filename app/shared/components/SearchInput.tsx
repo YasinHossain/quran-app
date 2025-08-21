@@ -33,21 +33,21 @@ const getSizeStyles = (size: SearchSize) => {
   switch (size) {
     case 'sm':
       return {
-        container: 'text-sm',
-        input: 'pl-9 pr-3 py-2',
-        icon: { size: 16, className: 'left-3' },
+        container: 'text-mobile-sm',
+        input: 'pl-8 sm:pl-9 pr-3 py-2 min-h-touch',
+        icon: { size: 16, className: 'left-2.5 sm:left-3' },
       };
     case 'lg':
       return {
-        container: 'text-lg',
-        input: 'pl-11 pr-4 py-3',
-        icon: { size: 20, className: 'left-3.5' },
+        container: 'text-mobile sm:text-lg',
+        input: 'pl-10 sm:pl-11 pr-4 py-3 sm:py-3.5 min-h-touch-lg',
+        icon: { size: 18, className: 'left-3 sm:left-3.5' },
       };
     default: // md
       return {
-        container: '',
-        input: 'pl-10 pr-4 py-2.5',
-        icon: { size: 18, className: 'left-3.5' },
+        container: 'text-mobile',
+        input: 'pl-9 sm:pl-10 pr-4 py-2.5 min-h-touch',
+        icon: { size: 18, className: 'left-3 sm:left-3.5' },
       };
   }
 };
@@ -103,6 +103,12 @@ export const SearchInput = ({
         placeholder={placeholder}
         onKeyDown={onKeyDown}
         className={`w-full ${sizeStyles.input} rounded-lg outline-none focus:outline-none ${focusStyles} transition-all duration-300 ${hoverStyles} ${variantStyles}`}
+        style={{ touchAction: 'manipulation' }}
+        autoCapitalize="off"
+        autoComplete="off"
+        autoCorrect="off"
+        spellCheck="false"
+        inputMode="search"
       />
     </div>
   );

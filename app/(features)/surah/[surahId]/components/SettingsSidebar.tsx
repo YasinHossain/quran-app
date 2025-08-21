@@ -57,32 +57,32 @@ export const SettingsSidebar = ({
 
   return (
     <>
-      <div
-        className={`fixed inset-0 bg-transparent z-30 lg:hidden ${isSettingsOpen ? '' : 'hidden'}`}
-        role="button"
-        tabIndex={0}
-        onClick={() => setSettingsOpen(false)}
-        onKeyDown={(e) => {
-          if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
-            setSettingsOpen(false);
-          }
-        }}
-      />
+      {/* Mobile drawer overlay */}
+      {isSettingsOpen && (
+        <div
+          className="drawer-overlay lg:hidden"
+          onClick={() => setSettingsOpen(false)}
+          aria-hidden="true"
+        />
+      )}
       <aside
         ref={sidebarRef}
-        className={`settings-sidebar fixed lg:static ${isHidden ? 'top-0' : 'top-16'} lg:top-0 bottom-0 right-0 w-80 sm:w-[20.7rem] bg-background text-foreground flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 lg:h-full border-l border-border ${
+        className={`settings-sidebar fixed lg:static top-0 lg:top-0 bottom-0 right-0 w-72 sm:w-80 md:w-[20.7rem] bg-background text-foreground flex flex-col lg:flex-shrink-0 shadow-modal lg:shadow-lg border-l border-border transition-transform duration-300 ease-in-out lg:h-full overflow-x-hidden ${
           isSettingsOpen ? 'translate-x-0' : 'translate-x-full'
-        } md:translate-x-0 ${isSettingsOpen ? 'flex' : 'hidden'} md:flex scrollbar-hide`}
+        } lg:translate-x-0`}
         style={{
-          zIndex: 'var(--z-sticky)',
-          position: 'relative',
+          zIndex: 'var(--z-modal)',
           msOverflowStyle: 'none',
           scrollbarWidth: 'none',
+          touchAction: 'pan-y',
         }}
+        role="dialog"
+        aria-label="Settings panel"
       >
         <SettingsHeader onClose={() => setSettingsOpen(false)} />
 
-        <div className="flex-grow p-4 space-y-4">
+        {/* Content section */}
+        <div className="flex-grow p-3 sm:p-4 space-y-3 sm:space-y-4 overflow-y-auto scrollbar-hide touch-pan-y">
           <SettingsTabs
             activeTab={activeTab}
             onTabChange={handleTabChange}
