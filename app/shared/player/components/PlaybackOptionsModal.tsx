@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { SlidersHorizontal, Mic2, Repeat } from 'lucide-react';
 import ReciterPanel from './ReciterPanel';
 import RepeatPanel from './RepeatPanel';
@@ -28,9 +29,9 @@ export default function PlaybackOptionsModal({ open, onClose, activeTab, setActi
 
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4"
+      className="fixed inset-0 z-[120] grid place-items-center bg-black/40 p-4"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -119,6 +120,7 @@ export default function PlaybackOptionsModal({ open, onClose, activeTab, setActi
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

@@ -122,7 +122,7 @@ export default function JuzPage({ params }: { params: Promise<{ juzId: string }>
         <div
           className={`fixed left-0 right-0 p-4 bg-transparent z-audio-player transition-all duration-300 ease-in-out ${
             isHidden ? 'bottom-0 pb-safe' : 'bottom-0 pb-safe lg:pb-4'
-          }`}
+          } lg:left-1/2 lg:-translate-x-1/2 lg:right-auto lg:w-[min(90vw,60rem)]`}
           style={{
             bottom: isHidden
               ? 'env(safe-area-inset-bottom)'

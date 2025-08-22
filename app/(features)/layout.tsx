@@ -2,36 +2,59 @@
 
 import { usePathname } from 'next/navigation';
 import Header from '@/app/shared/Header';
+import IconSidebar from '@/app/shared/IconSidebar';
 import SurahListSidebar from '@/app/shared/SurahListSidebar';
-import AdaptiveLayout from '@/app/shared/components/AdaptiveLayout';
 import ModernLayout from '@/app/shared/navigation/ModernLayout';
-import { HeaderVisibilityProvider } from '@/app/(features)/layout/context/HeaderVisibilityContext';
-import { useSidebar } from '@/app/providers/SidebarContext';
-import { useResponsiveState } from '@/lib/responsive';
+import {
+  HeaderVisibilityProvider,
+  useHeaderVisibility,
+} from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
-  const { isSurahListOpen, setSurahListOpen } = useSidebar();
-  const { variant } = useResponsiveState();
+  const { isHidden } = useHeaderVisibility();
   const pathname = usePathname();
-  // Determine if the current page is the bookmarks page.
+  // This check determines if the current page is the new bookmarks page.
+  // Using startsWith is slightly more robust for routing than includes.
   const isBookmarkPage = pathname.startsWith('/bookmarks');
   // Check if we're on the home page
   const isHomePage = pathname === '/';
 
-  const sidebarOpen = variant === 'expanded' ? !isBookmarkPage : isSurahListOpen;
-
   return (
     <ModernLayout>
-      <AdaptiveLayout
-        sidebarContent={!isBookmarkPage ? <SurahListSidebar /> : undefined}
-        sidebarOpen={sidebarOpen}
-        onSidebarToggle={() => setSurahListOpen(!isSurahListOpen)}
-      >
-        {!isHomePage && <Header />}
-        <div className="flex flex-col min-h-[100dvh]">
-          <div className="flex-grow min-h-0 transition-all duration-300">{children}</div>
+      {/* Only show main header and sidebars if not on home page */}
+      {!isHomePage && (
+        <>
+          <Header />
+
+          {/* Fixed desktop sidebars - positioned independently */}
+          <nav
+            aria-label="Primary navigation"
+            className={`hidden lg:flex fixed left-0 w-16 bg-background border-r border-border z-10 transition-[top] duration-300 ${isHidden ? 'top-0' : 'top-16'}`}
+            style={{ height: isHidden ? '100vh' : 'calc(100vh - 4rem)' }}
+          >
+            <IconSidebar />
+          </nav>
+
+          {!isBookmarkPage && (
+            <nav
+              aria-label="Surah navigation"
+              className={`hidden lg:flex fixed left-16 w-80 bg-background border-r border-border z-10 transition-[top] duration-300 ${isHidden ? 'top-0' : 'top-16'}`}
+              style={{ height: isHidden ? '100vh' : 'calc(100vh - 4rem)' }}
+            >
+              <SurahListSidebar />
+            </nav>
+          )}
+        </>
+      )}
+
+      {/* Main content area with proper left margin for sidebars */}
+      <div className="flex flex-col min-h-[100dvh]">
+        <div
+          className={`flex-grow min-h-0 transition-all duration-300 ${!isHomePage && !isBookmarkPage ? 'lg:ml-96' : !isHomePage ? 'lg:ml-16' : ''}`}
+        >
+          {children}
         </div>
-      </AdaptiveLayout>
+      </div>
     </ModernLayout>
   );
 }

@@ -7,6 +7,7 @@ import useVerseListing from '@/app/(features)/surah/hooks/useVerseListing';
 import useSurahPanels from '@/app/(features)/surah/hooks/useSurahPanels';
 import SurahAudioPlayer from './components/SurahAudioPlayer';
 import SurahVerseList from './components/SurahVerseList';
+import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
 interface SurahPageProps {
   params: Promise<{ surahId: string }>;
@@ -14,6 +15,7 @@ interface SurahPageProps {
 
 export default function SurahPage({ params }: SurahPageProps) {
   const { surahId } = React.use(params);
+  const { isHidden } = useHeaderVisibility();
 
   // Prevent body scroll to force scrollbar within content area
   React.useEffect(() => {
@@ -56,10 +58,14 @@ export default function SurahPage({ params }: SurahPageProps) {
   return (
     <>
       {/* Main content area with constrained height and scroll */}
-      <main className="h-screen text-foreground font-sans lg:mr-[20.7rem] overflow-hidden">
+      <main className={`h-screen text-foreground font-sans lg:mr-[20.7rem] overflow-hidden transition-all duration-300 ${
+        isHidden 
+          ? 'pt-0' 
+          : 'pt-[calc(3.5rem+env(safe-area-inset-top))] sm:pt-[calc(4rem+env(safe-area-inset-top))]'
+      }`}>
         <div
           ref={scrollContainerRef}
-          className="h-full overflow-y-auto px-4 sm:px-6 lg:px-8 pt-20 pb-6"
+          className="h-full overflow-y-auto px-4 sm:px-6 lg:px-8 pb-6"
         >
           <SurahVerseList
             verses={verses}

@@ -112,7 +112,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
 
       {/* Main sidebar container */}
       <aside
-        className={`drawer-panel pt-safe pb-safe md:static top-16 md:top-0 bottom-0 left-0 w-72 sm:w-80 lg:w-[20.7rem] bg-background text-foreground flex flex-col shadow-modal md:shadow-lg z-modal md:z-10 md:h-full ${
+        className={`drawer-panel pt-safe pb-safe md:pt-0 md:pb-0 md:static top-16 md:top-0 bottom-0 left-0 w-72 sm:w-80 lg:w-[20.7rem] bg-background text-foreground flex flex-col shadow-modal md:shadow-lg z-modal md:z-10 md:h-full ${
           isSurahListOpen ? 'open' : ''
         } md:translate-x-0`}
         style={{
@@ -122,7 +122,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
         aria-label="Surah navigation"
       >
         {/* Mobile header with close button */}
-        <div className="flex items-center justify-between p-3 sm:p-4 border-b border-border md:block">
+        <div className="flex items-center justify-between p-3 sm:p-4 border-b border-border md:hidden">
           <h2 className="text-lg font-semibold text-foreground md:hidden">{t('navigation')}</h2>
           <button
             onClick={() => setSurahListOpen(false)}
@@ -134,7 +134,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
         </div>
 
         {/* Tabs section */}
-        <div className="p-3 sm:p-4 border-b border-border">
+        <div className="p-3 sm:p-4 border-b border-border md:border-b-0 md:p-3 md:pb-1">
           <SidebarTabs
             tabs={TABS}
             activeTab={activeTab}
@@ -143,7 +143,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
           />
         </div>
         {/* Search section */}
-        <div className="p-3 sm:p-4 border-b border-border">
+        <div className="p-3 sm:p-4 border-b border-border md:border-b-0 md:pb-2">
           <SearchInput
             value={searchTerm}
             onChange={setSearchTerm}

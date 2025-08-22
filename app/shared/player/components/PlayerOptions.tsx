@@ -11,7 +11,9 @@ export default function PlayerOptions() {
   return (
     <div className="flex items-center gap-1 sm:gap-2">
       <SpeedControl />
-      <VolumeControl />
+      <div className="hidden sm:block">
+        <VolumeControl />
+      </div>
       <IconBtn
         className="shrink-0"
         aria-label="Options"

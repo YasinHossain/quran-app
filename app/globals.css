@@ -75,7 +75,7 @@
     --z-fixed: 30;
     --z-header: 40;
     --z-bottom-nav: 50;
-    --z-audio-player: 60;
+    --z-audio-player: 110;
     --z-popover: 70;
     --z-tooltip: 80;
     /* Modals/overlays should sit above everything */
