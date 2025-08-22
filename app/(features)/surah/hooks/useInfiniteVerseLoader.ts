@@ -40,11 +40,25 @@ export function useInfiniteVerseLoader({
 
   useEffect(() => {
     if (!loadMoreRef.current) return;
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !isReachingEnd && !isValidating) {
-        setSize(size + 1);
+
+    // Find the closest scrollable ancestor
+    let scrollRoot = loadMoreRef.current.parentElement;
+    while (scrollRoot && getComputedStyle(scrollRoot).overflowY !== 'auto') {
+      scrollRoot = scrollRoot.parentElement;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !isReachingEnd && !isValidating) {
+          setSize(size + 1);
+        }
+      },
+      {
+        root: scrollRoot, // Use the scroll container as root
+        rootMargin: '100px',
+        threshold: 0.1,
       }
-    });
+    );
     observer.observe(loadMoreRef.current);
     return () => observer.disconnect();
   }, [isReachingEnd, isValidating, size, setSize, loadMoreRef]);

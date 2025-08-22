@@ -15,6 +15,14 @@ interface SurahPageProps {
 export default function SurahPage({ params }: SurahPageProps) {
   const { surahId } = React.use(params);
 
+  // Prevent body scroll to force scrollbar within content area
+  React.useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
+
   const {
     error,
     isLoading,
@@ -43,18 +51,22 @@ export default function SurahPage({ params }: SurahPageProps) {
     selectedWordLanguageName,
   } = useSurahPanels({ translationOptions, wordLanguageOptions, settings });
 
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+
   return (
     <>
-      {/* Main content area; allow window to handle vertical scroll so the scrollbar appears at the far right */}
-      <main className="flex-grow bg-background text-foreground font-sans lg:mr-[20.7rem]">
-        <SurahVerseList
-          verses={verses}
-          isLoading={isLoading}
-          error={error}
-          loadMoreRef={loadMoreRef}
-          isValidating={isValidating}
-          isReachingEnd={isReachingEnd}
-        />
+      {/* Main content area with constrained height and scroll */}
+      <main className="h-screen bg-background text-foreground font-sans lg:mr-[20.7rem] overflow-hidden">
+        <div ref={scrollContainerRef} className="h-full overflow-y-auto px-4 sm:px-6 lg:px-8 py-6">
+          <SurahVerseList
+            verses={verses}
+            isLoading={isLoading}
+            error={error}
+            loadMoreRef={loadMoreRef}
+            isValidating={isValidating}
+            isReachingEnd={isReachingEnd}
+          />
+        </div>
       </main>
 
       {/* Settings sidebar - fixed positioned */}
