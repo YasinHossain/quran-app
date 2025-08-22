@@ -123,7 +123,6 @@ const MobileNavigation: React.FC<{
               item.isActive?.(pathname) ?? (item.href ? pathname === item.href : false);
 
             const commonProps = {
-              key: item.id,
               onClick: (e: React.MouseEvent) => onItemClick(item, e),
               className: cn(
                 'relative flex flex-col items-center justify-center',
@@ -161,11 +160,11 @@ const MobileNavigation: React.FC<{
             );
 
             return item.href ? (
-              <Link href={item.href} {...commonProps}>
+              <Link key={item.id} href={item.href} {...commonProps}>
                 {content}
               </Link>
             ) : (
-              <button type="button" {...commonProps}>
+              <button key={item.id} type="button" {...commonProps}>
                 {content}
               </button>
             );
@@ -206,7 +205,6 @@ const DesktopNavigation: React.FC<{
         const isActive = item.isActive?.(pathname) ?? (item.href ? pathname === item.href : false);
 
         const commonProps = {
-          key: item.id,
           onClick: (e: React.MouseEvent) => onItemClick(item, e),
           className: cn(
             'flex items-center gap-3 px-4 py-2 rounded-xl',
@@ -227,11 +225,11 @@ const DesktopNavigation: React.FC<{
         );
 
         return item.href ? (
-          <Link href={item.href} {...commonProps}>
+          <Link key={item.id} href={item.href} {...commonProps}>
             {content}
           </Link>
         ) : (
-          <button type="button" {...commonProps}>
+          <button key={item.id} type="button" {...commonProps}>
             {content}
           </button>
         );

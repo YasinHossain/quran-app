@@ -57,6 +57,7 @@
     "@radix-ui/react-slider": "latest",
     "@radix-ui/react-tooltip": "latest",
     "@tabler/icons-react": "^3.34.1",
+    "@tailwindcss/container-queries": "^0.1.1",
     "clsx": "^2.1.1",
     "dompurify": "^3.2.6",
     "framer-motion": "^12.23.12",
@@ -107,8 +108,8 @@
     "ts-node": "^10.9.1",
     "typescript": "^5",
     "viewport-units-buggyfill": "^0.6.2",
-    "whatwg-fetch": "^3.6.20",
-    "vscode-ripgrep": "^1.13.2"
+    "vscode-ripgrep": "^1.13.2",
+    "whatwg-fetch": "^3.6.20"
   },
   "overrides": {
     "rollup-plugin-terser": "file:packages/rollup-plugin-terser",

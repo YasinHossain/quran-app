@@ -39,6 +39,24 @@ const nextConfig: NextConfig = {
   outputFileTracingExcludes:
     process.env.NODE_ENV === 'production' ? { '*': ['app/(dev)/**'] } : undefined,
 
+  // Configure external image domains
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+        port: '',
+        pathname: '/wikipedia/commons/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'api.wikimedia.org',
+        port: '',
+        pathname: '/core/v1/commons/**',
+      },
+    ],
+  },
+
   // Add security headers
   async headers() {
     return [

@@ -69,7 +69,7 @@ export const SettingsSidebar = ({
         ref={sidebarRef}
         className={`settings-sidebar fixed ${isHidden ? 'top-0' : 'lg:top-16'} bottom-0 right-0 w-full sm:w-80 lg:w-[20.7rem] ${isHidden ? 'h-screen' : 'h-screen lg:h-[calc(100vh-4rem)]'} bg-background text-foreground flex flex-col shadow-modal lg:shadow-lg border-l border-border transition-all duration-300 ease-in-out overflow-x-hidden pt-safe pb-safe ${
           isSettingsOpen ? 'translate-x-0' : 'translate-x-full'
-        } lg:translate-x-0 touch-pan-y`}
+        } lg:translate-x-0 touch-pan-y scrollbar-hide`}
         style={{
           zIndex: 'var(--z-modal)',
           msOverflowStyle: 'none',
