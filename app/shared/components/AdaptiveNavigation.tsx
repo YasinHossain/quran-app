@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
 import { IconHome, IconBook, IconBookmark } from '@tabler/icons-react';
 import type { TablerIcon } from '@tabler/icons-react';
 import { usePathname } from 'next/navigation';
@@ -114,7 +113,7 @@ const MobileNavigation: React.FC<{
         className
       )}
     >
-      <div className="absolute inset-0 backdrop-blur-lg bg-white/8 dark:bg-gray-900/8 backdrop-saturate-150 border-t border-white/5 dark:border-white/5" />
+      <div className="absolute inset-0 backdrop-blur-lg bg-white/8 dark:bg-surface/8 backdrop-saturate-150 border-t border-white/5 dark:border-white/5" />
 
       <div className="relative px-4 pt-1.5 pb-safe pl-safe pr-safe">
         <div className="flex items-center justify-around w-full">

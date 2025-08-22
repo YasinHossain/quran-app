@@ -1,6 +1,7 @@
 'use client';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { X, SlidersHorizontal } from 'lucide-react';
+import Image from 'next/image';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import useAudioPlayer from '@/app/shared/player/hooks/useAudioPlayer';
 import usePlayerKeyboard from '@/app/shared/player/hooks/usePlayerKeyboard';
@@ -51,7 +52,6 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
     setVolume,
     playbackRate,
     repeatOptions,
-    reciter,
   } = useAudio();
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState<number>(track?.durationSec ?? 0);
@@ -156,9 +156,11 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
             <div className="flex items-center gap-2 flex-1 min-w-0">
               {/* Show icon only on larger mobile screens */}
               <div className="hidden min-[400px]:block flex-shrink-0">
-                <img
+                <Image
                   src={cover}
                   alt="cover"
+                  width={32}
+                  height={32}
                   className="h-8 w-8 rounded-full shadow-sm object-cover"
                   onError={(e) => {
                     e.currentTarget.src =
