@@ -50,7 +50,7 @@ const GlobalSettingsModal = () => {
             transition={{ duration: 0.2 }}
             className="fixed inset-4 z-50 flex items-center justify-center"
           >
-            <div className="bg-background/95 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+            <div className="bg-background/95 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90dvh] overflow-hidden">
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-border/30">
                 <div className="flex items-center gap-3">
@@ -67,7 +67,7 @@ const GlobalSettingsModal = () => {
               </div>
 
               {/* Settings Content */}
-              <div className="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
+              <div className="p-6 overflow-y-auto max-h-[calc(90dvh-80px)]">
                 <div className="space-y-6">
                   {/* Theme Section */}
                   <div className="space-y-4">

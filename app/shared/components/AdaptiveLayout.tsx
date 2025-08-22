@@ -61,7 +61,7 @@ const AdaptiveLayout: React.FC<AdaptiveLayoutProps> = ({
       case 'compact':
         return cn(
           baseClasses,
-          'fixed bottom-0 left-0 right-0 max-h-[70vh] rounded-t-2xl border-t',
+          'fixed bottom-0 left-0 right-0 max-h-[70dvh] rounded-t-2xl border-t',
           sidebarOpen ? 'translate-y-0' : 'translate-y-full'
         );
 
