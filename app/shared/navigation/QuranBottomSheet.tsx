@@ -80,7 +80,7 @@ const QuranBottomSheet: React.FC<QuranBottomSheetProps> = ({ isOpen, onClose, on
               stiffness: 500,
               damping: 40,
             }}
-            className="fixed bottom-0 left-0 right-0 bg-surface rounded-t-3xl shadow-2xl z-50 max-h-[90dvh] flex flex-col touch-pan-y"
+            className="fixed bottom-0 left-0 right-0 bg-surface rounded-t-3xl shadow-2xl z-50 max-h-[90dvh] flex flex-col pb-safe touch-pan-y"
           >
             {/* Handle bar */}
             <div className="flex justify-center pt-4 pb-2">
