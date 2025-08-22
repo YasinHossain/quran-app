@@ -41,7 +41,8 @@ const SwipeIndicator: React.FC<SwipeIndicatorProps> = ({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.3 }}
-          className="fixed bottom-20 left-4 right-4 z-30 pointer-events-none"
+          className="fixed left-4 right-4 z-30 pointer-events-none"
+          style={{ bottom: 'calc(5rem + env(safe-area-inset-bottom))' }}
         >
           <div className="bg-black/70 backdrop-blur-sm text-white rounded-2xl p-4 mx-auto max-w-sm">
             <div className="text-center mb-3">
