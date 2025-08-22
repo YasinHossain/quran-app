@@ -47,3 +47,4 @@ next-env.d.ts
 
 # generated service worker
 public/sw.js
+claude_desktop_config.json
