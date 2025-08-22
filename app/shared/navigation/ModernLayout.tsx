@@ -48,7 +48,7 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({
     <>
       {/* Main content with bottom padding for navigation */}
       <SwipeContainer
-        className={`min-h-screen ${shouldShowBottomNav ? 'bottom-nav-space lg:pb-0' : ''}`}
+        className={`min-h-[100dvh] ${shouldShowBottomNav ? 'bottom-nav-space lg:pb-0' : ''}`}
       >
         {children}
       </SwipeContainer>

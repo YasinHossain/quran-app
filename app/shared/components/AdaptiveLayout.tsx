@@ -85,7 +85,7 @@ const AdaptiveLayout: React.FC<AdaptiveLayoutProps> = ({
   };
 
   return (
-    <div className="relative min-h-screen bg-background">
+    <div className="relative min-h-[100dvh] bg-background">
       {/* Backdrop for mobile sidebar */}
       <AnimatePresence>
         {sidebarOpen && variant === 'compact' && (
