@@ -37,8 +37,8 @@ const AdaptiveNavigation: React.FC<AdaptiveNavigationProps> = ({ onSurahJump, cl
       id: 'home',
       icon: IconHome,
       label: 'Home',
-      href: '/home',
-      isActive: (path) => path === '/' || path === '/home',
+      href: '/',
+      isActive: (path) => path === '/',
     },
     {
       id: 'surah',
@@ -63,7 +63,7 @@ const AdaptiveNavigation: React.FC<AdaptiveNavigationProps> = ({ onSurahJump, cl
   };
 
   // Don't show on home page
-  const isHomePage = pathname === '/' || pathname === '/home';
+  const isHomePage = pathname === '/';
   if (isHomePage) return null;
 
   // Render based on current variant, not breakpoint

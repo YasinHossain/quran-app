@@ -28,7 +28,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onSurahJump }) => {
       id: 'home',
       icon: IconHome,
       label: 'Home',
-      href: '/home',
+      href: '/',
     },
     {
       id: 'surah',
@@ -44,7 +44,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onSurahJump }) => {
   ];
 
   const isActive = (href: string | undefined, id: string) => {
-    if (href === '/home' && pathname === '/') return true;
+    if (href === '/' && pathname === '/') return true;
     if (id === 'surah' && pathname.startsWith('/surah')) return true;
     if (href === '/bookmarks' && pathname.startsWith('/bookmarks')) return true;
     return pathname === href;
