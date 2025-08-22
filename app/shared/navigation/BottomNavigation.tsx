@@ -56,29 +56,29 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onSurahJump }) => {
         isHidden ? 'translate-y-full' : 'translate-y-0'
       }`}
     >
-      {/* Glass effect backdrop */}
-      <div className="absolute inset-0 backdrop-blur-lg bg-white/10 dark:bg-surface/10 backdrop-saturate-150 border-t border-white/5 dark:border-white/5" />
+      {/* Glass effect backdrop - matching header design */}
+      <div className="absolute inset-0 backdrop-blur-lg bg-white/8 dark:bg-gray-900/8 backdrop-saturate-150 border-t border-white/5 dark:border-white/5" />
 
-      {/* Safe area for iPhone */}
-      <div className="relative px-2 pt-2 pb-safe pl-safe pr-safe">
-        <div className="flex items-center justify-around">
+      {/* Safe area for iPhone - more compact */}
+      <div className="relative px-4 pt-1.5 pb-safe pl-safe pr-safe">
+        <div className="flex items-center justify-around max-w-sm mx-auto">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.href, item.id);
 
             const commonProps = {
               className:
-                'relative flex flex-col items-center justify-center min-w-[60px] py-2 px-3 rounded-2xl transition-all duration-200 hover:bg-interactive/50 active:scale-95 touch-manipulation',
+                'relative flex flex-col items-center justify-center min-w-[48px] py-1.5 px-2 rounded-xl transition-all duration-200 hover:bg-muted/60 active:scale-95 touch-manipulation',
             };
 
             const content = (
               <>
-                {/* Icon container */}
-                <div className="relative z-10 mb-1">
+                {/* Icon container - more compact */}
+                <div className="relative z-10 mb-0.5">
                   <Icon
-                    size={24}
+                    size={20}
                     className={`transition-all duration-200 ${
-                      active ? 'text-accent stroke-[2.5]' : 'text-muted stroke-[2]'
+                      active ? 'text-foreground stroke-[2.5]' : 'text-muted-foreground stroke-[2]'
                     }`}
                   />
 
@@ -87,36 +87,21 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onSurahJump }) => {
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      className="absolute -top-2 -right-2 min-w-[18px] h-[18px] bg-status-error text-white text-xs font-semibold rounded-full flex items-center justify-center"
+                      className="absolute -top-2 -right-2 min-w-[16px] h-[16px] bg-status-error text-white text-xs font-semibold rounded-full flex items-center justify-center"
                     >
                       {item.badge > 99 ? '99+' : item.badge}
                     </motion.div>
                   )}
                 </div>
 
-                {/* Label */}
+                {/* Label - smaller and more subtle */}
                 <span
                   className={`text-xs font-medium transition-all duration-200 ${
-                    active ? 'text-accent' : 'text-muted'
+                    active ? 'text-foreground' : 'text-muted-foreground'
                   }`}
                 >
                   {item.label}
                 </span>
-
-                {/* Active dot indicator */}
-                {active && (
-                  <motion.div
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="absolute -bottom-1 w-1 h-1 bg-accent rounded-full"
-                    transition={{
-                      delay: 0.1,
-                      type: 'spring',
-                      stiffness: 500,
-                      damping: 30,
-                    }}
-                  />
-                )}
               </>
             );
 

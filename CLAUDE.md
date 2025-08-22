@@ -30,7 +30,7 @@ npm run dev              # Start dev server with Turbopack
 npm run build           # Production build
 npm run start           # Start production server
 
-# Code Quality
+# Code Quality (AI runs these automatically)
 npm run check           # Run all checks (format, lint, typecheck, test)
 npm run format          # Format with Prettier
 npm run lint            # ESLint
@@ -40,6 +40,28 @@ npm run test:coverage   # Test with coverage
 
 # Feature Generation
 npm run generate-feature <name>  # Scaffold new feature
+```
+
+## AI-Enhanced Search Workflow
+
+**For AI Development Tasks:**
+
+1. **Code Discovery**: AI uses built-in Grep tool for reliable cross-platform searching
+2. **File Location**: AI uses Glob tool for pattern-based file finding
+3. **Complex Analysis**: AI uses Task tool for multi-step investigations
+4. **Quality Assurance**: AI automatically runs `npm run check` after changes
+
+**Search Strategy Examples:**
+
+```bash
+# Instead of: grep -r "useAudioPlayer"
+# AI uses: Grep tool with pattern "useAudioPlayer"
+
+# Instead of: find . -name "*.tsx" | head -10
+# AI uses: Glob tool with pattern "**/*.tsx"
+
+# Instead of: complex shell pipes and filtering
+# AI uses: Task tool for multi-step searches
 ```
 
 ## Key Features & Areas
@@ -76,8 +98,24 @@ npm run generate-feature <name>  # Scaffold new feature
 - Use `AGENTS.md` files for area-specific guidelines
 - Follow feature folder structure with `components/`, `hooks/`, `__tests__/`
 - Maintain TypeScript strict mode compliance
-- Run `npm run check` before commits
+- AI runs `npm run check` automatically after significant changes
 - Use conventional commit messages with `feat:`, `fix:` prefixes
+
+## Environment-Agnostic Practices
+
+**Cross-Platform Development:**
+
+- **Path Handling**: All file operations use absolute paths, work across Windows/WSL/Linux/macOS
+- **No CLI Dependencies**: Built-in AI tools eliminate issues with missing system commands
+- **Universal Scripts**: npm scripts work consistently across environments
+- **WSL Compatibility**: Full support for Windows Subsystem for Linux development
+
+**AI-Human Collaboration Best Practices:**
+
+- **Clear Task Definition**: Specify what you want accomplished, AI handles implementation details
+- **Minimal Manual Commands**: Let AI use optimized built-in tools instead of manual CLI
+- **Environment Resilience**: Workflows continue working even when system tools change
+- **Consistent Results**: Same outcomes regardless of development environment
 
 ## Mobile-First Development Guidelines
 
@@ -103,8 +141,44 @@ npm run generate-feature <name>  # Scaffold new feature
 - Verify keyboard navigation and screen reader compatibility
 - Maintain WCAG AA compliance standards
 
+## AI-Terminal Development Guidelines
+
+**Environment-Agnostic Best Practices:**
+
+- **Built-in Tool Priority**: AI uses built-in tools (Grep, Glob, Task) instead of system commands for reliability
+- **Cross-Platform Compatibility**: All workflows work on Windows/WSL, Linux, and macOS
+- **No System Dependencies**: Avoid relying on specific CLI tools that may not be available
+- **Structured Communication**: AI provides concise, direct responses optimized for terminal display
+
+**AI Search & Analysis Tools:**
+
+```bash
+# AI Built-in Tools (Recommended)
+Grep tool    # Code searching with regex support, no system dependencies
+Glob tool    # File pattern matching, works on any codebase size
+Task tool    # Multi-step complex searches and analysis
+Read tool    # Direct file reading with line numbers
+Edit tool    # Precise code modifications with context preservation
+```
+
+**AI Workflow Optimization:**
+
+- **Task Planning**: AI uses TodoWrite for complex multi-step tasks
+- **Parallel Operations**: Multiple tool calls in single responses for performance
+- **Context Management**: AI references code locations as `file_path:line_number`
+- **Quality Checks**: AI runs `npm run check` after significant changes
+- **Minimal Output**: Concise responses focused on the specific task
+
+**Terminal-Friendly Practices:**
+
+- **Batch Operations**: Group related operations to minimize output
+- **Progress Tracking**: Clear task completion indicators
+- **Error Handling**: Environment-agnostic fallback strategies
+- **Documentation**: Self-maintaining project context in this file
+
 ## Recent Updates
 
+- **AI-Terminal Integration**: Added comprehensive AI development environment guidelines
 - **Mobile-Responsive Architecture**: Implementing mobile-first design system with responsive breakpoints
 - **Tafsir System**: Enhanced with persistent selections, improved UI, and multiple tafsir support
 - **Settings Management**: Streamlined panels with better state management and storage

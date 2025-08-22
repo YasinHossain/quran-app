@@ -4,6 +4,11 @@ import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/Set
 import { useTafsirVerseData } from '../../hooks/useTafsirVerseData';
 import AyahNavigation from './components/AyahNavigation';
 import TafsirViewer from './components/TafsirViewer';
+import TafsirAudioPlayer from './components/TafsirAudioPlayer';
+import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { useAudio } from '@/app/shared/player/context/AudioContext';
+import { useSettings } from '@/app/providers/SettingsContext';
+import { RECITERS } from '@/lib/audio/reciters';
 
 interface TafsirVersePageProps {
   params: Promise<{ surahId: string; ayahId: string }>;
@@ -11,6 +16,9 @@ interface TafsirVersePageProps {
 
 export default function TafsirVersePage({ params }: TafsirVersePageProps) {
   const { surahId, ayahId } = React.use(params);
+  const { isHidden } = useHeaderVisibility();
+  const { activeVerse, isPlayerVisible } = useAudio();
+  const { settings } = useSettings();
   const {
     verse,
     tafsirHtml,
@@ -28,18 +36,37 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps) {
   const [isTafsirPanelOpen, setIsTafsirPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
 
+  // Get the current reciter
+  const reciter = RECITERS.find((r) => r.id === settings.reciterId) || RECITERS[0];
+
+  // Match verse page behavior: keep body from scrolling and use internal scroll area
+  React.useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
+
   return (
-    <div className="flex flex-grow bg-background text-foreground font-sans overflow-hidden min-h-0">
-      <main className="flex-grow bg-background section overflow-y-auto homepage-scrollable-area">
-        <div className="w-full space-y-6">
-          <AyahNavigation
-            prev={prev}
-            next={next}
-            navigate={navigate}
-            currentSurah={currentSurah}
-            ayahId={ayahId}
-          />
-          <TafsirViewer verse={verse} tafsirResource={tafsirResource} tafsirHtml={tafsirHtml} />
+    <>
+      <main className="h-screen text-foreground font-sans lg:mr-[20.7rem] overflow-hidden">
+        <div
+          className={`h-full overflow-y-auto px-4 sm:px-6 lg:px-8 pb-6 transition-all duration-300 ${
+            isHidden
+              ? 'pt-0'
+              : 'pt-[calc(3.5rem+env(safe-area-inset-top))] sm:pt-[calc(4rem+env(safe-area-inset-top))]'
+          }`}
+        >
+          <div className="w-full space-y-6 pt-4">
+            <AyahNavigation
+              prev={prev}
+              next={next}
+              navigate={navigate}
+              currentSurah={currentSurah}
+              ayahId={ayahId}
+            />
+            <TafsirViewer verse={verse} tafsirResource={tafsirResource} tafsirHtml={tafsirHtml} />
+          </div>
         </div>
       </main>
 
@@ -59,6 +86,8 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps) {
         onWordLanguagePanelClose={() => setIsWordPanelOpen(false)}
         pageType="tafsir"
       />
-    </div>
+
+      <TafsirAudioPlayer activeVerse={activeVerse} reciter={reciter} isVisible={isPlayerVisible} />
+    </>
   );
 }

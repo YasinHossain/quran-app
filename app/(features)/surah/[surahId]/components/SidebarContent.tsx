@@ -52,7 +52,7 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
     ref
   ) => {
     const { isHidden } = useHeaderVisibility();
-    
+
     return (
       <aside
         ref={ref}

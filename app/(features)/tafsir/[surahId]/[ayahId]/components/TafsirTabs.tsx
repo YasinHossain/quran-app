@@ -67,12 +67,12 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
 
   return (
     <div>
-      <div className="flex w-full items-center p-1 rounded-full bg-interactive border border-border ml-4">
+      <div className="flex w-full flex-nowrap items-center p-1 rounded-full bg-interactive border border-border mx-0 sm:mx-4 overflow-x-auto scrollbar-hide gap-1">
         {tabs.map((t) => (
           <button
             key={t.id}
             onClick={() => setActiveId(t.id)}
-            className={`flex-1 text-center py-3 px-5 rounded-full text-sm font-semibold transition-colors whitespace-nowrap ${
+            className={`flex-1 text-center py-2.5 px-4 sm:py-3 sm:px-5 rounded-full text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap ${
               activeId === t.id
                 ? 'bg-surface shadow text-foreground'
                 : 'text-muted hover:text-foreground hover:bg-surface/30'
@@ -82,15 +82,17 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
           </button>
         ))}
       </div>
-      <div className="p-4 mt-4">
-        <h2 className="mb-8 text-center text-xl font-bold text-foreground">{activeTab?.name}</h2>
+      <div className="p-3 sm:p-4 mt-3 sm:mt-4 w-full">
+        <h2 className="mb-6 sm:mb-8 text-center text-lg sm:text-xl font-bold text-foreground">
+          {activeTab?.name}
+        </h2>
         {loading[activeId] ? (
           <div className="flex justify-center py-4">
             <Spinner className="h-5 w-5 text-accent" />
           </div>
         ) : (
           <div
-            className="prose max-w-none tafsir-content"
+            className="prose max-w-none tafsir-content break-words"
             style={{
               fontSize: `${settings.tafsirFontSize}px`,
             }}

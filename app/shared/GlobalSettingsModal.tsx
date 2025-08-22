@@ -12,11 +12,12 @@ const GlobalSettingsModal = () => {
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
 
-  // On Surah routes, the page already renders a Settings sidebar.
-  // Avoid rendering this global modal there to prevent double overlays on mobile.
-  const isSurahRoute = pathname?.startsWith('/surah');
+  // On feature routes that already render a Settings sidebar (surah, tafsir, juz, page, bookmarks),
+  // avoid rendering this global modal to prevent double overlays.
+  const disablePrefixes = ['/surah', '/tafsir', '/juz', '/page', '/bookmarks'];
+  const disableGlobalSettings = disablePrefixes.some((p) => pathname?.startsWith(p));
 
-  if (isSurahRoute) return null;
+  if (disableGlobalSettings) return null;
 
   const toggleTheme = () => {
     const html = document.documentElement;

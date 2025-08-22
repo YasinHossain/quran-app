@@ -79,7 +79,13 @@ export default function JuzPage({ params }: { params: Promise<{ juzId: string }>
 
   return (
     <div className="flex flex-grow bg-surface text-foreground font-sans overflow-hidden min-h-0">
-      <main className="flex-grow bg-surface section overflow-y-auto homepage-scrollable-area">
+      <main
+        className={`flex-grow bg-surface overflow-y-auto homepage-scrollable-area transition-all duration-300 ${
+          isHidden
+            ? 'pt-6 lg:pt-10'
+            : 'pt-[calc(3.5rem+1.5rem+env(safe-area-inset-top))] sm:pt-[calc(4rem+1.5rem+env(safe-area-inset-top))] lg:pt-[calc(4rem+2.5rem+env(safe-area-inset-top))]'
+        } px-6 lg:px-10 pb-6 lg:pb-10`}
+      >
         <div className="w-full relative">
           {juzId ? (
             isLoading ? (

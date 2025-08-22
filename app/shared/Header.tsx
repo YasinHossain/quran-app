@@ -18,8 +18,9 @@ const Header = () => {
   const pathname = usePathname();
   const [query, setQuery] = useState('');
 
-  // Check if we're on a surah page where settings sidebar is visible on desktop
-  const isOnSurahPage = pathname.startsWith('/surah/') && pathname !== '/surah';
+  // On these routes, a fixed SettingsSidebar is rendered on desktop
+  const sidebarRoutes = ['/surah/', '/tafsir/', '/juz/', '/page/', '/bookmarks/'];
+  const hasFixedSidebar = sidebarRoutes.some((p) => pathname.startsWith(p));
 
   const toggleTheme = () => {
     const html = document.documentElement;
@@ -42,7 +43,7 @@ const Header = () => {
     <header
       className={cn(
         'fixed top-0 left-0 right-0 h-[calc(3.5rem+env(safe-area-inset-top))] sm:h-[calc(4rem+env(safe-area-inset-top))] z-header transition-all duration-300',
-        'backdrop-blur-lg bg-white/10 dark:bg-gray-900/10 backdrop-saturate-150',
+        'backdrop-blur-lg bg-white/8 dark:bg-gray-900/8 backdrop-saturate-150',
         'border-b border-white/5 dark:border-white/5',
         'flex items-center justify-center',
         isHidden ? '-translate-y-full' : 'translate-y-0'
@@ -103,9 +104,8 @@ const Header = () => {
             onClick={() => setSettingsOpen(true)}
             className={cn(
               'btn-touch p-2.5 rounded-xl hover:bg-muted/60 transition-all duration-200 active:scale-95',
-              // On surah pages: only show on mobile (when sidebar is hidden)
-              // On other pages: show on all screen sizes
-              isOnSurahPage ? 'lg:hidden' : ''
+              // On routes with a fixed SettingsSidebar, only show on mobile
+              hasFixedSidebar ? 'lg:hidden' : ''
             )}
             aria-label="Open Settings"
           >

@@ -117,7 +117,7 @@ const VerseActionsBottomSheet: React.FC<VerseActionsBottomSheetProps> = ({
             initial="hidden"
             animate="visible"
             exit="hidden"
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 touch-none"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-modal touch-none"
             onClick={onClose}
           />
 
@@ -132,7 +132,7 @@ const VerseActionsBottomSheet: React.FC<VerseActionsBottomSheetProps> = ({
               stiffness: 500,
               damping: 40,
             }}
-            className="fixed bottom-0 left-0 right-0 bg-surface rounded-t-3xl shadow-2xl z-50 touch-pan-y pb-safe flex flex-col max-h-[90dvh]"
+            className="fixed bottom-0 left-0 right-0 bg-surface rounded-t-3xl shadow-2xl z-modal touch-pan-y pb-safe flex flex-col max-h-[90dvh]"
           >
             {/* Handle bar */}
             <div className="flex justify-center pt-4 pb-2">

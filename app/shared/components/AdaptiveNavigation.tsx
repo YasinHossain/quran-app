@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useResponsiveState, responsiveClasses, touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
+import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
 interface NavItem {
   id: string;
@@ -103,13 +104,20 @@ const MobileNavigation: React.FC<{
   className?: string;
 }> = ({ navItems, onItemClick, className }) => {
   const pathname = usePathname();
+  const { isHidden } = useHeaderVisibility();
 
   return (
-    <nav className={cn('fixed bottom-0 left-0 right-0 z-50', className)}>
-      <div className="absolute inset-0 bg-surface-glass/95 backdrop-blur-xl border-t border-border/20" />
+    <nav
+      className={cn(
+        'fixed bottom-0 left-0 right-0 z-50 transition-transform duration-300 ease-in-out',
+        isHidden ? 'translate-y-full' : 'translate-y-0',
+        className
+      )}
+    >
+      <div className="absolute inset-0 backdrop-blur-lg bg-white/8 dark:bg-gray-900/8 backdrop-saturate-150 border-t border-white/5 dark:border-white/5" />
 
-      <div className="relative px-2 pt-2 pb-safe pl-safe pr-safe">
-        <div className="flex items-center justify-around">
+      <div className="relative px-4 pt-1.5 pb-safe pl-safe pr-safe">
+        <div className="flex items-center justify-around w-full">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive =
@@ -120,33 +128,24 @@ const MobileNavigation: React.FC<{
               onClick: (e: React.MouseEvent) => onItemClick(item, e),
               className: cn(
                 'relative flex flex-col items-center justify-center',
-                'min-w-[60px] py-2 px-3 rounded-2xl',
+                'min-w-[48px] py-1.5 px-2 rounded-xl',
                 'transition-all duration-200',
                 touchClasses.target,
                 touchClasses.gesture,
                 touchClasses.focus,
                 touchClasses.active,
-                'hover:bg-interactive/50'
+                'hover:bg-muted/60'
               ),
             };
 
             const content = (
               <>
-                {isActive && (
-                  <motion.div
-                    layoutId="activeIndicator"
-                    className="absolute inset-0 bg-accent/10 rounded-2xl"
-                    initial={false}
-                    transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                  />
-                )}
-
-                <div className="relative z-10 mb-1">
+                <div className="relative z-10 mb-0.5">
                   <Icon
-                    size={24}
+                    size={20}
                     className={cn(
                       'transition-all duration-200',
-                      isActive ? 'text-accent stroke-[2.5]' : 'text-muted stroke-[2]'
+                      isActive ? 'text-foreground stroke-[2.5]' : 'text-muted-foreground stroke-[2]'
                     )}
                   />
                 </div>
@@ -154,20 +153,11 @@ const MobileNavigation: React.FC<{
                 <span
                   className={cn(
                     'text-xs font-medium transition-all duration-200',
-                    isActive ? 'text-accent' : 'text-muted'
+                    isActive ? 'text-foreground' : 'text-muted-foreground'
                   )}
                 >
                   {item.label}
                 </span>
-
-                {isActive && (
-                  <motion.div
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="absolute -bottom-1 w-1 h-1 bg-accent rounded-full"
-                    transition={{ delay: 0.1, type: 'spring', stiffness: 500, damping: 30 }}
-                  />
-                )}
               </>
             );
 

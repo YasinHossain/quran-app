@@ -34,10 +34,12 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({ children, showFloatingButto
     showQuranSelector();
   };
 
-  // Hide floating button on verse pages
+  // Hide floating button on verse and tafsir pages
   const isHomePage = pathname === '/' || pathname === '/home';
   const isVersePage = pathname.includes('/surah/');
-  const shouldShowFloatingButton = showFloatingButton && !isHomePage && !isVersePage;
+  const isTafsirPage = pathname.includes('/tafsir/');
+  const shouldShowFloatingButton =
+    showFloatingButton && !isHomePage && !isVersePage && !isTafsirPage;
 
   return (
     <>

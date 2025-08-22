@@ -161,7 +161,8 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
                   alt="cover"
                   className="h-8 w-8 rounded-full shadow-sm object-cover"
                   onError={(e) => {
-                    e.currentTarget.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><rect width='100%' height='100%' rx='6' ry='6' fill='%23e5e7eb'/></svg>";
+                    e.currentTarget.src =
+                      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><rect width='100%' height='100%' rx='6' ry='6' fill='%23e5e7eb'/></svg>";
                   }}
                 />
               </div>
@@ -243,7 +244,7 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
       <audio ref={internalAudioRef} src={track?.src || ''} preload="metadata" onEnded={handleEnded}>
         <track kind="captions" />
       </audio>
-      
+
       {/* Mobile Options Modal */}
       <PlaybackOptionsModal
         open={mobileOptionsOpen}
