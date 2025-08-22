@@ -74,10 +74,12 @@
     --z-sticky: 20;
     --z-fixed: 30;
     --z-header: 40;
-    /* Modals/overlays should sit above header and bottom nav */
+    --z-bottom-nav: 50;
+    --z-audio-player: 60;
+    --z-popover: 70;
+    --z-tooltip: 80;
+    /* Modals/overlays should sit above everything */
     --z-modal: 100;
-    --z-popover: 50;
-    --z-tooltip: 60;
   }
 
   .dark {
@@ -232,8 +234,8 @@
 
   /* Bottom navigation spacing */
   .bottom-nav-space {
-    padding-bottom: 5rem;
-    padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+    padding-bottom: 3rem;
+    padding-bottom: calc(3rem + env(safe-area-inset-bottom));
   }
 
   /* Scrollbar hiding for cleaner mobile experience */
@@ -261,6 +263,14 @@
   /* Z-index utilities using semantic names */
   .z-header {
     z-index: var(--z-header);
+  }
+
+  .z-bottom-nav {
+    z-index: var(--z-bottom-nav);
+  }
+
+  .z-audio-player {
+    z-index: var(--z-audio-player);
   }
 
   .z-modal {

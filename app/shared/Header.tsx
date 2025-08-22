@@ -42,7 +42,8 @@ const Header = () => {
     <header
       className={cn(
         'fixed top-0 left-0 right-0 h-[calc(3.5rem+env(safe-area-inset-top))] sm:h-[calc(4rem+env(safe-area-inset-top))] z-header transition-all duration-300',
-        'border-b backdrop-blur-xl bg-background/80 border-border/10',
+        'backdrop-blur-lg bg-white/10 dark:bg-gray-900/10 backdrop-saturate-150',
+        'border-b border-white/5 dark:border-white/5',
         'flex items-center justify-center',
         isHidden ? '-translate-y-full' : 'translate-y-0'
       )}

@@ -43,9 +43,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
       {/* Main content area with proper left margin for sidebars */}
       <div className="flex flex-col min-h-[100dvh]">
         <div
-          className={`flex-grow min-h-0 transition-all duration-300 ${
-            isHidden ? 'pt-0' : 'pt-16'
-          } ${!isBookmarkPage ? 'lg:ml-96' : 'lg:ml-16'}`}
+          className={`flex-grow min-h-0 transition-all duration-300 ${!isBookmarkPage ? 'lg:ml-96' : 'lg:ml-16'}`}
         >
           {children}
         </div>

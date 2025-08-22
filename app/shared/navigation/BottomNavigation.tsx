@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { IconHome, IconBook, IconBookmark } from '@tabler/icons-react';
+import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
 interface NavItem {
   id: string;
@@ -20,6 +21,7 @@ interface BottomNavigationProps {
 
 const BottomNavigation: React.FC<BottomNavigationProps> = ({ onSurahJump }) => {
   const pathname = usePathname();
+  const { isHidden } = useHeaderVisibility();
 
   const navItems: NavItem[] = [
     {
@@ -49,9 +51,13 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onSurahJump }) => {
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
+    <nav
+      className={`fixed bottom-0 left-0 right-0 z-bottom-nav lg:hidden transition-transform duration-300 ease-in-out ${
+        isHidden ? 'translate-y-full' : 'translate-y-0'
+      }`}
+    >
       {/* Glass effect backdrop */}
-      <div className="absolute inset-0 bg-surface-glass/95 backdrop-blur-xl border-t border-border/20" />
+      <div className="absolute inset-0 backdrop-blur-lg bg-white/10 dark:bg-gray-900/10 backdrop-saturate-150 border-t border-white/5 dark:border-white/5" />
 
       {/* Safe area for iPhone */}
       <div className="relative px-2 pt-2 pb-safe pl-safe pr-safe">
