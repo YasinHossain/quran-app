@@ -54,7 +54,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onSurahJump }) => {
       <div className="absolute inset-0 bg-surface-glass/95 backdrop-blur-xl border-t border-border/20" />
 
       {/* Safe area for iPhone */}
-      <div className="relative px-2 pt-2 pb-safe">
+      <div className="relative px-2 pt-2 pb-safe pl-safe pr-safe">
         <div className="flex items-center justify-around">
           {navItems.map((item) => {
             const Icon = item.icon;

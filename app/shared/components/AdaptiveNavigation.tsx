@@ -108,7 +108,7 @@ const MobileNavigation: React.FC<{
     <nav className={cn('fixed bottom-0 left-0 right-0 z-50', className)}>
       <div className="absolute inset-0 bg-surface-glass/95 backdrop-blur-xl border-t border-border/20" />
 
-      <div className="relative px-2 pt-2 pb-safe">
+      <div className="relative px-2 pt-2 pb-safe pl-safe pr-safe">
         <div className="flex items-center justify-around">
           {navItems.map((item) => {
             const Icon = item.icon;
