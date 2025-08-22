@@ -31,14 +31,13 @@ beforeAll(() => {
 });
 
 describe('Header', () => {
-  it('renders the title', () => {
+  it('renders the brand text', () => {
     renderWithProviders(
       <HeaderVisibilityProvider>
         <Header />
       </HeaderVisibilityProvider>
     );
-    // The component uses t('title'), so we expect 'title' to be in the document.
-    expect(screen.getByText('title')).toBeInTheDocument();
+    expect(screen.getByText('Quran Mazid')).toBeInTheDocument();
   });
 
   it('renders the search placeholder', () => {
@@ -47,7 +46,16 @@ describe('Header', () => {
         <Header />
       </HeaderVisibilityProvider>
     );
-    // The component uses t('search_placeholder'), so we check for that key.
-    expect(screen.getByPlaceholderText('search_placeholder')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Search verses, surahs...')).toBeInTheDocument();
+  });
+
+  it('aligns content vertically centered', () => {
+    const { container } = renderWithProviders(
+      <HeaderVisibilityProvider>
+        <Header />
+      </HeaderVisibilityProvider>
+    );
+    const header = container.querySelector('header');
+    expect(header).toHaveClass('items-center');
   });
 });

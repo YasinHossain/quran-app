@@ -41,7 +41,7 @@ const Header = () => {
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 h-14 sm:h-16 z-header transition-all duration-300 pt-safe',
+        'fixed top-0 left-0 right-0 min-h-[calc(3.5rem+env(safe-area-inset-top))] sm:min-h-[calc(4rem+env(safe-area-inset-top))] z-header transition-all duration-300 pt-safe',
         'flex items-center gap-3 px-3 sm:px-4 lg:px-6',
         'border-b backdrop-blur-xl bg-background/80 border-border/10',
         isHidden ? '-translate-y-full' : 'translate-y-0'
@@ -99,7 +99,7 @@ const Header = () => {
             // On other pages: show on all screen sizes
             isOnSurahPage ? 'lg:hidden' : ''
           )}
-          aria-label="Settings"
+          aria-label="Open Settings"
         >
           <IconSettings size={18} className="text-muted-foreground" />
         </button>
