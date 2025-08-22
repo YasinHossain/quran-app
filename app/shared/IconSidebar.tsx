@@ -15,7 +15,7 @@ const IconSidebar = () => {
   return (
     // CHANGE: Removed the border-r class for a cleaner look and centered content vertically
     // Added h-full to make the sidebar take full height for vertical centering
-    <aside className="w-20 bg-background text-foreground flex flex-col justify-center py-4 h-full overflow-x-hidden">
+    <aside className="w-16 bg-background text-foreground flex flex-col justify-center py-4 h-full overflow-x-hidden">
       <nav className="flex flex-col items-center space-y-2">
         {navItems.map((item) => (
           <Link

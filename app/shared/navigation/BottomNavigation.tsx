@@ -31,7 +31,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onSurahJump }) => {
     {
       id: 'surah',
       icon: IconBook,
-      label: 'Jump to',
+      label: 'Surah',
     },
     {
       id: 'bookmarks',
@@ -67,20 +67,6 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onSurahJump }) => {
 
             const content = (
               <>
-                {/* Active indicator background */}
-                {active && (
-                  <motion.div
-                    layoutId="activeIndicator"
-                    className="absolute inset-0 bg-accent/10 rounded-2xl"
-                    initial={false}
-                    transition={{
-                      type: 'spring',
-                      stiffness: 500,
-                      damping: 35,
-                    }}
-                  />
-                )}
-
                 {/* Icon container */}
                 <div className="relative z-10 mb-1">
                   <Icon

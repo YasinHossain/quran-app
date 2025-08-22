@@ -44,8 +44,9 @@ export default function SurahPage({ params }: SurahPageProps) {
   } = useSurahPanels({ translationOptions, wordLanguageOptions, settings });
 
   return (
-    <div className="flex flex-grow bg-background text-foreground font-sans overflow-hidden">
-      <main className="flex-grow bg-background section overflow-y-auto homepage-scrollable-area">
+    <>
+      {/* Main content area; allow window to handle vertical scroll so the scrollbar appears at the far right */}
+      <main className="flex-grow bg-background text-foreground font-sans lg:mr-[20.7rem]">
         <SurahVerseList
           verses={verses}
           isLoading={isLoading}
@@ -55,6 +56,8 @@ export default function SurahPage({ params }: SurahPageProps) {
           isReachingEnd={isReachingEnd}
         />
       </main>
+
+      {/* Settings sidebar - fixed positioned */}
       <SettingsSidebar
         onTranslationPanelOpen={openTranslationPanel}
         onWordLanguagePanelOpen={openWordLanguagePanel}
@@ -67,6 +70,7 @@ export default function SurahPage({ params }: SurahPageProps) {
         onWordLanguagePanelClose={closeWordLanguagePanel}
         pageType="verse"
       />
+
       <SurahAudioPlayer
         activeVerse={activeVerse}
         reciter={reciter}
@@ -74,6 +78,6 @@ export default function SurahPage({ params }: SurahPageProps) {
         onNext={handleNext}
         onPrev={handlePrev}
       />
-    </div>
+    </>
   );
 }

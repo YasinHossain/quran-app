@@ -41,8 +41,8 @@ const Header = () => {
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 min-h-[calc(3.5rem+env(safe-area-inset-top))] sm:min-h-[calc(4rem+env(safe-area-inset-top))] z-header transition-all duration-300 pt-safe',
-        'flex items-center gap-3 px-3 sm:px-4 lg:px-6',
+        'fixed top-0 left-0 right-0 h-16 z-header transition-all duration-300 pt-safe',
+        'flex items-center justify-between gap-2 sm:gap-3 px-3 sm:px-4 lg:px-6',
         'border-b backdrop-blur-xl bg-background/80 border-border/10',
         isHidden ? '-translate-y-full' : 'translate-y-0'
       )}
@@ -61,8 +61,8 @@ const Header = () => {
       </Link>
 
       {/* Center section - Search */}
-      <div className="flex-1 flex justify-center mx-2">
-        <div className="w-full max-w-xs sm:max-w-sm">
+      <div className="flex-1 flex justify-center mx-2 sm:mx-4">
+        <div className="w-full max-w-xs sm:max-w-sm lg:max-w-md">
           <SearchInput
             value={query}
             onChange={setQuery}
@@ -76,7 +76,7 @@ const Header = () => {
       </div>
 
       {/* Right section - Actions */}
-      <div className="flex items-center space-x-1 flex-shrink-0">
+      <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
         {/* Theme toggle */}
         <button
           onClick={toggleTheme}

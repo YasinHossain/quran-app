@@ -71,7 +71,8 @@ export default function VerseCard({ verse }: VerseCardProps) {
     <div className="relative rounded-md border bg-surface p-6 shadow">
       {/* Mobile Layout (sm and below) */}
       <div className="block md:hidden">
-        <div className="mb-1">
+        {/* Verse actions positioned 25% closer to grey separator line */}
+        <div className="mt-2 mb-4">
           <VerseActionsMobile
             verseKey={verse.verse_key}
             isPlaying={isPlaying}
@@ -82,6 +83,7 @@ export default function VerseCard({ verse }: VerseCardProps) {
             className=""
           />
         </div>
+
         <div className="space-y-6">
           <VerseArabic verse={verse} />
           {verse.translations?.map((t: Translation) => (

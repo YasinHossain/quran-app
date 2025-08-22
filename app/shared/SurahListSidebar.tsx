@@ -112,9 +112,12 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
 
       {/* Main sidebar container */}
       <aside
-        className={`drawer-panel md:static top-14 sm:top-16 md:top-0 bottom-0 left-0 w-72 sm:w-80 md:w-[20.7rem] bg-background text-foreground flex flex-col shadow-modal md:shadow-lg z-modal md:z-10 md:h-full ${
+        className={`drawer-panel md:static top-16 md:top-0 bottom-0 left-0 w-72 sm:w-80 md:w-full bg-background text-foreground flex flex-col shadow-modal md:shadow-lg z-modal md:z-10 md:h-full ${
           isSurahListOpen ? 'open' : ''
         } md:translate-x-0`}
+        style={{
+          height: isSurahListOpen ? 'calc(100vh - 4rem)' : undefined,
+        }}
         role="navigation"
         aria-label="Surah navigation"
       >

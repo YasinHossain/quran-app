@@ -70,10 +70,11 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
   }, [addBookmark, removeBookmark, findBookmark, verse.id]);
 
   return (
-    <div className="mb-12 pb-8 border-b border-border">
+    <div className="mb-8 pb-8 border-b border-border">
       {/* Mobile Layout (sm and below) */}
       <div className="block md:hidden">
-        <div className="mb-1">
+        {/* Position verse actions closer to the separator for better visual balance */}
+        <div className="mt-0 mb-4">
           <VerseActionsMobile
             verseKey={verse.verse_key}
             isPlaying={isPlaying}
@@ -84,6 +85,7 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
             className=""
           />
         </div>
+
         <div className="space-y-6">
           <VerseArabic verse={verse} />
           {/* TRANSLATIONS */}
