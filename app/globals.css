@@ -237,6 +237,9 @@
   .touch-pan-y {
     touch-action: pan-y;
   }
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
 }
 
 @layer utilities {
