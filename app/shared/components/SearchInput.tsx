@@ -102,8 +102,7 @@ export const SearchInput = ({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         onKeyDown={onKeyDown}
-        className={`w-full ${sizeStyles.input} rounded-lg outline-none focus:outline-none ${focusStyles} transition-all duration-300 ${hoverStyles} ${variantStyles}`}
-        style={{ touchAction: 'manipulation' }}
+        className={`w-full ${sizeStyles.input} rounded-lg outline-none focus:outline-none ${focusStyles} transition-all duration-300 ${hoverStyles} ${variantStyles} touch-manipulation`}
         autoCapitalize="off"
         autoComplete="off"
         autoCorrect="off"

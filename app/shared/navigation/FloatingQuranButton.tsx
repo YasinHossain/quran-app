@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { IconBook, IconList } from '@tabler/icons-react';
+import { IconList } from '@tabler/icons-react';
 
 interface FloatingQuranButtonProps {
   onPress: () => void;
@@ -13,8 +13,7 @@ const FloatingQuranButton: React.FC<FloatingQuranButtonProps> = ({ onPress, clas
   return (
     <motion.button
       onClick={onPress}
-      className={`fixed right-4 bottom-24 z-40 w-14 h-14 bg-gradient-to-tr from-accent to-accent-hover text-on-accent rounded-2xl shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200 flex items-center justify-center lg:hidden ${className}`}
-      style={{ touchAction: 'manipulation' }}
+      className={`fixed right-4 bottom-24 z-40 w-14 h-14 bg-gradient-to-tr from-accent to-accent-hover text-on-accent rounded-2xl shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200 flex items-center justify-center lg:hidden touch-manipulation ${className}`}
       whileTap={{ scale: 0.9 }}
       whileHover={{ scale: 1.05 }}
       initial={{ scale: 0, opacity: 0 }}
