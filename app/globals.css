@@ -190,6 +190,16 @@
     background: rgb(var(--color-background));
   }
 
+  /* Touch-friendly interactive elements */
+  .btn-touch {
+    @apply min-h-touch min-w-touch;
+    @apply px-3 py-2 sm:px-4 sm:py-2.5 lg:px-6 lg:py-3;
+    @apply rounded-lg font-medium transition-all duration-200;
+    @apply focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none;
+    @apply active:scale-95 select-none;
+    touch-action: manipulation;
+  }
+
   /* Drawer and overlay patterns (for mobile sidebars/modals) */
   .drawer-overlay {
     @apply fixed inset-0 bg-black/50 backdrop-blur-sm;
@@ -242,6 +252,9 @@
   .touch-manipulation {
     touch-action: manipulation;
   }
+  .touch-callout-none {
+    -webkit-touch-callout: none;
+  }
 }
 
 @layer utilities {
@@ -261,6 +274,15 @@
 
   .touch-none {
     touch-action: none;
+  }
+
+  /* Bottom navigation offsets */
+  .bottom-nav-offset {
+    bottom: calc(5rem + env(safe-area-inset-bottom));
+  }
+
+  .bottom-nav-offset-lg {
+    bottom: calc(6rem + env(safe-area-inset-bottom));
   }
 }
 

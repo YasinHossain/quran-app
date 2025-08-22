@@ -4,6 +4,7 @@ import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useResponsiveState } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
+import { useNavigation } from '@/app/providers/NavigationContext';
 import AdaptiveNavigation from './AdaptiveNavigation';
 
 interface AdaptiveLayoutProps {
@@ -26,11 +27,11 @@ const AdaptiveLayout: React.FC<AdaptiveLayoutProps> = ({
   onSidebarToggle,
 }) => {
   const { variant } = useResponsiveState();
+  const { showQuranSelector } = useNavigation();
 
   // Handle navigation visibility
   const handleSurahJump = () => {
-    // Implementation for surah jump functionality
-    console.log('Surah jump triggered');
+    showQuranSelector();
   };
 
   // Adaptive content padding based on navigation presence

@@ -41,8 +41,7 @@ const SwipeIndicator: React.FC<SwipeIndicatorProps> = ({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.3 }}
-          className="fixed left-4 right-4 z-30"
-          style={{ bottom: 'calc(5rem + env(safe-area-inset-bottom))' }}
+          className="fixed left-4 right-4 z-30 bottom-nav-offset"
           onClick={() => setIsVisible(false)}
         >
           <div className="bg-black/70 backdrop-blur-sm text-white rounded-2xl p-4 mx-auto max-w-sm">

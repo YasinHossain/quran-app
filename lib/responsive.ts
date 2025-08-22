@@ -179,15 +179,17 @@ export const layoutPatterns = {
 
   // Header that adapts without breaking
   adaptiveHeader: {
-    mobile: 'fixed top-0 left-0 right-0 min-h-[calc(3.5rem+env(safe-area-inset-top))] px-3 pt-safe',
-    tablet: 'fixed top-0 left-0 right-0 min-h-[calc(4rem+env(safe-area-inset-top))] px-4 pt-safe',
+    mobile:
+      'fixed top-0 left-0 right-0 min-h-[calc(3.5rem+env(safe-area-inset-top))] pt-safe pl-safe pr-safe',
+    tablet:
+      'fixed top-0 left-0 right-0 min-h-[calc(4rem+env(safe-area-inset-top))] pt-safe pl-safe pr-safe',
     desktop: 'static h-20 px-6',
   },
 
   // Content area that works with any navigation
   adaptiveContent: {
     mobile: 'pt-14 bottom-nav-space', // Account for fixed header/nav and safe areas
-    tablet: 'pt-16 pb-4',
+    tablet: 'pt-16 bottom-nav-space',
     desktop: 'p-0', // No fixed elements
   },
 };
