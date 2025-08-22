@@ -21,18 +21,19 @@ export interface ResponsiveConfig<T> {
  * Determines the current breakpoint using matchMedia listeners.
  */
 export const useBreakpoint = (): BreakpointKey => {
-  const [breakpoint, setBreakpoint] = React.useState<BreakpointKey>('mobile');
+  const getBreakpoint = (): BreakpointKey => {
+    if (window.matchMedia('(min-width: 1280px)').matches) return 'wide';
+    if (window.matchMedia('(min-width: 1024px)').matches) return 'desktop';
+    if (window.matchMedia('(min-width: 768px)').matches) return 'tablet';
+    return 'mobile';
+  };
+
+  const [breakpoint, setBreakpoint] = React.useState<BreakpointKey>(() =>
+    typeof window !== 'undefined' ? getBreakpoint() : 'mobile'
+  );
 
   React.useEffect(() => {
-    const getBreakpoint = (): BreakpointKey => {
-      if (window.matchMedia('(min-width: 1280px)').matches) return 'wide';
-      if (window.matchMedia('(min-width: 1024px)').matches) return 'desktop';
-      if (window.matchMedia('(min-width: 768px)').matches) return 'tablet';
-      return 'mobile';
-    };
-
     const updateBreakpoint = () => setBreakpoint(getBreakpoint());
-    updateBreakpoint();
 
     const queries = [
       window.matchMedia('(min-width: 768px)'),
