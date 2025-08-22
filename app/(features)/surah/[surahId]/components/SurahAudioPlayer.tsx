@@ -43,7 +43,7 @@ export const SurahAudioPlayer = ({
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 p-4 bg-transparent z-50">
+    <div className="fixed bottom-0 left-0 right-0 p-4 pb-safe bg-transparent z-50">
       <QuranAudioPlayer track={track} onNext={onNext} onPrev={onPrev} />
     </div>
   );
