@@ -187,7 +187,7 @@ export const layoutPatterns = {
   // Content area that works with any navigation
   adaptiveContent: {
     mobile: 'pt-14 bottom-nav-space', // Account for fixed header/nav and safe areas
-    tablet: 'pt-16 pb-4',
+    tablet: 'pt-16 bottom-nav-space',
     desktop: 'p-0', // No fixed elements
   },
 };
