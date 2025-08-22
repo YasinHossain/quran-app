@@ -68,9 +68,7 @@ All interactive elements should meet WCAG touch target requirements:
 
 ```tsx
 // Enable touch gestures
-<div className="touch-pan-x touch-pinch-zoom" style={{ touchAction: 'pan-x pinch-zoom' }}>
-  {/* Swipeable content */}
-</div>
+<div className="touch-pan-x touch-pinch-zoom">{/* Swipeable content */}</div>
 ```
 
 #### Focus Management
