@@ -146,7 +146,7 @@ const QuickSearch: React.FC<QuickSearchProps> = ({ isOpen, onClose }) => {
                 ) : (
                   <div className="p-4">
                     <div className="text-center text-muted-foreground py-8">
-                      Press Enter to search for "{query}"
+                      Press Enter to search for &quot;{query}&quot;
                     </div>
                   </div>
                 )}

@@ -1,9 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useResponsiveState, responsiveClasses, layoutPatterns } from '@/lib/responsive';
+import { useResponsiveState } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
 import AdaptiveNavigation from './AdaptiveNavigation';
 
@@ -26,8 +25,7 @@ const AdaptiveLayout: React.FC<AdaptiveLayoutProps> = ({
   sidebarOpen = false,
   onSidebarToggle,
 }) => {
-  const pathname = usePathname();
-  const { breakpoint, variant, isMobile, isDesktop } = useResponsiveState();
+  const { variant } = useResponsiveState();
 
   // Handle navigation visibility
   const handleSurahJump = () => {
