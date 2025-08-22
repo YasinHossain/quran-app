@@ -153,8 +153,7 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
         <div
           ref={scrollRef}
           onScroll={handleScroll}
-          className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-3"
-          style={{ touchAction: 'pan-y' }}
+          className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-3 touch-pan-y"
         >
           {activeTab === 'Surah' && (
             <Surah

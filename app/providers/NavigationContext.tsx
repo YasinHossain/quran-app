@@ -67,19 +67,17 @@ export const NavigationProvider = ({ children }: { children: React.ReactNode }) 
     const shouldPreventScroll = isQuranBottomSheetOpen;
 
     if (typeof window !== 'undefined') {
+      const { classList } = document.body;
       if (shouldPreventScroll) {
-        document.body.style.overflow = 'hidden';
-        document.body.style.touchAction = 'none';
+        classList.add('overflow-hidden', 'touch-none');
       } else {
-        document.body.style.overflow = '';
-        document.body.style.touchAction = '';
+        classList.remove('overflow-hidden', 'touch-none');
       }
     }
 
     return () => {
       if (typeof window !== 'undefined') {
-        document.body.style.overflow = '';
-        document.body.style.touchAction = '';
+        document.body.classList.remove('overflow-hidden', 'touch-none');
       }
     };
   }, [isQuranBottomSheetOpen]);

@@ -237,12 +237,24 @@
   .touch-pan-y {
     touch-action: pan-y;
   }
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
 }
 
 @layer utilities {
   /* Z-index utilities using semantic names */
   .z-modal {
     z-index: var(--z-modal);
+  }
+
+  /* Body scroll/interaction helpers */
+  .overflow-hidden {
+    overflow: hidden;
+  }
+
+  .touch-none {
+    touch-action: none;
   }
 }
 

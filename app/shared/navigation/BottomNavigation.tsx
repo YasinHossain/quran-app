@@ -62,8 +62,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onSurahJump }) => {
 
             const commonProps = {
               className:
-                'relative flex flex-col items-center justify-center min-w-[60px] py-2 px-3 rounded-2xl transition-all duration-200 hover:bg-interactive/50 active:scale-95',
-              style: { touchAction: 'manipulation' },
+                'relative flex flex-col items-center justify-center min-w-[60px] py-2 px-3 rounded-2xl transition-all duration-200 hover:bg-interactive/50 active:scale-95 touch-manipulation',
             };
 
             const content = (

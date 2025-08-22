@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { IconX, IconSearch, IconBook, IconHash, IconFileText } from '@tabler/icons-react';
+import { IconX, IconBook, IconHash, IconFileText } from '@tabler/icons-react';
 import { SearchInput } from '../components/SearchInput';
 
 interface QuranBottomSheetProps {
@@ -81,8 +81,7 @@ const QuranBottomSheet: React.FC<QuranBottomSheetProps> = ({ isOpen, onClose, on
               stiffness: 500,
               damping: 40,
             }}
-            className="fixed bottom-0 left-0 right-0 bg-surface rounded-t-3xl shadow-2xl z-50 max-h-[90vh] flex flex-col"
-            style={{ touchAction: 'pan-y' }}
+            className="fixed bottom-0 left-0 right-0 bg-surface rounded-t-3xl shadow-2xl z-50 max-h-[90vh] flex flex-col touch-pan-y"
           >
             {/* Handle bar */}
             <div className="flex justify-center pt-4 pb-2">
@@ -120,7 +119,7 @@ const QuranBottomSheet: React.FC<QuranBottomSheetProps> = ({ isOpen, onClose, on
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id as any)}
+                    onClick={() => setActiveTab(tab.id as 'surah' | 'juz' | 'page')}
                     className={`flex-1 flex items-center justify-center gap-2 py-4 px-6 text-sm font-medium transition-all duration-200 relative ${
                       isActive ? 'text-accent' : 'text-muted hover:text-foreground'
                     }`}
@@ -160,8 +159,7 @@ const QuranBottomSheet: React.FC<QuranBottomSheetProps> = ({ isOpen, onClose, on
                         <motion.button
                           key={surah.id}
                           onClick={() => handleSurahClick(surah.id)}
-                          className="flex items-center gap-4 p-4 rounded-2xl hover:bg-interactive transition-all duration-200 text-left group"
-                          style={{ touchAction: 'manipulation' }}
+                          className="flex items-center gap-4 p-4 rounded-2xl hover:bg-interactive transition-all duration-200 text-left group touch-manipulation"
                           whileTap={{ scale: 0.98 }}
                         >
                           {/* Number badge */}

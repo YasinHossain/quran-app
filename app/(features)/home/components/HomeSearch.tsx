@@ -33,8 +33,7 @@ export default function HomeSearch({ searchQuery, setSearchQuery }: HomeSearchPr
             <button
               key={name}
               onClick={() => handleShortcutClick(name)}
-              className="btn-touch px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 rounded-full font-medium text-mobile-sm sm:text-mobile shadow-sm transition-all duration-200 bg-button-secondary border border-border text-content-primary hover:bg-button-secondary-hover hover:shadow-md active:scale-95 backdrop-blur-md"
-              style={{ touchAction: 'manipulation' }}
+              className="btn-touch px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 rounded-full font-medium text-mobile-sm sm:text-mobile shadow-sm transition-all duration-200 bg-button-secondary border border-border text-content-primary hover:bg-button-secondary-hover hover:shadow-md active:scale-95 backdrop-blur-md touch-manipulation"
             >
               {name}
             </button>
