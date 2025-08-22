@@ -41,12 +41,9 @@ const Header = () => {
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 h-14 sm:h-16 z-header transition-all duration-300',
+        'fixed top-0 left-0 right-0 h-14 sm:h-16 z-header transition-all duration-300 pt-safe',
         'flex items-center gap-3 px-3 sm:px-4 lg:px-6',
-        'border-b backdrop-blur-xl',
-        theme === 'dark'
-          ? 'bg-background/70 border-border/20'
-          : 'bg-background/80 border-border/10',
+        'border-b backdrop-blur-xl bg-background/80 border-border/10',
         isHidden ? '-translate-y-full' : 'translate-y-0'
       )}
     >
@@ -89,7 +86,7 @@ const Header = () => {
           {theme === 'dark' ? (
             <IconSun size={18} className="text-amber-500" />
           ) : (
-            <IconMoon size={18} className="text-slate-600" />
+            <IconMoon size={18} className="text-muted-foreground" />
           )}
         </button>
 
