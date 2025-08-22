@@ -172,7 +172,7 @@ export const createResponsiveComponent = <P extends object>(
 export const layoutPatterns = {
   // Sidebar that becomes bottom sheet on mobile
   adaptiveSidebar: {
-    mobile: 'fixed bottom-0 left-0 right-0 h-auto max-h-[50vh] rounded-t-2xl',
+    mobile: 'fixed bottom-0 left-0 right-0 h-auto max-h-[50dvh] rounded-t-2xl',
     tablet: 'fixed top-0 right-0 h-full w-80 rounded-l-2xl',
     desktop: 'static h-full w-80 rounded-xl',
   },

@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { IconHome, IconBook, IconBookmark } from '@tabler/icons-react';
+import type { TablerIcon } from '@tabler/icons-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useResponsiveState, responsiveClasses, touchClasses } from '@/lib/responsive';
@@ -10,7 +11,7 @@ import { cn } from '@/lib/utils';
 
 interface NavItem {
   id: string;
-  icon: React.ComponentType<any>;
+  icon: TablerIcon;
   label: string;
   href: string;
   isActive?: (pathname: string) => boolean;

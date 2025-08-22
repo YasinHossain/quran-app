@@ -88,8 +88,6 @@ export const ResponsiveInput: React.FC<ResponsiveInputProps> = ({
   className,
   ...props
 }) => {
-  const { variant } = useResponsiveState();
-
   return (
     <div className="space-y-1">
       {label && (
@@ -166,6 +164,17 @@ export const ResponsiveCard: React.FC<ResponsiveCardProps> = ({
         className
       )}
       onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={
+        onClick
+          ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                onClick();
+              }
+            }
+          : undefined
+      }
     >
       {children}
     </div>
