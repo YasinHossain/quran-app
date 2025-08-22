@@ -5,6 +5,7 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import VerseActions from '@/app/shared/VerseActions';
+import VerseActionsMobile from '@/app/shared/VerseActionsMobile';
 import VerseArabic from '@/app/shared/VerseArabic';
 
 interface VerseCardProps {
@@ -67,33 +68,58 @@ export default function VerseCard({ verse }: VerseCardProps) {
   }, [addBookmark, removeBookmark, findBookmark, verse.id]);
 
   return (
-    <div className="relative flex rounded-md border bg-surface p-6 shadow">
-      <VerseActions
-        verseKey={verse.verse_key}
-        isPlaying={isPlaying}
-        isLoadingAudio={isLoadingAudio}
-        isBookmarked={isVerseBookmarked}
-        onPlayPause={handlePlayPause}
-        onBookmark={handleBookmark}
-        className="mr-4 w-14 pt-2 text-muted"
-      />
-           {' '}
-      <div className="flex-grow space-y-6">
-                <VerseArabic verse={verse} />       {' '}
-        {verse.translations?.map((t: Translation) => (
-          <div key={t.resource_id}>
-                       {' '}
-            <p
-              className="text-left leading-relaxed"
-              style={{ fontSize: `${settings.translationFontSize}px` }}
-              dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.text) }}
-            />
-                     {' '}
-          </div>
-        ))}
-             {' '}
+    <div className="relative rounded-md border bg-surface p-6 shadow">
+      {/* Mobile Layout (sm and below) */}
+      <div className="block md:hidden">
+        <div className="mb-1">
+          <VerseActionsMobile
+            verseKey={verse.verse_key}
+            isPlaying={isPlaying}
+            isLoadingAudio={isLoadingAudio}
+            isBookmarked={isVerseBookmarked}
+            onPlayPause={handlePlayPause}
+            onBookmark={handleBookmark}
+            className=""
+          />
+        </div>
+        <div className="space-y-6">
+          <VerseArabic verse={verse} />
+          {verse.translations?.map((t: Translation) => (
+            <div key={t.resource_id}>
+              <p
+                className="text-left leading-relaxed"
+                style={{ fontSize: `${settings.translationFontSize}px` }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.text) }}
+              />
+            </div>
+          ))}
+        </div>
       </div>
-         {' '}
+
+      {/* Desktop Layout (md and above) */}
+      <div className="hidden md:flex">
+        <VerseActions
+          verseKey={verse.verse_key}
+          isPlaying={isPlaying}
+          isLoadingAudio={isLoadingAudio}
+          isBookmarked={isVerseBookmarked}
+          onPlayPause={handlePlayPause}
+          onBookmark={handleBookmark}
+          className="mr-4 w-14 pt-2 text-muted"
+        />
+        <div className="flex-grow space-y-6">
+          <VerseArabic verse={verse} />
+          {verse.translations?.map((t: Translation) => (
+            <div key={t.resource_id}>
+              <p
+                className="text-left leading-relaxed"
+                style={{ fontSize: `${settings.translationFontSize}px` }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.text) }}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
