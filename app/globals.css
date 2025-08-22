@@ -73,6 +73,7 @@
     --z-dropdown: 10;
     --z-sticky: 20;
     --z-fixed: 30;
+    --z-header: 40;
     /* Modals/overlays should sit above header and bottom nav */
     --z-modal: 100;
     --z-popover: 50;
@@ -245,6 +246,10 @@
 
 @layer utilities {
   /* Z-index utilities using semantic names */
+  .z-header {
+    z-index: var(--z-header);
+  }
+
   .z-modal {
     z-index: var(--z-modal);
   }
