@@ -13,7 +13,7 @@ interface NavItem {
   id: string;
   icon: TablerIcon;
   label: string;
-  href: string;
+  href?: string;
   isActive?: (pathname: string) => boolean;
 }
 
@@ -44,7 +44,6 @@ const AdaptiveNavigation: React.FC<AdaptiveNavigationProps> = ({ onSurahJump, cl
       id: 'surah',
       icon: IconBook,
       label: breakpoint === 'mobile' ? 'Jump' : 'Jump to Surah',
-      href: '#',
       isActive: (path) => path.startsWith('/surah'),
     },
     {
@@ -113,24 +112,26 @@ const MobileNavigation: React.FC<{
         <div className="flex items-center justify-around">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = item.isActive?.(pathname) ?? pathname === item.href;
+            const isActive =
+              item.isActive?.(pathname) ?? (item.href ? pathname === item.href : false);
 
-            return (
-              <Link
-                key={item.id}
-                href={item.href}
-                onClick={(e) => onItemClick(item, e)}
-                className={cn(
-                  'relative flex flex-col items-center justify-center',
-                  'min-w-[60px] py-2 px-3 rounded-2xl',
-                  'transition-all duration-200',
-                  touchClasses.target,
-                  touchClasses.gesture,
-                  touchClasses.focus,
-                  touchClasses.active,
-                  'hover:bg-interactive/50'
-                )}
-              >
+            const commonProps = {
+              key: item.id,
+              onClick: (e: React.MouseEvent) => onItemClick(item, e),
+              className: cn(
+                'relative flex flex-col items-center justify-center',
+                'min-w-[60px] py-2 px-3 rounded-2xl',
+                'transition-all duration-200',
+                touchClasses.target,
+                touchClasses.gesture,
+                touchClasses.focus,
+                touchClasses.active,
+                'hover:bg-interactive/50'
+              ),
+            };
+
+            const content = (
+              <>
                 {isActive && (
                   <motion.div
                     layoutId="activeIndicator"
@@ -167,7 +168,17 @@ const MobileNavigation: React.FC<{
                     transition={{ delay: 0.1, type: 'spring', stiffness: 500, damping: 30 }}
                   />
                 )}
+              </>
+            );
+
+            return item.href ? (
+              <Link href={item.href} {...commonProps}>
+                {content}
               </Link>
+            ) : (
+              <button type="button" {...commonProps}>
+                {content}
+              </button>
             );
           })}
         </div>
@@ -203,26 +214,37 @@ const DesktopNavigation: React.FC<{
     <nav className={cn('flex items-center gap-4', responsiveClasses.nav, className)}>
       {navItems.map((item) => {
         const Icon = item.icon;
-        const isActive = item.isActive?.(pathname) ?? pathname === item.href;
+        const isActive = item.isActive?.(pathname) ?? (item.href ? pathname === item.href : false);
 
-        return (
-          <Link
-            key={item.id}
-            href={item.href}
-            onClick={(e) => onItemClick(item, e)}
-            className={cn(
-              'flex items-center gap-3 px-4 py-2 rounded-xl',
-              'transition-all duration-200',
-              touchClasses.focus,
-              touchClasses.active,
-              isActive
-                ? 'bg-accent/10 text-accent'
-                : 'text-muted hover:text-foreground hover:bg-interactive/50'
-            )}
-          >
+        const commonProps = {
+          key: item.id,
+          onClick: (e: React.MouseEvent) => onItemClick(item, e),
+          className: cn(
+            'flex items-center gap-3 px-4 py-2 rounded-xl',
+            'transition-all duration-200',
+            touchClasses.focus,
+            touchClasses.active,
+            isActive
+              ? 'bg-accent/10 text-accent'
+              : 'text-muted hover:text-foreground hover:bg-interactive/50'
+          ),
+        };
+
+        const content = (
+          <>
             <Icon size={20} />
             <span className="font-medium">{item.label}</span>
+          </>
+        );
+
+        return item.href ? (
+          <Link href={item.href} {...commonProps}>
+            {content}
           </Link>
+        ) : (
+          <button type="button" {...commonProps}>
+            {content}
+          </button>
         );
       })}
     </nav>
