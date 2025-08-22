@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useBreakpoint } from '../responsive';
+import { useBreakpoint, layoutPatterns } from '../responsive';
 
 const createMatchMedia = (width: number) => (query: string) => ({
   matches: width >= parseInt(query.match(/\d+/)![0], 10),
@@ -33,5 +33,12 @@ describe('useBreakpoint', () => {
     window.matchMedia = jest.fn(createMatchMedia(1300)) as any;
     const { result } = renderHook(() => useBreakpoint());
     expect(result.current).toBe('wide');
+  });
+});
+
+describe('layoutPatterns.adaptiveHeader', () => {
+  it('includes pt-safe for mobile and tablet', () => {
+    expect(layoutPatterns.adaptiveHeader.mobile).toContain('pt-safe');
+    expect(layoutPatterns.adaptiveHeader.tablet).toContain('pt-safe');
   });
 });

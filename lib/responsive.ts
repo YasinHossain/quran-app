@@ -179,8 +179,8 @@ export const layoutPatterns = {
 
   // Header that adapts without breaking
   adaptiveHeader: {
-    mobile: 'fixed top-0 left-0 right-0 h-14 px-3',
-    tablet: 'fixed top-0 left-0 right-0 h-16 px-4',
+    mobile: 'fixed top-0 left-0 right-0 h-14 px-3 pt-safe',
+    tablet: 'fixed top-0 left-0 right-0 h-16 px-4 pt-safe',
     desktop: 'static h-20 px-6',
   },
 
