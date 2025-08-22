@@ -8,9 +8,9 @@ import { IconHome, IconBook, IconBookmark } from '@tabler/icons-react';
 
 interface NavItem {
   id: string;
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
   label: string;
-  href: string;
+  href?: string;
   badge?: number;
 }
 
@@ -32,7 +32,6 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onSurahJump }) => {
       id: 'surah',
       icon: IconBook,
       label: 'Jump to',
-      href: '#', // Will be handled by onPress
     },
     {
       id: 'bookmarks',
@@ -42,18 +41,11 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onSurahJump }) => {
     },
   ];
 
-  const isActive = (href: string, id: string) => {
+  const isActive = (href: string | undefined, id: string) => {
     if (href === '/home' && pathname === '/') return true;
     if (id === 'surah' && pathname.startsWith('/surah')) return true;
     if (href === '/bookmarks' && pathname.startsWith('/bookmarks')) return true;
     return pathname === href;
-  };
-
-  const handleJumpClick = (e: React.MouseEvent) => {
-    if (onSurahJump) {
-      e.preventDefault();
-      onSurahJump();
-    }
   };
 
   return (
@@ -68,14 +60,14 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onSurahJump }) => {
             const Icon = item.icon;
             const active = isActive(item.href, item.id);
 
-            return (
-              <Link
-                key={item.id}
-                href={item.href}
-                onClick={item.id === 'surah' ? handleJumpClick : undefined}
-                className="relative flex flex-col items-center justify-center min-w-[60px] py-2 px-3 rounded-2xl transition-all duration-200 hover:bg-interactive/50 active:scale-95"
-                style={{ touchAction: 'manipulation' }}
-              >
+            const commonProps = {
+              className:
+                'relative flex flex-col items-center justify-center min-w-[60px] py-2 px-3 rounded-2xl transition-all duration-200 hover:bg-interactive/50 active:scale-95',
+              style: { touchAction: 'manipulation' },
+            };
+
+            const content = (
+              <>
                 {/* Active indicator background */}
                 {active && (
                   <motion.div
@@ -134,6 +126,20 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onSurahJump }) => {
                     }}
                   />
                 )}
+              </>
+            );
+
+            if (item.id === 'surah') {
+              return (
+                <button key={item.id} type="button" onClick={onSurahJump} {...commonProps}>
+                  {content}
+                </button>
+              );
+            }
+
+            return (
+              <Link key={item.id} href={item.href!} {...commonProps}>
+                {content}
               </Link>
             );
           })}
