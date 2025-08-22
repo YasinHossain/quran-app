@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { useSidebar } from '@/app/providers/SidebarContext';
-import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { SettingsHeader } from './SettingsHeader';
 import { SettingsTabs } from './SettingsTabs';
 import { SettingsContent } from './SettingsContent';
@@ -46,7 +45,6 @@ export const SettingsSidebar = ({
   onWordLanguagePanelClose,
 }: SettingsSidebarProps) => {
   const { isSettingsOpen, setSettingsOpen } = useSidebar();
-  const { isHidden } = useHeaderVisibility();
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
 
   const { activeTab, handleTabChange, tabOptions } = useSettingsTabState({
@@ -67,7 +65,7 @@ export const SettingsSidebar = ({
       )}
       <aside
         ref={sidebarRef}
-        className={`settings-sidebar fixed lg:static top-0 lg:top-0 bottom-0 right-0 w-72 sm:w-80 md:w-[20.7rem] bg-background text-foreground flex flex-col lg:flex-shrink-0 shadow-modal lg:shadow-lg border-l border-border transition-transform duration-300 ease-in-out lg:h-full overflow-x-hidden ${
+        className={`settings-sidebar fixed lg:static top-0 lg:top-0 bottom-0 right-0 w-72 sm:w-80 md:w-[20.7rem] bg-background text-foreground flex flex-col lg:flex-shrink-0 shadow-modal lg:shadow-lg border-l border-border transition-transform duration-300 ease-in-out lg:h-full overflow-x-hidden pt-safe ${
           isSettingsOpen ? 'translate-x-0' : 'translate-x-full'
         } lg:translate-x-0`}
         style={{

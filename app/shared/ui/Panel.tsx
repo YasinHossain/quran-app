@@ -6,10 +6,10 @@ import { CloseIcon } from '@/app/shared/icons';
 import { Button } from './Button';
 
 export const PANEL_VARIANTS = {
-  sidebar: 'fixed top-0 bottom-0 right-0 w-80 bg-surface shadow-lg',
+  sidebar: 'fixed top-0 bottom-0 right-0 w-80 bg-surface shadow-lg pt-safe',
   modal: 'fixed inset-4 bg-surface rounded-lg shadow-xl max-w-2xl max-h-96 mx-auto my-auto',
   overlay: 'fixed top-16 right-4 w-72 bg-surface rounded-lg shadow-lg border border-border',
-  fullscreen: 'fixed inset-0 bg-surface',
+  fullscreen: 'fixed inset-0 bg-surface pt-safe',
 } as const;
 
 export interface PanelProps {
