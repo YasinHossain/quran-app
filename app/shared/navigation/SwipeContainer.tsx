@@ -4,6 +4,7 @@ import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useSwipeGestures } from '@/app/shared/hooks/useSwipeGestures';
 import { useNavigation } from '@/app/providers/NavigationContext';
+import { cn } from '@/lib/utils';
 
 interface SwipeContainerProps {
   children: React.ReactNode;
@@ -53,9 +54,8 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ children, className }) 
   return (
     <div
       {...swipeGestures}
-      className={className}
+      className={cn('touch-pan-y select-none', className)}
       style={{
-        touchAction: 'pan-y', // Allow vertical scrolling but handle horizontal swipes
         WebkitTouchCallout: 'none', // Disable iOS context menu
         WebkitUserSelect: 'none', // Disable text selection during swipes
       }}
