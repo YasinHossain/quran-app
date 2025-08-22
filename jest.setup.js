@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import 'cross-fetch/polyfill';
+import { jest } from '@jest/globals';
 
 // Ensure fetch is available in the JSDOM environment
 if (typeof globalThis.fetch === 'undefined') {
@@ -36,3 +37,5 @@ Object.defineProperty(global, 'IntersectionObserver', {
   configurable: true,
   value: IntersectionObserverMock,
 });
+
+jest.mock('@/app/shared/components/AdaptiveNavigation', () => () => null);
