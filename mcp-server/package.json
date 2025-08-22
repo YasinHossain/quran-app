@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
+    "@modelcontextprotocol/server-github": "^2025.4.8",
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {

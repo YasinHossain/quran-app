@@ -1,147 +1,119 @@
-# Setting up the Quran App MCP Server with Claude Code
+# GitHub MCP Server Setup for Quran App
 
-This guide will help you configure Claude Code to use the Quran App MCP server for enhanced AI assistance with your Quran app development.
+This document explains how to set up the GitHub MCP (Model Context Protocol) server for the Quran App project, enabling Claude and other AI assistants to interact directly with the GitHub repository.
 
 ## Prerequisites
 
-1. **Claude Code** installed and configured
-2. **Node.js** 18+ installed
-3. **Quran App v1** project cloned locally
+- Node.js (v18 or higher)
+- Claude Desktop app installed
+- GitHub Personal Access Token
+- Quran App v1 project cloned locally
 
-## Installation Steps
+## Setup Steps
 
-### 1. Build the MCP Server
+### 1. Create GitHub Personal Access Token
 
-```bash
-cd mcp-server
-npm install
-npm run build
-```
+1. Go to GitHub Settings > Developer Settings > Personal Access Tokens > Tokens (classic)
+2. Click "Generate new token (classic)"
+3. Select the following scopes:
+   - `repo` (Full control of private repositories)
+   - `read:org` (Read org and team membership)
+   - `read:user` (Read user profile data)
+   - `user:email` (Access user email addresses)
 
-### 2. Test the Server
+### 2. Configure Claude Desktop
 
-```bash
-# Test basic functionality
-echo '{"jsonrpc": "2.0", "id": 1, "method": "tools/list"}' | node dist/index.js
+1. Open Claude Desktop
+2. Click the hamburger menu (≡) → Settings → Developer tab
+3. Click "Edit Config" to open the configuration file
+4. Replace the contents with the configuration from `claude_desktop_config.json` in this directory
+5. Replace `YOUR_GITHUB_TOKEN_HERE` with your actual GitHub token
 
-# Test a specific tool
-echo '{"jsonrpc": "2.0", "id": 2, "method": "tools/call", "params": {"name": "get_juz_metadata", "arguments": {}}}' | node dist/index.js
-```
+### 3. Available MCP Servers
 
-### 3. Configure Claude Code
+This setup includes three MCP servers:
 
-Add the MCP server to your Claude Code configuration. The configuration file location varies by platform:
+#### GitHub Server
+- **Purpose**: Direct GitHub repository access
+- **Features**: 
+  - Repository management
+  - Issue and PR handling
+  - File operations via GitHub API
+  - Branch management
 
-- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Linux**: `~/.config/Claude/claude_desktop_config.json`
+#### Filesystem Server  
+- **Purpose**: Local file system access
+- **Features**:
+  - Read/write files in the project directory
+  - Directory listing
+  - File operations
 
-Add this configuration:
+#### Git Server
+- **Purpose**: Git repository operations
+- **Features**:
+  - Git status and log
+  - Commit operations
+  - Branch management
+  - Remote operations
 
-```json
-{
-  "mcpServers": {
-    "quran-app": {
-      "command": "node",
-      "args": ["/full/path/to/quran-app-v1/mcp-server/dist/index.js"],
-      "env": {}
-    }
-  }
-}
-```
+### 4. Restart Claude Desktop
 
-**Important**: Replace `/full/path/to/quran-app-v1/` with the actual absolute path to your project.
+After updating the configuration:
+1. Completely quit Claude Desktop
+2. Restart the application
+3. Start a new conversation
 
-### 4. Restart Claude Code
+### 5. Verify Setup
 
-After adding the configuration, restart Claude Code completely to load the new MCP server.
+In a new Claude conversation, you can test the MCP servers by asking:
+- "What's the current status of my GitHub repository?"
+- "Show me the recent commits"
+- "List the files in the project"
 
-## Verification
+## Benefits
 
-Once configured, you can test that the MCP server is working by asking Claude Code questions like:
+With this MCP setup, Claude can:
 
-- "What verses are in Juz 1?"
-- "Search for verses about patience"
-- "Get me the translation of Ayat al-Kursi (2:255)"
-- "Add verse 2:255 to my bookmarks"
-- "What are my current user settings?"
+1. **Direct Repository Access**: 
+   - Analyze code without manual file uploads
+   - View commit history and branches
+   - Read issues and pull requests
 
-## Available Capabilities
+2. **Enhanced Development Workflow**:
+   - Make informed suggestions based on full project context
+   - Help with code reviews and debugging
+   - Assist with project planning and documentation
 
-The MCP server provides Claude Code with:
+3. **Integrated File Operations**:
+   - Read and modify files directly
+   - Understand project structure
+   - Make contextual recommendations
 
-### 📖 Quran Data Access
+## Security Notes
 
-- Get chapters, verses, translations, and tafsir
-- Search verses by text or keywords
-- Access random verses and specific references
-
-### 🔖 Bookmark Management
-
-- Create, organize, and manage bookmark folders
-- Add/remove verses from bookmarks
-- Check bookmark status of verses
-
-### ⚙️ Settings Management
-
-- Read and update user preferences
-- Manage translation and tafsir selections
-- Configure audio and display settings
-
-### 🧭 Navigation Tools
-
-- Get verse context and navigation
-- Find verses by reference (chapter:verse)
-- Navigate between chapters, pages, and juzs
-
-## Example Usage
-
-With the MCP server configured, Claude Code can help you with tasks like:
-
-```
-User: "Help me implement a feature to display verses from Juz 15"
-
-Claude Code: Let me get information about Juz 15 first.
-[Uses get_juz_metadata and get_verses_by_juz tools]
-
-I can see Juz 15 contains verses from Al-Israa 1 through Al-Kahf 74.
-Here's how to implement the feature...
-```
+- Keep your GitHub token secure and don't share it
+- The token has access to your repositories - use appropriate scopes
+- MCP servers run locally on your machine
+- No data is sent to external services beyond GitHub API calls
 
 ## Troubleshooting
 
-### Server Not Starting
+If the MCP servers don't work:
 
-- Check that Node.js 18+ is installed
-- Verify the build completed successfully
-- Ensure the path in the configuration is absolute and correct
+1. **Check Node.js version**: `node --version` (should be 18+)
+2. **Verify token permissions**: Ensure all required scopes are selected
+3. **Restart Claude Desktop**: Completely quit and relaunch
+4. **Check configuration**: Ensure JSON syntax is valid in config file
 
-### Tools Not Available
+## Usage Examples
 
-- Restart Claude Code after configuration changes
-- Check the configuration file syntax is valid JSON
-- Verify the MCP server path exists and is executable
+Once set up, you can interact with your repository naturally:
 
-### API Errors
+```
+User: "What files have been changed in the latest commit?"
+User: "Show me the current branch and any uncommitted changes"
+User: "Create a new feature branch for implementing dark mode"
+User: "What issues are currently open on this repository?"
+```
 
-- Check internet connection (required for Quran.com API)
-- Verify the server logs for specific error messages
-
-## Development
-
-To modify or extend the MCP server:
-
-1. Edit files in `mcp-server/src/`
-2. Run `npm run build` to recompile
-3. Restart Claude Code to reload changes
-
-See the [MCP Server README](mcp-server/README.md) for detailed development information.
-
-## Storage
-
-The MCP server stores user data in:
-
-- **Location**: `~/.quran-app-mcp/`
-- **Files**: `bookmarks.json`, `settings.json`
-
-This data is separate from your main app's storage and can be shared between different instances of Claude Code.
+Claude will use the MCP servers to provide accurate, real-time information about your repository and project state.

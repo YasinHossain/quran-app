@@ -1,157 +1,207 @@
-# Quran App MCP Server - Usage Examples
+# GitHub MCP Server Usage Examples
 
-Your MCP server is now configured and working! Here are examples of how to use it with Claude Code.
+This document provides practical examples of how to use the GitHub MCP server with your Quran App project.
 
-## ✅ Current Status
+## Repository Analysis
 
-- **MCP Server**: Successfully built and running
-- **Claude Code**: Configured and connected
-- **Tools Available**: 27 tools across 4 categories
+### View Repository Status
+```
+User: "What's the current status of my quran-app repository?"
 
-## 🚀 Quick Test Commands
-
-### Basic Usage (with permission bypass for testing)
-
-```bash
-# Get Juz metadata
-echo "Get the Juz metadata" | claude --dangerously-skip-permissions --print
-
-# Search for verses
-echo "Search for verses about 'mercy'" | claude --dangerously-skip-permissions --print
-
-# Add a bookmark
-echo "Add verse 1:1 to my bookmarks" | claude --dangerously-skip-permissions --print
-
-# View bookmarks
-echo "Show me my bookmarks" | claude --dangerously-skip-permissions --print
+Expected Response: 
+- Current branch information
+- Uncommitted changes
+- Recent commit summary
+- Repository statistics
 ```
 
-### Interactive Usage (recommended)
+### Branch Management
+```
+User: "Show me all branches in the quran-app repository"
 
-```bash
-# Start interactive session
-claude
+User: "Create a new branch called 'feature/audio-improvements'"
 
-# Then ask:
-# "Get information about Juz 15"
-# "Search for verses containing 'guidance'"
-# "Add 2:255 to my bookmarks"
-# "What are my current user settings?"
+User: "Switch to the mobile-responsive-upgrade branch"
 ```
 
-## 📖 Example Queries
+### Commit History
+```
+User: "Show me the last 5 commits on the current branch"
 
-### Quran Data
+User: "What changes were made in commit 6cf85e16?"
 
-- "What verses are in Juz 1?"
-- "Get me verses from chapter 2 (Al-Baqarah)"
-- "Find the translation of verse 2:255"
-- "Get random verse for daily reflection"
-- "What tafsir is available for verse 3:110?"
-
-### Navigation
-
-- "Get context around verse 2:255 (2 verses before and after)"
-- "Find verse 112:1 and tell me about its location"
-- "Navigate to Surah Al-Fatiha and show me navigation options"
-
-### Bookmarks
-
-- "Create a new bookmark folder called 'Daily Reflections'"
-- "Add verse 2:255 to my 'Favorites' folder"
-- "Show me all my bookmarked verses"
-- "Remove verse 1:1 from bookmarks"
-
-### Settings
-
-- "What are my current user settings?"
-- "Update my theme to dark mode"
-- "Add translation ID 131 to my selected translations"
-- "What Arabic fonts are available?"
-
-### Development Queries
-
-- "Help me implement a feature to display verses from Juz 15"
-- "How should I structure the bookmark component based on the current data?"
-- "What API endpoints does my app use for verse translations?"
-
-## 🔧 Permission Management
-
-### First Time Setup
-
-1. Start Claude Code: `claude`
-2. Ask a question that requires MCP tools
-3. Grant permissions when prompted
-4. Future requests will remember your preferences
-
-### For Testing/Development
-
-Use `--dangerously-skip-permissions` flag:
-
-```bash
-claude --dangerously-skip-permissions
+User: "Find commits that mention 'mobile' or 'responsive'"
 ```
 
-## 💡 Advanced Usage
+## Code Analysis & Development
 
-### Combining Multiple Operations
+### File Operations
+```
+User: "Show me the structure of the app/shared directory"
 
-```bash
-claude --print "Search for verses about 'prayer', add the first result to bookmarks, then show me my bookmark folders"
+User: "What components are in the SurahListSidebar.tsx file?"
+
+User: "Find all TypeScript files that import 'useBreakpoint'"
 ```
 
-### Development Assistance
+### Issue Management
+```
+User: "List all open issues in the repository"
 
-```bash
-claude "I want to add a feature to display the current user's favorite verses. Use the MCP server to understand the bookmark structure and help me implement this."
+User: "Create a new issue for implementing voice search feature"
+
+User: "Show me issues labeled with 'bug' or 'mobile'"
 ```
 
-### Data Analysis
+### Pull Request Management
+```
+User: "List all open pull requests"
 
-```bash
-claude "Analyze the structure of Juz metadata and suggest how to improve the navigation in my app"
+User: "What files are changed in PR #45?"
+
+User: "Review the changes in the latest pull request"
 ```
 
-## 🐛 Troubleshooting
+## Development Workflow
 
-### MCP Server Not Responding
+### Feature Development
+```
+User: "I want to add a new prayer times feature. Help me plan this."
 
-```bash
-# Check server status
-claude mcp list
-
-# Restart if needed
-claude mcp remove quran-app
-claude mcp add quran-app node ./mcp-server/dist/index.js
+Expected Workflow:
+1. Claude analyzes existing code structure
+2. Creates feature branch
+3. Suggests component architecture
+4. Identifies integration points
+5. Plans testing approach
 ```
 
-### Permission Issues
+### Code Review Assistant
+```
+User: "Review the changes in my current working directory"
 
-- Use `--dangerously-skip-permissions` for testing
-- In interactive mode, grant permissions when prompted
-- Permissions are remembered for future sessions
+User: "Are there any potential issues with the responsive design changes?"
 
-### API Errors
+User: "Check if the new components follow the project's patterns"
+```
 
-- Ensure internet connection (Quran.com API required)
-- Check server logs: MCP server outputs to stderr
-- Rebuild server: `cd mcp-server && npm run build`
+### Testing & Quality
+```
+User: "Find all test files related to the audio player"
 
-## 📈 Benefits for Development
+User: "What components don't have test coverage?"
 
-1. **Faster Context**: Get verse data without reading files
-2. **Real-time Data**: Live access to Quran.com API
-3. **Reduced Tokens**: Targeted queries vs full file reads
-4. **Better Understanding**: AI knows your app's data structure
-5. **Enhanced Development**: AI can suggest features based on actual data
+User: "Run the linting checks and show me any issues"
+```
 
-## 🎯 What's Next
+## Project Management
 
-Your MCP server is fully functional! You can now:
+### Documentation Updates
+```
+User: "Update the README.md to reflect the new MCP server setup"
 
-- Develop features with AI assistance that understands your Quran data
-- Test bookmark and settings functionality
-- Get real-time verse searches and translations
-- Have AI suggest improvements based on actual app structure
+User: "Create documentation for the new responsive design patterns"
 
-The MCP server will make your development workflow significantly more efficient by giving Claude Code deep understanding of your Quran app's capabilities and data.
+User: "Check if all new features are documented"
+```
+
+### Release Planning
+```
+User: "What changes have been made since the last release?"
+
+User: "Create a changelog for version 1.2.0"
+
+User: "Tag a new release with the current changes"
+```
+
+### Architecture Analysis
+```
+User: "Analyze the component structure in the features directory"
+
+User: "How is state management handled across the application?"
+
+User: "Show me the API integration patterns used in the project"
+```
+
+## Mobile Development Focus
+
+Since your project is on a mobile responsive branch:
+
+### Responsive Design Review
+```
+User: "Review all components for mobile responsiveness"
+
+User: "Find components that use hardcoded breakpoints"
+
+User: "Check the mobile navigation implementation"
+```
+
+### Mobile Performance
+```
+User: "Identify components that might impact mobile performance"
+
+User: "Review image optimization across the mobile interface"
+
+User: "Check for mobile-specific accessibility issues"
+```
+
+### Touch Interface
+```
+User: "Review touch targets in the mobile interface"
+
+User: "Find gesture implementations in the codebase"
+
+User: "Check mobile keyboard interactions"
+```
+
+## Advanced Queries
+
+### Cross-File Analysis
+```
+User: "Find all usages of the 'useVerseListing' hook across the codebase"
+
+User: "What components depend on the ThemeContext?"
+
+User: "Map the data flow from API to components"
+```
+
+### Code Quality Insights
+```
+User: "Identify duplicate code patterns in the shared components"
+
+User: "Find unused imports across the project"
+
+User: "Review TypeScript strict mode compliance"
+```
+
+### Integration Testing
+```
+User: "Test the MCP server connection with a simple query"
+
+User: "Verify all MCP tools are working correctly"
+
+User: "Check GitHub API rate limits and status"
+```
+
+## Tips for Best Results
+
+1. **Be Specific**: Include file paths, component names, or specific features
+2. **Context Matters**: Mention the mobile responsive focus when relevant
+3. **Iterative Queries**: Build on previous responses for deeper analysis
+4. **Combine Tools**: Leverage both file system and GitHub API capabilities
+
+## Common Patterns
+
+The MCP server works best when you:
+- Reference specific branches or commits
+- Ask about code relationships and dependencies
+- Need real-time repository information
+- Want to understand project architecture
+- Plan development workflows
+
+## Security Reminders
+
+- The GitHub token provides access to your repository
+- All operations are performed with your GitHub permissions
+- Local file operations respect your system permissions
+- No external services access your code beyond GitHub API
