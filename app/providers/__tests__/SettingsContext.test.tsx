@@ -34,6 +34,7 @@ describe('SettingsContext settings state', () => {
     wordTranslationId: 85,
     showByWords: false,
     tajweed: false,
+    reciterId: 2,
   };
 
   it('defaults to expected values', () => {

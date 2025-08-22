@@ -13,4 +13,6 @@ export interface Settings {
   wordTranslationId: number;
   showByWords: boolean;
   tajweed: boolean;
+  /** Identifier of selected reciter for audio playback. */
+  reciterId: number;
 }

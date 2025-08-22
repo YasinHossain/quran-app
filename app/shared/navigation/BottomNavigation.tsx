@@ -57,7 +57,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onSurahJump }) => {
       }`}
     >
       {/* Glass effect backdrop */}
-      <div className="absolute inset-0 backdrop-blur-lg bg-white/10 dark:bg-gray-900/10 backdrop-saturate-150 border-t border-white/5 dark:border-white/5" />
+      <div className="absolute inset-0 backdrop-blur-lg bg-surface/10 backdrop-saturate-150 border-t border-border/5" />
 
       {/* Safe area for iPhone */}
       <div className="relative px-2 pt-2 pb-safe pl-safe pr-safe">

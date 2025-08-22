@@ -1,4 +1,5 @@
 import { Settings } from '@/types';
+import { RECITERS } from '@/lib/audio/reciters';
 
 export const ARABIC_FONTS = [
   { name: 'KFGQPC Uthman Taha', value: '"KFGQPC-Uthman-Taha", serif', category: 'Uthmani' },
@@ -22,6 +23,7 @@ export const defaultSettings: Settings = {
   wordTranslationId: 85,
   showByWords: false,
   tajweed: false,
+  reciterId: RECITERS[0].id,
 };
 
 const SETTINGS_KEY = 'quranAppSettings';
