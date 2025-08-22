@@ -221,6 +221,7 @@
 
   /* Bottom navigation spacing */
   .bottom-nav-space {
+    padding-bottom: 5rem;
     padding-bottom: calc(5rem + env(safe-area-inset-bottom));
   }
 

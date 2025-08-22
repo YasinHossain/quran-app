@@ -39,13 +39,13 @@ const AdaptiveLayout: React.FC<AdaptiveLayoutProps> = ({
 
     switch (variant) {
       case 'compact':
-        return 'pb-20'; // Mobile bottom nav height
+        return 'bottom-nav-space'; // Mobile bottom nav height
       case 'default':
-        return 'pb-20'; // Tablet also uses bottom nav
+        return 'bottom-nav-space'; // Tablet also uses bottom nav
       case 'expanded':
         return ''; // Desktop has no fixed navigation
       default:
-        return 'pb-20';
+        return 'bottom-nav-space';
     }
   };
 
