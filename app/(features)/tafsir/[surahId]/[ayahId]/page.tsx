@@ -7,7 +7,6 @@ import TafsirViewer from './components/TafsirViewer';
 import TafsirAudioPlayer from './components/TafsirAudioPlayer';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
-import { useSettings } from '@/app/providers/SettingsContext';
 
 interface TafsirVersePageProps {
   params: Promise<{ surahId: string; ayahId: string }>;
@@ -17,7 +16,6 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps) {
   const { surahId, ayahId } = React.use(params);
   const { isHidden } = useHeaderVisibility();
   const { activeVerse, isPlayerVisible, reciter } = useAudio();
-  const { settings } = useSettings();
   const {
     verse,
     tafsirHtml,
