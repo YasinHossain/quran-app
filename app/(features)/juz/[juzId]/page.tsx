@@ -9,6 +9,7 @@ import type { LanguageCode } from '@/lib/text/languageCodes';
 import { buildAudioUrl } from '@/lib/audio/reciters';
 import { QuranAudioPlayer } from '@/app/shared/player';
 import { getSurahCoverUrl } from '@/lib/api';
+import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import useJuzData from '../hooks/useJuzData';
 import { JuzHeader } from './components/JuzHeader';
 import { JuzVerseList } from './components/JuzVerseList';
@@ -20,6 +21,7 @@ export default function JuzPage({ params }: { params: Promise<{ juzId: string }>
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
   const { t } = useTranslation();
+  const { isHidden } = useHeaderVisibility();
 
   const {
     juz,
@@ -117,7 +119,16 @@ export default function JuzPage({ params }: { params: Promise<{ juzId: string }>
         onWordLanguagePanelClose={() => setIsWordPanelOpen(false)}
       />
       {activeVerse && isPlayerVisible && (
-        <div className="fixed bottom-0 left-0 right-0 p-4 pb-safe bg-transparent z-50">
+        <div
+          className={`fixed left-0 right-0 p-4 bg-transparent z-audio-player transition-all duration-300 ease-in-out ${
+            isHidden ? 'bottom-0 pb-safe' : 'bottom-0 pb-safe lg:pb-4'
+          }`}
+          style={{
+            bottom: isHidden
+              ? 'env(safe-area-inset-bottom)'
+              : 'calc(5rem + env(safe-area-inset-bottom))',
+          }}
+        >
           <QuranAudioPlayer track={track} onNext={handleNext} onPrev={handlePrev} />
         </div>
       )}
