@@ -9,26 +9,45 @@ import React from 'react';
 
 export type BreakpointKey = 'mobile' | 'tablet' | 'desktop' | 'wide';
 
-export interface ResponsiveConfig {
-  mobile: any;
-  tablet?: any;
-  desktop?: any;
-  wide?: any;
+export interface ResponsiveConfig<T> {
+  mobile: T;
+  tablet?: T;
+  desktop?: T;
+  wide?: T;
 }
 
 /**
- * Responsive breakpoint hooks
- * Use these instead of CSS classes for complex responsive logic
+ * Responsive breakpoint hook
+ * Determines the current breakpoint using matchMedia listeners.
  */
 export const useBreakpoint = (): BreakpointKey => {
-  if (typeof window === 'undefined') return 'mobile';
+  const [breakpoint, setBreakpoint] = React.useState<BreakpointKey>('mobile');
 
-  const width = window.innerWidth;
+  React.useEffect(() => {
+    const getBreakpoint = (): BreakpointKey => {
+      if (window.matchMedia('(min-width: 1280px)').matches) return 'wide';
+      if (window.matchMedia('(min-width: 1024px)').matches) return 'desktop';
+      if (window.matchMedia('(min-width: 768px)').matches) return 'tablet';
+      return 'mobile';
+    };
 
-  if (width >= 1280) return 'wide';
-  if (width >= 1024) return 'desktop';
-  if (width >= 768) return 'tablet';
-  return 'mobile';
+    const updateBreakpoint = () => setBreakpoint(getBreakpoint());
+    updateBreakpoint();
+
+    const queries = [
+      window.matchMedia('(min-width: 768px)'),
+      window.matchMedia('(min-width: 1024px)'),
+      window.matchMedia('(min-width: 1280px)'),
+    ];
+
+    queries.forEach((q) => q.addEventListener('change', updateBreakpoint));
+
+    return () => {
+      queries.forEach((q) => q.removeEventListener('change', updateBreakpoint));
+    };
+  }, []);
+
+  return breakpoint;
 };
 
 /**
@@ -41,11 +60,17 @@ export const useBreakpoint = (): BreakpointKey => {
  *   desktop: 3
  * });
  */
-export const getResponsiveValue = <T>(config: ResponsiveConfig): T => {
-  const breakpoint = useBreakpoint();
-
+export const getResponsiveValue = <T>(
+  breakpoint: BreakpointKey,
+  config: ResponsiveConfig<T>
+): T => {
   // Use mobile-first fallback
   return config[breakpoint] ?? config.tablet ?? config.mobile;
+};
+
+export const useResponsiveValue = <T>(config: ResponsiveConfig<T>): T => {
+  const breakpoint = useBreakpoint();
+  return getResponsiveValue<T>(breakpoint, config);
 };
 
 /**
@@ -128,13 +153,15 @@ export const createResponsiveComponent = <P extends object>(
     [K in ComponentVariant]?: Partial<P>;
   }
 ) => {
-  return (props: P) => {
+  const ResponsiveComponent = (props: P) => {
     const breakpoint = useBreakpoint();
     const variant = getVariantForBreakpoint(breakpoint);
     const adaptedProps = { ...props, ...adaptations[variant] };
 
     return React.createElement(baseComponent, adaptedProps);
   };
+  ResponsiveComponent.displayName = `Responsive(${baseComponent.displayName || baseComponent.name || 'Component'})`;
+  return ResponsiveComponent;
 };
 
 /**
@@ -168,18 +195,7 @@ export const layoutPatterns = {
  * State management for responsive behavior
  */
 export const useResponsiveState = () => {
-  const [breakpoint, setBreakpoint] = React.useState<BreakpointKey>('mobile');
-
-  React.useEffect(() => {
-    const updateBreakpoint = () => {
-      setBreakpoint(useBreakpoint());
-    };
-
-    window.addEventListener('resize', updateBreakpoint);
-    updateBreakpoint(); // Initial call
-
-    return () => window.removeEventListener('resize', updateBreakpoint);
-  }, []);
+  const breakpoint = useBreakpoint();
 
   return {
     breakpoint,
