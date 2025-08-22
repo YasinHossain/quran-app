@@ -272,6 +272,15 @@
   .touch-none {
     touch-action: none;
   }
+
+  /* Bottom navigation offsets */
+  .bottom-nav-offset {
+    bottom: calc(5rem + env(safe-area-inset-bottom));
+  }
+
+  .bottom-nav-offset-lg {
+    bottom: calc(6rem + env(safe-area-inset-bottom));
+  }
 }
 
 /* ===== Custom Range Slider Styles ===== */
