@@ -65,7 +65,7 @@ export const SettingsSidebar = ({
       )}
       <aside
         ref={sidebarRef}
-        className={`settings-sidebar fixed lg:static top-0 lg:top-0 bottom-0 right-0 w-72 sm:w-80 md:w-[20.7rem] bg-background text-foreground flex flex-col lg:flex-shrink-0 shadow-modal lg:shadow-lg border-l border-border transition-transform duration-300 ease-in-out lg:h-full overflow-x-hidden pt-safe ${
+        className={`settings-sidebar fixed lg:static top-0 lg:top-0 bottom-0 right-0 w-72 sm:w-80 md:w-[20.7rem] bg-background text-foreground flex flex-col lg:flex-shrink-0 shadow-modal lg:shadow-lg border-l border-border transition-transform duration-300 ease-in-out lg:h-full overflow-x-hidden pt-safe pb-safe ${
           isSettingsOpen ? 'translate-x-0' : 'translate-x-full'
         } lg:translate-x-0 touch-pan-y`}
         style={{

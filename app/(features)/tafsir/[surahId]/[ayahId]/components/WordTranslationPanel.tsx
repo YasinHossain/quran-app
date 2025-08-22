@@ -43,7 +43,7 @@ export const WordTranslationPanel = ({
 
   return (
     <div
-      className={`fixed pt-safe ${isHidden ? 'top-0' : 'top-16'} bottom-0 right-0 w-[20.7rem] bg-surface text-foreground flex flex-col transition-all duration-300 ease-in-out z-50 shadow-lg ${
+      className={`fixed pt-safe pb-safe ${isHidden ? 'top-0' : 'top-16'} bottom-0 right-0 w-[20.7rem] bg-surface text-foreground flex flex-col transition-all duration-300 ease-in-out z-50 shadow-lg ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
