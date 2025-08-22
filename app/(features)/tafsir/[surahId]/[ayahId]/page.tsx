@@ -8,7 +8,6 @@ import TafsirAudioPlayer from './components/TafsirAudioPlayer';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { useSettings } from '@/app/providers/SettingsContext';
-import { RECITERS } from '@/lib/audio/reciters';
 
 interface TafsirVersePageProps {
   params: Promise<{ surahId: string; ayahId: string }>;
@@ -17,7 +16,7 @@ interface TafsirVersePageProps {
 export default function TafsirVersePage({ params }: TafsirVersePageProps) {
   const { surahId, ayahId } = React.use(params);
   const { isHidden } = useHeaderVisibility();
-  const { activeVerse, isPlayerVisible } = useAudio();
+  const { activeVerse, isPlayerVisible, reciter } = useAudio();
   const { settings } = useSettings();
   const {
     verse,
@@ -36,8 +35,7 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps) {
   const [isTafsirPanelOpen, setIsTafsirPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
 
-  // Get the current reciter
-  const reciter = RECITERS.find((r) => r.id === settings.reciterId) || RECITERS[0];
+  // Reciter is now coming from AudioContext
 
   // Match verse page behavior: keep body from scrolling and use internal scroll area
   React.useEffect(() => {
