@@ -247,6 +247,15 @@
   .z-modal {
     z-index: var(--z-modal);
   }
+
+  /* Body scroll/interaction helpers */
+  .overflow-hidden {
+    overflow: hidden;
+  }
+
+  .touch-none {
+    touch-action: none;
+  }
 }
 
 /* ===== Custom Range Slider Styles ===== */
