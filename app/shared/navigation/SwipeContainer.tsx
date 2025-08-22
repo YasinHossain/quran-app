@@ -54,9 +54,8 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ children, className }) 
   return (
     <div
       {...swipeGestures}
-      className={cn('touch-pan-y select-none', className)}
+      className={cn('touch-pan-y select-none touch-callout-none', className)}
       style={{
-        WebkitTouchCallout: 'none', // Disable iOS context menu
         WebkitUserSelect: 'none', // Disable text selection during swipes
       }}
     >

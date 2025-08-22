@@ -252,6 +252,9 @@
   .touch-manipulation {
     touch-action: manipulation;
   }
+  .touch-callout-none {
+    -webkit-touch-callout: none;
+  }
 }
 
 @layer utilities {
