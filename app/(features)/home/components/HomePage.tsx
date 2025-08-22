@@ -23,7 +23,7 @@ export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <div className="relative h-screen flex flex-col bg-background text-foreground overflow-hidden">
+    <div className="relative min-h-[100dvh] flex flex-col bg-background text-foreground overflow-hidden">
       <HomePageBackground />
 
       <div className="relative z-10 flex flex-col h-full overflow-y-auto px-4 sm:px-6 lg:px-8 homepage-scrollable-area">
