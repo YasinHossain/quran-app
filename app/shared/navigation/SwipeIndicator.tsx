@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IconChevronLeft, IconChevronRight, IconArrowDown } from '@tabler/icons-react';
+import { useBreakpoint } from '@/lib/responsive';
 
 interface SwipeIndicatorProps {
   show?: boolean;
@@ -27,14 +28,8 @@ const SwipeIndicator: React.FC<SwipeIndicatorProps> = ({
     }
   }, [autoHide, autoHideDelay, show]);
 
-  // Don't show on desktop
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  const breakpoint = useBreakpoint();
+  const isMobile = breakpoint === 'mobile' || breakpoint === 'tablet';
 
   if (!isMobile) return null;
 
