@@ -132,7 +132,7 @@ const VerseActionsBottomSheet: React.FC<VerseActionsBottomSheetProps> = ({
               stiffness: 500,
               damping: 40,
             }}
-            className="fixed bottom-0 left-0 right-0 bg-surface rounded-t-3xl shadow-2xl z-50 touch-pan-y"
+            className="fixed bottom-0 left-0 right-0 bg-surface rounded-t-3xl shadow-2xl z-50 touch-pan-y pb-safe flex flex-col max-h-[90dvh]"
           >
             {/* Handle bar */}
             <div className="flex justify-center pt-4 pb-2">
@@ -152,7 +152,7 @@ const VerseActionsBottomSheet: React.FC<VerseActionsBottomSheetProps> = ({
             </div>
 
             {/* Actions */}
-            <div className="p-4 pb-8">
+            <div className="flex-1 overflow-y-auto p-4 pb-8">
               <div className="space-y-2">
                 {actions.map((action, index) =>
                   action.href ? (
