@@ -3,7 +3,6 @@
 import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useSwipeGestures } from '@/app/shared/hooks/useSwipeGestures';
-import { useNavigation } from '@/app/providers/NavigationContext';
 import { cn } from '@/lib/utils';
 
 interface SwipeContainerProps {
@@ -17,7 +16,6 @@ const MAIN_ROUTES = ['/home', '/surah', '/bookmarks'];
 const SwipeContainer: React.FC<SwipeContainerProps> = ({ children, className }) => {
   const router = useRouter();
   const pathname = usePathname();
-  const { showQuranSelector } = useNavigation();
 
   // Find current route index
   const currentRouteIndex = MAIN_ROUTES.findIndex(
@@ -43,22 +41,12 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ children, className }) 
   const swipeGestures = useSwipeGestures({
     onSwipeLeft: () => navigateToRoute('left'),
     onSwipeRight: () => navigateToRoute('right'),
-    onSwipeDown: () => {
-      // Swipe down for Quran selector
-      showQuranSelector();
-    },
     threshold: 75,
     velocity: 0.4,
   });
 
   return (
-    <div
-      {...swipeGestures}
-      className={cn('touch-pan-y select-none touch-callout-none', className)}
-      style={{
-        WebkitUserSelect: 'none', // Disable text selection during swipes
-      }}
-    >
+    <div {...swipeGestures} className={cn('touch-pan-y select-none touch-callout-none', className)}>
       {children}
     </div>
   );

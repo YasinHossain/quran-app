@@ -18,7 +18,19 @@ export const HeaderVisibilityProvider = ({ children }: { children: React.ReactNo
     lastScrollY.current = 0;
     setIsHidden(false);
 
-    const scrollEl = document.querySelector('.homepage-scrollable-area');
+    // Try to find the scrollable container based on the current page
+    let scrollEl = document.querySelector('.homepage-scrollable-area');
+
+    // If not found, try to find the surah page scrollable container
+    if (!scrollEl) {
+      scrollEl = document.querySelector('main .overflow-y-auto');
+    }
+
+    // If still not found, try the main content area
+    if (!scrollEl) {
+      scrollEl = document.querySelector('main[class*="overflow-y-auto"]');
+    }
+
     if (!scrollEl) return;
 
     const handleScroll = () => {

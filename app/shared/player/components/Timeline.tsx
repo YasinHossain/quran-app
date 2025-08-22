@@ -56,7 +56,7 @@ export default function Timeline({
           </Slider.Root>
         </Tooltip.Provider>
       </div>
-      <div className="hidden md:flex min-w-[88px] justify-between text-[11px] tabular-nums text-muted">
+      <div className="flex min-w-[72px] justify-between text-[10px] tabular-nums text-muted md:min-w-[88px] md:text-[11px]">
         <span aria-label="elapsed">{elapsed}</span>
         <span aria-label="duration">{total}</span>
       </div>
