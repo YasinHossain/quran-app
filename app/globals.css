@@ -202,6 +202,16 @@
     @apply transition-transform duration-300 ease-in-out;
   }
 
+  /* Safe area support for mobile devices */
+  .pb-safe {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  /* Bottom navigation spacing */
+  .bottom-nav-space {
+    padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+  }
+
   /* Scrollbar hiding for cleaner mobile experience */
   .scrollbar-hide {
     -ms-overflow-style: none;
