@@ -14,14 +14,14 @@ interface FolderSettingsModalProps {
 }
 
 const FOLDER_COLORS = [
-  { name: 'Blue', value: 'text-blue-500' },
-  { name: 'Green', value: 'text-green-500' },
-  { name: 'Purple', value: 'text-purple-500' },
-  { name: 'Red', value: 'text-red-500' },
-  { name: 'Orange', value: 'text-orange-500' },
-  { name: 'Pink', value: 'text-pink-500' },
-  { name: 'Teal', value: 'text-teal-500' },
-  { name: 'Indigo', value: 'text-indigo-500' },
+  { name: 'Accent', value: 'text-accent' },
+  { name: 'Primary', value: 'text-primary' },
+  { name: 'Interactive', value: 'text-interactive' },
+  { name: 'Success', value: 'text-status-success' },
+  { name: 'Warning', value: 'text-status-warning' },
+  { name: 'Error', value: 'text-status-error' },
+  { name: 'Info', value: 'text-status-info' },
+  { name: 'Content Accent', value: 'text-content-accent' },
 ];
 
 const FOLDER_ICONS = ['📁', '📖', '⭐', '💎', '🌟', '📚', '🔖', '💫'];
@@ -34,14 +34,14 @@ export const FolderSettingsModal: React.FC<FolderSettingsModalProps> = ({
 }) => {
   const { renameFolder } = useBookmarks();
   const [name, setName] = useState('');
-  const [selectedColor, setSelectedColor] = useState('text-blue-500');
+  const [selectedColor, setSelectedColor] = useState('text-accent');
   const [selectedIcon, setSelectedIcon] = useState('📁');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (folder && isOpen) {
       setName(folder.name);
-      setSelectedColor(folder.color || 'text-blue-500');
+      setSelectedColor(folder.color || 'text-accent');
       setSelectedIcon(folder.icon || '📁');
     }
   }, [folder, isOpen]);
