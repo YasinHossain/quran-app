@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Bookmark } from '@/types';
+import { Bookmark, Folder } from '@/types';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useBookmarkVerse } from '../hooks/useBookmarkVerse';
 import { FolderIcon } from '@/app/shared/icons';
@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils/cn';
 
 interface BookmarkFolderSidebarProps {
   bookmarks: Bookmark[];
-  folder: { id: string; name: string };
+  folder: Folder;
   activeVerseId?: string;
   onVerseSelect?: (verseId: string) => void;
   onBack?: () => void;
