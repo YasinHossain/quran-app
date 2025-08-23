@@ -8,6 +8,7 @@ import { useBookmarkVerse } from '../hooks/useBookmarkVerse';
 import { FolderIcon } from '@/app/shared/icons';
 import LoadingError from '@/app/shared/LoadingError';
 import { cn } from '@/lib/utils/cn';
+import { FixedSizeList as List } from 'react-window';
 
 interface BookmarkFolderSidebarProps {
   bookmarks: Bookmark[];
@@ -97,18 +98,18 @@ const VerseItem: React.FC<VerseItemProps> = ({ bookmark, folderId, isActive, onS
       isLoading={isLoading || !enrichedBookmark.verseKey || !enrichedBookmark.surahName}
       error={error}
       loadingFallback={
-        <li className="flex items-center justify-between py-2 px-2 rounded-lg animate-pulse">
+        <div className="flex items-center justify-between py-2 px-2 rounded-lg animate-pulse">
           <div className="h-4 bg-interactive rounded w-24"></div>
           <div className="w-5 h-5 bg-interactive rounded"></div>
-        </li>
+        </div>
       }
       errorFallback={
-        <li className="flex items-center justify-between py-2 px-2 rounded-lg">
+        <div className="flex items-center justify-between py-2 px-2 rounded-lg">
           <span className="text-error text-sm">Failed to load</span>
-        </li>
+        </div>
       }
     >
-      <li className="flex items-center justify-between py-2 px-2 rounded-lg hover:bg-interactive-hover">
+      <div className="flex items-center justify-between py-2 px-2 rounded-lg hover:bg-interactive-hover">
         <button
           onClick={onSelect}
           className={`text-foreground hover:text-accent transition-colors ${
@@ -124,7 +125,7 @@ const VerseItem: React.FC<VerseItemProps> = ({ bookmark, folderId, isActive, onS
         >
           <TrashIcon />
         </button>
-      </li>
+      </div>
     </LoadingError>
   );
 };
@@ -253,17 +254,26 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
                   <div className="px-4 pb-3">
                     <div className="border-t border-border pt-2">
                       {folderBookmarks.length > 0 ? (
-                        <ul className="space-y-1">
-                          {folderBookmarks.map((bookmark) => (
-                            <VerseItem
-                              key={bookmark.verseId}
-                              bookmark={bookmark}
-                              folderId={folder.id}
-                              isActive={activeVerseId === bookmark.verseId}
-                              onSelect={() => onVerseSelect?.(bookmark.verseId)}
-                            />
-                          ))}
-                        </ul>
+                        <List
+                          height={Math.min(200, folderBookmarks.length * 48)}
+                          width="100%"
+                          itemCount={folderBookmarks.length}
+                          itemSize={48}
+                        >
+                          {({ index, style }) => {
+                            const bookmark = folderBookmarks[index];
+                            return (
+                              <div style={style}>
+                                <VerseItem
+                                  bookmark={bookmark}
+                                  folderId={folder.id}
+                                  isActive={activeVerseId === bookmark.verseId}
+                                  onSelect={() => onVerseSelect?.(bookmark.verseId)}
+                                />
+                              </div>
+                            );
+                          }}
+                        </List>
                       ) : (
                         <p className="py-4 text-sm text-center text-muted">This folder is empty.</p>
                       )}
