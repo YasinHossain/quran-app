@@ -85,7 +85,7 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
   }, [addBookmark, removeBookmark, findBookmark, verse.id]);
 
   return (
-    <div ref={verseRef} className="mb-8 pb-8 border-b border-border">
+    <div id={`verse-${verse.id}`} ref={verseRef} className="mb-8 pb-8 border-b border-border">
       {/* Mobile: stacked layout, Desktop: side-by-side */}
       <div className="space-y-4 md:space-y-0 md:flex md:items-start md:gap-x-6">
         {/* Verse actions */}
