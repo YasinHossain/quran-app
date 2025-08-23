@@ -7,11 +7,13 @@ import { ListItem } from '@/app/shared/ui/ListItem';
 interface BookmarksSidebarProps {
   activeSection?: string;
   onSectionChange?: (section: string) => void;
+  children?: React.ReactNode;
 }
 
 export const BookmarksSidebar: React.FC<BookmarksSidebarProps> = ({
   activeSection = 'bookmarks',
   onSectionChange,
+  children,
 }) => {
   const sections = [
     { id: 'bookmarks', icon: BookmarkIcon, label: 'Bookmark' },
@@ -26,7 +28,7 @@ export const BookmarksSidebar: React.FC<BookmarksSidebarProps> = ({
         <p className="text-sm text-muted mt-1">Read, Study, and Learn The Quran</p>
       </div>
 
-      <div className="flex-1 p-4">
+      <div className="flex-1 p-4 overflow-y-auto">
         <nav className="space-y-2">
           {sections.map((section) => (
             <ListItem
@@ -39,6 +41,12 @@ export const BookmarksSidebar: React.FC<BookmarksSidebarProps> = ({
             />
           ))}
         </nav>
+
+        {children && (
+          <div className="mt-4 pt-4 border-t border-border space-y-3">
+            {children}
+          </div>
+        )}
       </div>
     </div>
   );
