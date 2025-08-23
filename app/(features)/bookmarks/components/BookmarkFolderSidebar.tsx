@@ -76,12 +76,9 @@ interface VerseItemProps {
 }
 
 const VerseItem: React.FC<VerseItemProps> = ({ bookmark, isActive, onSelect }) => {
-  const { bookmarkWithVerse, isLoading, error } = useBookmarkVerse(
-    bookmark.verseId,
-    bookmark.createdAt
-  );
+  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark);
 
-  if (isLoading || error || !bookmarkWithVerse.verse) {
+  if (isLoading || error || !enrichedBookmark.verseKey || !enrichedBookmark.surahName) {
     return (
       <li className="flex items-center justify-between py-2 px-2 rounded-lg animate-pulse">
         <div className="h-4 bg-interactive rounded w-24" />
@@ -90,8 +87,8 @@ const VerseItem: React.FC<VerseItemProps> = ({ bookmark, isActive, onSelect }) =
     );
   }
 
-  const verse = bookmarkWithVerse.verse;
-  const verseDisplayName = `${verse.surahNameEnglish}: ${verse.ayahNumber}`;
+  const ayahNumber = enrichedBookmark.verseKey.split(':')[1];
+  const verseDisplayName = `${enrichedBookmark.surahName}: ${ayahNumber}`;
 
   return (
     <li className="flex items-center justify-between py-2 px-2 rounded-lg hover:bg-interactive-hover">
