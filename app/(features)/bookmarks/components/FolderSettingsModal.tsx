@@ -14,14 +14,14 @@ interface FolderSettingsModalProps {
 }
 
 const FOLDER_COLORS = [
-  { name: 'Blue', value: 'bg-blue-500' },
-  { name: 'Green', value: 'bg-green-500' },
-  { name: 'Purple', value: 'bg-purple-500' },
-  { name: 'Red', value: 'bg-red-500' },
-  { name: 'Orange', value: 'bg-orange-500' },
-  { name: 'Pink', value: 'bg-pink-500' },
-  { name: 'Teal', value: 'bg-teal-500' },
-  { name: 'Indigo', value: 'bg-indigo-500' },
+  { name: 'Blue', value: 'text-blue-500' },
+  { name: 'Green', value: 'text-green-500' },
+  { name: 'Purple', value: 'text-purple-500' },
+  { name: 'Red', value: 'text-red-500' },
+  { name: 'Orange', value: 'text-orange-500' },
+  { name: 'Pink', value: 'text-pink-500' },
+  { name: 'Teal', value: 'text-teal-500' },
+  { name: 'Indigo', value: 'text-indigo-500' },
 ];
 
 const FOLDER_ICONS = ['📁', '📖', '⭐', '💎', '🌟', '📚', '🔖', '💫'];
@@ -34,14 +34,14 @@ export const FolderSettingsModal: React.FC<FolderSettingsModalProps> = ({
 }) => {
   const { renameFolder } = useBookmarks();
   const [name, setName] = useState('');
-  const [selectedColor, setSelectedColor] = useState('bg-blue-500');
+  const [selectedColor, setSelectedColor] = useState('text-blue-500');
   const [selectedIcon, setSelectedIcon] = useState('📁');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (folder && isOpen) {
       setName(folder.name);
-      setSelectedColor(folder.color || 'bg-blue-500');
+      setSelectedColor(folder.color || 'text-blue-500');
       setSelectedIcon(folder.icon || '📁');
     }
   }, [folder, isOpen]);
@@ -52,10 +52,8 @@ export const FolderSettingsModal: React.FC<FolderSettingsModalProps> = ({
 
     setIsSubmitting(true);
     try {
-      // For now, we only implement rename functionality
-      // Color and icon customization would require updating the BookmarkContext
-      if (mode === 'rename' || mode === 'edit') {
-        renameFolder(folder.id, name.trim());
+      if (mode === 'rename' || mode === 'edit' || mode === 'customize') {
+        renameFolder(folder.id, name.trim(), selectedColor, selectedIcon);
       }
       onClose();
     } catch (error) {
@@ -163,7 +161,7 @@ export const FolderSettingsModal: React.FC<FolderSettingsModalProps> = ({
                             selectedColor === color.value
                               ? 'border-accent scale-105'
                               : 'border-border hover:border-accent/50'
-                          } ${color.value}`}
+                          } ${color.value.replace('text-', 'bg-')}`}
                           aria-label={`Select ${color.name} color`}
                         >
                           {selectedColor === color.value && (

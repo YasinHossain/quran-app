@@ -1,8 +1,10 @@
 'use client';
 
 import React from 'react';
-import { BookmarkIcon, PinIcon, ClockIcon } from '@/app/shared/icons';
+import { BookmarkIcon, PinIcon, ClockIcon, FolderIcon } from '@/app/shared/icons';
 import { ListItem } from '@/app/shared/ui/ListItem';
+import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { cn } from '@/lib/utils/cn';
 
 interface BookmarksSidebarProps {
   activeSection?: string;
@@ -20,6 +22,7 @@ export const BookmarksSidebar: React.FC<BookmarksSidebarProps> = ({
     { id: 'pinned', icon: PinIcon, label: 'Pins' },
     { id: 'last-read', icon: ClockIcon, label: 'Last Reads' },
   ];
+  const { folders } = useBookmarks();
 
   return (
     <div className="h-full flex flex-col">
@@ -41,6 +44,28 @@ export const BookmarksSidebar: React.FC<BookmarksSidebarProps> = ({
             />
           ))}
         </nav>
+
+        {folders.length > 0 && (
+          <div className="mt-4 space-y-2">
+            {folders.map((folder) => {
+              const IconComp = ({ className }: { className?: string }) =>
+                folder.icon ? (
+                  <span className={cn('text-xl', folder.color, className)}>{folder.icon}</span>
+                ) : (
+                  <FolderIcon className={cn(className, folder.color)} />
+                );
+              return (
+                <ListItem
+                  key={folder.id}
+                  icon={IconComp}
+                  label={folder.name}
+                  onClick={() => (window.location.href = `/bookmarks/${folder.id}`)}
+                  className="px-3 py-3 rounded-lg transition-colors hover:bg-surface-hover"
+                />
+              );
+            })}
+          </div>
+        )}
 
         {children && <div className="mt-4 pt-4 border-t border-border space-y-3">{children}</div>}
       </div>

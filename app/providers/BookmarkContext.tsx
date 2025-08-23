@@ -8,9 +8,14 @@ const OLD_BOOKMARKS_STORAGE_KEY = 'quranAppBookmarks'; // Old key for migration
 
 interface BookmarkContextType {
   folders: Folder[];
-  createFolder: (name: string) => void;
+  createFolder: (name: string, color?: string, icon?: string) => void;
   deleteFolder: (folderId: string) => void;
-  renameFolder: (folderId: string, newName: string) => void;
+  renameFolder: (
+    folderId: string,
+    newName: string,
+    color?: string,
+    icon?: string
+  ) => void;
   addBookmark: (verseId: string, folderId?: string) => void;
   removeBookmark: (verseId: string, folderId: string) => void;
   isBookmarked: (verseId: string) => boolean;
@@ -72,25 +77,42 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
     }
   }, [folders]);
 
-  const createFolder = useCallback((name: string) => {
-    const newFolder: Folder = {
-      id: `folder-${Date.now()}`,
-      name,
-      createdAt: Date.now(),
-      bookmarks: [],
-    };
-    setFolders((prev) => [...prev, newFolder]);
-  }, []);
+  const createFolder = useCallback(
+    (name: string, color?: string, icon?: string) => {
+      const newFolder: Folder = {
+        id: `folder-${Date.now()}`,
+        name,
+        createdAt: Date.now(),
+        bookmarks: [],
+        ...(color ? { color } : {}),
+        ...(icon ? { icon } : {}),
+      };
+      setFolders((prev) => [...prev, newFolder]);
+    },
+    []
+  );
 
   const deleteFolder = useCallback((folderId: string) => {
     setFolders((prev) => prev.filter((folder) => folder.id !== folderId));
   }, []);
 
-  const renameFolder = useCallback((folderId: string, newName: string) => {
-    setFolders((prev) =>
-      prev.map((folder) => (folder.id === folderId ? { ...folder, name: newName } : folder))
-    );
-  }, []);
+  const renameFolder = useCallback(
+    (folderId: string, newName: string, color?: string, icon?: string) => {
+      setFolders((prev) =>
+        prev.map((folder) =>
+          folder.id === folderId
+            ? {
+                ...folder,
+                name: newName,
+                ...(color !== undefined ? { color } : {}),
+                ...(icon !== undefined ? { icon } : {}),
+              }
+            : folder
+        )
+      );
+    },
+    []
+  );
 
   const addBookmark = useCallback((verseId: string, folderId?: string) => {
     setFolders((prev) => {

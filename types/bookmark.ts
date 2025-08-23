@@ -1,18 +1,34 @@
+/**
+ * A single bookmarked verse reference.
+ */
 export interface Bookmark {
+  /** Quran verse identifier (e.g., `1:1`). */
   verseId: string;
-  createdAt: number; // Store as timestamp
-}
-
-export interface Folder {
-  id: string; // Store as timestamp string or UUID
-  name: string;
-  bookmarks: Bookmark[];
+  /** Timestamp of when the bookmark was created. */
   createdAt: number;
-  color?: string; // Folder color customization
-  icon?: string; // Folder icon customization
 }
 
-// Enhanced bookmark with verse content for display
+/**
+ * A collection of bookmarks grouped under a user-defined folder.
+ */
+export interface Folder {
+  /** Unique folder identifier. */
+  id: string;
+  /** Display name for the folder. */
+  name: string;
+  /** Bookmarks contained in this folder. */
+  bookmarks: Bookmark[];
+  /** Timestamp of when the folder was created. */
+  createdAt: number;
+  /** Folder color customization. */
+  color?: string;
+  /** Folder icon customization. */
+  icon?: string;
+}
+
+/**
+ * Enhanced bookmark with verse content for display.
+ */
 export interface BookmarkWithVerse extends Bookmark {
   verse?: {
     id: number;
