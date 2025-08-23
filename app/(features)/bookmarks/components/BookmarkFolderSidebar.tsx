@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Bookmark } from '@/types';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useBookmarkVerse } from '../hooks/useBookmarkVerse';
@@ -116,6 +117,8 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedFolderId, setExpandedFolderId] = useState<string | null>(folder.id);
 
+  const router = useRouter();
+
   const filteredFolders = folders.filter((f) =>
     f.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -126,7 +129,7 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
 
   const handleFolderSelect = (folderId: string) => {
     if (folderId !== folder.id) {
-      window.location.href = `/bookmarks/${folderId}`;
+      router.push(`/bookmarks/${folderId}`);
     }
   };
 

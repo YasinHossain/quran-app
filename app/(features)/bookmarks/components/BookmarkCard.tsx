@@ -1,6 +1,7 @@
 'use client';
 
 import React, { memo, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Bookmark } from '@/types';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
@@ -57,6 +58,8 @@ export const BookmarkCard = memo(function BookmarkCard({
 
   const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark);
 
+  const router = useRouter();
+
   const handlePlayPause = useCallback(() => {
     if (playingId === Number(enrichedBookmark.verseId)) {
       audioRef.current?.pause();
@@ -107,8 +110,8 @@ export const BookmarkCard = memo(function BookmarkCard({
   const handleNavigateToVerse = useCallback(() => {
     if (!enrichedBookmark.verseKey) return;
     const [surahId] = enrichedBookmark.verseKey.split(':');
-    window.location.href = `/surah/${surahId}#verse-${enrichedBookmark.verseId}`;
-  }, [enrichedBookmark.verseKey, enrichedBookmark.verseId]);
+    router.push(`/surah/${surahId}#verse-${enrichedBookmark.verseId}`);
+  }, [enrichedBookmark.verseKey, enrichedBookmark.verseId, router]);
 
   // If we don't have verse data yet or it's loading, show a loading state
   if (
