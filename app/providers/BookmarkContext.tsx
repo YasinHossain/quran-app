@@ -186,6 +186,7 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
           verseText: verse.text_uthmani,
           surahName: surahInfo?.name_simple || `Surah ${surahIdStr}`,
           translation: verse.translations?.[0]?.text,
+          verseApiId: verse.id,
         });
       } catch {
         // Silent fail for metadata fetch errors
