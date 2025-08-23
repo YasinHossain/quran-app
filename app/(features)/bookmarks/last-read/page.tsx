@@ -94,8 +94,23 @@ export default function LastReadPage() {
                     const chapter = chapters.find((c) => c.id === Number(surahId));
                     const total = chapter?.verses_count || 0;
                     const percent = total ? Math.round((verseId / total) * 100) : 0;
+                    const handleNavigate = () => {
+                      router.push(`/surah/${surahId}#verse-${verseId}`);
+                    };
                     return (
-                      <div key={surahId} className="rounded-xl bg-surface border border-border p-6">
+                      <div
+                        key={surahId}
+                        role="button"
+                        tabIndex={0}
+                        aria-label={`Continue reading ${chapter?.name_simple || `Surah ${surahId}`} at verse ${verseId}`}
+                        onClick={handleNavigate}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            handleNavigate();
+                          }
+                        }}
+                        className="rounded-xl bg-surface border border-border p-6 cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent"
+                      >
                         <div className="flex items-center justify-between mb-2">
                           <h3 className="font-semibold text-foreground">
                             {chapter?.name_simple || `Surah ${surahId}`}
