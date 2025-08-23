@@ -1,21 +1,32 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookmarksSidebar } from '../components/BookmarksSidebar';
 import { useRouter } from 'next/navigation';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { getChapters } from '@/lib/api/chapters';
+import type { Chapter } from '@/types';
 
 export default function LastReadPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
   const { isHidden } = useHeaderVisibility();
+  const { lastRead } = useBookmarks();
+  const [chapters, setChapters] = useState<Chapter[]>([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = '';
     };
+  }, []);
+
+  useEffect(() => {
+    getChapters()
+      .then(setChapters)
+      .catch(() => {});
   }, []);
 
   const handleSectionChange = (section: string) => {
@@ -55,27 +66,56 @@ export default function LastReadPage() {
                 <p className="text-muted">Continue your Quran reading journey</p>
               </div>
 
-              <div className="text-center py-16">
-                <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg
-                    className="w-8 h-8 text-muted"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
+              {Object.keys(lastRead).length === 0 ? (
+                <div className="text-center py-16">
+                  <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg
+                      className="w-8 h-8 text-muted"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">No Recent Activity</h3>
+                  <p className="text-muted max-w-md mx-auto">
+                    Start reading the Quran and your progress will be automatically tracked here.
+                  </p>
                 </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">No Recent Activity</h3>
-                <p className="text-muted max-w-md mx-auto">
-                  Start reading the Quran and your progress will be automatically tracked here.
-                </p>
-              </div>
+              ) : (
+                <div className="space-y-4">
+                  {Object.entries(lastRead).map(([surahId, verseId]) => {
+                    const chapter = chapters.find((c) => c.id === Number(surahId));
+                    const total = chapter?.verses_count || 0;
+                    const percent = total ? Math.round((verseId / total) * 100) : 0;
+                    return (
+                      <div key={surahId} className="rounded-xl bg-surface border border-border p-6">
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="font-semibold text-foreground">
+                            {chapter?.name_simple || `Surah ${surahId}`}
+                          </h3>
+                          <span className="text-sm text-muted">{percent}%</span>
+                        </div>
+                        <div className="w-full bg-border rounded-full h-2 mb-2">
+                          <div
+                            className="bg-accent h-2 rounded-full"
+                            style={{ width: `${percent}%` }}
+                          />
+                        </div>
+                        <p className="text-sm text-muted">
+                          Verse {verseId} of {total}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </motion.div>
           </div>
         </main>

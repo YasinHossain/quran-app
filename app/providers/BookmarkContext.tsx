@@ -8,17 +8,14 @@ import { getChapters } from '@/lib/api/chapters';
 
 const BOOKMARKS_STORAGE_KEY = 'quranAppBookmarks_v2'; // Use a new key for the new structure
 const OLD_BOOKMARKS_STORAGE_KEY = 'quranAppBookmarks'; // Old key for migration
+const PINNED_STORAGE_KEY = 'quranAppPinnedVerses_v1';
+const LAST_READ_STORAGE_KEY = 'quranAppLastRead_v1';
 
 interface BookmarkContextType {
   folders: Folder[];
   createFolder: (name: string, color?: string, icon?: string) => void;
   deleteFolder: (folderId: string) => void;
-  renameFolder: (
-    folderId: string,
-    newName: string,
-    color?: string,
-    icon?: string
-  ) => void;
+  renameFolder: (folderId: string, newName: string, color?: string, icon?: string) => void;
   addBookmark: (verseId: string, folderId?: string) => void;
   removeBookmark: (verseId: string, folderId: string) => void;
   isBookmarked: (verseId: string) => boolean;
@@ -26,12 +23,19 @@ interface BookmarkContextType {
   toggleBookmark: (verseId: string, folderId?: string) => void;
   updateBookmark: (verseId: string, data: Partial<Bookmark>) => void;
   bookmarkedVerses: string[];
+  pinnedVerses: Bookmark[];
+  togglePinned: (verseId: string) => void;
+  isPinned: (verseId: string) => boolean;
+  lastRead: Record<string, number>;
+  setLastRead: (surahId: string, verseId: number) => void;
 }
 
 const BookmarkContext = createContext<BookmarkContextType | undefined>(undefined);
 
 export const BookmarkProvider = ({ children }: { children: React.ReactNode }) => {
   const [folders, setFolders] = useState<Folder[]>([]);
+  const [pinnedVerses, setPinnedVerses] = useState<Bookmark[]>([]);
+  const [lastRead, setLastReadState] = useState<Record<string, number>>({});
   const { settings } = useSettings();
 
   // Load bookmarks from localStorage on mount and handle migration
@@ -68,6 +72,24 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
           }
         }
       }
+
+      const savedPinned = localStorage.getItem(PINNED_STORAGE_KEY);
+      if (savedPinned) {
+        try {
+          setPinnedVerses(JSON.parse(savedPinned));
+        } catch {
+          // Silent fail for parsing errors
+        }
+      }
+
+      const savedLastRead = localStorage.getItem(LAST_READ_STORAGE_KEY);
+      if (savedLastRead) {
+        try {
+          setLastReadState(JSON.parse(savedLastRead));
+        } catch {
+          // Silent fail for parsing errors
+        }
+      }
     }
   }, []);
 
@@ -82,20 +104,37 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
     }
   }, [folders]);
 
-  const createFolder = useCallback(
-    (name: string, color?: string, icon?: string) => {
-      const newFolder: Folder = {
-        id: `folder-${Date.now()}`,
-        name,
-        createdAt: Date.now(),
-        bookmarks: [],
-        ...(color ? { color } : {}),
-        ...(icon ? { icon } : {}),
-      };
-      setFolders((prev) => [...prev, newFolder]);
-    },
-    []
-  );
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(PINNED_STORAGE_KEY, JSON.stringify(pinnedVerses));
+      } catch {
+        // Silent fail
+      }
+    }
+  }, [pinnedVerses]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(LAST_READ_STORAGE_KEY, JSON.stringify(lastRead));
+      } catch {
+        // Silent fail
+      }
+    }
+  }, [lastRead]);
+
+  const createFolder = useCallback((name: string, color?: string, icon?: string) => {
+    const newFolder: Folder = {
+      id: `folder-${Date.now()}`,
+      name,
+      createdAt: Date.now(),
+      bookmarks: [],
+      ...(color ? { color } : {}),
+      ...(icon ? { icon } : {}),
+    };
+    setFolders((prev) => [...prev, newFolder]);
+  }, []);
 
   const deleteFolder = useCallback((folderId: string) => {
     setFolders((prev) => prev.filter((folder) => folder.id !== folderId));
@@ -126,6 +165,7 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
         bookmarks: folder.bookmarks.map((b) => (b.verseId === verseId ? { ...b, ...data } : b)),
       }))
     );
+    setPinnedVerses((prev) => prev.map((b) => (b.verseId === verseId ? { ...b, ...data } : b)));
   }, []);
 
   const fetchBookmarkMetadata = useCallback(
@@ -156,6 +196,18 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
 
   const addBookmark = useCallback(
     (verseId: string, folderId?: string) => {
+      if (folderId === 'pinned') {
+        setPinnedVerses((prev) => {
+          if (prev.some((b) => b.verseId === verseId)) {
+            return prev;
+          }
+          const newBookmark: Bookmark = { verseId, createdAt: Date.now() };
+          return [...prev, newBookmark];
+        });
+        void fetchBookmarkMetadata(verseId);
+        return;
+      }
+
       setFolders((prev) => {
         let targetFolderId = folderId;
 
@@ -194,6 +246,10 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
   );
 
   const removeBookmark = useCallback((verseId: string, folderId: string) => {
+    if (folderId === 'pinned') {
+      setPinnedVerses((prev) => prev.filter((b) => b.verseId !== verseId));
+      return;
+    }
     setFolders((prev) =>
       prev.map((folder) => {
         if (folder.id === folderId) {
@@ -239,6 +295,30 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
     [findBookmark, removeBookmark, addBookmark]
   );
 
+  const togglePinned = useCallback(
+    (verseId: string) => {
+      setPinnedVerses((prev) => {
+        const exists = prev.some((b) => b.verseId === verseId);
+        if (exists) {
+          return prev.filter((b) => b.verseId !== verseId);
+        }
+        const newBookmark: Bookmark = { verseId, createdAt: Date.now() };
+        return [...prev, newBookmark];
+      });
+      void fetchBookmarkMetadata(verseId);
+    },
+    [fetchBookmarkMetadata]
+  );
+
+  const isPinned = useCallback(
+    (verseId: string) => pinnedVerses.some((b) => b.verseId === verseId),
+    [pinnedVerses]
+  );
+
+  const setLastRead = useCallback((surahId: string, verseId: number) => {
+    setLastReadState((prev) => ({ ...prev, [surahId]: verseId }));
+  }, []);
+
   const bookmarkedVerses = useMemo(
     () => folders.flatMap((f) => f.bookmarks.map((b) => b.verseId)),
     [folders]
@@ -257,6 +337,11 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
       toggleBookmark,
       updateBookmark,
       bookmarkedVerses,
+      pinnedVerses,
+      togglePinned,
+      isPinned,
+      lastRead,
+      setLastRead,
     }),
     [
       folders,
@@ -270,6 +355,11 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
       toggleBookmark,
       updateBookmark,
       bookmarkedVerses,
+      pinnedVerses,
+      togglePinned,
+      isPinned,
+      lastRead,
+      setLastRead,
     ]
   );
 
