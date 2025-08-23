@@ -109,6 +109,7 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
         onTranslationPanelClose={() => setIsTranslationPanelOpen(false)}
         isWordLanguagePanelOpen={isWordPanelOpen}
         onWordLanguagePanelClose={() => setIsWordPanelOpen(false)}
+        pageType="verse"
       />
     </>
   );
