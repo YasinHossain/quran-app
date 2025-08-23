@@ -2,8 +2,8 @@
  * A saved verse reference with optional cached metadata for quick display.
  */
 export interface Bookmark {
-  /** Numeric verse identifier (stable internal ID). */
-  verseId: number;
+  /** Unique verse identifier stored as a string. */
+  verseId: string;
   /** Timestamp when the bookmark was created (ms since epoch). */
   createdAt: number;
 
