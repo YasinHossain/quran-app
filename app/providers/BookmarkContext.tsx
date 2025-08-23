@@ -2,6 +2,9 @@
 
 import { Folder, Bookmark } from '@/types';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useSettings } from '@/app/providers/SettingsContext';
+import { getVerseById, getVerseByKey } from '@/lib/api/verses';
+import { getChapters } from '@/lib/api/chapters';
 
 const BOOKMARKS_STORAGE_KEY = 'quranAppBookmarks_v2'; // Use a new key for the new structure
 const OLD_BOOKMARKS_STORAGE_KEY = 'quranAppBookmarks'; // Old key for migration
@@ -16,6 +19,7 @@ interface BookmarkContextType {
   isBookmarked: (verseId: string) => boolean;
   findBookmark: (verseId: string) => { folder: Folder; bookmark: Bookmark } | null;
   toggleBookmark: (verseId: string, folderId?: string) => void;
+  updateBookmark: (verseId: string, data: Partial<Bookmark>) => void;
   bookmarkedVerses: string[];
 }
 
@@ -23,6 +27,7 @@ const BookmarkContext = createContext<BookmarkContextType | undefined>(undefined
 
 export const BookmarkProvider = ({ children }: { children: React.ReactNode }) => {
   const [folders, setFolders] = useState<Folder[]>([]);
+  const { settings } = useSettings();
 
   // Load bookmarks from localStorage on mount and handle migration
   useEffect(() => {
@@ -92,39 +97,79 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
     );
   }, []);
 
-  const addBookmark = useCallback((verseId: string, folderId?: string) => {
-    setFolders((prev) => {
-      let targetFolderId = folderId;
-
-      // If no folderId is provided, use the first folder or create a default one
-      if (!targetFolderId) {
-        if (prev.length > 0) {
-          targetFolderId = prev[0].id;
-        } else {
-          const defaultFolder: Folder = {
-            id: `folder-${Date.now()}`,
-            name: 'Uncategorized',
-            createdAt: Date.now(),
-            bookmarks: [],
-          };
-          prev = [defaultFolder];
-          targetFolderId = defaultFolder.id;
-        }
-      }
-
-      return prev.map((folder) => {
-        if (folder.id === targetFolderId) {
-          // Avoid adding duplicate bookmarks
-          if (folder.bookmarks.some((b) => b.verseId === verseId)) {
-            return folder;
-          }
-          const newBookmark: Bookmark = { verseId, createdAt: Date.now() };
-          return { ...folder, bookmarks: [...folder.bookmarks, newBookmark] };
-        }
-        return folder;
-      });
-    });
+  const updateBookmark = useCallback((verseId: string, data: Partial<Bookmark>) => {
+    setFolders((prev) =>
+      prev.map((folder) => ({
+        ...folder,
+        bookmarks: folder.bookmarks.map((b) => (b.verseId === verseId ? { ...b, ...data } : b)),
+      }))
+    );
   }, []);
+
+  const fetchBookmarkMetadata = useCallback(
+    async (verseId: string) => {
+      try {
+        const translationId = settings.translationIds[0] || settings.translationId || 20;
+        const isCompositeKey = /:/.test(verseId) || /[^0-9]/.test(verseId);
+        const [verse, chapters] = await Promise.all([
+          isCompositeKey
+            ? getVerseByKey(verseId, translationId)
+            : getVerseById(verseId, translationId),
+          getChapters(),
+        ]);
+        const [surahIdStr] = verse.verse_key.split(':');
+        const surahInfo = chapters.find((chapter) => chapter.id === parseInt(surahIdStr));
+        updateBookmark(verseId, {
+          verseKey: verse.verse_key,
+          verseText: verse.text_uthmani,
+          surahName: surahInfo?.name_simple || `Surah ${surahIdStr}`,
+          translation: verse.translations?.[0]?.text,
+        });
+      } catch {
+        // Silent fail for metadata fetch errors
+      }
+    },
+    [settings.translationIds, settings.translationId, updateBookmark]
+  );
+
+  const addBookmark = useCallback(
+    (verseId: string, folderId?: string) => {
+      setFolders((prev) => {
+        let targetFolderId = folderId;
+
+        // If no folderId is provided, use the first folder or create a default one
+        if (!targetFolderId) {
+          if (prev.length > 0) {
+            targetFolderId = prev[0].id;
+          } else {
+            const defaultFolder: Folder = {
+              id: `folder-${Date.now()}`,
+              name: 'Uncategorized',
+              createdAt: Date.now(),
+              bookmarks: [],
+            };
+            prev = [defaultFolder];
+            targetFolderId = defaultFolder.id;
+          }
+        }
+
+        return prev.map((folder) => {
+          if (folder.id === targetFolderId) {
+            // Avoid adding duplicate bookmarks
+            if (folder.bookmarks.some((b) => b.verseId === verseId)) {
+              return folder;
+            }
+            const newBookmark: Bookmark = { verseId, createdAt: Date.now() };
+            return { ...folder, bookmarks: [...folder.bookmarks, newBookmark] };
+          }
+          return folder;
+        });
+      });
+
+      void fetchBookmarkMetadata(verseId);
+    },
+    [fetchBookmarkMetadata]
+  );
 
   const removeBookmark = useCallback((verseId: string, folderId: string) => {
     setFolders((prev) =>
@@ -188,6 +233,7 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
       isBookmarked,
       findBookmark,
       toggleBookmark,
+      updateBookmark,
       bookmarkedVerses,
     }),
     [
@@ -200,6 +246,7 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
       isBookmarked,
       findBookmark,
       toggleBookmark,
+      updateBookmark,
       bookmarkedVerses,
     ]
   );
