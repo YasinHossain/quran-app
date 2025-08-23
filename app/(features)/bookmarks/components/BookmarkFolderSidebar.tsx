@@ -7,6 +7,7 @@ import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useBookmarkVerse } from '../hooks/useBookmarkVerse';
 import { FolderIcon } from '@/app/shared/icons';
 import { cn } from '@/lib/utils/cn';
+import { FixedSizeList as List } from 'react-window';
 
 interface BookmarkFolderSidebarProps {
   bookmarks: Bookmark[];
@@ -90,10 +91,10 @@ const VerseItem: React.FC<VerseItemProps> = ({ bookmark, folderId, isActive, onS
 
   if (isLoading || error || !enrichedBookmark.verseKey || !enrichedBookmark.surahName) {
     return (
-      <li className="flex items-center justify-between py-2 px-2 rounded-lg animate-pulse">
+      <div className="flex items-center justify-between py-2 px-2 rounded-lg animate-pulse">
         <div className="h-4 bg-interactive rounded w-24"></div>
         <div className="w-5 h-5 bg-interactive rounded"></div>
-      </li>
+      </div>
     );
   }
 
@@ -101,7 +102,7 @@ const VerseItem: React.FC<VerseItemProps> = ({ bookmark, folderId, isActive, onS
   const verseDisplayName = `${enrichedBookmark.surahName}: ${ayahNumber}`;
 
   return (
-    <li className="flex items-center justify-between py-2 px-2 rounded-lg hover:bg-interactive-hover">
+    <div className="flex items-center justify-between py-2 px-2 rounded-lg hover:bg-interactive-hover">
       <button
         onClick={onSelect}
         className={`text-foreground hover:text-accent transition-colors ${
@@ -117,7 +118,7 @@ const VerseItem: React.FC<VerseItemProps> = ({ bookmark, folderId, isActive, onS
       >
         <TrashIcon />
       </button>
-    </li>
+    </div>
   );
 };
 
@@ -128,7 +129,7 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
   onVerseSelect,
   onBack,
 }) => {
-  const { folders, removeBookmark } = useBookmarks();
+  const { folders } = useBookmarks();
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedFolderId, setExpandedFolderId] = useState<string | null>(folder.id);
 
@@ -245,17 +246,26 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
                   <div className="px-4 pb-3">
                     <div className="border-t border-border pt-2">
                       {folderBookmarks.length > 0 ? (
-                        <ul className="space-y-1">
-                          {folderBookmarks.map((bookmark) => (
-                            <VerseItem
-                              key={bookmark.verseId}
-                              bookmark={bookmark}
-                              folderId={folder.id}
-                              isActive={activeVerseId === bookmark.verseId}
-                              onSelect={() => onVerseSelect?.(bookmark.verseId)}
-                            />
-                          ))}
-                        </ul>
+                        <List
+                          height={Math.min(200, folderBookmarks.length * 48)}
+                          width="100%"
+                          itemCount={folderBookmarks.length}
+                          itemSize={48}
+                        >
+                          {({ index, style }) => {
+                            const bookmark = folderBookmarks[index];
+                            return (
+                              <div style={style}>
+                                <VerseItem
+                                  bookmark={bookmark}
+                                  folderId={folder.id}
+                                  isActive={activeVerseId === bookmark.verseId}
+                                  onSelect={() => onVerseSelect?.(bookmark.verseId)}
+                                />
+                              </div>
+                            );
+                          }}
+                        </List>
                       ) : (
                         <p className="py-4 text-sm text-center text-muted">This folder is empty.</p>
                       )}
