@@ -172,10 +172,7 @@ export async function getVerseById(
 /**
  * Fetch a single verse by its composite key (e.g., "2:255").
  */
-export async function getVerseByKey(
-  verseKey: string,
-  translationId: number
-): Promise<Verse> {
+export async function getVerseByKey(verseKey: string, translationId: number): Promise<Verse> {
   const data = await apiFetch<{ verse: ApiVerse }>(
     `verses/by_key/${encodeURIComponent(verseKey)}`,
     { translations: translationId.toString(), fields: 'text_uthmani' },
