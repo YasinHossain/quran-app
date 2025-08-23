@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { BookmarkIcon, PinIcon, ClockIcon, FolderIcon } from '@/app/shared/icons';
 import { ListItem } from '@/app/shared/ui/ListItem';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
@@ -23,6 +24,7 @@ export const BookmarksSidebar: React.FC<BookmarksSidebarProps> = ({
     { id: 'last-read', icon: ClockIcon, label: 'Last Reads' },
   ];
   const { folders } = useBookmarks();
+  const router = useRouter();
 
   return (
     <div className="h-full flex flex-col">
@@ -59,7 +61,7 @@ export const BookmarksSidebar: React.FC<BookmarksSidebarProps> = ({
                   key={folder.id}
                   icon={IconComp}
                   label={folder.name}
-                  onClick={() => (window.location.href = `/bookmarks/${folder.id}`)}
+                  onClick={() => router.push(`/bookmarks/${folder.id}`)}
                   className="px-3 py-3 rounded-lg transition-colors hover:bg-surface-hover"
                 />
               );
