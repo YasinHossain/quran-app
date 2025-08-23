@@ -33,9 +33,7 @@ const BookmarkTestComponent = () => {
       <button onClick={() => addBookmark('1:1', folders[0]?.id)}>Add Bookmark</button>
       <button onClick={() => removeBookmark('1:1', folders[0]?.id)}>Remove Bookmark</button>
       <button onClick={() => renameFolder(folders[0]?.id, 'New Name')}>Rename Folder</button>
-      <button
-        onClick={() => renameFolder(folders[0]?.id, folders[0]?.name || '', 'text-green-500')}
-      >
+      <button onClick={() => renameFolder(folders[0]?.id, folders[0]?.name || '', 'text-primary')}>
         Set Color
       </button>
       <button onClick={() => deleteFolder(folders[0]?.id)}>Delete Folder</button>
@@ -233,10 +231,10 @@ describe('BookmarkContext with Folders', () => {
 
     await waitFor(() => {
       const folders: Folder[] = JSON.parse(screen.getByTestId('folders').textContent || '[]');
-      expect(folders[0].color).toBe('text-green-500');
+      expect(folders[0].color).toBe('text-primary');
 
       const stored: Folder[] = JSON.parse(localStorage.getItem(BOOKMARKS_STORAGE_KEY) || '[]');
-      expect(stored[0].color).toBe('text-green-500');
+      expect(stored[0].color).toBe('text-primary');
     });
   });
 });

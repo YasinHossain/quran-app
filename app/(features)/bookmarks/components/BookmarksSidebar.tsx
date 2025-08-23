@@ -50,9 +50,11 @@ export const BookmarksSidebar: React.FC<BookmarksSidebarProps> = ({
             {folders.map((folder) => {
               const IconComp = ({ className }: { className?: string }) =>
                 folder.icon ? (
-                  <span className={cn('text-xl', folder.color, className)}>{folder.icon}</span>
+                  <span className={cn('text-xl', folder.color || 'text-accent', className)}>
+                    {folder.icon}
+                  </span>
                 ) : (
-                  <FolderIcon className={cn(className, folder.color)} />
+                  <FolderIcon className={cn(className, folder.color || 'text-accent')} />
                 );
               return (
                 <ListItem
