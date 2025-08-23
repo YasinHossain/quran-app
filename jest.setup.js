@@ -40,5 +40,8 @@ Object.defineProperty(global, 'IntersectionObserver', {
 
 jest.mock('@/app/shared/components/AdaptiveNavigation', () => () => null);
 jest.mock('@/lib/api/chapters', () => ({
-  getChapters: jest.fn().mockResolvedValue([]),
+  getChapters: jest.fn().mockResolvedValue([
+    { id: 1, name_simple: 'Al-Fatihah', verses_count: 7 },
+    { id: 2, name_simple: 'Al-Baqarah', verses_count: 286 },
+  ]),
 }));
