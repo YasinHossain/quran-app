@@ -1,5 +1,5 @@
 // app/(features)/surah/[surahId]/components/Verse.tsx
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useEffect, useRef } from 'react';
 import { Verse as VerseType, Translation } from '@/types';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { useSettings } from '@/app/providers/SettingsContext';
@@ -28,10 +28,26 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
     openPlayer,
   } = useAudio();
   const { settings } = useSettings();
-  const { addBookmark, removeBookmark, findBookmark, isBookmarked } = useBookmarks();
+  const { addBookmark, removeBookmark, findBookmark, isBookmarked, setLastRead } = useBookmarks();
+  const verseRef = useRef<HTMLDivElement | null>(null);
   const isPlaying = playingId === verse.id;
   const isLoadingAudio = loadingId === verse.id;
   const isVerseBookmarked = isBookmarked(String(verse.id));
+
+  useEffect(() => {
+    if (!verseRef.current) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          const [surahId] = verse.verse_key.split(':');
+          setLastRead(surahId, verse.id);
+        }
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(verseRef.current);
+    return () => observer.disconnect();
+  }, [verse.verse_key, verse.id, setLastRead]);
 
   const handlePlayPause = useCallback(() => {
     if (playingId === verse.id) {
@@ -69,7 +85,7 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
   }, [addBookmark, removeBookmark, findBookmark, verse.id]);
 
   return (
-    <div className="mb-8 pb-8 border-b border-border">
+    <div ref={verseRef} className="mb-8 pb-8 border-b border-border">
       {/* Mobile: stacked layout, Desktop: side-by-side */}
       <div className="space-y-4 md:space-y-0 md:flex md:items-start md:gap-x-6">
         {/* Verse actions */}
