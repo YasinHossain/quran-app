@@ -61,8 +61,10 @@ export const BookmarkCard = memo(function BookmarkCard({
 
   const router = useRouter();
 
+  const numericVerseId = Number(enrichedBookmark.verseId);
+
   const handlePlayPause = useCallback(() => {
-    if (playingId === Number(enrichedBookmark.verseId)) {
+    if (playingId === numericVerseId) {
       audioRef.current?.pause();
       setPlayingId(null);
       setLoadingId(null);
@@ -70,7 +72,7 @@ export const BookmarkCard = memo(function BookmarkCard({
       setIsPlaying(false);
     } else if (enrichedBookmark.verseKey && enrichedBookmark.verseText) {
       const verseForAudio = {
-        id: Number(enrichedBookmark.verseId),
+        id: numericVerseId,
         verse_key: enrichedBookmark.verseKey,
         text_uthmani: enrichedBookmark.verseText,
         translations: enrichedBookmark.translation
@@ -94,7 +96,7 @@ export const BookmarkCard = memo(function BookmarkCard({
     enrichedBookmark.verseKey,
     enrichedBookmark.verseText,
     enrichedBookmark.translation,
-    enrichedBookmark.verseId,
+    numericVerseId,
     audioRef,
     setActiveVerse,
     setPlayingId,
@@ -114,8 +116,8 @@ export const BookmarkCard = memo(function BookmarkCard({
     router.push(`/surah/${surahId}#verse-${enrichedBookmark.verseId}`);
   }, [enrichedBookmark.verseKey, enrichedBookmark.verseId, router]);
 
-  const isPlaying = playingId === Number(enrichedBookmark.verseId);
-  const isLoadingAudio = loadingId === Number(enrichedBookmark.verseId);
+  const isPlaying = playingId === numericVerseId;
+  const isLoadingAudio = loadingId === numericVerseId;
   const isVerseBookmarked = isBookmarked(enrichedBookmark.verseId);
   return (
     <LoadingError
@@ -193,7 +195,7 @@ export const BookmarkCard = memo(function BookmarkCard({
           <div className="space-y-6 md:flex-grow">
             <VerseArabic
               verse={{
-                id: Number(enrichedBookmark.verseId),
+                id: numericVerseId,
                 verse_key: enrichedBookmark.verseKey!,
                 text_uthmani: enrichedBookmark.verseText!,
               }}
