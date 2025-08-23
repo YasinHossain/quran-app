@@ -1,14 +1,6 @@
 {
   "permissions": {
-    "allow": [
-      "all allowed",
-      "Bash(npm run format:*)",
-      "Bash(npm run lint)",
-      "Bash(npm run check:*)",
-      "Bash(npm run type-check:*)",
-      "Bash(npm run test:ci:*)",
-      "Bash(npm run test:*)"
-    ],
+    "allow": [],
     "deny": [],
     "ask": []
   }
