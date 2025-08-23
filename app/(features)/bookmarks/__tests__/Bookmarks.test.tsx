@@ -81,17 +81,17 @@ describe('Bookmarks Responsive Components', () => {
     it('should render all navigation items', () => {
       render(<BookmarksSidebar activeSection="bookmarks" />);
 
-      expect(screen.getAllByText('Bookmarks')).toHaveLength(2); // Header and nav item
-      expect(screen.getByText('Pin Ayah')).toBeInTheDocument();
-      expect(screen.getByText('Last Read')).toBeInTheDocument();
+      expect(screen.getByText('Bookmark')).toBeInTheDocument();
+      expect(screen.getByText('Pins')).toBeInTheDocument();
+      expect(screen.getByText('Last Reads')).toBeInTheDocument();
     });
 
     it('should have accessible navigation items', () => {
       render(<BookmarksSidebar activeSection="bookmarks" />);
 
       // Since there's no onClick handler, the ListItem renders as div
-      const pinnedItem = screen.getByText('Pin Ayah').closest('div');
-      const lastReadItem = screen.getByText('Last Read').closest('div');
+      const pinnedItem = screen.getByText('Pins').closest('div');
+      const lastReadItem = screen.getByText('Last Reads').closest('div');
 
       // Check that all items are properly accessible
       [pinnedItem, lastReadItem].forEach((item) => {
@@ -102,11 +102,9 @@ describe('Bookmarks Responsive Components', () => {
         }
       });
 
-      // Check the bookmarks item separately since there are two texts
-      const bookmarkButtons = screen.getAllByText('Bookmarks');
-      const navBookmarkItem = bookmarkButtons.find((button) =>
-        button.closest('div')?.classList.contains('bg-accent/20')
-      );
+      // Check the bookmark item is active
+      const bookmarkItem = screen.getByText('Bookmark');
+      const navBookmarkItem = bookmarkItem.closest('div');
       expect(navBookmarkItem).toBeInTheDocument();
     });
   });

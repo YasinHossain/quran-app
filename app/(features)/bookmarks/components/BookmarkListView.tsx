@@ -1,54 +1,157 @@
 'use client';
 
-import { Folder } from '@/types';
+import React, { useState, useEffect } from 'react';
+import { Folder, Bookmark } from '@/types';
 import { motion } from 'framer-motion';
 import { ArrowLeftIcon } from '@/app/shared/icons';
+import { BookmarkCard } from './BookmarkCard';
 
 interface BookmarkListViewProps {
   folder: Folder;
-  onBack: () => void;
+  onBack?: () => void;
+  bookmarks?: Bookmark[];
+  showAsVerseList?: boolean;
 }
 
-export const BookmarkListView = ({ folder, onBack }: BookmarkListViewProps) => {
+export const BookmarkListView = ({
+  folder,
+  onBack,
+  bookmarks: externalBookmarks,
+  showAsVerseList = false,
+}: BookmarkListViewProps) => {
+  const [bookmarks, setBookmarks] = useState(externalBookmarks || folder.bookmarks);
+
+  // Update local state when external bookmarks change
+  useEffect(() => {
+    if (externalBookmarks) {
+      setBookmarks(externalBookmarks);
+    } else {
+      setBookmarks(folder.bookmarks);
+    }
+  }, [externalBookmarks, folder.bookmarks]);
+
+  const handleRemoveBookmark = (verseId: string) => {
+    // Update local state to immediately remove the bookmark
+    setBookmarks((prev) => prev.filter((bookmark) => bookmark.verseId !== verseId));
+  };
+
+  // If showing as verse list (folder page), display verses like surah page
+  if (showAsVerseList) {
+    return (
+      <div className="space-y-6">
+        {bookmarks.length > 0 ? (
+          bookmarks.map((bookmark) => (
+            <BookmarkCard
+              key={bookmark.verseId}
+              bookmark={bookmark}
+              folderId={folder.id}
+              onRemove={() => handleRemoveBookmark(bookmark.verseId)}
+            />
+          ))
+        ) : (
+          <div className="text-center py-16">
+            <div className="max-w-sm mx-auto">
+              <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg
+                  className="w-8 h-8 text-muted"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-2">No Bookmarks</h3>
+              <p className="text-muted mb-4">
+                This folder is empty. Add some bookmarked verses to see them here.
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Default card layout (main bookmark page)
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
       transition={{ duration: 0.3 }}
+      className="max-w-4xl mx-auto"
     >
-      <div className="mb-6 flex items-center gap-4">
-        <button onClick={onBack} className="rounded-md p-1.5 text-muted hover:bg-surface/50">
-          <ArrowLeftIcon size={20} />
-        </button>
-        <h1 className="text-2xl font-bold text-foreground ">{folder.name}</h1>
-        <span className="text-sm text-muted">{folder.bookmarks.length} bookmarks</span>
-      </div>
-
-      <div>
-        {folder.bookmarks.length > 0 ? (
-          <ul className="space-y-3">
-            {folder.bookmarks.map((bookmark, index) => (
-              <motion.li
-                key={bookmark.verseId}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className="cursor-pointer rounded-lg border border-border bg-surface p-4 hover:bg-surface/50"
-              >
-                {/* For now, just display the verse ID. This will be replaced with actual verse content later. */}
-                <p className="font-mono text-sm text-accent">Verse: {bookmark.verseId}</p>
-                <p className="text-xs text-muted">
-                  Bookmarked on: {new Date(bookmark.createdAt).toLocaleDateString()}
-                </p>
-              </motion.li>
-            ))}
-          </ul>
-        ) : (
-          <div className="mt-10 text-center text-muted">
-            <p>This folder is empty.</p>
-            <p>You can add verses to it from the main reader.</p>
+      {/* Header */}
+      {onBack && (
+        <div className="mb-8 flex items-center gap-4">
+          <button
+            onClick={onBack}
+            className="rounded-full p-2 text-muted hover:bg-surface-hover hover:text-accent transition-colors"
+            aria-label="Go back to folders"
+          >
+            <ArrowLeftIcon size={20} />
+          </button>
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold text-foreground mb-1">{folder.name}</h1>
+            <p className="text-muted">
+              {bookmarks.length} {bookmarks.length === 1 ? 'verse' : 'verses'} bookmarked
+            </p>
           </div>
+        </div>
+      )}
+
+      {/* Bookmark Cards */}
+      <div>
+        {bookmarks.length > 0 ? (
+          <div className="space-y-0">
+            {bookmarks.map((bookmark) => (
+              <BookmarkCard
+                key={bookmark.verseId}
+                bookmark={bookmark}
+                folderId={folder.id}
+                onRemove={() => handleRemoveBookmark(bookmark.verseId)}
+              />
+            ))}
+          </div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-16"
+          >
+            <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg
+                className="w-8 h-8 text-muted"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-foreground mb-2">No Bookmarks</h3>
+            <p className="text-muted max-w-md mx-auto mb-4">
+              This folder is empty. Start bookmarking verses while reading to add them here.
+            </p>
+            {onBack && (
+              <button
+                onClick={onBack}
+                className="px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent/90 transition-colors"
+              >
+                Back to Folders
+              </button>
+            )}
+          </motion.div>
         )}
       </div>
     </motion.div>

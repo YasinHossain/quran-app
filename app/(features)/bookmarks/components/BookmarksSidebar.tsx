@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { PinIcon, ClockIcon } from '@/app/shared/icons';
+import { BookmarkIcon, PinIcon, ClockIcon } from '@/app/shared/icons';
 import { ListItem } from '@/app/shared/ui/ListItem';
 
 interface BookmarksSidebarProps {
@@ -14,16 +14,20 @@ export const BookmarksSidebar: React.FC<BookmarksSidebarProps> = ({
   onSectionChange,
 }) => {
   const sections = [
-    { id: 'bookmarks', icon: PinIcon, label: 'Bookmarks' },
-    { id: 'pinned', icon: PinIcon, label: 'Pin Ayah' },
-    { id: 'last-read', icon: ClockIcon, label: 'Last Read' },
+    { id: 'bookmarks', icon: BookmarkIcon, label: 'Bookmark' },
+    { id: 'pinned', icon: PinIcon, label: 'Pins' },
+    { id: 'last-read', icon: ClockIcon, label: 'Last Reads' },
   ];
 
   return (
-    <div className="h-full flex flex-col p-4">
-      <div className="space-y-4">
-        <h1 className="px-3 text-xl font-bold text-foreground">Bookmarks</h1>
-        <nav className="space-y-1">
+    <div className="h-full flex flex-col">
+      <div className="p-6 border-b border-border">
+        <h1 className="text-2xl font-bold text-foreground">Quran Mazid</h1>
+        <p className="text-sm text-muted mt-1">Read, Study, and Learn The Quran</p>
+      </div>
+
+      <div className="flex-1 p-4">
+        <nav className="space-y-2">
           {sections.map((section) => (
             <ListItem
               key={section.id}
@@ -31,6 +35,7 @@ export const BookmarksSidebar: React.FC<BookmarksSidebarProps> = ({
               label={section.label}
               isActive={activeSection === section.id}
               onClick={onSectionChange ? () => onSectionChange(section.id) : undefined}
+              className="px-3 py-3 rounded-lg transition-colors hover:bg-surface-hover"
             />
           ))}
         </nav>

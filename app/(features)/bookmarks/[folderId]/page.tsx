@@ -1,28 +1,11 @@
-'use client';
+import BookmarkFolderClient from './BookmarkFolderClient';
 
-import React from 'react';
-import BookmarkedVersesList from '../components/BookmarkedVersesList';
-import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
-
-interface PageProps {
+export default async function BookmarkFolderPage({
+  params,
+}: {
   params: Promise<{ folderId: string }>;
-}
-
-export default function BookmarkFolderPage({ params }: PageProps) {
-  const { folderId } = React.use(params);
-  return (
-    <div className="flex flex-grow bg-surface text-foreground overflow-hidden">
-      <main className="flex-grow section overflow-y-auto homepage-scrollable-area">
-        <h1 className="text-2xl font-bold mb-6">{folderId.replace(/-/g, ' ')}</h1>
-        <BookmarkedVersesList />
-      </main>
-      <SettingsSidebar
-        onTranslationPanelOpen={() => {}}
-        onWordLanguagePanelOpen={() => {}}
-        onReadingPanelOpen={() => {}}
-        selectedTranslationName=""
-        selectedWordLanguageName=""
-      />
-    </div>
-  );
+}) {
+  const { folderId: rawFolderId } = await params;
+  const folderId = decodeURIComponent(rawFolderId);
+  return <BookmarkFolderClient folderId={folderId} />;
 }

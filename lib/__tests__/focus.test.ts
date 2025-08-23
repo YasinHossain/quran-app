@@ -383,7 +383,7 @@ describe('Focus Management System', () => {
 
       // Re-render hook with new activeIndex
       const { rerender } = renderHook(() => useRovingTabIndex(items, activeIndex, setActiveIndex));
-      
+
       // ArrowUp from first item should wrap to last
       act(() => {
         const arrowEvent = new KeyboardEvent('keydown', {

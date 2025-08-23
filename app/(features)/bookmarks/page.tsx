@@ -4,22 +4,28 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { CreateFolderModal } from './components/CreateFolderModal';
-import { BookmarkListView } from './components/BookmarkListView';
 import { BookmarksSidebar } from './components/BookmarksSidebar';
 import { BookmarksHeader } from './components/BookmarksHeader';
 import { FolderGrid } from './components/FolderGrid';
 import { useFilteredList } from '@/app/shared/hooks/useFilteredList';
-import { useSelection } from '@/app/shared/hooks/useSelection';
 import { useModal } from '@/app/shared/hooks/useModal';
-import AdaptiveLayout from '@/app/shared/components/AdaptiveLayout';
 import { useState } from 'react';
-import type { Folder } from '@/types';
+import { useRouter } from 'next/navigation';
+import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
 const BookmarksPage = () => {
   const { folders } = useBookmarks();
   const modal = useModal();
-  const folderSelection = useSelection<Folder>();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter();
+  const { isHidden } = useHeaderVisibility();
+
+  React.useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
 
   const {
     searchTerm,
@@ -30,52 +36,86 @@ const BookmarksPage = () => {
   });
 
   const handleFolderSelect = (folderId: string) => {
-    const folder = folders.find((f) => f.id === folderId);
-    if (folder) {
-      folderSelection.select(folder);
-    }
+    router.push(`/bookmarks/${folderId}`);
   };
 
-  const handleBack = () => {
-    folderSelection.deselect();
+  const handleSectionChange = (section: string) => {
+    if (section === 'pinned') {
+      router.push('/bookmarks/pinned');
+    } else if (section === 'last-read') {
+      router.push('/bookmarks/last-read');
+    } else {
+      router.push('/bookmarks');
+    }
   };
 
   return (
     <>
       <CreateFolderModal isOpen={modal.isOpen} onClose={modal.close} />
-      <AdaptiveLayout
-        sidebarContent={<BookmarksSidebar activeSection="bookmarks" />}
-        sidebarOpen={sidebarOpen}
-        onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-        showNavigation={true}
-      >
-        <main className="flex-1 overflow-y-auto section">
-          <AnimatePresence mode="wait">
-            {folderSelection.selected ? (
-              <BookmarkListView
-                key={folderSelection.selected.id}
-                folder={folderSelection.selected}
-                onBack={handleBack}
+
+      <div className="flex h-[calc(100vh-4rem)] mt-16 bg-background">
+        {/* Left Sidebar */}
+        <aside className="w-80 h-full bg-surface border-r border-border hidden lg:block">
+          <BookmarksSidebar activeSection="bookmarks" onSectionChange={handleSectionChange} />
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 h-full overflow-hidden">
+          <div
+            className={`h-full overflow-y-auto px-4 sm:px-6 lg:px-8 pb-6 transition-all duration-300 ${
+              isHidden
+                ? 'pt-0'
+                : 'pt-[calc(3.5rem+env(safe-area-inset-top))] sm:pt-[calc(4rem+env(safe-area-inset-top))]'
+            }`}
+          >
+            <motion.div
+              key="folder-grid"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <BookmarksHeader
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                onNewFolderClick={modal.open}
+                onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
               />
-            ) : (
-              <motion.div
-                key="folder-grid"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <BookmarksHeader
-                  searchTerm={searchTerm}
-                  onSearchChange={setSearchTerm}
-                  onNewFolderClick={modal.open}
-                  onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-                />
-                <FolderGrid folders={filteredFolders} onFolderSelect={handleFolderSelect} />
-              </motion.div>
-            )}
-          </AnimatePresence>
+              <FolderGrid
+                folders={filteredFolders}
+                allFolders={folders}
+                onFolderSelect={handleFolderSelect}
+                onCreateFolder={modal.open}
+                searchTerm={searchTerm}
+                onClearSearch={() => setSearchTerm('')}
+              />
+            </motion.div>
+          </div>
         </main>
-      </AdaptiveLayout>
+      </div>
+
+      {/* Mobile Sidebar Overlay */}
+      <AnimatePresence>
+        {sidebarOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSidebarOpen(false)}
+              className="fixed inset-0 bg-surface-overlay/60 z-40 lg:hidden"
+            />
+            <motion.aside
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'tween', duration: 0.3 }}
+              className="fixed top-0 left-0 h-full w-80 bg-surface border-r border-border z-50 lg:hidden"
+            >
+              <BookmarksSidebar activeSection="bookmarks" onSectionChange={handleSectionChange} />
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 };

@@ -25,6 +25,8 @@ interface ResponsiveVerseActionsProps {
   onPlayPause: () => void;
   onBookmark: () => void;
   onShare?: () => void;
+  onNavigateToVerse?: () => void;
+  showRemove?: boolean;
   className?: string;
 }
 
@@ -45,6 +47,8 @@ const ResponsiveVerseActions: React.FC<ResponsiveVerseActionsProps> = ({
   onPlayPause,
   onBookmark,
   onShare,
+  onNavigateToVerse,
+  showRemove = false,
   className = '',
 }) => {
   const { variant } = useResponsiveState();
@@ -87,6 +91,8 @@ const ResponsiveVerseActions: React.FC<ResponsiveVerseActionsProps> = ({
           onPlayPause={onPlayPause}
           onBookmark={onBookmark}
           onShare={handleShare}
+          onNavigateToVerse={onNavigateToVerse}
+          showRemove={showRemove}
         />
       </>
     );
@@ -128,17 +134,41 @@ const ResponsiveVerseActions: React.FC<ResponsiveVerseActionsProps> = ({
           <BookReaderIcon size={18} />
         </Link>
 
+        {onNavigateToVerse && (
+          <Link
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              onNavigateToVerse();
+            }}
+            aria-label="Go to verse"
+            title="Go to verse"
+            className={cn(
+              'p-1.5 rounded-full hover:bg-accent/10 hover:text-accent transition',
+              touchClasses.focus
+            )}
+          >
+            <BookReaderIcon size={18} />
+          </Link>
+        )}
+
         <button
-          aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
-          title="Bookmark"
+          aria-label={
+            showRemove ? 'Remove bookmark' : isBookmarked ? 'Remove bookmark' : 'Add bookmark'
+          }
+          title={showRemove ? 'Remove bookmark' : 'Bookmark'}
           onClick={onBookmark}
           className={cn(
             'p-1.5 rounded-full hover:bg-accent/10 transition',
-            isBookmarked ? 'text-accent' : 'hover:text-accent',
+            isBookmarked || showRemove ? 'text-accent' : 'hover:text-accent',
             touchClasses.focus
           )}
         >
-          {isBookmarked ? <BookmarkIcon size={18} /> : <BookmarkOutlineIcon size={18} />}
+          {isBookmarked || showRemove ? (
+            <BookmarkIcon size={18} />
+          ) : (
+            <BookmarkOutlineIcon size={18} />
+          )}
         </button>
 
         <button
@@ -168,6 +198,8 @@ interface MobileBottomSheetProps {
   onPlayPause: () => void;
   onBookmark: () => void;
   onShare: () => void;
+  onNavigateToVerse?: () => void;
+  showRemove?: boolean;
 }
 
 const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
@@ -180,6 +212,8 @@ const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
   onPlayPause,
   onBookmark,
   onShare,
+  onNavigateToVerse,
+  showRemove = false,
 }) => {
   const handleAction = (action: () => void) => {
     action();
@@ -225,11 +259,21 @@ const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
       onClick: onClose,
       href: `/tafsir/${verseKey.replace(':', '/')}`,
     },
+    ...(onNavigateToVerse
+      ? [
+          {
+            label: 'Go to Verse',
+            icon: <BookReaderIcon size={20} />,
+            onClick: () => handleAction(onNavigateToVerse),
+          },
+        ]
+      : []),
     {
-      label: isBookmarked ? 'Remove Bookmark' : 'Add Bookmark',
-      icon: isBookmarked ? <BookmarkIcon size={20} /> : <BookmarkOutlineIcon size={20} />,
+      label: showRemove ? 'Remove Bookmark' : isBookmarked ? 'Remove Bookmark' : 'Add Bookmark',
+      icon:
+        isBookmarked || showRemove ? <BookmarkIcon size={20} /> : <BookmarkOutlineIcon size={20} />,
       onClick: () => handleAction(onBookmark),
-      active: isBookmarked,
+      active: isBookmarked || showRemove,
     },
     {
       label: 'Share',
