@@ -10,10 +10,6 @@ import { getVerseById } from '@/lib/api';
 import { useSettings } from '@/app/providers/SettingsContext';
 import type { Verse } from '@/types';
 import { BookmarksSidebar } from '../components/BookmarksSidebar';
-import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
-import { useTranslation } from 'react-i18next';
-import { useTranslationOptions } from '@/app/(features)/surah/hooks/useTranslationOptions';
-import { LANGUAGE_CODES, LanguageCode } from '@/lib/text/languageCodes';
 
 interface BookmarkFolderClientProps {
   folderId: string;
@@ -27,14 +23,10 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
   const [activeVerseId, setActiveVerseId] = useState<string | undefined>(undefined);
   const [verses, setVerses] = useState<Verse[]>([]);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-  const { t } = useTranslation();
-  const { translationOptions, wordLanguageOptions } = useTranslationOptions();
 
-  // Find the current folder and its bookmarks
   const folder = useMemo(() => folders.find((f) => f.id === folderId), [folders, folderId]);
   const bookmarks = useMemo(() => folder?.bookmarks || [], [folder]);
 
-  // Set body overflow hidden like surah page
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
@@ -54,22 +46,6 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
     if (activeVerseId) return verses.filter((v) => String(v.id) === activeVerseId);
     return verses;
   }, [verses, activeVerseId]);
-
-  const selectedTranslationName = useMemo(
-    () =>
-      translationOptions.find((o) => o.id === settings.translationId)?.name ||
-      t('select_translation'),
-    [settings.translationId, translationOptions, t]
-  );
-  const selectedWordLanguageName = useMemo(
-    () =>
-      wordLanguageOptions.find(
-        (o) =>
-          (LANGUAGE_CODES as Record<string, LanguageCode>)[o.name.toLowerCase()] ===
-          settings.wordLang
-      )?.name || t('select_word_translation'),
-    [settings.wordLang, wordLanguageOptions, t]
-  );
 
   if (!folder) {
     return (
@@ -102,7 +78,7 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
         />
       )}
 
-      {/* Left Sidebar - Unified navigation + folder verses as cards */}
+      {/* Left Sidebar - navigation */}
       <aside
         className={`fixed left-0 lg:left-16 top-16 h-[calc(100vh-4rem)] w-80 lg:w-[20.7rem] bg-surface border-r border-border z-50 lg:z-10 transition-transform duration-300 ${
           isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
@@ -115,23 +91,7 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
             else if (section === 'last-read') router.push('/bookmarks/last-read');
             else router.push('/bookmarks');
           }}
-        >
-          <div className="mb-2">
-            <h3 className="text-sm font-semibold text-foreground truncate" title={folder.name}>
-              {folder.name}
-            </h3>
-            <p className="text-xs text-muted">{bookmarks.length} items</p>
-          </div>
-          <div className="space-y-3">
-            {bookmarks.length === 0 ? (
-              <p className="text-sm text-muted">This folder is empty.</p>
-            ) : (
-              bookmarks.map((bm) => (
-                <BookmarkCard key={bm.verseId} bookmark={bm} folderId={folder.id} />)
-              )
-            )}
-          </div>
-        </BookmarksSidebar>
+        />
       </aside>
 
       {/* Mobile Header with Sidebar Toggle */}
@@ -154,11 +114,11 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
       </div>
 
       {/* Main Content - Verse display */}
-      <main className="h-screen text-foreground font-sans lg:ml-[20.7rem] overflow-hidden">
+      <main className="h-screen text-foreground font-sans lg:ml-[20.7rem] lg:mr-[20.7rem] overflow-hidden">
         <div
           className={`h-full overflow-y-auto px-4 sm:px-6 lg:px-8 pb-6 transition-all duration-300 ${
             isHidden
-              ? 'pt-12 lg:pt-0' // Account for mobile header
+              ? 'pt-12 lg:pt-0'
               : 'pt-[calc(3.5rem+3rem+env(safe-area-inset-top))] sm:pt-[calc(4rem+3rem+env(safe-area-inset-top))] lg:pt-[calc(3.5rem+env(safe-area-inset-top))] lg:sm:pt-[calc(4rem+env(safe-area-inset-top))]'
           }`}
         >
@@ -183,15 +143,16 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
         </div>
       </main>
 
-      {/* Right Sidebar - Settings */}
-      <SettingsSidebar
-        onTranslationPanelOpen={() => {}}
-        onWordLanguagePanelOpen={() => {}}
-        onReadingPanelOpen={() => {}}
-        selectedTranslationName={selectedTranslationName}
-        selectedWordLanguageName={selectedWordLanguageName}
-        pageType="verse"
-      />
+      {/* Right Sidebar - folder explorer */}
+      <aside className="fixed right-0 top-16 h-[calc(100vh-4rem)] w-80 lg:w-[20.7rem] bg-surface border-l border-border hidden lg:block overflow-y-auto">
+        <BookmarkFolderSidebar
+          bookmarks={bookmarks}
+          folder={{ id: folder.id, name: folder.name }}
+          activeVerseId={activeVerseId}
+          onVerseSelect={setActiveVerseId}
+          onBack={() => router.push('/bookmarks')}
+        />
+      </aside>
     </>
   );
 }

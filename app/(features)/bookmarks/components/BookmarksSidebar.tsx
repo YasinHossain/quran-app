@@ -42,11 +42,7 @@ export const BookmarksSidebar: React.FC<BookmarksSidebarProps> = ({
           ))}
         </nav>
 
-        {children && (
-          <div className="mt-4 pt-4 border-t border-border space-y-3">
-            {children}
-          </div>
-        )}
+        {children && <div className="mt-4 pt-4 border-t border-border space-y-3">{children}</div>}
       </div>
     </div>
   );
