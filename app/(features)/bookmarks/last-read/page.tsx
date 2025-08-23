@@ -6,27 +6,18 @@ import { BookmarksSidebar } from '../components/BookmarksSidebar';
 import { useRouter } from 'next/navigation';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { getChapters } from '@/lib/api/chapters';
-import type { Chapter } from '@/types';
 
 export default function LastReadPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
   const { isHidden } = useHeaderVisibility();
-  const { lastRead } = useBookmarks();
-  const [chapters, setChapters] = useState<Chapter[]>([]);
+  const { lastRead, chapters } = useBookmarks();
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = '';
     };
-  }, []);
-
-  useEffect(() => {
-    getChapters()
-      .then(setChapters)
-      .catch(() => {});
   }, []);
 
   const handleSectionChange = (section: string) => {

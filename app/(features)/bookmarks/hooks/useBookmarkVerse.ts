@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { getVerseById, getVerseByKey } from '@/lib/api/verses';
-import { getChapters } from '@/lib/api/chapters';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { Bookmark } from '@/types';
+import { Bookmark, Chapter } from '@/types';
 
 interface UseBookmarkVerseReturn {
   bookmark: Bookmark;
@@ -11,7 +10,7 @@ interface UseBookmarkVerseReturn {
   error: string | null;
 }
 
-export function useBookmarkVerse(bookmark: Bookmark): UseBookmarkVerseReturn {
+export function useBookmarkVerse(bookmark: Bookmark, chapters: Chapter[]): UseBookmarkVerseReturn {
   const { settings } = useSettings();
   const { updateBookmark } = useBookmarks();
   const [isLoading, setIsLoading] = useState(false);
@@ -28,12 +27,9 @@ export function useBookmarkVerse(bookmark: Bookmark): UseBookmarkVerseReturn {
       try {
         const translationId = settings.translationIds[0] || settings.translationId || 20;
         const isCompositeKey = /:/.test(bookmark.verseId) || /[^0-9]/.test(bookmark.verseId);
-        const [verse, chapters] = await Promise.all([
-          isCompositeKey
-            ? getVerseByKey(bookmark.verseId, translationId)
-            : getVerseById(bookmark.verseId, translationId),
-          getChapters(),
-        ]);
+        const verse = await (isCompositeKey
+          ? getVerseByKey(bookmark.verseId, translationId)
+          : getVerseById(bookmark.verseId, translationId));
         const [surahIdStr] = verse.verse_key.split(':');
         const surahInfo = chapters.find((chapter) => chapter.id === parseInt(surahIdStr));
         updateBookmark(bookmark.verseId, {
@@ -50,7 +46,7 @@ export function useBookmarkVerse(bookmark: Bookmark): UseBookmarkVerseReturn {
     };
 
     fetchVerseData();
-  }, [bookmark, settings.translationIds, settings.translationId, updateBookmark]);
+  }, [bookmark, settings.translationIds, settings.translationId, updateBookmark, chapters]);
 
   return { bookmark, isLoading, error };
 }

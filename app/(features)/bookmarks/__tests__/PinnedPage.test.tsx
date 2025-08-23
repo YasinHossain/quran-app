@@ -95,4 +95,3 @@ describe('Pinned Ayah Page', () => {
     expect(screen.getByText('No Pinned Verses')).toBeInTheDocument();
   });
 });
-

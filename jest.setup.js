@@ -39,3 +39,6 @@ Object.defineProperty(global, 'IntersectionObserver', {
 });
 
 jest.mock('@/app/shared/components/AdaptiveNavigation', () => () => null);
+jest.mock('@/lib/api/chapters', () => ({
+  getChapters: jest.fn().mockResolvedValue([]),
+}));

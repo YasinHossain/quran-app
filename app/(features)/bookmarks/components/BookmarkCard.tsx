@@ -55,9 +55,9 @@ export const BookmarkCard = memo(function BookmarkCard({
     openPlayer,
   } = useAudio();
   const { settings } = useSettings();
-  const { removeBookmark, isBookmarked } = useBookmarks();
+  const { removeBookmark, isBookmarked, chapters } = useBookmarks();
 
-  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark);
+  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark, chapters);
 
   const router = useRouter();
 

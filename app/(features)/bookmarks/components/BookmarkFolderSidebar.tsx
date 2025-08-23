@@ -80,8 +80,8 @@ interface VerseItemProps {
 }
 
 const VerseItem: React.FC<VerseItemProps> = ({ bookmark, folderId, isActive, onSelect }) => {
-  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark);
-  const { removeBookmark } = useBookmarks();
+  const { removeBookmark, chapters } = useBookmarks();
+  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark, chapters);
 
   const handleRemove = (e: React.MouseEvent) => {
     e.stopPropagation();

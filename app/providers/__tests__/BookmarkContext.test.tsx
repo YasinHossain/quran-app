@@ -4,6 +4,10 @@ import { BookmarkProvider, useBookmarks } from '@/app/providers/BookmarkContext'
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { Folder } from '@/types';
 
+jest.mock('@/lib/api/chapters', () => ({
+  getChapters: jest.fn().mockResolvedValue([]),
+}));
+
 // A more comprehensive test component to interact with the new context features
 const BookmarkTestComponent = () => {
   const {

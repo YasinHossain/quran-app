@@ -19,21 +19,17 @@ jest.mock('../components/BookmarksSidebar', () => ({
 }));
 
 let lastRead: Record<string, number> = { '1': 3 };
+let chapters = [{ id: 1, name_simple: 'Al-Fatihah', verses_count: 7 }];
 
 jest.mock('@/app/providers/BookmarkContext', () => ({
   useBookmarks: () => ({
     lastRead,
+    chapters,
   }),
 }));
 
 jest.mock('@/app/(features)/layout/context/HeaderVisibilityContext', () => ({
   useHeaderVisibility: () => ({ isHidden: false }),
-}));
-
-const mockGetChapters = jest.fn();
-
-jest.mock('@/lib/api/chapters', () => ({
-  getChapters: () => mockGetChapters(),
 }));
 
 jest.mock('framer-motion', () => ({
@@ -62,18 +58,14 @@ beforeAll(() => {
 
 beforeEach(() => {
   push.mockClear();
-  mockGetChapters.mockResolvedValue([
-    { id: 1, name_simple: 'Al-Fatihah', verses_count: 7 },
-  ]);
   lastRead = { '1': 3 };
+  chapters = [{ id: 1, name_simple: 'Al-Fatihah', verses_count: 7 }];
 });
 
 describe('Last Read Page', () => {
   it('renders last read progress and handles navigation', async () => {
     render(<LastReadPage />);
-    expect(
-      await screen.findByRole('heading', { name: 'Last Read' })
-    ).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Last Read' })).toBeInTheDocument();
     expect(await screen.findByText(/Verse 3 of 7/)).toBeInTheDocument();
     fireEvent.click(screen.getByText('Pins'));
     expect(push).toHaveBeenCalledWith('/bookmarks/pinned');
@@ -85,4 +77,3 @@ describe('Last Read Page', () => {
     expect(await screen.findByText('No Recent Activity')).toBeInTheDocument();
   });
 });
-
