@@ -166,6 +166,8 @@ export const BookmarkCard = memo(function BookmarkCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className="rounded-xl bg-surface border border-border p-6 mb-6 hover:border-accent/30 transition-colors"
+      role="article"
+      aria-label={`Bookmark for verse ${enrichedBookmark.verseKey} from ${enrichedBookmark.surahName}`}
     >
       {/* Header with surah info and timestamp */}
       <div className="flex items-center justify-between mb-4">

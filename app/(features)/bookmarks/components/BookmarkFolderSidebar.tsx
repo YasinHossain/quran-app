@@ -113,7 +113,7 @@ const VerseItem: React.FC<VerseItemProps> = ({ bookmark, folderId, isActive, onS
       <button
         onClick={handleRemove}
         className="p-1 rounded-full text-muted hover:text-error hover:bg-interactive-hover transition-colors"
-        aria-label="Remove bookmark"
+        aria-label={`Remove bookmark ${verseDisplayName}`}
       >
         <TrashIcon />
       </button>
@@ -128,7 +128,7 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
   onVerseSelect,
   onBack,
 }) => {
-  const { folders } = useBookmarks();
+  const { folders, removeBookmark } = useBookmarks();
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedFolderId, setExpandedFolderId] = useState<string | null>(folder.id);
 
@@ -172,6 +172,7 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full py-3 pl-11 pr-4 text-foreground bg-surface border border-border rounded-full focus:outline-none focus:ring-2 focus:ring-accent transition-shadow"
+            aria-label="Search bookmark folders"
           />
         </div>
 
@@ -202,6 +203,11 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
                     }}
                     role="button"
                     tabIndex={0}
+                    aria-label={
+                      isCurrentFolder
+                        ? `Toggle folder ${folderItem.name}`
+                        : `Open folder ${folderItem.name}`
+                    }
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
