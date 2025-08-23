@@ -21,11 +21,13 @@ export const getFocusableElements = (container: HTMLElement): HTMLElement[] => {
 
   return Array.from(container.querySelectorAll(focusableSelectors)).filter((element) => {
     const el = element as HTMLElement;
+    const computedStyle = window.getComputedStyle(el);
     return (
       el.offsetWidth > 0 &&
       el.offsetHeight > 0 &&
       !el.hidden &&
-      window.getComputedStyle(el).visibility !== 'hidden'
+      computedStyle.visibility !== 'hidden' &&
+      computedStyle.display !== 'none'
     );
   }) as HTMLElement[];
 };

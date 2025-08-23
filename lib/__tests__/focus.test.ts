@@ -29,6 +29,13 @@ describe('Focus Management System', () => {
       </select>
     `;
     document.body.appendChild(container);
+
+    // Mock element dimensions for JSDOM
+    const elements = container.querySelectorAll('*');
+    elements.forEach((el) => {
+      Object.defineProperty(el, 'offsetWidth', { value: 100, configurable: true });
+      Object.defineProperty(el, 'offsetHeight', { value: 20, configurable: true });
+    });
   });
 
   afterEach(() => {
@@ -374,6 +381,9 @@ describe('Focus Management System', () => {
       activeIndex = 0;
       setActiveIndex.mockClear();
 
+      // Re-render hook with new activeIndex
+      const { rerender } = renderHook(() => useRovingTabIndex(items, activeIndex, setActiveIndex));
+      
       // ArrowUp from first item should wrap to last
       act(() => {
         const arrowEvent = new KeyboardEvent('keydown', {
