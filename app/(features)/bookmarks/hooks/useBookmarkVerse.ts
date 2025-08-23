@@ -32,7 +32,9 @@ export function useBookmarkVerse(verseId: string, createdAt: number): UseBookmar
 
         const isCompositeKey = /:/.test(verseId) || /[^0-9]/.test(verseId);
         const [verse, chapters] = await Promise.all([
-          isCompositeKey ? getVerseByKey(verseId, translationId) : getVerseById(verseId, translationId),
+          isCompositeKey
+            ? getVerseByKey(verseId, translationId)
+            : getVerseById(verseId, translationId),
           getChapters(),
         ]);
 
