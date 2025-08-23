@@ -61,10 +61,11 @@ export const BookmarkCard = memo(function BookmarkCard({
 
   const router = useRouter();
 
-  const numericVerseId = Number(enrichedBookmark.verseId);
+  const verseApiId = enrichedBookmark.verseApiId;
 
   const handlePlayPause = useCallback(() => {
-    if (playingId === numericVerseId) {
+    if (!verseApiId) return;
+    if (playingId === verseApiId) {
       audioRef.current?.pause();
       setPlayingId(null);
       setLoadingId(null);
@@ -72,7 +73,7 @@ export const BookmarkCard = memo(function BookmarkCard({
       setIsPlaying(false);
     } else if (enrichedBookmark.verseKey && enrichedBookmark.verseText) {
       const verseForAudio = {
-        id: numericVerseId,
+        id: verseApiId,
         verse_key: enrichedBookmark.verseKey,
         text_uthmani: enrichedBookmark.verseText,
         translations: enrichedBookmark.translation
@@ -86,17 +87,17 @@ export const BookmarkCard = memo(function BookmarkCard({
           : [],
       };
       setActiveVerse(verseForAudio);
-      setPlayingId(verseForAudio.id);
-      setLoadingId(verseForAudio.id);
+      setPlayingId(verseApiId);
+      setLoadingId(verseApiId);
       setIsPlaying(true);
       openPlayer();
     }
   }, [
+    verseApiId,
     playingId,
     enrichedBookmark.verseKey,
     enrichedBookmark.verseText,
     enrichedBookmark.translation,
-    numericVerseId,
     audioRef,
     setActiveVerse,
     setPlayingId,
@@ -116,8 +117,8 @@ export const BookmarkCard = memo(function BookmarkCard({
     router.push(`/surah/${surahId}#verse-${enrichedBookmark.verseId}`);
   }, [enrichedBookmark.verseKey, enrichedBookmark.verseId, router]);
 
-  const isPlaying = playingId === numericVerseId;
-  const isLoadingAudio = loadingId === numericVerseId;
+  const isPlaying = playingId === verseApiId;
+  const isLoadingAudio = loadingId === verseApiId;
   const isVerseBookmarked = isBookmarked(enrichedBookmark.verseId);
   return (
     <LoadingError
@@ -126,7 +127,8 @@ export const BookmarkCard = memo(function BookmarkCard({
         !enrichedBookmark.verseText ||
         !enrichedBookmark.translation ||
         !enrichedBookmark.verseKey ||
-        !enrichedBookmark.surahName
+        !enrichedBookmark.surahName ||
+        !enrichedBookmark.verseApiId
       }
       error={error}
       loadingFallback={
@@ -195,7 +197,7 @@ export const BookmarkCard = memo(function BookmarkCard({
           <div className="space-y-6 md:flex-grow">
             <VerseArabic
               verse={{
-                id: numericVerseId,
+                id: verseApiId!,
                 verse_key: enrichedBookmark.verseKey!,
                 text_uthmani: enrichedBookmark.verseText!,
               }}

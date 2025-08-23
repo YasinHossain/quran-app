@@ -4,6 +4,8 @@
 export interface Bookmark {
   /** Unique verse identifier stored as a string. */
   verseId: string;
+  /** Numeric verse identifier from the source API. */
+  verseApiId?: number;
   /** Timestamp when the bookmark was created (ms since epoch). */
   createdAt: number;
 

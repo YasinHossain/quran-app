@@ -9,6 +9,7 @@ import { FolderIcon } from '@/app/shared/icons';
 import LoadingError from '@/app/shared/LoadingError';
 import { cn } from '@/lib/utils/cn';
 import { FixedSizeList as List } from 'react-window';
+import { ConfirmDeleteModal } from '@/app/shared/components/ConfirmDeleteModal';
 
 interface BookmarkFolderSidebarProps {
   bookmarks: Bookmark[];
@@ -74,20 +75,17 @@ const SearchIcon = () => (
 
 interface VerseItemProps {
   bookmark: Bookmark;
-  folderId: string;
   isActive: boolean;
   onSelect: () => void;
+  onRemove: (bookmark: Bookmark) => void;
 }
 
-const VerseItem: React.FC<VerseItemProps> = ({ bookmark, folderId, isActive, onSelect }) => {
-  const { removeBookmark, chapters } = useBookmarks();
-  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark, chapters);
+const VerseItem: React.FC<VerseItemProps> = ({ bookmark, isActive, onSelect, onRemove }) => {
+  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark);
 
   const handleRemove = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (window.confirm('Remove this bookmark?')) {
-      removeBookmark(String(bookmark.verseId), folderId);
-    }
+    onRemove(bookmark);
   };
 
   const ayahNumber = enrichedBookmark.verseKey?.split(':')[1];
@@ -137,9 +135,10 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
   onVerseSelect,
   onBack,
 }) => {
-  const { folders } = useBookmarks();
+  const { folders, removeBookmark } = useBookmarks();
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedFolderId, setExpandedFolderId] = useState<string | null>(folder.id);
+  const [bookmarkToDelete, setBookmarkToDelete] = useState<Bookmark | null>(null);
 
   const router = useRouter();
 
@@ -157,134 +156,158 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
     }
   };
 
+  const openDeleteModal = (bookmark: Bookmark) => {
+    setBookmarkToDelete(bookmark);
+  };
+
+  const handleConfirmDelete = () => {
+    if (bookmarkToDelete) {
+      removeBookmark(String(bookmarkToDelete.verseId), folder.id);
+      setBookmarkToDelete(null);
+    }
+  };
+
+  const handleCancelDelete = () => setBookmarkToDelete(null);
+
   return (
-    <div className="bg-background min-h-screen w-full flex justify-center p-4 font-sans">
-      <div className="w-full max-w-sm">
-        {/* Top Button */}
-        {onBack && (
-          <button
-            onClick={onBack}
-            className="w-full py-3 mb-4 text-lg font-semibold text-foreground bg-surface border border-border rounded-full shadow-sm hover:bg-interactive transition-colors"
-          >
-            Bookmark
-          </button>
-        )}
+    <>
+      <div className="bg-background min-h-screen w-full flex justify-center p-4 font-sans">
+        <div className="w-full max-w-sm">
+          {/* Top Button */}
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="w-full py-3 mb-4 text-lg font-semibold text-foreground bg-surface border border-border rounded-full shadow-sm hover:bg-interactive transition-colors"
+            >
+              Bookmark
+            </button>
+          )}
 
-        {/* Search Bar */}
-        <div className="relative mb-6">
-          <span className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-            <SearchIcon />
-          </span>
-          <input
-            type="text"
-            placeholder="Search Bookmark Folder"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full py-3 pl-11 pr-4 text-foreground bg-surface border border-border rounded-full focus:outline-none focus:ring-2 focus:ring-accent transition-shadow"
-            aria-label="Search bookmark folders"
-          />
-        </div>
+          {/* Search Bar */}
+          <div className="relative mb-6">
+            <span className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+              <SearchIcon />
+            </span>
+            <input
+              type="text"
+              placeholder="Search Bookmark Folder"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full py-3 pl-11 pr-4 text-foreground bg-surface border border-border rounded-full focus:outline-none focus:ring-2 focus:ring-accent transition-shadow"
+              aria-label="Search bookmark folders"
+            />
+          </div>
 
-        {/* Folders List */}
-        <div className="space-y-3">
-          {filteredFolders.map((folderItem) => {
-            const isExpanded = expandedFolderId === folderItem.id;
-            const isCurrentFolder = folderItem.id === folder.id;
-            const folderBookmarks = isCurrentFolder ? bookmarks : folderItem.bookmarks;
+          {/* Folders List */}
+          <div className="space-y-3">
+            {filteredFolders.map((folderItem) => {
+              const isExpanded = expandedFolderId === folderItem.id;
+              const isCurrentFolder = folderItem.id === folder.id;
+              const folderBookmarks = isCurrentFolder ? bookmarks : folderItem.bookmarks;
 
-            return (
-              <div
-                key={folderItem.id}
-                className={`rounded-2xl shadow-sm transition-all duration-300 ease-in-out ${
-                  isExpanded ? 'bg-interactive ring-1 ring-border' : 'bg-surface'
-                }`}
-              >
-                {/* Folder Header */}
-                <div className="flex items-center justify-between p-4 cursor-pointer">
-                  <div
-                    className="flex items-center space-x-4 flex-1"
-                    onClick={() => {
-                      if (!isCurrentFolder) {
-                        handleFolderSelect(folderItem.id);
-                      } else {
-                        toggleFolder(folderItem.id);
-                      }
-                    }}
-                    role="button"
-                    tabIndex={0}
-                    aria-label={
-                      isCurrentFolder
-                        ? `Toggle folder ${folderItem.name}`
-                        : `Open folder ${folderItem.name}`
-                    }
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
+              return (
+                <div
+                  key={folderItem.id}
+                  className={`rounded-2xl shadow-sm transition-all duration-300 ease-in-out ${
+                    isExpanded ? 'bg-interactive ring-1 ring-border' : 'bg-surface'
+                  }`}
+                >
+                  {/* Folder Header */}
+                  <div className="flex items-center justify-between p-4 cursor-pointer">
+                    <div
+                      className="flex items-center space-x-4 flex-1"
+                      onClick={() => {
                         if (!isCurrentFolder) {
                           handleFolderSelect(folderItem.id);
                         } else {
                           toggleFolder(folderItem.id);
                         }
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={
+                        isCurrentFolder
+                          ? `Toggle folder ${folderItem.name}`
+                          : `Open folder ${folderItem.name}`
                       }
-                    }}
-                  >
-                    {folderItem.icon ? (
-                      <span className={cn('text-2xl', folderItem.color)}>{folderItem.icon}</span>
-                    ) : (
-                      <FolderIcon className={cn('w-8 h-8', folderItem.color)} />
-                    )}
-                    <div>
-                      <p className="font-bold text-foreground">{folderItem.name}</p>
-                      <p className="text-sm text-muted">Total Ayah: {folderBookmarks.length}</p>
-                    </div>
-                  </div>
-                  {isCurrentFolder && (
-                    <button
-                      className="p-2 rounded-full hover:bg-interactive-hover transition-colors"
-                      aria-label="Folder options"
-                      onClick={() => toggleFolder(folderItem.id)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          if (!isCurrentFolder) {
+                            handleFolderSelect(folderItem.id);
+                          } else {
+                            toggleFolder(folderItem.id);
+                          }
+                        }
+                      }}
                     >
-                      <MoreIcon />
-                    </button>
+                      {folderItem.icon ? (
+                        <span className={cn('text-2xl', folderItem.color)}>{folderItem.icon}</span>
+                      ) : (
+                        <FolderIcon className={cn('w-8 h-8', folderItem.color)} />
+                      )}
+                      <div>
+                        <p className="font-bold text-foreground">{folderItem.name}</p>
+                        <p className="text-sm text-muted">Total Ayah: {folderBookmarks.length}</p>
+                      </div>
+                    </div>
+                    {isCurrentFolder && (
+                      <button
+                        className="p-2 rounded-full hover:bg-interactive-hover transition-colors"
+                        aria-label="Folder options"
+                        onClick={() => toggleFolder(folderItem.id)}
+                      >
+                        <MoreIcon />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Expanded Content (Verses) */}
+                  {isExpanded && isCurrentFolder && (
+                    <div className="px-4 pb-3">
+                      <div className="border-t border-border pt-2">
+                        {folderBookmarks.length > 0 ? (
+                          <List
+                            height={Math.min(200, folderBookmarks.length * 48)}
+                            width="100%"
+                            itemCount={folderBookmarks.length}
+                            itemSize={48}
+                          >
+                            {({ index, style }) => {
+                              const bookmark = folderBookmarks[index];
+                              return (
+                                <div style={style}>
+                                  <VerseItem
+                                    bookmark={bookmark}
+                                    isActive={activeVerseId === bookmark.verseId}
+                                    onSelect={() => onVerseSelect?.(bookmark.verseId)}
+                                    onRemove={openDeleteModal}
+                                  />
+                                </div>
+                              );
+                            }}
+                          </List>
+                        ) : (
+                          <p className="py-4 text-sm text-center text-muted">
+                            This folder is empty.
+                          </p>
+                        )}
+                      </div>
+                    </div>
                   )}
                 </div>
-
-                {/* Expanded Content (Verses) */}
-                {isExpanded && isCurrentFolder && (
-                  <div className="px-4 pb-3">
-                    <div className="border-t border-border pt-2">
-                      {folderBookmarks.length > 0 ? (
-                        <List
-                          height={Math.min(200, folderBookmarks.length * 48)}
-                          width="100%"
-                          itemCount={folderBookmarks.length}
-                          itemSize={48}
-                        >
-                          {({ index, style }) => {
-                            const bookmark = folderBookmarks[index];
-                            return (
-                              <div style={style}>
-                                <VerseItem
-                                  bookmark={bookmark}
-                                  folderId={folder.id}
-                                  isActive={activeVerseId === bookmark.verseId}
-                                  onSelect={() => onVerseSelect?.(bookmark.verseId)}
-                                />
-                              </div>
-                            );
-                          }}
-                        </List>
-                      ) : (
-                        <p className="py-4 text-sm text-center text-muted">This folder is empty.</p>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
-    </div>
+      <ConfirmDeleteModal
+        isOpen={!!bookmarkToDelete}
+        title="Remove Bookmark"
+        description="Are you sure you want to remove this bookmark?"
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
+    </>
   );
 };

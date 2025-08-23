@@ -18,7 +18,13 @@ export function useBookmarkVerse(bookmark: Bookmark, chapters: Chapter[]): UseBo
 
   useEffect(() => {
     const fetchVerseData = async () => {
-      if (bookmark.verseText && bookmark.surahName && bookmark.translation && bookmark.verseKey) {
+      if (
+        bookmark.verseText &&
+        bookmark.surahName &&
+        bookmark.translation &&
+        bookmark.verseKey &&
+        bookmark.verseApiId
+      ) {
         return;
       }
       setIsLoading(true);
@@ -37,6 +43,7 @@ export function useBookmarkVerse(bookmark: Bookmark, chapters: Chapter[]): UseBo
           verseText: verse.text_uthmani,
           surahName: surahInfo?.name_simple || `Surah ${surahIdStr}`,
           translation: verse.translations?.[0]?.text,
+          verseApiId: verse.id,
         });
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch verse');
