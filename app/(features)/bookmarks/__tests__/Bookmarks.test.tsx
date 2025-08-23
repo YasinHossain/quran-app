@@ -9,6 +9,10 @@ jest.mock('@/app/providers/BookmarkContext', () => ({
       { id: '1', name: 'Test Folder 1', bookmarks: [] },
       { id: '2', name: 'Test Folder 2', bookmarks: [] },
     ],
+    chapters: [
+      { id: 1, name_simple: 'Al-Fatihah', verses_count: 7 },
+      { id: 2, name_simple: 'Al-Baqarah', verses_count: 286 },
+    ],
   }),
 }));
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { Folder, Bookmark } from '@/types';
+import { Folder, Bookmark, Chapter } from '@/types';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { getVerseById, getVerseByKey } from '@/lib/api/verses';
@@ -28,6 +28,7 @@ interface BookmarkContextType {
   isPinned: (verseId: string) => boolean;
   lastRead: Record<string, number>;
   setLastRead: (surahId: string, verseId: number) => void;
+  chapters: Chapter[];
 }
 
 const BookmarkContext = createContext<BookmarkContextType | undefined>(undefined);
@@ -36,7 +37,14 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
   const [folders, setFolders] = useState<Folder[]>([]);
   const [pinnedVerses, setPinnedVerses] = useState<Bookmark[]>([]);
   const [lastRead, setLastReadState] = useState<Record<string, number>>({});
+  const [chapters, setChapters] = useState<Chapter[]>([]);
   const { settings } = useSettings();
+
+  useEffect(() => {
+    getChapters()
+      .then(setChapters)
+      .catch(() => {});
+  }, []);
 
   // Load bookmarks from localStorage on mount and handle migration
   useEffect(() => {
@@ -169,18 +177,15 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
   }, []);
 
   const fetchBookmarkMetadata = useCallback(
-    async (verseId: string) => {
+    async (verseId: string, chaptersList: Chapter[]) => {
       try {
         const translationId = settings.translationIds[0] || settings.translationId || 20;
         const isCompositeKey = /:/.test(verseId) || /[^0-9]/.test(verseId);
-        const [verse, chapters] = await Promise.all([
-          isCompositeKey
-            ? getVerseByKey(verseId, translationId)
-            : getVerseById(verseId, translationId),
-          getChapters(),
-        ]);
+        const verse = await (isCompositeKey
+          ? getVerseByKey(verseId, translationId)
+          : getVerseById(verseId, translationId));
         const [surahIdStr] = verse.verse_key.split(':');
-        const surahInfo = chapters.find((chapter) => chapter.id === parseInt(surahIdStr));
+        const surahInfo = chaptersList.find((chapter) => chapter.id === parseInt(surahIdStr));
         updateBookmark(verseId, {
           verseKey: verse.verse_key,
           verseText: verse.text_uthmani,
@@ -205,7 +210,7 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
           const newBookmark: Bookmark = { verseId, createdAt: Date.now() };
           return [...prev, newBookmark];
         });
-        void fetchBookmarkMetadata(verseId);
+        void fetchBookmarkMetadata(verseId, chapters);
         return;
       }
 
@@ -241,9 +246,9 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
         });
       });
 
-      void fetchBookmarkMetadata(verseId);
+      void fetchBookmarkMetadata(verseId, chapters);
     },
-    [fetchBookmarkMetadata]
+    [fetchBookmarkMetadata, chapters]
   );
 
   const removeBookmark = useCallback((verseId: string, folderId: string) => {
@@ -306,9 +311,9 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
         const newBookmark: Bookmark = { verseId, createdAt: Date.now() };
         return [...prev, newBookmark];
       });
-      void fetchBookmarkMetadata(verseId);
+      void fetchBookmarkMetadata(verseId, chapters);
     },
-    [fetchBookmarkMetadata]
+    [fetchBookmarkMetadata, chapters]
   );
 
   const isPinned = useCallback(
@@ -343,6 +348,7 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
       isPinned,
       lastRead,
       setLastRead,
+      chapters,
     }),
     [
       folders,
@@ -361,6 +367,7 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
       isPinned,
       lastRead,
       setLastRead,
+      chapters,
     ]
   );
 
