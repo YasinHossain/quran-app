@@ -248,7 +248,7 @@ const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
             initial="hidden"
             animate="visible"
             exit="hidden"
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-modal touch-none"
+            className="fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm z-modal touch-none"
             onClick={onClose}
           />
 

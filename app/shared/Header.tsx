@@ -43,8 +43,8 @@ const Header = () => {
     <header
       className={cn(
         'fixed top-0 left-0 right-0 h-[calc(3.5rem+env(safe-area-inset-top))] sm:h-[calc(4rem+env(safe-area-inset-top))] z-header transition-all duration-300',
-        'backdrop-blur-lg bg-white/8 dark:bg-gray-900/8 backdrop-saturate-150',
-        'border-b border-white/5 dark:border-white/5',
+        'backdrop-blur-lg bg-surface/8 backdrop-saturate-150',
+        'border-b border-border/5',
         'flex items-center justify-center',
         isHidden ? '-translate-y-full' : 'translate-y-0'
       )}
@@ -58,8 +58,8 @@ const Header = () => {
             href="/"
             className="flex items-center space-x-2 hover:opacity-80 transition-opacity ml-2"
           >
-            <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-sm">
-              <svg className="h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor">
+            <div className="h-8 w-8 rounded-xl bg-gradient-emerald flex items-center justify-center shadow-sm">
+              <svg className="h-5 w-5 text-on-accent" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M18.5 2h-13C4.7 2 4 2.7 4 3.5v17l8-4 8 4v-17C20 2.7 19.3 2 18.5 2z" />
               </svg>
             </div>
@@ -93,9 +93,9 @@ const Header = () => {
             aria-label="Toggle theme"
           >
             {theme === 'dark' ? (
-              <IconSun size={18} className="text-amber-500" />
+              <IconSun size={18} className="text-status-warning" />
             ) : (
-              <IconMoon size={18} className="text-muted-foreground" />
+              <IconMoon size={18} className="text-muted" />
             )}
           </button>
 
@@ -109,7 +109,7 @@ const Header = () => {
             )}
             aria-label="Open Settings"
           >
-            <IconSettings size={18} className="text-muted-foreground" />
+            <IconSettings size={18} className="text-muted" />
           </button>
         </div>
       </div>

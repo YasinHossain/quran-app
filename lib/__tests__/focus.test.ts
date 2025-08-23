@@ -39,11 +39,9 @@ describe('Focus Management System', () => {
   describe('getFocusableElements', () => {
     it('should find all focusable elements', () => {
       const focusable = getFocusableElements(container);
-      
+
       expect(focusable).toHaveLength(5);
-      expect(focusable.map(el => el.id)).toEqual([
-        'btn1', 'input1', 'link1', 'btn2', 'select1'
-      ]);
+      expect(focusable.map((el) => el.id)).toEqual(['btn1', 'input1', 'link1', 'btn2', 'select1']);
     });
 
     it('should exclude disabled elements', () => {
@@ -51,9 +49,9 @@ describe('Focus Management System', () => {
       disabledButton.disabled = true;
 
       const focusable = getFocusableElements(container);
-      
+
       expect(focusable).toHaveLength(4);
-      expect(focusable.map(el => el.id)).not.toContain('btn1');
+      expect(focusable.map((el) => el.id)).not.toContain('btn1');
     });
 
     it('should exclude hidden elements', () => {
@@ -61,9 +59,9 @@ describe('Focus Management System', () => {
       hiddenInput.style.display = 'none';
 
       const focusable = getFocusableElements(container);
-      
+
       expect(focusable).toHaveLength(4);
-      expect(focusable.map(el => el.id)).not.toContain('input1');
+      expect(focusable.map((el) => el.id)).not.toContain('input1');
     });
 
     it('should exclude elements with visibility hidden', () => {
@@ -71,16 +69,16 @@ describe('Focus Management System', () => {
       hiddenLink.style.visibility = 'hidden';
 
       const focusable = getFocusableElements(container);
-      
+
       expect(focusable).toHaveLength(4);
-      expect(focusable.map(el => el.id)).not.toContain('link1');
+      expect(focusable.map((el) => el.id)).not.toContain('link1');
     });
   });
 
   describe('useFocusTrap', () => {
     it('should trap focus within container when active', async () => {
       const containerRef = { current: container };
-      
+
       renderHook(() => useFocusTrap(true, containerRef));
 
       // First focusable element should be focused
@@ -89,7 +87,7 @@ describe('Focus Management System', () => {
       // Tab to last element
       const lastButton = container.querySelector('#select1') as HTMLSelectElement;
       lastButton.focus();
-      
+
       // Tab should wrap to first element
       act(() => {
         const tabEvent = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true });
@@ -102,18 +100,18 @@ describe('Focus Management System', () => {
 
     it('should handle Shift+Tab correctly', async () => {
       const containerRef = { current: container };
-      
+
       renderHook(() => useFocusTrap(true, containerRef));
 
       const firstButton = container.querySelector('#btn1') as HTMLButtonElement;
       firstButton.focus();
-      
+
       // Shift+Tab should wrap to last element
       act(() => {
-        const shiftTabEvent = new KeyboardEvent('keydown', { 
-          key: 'Tab', 
-          shiftKey: true, 
-          bubbles: true 
+        const shiftTabEvent = new KeyboardEvent('keydown', {
+          key: 'Tab',
+          shiftKey: true,
+          bubbles: true,
         });
         document.dispatchEvent(shiftTabEvent);
       });
@@ -123,7 +121,7 @@ describe('Focus Management System', () => {
 
     it('should not trap focus when inactive', () => {
       const containerRef = { current: container };
-      
+
       renderHook(() => useFocusTrap(false, containerRef));
 
       // Should not automatically focus any element
@@ -137,11 +135,10 @@ describe('Focus Management System', () => {
       externalButton.focus();
 
       const containerRef = { current: container };
-      
-      const { rerender } = renderHook(
-        ({ isActive }) => useFocusTrap(isActive, containerRef),
-        { initialProps: { isActive: true } }
-      );
+
+      const { rerender } = renderHook(({ isActive }) => useFocusTrap(isActive, containerRef), {
+        initialProps: { isActive: true },
+      });
 
       // Deactivate focus trap
       rerender({ isActive: false });
@@ -207,7 +204,7 @@ describe('Focus Management System', () => {
 
       // Wait for timeout
       await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 20));
+        await new Promise((resolve) => setTimeout(resolve, 20));
       });
 
       expect(document.activeElement).toBe(targetButton);
@@ -220,7 +217,7 @@ describe('Focus Management System', () => {
       renderHook(() => useAutoFocus(false, elementRef, 10));
 
       await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 20));
+        await new Promise((resolve) => setTimeout(resolve, 20));
       });
 
       expect(document.activeElement).not.toBe(targetButton);
@@ -234,13 +231,13 @@ describe('Focus Management System', () => {
 
       // Check before delay
       await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 25));
+        await new Promise((resolve) => setTimeout(resolve, 25));
       });
       expect(document.activeElement).not.toBe(targetButton);
 
       // Check after delay
       await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 30));
+        await new Promise((resolve) => setTimeout(resolve, 30));
       });
       expect(document.activeElement).toBe(targetButton);
     });
@@ -252,7 +249,8 @@ describe('Focus Management System', () => {
       targetElement.focus();
 
       const { rerender } = renderHook(
-        ({ breakpoint }: { breakpoint: 'mobile' | 'tablet' | 'desktop' }) => useResponsiveFocus(breakpoint),
+        ({ breakpoint }: { breakpoint: 'mobile' | 'tablet' | 'desktop' }) =>
+          useResponsiveFocus(breakpoint),
         { initialProps: { breakpoint: 'mobile' } }
       );
 
@@ -269,12 +267,8 @@ describe('Focus Management System', () => {
       const button1 = container.querySelector('#btn1') as HTMLButtonElement;
       const button2 = container.querySelector('#btn2') as HTMLButtonElement;
       const input1 = container.querySelector('#input1') as HTMLInputElement;
-      
-      const items = [
-        { current: button1 },
-        { current: button2 },
-        { current: input1 },
-      ];
+
+      const items = [{ current: button1 }, { current: button2 }, { current: input1 }];
 
       const activeIndex = 0;
       const setActiveIndex = jest.fn();
@@ -293,11 +287,8 @@ describe('Focus Management System', () => {
     it('should handle arrow key navigation', () => {
       const button1 = container.querySelector('#btn1') as HTMLButtonElement;
       const button2 = container.querySelector('#btn2') as HTMLButtonElement;
-      
-      const items = [
-        { current: button1 },
-        { current: button2 },
-      ];
+
+      const items = [{ current: button1 }, { current: button2 }];
 
       let activeIndex = 0;
       const setActiveIndex = jest.fn((newIndex) => {
@@ -308,9 +299,9 @@ describe('Focus Management System', () => {
 
       // Simulate ArrowDown
       act(() => {
-        const arrowEvent = new KeyboardEvent('keydown', { 
-          key: 'ArrowDown', 
-          bubbles: true 
+        const arrowEvent = new KeyboardEvent('keydown', {
+          key: 'ArrowDown',
+          bubbles: true,
         });
         document.dispatchEvent(arrowEvent);
       });
@@ -322,12 +313,8 @@ describe('Focus Management System', () => {
       const button1 = container.querySelector('#btn1') as HTMLButtonElement;
       const button2 = container.querySelector('#btn2') as HTMLButtonElement;
       const input1 = container.querySelector('#input1') as HTMLInputElement;
-      
-      const items = [
-        { current: button1 },
-        { current: button2 },
-        { current: input1 },
-      ];
+
+      const items = [{ current: button1 }, { current: button2 }, { current: input1 }];
 
       let activeIndex = 1;
       const setActiveIndex = jest.fn((newIndex) => {
@@ -338,9 +325,9 @@ describe('Focus Management System', () => {
 
       // Test Home key
       act(() => {
-        const homeEvent = new KeyboardEvent('keydown', { 
-          key: 'Home', 
-          bubbles: true 
+        const homeEvent = new KeyboardEvent('keydown', {
+          key: 'Home',
+          bubbles: true,
         });
         document.dispatchEvent(homeEvent);
       });
@@ -349,9 +336,9 @@ describe('Focus Management System', () => {
 
       // Test End key
       act(() => {
-        const endEvent = new KeyboardEvent('keydown', { 
-          key: 'End', 
-          bubbles: true 
+        const endEvent = new KeyboardEvent('keydown', {
+          key: 'End',
+          bubbles: true,
         });
         document.dispatchEvent(endEvent);
       });
@@ -362,11 +349,8 @@ describe('Focus Management System', () => {
     it('should wrap around at boundaries', () => {
       const button1 = container.querySelector('#btn1') as HTMLButtonElement;
       const button2 = container.querySelector('#btn2') as HTMLButtonElement;
-      
-      const items = [
-        { current: button1 },
-        { current: button2 },
-      ];
+
+      const items = [{ current: button1 }, { current: button2 }];
 
       let activeIndex = 1; // Last item
       const setActiveIndex = jest.fn((newIndex) => {
@@ -377,9 +361,9 @@ describe('Focus Management System', () => {
 
       // ArrowDown from last item should wrap to first
       act(() => {
-        const arrowEvent = new KeyboardEvent('keydown', { 
-          key: 'ArrowDown', 
-          bubbles: true 
+        const arrowEvent = new KeyboardEvent('keydown', {
+          key: 'ArrowDown',
+          bubbles: true,
         });
         document.dispatchEvent(arrowEvent);
       });
@@ -392,9 +376,9 @@ describe('Focus Management System', () => {
 
       // ArrowUp from first item should wrap to last
       act(() => {
-        const arrowEvent = new KeyboardEvent('keydown', { 
-          key: 'ArrowUp', 
-          bubbles: true 
+        const arrowEvent = new KeyboardEvent('keydown', {
+          key: 'ArrowUp',
+          bubbles: true,
         });
         document.dispatchEvent(arrowEvent);
       });
@@ -422,7 +406,7 @@ describe('Focus Management System', () => {
 
     it('should handle null container refs', () => {
       const containerRef = { current: null } as unknown as React.RefObject<HTMLElement>;
-      
+
       expect(() => {
         renderHook(() => useFocusTrap(true, containerRef));
       }).not.toThrow();

@@ -40,7 +40,7 @@ const GlobalSettingsModal = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSettingsOpen(false)}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm z-50"
           />
 
           {/* Settings Modal */}
@@ -63,7 +63,7 @@ const GlobalSettingsModal = () => {
                   className="p-2 hover:bg-muted/50 rounded-lg transition-colors"
                   aria-label="Close settings"
                 >
-                  <IconX size={20} className="text-muted-foreground" />
+                  <IconX size={20} className="text-muted" />
                 </button>
               </div>
 
@@ -77,20 +77,20 @@ const GlobalSettingsModal = () => {
                     <div className="flex items-center justify-between p-4 bg-muted/20 rounded-xl">
                       <div className="flex items-center gap-3">
                         {theme === 'dark' ? (
-                          <IconMoon size={20} className="text-blue-500" />
+                          <IconMoon size={20} className="text-status-info" />
                         ) : (
-                          <IconSun size={20} className="text-amber-500" />
+                          <IconSun size={20} className="text-status-warning" />
                         )}
                         <div>
                           <p className="font-medium text-foreground">Theme</p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-muted">
                             Currently using {theme === 'dark' ? 'dark' : 'light'} mode
                           </p>
                         </div>
                       </div>
                       <button
                         onClick={toggleTheme}
-                        className="px-4 py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/80 transition-colors"
+                        className="px-4 py-2 bg-accent text-on-accent rounded-lg hover:bg-accent/80 transition-colors"
                       >
                         Switch to {theme === 'dark' ? 'Light' : 'Dark'}
                       </button>
@@ -104,15 +104,15 @@ const GlobalSettingsModal = () => {
                     <div className="p-4 bg-muted/20 rounded-xl">
                       <div className="space-y-2">
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">App Name</span>
+                          <span className="text-muted">App Name</span>
                           <span className="text-foreground font-medium">Quran Mazid</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">Version</span>
+                          <span className="text-muted">Version</span>
                           <span className="text-foreground font-medium">v1.0.0</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">Platform</span>
+                          <span className="text-muted">Platform</span>
                           <span className="text-foreground font-medium">Web App</span>
                         </div>
                       </div>
@@ -126,7 +126,7 @@ const GlobalSettingsModal = () => {
                     </h3>
 
                     <div className="p-4 bg-muted/20 rounded-xl">
-                      <p className="text-muted-foreground text-center py-8">
+                      <p className="text-muted text-center py-8">
                         Reading settings will be available here soon.
                         <br />
                         Stay tuned for font size, translation preferences, and more.
@@ -141,7 +141,7 @@ const GlobalSettingsModal = () => {
                 <div className="flex justify-end">
                   <button
                     onClick={() => setSettingsOpen(false)}
-                    className="px-6 py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/80 transition-colors"
+                    className="px-6 py-2 bg-accent text-on-accent rounded-lg hover:bg-accent/80 transition-colors"
                   >
                     Done
                   </button>

@@ -113,7 +113,7 @@ const MobileNavigation: React.FC<{
         className
       )}
     >
-      <div className="absolute inset-0 backdrop-blur-lg bg-white/8 dark:bg-surface/8 backdrop-saturate-150 border-t border-white/5 dark:border-white/5" />
+      <div className="absolute inset-0 backdrop-blur-lg bg-surface/8 backdrop-saturate-150 border-t border-border/5" />
 
       <div className="relative px-4 pt-1.5 pb-safe pl-safe pr-safe">
         <div className="flex items-center justify-around w-full">
@@ -143,7 +143,7 @@ const MobileNavigation: React.FC<{
                     size={20}
                     className={cn(
                       'transition-all duration-200',
-                      isActive ? 'text-foreground stroke-[2.5]' : 'text-muted-foreground stroke-[2]'
+                      isActive ? 'text-foreground stroke-[2.5]' : 'text-muted stroke-[2]'
                     )}
                   />
                 </div>
@@ -151,7 +151,7 @@ const MobileNavigation: React.FC<{
                 <span
                   className={cn(
                     'text-xs font-medium transition-all duration-200',
-                    isActive ? 'text-foreground' : 'text-muted-foreground'
+                    isActive ? 'text-foreground' : 'text-muted'
                   )}
                 >
                   {item.label}

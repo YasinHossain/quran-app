@@ -143,10 +143,12 @@ export const useAutoFocus = (
 /**
  * Focus management for responsive navigation
  */
-export const useResponsiveFocus = (breakpoint: 'mobile' | 'tablet' | 'desktop') => {
+export const useResponsiveFocus = (breakpoint: 'mobile' | 'tablet' | 'desktop', enabled = true) => {
   const focusRestoration = useFocusRestoration();
 
   React.useEffect(() => {
+    if (!enabled) return;
+
     // Save focus before layout change
     focusRestoration.saveFocus();
 
@@ -156,9 +158,9 @@ export const useResponsiveFocus = (breakpoint: 'mobile' | 'tablet' | 'desktop') 
     }, 150);
 
     return () => clearTimeout(timeoutId);
-  }, [breakpoint, focusRestoration]);
+  }, [breakpoint, focusRestoration, enabled]);
 
-  return focusRestoration;
+  return enabled ? focusRestoration : { saveFocus: () => {}, restoreFocus: () => {} };
 };
 
 /**

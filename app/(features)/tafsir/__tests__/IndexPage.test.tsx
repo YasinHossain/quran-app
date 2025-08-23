@@ -1,5 +1,6 @@
-import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
+import { renderWithProviders, screen, waitFor } from '@/app/testUtils/renderWithProviders';
 import TafsirIndexPage from '@/app/(features)/tafsir/page';
+import React from 'react';
 
 jest.mock('next/link', () => ({ href, children }: any) => <a href={href}>{children}</a>);
 jest.mock('@/lib/api', () => ({
@@ -30,10 +31,15 @@ beforeAll(() => {
   });
 });
 
-const renderPage = () => renderWithProviders(<TafsirIndexPage />);
+const renderPage = async () => {
+  const PageComponent = await TafsirIndexPage();
+  return renderWithProviders(PageComponent);
+};
 
 test('renders list of tafsir links', async () => {
   await renderPage();
-  const link = screen.getByText('Al-Fatihah').closest('a');
-  expect(link).toHaveAttribute('href', '/tafsir/1');
+  await waitFor(() => {
+    const link = screen.getByText('Al-Fatihah').closest('a');
+    expect(link).toHaveAttribute('href', '/tafsir/1');
+  });
 });

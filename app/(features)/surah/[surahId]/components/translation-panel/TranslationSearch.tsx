@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { SearchInput } from '@/app/shared/components/SearchInput';
+import { TranslationSearchField } from '@/app/shared/ui/SearchField';
 
 interface TranslationSearchProps {
   searchTerm: string;
@@ -11,13 +11,6 @@ interface TranslationSearchProps {
 export const TranslationSearch: React.FC<TranslationSearchProps> = ({
   searchTerm,
   setSearchTerm,
-}) => (
-  <SearchInput
-    value={searchTerm}
-    onChange={setSearchTerm}
-    placeholder="Search by name or style..."
-    variant="panel"
-  />
-);
+}) => <TranslationSearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} />;
 
 export default TranslationSearch;

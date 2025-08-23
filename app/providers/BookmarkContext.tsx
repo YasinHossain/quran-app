@@ -31,8 +31,8 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
       if (savedFolders) {
         try {
           setFolders(JSON.parse(savedFolders));
-        } catch (error) {
-          console.error('Error parsing bookmarks from localStorage:', error);
+        } catch {
+          // Silent fail for localStorage parsing errors
         }
       } else {
         // Migration from old format
@@ -53,8 +53,8 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
               setFolders([migratedFolder]);
               localStorage.removeItem(OLD_BOOKMARKS_STORAGE_KEY); // Clean up old data
             }
-          } catch (error) {
-            console.error('Error migrating old bookmarks:', error);
+          } catch {
+            // Silent fail for bookmark migration errors
           }
         }
       }
@@ -66,8 +66,8 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
     if (typeof window !== 'undefined') {
       try {
         localStorage.setItem(BOOKMARKS_STORAGE_KEY, JSON.stringify(folders));
-      } catch (error) {
-        console.error('Error saving bookmarks to localStorage:', error);
+      } catch {
+        // Silent fail for localStorage save errors
       }
     }
   }, [folders]);

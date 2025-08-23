@@ -35,7 +35,6 @@ export const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
   sizes,
   fallback,
   loadingStrategy = 'auto',
-  // formats = ['webp', 'jpg'], // TODO: Implement format optimization
   alt,
   className,
   priority,

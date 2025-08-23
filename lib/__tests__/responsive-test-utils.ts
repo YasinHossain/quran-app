@@ -14,7 +14,7 @@ export const devicePresets = {
   'iPhone SE': { width: 375, height: 667, orientation: 'portrait' },
   'iPhone 12 Pro': { width: 390, height: 844, orientation: 'portrait' },
   'iPhone 12 Pro Landscape': { width: 844, height: 390, orientation: 'landscape' },
-  'iPad': { width: 768, height: 1024, orientation: 'portrait' },
+  iPad: { width: 768, height: 1024, orientation: 'portrait' },
   'iPad Landscape': { width: 1024, height: 768, orientation: 'landscape' },
   'Desktop Small': { width: 1024, height: 768, orientation: 'landscape' },
   'Desktop Large': { width: 1440, height: 900, orientation: 'landscape' },
@@ -32,9 +32,9 @@ export const createMatchMediaMock = () => {
   const matchMediaMock = jest.fn((query: string) => {
     const minWidthMatch = query.match(/\(min-width:\s*(\d+)px\)/);
     const orientationMatch = query.match(/\(orientation:\s*(landscape|portrait)\)/);
-    
+
     let matches = false;
-    
+
     if (minWidthMatch) {
       const minWidth = parseInt(minWidthMatch[1], 10);
       matches = currentWidth >= minWidth;
@@ -69,7 +69,7 @@ export const createMatchMediaMock = () => {
     getCurrentOrientation,
     cleanup: () => {
       // Cleanup function
-    }
+    },
   };
 };
 
@@ -77,9 +77,10 @@ export const createMatchMediaMock = () => {
  * Device simulation utilities
  */
 export const simulateDevice = (deviceOrWidth: DevicePreset | number) => {
-  const device = typeof deviceOrWidth === 'number' 
-    ? { width: deviceOrWidth, height: 800, orientation: 'landscape' as const }
-    : devicePresets[deviceOrWidth];
+  const device =
+    typeof deviceOrWidth === 'number'
+      ? { width: deviceOrWidth, height: 800, orientation: 'landscape' as const }
+      : devicePresets[deviceOrWidth];
 
   Object.defineProperty(window, 'innerWidth', {
     writable: true,
@@ -108,7 +109,7 @@ export const testResponsiveHook = async <T>(
   }>
 ) => {
   const matchMediaUtils = createMatchMediaMock();
-  
+
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
     configurable: true,
@@ -122,9 +123,9 @@ export const testResponsiveHook = async <T>(
     matchMediaUtils.setViewportWidth(device.width);
 
     const { result } = renderHook(hook);
-    
+
     await act(async () => {
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
     });
 
     results.push({
@@ -150,10 +151,7 @@ interface ResponsiveRenderOptions extends RenderOptions {
   mockMatchMedia?: boolean;
 }
 
-export const renderResponsive = (
-  ui: ReactElement,
-  options: ResponsiveRenderOptions = {}
-) => {
+export const renderResponsive = (ui: ReactElement, options: ResponsiveRenderOptions = {}) => {
   const { device = 'Desktop Small', mockMatchMedia = true, ...renderOptions } = options;
 
   let matchMediaUtils: ReturnType<typeof createMatchMediaMock> | undefined;
@@ -218,9 +216,10 @@ export const testAccessibility = {
       'button, a, input[type="button"], input[type="submit"], [role="button"]'
     );
 
-    const undersizedTargets: Array<{ element: Element; size: { width: number; height: number } }> = [];
+    const undersizedTargets: Array<{ element: Element; size: { width: number; height: number } }> =
+      [];
 
-    interactiveElements.forEach(element => {
+    interactiveElements.forEach((element) => {
       const rect = element.getBoundingClientRect();
       const minSize = 44;
 
@@ -243,17 +242,23 @@ export const testAccessibility = {
     const textElements = container.querySelectorAll('p, span, div, h1, h2, h3, h4, h5, h6');
     const issues: Array<{ element: Element; issue: string }> = [];
 
-    textElements.forEach(element => {
+    textElements.forEach((element) => {
       const styles = window.getComputedStyle(element);
       const fontSize = parseFloat(styles.fontSize);
       const lineHeight = parseFloat(styles.lineHeight);
 
       if (fontSize < 16) {
-        issues.push({ element, issue: `Font size ${fontSize}px is below recommended 16px minimum` });
+        issues.push({
+          element,
+          issue: `Font size ${fontSize}px is below recommended 16px minimum`,
+        });
       }
 
       if (lineHeight && lineHeight / fontSize < 1.4) {
-        issues.push({ element, issue: `Line height ratio ${lineHeight / fontSize} is below recommended 1.4` });
+        issues.push({
+          element,
+          issue: `Line height ratio ${lineHeight / fontSize} is below recommended 1.4`,
+        });
       }
     });
 
@@ -269,19 +274,24 @@ export const testAccessibility = {
  * Performance testing utilities for responsive components
  */
 export const testPerformance = {
-  measureLayoutShift: async (container: HTMLElement, deviceTransition: [DevicePreset, DevicePreset]) => {
+  measureLayoutShift: async (
+    container: HTMLElement,
+    deviceTransition: [DevicePreset, DevicePreset]
+  ) => {
     const [fromDevice, toDevice] = deviceTransition;
-    
+
     simulateDevice(fromDevice);
-    const initialRects = Array.from(container.children).map(child => child.getBoundingClientRect());
-    
+    const initialRects = Array.from(container.children).map((child) =>
+      child.getBoundingClientRect()
+    );
+
     simulateDevice(toDevice);
     await act(async () => {
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
     });
-    
-    const finalRects = Array.from(container.children).map(child => child.getBoundingClientRect());
-    
+
+    const finalRects = Array.from(container.children).map((child) => child.getBoundingClientRect());
+
     let totalShift = 0;
     initialRects.forEach((initialRect, index) => {
       const finalRect = finalRects[index];
@@ -291,7 +301,7 @@ export const testPerformance = {
         totalShift += deltaX + deltaY;
       }
     });
-    
+
     return {
       totalShift,
       averageShift: totalShift / initialRects.length,
@@ -301,10 +311,10 @@ export const testPerformance = {
 
   testImageLoading: async (container: HTMLElement) => {
     const images = container.querySelectorAll('img');
-    const loadingPromises = Array.from(images).map(img => {
+    const loadingPromises = Array.from(images).map((img) => {
       return new Promise<{ element: HTMLImageElement; loadTime: number }>((resolve) => {
         const startTime = performance.now();
-        
+
         if (img.complete) {
           resolve({ element: img, loadTime: 0 });
         } else {
@@ -319,12 +329,13 @@ export const testPerformance = {
     });
 
     const results = await Promise.all(loadingPromises);
-    
+
     return {
       totalImages: images.length,
       results,
-      averageLoadTime: results.reduce((sum, r) => sum + Math.max(0, r.loadTime), 0) / results.length,
-      failedImages: results.filter(r => r.loadTime === -1),
+      averageLoadTime:
+        results.reduce((sum, r) => sum + Math.max(0, r.loadTime), 0) / results.length,
+      failedImages: results.filter((r) => r.loadTime === -1),
     };
   },
 };

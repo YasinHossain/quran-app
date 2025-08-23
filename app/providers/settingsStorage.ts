@@ -49,8 +49,8 @@ export const loadSettings = (defaults: Settings = defaultSettings): Settings => 
           parsed.translationIds = translationIds;
           parsed.translationId = translationIds[0];
         }
-      } catch (e) {
-        console.warn('Failed to parse selected-translations:', e);
+      } catch {
+        // Silent fail for translation parsing errors
       }
     }
 
@@ -65,8 +65,8 @@ export const loadSettings = (defaults: Settings = defaultSettings): Settings => 
     }
 
     return { ...defaults, ...parsed } as Settings;
-  } catch (error) {
-    console.error('Error parsing settings from localStorage:', error);
+  } catch {
+    // Silent fail for settings parsing errors
     return defaults;
   }
 };

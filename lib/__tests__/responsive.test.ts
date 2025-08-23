@@ -71,12 +71,12 @@ describe('Responsive System', () => {
 
       matchMediaUtils.setViewportWidth(375);
       await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 10));
+        await new Promise((resolve) => setTimeout(resolve, 10));
       });
 
       matchMediaUtils.setViewportWidth(768);
       await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 10));
+        await new Promise((resolve) => setTimeout(resolve, 10));
       });
 
       expect(result.current).toBe('tablet');
@@ -211,10 +211,10 @@ describe('Responsive System', () => {
       const startTime = performance.now();
 
       for (let i = 0; i < 20; i++) {
-        const width = 375 + (i * 50);
+        const width = 375 + i * 50;
         matchMediaUtils.setViewportWidth(width);
         await act(async () => {
-          await new Promise(resolve => setTimeout(resolve, 1));
+          await new Promise((resolve) => setTimeout(resolve, 1));
         });
       }
 
@@ -244,7 +244,7 @@ describe('Responsive System', () => {
 
     it('should handle zero-dimension viewports', () => {
       matchMediaUtils.setViewportWidth(0);
-      
+
       const { result } = renderHook(() => useBreakpoint());
       expect(result.current).toBe('mobile');
     });

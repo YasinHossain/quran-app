@@ -31,7 +31,7 @@ export default function HomePage() {
 
         <main className="flex-grow flex flex-col items-center justify-center text-center pt-20 pb-10">
           <div className="content-visibility-auto animate-fade-in-up">
-            <h2 className="text-5xl md:text-7xl font-bold tracking-tight text-content-primary dark:bg-clip-text dark:text-transparent dark:bg-gradient-to-b dark:from-white dark:to-slate-400">
+            <h2 className="text-5xl md:text-7xl font-bold tracking-tight text-hero">
               The Noble Qur&apos;an
             </h2>
             <p className="mt-4 text-lg md:text-xl max-w-2xl mx-auto text-content-secondary">

@@ -12,7 +12,8 @@ import Timeline from './components/Timeline';
 import PlayerOptions from './components/PlayerOptions';
 import SpeedControl from './components/SpeedControl';
 import PlaybackOptionsModal from './components/PlaybackOptionsModal';
-import IconBtn from './components/IconBtn';
+import { Button } from '@/app/shared/ui/Button';
+import { iconClasses } from '@/lib/responsive';
 import type { Track } from './types';
 
 /**
@@ -33,13 +34,13 @@ import type { Track } from './types';
  * - REMOVED: Shuffle and Repeat icons from main bar for a cleaner look.
  */
 
-type Props = {
+interface QuranAudioPlayerProps {
   track?: Track | null;
   onPrev?: () => boolean;
   onNext?: () => boolean;
-};
+}
 
-export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
+export default function QuranAudioPlayer({ track, onPrev, onNext }: QuranAudioPlayerProps) {
   const {
     isPlayerVisible,
     closePlayer,
@@ -186,7 +187,9 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
             {/* Right: Speed, Settings, and Close */}
             <div className="flex items-center gap-1">
               <SpeedControl />
-              <IconBtn
+              <Button
+                variant="icon-round"
+                size="icon-round"
                 className="shrink-0"
                 aria-label="Options"
                 onClick={() => {
@@ -194,11 +197,16 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
                   setMobileOptionsOpen(true);
                 }}
               >
-                <SlidersHorizontal />
-              </IconBtn>
-              <IconBtn aria-label="Close player" onClick={closePlayer}>
-                <X />
-              </IconBtn>
+                <SlidersHorizontal className={`${iconClasses.touch} ${iconClasses.stroke}`} />
+              </Button>
+              <Button
+                variant="icon-round"
+                size="icon-round"
+                aria-label="Close player"
+                onClick={closePlayer}
+              >
+                <X className={`${iconClasses.touch} ${iconClasses.stroke}`} />
+              </Button>
             </div>
           </div>
           {/* Bottom row: Timeline */}
@@ -236,9 +244,14 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
           {/* Utilities */}
           <div className="flex items-center gap-2">
             <PlayerOptions />
-            <IconBtn aria-label="Close player" onClick={closePlayer}>
-              <X />
-            </IconBtn>
+            <Button
+              variant="icon-round"
+              size="icon-round"
+              aria-label="Close player"
+              onClick={closePlayer}
+            >
+              <X className={`${iconClasses.touch} ${iconClasses.stroke}`} />
+            </Button>
           </div>
         </div>
       </div>

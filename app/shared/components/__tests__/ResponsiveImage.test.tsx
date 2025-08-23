@@ -5,8 +5,13 @@
 
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { renderResponsive, testPerformance, devicePresets } from '../../../../lib/__tests__/responsive-test-utils';
-import { ResponsiveImage, ResponsiveBackgroundImage, generateResponsiveUrls, useImagePreload } from '../ResponsiveImage';
+import { renderResponsive, devicePresets } from '../../../../lib/__tests__/responsive-test-utils';
+import {
+  ResponsiveImage,
+  ResponsiveBackgroundImage,
+  generateResponsiveUrls,
+  useImagePreload,
+} from '../ResponsiveImage';
 import { renderHook } from '@testing-library/react';
 
 // Mock useResponsiveState hook
@@ -22,14 +27,7 @@ jest.mock('@/lib/responsive', () => ({
 describe('ResponsiveImage', () => {
   describe('Basic Functionality', () => {
     it('should render with string src', () => {
-      render(
-        <ResponsiveImage
-          src="/test-image.jpg"
-          alt="Test image"
-          width={800}
-          height={600}
-        />
-      );
+      render(<ResponsiveImage src="/test-image.jpg" alt="Test image" width={800} height={600} />);
 
       const img = screen.getByRole('img');
       expect(img).toHaveAttribute('alt', 'Test image');
@@ -45,12 +43,7 @@ describe('ResponsiveImage', () => {
       };
 
       render(
-        <ResponsiveImage
-          src={responsiveSrc}
-          alt="Responsive test image"
-          width={800}
-          height={600}
-        />
+        <ResponsiveImage src={responsiveSrc} alt="Responsive test image" width={800} height={600} />
       );
 
       const img = screen.getByRole('img');
@@ -71,14 +64,7 @@ describe('ResponsiveImage', () => {
         fallback: '/fallback.jpg',
       };
 
-      render(
-        <ResponsiveImage
-          src={responsiveSrc}
-          alt="Fallback test"
-          width={400}
-          height={300}
-        />
-      );
+      render(<ResponsiveImage src={responsiveSrc} alt="Fallback test" width={400} height={300} />);
 
       const img = screen.getByRole('img');
       expect(img).toHaveAttribute('src', expect.stringContaining('fallback.jpg'));
@@ -87,14 +73,7 @@ describe('ResponsiveImage', () => {
 
   describe('Responsive Sizes', () => {
     it('should use default responsive sizes when not specified', () => {
-      render(
-        <ResponsiveImage
-          src="/test.jpg"
-          alt="Default sizes test"
-          width={800}
-          height={600}
-        />
-      );
+      render(<ResponsiveImage src="/test.jpg" alt="Default sizes test" width={800} height={600} />);
 
       const img = screen.getByRole('img');
       expect(img).toHaveAttribute('sizes', expect.stringContaining('768px'));
@@ -191,7 +170,7 @@ describe('ResponsiveImage', () => {
       );
 
       const img = screen.getByRole('img');
-      
+
       // Simulate image load error
       fireEvent.error(img);
 
@@ -209,7 +188,7 @@ describe('ResponsiveImage', () => {
       );
 
       const img = screen.getByRole('img');
-      
+
       // Simulate image load error
       fireEvent.error(img);
 
@@ -220,12 +199,7 @@ describe('ResponsiveImage', () => {
   describe('Accessibility', () => {
     it('should have proper alt text', () => {
       render(
-        <ResponsiveImage
-          src="/test.jpg"
-          alt="Accessibility test image"
-          width={800}
-          height={600}
-        />
+        <ResponsiveImage src="/test.jpg" alt="Accessibility test image" width={800} height={600} />
       );
 
       const img = screen.getByRole('img');
@@ -265,17 +239,12 @@ describe('ResponsiveImage', () => {
 
       for (const { device, expectedSrc } of deviceTests) {
         // Update mock for each device
-        const breakpoint = device === 'iPhone SE' ? 'mobile' : 
-                          device === 'iPad' ? 'tablet' : 'desktop';
+        const breakpoint =
+          device === 'iPhone SE' ? 'mobile' : device === 'iPad' ? 'tablet' : 'desktop';
         (mockResponsiveState as any).breakpoint = breakpoint;
 
         const { unmount } = render(
-          <ResponsiveImage
-            src={responsiveSrc}
-            alt={`${device} test`}
-            width={800}
-            height={600}
-          />
+          <ResponsiveImage src={responsiveSrc} alt={`${device} test`} width={800} height={600} />
         );
 
         const img = screen.getByRole('img');
@@ -287,12 +256,7 @@ describe('ResponsiveImage', () => {
 
     it('should handle rapid device switches without performance issues', async () => {
       const { setDevice } = renderResponsive(
-        <ResponsiveImage
-          src="/test.jpg"
-          alt="Performance test"
-          width={800}
-          height={600}
-        />,
+        <ResponsiveImage src="/test.jpg" alt="Performance test" width={800} height={600} />,
         { device: 'iPhone SE' }
       );
 
@@ -300,7 +264,7 @@ describe('ResponsiveImage', () => {
 
       // Rapidly switch between devices
       const devices: (keyof typeof devicePresets)[] = ['iPad', 'Desktop Small', 'iPhone SE'];
-      
+
       for (const device of devices) {
         setDevice(device);
         await waitFor(() => {
@@ -346,11 +310,7 @@ describe('ResponsiveBackgroundImage', () => {
 
   it('should apply overlay when specified', () => {
     render(
-      <ResponsiveBackgroundImage 
-        src="/bg.jpg" 
-        overlay={true}
-        overlayOpacity={0.7}
-      >
+      <ResponsiveBackgroundImage src="/bg.jpg" overlay={true} overlayOpacity={0.7}>
         <div>Overlay Content</div>
       </ResponsiveBackgroundImage>
     );
@@ -391,7 +351,7 @@ describe('generateResponsiveUrls', () => {
 describe('useImagePreload', () => {
   it('should preload images when condition is true', async () => {
     const sources = ['/image1.jpg', '/image2.jpg', '/image3.jpg'];
-    
+
     const { result } = renderHook(() => useImagePreload(sources, true));
 
     // Wait for images to be created
@@ -403,7 +363,7 @@ describe('useImagePreload', () => {
 
   it('should not preload images when condition is false', () => {
     const sources = ['/image1.jpg', '/image2.jpg'];
-    
+
     const { result } = renderHook(() => useImagePreload(sources, false));
 
     expect(result.current).toBeUndefined();
@@ -411,7 +371,7 @@ describe('useImagePreload', () => {
 
   it('should cleanup preloaded images on unmount', () => {
     const sources = ['/image1.jpg'];
-    
+
     const { unmount } = renderHook(() => useImagePreload(sources, true));
 
     expect(() => unmount()).not.toThrow();

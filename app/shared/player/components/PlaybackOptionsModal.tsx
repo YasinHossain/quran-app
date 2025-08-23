@@ -31,7 +31,7 @@ export default function PlaybackOptionsModal({ open, onClose, activeTab, setActi
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[120] grid place-items-center bg-black/40 p-4"
+      className="fixed inset-0 z-[120] grid place-items-center bg-surface-overlay/60 p-4"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}

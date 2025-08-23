@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { useFocusRestoration, useResponsiveFocus } from './focus';
+import { useResponsiveFocus } from './focus';
 
 export type BreakpointKey = 'mobile' | 'tablet' | 'desktop' | 'wide';
 export type OrientationKey = 'portrait' | 'landscape';
@@ -165,6 +165,7 @@ export const responsiveClasses = {
   heading: 'text-lg font-semibold sm:text-xl lg:text-2xl',
   body: 'text-sm sm:text-base lg:text-lg leading-relaxed',
   caption: 'text-xs sm:text-sm text-muted',
+  timeLabel: 'text-[10px] md:text-[11px] tabular-nums text-muted', // Timeline time labels
 
   // Interactive patterns - touch friendly
   button: 'min-h-touch px-3 py-2 sm:px-4 sm:py-2.5 lg:px-6 lg:py-3',
@@ -175,9 +176,26 @@ export const responsiveClasses = {
   margin: 'm-3 sm:m-4 lg:m-6 xl:m-8',
   gap: 'gap-3 sm:gap-4 lg:gap-6 xl:gap-8',
 
+  // Width patterns - responsive and semantic
+  timeDisplay: 'min-w-[72px] md:min-w-[88px]', // Time display minimum widths
+
   // Navigation patterns - unified approach
   nav: 'flex items-center justify-between p-3 sm:p-4 lg:p-6',
   sidebar: 'w-full max-w-80 sm:max-w-sm lg:max-w-md transition-transform duration-300',
+};
+
+/**
+ * Icon size utilities - responsive and consistent
+ */
+export const iconClasses = {
+  xs: 'h-3 w-3 sm:h-3.5 sm:w-3.5', // 12-14px
+  sm: 'h-4 w-4 sm:h-4 sm:w-4', // 16px
+  md: 'h-5 w-5 sm:h-5 sm:w-5', // 20px
+  lg: 'h-6 w-6 sm:h-6 sm:w-6', // 24px
+  xl: 'h-8 w-8 sm:h-8 sm:w-8', // 32px
+  // Touch-friendly icon buttons
+  touch: 'h-[18px] w-[18px] sm:h-5 sm:w-5', // Default interactive icon size
+  stroke: 'stroke-[1.5] sm:stroke-[1.75]', // Responsive stroke width
 };
 
 /**
@@ -282,11 +300,10 @@ export const useResponsiveState = (enableFocusManagement = false) => {
   const orientation = useOrientation();
 
   // Optional focus management for responsive layout changes
-  const focusManagement = enableFocusManagement
-    ? useResponsiveFocus(
-        breakpoint === 'mobile' ? 'mobile' : breakpoint === 'tablet' ? 'tablet' : 'desktop'
-      )
-    : undefined;
+  const focusManagement = useResponsiveFocus(
+    breakpoint === 'mobile' ? 'mobile' : breakpoint === 'tablet' ? 'tablet' : 'desktop',
+    enableFocusManagement
+  );
 
   return {
     breakpoint,

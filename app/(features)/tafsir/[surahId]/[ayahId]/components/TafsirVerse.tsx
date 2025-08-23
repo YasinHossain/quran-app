@@ -38,7 +38,7 @@ export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps) => {
           onBookmark={() => toggleBookmark(String(verse.id))}
           className="md:w-16 md:pt-1"
         />
-        
+
         {/* Main content area */}
         <div className="space-y-6 md:flex-grow">
           <VerseArabic verse={verse} />

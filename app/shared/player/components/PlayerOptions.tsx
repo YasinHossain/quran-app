@@ -3,7 +3,8 @@ import { SlidersHorizontal } from 'lucide-react';
 import PlaybackOptionsModal from './PlaybackOptionsModal';
 import SpeedControl from './SpeedControl';
 import VolumeControl from './VolumeControl';
-import IconBtn from './IconBtn';
+import { Button } from '@/app/shared/ui/Button';
+import { iconClasses } from '@/lib/responsive';
 
 export default function PlayerOptions() {
   const [open, setOpen] = useState(false);
@@ -14,7 +15,9 @@ export default function PlayerOptions() {
       <div className="hidden sm:block">
         <VolumeControl />
       </div>
-      <IconBtn
+      <Button
+        variant="icon-round"
+        size="icon-round"
         className="shrink-0"
         aria-label="Options"
         onClick={() => {
@@ -22,8 +25,8 @@ export default function PlayerOptions() {
           setOpen(true);
         }}
       >
-        <SlidersHorizontal />
-      </IconBtn>
+        <SlidersHorizontal className={`${iconClasses.touch} ${iconClasses.stroke}`} />
+      </Button>
       <PlaybackOptionsModal
         open={open}
         onClose={() => setOpen(false)}

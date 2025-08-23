@@ -1,5 +1,5 @@
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
-import SurahPage from '@/app/(features)/surah/[surahId]/page';
+import SurahClient from '@/app/(features)/surah/[surahId]/SurahClient';
 import { Verse } from '@/types';
 import * as api from '@/lib/api';
 import useSWRInfinite from 'swr/infinite';
@@ -51,10 +51,7 @@ beforeEach(() => {
   (useSWRInfinite as jest.Mock).mockImplementation(jest.requireActual('swr/infinite').default);
 });
 
-const renderPage = () =>
-  renderWithProviders(
-    <SurahPage params={{ surahId: '1' } as unknown as Promise<{ surahId: string }>} />
-  );
+const renderPage = () => renderWithProviders(<SurahClient surahId="1" />);
 
 test('renders verses on successful fetch', async () => {
   (api.getVersesByChapter as jest.Mock).mockResolvedValue({

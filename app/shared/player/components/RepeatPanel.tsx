@@ -35,7 +35,9 @@ export default function RepeatPanel({
         </div>
       </div>
       <div className="rounded-xl border border-border p-4 grid grid-cols-2 gap-3">
-        {rangeWarning && <div className="col-span-2 text-sm text-red-400">{rangeWarning}</div>}
+        {rangeWarning && (
+          <div className="col-span-2 text-sm text-status-warning">{rangeWarning}</div>
+        )}
         <NumberField
           label="Start"
           value={localRepeat.start ?? 1}

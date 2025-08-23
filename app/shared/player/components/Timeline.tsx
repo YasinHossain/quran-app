@@ -1,6 +1,7 @@
 import React from 'react';
 import * as Slider from '@radix-ui/react-slider';
 import * as Tooltip from '@radix-ui/react-tooltip';
+import { responsiveClasses } from '@/lib/responsive';
 
 interface Props {
   current: number;
@@ -56,7 +57,9 @@ export default function Timeline({
           </Slider.Root>
         </Tooltip.Provider>
       </div>
-      <div className="flex min-w-[72px] justify-between text-[10px] tabular-nums text-muted md:min-w-[88px] md:text-[11px]">
+      <div
+        className={`flex justify-between ${responsiveClasses.timeDisplay} ${responsiveClasses.timeLabel}`}
+      >
         <span aria-label="elapsed">{elapsed}</span>
         <span aria-label="duration">{total}</span>
       </div>
