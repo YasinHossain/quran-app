@@ -36,7 +36,7 @@ const MoreIcon = () => (
 
 const TrashIcon = () => (
   <svg
-    className="w-5 h-5 text-muted hover:text-error cursor-pointer"
+    className="w-5 h-5"
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"
@@ -72,12 +72,21 @@ const SearchIcon = () => (
 
 interface VerseItemProps {
   bookmark: Bookmark;
+  folderId: string;
   isActive: boolean;
   onSelect: () => void;
 }
 
-const VerseItem: React.FC<VerseItemProps> = ({ bookmark, isActive, onSelect }) => {
+const VerseItem: React.FC<VerseItemProps> = ({ bookmark, folderId, isActive, onSelect }) => {
   const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark);
+  const { removeBookmark } = useBookmarks();
+
+  const handleRemove = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (window.confirm('Remove this bookmark?')) {
+      removeBookmark(String(bookmark.verseId), folderId);
+    }
+  };
 
   if (isLoading || error || !enrichedBookmark.verseKey || !enrichedBookmark.surahName) {
     return (
@@ -101,7 +110,13 @@ const VerseItem: React.FC<VerseItemProps> = ({ bookmark, isActive, onSelect }) =
       >
         {verseDisplayName}
       </button>
-      <TrashIcon />
+      <button
+        onClick={handleRemove}
+        className="p-1 rounded-full text-muted hover:text-error hover:bg-interactive-hover transition-colors"
+        aria-label="Remove bookmark"
+      >
+        <TrashIcon />
+      </button>
     </li>
   );
 };
@@ -229,6 +244,7 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
                             <VerseItem
                               key={bookmark.verseId}
                               bookmark={bookmark}
+                              folderId={folder.id}
                               isActive={activeVerseId === bookmark.verseId}
                               onSelect={() => onVerseSelect?.(bookmark.verseId)}
                             />
