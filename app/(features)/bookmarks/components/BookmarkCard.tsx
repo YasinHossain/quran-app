@@ -10,6 +10,7 @@ import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import ResponsiveVerseActions from '@/app/shared/ResponsiveVerseActions';
 import VerseArabic from '@/app/shared/VerseArabic';
+import LoadingError from '@/app/shared/LoadingError';
 // Simple time ago function
 const formatTimeAgo = (timestamp: number): string => {
   const now = Date.now();
@@ -113,108 +114,104 @@ export const BookmarkCard = memo(function BookmarkCard({
     router.push(`/surah/${surahId}#verse-${enrichedBookmark.verseId}`);
   }, [enrichedBookmark.verseKey, enrichedBookmark.verseId, router]);
 
-  // If we don't have verse data yet or it's loading, show a loading state
-  if (
-    isLoading ||
-    !enrichedBookmark.verseText ||
-    !enrichedBookmark.translation ||
-    !enrichedBookmark.verseKey ||
-    !enrichedBookmark.surahName
-  ) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="rounded-xl bg-surface border border-border p-6 mb-6"
-      >
-        <div className="animate-pulse">
-          <div className="flex items-center justify-between mb-4">
-            <div className="h-4 bg-surface-hover rounded w-32"></div>
-            <div className="h-3 bg-surface-hover rounded w-20"></div>
-          </div>
-          <div className="space-y-3">
-            <div className="h-6 bg-surface-hover rounded"></div>
-            <div className="h-4 bg-surface-hover rounded w-3/4"></div>
-          </div>
-        </div>
-      </motion.div>
-    );
-  }
-
-  // Show error state if verse failed to load
-  if (error) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="rounded-xl bg-surface border border-border p-6 mb-6 border-red-200"
-      >
-        <div className="text-red-600 text-center">
-          <p>Failed to load verse: {error}</p>
-          <p className="text-sm text-muted mt-2">Verse ID: {bookmark.verseId}</p>
-        </div>
-      </motion.div>
-    );
-  }
-
   const isPlaying = playingId === Number(enrichedBookmark.verseId);
   const isLoadingAudio = loadingId === Number(enrichedBookmark.verseId);
   const isVerseBookmarked = isBookmarked(enrichedBookmark.verseId);
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="rounded-xl bg-surface border border-border p-6 mb-6 hover:border-accent/30 transition-colors"
-      role="article"
-      aria-label={`Bookmark for verse ${enrichedBookmark.verseKey} from ${enrichedBookmark.surahName}`}
+    <LoadingError
+      isLoading={
+        isLoading ||
+        !enrichedBookmark.verseText ||
+        !enrichedBookmark.translation ||
+        !enrichedBookmark.verseKey ||
+        !enrichedBookmark.surahName
+      }
+      error={error}
+      loadingFallback={
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-xl bg-surface border border-border p-6 mb-6"
+        >
+          <div className="animate-pulse">
+            <div className="flex items-center justify-between mb-4">
+              <div className="h-4 bg-surface-hover rounded w-32"></div>
+              <div className="h-3 bg-surface-hover rounded w-20"></div>
+            </div>
+            <div className="space-y-3">
+              <div className="h-6 bg-surface-hover rounded"></div>
+              <div className="h-4 bg-surface-hover rounded w-3/4"></div>
+            </div>
+          </div>
+        </motion.div>
+      }
+      errorFallback={
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-xl bg-surface border border-border p-6 mb-6 border-red-200"
+        >
+          <div className="text-red-600 text-center">
+            <p>Failed to load verse: {String(error)}</p>
+            <p className="text-sm text-muted mt-2">Verse ID: {bookmark.verseId}</p>
+          </div>
+        </motion.div>
+      }
     >
-      {/* Header with surah info and timestamp */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center space-x-2">
-          <span className="text-accent font-semibold text-sm">{enrichedBookmark.verseKey}</span>
-          <span className="text-muted text-sm">{enrichedBookmark.surahName}</span>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="rounded-xl bg-surface border border-border p-6 mb-6 hover:border-accent/30 transition-colors"
+        role="article"
+        aria-label={`Bookmark for verse ${enrichedBookmark.verseKey} from ${enrichedBookmark.surahName}`}
+      >
+        {/* Header with surah info and timestamp */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-2">
+            <span className="text-accent font-semibold text-sm">{enrichedBookmark.verseKey}</span>
+            <span className="text-muted text-sm">{enrichedBookmark.surahName}</span>
+          </div>
+          <span className="text-xs text-muted">{formatTimeAgo(enrichedBookmark.createdAt)}</span>
         </div>
-        <span className="text-xs text-muted">{formatTimeAgo(enrichedBookmark.createdAt)}</span>
-      </div>
 
-      {/* Main content similar to verse page */}
-      <div className="space-y-4 md:space-y-0 md:flex md:items-start md:gap-x-6">
-        {/* Verse actions */}
-        <ResponsiveVerseActions
-          verseKey={enrichedBookmark.verseKey!}
-          isPlaying={isPlaying}
-          isLoadingAudio={isLoadingAudio}
-          isBookmarked={isVerseBookmarked}
-          onPlayPause={handlePlayPause}
-          onBookmark={handleRemoveBookmark}
-          onNavigateToVerse={handleNavigateToVerse}
-          showRemove={true}
-          className="md:w-16 md:pt-1"
-        />
-
-        {/* Verse content */}
-        <div className="space-y-6 md:flex-grow">
-          <VerseArabic
-            verse={{
-              id: Number(enrichedBookmark.verseId),
-              verse_key: enrichedBookmark.verseKey!,
-              text_uthmani: enrichedBookmark.verseText!,
-            }}
+        {/* Main content similar to verse page */}
+        <div className="space-y-4 md:space-y-0 md:flex md:items-start md:gap-x-6">
+          {/* Verse actions */}
+          <ResponsiveVerseActions
+            verseKey={enrichedBookmark.verseKey!}
+            isPlaying={isPlaying}
+            isLoadingAudio={isLoadingAudio}
+            isBookmarked={isVerseBookmarked}
+            onPlayPause={handlePlayPause}
+            onBookmark={handleRemoveBookmark}
+            onNavigateToVerse={handleNavigateToVerse}
+            showRemove={true}
+            className="md:w-16 md:pt-1"
           />
 
-          {/* Translations */}
-          {enrichedBookmark.translation && (
-            <div>
-              <p
-                className="text-left leading-relaxed text-foreground"
-                style={{ fontSize: `${settings.translationFontSize}px` }}
-                dangerouslySetInnerHTML={{ __html: sanitizeHtml(enrichedBookmark.translation) }}
-              />
-            </div>
-          )}
+          {/* Verse content */}
+          <div className="space-y-6 md:flex-grow">
+            <VerseArabic
+              verse={{
+                id: Number(enrichedBookmark.verseId),
+                verse_key: enrichedBookmark.verseKey!,
+                text_uthmani: enrichedBookmark.verseText!,
+              }}
+            />
+
+            {/* Translations */}
+            {enrichedBookmark.translation && (
+              <div>
+                <p
+                  className="text-left leading-relaxed text-foreground"
+                  style={{ fontSize: `${settings.translationFontSize}px` }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(enrichedBookmark.translation) }}
+                />
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </LoadingError>
   );
 });

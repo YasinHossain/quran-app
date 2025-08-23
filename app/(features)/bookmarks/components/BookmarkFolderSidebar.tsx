@@ -6,6 +6,7 @@ import { Bookmark, Folder } from '@/types';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useBookmarkVerse } from '../hooks/useBookmarkVerse';
 import { FolderIcon } from '@/app/shared/icons';
+import LoadingError from '@/app/shared/LoadingError';
 import { cn } from '@/lib/utils/cn';
 
 interface BookmarkFolderSidebarProps {
@@ -88,36 +89,43 @@ const VerseItem: React.FC<VerseItemProps> = ({ bookmark, folderId, isActive, onS
     }
   };
 
-  if (isLoading || error || !enrichedBookmark.verseKey || !enrichedBookmark.surahName) {
-    return (
-      <li className="flex items-center justify-between py-2 px-2 rounded-lg animate-pulse">
-        <div className="h-4 bg-interactive rounded w-24"></div>
-        <div className="w-5 h-5 bg-interactive rounded"></div>
-      </li>
-    );
-  }
-
-  const ayahNumber = enrichedBookmark.verseKey.split(':')[1];
+  const ayahNumber = enrichedBookmark.verseKey?.split(':')[1];
   const verseDisplayName = `${enrichedBookmark.surahName}: ${ayahNumber}`;
 
   return (
-    <li className="flex items-center justify-between py-2 px-2 rounded-lg hover:bg-interactive-hover">
-      <button
-        onClick={onSelect}
-        className={`text-foreground hover:text-accent transition-colors ${
-          isActive ? 'font-semibold text-accent' : ''
-        }`}
-      >
-        {verseDisplayName}
-      </button>
-      <button
-        onClick={handleRemove}
-        className="p-1 rounded-full text-muted hover:text-error hover:bg-interactive-hover transition-colors"
-        aria-label={`Remove bookmark ${verseDisplayName}`}
-      >
-        <TrashIcon />
-      </button>
-    </li>
+    <LoadingError
+      isLoading={isLoading || !enrichedBookmark.verseKey || !enrichedBookmark.surahName}
+      error={error}
+      loadingFallback={
+        <li className="flex items-center justify-between py-2 px-2 rounded-lg animate-pulse">
+          <div className="h-4 bg-interactive rounded w-24"></div>
+          <div className="w-5 h-5 bg-interactive rounded"></div>
+        </li>
+      }
+      errorFallback={
+        <li className="flex items-center justify-between py-2 px-2 rounded-lg">
+          <span className="text-error text-sm">Failed to load</span>
+        </li>
+      }
+    >
+      <li className="flex items-center justify-between py-2 px-2 rounded-lg hover:bg-interactive-hover">
+        <button
+          onClick={onSelect}
+          className={`text-foreground hover:text-accent transition-colors ${
+            isActive ? 'font-semibold text-accent' : ''
+          }`}
+        >
+          {verseDisplayName}
+        </button>
+        <button
+          onClick={handleRemove}
+          className="p-1 rounded-full text-muted hover:text-error hover:bg-interactive-hover transition-colors"
+          aria-label={`Remove bookmark ${verseDisplayName}`}
+        >
+          <TrashIcon />
+        </button>
+      </li>
+    </LoadingError>
   );
 };
 
@@ -128,7 +136,7 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
   onVerseSelect,
   onBack,
 }) => {
-  const { folders, removeBookmark } = useBookmarks();
+  const { folders } = useBookmarks();
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedFolderId, setExpandedFolderId] = useState<string | null>(folder.id);
 
