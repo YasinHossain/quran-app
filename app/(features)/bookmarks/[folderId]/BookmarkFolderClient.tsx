@@ -1,11 +1,14 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { BookmarkVerseSidebar } from '../components/BookmarkVerseSidebar';
-import { BookmarkListView } from '../components/BookmarkListView';
+import { BookmarkCard } from '../components/BookmarkCard';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { getVerseById } from '@/lib/api';
+import { useSettings } from '@/app/providers/SettingsContext';
+import type { Verse } from '@/types';
 
 interface BookmarkFolderClientProps {
   folderId: string;
@@ -15,17 +18,26 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
   const router = useRouter();
   const { isHidden } = useHeaderVisibility();
   const { folders } = useBookmarks();
+  const { settings } = useSettings();
   const [activeVerseId, setActiveVerseId] = useState<string | undefined>(undefined);
+  const [verses, setVerses] = useState<Verse[]>([]);
 
   // Find the current folder and its bookmarks
   const folder = useMemo(() => folders.find((f) => f.id === folderId), [folders, folderId]);
   const bookmarks = useMemo(() => folder?.bookmarks || [], [folder]);
 
-  const displayBookmarks = useMemo(() => {
-    if (!bookmarks?.length) return [];
-    if (activeVerseId) return bookmarks.filter((b) => b.verseId === activeVerseId);
-    return bookmarks;
-  }, [bookmarks, activeVerseId]);
+  useEffect(() => {
+    const verseIds = bookmarks.map((b) => b.verseId);
+    Promise.all(verseIds.map((id) => getVerseById(id, settings.translationId)))
+      .then(setVerses)
+      .catch(() => setVerses([]));
+  }, [bookmarks, settings.translationId]);
+
+  const displayVerses = useMemo(() => {
+    if (!verses.length) return [];
+    if (activeVerseId) return verses.filter((v) => String(v.id) === activeVerseId);
+    return verses;
+  }, [verses, activeVerseId]);
 
   if (!folder) {
     return (
@@ -63,11 +75,16 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
           }`}
         >
           <div className="max-w-4xl mx-auto">
-            <BookmarkListView bookmarks={displayBookmarks} folder={folder} showAsVerseList={true} />
+            {displayVerses.map((v) => (
+              <BookmarkCard
+                key={v.id}
+                bookmark={{ verseId: String(v.id), createdAt: Date.now() }}
+                folderId={folder.id}
+              />
+            ))}
           </div>
         </div>
       </main>
     </div>
   );
 }
-
