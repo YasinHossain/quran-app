@@ -19,12 +19,9 @@ interface VerseItemProps {
 }
 
 const VerseItem: React.FC<VerseItemProps> = ({ bookmark, isActive, onSelect }) => {
-  const { bookmarkWithVerse, isLoading, error } = useBookmarkVerse(
-    bookmark.verseId,
-    bookmark.createdAt
-  );
+  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark);
 
-  if (isLoading || error || !bookmarkWithVerse.verse) {
+  if (isLoading || error || !enrichedBookmark.verseKey || !enrichedBookmark.surahName) {
     return (
       <div className="p-3 border-b border-border">
         <div className="animate-pulse">
@@ -34,8 +31,7 @@ const VerseItem: React.FC<VerseItemProps> = ({ bookmark, isActive, onSelect }) =
       </div>
     );
   }
-
-  const verse = bookmarkWithVerse.verse;
+  const ayahNumber = enrichedBookmark.verseKey.split(':')[1];
 
   return (
     <button
@@ -46,13 +42,13 @@ const VerseItem: React.FC<VerseItemProps> = ({ bookmark, isActive, onSelect }) =
     >
       <div className="space-y-1">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-accent">{verse.verse_key}</span>
+          <span className="text-sm font-medium text-accent">{enrichedBookmark.verseKey}</span>
           <span className="text-xs text-muted">
             {new Date(bookmark.createdAt).toLocaleDateString()}
           </span>
         </div>
-        <p className="text-sm font-medium text-foreground truncate">{verse.surahNameEnglish}</p>
-        <p className="text-xs text-muted truncate">Ayah {verse.ayahNumber}</p>
+        <p className="text-sm font-medium text-foreground truncate">{enrichedBookmark.surahName}</p>
+        <p className="text-xs text-muted truncate">Ayah {ayahNumber}</p>
       </div>
     </button>
   );

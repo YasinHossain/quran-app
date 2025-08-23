@@ -55,37 +55,42 @@ export const BookmarkCard = memo(function BookmarkCard({
   const { settings } = useSettings();
   const { removeBookmark, isBookmarked } = useBookmarks();
 
-  // Use the hook to fetch verse data
-  const { bookmarkWithVerse, isLoading, error } = useBookmarkVerse(
-    bookmark.verseId,
-    bookmark.createdAt
-  );
+  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark);
 
   const handlePlayPause = useCallback(() => {
-    if (playingId === bookmarkWithVerse.verse?.id) {
+    if (playingId === Number(enrichedBookmark.verseId)) {
       audioRef.current?.pause();
       setPlayingId(null);
       setLoadingId(null);
       setActiveVerse(null);
       setIsPlaying(false);
-    } else if (bookmarkWithVerse.verse) {
-      // Convert our bookmark verse format to the expected Verse type
+    } else if (enrichedBookmark.verseKey && enrichedBookmark.verseText) {
       const verseForAudio = {
-        ...bookmarkWithVerse.verse,
-        id: bookmarkWithVerse.verse.id,
-        verse_key: bookmarkWithVerse.verse.verse_key,
-        text_uthmani: bookmarkWithVerse.verse.text_uthmani,
-        translations: bookmarkWithVerse.verse.translations || [],
+        id: Number(enrichedBookmark.verseId),
+        verse_key: enrichedBookmark.verseKey,
+        text_uthmani: enrichedBookmark.verseText,
+        translations: enrichedBookmark.translation
+          ? [
+              {
+                id: 0,
+                resource_id: 0,
+                text: enrichedBookmark.translation,
+              },
+            ]
+          : [],
       };
       setActiveVerse(verseForAudio);
-      setPlayingId(bookmarkWithVerse.verse.id);
-      setLoadingId(bookmarkWithVerse.verse.id);
+      setPlayingId(verseForAudio.id);
+      setLoadingId(verseForAudio.id);
       setIsPlaying(true);
       openPlayer();
     }
   }, [
     playingId,
-    bookmarkWithVerse.verse,
+    enrichedBookmark.verseKey,
+    enrichedBookmark.verseText,
+    enrichedBookmark.translation,
+    enrichedBookmark.verseId,
     audioRef,
     setActiveVerse,
     setPlayingId,
@@ -95,20 +100,24 @@ export const BookmarkCard = memo(function BookmarkCard({
   ]);
 
   const handleRemoveBookmark = useCallback(() => {
-    removeBookmark(bookmarkWithVerse.verseId, folderId);
+    removeBookmark(enrichedBookmark.verseId, folderId);
     onRemove?.();
-  }, [removeBookmark, bookmarkWithVerse.verseId, folderId, onRemove]);
+  }, [removeBookmark, enrichedBookmark.verseId, folderId, onRemove]);
 
   const handleNavigateToVerse = useCallback(() => {
-    if (!bookmarkWithVerse.verse) return;
-    // Use Next.js router instead of window.location for better performance
-    const surahId = bookmarkWithVerse.verse.surahId;
-    const verseId = bookmarkWithVerse.verse.id;
-    window.location.href = `/surah/${surahId}#verse-${verseId}`;
-  }, [bookmarkWithVerse.verse]);
+    if (!enrichedBookmark.verseKey) return;
+    const [surahId] = enrichedBookmark.verseKey.split(':');
+    window.location.href = `/surah/${surahId}#verse-${enrichedBookmark.verseId}`;
+  }, [enrichedBookmark.verseKey, enrichedBookmark.verseId]);
 
   // If we don't have verse data yet or it's loading, show a loading state
-  if (isLoading || !bookmarkWithVerse.verse) {
+  if (
+    isLoading ||
+    !enrichedBookmark.verseText ||
+    !enrichedBookmark.translation ||
+    !enrichedBookmark.verseKey ||
+    !enrichedBookmark.surahName
+  ) {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -145,10 +154,9 @@ export const BookmarkCard = memo(function BookmarkCard({
     );
   }
 
-  const verse = bookmarkWithVerse.verse!;
-  const isPlaying = playingId === verse.id;
-  const isLoadingAudio = loadingId === verse.id;
-  const isVerseBookmarked = isBookmarked(String(verse.id));
+  const isPlaying = playingId === Number(enrichedBookmark.verseId);
+  const isLoadingAudio = loadingId === Number(enrichedBookmark.verseId);
+  const isVerseBookmarked = isBookmarked(enrichedBookmark.verseId);
 
   return (
     <motion.div
@@ -159,17 +167,17 @@ export const BookmarkCard = memo(function BookmarkCard({
       {/* Header with surah info and timestamp */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
-          <span className="text-accent font-semibold text-sm">{verse.verse_key}</span>
-          <span className="text-muted text-sm">{verse.surahNameEnglish}</span>
+          <span className="text-accent font-semibold text-sm">{enrichedBookmark.verseKey}</span>
+          <span className="text-muted text-sm">{enrichedBookmark.surahName}</span>
         </div>
-        <span className="text-xs text-muted">{formatTimeAgo(bookmarkWithVerse.createdAt)}</span>
+        <span className="text-xs text-muted">{formatTimeAgo(enrichedBookmark.createdAt)}</span>
       </div>
 
       {/* Main content similar to verse page */}
       <div className="space-y-4 md:space-y-0 md:flex md:items-start md:gap-x-6">
         {/* Verse actions */}
         <ResponsiveVerseActions
-          verseKey={verse.verse_key}
+          verseKey={enrichedBookmark.verseKey!}
           isPlaying={isPlaying}
           isLoadingAudio={isLoadingAudio}
           isBookmarked={isVerseBookmarked}
@@ -184,23 +192,22 @@ export const BookmarkCard = memo(function BookmarkCard({
         <div className="space-y-6 md:flex-grow">
           <VerseArabic
             verse={{
-              ...verse,
-              id: verse.id,
-              verse_key: verse.verse_key,
-              text_uthmani: verse.text_uthmani,
+              id: Number(enrichedBookmark.verseId),
+              verse_key: enrichedBookmark.verseKey!,
+              text_uthmani: enrichedBookmark.verseText!,
             }}
           />
 
           {/* Translations */}
-          {verse.translations?.map((translation) => (
-            <div key={translation.resource_id}>
+          {enrichedBookmark.translation && (
+            <div>
               <p
                 className="text-left leading-relaxed text-foreground"
                 style={{ fontSize: `${settings.translationFontSize}px` }}
-                dangerouslySetInnerHTML={{ __html: sanitizeHtml(translation.text) }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(enrichedBookmark.translation) }}
               />
             </div>
-          ))}
+          )}
         </div>
       </div>
     </motion.div>

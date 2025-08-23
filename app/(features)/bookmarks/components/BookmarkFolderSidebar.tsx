@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { Bookmark } from '@/types';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useBookmarkVerse } from '../hooks/useBookmarkVerse';
+import { FolderIcon } from '@/app/shared/icons';
+import { cn } from '@/lib/utils/cn';
 
 interface BookmarkFolderSidebarProps {
   bookmarks: Bookmark[];
@@ -12,19 +14,6 @@ interface BookmarkFolderSidebarProps {
   onVerseSelect?: (verseId: string) => void;
   onBack?: () => void;
 }
-
-// Icon Components
-const FolderIcon = ({ className }: { className?: string }) => (
-  <svg
-    className={className}
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    aria-hidden="true"
-  >
-    <path d="M19.5 21a3 3 0 003-3v-8.625a3 3 0 00-3-3h-3.375l-1.25-1.5h-4.75l-1.25 1.5H3a3 3 0 00-3 3v8.625a3 3 0 003 3h16.5z"></path>
-  </svg>
-);
 
 const MoreIcon = () => (
   <svg
@@ -87,12 +76,9 @@ interface VerseItemProps {
 }
 
 const VerseItem: React.FC<VerseItemProps> = ({ bookmark, isActive, onSelect }) => {
-  const { bookmarkWithVerse, isLoading, error } = useBookmarkVerse(
-    bookmark.verseId,
-    bookmark.createdAt
-  );
+  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark);
 
-  if (isLoading || error || !bookmarkWithVerse.verse) {
+  if (isLoading || error || !enrichedBookmark.verseKey || !enrichedBookmark.surahName) {
     return (
       <li className="flex items-center justify-between py-2 px-2 rounded-lg animate-pulse">
         <div className="h-4 bg-interactive rounded w-24"></div>
@@ -101,8 +87,8 @@ const VerseItem: React.FC<VerseItemProps> = ({ bookmark, isActive, onSelect }) =
     );
   }
 
-  const verse = bookmarkWithVerse.verse;
-  const verseDisplayName = `${verse.surahNameEnglish}: ${verse.ayahNumber?.toString().padStart(2, '0')}`;
+  const ayahNumber = enrichedBookmark.verseKey.split(':')[1];
+  const verseDisplayName = `${enrichedBookmark.surahName}: ${ayahNumber}`;
 
   return (
     <li className="flex items-center justify-between py-2 px-2 rounded-lg hover:bg-interactive-hover">
@@ -142,17 +128,6 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
     if (folderId !== folder.id) {
       window.location.href = `/bookmarks/${folderId}`;
     }
-  };
-
-  const getFolderColor = (folderId: string) => {
-    const colors = [
-      'text-green-400',
-      'text-purple-400',
-      'text-blue-400',
-      'text-red-400',
-      'text-yellow-400',
-    ];
-    return colors[parseInt(folderId) % colors.length] || 'text-green-400';
   };
 
   return (
@@ -220,7 +195,11 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
                       }
                     }}
                   >
-                    <FolderIcon className={`w-8 h-8 ${getFolderColor(folderItem.id)}`} />
+                    {folderItem.icon ? (
+                      <span className={cn('text-2xl', folderItem.color)}>{folderItem.icon}</span>
+                    ) : (
+                      <FolderIcon className={cn('w-8 h-8', folderItem.color)} />
+                    )}
                     <div>
                       <p className="font-bold text-foreground">{folderItem.name}</p>
                       <p className="text-sm text-muted">Total Ayah: {folderBookmarks.length}</p>
