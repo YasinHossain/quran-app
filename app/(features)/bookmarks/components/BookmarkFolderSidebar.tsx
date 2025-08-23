@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { Bookmark } from '@/types';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useBookmarkVerse } from '../hooks/useBookmarkVerse';
+import { FolderIcon } from '@/app/shared/icons';
+import { cn } from '@/lib/utils/cn';
 
 interface BookmarkFolderSidebarProps {
   bookmarks: Bookmark[];
@@ -12,18 +14,6 @@ interface BookmarkFolderSidebarProps {
   onVerseSelect?: (verseId: string) => void;
   onBack?: () => void;
 }
-
-const FolderIcon = ({ className }: { className: string }) => (
-  <svg
-    className={className}
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    aria-hidden="true"
-  >
-    <path d="M19.5 21a3 3 0 003-3v-8.625a3 3 0 00-3-3h-3.375l-1.25-1.5h-4.75l-1.25 1.5H3a3 3 0 00-3 3v8.625a3 3 0 003 3h16.5z" />
-  </svg>
-);
 
 const MoreIcon = () => (
   <svg
@@ -140,17 +130,6 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
     }
   };
 
-  const getFolderColor = (folderId: string) => {
-    const colors = [
-      'text-green-400',
-      'text-purple-400',
-      'text-blue-400',
-      'text-red-400',
-      'text-yellow-400',
-    ];
-    return colors[parseInt(folderId) % colors.length] || 'text-green-400';
-  };
-
   return (
     <div className="h-full w-full bg-background p-4 font-sans overflow-y-auto">
       <button
@@ -198,7 +177,11 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
                 }}
               >
                 <div className="flex items-center space-x-4">
-                  <FolderIcon className={`w-8 h-8 ${getFolderColor(folderItem.id)}`} />
+                  {folderItem.icon ? (
+                    <span className={cn('text-2xl', folderItem.color)}>{folderItem.icon}</span>
+                  ) : (
+                    <FolderIcon className={cn('w-8 h-8', folderItem.color)} />
+                  )}
                   <div>
                     <p className="font-bold text-foreground">{folderItem.name}</p>
                     <p className="text-sm text-muted">Total Ayah: {folderBookmarks.length}</p>
