@@ -33,6 +33,11 @@ const BookmarkTestComponent = () => {
       <button onClick={() => addBookmark('1:1', folders[0]?.id)}>Add Bookmark</button>
       <button onClick={() => removeBookmark('1:1', folders[0]?.id)}>Remove Bookmark</button>
       <button onClick={() => renameFolder(folders[0]?.id, 'New Name')}>Rename Folder</button>
+      <button
+        onClick={() => renameFolder(folders[0]?.id, folders[0]?.name || '', 'text-green-500')}
+      >
+        Set Color
+      </button>
       <button onClick={() => deleteFolder(folders[0]?.id)}>Delete Folder</button>
       <button onClick={() => togglePinned('1:1')}>Toggle Pin</button>
       <button onClick={() => setLastRead('1', 1)}>Set Last Read</button>
@@ -211,6 +216,27 @@ describe('BookmarkContext with Folders', () => {
       expect(localStorage.getItem(OLD_BOOKMARKS_STORAGE_KEY)).toBeNull();
       // Check that the new key has been set
       expect(localStorage.getItem(BOOKMARKS_STORAGE_KEY)).toBeDefined();
+    });
+  });
+
+  it('should persist folder color', async () => {
+    render(
+      <SettingsProvider>
+        <BookmarkProvider>
+          <BookmarkTestComponent />
+        </BookmarkProvider>
+      </SettingsProvider>
+    );
+
+    await userEvent.click(screen.getByText('Create Folder'));
+    await userEvent.click(screen.getByText('Set Color'));
+
+    await waitFor(() => {
+      const folders: Folder[] = JSON.parse(screen.getByTestId('folders').textContent || '[]');
+      expect(folders[0].color).toBe('text-green-500');
+
+      const stored: Folder[] = JSON.parse(localStorage.getItem(BOOKMARKS_STORAGE_KEY) || '[]');
+      expect(stored[0].color).toBe('text-green-500');
     });
   });
 });

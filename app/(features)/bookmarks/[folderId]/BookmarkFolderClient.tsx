@@ -118,7 +118,7 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
                {' '}
         <BookmarkFolderSidebar
           bookmarks={bookmarks}
-          folder={{ id: folder.id, name: folder.name }}
+          folder={folder}
           activeVerseId={activeVerseId}
           onVerseSelect={(verseId) => {
             setActiveVerseId(verseId);
