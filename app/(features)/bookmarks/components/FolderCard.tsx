@@ -46,9 +46,11 @@ export const FolderCard: React.FC<FolderCardProps> = React.memo(function FolderC
       <div className="flex items-center space-x-3">
         <div className="flex-shrink-0">
           {folder.icon ? (
-            <span className={cn('text-2xl', folder.color)}>{folder.icon}</span>
+            <span className={cn('text-2xl', folder.color)} aria-hidden="true">
+              {folder.icon}
+            </span>
           ) : (
-            <FolderIcon size={24} className={folder.color || 'text-accent'} />
+            <FolderIcon size={24} className={folder.color || 'text-accent'} aria-hidden="true" />
           )}
         </div>
         <div className="flex-1 min-w-0">
