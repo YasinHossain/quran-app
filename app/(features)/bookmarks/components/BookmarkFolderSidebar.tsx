@@ -36,7 +36,7 @@ const MoreIcon = () => (
 
 const TrashIcon = () => (
   <svg
-    className="w-5 h-5 text-muted hover:text-error cursor-pointer"
+    className="w-5 h-5"
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"
@@ -72,13 +72,21 @@ const SearchIcon = () => (
 
 interface VerseItemProps {
   bookmark: Bookmark;
+  folderId: string;
   isActive: boolean;
   onSelect: () => void;
-  onRemove: () => void;
 }
 
-const VerseItem: React.FC<VerseItemProps> = ({ bookmark, isActive, onSelect, onRemove }) => {
+const VerseItem: React.FC<VerseItemProps> = ({ bookmark, folderId, isActive, onSelect }) => {
   const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark);
+  const { removeBookmark } = useBookmarks();
+
+  const handleRemove = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (window.confirm('Remove this bookmark?')) {
+      removeBookmark(String(bookmark.verseId), folderId);
+    }
+  };
 
   if (isLoading || error || !enrichedBookmark.verseKey || !enrichedBookmark.surahName) {
     return (
@@ -103,8 +111,8 @@ const VerseItem: React.FC<VerseItemProps> = ({ bookmark, isActive, onSelect, onR
         {verseDisplayName}
       </button>
       <button
-        onClick={onRemove}
-        className="p-1 rounded-full hover:bg-interactive-hover"
+        onClick={handleRemove}
+        className="p-1 rounded-full text-muted hover:text-error hover:bg-interactive-hover transition-colors"
         aria-label={`Remove bookmark ${verseDisplayName}`}
       >
         <TrashIcon />
@@ -242,9 +250,9 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
                             <VerseItem
                               key={bookmark.verseId}
                               bookmark={bookmark}
+                              folderId={folder.id}
                               isActive={activeVerseId === bookmark.verseId}
                               onSelect={() => onVerseSelect?.(bookmark.verseId)}
-                              onRemove={() => removeBookmark(String(bookmark.verseId), folder.id)}
                             />
                           ))}
                         </ul>
