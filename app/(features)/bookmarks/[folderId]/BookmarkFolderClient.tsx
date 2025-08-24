@@ -34,8 +34,6 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
   const [isMobileFolderOpen, setIsMobileFolderOpen] = useState(false);
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<'date' | 'surah' | 'name'>('date');
   const [loadedVerses, setLoadedVerses] = useState<Set<string>>(new Set());
   const [loadingVerses, setLoadingVerses] = useState<Set<string>>(new Set());
 
@@ -164,47 +162,13 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
 
     let filteredVerses = verses;
 
-    // Apply search filter
-    if (searchTerm) {
-      filteredVerses = verses.filter((verse) => {
-        const bookmark = bookmarks.find((b) => b.verseId === String(verse.id));
-        const searchLower = searchTerm.toLowerCase();
-        return (
-          verse.verse_key.includes(searchLower) ||
-          verse.text_uthmani.includes(searchTerm) ||
-          (verse.translations?.[0]?.text || '').toLowerCase().includes(searchLower) ||
-          (bookmark?.surahName || '').toLowerCase().includes(searchLower)
-        );
-      });
-    }
-
-    // Apply sorting
-    filteredVerses.sort((a, b) => {
-      const bookmarkA = bookmarks.find((bm) => bm.verseId === String(a.id));
-      const bookmarkB = bookmarks.find((bm) => bm.verseId === String(b.id));
-
-      switch (sortBy) {
-        case 'date':
-          return (bookmarkB?.createdAt || 0) - (bookmarkA?.createdAt || 0); // Newest first
-        case 'surah':
-          const [surahA, ayahA] = a.verse_key.split(':').map(Number);
-          const [surahB, ayahB] = b.verse_key.split(':').map(Number);
-          if (surahA !== surahB) return surahA - surahB;
-          return ayahA - ayahB;
-        case 'name':
-          return (bookmarkA?.surahName || '').localeCompare(bookmarkB?.surahName || '');
-        default:
-          return 0;
-      }
-    });
-
     // Apply verse selection filter
     if (activeVerseId) {
       filteredVerses = filteredVerses.filter((v) => String(v.id) === activeVerseId);
     }
 
     return filteredVerses;
-  }, [verses, activeVerseId, searchTerm, sortBy, bookmarks]);
+  }, [verses, activeVerseId]);
 
   if (!folder) {
     return (
@@ -275,13 +239,13 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
       </div>
 
       {/* Main Content - Verse display */}
-      <main className="h-screen text-foreground font-sans lg:ml-[20.7rem] lg:mr-[20.7rem] overflow-hidden relative z-50">
+      <main className="h-screen text-foreground font-sans lg:ml-[20.7rem] overflow-hidden relative z-50">
         <div
           className={`h-full overflow-y-auto px-4 sm:px-6 lg:px-8 pb-6 transition-all duration-300 ${
             isHidden ? 'pt-12 lg:pt-4' : 'pt-24 lg:pt-20'
           }`}
         >
-          <div className="max-w-4xl mx-auto">
+          <div>
             {/* Breadcrumb Navigation */}
             <nav
               className="flex items-center space-x-2 text-sm mb-6 hidden lg:flex"
@@ -308,82 +272,11 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
               )}
             </nav>
 
-            {/* Folder Header */}
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-2">
-                <h1 className="text-2xl font-bold text-foreground">{folder.name}</h1>
-                {activeVerseId && (
-                  <button
-                    onClick={() => setActiveVerseId(undefined)}
-                    className="px-3 py-1 text-sm bg-accent text-white rounded-full hover:bg-accent-hover transition-colors"
-                  >
-                    Show All
-                  </button>
-                )}
-              </div>
-              <p className="text-muted">
-                {displayVerses.length} of {bookmarks.length} verse
-                {bookmarks.length !== 1 ? 's' : ''}
-                {activeVerseId && ' • Viewing selected verse'}
-                {searchTerm && ' • Filtered'}
-              </p>
-            </div>
-
-            {/* Search and Sort Controls */}
-            {!activeVerseId && bookmarks.length > 0 && (
-              <div className="mb-6 space-y-4">
-                <div className="flex flex-col sm:flex-row gap-4">
-                  {/* Search Input */}
-                  <div className="flex-1 relative">
-                    <input
-                      type="text"
-                      placeholder="Search verses, translations, or surah names..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full px-4 py-3 border border-border rounded-lg bg-surface text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent touch-manipulation"
-                    />
-                    {searchTerm && (
-                      <button
-                        onClick={() => setSearchTerm('')}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted hover:text-foreground touch-manipulation p-1"
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
-                          />
-                        </svg>
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Sort Dropdown */}
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value as 'date' | 'surah' | 'name')}
-                    className="px-4 py-3 border border-border rounded-lg bg-surface text-foreground focus:outline-none focus:ring-2 focus:ring-accent touch-manipulation"
-                  >
-                    <option value="date">Sort by Date</option>
-                    <option value="surah">Sort by Surah</option>
-                    <option value="name">Sort by Name</option>
-                  </select>
-                </div>
-              </div>
-            )}
-
             {/* Verse List Component */}
             <BookmarkVerseList
               verses={displayVerses}
               isLoading={loadingVerses.size > 0 && verses.length === 0}
               error={null}
-              searchTerm={searchTerm}
             />
           </div>
         </div>
@@ -400,19 +293,6 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
         isWordLanguagePanelOpen={isWordPanelOpen}
         onWordLanguagePanelClose={() => setIsWordPanelOpen(false)}
       />
-
-      {/* Right Sidebar - folder explorer */}
-      <aside className="fixed right-0 top-16 h-[calc(100vh-4rem)] w-80 lg:w-[20.7rem] bg-surface border-l border-border hidden lg:block overflow-y-auto">
-        <BookmarkFolderSidebar
-          bookmarks={bookmarks}
-          folder={folder}
-          activeVerseId={activeVerseId}
-          onVerseSelect={(verseId) =>
-            setActiveVerseId(verseId === activeVerseId ? undefined : verseId)
-          }
-          onBack={() => router.push('/bookmarks')}
-        />
-      </aside>
     </>
   );
 }

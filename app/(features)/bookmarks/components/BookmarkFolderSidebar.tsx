@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Bookmark, Folder } from '@/types';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { FolderIcon } from '@/app/shared/icons';
+import { FolderIcon, ArrowLeftIcon } from '@/app/shared/icons';
 import { cn } from '@/lib/utils/cn';
 
 interface BookmarkFolderSidebarProps {
@@ -33,23 +33,6 @@ const MoreIcon = () => (
   </svg>
 );
 
-const SearchIcon = () => (
-  <svg
-    className="w-5 h-5 text-muted"
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    aria-hidden="true"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-    />
-  </svg>
-);
 
 export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
   bookmarks,
@@ -59,14 +42,9 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
   onBack,
 }) => {
   const { folders } = useBookmarks();
-  const [searchQuery, setSearchQuery] = useState('');
   const [expandedFolderId, setExpandedFolderId] = useState<string | null>(folder.id);
 
   const router = useRouter();
-
-  const filteredFolders = folders.filter((f) =>
-    f.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   const toggleFolder = (folderId: string) => {
     setExpandedFolderId((currentId) => (currentId === folderId ? null : folderId));
@@ -78,39 +56,28 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
     }
   };
 
-
   return (
     <>
-      <div className="bg-background min-h-screen w-full flex justify-center p-4 font-sans">
-        <div className="w-full max-w-sm">
-          {/* Top Button */}
+      <div className="bg-background min-h-screen w-full flex flex-col font-sans">
+        {/* Header */}
+        <div className="flex items-center justify-center px-4 py-6 border-b border-border relative">
           {onBack && (
             <button
               onClick={onBack}
-              className="w-full py-3 mb-4 text-lg font-semibold text-foreground bg-surface border border-border rounded-full shadow-sm hover:bg-interactive transition-colors"
+              className="absolute left-4 p-2 rounded-full hover:bg-surface-hover transition-colors"
+              aria-label="Go back to bookmarks"
             >
-              Bookmark
+              <ArrowLeftIcon size={20} className="text-foreground" />
             </button>
           )}
+          <h1 className="text-lg font-semibold text-foreground">Folder</h1>
+        </div>
 
-          {/* Search Bar */}
-          <div className="relative mb-6">
-            <span className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-              <SearchIcon />
-            </span>
-            <input
-              type="text"
-              placeholder="Search Bookmark Folder"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full py-3 pl-11 pr-4 text-foreground bg-surface border border-border rounded-full focus:outline-none focus:ring-2 focus:ring-accent transition-shadow"
-              aria-label="Search bookmark folders"
-            />
-          </div>
-
+        {/* Content */}
+        <div className="flex-1 p-4">
           {/* Folders List */}
           <div className="space-y-3">
-            {filteredFolders.map((folderItem) => {
+            {folders.map((folderItem) => {
               const isExpanded = expandedFolderId === folderItem.id;
               const isCurrentFolder = folderItem.id === folder.id;
               const folderBookmarks = isCurrentFolder ? bookmarks : folderItem.bookmarks;
@@ -177,10 +144,9 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
                     <div className="px-4 pb-3">
                       <div className="border-t border-border pt-2">
                         <p className="py-4 text-sm text-center text-muted">
-                          {folderBookmarks.length > 0 
+                          {folderBookmarks.length > 0
                             ? `${folderBookmarks.length} verse${folderBookmarks.length !== 1 ? 's' : ''} • View in main area`
-                            : 'This folder is empty.'
-                          }
+                            : 'This folder is empty.'}
                         </p>
                       </div>
                     </div>

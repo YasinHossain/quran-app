@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookmarksSidebar } from '../components/BookmarksSidebar';
+import { ClockIcon } from '@/app/shared/icons';
 import { useRouter } from 'next/navigation';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
@@ -47,16 +48,24 @@ export default function LastReadPage() {
                 : 'pt-[calc(3.5rem+env(safe-area-inset-top))] sm:pt-[calc(4rem+env(safe-area-inset-top))]'
             }`}
           >
+            {/* Last Read Header */}
+            <div className="mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 bg-accent rounded-xl flex items-center justify-center shadow-sm">
+                  <ClockIcon size={20} className="text-white" />
+                </div>
+                <div className="min-w-0">
+                  <h1 className="text-lg font-bold text-foreground">Recent</h1>
+                  <p className="text-xs text-muted">Last visited</p>
+                </div>
+              </div>
+            </div>
+
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="max-w-4xl mx-auto"
             >
-              <div className="mb-8">
-                <h1 className="text-3xl font-bold text-foreground mb-2">Last Read</h1>
-                <p className="text-muted">Continue your Quran reading journey</p>
-              </div>
-
               {Object.keys(lastRead).length === 0 ? (
                 <div className="text-center py-16">
                   <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
@@ -100,7 +109,7 @@ export default function LastReadPage() {
                             handleNavigate();
                           }
                         }}
-                        className="rounded-xl bg-surface border border-border p-6 cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent"
+                        className="rounded-xl bg-surface border border-border p-6 cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent hover:border-accent/30 hover:bg-surface-hover transition-all duration-200"
                       >
                         <div className="flex items-center justify-between mb-2">
                           <h3 className="font-semibold text-foreground">
@@ -110,7 +119,7 @@ export default function LastReadPage() {
                         </div>
                         <div className="w-full bg-border rounded-full h-2 mb-2">
                           <div
-                            className="bg-accent h-2 rounded-full"
+                            className="bg-accent h-2 rounded-full transition-all duration-300"
                             style={{ width: `${percent}%` }}
                           />
                         </div>

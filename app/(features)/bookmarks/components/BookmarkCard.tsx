@@ -8,8 +8,8 @@ import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
+import { applyTajweed } from '@/lib/text/tajweed';
 import ResponsiveVerseActions from '@/app/shared/ResponsiveVerseActions';
-import VerseArabic from '@/app/shared/VerseArabic';
 import LoadingError from '@/app/shared/LoadingError';
 // Simple time ago function
 const formatTimeAgo = (timestamp: number): string => {
@@ -165,55 +165,74 @@ export const BookmarkCard = memo(function BookmarkCard({
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-xl bg-surface border border-border p-6 mb-6 hover:border-accent/30 transition-colors"
+        className="rounded-xl bg-surface border border-border p-5 mb-4 hover:border-accent/30 hover:bg-surface-hover transition-all duration-200 cursor-pointer group hover:shadow-md hover:-translate-y-0.5"
         role="article"
         aria-label={`Bookmark for verse ${enrichedBookmark.verseKey} from ${enrichedBookmark.surahName}`}
+        onClick={handleNavigateToVerse}
       >
-        {/* Header with surah info and timestamp */}
-        <div className="flex items-center justify-between mb-4">
+        {/* Compact header layout */}
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-2">
             <span className="text-accent font-semibold text-sm">{enrichedBookmark.verseKey}</span>
-            <span className="text-muted text-sm">{enrichedBookmark.surahName}</span>
+            <span className="text-muted text-sm truncate">{enrichedBookmark.surahName}</span>
           </div>
-          <span className="text-xs text-muted">{formatTimeAgo(enrichedBookmark.createdAt)}</span>
+          <div className="flex items-center space-x-2">
+            <span className="text-xs text-muted">{formatTimeAgo(enrichedBookmark.createdAt)}</span>
+            <div
+              className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.stopPropagation();
+                }
+              }}
+              role="button"
+              tabIndex={0}
+            >
+              <ResponsiveVerseActions
+                verseKey={enrichedBookmark.verseKey!}
+                isPlaying={isPlaying}
+                isLoadingAudio={isLoadingAudio}
+                isBookmarked={isVerseBookmarked}
+                onPlayPause={handlePlayPause}
+                onBookmark={handleRemoveBookmark}
+                onNavigateToVerse={handleNavigateToVerse}
+                showRemove={true}
+                className="scale-75"
+              />
+            </div>
+          </div>
         </div>
 
-        {/* Main content similar to verse page */}
-        <div className="space-y-4 md:space-y-0 md:flex md:items-start md:gap-x-6">
-          {/* Verse actions */}
-          <ResponsiveVerseActions
-            verseKey={enrichedBookmark.verseKey!}
-            isPlaying={isPlaying}
-            isLoadingAudio={isLoadingAudio}
-            isBookmarked={isVerseBookmarked}
-            onPlayPause={handlePlayPause}
-            onBookmark={handleRemoveBookmark}
-            onNavigateToVerse={handleNavigateToVerse}
-            showRemove={true}
-            className="md:w-16 md:pt-1"
-          />
-
-          {/* Verse content */}
-          <div className="space-y-6 md:flex-grow">
-            <VerseArabic
-              verse={{
-                id: verseApiId!,
-                verse_key: enrichedBookmark.verseKey!,
-                text_uthmani: enrichedBookmark.verseText!,
+        {/* Compact verse preview */}
+        <div className="space-y-2">
+          {/* Arabic preview - truncated */}
+          <div className="text-right">
+            <p
+              dir="rtl"
+              className="text-foreground leading-relaxed text-lg line-clamp-2"
+              style={{
+                fontFamily: settings.arabicFontFace,
+                fontSize: `${Math.min(settings.arabicFontSize, 20)}px`,
+                lineHeight: 1.8,
+              }}
+              dangerouslySetInnerHTML={{
+                __html: settings.tajweed
+                  ? sanitizeHtml(applyTajweed(enrichedBookmark.verseText || ''))
+                  : sanitizeHtml(enrichedBookmark.verseText || ''),
               }}
             />
-
-            {/* Translations */}
-            {enrichedBookmark.translation && (
-              <div>
-                <p
-                  className="text-left leading-relaxed text-foreground"
-                  style={{ fontSize: `${settings.translationFontSize}px` }}
-                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(enrichedBookmark.translation) }}
-                />
-              </div>
-            )}
           </div>
+
+          {/* Translation preview - truncated */}
+          {enrichedBookmark.translation && (
+            <div>
+              <p
+                className="text-left leading-relaxed text-muted line-clamp-2 text-sm"
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(enrichedBookmark.translation) }}
+              />
+            </div>
+          )}
         </div>
       </motion.div>
     </LoadingError>

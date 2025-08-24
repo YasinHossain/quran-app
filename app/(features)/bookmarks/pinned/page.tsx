@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookmarksSidebar } from '../components/BookmarksSidebar';
+import { PinIcon } from '@/app/shared/icons';
 import { useRouter } from 'next/navigation';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
@@ -48,16 +49,24 @@ export default function PinnedAyahPage() {
                 : 'pt-[calc(3.5rem+env(safe-area-inset-top))] sm:pt-[calc(4rem+env(safe-area-inset-top))]'
             }`}
           >
+            {/* Pinned Verses Header */}
+            <div className="mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 bg-accent rounded-xl flex items-center justify-center shadow-sm">
+                  <PinIcon size={20} className="text-white" />
+                </div>
+                <div className="min-w-0">
+                  <h1 className="text-lg font-bold text-foreground">Pinned Verses</h1>
+                  <p className="text-xs text-muted">Quick access</p>
+                </div>
+              </div>
+            </div>
+
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="max-w-4xl mx-auto"
             >
-              <div className="mb-8">
-                <h1 className="text-3xl font-bold text-foreground mb-2">Pinned Ayahs</h1>
-                <p className="text-muted">Your saved verses for quick reference</p>
-              </div>
-
               {pinnedVerses.length === 0 ? (
                 <div className="text-center py-16">
                   <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">

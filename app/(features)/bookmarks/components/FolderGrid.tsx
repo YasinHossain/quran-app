@@ -74,18 +74,44 @@ export const FolderGrid: React.FC<FolderGridProps> = ({
 
   return (
     <>
-      <motion.div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        <AnimatePresence>
-          {folders.map((folder) => (
-            <FolderCard
+      <motion.div
+        className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+      >
+        <AnimatePresence mode="popLayout">
+          {folders.map((folder, index) => (
+            <motion.div
               key={folder.id}
-              folder={folder}
-              onClick={() => onFolderSelect(folder.id)}
-              onEdit={() => handleFolderAction(folder, 'edit')}
-              onDelete={() => handleFolderAction(folder, 'delete')}
-              onRename={() => handleFolderAction(folder, 'rename')}
-              onColorChange={() => handleFolderAction(folder, 'customize')}
-            />
+              layout
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                transition: {
+                  delay: index * 0.05,
+                  duration: 0.4,
+                  ease: 'easeOut',
+                },
+              }}
+              exit={{
+                opacity: 0,
+                scale: 0.9,
+                y: -20,
+                transition: { duration: 0.3 },
+              }}
+            >
+              <FolderCard
+                folder={folder}
+                onClick={() => onFolderSelect(folder.id)}
+                onEdit={() => handleFolderAction(folder, 'edit')}
+                onDelete={() => handleFolderAction(folder, 'delete')}
+                onRename={() => handleFolderAction(folder, 'rename')}
+                onColorChange={() => handleFolderAction(folder, 'customize')}
+              />
+            </motion.div>
           ))}
         </AnimatePresence>
       </motion.div>

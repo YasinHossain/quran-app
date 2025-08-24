@@ -30,7 +30,7 @@ const BookmarkModal: React.FC<BookmarkModalProps> = ({
     isPinned,
     createFolder,
   } = useBookmarks();
-  
+
   const [activeTab, setActiveTab] = useState<'bookmark' | 'pin'>('bookmark');
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
@@ -42,14 +42,14 @@ const BookmarkModal: React.FC<BookmarkModalProps> = ({
   // Filter folders based on search query
   const filteredFolders = useMemo(() => {
     if (!searchQuery.trim()) return folders;
-    return folders.filter(folder =>
+    return folders.filter((folder) =>
       folder.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [folders, searchQuery]);
 
   const handleFolderSelect = (folder: Folder) => {
     const existingBookmark = findBookmark(verseId);
-    
+
     if (existingBookmark && existingBookmark.folder.id === folder.id) {
       // Remove bookmark from this folder
       removeBookmark(verseId, folder.id);
@@ -136,9 +136,7 @@ const BookmarkModal: React.FC<BookmarkModalProps> = ({
               {/* Header */}
               <div className="px-6 py-6 border-b border-border">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold text-foreground">
-                    Add to Collections
-                  </h2>
+                  <h2 className="text-xl font-semibold text-foreground">Add to Collections</h2>
                   <button
                     onClick={onClose}
                     className={cn(
@@ -245,7 +243,8 @@ const BookmarkModal: React.FC<BookmarkModalProps> = ({
                                   {folder.name}
                                 </div>
                                 <div className="text-xs text-muted mt-0.5">
-                                  {folder.bookmarks.length} verse{folder.bookmarks.length !== 1 ? 's' : ''}
+                                  {folder.bookmarks.length} verse
+                                  {folder.bookmarks.length !== 1 ? 's' : ''}
                                 </div>
                               </div>
                               {isSelected && (
@@ -336,14 +335,15 @@ const BookmarkModal: React.FC<BookmarkModalProps> = ({
                   // Pin Tab Content
                   <div className="flex-1 flex flex-col items-center justify-center px-6 py-8">
                     <div className="text-center">
-                      <div className={cn(
-                        'w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center',
-                        isVersePinned ? 'bg-accent/10' : 'bg-interactive'
-                      )}>
-                        <div className={cn(
-                          'text-2xl',
-                          isVersePinned ? 'text-accent' : 'text-muted'
-                        )}>
+                      <div
+                        className={cn(
+                          'w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center',
+                          isVersePinned ? 'bg-accent/10' : 'bg-interactive'
+                        )}
+                      >
+                        <div
+                          className={cn('text-2xl', isVersePinned ? 'text-accent' : 'text-muted')}
+                        >
                           📌
                         </div>
                       </div>
@@ -353,8 +353,7 @@ const BookmarkModal: React.FC<BookmarkModalProps> = ({
                       <p className="text-sm text-muted mb-6 leading-relaxed max-w-sm">
                         {isVersePinned
                           ? 'This verse is pinned to your collection for quick access.'
-                          : 'Pin this verse to keep it easily accessible at the top of your collection.'
-                        }
+                          : 'Pin this verse to keep it easily accessible at the top of your collection.'}
                       </p>
                       <button
                         onClick={handleTogglePin}

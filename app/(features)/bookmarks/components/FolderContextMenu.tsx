@@ -49,8 +49,6 @@ export const FolderContextMenu: React.FC<FolderContextMenuProps> = ({
   };
 
   const menuItems = [
-    { label: 'Rename', onClick: () => handleAction(onRename) },
-    { label: 'Customize', onClick: () => handleAction(onColorChange) },
     { label: 'Edit', onClick: () => handleAction(onEdit) },
     { label: 'Delete', onClick: () => handleAction(onDelete), destructive: true },
   ];
@@ -59,7 +57,7 @@ export const FolderContextMenu: React.FC<FolderContextMenuProps> = ({
     <div className="relative">
       <button
         ref={buttonRef}
-        className="absolute right-2 top-2 rounded-full p-1.5 text-muted hover:bg-surface-hover hover:text-accent group-hover:opacity-100 md:opacity-0 touch-manipulation transition-all duration-200"
+        className="rounded-full p-1.5 text-muted hover:bg-surface-hover hover:text-accent transition-all duration-200 touch-manipulation"
         onClick={(e) => {
           e.stopPropagation();
           setIsOpen(!isOpen);
