@@ -91,11 +91,11 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
         {/* Verse actions */}
         <ResponsiveVerseActions
           verseKey={verse.verse_key}
+          verseId={String(verse.id)}
           isPlaying={isPlaying}
           isLoadingAudio={isLoadingAudio}
           isBookmarked={isVerseBookmarked}
           onPlayPause={handlePlayPause}
-          onBookmark={handleBookmark}
           className="md:w-16 md:pt-1"
         />
 

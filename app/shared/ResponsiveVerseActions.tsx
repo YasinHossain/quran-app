@@ -14,16 +14,18 @@ import {
   EllipsisHIcon,
 } from './icons';
 import Spinner from './Spinner';
+import BookmarkModal from './components/BookmarkModal';
 import { useResponsiveState, touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
 
 interface ResponsiveVerseActionsProps {
   verseKey: string;
+  verseId?: string;
   isPlaying: boolean;
   isLoadingAudio: boolean;
   isBookmarked: boolean;
   onPlayPause: () => void;
-  onBookmark: () => void;
+  onBookmark?: () => void;
   onShare?: () => void;
   onNavigateToVerse?: () => void;
   showRemove?: boolean;
@@ -41,6 +43,7 @@ const defaultShare = () => {
 
 const ResponsiveVerseActions: React.FC<ResponsiveVerseActionsProps> = ({
   verseKey,
+  verseId,
   isPlaying,
   isLoadingAudio,
   isBookmarked,
@@ -53,7 +56,18 @@ const ResponsiveVerseActions: React.FC<ResponsiveVerseActionsProps> = ({
 }) => {
   const { variant } = useResponsiveState();
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
   const handleShare = onShare || defaultShare;
+
+  const handleBookmarkClick = () => {
+    if (showRemove && onBookmark) {
+      // For bookmark removal in bookmark pages, use the old behavior
+      onBookmark();
+    } else {
+      // For verse pages, open the modal
+      setIsBookmarkModalOpen(true);
+    }
+  };
 
   // Mobile variant - compact trigger with bottom sheet
   if (variant === 'compact') {
@@ -85,14 +99,23 @@ const ResponsiveVerseActions: React.FC<ResponsiveVerseActionsProps> = ({
           isOpen={isBottomSheetOpen}
           onClose={() => setIsBottomSheetOpen(false)}
           verseKey={verseKey}
+          verseId={verseId}
           isPlaying={isPlaying}
           isLoadingAudio={isLoadingAudio}
           isBookmarked={isBookmarked}
           onPlayPause={onPlayPause}
-          onBookmark={onBookmark}
+          onBookmark={handleBookmarkClick}
           onShare={handleShare}
           onNavigateToVerse={onNavigateToVerse}
           showRemove={showRemove}
+        />
+
+        {/* BookmarkModal */}
+        <BookmarkModal
+          isOpen={isBookmarkModalOpen}
+          onClose={() => setIsBookmarkModalOpen(false)}
+          verseId={verseId || verseKey}
+          verseKey={verseKey}
         />
       </>
     );
@@ -157,7 +180,7 @@ const ResponsiveVerseActions: React.FC<ResponsiveVerseActionsProps> = ({
             showRemove ? 'Remove bookmark' : isBookmarked ? 'Remove bookmark' : 'Add bookmark'
           }
           title={showRemove ? 'Remove bookmark' : 'Bookmark'}
-          onClick={onBookmark}
+          onClick={handleBookmarkClick}
           className={cn(
             'p-1.5 rounded-full hover:bg-accent/10 transition',
             isBookmarked || showRemove ? 'text-accent' : 'hover:text-accent',
@@ -183,6 +206,14 @@ const ResponsiveVerseActions: React.FC<ResponsiveVerseActionsProps> = ({
           <ShareIcon size={18} />
         </button>
       </div>
+
+      {/* BookmarkModal */}
+      <BookmarkModal
+        isOpen={isBookmarkModalOpen}
+        onClose={() => setIsBookmarkModalOpen(false)}
+        verseId={verseId || verseKey}
+        verseKey={verseKey}
+      />
     </div>
   );
 };
@@ -192,6 +223,7 @@ interface MobileBottomSheetProps {
   isOpen: boolean;
   onClose: () => void;
   verseKey: string;
+  verseId?: string;
   isPlaying: boolean;
   isLoadingAudio: boolean;
   isBookmarked: boolean;
@@ -206,6 +238,7 @@ const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
   isOpen,
   onClose,
   verseKey,
+  verseId,
   isPlaying,
   isLoadingAudio,
   isBookmarked,

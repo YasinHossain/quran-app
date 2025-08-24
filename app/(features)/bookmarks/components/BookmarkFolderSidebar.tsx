@@ -4,12 +4,8 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Bookmark, Folder } from '@/types';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { useBookmarkVerse } from '../hooks/useBookmarkVerse';
 import { FolderIcon } from '@/app/shared/icons';
-import LoadingError from '@/app/shared/LoadingError';
 import { cn } from '@/lib/utils/cn';
-import { FixedSizeList as List } from 'react-window';
-import { ConfirmDeleteModal } from '@/app/shared/components/ConfirmDeleteModal';
 
 interface BookmarkFolderSidebarProps {
   bookmarks: Bookmark[];
@@ -37,24 +33,6 @@ const MoreIcon = () => (
   </svg>
 );
 
-const TrashIcon = () => (
-  <svg
-    className="w-5 h-5"
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    aria-hidden="true"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.134-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.067-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-    />
-  </svg>
-);
-
 const SearchIcon = () => (
   <svg
     className="w-5 h-5 text-muted"
@@ -73,61 +51,6 @@ const SearchIcon = () => (
   </svg>
 );
 
-interface VerseItemProps {
-  bookmark: Bookmark;
-  isActive: boolean;
-  onSelect: () => void;
-  onRemove: (bookmark: Bookmark) => void;
-}
-
-const VerseItem: React.FC<VerseItemProps> = ({ bookmark, isActive, onSelect, onRemove }) => {
-  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark);
-
-  const handleRemove = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onRemove(bookmark);
-  };
-
-  const ayahNumber = enrichedBookmark.verseKey?.split(':')[1];
-  const verseDisplayName = `${enrichedBookmark.surahName}: ${ayahNumber}`;
-
-  return (
-    <LoadingError
-      isLoading={isLoading || !enrichedBookmark.verseKey || !enrichedBookmark.surahName}
-      error={error}
-      loadingFallback={
-        <div className="flex items-center justify-between py-2 px-2 rounded-lg animate-pulse">
-          <div className="h-4 bg-interactive rounded w-24"></div>
-          <div className="w-5 h-5 bg-interactive rounded"></div>
-        </div>
-      }
-      errorFallback={
-        <div className="flex items-center justify-between py-2 px-2 rounded-lg">
-          <span className="text-error text-sm">Failed to load</span>
-        </div>
-      }
-    >
-      <div className="flex items-center justify-between py-2 px-2 rounded-lg hover:bg-interactive-hover">
-        <button
-          onClick={onSelect}
-          className={`text-foreground hover:text-accent transition-colors ${
-            isActive ? 'font-semibold text-accent' : ''
-          }`}
-        >
-          {verseDisplayName}
-        </button>
-        <button
-          onClick={handleRemove}
-          className="p-1 rounded-full text-muted hover:text-error hover:bg-interactive-hover transition-colors"
-          aria-label={`Remove bookmark ${verseDisplayName}`}
-        >
-          <TrashIcon />
-        </button>
-      </div>
-    </LoadingError>
-  );
-};
-
 export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
   bookmarks,
   folder,
@@ -135,10 +58,9 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
   onVerseSelect,
   onBack,
 }) => {
-  const { folders, removeBookmark } = useBookmarks();
+  const { folders } = useBookmarks();
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedFolderId, setExpandedFolderId] = useState<string | null>(folder.id);
-  const [bookmarkToDelete, setBookmarkToDelete] = useState<Bookmark | null>(null);
 
   const router = useRouter();
 
@@ -156,18 +78,6 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
     }
   };
 
-  const openDeleteModal = (bookmark: Bookmark) => {
-    setBookmarkToDelete(bookmark);
-  };
-
-  const handleConfirmDelete = () => {
-    if (bookmarkToDelete) {
-      removeBookmark(String(bookmarkToDelete.verseId), folder.id);
-      setBookmarkToDelete(null);
-    }
-  };
-
-  const handleCancelDelete = () => setBookmarkToDelete(null);
 
   return (
     <>
@@ -262,36 +172,16 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
                     )}
                   </div>
 
-                  {/* Expanded Content (Verses) */}
+                  {/* Expanded Content - Show verse count only */}
                   {isExpanded && isCurrentFolder && (
                     <div className="px-4 pb-3">
                       <div className="border-t border-border pt-2">
-                        {folderBookmarks.length > 0 ? (
-                          <List
-                            height={Math.min(200, folderBookmarks.length * 48)}
-                            width="100%"
-                            itemCount={folderBookmarks.length}
-                            itemSize={48}
-                          >
-                            {({ index, style }) => {
-                              const bookmark = folderBookmarks[index];
-                              return (
-                                <div style={style}>
-                                  <VerseItem
-                                    bookmark={bookmark}
-                                    isActive={activeVerseId === bookmark.verseId}
-                                    onSelect={() => onVerseSelect?.(bookmark.verseId)}
-                                    onRemove={openDeleteModal}
-                                  />
-                                </div>
-                              );
-                            }}
-                          </List>
-                        ) : (
-                          <p className="py-4 text-sm text-center text-muted">
-                            This folder is empty.
-                          </p>
-                        )}
+                        <p className="py-4 text-sm text-center text-muted">
+                          {folderBookmarks.length > 0 
+                            ? `${folderBookmarks.length} verse${folderBookmarks.length !== 1 ? 's' : ''} • View in main area`
+                            : 'This folder is empty.'
+                          }
+                        </p>
                       </div>
                     </div>
                   )}
@@ -301,13 +191,6 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
           </div>
         </div>
       </div>
-      <ConfirmDeleteModal
-        isOpen={!!bookmarkToDelete}
-        title="Remove Bookmark"
-        description="Are you sure you want to remove this bookmark?"
-        onConfirm={handleConfirmDelete}
-        onCancel={handleCancelDelete}
-      />
     </>
   );
 };

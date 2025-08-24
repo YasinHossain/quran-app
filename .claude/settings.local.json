@@ -1,7 +1,9 @@
 {
   "permissions": {
-    "allow": [],
+    "allow": ["WebSearch"],
     "deny": [],
     "ask": []
-  }
+  },
+  "enabledMcpjsonServers": ["browser-console"],
+  "enableAllProjectMcpServers": true
 }

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Browser Console Test Page</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+      }
+      button {
+        background: #007cba;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #005a8a;
+      }
+      .log-section {
+        background: #f5f5f5;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Browser Console MCP Server Test Page</h1>
+    <p>Use this page to test the Browser Console MCP server functionality.</p>
+
+    <div class="log-section">
+      <h3>Generate Test Console Logs:</h3>
+      <button onclick="console.log('Hello from test page!')">Log Message</button>
+      <button onclick="console.warn('This is a warning message')">Warn Message</button>
+      <button onclick="console.error('This is an error message')">Error Message</button>
+      <button onclick="console.info('This is an info message')">Info Message</button>
+      <button onclick="console.debug('This is a debug message')">Debug Message</button>
+    </div>
+
+    <div class="log-section">
+      <h3>Generate Test Errors:</h3>
+      <button onclick="generateError()">Throw Error</button>
+      <button onclick="undefinedFunction()">Call Undefined Function</button>
+      <button onclick="accessUndefinedProperty()">Access Undefined Property</button>
+    </div>
+
+    <div class="log-section">
+      <h3>Complex Logging:</h3>
+      <button onclick="complexLog()">Complex Objects</button>
+      <button onclick="timedLogs()">Timed Logs (5 logs over 5 seconds)</button>
+    </div>
+
+    <div class="log-section">
+      <h3>Instructions:</h3>
+      <ol>
+        <li>Start Chrome with: <code>chrome --remote-debugging-port=9222</code></li>
+        <li>Open this page in Chrome</li>
+        <li>In Claude Code, use the MCP server tools to connect and read logs</li>
+        <li>Click buttons above to generate different types of console logs</li>
+      </ol>
+    </div>
+
+    <script>
+      // Log an initial message when page loads
+      console.log('Test page loaded successfully');
+
+      function generateError() {
+        try {
+          throw new Error('This is a test error for debugging');
+        } catch (e) {
+          console.error('Caught error:', e.message);
+          throw e; // Re-throw to also show in console as uncaught
+        }
+      }
+
+      function undefinedFunction() {
+        nonExistentFunction();
+      }
+
+      function accessUndefinedProperty() {
+        const obj = {};
+        console.log('Accessing undefined property:', obj.nonExistent.someProperty);
+      }
+
+      function complexLog() {
+        const complexObject = {
+          user: { id: 1, name: 'Test User', email: 'test@example.com' },
+          settings: { theme: 'dark', notifications: true },
+          data: [1, 2, 3, 4, 5],
+          timestamp: new Date(),
+        };
+        console.log('Complex object:', complexObject);
+        console.table(complexObject.data);
+      }
+
+      function timedLogs() {
+        let count = 0;
+        const interval = setInterval(() => {
+          count++;
+          console.log(`Timed log ${count}/5 - ${new Date().toLocaleTimeString()}`);
+          if (count >= 5) {
+            clearInterval(interval);
+            console.log('Timed logging complete');
+          }
+        }, 1000);
+      }
+    </script>
+  </body>
+</html>
