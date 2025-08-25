@@ -181,7 +181,7 @@ export const responsiveClasses = {
 
   // Navigation patterns - unified approach
   nav: 'flex items-center justify-between p-3 sm:p-4 lg:p-6',
-  sidebar: 'w-full max-w-80 sm:max-w-sm lg:max-w-md transition-transform duration-300',
+  sidebar: 'w-full sm:w-80 lg:w-80 transition-transform duration-300',
 };
 
 /**

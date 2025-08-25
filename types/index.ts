@@ -6,7 +6,7 @@ export * from './settings';
 export * from './surah';
 export * from './word';
 export * from './juz';
-export type { Bookmark, BookmarkWithVerse, Folder } from './bookmark';
+export type { Bookmark, BookmarkWithVerse, Folder, MemorizationPlan } from './bookmark';
 export * from './components';
 
 /**

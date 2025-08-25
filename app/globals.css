@@ -213,6 +213,13 @@
   .drawer-panel {
     @apply fixed z-50 bg-surface shadow-modal;
     @apply transition-transform duration-300 ease-in-out;
+    /* Default state: slide out to left */
+    transform: translateX(-100%);
+  }
+
+  .drawer-panel.open {
+    /* Open state: slide in from left */
+    transform: translateX(0);
   }
 
   /* Safe area support for mobile devices */

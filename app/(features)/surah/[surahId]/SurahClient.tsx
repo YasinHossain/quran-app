@@ -17,9 +17,14 @@ export default function SurahClient({ surahId }: SurahClientProps) {
   const { isHidden } = useHeaderVisibility();
 
   React.useEffect(() => {
+    // Set initial body overflow, but allow sidebar context to override
+    const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => {
-      document.body.style.overflow = '';
+      // Only restore if body overflow is still 'hidden' (not changed by sidebar)
+      if (document.body.style.overflow === 'hidden') {
+        document.body.style.overflow = originalOverflow;
+      }
     };
   }, []);
 

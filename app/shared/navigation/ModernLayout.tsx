@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import FloatingQuranButton from './FloatingQuranButton';
 import QuranBottomSheet from './QuranBottomSheet';
 import SwipeContainer from './SwipeContainer';
 import SwipeIndicator from './SwipeIndicator';
@@ -38,8 +37,7 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({ children, showFloatingButto
   const isHomePage = pathname === '/' || pathname === '/home';
   const isVersePage = pathname.includes('/surah/');
   const isTafsirPage = pathname.includes('/tafsir/');
-  const shouldShowFloatingButton =
-    showFloatingButton && !isHomePage && !isVersePage && !isTafsirPage;
+  const shouldShowFloatingButton = false;
 
   return (
     <>
@@ -51,7 +49,7 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({ children, showFloatingButto
       {/* Adaptive Navigation */}
       <AdaptiveNavigation onSurahJump={handleSurahJump} />
 
-      {shouldShowFloatingButton && <FloatingQuranButton onPress={showQuranSelector} />}
+      {/* Floating Quran Button removed per request */}
 
       {/* Bottom Sheet for Quran Selection */}
       <QuranBottomSheet

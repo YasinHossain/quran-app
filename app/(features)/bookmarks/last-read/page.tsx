@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookmarksSidebar } from '../components/BookmarksSidebar';
+import { CircularProgress } from '../components/CircularProgress';
 import { ClockIcon } from '@/app/shared/icons';
 import { useRouter } from 'next/navigation';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
@@ -26,6 +27,8 @@ export default function LastReadPage() {
       router.push('/bookmarks');
     } else if (section === 'pinned') {
       router.push('/bookmarks/pinned');
+    } else if (section === 'memorization') {
+      router.push('/bookmarks/memorization');
     } else {
       router.push('/bookmarks/last-read');
     }
@@ -42,10 +45,10 @@ export default function LastReadPage() {
         {/* Main Content */}
         <main className="flex-1 h-full overflow-hidden">
           <div
-            className={`h-full overflow-y-auto px-4 sm:px-6 lg:px-8 pb-6 transition-all duration-300 ${
+            className={`h-full overflow-y-auto p-4 sm:p-6 md:p-8 pb-6 transition-all duration-300 ${
               isHidden
-                ? 'pt-0'
-                : 'pt-[calc(3.5rem+env(safe-area-inset-top))] sm:pt-[calc(4rem+env(safe-area-inset-top))]'
+                ? 'pt-4 sm:pt-6 md:pt-8'
+                : 'pt-[calc(3.5rem+1rem+env(safe-area-inset-top))] sm:pt-[calc(4rem+1.5rem+env(safe-area-inset-top))] md:pt-[calc(4rem+2rem+env(safe-area-inset-top))]'
             }`}
           >
             {/* Last Read Header */}
@@ -64,7 +67,7 @@ export default function LastReadPage() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="max-w-4xl mx-auto"
+              className=""
             >
               {Object.keys(lastRead).length === 0 ? (
                 <div className="text-center py-16">
@@ -89,16 +92,23 @@ export default function LastReadPage() {
                   </p>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {Object.entries(lastRead).map(([surahId, verseId]) => {
+                <div className="flex flex-wrap gap-4">
+                  {Object.entries(lastRead)
+                    .filter(([surahId, verseId]) => {
+                      const chapter = chapters.find((c) => c.id === Number(surahId));
+                      const total = chapter?.verses_count || 0;
+                      // Filter out invalid entries where verseId > total verses
+                      return total > 0 && verseId <= total && verseId > 0;
+                    })
+                    .map(([surahId, verseId]) => {
                     const chapter = chapters.find((c) => c.id === Number(surahId));
                     const total = chapter?.verses_count || 0;
-                    const percent = total ? Math.round((verseId / total) * 100) : 0;
+                    const percent = Math.min(100, Math.max(0, Math.round((verseId / total) * 100)));
                     const handleNavigate = () => {
                       router.push(`/surah/${surahId}#verse-${verseId}`);
                     };
                     return (
-                      <div
+                      <motion.div
                         key={surahId}
                         role="button"
                         tabIndex={0}
@@ -109,24 +119,26 @@ export default function LastReadPage() {
                             handleNavigate();
                           }
                         }}
-                        className="rounded-xl bg-surface border border-border p-6 cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent hover:border-accent/30 hover:bg-surface-hover transition-all duration-200"
+                        className="w-[calc(50%-0.5rem)] sm:w-72 lg:w-80 h-80 bg-surface rounded-2xl shadow-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-600 hover:shadow-xl transition-all duration-300 border border-border/50 p-6 text-center flex flex-col items-center justify-between"
+                        whileHover={{ y: -2, scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: parseInt(surahId) * 0.1 }}
                       >
-                        <div className="flex items-center justify-between mb-2">
-                          <h3 className="font-semibold text-foreground">
-                            {chapter?.name_simple || `Surah ${surahId}`}
-                          </h3>
-                          <span className="text-sm text-muted">{percent}%</span>
-                        </div>
-                        <div className="w-full bg-border rounded-full h-2 mb-2">
-                          <div
-                            className="bg-accent h-2 rounded-full transition-all duration-300"
-                            style={{ width: `${percent}%` }}
+                        <div className="flex-1 flex items-center justify-center">
+                          <CircularProgress 
+                            percentage={percent}
+                            label="Complete"
+                            size={160}
+                            strokeWidth={15}
                           />
                         </div>
-                        <p className="text-sm text-muted">
-                          Verse {verseId} of {total}
-                        </p>
-                      </div>
+                        <div className="mt-4">
+                          <p className="text-lg font-bold text-foreground truncate">{chapter?.name_simple || `Surah ${surahId}`}</p>
+                          <p className="text-sm text-muted mt-1">Verse {verseId} of {total}</p>
+                        </div>
+                      </motion.div>
                     );
                   })}
                 </div>

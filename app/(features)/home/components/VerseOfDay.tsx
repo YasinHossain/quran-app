@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Word } from '@/types';
 import Spinner from '@/app/shared/Spinner';
 import { applyTajweed } from '@/lib/text/tajweed';
@@ -12,6 +12,27 @@ import { useSettings } from '@/app/providers/SettingsContext';
 export default function VerseOfDay() {
   const { settings } = useSettings();
   const { verse, loading, error, surahs } = useVerseOfDay();
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [displayVerse, setDisplayVerse] = useState(verse);
+
+  // Handle verse transitions with smooth animation
+  useEffect(() => {
+    if (!verse) return;
+
+    if (displayVerse && verse.id !== displayVerse.id) {
+      // Start transition
+      setIsTransitioning(true);
+      
+      // After fade out, update verse and fade in
+      setTimeout(() => {
+        setDisplayVerse(verse);
+        setIsTransitioning(false);
+      }, 200); // Match CSS transition duration
+    } else if (!displayVerse) {
+      // Initial load
+      setDisplayVerse(verse);
+    }
+  }, [verse, displayVerse]);
 
   if (loading) {
     return (
@@ -31,54 +52,58 @@ export default function VerseOfDay() {
     );
   }
 
-  if (!verse) {
+  if (!displayVerse) {
     return null;
   }
 
-  const [surahNum] = verse.verse_key.split(':');
+  const [surahNum] = displayVerse.verse_key.split(':');
   const surahName = surahs.find((s) => s.number === Number(surahNum))?.name;
 
   return (
     <div className="mt-12 w-full max-w-4xl p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400 bg-surface-glass/60">
-      <h3
-        className="font-amiri text-3xl md:text-4xl leading-relaxed text-right text-content-accent"
-        dir="rtl"
+      <div 
+        className={`transition-opacity duration-200 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
       >
-        {verse.words && verse.words.length > 0 ? (
-          verse.words.map((w: Word) => (
-            <span key={w.id} className="inline-block mx-0.5 relative group">
-              {settings.tajweed ? (
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: sanitizeHtml(applyTajweed(w.uthmani)),
-                  }}
-                />
-              ) : (
-                w.uthmani
-              )}
-              {w.en && (
-                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-1 py-0.5 rounded bg-accent text-on-accent text-xs whitespace-nowrap opacity-0 group-hover:opacity-100">
-                  {w.en}
-                </span>
-              )}
-            </span>
-          ))
-        ) : settings.tajweed ? (
-          <span
-            dangerouslySetInnerHTML={{
-              __html: sanitizeHtml(applyTajweed(verse.text_uthmani)),
-            }}
-          />
-        ) : (
-          verse.text_uthmani
+        <h3
+          className="font-amiri text-3xl md:text-4xl leading-relaxed text-right text-content-accent"
+          dir="rtl"
+        >
+          {displayVerse.words && displayVerse.words.length > 0 ? (
+            displayVerse.words.map((w: Word) => (
+              <span key={w.id} className="inline-block mx-0.5 relative group">
+                {settings.tajweed ? (
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizeHtml(applyTajweed(w.uthmani)),
+                    }}
+                  />
+                ) : (
+                  w.uthmani
+                )}
+                {w.en && (
+                  <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-1 py-0.5 rounded bg-accent text-on-accent text-xs whitespace-nowrap opacity-0 group-hover:opacity-100">
+                    {w.en}
+                  </span>
+                )}
+              </span>
+            ))
+          ) : settings.tajweed ? (
+            <span
+              dangerouslySetInnerHTML={{
+                __html: sanitizeHtml(applyTajweed(displayVerse.text_uthmani)),
+              }}
+            />
+          ) : (
+            displayVerse.text_uthmani
+          )}
+        </h3>
+        {displayVerse.translations?.[0] && (
+          <p className="mt-4 text-left text-sm text-content-secondary">
+            &quot;{stripHtml(displayVerse.translations[0].text)}&quot; - [Surah {surahName ?? surahNum},{' '}
+            {displayVerse.verse_key}]
+          </p>
         )}
-      </h3>
-      {verse.translations?.[0] && (
-        <p className="mt-4 text-left text-sm text-content-secondary">
-          &quot;{stripHtml(verse.translations[0].text)}&quot; - [Surah {surahName ?? surahNum},{' '}
-          {verse.verse_key}]
-        </p>
-      )}
+      </div>
     </div>
   );
 }

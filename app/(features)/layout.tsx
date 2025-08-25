@@ -35,15 +35,8 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
             <IconSidebar />
           </nav>
 
-          {!isBookmarkPage && (
-            <nav
-              aria-label="Surah navigation"
-              className={`hidden lg:flex fixed left-16 w-80 bg-background border-r border-border z-10 transition-[top] duration-300 ${isHidden ? 'top-0' : 'top-16'}`}
-              style={{ height: isHidden ? '100vh' : 'calc(100vh - 4rem)' }}
-            >
-              <SurahListSidebar />
-            </nav>
-          )}
+          {/* Unified Surah navigation - handles both desktop and mobile */}
+          {!isBookmarkPage && <SurahListSidebar />}
         </>
       )}
 

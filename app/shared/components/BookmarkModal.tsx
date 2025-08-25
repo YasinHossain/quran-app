@@ -31,7 +31,7 @@ const BookmarkModal: React.FC<BookmarkModalProps> = ({
     createFolder,
   } = useBookmarks();
 
-  const [activeTab, setActiveTab] = useState<'bookmark' | 'pin'>('bookmark');
+  const [activeTab, setActiveTab] = useState<'bookmark' | 'pin'>('pin');
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
@@ -153,19 +153,6 @@ const BookmarkModal: React.FC<BookmarkModalProps> = ({
                 {/* Tabs */}
                 <div className="flex bg-interactive rounded-2xl p-1">
                   <button
-                    onClick={() => setActiveTab('bookmark')}
-                    className={cn(
-                      'flex-1 py-2 px-4 text-sm font-medium rounded-xl transition-all',
-                      touchClasses.target,
-                      touchClasses.focus,
-                      activeTab === 'bookmark'
-                        ? 'bg-surface text-foreground shadow-sm'
-                        : 'text-muted hover:text-foreground'
-                    )}
-                  >
-                    Bookmark
-                  </button>
-                  <button
                     onClick={() => setActiveTab('pin')}
                     className={cn(
                       'flex-1 py-2 px-4 text-sm font-medium rounded-xl transition-all',
@@ -177,6 +164,19 @@ const BookmarkModal: React.FC<BookmarkModalProps> = ({
                     )}
                   >
                     Pin
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('bookmark')}
+                    className={cn(
+                      'flex-1 py-2 px-4 text-sm font-medium rounded-xl transition-all',
+                      touchClasses.target,
+                      touchClasses.focus,
+                      activeTab === 'bookmark'
+                        ? 'bg-surface text-foreground shadow-sm'
+                        : 'text-muted hover:text-foreground'
+                    )}
+                  >
+                    Bookmark
                   </button>
                 </div>
               </div>

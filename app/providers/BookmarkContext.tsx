@@ -1,6 +1,6 @@
 'use client';
 
-import { Folder, Bookmark, Chapter } from '@/types';
+import { Folder, Bookmark, Chapter, MemorizationPlan } from '@/types';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { getVerseById, getVerseByKey } from '@/lib/api/verses';
@@ -10,6 +10,7 @@ const BOOKMARKS_STORAGE_KEY = 'quranAppBookmarks_v2'; // Use a new key for the n
 const OLD_BOOKMARKS_STORAGE_KEY = 'quranAppBookmarks'; // Old key for migration
 const PINNED_STORAGE_KEY = 'quranAppPinnedVerses_v1';
 const LAST_READ_STORAGE_KEY = 'quranAppLastRead_v1';
+const MEMORIZATION_STORAGE_KEY = 'quranAppMemorization_v1';
 
 interface BookmarkContextType {
   folders: Folder[];
@@ -29,6 +30,11 @@ interface BookmarkContextType {
   lastRead: Record<string, number>;
   setLastRead: (surahId: string, verseId: number) => void;
   chapters: Chapter[];
+  memorization: Record<string, MemorizationPlan>;
+  addToMemorization: (surahId: number, targetVerses?: number) => void;
+  createMemorizationPlan: (surahId: number, targetVerses: number, planName?: string) => void;
+  updateMemorizationProgress: (surahId: number, completedVerses: number) => void;
+  removeFromMemorization: (surahId: number) => void;
 }
 
 const BookmarkContext = createContext<BookmarkContextType | undefined>(undefined);
@@ -37,6 +43,7 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
   const [folders, setFolders] = useState<Folder[]>([]);
   const [pinnedVerses, setPinnedVerses] = useState<Bookmark[]>([]);
   const [lastRead, setLastReadState] = useState<Record<string, number>>({});
+  const [memorization, setMemorizationState] = useState<Record<string, MemorizationPlan>>({});
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const { settings } = useSettings();
 
@@ -98,6 +105,15 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
           // Silent fail for parsing errors
         }
       }
+
+      const savedMemorization = localStorage.getItem(MEMORIZATION_STORAGE_KEY);
+      if (savedMemorization) {
+        try {
+          setMemorizationState(JSON.parse(savedMemorization));
+        } catch {
+          // Silent fail for parsing errors
+        }
+      }
     }
   }, []);
 
@@ -131,6 +147,16 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
       }
     }
   }, [lastRead]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(MEMORIZATION_STORAGE_KEY, JSON.stringify(memorization));
+      } catch {
+        // Silent fail
+      }
+    }
+  }, [memorization]);
 
   const createFolder = useCallback((name: string, color?: string, icon?: string) => {
     const newFolder: Folder = {
@@ -325,6 +351,65 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
     setLastReadState((prev) => ({ ...prev, [surahId]: verseId }));
   }, []);
 
+  const addToMemorization = useCallback((surahId: number, targetVerses?: number) => {
+    const chapter = chapters.find((c) => c.id === surahId);
+    const defaultTargetVerses = targetVerses || chapter?.verses_count || 0;
+    
+    setMemorizationState((prev) => ({
+      ...prev,
+      [surahId.toString()]: {
+        id: `memorization-${surahId}-${Date.now()}`,
+        surahId,
+        targetVerses: defaultTargetVerses,
+        completedVerses: 0,
+        createdAt: Date.now(),
+        lastUpdated: Date.now(),
+      },
+    }));
+  }, [chapters]);
+
+  const createMemorizationPlan = useCallback((surahId: number, targetVerses: number, planName?: string) => {
+    const chapter = chapters.find((c) => c.id === surahId);
+    const timestamp = Date.now();
+    
+    setMemorizationState((prev) => ({
+      ...prev,
+      [surahId.toString()]: {
+        id: `memorization-${surahId}-${timestamp}`,
+        surahId,
+        targetVerses,
+        completedVerses: 0,
+        createdAt: timestamp,
+        lastUpdated: timestamp,
+        notes: planName || `Memorization plan for ${chapter?.name_simple || `Surah ${surahId}`}`,
+      },
+    }));
+  }, [chapters]);
+
+  const updateMemorizationProgress = useCallback((surahId: number, completedVerses: number) => {
+    setMemorizationState((prev) => {
+      const existing = prev[surahId.toString()];
+      if (!existing) return prev;
+      
+      return {
+        ...prev,
+        [surahId.toString()]: {
+          ...existing,
+          completedVerses: Math.max(0, Math.min(completedVerses, existing.targetVerses)),
+          lastUpdated: Date.now(),
+        },
+      };
+    });
+  }, []);
+
+  const removeFromMemorization = useCallback((surahId: number) => {
+    setMemorizationState((prev) => {
+      const newState = { ...prev };
+      delete newState[surahId.toString()];
+      return newState;
+    });
+  }, []);
+
   const bookmarkedVerses = useMemo(
     () => folders.flatMap((f) => f.bookmarks.map((b) => b.verseId)),
     [folders]
@@ -349,6 +434,11 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
       lastRead,
       setLastRead,
       chapters,
+      memorization,
+      addToMemorization,
+      createMemorizationPlan,
+      updateMemorizationProgress,
+      removeFromMemorization,
     }),
     [
       folders,
@@ -368,6 +458,11 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
       lastRead,
       setLastRead,
       chapters,
+      memorization,
+      addToMemorization,
+      createMemorizationPlan,
+      updateMemorizationProgress,
+      removeFromMemorization,
     ]
   );
 

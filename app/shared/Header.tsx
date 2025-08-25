@@ -3,24 +3,23 @@ import type React from 'react';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
-import { IconSettings, IconSun, IconMoon } from '@tabler/icons-react';
+import { IconSun, IconMoon, IconSettings, IconMenu2 } from '@tabler/icons-react';
 import { SearchInput } from './components/SearchInput';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useTheme } from '@/app/providers/ThemeContext';
+import { useUIState } from '@/app/providers/UIStateContext';
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { cn } from '@/lib/utils';
 
 const Header = () => {
   const { isHidden } = useHeaderVisibility();
   const { theme, setTheme } = useTheme();
-  const { setSettingsOpen } = useSidebar();
+  const { setSettingsOpen } = useUIState();
+  const { setSurahListOpen, setBookmarkSidebarOpen } = useSidebar();
   const router = useRouter();
   const pathname = usePathname();
   const [query, setQuery] = useState('');
 
-  // On these routes, a fixed SettingsSidebar is rendered on desktop
-  const sidebarRoutes = ['/surah/', '/tafsir/', '/juz/', '/page/', '/bookmarks/'];
-  const hasFixedSidebar = sidebarRoutes.some((p) => pathname.startsWith(p));
 
   const toggleTheme = () => {
     const html = document.documentElement;
@@ -39,12 +38,24 @@ const Header = () => {
     }
   };
 
+  // Check if we need to show navigation menu (for pages with sidebars)
+  const showNavigationMenu = pathname?.startsWith('/surah') || pathname?.startsWith('/tafsir') || pathname?.startsWith('/juz') || pathname?.startsWith('/page');
+  const showBookmarkMenu = pathname?.startsWith('/bookmarks');
+
+  const handleMobileNavClick = () => {
+    if (showBookmarkMenu) {
+      setBookmarkSidebarOpen(true);
+    } else if (showNavigationMenu) {
+      setSurahListOpen(true);
+    }
+  };
+
   return (
     <header
       className={cn(
         'fixed top-0 left-0 right-0 h-[calc(3.5rem+env(safe-area-inset-top))] sm:h-[calc(4rem+env(safe-area-inset-top))] z-header transition-all duration-300',
         'backdrop-blur-lg bg-surface/8 backdrop-saturate-150',
-        'border-b border-border/5',
+        'border-b border-border shadow-md shadow-black/5 dark:shadow-black/10',
         'flex items-center justify-center',
         isHidden ? '-translate-y-full' : 'translate-y-0'
       )}
@@ -52,8 +63,19 @@ const Header = () => {
     >
       {/* Content container centered within available height */}
       <div className="flex items-center justify-between gap-2 sm:gap-3 w-full h-14 sm:h-16 px-4 sm:px-6 lg:px-8">
-        {/* Left section - Brand */}
+        {/* Left section - Navigation & Brand */}
         <div className="flex items-center justify-start w-1/3">
+          {/* Mobile Navigation Menu Button */}
+          {(showNavigationMenu || showBookmarkMenu) && (
+            <button
+              onClick={handleMobileNavClick}
+              className="btn-touch p-2.5 rounded-xl hover:bg-muted/60 transition-all duration-200 active:scale-95 mr-2 lg:hidden"
+              aria-label="Open navigation"
+            >
+              <IconMenu2 size={18} className="text-muted" />
+            </button>
+          )}
+          
           <Link
             href="/"
             className="flex items-center space-x-2 hover:opacity-80 transition-opacity ml-2"
@@ -86,6 +108,15 @@ const Header = () => {
 
         {/* Right section - Actions */}
         <div className="flex items-center justify-end space-x-1 sm:space-x-1.5 w-1/3 mr-1">
+          {/* Settings button - only show on mobile/tablet when settings sidebar is hidden */}
+          <button
+            onClick={() => setSettingsOpen(true)}
+            className="btn-touch p-2.5 rounded-xl hover:bg-muted/60 transition-all duration-200 active:scale-95 lg:hidden"
+            aria-label="Open settings"
+          >
+            <IconSettings size={18} className="text-muted" />
+          </button>
+
           {/* Theme toggle */}
           <button
             onClick={toggleTheme}
@@ -99,18 +130,6 @@ const Header = () => {
             )}
           </button>
 
-          {/* Settings button */}
-          <button
-            onClick={() => setSettingsOpen(true)}
-            className={cn(
-              'btn-touch p-2.5 rounded-xl hover:bg-muted/60 transition-all duration-200 active:scale-95',
-              // On routes with a fixed SettingsSidebar, only show on mobile
-              hasFixedSidebar ? 'lg:hidden' : ''
-            )}
-            aria-label="Open Settings"
-          >
-            <IconSettings size={18} className="text-muted" />
-          </button>
         </div>
       </div>
     </header>

@@ -4,8 +4,8 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 interface SidebarContextType {
   isSurahListOpen: boolean;
   setSurahListOpen: (open: boolean) => void;
-  isSettingsOpen: boolean;
-  setSettingsOpen: (open: boolean) => void;
+  isBookmarkSidebarOpen: boolean;
+  setBookmarkSidebarOpen: (open: boolean) => void;
   surahScrollTop: number;
   setSurahScrollTop: (top: number) => void;
   juzScrollTop: number;
@@ -23,7 +23,7 @@ const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
  */
 export const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
   const [isSurahListOpen, _setSurahListOpen] = useState(false);
-  const [isSettingsOpen, _setSettingsOpen] = useState(false);
+  const [isBookmarkSidebarOpen, _setBookmarkSidebarOpen] = useState(false);
 
   // Enhanced mobile-friendly sidebar handlers
   const setSurahListOpen = useCallback((open: boolean) => {
@@ -39,8 +39,8 @@ export const SidebarProvider = ({ children }: { children: React.ReactNode }) => 
     }
   }, []);
 
-  const setSettingsOpen = useCallback((open: boolean) => {
-    _setSettingsOpen(open);
+  const setBookmarkSidebarOpen = useCallback((open: boolean) => {
+    _setBookmarkSidebarOpen(open);
 
     // Prevent body scroll when drawer is open (mobile)
     if (typeof window !== 'undefined') {
@@ -52,21 +52,23 @@ export const SidebarProvider = ({ children }: { children: React.ReactNode }) => 
     }
   }, []);
 
+
   // Keyboard support for closing drawers
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         if (isSurahListOpen) {
           setSurahListOpen(false);
-        } else if (isSettingsOpen) {
-          setSettingsOpen(false);
+        }
+        if (isBookmarkSidebarOpen) {
+          setBookmarkSidebarOpen(false);
         }
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isSurahListOpen, isSettingsOpen, setSurahListOpen, setSettingsOpen]);
+  }, [isSurahListOpen, setSurahListOpen, isBookmarkSidebarOpen, setBookmarkSidebarOpen]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -118,8 +120,8 @@ export const SidebarProvider = ({ children }: { children: React.ReactNode }) => 
     () => ({
       isSurahListOpen,
       setSurahListOpen,
-      isSettingsOpen,
-      setSettingsOpen,
+      isBookmarkSidebarOpen,
+      setBookmarkSidebarOpen,
       surahScrollTop,
       setSurahScrollTop,
       juzScrollTop,
@@ -130,8 +132,8 @@ export const SidebarProvider = ({ children }: { children: React.ReactNode }) => 
     [
       isSurahListOpen,
       setSurahListOpen,
-      isSettingsOpen,
-      setSettingsOpen,
+      isBookmarkSidebarOpen,
+      setBookmarkSidebarOpen,
       surahScrollTop,
       setSurahScrollTop,
       juzScrollTop,

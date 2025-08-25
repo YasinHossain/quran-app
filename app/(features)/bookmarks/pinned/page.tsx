@@ -7,13 +7,14 @@ import { PinIcon } from '@/app/shared/icons';
 import { useRouter } from 'next/navigation';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { useSidebar } from '@/app/providers/SidebarContext';
 import { BookmarkCard } from '../components/BookmarkCard';
 
 export default function PinnedAyahPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
   const { isHidden } = useHeaderVisibility();
   const { pinnedVerses } = useBookmarks();
+  const { isBookmarkSidebarOpen, setBookmarkSidebarOpen } = useSidebar();
 
   React.useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -27,6 +28,8 @@ export default function PinnedAyahPage() {
       router.push('/bookmarks');
     } else if (section === 'last-read') {
       router.push('/bookmarks/last-read');
+    } else if (section === 'memorization') {
+      router.push('/bookmarks/memorization');
     } else {
       router.push('/bookmarks/pinned');
     }
@@ -103,13 +106,13 @@ export default function PinnedAyahPage() {
 
       {/* Mobile Sidebar Overlay */}
       <AnimatePresence>
-        {sidebarOpen && (
+        {isBookmarkSidebarOpen && (
           <>
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setSidebarOpen(false)}
+              onClick={() => setBookmarkSidebarOpen(false)}
               className="fixed inset-0 bg-surface-overlay/60 z-40 lg:hidden"
             />
             <motion.aside
@@ -117,7 +120,7 @@ export default function PinnedAyahPage() {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className="fixed top-0 left-0 h-full w-80 bg-surface border-r border-border z-50 lg:hidden"
+              className="fixed top-16 left-0 h-[calc(100vh-4rem)] w-80 bg-surface border-r border-border z-50 lg:hidden"
             >
               <BookmarksSidebar activeSection="pinned" onSectionChange={handleSectionChange} />
             </motion.aside>

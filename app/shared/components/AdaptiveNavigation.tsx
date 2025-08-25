@@ -43,8 +43,12 @@ const AdaptiveNavigation: React.FC<AdaptiveNavigationProps> = ({ onSurahJump, cl
     {
       id: 'surah',
       icon: IconBook,
+      // Requirement: In mobile Surah page, this should navigate to verse page instead of opening sidebar.
+      // Keep concise label; actual behavior handled in onItemClick below.
       label: breakpoint === 'mobile' ? 'Jump' : 'Jump to Surah',
+      // Mark active on any surah path
       isActive: (path) => path.startsWith('/surah'),
+      href: '/surah/1',
     },
     {
       id: 'bookmarks',
@@ -56,9 +60,23 @@ const AdaptiveNavigation: React.FC<AdaptiveNavigationProps> = ({ onSurahJump, cl
   ];
 
   const handleItemClick = (item: NavItem, e: React.MouseEvent) => {
-    if (item.id === 'surah' && onSurahJump) {
-      e.preventDefault();
-      onSurahJump();
+    // New behavior:
+    // - On Surah pages or Bookmark pages in mobile view, tapping "Jump" should navigate to the verse page (no sidebar).
+    // - The Surah list sidebar trigger moves to the Verse page hamburger (handled elsewhere).
+    if (item.id === 'surah') {
+      const isOnSurahPage = pathname.startsWith('/surah/');
+      const isOnBookmarkPage = pathname.startsWith('/bookmarks');
+      const isMobile = breakpoint === 'mobile';
+      if ((isOnSurahPage || isOnBookmarkPage) && isMobile) {
+        // Allow default link navigation to verse page via href
+        // Don't prevent default, let the Link handle the navigation
+        return;
+      }
+      // For desktop or when not on surah/bookmark page, use the sidebar/selector
+      if (onSurahJump) {
+        e.preventDefault();
+        onSurahJump();
+      }
     }
   };
 

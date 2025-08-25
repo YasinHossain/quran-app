@@ -75,7 +75,7 @@ export const FolderGrid: React.FC<FolderGridProps> = ({
   return (
     <>
       <motion.div
-        className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+        className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}

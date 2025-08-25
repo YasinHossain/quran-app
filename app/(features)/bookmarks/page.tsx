@@ -11,16 +11,17 @@ import { useModal } from '@/app/shared/hooks/useModal';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { useSidebar } from '@/app/providers/SidebarContext';
 
 const BookmarksPage = () => {
   const { folders } = useBookmarks();
   const modal = useModal();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sortBy, setSortBy] = useState<'recent' | 'name-asc' | 'name-desc' | 'most-verses'>(
     'recent'
   );
   const router = useRouter();
   const { isHidden } = useHeaderVisibility();
+  const { isBookmarkSidebarOpen, setBookmarkSidebarOpen } = useSidebar();
 
   React.useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -55,6 +56,8 @@ const BookmarksPage = () => {
       router.push('/bookmarks/pinned');
     } else if (section === 'last-read') {
       router.push('/bookmarks/last-read');
+    } else if (section === 'memorization') {
+      router.push('/bookmarks/memorization');
     } else {
       router.push('/bookmarks');
     }
@@ -66,17 +69,26 @@ const BookmarksPage = () => {
 
       <div className="flex h-[calc(100vh-4rem)] mt-16 bg-background">
         {/* Left Sidebar */}
-        <aside className="w-full sm:w-80 lg:w-[20.7rem] bg-background text-foreground flex flex-col shadow-modal md:shadow-lg z-modal md:z-10 md:h-full hidden lg:block">
-          <BookmarksSidebar activeSection="bookmarks" onSectionChange={handleSectionChange} />
+        <aside className="w-full sm:w-80 lg:w-80 bg-background text-foreground flex flex-col shadow-modal md:shadow-lg z-modal md:z-10 md:h-full hidden lg:block">
+          <BookmarksSidebar 
+            activeSection="bookmarks" 
+            onSectionChange={handleSectionChange}
+            folders={folders}
+            onVerseClick={(verseKey) => {
+              // Navigate to the verse (you can customize this logic)
+              const [surahId, ayahNumber] = verseKey.split(':');
+              router.push(`/surah/${surahId}#verse-${verseKey}`);
+            }}
+          />
         </aside>
 
         {/* Main Content */}
         <main className="flex-1 h-full overflow-hidden">
           <div
-            className={`h-full overflow-y-auto px-4 sm:px-6 lg:px-8 pb-6 transition-all duration-300 ${
+            className={`h-full overflow-y-auto p-4 sm:p-6 md:p-8 pb-6 transition-all duration-300 ${
               isHidden
-                ? 'pt-0'
-                : 'pt-[calc(3.5rem+env(safe-area-inset-top))] sm:pt-[calc(4rem+env(safe-area-inset-top))]'
+                ? 'pt-4 sm:pt-6 md:pt-8'
+                : 'pt-[calc(3.5rem+1rem+env(safe-area-inset-top))] sm:pt-[calc(4rem+1.5rem+env(safe-area-inset-top))] md:pt-[calc(4rem+2rem+env(safe-area-inset-top))]'
             }`}
           >
             {/* Bookmarks Header */}
@@ -113,13 +125,13 @@ const BookmarksPage = () => {
 
       {/* Mobile Sidebar Overlay */}
       <AnimatePresence>
-        {sidebarOpen && (
+        {isBookmarkSidebarOpen && (
           <>
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setSidebarOpen(false)}
+              onClick={() => setBookmarkSidebarOpen(false)}
               className="fixed inset-0 bg-surface-overlay/60 z-40 lg:hidden"
             />
             <motion.aside
@@ -127,9 +139,19 @@ const BookmarksPage = () => {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className="fixed top-0 left-0 h-full w-full sm:w-80 lg:w-[20.7rem] bg-background text-foreground border-r border-border z-50 lg:hidden"
+              className="fixed top-16 left-0 h-[calc(100vh-4rem)] w-full sm:w-80 lg:w-80 bg-background text-foreground border-r border-border z-50 lg:hidden"
             >
-              <BookmarksSidebar activeSection="bookmarks" onSectionChange={handleSectionChange} />
+              <BookmarksSidebar 
+                activeSection="bookmarks" 
+                onSectionChange={handleSectionChange}
+                folders={folders}
+                onVerseClick={(verseKey) => {
+                  // Navigate to the verse (you can customize this logic)
+                  const [surahId, ayahNumber] = verseKey.split(':');
+                  router.push(`/surah/${surahId}#verse-${verseKey}`);
+                  setBookmarkSidebarOpen(false);
+                }}
+              />
             </motion.aside>
           </>
         )}

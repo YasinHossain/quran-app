@@ -8,6 +8,7 @@ import { BookmarkVerseList } from '../components/BookmarkVerseList';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { getVerseById, getVerseByKey } from '@/lib/api';
 import { useSettings } from '@/app/providers/SettingsContext';
+import { useSidebar } from '@/app/providers/SidebarContext';
 import type { Verse } from '@/types';
 
 // Simple cache for verses
@@ -17,12 +18,15 @@ import useTranslationOptions from '@/app/(features)/surah/hooks/useTranslationOp
 import { useTranslation } from 'react-i18next';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
+import { IconSettings } from '@tabler/icons-react';
+import { useUIState } from '@/app/providers/UIStateContext';
 
 interface BookmarkFolderClientProps {
   folderId: string;
 }
 
 export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientProps) {
+  console.log('BookmarkFolderClient rendering with folderId:', folderId);
   const router = useRouter();
   const { isHidden } = useHeaderVisibility();
   const bookmarkContext = useBookmarks();
@@ -31,12 +35,13 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
   const { settings } = useSettings();
   const [activeVerseId, setActiveVerseId] = useState<string | undefined>(undefined);
   const [verses, setVerses] = useState<Verse[]>([]);
-  const [isMobileFolderOpen, setIsMobileFolderOpen] = useState(false);
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
   const [loadedVerses, setLoadedVerses] = useState<Set<string>>(new Set());
   const [loadingVerses, setLoadingVerses] = useState<Set<string>>(new Set());
-
+  const { isBookmarkSidebarOpen, setBookmarkSidebarOpen } = useSidebar();
+  
+  const { setSettingsOpen } = useUIState();
   const { t } = useTranslation();
   const { translationOptions, wordLanguageOptions } = useTranslationOptions();
 
@@ -185,61 +190,22 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
 
   return (
     <>
-      {/* Mobile Sidebar Overlay */}
-      {isMobileFolderOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={() => setIsMobileFolderOpen(false)}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              setIsMobileFolderOpen(false);
-            }
-          }}
-          role="button"
-          tabIndex={-1}
-          aria-label="Close sidebar"
-        />
-      )}
-
       {/* Left Sidebar - navigation */}
-      <aside
-        className={`fixed left-0 lg:left-16 top-16 h-[calc(100vh-4rem)] w-80 lg:w-[20.7rem] bg-surface border-r border-border z-50 lg:z-10 transition-transform duration-300 ${
-          isMobileFolderOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}
-      >
-        <BookmarkFolderSidebar
-          bookmarks={bookmarks}
-          folder={folder}
-          activeVerseId={activeVerseId}
-          onVerseSelect={(verseId) => {
-            setActiveVerseId(verseId === activeVerseId ? undefined : verseId);
-            setIsMobileFolderOpen(false);
-          }}
-          onBack={() => router.push('/bookmarks')}
-        />
-      </aside>
-
-      {/* Mobile Header with Sidebar Toggle */}
-      <div className="lg:hidden fixed top-16 left-0 right-0 h-12 bg-surface border-b border-border z-30 flex items-center px-4">
-        <button
-          onClick={() => setIsMobileFolderOpen(true)}
-          className="p-2 rounded-md hover:bg-surface-hover transition-colors touch-manipulation"
-          aria-label="Open sidebar"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        </button>
-        <h1 className="ml-3 text-lg font-semibold truncate">{folder.name}</h1>
-      </div>
+      <BookmarkFolderSidebar
+        bookmarks={bookmarks}
+        folder={folder}
+        activeVerseId={activeVerseId}
+        onVerseSelect={(verseId) => {
+          setActiveVerseId(verseId === activeVerseId ? undefined : verseId);
+          setBookmarkSidebarOpen(false);
+        }}
+        onBack={() => router.push('/bookmarks')}
+        isOpen={isBookmarkSidebarOpen}
+        onClose={() => setBookmarkSidebarOpen(false)}
+      />
 
       {/* Main Content - Verse display */}
-      <main className="h-screen text-foreground font-sans lg:ml-[20.7rem] overflow-hidden relative z-50">
+      <main className="h-screen text-foreground font-sans lg:ml-[20.7rem] overflow-hidden relative">
         <div
           className={`h-full overflow-y-auto px-4 sm:px-6 lg:px-8 pb-6 transition-all duration-300 ${
             isHidden ? 'pt-12 lg:pt-4' : 'pt-24 lg:pt-20'
@@ -293,6 +259,7 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
         isWordLanguagePanelOpen={isWordPanelOpen}
         onWordLanguagePanelClose={() => setIsWordPanelOpen(false)}
       />
+
     </>
   );
 }

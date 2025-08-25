@@ -171,15 +171,15 @@ export const BookmarkCard = memo(function BookmarkCard({
         onClick={handleNavigateToVerse}
       >
         {/* Compact header layout */}
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center space-x-2">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-1 mt-1">
             <span className="text-accent font-semibold text-sm">{enrichedBookmark.verseKey}</span>
             <span className="text-muted text-sm truncate">{enrichedBookmark.surahName}</span>
           </div>
           <div className="flex items-center space-x-2">
             <span className="text-xs text-muted">{formatTimeAgo(enrichedBookmark.createdAt)}</span>
             <div
-              className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+              className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1"
               onClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -198,7 +198,7 @@ export const BookmarkCard = memo(function BookmarkCard({
                 onBookmark={handleRemoveBookmark}
                 onNavigateToVerse={handleNavigateToVerse}
                 showRemove={true}
-                className="scale-75"
+                className="scale-90"
               />
             </div>
           </div>

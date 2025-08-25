@@ -56,7 +56,7 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
     return (
       <aside
         ref={ref}
-        className={`settings-sidebar fixed lg:static ${isHidden ? 'top-0' : 'top-16'} lg:top-0 bottom-0 right-0 w-72 sm:w-80 md:w-[20.7rem] bg-surface text-foreground flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 z-40 lg:z-40 lg:h-full ${
+        className={`settings-sidebar fixed lg:static ${isHidden ? 'top-0' : 'top-16'} lg:top-0 bottom-0 right-0 w-72 sm:w-80 lg:w-[20.7rem] bg-surface text-foreground flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden shadow-[-5px_0px_15px_-5px_rgba(0,0,0,0.05)] transition-all duration-300 z-40 lg:z-40 lg:h-full ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         } lg:translate-x-0 ${isOpen ? 'flex' : 'hidden'} lg:flex scrollbar-hide`}
         style={{ position: 'relative' }}

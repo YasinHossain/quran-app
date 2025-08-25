@@ -24,21 +24,28 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
   const [surahs, setSurahs] = useState<Surah[]>([]);
 
   const abortRef = useRef(false);
+  const intervalRef = useRef<NodeJS.Timeout>();
 
-  // Preload a random verse and queue it for display
+  // Preload verses to maintain cache of 3-5 verses
   const prefetchVerse = useCallback(async () => {
     try {
       const v = await getRandomVerse(settings.translationId);
       if (abortRef.current) return;
-      setVerseQueue((q) => [...q, v]);
+      setVerseQueue((q) => {
+        // Keep max 5 verses in queue
+        const updatedQueue = [...q, v];
+        return updatedQueue.length > 5 ? updatedQueue.slice(1) : updatedQueue;
+      });
     } catch (err) {
       console.error('Error prefetching verse:', err);
     }
   }, [settings.translationId]);
 
   // Load the next verse from queue or fetch a new one
-  const loadNextVerse = useCallback(async () => {
-    setLoading(true);
+  const loadNextVerse = useCallback(async (showLoading = true) => {
+    if (showLoading) {
+      setLoading(true);
+    }
     setError(null);
 
     try {
@@ -56,8 +63,10 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
       if (!abortRef.current) {
         setVerse(nextVerse);
 
-        // Preload next verse for smooth experience
-        prefetchVerse();
+        // Maintain cache by prefetching more verses
+        if (verseQueue.length < 3) {
+          prefetchVerse();
+        }
       }
     } catch (err) {
       if (!abortRef.current) {
@@ -71,6 +80,28 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
     }
   }, [verseQueue, settings.translationId, prefetchVerse]);
 
+  // Start automatic rotation every 10 seconds
+  const startAutoRotation = useCallback(() => {
+    // Clear any existing interval
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    intervalRef.current = setInterval(() => {
+      if (!abortRef.current) {
+        loadNextVerse(false); // Don't show loading spinner for auto-rotation
+      }
+    }, 10000); // 10 seconds
+  }, [loadNextVerse]);
+
+  // Stop automatic rotation
+  const stopAutoRotation = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = undefined;
+    }
+  }, []);
+
   // Refresh current verse (load new one)
   const refreshVerse = useCallback(() => {
     loadNextVerse();
@@ -81,15 +112,26 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
     prefetchVerse();
   }, [prefetchVerse]);
 
-  // Load initial verse on mount or when translation changes
+  // Load initial verse and setup auto-rotation
   useEffect(() => {
     abortRef.current = false;
-    loadNextVerse();
+    
+    // Load initial verse
+    loadNextVerse().then(() => {
+      // Start auto-rotation after initial load
+      startAutoRotation();
+      
+      // Prefetch initial cache of verses
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => prefetchVerse(), i * 500); // Stagger requests
+      }
+    });
 
     return () => {
       abortRef.current = true;
+      stopAutoRotation();
     };
-  }, [settings.translationId, loadNextVerse]);
+  }, [settings.translationId, loadNextVerse, startAutoRotation, stopAutoRotation, prefetchVerse]);
 
   // Load surahs list for metadata
   useEffect(() => {
