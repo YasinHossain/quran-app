@@ -31,9 +31,21 @@ export const SurahListContent: React.FC<SurahListContentProps> = ({ chapters }) 
 
   const { surahId, juzId, pageId } = useParams();
   const pathname = usePathname();
-  const currentSurahId = Array.isArray(surahId) ? surahId[0] : (surahId as string | undefined);
-  const currentJuzId = Array.isArray(juzId) ? juzId[0] : (juzId as string | undefined);
-  const currentPageId = Array.isArray(pageId) ? pageId[0] : (pageId as string | undefined);
+  const currentSurahId = Array.isArray(surahId)
+    ? Number(surahId[0])
+    : surahId
+      ? Number(surahId)
+      : undefined;
+  const currentJuzId = Array.isArray(juzId)
+    ? Number(juzId[0])
+    : juzId
+      ? Number(juzId)
+      : undefined;
+  const currentPageId = Array.isArray(pageId)
+    ? Number(pageId[0])
+    : pageId
+      ? Number(pageId)
+      : undefined;
 
   const [activeTab, setActiveTab] = useState<'Surah' | 'Juz' | 'Page'>(() => {
     if (currentJuzId) return 'Juz';
