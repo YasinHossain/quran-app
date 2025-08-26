@@ -1,8 +1,12 @@
-import type { Bookmark, Folder } from '@/domain/entities';
+import type { Bookmark, Folder, MemorizationPlan } from '@/domain/entities';
 import { BookmarkStorageRepository } from '@/infrastructure/bookmarks/BookmarkStorageRepository';
 import { PinnedStorageRepository } from '@/infrastructure/bookmarks/PinnedStorageRepository';
+import { LastReadStorageRepository } from '@/infrastructure/bookmarks/LastReadStorageRepository';
+import { MemorizationStorageRepository } from '@/infrastructure/bookmarks/MemorizationStorageRepository';
 import type { BookmarkRepository } from '@/domain/repositories/BookmarkRepository';
 import type { PinnedRepository } from '@/domain/repositories/PinnedRepository';
+import type { LastReadRepository } from '@/domain/repositories/LastReadRepository';
+import type { MemorizationRepository } from '@/domain/repositories/MemorizationRepository';
 import {
   addBookmark,
   removeBookmark,
@@ -12,12 +16,16 @@ import {
   renameFolder as renameFolderUseCase,
   findBookmark,
   getSortedFolders,
+  createMemorizationPlan as createMemorizationPlanUseCase,
+  updateMemorizationProgress as updateMemorizationProgressUseCase,
 } from '@/domain/usecases/bookmark';
 
 export class BookmarkService {
   constructor(
     private bookmarkRepo: BookmarkRepository,
-    private pinnedRepo: PinnedRepository
+    private pinnedRepo: PinnedRepository,
+    private lastReadRepo: LastReadRepository,
+    private memorizationRepo: MemorizationRepository
   ) {}
 
   load() {
@@ -110,6 +118,66 @@ export class BookmarkService {
     return pinned.some((b) => b.verseId === verseId);
   }
 
+  loadLastRead(): Record<string, number> {
+    return this.lastReadRepo.load();
+  }
+
+  setLastRead(
+    lastRead: Record<string, number>,
+    surahId: string,
+    verseId: number
+  ): Record<string, number> {
+    const updated = { ...lastRead, [surahId]: verseId };
+    this.lastReadRepo.save(updated);
+    return updated;
+  }
+
+  loadMemorization(): Record<string, MemorizationPlan> {
+    return this.memorizationRepo.load();
+  }
+
+  createMemorizationPlan(
+    memorization: Record<string, MemorizationPlan>,
+    surahId: number,
+    targetVerses: number,
+    planName?: string
+  ): Record<string, MemorizationPlan> {
+    const plan = createMemorizationPlanUseCase(
+      surahId,
+      targetVerses,
+      planName
+    );
+    const key = surahId.toString();
+    const updated = { ...memorization, [key]: plan };
+    this.memorizationRepo.save(updated);
+    return updated;
+  }
+
+  updateMemorizationProgress(
+    memorization: Record<string, MemorizationPlan>,
+    surahId: number,
+    completedVerses: number
+  ): Record<string, MemorizationPlan> {
+    const updated = updateMemorizationProgressUseCase(
+      memorization,
+      surahId,
+      completedVerses
+    );
+    this.memorizationRepo.save(updated);
+    return updated;
+  }
+
+  removeMemorizationPlan(
+    memorization: Record<string, MemorizationPlan>,
+    surahId: number
+  ): Record<string, MemorizationPlan> {
+    const key = surahId.toString();
+    const updated = { ...memorization };
+    delete updated[key];
+    this.memorizationRepo.save(updated);
+    return updated;
+  }
+
   lockBodyScroll() {
     if (typeof document !== 'undefined') {
       document.body.style.overflow = 'hidden';
@@ -146,5 +214,7 @@ export class BookmarkService {
 
 export const bookmarkService = new BookmarkService(
   new BookmarkStorageRepository(),
-  new PinnedStorageRepository()
+  new PinnedStorageRepository(),
+  new LastReadStorageRepository(),
+  new MemorizationStorageRepository()
 );

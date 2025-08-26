@@ -6,15 +6,8 @@ import { useSettings } from '@/presentation/providers/SettingsContext';
 import { getChapters } from '@/lib/api/chapters';
 import { BookmarkContext } from './BookmarkContext';
 import type { BookmarkContextType } from './types';
-import {
-  loadLastReadFromStorage,
-  saveLastReadToStorage,
-  loadMemorizationFromStorage,
-  saveMemorizationToStorage,
-} from '@/infrastructure/bookmarks/storage-utils';
 import { bookmarkService } from '@/application/BookmarkService';
 import { getVerseById, getVerseByKey } from '@/lib/api/verses';
-import { updateMemorizationProgress, createMemorizationPlan } from '@/domain/usecases/bookmark';
 
 export const BookmarkProvider = ({ children }: { children: React.ReactNode }) => {
   const [folders, setFolders] = useState<Folder[]>([]);
@@ -30,17 +23,9 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
     const { folders: loadedFolders, pinned } = bookmarkService.load();
     setFolders(loadedFolders);
     setPinnedVerses(pinned);
-    setLastReadState(loadLastReadFromStorage());
-    setMemorizationState(loadMemorizationFromStorage());
+    setLastReadState(bookmarkService.loadLastRead());
+    setMemorizationState(bookmarkService.loadMemorization());
   }, []);
-
-  useEffect(() => {
-    saveLastReadToStorage(lastRead);
-  }, [lastRead]);
-
-  useEffect(() => {
-    saveMemorizationToStorage(memorization);
-  }, [memorization]);
 
   const fetchBookmarkMetadata = useCallback(
     async (verseId: string, chaptersList: Chapter[]) => {
@@ -161,7 +146,9 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
   );
 
   const setLastRead = useCallback((surahId: string, verseId: number) => {
-    setLastReadState((prev) => ({ ...prev, [surahId]: verseId }));
+    setLastReadState((prev) =>
+      bookmarkService.setLastRead(prev, surahId, verseId)
+    );
   }, []);
 
   const addToMemorization = useCallback(
@@ -169,35 +156,48 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
       const key = surahId.toString();
       if (memorization[key]) return;
 
-      const plan = createMemorizationPlan(surahId, targetVerses || 10);
-      setMemorizationState((prev) => ({ ...prev, [key]: plan }));
+      setMemorizationState((prev) =>
+        bookmarkService.createMemorizationPlan(
+          prev,
+          surahId,
+          targetVerses || 10
+        )
+      );
     },
     [memorization]
   );
 
   const createMemorizationPlanCallback = useCallback(
     (surahId: number, targetVerses: number, planName?: string) => {
-      const key = surahId.toString();
-      const plan = createMemorizationPlan(surahId, targetVerses, planName);
-      setMemorizationState((prev) => ({ ...prev, [key]: plan }));
+      setMemorizationState((prev) =>
+        bookmarkService.createMemorizationPlan(
+          prev,
+          surahId,
+          targetVerses,
+          planName
+        )
+      );
     },
     []
   );
 
   const updateMemorizationProgressCallback = useCallback(
     (surahId: number, completedVerses: number) => {
-      setMemorizationState((prev) => updateMemorizationProgress(prev, surahId, completedVerses));
+      setMemorizationState((prev) =>
+        bookmarkService.updateMemorizationProgress(
+          prev,
+          surahId,
+          completedVerses
+        )
+      );
     },
     []
   );
 
   const removeFromMemorization = useCallback((surahId: number) => {
-    const key = surahId.toString();
-    setMemorizationState((prev) => {
-      const newState = { ...prev };
-      delete newState[key];
-      return newState;
-    });
+    setMemorizationState((prev) =>
+      bookmarkService.removeMemorizationPlan(prev, surahId)
+    );
   }, []);
 
   const value: BookmarkContextType = {
