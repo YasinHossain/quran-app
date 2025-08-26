@@ -23,9 +23,7 @@ interface SurahListContentProps {
   chapters: Chapter[];
 }
 
-export const SurahListContent: React.FC<SurahListContentProps> = ({
-  chapters,
-}) => {
+export const SurahListContent: React.FC<SurahListContentProps> = ({ chapters }) => {
   const { t } = useTranslation();
   const juzs = useMemo(() => juzData as JuzSummary[], []);
   const pages = useMemo(() => Array.from({ length: 604 }, (_, i) => i + 1), []);
@@ -101,7 +99,7 @@ export const SurahListContent: React.FC<SurahListContentProps> = ({
           prepareForTabSwitch={prepareForTabSwitch}
         />
       </div>
-      
+
       {/* Search section */}
       <div className="p-3 sm:p-4 border-b border-border md:border-b-0 md:pb-2">
         <SearchInput
@@ -112,7 +110,7 @@ export const SurahListContent: React.FC<SurahListContentProps> = ({
           className="text-mobile"
         />
       </div>
-      
+
       {/* Content section */}
       <div
         ref={scrollRef}

@@ -1,6 +1,7 @@
 import type { Chapter } from '@/types';
 import { getSurahByPage, JUZ_START_PAGES } from '@/lib/utils/surah-navigation';
-import { JuzNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
+import { SidebarCard } from '@/app/shared/ui/SidebarCard';
+import { NumberBadge } from '@/app/shared/ui/NumberBadge';
 
 interface JuzSummary {
   number: number;
@@ -32,17 +33,13 @@ const Juz = ({
       const isActive = String(juz.number) === selectedJuzId;
       return (
         <li key={juz.number}>
-          <JuzNavigationCard
+          <SidebarCard
             href={`/juz/${juz.number}`}
             scroll={false}
             data-active={isActive}
             isActive={isActive}
-            content={{
-              id: juz.number,
-              title: `Juz ${juz.number}`,
-              subtitle: juz.surahRange,
-            }}
-            onNavigate={() => {
+            className="items-center ml-2"
+            onClick={() => {
               setSelectedJuzId(String(juz.number));
               const page = JUZ_START_PAGES[juz.number - 1];
               setSelectedPageId(String(page));
@@ -50,7 +47,25 @@ const Juz = ({
               if (chap) setSelectedSurahId(String(chap.id));
               rememberScroll();
             }}
-          />
+          >
+            <NumberBadge number={juz.number} isActive={isActive} />
+            <div>
+              <p
+                className={`font-semibold leading-tight mb-0 ${
+                  isActive ? 'text-on-accent' : 'text-foreground'
+                }`}
+              >
+                Juz {juz.number}
+              </p>
+              <p
+                className={`text-xs leading-tight mt-2 mb-0 ${
+                  isActive ? 'text-on-accent/90' : 'text-muted'
+                }`}
+              >
+                {juz.surahRange}
+              </p>
+            </div>
+          </SidebarCard>
         </li>
       );
     })}

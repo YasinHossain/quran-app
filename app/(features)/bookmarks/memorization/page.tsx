@@ -40,7 +40,7 @@ export default function MemorizationPage() {
   return (
     <>
       <CreateMemorizationModal isOpen={modal.isOpen} onClose={modal.close} />
-      
+
       <div className="flex h-[calc(100vh-4rem)] mt-16 bg-background relative">
         {/* Left Sidebar */}
         <aside className="w-80 h-full bg-surface border-r border-border hidden lg:block">
@@ -69,17 +69,15 @@ export default function MemorizationPage() {
               </div>
             </div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className=""
-            >
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="">
               {!memorization || Object.keys(memorization).length === 0 ? (
                 <div className="text-center py-16">
                   <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
                     <BrainIcon className="w-8 h-8 text-muted" />
                   </div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">No Memorization Plans</h3>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">
+                    No Memorization Plans
+                  </h3>
                   <p className="text-muted max-w-md mx-auto mb-6">
                     Start your memorization journey by creating a plan to track your progress.
                   </p>
@@ -95,8 +93,11 @@ export default function MemorizationPage() {
                 <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                   {Object.entries(memorization).map(([surahId, plan]) => {
                     const chapter = chapters.find((c) => c.id === Number(surahId));
-                    const percent = Math.min(100, Math.max(0, Math.round((plan.completedVerses / plan.targetVerses) * 100)));
-                    
+                    const percent = Math.min(
+                      100,
+                      Math.max(0, Math.round((plan.completedVerses / plan.targetVerses) * 100))
+                    );
+
                     const handleNavigate = () => {
                       router.push(`/surah/${surahId}`);
                     };
@@ -124,21 +125,19 @@ export default function MemorizationPage() {
                         {/* Header with progress circle and info */}
                         <div className="flex flex-col items-center text-center mb-4">
                           <div className="mb-4">
-                            <CircularProgress 
+                            <CircularProgress
                               percentage={percent}
                               label="Completed"
                               size={100}
                               strokeWidth={10}
                             />
                           </div>
-                          
+
                           <div className="mb-3">
                             <h3 className="text-lg font-bold text-foreground truncate mb-1">
                               {chapter?.name_simple || `Surah ${surahId}`}
                             </h3>
-                            <p className="text-sm text-muted truncate">
-                              {chapter?.name_arabic}
-                            </p>
+                            <p className="text-sm text-muted truncate">{chapter?.name_arabic}</p>
                           </div>
                         </div>
 
@@ -152,31 +151,38 @@ export default function MemorizationPage() {
                                 {plan.completedVerses} / {plan.targetVerses}
                               </span>
                             </div>
-                            
+
                             <div className="text-xs text-muted space-y-1">
-                              <div>From 1:1 - 1:{plan.completedVerses > 0 ? plan.completedVerses : 1}</div>
-                              <div>Now: Verse {Math.min(plan.completedVerses + 1, plan.targetVerses)}</div>
+                              <div>
+                                From 1:1 - 1:{plan.completedVerses > 0 ? plan.completedVerses : 1}
+                              </div>
+                              <div>
+                                Now: Verse {Math.min(plan.completedVerses + 1, plan.targetVerses)}
+                              </div>
                             </div>
                           </div>
-                          
+
                           {/* Status Badge */}
                           <div className="flex items-center justify-between">
                             <div className="text-left">
                               <div className="text-xl font-bold text-accent">{percent}%</div>
                               <div className="text-xs text-muted">Complete</div>
                             </div>
-                            
+
                             <div className="inline-flex items-center px-3 py-1.5 bg-accent/10 text-accent rounded-full text-sm font-medium">
-                              <div className="w-1.5 h-1.5 bg-accent rounded-full mr-2"></div>
-                              5 Days Left
+                              <div className="w-1.5 h-1.5 bg-accent rounded-full mr-2"></div>5 Days
+                              Left
                             </div>
                           </div>
-                          
+
                           <div className="text-xs text-muted pt-2 border-t border-border/50">
-                            {plan.completedVerses === plan.targetVerses ? 'Completed' : 'In Progress'} • 
-                            Started {new Date(plan.createdAt).toLocaleDateString('en-US', { 
-                              month: 'short', 
-                              day: 'numeric'
+                            {plan.completedVerses === plan.targetVerses
+                              ? 'Completed'
+                              : 'In Progress'}{' '}
+                            • Started{' '}
+                            {new Date(plan.createdAt).toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
                             })}
                           </div>
                         </div>
@@ -186,7 +192,6 @@ export default function MemorizationPage() {
                 </div>
               )}
             </motion.div>
-            
           </div>
         </main>
       </div>
@@ -209,7 +214,10 @@ export default function MemorizationPage() {
               transition={{ type: 'tween', duration: 0.3 }}
               className="fixed top-0 left-0 h-full w-80 bg-surface border-r border-border z-[110] lg:hidden"
             >
-              <BookmarksSidebar activeSection="memorization" onSectionChange={handleSectionChange} />
+              <BookmarksSidebar
+                activeSection="memorization"
+                onSectionChange={handleSectionChange}
+              />
             </motion.aside>
           </>
         )}

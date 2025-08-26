@@ -90,22 +90,22 @@ export interface Folder {
 export interface MemorizationPlan {
   /** Unique identifier for this memorization plan. */
   id: string;
-  
+
   /** Surah ID this memorization plan is for. */
   surahId: number;
-  
+
   /** Total number of verses targeted for memorization in this surah. */
   targetVerses: number;
-  
+
   /** Number of verses already memorized and confirmed. */
   completedVerses: number;
-  
+
   /** Timestamp when the memorization plan was created (ms since epoch). */
   createdAt: number;
-  
+
   /** Timestamp of last progress update (ms since epoch). */
   lastUpdated: number;
-  
+
   /** Optional notes about the memorization plan. */
   notes?: string;
 }

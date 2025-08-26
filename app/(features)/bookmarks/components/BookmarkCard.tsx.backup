@@ -2,13 +2,15 @@
 
 import React, { memo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 import { Bookmark } from '@/types';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { ContentBookmarkCard } from '@/app/shared/ui/cards/ContentBookmarkCard';
+import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
+import { applyTajweed } from '@/lib/text/tajweed';
+import ResponsiveVerseActions from '@/app/shared/ResponsiveVerseActions';
 import LoadingError from '@/app/shared/LoadingError';
-import { motion } from 'framer-motion';
 // Simple time ago function
 const formatTimeAgo = (timestamp: number): string => {
   const now = Date.now();
@@ -118,7 +120,6 @@ export const BookmarkCard = memo(function BookmarkCard({
   const isPlaying = playingId === verseApiId;
   const isLoadingAudio = loadingId === verseApiId;
   const isVerseBookmarked = isBookmarked(enrichedBookmark.verseId);
-
   return (
     <LoadingError
       isLoading={
@@ -161,20 +162,79 @@ export const BookmarkCard = memo(function BookmarkCard({
         </motion.div>
       }
     >
-      <ContentBookmarkCard
-        bookmark={enrichedBookmark}
-        isPlaying={isPlaying}
-        isLoadingAudio={isLoadingAudio}
-        onPlayPause={handlePlayPause}
-        isBookmarked={isVerseBookmarked}
-        onBookmark={handleRemoveBookmark}
-        onNavigateToVerse={handleNavigateToVerse}
-        settings={{
-          arabicFontFace: settings.arabicFontFace,
-          arabicFontSize: settings.arabicFontSize,
-          tajweed: settings.tajweed,
-        }}
-      />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="rounded-xl bg-surface border border-border p-5 mb-4 hover:border-accent/30 hover:bg-surface-hover transition-all duration-200 cursor-pointer group hover:shadow-md hover:-translate-y-0.5"
+        role="article"
+        aria-label={`Bookmark for verse ${enrichedBookmark.verseKey} from ${enrichedBookmark.surahName}`}
+        onClick={handleNavigateToVerse}
+      >
+        {/* Compact header layout */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-1 mt-1">
+            <span className="text-accent font-semibold text-sm">{enrichedBookmark.verseKey}</span>
+            <span className="text-muted text-sm truncate">{enrichedBookmark.surahName}</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className="text-xs text-muted">{formatTimeAgo(enrichedBookmark.createdAt)}</span>
+            <div
+              className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1"
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.stopPropagation();
+                }
+              }}
+              role="button"
+              tabIndex={0}
+            >
+              <ResponsiveVerseActions
+                verseKey={enrichedBookmark.verseKey!}
+                isPlaying={isPlaying}
+                isLoadingAudio={isLoadingAudio}
+                isBookmarked={isVerseBookmarked}
+                onPlayPause={handlePlayPause}
+                onBookmark={handleRemoveBookmark}
+                onNavigateToVerse={handleNavigateToVerse}
+                showRemove={true}
+                className="scale-90"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Compact verse preview */}
+        <div className="space-y-2">
+          {/* Arabic preview - truncated */}
+          <div className="text-right">
+            <p
+              dir="rtl"
+              className="text-foreground leading-relaxed text-lg line-clamp-2"
+              style={{
+                fontFamily: settings.arabicFontFace,
+                fontSize: `${Math.min(settings.arabicFontSize, 20)}px`,
+                lineHeight: 1.8,
+              }}
+              dangerouslySetInnerHTML={{
+                __html: settings.tajweed
+                  ? sanitizeHtml(applyTajweed(enrichedBookmark.verseText || ''))
+                  : sanitizeHtml(enrichedBookmark.verseText || ''),
+              }}
+            />
+          </div>
+
+          {/* Translation preview - truncated */}
+          {enrichedBookmark.translation && (
+            <div>
+              <p
+                className="text-left leading-relaxed text-muted line-clamp-2 text-sm"
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(enrichedBookmark.translation) }}
+              />
+            </div>
+          )}
+        </div>
+      </motion.div>
     </LoadingError>
   );
 });

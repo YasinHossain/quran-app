@@ -20,7 +20,6 @@ const Header = () => {
   const pathname = usePathname();
   const [query, setQuery] = useState('');
 
-
   const toggleTheme = () => {
     const html = document.documentElement;
     if (html.classList.contains('dark')) {
@@ -39,7 +38,11 @@ const Header = () => {
   };
 
   // Check if we need to show navigation menu (for pages with sidebars)
-  const showNavigationMenu = pathname?.startsWith('/surah') || pathname?.startsWith('/tafsir') || pathname?.startsWith('/juz') || pathname?.startsWith('/page');
+  const showNavigationMenu =
+    pathname?.startsWith('/surah') ||
+    pathname?.startsWith('/tafsir') ||
+    pathname?.startsWith('/juz') ||
+    pathname?.startsWith('/page');
   const showBookmarkMenu = pathname?.startsWith('/bookmarks');
 
   const handleMobileNavClick = () => {
@@ -75,7 +78,7 @@ const Header = () => {
               <IconMenu2 size={18} className="text-muted" />
             </button>
           )}
-          
+
           <Link
             href="/"
             className="flex items-center space-x-2 hover:opacity-80 transition-opacity ml-2"
@@ -129,7 +132,6 @@ const Header = () => {
               <IconMoon size={18} className="text-muted" />
             )}
           </button>
-
         </div>
       </div>
     </header>

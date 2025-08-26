@@ -25,9 +25,7 @@ export default function ClientProviders({
         <BookmarkProvider>
           <UIStateProvider>
             <SidebarProvider>
-              <NavigationProvider>
-                {children}
-              </NavigationProvider>
+              <NavigationProvider>{children}</NavigationProvider>
             </SidebarProvider>
           </UIStateProvider>
         </BookmarkProvider>

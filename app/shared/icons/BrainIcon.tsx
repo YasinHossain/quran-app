@@ -1,11 +1,7 @@
 import React from 'react';
 import { IconProps } from './IconProps';
 
-export const BrainIcon: React.FC<IconProps> = ({
-  size = 24,
-  className = '',
-  ...props
-}) => (
+export const BrainIcon: React.FC<IconProps> = ({ size = 24, className = '', ...props }) => (
   <svg
     width={size}
     height={size}

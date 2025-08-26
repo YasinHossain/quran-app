@@ -52,7 +52,6 @@ export const SidebarProvider = ({ children }: { children: React.ReactNode }) => 
     }
   }, []);
 
-
   // Keyboard support for closing drawers
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {

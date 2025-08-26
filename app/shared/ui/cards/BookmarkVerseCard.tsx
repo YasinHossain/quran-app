@@ -1,19 +1,25 @@
 'use client';
 
 import React from 'react';
+import { BaseCard, BaseCardProps } from '../BaseCard';
 import { cn } from '@/lib/utils/cn';
 import type { Bookmark } from '@/types/bookmark';
 
-interface FolderVerseCardProps {
+/**
+ * BookmarkVerseCard
+ *
+ * Specialized verse card for bookmark folder contents that maintains current design
+ * while using the unified BaseCard system for consistent behavior.
+ */
+
+interface BookmarkVerseCardProps extends Omit<BaseCardProps, 'children'> {
   bookmark: Bookmark;
-  onClick?: () => void;
-  className?: string;
 }
 
-export const FolderVerseCard: React.FC<FolderVerseCardProps> = ({
+export const BookmarkVerseCard: React.FC<BookmarkVerseCardProps> = ({
   bookmark,
-  onClick,
   className,
+  ...props
 }) => {
   // Parse verse key to get surah and ayah numbers
   const parseVerseKey = (verseKey?: string) => {
@@ -25,14 +31,17 @@ export const FolderVerseCard: React.FC<FolderVerseCardProps> = ({
   const { surahNumber, ayahNumber } = parseVerseKey(bookmark.verseKey);
 
   return (
-    <div
-      onClick={onClick}
+    <BaseCard
+      variant="navigation" // Use navigation variant for consistent hover
+      animation="navigation"
       className={cn(
-        'p-2.5 rounded-lg border transition-all duration-200 cursor-pointer group',
+        // Override with verse-specific styles while maintaining base behavior
+        'p-2.5 rounded-lg border transition-all duration-200 cursor-pointer group h-auto',
         'bg-surface/60 border-border/60 hover:border-accent/30 hover:bg-surface-hover hover:shadow-sm',
         'min-h-0', // Allow shrinking
         className
       )}
+      {...props}
     >
       <div className="flex items-start space-x-2.5">
         {/* Verse indicator */}
@@ -66,6 +75,6 @@ export const FolderVerseCard: React.FC<FolderVerseCardProps> = ({
           )}
         </div>
       </div>
-    </div>
+    </BaseCard>
   );
 };

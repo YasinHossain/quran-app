@@ -1,6 +1,7 @@
 import type { Chapter } from '@/types';
 import { getJuzByPage, getSurahByPage } from '@/lib/utils/surah-navigation';
-import { PageNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
+import { SidebarCard } from '@/app/shared/ui/SidebarCard';
+import { NumberBadge } from '@/app/shared/ui/NumberBadge';
 
 interface Props {
   pages: number[];
@@ -26,23 +27,29 @@ const Page = ({
       const isActive = String(p) === selectedPageId;
       return (
         <li key={p}>
-          <PageNavigationCard
+          <SidebarCard
             href={`/page/${p}`}
             scroll={false}
             data-active={isActive}
             isActive={isActive}
-            content={{
-              id: p,
-              title: `Page ${p}`,
-            }}
-            onNavigate={() => {
+            className="items-center ml-2"
+            onClick={() => {
               setSelectedPageId(String(p));
               setSelectedJuzId(String(getJuzByPage(p)));
               const chap = getSurahByPage(p, chapters);
               if (chap) setSelectedSurahId(String(chap.id));
               rememberScroll();
             }}
-          />
+          >
+            <NumberBadge number={p} isActive={isActive} />
+            <p
+              className={`font-semibold leading-tight mb-0 ${
+                isActive ? 'text-on-accent' : 'text-foreground'
+              }`}
+            >
+              Page {p}
+            </p>
+          </SidebarCard>
         </li>
       );
     })}

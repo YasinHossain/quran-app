@@ -39,12 +39,10 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
 
     try {
       const verses: Verse[] = [];
-      
+
       // Fetch 5 verses in parallel for initial cache
-      const fetchPromises = Array.from({ length: 5 }, () => 
-        getRandomVerse(settings.translationId)
-      );
-      
+      const fetchPromises = Array.from({ length: 5 }, () => getRandomVerse(settings.translationId));
+
       const fetchedVerses = await Promise.all(fetchPromises);
       verses.push(...fetchedVerses);
 
@@ -98,12 +96,10 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
 
     try {
       const newVerses: Verse[] = [];
-      
+
       // Fetch 5 new verses
-      const fetchPromises = Array.from({ length: 5 }, () => 
-        getRandomVerse(settings.translationId)
-      );
-      
+      const fetchPromises = Array.from({ length: 5 }, () => getRandomVerse(settings.translationId));
+
       const fetchedVerses = await Promise.all(fetchPromises);
       newVerses.push(...fetchedVerses);
 
@@ -173,7 +169,7 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
         }
       }, 10000); // 10 seconds
     }
-    
+
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);

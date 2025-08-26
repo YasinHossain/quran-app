@@ -11,8 +11,8 @@ interface BookmarksSidebarProps {
   children?: React.ReactNode;
   folders?: Folder[];
   onVerseClick?: (verseKey: string) => void;
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
 export const BookmarksSidebar: React.FC<BookmarksSidebarProps> = ({
@@ -24,6 +24,21 @@ export const BookmarksSidebar: React.FC<BookmarksSidebarProps> = ({
   isOpen,
   onClose,
 }) => {
+  // If no isOpen/onClose provided, render content directly (for desktop sidebar)
+  if (isOpen === undefined || onClose === undefined) {
+    return (
+      <BookmarksContent
+        activeSection={activeSection}
+        onSectionChange={onSectionChange}
+        folders={folders}
+        onVerseClick={onVerseClick}
+      >
+        {children}
+      </BookmarksContent>
+    );
+  }
+
+  // Otherwise use BaseSidebar wrapper (for mobile overlay)
   return (
     <BaseSidebar
       isOpen={isOpen}

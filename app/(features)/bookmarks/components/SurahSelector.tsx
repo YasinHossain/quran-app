@@ -17,22 +17,23 @@ export const SurahSelector: React.FC<SurahSelectorProps> = ({
   chapters,
   value,
   onChange,
-  placeholder = "Select Surah",
+  placeholder = 'Select Surah',
   disabled = false,
-  className = "",
+  className = '',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const selectedChapter = chapters.find(chapter => chapter.id === value);
+  const selectedChapter = chapters.find((chapter) => chapter.id === value);
 
   // Filter chapters based on search term
-  const filteredChapters = chapters.filter(chapter =>
-    chapter.name_simple.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    chapter.name_arabic.includes(searchTerm) ||
-    chapter.id.toString().includes(searchTerm)
+  const filteredChapters = chapters.filter(
+    (chapter) =>
+      chapter.name_simple.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      chapter.name_arabic.includes(searchTerm) ||
+      chapter.id.toString().includes(searchTerm)
   );
 
   // Close dropdown when clicking outside
@@ -80,9 +81,10 @@ export const SurahSelector: React.FC<SurahSelectorProps> = ({
           bg-surface border border-border rounded-xl 
           text-left text-foreground placeholder-muted
           transition-all duration-200 shadow-sm
-          ${!disabled 
-            ? 'hover:shadow-md hover:border-accent/20 focus:border-accent focus:ring-4 focus:ring-accent/10 focus:outline-none' 
-            : 'opacity-50 cursor-not-allowed'
+          ${
+            !disabled
+              ? 'hover:shadow-md hover:border-accent/20 focus:border-accent focus:ring-4 focus:ring-accent/10 focus:outline-none'
+              : 'opacity-50 cursor-not-allowed'
           }
           ${isOpen ? 'border-accent ring-4 ring-accent/10' : ''}
         `}

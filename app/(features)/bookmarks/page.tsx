@@ -70,8 +70,8 @@ const BookmarksPage = () => {
       <div className="flex h-[calc(100vh-4rem)] mt-16 bg-background">
         {/* Left Sidebar */}
         <aside className="w-full sm:w-80 lg:w-80 bg-background text-foreground flex flex-col shadow-modal md:shadow-lg z-modal md:z-10 md:h-full hidden lg:block">
-          <BookmarksSidebar 
-            activeSection="bookmarks" 
+          <BookmarksSidebar
+            activeSection="bookmarks"
             onSectionChange={handleSectionChange}
             folders={folders}
             onVerseClick={(verseKey) => {
@@ -141,8 +141,8 @@ const BookmarksPage = () => {
               transition={{ type: 'tween', duration: 0.3 }}
               className="fixed top-16 left-0 h-[calc(100vh-4rem)] w-full sm:w-80 lg:w-80 bg-background text-foreground border-r border-border z-50 lg:hidden"
             >
-              <BookmarksSidebar 
-                activeSection="bookmarks" 
+              <BookmarksSidebar
+                activeSection="bookmarks"
                 onSectionChange={handleSectionChange}
                 folders={folders}
                 onVerseClick={(verseKey) => {

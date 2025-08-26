@@ -24,11 +24,13 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
   children,
 }) => {
   return (
-    <div className={cn(
-      'flex items-center justify-between px-3 sm:px-4 py-3 sm:py-4 shadow-md shadow-black/5 dark:shadow-black/10',
-      showCloseButton && 'md:justify-center', // Center title on desktop when close button is only for mobile
-      className
-    )}>
+    <div
+      className={cn(
+        'flex items-center justify-between px-3 sm:px-4 py-3 sm:py-4 shadow-md shadow-black/5 dark:shadow-black/10',
+        showCloseButton && 'md:justify-center', // Center title on desktop when close button is only for mobile
+        className
+      )}
+    >
       {/* Back button (left side) */}
       {showBackButton && onBack && (
         <button
@@ -41,10 +43,12 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
       )}
 
       {/* Title */}
-      <h2 className={cn(
-        'text-lg font-semibold text-foreground',
-        showBackButton && 'flex-1 text-center'
-      )}>
+      <h2
+        className={cn(
+          'text-lg font-semibold text-foreground',
+          showBackButton && 'flex-1 text-center'
+        )}
+      >
         {title}
       </h2>
 
@@ -67,9 +71,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
       {children}
 
       {/* Spacer for centering when we have back button but no close button */}
-      {showBackButton && !showCloseButton && (
-        <div className="w-10 h-10" aria-hidden="true" />
-      )}
+      {showBackButton && !showCloseButton && <div className="w-10 h-10" aria-hidden="true" />}
     </div>
   );
 };

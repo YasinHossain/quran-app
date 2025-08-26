@@ -27,8 +27,9 @@ export const BaseSidebar: React.FC<BaseSidebarProps> = ({
 
   // Calculate positioning based on header visibility and position
   const getPositionClasses = () => {
-    const baseClasses = 'fixed w-full sm:w-80 lg:w-[20.7rem] bg-background transition-all duration-300 ease-in-out';
-    
+    const baseClasses =
+      'fixed w-full sm:w-80 lg:w-[20.7rem] bg-background transition-all duration-300 ease-in-out';
+
     if (position === 'left') {
       return cn(
         baseClasses,

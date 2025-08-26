@@ -40,7 +40,7 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
   const [loadedVerses, setLoadedVerses] = useState<Set<string>>(new Set());
   const [loadingVerses, setLoadingVerses] = useState<Set<string>>(new Set());
   const { isBookmarkSidebarOpen, setBookmarkSidebarOpen } = useSidebar();
-  
+
   const { setSettingsOpen } = useUIState();
   const { t } = useTranslation();
   const { translationOptions, wordLanguageOptions } = useTranslationOptions();
@@ -259,7 +259,6 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
         isWordLanguagePanelOpen={isWordPanelOpen}
         onWordLanguagePanelClose={() => setIsWordPanelOpen(false)}
       />
-
     </>
   );
 }

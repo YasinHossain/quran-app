@@ -22,19 +22,19 @@ export const CreateMemorizationModal = ({ isOpen, onClose }: CreateMemorizationM
   // Calculate total verses for selected range
   const calculateTotalVerses = () => {
     if (!startSurah || !endSurah || startSurah > endSurah) return 0;
-    
-    const start = chapters.find(c => c.id === startSurah);
-    const end = chapters.find(c => c.id === endSurah);
-    
+
+    const start = chapters.find((c) => c.id === startSurah);
+    const end = chapters.find((c) => c.id === endSurah);
+
     if (!start || !end) return 0;
-    
+
     if (startSurah === endSurah) {
       return start.verses_count;
     }
-    
+
     let total = 0;
     for (let i = startSurah; i <= endSurah; i++) {
-      const chapter = chapters.find(c => c.id === i);
+      const chapter = chapters.find((c) => c.id === i);
       if (chapter) total += chapter.verses_count;
     }
     return total;
@@ -48,12 +48,14 @@ export const CreateMemorizationModal = ({ isOpen, onClose }: CreateMemorizationM
     if (planName.trim() && startSurah && endSurah && totalVerses > 0) {
       // For now, create individual plans for each surah in the range
       for (let surahId = startSurah; surahId <= endSurah; surahId++) {
-        const chapter = chapters.find(c => c.id === surahId);
+        const chapter = chapters.find((c) => c.id === surahId);
         if (chapter) {
           createMemorizationPlan(
-            surahId, 
-            chapter.verses_count, 
-            startSurah === endSurah ? planName.trim() : `${planName.trim()} - ${chapter.name_simple}`
+            surahId,
+            chapter.verses_count,
+            startSurah === endSurah
+              ? planName.trim()
+              : `${planName.trim()} - ${chapter.name_simple}`
           );
         }
       }

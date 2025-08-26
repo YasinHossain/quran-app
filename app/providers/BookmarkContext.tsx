@@ -351,46 +351,52 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
     setLastReadState((prev) => ({ ...prev, [surahId]: verseId }));
   }, []);
 
-  const addToMemorization = useCallback((surahId: number, targetVerses?: number) => {
-    const chapter = chapters.find((c) => c.id === surahId);
-    const defaultTargetVerses = targetVerses || chapter?.verses_count || 0;
-    
-    setMemorizationState((prev) => ({
-      ...prev,
-      [surahId.toString()]: {
-        id: `memorization-${surahId}-${Date.now()}`,
-        surahId,
-        targetVerses: defaultTargetVerses,
-        completedVerses: 0,
-        createdAt: Date.now(),
-        lastUpdated: Date.now(),
-      },
-    }));
-  }, [chapters]);
+  const addToMemorization = useCallback(
+    (surahId: number, targetVerses?: number) => {
+      const chapter = chapters.find((c) => c.id === surahId);
+      const defaultTargetVerses = targetVerses || chapter?.verses_count || 0;
 
-  const createMemorizationPlan = useCallback((surahId: number, targetVerses: number, planName?: string) => {
-    const chapter = chapters.find((c) => c.id === surahId);
-    const timestamp = Date.now();
-    
-    setMemorizationState((prev) => ({
-      ...prev,
-      [surahId.toString()]: {
-        id: `memorization-${surahId}-${timestamp}`,
-        surahId,
-        targetVerses,
-        completedVerses: 0,
-        createdAt: timestamp,
-        lastUpdated: timestamp,
-        notes: planName || `Memorization plan for ${chapter?.name_simple || `Surah ${surahId}`}`,
-      },
-    }));
-  }, [chapters]);
+      setMemorizationState((prev) => ({
+        ...prev,
+        [surahId.toString()]: {
+          id: `memorization-${surahId}-${Date.now()}`,
+          surahId,
+          targetVerses: defaultTargetVerses,
+          completedVerses: 0,
+          createdAt: Date.now(),
+          lastUpdated: Date.now(),
+        },
+      }));
+    },
+    [chapters]
+  );
+
+  const createMemorizationPlan = useCallback(
+    (surahId: number, targetVerses: number, planName?: string) => {
+      const chapter = chapters.find((c) => c.id === surahId);
+      const timestamp = Date.now();
+
+      setMemorizationState((prev) => ({
+        ...prev,
+        [surahId.toString()]: {
+          id: `memorization-${surahId}-${timestamp}`,
+          surahId,
+          targetVerses,
+          completedVerses: 0,
+          createdAt: timestamp,
+          lastUpdated: timestamp,
+          notes: planName || `Memorization plan for ${chapter?.name_simple || `Surah ${surahId}`}`,
+        },
+      }));
+    },
+    [chapters]
+  );
 
   const updateMemorizationProgress = useCallback((surahId: number, completedVerses: number) => {
     setMemorizationState((prev) => {
       const existing = prev[surahId.toString()];
       if (!existing) return prev;
-      
+
       return {
         ...prev,
         [surahId.toString()]: {
