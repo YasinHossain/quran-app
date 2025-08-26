@@ -11,6 +11,7 @@ interface SurahSelectorProps {
   placeholder?: string;
   disabled?: boolean;
   className?: string;
+  id?: string;
 }
 
 export const SurahSelector: React.FC<SurahSelectorProps> = ({
@@ -20,6 +21,7 @@ export const SurahSelector: React.FC<SurahSelectorProps> = ({
   placeholder = 'Select Surah',
   disabled = false,
   className = '',
+  id,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -74,6 +76,7 @@ export const SurahSelector: React.FC<SurahSelectorProps> = ({
       {/* Trigger Button */}
       <button
         type="button"
+        id={id}
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
         className={`
@@ -158,7 +161,7 @@ export const SurahSelector: React.FC<SurahSelectorProps> = ({
               ))
             ) : (
               <div className="p-4 text-center text-muted text-sm">
-                No surahs found matching "{searchTerm}"
+                No surahs found matching &quot;{searchTerm}&quot;
               </div>
             )}
           </div>

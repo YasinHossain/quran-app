@@ -27,6 +27,14 @@ export const FolderVerseCard: React.FC<FolderVerseCardProps> = ({
   return (
     <div
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick?.();
+        }
+      }}
+      role="button"
+      tabIndex={0}
       className={cn(
         'p-2.5 rounded-lg border transition-all duration-200 cursor-pointer group',
         'bg-surface/60 border-border/60 hover:border-accent/30 hover:bg-surface-hover hover:shadow-sm',

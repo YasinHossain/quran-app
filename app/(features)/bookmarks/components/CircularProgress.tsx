@@ -58,8 +58,8 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
       </svg>
       {/* Center text */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <div className="text-2xl font-bold text-gray-800">{Math.round(animatedPercentage)}%</div>
-        <div className="text-gray-500 text-xs font-medium">{label}</div>
+        <div className="text-2xl font-bold text-foreground">{Math.round(animatedPercentage)}%</div>
+        <div className="text-muted text-xs font-medium">{label}</div>
       </div>
     </div>
   );

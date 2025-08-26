@@ -18,7 +18,7 @@ interface FolderData {
   name: string;
   icon?: string;
   color?: string;
-  bookmarks: { length: number } | any[];
+  bookmarks: Array<{ verseId: string; verseKey?: string }> | { length: number };
 }
 
 interface EnhancedFolderCardProps extends Omit<BaseCardProps, 'children'> {

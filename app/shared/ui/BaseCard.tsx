@@ -32,11 +32,11 @@ interface AnimationConfig {
     hover: string;
   };
   framer?: {
-    initial: Record<string, any>;
-    animate: Record<string, any>;
-    exit?: Record<string, any>;
-    transition: Record<string, any>;
-    hover?: Record<string, any>;
+    initial: Record<string, string | number>;
+    animate: Record<string, string | number>;
+    exit?: Record<string, string | number>;
+    transition: Record<string, string | number>;
+    hover?: Record<string, string | number>;
   };
 }
 
@@ -169,8 +169,8 @@ interface BaseCardProps {
   justify?: 'start' | 'center' | 'end' | 'between';
   gap?: string;
 
-  // Additional props
-  [key: string]: any;
+  // Additional HTML attributes
+  [key: string]: unknown;
 }
 
 export const BaseCard = ({

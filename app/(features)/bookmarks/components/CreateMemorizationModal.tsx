@@ -119,7 +119,7 @@ export const CreateMemorizationModal = ({ isOpen, onClose }: CreateMemorizationM
 
           {/* Start Surah */}
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-foreground">
+            <label htmlFor="start-surah" className="block text-sm font-semibold text-foreground">
               <div className="flex items-center gap-2">
                 <div className="w-5 h-5 bg-accent/10 rounded flex items-center justify-center">
                   <div className="w-2 h-2 bg-accent rounded-full"></div>
@@ -128,6 +128,7 @@ export const CreateMemorizationModal = ({ isOpen, onClose }: CreateMemorizationM
               </div>
             </label>
             <SurahSelector
+              id="start-surah"
               chapters={chapters}
               value={startSurah}
               onChange={setStartSurah}
@@ -137,7 +138,7 @@ export const CreateMemorizationModal = ({ isOpen, onClose }: CreateMemorizationM
 
           {/* End Surah */}
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-foreground">
+            <label htmlFor="end-surah" className="block text-sm font-semibold text-foreground">
               <div className="flex items-center gap-2">
                 <div className="w-5 h-5 bg-accent/10 rounded flex items-center justify-center">
                   <div className="w-2 h-2 bg-accent rounded-full"></div>
@@ -146,6 +147,7 @@ export const CreateMemorizationModal = ({ isOpen, onClose }: CreateMemorizationM
               </div>
             </label>
             <SurahSelector
+              id="end-surah"
               chapters={chapters}
               value={endSurah}
               onChange={setEndSurah}

@@ -1,40 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookmarksSidebar } from '../components/BookmarksSidebar';
-import { PinIcon } from '@/app/shared/icons';
-import { useRouter } from 'next/navigation';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
-import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useSidebar } from '@/app/providers/SidebarContext';
-import { BookmarkCard } from '../components/BookmarkCard';
-import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
+import { usePinnedPage } from './hooks/usePinnedPage';
+import { PinnedHeader, PinnedVersesList } from './components';
 
 export default function PinnedAyahPage() {
-  const router = useRouter();
   const { isHidden } = useHeaderVisibility();
-  const { pinnedVerses } = useBookmarks();
   const { isBookmarkSidebarOpen, setBookmarkSidebarOpen } = useSidebar();
-
-  React.useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, []);
-
-  const handleSectionChange = (section: SectionId) => {
-    if (section === 'bookmarks') {
-      router.push('/bookmarks');
-    } else if (section === 'last-read') {
-      router.push('/bookmarks/last-read');
-    } else if (section === 'memorization') {
-      router.push('/bookmarks/memorization');
-    } else {
-      router.push('/bookmarks/pinned');
-    }
-  };
+  const { pinnedVerses, handleSectionChange } = usePinnedPage();
 
   return (
     <>
@@ -53,54 +30,9 @@ export default function PinnedAyahPage() {
                 : 'pt-[calc(3.5rem+env(safe-area-inset-top))] sm:pt-[calc(4rem+env(safe-area-inset-top))]'
             }`}
           >
-            {/* Pinned Verses Header */}
-            <div className="mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-accent rounded-xl flex items-center justify-center shadow-sm">
-                  <PinIcon size={20} className="text-white" />
-                </div>
-                <div className="min-w-0">
-                  <h1 className="text-lg font-bold text-foreground">Pinned Verses</h1>
-                  <p className="text-xs text-muted">Quick access</p>
-                </div>
-              </div>
-            </div>
+            <PinnedHeader />
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="max-w-4xl mx-auto"
-            >
-              {pinnedVerses.length === 0 ? (
-                <div className="text-center py-16">
-                  <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg
-                      className="w-8 h-8 text-muted"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
-                      />
-                    </svg>
-                  </div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">No Pinned Verses</h3>
-                  <p className="text-muted max-w-md mx-auto">
-                    Pin your favorite verses while reading to access them quickly from here.
-                  </p>
-                </div>
-              ) : (
-                <div>
-                  {pinnedVerses.map((bookmark) => (
-                    <BookmarkCard key={bookmark.verseId} bookmark={bookmark} folderId="pinned" />
-                  ))}
-                </div>
-              )}
-            </motion.div>
+            <PinnedVersesList pinnedVerses={pinnedVerses} />
           </div>
         </main>
       </div>

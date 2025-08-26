@@ -36,11 +36,7 @@ export const SurahListContent: React.FC<SurahListContentProps> = ({ chapters }) 
     : surahId
       ? Number(surahId)
       : undefined;
-  const currentJuzId = Array.isArray(juzId)
-    ? Number(juzId[0])
-    : juzId
-      ? Number(juzId)
-      : undefined;
+  const currentJuzId = Array.isArray(juzId) ? Number(juzId[0]) : juzId ? Number(juzId) : undefined;
   const currentPageId = Array.isArray(pageId)
     ? Number(pageId[0])
     : pageId
