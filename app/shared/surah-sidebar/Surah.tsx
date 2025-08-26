@@ -4,10 +4,10 @@ import { SurahNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCar
 
 interface Props {
   chapters: Chapter[];
-  selectedSurahId: string | null;
-  setSelectedSurahId: (id: string) => void;
-  setSelectedPageId: (id: string) => void;
-  setSelectedJuzId: (id: string) => void;
+  selectedSurahId: number | null;
+  setSelectedSurahId: (id: number) => void;
+  setSelectedPageId: (id: number) => void;
+  setSelectedJuzId: (id: number) => void;
   rememberScroll: () => void;
   isTafsirPath: boolean;
 }
@@ -23,7 +23,7 @@ const Surah = ({
 }: Props) => (
   <ul className="space-y-2">
     {chapters.map((chapter) => {
-      const isActive = String(chapter.id) === selectedSurahId;
+      const isActive = chapter.id === selectedSurahId;
       return (
         <li key={chapter.id}>
           <SurahNavigationCard
@@ -38,10 +38,10 @@ const Surah = ({
               arabic: chapter.name_arabic,
             }}
             onNavigate={() => {
-              setSelectedSurahId(String(chapter.id));
+              setSelectedSurahId(chapter.id);
               const firstPage = chapter.pages?.[0] ?? 1;
-              setSelectedPageId(String(firstPage));
-              setSelectedJuzId(String(getJuzByPage(firstPage)));
+              setSelectedPageId(firstPage);
+              setSelectedJuzId(getJuzByPage(firstPage));
               rememberScroll();
             }}
           />

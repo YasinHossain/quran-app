@@ -11,10 +11,10 @@ interface JuzSummary {
 interface Props {
   juzs: JuzSummary[];
   chapters: Chapter[];
-  selectedJuzId: string | null;
-  setSelectedJuzId: (id: string) => void;
-  setSelectedPageId: (id: string) => void;
-  setSelectedSurahId: (id: string) => void;
+  selectedJuzId: number | null;
+  setSelectedJuzId: (id: number) => void;
+  setSelectedPageId: (id: number) => void;
+  setSelectedSurahId: (id: number) => void;
   rememberScroll: () => void;
 }
 
@@ -29,7 +29,7 @@ const Juz = ({
 }: Props) => (
   <ul className="space-y-2">
     {juzs.map((juz) => {
-      const isActive = String(juz.number) === selectedJuzId;
+      const isActive = juz.number === selectedJuzId;
       return (
         <li key={juz.number}>
           <JuzNavigationCard
@@ -43,11 +43,11 @@ const Juz = ({
               subtitle: juz.surahRange,
             }}
             onNavigate={() => {
-              setSelectedJuzId(String(juz.number));
+              setSelectedJuzId(juz.number);
               const page = JUZ_START_PAGES[juz.number - 1];
-              setSelectedPageId(String(page));
+              setSelectedPageId(page);
               const chap = getSurahByPage(page, chapters);
-              if (chap) setSelectedSurahId(String(chap.id));
+              if (chap) setSelectedSurahId(chap.id);
               rememberScroll();
             }}
           />

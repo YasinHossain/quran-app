@@ -3,7 +3,7 @@ import { RefObject, useEffect, useLayoutEffect, useRef } from 'react';
 interface ScrollCenteringOptions<T extends string> {
   scrollRef: RefObject<HTMLDivElement | null>;
   activeTab: T;
-  selectedIds: Record<T, string | null>;
+  selectedIds: Record<T, number | null>;
   scrollTops: Record<T, number>;
 }
 
@@ -32,8 +32,8 @@ const useScrollCentering = <T extends string>({
     });
   }, [tabs]);
 
-  const prevIds = useRef<Record<T, string | null>>(
-    tabs.reduce((acc, t) => ({ ...acc, [t]: selectedIds[t] }), {} as Record<T, string | null>)
+  const prevIds = useRef<Record<T, number | null>>(
+    tabs.reduce((acc, t) => ({ ...acc, [t]: selectedIds[t] }), {} as Record<T, number | null>)
   );
 
   useEffect(() => {
