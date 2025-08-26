@@ -2,7 +2,7 @@ import { getChapters, getSurahCoverUrl, getSurahList } from '@/lib/api/chapters'
 import { API_BASE_URL } from '@/lib/api';
 import { Chapter, Surah } from '@/types';
 
-jest.mock('@/app/(features)/surah/lib/surahImageMap', () => ({
+jest.mock('@/presentation/(features)/surah/lib/surahImageMap', () => ({
   surahImageMap: { 1: 'test.jpg' },
 }));
 

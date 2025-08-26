@@ -1,0 +1,13 @@
+'use client';
+import { TranslationPanel } from '@/presentation/(features)/surah/[surahId]/components/translation-panel';
+
+interface TranslationSelectorProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export const TranslationSelector = ({ isOpen, onClose }: TranslationSelectorProps) => {
+  return <TranslationPanel isOpen={isOpen} onClose={onClose} />;
+};
+
+export default TranslationSelector;
