@@ -12,6 +12,9 @@ import { colors } from '../../design-system/card-tokens';
  * that maintains the current design while using the unified BaseCard system.
  */
 
+// Valid bookmark section identifiers
+type SectionId = 'bookmarks' | 'pinned' | 'last-read' | 'memorization';
+
 interface BookmarkNavigationContent {
   id: string;
   icon: React.ComponentType<{ size?: number; className?: string }>;
@@ -25,20 +28,15 @@ interface BookmarkNavigationCardProps extends Omit<BaseCardProps, 'children'> {
 }
 
 // Map section IDs to URLs for smooth navigation
-const getSectionHref = (sectionId: string): string => {
-  switch (sectionId) {
-    case 'bookmarks':
-      return '/bookmarks';
-    case 'pinned':
-      return '/bookmarks/pinned';
-    case 'last-read':
-      return '/bookmarks/last-read';
-    case 'memorization':
-      return '/bookmarks/memorization';
-    default:
-      return '/bookmarks';
-  }
+const routes: Record<SectionId, string> = {
+  bookmarks: '/bookmarks',
+  pinned: '/bookmarks/pinned',
+  'last-read': '/bookmarks/last-read',
+  memorization: '/bookmarks/memorization',
 };
+
+const getSectionHref = (sectionId: string): string =>
+  routes[sectionId as SectionId] || '/bookmarks';
 
 export const BookmarkNavigationCard: React.FC<BookmarkNavigationCardProps> = ({
   content,
