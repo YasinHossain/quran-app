@@ -38,6 +38,7 @@ const Juz = ({
             scroll={false}
             data-active={isActive}
             isActive={isActive}
+            className="items-center ml-2"
             onClick={() => {
               setSelectedJuzId(String(juz.number));
               const page = JUZ_START_PAGES[juz.number - 1];
@@ -49,10 +50,18 @@ const Juz = ({
           >
             <NumberBadge number={juz.number} isActive={isActive} />
             <div>
-              <p className={`font-semibold ${isActive ? 'text-on-accent' : 'text-foreground'}`}>
+              <p
+                className={`font-semibold leading-tight mb-0 ${
+                  isActive ? 'text-on-accent' : 'text-foreground'
+                }`}
+              >
                 Juz {juz.number}
               </p>
-              <p className={`text-xs ${isActive ? 'text-on-accent/90' : 'text-muted'}`}>
+              <p
+                className={`text-xs leading-tight mt-2 mb-0 ${
+                  isActive ? 'text-on-accent/90' : 'text-muted'
+                }`}
+              >
                 {juz.surahRange}
               </p>
             </div>

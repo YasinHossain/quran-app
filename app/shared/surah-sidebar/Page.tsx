@@ -32,6 +32,7 @@ const Page = ({
             scroll={false}
             data-active={isActive}
             isActive={isActive}
+            className="items-center ml-2"
             onClick={() => {
               setSelectedPageId(String(p));
               setSelectedJuzId(String(getJuzByPage(p)));
@@ -41,7 +42,11 @@ const Page = ({
             }}
           >
             <NumberBadge number={p} isActive={isActive} />
-            <p className={`font-semibold ${isActive ? 'text-on-accent' : 'text-foreground'}`}>
+            <p
+              className={`font-semibold leading-tight mb-0 ${
+                isActive ? 'text-on-accent' : 'text-foreground'
+              }`}
+            >
               Page {p}
             </p>
           </SidebarCard>

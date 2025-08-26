@@ -19,94 +19,118 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
   const { settings } = useSettings();
   const [verse, setVerse] = useState<Verse | null>(null);
   const [verseQueue, setVerseQueue] = useState<Verse[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [surahs, setSurahs] = useState<Surah[]>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const abortRef = useRef(false);
   const intervalRef = useRef<NodeJS.Timeout>();
   const prefetchingRef = useRef(false);
+  const initializingRef = useRef(false);
 
-  // Preload verses to maintain cache of exactly 3 verses
-  const prefetchVerse = useCallback(async () => {
+  // Initialize verse cache with 5 verses
+  const initializeVerseCache = useCallback(async () => {
+    if (initializingRef.current || isInitialized) return;
+    initializingRef.current = true;
+    setLoading(true);
+    setError(null);
+
+    try {
+      const verses: Verse[] = [];
+      
+      // Fetch 5 verses in parallel for initial cache
+      const fetchPromises = Array.from({ length: 5 }, () => 
+        getRandomVerse(settings.translationId)
+      );
+      
+      const fetchedVerses = await Promise.all(fetchPromises);
+      verses.push(...fetchedVerses);
+
+      if (!abortRef.current) {
+        setVerseQueue(verses);
+        setVerse(verses[0]);
+        setCurrentIndex(0);
+        setIsInitialized(true);
+        setLoading(false);
+      }
+    } catch (err) {
+      if (!abortRef.current) {
+        console.error('Error initializing verse cache:', err);
+        setError('Failed to load verse. Please try again.');
+        setLoading(false);
+      }
+    } finally {
+      initializingRef.current = false;
+    }
+  }, [settings.translationId, isInitialized]);
+
+  // Use refs to avoid dependency issues
+  const verseQueueRef = useRef<Verse[]>([]);
+  const currentIndexRef = useRef(0);
+
+  // Update refs when state changes
+  useEffect(() => {
+    verseQueueRef.current = verseQueue;
+  }, [verseQueue]);
+
+  useEffect(() => {
+    currentIndexRef.current = currentIndex;
+  }, [currentIndex]);
+
+  // Rotate to next verse in cache
+  const rotateToNextVerse = useCallback(() => {
+    const queue = verseQueueRef.current;
+    if (queue.length === 0) return;
+
+    setCurrentIndex((prevIndex) => {
+      const nextIndex = (prevIndex + 1) % queue.length;
+      setVerse(queue[nextIndex]);
+      return nextIndex;
+    });
+  }, []);
+
+  // Refresh cache with new verses
+  const refreshCache = useCallback(async () => {
     if (prefetchingRef.current) return;
     prefetchingRef.current = true;
 
     try {
-      const v = await getRandomVerse(settings.translationId);
-      if (abortRef.current) return;
+      const newVerses: Verse[] = [];
+      
+      // Fetch 5 new verses
+      const fetchPromises = Array.from({ length: 5 }, () => 
+        getRandomVerse(settings.translationId)
+      );
+      
+      const fetchedVerses = await Promise.all(fetchPromises);
+      newVerses.push(...fetchedVerses);
 
-      setVerseQueue((q) => {
-        // Keep exactly 3 verses in queue
-        const updatedQueue = [...q, v];
-        return updatedQueue.length > 3 ? updatedQueue.slice(-3) : updatedQueue;
-      });
+      if (!abortRef.current) {
+        setVerseQueue(newVerses);
+        setVerse(newVerses[0]);
+        setCurrentIndex(0);
+      }
     } catch (err) {
-      console.error('Error prefetching verse:', err);
+      console.error('Error refreshing verse cache:', err);
     } finally {
       prefetchingRef.current = false;
     }
   }, [settings.translationId]);
 
-  // Load the next verse from queue or fetch a new one
-  const loadNextVerse = useCallback(
-    async (showLoading = true) => {
-      if (showLoading) {
-        setLoading(true);
-      }
-      setError(null);
-
-      try {
-        let nextVerse: Verse;
-
-        if (verseQueue.length > 0) {
-          // Use verse from queue (smooth transition)
-          nextVerse = verseQueue[0];
-          setVerseQueue((q) => {
-            const newQueue = q.slice(1);
-            // Immediately prefetch a new verse to maintain 3 in cache
-            if (newQueue.length < 3) {
-              setTimeout(() => prefetchVerse(), 100);
-            }
-            return newQueue;
-          });
-        } else {
-          // Fallback: fetch new verse directly
-          nextVerse = await getRandomVerse(settings.translationId);
-          // Start building cache
-          setTimeout(() => prefetchVerse(), 100);
-        }
-
-        if (!abortRef.current) {
-          setVerse(nextVerse);
-        }
-      } catch (err) {
-        if (!abortRef.current) {
-          console.error('Error loading verse:', err);
-          setError('Failed to load verse. Please try again.');
-        }
-      } finally {
-        if (!abortRef.current && showLoading) {
-          setLoading(false);
-        }
-      }
-    },
-    [verseQueue, settings.translationId, prefetchVerse]
-  );
-
   // Start automatic rotation every 10 seconds
   const startAutoRotation = useCallback(() => {
-    // Clear any existing interval
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
 
     intervalRef.current = setInterval(() => {
       if (!abortRef.current) {
-        loadNextVerse(false); // Don't show loading spinner for auto-rotation
+        rotateToNextVerse();
       }
     }, 10000); // 10 seconds
-  }, [loadNextVerse]);
+  }, [rotateToNextVerse]);
 
   // Stop automatic rotation
   const stopAutoRotation = useCallback(() => {
@@ -116,47 +140,47 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
     }
   }, []);
 
-  // Refresh current verse (load new one)
+  // Refresh verse (reload entire cache)
   const refreshVerse = useCallback(() => {
-    loadNextVerse();
-  }, [loadNextVerse]);
+    refreshCache();
+  }, [refreshCache]);
 
-  // Prefetch next verse for queue
+  // Prefetch next verse (refresh cache when needed)
   const prefetchNextVerse = useCallback(() => {
-    prefetchVerse();
-  }, [prefetchVerse]);
+    refreshCache();
+  }, [refreshCache]);
 
-  // Load initial verse and setup auto-rotation
+  // Initialize on mount and translation change
   useEffect(() => {
     abortRef.current = false;
-
-    const initializeVerse = async () => {
-      // Load initial verse
-      await loadNextVerse();
-
-      // Build initial cache of 3 verses
-      const prefetchPromises = [];
-      for (let i = 0; i < 3; i++) {
-        prefetchPromises.push(
-          new Promise((resolve) => setTimeout(() => prefetchVerse().then(resolve), i * 200))
-        );
-      }
-
-      // Wait for initial cache to build, then start rotation
-      await Promise.all(prefetchPromises);
-
-      if (!abortRef.current) {
-        startAutoRotation();
-      }
-    };
-
-    initializeVerse();
+    setIsInitialized(false);
+    stopAutoRotation(); // Stop any existing rotation
+    initializeVerseCache();
 
     return () => {
       abortRef.current = true;
       stopAutoRotation();
     };
-  }, [settings.translationId, loadNextVerse, startAutoRotation, stopAutoRotation, prefetchVerse]);
+  }, [settings.translationId]);
+
+  // Start rotation when cache is ready
+  useEffect(() => {
+    if (isInitialized && verseQueue.length > 0 && !intervalRef.current) {
+      // Start interval directly to avoid dependency issues
+      intervalRef.current = setInterval(() => {
+        if (!abortRef.current) {
+          rotateToNextVerse();
+        }
+      }, 10000); // 10 seconds
+    }
+    
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = undefined;
+      }
+    };
+  }, [isInitialized, verseQueue.length]);
 
   // Load surahs list for metadata
   useEffect(() => {
