@@ -5,10 +5,10 @@ import { PageNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard
 interface Props {
   pages: number[];
   chapters: Chapter[];
-  selectedPageId: string | null;
-  setSelectedPageId: (id: string) => void;
-  setSelectedJuzId: (id: string) => void;
-  setSelectedSurahId: (id: string) => void;
+  selectedPageId: number | null;
+  setSelectedPageId: (id: number) => void;
+  setSelectedJuzId: (id: number) => void;
+  setSelectedSurahId: (id: number) => void;
   rememberScroll: () => void;
 }
 
@@ -23,7 +23,7 @@ const Page = ({
 }: Props) => (
   <ul className="space-y-2">
     {pages.map((p) => {
-      const isActive = String(p) === selectedPageId;
+      const isActive = p === selectedPageId;
       return (
         <li key={p}>
           <PageNavigationCard
@@ -36,10 +36,10 @@ const Page = ({
               title: `Page ${p}`,
             }}
             onNavigate={() => {
-              setSelectedPageId(String(p));
-              setSelectedJuzId(String(getJuzByPage(p)));
+              setSelectedPageId(p);
+              setSelectedJuzId(getJuzByPage(p));
               const chap = getSurahByPage(p, chapters);
-              if (chap) setSelectedSurahId(String(chap.id));
+              if (chap) setSelectedSurahId(chap.id);
               rememberScroll();
             }}
           />

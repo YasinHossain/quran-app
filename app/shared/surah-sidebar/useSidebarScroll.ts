@@ -7,9 +7,9 @@ type TabKey = 'Surah' | 'Juz' | 'Page';
 
 interface Options {
   activeTab: TabKey;
-  selectedSurahId: string | null;
-  selectedJuzId: string | null;
-  selectedPageId: string | null;
+  selectedSurahId: number | null;
+  selectedJuzId: number | null;
+  selectedPageId: number | null;
 }
 
 const useSidebarScroll = ({
