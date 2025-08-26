@@ -13,10 +13,10 @@ import { colors } from '../../design-system/card-tokens';
  */
 
 // Valid bookmark section identifiers
-type SectionId = 'bookmarks' | 'pinned' | 'last-read' | 'memorization';
+export type SectionId = 'bookmarks' | 'pinned' | 'last-read' | 'memorization';
 
-interface BookmarkNavigationContent {
-  id: string;
+export interface BookmarkNavigationContent {
+  id: SectionId;
   icon: React.ComponentType<{ size?: number; className?: string }>;
   label: string;
   description: string;
@@ -24,7 +24,7 @@ interface BookmarkNavigationContent {
 
 interface BookmarkNavigationCardProps extends Omit<BaseCardProps, 'children'> {
   content: BookmarkNavigationContent;
-  onSectionChange?: (sectionId: string) => void;
+  onSectionChange?: (sectionId: SectionId) => void;
 }
 
 // Map section IDs to URLs for smooth navigation
@@ -35,8 +35,7 @@ const routes: Record<SectionId, string> = {
   memorization: '/bookmarks/memorization',
 };
 
-const getSectionHref = (sectionId: string): string =>
-  routes[sectionId as SectionId] || '/bookmarks';
+const getSectionHref = (sectionId: SectionId): string => routes[sectionId];
 
 export const BookmarkNavigationCard: React.FC<BookmarkNavigationCardProps> = ({
   content,
@@ -48,10 +47,10 @@ export const BookmarkNavigationCard: React.FC<BookmarkNavigationCardProps> = ({
 }) => {
   const { id, icon: IconComponent, label, description } = content;
 
-  const handleClick: React.MouseEventHandler<HTMLAnchorElement | HTMLDivElement> = (e) => {
+  const handleClick = () => {
     // Trigger section change before navigation for immediate feedback
     onSectionChange?.(id);
-    onClick?.(e);
+    onClick?.();
   };
 
   return (

@@ -8,6 +8,7 @@ import { ClockIcon } from '@/app/shared/icons';
 import { useRouter } from 'next/navigation';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 
 export default function LastReadPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -22,7 +23,7 @@ export default function LastReadPage() {
     };
   }, []);
 
-  const handleSectionChange = (section: string) => {
+  const handleSectionChange = (section: SectionId) => {
     if (section === 'bookmarks') {
       router.push('/bookmarks');
     } else if (section === 'pinned') {

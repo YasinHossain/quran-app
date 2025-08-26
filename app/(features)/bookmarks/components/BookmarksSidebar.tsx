@@ -4,10 +4,11 @@ import React from 'react';
 import { BaseSidebar } from '@/app/shared/components/BaseSidebar';
 import { BookmarksContent } from './BookmarksContent';
 import type { Folder } from '@/types/bookmark';
+import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 
 interface BookmarksSidebarProps {
-  activeSection?: string;
-  onSectionChange?: (section: string) => void;
+  activeSection?: SectionId;
+  onSectionChange?: (section: SectionId) => void;
   children?: React.ReactNode;
   folders?: Folder[];
   onVerseClick?: (verseKey: string) => void;

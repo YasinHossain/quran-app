@@ -7,11 +7,15 @@ import {
   BookmarkFolderCard,
   BookmarkVerseCard,
 } from '@/app/shared/ui/cards';
+import type {
+  BookmarkNavigationContent,
+  SectionId,
+} from '@/app/shared/ui/cards/BookmarkNavigationCard';
 import type { Folder } from '@/types/bookmark';
 
 interface BookmarksContentProps {
-  activeSection?: string;
-  onSectionChange?: (section: string) => void;
+  activeSection?: SectionId;
+  onSectionChange?: (section: SectionId) => void;
   children?: React.ReactNode;
   folders?: Folder[];
   onVerseClick?: (verseKey: string) => void;
@@ -38,7 +42,7 @@ export const BookmarksContent: React.FC<BookmarksContentProps> = ({
     });
   };
 
-  const sections = [
+  const sections: BookmarkNavigationContent[] = [
     { id: 'bookmarks', icon: BookmarkIcon, label: 'All Bookmarks', description: 'Manage folders' },
     { id: 'pinned', icon: PinIcon, label: 'Pinned Verses', description: 'Quick access' },
     { id: 'last-read', icon: ClockIcon, label: 'Recent', description: 'Last visited' },

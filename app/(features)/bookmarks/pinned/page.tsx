@@ -9,6 +9,7 @@ import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisib
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { BookmarkCard } from '../components/BookmarkCard';
+import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 
 export default function PinnedAyahPage() {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function PinnedAyahPage() {
     };
   }, []);
 
-  const handleSectionChange = (section: string) => {
+  const handleSectionChange = (section: SectionId) => {
     if (section === 'bookmarks') {
       router.push('/bookmarks');
     } else if (section === 'last-read') {
