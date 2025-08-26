@@ -14,7 +14,7 @@ import { buildTextClasses } from '../../design-system/card-tokens';
 
 interface NavigationCardContent {
   // Core navigation data
-  id: number | string;
+  id: number;
   title: string;
   subtitle?: string;
   arabic?: string;
@@ -27,7 +27,7 @@ interface NavigationCardContent {
 
 interface StandardNavigationCardProps extends Omit<BaseCardProps, 'children'> {
   content: NavigationCardContent;
-  onNavigate?: (id: string | number) => void;
+  onNavigate?: (id: number) => void;
 }
 
 export const StandardNavigationCard: React.FC<StandardNavigationCardProps> = ({
@@ -61,9 +61,7 @@ export const StandardNavigationCard: React.FC<StandardNavigationCardProps> = ({
       {...props}
     >
       {/* Number Badge */}
-      {showBadge && (
-        <NumberBadge number={typeof id === 'string' ? parseInt(id) : id} isActive={isActive} />
-      )}
+      {showBadge && <NumberBadge number={id} isActive={isActive} />}
 
       {/* Content Area */}
       <div className={showArabic ? 'flex-grow min-w-0' : undefined}>
