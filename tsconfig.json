@@ -27,6 +27,7 @@
       "@/presentation/*": ["src/presentation/*"],
       "@/lib/*": ["lib/*"],
       "@/types/*": ["types/*"],
+      "@/data/*": ["data/*"],
       "@/*": ["src/*"]
     }
   },
