@@ -1,0 +1,34 @@
+{
+  "name": "quran-app-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for Quran App v1 - provides AI access to Quran data and functionality",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "inspector": "node --inspect dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "@modelcontextprotocol/server-github": "^2025.4.8",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "mcp",
+    "quran",
+    "ai",
+    "assistant",
+    "islamic"
+  ],
+  "author": "Quran App v1",
+  "license": "MIT"
+}
