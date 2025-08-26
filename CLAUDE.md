@@ -21,6 +21,7 @@ A modern Quran reading application built with Next.js 15, featuring audio playba
 - **Type definitions** centralized in `types/`
 - **Context providers** in `app/providers/` for global state
 - **Comprehensive testing** with `__tests__/` folders throughout
+- **Documentation structure**: Organized in `/docs` with architecture, development, and guides
 
 ## Development Commands
 
@@ -95,7 +96,8 @@ npm run generate-feature <name>  # Scaffold new feature
 
 ## Development Notes
 
-- Use `AGENTS.md` files for area-specific guidelines
+- Use `AGENTS.md` for AI workflow guidelines (root level for discoverability)
+- Reference `AI_DEVELOPMENT_GUIDE.md` for comprehensive AI development practices
 - Follow feature folder structure with `components/`, `hooks/`, `__tests__/`
 - Maintain TypeScript strict mode compliance
 - AI runs `npm run check` automatically after significant changes
@@ -174,10 +176,25 @@ Edit tool    # Precise code modifications with context preservation
 - **Batch Operations**: Group related operations to minimize output
 - **Progress Tracking**: Clear task completion indicators
 - **Error Handling**: Environment-agnostic fallback strategies
-- **Documentation**: Self-maintaining project context in this file
+- **Documentation**: Self-maintaining project context in this file and organized docs structure
+
+## Documentation Organization
+
+**Root Level (Critical/Discoverable):**
+- `CLAUDE.md` - This file, AI development context
+- `AGENTS.md` - AI workflow and development guidelines
+- `AI_DEVELOPMENT_GUIDE.md` - Comprehensive AI development practices
+- `README.md` - Main project documentation
+- `CHANGELOG.md` - Version history
+
+**Organized Structure (`/docs`):**
+- `docs/architecture/` - Design system, responsive strategy, semantic tokens, styling guidelines
+- `docs/development/` - MCP setup, usage examples, development tools
+- `docs/guides/` - Contributing guidelines, security policies, code of conduct
 
 ## Recent Updates
 
+- **Documentation Reorganization**: Structured docs into logical categories while keeping AI-critical files discoverable
 - **AI-Terminal Integration**: Added comprehensive AI development environment guidelines
 - **Mobile-Responsive Architecture**: Implementing mobile-first design system with responsive breakpoints
 - **Tafsir System**: Enhanced with persistent selections, improved UI, and multiple tafsir support

@@ -165,7 +165,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Contributing
 
-We welcome contributions from the community. Please read our [CONTRIBUTING.md](CONTRIBUTING.md) guide to get started.
+We welcome contributions from the community. Please read our [CONTRIBUTING.md](docs/guides/CONTRIBUTING.md) guide to get started.
 For a summary of the required workflow, see [AGENTS.md](AGENTS.md).
 For debugging tips, see [docs/DEBUGGING.md](docs/DEBUGGING.md).
 
@@ -176,7 +176,7 @@ All bundled fonts are licensed separately; see [public/fonts/LICENSES.md](public
 
 ## Code of Conduct
 
-Please read our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing to ensure a welcoming and inclusive environment.
+Please read our [Code of Conduct](docs/guides/CODE_OF_CONDUCT.md) before contributing to ensure a welcoming and inclusive environment.
 
 ## Changelog
 
