@@ -23,6 +23,22 @@ interface BookmarkNavigationCardProps extends Omit<BaseCardProps, 'children'> {
   onSectionChange?: (sectionId: string) => void;
 }
 
+// Map section IDs to URLs for smooth navigation
+const getSectionHref = (sectionId: string): string => {
+  switch (sectionId) {
+    case 'bookmarks':
+      return '/bookmarks';
+    case 'pinned':
+      return '/bookmarks/pinned';
+    case 'last-read':
+      return '/bookmarks/last-read';
+    case 'memorization':
+      return '/bookmarks/memorization';
+    default:
+      return '/bookmarks';
+  }
+};
+
 export const BookmarkNavigationCard: React.FC<BookmarkNavigationCardProps> = ({
   content,
   onSectionChange,
@@ -32,16 +48,13 @@ export const BookmarkNavigationCard: React.FC<BookmarkNavigationCardProps> = ({
 }) => {
   const { id, icon: IconComponent, label, description } = content;
 
-  const handleClick = () => {
-    onSectionChange?.(id);
-  };
-
   return (
     <BaseCard
       variant="navigation"
       animation="navigation"
       isActive={isActive}
-      onClick={handleClick}
+      href={getSectionHref(id)}
+      scroll={false}
       className={cn('items-center', className)}
       {...props}
     >
