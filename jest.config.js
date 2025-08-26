@@ -11,7 +11,7 @@ const customJestConfig = {
     '^@/domain/(.*)$': '<rootDir>/src/domain/$1',
     '^@/application/(.*)$': '<rootDir>/src/application/$1',
     '^@/infrastructure/(.*)$': '<rootDir>/src/infrastructure/$1',
-    '^@/presentation/(.*)$': '<rootDir>/src/presentation/$1',
+    '^@/presentation/(.*)$': '<rootDir>/src/app/$1',
     '^@/lib/(.*)$': '<rootDir>/lib/$1',
     '^@/types/(.*)$': '<rootDir>/types/$1',
     '^@/(.*)$': '<rootDir>/src/$1',
