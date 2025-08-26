@@ -3,6 +3,7 @@
 import React from 'react';
 import { BaseCard, BaseCardProps } from '../BaseCard';
 import { cn } from '@/lib/utils/cn';
+import { colors } from '../../design-system/card-tokens';
 
 /**
  * BookmarkNavigationCard
@@ -62,7 +63,9 @@ export const BookmarkNavigationCard: React.FC<BookmarkNavigationCardProps> = ({
       <div
         className={cn(
           'w-8 h-8 rounded-lg flex items-center justify-center text-sm font-semibold shrink-0 transition-colors duration-200',
-          isActive ? 'bg-white/20 text-white' : 'bg-accent/10 text-accent group-hover:bg-accent/15'
+          isActive
+            ? 'bg-on-accent/20 text-on-accent'
+            : `${colors.background.gradientBase} ${colors.text.accent} ${colors.background.gradientHover}`
         )}
       >
         <IconComponent size={16} />
@@ -73,13 +76,15 @@ export const BookmarkNavigationCard: React.FC<BookmarkNavigationCardProps> = ({
         <div
           className={cn(
             'font-semibold text-sm truncate transition-colors duration-200',
-            isActive ? 'text-white' : 'text-foreground group-hover:text-accent'
+            isActive ? 'text-on-accent' : 'text-foreground group-hover:text-accent'
           )}
         >
           {label}
         </div>
         <div className="text-xs leading-tight truncate transition-colors duration-200">
-          <span className={isActive ? 'text-white/70' : 'text-muted'}>{description}</span>
+          <span className={isActive ? colors.text.activeSecondary : 'text-muted'}>
+            {description}
+          </span>
         </div>
       </div>
     </BaseCard>
