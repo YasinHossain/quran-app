@@ -1,14 +1,18 @@
 'use client';
 import { SunIcon, MoonIcon } from '@/app/shared/icons';
 import { GlassCard } from '@/app/shared/ui';
+import { useTheme } from '@/app/providers/ThemeContext';
 
 export default function HomeHeader() {
+  const { theme, setTheme } = useTheme();
   const toggleTheme = () => {
     const html = document.documentElement;
     if (html.classList.contains('dark')) {
       html.classList.remove('dark');
+      setTheme('light');
     } else {
       html.classList.add('dark');
+      setTheme('dark');
     }
   };
 
@@ -27,12 +31,11 @@ export default function HomeHeader() {
             className="p-2 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             aria-label="Toggle Theme"
           >
-            <div className="dark:hidden">
-              <MoonIcon className="w-5 h-5 text-content-secondary" />
-            </div>
-            <div className="hidden dark:block">
+            {theme === 'dark' ? (
               <SunIcon className="w-5 h-5 text-status-warning" />
-            </div>
+            ) : (
+              <MoonIcon className="w-5 h-5 text-content-secondary" />
+            )}
           </button>
         </nav>
       </GlassCard>

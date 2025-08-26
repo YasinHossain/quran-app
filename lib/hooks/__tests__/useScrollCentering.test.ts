@@ -39,7 +39,7 @@ describe('useScrollCentering', () => {
       useScrollCentering<Tab>({
         scrollRef,
         activeTab: 'Surah',
-        selectedIds: { Surah: '1', Juz: null, Page: null },
+        selectedIds: { Surah: 1, Juz: null, Page: null },
         scrollTops: { Surah: 0, Juz: 0, Page: 0 },
       })
     );
@@ -53,7 +53,7 @@ describe('useScrollCentering', () => {
       useScrollCentering<Tab>({
         scrollRef,
         activeTab: 'Surah',
-        selectedIds: { Surah: '1', Juz: null, Page: null },
+        selectedIds: { Surah: 1, Juz: null, Page: null },
         scrollTops: { Surah: 0, Juz: 0, Page: 0 },
       })
     );
@@ -66,7 +66,7 @@ describe('useScrollCentering', () => {
       useScrollCentering<Tab>({
         scrollRef,
         activeTab: 'Surah',
-        selectedIds: { Surah: '1', Juz: null, Page: null },
+        selectedIds: { Surah: 1, Juz: null, Page: null },
         scrollTops: { Surah: 0, Juz: 0, Page: 0 },
       })
     );

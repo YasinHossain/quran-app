@@ -6,7 +6,8 @@ export * from './settings';
 export * from './surah';
 export * from './word';
 export * from './juz';
-export * from './bookmark';
+export type { Bookmark, BookmarkWithVerse, Folder, MemorizationPlan } from './bookmark';
+export * from './components';
 
 /**
  * Mapping and metadata for a Juz (section) of the Quran.

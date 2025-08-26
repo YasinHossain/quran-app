@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { SearchInput } from '@/app/shared/components/SearchInput';
+import { FontSearchField } from '@/app/shared/ui/SearchField';
 
 interface ArabicFontSearchProps {
   searchTerm: string;
@@ -11,19 +11,6 @@ interface ArabicFontSearchProps {
 export const ArabicFontSearch: React.FC<ArabicFontSearchProps> = ({
   searchTerm,
   setSearchTerm,
-}) => {
-  return (
-    <div className="px-2">
-      <h2 className="text-sm font-semibold px-2 mb-3 text-muted">SEARCH FONTS</h2>
-      <SearchInput
-        value={searchTerm}
-        onChange={setSearchTerm}
-        placeholder="Search for a font..."
-        variant="panel"
-        size="sm"
-      />
-    </div>
-  );
-};
+}) => <FontSearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} />;
 
 export default ArabicFontSearch;

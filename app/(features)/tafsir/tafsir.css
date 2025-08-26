@@ -6,6 +6,8 @@
   text-align: justify;
   word-spacing: normal;
   letter-spacing: 0.015em;
+  word-break: break-word;
+  overflow-wrap: anywhere;
   font-feature-settings:
     'kern' 1,
     'liga' 1;
@@ -120,4 +122,56 @@
 /* Override for Arabic text to maintain Arabic fonts */
 .tafsir-content [lang='ar'] {
   font-family: var(--font-noto-sans-arabic), 'Noto Sans Arabic', serif !important;
+}
+
+/* Ensure embedded media and wide content are responsive */
+.tafsir-content img,
+.tafsir-content video,
+.tafsir-content iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Prevent long URLs or tokens from overflowing */
+.tafsir-content a,
+.tafsir-content code,
+.tafsir-content pre {
+  overflow-wrap: anywhere;
+}
+
+/* ===== Responsive Adjustments ===== */
+@media (max-width: 640px) {
+  .tafsir-content {
+    line-height: 2.1;
+    letter-spacing: 0.01em;
+  }
+
+  .tafsir-content p {
+    margin-bottom: 1.1rem;
+    text-indent: 0; /* Remove indent on small screens for readability */
+  }
+
+  /* Neutralize drop cap on small screens */
+  .tafsir-content p:first-child::first-letter {
+    float: none;
+    margin: 0;
+    font-size: 1.5em;
+    line-height: 1;
+  }
+
+  /* Tighter arabic badge on small screens */
+  .tafsir-content [lang='ar'] {
+    font-size: 1.05em;
+    padding: 0.15rem 0.35rem;
+    display: inline;
+  }
+
+  .tafsir-content blockquote {
+    padding-left: 1rem;
+    margin: 1rem 0;
+  }
+
+  .tafsir-content p + p {
+    margin-top: 1rem;
+  }
 }

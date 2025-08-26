@@ -130,6 +130,21 @@ Generate a coverage report:
 npm run test:coverage
 ```
 
+### Local Tooling
+
+- `npm run rg -- <pattern> [paths]`: Project-local ripgrep for fast text search. Works even if `rg` isn’t installed system-wide.
+- Optional system install: `scripts/install-cli-tools.sh` (macOS/Linux) or `scripts/install-cli-tools.ps1` (Windows) to add `ripgrep`, `fd`, `jq`, and `tree`.
+
+Examples:
+
+```bash
+# search text in src
+npm run -s rg -- "use client" app lib
+
+# list tracked files with ripgrep
+npm run -s rg -- --files | head -n 20
+```
+
 ## Storybook
 
 Run Storybook to iterate on UI components in isolation:

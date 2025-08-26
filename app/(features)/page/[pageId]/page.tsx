@@ -80,14 +80,22 @@ export default function PagePage({ params }: PagePageProps) {
 
   return (
     <div className="flex flex-grow bg-surface text-foreground font-sans overflow-hidden">
-      <main className="flex-grow bg-surface section overflow-y-auto homepage-scrollable-area">
+      <main
+        className={`flex-grow bg-surface overflow-y-auto homepage-scrollable-area transition-all duration-300 ${
+          isHidden
+            ? 'pt-6 lg:pt-10'
+            : 'pt-[calc(3.5rem+1.5rem+env(safe-area-inset-top))] sm:pt-[calc(4rem+1.5rem+env(safe-area-inset-top))] lg:pt-[calc(4rem+2.5rem+env(safe-area-inset-top))]'
+        } px-6 lg:px-10 pb-6 lg:pb-10`}
+      >
         <div className="w-full relative">
           {isLoading ? (
             <div className="flex justify-center py-20">
               <Spinner className="h-8 w-8 text-accent" />
             </div>
           ) : error ? (
-            <div className="text-center py-20 text-red-600 bg-red-50 p-4 rounded-lg">{error}</div>
+            <div className="text-center py-20 text-status-error bg-surface border border-status-error/20 p-4 rounded-lg">
+              {error}
+            </div>
           ) : verses.length > 0 ? (
             <>
               {verses.map((v: VerseType) => (
@@ -120,7 +128,7 @@ export default function PagePage({ params }: PagePageProps) {
         <div
           className={`fixed left-0 right-0 p-4 bg-transparent z-audio-player transition-all duration-300 ease-in-out ${
             isHidden ? 'bottom-0 pb-safe' : 'bottom-0 pb-safe lg:pb-4'
-          }`}
+          } lg:left-1/2 lg:-translate-x-1/2 lg:right-auto lg:w-[min(90vw,60rem)]`}
           style={{
             bottom: isHidden
               ? 'env(safe-area-inset-bottom)'

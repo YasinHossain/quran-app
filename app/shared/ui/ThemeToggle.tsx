@@ -3,6 +3,7 @@
 import React from 'react';
 import { useTheme } from '@/app/providers/ThemeContext';
 import { SunIcon, MoonIcon } from '@/app/shared/icons';
+import { Button } from './Button';
 
 interface ThemeToggleProps {
   variant?: 'primary' | 'secondary' | 'ghost' | 'tabs' | string;
@@ -63,17 +64,18 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ variant = 'ghost', cla
   };
 
   return (
-    <button
+    <Button
+      variant="icon-round"
+      size="icon"
       onClick={toggleTheme}
-      className={`p-2 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${className || ''}`}
+      className={`bg-button-secondary/40 hover:bg-button-secondary-hover/60 ${className || ''}`}
       aria-label="Toggle Theme"
     >
-      <div className="dark:hidden">
-        <MoonIcon className="w-5 h-5 text-content-secondary" />
-      </div>
-      <div className="hidden dark:block">
+      {currentTheme === 'dark' ? (
         <SunIcon className="w-5 h-5 text-status-warning" />
-      </div>
-    </button>
+      ) : (
+        <MoonIcon className="w-5 h-5 text-content-secondary" />
+      )}
+    </Button>
   );
 };

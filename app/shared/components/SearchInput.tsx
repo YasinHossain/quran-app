@@ -19,13 +19,13 @@ interface SearchInputProps {
 const getVariantStyles = (variant: SearchVariant) => {
   switch (variant) {
     case 'header':
-      return 'bg-black/[.05] dark:bg-white/[.05] text-foreground border border-border placeholder:text-muted';
+      return 'bg-interactive/60 text-foreground border border-border placeholder:text-muted';
     case 'panel':
-      return 'bg-black/[.05] dark:bg-white/[.05] border-border text-foreground placeholder-muted';
+      return 'bg-interactive/60 border border-border text-foreground placeholder:text-muted';
     case 'glass':
-      return 'bg-surface-glass/60 text-lg text-foreground border-none placeholder-input-placeholder backdrop-blur-xl shadow-lg hover:shadow-xl';
+      return 'bg-surface-glass/60 text-lg text-foreground border-none placeholder:text-input-placeholder backdrop-blur-xl shadow-lg hover:shadow-xl';
     default:
-      return 'bg-black/[.05] dark:bg-white/[.05] text-foreground border border-border placeholder:text-muted';
+      return 'bg-interactive/60 text-foreground border border-border placeholder:text-muted';
   }
 };
 

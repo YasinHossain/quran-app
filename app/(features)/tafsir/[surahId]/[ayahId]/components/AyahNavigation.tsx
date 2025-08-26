@@ -21,14 +21,14 @@ export const AyahNavigation = ({
   currentSurah,
   ayahId,
 }: AyahNavigationProps) => (
-  <div className="flex items-center justify-between rounded-full bg-accent text-on-accent p-2">
+  <div className="flex w-full items-center justify-between gap-2 sm:gap-3 rounded-full bg-accent text-on-accent p-2 min-w-0 overflow-hidden">
     <button
       aria-label="Previous"
       disabled={!prev}
       onClick={() => navigate(prev)}
-      className="flex items-center px-4 py-2 rounded-full bg-accent text-on-accent disabled:opacity-50 font-bold"
+      className="flex items-center px-3 py-2 sm:px-4 rounded-full bg-accent text-on-accent disabled:opacity-50 font-bold"
     >
-      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-surface mr-2">
+      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-surface mr-1 sm:mr-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-5 w-5 text-accent"
@@ -43,7 +43,7 @@ export const AyahNavigation = ({
         </svg>
       </div>
     </button>
-    <div className="text-on-accent font-bold">
+    <div className="flex-1 min-w-0 text-center px-2 text-on-accent font-bold text-sm sm:text-base truncate">
       {currentSurah ? (
         <>
           <span className="font-bold">{currentSurah.name}</span> : {ayahId}
@@ -56,9 +56,9 @@ export const AyahNavigation = ({
       aria-label="Next"
       disabled={!next}
       onClick={() => navigate(next)}
-      className="flex items-center px-4 py-2 rounded-full bg-accent text-on-accent disabled:opacity-50 font-bold"
+      className="flex items-center px-3 py-2 sm:px-4 rounded-full bg-accent text-on-accent disabled:opacity-50 font-bold"
     >
-      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-surface ml-2">
+      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-surface ml-1 sm:ml-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-5 w-5 text-accent"

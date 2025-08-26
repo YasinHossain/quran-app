@@ -3,36 +3,36 @@ import { getJuzByPage, getSurahByPage, JUZ_START_PAGES } from '@/lib/utils/surah
 import type { Chapter } from '@/types';
 
 interface Args {
-  currentSurahId?: string;
-  currentJuzId?: string;
-  currentPageId?: string;
+  currentSurahId?: number;
+  currentJuzId?: number;
+  currentPageId?: number;
   chapters: Chapter[];
 }
 
 const useSelectionSync = ({ currentSurahId, currentJuzId, currentPageId, chapters }: Args) => {
-  const [selectedSurahId, setSelectedSurahId] = useState<string | null>(currentSurahId ?? null);
-  const [selectedJuzId, setSelectedJuzId] = useState<string | null>(currentJuzId ?? null);
-  const [selectedPageId, setSelectedPageId] = useState<string | null>(currentPageId ?? null);
+  const [selectedSurahId, setSelectedSurahId] = useState<number | null>(currentSurahId ?? null);
+  const [selectedJuzId, setSelectedJuzId] = useState<number | null>(currentJuzId ?? null);
+  const [selectedPageId, setSelectedPageId] = useState<number | null>(currentPageId ?? null);
 
   useEffect(() => {
     if (currentSurahId) {
       setSelectedSurahId(currentSurahId);
-      const chapter = chapters.find((c) => c.id === Number(currentSurahId));
+      const chapter = chapters.find((c) => c.id === currentSurahId);
       const page = chapter?.pages?.[0] ?? 1;
-      setSelectedPageId(String(page));
-      setSelectedJuzId(String(getJuzByPage(page)));
+      setSelectedPageId(page);
+      setSelectedJuzId(getJuzByPage(page));
     } else if (currentJuzId) {
       setSelectedJuzId(currentJuzId);
-      const page = JUZ_START_PAGES[Number(currentJuzId) - 1];
-      setSelectedPageId(String(page));
+      const page = JUZ_START_PAGES[currentJuzId - 1];
+      setSelectedPageId(page);
       const chapter = getSurahByPage(page, chapters);
-      if (chapter) setSelectedSurahId(String(chapter.id));
+      if (chapter) setSelectedSurahId(chapter.id);
     } else if (currentPageId) {
       setSelectedPageId(currentPageId);
-      const page = Number(currentPageId);
-      setSelectedJuzId(String(getJuzByPage(page)));
+      const page = currentPageId;
+      setSelectedJuzId(getJuzByPage(page));
       const chapter = getSurahByPage(page, chapters);
-      if (chapter) setSelectedSurahId(String(chapter.id));
+      if (chapter) setSelectedSurahId(chapter.id);
     }
   }, [currentSurahId, currentJuzId, currentPageId, chapters]);
 

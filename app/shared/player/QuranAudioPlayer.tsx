@@ -1,6 +1,7 @@
 'use client';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { X } from 'lucide-react';
+import { X, SlidersHorizontal } from 'lucide-react';
+import Image from 'next/image';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import useAudioPlayer from '@/app/shared/player/hooks/useAudioPlayer';
 import usePlayerKeyboard from '@/app/shared/player/hooks/usePlayerKeyboard';
@@ -9,7 +10,10 @@ import TrackInfo from './components/TrackInfo';
 import TransportControls from './components/TransportControls';
 import Timeline from './components/Timeline';
 import PlayerOptions from './components/PlayerOptions';
-import IconBtn from './components/IconBtn';
+import SpeedControl from './components/SpeedControl';
+import PlaybackOptionsModal from './components/PlaybackOptionsModal';
+import { Button } from '@/app/shared/ui/Button';
+import { iconClasses } from '@/lib/responsive';
 import type { Track } from './types';
 
 /**
@@ -30,13 +34,13 @@ import type { Track } from './types';
  * - REMOVED: Shuffle and Repeat icons from main bar for a cleaner look.
  */
 
-type Props = {
+interface QuranAudioPlayerProps {
   track?: Track | null;
   onPrev?: () => boolean;
   onNext?: () => boolean;
-};
+}
 
-export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
+export default function QuranAudioPlayer({ track, onPrev, onNext }: QuranAudioPlayerProps) {
   const {
     isPlayerVisible,
     closePlayer,
@@ -52,6 +56,8 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
   } = useAudio();
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState<number>(track?.durationSec ?? 0);
+  const [mobileOptionsOpen, setMobileOptionsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<'reciter' | 'repeat'>('reciter');
 
   const {
     audioRef: internalAudioRef,
@@ -139,41 +145,128 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: Props) {
     <div className="relative w-full">
       {/* Card */}
       <div
-        className="mx-auto w-full rounded-2xl px-4 py-4 flex items-center gap-4 bg-surface shadow-lg border border-border"
+        className="mx-auto w-full rounded-2xl px-3 py-3 sm:px-4 sm:py-4 bg-surface shadow-lg border border-border"
         role="region"
         aria-label="Player"
       >
-        {/* Left media block */}
-        <TrackInfo cover={cover} title={title} artist={artist} />
-        {/* Transport controls */}
-        <TransportControls
-          isPlaying={isPlaying}
-          interactable={interactable}
-          onPrev={onPrev}
-          onNext={onNext}
-          togglePlay={togglePlay}
-        />
-        {/* Timeline & Time Labels */}
-        <Timeline
-          current={current}
-          duration={duration}
-          setSeek={setSeek}
-          interactable={interactable}
-          elapsed={elapsed}
-          total={total}
-        />
-        {/* Utilities */}
-        <div className="flex items-center gap-2">
-          <PlayerOptions />
-          <IconBtn aria-label="Close player" onClick={closePlayer}>
-            <X />
-          </IconBtn>
+        {/* Mobile Layout */}
+        <div className="flex flex-col gap-3 sm:hidden">
+          {/* Main row: Verse info + Transport controls + Speed & Settings + Close */}
+          <div className="flex items-center justify-between gap-2">
+            {/* Left: Verse info (responsive icon) */}
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              {/* Show icon only on larger mobile screens */}
+              <div className="hidden min-[400px]:block flex-shrink-0">
+                <Image
+                  src={cover}
+                  alt="cover"
+                  width={32}
+                  height={32}
+                  className="h-8 w-8 rounded-full shadow-sm object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src =
+                      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><rect width='100%' height='100%' rx='6' ry='6' fill='%23e5e7eb'/></svg>";
+                  }}
+                />
+              </div>
+              <div className="min-w-0">
+                <div className="text-sm font-semibold tracking-[-0.01em] truncate text-foreground">
+                  {title}
+                </div>
+                <div className="text-xs -mt-0.5 truncate text-muted">{artist}</div>
+              </div>
+            </div>
+            {/* Center: Transport controls */}
+            <TransportControls
+              isPlaying={isPlaying}
+              interactable={interactable}
+              onPrev={onPrev}
+              onNext={onNext}
+              togglePlay={togglePlay}
+            />
+            {/* Right: Speed, Settings, and Close */}
+            <div className="flex items-center gap-1">
+              <SpeedControl />
+              <Button
+                variant="icon-round"
+                size="icon-round"
+                className="shrink-0"
+                aria-label="Options"
+                onClick={() => {
+                  setActiveTab('reciter');
+                  setMobileOptionsOpen(true);
+                }}
+              >
+                <SlidersHorizontal className={`${iconClasses.touch} ${iconClasses.stroke}`} />
+              </Button>
+              <Button
+                variant="icon-round"
+                size="icon-round"
+                aria-label="Close player"
+                onClick={closePlayer}
+              >
+                <X className={`${iconClasses.touch} ${iconClasses.stroke}`} />
+              </Button>
+            </div>
+          </div>
+          {/* Bottom row: Timeline */}
+          <Timeline
+            current={current}
+            duration={duration}
+            setSeek={setSeek}
+            interactable={interactable}
+            elapsed={elapsed}
+            total={total}
+          />
+        </div>
+
+        {/* Desktop Layout */}
+        <div className="hidden sm:flex items-center gap-4">
+          {/* Left media block */}
+          <TrackInfo cover={cover} title={title} artist={artist} />
+          {/* Transport controls */}
+          <TransportControls
+            isPlaying={isPlaying}
+            interactable={interactable}
+            onPrev={onPrev}
+            onNext={onNext}
+            togglePlay={togglePlay}
+          />
+          {/* Timeline & Time Labels */}
+          <Timeline
+            current={current}
+            duration={duration}
+            setSeek={setSeek}
+            interactable={interactable}
+            elapsed={elapsed}
+            total={total}
+          />
+          {/* Utilities */}
+          <div className="flex items-center gap-2">
+            <PlayerOptions />
+            <Button
+              variant="icon-round"
+              size="icon-round"
+              aria-label="Close player"
+              onClick={closePlayer}
+            >
+              <X className={`${iconClasses.touch} ${iconClasses.stroke}`} />
+            </Button>
+          </div>
         </div>
       </div>
       {/* Hidden audio element */}
       <audio ref={internalAudioRef} src={track?.src || ''} preload="metadata" onEnded={handleEnded}>
         <track kind="captions" />
       </audio>
+
+      {/* Mobile Options Modal */}
+      <PlaybackOptionsModal
+        open={mobileOptionsOpen}
+        onClose={() => setMobileOptionsOpen(false)}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+      />
     </div>
   );
 }

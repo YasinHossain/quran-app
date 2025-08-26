@@ -4,8 +4,7 @@ import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
-import VerseActions from '@/app/shared/VerseActions';
-import VerseActionsMobile from '@/app/shared/VerseActionsMobile';
+import ResponsiveVerseActions from '@/app/shared/ResponsiveVerseActions';
 import VerseArabic from '@/app/shared/VerseArabic';
 
 interface VerseCardProps {
@@ -69,47 +68,21 @@ export default function VerseCard({ verse }: VerseCardProps) {
 
   return (
     <div className="relative rounded-md border bg-surface p-6 shadow">
-      {/* Mobile Layout (sm and below) */}
-      <div className="block md:hidden">
-        {/* Verse actions positioned 25% closer to grey separator line */}
-        <div className="mt-2 mb-4">
-          <VerseActionsMobile
-            verseKey={verse.verse_key}
-            isPlaying={isPlaying}
-            isLoadingAudio={isLoadingAudio}
-            isBookmarked={isVerseBookmarked}
-            onPlayPause={handlePlayPause}
-            onBookmark={handleBookmark}
-            className=""
-          />
-        </div>
-
-        <div className="space-y-6">
-          <VerseArabic verse={verse} />
-          {verse.translations?.map((t: Translation) => (
-            <div key={t.resource_id}>
-              <p
-                className="text-left leading-relaxed"
-                style={{ fontSize: `${settings.translationFontSize}px` }}
-                dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.text) }}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Desktop Layout (md and above) */}
-      <div className="hidden md:flex">
-        <VerseActions
+      {/* Mobile: stacked layout, Desktop: side-by-side */}
+      <div className="space-y-4 md:space-y-0 md:flex md:items-start md:gap-x-6">
+        {/* Verse actions */}
+        <ResponsiveVerseActions
           verseKey={verse.verse_key}
           isPlaying={isPlaying}
           isLoadingAudio={isLoadingAudio}
           isBookmarked={isVerseBookmarked}
           onPlayPause={handlePlayPause}
           onBookmark={handleBookmark}
-          className="mr-4 w-14 pt-2 text-muted"
+          className="md:w-16 md:pt-1"
         />
-        <div className="flex-grow space-y-6">
+
+        {/* Main content area */}
+        <div className="space-y-6 md:flex-grow">
           <VerseArabic verse={verse} />
           {verse.translations?.map((t: Translation) => (
             <div key={t.resource_id}>

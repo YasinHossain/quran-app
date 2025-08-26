@@ -65,7 +65,7 @@ const QuranBottomSheet: React.FC<QuranBottomSheetProps> = ({ isOpen, onClose, on
             initial="hidden"
             animate="visible"
             exit="hidden"
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 touch-none"
+            className="fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm z-50 touch-none"
             onClick={onClose}
           />
 

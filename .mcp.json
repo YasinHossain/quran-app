@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "browser-console": {
+      "command": "node",
+      "args": ["./mcp-browser-console/server.js"],
+      "env": {},
+      "description": "Access Chrome browser console logs for debugging"
+    }
+  }
+}

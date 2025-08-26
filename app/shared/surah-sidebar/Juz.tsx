@@ -1,7 +1,6 @@
 import type { Chapter } from '@/types';
 import { getSurahByPage, JUZ_START_PAGES } from '@/lib/utils/surah-navigation';
-import { SidebarCard } from '@/app/shared/ui/SidebarCard';
-import { NumberBadge } from '@/app/shared/ui/NumberBadge';
+import { JuzNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
 
 interface JuzSummary {
   number: number;
@@ -12,10 +11,10 @@ interface JuzSummary {
 interface Props {
   juzs: JuzSummary[];
   chapters: Chapter[];
-  selectedJuzId: string | null;
-  setSelectedJuzId: (id: string) => void;
-  setSelectedPageId: (id: string) => void;
-  setSelectedSurahId: (id: string) => void;
+  selectedJuzId: number | null;
+  setSelectedJuzId: (id: number) => void;
+  setSelectedPageId: (id: number) => void;
+  setSelectedSurahId: (id: number) => void;
   rememberScroll: () => void;
 }
 
@@ -30,33 +29,28 @@ const Juz = ({
 }: Props) => (
   <ul className="space-y-2">
     {juzs.map((juz) => {
-      const isActive = String(juz.number) === selectedJuzId;
+      const isActive = juz.number === selectedJuzId;
       return (
         <li key={juz.number}>
-          <SidebarCard
+          <JuzNavigationCard
             href={`/juz/${juz.number}`}
             scroll={false}
             data-active={isActive}
             isActive={isActive}
-            onClick={() => {
-              setSelectedJuzId(String(juz.number));
+            content={{
+              id: juz.number,
+              title: `Juz ${juz.number}`,
+              subtitle: juz.surahRange,
+            }}
+            onNavigate={() => {
+              setSelectedJuzId(juz.number);
               const page = JUZ_START_PAGES[juz.number - 1];
-              setSelectedPageId(String(page));
+              setSelectedPageId(page);
               const chap = getSurahByPage(page, chapters);
-              if (chap) setSelectedSurahId(String(chap.id));
+              if (chap) setSelectedSurahId(chap.id);
               rememberScroll();
             }}
-          >
-            <NumberBadge number={juz.number} isActive={isActive} />
-            <div>
-              <p className={`font-semibold ${isActive ? 'text-on-accent' : 'text-foreground'}`}>
-                Juz {juz.number}
-              </p>
-              <p className={`text-xs ${isActive ? 'text-on-accent/90' : 'text-muted'}`}>
-                {juz.surahRange}
-              </p>
-            </div>
-          </SidebarCard>
+          />
         </li>
       );
     })}

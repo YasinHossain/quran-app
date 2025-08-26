@@ -1,12 +1,11 @@
 // app/(features)/surah/[surahId]/components/Verse.tsx
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useEffect, useRef } from 'react';
 import { Verse as VerseType, Translation } from '@/types';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
-import VerseActions from '@/app/shared/VerseActions';
-import VerseActionsMobile from '@/app/shared/VerseActionsMobile';
+import ResponsiveVerseActions from '@/app/shared/ResponsiveVerseActions';
 import VerseArabic from '@/app/shared/VerseArabic';
 
 interface VerseProps {
@@ -29,10 +28,26 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
     openPlayer,
   } = useAudio();
   const { settings } = useSettings();
-  const { addBookmark, removeBookmark, findBookmark, isBookmarked } = useBookmarks();
+  const { addBookmark, removeBookmark, findBookmark, isBookmarked, setLastRead } = useBookmarks();
+  const verseRef = useRef<HTMLDivElement | null>(null);
   const isPlaying = playingId === verse.id;
   const isLoadingAudio = loadingId === verse.id;
   const isVerseBookmarked = isBookmarked(String(verse.id));
+
+  useEffect(() => {
+    if (!verseRef.current) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          const [surahId] = verse.verse_key.split(':');
+          setLastRead(surahId, verse.id);
+        }
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(verseRef.current);
+    return () => observer.disconnect();
+  }, [verse.verse_key, verse.id, setLastRead]);
 
   const handlePlayPause = useCallback(() => {
     if (playingId === verse.id) {
@@ -70,49 +85,22 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
   }, [addBookmark, removeBookmark, findBookmark, verse.id]);
 
   return (
-    <div className="mb-8 pb-8 border-b border-border">
-      {/* Mobile Layout (sm and below) */}
-      <div className="block md:hidden">
-        {/* Position verse actions closer to the separator for better visual balance */}
-        <div className="mt-0 mb-4">
-          <VerseActionsMobile
-            verseKey={verse.verse_key}
-            isPlaying={isPlaying}
-            isLoadingAudio={isLoadingAudio}
-            isBookmarked={isVerseBookmarked}
-            onPlayPause={handlePlayPause}
-            onBookmark={handleBookmark}
-            className=""
-          />
-        </div>
-
-        <div className="space-y-6">
-          <VerseArabic verse={verse} />
-          {/* TRANSLATIONS */}
-          {verse.translations?.map((t: Translation) => (
-            <div key={t.resource_id}>
-              <p
-                className="text-left leading-relaxed text-foreground"
-                style={{ fontSize: `${settings.translationFontSize}px` }}
-                dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.text) }}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Desktop Layout (md and above) */}
-      <div className="hidden md:flex items-start gap-x-6">
-        <VerseActions
+    <div id={`verse-${verse.id}`} ref={verseRef} className="mb-8 pb-8 border-b border-border">
+      {/* Mobile: stacked layout, Desktop: side-by-side */}
+      <div className="space-y-4 md:space-y-0 md:flex md:items-start md:gap-x-6">
+        {/* Verse actions */}
+        <ResponsiveVerseActions
           verseKey={verse.verse_key}
+          verseId={String(verse.id)}
           isPlaying={isPlaying}
           isLoadingAudio={isLoadingAudio}
           isBookmarked={isVerseBookmarked}
           onPlayPause={handlePlayPause}
-          onBookmark={handleBookmark}
-          className="w-16 pt-1"
+          className="md:w-16 md:pt-1"
         />
-        <div className="flex-grow space-y-6">
+
+        {/* Main content area */}
+        <div className="space-y-6 md:flex-grow">
           <VerseArabic verse={verse} />
           {/* TRANSLATIONS */}
           {verse.translations?.map((t: Translation) => (

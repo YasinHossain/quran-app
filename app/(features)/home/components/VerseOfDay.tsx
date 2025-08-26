@@ -1,107 +1,82 @@
 'use client';
-import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { Verse, Word } from '@/types';
-import { getRandomVerse, getSurahList } from '@/lib/api';
-import { useSettings } from '@/app/providers/SettingsContext';
+
+import React, { useState, useEffect } from 'react';
+import { Word } from '@/types';
 import Spinner from '@/app/shared/Spinner';
-import type { Surah } from '@/types';
 import { applyTajweed } from '@/lib/text/tajweed';
 import { stripHtml } from '@/lib/text/stripHtml';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
+import { useVerseOfDay } from '../hooks/useVerseOfDay';
+import { useSettings } from '@/app/providers/SettingsContext';
 
 export default function VerseOfDay() {
   const { settings } = useSettings();
-  const [verse, setVerse] = useState<Verse | null>(null);
-  const [verseQueue, setVerseQueue] = useState<Verse[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [surahs, setSurahs] = useState<Surah[]>([]);
+  const { verse, loading, error, surahs } = useVerseOfDay();
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [displayVerse, setDisplayVerse] = useState(verse);
+  const [initialLoad, setInitialLoad] = useState(true);
 
-  const abortRef = useRef(false);
+  // Handle verse transitions with smooth animation
+  useEffect(() => {
+    if (!verse) return;
 
-  // Preload a random verse and queue it for display.
-  // Aborts gracefully if the component unmounts mid-fetch.
-  const prefetchVerse = useCallback(async () => {
-    try {
-      const v = await getRandomVerse(settings.translationId);
-      if (abortRef.current) return;
-      setVerseQueue((q) => [...q, v]);
-    } catch (err) {
-      console.error(err);
-      if (abortRef.current) return;
-      setError('Failed to load verse.');
+    if (initialLoad) {
+      // First verse load
+      setDisplayVerse(verse);
+      setInitialLoad(false);
+      return;
     }
-  }, [settings.translationId]);
 
-  useEffect(() => {
-    abortRef.current = false;
-    setVerse(null);
-    setVerseQueue([]);
-    setError(null);
-    setLoading(true);
+    if (displayVerse && verse.id !== displayVerse.id) {
+      // Start transition animation
+      setIsTransitioning(true);
 
-    const init = async () => {
-      await Promise.all([prefetchVerse(), prefetchVerse(), prefetchVerse()]);
-    };
+      // After fade out completes, update verse and fade in
+      const timer = setTimeout(() => {
+        setDisplayVerse(verse);
+        setIsTransitioning(false);
+      }, 300); // Smooth transition duration
 
-    init().then(() => {
-      if (abortRef.current) return;
-      setVerseQueue((q) => {
-        if (q.length === 0) return q;
-        const [first, ...rest] = q;
-        setVerse(first);
-        return rest;
-      });
-      setLoading(false);
-    });
-
-    const intervalId = setInterval(() => {
-      setVerseQueue((q) => {
-        if (q.length === 0) return q;
-        const [next, ...rest] = q;
-        setVerse(next);
-        return rest;
-      });
-    }, 10000);
-
-    return () => {
-      abortRef.current = true;
-      clearInterval(intervalId);
-    };
-  }, [prefetchVerse]);
-
-  useEffect(() => {
-    if (verseQueue.length < 2) {
-      prefetchVerse();
+      return () => clearTimeout(timer);
     }
-  }, [verseQueue, prefetchVerse]);
+  }, [verse, displayVerse, initialLoad]);
 
-  useEffect(() => {
-    getSurahList()
-      .then(setSurahs)
-      .catch((err) => console.error(err));
-  }, []);
-
-  let content: React.ReactNode = null;
-  if (loading) {
-    content = (
-      <div className="flex justify-center py-8">
-        <Spinner className="h-6 w-6 text-accent" />
+  if (loading && initialLoad) {
+    return (
+      <div className="mt-12 w-full max-w-4xl p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400 bg-surface-glass/60">
+        <div className="flex justify-center py-8">
+          <Spinner className="h-6 w-6 text-accent" />
+        </div>
       </div>
     );
-  } else if (error) {
-    content = <div className="text-center py-8 text-status-error">{error}</div>;
-  } else if (verse) {
-    const [surahNum] = verse.verse_key.split(':');
-    const surahName = surahs.find((s) => s.number === Number(surahNum))?.name;
-    content = (
-      <>
+  }
+
+  if (error) {
+    return (
+      <div className="mt-12 w-full max-w-4xl p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400 bg-surface-glass/60">
+        <div className="text-center py-8 text-status-error">{error}</div>
+      </div>
+    );
+  }
+
+  if (!displayVerse) {
+    return null;
+  }
+
+  const [surahNum] = displayVerse.verse_key.split(':');
+  const surahName = surahs.find((s) => s.number === Number(surahNum))?.name;
+
+  return (
+    <div className="mt-12 w-full max-w-4xl p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400 bg-surface-glass/60">
+      <div
+        className={`transition-opacity duration-300 ease-in-out ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
+      >
         <h3
           className="font-amiri text-3xl md:text-4xl leading-relaxed text-right text-content-accent"
           dir="rtl"
         >
-          {verse.words && verse.words.length > 0 ? (
-            verse.words.map((w: Word) => (
+          {displayVerse.words && displayVerse.words.length > 0 ? (
+            displayVerse.words.map((w: Word) => (
               <span key={w.id} className="inline-block mx-0.5 relative group">
                 {settings.tajweed ? (
                   <span
@@ -122,26 +97,20 @@ export default function VerseOfDay() {
           ) : settings.tajweed ? (
             <span
               dangerouslySetInnerHTML={{
-                __html: sanitizeHtml(applyTajweed(verse.text_uthmani)),
+                __html: sanitizeHtml(applyTajweed(displayVerse.text_uthmani)),
               }}
             />
           ) : (
-            verse.text_uthmani
+            displayVerse.text_uthmani
           )}
         </h3>
-        {verse.translations?.[0] && (
+        {displayVerse.translations?.[0] && (
           <p className="mt-4 text-left text-sm text-content-secondary">
-            &quot;{stripHtml(verse.translations[0].text)}&quot; - [Surah {surahName ?? surahNum},{' '}
-            {verse.verse_key}]
+            &quot;{stripHtml(displayVerse.translations[0].text)}&quot; - [Surah{' '}
+            {surahName ?? surahNum}, {displayVerse.verse_key}]
           </p>
         )}
-      </>
-    );
-  }
-
-  return (
-    <div className="mt-12 w-full max-w-4xl p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400 bg-surface-glass/60">
-      {content}
+      </div>
     </div>
   );
 }

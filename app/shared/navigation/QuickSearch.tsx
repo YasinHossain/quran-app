@@ -61,7 +61,7 @@ const QuickSearch: React.FC<QuickSearchProps> = ({ isOpen, onClose }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm z-50"
           />
 
           {/* Search Modal */}
@@ -75,7 +75,7 @@ const QuickSearch: React.FC<QuickSearchProps> = ({ isOpen, onClose }) => {
             <div className="bg-background/95 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl overflow-hidden">
               {/* Search Input */}
               <div className="flex items-center p-4 border-b border-border/30">
-                <IconSearch size={20} className="text-muted-foreground mr-3 flex-shrink-0" />
+                <IconSearch size={20} className="text-muted mr-3 flex-shrink-0" />
                 <input
                   ref={inputRef}
                   type="text"
@@ -83,13 +83,13 @@ const QuickSearch: React.FC<QuickSearchProps> = ({ isOpen, onClose }) => {
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="Search verses, surahs, topics..."
-                  className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted-foreground text-lg"
+                  className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted text-lg"
                 />
                 <button
                   onClick={onClose}
                   className="p-2 hover:bg-muted/50 rounded-lg transition-colors ml-2"
                 >
-                  <IconX size={20} className="text-muted-foreground" />
+                  <IconX size={20} className="text-muted" />
                 </button>
               </div>
 
@@ -100,8 +100,8 @@ const QuickSearch: React.FC<QuickSearchProps> = ({ isOpen, onClose }) => {
                     {/* Recent Searches */}
                     <div>
                       <div className="flex items-center gap-2 mb-3">
-                        <IconClock size={16} className="text-muted-foreground" />
-                        <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                        <IconClock size={16} className="text-muted" />
+                        <h3 className="text-sm font-medium text-muted uppercase tracking-wide">
                           Recent
                         </h3>
                       </div>
@@ -123,8 +123,8 @@ const QuickSearch: React.FC<QuickSearchProps> = ({ isOpen, onClose }) => {
                     {/* Trending Searches */}
                     <div>
                       <div className="flex items-center gap-2 mb-3">
-                        <IconTrendingUp size={16} className="text-muted-foreground" />
-                        <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                        <IconTrendingUp size={16} className="text-muted" />
+                        <h3 className="text-sm font-medium text-muted uppercase tracking-wide">
                           Trending
                         </h3>
                       </div>
@@ -145,7 +145,7 @@ const QuickSearch: React.FC<QuickSearchProps> = ({ isOpen, onClose }) => {
                   </div>
                 ) : (
                   <div className="p-4">
-                    <div className="text-center text-muted-foreground py-8">
+                    <div className="text-center text-muted py-8">
                       Press Enter to search for &quot;{query}&quot;
                     </div>
                   </div>

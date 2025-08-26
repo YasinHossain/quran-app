@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { SearchInput } from '@/app/shared/components/SearchInput';
+import { TafsirSearchField } from '@/app/shared/ui/SearchField';
 
 interface TafsirSearchProps {
   searchTerm: string;
@@ -9,10 +9,5 @@ interface TafsirSearchProps {
 }
 
 export const TafsirSearch: React.FC<TafsirSearchProps> = ({ searchTerm, setSearchTerm }) => (
-  <SearchInput
-    value={searchTerm}
-    onChange={setSearchTerm}
-    placeholder="Search tafsirs (exact match)..."
-    variant="panel"
-  />
+  <TafsirSearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
 );

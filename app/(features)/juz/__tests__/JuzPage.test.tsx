@@ -1,5 +1,5 @@
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
-import JuzPage from '@/app/(features)/juz/[juzId]/page';
+import JuzClient from '@/app/(features)/juz/[juzId]/JuzClient';
 import { Verse, Juz } from '@/types';
 import * as api from '@/lib/api';
 
@@ -55,8 +55,7 @@ beforeEach(() => {
   (api.getJuz as jest.Mock).mockResolvedValue(mockJuz);
 });
 
-const renderPage = () =>
-  renderWithProviders(<JuzPage params={{ juzId: '1' } as unknown as Promise<{ juzId: string }>} />);
+const renderPage = () => renderWithProviders(<JuzClient juzId="1" />);
 
 test('renders juz info and verses', async () => {
   renderPage();

@@ -23,3 +23,4 @@ export { ClockIcon } from './ClockIcon';
 export { PinIcon } from './PinIcon';
 export { FolderIcon } from './FolderIcon';
 export { PlusIcon } from './PlusIcon';
+export { BrainIcon } from './BrainIcon';

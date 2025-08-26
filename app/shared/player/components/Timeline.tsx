@@ -1,6 +1,7 @@
 import React from 'react';
 import * as Slider from '@radix-ui/react-slider';
 import * as Tooltip from '@radix-ui/react-tooltip';
+import { responsiveClasses } from '@/lib/responsive';
 
 interface Props {
   current: number;
@@ -39,14 +40,14 @@ export default function Timeline({
             <Tooltip.Root>
               <Tooltip.Trigger asChild>
                 <Slider.Thumb
-                  className="block h-3 w-3 rounded-full shadow-[0_1px_2px_rgba(2,6,23,0.15)] focus:outline-none focus:ring-2 focus:ring-offset-2 bg-background ring-accent focus:ring-accent/35"
+                  className="block h-3 w-3 rounded-full shadow-[0_1px_2px_rgba(2,6,23,0.15)] focus:outline-none focus:ring-2 focus:ring-offset-2 bg-background ring-accent focus:ring-accent/35 relative z-[120]"
                   aria-label="Position"
                 />
               </Tooltip.Trigger>
               <Tooltip.Portal>
                 <Tooltip.Content
                   sideOffset={8}
-                  className="rounded-md text-foreground text-xs px-2 py-1 shadow bg-surface"
+                  className="rounded-md text-foreground text-xs px-2 py-1 shadow bg-surface z-[120]"
                 >
                   {elapsed}
                   <Tooltip.Arrow className="fill-surface" />
@@ -56,7 +57,9 @@ export default function Timeline({
           </Slider.Root>
         </Tooltip.Provider>
       </div>
-      <div className="hidden md:flex min-w-[88px] justify-between text-[11px] tabular-nums text-muted">
+      <div
+        className={`flex justify-between ${responsiveClasses.timeDisplay} ${responsiveClasses.timeLabel}`}
+      >
         <span aria-label="elapsed">{elapsed}</span>
         <span aria-label="duration">{total}</span>
       </div>

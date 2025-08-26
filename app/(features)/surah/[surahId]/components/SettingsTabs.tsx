@@ -10,7 +10,5 @@ interface SettingsTabsProps {
 }
 
 export const SettingsTabs = ({ activeTab, onTabChange, tabOptions }: SettingsTabsProps) => {
-  return (
-    <TabToggle options={tabOptions} value={activeTab} onChange={onTabChange} className="mb-4" />
-  );
+  return <TabToggle options={tabOptions} value={activeTab} onChange={onTabChange} />;
 };

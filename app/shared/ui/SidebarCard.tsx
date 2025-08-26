@@ -28,7 +28,7 @@ export const SidebarCard = ({
       data-active={dataActive}
       onClick={onClick}
       className={cn(
-        'group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02]',
+        'group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] h-[80px]',
         isActive
           ? 'bg-accent text-on-accent shadow-lg shadow-accent/30'
           : 'bg-surface text-foreground shadow',

@@ -1,62 +1,43 @@
-# Contributor Guidelines
+# Repository Guidelines
 
-## Setup
+## Project Structure & Module Organization
 
-Make sure you are using Node.js 20. Run `nvm use` to load the version specified in `.nvmrc`.
+- Source: Next.js App Router in `app/` (pages, layouts, components). Shared utilities in `lib/`, types in `types/`, assets in `public/`, data in `data/`.
+- Tests: Unit/integration tests in `tests/` (Jest + Testing Library).
+- Configuration: `next.config.ts`, `tailwind.config.mjs`, `eslint.config.mjs`, `tsconfig.json`.
+- Tooling: Scripts in `scripts/`, Storybook in `.storybook/`, custom Rollup plugin in `packages/rollup-plugin-terser/`.
 
-Run the following commands before pushing changes:
+## Build, Test, and Development Commands
 
-```bash
-npm install
-npm run check
-```
+- `npm run dev`: Start the app locally with Turbopack.
+- `npm run build` / `npm start`: Production build and serve.
+- `npm run test` | `test:watch` | `test:coverage`: Run Jest tests.
+- `npm run lint` | `lint:fix`: ESLint check and auto-fix.
+- `npm run format` | `format:check`: Prettier write/check.
+- `npm run type-check`: TypeScript validation.
+- `npm run check`: CI-style suite (format check, lint, type-check, tests).
+- `npm run storybook`: Run component explorer at http://localhost:6006.
 
-Security audits run in CI. Optionally run `npm audit --omit=dev` locally to check for vulnerabilities before pushing.
+## Coding Style & Naming Conventions
 
-## Commit Messages
+- Language: TypeScript with two-space indentation.
+- Lint/Format: ESLint + Prettier (use project configs).
+- Components: PascalCase file/folder names (e.g., `PlayerControls.tsx`).
+- Styling: Use semantic tokens (e.g., `text-primary`, `bg-surface`, `border-border`). Avoid raw Tailwind color utilities and `dark:` classes; don’t use `useTheme` for colors. See `SEMANTIC_TOKENS.md` and `STYLING.md`.
 
-- Use a short summary in the imperative mood ("Add feature" not "Added" or "Adds").
-- Prefix the summary with a type such as `feat:` or `fix:` (for example, `feat: add audio player`).
-- Keep the first line under 50 characters.
-- Separate the summary from any additional details with a blank line.
-- Commit messages are automatically checked by Husky's `commit-msg` hook using commitlint.
-- To bypass this check when necessary, set `SKIP_COMMITLINT=1` before committing.
+## Testing Guidelines
 
-## Code Style
+- Framework: Jest with `jest-environment-jsdom` and Testing Library.
+- Location/Names: Place tests in `tests/` or co-locate as `Component.test.tsx`.
+- Expectations: Prefer user-focused queries and avoid testing implementation details.
+- Commands: `npm run test` locally; `npm run test:ci` in pipelines.
 
-- Follow the project's ESLint configuration. Run `npm run format` followed by `npm run lint` and fix warnings when possible.
-- Use two spaces for indentation.
-- Write clear, descriptive variable and function names.
+## Commit & Pull Request Guidelines
 
-## Design Tokens & Utilities
+- Commits: Conventional style (e.g., `feat: add audio player`). Keep subject under 50 chars; imperative mood. Separate body with a blank line. To bypass commit linting in rare cases: `SKIP_COMMITLINT=1`.
+- PRs: Provide a clear description, link issues (`Closes #123`), include screenshots for UI, and note any breaking changes. Run `npm run check` before opening.
 
-- Use semantic token classes instead of hardcoded colors. Prefer `text-primary`, `text-muted`, and `bg-surface` over `text-gray-*` or `bg-white`. These classes adapt to light and dark themes automatically.
-- Reusable layout helpers live in `app/globals.css` under `@layer components`:
-  - `.section` provides standard page padding.
-  - `.card` applies surface background, padding, rounded corners, and a shadow for basic card layouts.
-- Common token classes:
-  - `bg-surface` – surface backgrounds.
-  - `text-primary` – primary text color.
-  - `border-border` – neutral border color.
-- Avoid using `useTheme` for styling; tokens handle theme-aware colors.
-- Do not use `dark:` classes in new code.
+## Security & Configuration Tips
 
-### Styling examples
-
-```tsx
-// Button
-<button className="bg-surface text-primary border border-border rounded px-4 py-2">
-  Save
-</button>
-
-// Card
-<div className="card bg-surface text-primary border border-border p-4 rounded">
-  Card content
-</div>
-
-// Toggle
-<label className="inline-flex items-center gap-2">
-  <input type="checkbox" className="sr-only peer" />
-  <span className="w-10 h-6 bg-surface border border-border rounded-full peer-checked:bg-accent"></span>
-</label>
-```
+- Runtime: Node.js 20 (`nvm use`). Example env: copy `.env.example` to `.env`.
+- Audits: CI runs security checks; optionally run `npm audit --omit=dev` locally.

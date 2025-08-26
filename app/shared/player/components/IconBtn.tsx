@@ -1,5 +1,10 @@
 import React from 'react';
+import { iconClasses } from '@/lib/responsive';
 
+/**
+ * @deprecated Use Button with variant="icon-round" size="icon-round" instead
+ * This component will be removed in a future version
+ */
 export default function IconBtn({
   children,
   className = '',
@@ -16,7 +21,7 @@ export default function IconBtn({
           : 'hover:-translate-y-px active:scale-95 active:bg-surface/10 text-foreground focus:ring-accent/35 hover:text-accent hover:bg-interactive-hover'
       } ${className}`}
     >
-      <span className="[&>*]:h-[18px] [&>*]:w-[18px] [&>*]:stroke-[1.75]">{children}</span>
+      <span className={`[&>*]:${iconClasses.touch} [&>*]:${iconClasses.stroke}`}>{children}</span>
     </button>
   );
 }

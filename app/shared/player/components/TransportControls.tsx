@@ -1,6 +1,7 @@
 import React from 'react';
 import { SkipBack, SkipForward, Play, Pause } from 'lucide-react';
-import IconBtn from './IconBtn';
+import { Button } from '@/app/shared/ui/Button';
+import { iconClasses } from '@/lib/responsive';
 
 interface Props {
   isPlaying: boolean;
@@ -19,24 +20,38 @@ export default function TransportControls({
 }: Props) {
   return (
     <div className="flex items-center gap-2">
-      <IconBtn aria-label="Previous track" onClick={onPrev} disabled={!interactable}>
-        <SkipBack />
-      </IconBtn>
-      <button
+      <Button
+        variant="icon-round"
+        size="icon-round"
+        aria-label="Previous track"
+        onClick={onPrev}
+        disabled={!interactable}
+      >
+        <SkipBack className={`${iconClasses.touch} ${iconClasses.stroke}`} />
+      </Button>
+      <Button
+        variant="primary"
+        size="icon-round"
         aria-label={isPlaying ? 'Pause' : 'Play'}
         onClick={togglePlay}
         disabled={!interactable}
-        className={`h-10 w-10 grid place-items-center rounded-full hover:opacity-90 active:scale-95 transition ${
-          interactable
-            ? 'bg-accent text-on-accent hover:bg-accent-hover'
-            : 'bg-disabled cursor-not-allowed opacity-60 text-foreground'
-        }`}
+        className="h-10 w-10"
       >
-        {isPlaying ? <Pause /> : <Play />}
-      </button>
-      <IconBtn aria-label="Next track" onClick={onNext} disabled={!interactable}>
-        <SkipForward />
-      </IconBtn>
+        {isPlaying ? (
+          <Pause className={iconClasses.touch} />
+        ) : (
+          <Play className={iconClasses.touch} />
+        )}
+      </Button>
+      <Button
+        variant="icon-round"
+        size="icon-round"
+        aria-label="Next track"
+        onClick={onNext}
+        disabled={!interactable}
+      >
+        <SkipForward className={`${iconClasses.touch} ${iconClasses.stroke}`} />
+      </Button>
     </div>
   );
 }

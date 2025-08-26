@@ -110,11 +110,11 @@ const { isMobile, variant } = useResponsiveHelpers();
 ### **For Existing Components** ✅ Keep As-Is
 
 ```tsx
-// Don't change existing working components
-<div className="w-80 sm:w-[22rem] lg:w-[20.7rem]">
+// Standard sidebar width pattern - all sidebars should use this consistent size
+<div className="w-full sm:w-80 lg:w-80">
   {' '}
-  {/* Keep original */}
-  <ExistingSidebar />
+  {/* Standard 320px (20rem) width on desktop to match layout expectations */}
+  <StandardSidebar />
 </div>
 ```
 

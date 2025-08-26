@@ -75,7 +75,7 @@
     --z-fixed: 30;
     --z-header: 40;
     --z-bottom-nav: 50;
-    --z-audio-player: 60;
+    --z-audio-player: 110;
     --z-popover: 70;
     --z-tooltip: 80;
     /* Modals/overlays should sit above everything */
@@ -204,7 +204,7 @@
 
   /* Drawer and overlay patterns (for mobile sidebars/modals) */
   .drawer-overlay {
-    @apply fixed inset-0 bg-black/50 backdrop-blur-sm;
+    @apply fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm;
     @apply transition-opacity duration-300;
     /* Ensure overlays sit above header/bottom navigation */
     z-index: var(--z-modal);
@@ -213,6 +213,13 @@
   .drawer-panel {
     @apply fixed z-50 bg-surface shadow-modal;
     @apply transition-transform duration-300 ease-in-out;
+    /* Default state: slide out to left */
+    transform: translateX(-100%);
+  }
+
+  .drawer-panel.open {
+    /* Open state: slide in from left */
+    transform: translateX(0);
   }
 
   /* Safe area support for mobile devices */
@@ -260,6 +267,17 @@
 }
 
 @layer utilities {
+  /* Hero heading text that becomes gradient in dark theme via tokens */
+  .text-hero {
+    color: rgb(var(--color-content-primary));
+  }
+  .dark .text-hero {
+    background-image: var(--gradient-background);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
   /* Z-index utilities using semantic names */
   .z-header {
     z-index: var(--z-header);
