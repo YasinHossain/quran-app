@@ -1,0 +1,24 @@
+import { render, screen } from '@testing-library/react';
+import type { ReactNode } from 'react';
+import NotFound from '@/presentation/not-found';
+import TranslationProvider from '@/presentation/providers/TranslationProvider';
+import i18n from '@/presentation/i18n';
+
+jest.mock('next/link', () => {
+  return ({ children, href }: { children: ReactNode; href: string }) => (
+    <a href={href}>{children}</a>
+  );
+});
+
+describe('NotFound page in Bengali', () => {
+  it('renders Bengali text', async () => {
+    await i18n.changeLanguage('bn');
+    render(
+      <TranslationProvider>
+        <NotFound />
+      </TranslationProvider>
+    );
+    expect(screen.getByText('পৃষ্ঠা পাওয়া যায় নি')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'বাড়ি' })).toHaveAttribute('href', '/');
+  });
+});
