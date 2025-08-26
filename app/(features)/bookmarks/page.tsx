@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useSidebar } from '@/app/providers/SidebarContext';
+import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 
 const BookmarksPage = () => {
   const { folders } = useBookmarks();
@@ -51,7 +52,7 @@ const BookmarksPage = () => {
     router.push(`/bookmarks/${folderId}`);
   };
 
-  const handleSectionChange = (section: string) => {
+  const handleSectionChange = (section: SectionId) => {
     if (section === 'pinned') {
       router.push('/bookmarks/pinned');
     } else if (section === 'last-read') {
