@@ -14,27 +14,34 @@ export default function VerseOfDay() {
   const { verse, loading, error, surahs } = useVerseOfDay();
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [displayVerse, setDisplayVerse] = useState(verse);
+  const [initialLoad, setInitialLoad] = useState(true);
 
   // Handle verse transitions with smooth animation
   useEffect(() => {
     if (!verse) return;
 
+    if (initialLoad) {
+      // First verse load
+      setDisplayVerse(verse);
+      setInitialLoad(false);
+      return;
+    }
+
     if (displayVerse && verse.id !== displayVerse.id) {
-      // Start transition
+      // Start transition animation
       setIsTransitioning(true);
-      
-      // After fade out, update verse and fade in
-      setTimeout(() => {
+
+      // After fade out completes, update verse and fade in
+      const timer = setTimeout(() => {
         setDisplayVerse(verse);
         setIsTransitioning(false);
-      }, 200); // Match CSS transition duration
-    } else if (!displayVerse) {
-      // Initial load
-      setDisplayVerse(verse);
-    }
-  }, [verse, displayVerse]);
+      }, 300); // Smooth transition duration
 
-  if (loading) {
+      return () => clearTimeout(timer);
+    }
+  }, [verse, displayVerse, initialLoad]);
+
+  if (loading && initialLoad) {
     return (
       <div className="mt-12 w-full max-w-4xl p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400 bg-surface-glass/60">
         <div className="flex justify-center py-8">
@@ -61,8 +68,8 @@ export default function VerseOfDay() {
 
   return (
     <div className="mt-12 w-full max-w-4xl p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400 bg-surface-glass/60">
-      <div 
-        className={`transition-opacity duration-200 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
+      <div
+        className={`transition-opacity duration-300 ease-in-out ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
       >
         <h3
           className="font-amiri text-3xl md:text-4xl leading-relaxed text-right text-content-accent"
@@ -99,8 +106,8 @@ export default function VerseOfDay() {
         </h3>
         {displayVerse.translations?.[0] && (
           <p className="mt-4 text-left text-sm text-content-secondary">
-            &quot;{stripHtml(displayVerse.translations[0].text)}&quot; - [Surah {surahName ?? surahNum},{' '}
-            {displayVerse.verse_key}]
+            &quot;{stripHtml(displayVerse.translations[0].text)}&quot; - [Surah{' '}
+            {surahName ?? surahNum}, {displayVerse.verse_key}]
           </p>
         )}
       </div>
