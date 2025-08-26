@@ -6,7 +6,7 @@ import { buildAudioUrl } from '@/lib/audio/reciters';
 import { getSurahCoverUrl } from '@/lib/api';
 import { useHeaderVisibility } from '@/presentation/(features)/layout/context/HeaderVisibilityContext';
 import type { Verse } from '@/types';
-import type { Reciter } from '@/presentation/shared/player/types';
+import type { Reciter } from '@/types';
 
 interface SurahAudioPlayerProps {
   activeVerse: Verse | null;

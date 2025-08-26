@@ -1,9 +1,4 @@
-export interface Reciter {
-  id: number;
-  name: string;
-  path: string;
-  locale?: string;
-}
+import type { Reciter } from '@/types';
 
 export interface AyahTiming {
   ayah: number;
