@@ -141,7 +141,7 @@ interface BaseCardProps {
 
   // Navigation (for Link-based cards)
   href?: string;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler<HTMLDivElement | HTMLAnchorElement>;
   scroll?: boolean;
 
   // State management
