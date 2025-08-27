@@ -24,9 +24,10 @@
       "@/domain/*": ["src/domain/*"],
       "@/application/*": ["src/application/*"],
       "@/infrastructure/*": ["src/infrastructure/*"],
-      "@/presentation/*": ["src/presentation/*"],
+      "@/presentation/*": ["src/app/*"],
       "@/lib/*": ["lib/*"],
       "@/types/*": ["types/*"],
+      "@/data/*": ["data/*"],
       "@/*": ["src/*"]
     }
   },
