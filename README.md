@@ -130,6 +130,10 @@ Generate a coverage report:
 npm run test:coverage
 ```
 
+### Service Teardown
+
+When running tests or using hot reload, call `destroyServices()` during teardown to reset singletons and clean up listeners.
+
 ### Local Tooling
 
 - `npm run rg -- <pattern> [paths]`: Project-local ripgrep for fast text search. Works even if `rg` isn’t installed system-wide.
