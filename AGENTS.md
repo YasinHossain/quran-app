@@ -23,7 +23,7 @@
 - Language: TypeScript with two-space indentation.
 - Lint/Format: ESLint + Prettier (use project configs).
 - Components: PascalCase file/folder names (e.g., `PlayerControls.tsx`).
-- Styling: Use semantic tokens (e.g., `text-primary`, `bg-surface`, `border-border`). Avoid raw Tailwind color utilities and `dark:` classes; don’t use `useTheme` for colors. See `SEMANTIC_TOKENS.md` and `STYLING.md`.
+- Styling: Use semantic tokens (e.g., `text-primary`, `bg-surface`, `border-border`). Avoid raw Tailwind color utilities and `dark:` classes; don't use `useTheme` for colors. See `../architecture/SEMANTIC_TOKENS.md` and `STYLING.md`.
 
 ## Testing Guidelines
 
