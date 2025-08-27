@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ArrowLeftIcon } from '@/app/shared/icons';
+import { ArrowLeft } from 'lucide-react';
 
 interface SettingsHeaderProps {
   onClose: () => void;
@@ -15,7 +15,7 @@ export const SettingsHeader = ({ onClose }: SettingsHeaderProps) => {
         onClick={onClose}
         className="btn-touch p-2 rounded-full hover:bg-interactive-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent lg:hidden"
       >
-        <ArrowLeftIcon size={18} className="sm:w-4 sm:h-4" />
+        <ArrowLeft size={18} className="sm:w-4 sm:h-4" />
       </button>
       <h2 className="flex-grow text-center text-mobile-lg font-semibold text-foreground">
         Settings

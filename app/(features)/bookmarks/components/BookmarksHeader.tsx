@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Menu, Search } from 'lucide-react';
-import { PlusIcon } from '@/app/shared/icons';
+import { Plus } from 'lucide-react';
 import { SearchInput } from '@/app/shared/components/SearchInput';
 import { Button } from '@/app/shared/ui/Button';
 import { useResponsiveState } from '@/lib/responsive';
@@ -69,7 +69,7 @@ export const BookmarksHeader: React.FC<BookmarksHeaderProps> = ({
             size="sm"
             className="flex items-center gap-2 px-4 py-2 font-semibold shadow-sm hover:shadow-md transition-all duration-200"
           >
-            <PlusIcon size={16} />
+            <Plus size={16} />
             <span>New Folder</span>
           </Button>
         </div>

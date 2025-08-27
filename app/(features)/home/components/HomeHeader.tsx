@@ -1,5 +1,5 @@
 'use client';
-import { SunIcon, MoonIcon } from '@/app/shared/icons';
+import { Sun, Moon } from 'lucide-react';
 import { GlassCard } from '@/app/shared/ui';
 import { useTheme } from '@/app/providers/ThemeContext';
 
@@ -32,9 +32,9 @@ export default function HomeHeader() {
             aria-label="Toggle Theme"
           >
             {theme === 'dark' ? (
-              <SunIcon className="w-5 h-5 text-status-warning" />
+              <Sun className="w-5 h-5 text-status-warning" />
             ) : (
-              <MoonIcon className="w-5 h-5 text-content-secondary" />
+              <Moon className="w-5 h-5 text-content-secondary" />
             )}
           </button>
         </nav>

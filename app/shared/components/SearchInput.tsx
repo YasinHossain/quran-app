@@ -1,6 +1,5 @@
 'use client';
 import React from 'react';
-import { SearchSolidIcon } from '../icons';
 import { Search } from 'lucide-react';
 
 type SearchVariant = 'main' | 'default' | 'glass' | 'header' | 'panel';
@@ -86,8 +85,8 @@ export const SearchInput = ({
   const focusStyles = getFocusStyles(variant);
   const hoverStyles = getHoverStyles(variant);
 
-  // Use different icons based on variant for consistency with existing designs
-  const IconComponent = variant === 'panel' ? Search : SearchSolidIcon;
+  // Use Search icon for all variants
+  const IconComponent = Search;
   const iconSize = variant === 'panel' ? sizeStyles.icon.size : sizeStyles.icon.size;
 
   return (

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { BookReaderIcon } from '@/app/shared/icons';
+import { BookOpen } from 'lucide-react';
 import { CollapsibleSection } from './CollapsibleSection';
 
 interface ReadingSettingsProps {
@@ -13,7 +13,7 @@ export const ReadingSettings = ({ isOpen = false, onToggle }: ReadingSettingsPro
   return (
     <CollapsibleSection
       title="Mushaf Settings"
-      icon={<BookReaderIcon size={20} className="text-accent" />}
+      icon={<BookOpen size={20} className="text-accent" />}
       isLast={false}
       isOpen={isOpen}
       onToggle={onToggle || (() => {})}

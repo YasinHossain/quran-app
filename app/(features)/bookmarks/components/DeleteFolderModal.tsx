@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CloseIcon } from '@/app/shared/icons';
+import { X } from 'lucide-react';
 import { Folder } from '@/types';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 
@@ -96,7 +96,7 @@ export const DeleteFolderModal: React.FC<DeleteFolderModalProps> = ({
                 className="rounded-xl p-2 text-muted hover:bg-surface-hover hover:text-accent transition-all duration-200"
                 aria-label="Close"
               >
-                <CloseIcon size={20} />
+                <X size={20} />
               </button>
             </div>
 

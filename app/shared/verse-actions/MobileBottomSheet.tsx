@@ -3,15 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  PlayIcon,
-  PauseIcon,
-  BookmarkIcon,
-  BookmarkOutlineIcon,
-  ShareIcon,
-  BookReaderIcon,
-  CloseIcon,
-} from '../icons';
+import { Play, Pause, Bookmark, Share, BookOpen, X } from 'lucide-react';
 import Spinner from '../Spinner';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
@@ -75,16 +67,16 @@ const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
       icon: isLoadingAudio ? (
         <Spinner className="h-5 w-5 text-accent" />
       ) : isPlaying ? (
-        <PauseIcon size={20} />
+        <Pause size={20} />
       ) : (
-        <PlayIcon size={20} />
+        <Play size={20} />
       ),
       onClick: () => handleAction(onPlayPause),
       active: isPlaying,
     },
     {
       label: 'View Tafsir',
-      icon: <BookReaderIcon size={20} />,
+      icon: <BookOpen size={20} />,
       onClick: onClose,
       href: `/tafsir/${verseKey.replace(':', '/')}`,
     },
@@ -92,7 +84,7 @@ const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
       ? [
           {
             label: 'Go to Verse',
-            icon: <BookReaderIcon size={20} />,
+            icon: <BookOpen size={20} />,
             onClick: () => handleAction(onNavigateToVerse),
           },
         ]
@@ -100,13 +92,17 @@ const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
     {
       label: showRemove ? 'Remove Bookmark' : isBookmarked ? 'Remove Bookmark' : 'Add Bookmark',
       icon:
-        isBookmarked || showRemove ? <BookmarkIcon size={20} /> : <BookmarkOutlineIcon size={20} />,
+        isBookmarked || showRemove ? (
+          <Bookmark size={20} fill="currentColor" />
+        ) : (
+          <Bookmark size={20} />
+        ),
       onClick: () => handleAction(onBookmark),
       active: isBookmarked || showRemove,
     },
     {
       label: 'Share',
-      icon: <ShareIcon size={20} />,
+      icon: <Share size={20} />,
       onClick: () => handleAction(onShare),
     },
   ];
@@ -156,7 +152,7 @@ const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
                 )}
                 aria-label="Close"
               >
-                <CloseIcon size={20} className="text-muted" />
+                <X size={20} className="text-muted" />
               </button>
             </div>
 

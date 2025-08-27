@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { CloseIcon } from '@/app/shared/icons';
+import { X } from 'lucide-react';
 import { Folder } from '@/types';
 import { touchClasses } from '@/lib/responsive';
 import TabNavigation from './TabNavigation';
@@ -143,7 +143,7 @@ const BookmarkModal: React.FC<BookmarkModalProps> = ({
                   )}
                   aria-label="Close"
                 >
-                  <CloseIcon size={20} className="text-muted" />
+                  <X size={20} className="text-muted" />
                 </button>
               </div>
 

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { Panel } from '@/app/shared/ui/Panel';
 import { Button } from '@/app/shared/ui/Button';
-import { FolderIcon, PlusIcon } from '@/app/shared/icons';
+import { Folder, Plus } from 'lucide-react';
 
 interface CreateFolderModalProps {
   isOpen: boolean;
@@ -42,7 +42,7 @@ export const CreateFolderModal = ({ isOpen, onClose }: CreateFolderModalProps) =
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
           <div className="w-12 h-12 bg-gradient-to-br from-accent/20 to-accent/10 rounded-xl flex items-center justify-center">
-            <FolderIcon size={24} className="text-accent" />
+            <Folder size={24} className="text-accent" />
           </div>
           <div>
             <h2 className="text-2xl font-bold text-foreground">Create New Folder</h2>
@@ -72,7 +72,7 @@ export const CreateFolderModal = ({ isOpen, onClose }: CreateFolderModalProps) =
             </div>
             {folderName.length > 0 && (
               <div className="flex items-center gap-2 text-xs text-muted">
-                <FolderIcon size={14} />
+                <Folder size={14} />
                 <span>Preview: {folderName.trim()}</span>
               </div>
             )}
@@ -89,7 +89,7 @@ export const CreateFolderModal = ({ isOpen, onClose }: CreateFolderModalProps) =
               disabled={!folderName.trim()}
               className="px-6 py-2.5 flex items-center gap-2 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5"
             >
-              <PlusIcon size={18} />
+              <Plus size={18} />
               <span>Create Folder</span>
             </Button>
           </div>

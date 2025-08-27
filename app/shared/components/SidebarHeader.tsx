@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { CloseIcon, ArrowLeftIcon } from '@/app/shared/icons';
+import { X, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 
 interface SidebarHeaderProps {
@@ -38,7 +38,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
           className="p-2 rounded-full hover:bg-surface-hover transition-colors"
           aria-label="Go back"
         >
-          <ArrowLeftIcon size={20} className="text-foreground" />
+          <ArrowLeft size={20} className="text-foreground" />
         </button>
       )}
 
@@ -63,7 +63,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
           )}
           aria-label="Close sidebar"
         >
-          <CloseIcon size={18} />
+          <X size={18} />
         </button>
       )}
 

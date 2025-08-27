@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Bookmark, Folder } from '@/types';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { FolderIcon } from '@/app/shared/icons';
+import { Folder as FolderIcon } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 
 interface BookmarkFolderContentProps {

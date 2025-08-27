@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PlusIcon } from '@/app/shared/icons';
+import { Plus } from 'lucide-react';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
 import FolderSearch from './FolderSearch';
@@ -54,7 +54,7 @@ const BookmarkTab: React.FC<BookmarkTabProps> = ({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
             >
-              <PlusIcon size={20} />
+              <Plus size={20} />
               <span className="font-medium">Create new folder</span>
             </motion.button>
           )}

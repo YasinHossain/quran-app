@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { FontSettingIcon } from '@/app/shared/icons';
+import { Type } from 'lucide-react';
 import { CollapsibleSection } from './CollapsibleSection';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useFontSize } from '../../hooks/useFontSize';
@@ -30,7 +30,7 @@ export const FontSettings = ({
   return (
     <CollapsibleSection
       title={t('font_setting')}
-      icon={<FontSettingIcon size={20} className="text-accent" />}
+      icon={<Type size={20} className="text-accent" />}
       isLast
       isOpen={isOpen}
       onToggle={onToggle || (() => {})}

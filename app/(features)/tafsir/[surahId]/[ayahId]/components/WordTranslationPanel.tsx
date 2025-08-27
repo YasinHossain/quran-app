@@ -5,7 +5,7 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
-import { ArrowLeftIcon } from '@/app/shared/icons';
+import { ArrowLeft, Check } from 'lucide-react';
 import { Button } from '@/app/shared/ui/Button';
 import { SearchInput } from '@/app/shared/components/SearchInput';
 
@@ -50,7 +50,7 @@ export const WordTranslationPanel = ({
     >
       <div className="flex items-center justify-between p-4 border-b border-border">
         <Button variant="icon-round" size="icon" aria-label="Back" onClick={onClose}>
-          <ArrowLeftIcon size={18} />
+          <ArrowLeft size={18} />
         </Button>
         <h2 className="font-bold text-lg text-foreground">{t('word_by_word_panel_title')}</h2>
         <div className="w-8"></div>
@@ -114,20 +114,7 @@ export const WordTranslationPanel = ({
                 </p>
               </div>
               <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-                {isSelected && (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 text-accent"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                )}
+                {isSelected && <Check size={20} className="text-accent" />}
               </div>
             </div>
           );

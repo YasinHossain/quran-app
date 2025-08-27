@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronDownIcon } from './icons';
+import { ChevronDown } from 'lucide-react';
 
 interface SelectionBoxProps {
   label: string;
@@ -17,7 +17,7 @@ const SelectionBox = ({ label, value, onClick }: SelectionBoxProps) => {
         style={{ outline: 'none' }}
       >
         <span className="truncate">{value}</span>
-        <ChevronDownIcon className="text-muted" />
+        <ChevronDown className="text-muted" />
       </button>
     </div>
   );

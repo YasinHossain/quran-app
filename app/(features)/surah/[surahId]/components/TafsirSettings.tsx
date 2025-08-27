@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { BookReaderIcon } from '@/app/shared/icons';
+import { BookOpen } from 'lucide-react';
 import { CollapsibleSection } from './CollapsibleSection';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useFontSize } from '../../hooks/useFontSize';
@@ -32,7 +32,7 @@ export const TafsirSettings = ({
       {showTafsirSetting && (
         <CollapsibleSection
           title={t('tafsir_setting')}
-          icon={<BookReaderIcon size={20} className="text-accent" />}
+          icon={<BookOpen size={20} className="text-accent" />}
           isLast={true}
           isOpen={isOpen}
           onToggle={onToggle || (() => {})}

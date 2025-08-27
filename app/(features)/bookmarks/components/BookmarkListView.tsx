@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Folder, Bookmark } from '@/types';
 import { motion } from 'framer-motion';
-import { ArrowLeftIcon } from '@/app/shared/icons';
+import { ArrowLeft } from 'lucide-react';
 import { BookmarkCard } from './BookmarkCard';
 import { FixedSizeList as List } from 'react-window';
 
@@ -107,7 +107,7 @@ export const BookmarkListView = ({
             className="rounded-full p-2 text-muted hover:bg-surface-hover hover:text-accent transition-colors"
             aria-label="Go back to folders"
           >
-            <ArrowLeftIcon size={20} />
+            <ArrowLeft size={20} />
           </button>
           <div className="flex-1">
             <h1 className="text-3xl font-bold text-foreground mb-1">{folder.name}</h1>

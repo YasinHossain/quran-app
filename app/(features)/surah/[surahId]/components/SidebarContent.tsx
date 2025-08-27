@@ -2,7 +2,7 @@
 
 import React, { forwardRef } from 'react';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
-import { ArrowLeftIcon } from '@/app/shared/icons';
+import { ArrowLeft } from 'lucide-react';
 import { ArabicFontPanel } from './ArabicFontPanel';
 import { TranslationSettings } from './TranslationSettings';
 import { TafsirSettings } from './TafsirSettings';
@@ -67,7 +67,7 @@ export const SidebarContent = forwardRef<HTMLElement, SidebarContentProps>(
             onClick={onClose}
             className="p-2 rounded-full hover:bg-interactive-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent lg:hidden"
           >
-            <ArrowLeftIcon size={18} />
+            <ArrowLeft size={18} />
           </button>
           <h2 className="flex-grow text-center text-lg font-bold">Settings</h2>
           <div className="w-8" />

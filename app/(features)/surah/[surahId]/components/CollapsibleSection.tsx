@@ -1,6 +1,6 @@
 // app/(features)/surah/[surahId]/components/CollapsibleSection.tsx
 'use client';
-import { ChevronDownIcon } from '@/app/shared/icons';
+import { ChevronDown } from 'lucide-react';
 
 interface CollapsibleSectionProps {
   title: string;
@@ -28,7 +28,7 @@ export const CollapsibleSection = ({
           {icon}
           <span className="font-semibold text-foreground">{title}</span>
         </div>
-        <ChevronDownIcon
+        <ChevronDown
           size={16}
           className={`text-muted transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
         />

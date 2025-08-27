@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CloseIcon } from '@/app/shared/icons';
+import { X } from 'lucide-react';
 import { Folder } from '@/types';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 
@@ -118,7 +118,7 @@ export const FolderSettingsModal: React.FC<FolderSettingsModalProps> = ({
                 className="rounded-full p-1.5 text-muted hover:bg-surface-hover hover:text-accent transition-colors"
                 aria-label="Close"
               >
-                <CloseIcon size={20} />
+                <X size={20} />
               </button>
             </div>
 

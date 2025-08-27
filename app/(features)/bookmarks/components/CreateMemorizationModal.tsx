@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { Panel } from '@/app/shared/ui/Panel';
 import { Button } from '@/app/shared/ui/Button';
-import { BrainIcon, PlusIcon } from '@/app/shared/icons';
+import { Brain, Plus } from 'lucide-react';
 import { SurahSelector } from './SurahSelector';
 
 interface CreateMemorizationModalProps {
@@ -87,7 +87,7 @@ export const CreateMemorizationModal = ({ isOpen, onClose }: CreateMemorizationM
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
           <div className="w-12 h-12 bg-gradient-to-br from-accent/20 to-accent/10 rounded-xl flex items-center justify-center">
-            <BrainIcon size={24} className="text-accent" />
+            <Brain size={24} className="text-accent" />
           </div>
           <div>
             <h2 className="text-2xl font-bold text-foreground">Memorization Planner</h2>
@@ -211,7 +211,7 @@ export const CreateMemorizationModal = ({ isOpen, onClose }: CreateMemorizationM
               disabled={!canSubmit}
               className="px-6 py-2.5 flex items-center gap-2 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5"
             >
-              <PlusIcon size={18} />
+              <Plus size={18} />
               <span>Create New</span>
             </Button>
           </div>

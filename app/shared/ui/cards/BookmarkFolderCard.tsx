@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { BaseCard, BaseCardProps } from '../BaseCard';
-import { ChevronDownIcon } from '@/app/shared/icons';
+import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import type { Folder } from '@/types/bookmark';
 
@@ -58,7 +58,7 @@ export const BookmarkFolderCard: React.FC<BookmarkFolderCardProps> = ({
             </div>
           </div>
         </div>
-        <ChevronDownIcon
+        <ChevronDown
           className={cn(
             'w-4 h-4 text-muted transition-transform duration-200',
             isExpanded && 'rotate-180'

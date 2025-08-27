@@ -1,5 +1,5 @@
 'use client';
-import { ChevronDownIcon } from '@/app/shared/icons';
+import { ChevronDown } from 'lucide-react';
 import Spinner from '@/app/shared/Spinner';
 import { applyArabicFont } from '@/lib/tafsir/applyArabicFont';
 import { useSettings } from '@/app/providers/SettingsContext';
@@ -25,7 +25,7 @@ export const TafsirPanels = ({ verseKey, tafsirIds }: TafsirPanelsProps) => {
               className="w-full flex items-center justify-between py-3 text-left"
             >
               <span className="font-semibold text-foreground">Tafsir {id}</span>
-              <ChevronDownIcon
+              <ChevronDown
                 size={16}
                 className={`text-muted transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
               />

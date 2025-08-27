@@ -34,14 +34,16 @@ This document explains how to set up the GitHub MCP (Model Context Protocol) ser
 This setup includes three MCP servers:
 
 #### GitHub Server
+
 - **Purpose**: Direct GitHub repository access
-- **Features**: 
+- **Features**:
   - Repository management
   - Issue and PR handling
   - File operations via GitHub API
   - Branch management
 
-#### Filesystem Server  
+#### Filesystem Server
+
 - **Purpose**: Local file system access
 - **Features**:
   - Read/write files in the project directory
@@ -49,6 +51,7 @@ This setup includes three MCP servers:
   - File operations
 
 #### Git Server
+
 - **Purpose**: Git repository operations
 - **Features**:
   - Git status and log
@@ -59,6 +62,7 @@ This setup includes three MCP servers:
 ### 4. Restart Claude Desktop
 
 After updating the configuration:
+
 1. Completely quit Claude Desktop
 2. Restart the application
 3. Start a new conversation
@@ -66,6 +70,7 @@ After updating the configuration:
 ### 5. Verify Setup
 
 In a new Claude conversation, you can test the MCP servers by asking:
+
 - "What's the current status of my GitHub repository?"
 - "Show me the recent commits"
 - "List the files in the project"
@@ -74,7 +79,7 @@ In a new Claude conversation, you can test the MCP servers by asking:
 
 With this MCP setup, Claude can:
 
-1. **Direct Repository Access**: 
+1. **Direct Repository Access**:
    - Analyze code without manual file uploads
    - View commit history and branches
    - Read issues and pull requests

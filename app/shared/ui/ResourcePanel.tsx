@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { Panel } from './Panel';
 import { SearchInput } from '../components/SearchInput';
 import Spinner from '../Spinner';
-import { CheckIcon } from '../icons';
+import { Check } from 'lucide-react';
 import type { ResourceSelectionProps } from '@/types/components';
 
 interface ResourceItem {
@@ -69,7 +69,7 @@ export function ResourcePanel<T extends ResourceItem>({
           )}
           {item.meta && <p className="text-xs text-muted mt-1">{item.meta}</p>}
         </div>
-        {isSelected && <CheckIcon size={18} className="text-accent ml-2 flex-shrink-0" />}
+        {isSelected && <Check size={18} className="text-accent ml-2 flex-shrink-0" />}
       </div>
     </button>
   );

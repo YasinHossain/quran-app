@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { EllipsisHIcon } from '../icons';
+import { MoreHorizontal } from 'lucide-react';
 import BookmarkModal from '../components/BookmarkModal';
 import MobileBottomSheet from './MobileBottomSheet';
 import { touchClasses } from '@/lib/responsive';
@@ -53,7 +53,7 @@ const MobileVerseActions: React.FC<VerseActionsProps> = ({
           )}
           aria-label="Open verse actions menu"
         >
-          <EllipsisHIcon size={18} className="text-muted" />
+          <MoreHorizontal size={18} className="text-muted" />
         </button>
       </div>
 

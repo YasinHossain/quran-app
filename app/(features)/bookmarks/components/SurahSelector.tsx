@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Chapter } from '@/types';
-import { ChevronDownIcon } from '@/app/shared/icons';
+import { ChevronDown } from 'lucide-react';
 
 interface SurahSelectorProps {
   chapters: Chapter[];
@@ -109,7 +109,7 @@ export const SurahSelector: React.FC<SurahSelectorProps> = ({
             <span className="text-muted">{placeholder}</span>
           )}
         </div>
-        <ChevronDownIcon
+        <ChevronDown
           size={18}
           className={`text-muted transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
         />

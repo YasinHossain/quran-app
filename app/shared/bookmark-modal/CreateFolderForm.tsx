@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CloseIcon, CheckIcon } from '@/app/shared/icons';
+import { X, Check } from 'lucide-react';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
 
@@ -57,7 +57,7 @@ const CreateFolderForm: React.FC<CreateFolderFormProps> = ({
           )}
           aria-label="Create folder"
         >
-          <CheckIcon size={16} />
+          <Check size={16} />
         </button>
 
         <button
@@ -70,7 +70,7 @@ const CreateFolderForm: React.FC<CreateFolderFormProps> = ({
           )}
           aria-label="Cancel"
         >
-          <CloseIcon size={16} />
+          <X size={16} />
         </button>
       </div>
     </motion.form>

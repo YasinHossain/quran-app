@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { PlusIcon, BookmarkIcon, CheckIcon } from '@/app/shared/icons';
+import { Plus, Bookmark, Check } from 'lucide-react';
 
 interface EmptyBookmarksProps {
   onCreateFolder: () => void;
@@ -24,7 +24,7 @@ export const EmptyBookmarks: React.FC<EmptyBookmarksProps> = ({ onCreateFolder }
           transition={{ delay: 0.2, duration: 0.5 }}
           className="w-32 h-32 bg-gradient-to-br from-accent/20 to-accent/5 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-lg"
         >
-          <BookmarkIcon size={48} className="text-accent" />
+          <Bookmark size={48} className="text-accent" fill="currentColor" />
         </motion.div>
 
         {/* Floating elements */}
@@ -34,7 +34,7 @@ export const EmptyBookmarks: React.FC<EmptyBookmarksProps> = ({ onCreateFolder }
           transition={{ delay: 0.4, duration: 0.5 }}
           className="absolute -top-2 -right-4 w-8 h-8 bg-accent/10 rounded-full flex items-center justify-center"
         >
-          <CheckIcon size={16} className="text-accent" />
+          <Check size={16} className="text-accent" />
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -70,7 +70,7 @@ export const EmptyBookmarks: React.FC<EmptyBookmarksProps> = ({ onCreateFolder }
           onClick={onCreateFolder}
           className="group bg-accent text-white px-8 py-4 rounded-2xl hover:bg-accent/90 transition-all duration-300 flex items-center justify-center space-x-3 font-semibold text-lg shadow-lg hover:shadow-xl hover:-translate-y-1 mx-auto"
         >
-          <PlusIcon size={24} className="group-hover:scale-110 transition-transform duration-200" />
+          <Plus size={24} className="group-hover:scale-110 transition-transform duration-200" />
           <span>Create Your First Folder</span>
         </button>
       </motion.div>
@@ -83,7 +83,7 @@ export const EmptyBookmarks: React.FC<EmptyBookmarksProps> = ({ onCreateFolder }
         className="bg-surface border border-border rounded-2xl p-8 shadow-sm"
       >
         <div className="flex items-center justify-center gap-2 mb-6">
-          <CheckIcon size={20} className="text-accent" />
+          <Check size={20} className="text-accent" />
           <h3 className="font-bold text-foreground text-lg">Quick Start Guide</h3>
         </div>
 

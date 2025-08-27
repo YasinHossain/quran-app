@@ -1,15 +1,15 @@
 // app/components/IconSidebar.tsx
 'use client';
-import { HomeIcon, BookmarkOutlineIcon, GridIcon } from './icons';
+import { Home, Bookmark, Grid3X3 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link'; // Import Link
 
 const IconSidebar = () => {
   const { t } = useTranslation();
   const navItems = [
-    { icon: HomeIcon, label: t('home'), href: '/' },
-    { icon: GridIcon, label: t('all_surahs'), href: '/surah/1' },
-    { icon: BookmarkOutlineIcon, label: t('bookmarks'), href: '/bookmarks' },
+    { icon: Home, label: t('home'), href: '/' },
+    { icon: Grid3X3, label: t('all_surahs'), href: '/surah/1' },
+    { icon: Bookmark, label: t('bookmarks'), href: '/bookmarks' },
   ];
 
   return (

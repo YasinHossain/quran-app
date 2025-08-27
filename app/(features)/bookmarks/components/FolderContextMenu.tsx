@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { EllipsisHIcon, CloseIcon } from '@/app/shared/icons';
+import { MoreHorizontal, X } from 'lucide-react';
 
 interface FolderContextMenuProps {
   onEdit: () => void;
@@ -66,7 +66,7 @@ export const FolderContextMenu: React.FC<FolderContextMenuProps> = ({
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        {isOpen ? <CloseIcon size={16} /> : <EllipsisHIcon size={16} />}
+        {isOpen ? <X size={16} /> : <MoreHorizontal size={16} />}
       </button>
 
       <AnimatePresence>

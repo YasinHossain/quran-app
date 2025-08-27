@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils/cn';
-import { CloseIcon } from '@/app/shared/icons';
+import { X } from 'lucide-react';
 import { Button } from './Button';
 
 export const PANEL_VARIANTS = {
@@ -75,7 +75,7 @@ export const Panel: React.FC<PanelProps> = ({
               {title && <h2 className="text-lg font-semibold">{title}</h2>}
               {showCloseButton && (
                 <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close panel">
-                  <CloseIcon size={18} />
+                  <X size={18} />
                 </Button>
               )}
             </header>
@@ -122,7 +122,7 @@ export const Panel: React.FC<PanelProps> = ({
             {title && <h2 className="text-lg font-semibold">{title}</h2>}
             {showCloseButton && (
               <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close panel">
-                <CloseIcon size={18} />
+                <X size={18} />
               </Button>
             )}
           </header>

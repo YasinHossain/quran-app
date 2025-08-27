@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { BookmarkIcon, PinIcon, ClockIcon, BrainIcon } from '@/app/shared/icons';
+import { Bookmark, Pin, Clock, Brain } from 'lucide-react';
 import {
   BookmarkNavigationCard,
   BookmarkFolderCard,
@@ -43,12 +43,12 @@ export const BookmarksContent: React.FC<BookmarksContentProps> = ({
   };
 
   const sections: BookmarkNavigationContent[] = [
-    { id: 'bookmarks', icon: BookmarkIcon, label: 'All Bookmarks', description: 'Manage folders' },
-    { id: 'pinned', icon: PinIcon, label: 'Pinned Verses', description: 'Quick access' },
-    { id: 'last-read', icon: ClockIcon, label: 'Recent', description: 'Last visited' },
+    { id: 'bookmarks', icon: Bookmark, label: 'All Bookmarks', description: 'Manage folders' },
+    { id: 'pinned', icon: Pin, label: 'Pinned Verses', description: 'Quick access' },
+    { id: 'last-read', icon: Clock, label: 'Recent', description: 'Last visited' },
     {
       id: 'memorization',
-      icon: BrainIcon,
+      icon: Brain,
       label: 'Memorization Plan',
       description: 'Track progress',
     },

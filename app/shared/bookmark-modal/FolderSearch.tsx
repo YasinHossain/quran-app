@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { SearchIcon } from '@/app/shared/icons';
+import { Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface FolderSearchProps {
@@ -17,7 +17,7 @@ const FolderSearch: React.FC<FolderSearchProps> = ({
 }) => {
   return (
     <div className="relative">
-      <SearchIcon
+      <Search
         width={18}
         height={18}
         className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted"

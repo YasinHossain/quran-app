@@ -2,14 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import {
-  PlayIcon,
-  PauseIcon,
-  BookmarkIcon,
-  BookmarkOutlineIcon,
-  ShareIcon,
-  BookReaderIcon,
-} from '../icons';
+import { Play, Pause, Bookmark, Share, BookOpen } from 'lucide-react';
 import Spinner from '../Spinner';
 import BookmarkModal from '../components/BookmarkModal';
 import { touchClasses } from '@/lib/responsive';
@@ -58,9 +51,9 @@ const DesktopVerseActions: React.FC<VerseActionsProps> = ({
           {isLoadingAudio ? (
             <Spinner className="h-4 w-4 text-accent" />
           ) : isPlaying ? (
-            <PauseIcon size={18} />
+            <Pause size={18} />
           ) : (
-            <PlayIcon size={18} />
+            <Play size={18} />
           )}
         </button>
 
@@ -73,7 +66,7 @@ const DesktopVerseActions: React.FC<VerseActionsProps> = ({
             touchClasses.focus
           )}
         >
-          <BookReaderIcon size={18} />
+          <BookOpen size={18} />
         </Link>
 
         {onNavigateToVerse && (
@@ -90,7 +83,7 @@ const DesktopVerseActions: React.FC<VerseActionsProps> = ({
               touchClasses.focus
             )}
           >
-            <BookReaderIcon size={18} />
+            <BookOpen size={18} />
           </Link>
         )}
 
@@ -107,9 +100,9 @@ const DesktopVerseActions: React.FC<VerseActionsProps> = ({
           )}
         >
           {isBookmarked || showRemove ? (
-            <BookmarkIcon size={18} />
+            <Bookmark size={18} fill="currentColor" />
           ) : (
-            <BookmarkOutlineIcon size={18} />
+            <Bookmark size={18} />
           )}
         </button>
 
@@ -122,7 +115,7 @@ const DesktopVerseActions: React.FC<VerseActionsProps> = ({
             touchClasses.focus
           )}
         >
-          <ShareIcon size={18} />
+          <Share size={18} />
         </button>
       </div>
 

@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FolderIcon, CheckIcon } from '@/app/shared/icons';
+import { Folder as FolderIcon, Check } from 'lucide-react';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
-import { Folder, Bookmark } from '@/types';
+import type { Folder, Bookmark } from '@/types';
 
 interface FolderListProps {
   folders: Folder[];
@@ -74,7 +74,7 @@ const FolderList: React.FC<FolderListProps> = ({
                 >
                   {folder.name}
                 </h3>
-                {isSelected && <CheckIcon size={16} className="text-accent flex-shrink-0" />}
+                {isSelected && <Check size={16} className="text-accent flex-shrink-0" />}
               </div>
               <p className="text-sm text-muted">
                 {bookmarkCount} {bookmarkCount === 1 ? 'verse' : 'verses'}

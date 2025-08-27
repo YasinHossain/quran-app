@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { TranslationIcon } from '@/app/shared/icons';
+import { Languages } from 'lucide-react';
 import { CollapsibleSection } from './CollapsibleSection';
 import { useSettings } from '@/app/providers/SettingsContext';
 import SelectionBox from '@/app/shared/SelectionBox';
@@ -31,7 +31,7 @@ export const TranslationSettings = ({
     <>
       <CollapsibleSection
         title={t('reading_setting')}
-        icon={<TranslationIcon size={20} className="text-accent" />}
+        icon={<Languages size={20} className="text-accent" />}
         isLast={true}
         isOpen={isOpen}
         onToggle={onToggle || (() => {})}

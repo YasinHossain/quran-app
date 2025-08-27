@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { BaseCard, BaseCardProps } from '../BaseCard';
-import { FolderIcon } from '@/app/shared/icons';
+import { Folder } from 'lucide-react';
 import { FolderContextMenu } from '@/app/(features)/bookmarks/components/FolderContextMenu';
 import { cn } from '@/lib/utils/cn';
 import { motion } from 'framer-motion';
@@ -72,7 +72,7 @@ export const EnhancedFolderCard: React.FC<EnhancedFolderCardProps> = React.memo(
                   {folder.icon}
                 </span>
               ) : (
-                <FolderIcon
+                <Folder
                   size={28}
                   className={cn(folder.color || 'text-accent')}
                   aria-hidden="true"

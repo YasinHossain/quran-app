@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useTheme } from '@/app/providers/ThemeContext';
-import { SunIcon, MoonIcon } from '@/app/shared/icons';
+import { Sun, Moon } from 'lucide-react';
 
 interface ThemeSelectorProps {
   className?: string;
@@ -29,9 +29,9 @@ export const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className }) => {
       aria-label="Toggle Theme"
     >
       {theme === 'dark' ? (
-        <SunIcon className="w-5 h-5 text-status-warning" />
+        <Sun className="w-5 h-5 text-status-warning" />
       ) : (
-        <MoonIcon className="w-5 h-5 text-content-secondary" />
+        <Moon className="w-5 h-5 text-content-secondary" />
       )}
     </button>
   );

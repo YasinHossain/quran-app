@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useTheme } from '@/app/providers/ThemeContext';
-import { SunIcon, MoonIcon } from '@/app/shared/icons';
+import { Sun, Moon } from 'lucide-react';
 import { Button } from './Button';
 
 interface ThemeToggleProps {
@@ -40,7 +40,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ variant = 'ghost', cla
           }`}
           aria-label="Light theme"
         >
-          <SunIcon className="w-4 h-4" />
+          <Sun className="w-4 h-4" />
         </button>
         <button
           onClick={() => handleThemeChange('dark')}
@@ -51,7 +51,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ variant = 'ghost', cla
           }`}
           aria-label="Dark theme"
         >
-          <MoonIcon className="w-4 h-4" />
+          <Moon className="w-4 h-4" />
         </button>
       </div>
     );
@@ -72,9 +72,9 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ variant = 'ghost', cla
       aria-label="Toggle Theme"
     >
       {currentTheme === 'dark' ? (
-        <SunIcon className="w-5 h-5 text-status-warning" />
+        <Sun className="w-5 h-5 text-status-warning" />
       ) : (
-        <MoonIcon className="w-5 h-5 text-content-secondary" />
+        <Moon className="w-5 h-5 text-content-secondary" />
       )}
     </Button>
   );
