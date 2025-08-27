@@ -17,7 +17,7 @@ export const useTafsirVerseData = (surahId: string, ayahId: string) => {
   const { prev, next, navigate, currentSurah } = useVerseNavigation(surahId, ayahId);
 
   const { data: verseData } = useSWR(
-    surahId && ayahId
+    surahId && ayahId && settings
       ? ['verse', surahId, ayahId, settings.translationId, settings.wordLang]
       : null,
     ([, s, a, trId, wordLang]) =>

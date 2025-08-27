@@ -13,6 +13,7 @@ interface TafsirTabsProps {
 }
 
 export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
+  // All hooks must be called before any conditional logic
   const { data } = useSWR('tafsirs', getTafsirResources);
   const { settings } = useSettings();
 
@@ -50,6 +51,19 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
       .catch(() => setContents((c) => ({ ...c, [activeId]: 'Error loading tafsir.' })))
       .finally(() => setLoading((l) => ({ ...l, [activeId]: false })));
   }, [activeId, verseKey, contents]);
+
+  // Early return if settings are not loaded (after all hooks)
+  if (!settings) {
+    return (
+      <div className="space-y-4">
+        <div className="h-10 bg-surface-hover rounded animate-pulse"></div>
+        <div className="space-y-2">
+          <div className="h-4 bg-surface-hover rounded animate-pulse"></div>
+          <div className="h-4 bg-surface-hover rounded w-3/4 animate-pulse"></div>
+        </div>
+      </div>
+    );
+  }
 
   if (!tabs.length) {
     return (

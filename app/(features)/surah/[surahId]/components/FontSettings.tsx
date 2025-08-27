@@ -19,10 +19,28 @@ export const FontSettings = ({
   isOpen = false,
   onToggle,
 }: FontSettingsProps) => {
+  // All hooks must be called before any conditional logic
   const { settings, setSettings, arabicFonts } = useSettings();
   const { t } = useTranslation();
-  const { style: arabicStyle } = useFontSize(settings.arabicFontSize, 16, 48);
-  const { style: translationStyle } = useFontSize(settings.translationFontSize, 12, 28);
+  const { style: arabicStyle } = useFontSize(settings?.arabicFontSize || 24, 16, 48);
+  const { style: translationStyle } = useFontSize(settings?.translationFontSize || 16, 12, 28);
+
+  // Early return if settings are not loaded (after all hooks)
+  if (!settings) {
+    return (
+      <CollapsibleSection
+        title={t('font_setting')}
+        icon={<Type size={20} className="text-accent" />}
+        isLast
+        isOpen={isOpen}
+        onToggle={onToggle || (() => {})}
+      >
+        <div className="space-y-4">
+          <div className="text-center py-4 text-muted">{t('loading_settings')}</div>
+        </div>
+      </CollapsibleSection>
+    );
+  }
 
   const selectedArabicFont =
     arabicFonts.find((font) => font.value === settings.arabicFontFace)?.name || t('select_font');

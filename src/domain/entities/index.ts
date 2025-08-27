@@ -1,6 +1,6 @@
 /**
  * Domain Entities Index
- * 
+ *
  * Centralized exports for all domain entities.
  * These entities represent the core business objects and rules of the Quran app.
  */
@@ -10,29 +10,20 @@ export {
   Bookmark,
   BookmarkWithVerse,
   type BookmarkMetadata,
-  type BookmarkStorageData
+  type BookmarkStorageData,
 } from './Bookmark';
 
 export {
   Folder,
   type FolderCustomization,
   type FolderStatistics,
-  type FolderStorageData
+  type FolderStorageData,
 } from './Folder';
 
 // Verse and Word entities
-export {
-  Verse,
-  type Translation,
-  type Audio,
-  type VerseStorageData
-} from './Verse';
+export { Verse, type Translation, type Audio, type VerseStorageData } from './Verse';
 
-export {
-  Word,
-  type WordTranslation,
-  type WordStorageData
-} from './Word';
+export { Word, type WordTranslation, type WordStorageData } from './Word';
 
 // Memorization entities
 export {
@@ -43,5 +34,19 @@ export {
   type ReviewSession,
   type MemorizationGoal,
   type MemorizationStatistics,
-  type MemorizationPlanStorageData
+  type MemorizationPlanStorageData,
 } from './MemorizationPlan';
+
+// Settings entities
+export { Settings, type ArabicFont, type SettingsStorageData } from './Settings';
+
+// Audio entities
+export {
+  AudioSettings,
+  type RepeatOptions,
+  type Reciter,
+  type AudioSettingsStorageData,
+} from './AudioSettings';
+
+// Theme entities
+export { Theme, type ThemeMode, type ResolvedTheme, type ThemeStorageData } from './Theme';

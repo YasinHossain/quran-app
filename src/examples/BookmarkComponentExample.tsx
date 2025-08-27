@@ -1,7 +1,7 @@
 /**
  * Example: How to Update React Components to Use Clean Architecture
- * 
- * This shows how to migrate from the old BookmarkContext pattern 
+ *
+ * This shows how to migrate from the old BookmarkContext pattern
  * to the new clean architecture services.
  */
 
@@ -30,7 +30,7 @@ const NewBookmarkComponent = () => {
     toggleBookmark,
     togglePinned,
     createFolder,
-    refreshData
+    refreshData,
   } = useBookmarkService();
 
   // Load data on component mount
@@ -60,7 +60,7 @@ const NewBookmarkComponent = () => {
     try {
       const folder = await createFolder(name, {
         color: '#7C3AED',
-        icon: 'bookmark'
+        icon: 'bookmark',
       });
       console.log('Folder created:', folder.name);
     } catch (error) {
@@ -74,18 +74,18 @@ const NewBookmarkComponent = () => {
   return (
     <div>
       <h2>Bookmarks ({folders.length} folders)</h2>
-      
+
       <div>
         <h3>Folders:</h3>
-        {folders.map(folder => (
+        {folders.map((folder) => (
           <div key={folder.id}>
-            <h4>{folder.name} ({folder.getBookmarkCount()} bookmarks)</h4>
-            {folder.bookmarks.map(bookmark => (
+            <h4>
+              {folder.name} ({folder.getBookmarkCount()} bookmarks)
+            </h4>
+            {folder.bookmarks.map((bookmark) => (
               <div key={bookmark.id}>
                 {bookmark.getDisplayReference()}
-                <button onClick={() => removeBookmark(bookmark.verseId, folder.id)}>
-                  Remove
-                </button>
+                <button onClick={() => removeBookmark(bookmark.verseId, folder.id)}>Remove</button>
               </div>
             ))}
           </div>
@@ -94,26 +94,18 @@ const NewBookmarkComponent = () => {
 
       <div>
         <h3>Pinned Verses ({pinnedVerses.length}):</h3>
-        {pinnedVerses.map(verse => (
+        {pinnedVerses.map((verse) => (
           <div key={verse.id}>
             {verse.getDisplayReference()}
-            <button onClick={() => handlePinVerse(verse.verseId)}>
-              Unpin
-            </button>
+            <button onClick={() => handlePinVerse(verse.verseId)}>Unpin</button>
           </div>
         ))}
       </div>
 
       <div>
-        <button onClick={() => handleBookmarkVerse('2:255')}>
-          Bookmark Ayat al-Kursi
-        </button>
-        <button onClick={() => handlePinVerse('1:1')}>
-          Pin Al-Fatiha
-        </button>
-        <button onClick={() => handleCreateFolder('My Favorites')}>
-          Create Folder
-        </button>
+        <button onClick={() => handleBookmarkVerse('2:255')}>Bookmark Ayat al-Kursi</button>
+        <button onClick={() => handlePinVerse('1:1')}>Pin Al-Fatiha</button>
+        <button onClick={() => handleCreateFolder('My Favorites')}>Create Folder</button>
       </div>
     </div>
   );

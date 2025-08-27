@@ -1,20 +1,25 @@
 /**
  * Domain Entity: MemorizationPlan
- * 
+ *
  * Represents a structured plan for memorizing Quranic verses with progress tracking.
  * Encapsulates memorization business logic and progress management.
  */
 
-export type MemorizationStatus = 'not_started' | 'in_progress' | 'review' | 'completed' | 'mastered';
+export type MemorizationStatus =
+  | 'not_started'
+  | 'in_progress'
+  | 'review'
+  | 'completed'
+  | 'mastered';
 export type MemorizationDifficulty = 'easy' | 'medium' | 'hard';
 
 export interface VerseProgress {
   verseKey: string;
   status: MemorizationStatus;
   attempts: number;
-  firstMemorized?: number;  // timestamp
-  lastReviewed?: number;    // timestamp
-  confidenceLevel: number;  // 0-100
+  firstMemorized?: number; // timestamp
+  lastReviewed?: number; // timestamp
+  confidenceLevel: number; // 0-100
   notes?: string;
   difficulty?: MemorizationDifficulty;
 }
@@ -55,15 +60,11 @@ export class MemorizationPlan {
   /**
    * Factory method to create a new memorization plan
    */
-  static create(
-    surahId: number,
-    targetVerses: number,
-    planName?: string
-  ): MemorizationPlan {
+  static create(surahId: number, targetVerses: number, planName?: string): MemorizationPlan {
     const id = `memo_plan_${surahId}_${Date.now()}`;
     const name = planName || `Surah ${surahId} Memorization`;
     const now = Date.now();
-    
+
     return new MemorizationPlan(
       id,
       surahId,
@@ -96,7 +97,7 @@ export class MemorizationPlan {
     isActive?: boolean;
   }): MemorizationPlan {
     const progressMap = new Map(data.verseProgress);
-    
+
     return new MemorizationPlan(
       data.id,
       data.surahId,
@@ -125,7 +126,7 @@ export class MemorizationPlan {
       verseKey,
       status: 'not_started',
       attempts: 0,
-      confidenceLevel: 0
+      confidenceLevel: 0,
     });
 
     return new MemorizationPlan(
@@ -146,10 +147,7 @@ export class MemorizationPlan {
   /**
    * Update verse progress (returns new instance - immutable)
    */
-  updateVerseProgress(
-    verseKey: string, 
-    updates: Partial<VerseProgress>
-  ): MemorizationPlan {
+  updateVerseProgress(verseKey: string, updates: Partial<VerseProgress>): MemorizationPlan {
     const currentProgress = this.verseProgress.get(verseKey);
     if (!currentProgress) {
       return this; // Verse not in plan
@@ -188,7 +186,7 @@ export class MemorizationPlan {
       confidenceLevel,
       attempts: currentProgress.attempts + 1,
       firstMemorized: currentProgress.firstMemorized || now,
-      lastReviewed: now
+      lastReviewed: now,
     };
 
     return this.updateVerseProgress(verseKey, updates);
@@ -200,14 +198,15 @@ export class MemorizationPlan {
   addReviewSession(session: Omit<ReviewSession, 'id'>): MemorizationPlan {
     const newSession: ReviewSession = {
       id: `review_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      ...session
+      ...session,
     };
 
     // Update last reviewed timestamps for reviewed verses
-    let updatedPlan = this;
-    session.versesReviewed.forEach(verseKey => {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let updatedPlan: MemorizationPlan = this;
+    session.versesReviewed.forEach((verseKey) => {
       updatedPlan = updatedPlan.updateVerseProgress(verseKey, {
-        lastReviewed: session.timestamp
+        lastReviewed: session.timestamp,
       });
     });
 
@@ -232,7 +231,7 @@ export class MemorizationPlan {
   addGoal(goal: Omit<MemorizationGoal, 'id'>): MemorizationPlan {
     const newGoal: MemorizationGoal = {
       id: `goal_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      ...goal
+      ...goal,
     };
 
     return new MemorizationPlan(
@@ -297,10 +296,11 @@ export class MemorizationPlan {
    */
   getCompletionPercentage(): number {
     if (this.verseProgress.size === 0) return 0;
-    
-    const completedVerses = Array.from(this.verseProgress.values())
-      .filter(p => p.status === 'completed' || p.status === 'mastered').length;
-    
+
+    const completedVerses = Array.from(this.verseProgress.values()).filter(
+      (p) => p.status === 'completed' || p.status === 'mastered'
+    ).length;
+
     return Math.round((completedVerses / this.verseProgress.size) * 100);
   }
 
@@ -308,21 +308,19 @@ export class MemorizationPlan {
    * Get verses by status
    */
   getVersesByStatus(status: MemorizationStatus): VerseProgress[] {
-    return Array.from(this.verseProgress.values())
-      .filter(p => p.status === status);
+    return Array.from(this.verseProgress.values()).filter((p) => p.status === status);
   }
 
   /**
    * Get verses needing review
    */
   getVersesNeedingReview(daysSinceReview: number = 7): VerseProgress[] {
-    const cutoff = Date.now() - (daysSinceReview * 24 * 60 * 60 * 1000);
-    
-    return Array.from(this.verseProgress.values())
-      .filter(p => {
-        if (p.status === 'not_started') return false;
-        return !p.lastReviewed || p.lastReviewed < cutoff;
-      });
+    const cutoff = Date.now() - daysSinceReview * 24 * 60 * 60 * 1000;
+
+    return Array.from(this.verseProgress.values()).filter((p) => {
+      if (p.status === 'not_started') return false;
+      return !p.lastReviewed || p.lastReviewed < cutoff;
+    });
   }
 
   /**
@@ -331,7 +329,7 @@ export class MemorizationPlan {
   getAverageConfidence(): number {
     const verses = Array.from(this.verseProgress.values());
     if (verses.length === 0) return 0;
-    
+
     const total = verses.reduce((sum, p) => sum + p.confidenceLevel, 0);
     return Math.round(total / verses.length);
   }
@@ -346,10 +344,10 @@ export class MemorizationPlan {
       in_progress: 0,
       review: 0,
       completed: 0,
-      mastered: 0
+      mastered: 0,
     };
 
-    verses.forEach(v => {
+    verses.forEach((v) => {
       statusCounts[v.status]++;
     });
 
@@ -364,7 +362,7 @@ export class MemorizationPlan {
       totalReviewSessions: this.reviewSessions.length,
       averageAttemptsPerVerse: Math.round(averageAttempts * 100) / 100,
       activeDays: this.getActiveDays(),
-      currentStreak: this.getCurrentStreak()
+      currentStreak: this.getCurrentStreak(),
     };
   }
 
@@ -373,9 +371,7 @@ export class MemorizationPlan {
    */
   getActiveDays(): number {
     const sessions = this.reviewSessions;
-    const uniqueDays = new Set(
-      sessions.map(s => new Date(s.timestamp).toDateString())
-    );
+    const uniqueDays = new Set(sessions.map((s) => new Date(s.timestamp).toDateString()));
     return uniqueDays.size;
   }
 
@@ -383,20 +379,19 @@ export class MemorizationPlan {
    * Get current streak (consecutive days with activity)
    */
   getCurrentStreak(): number {
-    const sessions = this.reviewSessions
-      .sort((a, b) => b.timestamp - a.timestamp);
-    
+    const sessions = this.reviewSessions.sort((a, b) => b.timestamp - a.timestamp);
+
     if (sessions.length === 0) return 0;
-    
+
     let streak = 1;
     let currentDate = new Date(sessions[0].timestamp);
-    
+
     for (let i = 1; i < sessions.length; i++) {
       const sessionDate = new Date(sessions[i].timestamp);
       const daysDiff = Math.floor(
         (currentDate.getTime() - sessionDate.getTime()) / (1000 * 60 * 60 * 24)
       );
-      
+
       if (daysDiff === 1) {
         streak++;
         currentDate = sessionDate;
@@ -404,7 +399,7 @@ export class MemorizationPlan {
         break;
       }
     }
-    
+
     return streak;
   }
 
@@ -422,9 +417,9 @@ export class MemorizationPlan {
    * Check if plan is on track (meeting daily goals)
    */
   isOnTrack(): boolean {
-    const activeGoals = this.goals.filter(g => g.targetDate && g.targetDate > Date.now());
+    const activeGoals = this.goals.filter((g) => g.targetDate && g.targetDate > Date.now());
     if (activeGoals.length === 0) return true; // No active goals
-    
+
     // Simple check: are we progressing at the required rate?
     const completion = this.getCompletionPercentage();
     return completion >= 50; // Simplified logic
@@ -445,7 +440,7 @@ export class MemorizationPlan {
       goals: this.goals,
       reviewSessions: this.reviewSessions,
       notes: this.notes,
-      isActive: this.isActive
+      isActive: this.isActive,
     };
   }
 }

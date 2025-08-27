@@ -33,6 +33,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
   const { t } = useTranslation();
 
   const handleLanguageSelect = (language: (typeof WORD_LANGUAGES)[0]) => {
+    if (!settings) return;
     setSettings({
       ...settings,
       wordLang: language.code,
@@ -43,7 +44,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
   const renderLanguageList = () => (
     <div className="space-y-2">
       {WORD_LANGUAGES.map((language) => {
-        const isSelected = settings.wordTranslationId === language.id;
+        const isSelected = settings?.wordTranslationId === language.id;
         return (
           <div
             key={language.id}

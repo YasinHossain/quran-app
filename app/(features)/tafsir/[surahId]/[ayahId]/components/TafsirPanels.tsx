@@ -14,6 +14,21 @@ export const TafsirPanels = ({ verseKey, tafsirIds }: TafsirPanelsProps) => {
   const { settings } = useSettings();
   const { openPanels, tafsirTexts, loading, togglePanel } = useTafsirPanels(verseKey);
 
+  if (!settings) {
+    return (
+      <div className="space-y-4">
+        {tafsirIds.map((id) => (
+          <div key={id} className="border-b border-border last:border-none">
+            <div className="py-3">
+              <div className="h-4 bg-surface-hover rounded w-32 mb-2 animate-pulse"></div>
+              <div className="h-3 bg-surface-hover rounded w-48 animate-pulse"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <>
       {tafsirIds.map((id) => {

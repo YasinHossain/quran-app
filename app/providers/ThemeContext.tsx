@@ -1,17 +1,22 @@
 'use client';
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
+import { useThemeService } from '@/src/application/hooks/useThemeService';
+import { ResolvedTheme, ThemeMode } from '@/src/domain/entities/Theme';
 
-export type Theme = 'light' | 'dark';
+export type Theme = ResolvedTheme; // For backward compatibility
 
 interface ThemeContextType {
   theme: Theme;
-  setTheme: React.Dispatch<React.SetStateAction<Theme>>;
+  setTheme: (theme: ThemeMode) => Promise<void>;
+  toggleTheme: () => Promise<ResolvedTheme>;
+  loading: boolean;
+  error: string | null;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 /**
- * Provides global color theme state.
+ * Provides global color theme state using clean architecture services.
  * Wrap your app with this provider to share and persist the current
  * light or dark theme preference across components.
  */
@@ -22,32 +27,18 @@ export const ThemeProvider = ({
   children: React.ReactNode;
   initialTheme?: Theme;
 }) => {
-  // Initialize theme with a default value or provided value
-  const [theme, setTheme] = useState<Theme>(initialTheme);
+  const themeService = useThemeService();
 
-  // Effect to load theme from localStorage on the client side after initial render
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('theme');
-      if (stored === 'light' || stored === 'dark') {
-        setTheme(stored as Theme);
-      } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        setTheme('dark');
-      }
-    }
-  }, []); // Empty dependency array ensures this effect runs only once on mount
-
-  // Effect to save theme to localStorage and toggle the dark class whenever theme changes
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('theme', theme);
-      // Ensure the dark class is toggled for Tailwind's class strategy
-      document.documentElement.classList.toggle('dark', theme === 'dark');
-      document.cookie = `theme=${theme}; path=/; max-age=31536000`;
-    }
-  }, [theme]);
-
-  const value = useMemo(() => ({ theme, setTheme }), [theme, setTheme]);
+  const value = useMemo(
+    () => ({
+      theme: themeService.resolvedTheme,
+      setTheme: themeService.setTheme,
+      toggleTheme: themeService.toggleTheme,
+      loading: themeService.loading,
+      error: themeService.error,
+    }),
+    [themeService]
+  );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };

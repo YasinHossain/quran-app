@@ -1,6 +1,6 @@
 /**
  * Domain Entity: Folder
- * 
+ *
  * Represents a collection of bookmarks with organization and customization features.
  * Encapsulates folder management business logic.
  */
@@ -26,13 +26,10 @@ export class Folder {
   /**
    * Factory method to create a new folder
    */
-  static create(
-    name: string, 
-    customization?: FolderCustomization
-  ): Folder {
+  static create(name: string, customization?: FolderCustomization): Folder {
     const id = `folder_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const now = Date.now();
-    
+
     return new Folder(id, name, [], now, customization, now);
   }
 
@@ -47,7 +44,7 @@ export class Folder {
     customization?: FolderCustomization;
     lastModified?: number;
   }): Folder {
-    const bookmarks = data.bookmarks.map(b => Bookmark.fromStorage(b));
+    const bookmarks = data.bookmarks.map((b) => Bookmark.fromStorage(b));
     return new Folder(
       data.id,
       data.name,
@@ -63,7 +60,7 @@ export class Folder {
    */
   addBookmark(bookmark: Bookmark): Folder {
     // Check if bookmark already exists
-    if (this.bookmarks.some(b => b.matchesVerse(bookmark.verseId))) {
+    if (this.bookmarks.some((b) => b.matchesVerse(bookmark.verseId))) {
       return this; // No change if already exists
     }
 
@@ -81,8 +78,8 @@ export class Folder {
    * Remove bookmark from folder (returns new instance - immutable)
    */
   removeBookmark(verseId: string): Folder {
-    const filteredBookmarks = this.bookmarks.filter(b => !b.matchesVerse(verseId));
-    
+    const filteredBookmarks = this.bookmarks.filter((b) => !b.matchesVerse(verseId));
+
     // No change if bookmark wasn't found
     if (filteredBookmarks.length === this.bookmarks.length) {
       return this;
@@ -102,7 +99,7 @@ export class Folder {
    * Update bookmark in folder (returns new instance - immutable)
    */
   updateBookmark(verseId: string, updatedBookmark: Bookmark): Folder {
-    const updatedBookmarks = this.bookmarks.map(b => 
+    const updatedBookmarks = this.bookmarks.map((b) =>
       b.matchesVerse(verseId) ? updatedBookmark : b
     );
 
@@ -137,29 +134,22 @@ export class Folder {
    */
   updateCustomization(customization: FolderCustomization): Folder {
     const merged = { ...this.customization, ...customization };
-    
-    return new Folder(
-      this.id,
-      this.name,
-      this.bookmarks,
-      this.createdAt,
-      merged,
-      Date.now()
-    );
+
+    return new Folder(this.id, this.name, this.bookmarks, this.createdAt, merged, Date.now());
   }
 
   /**
    * Find bookmark by verse ID
    */
   findBookmark(verseId: string): Bookmark | null {
-    return this.bookmarks.find(b => b.matchesVerse(verseId)) || null;
+    return this.bookmarks.find((b) => b.matchesVerse(verseId)) || null;
   }
 
   /**
    * Check if folder contains a specific verse
    */
   containsVerse(verseId: string): boolean {
-    return this.bookmarks.some(b => b.matchesVerse(verseId));
+    return this.bookmarks.some((b) => b.matchesVerse(verseId));
   }
 
   /**
@@ -180,7 +170,7 @@ export class Folder {
    * Get bookmarks sorted by creation date
    */
   getBookmarksSortedByDate(ascending: boolean = false): Bookmark[] {
-    return [...this.bookmarks].sort((a, b) => 
+    return [...this.bookmarks].sort((a, b) =>
       ascending ? a.createdAt - b.createdAt : b.createdAt - a.createdAt
     );
   }
@@ -192,11 +182,11 @@ export class Folder {
     return [...this.bookmarks].sort((a, b) => {
       const coordsA = a.getVerseCoordinates();
       const coordsB = b.getVerseCoordinates();
-      
+
       if (!coordsA && !coordsB) return 0;
       if (!coordsA) return 1;
       if (!coordsB) return -1;
-      
+
       // Sort by surah first, then by ayah
       if (coordsA.surahId !== coordsB.surahId) {
         return coordsA.surahId - coordsB.surahId;
@@ -209,7 +199,7 @@ export class Folder {
    * Get bookmarks with incomplete metadata
    */
   getBookmarksNeedingMetadata(): Bookmark[] {
-    return this.bookmarks.filter(b => !b.hasCompleteMetadata());
+    return this.bookmarks.filter((b) => !b.hasCompleteMetadata());
   }
 
   /**
@@ -260,7 +250,7 @@ export class Folder {
    */
   searchBookmarks(query: string): Bookmark[] {
     const lowerQuery = query.toLowerCase();
-    return this.bookmarks.filter(bookmark => {
+    return this.bookmarks.filter((bookmark) => {
       const metadata = bookmark.metadata;
       return (
         bookmark.verseId.toLowerCase().includes(lowerQuery) ||
@@ -277,20 +267,19 @@ export class Folder {
   getStatistics(): FolderStatistics {
     const bookmarks = this.bookmarks;
     const surahIds = new Set(
-      bookmarks
-        .map(b => b.getVerseCoordinates()?.surahId)
-        .filter(Boolean)
+      bookmarks.map((b) => b.getVerseCoordinates()?.surahId).filter(Boolean)
     );
 
     return {
       totalBookmarks: bookmarks.length,
       uniqueSurahs: surahIds.size,
-      bookmarksWithMetadata: bookmarks.filter(b => b.hasCompleteMetadata()).length,
-      averageAge: bookmarks.length > 0 
-        ? bookmarks.reduce((sum, b) => sum + b.getAgeInDays(), 0) / bookmarks.length 
-        : 0,
-      oldestBookmark: Math.max(...bookmarks.map(b => b.getAgeInDays()), 0),
-      newestBookmark: Math.min(...bookmarks.map(b => b.getAgeInDays()), 0)
+      bookmarksWithMetadata: bookmarks.filter((b) => b.hasCompleteMetadata()).length,
+      averageAge:
+        bookmarks.length > 0
+          ? bookmarks.reduce((sum, b) => sum + b.getAgeInDays(), 0) / bookmarks.length
+          : 0,
+      oldestBookmark: Math.max(...bookmarks.map((b) => b.getAgeInDays()), 0),
+      newestBookmark: Math.min(...bookmarks.map((b) => b.getAgeInDays()), 0),
     };
   }
 
@@ -301,10 +290,10 @@ export class Folder {
     return {
       id: this.id,
       name: this.name,
-      bookmarks: this.bookmarks.map(b => b.toStorage()),
+      bookmarks: this.bookmarks.map((b) => b.toStorage()),
       createdAt: this.createdAt,
       customization: this.customization,
-      lastModified: this.lastModified
+      lastModified: this.lastModified,
     };
   }
 }

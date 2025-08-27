@@ -1,17 +1,17 @@
 /**
  * Repository Interface: IGrammarRepository
- * 
+ *
  * Defines the contract for grammar analysis data persistence and retrieval.
  * Supports future grammar research features.
  */
 
-import { 
-  Grammar, 
-  GrammarRule, 
-  GrammarAnalysisResult, 
-  GrammarRuleType, 
+import {
+  Grammar,
+  GrammarRule,
+  GrammarAnalysisResult,
+  GrammarRuleType,
   GrammarCategory,
-  GrammarStorageData
+  GrammarStorageData,
 } from '../entities/Grammar';
 
 export interface GrammarQuery {
@@ -46,7 +46,7 @@ export interface IGrammarRepository {
    * Get grammar domain by type and category
    */
   getGrammarDomainByTypeCategory(
-    type: GrammarRuleType, 
+    type: GrammarRuleType,
     category: GrammarCategory
   ): Promise<Grammar | null>;
 
@@ -121,7 +121,7 @@ export interface IGrammarRepository {
    * Update analysis result status
    */
   updateAnalysisStatus(
-    resultId: string, 
+    resultId: string,
     status: 'draft' | 'reviewed' | 'verified' | 'disputed'
   ): Promise<void>;
 
@@ -170,20 +170,22 @@ export interface IGrammarRepository {
   /**
    * Get rule usage statistics
    */
-  getRuleUsageStats(): Promise<Array<{
-    ruleId: string;
-    ruleName: string;
-    usageCount: number;
-    lastUsed: number; // timestamp
-  }>>;
+  getRuleUsageStats(): Promise<
+    Array<{
+      ruleId: string;
+      ruleName: string;
+      usageCount: number;
+      lastUsed: number; // timestamp
+    }>
+  >;
 
   /**
    * Get analysis confidence distribution
    */
   getConfidenceDistribution(): Promise<{
-    high: number;    // > 0.8
-    medium: number;  // 0.5 - 0.8
-    low: number;     // < 0.5
+    high: number; // > 0.8
+    medium: number; // 0.5 - 0.8
+    low: number; // < 0.5
   }>;
 
   // Research and discovery
@@ -191,25 +193,27 @@ export interface IGrammarRepository {
    * Find similar grammar patterns
    */
   findSimilarPatterns(
-    verseKey: string, 
+    verseKey: string,
     wordId: number
-  ): Promise<Array<{
-    verseKey: string;
-    wordId: number;
-    similarity: number;
-    pattern: string;
-  }>>;
+  ): Promise<
+    Array<{
+      verseKey: string;
+      wordId: number;
+      similarity: number;
+      pattern: string;
+    }>
+  >;
 
   /**
    * Get grammar patterns by frequency
    */
-  getPatternsByFrequency(
-    limit?: number
-  ): Promise<Array<{
-    pattern: string;
-    frequency: number;
-    examples: Array<{ verseKey: string; wordId: number }>;
-  }>>;
+  getPatternsByFrequency(limit?: number): Promise<
+    Array<{
+      pattern: string;
+      frequency: number;
+      examples: Array<{ verseKey: string; wordId: number }>;
+    }>
+  >;
 
   /**
    * Suggest analysis based on existing patterns
@@ -217,11 +221,13 @@ export interface IGrammarRepository {
   suggestAnalysis(
     verseKey: string,
     wordId: number
-  ): Promise<Array<{
-    ruleId: string;
-    confidence: number;
-    reasoning: string;
-  }>>;
+  ): Promise<
+    Array<{
+      ruleId: string;
+      confidence: number;
+      reasoning: string;
+    }>
+  >;
 
   // Collaboration features
   /**
@@ -237,11 +243,7 @@ export interface IGrammarRepository {
   /**
    * Add review comment to analysis
    */
-  addReviewComment(
-    resultId: string,
-    comment: string,
-    reviewer: string
-  ): Promise<void>;
+  addReviewComment(resultId: string, comment: string, reviewer: string): Promise<void>;
 
   // Storage management
   /**
@@ -260,8 +262,5 @@ export interface IGrammarRepository {
   /**
    * Restore grammar data from backup
    */
-  restore(backup: {
-    domains: GrammarStorageData[];
-    timestamp: number;
-  }): Promise<void>;
+  restore(backup: { domains: GrammarStorageData[]; timestamp: number }): Promise<void>;
 }

@@ -1,31 +1,30 @@
 /**
  * Application Service: BookmarkService
- * 
+ *
  * Orchestrates bookmark-related use cases and provides a clean API for React components.
  * This is the main interface between React and the domain layer.
  */
 
-import { 
-  IBookmarkRepository, 
-  IVerseRepository 
-} from '../../domain/repositories';
+import { IBookmarkRepository, IVerseRepository } from '../../domain/repositories';
 
-import { 
-  AddBookmark, 
-  RemoveBookmark, 
+import {
+  AddBookmark,
+  RemoveBookmark,
   CreateFolder,
   type AddBookmarkRequest,
   type AddBookmarkResponse,
   type RemoveBookmarkRequest,
   type RemoveBookmarkResponse,
   type CreateFolderRequest,
-  type CreateFolderResponse
+  type CreateFolderResponse,
 } from '../../domain/usecases/bookmark';
 
-import { 
-  Bookmark, 
-  Folder, 
-  type FolderCustomization 
+import {
+  Bookmark,
+  Folder,
+  type FolderCustomization,
+  type BookmarkStorageData,
+  type FolderStorageData,
 } from '../../domain/entities';
 
 export interface BookmarkServiceConfig {
@@ -37,7 +36,7 @@ export class BookmarkService {
   private addBookmarkUseCase: AddBookmark;
   private removeBookmarkUseCase: RemoveBookmark;
   private createFolderUseCase: CreateFolder;
-  
+
   private config: Required<BookmarkServiceConfig>;
 
   constructor(
@@ -48,7 +47,7 @@ export class BookmarkService {
     this.config = {
       defaultTranslationId: 20,
       fetchMetadataByDefault: true,
-      ...config
+      ...config,
     };
 
     // Initialize use cases
@@ -59,7 +58,7 @@ export class BookmarkService {
 
   // Bookmark operations
   async addBookmark(
-    verseId: string, 
+    verseId: string,
     options: {
       folderId?: string;
       translationId?: number;
@@ -70,19 +69,16 @@ export class BookmarkService {
       verseId,
       folderId: options.folderId,
       translationId: options.translationId || this.config.defaultTranslationId,
-      fetchMetadata: options.fetchMetadata ?? this.config.fetchMetadataByDefault
+      fetchMetadata: options.fetchMetadata ?? this.config.fetchMetadataByDefault,
     };
 
     return this.addBookmarkUseCase.execute(request);
   }
 
-  async removeBookmark(
-    verseId: string,
-    folderId?: string
-  ): Promise<RemoveBookmarkResponse> {
+  async removeBookmark(verseId: string, folderId?: string): Promise<RemoveBookmarkResponse> {
     const request: RemoveBookmarkRequest = {
       verseId,
-      folderId
+      folderId,
     };
 
     return this.removeBookmarkUseCase.execute(request);
@@ -94,14 +90,14 @@ export class BookmarkService {
   ): Promise<{ action: 'added' | 'removed'; bookmark?: Bookmark; folder?: Folder }> {
     // Check if bookmark exists
     const existingLocation = await this.bookmarkRepository.findBookmarkFolder(verseId);
-    
+
     if (existingLocation) {
       // Remove existing bookmark
       const result = await this.removeBookmark(verseId, folderId);
       return {
         action: 'removed',
         bookmark: existingLocation.bookmark,
-        folder: result.folder
+        folder: result.folder,
       };
     } else {
       // Add new bookmark
@@ -109,7 +105,7 @@ export class BookmarkService {
       return {
         action: 'added',
         bookmark: result.bookmark,
-        folder: result.folder
+        folder: result.folder,
       };
     }
   }
@@ -119,7 +115,9 @@ export class BookmarkService {
     return location !== null;
   }
 
-  async findBookmarkLocation(verseId: string): Promise<{ folder: Folder; bookmark: Bookmark } | null> {
+  async findBookmarkLocation(
+    verseId: string
+  ): Promise<{ folder: Folder; bookmark: Bookmark } | null> {
     return this.bookmarkRepository.findBookmarkFolder(verseId);
   }
 
@@ -130,7 +128,7 @@ export class BookmarkService {
   ): Promise<CreateFolderResponse> {
     const request: CreateFolderRequest = {
       name,
-      customization
+      customization,
     };
 
     return this.createFolderUseCase.execute(request);
@@ -157,10 +155,7 @@ export class BookmarkService {
     await this.bookmarkRepository.deleteFolder(folderId);
   }
 
-  async renameFolder(
-    folderId: string,
-    newName: string
-  ): Promise<Folder> {
+  async renameFolder(folderId: string, newName: string): Promise<Folder> {
     const folder = await this.bookmarkRepository.getFolder(folderId);
     if (!folder) {
       throw new Error(`Folder not found: ${folderId}`);
@@ -188,7 +183,7 @@ export class BookmarkService {
   // Pinned verses operations
   async togglePinned(verseId: string): Promise<{ action: 'pinned' | 'unpinned' }> {
     const isPinned = await this.bookmarkRepository.isVersePinned(verseId);
-    
+
     if (isPinned) {
       await this.bookmarkRepository.removePinnedVerse(verseId);
       return { action: 'unpinned' };
@@ -218,16 +213,16 @@ export class BookmarkService {
   }
 
   async exportData(): Promise<{
-    folders: any[];
-    pinnedVerses: any[];
+    folders: FolderStorageData[];
+    pinnedVerses: BookmarkStorageData[];
     exportedAt: string;
   }> {
     return this.bookmarkRepository.exportData();
   }
 
   async importData(data: {
-    folders: any[];
-    pinnedVerses: any[];
+    folders: FolderStorageData[];
+    pinnedVerses: BookmarkStorageData[];
   }): Promise<void> {
     return this.bookmarkRepository.importData(data);
   }
@@ -246,36 +241,32 @@ export class BookmarkService {
     const pinnedVerses = await this.getPinnedVerses();
     const allBookmarks = await this.getAllBookmarks();
 
-    const folderStats = folders.map(folder => ({
+    const folderStats = folders.map((folder) => ({
       folder,
-      stats: folder.getStatistics()
+      stats: folder.getStatistics(),
     }));
 
     return {
       totalFolders: folders.length,
       totalBookmarks: allBookmarks.length,
       totalPinnedVerses: pinnedVerses.length,
-      folderStats
+      folderStats,
     };
   }
 
   async getBookmarksNeedingMetadata(): Promise<Bookmark[]> {
     const allBookmarks = await this.getAllBookmarks();
-    return allBookmarks.filter(bookmark => !bookmark.hasCompleteMetadata());
+    return allBookmarks.filter((bookmark) => !bookmark.hasCompleteMetadata());
   }
 
-  async refreshBookmarkMetadata(
-    verseId: string,
-    translationId?: number
-  ): Promise<Bookmark | null> {
+  async refreshBookmarkMetadata(verseId: string, translationId?: number): Promise<Bookmark | null> {
     const location = await this.findBookmarkLocation(verseId);
     if (!location) return null;
 
     // Fetch fresh metadata
-    const verse = await this.verseRepository.getByKey(
-      verseId, 
-      [translationId || this.config.defaultTranslationId]
-    );
+    const verse = await this.verseRepository.getByKey(verseId, [
+      translationId || this.config.defaultTranslationId,
+    ]);
 
     if (!verse) return location.bookmark;
 
@@ -287,12 +278,12 @@ export class BookmarkService {
       verseText: verse.text_uthmani,
       surahName: metadata?.surahName || `Surah ${coordinates.surahId}`,
       translation: verse.getPrimaryTranslation(),
-      verseApiId: verse.id
+      verseApiId: verse.id,
     };
 
     const updatedBookmark = location.bookmark.withMetadata(updatedMetadata);
     const updatedFolder = location.folder.updateBookmark(verseId, updatedBookmark);
-    
+
     await this.bookmarkRepository.saveFolder(updatedFolder);
     return updatedBookmark;
   }
@@ -310,7 +301,7 @@ export class BookmarkService {
     if (!Folder.isValidName(name)) {
       return {
         isValid: false,
-        error: 'Folder name must be 1-100 characters and not empty'
+        error: 'Folder name must be 1-100 characters and not empty',
       };
     }
     return { isValid: true };

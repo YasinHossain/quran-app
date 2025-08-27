@@ -1,6 +1,6 @@
 /**
  * Use Case: Add Bookmark
- * 
+ *
  * Handles the business logic for adding a verse to a bookmark folder.
  * Includes validation, metadata fetching, and folder management.
  */
@@ -41,13 +41,13 @@ export class AddBookmark {
       return {
         bookmark: existingBookmark.bookmark,
         folder: existingBookmark.folder,
-        wasCreated: false
+        wasCreated: false,
       };
     }
 
     // Create bookmark with optional metadata
     let bookmark = Bookmark.create(verseId);
-    
+
     if (fetchMetadata) {
       try {
         const metadata = await this.fetchBookmarkMetadata(verseId, translationId);
@@ -60,7 +60,7 @@ export class AddBookmark {
 
     // Handle folder selection/creation
     let targetFolder: Folder;
-    
+
     if (folderId) {
       // Use specified folder
       const existingFolder = await this.bookmarkRepository.getFolder(folderId);
@@ -80,7 +80,7 @@ export class AddBookmark {
     return {
       bookmark,
       folder: targetFolder,
-      wasCreated: true
+      wasCreated: true,
     };
   }
 
@@ -106,7 +106,7 @@ export class AddBookmark {
         verseText: verse.text_uthmani,
         surahName: metadata?.surahName || `Surah ${coordinates.surahId}`,
         translation: verse.getPrimaryTranslation(),
-        verseApiId: verse.id
+        verseApiId: verse.id,
       };
     } catch (error) {
       throw new Error(`Failed to fetch verse metadata: ${error.message}`);
@@ -115,9 +115,9 @@ export class AddBookmark {
 
   private async getOrCreateDefaultFolder(): Promise<Folder> {
     const folders = await this.bookmarkRepository.getFolders();
-    
+
     // Look for existing default folder
-    const defaultFolder = folders.find(f => f.name === 'My Bookmarks');
+    const defaultFolder = folders.find((f) => f.name === 'My Bookmarks');
     if (defaultFolder) {
       return defaultFolder;
     }
@@ -126,7 +126,7 @@ export class AddBookmark {
     const newFolder = Folder.create('My Bookmarks', {
       color: '#7C3AED',
       icon: 'bookmark',
-      description: 'Default bookmark collection'
+      description: 'Default bookmark collection',
     });
 
     await this.bookmarkRepository.saveFolder(newFolder);

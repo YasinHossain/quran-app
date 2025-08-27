@@ -1,6 +1,6 @@
 /**
  * Domain Entity: Bookmark
- * 
+ *
  * Represents a saved verse reference with rich metadata and business logic.
  * This is a domain entity that encapsulates bookmark-related business rules.
  */
@@ -9,12 +9,12 @@ export interface BookmarkMetadata {
   verseKey?: string;
   verseText?: string;
   surahName?: string;
-  translation?: string;
+  translation?: string | null;
   verseApiId?: number;
 }
 
 export class Bookmark {
-  private constructor(
+  protected constructor(
     public readonly id: string,
     public readonly verseId: string,
     public readonly createdAt: number,
@@ -48,7 +48,7 @@ export class Bookmark {
   withMetadata(metadata: BookmarkMetadata): Bookmark {
     return new Bookmark(this.id, this.verseId, this.createdAt, {
       ...this.metadata,
-      ...metadata
+      ...metadata,
     });
   }
 
@@ -56,11 +56,7 @@ export class Bookmark {
    * Check if bookmark has complete metadata for display
    */
   hasCompleteMetadata(): boolean {
-    return !!(
-      this.metadata?.verseKey &&
-      this.metadata?.verseText &&
-      this.metadata?.surahName
-    );
+    return !!(this.metadata?.verseKey && this.metadata?.verseText && this.metadata?.surahName);
   }
 
   /**
@@ -112,7 +108,7 @@ export class Bookmark {
       verseKey: this.metadata?.verseKey,
       verseText: this.metadata?.verseText,
       surahName: this.metadata?.surahName,
-      translation: this.metadata?.translation
+      translation: this.metadata?.translation,
     };
   }
 }

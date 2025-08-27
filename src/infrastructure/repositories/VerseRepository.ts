@@ -1,17 +1,23 @@
 /**
  * Infrastructure: VerseRepository
- * 
+ *
  * Implements IVerseRepository using existing Quran.com API client.
  * Wraps existing API functions with domain interfaces.
  */
 
-import { IVerseRepository, VerseQuery, PaginationOptions, PaginatedResult } from '../../domain/repositories';
+import {
+  IVerseRepository,
+  VerseQuery,
+  PaginationOptions,
+  PaginatedResult,
+} from '../../domain/repositories';
 import { Verse, Word } from '../../domain/entities';
 import * as api from '../../../lib/api/verses';
 import { getChapters } from '../../../lib/api/chapters';
 
 export class VerseRepository implements IVerseRepository {
-  private chapterCache: Map<number, any> = new Map();
+  private chapterCache: Map<number, { id: number; name_simple: string; name_arabic: string }> =
+    new Map();
 
   // Single verse operations
   async getById(id: number, translationIds?: number[]): Promise<Verse | null> {
@@ -37,19 +43,20 @@ export class VerseRepository implements IVerseRepository {
   }
 
   async getByKeys(verseKeys: string[], translationIds?: number[]): Promise<Verse[]> {
-    const promises = verseKeys.map(key => this.getByKey(key, translationIds));
+    const promises = verseKeys.map((key) => this.getByKey(key, translationIds));
     const results = await Promise.allSettled(promises);
-    
+
     return results
-      .filter((result): result is PromisedFulfilled<Verse | null> => 
-        result.status === 'fulfilled' && result.value !== null
+      .filter(
+        (result): result is PromisedFulfilled<Verse | null> =>
+          result.status === 'fulfilled' && result.value !== null
       )
-      .map(result => result.value!);
+      .map((result) => result.value!);
   }
 
   // Batch verse operations
   async getByChapter(
-    chapterId: number, 
+    chapterId: number,
     translationIds?: number[],
     pagination?: PaginationOptions
   ): Promise<PaginatedResult<Verse>> {
@@ -57,19 +64,19 @@ export class VerseRepository implements IVerseRepository {
       const translationId = translationIds?.[0] || 20;
       const page = pagination?.page || 1;
       const perPage = pagination?.perPage || 20;
-      
+
       const result = await api.getVersesByChapter(chapterId, translationId, page, perPage);
-      
-      const verses = result.verses.map(v => Verse.fromApiData(v));
+
+      const verses = result.verses.map((v) => Verse.fromApiData(v));
       const totalPages = result.totalPages;
-      
+
       return {
         data: verses,
         totalCount: totalPages * perPage, // Approximation
         totalPages,
         currentPage: page,
         hasNextPage: page < totalPages,
-        hasPreviousPage: page > 1
+        hasPreviousPage: page > 1,
       };
     } catch (error) {
       console.error(`Failed to get verses by chapter ${chapterId}:`, error);
@@ -86,19 +93,19 @@ export class VerseRepository implements IVerseRepository {
       const translationId = translationIds?.[0] || 20;
       const page = pagination?.page || 1;
       const perPage = pagination?.perPage || 20;
-      
+
       const result = await api.getVersesByJuz(juzId, translationId, page, perPage);
-      
-      const verses = result.verses.map(v => Verse.fromApiData(v));
+
+      const verses = result.verses.map((v) => Verse.fromApiData(v));
       const totalPages = result.totalPages;
-      
+
       return {
         data: verses,
         totalCount: totalPages * perPage, // Approximation
         totalPages,
         currentPage: page,
         hasNextPage: page < totalPages,
-        hasPreviousPage: page > 1
+        hasPreviousPage: page > 1,
       };
     } catch (error) {
       console.error(`Failed to get verses by juz ${juzId}:`, error);
@@ -115,19 +122,19 @@ export class VerseRepository implements IVerseRepository {
       const translationId = translationIds?.[0] || 20;
       const page = pagination?.page || 1;
       const perPage = pagination?.perPage || 20;
-      
+
       const result = await api.getVersesByPage(pageId, translationId, page, perPage);
-      
-      const verses = result.verses.map(v => Verse.fromApiData(v));
+
+      const verses = result.verses.map((v) => Verse.fromApiData(v));
       const totalPages = result.totalPages;
-      
+
       return {
         data: verses,
         totalCount: totalPages * perPage, // Approximation
         totalPages,
         currentPage: page,
         hasNextPage: page < totalPages,
-        hasPreviousPage: page > 1
+        hasPreviousPage: page > 1,
       };
     } catch (error) {
       console.error(`Failed to get verses by page ${pageId}:`, error);
@@ -146,22 +153,22 @@ export class VerseRepository implements IVerseRepository {
   ): Promise<PaginatedResult<Verse>> {
     try {
       const results = await api.searchVerses(query);
-      const verses = results.map(v => Verse.fromApiData(v));
-      
+      const verses = results.map((v) => Verse.fromApiData(v));
+
       // Simple pagination for search results
       const page = options?.pagination?.page || 1;
       const perPage = options?.pagination?.perPage || 20;
       const startIndex = (page - 1) * perPage;
       const endIndex = startIndex + perPage;
       const paginatedVerses = verses.slice(startIndex, endIndex);
-      
+
       return {
         data: paginatedVerses,
         totalCount: verses.length,
         totalPages: Math.ceil(verses.length / perPage),
         currentPage: page,
         hasNextPage: endIndex < verses.length,
-        hasPreviousPage: page > 1
+        hasPreviousPage: page > 1,
       };
     } catch (error) {
       console.error(`Failed to search verses with query "${query}":`, error);
@@ -192,23 +199,23 @@ export class VerseRepository implements IVerseRepository {
       const [surahIdStr, ayahNumberStr] = verseKey.split(':');
       const surahId = parseInt(surahIdStr);
       const ayahNumber = parseInt(ayahNumberStr);
-      
+
       // Get chapter info (with caching)
       let chapterInfo = this.chapterCache.get(surahId);
       if (!chapterInfo) {
         const chapters = await getChapters();
-        chapters.forEach(chapter => {
+        chapters.forEach((chapter) => {
           this.chapterCache.set(chapter.id, chapter);
         });
         chapterInfo = this.chapterCache.get(surahId);
       }
-      
+
       return {
         verseKey,
         surahId,
         ayahNumber,
         surahName: chapterInfo?.name_simple || `Surah ${surahId}`,
-        surahNameArabic: chapterInfo?.name_arabic || `سورة ${surahId}`
+        surahNameArabic: chapterInfo?.name_arabic || `سورة ${surahId}`,
       };
     } catch (error) {
       console.error(`Failed to get verse metadata for ${verseKey}:`, error);
@@ -216,28 +223,35 @@ export class VerseRepository implements IVerseRepository {
     }
   }
 
-  async getBulkVerseMetadata(verseKeys: string[]): Promise<Array<{
-    verseKey: string;
-    surahId: number;
-    ayahNumber: number;
-    surahName: string;
-    surahNameArabic: string;
-  }>> {
-    const promises = verseKeys.map(key => this.getVerseMetadata(key));
+  async getBulkVerseMetadata(verseKeys: string[]): Promise<
+    Array<{
+      verseKey: string;
+      surahId: number;
+      ayahNumber: number;
+      surahName: string;
+      surahNameArabic: string;
+    }>
+  > {
+    const promises = verseKeys.map((key) => this.getVerseMetadata(key));
     const results = await Promise.allSettled(promises);
-    
+
     return results
-      .filter((result): result is PromisedFulfilled<any> => 
-        result.status === 'fulfilled' && result.value !== null
+      .filter(
+        (
+          result
+        ): result is PromisedFulfilled<{
+          verseKey: string;
+          surahId: number;
+          ayahNumber: number;
+          surahName: string;
+          surahNameArabic: string;
+        }> => result.status === 'fulfilled' && result.value !== null
       )
-      .map(result => result.value);
+      .map((result) => result.value);
   }
 
   // Word-level operations
-  async getVerseWords(
-    verseKey: string,
-    translationLanguage?: string
-  ): Promise<Word[]> {
+  async getVerseWords(verseKey: string, translationLanguage?: string): Promise<Word[]> {
     try {
       const verse = await this.getByKey(verseKey, [20]);
       return verse?.words || [];
@@ -263,7 +277,7 @@ export class VerseRepository implements IVerseRepository {
       const cacheData = {
         verse: verse.toStorage(),
         cachedAt: Date.now(),
-        expiresAt: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
+        expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
       };
       localStorage.setItem(cacheKey, JSON.stringify(cacheData));
     } catch (error) {
@@ -271,23 +285,20 @@ export class VerseRepository implements IVerseRepository {
     }
   }
 
-  async clearCache(options?: {
-    older_than_days?: number;
-    surahId?: number;
-  }): Promise<void> {
+  async clearCache(options?: { older_than_days?: number; surahId?: number }): Promise<void> {
     try {
-      const keys = Object.keys(localStorage).filter(key => key.startsWith('verse_cache_'));
-      const cutoffTime = options?.older_than_days 
-        ? Date.now() - (options.older_than_days * 24 * 60 * 60 * 1000)
+      const keys = Object.keys(localStorage).filter((key) => key.startsWith('verse_cache_'));
+      const cutoffTime = options?.older_than_days
+        ? Date.now() - options.older_than_days * 24 * 60 * 60 * 1000
         : 0;
 
       for (const key of keys) {
         try {
           const data = JSON.parse(localStorage.getItem(key) || '{}');
-          const shouldDelete = 
+          const shouldDelete =
             (cutoffTime > 0 && data.cachedAt < cutoffTime) ||
             (options?.surahId && key.includes(`_${options.surahId}:`));
-          
+
           if (shouldDelete) {
             localStorage.removeItem(key);
           }
@@ -307,7 +318,7 @@ export class VerseRepository implements IVerseRepository {
     oldestCacheEntry: number;
     newestCacheEntry: number;
   }> {
-    const keys = Object.keys(localStorage).filter(key => key.startsWith('verse_cache_'));
+    const keys = Object.keys(localStorage).filter((key) => key.startsWith('verse_cache_'));
     let totalSize = 0;
     let oldestEntry = Date.now();
     let newestEntry = 0;
@@ -316,7 +327,7 @@ export class VerseRepository implements IVerseRepository {
       try {
         const data = localStorage.getItem(key) || '';
         totalSize += data.length;
-        
+
         const cacheData = JSON.parse(data);
         oldestEntry = Math.min(oldestEntry, cacheData.cachedAt || Date.now());
         newestEntry = Math.max(newestEntry, cacheData.cachedAt || 0);
@@ -329,7 +340,7 @@ export class VerseRepository implements IVerseRepository {
       totalCachedVerses: keys.length,
       cacheSize: totalSize,
       oldestCacheEntry: keys.length > 0 ? oldestEntry : Date.now(),
-      newestCacheEntry: newestEntry
+      newestCacheEntry: newestEntry,
     };
   }
 
@@ -357,7 +368,7 @@ export class VerseRepository implements IVerseRepository {
     return {
       totalOfflineVerses: cacheStats.totalCachedVerses,
       offlineSurahs: [], // TODO: Implement surah tracking
-      storageUsed: cacheStats.cacheSize
+      storageUsed: cacheStats.cacheSize,
     };
   }
 
@@ -369,7 +380,7 @@ export class VerseRepository implements IVerseRepository {
       totalPages: 0,
       currentPage: 1,
       hasNextPage: false,
-      hasPreviousPage: false
+      hasPreviousPage: false,
     };
   }
 }

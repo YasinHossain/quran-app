@@ -10,6 +10,7 @@ import { useVerseOfDay } from '../hooks/useVerseOfDay';
 import { useSettings } from '@/app/providers/SettingsContext';
 
 export default function VerseOfDay() {
+  // All hooks must be called before any conditional logic
   const { settings } = useSettings();
   const { verse, loading, error, surahs } = useVerseOfDay();
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -40,6 +41,17 @@ export default function VerseOfDay() {
       return () => clearTimeout(timer);
     }
   }, [verse, displayVerse, initialLoad]);
+
+  // Early return if settings are not loaded (after all hooks)
+  if (!settings) {
+    return (
+      <div className="mt-12 w-full max-w-4xl p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400 bg-surface-glass/60">
+        <div className="flex justify-center py-8">
+          <Spinner className="h-6 w-6 text-accent" />
+        </div>
+      </div>
+    );
+  }
 
   if (loading && initialLoad) {
     return (

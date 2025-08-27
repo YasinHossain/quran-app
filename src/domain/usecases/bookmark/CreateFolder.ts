@@ -1,6 +1,6 @@
 /**
  * Use Case: Create Folder
- * 
+ *
  * Handles the business logic for creating a new bookmark folder.
  * Includes name validation and customization options.
  */
@@ -31,14 +31,12 @@ export class CreateFolder {
 
     // Check if folder with same name already exists
     const existingFolders = await this.bookmarkRepository.getFolders();
-    const duplicateName = existingFolders.find(f => 
-      f.name.toLowerCase() === name.toLowerCase()
-    );
+    const duplicateName = existingFolders.find((f) => f.name.toLowerCase() === name.toLowerCase());
 
     if (duplicateName) {
       return {
         folder: duplicateName,
-        wasCreated: false
+        wasCreated: false,
       };
     }
 
@@ -46,7 +44,7 @@ export class CreateFolder {
     const folderCustomization: FolderCustomization = {
       color: '#7C3AED',
       icon: 'folder',
-      ...customization
+      ...customization,
     };
 
     const newFolder = Folder.create(name, folderCustomization);
@@ -56,7 +54,7 @@ export class CreateFolder {
 
     return {
       folder: newFolder,
-      wasCreated: true
+      wasCreated: true,
     };
   }
 
@@ -65,8 +63,8 @@ export class CreateFolder {
    */
   async suggestColors(): Promise<string[]> {
     const existingFolders = await this.bookmarkRepository.getFolders();
-    const usedColors = new Set(existingFolders.map(f => f.getColor()));
-    
+    const usedColors = new Set(existingFolders.map((f) => f.getColor()));
+
     const availableColors = [
       '#7C3AED', // Purple
       '#EF4444', // Red
@@ -80,7 +78,7 @@ export class CreateFolder {
       '#F97316', // Orange
     ];
 
-    return availableColors.filter(color => !usedColors.has(color));
+    return availableColors.filter((color) => !usedColors.has(color));
   }
 
   /**
@@ -97,16 +95,16 @@ export class CreateFolder {
       'collection',
       'document-text',
       'flag',
-      'tag'
+      'tag',
     ];
   }
 
   /**
    * Validate folder customization
    */
-  validateCustomization(customization: FolderCustomization): { 
-    isValid: boolean; 
-    errors: string[] 
+  validateCustomization(customization: FolderCustomization): {
+    isValid: boolean;
+    errors: string[];
   } {
     const errors: string[] = [];
 
@@ -120,13 +118,12 @@ export class CreateFolder {
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
   private isValidColor(color: string): boolean {
     // Simple validation for hex colors and CSS color names
-    return /^#[0-9A-Fa-f]{6}$/.test(color) || 
-           /^[a-zA-Z]+$/.test(color);
+    return /^#[0-9A-Fa-f]{6}$/.test(color) || /^[a-zA-Z]+$/.test(color);
   }
 }

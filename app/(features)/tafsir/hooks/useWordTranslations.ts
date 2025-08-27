@@ -39,12 +39,13 @@ export const useWordTranslations = () => {
       wordLanguageOptions.find(
         (o) =>
           (LANGUAGE_CODES as Record<string, LanguageCode>)[o.name.toLowerCase()] ===
-          settings.wordLang
+          settings?.wordLang
       )?.name || t('select_word_translation'),
-    [wordLanguageOptions, settings.wordLang, t]
+    [wordLanguageOptions, settings?.wordLang, t]
   );
 
   const resetWordSettings = useCallback(() => {
+    if (!settings) return;
     setSettings({
       ...settings,
       wordLang: 'en',

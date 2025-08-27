@@ -14,9 +14,9 @@ export const useTranslationOptions = () => {
 
   const selectedTranslationName = useMemo(
     () =>
-      translationOptions.find((o) => o.id === settings.translationId)?.name ||
+      translationOptions.find((o) => o.id === settings?.translationId)?.name ||
       t('select_translation'),
-    [translationOptions, settings.translationId, t]
+    [translationOptions, settings?.translationId, t]
   );
 
   return { translationOptions, selectedTranslationName };

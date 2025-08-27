@@ -67,7 +67,7 @@ export const WordTranslationPanel = ({
       <div className="flex-grow overflow-y-auto">
         {filtered.map((lang) => {
           const isSelected =
-            settings.wordLang ===
+            settings?.wordLang ===
             (LANGUAGE_CODES as Record<string, LanguageCode>)[lang.name.toLowerCase()];
           return (
             <div
@@ -75,6 +75,7 @@ export const WordTranslationPanel = ({
               role="button"
               tabIndex={0}
               onClick={() => {
+                if (!settings) return;
                 setSettings({
                   ...settings,
                   wordLang:
@@ -87,6 +88,7 @@ export const WordTranslationPanel = ({
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
+                  if (!settings) return;
                   setSettings({
                     ...settings,
                     wordLang:

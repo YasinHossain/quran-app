@@ -69,7 +69,7 @@ export const useTafsirPanel = (isOpen: boolean) => {
   const selectable = useSelectableResources<Tafsir>({
     resources: tafsirs,
     selectionLimit: MAX_SELECTIONS,
-    initialSelectedIds: settings.tafsirIds || [],
+    initialSelectedIds: settings?.tafsirIds || [],
     languageSort,
   });
 

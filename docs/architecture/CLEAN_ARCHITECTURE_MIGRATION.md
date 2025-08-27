@@ -16,21 +16,28 @@ This document outlines a strategic migration from the current Next.js feature-ba
 ### Mixed Concerns Identified
 
 **BookmarkProvider.tsx (Lines 32-268)**
+
 ```typescript
 // ❌ Mixed concerns: React state + business logic + API calls + storage
-const fetchBookmarkMetadata = useCallback(async (verseId: string) => {
-  try {
-    const verse = await getVerseByKey(verseId, translationId); // API call
-    setFolders((prev) => updateBookmarkInFolders(prev, verseId, metadata)); // React state
-  } catch { /* error handling */ }
-}, [settings.translationIds]);
+const fetchBookmarkMetadata = useCallback(
+  async (verseId: string) => {
+    try {
+      const verse = await getVerseByKey(verseId, translationId); // API call
+      setFolders((prev) => updateBookmarkInFolders(prev, verseId, metadata)); // React state
+    } catch {
+      /* error handling */
+    }
+  },
+  [settings.translationIds]
+);
 ```
 
 **useBookmarksPage.ts (Lines 13-18)**
+
 ```typescript
 // ❌ Mixed concerns: DOM manipulation + business logic + routing
 React.useEffect(() => {
-  document.body.style.overflow = 'hidden';  // DOM manipulation
+  document.body.style.overflow = 'hidden'; // DOM manipulation
   return () => {
     document.body.style.overflow = '';
   };
@@ -49,6 +56,7 @@ React.useEffect(() => {
 ### Option 1: Feature-Level Clean Architecture
 
 **Structure:**
+
 ```
 app/(features)/bookmarks/
 ├── components/          # Pure UI components
@@ -62,12 +70,14 @@ app/(features)/bookmarks/
 ```
 
 **Benefits:**
+
 - ✅ Minimal disruption to Next.js App Router structure
 - ✅ Gradual adoption with immediate ROI
 - ✅ Lower risk and faster implementation
 - ✅ Maintains existing conventions
 
 **Limitations:**
+
 - ⚠️ Cross-feature dependencies may cause duplication
 - ⚠️ Inconsistent architecture across features
 - ⚠️ Potential refactoring debt
@@ -75,6 +85,7 @@ app/(features)/bookmarks/
 ### Option 2: Full Clean Architecture
 
 **Structure:**
+
 ```
 src/
 ├── domain/        # Business entities & rules (cross-cutting)
@@ -84,12 +95,14 @@ src/
 ```
 
 **Benefits:**
+
 - ✅ Complete separation of concerns
 - ✅ Enterprise-ready scalability
 - ✅ Technology independence
 - ✅ Cross-feature domain logic reuse
 
 **Limitations:**
+
 - ❌ High upfront migration cost
 - ❌ Complexity overhead for current scope
 - ❌ Framework friction with Next.js patterns
@@ -99,6 +112,7 @@ src/
 ### Your Future Goals Impact
 
 Given your roadmap:
+
 - **60-70% project completion**
 - **Custom API/backend development**
 - **Android/iOS mobile applications**
@@ -121,6 +135,7 @@ Implement clean architecture with **component reusability** as primary design go
 **Status:** Complete and ready for multi-app ecosystem
 
 ### Core Domain Entities (Reusable Across All Apps):
+
 ```
 src/domain/entities/
 ├── Bookmark.ts              # ✅ Verse bookmarking with rich metadata
@@ -131,6 +146,7 @@ src/domain/entities/
 ```
 
 ### Repository Interfaces (API-Independent):
+
 ```
 src/domain/repositories/
 ├── IBookmarkRepository.ts   # ✅ Bookmark persistence abstraction
@@ -138,6 +154,7 @@ src/domain/repositories/
 ```
 
 ### Use Cases (Business Logic):
+
 ```
 src/domain/usecases/bookmark/
 ├── AddBookmark.ts          # ✅ Bookmark creation with validation
@@ -146,6 +163,7 @@ src/domain/usecases/bookmark/
 ```
 
 ### Future Features (Archived):
+
 ```
 src/domain/_future/
 ├── entities/Grammar.ts     # 📦 Grammar analysis (ready when needed)
@@ -158,7 +176,7 @@ src/domain/_future/
 ✅ **Habit Tracker App**: Progress tracking patterns established  
 ✅ **Mobile Apps**: Domain layer has zero React dependencies  
 ✅ **Custom API**: Repository interfaces abstract all data access  
-✅ **Grammar Research**: Architecture ready, features archived for later  
+✅ **Grammar Research**: Architecture ready, features archived for later
 
 ---
 
@@ -167,6 +185,7 @@ src/domain/_future/
 **Goal:** Complete current 60-70% app while building reusable infrastructure
 
 ### Week 1-2: Infrastructure Layer
+
 ```
 src/infrastructure/
 ├── api/
@@ -181,6 +200,7 @@ src/infrastructure/
 ```
 
 ### Week 3-4: Application Services
+
 ```
 src/application/
 ├── services/
@@ -193,11 +213,13 @@ src/application/
 ```
 
 ### Week 5-6: React Integration
+
 - Update existing React components to use application services
 - Migrate `BookmarkProvider` to use domain services
 - Transform hooks to consume clean application layer
 
 ### Week 7-8: Testing & Validation
+
 - Unit tests for domain entities and use cases
 - Integration tests for application services
 - Validation that React components work with new architecture
@@ -209,6 +231,7 @@ src/application/
 **Timeline:** After current app reaches 100% completion
 
 ### Mobile App Development
+
 - **React Native App**: Reuse entire `src/domain/` and `src/application/` layers
 - **Flutter App**: Port domain entities to Dart, keep same business logic
 - **Native iOS/Android**: Shared API contracts via repository interfaces
@@ -216,6 +239,7 @@ src/application/
 ### Specialized Quran Apps
 
 **Memorization-Centric App:**
+
 ```typescript
 // Reuse existing domain entities
 import { MemorizationPlan, Verse } from '@quran-core/domain';
@@ -226,6 +250,7 @@ const memorizationApp = new MemorizationService(verseRepo, progressRepo);
 ```
 
 **Habit Tracker App:**
+
 ```typescript
 // Extend existing patterns
 import { MemorizationPlan } from '@quran-core/domain';
@@ -238,6 +263,7 @@ class HabitPlan extends MemorizationPlan {
 ```
 
 ### Custom API Integration
+
 ```typescript
 // Simply swap repository implementations
 const customApiClient = new CustomQuranApiClient(apiKey);
@@ -246,6 +272,7 @@ const verseRepo = new VerseRepository(customApiClient);
 ```
 
 ### Grammar Research Integration (When Ready)
+
 ```typescript
 // Move archived features back to main domain
 mv src/domain/_future/entities/Grammar.ts src/domain/entities/
@@ -260,24 +287,28 @@ const grammarService = new GrammarAnalysisService(grammarRepo, aiService);
 ### Code Organization Principles
 
 **Domain Layer (src/domain/)**
+
 - Contains business entities and rules
 - No dependencies on external frameworks
 - Pure TypeScript classes and functions
 - Comprehensive unit tests
 
 **Application Layer (src/application/)**
+
 - Orchestrates domain objects
 - Contains use cases and application services
 - Depends only on domain layer interfaces
 - Handles cross-cutting concerns (logging, validation)
 
 **Infrastructure Layer (src/infrastructure/)**
+
 - Implements domain repository interfaces
 - Handles external service integration
 - Database, API, file system access
 - Framework-specific implementations
 
 **Presentation Layer (src/presentation/ or keep app/)**
+
 - React components and hooks
 - Next.js routing and pages
 - UI state management
@@ -294,11 +325,13 @@ const grammarService = new GrammarAnalysisService(grammarRepo, aiService);
 ### Risk Mitigation Strategies
 
 **Technical Risks:**
+
 - **Import Chaos:** Use path mapping in tsconfig.json for clean imports
 - **Circular Dependencies:** Strict layer boundaries prevent circular refs
 - **Performance Impact:** Lazy load services and optimize bundle splitting
 
 **Team Risks:**
+
 - **Learning Curve:** Gradual introduction of clean architecture concepts
 - **Consistency:** Code review guidelines for architectural compliance
 - **Momentum:** Visible progress through working features in each phase
@@ -306,17 +339,20 @@ const grammarService = new GrammarAnalysisService(grammarRepo, aiService);
 ## Expected Benefits
 
 ### ✅ Immediate (Phase 1 - ACHIEVED)
+
 - **Multi-app foundation**: Domain entities ready for memorization app, habit tracker
 - **Future-proof architecture**: Grammar features archived, not lost
 - **API independence**: Repository interfaces enable seamless API swapping
 - **Mobile-ready**: Zero React dependencies in business logic
 
 ### Medium-term (Phase 2)
+
 - **Current app completion**: Clean architecture supporting remaining 30% features
 - **Testing foundation**: Isolated domain logic enables comprehensive testing
 - **Component reusability**: Shared services across different app features
 
 ### Long-term (Phase 3+)
+
 - **Multi-platform ecosystem**: Same business logic across web/mobile/desktop
 - **Specialized app development**: Quick creation of memorization/habit tracker apps
 - **Research capabilities**: Grammar analysis ready when needed
@@ -325,12 +361,14 @@ const grammarService = new GrammarAnalysisService(grammarRepo, aiService);
 ## Success Metrics
 
 **Technical Metrics:**
+
 - [ ] 90%+ test coverage for domain layer
 - [ ] Zero circular dependencies between layers
 - [ ] API response times maintained during migration
 - [ ] Bundle size impact < 10% increase
 
 **Business Metrics:**
+
 - [ ] Feature development velocity maintained during migration
 - [ ] Zero user-facing bugs during transition
 - [ ] Mobile app development timeline reduced by 40%
@@ -342,7 +380,7 @@ const grammarService = new GrammarAnalysisService(grammarRepo, aiService);
 
 This strategic clean architecture migration positions your project for:
 
-1. **Current Success**: Clean completion of remaining 30% features  
+1. **Current Success**: Clean completion of remaining 30% features
 2. **Multi-App Expansion**: Reusable components for memorization/habit tracker apps
 3. **Mobile Development**: Shared business logic across platforms
 4. **API Independence**: Easy transition to custom backend
@@ -355,13 +393,15 @@ The domain-first approach ensures **maximum component reusability** while mainta
 ## ✅ Current Status: Ready for Phase 2
 
 **Phase 1 Achievements:**
+
 - Domain entities built with multi-app reusability
-- Repository interfaces abstract all data dependencies  
+- Repository interfaces abstract all data dependencies
 - Use cases contain pure business logic
 - Grammar features safely archived for future integration
 - Zero technical debt from architectural migration
 
 **Immediate Next Steps:**
+
 1. **Continue with current app development** using existing React components
 2. **When ready for Phase 2**: Implement infrastructure layer
 3. **Future apps**: Import and extend existing domain entities

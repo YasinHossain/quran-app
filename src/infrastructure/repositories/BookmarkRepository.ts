@@ -1,6 +1,6 @@
 /**
  * Infrastructure: BookmarkRepository
- * 
+ *
  * Implements IBookmarkRepository using localStorage.
  * Handles data persistence for bookmarks and folders.
  */
@@ -11,7 +11,7 @@ import { Bookmark, Folder, BookmarkStorageData, FolderStorageData } from '../../
 const STORAGE_KEYS = {
   FOLDERS: 'quran-app-bookmark-folders',
   PINNED: 'quran-app-pinned-verses',
-  VERSION: 'quran-app-storage-version'
+  VERSION: 'quran-app-storage-version',
 } as const;
 
 const CURRENT_VERSION = '1.0';
@@ -54,9 +54,11 @@ export class BookmarkRepository implements IBookmarkRepository {
   }
 
   // Bookmark operations within folders
-  async findBookmarkFolder(verseId: string): Promise<{ folder: Folder; bookmark: Bookmark } | null> {
+  async findBookmarkFolder(
+    verseId: string
+  ): Promise<{ folder: Folder; bookmark: Bookmark } | null> {
     await this.ensureInitialized();
-    
+
     for (const folder of this.folders.values()) {
       const bookmark = folder.findBookmark(verseId);
       if (bookmark) {
@@ -69,23 +71,23 @@ export class BookmarkRepository implements IBookmarkRepository {
   async getAllBookmarks(): Promise<Bookmark[]> {
     await this.ensureInitialized();
     const allBookmarks: Bookmark[] = [];
-    
+
     for (const folder of this.folders.values()) {
       allBookmarks.push(...folder.bookmarks);
     }
-    
+
     return allBookmarks;
   }
 
   async searchBookmarks(query: string): Promise<{ folder: Folder; bookmark: Bookmark }[]> {
     await this.ensureInitialized();
     const results: { folder: Folder; bookmark: Bookmark }[] = [];
-    
+
     for (const folder of this.folders.values()) {
       const matchingBookmarks = folder.searchBookmarks(query);
-      results.push(...matchingBookmarks.map(bookmark => ({ folder, bookmark })));
+      results.push(...matchingBookmarks.map((bookmark) => ({ folder, bookmark })));
     }
-    
+
     return results;
   }
 
@@ -97,10 +99,10 @@ export class BookmarkRepository implements IBookmarkRepository {
 
   async addPinnedVerse(bookmark: Bookmark): Promise<void> {
     await this.ensureInitialized();
-    
+
     // Remove if already exists
-    this.pinnedVerses = this.pinnedVerses.filter(b => !b.matchesVerse(bookmark.verseId));
-    
+    this.pinnedVerses = this.pinnedVerses.filter((b) => !b.matchesVerse(bookmark.verseId));
+
     // Add new bookmark
     this.pinnedVerses.push(bookmark);
     await this.persistPinnedVerses();
@@ -108,20 +110,20 @@ export class BookmarkRepository implements IBookmarkRepository {
 
   async removePinnedVerse(verseId: string): Promise<void> {
     await this.ensureInitialized();
-    this.pinnedVerses = this.pinnedVerses.filter(b => !b.matchesVerse(verseId));
+    this.pinnedVerses = this.pinnedVerses.filter((b) => !b.matchesVerse(verseId));
     await this.persistPinnedVerses();
   }
 
   async isVersePinned(verseId: string): Promise<boolean> {
     await this.ensureInitialized();
-    return this.pinnedVerses.some(b => b.matchesVerse(verseId));
+    return this.pinnedVerses.some((b) => b.matchesVerse(verseId));
   }
 
   // Bulk operations
   async saveFolders(folders: Folder[]): Promise<void> {
     await this.ensureInitialized();
     this.folders.clear();
-    folders.forEach(folder => {
+    folders.forEach((folder) => {
       this.folders.set(folder.id, folder);
     });
     await this.persistFolders();
@@ -134,9 +136,9 @@ export class BookmarkRepository implements IBookmarkRepository {
   }> {
     await this.ensureInitialized();
     return {
-      folders: Array.from(this.folders.values()).map(f => f.toStorage()),
-      pinnedVerses: this.pinnedVerses.map(b => b.toStorage()),
-      exportedAt: new Date().toISOString()
+      folders: Array.from(this.folders.values()).map((f) => f.toStorage()),
+      pinnedVerses: this.pinnedVerses.map((b) => b.toStorage()),
+      exportedAt: new Date().toISOString(),
     };
   }
 
@@ -149,15 +151,13 @@ export class BookmarkRepository implements IBookmarkRepository {
     this.pinnedVerses = [];
 
     // Import folders
-    data.folders.forEach(folderData => {
+    data.folders.forEach((folderData) => {
       const folder = Folder.fromStorage(folderData);
       this.folders.set(folder.id, folder);
     });
 
     // Import pinned verses
-    this.pinnedVerses = data.pinnedVerses.map(bookmarkData => 
-      Bookmark.fromStorage(bookmarkData)
-    );
+    this.pinnedVerses = data.pinnedVerses.map((bookmarkData) => Bookmark.fromStorage(bookmarkData));
 
     // Persist to storage
     await this.persistFolders();
@@ -179,15 +179,18 @@ export class BookmarkRepository implements IBookmarkRepository {
     storageSize: number;
   }> {
     await this.ensureInitialized();
-    
+
     const foldersData = localStorage.getItem(STORAGE_KEYS.FOLDERS) || '';
     const pinnedData = localStorage.getItem(STORAGE_KEYS.PINNED) || '';
-    
+
     return {
       totalFolders: this.folders.size,
-      totalBookmarks: Array.from(this.folders.values()).reduce((sum, f) => sum + f.getBookmarkCount(), 0),
+      totalBookmarks: Array.from(this.folders.values()).reduce(
+        (sum, f) => sum + f.getBookmarkCount(),
+        0
+      ),
       totalPinnedVerses: this.pinnedVerses.length,
-      storageSize: foldersData.length + pinnedData.length
+      storageSize: foldersData.length + pinnedData.length,
     };
   }
 
@@ -206,7 +209,7 @@ export class BookmarkRepository implements IBookmarkRepository {
       const foldersData = localStorage.getItem(STORAGE_KEYS.FOLDERS);
       if (foldersData) {
         const folders: FolderStorageData[] = JSON.parse(foldersData);
-        folders.forEach(folderData => {
+        folders.forEach((folderData) => {
           const folder = Folder.fromStorage(folderData);
           this.folders.set(folder.id, folder);
         });
@@ -216,9 +219,7 @@ export class BookmarkRepository implements IBookmarkRepository {
       const pinnedData = localStorage.getItem(STORAGE_KEYS.PINNED);
       if (pinnedData) {
         const bookmarks: BookmarkStorageData[] = JSON.parse(pinnedData);
-        this.pinnedVerses = bookmarks.map(bookmarkData => 
-          Bookmark.fromStorage(bookmarkData)
-        );
+        this.pinnedVerses = bookmarks.map((bookmarkData) => Bookmark.fromStorage(bookmarkData));
       }
 
       this.initialized = true;
@@ -236,7 +237,7 @@ export class BookmarkRepository implements IBookmarkRepository {
 
   private async persistFolders(): Promise<void> {
     try {
-      const foldersData = Array.from(this.folders.values()).map(f => f.toStorage());
+      const foldersData = Array.from(this.folders.values()).map((f) => f.toStorage());
       localStorage.setItem(STORAGE_KEYS.FOLDERS, JSON.stringify(foldersData));
       localStorage.setItem(STORAGE_KEYS.VERSION, CURRENT_VERSION);
     } catch (error) {
@@ -246,7 +247,7 @@ export class BookmarkRepository implements IBookmarkRepository {
 
   private async persistPinnedVerses(): Promise<void> {
     try {
-      const pinnedData = this.pinnedVerses.map(b => b.toStorage());
+      const pinnedData = this.pinnedVerses.map((b) => b.toStorage());
       localStorage.setItem(STORAGE_KEYS.PINNED, JSON.stringify(pinnedData));
     } catch (error) {
       console.error('Failed to persist pinned verses:', error);
@@ -255,7 +256,7 @@ export class BookmarkRepository implements IBookmarkRepository {
 
   private migrateStorage(currentVersion: string | null): void {
     console.log(`Migrating bookmark storage from ${currentVersion} to ${CURRENT_VERSION}`);
-    
+
     // Migration logic would go here
     // For now, just set the version
     localStorage.setItem(STORAGE_KEYS.VERSION, CURRENT_VERSION);

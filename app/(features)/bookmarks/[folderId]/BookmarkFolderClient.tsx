@@ -27,11 +27,12 @@ interface BookmarkFolderClientProps {
 
 export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientProps) {
   console.log('BookmarkFolderClient rendering with folderId:', folderId);
+
+  // All hooks must be called before any conditional logic
   const router = useRouter();
   const { isHidden } = useHeaderVisibility();
   const bookmarkContext = useBookmarks();
   const { folders } = bookmarkContext;
-
   const { settings } = useSettings();
   const [activeVerseId, setActiveVerseId] = useState<string | undefined>(undefined);
   const [verses, setVerses] = useState<Verse[]>([]);
@@ -40,16 +41,15 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
   const [loadedVerses, setLoadedVerses] = useState<Set<string>>(new Set());
   const [loadingVerses, setLoadingVerses] = useState<Set<string>>(new Set());
   const { isBookmarkSidebarOpen, setBookmarkSidebarOpen } = useSidebar();
-
   const { setSettingsOpen } = useUIState();
   const { t } = useTranslation();
   const { translationOptions, wordLanguageOptions } = useTranslationOptions();
 
   const selectedTranslationName = useMemo(
     () =>
-      translationOptions.find((o) => o.id === settings.translationId)?.name ||
+      translationOptions.find((o) => o.id === settings?.translationId)?.name ||
       t('select_translation'),
-    [settings.translationId, translationOptions, t]
+    [settings?.translationId, translationOptions, t]
   );
 
   const selectedWordLanguageName = useMemo(
@@ -57,9 +57,9 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
       wordLanguageOptions.find(
         (o) =>
           (LANGUAGE_CODES as Record<string, LanguageCode>)[o.name.toLowerCase()] ===
-          settings.wordLang
+          settings?.wordLang
       )?.name || t('select_word_translation'),
-    [settings.wordLang, wordLanguageOptions, t]
+    [settings?.wordLang, wordLanguageOptions, t]
   );
 
   const folder = useMemo(() => folders.find((f) => f.id === folderId), [folders, folderId]);
@@ -103,6 +103,8 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
 
   // Load all verses immediately (remove lazy loading for now to fix the display issue)
   useEffect(() => {
+    if (!settings) return; // Skip if settings not loaded
+
     const loadAllVerses = async () => {
       const verseIds = bookmarks.map((b) => b.verseId);
 
@@ -130,7 +132,7 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
     };
 
     loadAllVerses();
-  }, [bookmarks, settings.translationId, getVerseWithCache]);
+  }, [bookmarks, settings, getVerseWithCache]);
 
   // Function to load more verses on demand (removed for now but kept for future use)
   // const loadMoreVerses = useCallback(
@@ -174,6 +176,17 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
 
     return filteredVerses;
   }, [verses, activeVerseId]);
+
+  // Early return if settings are not loaded (after all hooks)
+  if (!settings) {
+    return (
+      <div className="h-screen text-foreground font-sans overflow-hidden flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-lg">Loading settings...</div>
+        </div>
+      </div>
+    );
+  }
 
   if (!folder) {
     return (

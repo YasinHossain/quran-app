@@ -1,6 +1,6 @@
 /**
  * Clean Architecture Index
- * 
+ *
  * Main entry point for the clean architecture layers.
  * This provides a unified interface for React components to access all services.
  */

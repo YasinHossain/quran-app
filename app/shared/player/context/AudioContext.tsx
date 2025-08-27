@@ -11,6 +11,7 @@ import React, {
 import { Verse } from '@/types';
 import { RECITERS } from '@/lib/audio/reciters';
 import type { Reciter, RepeatOptions } from '@/app/shared/player/types';
+import { useAudioService } from '@/src/application/hooks/useAudioService';
 
 interface AudioContextType {
   playingId: number | null;
@@ -48,7 +49,12 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const [activeVerse, setActiveVerse] = useState<Verse | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [repeatOptions, setRepeatOptions] = useState<RepeatOptions>({
+  const [isPlayerVisible, setPlayerVisible] = useState(true);
+
+  const audioService = useAudioService();
+
+  // Load settings from clean architecture service
+  const [repeatOptions, setRepeatOptionsState] = useState<RepeatOptions>({
     mode: 'off',
     start: 1,
     end: 1,
@@ -56,58 +62,93 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
     repeatEach: 1,
     delay: 0,
   });
-  const [reciter, setReciter] = useState<Reciter>(RECITERS[0]);
-  const [volume, setVolume] = useState(0.9);
-  const [playbackRate, setPlaybackRate] = useState(1);
-  const [isPlayerVisible, setPlayerVisible] = useState(true);
+  const [reciter, setReciterState] = useState<Reciter>(RECITERS[0]);
+  const [volume, setVolumeState] = useState(0.9);
+  const [playbackRate, setPlaybackRateState] = useState(1);
 
-  // Load persisted settings on mount
+  // Initialize settings from service
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    try {
-      const reciterId = localStorage.getItem('reciterId');
-      if (reciterId) {
-        const parsed = Number.parseInt(reciterId, 10);
-        const found = RECITERS.find((r) => r.id === parsed);
-        if (found) setReciter(found);
-        else localStorage.removeItem('reciterId');
+    const initializeSettings = async () => {
+      if (!audioService.audioSettings) return;
+
+      const settings = audioService.audioSettings;
+
+      // Set repeat options
+      setRepeatOptionsState(settings.repeatOptions);
+
+      // Find and set reciter
+      const foundReciter = RECITERS.find((r) => r.id === settings.reciterId);
+      if (foundReciter) {
+        setReciterState(foundReciter);
       }
 
-      const storedVolume = localStorage.getItem('volume');
-      if (storedVolume !== null) {
-        const parsed = Number.parseFloat(storedVolume);
-        if (!Number.isNaN(parsed) && parsed >= 0 && parsed <= 1) setVolume(parsed);
-        else localStorage.removeItem('volume');
-      }
+      // Set volume and playback rate
+      setVolumeState(settings.volume);
+      setPlaybackRateState(settings.playbackRate);
 
-      const storedRate = localStorage.getItem('playbackRate');
-      if (storedRate !== null) {
-        const parsed = Number.parseFloat(storedRate);
-        if (!Number.isNaN(parsed) && parsed > 0) setPlaybackRate(parsed);
-        else localStorage.removeItem('playbackRate');
+      // Set last playing ID if available
+      if (settings.lastPlayingId) {
+        setPlayingId(settings.lastPlayingId);
       }
-    } catch {
-      // ignore corrupted localStorage entries
-    }
-  }, []);
+    };
 
-  // Persist settings when they change
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    try {
-      localStorage.setItem('reciterId', String(reciter.id));
-      localStorage.setItem('volume', String(volume));
-      localStorage.setItem('playbackRate', String(playbackRate));
-    } catch {
-      // ignore write errors
-    }
-  }, [reciter.id, volume, playbackRate]);
+    initializeSettings();
+  }, [audioService.audioSettings]);
+
+  // Wrapper functions that update both local state and service
+  const setRepeatOptions = useCallback(
+    async (options: RepeatOptions) => {
+      setRepeatOptionsState(options);
+      try {
+        await audioService.setRepeatOptions(options);
+      } catch (error) {
+        console.error('Failed to save repeat options:', error);
+      }
+    },
+    [audioService]
+  );
+
+  const setReciter = useCallback(
+    async (newReciter: Reciter) => {
+      setReciterState(newReciter);
+      try {
+        await audioService.setReciter(newReciter.id);
+      } catch (error) {
+        console.error('Failed to save reciter:', error);
+      }
+    },
+    [audioService]
+  );
+
+  const setVolume = useCallback(
+    async (newVolume: number) => {
+      setVolumeState(newVolume);
+      try {
+        await audioService.setVolume(newVolume);
+      } catch (error) {
+        console.error('Failed to save volume:', error);
+      }
+    },
+    [audioService]
+  );
+
+  const setPlaybackRate = useCallback(
+    async (newRate: number) => {
+      setPlaybackRateState(newRate);
+      try {
+        await audioService.setPlaybackRate(newRate);
+      } catch (error) {
+        console.error('Failed to save playback rate:', error);
+      }
+    },
+    [audioService]
+  );
 
   const openPlayer = useCallback(() => {
     setPlayerVisible(true);
   }, [setPlayerVisible]);
 
-  const closePlayer = useCallback(() => {
+  const closePlayer = useCallback(async () => {
     setIsPlaying(false);
     setPlayingId(null);
     setActiveVerse(null);
@@ -115,7 +156,29 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
       audioRef.current.pause();
     }
     setPlayerVisible(false);
-  }, [setIsPlaying, setPlayingId, setActiveVerse, audioRef, setPlayerVisible]);
+
+    // Clear last playing ID when player is closed
+    try {
+      await audioService.setLastPlayingId(undefined);
+    } catch (error) {
+      console.error('Failed to clear last playing ID:', error);
+    }
+  }, [audioService]);
+
+  // Update last playing ID when playingId changes
+  useEffect(() => {
+    const updateLastPlayingId = async () => {
+      try {
+        await audioService.setLastPlayingId(playingId || undefined);
+      } catch (error) {
+        console.error('Failed to update last playing ID:', error);
+      }
+    };
+
+    if (playingId !== null) {
+      updateLastPlayingId();
+    }
+  }, [playingId, audioService]);
 
   const value = useMemo(
     () => ({
@@ -152,6 +215,10 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
       isPlayerVisible,
       openPlayer,
       closePlayer,
+      setRepeatOptions,
+      setReciter,
+      setVolume,
+      setPlaybackRate,
     ]
   );
 

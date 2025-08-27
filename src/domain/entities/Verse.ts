@@ -1,11 +1,11 @@
 /**
  * Domain Entity: Verse
- * 
+ *
  * Represents a Quranic verse with content, translations, and word data.
  * Focused on current application needs.
  */
 
-import { Word } from './Word';
+import { Word, WordStorageData } from './Word';
 
 export interface Translation {
   id?: number;
@@ -41,9 +41,11 @@ export class Verse {
     text_uthmani: string;
     audio?: Audio;
     translations?: Translation[];
-    words?: any[];
+    words?: unknown[];
   }): Verse {
-    const words = data.words?.map(w => Word.fromApiData(w));
+    const words = data.words?.map((w) =>
+      Word.fromApiData(w as Parameters<typeof Word.fromApiData>[0])
+    );
     return new Verse(
       data.id,
       data.verse_key,
@@ -73,7 +75,7 @@ export class Verse {
    * Get translation by resource ID
    */
   getTranslationByResourceId(resourceId: number): Translation | null {
-    return this.translations?.find(t => t.resource_id === resourceId) || null;
+    return this.translations?.find((t) => t.resource_id === resourceId) || null;
   }
 
   /**
@@ -81,17 +83,14 @@ export class Verse {
    */
   getAvailableLanguages(): string[] {
     if (!this.translations) return [];
-    return [...new Set(this.translations
-      .map(t => t.language)
-      .filter(Boolean)
-    )] as string[];
+    return [...new Set(this.translations.map((t) => t.language).filter(Boolean))] as string[];
   }
 
   /**
    * Check if verse has audio
    */
   hasAudio(): boolean {
-    return !!(this.audio?.url);
+    return !!this.audio?.url;
   }
 
   /**
@@ -118,18 +117,20 @@ export class Verse {
   /**
    * Get verse text with optional formatting
    */
-  getFormattedText(options: {
-    includeTashkeel?: boolean;
-    fontFamily?: string;
-    tajweed?: boolean;
-  } = {}): string {
+  getFormattedText(
+    options: {
+      includeTashkeel?: boolean;
+      fontFamily?: string;
+      tajweed?: boolean;
+    } = {}
+  ): string {
     let text = this.text_uthmani;
-    
+
     if (options.includeTashkeel === false) {
       // Remove diacritical marks for simplified reading
       text = text.replace(/[\u064B-\u065F\u0670\u0640]/g, '');
     }
-    
+
     return text;
   }
 
@@ -145,10 +146,11 @@ export class Verse {
    */
   containsWord(searchTerm: string): boolean {
     if (!this.words) return false;
-    
-    return this.words.some(word => 
-      word.getArabicText().includes(searchTerm) ||
-      word.getTranslation()?.toLowerCase().includes(searchTerm.toLowerCase())
+
+    return this.words.some(
+      (word) =>
+        word.getArabicText().includes(searchTerm) ||
+        word.getTranslation()?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
 
@@ -170,7 +172,7 @@ export class Verse {
       text_uthmani: this.text_uthmani,
       audio: this.audio,
       translations: this.translations,
-      words: this.words?.map(w => w.toStorage())
+      words: this.words?.map((w) => w.toStorage()),
     };
   }
 }
@@ -181,5 +183,5 @@ export interface VerseStorageData {
   text_uthmani: string;
   audio?: Audio;
   translations?: Translation[];
-  words?: any[];
+  words?: WordStorageData[];
 }

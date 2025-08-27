@@ -11,6 +11,15 @@ interface VerseArabicProps {
 
 const VerseArabic = ({ verse }: VerseArabicProps) => {
   const { settings } = useSettings();
+
+  if (!settings) {
+    return (
+      <p dir="rtl" className="text-right leading-loose text-foreground">
+        {verse.text_uthmani}
+      </p>
+    );
+  }
+
   const showByWords = settings.showByWords ?? false;
   const wordLang = settings.wordLang ?? 'en';
 

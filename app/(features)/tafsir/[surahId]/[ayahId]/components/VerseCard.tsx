@@ -14,6 +14,7 @@ interface VerseCardProps {
 import { useCallback } from 'react';
 
 export default function VerseCard({ verse }: VerseCardProps) {
+  // All hooks must be called before any conditional logic
   const {
     playingId,
     setPlayingId,
@@ -26,10 +27,6 @@ export default function VerseCard({ verse }: VerseCardProps) {
   } = useAudio();
   const { settings } = useSettings();
   const { addBookmark, removeBookmark, findBookmark, isBookmarked } = useBookmarks();
-
-  const isPlaying = playingId === verse.id;
-  const isLoadingAudio = loadingId === verse.id;
-  const isVerseBookmarked = isBookmarked(String(verse.id));
 
   const handlePlayPause = useCallback(() => {
     if (playingId === verse.id) {
@@ -65,6 +62,22 @@ export default function VerseCard({ verse }: VerseCardProps) {
       addBookmark(verseId);
     }
   }, [addBookmark, removeBookmark, findBookmark, verse.id]);
+
+  // Early return if settings are not loaded (after all hooks)
+  if (!settings) {
+    return (
+      <div className="mb-8 bg-surface rounded-xl p-6 shadow-sm">
+        <div className="animate-pulse space-y-4">
+          <div className="h-6 bg-surface-hover rounded"></div>
+          <div className="h-4 bg-surface-hover rounded w-3/4"></div>
+        </div>
+      </div>
+    );
+  }
+
+  const isPlaying = playingId === verse.id;
+  const isLoadingAudio = loadingId === verse.id;
+  const isVerseBookmarked = isBookmarked(String(verse.id));
 
   return (
     <div className="relative rounded-md border bg-surface p-6 shadow">

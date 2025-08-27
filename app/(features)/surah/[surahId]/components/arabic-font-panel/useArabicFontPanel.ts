@@ -31,13 +31,13 @@ export const useArabicFontPanel = () => {
 
   // Initialize selection from settings
   useEffect(() => {
-    if (settings.arabicFontFace && fonts.length > 0) {
+    if (settings?.arabicFontFace && fonts.length > 0) {
       const selectedFont = fonts.find((font) => font.value === settings.arabicFontFace);
       if (selectedFont) {
         setSelectedIds(new Set([selectedFont.id]));
       }
     }
-  }, [settings.arabicFontFace, fonts]);
+  }, [settings?.arabicFontFace, fonts]);
 
   // Group fonts by category
   const groupedFonts = useMemo(() => {
@@ -68,10 +68,12 @@ export const useArabicFontPanel = () => {
       setSelectedIds(new Set([id]));
 
       // Update settings
-      setSettings({
-        ...settings,
-        arabicFontFace: font.value,
-      });
+      if (settings) {
+        setSettings({
+          ...settings,
+          arabicFontFace: font.value,
+        });
+      }
     },
     [fonts, settings, setSettings]
   );
@@ -81,7 +83,7 @@ export const useArabicFontPanel = () => {
     setSelectedIds(new Set());
     // Reset to default font (usually the first Uthmani font)
     const defaultFont = fonts.find((font) => font.category === 'Uthmani');
-    if (defaultFont) {
+    if (defaultFont && settings) {
       setSettings({
         ...settings,
         arabicFontFace: defaultFont.value,

@@ -6,25 +6,6 @@ export const capitalizeLanguageName = (lang: string): string =>
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(' ');
 
-export const loadSelectedTranslations = (): number[] => {
-  if (typeof window === 'undefined') return [];
-  try {
-    const stored = localStorage.getItem('selected-translations');
-    return stored ? JSON.parse(stored) : [];
-  } catch {
-    return [];
-  }
-};
-
-export const saveSelectedTranslations = (ids: number[]) => {
-  if (typeof window === 'undefined') return;
-  try {
-    localStorage.setItem('selected-translations', JSON.stringify(ids));
-  } catch {
-    // ignore storage errors
-  }
-};
-
 export const scrollTabs = (
   ref: RefObject<HTMLDivElement | null>,
   direction: 'left' | 'right',

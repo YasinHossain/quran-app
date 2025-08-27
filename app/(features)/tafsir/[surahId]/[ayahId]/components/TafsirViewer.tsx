@@ -15,6 +15,18 @@ export const TafsirViewer = ({ verse, tafsirResource, tafsirHtml }: TafsirViewer
 
   if (!verse) return null;
 
+  if (!settings) {
+    return (
+      <div className="space-y-4 w-full">
+        <div className="animate-pulse space-y-4">
+          <div className="h-6 bg-surface-hover rounded"></div>
+          <div className="h-4 bg-surface-hover rounded w-3/4"></div>
+          <div className="h-4 bg-surface-hover rounded w-1/2"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4 w-full">
       <div className="flex flex-wrap gap-4"></div>

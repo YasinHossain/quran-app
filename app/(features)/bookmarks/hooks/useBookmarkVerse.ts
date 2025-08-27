@@ -18,6 +18,11 @@ export function useBookmarkVerse(bookmark: Bookmark, chapters: Chapter[]): UseBo
 
   useEffect(() => {
     const fetchVerseData = async () => {
+      // Return early if settings are not loaded
+      if (!settings) {
+        return;
+      }
+
       if (
         bookmark.verseText &&
         bookmark.surahName &&
@@ -53,7 +58,7 @@ export function useBookmarkVerse(bookmark: Bookmark, chapters: Chapter[]): UseBo
     };
 
     fetchVerseData();
-  }, [bookmark, settings.translationIds, settings.translationId, updateBookmark, chapters]);
+  }, [bookmark, settings?.translationIds, settings?.translationId, updateBookmark, chapters]);
 
   return { bookmark, isLoading, error };
 }

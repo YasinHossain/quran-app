@@ -1,4 +1,4 @@
-import { ARABIC_FONTS } from '@/app/providers/settingsStorage';
+import { ARABIC_FONTS } from '@/src/domain/constants/fonts';
 
 describe('ARABIC_FONTS', () => {
   it('contains expected font names', () => {

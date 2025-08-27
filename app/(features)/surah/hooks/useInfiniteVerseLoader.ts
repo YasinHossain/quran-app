@@ -39,29 +39,60 @@ export function useInfiniteVerseLoader({
   const isReachingEnd = size >= totalPages;
 
   useEffect(() => {
-    if (!loadMoreRef.current) return;
+    if (!loadMoreRef.current || isReachingEnd) return;
 
-    // Find the closest scrollable ancestor
-    let scrollRoot = loadMoreRef.current.parentElement;
-    while (scrollRoot && getComputedStyle(scrollRoot).overflowY !== 'auto') {
-      scrollRoot = scrollRoot.parentElement;
+    // Add safety check for development environment
+    if (process.env.NODE_ENV === 'development' && verses.length > 100) {
+      console.warn('Stopping infinite loading in development to prevent memory issues');
+      return;
     }
 
+    // Find the closest scrollable ancestor with improved safety
+    let scrollRoot = loadMoreRef.current.parentElement;
+    let depth = 0;
+    const maxDepth = 10; // Prevent infinite traversal
+    
+    while (scrollRoot && depth < maxDepth) {
+      const style = getComputedStyle(scrollRoot);
+      if (style.overflowY === 'auto' || style.overflowY === 'scroll') {
+        break;
+      }
+      scrollRoot = scrollRoot.parentElement;
+      depth++;
+    }
+
+    // Fallback to viewport if no scroll container found
+    if (depth >= maxDepth) {
+      scrollRoot = null;
+    }
+
+    const targetElement = loadMoreRef.current;
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !isReachingEnd && !isValidating) {
-          setSize(size + 1);
+        const entry = entries[0];
+        if (entry && entry.isIntersecting && !isReachingEnd && !isValidating) {
+          // Add debounce to prevent rapid firing
+          setTimeout(() => {
+            if (!isReachingEnd && !isValidating) {
+              setSize(prev => prev + 1);
+            }
+          }, 100);
         }
       },
       {
-        root: scrollRoot, // Use the scroll container as root
-        rootMargin: '100px',
+        root: scrollRoot,
+        rootMargin: '200px', // Increased margin for better UX
         threshold: 0.1,
       }
     );
-    observer.observe(loadMoreRef.current);
-    return () => observer.disconnect();
-  }, [isReachingEnd, isValidating, size, setSize, loadMoreRef]);
+
+    observer.observe(targetElement);
+    
+    return () => {
+      observer.unobserve(targetElement);
+      observer.disconnect();
+    };
+  }, [isReachingEnd, isValidating, verses.length]); // Removed size dependency to prevent excessive re-renders
 
   return { verses, isLoading, isValidating, isReachingEnd } as const;
 }

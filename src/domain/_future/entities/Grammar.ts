@@ -1,6 +1,6 @@
 /**
  * Domain Entity: Grammar
- * 
+ *
  * Represents grammatical analysis and rules for Quranic text.
  * Supports future grammar research features.
  */
@@ -16,24 +16,24 @@ export interface GrammarRule {
   category: GrammarCategory;
 }
 
-export type GrammarRuleType = 
-  | 'morphology'    // Word formation, roots, patterns
-  | 'syntax'        // Sentence structure, i'rab
-  | 'semantics'     // Meaning and context
-  | 'phonology'     // Sound and pronunciation
-  | 'rhetoric'      // Literary devices, balagha
-  | 'pragmatics';   // Context and interpretation
+export type GrammarRuleType =
+  | 'morphology' // Word formation, roots, patterns
+  | 'syntax' // Sentence structure, i'rab
+  | 'semantics' // Meaning and context
+  | 'phonology' // Sound and pronunciation
+  | 'rhetoric' // Literary devices, balagha
+  | 'pragmatics'; // Context and interpretation
 
 export type GrammarCategory =
-  | 'noun'          // Ism
-  | 'verb'          // Fi'l
-  | 'particle'      // Harf
-  | 'sentence'      // Jumlah
-  | 'phrase'        // Tarkib
-  | 'root_pattern'  // Wazan
-  | 'conjugation'   // Tasrif
-  | 'declension'    // I'rab
-  | 'rhetoric';     // Balagha
+  | 'noun' // Ism
+  | 'verb' // Fi'l
+  | 'particle' // Harf
+  | 'sentence' // Jumlah
+  | 'phrase' // Tarkib
+  | 'root_pattern' // Wazan
+  | 'conjugation' // Tasrif
+  | 'declension' // I'rab
+  | 'rhetoric'; // Balagha
 
 export interface GrammarExample {
   id: string;
@@ -88,13 +88,10 @@ export class Grammar {
   /**
    * Factory method to create new grammar domain
    */
-  static create(
-    type: GrammarRuleType,
-    category: GrammarCategory
-  ): Grammar {
+  static create(type: GrammarRuleType, category: GrammarCategory): Grammar {
     const id = `grammar_${type}_${category}_${Date.now()}`;
     const now = Date.now();
-    
+
     return new Grammar(id, type, category, [], [], now, now);
   }
 
@@ -140,7 +137,7 @@ export class Grammar {
    * Update grammar rule (returns new instance - immutable)
    */
   updateRule(ruleId: string, updates: Partial<GrammarRule>): Grammar {
-    const updatedRules = this.rules.map(rule =>
+    const updatedRules = this.rules.map((rule) =>
       rule.id === ruleId ? { ...rule, ...updates } : rule
     );
 
@@ -159,8 +156,8 @@ export class Grammar {
    * Remove grammar rule (returns new instance - immutable)
    */
   removeRule(ruleId: string): Grammar {
-    const filteredRules = this.rules.filter(rule => rule.id !== ruleId);
-    
+    const filteredRules = this.rules.filter((rule) => rule.id !== ruleId);
+
     return new Grammar(
       this.id,
       this.type,
@@ -191,14 +188,14 @@ export class Grammar {
    * Get rule by ID
    */
   getRule(ruleId: string): GrammarRule | null {
-    return this.rules.find(rule => rule.id === ruleId) || null;
+    return this.rules.find((rule) => rule.id === ruleId) || null;
   }
 
   /**
    * Get rules by difficulty level
    */
   getRulesByDifficulty(difficulty: 'beginner' | 'intermediate' | 'advanced'): GrammarRule[] {
-    return this.rules.filter(rule => rule.difficulty === difficulty);
+    return this.rules.filter((rule) => rule.difficulty === difficulty);
   }
 
   /**
@@ -206,10 +203,11 @@ export class Grammar {
    */
   searchRules(query: string): GrammarRule[] {
     const lowerQuery = query.toLowerCase();
-    return this.rules.filter(rule =>
-      rule.name.toLowerCase().includes(lowerQuery) ||
-      rule.description.toLowerCase().includes(lowerQuery) ||
-      rule.arabicName?.toLowerCase().includes(lowerQuery)
+    return this.rules.filter(
+      (rule) =>
+        rule.name.toLowerCase().includes(lowerQuery) ||
+        rule.description.toLowerCase().includes(lowerQuery) ||
+        rule.arabicName?.toLowerCase().includes(lowerQuery)
     );
   }
 
@@ -217,29 +215,29 @@ export class Grammar {
    * Get analysis results for a specific verse
    */
   getAnalysisForVerse(verseKey: string): GrammarAnalysisResult[] {
-    return this.analysisResults.filter(result => result.verseKey === verseKey);
+    return this.analysisResults.filter((result) => result.verseKey === verseKey);
   }
 
   /**
    * Get analysis results by confidence threshold
    */
   getHighConfidenceAnalysis(threshold: number = 0.8): GrammarAnalysisResult[] {
-    return this.analysisResults.filter(result => result.confidence >= threshold);
+    return this.analysisResults.filter((result) => result.confidence >= threshold);
   }
 
   /**
    * Get analysis results by status
    */
   getAnalysisByStatus(status: GrammarAnalysisResult['status']): GrammarAnalysisResult[] {
-    return this.analysisResults.filter(result => result.status === status);
+    return this.analysisResults.filter((result) => result.status === status);
   }
 
   /**
    * Get rules with examples from specific verses
    */
   getRulesWithVerseExamples(verseKeys: string[]): GrammarRule[] {
-    return this.rules.filter(rule =>
-      rule.examples.some(example => verseKeys.includes(example.verseKey))
+    return this.rules.filter((rule) =>
+      rule.examples.some((example) => verseKeys.includes(example.verseKey))
     );
   }
 
@@ -250,19 +248,21 @@ export class Grammar {
     const rulesByDifficulty = {
       beginner: this.getRulesByDifficulty('beginner').length,
       intermediate: this.getRulesByDifficulty('intermediate').length,
-      advanced: this.getRulesByDifficulty('advanced').length
+      advanced: this.getRulesByDifficulty('advanced').length,
     };
 
     const analysisByStatus = {
       draft: this.getAnalysisByStatus('draft').length,
       reviewed: this.getAnalysisByStatus('reviewed').length,
       verified: this.getAnalysisByStatus('verified').length,
-      disputed: this.getAnalysisByStatus('disputed').length
+      disputed: this.getAnalysisByStatus('disputed').length,
     };
 
-    const avgConfidence = this.analysisResults.length > 0
-      ? this.analysisResults.reduce((sum, result) => sum + result.confidence, 0) / this.analysisResults.length
-      : 0;
+    const avgConfidence =
+      this.analysisResults.length > 0
+        ? this.analysisResults.reduce((sum, result) => sum + result.confidence, 0) /
+          this.analysisResults.length
+        : 0;
 
     return {
       totalRules: this.rules.length,
@@ -270,7 +270,7 @@ export class Grammar {
       rulesByDifficulty,
       analysisByStatus,
       averageConfidence: avgConfidence,
-      uniqueVersesAnalyzed: new Set(this.analysisResults.map(r => r.verseKey)).size
+      uniqueVersesAnalyzed: new Set(this.analysisResults.map((r) => r.verseKey)).size,
     };
   }
 
@@ -298,7 +298,7 @@ export class Grammar {
     return {
       isValid: errors.length === 0,
       errors,
-      warnings
+      warnings,
     };
   }
 
@@ -306,15 +306,19 @@ export class Grammar {
    * Export rules as JSON
    */
   exportRules(): string {
-    return JSON.stringify({
-      grammarDomain: {
-        id: this.id,
-        type: this.type,
-        category: this.category,
-        rules: this.rules,
-        exportedAt: new Date().toISOString()
-      }
-    }, null, 2);
+    return JSON.stringify(
+      {
+        grammarDomain: {
+          id: this.id,
+          type: this.type,
+          category: this.category,
+          rules: this.rules,
+          exportedAt: new Date().toISOString(),
+        },
+      },
+      null,
+      2
+    );
   }
 
   /**
@@ -328,7 +332,7 @@ export class Grammar {
       rules: this.rules,
       analysisResults: this.analysisResults,
       createdAt: this.createdAt,
-      lastUpdated: this.lastUpdated
+      lastUpdated: this.lastUpdated,
     };
   }
 }
@@ -388,7 +392,7 @@ export class GrammarUtils {
       description,
       examples: [],
       difficulty,
-      category
+      category,
     };
   }
 
@@ -408,7 +412,7 @@ export class GrammarUtils {
       wordPosition,
       arabicText,
       translation,
-      explanation
+      explanation,
     };
   }
 

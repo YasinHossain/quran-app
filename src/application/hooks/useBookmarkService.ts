@@ -1,6 +1,6 @@
 /**
  * React Hook: useBookmarkService
- * 
+ *
  * Provides access to BookmarkService with React integration.
  * This replaces the need for the existing BookmarkContext/Provider pattern.
  */
@@ -8,7 +8,7 @@
 import { useState, useCallback } from 'react';
 import { BookmarkService } from '../services/BookmarkService';
 import { getServices } from '../ServiceContainer';
-import { Bookmark, Folder } from '../../domain/entities';
+import { Bookmark, Folder, FolderCustomization } from '../../domain/entities';
 
 export interface UseBookmarkServiceResult {
   // State
@@ -24,7 +24,7 @@ export interface UseBookmarkServiceResult {
   isBookmarked: (verseId: string) => Promise<boolean>;
 
   // Folder operations
-  createFolder: (name: string, customization?: any) => Promise<Folder>;
+  createFolder: (name: string, customization?: FolderCustomization) => Promise<Folder>;
   deleteFolder: (folderId: string) => Promise<void>;
   renameFolder: (folderId: string, newName: string) => Promise<void>;
 
@@ -50,12 +50,12 @@ export function useBookmarkService(): UseBookmarkServiceResult {
     try {
       setLoading(true);
       setError(null);
-      
+
       const [foldersData, pinnedData] = await Promise.all([
         bookmarkService.getFolders(),
-        bookmarkService.getPinnedVerses()
+        bookmarkService.getPinnedVerses(),
       ]);
-      
+
       setFolders(foldersData);
       setPinnedVerses(pinnedData);
     } catch (err) {
@@ -66,116 +66,146 @@ export function useBookmarkService(): UseBookmarkServiceResult {
   }, [bookmarkService]);
 
   // Bookmark operations
-  const addBookmark = useCallback(async (verseId: string, folderId?: string) => {
-    try {
-      setError(null);
-      await bookmarkService.addBookmark(verseId, { folderId });
-      await refreshData(); // Refresh to get updated state
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to add bookmark');
-      throw err;
-    }
-  }, [bookmarkService, refreshData]);
+  const addBookmark = useCallback(
+    async (verseId: string, folderId?: string) => {
+      try {
+        setError(null);
+        await bookmarkService.addBookmark(verseId, { folderId });
+        await refreshData(); // Refresh to get updated state
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to add bookmark');
+        throw err;
+      }
+    },
+    [bookmarkService, refreshData]
+  );
 
-  const removeBookmark = useCallback(async (verseId: string, folderId?: string) => {
-    try {
-      setError(null);
-      await bookmarkService.removeBookmark(verseId, folderId);
-      await refreshData(); // Refresh to get updated state
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to remove bookmark');
-      throw err;
-    }
-  }, [bookmarkService, refreshData]);
+  const removeBookmark = useCallback(
+    async (verseId: string, folderId?: string) => {
+      try {
+        setError(null);
+        await bookmarkService.removeBookmark(verseId, folderId);
+        await refreshData(); // Refresh to get updated state
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to remove bookmark');
+        throw err;
+      }
+    },
+    [bookmarkService, refreshData]
+  );
 
-  const toggleBookmark = useCallback(async (verseId: string, folderId?: string) => {
-    try {
-      setError(null);
-      const result = await bookmarkService.toggleBookmark(verseId, folderId);
-      await refreshData(); // Refresh to get updated state
-      return result.action;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to toggle bookmark');
-      throw err;
-    }
-  }, [bookmarkService, refreshData]);
+  const toggleBookmark = useCallback(
+    async (verseId: string, folderId?: string) => {
+      try {
+        setError(null);
+        const result = await bookmarkService.toggleBookmark(verseId, folderId);
+        await refreshData(); // Refresh to get updated state
+        return result.action;
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to toggle bookmark');
+        throw err;
+      }
+    },
+    [bookmarkService, refreshData]
+  );
 
-  const isBookmarked = useCallback(async (verseId: string) => {
-    try {
-      return await bookmarkService.isBookmarked(verseId);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to check bookmark status');
-      return false;
-    }
-  }, [bookmarkService]);
+  const isBookmarked = useCallback(
+    async (verseId: string) => {
+      try {
+        return await bookmarkService.isBookmarked(verseId);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to check bookmark status');
+        return false;
+      }
+    },
+    [bookmarkService]
+  );
 
   // Folder operations
-  const createFolder = useCallback(async (name: string, customization?: any) => {
-    try {
-      setError(null);
-      const result = await bookmarkService.createFolder(name, customization);
-      await refreshData(); // Refresh to get updated state
-      return result.folder;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create folder');
-      throw err;
-    }
-  }, [bookmarkService, refreshData]);
+  const createFolder = useCallback(
+    async (name: string, customization?: FolderCustomization) => {
+      try {
+        setError(null);
+        const result = await bookmarkService.createFolder(name, customization);
+        await refreshData(); // Refresh to get updated state
+        return result.folder;
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to create folder');
+        throw err;
+      }
+    },
+    [bookmarkService, refreshData]
+  );
 
-  const deleteFolder = useCallback(async (folderId: string) => {
-    try {
-      setError(null);
-      await bookmarkService.deleteFolder(folderId);
-      await refreshData(); // Refresh to get updated state
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete folder');
-      throw err;
-    }
-  }, [bookmarkService, refreshData]);
+  const deleteFolder = useCallback(
+    async (folderId: string) => {
+      try {
+        setError(null);
+        await bookmarkService.deleteFolder(folderId);
+        await refreshData(); // Refresh to get updated state
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to delete folder');
+        throw err;
+      }
+    },
+    [bookmarkService, refreshData]
+  );
 
-  const renameFolder = useCallback(async (folderId: string, newName: string) => {
-    try {
-      setError(null);
-      await bookmarkService.renameFolder(folderId, newName);
-      await refreshData(); // Refresh to get updated state
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to rename folder');
-      throw err;
-    }
-  }, [bookmarkService, refreshData]);
+  const renameFolder = useCallback(
+    async (folderId: string, newName: string) => {
+      try {
+        setError(null);
+        await bookmarkService.renameFolder(folderId, newName);
+        await refreshData(); // Refresh to get updated state
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to rename folder');
+        throw err;
+      }
+    },
+    [bookmarkService, refreshData]
+  );
 
   // Pinned operations
-  const togglePinned = useCallback(async (verseId: string) => {
-    try {
-      setError(null);
-      const result = await bookmarkService.togglePinned(verseId);
-      await refreshData(); // Refresh to get updated state
-      return result.action;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to toggle pinned');
-      throw err;
-    }
-  }, [bookmarkService, refreshData]);
+  const togglePinned = useCallback(
+    async (verseId: string) => {
+      try {
+        setError(null);
+        const result = await bookmarkService.togglePinned(verseId);
+        await refreshData(); // Refresh to get updated state
+        return result.action;
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to toggle pinned');
+        throw err;
+      }
+    },
+    [bookmarkService, refreshData]
+  );
 
-  const isPinned = useCallback(async (verseId: string) => {
-    try {
-      return await bookmarkService.isPinned(verseId);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to check pinned status');
-      return false;
-    }
-  }, [bookmarkService]);
+  const isPinned = useCallback(
+    async (verseId: string) => {
+      try {
+        return await bookmarkService.isPinned(verseId);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to check pinned status');
+        return false;
+      }
+    },
+    [bookmarkService]
+  );
 
   // Search
-  const searchBookmarks = useCallback(async (query: string) => {
-    try {
-      setError(null);
-      return await bookmarkService.searchBookmarks(query);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to search bookmarks');
-      return [];
-    }
-  }, [bookmarkService]);
+  const searchBookmarks = useCallback(
+    async (query: string) => {
+      try {
+        setError(null);
+        return await bookmarkService.searchBookmarks(query);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to search bookmarks');
+        return [];
+      }
+    },
+    [bookmarkService]
+  );
 
   return {
     // State
@@ -195,6 +225,6 @@ export function useBookmarkService(): UseBookmarkServiceResult {
     togglePinned,
     isPinned,
     refreshData,
-    searchBookmarks
+    searchBookmarks,
   };
 }

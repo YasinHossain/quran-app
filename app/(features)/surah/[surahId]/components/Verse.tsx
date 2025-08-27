@@ -17,6 +17,7 @@ interface VerseProps {
  * and context values are stable.
  */
 export const Verse = memo(function Verse({ verse }: VerseProps) {
+  // All hooks must be called before any conditional logic
   const {
     playingId,
     setPlayingId,
@@ -30,9 +31,6 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
   const { settings } = useSettings();
   const { addBookmark, removeBookmark, findBookmark, isBookmarked, setLastRead } = useBookmarks();
   const verseRef = useRef<HTMLDivElement | null>(null);
-  const isPlaying = playingId === verse.id;
-  const isLoadingAudio = loadingId === verse.id;
-  const isVerseBookmarked = isBookmarked(String(verse.id));
 
   useEffect(() => {
     if (!verseRef.current) return;
@@ -83,6 +81,22 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
       addBookmark(verseId);
     }
   }, [addBookmark, removeBookmark, findBookmark, verse.id]);
+
+  // Early return if settings are not loaded (after all hooks)
+  if (!settings) {
+    return (
+      <div className="mb-8 bg-surface rounded-xl p-6 shadow-sm">
+        <div className="animate-pulse">
+          <div className="h-6 bg-surface-hover rounded mb-4"></div>
+          <div className="h-4 bg-surface-hover rounded w-3/4"></div>
+        </div>
+      </div>
+    );
+  }
+
+  const isPlaying = playingId === verse.id;
+  const isLoadingAudio = loadingId === verse.id;
+  const isVerseBookmarked = isBookmarked(String(verse.id));
 
   return (
     <div id={`verse-${verse.id}`} ref={verseRef} className="mb-8 pb-8 border-b border-border">

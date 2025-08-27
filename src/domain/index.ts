@@ -1,6 +1,6 @@
 /**
  * Domain Layer Index
- * 
+ *
  * Centralized exports for the entire domain layer.
  * This provides a clean interface for the application layer to consume domain logic.
  */

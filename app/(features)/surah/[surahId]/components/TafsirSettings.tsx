@@ -23,9 +23,31 @@ export const TafsirSettings = ({
   isOpen = false,
   onToggle,
 }: TafsirSettingsProps) => {
+  // All hooks must be called before any conditional logic
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
-  const { style: tafsirStyle } = useFontSize(settings.tafsirFontSize, 12, 28);
+  const { style: tafsirStyle } = useFontSize(settings?.tafsirFontSize || 16, 12, 28);
+
+  // Early return if settings are not loaded (after all hooks)
+  if (!settings) {
+    return (
+      <>
+        {showTafsirSetting && (
+          <CollapsibleSection
+            title={t('tafsir_setting')}
+            icon={<BookOpen size={20} className="text-accent" />}
+            isLast={true}
+            isOpen={isOpen}
+            onToggle={onToggle || (() => {})}
+          >
+            <div className="space-y-4">
+              <div className="text-center py-4 text-muted">{t('loading_settings')}</div>
+            </div>
+          </CollapsibleSection>
+        )}
+      </>
+    );
+  }
 
   return (
     <>

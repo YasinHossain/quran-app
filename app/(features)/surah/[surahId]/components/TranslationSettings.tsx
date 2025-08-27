@@ -27,6 +27,24 @@ export const TranslationSettings = ({
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
 
+  if (!settings) {
+    return (
+      <>
+        <CollapsibleSection
+          title={t('reading_setting')}
+          icon={<Languages size={20} className="text-accent" />}
+          isLast={true}
+          isOpen={isOpen}
+          onToggle={onToggle || (() => {})}
+        >
+          <div className="space-y-4">
+            <div className="text-center py-4 text-muted">{t('loading_settings')}</div>
+          </div>
+        </CollapsibleSection>
+      </>
+    );
+  }
+
   return (
     <>
       <CollapsibleSection

@@ -41,19 +41,23 @@ export default function JuzClient({ juzId }: { juzId: string }) {
 
   const selectedTranslationName = useMemo(
     () =>
-      translationOptions.find((o) => o.id === settings.translationId)?.name ||
-      t('select_translation'),
-    [settings.translationId, translationOptions, t]
+      settings
+        ? translationOptions.find((o) => o.id === settings.translationId)?.name ||
+          t('select_translation')
+        : t('select_translation'),
+    [settings?.translationId, translationOptions, t]
   );
 
   const selectedWordLanguageName = useMemo(
     () =>
-      wordLanguageOptions.find(
-        (o) =>
-          (LANGUAGE_CODES as Record<string, LanguageCode>)[o.name.toLowerCase()] ===
-          settings.wordLang
-      )?.name || t('select_word_translation'),
-    [settings.wordLang, wordLanguageOptions, t]
+      settings
+        ? wordLanguageOptions.find(
+            (o) =>
+              (LANGUAGE_CODES as Record<string, LanguageCode>)[o.name.toLowerCase()] ===
+              settings.wordLang
+          )?.name || t('select_word_translation')
+        : t('select_word_translation'),
+    [settings?.wordLang, wordLanguageOptions, t]
   );
 
   useEffect(() => {

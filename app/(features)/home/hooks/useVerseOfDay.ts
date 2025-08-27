@@ -16,6 +16,7 @@ interface UseVerseOfDayReturn {
 }
 
 export function useVerseOfDay(): UseVerseOfDayReturn {
+  // All hooks must be called before any conditional logic
   const { settings } = useSettings();
   const [verse, setVerse] = useState<Verse | null>(null);
   const [verseQueue, setVerseQueue] = useState<Verse[]>([]);
@@ -26,13 +27,17 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
   const [isInitialized, setIsInitialized] = useState(false);
 
   const abortRef = useRef(false);
-  const intervalRef = useRef<NodeJS.Timeout>();
+  const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
   const prefetchingRef = useRef(false);
   const initializingRef = useRef(false);
 
+  // Use refs to avoid dependency issues
+  const verseQueueRef = useRef<Verse[]>([]);
+  const currentIndexRef = useRef(0);
+
   // Initialize verse cache with 5 verses
   const initializeVerseCache = useCallback(async () => {
-    if (initializingRef.current || isInitialized) return;
+    if (!settings || initializingRef.current || isInitialized) return;
     initializingRef.current = true;
     setLoading(true);
     setError(null);
@@ -62,11 +67,7 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
     } finally {
       initializingRef.current = false;
     }
-  }, [settings.translationId, isInitialized]);
-
-  // Use refs to avoid dependency issues
-  const verseQueueRef = useRef<Verse[]>([]);
-  const currentIndexRef = useRef(0);
+  }, [settings, isInitialized]);
 
   // Update refs when state changes
   useEffect(() => {
@@ -91,7 +92,7 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
 
   // Refresh cache with new verses
   const refreshCache = useCallback(async () => {
-    if (prefetchingRef.current) return;
+    if (!settings || prefetchingRef.current) return;
     prefetchingRef.current = true;
 
     try {
@@ -113,7 +114,7 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
     } finally {
       prefetchingRef.current = false;
     }
-  }, [settings.translationId]);
+  }, [settings]);
 
   // Start automatic rotation every 10 seconds
   const startAutoRotation = useCallback(() => {
@@ -148,6 +149,8 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
 
   // Initialize on mount and translation change
   useEffect(() => {
+    if (!settings) return;
+
     abortRef.current = false;
     setIsInitialized(false);
     stopAutoRotation(); // Stop any existing rotation
@@ -157,7 +160,7 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
       abortRef.current = true;
       stopAutoRotation();
     };
-  }, [settings.translationId]);
+  }, [settings, initializeVerseCache, stopAutoRotation]);
 
   // Start rotation when cache is ready
   useEffect(() => {
@@ -199,6 +202,18 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
       isMounted = false;
     };
   }, []);
+
+  // Return early if settings are not loaded (after all hooks)
+  if (!settings) {
+    return {
+      verse: null,
+      loading: true,
+      error: null,
+      surahs: [],
+      refreshVerse: () => {},
+      prefetchNextVerse: () => {},
+    };
+  }
 
   return {
     verse,

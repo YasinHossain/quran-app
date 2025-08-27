@@ -1,6 +1,6 @@
 /**
  * Repository Interface: IVerseRepository
- * 
+ *
  * Defines the contract for verse data retrieval from various sources.
  * Abstracts API and caching details from domain logic.
  */
@@ -54,7 +54,7 @@ export interface IVerseRepository {
    * Get verses by surah (chapter)
    */
   getByChapter(
-    chapterId: number, 
+    chapterId: number,
     translationIds?: number[],
     pagination?: PaginationOptions
   ): Promise<PaginatedResult<Verse>>;
@@ -110,22 +110,21 @@ export interface IVerseRepository {
   /**
    * Get multiple verse metadata
    */
-  getBulkVerseMetadata(verseKeys: string[]): Promise<Array<{
-    verseKey: string;
-    surahId: number;
-    ayahNumber: number;
-    surahName: string;
-    surahNameArabic: string;
-  }>>;
+  getBulkVerseMetadata(verseKeys: string[]): Promise<
+    Array<{
+      verseKey: string;
+      surahId: number;
+      ayahNumber: number;
+      surahName: string;
+      surahNameArabic: string;
+    }>
+  >;
 
   // Word-level operations
   /**
    * Get word-by-word data for a verse
    */
-  getVerseWords(
-    verseKey: string,
-    translationLanguage?: string
-  ): Promise<Word[]>;
+  getVerseWords(verseKey: string, translationLanguage?: string): Promise<Word[]>;
 
   // Note: Grammar-related methods moved to _future/repositories/IGrammarRepository.ts
   // Can be integrated here when grammar features are implemented
@@ -144,10 +143,7 @@ export interface IVerseRepository {
   /**
    * Clear cached data
    */
-  clearCache(options?: {
-    older_than_days?: number;
-    surahId?: number;
-  }): Promise<void>;
+  clearCache(options?: { older_than_days?: number; surahId?: number }): Promise<void>;
 
   /**
    * Get cache statistics

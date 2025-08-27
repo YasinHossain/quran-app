@@ -13,12 +13,12 @@ export const useTafsirOptions = () => {
   const tafsirOptions: TafsirResource[] = useMemo(() => data || [], [data]);
 
   const tafsirResource = useMemo(
-    () => tafsirOptions.find((t) => t.id === settings.tafsirIds[0]),
-    [tafsirOptions, settings.tafsirIds]
+    () => tafsirOptions.find((t) => t.id === settings?.tafsirIds?.[0]),
+    [tafsirOptions, settings?.tafsirIds]
   );
 
   const selectedTafsirName = useMemo(() => {
-    if (!settings.tafsirIds || settings.tafsirIds.length === 0) {
+    if (!settings?.tafsirIds || settings.tafsirIds.length === 0) {
       return t('select_tafsir');
     }
     const names = settings.tafsirIds
@@ -26,7 +26,7 @@ export const useTafsirOptions = () => {
       .filter(Boolean)
       .slice(0, 3);
     return names.length ? names.join(', ') : t('select_tafsir');
-  }, [settings.tafsirIds, tafsirOptions, t]);
+  }, [settings?.tafsirIds, tafsirOptions, t]);
 
   return { tafsirOptions, tafsirResource, selectedTafsirName };
 };

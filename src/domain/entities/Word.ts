@@ -1,6 +1,6 @@
 /**
  * Domain Entity: Word
- * 
+ *
  * Represents an individual word in a Quranic verse with translation information.
  * Focused on current application needs.
  */
@@ -31,10 +31,12 @@ export class Word {
     translation?: { text?: string; language?: string };
     audio_url?: string;
   }): Word {
-    const translation = data.translation?.text ? {
-      language: data.translation.language || 'en',
-      text: data.translation.text
-    } : undefined;
+    const translation = data.translation?.text
+      ? {
+          language: data.translation.language || 'en',
+          text: data.translation.text,
+        }
+      : undefined;
 
     return new Word(
       data.id,
@@ -87,29 +89,21 @@ export class Word {
    * Check if word has translation
    */
   hasTranslation(): boolean {
-    return !!(this.translation?.text);
+    return !!this.translation?.text;
   }
 
   /**
    * Check if word has audio
    */
   hasAudio(): boolean {
-    return !!(this.audioUrl);
+    return !!this.audioUrl;
   }
-
 
   /**
    * Add or update translation (returns new instance - immutable)
    */
   withTranslation(translation: WordTranslation): Word {
-    return new Word(
-      this.id,
-      this.position,
-      this.uthmani,
-      this.simple,
-      translation,
-      this.audioUrl
-    );
+    return new Word(this.id, this.position, this.uthmani, this.simple, translation, this.audioUrl);
   }
 
   /**
@@ -124,7 +118,7 @@ export class Word {
    */
   containsLetters(letters: string[]): boolean {
     const text = this.getArabicText();
-    return letters.some(letter => text.includes(letter));
+    return letters.some((letter) => text.includes(letter));
   }
 
   /**
@@ -145,7 +139,7 @@ export class Word {
       uthmani: this.uthmani,
       simple: this.simple,
       translation: this.translation,
-      audioUrl: this.audioUrl
+      audioUrl: this.audioUrl,
     };
   }
 

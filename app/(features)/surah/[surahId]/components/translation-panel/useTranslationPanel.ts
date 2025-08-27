@@ -90,7 +90,7 @@ export const useTranslationPanel = (isOpen: boolean) => {
       hasInitialized.current = true;
 
       // Always use settings.translationIds as the source of truth
-      const settingsIds = settings.translationIds || [];
+      const settingsIds = settings?.translationIds || [];
       if (settingsIds.length > 0) {
         isUpdatingRef.current = true;
         setSelections(settingsIds);
@@ -108,7 +108,7 @@ export const useTranslationPanel = (isOpen: boolean) => {
         }, 100);
       }
     }
-  }, [translations.length, setSelections, settings.translationIds]);
+  }, [translations.length, setSelections, settings?.translationIds]);
 
   // Save selections when they change (only after initialization)
   useEffect(() => {

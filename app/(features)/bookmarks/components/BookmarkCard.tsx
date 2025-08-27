@@ -42,6 +42,7 @@ export const BookmarkCard = memo(function BookmarkCard({
   folderId,
   onRemove,
 }: BookmarkCardProps) {
+  // All hooks must be called before any conditional logic
   const {
     playingId,
     setPlayingId,
@@ -54,14 +55,11 @@ export const BookmarkCard = memo(function BookmarkCard({
   } = useAudio();
   const { settings } = useSettings();
   const { removeBookmark, isBookmarked, chapters } = useBookmarks();
-
   const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark, chapters);
-
   const router = useRouter();
 
-  const verseApiId = enrichedBookmark.verseApiId;
-
   const handlePlayPause = useCallback(() => {
+    const verseApiId = enrichedBookmark.verseApiId;
     if (!verseApiId) return;
     if (playingId === verseApiId) {
       audioRef.current?.pause();
@@ -91,7 +89,7 @@ export const BookmarkCard = memo(function BookmarkCard({
       openPlayer();
     }
   }, [
-    verseApiId,
+    enrichedBookmark.verseApiId,
     playingId,
     enrichedBookmark.verseKey,
     enrichedBookmark.verseText,
@@ -115,6 +113,29 @@ export const BookmarkCard = memo(function BookmarkCard({
     router.push(`/surah/${surahId}#verse-${enrichedBookmark.verseId}`);
   }, [enrichedBookmark.verseKey, enrichedBookmark.verseId, router]);
 
+  // Early return if settings are not loaded (after all hooks)
+  if (!settings) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="rounded-xl bg-surface border border-border p-6 mb-6"
+      >
+        <div className="animate-pulse">
+          <div className="flex items-center justify-between mb-4">
+            <div className="h-4 bg-surface-hover rounded w-32"></div>
+            <div className="h-3 bg-surface-hover rounded w-20"></div>
+          </div>
+          <div className="space-y-3">
+            <div className="h-6 bg-surface-hover rounded"></div>
+            <div className="h-4 bg-surface-hover rounded w-3/4"></div>
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
+
+  const verseApiId = enrichedBookmark.verseApiId;
   const isPlaying = playingId === verseApiId;
   const isLoadingAudio = loadingId === verseApiId;
   const isVerseBookmarked = isBookmarked(enrichedBookmark.verseId);

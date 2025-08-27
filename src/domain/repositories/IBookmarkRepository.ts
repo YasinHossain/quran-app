@@ -1,6 +1,6 @@
 /**
  * Repository Interface: IBookmarkRepository
- * 
+ *
  * Defines the contract for bookmark data persistence and retrieval.
  * This interface abstracts storage details from domain logic.
  */

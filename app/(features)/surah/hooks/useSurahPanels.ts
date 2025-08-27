@@ -16,27 +16,29 @@ export default function useSurahPanels({
 }: {
   translationOptions: Option[];
   wordLanguageOptions: Option[];
-  settings: Settings;
+  settings: Settings | null;
 }) {
   const { t } = useTranslation();
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
 
   const selectedTranslationName = useMemo(() => {
+    if (!settings) return t('select_translation');
     // Use the first translation from translationIds array, fallback to translationId
     const primaryId = settings.translationIds?.[0] || settings.translationId;
     return translationOptions.find((o) => o.id === primaryId)?.name || t('select_translation');
-  }, [settings.translationIds, settings.translationId, translationOptions, t]);
+  }, [settings, translationOptions, t]);
 
-  const selectedWordLanguageName = useMemo(
-    () =>
+  const selectedWordLanguageName = useMemo(() => {
+    if (!settings) return t('select_word_translation');
+    return (
       wordLanguageOptions.find(
         (o) =>
           (LANGUAGE_CODES as Record<string, LanguageCode>)[o.name.toLowerCase()] ===
           settings.wordLang
-      )?.name || t('select_word_translation'),
-    [settings.wordLang, wordLanguageOptions, t]
-  );
+      )?.name || t('select_word_translation')
+    );
+  }, [settings, wordLanguageOptions, t]);
 
   return {
     isTranslationPanelOpen,

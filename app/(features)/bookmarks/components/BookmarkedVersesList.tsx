@@ -8,12 +8,15 @@ import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { Verse } from '@/types';
 
 const BookmarkedVersesList = () => {
+  // All hooks must be called before any conditional logic
   const { bookmarkedVerses } = useBookmarks();
   const { settings } = useSettings();
   const [verses, setVerses] = useState<Verse[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!settings) return; // Skip fetch if settings not loaded
+
     if (bookmarkedVerses.length === 0) {
       setVerses([]);
       setError(null);
@@ -35,7 +38,16 @@ const BookmarkedVersesList = () => {
     };
 
     fetchBookmarkedVerses();
-  }, [bookmarkedVerses, settings.translationId]);
+  }, [bookmarkedVerses, settings]);
+
+  // Early return if settings are not loaded (after all hooks)
+  if (!settings) {
+    return (
+      <div className="text-center py-8">
+        <div className="text-lg">Loading settings...</div>
+      </div>
+    );
+  }
 
   if (bookmarkedVerses.length === 0) {
     return <p className="text-muted">No verses bookmarked yet.</p>;

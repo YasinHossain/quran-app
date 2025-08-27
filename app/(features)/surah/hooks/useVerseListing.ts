@@ -30,17 +30,18 @@ export function useVerseListing({ id, lookup }: UseVerseListingParams) {
 
   // Stabilize the translation IDs for SWR key to prevent unnecessary re-fetches
   const stableTranslationIds = useMemo(() => {
+    if (!settings) return '20'; // Default to Sahih International
     const ids = settings.translationIds || [settings.translationId];
     // Filter out any undefined/null values and ensure we have valid IDs
     const validIds = ids.filter((id) => id && typeof id === 'number');
     return validIds.length > 0 ? validIds.sort((a, b) => a - b).join(',') : '20'; // Default to Sahih International
-  }, [settings.translationIds, settings.translationId]);
+  }, [settings?.translationIds, settings?.translationId]);
 
   const { verses, isLoading, isValidating, isReachingEnd } = useInfiniteVerseLoader({
     id,
     lookup,
     stableTranslationIds,
-    wordLang: settings.wordLang,
+    wordLang: settings?.wordLang || 'en',
     loadMoreRef,
     error,
     setError: (e: string) => setError(e),

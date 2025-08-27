@@ -36,6 +36,13 @@ jest.mock('@/app/(features)/layout/context/HeaderVisibilityContext', () => ({
   useHeaderVisibility: () => ({ isHidden: false }),
 }));
 
+jest.mock('@/app/providers/SidebarContext', () => ({
+  useSidebar: () => ({
+    isBookmarkSidebarOpen: false,
+    setBookmarkSidebarOpen: jest.fn(),
+  }),
+}));
+
 jest.mock('../components/BookmarkCard', () => ({
   BookmarkCard: ({ bookmark }: any) => {
     const { removeBookmark } = require('@/app/providers/BookmarkContext').useBookmarks();
