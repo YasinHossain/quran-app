@@ -1,6 +1,6 @@
 import { Chapter, Surah } from '@/types';
 import { apiFetch } from './client';
-import { surahImageMap } from '@/presentation/(features)/surah/lib/surahImageMap';
+import { surahImageMap } from '@/data/surahImageMap';
 
 export async function getChapters(): Promise<Chapter[]> {
   const data = await apiFetch<{ chapters: Chapter[] }>(
