@@ -117,6 +117,7 @@ export class ServiceContainer {
 
   // Method to reset all services (useful for testing)
   reset(): void {
+    this._themeService?.destroy();
     this._bookmarkService = null;
     this._settingsService = null;
     this._audioService = null;
@@ -131,3 +132,7 @@ export class ServiceContainer {
 
 // Convenience function to get services
 export const getServices = () => ServiceContainer.getInstance();
+
+if ((module as any).hot) {
+  (module as any).hot.dispose(() => ServiceContainer.getInstance().reset());
+}
