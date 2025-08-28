@@ -117,10 +117,6 @@ export class ServiceContainer {
 
   // Method to reset all services (useful for testing)
   reset(): void {
-    // Clean up theme service first (removes system theme change listeners)
-    this._themeService?.destroy();
-    this._themeService = null;
-
     this._bookmarkService?.destroy?.();
     this._bookmarkService?.dispose?.();
     this._bookmarkService = null;
@@ -132,6 +128,10 @@ export class ServiceContainer {
     this._audioService?.destroy?.();
     this._audioService?.dispose?.();
     this._audioService = null;
+
+    this._themeService?.destroy?.();
+    this._themeService?.dispose?.();
+    this._themeService = null;
 
     this._bookmarkRepository?.destroy?.();
     this._bookmarkRepository?.dispose?.();
@@ -165,11 +165,5 @@ export class ServiceContainer {
 
 // Convenience function to get services
 export const getServices = () => ServiceContainer.getInstance();
-
 // Helper to destroy and reset services
 export const destroyServices = () => ServiceContainer.destroy();
-
-// Hot Module Replacement support - clean up listeners during HMR
-if ((module as any).hot) {
-  (module as any).hot.dispose(() => ServiceContainer.getInstance().reset());
-}

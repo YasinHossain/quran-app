@@ -16,7 +16,6 @@ export interface ThemeServiceConfig {
 export class ThemeService {
   private theme: Theme | null = null;
   private mediaQuery: MediaQueryList | null = null;
-  private readonly systemThemeChangeHandler: () => Promise<void>;
 
   constructor(
     private readonly themeRepository: IThemeRepository,
@@ -30,10 +29,9 @@ export class ThemeService {
     };
 
     // Listen for system theme changes if running in browser
-    this.systemThemeChangeHandler = this.handleSystemThemeChange.bind(this);
     if (typeof window !== 'undefined') {
       this.mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      this.mediaQuery.addEventListener('change', this.systemThemeChangeHandler);
+      this.mediaQuery.addEventListener('change', this.handleSystemThemeChange.bind(this));
     }
   }
 
@@ -130,7 +128,7 @@ export class ThemeService {
     document.documentElement.classList.toggle('dark', isDark);
   }
 
-  private async handleSystemThemeChange(): Promise<void> {
+  private handleSystemThemeChange = async (): Promise<void> => {
     const currentTheme = await this.getTheme();
     if (currentTheme.isSystemMode()) {
       // Update resolved theme when system preference changes
@@ -147,12 +145,12 @@ export class ThemeService {
         await this.themeRepository.saveTheme(updatedTheme);
       }
     }
-  }
+  };
 
   // Cleanup method for removing event listeners
   destroy(): void {
     if (this.mediaQuery) {
-      this.mediaQuery.removeEventListener('change', this.systemThemeChangeHandler);
+      this.mediaQuery.removeEventListener('change', this.handleSystemThemeChange);
     }
   }
 }
