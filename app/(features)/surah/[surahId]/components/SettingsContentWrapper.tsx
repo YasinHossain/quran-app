@@ -7,8 +7,8 @@ import { SettingsContent } from './SettingsContent';
 interface SettingsContentWrapperProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
-  tabOptions: Array<{ id: string; label: string; disabled?: boolean }>;
-  openSections: Set<string>;
+  tabOptions: Array<{ value: string; label: string }>;
+  openSections: string[];
   onSectionToggle: (section: string) => void;
   onArabicFontPanelOpen: () => void;
   onTranslationPanelOpen: () => void;
@@ -46,7 +46,7 @@ export const SettingsContentWrapper: React.FC<SettingsContentWrapperProps> = ({
       <div className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-3 touch-pan-y">
         <SettingsContent
           activeTab={activeTab}
-          openSections={Array.from(openSections)}
+          openSections={openSections}
           onSectionToggle={onSectionToggle}
           onArabicFontPanelOpen={onArabicFontPanelOpen}
           onTranslationPanelOpen={onTranslationPanelOpen}

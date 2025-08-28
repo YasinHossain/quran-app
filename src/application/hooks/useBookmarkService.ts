@@ -5,7 +5,7 @@
  * This replaces the need for the existing BookmarkContext/Provider pattern.
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { BookmarkService } from '../services/BookmarkService';
 import { getServices } from '../ServiceContainer';
 import { Bookmark, Folder, FolderCustomization } from '../../domain/entities';
@@ -43,7 +43,8 @@ export function useBookmarkService(): UseBookmarkServiceResult {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const bookmarkService: BookmarkService = getServices().bookmarkService;
+  // FIXED: Memoize service to prevent infinite recreation
+  const [bookmarkService] = useState<BookmarkService>(() => getServices().bookmarkService);
 
   // Load initial data
   const refreshData = useCallback(async () => {

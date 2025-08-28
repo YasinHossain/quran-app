@@ -53,8 +53,10 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
 
       if (!abortRef.current) {
         setVerseQueue(verses);
+        verseQueueRef.current = verses; // Update ref immediately
         setVerse(verses[0]);
         setCurrentIndex(0);
+        currentIndexRef.current = 0; // Update ref immediately
         setIsInitialized(true);
         setLoading(false);
       }
@@ -78,17 +80,7 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
     currentIndexRef.current = currentIndex;
   }, [currentIndex]);
 
-  // Rotate to next verse in cache
-  const rotateToNextVerse = useCallback(() => {
-    const queue = verseQueueRef.current;
-    if (queue.length === 0) return;
-
-    setCurrentIndex((prevIndex) => {
-      const nextIndex = (prevIndex + 1) % queue.length;
-      setVerse(queue[nextIndex]);
-      return nextIndex;
-    });
-  }, []);
+  // Rotate to next verse in cache - REMOVED (inlined in interval)
 
   // Refresh cache with new verses
   const refreshCache = useCallback(async () => {
@@ -116,7 +108,7 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
     }
   }, [settings]);
 
-  // Start automatic rotation every 10 seconds
+  // Start automatic rotation every 10 seconds - SIMPLIFIED
   const startAutoRotation = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -124,10 +116,17 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
 
     intervalRef.current = setInterval(() => {
       if (!abortRef.current) {
-        rotateToNextVerse();
+        const queue = verseQueueRef.current;
+        if (queue.length === 0) return;
+
+        setCurrentIndex((prevIndex) => {
+          const nextIndex = (prevIndex + 1) % queue.length;
+          setVerse(queue[nextIndex]);
+          return nextIndex;
+        });
       }
     }, 10000); // 10 seconds
-  }, [rotateToNextVerse]);
+  }, []); // NO DEPENDENCIES!
 
   // Stop automatic rotation
   const stopAutoRotation = useCallback(() => {
@@ -153,22 +152,43 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
 
     abortRef.current = false;
     setIsInitialized(false);
-    stopAutoRotation(); // Stop any existing rotation
+
+    // Stop any existing rotation
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = undefined;
+    }
+
     initializeVerseCache();
 
     return () => {
       abortRef.current = true;
-      stopAutoRotation();
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = undefined;
+      }
     };
-  }, [settings, initializeVerseCache, stopAutoRotation]);
+  }, [settings, initializeVerseCache]); // Removed stopAutoRotation dependency
 
-  // Start rotation when cache is ready
+  // Start rotation when cache is ready - SINGLE INTERVAL MANAGER
   useEffect(() => {
-    if (isInitialized && verseQueue.length > 0 && !intervalRef.current) {
-      // Start interval directly to avoid dependency issues
+    if (isInitialized && verseQueue.length > 0) {
+      // Clear any existing interval first
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+
+      // Create new interval
       intervalRef.current = setInterval(() => {
         if (!abortRef.current) {
-          rotateToNextVerse();
+          const queue = verseQueueRef.current;
+          if (queue.length === 0) return;
+
+          setCurrentIndex((prevIndex) => {
+            const nextIndex = (prevIndex + 1) % queue.length;
+            setVerse(queue[nextIndex]);
+            return nextIndex;
+          });
         }
       }, 10000); // 10 seconds
     }
@@ -179,7 +199,7 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
         intervalRef.current = undefined;
       }
     };
-  }, [isInitialized, verseQueue.length]);
+  }, [isInitialized]); // ONLY isInitialized - no verseQueue.length!
 
   // Load surahs list for metadata
   useEffect(() => {

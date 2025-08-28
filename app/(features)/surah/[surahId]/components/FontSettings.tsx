@@ -20,7 +20,7 @@ export const FontSettings = ({
   onToggle,
 }: FontSettingsProps) => {
   // All hooks must be called before any conditional logic
-  const { settings, setSettings, arabicFonts } = useSettings();
+  const { settings, setFontSize, updateSettings, arabicFonts } = useSettings();
   const { t } = useTranslation();
   const { style: arabicStyle } = useFontSize(settings?.arabicFontSize || 24, 16, 48);
   const { style: translationStyle } = useFontSize(settings?.translationFontSize || 16, 12, 28);
@@ -64,7 +64,7 @@ export const FontSettings = ({
             min="16"
             max="48"
             value={settings.arabicFontSize}
-            onChange={(e) => setSettings({ ...settings, arabicFontSize: +e.target.value })}
+            onChange={(e) => updateSettings({ arabicFontSize: +e.target.value })}
             style={arabicStyle}
           />
         </div>
@@ -78,7 +78,7 @@ export const FontSettings = ({
             min="12"
             max="28"
             value={settings.translationFontSize}
-            onChange={(e) => setSettings({ ...settings, translationFontSize: +e.target.value })}
+            onChange={(e) => updateSettings({ translationFontSize: +e.target.value })}
             style={translationStyle}
           />
         </div>

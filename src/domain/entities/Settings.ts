@@ -5,6 +5,7 @@
  */
 
 import { ARABIC_FONTS } from '../constants/fonts';
+import { Settings as UISettings } from '../../../types/settings';
 
 export interface ArabicFont {
   name: string;
@@ -17,7 +18,9 @@ export class Settings {
     public readonly translationIds: number[],
     public readonly tafsirIds: number[],
     public readonly arabicFont: string,
-    public readonly fontSize: number,
+    public readonly arabicFontSize: number,
+    public readonly translationFontSize: number,
+    public readonly tafsirFontSize: number,
     public readonly showByWords: boolean,
     public readonly tajweed: boolean,
     public readonly wordLang: string,
@@ -33,7 +36,9 @@ export class Settings {
       [20], // Default translation ID
       [169], // Default tafsir ID
       ARABIC_FONTS[0].value, // Default Arabic font
-      16, // Default font size
+      24, // Default Arabic font size
+      16, // Default translation font size
+      16, // Default tafsir font size
       false, // Show word by word
       true, // Show tajweed
       'en', // Word translation language
@@ -46,11 +51,23 @@ export class Settings {
    * Factory method to create from storage data
    */
   static fromStorage(data: SettingsStorageData): Settings {
+    // Handle backward compatibility - if old fontSize exists, use it for both
+    const defaultArabicSize = data.arabicFontSize ?? data.fontSize ?? 24;
+    const defaultTranslationSize =
+      data.translationFontSize ?? Math.round((data.fontSize ?? 16) * 0.67) ?? 16;
+    const defaultTafsirSize =
+      data.tafsirFontSize ??
+      data.translationFontSize ??
+      Math.round((data.fontSize ?? 16) * 0.67) ??
+      16;
+
     return new Settings(
       data.translationIds || [20],
       data.tafsirIds || [169],
       data.arabicFont || ARABIC_FONTS[0].value,
-      data.fontSize || 16,
+      defaultArabicSize,
+      defaultTranslationSize,
+      defaultTafsirSize,
       data.showByWords ?? false,
       data.tajweed ?? true,
       data.wordLang || 'en',
@@ -71,7 +88,9 @@ export class Settings {
       translationIds,
       this.tafsirIds,
       this.arabicFont,
-      this.fontSize,
+      this.arabicFontSize,
+      this.translationFontSize,
+      this.tafsirFontSize,
       this.showByWords,
       this.tajweed,
       this.wordLang,
@@ -88,7 +107,9 @@ export class Settings {
       this.translationIds,
       tafsirIds,
       this.arabicFont,
-      this.fontSize,
+      this.arabicFontSize,
+      this.translationFontSize,
+      this.tafsirFontSize,
       this.showByWords,
       this.tajweed,
       this.wordLang,
@@ -109,7 +130,9 @@ export class Settings {
       this.translationIds,
       this.tafsirIds,
       arabicFont,
-      this.fontSize,
+      this.arabicFontSize,
+      this.translationFontSize,
+      this.tafsirFontSize,
       this.showByWords,
       this.tajweed,
       this.wordLang,
@@ -119,7 +142,76 @@ export class Settings {
   }
 
   /**
-   * Update font size (returns new instance - immutable)
+   * Update Arabic font size (returns new instance - immutable)
+   */
+  withArabicFontSize(arabicFontSize: number): Settings {
+    if (arabicFontSize < 16 || arabicFontSize > 48) {
+      throw new Error('Arabic font size must be between 16 and 48');
+    }
+
+    return new Settings(
+      this.translationIds,
+      this.tafsirIds,
+      this.arabicFont,
+      arabicFontSize,
+      this.translationFontSize,
+      this.tafsirFontSize,
+      this.showByWords,
+      this.tajweed,
+      this.wordLang,
+      this.wordTranslationId,
+      this.theme
+    );
+  }
+
+  /**
+   * Update translation font size (returns new instance - immutable)
+   */
+  withTranslationFontSize(translationFontSize: number): Settings {
+    if (translationFontSize < 12 || translationFontSize > 28) {
+      throw new Error('Translation font size must be between 12 and 28');
+    }
+
+    return new Settings(
+      this.translationIds,
+      this.tafsirIds,
+      this.arabicFont,
+      this.arabicFontSize,
+      translationFontSize,
+      this.tafsirFontSize,
+      this.showByWords,
+      this.tajweed,
+      this.wordLang,
+      this.wordTranslationId,
+      this.theme
+    );
+  }
+
+  /**
+   * Update tafsir font size (returns new instance - immutable)
+   */
+  withTafsirFontSize(tafsirFontSize: number): Settings {
+    if (tafsirFontSize < 12 || tafsirFontSize > 28) {
+      throw new Error('Tafsir font size must be between 12 and 28');
+    }
+
+    return new Settings(
+      this.translationIds,
+      this.tafsirIds,
+      this.arabicFont,
+      this.arabicFontSize,
+      this.translationFontSize,
+      tafsirFontSize,
+      this.showByWords,
+      this.tajweed,
+      this.wordLang,
+      this.wordTranslationId,
+      this.theme
+    );
+  }
+
+  /**
+   * Update font size (returns new instance - immutable) - deprecated, kept for backward compatibility
    */
   withFontSize(fontSize: number): Settings {
     if (fontSize < 10 || fontSize > 32) {
@@ -131,6 +223,8 @@ export class Settings {
       this.tafsirIds,
       this.arabicFont,
       fontSize,
+      Math.round(fontSize * 0.67),
+      Math.round(fontSize * 0.67),
       this.showByWords,
       this.tajweed,
       this.wordLang,
@@ -147,7 +241,9 @@ export class Settings {
       this.translationIds,
       this.tafsirIds,
       this.arabicFont,
-      this.fontSize,
+      this.arabicFontSize,
+      this.translationFontSize,
+      this.tafsirFontSize,
       showByWords,
       this.tajweed,
       this.wordLang,
@@ -164,7 +260,9 @@ export class Settings {
       this.translationIds,
       this.tafsirIds,
       this.arabicFont,
-      this.fontSize,
+      this.arabicFontSize,
+      this.translationFontSize,
+      this.tafsirFontSize,
       this.showByWords,
       tajweed,
       this.wordLang,
@@ -185,7 +283,9 @@ export class Settings {
       this.translationIds,
       this.tafsirIds,
       this.arabicFont,
-      this.fontSize,
+      this.arabicFontSize,
+      this.translationFontSize,
+      this.tafsirFontSize,
       this.showByWords,
       this.tajweed,
       wordLang,
@@ -206,7 +306,9 @@ export class Settings {
       this.translationIds,
       this.tafsirIds,
       this.arabicFont,
-      this.fontSize,
+      this.arabicFontSize,
+      this.translationFontSize,
+      this.tafsirFontSize,
       this.showByWords,
       this.tajweed,
       this.wordLang,
@@ -223,7 +325,9 @@ export class Settings {
       this.translationIds,
       this.tafsirIds,
       this.arabicFont,
-      this.fontSize,
+      this.arabicFontSize,
+      this.translationFontSize,
+      this.tafsirFontSize,
       this.showByWords,
       this.tajweed,
       this.wordLang,
@@ -272,7 +376,7 @@ export class Settings {
     return {
       hasWordByWord: this.showByWords,
       hasTajweed: this.tajweed,
-      isLargeText: this.fontSize > 20,
+      isLargeText: this.arabicFontSize > 28,
       primaryLanguage: this.wordLang,
     };
   }
@@ -283,8 +387,12 @@ export class Settings {
   isValid(): boolean {
     return (
       this.translationIds.length > 0 &&
-      this.fontSize >= 10 &&
-      this.fontSize <= 32 &&
+      this.arabicFontSize >= 16 &&
+      this.arabicFontSize <= 48 &&
+      this.translationFontSize >= 12 &&
+      this.translationFontSize <= 28 &&
+      this.tafsirFontSize >= 12 &&
+      this.tafsirFontSize <= 28 &&
       this.isValidArabicFont(this.arabicFont) &&
       this.isValidLanguage(this.wordLang) &&
       this.wordTranslationId > 0
@@ -299,7 +407,9 @@ export class Settings {
       translationIds: this.translationIds,
       tafsirIds: this.tafsirIds,
       arabicFont: this.arabicFont,
-      fontSize: this.fontSize,
+      arabicFontSize: this.arabicFontSize,
+      translationFontSize: this.translationFontSize,
+      tafsirFontSize: this.tafsirFontSize,
       showByWords: this.showByWords,
       tajweed: this.tajweed,
       wordLang: this.wordLang,
@@ -308,16 +418,28 @@ export class Settings {
     };
   }
 
+  /**
+   * Convert to UI format (for React components)
+   */
+  toUI(): UISettings {
+    return {
+      translationId: this.translationIds[0] || 20,
+      translationIds: this.translationIds,
+      tafsirIds: this.tafsirIds,
+      arabicFontSize: this.arabicFontSize,
+      translationFontSize: this.translationFontSize,
+      tafsirFontSize: this.tafsirFontSize,
+      arabicFontFace: this.arabicFont,
+      wordLang: this.wordLang,
+      wordTranslationId: this.wordTranslationId,
+      showByWords: this.showByWords,
+      tajweed: this.tajweed,
+    };
+  }
+
   // Private validation methods
   private isValidArabicFont(font: string): boolean {
-    const validFonts = [
-      'uthmanic-hafs',
-      'amiri',
-      'lateef',
-      'scheherazade-new',
-      'noor-e-hira',
-      'uthman-taha',
-    ];
+    const validFonts = ARABIC_FONTS.map((f) => f.value);
     return validFonts.includes(font);
   }
 
@@ -331,7 +453,10 @@ export interface SettingsStorageData {
   translationIds: number[];
   tafsirIds: number[];
   arabicFont: string;
-  fontSize: number;
+  fontSize?: number; // For backward compatibility
+  arabicFontSize?: number;
+  translationFontSize?: number;
+  tafsirFontSize?: number;
   showByWords: boolean;
   tajweed: boolean;
   wordLang: string;

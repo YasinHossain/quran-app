@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useSWRInfinite from 'swr/infinite';
 import type { Verse } from '@/types';
 import type { LookupFn } from './useVerseListing';
@@ -41,17 +41,60 @@ export function useInfiniteVerseLoader({
   const [needsManualLoad, setNeedsManualLoad] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
+  // Use refs to avoid dependency issues
+  const isReachingEndRef = useRef(isReachingEnd);
+  const isValidatingRef = useRef(isValidating);
+
+  // Update refs when values change
   useEffect(() => {
-    if (!loadMoreRef.current || isReachingEnd) return;
+    isReachingEndRef.current = isReachingEnd;
+    isValidatingRef.current = isValidating;
+  }, [isReachingEnd, isValidating]);
+
+  // Memoize the intersection handler to prevent unnecessary re-creates
+  const handleIntersection = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const entry = entries[0];
+      if (entry && entry.isIntersecting && !isReachingEndRef.current && !isValidatingRef.current) {
+        const observer = observerRef.current;
+        if (observer) {
+          observer.unobserve(entry.target);
+          setSize((prev) => prev + 1);
+        }
+      }
+    },
+    [setSize]
+  );
+
+  useEffect(() => {
+    const currentElement = loadMoreRef.current;
+
+    if (!currentElement || isReachingEnd) {
+      // Clean up existing observer if conditions no longer met
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
+      }
+      return;
+    }
 
     // Add safety check for development environment
-    if (process.env.NODE_ENV === 'development' && verses.length > 100) {
+    if (process.env.NODE_ENV !== 'production' && verses.length > 100) {
       console.warn('Stopping infinite loading in development to prevent memory issues');
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
+      }
+      return;
+    }
+
+    // Prevent multiple observers
+    if (observerRef.current) {
       return;
     }
 
     // Find the closest scrollable ancestor with improved safety
-    let scrollRoot = loadMoreRef.current.parentElement;
+    let scrollRoot = currentElement.parentElement;
     let depth = 0;
     const maxDepth = 10; // Prevent infinite traversal
 
@@ -69,53 +112,20 @@ export function useInfiniteVerseLoader({
       scrollRoot = null;
     }
 
-    const targetElement = loadMoreRef.current;
-
-    const isOutsideViewport = () => {
-      const rect = targetElement.getBoundingClientRect();
-      const viewportBottom = scrollRoot
-        ? (scrollRoot as Element).getBoundingClientRect().bottom
-        : window.innerHeight;
-      return rect.top > viewportBottom;
-    };
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry && entry.isIntersecting && !isReachingEnd && !isValidating) {
-          observer.unobserve(targetElement);
-          setSize((prev) => prev + 1).finally(() => {
-            if (loadMoreRef.current && !isReachingEnd) {
-              if (isOutsideViewport()) {
-                setNeedsManualLoad(false);
-                observer.observe(loadMoreRef.current);
-              } else {
-                setNeedsManualLoad(true);
-              }
-            }
-          });
-        }
-      },
-      {
-        root: scrollRoot,
-        rootMargin: '200px', // Increased margin for better UX
-        threshold: 0.1,
-      }
-    );
+    const observer = new IntersectionObserver(handleIntersection, {
+      root: scrollRoot,
+      rootMargin: process.env.NODE_ENV !== 'production' ? '50px' : '200px',
+      threshold: 0.1,
+    });
 
     observerRef.current = observer;
-
-    if (isOutsideViewport()) {
-      observer.observe(targetElement);
-    } else {
-      setNeedsManualLoad(true);
-    }
+    observer.observe(currentElement);
 
     return () => {
       observer.disconnect();
       observerRef.current = null;
     };
-  }, [isReachingEnd, isValidating, verses.length]); // Removed size dependency to prevent excessive re-renders
+  }, [handleIntersection, isReachingEnd, verses.length]); // Only essential dependencies
 
   const loadMore = () => {
     if (isReachingEnd || isValidating) return;

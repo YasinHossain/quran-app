@@ -141,7 +141,7 @@ export class SettingsService {
   async setFontSize(fontSize: number): Promise<void> {
     await this.ensureInitialized();
 
-    this.currentSettings = this.currentSettings.withFontSize(fontSize);
+    this.currentSettings = this.currentSettings.withArabicFontSize(fontSize);
 
     if (this.config.autoSave) {
       await this.settingsRepository.saveSettings(this.currentSettings);
@@ -150,15 +150,15 @@ export class SettingsService {
 
   async increaseFontSize(): Promise<void> {
     await this.ensureInitialized();
-    const current = this.currentSettings.fontSize;
-    const newSize = Math.min(32, current + 1);
+    const current = this.currentSettings.arabicFontSize;
+    const newSize = Math.min(48, current + 1);
     await this.setFontSize(newSize);
   }
 
   async decreaseFontSize(): Promise<void> {
     await this.ensureInitialized();
-    const current = this.currentSettings.fontSize;
-    const newSize = Math.max(10, current - 1);
+    const current = this.currentSettings.arabicFontSize;
+    const newSize = Math.max(16, current - 1);
     await this.setFontSize(newSize);
   }
 
@@ -236,6 +236,9 @@ export class SettingsService {
       tafsirIds: number[];
       arabicFont: string;
       fontSize: number;
+      arabicFontSize: number;
+      translationFontSize: number;
+      tafsirFontSize: number;
       showByWords: boolean;
       tajweed: boolean;
       wordLang: string;
@@ -258,6 +261,15 @@ export class SettingsService {
     }
     if (updates.fontSize !== undefined) {
       settings = settings.withFontSize(updates.fontSize);
+    }
+    if (updates.arabicFontSize !== undefined) {
+      settings = settings.withArabicFontSize(updates.arabicFontSize);
+    }
+    if (updates.translationFontSize !== undefined) {
+      settings = settings.withTranslationFontSize(updates.translationFontSize);
+    }
+    if (updates.tafsirFontSize !== undefined) {
+      settings = settings.withTafsirFontSize(updates.tafsirFontSize);
     }
     if (updates.showByWords !== undefined) {
       settings = settings.withShowByWords(updates.showByWords);

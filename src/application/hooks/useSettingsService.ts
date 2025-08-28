@@ -8,7 +8,12 @@
 import { useState, useCallback, useEffect } from 'react';
 import { SettingsService } from '../services/SettingsService';
 import { getServices } from '../ServiceContainer';
-import { Settings, ArabicFont, SettingsStorageData } from '../../domain/entities/Settings';
+import {
+  Settings as DomainSettings,
+  ArabicFont,
+  SettingsStorageData,
+} from '../../domain/entities/Settings';
+import { Settings } from '../../../types/settings';
 
 export interface UseSettingsServiceResult {
   // Current settings
@@ -67,8 +72,9 @@ export function useSettingsService(): UseSettingsServiceResult {
       setLoading(true);
       setError(null);
 
-      const currentSettings = await settingsService.getSettings();
-      setSettings(currentSettings);
+      const domainSettings = await settingsService.getSettings();
+      const uiSettings = domainSettings.toUI();
+      setSettings(uiSettings);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load settings');
     } finally {
@@ -317,10 +323,35 @@ export function useSettingsService(): UseSettingsServiceResult {
 
   // Bulk operations
   const updateSettings = useCallback(
-    async (updates: Partial<SettingsStorageData>) => {
+    async (updates: Partial<Settings & SettingsStorageData>) => {
       try {
         setError(null);
-        await settingsService.updateSettings(updates);
+
+        // Convert UI format updates to domain format
+        const domainUpdates: Partial<SettingsStorageData> = { ...updates };
+
+        // Handle arabicFontSize - keep as is now
+        if ('arabicFontSize' in updates && updates.arabicFontSize !== undefined) {
+          domainUpdates.arabicFontSize = updates.arabicFontSize;
+        }
+
+        // Handle translationFontSize - keep as is now
+        if ('translationFontSize' in updates && updates.translationFontSize !== undefined) {
+          domainUpdates.translationFontSize = updates.translationFontSize;
+        }
+
+        // Handle tafsirFontSize - keep as is now
+        if ('tafsirFontSize' in updates && updates.tafsirFontSize !== undefined) {
+          domainUpdates.tafsirFontSize = updates.tafsirFontSize;
+        }
+
+        // Handle arabicFontFace -> arabicFont conversion
+        if ('arabicFontFace' in updates && updates.arabicFontFace !== undefined) {
+          domainUpdates.arabicFont = updates.arabicFontFace;
+          delete (domainUpdates as Record<string, unknown>).arabicFontFace;
+        }
+
+        await settingsService.updateSettings(domainUpdates);
         await refreshSettings();
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to update settings');

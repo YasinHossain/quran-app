@@ -19,7 +19,7 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
   const [memorization, setMemorizationState] = useState<Record<string, MemorizationPlan>>({});
   const [chapters, setChapters] = useState<Chapter[]>([]);
 
-  // Load initial data
+  // Load initial data - FIXED: Remove unstable dependency
   useEffect(() => {
     // Load bookmark data through clean architecture service
     bookmarkServiceHook.refreshData();
@@ -30,7 +30,7 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
         .then(setChapters)
         .catch(() => {});
     });
-  }, [bookmarkServiceHook]);
+  }, []); // FIXED: Empty dependency array since refreshData is stable now
 
   // ✅ CLEAN: Metadata fetching now handled by BookmarkService
   const refreshBookmarkMetadata = useCallback(
@@ -119,21 +119,6 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
     [bookmarkServiceHook]
   );
 
-  // ✅ CLEAN: All bookmark queries use BookmarkService
-  const isBookmarked = useCallback(
-    async (verseId: string) => {
-      return await bookmarkServiceHook.isBookmarked(verseId);
-    },
-    [bookmarkServiceHook]
-  );
-
-  const findBookmark = useCallback(
-    async (verseId: string) => {
-      return await services.bookmarkService.findBookmarkLocation(verseId);
-    },
-    [services.bookmarkService]
-  );
-
   const toggleBookmark = useCallback(
     async (verseId: string, folderId?: string) => {
       try {
@@ -160,7 +145,36 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
   );
 
   // ✅ CLEAN: Use service data instead of computed values
-  const bookmarkedVerses = bookmarkServiceHook.folders.flatMap((f) => f.bookmarks || []);
+  const bookmarkedVerses = bookmarkServiceHook.folders.flatMap((f) =>
+    (f.bookmarks || []).map((bookmark) => bookmark.verseId)
+  );
+
+  const isBookmarked = useCallback(
+    (verseId: string) => {
+      return bookmarkedVerses.includes(verseId);
+    },
+    [bookmarkedVerses]
+  );
+
+  const findBookmark = useCallback(
+    (verseId: string) => {
+      for (const folder of bookmarkServiceHook.folders) {
+        const bookmark = folder.bookmarks?.find((b) => b.verseId === verseId);
+        if (bookmark) {
+          return { folder, bookmark };
+        }
+      }
+      return null;
+    },
+    [bookmarkServiceHook.folders]
+  );
+
+  const isPinned = useCallback(
+    (verseId: string) => {
+      return bookmarkServiceHook.pinnedVerses.some((pv) => pv.verseId === verseId);
+    },
+    [bookmarkServiceHook.pinnedVerses]
+  );
 
   const togglePinned = useCallback(
     async (verseId: string) => {
@@ -170,13 +184,6 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
         console.error('Failed to toggle pinned:', error);
         throw error;
       }
-    },
-    [bookmarkServiceHook]
-  );
-
-  const isPinned = useCallback(
-    async (verseId: string) => {
-      return await bookmarkServiceHook.isPinned(verseId);
     },
     [bookmarkServiceHook]
   );

@@ -1,24 +1,12 @@
 'use client';
 import React, { useState } from 'react';
-import VerseOfDay from './VerseOfDay';
+// import VerseOfDay from './VerseOfDay'; // Keep VerseOfDay disabled for now
 import HomePageBackground from './HomePageBackground';
 import HomeHeader from './HomeHeader';
 import HomeSearch from './HomeSearch';
 import HomeTabs from './HomeTabs';
 
-// --- Main Page Component ---
-/**
- * Home page for the Qur'an application.
- *
- * Features:
- * - Search bar for filtering Surahs, Juz, and pages.
- * - Tab navigation to switch between Surah, Juz, and Page views.
- * - Theme toggle to switch between light and dark modes.
- *
- * Internal state:
- * - `searchQuery` stores the user's search input.
- * - `theme` is managed via `useTheme`.
- */
+// FULL HOME PAGE RESTORED (except VerseOfDay)
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -41,7 +29,10 @@ export default function HomePage() {
 
           <HomeSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
-          <VerseOfDay />
+          {/* <VerseOfDay /> */}
+          <div className="mt-12 w-full max-w-4xl p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg backdrop-blur-xl bg-surface-glass/60">
+            <p className="text-center text-muted">Verse of Day temporarily disabled</p>
+          </div>
         </main>
 
         <HomeTabs searchQuery={searchQuery} />

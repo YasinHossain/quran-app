@@ -24,7 +24,7 @@ export const TafsirSettings = ({
   onToggle,
 }: TafsirSettingsProps) => {
   // All hooks must be called before any conditional logic
-  const { settings, setSettings } = useSettings();
+  const { settings, updateSettings } = useSettings();
   const { t } = useTranslation();
   const { style: tafsirStyle } = useFontSize(settings?.tafsirFontSize || 16, 12, 28);
 
@@ -75,7 +75,7 @@ export const TafsirSettings = ({
                 min="12"
                 max="28"
                 value={settings.tafsirFontSize}
-                onChange={(e) => setSettings({ ...settings, tafsirFontSize: +e.target.value })}
+                onChange={(e) => updateSettings({ tafsirFontSize: +e.target.value })}
                 style={tafsirStyle}
               />
             </div>

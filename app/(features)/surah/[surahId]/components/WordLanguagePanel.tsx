@@ -29,16 +29,13 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
   onClose,
   renderMode = 'panel',
 }) => {
-  const { settings, setSettings } = useSettings();
+  const { settings, setWordLang, setWordTranslationId } = useSettings();
   const { t } = useTranslation();
 
   const handleLanguageSelect = (language: (typeof WORD_LANGUAGES)[0]) => {
     if (!settings) return;
-    setSettings({
-      ...settings,
-      wordLang: language.code,
-      wordTranslationId: language.id,
-    });
+    setWordLang(language.code);
+    setWordTranslationId(language.id);
   };
 
   const renderLanguageList = () => (

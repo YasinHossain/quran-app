@@ -9,14 +9,16 @@ interface SettingsContextType {
   settings: Settings | null;
   loading: boolean;
   error: string | null;
-  arabicFonts: { name: string; value: string; category: string }[];
+  arabicFonts: typeof ARABIC_FONTS;
   setSettings: (settings: Record<string, unknown>) => Promise<void>;
+  updateSettings: (updates: Record<string, unknown>) => Promise<void>;
   setShowByWords: (val: boolean) => Promise<void>;
   setTajweed: (val: boolean) => Promise<void>;
   setWordLang: (lang: string) => Promise<void>;
   setWordTranslationId: (id: number) => Promise<void>;
   setTafsirIds: (ids: number[]) => Promise<void>;
   setTranslationIds: (ids: number[]) => Promise<void>;
+  setFontSize: (size: number) => Promise<void>;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -39,12 +41,14 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
       error: settingsService.error,
       arabicFonts: ARABIC_FONTS,
       setSettings: settingsService.updateSettings,
+      updateSettings: settingsService.updateSettings,
       setShowByWords: settingsService.setShowByWords,
       setTajweed: settingsService.setTajweed,
       setWordLang: settingsService.setWordLang,
       setWordTranslationId: settingsService.setWordTranslationId,
       setTafsirIds: settingsService.setTafsirIds,
       setTranslationIds: settingsService.setTranslationIds,
+      setFontSize: settingsService.setFontSize,
     }),
     [settingsService]
   );
