@@ -6,6 +6,7 @@ import { BookmarkProvider } from './BookmarkContext';
 import { SidebarProvider } from './SidebarContext';
 import { UIStateProvider } from './UIStateContext';
 import { NavigationProvider } from './NavigationContext';
+import { AudioProvider } from '@/app/shared/player/context/AudioContext';
 
 /**
  * Groups client-side providers including `ThemeProvider`, `SettingsProvider`,
@@ -25,7 +26,9 @@ export default function ClientProviders({
         <BookmarkProvider>
           <UIStateProvider>
             <SidebarProvider>
-              <NavigationProvider>{children}</NavigationProvider>
+              <NavigationProvider>
+                <AudioProvider>{children}</AudioProvider>
+              </NavigationProvider>
             </SidebarProvider>
           </UIStateProvider>
         </BookmarkProvider>
