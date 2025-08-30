@@ -1,3 +1,0 @@
-@echo off
-echo Starting Chrome with remote debugging on port 9222...
-"C:\Program Files\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9222
