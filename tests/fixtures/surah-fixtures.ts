@@ -8,16 +8,18 @@ export class SurahFixtures {
   /**
    * Creates a basic Surah entity for testing
    */
-  static createSurah(overrides: Partial<{
-    id: number;
-    name: string;
-    arabicName: string;
-    englishName: string;
-    englishTranslation: string;
-    numberOfAyahs: number;
-    revelationType: RevelationType;
-    revelationOrder?: number;
-  }> = {}): Surah {
+  static createSurah(
+    overrides: Partial<{
+      id: number;
+      name: string;
+      arabicName: string;
+      englishName: string;
+      englishTranslation: string;
+      numberOfAyahs: number;
+      revelationType: RevelationType;
+      revelationOrder?: number;
+    }> = {}
+  ): Surah {
     const defaults = {
       id: 1,
       name: 'Al-Fatiha',
@@ -30,7 +32,7 @@ export class SurahFixtures {
     };
 
     const data = { ...defaults, ...overrides };
-    
+
     return new Surah(
       data.id,
       data.name,
@@ -72,7 +74,7 @@ export class SurahFixtures {
       englishTranslation: 'The Opening',
       numberOfAyahs: 7,
       revelationType: RevelationType.MAKKI,
-      revelationOrder: 5
+      revelationOrder: 5,
     });
   }
 
@@ -88,7 +90,7 @@ export class SurahFixtures {
       englishTranslation: 'The Cow',
       numberOfAyahs: 286,
       revelationType: RevelationType.MADANI,
-      revelationOrder: 87
+      revelationOrder: 87,
     });
   }
 
@@ -104,7 +106,7 @@ export class SurahFixtures {
       englishTranslation: 'The Repentance',
       numberOfAyahs: 129,
       revelationType: RevelationType.MADANI,
-      revelationOrder: 113
+      revelationOrder: 113,
     });
   }
 
@@ -120,7 +122,7 @@ export class SurahFixtures {
       englishTranslation: 'The Abundance',
       numberOfAyahs: 3,
       revelationType: RevelationType.MAKKI,
-      revelationOrder: 15
+      revelationOrder: 15,
     });
   }
 
@@ -136,7 +138,7 @@ export class SurahFixtures {
       englishTranslation: 'The People',
       numberOfAyahs: 6,
       revelationType: RevelationType.MAKKI,
-      revelationOrder: 21
+      revelationOrder: 21,
     });
   }
 
@@ -152,7 +154,7 @@ export class SurahFixtures {
       englishTranslation: 'Ya-Sin',
       numberOfAyahs: 83,
       revelationType: RevelationType.MAKKI,
-      revelationOrder: 41
+      revelationOrder: 41,
     });
   }
 
@@ -168,7 +170,7 @@ export class SurahFixtures {
       englishTranslation: 'The Cave',
       numberOfAyahs: 110,
       revelationType: RevelationType.MAKKI,
-      revelationOrder: 69
+      revelationOrder: 69,
     });
   }
 
@@ -184,7 +186,7 @@ export class SurahFixtures {
       englishTranslation: 'The Kingdom',
       numberOfAyahs: 30,
       revelationType: RevelationType.MAKKI,
-      revelationOrder: 77
+      revelationOrder: 77,
     });
   }
 
@@ -217,7 +219,7 @@ export class SurahFixtures {
         englishTranslation: 'The Family of Imran',
         numberOfAyahs: 200,
         revelationType: RevelationType.MADANI,
-        revelationOrder: 89
+        revelationOrder: 89,
       }),
     ];
   }
@@ -228,52 +230,57 @@ export class SurahFixtures {
   static createSevenLongSurahs(): Surah[] {
     return [
       this.createAlBaqarah(), // 2
-      this.createSurah({ // 3 - Ali Imran
+      this.createSurah({
+        // 3 - Ali Imran
         id: 3,
         name: 'Ali Imran',
         arabicName: 'آل عمران',
         englishName: 'The Family of Imran',
         englishTranslation: 'The Family of Imran',
         numberOfAyahs: 200,
-        revelationType: RevelationType.MADANI
+        revelationType: RevelationType.MADANI,
       }),
-      this.createSurah({ // 4 - An-Nisa
+      this.createSurah({
+        // 4 - An-Nisa
         id: 4,
         name: 'An-Nisa',
         arabicName: 'النساء',
         englishName: 'The Women',
         englishTranslation: 'The Women',
         numberOfAyahs: 176,
-        revelationType: RevelationType.MADANI
+        revelationType: RevelationType.MADANI,
       }),
-      this.createSurah({ // 5 - Al-Maidah
+      this.createSurah({
+        // 5 - Al-Maidah
         id: 5,
         name: 'Al-Maidah',
         arabicName: 'المائدة',
         englishName: 'The Table',
         englishTranslation: 'The Table',
         numberOfAyahs: 120,
-        revelationType: RevelationType.MADANI
+        revelationType: RevelationType.MADANI,
       }),
-      this.createSurah({ // 6 - Al-Anam
+      this.createSurah({
+        // 6 - Al-Anam
         id: 6,
         name: 'Al-Anam',
         arabicName: 'الأنعام',
         englishName: 'The Cattle',
         englishTranslation: 'The Cattle',
         numberOfAyahs: 165,
-        revelationType: RevelationType.MAKKI
+        revelationType: RevelationType.MAKKI,
       }),
-      this.createSurah({ // 7 - Al-Araf
+      this.createSurah({
+        // 7 - Al-Araf
         id: 7,
         name: 'Al-Araf',
         arabicName: 'الأعراف',
         englishName: 'The Heights',
         englishTranslation: 'The Heights',
         numberOfAyahs: 206,
-        revelationType: RevelationType.MAKKI
+        revelationType: RevelationType.MAKKI,
       }),
-      this.createAtTawbah() // 9 - At-Tawbah (note: skips 8)
+      this.createAtTawbah(), // 9 - At-Tawbah (note: skips 8)
     ];
   }
 
@@ -288,7 +295,7 @@ export class SurahFixtures {
     return {
       shortSurah: this.createAlKawthar(), // 3 verses
       mediumSurah: this.createAlMulk(), // 30 verses
-      longSurah: this.createAlBaqarah() // 286 verses
+      longSurah: this.createAlBaqarah(), // 286 verses
     };
   }
 
@@ -301,12 +308,14 @@ export class SurahFixtures {
     hard: Surah[];
   } {
     return {
-      easy: [ // <= 10 verses
+      easy: [
+        // <= 10 verses
         this.createAlFatiha(), // 7 verses
         this.createAlKawthar(), // 3 verses
-        this.createAnNas() // 6 verses
+        this.createAnNas(), // 6 verses
       ],
-      medium: [ // 11-50 verses
+      medium: [
+        // 11-50 verses
         this.createAlMulk(), // 30 verses
         this.createSurah({
           id: 112,
@@ -315,14 +324,15 @@ export class SurahFixtures {
           englishName: 'The Sincerity',
           englishTranslation: 'The Sincerity',
           numberOfAyahs: 4,
-          revelationType: RevelationType.MAKKI
-        })
+          revelationType: RevelationType.MAKKI,
+        }),
       ],
-      hard: [ // > 50 verses
+      hard: [
+        // > 50 verses
         this.createAlBaqarah(), // 286 verses
         this.createAlKahf(), // 110 verses
-        this.createYaseen() // 83 verses
-      ]
+        this.createYaseen(), // 83 verses
+      ],
     };
   }
 
@@ -338,7 +348,7 @@ export class SurahFixtures {
         englishName: 'The Chambers',
         englishTranslation: 'The Chambers',
         numberOfAyahs: 18,
-        revelationType: RevelationType.MADANI
+        revelationType: RevelationType.MADANI,
       }),
       this.createSurah({
         id: 50,
@@ -347,10 +357,10 @@ export class SurahFixtures {
         englishName: 'Qaf',
         englishTranslation: 'Qaf',
         numberOfAyahs: 45,
-        revelationType: RevelationType.MAKKI
+        revelationType: RevelationType.MAKKI,
       }),
       // ... would continue with more Mufassal surahs
-      this.createAnNas() // 114
+      this.createAnNas(), // 114
     ];
   }
 
@@ -360,26 +370,46 @@ export class SurahFixtures {
   static createApiResponses() {
     return {
       singleSurah: { chapter: this.createApiSurah() },
-      allSurahs: { chapters: [
-        this.createApiSurah(),
-        this.createApiSurah({ id: 2, name_simple: 'Al-Baqarah', name_arabic: 'البقرة', verses_count: 286 }),
-        this.createApiSurah({ id: 114, name_simple: 'An-Nas', name_arabic: 'الناس', verses_count: 6 })
-      ]},
-      makkiSurahs: { chapters: this.createMakkiSurahs().map(surah => this.createApiSurah({
-        id: surah.id,
-        name_simple: surah.englishName,
-        name_arabic: surah.arabicName,
-        verses_count: surah.numberOfAyahs,
-        revelation_place: 'makkah'
-      }))},
-      madaniSurahs: { chapters: this.createMadaniSurahs().map(surah => this.createApiSurah({
-        id: surah.id,
-        name_simple: surah.englishName,
-        name_arabic: surah.arabicName,
-        verses_count: surah.numberOfAyahs,
-        revelation_place: 'madinah'
-      }))},
-      errorResponse: null
+      allSurahs: {
+        chapters: [
+          this.createApiSurah(),
+          this.createApiSurah({
+            id: 2,
+            name_simple: 'Al-Baqarah',
+            name_arabic: 'البقرة',
+            verses_count: 286,
+          }),
+          this.createApiSurah({
+            id: 114,
+            name_simple: 'An-Nas',
+            name_arabic: 'الناس',
+            verses_count: 6,
+          }),
+        ],
+      },
+      makkiSurahs: {
+        chapters: this.createMakkiSurahs().map((surah) =>
+          this.createApiSurah({
+            id: surah.id,
+            name_simple: surah.englishName,
+            name_arabic: surah.arabicName,
+            verses_count: surah.numberOfAyahs,
+            revelation_place: 'makkah',
+          })
+        ),
+      },
+      madaniSurahs: {
+        chapters: this.createMadaniSurahs().map((surah) =>
+          this.createApiSurah({
+            id: surah.id,
+            name_simple: surah.englishName,
+            name_arabic: surah.arabicName,
+            verses_count: surah.numberOfAyahs,
+            revelation_place: 'madinah',
+          })
+        ),
+      },
+      errorResponse: null,
     };
   }
 
@@ -394,7 +424,7 @@ export class SurahFixtures {
       18: [15, 16], // Al-Kahf spans Juz 15, 16
       36: [22, 23], // Yaseen spans Juz 22, 23
       67: [29], // Al-Mulk in Juz 29
-      114: [30] // An-Nas in Juz 30
+      114: [30], // An-Nas in Juz 30
     };
   }
 
@@ -412,7 +442,7 @@ export class SurahFixtures {
         englishTranslation: 'The Clot',
         numberOfAyahs: 19,
         revelationType: RevelationType.MAKKI,
-        revelationOrder: 1 // First revealed
+        revelationOrder: 1, // First revealed
       }),
       this.createSurah({
         id: 68,
@@ -422,7 +452,7 @@ export class SurahFixtures {
         englishTranslation: 'The Pen',
         numberOfAyahs: 52,
         revelationType: RevelationType.MAKKI,
-        revelationOrder: 2
+        revelationOrder: 2,
       }),
       this.createSurah({
         id: 73,
@@ -432,7 +462,7 @@ export class SurahFixtures {
         englishTranslation: 'The Wrapped',
         numberOfAyahs: 20,
         revelationType: RevelationType.MAKKI,
-        revelationOrder: 3
+        revelationOrder: 3,
       }),
       this.createSurah({
         id: 74,
@@ -442,9 +472,9 @@ export class SurahFixtures {
         englishTranslation: 'The Covered',
         numberOfAyahs: 56,
         revelationType: RevelationType.MAKKI,
-        revelationOrder: 4
+        revelationOrder: 4,
       }),
-      this.createAlFatiha() // 5th revealed
+      this.createAlFatiha(), // 5th revealed
     ];
   }
 
@@ -454,15 +484,17 @@ export class SurahFixtures {
   static createPaginatedSurahs(page: number = 1, perPage: number = 10): Surah[] {
     const allSurahs = [];
     for (let i = 1; i <= 114; i++) {
-      allSurahs.push(this.createSurah({
-        id: i,
-        name: `Surah ${i}`,
-        arabicName: `السورة ${i}`,
-        englishName: `Surah ${i}`,
-        englishTranslation: `The ${i}`,
-        numberOfAyahs: Math.floor(Math.random() * 200) + 1,
-        revelationType: i % 2 === 0 ? RevelationType.MADANI : RevelationType.MAKKI
-      }));
+      allSurahs.push(
+        this.createSurah({
+          id: i,
+          name: `Surah ${i}`,
+          arabicName: `السورة ${i}`,
+          englishName: `Surah ${i}`,
+          englishTranslation: `The ${i}`,
+          numberOfAyahs: Math.floor(Math.random() * 200) + 1,
+          revelationType: i % 2 === 0 ? RevelationType.MADANI : RevelationType.MAKKI,
+        })
+      );
     }
 
     const startIndex = (page - 1) * perPage;

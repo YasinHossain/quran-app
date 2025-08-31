@@ -63,11 +63,11 @@ export class QuranApiClient {
   async getVerse(surahId: number, ayahNumber: number): Promise<ApiVerse> {
     const url = `${this.baseUrl}/verses/by_chapter/${surahId}?verse_number=${ayahNumber}`;
     const response = await this.httpClient.get<{ verses: ApiVerse[] }>(url);
-    
+
     if (!response.verses || response.verses.length === 0) {
       throw new Error(`Verse not found: ${surahId}:${ayahNumber}`);
     }
-    
+
     return response.verses[0];
   }
 
@@ -76,11 +76,11 @@ export class QuranApiClient {
    */
   async getVersesBySurah(surahId: number, includeTranslation?: boolean): Promise<ApiVerse[]> {
     let url = `${this.baseUrl}/verses/by_chapter/${surahId}`;
-    
+
     if (includeTranslation) {
       url += '?translations=131'; // Default English translation
     }
-    
+
     const response = await this.httpClient.get<{ verses: ApiVerse[] }>(url);
     return response.verses || [];
   }
@@ -118,11 +118,11 @@ export class QuranApiClient {
   async getSurah(surahId: number): Promise<ApiSurah> {
     const url = `${this.baseUrl}/chapters/${surahId}`;
     const response = await this.httpClient.get<{ chapter: ApiSurah }>(url);
-    
+
     if (!response.chapter) {
       throw new Error(`Surah not found: ${surahId}`);
     }
-    
+
     return response.chapter;
   }
 
@@ -141,20 +141,58 @@ export class QuranApiClient {
   async getTranslation(verseId: string, translationId: number): Promise<ApiTranslation> {
     const url = `${this.baseUrl}/translations/${translationId}?verse_id=${verseId}`;
     const response = await this.httpClient.get<{ translations: ApiTranslation[] }>(url);
-    
+
     if (!response.translations || response.translations.length === 0) {
       throw new Error(`Translation not found: ${verseId} with translation ${translationId}`);
     }
-    
+
     return response.translations[0];
   }
 
   /**
    * Gets random verses
+   * Since /verses/random endpoint returns 503, we generate random verse keys
+   * and fetch them individually using working endpoints
    */
   async getRandomVerses(count: number): Promise<ApiVerse[]> {
-    const url = `${this.baseUrl}/verses/random?limit=${count}`;
-    const response = await this.httpClient.get<{ verses: ApiVerse[] }>(url);
-    return response.verses || [];
+    const randomVerses: ApiVerse[] = [];
+    const usedKeys = new Set<string>();
+
+    // Get all surahs to know verse counts
+    const surahs = await this.getAllSurahs();
+
+    for (let i = 0; i < count; i++) {
+      let verseKey: string;
+      let attempts = 0;
+      const maxAttempts = 50; // Prevent infinite loop
+
+      // Generate unique random verse key
+      do {
+        const randomSurah = surahs[Math.floor(Math.random() * surahs.length)];
+        const randomAyah = Math.floor(Math.random() * randomSurah.verses_count) + 1;
+        verseKey = `${randomSurah.id}:${randomAyah}`;
+        attempts++;
+      } while (usedKeys.has(verseKey) && attempts < maxAttempts);
+
+      if (attempts >= maxAttempts) {
+        console.warn('Max attempts reached for generating unique verse key');
+        continue;
+      }
+
+      usedKeys.add(verseKey);
+
+      try {
+        const url = `${this.baseUrl}/verses/by_key/${verseKey}?translations=131&fields=text_uthmani`;
+        const response = await this.httpClient.get<{ verse: ApiVerse }>(url);
+        if (response.verse) {
+          randomVerses.push(response.verse);
+        }
+      } catch (error) {
+        // Skip this verse if it fails to fetch, but don't break the whole operation
+        console.warn(`Failed to fetch verse ${verseKey}:`, error);
+      }
+    }
+
+    return randomVerses;
   }
 }

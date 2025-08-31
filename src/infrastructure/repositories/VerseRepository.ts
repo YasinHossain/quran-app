@@ -13,7 +13,7 @@ export class VerseMapper {
    */
   static toDomain(apiVerse: ApiVerse): Verse {
     let translation: Translation | undefined;
-    
+
     if (apiVerse.translation) {
       translation = new Translation(
         apiVerse.translation.id,
@@ -37,7 +37,7 @@ export class VerseMapper {
    * Maps multiple API verses to domain entities
    */
   static toDomainList(apiVerses: ApiVerse[]): Verse[] {
-    return apiVerses.map(apiVerse => this.toDomain(apiVerse));
+    return apiVerses.map((apiVerse) => this.toDomain(apiVerse));
   }
 }
 
@@ -55,7 +55,7 @@ export class VerseRepository implements IVerseRepository {
 
   async findById(id: string): Promise<Verse | null> {
     const cacheKey = `${this.cachePrefix}${id}`;
-    
+
     // Check cache first
     const cached = await this.cache.get<ApiVerse>(cacheKey);
     if (cached) {
@@ -82,7 +82,9 @@ export class VerseRepository implements IVerseRepository {
   async findAll(): Promise<Verse[]> {
     // This would be expensive to load all verses at once
     // In practice, we'd paginate or have specific use cases
-    throw new Error('findAll not implemented for performance reasons. Use specific queries instead.');
+    throw new Error(
+      'findAll not implemented for performance reasons. Use specific queries instead.'
+    );
   }
 
   async save(entity: Verse): Promise<Verse> {
@@ -96,14 +98,16 @@ export class VerseRepository implements IVerseRepository {
       verse_key: entity.verseKey,
       text_uthmani: entity.uthmaniText,
       text_simple: entity.arabicText,
-      translation: entity.translation ? {
-        id: entity.translation.id,
-        resource_id: entity.translation.resourceId,
-        text: entity.translation.text,
-        language_name: entity.translation.languageCode
-      } : undefined
+      translation: entity.translation
+        ? {
+            id: entity.translation.id,
+            resource_id: entity.translation.resourceId,
+            text: entity.translation.text,
+            language_name: entity.translation.languageCode,
+          }
+        : undefined,
     };
-    
+
     await this.cache.set(cacheKey, apiVerse, this.cacheTtl);
     return entity;
   }
@@ -115,7 +119,7 @@ export class VerseRepository implements IVerseRepository {
 
   async findBySurahAndAyah(surahId: number, ayahNumber: number): Promise<Verse | null> {
     const cacheKey = `${this.cachePrefix}${surahId}:${ayahNumber}`;
-    
+
     // Check cache first
     const cached = await this.cache.get<ApiVerse>(cacheKey);
     if (cached) {
@@ -133,7 +137,7 @@ export class VerseRepository implements IVerseRepository {
 
   async findBySurah(surahId: number, includeTranslations = false): Promise<Verse[]> {
     const cacheKey = `${this.cachePrefix}surah:${surahId}:${includeTranslations}`;
-    
+
     // Check cache first
     const cached = await this.cache.get<ApiVerse[]>(cacheKey);
     if (cached) {
@@ -156,14 +160,14 @@ export class VerseRepository implements IVerseRepository {
     includeTranslations = false
   ): Promise<Verse[]> {
     const allVerses = await this.findBySurah(surahId, includeTranslations);
-    return allVerses.filter(verse => 
-      verse.ayahNumber >= startAyah && verse.ayahNumber <= endAyah
+    return allVerses.filter(
+      (verse) => verse.ayahNumber >= startAyah && verse.ayahNumber <= endAyah
     );
   }
 
   async findByJuz(juzNumber: number, includeTranslations = false): Promise<Verse[]> {
     const cacheKey = `${this.cachePrefix}juz:${juzNumber}:${includeTranslations}`;
-    
+
     // Check cache first
     const cached = await this.cache.get<ApiVerse[]>(cacheKey);
     if (cached) {
@@ -181,7 +185,7 @@ export class VerseRepository implements IVerseRepository {
 
   async findByPage(pageNumber: number, includeTranslations = false): Promise<Verse[]> {
     const cacheKey = `${this.cachePrefix}page:${pageNumber}:${includeTranslations}`;
-    
+
     // Check cache first
     const cached = await this.cache.get<ApiVerse[]>(cacheKey);
     if (cached) {
@@ -201,11 +205,11 @@ export class VerseRepository implements IVerseRepository {
     // Hizb calculation: each juz has 2 hizbs, so hizb N spans verses in juz Math.ceil(N/2)
     const juzNumber = Math.ceil(hizbNumber / 2);
     const allJuzVerses = await this.findByJuz(juzNumber, includeTranslations);
-    
+
     // For simplicity, return half of the juz verses (this would be more complex in reality)
     const isFirstHalf = hizbNumber % 2 === 1;
     const half = Math.ceil(allJuzVerses.length / 2);
-    
+
     return isFirstHalf ? allJuzVerses.slice(0, half) : allJuzVerses.slice(half);
   }
 
@@ -213,11 +217,11 @@ export class VerseRepository implements IVerseRepository {
     // Each hizb has 4 rub al hizbs, so rub N is in hizb Math.ceil(N/4)
     const hizbNumber = Math.ceil(rubNumber / 4);
     const allHizbVerses = await this.findByHizb(hizbNumber, includeTranslations);
-    
+
     // Return a quarter of the hizb verses
     const quarter = Math.ceil(allHizbVerses.length / 4);
     const startIndex = ((rubNumber - 1) % 4) * quarter;
-    
+
     return allHizbVerses.slice(startIndex, startIndex + quarter);
   }
 
@@ -227,7 +231,7 @@ export class VerseRepository implements IVerseRepository {
     }
 
     const cacheKey = `${this.cachePrefix}search:${JSON.stringify(options)}`;
-    
+
     // Check cache first
     const cached = await this.cache.get<ApiVerse[]>(cacheKey);
     if (cached) {
@@ -240,7 +244,7 @@ export class VerseRepository implements IVerseRepository {
         options.limit || 20,
         options.offset || 0
       );
-      
+
       await this.cache.set(cacheKey, apiVerses, this.cacheTtl);
       return VerseMapper.toDomainList(apiVerses);
     } catch (error) {
@@ -250,7 +254,7 @@ export class VerseRepository implements IVerseRepository {
 
   async findSajdahVerses(): Promise<Verse[]> {
     const cacheKey = `${this.cachePrefix}sajdah`;
-    
+
     // Check cache first
     const cached = await this.cache.get<Verse[]>(cacheKey);
     if (cached) {
@@ -276,7 +280,7 @@ export class VerseRepository implements IVerseRepository {
     ];
 
     const sajdahVerses: Verse[] = [];
-    
+
     for (const { surah, ayah } of sajdahPositions) {
       const verse = await this.findBySurahAndAyah(surah, ayah);
       if (verse) {
@@ -290,7 +294,7 @@ export class VerseRepository implements IVerseRepository {
 
   async findFirstVerses(): Promise<Verse[]> {
     const cacheKey = `${this.cachePrefix}first_verses`;
-    
+
     // Check cache first
     const cached = await this.cache.get<Verse[]>(cacheKey);
     if (cached) {
@@ -298,7 +302,7 @@ export class VerseRepository implements IVerseRepository {
     }
 
     const firstVerses: Verse[] = [];
-    
+
     // Get first verse of each surah (1-114)
     for (let surahId = 1; surahId <= 114; surahId++) {
       const verse = await this.findBySurahAndAyah(surahId, 1);
@@ -313,7 +317,7 @@ export class VerseRepository implements IVerseRepository {
 
   async findByVerseKeys(verseKeys: string[]): Promise<Verse[]> {
     const verses: Verse[] = [];
-    
+
     for (const verseKey of verseKeys) {
       const [surahId, ayahNumber] = verseKey.split(':').map(Number);
       if (surahId && ayahNumber) {
@@ -330,8 +334,16 @@ export class VerseRepository implements IVerseRepository {
   async findRandom(count: number, includeTranslations = false): Promise<Verse[]> {
     try {
       const apiVerses = await this.apiClient.getRandomVerses(count);
-      return VerseMapper.toDomainList(apiVerses);
+      const verses = VerseMapper.toDomainList(apiVerses);
+
+      // If we got fewer verses than requested, try to get more
+      if (verses.length < count) {
+        console.warn(`Only received ${verses.length} out of ${count} requested random verses`);
+      }
+
+      return verses;
     } catch (error) {
+      console.error('Failed to fetch random verses:', error);
       return [];
     }
   }
@@ -386,7 +398,7 @@ export class VerseRepository implements IVerseRepository {
   ): Promise<Verse[]> {
     // For simplicity, this implementation just returns verses with translations
     // A full implementation would fetch specific translations
-    
+
     if (surahId) {
       return await this.findBySurah(surahId, true);
     }
@@ -398,13 +410,13 @@ export class VerseRepository implements IVerseRepository {
   async findByRevelationType(type: 'makki' | 'madani', limit = 20): Promise<Verse[]> {
     // This would require surah revelation type data to filter verses
     // For now, return a sample from known surahs of that type
-    
+
     const makkiSurahs = [1, 6, 7, 10, 11, 12, 15]; // Sample Makki surahs
     const madaniSurahs = [2, 3, 4, 5, 8, 9]; // Sample Madani surahs
-    
+
     const surahs = type === 'makki' ? makkiSurahs : madaniSurahs;
     const verses: Verse[] = [];
-    
+
     for (const surahId of surahs.slice(0, Math.min(surahs.length, limit))) {
       const firstVerse = await this.findBySurahAndAyah(surahId, 1);
       if (firstVerse) {

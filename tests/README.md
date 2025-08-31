@@ -7,7 +7,7 @@ This document outlines the comprehensive testing structure implemented as part o
 The testing infrastructure follows the architecture outlined in your project goal, providing:
 
 - ✅ Unit tests for domain entities
-- ✅ Integration tests for repositories  
+- ✅ Integration tests for repositories
 - ✅ E2E tests for user flows
 - ✅ Test fixtures and mocks
 - ✅ CI pipeline for automated testing
@@ -47,11 +47,13 @@ tests/
 **Purpose**: Test individual domain entities and their business logic in isolation.
 
 **Coverage**:
+
 - **Verse Entity**: Business rules (Bismillah detection, sajdah verses, memorization segments, reading time calculation)
 - **Surah Entity**: Classification logic (Makki/Madani, length categories, memorization difficulty)
 - **Value Objects**: Translation and BookmarkPosition logic
 
 **Example**: `Verse.test.ts`
+
 ```typescript
 describe('Verse Entity', () => {
   it('should identify sajdah verses correctly', () => {
@@ -66,11 +68,13 @@ describe('Verse Entity', () => {
 **Purpose**: Test repository implementations with real API clients and cache.
 
 **Coverage**:
+
 - **VerseRepository**: API integration, caching behavior, error handling
 - **Data mapping**: API response → Domain entity conversion
 - **Cache performance**: Hit/miss scenarios, TTL behavior
 
 **Example**: `VerseRepository.test.ts`
+
 ```typescript
 describe('VerseRepository Integration', () => {
   it('should cache verse after API fetch', async () => {
@@ -86,6 +90,7 @@ describe('VerseRepository Integration', () => {
 **Purpose**: Test complete user workflows from UI to data persistence.
 
 **Coverage**:
+
 - **Navigation**: Surah browsing, verse display
 - **Bookmarking**: Add/remove bookmarks, sidebar navigation
 - **Audio**: Playback controls, continuous play
@@ -94,15 +99,14 @@ describe('VerseRepository Integration', () => {
 - **Accessibility**: Keyboard navigation, ARIA labels
 
 **Example**: `reading-quran.test.ts`
+
 ```typescript
 describe('Reading Quran E2E', () => {
   it('should bookmark a verse', async () => {
     await page.goto('/surah/1');
     await page.click('[data-testid="bookmark-button-1-1"]');
-    
-    const bookmarkVisible = await page
-      .locator('[data-testid="bookmark-item-1-1"]')
-      .isVisible();
+
+    const bookmarkVisible = await page.locator('[data-testid="bookmark-item-1-1"]').isVisible();
     expect(bookmarkVisible).toBe(true);
   });
 });
@@ -115,12 +119,14 @@ describe('Reading Quran E2E', () => {
 Pre-built test data for consistent testing:
 
 **VerseFixtures**:
+
 - `createBismillahVerse()`: Standard Bismillah verse
 - `createSajdahVerse()`: Prostration verse for testing
 - `createAllSajdahVerses()`: All 15 sajdah verses
 - `createAlFatihaVerses()`: Complete Al-Fatiha verses
 
 **SurahFixtures**:
+
 - `createAlFatiha()`, `createAlBaqarah()`: Common surahs
 - `createSevenLongSurahs()`: The seven longest surahs
 - `createMakkiSurahs()`, `createMadaniSurahs()`: By revelation type
@@ -130,12 +136,14 @@ Pre-built test data for consistent testing:
 Mock implementations for external dependencies:
 
 **MockHttpClient**:
+
 - Configurable responses
 - Request logging
 - Network delay simulation
 - Failure scenarios
 
 **MockCache**:
+
 - In-memory storage
 - TTL simulation
 - Access pattern tracking
@@ -182,12 +190,14 @@ npm run check
 Based on your project goal requirements:
 
 ### Global Coverage (Phase 4 Requirement)
+
 - **Lines**: 80% minimum
-- **Statements**: 80% minimum  
+- **Statements**: 80% minimum
 - **Functions**: 70% minimum
 - **Branches**: 70% minimum
 
 ### Domain Layer (Higher Standards)
+
 - **Lines**: 90% minimum
 - **Statements**: 90% minimum
 - **Functions**: 85% minimum
@@ -200,6 +210,7 @@ Coverage is enforced in CI pipeline and will fail builds below thresholds.
 The GitHub Actions pipeline (`.github/workflows/test.yml`) includes:
 
 ### Test Jobs
+
 1. **Unit/Integration Tests**: Domain logic and repository tests
 2. **Build Tests**: Compilation and build verification
 3. **E2E Tests**: User flow validation with Playwright
@@ -210,6 +221,7 @@ The GitHub Actions pipeline (`.github/workflows/test.yml`) includes:
 8. **Domain Tests**: Specific Phase 4 domain layer validation
 
 ### Quality Gates
+
 - ✅ All tests must pass
 - ✅ Coverage thresholds must be met
 - ✅ No security vulnerabilities
@@ -219,16 +231,19 @@ The GitHub Actions pipeline (`.github/workflows/test.yml`) includes:
 ## 🛠️ Configuration Files
 
 ### Jest Configuration (`jest.config.js`)
+
 - Module mapping for domain architecture
 - Coverage thresholds aligned with Phase 4 requirements
 - Test patterns for new structure
 
 ### Playwright Configuration (`playwright.config.ts`)
+
 - Multi-browser testing (Chrome, Firefox, Safari)
 - Mobile viewport testing
 - Automatic dev server startup
 
 ### Lighthouse Configuration (`lighthouserc.js`)
+
 - Performance budgets
 - PWA compliance
 - Accessibility standards
@@ -245,11 +260,13 @@ All metrics from your project goal are now achievable:
 ## 🔍 Testing Best Practices
 
 ### 1. Test Organization
+
 - **Unit tests**: Focus on single responsibility and business logic
 - **Integration tests**: Test component interactions and data flow
 - **E2E tests**: Test complete user scenarios
 
 ### 2. Fixture Usage
+
 ```typescript
 // Good: Use fixtures for consistent test data
 const verse = VerseFixtures.createBismillahVerse();
@@ -259,6 +276,7 @@ const verse = new Verse('1:1', 1, 1, 'text', 'uthmani');
 ```
 
 ### 3. Mock Configuration
+
 ```typescript
 // Good: Set up mocks with realistic scenarios
 const mockClient = MockHttpClientFactory.createSlow(2000);
@@ -268,6 +286,7 @@ const failingClient = MockHttpClientFactory.createFailing();
 ```
 
 ### 4. Test Data Management
+
 - Use factories for complex object creation
 - Parameterize tests for different scenarios
 - Clean up test data between tests
@@ -277,16 +296,17 @@ const failingClient = MockHttpClientFactory.createFailing();
 With Phase 4 complete, you're ready for:
 
 1. **Phase 5**: Dependency injection setup
-2. **Phase 6**: Monorepo preparation  
+2. **Phase 6**: Monorepo preparation
 3. **Phase 7**: Mobile app foundation
 
 The testing infrastructure will support all future phases with:
+
 - Shared test fixtures across packages
 - Consistent testing patterns
 - Automated quality gates
 
 ---
 
-**Phase 4 Complete** ✅ 
+**Phase 4 Complete** ✅
 
 Your Quran app now has comprehensive testing infrastructure supporting the domain-driven architecture and preparing for multi-platform development.

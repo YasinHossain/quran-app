@@ -1,5 +1,12 @@
-import { VerseRepository, VerseMapper } from '../../../src/infrastructure/repositories/VerseRepository';
-import { QuranApiClient, IHttpClient, ApiVerse } from '../../../src/infrastructure/api/QuranApiClient';
+import {
+  VerseRepository,
+  VerseMapper,
+} from '../../../src/infrastructure/repositories/VerseRepository';
+import {
+  QuranApiClient,
+  IHttpClient,
+  ApiVerse,
+} from '../../../src/infrastructure/api/QuranApiClient';
 import { MemoryCache } from '../../../src/infrastructure/cache/ICache';
 
 // Mock HTTP Client for testing
@@ -48,8 +55,8 @@ describe('VerseRepository Integration Tests', () => {
       id: 1,
       resource_id: 131,
       text: 'In the name of Allah, the Beneficent, the Merciful.',
-      language_name: 'english'
-    }
+      language_name: 'english',
+    },
   };
 
   beforeEach(() => {
@@ -87,7 +94,7 @@ describe('VerseRepository Integration Tests', () => {
 
     it('should map list of API verses to domain entities', () => {
       const apiVerses = [mockApiVerse, { ...mockApiVerse, id: '1:2', verse_number: 2 }];
-      
+
       const verses = VerseMapper.toDomainList(apiVerses);
 
       expect(verses).toHaveLength(2);
@@ -176,7 +183,7 @@ describe('VerseRepository Integration Tests', () => {
       );
 
       await repository.findBySurahAndAyah(1, 1);
-      
+
       // Check if cached
       const cached = await cache.has('verse:1:1');
       expect(cached).toBe(true);
@@ -188,13 +195,12 @@ describe('VerseRepository Integration Tests', () => {
       const surahVerses = [
         mockApiVerse,
         { ...mockApiVerse, id: '1:2', verse_number: 2 },
-        { ...mockApiVerse, id: '1:3', verse_number: 3 }
+        { ...mockApiVerse, id: '1:3', verse_number: 3 },
       ];
 
-      mockHttpClient.setResponse(
-        'https://api.quran.com/api/v4/verses/by_chapter/1',
-        { verses: surahVerses }
-      );
+      mockHttpClient.setResponse('https://api.quran.com/api/v4/verses/by_chapter/1', {
+        verses: surahVerses,
+      });
 
       const verses = await repository.findBySurah(1);
 
@@ -217,13 +223,12 @@ describe('VerseRepository Integration Tests', () => {
     });
 
     it('should cache surah verses', async () => {
-      mockHttpClient.setResponse(
-        'https://api.quran.com/api/v4/verses/by_chapter/1',
-        { verses: [mockApiVerse] }
-      );
+      mockHttpClient.setResponse('https://api.quran.com/api/v4/verses/by_chapter/1', {
+        verses: [mockApiVerse],
+      });
 
       await repository.findBySurah(1);
-      
+
       const cached = await cache.has('verse:surah:1:false');
       expect(cached).toBe(true);
     });
@@ -234,13 +239,12 @@ describe('VerseRepository Integration Tests', () => {
       const surahVerses = Array.from({ length: 7 }, (_, i) => ({
         ...mockApiVerse,
         id: `1:${i + 1}`,
-        verse_number: i + 1
+        verse_number: i + 1,
       }));
 
-      mockHttpClient.setResponse(
-        'https://api.quran.com/api/v4/verses/by_chapter/1',
-        { verses: surahVerses }
-      );
+      mockHttpClient.setResponse('https://api.quran.com/api/v4/verses/by_chapter/1', {
+        verses: surahVerses,
+      });
 
       const verses = await repository.findBySurahRange(1, 2, 5);
 
@@ -252,10 +256,9 @@ describe('VerseRepository Integration Tests', () => {
 
   describe('findByPage', () => {
     it('should find verses by page number', async () => {
-      mockHttpClient.setResponse(
-        'https://api.quran.com/api/v4/verses/by_page/1',
-        { verses: [mockApiVerse] }
-      );
+      mockHttpClient.setResponse('https://api.quran.com/api/v4/verses/by_page/1', {
+        verses: [mockApiVerse],
+      });
 
       const verses = await repository.findByPage(1);
 
@@ -266,10 +269,9 @@ describe('VerseRepository Integration Tests', () => {
 
   describe('findByJuz', () => {
     it('should find verses by Juz number', async () => {
-      mockHttpClient.setResponse(
-        'https://api.quran.com/api/v4/verses/by_juz/1',
-        { verses: [mockApiVerse] }
-      );
+      mockHttpClient.setResponse('https://api.quran.com/api/v4/verses/by_juz/1', {
+        verses: [mockApiVerse],
+      });
 
       const verses = await repository.findByJuz(1);
 
@@ -280,10 +282,9 @@ describe('VerseRepository Integration Tests', () => {
 
   describe('search', () => {
     it('should search verses by query', async () => {
-      mockHttpClient.setResponse(
-        'https://api.quran.com/api/v4/search?q=Allah&size=20&from=0',
-        { search: { results: [mockApiVerse] } }
-      );
+      mockHttpClient.setResponse('https://api.quran.com/api/v4/search?q=Allah&size=20&from=0', {
+        search: { results: [mockApiVerse] },
+      });
 
       const verses = await repository.search({ query: 'Allah' });
 
@@ -292,15 +293,14 @@ describe('VerseRepository Integration Tests', () => {
     });
 
     it('should handle search with pagination', async () => {
-      mockHttpClient.setResponse(
-        'https://api.quran.com/api/v4/search?q=Allah&size=10&from=5',
-        { search: { results: [mockApiVerse] } }
-      );
+      mockHttpClient.setResponse('https://api.quran.com/api/v4/search?q=Allah&size=10&from=5', {
+        search: { results: [mockApiVerse] },
+      });
 
-      const verses = await repository.search({ 
+      const verses = await repository.search({
         query: 'Allah',
         limit: 10,
-        offset: 5
+        offset: 5,
       });
 
       expect(verses).toHaveLength(1);
@@ -324,14 +324,18 @@ describe('VerseRepository Integration Tests', () => {
       sajdahPositions.forEach(({ surah, ayah }) => {
         mockHttpClient.setResponse(
           `https://api.quran.com/api/v4/verses/by_chapter/${surah}?verse_number=${ayah}`,
-          { verses: [{ ...mockApiVerse, id: `${surah}:${ayah}`, chapter_id: surah, verse_number: ayah }] }
+          {
+            verses: [
+              { ...mockApiVerse, id: `${surah}:${ayah}`, chapter_id: surah, verse_number: ayah },
+            ],
+          }
         );
       });
 
       const verses = await repository.findSajdahVerses();
 
       expect(verses.length).toBeGreaterThan(0);
-      verses.forEach(verse => {
+      verses.forEach((verse) => {
         expect(verse.isSajdahVerse()).toBe(true);
       });
     });
@@ -368,13 +372,12 @@ describe('VerseRepository Integration Tests', () => {
       const surahVerses = Array.from({ length: 7 }, (_, i) => ({
         ...mockApiVerse,
         id: `1:${i + 1}`,
-        verse_number: i + 1
+        verse_number: i + 1,
       }));
 
-      mockHttpClient.setResponse(
-        'https://api.quran.com/api/v4/verses/by_chapter/1',
-        { verses: surahVerses }
-      );
+      mockHttpClient.setResponse('https://api.quran.com/api/v4/verses/by_chapter/1', {
+        verses: surahVerses,
+      });
 
       const count = await repository.getCountBySurah(1);
       expect(count).toBe(7);
@@ -400,7 +403,7 @@ describe('VerseRepository Integration Tests', () => {
         'https://api.quran.com/api/v4/verses/by_chapter/1?verse_number=8',
         { verses: [] }
       );
-      
+
       // Mock first verse of next surah
       mockHttpClient.setResponse(
         'https://api.quran.com/api/v4/verses/by_chapter/2?verse_number=1',
@@ -445,7 +448,7 @@ describe('VerseRepository Integration Tests', () => {
       // Check if both surahs are cached
       const surah1Cached = await cache.has('verse:surah:1:true');
       const surah2Cached = await cache.has('verse:surah:2:true');
-      
+
       expect(surah1Cached).toBe(true);
       expect(surah2Cached).toBe(true);
     });
@@ -456,21 +459,21 @@ describe('VerseRepository Integration Tests', () => {
       // First cache some data
       await cache.set('verse:surah:1:false', [mockApiVerse]);
       await cache.set('verse:surah:1:true', [mockApiVerse]);
-      
+
       await repository.clearCache(1);
-      
+
       const cached1 = await cache.has('verse:surah:1:false');
       const cached2 = await cache.has('verse:surah:1:true');
-      
+
       expect(cached1).toBe(false);
       expect(cached2).toBe(false);
     });
 
     it('should clear all cache when no surah specified', async () => {
       await cache.set('test-key', 'test-value');
-      
+
       await repository.clearCache();
-      
+
       const hasKey = await cache.has('test-key');
       expect(hasKey).toBe(false);
     });
@@ -479,14 +482,14 @@ describe('VerseRepository Integration Tests', () => {
   describe('error handling', () => {
     it('should handle API errors gracefully', async () => {
       // Don't set up any mock response, so it will throw an error
-      
+
       const verse = await repository.findById('1:1');
       expect(verse).toBeNull();
     });
 
     it('should return empty array when search fails', async () => {
       // Don't set up mock response for search
-      
+
       const verses = await repository.search({ query: 'test' });
       expect(verses).toHaveLength(0);
     });

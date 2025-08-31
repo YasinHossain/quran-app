@@ -9,14 +9,16 @@ export class VerseFixtures {
   /**
    * Creates a basic Verse entity for testing
    */
-  static createVerse(overrides: Partial<{
-    id: string;
-    surahId: number;
-    ayahNumber: number;
-    arabicText: string;
-    uthmaniText: string;
-    translation?: Translation;
-  }> = {}): Verse {
+  static createVerse(
+    overrides: Partial<{
+      id: string;
+      surahId: number;
+      ayahNumber: number;
+      arabicText: string;
+      uthmaniText: string;
+      translation?: Translation;
+    }> = {}
+  ): Verse {
     const defaults = {
       id: '1:1',
       surahId: 1,
@@ -26,7 +28,7 @@ export class VerseFixtures {
     };
 
     const data = { ...defaults, ...overrides };
-    
+
     return new Verse(
       data.id,
       data.surahId,
@@ -40,12 +42,14 @@ export class VerseFixtures {
   /**
    * Creates a Translation for testing
    */
-  static createTranslation(overrides: Partial<{
-    id: number;
-    resourceId: number;
-    text: string;
-    languageCode: string;
-  }> = {}): Translation {
+  static createTranslation(
+    overrides: Partial<{
+      id: number;
+      resourceId: number;
+      text: string;
+      languageCode: string;
+    }> = {}
+  ): Translation {
     const defaults = {
       id: 1,
       resourceId: 131,
@@ -54,7 +58,7 @@ export class VerseFixtures {
     };
 
     const data = { ...defaults, ...overrides };
-    
+
     return new Translation(data.id, data.resourceId, data.text, data.languageCode);
   }
 
@@ -73,8 +77,8 @@ export class VerseFixtures {
         id: 1,
         resource_id: 131,
         text: 'In the name of Allah, the Beneficent, the Merciful.',
-        language_name: 'english'
-      }
+        language_name: 'english',
+      },
     };
 
     return { ...defaults, ...overrides };
@@ -91,8 +95,8 @@ export class VerseFixtures {
       arabicText: 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
       uthmaniText: 'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ',
       translation: this.createTranslation({
-        text: 'In the name of Allah, the Beneficent, the Merciful.'
-      })
+        text: 'In the name of Allah, the Beneficent, the Merciful.',
+      }),
     });
   }
 
@@ -107,8 +111,8 @@ export class VerseFixtures {
       arabicText: 'اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ',
       uthmaniText: 'ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلْحَىُّ ٱلْقَيُّومُ',
       translation: this.createTranslation({
-        text: 'Allah - there is no deity except Him, the Ever-Living, the Sustainer of existence.'
-      })
+        text: 'Allah - there is no deity except Him, the Ever-Living, the Sustainer of existence.',
+      }),
     });
   }
 
@@ -120,11 +124,13 @@ export class VerseFixtures {
       id: '7:206',
       surahId: 7,
       ayahNumber: 206,
-      arabicText: 'إِنَّ الَّذِينَ عِندَ رَبِّكَ لَا يَسْتَكْبِرُونَ عَنْ عِبَادَتِهِ وَيُسَبِّحُونَهُ وَلَهُ يَسْجُدُونَ',
-      uthmaniText: 'إِنَّ ٱلَّذِينَ عِندَ رَبِّكَ لَا يَسْتَكْبِرُونَ عَنْ عِبَادَتِهِۦ وَيُسَبِّحُونَهُۥ وَلَهُۥ يَسْجُدُونَ',
+      arabicText:
+        'إِنَّ الَّذِينَ عِندَ رَبِّكَ لَا يَسْتَكْبِرُونَ عَنْ عِبَادَتِهِ وَيُسَبِّحُونَهُ وَلَهُ يَسْجُدُونَ',
+      uthmaniText:
+        'إِنَّ ٱلَّذِينَ عِندَ رَبِّكَ لَا يَسْتَكْبِرُونَ عَنْ عِبَادَتِهِۦ وَيُسَبِّحُونَهُۥ وَلَهُۥ يَسْجُدُونَ',
       translation: this.createTranslation({
-        text: 'Indeed, those who are near your Lord do not disdain His worship, and they exalt Him, and to Him they prostrate.'
-      })
+        text: 'Indeed, those who are near your Lord do not disdain His worship, and they exalt Him, and to Him they prostrate.',
+      }),
     });
   }
 
@@ -139,8 +145,8 @@ export class VerseFixtures {
       arabicText: 'وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ',
       uthmaniText: 'وَلَمْ يَكُن لَّهُۥ كُفُوًا أَحَدٌۢ',
       translation: this.createTranslation({
-        text: 'Nor is there to Him any equivalent.'
-      })
+        text: 'Nor is there to Him any equivalent.',
+      }),
     });
   }
 
@@ -152,11 +158,13 @@ export class VerseFixtures {
       id: '2:282',
       surahId: 2,
       ayahNumber: 282,
-      arabicText: 'يَا أَيُّهَا الَّذِينَ آمَنُوا إِذَا تَدَايَنتُم بِدَيْنٍ إِلَىٰ أَجَلٍ مُّسَمًّى فَاكْتُبُوهُ',
-      uthmaniText: 'يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوٓا۟ إِذَا تَدَايَنتُم بِدَيْنٍ إِلَىٰٓ أَجَلٍ مُّسَمًّى فَٱكْتُبُوهُ',
+      arabicText:
+        'يَا أَيُّهَا الَّذِينَ آمَنُوا إِذَا تَدَايَنتُم بِدَيْنٍ إِلَىٰ أَجَلٍ مُّسَمًّى فَاكْتُبُوهُ',
+      uthmaniText:
+        'يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوٓا۟ إِذَا تَدَايَنتُم بِدَيْنٍ إِلَىٰٓ أَجَلٍ مُّسَمًّى فَٱكْتُبُوهُ',
       translation: this.createTranslation({
-        text: 'O you who have believed, when you contract a debt for a specified term, write it down.'
-      })
+        text: 'O you who have believed, when you contract a debt for a specified term, write it down.',
+      }),
     });
   }
 
@@ -173,8 +181,8 @@ export class VerseFixtures {
         arabicText: 'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ',
         uthmaniText: 'ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَٰلَمِينَ',
         translation: this.createTranslation({
-          text: '[All] praise is [due] to Allah, Lord of the worlds.'
-        })
+          text: '[All] praise is [due] to Allah, Lord of the worlds.',
+        }),
       }),
       this.createVerse({
         id: '1:3',
@@ -183,8 +191,8 @@ export class VerseFixtures {
         arabicText: 'الرَّحْمَٰنِ الرَّحِيمِ',
         uthmaniText: 'ٱلرَّحْمَٰنِ ٱلرَّحِيمِ',
         translation: this.createTranslation({
-          text: 'The Entirely Merciful, the Especially Merciful.'
-        })
+          text: 'The Entirely Merciful, the Especially Merciful.',
+        }),
       }),
     ];
   }
@@ -197,19 +205,19 @@ export class VerseFixtures {
       id: 1,
       resourceId: 131,
       text: 'In the name of Allah, the Beneficent, the Merciful.',
-      languageCode: 'en'
+      languageCode: 'en',
     });
 
     const urduTranslation = this.createTranslation({
       id: 2,
       resourceId: 158,
       text: 'اللہ کے نام سے جو بڑا مہربان نہایت رحم والا ہے',
-      languageCode: 'ur'
+      languageCode: 'ur',
     });
 
     return [
       this.createVerse({ translation: englishTranslation }),
-      this.createVerse({ translation: urduTranslation })
+      this.createVerse({ translation: urduTranslation }),
     ];
   }
 
@@ -243,8 +251,8 @@ export class VerseFixtures {
         arabicText: 'سَجْدَة', // Placeholder Arabic text
         uthmaniText: 'سَجْدَة',
         translation: this.createTranslation({
-          text: `Sajdah verse ${surah}:${ayah}`
-        })
+          text: `Sajdah verse ${surah}:${ayah}`,
+        }),
       })
     );
   }
@@ -255,24 +263,33 @@ export class VerseFixtures {
   static createApiResponses() {
     return {
       singleVerse: { verses: [this.createApiVerse()] },
-      surahVerses: { verses: this.createAlFatihaVerses().map(verse => this.createApiVerse({
-        id: verse.id,
-        verse_number: verse.ayahNumber,
-        chapter_id: verse.surahId,
-        verse_key: verse.verseKey,
-        text_simple: verse.arabicText,
-        text_uthmani: verse.uthmaniText
-      })) },
-      searchResults: { 
-        search: { 
+      surahVerses: {
+        verses: this.createAlFatihaVerses().map((verse) =>
+          this.createApiVerse({
+            id: verse.id,
+            verse_number: verse.ayahNumber,
+            chapter_id: verse.surahId,
+            verse_key: verse.verseKey,
+            text_simple: verse.arabicText,
+            text_uthmani: verse.uthmaniText,
+          })
+        ),
+      },
+      searchResults: {
+        search: {
           results: [
             this.createApiVerse(),
-            this.createApiVerse({ id: '2:255', verse_number: 255, chapter_id: 2, verse_key: '2:255' })
-          ] 
-        } 
+            this.createApiVerse({
+              id: '2:255',
+              verse_number: 255,
+              chapter_id: 2,
+              verse_key: '2:255',
+            }),
+          ],
+        },
       },
       emptyResults: { verses: [] },
-      errorResponse: null
+      errorResponse: null,
     };
   }
 
@@ -282,18 +299,20 @@ export class VerseFixtures {
   static createPaginatedVerses(page: number = 1, perPage: number = 10): Verse[] {
     const verses: Verse[] = [];
     const startId = (page - 1) * perPage + 1;
-    
+
     for (let i = 0; i < perPage; i++) {
       const verseId = startId + i;
-      verses.push(this.createVerse({
-        id: `test:${verseId}`,
-        surahId: 1,
-        ayahNumber: verseId,
-        arabicText: `آية رقم ${verseId}`,
-        uthmaniText: `آية رقم ${verseId}`
-      }));
+      verses.push(
+        this.createVerse({
+          id: `test:${verseId}`,
+          surahId: 1,
+          ayahNumber: verseId,
+          arabicText: `آية رقم ${verseId}`,
+          uthmaniText: `آية رقم ${verseId}`,
+        })
+      );
     }
-    
+
     return verses;
   }
 
@@ -308,16 +327,18 @@ export class VerseFixtures {
     return {
       shortVerse: this.createVerse({
         arabicText: 'قُلْ هُوَ اللَّهُ أَحَدٌ', // 4 words
-        uthmaniText: 'قُلْ هُوَ ٱللَّهُ أَحَدٌ'
+        uthmaniText: 'قُلْ هُوَ ٱللَّهُ أَحَدٌ',
       }),
       mediumVerse: this.createVerse({
-        arabicText: 'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ الرَّحْمَٰنِ الرَّحِيمِ مَالِكِ يَوْمِ الدِّينِ', // 10 words
-        uthmaniText: 'ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَٰلَمِينَ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ مَٰلِكِ يَوْمِ ٱلدِّينِ'
+        arabicText:
+          'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ الرَّحْمَٰنِ الرَّحِيمِ مَالِكِ يَوْمِ الدِّينِ', // 10 words
+        uthmaniText:
+          'ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَٰلَمِينَ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ مَٰلِكِ يَوْمِ ٱلدِّينِ',
       }),
       longVerse: this.createVerse({
         arabicText: Array(20).fill('كَلِمَة').join(' '), // 20 words
-        uthmaniText: Array(20).fill('كَلِمَة').join(' ')
-      })
+        uthmaniText: Array(20).fill('كَلِمَة').join(' '),
+      }),
     };
   }
 }

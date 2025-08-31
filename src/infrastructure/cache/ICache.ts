@@ -42,7 +42,7 @@ export class MemoryCache implements ICache {
 
   async get<T>(key: string): Promise<T | null> {
     const item = this.cache.get(key);
-    
+
     if (!item) {
       this.stats.misses++;
       return null;
@@ -60,9 +60,9 @@ export class MemoryCache implements ICache {
 
   async set<T>(key: string, value: T, ttlSeconds?: number): Promise<void> {
     const item: { value: T; expires?: number } = { value };
-    
+
     if (ttlSeconds) {
-      item.expires = Date.now() + (ttlSeconds * 1000);
+      item.expires = Date.now() + ttlSeconds * 1000;
     }
 
     this.cache.set(key, item);
@@ -70,9 +70,9 @@ export class MemoryCache implements ICache {
 
   async has(key: string): Promise<boolean> {
     const item = this.cache.get(key);
-    
+
     if (!item) return false;
-    
+
     if (item.expires && Date.now() > item.expires) {
       this.cache.delete(key);
       return false;

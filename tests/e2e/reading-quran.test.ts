@@ -1,7 +1,7 @@
 /**
  * E2E tests for reading Quran user flows
  * These tests would typically run with Playwright or similar E2E framework
- * 
+ *
  * Note: These tests are written as examples of what E2E tests would look like
  * In a real implementation, you would need to install and configure Playwright:
  * npm install --save-dev @playwright/test
@@ -12,7 +12,11 @@ interface MockPage {
   goto(url: string): Promise<void>;
   click(selector: string): Promise<void>;
   waitForURL(pattern: string): Promise<void>;
-  locator(selector: string): { count(): Promise<number>; textContent(): Promise<string | null>; isVisible(): Promise<boolean> };
+  locator(selector: string): {
+    count(): Promise<number>;
+    textContent(): Promise<string | null>;
+    isVisible(): Promise<boolean>;
+  };
   waitForSelector(selector: string): Promise<void>;
   fill(selector: string, value: string): Promise<void>;
   keyboard: { press(key: string): Promise<void> };
@@ -31,11 +35,11 @@ describe('Reading Quran E2E', () => {
       locator: jest.fn((selector: string) => ({
         count: jest.fn().mockResolvedValue(7), // Al-Fatiha has 7 verses
         textContent: jest.fn().mockResolvedValue('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ'),
-        isVisible: jest.fn().mockResolvedValue(true)
+        isVisible: jest.fn().mockResolvedValue(true),
       })),
       waitForSelector: jest.fn(),
       fill: jest.fn(),
-      keyboard: { press: jest.fn() }
+      keyboard: { press: jest.fn() },
     };
   });
 
@@ -55,7 +59,9 @@ describe('Reading Quran E2E', () => {
       expect(verseCount).toBe(7);
 
       // Check first verse contains Bismillah
-      const firstVerseText = await page.locator('[data-testid="verse-1-1"] .arabic-text').textContent();
+      const firstVerseText = await page
+        .locator('[data-testid="verse-1-1"] .arabic-text')
+        .textContent();
       expect(firstVerseText).toContain('بِسْمِ اللَّهِ');
 
       // Verify verse numbers are displayed correctly
@@ -110,12 +116,14 @@ describe('Reading Quran E2E', () => {
 
       // Verify bookmark appears in sidebar
       await page.click('[data-testid="bookmarks-sidebar-trigger"]');
-      
+
       const bookmarkItem = await page.locator('[data-testid="bookmark-item-1-1"]').isVisible();
       expect(bookmarkItem).toBe(true);
 
       // Verify bookmark shows correct verse reference
-      const bookmarkText = await page.locator('[data-testid="bookmark-item-1-1"] .verse-reference').textContent();
+      const bookmarkText = await page
+        .locator('[data-testid="bookmark-item-1-1"] .verse-reference')
+        .textContent();
       expect(bookmarkText).toBe('1:1');
     });
 
@@ -124,13 +132,13 @@ describe('Reading Quran E2E', () => {
 
       // First bookmark the verse
       await page.click('[data-testid="bookmark-button-1-1"]');
-      
+
       // Then remove the bookmark
       await page.click('[data-testid="bookmark-button-1-1"]');
 
       // Verify bookmark is removed from sidebar
       await page.click('[data-testid="bookmarks-sidebar-trigger"]');
-      
+
       const bookmarkItem = await page.locator('[data-testid="bookmark-item-1-1"]').isVisible();
       expect(bookmarkItem).toBe(false);
     });
@@ -152,9 +160,11 @@ describe('Reading Quran E2E', () => {
 
       // Verify navigation to bookmarked verse
       await page.waitForURL('**/surah/2');
-      
+
       // Verify the specific verse is highlighted or scrolled to
-      const highlightedVerse = await page.locator('[data-testid="verse-2-255"].highlighted').isVisible();
+      const highlightedVerse = await page
+        .locator('[data-testid="verse-2-255"].highlighted')
+        .isVisible();
       expect(highlightedVerse).toBe(true);
     });
   });
@@ -164,18 +174,24 @@ describe('Reading Quran E2E', () => {
       await page.goto('http://localhost:3000/surah/1');
 
       // Initially translations should be hidden
-      const translationHidden = await page.locator('[data-testid="verse-1-1"] .translation-text').isVisible();
+      const translationHidden = await page
+        .locator('[data-testid="verse-1-1"] .translation-text')
+        .isVisible();
       expect(translationHidden).toBe(false);
 
       // Click translation toggle button
       await page.click('[data-testid="translation-toggle"]');
 
       // Verify translations are now visible
-      const translationVisible = await page.locator('[data-testid="verse-1-1"] .translation-text').isVisible();
+      const translationVisible = await page
+        .locator('[data-testid="verse-1-1"] .translation-text')
+        .isVisible();
       expect(translationVisible).toBe(true);
 
       // Verify translation content
-      const translationText = await page.locator('[data-testid="verse-1-1"] .translation-text').textContent();
+      const translationText = await page
+        .locator('[data-testid="verse-1-1"] .translation-text')
+        .textContent();
       expect(translationText).toContain('In the name of Allah');
     });
 
@@ -192,7 +208,9 @@ describe('Reading Quran E2E', () => {
       await page.click('[data-testid="translation-toggle"]');
 
       // Verify Urdu translation is displayed
-      const urduTranslation = await page.locator('[data-testid="verse-1-1"] .translation-text').textContent();
+      const urduTranslation = await page
+        .locator('[data-testid="verse-1-1"] .translation-text')
+        .textContent();
       expect(urduTranslation).toContain('اللہ'); // Should contain Allah in Urdu script
     });
   });
@@ -271,7 +289,9 @@ describe('Reading Quran E2E', () => {
       expect(searchResults).toBeGreaterThan(0);
 
       // Verify search results contain the query
-      const firstResult = await page.locator('[data-testid="search-result"]:first-child .verse-text').textContent();
+      const firstResult = await page
+        .locator('[data-testid="search-result"]:first-child .verse-text')
+        .textContent();
       expect(firstResult?.toLowerCase()).toContain('allah');
     });
 
@@ -317,7 +337,9 @@ describe('Reading Quran E2E', () => {
       await page.click('[data-testid="play-surah-button"]');
 
       // Verify mobile audio controls are visible
-      const mobileAudioControls = await page.locator('[data-testid="mobile-audio-controls"]').isVisible();
+      const mobileAudioControls = await page
+        .locator('[data-testid="mobile-audio-controls"]')
+        .isVisible();
       expect(mobileAudioControls).toBe(true);
 
       // Verify essential controls are present
@@ -338,7 +360,9 @@ describe('Reading Quran E2E', () => {
       await page.keyboard.press('Enter');
 
       // Verify bookmark was added
-      const bookmarkActive = await page.locator('[data-testid="bookmark-button-1-1"].active').isVisible();
+      const bookmarkActive = await page
+        .locator('[data-testid="bookmark-button-1-1"].active')
+        .isVisible();
       expect(bookmarkActive).toBe(true);
     });
 
@@ -347,7 +371,7 @@ describe('Reading Quran E2E', () => {
 
       // Check that verse cards have proper labels
       const verseCard = page.locator('[data-testid="verse-1-1"]');
-      
+
       // Note: In real tests, you would check actual aria-label attributes
       // const ariaLabel = await verseCard.getAttribute('aria-label');
       // expect(ariaLabel).toContain('Verse 1 of Surah Al-Fatiha');

@@ -61,19 +61,13 @@ const customJestConfig = {
   },
 
   // Coverage reporters
-  coverageReporters: [
-    'text',
-    'text-summary',
-    'html',
-    'lcov',
-    'clover',
-  ],
+  coverageReporters: ['text', 'text-summary', 'html', 'lcov', 'clover'],
 
   // Test timeout
   testTimeout: 10000, // 10 seconds
 
   testPathIgnorePatterns: [
-    '<rootDir>/.next/', 
+    '<rootDir>/.next/',
     '<rootDir>/node_modules/',
     '<rootDir>/out/',
     '<rootDir>/coverage/',

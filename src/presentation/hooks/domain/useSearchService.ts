@@ -52,26 +52,38 @@ export const useSearchService = ({ searchService }: UseSearchServiceProps) => {
         const surahs = await searchService.searchSurahs(query);
 
         // Convert search results to domain entities for consistency
-        const domainVerses = verses.map(v => new Verse(
-          String(v.id),
-          v.surahId,
-          v.ayahNumber,
-          v.arabicText,
-          v.uthmaniText,
-          v.translation ? new Translation(v.translation.resourceId, v.translation.text, v.translation.language) : undefined
-        ));
+        const domainVerses = verses.map(
+          (v) =>
+            new Verse(
+              String(v.id),
+              v.surahId,
+              v.ayahNumber,
+              v.arabicText,
+              v.uthmaniText,
+              v.translation
+                ? new Translation(
+                    v.translation.resourceId,
+                    v.translation.text,
+                    v.translation.language
+                  )
+                : undefined
+            )
+        );
 
-        const domainSurahs = surahs.map(s => new Surah(
-          s.id,
-          s.name,
-          s.arabicName,
-          s.englishName,
-          s.englishTranslation,
-          s.numberOfAyahs,
-          s.revelationType,
-          s.revelationOrder,
-          s.rukus
-        ));
+        const domainSurahs = surahs.map(
+          (s) =>
+            new Surah(
+              s.id,
+              s.name,
+              s.arabicName,
+              s.englishName,
+              s.englishTranslation,
+              s.numberOfAyahs,
+              s.revelationType,
+              s.revelationOrder,
+              s.rukus
+            )
+        );
 
         const searchResults = {
           verses: domainVerses,

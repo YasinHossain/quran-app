@@ -5,7 +5,8 @@ import { IHttpClient } from '../../src/infrastructure/api/QuranApiClient';
  */
 export class MockHttpClient implements IHttpClient {
   private responses = new Map<string, any>();
-  private requestLog: Array<{ method: string; url: string; data?: any; options?: RequestInit }> = [];
+  private requestLog: Array<{ method: string; url: string; data?: any; options?: RequestInit }> =
+    [];
   private delayMs: number = 0;
   private shouldFail: boolean = false;
   private failureError: Error = new Error('Mock HTTP request failed');
@@ -75,16 +76,21 @@ export class MockHttpClient implements IHttpClient {
     if (!url) {
       return this.requestLog.length;
     }
-    return this.requestLog.filter(req => req.url === url).length;
+    return this.requestLog.filter((req) => req.url === url).length;
   }
 
-  private async simulateRequest<T>(method: string, url: string, data?: any, options?: RequestInit): Promise<T> {
+  private async simulateRequest<T>(
+    method: string,
+    url: string,
+    data?: any,
+    options?: RequestInit
+  ): Promise<T> {
     // Log the request
     this.requestLog.push({ method, url, data, options });
 
     // Simulate delay
     if (this.delayMs > 0) {
-      await new Promise(resolve => setTimeout(resolve, this.delayMs));
+      await new Promise((resolve) => setTimeout(resolve, this.delayMs));
     }
 
     // Check if should fail
@@ -128,18 +134,20 @@ export class MockHttpClientFactory {
    */
   static createSuccessful(): MockHttpClient {
     const client = new MockHttpClient();
-    
+
     // Pre-configure common successful responses
     client.setResponses({
       'https://api.quran.com/api/v4/verses/by_chapter/1?verse_number=1': {
-        verses: [{
-          id: '1:1',
-          verse_number: 1,
-          chapter_id: 1,
-          verse_key: '1:1',
-          text_uthmani: 'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ',
-          text_simple: 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
-        }]
+        verses: [
+          {
+            id: '1:1',
+            verse_number: 1,
+            chapter_id: 1,
+            verse_key: '1:1',
+            text_uthmani: 'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ',
+            text_simple: 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
+          },
+        ],
       },
       'https://api.quran.com/api/v4/chapters/1': {
         chapter: {
@@ -148,8 +156,8 @@ export class MockHttpClientFactory {
           name_complex: 'Al-Fātiḥah',
           name_arabic: 'الفاتحة',
           verses_count: 7,
-          revelation_place: 'makkah'
-        }
+          revelation_place: 'makkah',
+        },
       },
       'https://api.quran.com/api/v4/chapters': {
         chapters: [
@@ -158,17 +166,17 @@ export class MockHttpClientFactory {
             name_simple: 'Al-Fatiha',
             name_arabic: 'الفاتحة',
             verses_count: 7,
-            revelation_place: 'makkah'
+            revelation_place: 'makkah',
           },
           {
             id: 2,
             name_simple: 'Al-Baqarah',
             name_arabic: 'البقرة',
             verses_count: 286,
-            revelation_place: 'madinah'
-          }
-        ]
-      }
+            revelation_place: 'madinah',
+          },
+        ],
+      },
     });
 
     return client;
@@ -200,7 +208,7 @@ export class MockHttpClientFactory {
     client.setResponses({
       'https://api.quran.com/api/v4/verses/by_chapter/999?verse_number=999': { verses: [] },
       'https://api.quran.com/api/v4/search?q=nonexistent': { search: { results: [] } },
-      'https://api.quran.com/api/v4/chapters/999': { chapter: null }
+      'https://api.quran.com/api/v4/chapters/999': { chapter: null },
     });
     return client;
   }
@@ -211,11 +219,12 @@ export class MockHttpClientFactory {
   static createRateLimited(): MockHttpClient {
     const client = new MockHttpClient();
     let requestCount = 0;
-    
+
     const originalGet = client.get.bind(client);
-    client.get = async function<T>(url: string, options?: RequestInit): Promise<T> {
+    client.get = async function <T>(url: string, options?: RequestInit): Promise<T> {
       requestCount++;
-      if (requestCount > 100) { // Simulate rate limit after 100 requests
+      if (requestCount > 100) {
+        // Simulate rate limit after 100 requests
         throw new Error('Rate limit exceeded');
       }
       return originalGet(url, options);
@@ -229,9 +238,9 @@ export class MockHttpClientFactory {
    */
   static createUnreliable(failureRate: number = 0.3): MockHttpClient {
     const client = MockHttpClientFactory.createSuccessful();
-    
+
     const originalGet = client.get.bind(client);
-    client.get = async function<T>(url: string, options?: RequestInit): Promise<T> {
+    client.get = async function <T>(url: string, options?: RequestInit): Promise<T> {
       if (Math.random() < failureRate) {
         throw new Error('Network error');
       }

@@ -27,14 +27,14 @@ export class MockCache implements ICache {
    * Get the number of times a key was accessed
    */
   getAccessCount(key: string): number {
-    return this.operationLog.filter(op => op.key === key && op.operation === 'get').length;
+    return this.operationLog.filter((op) => op.key === key && op.operation === 'get').length;
   }
 
   /**
    * Check if a key was ever set
    */
   wasKeySet(key: string): boolean {
-    return this.operationLog.some(op => op.key === key && op.operation === 'set');
+    return this.operationLog.some((op) => op.key === key && op.operation === 'set');
   }
 
   /**
@@ -86,7 +86,7 @@ export class MockCache implements ICache {
     const item: { value: T; expires?: number } = { value };
 
     if (ttlSeconds) {
-      item.expires = Date.now() + (ttlSeconds * 1000);
+      item.expires = Date.now() + ttlSeconds * 1000;
     }
 
     this.storage.set(key, item);
@@ -152,7 +152,7 @@ export class MockCache implements ICache {
   directSet(key: string, value: any, ttlSeconds?: number): void {
     const item: { value: any; expires?: number } = { value };
     if (ttlSeconds) {
-      item.expires = Date.now() + (ttlSeconds * 1000);
+      item.expires = Date.now() + ttlSeconds * 1000;
     }
     this.storage.set(key, item);
   }
@@ -165,7 +165,7 @@ export class MockCache implements ICache {
     // For now, we manually expire items
     const currentTime = Date.now();
     for (const [key, item] of this.storage.entries()) {
-      if (item.expires && item.expires <= currentTime + (seconds * 1000)) {
+      if (item.expires && item.expires <= currentTime + seconds * 1000) {
         this.storage.delete(key);
       }
     }
@@ -182,7 +182,7 @@ export class MockCache implements ICache {
    * Get all stored values (for debugging)
    */
   getAllValues(): any[] {
-    return Array.from(this.storage.values()).map(item => item.value);
+    return Array.from(this.storage.values()).map((item) => item.value);
   }
 }
 
@@ -195,7 +195,7 @@ export class MockCacheFactory {
    */
   static createPopulated(): MockCache {
     const cache = new MockCache();
-    
+
     // Pre-populate with some test data
     cache.directSet('verse:1:1', {
       id: '1:1',
@@ -211,7 +211,7 @@ export class MockCacheFactory {
       name_simple: 'Al-Fatiha',
       name_arabic: 'الفاتحة',
       verses_count: 7,
-      revelation_place: 'makkah'
+      revelation_place: 'makkah',
     });
 
     return cache;
@@ -231,12 +231,12 @@ export class MockCacheFactory {
    */
   static createWithExpiredItems(): MockCache {
     const cache = new MockCache();
-    
+
     // Add items that are already expired
     const pastTime = Date.now() - 10000; // 10 seconds ago
     cache.directSet('expired:item1', 'value1', -10); // Already expired
-    cache.directSet('expired:item2', 'value2', -5);  // Already expired
-    cache.directSet('valid:item', 'value', 3600);    // Valid for 1 hour
+    cache.directSet('expired:item2', 'value2', -5); // Already expired
+    cache.directSet('valid:item', 'value', 3600); // Valid for 1 hour
 
     return cache;
   }
@@ -250,7 +250,7 @@ export class MockCacheFactory {
     const maxItems = 100;
 
     const originalSet = cache.set.bind(cache);
-    cache.set = async function<T>(key: string, value: T, ttlSeconds?: number): Promise<void> {
+    cache.set = async function <T>(key: string, value: T, ttlSeconds?: number): Promise<void> {
       if (itemCount >= maxItems) {
         throw new Error('Cache memory limit exceeded');
       }
@@ -259,7 +259,7 @@ export class MockCacheFactory {
     };
 
     const originalDelete = cache.delete.bind(cache);
-    cache.delete = async function(key: string): Promise<void> {
+    cache.delete = async function (key: string): Promise<void> {
       const had = await cache.has(key);
       if (had) {
         itemCount--;
@@ -278,13 +278,13 @@ export class MockCacheFactory {
     const accessPattern: Record<string, number> = {};
 
     const originalGet = cache.get.bind(cache);
-    cache.get = async function<T>(key: string): Promise<T | null> {
+    cache.get = async function <T>(key: string): Promise<T | null> {
       accessPattern[key] = (accessPattern[key] || 0) + 1;
       return originalGet(key);
     };
 
     return Object.assign(cache, {
-      getAccessPattern: () => ({ ...accessPattern })
+      getAccessPattern: () => ({ ...accessPattern }),
     });
   }
 }
