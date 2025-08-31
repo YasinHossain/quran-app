@@ -1,20 +1,20 @@
 import { Container } from 'inversify';
 import 'reflect-metadata';
 
-// Domain Services - Temporarily commented for testing
-// import { BookmarkService } from '../../domain/services/BookmarkService';
-// import { SearchService } from '../../domain/services/SearchService';
-// import { ReadingProgressService } from '../../domain/services/ReadingProgressService';
+// Domain Services
+import { BookmarkService } from '../../domain/services/BookmarkService';
+import { SearchService } from '../../domain/services/SearchService';
+import { ReadingProgressService } from '../../domain/services/ReadingProgressService';
 
-// Repository Interfaces - Temporarily commented for testing
-// import { IVerseRepository } from '../../domain/repositories/IVerseRepository';
-// import { ISurahRepository } from '../../domain/repositories/ISurahRepository';
-// import { IBookmarkRepository } from '../../domain/repositories/IBookmarkRepository';
+// Repository Interfaces
+import { IVerseRepository } from '../../domain/repositories/IVerseRepository';
+import { ISurahRepository } from '../../domain/repositories/ISurahRepository';
+import { IBookmarkRepository } from '../../domain/repositories/IBookmarkRepository';
 
-// Infrastructure Implementations - Temporarily commented for testing
-// import { VerseRepository } from '../../infrastructure/repositories/VerseRepository';
-// import { SurahRepository } from '../../infrastructure/repositories/SurahRepository';
-// import { BookmarkRepository } from '../../infrastructure/repositories/BookmarkRepository';
+// Infrastructure Implementations
+import { VerseRepository } from '../../infrastructure/repositories/VerseRepository';
+import { SurahRepository } from '../../infrastructure/repositories/SurahRepository';
+import { BookmarkRepository } from '../../infrastructure/repositories/BookmarkRepository';
 
 // API Client
 import { QuranApiClient } from '../../infrastructure/api/QuranApiClient';
@@ -24,10 +24,10 @@ import { FetchHttpClient } from '../../infrastructure/http/FetchHttpClient';
 import { ICache } from '../../domain/repositories/ICache';
 import { LocalStorageCache } from '../../infrastructure/cache/LocalStorageCache';
 
-// Use Cases - Commented out temporarily for testing
-// import { ReadVerseUseCase } from '../../application/use-cases/ReadVerseUseCase';
-// import { BookmarkVerseUseCase } from '../../application/use-cases/BookmarkVerseUseCase';
-// import { SearchVersesUseCase } from '../../application/use-cases/SearchVersesUseCase';
+// Use Cases
+import { ReadVerseUseCase } from '../../application/use-cases/ReadVerseUseCase';
+import { BookmarkVerseUseCase } from '../../application/use-cases/BookmarkVerseUseCase';
+import { SearchVersesUseCase } from '../../application/use-cases/SearchVersesUseCase';
 
 // Logging
 import { ILogger } from '../../domain/services/ILogger';
@@ -41,15 +41,15 @@ import { ErrorTrackingService } from '../../infrastructure/error-tracking/ErrorT
 
 // Types for DI container
 export const TYPES = {
-  // Domain Services - Temporarily commented for testing
-  // BookmarkService: Symbol.for('BookmarkService'),
-  // SearchService: Symbol.for('SearchService'),
-  // ReadingProgressService: Symbol.for('ReadingProgressService'),
+  // Domain Services
+  BookmarkService: Symbol.for('BookmarkService'),
+  SearchService: Symbol.for('SearchService'),
+  ReadingProgressService: Symbol.for('ReadingProgressService'),
 
-  // Repositories - Temporarily commented for testing
-  // IVerseRepository: Symbol.for('IVerseRepository'),
-  // ISurahRepository: Symbol.for('ISurahRepository'),
-  // IBookmarkRepository: Symbol.for('IBookmarkRepository'),
+  // Repositories
+  IVerseRepository: Symbol.for('IVerseRepository'),
+  ISurahRepository: Symbol.for('ISurahRepository'),
+  IBookmarkRepository: Symbol.for('IBookmarkRepository'),
 
   // Infrastructure
   QuranApiClient: Symbol.for('QuranApiClient'),
@@ -58,10 +58,10 @@ export const TYPES = {
   HealthCheckService: Symbol.for('HealthCheckService'),
   ErrorTrackingService: Symbol.for('ErrorTrackingService'),
 
-  // Use Cases - Commented out temporarily
-  // ReadVerseUseCase: Symbol.for('ReadVerseUseCase'),
-  // BookmarkVerseUseCase: Symbol.for('BookmarkVerseUseCase'),
-  // SearchVersesUseCase: Symbol.for('SearchVersesUseCase'),
+  // Use Cases
+  ReadVerseUseCase: Symbol.for('ReadVerseUseCase'),
+  BookmarkVerseUseCase: Symbol.for('BookmarkVerseUseCase'),
+  SearchVersesUseCase: Symbol.for('SearchVersesUseCase'),
 };
 
 const container = new Container();
@@ -80,17 +80,20 @@ container
     )
   );
 
-// Repository bindings - Temporarily commented for testing
+// Repository bindings - Temporarily disabled due to interface mismatches
+// TODO: Fix interface implementations to match repository contracts
 // container.bind<IVerseRepository>(TYPES.IVerseRepository).to(VerseRepository).inSingletonScope();
 // container.bind<ISurahRepository>(TYPES.ISurahRepository).to(SurahRepository).inSingletonScope();
 // container.bind<IBookmarkRepository>(TYPES.IBookmarkRepository).to(BookmarkRepository).inSingletonScope();
 
-// Domain service bindings - Temporarily commented for testing
+// Domain service bindings - Temporarily disabled due to dependency issues
+// TODO: Enable after repository bindings are fixed
 // container.bind<BookmarkService>(TYPES.BookmarkService).to(BookmarkService).inSingletonScope();
 // container.bind<SearchService>(TYPES.SearchService).to(SearchService).inSingletonScope();
 // container.bind<ReadingProgressService>(TYPES.ReadingProgressService).to(ReadingProgressService).inSingletonScope();
 
-// Use case bindings - Commented out temporarily
+// Use case bindings - Temporarily disabled due to dependency issues
+// TODO: Enable after repository and service bindings are fixed
 // container.bind<ReadVerseUseCase>(TYPES.ReadVerseUseCase).to(ReadVerseUseCase);
 // container.bind<BookmarkVerseUseCase>(TYPES.BookmarkVerseUseCase).to(BookmarkVerseUseCase);
 // container.bind<SearchVersesUseCase>(TYPES.SearchVersesUseCase).to(SearchVersesUseCase);
