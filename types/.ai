@@ -1,0 +1,116 @@
+# Types Directory - AI Development Context
+
+## Overview
+The `types/` directory contains centralized TypeScript type definitions for the entire application. All public types are re-exported through `types/index.ts`.
+
+## AI Development Patterns
+
+### Type Organization
+- **Entity types**: Core business objects (Verse, Surah, Bookmark, etc.)
+- **API types**: External service response shapes
+- **UI types**: Component props, state shapes, event handlers
+- **Configuration types**: Environment variables, settings, options
+
+### Naming Conventions
+- **Interfaces**: PascalCase (e.g., `Verse`, `BookmarkPosition`)
+- **File names**: Singular, kebab-case matching the primary type (e.g., `verse.ts`)
+- **Generic constraints**: Descriptive names (e.g., `TEntity extends BaseEntity`)
+
+## Common AI Tasks
+
+#### Adding New Types
+1. **Create dedicated file** for each major type
+2. **Use TSDoc comments** for all public interfaces
+3. **Export from index.ts** to maintain single entry point
+4. **Consider discriminated unions** for related variants
+
+#### Type Definition Pattern
+```typescript
+/**
+ * Represents a Quranic verse with metadata and content
+ */
+export interface Verse {
+  readonly id: string;
+  readonly surahId: number;
+  readonly ayahNumber: number;
+  readonly arabicText: string;
+  readonly translation?: Translation;
+  readonly tafsir?: TafsirEntry[];
+}
+
+/**
+ * Configuration options for verse display
+ */
+export interface VerseDisplayOptions {
+  showTranslation: boolean;
+  showTafsir: boolean;
+  arabicFontSize: 'sm' | 'md' | 'lg' | 'xl';
+  translationLanguage?: string;
+}
+```
+
+## Current Type Categories
+
+### Core Domain Types
+- **Verse**: Quranic verse with content and metadata
+- **Surah**: Chapter information with revelation details
+- **Bookmark**: User bookmarks with position tracking
+- **Translation**: Verse translations with language metadata
+- **Tafsir**: Commentary entries with source attribution
+
+### API Response Types
+- **ApiVerse**: Raw API response shape from Quran.com
+- **ApiSurah**: Chapter data from external services
+- **ApiError**: Standardized error response format
+- **PaginatedResponse**: Generic pagination wrapper
+
+### UI Component Types
+- **ComponentProps**: Standard props for reusable components
+- **ThemeConfig**: Design system configuration
+- **AudioPlayerState**: Media player state management
+- **NavigationState**: App navigation and routing
+
+### Configuration Types
+- **AppConfig**: Application-wide settings
+- **ApiEndpoints**: Service endpoint definitions
+- **CacheConfig**: Caching strategy configuration
+- **EnvironmentVariables**: Typed environment variables
+
+## Type Safety Patterns
+
+### Discriminated Unions
+```typescript
+export type BookmarkType = 
+  | { type: 'verse'; verseId: string }
+  | { type: 'surah'; surahId: number }
+  | { type: 'page'; pageNumber: number };
+```
+
+### Generic Constraints
+```typescript
+export interface Repository<T extends { id: string }> {
+  findById(id: string): Promise<T>;
+  save(entity: T): Promise<void>;
+  delete(id: string): Promise<void>;
+}
+```
+
+### Utility Types
+```typescript
+export type PartialExcept<T, K extends keyof T> = Partial<T> & Pick<T, K>;
+export type DeepReadonly<T> = {
+  readonly [P in keyof T]: T[P] extends object ? DeepReadonly<T[P]> : T[P];
+};
+```
+
+## Integration with Architecture
+- **Domain Layer**: Uses core entity types
+- **Application Layer**: DTO types for use case inputs/outputs
+- **Infrastructure**: API response types and external service contracts
+- **Presentation**: Component prop types and UI state shapes
+
+## AI Efficiency Tips
+- **Search existing types**: Use `Grep "interface.*{" types/` to find similar types
+- **Check index.ts exports**: Ensure new types are properly exported
+- **Use strict TypeScript**: Enable all strict mode options in tsconfig.json
+- **Document complex types**: Add examples in TSDoc comments for complex interfaces

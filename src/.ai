@@ -1,0 +1,96 @@
+# Src Directory - AI Development Context
+
+## Overview
+The `src/` directory contains the core architecture following Domain-Driven Design (DDD) principles. This is where business logic, application use cases, and infrastructure implementations reside.
+
+## AI Development Patterns
+
+### Domain-First Development
+1. **Start with domain**: Business logic goes in `src/domain/entities/` and `src/domain/services/`
+2. **Interface first**: Define repository interfaces in `src/domain/repositories/`
+3. **Implementation follows**: Create infrastructure implementations in `src/infrastructure/repositories/`
+4. **Use cases coordinate**: Application layer in `src/application/use-cases/`
+
+### Architecture Layers (Bottom-up)
+```
+src/domain/           # Business rules (no dependencies)
+├── entities/         # Core business objects (Verse, Surah, Bookmark)
+├── value-objects/    # Immutable values (Translation, BookmarkPosition)
+├── repositories/     # Data access interfaces
+├── services/         # Domain coordination logic
+└── errors/          # Business-specific exceptions
+
+src/application/      # Use cases (depends on domain)
+├── use-cases/       # Application-specific operations
+├── dto/            # Data transfer objects
+└── ports/          # External service interfaces
+
+src/infrastructure/  # External concerns (depends on domain + application)
+├── api/            # HTTP clients and API integration
+├── repositories/   # Repository implementations
+├── cache/          # Caching implementations
+└── external/       # Third-party service wrappers
+
+src/presentation/    # UI layer (depends on application)
+├── components/     # React components (atomic design)
+├── hooks/          # Custom React hooks
+├── stores/         # State management (Zustand)
+└── utils/          # UI-specific utilities
+
+src/shared/          # Cross-cutting concerns
+├── constants/      # Application constants
+├── types/          # Shared TypeScript types
+├── utils/          # Utility functions
+└── config/         # Configuration objects
+```
+
+## Common AI Tasks
+
+#### Adding New Business Logic
+1. **Domain entity**: Create in `src/domain/entities/` with business rules
+2. **Repository interface**: Define data access contract
+3. **Domain service**: Coordinate between entities if complex logic needed
+4. **Use case**: Create application-specific operation
+5. **Infrastructure**: Implement repository with API/cache
+6. **Presentation**: Create React hooks and components
+
+#### Modifying Existing Features
+- **Find domain entity** first to understand business rules
+- **Check use cases** for application logic
+- **Update repository** if data access changes needed
+- **Modify presentation** components last
+
+## DI Container Integration
+
+### Service Resolution Pattern
+```typescript
+// In React components
+const bookmarkService = useContainer().get<BookmarkService>(BookmarkService);
+
+// In use cases (constructor injection)
+class ReadVerseUseCase {
+  constructor(
+    @inject('IVerseRepository') private verseRepo: IVerseRepository
+  ) {}
+}
+```
+
+### Available Services
+- **BookmarkService**: Bookmark domain operations
+- **SearchService**: Verse search functionality
+- **ReadingProgressService**: User progress tracking
+- **IVerseRepository**: Verse data access
+- **ISurahRepository**: Surah data access
+- **IBookmarkRepository**: Bookmark persistence
+
+## Testing Strategy
+- **Unit tests**: Domain entities and services (isolated)
+- **Integration tests**: Repository implementations with mocked APIs
+- **Component tests**: React components with provider wrappers
+- **Use case tests**: Application layer with mocked dependencies
+
+## AI Efficiency Tips
+- **Search domain first**: Use `Grep "class.*Service" src/domain/` to find existing services
+- **Follow DI patterns**: Check `src/shared/config/container.ts` for service registration
+- **Maintain type safety**: All cross-layer communication uses TypeScript interfaces
+- **Test-driven**: Write tests alongside implementation, especially for domain logic
