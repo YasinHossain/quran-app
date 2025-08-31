@@ -56,7 +56,7 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
     } catch (err) {
       if (!abortRef.current) {
         console.error('Error initializing verse cache:', err);
-        setError('Failed to load verse. Please try again.');
+        setError('Unable to load verse. Using offline content.');
         setLoading(false);
       }
     } finally {

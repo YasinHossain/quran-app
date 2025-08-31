@@ -9,10 +9,7 @@ export default function LastReadPage() {
   const { lastRead, chapters, handleSectionChange } = useLastReadPage();
 
   return (
-    <BookmarksLayout
-      activeSection="last-read"
-      onSectionChange={handleSectionChange}
-    >
+    <BookmarksLayout activeSection="last-read" onSectionChange={handleSectionChange}>
       <LastReadHeader />
       <LastReadGrid lastRead={lastRead} chapters={chapters} />
     </BookmarksLayout>

@@ -12,11 +12,8 @@ export default function MemorizationPage() {
   return (
     <>
       <CreateMemorizationModal isOpen={modal.isOpen} onClose={modal.close} />
-      
-      <BookmarksLayout
-        activeSection="memorization"
-        onSectionChange={handleSectionChange}
-      >
+
+      <BookmarksLayout activeSection="memorization" onSectionChange={handleSectionChange}>
         <MemorizationHeader />
         <MemorizationGrid
           memorization={memorization}

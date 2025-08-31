@@ -9,10 +9,7 @@ export default function PinnedAyahPage() {
   const { pinnedVerses, handleSectionChange } = usePinnedPage();
 
   return (
-    <BookmarksLayout
-      activeSection="pinned"
-      onSectionChange={handleSectionChange}
-    >
+    <BookmarksLayout activeSection="pinned" onSectionChange={handleSectionChange}>
       <PinnedHeader />
       <PinnedVersesList pinnedVerses={pinnedVerses} />
     </BookmarksLayout>
