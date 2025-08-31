@@ -41,6 +41,8 @@
     "preview": "npm run build && npm start",
     "size-limit": "npx size-limit",
     "lighthouse": "npx lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html",
+    "ai:docs": "node tools/ai/doc-updater.js",
+    "ai:generate-test": "node tools/ai/test-generator.js",
     "rg": "node scripts/rg.js",
     "search": "npm run -s rg --",
     "search:todos": "npm run -s rg -- \"(TODO|FIXME|HACK|BUG|NOTE)[:\\s]\" --glob \"*.{ts,tsx,js,jsx}\"",
