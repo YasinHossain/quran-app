@@ -2,7 +2,7 @@
 
 /**
  * AI Platform Generator
- * 
+ *
  * Generates platform-specific implementations while maintaining
  * shared business logic and architectural consistency.
  */
@@ -16,7 +16,7 @@ class AIPlatformGenerator {
     this.platforms = {
       mobile: this.generateMobilePlatform.bind(this),
       desktop: this.generateDesktopPlatform.bind(this),
-      extension: this.generateExtensionPlatform.bind(this)
+      extension: this.generateExtensionPlatform.bind(this),
     };
   }
 
@@ -34,8 +34,10 @@ class AIPlatformGenerator {
       await this.platforms[platformType](options);
       await this.generatePlatformTests(platformType);
       await this.updateConfigurationFiles(platformType);
-      
-      console.log(`✅ ${platformType.charAt(0).toUpperCase() + platformType.slice(1)} platform generated successfully!`);
+
+      console.log(
+        `✅ ${platformType.charAt(0).toUpperCase() + platformType.slice(1)} platform generated successfully!`
+      );
       this.displayNextSteps(platformType);
     } catch (error) {
       console.error(`❌ Platform generation failed:`, error.message);
@@ -52,7 +54,7 @@ class AIPlatformGenerator {
       'src/platforms/shared/utils',
       'src/platforms/shared/constants',
       'src/platforms/shared/services',
-      'src/platforms/shared/hooks'
+      'src/platforms/shared/hooks',
     ];
 
     for (const dir of sharedDirs) {
@@ -570,7 +572,7 @@ export const usePlatformConfig = () => {
       'src/platforms/mobile/services',
       'src/platforms/mobile/storage',
       'src/platforms/mobile/hooks',
-      'src/platforms/mobile/__tests__'
+      'src/platforms/mobile/__tests__',
     ];
 
     for (const dir of mobileDirs) {
@@ -595,7 +597,7 @@ export const usePlatformConfig = () => {
       'src/platforms/desktop/services',
       'src/platforms/desktop/windows',
       'src/platforms/desktop/ipc',
-      'src/platforms/desktop/__tests__'
+      'src/platforms/desktop/__tests__',
     ];
 
     for (const dir of desktopDirs) {
@@ -620,7 +622,7 @@ export const usePlatformConfig = () => {
       'src/platforms/extension/popup',
       'src/platforms/extension/options',
       'src/platforms/extension/services',
-      'src/platforms/extension/__tests__'
+      'src/platforms/extension/__tests__',
     ];
 
     for (const dir of extensionDirs) {
@@ -642,23 +644,24 @@ export const usePlatformConfig = () => {
       version: '1.0.0',
       main: 'index.js',
       scripts: {
-        'android': 'react-native run-android',
-        'ios': 'react-native run-ios',
-        'start': 'react-native start',
-        'test': 'jest',
-        'lint': 'eslint .',
+        android: 'react-native run-android',
+        ios: 'react-native run-ios',
+        start: 'react-native start',
+        test: 'jest',
+        lint: 'eslint .',
         'build:android': 'cd android && ./gradlew assembleRelease',
-        'build:ios': 'cd ios && xcodebuild -workspace QuranApp.xcworkspace -scheme QuranApp -configuration Release -destination generic/platform=iOS -archivePath QuranApp.xcarchive archive'
+        'build:ios':
+          'cd ios && xcodebuild -workspace QuranApp.xcworkspace -scheme QuranApp -configuration Release -destination generic/platform=iOS -archivePath QuranApp.xcarchive archive',
       },
       dependencies: {
-        'react': '^18.2.0',
+        react: '^18.2.0',
         'react-native': '^0.72.0',
         '@react-navigation/native': '^6.1.0',
         '@react-navigation/stack': '^6.3.0',
         '@react-native-async-storage/async-storage': '^1.19.0',
         'react-native-track-player': '^4.0.0',
-        'react-native-vector-icons': '^10.0.0'
-      }
+        'react-native-vector-icons': '^10.0.0',
+      },
     };
 
     fs.writeFileSync('src/platforms/mobile/package.json', JSON.stringify(content, null, 2));
@@ -920,24 +923,24 @@ export const MobileNavigation = () => (
       version: '1.0.0',
       main: 'dist/main.js',
       scripts: {
-        'dev': 'electron-forge start',
-        'build': 'electron-forge make',
-        'package': 'electron-forge package',
-        'make': 'electron-forge make',
-        'publish': 'electron-forge publish'
+        dev: 'electron-forge start',
+        build: 'electron-forge make',
+        package: 'electron-forge package',
+        make: 'electron-forge make',
+        publish: 'electron-forge publish',
       },
       dependencies: {
-        'electron': '^25.0.0',
+        electron: '^25.0.0',
         'electron-store': '^8.1.0',
-        'electron-updater': '^6.1.0'
+        'electron-updater': '^6.1.0',
       },
       devDependencies: {
         '@electron-forge/cli': '^6.2.0',
         '@electron-forge/maker-squirrel': '^6.2.0',
         '@electron-forge/maker-zip': '^6.2.0',
         '@electron-forge/maker-deb': '^6.2.0',
-        '@electron-forge/maker-rpm': '^6.2.0'
-      }
+        '@electron-forge/maker-rpm': '^6.2.0',
+      },
     };
 
     fs.writeFileSync('src/platforms/desktop/package.json', JSON.stringify(content, null, 2));
@@ -1256,28 +1259,26 @@ declare global {
       name: 'Quran Reader Extension',
       version: '1.0.0',
       description: 'Read Quran verses with translations and tafsir',
-      permissions: [
-        'storage',
-        'notifications',
-        'activeTab'
-      ],
+      permissions: ['storage', 'notifications', 'activeTab'],
       background: {
-        service_worker: 'background.js'
+        service_worker: 'background.js',
       },
-      content_scripts: [{
-        matches: ['<all_urls>'],
-        js: ['content.js']
-      }],
+      content_scripts: [
+        {
+          matches: ['<all_urls>'],
+          js: ['content.js'],
+        },
+      ],
       action: {
         default_popup: 'popup.html',
-        default_title: 'Quran Reader'
+        default_title: 'Quran Reader',
       },
       options_page: 'options.html',
       icons: {
         16: 'icons/icon16.png',
         48: 'icons/icon48.png',
-        128: 'icons/icon128.png'
-      }
+        128: 'icons/icon128.png',
+      },
     };
 
     fs.writeFileSync('src/platforms/extension/manifest.json', JSON.stringify(content, null, 2));
@@ -1688,9 +1689,9 @@ describe('${platformType.charAt(0).toUpperCase() + platformType.slice(1)} Platfo
     const capabilities = {
       mobile: 'expect(platform.capabilities.hasCamera).toBe(true);',
       desktop: 'expect(platform.capabilities.hasFileSystem).toBe(true);',
-      extension: 'expect(platform.capabilities.supportsNotifications).toBe(true);'
+      extension: 'expect(platform.capabilities.supportsNotifications).toBe(true);',
     };
-    
+
     return capabilities[platformType] || 'expect(platform.capabilities).toBeDefined();';
   }
 
@@ -1713,12 +1714,14 @@ describe('${platformType.charAt(0).toUpperCase() + platformType.slice(1)} Platfo
     const packageJsonPath = 'package.json';
     if (fs.existsSync(packageJsonPath)) {
       const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-      
+
       packageJson.scripts = packageJson.scripts || {};
-      packageJson.scripts[`dev:${platformType}`] = `cd src/platforms/${platformType} && npm run dev`;
-      packageJson.scripts[`build:${platformType}`] = `cd src/platforms/${platformType} && npm run build`;
+      packageJson.scripts[`dev:${platformType}`] =
+        `cd src/platforms/${platformType} && npm run dev`;
+      packageJson.scripts[`build:${platformType}`] =
+        `cd src/platforms/${platformType} && npm run build`;
       packageJson.scripts[`test:${platformType}`] = `jest src/platforms/${platformType}`;
-      
+
       fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
     }
 
@@ -1726,11 +1729,13 @@ describe('${platformType.charAt(0).toUpperCase() + platformType.slice(1)} Platfo
     const tsconfigPath = 'tsconfig.json';
     if (fs.existsSync(tsconfigPath)) {
       const tsconfig = JSON.parse(fs.readFileSync(tsconfigPath, 'utf8'));
-      
+
       tsconfig.compilerOptions = tsconfig.compilerOptions || {};
       tsconfig.compilerOptions.paths = tsconfig.compilerOptions.paths || {};
-      tsconfig.compilerOptions.paths[`@platforms/${platformType}/*`] = [`src/platforms/${platformType}/*`];
-      
+      tsconfig.compilerOptions.paths[`@platforms/${platformType}/*`] = [
+        `src/platforms/${platformType}/*`,
+      ];
+
       fs.writeFileSync(tsconfigPath, JSON.stringify(tsconfig, null, 2));
     }
 
@@ -1738,8 +1743,10 @@ describe('${platformType.charAt(0).toUpperCase() + platformType.slice(1)} Platfo
   }
 
   displayNextSteps(platformType) {
-    console.log(`\n📋 Next Steps for ${platformType.charAt(0).toUpperCase() + platformType.slice(1)} Platform:`);
-    
+    console.log(
+      `\n📋 Next Steps for ${platformType.charAt(0).toUpperCase() + platformType.slice(1)} Platform:`
+    );
+
     switch (platformType) {
       case 'mobile':
         console.log('1. Install React Native CLI: npm install -g @react-native-community/cli');
@@ -1748,7 +1755,7 @@ describe('${platformType.charAt(0).toUpperCase() + platformType.slice(1)} Platfo
         console.log('4. Implement navigation with React Navigation');
         console.log('5. Test on iOS/Android simulators');
         break;
-        
+
       case 'desktop':
         console.log('1. Install Electron Forge: npm install --save-dev @electron-forge/cli');
         console.log('2. Setup main process and IPC handlers');
@@ -1756,7 +1763,7 @@ describe('${platformType.charAt(0).toUpperCase() + platformType.slice(1)} Platfo
         console.log('4. Implement native menus and dialogs');
         console.log('5. Test packaging and distribution');
         break;
-        
+
       case 'extension':
         console.log('1. Load extension in Chrome Developer Mode');
         console.log('2. Implement background script functionality');
@@ -1765,7 +1772,7 @@ describe('${platformType.charAt(0).toUpperCase() + platformType.slice(1)} Platfo
         console.log('5. Test permissions and API usage');
         break;
     }
-    
+
     console.log('\nCommon Next Steps:');
     console.log('• Implement platform-specific service methods');
     console.log('• Create shared business logic integration');
@@ -1778,7 +1785,7 @@ describe('${platformType.charAt(0).toUpperCase() + platformType.slice(1)} Platfo
 // CLI interface
 if (require.main === module) {
   const platformType = process.argv[2];
-  
+
   if (!platformType) {
     console.log('Usage: node platform-generator.js <platform-type>');
     console.log('Available platforms: mobile, desktop, extension');

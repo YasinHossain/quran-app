@@ -2,7 +2,7 @@
 
 /**
  * AI Workflow Integration
- * 
+ *
  * Integrates all AI workflow enhancements into the development process
  * and provides a unified interface for AI-assisted development.
  */
@@ -20,23 +20,17 @@ class AIWorkflowIntegration {
       'feature-generator': './tools/ai/feature-generator.js',
       'refactoring-assistant': './tools/ai/refactoring-assistant.js',
       'platform-generator': './tools/ai/platform-generator.js',
-      'quality-monitor': './tools/ai/quality-monitor.js'
+      'quality-monitor': './tools/ai/quality-monitor.js',
     };
 
     this.documentation = {
       'component-registry': './docs/ai/component-registry.md',
       'architecture-map': './docs/ai/architecture-map.md',
       'search-patterns': './docs/ai/search-patterns.md',
-      'multi-platform-guide': './docs/ai/multi-platform-guide.md'
+      'multi-platform-guide': './docs/ai/multi-platform-guide.md',
     };
 
-    this.contextFiles = [
-      './app/.ai',
-      './src/.ai',
-      './lib/.ai',
-      './types/.ai',
-      './tests/.ai'
-    ];
+    this.contextFiles = ['./app/.ai', './src/.ai', './lib/.ai', './types/.ai', './tests/.ai'];
   }
 
   async initialize() {
@@ -48,10 +42,9 @@ class AIWorkflowIntegration {
       await this.updatePackageScripts();
       await this.createWorkflowCommands();
       await this.generateUsageGuide();
-      
+
       console.log('✅ AI Workflow Integration complete!\n');
       this.displayQuickStart();
-      
     } catch (error) {
       console.error('❌ Integration failed:', error.message);
       process.exit(1);
@@ -86,7 +79,7 @@ class AIWorkflowIntegration {
     }
 
     // Check context files
-    const missingContext = this.contextFiles.filter(file => !fs.existsSync(file));
+    const missingContext = this.contextFiles.filter((file) => !fs.existsSync(file));
     if (missingContext.length > 0) {
       console.warn('⚠️  Missing context files:', missingContext.join(', '));
     }
@@ -140,27 +133,27 @@ node tools/ai/doc-updater.js >/dev/null 2>&1 &
     }
 
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-    
+
     // Add AI workflow scripts
     packageJson.scripts = packageJson.scripts || {};
-    
+
     const aiScripts = {
       // Analysis and monitoring
       'ai:quality': 'node tools/ai/quality-monitor.js',
       'ai:analyze': 'node tools/ai/refactoring-assistant.js analyze',
-      
+
       // Generation and automation
       'ai:feature': 'node tools/ai/feature-generator.js',
       'ai:tests': 'node tools/ai/test-generator.js',
       'ai:platform': 'node tools/ai/platform-generator.js',
-      
+
       // Documentation and maintenance
       'ai:docs': 'node tools/ai/doc-updater.js',
       'ai:refactor': 'node tools/ai/refactoring-assistant.js refactor',
-      
+
       // Workflow commands
       'ai:check': 'node tools/ai/pre-commit-ai-check.js',
-      'ai:workflow': 'node tools/ai/workflow-integration.js help'
+      'ai:workflow': 'node tools/ai/workflow-integration.js help',
     };
 
     Object.assign(packageJson.scripts, aiScripts);
@@ -510,7 +503,7 @@ This ensures AI assistance aligns with your project's architecture and standards
     console.log('• Generates comprehensive usage documentation');
     console.log('• Validates all AI tools and documentation');
     console.log('');
-    console.log('After running initialize, you\'ll have:');
+    console.log("After running initialize, you'll have:");
     console.log('• Pre-commit hooks for quality checks');
     console.log('• npm scripts for all AI tools');
     console.log('• Helper script for common workflows');
@@ -529,7 +522,8 @@ if (require.main === module) {
       integration.initialize().catch(console.error);
       break;
     case 'validate':
-      integration.validateEnvironment()
+      integration
+        .validateEnvironment()
         .then(() => console.log('✅ All AI tools validated successfully'))
         .catch(console.error);
       break;

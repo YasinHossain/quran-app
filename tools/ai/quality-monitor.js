@@ -2,7 +2,7 @@
 
 /**
  * AI Quality Monitor
- * 
+ *
  * Continuously monitors code quality metrics and provides
  * AI-readable reports for maintaining high standards.
  */
@@ -20,9 +20,9 @@ class AIQualityMonitor {
       maintainability: 0,
       security: 0,
       performance: 0,
-      accessibility: 0
+      accessibility: 0,
     };
-    
+
     this.thresholds = {
       coverage: { min: 80, target: 90 },
       complexity: { max: 10, target: 5 },
@@ -30,7 +30,7 @@ class AIQualityMonitor {
       maintainability: { min: 70, target: 85 },
       security: { min: 95, target: 100 },
       performance: { min: 90, target: 95 },
-      accessibility: { min: 95, target: 100 }
+      accessibility: { min: 95, target: 100 },
     };
 
     this.reports = [];
@@ -47,10 +47,10 @@ class AIQualityMonitor {
       await this.analyzeSecurity();
       await this.analyzePerformance();
       await this.analyzeAccessibility();
-      
+
       await this.generateReport();
       await this.generateAIInsights();
-      
+
       console.log('✅ Quality analysis complete!');
       return this.metrics;
     } catch (error) {
@@ -64,19 +64,17 @@ class AIQualityMonitor {
 
     try {
       // Run Jest with coverage
-      const output = execSync('npm run test:coverage -- --silent --json', { 
+      const output = execSync('npm run test:coverage -- --silent --json', {
         encoding: 'utf8',
-        cwd: process.cwd()
+        cwd: process.cwd(),
       });
 
       const coverageData = JSON.parse(output);
       const summary = coverageData.coverageMap?.getCoverageSummary?.() || coverageData.summary;
 
       if (summary) {
-        this.metrics.coverage = Math.round(
-          (summary.lines?.pct || summary.statements?.pct || 0)
-        );
-        
+        this.metrics.coverage = Math.round(summary.lines?.pct || summary.statements?.pct || 0);
+
         this.reports.push({
           type: 'coverage',
           score: this.metrics.coverage,
@@ -84,9 +82,9 @@ class AIQualityMonitor {
             lines: summary.lines?.pct || 0,
             statements: summary.statements?.pct || 0,
             functions: summary.functions?.pct || 0,
-            branches: summary.branches?.pct || 0
+            branches: summary.branches?.pct || 0,
           },
-          issues: this.findCoverageIssues(summary)
+          issues: this.findCoverageIssues(summary),
         });
 
         console.log(`   Coverage: ${this.metrics.coverage}%`);
@@ -100,10 +98,14 @@ class AIQualityMonitor {
   async estimateCoverage() {
     // Fallback method to estimate coverage
     const testFiles = this.findFiles('**/*.test.{ts,tsx,js,jsx}');
-    const sourceFiles = this.findFiles('**/*.{ts,tsx,js,jsx}', ['**/node_modules/**', '**/dist/**', '**/*.test.*']);
-    
+    const sourceFiles = this.findFiles('**/*.{ts,tsx,js,jsx}', [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/*.test.*',
+    ]);
+
     if (sourceFiles.length === 0) return 0;
-    
+
     // Simple heuristic: assume 70% coverage if we have reasonable test coverage
     const testRatio = testFiles.length / sourceFiles.length;
     return Math.min(Math.round(testRatio * 100), 85);
@@ -111,11 +113,13 @@ class AIQualityMonitor {
 
   findCoverageIssues(summary) {
     const issues = [];
-    
+
     if (summary.lines?.pct < this.thresholds.coverage.target) {
-      issues.push(`Line coverage (${summary.lines.pct}%) below target (${this.thresholds.coverage.target}%)`);
+      issues.push(
+        `Line coverage (${summary.lines.pct}%) below target (${this.thresholds.coverage.target}%)`
+      );
     }
-    
+
     if (summary.branches?.pct < this.thresholds.coverage.target - 10) {
       issues.push(`Branch coverage (${summary.branches.pct}%) significantly low`);
     }
@@ -146,13 +150,13 @@ class AIQualityMonitor {
 
       this.reports.push({
         type: 'complexity',
-        score: Math.max(0, 100 - (this.metrics.complexity * 10)), // Convert to 0-100 scale
+        score: Math.max(0, 100 - this.metrics.complexity * 10), // Convert to 0-100 scale
         details: {
           averageComplexity: this.metrics.complexity,
           totalFiles: fileCount,
-          highComplexityFiles: highComplexityFiles.length
+          highComplexityFiles: highComplexityFiles.length,
         },
-        issues: highComplexityFiles.map(f => `${f.file}: complexity ${f.complexity}`)
+        issues: highComplexityFiles.map((f) => `${f.file}: complexity ${f.complexity}`),
       });
 
       console.log(`   Average complexity: ${this.metrics.complexity}`);
@@ -165,10 +169,10 @@ class AIQualityMonitor {
   calculateFileComplexity(filePath) {
     try {
       const content = fs.readFileSync(filePath, 'utf8');
-      
+
       // Simple complexity calculation
       let complexity = 1; // Base complexity
-      
+
       // Control structures
       const patterns = [
         /\bif\s*\(/g,
@@ -179,7 +183,7 @@ class AIQualityMonitor {
         /\bwhile\s*\(/g,
         /\bcatch\s*\(/g,
         /\?\s*[^:]*\s*:/g, // ternary operators
-        /&&|\|\|/g // logical operators
+        /&&|\|\|/g, // logical operators
       ];
 
       for (const pattern of patterns) {
@@ -201,7 +205,7 @@ class AIQualityMonitor {
     try {
       const files = this.findFiles('src/**/*.{ts,tsx}', ['**/*.test.*']);
       const duplications = this.findCodeDuplication(files);
-      
+
       this.metrics.duplication = duplications.percentage;
 
       this.reports.push({
@@ -210,9 +214,11 @@ class AIQualityMonitor {
         details: {
           duplicatedLines: duplications.lines,
           totalLines: duplications.total,
-          percentage: this.metrics.duplication
+          percentage: this.metrics.duplication,
         },
-        issues: duplications.instances.map(d => `Duplication in ${d.files.join(', ')}: ${d.lines} lines`)
+        issues: duplications.instances.map(
+          (d) => `Duplication in ${d.files.join(', ')}: ${d.lines} lines`
+        ),
       });
 
       console.log(`   Code duplication: ${this.metrics.duplication}%`);
@@ -229,27 +235,29 @@ class AIQualityMonitor {
     let duplicatedLines = 0;
     const instances = [];
 
-    for (const file of files.slice(0, 50)) { // Limit to prevent performance issues
+    for (const file of files.slice(0, 50)) {
+      // Limit to prevent performance issues
       try {
         const content = fs.readFileSync(file, 'utf8');
-        const lines = content.split('\n')
-          .map(line => line.trim())
-          .filter(line => line.length > 10 && !line.startsWith('//') && !line.startsWith('*'));
+        const lines = content
+          .split('\n')
+          .map((line) => line.trim())
+          .filter((line) => line.length > 10 && !line.startsWith('//') && !line.startsWith('*'));
 
         totalLines += lines.length;
 
-        lines.forEach(line => {
+        lines.forEach((line) => {
           if (lineHashes.has(line)) {
             const existing = lineHashes.get(line);
             existing.count++;
             existing.files.add(file);
-            
+
             if (existing.count === 2) {
               duplicatedLines += existing.count;
               instances.push({
                 line,
                 files: Array.from(existing.files),
-                lines: existing.count
+                lines: existing.count,
               });
             } else if (existing.count > 2) {
               duplicatedLines++;
@@ -267,7 +275,7 @@ class AIQualityMonitor {
       lines: duplicatedLines,
       total: totalLines,
       percentage: totalLines > 0 ? Math.round((duplicatedLines / totalLines) * 100) : 0,
-      instances: instances.slice(0, 10) // Top 10 duplications
+      instances: instances.slice(0, 10), // Top 10 duplications
     };
   }
 
@@ -298,9 +306,9 @@ class AIQualityMonitor {
         details: {
           averageScore: this.metrics.maintainability,
           totalFiles: fileCount,
-          lowScoreFiles: issues.length
+          lowScoreFiles: issues.length,
         },
-        issues
+        issues,
       });
 
       console.log(`   Maintainability: ${this.metrics.maintainability}/100`);
@@ -314,21 +322,21 @@ class AIQualityMonitor {
     try {
       const content = fs.readFileSync(filePath, 'utf8');
       const lines = content.split('\n');
-      
+
       let score = 100;
-      
+
       // Penalize large files
       if (lines.length > 200) score -= Math.min(20, (lines.length - 200) / 10);
-      
+
       // Penalize long functions
       const functionLengths = this.findFunctionLengths(content);
-      const longFunctions = functionLengths.filter(len => len > 50);
+      const longFunctions = functionLengths.filter((len) => len > 50);
       score -= longFunctions.length * 5;
-      
+
       // Penalize high nesting
       const maxNesting = this.calculateMaxNesting(content);
       if (maxNesting > 3) score -= (maxNesting - 3) * 5;
-      
+
       // Reward good practices
       if (content.includes('interface ') || content.includes('type ')) score += 5;
       if (content.includes('export ')) score += 2;
@@ -349,17 +357,17 @@ class AIQualityMonitor {
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      
+
       if (/\b(function|const\s+\w+\s*=.*=>|\w+\s*\([^)]*\)\s*{)/.test(line)) {
         inFunction = true;
         functionStart = i;
         braceCount = 0;
       }
-      
+
       if (inFunction) {
         braceCount += (line.match(/\{/g) || []).length;
         braceCount -= (line.match(/\}/g) || []).length;
-        
+
         if (braceCount === 0 && line.includes('}')) {
           functions.push(i - functionStart + 1);
           inFunction = false;
@@ -373,7 +381,7 @@ class AIQualityMonitor {
   calculateMaxNesting(content) {
     let maxNesting = 0;
     let currentNesting = 0;
-    
+
     for (const char of content) {
       if (char === '{') {
         currentNesting++;
@@ -382,7 +390,7 @@ class AIQualityMonitor {
         currentNesting--;
       }
     }
-    
+
     return maxNesting;
   }
 
@@ -391,30 +399,30 @@ class AIQualityMonitor {
 
     try {
       // Run security audit
-      const auditOutput = execSync('npm audit --json', { 
+      const auditOutput = execSync('npm audit --json', {
         encoding: 'utf8',
-        stdio: ['pipe', 'pipe', 'ignore'] // Suppress stderr
+        stdio: ['pipe', 'pipe', 'ignore'], // Suppress stderr
       });
-      
+
       const auditData = JSON.parse(auditOutput);
       const vulnerabilities = auditData.vulnerabilities || {};
       const vulnCount = Object.keys(vulnerabilities).length;
-      
+
       // Calculate security score based on vulnerabilities
-      this.metrics.security = Math.max(0, 100 - (vulnCount * 10));
+      this.metrics.security = Math.max(0, 100 - vulnCount * 10);
 
       this.reports.push({
         type: 'security',
         score: this.metrics.security,
         details: {
           vulnerabilities: vulnCount,
-          high: Object.values(vulnerabilities).filter(v => v.severity === 'high').length,
-          moderate: Object.values(vulnerabilities).filter(v => v.severity === 'moderate').length,
-          low: Object.values(vulnerabilities).filter(v => v.severity === 'low').length
+          high: Object.values(vulnerabilities).filter((v) => v.severity === 'high').length,
+          moderate: Object.values(vulnerabilities).filter((v) => v.severity === 'moderate').length,
+          low: Object.values(vulnerabilities).filter((v) => v.severity === 'low').length,
         },
         issues: Object.entries(vulnerabilities)
           .filter(([_, v]) => ['high', 'critical'].includes(v.severity))
-          .map(([name, v]) => `${name}: ${v.severity} - ${v.title}`)
+          .map(([name, v]) => `${name}: ${v.severity} - ${v.title}`),
       });
 
       console.log(`   Security score: ${this.metrics.security}/100`);
@@ -428,19 +436,22 @@ class AIQualityMonitor {
     // Simple security pattern scanning
     const files = this.findFiles('src/**/*.{ts,tsx,js,jsx}');
     const securityIssues = [];
-    
+
     const patterns = [
-      { pattern: /console\.log.*password|console\.log.*secret/i, issue: 'Potential credential logging' },
+      {
+        pattern: /console\.log.*password|console\.log.*secret/i,
+        issue: 'Potential credential logging',
+      },
       { pattern: /eval\s*\(/g, issue: 'Use of eval() function' },
       { pattern: /innerHTML\s*=/g, issue: 'Direct innerHTML usage' },
       { pattern: /dangerouslySetInnerHTML/g, issue: 'Dangerous HTML injection' },
-      { pattern: /http:\/\//g, issue: 'Insecure HTTP protocol' }
+      { pattern: /http:\/\//g, issue: 'Insecure HTTP protocol' },
     ];
 
     for (const file of files) {
       try {
         const content = fs.readFileSync(file, 'utf8');
-        
+
         for (const { pattern, issue } of patterns) {
           if (pattern.test(content)) {
             securityIssues.push(`${file}: ${issue}`);
@@ -451,7 +462,7 @@ class AIQualityMonitor {
       }
     }
 
-    return Math.max(50, 100 - (securityIssues.length * 5));
+    return Math.max(50, 100 - securityIssues.length * 5);
   }
 
   async analyzePerformance() {
@@ -459,7 +470,7 @@ class AIQualityMonitor {
 
     try {
       const performanceIssues = await this.findPerformanceIssues();
-      this.metrics.performance = Math.max(0, 100 - (performanceIssues.length * 5));
+      this.metrics.performance = Math.max(0, 100 - performanceIssues.length * 5);
 
       this.reports.push({
         type: 'performance',
@@ -467,12 +478,12 @@ class AIQualityMonitor {
         details: {
           issues: performanceIssues.length,
           categories: {
-            'Large bundles': performanceIssues.filter(i => i.includes('bundle')).length,
-            'Inefficient renders': performanceIssues.filter(i => i.includes('render')).length,
-            'Memory leaks': performanceIssues.filter(i => i.includes('memory')).length
-          }
+            'Large bundles': performanceIssues.filter((i) => i.includes('bundle')).length,
+            'Inefficient renders': performanceIssues.filter((i) => i.includes('render')).length,
+            'Memory leaks': performanceIssues.filter((i) => i.includes('memory')).length,
+          },
         },
-        issues: performanceIssues
+        issues: performanceIssues,
       });
 
       console.log(`   Performance score: ${this.metrics.performance}/100`);
@@ -489,20 +500,24 @@ class AIQualityMonitor {
     for (const file of files) {
       try {
         const content = fs.readFileSync(file, 'utf8');
-        
+
         // Check for performance anti-patterns
-        if (content.includes('useEffect') && !content.includes('useMemo') && content.length > 1000) {
+        if (
+          content.includes('useEffect') &&
+          !content.includes('useMemo') &&
+          content.length > 1000
+        ) {
           issues.push(`${file}: Large component without memoization`);
         }
-        
+
         if (/\.map\(.*\.map\(/g.test(content)) {
           issues.push(`${file}: Nested array operations`);
         }
-        
+
         if (/console\.log/g.test(content) && !file.includes('test')) {
           issues.push(`${file}: Console statements in production code`);
         }
-        
+
         if (content.includes('new Date()') && content.includes('useEffect')) {
           issues.push(`${file}: Date operations in effect hooks`);
         }
@@ -519,7 +534,7 @@ class AIQualityMonitor {
 
     try {
       const a11yIssues = await this.findAccessibilityIssues();
-      this.metrics.accessibility = Math.max(0, 100 - (a11yIssues.length * 5));
+      this.metrics.accessibility = Math.max(0, 100 - a11yIssues.length * 5);
 
       this.reports.push({
         type: 'accessibility',
@@ -527,12 +542,12 @@ class AIQualityMonitor {
         details: {
           issues: a11yIssues.length,
           categories: {
-            'Missing ARIA': a11yIssues.filter(i => i.includes('aria')).length,
-            'Semantic HTML': a11yIssues.filter(i => i.includes('semantic')).length,
-            'Focus management': a11yIssues.filter(i => i.includes('focus')).length
-          }
+            'Missing ARIA': a11yIssues.filter((i) => i.includes('aria')).length,
+            'Semantic HTML': a11yIssues.filter((i) => i.includes('semantic')).length,
+            'Focus management': a11yIssues.filter((i) => i.includes('focus')).length,
+          },
         },
-        issues: a11yIssues
+        issues: a11yIssues,
       });
 
       console.log(`   Accessibility score: ${this.metrics.accessibility}/100`);
@@ -549,25 +564,29 @@ class AIQualityMonitor {
     for (const file of files) {
       try {
         const content = fs.readFileSync(file, 'utf8');
-        
+
         // Check for accessibility issues
         if (content.includes('<button') && !content.includes('aria-')) {
           issues.push(`${file}: Button without ARIA attributes`);
         }
-        
+
         if (content.includes('<input') && !content.includes('aria-') && !content.includes('id=')) {
           issues.push(`${file}: Input without proper labeling`);
         }
-        
+
         if (content.includes('<img') && !content.includes('alt=')) {
           issues.push(`${file}: Image without alt text`);
         }
-        
+
         if (content.includes('onClick') && !content.includes('onKeyDown')) {
           issues.push(`${file}: Click handler without keyboard support`);
         }
-        
-        if (!content.includes('<main>') && !content.includes('<section>') && file.includes('page.tsx')) {
+
+        if (
+          !content.includes('<main>') &&
+          !content.includes('<section>') &&
+          file.includes('page.tsx')
+        ) {
           issues.push(`${file}: Page without semantic landmarks`);
         }
       } catch (error) {
@@ -592,7 +611,7 @@ class AIQualityMonitor {
       thresholds: this.thresholds,
       details: this.reports,
       summary: this.generateSummary(),
-      recommendations: this.generateRecommendations()
+      recommendations: this.generateRecommendations(),
     };
 
     // Save report
@@ -615,11 +634,11 @@ class AIQualityMonitor {
     const weights = {
       coverage: 0.25,
       complexity: 0.15,
-      duplication: 0.10,
-      maintainability: 0.20,
-      security: 0.20,
+      duplication: 0.1,
+      maintainability: 0.2,
+      security: 0.2,
       performance: 0.05,
-      accessibility: 0.05
+      accessibility: 0.05,
     };
 
     let weightedScore = 0;
@@ -627,14 +646,14 @@ class AIQualityMonitor {
 
     Object.entries(weights).forEach(([metric, weight]) => {
       let score = this.metrics[metric];
-      
+
       // Normalize scores to 0-100 scale
       if (metric === 'complexity') {
-        score = Math.max(0, 100 - (score * 10));
+        score = Math.max(0, 100 - score * 10);
       } else if (metric === 'duplication') {
         score = Math.max(0, 100 - score);
       }
-      
+
       weightedScore += score * weight;
       totalWeight += weight;
     });
@@ -652,7 +671,7 @@ class AIQualityMonitor {
 
   getMetricStatus(key, value) {
     const threshold = this.thresholds[key];
-    
+
     if (key === 'complexity' || key === 'duplication') {
       if (value <= threshold.target) return '✅';
       if (value <= threshold.max) return '⚠️';
@@ -665,7 +684,16 @@ class AIQualityMonitor {
   }
 
   getMetricUnit(key) {
-    if (['coverage', 'duplication', 'maintainability', 'security', 'performance', 'accessibility'].includes(key)) {
+    if (
+      [
+        'coverage',
+        'duplication',
+        'maintainability',
+        'security',
+        'performance',
+        'accessibility',
+      ].includes(key)
+    ) {
       return '%';
     }
     return '';
@@ -686,7 +714,7 @@ class AIQualityMonitor {
       totalIssues: issues,
       passedMetrics,
       totalMetrics: Object.keys(this.metrics).length,
-      criticalIssues: this.reports.filter(r => r.score < 60).length
+      criticalIssues: this.reports.filter((r) => r.score < 60).length,
     };
   }
 
@@ -702,8 +730,8 @@ class AIQualityMonitor {
         actions: [
           'Add unit tests for domain entities and services',
           'Create integration tests for repositories',
-          'Add E2E tests for critical user flows'
-        ]
+          'Add E2E tests for critical user flows',
+        ],
       });
     }
 
@@ -716,8 +744,8 @@ class AIQualityMonitor {
         actions: [
           'Break down large functions into smaller ones',
           'Extract complex logic into separate services',
-          'Use early returns to reduce nesting'
-        ]
+          'Use early returns to reduce nesting',
+        ],
       });
     }
 
@@ -730,8 +758,8 @@ class AIQualityMonitor {
         actions: [
           'Run npm audit and fix vulnerabilities',
           'Remove console.log statements with sensitive data',
-          'Use secure HTTP protocols'
-        ]
+          'Use secure HTTP protocols',
+        ],
       });
     }
 
@@ -746,7 +774,7 @@ class AIQualityMonitor {
       developmentFocus: this.suggestDevelopmentFocus(),
       refactoringOpportunities: this.identifyRefactoringOpportunities(),
       testingStrategy: this.suggestTestingStrategy(),
-      architectureRecommendations: this.generateArchitectureRecommendations()
+      architectureRecommendations: this.generateArchitectureRecommendations(),
     };
 
     const insightsPath = 'ai-insights.json';
@@ -757,36 +785,36 @@ class AIQualityMonitor {
     console.log(`   Codebase Health: ${insights.codebaseHealth.status}`);
     console.log(`   Primary Focus: ${insights.developmentFocus.primary}`);
     console.log(`   Refactoring Priority: ${insights.refactoringOpportunities[0]?.type || 'None'}`);
-    
+
     console.log(`\nFull AI insights saved to: ${insightsPath}`);
   }
 
   assessCodebaseHealth() {
     const overallScore = this.calculateOverallScore();
-    
+
     if (overallScore >= 85) {
       return {
         status: 'Excellent',
         message: 'Codebase is well-maintained with high quality standards',
-        confidence: 0.9
+        confidence: 0.9,
       };
     } else if (overallScore >= 70) {
       return {
         status: 'Good',
         message: 'Codebase is in good shape with some areas for improvement',
-        confidence: 0.8
+        confidence: 0.8,
       };
     } else if (overallScore >= 55) {
       return {
         status: 'Needs Attention',
         message: 'Several quality issues need to be addressed',
-        confidence: 0.7
+        confidence: 0.7,
       };
     } else {
       return {
         status: 'Critical',
         message: 'Codebase requires immediate quality improvements',
-        confidence: 0.9
+        confidence: 0.9,
       };
     }
   }
@@ -794,7 +822,7 @@ class AIQualityMonitor {
   suggestDevelopmentFocus() {
     const scores = Object.entries(this.metrics).map(([key, value]) => {
       let normalizedScore = value;
-      if (key === 'complexity') normalizedScore = 100 - (value * 10);
+      if (key === 'complexity') normalizedScore = 100 - value * 10;
       if (key === 'duplication') normalizedScore = 100 - value;
       return { metric: key, score: normalizedScore };
     });
@@ -809,14 +837,14 @@ class AIQualityMonitor {
       maintainability: 'Architecture and Code Organization',
       security: 'Security Hardening',
       performance: 'Performance Optimization',
-      accessibility: 'User Experience and Accessibility'
+      accessibility: 'User Experience and Accessibility',
     };
 
     return {
       primary: focusMap[lowestScore.metric],
       score: lowestScore.score,
       secondary: focusMap[scores[1].metric],
-      recommendations: this.getMetricSpecificRecommendations(lowestScore.metric)
+      recommendations: this.getMetricSpecificRecommendations(lowestScore.metric),
     };
   }
 
@@ -825,38 +853,38 @@ class AIQualityMonitor {
       coverage: [
         'Focus on testing domain entities and business logic',
         'Add integration tests for API repositories',
-        'Create E2E tests for user workflows'
+        'Create E2E tests for user workflows',
       ],
       complexity: [
         'Extract large components into smaller ones',
         'Use custom hooks for complex state logic',
-        'Apply single responsibility principle'
+        'Apply single responsibility principle',
       ],
       duplication: [
         'Extract common patterns into shared utilities',
         'Create reusable atomic components',
-        'Implement shared business logic in domain services'
+        'Implement shared business logic in domain services',
       ],
       maintainability: [
         'Follow clean architecture principles',
         'Improve code documentation',
-        'Standardize naming conventions'
+        'Standardize naming conventions',
       ],
       security: [
         'Update dependencies regularly',
         'Implement proper authentication',
-        'Sanitize user inputs'
+        'Sanitize user inputs',
       ],
       performance: [
         'Implement code splitting',
         'Add React.memo for expensive components',
-        'Optimize bundle size'
+        'Optimize bundle size',
       ],
       accessibility: [
         'Add ARIA attributes to interactive elements',
         'Implement keyboard navigation',
-        'Ensure proper color contrast'
-      ]
+        'Ensure proper color contrast',
+      ],
     };
 
     return recommendations[metric] || [];
@@ -866,16 +894,15 @@ class AIQualityMonitor {
     const opportunities = [];
 
     // Find files with high complexity
-    const complexFiles = this.reports
-      .find(r => r.type === 'complexity')
-      ?.details?.highComplexityFiles || 0;
+    const complexFiles =
+      this.reports.find((r) => r.type === 'complexity')?.details?.highComplexityFiles || 0;
 
     if (complexFiles > 0) {
       opportunities.push({
         type: 'Component Splitting',
         priority: 'high',
         impact: 'maintainability',
-        description: 'Break down complex components into smaller, focused components'
+        description: 'Break down complex components into smaller, focused components',
       });
     }
 
@@ -886,7 +913,7 @@ class AIQualityMonitor {
         type: 'Code Deduplication',
         priority: 'medium',
         impact: 'maintainability',
-        description: 'Extract common code patterns into reusable utilities'
+        description: 'Extract common code patterns into reusable utilities',
       });
     }
 
@@ -896,7 +923,7 @@ class AIQualityMonitor {
         type: 'Test Coverage Improvement',
         priority: 'high',
         impact: 'reliability',
-        description: 'Add missing tests for critical business logic'
+        description: 'Add missing tests for critical business logic',
       });
     }
 
@@ -908,27 +935,27 @@ class AIQualityMonitor {
 
   suggestTestingStrategy() {
     const coverage = this.metrics.coverage;
-    
+
     if (coverage < 50) {
       return {
         phase: 'Foundation',
         focus: 'Basic unit tests for core functionality',
         priority: ['Domain entities', 'Business services', 'Critical utilities'],
-        tools: ['Jest', 'Testing Library', 'Mock implementations']
+        tools: ['Jest', 'Testing Library', 'Mock implementations'],
       };
     } else if (coverage < 80) {
       return {
         phase: 'Expansion',
         focus: 'Integration tests and edge cases',
         priority: ['Repository integrations', 'Component interactions', 'Error handling'],
-        tools: ['MSW for API mocking', 'Test fixtures', 'E2E framework setup']
+        tools: ['MSW for API mocking', 'Test fixtures', 'E2E framework setup'],
       };
     } else {
       return {
         phase: 'Optimization',
         focus: 'Performance and reliability testing',
         priority: ['Load testing', 'Visual regression', 'Accessibility testing'],
-        tools: ['Lighthouse CI', 'Percy/Chromatic', 'axe-core']
+        tools: ['Lighthouse CI', 'Percy/Chromatic', 'axe-core'],
       };
     }
   }
@@ -941,7 +968,7 @@ class AIQualityMonitor {
       recommendations.push({
         area: 'Component Architecture',
         recommendation: 'Implement atomic design patterns more consistently',
-        benefit: 'Reduced complexity and improved reusability'
+        benefit: 'Reduced complexity and improved reusability',
       });
     }
 
@@ -950,7 +977,7 @@ class AIQualityMonitor {
       recommendations.push({
         area: 'Code Organization',
         recommendation: 'Strengthen domain-driven design implementation',
-        benefit: 'Better separation of concerns and testability'
+        benefit: 'Better separation of concerns and testability',
       });
     }
 
@@ -959,7 +986,7 @@ class AIQualityMonitor {
       recommendations.push({
         area: 'Code Reuse',
         recommendation: 'Create more shared utilities and custom hooks',
-        benefit: 'Reduced duplication and improved consistency'
+        benefit: 'Reduced duplication and improved consistency',
       });
     }
 
@@ -970,11 +997,11 @@ class AIQualityMonitor {
     try {
       const { execSync } = require('child_process');
       let cmd = `find . -name "${pattern}" -type f`;
-      
+
       for (const excludePattern of exclude) {
         cmd += ` ! -path "${excludePattern}"`;
       }
-      
+
       const output = execSync(cmd, { encoding: 'utf8' }).trim();
       return output ? output.split('\n') : [];
     } catch (error) {
@@ -987,13 +1014,13 @@ class AIQualityMonitor {
     const files = [];
     try {
       const entries = fs.readdirSync(dir, { withFileTypes: true });
-      
+
       for (const entry of entries) {
         const fullPath = path.join(dir, entry.name);
-        
+
         if (entry.isDirectory() && !entry.name.startsWith('.')) {
           // Skip excluded directories
-          if (!exclude.some(ex => fullPath.includes(ex.replace('**/', '')))) {
+          if (!exclude.some((ex) => fullPath.includes(ex.replace('**/', '')))) {
             files.push(...this.findFilesRecursive(fullPath, pattern, exclude));
           }
         } else if (entry.isFile()) {
@@ -1017,7 +1044,7 @@ class AIQualityMonitor {
       .replace(/\*/g, '[^/]*')
       .replace(/\{([^}]+)\}/g, '($1)')
       .replace(/,/g, '|');
-    
+
     return new RegExp(regex).test(filename);
   }
 }
@@ -1033,13 +1060,22 @@ if (require.main === module) {
       monitor.runFullAnalysis().catch(console.error);
       break;
     case 'coverage':
-      monitor.analyzeCoverage().then(() => console.log('Coverage analysis complete')).catch(console.error);
+      monitor
+        .analyzeCoverage()
+        .then(() => console.log('Coverage analysis complete'))
+        .catch(console.error);
       break;
     case 'complexity':
-      monitor.analyzeComplexity().then(() => console.log('Complexity analysis complete')).catch(console.error);
+      monitor
+        .analyzeComplexity()
+        .then(() => console.log('Complexity analysis complete'))
+        .catch(console.error);
       break;
     case 'security':
-      monitor.analyzeSecurity().then(() => console.log('Security analysis complete')).catch(console.error);
+      monitor
+        .analyzeSecurity()
+        .then(() => console.log('Security analysis complete'))
+        .catch(console.error);
       break;
     default:
       console.log('AI Quality Monitor');

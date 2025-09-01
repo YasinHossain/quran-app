@@ -95,6 +95,7 @@ quran-app/
 ## Data Flow Patterns
 
 ### Read Operation Flow
+
 ```
 User Request → Next.js Route → React Component → Custom Hook → Use Case
                                                                    ↓
@@ -106,6 +107,7 @@ Cache Layer → Domain Entity → Use Case → Hook → Component → UI
 ```
 
 ### Write Operation Flow
+
 ```
 User Action → Component → Hook → Use Case → Domain Service
                                                 ↓
@@ -139,6 +141,7 @@ Cache Update → State Update → Component Re-render
 ## Feature Architecture Pattern
 
 Each feature follows this structure:
+
 ```
 app/(features)/[feature-name]/
 ├── page.tsx                     # Next.js route entry point
@@ -158,6 +161,7 @@ src/infrastructure/repositories/[Feature]Repository.ts # Data access
 ## Service Layer Integration
 
 ### DI Container Resolution
+
 ```
 React Component
        ↓ useContainer()
@@ -169,6 +173,7 @@ Business Logic Execution
 ```
 
 ### Available Services
+
 - **BookmarkService**: Domain operations for bookmarks
 - **SearchService**: Verse search and filtering
 - **ReadingProgressService**: User progress tracking
@@ -178,16 +183,18 @@ Business Logic Execution
 ## State Management Strategy
 
 ### Global State (Providers)
+
 ```
 App
 ├── DIProvider (Dependency Injection)
 ├── ThemeProvider (Design System)
-├── SettingsProvider (User Preferences) 
+├── SettingsProvider (User Preferences)
 ├── BookmarkProvider (Bookmark Management)
 └── SidebarProvider (Navigation State)
 ```
 
 ### Local State (Hooks)
+
 - **useState**: Simple component state
 - **useReducer**: Complex state with actions
 - **SWR**: Server state with caching
@@ -196,12 +203,14 @@ App
 ## API Integration Points
 
 ### External Services
+
 1. **Quran.com API**: Verse data, translations, audio URLs
 2. **CDN Services**: Audio files, images
 3. **Tafsir APIs**: Commentary content
 4. **Translation APIs**: Multi-language support
 
 ### Caching Strategy
+
 ```
 Request → Local Cache Check → API Call (if cache miss) → Cache Update → Response
               ↓ (cache hit)
@@ -211,6 +220,7 @@ Request → Local Cache Check → API Call (if cache miss) → Cache Update → 
 ## AI Development Paths
 
 ### Adding New Feature
+
 1. **Domain**: Create entity, repository interface, service
 2. **Application**: Create use cases for feature operations
 3. **Infrastructure**: Implement repository, API integration
@@ -218,6 +228,7 @@ Request → Local Cache Check → API Call (if cache miss) → Cache Update → 
 5. **Integration**: Wire up DI, add to providers
 
 ### Modifying Existing Feature
+
 1. **Identify layer**: Determine if change is domain, app, or UI
 2. **Follow dependencies**: Update dependent layers
 3. **Maintain interfaces**: Keep contracts stable

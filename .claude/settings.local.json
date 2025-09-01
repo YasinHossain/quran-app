@@ -1,13 +1,9 @@
 {
   "permissions": {
-    "allow": [
-      "Bash(npm run build:*)"
-    ],
+    "allow": ["Bash(npm run build:*)", "Bash(npm run test:*)"],
     "deny": [],
     "ask": []
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": [
-    "browser-console"
-  ]
+  "enabledMcpjsonServers": ["browser-console"]
 }

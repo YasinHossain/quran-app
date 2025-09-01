@@ -2,7 +2,7 @@
 
 /**
  * AI Refactoring Assistant
- * 
+ *
  * Provides intelligent refactoring suggestions and automated
  * code transformations following the project's architecture.
  */
@@ -21,7 +21,7 @@ class AIRefactoringAssistant {
       'convert-to-atomic': this.convertToAtomic.bind(this),
       'add-error-boundary': this.addErrorBoundary.bind(this),
       'optimize-performance': this.optimizePerformance.bind(this),
-      'improve-accessibility': this.improveAccessibility.bind(this)
+      'improve-accessibility': this.improveAccessibility.bind(this),
     };
   }
 
@@ -35,7 +35,7 @@ class AIRefactoringAssistant {
 
     const content = fs.readFileSync(filePath, 'utf8');
     const analysis = await this.performAnalysis(filePath, content);
-    
+
     this.displayAnalysis(analysis);
     return analysis;
   }
@@ -47,7 +47,7 @@ class AIRefactoringAssistant {
       issues: [],
       suggestions: [],
       metrics: this.calculateMetrics(content),
-      dependencies: this.analyzeDependencies(content)
+      dependencies: this.analyzeDependencies(content),
     };
 
     // Run specific analyses based on file type
@@ -83,8 +83,8 @@ class AIRefactoringAssistant {
 
   calculateMetrics(content) {
     const lines = content.split('\n');
-    const codeLines = lines.filter(line => 
-      line.trim() && !line.trim().startsWith('//') && !line.trim().startsWith('/*')
+    const codeLines = lines.filter(
+      (line) => line.trim() && !line.trim().startsWith('//') && !line.trim().startsWith('/*')
     );
 
     return {
@@ -93,7 +93,7 @@ class AIRefactoringAssistant {
       complexity: this.calculateComplexity(content),
       imports: (content.match(/^import/gm) || []).length,
       exports: (content.match(/^export/gm) || []).length,
-      functions: (content.match(/function\s+\w+|const\s+\w+\s*=.*=>/g) || []).length
+      functions: (content.match(/function\s+\w+|const\s+\w+\s*=.*=>/g) || []).length,
     };
   }
 
@@ -107,11 +107,11 @@ class AIRefactoringAssistant {
       /for\s*\(/g,
       /while\s*\(/g,
       /catch\s*\(/g,
-      /\?\s*.*:/g // ternary
+      /\?\s*.*:/g, // ternary
     ];
 
     let complexity = 1; // base complexity
-    
+
     for (const pattern of complexityPatterns) {
       const matches = content.match(pattern);
       if (matches) {
@@ -125,18 +125,18 @@ class AIRefactoringAssistant {
   analyzeDependencies(content) {
     const imports = [];
     const importMatches = content.matchAll(/import\s+{?([^}]+)}?\s+from\s+['"]([^'"]+)['"]/g);
-    
+
     for (const match of importMatches) {
       imports.push({
         what: match[1].trim(),
-        from: match[2]
+        from: match[2],
       });
     }
 
     return {
       imports,
-      external: imports.filter(imp => !imp.from.startsWith('.')).length,
-      internal: imports.filter(imp => imp.from.startsWith('.')).length
+      external: imports.filter((imp) => !imp.from.startsWith('.')).length,
+      internal: imports.filter((imp) => imp.from.startsWith('.')).length,
     };
   }
 
@@ -147,7 +147,7 @@ class AIRefactoringAssistant {
         type: 'size',
         severity: 'warning',
         message: 'Component is large (>200 lines). Consider splitting.',
-        suggestion: 'split-large-component'
+        suggestion: 'split-large-component',
       });
     }
 
@@ -158,7 +158,7 @@ class AIRefactoringAssistant {
         type: 'complexity',
         severity: 'warning',
         message: 'Component uses many hooks. Consider extracting custom hooks.',
-        suggestion: 'extract-hook'
+        suggestion: 'extract-hook',
       });
     }
 
@@ -168,7 +168,7 @@ class AIRefactoringAssistant {
       analysis.suggestions.push({
         type: 'performance',
         message: 'Consider extracting inline event handlers to useCallback.',
-        suggestion: 'optimize-performance'
+        suggestion: 'optimize-performance',
       });
     }
 
@@ -177,7 +177,7 @@ class AIRefactoringAssistant {
       analysis.suggestions.push({
         type: 'accessibility',
         message: 'Button elements should have ARIA attributes.',
-        suggestion: 'improve-accessibility'
+        suggestion: 'improve-accessibility',
       });
     }
 
@@ -186,7 +186,7 @@ class AIRefactoringAssistant {
       analysis.suggestions.push({
         type: 'architecture',
         message: 'Component should follow atomic design structure.',
-        suggestion: 'convert-to-atomic'
+        suggestion: 'convert-to-atomic',
       });
     }
 
@@ -195,7 +195,7 @@ class AIRefactoringAssistant {
       analysis.suggestions.push({
         type: 'reliability',
         message: 'Consider adding error boundary for better error handling.',
-        suggestion: 'add-error-boundary'
+        suggestion: 'add-error-boundary',
       });
     }
   }
@@ -206,7 +206,7 @@ class AIRefactoringAssistant {
       analysis.issues.push({
         type: 'naming',
         severity: 'error',
-        message: 'Hook should start with "use" prefix.'
+        message: 'Hook should start with "use" prefix.',
       });
     }
 
@@ -216,17 +216,15 @@ class AIRefactoringAssistant {
         type: 'architecture',
         severity: 'warning',
         message: 'Hook contains direct API calls. Consider using use cases.',
-        suggestion: 'extract-domain-service'
+        suggestion: 'extract-domain-service',
       });
     }
   }
 
   async analyzeDomainFile(content, analysis) {
     // Check for external dependencies
-    const externalImports = analysis.dependencies.imports.filter(imp => 
-      imp.from.includes('react') || 
-      imp.from.includes('next/') ||
-      imp.from.includes('http')
+    const externalImports = analysis.dependencies.imports.filter(
+      (imp) => imp.from.includes('react') || imp.from.includes('next/') || imp.from.includes('http')
     );
 
     if (externalImports.length > 0) {
@@ -234,7 +232,7 @@ class AIRefactoringAssistant {
         type: 'architecture',
         severity: 'error',
         message: 'Domain layer should not have external dependencies.',
-        details: externalImports.map(imp => imp.from)
+        details: externalImports.map((imp) => imp.from),
       });
     }
 
@@ -243,7 +241,7 @@ class AIRefactoringAssistant {
       analysis.issues.push({
         type: 'structure',
         severity: 'warning',
-        message: 'Entity file should contain a class with business logic.'
+        message: 'Entity file should contain a class with business logic.',
       });
     }
   }
@@ -253,7 +251,7 @@ class AIRefactoringAssistant {
     if (!content.includes('cache')) {
       analysis.suggestions.push({
         type: 'performance',
-        message: 'Repository should implement caching for better performance.'
+        message: 'Repository should implement caching for better performance.',
       });
     }
 
@@ -262,7 +260,7 @@ class AIRefactoringAssistant {
       analysis.issues.push({
         type: 'reliability',
         severity: 'warning',
-        message: 'Repository should have proper error handling.'
+        message: 'Repository should have proper error handling.',
       });
     }
   }
@@ -272,27 +270,31 @@ class AIRefactoringAssistant {
     if (!content.includes('@inject') && !content.includes('constructor(')) {
       analysis.suggestions.push({
         type: 'architecture',
-        message: 'Service should use dependency injection.'
+        message: 'Service should use dependency injection.',
       });
     }
   }
 
   isAtomicComponent(filePath) {
-    return filePath.includes('/atoms/') || 
-           filePath.includes('/molecules/') || 
-           filePath.includes('/organisms/') || 
-           filePath.includes('/templates/');
+    return (
+      filePath.includes('/atoms/') ||
+      filePath.includes('/molecules/') ||
+      filePath.includes('/organisms/') ||
+      filePath.includes('/templates/')
+    );
   }
 
   displayAnalysis(analysis) {
     console.log(`📊 Analysis Results for ${path.basename(analysis.file)}\n`);
-    
+
     // Display metrics
     console.log('📈 Metrics:');
     console.log(`   Lines of code: ${analysis.metrics.codeLines}`);
     console.log(`   Complexity: ${analysis.metrics.complexity}`);
     console.log(`   Functions: ${analysis.metrics.functions}`);
-    console.log(`   Imports: ${analysis.dependencies.external} external, ${analysis.dependencies.internal} internal\n`);
+    console.log(
+      `   Imports: ${analysis.dependencies.external} external, ${analysis.dependencies.internal} internal\n`
+    );
 
     // Display issues
     if (analysis.issues.length > 0) {
@@ -300,7 +302,7 @@ class AIRefactoringAssistant {
       analysis.issues.forEach((issue, i) => {
         console.log(`   ${i + 1}. [${issue.severity.toUpperCase()}] ${issue.message}`);
         if (issue.details) {
-          issue.details.forEach(detail => console.log(`      - ${detail}`));
+          issue.details.forEach((detail) => console.log(`      - ${detail}`));
         }
       });
       console.log('');
@@ -342,10 +344,10 @@ class AIRefactoringAssistant {
   // Refactoring implementations
   async extractComponent(filePath, options) {
     const content = fs.readFileSync(filePath, 'utf8');
-    
+
     // Simple extraction: find JSX elements that could be components
     const jsxElements = this.findExtractableJSX(content);
-    
+
     if (jsxElements.length === 0) {
       console.log('No extractable components found.');
       return;
@@ -362,10 +364,10 @@ class AIRefactoringAssistant {
 
   async extractHook(filePath, options) {
     const content = fs.readFileSync(filePath, 'utf8');
-    
+
     // Find useState, useEffect patterns that could be extracted
     const hookPatterns = this.findExtractableHooks(content);
-    
+
     if (hookPatterns.length === 0) {
       console.log('No extractable hooks found.');
       return;
@@ -379,10 +381,10 @@ class AIRefactoringAssistant {
 
   async extractDomainService(filePath, options) {
     const content = fs.readFileSync(filePath, 'utf8');
-    
+
     // Find API calls and business logic that should be in domain layer
     const businessLogic = this.findBusinessLogic(content);
-    
+
     if (businessLogic.length === 0) {
       console.log('No business logic to extract found.');
       return;
@@ -397,7 +399,7 @@ class AIRefactoringAssistant {
   async splitLargeComponent(filePath, options) {
     const content = fs.readFileSync(filePath, 'utf8');
     const analysis = await this.performAnalysis(filePath, content);
-    
+
     if (analysis.metrics.codeLines < 100) {
       console.log('Component is not large enough to warrant splitting.');
       return;
@@ -413,25 +415,25 @@ class AIRefactoringAssistant {
   async convertToAtomic(filePath, options) {
     const componentName = path.basename(filePath, '.tsx');
     const currentDir = path.dirname(filePath);
-    
+
     console.log(`Converting ${componentName} to atomic design structure:`);
     console.log(`Current location: ${currentDir}`);
-    
+
     // Determine atomic level based on complexity
     const content = fs.readFileSync(filePath, 'utf8');
     const analysis = await this.performAnalysis(filePath, content);
-    
+
     let atomicLevel = 'molecules';
     if (analysis.metrics.codeLines < 50) atomicLevel = 'atoms';
     if (analysis.metrics.codeLines > 150) atomicLevel = 'organisms';
-    
+
     console.log(`Suggested atomic level: ${atomicLevel}`);
     console.log(`Move to: ${currentDir.replace(/components.*/, `components/${atomicLevel}`)}`);
   }
 
   async addErrorBoundary(filePath, options) {
     const content = fs.readFileSync(filePath, 'utf8');
-    
+
     // Check if already has error boundary
     if (content.includes('ErrorBoundary')) {
       console.log('Component already has error boundary.');
@@ -504,16 +506,17 @@ import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
   findExtractableJSX(content) {
     // Simple pattern matching for repetitive JSX
     const elements = [];
-    
+
     // Look for repeated patterns (simplified)
     const divMatches = content.match(/<div[^>]*>[\s\S]*?<\/div>/g) || [];
-    
-    divMatches.forEach(match => {
-      if (match.length > 200) { // Large JSX blocks
+
+    divMatches.forEach((match) => {
+      if (match.length > 200) {
+        // Large JSX blocks
         elements.push({
           name: 'ExtractedComponent',
           lines: match.split('\n').length,
-          content: match.substring(0, 100) + '...'
+          content: match.substring(0, 100) + '...',
         });
       }
     });
@@ -528,7 +531,7 @@ import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
     if (content.includes('useState') && content.includes('useEffect')) {
       patterns.push({
         type: 'State Management Hook',
-        description: 'useState + useEffect pattern can be extracted to custom hook'
+        description: 'useState + useEffect pattern can be extracted to custom hook',
       });
     }
 
@@ -536,7 +539,7 @@ import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
     if (content.includes('fetch(') || content.includes('.get(')) {
       patterns.push({
         type: 'Data Fetching Hook',
-        description: 'API calls can be extracted to data fetching hook'
+        description: 'API calls can be extracted to data fetching hook',
       });
     }
 
@@ -550,7 +553,7 @@ import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
     if (content.includes('fetch(') || content.includes('.post(') || content.includes('.get(')) {
       logic.push({
         type: 'API Operations',
-        description: 'API calls should be moved to repository layer'
+        description: 'API calls should be moved to repository layer',
       });
     }
 
@@ -558,7 +561,7 @@ import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
     if (content.includes('validate') || content.includes('isValid')) {
       logic.push({
         type: 'Validation Logic',
-        description: 'Validation logic should be moved to domain entities'
+        description: 'Validation logic should be moved to domain entities',
       });
     }
 
@@ -566,7 +569,7 @@ import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
     if (content.includes('calculate') || content.includes('compute')) {
       logic.push({
         type: 'Business Calculations',
-        description: 'Business calculations should be moved to domain services'
+        description: 'Business calculations should be moved to domain services',
       });
     }
 
@@ -591,13 +594,13 @@ if (require.main === module) {
   } else if (command === 'refactor') {
     const refactorType = process.argv[3];
     const refactorFile = process.argv[4];
-    
+
     if (!refactorType || !refactorFile) {
       console.log('Usage: node refactoring-assistant.js refactor <type> <file-path>');
       console.log('Available types:', Object.keys(assistant.refactorings).join(', '));
       process.exit(1);
     }
-    
+
     assistant.applyRefactoring(refactorType, refactorFile, options).catch(console.error);
   } else {
     console.log('AI Refactoring Assistant');
@@ -618,7 +621,9 @@ if (require.main === module) {
     console.log('');
     console.log('Examples:');
     console.log('  node refactoring-assistant.js analyze src/components/LargeComponent.tsx');
-    console.log('  node refactoring-assistant.js refactor extract-hook src/components/MyComponent.tsx');
+    console.log(
+      '  node refactoring-assistant.js refactor extract-hook src/components/MyComponent.tsx'
+    );
   }
 }
 

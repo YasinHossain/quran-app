@@ -2,7 +2,7 @@
 
 /**
  * AI Test Generator
- * 
+ *
  * Automatically generates test templates based on code changes
  * and existing patterns in the codebase.
  */
@@ -19,7 +19,7 @@ class AITestGenerator {
       useCase: this.getUseCaseTestTemplate(),
       repository: this.getRepositoryTestTemplate(),
       component: this.getComponentTestTemplate(),
-      hook: this.getHookTestTemplate()
+      hook: this.getHookTestTemplate(),
     };
   }
 
@@ -62,7 +62,7 @@ class AITestGenerator {
     const ext = path.extname(filePath);
     const baseName = path.basename(filePath, ext);
     const dirName = path.dirname(filePath);
-    
+
     // For domain/application/infrastructure - use tests/ directory
     if (filePath.includes('src/')) {
       const relativePath = path.relative('src', filePath);
@@ -72,7 +72,7 @@ class AITestGenerator {
       }
       return path.join(testDir, `${baseName}.test.ts`);
     }
-    
+
     // For components/hooks - use local __tests__ directory
     const testDir = path.join(dirName, '__tests__');
     if (!fs.existsSync(testDir)) {
@@ -86,9 +86,9 @@ class AITestGenerator {
     const className = this.extractClassName(content);
     const imports = this.extractImports(content);
     const methods = this.extractMethods(content);
-    
+
     const template = this.templates[fileType];
-    
+
     return template
       .replace(/\{\{className\}\}/g, className)
       .replace(/\{\{filePath\}\}/g, this.getImportPath(filePath))
@@ -102,32 +102,32 @@ class AITestGenerator {
     const classMatch = content.match(/export\s+class\s+(\w+)/);
     const functionMatch = content.match(/export\s+const\s+(\w+).*=.*React\.FC/);
     const hookMatch = content.match(/export\s+const\s+(use\w+)/);
-    
+
     return classMatch?.[1] || functionMatch?.[1] || hookMatch?.[1] || 'UnknownClass';
   }
 
   extractImports(content) {
     const imports = [];
     const importMatches = content.matchAll(/import.*from\s+['"](.+)['"]/g);
-    
+
     for (const match of importMatches) {
       if (!match[1].startsWith('.')) {
         imports.push(match[1]);
       }
     }
-    
+
     return imports;
   }
 
   extractMethods(content) {
     const methods = [];
-    
+
     // Public methods in classes
     const methodMatches = content.matchAll(/public\s+(\w+)\s*\(/g);
     for (const match of methodMatches) {
       methods.push(match[1]);
     }
-    
+
     // Regular methods in classes
     const regularMethodMatches = content.matchAll(/^\s+(\w+)\s*\([^)]*\)\s*[:{}]/gm);
     for (const match of regularMethodMatches) {
@@ -135,7 +135,7 @@ class AITestGenerator {
         methods.push(match[1]);
       }
     }
-    
+
     return [...new Set(methods)];
   }
 
@@ -151,7 +151,7 @@ class AITestGenerator {
     const testImports = [
       "import { jest } from '@jest/globals';",
       "import { render, screen } from '@testing-library/react';",
-      "import { userEvent } from '@testing-library/user-event';"
+      "import { userEvent } from '@testing-library/user-event';",
     ];
 
     if (fileType === 'component') {
@@ -171,8 +171,9 @@ class AITestGenerator {
       return this.getDefaultTest(fileType);
     }
 
-    return methods.map(method => {
-      return `  describe('${method}', () => {
+    return methods
+      .map((method) => {
+        return `  describe('${method}', () => {
     it('should ${method.toLowerCase()} successfully', () => {
       // TODO: Implement test for ${method}
       expect(true).toBe(true);
@@ -183,7 +184,8 @@ class AITestGenerator {
       expect(true).toBe(true);
     });
   });\n`;
-    }).join('\n');
+      })
+      .join('\n');
   }
 
   generateSetup(fileType, className) {
@@ -388,7 +390,7 @@ describe('{{className}}', () => {
 // CLI interface
 if (require.main === module) {
   const filePath = process.argv[2];
-  
+
   if (!filePath) {
     console.log('Usage: node test-generator.js <file-path>');
     console.log('Example: node test-generator.js src/domain/entities/Verse.ts');

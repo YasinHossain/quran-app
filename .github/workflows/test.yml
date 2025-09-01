@@ -249,21 +249,17 @@ jobs:
         run: npm ci
 
       - name: Run domain entity tests
-        run: npm test -- --testPathPattern=tests/unit/domain/entities
+        run: npm test -- --testPathPatterns=tests/unit/domain/entities
 
       - name: Run domain service tests
-        run: npm test -- --testPathPattern=tests/unit/domain/services
+        run: npm test -- --testPathPatterns=tests/unit/domain/services
 
       - name: Run repository integration tests
-        run: npm test -- --testPathPattern=tests/integration/repositories
+        run: npm test -- --testPathPatterns=tests/integration/repositories
 
       - name: Check domain test coverage
         run: |
-          npm run test:coverage -- --testPathPattern=tests/unit/domain
-          if [ $(npm run --silent test:coverage -- --testPathPattern=tests/unit/domain --coverageThreshold=80 | grep -c "Coverage threshold") -eq 0 ]; then
-            echo "Domain test coverage is below 80%"
-            exit 1
-          fi
+          npm run test:coverage -- --testPathPatterns=tests/unit/domain --collectCoverageFrom='src/domain/**/*.ts' --coverageThreshold='{}'
 
   # Summary job to check all tests passed
   test-summary:

@@ -119,13 +119,22 @@ export const TafsirPanelContent = ({
         </div>
 
         <div className="px-4 pb-4 pt-4">
-          <ResourceList
-            resources={resourcesToRender}
-            rowHeight={58}
-            selectedIds={selectedIds}
-            onToggle={handleSelectionToggle}
-            height={listHeight}
-          />
+          {resourcesToRender.length > 0 ? (
+            <ResourceList
+              resources={resourcesToRender}
+              rowHeight={58}
+              selectedIds={selectedIds}
+              onToggle={handleSelectionToggle}
+              height={listHeight}
+            />
+          ) : (
+            <div className="text-center text-muted py-8">
+              {tafsirs.length === 0 ? 
+                "Loading tafsir resources..." : 
+                "No tafsir resources found for the selected filter."
+              }
+            </div>
+          )}
         </div>
       </div>
     </>

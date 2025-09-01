@@ -2,7 +2,7 @@
 
 /**
  * AI Feature Generator
- * 
+ *
  * Generates complete feature structures following the project's
  * clean architecture and atomic design patterns.
  */
@@ -33,7 +33,7 @@ class AIFeatureGenerator {
       await this.generatePresentationLayer();
       await this.generateTests();
       await this.updateConfiguration();
-      
+
       console.log(`✅ Feature "${featureName}" generated successfully!`);
       console.log('\n📋 Next steps:');
       console.log('1. Update the domain entity with business logic');
@@ -59,23 +59,23 @@ class AIFeatureGenerator {
       `${this.featurePath}/components/organisms`,
       `${this.featurePath}/hooks`,
       `${this.featurePath}/__tests__`,
-      
+
       // Domain directories
       `src/domain/entities`,
       `src/domain/repositories`,
       `src/domain/services`,
-      
+
       // Application directories
       `src/application/use-cases`,
       `src/application/dto`,
-      
+
       // Infrastructure directories
       `src/infrastructure/repositories`,
-      
+
       // Test directories
       `tests/unit/domain/entities`,
       `tests/integration/repositories`,
-      `tests/e2e/${this.featureName}`
+      `tests/e2e/${this.featureName}`,
     ];
 
     for (const dir of directories) {
@@ -96,12 +96,18 @@ class AIFeatureGenerator {
 
     // Repository Interface
     const repositoryContent = this.generateRepositoryInterfaceTemplate();
-    fs.writeFileSync(`src/domain/repositories/I${this.capitalize(this.featureName)}Repository.ts`, repositoryContent);
+    fs.writeFileSync(
+      `src/domain/repositories/I${this.capitalize(this.featureName)}Repository.ts`,
+      repositoryContent
+    );
     console.log(`   Created: I${this.capitalize(this.featureName)}Repository interface`);
 
     // Domain Service
     const serviceContent = this.generateDomainServiceTemplate();
-    fs.writeFileSync(`src/domain/services/${this.capitalize(this.featureName)}Service.ts`, serviceContent);
+    fs.writeFileSync(
+      `src/domain/services/${this.capitalize(this.featureName)}Service.ts`,
+      serviceContent
+    );
     console.log(`   Created: ${this.capitalize(this.featureName)}Service`);
   }
 
@@ -109,8 +115,13 @@ class AIFeatureGenerator {
     console.log('⚙️ Generating application layer...');
 
     // Use Cases
-    const useCases = [`Get${this.capitalize(this.featureName)}`, `Create${this.capitalize(this.featureName)}`, `Update${this.capitalize(this.featureName)}`, `Delete${this.capitalize(this.featureName)}`];
-    
+    const useCases = [
+      `Get${this.capitalize(this.featureName)}`,
+      `Create${this.capitalize(this.featureName)}`,
+      `Update${this.capitalize(this.featureName)}`,
+      `Delete${this.capitalize(this.featureName)}`,
+    ];
+
     for (const useCase of useCases) {
       const content = this.generateUseCaseTemplate(useCase);
       fs.writeFileSync(`src/application/use-cases/${useCase}UseCase.ts`, content);
@@ -128,7 +139,10 @@ class AIFeatureGenerator {
 
     // Repository Implementation
     const repoImplContent = this.generateRepositoryImplementationTemplate();
-    fs.writeFileSync(`src/infrastructure/repositories/${this.capitalize(this.featureName)}Repository.ts`, repoImplContent);
+    fs.writeFileSync(
+      `src/infrastructure/repositories/${this.capitalize(this.featureName)}Repository.ts`,
+      repoImplContent
+    );
     console.log(`   Created: ${this.capitalize(this.featureName)}Repository implementation`);
   }
 
@@ -147,17 +161,29 @@ class AIFeatureGenerator {
 
     // Atomic Design Components
     const atomContent = this.generateAtomTemplate();
-    fs.writeFileSync(`${this.featurePath}/components/atoms/${this.capitalize(this.featureName)}Card.tsx`, atomContent);
+    fs.writeFileSync(
+      `${this.featurePath}/components/atoms/${this.capitalize(this.featureName)}Card.tsx`,
+      atomContent
+    );
 
     const moleculeContent = this.generateMoleculeTemplate();
-    fs.writeFileSync(`${this.featurePath}/components/molecules/${this.capitalize(this.featureName)}List.tsx`, moleculeContent);
+    fs.writeFileSync(
+      `${this.featurePath}/components/molecules/${this.capitalize(this.featureName)}List.tsx`,
+      moleculeContent
+    );
 
     const organismContent = this.generateOrganismTemplate();
-    fs.writeFileSync(`${this.featurePath}/components/organisms/${this.capitalize(this.featureName)}Manager.tsx`, organismContent);
+    fs.writeFileSync(
+      `${this.featurePath}/components/organisms/${this.capitalize(this.featureName)}Manager.tsx`,
+      organismContent
+    );
 
     // Custom Hook
     const hookContent = this.generateHookTemplate();
-    fs.writeFileSync(`${this.featurePath}/hooks/use${this.capitalize(this.featureName)}.ts`, hookContent);
+    fs.writeFileSync(
+      `${this.featurePath}/hooks/use${this.capitalize(this.featureName)}.ts`,
+      hookContent
+    );
 
     console.log(`   Created: atomic design components and hooks`);
   }
@@ -167,22 +193,37 @@ class AIFeatureGenerator {
 
     // Domain tests
     const entityTestContent = this.generateEntityTestTemplate();
-    fs.writeFileSync(`tests/unit/domain/entities/${this.capitalize(this.featureName)}.test.ts`, entityTestContent);
+    fs.writeFileSync(
+      `tests/unit/domain/entities/${this.capitalize(this.featureName)}.test.ts`,
+      entityTestContent
+    );
 
     const serviceTestContent = this.generateServiceTestTemplate();
-    fs.writeFileSync(`tests/unit/domain/services/${this.capitalize(this.featureName)}Service.test.ts`, serviceTestContent);
+    fs.writeFileSync(
+      `tests/unit/domain/services/${this.capitalize(this.featureName)}Service.test.ts`,
+      serviceTestContent
+    );
 
     // Integration tests
     const repoTestContent = this.generateRepositoryTestTemplate();
-    fs.writeFileSync(`tests/integration/repositories/${this.capitalize(this.featureName)}Repository.test.ts`, repoTestContent);
+    fs.writeFileSync(
+      `tests/integration/repositories/${this.capitalize(this.featureName)}Repository.test.ts`,
+      repoTestContent
+    );
 
     // Component tests
     const componentTestContent = this.generateComponentTestTemplate();
-    fs.writeFileSync(`${this.featurePath}/__tests__/${this.capitalize(this.featureName)}Manager.test.tsx`, componentTestContent);
+    fs.writeFileSync(
+      `${this.featurePath}/__tests__/${this.capitalize(this.featureName)}Manager.test.tsx`,
+      componentTestContent
+    );
 
     // E2E tests
     const e2eTestContent = this.generateE2ETestTemplate();
-    fs.writeFileSync(`tests/e2e/${this.featureName}/${this.featureName}-flow.test.ts`, e2eTestContent);
+    fs.writeFileSync(
+      `tests/e2e/${this.featureName}/${this.featureName}-flow.test.ts`,
+      e2eTestContent
+    );
 
     console.log(`   Created: comprehensive test suite`);
   }
@@ -413,8 +454,12 @@ export interface ${this.capitalize(this.featureName)}Stats {
   }
 
   generateUseCaseTemplate(useCaseName) {
-    const action = useCaseName.replace(/UseCase$/, '').replace(/^(Get|Create|Update|Delete)/, '').toLowerCase();
-    const operation = useCaseName.match(/^(Get|Create|Update|Delete)/)?.[1].toLowerCase() || 'process';
+    const action = useCaseName
+      .replace(/UseCase$/, '')
+      .replace(/^(Get|Create|Update|Delete)/, '')
+      .toLowerCase();
+    const operation =
+      useCaseName.match(/^(Get|Create|Update|Delete)/)?.[1].toLowerCase() || 'process';
 
     return `/**
  * ${useCaseName} Use Case
@@ -457,8 +502,9 @@ export class ${useCaseName}UseCase {
   }
 
   generateUseCaseInterface(useCaseName) {
-    const operation = useCaseName.match(/^(Get|Create|Update|Delete)/)?.[1].toLowerCase() || 'process';
-    
+    const operation =
+      useCaseName.match(/^(Get|Create|Update|Delete)/)?.[1].toLowerCase() || 'process';
+
     return `export interface ${useCaseName}Request {
   ${this.generateRequestInterface(operation)}
 }
@@ -470,21 +516,31 @@ export interface ${useCaseName}Response {
 
   generateUseCaseParams(operation) {
     switch (operation) {
-      case 'get': return 'request: Get${this.capitalize(this.featureName)}Request';
-      case 'create': return 'request: Create${this.capitalize(this.featureName)}Request';
-      case 'update': return 'request: Update${this.capitalize(this.featureName)}Request';
-      case 'delete': return 'request: Delete${this.capitalize(this.featureName)}Request';
-      default: return 'request: any';
+      case 'get':
+        return 'request: Get${this.capitalize(this.featureName)}Request';
+      case 'create':
+        return 'request: Create${this.capitalize(this.featureName)}Request';
+      case 'update':
+        return 'request: Update${this.capitalize(this.featureName)}Request';
+      case 'delete':
+        return 'request: Delete${this.capitalize(this.featureName)}Request';
+      default:
+        return 'request: any';
     }
   }
 
   generateUseCaseReturn(operation) {
     switch (operation) {
-      case 'get': return `${this.capitalize(this.featureName)}Dto | ${this.capitalize(this.featureName)}Dto[]`;
-      case 'create': return `${this.capitalize(this.featureName)}Dto`;
-      case 'update': return `${this.capitalize(this.featureName)}Dto`;
-      case 'delete': return 'void';
-      default: return 'any';
+      case 'get':
+        return `${this.capitalize(this.featureName)}Dto | ${this.capitalize(this.featureName)}Dto[]`;
+      case 'create':
+        return `${this.capitalize(this.featureName)}Dto`;
+      case 'update':
+        return `${this.capitalize(this.featureName)}Dto`;
+      case 'delete':
+        return 'void';
+      default:
+        return 'any';
     }
   }
 
@@ -508,21 +564,31 @@ export interface ${useCaseName}Response {
 
   generateRequestInterface(operation) {
     switch (operation) {
-      case 'get': return 'id: string;';
-      case 'create': return 'name: string;';
-      case 'update': return 'id: string;\n  name: string;';
-      case 'delete': return 'id: string;';
-      default: return '// TODO: Define request properties';
+      case 'get':
+        return 'id: string;';
+      case 'create':
+        return 'name: string;';
+      case 'update':
+        return 'id: string;\n  name: string;';
+      case 'delete':
+        return 'id: string;';
+      default:
+        return '// TODO: Define request properties';
     }
   }
 
   generateResponseInterface(operation) {
     switch (operation) {
-      case 'get': return `${this.featureName}: ${this.capitalize(this.featureName)}Dto | null;`;
-      case 'create': return `${this.featureName}: ${this.capitalize(this.featureName)}Dto;`;
-      case 'update': return `${this.featureName}: ${this.capitalize(this.featureName)}Dto;`;
-      case 'delete': return 'success: boolean;';
-      default: return '// TODO: Define response properties';
+      case 'get':
+        return `${this.featureName}: ${this.capitalize(this.featureName)}Dto | null;`;
+      case 'create':
+        return `${this.featureName}: ${this.capitalize(this.featureName)}Dto;`;
+      case 'update':
+        return `${this.featureName}: ${this.capitalize(this.featureName)}Dto;`;
+      case 'delete':
+        return 'success: boolean;';
+      default:
+        return '// TODO: Define response properties';
     }
   }
 
@@ -1771,7 +1837,7 @@ test.describe('${this.capitalize(this.featureName)} Feature', () => {
 // CLI interface
 if (require.main === module) {
   const featureName = process.argv[2];
-  
+
   if (!featureName) {
     console.log('Usage: node feature-generator.js <feature-name>');
     console.log('Example: node feature-generator.js user-profile');

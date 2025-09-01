@@ -43,7 +43,7 @@ const eslintConfig = [
           paths: [
             {
               name: 'lucide-react',
-              message: 'Use icons from \'@/app/shared/icons\' to keep consistency and theming.',
+              message: "Use icons from '@/app/shared/icons' to keep consistency and theming.",
             },
           ],
         },

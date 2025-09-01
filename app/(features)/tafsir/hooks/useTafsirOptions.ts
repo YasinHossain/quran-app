@@ -2,14 +2,15 @@ import { useMemo } from 'react';
 import useSWR from 'swr';
 import { useTranslation } from 'react-i18next';
 import { useSettings } from '@/app/providers/SettingsContext';
-import { getTafsirResources } from '@/lib/api';
+import { getAllTafsirResources } from '@/lib/api';
 import { TafsirResource } from '@/types';
 
 export const useTafsirOptions = () => {
   const { t } = useTranslation();
   const { settings } = useSettings();
 
-  const { data } = useSWR('tafsirs', getTafsirResources);
+  // Fetch a broad set so the user can pick any available tafsir
+  const { data } = useSWR('tafsir:resources:all', getAllTafsirResources);
   const tafsirOptions: TafsirResource[] = useMemo(() => data || [], [data]);
 
   const tafsirResource = useMemo(

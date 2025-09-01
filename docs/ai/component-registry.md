@@ -1,6 +1,7 @@
 # Component Registry - AI Development Reference
 
 ## Overview
+
 This registry provides AI with comprehensive understanding of all components, their purposes, props, and usage patterns.
 
 ## Component Architecture
@@ -8,40 +9,45 @@ This registry provides AI with comprehensive understanding of all components, th
 ### Atomic Design Hierarchy
 
 #### Atoms (Basic UI Elements)
-| Component | Location | Purpose | Key Props | Usage Notes |
-|-----------|----------|---------|-----------|-------------|
-| `ArabicText` | `src/presentation/components/atoms/` | Display Arabic Quran text with proper typography | `text: string, size?: 'sm'\|'md'\|'lg'` | Handles RTL text, tajweed colors |
-| `TranslationText` | `src/presentation/components/atoms/` | Display verse translations | `text: string, language?: string` | Supports multiple languages |
-| `VerseNumber` | `src/presentation/components/atoms/` | Show verse number in circle | `number: number, surahId?: number` | Responsive design, accessible |
-| `LoadingSpinner` | `src/presentation/components/atoms/` | Loading state indicator | `size?: 'sm'\|'md'\|'lg', className?: string` | Consistent loading UX |
-| `ActionButton` | `src/presentation/components/atoms/` | Standard button component | `onClick: () => void, variant?: string, children: ReactNode` | Theme-aware styling |
+
+| Component         | Location                             | Purpose                                          | Key Props                                                    | Usage Notes                      |
+| ----------------- | ------------------------------------ | ------------------------------------------------ | ------------------------------------------------------------ | -------------------------------- |
+| `ArabicText`      | `src/presentation/components/atoms/` | Display Arabic Quran text with proper typography | `text: string, size?: 'sm'\|'md'\|'lg'`                      | Handles RTL text, tajweed colors |
+| `TranslationText` | `src/presentation/components/atoms/` | Display verse translations                       | `text: string, language?: string`                            | Supports multiple languages      |
+| `VerseNumber`     | `src/presentation/components/atoms/` | Show verse number in circle                      | `number: number, surahId?: number`                           | Responsive design, accessible    |
+| `LoadingSpinner`  | `src/presentation/components/atoms/` | Loading state indicator                          | `size?: 'sm'\|'md'\|'lg', className?: string`                | Consistent loading UX            |
+| `ActionButton`    | `src/presentation/components/atoms/` | Standard button component                        | `onClick: () => void, variant?: string, children: ReactNode` | Theme-aware styling              |
 
 #### Molecules (Composed Components)
-| Component | Location | Purpose | Key Props | Dependencies |
-|-----------|----------|---------|-----------|--------------|
-| `VerseCard` | `src/presentation/components/molecules/` | Display single verse with metadata | `verse: Verse, showBookmark?: boolean` | ArabicText, TranslationText, VerseNumber |
-| `ErrorCard` | `src/presentation/components/molecules/` | Error state display with retry | `error: Error, onRetry?: () => void` | ActionButton |
-| `LoadingCard` | `src/presentation/components/molecules/` | Skeleton loading for verse cards | `count?: number` | LoadingSpinner |
-| `BookmarkItem` | `src/presentation/components/molecules/` | Bookmark list item | `bookmark: Bookmark, onRemove?: () => void` | VerseNumber, ActionButton |
+
+| Component      | Location                                 | Purpose                            | Key Props                                   | Dependencies                             |
+| -------------- | ---------------------------------------- | ---------------------------------- | ------------------------------------------- | ---------------------------------------- |
+| `VerseCard`    | `src/presentation/components/molecules/` | Display single verse with metadata | `verse: Verse, showBookmark?: boolean`      | ArabicText, TranslationText, VerseNumber |
+| `ErrorCard`    | `src/presentation/components/molecules/` | Error state display with retry     | `error: Error, onRetry?: () => void`        | ActionButton                             |
+| `LoadingCard`  | `src/presentation/components/molecules/` | Skeleton loading for verse cards   | `count?: number`                            | LoadingSpinner                           |
+| `BookmarkItem` | `src/presentation/components/molecules/` | Bookmark list item                 | `bookmark: Bookmark, onRemove?: () => void` | VerseNumber, ActionButton                |
 
 #### Organisms (Complex Components)
-| Component | Location | Purpose | Key Props | Business Logic |
-|-----------|----------|---------|-----------|----------------|
-| `VerseList` | `src/presentation/components/organisms/` | Virtualized list of verses | `surahId: number, verses: Verse[]` | Infinite scroll, performance optimized |
-| `SurahReadingLayout` | `src/presentation/components/organisms/` | Main reading interface | `surahId: number` | Audio player integration, settings |
-| `BookmarksSidebar` | `src/presentation/components/organisms/` | Bookmark management panel | `bookmarks: Bookmark[], isOpen: boolean` | CRUD operations |
-| `AudioPlayer` | `app/shared/player/` | Quran recitation player | `surahId?: number, reciterId?: string` | Audio state management |
+
+| Component            | Location                                 | Purpose                    | Key Props                                | Business Logic                         |
+| -------------------- | ---------------------------------------- | -------------------------- | ---------------------------------------- | -------------------------------------- |
+| `VerseList`          | `src/presentation/components/organisms/` | Virtualized list of verses | `surahId: number, verses: Verse[]`       | Infinite scroll, performance optimized |
+| `SurahReadingLayout` | `src/presentation/components/organisms/` | Main reading interface     | `surahId: number`                        | Audio player integration, settings     |
+| `BookmarksSidebar`   | `src/presentation/components/organisms/` | Bookmark management panel  | `bookmarks: Bookmark[], isOpen: boolean` | CRUD operations                        |
+| `AudioPlayer`        | `app/shared/player/`                     | Quran recitation player    | `surahId?: number, reciterId?: string`   | Audio state management                 |
 
 #### Templates (Page Layouts)
-| Component | Location | Purpose | Key Props | Layout Structure |
-|-----------|----------|---------|-----------|------------------|
-| `SurahPageTemplate` | `src/presentation/components/templates/` | Surah reading page layout | `surahId: number` | Header + VerseList + AudioPlayer |
-| `BookmarksPageTemplate` | `src/presentation/components/templates/` | Bookmarks page layout | `bookmarks: Bookmark[]` | Sidebar + main content area |
-| `SearchPageTemplate` | `src/presentation/components/templates/` | Search results layout | `query: string, results: Verse[]` | Search bar + result list |
+
+| Component               | Location                                 | Purpose                   | Key Props                         | Layout Structure                 |
+| ----------------------- | ---------------------------------------- | ------------------------- | --------------------------------- | -------------------------------- |
+| `SurahPageTemplate`     | `src/presentation/components/templates/` | Surah reading page layout | `surahId: number`                 | Header + VerseList + AudioPlayer |
+| `BookmarksPageTemplate` | `src/presentation/components/templates/` | Bookmarks page layout     | `bookmarks: Bookmark[]`           | Sidebar + main content area      |
+| `SearchPageTemplate`    | `src/presentation/components/templates/` | Search results layout     | `query: string, results: Verse[]` | Search bar + result list         |
 
 ## Feature Components
 
 ### Audio Player Feature
+
 ```typescript
 // Location: app/shared/player/
 interface AudioPlayerProps {
@@ -52,12 +58,13 @@ interface AudioPlayerProps {
 }
 
 // Key hooks:
-useAudioPlayer() // Player state management
-useReciterSelection() // Reciter switching
-usePlaybackControls() // Play/pause/seek
+useAudioPlayer(); // Player state management
+useReciterSelection(); // Reciter switching
+usePlaybackControls(); // Play/pause/seek
 ```
 
 ### Bookmarks Feature
+
 ```typescript
 // Location: app/(features)/bookmarks/
 interface BookmarkFeatureProps {
@@ -66,12 +73,13 @@ interface BookmarkFeatureProps {
 }
 
 // Key hooks:
-useBookmarks() // CRUD operations
-useBookmarkSync() // Synchronization
-useBookmarkFiltering() // Search/filter
+useBookmarks(); // CRUD operations
+useBookmarkSync(); // Synchronization
+useBookmarkFiltering(); // Search/filter
 ```
 
 ### Surah Reading Feature
+
 ```typescript
 // Location: app/(features)/surah/
 interface SurahReadingProps {
@@ -81,14 +89,15 @@ interface SurahReadingProps {
 }
 
 // Key hooks:
-useVerses(surahId) // Verse loading
-useSurahNavigation() // Next/prev navigation
-useReadingSettings() // Font size, theme
+useVerses(surahId); // Verse loading
+useSurahNavigation(); // Next/prev navigation
+useReadingSettings(); // Font size, theme
 ```
 
 ## Provider Dependencies
 
 ### Required Providers for Testing
+
 ```typescript
 // All components need these providers in tests:
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
@@ -107,6 +116,7 @@ const TestWrapper = ({ children }: { children: React.ReactNode }) => (
 ```
 
 ### Provider Hierarchy
+
 1. **DIProvider** - Dependency injection container
 2. **ThemeProvider** - Design system and responsive breakpoints
 3. **SettingsProvider** - User preferences and configuration
@@ -116,6 +126,7 @@ const TestWrapper = ({ children }: { children: React.ReactNode }) => (
 ## Component Creation Patterns
 
 ### New Atom Component
+
 ```typescript
 // src/presentation/components/atoms/NewAtom.tsx
 import React from 'react';
@@ -141,6 +152,7 @@ export const NewAtom: React.FC<NewAtomProps> = ({
 ```
 
 ### New Feature Component
+
 ```typescript
 // app/(features)/new-feature/components/FeatureMain.tsx
 import React from 'react';
@@ -167,13 +179,14 @@ export const FeatureMain: React.FC<FeatureMainProps> = ({ config }) => {
 ## AI Usage Instructions
 
 ### Finding Similar Components
+
 ```bash
 # Search for components by type
 Grep "export.*React.FC.*Props" --glob "**/*.tsx"
 
 # Find atoms/molecules/organisms
 Glob "**/atoms/**/*.tsx"
-Glob "**/molecules/**/*.tsx"  
+Glob "**/molecules/**/*.tsx"
 Glob "**/organisms/**/*.tsx"
 
 # Search for specific functionality
@@ -181,6 +194,7 @@ Grep "useState\|useEffect" app/ --glob "*.tsx"
 ```
 
 ### Component Modification Workflow
+
 1. **Find existing component** using Glob/Grep
 2. **Check dependencies** - what other components it uses
 3. **Review tests** - understand expected behavior
@@ -189,6 +203,7 @@ Grep "useState\|useEffect" app/ --glob "*.tsx"
 6. **Test across breakpoints** - 375px, 768px, 1024px+
 
 ### Performance Considerations
+
 - **Virtualization**: Use for lists > 100 items
 - **Memoization**: React.memo for expensive components
 - **Lazy loading**: Suspend components not immediately needed

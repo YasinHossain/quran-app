@@ -291,7 +291,7 @@ describe('Verse Entity', () => {
         wordCount: verse.getWordCount(),
         estimatedReadingTime: verse.getEstimatedReadingTime(),
         isFirstVerse: false,
-        isSajdahVerse: true, // 2:255 is not a sajdah verse, but we're not testing specific verses here
+        isSajdahVerse: false, // 2:255 is not a sajdah verse
       });
     });
 

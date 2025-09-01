@@ -293,16 +293,28 @@ export const BaseCard = ({
 };
 
 // Convenience components for common patterns
-export const NavigationCard: React.FC<Omit<BaseCardProps, 'variant' | 'animation'> & { children?: React.ReactNode }> = ({ children, ...props }) => (
-  <BaseCard variant="navigation" animation="navigation" {...props}>{children}</BaseCard>
+export const NavigationCard: React.FC<
+  Omit<BaseCardProps, 'variant' | 'animation'> & { children?: React.ReactNode }
+> = ({ children, ...props }) => (
+  <BaseCard variant="navigation" animation="navigation" {...props}>
+    {children}
+  </BaseCard>
 );
 
-export const FolderCardBase: React.FC<Omit<BaseCardProps, 'variant' | 'animation'> & { children?: React.ReactNode }> = ({ children, ...props }) => (
-  <BaseCard variant="folder" animation="folder" {...props}>{children}</BaseCard>
+export const FolderCardBase: React.FC<
+  Omit<BaseCardProps, 'variant' | 'animation'> & { children?: React.ReactNode }
+> = ({ children, ...props }) => (
+  <BaseCard variant="folder" animation="folder" {...props}>
+    {children}
+  </BaseCard>
 );
 
-export const BookmarkCardBase: React.FC<Omit<BaseCardProps, 'variant' | 'animation'> & { children?: React.ReactNode }> = ({ children, ...props }) => (
-  <BaseCard variant="bookmark" animation="bookmark" {...props}>{children}</BaseCard>
+export const BookmarkCardBase: React.FC<
+  Omit<BaseCardProps, 'variant' | 'animation'> & { children?: React.ReactNode }
+> = ({ children, ...props }) => (
+  <BaseCard variant="bookmark" animation="bookmark" {...props}>
+    {children}
+  </BaseCard>
 );
 
 // Export types for external use

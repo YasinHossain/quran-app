@@ -2,7 +2,7 @@
 
 /**
  * Pre-commit AI Check Hook
- * 
+ *
  * This script runs before git commits to provide AI-readable analysis
  * of changes and suggest improvements or catch potential issues.
  */
@@ -25,7 +25,7 @@ class PreCommitAICheck {
       await this.getChangedFiles();
       await this.analyzeChanges();
       await this.generateReport();
-      
+
       if (this.issues.length > 0) {
         console.log('❌ Pre-commit check failed. Please address the issues above.');
         process.exit(1);
@@ -98,17 +98,21 @@ class PreCommitAICheck {
         file: filePath,
         type: 'TypeScript',
         message: 'Contains "any" type - should use specific types',
-        severity: 'warning'
+        severity: 'warning',
       });
     }
 
     // Check for console.log in non-dev files
-    if (content.includes('console.log') && !filePath.includes('/tools/') && !filePath.includes('.test.')) {
+    if (
+      content.includes('console.log') &&
+      !filePath.includes('/tools/') &&
+      !filePath.includes('.test.')
+    ) {
       analysis.issues.push({
         file: filePath,
         type: 'Debug',
         message: 'Contains console.log - remove before committing',
-        severity: 'error'
+        severity: 'error',
       });
     }
 
@@ -118,7 +122,7 @@ class PreCommitAICheck {
         file: filePath,
         type: 'Maintenance',
         message: 'Contains TODO/FIXME comments - consider addressing or creating issues',
-        severity: 'info'
+        severity: 'info',
       });
     }
 
@@ -128,7 +132,7 @@ class PreCommitAICheck {
         file: filePath,
         type: 'Error Handling',
         message: 'Catch block without proper error handling - consider logging or re-throwing',
-        severity: 'warning'
+        severity: 'warning',
       });
     }
   }
@@ -140,7 +144,7 @@ class PreCommitAICheck {
         file: filePath,
         type: 'Testing',
         message: 'Test file without proper describe/it blocks',
-        severity: 'error'
+        severity: 'error',
       });
     }
 
@@ -150,7 +154,7 @@ class PreCommitAICheck {
         file: filePath,
         type: 'Testing',
         message: 'Test file without assertions',
-        severity: 'error'
+        severity: 'error',
       });
     }
 
@@ -160,7 +164,7 @@ class PreCommitAICheck {
         file: filePath,
         type: 'Testing',
         message: 'Component test may need provider wrappers - check component dependencies',
-        severity: 'info'
+        severity: 'info',
       });
     }
   }
@@ -172,17 +176,22 @@ class PreCommitAICheck {
         file: filePath,
         type: 'Component',
         message: 'Component missing TypeScript props interface',
-        severity: 'warning'
+        severity: 'warning',
       });
     }
 
     // Check for responsive design patterns
-    if (content.includes('className') && !content.includes('sm:') && !content.includes('md:') && !content.includes('lg:')) {
+    if (
+      content.includes('className') &&
+      !content.includes('sm:') &&
+      !content.includes('md:') &&
+      !content.includes('lg:')
+    ) {
       analysis.suggestions.push({
         file: filePath,
         type: 'Responsive Design',
         message: 'Component may need responsive design classes (sm:, md:, lg:)',
-        severity: 'info'
+        severity: 'info',
       });
     }
 
@@ -192,17 +201,21 @@ class PreCommitAICheck {
         file: filePath,
         type: 'Accessibility',
         message: 'Button component may need ARIA attributes for accessibility',
-        severity: 'info'
+        severity: 'info',
       });
     }
 
     // Check for proper memo usage for performance
-    if (content.includes('React.FC') && !content.includes('React.memo') && filePath.includes('/organisms/')) {
+    if (
+      content.includes('React.FC') &&
+      !content.includes('React.memo') &&
+      filePath.includes('/organisms/')
+    ) {
       analysis.suggestions.push({
         file: filePath,
         type: 'Performance',
         message: 'Complex organism component may benefit from React.memo',
-        severity: 'info'
+        severity: 'info',
       });
     }
   }
@@ -214,7 +227,7 @@ class PreCommitAICheck {
         file: filePath,
         type: 'Domain Design',
         message: 'Entity file should contain a class with business logic',
-        severity: 'warning'
+        severity: 'warning',
       });
     }
 
@@ -224,7 +237,7 @@ class PreCommitAICheck {
         file: filePath,
         type: 'Clean Architecture',
         message: 'Domain layer should not have external dependencies (API calls, HTTP)',
-        severity: 'error'
+        severity: 'error',
       });
     }
 
@@ -234,7 +247,7 @@ class PreCommitAICheck {
         file: filePath,
         type: 'Clean Architecture',
         message: 'Domain layer should not import UI framework code',
-        severity: 'error'
+        severity: 'error',
       });
     }
   }
@@ -256,7 +269,7 @@ class PreCommitAICheck {
       console.log('🚨 Issues (must fix):');
       for (const [type, items] of Object.entries(issuesByType)) {
         console.log(`\n  ${type}:`);
-        items.forEach(item => {
+        items.forEach((item) => {
           console.log(`    • ${item.file}: ${item.message}`);
         });
       }
@@ -267,7 +280,7 @@ class PreCommitAICheck {
       console.log('\n💡 Suggestions (consider addressing):');
       for (const [type, items] of Object.entries(suggestionsByType)) {
         console.log(`\n  ${type}:`);
-        items.forEach(item => {
+        items.forEach((item) => {
           console.log(`    • ${item.file}: ${item.message}`);
         });
       }
@@ -276,15 +289,19 @@ class PreCommitAICheck {
     // AI-specific recommendations
     console.log('\n🤖 AI Development Recommendations:');
     console.log('  • Run "npm run check" to ensure all quality checks pass');
-    console.log('  • Use the component registry (docs/ai/component-registry.md) for similar patterns');
+    console.log(
+      '  • Use the component registry (docs/ai/component-registry.md) for similar patterns'
+    );
     console.log('  • Check .ai files in each directory for context-specific guidelines');
-    
-    if (this.changedFiles.some(f => f.includes('/domain/'))) {
+
+    if (this.changedFiles.some((f) => f.includes('/domain/'))) {
       console.log('  • Domain changes detected - ensure business logic tests are updated');
     }
-    
-    if (this.changedFiles.some(f => f.includes('.tsx'))) {
-      console.log('  • Component changes detected - test responsive design on multiple breakpoints');
+
+    if (this.changedFiles.some((f) => f.includes('.tsx'))) {
+      console.log(
+        '  • Component changes detected - test responsive design on multiple breakpoints'
+      );
     }
   }
 

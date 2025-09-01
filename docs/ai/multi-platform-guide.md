@@ -1,11 +1,13 @@
 # Multi-Platform AI Development Guide
 
 ## Overview
+
 This guide provides AI with comprehensive context for developing across multiple platforms while maintaining code reuse and architectural consistency.
 
 ## Platform Architecture Strategy
 
 ### Code Sharing Matrix
+
 ```
 ┌─────────────────────┬─────────┬─────────┬─────────┬─────────┐
 │ Layer               │ Web     │ Mobile  │ Desktop │ Future  │
@@ -24,6 +26,7 @@ This guide provides AI with comprehensive context for developing across multiple
 ## Platform-Specific Implementation
 
 ### Web (Next.js)
+
 - **Current Implementation**: Full-featured Quran reading app
 - **Unique Features**: SEO optimization, server-side rendering, PWA
 - **State Management**: React Context + Zustand
@@ -32,6 +35,7 @@ This guide provides AI with comprehensive context for developing across multiple
 - **Audio**: Web Audio API + HTML5 Audio
 
 ### Mobile (React Native) - Future
+
 - **Target Platforms**: iOS 13+ / Android 8+
 - **Unique Features**: Offline-first, push notifications, background audio
 - **State Management**: Redux Toolkit + React Query
@@ -40,6 +44,7 @@ This guide provides AI with comprehensive context for developing across multiple
 - **Audio**: React Native Track Player
 
 ### Desktop (Electron) - Future
+
 - **Target Platforms**: Windows 10+, macOS 10.15+, Ubuntu 18+
 - **Unique Features**: Multi-window, system tray, keyboard shortcuts
 - **State Management**: Shared with web implementation
@@ -50,6 +55,7 @@ This guide provides AI with comprehensive context for developing across multiple
 ## Shared Architecture Components
 
 ### Domain Layer (100% Shared)
+
 ```typescript
 // Completely platform-agnostic business logic
 export class Verse {
@@ -67,6 +73,7 @@ export interface IVerseRepository {
 ```
 
 ### Application Layer (100% Shared)
+
 ```typescript
 // Use cases work across all platforms
 export class ReadVerseUseCase {
@@ -77,6 +84,7 @@ export class ReadVerseUseCase {
 ```
 
 ### Infrastructure Layer (80-95% Shared)
+
 ```typescript
 // Platform-specific implementations of shared interfaces
 export class WebVerseRepository implements IVerseRepository {
@@ -95,13 +103,14 @@ export class DesktopVerseRepository implements IVerseRepository {
 ## Platform Detection & Adaptation
 
 ### Runtime Platform Detection
+
 ```typescript
 // Shared utility for platform detection
 export enum Platform {
   WEB = 'web',
   MOBILE = 'mobile',
   DESKTOP = 'desktop',
-  UNKNOWN = 'unknown'
+  UNKNOWN = 'unknown',
 }
 
 export const detectPlatform = (): Platform => {
@@ -115,12 +124,13 @@ export const detectPlatform = (): Platform => {
 ```
 
 ### Platform-Specific Services
+
 ```typescript
 // Service factory based on platform
 export class ServiceFactory {
   static createVerseRepository(): IVerseRepository {
     const platform = detectPlatform();
-    
+
     switch (platform) {
       case Platform.WEB:
         return new WebVerseRepository(/* web deps */);
@@ -138,6 +148,7 @@ export class ServiceFactory {
 ## AI Development Patterns by Platform
 
 ### Web Development (Current)
+
 ```bash
 # Component creation
 Grep "export.*React.FC" app/ --glob "*.tsx"
@@ -152,6 +163,7 @@ Glob "app/**/layout.tsx"
 ```
 
 ### Mobile Development (Future)
+
 ```bash
 # Component patterns
 Grep "export.*React.FC" src/mobile/components/ --glob "*.tsx"
@@ -167,6 +179,7 @@ Grep "Platform.OS" src/mobile/ --glob "*.ts*"
 ```
 
 ### Desktop Development (Future)
+
 ```bash
 # Electron specific
 Grep "electron" src/desktop/ --glob "*.ts*"
@@ -181,6 +194,7 @@ Grep "BrowserWindow" src/desktop/ --glob "*.ts*"
 ## Shared Component Libraries
 
 ### Design System Tokens
+
 ```typescript
 // Platform-agnostic design tokens
 export const tokens = {
@@ -191,7 +205,9 @@ export const tokens = {
     // Color values work across platforms
   },
   spacing: {
-    xs: 4, md: 16, xl: 32
+    xs: 4,
+    md: 16,
+    xl: 32,
     // Numeric values adapt to platform density
   },
   typography: {
@@ -199,35 +215,37 @@ export const tokens = {
     fontFamily: {
       web: 'Inter, system-ui, sans-serif',
       mobile: Platform.OS === 'ios' ? 'SF Pro Text' : 'Roboto',
-      desktop: 'system-ui, -apple-system, sans-serif'
-    }
-  }
+      desktop: 'system-ui, -apple-system, sans-serif',
+    },
+  },
 };
 ```
 
 ### Responsive Utilities
+
 ```typescript
 // Platform-aware responsive utilities
 export const responsive = {
   breakpoints: {
     web: { sm: 640, md: 768, lg: 1024, xl: 1280 },
     mobile: { sm: 360, md: 768, lg: 1024 }, // device sizes
-    desktop: { sm: 1024, md: 1440, lg: 1920 } // window sizes
+    desktop: { sm: 1024, md: 1440, lg: 1920 }, // window sizes
   },
-  
+
   isTablet: () => {
     const platform = detectPlatform();
     if (platform === Platform.MOBILE) {
       return Dimensions.get('window').width >= 768;
     }
     return window.innerWidth >= 768 && window.innerWidth < 1024;
-  }
+  },
 };
 ```
 
 ## Data Layer Strategies
 
 ### Offline-First Architecture
+
 ```typescript
 // Shared caching interface
 export interface IPlatformCache {
@@ -252,6 +270,7 @@ export class DesktopCache implements IPlatformCache {
 ```
 
 ### Synchronization Strategy
+
 ```typescript
 // Shared sync service
 export class SyncService {
@@ -259,15 +278,12 @@ export class SyncService {
     // Platform-agnostic sync logic
     const local = await this.localRepo.findAll();
     const remote = await this.remoteRepo.findAll();
-    
+
     // Conflict resolution logic
     const merged = this.mergeChanges(local, remote);
-    
+
     // Save to both local and remote
-    await Promise.all([
-      this.localRepo.saveAll(merged),
-      this.remoteRepo.saveAll(merged)
-    ]);
+    await Promise.all([this.localRepo.saveAll(merged), this.remoteRepo.saveAll(merged)]);
   }
 }
 ```
@@ -275,43 +291,46 @@ export class SyncService {
 ## Navigation Patterns
 
 ### Web Navigation (Next.js)
+
 ```typescript
 // App Router navigation
 export const useQuranNavigation = () => {
   const router = useRouter();
-  
+
   return {
     navigateToSurah: (id: number) => router.push(`/surah/${id}`),
     navigateToBookmarks: () => router.push('/bookmarks'),
-    goBack: () => router.back()
+    goBack: () => router.back(),
   };
 };
 ```
 
 ### Mobile Navigation (React Navigation)
+
 ```typescript
 // Stack navigation
 export const useQuranNavigation = () => {
   const navigation = useNavigation();
-  
+
   return {
     navigateToSurah: (id: number) => navigation.navigate('Surah', { id }),
     navigateToBookmarks: () => navigation.navigate('Bookmarks'),
-    goBack: () => navigation.goBack()
+    goBack: () => navigation.goBack(),
   };
 };
 ```
 
 ### Desktop Navigation (React Router)
+
 ```typescript
 // Browser routing in Electron
 export const useQuranNavigation = () => {
   const navigate = useNavigate();
-  
+
   return {
     navigateToSurah: (id: number) => navigate(`/surah/${id}`),
     navigateToBookmarks: () => navigate('/bookmarks'),
-    goBack: () => navigate(-1)
+    goBack: () => navigate(-1),
   };
 };
 ```
@@ -319,6 +338,7 @@ export const useQuranNavigation = () => {
 ## Testing Across Platforms
 
 ### Shared Domain Tests
+
 ```typescript
 // Tests run on all platforms
 describe('Verse Entity', () => {
@@ -329,6 +349,7 @@ describe('Verse Entity', () => {
 ```
 
 ### Platform-Specific Tests
+
 ```typescript
 // Web-specific tests
 describe('WebVerseRepository', () => {
@@ -349,13 +370,14 @@ describe('DesktopVerseRepository', () => {
 ## Performance Considerations
 
 ### Bundle Splitting by Platform
+
 ```javascript
 // webpack.config.js - Platform-specific bundles
 module.exports = {
   entry: {
     web: './src/platforms/web/index.ts',
     mobile: './src/platforms/mobile/index.ts',
-    desktop: './src/platforms/desktop/index.ts'
+    desktop: './src/platforms/desktop/index.ts',
   },
   optimization: {
     splitChunks: {
@@ -364,26 +386,27 @@ module.exports = {
         shared: {
           name: 'shared',
           test: /[\\/]src[\\/]shared[\\/]/,
-          priority: 10
+          priority: 10,
         },
         domain: {
           name: 'domain',
           test: /[\\/]src[\\/]domain[\\/]/,
-          priority: 20
-        }
-      }
-    }
-  }
+          priority: 20,
+        },
+      },
+    },
+  },
 };
 ```
 
 ### Memory Management
+
 ```typescript
 // Platform-aware memory management
 export class MemoryManager {
   static cleanup(): void {
     const platform = detectPlatform();
-    
+
     switch (platform) {
       case Platform.MOBILE:
         // Mobile: aggressive cleanup
@@ -406,6 +429,7 @@ export class MemoryManager {
 ## AI Development Workflows
 
 ### Cross-Platform Feature Development
+
 1. **Start with Domain**: Create shared business logic
 2. **Define Use Cases**: Platform-agnostic application operations
 3. **Create Interfaces**: Repository and service contracts
@@ -414,6 +438,7 @@ export class MemoryManager {
 6. **Test Everywhere**: Shared domain tests + platform-specific tests
 
 ### AI Tools for Multi-Platform
+
 ```bash
 # Find shared code opportunities
 Grep "platform" --glob "*.ts*" -i
@@ -431,6 +456,7 @@ Grep "react-native\\|next\\/" src/domain/ --glob "*.ts*"
 ## Migration Strategies
 
 ### Web to Mobile Migration
+
 1. **Extract Shared Logic**: Move business logic to domain/application layers
 2. **Create Mobile Infrastructure**: Implement mobile-specific repositories
 3. **Build Mobile UI**: Create React Native components
@@ -438,6 +464,7 @@ Grep "react-native\\|next\\/" src/domain/ --glob "*.ts*"
 5. **Test Integration**: Ensure shared code works on mobile
 
 ### Progressive Enhancement
+
 ```typescript
 // Feature detection for progressive enhancement
 export const FeatureDetection = {
@@ -446,32 +473,35 @@ export const FeatureDetection = {
     if (Platform.WEB) return navigator.mediaDevices?.getUserMedia;
     return false;
   },
-  
+
   hasFileSystem: () => {
     if (Platform.DESKTOP) return true;
     if (Platform.WEB) return 'showSaveFilePicker' in window;
     return false;
   },
-  
+
   supportsBackgroundSync: () => {
-    return Platform.MOBILE || ('serviceWorker' in navigator);
-  }
+    return Platform.MOBILE || 'serviceWorker' in navigator;
+  },
 };
 ```
 
 ## AI Efficiency Tips for Multi-Platform
 
 ### Context Switching
+
 - Use platform-specific `.ai` files for context
 - Search within platform directories: `Glob "src/platforms/web/**/*.ts*"`
 - Check shared dependencies: `Grep "shared" --glob "*.ts*"`
 
 ### Architecture Validation
+
 - Ensure domain layer purity: No platform imports in domain/
 - Validate interface compliance: All platforms implement same interfaces
 - Check bundle sizes: Monitor shared vs. platform-specific code ratios
 
 ### Development Workflow
+
 1. **Domain First**: Always start with business logic
 2. **Interface Definition**: Define contracts before implementation
 3. **Platform Implementation**: Implement per platform after interfaces are stable

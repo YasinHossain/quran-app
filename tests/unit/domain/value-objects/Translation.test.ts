@@ -262,7 +262,7 @@ describe('Translation Value Object', () => {
         text: 'This is a test translation with multiple words',
         languageCode: 'en-US',
         wordCount: 8,
-        characterCount: 44,
+        characterCount: 46,
         isEnglish: true,
         isLong: false,
         preview: 'This is a test translation with multiple words',

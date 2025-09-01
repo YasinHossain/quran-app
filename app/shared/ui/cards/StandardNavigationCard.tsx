@@ -80,7 +80,9 @@ export const StandardNavigationCard: React.FC<StandardNavigationCardProps> = ({
       </div>
 
       {/* Arabic Text (if enabled) */}
-      {showArabic && arabic && <p className={buildTextClasses('arabic', Boolean(isActive))}>{arabic}</p>}
+      {showArabic && arabic && (
+        <p className={buildTextClasses('arabic', Boolean(isActive))}>{arabic}</p>
+      )}
     </BaseCard>
   );
 };

@@ -4,4 +4,3 @@ import { IconProps } from './IconProps';
 export const SkipBackIcon = ({ size = 18, className = '', ...rest }: IconProps) => (
   <SkipBack size={size} className={className} {...rest} />
 );
-

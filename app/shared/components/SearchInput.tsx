@@ -90,7 +90,10 @@ export const SearchInput = ({
 
   return (
     <div className={`relative ${sizeStyles.container} ${className}`}>
-      <IconComponent size={iconSize} className={`absolute ${sizeStyles.icon.className} top-1/2 -translate-y-1/2 text-muted`} />
+      <IconComponent
+        size={iconSize}
+        className={`absolute ${sizeStyles.icon.className} top-1/2 -translate-y-1/2 text-muted`}
+      />
       <input
         type="text"
         value={value}

@@ -2,11 +2,11 @@
 const { spawn } = require('child_process');
 const path = require('path');
 
-const isWin = process.platform === 'win32';
-const binName = isWin ? 'rg.exe' : 'rg';
-const rgPath = path.join(__dirname, '..', 'node_modules', 'vscode-ripgrep', 'bin', binName);
-
 const args = process.argv.slice(2);
+
+// Use Claude Code's ripgrep binary
+const rgPath =
+  '/Users/yasinhossain/.npm-global/lib/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/arm64-darwin/rg';
 
 const child = spawn(rgPath, args, { stdio: 'inherit', shell: false });
 

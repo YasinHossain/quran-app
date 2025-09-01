@@ -153,10 +153,10 @@ export async function getRandomVerse(translationId: number): Promise<Verse> {
   try {
     // Get surah list to know verse counts
     const surahs = await getSurahList();
-    
+
     // Pick a random surah
     const randomSurah = surahs[Math.floor(Math.random() * surahs.length)];
-    
+
     // Pick a random ayah within that surah
     const randomAyah = Math.floor(Math.random() * randomSurah.verses) + 1;
     const verseKey = `${randomSurah.number}:${randomAyah}`;
