@@ -1,6 +1,6 @@
 'use client';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { X, SlidersHorizontal } from 'lucide-react';
+import { CloseIcon, SlidersIcon } from '@/app/shared/icons';
 import Image from 'next/image';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import useAudioPlayer from '@/app/shared/player/hooks/useAudioPlayer';
@@ -197,7 +197,7 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: QuranAudioPl
                   setMobileOptionsOpen(true);
                 }}
               >
-                <SlidersHorizontal className={`${iconClasses.touch} ${iconClasses.stroke}`} />
+                <SlidersIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
               </Button>
               <Button
                 variant="icon-round"
@@ -205,7 +205,7 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: QuranAudioPl
                 aria-label="Close player"
                 onClick={closePlayer}
               >
-                <X className={`${iconClasses.touch} ${iconClasses.stroke}`} />
+                <CloseIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
               </Button>
             </div>
           </div>
@@ -250,7 +250,7 @@ export default function QuranAudioPlayer({ track, onPrev, onNext }: QuranAudioPl
               aria-label="Close player"
               onClick={closePlayer}
             >
-              <X className={`${iconClasses.touch} ${iconClasses.stroke}`} />
+              <CloseIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
             </Button>
           </div>
         </div>

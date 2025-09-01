@@ -21,6 +21,25 @@ export default function ClientProviders({
   children: React.ReactNode;
   initialTheme: Theme;
 }) {
+  // In development, make sure any previously-installed service worker from a
+  // production run doesn't interfere with local dev (common Safari issue).
+  React.useEffect(() => {
+    if (process.env.NODE_ENV !== 'development') return;
+    // Unregister all service workers and clear caches on localhost during dev
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .getRegistrations()
+        .then((regs) => regs.forEach((r) => r.unregister()))
+        .catch(() => {});
+    }
+    if (typeof window !== 'undefined' && 'caches' in window) {
+      caches
+        .keys()
+        .then((keys) => Promise.all(keys.map((k) => caches.delete(k))))
+        .catch(() => {});
+    }
+  }, []);
+
   return (
     <ApplicationProvider>
       <ThemeProvider initialTheme={initialTheme}>

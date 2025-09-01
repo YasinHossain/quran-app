@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SlidersHorizontal } from 'lucide-react';
+import { SlidersIcon } from '@/app/shared/icons';
 import PlaybackOptionsModal from './PlaybackOptionsModal';
 import SpeedControl from './SpeedControl';
 import VolumeControl from './VolumeControl';
@@ -25,7 +25,7 @@ export default function PlayerOptions() {
           setOpen(true);
         }}
       >
-        <SlidersHorizontal className={`${iconClasses.touch} ${iconClasses.stroke}`} />
+        <SlidersIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
       </Button>
       <PlaybackOptionsModal
         open={open}

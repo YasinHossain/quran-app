@@ -1,6 +1,6 @@
 import React from 'react';
 import * as Slider from '@radix-ui/react-slider';
-import { Volume2, VolumeX } from 'lucide-react';
+import { VolumeIcon, VolumeOffIcon } from '@/app/shared/icons';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 
 export default function VolumeControl() {
@@ -14,18 +14,18 @@ export default function VolumeControl() {
         aria-label={volume === 0 ? 'Unmute' : 'Mute'}
       >
         {volume === 0 ? (
-          <VolumeX className="h-4 w-4 opacity-80 text-muted" />
+          <VolumeOffIcon className="h-4 w-4 opacity-80 text-muted" />
         ) : (
-          <Volume2 className="h-4 w-4 opacity-80 text-muted" />
+          <VolumeIcon className="h-4 w-4 opacity-80 text-muted" />
         )}
       </button>
 
       {/* Desktop: Volume slider */}
       <div className="hidden md:flex items-center gap-2 w-20 lg:w-28">
         {volume === 0 ? (
-          <VolumeX className="h-4 w-4 opacity-80 text-muted" />
+          <VolumeOffIcon className="h-4 w-4 opacity-80 text-muted" />
         ) : (
-          <Volume2 className="h-4 w-4 opacity-80 text-muted" />
+          <VolumeIcon className="h-4 w-4 opacity-80 text-muted" />
         )}
         <Slider.Root
           className="relative w-full h-2.5 group flex items-center"

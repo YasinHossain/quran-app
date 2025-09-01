@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Menu, Search } from 'lucide-react';
+import { BarsIcon, SearchIcon } from '@/app/shared/icons';
 import { PlusIcon } from '@/app/shared/icons';
 import { SearchInput } from '@/app/shared/components/SearchInput';
 import { Button } from '@/app/shared/ui/Button';
@@ -45,7 +45,7 @@ export const BookmarksHeader: React.FC<BookmarksHeaderProps> = ({
               aria-label="Toggle sidebar"
               className="hover:shadow-sm transition-shadow flex-shrink-0"
             >
-              <Menu size={18} />
+              <BarsIcon size={18} />
             </Button>
           )}
           <div className="min-w-0">
@@ -78,7 +78,7 @@ export const BookmarksHeader: React.FC<BookmarksHeaderProps> = ({
       {/* Search and Filter Section - Better organized */}
       <div className="flex items-center gap-3 flex-wrap">
         <div className="relative flex-1 min-w-0 max-w-sm">
-          <Search
+          <SearchIcon
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted"
             size={16}
           />

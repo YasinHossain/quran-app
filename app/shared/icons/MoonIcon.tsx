@@ -1,18 +1,6 @@
-import type { SVGProps } from 'react';
+import { Moon } from 'lucide-react';
+import { IconProps } from './IconProps';
 
-export const MoonIcon = (props: SVGProps<SVGSVGElement>) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-  </svg>
+export const MoonIcon = ({ size = 18, className = '', ...rest }: IconProps) => (
+  <Moon size={size} className={className} {...rest} />
 );

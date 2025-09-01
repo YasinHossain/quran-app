@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeftIcon, ChevronRightIcon } from '@/app/shared/icons';
 
 interface ResourceTabsProps {
   languages: string[];
@@ -36,7 +36,7 @@ export const ResourceTabs: React.FC<ResourceTabsProps> = ({
           : 'text-muted cursor-not-allowed'
       }`}
     >
-      <ChevronLeft size={20} />
+      <ChevronLeftIcon size={20} />
     </button>
     <div ref={tabsContainerRef} className="flex items-center space-x-2 overflow-hidden flex-1">
       {languages.map((lang) => (
@@ -62,7 +62,7 @@ export const ResourceTabs: React.FC<ResourceTabsProps> = ({
           : 'text-muted cursor-not-allowed'
       }`}
     >
-      <ChevronRight size={20} />
+      <ChevronRightIcon size={20} />
     </button>
   </div>
 );

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { GripVertical, X } from 'lucide-react';
+import { GripVerticalIcon, CloseIcon } from '@/app/shared/icons';
 import { TafsirResource } from '@/types';
 import { MAX_SELECTIONS } from './tafsirPanel.utils';
 
@@ -55,14 +55,14 @@ export const TafsirSelectionList: React.FC<TafsirSelectionListProps> = ({
               } bg-background border-border`}
             >
               <div className="flex items-center min-w-0">
-                <GripVertical className="h-5 w-5 mr-2 flex-shrink-0 text-muted" />
+                <GripVerticalIcon className="h-5 w-5 mr-2 flex-shrink-0 text-muted" />
                 <span className="font-medium text-sm truncate text-foreground">{item.name}</span>
               </div>
               <button
                 onClick={() => handleSelectionToggle(id)}
                 className="hover:text-accent transition-colors p-1 rounded-full flex-shrink-0 ml-2 text-muted"
               >
-                <X size={16} strokeWidth={2.5} />
+                <CloseIcon size={16} strokeWidth={2.5} />
               </button>
             </div>
           );

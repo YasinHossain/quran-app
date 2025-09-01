@@ -1,17 +1,6 @@
+import { ChevronDown } from 'lucide-react';
 import { IconProps } from './IconProps';
 
-export const ChevronDownIcon = ({ size = 16, className = '' }: IconProps) => (
-  <svg
-    className={className}
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <polyline points="6 9 12 15 18 9" />
-  </svg>
+export const ChevronDownIcon = ({ size = 18, className = '', ...rest }: IconProps) => (
+  <ChevronDown size={size} className={className} {...rest} />
 );
