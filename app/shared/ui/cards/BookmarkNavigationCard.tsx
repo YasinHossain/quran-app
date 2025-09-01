@@ -47,20 +47,22 @@ export const BookmarkNavigationCard: React.FC<BookmarkNavigationCardProps> = ({
 }) => {
   const { id, icon: IconComponent, label, description } = content;
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent<HTMLDivElement | HTMLAnchorElement>) => {
     // Trigger section change before navigation for immediate feedback
     onSectionChange?.(id);
-    onClick?.();
+    if (onClick && typeof onClick === 'function') {
+      onClick(e);
+    }
   };
 
   return (
     <BaseCard
       variant="navigation"
       animation="navigation"
-      isActive={isActive}
+      isActive={Boolean(isActive)}
       href={getSectionHref(id)}
       scroll={false}
-      className={cn('items-center', className)}
+      className={cn('items-center', className as string)}
       onClick={handleClick}
       {...props}
     >

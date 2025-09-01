@@ -39,7 +39,7 @@ export const BookmarkVerseCard: React.FC<BookmarkVerseCardProps> = ({
         'p-2.5 rounded-lg border transition-all duration-200 cursor-pointer group h-auto',
         'bg-surface/60 border-border/60 hover:border-accent/30 hover:bg-surface-hover hover:shadow-sm',
         'min-h-0', // Allow shrinking
-        className
+        className as string
       )}
       {...props}
     >

@@ -11,7 +11,7 @@
     "dev:webpack": "next dev",
     "dev:no-turbo": "next dev",
     "dev:debug": "NODE_OPTIONS='--inspect' next dev --turbopack",
-    "build": "rimraf public/sw.js && next build",
+    "build": "rm -f public/sw.js && next build",
     "build:analyze": "ANALYZE=true npm run build",
     "start": "next start",
     "lint": "next lint",
@@ -26,8 +26,8 @@
     "type-check:watch": "tsc --noEmit --watch",
     "check": "npm run format:check && npm run lint && npm run type-check && npm run test:ci",
     "check:fix": "npm run format && npm run lint:fix && npm run type-check",
-    "clean": "rimraf .next out coverage",
-    "reset": "npm run clean && rimraf node_modules package-lock.json && npm install",
+    "clean": "rm -rf .next out coverage",
+    "reset": "npm run clean && rm -rf node_modules package-lock.json && npm install",
     "generate:tokens": "ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/generate-tokens.ts",
     "generate-feature": "ts-node scripts/generateFeature.ts",
     "generate-component": "node scripts/generate-component.mjs",
@@ -82,6 +82,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.55.0",
     "@rollup/plugin-terser": "^0.4.4",
     "@storybook/addon-essentials": "^8.4.3",
     "@storybook/addon-themes": "^8.4.3",
@@ -91,7 +92,6 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^30.0.0",
-    "@types/next-pwa": "^5.6.9",
     "@types/node": "^24",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -107,19 +107,13 @@
     "jest-environment-jsdom": "^30.0.5",
     "node-fetch": "^3.3.2",
     "prettier": "^3.6.2",
-    "rimraf": "^4",
-    "rollup-plugin-terser": "file:packages/rollup-plugin-terser",
     "storybook": "^8.4.3",
     "tailwindcss": "^3.4.17",
     "ts-jest": "^29.4.1",
     "ts-node": "^10.9.1",
-    "typescript": "^5",
+    "typescript": "^5.7.2",
     "viewport-units-buggyfill": "^0.6.2",
     "vscode-ripgrep": "^1.13.2",
     "whatwg-fetch": "^3.6.20"
-  },
-  "overrides": {
-    "rollup-plugin-terser": "file:packages/rollup-plugin-terser",
-    "rimraf": "^4"
   }
 }

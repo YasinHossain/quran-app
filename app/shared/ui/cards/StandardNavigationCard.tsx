@@ -55,13 +55,13 @@ export const StandardNavigationCard: React.FC<StandardNavigationCardProps> = ({
     <BaseCard
       variant="navigation"
       animation="navigation"
-      isActive={isActive}
-      className={className}
+      isActive={Boolean(isActive)}
+      className={className as string}
       onClick={handleClick}
       {...props}
     >
       {/* Number Badge */}
-      {showBadge && <NumberBadge number={id} isActive={isActive} />}
+      {showBadge && <NumberBadge number={id} isActive={Boolean(isActive)} />}
 
       {/* Content Area */}
       <div className={showArabic ? 'flex-grow min-w-0' : undefined}>
@@ -69,18 +69,18 @@ export const StandardNavigationCard: React.FC<StandardNavigationCardProps> = ({
         <p
           className={`
           ${titleWeight === 'bold' ? 'font-bold' : 'font-semibold'}
-          ${buildTextClasses('primary', isActive)}
+          ${buildTextClasses('primary', Boolean(isActive))}
         `}
         >
           {title}
         </p>
 
         {/* Subtitle (if provided) */}
-        {subtitle && <p className={buildTextClasses('secondary', isActive)}>{subtitle}</p>}
+        {subtitle && <p className={buildTextClasses('secondary', Boolean(isActive))}>{subtitle}</p>}
       </div>
 
       {/* Arabic Text (if enabled) */}
-      {showArabic && arabic && <p className={buildTextClasses('arabic', isActive)}>{arabic}</p>}
+      {showArabic && arabic && <p className={buildTextClasses('arabic', Boolean(isActive))}>{arabic}</p>}
     </BaseCard>
   );
 };

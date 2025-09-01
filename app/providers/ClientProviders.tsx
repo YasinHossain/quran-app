@@ -7,7 +7,7 @@ import { SidebarProvider } from './SidebarContext';
 import { UIStateProvider } from './UIStateContext';
 import { NavigationProvider } from './NavigationContext';
 import { AudioProvider } from '@/app/shared/player/context/AudioContext';
-import { ApplicationProvider } from '../../src/presentation/providers/ApplicationProvider';
+// import { ApplicationProvider } from '../../src/presentation/providers/ApplicationProvider';
 
 /**
  * Groups client-side providers including `ThemeProvider`, `SettingsProvider`,
@@ -41,20 +41,18 @@ export default function ClientProviders({
   }, []);
 
   return (
-    <ApplicationProvider>
-      <ThemeProvider initialTheme={initialTheme}>
-        <SettingsProvider>
-          <BookmarkProvider>
-            <UIStateProvider>
-              <SidebarProvider>
-                <NavigationProvider>
-                  <AudioProvider>{children}</AudioProvider>
-                </NavigationProvider>
-              </SidebarProvider>
-            </UIStateProvider>
-          </BookmarkProvider>
-        </SettingsProvider>
-      </ThemeProvider>
-    </ApplicationProvider>
+    <ThemeProvider initialTheme={initialTheme}>
+      <SettingsProvider>
+        <BookmarkProvider>
+          <UIStateProvider>
+            <SidebarProvider>
+              <NavigationProvider>
+                <AudioProvider>{children}</AudioProvider>
+              </NavigationProvider>
+            </SidebarProvider>
+          </UIStateProvider>
+        </BookmarkProvider>
+      </SettingsProvider>
+    </ThemeProvider>
   );
 }

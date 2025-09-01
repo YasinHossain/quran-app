@@ -9,43 +9,43 @@ const envSchema = z.object({
   NEXT_PUBLIC_IMAGE_CDN_URL: z.string().url().default('https://cdn.quran.com'),
 
   // Cache Configuration
-  CACHE_TTL: z.string().transform(Number).default('3600'),
+  CACHE_TTL: z.string().default('3600').transform(Number),
   ENABLE_OFFLINE_MODE: z
     .string()
-    .transform((v) => v === 'true')
-    .default('true'),
+    .default('true')
+    .transform((v) => v === 'true'),
 
   // Logging Configuration
   LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
   ENABLE_CONSOLE_LOGGING: z
     .string()
-    .transform((v) => v === 'true')
-    .default('true'),
+    .default('true')
+    .transform((v) => v === 'true'),
 
   // Performance Configuration
   ENABLE_ANALYTICS: z
     .string()
-    .transform((v) => v === 'true')
-    .default('false'),
-  API_TIMEOUT: z.string().transform(Number).default('10000'),
+    .default('false')
+    .transform((v) => v === 'true'),
+  API_TIMEOUT: z.string().default('10000').transform(Number),
 
   // Feature Flags
   ENABLE_TAFSIR: z
     .string()
-    .transform((v) => v === 'true')
-    .default('true'),
+    .default('true')
+    .transform((v) => v === 'true'),
   ENABLE_BOOKMARKS: z
     .string()
-    .transform((v) => v === 'true')
-    .default('true'),
+    .default('true')
+    .transform((v) => v === 'true'),
   ENABLE_SEARCH: z
     .string()
-    .transform((v) => v === 'true')
-    .default('true'),
+    .default('true')
+    .transform((v) => v === 'true'),
   ENABLE_AUDIO: z
     .string()
-    .transform((v) => v === 'true')
-    .default('true'),
+    .default('true')
+    .transform((v) => v === 'true'),
 });
 
 export type Config = z.infer<typeof envSchema>;

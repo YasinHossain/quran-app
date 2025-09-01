@@ -69,7 +69,7 @@ function getPerformanceMetrics() {
   return null;
 }
 
-// Increment error count (can be called from error handlers)
-export function incrementErrorCount() {
+// Increment error count (can be called from error handlers)  
+function incrementErrorCount() {
   errorCount++;
 }

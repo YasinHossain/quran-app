@@ -50,14 +50,16 @@ export const EnhancedFolderCard: React.FC<EnhancedFolderCardProps> = React.memo(
       <BaseCard
         variant="folder"
         animation="folder"
-        onClick={onClick}
+        onClick={onClick as React.MouseEventHandler<HTMLDivElement | HTMLAnchorElement> | undefined}
         role="button"
         tabIndex={0}
-        aria-label={ariaLabel || defaultAriaLabel}
+        aria-label={(ariaLabel || defaultAriaLabel) as string}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            onClick?.();
+            if (onClick && typeof onClick === 'function') {
+              onClick(e as any);
+            }
           }
         }}
         className="relative"
