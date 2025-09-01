@@ -1,11 +1,8 @@
 # AI Search Patterns - Efficient Code Discovery
 
-For automated doc maintenance and testing aids, see [AI Automation Tools](automation-tools.md).
-
 ## Quick Reference Commands
 
 ### Component Discovery
-
 ```bash
 # Find all React components
 Grep "export.*React.FC" --glob "**/*.tsx"
@@ -24,7 +21,6 @@ Glob "app/shared/**/*.tsx"
 ```
 
 ### Domain Layer Search
-
 ```bash
 # Find all domain entities
 Glob "src/domain/entities/**/*.ts"
@@ -41,7 +37,6 @@ Glob "src/domain/value-objects/**/*.ts"
 ```
 
 ### Business Logic Discovery
-
 ```bash
 # Find all use cases
 Glob "src/application/use-cases/**/*.ts"
@@ -58,7 +53,6 @@ Grep "throw.*Error" src/domain/ --glob "*.ts"
 ```
 
 ### Infrastructure Search
-
 ```bash
 # Find API clients
 Glob "src/infrastructure/api/**/*.ts"
@@ -73,7 +67,6 @@ Glob "src/infrastructure/external/**/*.ts"
 ```
 
 ### Hook and State Search
-
 ```bash
 # Find custom hooks
 Grep "export.*use[A-Z]" --glob "**/*.ts" --glob "**/*.tsx"
@@ -89,7 +82,6 @@ Grep "useSWR\|mutate" --glob "**/*.tsx"
 ```
 
 ### Testing Discovery
-
 ```bash
 # Find all test files
 Glob "**/*.test.ts*"
@@ -110,7 +102,6 @@ Glob "tests/e2e/**/*.test.ts"
 ## Advanced Search Patterns
 
 ### Feature-Specific Searches
-
 ```bash
 # All files related to bookmarks feature
 Grep -i "bookmark" --glob "**/*.ts*" app/
@@ -126,7 +117,6 @@ Grep -i "surah\|verse" --glob "**/*.ts*" app/(features)/
 ```
 
 ### Type and Interface Discovery
-
 ```bash
 # Find type definitions
 Grep "type.*=" types/ --glob "*.ts"
@@ -140,7 +130,6 @@ Grep "type.*=.*\|" types/ --glob "*.ts"
 ```
 
 ### Configuration and Setup
-
 ```bash
 # Find configuration files
 Glob "**/config/**/*"
@@ -156,7 +145,6 @@ Grep "container\|inject\|bind" src/shared/config/
 ## Search by Functionality
 
 ### Data Fetching Patterns
-
 ```bash
 # API calls and data fetching
 Grep "fetch\|axios\|useSWR" --glob "**/*.ts*"
@@ -169,7 +157,6 @@ Grep "cache\|Cache" --glob "**/*.ts*"
 ```
 
 ### Error Handling Patterns
-
 ```bash
 # Error definitions
 Grep "extends.*Error\|Error.*class" --glob "**/*.ts"
@@ -182,7 +169,6 @@ Grep "ErrorBoundary\|componentDidCatch" --glob "**/*.tsx"
 ```
 
 ### Performance Patterns
-
 ```bash
 # Memoization usage
 Grep "useMemo\|useCallback\|React\.memo" --glob "**/*.tsx"
@@ -195,7 +181,6 @@ Grep "lazy\|Suspense" --glob "**/*.tsx"
 ```
 
 ### Accessibility Patterns
-
 ```bash
 # ARIA attributes
 Grep "aria-\|role=" --glob "**/*.tsx"
@@ -210,7 +195,6 @@ Grep "focus\|tabindex" --glob "**/*.tsx"
 ## Problem-Specific Search Strategies
 
 ### Debugging Component Issues
-
 ```bash
 # 1. Find the component
 Glob "**/*ComponentName*.*"
@@ -226,7 +210,6 @@ Glob "**/*ComponentName*.test.*"
 ```
 
 ### Understanding Data Flow
-
 ```bash
 # 1. Start with the entity
 Grep "class.*EntityName" src/domain/entities/
@@ -242,7 +225,6 @@ Grep "EntityName" --glob "**/*.tsx"
 ```
 
 ### Performance Investigation
-
 ```bash
 # 1. Find expensive operations
 Grep "map\|filter\|reduce.*\(" --glob "**/*.tsx" -A 3
@@ -257,21 +239,18 @@ Grep "useEffect.*\[\]" --glob "**/*.tsx"
 ## Context-Aware Search Tips
 
 ### Before Making Changes
-
 1. **Search existing patterns**: Look for similar implementations
 2. **Check dependencies**: Find what uses the code you're changing
 3. **Review tests**: Understand expected behavior
 4. **Check types**: Ensure TypeScript compatibility
 
 ### Search Workflow for New Features
-
 1. **Find similar features**: `Grep -i "similar-feature" --glob "**/*.ts*"`
 2. **Check domain layer**: `Glob "src/domain/**/*Similar*.*"`
 3. **Review architecture**: `Grep "Similar.*Service\|Similar.*UseCase"`
 4. **Study UI patterns**: `Grep "Similar" app/ --glob "*.tsx"`
 
 ### Multi-Step Discovery Process
-
 ```bash
 # Step 1: Broad search for concept
 Grep -i "concept" --glob "**/*.ts*" | head -20
@@ -289,19 +268,16 @@ Grep "concept" --glob "**/*.tsx" -B 2 -A 2
 ## AI Efficiency Guidelines
 
 ### Search Before Creating
-
 - Always search for existing implementations before building new ones
 - Use multiple search patterns to ensure comprehensive discovery
 - Check both current and legacy code paths
 
 ### Understand Context
-
 - Search for usage patterns to understand how code should integrate
 - Find tests to understand expected behavior
 - Check dependencies to avoid breaking changes
 
 ### Follow Architecture
-
 - Start searches in the appropriate layer (domain, application, presentation)
 - Follow dependency direction (presentation → application → domain → infrastructure)
 - Respect clean architecture boundaries in implementations
