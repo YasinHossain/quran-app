@@ -18,8 +18,6 @@ import useTranslationOptions from '@/app/(features)/surah/hooks/useTranslationOp
 import { useTranslation } from 'react-i18next';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
-import { IconSettings } from '@tabler/icons-react';
-import { useUIState } from '@/app/providers/UIStateContext';
 
 interface BookmarkFolderClientProps {
   folderId: string;
@@ -37,11 +35,9 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
   const [verses, setVerses] = useState<Verse[]>([]);
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
-  const [loadedVerses, setLoadedVerses] = useState<Set<string>>(new Set());
   const [loadingVerses, setLoadingVerses] = useState<Set<string>>(new Set());
   const { isBookmarkSidebarOpen, setBookmarkSidebarOpen } = useSidebar();
 
-  const { setSettingsOpen } = useUIState();
   const { t } = useTranslation();
   const { translationOptions, wordLanguageOptions } = useTranslationOptions();
 
@@ -108,7 +104,6 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
 
       if (verseIds.length === 0) {
         setVerses([]);
-        setLoadedVerses(new Set());
         setLoadingVerses(new Set());
         return;
       }
@@ -120,7 +115,6 @@ export default function BookmarkFolderClient({ folderId }: BookmarkFolderClientP
           verseIds.map((id) => getVerseWithCache(id, settings.translationId))
         );
         setVerses(loadedVerses);
-        setLoadedVerses(new Set(verseIds));
       } catch (error) {
         setVerses([]);
         console.error('Failed to load verses:', error);

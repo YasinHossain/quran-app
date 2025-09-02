@@ -17,6 +17,10 @@ jest.mock('@/lib/api', () => ({
   ]),
 }));
 
+jest.mock('@/lib/api/verses', () => ({
+  getVerseByKey: jest.fn(),
+}));
+
 const mockedGetRandomVerse = getRandomVerse as jest.MockedFunction<typeof getRandomVerse>;
 
 const renderVerseOfDay = () => renderWithProviders(<VerseOfDay />);
@@ -75,11 +79,25 @@ it('rotates through verses in queue', async () => {
 
 it('shows error message when fetching verse fails', async () => {
   const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+  // Mock the retry mechanism to fail fast in tests by making the delay 0
+  const originalSetTimeout = global.setTimeout;
+  global.setTimeout = ((callback: () => void) => {
+    callback();
+    return 0 as unknown as NodeJS.Timeout;
+  }) as typeof setTimeout;
+
   mockedGetRandomVerse.mockRejectedValue(new Error('fail'));
 
   renderVerseOfDay();
 
-  await waitFor(() => expect(screen.getByText('Failed to load verse.')).toBeInTheDocument());
+  await waitFor(
+    () => expect(screen.getByText(/Unable to connect to Quran service/)).toBeInTheDocument(),
+    { timeout: 5000 }
+  );
 
+  global.setTimeout = originalSetTimeout;
   consoleSpy.mockRestore();
+  consoleWarnSpy.mockRestore();
 });

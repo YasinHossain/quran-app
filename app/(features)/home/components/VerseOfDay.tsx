@@ -11,7 +11,7 @@ import { useSettings } from '@/app/providers/SettingsContext';
 
 export default function VerseOfDay() {
   const { settings } = useSettings();
-  const { verse, loading, error, surahs } = useVerseOfDay();
+  const { verse, loading, error, surahs, refreshVerse } = useVerseOfDay();
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [displayVerse, setDisplayVerse] = useState(verse);
   const [initialLoad, setInitialLoad] = useState(true);
@@ -54,7 +54,16 @@ export default function VerseOfDay() {
   if (error) {
     return (
       <div className="mt-12 w-full max-w-4xl p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400 bg-surface-glass/60">
-        <div className="text-center py-8 text-status-error">{error}</div>
+        <div className="text-center py-8">
+          <p className="text-status-error mb-4">{error}</p>
+          <button
+            onClick={refreshVerse}
+            className="px-4 py-2 bg-accent text-on-accent rounded-lg hover:bg-accent/90 transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50"
+            aria-label="Retry loading verse"
+          >
+            Try Again
+          </button>
+        </div>
       </div>
     );
   }

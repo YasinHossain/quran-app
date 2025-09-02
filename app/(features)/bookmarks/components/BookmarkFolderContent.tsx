@@ -10,8 +10,6 @@ import { cn } from '@/lib/utils/cn';
 interface BookmarkFolderContentProps {
   bookmarks: Bookmark[];
   folder: Folder;
-  activeVerseId?: string;
-  onVerseSelect?: (verseId: string) => void;
 }
 
 const MoreIcon = () => (
@@ -35,8 +33,6 @@ const MoreIcon = () => (
 export const BookmarkFolderContent: React.FC<BookmarkFolderContentProps> = ({
   bookmarks,
   folder,
-  activeVerseId,
-  onVerseSelect,
 }) => {
   const { folders } = useBookmarks();
   const [expandedFolderId, setExpandedFolderId] = useState<string | null>(folder.id);

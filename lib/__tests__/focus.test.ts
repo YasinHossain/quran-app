@@ -382,7 +382,7 @@ describe('Focus Management System', () => {
       setActiveIndex.mockClear();
 
       // Re-render hook with new activeIndex
-      const { rerender } = renderHook(() => useRovingTabIndex(items, activeIndex, setActiveIndex));
+      renderHook(() => useRovingTabIndex(items, activeIndex, setActiveIndex));
 
       // ArrowUp from first item should wrap to last
       act(() => {

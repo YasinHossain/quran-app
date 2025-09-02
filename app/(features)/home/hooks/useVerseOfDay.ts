@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState, useCallback, useRef } from 'react';
+import useSWR from 'swr';
 import { Verse } from '@/types';
-import { getRandomVerse, getSurahList } from '@/lib/api';
+import { getRandomVerse, getSurahList, getVerseByKey } from '@/lib/api';
 import { useSettings } from '@/app/providers/SettingsContext';
 import type { Surah } from '@/types';
 
@@ -15,195 +16,154 @@ interface UseVerseOfDayReturn {
   prefetchNextVerse: () => void;
 }
 
+// Curated verses that always work as fallback
+const FALLBACK_VERSE_KEYS = [
+  '2:255', // Ayat al-Kursi
+  '1:1', // Al-Fatihah opening
+  '1:2', // Al-Fatihah verse 2
+  '1:3', // Al-Fatihah verse 3
+  '1:4', // Al-Fatihah verse 4
+  '1:5', // Al-Fatihah verse 5
+  '1:6', // Al-Fatihah verse 6
+  '1:7', // Al-Fatihah verse 7
+  '2:1', // Al-Baqarah opening
+  '2:2', // Al-Baqarah verse 2
+  '3:1', // Al Imran opening
+  '3:2', // Al Imran verse 2
+  '112:1', // Al-Ikhlas opening
+  '112:2', // Al-Ikhlas verse 2
+  '112:3', // Al-Ikhlas verse 3
+  '112:4', // Al-Ikhlas verse 4
+  '113:1', // Al-Falaq opening
+  '114:1', // An-Nas opening
+  '36:1', // Ya-Sin opening
+  '67:1', // Al-Mulk opening
+];
+
 export function useVerseOfDay(): UseVerseOfDayReturn {
   const { settings } = useSettings();
-  const [verse, setVerse] = useState<Verse | null>(null);
-  const [verseQueue, setVerseQueue] = useState<Verse[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [surahs, setSurahs] = useState<Surah[]>([]);
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [useRandomAPI, setUseRandomAPI] = useState(true);
+  const [verse, setVerse] = useState<Verse | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | undefined>();
 
-  const abortRef = useRef(false);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const prefetchingRef = useRef(false);
-  const initializingRef = useRef(false);
-
-  // Initialize verse cache with 5 verses
-  const initializeVerseCache = useCallback(async () => {
-    if (initializingRef.current || isInitialized) return;
-    initializingRef.current = true;
-    setLoading(true);
-    setError(null);
-
+  // Try to fetch a random verse, but fallback gracefully
+  const randomVerseFetcher = useCallback(async (): Promise<Verse> => {
     try {
-      const verses: Verse[] = [];
-
-      // Fetch 5 verses in parallel for initial cache
-      const fetchPromises = Array.from({ length: 5 }, () => getRandomVerse(settings.translationId));
-
-      const fetchedVerses = await Promise.all(fetchPromises);
-      verses.push(...fetchedVerses);
-
-      if (!abortRef.current) {
-        setVerseQueue(verses);
-        setVerse(verses[0]);
-        setCurrentIndex(0);
-        setIsInitialized(true);
-        setLoading(false);
-      }
-    } catch (err) {
-      if (!abortRef.current) {
-        console.error('Error initializing verse cache:', err);
-        setError('Unable to load verse. Using offline content.');
-        setLoading(false);
-      }
-    } finally {
-      initializingRef.current = false;
-    }
-  }, [settings.translationId, isInitialized]);
-
-  // Use refs to avoid dependency issues
-  const verseQueueRef = useRef<Verse[]>([]);
-  const currentIndexRef = useRef(0);
-
-  // Update refs when state changes
-  useEffect(() => {
-    verseQueueRef.current = verseQueue;
-  }, [verseQueue]);
-
-  useEffect(() => {
-    currentIndexRef.current = currentIndex;
-  }, [currentIndex]);
-
-  // Rotate to next verse in cache
-  const rotateToNextVerse = useCallback(() => {
-    const queue = verseQueueRef.current;
-    if (queue.length === 0) return;
-
-    setCurrentIndex((prevIndex) => {
-      const nextIndex = (prevIndex + 1) % queue.length;
-      setVerse(queue[nextIndex]);
-      return nextIndex;
-    });
-  }, []);
-
-  // Refresh cache with new verses
-  const refreshCache = useCallback(async () => {
-    if (prefetchingRef.current) return;
-    prefetchingRef.current = true;
-
-    try {
-      const newVerses: Verse[] = [];
-
-      // Fetch 5 new verses
-      const fetchPromises = Array.from({ length: 5 }, () => getRandomVerse(settings.translationId));
-
-      const fetchedVerses = await Promise.all(fetchPromises);
-      newVerses.push(...fetchedVerses);
-
-      if (!abortRef.current) {
-        setVerseQueue(newVerses);
-        setVerse(newVerses[0]);
-        setCurrentIndex(0);
-      }
-    } catch (err) {
-      console.error('Error refreshing verse cache:', err);
-    } finally {
-      prefetchingRef.current = false;
+      return await getRandomVerse(settings.translationId);
+    } catch (error) {
+      console.warn('Random verse API failed, switching to fallback mode:', error);
+      setUseRandomAPI(false);
+      throw error;
     }
   }, [settings.translationId]);
 
-  // Start automatic rotation every 10 seconds
-  const startAutoRotation = useCallback(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
+  // Fallback verse fetcher using curated verse keys
+  const fallbackVerseFetcher = useCallback(async (): Promise<Verse> => {
+    const verseKey = FALLBACK_VERSE_KEYS[currentIndex % FALLBACK_VERSE_KEYS.length];
+    return await getVerseByKey(verseKey, settings.translationId);
+  }, [settings.translationId, currentIndex]);
+
+  // Use SWR for random verses (with error handling)
+  const {
+    data: randomVerse,
+    error: randomError,
+    mutate: mutateRandom,
+  } = useSWR(useRandomAPI ? ['random-verse', settings.translationId] : null, randomVerseFetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    shouldRetryOnError: false,
+    dedupingInterval: 30000, // Don't refetch for 30 seconds
+  });
+
+  // Use SWR for fallback verses
+  const {
+    data: fallbackVerse,
+    error: fallbackError,
+    mutate: mutateFallback,
+  } = useSWR(
+    !useRandomAPI ? ['fallback-verse', settings.translationId, currentIndex] : null,
+    fallbackVerseFetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
     }
+  );
 
-    intervalRef.current = setInterval(() => {
-      if (!abortRef.current) {
-        rotateToNextVerse();
-      }
-    }, 10000); // 10 seconds
-  }, [rotateToNextVerse]);
+  // Load surahs using SWR
+  const { data: surahs = [] } = useSWR('surahs', getSurahList);
 
-  // Stop automatic rotation
-  const stopAutoRotation = useCallback(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
+  // Determine current verse and loading state
+  const currentVerse = randomVerse || fallbackVerse;
+  const isLoading = useRandomAPI ? !randomVerse && !randomError : !fallbackVerse && !fallbackError;
+  const currentError =
+    randomError && fallbackError ? 'Unable to load verses. Please check your connection.' : null;
+
+  // Set the active verse when data changes
+  useEffect(() => {
+    if (currentVerse) {
+      setVerse(currentVerse);
     }
-  }, []);
+  }, [currentVerse]);
 
-  // Refresh verse (reload entire cache)
-  const refreshVerse = useCallback(() => {
-    refreshCache();
-  }, [refreshCache]);
-
-  // Prefetch next verse (refresh cache when needed)
-  const prefetchNextVerse = useCallback(() => {
-    refreshCache();
-  }, [refreshCache]);
-
-  // Initialize on mount and translation change
+  // Auto-rotate verses every 10 seconds
   useEffect(() => {
-    abortRef.current = false;
-    setIsInitialized(false);
-    stopAutoRotation(); // Stop any existing rotation
-    initializeVerseCache();
+    if (!currentVerse) return;
 
-    return () => {
-      abortRef.current = true;
-      stopAutoRotation();
-    };
-  }, [settings.translationId]);
-
-  // Start rotation when cache is ready
-  useEffect(() => {
-    if (isInitialized && verseQueue.length > 0 && !intervalRef.current) {
-      // Start interval directly to avoid dependency issues
+    const startRotation = () => {
       intervalRef.current = setInterval(() => {
-        if (!abortRef.current) {
-          rotateToNextVerse();
-        }
-      }, 10000); // 10 seconds
-    }
+        setCurrentIndex((prev) => {
+          const nextIndex = (prev + 1) % FALLBACK_VERSE_KEYS.length;
+
+          // If using random API, try to fetch a new random verse periodically
+          if (useRandomAPI && Math.random() < 0.3) {
+            // 30% chance to try random
+            mutateRandom();
+          } else if (!useRandomAPI) {
+            // In fallback mode, trigger refetch with new index
+            mutateFallback();
+          }
+
+          return nextIndex;
+        });
+      }, 10000);
+    };
+
+    startRotation();
 
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
-        intervalRef.current = null;
       }
     };
-  }, [isInitialized, verseQueue.length]);
+  }, [currentVerse, useRandomAPI, mutateRandom, mutateFallback]);
 
-  // Load surahs list for metadata
-  useEffect(() => {
-    let isMounted = true;
-
-    const loadSurahs = async () => {
-      try {
-        const surahsList = await getSurahList();
-        if (isMounted) {
-          setSurahs(surahsList);
-        }
-      } catch (err) {
-        console.error('Error loading surahs:', err);
+  // Refresh function - try random API first, fallback if needed
+  const refreshVerse = useCallback(() => {
+    if (useRandomAPI) {
+      mutateRandom();
+    } else {
+      // Try to re-enable random API periodically
+      if (Math.random() < 0.5) {
+        // 50% chance to retry random API
+        setUseRandomAPI(true);
+        mutateRandom();
+      } else {
+        setCurrentIndex((prev) => (prev + 1) % FALLBACK_VERSE_KEYS.length);
+        mutateFallback();
       }
-    };
+    }
+  }, [useRandomAPI, mutateRandom, mutateFallback]);
 
-    loadSurahs();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  // Prefetch next verse
+  const prefetchNextVerse = useCallback(() => {
+    refreshVerse();
+  }, [refreshVerse]);
 
   return {
     verse,
-    loading,
-    error,
+    loading: isLoading,
+    error: currentError,
     surahs,
     refreshVerse,
     prefetchNextVerse,

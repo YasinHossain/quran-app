@@ -252,41 +252,108 @@ Edit tool    # Precise code modifications with context preservation
 - **Error Handling**: Environment-agnostic fallback strategies
 - **Documentation**: Self-maintaining project context in this file
 
-## AI Workflow Enhancement System
+## AI Architecture Compliance System
 
-**Complete AI Development Integration (Latest Update):**
+**CRITICAL: AI must follow established patterns exactly to maintain codebase consistency.**
 
-- **Context-Aware AI System**: Directory-specific `.ai` context files provide precise development guidance
-- **Comprehensive Tool Suite**: 7 specialized AI tools for feature generation, quality analysis, and refactoring
-- **Architecture-Compliant Generation**: Complete features following clean architecture and atomic design
-- **Automated Quality Assurance**: Continuous monitoring with AI insights and recommendations
-- **Multi-Platform Support**: Platform-specific code generation (mobile, desktop, extension) with shared business logic
-- **Enhanced Search & Discovery**: Optimized patterns for 10x faster code discovery and component location
-- **Intelligent Testing**: Automated test generation with proper provider wrapping and layer-specific strategies
+### 📋 Architecture Documentation
 
-**AI Documentation & Guides:**
+- **`ARCHITECTURE_GUIDELINES.md`** - Comprehensive patterns and requirements for all development
+- **`app/(features)/*/AGENTS.md`** - Feature-specific patterns and integration points
+- **`app/shared/AGENTS.md`** - Shared component patterns and responsive design rules
+- **`app/providers/AGENTS.md`** - Context and state management patterns
 
-- `docs/ai/component-registry.md` - Complete component catalog with atomic design classification
-- `docs/ai/architecture-map.md` - System architecture with dependency flows and service mapping
-- `docs/ai/search-patterns.md` - Efficient code discovery patterns for AI assistants
-- `docs/ai/multi-platform-guide.md` - Cross-platform development with code sharing strategies
-- `docs/AI_WORKFLOW_GUIDE.md` - Comprehensive usage guide for AI-enhanced development
+### 🚫 AI Development Restrictions
 
-**Quick Start AI Commands:**
+**Before making ANY changes, AI must:**
 
-```bash
-./ai-workflow.sh quality           # Run comprehensive quality analysis
-./ai-workflow.sh feature <name>    # Generate complete feature with clean architecture
-./ai-workflow.sh analyze <file>    # Analyze code for refactoring opportunities
-npm run ai:quality                 # Quality monitoring with AI insights
-npm run ai:tests <file>            # Generate appropriate test templates
+1. **Read relevant `AGENTS.md` files** for the area being modified
+2. **Follow exact patterns** shown in the architecture documentation
+3. **Use established component structures** (memo, interfaces, responsive design)
+4. **Integrate properly with contexts** (Settings, Audio, Bookmarks)
+5. **Follow mobile-first responsive patterns** with proper breakpoints
+6. **Include proper TypeScript typing** and error handling
+7. **Use memoization patterns** for performance optimization
+
+### 🔍 AI Code Review Checklist
+
+**Every AI implementation must verify:**
+
+- [ ] **Pattern Compliance**: Does it match existing component/hook patterns?
+- [ ] **Context Integration**: Properly uses SettingsContext, AudioContext, BookmarkContext?
+- [ ] **Responsive Design**: Mobile-first with `md:` breakpoints?
+- [ ] **Performance**: Memoized with `memo()`, `useCallback()`, `useMemo()`?
+- [ ] **TypeScript**: Proper interfaces, no `any` types?
+- [ ] **Testing**: Includes tests with proper provider wrappers?
+- [ ] **Accessibility**: 44px touch targets, proper ARIA labels?
+- [ ] **Import Conventions**: Uses `@/` aliases, proper import order?
+
+### ⚠️ Common AI Violations to Avoid
+
+**Do NOT:**
+
+- Create components without `memo()` wrapper
+- Skip responsive design patterns (`space-y-4 md:space-y-0 md:flex`)
+- Ignore context integration requirements
+- Create inline styles instead of Tailwind classes
+- Skip memoization of callbacks and computations
+- Use generic names like `Component` or `Hook`
+- Create hardcoded breakpoint logic instead of CSS classes
+- Skip TypeScript interfaces for props
+
+### 🎯 AI Success Pattern
+
+```typescript
+// ✅ CORRECT: Follow this exact pattern
+import { memo, useCallback, useMemo } from 'react';
+import { SomeType } from '@/types';
+import { useSettings } from '@/app/providers/SettingsContext';
+
+interface ComponentProps {
+  data: SomeType;
+  onAction: (id: string) => void;
+}
+
+export const FeatureComponent = memo(function FeatureComponent({
+  data,
+  onAction,
+}: ComponentProps) {
+  const { settings } = useSettings();
+
+  const processedData = useMemo(() =>
+    transformData(data, settings),
+    [data, settings]
+  );
+
+  const handleClick = useCallback(() => {
+    onAction(data.id);
+  }, [onAction, data.id]);
+
+  return (
+    <div className="space-y-4 md:space-y-0 md:flex md:items-center">
+      {/* Mobile-first responsive content */}
+    </div>
+  );
+});
+
+export default FeatureComponent;
 ```
 
-## Recent Architecture Updates
+### 🔧 AI Quality Assurance
 
-- **Clean Architecture (DDD)**: Complete domain-driven design implementation in `src/` directory structure
-- **Atomic Design Components**: Systematic component organization (atoms → molecules → organisms → templates)
-- **AI-Terminal Integration**: Optimized AI development environment with context-aware assistance
-- **Mobile-Responsive Architecture**: Mobile-first design system with responsive breakpoints
+**After any changes, AI automatically runs:**
+
+```bash
+npm run check  # Format, lint, typecheck, test
+```
+
+**If checks fail, AI must fix issues before completing the task.**
+
+## Recent Updates
+
+- **AI Architecture Compliance System**: Added comprehensive AI development restrictions and patterns
+- **Architecture Documentation**: Created detailed guidelines and feature-specific patterns
+- **AI Code Review Process**: Implemented mandatory compliance checklist for all changes
+- **Mobile-Responsive Architecture**: Implementing mobile-first design system with responsive breakpoints
 - **Tafsir System**: Enhanced with persistent selections, improved UI, and multiple tafsir support
 - **Settings Management**: Streamlined panels with better state management and storage

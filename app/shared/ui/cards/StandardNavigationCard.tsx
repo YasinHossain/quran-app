@@ -47,7 +47,7 @@ export const StandardNavigationCard: React.FC<StandardNavigationCardProps> = ({
     titleWeight = 'semibold',
   } = content;
 
-  const handleClick: React.MouseEventHandler<HTMLDivElement | HTMLAnchorElement> = (_e) => {
+  const handleClick: React.MouseEventHandler<HTMLDivElement | HTMLAnchorElement> = () => {
     onNavigate?.(id);
   };
 

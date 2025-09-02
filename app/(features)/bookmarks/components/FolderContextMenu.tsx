@@ -7,16 +7,9 @@ import { EllipsisHIcon, CloseIcon } from '@/app/shared/icons';
 interface FolderContextMenuProps {
   onEdit: () => void;
   onDelete: () => void;
-  onRename: () => void;
-  onColorChange: () => void;
 }
 
-export const FolderContextMenu: React.FC<FolderContextMenuProps> = ({
-  onEdit,
-  onDelete,
-  onRename,
-  onColorChange,
-}) => {
+export const FolderContextMenu: React.FC<FolderContextMenuProps> = ({ onEdit, onDelete }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
