@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { AlertCircle } from 'lucide-react';
+import { AlertIcon } from '@/app/shared/icons';
 import { ResourceTabs, ResourceList, ResourceItem } from '@/app/shared/resource-panel';
 import { TranslationResource } from '@/types';
 import { TranslationSearch } from '../TranslationSearch';
@@ -74,7 +74,7 @@ export const TranslationPanelContent = ({
     return (
       <div className="mx-4 mt-4 p-4 rounded-lg border bg-error/10 border-error/20 text-error">
         <div className="flex items-center space-x-2">
-          <AlertCircle className="h-5 w-5 text-error" />
+          <AlertIcon className="h-5 w-5 text-error" />
           <span className="text-sm">{error}</span>
         </div>
       </div>

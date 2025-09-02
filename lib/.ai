@@ -1,0 +1,94 @@
+# Lib Directory - AI Development Context
+
+## Overview
+The `lib/` directory contains shared utilities used across the app. These are pure functions and helpers that don't contain business logic but provide technical functionality.
+
+## AI Development Patterns
+
+### Utility Organization
+- **api/**: Wrappers around external APIs (Quran.com)
+- **audio/**: Audio playback utilities and reciter management
+- **tafsir/**: Tafsir content processing and rendering
+- **text/**: Text processing (sanitization, tajweed, language detection)
+
+### Adding New Utilities
+1. **Choose appropriate submodule** based on functionality
+2. **Create focused modules** - single responsibility principle
+3. **Export with TypeScript annotations** - avoid `any` types
+4. **Add tests** in `__tests__` folder
+5. **Update exports** in module index files
+
+## Common AI Tasks
+
+#### API Wrapper Creation
+```typescript
+// lib/api/[service].ts pattern
+export interface ServiceConfig {
+  baseUrl: string;
+  timeout?: number;
+}
+
+export class ServiceClient {
+  constructor(private config: ServiceConfig) {}
+  
+  async fetchData<T>(endpoint: string): Promise<T> {
+    // Implementation with error handling
+  }
+}
+```
+
+#### Text Processing Functions
+```typescript
+// lib/text/[processor].ts pattern
+export interface TextProcessorOptions {
+  preserveWhitespace?: boolean;
+  enableTajweed?: boolean;
+}
+
+export function processText(
+  text: string, 
+  options: TextProcessorOptions = {}
+): ProcessedText {
+  // Pure function implementation
+}
+```
+
+## Current Modules
+
+### lib/api/
+- **Purpose**: External API communication
+- **Pattern**: Service classes with configuration injection
+- **Testing**: Mock HTTP responses, test error handling
+
+### lib/audio/
+- **Purpose**: Audio playback coordination
+- **Pattern**: Stateless utilities, reciter definitions
+- **Testing**: Mock audio elements, test URL generation
+
+### lib/tafsir/
+- **Purpose**: Commentary content processing
+- **Pattern**: Content sanitization, Arabic text handling
+- **Testing**: Test with various tafsir sources, HTML sanitization
+
+### lib/text/
+- **Purpose**: Text manipulation and formatting
+- **Pattern**: Pure functions, configurable processing
+- **Testing**: Edge cases, Unicode handling, performance
+
+## Integration with Architecture
+- **Domain Layer**: Lib utilities are used by domain services
+- **Infrastructure**: Repository implementations use lib/api modules
+- **Presentation**: Components use lib utilities for formatting/display
+
+## Quality Standards
+1. **Pure functions**: No side effects, predictable outputs
+2. **Type safety**: Explicit TypeScript interfaces and return types
+3. **Error handling**: Graceful degradation, meaningful error messages
+4. **Performance**: Optimized for frequent use, memoization where appropriate
+5. **Testing**: 100% coverage for utility functions
+
+## AI Efficiency Tips
+- **Search existing utilities**: Use `Grep "export.*function" lib/` before creating new ones
+- **Follow patterns**: Check similar modules for consistent API design
+- **Test-first**: Utilities are perfect for TDD approach
+- **Document edge cases**: Add JSDoc comments for complex processing logic

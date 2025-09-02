@@ -26,7 +26,7 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
   const [isInitialized, setIsInitialized] = useState(false);
 
   const abortRef = useRef(false);
-  const intervalRef = useRef<NodeJS.Timeout>();
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const prefetchingRef = useRef(false);
   const initializingRef = useRef(false);
 
@@ -56,7 +56,7 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
     } catch (err) {
       if (!abortRef.current) {
         console.error('Error initializing verse cache:', err);
-        setError('Failed to load verse. Please try again.');
+        setError('Unable to load verse. Using offline content.');
         setLoading(false);
       }
     } finally {
@@ -132,7 +132,7 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
   const stopAutoRotation = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
-      intervalRef.current = undefined;
+      intervalRef.current = null;
     }
   }, []);
 
@@ -173,7 +173,7 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
-        intervalRef.current = undefined;
+        intervalRef.current = null;
       }
     };
   }, [isInitialized, verseQueue.length]);

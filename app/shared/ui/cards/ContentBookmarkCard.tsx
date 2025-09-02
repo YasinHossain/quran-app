@@ -78,16 +78,18 @@ export const ContentBookmarkCard = memo(function ContentBookmarkCard({
 
   const { arabicFontFace = 'font-amiri', arabicFontSize = 18, tajweed = false } = settings;
 
-  const handleCardClick = () => {
+  const handleCardClick = (e: React.MouseEvent<HTMLDivElement | HTMLAnchorElement>) => {
     onNavigateToVerse?.();
-    onClick?.();
+    if (onClick && typeof onClick === 'function') {
+      onClick(e);
+    }
   };
 
   return (
     <BaseCard
       variant="bookmark"
       animation="bookmark"
-      onClick={onNavigateToVerse ? handleCardClick : onClick}
+      onClick={handleCardClick}
       role="article"
       aria-label={`Bookmark for verse ${verseKey} from ${surahName}`}
       {...props}
@@ -116,7 +118,7 @@ export const ContentBookmarkCard = memo(function ContentBookmarkCard({
               isPlaying={isPlaying}
               isLoadingAudio={isLoadingAudio}
               isBookmarked={isBookmarked}
-              onPlayPause={onPlayPause}
+              onPlayPause={onPlayPause || (() => {})}
               onBookmark={onBookmark}
               onNavigateToVerse={onNavigateToVerse}
               showRemove={true}

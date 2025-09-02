@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { SlidersHorizontal, Mic2, Repeat } from 'lucide-react';
+import { SlidersIcon, MicIcon, RepeatIcon } from '@/app/shared/icons';
 import ReciterPanel from './ReciterPanel';
 import RepeatPanel from './RepeatPanel';
 import usePlaybackOptions from '../hooks/usePlaybackOptions';
@@ -50,7 +50,7 @@ export default function PlaybackOptionsModal({ open, onClose, activeTab, setActi
         {/* Header */}
         <div className="flex items-center justify-center gap-3 mb-4">
           <div className="h-10 w-10 rounded-xl grid place-items-center bg-accent/10 text-accent">
-            <SlidersHorizontal />
+            <SlidersIcon />
           </div>
           <div className="font-semibold text-foreground">Playback Options</div>
           <button className="ml-auto text-muted hover:text-foreground" onClick={onClose}>
@@ -69,7 +69,7 @@ export default function PlaybackOptionsModal({ open, onClose, activeTab, setActi
             }`}
           >
             <span className="inline-flex items-center gap-2">
-              <Mic2 className="h-4 w-4" />
+              <MicIcon className="h-4 w-4" />
               Reciter
             </span>
           </button>
@@ -82,7 +82,7 @@ export default function PlaybackOptionsModal({ open, onClose, activeTab, setActi
             }`}
           >
             <span className="inline-flex items-center gap-2">
-              <Repeat className="h-4 w-4" />
+              <RepeatIcon className="h-4 w-4" />
               Verse Repeat
             </span>
           </button>

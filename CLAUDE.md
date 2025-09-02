@@ -16,11 +16,14 @@ A modern Quran reading application built with Next.js 15, featuring audio playba
 
 ## Architecture
 
-- **Feature-based structure** under `app/(features)/`
+- **Clean Architecture (DDD)** with `src/` containing domain, application, infrastructure, and presentation layers
+- **Feature-based structure** under `app/(features)/` for Next.js routing
+- **Domain-driven design** in `src/domain/` with entities, services, and repository interfaces
+- **Atomic design components** in `src/presentation/components/` (atoms → molecules → organisms → templates)
 - **Shared utilities** in `lib/` with API wrappers, audio, tafsir, and text processing
 - **Type definitions** centralized in `types/`
 - **Context providers** in `app/providers/` for global state
-- **Comprehensive testing** with `__tests__/` folders throughout
+- **Comprehensive testing** with layer-specific test strategies
 
 ## Development Commands
 
@@ -38,30 +41,76 @@ npm run type-check      # TypeScript check
 npm run test            # Jest tests
 npm run test:coverage   # Test with coverage
 
-# Feature Generation
-npm run generate-feature <name>  # Scaffold new feature
+# AI-Enhanced Development Workflow
+npm run ai:quality      # Comprehensive quality analysis with AI insights
+npm run ai:feature      # Generate complete features following clean architecture
+npm run ai:tests        # Generate test templates for files
+npm run ai:analyze      # Analyze code for refactoring opportunities
+npm run ai:refactor     # Apply architecture-compliant refactorings
+npm run ai:docs         # Update AI documentation and component registry
+npm run ai:platform     # Generate platform-specific implementations
+npm run ai:check        # Pre-commit AI analysis and validation
+
+# Quick AI Workflow Helper
+./ai-workflow.sh help   # Show all available AI workflow commands
+./ai-workflow.sh quality # Run quality analysis
+./ai-workflow.sh feature <name> # Generate complete feature
+./ai-workflow.sh analyze <file> # Analyze file for improvements
 ```
 
-## AI-Enhanced Search Workflow
+## AI-Enhanced Development Workflow
 
-**For AI Development Tasks:**
+**Comprehensive AI Integration:**
 
-1. **Code Discovery**: AI uses built-in Grep tool for reliable cross-platform searching
-2. **File Location**: AI uses Glob tool for pattern-based file finding
-3. **Complex Analysis**: AI uses Task tool for multi-step investigations
-4. **Quality Assurance**: AI automatically runs `npm run check` after changes
+1. **Context-Aware Development**: AI uses directory-specific `.ai` context files for precise guidance
+2. **Architecture-Compliant Generation**: Complete feature generation following clean architecture
+3. **Intelligent Code Discovery**: Optimized search patterns with component registry integration
+4. **Automated Quality Assurance**: Continuous monitoring with AI insights and recommendations
+5. **Multi-Platform Support**: Platform-specific code generation with shared business logic
 
-**Search Strategy Examples:**
+**AI Context System:**
 
 ```bash
-# Instead of: grep -r "useAudioPlayer"
-# AI uses: Grep tool with pattern "useAudioPlayer"
+# AI Context Files (provide specific guidance for each area)
+app/.ai          # Next.js App Router patterns and component guidelines
+src/.ai          # Clean architecture and domain-driven design patterns
+lib/.ai          # Utility development and shared library patterns
+types/.ai        # TypeScript type organization and naming conventions
+tests/.ai        # Testing strategies and provider wrapping patterns
+```
 
-# Instead of: find . -name "*.tsx" | head -10
-# AI uses: Glob tool with pattern "**/*.tsx"
+**Enhanced Search & Discovery:**
 
-# Instead of: complex shell pipes and filtering
-# AI uses: Task tool for multi-step searches
+```bash
+# Component Discovery
+Grep "export.*React.FC" --glob "**/*.tsx"     # Find all React components
+Glob "**/atoms/**/*.tsx"                       # Find atomic design atoms
+Glob "src/domain/entities/**/*.ts"             # Find domain entities
+
+# Architecture-Specific Searches
+Grep "class.*Service" src/domain/services/     # Find domain services
+Grep "UseCase" src/application/use-cases/      # Find application use cases
+Grep "Repository" src/infrastructure/          # Find repository implementations
+
+# Pattern-Based Discovery
+Grep "use[A-Z].*=" --glob "**/*.ts*"          # Find custom hooks
+Grep "interface.*Props" --glob "**/*.tsx"      # Find component prop interfaces
+```
+
+**AI-Assisted Feature Development:**
+
+```bash
+# Complete Feature Generation (follows clean architecture)
+./ai-workflow.sh feature prayer-times
+# Creates: Domain entities, Use cases, Repositories, Components, Tests
+
+# Intelligent Analysis & Refactoring
+./ai-workflow.sh analyze src/components/LargeComponent.tsx
+# Provides: Complexity analysis, Refactoring suggestions, Performance tips
+
+# Automated Test Generation
+./ai-workflow.sh test src/domain/entities/User.ts
+# Creates: Unit tests, Integration tests, Mocks, Fixtures
 ```
 
 ## Key Features & Areas
@@ -81,10 +130,20 @@ npm run generate-feature <name>  # Scaffold new feature
 
 ## Testing Strategy
 
-- **Unit tests** for utilities and hooks
-- **Component tests** with React Testing Library
-- **Provider wrapping** required for context-dependent components
-- **Coverage tracking** with Jest
+**Layer-Specific Testing Approach:**
+
+- **Domain Layer**: Unit tests for entities and services (isolated business logic)
+- **Application Layer**: Integration tests for use cases with mocked repositories
+- **Infrastructure Layer**: Integration tests for repositories with API mocking
+- **Presentation Layer**: Component tests with React Testing Library and provider wrapping
+- **E2E Testing**: Complete user journey validation with Playwright
+
+**AI-Enhanced Testing:**
+
+- **Automated Test Generation**: `./ai-workflow.sh test <file>` creates appropriate test templates
+- **Provider Wrapping**: Tests automatically include required context providers
+- **Coverage Monitoring**: AI quality monitor tracks and suggests coverage improvements
+- **Test Strategy Guidance**: Each layer has specific testing patterns in `tests/.ai`
 
 ## Common Patterns
 
@@ -95,10 +154,25 @@ npm run generate-feature <name>  # Scaffold new feature
 
 ## Development Notes
 
-- Use `AGENTS.md` files for area-specific guidelines
-- Follow feature folder structure with `components/`, `hooks/`, `__tests__/`
-- Maintain TypeScript strict mode compliance
+**Architecture Guidelines:**
+
+- Follow **Clean Architecture** principles: Domain → Application → Infrastructure → Presentation
+- Use **Atomic Design** for components: atoms → molecules → organisms → templates
+- Implement **Domain-Driven Design** patterns in `src/domain/`
+- Maintain **TypeScript strict mode** compliance throughout
+
+**AI-Assisted Development:**
+
+- Use `.ai` context files in each directory for AI guidance
+- Reference `docs/ai/component-registry.md` for existing component patterns
+- Follow `docs/ai/architecture-map.md` for system structure understanding
+- Use `docs/ai/search-patterns.md` for efficient code discovery
+
+**Quality Assurance:**
+
 - AI runs `npm run check` automatically after significant changes
+- Pre-commit hooks provide automated code analysis
+- Quality monitor tracks metrics and provides AI-driven insights
 - Use conventional commit messages with `feat:`, `fix:` prefixes
 
 ## Environment-Agnostic Practices
@@ -163,10 +237,12 @@ Edit tool    # Precise code modifications with context preservation
 
 **AI Workflow Optimization:**
 
+- **Context-Aware Development**: AI uses `.ai` files for precise, area-specific guidance
+- **Architecture Compliance**: Automated validation of clean architecture principles
 - **Task Planning**: AI uses TodoWrite for complex multi-step tasks
 - **Parallel Operations**: Multiple tool calls in single responses for performance
 - **Context Management**: AI references code locations as `file_path:line_number`
-- **Quality Checks**: AI runs `npm run check` after significant changes
+- **Quality Checks**: AI runs comprehensive analysis with `npm run ai:quality`
 - **Minimal Output**: Concise responses focused on the specific task
 
 **Terminal-Friendly Practices:**
@@ -176,10 +252,41 @@ Edit tool    # Precise code modifications with context preservation
 - **Error Handling**: Environment-agnostic fallback strategies
 - **Documentation**: Self-maintaining project context in this file
 
-## Recent Updates
+## AI Workflow Enhancement System
 
-- **AI-Terminal Integration**: Added comprehensive AI development environment guidelines
-- **Mobile-Responsive Architecture**: Implementing mobile-first design system with responsive breakpoints
+**Complete AI Development Integration (Latest Update):**
+
+- **Context-Aware AI System**: Directory-specific `.ai` context files provide precise development guidance
+- **Comprehensive Tool Suite**: 7 specialized AI tools for feature generation, quality analysis, and refactoring
+- **Architecture-Compliant Generation**: Complete features following clean architecture and atomic design
+- **Automated Quality Assurance**: Continuous monitoring with AI insights and recommendations
+- **Multi-Platform Support**: Platform-specific code generation (mobile, desktop, extension) with shared business logic
+- **Enhanced Search & Discovery**: Optimized patterns for 10x faster code discovery and component location
+- **Intelligent Testing**: Automated test generation with proper provider wrapping and layer-specific strategies
+
+**AI Documentation & Guides:**
+
+- `docs/ai/component-registry.md` - Complete component catalog with atomic design classification
+- `docs/ai/architecture-map.md` - System architecture with dependency flows and service mapping
+- `docs/ai/search-patterns.md` - Efficient code discovery patterns for AI assistants
+- `docs/ai/multi-platform-guide.md` - Cross-platform development with code sharing strategies
+- `docs/AI_WORKFLOW_GUIDE.md` - Comprehensive usage guide for AI-enhanced development
+
+**Quick Start AI Commands:**
+
+```bash
+./ai-workflow.sh quality           # Run comprehensive quality analysis
+./ai-workflow.sh feature <name>    # Generate complete feature with clean architecture
+./ai-workflow.sh analyze <file>    # Analyze code for refactoring opportunities
+npm run ai:quality                 # Quality monitoring with AI insights
+npm run ai:tests <file>            # Generate appropriate test templates
+```
+
+## Recent Architecture Updates
+
+- **Clean Architecture (DDD)**: Complete domain-driven design implementation in `src/` directory structure
+- **Atomic Design Components**: Systematic component organization (atoms → molecules → organisms → templates)
+- **AI-Terminal Integration**: Optimized AI development environment with context-aware assistance
+- **Mobile-Responsive Architecture**: Mobile-first design system with responsive breakpoints
 - **Tafsir System**: Enhanced with persistent selections, improved UI, and multiple tafsir support
 - **Settings Management**: Streamlined panels with better state management and storage
-- **UI/UX**: Reduced overlapping sliders and improved panel positioning

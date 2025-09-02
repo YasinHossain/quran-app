@@ -98,9 +98,14 @@ export const useTranslationPanel = (isOpen: boolean) => {
           isUpdatingRef.current = false;
         }, 100);
       } else {
-        // If no translations selected, ensure we have default selections
-        // This will trigger the save effect and update settings
-        const defaultIds = [20]; // Only Sahih International
+        // If no translations selected, ensure we have a sensible default.
+        // Prefer Saheeh/Sahih International if available; otherwise fall back to id 20.
+        const sahih = translations.find(
+          (t) =>
+            t.name.toLowerCase().includes('saheeh international') ||
+            t.name.toLowerCase().includes('sahih international')
+        );
+        const defaultIds = sahih ? [sahih.id] : [20];
         isUpdatingRef.current = true;
         setSelections(defaultIds);
         setTimeout(() => {

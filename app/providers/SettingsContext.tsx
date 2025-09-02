@@ -8,6 +8,7 @@ import React, {
   useMemo,
   useReducer,
   useRef,
+  useState,
 } from 'react';
 import { Settings } from '@/types';
 import { ARABIC_FONTS, defaultSettings, loadSettings, saveSettings } from './settingsStorage';

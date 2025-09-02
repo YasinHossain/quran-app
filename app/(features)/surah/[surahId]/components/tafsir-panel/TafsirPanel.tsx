@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useTafsirPanel } from './useTafsirPanel';
+import { useTafsirPanel } from '@/src/presentation/hooks/useTafsirPanel';
 import { useListHeight } from '@/app/shared/resource-panel/hooks/useListHeight';
 import { useTafsirSections } from './hooks/useTafsirSections';
 import { ResourcePanelHeader } from '@/app/shared/resource-panel/components/ResourcePanelHeader';

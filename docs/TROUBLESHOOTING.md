@@ -4,6 +4,30 @@
 
 ### Development Environment
 
+#### Safari Can't Connect To Dev Server
+
+**Problem**: Safari shows "cannot connect to the server" when opening the app during local development.
+
+**Solutions**:
+
+1. Stale service worker (PWA) interfering
+
+- Clear SW and caches: Safari > Develop > Service Workers > Unregister for `localhost:3000`, or Safari > Settings > Privacy > Manage Website Data… > remove `localhost`.
+- This repo also auto‑unregisters SW in development to avoid this issue.
+
+2. Accessing from iPhone/another device on your LAN
+
+- Start the dev server bound to all interfaces: `npm run dev:lan`.
+- Find your machine IP (macOS): `ipconfig getifaddr en0` (Wi‑Fi) or `ipconfig getifaddr en1` (Ethernet).
+- Open `http://<your-ip>:3000` in Safari on the device.
+- Ensure macOS Firewall allows Node/Next: System Settings > Network > Firewall > Allow incoming connections.
+
+3. Port or cache issues on the same machine
+
+- Verify the server is running at `http://localhost:3000`.
+- If port is busy, run on a different port: `npm run dev -- --port 3001`.
+- Hard refresh: hold Option and click Reload, or clear website data for `localhost`.
+
 #### Node.js Version Issues
 
 **Problem**: Build fails with Node.js version errors

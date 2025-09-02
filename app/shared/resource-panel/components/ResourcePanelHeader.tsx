@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { RotateCcw } from 'lucide-react';
+import { ResetIcon } from '@/app/shared/icons';
 
 interface ResourcePanelHeaderProps {
   title: string;
@@ -33,7 +33,7 @@ export const ResourcePanelHeader = ({ title, onClose, onReset }: ResourcePanelHe
         className="p-2 rounded-full text-foreground hover:bg-interactive hover:text-accent focus-visible:outline-none transition-colors"
         title="Reset to Default"
       >
-        <RotateCcw size={20} />
+        <ResetIcon size={20} />
       </button>
     </header>
   );

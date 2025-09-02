@@ -1,0 +1,183 @@
+# Tests Directory - AI Development Context
+
+## Overview
+The `tests/` directory contains comprehensive test infrastructure following the testing pyramid: unit tests (most), integration tests (some), E2E tests (few).
+
+## AI Development Patterns
+
+### Test Organization Strategy
+```
+tests/
+├── unit/              # Fast, isolated tests (domain entities, utilities)
+├── integration/       # API + infrastructure tests with mocking
+├── e2e/              # Full user journey tests (Playwright)
+├── fixtures/         # Reusable test data factories
+├── mocks/            # Mock implementations for dependencies
+└── helpers/          # Test utilities and setup functions
+```
+
+### Test-Driven Development Flow
+1. **Write failing test** for new functionality
+2. **Implement minimum code** to make test pass
+3. **Refactor** while keeping tests green
+4. **Add edge cases** and error scenarios
+
+## Common AI Tasks
+
+#### Adding Unit Tests
+```typescript
+// tests/unit/domain/entities/EntityName.test.ts
+describe('EntityName', () => {
+  let entity: EntityName;
+  
+  beforeEach(() => {
+    entity = EntityFixtures.createDefault();
+  });
+  
+  describe('businessLogicMethod', () => {
+    it('should handle valid input correctly', () => {
+      const result = entity.businessLogicMethod('valid input');
+      expect(result).toBe(expectedOutput);
+    });
+    
+    it('should throw error for invalid input', () => {
+      expect(() => entity.businessLogicMethod('invalid')).toThrow(DomainError);
+    });
+  });
+});
+```
+
+#### Adding Integration Tests
+```typescript
+// tests/integration/repositories/RepositoryName.test.ts
+describe('RepositoryName Integration', () => {
+  let repository: RepositoryName;
+  let mockApiClient: jest.Mocked<ApiClient>;
+  let mockCache: jest.Mocked<ICache>;
+  
+  beforeEach(() => {
+    mockApiClient = MockHttpClient.create();
+    mockCache = MockCache.create();
+    repository = new RepositoryName(mockApiClient, mockCache);
+  });
+  
+  it('should fetch and cache data correctly', async () => {
+    mockApiClient.get.mockResolvedValue(ApiFixtures.validResponse);
+    
+    const result = await repository.findById('test-id');
+    
+    expect(mockCache.set).toHaveBeenCalledWith('test-id', expect.any(Object));
+    expect(result).toMatchObject(expectedDomainEntity);
+  });
+});
+```
+
+#### Adding E2E Tests
+```typescript
+// tests/e2e/user-flows/reading-flow.test.ts
+describe('Quran Reading Flow', () => {
+  beforeEach(async () => {
+    await page.goto('http://localhost:3000');
+  });
+  
+  it('should complete full reading session', async () => {
+    // Navigate to surah
+    await page.click('[data-testid="surah-1"]');
+    await expect(page).toHaveURL(/.*\/surah\/1/);
+    
+    // Verify verse display
+    const verses = await page.locator('[data-testid^="verse-"]').count();
+    expect(verses).toBe(7);
+    
+    // Test bookmark functionality
+    await page.click('[data-testid="bookmark-1-1"]');
+    await expect(page.locator('[data-testid="bookmark-active-1-1"]')).toBeVisible();
+  });
+});
+```
+
+## Testing Utilities
+
+### Fixtures (Reusable Test Data)
+```typescript
+// tests/fixtures/VerseFixtures.ts
+export class VerseFixtures {
+  static createBasic(): Verse {
+    return new Verse('1:1', 1, 1, 'بِسْمِ اللَّهِ', 'In the name of Allah');
+  }
+  
+  static createWithTafsir(): Verse {
+    const verse = this.createBasic();
+    verse.addTafsir(TafsirFixtures.createBasic());
+    return verse;
+  }
+  
+  static createSajdahVerse(): Verse {
+    return new Verse('7:206', 7, 206, 'Arabic text', 'Translation');
+  }
+}
+```
+
+### Mock Implementations
+```typescript
+// tests/mocks/MockCache.ts
+export class MockCache implements ICache {
+  private storage = new Map<string, any>();
+  
+  async get<T>(key: string): Promise<T | null> {
+    return this.storage.get(key) || null;
+  }
+  
+  async set<T>(key: string, value: T, ttl?: number): Promise<void> {
+    this.storage.set(key, value);
+  }
+  
+  static create(): jest.Mocked<ICache> {
+    return new MockCache() as jest.Mocked<ICache>;
+  }
+}
+```
+
+## Coverage Requirements
+
+### Thresholds (jest.config.js)
+```javascript
+coverageThreshold: {
+  global: {
+    branches: 80,
+    functions: 80,
+    lines: 80,
+    statements: 80
+  },
+  './src/domain/': {
+    branches: 90,
+    functions: 90,
+    lines: 90,
+    statements: 90
+  }
+}
+```
+
+### Test Categories & Coverage Expectations
+- **Domain entities**: 95%+ coverage (business logic critical)
+- **Domain services**: 90%+ coverage (coordination logic)
+- **Use cases**: 85%+ coverage (application workflows)
+- **Repositories**: 80%+ coverage (integration points)
+- **Components**: 75%+ coverage (UI behavior)
+- **Utilities**: 90%+ coverage (pure functions)
+
+## CI/CD Integration
+
+### GitHub Actions Jobs
+1. **Unit Tests**: Fast feedback on business logic
+2. **Integration Tests**: API and data layer validation
+3. **E2E Tests**: Cross-browser user journey validation
+4. **Coverage Report**: Ensure quality thresholds met
+5. **Performance Tests**: Lighthouse CI for web vitals
+
+## AI Efficiency Tips
+- **Use fixtures**: `Grep "Fixtures.*create" tests/fixtures/` to find reusable test data
+- **Mock external dependencies**: Never hit real APIs in tests
+- **Test behavior, not implementation**: Focus on what the code does, not how
+- **Run tests before AI changes**: Ensure baseline is green
+- **Add tests with new features**: No production code without corresponding tests

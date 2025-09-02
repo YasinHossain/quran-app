@@ -1,5 +1,4 @@
 import { getRandomVerse } from '@/lib/api/verses';
-import { API_BASE_URL } from '@/lib/api';
 import { Verse } from '@/types';
 
 describe('getRandomVerse', () => {
@@ -7,7 +6,7 @@ describe('getRandomVerse', () => {
     jest.restoreAllMocks();
   });
 
-  it('normalizes random verse data', async () => {
+  it('normalizes random verse data (via internal API in browser)', async () => {
     const mockRaw: Verse & { words: any[] } = {
       id: 1,
       verse_key: '1:1',
@@ -30,18 +29,17 @@ describe('getRandomVerse', () => {
 
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ verse: mockRaw }),
+      json: () => Promise.resolve(mockRaw),
     }) as jest.Mock;
 
     const result = await getRandomVerse(20);
-    expect(global.fetch).toHaveBeenCalledWith(
-      `${API_BASE_URL}/verses/random?translations=20&fields=text_uthmani`
-    );
+    expect(global.fetch).toHaveBeenCalledWith('/api/verses/random?translationId=20');
     expect(result).toEqual(expected);
   });
 
-  it('throws on fetch error', async () => {
+  it('falls back to local verse on client fetch error', async () => {
     global.fetch = jest.fn().mockResolvedValue({ ok: false, status: 500 }) as jest.Mock;
-    await expect(getRandomVerse(20)).rejects.toThrow('Failed to fetch random verse: 500');
+    const result = await getRandomVerse(20);
+    expect(result).toMatchObject({ id: expect.any(Number), verse_key: expect.any(String) });
   });
 });

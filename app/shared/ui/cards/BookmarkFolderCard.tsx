@@ -39,7 +39,7 @@ export const BookmarkFolderCard: React.FC<BookmarkFolderCardProps> = ({
         // Override with folder-specific styles while maintaining base structure
         'p-3 rounded-lg border transition-all duration-200 cursor-pointer group h-auto',
         'bg-surface border-border hover:border-accent/30 hover:bg-surface-hover hover:shadow-sm',
-        className
+        className as string
       )}
       {...props}
     >

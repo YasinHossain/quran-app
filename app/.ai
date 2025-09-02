@@ -1,0 +1,51 @@
+# App Directory - AI Development Context
+
+## Overview
+The `app/` directory contains the Next.js 15 application with App Router structure. This is the presentation layer of the clean architecture.
+
+## AI Development Patterns
+
+### Feature Creation Workflow
+1. **Check existing patterns**: Look at `app/(features)/*/` for consistent structure
+2. **Use feature template**: All features follow atomic design (atoms → molecules → organisms → templates)
+3. **Provider integration**: All features use providers from `app/providers/`
+4. **Route structure**: Use `page.tsx` for routes, `layout.tsx` for wrappers
+
+### Common AI Tasks
+
+#### Adding a New Feature
+```bash
+# 1. Create feature directory
+mkdir -p app/(features)/[feature-name]/{components,hooks,__tests__}
+
+# 2. Follow existing patterns from surah/ or bookmarks/
+# 3. Ensure responsive design (mobile-first)
+# 4. Add proper TypeScript interfaces
+# 5. Include comprehensive tests
+```
+
+#### Component Modification
+- **Always check**: Existing component patterns in same feature
+- **Mobile responsiveness**: Test on mobile breakpoints (375px, 768px, 1024px+)
+- **Provider dependencies**: Wrap tests with required providers
+- **Type safety**: Maintain strict TypeScript compliance
+
+## Key Files & Directories
+- `app/(features)/*/`: User-facing routed features
+- `app/shared/`: Non-routing reusable components (player)
+- `app/providers/`: Global context providers
+- `app/layout.tsx`: Root layout with provider setup
+- `app/globals.css`: Global styles and design tokens
+
+## Architecture Rules
+1. **Clean separation**: Presentation logic only, domain logic in src/domain/
+2. **Provider pattern**: Use React context for global state
+3. **Atomic design**: Components follow atoms → molecules → organisms → templates
+4. **Mobile-first**: All components must be responsive
+5. **Testing required**: Every component needs tests with provider wrappers
+
+## AI Efficiency Tips
+- Use `Grep` tool to find similar components before creating new ones
+- Check `app/providers/` for available contexts before creating new state
+- Follow naming conventions: PascalCase for components, kebab-case for features
+- Always run `npm run check` after changes

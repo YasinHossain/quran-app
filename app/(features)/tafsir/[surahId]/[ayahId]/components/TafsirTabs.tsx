@@ -2,7 +2,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import Spinner from '@/app/shared/Spinner';
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
-import { getTafsirResources } from '@/lib/api';
+import { getAllTafsirResources } from '@/lib/api';
 import { applyArabicFont } from '@/lib/tafsir/applyArabicFont';
 import useSWR from 'swr';
 import { useSettings } from '@/app/providers/SettingsContext';
@@ -13,7 +13,8 @@ interface TafsirTabsProps {
 }
 
 export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
-  const { data } = useSWR('tafsirs', getTafsirResources);
+  // Use a distinct SWR key and the unified fetcher to avoid cache collisions
+  const { data } = useSWR('tafsir:resources:all', getAllTafsirResources);
   const { settings } = useSettings();
 
   // Compute tabs only when data or tafsirIds change

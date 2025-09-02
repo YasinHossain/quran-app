@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { GripVertical, X } from 'lucide-react';
+import { GripVerticalIcon, CloseIcon } from '@/app/shared/icons';
 
 interface ArabicFont {
   id: number;
@@ -61,7 +61,7 @@ export const ArabicFontSelectionList: React.FC<ArabicFontSelectionListProps> = (
               } bg-surface border border-border hover:bg-accent/10`}
             >
               <div className="flex items-center min-w-0">
-                <GripVertical className="h-4 w-4 mr-3 flex-shrink-0 text-muted" />
+                <GripVerticalIcon className="h-4 w-4 mr-3 flex-shrink-0 text-muted" />
                 <div className="min-w-0">
                   <span className="font-medium text-sm block truncate text-foreground">
                     {item.name}
@@ -73,7 +73,7 @@ export const ArabicFontSelectionList: React.FC<ArabicFontSelectionListProps> = (
                 onClick={() => handleSelectionToggle(id)}
                 className="hover:text-accent hover:bg-accent/10 transition-all duration-200 p-1.5 rounded-full flex-shrink-0 ml-2 text-muted"
               >
-                <X size={14} strokeWidth={2.5} />
+                <CloseIcon size={14} strokeWidth={2.5} />
               </button>
             </div>
           );
