@@ -186,7 +186,7 @@ export class ErrorHandler {
     try {
       return await operation();
     } catch (error) {
-      return await ErrorHandler.handle(error, { ...options, rethrow: false }) as T;
+      return (await ErrorHandler.handle(error, { ...options, rethrow: false })) as T;
     }
   }
 

@@ -122,7 +122,7 @@ export class SentryErrorTracker implements IErrorTracker {
   private async initialize(): Promise<void> {
     try {
       // Dynamically import Sentry if available
-      this.sentry = await import('@sentry/nextjs') as SentryLike;
+      this.sentry = (await import('@sentry/nextjs')) as SentryLike;
       this.isEnabled = true;
 
       logger.info('Sentry error tracker initialized');
