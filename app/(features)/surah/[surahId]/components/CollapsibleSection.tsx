@@ -31,10 +31,7 @@ export const CollapsibleSection = ({
         </div>
         <ChevronDownIcon
           size={16}
-          className={cn(
-            'text-muted transition-transform duration-300',
-            isOpen && 'rotate-180'
-          )}
+          className={cn('text-muted transition-transform duration-300', isOpen && 'rotate-180')}
         />
       </button>
       <div
