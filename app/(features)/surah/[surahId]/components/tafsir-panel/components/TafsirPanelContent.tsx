@@ -129,10 +129,9 @@ export const TafsirPanelContent = ({
             />
           ) : (
             <div className="text-center text-muted py-8">
-              {tafsirs.length === 0 ? 
-                "Loading tafsir resources..." : 
-                "No tafsir resources found for the selected filter."
-              }
+              {tafsirs.length === 0
+                ? 'Loading tafsir resources...'
+                : 'No tafsir resources found for the selected filter.'}
             </div>
           )}
         </div>

@@ -13,7 +13,7 @@ export type TafsirData = z.infer<typeof TafsirSchema>;
 
 /**
  * Tafsir Domain Entity
- * 
+ *
  * Represents a Tafsir (Quranic commentary) resource with business logic
  * for validation, language handling, and display formatting.
  */
@@ -73,7 +73,7 @@ export class Tafsir {
     return (
       this.name.toLowerCase().includes(term) ||
       this.language.toLowerCase().includes(term) ||
-      (this.authorName && this.authorName.toLowerCase().includes(term))
+      Boolean(this.authorName && this.authorName.toLowerCase().includes(term))
     );
   }
 
@@ -84,11 +84,15 @@ export class Tafsir {
   getLanguagePriority(): number {
     const lang = this.language.toLowerCase();
     switch (lang) {
-      case 'english': return 0;
+      case 'english':
+        return 0;
       case 'bengali':
-      case 'bangla': return 1;
-      case 'arabic': return 2;
-      default: return 3;
+      case 'bangla':
+        return 1;
+      case 'arabic':
+        return 2;
+      default:
+        return 3;
     }
   }
 
@@ -119,7 +123,7 @@ export class Tafsir {
   private capitalizeLanguageName(lang: string): string {
     return lang
       .split(' ')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join(' ');
   }
 }

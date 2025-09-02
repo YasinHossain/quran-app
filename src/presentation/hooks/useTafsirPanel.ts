@@ -22,14 +22,9 @@ const MAX_SELECTIONS = 3;
 export const useTafsirPanel = (isOpen: boolean) => {
   const { theme } = useTheme();
   const { settings, setTafsirIds } = useSettings();
-  
+
   // Use clean architecture hook
-  const { 
-    tafsirs: domainTafsirs, 
-    loading: apiLoading, 
-    error: apiError,
-    isFromCache 
-  } = useTafsir();
+  const { tafsirs: domainTafsirs, loading: apiLoading, error: apiError, isFromCache } = useTafsir();
 
   // UI state
   const [searchTerm, setSearchTerm] = useState('');
@@ -44,7 +39,7 @@ export const useTafsirPanel = (isOpen: boolean) => {
 
   // Convert domain entities to UI format
   const tafsirs = useMemo((): TafsirPanelData[] => {
-    return domainTafsirs.map(domainTafsir => ({
+    return domainTafsirs.map((domainTafsir) => ({
       id: domainTafsir.id,
       name: domainTafsir.displayName,
       lang: domainTafsir.formattedLanguage,
@@ -54,7 +49,7 @@ export const useTafsirPanel = (isOpen: boolean) => {
 
   // Only show loading when panel is open and API is loading
   const loading = isOpen && apiLoading;
-  
+
   // Error handling
   const error = apiError;
 
@@ -68,30 +63,32 @@ export const useTafsirPanel = (isOpen: boolean) => {
   }, [settings.tafsirIds]);
 
   // Language sorting logic from domain
-  const languageSort = useCallback((a: string, b: string) => {
-    const getDomainTafsir = (lang: string) => 
-      domainTafsirs.find(t => t.formattedLanguage === lang);
-    
-    const tafsirA = getDomainTafsir(a);
-    const tafsirB = getDomainTafsir(b);
-    
-    if (!tafsirA || !tafsirB) return a.localeCompare(b);
-    
-    const priorityA = tafsirA.getLanguagePriority();
-    const priorityB = tafsirB.getLanguagePriority();
-    
-    if (priorityA !== priorityB) return priorityA - priorityB;
-    return a.localeCompare(b);
-  }, [domainTafsirs]);
+  const languageSort = useCallback(
+    (a: string, b: string) => {
+      const getDomainTafsir = (lang: string) =>
+        domainTafsirs.find((t) => t.formattedLanguage === lang);
+
+      const tafsirA = getDomainTafsir(a);
+      const tafsirB = getDomainTafsir(b);
+
+      if (!tafsirA || !tafsirB) return a.localeCompare(b);
+
+      const priorityA = tafsirA.getLanguagePriority();
+      const priorityB = tafsirB.getLanguagePriority();
+
+      if (priorityA !== priorityB) return priorityA - priorityB;
+      return a.localeCompare(b);
+    },
+    [domainTafsirs]
+  );
 
   // Filtered and grouped tafsirs
   const filteredTafsirs = useMemo(() => {
     if (!searchTerm) return tafsirs;
-    
+
     const term = searchTerm.toLowerCase();
-    return tafsirs.filter(t => 
-      t.name.toLowerCase().includes(term) || 
-      t.lang.toLowerCase().includes(term)
+    return tafsirs.filter(
+      (t) => t.name.toLowerCase().includes(term) || t.lang.toLowerCase().includes(term)
     );
   }, [tafsirs, searchTerm]);
 
@@ -104,37 +101,40 @@ export const useTafsirPanel = (isOpen: boolean) => {
 
   // Available languages
   const languages = useMemo(() => {
-    const unique = Array.from(new Set(tafsirs.map(t => t.lang)));
+    const unique = Array.from(new Set(tafsirs.map((t) => t.lang)));
     const sorted = unique.sort(languageSort);
     return ['All', ...sorted];
   }, [tafsirs, languageSort]);
 
   // Selection handlers
-  const handleSelectionToggle = useCallback((id: number): boolean => {
-    const newSelected = new Set(selectedIds);
-    let newOrder = [...orderedSelection];
-    let changed = false;
+  const handleSelectionToggle = useCallback(
+    (id: number): boolean => {
+      const newSelected = new Set(selectedIds);
+      let newOrder = [...orderedSelection];
+      let changed = false;
 
-    if (newSelected.has(id)) {
-      newSelected.delete(id);
-      newOrder = newOrder.filter(i => i !== id);
-      changed = true;
-    } else {
-      if (newSelected.size >= MAX_SELECTIONS) {
-        setShowLimitWarning(true);
-        return false;
+      if (newSelected.has(id)) {
+        newSelected.delete(id);
+        newOrder = newOrder.filter((i) => i !== id);
+        changed = true;
+      } else {
+        if (newSelected.size >= MAX_SELECTIONS) {
+          setShowLimitWarning(true);
+          return false;
+        }
+        newSelected.add(id);
+        newOrder.push(id);
+        changed = true;
       }
-      newSelected.add(id);
-      newOrder.push(id);
-      changed = true;
-    }
 
-    if (changed) {
-      setTafsirIds(newOrder);
-      setShowLimitWarning(false);
-    }
-    return changed;
-  }, [selectedIds, orderedSelection, setTafsirIds]);
+      if (changed) {
+        setTafsirIds(newOrder);
+        setShowLimitWarning(false);
+      }
+      return changed;
+    },
+    [selectedIds, orderedSelection, setTafsirIds]
+  );
 
   // Drag handlers
   const handleDragStart = useCallback((e: React.DragEvent<HTMLDivElement>, id: number) => {
@@ -146,25 +146,28 @@ export const useTafsirPanel = (isOpen: boolean) => {
     e.preventDefault();
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>, targetId: number) => {
-    e.preventDefault();
-    if (draggedId === null || draggedId === targetId) {
-      setDraggedId(null);
-      return;
-    }
+  const handleDrop = useCallback(
+    (e: React.DragEvent<HTMLDivElement>, targetId: number) => {
+      e.preventDefault();
+      if (draggedId === null || draggedId === targetId) {
+        setDraggedId(null);
+        return;
+      }
 
-    const newOrder = [...orderedSelection];
-    const fromIndex = newOrder.indexOf(draggedId);
-    const toIndex = newOrder.indexOf(targetId);
-    
-    if (fromIndex > -1 && toIndex > -1) {
-      const [movedItem] = newOrder.splice(fromIndex, 1);
-      newOrder.splice(toIndex, 0, movedItem);
-      setTafsirIds(newOrder);
-    }
-    
-    setDraggedId(null);
-  }, [draggedId, orderedSelection, setTafsirIds]);
+      const newOrder = [...orderedSelection];
+      const fromIndex = newOrder.indexOf(draggedId);
+      const toIndex = newOrder.indexOf(targetId);
+
+      if (fromIndex > -1 && toIndex > -1) {
+        const [movedItem] = newOrder.splice(fromIndex, 1);
+        newOrder.splice(toIndex, 0, movedItem);
+        setTafsirIds(newOrder);
+      }
+
+      setDraggedId(null);
+    },
+    [draggedId, orderedSelection, setTafsirIds]
+  );
 
   const handleDragEnd = useCallback(() => {
     setDraggedId(null);
@@ -172,7 +175,7 @@ export const useTafsirPanel = (isOpen: boolean) => {
 
   // Reset handler
   const handleReset = useCallback(() => {
-    const englishTafsir = tafsirs.find(t => t.lang.toLowerCase() === 'english');
+    const englishTafsir = tafsirs.find((t) => t.lang.toLowerCase() === 'english');
     if (englishTafsir) {
       setTafsirIds([englishTafsir.id]);
       setShowLimitWarning(false);
@@ -221,7 +224,7 @@ export const useTafsirPanel = (isOpen: boolean) => {
     loading,
     error,
     isFromCache,
-    
+
     // Search & Filter
     searchTerm,
     setSearchTerm,
@@ -229,23 +232,23 @@ export const useTafsirPanel = (isOpen: boolean) => {
     groupedTafsirs,
     activeFilter,
     setActiveFilter,
-    
+
     // Selection
     selectedIds,
     orderedSelection,
     handleSelectionToggle,
     showLimitWarning,
-    
+
     // Drag & Drop
     handleDragStart,
     handleDragOver,
     handleDrop,
     handleDragEnd,
     draggedId,
-    
+
     // Actions
     handleReset,
-    
+
     // Scroll
     tabsContainerRef,
     canScrollLeft,

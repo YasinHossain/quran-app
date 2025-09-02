@@ -22,7 +22,7 @@ export async function GET(request: Request) {
     // As a resilience measure, return the local fallback verse with a 200
     // and annotate the response, instead of bubbling an error to the client.
     const message = error instanceof Error ? error.message : 'Unknown error';
-    // eslint-disable-next-line no-console
+
     console.error('random verse route error:', message);
     const { fallbackVerse } = await import('@/lib/api/fallback-verse');
     return new NextResponse(JSON.stringify(fallbackVerse), {

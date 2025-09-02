@@ -61,7 +61,7 @@ export async function getTafsirByVerse(verseKey: string, tafsirId = 169): Promis
     return await useCase.execute(verseKey, tafsirId);
   } catch (error) {
     console.warn('Clean architecture failed, falling back to legacy implementation:', error);
-    
+
     // Legacy fallback
     try {
       const data = await apiFetch<{ tafsir?: { text: string } }>(
@@ -90,7 +90,7 @@ export async function getTafsirByVerse(verseKey: string, tafsirId = 169): Promis
 /**
  * DEPRECATED: Use clean architecture implementation instead.
  * This function now delegates to the new clean architecture.
- * 
+ *
  * Fetch tafsir resources across languages using clean architecture.
  */
 export async function getAllTafsirResources(): Promise<TafsirResource[]> {
@@ -99,16 +99,16 @@ export async function getAllTafsirResources(): Promise<TafsirResource[]> {
     const repository = container.getTafsirRepository();
     const useCase = new GetTafsirResourcesUseCase(repository);
     const result = await useCase.execute();
-    
+
     // Convert domain entities back to legacy format for backward compatibility
-    return result.tafsirs.map(domainTafsir => ({
+    return result.tafsirs.map((domainTafsir) => ({
       id: domainTafsir.id,
       name: domainTafsir.displayName,
       lang: domainTafsir.language, // Keep original format
     }));
   } catch (error) {
     console.warn('Clean architecture failed, falling back to legacy implementation:', error);
-    
+
     // Legacy fallback
     try {
       const all = await getTafsirResources('all');

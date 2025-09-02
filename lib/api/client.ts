@@ -42,7 +42,7 @@ async function apiFetch<T>(
     if (!res.ok) {
       throw new Error(`${errorPrefix}: ${res.status} ${res.statusText}`);
     }
-    
+
     return (await res.json()) as T;
   } catch (error) {
     // Handle specific error types

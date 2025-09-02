@@ -3,7 +3,7 @@ import { Tafsir } from '../../domain/entities/Tafsir';
 
 /**
  * Use Case: Get Tafsir Resources
- * 
+ *
  * Handles the business logic for retrieving and managing tafsir resources.
  * Implements caching strategy and error recovery.
  */
@@ -12,7 +12,7 @@ export class GetTafsirResourcesUseCase {
 
   /**
    * Execute the use case to get all tafsir resources
-   * 
+   *
    * Strategy:
    * 1. Try to get fresh data from API
    * 2. If successful, cache and return
@@ -27,7 +27,7 @@ export class GetTafsirResourcesUseCase {
     try {
       // Try to get fresh data
       const tafsirs = await this.tafsirRepository.getAllResources();
-      
+
       if (tafsirs.length > 0) {
         return {
           tafsirs,
@@ -39,7 +39,7 @@ export class GetTafsirResourcesUseCase {
       return await this.getCachedResourcesWithFallback();
     } catch (error) {
       console.warn('Failed to fetch fresh tafsir resources:', error);
-      
+
       // Try cached data as fallback
       return await this.getCachedResourcesWithFallback();
     }
@@ -55,19 +55,17 @@ export class GetTafsirResourcesUseCase {
   }> {
     try {
       const tafsirs = await this.tafsirRepository.getResourcesByLanguage(language);
-      
+
       return {
         tafsirs,
         isFromCache: false,
       };
     } catch (error) {
       console.warn(`Failed to fetch tafsir resources for language ${language}:`, error);
-      
+
       // For language-specific requests, filter cached data
       const cachedResult = await this.getCachedResourcesWithFallback();
-      const filteredTafsirs = cachedResult.tafsirs.filter(t => 
-        t.isInLanguage(language)
-      );
+      const filteredTafsirs = cachedResult.tafsirs.filter((t) => t.isInLanguage(language));
 
       return {
         tafsirs: filteredTafsirs,
@@ -91,7 +89,7 @@ export class GetTafsirResourcesUseCase {
     } catch (error) {
       console.warn('Search failed, using cached data:', error);
       const cached = await this.tafsirRepository.getCachedResources();
-      return cached.filter(t => t.matchesSearch(searchTerm));
+      return cached.filter((t) => t.matchesSearch(searchTerm));
     }
   }
 
@@ -104,7 +102,7 @@ export class GetTafsirResourcesUseCase {
     } catch (error) {
       console.warn('Failed to get tafsir by ID, trying cache:', error);
       const cached = await this.tafsirRepository.getCachedResources();
-      return cached.find(t => t.id === id) || null;
+      return cached.find((t) => t.id === id) || null;
     }
   }
 
@@ -125,7 +123,7 @@ export class GetTafsirResourcesUseCase {
   }> {
     try {
       const cachedTafsirs = await this.tafsirRepository.getCachedResources();
-      
+
       if (cachedTafsirs.length > 0) {
         return {
           tafsirs: cachedTafsirs,

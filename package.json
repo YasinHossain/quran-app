@@ -56,7 +56,6 @@
   },
   "dependencies": {
     "@juggle/resize-observer": "^3.4.0",
-    "@next/swc-darwin-arm64": "^15.5.2",
     "@radix-ui/react-popover": "latest",
     "@radix-ui/react-slider": "latest",
     "@radix-ui/react-tooltip": "latest",

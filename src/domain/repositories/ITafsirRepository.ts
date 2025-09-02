@@ -2,7 +2,7 @@ import { Tafsir } from '../entities/Tafsir';
 
 /**
  * Repository interface for Tafsir operations
- * 
+ *
  * Defines the contract for accessing and managing Tafsir resources.
  * This interface is implemented by the infrastructure layer.
  */

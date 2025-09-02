@@ -2,7 +2,7 @@ import { ITafsirRepository } from '../../domain/repositories/ITafsirRepository';
 
 /**
  * Use Case: Get Tafsir Content for a Verse
- * 
+ *
  * Handles retrieving tafsir content for specific verses with caching and fallback.
  */
 export class GetTafsirContentUseCase {
@@ -10,8 +10,8 @@ export class GetTafsirContentUseCase {
 
   /**
    * Get tafsir content for a specific verse
-   * 
-   * @param verseKey - Verse identifier (e.g., "1:1") 
+   *
+   * @param verseKey - Verse identifier (e.g., "1:1")
    * @param tafsirId - Tafsir resource ID
    * @returns Promise resolving to HTML content
    */
@@ -22,11 +22,11 @@ export class GetTafsirContentUseCase {
 
     try {
       const content = await this.tafsirRepository.getTafsirByVerse(verseKey, tafsirId);
-      
+
       if (!content || content.trim() === '') {
         return 'No tafsir content available for this verse.';
       }
-      
+
       return content;
     } catch (error) {
       console.error('Failed to get tafsir content:', error);
@@ -36,17 +36,14 @@ export class GetTafsirContentUseCase {
 
   /**
    * Get tafsir content for multiple tafsir sources
-   * 
+   *
    * @param verseKey - Verse identifier
    * @param tafsirIds - Array of tafsir resource IDs
    * @returns Promise resolving to map of tafsir ID to content
    */
-  async executeMultiple(
-    verseKey: string, 
-    tafsirIds: number[]
-  ): Promise<Map<number, string>> {
+  async executeMultiple(verseKey: string, tafsirIds: number[]): Promise<Map<number, string>> {
     const results = new Map<number, string>();
-    
+
     const promises = tafsirIds.map(async (tafsirId) => {
       try {
         const content = await this.execute(verseKey, tafsirId);

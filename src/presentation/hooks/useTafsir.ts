@@ -16,7 +16,7 @@ interface UseTafsirResult {
 
 /**
  * Clean Architecture hook for Tafsir operations
- * 
+ *
  * This hook follows the clean architecture pattern:
  * - Uses dependency injection to get repository
  * - Delegates business logic to use cases
@@ -41,10 +41,10 @@ export const useTafsir = (): UseTafsirResult => {
 
     try {
       const result = await useCase.execute();
-      
+
       setTafsirs(result.tafsirs);
       setIsFromCache(result.isFromCache);
-      
+
       if (result.error) {
         setError(result.error);
       }

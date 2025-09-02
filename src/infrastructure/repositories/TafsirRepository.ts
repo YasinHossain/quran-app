@@ -12,7 +12,7 @@ interface ApiTafsirResource {
 
 /**
  * Infrastructure implementation of ITafsirRepository
- * 
+ *
  * Handles external API communication and caching for Tafsir resources.
  * Uses the existing lib/api infrastructure but follows clean architecture patterns.
  */
@@ -32,13 +32,16 @@ export class TafsirRepository implements ITafsirRepository {
         return allResources;
       }
     } catch (error) {
-      console.warn('Failed to fetch all tafsir resources, trying language-specific approach:', error);
+      console.warn(
+        'Failed to fetch all tafsir resources, trying language-specific approach:',
+        error
+      );
     }
 
     // Fallback to language-specific fetching
     const languages = ['en', 'ar', 'bn', 'ur', 'id', 'tr', 'fa'];
     const results = await Promise.allSettled(
-      languages.map(lang => this.fetchResourcesForLanguage(lang))
+      languages.map((lang) => this.fetchResourcesForLanguage(lang))
     );
 
     // Merge results and deduplicate by ID
@@ -73,7 +76,7 @@ export class TafsirRepository implements ITafsirRepository {
    */
   async getById(id: number): Promise<Tafsir | null> {
     const allResources = await this.getAllResources();
-    return allResources.find(t => t.id === id) || null;
+    return allResources.find((t) => t.id === id) || null;
   }
 
   /**
@@ -97,14 +100,14 @@ export class TafsirRepository implements ITafsirRepository {
     // Fallback to CDN endpoint
     const cdnUrl = `https://api.qurancdn.com/api/qdc/tafsirs/${tafsirId}/by_ayah/${encodeURIComponent(verseKey)}`;
     const response = await fetch(cdnUrl, {
-      headers: { Accept: 'application/json' }
+      headers: { Accept: 'application/json' },
     });
 
     if (!response.ok) {
       throw new Error(`Failed to fetch tafsir content: ${response.status}`);
     }
 
-    const json = await response.json() as { tafsir?: { text: string } };
+    const json = (await response.json()) as { tafsir?: { text: string } };
     return json.tafsir?.text || '';
   }
 
@@ -113,7 +116,7 @@ export class TafsirRepository implements ITafsirRepository {
    */
   async search(searchTerm: string): Promise<Tafsir[]> {
     const allResources = await this.getAllResources();
-    return allResources.filter(tafsir => tafsir.matchesSearch(searchTerm));
+    return allResources.filter((tafsir) => tafsir.matchesSearch(searchTerm));
   }
 
   /**
@@ -123,7 +126,7 @@ export class TafsirRepository implements ITafsirRepository {
     try {
       const cacheData = {
         timestamp: Date.now(),
-        data: tafsirs.map(t => t.toJSON())
+        data: tafsirs.map((t) => t.toJSON()),
       };
       localStorage.setItem(this.CACHE_KEY, JSON.stringify(cacheData));
     } catch (error) {
@@ -188,14 +191,14 @@ export class TafsirRepository implements ITafsirRepository {
     url.searchParams.set('page', '1');
 
     const response = await fetch(url.toString(), {
-      headers: { Accept: 'application/json' }
+      headers: { Accept: 'application/json' },
     });
 
     if (!response.ok) {
       throw new Error(`Failed to fetch tafsir resources: ${response.status}`);
     }
 
-    const json = await response.json() as { tafsirs: ApiTafsirResource[] };
+    const json = (await response.json()) as { tafsirs: ApiTafsirResource[] };
     return this.mapApiResponseToEntities(json.tafsirs || []);
   }
 
@@ -203,7 +206,7 @@ export class TafsirRepository implements ITafsirRepository {
    * Map API response to domain entities
    */
   private mapApiResponseToEntities(apiTafsirs: ApiTafsirResource[]): Tafsir[] {
-    return apiTafsirs.map(apiTafsir => {
+    return apiTafsirs.map((apiTafsir) => {
       const tafsirData: TafsirData = {
         id: apiTafsir.id,
         name: apiTafsir.name,
