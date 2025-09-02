@@ -222,7 +222,7 @@ export { preDestroy as PreDestroy } from 'inversify';
  */
 export type Factory<T> = () => T;
 export type AsyncFactory<T> = () => Promise<T>;
-export type FactoryWithArgs<T, Args extends any[]> = (...args: Args) => T;
+export type FactoryWithArgs<T, Args extends unknown[]> = (...args: Args) => T;
 
 /**
  * Factory decorator helper

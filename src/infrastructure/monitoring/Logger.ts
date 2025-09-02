@@ -25,7 +25,7 @@ export interface LogEntry {
   level: LogLevel;
   message: string;
   timestamp: Date;
-  context?: Record<string, any>;
+  context?: Record<string, unknown>;
   error?: Error | ApplicationError;
   source?: string;
   userId?: string;
@@ -187,7 +187,7 @@ export class RemoteTransport implements ILoggerTransport {
 export class Logger {
   private static instance: Logger;
   private transports: ILoggerTransport[] = [];
-  private contextData: Record<string, any> = {};
+  private contextData: Record<string, unknown> = {};
   private minLevel: LogLevel;
 
   constructor() {
@@ -257,7 +257,7 @@ export class Logger {
   /**
    * Set global context data
    */
-  setContext(context: Record<string, any>): void {
+  setContext(context: Record<string, unknown>): void {
     this.contextData = { ...this.contextData, ...context };
   }
 
@@ -271,7 +271,7 @@ export class Logger {
   /**
    * Create child logger with additional context
    */
-  child(context: Record<string, any>): Logger {
+  child(context: Record<string, unknown>): Logger {
     const child = Object.create(this);
     child.contextData = { ...this.contextData, ...context };
     return child;
@@ -290,7 +290,7 @@ export class Logger {
   private log(
     level: LogLevel,
     message: string,
-    context?: Record<string, any>,
+    context?: Record<string, unknown>,
     error?: Error | ApplicationError
   ): void {
     if (!this.shouldLog(level)) return;
@@ -347,21 +347,21 @@ export class Logger {
   /**
    * Debug level logging
    */
-  debug(message: string, context?: Record<string, any>): void {
+  debug(message: string, context?: Record<string, unknown>): void {
     this.log(LogLevel.DEBUG, message, context);
   }
 
   /**
    * Info level logging
    */
-  info(message: string, context?: Record<string, any>): void {
+  info(message: string, context?: Record<string, unknown>): void {
     this.log(LogLevel.INFO, message, context);
   }
 
   /**
    * Warning level logging
    */
-  warn(message: string, context?: Record<string, any>, error?: Error): void {
+  warn(message: string, context?: Record<string, unknown>, error?: Error): void {
     this.log(LogLevel.WARN, message, context, error);
   }
 
@@ -370,7 +370,7 @@ export class Logger {
    */
   error(
     message: string | Error | ApplicationError,
-    context?: Record<string, any>,
+    context?: Record<string, unknown>,
     error?: Error | ApplicationError
   ): void {
     if (message instanceof Error) {
@@ -427,7 +427,7 @@ export class PerformanceLogger {
   /**
    * End performance timer and log duration
    */
-  end(operation: string, context?: Record<string, any>): number {
+  end(operation: string, context?: Record<string, unknown>): number {
     const startTime = this.timers.get(operation);
     if (!startTime) {
       this.logger.warn(`Performance timer '${operation}' was not started`);
@@ -452,7 +452,7 @@ export class PerformanceLogger {
   async measure<T>(
     operation: string,
     fn: () => Promise<T>,
-    context?: Record<string, any>
+    context?: Record<string, unknown>
   ): Promise<T> {
     this.start(operation);
     try {
@@ -468,7 +468,7 @@ export class PerformanceLogger {
   /**
    * Measure sync operation
    */
-  measureSync<T>(operation: string, fn: () => T, context?: Record<string, any>): T {
+  measureSync<T>(operation: string, fn: () => T, context?: Record<string, unknown>): T {
     this.start(operation);
     try {
       const result = fn();

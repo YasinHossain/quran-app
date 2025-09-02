@@ -20,10 +20,31 @@ export interface ErrorContext {
   url?: string;
   component?: string;
   action?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   tags?: Record<string, string>;
   fingerprint?: string[];
   level?: 'fatal' | 'error' | 'warning' | 'info';
+}
+
+/**
+ * Sentry-like interface for type safety
+ */
+interface SentryLike {
+  withScope: (callback: (scope: SentryScope) => void) => void;
+  captureException: (error: Error) => void;
+  captureMessage: (message: string, level?: string) => void;
+  setUser: (user: { id?: string; email?: string; username?: string }) => void;
+  setContext: (key: string, data: Record<string, unknown>) => void;
+  addBreadcrumb: (breadcrumb: Record<string, unknown>) => void;
+  flush: (timeout?: number) => Promise<boolean>;
+}
+
+interface SentryScope {
+  setUser: (user: { id?: string }) => void;
+  setLevel: (level: string) => void;
+  setTag: (key: string, value: string) => void;
+  setFingerprint: (fingerprint: string[]) => void;
+  setContext: (key: string, data: Record<string, unknown>) => void;
 }
 
 /**
@@ -33,13 +54,13 @@ export interface IErrorTracker {
   captureError(error: Error | ApplicationError, context?: ErrorContext): void;
   captureMessage(message: string, level?: string, context?: ErrorContext): void;
   setUser(user: { id?: string; email?: string; username?: string }): void;
-  setContext(key: string, data: Record<string, any>): void;
+  setContext(key: string, data: Record<string, unknown>): void;
   addBreadcrumb(breadcrumb: {
     message: string;
     category?: string;
     level?: string;
     timestamp?: number;
-    data?: Record<string, any>;
+    data?: Record<string, unknown>;
   }): void;
   flush(): Promise<void>;
 }
@@ -65,11 +86,17 @@ export class ConsoleErrorTracker implements IErrorTracker {
     console.debug('[ErrorTracker] User set:', user);
   }
 
-  setContext(key: string, data: Record<string, any>): void {
+  setContext(key: string, data: Record<string, unknown>): void {
     console.debug('[ErrorTracker] Context set:', key, data);
   }
 
-  addBreadcrumb(breadcrumb: any): void {
+  addBreadcrumb(breadcrumb: {
+    message: string;
+    category?: string;
+    level?: string;
+    timestamp?: number;
+    data?: Record<string, unknown>;
+  }): void {
     console.debug('[ErrorTracker] Breadcrumb added:', breadcrumb);
   }
 
@@ -86,7 +113,7 @@ export class ConsoleErrorTracker implements IErrorTracker {
  */
 export class SentryErrorTracker implements IErrorTracker {
   private isEnabled: boolean = false;
-  private sentry: any;
+  private sentry: SentryLike | null = null;
 
   constructor() {
     this.initialize();
@@ -95,11 +122,11 @@ export class SentryErrorTracker implements IErrorTracker {
   private async initialize(): Promise<void> {
     try {
       // Dynamically import Sentry if available
-      this.sentry = await import('@sentry/nextjs');
+      this.sentry = await import('@sentry/nextjs') as SentryLike;
       this.isEnabled = true;
 
       logger.info('Sentry error tracker initialized');
-    } catch (error) {
+    } catch {
       logger.warn('Sentry not available, falling back to console error tracking');
       this.isEnabled = false;
     }
@@ -112,7 +139,7 @@ export class SentryErrorTracker implements IErrorTracker {
       return;
     }
 
-    this.sentry.withScope((scope: any) => {
+    this.sentry.withScope((scope: SentryScope) => {
       if (context) {
         if (context.userId) scope.setUser({ id: context.userId });
         if (context.level) scope.setLevel(context.level);
@@ -140,7 +167,7 @@ export class SentryErrorTracker implements IErrorTracker {
       return;
     }
 
-    this.sentry.withScope((scope: any) => {
+    this.sentry.withScope((scope: SentryScope) => {
       if (context) {
         if (context.userId) scope.setUser({ id: context.userId });
         if (context.tags) {
@@ -163,7 +190,7 @@ export class SentryErrorTracker implements IErrorTracker {
     this.sentry.setUser(user);
   }
 
-  setContext(key: string, data: Record<string, any>): void {
+  setContext(key: string, data: Record<string, unknown>): void {
     if (!this.isEnabled || !this.sentry) return;
 
     this.sentry.setContext(key, data);
@@ -174,7 +201,7 @@ export class SentryErrorTracker implements IErrorTracker {
     category?: string;
     level?: string;
     timestamp?: number;
-    data?: Record<string, any>;
+    data?: Record<string, unknown>;
   }): void {
     if (!this.isEnabled || !this.sentry) return;
 
@@ -206,7 +233,7 @@ export class RemoteErrorTracker implements IErrorTracker {
   private apiKey?: string;
   private buffer: Array<{
     type: 'error' | 'message';
-    data: any;
+    data: unknown;
     timestamp: number;
   }> = [];
   private flushTimer?: NodeJS.Timeout;
@@ -276,7 +303,7 @@ export class RemoteErrorTracker implements IErrorTracker {
     });
   }
 
-  setContext(key: string, data: Record<string, any>): void {
+  setContext(key: string, data: Record<string, unknown>): void {
     // Store context for future events
     this.buffer.push({
       type: 'message',
@@ -289,7 +316,13 @@ export class RemoteErrorTracker implements IErrorTracker {
     });
   }
 
-  addBreadcrumb(breadcrumb: any): void {
+  addBreadcrumb(breadcrumb: {
+    message: string;
+    category?: string;
+    level?: string;
+    timestamp?: number;
+    data?: Record<string, unknown>;
+  }): void {
     this.buffer.push({
       type: 'message',
       data: {
@@ -343,8 +376,8 @@ export class RemoteErrorTracker implements IErrorTracker {
 export class ErrorTrackerService {
   private static instance: ErrorTrackerService;
   private tracker: IErrorTracker;
-  private globalContext: Record<string, any> = {};
-  private breadcrumbs: Array<any> = [];
+  private globalContext: Record<string, unknown> = {};
+  private breadcrumbs: Array<unknown> = [];
   private maxBreadcrumbs = 100;
 
   constructor() {
@@ -467,7 +500,7 @@ export class ErrorTrackerService {
   /**
    * Set global context
    */
-  setContext(key: string, data: Record<string, any>): void {
+  setContext(key: string, data: Record<string, unknown>): void {
     this.tracker.setContext(key, data);
     this.globalContext[key] = data;
   }
@@ -480,7 +513,7 @@ export class ErrorTrackerService {
     category?: string;
     level?: string;
     timestamp?: number;
-    data?: Record<string, any>;
+    data?: Record<string, unknown>;
   }): void {
     const enhancedBreadcrumb = {
       timestamp: Date.now() / 1000,
@@ -507,7 +540,11 @@ export class ErrorTrackerService {
   /**
    * Create error context helper
    */
-  createContext(component?: string, action?: string, metadata?: Record<string, any>): ErrorContext {
+  createContext(
+    component?: string,
+    action?: string,
+    metadata?: Record<string, unknown>
+  ): ErrorContext {
     return {
       component,
       action,

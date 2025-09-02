@@ -322,8 +322,7 @@ export const buildCardClasses = (
 
 export const buildTextClasses = (
   type: 'primary' | 'secondary' | 'arabic',
-  isActive: boolean = false,
-  variant: 'navigation' | 'folder' | 'bookmark' = 'navigation'
+  isActive: boolean = false
 ) => {
   if (type === 'arabic') {
     return patterns.arabicText(isActive);

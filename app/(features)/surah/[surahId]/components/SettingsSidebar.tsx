@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useUIState } from '@/app/providers/UIStateContext';
 import { BaseSidebar } from '@/app/shared/components/BaseSidebar';
-import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
 import { SettingsContentWrapper } from './SettingsContentWrapper';
 import { SettingsPanels } from './SettingsPanels';
 import { useSettingsTabState } from './hooks/useSettingsTabState';

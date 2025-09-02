@@ -20,7 +20,7 @@ export class ApplicationError extends Error {
     public readonly code: string,
     public readonly statusCode: number = 500,
     public readonly isOperational: boolean = true,
-    public readonly context?: Record<string, any>,
+    public readonly context?: Record<string, unknown>,
     public readonly cause?: Error
   ) {
     super(message);
@@ -38,7 +38,7 @@ export class ApplicationError extends Error {
   /**
    * Convert error to JSON for logging/serialization
    */
-  toJSON(): Record<string, any> {
+  toJSON(): Record<string, unknown> {
     return {
       name: this.name,
       message: this.message,
@@ -67,7 +67,7 @@ export class ApplicationError extends Error {
  * Thrown when user input or data validation fails.
  */
 export class ValidationError extends ApplicationError {
-  constructor(message: string, context?: Record<string, any>, cause?: Error) {
+  constructor(message: string, context?: Record<string, unknown>, cause?: Error) {
     super(message, 'VALIDATION_ERROR', 400, true, context, cause);
   }
 
@@ -84,7 +84,7 @@ export class ValidationError extends ApplicationError {
 export class AuthenticationError extends ApplicationError {
   constructor(
     message: string = 'Authentication required',
-    context?: Record<string, any>,
+    context?: Record<string, unknown>,
     cause?: Error
   ) {
     super(message, 'AUTHENTICATION_ERROR', 401, true, context, cause);
@@ -103,7 +103,7 @@ export class AuthenticationError extends ApplicationError {
 export class AuthorizationError extends ApplicationError {
   constructor(
     message: string = 'Insufficient permissions',
-    context?: Record<string, any>,
+    context?: Record<string, unknown>,
     cause?: Error
   ) {
     super(message, 'AUTHORIZATION_ERROR', 403, true, context, cause);
@@ -120,7 +120,7 @@ export class AuthorizationError extends ApplicationError {
  * Thrown when a requested resource is not found.
  */
 export class NotFoundError extends ApplicationError {
-  constructor(resource: string, context?: Record<string, any>, cause?: Error) {
+  constructor(resource: string, context?: Record<string, unknown>, cause?: Error) {
     const message = `${resource} not found`;
     super(message, 'NOT_FOUND', 404, true, { resource, ...context }, cause);
   }
@@ -137,7 +137,7 @@ export class NotFoundError extends ApplicationError {
  * Thrown when a resource conflict occurs (e.g., duplicate entries).
  */
 export class ConflictError extends ApplicationError {
-  constructor(message: string, context?: Record<string, any>, cause?: Error) {
+  constructor(message: string, context?: Record<string, unknown>, cause?: Error) {
     super(message, 'CONFLICT_ERROR', 409, true, context, cause);
   }
 
@@ -152,7 +152,7 @@ export class ConflictError extends ApplicationError {
  * Thrown when network or API communication fails.
  */
 export class NetworkError extends ApplicationError {
-  constructor(message: string, context?: Record<string, any>, cause?: Error) {
+  constructor(message: string, context?: Record<string, unknown>, cause?: Error) {
     super(message, 'NETWORK_ERROR', 503, true, context, cause);
   }
 
@@ -171,7 +171,7 @@ export class ApiError extends ApplicationError {
     message: string,
     public readonly endpoint: string,
     statusCode: number = 500,
-    context?: Record<string, any>,
+    context?: Record<string, unknown>,
     cause?: Error
   ) {
     super(message, 'API_ERROR', statusCode, true, { endpoint, ...context }, cause);
@@ -194,7 +194,7 @@ export class RateLimitError extends ApplicationError {
   constructor(
     message: string = 'Rate limit exceeded',
     public readonly retryAfter?: number,
-    context?: Record<string, any>,
+    context?: Record<string, unknown>,
     cause?: Error
   ) {
     super(message, 'RATE_LIMIT_ERROR', 429, true, { retryAfter, ...context }, cause);
@@ -215,7 +215,7 @@ export class StorageError extends ApplicationError {
   constructor(
     message: string,
     public readonly storageType: 'localStorage' | 'indexedDB' | 'memory',
-    context?: Record<string, any>,
+    context?: Record<string, unknown>,
     cause?: Error
   ) {
     super(message, 'STORAGE_ERROR', 500, true, { storageType, ...context }, cause);
@@ -235,7 +235,7 @@ export class CacheError extends ApplicationError {
   constructor(
     message: string,
     public readonly operation: 'get' | 'set' | 'delete' | 'clear',
-    context?: Record<string, any>,
+    context?: Record<string, unknown>,
     cause?: Error
   ) {
     super(message, 'CACHE_ERROR', 500, true, { operation, ...context }, cause);
@@ -255,7 +255,7 @@ export class AudioError extends ApplicationError {
   constructor(
     message: string,
     public readonly audioUrl?: string,
-    context?: Record<string, any>,
+    context?: Record<string, unknown>,
     cause?: Error
   ) {
     super(message, 'AUDIO_ERROR', 500, true, { audioUrl, ...context }, cause);
@@ -273,7 +273,7 @@ export class AudioError extends ApplicationError {
  * This is typically a programming error, not user error.
  */
 export class ConfigurationError extends ApplicationError {
-  constructor(message: string, context?: Record<string, any>, cause?: Error) {
+  constructor(message: string, context?: Record<string, unknown>, cause?: Error) {
     super(message, 'CONFIGURATION_ERROR', 500, false, context, cause);
   }
 
@@ -288,7 +288,7 @@ export class ConfigurationError extends ApplicationError {
  * Thrown when a requested feature is not available (e.g., due to feature flags).
  */
 export class FeatureNotAvailableError extends ApplicationError {
-  constructor(featureName: string, context?: Record<string, any>, cause?: Error) {
+  constructor(featureName: string, context?: Record<string, unknown>, cause?: Error) {
     const message = `Feature '${featureName}' is not available`;
     super(message, 'FEATURE_NOT_AVAILABLE', 503, true, { featureName, ...context }, cause);
   }
@@ -307,7 +307,7 @@ export class TimeoutError extends ApplicationError {
   constructor(
     message: string,
     public readonly timeoutMs: number,
-    context?: Record<string, any>,
+    context?: Record<string, unknown>,
     cause?: Error
   ) {
     super(message, 'TIMEOUT_ERROR', 408, true, { timeoutMs, ...context }, cause);
@@ -321,27 +321,27 @@ export class TimeoutError extends ApplicationError {
 /**
  * Error Type Guards
  */
-export function isApplicationError(error: any): error is ApplicationError {
+export function isApplicationError(error: unknown): error is ApplicationError {
   return error instanceof ApplicationError;
 }
 
-export function isNetworkError(error: any): error is NetworkError {
+export function isNetworkError(error: unknown): error is NetworkError {
   return error instanceof NetworkError;
 }
 
-export function isValidationError(error: any): error is ValidationError {
+export function isValidationError(error: unknown): error is ValidationError {
   return error instanceof ValidationError;
 }
 
-export function isAuthenticationError(error: any): error is AuthenticationError {
+export function isAuthenticationError(error: unknown): error is AuthenticationError {
   return error instanceof AuthenticationError;
 }
 
-export function isNotFoundError(error: any): error is NotFoundError {
+export function isNotFoundError(error: unknown): error is NotFoundError {
   return error instanceof NotFoundError;
 }
 
-export function isRateLimitError(error: any): error is RateLimitError {
+export function isRateLimitError(error: unknown): error is RateLimitError {
   return error instanceof RateLimitError;
 }
 
@@ -352,7 +352,11 @@ export const ErrorFactory = {
   /**
    * Create appropriate error from HTTP response
    */
-  fromHttpStatus(status: number, message: string, context?: Record<string, any>): ApplicationError {
+  fromHttpStatus(
+    status: number,
+    message: string,
+    context?: Record<string, unknown>
+  ): ApplicationError {
     switch (true) {
       case status === 400:
         return new ValidationError(message, context);
@@ -383,7 +387,7 @@ export const ErrorFactory = {
   /**
    * Create error from unknown error
    */
-  fromUnknownError(error: any, context?: Record<string, any>): ApplicationError {
+  fromUnknownError(error: unknown, context?: Record<string, unknown>): ApplicationError {
     if (isApplicationError(error)) {
       return error;
     }

@@ -18,9 +18,9 @@ export interface ErrorHandlerOptions {
   /** Whether to report error to monitoring service */
   reportError?: boolean;
   /** Additional context for error handling */
-  context?: Record<string, any>;
+  context?: Record<string, unknown>;
   /** Fallback value to return */
-  fallback?: any;
+  fallback?: unknown;
   /** Whether to rethrow the error after handling */
   rethrow?: boolean;
 }
@@ -42,8 +42,8 @@ export interface ErrorNotification {
 /**
  * Error handler callback types
  */
-export type ErrorLogger = (error: ApplicationError, context?: Record<string, any>) => void;
-export type ErrorReporter = (error: ApplicationError, context?: Record<string, any>) => void;
+export type ErrorLogger = (error: ApplicationError, context?: Record<string, unknown>) => void;
+export type ErrorReporter = (error: ApplicationError, context?: Record<string, unknown>) => void;
 export type ErrorNotifier = (notification: ErrorNotification) => void;
 
 /**
@@ -122,7 +122,7 @@ export class ErrorHandler {
   /**
    * Handle any error with full error processing pipeline
    */
-  static async handle(error: any, options: ErrorHandlerOptions = {}): Promise<any> {
+  static async handle(error: unknown, options: ErrorHandlerOptions = {}): Promise<unknown> {
     const appError = isApplicationError(error)
       ? error
       : ErrorFactory.fromUnknownError(error, options.context);
@@ -186,14 +186,14 @@ export class ErrorHandler {
     try {
       return await operation();
     } catch (error) {
-      return await ErrorHandler.handle(error, { ...options, rethrow: false });
+      return await ErrorHandler.handle(error, { ...options, rethrow: false }) as T;
     }
   }
 
   /**
    * Handle error synchronously
    */
-  static handleSync(error: any, options: ErrorHandlerOptions = {}): any {
+  static handleSync(error: unknown, options: ErrorHandlerOptions = {}): unknown {
     const appError = isApplicationError(error)
       ? error
       : ErrorFactory.fromUnknownError(error, options.context);
@@ -402,10 +402,10 @@ export class ErrorHandler {
  * Method decorator for automatic error handling
  */
 export function handleErrors(options: ErrorHandlerOptions = {}) {
-  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  return function (target: unknown, propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
 
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (...args: unknown[]) {
       try {
         return await originalMethod.apply(this, args);
       } catch (error) {
@@ -413,7 +413,7 @@ export function handleErrors(options: ErrorHandlerOptions = {}) {
           ...options,
           context: {
             ...options.context,
-            method: `${target.constructor.name}.${propertyKey}`,
+            method: `${(target as { constructor: { name: string } }).constructor.name}.${propertyKey}`,
             args: args.length > 0 ? 'provided' : 'none',
           },
         });
@@ -428,7 +428,7 @@ export function handleErrors(options: ErrorHandlerOptions = {}) {
  * Class decorator for error handling on all methods
  */
 export function handleAllErrors(options: ErrorHandlerOptions = {}) {
-  return function <T extends { new (...args: any[]): {} }>(constructor: T) {
+  return function <T extends { new (...args: unknown[]): object }>(constructor: T) {
     const prototype = constructor.prototype;
     const methodNames = Object.getOwnPropertyNames(prototype).filter(
       (name) => name !== 'constructor' && typeof prototype[name] === 'function'
@@ -439,7 +439,7 @@ export function handleAllErrors(options: ErrorHandlerOptions = {}) {
       if (descriptor && descriptor.value) {
         const originalMethod = descriptor.value;
 
-        descriptor.value = async function (...args: any[]) {
+        descriptor.value = async function (...args: unknown[]) {
           try {
             return await originalMethod.apply(this, args);
           } catch (error) {

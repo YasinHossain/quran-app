@@ -115,19 +115,6 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
     }
   }, [settings.translationId]);
 
-  // Start automatic rotation every 10 seconds
-  const startAutoRotation = useCallback(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-
-    intervalRef.current = setInterval(() => {
-      if (!abortRef.current) {
-        rotateToNextVerse();
-      }
-    }, 10000); // 10 seconds
-  }, [rotateToNextVerse]);
-
   // Stop automatic rotation
   const stopAutoRotation = useCallback(() => {
     if (intervalRef.current) {
@@ -157,7 +144,7 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
       abortRef.current = true;
       stopAutoRotation();
     };
-  }, [settings.translationId]);
+  }, [settings.translationId, initializeVerseCache, stopAutoRotation]);
 
   // Start rotation when cache is ready
   useEffect(() => {
@@ -176,7 +163,7 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
         intervalRef.current = undefined;
       }
     };
-  }, [isInitialized, verseQueue.length]);
+  }, [isInitialized, verseQueue.length, rotateToNextVerse]);
 
   // Load surahs list for metadata
   useEffect(() => {

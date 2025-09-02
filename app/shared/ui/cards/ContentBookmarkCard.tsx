@@ -74,7 +74,7 @@ export const ContentBookmarkCard = memo(function ContentBookmarkCard({
   onClick,
   ...props
 }: ContentBookmarkCardProps) {
-  const { verseKey, verseText, translation, surahName, createdAt, verseId } = bookmark;
+  const { verseKey, verseText, translation, surahName, createdAt } = bookmark;
 
   const { arabicFontFace = 'font-amiri', arabicFontSize = 18, tajweed = false } = settings;
 

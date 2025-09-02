@@ -28,7 +28,7 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
     openPlayer,
   } = useAudio();
   const { settings } = useSettings();
-  const { addBookmark, removeBookmark, findBookmark, isBookmarked, setLastRead } = useBookmarks();
+  const { isBookmarked, setLastRead } = useBookmarks();
   const verseRef = useRef<HTMLDivElement | null>(null);
   const isPlaying = playingId === verse.id;
   const isLoadingAudio = loadingId === verse.id;
@@ -73,16 +73,6 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
     setIsPlaying,
     openPlayer,
   ]);
-
-  const handleBookmark = useCallback(() => {
-    const verseId = String(verse.id);
-    const bookmarkInfo = findBookmark(verseId);
-    if (bookmarkInfo) {
-      removeBookmark(verseId, bookmarkInfo.folder.id);
-    } else {
-      addBookmark(verseId);
-    }
-  }, [addBookmark, removeBookmark, findBookmark, verse.id]);
 
   return (
     <div id={`verse-${verse.id}`} ref={verseRef} className="mb-8 pb-8 border-b border-border">

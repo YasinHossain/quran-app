@@ -10,10 +10,9 @@ import { useNavigation } from '@/app/providers/NavigationContext';
 
 interface ModernLayoutProps {
   children: React.ReactNode;
-  showFloatingButton?: boolean;
 }
 
-const ModernLayout: React.FC<ModernLayoutProps> = ({ children, showFloatingButton = true }) => {
+const ModernLayout: React.FC<ModernLayoutProps> = ({ children }) => {
   const pathname = usePathname();
   const { isQuranBottomSheetOpen, setQuranBottomSheetOpen, navigateToSurah, showQuranSelector } =
     useNavigation();
@@ -33,11 +32,7 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({ children, showFloatingButto
     showQuranSelector();
   };
 
-  // Hide floating button on verse and tafsir pages
   const isHomePage = pathname === '/' || pathname === '/home';
-  const isVersePage = pathname.includes('/surah/');
-  const isTafsirPage = pathname.includes('/tafsir/');
-  const shouldShowFloatingButton = false;
 
   return (
     <>
