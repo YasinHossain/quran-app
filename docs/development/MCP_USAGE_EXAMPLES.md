@@ -5,10 +5,11 @@ This document provides practical examples of how to use the GitHub MCP server wi
 ## Repository Analysis
 
 ### View Repository Status
+
 ```
 User: "What's the current status of my quran-app repository?"
 
-Expected Response: 
+Expected Response:
 - Current branch information
 - Uncommitted changes
 - Recent commit summary
@@ -16,6 +17,7 @@ Expected Response:
 ```
 
 ### Branch Management
+
 ```
 User: "Show me all branches in the quran-app repository"
 
@@ -25,6 +27,7 @@ User: "Switch to the mobile-responsive-upgrade branch"
 ```
 
 ### Commit History
+
 ```
 User: "Show me the last 5 commits on the current branch"
 
@@ -36,6 +39,7 @@ User: "Find commits that mention 'mobile' or 'responsive'"
 ## Code Analysis & Development
 
 ### File Operations
+
 ```
 User: "Show me the structure of the app/shared directory"
 
@@ -45,6 +49,7 @@ User: "Find all TypeScript files that import 'useBreakpoint'"
 ```
 
 ### Issue Management
+
 ```
 User: "List all open issues in the repository"
 
@@ -54,6 +59,7 @@ User: "Show me issues labeled with 'bug' or 'mobile'"
 ```
 
 ### Pull Request Management
+
 ```
 User: "List all open pull requests"
 
@@ -65,6 +71,7 @@ User: "Review the changes in the latest pull request"
 ## Development Workflow
 
 ### Feature Development
+
 ```
 User: "I want to add a new prayer times feature. Help me plan this."
 
@@ -77,6 +84,7 @@ Expected Workflow:
 ```
 
 ### Code Review Assistant
+
 ```
 User: "Review the changes in my current working directory"
 
@@ -86,6 +94,7 @@ User: "Check if the new components follow the project's patterns"
 ```
 
 ### Testing & Quality
+
 ```
 User: "Find all test files related to the audio player"
 
@@ -97,6 +106,7 @@ User: "Run the linting checks and show me any issues"
 ## Project Management
 
 ### Documentation Updates
+
 ```
 User: "Update the README.md to reflect the new MCP server setup"
 
@@ -106,6 +116,7 @@ User: "Check if all new features are documented"
 ```
 
 ### Release Planning
+
 ```
 User: "What changes have been made since the last release?"
 
@@ -115,6 +126,7 @@ User: "Tag a new release with the current changes"
 ```
 
 ### Architecture Analysis
+
 ```
 User: "Analyze the component structure in the features directory"
 
@@ -128,6 +140,7 @@ User: "Show me the API integration patterns used in the project"
 Since your project is on a mobile responsive branch:
 
 ### Responsive Design Review
+
 ```
 User: "Review all components for mobile responsiveness"
 
@@ -137,6 +150,7 @@ User: "Check the mobile navigation implementation"
 ```
 
 ### Mobile Performance
+
 ```
 User: "Identify components that might impact mobile performance"
 
@@ -146,6 +160,7 @@ User: "Check for mobile-specific accessibility issues"
 ```
 
 ### Touch Interface
+
 ```
 User: "Review touch targets in the mobile interface"
 
@@ -157,6 +172,7 @@ User: "Check mobile keyboard interactions"
 ## Advanced Queries
 
 ### Cross-File Analysis
+
 ```
 User: "Find all usages of the 'useVerseListing' hook across the codebase"
 
@@ -166,6 +182,7 @@ User: "Map the data flow from API to components"
 ```
 
 ### Code Quality Insights
+
 ```
 User: "Identify duplicate code patterns in the shared components"
 
@@ -175,6 +192,7 @@ User: "Review TypeScript strict mode compliance"
 ```
 
 ### Integration Testing
+
 ```
 User: "Test the MCP server connection with a simple query"
 
@@ -193,6 +211,7 @@ User: "Check GitHub API rate limits and status"
 ## Common Patterns
 
 The MCP server works best when you:
+
 - Reference specific branches or commits
 - Ask about code relationships and dependencies
 - Need real-time repository information
