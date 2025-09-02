@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FontSettingIcon } from '@/app/shared/icons';
 import { CollapsibleSection } from './CollapsibleSection';
@@ -21,8 +21,13 @@ export const FontSettings = ({
 }: FontSettingsProps) => {
   const { settings, setSettings, arabicFonts } = useSettings();
   const { t } = useTranslation();
+  const [isClient, setIsClient] = useState(false);
   const { style: arabicStyle } = useFontSize(settings.arabicFontSize, 16, 48);
   const { style: translationStyle } = useFontSize(settings.translationFontSize, 12, 28);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const selectedArabicFont =
     arabicFonts.find((font) => font.value === settings.arabicFontFace)?.name || t('select_font');
@@ -39,29 +44,35 @@ export const FontSettings = ({
         <div>
           <div className="flex justify-between mb-1 text-sm">
             <label className="text-foreground">{t('arabic_font_size')}</label>
-            <span className="font-semibold text-accent">{settings.arabicFontSize}</span>
+            <span className="font-semibold text-accent" suppressHydrationWarning>
+              {isClient ? settings.arabicFontSize : 28}
+            </span>
           </div>
           <input
             type="range"
             min="16"
             max="48"
-            value={settings.arabicFontSize}
+            value={isClient ? settings.arabicFontSize : 28}
             onChange={(e) => setSettings({ ...settings, arabicFontSize: +e.target.value })}
             style={arabicStyle}
+            suppressHydrationWarning
           />
         </div>
         <div>
           <div className="flex justify-between mb-1 text-sm">
             <label className="text-foreground">{t('translation_font_size')}</label>
-            <span className="font-semibold text-accent">{settings.translationFontSize}</span>
+            <span className="font-semibold text-accent" suppressHydrationWarning>
+              {isClient ? settings.translationFontSize : 16}
+            </span>
           </div>
           <input
             type="range"
             min="12"
             max="28"
-            value={settings.translationFontSize}
+            value={isClient ? settings.translationFontSize : 16}
             onChange={(e) => setSettings({ ...settings, translationFontSize: +e.target.value })}
             style={translationStyle}
+            suppressHydrationWarning
           />
         </div>
         <SelectionBox

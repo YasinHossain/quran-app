@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { container } from '../../infrastructure/di/Container';
+import { container } from '../../infrastructure/di/container';
 import { GetTafsirResourcesUseCase } from '../../application/use-cases/GetTafsirResources';
 import { Tafsir } from '../../domain/entities/Tafsir';
 

@@ -1,7 +1,7 @@
 import { TafsirResource } from '@/types';
 import { apiFetch } from './client';
 // Clean Architecture imports
-import { container } from '@/src/infrastructure/di/Container';
+import { container } from '@/src/infrastructure/di/container';
 import { GetTafsirResourcesUseCase } from '@/src/application/use-cases/GetTafsirResources';
 import { GetTafsirContentUseCase } from '@/src/application/use-cases/GetTafsirContent';
 
