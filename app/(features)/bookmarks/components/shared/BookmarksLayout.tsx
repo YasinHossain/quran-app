@@ -6,16 +6,13 @@ import { BookmarksSidebar } from '../BookmarksSidebar';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useSidebar } from '@/app/providers/SidebarContext';
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
+import type { Folder } from '@/types/bookmark';
 
 interface BookmarksLayoutProps {
   children: React.ReactNode;
   activeSection: SectionId;
   onSectionChange: (section: SectionId) => void;
-  folders?: Array<{
-    id: string;
-    name: string;
-    bookmarks: Array<{ verseId: string; verseKey?: string }>;
-  }>;
+  folders?: Folder[];
   onVerseClick?: (verseKey: string) => void;
 }
 

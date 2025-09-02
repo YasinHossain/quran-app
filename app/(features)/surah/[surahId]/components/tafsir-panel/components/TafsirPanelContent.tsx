@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { AlertCircle } from 'lucide-react';
+import { AlertIcon } from '@/app/shared/icons';
 import { ResourceTabs, ResourceList } from '@/app/shared/resource-panel';
 import { TafsirResource } from '@/types';
 import { TafsirSearch } from '../TafsirSearch';
@@ -75,7 +75,7 @@ export const TafsirPanelContent = ({
     return (
       <div className="mx-4 mt-4 p-4 rounded-lg border bg-error/10 border-error/20 text-error">
         <div className="flex items-center space-x-2">
-          <AlertCircle className="h-5 w-5 text-error" />
+          <AlertIcon className="h-5 w-5 text-error" />
           <span className="text-sm">{error}</span>
         </div>
       </div>
@@ -119,13 +119,21 @@ export const TafsirPanelContent = ({
         </div>
 
         <div className="px-4 pb-4 pt-4">
-          <ResourceList
-            resources={resourcesToRender}
-            rowHeight={58}
-            selectedIds={selectedIds}
-            onToggle={handleSelectionToggle}
-            height={listHeight}
-          />
+          {resourcesToRender.length > 0 ? (
+            <ResourceList
+              resources={resourcesToRender}
+              rowHeight={58}
+              selectedIds={selectedIds}
+              onToggle={handleSelectionToggle}
+              height={listHeight}
+            />
+          ) : (
+            <div className="text-center text-muted py-8">
+              {tafsirs.length === 0
+                ? 'Loading tafsir resources...'
+                : 'No tafsir resources found for the selected filter.'}
+            </div>
+          )}
         </div>
       </div>
     </>

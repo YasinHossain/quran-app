@@ -1,6 +1,6 @@
 import { Share2 } from 'lucide-react';
 import { IconProps } from './IconProps';
 
-export const ShareIcon = ({ size = 18, className = '' }: IconProps) => (
-  <Share2 size={size} className={className} />
+export const ShareIcon = ({ size = 18, className = '', ...rest }: IconProps) => (
+  <Share2 size={size} className={className} {...rest} />
 );

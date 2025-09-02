@@ -26,8 +26,8 @@ const VerseArabic = ({ verse }: VerseArabicProps) => {
     >
       {verse.words && verse.words.length > 0 ? (
         <span className="flex flex-wrap gap-x-3 gap-y-1 justify-start">
-          {verse.words.map((word: Word) => (
-            <span key={word.id} className="text-center">
+          {verse.words.map((word: Word, index: number) => (
+            <span key={`${word.id}-${index}`} className="text-center">
               <span className="relative group cursor-pointer inline-block">
                 <span
                   dangerouslySetInnerHTML={{

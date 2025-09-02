@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { ResizeObserver as ResizeObserverPolyfill } from '@juggle/resize-observer';
-import { AlertCircle, RotateCcw } from 'lucide-react';
+import { AlertIcon, ResetIcon } from '@/app/shared/icons';
 import { useArabicFontPanel } from './arabic-font-panel/useArabicFontPanel';
 import { ResourceList } from '@/app/shared/resource-panel';
 
@@ -90,7 +90,7 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
           className="p-2 rounded-full focus-visible:outline-none transition-colors text-foreground hover:bg-interactive-hover"
           title="Reset to Default"
         >
-          <RotateCcw size={20} />
+          <ResetIcon size={20} />
         </button>
       </header>
 
@@ -104,7 +104,7 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
         {error && (
           <div className="mx-4 mt-4 p-4 rounded-lg border bg-error/10 border-error/20 text-error">
             <div className="flex items-center space-x-2">
-              <AlertCircle className="h-5 w-5 text-status-error" />
+              <AlertIcon className="h-5 w-5 text-status-error" />
               <span className="text-sm">{error}</span>
             </div>
           </div>

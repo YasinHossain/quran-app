@@ -1,0 +1,285 @@
+name: AI-Enhanced Development Checks
+
+on:
+  push:
+    branches: [main, master, develop, refactor/complete-architecture]
+  pull_request:
+    branches: [main, master, develop, refactor/complete-architecture]
+
+jobs:
+  ai-pre-commit-check:
+    name: AI Pre-commit Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run AI Pre-commit Check
+        run: node tools/ai/pre-commit-ai-check.js
+        continue-on-error: true
+
+      - name: Upload AI Analysis Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ai-analysis-report
+          path: ai-analysis-report.json
+
+  auto-test-generation:
+    name: Generate Missing Tests
+    runs-on: ubuntu-latest
+    needs: ai-pre-commit-check
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Detect files needing tests
+        id: detect-files
+        run: |
+          # Get changed files that might need tests
+          CHANGED_FILES=$(git diff --name-only HEAD~1 | grep -E '\.(ts|tsx)$' | grep -v '\.test\.' | grep -v '__tests__' || true)
+          echo "changed_files=$CHANGED_FILES" >> $GITHUB_OUTPUT
+          echo "Files that might need tests: $CHANGED_FILES"
+
+      - name: Generate test templates
+        if: steps.detect-files.outputs.changed_files != ''
+        run: |
+          echo "${{ steps.detect-files.outputs.changed_files }}" | while read file; do
+            if [ -n "$file" ] && [ -f "$file" ]; then
+              echo "Generating tests for: $file"
+              node tools/ai/test-generator.js "$file" || echo "Could not generate tests for $file"
+            fi
+          done
+
+      - name: Commit generated tests
+        if: steps.detect-files.outputs.changed_files != ''
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add tests/ app/**/__tests__/ src/**/__tests__/ || true
+          git diff --staged --quiet || git commit -m "🤖 Auto-generate test templates" || echo "No tests to commit"
+
+  documentation-sync:
+    name: Update AI Documentation
+    runs-on: ubuntu-latest
+    needs: ai-pre-commit-check
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Update documentation
+        run: node tools/ai/doc-updater.js
+
+      - name: Commit documentation updates
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add docs/ai/ || true
+          git diff --staged --quiet || git commit -m "📚 Auto-update AI documentation" || echo "No docs to update"
+          git push origin ${{ github.ref_name }} || echo "No changes to push"
+
+  architecture-validation:
+    name: Validate Clean Architecture
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate domain layer independence
+        run: |
+          echo "🏗️ Checking domain layer has no external dependencies..."
+
+          # Check domain layer doesn't import from presentation or infrastructure
+          DOMAIN_VIOLATIONS=$(grep -r "import.*from.*\.\./\.\./\(presentation\|infrastructure\)" src/domain/ || true)
+          if [ -n "$DOMAIN_VIOLATIONS" ]; then
+            echo "❌ Domain layer has invalid dependencies:"
+            echo "$DOMAIN_VIOLATIONS"
+            exit 1
+          fi
+
+          # Check domain layer doesn't import React or Next.js
+          REACT_VIOLATIONS=$(grep -r "import.*from.*\(react\|next/\)" src/domain/ || true)
+          if [ -n "$REACT_VIOLATIONS" ]; then
+            echo "❌ Domain layer imports UI framework code:"
+            echo "$REACT_VIOLATIONS"
+            exit 1
+          fi
+
+          echo "✅ Domain layer architecture is clean"
+
+      - name: Validate dependency direction
+        run: |
+          echo "🏗️ Checking dependency direction follows clean architecture..."
+
+          # Infrastructure should not import from presentation
+          INFRA_VIOLATIONS=$(grep -r "import.*from.*\.\./presentation" src/infrastructure/ || true)
+          if [ -n "$INFRA_VIOLATIONS" ]; then
+            echo "❌ Infrastructure imports from presentation layer:"
+            echo "$INFRA_VIOLATIONS"
+            exit 1
+          fi
+
+          echo "✅ Dependency direction is correct"
+
+  component-analysis:
+    name: Component Architecture Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Analyze component structure
+        run: |
+          echo "🧱 Analyzing component architecture..."
+
+          # Check atomic design structure
+          ATOMS_COUNT=$(find src/presentation/components/atoms -name "*.tsx" 2>/dev/null | wc -l || echo 0)
+          MOLECULES_COUNT=$(find src/presentation/components/molecules -name "*.tsx" 2>/dev/null | wc -l || echo 0)
+          ORGANISMS_COUNT=$(find src/presentation/components/organisms -name "*.tsx" 2>/dev/null | wc -l || echo 0)
+
+          echo "📊 Component distribution:"
+          echo "  Atoms: $ATOMS_COUNT"
+          echo "  Molecules: $MOLECULES_COUNT" 
+          echo "  Organisms: $ORGANISMS_COUNT"
+
+          # Check for components without tests
+          COMPONENTS_WITHOUT_TESTS=$(find src/presentation/components app/(features) -name "*.tsx" -not -path "*/__tests__/*" -not -name "*.test.tsx" | while read file; do
+            basename=$(basename "$file" .tsx)
+            dirname=$(dirname "$file")
+            if [ ! -f "$dirname/__tests__/$basename.test.tsx" ] && [ ! -f "tests/unit/$(echo $file | sed 's|src/||' | sed 's|\.tsx|.test.tsx|')" ]; then
+              echo "$file"
+            fi
+          done)
+
+          if [ -n "$COMPONENTS_WITHOUT_TESTS" ]; then
+            echo "⚠️ Components without tests:"
+            echo "$COMPONENTS_WITHOUT_TESTS"
+          else
+            echo "✅ All components have tests"
+          fi
+
+  performance-budget-check:
+    name: Performance Budget Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+        env:
+          SKIP_ENV_VALIDATION: true
+
+      - name: Analyze bundle size
+        run: |
+          echo "📦 Analyzing bundle size..."
+
+          # Check if bundle analysis files exist
+          if [ -f ".next/analyze/client.html" ]; then
+            echo "Bundle analysis available at .next/analyze/"
+          fi
+
+          # Basic bundle size check
+          BUNDLE_SIZE=$(du -sh .next/static/chunks | cut -f1)
+          echo "Bundle size: $BUNDLE_SIZE"
+
+          # Check for large individual chunks
+          LARGE_CHUNKS=$(find .next/static/chunks -name "*.js" -size +500k | head -5)
+          if [ -n "$LARGE_CHUNKS" ]; then
+            echo "⚠️ Large chunks detected:"
+            echo "$LARGE_CHUNKS"
+          fi
+
+          echo "✅ Bundle analysis complete"
+
+  ai-workflow-summary:
+    name: AI Workflow Summary
+    runs-on: ubuntu-latest
+    needs:
+      [ai-pre-commit-check, architecture-validation, component-analysis, performance-budget-check]
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate AI Workflow Report
+        run: |
+          echo "# 🤖 AI Workflow Summary" > ai-workflow-summary.md
+          echo "" >> ai-workflow-summary.md
+          echo "## Workflow Status" >> ai-workflow-summary.md
+          echo "- **AI Pre-commit Check**: ${{ needs.ai-pre-commit-check.result }}" >> ai-workflow-summary.md
+          echo "- **Architecture Validation**: ${{ needs.architecture-validation.result }}" >> ai-workflow-summary.md
+          echo "- **Component Analysis**: ${{ needs.component-analysis.result }}" >> ai-workflow-summary.md
+          echo "- **Performance Budget**: ${{ needs.performance-budget-check.result }}" >> ai-workflow-summary.md
+          echo "" >> ai-workflow-summary.md
+          echo "## AI Development Resources" >> ai-workflow-summary.md
+          echo "- 📚 [Component Registry](docs/ai/component-registry.md)" >> ai-workflow-summary.md
+          echo "- 🏗️ [Architecture Map](docs/ai/architecture-map.md)" >> ai-workflow-summary.md
+          echo "- 🔍 [Search Patterns](docs/ai/search-patterns.md)" >> ai-workflow-summary.md
+          echo "- 📋 Context files available in each directory (.ai files)" >> ai-workflow-summary.md
+          echo "" >> ai-workflow-summary.md
+          echo "## Next Steps for AI Development" >> ai-workflow-summary.md
+          echo "1. Review any failed checks above" >> ai-workflow-summary.md
+          echo "2. Use AI context files for domain-specific guidance" >> ai-workflow-summary.md
+          echo "3. Follow clean architecture principles" >> ai-workflow-summary.md
+          echo "4. Generate tests using \`node tools/ai/test-generator.js\`" >> ai-workflow-summary.md
+          echo "5. Keep documentation synchronized with \`node tools/ai/doc-updater.js\`" >> ai-workflow-summary.md
+
+      - name: Upload Workflow Summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-workflow-summary
+          path: ai-workflow-summary.md

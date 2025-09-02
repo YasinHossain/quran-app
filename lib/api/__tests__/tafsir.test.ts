@@ -21,7 +21,11 @@ describe('getTafsirResources', () => {
     }) as jest.Mock;
 
     const result = await getTafsirResources();
-    expect(global.fetch).toHaveBeenCalledWith(`${API_BASE_URL}/resources/tafsirs`);
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.stringContaining(`${API_BASE_URL}/resources/tafsirs`)
+    );
+    expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('per_page=200'));
+    expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('page=1'));
     const expected: TafsirResource[] = [{ id: 1, name: 'Test Tafsir', lang: 'English' }];
     expect(result).toEqual(expected);
   });

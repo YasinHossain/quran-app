@@ -3,6 +3,7 @@ import './globals.css';
 import './fonts.css';
 import TranslationProvider from './providers/TranslationProvider';
 import ClientProviders from './providers/ClientProviders';
+import { ErrorBoundary } from './shared/components/ErrorBoundary';
 import localFont from 'next/font/local';
 import {
   Inter,
@@ -84,9 +85,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body
         className={`font-sans ${kfgqpc.variable} ${nastaliq.variable} ${amiri.variable} ${arabic.variable} ${bengali.variable} ${crimsonText.variable} ${libreBaskerville.variable} ${inter.className}`}
       >
-        <TranslationProvider>
-          <ClientProviders initialTheme={theme}>{children}</ClientProviders>
-        </TranslationProvider>
+        <ErrorBoundary>
+          <TranslationProvider>
+            <ClientProviders initialTheme={theme}>{children}</ClientProviders>
+          </TranslationProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

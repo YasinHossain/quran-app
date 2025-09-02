@@ -1,6 +1,7 @@
 import { Verse, Juz, Word } from '@/types';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import { apiFetch } from './client';
+import { getSurahList } from './chapters';
 
 interface ApiWord {
   id: number;
@@ -149,12 +150,29 @@ export async function getJuz(juzId: string | number): Promise<Juz> {
 }
 
 export async function getRandomVerse(translationId: number): Promise<Verse> {
-  const data = await apiFetch<{ verse: ApiVerse }>(
-    'verses/random',
-    { translations: translationId.toString(), fields: 'text_uthmani' },
-    'Failed to fetch random verse'
-  );
-  return normalizeVerse(data.verse);
+  try {
+    // Get surah list to know verse counts
+    const surahs = await getSurahList();
+
+    // Pick a random surah
+    const randomSurah = surahs[Math.floor(Math.random() * surahs.length)];
+
+    // Pick a random ayah within that surah
+    const randomAyah = Math.floor(Math.random() * randomSurah.verses) + 1;
+    const verseKey = `${randomSurah.number}:${randomAyah}`;
+
+    const data = await apiFetch<{ verse: ApiVerse }>(
+      `verses/by_key/${verseKey}`,
+      { translations: translationId.toString(), fields: 'text_uthmani' },
+      'Failed to fetch random verse'
+    );
+    return normalizeVerse(data.verse);
+  } catch (error) {
+    console.warn('API unavailable, using fallback verse:', error);
+    // Import fallback verse when API fails
+    const { fallbackVerse } = await import('./fallback-verse');
+    return fallbackVerse;
+  }
 }
 
 export async function getVerseById(

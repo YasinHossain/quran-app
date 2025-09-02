@@ -1,9 +1,11 @@
 import type { NextConfig } from 'next';
-import nextPwa, { type PWAConfig } from 'next-pwa';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const nextPwa = require('next-pwa');
 import pwaConfig from './next-pwa.config.mjs';
 
 // Define commonly recommended security headers
-const securityHeaders = [
+// Note: Avoid HSTS in development (can break Safari by forcing HTTPS on localhost)
+const baseSecurityHeaders = [
   {
     key: 'X-DNS-Prefetch-Control',
     value: 'on',
@@ -21,14 +23,21 @@ const securityHeaders = [
     value: 'origin-when-cross-origin',
   },
   {
-    key: 'Strict-Transport-Security',
-    value: 'max-age=63072000; includeSubDomains; preload',
-  },
-  {
     key: 'Permissions-Policy',
     value: 'camera=(), microphone=(), geolocation=()',
   },
 ];
+
+const isProd = process.env.NODE_ENV === 'production';
+const securityHeaders = isProd
+  ? [
+      ...baseSecurityHeaders,
+      {
+        key: 'Strict-Transport-Security',
+        value: 'max-age=63072000; includeSubDomains; preload',
+      },
+    ]
+  : baseSecurityHeaders;
 
 const nextConfig: NextConfig = {
   // Expose the Quran API base URL to the app
@@ -68,6 +77,6 @@ const nextConfig: NextConfig = {
   },
 };
 
-const withPWA = nextPwa(pwaConfig as PWAConfig) as (config: NextConfig) => NextConfig;
+const withPWA = nextPwa(pwaConfig) as (config: NextConfig) => NextConfig;
 
 export default withPWA(nextConfig);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { SkipBack, SkipForward, Play, Pause } from 'lucide-react';
+import { SkipBackIcon, SkipForwardIcon, PlayIcon, PauseIcon } from '@/app/shared/icons';
 import { Button } from '@/app/shared/ui/Button';
 import { iconClasses } from '@/lib/responsive';
 
@@ -27,7 +27,7 @@ export default function TransportControls({
         onClick={onPrev}
         disabled={!interactable}
       >
-        <SkipBack className={`${iconClasses.touch} ${iconClasses.stroke}`} />
+        <SkipBackIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
       </Button>
       <Button
         variant="primary"
@@ -38,9 +38,9 @@ export default function TransportControls({
         className="h-10 w-10"
       >
         {isPlaying ? (
-          <Pause className={iconClasses.touch} />
+          <PauseIcon className={iconClasses.touch} />
         ) : (
-          <Play className={iconClasses.touch} />
+          <PlayIcon className={iconClasses.touch} />
         )}
       </Button>
       <Button
@@ -50,7 +50,7 @@ export default function TransportControls({
         onClick={onNext}
         disabled={!interactable}
       >
-        <SkipForward className={`${iconClasses.touch} ${iconClasses.stroke}`} />
+        <SkipForwardIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
       </Button>
     </div>
   );
