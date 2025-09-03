@@ -293,4 +293,263 @@ npm run audit:classes         # Check raw utility classes
 npm run generate-feature <name>  # Scaffold new feature
 ```
 
-This workflow ensures consistent, high-quality development that aligns with project standards and AI assistance capabilities.
+---
+
+## 🤖 Week 7: AI-Enhanced Development Workflows
+
+### Architecture-Compliant AI Development Pattern
+
+**MANDATORY: AI must follow this exact sequence for ANY change:**
+
+```bash
+# 1. AI reads documentation first (REQUIRED)
+# Read ARCHITECTURE_GUIDELINES.md
+# Read relevant AGENTS.md files  
+# Read .ai/context.md
+
+# 2. AI analyzes current state
+# Check architecture compliance
+# Validate existing patterns
+# Identify context requirements
+
+# 3. AI implements using templates
+# Use templates/ai-compliant/ templates exactly
+# Apply established patterns consistently
+# Maintain architecture compliance
+
+# 4. AI validates implementation
+npm run check:architecture    # Architecture compliance
+npm run test:architecture    # Architecture-specific tests
+npm run test:responsive      # Mobile-first design validation
+```
+
+### 🎯 AI Task Categories
+
+#### Component Development (Architecture-Compliant)
+```typescript
+// AI MUST follow this exact pattern for ALL components
+import { memo, useCallback, useMemo } from 'react';
+import { useSettings } from '@/app/providers/SettingsContext';
+import { useAudio } from '@/app/providers/AudioContext';
+import { useBookmarks } from '@/app/providers/BookmarkContext';
+import type { ComponentProps } from '@/types';
+
+interface NewComponentProps {
+  id: string;
+  // Proper TypeScript interface
+}
+
+/**
+ * @description Component purpose and behavior
+ * @example
+ * ```tsx
+ * <NewComponent id="example" />
+ * ```
+ */
+export const NewComponent = memo(function NewComponent({
+  id,
+  // ... props
+}: NewComponentProps) {
+  const { settings } = useSettings();
+  
+  // ✅ REQUIRED: Memoize computations
+  const processedData = useMemo(() => {
+    return transformData(data, settings);
+  }, [data, settings]);
+  
+  // ✅ REQUIRED: Memoize callbacks
+  const handleAction = useCallback(() => {
+    // Event handler logic
+  }, [dependencies]);
+
+  return (
+    <div className="space-y-4 p-4 md:space-y-6 md:p-6">
+      {/* ✅ REQUIRED: Mobile-first responsive layout */}
+      <div className="space-y-4 md:space-y-0 md:flex md:items-center md:gap-6">
+        <button 
+          className="h-11 px-4 touch-manipulation"
+          onClick={handleAction}
+        >
+          Action
+        </button>
+      </div>
+    </div>
+  );
+});
+
+export { NewComponent };
+export default NewComponent;
+```
+
+#### Hook Development (Architecture-Compliant)
+```typescript
+// AI MUST follow this exact pattern for ALL hooks
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useSettings } from '@/app/providers/SettingsContext';
+import type { HookResult } from '@/types';
+
+export function useNewHook({ id }: { id: string }): HookResult {
+  const [data, setData] = useState(null);
+  const { settings } = useSettings();
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  const processedData = useMemo(() => {
+    return data ? transformData(data, settings) : null;
+  }, [data, settings]);
+
+  const fetchData = useCallback(async () => {
+    // Implementation with proper cleanup
+  }, [id]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  useEffect(() => {
+    return () => {
+      abortControllerRef.current?.abort();
+    };
+  }, []);
+
+  return {
+    data: processedData,
+    isLoading,
+    refetch: fetchData,
+  } as const;
+}
+```
+
+#### Testing (Architecture-Compliant)
+```typescript
+// AI MUST follow this pattern for ALL tests
+import { render, screen } from '@testing-library/react';
+import { SettingsProvider } from '@/app/providers/SettingsContext';
+import { AudioProvider } from '@/app/providers/AudioContext';
+import { BookmarkProvider } from '@/app/providers/BookmarkContext';
+import { NewComponent } from '../NewComponent';
+
+// ✅ REQUIRED: Provider wrapper for ALL tests
+const TestWrapper = ({ children }: { children: React.ReactNode }) => (
+  <SettingsProvider>
+    <AudioProvider>
+      <BookmarkProvider>
+        {children}
+      </BookmarkProvider>
+    </AudioProvider>
+  </SettingsProvider>
+);
+
+describe('NewComponent', () => {
+  it('renders with architecture compliance', () => {
+    render(<NewComponent id="test" />, { wrapper: TestWrapper });
+    
+    // Test mobile-first responsive design
+    const container = screen.getByTestId('component-test');
+    expect(container).toHaveClass('space-y-4', 'md:space-y-0');
+    
+    // Test touch-friendly interactions
+    const button = screen.getByRole('button');
+    expect(button).toHaveClass('h-11'); // 44px touch target
+  });
+});
+```
+
+### 🔧 AI Quality Gates
+
+#### Pre-Development Validation (MANDATORY)
+```markdown
+AI MUST verify before ANY changes:
+- [ ] Read ARCHITECTURE_GUIDELINES.md
+- [ ] Read relevant AGENTS.md files
+- [ ] Understand established patterns
+- [ ] Plan architecture-compliant solution
+- [ ] Identify context integration needs
+```
+
+#### Post-Development Validation (MANDATORY)
+```markdown
+AI MUST verify after implementation:
+- [ ] All components have memo() wrapper
+- [ ] Mobile-first responsive design applied
+- [ ] Required contexts integrated
+- [ ] Performance optimizations in place
+- [ ] Tests include provider wrappers
+- [ ] npm run check passes
+- [ ] Architecture compliance validated
+```
+
+### 🚨 AI Architecture Violation Prevention
+
+#### Critical Violations AI Must NEVER Make
+```markdown
+❌ NEVER:
+- Create components without memo() wrapper
+- Skip responsive design patterns (space-y-4 md:space-y-0 md:flex)
+- Ignore context integration requirements
+- Skip performance optimizations (useCallback, useMemo)
+- Create tests without provider wrappers
+- Violate import/export order
+- Skip TypeScript interfaces
+
+✅ ALWAYS:
+- Follow templates/ai-compliant/ exactly
+- Apply mobile-first responsive design
+- Integrate required contexts where applicable
+- Optimize with useCallback/useMemo
+- Include comprehensive tests
+- Validate architecture compliance
+- Run quality checks
+```
+
+### 📊 AI Success Metrics
+
+#### Every AI Implementation Must Achieve
+```yaml
+Architecture Compliance: 100%
+  - memo() wrapper: Required on ALL components
+  - Mobile-first design: Required patterns applied
+  - Context integration: Where applicable
+  - Performance optimization: useCallback/useMemo applied
+  - TypeScript compliance: Proper interfaces
+  - Touch-friendly: 44px minimum targets
+
+Quality Assurance: 100%
+  - Tests with provider wrappers: Required
+  - Responsive design validation: Tested
+  - Context integration testing: Verified
+  - npm run check: Must pass
+  - Architecture compliance: Validated
+  - No functionality regressions: Verified
+```
+
+### 🎯 AI Development Commands
+
+#### Enhanced Quality Commands
+```bash
+# AI uses these commands for validation
+npm run check:architecture     # Full architecture compliance check
+npm run test:architecture      # Architecture-specific test suite
+npm run test:responsive        # Mobile-first design validation
+npm run test:performance       # Performance optimization tests
+npm run analyze:patterns       # Pattern compliance analysis
+```
+
+#### AI Context System
+```bash
+# AI reads these files before any development
+.ai/context.md                                   # Primary development context
+.ai/prompts/architecture-compliance.md          # Refactoring checklist
+.ai/prompts/development-workflow.md             # Task-specific prompts
+app/(features)/*/AGENTS.md                      # Feature-specific guidance
+```
+
+#### AI Template System
+```bash
+# AI uses these templates for consistency
+templates/ai-compliant/component.template.tsx   # Component pattern
+templates/ai-compliant/hook.template.ts         # Hook pattern
+templates/ai-compliant/page.template.tsx        # Page pattern
+templates/ai-compliant/test.template.test.tsx   # Test pattern
+```
+
+This enhanced workflow ensures AI assistants maintain strict architecture compliance while maximizing development efficiency and code quality.
