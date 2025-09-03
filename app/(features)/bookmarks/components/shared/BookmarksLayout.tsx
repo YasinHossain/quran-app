@@ -35,7 +35,7 @@ const BookmarksLayout: React.FC<BookmarksLayoutProps> = ({
             activeSection={activeSection}
             onSectionChange={onSectionChange}
             folders={folders}
-            onVerseClick={onVerseClick}
+            {...(onVerseClick && { onVerseClick })}
           />
         </aside>
 

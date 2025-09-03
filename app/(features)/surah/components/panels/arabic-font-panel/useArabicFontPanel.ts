@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTheme } from '@/app/providers/ThemeContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 
-export const MAX_SELECTIONS = 1; // Only one font can be selected at a time
+export const MAX_ARABIC_FONT_SELECTIONS = 1; // Only one font can be selected at a time
 
 interface ArabicFont {
   name: string;

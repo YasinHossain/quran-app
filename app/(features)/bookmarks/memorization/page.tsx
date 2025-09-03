@@ -1,10 +1,21 @@
 'use client';
 
-import React from 'react';
+import dynamic from 'next/dynamic';
+
 import BookmarksLayout from '../components/shared/BookmarksLayout';
-import { CreateMemorizationModal } from '../components/CreateMemorizationModal';
 import { useMemorizationPage } from './hooks/useMemorizationPage';
 import { MemorizationHeader, MemorizationGrid } from './components';
+
+// Dynamic import for heavy modal component
+const CreateMemorizationModal = dynamic(
+  () =>
+    import('../components/CreateMemorizationModal').then((mod) => ({
+      default: mod.CreateMemorizationModal,
+    })),
+  {
+    ssr: false,
+  }
+);
 
 export default function MemorizationPage() {
   const { memorization, chapters, modal, handleSectionChange } = useMemorizationPage();

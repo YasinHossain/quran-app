@@ -67,7 +67,7 @@ export default function BookmarkFolderClient({
       <BookmarkFolderSidebar
         bookmarks={bookmarks}
         folder={folder}
-        activeVerseId={activeVerseId}
+        {...(activeVerseId && { activeVerseId })}
         onVerseSelect={(verseId) => {
           setActiveVerseId(verseId === activeVerseId ? undefined : verseId);
           setBookmarkSidebarOpen(false);

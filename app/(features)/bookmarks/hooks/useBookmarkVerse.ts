@@ -37,12 +37,12 @@ export function useBookmarkVerse(bookmark: Bookmark, chapters: Chapter[]): UseBo
           ? getVerseByKey(bookmark.verseId, translationId)
           : getVerseById(bookmark.verseId, translationId));
         const [surahIdStr] = verse.verse_key.split(':');
-        const surahInfo = chapters.find((chapter) => chapter.id === parseInt(surahIdStr));
+        const surahInfo = surahIdStr ? chapters.find((chapter) => chapter.id === parseInt(surahIdStr)) : undefined;
         updateBookmark(bookmark.verseId, {
           verseKey: verse.verse_key,
           verseText: verse.text_uthmani,
-          surahName: surahInfo?.name_simple || `Surah ${surahIdStr}`,
-          translation: verse.translations?.[0]?.text,
+          surahName: surahInfo?.name_simple || `Surah ${surahIdStr || ''}`,
+          ...(verse.translations?.[0]?.text && { translation: verse.translations[0].text }),
           verseApiId: verse.id,
         });
       } catch (err) {

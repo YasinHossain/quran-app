@@ -64,3 +64,5 @@ export const useSettingsSections = () => {
     handleSectionToggle,
   };
 };
+
+export default useSettingsSections;

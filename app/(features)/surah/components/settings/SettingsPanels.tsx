@@ -3,7 +3,7 @@
 import React from 'react';
 import { TranslationPanel, TafsirPanel } from '../panels';
 import { WordLanguagePanel } from '../WordLanguagePanel';
-import ArabicFontPanel from '../ArabicFontPanel';
+import { ArabicFontPanel } from '../ArabicFontPanel';
 import { SettingsSidebarProps } from './SettingsSidebar';
 
 interface SettingsPanelsProps

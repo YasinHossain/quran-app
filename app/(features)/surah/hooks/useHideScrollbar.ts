@@ -30,3 +30,5 @@ export const useHideScrollbar = (ref: RefObject<HTMLElement | null>, className?:
     };
   }, [ref, className]);
 };
+
+export default useHideScrollbar;

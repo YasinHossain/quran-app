@@ -13,3 +13,5 @@ export const useFontSize = (value: number, min: number, max: number) => {
 
   return { percentage, style };
 };
+
+export default useFontSize;

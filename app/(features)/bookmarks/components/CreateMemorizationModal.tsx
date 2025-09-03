@@ -130,8 +130,8 @@ export const CreateMemorizationModal = ({ isOpen, onClose }: CreateMemorizationM
             <SurahSelector
               id="start-surah"
               chapters={chapters}
-              value={startSurah}
-              onChange={setStartSurah}
+              {...(startSurah && { value: startSurah })}
+              onChange={(id) => setStartSurah(id)}
               placeholder="Select Start Surah"
             />
           </div>
@@ -149,8 +149,8 @@ export const CreateMemorizationModal = ({ isOpen, onClose }: CreateMemorizationM
             <SurahSelector
               id="end-surah"
               chapters={chapters}
-              value={endSurah}
-              onChange={setEndSurah}
+              {...(endSurah && { value: endSurah })}
+              onChange={(id) => setEndSurah(id)}
               placeholder="Select End Surah"
               disabled={!startSurah}
             />

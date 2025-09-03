@@ -47,3 +47,5 @@ export const CollapsibleSection = ({
     </div>
   );
 };
+
+export default CollapsibleSection;

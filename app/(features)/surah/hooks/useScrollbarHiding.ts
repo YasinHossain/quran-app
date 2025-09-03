@@ -36,3 +36,5 @@ export const useScrollbarHiding = () => {
 
   return { sidebarRef };
 };
+
+export default useScrollbarHiding;

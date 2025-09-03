@@ -9,7 +9,7 @@ import useSelectableResources from '@/lib/hooks/useSelectableResources';
 import { capitalizeLanguageName, scrollTabs, updateScrollState } from './translationPanel.utils';
 import { initialTranslationsData } from './translationPanel.data';
 
-export const MAX_SELECTIONS = 5;
+export const MAX_TRANSLATION_SELECTIONS = 5;
 
 export const useTranslationPanel = (isOpen: boolean) => {
   const { theme } = useTheme();
@@ -59,7 +59,7 @@ export const useTranslationPanel = (isOpen: boolean) => {
 
   const selectable = useSelectableResources<TranslationResource>({
     resources: translations,
-    selectionLimit: MAX_SELECTIONS,
+    selectionLimit: MAX_TRANSLATION_SELECTIONS,
     languageSort,
   });
 

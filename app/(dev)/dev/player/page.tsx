@@ -33,7 +33,14 @@ const DEMO_TRACKS: Track[] = [
  * Provides controls for reciter selection and repeat options.
  */
 export default function PlayerDemoPage(): React.JSX.Element {
-  const [track, setTrack] = useState<Track>(DEMO_TRACKS[0]);
+  const [track, setTrack] = useState<Track>(DEMO_TRACKS[0] || {
+    id: 'default',
+    src: '',
+    title: 'Default Track',
+    artist: 'Unknown',
+    coverUrl: '',
+    durationSec: 0,
+  });
   const [repeat, setRepeat] = useState<RepeatOptions>({
     mode: 'off',
     start: 0,

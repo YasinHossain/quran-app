@@ -84,3 +84,5 @@ export const FontSettings = ({
     </CollapsibleSection>
   );
 };
+
+export default FontSettings;

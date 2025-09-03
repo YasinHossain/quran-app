@@ -64,7 +64,7 @@ export const BookmarksContent: React.FC<BookmarksContentProps> = ({
               key={section.id}
               content={section}
               isActive={activeSection === section.id}
-              onSectionChange={onSectionChange}
+              {...(onSectionChange && { onSectionChange })}
             />
           ))}
         </div>

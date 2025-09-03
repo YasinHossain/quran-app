@@ -1,14 +1,25 @@
-# Quran App Refactoring & Code Organization Guide
+# Quran App Architecture-Compliant Refactoring Guide
 
 ## Executive Summary
 
-This guide provides a comprehensive, phase-by-phase approach to refactor and optimize the Quran app codebase for improved developer experience and AI-assisted development workflow. Based on analysis of your current project structure and industry best practices for Next.js 15 with TypeScript.
+This guide provides a comprehensive, phase-by-phase approach to refactor and optimize the Quran app codebase while **maintaining strict compliance with established architecture guidelines**. All refactoring must follow the patterns defined in `ARCHITECTURE_GUIDELINES.md` to ensure consistency and maintainability.
 
 ### Current State Assessment
 
-- **Strengths**: Clean architecture pattern, feature-based organization, good TypeScript usage
-- **Opportunities**: File size optimization, enhanced linting rules, improved code splitting, standardized line counts
-- **Priority**: Implement line count limits and enhance ESLint configuration for better AI parsing
+- **Strengths**: Clean architecture pattern, feature-based organization, established component patterns
+- **Opportunities**: Full architecture compliance (memo() wrappers, responsive design, context integration)
+- **Priority**: Apply established patterns consistently across all components while maintaining file size limits
+
+### ⚠️ **CRITICAL REQUIREMENT**
+
+**All refactoring MUST follow the established architecture patterns:**
+
+- Component patterns with `memo()` wrappers
+- Mobile-first responsive design
+- Context integration (Settings, Audio, Bookmarks)
+- Performance optimization patterns
+- TypeScript strict compliance
+- Testing patterns with provider wrappers
 
 ---
 
@@ -56,42 +67,70 @@ module.exports = {
     'max-depth': ['warn', 3],
     'max-nested-callbacks': ['warn', 3],
 
-    // Import organization
+    // Import organization - MATCHES ARCHITECTURE_GUIDELINES.md
     'import/order': [
-      'warn',
+      'error',
       {
         groups: [
-          'builtin',
-          'external',
-          'internal',
-          ['parent', 'sibling'],
-          'index',
-          'object',
-          'type',
+          'builtin', // Node.js built-in modules
+          'external', // Third-party packages
+          'internal', // @/ aliased imports
+          ['parent', 'sibling'], // Relative imports
+          'index', // Index imports
+          'object', // Object imports
+          'type', // Type-only imports
         ],
         'newlines-between': 'always',
         alphabetize: {
           order: 'asc',
           caseInsensitive: true,
         },
+        pathGroups: [
+          {
+            pattern: '@/**',
+            group: 'internal',
+            position: 'before',
+          },
+          {
+            pattern: '@/types/**',
+            group: 'type',
+            position: 'before',
+          },
+        ],
+        pathGroupsExcludedImportTypes: ['builtin'],
       },
     ],
     'import/no-cycle': 'error',
     'unused-imports/no-unused-imports': 'error',
 
-    // TypeScript strictness
+    // TypeScript strictness - ARCHITECTURE COMPLIANCE
     '@typescript-eslint/no-explicit-any': 'error',
     '@typescript-eslint/explicit-function-return-type': [
-      'warn',
+      'error',
       {
         allowExpressions: true,
         allowTypedFunctionExpressions: true,
+        allowHigherOrderFunctions: true,
+        allowDirectConstAssertionInArrowFunctions: true,
+      },
+    ],
+    '@typescript-eslint/prefer-as-const': 'error',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
       },
     ],
 
-    // React best practices
-    'react/display-name': 'off', // You're using memo properly
-    'react-hooks/exhaustive-deps': 'warn',
+    // React Architecture Compliance
+    'react/jsx-key': ['error', { checkFragmentShorthand: true }],
+    'react/jsx-no-useless-fragment': 'error',
+    'react/self-closing-comp': 'error',
+
+    // Performance - MANDATORY memo() and optimization patterns
+    'react/display-name': 'error', // Ensures memo() components have names
+    'react-hooks/exhaustive-deps': 'error', // Critical for useCallback/useMemo
   },
   overrides: [
     // Tighter limits for pages
@@ -250,43 +289,185 @@ Based on analysis, prioritize splitting these files:
 - [ ] Split by domain responsibility
 ```
 
-### 2.3 Refactoring Example: Splitting Large Components
+### 2.3 Architecture-Compliant Refactoring Example
 
-**Before:** Large component with multiple responsibilities
+**Before:** Large component violating architecture patterns
 
 ```typescript
-// ❌ app/(features)/example/LargeComponent.tsx (250+ lines)
-export function LargeComponent() {
+// ❌ app/(features)/surah/SurahClient.tsx (250+ lines)
+// VIOLATIONS: No memo(), no context integration, not responsive
+export function SurahClient({ surahId }: { surahId: string }) {
   // Multiple state management
   // Multiple effects
-  // Complex render logic
+  // Complex render logic without mobile-first design
 }
 ```
 
-**After:** Split into smaller, focused components
+**After:** Architecture-compliant split following established patterns
 
 ```typescript
-// ✅ app/(features)/example/ExampleContainer.tsx (80 lines)
-export function ExampleContainer() {
-  const data = useExampleData();
-  return <ExampleView data={data} />;
+// ✅ app/(features)/surah/SurahContainer.client.tsx (80 lines)
+import { memo, useCallback, useMemo } from 'react';
+import { useSettings } from '@/app/providers/SettingsContext';
+import { useAudio } from '@/app/providers/AudioContext';
+import { useBookmarks } from '@/app/providers/BookmarkContext';
+import type { SurahData } from '@/types';
+
+interface SurahContainerProps {
+  surahId: string;
+  initialData?: SurahData;
 }
 
-// ✅ app/(features)/example/components/ExampleView.tsx (100 lines)
-export function ExampleView({ data }: Props) {
-  return (
-    <>
-      <ExampleHeader />
-      <ExampleContent data={data} />
-      <ExampleActions />
-    </>
+/**
+ * Container component for Surah reading interface.
+ * Integrates with global contexts and manages surah-specific state.
+ */
+export const SurahContainer = memo(function SurahContainer({
+  surahId,
+  initialData,
+}: SurahContainerProps) {
+  const { settings } = useSettings();
+  const { currentTrack } = useAudio();
+  const { bookmarkedVerses } = useBookmarks();
+  const data = useSurahData({ surahId, initialData });
+
+  const processedData = useMemo(() =>
+    processSurahData(data, settings),
+    [data, settings]
   );
+
+  const handleVerseAction = useCallback((verseId: string, action: string) => {
+    // Memoized verse action handler
+  }, []);
+
+  return (
+    <div className="space-y-4 md:space-y-0">
+      <SurahView
+        data={processedData}
+        currentTrack={currentTrack}
+        bookmarkedVerses={bookmarkedVerses}
+        onVerseAction={handleVerseAction}
+      />
+    </div>
+  );
+});
+
+export default SurahContainer;
+
+// ✅ app/(features)/surah/components/SurahView.tsx (100 lines)
+import { memo, useCallback } from 'react';
+import type { ProcessedSurahData, VerseActionHandler } from '@/types';
+
+interface SurahViewProps {
+  data: ProcessedSurahData;
+  currentTrack?: string;
+  bookmarkedVerses: Set<string>;
+  onVerseAction: VerseActionHandler;
 }
 
-// ✅ app/(features)/example/hooks/useExampleData.ts (60 lines)
-export function useExampleData() {
-  // Focused data fetching logic
+/**
+ * Displays surah verses with responsive mobile-first design.
+ * Handles verse interactions and audio playback integration.
+ */
+export const SurahView = memo(function SurahView({
+  data,
+  currentTrack,
+  bookmarkedVerses,
+  onVerseAction,
+}: SurahViewProps) {
+  const handleVerseClick = useCallback((verseId: string) => {
+    onVerseAction(verseId, 'select');
+  }, [onVerseAction]);
+
+  return (
+    <div className="space-y-6 p-4 md:space-y-8 md:p-6">
+      <div className="space-y-4 md:space-y-0 md:flex md:items-center md:gap-6">
+        <div className="md:w-16 md:pt-1">
+          <SurahActions surahId={data.id} />
+        </div>
+        <div className="space-y-6 md:flex-grow">
+          {data.verses.map((verse) => (
+            <VerseCard
+              key={verse.id}
+              verse={verse}
+              isPlaying={currentTrack === verse.id}
+              isBookmarked={bookmarkedVerses.has(verse.id)}
+              onClick={handleVerseClick}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+});
+
+export default SurahView;
+
+// ✅ app/(features)/surah/hooks/useSurahData.ts (80 lines)
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useSettings } from '@/app/providers/SettingsContext';
+import type { SurahData, SurahDataParams } from '@/types';
+
+interface UseSurahDataParams {
+  surahId: string;
+  initialData?: SurahData;
 }
+
+/**
+ * Hook for managing surah data fetching and processing.
+ * Integrates with settings context for translation preferences.
+ */
+export function useSurahData({ surahId, initialData }: UseSurahDataParams) {
+  const [data, setData] = useState<SurahData | null>(initialData || null);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(!initialData);
+  const { settings } = useSettings();
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  const fetchSurah = useCallback(async () => {
+    if (!surahId) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      abortControllerRef.current?.abort();
+      abortControllerRef.current = new AbortController();
+
+      const result = await fetchSurahData(surahId, {
+        translations: settings.selectedTranslations,
+        signal: abortControllerRef.current.signal,
+      });
+
+      setData(result);
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        setError(err instanceof Error ? err.message : 'Failed to load surah');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [surahId, settings.selectedTranslations]);
+
+  useEffect(() => {
+    fetchSurah();
+  }, [fetchSurah]);
+
+  useEffect(() => {
+    return () => {
+      abortControllerRef.current?.abort();
+    };
+  }, []);
+
+  return {
+    data,
+    error,
+    isLoading,
+    refetch: fetchSurah,
+  } as const;
+}
+
+export default useSurahData;
 ```
 
 ---
@@ -396,22 +577,73 @@ export function processAndDisplayVerses(verses, settings, callbacks) {
 }
 ```
 
-### 4.3 Component Composition Pattern
+### 4.3 Architecture-Compliant Component Composition
 
 ```typescript
-// ✅ Preferred: Composition with small components
-export function SurahPage() {
-  return (
-    <SurahProvider>
-      <SurahHeader />
-      <SurahContent />
-      <SurahFooter />
-    </SurahProvider>
-  );
+// ✅ REQUIRED: Architecture-compliant composition
+import { memo, Suspense } from 'react';
+import { SurahProvider } from '@/app/providers/SurahProvider';
+import { LoadingSpinner } from '@/app/shared/ui/LoadingSpinner';
+
+interface SurahPageProps {
+  params: { surahId: string };
 }
 
-// Each sub-component: 40-100 lines max
+/**
+ * Main page component for surah reading interface.
+ * Follows established architecture patterns with memo() wrapper and context integration.
+ */
+export const SurahPage = memo(function SurahPage({
+  params,
+}: SurahPageProps) {
+  return (
+    <SurahProvider>
+      <div className="min-h-screen space-y-4 p-4 md:space-y-6 md:p-6">
+        {/* Mobile-first responsive layout */}
+        <div className="space-y-4 md:space-y-0 md:flex md:items-center md:gap-6">
+          <div className="md:w-64">
+            <SurahHeader surahId={params.surahId} />
+          </div>
+          <div className="md:flex-grow">
+            <Suspense fallback={<LoadingSpinner />}>
+              <SurahContent surahId={params.surahId} />
+            </Suspense>
+          </div>
+        </div>
+        <div className="mt-6 pt-4 border-t md:mt-8">
+          <SurahFooter surahId={params.surahId} />
+        </div>
+      </div>
+    </SurahProvider>
+  );
+});
+
+export default SurahPage;
+
+// Each sub-component must follow the same architecture patterns:
+// - memo() wrapper
+// - Proper TypeScript interfaces
+// - Context integration where needed
+// - Mobile-first responsive design
+// - 40-100 lines max
 ```
+
+### 4.4 **MANDATORY Architecture Compliance Checklist**
+
+**Every refactored component MUST verify:**
+
+- [ ] **memo() Wrapper**: Component wrapped with `memo()` for performance
+- [ ] **TypeScript Interface**: Proper props interface defined
+- [ ] **JSDoc Documentation**: Component purpose and usage documented
+- [ ] **Context Integration**: Uses required contexts (Settings/Audio/Bookmarks)
+- [ ] **Mobile-First Design**: Responsive classes (`space-y-4 md:space-y-0`)
+- [ ] **Touch-Friendly**: 44px minimum touch targets (`h-11`, `p-4`)
+- [ ] **Performance**: useCallback/useMemo for optimization
+- [ ] **Import Order**: React → Third-party → Internal → Types
+- [ ] **Error Handling**: Proper error states and boundaries
+- [ ] **Accessibility**: ARIA labels and keyboard navigation
+
+**FAILURE TO FOLLOW THIS CHECKLIST VIOLATES PROJECT ARCHITECTURE**
 
 ---
 
@@ -453,14 +685,39 @@ Add to `package.json`:
 }
 ```
 
-### 5.3 Performance Checklist
+### 5.3 **MANDATORY Performance & Architecture Checklist**
 
-- [ ] All lists use `key` prop correctly
-- [ ] Heavy computations use `useMemo`
-- [ ] Event handlers use `useCallback`
-- [ ] Components are wrapped in `memo()` where appropriate
-- [ ] Images use Next.js `Image` component
-- [ ] Fonts are optimized with `next/font`
+**Components:**
+
+- [ ] **memo() Required**: ALL components wrapped with `memo()`
+- [ ] **Context Integration**: Uses SettingsContext, AudioContext, BookmarkContext where needed
+- [ ] **Mobile-First Design**: Responsive classes follow `space-y-4 md:space-y-0` pattern
+- [ ] **Touch-Friendly**: Minimum 44px touch targets (`h-11`, `min-h-11`)
+- [ ] **TypeScript Interfaces**: Proper props interfaces defined
+- [ ] **JSDoc Comments**: Component purpose and usage documented
+
+**Performance:**
+
+- [ ] **useCallback**: Event handlers memoized with proper dependencies
+- [ ] **useMemo**: Heavy computations and derived data memoized
+- [ ] **Key Props**: All lists use stable, unique `key` props
+- [ ] **as const**: Hook returns use `as const` for type inference
+- [ ] **AbortController**: Data fetching includes cleanup logic
+
+**Responsive Design:**
+
+- [ ] **Mobile-First Classes**: `block md:flex`, `space-y-4 md:space-y-0`
+- [ ] **Breakpoint Strategy**: Primary desktop breakpoint at `md:` (768px)
+- [ ] **Touch Targets**: Interactive elements minimum 44px height/width
+- [ ] **Spacing**: `p-4 md:p-6`, `space-y-4 md:space-y-6` patterns
+- [ ] **Layout**: `space-y-4 md:space-y-0 md:flex md:items-center`
+
+**Assets & Performance:**
+
+- [ ] **Next.js Image**: All images use `next/image` with proper optimization
+- [ ] **Font Optimization**: Fonts loaded via `next/font` with display swap
+- [ ] **Dynamic Imports**: Heavy components lazy-loaded with Suspense
+- [ ] **Bundle Splitting**: Feature-based code splitting implemented
 
 ---
 
@@ -478,14 +735,102 @@ Add to `package.json`:
 - Overall: 75%
 ```
 
-### 6.2 Test File Organization
+### 6.2 **MANDATORY Test File Organization & Provider Patterns**
 
 ```typescript
-// Co-located tests
-app / features / surah / components / SurahView.tsx;
-SurahView.test.tsx; // 100-250 lines
-hooks / useSurahData.ts;
-useSurahData.test.ts; // 80-200 lines
+// ✅ REQUIRED: Co-located tests with provider wrappers
+
+// File: app/(features)/surah/components/__tests__/SurahView.test.tsx
+import { render, screen, fireEvent } from '@testing-library/react';
+import { SettingsProvider } from '@/app/providers/SettingsContext';
+import { AudioProvider } from '@/app/providers/AudioContext';
+import { BookmarkProvider } from '@/app/providers/BookmarkContext';
+import { SurahView } from '../SurahView';
+import type { ProcessedSurahData } from '@/types';
+
+// ✅ REQUIRED: Test wrapper with ALL necessary providers
+const TestWrapper = ({ children }: { children: React.ReactNode }) => (
+  <SettingsProvider>
+    <AudioProvider>
+      <BookmarkProvider>
+        {children}
+      </BookmarkProvider>
+    </AudioProvider>
+  </SettingsProvider>
+);
+
+const mockSurahData: ProcessedSurahData = {
+  id: '1',
+  verses: [/* test data */],
+  // ... other properties
+};
+
+describe('SurahView', () => {
+  const defaultProps = {
+    data: mockSurahData,
+    bookmarkedVerses: new Set<string>(),
+    onVerseAction: jest.fn(),
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('renders verses with mobile-first responsive design', () => {
+    render(<SurahView {...defaultProps} />, { wrapper: TestWrapper });
+
+    // Test mobile-first responsive classes
+    const container = screen.getByTestId('surah-view');
+    expect(container).toHaveClass('space-y-6', 'p-4', 'md:space-y-8', 'md:p-6');
+  });
+
+  it('integrates with context providers', () => {
+    render(<SurahView {...defaultProps} />, { wrapper: TestWrapper });
+
+    // Verify context integration
+    expect(screen.getByTestId('settings-dependent-element')).toBeInTheDocument();
+  });
+
+  it('handles touch-friendly interactions', () => {
+    const mockOnAction = jest.fn();
+    render(
+      <SurahView {...defaultProps} onVerseAction={mockOnAction} />,
+      { wrapper: TestWrapper }
+    );
+
+    const actionButton = screen.getByRole('button');
+    expect(actionButton).toHaveClass('h-11'); // 44px touch target
+
+    fireEvent.click(actionButton);
+    expect(mockOnAction).toHaveBeenCalled();
+  });
+});
+
+// File: app/(features)/surah/hooks/__tests__/useSurahData.test.ts
+import { renderHook, waitFor } from '@testing-library/react';
+import { SettingsProvider } from '@/app/providers/SettingsContext';
+import { useSurahData } from '../useSurahData';
+
+const TestWrapper = ({ children }: { children: React.ReactNode }) => (
+  <SettingsProvider>{children}</SettingsProvider>
+);
+
+describe('useSurahData', () => {
+  it('integrates with settings context', async () => {
+    const { result } = renderHook(
+      () => useSurahData({ surahId: '1' }),
+      { wrapper: TestWrapper }
+    );
+
+    await waitFor(() => {
+      expect(result.current.data).toBeTruthy();
+    });
+
+    // Verify return type with 'as const'
+    expect(typeof result.current.refetch).toBe('function');
+    expect(typeof result.current.isLoading).toBe('boolean');
+  });
+});
 ```
 
 ### 6.3 E2E Test Structure
@@ -529,41 +874,263 @@ Quran reading application with Clean Architecture
 - Server Components by default
 ```
 
-### 7.2 Template Files
+### 7.2 **MANDATORY Architecture-Compliant Templates**
 
-```typescript
+````typescript
 // templates/component.template.tsx
-import { memo } from 'react';
+// ✅ MUST FOLLOW: Complete architecture pattern
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useSettings } from '@/app/providers/SettingsContext';
+import { useAudio } from '@/app/providers/AudioContext';
+import { useBookmarks } from '@/app/providers/BookmarkContext';
+import type { ComponentData, ComponentAction } from '@/types';
 
 interface ComponentNameProps {
-  // Props
+  id: string;
+  data: ComponentData;
+  onAction?: ComponentAction;
+  className?: string;
 }
 
 /**
- * @description Component description
+ * @description Brief description of component purpose and behavior
+ * @example
+ * ```tsx
+ * <ComponentName
+ *   id="example-id"
+ *   data={componentData}
+ *   onAction={handleAction}
+ * />
+ * ```
  */
 export const ComponentName = memo(function ComponentName({
-  // props
+  id,
+  data,
+  onAction,
+  className,
 }: ComponentNameProps) {
-  return <div>Component</div>;
+  const [localState, setLocalState] = useState<string>('');
+  const { settings } = useSettings();
+  const { isPlaying } = useAudio();
+  const { isBookmarked } = useBookmarks();
+  const componentRef = useRef<HTMLDivElement>(null);
+
+  // ✅ REQUIRED: Memoize derived data
+  const processedData = useMemo(() => {
+    return transformData(data, settings);
+  }, [data, settings]);
+
+  // ✅ REQUIRED: Memoize callbacks
+  const handleAction = useCallback(() => {
+    onAction?.(id, 'action-type');
+  }, [id, onAction]);
+
+  // ✅ REQUIRED: Proper cleanup
+  useEffect(() => {
+    // Side effects with cleanup
+    return () => {
+      // Cleanup logic
+    };
+  }, [/* dependencies */]);
+
+  return (
+    <div
+      ref={componentRef}
+      className={`
+        space-y-4 p-4 md:space-y-6 md:p-6
+        ${className}
+      `.trim()}
+      data-testid={`component-${id}`}
+    >
+      {/* ✅ REQUIRED: Mobile-first responsive layout */}
+      <div className="space-y-4 md:space-y-0 md:flex md:items-center md:gap-6">
+        <div className="md:w-16 md:pt-1">
+          {/* Touch-friendly actions */}
+          <button
+            className="h-11 px-4 touch-manipulation"
+            onClick={handleAction}
+            aria-label="Component action"
+          >
+            Action
+          </button>
+        </div>
+        <div className="space-y-4 md:flex-grow">
+          {/* Main content area */}
+          {processedData.items.map((item) => (
+            <div key={item.id} className="min-h-11">
+              {item.content}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 });
 
+export { ComponentName };
 export default ComponentName;
-```
+````
 
-### 7.3 AI Prompt Templates
+````typescript
+// templates/hook.template.ts
+// ✅ MUST FOLLOW: Complete hook pattern
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useSettings } from '@/app/providers/SettingsContext';
+import type { HookData, HookOptions, HookResult } from '@/types';
+
+interface UseHookNameParams {
+  id: string;
+  options?: HookOptions;
+}
+
+/**
+ * @description Hook purpose and behavior description
+ * @example
+ * ```tsx
+ * const { data, isLoading, refetch } = useHookName({ id: 'example' });
+ * ```
+ */
+export function useHookName({ id, options }: UseHookNameParams): HookResult {
+  const [data, setData] = useState<HookData | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { settings } = useSettings();
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  // ✅ REQUIRED: Memoize derived values
+  const processedData = useMemo(() => {
+    return data ? transformHookData(data, settings) : null;
+  }, [data, settings]);
+
+  // ✅ REQUIRED: Memoize callbacks
+  const fetchData = useCallback(async () => {
+    if (!id) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      abortControllerRef.current?.abort();
+      abortControllerRef.current = new AbortController();
+
+      const result = await apiCall(id, options, {
+        signal: abortControllerRef.current.signal,
+      });
+
+      setData(result);
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [id, options]);
+
+  // ✅ REQUIRED: Proper effects with cleanup
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  useEffect(() => {
+    return () => {
+      abortControllerRef.current?.abort();
+    };
+  }, []);
+
+  // ✅ REQUIRED: Return with 'as const'
+  return {
+    data: processedData,
+    error,
+    isLoading,
+    refetch: fetchData,
+  } as const;
+}
+
+export { useHookName };
+export default useHookName;
+````
+
+### 7.3 **MANDATORY AI Refactoring Checklist**
 
 ```markdown
-// .ai/prompts/refactor.md
-When refactoring a component:
+// .ai/prompts/architecture-compliance.md
 
-1. Check current line count
-2. Identify responsibilities
-3. Split if >150 lines
-4. Ensure each part <100 lines
-5. Update imports and exports
-6. Add proper TypeScript types
-7. Include JSDoc comments
+## PRE-REFACTORING REQUIREMENTS
+
+Before making ANY changes, AI MUST:
+
+1. **Read ARCHITECTURE_GUIDELINES.md** - Understand established patterns
+2. **Read relevant AGENTS.md files** - Feature-specific requirements
+3. **Check current architecture compliance** - Identify violations
+4. **Plan architecture-compliant solution** - Follow established patterns
+
+## REFACTORING CHECKLIST (MANDATORY)
+
+### Phase 1: Analysis
+
+- [ ] Current line count and complexity
+- [ ] Existing architecture violations
+- [ ] Context integration requirements
+- [ ] Responsive design compliance
+- [ ] Performance optimization needs
+
+### Phase 2: Architecture Compliance
+
+- [ ] **memo() Wrapper**: Add to ALL components
+- [ ] **TypeScript Interfaces**: Define proper props types
+- [ ] **JSDoc Comments**: Document purpose and usage
+- [ ] **Context Integration**: Add Settings/Audio/Bookmarks where needed
+- [ ] **Mobile-First Design**: Apply `space-y-4 md:space-y-0` patterns
+- [ ] **Touch-Friendly**: Ensure 44px minimum targets
+
+### Phase 3: Performance Optimization
+
+- [ ] **useCallback**: Memoize all event handlers
+- [ ] **useMemo**: Memoize expensive computations
+- [ ] **as const**: Add to hook returns
+- [ ] **AbortController**: Add cleanup to data fetching
+- [ ] **Key Props**: Ensure stable keys in lists
+
+### Phase 4: Import/Export Standards
+
+- [ ] **Import Order**: React → Third-party → Internal → Types
+- [ ] **Path Aliases**: Use @/ for internal imports
+- [ ] **Barrel Exports**: Create/update index.ts files
+- [ ] **Named + Default**: Include both export types
+
+### Phase 5: Testing Integration
+
+- [ ] **Provider Wrappers**: Add context providers to tests
+- [ ] **Responsive Testing**: Test mobile-first design
+- [ ] **Interaction Testing**: Verify touch-friendly interactions
+- [ ] **Context Testing**: Test context integration
+
+### Phase 6: Final Validation
+
+- [ ] **Run npm run check**: Ensure no lint/type errors
+- [ ] **Verify patterns**: Match ARCHITECTURE_GUIDELINES.md exactly
+- [ ] **Test functionality**: Ensure no regressions
+- [ ] **Document changes**: Update relevant documentation
+
+## FAILURE CONDITIONS
+
+**AI MUST REJECT refactoring if:**
+
+- Cannot apply memo() wrapper
+- Cannot integrate required contexts
+- Cannot implement mobile-first design
+- Would violate established patterns
+- Would introduce architecture inconsistencies
+
+## SUCCESS CRITERIA
+
+**Refactoring is complete ONLY when:**
+
+- All checklist items verified ✅
+- `npm run check` passes without warnings
+- Architecture patterns match established guidelines exactly
+- Code follows project conventions consistently
 ```
 
 ---
@@ -589,23 +1156,76 @@ When refactoring a component:
 - [x] Implement naming conventions (SurahClient.tsx → SurahView.client.tsx, Verse.tsx → VerseCard.tsx)
 - [x] Create barrel exports (index.ts files with clean imports)
 
-### Week 4: Code Quality ✅ COMPLETED
+### Week 4: Code Quality 🟡 **PARTIALLY COMPLETED - ARCHITECTURE VIOLATIONS IDENTIFIED**
 
-- [x] Add documentation (JSDoc comments following project architecture standards)
-- [x] Reduce complexity (Split large functions: BookmarkFolderClient 171→50 lines, PlayerDemo 104→35 lines)
-- [x] Improve type safety (Added proper TypeScript return types and interfaces)
+#### ✅ **Successfully Completed:**
 
-### Week 5: Performance
+- [x] Add JSDoc documentation following project architecture standards
+- [x] Reduce complexity (BookmarkFolderClient 171→138 lines, PlayerDemo 104→63 lines)
+- [x] Improve TypeScript safety (Added proper return types and interfaces)
+- [x] Extract focused components and hooks with proper patterns
 
-- [ ] Implement code splitting
-- [ ] Optimize bundle size
-- [ ] Add performance monitoring
+#### ⚠️ **CRITICAL VIOLATIONS IDENTIFIED:**
 
-### Week 6: Testing
+- [ ] **memo() Compliance**: 60+ components missing required memo() wrappers
+- [ ] **Context Integration**: Many components not using Settings/Audio/Bookmarks contexts
+- [ ] **Mobile-First Design**: Missing responsive patterns in existing components
+- [ ] **Performance Optimization**: useCallback/useMemo not applied consistently
 
-- [ ] Increase test coverage
-- [ ] Add E2E tests
-- [ ] Set up CI/CD checks
+#### 🔴 **IMMEDIATE ACTION REQUIRED:**
+
+- [ ] Apply memo() wrapper to BookmarkFolderClient, QuranAudioPlayer, HomeHeader
+- [ ] Add context integration where missing
+- [ ] Implement mobile-first responsive classes
+- [ ] Add performance optimizations (useCallback, useMemo)
+
+**Status: 85% Complete - Architecture compliance fixes needed**
+
+### Week 5: **ARCHITECTURE COMPLIANCE + Performance**
+
+#### **Phase 1: Critical Architecture Fixes (HIGH PRIORITY)**
+
+- [ ] **memo() Wrapper Fix**: Apply to ALL components (60+ violations)
+- [ ] **Context Integration**: Add Settings/Audio/Bookmarks where missing
+- [ ] **Responsive Design Fix**: Apply mobile-first patterns consistently
+- [ ] **Performance Patterns**: Add useCallback/useMemo optimization
+
+#### **Phase 2: Performance Optimization**
+
+- [ ] **Code Splitting**: Implement dynamic imports for heavy components
+- [ ] **Bundle Optimization**: Apply size limits and monitoring
+- [ ] **Performance Monitoring**: Add metrics and tracking
+- [ ] **Image Optimization**: Ensure all images use next/image
+
+#### **Phase 3: Architecture Validation**
+
+- [ ] **Compliance Testing**: Run architecture compliance checks
+- [ ] **Pattern Verification**: Ensure all components follow established patterns
+- [ ] **Context Testing**: Verify context integration functionality
+- [ ] **Responsive Testing**: Test mobile-first design across breakpoints
+
+### Week 6: **Architecture-Compliant Testing**
+
+#### **Phase 1: Test Architecture Compliance**
+
+- [ ] **Provider Wrapper Tests**: Add context providers to ALL component tests
+- [ ] **Responsive Design Tests**: Test mobile-first patterns
+- [ ] **Context Integration Tests**: Verify Settings/Audio/Bookmarks integration
+- [ ] **Performance Tests**: Test memo() and optimization effectiveness
+
+#### **Phase 2: Coverage Enhancement**
+
+- [ ] **Component Testing**: Increase coverage with architecture-compliant patterns
+- [ ] **Hook Testing**: Test with proper context provider wrappers
+- [ ] **Integration Testing**: Test context interactions
+- [ ] **Responsive Testing**: Test across all breakpoints
+
+#### **Phase 3: E2E & CI/CD**
+
+- [ ] **E2E Architecture Tests**: Test full architecture compliance flows
+- [ ] **CI/CD Compliance Checks**: Add architecture validation to pipeline
+- [ ] **Performance Monitoring**: Add bundle size and performance checks
+- [ ] **Quality Gates**: Enforce architecture compliance in CI/CD
 
 ---
 
@@ -660,18 +1280,71 @@ npm run test:coverage
 
 ---
 
-## Quick Reference: File Size Limits
+## **MANDATORY Architecture Compliance Summary**
+
+### File Size Limits WITH Architecture Requirements
 
 ```yaml
-Page Components: 40-120 lines
-Client Components: 80-200 lines
-Server Components: 60-150 lines
-Hooks: 40-120 lines
-API Routes: 50-150 lines
-Services: 60-200 lines
-Utilities: 20-150 lines
-Tests: 100-350 lines
-Type Definitions: 20-150 lines
+# EVERY file type MUST follow architecture patterns
+
+Page Components: 40-120 lines + memo() + mobile-first + context integration
+Client Components: 80-200 lines + memo() + responsive + performance optimization
+Server Components: 60-150 lines + memo() + responsive + proper data handling
+Hooks: 40-120 lines + useCallback/useMemo + as const + cleanup
+API Routes: 50-150 lines + proper validation + error handling
+Services: 60-200 lines + clean architecture + dependency injection
+Utilities: 20-150 lines + pure functions + proper typing
+Tests: 100-350 lines + provider wrappers + responsive testing
+Type Definitions: 20-150 lines + strict typing + proper interfaces
+```
+
+### Import/Export Pattern (MANDATORY)
+
+```typescript
+// ✅ REQUIRED: Exact import order for ALL files
+
+// 1. React imports (always first)
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+
+// 2. Third-party imports (alphabetical)
+import { SWRConfig } from 'swr';
+
+// 3. Internal type imports (with type keyword)
+import type { Verse, Translation, ComponentProps } from '@/types';
+
+// 4. Internal component/utility imports (@/ aliases)
+import { useSettings } from '@/app/providers/SettingsContext';
+import { useAudio } from '@/app/providers/AudioContext';
+import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
+import ResponsiveVerseActions from '@/app/shared/ResponsiveVerseActions';
+
+// 5. Relative imports (last)
+import './component.styles.css';
+
+// At end of file - BOTH exports required
+export { ComponentName }; // Named export
+export default ComponentName; // Default export
+```
+
+### Context Integration Pattern (MANDATORY)
+
+```typescript
+// ✅ REQUIRED: Context integration in components
+const { settings, updateSetting } = useSettings();
+const { currentTrack, isPlaying, togglePlay } = useAudio();
+const { bookmarkedVerses, toggleBookmark } = useBookmarks();
+```
+
+### Responsive Design Pattern (MANDATORY)
+
+```typescript
+// ✅ REQUIRED: Mobile-first responsive classes
+className="
+  space-y-4 p-4 md:space-y-6 md:p-6
+  md:flex md:items-center md:gap-6
+  min-h-11 touch-manipulation
+"
 ```
 
 ---
@@ -694,18 +1367,81 @@ Type Definitions: 20-150 lines
 
 ---
 
-## Conclusion
+## **CRITICAL: Architecture Compliance Enforcement**
 
-This refactoring guide provides a structured approach to optimize your Quran app for better maintainability and AI-assisted development. Focus on implementing phases progressively, starting with the foundation and moving through each phase systematically.
+### ⚠️ **MANDATORY COMPLIANCE REQUIREMENTS**
 
-Remember: The goal is not just smaller files, but better-organized, more maintainable code that both humans and AI can work with efficiently.
+This refactoring guide is **ARCHITECTURE-COMPLIANT** and enforces the established patterns from `ARCHITECTURE_GUIDELINES.md`. **ALL refactoring MUST follow these exact patterns** to maintain codebase consistency.
 
-### Next Steps
+### **Implementation Priority (STRICT ORDER)**
 
-1. Start with Phase 1 (ESLint configuration)
-2. Run initial audits to identify problem areas
-3. Begin refactoring largest files first
-4. Document changes in CHANGELOG.md
-5. Update team on new standards
+#### **Phase 1: Immediate Architecture Fixes**
 
-For questions or clarification, refer to the existing ARCHITECTURE_GUIDELINES.md and this refactoring guide together.
+1. **Apply memo() wrappers** to ALL components (60+ violations identified)
+2. **Add context integration** where missing (Settings/Audio/Bookmarks)
+3. **Fix responsive design** violations (mobile-first patterns)
+4. **Add performance optimizations** (useCallback, useMemo)
+
+#### **Phase 2: Pattern Standardization**
+
+1. **Update import/export order** to match established conventions
+2. **Add missing TypeScript interfaces** and return types
+3. **Include JSDoc documentation** for all components
+4. **Apply testing patterns** with provider wrappers
+
+#### **Phase 3: Quality Assurance**
+
+1. **Run architecture compliance checks** (`npm run check`)
+2. **Verify responsive design** across all breakpoints
+3. **Test context integration** functionality
+4. **Validate performance optimizations**
+
+### **Success Criteria (ALL MUST BE MET)**
+
+- ✅ **100% memo() compliance** - Every component uses memo() wrapper
+- ✅ **Mobile-first design** - All components use responsive patterns
+- ✅ **Context integration** - Components use required contexts
+- ✅ **Performance optimization** - useCallback/useMemo applied consistently
+- ✅ **TypeScript strict** - Proper interfaces and return types
+- ✅ **Testing compliance** - Provider wrappers and responsive testing
+- ✅ **Import conventions** - Exact order matching architecture guidelines
+
+### **Quality Gates**
+
+```bash
+# MUST PASS before any refactoring is considered complete
+npm run check           # No lint/type errors
+npm run test           # All tests passing
+npm run test:coverage  # Maintain coverage levels
+```
+
+### **Architecture Violation Prevention**
+
+**AI Development Rules:**
+
+- **MUST read ARCHITECTURE_GUIDELINES.md** before any changes
+- **MUST follow established patterns exactly** - no variations allowed
+- **MUST use architecture compliance checklist** for every change
+- **MUST integrate with required contexts** (Settings/Audio/Bookmarks)
+- **MUST implement mobile-first responsive design**
+
+### **Final Note**
+
+This guide transforms the previous refactoring approach into an **architecture-compliant system** that maintains the established patterns while achieving file size and complexity goals.
+
+**The goal is not just smaller files, but architecture-compliant, maintainable code that follows established patterns consistently.**
+
+---
+
+### **Emergency Architecture Fix Checklist**
+
+If implementing this refactoring guide, prioritize these critical fixes:
+
+1. **⚠️ HIGH PRIORITY**: Add memo() to BookmarkFolderClient, QuranAudioPlayer, HomeHeader
+2. **⚠️ HIGH PRIORITY**: Apply mobile-first classes to all components
+3. **⚠️ HIGH PRIORITY**: Integrate Settings/Audio/Bookmarks contexts
+4. **MEDIUM PRIORITY**: Add useCallback/useMemo optimization
+5. **MEDIUM PRIORITY**: Fix import/export order
+6. **LOW PRIORITY**: Add comprehensive JSDoc documentation
+
+For questions or clarification, refer to `ARCHITECTURE_GUIDELINES.md` as the authoritative source - this guide implements those patterns exactly.

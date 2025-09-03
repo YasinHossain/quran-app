@@ -4,7 +4,7 @@ export interface Tafsir extends TafsirResource {
   selected: boolean;
 }
 
-export const MAX_SELECTIONS = 3;
+export const MAX_TAFSIR_SELECTIONS = 3;
 
 export const capitalizeLanguageName = (lang: string): string => {
   return lang

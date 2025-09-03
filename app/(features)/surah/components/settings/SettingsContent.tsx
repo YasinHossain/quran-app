@@ -73,3 +73,5 @@ export const SettingsContent = ({
 
   return null;
 };
+
+export default SettingsContent;

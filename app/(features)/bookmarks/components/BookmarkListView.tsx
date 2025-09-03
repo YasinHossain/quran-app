@@ -52,6 +52,7 @@ export const BookmarkListView = ({
       <List height={listHeight} width="100%" itemCount={bookmarks.length} itemSize={140}>
         {({ index, style }) => {
           const bookmark = bookmarks[index];
+          if (!bookmark) return null;
           return (
             <div style={style} className="px-0">
               <BookmarkCard
@@ -123,6 +124,7 @@ export const BookmarkListView = ({
         <List height={listHeight} width="100%" itemCount={bookmarks.length} itemSize={180}>
           {({ index, style }) => {
             const bookmark = bookmarks[index];
+            if (!bookmark) return null;
             return (
               <div style={style} className="px-0">
                 <BookmarkCard

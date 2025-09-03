@@ -1,6 +1,25 @@
+import { memo } from 'react';
+
+import type { Params } from '@/types';
+
 import { SurahView } from '../components';
 
-export default async function Page({ params }: { params: Promise<{ surahId: string }> }) {
-  const { surahId } = await params;
-  return <SurahView surahId={surahId} />;
+interface SurahPageProps {
+  params: Promise<{ surahId: string }>;
 }
+
+/**
+ * Surah page component for displaying a specific Surah.
+ * Server component that handles async params and renders the SurahView.
+ */
+async function SurahPage({ params }: SurahPageProps) {
+  const { surahId } = await params;
+
+  return (
+    <div className="min-h-screen bg-background">
+      <SurahView surahId={surahId} />
+    </div>
+  );
+}
+
+export default SurahPage;

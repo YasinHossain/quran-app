@@ -3,7 +3,7 @@
 import React from 'react';
 import { GripVerticalIcon, CloseIcon } from '@/app/shared/icons';
 import { TafsirResource } from '@/types';
-import { MAX_SELECTIONS } from './tafsirPanel.utils';
+import { MAX_TAFSIR_SELECTIONS } from './tafsirPanel.utils';
 
 interface TafsirSelectionListProps {
   orderedSelection: number[];
@@ -29,9 +29,9 @@ export const TafsirSelectionList: React.FC<TafsirSelectionListProps> = ({
   <div>
     <h2 className="text-sm font-semibold px-1 mb-2 flex items-center justify-between text-muted">
       <span>
-        MY SELECTIONS ({orderedSelection.length}/{MAX_SELECTIONS})
+        MY SELECTIONS ({orderedSelection.length}/{MAX_TAFSIR_SELECTIONS})
       </span>
-      {orderedSelection.length >= MAX_SELECTIONS && (
+      {orderedSelection.length >= MAX_TAFSIR_SELECTIONS && (
         <span className="text-xs px-2 py-1 rounded-full bg-accent/10 text-accent">MAX</span>
       )}
     </h2>

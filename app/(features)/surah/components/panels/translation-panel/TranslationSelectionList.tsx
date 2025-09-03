@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { GripVerticalIcon, CloseIcon } from '@/app/shared/icons';
-import { MAX_SELECTIONS } from './useTranslationPanel';
+import { MAX_TRANSLATION_SELECTIONS } from './useTranslationPanel';
 import { TranslationResource } from '@/types';
 
 interface TranslationSelectionListProps {
@@ -29,9 +29,9 @@ export const TranslationSelectionList: React.FC<TranslationSelectionListProps> =
   <div>
     <h2 className="text-sm font-semibold px-2 mb-3 flex items-center justify-between text-foreground">
       <span>
-        MY SELECTIONS ({orderedSelection.length}/{MAX_SELECTIONS})
+        MY SELECTIONS ({orderedSelection.length}/{MAX_TRANSLATION_SELECTIONS})
       </span>
-      {orderedSelection.length >= MAX_SELECTIONS && (
+      {orderedSelection.length >= MAX_TRANSLATION_SELECTIONS && (
         <span className="text-xs px-2.5 py-1 rounded-full bg-accent/10 text-accent font-medium">
           MAX
         </span>

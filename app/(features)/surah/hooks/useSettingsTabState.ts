@@ -28,3 +28,5 @@ export const useSettingsTabState = ({ onReadingPanelOpen }: UseSettingsTabStateP
     tabOptions,
   };
 };
+
+export default useSettingsTabState;

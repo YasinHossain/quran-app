@@ -1,12 +1,31 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { QuranAudioPlayer } from '@/app/shared/player';
+import { lazy, Suspense, useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+
 import { buildAudioUrl } from '@/lib/audio/reciters';
 import { getSurahCoverUrl } from '@/lib/api';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import Spinner from '@/app/shared/Spinner';
+
 import type { Verse } from '@/types';
 import type { Reciter } from '@/app/shared/player/types';
+
+// Dynamic import for heavy QuranAudioPlayer component
+const QuranAudioPlayer = dynamic(
+  () =>
+    import('@/app/shared/player/QuranAudioPlayer').then((mod) => ({
+      default: mod.QuranAudioPlayer,
+    })),
+  {
+    loading: () => (
+      <div className="flex justify-center items-center p-4 bg-surface rounded-lg">
+        <Spinner className="h-5 w-5 text-accent" />
+      </div>
+    ),
+    ssr: false,
+  }
+);
 
 interface SurahAudioPlayerProps {
   activeVerse: Verse | null;

@@ -46,7 +46,7 @@ const MemorizationGrid: React.FC<MemorizationGridProps> = ({
     >
       {Object.entries(memorization).map(([surahId, plan]) => {
         const chapter = chapters.find((c) => c.id === Number(surahId));
-        return <MemorizationCard key={surahId} surahId={surahId} plan={plan} chapter={chapter} />;
+        return <MemorizationCard key={surahId} surahId={surahId} plan={plan} {...(chapter && { chapter: { name_simple: chapter.name_simple, name_arabic: chapter.name_arabic } })} />;
       })}
     </motion.div>
   );

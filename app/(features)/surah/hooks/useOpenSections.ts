@@ -40,3 +40,5 @@ export const useOpenSections = (defaultSections: string[] = ['translation', 'fon
 
   return { openSections, toggleSection };
 };
+
+export default useOpenSections;

@@ -22,3 +22,5 @@ export const ReadingSettings = ({ isOpen = false, onToggle }: ReadingSettingsPro
     </CollapsibleSection>
   );
 };
+
+export default ReadingSettings;

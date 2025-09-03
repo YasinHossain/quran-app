@@ -47,7 +47,7 @@ const LastReadGrid: React.FC<LastReadGridProps> = ({ lastRead, chapters }) => {
             key={surahId}
             surahId={surahId}
             verseId={verseId}
-            chapter={chapter}
+            {...(chapter && { chapter })}
             index={index}
           />
         );

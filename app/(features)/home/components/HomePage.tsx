@@ -1,45 +1,58 @@
 'use client';
-import React, { useState } from 'react';
+import { memo, useCallback, useState } from 'react';
+
+
 import VerseOfDay from './VerseOfDay';
 import HomePageBackground from './HomePageBackground';
-import HomeHeader from './HomeHeader';
+import { HomeHeader } from './HomeHeader';
 import HomeSearch from './HomeSearch';
 import HomeTabs from './HomeTabs';
 
-// --- Main Page Component ---
+interface HomePageProps {
+  className?: string;
+}
+
 /**
- * Home page for the Qur'an application.
+ * Home page for the Qur'an application with mobile-first responsive design.
  *
  * Features:
- * - Search bar for filtering Surahs, Juz, and pages.
- * - Tab navigation to switch between Surah, Juz, and Page views.
- * - Theme toggle to switch between light and dark modes.
+ * - Search functionality for Surahs, Juz, and Pages
+ * - Tab navigation between different content views
+ * - Verse of the Day display
+ * - Theme toggle functionality
  *
- * Internal state:
- * - `searchQuery` stores the user's search input.
- * - `theme` is managed via `useTheme`.
+ * Architecture compliance:
+ * - Uses memo() for performance optimization
+ * - Implements mobile-first responsive design
+ * - Includes proper TypeScript interfaces
  */
-export default function HomePage() {
-  const [searchQuery, setSearchQuery] = useState('');
+export const HomePage = memo(function HomePage({ className }: HomePageProps) {
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
+  const handleSearchChange = useCallback((query: string) => {
+    setSearchQuery(query);
+  }, []);
 
   return (
-    <div className="relative min-h-[100dvh] flex flex-col bg-background text-foreground overflow-hidden">
+    <div
+      className={`relative min-h-[100dvh] flex flex-col bg-background text-foreground overflow-hidden ${className || ''}`}
+    >
       <HomePageBackground />
 
-      <div className="relative z-10 flex flex-col h-full overflow-y-auto px-4 sm:px-6 lg:px-8 homepage-scrollable-area">
+      <div className="relative z-10 flex flex-col h-full overflow-y-auto px-4 md:px-6 lg:px-8 homepage-scrollable-area">
         <HomeHeader />
 
-        <main className="flex-grow flex flex-col items-center justify-center text-center pt-20 pb-10">
-          <div className="content-visibility-auto animate-fade-in-up">
-            <h2 className="text-5xl md:text-7xl font-bold tracking-tight text-hero">
+        <main className="flex-grow flex flex-col items-center justify-center text-center space-y-8 pt-12 pb-6 md:pt-20 md:pb-10 md:space-y-12">
+          <div className="content-visibility-auto animate-fade-in-up space-y-4 md:space-y-6">
+            <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-hero leading-tight">
               The Noble Qur&apos;an
             </h2>
-            <p className="mt-4 text-lg md:text-xl max-w-2xl mx-auto text-content-secondary">
+            <p className="text-base md:text-lg lg:text-xl max-w-xl md:max-w-2xl mx-auto text-content-secondary px-4 md:px-0">
               Read! In the name of your Lord
             </p>
           </div>
 
-          <HomeSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          <HomeSearch searchQuery={searchQuery} setSearchQuery={handleSearchChange} />
 
           <VerseOfDay />
         </main>
@@ -48,4 +61,6 @@ export default function HomePage() {
       </div>
     </div>
   );
-}
+});
+
+export default HomePage;

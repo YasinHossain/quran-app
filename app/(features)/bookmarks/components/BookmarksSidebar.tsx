@@ -30,9 +30,9 @@ export const BookmarksSidebar: React.FC<BookmarksSidebarProps> = ({
     return (
       <BookmarksContent
         activeSection={activeSection}
-        onSectionChange={onSectionChange}
+        {...(onSectionChange && { onSectionChange })}
         folders={folders}
-        onVerseClick={onVerseClick}
+        {...(onVerseClick && { onVerseClick })}
       >
         {children}
       </BookmarksContent>
@@ -49,9 +49,9 @@ export const BookmarksSidebar: React.FC<BookmarksSidebarProps> = ({
     >
       <BookmarksContent
         activeSection={activeSection}
-        onSectionChange={onSectionChange}
+        {...(onSectionChange && { onSectionChange })}
         folders={folders}
-        onVerseClick={onVerseClick}
+        {...(onVerseClick && { onVerseClick })}
       >
         {children}
       </BookmarksContent>

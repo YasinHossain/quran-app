@@ -30,7 +30,7 @@ const FALLBACK_VERSE_KEYS = [
 ];
 
 interface UseFallbackVerseOptions {
-  translationId: number;
+  translationId?: number;
   initialIndex?: number;
 }
 
@@ -56,7 +56,9 @@ export function useFallbackVerse({
 
   const fallbackVerseFetcher = useCallback(async (): Promise<Verse> => {
     const verseKey = FALLBACK_VERSE_KEYS[currentIndex % FALLBACK_VERSE_KEYS.length];
-    return await getVerseByKey(verseKey, translationId);
+    const finalTranslationId = translationId || 131;
+    if (!verseKey) throw new Error('No verse key available');
+    return await getVerseByKey(verseKey, finalTranslationId);
   }, [translationId, currentIndex]);
 
   const {

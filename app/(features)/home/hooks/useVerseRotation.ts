@@ -22,7 +22,7 @@ export function useVerseRotation({
   onRotate,
   enabled = true,
 }: UseVerseRotationOptions): UseVerseRotationReturn {
-  const intervalRef = useRef<NodeJS.Timeout | undefined>();
+  const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const isRotatingRef = useRef(false);
 
   const startRotation = useCallback(() => {

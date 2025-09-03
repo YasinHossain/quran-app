@@ -1,6 +1,24 @@
-import React from 'react';
-import { QuranAudioPlayer } from '@/app/shared/player';
+import dynamic from 'next/dynamic';
+
+import Spinner from '@/app/shared/Spinner';
+
 import type { Track } from '@/app/shared/player/types';
+
+// Dynamic import for heavy QuranAudioPlayer component
+const QuranAudioPlayer = dynamic(
+  () =>
+    import('@/app/shared/player/QuranAudioPlayer').then((mod) => ({
+      default: mod.QuranAudioPlayer,
+    })),
+  {
+    loading: () => (
+      <div className="flex justify-center items-center p-4 bg-surface rounded-lg">
+        <Spinner className="h-4 w-4 md:h-5 md:w-5 text-accent" />
+      </div>
+    ),
+    ssr: false,
+  }
+);
 
 interface PageAudioPlayerProps {
   track: Track | null;
