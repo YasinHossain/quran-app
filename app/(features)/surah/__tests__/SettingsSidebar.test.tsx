@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Header from '@/app/shared/Header';
-import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
-import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/translation-panel';
+import { SettingsSidebar, TranslationPanel } from '@/app/(features)/surah/components';
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import { HeaderVisibilityProvider } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 

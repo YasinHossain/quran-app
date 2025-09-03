@@ -1,3 +1,5 @@
+'use client';
+
 // app/(features)/surah/[surahId]/components/Verse.tsx
 import { memo, useCallback, useEffect, useRef } from 'react';
 import { Verse as VerseType, Translation } from '@/types';
@@ -107,3 +109,5 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
     </div>
   );
 });
+
+export default Verse;

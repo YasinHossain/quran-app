@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
+import { SettingsSidebar } from '@/app/(features)/surah/components';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { PageContent } from './components/PageContent';
 import { PageAudioPlayer } from './components/PageAudioPlayer';

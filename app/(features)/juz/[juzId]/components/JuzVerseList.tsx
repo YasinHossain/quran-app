@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Verse } from '@/app/(features)/surah/[surahId]/components/Verse';
+import { VerseCard } from '@/app/(features)/surah/components';
 import type { Verse as VerseType } from '@/types';
 
 interface JuzVerseListProps {
@@ -25,7 +25,7 @@ export function JuzVerseList({
   return (
     <>
       {verses.map((v) => (
-        <Verse key={v.id} verse={v} />
+        <VerseCard key={v.id} verse={v} />
       ))}
       <div ref={loadMoreRef} className="py-4 text-center">
         {isValidating && <span className="text-accent">{t('loading')}</span>}

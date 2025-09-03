@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ResizeObserver as ResizeObserverPolyfill } from '@juggle/resize-observer';
 import { AlertIcon, ResetIcon } from '@/app/shared/icons';
-import { useArabicFontPanel } from './arabic-font-panel/useArabicFontPanel';
+import { useArabicFontPanel } from './panels/arabic-font-panel/useArabicFontPanel';
 import { ResourceList } from '@/app/shared/resource-panel';
 
 interface ArabicFontPanelProps {

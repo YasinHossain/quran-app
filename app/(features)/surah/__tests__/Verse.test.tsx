@@ -1,5 +1,5 @@
 import { screen, waitFor } from '@testing-library/react';
-import { Verse as VerseComponent } from '@/app/(features)/surah/[surahId]/components/Verse';
+import { VerseCard as VerseComponent } from '@/app/(features)/surah/components';
 import TranslationProvider from '@/app/providers/TranslationProvider';
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import { Verse } from '@/types';

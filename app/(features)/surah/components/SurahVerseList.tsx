@@ -3,7 +3,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Spinner from '@/app/shared/Spinner';
-import { Verse as VerseComponent } from './Verse';
+import { VerseCard as VerseComponent } from './VerseCard';
 import type { Verse as VerseType } from '@/types';
 
 interface SurahVerseListProps {

@@ -1,6 +1,6 @@
 'use client';
 import { Verse as VerseType, TafsirResource } from '@/types';
-import { Verse as VerseComponent } from '@/app/(features)/surah/[surahId]/components/Verse';
+import { VerseCard as VerseComponent } from '@/app/(features)/surah/components';
 import TafsirTabs from './TafsirTabs';
 import { useSettings } from '@/app/providers/SettingsContext';
 

@@ -3,7 +3,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { searchVerses } from '@/lib/api';
 import { Verse as VerseType } from '@/types';
-import { Verse } from '@/app/(features)/surah/[surahId]/components/Verse';
+import { VerseCard } from '@/app/(features)/surah/components';
 
 function SearchContent() {
   const searchParams = useSearchParams();
@@ -37,7 +37,7 @@ function SearchContent() {
       )}
       <div className="space-y-8">
         {verses.map((v) => (
-          <Verse key={v.id} verse={v} />
+          <VerseCard key={v.id} verse={v} />
         ))}
       </div>
     </div>

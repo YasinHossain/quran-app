@@ -5,8 +5,7 @@ import { useUIState } from '@/app/providers/UIStateContext';
 import { BaseSidebar } from '@/app/shared/components/BaseSidebar';
 import { SettingsContentWrapper } from './SettingsContentWrapper';
 import { SettingsPanels } from './SettingsPanels';
-import { useSettingsTabState } from './hooks/useSettingsTabState';
-import { useSettingsSections } from './hooks/useSettingsSections';
+import { useSettingsTabState, useSettingsSections } from '../../hooks';
 
 export interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;

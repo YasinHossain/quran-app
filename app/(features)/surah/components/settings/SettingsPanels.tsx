@@ -1,10 +1,9 @@
 'use client';
 
 import React from 'react';
-import { ArabicFontPanel } from './ArabicFontPanel';
-import { TranslationPanel } from './translation-panel';
-import { TafsirPanel } from './tafsir-panel';
-import { WordLanguagePanel } from './WordLanguagePanel';
+import { TranslationPanel, TafsirPanel } from '../panels';
+import { WordLanguagePanel } from '../WordLanguagePanel';
+import ArabicFontPanel from '../ArabicFontPanel';
 import { SettingsSidebarProps } from './SettingsSidebar';
 
 interface SettingsPanelsProps

@@ -3,7 +3,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { TranslationIcon } from '@/app/shared/icons';
-import { CollapsibleSection } from './CollapsibleSection';
+import { CollapsibleSection } from '../CollapsibleSection';
 import { useSettings } from '@/app/providers/SettingsContext';
 import SelectionBox from '@/app/shared/SelectionBox';
 

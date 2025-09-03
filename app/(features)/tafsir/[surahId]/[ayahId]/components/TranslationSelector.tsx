@@ -1,5 +1,5 @@
 'use client';
-import { TranslationPanel } from '@/app/(features)/surah/[surahId]/components/translation-panel';
+import { TranslationPanel } from '@/app/(features)/surah/components';
 
 interface TranslationSelectorProps {
   isOpen: boolean;

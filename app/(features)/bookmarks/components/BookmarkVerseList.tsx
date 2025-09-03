@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Verse as VerseComponent } from '@/app/(features)/surah/[surahId]/components/Verse';
+import { VerseCard as VerseComponent } from '@/app/(features)/surah/components';
 import type { Verse as VerseType } from '@/types';
 import Spinner from '@/app/shared/Spinner';
 

@@ -1,0 +1,10 @@
+export { default as SettingsContent } from './SettingsContent';
+export { default as SettingsSidebar } from './SettingsSidebar';
+export { default as ReadingSettings } from './ReadingSettings';
+export { default as FontSettings } from './FontSettings';
+export { default as TranslationSettings } from './TranslationSettings';
+export { default as TafsirSettings } from './TafsirSettings';
+export { default as SettingsContentWrapper } from './SettingsContentWrapper';
+export { default as SettingsPanels } from './SettingsPanels';
+export { default as SettingsHeader } from './SettingsHeader';
+export { default as SettingsTabs } from './SettingsTabs';

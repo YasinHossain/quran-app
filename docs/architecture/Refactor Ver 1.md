@@ -583,11 +583,11 @@ When refactoring a component:
 - [x] Refactor large hooks (useSelection: 184→14 lines + focused modules, useVerseOfDay: 171→96 lines + composed hooks)
 - [x] Optimize page components (page/[pageId]/page.tsx: 143→69 lines + extracted components)
 
-### Week 3: Architecture
+### Week 3: Architecture ✅ COMPLETED
 
-- [ ] Reorganize folder structure
-- [ ] Implement naming conventions
-- [ ] Create barrel exports
+- [x] Reorganize folder structure (moved components from route-level to feature-level)
+- [x] Implement naming conventions (SurahClient.tsx → SurahView.client.tsx, Verse.tsx → VerseCard.tsx)
+- [x] Create barrel exports (index.ts files with clean imports)
 
 ### Week 4: Code Quality
 

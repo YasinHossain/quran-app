@@ -13,7 +13,7 @@ import type { Verse } from '@/types';
 
 // Simple cache for verses
 const verseCache = new Map<string, Verse>();
-import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
+import { SettingsSidebar } from '@/app/(features)/surah/components';
 import useTranslationOptions from '@/app/(features)/surah/hooks/useTranslationOptions';
 import { useTranslation } from 'react-i18next';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';

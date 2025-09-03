@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
+import { SettingsSidebar } from '@/app/(features)/surah/components';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import { buildAudioUrl } from '@/lib/audio/reciters';

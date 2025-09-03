@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FontSettingIcon } from '@/app/shared/icons';
-import { CollapsibleSection } from './CollapsibleSection';
+import { CollapsibleSection } from '../CollapsibleSection';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useFontSize } from '../../hooks/useFontSize';
 import SelectionBox from '@/app/shared/SelectionBox';

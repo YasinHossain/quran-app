@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Verse } from '@/app/(features)/surah/[surahId]/components/Verse';
+import { VerseCard } from '@/app/(features)/surah/components';
 import { Verse as VerseType } from '@/types';
 import Spinner from '@/app/shared/Spinner';
 
@@ -49,7 +49,7 @@ export function PageContent({
           <>
             {verses.map((v: VerseType) => (
               <React.Fragment key={v.id}>
-                <Verse verse={v} />
+                <VerseCard verse={v} />
               </React.Fragment>
             ))}
             <div ref={loadMoreRef} className="py-4 text-center space-x-2">

@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { SettingsSidebar } from '@/app/(features)/surah/[surahId]/components/SettingsSidebar';
+import { SettingsSidebar } from '@/app/(features)/surah/components';
 import { useTafsirVerseData } from '../../hooks/useTafsirVerseData';
 import AyahNavigation from './components/AyahNavigation';
 import TafsirViewer from './components/TafsirViewer';

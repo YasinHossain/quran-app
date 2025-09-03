@@ -1,19 +1,18 @@
 'use client';
 
 import React from 'react';
-import { SettingsSidebar } from './components/SettingsSidebar';
+import { SettingsSidebar } from './settings/SettingsSidebar';
 import { getVersesByChapter } from '@/lib/api';
-import useVerseListing from '@/app/(features)/surah/hooks/useVerseListing';
-import useSurahPanels from '@/app/(features)/surah/hooks/useSurahPanels';
-import SurahAudioPlayer from './components/SurahAudioPlayer';
-import SurahVerseList from './components/SurahVerseList';
+import { useVerseListing, useSurahPanels } from '../hooks';
+import SurahAudioPlayer from './SurahAudioPlayer';
+import SurahVerseList from './SurahVerseList';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
-interface SurahClientProps {
+interface SurahViewProps {
   surahId: string;
 }
 
-export default function SurahClient({ surahId }: SurahClientProps) {
+export default function SurahView({ surahId }: SurahViewProps) {
   const { isHidden } = useHeaderVisibility();
 
   React.useEffect(() => {
