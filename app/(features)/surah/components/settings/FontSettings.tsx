@@ -29,8 +29,9 @@ export const FontSettings = ({
     setIsClient(true);
   }, []);
 
-  const selectedArabicFont =
-    arabicFonts.find((font) => font.value === settings.arabicFontFace)?.name || t('select_font');
+  const selectedArabicFont = isClient
+    ? arabicFonts.find((font) => font.value === settings.arabicFontFace)?.name || t('select_font')
+    : '';
 
   return (
     <CollapsibleSection
@@ -75,11 +76,13 @@ export const FontSettings = ({
             suppressHydrationWarning
           />
         </div>
-        <SelectionBox
-          label={t('arabic_font_face')}
-          value={selectedArabicFont}
-          onClick={onArabicFontPanelOpen}
-        />
+        <div suppressHydrationWarning>
+          <SelectionBox
+            label={t('arabic_font_face')}
+            value={selectedArabicFont}
+            onClick={onArabicFontPanelOpen}
+          />
+        </div>
       </div>
     </CollapsibleSection>
   );
