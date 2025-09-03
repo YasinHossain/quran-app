@@ -1,9 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
+
 import QuranAudioPlayer from '@/app/shared/player/QuranAudioPlayer';
 import { AudioProvider } from '@/app/shared/player/context/AudioContext';
 import type { Track, RepeatOptions } from '@/app/shared/player/types';
+import ReciterSelector from './components/ReciterSelector';
+import RepeatModeSelector from './components/RepeatModeSelector';
+import DebugInfo from './components/DebugInfo';
 
 const DEMO_TRACKS: Track[] = [
   {
@@ -24,7 +28,11 @@ const DEMO_TRACKS: Track[] = [
   },
 ];
 
-export default function Page() {
+/**
+ * Demo page for testing the Quran Audio Player component.
+ * Provides controls for reciter selection and repeat options.
+ */
+export default function PlayerDemoPage(): React.JSX.Element {
   const [track, setTrack] = useState<Track>(DEMO_TRACKS[0]);
   const [repeat, setRepeat] = useState<RepeatOptions>({
     mode: 'off',
@@ -39,91 +47,15 @@ export default function Page() {
     <AudioProvider>
       <div className="p-4 space-y-4">
         <h1 className="text-xl font-semibold">Player Demo</h1>
+
         <div className="space-y-2 text-sm">
-          <div>
-            <label className="mr-2 font-medium" htmlFor="reciter">
-              Reciter:
-            </label>
-            <select
-              id="reciter"
-              value={track.id}
-              onChange={(e) => {
-                const t = DEMO_TRACKS.find((d) => d.id === e.target.value);
-                if (t) setTrack(t);
-              }}
-              className="border p-1 rounded"
-            >
-              {DEMO_TRACKS.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.artist}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="mr-2 font-medium" htmlFor="repeat">
-              Repeat:
-            </label>
-            <select
-              id="repeat"
-              value={repeat.mode}
-              onChange={(e) =>
-                setRepeat({ ...repeat, mode: e.target.value as RepeatOptions['mode'] })
-              }
-              className="border p-1 rounded"
-            >
-              <option value="off">Off</option>
-              <option value="single">Single</option>
-              <option value="range">Range</option>
-              <option value="surah">Surah</option>
-            </select>
-          </div>
-          {repeat.mode === 'range' && (
-            <div className="space-x-2">
-              <label>
-                Start
-                <input
-                  type="number"
-                  value={repeat.start}
-                  onChange={(e) => setRepeat({ ...repeat, start: Number(e.target.value) })}
-                  className="border ml-1 w-16 rounded p-0.5"
-                />
-              </label>
-              <label>
-                End
-                <input
-                  type="number"
-                  value={repeat.end}
-                  onChange={(e) => setRepeat({ ...repeat, end: Number(e.target.value) })}
-                  className="border ml-1 w-16 rounded p-0.5"
-                />
-              </label>
-            </div>
-          )}
-          <div className="space-x-2">
-            <label>
-              Repeat each
-              <input
-                type="number"
-                value={repeat.repeatEach}
-                onChange={(e) => setRepeat({ ...repeat, repeatEach: Number(e.target.value) })}
-                className="border ml-1 w-16 rounded p-0.5"
-              />
-            </label>
-            <label>
-              Delay (s)
-              <input
-                type="number"
-                value={repeat.delay}
-                onChange={(e) => setRepeat({ ...repeat, delay: Number(e.target.value) })}
-                className="border ml-1 w-20 rounded p-0.5"
-              />
-            </label>
-          </div>
-          <pre className="bg-surface p-2 rounded text-xs">
-            {JSON.stringify({ track, repeat }, null, 2)}
-          </pre>
+          <ReciterSelector tracks={DEMO_TRACKS} selectedTrack={track} onTrackChange={setTrack} />
+
+          <RepeatModeSelector repeatOptions={repeat} onRepeatChange={setRepeat} />
+
+          <DebugInfo track={track} repeatOptions={repeat} />
         </div>
+
         <QuranAudioPlayer track={track} />
       </div>
     </AudioProvider>

@@ -30,6 +30,10 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   children: React.ReactNode;
 }
 
+/**
+ * Flexible button component with variants, sizes, and loading state.
+ * Includes touch-friendly design with proper accessibility support.
+ */
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     { variant = 'primary', size = 'md', isLoading, className, children, disabled, ...props },

@@ -16,10 +16,16 @@ export interface LookupFn {
 }
 
 interface UseVerseListingParams {
+  /** Surah or resource ID */
   id?: string;
+  /** Function to fetch verses */
   lookup: LookupFn;
 }
 
+/**
+ * Hook for managing verse listing with infinite scroll, audio controls, and settings.
+ * Handles verse fetching, translation management, and audio player integration.
+ */
 export function useVerseListing({ id, lookup }: UseVerseListingParams) {
   const [error, setError] = useState<string | null>(null);
   const { settings, setSettings } = useSettings();

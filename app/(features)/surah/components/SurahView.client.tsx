@@ -12,6 +12,10 @@ interface SurahViewProps {
   surahId: string;
 }
 
+/**
+ * Main client component for displaying Surah verses with settings sidebar.
+ * Manages verse listing, audio playback, and responsive layout with hidden header behavior.
+ */
 export default function SurahView({ surahId }: SurahViewProps) {
   const { isHidden } = useHeaderVisibility();
 
