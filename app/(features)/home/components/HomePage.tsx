@@ -61,5 +61,3 @@ export const HomePage = memo(function HomePage({ className }: HomePageProps) {
     </div>
   );
 });
-
-export default HomePage;

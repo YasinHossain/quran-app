@@ -1,6 +1,11 @@
 import { VerseRepository } from '../../../src/infrastructure/repositories/VerseRepository';
 import * as apiVerses from '../../../lib/api/verses';
 import { Verse } from '../../../types';
+import {
+  logger,
+  MemoryTransport,
+  LogLevel,
+} from '../../../src/infrastructure/monitoring/Logger';
 
 // Mock the API functions
 jest.mock('../../../lib/api/verses', () => ({
@@ -277,6 +282,41 @@ describe('VerseRepository Integration Tests', () => {
       const sajdahVerses = await repository.findSajdahVerses();
 
       expect(sajdahVerses.length).toBeGreaterThanOrEqual(3);
+    });
+  });
+
+  describe('logging', () => {
+    let memory: MemoryTransport;
+
+    beforeEach(() => {
+      memory = new MemoryTransport();
+      logger.addTransport(memory);
+    });
+
+    afterEach(() => {
+      logger.removeTransport(memory);
+      memory.clear();
+    });
+
+    it('logs warning for unsupported save operation', async () => {
+      const verse = new (require('../../../src/domain/entities/Verse').Verse)(
+        '1:1',
+        1,
+        1,
+        '',
+        ''
+      );
+
+      await expect(repository.save(verse)).rejects.toThrow(
+        'Save operation not supported by read-only API'
+      );
+
+      const entries = memory.getEntries();
+      expect(entries).toHaveLength(1);
+      expect(entries[0].level).toBe(LogLevel.WARN);
+      expect(entries[0].message).toBe(
+        'Save operation not supported by read-only API'
+      );
     });
   });
 });

@@ -4,6 +4,7 @@ import { Translation } from '../../domain/value-objects/Translation';
 import * as apiVerses from '../../../lib/api/verses';
 import * as apiSearch from '../../../lib/api/verses';
 import { Verse as ApiVerse } from '../../../types';
+import { logger } from '../monitoring/Logger';
 
 /**
  * Infrastructure implementation of verse repository using Quran.com API
@@ -46,13 +47,13 @@ export class VerseRepository implements IVerseRepository {
 
   async save(verse: Verse): Promise<void> {
     // Note: API is read-only, this would be implemented for local storage/cache
-    console.warn('Save operation not supported by read-only API');
+    logger.warn('Save operation not supported by read-only API');
     throw new Error('Save operation not supported by read-only API');
   }
 
   async remove(id: string): Promise<void> {
     // Note: API is read-only, this would be implemented for local storage/cache
-    console.warn('Remove operation not supported by read-only API');
+    logger.warn('Remove operation not supported by read-only API');
     throw new Error('Remove operation not supported by read-only API');
   }
 
@@ -304,17 +305,17 @@ export class VerseRepository implements IVerseRepository {
   async findByRevelationType(type: 'makki' | 'madani'): Promise<Verse[]> {
     // This would require surah metadata to determine revelation type
     // For now, return empty array as this requires additional API calls
-    console.warn('findByRevelationType not fully implemented - requires surah metadata');
+    logger.warn('findByRevelationType not fully implemented - requires surah metadata');
     return [];
   }
 
   async cacheForOffline(surahIds?: number[]): Promise<void> {
     // This would be implemented with local storage/IndexedDB
-    console.warn('Offline caching not implemented');
+    logger.warn('Offline caching not implemented');
   }
 
   async clearCache(): Promise<void> {
     // This would be implemented with local storage/IndexedDB
-    console.warn('Cache clearing not implemented');
+    logger.warn('Cache clearing not implemented');
   }
 }

@@ -1,0 +1,31 @@
+import { BookmarkRepository } from '../../../src/infrastructure/repositories/BookmarkRepository';
+import {
+  logger,
+  MemoryTransport,
+  LogLevel,
+} from '../../../src/infrastructure/monitoring/Logger';
+
+describe('BookmarkRepository logging', () => {
+  let repository: BookmarkRepository;
+  let memory: MemoryTransport;
+
+  beforeEach(() => {
+    repository = new BookmarkRepository();
+    memory = new MemoryTransport();
+    logger.addTransport(memory);
+  });
+
+  afterEach(() => {
+    logger.removeTransport(memory);
+    memory.clear();
+  });
+
+  it('logs warning for invalid import data', async () => {
+    await repository.importBookmarks('user1', [{} as any]);
+
+    const entries = memory.getEntries();
+    expect(entries).toHaveLength(1);
+    expect(entries[0].level).toBe(LogLevel.WARN);
+    expect(entries[0].message).toBe('Invalid bookmark data for import');
+  });
+});

@@ -1,4 +1,5 @@
-import { getTafsirByVerse } from '@/lib/api';
+import { container } from '@/src/infrastructure/di/container';
+import { GetTafsirContentUseCase } from '@/src/application/use-cases/GetTafsirContent';
 
 export const CACHE_TTL = 60 * 60 * 1000; // 1 hour in ms
 export const MAX_CACHE_SIZE = 50;
@@ -40,7 +41,9 @@ export function getTafsirCached(verseKey: string, tafsirId = 169): Promise<strin
     }
   }
 
-  const value = getTafsirByVerse(verseKey, tafsirId);
+  const repository = container.getTafsirRepository();
+  const useCase = new GetTafsirContentUseCase(repository);
+  const value = useCase.execute(verseKey, tafsirId);
   cache.set(key, { value, timestamp: now });
   return value;
 }

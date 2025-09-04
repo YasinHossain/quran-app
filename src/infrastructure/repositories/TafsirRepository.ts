@@ -1,6 +1,7 @@
 import { ITafsirRepository } from '../../domain/repositories/ITafsirRepository';
 import { Tafsir, TafsirData } from '../../domain/entities/Tafsir';
 import { apiFetch } from '../../../lib/api/client';
+import { logger } from '../monitoring/Logger';
 
 interface ApiTafsirResource {
   id: number;
@@ -32,9 +33,10 @@ export class TafsirRepository implements ITafsirRepository {
         return allResources;
       }
     } catch (error) {
-      console.warn(
-        'Failed to fetch all tafsir resources, trying language-specific approach:',
-        error
+      logger.warn(
+        'Failed to fetch all tafsir resources, trying language-specific approach',
+        undefined,
+        error as Error
       );
     }
 
@@ -94,7 +96,7 @@ export class TafsirRepository implements ITafsirRepository {
         return data.tafsir.text;
       }
     } catch (error) {
-      console.warn('Primary tafsir API failed, trying fallback:', error);
+      logger.warn('Primary tafsir API failed, trying fallback', undefined, error as Error);
     }
 
     // Fallback to CDN endpoint
@@ -130,7 +132,7 @@ export class TafsirRepository implements ITafsirRepository {
       };
       localStorage.setItem(this.CACHE_KEY, JSON.stringify(cacheData));
     } catch (error) {
-      console.warn('Failed to cache tafsir resources:', error);
+      logger.warn('Failed to cache tafsir resources', undefined, error as Error);
     }
   }
 
@@ -153,7 +155,7 @@ export class TafsirRepository implements ITafsirRepository {
 
       return cacheData.data.map((data: TafsirData) => Tafsir.fromJSON(data));
     } catch (error) {
-      console.warn('Failed to get cached tafsir resources:', error);
+      logger.warn('Failed to get cached tafsir resources', undefined, error as Error);
       localStorage.removeItem(this.CACHE_KEY);
       return [];
     }
@@ -179,7 +181,7 @@ export class TafsirRepository implements ITafsirRepository {
         return this.mapApiResponseToEntities(data.tafsirs);
       }
     } catch (error) {
-      console.warn('Primary API failed, trying CDN fallback:', error);
+      logger.warn('Primary API failed, trying CDN fallback', undefined, error as Error);
     }
 
     // Fallback to CDN API

@@ -2,6 +2,7 @@ import { IBookmarkRepository } from '../../domain/repositories/IBookmarkReposito
 import { Bookmark } from '../../domain/entities/Bookmark';
 import { BookmarkPosition } from '../../domain/value-objects/BookmarkPosition';
 import { StoredBookmark, isStoredBookmark } from '../../domain/value-objects/StoredBookmark';
+import { logger } from '../monitoring/Logger';
 
 /**
  * Infrastructure implementation of bookmark repository using localStorage
@@ -353,7 +354,7 @@ export class BookmarkRepository implements IBookmarkRepository {
 
   async importBookmarks(userId: string, bookmarks: StoredBookmark[]): Promise<void> {
     if (!this.isStoredBookmarkArray(bookmarks)) {
-      console.warn('Invalid bookmark data for import');
+      logger.warn('Invalid bookmark data for import');
       return;
     }
     for (const bookmarkData of bookmarks) {

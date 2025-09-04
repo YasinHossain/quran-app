@@ -1,6 +1,6 @@
 import { screen, within, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import HomePage from '@/app/(features)/home/components/HomePage';
+import { HomePage } from '@/app/(features)/home/components/HomePage';
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import { Verse } from '@/types';
 

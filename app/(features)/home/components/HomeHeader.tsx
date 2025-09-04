@@ -55,5 +55,3 @@ export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProp
     </header>
   );
 });
-
-export default HomeHeader;

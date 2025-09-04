@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import NotFound from '@/app/not-found';
-import TranslationProvider from '@/app/providers/TranslationProvider';
+import { TranslationProvider } from '@/app/providers/TranslationProvider';
 
 // Mock next/link for testing environment
 jest.mock('next/link', () => {

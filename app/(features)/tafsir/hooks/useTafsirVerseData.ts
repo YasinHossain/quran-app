@@ -1,6 +1,8 @@
 import useSWR from 'swr';
 import { useSettings } from '@/app/providers/SettingsContext';
-import { getVersesByChapter, getTafsirByVerse } from '@/lib/api';
+import { getVersesByChapter } from '@/lib/api';
+import { container } from '@/src/infrastructure/di/container';
+import { GetTafsirContentUseCase } from '@/src/application/use-cases/GetTafsirContent';
 import { Verse as VerseType } from '@/types';
 import { useTranslationOptions } from './useTranslationOptions';
 import { useTafsirOptions } from './useTafsirOptions';
@@ -25,9 +27,12 @@ export const useTafsirVerseData = (surahId: string, ayahId: string) => {
   );
   const verse: VerseType | undefined = verseData;
 
+  const repository = container.getTafsirRepository();
+  const tafsirUseCase = new GetTafsirContentUseCase(repository);
+
   const { data: tafsirHtml } = useSWR(
     verse && tafsirResource ? ['tafsir', verse.verse_key, tafsirResource.id] : null,
-    ([, key, id]) => getTafsirByVerse(key as string, id as number)
+    ([, key, id]) => tafsirUseCase.execute(key as string, id as number)
   );
 
   return {

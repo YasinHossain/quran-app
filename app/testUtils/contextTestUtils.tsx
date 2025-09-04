@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react';
-import { render, RenderOptions, screen, fireEvent } from '@testing-library/react';
+import { render, RenderOptions, screen } from '@testing-library/react';
 import { renderHook, RenderHookOptions } from '@testing-library/react';
-import { AudioProvider } from '@/app/shared/player/context/AudioContext';
-import { SettingsProvider } from '@/app/providers/SettingsContext';
-import { BookmarkProvider } from '@/app/providers/BookmarkContext';
+import { AudioProvider, useAudio } from '@/app/shared/player/context/AudioContext';
+import { SettingsProvider, useSettings } from '@/app/providers/SettingsContext';
+import { BookmarkProvider, useBookmarks } from '@/app/providers/BookmarkContext';
 import { ThemeProvider } from '@/app/providers/ThemeContext';
 import { SidebarProvider } from '@/app/providers/SidebarContext';
 import { SWRConfig } from 'swr';
@@ -130,10 +130,10 @@ export const mockContextValues = {
 /**
  * Test context integration for components
  */
-export function testContextIntegration<T extends ContextProviderName>(
+export function testContextIntegration<T extends ContextProviderName, C>(
   contextName: T,
-  testFn: (contextValue: any) => void,
-  mockValue?: any
+  testFn: (contextValue: C) => void,
+  mockValue?: C
 ): void {
   describe(`${contextName} Context Integration`, () => {
     it(`should integrate with ${contextName} context`, () => {
@@ -145,6 +145,9 @@ export function testContextIntegration<T extends ContextProviderName>(
 
       renderWithSpecificProviders(<TestComponent />, [contextName]);
       expect(screen.getByTestId(`${contextName.toLowerCase()}-context`)).toBeInTheDocument();
+      if (mockValue !== undefined) {
+        testFn(mockValue);
+      }
     });
   });
 }
@@ -152,9 +155,9 @@ export function testContextIntegration<T extends ContextProviderName>(
 /**
  * Test Settings context integration
  */
-export function testSettingsContextIntegration(
-  Component: React.ComponentType<any>,
-  props?: any
+export function testSettingsContextIntegration<P>(
+  Component: React.ComponentType<P>,
+  props?: P
 ): void {
   it('integrates with SettingsContext', () => {
     renderWithSpecificProviders(<Component {...props} />, ['Settings']);
@@ -165,7 +168,7 @@ export function testSettingsContextIntegration(
 
   it('provides settings and update functions', () => {
     const TestComponent = () => {
-      const { settings, updateSetting } = require('@/app/providers/SettingsContext').useSettings();
+      const { settings, updateSetting } = useSettings();
       return (
         <div>
           <span data-testid="font-size">{settings.fontSize}</span>
@@ -186,10 +189,7 @@ export function testSettingsContextIntegration(
 /**
  * Test Audio context integration
  */
-export function testAudioContextIntegration(
-  Component: React.ComponentType<any>,
-  props?: any
-): void {
+export function testAudioContextIntegration<P>(Component: React.ComponentType<P>, props?: P): void {
   it('integrates with AudioContext', () => {
     renderWithSpecificProviders(<Component {...props} />, ['Audio']);
     // Component should render without errors when Audio context is available
@@ -197,8 +197,7 @@ export function testAudioContextIntegration(
 
   it('provides audio controls and state', () => {
     const TestComponent = () => {
-      const { isPlaying, togglePlay } =
-        require('@/app/shared/player/context/AudioContext').useAudio();
+      const { isPlaying, togglePlay } = useAudio();
       return (
         <div>
           <span data-testid="is-playing">{isPlaying ? 'playing' : 'paused'}</span>
@@ -219,9 +218,9 @@ export function testAudioContextIntegration(
 /**
  * Test Bookmark context integration
  */
-export function testBookmarkContextIntegration(
-  Component: React.ComponentType<any>,
-  props?: any
+export function testBookmarkContextIntegration<P>(
+  Component: React.ComponentType<P>,
+  props?: P
 ): void {
   it('integrates with BookmarkContext', () => {
     renderWithSpecificProviders(<Component {...props} />, ['Bookmark']);
@@ -230,8 +229,7 @@ export function testBookmarkContextIntegration(
 
   it('provides bookmark state and actions', () => {
     const TestComponent = () => {
-      const { bookmarkedVerses, toggleBookmark } =
-        require('@/app/providers/BookmarkContext').useBookmarks();
+      const { bookmarkedVerses, toggleBookmark } = useBookmarks();
       return (
         <div>
           <span data-testid="bookmark-count">{bookmarkedVerses.size}</span>
@@ -252,7 +250,7 @@ export function testBookmarkContextIntegration(
 /**
  * Test all context integrations for a component
  */
-export function testAllContextIntegrations(Component: React.ComponentType<any>, props?: any): void {
+export function testAllContextIntegrations<P>(Component: React.ComponentType<P>, props?: P): void {
   describe('Context Integrations', () => {
     testSettingsContextIntegration(Component, props);
     testAudioContextIntegration(Component, props);
@@ -263,10 +261,10 @@ export function testAllContextIntegrations(Component: React.ComponentType<any>, 
 /**
  * Create a comprehensive context test suite
  */
-export function createContextTestSuite(
+export function createContextTestSuite<P>(
   componentName: string,
-  Component: React.ComponentType<any>,
-  testProps?: any
+  Component: React.ComponentType<P>,
+  testProps?: P
 ): void {
   describe(`${componentName} Context Integration`, () => {
     it('renders with all required providers', () => {

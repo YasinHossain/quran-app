@@ -1,5 +1,5 @@
 import { render, RenderResult } from '@testing-library/react';
-import { ReactElement, ComponentType } from 'react';
+import { ComponentType } from 'react';
 
 /**
  * @module PerformanceTestUtils
@@ -17,7 +17,7 @@ import { ReactElement, ComponentType } from 'react';
  */
 
 let renderCount = 0;
-let lastProps: any = null;
+let lastProps: unknown = null;
 
 /**
  * Higher-order component to track renders
@@ -51,8 +51,8 @@ export function getRenderCount(): number {
 /**
  * Get last rendered props
  */
-export function getLastProps(): any {
-  return lastProps;
+export function getLastProps<P>(): P | null {
+  return lastProps as P | null;
 }
 
 /**
@@ -60,8 +60,7 @@ export function getLastProps(): any {
  */
 export function testMemoization<P extends object>(
   Component: ComponentType<P>,
-  initialProps: P,
-  changedProps?: Partial<P>
+  initialProps: P
 ): {
   renderCount: number;
   rerender: (props: P) => void;
@@ -193,10 +192,10 @@ export class PerformanceTester<P extends object> {
 /**
  * Test useCallback effectiveness
  */
-export function testCallbackStability(
-  callback1: Function,
-  callback2: Function,
-  shouldBeStable: boolean = true
+export function testCallbackStability<T extends (...args: unknown[]) => unknown>(
+  callback1: T,
+  callback2: T,
+  shouldBeStable = true
 ): void {
   if (shouldBeStable) {
     expect(callback1).toBe(callback2);
@@ -242,16 +241,20 @@ export function createPerformanceTestSuite<P extends object>(
     });
 
     it('should re-render when props change', () => {
-      const changedProps = { ...testProps };
+      const changedProps = { ...testProps } as Record<string, unknown>;
       // Modify a prop to force re-render
       if (typeof testProps === 'object' && testProps !== null) {
-        const firstKey = Object.keys(testProps)[0];
+        const firstKey = Object.keys(testProps as Record<string, unknown>)[0];
         if (firstKey) {
-          (changedProps as any)[firstKey] = 'changed-value';
+          changedProps[firstKey] = 'changed-value';
         }
       }
 
-      tester.render(testProps).expectRenderCount(1).rerender(changedProps).expectRerender();
+      tester
+        .render(testProps)
+        .expectRenderCount(1)
+        .rerender(changedProps as P)
+        .expectRerender();
     });
   });
 }
