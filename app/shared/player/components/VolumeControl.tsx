@@ -1,9 +1,12 @@
-import React from 'react';
+import { memo } from 'react';
 import * as Slider from '@radix-ui/react-slider';
 import { VolumeIcon, VolumeOffIcon } from '@/app/shared/icons';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 
-export default function VolumeControl() {
+/**
+ * Provides mobile and desktop controls for adjusting audio volume.
+ */
+export const VolumeControl = memo(function VolumeControl() {
   const { volume, setVolume } = useAudio();
   return (
     <>
@@ -45,4 +48,4 @@ export default function VolumeControl() {
       </div>
     </>
   );
-}
+});

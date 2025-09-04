@@ -3,7 +3,13 @@ import { useAudio } from '../context/AudioContext';
 import { RECITERS } from '@/lib/audio/reciters';
 import type { RepeatOptions } from '../types';
 
-export default function usePlaybackOptions(onClose: () => void) {
+/**
+ * Local state manager for playback options and reciter selection.
+ *
+ * @param onClose callback to close the options modal.
+ * @returns current selections and helpers to commit changes.
+ */
+export function usePlaybackOptions(onClose: () => void) {
   const { reciter, setReciter, repeatOptions, setRepeatOptions } = useAudio();
   const [localReciter, setLocalReciter] = useState(reciter.id.toString());
   const [localRepeat, setLocalRepeat] = useState<RepeatOptions>(repeatOptions);

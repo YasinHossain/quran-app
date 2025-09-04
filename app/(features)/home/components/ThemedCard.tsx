@@ -11,7 +11,13 @@ interface ThemedCardProps {
 
 export default function ThemedCard({ href, children, className }: ThemedCardProps) {
   return (
-    <GlassCard href={href} variant="primary" size="spacious" radius="2xl" {...(className && { className })}>
+    <GlassCard
+      href={href}
+      variant="primary"
+      size="spacious"
+      radius="2xl"
+      {...(className && { className })}
+    >
       {children}
     </GlassCard>
   );

@@ -14,14 +14,7 @@ describe('SurahVerseList', () => {
   };
 
   it('shows spinner while loading', () => {
-    renderWithProviders(
-      <SurahVerseList
-        verses={[]}
-        isLoading
-        error={null}
-        {...baseProps}
-      />
-    );
+    renderWithProviders(<SurahVerseList verses={[]} isLoading error={null} {...baseProps} />);
 
     expect(screen.getByRole('img', { hidden: true })).toBeInTheDocument();
   });
@@ -56,4 +49,3 @@ describe('SurahVerseList', () => {
     expect(screen.getByText('end_of_surah')).toBeInTheDocument();
   });
 });
-

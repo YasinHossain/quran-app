@@ -8,7 +8,13 @@ type Options = {
   onError?: (error: unknown) => void;
 };
 
-export default function useAudioPlayer(options: Options = {}) {
+/**
+ * Controls an `HTMLAudioElement` and exposes playback helpers.
+ *
+ * @param options optional callbacks and src.
+ * @returns helpers and state for audio playback.
+ */
+export function useAudioPlayer(options: Options = {}) {
   const { src, defaultDuration, onTimeUpdate, onLoadedMetadata, onError } = options;
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);

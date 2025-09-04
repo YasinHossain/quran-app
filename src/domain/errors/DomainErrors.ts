@@ -73,3 +73,12 @@ export class UnauthorizedAccessError extends DomainError {
     super(`Unauthorized access: ${message}`);
   }
 }
+
+/**
+ * Error thrown when unauthorized bookmark operation is attempted
+ */
+export class UnauthorizedBookmarkError extends DomainError {
+  constructor(message: string) {
+    super(`Unauthorized: ${message}`);
+  }
+}

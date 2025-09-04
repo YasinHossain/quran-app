@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, RefObject } from 'react';
 import type { RepeatOptions } from '../types';
 import { Verse } from '@/types';
-import useSurahRepeat from './useSurahRepeat';
+import { useSurahRepeat } from './useSurahRepeat';
 
 interface Options {
   audioRef: RefObject<HTMLAudioElement | null>;
@@ -16,7 +16,13 @@ interface Options {
   setPlayingId: (v: number | null) => void;
 }
 
-export default function usePlaybackCompletion({
+/**
+ * Returns a callback for handling audio completion based on repeat settings.
+ *
+ * @param options playback context and controls.
+ * @returns function to run when playback ends.
+ */
+export function usePlaybackCompletion({
   audioRef,
   repeatOptions,
   activeVerse,

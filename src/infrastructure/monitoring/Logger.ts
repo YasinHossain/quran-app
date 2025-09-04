@@ -485,5 +485,4 @@ export class PerformanceLogger {
 export const logger = Logger.getInstance();
 export const perfLogger = new PerformanceLogger(logger);
 
-// Export types
-export type { ILoggerTransport, LogEntry };
+// Types already exported as interfaces above

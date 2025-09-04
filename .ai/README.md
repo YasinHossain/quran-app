@@ -21,12 +21,14 @@ This directory contains the comprehensive AI development system implemented as p
 **Every AI assistant MUST follow these requirements exactly:**
 
 ### Pre-Development Requirements
+
 1. **Read Documentation First** - ARCHITECTURE_GUIDELINES.md + relevant AGENTS.md files
 2. **Understand Patterns** - Study established architecture patterns
 3. **Plan Compliance** - Design architecture-compliant solutions
 4. **Use Templates** - Follow templates/ai-compliant/ exactly
 
 ### Implementation Requirements
+
 - **memo() Wrapper**: ALL components must use React.memo()
 - **Mobile-First Design**: Apply space-y-4 md:space-y-0 md:flex patterns
 - **Context Integration**: Use Settings/Audio/Bookmarks where needed
@@ -35,6 +37,7 @@ This directory contains the comprehensive AI development system implemented as p
 - **Touch-Friendly**: 44px minimum touch targets (h-11 class)
 
 ### Testing Requirements
+
 - **Provider Wrappers**: ALL tests must include context providers
 - **Responsive Testing**: Validate mobile-first design patterns
 - **Architecture Testing**: Test memo(), context integration, touch targets
@@ -43,6 +46,7 @@ This directory contains the comprehensive AI development system implemented as p
 ## 📚 Usage Guide for AI Assistants
 
 ### Step 1: Read Context
+
 ```bash
 # AI must read these files before ANY development task
 1. .ai/context.md                    # Primary development context
@@ -51,6 +55,7 @@ This directory contains the comprehensive AI development system implemented as p
 ```
 
 ### Step 2: Choose Template
+
 ```bash
 # AI must use appropriate template for task type
 templates/ai-compliant/component.template.tsx  # For React components
@@ -60,6 +65,7 @@ templates/ai-compliant/test.template.test.tsx  # For tests
 ```
 
 ### Step 3: Apply Patterns
+
 ```typescript
 // AI must follow these exact patterns:
 
@@ -68,7 +74,7 @@ export const MyComponent = memo(function MyComponent(props) {
   const { settings } = useSettings();
   const memoizedValue = useMemo(() => compute(props), [props]);
   const memoizedCallback = useCallback(() => {}, []);
-  
+
   return (
     <div className="space-y-4 p-4 md:space-y-6 md:p-6">
       <div className="space-y-4 md:space-y-0 md:flex md:items-center">
@@ -84,11 +90,11 @@ export const MyComponent = memo(function MyComponent(props) {
 export function useMyHook({ id }: { id: string }) {
   const [data, setData] = useState(null);
   const { settings } = useSettings();
-  
+
   const processedData = useMemo(() => {
     return transformData(data, settings);
   }, [data, settings]);
-  
+
   return { data: processedData, refetch } as const;
 }
 
@@ -112,6 +118,7 @@ describe('MyComponent', () => {
 ```
 
 ### Step 4: Validate Implementation
+
 ```bash
 # AI must run these commands after implementation
 npm run check:architecture    # Architecture compliance validation
@@ -123,12 +130,14 @@ npm run check                 # Full quality check
 ## 🔍 Quick Reference
 
 ### Essential Patterns
+
 - **Components**: memo() + mobile-first + context integration + performance
 - **Hooks**: useCallback/useMemo + cleanup + as const + context integration
 - **Tests**: Provider wrappers + responsive testing + architecture validation
 - **Pages**: Composition-only + Suspense + error boundaries + mobile-first
 
 ### File Size Limits (WITH Architecture Compliance)
+
 ```yaml
 Page Components: 40-120 lines + all patterns
 Client Components: 80-200 lines + all patterns
@@ -138,6 +147,7 @@ Tests: 100-350 lines + provider wrappers
 ```
 
 ### Import Order (MANDATORY)
+
 ```typescript
 // 1. React imports (always first)
 import { memo, useCallback, useMemo } from 'react';
@@ -153,6 +163,7 @@ import type { ComponentProps } from '@/types';
 ```
 
 ### Context Integration
+
 ```typescript
 // Use these contexts where applicable
 const { settings } = useSettings();
@@ -161,6 +172,7 @@ const { bookmarkedVerses, toggleBookmark } = useBookmarks();
 ```
 
 ### Responsive Classes
+
 ```typescript
 // Mobile-first responsive patterns
 className="
@@ -173,6 +185,7 @@ className="
 ## ⚠️ Common AI Violations to Avoid
 
 ### Critical Violations (NEVER)
+
 - Creating components without memo() wrapper
 - Skipping responsive design patterns
 - Ignoring context integration requirements
@@ -181,6 +194,7 @@ className="
 - Violating import/export order
 
 ### Architecture Compliance Failures
+
 - Using hardcoded breakpoints instead of Tailwind classes
 - Skipping TypeScript interfaces
 - Missing JSDoc documentation
@@ -190,6 +204,7 @@ className="
 ## 🎯 Success Criteria
 
 ### Every AI Implementation Must Achieve
+
 - ✅ **100% memo() compliance** - Every component uses memo() wrapper
 - ✅ **100% mobile-first design** - All responsive patterns applied
 - ✅ **100% context integration** - Required contexts used where applicable
@@ -201,6 +216,7 @@ className="
 ## 📞 Support
 
 If AI assistants encounter issues:
+
 1. **Read .ai/prompts/architecture-compliance.md** - Detailed refactoring checklist
 2. **Read .ai/prompts/development-workflow.md** - Task-specific guidance
 3. **Check templates/ai-compliant/** - Reference implementations

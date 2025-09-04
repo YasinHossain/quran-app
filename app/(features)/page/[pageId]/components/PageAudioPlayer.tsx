@@ -24,8 +24,8 @@ interface PageAudioPlayerProps {
   track: Track | null;
   isVisible: boolean;
   isHidden: boolean;
-  onNext: () => void;
-  onPrev: () => void;
+  onNext: () => boolean;
+  onPrev: () => boolean;
 }
 
 /**

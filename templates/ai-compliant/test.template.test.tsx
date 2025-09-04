@@ -22,11 +22,11 @@ import { ComponentName } from '../ComponentName';
 import type { ComponentNameProps } from '../ComponentName';
 
 // ✅ REQUIRED: Mock external dependencies
-jest.mock('@/lib/api/apiClient', () => ({
+jest.mock('@/lib/api/client', () => ({
   fetchData: jest.fn(),
 }));
 
-jest.mock('@/lib/utils/transformData', () => ({
+jest.mock('@/lib/utils', () => ({
   transformData: jest.fn((data) => ({ ...data, processed: true })),
 }));
 

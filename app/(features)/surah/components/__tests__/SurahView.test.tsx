@@ -113,4 +113,3 @@ describe('SurahView (Week 6 architecture-compliant tests)', () => {
     expect(screen.getByText(/Add Bookmark|Remove Bookmark/)).toBeInTheDocument();
   });
 });
-

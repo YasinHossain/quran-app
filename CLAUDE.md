@@ -252,108 +252,16 @@ Edit tool    # Precise code modifications with context preservation
 - **Error Handling**: Environment-agnostic fallback strategies
 - **Documentation**: Self-maintaining project context in this file
 
-## AI Architecture Compliance System
+## Core Development Patterns
 
-**CRITICAL: AI must follow established patterns exactly to maintain codebase consistency.**
-
-### 📋 Architecture Documentation
-
-- **`ARCHITECTURE_GUIDELINES.md`** - Comprehensive patterns and requirements for all development
-- **`app/(features)/*/AGENTS.md`** - Feature-specific patterns and integration points
-- **`app/shared/AGENTS.md`** - Shared component patterns and responsive design rules
-- **`app/providers/AGENTS.md`** - Context and state management patterns
-
-### 🚫 AI Development Restrictions
-
-**Before making ANY changes, AI must:**
-
-1. **Read relevant `AGENTS.md` files** for the area being modified
-2. **Follow exact patterns** shown in the architecture documentation
-3. **Use established component structures** (memo, interfaces, responsive design)
-4. **Integrate properly with contexts** (Settings, Audio, Bookmarks)
-5. **Follow mobile-first responsive patterns** with proper breakpoints
-6. **Include proper TypeScript typing** and error handling
-7. **Use memoization patterns** for performance optimization
-
-### 🔍 AI Code Review Checklist
-
-**Every AI implementation must verify:**
-
-- [ ] **Pattern Compliance**: Does it match existing component/hook patterns?
-- [ ] **Context Integration**: Properly uses SettingsContext, AudioContext, BookmarkContext?
-- [ ] **Responsive Design**: Mobile-first with `md:` breakpoints?
-- [ ] **Performance**: Memoized with `memo()`, `useCallback()`, `useMemo()`?
-- [ ] **TypeScript**: Proper interfaces, no `any` types?
-- [ ] **Testing**: Includes tests with proper provider wrappers?
-- [ ] **Accessibility**: 44px touch targets, proper ARIA labels?
-- [ ] **Import Conventions**: Uses `@/` aliases, proper import order?
-
-### ⚠️ Common AI Violations to Avoid
-
-**Do NOT:**
-
-- Create components without `memo()` wrapper
-- Skip responsive design patterns (`space-y-4 md:space-y-0 md:flex`)
-- Ignore context integration requirements
-- Create inline styles instead of Tailwind classes
-- Skip memoization of callbacks and computations
-- Use generic names like `Component` or `Hook`
-- Create hardcoded breakpoint logic instead of CSS classes
-- Skip TypeScript interfaces for props
-
-### 🎯 AI Success Pattern
-
-```typescript
-// ✅ CORRECT: Follow this exact pattern
-import { memo, useCallback, useMemo } from 'react';
-import { SomeType } from '@/types';
-import { useSettings } from '@/app/providers/SettingsContext';
-
-interface ComponentProps {
-  data: SomeType;
-  onAction: (id: string) => void;
-}
-
-export const FeatureComponent = memo(function FeatureComponent({
-  data,
-  onAction,
-}: ComponentProps) {
-  const { settings } = useSettings();
-
-  const processedData = useMemo(() =>
-    transformData(data, settings),
-    [data, settings]
-  );
-
-  const handleClick = useCallback(() => {
-    onAction(data.id);
-  }, [onAction, data.id]);
-
-  return (
-    <div className="space-y-4 md:space-y-0 md:flex md:items-center">
-      {/* Mobile-first responsive content */}
-    </div>
-  );
-});
-
-export default FeatureComponent;
-```
-
-### 🔧 AI Quality Assurance
-
-**After any changes, AI automatically runs:**
-
-```bash
-npm run check  # Format, lint, typecheck, test
-```
-
-**If checks fail, AI must fix issues before completing the task.**
+**Components:** Use `memo()` wrapper, responsive classes, TypeScript interfaces
+**Hooks:** Apply `useCallback`/`useMemo` for performance  
+**Tests:** Wrap with required providers
+**Quality:** Run `npm run check` after changes
 
 ## Recent Updates
 
-- **AI Architecture Compliance System**: Added comprehensive AI development restrictions and patterns
-- **Architecture Documentation**: Created detailed guidelines and feature-specific patterns
-- **AI Code Review Process**: Implemented mandatory compliance checklist for all changes
-- **Mobile-Responsive Architecture**: Implementing mobile-first design system with responsive breakpoints
-- **Tafsir System**: Enhanced with persistent selections, improved UI, and multiple tafsir support
+- **Streamlined AI Context**: Simplified documentation for better token efficiency
+- **Mobile-Responsive Architecture**: Mobile-first design with responsive breakpoints
+- **Tafsir System**: Enhanced with persistent selections and multiple tafsir support
 - **Settings Management**: Streamlined panels with better state management and storage

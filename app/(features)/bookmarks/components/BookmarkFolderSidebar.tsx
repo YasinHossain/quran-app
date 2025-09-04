@@ -33,10 +33,7 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
       aria-label="Bookmark folder navigation"
     >
       <SidebarHeader title="Folder" {...(onBack && { onBack })} showBackButton={!!onBack} />
-      <BookmarkFolderContent
-        bookmarks={bookmarks}
-        folder={folder}
-      />
+      <BookmarkFolderContent bookmarks={bookmarks} folder={folder} />
     </BaseSidebar>
   );
 };

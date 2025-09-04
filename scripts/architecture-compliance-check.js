@@ -16,40 +16,40 @@ const { execSync } = require('child_process');
 const COMPLIANCE_CONFIG = {
   // File size limits (in lines)
   fileSizeLimits: {
-    'pages': { max: 120, path: 'app/**/page.tsx' },
-    'layouts': { max: 120, path: 'app/**/layout.tsx' },
+    pages: { max: 120, path: 'app/**/page.tsx' },
+    layouts: { max: 120, path: 'app/**/layout.tsx' },
     'client-components': { max: 200, path: '**/*.client.tsx' },
     'server-components': { max: 150, path: 'app/**/*.tsx' },
-    'hooks': { max: 120, path: '**/hooks/*.ts' },
-    'utils': { max: 150, path: 'lib/**/*.ts' },
-    'tests': { max: 350, path: '**/*.test.{ts,tsx}' },
+    hooks: { max: 120, path: '**/hooks/*.ts' },
+    utils: { max: 150, path: 'lib/**/*.ts' },
+    tests: { max: 350, path: '**/*.test.{ts,tsx}' },
   },
-  
+
   // Required patterns for architecture compliance
   requiredPatterns: {
     // memo() wrapper requirement
     memoPattern: /export\s+const\s+\w+\s*=\s*memo\(function/,
     memoPatternAlt: /React\.memo\(/,
-    
+
     // Context integration patterns
     settingsContextPattern: /useSettings\(\)/,
     audioContextPattern: /useAudio\(\)/,
     bookmarkContextPattern: /useBookmarks\(\)/,
-    
+
     // Responsive design patterns
     responsivePattern: /md:|lg:|xl:|sm:/,
     touchFriendlyPattern: /min-h-11|h-11|min-h-touch/,
-    
+
     // Performance optimization patterns
     useCallbackPattern: /useCallback\(/,
     useMemoPattern: /useMemo\(/,
     asConstPattern: /as const/,
-    
+
     // Import order patterns
     reactImportFirst: /^import\s+(?:React,?\s*)?{[^}]*}\s+from\s+['"]react['"];?$/m,
     typeImportPattern: /import\s+type\s+{[^}]*}\s+from/,
   },
-  
+
   // Coverage thresholds
   coverageThresholds: {
     global: {
@@ -59,12 +59,12 @@ const COMPLIANCE_CONFIG = {
       statements: 75,
     },
   },
-  
+
   // Bundle size limits
   bundleSizeLimits: {
     'app/(features)/surah': '150KB',
     'app/shared': '100KB',
-    'lib': '75KB',
+    lib: '75KB',
   },
 };
 
@@ -91,9 +91,9 @@ class ArchitectureComplianceChecker {
       await this.checkBundleSize();
       await this.checkTypeScript();
       await this.checkLinting();
-      
+
       this.generateReport();
-      
+
       if (this.violations.length > 0) {
         console.error('❌ Architecture compliance check FAILED\n');
         process.exit(1);
@@ -116,10 +116,10 @@ class ArchitectureComplianceChecker {
     for (const [category, config] of Object.entries(COMPLIANCE_CONFIG.fileSizeLimits)) {
       try {
         const files = this.findFiles(config.path);
-        
+
         for (const file of files) {
           const lineCount = this.countLines(file);
-          
+
           if (lineCount > config.max) {
             this.violations.push({
               type: 'FILE_SIZE',
@@ -146,17 +146,20 @@ class ArchitectureComplianceChecker {
     console.log('🏗️ Checking architecture patterns...');
 
     const componentFiles = this.findFiles('app/**/*.{ts,tsx}').filter(
-      file => !file.includes('.test.') && !file.includes('__tests__')
+      (file) => !file.includes('.test.') && !file.includes('__tests__')
     );
 
     for (const file of componentFiles) {
       const content = fs.readFileSync(file, 'utf8');
-      
+
       // Check if it's a React component
-      if (content.includes('export') && (content.includes('tsx') || content.includes('React') || content.includes('function'))) {
+      if (
+        content.includes('export') &&
+        (content.includes('tsx') || content.includes('React') || content.includes('function'))
+      ) {
         this.checkComponentPatterns(file, content);
       }
-      
+
       // Check if it's a hook
       if (file.includes('/hooks/') || content.includes('function use')) {
         this.checkHookPatterns(file, content);
@@ -169,12 +172,13 @@ class ArchitectureComplianceChecker {
    */
   checkComponentPatterns(file, content) {
     const fileName = path.basename(file);
-    
+
     // Check memo() wrapper
     if (content.includes('function ') && content.includes('export')) {
-      const hasMemo = COMPLIANCE_CONFIG.requiredPatterns.memoPattern.test(content) ||
-                     COMPLIANCE_CONFIG.requiredPatterns.memoPatternAlt.test(content);
-      
+      const hasMemo =
+        COMPLIANCE_CONFIG.requiredPatterns.memoPattern.test(content) ||
+        COMPLIANCE_CONFIG.requiredPatterns.memoPatternAlt.test(content);
+
       if (!hasMemo && !content.includes('"use server"') && !file.includes('page.tsx')) {
         this.violations.push({
           type: 'MEMO_MISSING',
@@ -187,7 +191,7 @@ class ArchitectureComplianceChecker {
     // Check responsive design patterns
     if (content.includes('className') || content.includes('class=')) {
       const hasResponsive = COMPLIANCE_CONFIG.requiredPatterns.responsivePattern.test(content);
-      
+
       if (!hasResponsive) {
         this.warnings.push(`${fileName} may be missing responsive design classes`);
       }
@@ -195,8 +199,9 @@ class ArchitectureComplianceChecker {
 
     // Check touch-friendly patterns for interactive elements
     if (content.includes('button') || content.includes('onClick')) {
-      const hasTouchFriendly = COMPLIANCE_CONFIG.requiredPatterns.touchFriendlyPattern.test(content);
-      
+      const hasTouchFriendly =
+        COMPLIANCE_CONFIG.requiredPatterns.touchFriendlyPattern.test(content);
+
       if (!hasTouchFriendly) {
         this.warnings.push(`${fileName} may be missing touch-friendly classes`);
       }
@@ -206,19 +211,23 @@ class ArchitectureComplianceChecker {
     if (content.includes('function') || content.includes('=>')) {
       const hasUseCallback = COMPLIANCE_CONFIG.requiredPatterns.useCallbackPattern.test(content);
       const hasUseMemo = COMPLIANCE_CONFIG.requiredPatterns.useMemoPattern.test(content);
-      
+
       if (!hasUseCallback && (content.includes('onClick') || content.includes('onSubmit'))) {
         this.warnings.push(`${fileName} may be missing useCallback for event handlers`);
       }
-      
-      if (!hasUseMemo && (content.includes('filter(') || content.includes('map(') || content.includes('reduce('))) {
+
+      if (
+        !hasUseMemo &&
+        (content.includes('filter(') || content.includes('map(') || content.includes('reduce('))
+      ) {
         this.warnings.push(`${fileName} may be missing useMemo for computations`);
       }
     }
 
     // Check context integration for components that need it
     if (content.includes('fontSize') || content.includes('settings')) {
-      const hasSettingsContext = COMPLIANCE_CONFIG.requiredPatterns.settingsContextPattern.test(content);
+      const hasSettingsContext =
+        COMPLIANCE_CONFIG.requiredPatterns.settingsContextPattern.test(content);
       if (!hasSettingsContext) {
         this.warnings.push(`${fileName} may need Settings context integration`);
       }
@@ -230,11 +239,11 @@ class ArchitectureComplianceChecker {
    */
   checkHookPatterns(file, content) {
     const fileName = path.basename(file);
-    
+
     // Check as const pattern
     if (content.includes('return')) {
       const hasAsConst = COMPLIANCE_CONFIG.requiredPatterns.asConstPattern.test(content);
-      
+
       if (!hasAsConst) {
         this.warnings.push(`${fileName} hook may be missing 'as const' for stable returns`);
       }
@@ -243,7 +252,7 @@ class ArchitectureComplianceChecker {
     // Check cleanup patterns
     if (content.includes('useEffect')) {
       const hasCleanup = content.includes('return () =>') || content.includes('AbortController');
-      
+
       if (!hasCleanup && (content.includes('fetch') || content.includes('subscribe'))) {
         this.violations.push({
           type: 'CLEANUP_MISSING',
@@ -261,29 +270,31 @@ class ArchitectureComplianceChecker {
     console.log('📊 Checking test coverage...');
 
     try {
-      const coverageOutput = execSync('npm run test:coverage --silent', { 
+      const coverageOutput = execSync('npm run test:coverage --silent', {
         encoding: 'utf8',
         cwd: process.cwd(),
       });
 
       // Parse coverage output (simplified)
       const lines = coverageOutput.split('\n');
-      const coverageLine = lines.find(line => line.includes('All files'));
-      
+      const coverageLine = lines.find((line) => line.includes('All files'));
+
       if (coverageLine) {
         const coverage = this.parseCoverageNumbers(coverageLine);
-        
-        Object.entries(COMPLIANCE_CONFIG.coverageThresholds.global).forEach(([metric, threshold]) => {
-          if (coverage[metric] < threshold) {
-            this.violations.push({
-              type: 'COVERAGE_LOW',
-              metric,
-              current: coverage[metric],
-              threshold,
-              message: `${metric} coverage ${coverage[metric]}% below threshold ${threshold}%`,
-            });
+
+        Object.entries(COMPLIANCE_CONFIG.coverageThresholds.global).forEach(
+          ([metric, threshold]) => {
+            if (coverage[metric] < threshold) {
+              this.violations.push({
+                type: 'COVERAGE_LOW',
+                metric,
+                current: coverage[metric],
+                threshold,
+                message: `${metric} coverage ${coverage[metric]}% below threshold ${threshold}%`,
+              });
+            }
           }
-        });
+        );
       }
     } catch (error) {
       this.warnings.push(`Could not check test coverage: ${error.message}`);
@@ -305,12 +316,12 @@ class ArchitectureComplianceChecker {
       // Check bundle sizes (simplified)
       for (const [path, limit] of Object.entries(COMPLIANCE_CONFIG.bundleSizeLimits)) {
         const bundlePath = `.next/static/chunks/${path.replace(/\//g, '-')}.js`;
-        
+
         if (fs.existsSync(bundlePath)) {
           const stats = fs.statSync(bundlePath);
           const sizeKB = (stats.size / 1024).toFixed(1);
           const limitKB = parseInt(limit.replace('KB', ''));
-          
+
           if (parseInt(sizeKB) > limitKB) {
             this.violations.push({
               type: 'BUNDLE_SIZE',
@@ -334,11 +345,11 @@ class ArchitectureComplianceChecker {
     console.log('🔷 Checking TypeScript compliance...');
 
     try {
-      execSync('npx tsc --noEmit --skipLibCheck', { 
+      execSync('npx tsc --noEmit --skipLibCheck', {
         cwd: process.cwd(),
         stdio: 'pipe',
       });
-      
+
       this.passed.push('TypeScript compilation ✓');
     } catch (error) {
       this.violations.push({
@@ -356,15 +367,15 @@ class ArchitectureComplianceChecker {
     console.log('🔍 Checking ESLint compliance...');
 
     try {
-      execSync('npm run lint', { 
+      execSync('npm run lint', {
         cwd: process.cwd(),
         stdio: 'pipe',
       });
-      
+
       this.passed.push('ESLint checks ✓');
     } catch (error) {
       const output = error.stdout?.toString() || error.message;
-      
+
       if (output.includes('error')) {
         this.violations.push({
           type: 'ESLINT',
@@ -382,21 +393,21 @@ class ArchitectureComplianceChecker {
    */
   generateReport() {
     console.log('\n📋 ARCHITECTURE COMPLIANCE REPORT\n');
-    console.log('=' .repeat(50));
+    console.log('='.repeat(50));
 
     if (this.passed.length > 0) {
       console.log('\n✅ PASSED CHECKS:');
-      this.passed.forEach(item => console.log(`  ${item}`));
+      this.passed.forEach((item) => console.log(`  ${item}`));
     }
 
     if (this.warnings.length > 0) {
       console.log('\n⚠️  WARNINGS:');
-      this.warnings.forEach(warning => console.log(`  ${warning}`));
+      this.warnings.forEach((warning) => console.log(`  ${warning}`));
     }
 
     if (this.violations.length > 0) {
       console.log('\n❌ VIOLATIONS:');
-      this.violations.forEach(violation => {
+      this.violations.forEach((violation) => {
         console.log(`  [${violation.type}] ${violation.message}`);
         if (violation.details) {
           console.log(`    Details: ${violation.details.substring(0, 200)}...`);
@@ -405,7 +416,9 @@ class ArchitectureComplianceChecker {
     }
 
     console.log('\n' + '='.repeat(50));
-    console.log(`Summary: ${this.passed.length} passed, ${this.warnings.length} warnings, ${this.violations.length} violations`);
+    console.log(
+      `Summary: ${this.passed.length} passed, ${this.warnings.length} warnings, ${this.violations.length} violations`
+    );
   }
 
   /**
@@ -413,11 +426,14 @@ class ArchitectureComplianceChecker {
    */
   findFiles(pattern) {
     try {
-      const output = execSync(`find . -path "./node_modules" -prune -o -name "${pattern}" -type f -print`, {
-        encoding: 'utf8',
-        cwd: process.cwd(),
-      });
-      
+      const output = execSync(
+        `find . -path "./node_modules" -prune -o -name "${pattern}" -type f -print`,
+        {
+          encoding: 'utf8',
+          cwd: process.cwd(),
+        }
+      );
+
       return output.trim().split('\n').filter(Boolean);
     } catch (error) {
       return [];
@@ -427,7 +443,7 @@ class ArchitectureComplianceChecker {
   countLines(filePath) {
     try {
       const content = fs.readFileSync(filePath, 'utf8');
-      return content.split('\n').filter(line => line.trim() !== '').length;
+      return content.split('\n').filter((line) => line.trim() !== '').length;
     } catch (error) {
       return 0;
     }
@@ -448,7 +464,7 @@ class ArchitectureComplianceChecker {
 // Run compliance check if this script is executed directly
 if (require.main === module) {
   const checker = new ArchitectureComplianceChecker();
-  checker.runAllChecks().catch(error => {
+  checker.runAllChecks().catch((error) => {
     console.error('Fatal error:', error);
     process.exit(1);
   });

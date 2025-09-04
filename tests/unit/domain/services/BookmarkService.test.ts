@@ -2,12 +2,14 @@ import { BookmarkService } from '../../../../src/domain/services/BookmarkService
 import { Bookmark } from '../../../../src/domain/entities/Bookmark';
 import { Verse } from '../../../../src/domain/entities/Verse';
 import { BookmarkPosition } from '../../../../src/domain/value-objects/BookmarkPosition';
+import { StoredBookmark } from '../../../../src/domain/value-objects/StoredBookmark';
 import { IBookmarkRepository } from '../../../../src/domain/repositories/IBookmarkRepository';
 import { IVerseRepository } from '../../../../src/domain/repositories/IVerseRepository';
 import {
   BookmarkAlreadyExistsError,
   VerseNotFoundError,
   BookmarkNotFoundError,
+  UnauthorizedBookmarkError,
 } from '../../../../src/domain/errors/DomainErrors';
 
 // Mock repositories
@@ -193,7 +195,7 @@ describe('BookmarkService', () => {
       mockBookmarkRepository.findById.mockResolvedValue(otherUserBookmark);
 
       await expect(bookmarkService.removeBookmark(userId, bookmarkId)).rejects.toThrow(
-        'Unauthorized: Cannot remove bookmark belonging to another user'
+        UnauthorizedBookmarkError
       );
 
       expect(mockBookmarkRepository.remove).not.toHaveBeenCalled();
@@ -244,7 +246,7 @@ describe('BookmarkService', () => {
 
       await expect(
         bookmarkService.updateBookmarkNotes(userId, bookmarkId, newNotes)
-      ).rejects.toThrow('Unauthorized: Cannot update bookmark belonging to another user');
+      ).rejects.toThrow(UnauthorizedBookmarkError);
 
       expect(mockBookmarkRepository.save).not.toHaveBeenCalled();
     });
@@ -270,6 +272,23 @@ describe('BookmarkService', () => {
       expect(result.tags).toEqual(newTags);
       expect(mockBookmarkRepository.findById).toHaveBeenCalledWith(bookmarkId);
       expect(mockBookmarkRepository.save).toHaveBeenCalled();
+    });
+
+    it("should throw error when trying to update another user's bookmark", async () => {
+      const otherUserBookmark = new Bookmark(
+        bookmarkId,
+        'otherUser',
+        verseId,
+        new BookmarkPosition(surahId, ayahNumber, new Date()),
+        new Date()
+      );
+      mockBookmarkRepository.findById.mockResolvedValue(otherUserBookmark);
+
+      await expect(bookmarkService.updateBookmarkTags(userId, bookmarkId, newTags)).rejects.toThrow(
+        UnauthorizedBookmarkError
+      );
+
+      expect(mockBookmarkRepository.save).not.toHaveBeenCalled();
     });
   });
 
@@ -297,6 +316,25 @@ describe('BookmarkService', () => {
       expect(result.tags).toContain('memorize');
       expect(mockBookmarkRepository.save).toHaveBeenCalled();
     });
+
+    it("should throw error when trying to add tag to another user's bookmark", async () => {
+      const otherUserBookmark = new Bookmark(
+        bookmarkId,
+        'otherUser',
+        verseId,
+        new BookmarkPosition(surahId, ayahNumber, new Date()),
+        new Date(),
+        undefined,
+        existingTags
+      );
+      mockBookmarkRepository.findById.mockResolvedValue(otherUserBookmark);
+
+      await expect(bookmarkService.addTagToBookmark(userId, bookmarkId, newTag)).rejects.toThrow(
+        UnauthorizedBookmarkError
+      );
+
+      expect(mockBookmarkRepository.save).not.toHaveBeenCalled();
+    });
   });
 
   describe('removeTagFromBookmark', () => {
@@ -322,6 +360,25 @@ describe('BookmarkService', () => {
       expect(result.tags).not.toContain(tagToRemove);
       expect(result.tags).toContain('important');
       expect(mockBookmarkRepository.save).toHaveBeenCalled();
+    });
+
+    it("should throw error when trying to remove tag from another user's bookmark", async () => {
+      const otherUserBookmark = new Bookmark(
+        bookmarkId,
+        'otherUser',
+        verseId,
+        new BookmarkPosition(surahId, ayahNumber, new Date()),
+        new Date(),
+        undefined,
+        existingTags
+      );
+      mockBookmarkRepository.findById.mockResolvedValue(otherUserBookmark);
+
+      await expect(
+        bookmarkService.removeTagFromBookmark(userId, bookmarkId, tagToRemove)
+      ).rejects.toThrow(UnauthorizedBookmarkError);
+
+      expect(mockBookmarkRepository.save).not.toHaveBeenCalled();
     });
   });
 
@@ -514,20 +571,34 @@ describe('BookmarkService', () => {
 
   describe('exportBookmarks', () => {
     it('should export bookmarks in portable format', async () => {
-      const mockBookmarks = [
-        new Bookmark('b1', userId, 'v1', new BookmarkPosition(1, 1, new Date()), new Date()),
-        new Bookmark('b2', userId, 'v2', new BookmarkPosition(2, 255, new Date()), new Date()),
+      const position1 = new BookmarkPosition(1, 1, new Date());
+      const position2 = new BookmarkPosition(2, 255, new Date());
+      const now = new Date().toISOString();
+      const mockStored: StoredBookmark[] = [
+        {
+          id: 'b1',
+          userId,
+          verseId: 'v1',
+          position: position1.toPlainObject(),
+          createdAt: now,
+          tags: [],
+        },
+        {
+          id: 'b2',
+          userId,
+          verseId: 'v2',
+          position: position2.toPlainObject(),
+          createdAt: now,
+          tags: [],
+        },
       ];
 
-      mockBookmarkRepository.findByUser.mockResolvedValue(mockBookmarks);
+      mockBookmarkRepository.exportBookmarks.mockResolvedValue(mockStored);
 
       const result = await bookmarkService.exportBookmarks(userId);
 
-      expect(result.userId).toBe(userId);
-      expect(result.exportedAt).toBeDefined();
-      expect(result.bookmarks).toHaveLength(2);
-      expect(result.bookmarks[0]).toEqual(mockBookmarks[0].toPlainObject());
-      expect(result.bookmarks[1]).toEqual(mockBookmarks[1].toPlainObject());
+      expect(mockBookmarkRepository.exportBookmarks).toHaveBeenCalledWith(userId);
+      expect(result).toEqual(mockStored);
     });
   });
 });

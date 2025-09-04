@@ -9,19 +9,19 @@ import userEvent from '@testing-library/user-event';
 
 // Architecture-compliant testing utilities
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
-import { 
-  mockViewport, 
-  testBreakpoints, 
+import {
+  mockViewport,
+  testBreakpoints,
   assertResponsiveClasses,
   assertTouchFriendly,
   BREAKPOINTS,
   setupResponsiveTests,
 } from '@/app/testUtils/responsiveTestUtils';
-import { 
+import {
   PerformanceTester,
   createPerformanceTestSuite,
 } from '@/app/testUtils/performanceTestUtils';
-import { 
+import {
   renderWithSpecificProviders,
   testSettingsContextIntegration,
   testAudioContextIntegration,
@@ -97,7 +97,7 @@ describe('SurahView - Architecture Compliance Tests', () => {
     jest.clearAllMocks();
     // Reset to mobile-first
     mockViewport(BREAKPOINTS.mobile);
-    
+
     // Reset document overflow changes
     document.body.style.overflow = '';
   });
@@ -111,9 +111,9 @@ describe('SurahView - Architecture Compliance Tests', () => {
   describe('🏗️ Architecture Compliance', () => {
     it('applies mobile-first responsive layout correctly', () => {
       renderWithProviders(<SurahView {...defaultProps} />);
-      
+
       const main = screen.getByRole('main');
-      
+
       // Mobile-first responsive classes
       assertResponsiveClasses(main, {
         base: ['h-screen', 'overflow-hidden'],
@@ -123,24 +123,24 @@ describe('SurahView - Architecture Compliance Tests', () => {
 
     it('handles body overflow management', () => {
       const originalOverflow = document.body.style.overflow;
-      
+
       const { unmount } = renderWithProviders(<SurahView {...defaultProps} />);
-      
+
       // Should set overflow hidden on mount
       expect(document.body.style.overflow).toBe('hidden');
-      
+
       unmount();
-      
+
       // Should restore overflow on unmount
       expect(document.body.style.overflow).toBe(originalOverflow);
     });
 
     it('integrates with all required contexts', () => {
       renderWithProviders(<SurahView {...defaultProps} />);
-      
+
       // Should render without context errors
       expect(screen.getByRole('main')).toBeInTheDocument();
-      
+
       // Should display verse content (requires Settings context)
       const verseEl = document.querySelector('#verse-1');
       expect(verseEl).toBeInTheDocument();
@@ -152,9 +152,9 @@ describe('SurahView - Architecture Compliance Tests', () => {
       testBreakpoints((breakpointName, width) => {
         mockViewport(breakpointName);
         const { rerender } = renderWithProviders(<SurahView {...defaultProps} />);
-        
+
         const main = screen.getByRole('main');
-        
+
         if (width >= BREAKPOINTS.desktop) {
           // Desktop: Should have right margin for sidebar
           expect(main).toHaveClass('lg:mr-[20.7rem]');
@@ -162,11 +162,11 @@ describe('SurahView - Architecture Compliance Tests', () => {
           // Mobile/Tablet: Full width
           expect(main).toHaveClass('h-screen');
         }
-        
+
         // Verify scroll container responsive classes
         const scrollContainer = main.querySelector('.overflow-y-auto');
         expect(scrollContainer).toHaveClass('px-4', 'sm:px-6', 'lg:px-8');
-        
+
         // Clean up
         rerender(<></>);
       });
@@ -175,7 +175,7 @@ describe('SurahView - Architecture Compliance Tests', () => {
     it('provides touch-friendly interactions on mobile', () => {
       mockViewport(BREAKPOINTS.mobile);
       renderWithProviders(<SurahView {...defaultProps} />);
-      
+
       // Verse action buttons should be touch-friendly
       const actionButton = screen.getByRole('button', { name: /open verse actions menu/i });
       assertTouchFriendly(actionButton);
@@ -184,7 +184,7 @@ describe('SurahView - Architecture Compliance Tests', () => {
 
     it('displays proper header spacing based on visibility', () => {
       renderWithProviders(<SurahView {...defaultProps} />);
-      
+
       const scrollContainer = document.querySelector('.overflow-y-auto');
       expect(scrollContainer?.className).toContain('pt-[calc(3.5rem+env(safe-area-inset-top))]');
     });
@@ -193,45 +193,39 @@ describe('SurahView - Architecture Compliance Tests', () => {
   describe('🔄 Context Integration', () => {
     it('integrates with SettingsContext for verse display', () => {
       renderWithSpecificProviders(<SurahView {...defaultProps} />, ['Settings']);
-      
+
       // Should access settings without errors
       expect(screen.getByRole('main')).toBeInTheDocument();
-      
+
       // Should display content with settings applied
       const verseEl = document.querySelector('#verse-1');
       expect(verseEl).toBeInTheDocument();
     });
 
     it('integrates with AudioContext for player state', () => {
-      renderWithSpecificProviders(
-        <SurahView {...defaultProps} />, 
-        ['Settings', 'Audio']
-      );
-      
+      renderWithSpecificProviders(<SurahView {...defaultProps} />, ['Settings', 'Audio']);
+
       // Should render audio player without errors
       expect(screen.getByRole('main')).toBeInTheDocument();
     });
 
     it('integrates with BookmarkContext for verse bookmarking', () => {
-      renderWithSpecificProviders(
-        <SurahView {...defaultProps} />, 
-        ['Settings', 'Bookmark']
-      );
-      
+      renderWithSpecificProviders(<SurahView {...defaultProps} />, ['Settings', 'Bookmark']);
+
       // Should show bookmark actions
       const actionButton = screen.getByRole('button', { name: /open verse actions menu/i });
       fireEvent.click(actionButton);
-      
+
       expect(screen.getByText(/Add Bookmark|Remove Bookmark/)).toBeInTheDocument();
     });
 
     it('updates when context values change', async () => {
       renderWithProviders(<SurahView {...defaultProps} />);
-      
+
       // Settings panel should update display
       const settingsButton = screen.getByRole('button', { name: /settings/i });
       fireEvent.click(settingsButton);
-      
+
       // Panel should be accessible
       await waitFor(() => {
         const panel = screen.getByRole('complementary', { name: /settings/i });
@@ -243,14 +237,14 @@ describe('SurahView - Architecture Compliance Tests', () => {
   describe('⚡ Performance Optimization', () => {
     it('memoizes expensive verse rendering', () => {
       const { rerender } = renderWithProviders(<SurahView {...defaultProps} />);
-      
+
       // Get initial verse element
       const verse = document.querySelector('#verse-1');
       expect(verse).toBeInTheDocument();
-      
+
       // Re-render with same props - should not recreate DOM
       rerender(<SurahView {...defaultProps} />);
-      
+
       // Verse should still be there and efficiently rendered
       const sameVerse = document.querySelector('#verse-1');
       expect(sameVerse).toBeInTheDocument();
@@ -258,10 +252,10 @@ describe('SurahView - Architecture Compliance Tests', () => {
 
     it('efficiently manages scroll position persistence', () => {
       renderWithProviders(<SurahView {...defaultProps} />);
-      
+
       const scrollContainer = document.querySelector('.overflow-y-auto') as HTMLElement;
       expect(scrollContainer).toBeInTheDocument();
-      
+
       // Scroll position should be managed efficiently
       // (This would be tested with actual scroll behavior)
     });
@@ -270,10 +264,10 @@ describe('SurahView - Architecture Compliance Tests', () => {
   describe('♿ Accessibility', () => {
     it('provides proper semantic structure', () => {
       renderWithProviders(<SurahView {...defaultProps} />);
-      
+
       const main = screen.getByRole('main');
       expect(main).toBeInTheDocument();
-      
+
       // Should have accessible verse structure
       const verseEl = document.querySelector('#verse-1');
       expect(verseEl).toHaveAttribute('role');
@@ -282,14 +276,14 @@ describe('SurahView - Architecture Compliance Tests', () => {
     it('supports keyboard navigation', async () => {
       const user = userEvent.setup();
       renderWithProviders(<SurahView {...defaultProps} />);
-      
+
       // Tab should navigate to actionable elements
       await user.tab();
-      
+
       // Should focus on verse action button
       const actionButton = screen.getByRole('button', { name: /open verse actions menu/i });
       expect(actionButton).toHaveFocus();
-      
+
       // Enter should activate
       await user.keyboard('{Enter}');
       expect(screen.getByText(/Add Bookmark|Remove Bookmark/)).toBeInTheDocument();
@@ -297,7 +291,7 @@ describe('SurahView - Architecture Compliance Tests', () => {
 
     it('provides screen reader support', () => {
       renderWithProviders(<SurahView {...defaultProps} />);
-      
+
       // Verse elements should have proper ARIA labels
       const verseEl = document.querySelector('#verse-1');
       expect(verseEl).toHaveAttribute('aria-label');
@@ -307,10 +301,10 @@ describe('SurahView - Architecture Compliance Tests', () => {
   describe('🎯 User Interactions', () => {
     it('handles verse interactions correctly', async () => {
       renderWithProviders(<SurahView {...defaultProps} />);
-      
+
       const actionButton = screen.getByRole('button', { name: /open verse actions menu/i });
       fireEvent.click(actionButton);
-      
+
       // Should open action menu
       await waitFor(() => {
         expect(screen.getByText(/Add Bookmark|Remove Bookmark/)).toBeInTheDocument();
@@ -319,10 +313,10 @@ describe('SurahView - Architecture Compliance Tests', () => {
 
     it('manages settings panel interactions', async () => {
       renderWithProviders(<SurahView {...defaultProps} />);
-      
+
       const settingsButton = screen.getByRole('button', { name: /settings/i });
       fireEvent.click(settingsButton);
-      
+
       // Settings panel should open
       await waitFor(() => {
         const panel = screen.getByRole('complementary', { name: /settings/i });
@@ -333,15 +327,15 @@ describe('SurahView - Architecture Compliance Tests', () => {
     it('handles touch gestures on mobile', async () => {
       mockViewport(BREAKPOINTS.mobile);
       const user = userEvent.setup();
-      
+
       renderWithProviders(<SurahView {...defaultProps} />);
-      
+
       const actionButton = screen.getByRole('button', { name: /open verse actions menu/i });
-      
+
       // Touch interaction
       await user.pointer({ keys: '[TouchA>]', target: actionButton });
       await user.pointer({ keys: '[/TouchA]' });
-      
+
       await waitFor(() => {
         expect(screen.getByText(/Add Bookmark|Remove Bookmark/)).toBeInTheDocument();
       });
@@ -359,9 +353,9 @@ describe('SurahView - Architecture Compliance Tests', () => {
           // ... other properties
         }),
       }));
-      
+
       renderWithProviders(<SurahView {...defaultProps} />);
-      
+
       // Should show loading indicator
       expect(screen.getByText(/loading/i)).toBeInTheDocument();
     });
@@ -378,9 +372,9 @@ describe('SurahView - Architecture Compliance Tests', () => {
           // ... other properties
         }),
       }));
-      
+
       renderWithProviders(<SurahView {...defaultProps} />);
-      
+
       // Should display error message
       expect(screen.getByText(/error|failed/i)).toBeInTheDocument();
     });
@@ -389,23 +383,23 @@ describe('SurahView - Architecture Compliance Tests', () => {
   describe('🚀 Integration Tests', () => {
     it('works end-to-end with complete verse reading flow', async () => {
       renderWithProviders(<SurahView {...defaultProps} />);
-      
+
       // 1. Component renders with responsive layout
       const main = screen.getByRole('main');
       expect(main).toHaveClass('h-screen', 'overflow-hidden');
-      
+
       // 2. Verse content displays
       const verseEl = document.querySelector('#verse-1');
       expect(verseEl).toBeInTheDocument();
-      
+
       // 3. Settings integration works
       const settingsButton = screen.getByRole('button', { name: /settings/i });
       fireEvent.click(settingsButton);
-      
+
       // 4. Responsive interactions work
       const actionButton = screen.getByRole('button', { name: /open verse actions menu/i });
       expect(actionButton).toHaveClass('min-h-touch');
-      
+
       // 5. Context integrations function
       fireEvent.click(actionButton);
       await waitFor(() => {
@@ -418,5 +412,5 @@ describe('SurahView - Architecture Compliance Tests', () => {
 // Generate automated performance test suite
 createPerformanceTestSuite('SurahView', SurahView, defaultProps);
 
-// Generate automated context test suite  
+// Generate automated context test suite
 createContextTestSuite('SurahView', SurahView, defaultProps);

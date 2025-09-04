@@ -2,12 +2,14 @@
 
 import React, { useState } from 'react';
 
-import QuranAudioPlayer from '@/app/shared/player/QuranAudioPlayer';
 import { AudioProvider } from '@/app/shared/player/context/AudioContext';
-import type { Track, RepeatOptions } from '@/app/shared/player/types';
+import QuranAudioPlayer from '@/app/shared/player/QuranAudioPlayer';
+
+import DebugInfo from './components/DebugInfo';
 import ReciterSelector from './components/ReciterSelector';
 import RepeatModeSelector from './components/RepeatModeSelector';
-import DebugInfo from './components/DebugInfo';
+
+import type { Track, RepeatOptions } from '@/app/shared/player/types';
 
 const DEMO_TRACKS: Track[] = [
   {
@@ -33,14 +35,16 @@ const DEMO_TRACKS: Track[] = [
  * Provides controls for reciter selection and repeat options.
  */
 export default function PlayerDemoPage(): React.JSX.Element {
-  const [track, setTrack] = useState<Track>(DEMO_TRACKS[0] || {
-    id: 'default',
-    src: '',
-    title: 'Default Track',
-    artist: 'Unknown',
-    coverUrl: '',
-    durationSec: 0,
-  });
+  const [track, setTrack] = useState<Track>(
+    DEMO_TRACKS[0] || {
+      id: 'default',
+      src: '',
+      title: 'Default Track',
+      artist: 'Unknown',
+      coverUrl: '',
+      durationSec: 0,
+    }
+  );
   const [repeat, setRepeat] = useState<RepeatOptions>({
     mode: 'off',
     start: 0,

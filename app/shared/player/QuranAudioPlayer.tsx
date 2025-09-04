@@ -3,11 +3,11 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { CloseIcon, SlidersIcon } from '@/app/shared/icons';
 import Image from 'next/image';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
-import useAudioPlayer from '@/app/shared/player/hooks/useAudioPlayer';
-import usePlayerKeyboard from '@/app/shared/player/hooks/usePlayerKeyboard';
-import usePlaybackCompletion from '@/app/shared/player/hooks/usePlaybackCompletion';
+import { useAudioPlayer } from '@/app/shared/player/hooks/useAudioPlayer';
+import { usePlayerKeyboard } from '@/app/shared/player/hooks/usePlayerKeyboard';
+import { usePlaybackCompletion } from '@/app/shared/player/hooks/usePlaybackCompletion';
 import TrackInfo from './components/TrackInfo';
-import TransportControls from './components/TransportControls';
+import { TransportControls } from './components/TransportControls';
 import Timeline from './components/Timeline';
 import PlayerOptions from './components/PlayerOptions';
 import SpeedControl from './components/SpeedControl';
@@ -40,7 +40,7 @@ interface QuranAudioPlayerProps {
   onNext?: () => boolean;
 }
 
-export default function QuranAudioPlayer({ track, onPrev, onNext }: QuranAudioPlayerProps) {
+function QuranAudioPlayer({ track, onPrev, onNext }: QuranAudioPlayerProps) {
   const {
     isPlayerVisible,
     closePlayer,
@@ -277,3 +277,6 @@ function mmss(t: number) {
   const s = t % 60;
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
+
+export { QuranAudioPlayer };
+export default QuranAudioPlayer;

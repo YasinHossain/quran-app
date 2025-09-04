@@ -8,13 +8,12 @@ interface Options {
   setVolume: Dispatch<SetStateAction<number>>;
 }
 
-export default function usePlayerKeyboard({
-  current,
-  duration,
-  setSeek,
-  togglePlay,
-  setVolume,
-}: Options) {
+/**
+ * Registers keyboard shortcuts for the audio player.
+ *
+ * @param options current playback data and control handlers.
+ */
+export function usePlayerKeyboard({ current, duration, setSeek, togglePlay, setVolume }: Options) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.target as HTMLElement)?.closest('input, textarea, [role=slider]')) return;

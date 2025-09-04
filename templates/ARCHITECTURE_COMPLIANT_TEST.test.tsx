@@ -59,14 +59,17 @@ const mockExampleData = {
 /**
  * Mock external dependencies
  */
-jest.mock('@/lib/api/example', () => ({
+jest.mock('@/lib/api/client', () => ({
   fetchExampleData: jest.fn(),
   fetchExampleTranslations: jest.fn(),
 }));
 
-jest.mock('@/lib/utils/example', () => ({
+jest.mock('@/lib/utils', () => ({
   transformData: jest.fn((data) => data),
   applySettings: jest.fn((text, settings) => text),
+}));
+
+jest.mock('@/lib/text/sanitizeHtml', () => ({
   sanitizeHtml: jest.fn((html) => html),
 }));
 

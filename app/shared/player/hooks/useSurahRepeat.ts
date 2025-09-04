@@ -56,7 +56,13 @@ export function handleSurahRepeat({
   }, 0);
 }
 
-export default function useSurahRepeat({
+/**
+ * Provides a memoized callback for handling surah repeat logic.
+ *
+ * @param params repeat state and audio controls.
+ * @returns function to execute the repeat routine.
+ */
+export function useSurahRepeat({
   verseRepeatsLeft,
   playRepeatsLeft,
   repeatEach,

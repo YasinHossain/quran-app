@@ -1,12 +1,14 @@
 import { Bookmark } from '../entities/Bookmark';
 import { Verse } from '../entities/Verse';
 import { BookmarkPosition } from '../value-objects/BookmarkPosition';
+import { StoredBookmark } from '../value-objects/StoredBookmark';
 import { IBookmarkRepository } from '../repositories/IBookmarkRepository';
 import { IVerseRepository } from '../repositories/IVerseRepository';
 import {
   BookmarkAlreadyExistsError,
   VerseNotFoundError,
   BookmarkNotFoundError,
+  UnauthorizedBookmarkError,
 } from '../errors/DomainErrors';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -59,7 +61,7 @@ export class BookmarkService {
     }
 
     if (!bookmark.belongsToUser(userId)) {
-      throw new Error('Unauthorized: Cannot remove bookmark belonging to another user');
+      throw new UnauthorizedBookmarkError('Cannot remove bookmark belonging to another user');
     }
 
     await this.bookmarkRepository.remove(bookmarkId);
@@ -75,7 +77,7 @@ export class BookmarkService {
     }
 
     if (!bookmark.belongsToUser(userId)) {
-      throw new Error('Unauthorized: Cannot update bookmark belonging to another user');
+      throw new UnauthorizedBookmarkError('Cannot update bookmark belonging to another user');
     }
 
     const updatedBookmark = bookmark.withNotes(notes);
@@ -93,7 +95,7 @@ export class BookmarkService {
     }
 
     if (!bookmark.belongsToUser(userId)) {
-      throw new Error('Unauthorized: Cannot update bookmark belonging to another user');
+      throw new UnauthorizedBookmarkError('Cannot update bookmark belonging to another user');
     }
 
     const updatedBookmark = bookmark.withTags(tags);
@@ -111,7 +113,7 @@ export class BookmarkService {
     }
 
     if (!bookmark.belongsToUser(userId)) {
-      throw new Error('Unauthorized: Cannot update bookmark belonging to another user');
+      throw new UnauthorizedBookmarkError('Cannot update bookmark belonging to another user');
     }
 
     const updatedBookmark = bookmark.withAddedTag(tag);
@@ -129,7 +131,7 @@ export class BookmarkService {
     }
 
     if (!bookmark.belongsToUser(userId)) {
-      throw new Error('Unauthorized: Cannot update bookmark belonging to another user');
+      throw new UnauthorizedBookmarkError('Cannot update bookmark belonging to another user');
     }
 
     const updatedBookmark = bookmark.withRemovedTag(tag);
@@ -248,17 +250,7 @@ export class BookmarkService {
   /**
    * Exports user bookmarks
    */
-  async exportBookmarks(userId: string): Promise<{
-    userId: string;
-    exportedAt: Date;
-    bookmarks: any[];
-  }> {
-    const bookmarks = await this.bookmarkRepository.findByUser(userId);
-
-    return {
-      userId,
-      exportedAt: new Date(),
-      bookmarks: bookmarks.map((bookmark) => bookmark.toPlainObject()),
-    };
+  async exportBookmarks(userId: string): Promise<StoredBookmark[]> {
+    return this.bookmarkRepository.exportBookmarks(userId);
   }
 }

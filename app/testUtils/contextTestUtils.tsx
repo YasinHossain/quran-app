@@ -15,7 +15,7 @@ import { SWRConfig } from 'swr';
  * @example
  * ```tsx
  * import { testContextIntegration } from '@/app/testUtils/contextTestUtils';
- * 
+ *
  * testContextIntegration('Settings', (context) => {
  *   expect(context.settings).toBeDefined();
  *   expect(context.updateSetting).toBeInstanceOf(Function);
@@ -43,22 +43,18 @@ export function createProviderWrapper(
 ): React.ComponentType<{ children: ReactNode }> {
   return ({ children }) => {
     let wrapped = children;
-    
+
     // Add SWR config if provided
     if (swrConfig) {
-      wrapped = (
-        <SWRConfig value={swrConfig}>
-          {wrapped}
-        </SWRConfig>
-      );
+      wrapped = <SWRConfig value={swrConfig}>{wrapped}</SWRConfig>;
     }
-    
+
     // Wrap with providers in reverse order (innermost first)
-    providers.reverse().forEach(providerName => {
+    providers.reverse().forEach((providerName) => {
       const Provider = ContextProviders[providerName];
       wrapped = <Provider>{wrapped}</Provider>;
     });
-    
+
     return <>{wrapped}</>;
   };
 }
@@ -146,7 +142,7 @@ export function testContextIntegration<T extends ContextProviderName>(
         // For now, we'll use a generic approach
         return <div data-testid={`${contextName.toLowerCase()}-context`}>Test</div>;
       };
-      
+
       renderWithSpecificProviders(<TestComponent />, [contextName]);
       expect(screen.getByTestId(`${contextName.toLowerCase()}-context`)).toBeInTheDocument();
     });
@@ -162,29 +158,26 @@ export function testSettingsContextIntegration(
 ): void {
   it('integrates with SettingsContext', () => {
     renderWithSpecificProviders(<Component {...props} />, ['Settings']);
-    
+
     // Component should render without errors when Settings context is available
     // Additional assertions would be component-specific
   });
-  
+
   it('provides settings and update functions', () => {
     const TestComponent = () => {
       const { settings, updateSetting } = require('@/app/providers/SettingsContext').useSettings();
       return (
         <div>
           <span data-testid="font-size">{settings.fontSize}</span>
-          <button
-            data-testid="update-font"
-            onClick={() => updateSetting('fontSize', 18)}
-          >
+          <button data-testid="update-font" onClick={() => updateSetting('fontSize', 18)}>
             Update Font
           </button>
         </div>
       );
     };
-    
+
     renderWithSpecificProviders(<TestComponent />, ['Settings']);
-    
+
     expect(screen.getByTestId('font-size')).toBeInTheDocument();
     expect(screen.getByTestId('update-font')).toBeInTheDocument();
   });
@@ -201,10 +194,11 @@ export function testAudioContextIntegration(
     renderWithSpecificProviders(<Component {...props} />, ['Audio']);
     // Component should render without errors when Audio context is available
   });
-  
+
   it('provides audio controls and state', () => {
     const TestComponent = () => {
-      const { isPlaying, togglePlay } = require('@/app/shared/player/context/AudioContext').useAudio();
+      const { isPlaying, togglePlay } =
+        require('@/app/shared/player/context/AudioContext').useAudio();
       return (
         <div>
           <span data-testid="is-playing">{isPlaying ? 'playing' : 'paused'}</span>
@@ -214,9 +208,9 @@ export function testAudioContextIntegration(
         </div>
       );
     };
-    
+
     renderWithSpecificProviders(<TestComponent />, ['Audio']);
-    
+
     expect(screen.getByTestId('is-playing')).toBeInTheDocument();
     expect(screen.getByTestId('toggle-play')).toBeInTheDocument();
   });
@@ -233,25 +227,23 @@ export function testBookmarkContextIntegration(
     renderWithSpecificProviders(<Component {...props} />, ['Bookmark']);
     // Component should render without errors when Bookmark context is available
   });
-  
+
   it('provides bookmark state and actions', () => {
     const TestComponent = () => {
-      const { bookmarkedVerses, toggleBookmark } = require('@/app/providers/BookmarkContext').useBookmarks();
+      const { bookmarkedVerses, toggleBookmark } =
+        require('@/app/providers/BookmarkContext').useBookmarks();
       return (
         <div>
           <span data-testid="bookmark-count">{bookmarkedVerses.size}</span>
-          <button
-            data-testid="toggle-bookmark"
-            onClick={() => toggleBookmark('1:1')}
-          >
+          <button data-testid="toggle-bookmark" onClick={() => toggleBookmark('1:1')}>
             Toggle Bookmark
           </button>
         </div>
       );
     };
-    
+
     renderWithSpecificProviders(<TestComponent />, ['Bookmark']);
-    
+
     expect(screen.getByTestId('bookmark-count')).toBeInTheDocument();
     expect(screen.getByTestId('toggle-bookmark')).toBeInTheDocument();
   });
@@ -260,10 +252,7 @@ export function testBookmarkContextIntegration(
 /**
  * Test all context integrations for a component
  */
-export function testAllContextIntegrations(
-  Component: React.ComponentType<any>,
-  props?: any
-): void {
+export function testAllContextIntegrations(Component: React.ComponentType<any>, props?: any): void {
   describe('Context Integrations', () => {
     testSettingsContextIntegration(Component, props);
     testAudioContextIntegration(Component, props);
@@ -281,22 +270,25 @@ export function createContextTestSuite(
 ): void {
   describe(`${componentName} Context Integration`, () => {
     it('renders with all required providers', () => {
-      renderWithSpecificProviders(
-        <Component {...testProps} />,
-        ['Settings', 'Audio', 'Bookmark', 'Theme', 'Sidebar']
-      );
-      
+      renderWithSpecificProviders(<Component {...testProps} />, [
+        'Settings',
+        'Audio',
+        'Bookmark',
+        'Theme',
+        'Sidebar',
+      ]);
+
       // Component should render without errors
       // Additional assertions would be component-specific
     });
-    
+
     it('handles missing providers gracefully', () => {
       // Test with minimal providers to ensure graceful degradation
       expect(() => {
         renderWithSpecificProviders(<Component {...testProps} />, ['Settings']);
       }).not.toThrow();
     });
-    
+
     testAllContextIntegrations(Component, testProps);
   });
 }

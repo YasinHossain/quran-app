@@ -41,25 +41,25 @@ export default defineConfig({
     /* Architecture Compliance Tests - Desktop Browsers */
     {
       name: 'chromium-architecture',
-      use: { 
+      use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1280, height: 720 },
       },
       testMatch: '**/architecture-compliance.spec.ts',
     },
-    
+
     {
       name: 'firefox-architecture',
-      use: { 
+      use: {
         ...devices['Desktop Firefox'],
         viewport: { width: 1280, height: 720 },
       },
       testMatch: '**/architecture-compliance.spec.ts',
     },
-    
+
     {
       name: 'webkit-architecture',
-      use: { 
+      use: {
         ...devices['Desktop Safari'],
         viewport: { width: 1280, height: 720 },
       },
@@ -69,15 +69,15 @@ export default defineConfig({
     /* Mobile Architecture Testing */
     {
       name: 'mobile-chrome-architecture',
-      use: { 
+      use: {
         ...devices['Pixel 5'],
       },
       testMatch: '**/architecture-compliance.spec.ts',
     },
-    
+
     {
       name: 'mobile-safari-architecture',
-      use: { 
+      use: {
         ...devices['iPhone 12'],
       },
       testMatch: '**/architecture-compliance.spec.ts',

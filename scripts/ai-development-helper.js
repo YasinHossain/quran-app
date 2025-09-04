@@ -2,7 +2,7 @@
 
 /**
  * AI Development Helper Script - Week 7
- * 
+ *
  * Provides AI assistants with quick access to architecture patterns,
  * validation tools, and compliance checking for development tasks.
  */
@@ -33,7 +33,7 @@ class AIDevHelper {
   // Main CLI interface
   run() {
     const command = process.argv[2];
-    
+
     console.log(`${colors.cyan}${colors.bright}🤖 AI Development Helper - Week 7${colors.reset}\n`);
 
     switch (command) {
@@ -93,16 +93,17 @@ ${colors.bright}For AI Assistants:${colors.reset}
     try {
       // Check if required files exist
       this.checkRequiredFiles();
-      
+
       // Run architecture-specific checks
       this.checkComponentPatterns();
       this.checkHookPatterns();
       this.checkTestPatterns();
-      
+
       console.log(`${colors.green}✅ Architecture validation completed${colors.reset}\n`);
-      
     } catch (error) {
-      console.error(`${colors.red}❌ Architecture validation failed: ${error.message}${colors.reset}\n`);
+      console.error(
+        `${colors.red}❌ Architecture validation failed: ${error.message}${colors.reset}\n`
+      );
       process.exit(1);
     }
   }
@@ -114,12 +115,12 @@ ${colors.bright}For AI Assistants:${colors.reset}
       '.ai/context.md',
       'templates/ai-compliant/component.template.tsx',
       'templates/ai-compliant/hook.template.ts',
-      'templates/ai-compliant/test.template.test.tsx'
+      'templates/ai-compliant/test.template.test.tsx',
     ];
 
     console.log(`${colors.bright}Checking required files...${colors.reset}`);
 
-    requiredFiles.forEach(file => {
+    requiredFiles.forEach((file) => {
       const filePath = path.join(this.rootDir, file);
       if (fs.existsSync(filePath)) {
         console.log(`  ${colors.green}✓${colors.reset} ${file}`);
@@ -135,29 +136,35 @@ ${colors.bright}For AI Assistants:${colors.reset}
   // Check component patterns
   checkComponentPatterns() {
     console.log(`${colors.bright}Checking component patterns...${colors.reset}`);
-    
+
     // Find all .tsx files in app directory
     const componentFiles = this.findFiles('app/**/*.tsx', ['**/*.test.tsx']);
-    
+
     let violations = 0;
-    
-    componentFiles.forEach(file => {
+
+    componentFiles.forEach((file) => {
       const content = fs.readFileSync(file, 'utf8');
       const fileName = path.relative(this.rootDir, file);
-      
+
       // Check for memo() wrapper
       if (!content.includes('memo(function') && !content.includes('memo(')) {
         console.log(`  ${colors.red}✗${colors.reset} ${fileName} - Missing memo() wrapper`);
         violations++;
       }
-      
+
       // Check for mobile-first responsive patterns
       if (!content.includes('md:') && content.includes('className')) {
-        console.log(`  ${colors.yellow}⚠${colors.reset} ${fileName} - No responsive design patterns found`);
+        console.log(
+          `  ${colors.yellow}⚠${colors.reset} ${fileName} - No responsive design patterns found`
+        );
       }
-      
+
       // Check for context integration (basic check)
-      if (content.includes('useSettings') || content.includes('useAudio') || content.includes('useBookmarks')) {
+      if (
+        content.includes('useSettings') ||
+        content.includes('useAudio') ||
+        content.includes('useBookmarks')
+      ) {
         console.log(`  ${colors.green}✓${colors.reset} ${fileName} - Context integration found`);
       }
     });
@@ -167,32 +174,34 @@ ${colors.bright}For AI Assistants:${colors.reset}
     } else {
       console.log(`  ${colors.red}❌ Found ${violations} memo() violations${colors.reset}`);
     }
-    
+
     console.log();
   }
 
   // Check hook patterns
   checkHookPatterns() {
     console.log(`${colors.bright}Checking hook patterns...${colors.reset}`);
-    
+
     // Find all custom hook files
     const hookFiles = this.findFiles('app/**/*use*.ts', ['**/*.test.ts']);
-    
+
     let violations = 0;
-    
-    hookFiles.forEach(file => {
+
+    hookFiles.forEach((file) => {
       const content = fs.readFileSync(file, 'utf8');
       const fileName = path.relative(this.rootDir, file);
-      
+
       // Check for 'as const' return pattern
       if (content.includes('return {') && !content.includes('} as const')) {
         console.log(`  ${colors.red}✗${colors.reset} ${fileName} - Missing 'as const' in return`);
         violations++;
       }
-      
+
       // Check for useCallback/useMemo usage
       if (content.includes('useCallback') || content.includes('useMemo')) {
-        console.log(`  ${colors.green}✓${colors.reset} ${fileName} - Performance optimizations found`);
+        console.log(
+          `  ${colors.green}✓${colors.reset} ${fileName} - Performance optimizations found`
+        );
       }
     });
 
@@ -201,41 +210,45 @@ ${colors.bright}For AI Assistants:${colors.reset}
     } else {
       console.log(`  ${colors.red}❌ Found ${violations} 'as const' violations${colors.reset}`);
     }
-    
+
     console.log();
   }
 
   // Check test patterns
   checkTestPatterns() {
     console.log(`${colors.bright}Checking test patterns...${colors.reset}`);
-    
+
     // Find all test files
     const testFiles = this.findFiles('**/*.test.{ts,tsx}');
-    
+
     let violations = 0;
-    
-    testFiles.forEach(file => {
+
+    testFiles.forEach((file) => {
       const content = fs.readFileSync(file, 'utf8');
       const fileName = path.relative(this.rootDir, file);
-      
+
       // Check for provider wrapper
       if (content.includes('render(') && !content.includes('Provider')) {
         console.log(`  ${colors.red}✗${colors.reset} ${fileName} - Missing provider wrapper`);
         violations++;
       }
-      
+
       // Check for responsive testing
       if (content.includes('toHaveClass') && content.includes('md:')) {
-        console.log(`  ${colors.green}✓${colors.reset} ${fileName} - Responsive design testing found`);
+        console.log(
+          `  ${colors.green}✓${colors.reset} ${fileName} - Responsive design testing found`
+        );
       }
     });
 
     if (violations === 0) {
       console.log(`  ${colors.green}✅ All tests use provider wrappers${colors.reset}`);
     } else {
-      console.log(`  ${colors.red}❌ Found ${violations} provider wrapper violations${colors.reset}`);
+      console.log(
+        `  ${colors.red}❌ Found ${violations} provider wrapper violations${colors.reset}`
+      );
     }
-    
+
     console.log();
   }
 
@@ -293,7 +306,7 @@ describe('Component', () => {
   // Show AI context information
   showContext() {
     console.log(`${colors.bright}📚 AI Development Context${colors.reset}\n`);
-    
+
     const contextFile = path.join(this.aiDir, 'context.md');
     if (fs.existsSync(contextFile)) {
       const context = fs.readFileSync(contextFile, 'utf8');
@@ -307,30 +320,32 @@ describe('Component', () => {
   // List available templates
   listTemplates() {
     console.log(`${colors.bright}📄 Available Architecture-Compliant Templates${colors.reset}\n`);
-    
+
     if (fs.existsSync(this.templatesDir)) {
       const templates = fs.readdirSync(this.templatesDir);
-      
-      templates.forEach(template => {
+
+      templates.forEach((template) => {
         const templatePath = path.join(this.templatesDir, template);
         const stats = fs.statSync(templatePath);
-        
+
         if (stats.isFile()) {
           console.log(`  ${colors.green}📄${colors.reset} ${template}`);
           console.log(`     ${colors.blue}${templatePath}${colors.reset}`);
         }
       });
     } else {
-      console.log(`${colors.red}❌ Templates directory not found: ${this.templatesDir}${colors.reset}`);
+      console.log(
+        `${colors.red}❌ Templates directory not found: ${this.templatesDir}${colors.reset}`
+      );
     }
-    
+
     console.log();
   }
 
   // Show architecture compliance checklist
   showChecklist() {
     console.log(`${colors.bright}✅ Architecture Compliance Checklist${colors.reset}\n`);
-    
+
     console.log(`${colors.cyan}Pre-Development (MANDATORY):${colors.reset}
   ${colors.yellow}□${colors.reset} Read ARCHITECTURE_GUIDELINES.md
   ${colors.yellow}□${colors.reset} Read relevant AGENTS.md files
@@ -362,17 +377,17 @@ ${colors.cyan}Validation (REQUIRED):${colors.reset}
   // Run all quality checks
   runQualityChecks() {
     console.log(`${colors.bright}🚀 Running Quality Checks${colors.reset}\n`);
-    
+
     const commands = [
       'npm run check',
       'npm run test:architecture',
       'npm run test:responsive',
-      'npm run check:architecture'
+      'npm run check:architecture',
     ];
 
-    commands.forEach(command => {
+    commands.forEach((command) => {
       console.log(`${colors.cyan}Running: ${command}${colors.reset}`);
-      
+
       try {
         execSync(command, { stdio: 'inherit' });
         console.log(`${colors.green}✅ ${command} passed${colors.reset}\n`);
@@ -387,31 +402,31 @@ ${colors.cyan}Validation (REQUIRED):${colors.reset}
     const files = [];
     const searchDir = pattern.includes('app/') ? 'app' : '.';
     const extension = pattern.includes('.tsx') ? '.tsx' : '.ts';
-    
+
     const walkDir = (dir) => {
       const items = fs.readdirSync(dir);
-      
-      items.forEach(item => {
+
+      items.forEach((item) => {
         const fullPath = path.join(dir, item);
         const stat = fs.statSync(fullPath);
-        
+
         if (stat.isDirectory()) {
           walkDir(fullPath);
         } else if (item.endsWith(extension)) {
           const relativePath = path.relative(this.rootDir, fullPath);
-          
+
           // Check exclusions
-          const shouldExclude = exclude.some(pattern => {
+          const shouldExclude = exclude.some((pattern) => {
             return relativePath.includes(pattern.replace('**/', ''));
           });
-          
+
           if (!shouldExclude) {
             files.push(fullPath);
           }
         }
       });
     };
-    
+
     walkDir(searchDir);
     return files;
   }

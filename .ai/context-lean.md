@@ -25,22 +25,4 @@ npm run check  # Format, lint, typecheck, test (AI runs this automatically)
 - Missing context providers in tests
 - No TypeScript interfaces
 
-## Component Template
-```typescript
-export const Component = memo(function Component({ id }: { id: string }) {
-  const { settings } = useSettings();
-  
-  const data = useMemo(() => processData(settings), [settings]);
-  const handleClick = useCallback(() => {}, []);
-
-  return (
-    <div className="space-y-4 md:space-y-0 md:flex">
-      <button className="h-11 px-4" onClick={handleClick}>
-        Action
-      </button>
-    </div>
-  );
-});
-```
-
-Keep it simple.
+That's it. Keep it simple.

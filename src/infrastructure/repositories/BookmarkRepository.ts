@@ -1,6 +1,7 @@
 import { IBookmarkRepository } from '../../domain/repositories/IBookmarkRepository';
 import { Bookmark } from '../../domain/entities/Bookmark';
 import { BookmarkPosition } from '../../domain/value-objects/BookmarkPosition';
+import { StoredBookmark, isStoredBookmark } from '../../domain/value-objects/StoredBookmark';
 
 /**
  * Infrastructure implementation of bookmark repository using localStorage
@@ -9,17 +10,22 @@ import { BookmarkPosition } from '../../domain/value-objects/BookmarkPosition';
 export class BookmarkRepository implements IBookmarkRepository {
   private readonly storageKey = 'quran_bookmarks';
 
-  private getStoredBookmarks(): any[] {
+  private isStoredBookmarkArray(value: unknown): value is StoredBookmark[] {
+    return Array.isArray(value) && value.every((item) => isStoredBookmark(item));
+  }
+
+  private getStoredBookmarks(): StoredBookmark[] {
     try {
       const stored = localStorage.getItem(this.storageKey);
-      return stored ? JSON.parse(stored) : [];
+      const parsed = stored ? JSON.parse(stored) : [];
+      return this.isStoredBookmarkArray(parsed) ? parsed : [];
     } catch (error) {
       console.error('Failed to parse stored bookmarks:', error);
       return [];
     }
   }
 
-  private saveStoredBookmarks(bookmarks: any[]): void {
+  private saveStoredBookmarks(bookmarks: StoredBookmark[]): void {
     try {
       localStorage.setItem(this.storageKey, JSON.stringify(bookmarks));
     } catch (error) {
@@ -27,7 +33,7 @@ export class BookmarkRepository implements IBookmarkRepository {
     }
   }
 
-  private mapStoredToBookmark(stored: any): Bookmark {
+  private mapStoredToBookmark(stored: StoredBookmark): Bookmark {
     return new Bookmark(
       stored.id,
       stored.userId,
@@ -35,7 +41,7 @@ export class BookmarkRepository implements IBookmarkRepository {
       new BookmarkPosition(
         stored.position.surahId,
         stored.position.ayahNumber,
-        new Date(stored.createdAt)
+        new Date(stored.position.timestamp)
       ),
       new Date(stored.createdAt),
       stored.notes,
@@ -43,7 +49,7 @@ export class BookmarkRepository implements IBookmarkRepository {
     );
   }
 
-  private mapBookmarkToStored(bookmark: Bookmark): any {
+  private mapBookmarkToStored(bookmark: Bookmark): StoredBookmark {
     return {
       id: bookmark.id,
       userId: bookmark.userId,
@@ -340,12 +346,16 @@ export class BookmarkRepository implements IBookmarkRepository {
     };
   }
 
-  async exportBookmarks(userId: string): Promise<any[]> {
+  async exportBookmarks(userId: string): Promise<StoredBookmark[]> {
     const userBookmarks = await this.findByUser(userId);
-    return userBookmarks.map((bookmark) => bookmark.toPlainObject());
+    return userBookmarks.map((bookmark) => this.mapBookmarkToStored(bookmark));
   }
 
-  async importBookmarks(userId: string, bookmarks: any[]): Promise<void> {
+  async importBookmarks(userId: string, bookmarks: StoredBookmark[]): Promise<void> {
+    if (!this.isStoredBookmarkArray(bookmarks)) {
+      console.warn('Invalid bookmark data for import');
+      return;
+    }
     for (const bookmarkData of bookmarks) {
       const bookmark = new Bookmark(
         bookmarkData.id || crypto.randomUUID(),
@@ -354,7 +364,7 @@ export class BookmarkRepository implements IBookmarkRepository {
         new BookmarkPosition(
           bookmarkData.position.surahId,
           bookmarkData.position.ayahNumber,
-          new Date(bookmarkData.createdAt)
+          new Date(bookmarkData.position.timestamp)
         ),
         new Date(bookmarkData.createdAt),
         bookmarkData.notes,

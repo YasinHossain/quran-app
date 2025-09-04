@@ -1,7 +1,8 @@
-import { useState, useEffect, useMemo } from 'react';
-import { container } from '../../infrastructure/di/container';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+
 import { GetTafsirResourcesUseCase } from '../../application/use-cases/GetTafsirResources';
 import { Tafsir } from '../../domain/entities/Tafsir';
+import { container } from '../../infrastructure/di/container';
 
 interface UseTafsirResult {
   tafsirs: Tafsir[];
@@ -35,7 +36,7 @@ export const useTafsir = (): UseTafsirResult => {
   }, []);
 
   // Load tafsir resources
-  const loadTafsirs = async () => {
+  const loadTafsirs = useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -54,56 +55,68 @@ export const useTafsir = (): UseTafsirResult => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [useCase]);
 
   // Search tafsirs
-  const searchTafsirs = async (searchTerm: string): Promise<Tafsir[]> => {
-    try {
-      return await useCase.search(searchTerm);
-    } catch (err) {
-      console.error('Error searching tafsirs:', err);
-      return [];
-    }
-  };
+  const searchTafsirs = useCallback(
+    async (searchTerm: string): Promise<Tafsir[]> => {
+      try {
+        return await useCase.search(searchTerm);
+      } catch (err) {
+        console.error('Error searching tafsirs:', err);
+        return [];
+      }
+    },
+    [useCase]
+  );
 
   // Get tafsir by ID
-  const getTafsirById = async (id: number): Promise<Tafsir | null> => {
-    try {
-      return await useCase.getById(id);
-    } catch (err) {
-      console.error('Error getting tafsir by ID:', err);
-      return null;
-    }
-  };
+  const getTafsirById = useCallback(
+    async (id: number): Promise<Tafsir | null> => {
+      try {
+        return await useCase.getById(id);
+      } catch (err) {
+        console.error('Error getting tafsir by ID:', err);
+        return null;
+      }
+    },
+    [useCase]
+  );
 
   // Get tafsir content for verse
-  const getTafsirContent = async (verseKey: string, tafsirId: number): Promise<string> => {
-    try {
-      return await useCase.getTafsirContent(verseKey, tafsirId);
-    } catch (err) {
-      console.error('Error getting tafsir content:', err);
-      throw err;
-    }
-  };
+  const getTafsirContent = useCallback(
+    async (verseKey: string, tafsirId: number): Promise<string> => {
+      try {
+        return await useCase.getTafsirContent(verseKey, tafsirId);
+      } catch (err) {
+        console.error('Error getting tafsir content:', err);
+        throw err;
+      }
+    },
+    [useCase]
+  );
 
   // Refresh data
-  const refresh = async () => {
+  const refresh = useCallback(async () => {
     await loadTafsirs();
-  };
+  }, [loadTafsirs]);
 
   // Load tafsirs on mount
   useEffect(() => {
     loadTafsirs();
-  }, []);
+  }, [loadTafsirs]);
 
-  return {
-    tafsirs,
-    loading,
-    error,
-    isFromCache,
-    searchTafsirs,
-    getTafsirById,
-    getTafsirContent,
-    refresh,
-  };
+  return useMemo(
+    () => ({
+      tafsirs,
+      loading,
+      error,
+      isFromCache,
+      searchTafsirs,
+      getTafsirById,
+      getTafsirContent,
+      refresh,
+    }),
+    [tafsirs, loading, error, isFromCache, searchTafsirs, getTafsirById, getTafsirContent, refresh]
+  );
 };

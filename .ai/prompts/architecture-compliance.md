@@ -29,6 +29,7 @@
 ### Phase 2: Architecture Compliance ✅ MANDATORY
 
 - [ ] **memo() Wrapper**: Add to ALL components
+
   ```typescript
   export const ComponentName = memo(function ComponentName(props) {
     // Component logic
@@ -36,6 +37,7 @@
   ```
 
 - [ ] **TypeScript Interfaces**: Define proper props types
+
   ```typescript
   interface ComponentNameProps {
     id: string;
@@ -44,7 +46,8 @@
   ```
 
 - [ ] **JSDoc Comments**: Document purpose and usage
-  ```typescript
+
+  ````typescript
   /**
    * @description Component purpose and behavior
    * @example
@@ -52,9 +55,10 @@
    * <ComponentName id="example" />
    * ```
    */
-  ```
+  ````
 
 - [ ] **Context Integration**: Add Settings/Audio/Bookmarks where needed
+
   ```typescript
   const { settings } = useSettings();
   const { currentTrack, isPlaying } = useAudio();
@@ -62,18 +66,20 @@
   ```
 
 - [ ] **Mobile-First Design**: Apply `space-y-4 md:space-y-0` patterns
+
   ```typescript
-  className="space-y-4 p-4 md:space-y-6 md:p-6 md:flex md:items-center"
+  className = 'space-y-4 p-4 md:space-y-6 md:p-6 md:flex md:items-center';
   ```
 
 - [ ] **Touch-Friendly**: Ensure 44px minimum targets
   ```typescript
-  className="h-11 px-4 touch-manipulation"
+  className = 'h-11 px-4 touch-manipulation';
   ```
 
 ### Phase 3: Performance Optimization ✅ REQUIRED
 
 - [ ] **useCallback**: Memoize all event handlers
+
   ```typescript
   const handleClick = useCallback(() => {
     // Handler logic
@@ -81,6 +87,7 @@
   ```
 
 - [ ] **useMemo**: Memoize expensive computations
+
   ```typescript
   const processedData = useMemo(() => {
     return transformData(data, settings);
@@ -88,6 +95,7 @@
   ```
 
 - [ ] **as const**: Add to hook returns
+
   ```typescript
   return {
     data,
@@ -97,6 +105,7 @@
   ```
 
 - [ ] **AbortController**: Add cleanup to data fetching
+
   ```typescript
   useEffect(() => {
     return () => {
@@ -117,26 +126,29 @@
 ### Phase 4: Import/Export Standards ✅ MANDATORY
 
 - [ ] **Import Order**: React → Third-party → Internal → Types
+
   ```typescript
   // 1. React imports (always first)
   import { memo, useCallback, useMemo } from 'react';
-  
+
   // 2. Third-party imports (alphabetical)
   import { SWRConfig } from 'swr';
-  
+
   // 3. Internal imports with @/ aliases
   import { useSettings } from '@/app/providers/SettingsContext';
-  
+
   // 4. Type imports with 'type' keyword
   import type { ComponentProps } from '@/types';
   ```
 
 - [ ] **Path Aliases**: Use @/ for internal imports
+
   ```typescript
   import { Component } from '@/app/shared/ui/Component';
   ```
 
 - [ ] **Barrel Exports**: Create/update index.ts files
+
   ```typescript
   export { ComponentName } from './ComponentName';
   export { default as ComponentName } from './ComponentName';
@@ -151,6 +163,7 @@
 ### Phase 5: Testing Integration ✅ REQUIRED
 
 - [ ] **Provider Wrappers**: Add context providers to tests
+
   ```typescript
   const TestWrapper = ({ children }) => (
     <SettingsProvider>
@@ -164,11 +177,13 @@
   ```
 
 - [ ] **Responsive Testing**: Test mobile-first design
+
   ```typescript
   expect(container).toHaveClass('space-y-4', 'md:space-y-0');
   ```
 
 - [ ] **Interaction Testing**: Verify touch-friendly interactions
+
   ```typescript
   const button = screen.getByRole('button');
   expect(button).toHaveClass('h-11'); // 44px touch target
@@ -182,6 +197,7 @@
 ### Phase 6: Final Validation ✅ MANDATORY
 
 - [ ] **Run npm run check**: Ensure no lint/type errors
+
   ```bash
   npm run check
   ```
@@ -193,6 +209,7 @@
   - [ ] All performance optimizations in place
 
 - [ ] **Test functionality**: Ensure no regressions
+
   ```bash
   npm run test:architecture
   npm run test:responsive
@@ -243,11 +260,11 @@ export const MyComponent = memo(function MyComponent({
   // ... other props
 }: MyComponentProps) {
   const { settings } = useSettings();
-  
+
   const processedData = useMemo(() => {
     // Expensive calculations
   }, [dependencies]);
-  
+
   const handleAction = useCallback(() => {
     // Event handlers
   }, [dependencies]);

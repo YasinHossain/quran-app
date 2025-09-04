@@ -8,7 +8,7 @@ import { ReactElement, ComponentType } from 'react';
  * @example
  * ```tsx
  * import { testMemoization } from '@/app/testUtils/performanceTestUtils';
- * 
+ *
  * it('should not re-render when props unchanged', () => {
  *   const result = testMemoization(Component, { prop: 'value' });
  *   expect(result.renderCount).toBe(1);
@@ -22,15 +22,13 @@ let lastProps: any = null;
 /**
  * Higher-order component to track renders
  */
-function withRenderTracking<P extends object>(
-  Component: ComponentType<P>
-): ComponentType<P> {
+function withRenderTracking<P extends object>(Component: ComponentType<P>): ComponentType<P> {
   const TrackedComponent = (props: P) => {
     renderCount++;
     lastProps = props;
     return <Component {...props} />;
   };
-  
+
   TrackedComponent.displayName = `TrackedComponent(${Component.displayName || Component.name})`;
   return TrackedComponent;
 }
@@ -70,12 +68,12 @@ export function testMemoization<P extends object>(
   unmount: () => void;
 } {
   resetRenderTracking();
-  
+
   const TrackedComponent = withRenderTracking(Component);
   const { rerender, unmount } = render(<TrackedComponent {...initialProps} />);
-  
+
   const initialRenderCount = getRenderCount();
-  
+
   return {
     renderCount: initialRenderCount,
     rerender: (newProps: P) => {
@@ -93,12 +91,12 @@ export const performanceMocks = {
    * Mock performance.mark for performance testing
    */
   mockPerformanceMark: jest.fn(),
-  
+
   /**
    * Mock performance.measure for performance testing
    */
   mockPerformanceMeasure: jest.fn(),
-  
+
   /**
    * Setup performance mocking
    */
@@ -114,7 +112,7 @@ export const performanceMocks = {
       },
     });
   },
-  
+
   /**
    * Reset performance mocks
    */
@@ -131,12 +129,12 @@ export class PerformanceTester<P extends object> {
   private component: ComponentType<P>;
   private renderResult: RenderResult | null = null;
   private TrackedComponent: ComponentType<P>;
-  
+
   constructor(component: ComponentType<P>) {
     this.component = component;
     this.TrackedComponent = withRenderTracking(component);
   }
-  
+
   /**
    * Initial render with props
    */
@@ -145,7 +143,7 @@ export class PerformanceTester<P extends object> {
     this.renderResult = render(<this.TrackedComponent {...props} />);
     return this;
   }
-  
+
   /**
    * Re-render with new props
    */
@@ -156,7 +154,7 @@ export class PerformanceTester<P extends object> {
     this.renderResult.rerender(<this.TrackedComponent {...props} />);
     return this;
   }
-  
+
   /**
    * Assert render count
    */
@@ -164,14 +162,14 @@ export class PerformanceTester<P extends object> {
     expect(getRenderCount()).toBe(count);
     return this;
   }
-  
+
   /**
    * Assert component did not re-render
    */
   expectNoRerender(): this {
     return this.expectRenderCount(1);
   }
-  
+
   /**
    * Assert component re-rendered
    */
@@ -179,7 +177,7 @@ export class PerformanceTester<P extends object> {
     expect(getRenderCount()).toBeGreaterThan(1);
     return this;
   }
-  
+
   /**
    * Clean up
    */
@@ -210,11 +208,7 @@ export function testCallbackStability(
 /**
  * Test useMemo effectiveness
  */
-export function testMemoStability<T>(
-  value1: T,
-  value2: T,
-  shouldBeStable: boolean = true
-): void {
+export function testMemoStability<T>(value1: T, value2: T, shouldBeStable: boolean = true): void {
   if (shouldBeStable) {
     expect(value1).toBe(value2);
   } else {
@@ -232,25 +226,21 @@ export function createPerformanceTestSuite<P extends object>(
 ) {
   describe(`${componentName} Performance`, () => {
     let tester: PerformanceTester<P>;
-    
+
     beforeEach(() => {
       tester = new PerformanceTester(Component);
       performanceMocks.setup();
     });
-    
+
     afterEach(() => {
       tester.unmount();
       performanceMocks.reset();
     });
-    
+
     it('should be memoized and not re-render with same props', () => {
-      tester
-        .render(testProps)
-        .expectRenderCount(1)
-        .rerender(testProps)
-        .expectNoRerender();
+      tester.render(testProps).expectRenderCount(1).rerender(testProps).expectNoRerender();
     });
-    
+
     it('should re-render when props change', () => {
       const changedProps = { ...testProps };
       // Modify a prop to force re-render
@@ -260,12 +250,8 @@ export function createPerformanceTestSuite<P extends object>(
           (changedProps as any)[firstKey] = 'changed-value';
         }
       }
-      
-      tester
-        .render(testProps)
-        .expectRenderCount(1)
-        .rerender(changedProps)
-        .expectRerender();
+
+      tester.render(testProps).expectRenderCount(1).rerender(changedProps).expectRerender();
     });
   });
 }

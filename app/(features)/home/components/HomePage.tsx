@@ -1,7 +1,6 @@
 'use client';
 import { memo, useCallback, useState } from 'react';
 
-
 import VerseOfDay from './VerseOfDay';
 import HomePageBackground from './HomePageBackground';
 import { HomeHeader } from './HomeHeader';

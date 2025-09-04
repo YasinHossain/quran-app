@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import { SkipBackIcon, SkipForwardIcon, PlayIcon, PauseIcon } from '@/app/shared/icons';
 import { Button } from '@/app/shared/ui/Button';
 import { iconClasses } from '@/lib/responsive';
@@ -11,7 +11,10 @@ interface Props {
   togglePlay: () => void;
 }
 
-export default function TransportControls({
+/**
+ * Displays play/pause and skip controls for audio transport.
+ */
+export const TransportControls = memo(function TransportControls({
   isPlaying,
   interactable,
   onPrev,
@@ -54,4 +57,4 @@ export default function TransportControls({
       </Button>
     </div>
   );
-}
+});
