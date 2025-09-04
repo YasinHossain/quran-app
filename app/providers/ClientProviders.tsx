@@ -14,7 +14,7 @@ import { AudioProvider } from '@/app/shared/player/context/AudioContext';
  * and `SidebarProvider`. Wrap your component tree with this provider to give
  * descendants access to theme, settings, and sidebar contexts.
  */
-export default function ClientProviders({
+export function ClientProviders({
   children,
   initialTheme,
 }: {

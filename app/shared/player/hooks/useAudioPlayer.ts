@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 type Options = {
   src?: string;
@@ -25,7 +26,7 @@ export function useAudioPlayer(options: Options = {}) {
     a.play().catch((err) => {
       if (err instanceof DOMException && err.name === 'AbortError') return;
       if (onError) onError(err);
-      else console.error(err);
+      else logger.error(err);
     });
     setIsPlaying(true);
   }, [onError]);
@@ -69,7 +70,7 @@ export function useAudioPlayer(options: Options = {}) {
       a.play().catch((err) => {
         if (err instanceof DOMException && err.name === 'AbortError') return;
         if (onError) onError(err);
-        else console.error(err);
+        else logger.error(err);
       });
     } else {
       a.pause();

@@ -6,6 +6,7 @@
  */
 
 import { ApplicationError, ErrorFactory, isApplicationError } from './ApplicationError';
+import { logger } from '../monitoring/Logger';
 
 /**
  * Error handling options
@@ -134,11 +135,11 @@ export class ErrorHandler {
 
     // Log error
     if (finalOptions.logError) {
-      const logger = errorHandlerConfig.getLogger();
-      if (logger) {
-        logger(appError, options.context);
+      const configuredLogger = errorHandlerConfig.getLogger();
+      if (configuredLogger) {
+        configuredLogger(appError, options.context);
       } else {
-        console.error('[ErrorHandler]', appError.toJSON());
+        logger.error('[ErrorHandler]', options.context, appError);
       }
     }
 
@@ -149,7 +150,7 @@ export class ErrorHandler {
         try {
           reporter(appError, options.context);
         } catch (reportError) {
-          console.error('[ErrorHandler] Failed to report error:', reportError);
+          logger.error('[ErrorHandler] Failed to report error', undefined, reportError as Error);
         }
       }
     }
@@ -162,7 +163,7 @@ export class ErrorHandler {
         try {
           notifier(notification);
         } catch (notifyError) {
-          console.error('[ErrorHandler] Failed to show notification:', notifyError);
+          logger.error('[ErrorHandler] Failed to show notification', undefined, notifyError as Error);
         }
       }
     }
@@ -205,11 +206,11 @@ export class ErrorHandler {
 
     // Log error synchronously
     if (finalOptions.logError) {
-      const logger = errorHandlerConfig.getLogger();
-      if (logger) {
-        logger(appError, options.context);
+      const configuredLogger = errorHandlerConfig.getLogger();
+      if (configuredLogger) {
+        configuredLogger(appError, options.context);
       } else {
-        console.error('[ErrorHandler]', appError.toJSON());
+        logger.error('[ErrorHandler]', options.context, appError);
       }
     }
 
@@ -221,7 +222,7 @@ export class ErrorHandler {
         try {
           notifier(notification);
         } catch (notifyError) {
-          console.error('[ErrorHandler] Failed to show notification:', notifyError);
+          logger.error('[ErrorHandler] Failed to show notification', undefined, notifyError as Error);
         }
       }
     }
@@ -235,7 +236,7 @@ export class ErrorHandler {
           try {
             reporter(appError, options.context);
           } catch (reportError) {
-            console.error('[ErrorHandler] Failed to report error:', reportError);
+            logger.error('[ErrorHandler] Failed to report error', undefined, reportError as Error);
           }
         });
       }

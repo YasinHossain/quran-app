@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
@@ -9,7 +9,7 @@ interface Option {
   name: string;
 }
 
-export default function useSurahPanels({
+export function useSurahPanels({
   translationOptions,
   wordLanguageOptions,
   settings,
@@ -21,6 +21,26 @@ export default function useSurahPanels({
   const { t } = useTranslation();
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
+
+  const openTranslationPanel = useCallback(
+    () => setIsTranslationPanelOpen(true),
+    [setIsTranslationPanelOpen]
+  );
+
+  const closeTranslationPanel = useCallback(
+    () => setIsTranslationPanelOpen(false),
+    [setIsTranslationPanelOpen]
+  );
+
+  const openWordLanguagePanel = useCallback(
+    () => setIsWordPanelOpen(true),
+    [setIsWordPanelOpen]
+  );
+
+  const closeWordLanguagePanel = useCallback(
+    () => setIsWordPanelOpen(false),
+    [setIsWordPanelOpen]
+  );
 
   const selectedTranslationName = useMemo(() => {
     // Use the first translation from translationIds array, fallback to translationId
@@ -40,11 +60,11 @@ export default function useSurahPanels({
 
   return {
     isTranslationPanelOpen,
-    openTranslationPanel: () => setIsTranslationPanelOpen(true),
-    closeTranslationPanel: () => setIsTranslationPanelOpen(false),
+    openTranslationPanel,
+    closeTranslationPanel,
     isWordLanguagePanelOpen: isWordPanelOpen,
-    openWordLanguagePanel: () => setIsWordPanelOpen(true),
-    closeWordLanguagePanel: () => setIsWordPanelOpen(false),
+    openWordLanguagePanel,
+    closeWordLanguagePanel,
     selectedTranslationName,
     selectedWordLanguageName,
   } as const;

@@ -2,8 +2,12 @@
 
 import { useCallback, useState } from 'react';
 import useSWR from 'swr';
-import { Verse } from '@/types';
+
 import { getRandomVerse } from '@/lib/api';
+import { Verse } from '@/types';
+
+export const RETRY_LIMIT = 3;
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 interface UseRandomVerseOptions {
   translationId: number;
@@ -27,13 +31,18 @@ export function useRandomVerse({
   onError,
 }: UseRandomVerseOptions): UseRandomVerseReturn {
   const [isAvailable, setIsAvailable] = useState(true);
+  const [, setRetryCount] = useState(0);
 
   const randomVerseFetcher = useCallback(async (): Promise<Verse> => {
     try {
-      return await getRandomVerse(translationId);
+      const verseData = await getRandomVerse(translationId);
+      setRetryCount(0);
+      setIsAvailable(true);
+      return verseData;
     } catch (error) {
-      console.warn('Random verse API failed:', error);
+      logger.warn('Random verse API failed', undefined, error as Error);
       setIsAvailable(false);
+      setRetryCount(0);
       onError?.(error as Error);
       throw error;
     }
@@ -51,11 +60,18 @@ export function useRandomVerse({
   });
 
   const refresh = useCallback(() => {
-    if (!isAvailable && Math.random() < 0.5) {
-      // 50% chance to retry random API
-      setIsAvailable(true);
+    if (!isAvailable) {
+      setRetryCount((count) => {
+        const next = count + 1;
+        if (next >= RETRY_LIMIT) {
+          setIsAvailable(true);
+          return 0;
+        }
+        return next;
+      });
+    } else {
+      mutate();
     }
-    mutate();
   }, [isAvailable, mutate]);
 
   return {

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { ErrorHandler } from '@/src/infrastructure/errors';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -25,8 +26,6 @@ class ErrorBoundaryClass extends React.Component<ErrorBoundaryProps, ErrorBounda
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
-
     this.setState({
       hasError: true,
       error,
@@ -36,9 +35,11 @@ class ErrorBoundaryClass extends React.Component<ErrorBoundaryProps, ErrorBounda
     // Call the onError callback if provided
     this.props.onError?.(error, errorInfo);
 
-    // App-level error logging
-    console.error('App-level error caught:', error, errorInfo);
-    // In production, send to error tracking service
+    // Delegate to global error handler
+    ErrorHandler.handle(error, {
+      context: { errorInfo },
+      showUserNotification: false,
+    });
   }
 
   resetError = () => {
@@ -62,12 +63,12 @@ interface ErrorFallbackProps {
 
 function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="max-w-md w-full bg-surface rounded-lg shadow-lg p-6">
         <div className="flex items-center mb-4">
           <div className="flex-shrink-0">
             <svg
-              className="h-8 w-8 text-red-500"
+              className="h-8 w-8 text-error"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -81,24 +82,24 @@ function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps) {
             </svg>
           </div>
           <div className="ml-3">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+            <h3 className="text-lg font-medium text-foreground">
               Something went wrong
             </h3>
           </div>
         </div>
 
         <div className="mb-6">
-          <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+          <p className="text-sm text-muted mb-4">
             We encountered an unexpected error. You can try refreshing the page or go back to
             continue reading.
           </p>
 
           {process.env.NODE_ENV === 'development' && error && (
             <details className="mt-4">
-              <summary className="cursor-pointer text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <summary className="cursor-pointer text-sm font-medium text-foreground mb-2">
                 Error Details (Development Only)
               </summary>
-              <pre className="text-xs bg-gray-100 dark:bg-gray-700 p-2 rounded overflow-auto max-h-32">
+              <pre className="text-xs bg-interactive p-2 rounded overflow-auto max-h-32">
                 {error.toString()}
               </pre>
             </details>
@@ -108,13 +109,13 @@ function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps) {
         <div className="flex space-x-3">
           <button
             onClick={resetError}
-            className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
+            className="flex-1 bg-accent hover:bg-accent-hover text-on-accent font-medium py-2 px-4 rounded-md transition-colors"
           >
             Try Again
           </button>
           <button
             onClick={() => (window.location.href = '/')}
-            className="flex-1 bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium py-2 px-4 rounded-md transition-colors"
+            className="flex-1 bg-interactive hover:bg-interactive-hover text-foreground font-medium py-2 px-4 rounded-md transition-colors"
           >
             Go Home
           </button>
@@ -132,7 +133,7 @@ export function ErrorBoundary(props: ErrorBoundaryProps) {
 // Hook for handling errors in functional components
 export function useErrorHandler() {
   return React.useCallback((error: Error) => {
-    console.error('Error caught by useErrorHandler:', error);
+    ErrorHandler.handle(error);
 
     // In development, throw the error to be caught by error boundary
     if (process.env.NODE_ENV === 'development') {

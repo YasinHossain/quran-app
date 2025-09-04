@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { GetTafsirResourcesUseCase } from '../../application/use-cases/GetTafsirResources';
 import { Tafsir } from '../../domain/entities/Tafsir';
 import { container } from '../../infrastructure/di/container';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 interface UseTafsirResult {
   tafsirs: Tafsir[];
@@ -51,7 +52,7 @@ export const useTafsir = (): UseTafsirResult => {
       }
     } catch (err) {
       setError('Failed to load tafsir resources. Please try again.');
-      console.error('Error loading tafsirs:', err);
+      logger.error('Error loading tafsirs', undefined, err as Error);
     } finally {
       setLoading(false);
     }
@@ -63,7 +64,7 @@ export const useTafsir = (): UseTafsirResult => {
       try {
         return await useCase.search(searchTerm);
       } catch (err) {
-        console.error('Error searching tafsirs:', err);
+        logger.error('Error searching tafsirs', undefined, err as Error);
         return [];
       }
     },
@@ -76,7 +77,7 @@ export const useTafsir = (): UseTafsirResult => {
       try {
         return await useCase.getById(id);
       } catch (err) {
-        console.error('Error getting tafsir by ID:', err);
+        logger.error('Error getting tafsir by ID', undefined, err as Error);
         return null;
       }
     },
@@ -89,7 +90,7 @@ export const useTafsir = (): UseTafsirResult => {
       try {
         return await useCase.getTafsirContent(verseKey, tafsirId);
       } catch (err) {
-        console.error('Error getting tafsir content:', err);
+        logger.error('Error getting tafsir content', undefined, err as Error);
         throw err;
       }
     },

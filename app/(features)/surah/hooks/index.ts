@@ -1,6 +1,6 @@
 // Core surah hooks
 export { default as useVerseListing } from './useVerseListing';
-export { default as useSurahPanels } from './useSurahPanels';
+export { useSurahPanels } from './useSurahPanels';
 export { default as useFontSize } from './useFontSize';
 export { default as useHideScrollbar } from './useHideScrollbar';
 export { default as useInfiniteVerseLoader } from './useInfiniteVerseLoader';

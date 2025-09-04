@@ -2,7 +2,7 @@
 import './globals.css';
 import './fonts.css';
 import { TranslationProvider } from './providers/TranslationProvider';
-import ClientProviders from './providers/ClientProviders';
+import { ClientProviders } from './providers/ClientProviders';
 import { ErrorBoundary } from './shared/components/ErrorBoundary';
 import localFont from 'next/font/local';
 import {
