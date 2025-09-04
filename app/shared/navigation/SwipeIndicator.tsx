@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IconChevronLeft, IconChevronRight, IconArrowDown } from '@tabler/icons-react';
 import { useBreakpoint } from '@/lib/responsive';
@@ -11,11 +11,11 @@ interface SwipeIndicatorProps {
   autoHideDelay?: number;
 }
 
-export const SwipeIndicator: React.FC<SwipeIndicatorProps> = ({
+export const SwipeIndicator = ({
   show = true,
   autoHide = true,
   autoHideDelay = 5000,
-}) => {
+}: SwipeIndicatorProps): JSX.Element => {
   const [isVisible, setIsVisible] = useState(show);
 
   useEffect(() => {

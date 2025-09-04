@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSettings } from '@/app/providers/SettingsContext';
 import type { LanguageCode } from '@/lib/text/languageCodes';
@@ -23,11 +22,11 @@ const WORD_LANGUAGES = [
   { id: 50, name: 'Tamil', code: 'ta' as LanguageCode },
 ];
 
-export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
+export const WordLanguagePanel = ({
   isOpen,
   onClose,
   renderMode = 'panel',
-}) => {
+}: WordLanguagePanelProps): JSX.Element => {
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
 
@@ -123,7 +122,7 @@ export const WordLanguagePanel: React.FC<WordLanguagePanelProps> = ({
   );
 };
 
-const CheckIcon: React.FC<{ className?: string }> = ({ className }) => (
+const const CheckIcon = ({ className }: { className?: string }): JSX.Element => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className={className}

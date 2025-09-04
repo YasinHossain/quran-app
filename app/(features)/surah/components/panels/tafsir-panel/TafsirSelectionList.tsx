@@ -1,6 +1,6 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
 import { GripVerticalIcon, CloseIcon } from '@/app/shared/icons';
 import { TafsirResource } from '@/types';
 import { MAX_TAFSIR_SELECTIONS } from './tafsirPanel.utils';
@@ -16,7 +16,7 @@ interface TafsirSelectionListProps {
   draggedId: number | null;
 }
 
-export const TafsirSelectionList: React.FC<TafsirSelectionListProps> = ({
+export const TafsirSelectionList = ({
   orderedSelection,
   tafsirs,
   handleSelectionToggle,
@@ -25,7 +25,7 @@ export const TafsirSelectionList: React.FC<TafsirSelectionListProps> = ({
   handleDrop,
   handleDragEnd,
   draggedId,
-}) => (
+}: TafsirSelectionListProps): JSX.Element => (
   <div>
     <h2 className="text-sm font-semibold px-1 mb-2 flex items-center justify-between text-muted">
       <span>

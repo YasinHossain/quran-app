@@ -1,6 +1,6 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
 import { useTranslationPanel } from './useTranslationPanel';
 import { useListHeight } from '@/app/shared/resource-panel/hooks/useListHeight';
 import { useTranslationSections } from './hooks/useTranslationSections';
@@ -12,7 +12,7 @@ interface TranslationPanelProps {
   onClose: () => void;
 }
 
-export const TranslationPanel: React.FC<TranslationPanelProps> = ({ isOpen, onClose }) => {
+export const TranslationPanel = ({ isOpen, onClose }: TranslationPanelProps): JSX.Element => {
   const panelData = useTranslationPanel(isOpen);
   const { listContainerRef, listHeight } = useListHeight(isOpen);
   const { resourcesToRender, sectionsToRender } = useTranslationSections(

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import type React from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { CircularProgress } from '../../components/CircularProgress';
@@ -15,7 +15,11 @@ interface MemorizationCardProps {
   };
 }
 
-const MemorizationCard: React.FC<MemorizationCardProps> = ({ surahId, plan, chapter }) => {
+export const MemorizationCard: React.FC<MemorizationCardProps> = ({
+  surahId,
+  plan,
+  chapter,
+}) => {
   const router = useRouter();
   const percent = Math.min(
     100,
@@ -99,5 +103,3 @@ const MemorizationCard: React.FC<MemorizationCardProps> = ({ surahId, plan, chap
     </motion.div>
   );
 };
-
-export default MemorizationCard;

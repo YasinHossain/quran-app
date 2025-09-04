@@ -1,6 +1,6 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
 import { Panel } from './Panel';
 import { cn } from '@/lib/utils/cn';
 import type { SettingsPanelProps } from '@/types/components';
@@ -12,12 +12,12 @@ interface SettingItemProps {
   disabled?: boolean;
 }
 
-const SettingItem: React.FC<SettingItemProps> = ({
+const SettingItem = ({
   label,
   description,
   children,
   disabled = false,
-}) => (
+}: SettingItemProps): JSX.Element => (
   <div
     className={cn(
       'flex items-center justify-between p-4 border-b border-border last:border-b-0',
@@ -40,13 +40,13 @@ interface ToggleSettingProps {
   disabled?: boolean;
 }
 
-const ToggleSetting: React.FC<ToggleSettingProps> = ({
+const const ToggleSetting = ({
   label,
   description,
   value,
   onChange,
   disabled = false,
-}) => (
+}: ToggleSettingProps): JSX.Element => (
   <SettingItem label={label} description={description} disabled={disabled}>
     <button
       onClick={() => !disabled && onChange(!value)}
@@ -78,14 +78,14 @@ interface SelectSettingProps {
   disabled?: boolean;
 }
 
-const SelectSetting: React.FC<SelectSettingProps> = ({
+const const SelectSetting = ({
   label,
   description,
   value,
   options,
   onChange,
   disabled = false,
-}) => (
+}: SelectSettingProps): JSX.Element => (
   <SettingItem label={label} description={description} disabled={disabled}>
     <select
       value={value}
@@ -117,7 +117,7 @@ interface RangeSettingProps {
   showValue?: boolean;
 }
 
-const RangeSetting: React.FC<RangeSettingProps> = ({
+const const RangeSetting = ({
   label,
   description,
   value,
@@ -127,7 +127,7 @@ const RangeSetting: React.FC<RangeSettingProps> = ({
   onChange,
   disabled = false,
   showValue = true,
-}) => (
+}: RangeSettingProps): JSX.Element => (
   <SettingItem label={label} description={description} disabled={disabled}>
     <div className="flex items-center space-x-3">
       <input
@@ -156,7 +156,7 @@ interface SettingsPanelComponentProps extends SettingsPanelProps {
   actions?: React.ReactNode[];
 }
 
-export const SettingsPanel: React.FC<SettingsPanelComponentProps> = ({
+export const const SettingsPanel = ({
   isOpen,
   onClose,
   title = 'Settings',
@@ -164,7 +164,7 @@ export const SettingsPanel: React.FC<SettingsPanelComponentProps> = ({
   actions = [],
   className,
   children,
-}) => {
+}: SettingsPanelComponentProps): JSX.Element => {
   return (
     <Panel
       isOpen={isOpen}

@@ -1,13 +1,12 @@
 'use client';
 
-import React from 'react';
 import { motion } from 'framer-motion';
 import { PinIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
 import { PinTabProps } from './types';
 
-export const PinTab: React.FC<PinTabProps> = ({ verseId, verseKey, isVersePinned, onTogglePin }) => {
+export const PinTab = ({ verseId, verseKey, isVersePinned, onTogglePin }: PinTabProps): JSX.Element => {
   return (
     <div className="p-6 flex flex-col items-center justify-center min-h-[200px] space-y-6">
       <div className="text-center space-y-3">

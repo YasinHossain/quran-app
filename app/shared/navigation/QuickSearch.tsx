@@ -1,4 +1,5 @@
 'use client';
+import type React from 'react';
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -10,7 +11,7 @@ interface QuickSearchProps {
   onClose: () => void;
 }
 
-export const QuickSearch: React.FC<QuickSearchProps> = ({ isOpen, onClose }) => {
+export const QuickSearch = ({ isOpen, onClose }: QuickSearchProps): JSX.Element => {
   const [query, setQuery] = useState('');
   const [recentSearches] = useState([
     'Al-Fatiha',

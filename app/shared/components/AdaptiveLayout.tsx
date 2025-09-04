@@ -1,6 +1,6 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useResponsiveState } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
@@ -19,13 +19,13 @@ interface AdaptiveLayoutProps {
  * Unified layout that adapts to any screen size
  * Replaces the need for separate mobile/desktop layouts
  */
-export const AdaptiveLayout: React.FC<AdaptiveLayoutProps> = ({
+export const AdaptiveLayout = ({
   children,
   showNavigation = true,
   sidebarContent,
   sidebarOpen = false,
   onSidebarToggle,
-}) => {
+}: AdaptiveLayoutProps): JSX.Element => {
   const { variant } = useResponsiveState();
   const { showQuranSelector } = useNavigation();
 

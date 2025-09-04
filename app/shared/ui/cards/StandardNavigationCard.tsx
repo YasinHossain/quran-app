@@ -1,6 +1,6 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
 import { BaseCard, BaseCardProps } from '../BaseCard';
 import { NumberBadge } from '../NumberBadge';
 import { buildTextClasses } from '../../design-system/card-tokens';
@@ -30,13 +30,13 @@ interface StandardNavigationCardProps extends Omit<BaseCardProps, 'children'> {
   onNavigate?: (id: number) => void;
 }
 
-export const StandardNavigationCard: React.FC<StandardNavigationCardProps> = ({
+export const StandardNavigationCard = ({
   content,
   onNavigate,
   isActive = false,
   className = 'items-center ml-2',
   ...props
-}) => {
+}: StandardNavigationCardProps): JSX.Element => {
   const {
     id,
     title,
@@ -92,7 +92,7 @@ export const StandardNavigationCard: React.FC<StandardNavigationCardProps> = ({
  */
 
 // For Surah cards (complex layout with Arabic)
-export const SurahNavigationCard: React.FC<StandardNavigationCardProps> = (props) => (
+export const const SurahNavigationCard = (props: StandardNavigationCardProps): JSX.Element => (
   <StandardNavigationCard
     {...props}
     content={{
@@ -104,7 +104,7 @@ export const SurahNavigationCard: React.FC<StandardNavigationCardProps> = (props
 );
 
 // For Juz cards (medium layout, no Arabic)
-export const JuzNavigationCard: React.FC<StandardNavigationCardProps> = (props) => (
+export const const JuzNavigationCard = (props: StandardNavigationCardProps): JSX.Element => (
   <StandardNavigationCard
     {...props}
     content={{
@@ -116,7 +116,7 @@ export const JuzNavigationCard: React.FC<StandardNavigationCardProps> = (props) 
 );
 
 // For Page cards (simple layout)
-export const PageNavigationCard: React.FC<StandardNavigationCardProps> = (props) => (
+export const const PageNavigationCard = (props: StandardNavigationCardProps): JSX.Element => (
   <StandardNavigationCard
     {...props}
     content={{

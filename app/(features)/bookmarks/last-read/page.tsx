@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import BookmarksLayout from '../components/shared/BookmarksLayout';
+import { BookmarksLayout } from '../components/shared/BookmarksLayout';
 import { useLastReadPage } from './hooks/useLastReadPage';
 import { LastReadHeader, LastReadGrid } from './components';
 

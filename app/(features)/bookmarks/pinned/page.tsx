@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import BookmarksLayout from '../components/shared/BookmarksLayout';
+import { BookmarksLayout } from '../components/shared/BookmarksLayout';
 import { usePinnedPage } from './hooks/usePinnedPage';
 import { PinnedHeader, PinnedVersesList } from './components';
 

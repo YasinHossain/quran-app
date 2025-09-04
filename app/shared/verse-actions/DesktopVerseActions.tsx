@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import {
   PlayIcon,
@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils';
 import { VerseActionsProps } from './types';
 import { defaultShare } from './utils';
 
-export const DesktopVerseActions: React.FC<VerseActionsProps> = ({
+export const DesktopVerseActions = ({
   verseKey,
   verseId,
   isPlaying,
@@ -29,7 +29,7 @@ export const DesktopVerseActions: React.FC<VerseActionsProps> = ({
   onNavigateToVerse,
   showRemove = false,
   className = '',
-}) => {
+}: VerseActionsProps): JSX.Element => {
   const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
   const handleShare = onShare || defaultShare;
 

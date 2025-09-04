@@ -1,7 +1,7 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
-import { IconHome, IconBook, IconBookmark } from '@tabler/icons-react';
+import { IconHome, IconBook, IconBookmark} from '@tabler/icons-react';
 import type { TablerIcon } from '@tabler/icons-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -28,10 +28,10 @@ interface AdaptiveNavigationProps {
  * - Tablet: Compact sidebar or bottom nav based on space
  * - Desktop: Full sidebar or top navigation
  */
-export const AdaptiveNavigation: React.FC<AdaptiveNavigationProps> = ({
+export const AdaptiveNavigation = ({
   onSurahJump,
   className,
-}) => {
+}: AdaptiveNavigationProps): JSX.Element => {
   const pathname = usePathname();
   const { breakpoint, variant } = useResponsiveState();
 
@@ -118,11 +118,11 @@ export const AdaptiveNavigation: React.FC<AdaptiveNavigationProps> = ({
 /**
  * Mobile variant - bottom navigation
  */
-const MobileNavigation: React.FC<{
+const const MobileNavigation = ({ navItems, onItemClick, className }: {
   navItems: NavItem[];
   onItemClick: (item: NavItem, e: React.MouseEvent) => void;
   className?: string;
-}> = ({ navItems, onItemClick, className }) => {
+}): JSX.Element => {
   const pathname = usePathname();
   const { isHidden } = useHeaderVisibility();
 
@@ -199,11 +199,11 @@ const MobileNavigation: React.FC<{
 /**
  * Tablet variant - can be bottom nav or compact sidebar
  */
-const TabletNavigation: React.FC<{
+const const TabletNavigation = ({ navItems, onItemClick, className }: {
   navItems: NavItem[];
   onItemClick: (item: NavItem, e: React.MouseEvent) => void;
   className?: string;
-}> = ({ navItems, onItemClick, className }) => {
+}): JSX.Element => {
   // For now, use bottom navigation on tablets too
   // Can be enhanced to show sidebar based on screen ratio
   return <MobileNavigation navItems={navItems} onItemClick={onItemClick} className={className} />;
@@ -212,11 +212,11 @@ const TabletNavigation: React.FC<{
 /**
  * Desktop variant - sidebar or top navigation
  */
-const DesktopNavigation: React.FC<{
+const const DesktopNavigation = ({ navItems, onItemClick, className }: {
   navItems: NavItem[];
   onItemClick: (item: NavItem, e: React.MouseEvent) => void;
   className?: string;
-}> = ({ navItems, onItemClick, className }) => {
+}): JSX.Element => {
   const pathname = usePathname();
 
   return (

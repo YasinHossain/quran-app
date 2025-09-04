@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import type React from 'react';
 import { motion } from 'framer-motion';
 import { BrainIcon, PlusIcon } from '@/app/shared/icons';
-import MemorizationCard from './MemorizationCard';
+import { MemorizationCard } from './MemorizationCard';
 import { MemorizationPlan, Chapter } from '@/types';
 
 interface MemorizationGridProps {
@@ -12,11 +12,11 @@ interface MemorizationGridProps {
   onCreatePlan: () => void;
 }
 
-const MemorizationGrid: React.FC<MemorizationGridProps> = ({
+export const MemorizationGrid: React.FC<MemorizationGridProps> = ({
   memorization,
   chapters,
   onCreatePlan,
-}) => {
+}: MemorizationGridProps): JSX.Element => {
   if (!memorization || Object.keys(memorization).length === 0) {
     return (
       <div className="text-center py-16">
@@ -60,5 +60,3 @@ const MemorizationGrid: React.FC<MemorizationGridProps> = ({
     </motion.div>
   );
 };
-
-export default MemorizationGrid;

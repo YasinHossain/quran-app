@@ -1,17 +1,16 @@
 'use client';
 
-import React from 'react';
 import { cn } from '@/lib/utils/cn';
 import type { ListItemProps, NavigationItemProps } from '@/types/components';
 
-export const ListItem: React.FC<ListItemProps> = ({
+export const ListItem = ({
   icon: Icon,
   label,
   isActive = false,
   onClick,
   className,
   children,
-}) => {
+}: ListItemProps): JSX.Element => {
   const Component = onClick ? 'button' : 'div';
 
   return (
@@ -31,7 +30,7 @@ export const ListItem: React.FC<ListItemProps> = ({
   );
 };
 
-export const NavigationItem: React.FC<NavigationItemProps> = ({
+export const const NavigationItem = ({
   href,
   icon: Icon,
   label,
@@ -39,7 +38,7 @@ export const NavigationItem: React.FC<NavigationItemProps> = ({
   count,
   className,
   children,
-}) => {
+}: NavigationItemProps): JSX.Element => {
   const baseClasses = cn(
     'flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
     isActive

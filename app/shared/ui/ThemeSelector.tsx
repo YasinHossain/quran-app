@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { useTheme } from '@/app/providers/ThemeContext';
 import { SunIcon, MoonIcon } from '@/app/shared/icons';
 
@@ -8,7 +7,7 @@ interface ThemeSelectorProps {
   className?: string;
 }
 
-export const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className }) => {
+export const ThemeSelector = ({ className }: ThemeSelectorProps): JSX.Element => {
   const { theme, setTheme } = useTheme();
 
   const toggleTheme = () => {

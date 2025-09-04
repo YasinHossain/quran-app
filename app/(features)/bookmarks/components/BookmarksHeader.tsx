@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { BarsIcon, SearchIcon } from '@/app/shared/icons';
 import { PlusIcon } from '@/app/shared/icons';
 import { SearchInput } from '@/app/shared/components/SearchInput';
@@ -18,7 +17,7 @@ interface BookmarksHeaderProps {
   stats?: { folders: number; verses: number };
 }
 
-export const BookmarksHeader: React.FC<BookmarksHeaderProps> = ({
+export const BookmarksHeader = ({
   searchTerm,
   onSearchChange,
   onNewFolderClick,
@@ -27,7 +26,7 @@ export const BookmarksHeader: React.FC<BookmarksHeaderProps> = ({
   sortBy = 'recent',
   onSortChange,
   stats,
-}) => {
+}: BookmarksHeaderProps): JSX.Element => {
   const { variant } = useResponsiveState();
   const showMenuButton = variant === 'compact' || variant === 'default';
 

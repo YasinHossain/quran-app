@@ -1,4 +1,5 @@
 'use client';
+import type React from 'react';
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -293,25 +294,25 @@ export const BaseCard = ({
 };
 
 // Convenience components for common patterns
-export const NavigationCard: React.FC<
+export const NavigationCard = ({ children, ...props }: 
   Omit<BaseCardProps, 'variant' | 'animation'> & { children?: React.ReactNode }
-> = ({ children, ...props }) => (
+): JSX.Element => (
   <BaseCard variant="navigation" animation="navigation" {...props}>
     {children}
   </BaseCard>
 );
 
-export const FolderCardBase: React.FC<
+export const const FolderCardBase = ({ children, ...props }: 
   Omit<BaseCardProps, 'variant' | 'animation'> & { children?: React.ReactNode }
-> = ({ children, ...props }) => (
+): JSX.Element => (
   <BaseCard variant="folder" animation="folder" {...props}>
     {children}
   </BaseCard>
 );
 
-export const BookmarkCardBase: React.FC<
+export const const BookmarkCardBase = ({ children, ...props }: 
   Omit<BaseCardProps, 'variant' | 'animation'> & { children?: React.ReactNode }
-> = ({ children, ...props }) => (
+): JSX.Element => (
   <BaseCard variant="bookmark" animation="bookmark" {...props}>
     {children}
   </BaseCard>

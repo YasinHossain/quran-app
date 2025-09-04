@@ -1,6 +1,6 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
 import { useTheme } from '@/app/providers/ThemeContext';
 import { SunIcon, MoonIcon } from '@/app/shared/icons';
 import { Button } from './Button';
@@ -11,7 +11,7 @@ interface ThemeToggleProps {
   className?: string;
 }
 
-export const ThemeToggle: React.FC<ThemeToggleProps> = ({ variant = 'ghost', className }) => {
+export const ThemeToggle = ({ variant = 'ghost', className }: ThemeToggleProps): JSX.Element => {
   const { setTheme } = useTheme();
   const [currentTheme, setCurrentTheme] = React.useState<'light' | 'dark'>('light');
 

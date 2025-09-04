@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 interface ConfirmDeleteModalProps {
@@ -11,13 +11,13 @@ interface ConfirmDeleteModalProps {
   onCancel: () => void;
 }
 
-export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
+export const ConfirmDeleteModal = ({
   isOpen,
   title = 'Delete Item',
   description = 'Are you sure you want to delete this item?',
   onConfirm,
   onCancel,
-}) => {
+}: ConfirmDeleteModalProps): JSX.Element => {
   const cancelRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {

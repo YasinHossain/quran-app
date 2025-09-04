@@ -1,6 +1,7 @@
 'use client';
+import type React from 'react';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CloseIcon } from '@/app/shared/icons';
 import { Folder } from '@/types';
@@ -27,12 +28,12 @@ const FOLDER_COLORS = [
 
 const FOLDER_ICONS = ['📁', '📖', '⭐', '💎', '🌟', '📚', '🔖', '💫'];
 
-export const FolderSettingsModal: React.FC<FolderSettingsModalProps> = ({
+export const FolderSettingsModal = ({
   isOpen,
   onClose,
   folder,
   mode,
-}) => {
+}: FolderSettingsModalProps): JSX.Element => {
   const { renameFolder } = useBookmarks();
   const [name, setName] = useState('');
   const [selectedColor, setSelectedColor] = useState('text-accent');

@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { BaseCard, BaseCardProps } from '../BaseCard';
 import { ChevronDownIcon } from '@/app/shared/icons';
 import { cn } from '@/lib/utils/cn';
@@ -19,13 +18,13 @@ interface BookmarkFolderCardProps extends Omit<BaseCardProps, 'children'> {
   onToggleExpansion?: (folderId: string) => void;
 }
 
-export const BookmarkFolderCard: React.FC<BookmarkFolderCardProps> = ({
+export const BookmarkFolderCard = ({
   folder,
   isExpanded = false,
   onToggleExpansion,
   className,
   ...props
-}) => {
+}: BookmarkFolderCardProps): JSX.Element => {
   const handleClick = () => {
     onToggleExpansion?.(folder.id);
   };

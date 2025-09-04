@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 
-import BookmarksLayout from '../components/shared/BookmarksLayout';
+import { BookmarksLayout } from '../components/shared/BookmarksLayout';
 import { useMemorizationPage } from './hooks/useMemorizationPage';
 import { MemorizationHeader, MemorizationGrid } from './components';
 

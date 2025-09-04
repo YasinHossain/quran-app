@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { EllipsisHIcon, CloseIcon } from '@/app/shared/icons';
 
@@ -9,7 +9,7 @@ interface FolderContextMenuProps {
   onDelete: () => void;
 }
 
-export const FolderContextMenu: React.FC<FolderContextMenuProps> = ({ onEdit, onDelete }) => {
+export const FolderContextMenu = ({ onEdit, onDelete }: FolderContextMenuProps): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);

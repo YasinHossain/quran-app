@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { TranslationSearchField } from '@/app/shared/ui/SearchField';
 
 interface TranslationSearchProps {
@@ -8,9 +7,9 @@ interface TranslationSearchProps {
   setSearchTerm: (value: string) => void;
 }
 
-export const TranslationSearch: React.FC<TranslationSearchProps> = ({
+export const TranslationSearch = ({
   searchTerm,
   setSearchTerm,
-}) => <TranslationSearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} />;
+}: TranslationSearchProps): JSX.Element => <TranslationSearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} />;
 
 export default TranslationSearch;

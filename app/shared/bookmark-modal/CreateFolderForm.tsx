@@ -1,6 +1,6 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
 import { motion } from 'framer-motion';
 import { CloseIcon, CheckIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
@@ -13,12 +13,12 @@ interface CreateFolderFormProps {
   onCancel: () => void;
 }
 
-export const CreateFolderForm: React.FC<CreateFolderFormProps> = ({
+export const CreateFolderForm = ({
   newFolderName,
   onNameChange,
   onCreateFolder,
   onCancel,
-}) => {
+}: CreateFolderFormProps): JSX.Element => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onCreateFolder();

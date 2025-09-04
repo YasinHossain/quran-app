@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { Bookmark, Folder } from '@/types';
 import { BaseSidebar } from '@/app/shared/components/BaseSidebar';
 import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
@@ -16,7 +15,7 @@ interface BookmarkFolderSidebarProps {
   onClose: () => void;
 }
 
-export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
+export const BookmarkFolderSidebar = ({
   bookmarks,
   folder,
   activeVerseId,
@@ -24,7 +23,7 @@ export const BookmarkFolderSidebar: React.FC<BookmarkFolderSidebarProps> = ({
   onBack,
   isOpen,
   onClose,
-}) => {
+}: BookmarkFolderSidebarProps): JSX.Element => {
   return (
     <BaseSidebar
       isOpen={isOpen}

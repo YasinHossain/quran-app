@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { cn } from '@/lib/utils/cn';
 
 interface TabToggleProps {
@@ -10,7 +9,7 @@ interface TabToggleProps {
   className?: string;
 }
 
-export const TabToggle: React.FC<TabToggleProps> = ({ options, value, onChange, className }) => {
+export const TabToggle = ({ options, value, onChange, className }: TabToggleProps): JSX.Element => {
   return (
     <div
       className={cn(

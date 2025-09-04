@@ -1,6 +1,6 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
 import { BaseCard, BaseCardProps } from '../BaseCard';
 import { cn } from '@/lib/utils/cn';
 import { colors } from '../../design-system/card-tokens';
@@ -37,14 +37,14 @@ const routes: Record<SectionId, string> = {
 
 const getSectionHref = (sectionId: SectionId): string => routes[sectionId];
 
-export const BookmarkNavigationCard: React.FC<BookmarkNavigationCardProps> = ({
+export const BookmarkNavigationCard = ({
   content,
   onSectionChange,
   isActive = false,
   className,
   onClick,
   ...props
-}) => {
+}: BookmarkNavigationCardProps): JSX.Element => {
   const { id, icon: IconComponent, label, description } = content;
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement | HTMLAnchorElement>) => {

@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PlusIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
@@ -10,7 +9,7 @@ import { CreateFolderForm } from './CreateFolderForm';
 import { FolderList } from './FolderList';
 import { BookmarkTabProps } from './types';
 
-export const BookmarkTab: React.FC<BookmarkTabProps> = ({
+export const BookmarkTab = ({
   folders,
   verseId,
   searchQuery,
@@ -21,7 +20,7 @@ export const BookmarkTab: React.FC<BookmarkTabProps> = ({
   onToggleCreateFolder,
   onNewFolderNameChange,
   findBookmark,
-}) => {
+}: BookmarkTabProps): JSX.Element => {
   return (
     <div className="flex-1 flex flex-col">
       {/* Search and Create Folder */}

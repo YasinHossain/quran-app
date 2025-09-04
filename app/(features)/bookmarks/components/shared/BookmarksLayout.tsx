@@ -1,6 +1,6 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookmarksSidebar } from '../BookmarksSidebar';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
@@ -16,13 +16,13 @@ interface BookmarksLayoutProps {
   onVerseClick?: (verseKey: string) => void;
 }
 
-const BookmarksLayout: React.FC<BookmarksLayoutProps> = ({
+export const BookmarksLayout: React.FC<BookmarksLayoutProps> = ({
   children,
   activeSection,
   onSectionChange,
   folders = [],
   onVerseClick,
-}) => {
+}: BookmarksLayoutProps): JSX.Element => {
   const { isHidden } = useHeaderVisibility();
   const { isBookmarkSidebarOpen, setBookmarkSidebarOpen } = useSidebar();
 
@@ -87,5 +87,3 @@ const BookmarksLayout: React.FC<BookmarksLayoutProps> = ({
     </>
   );
 };
-
-export default BookmarksLayout;

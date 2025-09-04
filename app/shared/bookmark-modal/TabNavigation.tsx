@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { motion } from 'framer-motion';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
@@ -11,11 +10,11 @@ interface TabNavigationProps {
   verseKey?: string;
 }
 
-export const TabNavigation: React.FC<TabNavigationProps> = ({
+export const TabNavigation = ({
   activeTab,
   onTabChange,
   verseKey = '',
-}) => {
+}: TabNavigationProps): JSX.Element => {
   const tabs = [
     { id: 'pin' as const, label: 'Pin Verse', description: 'Quick access' },
     { id: 'bookmark' as const, label: 'Add to Folder', description: 'Organize & save' },

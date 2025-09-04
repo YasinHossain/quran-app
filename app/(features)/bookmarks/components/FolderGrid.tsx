@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FolderCard } from './FolderCard';
 import { FolderSettingsModal } from './FolderSettingsModal';
@@ -17,14 +17,14 @@ interface FolderGridProps {
   onClearSearch: () => void;
 }
 
-export const FolderGrid: React.FC<FolderGridProps> = ({
+export const FolderGrid = ({
   folders,
   allFolders,
   onFolderSelect,
   onCreateFolder,
   searchTerm,
   onClearSearch,
-}) => {
+}: FolderGridProps): JSX.Element => {
   const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);

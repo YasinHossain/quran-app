@@ -1,6 +1,6 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
 import { cn } from '@/lib/utils/cn';
 import { CloseIcon } from '@/app/shared/icons';
 import { Button } from './Button';
@@ -26,7 +26,7 @@ export interface PanelProps {
   closeOnOverlayClick?: boolean;
 }
 
-export const Panel: React.FC<PanelProps> = ({
+export const Panel = ({
   isOpen,
   onClose,
   variant = 'sidebar',
@@ -35,7 +35,7 @@ export const Panel: React.FC<PanelProps> = ({
   className,
   showCloseButton = true,
   closeOnOverlayClick = true,
-}) => {
+}: PanelProps): JSX.Element => {
   if (!isOpen) return null;
 
   const variantClass =

@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { TafsirSearchField } from '@/app/shared/ui/SearchField';
 
 interface TafsirSearchProps {
@@ -8,6 +7,6 @@ interface TafsirSearchProps {
   setSearchTerm: (value: string) => void;
 }
 
-export const TafsirSearch: React.FC<TafsirSearchProps> = ({ searchTerm, setSearchTerm }) => (
+export const TafsirSearch = ({ searchTerm, setSearchTerm }: TafsirSearchProps): JSX.Element => (
   <TafsirSearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
 );

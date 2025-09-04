@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { BaseCard, BaseCardProps } from '../BaseCard';
 import { cn } from '@/lib/utils/cn';
 import type { Bookmark } from '@/types/bookmark';
@@ -16,11 +15,11 @@ interface BookmarkVerseCardProps extends Omit<BaseCardProps, 'children'> {
   bookmark: Bookmark;
 }
 
-export const BookmarkVerseCard: React.FC<BookmarkVerseCardProps> = ({
+export const BookmarkVerseCard = ({
   bookmark,
   className,
   ...props
-}) => {
+}: BookmarkVerseCardProps): JSX.Element => {
   // Parse verse key to get surah and ayah numbers
   const parseVerseKey = (verseKey?: string) => {
     if (!verseKey) return { surahNumber: 0, ayahNumber: 0 };

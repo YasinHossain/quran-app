@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { EllipsisHIcon } from '../icons';
 import { BookmarkModal } from '../components/BookmarkModal';
 import { MobileBottomSheet } from './MobileBottomSheet';
@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { VerseActionsProps } from './types';
 import { defaultShare } from './utils';
 
-export const MobileVerseActions: React.FC<VerseActionsProps> = ({
+export const MobileVerseActions = ({
   verseKey,
   verseId,
   isPlaying,
@@ -21,7 +21,7 @@ export const MobileVerseActions: React.FC<VerseActionsProps> = ({
   onNavigateToVerse,
   showRemove = false,
   className = '',
-}) => {
+}: VerseActionsProps): JSX.Element => {
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
   const handleShare = onShare || defaultShare;

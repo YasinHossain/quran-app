@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import type React from 'react';
 import { motion } from 'framer-motion';
 import { BookmarkCard } from '../../components/BookmarkCard';
 import { Bookmark } from '@/types';
@@ -9,7 +9,7 @@ interface PinnedVersesListProps {
   pinnedVerses: Bookmark[];
 }
 
-const PinnedVersesList: React.FC<PinnedVersesListProps> = ({ pinnedVerses }) => {
+export const PinnedVersesList: React.FC<PinnedVersesListProps> = ({ pinnedVerses }) => {
   if (pinnedVerses.length === 0) {
     return (
       <div className="text-center py-16">
@@ -41,5 +41,3 @@ const PinnedVersesList: React.FC<PinnedVersesListProps> = ({ pinnedVerses }) => 
     </motion.div>
   );
 };
-
-export default PinnedVersesList;

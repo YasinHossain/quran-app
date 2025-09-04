@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import type React from 'react';
 import { ClockIcon } from '@/app/shared/icons';
 
-const LastReadHeader: React.FC = () => {
+export const LastReadHeader: React.FC = () => {
   return (
     <div className="mb-6">
       <div className="flex items-center gap-3">
@@ -18,5 +18,3 @@ const LastReadHeader: React.FC = () => {
     </div>
   );
 };
-
-export default LastReadHeader;

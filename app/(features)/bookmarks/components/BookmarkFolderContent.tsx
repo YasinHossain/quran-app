@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Bookmark, Folder } from '@/types';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
@@ -30,10 +30,10 @@ const MoreIcon = () => (
   </svg>
 );
 
-export const BookmarkFolderContent: React.FC<BookmarkFolderContentProps> = ({
+export const BookmarkFolderContent = ({
   bookmarks,
   folder,
-}) => {
+}: BookmarkFolderContentProps): JSX.Element => {
   const { folders } = useBookmarks();
   const [expandedFolderId, setExpandedFolderId] = useState<string | null>(folder.id);
 

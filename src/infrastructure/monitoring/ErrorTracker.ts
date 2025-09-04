@@ -342,6 +342,9 @@ export class RemoteErrorTracker implements IErrorTracker {
     const events = [...this.buffer];
     this.buffer = [];
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
     try {
       const response = await fetch(this.endpoint, {
         method: 'POST',
@@ -350,6 +353,7 @@ export class RemoteErrorTracker implements IErrorTracker {
           ...(this.apiKey ? { Authorization: `Bearer ${this.apiKey}` } : {}),
         },
         body: JSON.stringify({ events }),
+        signal: controller.signal,
       });
 
       if (!response.ok) {
@@ -361,6 +365,8 @@ export class RemoteErrorTracker implements IErrorTracker {
       logger.warn('Failed to send error tracking data:', error);
       // Re-add events to buffer for retry
       this.buffer.unshift(...events);
+    } finally {
+      clearTimeout(timeoutId);
     }
   }
 

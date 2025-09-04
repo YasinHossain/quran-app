@@ -1,6 +1,6 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
 import { SearchInput } from '../components/SearchInput';
 import type { SearchProps } from '@/types/components';
 
@@ -16,7 +16,7 @@ interface SearchFieldProps extends SearchProps {
  * Generic search field component with optional label
  * Replaces simple search wrapper components throughout the app
  */
-export const SearchField: React.FC<SearchFieldProps> = ({
+export const SearchField = ({
   searchTerm,
   setSearchTerm,
   placeholder = 'Search...',
@@ -25,7 +25,7 @@ export const SearchField: React.FC<SearchFieldProps> = ({
   className = '',
   label,
   onKeyDown,
-}) => (
+}: SearchFieldProps): JSX.Element => (
   <div className={className}>
     {label && (
       <h2 className="text-sm font-semibold px-2 mb-3 text-muted uppercase tracking-wide">

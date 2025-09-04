@@ -4,8 +4,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { CreateFolderModal } from './components/CreateFolderModal';
 import { FolderGrid } from './components/FolderGrid';
-import BookmarksLayout from './components/shared/BookmarksLayout';
-import BookmarksPageHeader from './components/shared/BookmarksPageHeader';
+import { BookmarksLayout } from './components/shared/BookmarksLayout';
+import { BookmarksPageHeader } from './components/shared/BookmarksPageHeader';
 import { useBookmarksPage } from './hooks/useBookmarksPage';
 
 const BookmarksPage = () => {

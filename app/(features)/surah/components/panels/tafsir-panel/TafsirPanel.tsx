@@ -1,6 +1,6 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
 import { useTafsirPanel } from '@/src/presentation/hooks/useTafsirPanel';
 import { useListHeight } from '@/app/shared/resource-panel/hooks/useListHeight';
 import { useTafsirSections } from './hooks/useTafsirSections';
@@ -12,7 +12,7 @@ interface TafsirPanelProps {
   onClose: () => void;
 }
 
-export const TafsirPanel: React.FC<TafsirPanelProps> = ({ isOpen, onClose }) => {
+export const TafsirPanel = ({ isOpen, onClose }: TafsirPanelProps): JSX.Element => {
   const panelData = useTafsirPanel(isOpen);
   const { listContainerRef, listHeight } = useListHeight(isOpen);
   const { resourcesToRender } = useTafsirSections(

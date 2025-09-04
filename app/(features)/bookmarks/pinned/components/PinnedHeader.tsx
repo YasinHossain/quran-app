@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import type React from 'react';
 import { PinIcon } from '@/app/shared/icons';
 
-const PinnedHeader: React.FC = () => {
+export const PinnedHeader: React.FC = () => {
   return (
     <div className="mb-6">
       <div className="flex items-center gap-3">
@@ -18,5 +18,3 @@ const PinnedHeader: React.FC = () => {
     </div>
   );
 };
-
-export default PinnedHeader;

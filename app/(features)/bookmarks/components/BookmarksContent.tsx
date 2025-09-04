@@ -1,6 +1,7 @@
 'use client';
+import type React from 'react';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BookmarkIcon, PinIcon, ClockIcon, BrainIcon } from '@/app/shared/icons';
 import {
   BookmarkNavigationCard,
@@ -21,13 +22,13 @@ interface BookmarksContentProps {
   onVerseClick?: (verseKey: string) => void;
 }
 
-export const BookmarksContent: React.FC<BookmarksContentProps> = ({
+export const BookmarksContent = ({
   activeSection = 'bookmarks',
   onSectionChange,
   children,
   folders = [],
   onVerseClick,
-}) => {
+}: BookmarksContentProps): JSX.Element => {
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
 
   const toggleFolderExpansion = (folderId: string) => {

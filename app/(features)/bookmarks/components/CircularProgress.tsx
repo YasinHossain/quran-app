@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 interface CircularProgressProps {
   percentage: number;
@@ -7,12 +7,12 @@ interface CircularProgressProps {
   label?: string;
 }
 
-const CircularProgress: React.FC<CircularProgressProps> = ({
+const CircularProgress = ({
   percentage = 75,
   size = 150,
   strokeWidth = 15,
   label = 'Complete',
-}) => {
+}: CircularProgressProps): JSX.Element => {
   const [animatedPercentage, setAnimatedPercentage] = useState(0);
 
   const radius = (size - strokeWidth) / 2;

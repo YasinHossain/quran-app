@@ -1,6 +1,6 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
 import { BaseCard, BaseCardProps } from '../BaseCard';
 import { FolderIcon } from '@/app/shared/icons';
 import { FolderContextMenu } from '@/app/(features)/bookmarks/components/FolderContextMenu';
@@ -30,7 +30,7 @@ interface EnhancedFolderCardProps extends Omit<BaseCardProps, 'children' | 'onCl
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
-export const EnhancedFolderCard: React.FC<EnhancedFolderCardProps> = React.memo(
+export const EnhancedFolderCard = React.memo(
   function EnhancedFolderCard({
     folder,
     onEdit,
@@ -40,7 +40,7 @@ export const EnhancedFolderCard: React.FC<EnhancedFolderCardProps> = React.memo(
     onClick,
     'aria-label': ariaLabel,
     ...props
-  }) {
+  }: EnhancedFolderCardProps): JSX.Element {
     const bookmarkCount = Array.isArray(folder.bookmarks)
       ? folder.bookmarks.length
       : folder.bookmarks.length;

@@ -1,6 +1,6 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
 import { useResponsiveState, responsiveClasses, touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
 
@@ -17,13 +17,13 @@ interface ResponsiveButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEle
 /**
  * Button that adapts its size and spacing based on screen size
  */
-export const ResponsiveButton: React.FC<ResponsiveButtonProps> = ({
+export const ResponsiveButton = ({
   variant = 'primary',
   size = 'md',
   className,
   children,
   ...props
-}) => {
+}: ResponsiveButtonProps): JSX.Element => {
   const { variant: layoutVariant } = useResponsiveState();
 
   const getVariantClasses = () => {
@@ -81,13 +81,13 @@ interface ResponsiveInputProps extends React.InputHTMLAttributes<HTMLInputElemen
 /**
  * Input that adapts its sizing and layout for different screen sizes
  */
-export const ResponsiveInput: React.FC<ResponsiveInputProps> = ({
+export const const ResponsiveInput = ({
   label,
   error,
   hint,
   className,
   ...props
-}) => {
+}: ResponsiveInputProps): JSX.Element => {
   return (
     <div className="space-y-1">
       {label && (
@@ -128,13 +128,13 @@ interface ResponsiveCardProps {
 /**
  * Card that adapts its spacing and interaction based on screen size
  */
-export const ResponsiveCard: React.FC<ResponsiveCardProps> = ({
+export const const ResponsiveCard = ({
   children,
   className,
   padding = true,
   hover = false,
   onClick,
-}) => {
+}: ResponsiveCardProps): JSX.Element => {
   const { variant } = useResponsiveState();
 
   const getPaddingClasses = () => {
@@ -195,12 +195,12 @@ interface ResponsiveGridProps {
 /**
  * Grid that automatically adjusts columns based on screen size
  */
-export const ResponsiveGrid: React.FC<ResponsiveGridProps> = ({
+export const const ResponsiveGrid = ({
   children,
   columns = { mobile: 1, tablet: 2, desktop: 3 },
   gap = 'md',
   className,
-}) => {
+}: ResponsiveGridProps): JSX.Element => {
   const getGridClasses = () => {
     const gapClass = gap === 'sm' ? 'gap-2' : gap === 'lg' ? 'gap-6' : 'gap-4';
 
@@ -249,11 +249,11 @@ export const useResponsiveHelpers = () => {
 /**
  * Layout components that replace multiple breakpoint-specific components
  */
-export const ResponsiveStack: React.FC<{
+export const const ResponsiveStack = ({ children, className, spacing = 'md' }: {
   children: React.ReactNode;
   className?: string;
   spacing?: 'sm' | 'md' | 'lg';
-}> = ({ children, className, spacing = 'md' }) => {
+}): JSX.Element => {
   const { variant } = useResponsiveState();
 
   const getSpacing = () => {
@@ -270,13 +270,13 @@ export const ResponsiveStack: React.FC<{
   return <div className={cn('flex flex-col', getSpacing(), className)}>{children}</div>;
 };
 
-export const ResponsiveRow: React.FC<{
+export const const ResponsiveRow = ({ children, className, wrap = true, align = 'center', justify = 'start' }: {
   children: React.ReactNode;
   className?: string;
   wrap?: boolean;
   align?: 'start' | 'center' | 'end';
   justify?: 'start' | 'center' | 'end' | 'between';
-}> = ({ children, className, wrap = true, align = 'center', justify = 'start' }) => {
+}): JSX.Element => {
   const { variant } = useResponsiveState();
 
   // Stack on mobile, row on larger screens

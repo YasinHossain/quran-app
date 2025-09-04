@@ -1,6 +1,6 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -12,10 +12,10 @@ interface ErrorBoundaryState {
   error: Error | null;
 }
 
-const DefaultErrorFallback: React.FC<{ error: Error; resetError: () => void }> = ({
+const DefaultErrorFallback = ({
   error,
   resetError,
-}) => (
+}: { error: Error; resetError: () => void }): JSX.Element => (
   <div className="min-h-[50vh] flex items-center justify-center p-4">
     <div className="max-w-md w-full text-center space-y-4">
       <div className="text-error-text">

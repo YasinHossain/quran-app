@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import {
   ResponsiveButton,
   ResponsiveCard,
@@ -14,7 +13,7 @@ import {
  * Example component demonstrating the unified responsive system
  * This shows how components now adapt naturally without breakpoint-specific code
  */
-export const ResponsiveExample: React.FC = () => {
+export const ResponsiveExample = (): JSX.Element => {
   const { variant, breakpoint, isMobile, isDesktop } = useResponsiveHelpers();
 
   return (

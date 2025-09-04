@@ -1,6 +1,7 @@
 'use client';
+import type React from 'react';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { QuranBottomSheet } from './QuranBottomSheet';
 import { SwipeContainer } from './SwipeContainer';
@@ -12,7 +13,7 @@ interface ModernLayoutProps {
   children: React.ReactNode;
 }
 
-export const ModernLayout: React.FC<ModernLayoutProps> = ({ children }) => {
+export const ModernLayout = ({ children }: ModernLayoutProps): JSX.Element => {
   const pathname = usePathname();
   const { isQuranBottomSheetOpen, setQuranBottomSheetOpen, navigateToSurah, showQuranSelector } =
     useNavigation();

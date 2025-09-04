@@ -1,2 +1,2 @@
-export { default as PinnedHeader } from './PinnedHeader';
-export { default as PinnedVersesList } from './PinnedVersesList';
+export { PinnedHeader } from './PinnedHeader';
+export { PinnedVersesList } from './PinnedVersesList';

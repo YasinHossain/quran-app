@@ -7,7 +7,7 @@ import { getVerseById } from '@/lib/api';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { Verse } from '@/types';
 
-const BookmarkedVersesList = () => {
+export const BookmarkedVersesList = () => {
   const { bookmarkedVerses } = useBookmarks();
   const { settings } = useSettings();
   const [verses, setVerses] = useState<Verse[]>([]);
@@ -62,5 +62,3 @@ const BookmarkedVersesList = () => {
     </div>
   );
 };
-
-export default BookmarkedVersesList;

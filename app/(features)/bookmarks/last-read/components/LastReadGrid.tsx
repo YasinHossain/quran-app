@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
+import type React from 'react';
 import { motion } from 'framer-motion';
-import LastReadCard from './LastReadCard';
+import { LastReadCard } from './LastReadCard';
 import { Chapter } from '@/types';
 
 interface LastReadGridProps {
@@ -10,7 +10,7 @@ interface LastReadGridProps {
   chapters: Chapter[];
 }
 
-const LastReadGrid: React.FC<LastReadGridProps> = ({ lastRead, chapters }) => {
+export const LastReadGrid: React.FC<LastReadGridProps> = ({ lastRead, chapters }) => {
   if (Object.keys(lastRead).length === 0) {
     return (
       <div className="text-center py-16">
@@ -55,5 +55,3 @@ const LastReadGrid: React.FC<LastReadGridProps> = ({ lastRead, chapters }) => {
     </motion.div>
   );
 };
-
-export default LastReadGrid;

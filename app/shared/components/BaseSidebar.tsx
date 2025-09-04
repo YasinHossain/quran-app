@@ -1,6 +1,6 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { cn } from '@/lib/utils/cn';
 
@@ -14,7 +14,7 @@ interface BaseSidebarProps {
   'aria-label'?: string;
 }
 
-export const BaseSidebar: React.FC<BaseSidebarProps> = ({
+export const BaseSidebar = ({
   isOpen,
   onClose,
   position = 'left',
@@ -22,7 +22,7 @@ export const BaseSidebar: React.FC<BaseSidebarProps> = ({
   className,
   showOverlay = true,
   'aria-label': ariaLabel = 'Sidebar',
-}) => {
+}: BaseSidebarProps): JSX.Element => {
   const { isHidden } = useHeaderVisibility();
 
   // Calculate positioning based on header visibility and position

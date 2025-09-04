@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { SettingsTabs } from './SettingsTabs';
 import { SettingsContent } from './SettingsContent';
 
@@ -20,7 +19,7 @@ interface SettingsContentWrapperProps {
   showTafsirSetting: boolean;
 }
 
-export const SettingsContentWrapper: React.FC<SettingsContentWrapperProps> = ({
+export const SettingsContentWrapper = ({
   activeTab,
   onTabChange,
   tabOptions,
@@ -34,7 +33,7 @@ export const SettingsContentWrapper: React.FC<SettingsContentWrapperProps> = ({
   selectedTafsirName,
   selectedWordLanguageName,
   showTafsirSetting,
-}) => {
+}: SettingsContentWrapperProps): JSX.Element => {
   return (
     <>
       {/* Tabs section with header separation - matches SurahListContent structure */}

@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import type React from 'react';
 import { BrainIcon } from '@/app/shared/icons';
 
-const MemorizationHeader: React.FC = () => {
+export const MemorizationHeader: React.FC = () => {
   return (
     <div className="mb-6">
       <div className="flex items-center gap-3">
@@ -18,5 +18,3 @@ const MemorizationHeader: React.FC = () => {
     </div>
   );
 };
-
-export default MemorizationHeader;

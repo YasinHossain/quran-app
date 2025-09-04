@@ -1,6 +1,6 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
 import { BaseSidebar } from '@/app/shared/components/BaseSidebar';
 import { BookmarksContent } from './BookmarksContent';
 import type { Folder } from '@/types/bookmark';
@@ -16,7 +16,7 @@ interface BookmarksSidebarProps {
   onClose?: () => void;
 }
 
-export const BookmarksSidebar: React.FC<BookmarksSidebarProps> = ({
+export const BookmarksSidebar = ({
   activeSection = 'bookmarks',
   onSectionChange,
   children,
@@ -24,7 +24,7 @@ export const BookmarksSidebar: React.FC<BookmarksSidebarProps> = ({
   onVerseClick,
   isOpen,
   onClose,
-}) => {
+}: BookmarksSidebarProps): JSX.Element => {
   // If no isOpen/onClose provided, render content directly (for desktop sidebar)
   if (isOpen === undefined || onClose === undefined) {
     return (

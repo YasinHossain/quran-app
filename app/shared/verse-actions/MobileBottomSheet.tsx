@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -31,7 +30,7 @@ interface MobileBottomSheetProps {
   showRemove?: boolean;
 }
 
-export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
+export const MobileBottomSheet = ({
   isOpen,
   onClose,
   verseKey,
@@ -43,7 +42,7 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
   onShare,
   onNavigateToVerse,
   showRemove = false,
-}) => {
+}: MobileBottomSheetProps): JSX.Element => {
   const handleAction = (action: () => void) => {
     action();
     onClose();

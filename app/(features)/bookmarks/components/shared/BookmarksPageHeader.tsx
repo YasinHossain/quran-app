@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import type React from 'react';
 import { BookmarkIcon } from '@/app/shared/icons';
 
-const BookmarksPageHeader: React.FC = () => {
+export const BookmarksPageHeader: React.FC = () => {
   return (
     <div className="mb-6">
       <div className="flex items-center gap-3">
@@ -18,5 +18,3 @@ const BookmarksPageHeader: React.FC = () => {
     </div>
   );
 };
-
-export default BookmarksPageHeader;

@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { motion } from 'framer-motion';
 import { FolderIcon, CheckIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
@@ -15,13 +14,13 @@ interface FolderListProps {
   emptyMessage?: string;
 }
 
-export const FolderList: React.FC<FolderListProps> = ({
+export const FolderList = ({
   folders,
   verseId,
   onFolderSelect,
   findBookmark,
   emptyMessage = 'No folders found',
-}) => {
+}: FolderListProps): JSX.Element => {
   const existingBookmark = findBookmark(verseId);
 
   if (folders.length === 0) {

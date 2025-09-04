@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { AlertIcon, ResetIcon } from '@/app/shared/icons';
 import { useArabicFontPanel } from './panels/arabic-font-panel/useArabicFontPanel';
 import { ResourceList } from '@/app/shared/resource-panel';
@@ -11,7 +10,7 @@ interface ArabicFontPanelProps {
   onClose: () => void;
 }
 
-export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClose }) => {
+export const ArabicFontPanel = ({ isOpen, onClose }: ArabicFontPanelProps): JSX.Element => {
   const {
     loading,
     error,

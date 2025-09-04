@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
@@ -12,12 +12,12 @@ import { BookmarkTab } from './BookmarkTab';
 import { PinTab } from './PinTab';
 import { BookmarkModalProps } from './types';
 
-export const BookmarkModal: React.FC<BookmarkModalProps> = ({
+export const BookmarkModal = ({
   isOpen,
   onClose,
   verseId,
   verseKey = '',
-}) => {
+}: BookmarkModalProps): JSX.Element => {
   const {
     folders,
     addBookmark,

@@ -1,6 +1,6 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
 import { CloseIcon, ArrowLeftIcon } from '@/app/shared/icons';
 import { cn } from '@/lib/utils/cn';
 
@@ -14,7 +14,7 @@ interface SidebarHeaderProps {
   children?: React.ReactNode;
 }
 
-export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
+export const SidebarHeader = ({
   title,
   onClose,
   onBack,
@@ -22,7 +22,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
   showBackButton = false,
   className,
   children,
-}) => {
+}: SidebarHeaderProps): JSX.Element => {
   return (
     <div
       className={cn(

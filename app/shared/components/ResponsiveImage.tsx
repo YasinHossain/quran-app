@@ -1,6 +1,6 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
 import Image, { ImageProps } from 'next/image';
 import { useResponsiveState } from '@/lib/responsive';
 
@@ -30,7 +30,7 @@ interface ResponsiveImageSizes {
  * ResponsiveImage component that optimizes images for different screen sizes
  * Supports multiple formats, responsive sources, and smart loading strategies
  */
-export const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
+export const ResponsiveImage = ({
   src,
   sizes,
   fallback,
@@ -39,7 +39,7 @@ export const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
   className,
   priority,
   ...props
-}) => {
+}: ResponsiveImageProps): JSX.Element => {
   const { variant, breakpoint } = useResponsiveState();
 
   // Determine the optimal image source based on current breakpoint
@@ -147,13 +147,13 @@ interface ResponsiveBackgroundImageProps {
   overlayOpacity?: number;
 }
 
-export const ResponsiveBackgroundImage: React.FC<ResponsiveBackgroundImageProps> = ({
+export const const ResponsiveBackgroundImage = ({
   src,
   children,
   className = '',
   overlay = false,
   overlayOpacity = 0.5,
-}) => {
+}: ResponsiveBackgroundImageProps): JSX.Element => {
   const { breakpoint } = useResponsiveState();
 
   const getOptimalSource = (): string => {

@@ -1,6 +1,6 @@
 'use client';
+import type React from 'react';
 
-import React from 'react';
 import { GripVerticalIcon, CloseIcon } from '@/app/shared/icons';
 import { MAX_TRANSLATION_SELECTIONS } from './useTranslationPanel';
 import { TranslationResource } from '@/types';
@@ -16,7 +16,7 @@ interface TranslationSelectionListProps {
   draggedId: number | null;
 }
 
-export const TranslationSelectionList: React.FC<TranslationSelectionListProps> = ({
+export const TranslationSelectionList = ({
   orderedSelection,
   translations,
   handleSelectionToggle,
@@ -25,7 +25,7 @@ export const TranslationSelectionList: React.FC<TranslationSelectionListProps> =
   handleDrop,
   handleDragEnd,
   draggedId,
-}) => (
+}: TranslationSelectionListProps): JSX.Element => (
   <div>
     <h2 className="text-sm font-semibold px-2 mb-3 flex items-center justify-between text-foreground">
       <span>

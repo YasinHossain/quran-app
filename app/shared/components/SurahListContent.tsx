@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, usePathname } from 'next/navigation';
 import { Chapter } from '@/types';
@@ -23,7 +23,7 @@ interface SurahListContentProps {
   chapters: Chapter[];
 }
 
-export const SurahListContent: React.FC<SurahListContentProps> = ({ chapters }) => {
+export const SurahListContent = ({ chapters }: SurahListContentProps): JSX.Element => {
   const { t } = useTranslation();
   const juzs = useMemo(() => juzData as JuzSummary[], []);
   const pages = useMemo(() => Array.from({ length: 604 }, (_, i) => i + 1), []);

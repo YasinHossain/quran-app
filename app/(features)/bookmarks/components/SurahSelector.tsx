@@ -1,6 +1,7 @@
 'use client';
+import type React from 'react';
 
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Chapter } from '@/types';
 import { ChevronDownIcon } from '@/app/shared/icons';
 
@@ -14,7 +15,7 @@ interface SurahSelectorProps {
   id?: string;
 }
 
-export const SurahSelector: React.FC<SurahSelectorProps> = ({
+export const SurahSelector = ({
   chapters,
   value,
   onChange,
@@ -22,7 +23,7 @@ export const SurahSelector: React.FC<SurahSelectorProps> = ({
   disabled = false,
   className = '',
   id,
-}) => {
+}: SurahSelectorProps): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
