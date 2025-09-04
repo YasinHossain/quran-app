@@ -16,5 +16,3 @@ export function JuzHeader({ juz }: JuzHeaderProps) {
     </div>
   );
 }
-
-export default JuzHeader;

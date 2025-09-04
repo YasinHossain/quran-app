@@ -13,7 +13,7 @@ import { useJuzData } from '../hooks/useJuzData';
 import { JuzHeader } from './components/JuzHeader';
 import { JuzVerseList } from './components/JuzVerseList';
 
-export default function JuzClient({ juzId }: { juzId: string }) {
+export function JuzClient({ juzId }: { juzId: string }) {
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
   const [coverUrl, setCoverUrl] = useState<string | null>(null);

@@ -150,7 +150,10 @@ describe('Mobile Performance Optimization', () => {
     });
 
     it('should not create memory leaks during rapid re-renders', async () => {
-      const performanceWithMemory = performance as any;
+      interface PerformanceWithMemory extends Performance {
+        memory?: { usedJSHeapSize: number };
+      }
+      const performanceWithMemory = performance as PerformanceWithMemory;
       const initialMemory = performanceWithMemory.memory
         ? performanceWithMemory.memory.usedJSHeapSize
         : 0;
@@ -167,8 +170,9 @@ describe('Mobile Performance Optimization', () => {
       }
 
       // Force garbage collection if available
-      if ((global as any).gc) {
-        (global as any).gc();
+      const globalWithGc = global as typeof globalThis & { gc?: () => void };
+      if (globalWithGc.gc) {
+        globalWithGc.gc();
       }
 
       const finalMemory = performanceWithMemory.memory

@@ -1,4 +1,4 @@
-import BookmarkFolderClient from './BookmarkFolderClient';
+import { BookmarkFolderClient } from './BookmarkFolderClient';
 
 export default async function BookmarkFolderPage({
   params,

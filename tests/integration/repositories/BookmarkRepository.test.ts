@@ -4,6 +4,7 @@ import {
   MemoryTransport,
   LogLevel,
 } from '../../../src/infrastructure/monitoring/Logger';
+import type { StoredBookmark } from '../../../src/domain/value-objects/StoredBookmark';
 
 describe('BookmarkRepository logging', () => {
   let repository: BookmarkRepository;
@@ -21,7 +22,7 @@ describe('BookmarkRepository logging', () => {
   });
 
   it('logs warning for invalid import data', async () => {
-    await repository.importBookmarks('user1', [{} as any]);
+    await repository.importBookmarks('user1', [{} as unknown as StoredBookmark]);
 
     const entries = memory.getEntries();
     expect(entries).toHaveLength(1);

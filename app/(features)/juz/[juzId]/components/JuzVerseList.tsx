@@ -34,5 +34,3 @@ export function JuzVerseList({
     </>
   );
 }
-
-export default JuzVerseList;

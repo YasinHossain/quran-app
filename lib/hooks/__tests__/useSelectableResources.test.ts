@@ -1,5 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { useSelectableResources } from '@/lib/hooks/useSelectableResources';
+import type React from 'react';
 
 interface Item {
   id: number;
@@ -40,8 +41,13 @@ describe('useSelectableResources', () => {
     expect(added).toBe(true);
     expect(result.current.orderedSelection).toEqual([2, 3]);
 
-    act(() => result.current.handleDragStart({ dataTransfer: { effectAllowed: '' } } as any, 2));
-    act(() => result.current.handleDrop({ preventDefault: () => {} } as any, 3));
+    const dragStartEvent = {
+      dataTransfer: { effectAllowed: '' },
+    } as unknown as React.DragEvent<HTMLDivElement>;
+    act(() => result.current.handleDragStart(dragStartEvent, 2));
+
+    const dropEvent = { preventDefault: () => {} } as unknown as React.DragEvent<HTMLDivElement>;
+    act(() => result.current.handleDrop(dropEvent, 3));
     expect(result.current.orderedSelection).toEqual([3, 2]);
   });
 

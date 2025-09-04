@@ -13,11 +13,17 @@ import {
   useImagePreload,
 } from '../ResponsiveImage';
 import { renderHook } from '@testing-library/react';
+import type { BreakpointKey, ComponentVariant } from '@/lib/responsive';
 
 // Mock useResponsiveState hook
-const mockResponsiveState = {
-  variant: 'expanded' as const,
-  breakpoint: 'desktop' as const,
+interface MockResponsiveState {
+  variant: ComponentVariant;
+  breakpoint: BreakpointKey;
+}
+
+const mockResponsiveState: MockResponsiveState = {
+  variant: 'expanded',
+  breakpoint: 'desktop',
 };
 
 jest.mock('@/lib/responsive', () => ({
@@ -54,8 +60,8 @@ describe('ResponsiveImage', () => {
 
     it('should fall back to fallback source when specific breakpoint not available', () => {
       // Mock mobile breakpoint
-      (mockResponsiveState as any).breakpoint = 'mobile';
-      (mockResponsiveState as any).variant = 'compact';
+      mockResponsiveState.breakpoint = 'mobile';
+      mockResponsiveState.variant = 'compact';
 
       const responsiveSrc = {
         // No mobile source
@@ -139,7 +145,7 @@ describe('ResponsiveImage', () => {
 
     it('should auto-determine loading strategy based on variant', () => {
       // Mock compact variant (mobile)
-      (mockResponsiveState as any).variant = 'compact';
+      mockResponsiveState.variant = 'compact';
 
       render(
         <ResponsiveImage
@@ -240,7 +246,7 @@ describe('ResponsiveImage', () => {
         // Update mock for each device
         const breakpoint =
           device === 'iPhone SE' ? 'mobile' : device === 'iPad' ? 'tablet' : 'desktop';
-        (mockResponsiveState as any).breakpoint = breakpoint;
+        mockResponsiveState.breakpoint = breakpoint;
 
         const { unmount } = render(
           <ResponsiveImage src={responsiveSrc} alt={`${device} test`} width={800} height={600} />

@@ -19,10 +19,12 @@ describe('TafsirRepository logging', () => {
     repository = new TafsirRepository();
     memory = new MemoryTransport();
     logger.addTransport(memory);
-    global.fetch = jest.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({ tafsir: { text: 'fallback' } }),
-    }) as any;
+    global.fetch = jest
+      .fn()
+      .mockResolvedValue({
+        ok: true,
+        json: async () => ({ tafsir: { text: 'fallback' } }),
+      }) as unknown as typeof fetch;
   });
 
   afterEach(() => {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import SurahVerseList from '../SurahVerseList';
+import type { Verse } from '@/types';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
@@ -34,7 +35,15 @@ describe('SurahVerseList', () => {
   it('renders verses and end-of-surah indicator', () => {
     renderWithProviders(
       <SurahVerseList
-        verses={[{ id: 1, verse_key: '1:1', words: [], translations: [] } as any]}
+        verses={[
+          {
+            id: 1,
+            verse_key: '1:1',
+            text_uthmani: '',
+            words: [],
+            translations: [],
+          } as Verse,
+        ]}
         isLoading={false}
         error={null}
         isReachingEnd

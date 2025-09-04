@@ -12,7 +12,7 @@ describe('Player components mobile layout', () => {
       unobserve() {}
       disconnect() {}
     }
-    window.ResizeObserver = ResizeObserverMock as any;
+    window.ResizeObserver = ResizeObserverMock as unknown as typeof ResizeObserver;
   });
 
   test('renders options icon and progress bar on small viewports', async () => {

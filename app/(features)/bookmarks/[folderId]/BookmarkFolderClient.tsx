@@ -8,7 +8,7 @@ import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisib
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { SettingsSidebar } from '@/app/(features)/surah/components';
 import { useBookmarkFolderData, useBookmarkFolderPanels } from './hooks';
-import FolderNotFound from './components/FolderNotFound';
+import { FolderNotFound } from './components/FolderNotFound';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 interface BookmarkFolderClientProps {
@@ -19,7 +19,7 @@ interface BookmarkFolderClientProps {
  * Client component for displaying bookmark folder contents with sidebar navigation.
  * Handles folder data loading, verse display, and panel management.
  */
-export default function BookmarkFolderClient({
+export function BookmarkFolderClient({
   folderId,
 }: BookmarkFolderClientProps): React.JSX.Element {
   logger.debug('BookmarkFolderClient rendering', { folderId });

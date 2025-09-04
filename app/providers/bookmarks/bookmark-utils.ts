@@ -1,7 +1,7 @@
 import { Folder, Bookmark, MemorizationPlan } from '@/types';
 
 export const createNewFolder = (name: string, color?: string, icon?: string): Folder => ({
-  id: `folder-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+  id: crypto.randomUUID(),
   name,
   color,
   icon,
@@ -97,7 +97,7 @@ export const createMemorizationPlan = (
   targetVerses: number,
   planName?: string
 ): MemorizationPlan => ({
-  id: `memorization-${surahId}-${Date.now()}`,
+  id: crypto.randomUUID(),
   surahId,
   targetVerses,
   completedVerses: 0,

@@ -72,9 +72,9 @@ export const DeleteFolderModal: React.FC<DeleteFolderModalProps> = ({
             {/* Header */}
             <div className="flex items-center justify-between p-6 pb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-error/10 rounded-xl flex items-center justify-center">
                   <svg
-                    className="w-5 h-5 text-red-600 dark:text-red-400"
+                    className="w-5 h-5 text-error"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -139,9 +139,9 @@ export const DeleteFolderModal: React.FC<DeleteFolderModalProps> = ({
                 </p>
 
                 {folder.bookmarks.length > 0 && (
-                  <div className="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
+                  <div role="alert" className="bg-error/10 border border-error/20 rounded-xl p-4">
                     <div className="flex items-start gap-3">
-                      <div className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5">
+                      <div className="w-5 h-5 text-error flex-shrink-0 mt-0.5">
                         <svg fill="currentColor" viewBox="0 0 20 20">
                           <path
                             fillRule="evenodd"
@@ -151,10 +151,10 @@ export const DeleteFolderModal: React.FC<DeleteFolderModalProps> = ({
                         </svg>
                       </div>
                       <div>
-                        <p className="font-semibold text-red-800 dark:text-red-200 text-sm mb-1">
+                        <p className="font-semibold text-error text-sm mb-1">
                           Warning: Contains bookmarked verses
                         </p>
-                        <p className="text-red-700 dark:text-red-300 text-sm">
+                        <p className="text-error text-sm">
                           This folder contains{' '}
                           <strong>
                             {folder.bookmarks.length} bookmarked verse
@@ -179,7 +179,7 @@ export const DeleteFolderModal: React.FC<DeleteFolderModalProps> = ({
                 <button
                   onClick={handleDelete}
                   disabled={isDeleting}
-                  className="px-6 py-2.5 text-sm font-semibold bg-red-600 text-white rounded-xl hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 flex items-center gap-2"
+                  className="px-6 py-2.5 text-sm font-semibold bg-error text-on-error rounded-xl hover:bg-error/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 flex items-center gap-2"
                 >
                   {isDeleting ? (
                     <>

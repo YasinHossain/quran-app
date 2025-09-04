@@ -16,5 +16,3 @@ export const FolderNotFound = memo(function FolderNotFound() {
     </div>
   );
 });
-
-export default FolderNotFound;

@@ -58,12 +58,13 @@ describe('Responsive System', () => {
 
     it('should handle SSR correctly', () => {
       const originalWindow = global.window;
-      delete (global as any).window;
+      const globalWithWindow = global as typeof globalThis & { window?: unknown };
+      delete globalWithWindow.window;
 
       const { result } = renderHook(() => useBreakpoint());
       expect(result.current).toBe('mobile');
 
-      global.window = originalWindow;
+      globalWithWindow.window = originalWindow;
     });
 
     it('should update breakpoint when window resizes', async () => {
@@ -109,12 +110,13 @@ describe('Responsive System', () => {
 
     it('should handle SSR correctly', () => {
       const originalWindow = global.window;
-      delete (global as any).window;
+      const globalWithWindow = global as typeof globalThis & { window?: unknown };
+      delete globalWithWindow.window;
 
       const { result } = renderHook(() => useOrientation());
       expect(result.current).toBe('portrait');
 
-      global.window = originalWindow;
+      globalWithWindow.window = originalWindow;
     });
   });
 
@@ -229,7 +231,8 @@ describe('Responsive System', () => {
   describe('Edge Cases', () => {
     it('should handle missing window object gracefully', () => {
       const originalWindow = global.window;
-      delete (global as any).window;
+      const globalWithWindow = global as typeof globalThis & { window?: unknown };
+      delete globalWithWindow.window;
 
       expect(() => {
         renderHook(() => useBreakpoint());
@@ -239,7 +242,7 @@ describe('Responsive System', () => {
         renderHook(() => useOrientation());
       }).not.toThrow();
 
-      global.window = originalWindow;
+      globalWithWindow.window = originalWindow;
     });
 
     it('should handle zero-dimension viewports', () => {

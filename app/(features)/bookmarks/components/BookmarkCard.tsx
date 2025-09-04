@@ -130,11 +130,12 @@ export const BookmarkCard = memo(function BookmarkCard({
       }
       errorFallback={
         <motion.div
+          role="alert"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-xl bg-surface border border-border p-6 mb-6 border-red-200"
+          className="rounded-xl bg-surface border border-error/20 p-6 mb-6"
         >
-          <div className="text-red-600 text-center">
+          <div className="text-error text-center">
             <p>Failed to load verse: {String(error)}</p>
             <p className="text-sm text-muted mt-2">Verse ID: {bookmark.verseId}</p>
           </div>

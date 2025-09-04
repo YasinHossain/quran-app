@@ -54,7 +54,7 @@ class ErrorHandlerConfig {
   private logger?: ErrorLogger;
   private reporter?: ErrorReporter;
   private notifier?: ErrorNotifier;
-  private retryCallback?: () => void;
+  private retryCallback: () => void = () => {};
   private defaultOptions: Required<Omit<ErrorHandlerOptions, 'context' | 'fallback'>> = {
     showUserNotification: true,
     logError: true,
@@ -94,7 +94,7 @@ class ErrorHandlerConfig {
     return this.notifier;
   }
 
-  getRetryCallback(): (() => void) | undefined {
+  getRetryCallback(): () => void {
     return this.retryCallback;
   }
 
@@ -291,8 +291,7 @@ export class ErrorHandler {
           actions: [
             {
               label: 'Retry',
-              action: () =>
-                (errorHandlerConfig.getRetryCallback() ?? (() => window.location.reload()))(),
+              action: () => errorHandlerConfig.getRetryCallback()(),
             },
           ],
         };

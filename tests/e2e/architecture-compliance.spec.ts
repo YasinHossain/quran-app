@@ -614,9 +614,9 @@ test.describe('📊 Performance Metrics', () => {
       return new Promise((resolve) => {
         let clsValue = 0;
         new PerformanceObserver((list) => {
-          for (const entry of list.getEntries()) {
-            if (!(entry as any).hadRecentInput) {
-              clsValue += (entry as any).value;
+          for (const entry of list.getEntries() as LayoutShift[]) {
+            if (!entry.hadRecentInput) {
+              clsValue += entry.value;
             }
           }
           resolve(clsValue);

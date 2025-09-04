@@ -33,15 +33,15 @@ describe('BookmarkPosition Value Object', () => {
     });
 
     it('should throw error for null timestamp', () => {
-      expect(() => new BookmarkPosition(validSurahId, validAyahNumber, null as any)).toThrow(
-        'Timestamp is required'
-      );
+      expect(() =>
+        new BookmarkPosition(validSurahId, validAyahNumber, null as unknown as Date)
+      ).toThrow('Timestamp is required');
     });
 
     it('should throw error for undefined timestamp', () => {
-      expect(() => new BookmarkPosition(validSurahId, validAyahNumber, undefined as any)).toThrow(
-        'Timestamp is required'
-      );
+      expect(() =>
+        new BookmarkPosition(validSurahId, validAyahNumber, undefined as unknown as Date)
+      ).toThrow('Timestamp is required');
     });
   });
 

@@ -77,7 +77,7 @@ export const FolderContextMenu: React.FC<FolderContextMenuProps> = ({ onEdit, on
                 key={item.label}
                 onClick={item.onClick}
                 className={`w-full text-left px-4 py-2 text-sm hover:bg-surface-hover transition-colors ${
-                  item.destructive ? 'text-red-600 hover:text-red-700' : 'text-foreground'
+                  item.destructive ? 'text-error hover:text-error/90' : 'text-foreground'
                 }`}
               >
                 {item.label}
