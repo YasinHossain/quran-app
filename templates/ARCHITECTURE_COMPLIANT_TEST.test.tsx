@@ -75,8 +75,8 @@ jest.mock('@/lib/text/sanitizeHtml', () => ({
 
 // Mock i18n for consistent testing
 jest.mock('react-i18next', () => ({
-  useTranslation: () => ({ 
-    t: (key: string, options?: any) => options?.defaultValue || key 
+  useTranslation: () => ({
+    t: (key: string, options?: Record<string, unknown>) => options?.defaultValue || key
   }),
 }));
 

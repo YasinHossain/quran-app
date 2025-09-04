@@ -290,17 +290,3 @@ export function createContextTestSuite<P>(
     testAllContextIntegrations(Component, testProps);
   });
 }
-
-export default {
-  ContextProviders,
-  createProviderWrapper,
-  renderWithSpecificProviders,
-  renderHookWithProviders,
-  mockContextValues,
-  testContextIntegration,
-  testSettingsContextIntegration,
-  testAudioContextIntegration,
-  testBookmarkContextIntegration,
-  testAllContextIntegrations,
-  createContextTestSuite,
-};

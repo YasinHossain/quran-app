@@ -258,5 +258,3 @@ export function createPerformanceTestSuite<P extends object>(
     });
   });
 }
-
-export default PerformanceTester;

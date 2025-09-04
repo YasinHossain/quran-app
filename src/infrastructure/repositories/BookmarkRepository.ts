@@ -377,7 +377,7 @@ export class BookmarkRepository implements IBookmarkRepository {
 
   async cacheForOffline(userId: string): Promise<void> {
     // Already using localStorage, so inherently offline-capable
-    console.log(`Bookmarks for user ${userId} are already cached offline`);
+    logger.info('Bookmarks already cached offline', { userId });
   }
 
   async clearCache(userId: string): Promise<void> {

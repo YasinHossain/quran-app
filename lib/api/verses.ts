@@ -150,16 +150,19 @@ export async function getJuz(juzId: string | number): Promise<Juz> {
   return data.juz as Juz;
 }
 
-export async function getRandomVerse(translationId: number): Promise<Verse> {
+export async function getRandomVerse(
+  translationId: number,
+  rng: () => number = Math.random
+): Promise<Verse> {
   try {
     // Get surah list to know verse counts
     const surahs = await getSurahList();
 
     // Pick a random surah
-    const randomSurah = surahs[Math.floor(Math.random() * surahs.length)];
+    const randomSurah = surahs[Math.floor(rng() * surahs.length)];
 
     // Pick a random ayah within that surah
-    const randomAyah = Math.floor(Math.random() * randomSurah.verses) + 1;
+    const randomAyah = Math.floor(rng() * randomSurah.verses) + 1;
     const verseKey = `${randomSurah.number}:${randomAyah}`;
 
     const data = await apiFetch<{ verse: ApiVerse }>(

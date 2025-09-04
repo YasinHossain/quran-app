@@ -63,5 +63,3 @@ export const HomeSearch = memo(function HomeSearch({
     </div>
   );
 });
-
-export default HomeSearch;

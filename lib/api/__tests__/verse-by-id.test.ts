@@ -1,6 +1,7 @@
 import { getVerseById } from '@/lib/api/verses';
 import { API_BASE_URL } from '@/lib/api';
 import { Verse } from '@/types';
+import type { RawVerse } from './apiMocks';
 
 describe('getVerseById', () => {
   afterEach(() => {
@@ -8,7 +9,7 @@ describe('getVerseById', () => {
   });
 
   it('normalizes verse data', async () => {
-    const mockRaw: Verse & { words: any[] } = {
+    const mockRaw: RawVerse = {
       id: 1,
       verse_key: '1:1',
       text_uthmani: 'test',
@@ -16,7 +17,7 @@ describe('getVerseById', () => {
         { id: 1, text_uthmani: 'foo', translation: { text: 'bar' } },
         { id: 2, text: 'baz', translation: { text: 'qux' } },
       ],
-    } as any;
+    };
 
     const expected: Verse = {
       id: 1,

@@ -1,45 +1,66 @@
 import { getRandomVerse } from '@/lib/api/verses';
+import { getSurahList } from '@/lib/api/chapters';
+import { apiFetch } from '@/lib/api/client';
 import { Verse } from '@/types';
+import type { RawVerse } from './apiMocks';
+
+jest.mock('@/lib/api/chapters');
+jest.mock('@/lib/api/client');
 
 describe('getRandomVerse', () => {
   afterEach(() => {
+    jest.resetAllMocks();
     jest.restoreAllMocks();
   });
 
-  it('normalizes random verse data (via internal API in browser)', async () => {
-    const mockRaw: Verse & { words: any[] } = {
-      id: 1,
-      verse_key: '1:1',
-      text_uthmani: 'test',
-      words: [
-        { id: 1, text_uthmani: 'foo', translation: { text: 'bar' } },
-        { id: 2, text: 'baz', translation: { text: 'qux' } },
-      ],
-    } as any;
+  const mockSurahs = [
+    { number: 1, name: 'Al-Fatihah', arabicName: 'الفاتحة', verses: 7, meaning: '' },
+    { number: 2, name: 'Al-Baqarah', arabicName: 'البقرة', verses: 286, meaning: '' },
+  ];
 
-    const expected: Verse = {
-      id: 1,
-      verse_key: '1:1',
-      text_uthmani: 'test',
-      words: [
-        { id: 1, uthmani: 'foo', en: 'bar' },
-        { id: 2, uthmani: 'baz', en: 'qux' },
-      ],
-    };
+  it('uses Math.random by default', async () => {
+    (getSurahList as jest.Mock).mockResolvedValue(mockSurahs);
+    (apiFetch as jest.Mock).mockResolvedValue({
+      verse: { id: 5, verse_key: '2:72', text_uthmani: 'test' } as Verse,
+    });
 
-    global.fetch = jest.fn().mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve(mockRaw),
-    }) as jest.Mock;
+    const mathSpy = jest.spyOn(Math, 'random').mockReturnValueOnce(0.5).mockReturnValueOnce(0.25);
 
-    const result = await getRandomVerse(20);
-    expect(global.fetch).toHaveBeenCalledWith('/api/verses/random?translationId=20');
-    expect(result).toEqual(expected);
+    const verse = await getRandomVerse(20);
+
+    expect(mathSpy).toHaveBeenCalledTimes(2);
+    expect(apiFetch).toHaveBeenCalledWith(
+      'verses/by_key/2:72',
+      { translations: '20', fields: 'text_uthmani' },
+      'Failed to fetch random verse'
+    );
+    expect(verse).toMatchObject({ id: 5, verse_key: '2:72', text_uthmani: 'test' });
   });
 
-  it('falls back to local verse on client fetch error', async () => {
-    global.fetch = jest.fn().mockResolvedValue({ ok: false, status: 500 }) as jest.Mock;
-    const result = await getRandomVerse(20);
-    expect(result).toMatchObject({ id: expect.any(Number), verse_key: expect.any(String) });
+  it('uses provided RNG when supplied', async () => {
+    (getSurahList as jest.Mock).mockResolvedValue(mockSurahs);
+    (apiFetch as jest.Mock).mockResolvedValue({
+      verse: { id: 1, verse_key: '1:1', text_uthmani: 'alpha' } as Verse,
+    });
+
+    const rng = jest.fn().mockReturnValueOnce(0).mockReturnValueOnce(0);
+
+    const verse = await getRandomVerse(20, rng);
+
+    expect(rng).toHaveBeenCalledTimes(2);
+    expect(apiFetch).toHaveBeenCalledWith(
+      'verses/by_key/1:1',
+      { translations: '20', fields: 'text_uthmani' },
+      'Failed to fetch random verse'
+    );
+    expect(verse).toMatchObject({ id: 1, verse_key: '1:1', text_uthmani: 'alpha' });
+  });
+
+  it('falls back to local verse on API error', async () => {
+    (getSurahList as jest.Mock).mockRejectedValue(new Error('fail'));
+
+    const verse = await getRandomVerse(20);
+
+    expect(verse).toMatchObject({ id: expect.any(Number), verse_key: expect.any(String) });
   });
 });

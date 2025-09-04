@@ -1,5 +1,6 @@
 import { fetchVerses } from '@/lib/api/verses';
 import { API_BASE_URL } from '@/lib/api';
+import type { RawVerse } from './apiMocks';
 
 describe('fetchVerses', () => {
   afterEach(() => {
@@ -7,7 +8,7 @@ describe('fetchVerses', () => {
   });
 
   it('constructs correct URL and normalizes verses', async () => {
-    const mockVerse: any = {
+    const mockVerse: RawVerse = {
       id: 1,
       verse_key: '1:1',
       text_uthmani: 'text',

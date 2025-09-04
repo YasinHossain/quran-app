@@ -2,15 +2,16 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { getSurahList } from '@/lib/api';
 import type { MockProps } from '@/tests/mocks';
+import { Surah } from '@/types';
 
 // Mock the API call
 jest.mock('@/lib/api', () => ({
   getSurahList: jest.fn(),
 }));
 
-jest.mock('next/link', () =>
-  ({ href, children }: MockProps<{ href: string }>) => <a href={href}>{children}</a>
-);
+jest.mock('next/link', () => ({ href, children }: MockProps<{ href: string }>) => (
+  <a href={href}>{children}</a>
+));
 
 const mockedGetSurahList = getSurahList as jest.MockedFunction<typeof getSurahList>;
 
@@ -32,7 +33,7 @@ beforeAll(() => {
 
 // Create a test component that mirrors the server component behavior
 const TestSurahIndexPage = () => {
-  const [surahs, setSurahs] = React.useState<any[]>([]);
+  const [surahs, setSurahs] = React.useState<Surah[]>([]);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
@@ -48,7 +49,7 @@ const TestSurahIndexPage = () => {
     <div className="p-6">
       <h1 className="text-xl font-bold mb-4">Surah</h1>
       <ul className="space-y-2">
-        {surahs.map((s: any) => (
+        {surahs.map((s: Surah) => (
           <li key={s.number}>
             <a href={`/surah/${s.number}`}>{s.name}</a>
           </li>

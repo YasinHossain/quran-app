@@ -1208,7 +1208,7 @@ contextBridge.exposeInMainWorld('electron', {
   // Storage
   store: {
     get: (key: string) => ipcRenderer.invoke('store-get', key),
-    set: (key: string, value: any) => ipcRenderer.invoke('store-set', key, value),
+    set: (key: string, value: unknown) => ipcRenderer.invoke('store-set', key, value),
     delete: (key: string) => ipcRenderer.invoke('store-delete', key),
   },
 
@@ -1232,8 +1232,8 @@ declare global {
     electron: {
       version(): Promise<string>;
       store: {
-        get(key: string): Promise<any>;
-        set(key: string, value: any): Promise<void>;
+        get(key: string): Promise<unknown>;
+        set(key: string, value: unknown): Promise<void>;
         delete(key: string): Promise<void>;
       };
       fs: {
@@ -1244,7 +1244,7 @@ declare global {
         createDirectory(path: string): Promise<void>;
         listFiles(directory: string): Promise<string[]>;
       };
-      showSaveDialog(): Promise<any>;
+      showSaveDialog(): Promise<unknown>;
     };
   }
 }`;

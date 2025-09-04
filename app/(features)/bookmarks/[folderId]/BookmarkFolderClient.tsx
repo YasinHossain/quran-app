@@ -9,6 +9,7 @@ import { useSidebar } from '@/app/providers/SidebarContext';
 import { SettingsSidebar } from '@/app/(features)/surah/components';
 import { useBookmarkFolderData, useBookmarkFolderPanels } from './hooks';
 import FolderNotFound from './components/FolderNotFound';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 interface BookmarkFolderClientProps {
   folderId: string;
@@ -21,7 +22,7 @@ interface BookmarkFolderClientProps {
 export default function BookmarkFolderClient({
   folderId,
 }: BookmarkFolderClientProps): React.JSX.Element {
-  console.log('BookmarkFolderClient rendering with folderId:', folderId);
+  logger.debug('BookmarkFolderClient rendering', { folderId });
   const router = useRouter();
   const { isHidden } = useHeaderVisibility();
   const [activeVerseId, setActiveVerseId] = useState<string | undefined>(undefined);

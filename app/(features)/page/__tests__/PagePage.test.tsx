@@ -3,10 +3,11 @@ import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import QuranPage from '@/app/(features)/page/[pageId]/page';
 import { Verse } from '@/types';
 import * as api from '@/lib/api';
+import { identity } from '@/tests/mocks';
 
 jest.mock('react', () => {
   const actual = jest.requireActual('react');
-  return { ...actual, use: (v: any) => v };
+  return { ...actual, use: identity };
 });
 
 jest.mock('react-i18next', () => ({

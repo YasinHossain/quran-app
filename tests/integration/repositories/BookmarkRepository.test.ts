@@ -28,4 +28,14 @@ describe('BookmarkRepository logging', () => {
     expect(entries[0].level).toBe(LogLevel.WARN);
     expect(entries[0].message).toBe('Invalid bookmark data for import');
   });
+
+  it('logs info when caching for offline use', async () => {
+    await repository.cacheForOffline('user1');
+
+    const entries = memory.getEntries();
+    expect(entries).toHaveLength(1);
+    expect(entries[0].level).toBe(LogLevel.INFO);
+    expect(entries[0].message).toBe('Bookmarks already cached offline');
+    expect(entries[0].context).toEqual({ userId: 'user1' });
+  });
 });

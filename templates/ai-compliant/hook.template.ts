@@ -208,7 +208,7 @@ function clearCachedData(key: string): void {
   }
 }
 
-function transformHookData(data: HookData, settings: any): HookData {
+function transformHookData(data: HookData, settings: Record<string, unknown>): HookData {
   // Transform data based on settings
   // This is where you'd apply user preferences, formatting, etc.
   return data;

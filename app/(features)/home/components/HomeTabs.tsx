@@ -2,13 +2,13 @@
 import React, { useState } from 'react';
 import SurahTab from './SurahTab';
 import JuzTab from './JuzTab';
-import PageTab from './PageTab';
+import { PageTab } from './PageTab';
 
 interface HomeTabsProps {
   searchQuery: string;
 }
 
-export default function HomeTabs({ searchQuery }: HomeTabsProps) {
+export function HomeTabs({ searchQuery }: HomeTabsProps) {
   const [activeTab, setActiveTab] = useState<'Surah' | 'Juz' | 'Page'>('Surah');
 
   return (

@@ -5,6 +5,7 @@ import { Verse } from '@/types';
 import useSWR from 'swr';
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { identity } from '@/tests/mocks';
 
 jest.mock('@/lib/api', () => ({
   getSurahList: jest.fn().mockResolvedValue([
@@ -33,7 +34,7 @@ jest.mock('@/lib/tafsir/tafsirCache');
 
 jest.mock('react', () => {
   const actual = jest.requireActual('react');
-  return { ...actual, use: (v: any) => v };
+  return { ...actual, use: identity };
 });
 
 jest.mock('react-i18next', () => ({
@@ -91,7 +92,7 @@ beforeEach(() => {
   mockGetTafsirCached.mockImplementation((key: string, id: number) =>
     Promise.resolve(`Text ${id}`)
   );
-  mockUseSWR.mockImplementation((key: any) => {
+  mockUseSWR.mockImplementation((key: string | readonly unknown[]) => {
     if (key === 'tafsirs') return { data: resources };
     if (Array.isArray(key) && key[0] === 'verse') return { data: verse };
     return { data: undefined };

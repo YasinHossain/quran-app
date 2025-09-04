@@ -293,7 +293,7 @@ export class ErrorHandler {
               label: 'Sign In',
               action: () => {
                 // Handle sign in redirect
-                console.log('Redirect to sign in');
+                logger.info('Redirect to sign in');
               },
             },
           ],
@@ -324,7 +324,7 @@ export class ErrorHandler {
               label: 'Try Again',
               action: () => {
                 // Handle audio retry
-                console.log('Retry audio playback');
+                logger.info('Retry audio playback');
               },
             },
           ],

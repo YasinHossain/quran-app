@@ -525,7 +525,7 @@ export interface ${useCaseName}Response {
       case 'delete':
         return 'request: Delete${this.capitalize(this.featureName)}Request';
       default:
-        return 'request: any';
+        return 'request: unknown';
     }
   }
 
@@ -644,7 +644,7 @@ export class ${this.capitalize(this.featureName)}Repository implements I${this.c
 
   constructor(
     @inject('ICache') private readonly cache: ICache,
-    @inject('HttpClient') private readonly httpClient: any
+    @inject('HttpClient') private readonly httpClient: unknown
   ) {}
 
   async findById(id: string): Promise<${this.capitalize(this.featureName)} | null> {
@@ -1038,7 +1038,7 @@ export const ${this.capitalize(this.featureName)}Manager: React.FC = () => {
     reload
   } = use${this.capitalize(this.featureName)}({ searchQuery });
 
-  const handleItemClick = (item: any) => {
+  const handleItemClick = <T,>(item: T) => {
     console.log('${this.capitalize(this.featureName)} clicked:', item);
     // TODO: Implement item selection/editing
   };

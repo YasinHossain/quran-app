@@ -4,8 +4,8 @@ import { memo, useCallback, useState } from 'react';
 import VerseOfDay from './VerseOfDay';
 import HomePageBackground from './HomePageBackground';
 import { HomeHeader } from './HomeHeader';
-import HomeSearch from './HomeSearch';
-import HomeTabs from './HomeTabs';
+import { HomeSearch } from './HomeSearch';
+import { HomeTabs } from './HomeTabs';
 
 interface HomePageProps {
   className?: string;

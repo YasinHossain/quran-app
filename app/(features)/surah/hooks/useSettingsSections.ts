@@ -25,7 +25,7 @@ export const useSettingsSections = () => {
   const handleSectionToggle = useCallback(
     (sectionId: string) => {
       if (process.env.NODE_ENV === 'development') {
-        console.log('Toggling section:', sectionId, 'Current open:', openSections);
+        logger.debug('Toggling section', { sectionId, openSections });
       }
 
       setOpenSections((prev) => {
