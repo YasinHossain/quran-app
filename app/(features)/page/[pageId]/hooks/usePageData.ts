@@ -46,7 +46,8 @@ export function usePageData({ pageId }: UsePageDataOptions) {
   // Load cover URL when active verse changes
   useEffect(() => {
     if (activeVerse) {
-      const surahNumber = parseInt(activeVerse.verse_key.split(':')[0], 10);
+      const [surahStr] = activeVerse.verse_key.split(':');
+      const surahNumber = Number.parseInt(surahStr ?? '0', 10);
       getSurahCoverUrl(surahNumber).then(setCoverUrl);
     }
   }, [activeVerse]);

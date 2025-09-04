@@ -45,7 +45,7 @@ export const SettingsSidebar = ({
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
 
   const { activeTab, handleTabChange, tabOptions } = useSettingsTabState({
-    onReadingPanelOpen,
+    ...(onReadingPanelOpen !== undefined ? { onReadingPanelOpen } : {}),
   });
   const { openSections, handleSectionToggle } = useSettingsSections();
 
@@ -66,9 +66,9 @@ export const SettingsSidebar = ({
           onArabicFontPanelOpen={() => setIsArabicFontPanelOpen(true)}
           onTranslationPanelOpen={onTranslationPanelOpen}
           onWordLanguagePanelOpen={onWordLanguagePanelOpen}
-          onTafsirPanelOpen={onTafsirPanelOpen}
+          {...(onTafsirPanelOpen !== undefined ? { onTafsirPanelOpen } : {})}
           selectedTranslationName={selectedTranslationName}
-          selectedTafsirName={selectedTafsirName}
+          {...(selectedTafsirName !== undefined ? { selectedTafsirName } : {})}
           selectedWordLanguageName={selectedWordLanguageName}
           showTafsirSetting={showTafsirSetting}
         />
@@ -77,11 +77,11 @@ export const SettingsSidebar = ({
           isArabicFontPanelOpen={isArabicFontPanelOpen}
           onArabicFontPanelClose={() => setIsArabicFontPanelOpen(false)}
           isTranslationPanelOpen={isTranslationPanelOpen}
-          onTranslationPanelClose={onTranslationPanelClose}
+          {...(onTranslationPanelClose !== undefined ? { onTranslationPanelClose } : {})}
           isTafsirPanelOpen={isTafsirPanelOpen}
-          onTafsirPanelClose={onTafsirPanelClose}
+          {...(onTafsirPanelClose !== undefined ? { onTafsirPanelClose } : {})}
           isWordLanguagePanelOpen={isWordLanguagePanelOpen}
-          onWordLanguagePanelClose={onWordLanguagePanelClose}
+          {...(onWordLanguagePanelClose !== undefined ? { onWordLanguagePanelClose } : {})}
         />
       </BaseSidebar>
     </>

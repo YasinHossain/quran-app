@@ -48,8 +48,8 @@ export const SettingsContent = ({
           onToggle={() => onSectionToggle('translation')}
         />
         <TafsirSettings
-          onTafsirPanelOpen={onTafsirPanelOpen}
-          selectedTafsirName={selectedTafsirName}
+          {...(onTafsirPanelOpen !== undefined ? { onTafsirPanelOpen } : {})}
+          {...(selectedTafsirName !== undefined ? { selectedTafsirName } : {})}
           showTafsirSetting={showTafsirSetting}
           isOpen={openSections.includes('tafsir')}
           onToggle={() => onSectionToggle('tafsir')}

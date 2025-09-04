@@ -1,6 +1,6 @@
 export default {
   dest: 'public',
-  disable: process.env.NEXT_DISABLE_PWA === 'true' || process.env.NODE_ENV === 'development',
+  disable: process.env.NODE_ENV === 'development' || process.env.NEXT_DISABLE_PWA === 'true',
   runtimeCaching: [
     {
       urlPattern:

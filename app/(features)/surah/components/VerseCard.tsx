@@ -40,9 +40,10 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
     if (!verseRef.current) return;
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
+        const first = entries[0];
+        if (first && first.isIntersecting) {
           const [surahId] = verse.verse_key.split(':');
-          setLastRead(surahId, verse.id);
+          setLastRead(surahId ?? String(verse.id), verse.id);
         }
       },
       { threshold: 0.5 }

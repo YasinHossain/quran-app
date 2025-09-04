@@ -43,7 +43,7 @@ export function useVerseListing({ id, lookup }: UseVerseListingParams) {
   }, [settings.translationIds, settings.translationId]);
 
   const { verses, isLoading, isValidating, isReachingEnd } = useInfiniteVerseLoader({
-    id,
+    ...(id !== undefined ? { id } : {}),
     lookup,
     stableTranslationIds,
     wordLang: settings.wordLang,
@@ -56,7 +56,7 @@ export function useVerseListing({ id, lookup }: UseVerseListingParams) {
     if (!activeVerse) return false;
     const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
     if (currentIndex < verses.length - 1) {
-      setActiveVerse(verses[currentIndex + 1]);
+      setActiveVerse(verses[currentIndex + 1]!);
       openPlayer();
       return true;
     }
@@ -67,7 +67,7 @@ export function useVerseListing({ id, lookup }: UseVerseListingParams) {
     if (!activeVerse) return false;
     const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
     if (currentIndex > 0) {
-      setActiveVerse(verses[currentIndex - 1]);
+      setActiveVerse(verses[currentIndex - 1]!);
       openPlayer();
       return true;
     }

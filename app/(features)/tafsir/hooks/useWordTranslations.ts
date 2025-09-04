@@ -30,7 +30,7 @@ export const useWordTranslations = () => {
     () =>
       Object.keys(wordLanguageMap)
         .filter((name) => WORD_LANGUAGE_LABELS[name])
-        .map((name) => ({ name: WORD_LANGUAGE_LABELS[name], id: wordLanguageMap[name] })),
+        .map((name) => ({ name: WORD_LANGUAGE_LABELS[name]!, id: wordLanguageMap[name]! })),
     [wordLanguageMap]
   );
 

@@ -38,7 +38,7 @@ export const useSettingsSections = () => {
           // If section is closed, open it
           if (prev.length >= MAX_OPEN_SECTIONS) {
             // If already at max sections, remove the oldest one and add the new one
-            newState = [prev[1], sectionId];
+            newState = [...prev.slice(-1), sectionId];
           } else {
             // If less than max sections open, just add the new one
             newState = [...prev, sectionId];

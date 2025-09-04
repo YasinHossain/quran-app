@@ -34,7 +34,7 @@ export function useInfiniteVerseLoader({
   );
 
   const verses: Verse[] = useMemo(() => (data ? data.flatMap((d) => d.verses) : []), [data]);
-  const totalPages = useMemo(() => (data ? data[data.length - 1]?.totalPages : 1), [data]);
+  const totalPages = useMemo(() => (data ? data[data.length - 1]?.totalPages ?? 1 : 1), [data]);
   const isLoading = !data && !error;
   const isReachingEnd = size >= totalPages;
 
@@ -49,7 +49,8 @@ export function useInfiniteVerseLoader({
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !isReachingEnd && !isValidating) {
+        const first = entries[0];
+        if (first && first.isIntersecting && !isReachingEnd && !isValidating) {
           setSize(size + 1);
         }
       },

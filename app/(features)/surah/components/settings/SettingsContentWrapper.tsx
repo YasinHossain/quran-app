@@ -51,9 +51,9 @@ export const SettingsContentWrapper: React.FC<SettingsContentWrapperProps> = ({
           onArabicFontPanelOpen={onArabicFontPanelOpen}
           onTranslationPanelOpen={onTranslationPanelOpen}
           onWordLanguagePanelOpen={onWordLanguagePanelOpen}
-          onTafsirPanelOpen={onTafsirPanelOpen}
+          {...(onTafsirPanelOpen !== undefined ? { onTafsirPanelOpen } : {})}
           selectedTranslationName={selectedTranslationName}
-          selectedTafsirName={selectedTafsirName}
+          {...(selectedTafsirName !== undefined ? { selectedTafsirName } : {})}
           selectedWordLanguageName={selectedWordLanguageName}
           showTafsirSetting={showTafsirSetting}
         />

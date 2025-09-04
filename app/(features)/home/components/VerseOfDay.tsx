@@ -38,8 +38,8 @@ export const VerseOfDay = memo(function VerseOfDay({
 }: VerseOfDayProps) {
   const { settings } = useSettings();
   const { verse, loading, error, surahs, refreshVerse } = useVerseOfDay({
-    rotationInterval,
-    randomVerseInterval,
+    ...(rotationInterval !== undefined ? { rotationInterval } : {}),
+    ...(randomVerseInterval !== undefined ? { randomVerseInterval } : {}),
   });
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [displayVerse, setDisplayVerse] = useState(verse);

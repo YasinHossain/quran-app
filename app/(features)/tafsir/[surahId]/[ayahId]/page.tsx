@@ -58,10 +58,14 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps) {
               prev={prev}
               next={next}
               navigate={navigate}
-              currentSurah={currentSurah}
+              {...(currentSurah !== undefined ? { currentSurah } : {})}
               ayahId={ayahId}
             />
-            <TafsirViewer verse={verse} tafsirResource={tafsirResource} tafsirHtml={tafsirHtml} />
+            <TafsirViewer
+              {...(verse !== undefined ? { verse } : {})}
+              {...(tafsirResource !== undefined ? { tafsirResource } : {})}
+              {...(tafsirHtml !== undefined ? { tafsirHtml } : {})}
+            />
           </div>
         </div>
       </main>

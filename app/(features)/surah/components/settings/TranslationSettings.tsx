@@ -77,3 +77,5 @@ export const TranslationSettings = ({
     </>
   );
 };
+
+export default TranslationSettings;

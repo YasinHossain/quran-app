@@ -35,13 +35,13 @@ export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
 
   // Initialize activeId with the first tab when tabs are available
   const [activeId, setActiveId] = useState<number | undefined>(() => {
-    return tabs.length > 0 ? tabs[0].id : undefined;
+    return tabs.length > 0 ? tabs[0]?.id : undefined;
   });
 
   useEffect(() => {
     // If tabs exist and activeId is not in them, set to first tab
     if (tabs.length > 0 && !tabs.find((t) => t.id === activeId)) {
-      setActiveId(tabs[0].id);
+      setActiveId(tabs[0]!.id);
     }
   }, [tabs, activeId]);
 

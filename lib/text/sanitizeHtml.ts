@@ -1,4 +1,12 @@
-import DOMPurify from 'isomorphic-dompurify';
+// Fallback lightweight sanitizer that works without external deps.
+// If `isomorphic-dompurify` is available at runtime, we use it.
+let DOMPurify: { sanitize: (html: string) => string } | null = null;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  DOMPurify = require('isomorphic-dompurify');
+} catch {
+  DOMPurify = null;
+}
 
 /**
  * Sanitize a string containing HTML and return a safe version.
@@ -14,5 +22,19 @@ import DOMPurify from 'isomorphic-dompurify';
  * // => '<p>Hi</p>'
  */
 export function sanitizeHtml(html: string): string {
-  return DOMPurify.sanitize(html);
+  if (DOMPurify) {
+    return DOMPurify.sanitize(html);
+  }
+  // Minimal fallback: strip script/style/iframe and all tags, keep text.
+  // This is conservative to ensure safety when DOMPurify isn't installed.
+  try {
+    // Remove dangerous blocks first
+    let safe = html.replace(/<\/(?:script|style|iframe)[^>]*>/gi, '')
+      .replace(/<(?:script|style|iframe)(.|\n|\r)*?>/gi, '');
+    // Remove all other tags
+    safe = safe.replace(/<[^>]*>/g, '');
+    return safe;
+  } catch {
+    return '';
+  }
 }

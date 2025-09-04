@@ -52,7 +52,7 @@ export const useArabicFontPanel = () => {
 
     // Sort within each group
     Object.keys(grouped).forEach((key) => {
-      grouped[key].sort((a, b) => a.name.localeCompare(b.name));
+      grouped[key]!.sort((a, b) => a.name.localeCompare(b.name));
     });
 
     return grouped;

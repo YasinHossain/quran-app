@@ -12,7 +12,7 @@ interface PageContentProps {
   error: string | null;
   isValidating: boolean;
   isReachingEnd: boolean;
-  loadMoreRef: (node?: Element | null) => void;
+  loadMoreRef: React.Ref<HTMLDivElement>;
   isHidden: boolean;
   className?: string;
 }

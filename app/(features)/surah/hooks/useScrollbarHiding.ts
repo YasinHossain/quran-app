@@ -32,6 +32,7 @@ export const useScrollbarHiding = () => {
         }
       };
     }
+    return undefined;
   }, []);
 
   return { sidebarRef };

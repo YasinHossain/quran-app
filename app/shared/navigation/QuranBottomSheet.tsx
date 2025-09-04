@@ -292,4 +292,4 @@ export const QuranBottomSheet = memo(function QuranBottomSheet({
       )}
     </AnimatePresence>
   );
-};
+});

@@ -25,7 +25,7 @@ export const useOpenSections = (defaultSections: string[] = ['translation', 'fon
         newState = prev.filter((id) => id !== sectionId);
       } else {
         if (prev.length >= 2) {
-          newState = [prev[1], sectionId];
+          newState = [...prev.slice(-1), sectionId];
         } else {
           newState = [...prev, sectionId];
         }

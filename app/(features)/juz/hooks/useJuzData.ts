@@ -4,7 +4,10 @@ import type { Juz } from '@/types';
 import { useVerseListing } from '@/app/(features)/surah/hooks/useVerseListing';
 
 export function useJuzData(juzId?: string) {
-  const verseListing = useVerseListing({ id: juzId, lookup: getVersesByJuz });
+  const verseListing = useVerseListing({
+    ...(juzId !== undefined ? { id: juzId } : {}),
+    lookup: getVersesByJuz,
+  });
 
   const { data: juz, error: juzError } = useSWR<Juz>(
     juzId ? ['juz', juzId] : null,

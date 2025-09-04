@@ -25,11 +25,11 @@ export const useVerseNavigation = (surahId: string, ayahId: string) => {
     currentAyahNum > 1
       ? { surahId, ayahId: currentAyahNum - 1 }
       : currentSurahIndex > 0 && surahList.length > 0
-        ? { surahId: String(Number(surahId) - 1), ayahId: surahList[currentSurahIndex - 1].verses }
+        ? { surahId: String(Number(surahId) - 1), ayahId: surahList[currentSurahIndex - 1]!.verses }
         : null;
 
   const next =
-    surahList.length > 0 && currentAyahNum < surahList[currentSurahIndex].verses
+    surahList.length > 0 && currentAyahNum < (surahList[currentSurahIndex]?.verses ?? 0)
       ? { surahId, ayahId: currentAyahNum + 1 }
       : currentSurahIndex < totalSurahs - 1
         ? { surahId: String(Number(surahId) + 1), ayahId: 1 }
