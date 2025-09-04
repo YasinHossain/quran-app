@@ -41,21 +41,10 @@ npm run type-check      # TypeScript check
 npm run test            # Jest tests
 npm run test:coverage   # Test with coverage
 
-# AI-Enhanced Development Workflow
-npm run ai:quality      # Comprehensive quality analysis with AI insights
-npm run ai:feature      # Generate complete features following clean architecture
-npm run ai:tests        # Generate test templates for files
-npm run ai:analyze      # Analyze code for refactoring opportunities
-npm run ai:refactor     # Apply architecture-compliant refactorings
-npm run ai:docs         # Update AI documentation and component registry
-npm run ai:platform     # Generate platform-specific implementations
-npm run ai:check        # Pre-commit AI analysis and validation
-
-# Quick AI Workflow Helper
-./ai-workflow.sh help   # Show all available AI workflow commands
-./ai-workflow.sh quality # Run quality analysis
-./ai-workflow.sh feature <name> # Generate complete feature
-./ai-workflow.sh analyze <file> # Analyze file for improvements
+# Available AI Tools (Direct Script Execution)
+node tools/ai/feature-generator.js <name>    # Generate complete features (future mobile app support)
+node tools/ai/platform-generator.js <type>   # Generate platform-specific code (mobile/desktop)
+# Note: Other AI tools are integrated into GitHub Actions and run automatically
 ```
 
 ## AI-Enhanced Development Workflow
@@ -100,17 +89,13 @@ Grep "interface.*Props" --glob "**/*.tsx"      # Find component prop interfaces
 **AI-Assisted Feature Development:**
 
 ```bash
-# Complete Feature Generation (follows clean architecture)
-./ai-workflow.sh feature prayer-times
+# Complete Feature Generation (follows clean architecture, prepares for mobile)
+node tools/ai/feature-generator.js prayer-times
 # Creates: Domain entities, Use cases, Repositories, Components, Tests
 
-# Intelligent Analysis & Refactoring
-./ai-workflow.sh analyze src/components/LargeComponent.tsx
-# Provides: Complexity analysis, Refactoring suggestions, Performance tips
-
-# Automated Test Generation
-./ai-workflow.sh test src/domain/entities/User.ts
-# Creates: Unit tests, Integration tests, Mocks, Fixtures
+# Platform-Specific Code Generation (for future mobile apps)
+node tools/ai/platform-generator.js mobile
+# Creates: React Native mobile app structure with shared business logic
 ```
 
 ## Key Features & Areas
@@ -140,7 +125,7 @@ Grep "interface.*Props" --glob "**/*.tsx"      # Find component prop interfaces
 
 **AI-Enhanced Testing:**
 
-- **Automated Test Generation**: `./ai-workflow.sh test <file>` creates appropriate test templates
+- **Automated Test Generation**: Tests are created automatically during feature generation
 - **Provider Wrapping**: Tests automatically include required context providers
 - **Coverage Monitoring**: AI quality monitor tracks and suggests coverage improvements
 - **Test Strategy Guidance**: Each layer has specific testing patterns in `tests/.ai`
@@ -242,7 +227,7 @@ Edit tool    # Precise code modifications with context preservation
 - **Task Planning**: AI uses TodoWrite for complex multi-step tasks
 - **Parallel Operations**: Multiple tool calls in single responses for performance
 - **Context Management**: AI references code locations as `file_path:line_number`
-- **Quality Checks**: AI runs comprehensive analysis with `npm run ai:quality`
+- **Quality Checks**: AI runs comprehensive analysis with `npm run check`
 - **Minimal Output**: Concise responses focused on the specific task
 
 **Terminal-Friendly Practices:**
