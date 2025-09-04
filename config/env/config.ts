@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
@@ -55,7 +56,7 @@ let config: Config;
 try {
   config = envSchema.parse(process.env);
 } catch (error) {
-  console.error('❌ Invalid environment configuration:', error);
+  logger.error('❌ Invalid environment configuration:', undefined, error as Error);
 
   // Provide fallback configuration in case of validation errors
   config = {

@@ -4,6 +4,7 @@ import TafsirVersePage from '@/app/(features)/tafsir/[surahId]/[ayahId]/page';
 import { Verse } from '@/types';
 import useSWR from 'swr';
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 jest.mock('@/lib/api', () => ({
   getSurahList: jest.fn().mockResolvedValue([
@@ -62,11 +63,11 @@ beforeAll(() => {
       dispatchEvent: jest.fn(),
     })),
   });
-  jest.spyOn(console, 'error').mockImplementation(() => {});
+  jest.spyOn(logger, 'error').mockImplementation(() => {});
 });
 
 afterAll(() => {
-  (console.error as jest.Mock).mockRestore();
+  (logger.error as jest.Mock).mockRestore();
 });
 
 const verse: Verse = {

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CloseIcon } from '@/app/shared/icons';
 import { Folder } from '@/types';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 interface DeleteFolderModalProps {
   isOpen: boolean;
@@ -28,7 +29,7 @@ export const DeleteFolderModal: React.FC<DeleteFolderModalProps> = ({
       deleteFolder(folder.id);
       onClose();
     } catch (error) {
-      console.error('Failed to delete folder:', error);
+      logger.error('Failed to delete folder:', undefined, error as Error);
     } finally {
       setIsDeleting(false);
     }

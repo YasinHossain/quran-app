@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import LastReadPage from '../last-read/page';
+import { mockTag, type MockProps } from '@/tests/mocks';
 
 const push = jest.fn();
 
@@ -9,7 +10,7 @@ jest.mock('next/navigation', () => ({
 }));
 
 jest.mock('../components/BookmarksSidebar', () => ({
-  BookmarksSidebar: ({ onSectionChange }: any) => (
+  BookmarksSidebar: ({ onSectionChange }: { onSectionChange: (section: string) => void }) => (
     <nav>
       <button onClick={() => onSectionChange('bookmarks')}>Bookmarks</button>
       <button onClick={() => onSectionChange('pinned')}>Pins</button>
@@ -34,10 +35,10 @@ jest.mock('@/app/(features)/layout/context/HeaderVisibilityContext', () => ({
 
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    aside: ({ children, ...props }: any) => <aside {...props}>{children}</aside>,
+    div: mockTag('div'),
+    aside: mockTag('aside'),
   },
-  AnimatePresence: ({ children }: any) => children,
+  AnimatePresence: ({ children }: MockProps) => <>{children}</>,
 }));
 
 beforeAll(() => {

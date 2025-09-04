@@ -1,6 +1,7 @@
 import { Chapter, Surah } from '@/types';
 import { apiFetch } from './client';
 import { surahImageMap } from '@/app/(features)/surah/lib/surahImageMap';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 export async function getChapters(): Promise<Chapter[]> {
   const data = await apiFetch<{ chapters: Chapter[] }>(
@@ -42,7 +43,7 @@ export async function getSurahCoverUrl(surahNumber: number): Promise<string | nu
     const data = await response.json();
     return data.preferred.url || null;
   } catch (error) {
-    console.error('Error fetching surah cover:', error);
+    logger.error('Error fetching surah cover:', undefined, error as Error);
     return null;
   }
 }

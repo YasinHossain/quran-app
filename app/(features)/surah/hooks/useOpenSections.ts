@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 const STORAGE_KEY = 'settings-sidebar-open-sections';
 
@@ -12,7 +13,7 @@ export const useOpenSections = (defaultSections: string[] = ['translation', 'fon
         return JSON.parse(saved);
       }
     } catch (error) {
-      console.warn('Failed to parse saved sidebar sections:', error);
+      logger.warn('Failed to parse saved sidebar sections:', undefined, error as Error);
     }
     return defaultSections;
   });
@@ -32,7 +33,7 @@ export const useOpenSections = (defaultSections: string[] = ['translation', 'fon
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
       } catch (error) {
-        console.warn('Failed to save sidebar sections to localStorage:', error);
+        logger.warn('Failed to save sidebar sections to localStorage:', undefined, error as Error);
       }
       return newState;
     });
@@ -40,5 +41,3 @@ export const useOpenSections = (defaultSections: string[] = ['translation', 'fon
 
   return { openSections, toggleSection };
 };
-
-export default useOpenSections;

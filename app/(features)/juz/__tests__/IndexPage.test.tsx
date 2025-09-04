@@ -1,7 +1,10 @@
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import JuzIndexPage from '@/app/(features)/juz/page';
+import type { MockProps } from '@/tests/mocks';
 
-jest.mock('next/link', () => ({ href, children }: any) => <a href={href}>{children}</a>);
+jest.mock('next/link', () =>
+  ({ href, children }: MockProps<{ href: string }>) => <a href={href}>{children}</a>
+);
 
 beforeAll(() => {
   Object.defineProperty(window, 'matchMedia', {

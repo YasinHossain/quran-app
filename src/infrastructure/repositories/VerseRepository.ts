@@ -40,7 +40,7 @@ export class VerseRepository implements IVerseRepository {
       const apiVerse = await apiVerses.getVerseById(id, this.defaultTranslationId);
       return this.mapApiVerseToDomain(apiVerse);
     } catch (error) {
-      console.error('Failed to find verse by ID:', error);
+      logger.error('Failed to find verse by ID:', undefined, error as Error);
       return null;
     }
   }
@@ -68,7 +68,7 @@ export class VerseRepository implements IVerseRepository {
       const apiVerse = await apiVerses.getVerseByKey(verseKey, this.defaultTranslationId);
       return this.mapApiVerseToDomain(apiVerse);
     } catch (error) {
-      console.error('Failed to find verse by surah and ayah:', error);
+      logger.error('Failed to find verse by surah and ayah:', undefined, error as Error);
       return null;
     }
   }
@@ -83,7 +83,7 @@ export class VerseRepository implements IVerseRepository {
       );
       return response.verses.map((v) => this.mapApiVerseToDomain(v));
     } catch (error) {
-      console.error('Failed to find verses by surah:', error);
+      logger.error('Failed to find verses by surah:', undefined, error as Error);
       return [];
     }
   }
@@ -93,7 +93,7 @@ export class VerseRepository implements IVerseRepository {
       const allVerses = await this.findBySurah(surahId);
       return allVerses.filter((v) => v.ayahNumber >= fromAyah && v.ayahNumber <= toAyah);
     } catch (error) {
-      console.error('Failed to find verses by surah range:', error);
+      logger.error('Failed to find verses by surah range:', undefined, error as Error);
       return [];
     }
   }
@@ -108,7 +108,7 @@ export class VerseRepository implements IVerseRepository {
       );
       return response.verses.map((v) => this.mapApiVerseToDomain(v));
     } catch (error) {
-      console.error('Failed to find verses by juz:', error);
+      logger.error('Failed to find verses by juz:', undefined, error as Error);
       return [];
     }
   }
@@ -123,7 +123,7 @@ export class VerseRepository implements IVerseRepository {
       );
       return response.verses.map((v) => this.mapApiVerseToDomain(v));
     } catch (error) {
-      console.error('Failed to find verses by page:', error);
+      logger.error('Failed to find verses by page:', undefined, error as Error);
       return [];
     }
   }
@@ -165,7 +165,7 @@ export class VerseRepository implements IVerseRepository {
       const apiVerses = await apiSearch.searchVerses(query);
       return apiVerses.map((v) => this.mapApiVerseToDomain(v));
     } catch (error) {
-      console.error('Failed to search verses:', error);
+      logger.error('Failed to search verses:', undefined, error as Error);
       return [];
     }
   }
@@ -218,7 +218,7 @@ export class VerseRepository implements IVerseRepository {
         const apiVerse = await apiVerses.getVerseByKey(key, this.defaultTranslationId);
         verses.push(this.mapApiVerseToDomain(apiVerse));
       } catch (error) {
-        console.error(`Failed to fetch verse ${key}:`, error);
+        logger.error(`Failed to fetch verse ${key}:`, undefined, error as Error);
       }
     }
     return verses;
@@ -229,7 +229,7 @@ export class VerseRepository implements IVerseRepository {
       const randomVerse = await apiVerses.getRandomVerse(this.defaultTranslationId);
       return [this.mapApiVerseToDomain(randomVerse)];
     } catch (error) {
-      console.error('Failed to find random verse:', error);
+      logger.error('Failed to find random verse:', undefined, error as Error);
       return [];
     }
   }
@@ -243,7 +243,7 @@ export class VerseRepository implements IVerseRepository {
       const verses = await this.findBySurah(surahId);
       return verses.length;
     } catch (error) {
-      console.error('Failed to get count by surah:', error);
+      logger.error('Failed to get count by surah:', undefined, error as Error);
       return 0;
     }
   }
@@ -264,7 +264,7 @@ export class VerseRepository implements IVerseRepository {
 
       return null; // End of Quran
     } catch (error) {
-      console.error('Failed to find next verse:', error);
+      logger.error('Failed to find next verse:', undefined, error as Error);
       return null;
     }
   }
@@ -287,7 +287,7 @@ export class VerseRepository implements IVerseRepository {
 
       return null; // Beginning of Quran
     } catch (error) {
-      console.error('Failed to find previous verse:', error);
+      logger.error('Failed to find previous verse:', undefined, error as Error);
       return null;
     }
   }
@@ -297,7 +297,7 @@ export class VerseRepository implements IVerseRepository {
       const apiVerse = await apiVerses.getVerseById(verseId, translationId);
       return this.mapApiVerseToDomain(apiVerse, translationId);
     } catch (error) {
-      console.error('Failed to find verse with translation:', error);
+      logger.error('Failed to find verse with translation:', undefined, error as Error);
       return null;
     }
   }

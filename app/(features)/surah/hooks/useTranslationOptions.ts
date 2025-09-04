@@ -38,5 +38,3 @@ export function useTranslationOptions() {
 
   return { translationOptions, wordLanguageOptions, wordLanguageMap } as const;
 }
-
-export default useTranslationOptions;

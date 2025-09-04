@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { BookmarksHeader } from '../components/BookmarksHeader';
 import { BookmarksSidebar } from '../components/BookmarksSidebar';
+import { mockTag, type MockProps } from '@/tests/mocks';
 
 // Mock the BookmarkContext
 jest.mock('@/app/providers/BookmarkContext', () => ({
@@ -19,9 +20,9 @@ jest.mock('@/app/providers/BookmarkContext', () => ({
 // Mock framer-motion to avoid animation issues in tests
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: mockTag('div'),
   },
-  AnimatePresence: ({ children }: any) => children,
+  AnimatePresence: ({ children }: MockProps) => <>{children}</>,
 }));
 
 // Mock matchMedia

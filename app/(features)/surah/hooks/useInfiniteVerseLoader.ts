@@ -65,5 +65,3 @@ export function useInfiniteVerseLoader({
 
   return { verses, isLoading, isValidating, isReachingEnd } as const;
 }
-
-export default useInfiniteVerseLoader;

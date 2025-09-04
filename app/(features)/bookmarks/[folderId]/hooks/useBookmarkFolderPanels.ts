@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useTranslation } from 'react-i18next';
-import useTranslationOptions from '@/app/(features)/surah/hooks/useTranslationOptions';
+import { useTranslationOptions } from '@/app/(features)/surah/hooks/useTranslationOptions';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 
@@ -50,5 +50,3 @@ export function useBookmarkFolderPanels(): {
     selectedWordLanguageName,
   } as const;
 }
-
-export default useBookmarkFolderPanels;

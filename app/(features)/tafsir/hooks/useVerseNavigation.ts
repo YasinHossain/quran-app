@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useSidebar } from '@/app/providers/SidebarContext';
 import type { Surah } from '@/types';
 import { getSurahList } from '@/lib/api';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 export const useVerseNavigation = (surahId: string, ayahId: string) => {
   const router = useRouter();
@@ -13,7 +14,7 @@ export const useVerseNavigation = (surahId: string, ayahId: string) => {
   useEffect(() => {
     getSurahList()
       .then(setSurahList)
-      .catch((err) => console.error(err));
+      .catch((err) => logger.error(err as Error));
   }, []);
 
   const totalSurahs = surahList.length;

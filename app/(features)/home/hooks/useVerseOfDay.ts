@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import useSWR from 'swr';
 import { Verse } from '@/types';
 import { getSurahList } from '@/lib/api';
@@ -9,6 +9,18 @@ import { useRandomVerse } from './useRandomVerse';
 import { useFallbackVerse } from './useFallbackVerse';
 import { useVerseRotation } from './useVerseRotation';
 import type { Surah } from '@/types';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
+
+interface UseVerseOfDayOptions {
+  /**
+   * Interval in milliseconds between each automatic rotation
+   */
+  rotationInterval?: number;
+  /**
+   * Number of rotations before fetching a new random verse
+   */
+  randomVerseInterval?: number;
+}
 
 interface UseVerseOfDayReturn {
   verse: Verse | null;
@@ -23,14 +35,18 @@ interface UseVerseOfDayReturn {
  * Main hook for managing verse of the day functionality
  * Composes smaller hooks for random verses, fallback verses, and rotation
  */
-export function useVerseOfDay(): UseVerseOfDayReturn {
+export function useVerseOfDay({
+  rotationInterval = 10000,
+  randomVerseInterval = 3,
+}: UseVerseOfDayOptions = {}): UseVerseOfDayReturn {
   const { settings } = useSettings();
   const [currentVerse, setCurrentVerse] = useState<Verse | null>(null);
+  const rotationCountRef = useRef(0);
 
   // Random verse hook with error handling
   const randomVerse = useRandomVerse({
     translationId: settings.translationId,
-    onError: () => console.warn('Random verse API unavailable, using fallback'),
+    onError: () => logger.warn('Random verse API unavailable, using fallback'),
   });
 
   // Fallback verse hook for when random API fails
@@ -55,18 +71,19 @@ export function useVerseOfDay(): UseVerseOfDayReturn {
 
   // Handle verse rotation
   const handleRotation = useCallback(() => {
-    if (randomVerse.isAvailable && Math.random() < 0.3) {
-      // 30% chance to fetch new random verse
+    rotationCountRef.current += 1;
+
+    if (randomVerse.isAvailable && rotationCountRef.current >= randomVerseInterval) {
       randomVerse.refresh();
+      rotationCountRef.current = 0;
     } else {
-      // Use fallback rotation
       fallbackVerse.nextVerse();
     }
-  }, [randomVerse, fallbackVerse]);
+  }, [randomVerse, fallbackVerse, randomVerseInterval]);
 
   // Set up auto-rotation
   useVerseRotation({
-    interval: 10000,
+    interval: rotationInterval,
     onRotate: handleRotation,
     enabled: Boolean(currentVerse),
   });

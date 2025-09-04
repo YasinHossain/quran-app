@@ -1,9 +1,12 @@
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import { BookmarkNavigationCard } from '../BookmarkNavigationCard';
+import type { MockProps } from '@/tests/mocks';
 
 jest.mock('next/link', () => {
-  return ({ children, href, onClick, ...props }: any) => {
+  return ({ children, href, onClick, ...props }: MockProps<
+    React.AnchorHTMLAttributes<HTMLAnchorElement> & { scroll?: boolean; href: string }
+  >) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { scroll, ...rest } = props;
     return (

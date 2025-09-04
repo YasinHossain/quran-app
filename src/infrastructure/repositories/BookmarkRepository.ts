@@ -21,7 +21,7 @@ export class BookmarkRepository implements IBookmarkRepository {
       const parsed = stored ? JSON.parse(stored) : [];
       return this.isStoredBookmarkArray(parsed) ? parsed : [];
     } catch (error) {
-      console.error('Failed to parse stored bookmarks:', error);
+      logger.error('Failed to parse stored bookmarks:', undefined, error as Error);
       return [];
     }
   }
@@ -30,7 +30,7 @@ export class BookmarkRepository implements IBookmarkRepository {
     try {
       localStorage.setItem(this.storageKey, JSON.stringify(bookmarks));
     } catch (error) {
-      console.error('Failed to save bookmarks:', error);
+      logger.error('Failed to save bookmarks:', undefined, error as Error);
     }
   }
 

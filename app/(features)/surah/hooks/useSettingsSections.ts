@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 const STORAGE_KEY = 'settings-sidebar-open-sections';
 const DEFAULT_OPEN_SECTIONS = ['translation', 'font'];
@@ -16,7 +17,7 @@ export const useSettingsSections = () => {
         return JSON.parse(saved);
       }
     } catch (error) {
-      console.warn('Failed to parse saved sidebar sections:', error);
+      logger.warn('Failed to parse saved sidebar sections:', undefined, error as Error);
     }
     return DEFAULT_OPEN_SECTIONS;
   });
@@ -49,7 +50,7 @@ export const useSettingsSections = () => {
           try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
           } catch (error) {
-            console.warn('Failed to save sidebar sections to localStorage:', error);
+            logger.warn('Failed to save sidebar sections to localStorage:', undefined, error as Error);
           }
         }
 
@@ -64,5 +65,3 @@ export const useSettingsSections = () => {
     handleSectionToggle,
   };
 };
-
-export default useSettingsSections;

@@ -4,6 +4,7 @@ import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { getVerseById, getVerseByKey } from '@/lib/api';
 import type { Verse, Folder, Bookmark } from '@/types';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 // Simple cache for verses
 const verseCache = new Map<string, Verse>();
@@ -82,7 +83,7 @@ export function useBookmarkFolderData({ folderId }: UseBookmarkFolderDataParams)
         setVerses(loadedVerses);
       } catch (error) {
         setVerses([]);
-        console.error('Failed to load verses:', error);
+        logger.error('Failed to load verses:', undefined, error as Error);
       } finally {
         setLoadingVerses(new Set());
       }

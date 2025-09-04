@@ -5,6 +5,7 @@ import { Header } from '@/app/shared/Header';
 import { SettingsSidebar, TranslationPanel } from '@/app/(features)/surah/components';
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import { HeaderVisibilityProvider } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 // mock translation hook
 jest.mock('react-i18next', () => ({
@@ -22,6 +23,7 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => (
 );
 
 describe('SettingsSidebar interactions', () => {
+  let errorSpy: jest.SpyInstance;
   beforeAll(() => {
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
@@ -36,11 +38,11 @@ describe('SettingsSidebar interactions', () => {
         dispatchEvent: jest.fn(),
       })),
     });
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    errorSpy = jest.spyOn(logger, 'error').mockImplementation(() => {});
   });
 
   afterAll(() => {
-    (console.error as jest.Mock).mockRestore();
+    errorSpy.mockRestore();
   });
 
   beforeEach(() => {

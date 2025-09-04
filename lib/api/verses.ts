@@ -2,6 +2,7 @@ import { Verse, Juz, Word } from '@/types';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import { apiFetch } from './client';
 import { getSurahList } from './chapters';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 interface ApiWord {
   id: number;
@@ -168,7 +169,7 @@ export async function getRandomVerse(translationId: number): Promise<Verse> {
     );
     return normalizeVerse(data.verse);
   } catch (error) {
-    console.warn('API unavailable, using fallback verse:', error);
+    logger.warn('API unavailable, using fallback verse:', undefined, error as Error);
     // Import fallback verse when API fails
     const { fallbackVerse } = await import('./fallback-verse');
     return fallbackVerse;

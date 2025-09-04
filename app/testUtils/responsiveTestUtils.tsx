@@ -1,4 +1,5 @@
 import { act } from '@testing-library/react';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 /**
  * @module ResponsiveTestUtils
@@ -178,7 +179,7 @@ export function assertTouchFriendly(element: HTMLElement): void {
   );
 
   if (!hasTouchClass) {
-    console.warn('Element may not be touch-friendly:', element.className);
+    logger.warn(`Element may not be touch-friendly: ${element.className}`);
   }
 }
 

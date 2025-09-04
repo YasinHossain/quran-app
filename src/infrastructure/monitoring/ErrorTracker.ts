@@ -70,24 +70,26 @@ export interface IErrorTracker {
  */
 export class ConsoleErrorTracker implements IErrorTracker {
   captureError(error: Error | ApplicationError, context?: ErrorContext): void {
-    console.error('[ErrorTracker] Error captured:', {
-      error: error.message,
-      stack: error.stack,
-      context,
-    });
+    logger.error('[ErrorTracker] Error captured:', context, error);
   }
 
   captureMessage(message: string, level = 'info', context?: ErrorContext): void {
     const logLevel = level === 'error' ? 'error' : level === 'warning' ? 'warn' : 'info';
-    console[logLevel as 'error' | 'warn' | 'info']('[ErrorTracker] Message:', message, context);
+    if (logLevel === 'error') {
+      logger.error(`[ErrorTracker] Message: ${message}`, context);
+    } else if (logLevel === 'warn') {
+      logger.warn(`[ErrorTracker] Message: ${message}`, context);
+    } else {
+      logger.info(`[ErrorTracker] Message: ${message}`, context);
+    }
   }
 
   setUser(user: { id?: string; email?: string; username?: string }): void {
-    console.debug('[ErrorTracker] User set:', user);
+    logger.debug('[ErrorTracker] User set:', { user });
   }
 
   setContext(key: string, data: Record<string, unknown>): void {
-    console.debug('[ErrorTracker] Context set:', key, data);
+    logger.debug('[ErrorTracker] Context set:', { key, data });
   }
 
   addBreadcrumb(breadcrumb: {
@@ -97,7 +99,7 @@ export class ConsoleErrorTracker implements IErrorTracker {
     timestamp?: number;
     data?: Record<string, unknown>;
   }): void {
-    console.debug('[ErrorTracker] Breadcrumb added:', breadcrumb);
+    logger.debug('[ErrorTracker] Breadcrumb added:', { breadcrumb });
   }
 
   async flush(): Promise<void> {

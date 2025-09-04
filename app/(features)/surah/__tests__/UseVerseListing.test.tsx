@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import useVerseListing from '@/app/(features)/surah/hooks/useVerseListing';
+import { useVerseListing } from '@/app/(features)/surah/hooks/useVerseListing';
 import type { Verse } from '@/types';
 
 const verses: Verse[] = [
@@ -15,7 +15,7 @@ const openPlayer = jest.fn();
 
 jest.mock('@/app/(features)/surah/hooks/useTranslationOptions', () => ({
   __esModule: true,
-  default: jest.fn(() => ({
+  useTranslationOptions: jest.fn(() => ({
     translationOptions: [],
     wordLanguageOptions: [],
     wordLanguageMap: {},
@@ -24,7 +24,7 @@ jest.mock('@/app/(features)/surah/hooks/useTranslationOptions', () => ({
 
 jest.mock('@/app/(features)/surah/hooks/useInfiniteVerseLoader', () => ({
   __esModule: true,
-  default: jest.fn(() => ({
+  useInfiniteVerseLoader: jest.fn(() => ({
     verses,
     isLoading: false,
     isValidating: false,

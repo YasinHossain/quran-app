@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { getSurahList } from '@/lib/api';
 import { GlassCard, NumberBadge } from '@/app/shared/ui';
 import type { Surah } from '@/types';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 interface SurahTabProps {
   searchQuery: string;
@@ -14,7 +15,7 @@ export default function SurahTab({ searchQuery }: SurahTabProps) {
   useEffect(() => {
     getSurahList()
       .then(setAllSurahs)
-      .catch((err) => console.error(err));
+      .catch((err) => logger.error(err as Error));
   }, []);
 
   const filteredSurahs = useMemo(() => {

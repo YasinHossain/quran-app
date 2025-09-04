@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import TafsirTabs from '@/app/(features)/tafsir/[surahId]/[ayahId]/components/TafsirTabs';
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 import useSWR from 'swr';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 jest.mock('swr', () => {
   const actual = jest.requireActual('swr');
@@ -32,11 +33,11 @@ beforeAll(() => {
       dispatchEvent: jest.fn(),
     })),
   });
-  jest.spyOn(console, 'error').mockImplementation(() => {});
+  jest.spyOn(logger, 'error').mockImplementation(() => {});
 });
 
 afterAll(() => {
-  (console.error as jest.Mock).mockRestore();
+  (logger.error as jest.Mock).mockRestore();
 });
 
 beforeEach(() => {

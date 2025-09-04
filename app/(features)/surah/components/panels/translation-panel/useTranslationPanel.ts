@@ -12,6 +12,7 @@ import {
   updateScrollState,
 } from './translationPanel.utils';
 import { initialTranslationsData } from './translationPanel.data';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 export const MAX_TRANSLATION_SELECTIONS = 5;
 
@@ -38,7 +39,7 @@ export const useTranslationPanel = (isOpen: boolean) => {
         }));
         setTranslations(formatted);
       } catch (error) {
-        console.error('Failed to fetch translations from API:', error);
+        logger.error('Failed to fetch translations from API:', undefined, error as Error);
         setError('Failed to load translations from API. Using offline data.');
         setTranslations(initialTranslationsData);
       } finally {

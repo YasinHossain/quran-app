@@ -5,7 +5,7 @@ import { buildAudioUrl } from '@/lib/audio/reciters';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import type { Track } from '@/app/shared/player/types';
-import useVerseListing from '@/app/(features)/surah/hooks/useVerseListing';
+import { useVerseListing } from '@/app/(features)/surah/hooks/useVerseListing';
 
 interface UsePageDataOptions {
   pageId: string;

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CloseIcon } from '@/app/shared/icons';
 import { Folder } from '@/types';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 interface FolderSettingsModalProps {
   isOpen: boolean;
@@ -57,7 +58,7 @@ export const FolderSettingsModal: React.FC<FolderSettingsModalProps> = ({
       }
       onClose();
     } catch (error) {
-      console.error('Failed to update folder:', error);
+      logger.error('Failed to update folder:', undefined, error as Error);
     } finally {
       setIsSubmitting(false);
     }

@@ -45,7 +45,7 @@ jest.mock('@/app/(features)/surah/hooks', () => {
 // Mock verse listing to provide deterministic data
 jest.mock('@/app/(features)/surah/hooks/useVerseListing', () => ({
   __esModule: true,
-  default: () => ({
+  useVerseListing: () => ({
     error: null,
     isLoading: false,
     verses: [

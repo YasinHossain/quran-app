@@ -9,7 +9,7 @@ import { buildAudioUrl } from '@/lib/audio/reciters';
 import { QuranAudioPlayer } from '@/app/shared/player';
 import { getSurahCoverUrl } from '@/lib/api';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
-import useJuzData from '../hooks/useJuzData';
+import { useJuzData } from '../hooks/useJuzData';
 import { JuzHeader } from './components/JuzHeader';
 import { JuzVerseList } from './components/JuzVerseList';
 

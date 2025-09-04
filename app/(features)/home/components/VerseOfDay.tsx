@@ -13,6 +13,10 @@ import { useSettings } from '@/app/providers/SettingsContext';
 
 interface VerseOfDayProps {
   className?: string;
+  /** Interval in ms between automatic rotations */
+  rotationInterval?: number;
+  /** Number of rotations before fetching a new random verse */
+  randomVerseInterval?: number;
 }
 
 /**
@@ -27,9 +31,16 @@ interface VerseOfDayProps {
  * - Mobile-first responsive design
  * - Performance optimized with memo() wrapper
  */
-export const VerseOfDay = memo(function VerseOfDay({ className }: VerseOfDayProps) {
+export const VerseOfDay = memo(function VerseOfDay({
+  className,
+  rotationInterval,
+  randomVerseInterval,
+}: VerseOfDayProps) {
   const { settings } = useSettings();
-  const { verse, loading, error, surahs, refreshVerse } = useVerseOfDay();
+  const { verse, loading, error, surahs, refreshVerse } = useVerseOfDay({
+    rotationInterval,
+    randomVerseInterval,
+  });
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [displayVerse, setDisplayVerse] = useState(verse);
   const [initialLoad, setInitialLoad] = useState(true);

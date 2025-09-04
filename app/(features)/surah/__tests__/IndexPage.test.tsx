@@ -1,13 +1,16 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { getSurahList } from '@/lib/api';
+import type { MockProps } from '@/tests/mocks';
 
 // Mock the API call
 jest.mock('@/lib/api', () => ({
   getSurahList: jest.fn(),
 }));
 
-jest.mock('next/link', () => ({ href, children }: any) => <a href={href}>{children}</a>);
+jest.mock('next/link', () =>
+  ({ href, children }: MockProps<{ href: string }>) => <a href={href}>{children}</a>
+);
 
 const mockedGetSurahList = getSurahList as jest.MockedFunction<typeof getSurahList>;
 

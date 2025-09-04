@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import SearchPage from '@/app/(features)/search/page';
 import { searchVerses } from '@/lib/api';
 import { useSearchParams } from 'next/navigation';
+import type { MockProps } from '@/tests/mocks';
 
 jest.mock('next/navigation', () => ({
   useSearchParams: jest.fn(),
@@ -12,7 +13,9 @@ jest.mock('@/lib/api', () => ({
 }));
 
 jest.mock('@/app/(features)/surah/[surahId]/components/Verse', () => ({
-  Verse: ({ verse }: any) => <div>{verse.text_uthmani}</div>,
+  Verse: ({ verse }: MockProps<{ verse: { text_uthmani: string } }>) => (
+    <div>{verse.text_uthmani}</div>
+  ),
 }));
 
 afterEach(() => {

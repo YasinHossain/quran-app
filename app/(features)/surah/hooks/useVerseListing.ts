@@ -2,8 +2,8 @@ import { useMemo, useRef, useState, useCallback } from 'react';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import type { Verse } from '@/types';
-import useTranslationOptions from './useTranslationOptions';
-import useInfiniteVerseLoader from './useInfiniteVerseLoader';
+import { useTranslationOptions } from './useTranslationOptions';
+import { useInfiniteVerseLoader } from './useInfiniteVerseLoader';
 
 export interface LookupFn {
   (
@@ -93,5 +93,3 @@ export function useVerseListing({ id, lookup }: UseVerseListingParams) {
     handlePrev,
   } as const;
 }
-
-export default useVerseListing;

@@ -1,13 +1,13 @@
 // Core surah hooks
-export { default as useVerseListing } from './useVerseListing';
+export { useVerseListing } from './useVerseListing';
 export { useSurahPanels } from './useSurahPanels';
-export { default as useFontSize } from './useFontSize';
-export { default as useHideScrollbar } from './useHideScrollbar';
-export { default as useInfiniteVerseLoader } from './useInfiniteVerseLoader';
-export { default as useTranslationOptions } from './useTranslationOptions';
+export { useFontSize } from './useFontSize';
+export { useHideScrollbar } from './useHideScrollbar';
+export { useInfiniteVerseLoader } from './useInfiniteVerseLoader';
+export { useTranslationOptions } from './useTranslationOptions';
 
 // Component-specific hooks
-export { default as useScrollbarHiding } from './useScrollbarHiding';
-export { default as useSettingsSections } from './useSettingsSections';
-export { default as useSettingsTabState } from './useSettingsTabState';
-export { default as useOpenSections } from './useOpenSections';
+export { useScrollbarHiding } from './useScrollbarHiding';
+export { useSettingsSections } from './useSettingsSections';
+export { useSettingsTabState } from './useSettingsTabState';
+export { useOpenSections } from './useOpenSections';

@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import { searchVerses } from '@/lib/api';
 import { Verse as VerseType } from '@/types';
 import { VerseCard } from '@/app/(features)/surah/components';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 function SearchContent() {
   const searchParams = useSearchParams();
@@ -21,7 +22,7 @@ function SearchContent() {
     searchVerses(query)
       .then(setVerses)
       .catch((err) => {
-        console.error(err);
+        logger.error(err as Error);
         setError('Failed to load results.');
       })
       .finally(() => setLoading(false));
