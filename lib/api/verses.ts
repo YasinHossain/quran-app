@@ -1,8 +1,14 @@
-import { Verse, Juz, Word } from '@/types';
+import { Verse, Juz, Word, Surah } from '@/types';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import { apiFetch } from './client';
 import { getSurahList } from './chapters';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
+
+let surahList: Surah[] | null = null;
+
+export function clearSurahListCache() {
+  surahList = null;
+}
 
 interface ApiWord {
   id: number;
@@ -156,7 +162,7 @@ export async function getRandomVerse(
 ): Promise<Verse> {
   try {
     // Get surah list to know verse counts
-    const surahs = await getSurahList();
+    const surahs = surahList ?? (surahList = await getSurahList());
 
     // Pick a random surah
     const randomSurah = surahs[Math.floor(rng() * surahs.length)];

@@ -1,4 +1,4 @@
-import { getRandomVerse } from '@/lib/api/verses';
+import { getRandomVerse, clearSurahListCache } from '@/lib/api/verses';
 import { getSurahList } from '@/lib/api/chapters';
 import { apiFetch } from '@/lib/api/client';
 import { Verse } from '@/types';
@@ -11,6 +11,7 @@ describe('getRandomVerse', () => {
   afterEach(() => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
+    clearSurahListCache();
   });
 
   const mockSurahs = [
@@ -54,6 +55,31 @@ describe('getRandomVerse', () => {
       'Failed to fetch random verse'
     );
     expect(verse).toMatchObject({ id: 1, verse_key: '1:1', text_uthmani: 'alpha' });
+  });
+
+  it('caches surah list between calls', async () => {
+    (getSurahList as jest.Mock).mockResolvedValue(mockSurahs);
+    (apiFetch as jest.Mock).mockResolvedValue({
+      verse: { id: 1, verse_key: '1:1', text_uthmani: 'alpha' } as Verse,
+    });
+
+    await getRandomVerse(20, () => 0);
+    await getRandomVerse(20, () => 0);
+
+    expect(getSurahList).toHaveBeenCalledTimes(1);
+  });
+
+  it('can clear cached surah list', async () => {
+    (getSurahList as jest.Mock).mockResolvedValue(mockSurahs);
+    (apiFetch as jest.Mock).mockResolvedValue({
+      verse: { id: 1, verse_key: '1:1', text_uthmani: 'alpha' } as Verse,
+    });
+
+    await getRandomVerse(20, () => 0);
+    clearSurahListCache();
+    await getRandomVerse(20, () => 0);
+
+    expect(getSurahList).toHaveBeenCalledTimes(2);
   });
 
   it('falls back to local verse on API error', async () => {

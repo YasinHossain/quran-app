@@ -54,6 +54,7 @@ class ErrorHandlerConfig {
   private logger?: ErrorLogger;
   private reporter?: ErrorReporter;
   private notifier?: ErrorNotifier;
+  private retryCallback?: () => void;
   private defaultOptions: Required<Omit<ErrorHandlerOptions, 'context' | 'fallback'>> = {
     showUserNotification: true,
     logError: true,
@@ -73,6 +74,10 @@ class ErrorHandlerConfig {
     this.notifier = notifier;
   }
 
+  setRetryCallback(callback: () => void): void {
+    this.retryCallback = callback;
+  }
+
   setDefaultOptions(options: Partial<ErrorHandlerOptions>): void {
     this.defaultOptions = { ...this.defaultOptions, ...options };
   }
@@ -87,6 +92,10 @@ class ErrorHandlerConfig {
 
   getNotifier(): ErrorNotifier | undefined {
     return this.notifier;
+  }
+
+  getRetryCallback(): (() => void) | undefined {
+    return this.retryCallback;
   }
 
   getDefaultOptions(): Required<Omit<ErrorHandlerOptions, 'context' | 'fallback'>> {
@@ -108,16 +117,19 @@ export class ErrorHandler {
     reporter,
     notifier,
     defaultOptions,
+    retryCallback,
   }: {
     logger?: ErrorLogger;
     reporter?: ErrorReporter;
     notifier?: ErrorNotifier;
     defaultOptions?: Partial<ErrorHandlerOptions>;
+    retryCallback?: () => void;
   }): void {
     if (logger) errorHandlerConfig.setLogger(logger);
     if (reporter) errorHandlerConfig.setReporter(reporter);
     if (notifier) errorHandlerConfig.setNotifier(notifier);
     if (defaultOptions) errorHandlerConfig.setDefaultOptions(defaultOptions);
+    if (retryCallback) errorHandlerConfig.setRetryCallback(retryCallback);
   }
 
   /**
@@ -163,7 +175,11 @@ export class ErrorHandler {
         try {
           notifier(notification);
         } catch (notifyError) {
-          logger.error('[ErrorHandler] Failed to show notification', undefined, notifyError as Error);
+          logger.error(
+            '[ErrorHandler] Failed to show notification',
+            undefined,
+            notifyError as Error
+          );
         }
       }
     }
@@ -222,7 +238,11 @@ export class ErrorHandler {
         try {
           notifier(notification);
         } catch (notifyError) {
-          logger.error('[ErrorHandler] Failed to show notification', undefined, notifyError as Error);
+          logger.error(
+            '[ErrorHandler] Failed to show notification',
+            undefined,
+            notifyError as Error
+          );
         }
       }
     }
@@ -271,7 +291,8 @@ export class ErrorHandler {
           actions: [
             {
               label: 'Retry',
-              action: () => window.location.reload(),
+              action: () =>
+                (errorHandlerConfig.getRetryCallback() ?? (() => window.location.reload()))(),
             },
           ],
         };

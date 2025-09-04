@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useTranslationPanel } from './useTranslationPanel';
-import { useListHeight } from './hooks/useListHeight';
+import { useListHeight } from '@/app/shared/resource-panel/hooks/useListHeight';
 import { useTranslationSections } from './hooks/useTranslationSections';
 import { TranslationPanelHeader } from './components/TranslationPanelHeader';
 import { TranslationPanelContent } from './components/TranslationPanelContent';

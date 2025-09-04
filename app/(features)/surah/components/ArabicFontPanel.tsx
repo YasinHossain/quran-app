@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import { ResizeObserver as ResizeObserverPolyfill } from '@juggle/resize-observer';
+import React from 'react';
 import { AlertIcon, ResetIcon } from '@/app/shared/icons';
 import { useArabicFontPanel } from './panels/arabic-font-panel/useArabicFontPanel';
 import { ResourceList } from '@/app/shared/resource-panel';
+import { useListHeight } from '@/app/shared/resource-panel/hooks/useListHeight';
 
 interface ArabicFontPanelProps {
   isOpen: boolean;
@@ -23,39 +23,7 @@ export const ArabicFontPanel: React.FC<ArabicFontPanelProps> = ({ isOpen, onClos
     handleReset,
   } = useArabicFontPanel();
 
-  const listContainerRef = useRef<HTMLDivElement>(null);
-  const [listHeight, setListHeight] = useState(0);
-
-  useEffect(() => {
-    const element = listContainerRef.current;
-    if (!element || !isOpen) return;
-
-    const updateHeight = () => {
-      const rect = element.getBoundingClientRect();
-      const fallback = window.innerHeight - rect.top;
-      setListHeight(rect.height || fallback);
-    };
-
-    updateHeight();
-
-    const ResizeObserverConstructor =
-      typeof ResizeObserver !== 'undefined' ? ResizeObserver : ResizeObserverPolyfill;
-
-    if (ResizeObserverConstructor) {
-      const observer = new ResizeObserverConstructor((entries) => {
-        for (const entry of entries) {
-          const rect = entry.target.getBoundingClientRect();
-          const fallback = window.innerHeight - rect.top;
-          setListHeight(entry.contentRect.height || fallback);
-        }
-      });
-      observer.observe(element);
-      return () => observer.disconnect();
-    }
-
-    window.addEventListener('resize', updateHeight);
-    return () => window.removeEventListener('resize', updateHeight);
-  }, [isOpen]);
+  const { listContainerRef, listHeight } = useListHeight(isOpen);
 
   const resourcesToRender = groupedFonts[activeFilter] || [];
 

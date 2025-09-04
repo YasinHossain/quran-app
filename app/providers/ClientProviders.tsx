@@ -1,5 +1,7 @@
 'use client';
 import React from 'react';
+import { useRouter } from 'next/navigation';
+import { ErrorHandler } from '@/src/infrastructure/errors';
 import { ThemeProvider, Theme } from './ThemeContext';
 import { SettingsProvider } from './SettingsContext';
 import { BookmarkProvider } from './BookmarkContext';
@@ -21,6 +23,12 @@ export function ClientProviders({
   children: React.ReactNode;
   initialTheme: Theme;
 }) {
+  const router = useRouter();
+
+  React.useEffect(() => {
+    ErrorHandler.configure({ retryCallback: () => router.refresh() });
+  }, [router]);
+
   // In development, make sure any previously-installed service worker from a
   // production run doesn't interfere with local dev (common Safari issue).
   React.useEffect(() => {
