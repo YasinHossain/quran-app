@@ -11,7 +11,7 @@ import { useUIState } from '@/app/providers/UIStateContext';
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { cn } from '@/lib/utils';
 
-const Header = () => {
+export const Header = () => {
   const { isHidden } = useHeaderVisibility();
   const { theme, setTheme } = useTheme();
   const { setSettingsOpen } = useUIState();
@@ -137,5 +137,3 @@ const Header = () => {
     </header>
   );
 };
-
-export default Header;

@@ -11,7 +11,7 @@ interface SwipeIndicatorProps {
   autoHideDelay?: number;
 }
 
-const SwipeIndicator: React.FC<SwipeIndicatorProps> = ({
+export const SwipeIndicator: React.FC<SwipeIndicatorProps> = ({
   show = true,
   autoHide = true,
   autoHideDelay = 5000,
@@ -76,5 +76,3 @@ const SwipeIndicator: React.FC<SwipeIndicatorProps> = ({
     </AnimatePresence>
   );
 };
-
-export default SwipeIndicator;

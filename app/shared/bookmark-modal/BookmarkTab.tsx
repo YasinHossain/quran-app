@@ -5,12 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { PlusIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
-import FolderSearch from './FolderSearch';
-import CreateFolderForm from './CreateFolderForm';
-import FolderList from './FolderList';
+import { FolderSearch } from './FolderSearch';
+import { CreateFolderForm } from './CreateFolderForm';
+import { FolderList } from './FolderList';
 import { BookmarkTabProps } from './types';
 
-const BookmarkTab: React.FC<BookmarkTabProps> = ({
+export const BookmarkTab: React.FC<BookmarkTabProps> = ({
   folders,
   verseId,
   searchQuery,
@@ -78,5 +78,3 @@ const BookmarkTab: React.FC<BookmarkTabProps> = ({
     </div>
   );
 };
-
-export default BookmarkTab;

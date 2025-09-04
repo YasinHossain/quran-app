@@ -3,7 +3,7 @@
 import React from 'react';
 import { Bookmark } from '@/types';
 import { useBookmarkVerse } from '../hooks/useBookmarkVerse';
-import LoadingError from '@/app/shared/LoadingError';
+import { LoadingError } from '@/app/shared/LoadingError';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 
 interface BookmarkVerseSidebarProps {

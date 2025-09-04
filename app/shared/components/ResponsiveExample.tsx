@@ -14,7 +14,7 @@ import {
  * Example component demonstrating the unified responsive system
  * This shows how components now adapt naturally without breakpoint-specific code
  */
-const ResponsiveExample: React.FC = () => {
+export const ResponsiveExample: React.FC = () => {
   const { variant, breakpoint, isMobile, isDesktop } = useResponsiveHelpers();
 
   return (
@@ -176,5 +176,3 @@ const ResponsiveExample: React.FC = () => {
     </div>
   );
 };
-
-export default ResponsiveExample;

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 
 import { AudioProvider } from '@/app/shared/player/context/AudioContext';
-import QuranAudioPlayer from '@/app/shared/player/QuranAudioPlayer';
+import { QuranAudioPlayer } from '@/app/shared/player/QuranAudioPlayer';
 
 import DebugInfo from './components/DebugInfo';
 import ReciterSelector from './components/ReciterSelector';

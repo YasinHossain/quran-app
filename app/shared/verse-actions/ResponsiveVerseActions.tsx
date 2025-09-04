@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { useResponsiveState } from '@/lib/responsive';
-import MobileVerseActions from './MobileVerseActions';
-import DesktopVerseActions from './DesktopVerseActions';
+import { MobileVerseActions } from './MobileVerseActions';
+import { DesktopVerseActions } from './DesktopVerseActions';
 import { VerseActionsProps } from './types';
 
-const ResponsiveVerseActions: React.FC<VerseActionsProps> = (props) => {
+export const ResponsiveVerseActions: React.FC<VerseActionsProps> = (props) => {
   const { variant } = useResponsiveState();
 
   if (variant === 'compact') {
@@ -15,5 +15,3 @@ const ResponsiveVerseActions: React.FC<VerseActionsProps> = (props) => {
 
   return <DesktopVerseActions {...props} />;
 };
-
-export default ResponsiveVerseActions;

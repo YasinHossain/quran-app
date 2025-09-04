@@ -8,7 +8,7 @@ interface Props {
   setRangeWarning: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-export default function RepeatPanel({
+export function RepeatPanel({
   localRepeat,
   setLocalRepeat,
   rangeWarning,

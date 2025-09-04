@@ -12,7 +12,7 @@ interface Props {
   rememberScroll: () => void;
 }
 
-const Page = ({
+export const Page = ({
   pages,
   chapters,
   selectedPageId,
@@ -48,5 +48,3 @@ const Page = ({
     })}
   </ul>
 );
-
-export default Page;

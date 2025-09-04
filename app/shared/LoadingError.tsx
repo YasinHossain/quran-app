@@ -1,5 +1,5 @@
 import React from 'react';
-import Spinner from './Spinner';
+import { Spinner } from './Spinner';
 
 interface LoadingErrorProps {
   isLoading: boolean;
@@ -9,7 +9,7 @@ interface LoadingErrorProps {
   errorFallback?: React.ReactNode;
 }
 
-const LoadingError = ({
+export const LoadingError = ({
   isLoading,
   error,
   children,
@@ -42,5 +42,3 @@ const LoadingError = ({
 
   return <>{children}</>;
 };
-
-export default LoadingError;

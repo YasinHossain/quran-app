@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import userEvent from '@testing-library/user-event';
-import SurahListSidebar from '@/app/shared/SurahListSidebar';
+import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
 import useSWR from 'swr';
 
 jest.mock('swr', () => {

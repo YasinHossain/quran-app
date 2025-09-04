@@ -12,7 +12,7 @@ import {
   BookReaderIcon,
   CloseIcon,
 } from '../icons';
-import Spinner from '../Spinner';
+import { Spinner } from '../Spinner';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
 import { VerseActionItem } from './types';
@@ -31,7 +31,7 @@ interface MobileBottomSheetProps {
   showRemove?: boolean;
 }
 
-const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
+export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
   isOpen,
   onClose,
   verseKey,
@@ -208,5 +208,3 @@ const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
     </AnimatePresence>
   );
 };
-
-export default MobileBottomSheet;

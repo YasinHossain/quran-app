@@ -12,7 +12,7 @@ interface Props {
   total: string;
 }
 
-export default function Timeline({
+export function Timeline({
   current,
   duration,
   setSeek,

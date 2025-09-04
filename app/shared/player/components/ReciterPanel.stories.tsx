@@ -1,12 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
-import ReciterPanel from './ReciterPanel';
+import { ReciterPanel } from './ReciterPanel';
 
-const meta: Meta<typeof ReciterPanel> = {
+export const meta: Meta<typeof ReciterPanel> = {
   title: 'Player/ReciterPanel',
   component: ReciterPanel,
 };
-export default meta;
 
 type Story = StoryObj<typeof ReciterPanel>;
 

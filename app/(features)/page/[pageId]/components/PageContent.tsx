@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import type { Verse as VerseType } from '@/types';
 
 import { VerseCard } from '@/app/(features)/surah/components';
-import Spinner from '@/app/shared/Spinner';
+import { Spinner } from '@/app/shared/Spinner';
 
 interface PageContentProps {
   verses: VerseType[];

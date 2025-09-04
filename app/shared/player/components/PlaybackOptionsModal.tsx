@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { SlidersIcon, MicIcon, RepeatIcon } from '@/app/shared/icons';
-import ReciterPanel from './ReciterPanel';
-import RepeatPanel from './RepeatPanel';
+import { ReciterPanel } from './ReciterPanel';
+import { RepeatPanel } from './RepeatPanel';
 import { usePlaybackOptions } from '../hooks/usePlaybackOptions';
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
   setActiveTab: (tab: 'reciter' | 'repeat') => void;
 }
 
-export default function PlaybackOptionsModal({ open, onClose, activeTab, setActiveTab }: Props) {
+export function PlaybackOptionsModal({ open, onClose, activeTab, setActiveTab }: Props) {
   const {
     localReciter,
     setLocalReciter,

@@ -4,7 +4,7 @@ import { HomeIcon, BookmarkOutlineIcon, GridIcon } from './icons';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link'; // Import Link
 
-const IconSidebar = () => {
+export const IconSidebar = () => {
   const { t } = useTranslation();
   const navItems = [
     { icon: HomeIcon, label: t('home'), href: '/' },
@@ -32,5 +32,3 @@ const IconSidebar = () => {
     </aside>
   );
 };
-
-export default IconSidebar;

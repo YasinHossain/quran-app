@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState, useMemo } from 'react';
-import Spinner from '@/app/shared/Spinner';
+import { Spinner } from '@/app/shared/Spinner';
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 import { getAllTafsirResources } from '@/lib/api';
 import { applyArabicFont } from '@/lib/tafsir/applyArabicFont';

@@ -12,7 +12,7 @@ interface Props {
   isTafsirPath: boolean;
 }
 
-const Surah = ({
+export const Surah = ({
   chapters,
   selectedSurahId,
   setSelectedSurahId,
@@ -50,5 +50,3 @@ const Surah = ({
     })}
   </ul>
 );
-
-export default Surah;

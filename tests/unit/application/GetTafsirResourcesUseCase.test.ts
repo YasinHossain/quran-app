@@ -1,6 +1,7 @@
 import { GetTafsirResourcesUseCase } from '../../../src/application/use-cases/GetTafsirResources';
 import { ITafsirRepository } from '../../../src/domain/repositories/ITafsirRepository';
 import { Tafsir } from '../../../src/domain/entities/Tafsir';
+import { logger as Logger } from '../../../src/infrastructure/monitoring/Logger';
 
 const createRepository = (): jest.Mocked<ITafsirRepository> => ({
   getAllResources: jest.fn(),
@@ -51,7 +52,7 @@ describe('GetTafsirResourcesUseCase', () => {
   it('falls back to cached resources when API call fails', async () => {
     repository.getAllResources.mockRejectedValue(new Error('network'));
     repository.getCachedResources.mockResolvedValue(mockTafsirs);
-    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    const warnSpy = jest.spyOn(Logger, 'warn').mockImplementation(() => {});
 
     const result = await useCase.execute();
 

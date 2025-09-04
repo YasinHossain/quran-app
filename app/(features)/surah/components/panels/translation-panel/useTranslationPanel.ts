@@ -5,8 +5,12 @@ import { useTheme } from '@/app/providers/ThemeContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { getTranslations } from '@/lib/api/translations';
 import { TranslationResource } from '@/types';
-import useSelectableResources from '@/lib/hooks/useSelectableResources';
-import { capitalizeLanguageName, scrollTabs, updateScrollState } from './translationPanel.utils';
+import { useSelectableResources } from '@/lib/hooks/useSelectableResources';
+import {
+  capitalizeLanguageName,
+  scrollTabs,
+  updateScrollState,
+} from './translationPanel.utils';
 import { initialTranslationsData } from './translationPanel.data';
 
 export const MAX_TRANSLATION_SELECTIONS = 5;

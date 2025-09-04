@@ -1,4 +1,9 @@
 import { ITafsirRepository } from '../../domain/repositories/ITafsirRepository';
+import { logger as Logger } from '../../infrastructure/monitoring/Logger';
+import {
+  InvalidTafsirRequestError,
+  TafsirContentLoadError,
+} from '../../domain/errors/DomainErrors';
 
 /**
  * Use Case: Get Tafsir Content for a Verse
@@ -17,7 +22,7 @@ export class GetTafsirContentUseCase {
    */
   async execute(verseKey: string, tafsirId: number): Promise<string> {
     if (!verseKey || !tafsirId) {
-      throw new Error('Verse key and tafsir ID are required');
+      throw new InvalidTafsirRequestError();
     }
 
     try {
@@ -29,8 +34,8 @@ export class GetTafsirContentUseCase {
 
       return content;
     } catch (error) {
-      console.error('Failed to get tafsir content:', error);
-      throw new Error('Failed to load tafsir content. Please try again.');
+      Logger.error('Failed to get tafsir content:', undefined, error as Error);
+      throw new TafsirContentLoadError();
     }
   }
 
@@ -49,7 +54,11 @@ export class GetTafsirContentUseCase {
         const content = await this.execute(verseKey, tafsirId);
         results.set(tafsirId, content);
       } catch (error) {
-        console.warn(`Failed to get tafsir content for ID ${tafsirId}:`, error);
+        Logger.warn(
+          `Failed to get tafsir content for ID ${tafsirId}:`,
+          undefined,
+          error as Error,
+        );
         results.set(tafsirId, 'Failed to load tafsir content.');
       }
     });

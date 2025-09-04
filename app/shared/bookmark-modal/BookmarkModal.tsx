@@ -7,12 +7,12 @@ import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { CloseIcon } from '@/app/shared/icons';
 import { Folder } from '@/types';
 import { touchClasses } from '@/lib/responsive';
-import TabNavigation from './TabNavigation';
-import BookmarkTab from './BookmarkTab';
-import PinTab from './PinTab';
+import { TabNavigation } from './TabNavigation';
+import { BookmarkTab } from './BookmarkTab';
+import { PinTab } from './PinTab';
 import { BookmarkModalProps } from './types';
 
-const BookmarkModal: React.FC<BookmarkModalProps> = ({
+export const BookmarkModal: React.FC<BookmarkModalProps> = ({
   isOpen,
   onClose,
   verseId,
@@ -199,5 +199,3 @@ const BookmarkModal: React.FC<BookmarkModalProps> = ({
     </AnimatePresence>
   );
 };
-
-export default BookmarkModal;

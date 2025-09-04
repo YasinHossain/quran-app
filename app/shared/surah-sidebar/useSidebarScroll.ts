@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useSidebar } from '@/app/providers/SidebarContext';
-import useScrollPersistence from '@/lib/hooks/useScrollPersistence';
-import useScrollCentering from '@/lib/hooks/useScrollCentering';
+import { useScrollPersistence } from '@/lib/hooks/useScrollPersistence';
+import { useScrollCentering } from '@/lib/hooks/useScrollCentering';
 
 type TabKey = 'Surah' | 'Juz' | 'Page';
 
@@ -12,7 +12,7 @@ interface Options {
   selectedPageId: number | null;
 }
 
-const useSidebarScroll = ({
+export const useSidebarScroll = ({
   activeTab,
   selectedSurahId,
   selectedJuzId,
@@ -79,7 +79,5 @@ const useSidebarScroll = ({
 
   return { scrollRef, handleScroll, prepareForTabSwitch, rememberScroll };
 };
-
-export default useSidebarScroll;
 
 export type { TabKey };

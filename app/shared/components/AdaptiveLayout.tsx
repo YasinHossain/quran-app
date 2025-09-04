@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useResponsiveState } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
 import { useNavigation } from '@/app/providers/NavigationContext';
-import AdaptiveNavigation from './AdaptiveNavigation';
+import { AdaptiveNavigation } from './AdaptiveNavigation';
 
 interface AdaptiveLayoutProps {
   children: React.ReactNode;
@@ -19,7 +19,7 @@ interface AdaptiveLayoutProps {
  * Unified layout that adapts to any screen size
  * Replaces the need for separate mobile/desktop layouts
  */
-const AdaptiveLayout: React.FC<AdaptiveLayoutProps> = ({
+export const AdaptiveLayout: React.FC<AdaptiveLayoutProps> = ({
   children,
   showNavigation = true,
   sidebarContent,
@@ -114,5 +114,3 @@ const AdaptiveLayout: React.FC<AdaptiveLayoutProps> = ({
     </div>
   );
 };
-
-export default AdaptiveLayout;

@@ -16,7 +16,7 @@ interface Props {
  * Includes a search input for filtering and remembers scroll position
  * between tabs via session storage and the sidebar context.
  */
-const SurahListSidebar = ({ initialChapters = [] }: Props) => {
+export const SurahListSidebar = ({ initialChapters = [] }: Props) => {
   const { data } = useSWR('chapters', getChapters, { fallbackData: initialChapters });
   const chapters = useMemo(() => data || [], [data]);
   const { isSurahListOpen, setSurahListOpen } = useSidebar();
@@ -32,5 +32,3 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
     </BaseSidebar>
   );
 };
-
-export default SurahListSidebar;

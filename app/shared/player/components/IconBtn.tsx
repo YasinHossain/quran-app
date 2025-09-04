@@ -5,7 +5,7 @@ import { iconClasses } from '@/lib/responsive';
  * @deprecated Use Button with variant="icon-round" size="icon-round" instead
  * This component will be removed in a future version
  */
-export default function IconBtn({
+export function IconBtn({
   children,
   className = '',
   disabled,

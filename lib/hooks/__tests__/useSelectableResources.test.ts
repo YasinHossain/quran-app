@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import useSelectableResources from '@/lib/hooks/useSelectableResources';
+import { useSelectableResources } from '@/lib/hooks/useSelectableResources';
 
 interface Item {
   id: number;

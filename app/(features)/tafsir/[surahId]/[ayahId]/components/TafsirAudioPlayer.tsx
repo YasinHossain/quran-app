@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 import { buildAudioUrl } from '@/lib/audio/reciters';
 import { getSurahCoverUrl } from '@/lib/api';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
-import Spinner from '@/app/shared/Spinner';
+import { Spinner } from '@/app/shared/Spinner';
 
 import type { Verse } from '@/types';
 import type { Reciter } from '@/app/shared/player/types';

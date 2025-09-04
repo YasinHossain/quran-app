@@ -2,14 +2,14 @@
 
 import React, { useState } from 'react';
 import { EllipsisHIcon } from '../icons';
-import BookmarkModal from '../components/BookmarkModal';
-import MobileBottomSheet from './MobileBottomSheet';
+import { BookmarkModal } from '../components/BookmarkModal';
+import { MobileBottomSheet } from './MobileBottomSheet';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
 import { VerseActionsProps } from './types';
 import { defaultShare } from './utils';
 
-const MobileVerseActions: React.FC<VerseActionsProps> = ({
+export const MobileVerseActions: React.FC<VerseActionsProps> = ({
   verseKey,
   verseId,
   isPlaying,
@@ -82,5 +82,3 @@ const MobileVerseActions: React.FC<VerseActionsProps> = ({
     </>
   );
 };
-
-export default MobileVerseActions;

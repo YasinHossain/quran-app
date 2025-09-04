@@ -6,7 +6,7 @@ interface Props {
   setLocalReciter: (id: string) => void;
 }
 
-export default function ReciterPanel({ localReciter, setLocalReciter }: Props) {
+export function ReciterPanel({ localReciter, setLocalReciter }: Props) {
   return (
     <div className="md:col-span-2">
       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-80 overflow-auto pr-1">

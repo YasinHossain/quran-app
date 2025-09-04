@@ -11,7 +11,11 @@ interface TabNavigationProps {
   verseKey?: string;
 }
 
-const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabChange, verseKey = '' }) => {
+export const TabNavigation: React.FC<TabNavigationProps> = ({
+  activeTab,
+  onTabChange,
+  verseKey = '',
+}) => {
   const tabs = [
     { id: 'pin' as const, label: 'Pin Verse', description: 'Quick access' },
     { id: 'bookmark' as const, label: 'Add to Folder', description: 'Organize & save' },
@@ -55,5 +59,3 @@ const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabChange, v
     </div>
   );
 };
-
-export default TabNavigation;

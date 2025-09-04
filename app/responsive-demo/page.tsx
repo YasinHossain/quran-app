@@ -1,4 +1,4 @@
-import ResponsiveExample from '@/app/shared/components/ResponsiveExample';
+import { ResponsiveExample } from '@/app/shared/components/ResponsiveExample';
 
 export default function ResponsiveDemoPage() {
   return <ResponsiveExample />;

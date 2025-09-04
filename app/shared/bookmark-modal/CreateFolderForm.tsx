@@ -13,7 +13,7 @@ interface CreateFolderFormProps {
   onCancel: () => void;
 }
 
-const CreateFolderForm: React.FC<CreateFolderFormProps> = ({
+export const CreateFolderForm: React.FC<CreateFolderFormProps> = ({
   newFolderName,
   onNameChange,
   onCreateFolder,
@@ -76,5 +76,3 @@ const CreateFolderForm: React.FC<CreateFolderFormProps> = ({
     </motion.form>
   );
 };
-
-export default CreateFolderForm;

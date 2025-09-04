@@ -18,7 +18,7 @@ interface Props {
   rememberScroll: () => void;
 }
 
-const Juz = ({
+export const Juz = ({
   juzs,
   chapters,
   selectedJuzId,
@@ -56,5 +56,3 @@ const Juz = ({
     })}
   </ul>
 );
-
-export default Juz;

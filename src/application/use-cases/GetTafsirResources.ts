@@ -1,5 +1,6 @@
 import { ITafsirRepository } from '../../domain/repositories/ITafsirRepository';
 import { Tafsir } from '../../domain/entities/Tafsir';
+import { logger as Logger } from '../../infrastructure/monitoring/Logger';
 
 /**
  * Use Case: Get Tafsir Resources
@@ -38,7 +39,7 @@ export class GetTafsirResourcesUseCase {
       // If no data from API, try cache
       return await this.getCachedResourcesWithFallback();
     } catch (error) {
-      console.warn('Failed to fetch fresh tafsir resources:', error);
+      Logger.warn('Failed to fetch fresh tafsir resources:', undefined, error as Error);
 
       // Try cached data as fallback
       return await this.getCachedResourcesWithFallback();
@@ -61,7 +62,11 @@ export class GetTafsirResourcesUseCase {
         isFromCache: false,
       };
     } catch (error) {
-      console.warn(`Failed to fetch tafsir resources for language ${language}:`, error);
+      Logger.warn(
+        `Failed to fetch tafsir resources for language ${language}:`,
+        undefined,
+        error as Error,
+      );
 
       // For language-specific requests, filter cached data
       const cachedResult = await this.getCachedResourcesWithFallback();
@@ -87,7 +92,7 @@ export class GetTafsirResourcesUseCase {
     try {
       return await this.tafsirRepository.search(searchTerm);
     } catch (error) {
-      console.warn('Search failed, using cached data:', error);
+      Logger.warn('Search failed, using cached data:', undefined, error as Error);
       const cached = await this.tafsirRepository.getCachedResources();
       return cached.filter((t) => t.matchesSearch(searchTerm));
     }
@@ -100,7 +105,7 @@ export class GetTafsirResourcesUseCase {
     try {
       return await this.tafsirRepository.getById(id);
     } catch (error) {
-      console.warn('Failed to get tafsir by ID, trying cache:', error);
+      Logger.warn('Failed to get tafsir by ID, trying cache:', undefined, error as Error);
       const cached = await this.tafsirRepository.getCachedResources();
       return cached.find((t) => t.id === id) || null;
     }

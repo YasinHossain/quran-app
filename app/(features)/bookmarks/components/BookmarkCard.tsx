@@ -7,7 +7,7 @@ import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { ContentBookmarkCard } from '@/app/shared/ui/cards/ContentBookmarkCard';
-import LoadingError from '@/app/shared/LoadingError';
+import { LoadingError } from '@/app/shared/LoadingError';
 import { motion } from 'framer-motion';
 import { useBookmarkVerse } from '../hooks/useBookmarkVerse';
 

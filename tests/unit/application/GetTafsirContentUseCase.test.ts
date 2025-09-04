@@ -1,5 +1,10 @@
 import { GetTafsirContentUseCase } from '../../../src/application/use-cases/GetTafsirContent';
 import { ITafsirRepository } from '../../../src/domain/repositories/ITafsirRepository';
+import { logger as Logger } from '../../../src/infrastructure/monitoring/Logger';
+import {
+  InvalidTafsirRequestError,
+  TafsirContentLoadError,
+} from '../../../src/domain/errors/DomainErrors';
 
 // Minimal mocked repository implementing ITafsirRepository
 const createRepository = (): jest.Mocked<ITafsirRepository> => ({
@@ -38,12 +43,18 @@ describe('GetTafsirContentUseCase', () => {
     expect(result).toBe('No tafsir content available for this verse.');
   });
 
-  it('throws user-friendly error when repository fails', async () => {
+  it('throws InvalidTafsirRequestError when parameters are missing', async () => {
+    await expect(useCase.execute('', 0)).rejects.toThrow(
+      InvalidTafsirRequestError,
+    );
+  });
+
+  it('throws TafsirContentLoadError when repository fails', async () => {
     repository.getTafsirByVerse.mockRejectedValue(new Error('Network error'));
-    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const errorSpy = jest.spyOn(Logger, 'error').mockImplementation(() => {});
 
     await expect(useCase.execute('1:1', 1)).rejects.toThrow(
-      'Failed to load tafsir content. Please try again.'
+      TafsirContentLoadError,
     );
     expect(errorSpy).toHaveBeenCalled();
     errorSpy.mockRestore();
@@ -54,7 +65,8 @@ describe('GetTafsirContentUseCase', () => {
       .mockResolvedValueOnce('<p>tafsir 1</p>')
       .mockResolvedValueOnce('')
       .mockRejectedValueOnce(new Error('boom'));
-    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    const warnSpy = jest.spyOn(Logger, 'warn').mockImplementation(() => {});
+    const errorSpy = jest.spyOn(Logger, 'error').mockImplementation(() => {});
 
     const result = await useCase.executeMultiple('1:1', [1, 2, 3]);
 
@@ -64,5 +76,6 @@ describe('GetTafsirContentUseCase', () => {
     expect(repository.getTafsirByVerse).toHaveBeenCalledTimes(3);
     expect(warnSpy).toHaveBeenCalled();
     warnSpy.mockRestore();
+    errorSpy.mockRestore();
   });
 });

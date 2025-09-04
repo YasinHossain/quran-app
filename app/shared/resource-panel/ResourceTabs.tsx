@@ -67,4 +67,3 @@ export const ResourceTabs: React.FC<ResourceTabsProps> = ({
   </div>
 );
 
-export default ResourceTabs;

@@ -11,7 +11,11 @@ interface QuranBottomSheetProps {
   onSurahSelect: (surahId: number) => void;
 }
 
-const QuranBottomSheet: React.FC<QuranBottomSheetProps> = ({ isOpen, onClose, onSurahSelect }) => {
+export const QuranBottomSheet: React.FC<QuranBottomSheetProps> = ({
+  isOpen,
+  onClose,
+  onSurahSelect,
+}) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState<'surah' | 'juz' | 'page'>('surah');
 
@@ -207,5 +211,3 @@ const QuranBottomSheet: React.FC<QuranBottomSheetProps> = ({ isOpen, onClose, on
     </AnimatePresence>
   );
 };
-
-export default QuranBottomSheet;

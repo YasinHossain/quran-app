@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
 
-import Spinner from '@/app/shared/Spinner';
+import { Spinner } from '@/app/shared/Spinner';
 
 import type { Track } from '@/app/shared/player/types';
 

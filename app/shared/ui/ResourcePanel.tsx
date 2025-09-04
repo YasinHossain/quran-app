@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { Panel } from './Panel';
 import { SearchInput } from '../components/SearchInput';
-import Spinner from '../Spinner';
+import { Spinner } from '../Spinner';
 import { CheckIcon } from '../icons';
 import type { ResourceSelectionProps } from '@/types/components';
 

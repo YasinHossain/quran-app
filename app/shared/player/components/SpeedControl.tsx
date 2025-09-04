@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 
-export default function SpeedControl() {
+export function SpeedControl() {
   const { playbackRate, setPlaybackRate } = useAudio();
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);

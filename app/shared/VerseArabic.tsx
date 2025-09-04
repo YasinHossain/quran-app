@@ -9,7 +9,7 @@ interface VerseArabicProps {
   verse: VerseType;
 }
 
-const VerseArabic = ({ verse }: VerseArabicProps) => {
+export const VerseArabic = ({ verse }: VerseArabicProps) => {
   const { settings } = useSettings();
   const showByWords = settings.showByWords ?? false;
   const wordLang = settings.wordLang ?? 'en';
@@ -65,5 +65,3 @@ const VerseArabic = ({ verse }: VerseArabicProps) => {
     </p>
   );
 };
-
-export default VerseArabic;

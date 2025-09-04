@@ -10,7 +10,7 @@ interface FolderSearchProps {
   placeholder?: string;
 }
 
-const FolderSearch: React.FC<FolderSearchProps> = ({
+export const FolderSearch: React.FC<FolderSearchProps> = ({
   searchQuery,
   onSearchChange,
   placeholder = 'Search folders...',
@@ -37,5 +37,3 @@ const FolderSearch: React.FC<FolderSearchProps> = ({
     </div>
   );
 };
-
-export default FolderSearch;

@@ -76,5 +76,3 @@ const CheckIcon: React.FC<{ className?: string }> = ({ className }) => (
     />
   </svg>
 );
-
-export default ResourceItem;

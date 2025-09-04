@@ -4,7 +4,7 @@ import React, { memo } from 'react';
 import { BaseCard, BaseCardProps } from '../BaseCard';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { applyTajweed } from '@/lib/text/tajweed';
-import ResponsiveVerseActions from '@/app/shared/ResponsiveVerseActions';
+import { ResponsiveVerseActions } from '@/app/shared/ResponsiveVerseActions';
 
 /**
  * ContentBookmarkCard

@@ -28,7 +28,10 @@ interface AdaptiveNavigationProps {
  * - Tablet: Compact sidebar or bottom nav based on space
  * - Desktop: Full sidebar or top navigation
  */
-const AdaptiveNavigation: React.FC<AdaptiveNavigationProps> = ({ onSurahJump, className }) => {
+export const AdaptiveNavigation: React.FC<AdaptiveNavigationProps> = ({
+  onSurahJump,
+  className,
+}) => {
   const pathname = usePathname();
   const { breakpoint, variant } = useResponsiveState();
 
@@ -255,5 +258,3 @@ const DesktopNavigation: React.FC<{
     </nav>
   );
 };
-
-export default AdaptiveNavigation;

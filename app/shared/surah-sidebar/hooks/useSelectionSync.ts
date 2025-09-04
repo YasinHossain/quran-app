@@ -9,7 +9,12 @@ interface Args {
   chapters: Chapter[];
 }
 
-const useSelectionSync = ({ currentSurahId, currentJuzId, currentPageId, chapters }: Args) => {
+export const useSelectionSync = ({
+  currentSurahId,
+  currentJuzId,
+  currentPageId,
+  chapters,
+}: Args) => {
   const [selectedSurahId, setSelectedSurahId] = useState<number | null>(currentSurahId ?? null);
   const [selectedJuzId, setSelectedJuzId] = useState<number | null>(currentJuzId ?? null);
   const [selectedPageId, setSelectedPageId] = useState<number | null>(currentPageId ?? null);
@@ -45,5 +50,3 @@ const useSelectionSync = ({ currentSurahId, currentJuzId, currentPageId, chapter
     setSelectedPageId,
   };
 };
-
-export default useSelectionSync;

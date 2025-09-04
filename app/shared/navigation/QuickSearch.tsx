@@ -10,7 +10,7 @@ interface QuickSearchProps {
   onClose: () => void;
 }
 
-const QuickSearch: React.FC<QuickSearchProps> = ({ isOpen, onClose }) => {
+export const QuickSearch: React.FC<QuickSearchProps> = ({ isOpen, onClose }) => {
   const [query, setQuery] = useState('');
   const [recentSearches] = useState([
     'Al-Fatiha',
@@ -158,5 +158,3 @@ const QuickSearch: React.FC<QuickSearchProps> = ({ isOpen, onClose }) => {
     </AnimatePresence>
   );
 };
-
-export default QuickSearch;

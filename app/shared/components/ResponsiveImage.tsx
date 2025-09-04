@@ -237,4 +237,3 @@ export const useImagePreload = (sources: string[], condition = true) => {
   }, [sources, condition]);
 };
 
-export default ResponsiveImage;

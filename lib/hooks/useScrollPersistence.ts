@@ -1,4 +1,4 @@
-import { RefObject, useLayoutEffect } from 'react';
+import { RefObject, useCallback, useLayoutEffect } from 'react';
 
 interface ScrollPersistenceOptions<T extends string> {
   scrollRef: RefObject<HTMLDivElement | null>;
@@ -14,7 +14,7 @@ interface ScrollPersistenceResult<T extends string> {
   rememberScroll: (tab: T) => void;
 }
 
-const useScrollPersistence = <T extends string>({
+export const useScrollPersistence = <T extends string>({
   scrollRef,
   activeTab,
   scrollTops,
@@ -29,24 +29,28 @@ const useScrollPersistence = <T extends string>({
     container.scrollTop = top;
   }, [activeTab, scrollRef, scrollTops, storageKeys]);
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>): void => {
-    const top = e.currentTarget.scrollTop;
-    setScrollTops[activeTab](top);
-    sessionStorage.setItem(storageKeys[activeTab], String(top));
-  };
+  const handleScroll = useCallback(
+    (e: React.UIEvent<HTMLDivElement>): void => {
+      const top = e.currentTarget.scrollTop;
+      setScrollTops[activeTab](top);
+      sessionStorage.setItem(storageKeys[activeTab], String(top));
+    },
+    [activeTab, setScrollTops, storageKeys]
+  );
 
-  const prepareForTabSwitch = (): void => {
+  const prepareForTabSwitch = useCallback((): void => {
     const top = scrollRef.current?.scrollTop ?? 0;
     setScrollTops[activeTab](top);
-  };
+  }, [activeTab, scrollRef, setScrollTops]);
 
-  const rememberScroll = (tab: T): void => {
-    const top = scrollRef.current?.scrollTop ?? 0;
-    setScrollTops[tab](top);
-    sessionStorage.setItem(storageKeys[tab], String(top));
-  };
+  const rememberScroll = useCallback(
+    (tab: T): void => {
+      const top = scrollRef.current?.scrollTop ?? 0;
+      setScrollTops[tab](top);
+      sessionStorage.setItem(storageKeys[tab], String(top));
+    },
+    [scrollRef, setScrollTops, storageKeys]
+  );
 
   return { handleScroll, prepareForTabSwitch, rememberScroll };
 };
-
-export default useScrollPersistence;

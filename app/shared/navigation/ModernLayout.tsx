@@ -2,17 +2,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import QuranBottomSheet from './QuranBottomSheet';
-import SwipeContainer from './SwipeContainer';
-import SwipeIndicator from './SwipeIndicator';
-import AdaptiveNavigation from '../components/AdaptiveNavigation';
+import { QuranBottomSheet } from './QuranBottomSheet';
+import { SwipeContainer } from './SwipeContainer';
+import { SwipeIndicator } from './SwipeIndicator';
+import { AdaptiveNavigation } from '../components/AdaptiveNavigation';
 import { useNavigation } from '@/app/providers/NavigationContext';
 
 interface ModernLayoutProps {
   children: React.ReactNode;
 }
 
-const ModernLayout: React.FC<ModernLayoutProps> = ({ children }) => {
+export const ModernLayout: React.FC<ModernLayoutProps> = ({ children }) => {
   const pathname = usePathname();
   const { isQuranBottomSheetOpen, setQuranBottomSheetOpen, navigateToSurah, showQuranSelector } =
     useNavigation();
@@ -58,5 +58,3 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({ children }) => {
     </>
   );
 };
-
-export default ModernLayout;

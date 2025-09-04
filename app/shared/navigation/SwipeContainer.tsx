@@ -13,7 +13,10 @@ interface SwipeContainerProps {
 // Navigation routes in order for swipe navigation
 const MAIN_ROUTES = ['/home', '/surah', '/bookmarks'];
 
-const SwipeContainer: React.FC<SwipeContainerProps> = ({ children, className }) => {
+export const SwipeContainer: React.FC<SwipeContainerProps> = ({
+  children,
+  className,
+}) => {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -51,5 +54,3 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ children, className }) 
     </div>
   );
 };
-
-export default SwipeContainer;

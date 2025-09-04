@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 interface Resource {
   id: number;
@@ -43,10 +43,13 @@ export const useSelectableResources = <T extends Resource>({
   const [orderedSelection, setOrderedSelection] = useState<number[]>(initialSelectedIds);
   const [draggedId, setDraggedId] = useState<number | null>(null);
 
-  const setSelections = (ids: number[]): void => {
-    setSelectedIds(new Set(ids));
-    setOrderedSelection(ids);
-  };
+  const setSelections = useCallback(
+    (ids: number[]): void => {
+      setSelectedIds(new Set(ids));
+      setOrderedSelection(ids);
+    },
+    [setOrderedSelection, setSelectedIds]
+  );
 
   const languages = useMemo(() => {
     const unique = Array.from(new Set(resources.map((r) => r.lang)));
@@ -76,56 +79,65 @@ export const useSelectableResources = <T extends Resource>({
     [filteredResources]
   );
 
-  const handleSelectionToggle = (id: number): boolean => {
-    const newSelected = new Set(selectedIds);
-    let newOrder = [...orderedSelection];
-    let changed = false;
+  const handleSelectionToggle = useCallback(
+    (id: number): boolean => {
+      const newSelected = new Set(selectedIds);
+      let newOrder = [...orderedSelection];
+      let changed = false;
 
-    if (newSelected.has(id)) {
-      newSelected.delete(id);
-      newOrder = newOrder.filter((i) => i !== id);
-      changed = true;
-    } else {
-      if (newSelected.size >= selectionLimit) return false;
-      newSelected.add(id);
-      newOrder.push(id);
-      changed = true;
-    }
+      if (newSelected.has(id)) {
+        newSelected.delete(id);
+        newOrder = newOrder.filter((i) => i !== id);
+        changed = true;
+      } else {
+        if (newSelected.size >= selectionLimit) return false;
+        newSelected.add(id);
+        newOrder.push(id);
+        changed = true;
+      }
 
-    if (changed) {
-      setSelectedIds(newSelected);
-      setOrderedSelection(newOrder);
-    }
-    return changed;
-  };
+      if (changed) {
+        setSelectedIds(newSelected);
+        setOrderedSelection(newOrder);
+      }
+      return changed;
+    },
+    [orderedSelection, selectedIds, selectionLimit, setOrderedSelection, setSelectedIds]
+  );
 
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: number) => {
-    setDraggedId(id);
-    e.dataTransfer.effectAllowed = 'move';
-  };
+  const handleDragStart = useCallback(
+    (e: React.DragEvent<HTMLDivElement>, id: number) => {
+      setDraggedId(id);
+      e.dataTransfer.effectAllowed = 'move';
+    },
+    [setDraggedId]
+  );
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-  };
+  }, []);
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>, targetId: number) => {
-    e.preventDefault();
-    if (draggedId === null || draggedId === targetId) {
+  const handleDrop = useCallback(
+    (e: React.DragEvent<HTMLDivElement>, targetId: number) => {
+      e.preventDefault();
+      if (draggedId === null || draggedId === targetId) {
+        setDraggedId(null);
+        return;
+      }
+      setOrderedSelection((prev) => {
+        const newOrder = [...prev];
+        const from = newOrder.indexOf(draggedId);
+        const to = newOrder.indexOf(targetId);
+        const [item] = newOrder.splice(from, 1);
+        newOrder.splice(to, 0, item);
+        return newOrder;
+      });
       setDraggedId(null);
-      return;
-    }
-    setOrderedSelection((prev) => {
-      const newOrder = [...prev];
-      const from = newOrder.indexOf(draggedId);
-      const to = newOrder.indexOf(targetId);
-      const [item] = newOrder.splice(from, 1);
-      newOrder.splice(to, 0, item);
-      return newOrder;
-    });
-    setDraggedId(null);
-  };
+    },
+    [draggedId, setDraggedId, setOrderedSelection]
+  );
 
-  const handleDragEnd = () => setDraggedId(null);
+  const handleDragEnd = useCallback(() => setDraggedId(null), [setDraggedId]);
 
   return {
     searchTerm,
@@ -145,5 +157,3 @@ export const useSelectableResources = <T extends Resource>({
     setSelections,
   } as const;
 };
-
-export default useSelectableResources;

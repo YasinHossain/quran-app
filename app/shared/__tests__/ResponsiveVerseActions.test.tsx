@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { testAccessibility } from '../../../lib/__tests__/responsive-test-utils';
-import ResponsiveVerseActions from '../ResponsiveVerseActions';
+import { ResponsiveVerseActions } from '../ResponsiveVerseActions';
 
 // Create mock responsive state for different breakpoints
 const mockResponsiveState = (variant: string, breakpoint: string) => ({

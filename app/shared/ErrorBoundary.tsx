@@ -86,4 +86,3 @@ export const useErrorHandler = () => {
   return { handleError, resetError };
 };
 
-export default ErrorBoundary;

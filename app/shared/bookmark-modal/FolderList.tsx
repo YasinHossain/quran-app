@@ -15,7 +15,7 @@ interface FolderListProps {
   emptyMessage?: string;
 }
 
-const FolderList: React.FC<FolderListProps> = ({
+export const FolderList: React.FC<FolderListProps> = ({
   folders,
   verseId,
   onFolderSelect,
@@ -86,5 +86,3 @@ const FolderList: React.FC<FolderListProps> = ({
     </div>
   );
 };
-
-export default FolderList;

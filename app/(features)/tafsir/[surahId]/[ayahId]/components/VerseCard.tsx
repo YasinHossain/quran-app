@@ -4,8 +4,8 @@ import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
-import ResponsiveVerseActions from '@/app/shared/ResponsiveVerseActions';
-import VerseArabic from '@/app/shared/VerseArabic';
+import { ResponsiveVerseActions } from '@/app/shared/ResponsiveVerseActions';
+import { VerseArabic } from '@/app/shared/VerseArabic';
 
 interface VerseCardProps {
   verse: VerseType;

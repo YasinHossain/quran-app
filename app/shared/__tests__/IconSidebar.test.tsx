@@ -1,4 +1,4 @@
-import IconSidebar from '@/app/shared/IconSidebar';
+import { IconSidebar } from '@/app/shared/IconSidebar';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 
 // mock translation hook

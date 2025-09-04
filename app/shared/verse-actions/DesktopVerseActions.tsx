@@ -10,14 +10,14 @@ import {
   ShareIcon,
   BookReaderIcon,
 } from '../icons';
-import Spinner from '../Spinner';
-import BookmarkModal from '../components/BookmarkModal';
+import { Spinner } from '../Spinner';
+import { BookmarkModal } from '../components/BookmarkModal';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
 import { VerseActionsProps } from './types';
 import { defaultShare } from './utils';
 
-const DesktopVerseActions: React.FC<VerseActionsProps> = ({
+export const DesktopVerseActions: React.FC<VerseActionsProps> = ({
   verseKey,
   verseId,
   isPlaying,
@@ -136,5 +136,3 @@ const DesktopVerseActions: React.FC<VerseActionsProps> = ({
     </div>
   );
 };
-
-export default DesktopVerseActions;

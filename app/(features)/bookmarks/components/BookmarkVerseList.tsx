@@ -4,7 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { VerseCard as VerseComponent } from '@/app/(features)/surah/components';
 import type { Verse as VerseType } from '@/types';
-import Spinner from '@/app/shared/Spinner';
+import { Spinner } from '@/app/shared/Spinner';
 
 interface BookmarkVerseListProps {
   verses: VerseType[];

@@ -4,7 +4,7 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { Word } from '@/types';
 
-import Spinner from '@/app/shared/Spinner';
+import { Spinner } from '@/app/shared/Spinner';
 import { applyTajweed } from '@/lib/text/tajweed';
 import { stripHtml } from '@/lib/text/stripHtml';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';

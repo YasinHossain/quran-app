@@ -15,5 +15,3 @@ export const setTheme = (theme: TokenTheme): void => {
     localStorage.setItem('token-theme', 'base');
   }
 };
-
-export default setTheme;

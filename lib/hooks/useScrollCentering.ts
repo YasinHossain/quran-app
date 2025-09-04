@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useLayoutEffect, useRef } from 'react';
+import { RefObject, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 
 interface ScrollCenteringOptions<T extends string> {
   scrollRef: RefObject<HTMLDivElement | null>;
@@ -12,7 +12,7 @@ interface ScrollCenteringResult<T extends string> {
   prepareForTabSwitch: (nextTab: T) => void;
 }
 
-const useScrollCentering = <T extends string>({
+export const useScrollCentering = <T extends string>({
   scrollRef,
   activeTab,
   selectedIds,
@@ -64,15 +64,16 @@ const useScrollCentering = <T extends string>({
     shouldCenterRef.current[activeTab] = false;
   }, [activeTab, scrollRef, scrollTops, selectedIds]);
 
-  const skipNextCentering = (tab: T): void => {
+  const skipNextCentering = useCallback((tab: T): void => {
     sessionStorage.setItem(`skipCenter${tab}`, '1');
-  };
+  }, []);
 
-  const prepareForTabSwitch = (nextTab: T): void => {
-    shouldCenterRef.current[nextTab] = true;
-  };
+  const prepareForTabSwitch = useCallback(
+    (nextTab: T): void => {
+      shouldCenterRef.current[nextTab] = true;
+    },
+    [shouldCenterRef]
+  );
 
   return { skipNextCentering, prepareForTabSwitch };
 };
-
-export default useScrollCentering;

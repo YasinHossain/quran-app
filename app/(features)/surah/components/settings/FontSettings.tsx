@@ -6,7 +6,7 @@ import { FontSettingIcon } from '@/app/shared/icons';
 import { CollapsibleSection } from '../CollapsibleSection';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useFontSize } from '../../hooks/useFontSize';
-import SelectionBox from '@/app/shared/SelectionBox';
+import { SelectionBox } from '@/app/shared/SelectionBox';
 
 interface FontSettingsProps {
   onArabicFontPanelOpen: () => void;

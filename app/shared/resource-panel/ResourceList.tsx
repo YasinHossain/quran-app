@@ -54,5 +54,3 @@ export const ResourceList = <T extends Resource>({
     </List>
   );
 };
-
-export default ResourceList;

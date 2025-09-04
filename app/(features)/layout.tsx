@@ -1,10 +1,10 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import Header from '@/app/shared/Header';
-import IconSidebar from '@/app/shared/IconSidebar';
-import SurahListSidebar from '@/app/shared/SurahListSidebar';
-import ModernLayout from '@/app/shared/navigation/ModernLayout';
+import { Header } from '@/app/shared/Header';
+import { IconSidebar } from '@/app/shared/IconSidebar';
+import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
+import { ModernLayout } from '@/app/shared/navigation/ModernLayout';
 import {
   HeaderVisibilityProvider,
   useHeaderVisibility,

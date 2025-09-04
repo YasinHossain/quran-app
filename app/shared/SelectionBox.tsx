@@ -7,7 +7,7 @@ interface SelectionBoxProps {
   onClick: () => void;
 }
 
-const SelectionBox = ({ label, value, onClick }: SelectionBoxProps) => {
+export const SelectionBox = ({ label, value, onClick }: SelectionBoxProps) => {
   return (
     <div>
       <label className="block mb-2 text-sm font-medium text-foreground">{label}</label>
@@ -22,5 +22,3 @@ const SelectionBox = ({ label, value, onClick }: SelectionBoxProps) => {
     </div>
   );
 };
-
-export default SelectionBox;

@@ -1,5 +1,5 @@
-export { default } from './ResponsiveVerseActions';
-export { default as MobileVerseActions } from './MobileVerseActions';
-export { default as DesktopVerseActions } from './DesktopVerseActions';
-export { default as MobileBottomSheet } from './MobileBottomSheet';
+export { ResponsiveVerseActions } from './ResponsiveVerseActions';
+export { MobileVerseActions } from './MobileVerseActions';
+export { DesktopVerseActions } from './DesktopVerseActions';
+export { MobileBottomSheet } from './MobileBottomSheet';
 export type { VerseActionsProps, VerseActionItem } from './types';

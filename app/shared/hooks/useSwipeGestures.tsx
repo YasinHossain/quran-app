@@ -106,5 +106,3 @@ export const useSwipeGestures = (options: SwipeGesturesOptions) => {
     onTouchMove: handleTouchMove,
   };
 };
-
-export default useSwipeGestures;
