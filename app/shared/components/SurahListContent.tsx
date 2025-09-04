@@ -5,13 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { useParams, usePathname } from 'next/navigation';
 import { Chapter } from '@/types';
 import juzData from '@/data/juz.json';
-import useSidebarScroll from '../surah-sidebar/useSidebarScroll';
-import Surah from '../surah-sidebar/Surah';
-import Juz from '../surah-sidebar/Juz';
-import Page from '../surah-sidebar/Page';
-import SidebarTabs from '../surah-sidebar/components/SidebarTabs';
+import { useSidebarScroll } from '../surah-sidebar/useSidebarScroll';
+import { Surah } from '../surah-sidebar/Surah';
+import { Juz } from '../surah-sidebar/Juz';
+import { Page } from '../surah-sidebar/Page';
+import { SidebarTabs } from '../surah-sidebar/components/SidebarTabs';
 import { SearchInput } from './SearchInput';
-import useSelectionSync from '../surah-sidebar/hooks/useSelectionSync';
+import { useSelectionSync } from '../surah-sidebar/hooks/useSelectionSync';
 
 interface JuzSummary {
   number: number;
