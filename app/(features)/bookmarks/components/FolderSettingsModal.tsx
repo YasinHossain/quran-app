@@ -40,6 +40,17 @@ export const FolderSettingsModal: React.FC<FolderSettingsModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
     if (folder && isOpen) {
       setName(folder.name);
       setSelectedColor(folder.color || 'text-accent');
@@ -110,10 +121,18 @@ export const FolderSettingsModal: React.FC<FolderSettingsModalProps> = ({
             exit="exit"
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-surface border border-border rounded-2xl shadow-modal z-modal p-6"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="folder-settings-title"
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-foreground">{getModalTitle()}</h2>
+              <h2
+                id="folder-settings-title"
+                className="text-xl font-semibold text-foreground"
+              >
+                {getModalTitle()}
+              </h2>
               <button
                 onClick={onClose}
                 className="rounded-full p-1.5 text-muted hover:bg-surface-hover hover:text-accent transition-colors"
@@ -140,8 +159,6 @@ export const FolderSettingsModal: React.FC<FolderSettingsModalProps> = ({
                   className="w-full px-3 py-2 bg-background border border-border rounded-lg text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent"
                   placeholder="Enter folder name"
                   required
-                  // eslint-disable-next-line jsx-a11y/no-autofocus
-                  autoFocus
                 />
               </div>
 

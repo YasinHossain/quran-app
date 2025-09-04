@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
@@ -34,6 +34,17 @@ export const BookmarkModal: React.FC<BookmarkModalProps> = ({
   const [newFolderName, setNewFolderName] = useState('');
 
   const isVersePinned = isPinned(verseId);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   // Filter folders based on search query
   const filteredFolders = useMemo(() => {
@@ -117,20 +128,12 @@ export const BookmarkModal: React.FC<BookmarkModalProps> = ({
               damping: 40,
             }}
             className="fixed inset-0 flex items-center justify-center z-modal p-4 pointer-events-none"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                onClose();
-              }
-            }}
-            onClick={onClose}
-            role="button"
-            tabIndex={0}
           >
-            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
             <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Bookmark options"
               className="bg-surface rounded-3xl shadow-2xl w-full max-w-md max-h-[80vh] flex flex-col pointer-events-auto"
-              onClick={(e) => e.stopPropagation()}
             >
               {/* Header with Close Button */}
               <div className="flex justify-end p-4">

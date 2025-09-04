@@ -21,12 +21,13 @@ interface FolderData {
   bookmarks: Array<{ verseId: string; verseKey?: string }> | { length: number };
 }
 
-interface EnhancedFolderCardProps extends Omit<BaseCardProps, 'children'> {
+interface EnhancedFolderCardProps extends Omit<BaseCardProps, 'children' | 'onClick'> {
   folder: FolderData;
   onEdit: () => void;
   onDelete: () => void;
   onRename: () => void;
   onColorChange: () => void;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 export const EnhancedFolderCard: React.FC<EnhancedFolderCardProps> = React.memo(
@@ -57,9 +58,7 @@ export const EnhancedFolderCard: React.FC<EnhancedFolderCardProps> = React.memo(
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            if (onClick && typeof onClick === 'function') {
-              onClick(e as any);
-            }
+            onClick?.(e as unknown as React.MouseEvent<HTMLElement>);
           }
         }}
         className="relative"

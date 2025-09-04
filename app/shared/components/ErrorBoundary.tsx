@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { ErrorHandler } from '@/src/infrastructure/errors';
 
 interface ErrorBoundaryState {
@@ -62,6 +63,11 @@ interface ErrorFallbackProps {
 }
 
 function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps) {
+  const router = useRouter();
+  const handleGoHome = useCallback(() => {
+    router.push('/');
+  }, [router]);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="max-w-md w-full bg-surface rounded-lg shadow-lg p-6">
@@ -114,7 +120,7 @@ function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps) {
             Try Again
           </button>
           <button
-            onClick={() => (window.location.href = '/')}
+            onClick={handleGoHome}
             className="flex-1 bg-interactive hover:bg-interactive-hover text-foreground font-medium py-2 px-4 rounded-md transition-colors"
           >
             Go Home
