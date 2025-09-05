@@ -1,6 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils/cn';
+
 import type { Bookmark } from '@/types/bookmark';
 
 interface FolderVerseCardProps {

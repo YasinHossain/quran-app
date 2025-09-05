@@ -1,6 +1,7 @@
-import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import userEvent from '@testing-library/user-event';
+
 import { VerseCard } from '@/app/(features)/tafsir/[surahId]/[ayahId]/components/VerseCard';
+import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import { Verse } from '@/types';
 
 const verse: Verse = {

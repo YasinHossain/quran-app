@@ -13,10 +13,7 @@ describe('ConsoleTransport', () => {
 
     transport.log(entry);
 
-    expect(spy).toHaveBeenCalledWith(
-      '[2023-01-01T00:00:00.000Z] [INFO] hello',
-      undefined,
-    );
+    expect(spy).toHaveBeenCalledWith('[2023-01-01T00:00:00.000Z] [INFO] hello', undefined);
 
     spy.mockRestore();
   });

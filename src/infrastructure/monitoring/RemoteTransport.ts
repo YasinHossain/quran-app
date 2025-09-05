@@ -1,5 +1,5 @@
-import { fetchWithTimeout } from '../../../lib/api/client';
 import { LogLevel, type LogEntry, type ILoggerTransport, logger } from './Logger';
+import { fetchWithTimeout } from '../../../lib/api/client';
 
 /**
  * Remote transport for sending logs to external services
@@ -18,7 +18,7 @@ export class RemoteTransport implements ILoggerTransport {
       apiKey?: string;
       flushInterval?: number;
       batchSize?: number;
-    } = {},
+    } = {}
   ) {
     this.endpoint = endpoint;
     this.apiKey = options.apiKey;

@@ -1,9 +1,10 @@
 'use client';
 
 import React from 'react';
-import { BookmarksLayout } from '../components/shared/BookmarksLayout';
-import { useLastReadPage } from './hooks/useLastReadPage';
+
 import { LastReadHeader, LastReadGrid } from './components';
+import { useLastReadPage } from './hooks/useLastReadPage';
+import { BookmarksLayout } from '../components/shared/BookmarksLayout';
 
 export default function LastReadPage() {
   const { lastRead, chapters, handleSectionChange } = useLastReadPage();

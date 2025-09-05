@@ -4,6 +4,8 @@
  */
 
 import { renderHook, act } from '@testing-library/react';
+import React from 'react';
+
 import {
   useFocusTrap,
   useFocusRestoration,
@@ -12,7 +14,6 @@ import {
   useRovingTabIndex,
   getFocusableElements,
 } from '../focus';
-import React from 'react';
 
 describe('Focus Management System', () => {
   let container: HTMLElement;

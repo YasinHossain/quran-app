@@ -1,7 +1,11 @@
 'use client';
 
-import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
+
+import { touchClasses } from '@/lib/responsive';
+import { cn } from '@/lib/utils';
+
 import {
   PlayIcon,
   PauseIcon,
@@ -12,8 +16,6 @@ import {
   CloseIcon,
 } from '../icons';
 import { Spinner } from '../Spinner';
-import { touchClasses } from '@/lib/responsive';
-import { cn } from '@/lib/utils';
 import { VerseActionItem } from './types';
 
 interface MobileBottomSheetProps {

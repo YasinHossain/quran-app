@@ -1,5 +1,5 @@
-import { getJuz } from '@/lib/api/verses';
 import { API_BASE_URL } from '@/lib/api';
+import { getJuz } from '@/lib/api/verses';
 import { Juz } from '@/types';
 
 describe('getJuz', () => {

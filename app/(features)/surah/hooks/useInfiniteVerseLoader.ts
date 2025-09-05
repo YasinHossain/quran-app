@@ -1,7 +1,8 @@
 import { useEffect, useMemo } from 'react';
 import useSWRInfinite from 'swr/infinite';
-import type { Verse } from '@/types';
+
 import type { LookupFn } from './useVerseListing';
+import type { Verse } from '@/types';
 
 interface UseInfiniteVerseLoaderParams {
   id?: string;
@@ -34,7 +35,7 @@ export function useInfiniteVerseLoader({
   );
 
   const verses: Verse[] = useMemo(() => (data ? data.flatMap((d) => d.verses) : []), [data]);
-  const totalPages = useMemo(() => (data ? data[data.length - 1]?.totalPages ?? 1 : 1), [data]);
+  const totalPages = useMemo(() => (data ? (data[data.length - 1]?.totalPages ?? 1) : 1), [data]);
   const isLoading = !data && !error;
   const isReachingEnd = size >= totalPages;
 

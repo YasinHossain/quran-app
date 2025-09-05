@@ -1,9 +1,11 @@
 'use client';
 
 import { motion } from 'framer-motion';
+
 import { BrainIcon, PlusIcon } from '@/app/shared/icons';
-import { MemorizationCard } from './MemorizationCard';
 import { MemorizationPlan, Chapter } from '@/types';
+
+import { MemorizationCard } from './MemorizationCard';
 
 interface MemorizationGridProps {
   memorization: Record<string, MemorizationPlan>;

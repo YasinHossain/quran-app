@@ -1,8 +1,10 @@
-import { Verse, Juz, Word, Surah } from '@/types';
-import type { LanguageCode } from '@/lib/text/languageCodes';
-import { apiFetch } from './client';
-import { getSurahList } from './chapters';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { Verse, Juz, Word, Surah } from '@/types';
+
+import { getSurahList } from './chapters';
+import { apiFetch } from './client';
+
+import type { LanguageCode } from '@/lib/text/languageCodes';
 
 let surahList: Surah[] | null = null;
 

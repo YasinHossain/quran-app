@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 const STORAGE_KEY = 'settings-sidebar-open-sections';
@@ -50,7 +51,11 @@ export const useSettingsSections = () => {
           try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
           } catch (error) {
-            logger.warn('Failed to save sidebar sections to localStorage:', undefined, error as Error);
+            logger.warn(
+              'Failed to save sidebar sections to localStorage:',
+              undefined,
+              error as Error
+            );
           }
         }
 

@@ -1,4 +1,5 @@
 import { memo } from 'react';
+
 import type { Track, RepeatOptions } from '@/app/shared/player/types';
 
 interface DebugInfoProps {
@@ -17,4 +18,3 @@ export const DebugInfo = memo(function DebugInfo({ track, repeatOptions }: Debug
     </pre>
   );
 });
-

@@ -1,8 +1,10 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { LastReadCard } from './LastReadCard';
+
 import { Chapter } from '@/types';
+
+import { LastReadCard } from './LastReadCard';
 
 interface LastReadGridProps {
   lastRead: Record<string, number>;

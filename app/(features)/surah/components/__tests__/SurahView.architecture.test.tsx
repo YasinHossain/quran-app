@@ -3,11 +3,16 @@
  * @description Week 6 implementation demonstrating complete testing patterns
  */
 
-import React from 'react';
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
 
 // Architecture-compliant testing utilities
+import {
+  renderWithSpecificProviders,
+  createContextTestSuite,
+} from '@/app/testUtils/contextTestUtils';
+import { createPerformanceTestSuite } from '@/app/testUtils/performanceTestUtils';
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import {
   mockViewport,
@@ -17,17 +22,6 @@ import {
   BREAKPOINTS,
   setupResponsiveTests,
 } from '@/app/testUtils/responsiveTestUtils';
-import {
-  PerformanceTester,
-  createPerformanceTestSuite,
-} from '@/app/testUtils/performanceTestUtils';
-import {
-  renderWithSpecificProviders,
-  testSettingsContextIntegration,
-  testAudioContextIntegration,
-  testBookmarkContextIntegration,
-  createContextTestSuite,
-} from '@/app/testUtils/contextTestUtils';
 
 // Component under test
 import { SurahView } from '../SurahView.client';

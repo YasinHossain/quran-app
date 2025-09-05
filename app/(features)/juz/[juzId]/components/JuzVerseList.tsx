@@ -1,6 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+
 import { VerseCard } from '@/app/(features)/surah/components';
+
 import type { Verse as VerseType } from '@/types';
 
 interface JuzVerseListProps {

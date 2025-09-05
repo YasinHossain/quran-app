@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
 import Link from 'next/link';
+import React from 'react';
+
 import { cn } from '@/lib/utils/cn';
 
 export const GLASS_CARD_VARIANTS = {

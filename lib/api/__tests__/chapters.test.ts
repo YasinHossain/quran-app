@@ -1,10 +1,10 @@
+import { API_BASE_URL } from '@/lib/api';
 import {
   getChapters,
   getSurahCoverUrl,
   getSurahList,
   clearSurahCoverCache,
 } from '@/lib/api/chapters';
-import { API_BASE_URL } from '@/lib/api';
 import { Chapter, Surah } from '@/types';
 
 jest.mock('@/app/(features)/surah/lib/surahImageMap', () => ({

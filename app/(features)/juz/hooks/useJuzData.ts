@@ -1,7 +1,9 @@
 import useSWR from 'swr';
-import { getJuz, getVersesByJuz } from '@/lib/api';
-import type { Juz } from '@/types';
+
 import { useVerseListing } from '@/app/(features)/surah/hooks/useVerseListing';
+import { getJuz, getVersesByJuz } from '@/lib/api';
+
+import type { Juz } from '@/types';
 
 export function useJuzData(juzId?: string) {
   const verseListing = useVerseListing({

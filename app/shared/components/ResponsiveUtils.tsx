@@ -1,8 +1,9 @@
 'use client';
-import type React from 'react';
 
 import { useResponsiveState, responsiveClasses, touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
+
+import type React from 'react';
 
 /**
  * Pre-built responsive components that adapt without breakpoint-specific code
@@ -81,7 +82,7 @@ interface ResponsiveInputProps extends React.InputHTMLAttributes<HTMLInputElemen
 /**
  * Input that adapts its sizing and layout for different screen sizes
  */
-export const const ResponsiveInput = ({
+export const ResponsiveInput = ({
   label,
   error,
   hint,
@@ -128,7 +129,7 @@ interface ResponsiveCardProps {
 /**
  * Card that adapts its spacing and interaction based on screen size
  */
-export const const ResponsiveCard = ({
+export const ResponsiveCard = ({
   children,
   className,
   padding = true,
@@ -195,7 +196,7 @@ interface ResponsiveGridProps {
 /**
  * Grid that automatically adjusts columns based on screen size
  */
-export const const ResponsiveGrid = ({
+export const ResponsiveGrid = ({
   children,
   columns = { mobile: 1, tablet: 2, desktop: 3 },
   gap = 'md',
@@ -249,7 +250,11 @@ export const useResponsiveHelpers = () => {
 /**
  * Layout components that replace multiple breakpoint-specific components
  */
-export const const ResponsiveStack = ({ children, className, spacing = 'md' }: {
+export const ResponsiveStack = ({
+  children,
+  className,
+  spacing = 'md',
+}: {
   children: React.ReactNode;
   className?: string;
   spacing?: 'sm' | 'md' | 'lg';
@@ -270,7 +275,13 @@ export const const ResponsiveStack = ({ children, className, spacing = 'md' }: {
   return <div className={cn('flex flex-col', getSpacing(), className)}>{children}</div>;
 };
 
-export const const ResponsiveRow = ({ children, className, wrap = true, align = 'center', justify = 'start' }: {
+export const ResponsiveRow = ({
+  children,
+  className,
+  wrap = true,
+  align = 'center',
+  justify = 'start',
+}: {
   children: React.ReactNode;
   className?: string;
   wrap?: boolean;

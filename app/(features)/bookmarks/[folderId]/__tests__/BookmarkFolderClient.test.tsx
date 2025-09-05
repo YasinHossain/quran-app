@@ -1,6 +1,8 @@
 import { render } from '@testing-library/react';
-import { BookmarkFolderClient } from '../BookmarkFolderClient';
+
 import { logger } from '@/src/infrastructure/monitoring/Logger';
+
+import { BookmarkFolderClient } from '../BookmarkFolderClient';
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: jest.fn() }),
@@ -55,4 +57,3 @@ describe('BookmarkFolderClient logging', () => {
     debugSpy.mockRestore();
   });
 });
-

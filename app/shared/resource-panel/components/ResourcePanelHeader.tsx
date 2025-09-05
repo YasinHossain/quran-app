@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+
 import { ResetIcon } from '@/app/shared/icons';
 
 interface ResourcePanelHeaderProps {

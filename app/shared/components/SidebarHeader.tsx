@@ -1,8 +1,9 @@
 'use client';
-import type React from 'react';
 
 import { CloseIcon, ArrowLeftIcon } from '@/app/shared/icons';
 import { cn } from '@/lib/utils/cn';
+
+import type React from 'react';
 
 interface SidebarHeaderProps {
   title: string;

@@ -1,9 +1,11 @@
-import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
-import SurahClient from '@/app/(features)/surah/[surahId]/SurahClient';
-import { Verse } from '@/types';
-import * as api from '@/lib/api';
 import useSWRInfinite from 'swr/infinite';
+
+import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
+import * as api from '@/lib/api';
 import { identity } from '@/tests/mocks';
+import { Verse } from '@/types';
+
+import SurahClient from '@/app/(features)/surah/[surahId]/SurahClient';
 
 jest.mock('react', () => {
   const actual = jest.requireActual('react');

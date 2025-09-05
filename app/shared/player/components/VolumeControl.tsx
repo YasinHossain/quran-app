@@ -1,5 +1,6 @@
-import { memo } from 'react';
 import * as Slider from '@radix-ui/react-slider';
+import { memo } from 'react';
+
 import { VolumeIcon, VolumeOffIcon } from '@/app/shared/icons';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 

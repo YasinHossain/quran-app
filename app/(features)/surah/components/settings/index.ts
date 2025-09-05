@@ -8,3 +8,9 @@ export { SettingsContentWrapper } from './SettingsContentWrapper';
 export { SettingsPanels } from './SettingsPanels';
 export { SettingsHeader } from './SettingsHeader';
 export { SettingsTabs } from './SettingsTabs';
+export type {
+  SettingsSidebarProps,
+  SettingsContentProps,
+  SettingsContentWrapperProps,
+  SettingsPanelsProps,
+} from './types';

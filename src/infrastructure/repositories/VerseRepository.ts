@@ -1,9 +1,9 @@
-import { IVerseRepository } from '../../domain/repositories/IVerseRepository';
-import { Verse } from '../../domain/entities/Verse';
-import { Translation } from '../../domain/value-objects/Translation';
 import * as apiVerses from '../../../lib/api/verses';
 import * as apiSearch from '../../../lib/api/verses';
 import { Verse as ApiVerse } from '../../../types';
+import { Verse } from '../../domain/entities/Verse';
+import { IVerseRepository } from '../../domain/repositories/IVerseRepository';
+import { Translation } from '../../domain/value-objects/Translation';
 import { logger } from '../monitoring/Logger';
 
 /**

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+
 import juzData from '@/data/juz.json';
 
 interface JuzSummary {

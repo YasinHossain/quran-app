@@ -2,10 +2,12 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { TranslationIcon } from '@/app/shared/icons';
-import { CollapsibleSection } from '../CollapsibleSection';
+
 import { useSettings } from '@/app/providers/SettingsContext';
+import { TranslationIcon } from '@/app/shared/icons';
 import { SelectionBox } from '@/app/shared/SelectionBox';
+
+import { CollapsibleSection } from '../CollapsibleSection';
 
 interface TranslationSettingsProps {
   onTranslationPanelOpen: () => void;
@@ -77,4 +79,3 @@ export const TranslationSettings = ({
     </>
   );
 };
-

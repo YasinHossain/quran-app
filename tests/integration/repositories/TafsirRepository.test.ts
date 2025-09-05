@@ -1,6 +1,6 @@
-import { TafsirRepository } from '../../../src/infrastructure/repositories/TafsirRepository';
-import { logger, MemoryTransport, LogLevel } from '../../../src/infrastructure/monitoring';
 import { apiFetch } from '../../../lib/api/client';
+import { logger, MemoryTransport, LogLevel } from '../../../src/infrastructure/monitoring';
+import { TafsirRepository } from '../../../src/infrastructure/repositories/TafsirRepository';
 
 jest.mock('../../../lib/api/client', () => ({
   apiFetch: jest.fn(),
@@ -34,8 +34,6 @@ describe('TafsirRepository logging', () => {
     const entries = memory.getEntries();
     expect(entries).toHaveLength(1);
     expect(entries[0].level).toBe(LogLevel.WARN);
-    expect(entries[0].message).toBe(
-      'Primary tafsir API failed, trying fallback'
-    );
+    expect(entries[0].message).toBe('Primary tafsir API failed, trying fallback');
   });
 });

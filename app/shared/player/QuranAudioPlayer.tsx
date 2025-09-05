@@ -1,19 +1,22 @@
 'use client';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { CloseIcon, SlidersIcon } from '@/app/shared/icons';
 import Image from 'next/image';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+
+import { CloseIcon, SlidersIcon } from '@/app/shared/icons';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { useAudioPlayer } from '@/app/shared/player/hooks/useAudioPlayer';
-import { usePlayerKeyboard } from '@/app/shared/player/hooks/usePlayerKeyboard';
 import { usePlaybackCompletion } from '@/app/shared/player/hooks/usePlaybackCompletion';
-import { TrackInfo } from './components/TrackInfo';
-import { TransportControls } from './components/TransportControls';
-import { Timeline } from './components/Timeline';
-import { PlayerOptions } from './components/PlayerOptions';
-import { SpeedControl } from './components/SpeedControl';
-import { PlaybackOptionsModal } from './components/PlaybackOptionsModal';
+import { usePlayerKeyboard } from '@/app/shared/player/hooks/usePlayerKeyboard';
 import { Button } from '@/app/shared/ui/Button';
 import { iconClasses } from '@/lib/responsive';
+
+import { PlaybackOptionsModal } from './components/PlaybackOptionsModal';
+import { PlayerOptions } from './components/PlayerOptions';
+import { SpeedControl } from './components/SpeedControl';
+import { Timeline } from './components/Timeline';
+import { TrackInfo } from './components/TrackInfo';
+import { TransportControls } from './components/TransportControls';
+
 import type { Track } from './types';
 
 /**

@@ -7,12 +7,21 @@
  * Required imports for architecture-compliant testing:
  */
 
-import React from 'react';
 import { screen, fireEvent, waitFor } from '@testing-library/react';
+import { act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { renderHook, act } from '@testing-library/react';
+import React from 'react';
 
 // Architecture-compliant testing utilities
+import { 
+  renderWithSpecificProviders,
+  renderHookWithProviders,
+  createContextTestSuite,
+} from '@/app/testUtils/contextTestUtils';
+import { 
+  PerformanceTester,
+  createPerformanceTestSuite,
+} from '@/app/testUtils/performanceTestUtils';
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import { 
   mockViewport, 
@@ -21,19 +30,6 @@ import {
   assertTouchFriendly,
   BREAKPOINTS,
 } from '@/app/testUtils/responsiveTestUtils';
-import { 
-  PerformanceTester,
-  testMemoization,
-  createPerformanceTestSuite,
-} from '@/app/testUtils/performanceTestUtils';
-import { 
-  renderWithSpecificProviders,
-  renderHookWithProviders,
-  testSettingsContextIntegration,
-  testAudioContextIntegration,
-  testBookmarkContextIntegration,
-  createContextTestSuite,
-} from '@/app/testUtils/contextTestUtils';
 
 // Component under test
 import { ExampleComponent } from '../ExampleComponent';

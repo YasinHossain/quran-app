@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState, RefObject } from 'react';
-import type { RepeatOptions } from '../types';
+
 import { Verse } from '@/types';
+
 import { useSurahRepeat } from './useSurahRepeat';
+
+import type { RepeatOptions } from '../types';
 
 interface Options {
   audioRef: RefObject<HTMLAudioElement | null>;

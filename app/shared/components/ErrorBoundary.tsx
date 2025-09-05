@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import React, { useCallback } from 'react';
+
 import { ErrorHandler } from '@/src/infrastructure/errors';
 
 interface ErrorBoundaryState {
@@ -88,9 +89,7 @@ function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps) {
             </svg>
           </div>
           <div className="ml-3">
-            <h3 className="text-lg font-medium text-foreground">
-              Something went wrong
-            </h3>
+            <h3 className="text-lg font-medium text-foreground">Something went wrong</h3>
           </div>
         </div>
 

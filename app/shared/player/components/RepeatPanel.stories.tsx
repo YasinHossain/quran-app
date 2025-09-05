@@ -1,7 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
+
 import { RepeatPanel } from './RepeatPanel';
+
 import type { RepeatOptions } from '../types';
+import type { Meta, StoryObj } from '@storybook/react';
 
 export const meta: Meta<typeof RepeatPanel> = {
   title: 'Player/RepeatPanel',

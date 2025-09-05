@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
 import { ResizeObserver as ResizeObserverPolyfill } from '@juggle/resize-observer';
+import { useEffect, useRef, useState } from 'react';
 
 export const useListHeight = (isOpen: boolean) => {
   const listContainerRef = useRef<HTMLDivElement>(null);

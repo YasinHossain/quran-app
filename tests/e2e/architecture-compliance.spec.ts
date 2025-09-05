@@ -4,7 +4,7 @@
  * @requires @playwright/test
  */
 
-import { test, expect, Page, Browser } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 
 /**
  * Architecture compliance test utilities

@@ -1,7 +1,7 @@
 'use client';
-import type React from 'react';
-
 import { GripVerticalIcon, CloseIcon } from '@/app/shared/icons';
+
+import type React from 'react';
 
 interface ArabicFont {
   id: number;
@@ -82,4 +82,3 @@ export const ArabicFontSelectionList = ({
     </div>
   </div>
 );
-

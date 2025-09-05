@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+
 import { SearchIcon } from '../icons';
 
 type SearchVariant = 'main' | 'default' | 'glass' | 'header' | 'panel';

@@ -1,7 +1,3 @@
-import { memo } from 'react';
-
-import type { Params } from '@/types';
-
 import { SurahView } from '../components';
 
 interface SurahPageProps {

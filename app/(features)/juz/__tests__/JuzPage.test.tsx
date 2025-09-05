@@ -1,8 +1,8 @@
-import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import { JuzClient } from '@/app/(features)/juz/[juzId]/JuzClient';
-import { Verse, Juz } from '@/types';
+import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import * as api from '@/lib/api';
 import { identity } from '@/tests/mocks';
+import { Verse, Juz } from '@/types';
 
 jest.mock('react', () => {
   const actual = jest.requireActual('react');

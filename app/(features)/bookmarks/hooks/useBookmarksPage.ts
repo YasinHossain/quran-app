@@ -1,7 +1,9 @@
-import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import React, { useState, useMemo } from 'react';
+
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useModal } from '@/app/shared/hooks/useModal';
+
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 
 export const useBookmarksPage = () => {

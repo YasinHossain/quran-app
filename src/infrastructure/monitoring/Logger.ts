@@ -43,7 +43,6 @@ export interface ILoggerTransport {
   flush?(): void | Promise<void>;
 }
 
-
 /**
  * Main Logger class
  */
@@ -268,7 +267,6 @@ export class Logger {
     this.transports = [];
   }
 }
-
 
 // Export singleton instances
 export const logger = Logger.getInstance();

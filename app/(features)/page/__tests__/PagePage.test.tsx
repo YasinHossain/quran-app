@@ -1,9 +1,10 @@
 import { act } from '@testing-library/react';
-import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
+
 import QuranPage from '@/app/(features)/page/[pageId]/page';
-import { Verse } from '@/types';
+import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import * as api from '@/lib/api';
 import { identity } from '@/tests/mocks';
+import { Verse } from '@/types';
 
 jest.mock('react', () => {
   const actual = jest.requireActual('react');

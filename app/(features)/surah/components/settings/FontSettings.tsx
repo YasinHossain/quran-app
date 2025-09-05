@@ -2,11 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FontSettingIcon } from '@/app/shared/icons';
-import { CollapsibleSection } from '../CollapsibleSection';
+
 import { useSettings } from '@/app/providers/SettingsContext';
-import { useFontSize } from '../../hooks/useFontSize';
+import { FontSettingIcon } from '@/app/shared/icons';
 import { SelectionBox } from '@/app/shared/SelectionBox';
+
+import { useFontSize } from '../../hooks/useFontSize';
+import { CollapsibleSection } from '../CollapsibleSection';
 
 interface FontSettingsProps {
   onArabicFontPanelOpen: () => void;
@@ -87,4 +89,3 @@ export const FontSettings = ({
     </CollapsibleSection>
   );
 };
-

@@ -1,9 +1,9 @@
 'use client';
 import { memo, useCallback } from 'react';
 
+import { useTheme } from '@/app/providers/ThemeContext';
 import { SunIcon, MoonIcon } from '@/app/shared/icons';
 import { GlassCard } from '@/app/shared/ui';
-import { useTheme } from '@/app/providers/ThemeContext';
 
 interface HomeHeaderProps {
   className?: string;

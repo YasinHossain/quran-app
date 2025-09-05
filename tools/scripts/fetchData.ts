@@ -5,6 +5,7 @@
  * surah ranges. Surah metadata is fetched at runtime and is not included here.
  */
 import { writeFile } from 'fs/promises';
+
 import { getJuzMeta, surahNamesEn } from 'quran-meta';
 
 interface JuzMeta {

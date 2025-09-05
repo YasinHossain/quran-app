@@ -1,18 +1,16 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useTheme } from '@/app/providers/ThemeContext';
+
 import { useSettings } from '@/app/providers/SettingsContext';
+import { useTheme } from '@/app/providers/ThemeContext';
 import { getTranslations } from '@/lib/api/translations';
-import { TranslationResource } from '@/types';
 import { useSelectableResources } from '@/lib/hooks/useSelectableResources';
-import {
-  capitalizeLanguageName,
-  scrollTabs,
-  updateScrollState,
-} from './translationPanel.utils';
-import { initialTranslationsData } from './translationPanel.data';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { TranslationResource } from '@/types';
+
+import { initialTranslationsData } from './translationPanel.data';
+import { capitalizeLanguageName, scrollTabs, updateScrollState } from './translationPanel.utils';
 
 export const MAX_TRANSLATION_SELECTIONS = 5;
 

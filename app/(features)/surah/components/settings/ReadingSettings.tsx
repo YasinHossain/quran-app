@@ -1,7 +1,9 @@
 'use client';
 
 import React from 'react';
+
 import { BookReaderIcon } from '@/app/shared/icons';
+
 import { CollapsibleSection } from '../CollapsibleSection';
 
 interface ReadingSettingsProps {
@@ -22,4 +24,3 @@ export const ReadingSettings = ({ isOpen = false, onToggle }: ReadingSettingsPro
     </CollapsibleSection>
   );
 };
-

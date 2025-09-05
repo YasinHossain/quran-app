@@ -1,4 +1,5 @@
 import { act } from '@testing-library/react';
+
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 /**

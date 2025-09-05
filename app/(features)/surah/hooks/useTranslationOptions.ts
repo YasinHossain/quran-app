@@ -1,7 +1,9 @@
 import { useMemo } from 'react';
 import useSWR from 'swr';
+
 import { getTranslations, getWordTranslations } from '@/lib/api';
 import { WORD_LANGUAGE_LABELS } from '@/lib/text/wordLanguages';
+
 import type { TranslationResource } from '@/types';
 
 export interface WordLanguageOption {

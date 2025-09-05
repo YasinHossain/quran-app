@@ -1,8 +1,10 @@
- 'use client';
+'use client';
 
 import { motion } from 'framer-motion';
-import { BookmarkCard } from '../../components/BookmarkCard';
+
 import { Bookmark } from '@/types';
+
+import { BookmarkCard } from '../../components/BookmarkCard';
 
 interface PinnedVersesListProps {
   pinnedVerses: Bookmark[];

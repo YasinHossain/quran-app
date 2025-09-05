@@ -1,8 +1,10 @@
-import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
+import React from 'react';
+
 import { getSurahList } from '@/lib/api';
-import type { MockProps } from '@/tests/mocks';
 import { Surah } from '@/types';
+
+import type { MockProps } from '@/tests/mocks';
 
 // Mock the API call
 jest.mock('@/lib/api', () => ({

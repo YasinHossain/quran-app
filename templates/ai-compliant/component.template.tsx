@@ -9,11 +9,13 @@
 
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { useSettings } from '@/app/providers/SettingsContext';
-import { useAudio } from '@/app/providers/AudioContext';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { useSettings } from '@/app/providers/SettingsContext';
 
 import type { ComponentData, ComponentAction } from '@/types';
+
+import { useAudio } from '@/app/providers/AudioContext';
+
 
 interface ComponentNameProps {
   id: string;

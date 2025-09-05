@@ -2,13 +2,14 @@
 
 // app/(features)/surah/[surahId]/components/Verse.tsx
 import { memo, useCallback, useEffect, useRef } from 'react';
-import { Verse as VerseType, Translation } from '@/types';
-import { useAudio } from '@/app/shared/player/context/AudioContext';
-import { useSettings } from '@/app/providers/SettingsContext';
+
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
+import { useSettings } from '@/app/providers/SettingsContext';
+import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { ResponsiveVerseActions } from '@/app/shared/ResponsiveVerseActions';
 import { VerseArabic } from '@/app/shared/VerseArabic';
+import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
+import { Verse as VerseType, Translation } from '@/types';
 
 interface VerseProps {
   verse: VerseType;
@@ -110,4 +111,3 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
     </div>
   );
 });
-

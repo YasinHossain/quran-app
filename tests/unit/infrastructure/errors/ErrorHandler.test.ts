@@ -1,9 +1,9 @@
-import { ErrorHandler } from '../../../../src/infrastructure/errors/ErrorHandler';
 import {
   AuthenticationError,
   AudioError,
   NetworkError,
 } from '../../../../src/infrastructure/errors/ApplicationError';
+import { ErrorHandler } from '../../../../src/infrastructure/errors/ErrorHandler';
 import { logger, MemoryTransport, LogLevel } from '../../../../src/infrastructure/monitoring';
 
 describe('ErrorHandler action logging', () => {

@@ -8,11 +8,12 @@ import React, {
   useMemo,
   useReducer,
   useRef,
-  useState,
 } from 'react';
+
 import { Settings } from '@/types';
-import { ARABIC_FONTS, defaultSettings, loadSettings, saveSettings } from './settingsStorage';
+
 import { reducer } from './settingsReducer';
+import { ARABIC_FONTS, defaultSettings, loadSettings, saveSettings } from './settingsStorage';
 
 // Debounce interval for persisting to localStorage.
 // Shorter intervals save sooner but risk more writes; longer ones delay persistence.
@@ -41,17 +42,30 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
  * the {@link useSettings} hook to read or update them.
  */
 export const SettingsProvider = ({ children }: { children: React.ReactNode }) => {
-  const [settings, dispatch] = useReducer(reducer, defaultSettings, loadSettings);
+  // Initialize with defaults on both server and client for hydration consistency.
+  // Load from localStorage after mount to avoid SSR/CSR mismatch.
+  const [settings, dispatch] = useReducer(reducer, defaultSettings);
 
   const settingsTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const latestSettings = useRef(settings);
+  const hasLoadedFromStorage = useRef(false);
 
-  // Settings are already loaded by the useReducer initializer, no need to load again
+  // Load settings from storage on client after mount
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const loaded = loadSettings(defaultSettings);
+    hasLoadedFromStorage.current = true;
+    dispatch({ type: 'SET_SETTINGS', value: loaded });
+    // also keep latest ref in sync
+    latestSettings.current = loaded;
+  }, []);
 
   // Save settings when changed (debounced)
   useEffect(() => {
     latestSettings.current = settings;
     if (typeof window === 'undefined') return;
+    // Avoid saving initial defaults before we've attempted loading from storage
+    if (!hasLoadedFromStorage.current) return;
 
     if (settingsTimeoutRef.current) {
       clearTimeout(settingsTimeoutRef.current);

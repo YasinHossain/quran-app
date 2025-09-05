@@ -120,7 +120,7 @@ const config = {
       },
     },
   },
-  plugins: [require('@tailwindcss/container-queries')],
+  plugins: [import('@tailwindcss/container-queries')],
 };
 
 export default config;

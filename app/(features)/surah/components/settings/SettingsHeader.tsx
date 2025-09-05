@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+
 import { ArrowLeftIcon } from '@/app/shared/icons';
 
 interface SettingsHeaderProps {

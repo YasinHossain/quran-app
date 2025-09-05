@@ -1,18 +1,20 @@
 'use client';
-import type React from 'react';
 
 import { useState } from 'react';
+
 import { BookmarkIcon, PinIcon, ClockIcon, BrainIcon } from '@/app/shared/icons';
 import {
   BookmarkNavigationCard,
   BookmarkFolderCard,
   BookmarkVerseCard,
 } from '@/app/shared/ui/cards';
+
 import type {
   BookmarkNavigationContent,
   SectionId,
 } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 import type { Folder } from '@/types/bookmark';
+import type React from 'react';
 
 interface BookmarksContentProps {
   activeSection?: SectionId;

@@ -1,6 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils/cn';
+
 import type { ListItemProps, NavigationItemProps } from '@/types/components';
 
 export const ListItem = ({
@@ -30,7 +31,7 @@ export const ListItem = ({
   );
 };
 
-export const const NavigationItem = ({
+export const NavigationItem = ({
   href,
   icon: Icon,
   label,

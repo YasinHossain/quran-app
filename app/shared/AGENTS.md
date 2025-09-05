@@ -51,7 +51,7 @@ import { applyArabicFont } from '@/lib/tafsir/applyArabicFont';
 
 export const VerseArabic = memo(function VerseArabic({ verse, className }) {
   const { settings } = useSettings();
-  
+
   const arabicText = applyArabicFont(verse.text_uthmani || verse.text_simple, {
     fontFamily: settings.arabicFontFamily,
     showTajweed: settings.showTajweed,
@@ -151,10 +151,10 @@ export const Panel = memo(function Panel({ children, className, title, descripti
 ```typescript
 export function useModal(initialOpen = false) {
   const [isOpen, setIsOpen] = useState(initialOpen);
-  
+
   const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => setIsOpen(false), []);
-  const toggle = useCallback(() => setIsOpen(prev => !prev), []);
+  const toggle = useCallback(() => setIsOpen((prev) => !prev), []);
 
   return { isOpen, open, close, toggle } as const;
 }
@@ -167,18 +167,26 @@ export function useSelection<T>(initialSelection: T[] = []) {
   const [selected, setSelected] = useState(new Set(initialSelection));
 
   const isSelected = useCallback((item: T) => selected.has(item), [selected]);
-  const select = useCallback((item: T) => setSelected(prev => new Set(prev).add(item)), []);
-  const deselect = useCallback((item: T) => setSelected(prev => {
-    const newSet = new Set(prev);
-    newSet.delete(item);
-    return newSet;
-  }), []);
-  const toggle = useCallback((item: T) => setSelected(prev => {
-    const newSet = new Set(prev);
-    if (newSet.has(item)) newSet.delete(item);
-    else newSet.add(item);
-    return newSet;
-  }), []);
+  const select = useCallback((item: T) => setSelected((prev) => new Set(prev).add(item)), []);
+  const deselect = useCallback(
+    (item: T) =>
+      setSelected((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(item);
+        return newSet;
+      }),
+    []
+  );
+  const toggle = useCallback(
+    (item: T) =>
+      setSelected((prev) => {
+        const newSet = new Set(prev);
+        if (newSet.has(item)) newSet.delete(item);
+        else newSet.add(item);
+        return newSet;
+      }),
+    []
+  );
   const clear = useCallback(() => setSelected(new Set()), []);
   const selectAll = useCallback((items: T[]) => setSelected(new Set(items)), []);
 
@@ -189,21 +197,25 @@ export function useSelection<T>(initialSelection: T[] = []) {
 ## Key Patterns
 
 ### Responsive Design
+
 - Use `useBreakpoint('md', 'below')` for mobile detection
 - Minimum 44px touch targets
 - Import icons from `@/app/shared/icons`
 
 ### Performance
+
 - Memoize all shared components with `memo()`
 - Use `useCallback` for event handlers
 - Proper dependency arrays for hooks
 
 ### Testing
+
 - Mock `@/lib/responsive` for responsive tests
 - Test both mobile and desktop variants
 - Include accessibility testing
 
 ### Development Checklist
+
 - [ ] Component memoized with `memo()`
 - [ ] Responsive (mobile/desktop handling)
 - [ ] Performance optimized (callbacks memoized)

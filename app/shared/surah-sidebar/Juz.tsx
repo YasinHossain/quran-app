@@ -1,6 +1,7 @@
-import type { Chapter } from '@/types';
-import { getSurahByPage, JUZ_START_PAGES } from '@/lib/utils/surah-navigation';
 import { JuzNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
+import { getSurahByPage, JUZ_START_PAGES } from '@/lib/utils/surah-navigation';
+
+import type { Chapter } from '@/types';
 
 interface JuzSummary {
   number: number;

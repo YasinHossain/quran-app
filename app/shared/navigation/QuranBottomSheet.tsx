@@ -1,14 +1,17 @@
 'use client';
 
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { IconX, IconBook, IconHash, IconFileText } from '@tabler/icons-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { SearchInput } from '../components/SearchInput';
-import type { Surah } from '@/types';
-import { getSurahList } from '@/lib/api';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+
 import juzData from '@/data/juz.json';
+import { getSurahList } from '@/lib/api';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
+
+import { SearchInput } from '../components/SearchInput';
+
+import type { Surah } from '@/types';
 
 interface QuranBottomSheetProps {
   isOpen: boolean;
@@ -52,18 +55,14 @@ export const QuranBottomSheet = memo(function QuranBottomSheet({
   const filteredSurahs = useMemo(
     () =>
       surahs.filter(
-        (s) =>
-          s.name.toLowerCase().includes(term) ||
-          s.number.toString().includes(searchTerm)
+        (s) => s.name.toLowerCase().includes(term) || s.number.toString().includes(searchTerm)
       ),
     [surahs, term, searchTerm]
   );
   const filteredJuzs = useMemo(
     () =>
       juzs.filter(
-        (j) =>
-          j.name.toLowerCase().includes(term) ||
-          j.number.toString().includes(searchTerm)
+        (j) => j.name.toLowerCase().includes(term) || j.number.toString().includes(searchTerm)
       ),
     [juzs, term, searchTerm]
   );

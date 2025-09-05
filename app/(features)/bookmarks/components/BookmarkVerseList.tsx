@@ -1,10 +1,12 @@
 'use client';
 
-import React from 'react';
 import { motion } from 'framer-motion';
+import React from 'react';
+
 import { VerseCard as VerseComponent } from '@/app/(features)/surah/components';
-import type { Verse as VerseType } from '@/types';
 import { Spinner } from '@/app/shared/Spinner';
+
+import type { Verse as VerseType } from '@/types';
 
 interface BookmarkVerseListProps {
   verses: VerseType[];
@@ -52,4 +54,3 @@ export const BookmarkVerseList = ({
     </div>
   );
 };
-

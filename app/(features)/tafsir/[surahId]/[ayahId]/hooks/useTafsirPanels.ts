@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 
 export const useTafsirPanels = (verseKey: string) => {

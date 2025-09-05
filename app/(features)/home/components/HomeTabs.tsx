@@ -1,8 +1,9 @@
 'use client';
 import React, { useState } from 'react';
-import { SurahTab } from './SurahTab';
+
 import { JuzTab } from './JuzTab';
 import { PageTab } from './PageTab';
+import { SurahTab } from './SurahTab';
 
 interface HomeTabsProps {
   searchQuery: string;

@@ -1,16 +1,16 @@
-import { BookmarkService } from '../../../../src/domain/services/BookmarkService';
 import { Bookmark } from '../../../../src/domain/entities/Bookmark';
 import { Verse } from '../../../../src/domain/entities/Verse';
-import { BookmarkPosition } from '../../../../src/domain/value-objects/BookmarkPosition';
-import { StoredBookmark } from '../../../../src/domain/value-objects/StoredBookmark';
-import { IBookmarkRepository } from '../../../../src/domain/repositories/IBookmarkRepository';
-import { IVerseRepository } from '../../../../src/domain/repositories/IVerseRepository';
 import {
   BookmarkAlreadyExistsError,
   VerseNotFoundError,
   BookmarkNotFoundError,
   UnauthorizedBookmarkError,
 } from '../../../../src/domain/errors/DomainErrors';
+import { IBookmarkRepository } from '../../../../src/domain/repositories/IBookmarkRepository';
+import { IVerseRepository } from '../../../../src/domain/repositories/IVerseRepository';
+import { BookmarkService } from '../../../../src/domain/services/BookmarkService';
+import { BookmarkPosition } from '../../../../src/domain/value-objects/BookmarkPosition';
+import { StoredBookmark } from '../../../../src/domain/value-objects/StoredBookmark';
 
 // Mock repositories
 const mockBookmarkRepository: jest.Mocked<IBookmarkRepository> = {

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Header } from '@/app/shared/Header';
-import { SettingsSidebar, TranslationPanel } from '@/app/(features)/surah/components';
-import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
+import React, { useState } from 'react';
+
 import { HeaderVisibilityProvider } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { SettingsSidebar, TranslationPanel } from '@/app/(features)/surah/components';
+import { Header } from '@/app/shared/Header';
+import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 // mock translation hook

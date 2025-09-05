@@ -1,4 +1,5 @@
 import { RemoteTransport, LogLevel, type LogEntry, logger } from '@infra/monitoring';
+
 import { fetchWithTimeout } from '../../../../lib/api/client';
 
 jest.mock('../../../../lib/api/client', () => ({

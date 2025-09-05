@@ -1,9 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+
 import { useSidebar } from '@/app/providers/SidebarContext';
-import type { Surah } from '@/types';
 import { getSurahList } from '@/lib/api';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
+
+import type { Surah } from '@/types';
 
 export const useVerseNavigation = (surahId: string, ayahId: string) => {
   const router = useRouter();

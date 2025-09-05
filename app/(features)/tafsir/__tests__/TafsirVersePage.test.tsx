@@ -1,11 +1,12 @@
-import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import userEvent from '@testing-library/user-event';
-import TafsirVersePage from '@/app/(features)/tafsir/[surahId]/[ayahId]/page';
-import { Verse } from '@/types';
 import useSWR from 'swr';
+
+import TafsirVersePage from '@/app/(features)/tafsir/[surahId]/[ayahId]/page';
+import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { identity } from '@/tests/mocks';
+import { Verse } from '@/types';
 
 jest.mock('@/lib/api', () => ({
   getSurahList: jest.fn().mockResolvedValue([

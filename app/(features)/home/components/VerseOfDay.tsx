@@ -2,14 +2,15 @@
 
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
-import type { Word } from '@/types';
-
-import { Spinner } from '@/app/shared/Spinner';
-import { applyTajweed } from '@/lib/text/tajweed';
-import { stripHtml } from '@/lib/text/stripHtml';
-import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
-import { useVerseOfDay } from '../hooks/useVerseOfDay';
 import { useSettings } from '@/app/providers/SettingsContext';
+import { Spinner } from '@/app/shared/Spinner';
+import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
+import { stripHtml } from '@/lib/text/stripHtml';
+import { applyTajweed } from '@/lib/text/tajweed';
+
+import { useVerseOfDay } from '../hooks/useVerseOfDay';
+
+import type { Word } from '@/types';
 
 interface VerseOfDayProps {
   className?: string;
@@ -172,4 +173,3 @@ export const VerseOfDay = memo(function VerseOfDay({
     </div>
   );
 });
-

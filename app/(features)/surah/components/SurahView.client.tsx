@@ -1,12 +1,14 @@
 'use client';
 
 import React from 'react';
-import { SettingsSidebar } from './settings/SettingsSidebar';
+
+import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { getVersesByChapter } from '@/lib/api';
+
 import { useVerseListing, useSurahPanels } from '../hooks';
+import { SettingsSidebar } from './settings/SettingsSidebar';
 import { SurahAudioPlayer } from './SurahAudioPlayer';
 import { SurahVerseList } from './SurahVerseList';
-import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
 interface SurahViewProps {
   surahId: string;

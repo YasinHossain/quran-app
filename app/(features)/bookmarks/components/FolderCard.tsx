@@ -1,8 +1,9 @@
 'use client';
-import type React from 'react';
 
 import { EnhancedFolderCard } from '@/app/shared/ui/cards/EnhancedFolderCard';
 import { Folder } from '@/types';
+
+import type React from 'react';
 
 interface FolderCardProps {
   folder: Folder;

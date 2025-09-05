@@ -1,11 +1,11 @@
 'use client';
 import { memo, useCallback, useState } from 'react';
 
-import { VerseOfDay } from './VerseOfDay';
-import { HomePageBackground } from './HomePageBackground';
 import { HomeHeader } from './HomeHeader';
+import { HomePageBackground } from './HomePageBackground';
 import { HomeSearch } from './HomeSearch';
 import { HomeTabs } from './HomeTabs';
+import { VerseOfDay } from './VerseOfDay';
 
 interface HomePageProps {
   className?: string;

@@ -1,13 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { EllipsisHIcon } from '../icons';
-import { BookmarkModal } from '../components/BookmarkModal';
-import { MobileBottomSheet } from './MobileBottomSheet';
+
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
+
+import { MobileBottomSheet } from './MobileBottomSheet';
 import { VerseActionsProps } from './types';
 import { defaultShare } from './utils';
+import { BookmarkModal } from '../components/BookmarkModal';
+import { EllipsisHIcon } from '../icons';
 
 export const MobileVerseActions = ({
   verseKey,

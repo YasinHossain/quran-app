@@ -1,5 +1,5 @@
-import { IBookmarkRepository } from '../../domain/repositories/IBookmarkRepository';
 import { Bookmark } from '../../domain/entities/Bookmark';
+import { IBookmarkRepository } from '../../domain/repositories/IBookmarkRepository';
 import { BookmarkPosition } from '../../domain/value-objects/BookmarkPosition';
 import { StoredBookmark, isStoredBookmark } from '../../domain/value-objects/StoredBookmark';
 import { logger } from '../monitoring/Logger';

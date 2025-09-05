@@ -1,15 +1,17 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { useState, useMemo, useEffect } from 'react';
+
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { CloseIcon } from '@/app/shared/icons';
-import { Folder } from '@/types';
 import { touchClasses } from '@/lib/responsive';
-import { TabNavigation } from './TabNavigation';
+import { cn } from '@/lib/utils';
+import { Folder } from '@/types';
+
 import { BookmarkTab } from './BookmarkTab';
 import { PinTab } from './PinTab';
+import { TabNavigation } from './TabNavigation';
 import { BookmarkModalProps } from './types';
 
 export const BookmarkModal = ({

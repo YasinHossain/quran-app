@@ -1,5 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
+
 import { useVerseListing } from '@/app/(features)/surah/hooks/useVerseListing';
+
 import type { Verse } from '@/types';
 
 const verses: Verse[] = [

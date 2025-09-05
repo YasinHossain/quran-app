@@ -1,7 +1,9 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { ErrorBoundary } from '../ErrorBoundary';
+import React from 'react';
+
 import { ErrorHandler } from '@/src/infrastructure/errors';
+
+import { ErrorBoundary } from '../ErrorBoundary';
 
 jest.mock('@/src/infrastructure/errors', () => ({
   ErrorHandler: { handle: jest.fn() },

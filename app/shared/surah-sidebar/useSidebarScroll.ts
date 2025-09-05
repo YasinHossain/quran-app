@@ -1,7 +1,8 @@
 import { useRef } from 'react';
+
 import { useSidebar } from '@/app/providers/SidebarContext';
-import { useScrollPersistence } from '@/lib/hooks/useScrollPersistence';
 import { useScrollCentering } from '@/lib/hooks/useScrollCentering';
+import { useScrollPersistence } from '@/lib/hooks/useScrollPersistence';
 
 type TabKey = 'Surah' | 'Juz' | 'Page';
 

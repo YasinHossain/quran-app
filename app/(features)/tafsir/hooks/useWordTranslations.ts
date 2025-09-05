@@ -1,10 +1,12 @@
 import { useMemo, useCallback } from 'react';
-import useSWR from 'swr';
 import { useTranslation } from 'react-i18next';
+import useSWR from 'swr';
+
 import { useSettings } from '@/app/providers/SettingsContext';
 import { getWordTranslations } from '@/lib/api';
-import { WORD_LANGUAGE_LABELS } from '@/lib/text/wordLanguages';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
+import { WORD_LANGUAGE_LABELS } from '@/lib/text/wordLanguages';
+
 import type { LanguageCode } from '@/lib/text/languageCodes';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;

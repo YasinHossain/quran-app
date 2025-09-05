@@ -3,8 +3,10 @@
  * Comprehensive testing of responsive image optimization
  */
 
-import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
+import React from 'react';
+
 import { renderResponsive, devicePresets } from '../../../../lib/__tests__/responsive-test-utils';
 import {
   ResponsiveImage,
@@ -12,7 +14,7 @@ import {
   generateResponsiveUrls,
   useImagePreload,
 } from '../ResponsiveImage';
-import { renderHook } from '@testing-library/react';
+
 import type { BreakpointKey, ComponentVariant } from '@/lib/responsive';
 
 // Mock useResponsiveState hook

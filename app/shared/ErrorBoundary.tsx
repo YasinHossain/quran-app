@@ -1,7 +1,6 @@
 'use client';
 import type React from 'react';
 
-
 interface ErrorBoundaryProps {
   children: React.ReactNode;
   fallback?: React.ComponentType<{ error: Error; resetError: () => void }>;
@@ -15,7 +14,10 @@ interface ErrorBoundaryState {
 const DefaultErrorFallback = ({
   error,
   resetError,
-}: { error: Error; resetError: () => void }): JSX.Element => (
+}: {
+  error: Error;
+  resetError: () => void;
+}): JSX.Element => (
   <div className="min-h-[50vh] flex items-center justify-center p-4">
     <div className="max-w-md w-full text-center space-y-4">
       <div className="text-error-text">
@@ -85,4 +87,3 @@ export const useErrorHandler = () => {
 
   return { handleError, resetError };
 };
-

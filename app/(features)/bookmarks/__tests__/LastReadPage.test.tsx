@@ -1,7 +1,9 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import LastReadPage from '../last-read/page';
+import React from 'react';
+
 import { mockTag, type MockProps } from '@/tests/mocks';
+
+import LastReadPage from '../last-read/page';
 
 const push = jest.fn();
 

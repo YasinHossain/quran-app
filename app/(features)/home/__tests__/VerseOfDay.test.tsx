@@ -1,9 +1,10 @@
 import { screen, act, waitFor } from '@testing-library/react';
-import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
+
 import { VerseOfDay } from '@/app/(features)/home/components/VerseOfDay';
-import { Verse } from '@/types';
+import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import { getRandomVerse } from '@/lib/api';
 import { getVerseByKey } from '@/lib/api/verses';
+import { Verse } from '@/types';
 
 jest.mock('@/lib/api', () => ({
   getRandomVerse: jest.fn(),

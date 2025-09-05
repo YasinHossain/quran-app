@@ -1,8 +1,9 @@
 'use client';
-import { Verse as VerseType, Word } from '@/types';
 import { useSettings } from '@/app/providers/SettingsContext';
-import { applyTajweed } from '@/lib/text/tajweed';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
+import { applyTajweed } from '@/lib/text/tajweed';
+import { Verse as VerseType, Word } from '@/types';
+
 import type { LanguageCode } from '@/lib/text/languageCodes';
 
 interface VerseArabicProps {

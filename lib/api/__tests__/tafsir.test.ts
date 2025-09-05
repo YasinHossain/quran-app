@@ -1,5 +1,5 @@
-import { getTafsirResources } from '@/lib/api/tafsir';
 import { API_BASE_URL } from '@/lib/api';
+import { getTafsirResources } from '@/lib/api/tafsir';
 import { TafsirResource } from '@/types';
 
 describe('getTafsirResources', () => {

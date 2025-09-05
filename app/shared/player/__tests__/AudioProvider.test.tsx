@@ -1,7 +1,9 @@
-import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import { AudioProvider, useAudio } from '../context/AudioContext';
+import React from 'react';
+
 import { RECITERS } from '@/lib/audio/reciters';
+
+import { AudioProvider, useAudio } from '../context/AudioContext';
 
 const Consumer = () => {
   const { reciter, volume, playbackRate, setReciter, setVolume, setPlaybackRate } = useAudio();

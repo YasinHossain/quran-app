@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useAudio } from '../context/AudioContext';
+
 import { RECITERS } from '@/lib/audio/reciters';
+
+import { useAudio } from '../context/AudioContext';
+
 import type { RepeatOptions } from '../types';
 
 /**

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+
 import { TabToggle } from '@/app/shared/ui/TabToggle';
 
 interface SettingsTabsProps {

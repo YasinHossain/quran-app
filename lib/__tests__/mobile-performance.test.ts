@@ -4,6 +4,7 @@
  */
 
 import { renderHook, act } from '@testing-library/react';
+
 import { testPerformance, simulateDevice, createMatchMediaMock } from './responsive-test-utils';
 import { useBreakpoint, useResponsiveState } from '../responsive';
 

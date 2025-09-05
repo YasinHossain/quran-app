@@ -1,4 +1,5 @@
 import { memo, useCallback } from 'react';
+
 import type { RepeatOptions } from '@/app/shared/player/types';
 
 interface RepeatModeSelectorProps {
@@ -99,4 +100,3 @@ export const RepeatModeSelector = memo(function RepeatModeSelector({
     </div>
   );
 });
-

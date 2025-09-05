@@ -1,9 +1,11 @@
 'use client';
 import React, { useEffect, useMemo, useState } from 'react';
-import { getSurahList } from '@/lib/api';
+
 import { GlassCard, NumberBadge } from '@/app/shared/ui';
-import type { Surah } from '@/types';
+import { getSurahList } from '@/lib/api';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
+
+import type { Surah } from '@/types';
 
 interface SurahTabProps {
   searchQuery: string;

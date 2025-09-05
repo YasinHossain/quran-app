@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
 import { motion } from 'framer-motion';
+import React from 'react';
+
 import { CreateFolderModal } from './components/CreateFolderModal';
 import { FolderGrid } from './components/FolderGrid';
 import { BookmarksLayout } from './components/shared/BookmarksLayout';

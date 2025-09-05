@@ -1,11 +1,13 @@
 import { useMemo } from 'react';
-import useSWR from 'swr';
 import { useTranslation } from 'react-i18next';
+import useSWR from 'swr';
+
 import { useSettings } from '@/app/providers/SettingsContext';
-import { container } from '@/src/infrastructure/di/container';
 import { GetTafsirResourcesUseCase } from '@/src/application/use-cases/GetTafsirResources';
-import type { TafsirResource } from '@/types';
+import { container } from '@/src/infrastructure/di/container';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
+
+import type { TafsirResource } from '@/types';
 
 export const useTafsirOptions = () => {
   const { t } = useTranslation();
@@ -22,7 +24,8 @@ export const useTafsirOptions = () => {
       return result.tafsirs.map((t) => ({ id: t.id, name: t.displayName, lang: t.language }));
     },
     {
-      onError: (error) => logger.error('Failed to load tafsir resources:', undefined, error as Error),
+      onError: (error) =>
+        logger.error('Failed to load tafsir resources:', undefined, error as Error),
     }
   );
   const tafsirOptions: TafsirResource[] = useMemo(() => data || [], [data]);

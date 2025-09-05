@@ -10,5 +10,6 @@ interface TranslationSearchProps {
 export const TranslationSearch = ({
   searchTerm,
   setSearchTerm,
-}: TranslationSearchProps): JSX.Element => <TranslationSearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} />;
-
+}: TranslationSearchProps): JSX.Element => (
+  <TranslationSearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+);

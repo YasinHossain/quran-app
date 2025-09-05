@@ -3,8 +3,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { getVerseById, getVerseByKey } from '@/lib/api';
-import type { Bookmark, Folder, Verse } from '@/types';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
+
+import type { Bookmark, Folder, Verse } from '@/types';
 
 // Simple cache for verses
 const verseCache = new Map<string, Verse>();
@@ -20,10 +21,7 @@ export function clearCache(): void {
 // Expose cache for testing purposes
 export const __verseCache = verseCache;
 
-export async function getVerseWithCache(
-  verseId: string,
-  translationId: number
-): Promise<Verse> {
+export async function getVerseWithCache(verseId: string, translationId: number): Promise<Verse> {
   const cacheKey = `${verseId}-${translationId}`;
 
   if (verseCache.has(cacheKey)) {
@@ -118,4 +116,3 @@ export function useBookmarkFolderData({ folderId }: UseBookmarkFolderDataParams)
     loadingVerses,
   } as const;
 }
-

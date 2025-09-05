@@ -1,7 +1,9 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import PinnedAyahPage from '../pinned/page';
+import React from 'react';
+
 import { mockTag, type MockProps } from '@/tests/mocks';
+
+import PinnedAyahPage from '../pinned/page';
 
 const push = jest.fn();
 

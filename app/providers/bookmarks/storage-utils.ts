@@ -1,4 +1,5 @@
 import { Folder, Bookmark, MemorizationPlan } from '@/types';
+
 import {
   BOOKMARKS_STORAGE_KEY,
   OLD_BOOKMARKS_STORAGE_KEY,

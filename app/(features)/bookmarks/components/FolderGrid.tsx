@@ -1,11 +1,13 @@
 'use client';
 
-import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FolderCard } from './FolderCard';
-import { FolderSettingsModal } from './FolderSettingsModal';
+import { useState } from 'react';
+
 import { DeleteFolderModal } from './DeleteFolderModal';
 import { EmptyBookmarks, EmptySearch } from './EmptyStates';
+import { FolderCard } from './FolderCard';
+import { FolderSettingsModal } from './FolderSettingsModal';
+
 import type { Folder } from '@/types';
 
 interface FolderGridProps {

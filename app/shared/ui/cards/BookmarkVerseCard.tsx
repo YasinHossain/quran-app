@@ -1,7 +1,9 @@
 'use client';
 
-import { BaseCard, BaseCardProps } from '../BaseCard';
 import { cn } from '@/lib/utils/cn';
+
+import { BaseCard, BaseCardProps } from '../BaseCard';
+
 import type { Bookmark } from '@/types/bookmark';
 
 /**

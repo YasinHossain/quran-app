@@ -1,6 +1,8 @@
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 
 export const useLastReadPage = () => {

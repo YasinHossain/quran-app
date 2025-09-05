@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
+
 import { getJuzByPage, getSurahByPage, JUZ_START_PAGES } from '@/lib/utils/surah-navigation';
+
 import type { Chapter } from '@/types';
 
 interface Args {

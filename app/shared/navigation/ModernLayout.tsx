@@ -1,13 +1,16 @@
 'use client';
-import type React from 'react';
 
-import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
+
+import { useNavigation } from '@/app/providers/NavigationContext';
+
 import { QuranBottomSheet } from './QuranBottomSheet';
 import { SwipeContainer } from './SwipeContainer';
 import { SwipeIndicator } from './SwipeIndicator';
 import { AdaptiveNavigation } from '../components/AdaptiveNavigation';
-import { useNavigation } from '@/app/providers/NavigationContext';
+
+import type React from 'react';
 
 interface ModernLayoutProps {
   children: React.ReactNode;

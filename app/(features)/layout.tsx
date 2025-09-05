@@ -1,14 +1,15 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { Header } from '@/app/shared/Header';
-import { IconSidebar } from '@/app/shared/IconSidebar';
-import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
-import { ModernLayout } from '@/app/shared/navigation/ModernLayout';
+
 import {
   HeaderVisibilityProvider,
   useHeaderVisibility,
 } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { Header } from '@/app/shared/Header';
+import { IconSidebar } from '@/app/shared/IconSidebar';
+import { ModernLayout } from '@/app/shared/navigation/ModernLayout';
+import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
   const { isHidden } = useHeaderVisibility();

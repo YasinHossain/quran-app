@@ -1,13 +1,15 @@
 'use client';
-import type React from 'react';
 
-import { IconHome, IconBook, IconBookmark} from '@tabler/icons-react';
-import type { TablerIcon } from '@tabler/icons-react';
-import { usePathname } from 'next/navigation';
+import { IconHome, IconBook, IconBookmark } from '@tabler/icons-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
+import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useResponsiveState, responsiveClasses, touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
-import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+
+import type { TablerIcon } from '@tabler/icons-react';
+import type React from 'react';
 
 interface NavItem {
   id: string;
@@ -118,7 +120,11 @@ export const AdaptiveNavigation = ({
 /**
  * Mobile variant - bottom navigation
  */
-const const MobileNavigation = ({ navItems, onItemClick, className }: {
+const MobileNavigation = ({
+  navItems,
+  onItemClick,
+  className,
+}: {
   navItems: NavItem[];
   onItemClick: (item: NavItem, e: React.MouseEvent) => void;
   className?: string;
@@ -199,7 +205,11 @@ const const MobileNavigation = ({ navItems, onItemClick, className }: {
 /**
  * Tablet variant - can be bottom nav or compact sidebar
  */
-const const TabletNavigation = ({ navItems, onItemClick, className }: {
+const TabletNavigation = ({
+  navItems,
+  onItemClick,
+  className,
+}: {
   navItems: NavItem[];
   onItemClick: (item: NavItem, e: React.MouseEvent) => void;
   className?: string;
@@ -212,7 +222,11 @@ const const TabletNavigation = ({ navItems, onItemClick, className }: {
 /**
  * Desktop variant - sidebar or top navigation
  */
-const const DesktopNavigation = ({ navItems, onItemClick, className }: {
+const DesktopNavigation = ({
+  navItems,
+  onItemClick,
+  className,
+}: {
   navItems: NavItem[];
   onItemClick: (item: NavItem, e: React.MouseEvent) => void;
   className?: string;

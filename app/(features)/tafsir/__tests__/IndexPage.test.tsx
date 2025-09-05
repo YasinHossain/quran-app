@@ -1,11 +1,13 @@
-import { renderWithProviders, screen, waitFor } from '@/app/testUtils/renderWithProviders';
-import TafsirIndexPage from '@/app/(features)/tafsir/page';
 import React from 'react';
+
+import TafsirIndexPage from '@/app/(features)/tafsir/page';
+import { renderWithProviders, screen, waitFor } from '@/app/testUtils/renderWithProviders';
+
 import type { MockProps } from '@/tests/mocks';
 
-jest.mock('next/link', () =>
-  ({ href, children }: MockProps<{ href: string }>) => <a href={href}>{children}</a>
-);
+jest.mock('next/link', () => ({ href, children }: MockProps<{ href: string }>) => (
+  <a href={href}>{children}</a>
+));
 jest.mock('@/lib/api', () => ({
   getSurahList: jest.fn().mockResolvedValue([
     {

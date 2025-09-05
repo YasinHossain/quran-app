@@ -1,5 +1,6 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import React from 'react';
+
 import { testAccessibility } from '../../../lib/__tests__/responsive-test-utils';
 import { ResponsiveVerseActions } from '../ResponsiveVerseActions';
 

@@ -1,8 +1,10 @@
 import { screen, within, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
 import { HomePage } from '@/app/(features)/home/components/HomePage';
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import { Verse } from '@/types';
+
 import type { MockProps } from '@/tests/mocks';
 
 jest.mock('@/lib/api', () => ({
@@ -36,9 +38,9 @@ jest.mock('@/lib/api', () => ({
 }));
 
 // Mock next/link to simply render an anchor tag
-jest.mock('next/link', () =>
-  ({ children, href }: MockProps<{ href: string }>) => <a href={href}>{children}</a>
-);
+jest.mock('next/link', () => ({ children, href }: MockProps<{ href: string }>) => (
+  <a href={href}>{children}</a>
+));
 
 // Mock VerseOfDay to avoid fetch during tests
 jest.mock('@/app/(features)/home/components/VerseOfDay', () => () => <div>VerseOfDay</div>);

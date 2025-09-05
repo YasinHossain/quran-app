@@ -1,12 +1,14 @@
 'use client';
-import type React from 'react';
 
-import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CloseIcon } from '@/app/shared/icons';
-import { Folder } from '@/types';
+import { useState, useEffect } from 'react';
+
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { CloseIcon } from '@/app/shared/icons';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { Folder } from '@/types';
+
+import type React from 'react';
 
 interface FolderSettingsModalProps {
   isOpen: boolean;
@@ -128,10 +130,7 @@ export const FolderSettingsModal = ({
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
-              <h2
-                id="folder-settings-title"
-                className="text-xl font-semibold text-foreground"
-              >
+              <h2 id="folder-settings-title" className="text-xl font-semibold text-foreground">
                 {getModalTitle()}
               </h2>
               <button

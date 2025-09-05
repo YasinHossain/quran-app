@@ -18,6 +18,7 @@ Comprehensive testing strategy using Jest, React Testing Library, and custom tes
 ## Configuration
 
 ### jest.config.js
+
 ```javascript
 const nextJest = require('next/jest');
 const createJestConfig = nextJest({ dir: './' });
@@ -27,31 +28,35 @@ const customJestConfig = {
   testEnvironment: 'jsdom',
   moduleNameMapping: { '^@/(.*)$': '<rootDir>/$1' },
   coverageThreshold: {
-    global: { branches: 80, functions: 80, lines: 80, statements: 80 }
-  }
+    global: { branches: 80, functions: 80, lines: 80, statements: 80 },
+  },
 };
 
 module.exports = createJestConfig(customJestConfig);
 ```
 
 ### jest.setup.js
+
 ```javascript
 import '@testing-library/jest-dom';
 
 // Mock Next.js router
 jest.mock('next/router', () => ({
-  useRouter: () => ({ route: '/', pathname: '/', query: {}, push: jest.fn() })
+  useRouter: () => ({ route: '/', pathname: '/', query: {}, push: jest.fn() }),
 }));
 
 // Mock IntersectionObserver
 global.IntersectionObserver = jest.fn(() => ({
-  observe: jest.fn(), disconnect: jest.fn(), unobserve: jest.fn()
+  observe: jest.fn(),
+  disconnect: jest.fn(),
+  unobserve: jest.fn(),
 }));
 ```
 
 ## Test Utilities
 
 ### Provider Wrapper
+
 ```typescript
 // __tests__/test-utils.tsx
 import { render } from '@testing-library/react';
@@ -75,6 +80,7 @@ export * from '@testing-library/react';
 ## Component Testing Patterns
 
 ### Basic Component Test
+
 ```typescript
 import { renderWithProviders, screen, fireEvent } from '@/__tests__/test-utils';
 import Component from '../Component';
@@ -84,9 +90,9 @@ describe('Component', () => {
 
   it('renders and handles interaction', () => {
     renderWithProviders(<Component {...defaultProps} />);
-    
+
     expect(screen.getByText('Expected Text')).toBeInTheDocument();
-    
+
     fireEvent.click(screen.getByRole('button'));
     expect(defaultProps.onAction).toHaveBeenCalled();
   });
@@ -94,6 +100,7 @@ describe('Component', () => {
 ```
 
 ### Hook Testing
+
 ```typescript
 import { renderHook, act } from '@testing-library/react';
 import { AllTheProviders } from '@/__tests__/test-utils';
@@ -102,7 +109,7 @@ import { useCustomHook } from '../useCustomHook';
 describe('useCustomHook', () => {
   it('manages state correctly', () => {
     const { result } = renderHook(() => useCustomHook('initial'), {
-      wrapper: AllTheProviders
+      wrapper: AllTheProviders,
     });
 
     expect(result.current.state).toBe('initial');
@@ -117,6 +124,7 @@ describe('useCustomHook', () => {
 ```
 
 ### Async Testing
+
 ```typescript
 import { waitFor } from '@testing-library/react';
 
@@ -125,7 +133,7 @@ it('handles async operations', async () => {
   global.fetch = mockFetch;
 
   renderWithProviders(<AsyncComponent />);
-  
+
   await waitFor(() => {
     expect(screen.getByText('Data loaded')).toBeInTheDocument();
   });
@@ -133,6 +141,7 @@ it('handles async operations', async () => {
 ```
 
 ### Context Testing
+
 ```typescript
 import { renderHook } from '@testing-library/react';
 import { SettingsProvider, useSettings } from '../SettingsContext';
@@ -150,23 +159,25 @@ describe('SettingsContext', () => {
 ## Mocking Strategies
 
 ### API Mocking
+
 ```typescript
 // Mock SWR
 jest.mock('swr', () => ({
   __esModule: true,
-  default: jest.fn(() => ({ data: mockData, error: null, isLoading: false }))
+  default: jest.fn(() => ({ data: mockData, error: null, isLoading: false })),
 }));
 
 // Mock fetch
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
-    json: () => Promise.resolve(mockData)
+    json: () => Promise.resolve(mockData),
   })
 );
 ```
 
 ### Component Mocking
+
 ```typescript
 // Mock complex components
 jest.mock('@/app/shared/player/QuranAudioPlayer', () => {
@@ -179,6 +190,7 @@ jest.mock('@/app/shared/player/QuranAudioPlayer', () => {
 ## Best Practices
 
 ### Accessibility Testing
+
 ```typescript
 import { axe, toHaveNoViolations } from 'jest-axe';
 expect.extend(toHaveNoViolations);
@@ -191,29 +203,31 @@ it('has no accessibility violations', async () => {
 ```
 
 ### User Event Testing
+
 ```typescript
 import userEvent from '@testing-library/user-event';
 
 it('handles user interactions', async () => {
   const user = userEvent.setup();
   renderWithProviders(<Component />);
-  
+
   await user.click(screen.getByRole('button'));
   await user.type(screen.getByRole('textbox'), 'test input');
 });
 ```
 
 ### Error Boundary Testing
+
 ```typescript
 it('handles errors gracefully', () => {
   const ThrowError = () => { throw new Error('Test error'); };
-  
+
   renderWithProviders(
     <ErrorBoundary>
       <ThrowError />
     </ErrorBoundary>
   );
-  
+
   expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
 });
 ```

@@ -1,8 +1,9 @@
-import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import userEvent from '@testing-library/user-event';
-import { TafsirTabs } from '@/app/(features)/tafsir/[surahId]/[ayahId]/components/TafsirTabs';
-import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 import useSWR from 'swr';
+
+import { TafsirTabs } from '@/app/(features)/tafsir/[surahId]/[ayahId]/components/TafsirTabs';
+import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
+import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 jest.mock('swr', () => {

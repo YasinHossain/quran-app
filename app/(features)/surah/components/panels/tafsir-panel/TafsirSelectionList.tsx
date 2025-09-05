@@ -1,9 +1,11 @@
 'use client';
-import type React from 'react';
 
 import { GripVerticalIcon, CloseIcon } from '@/app/shared/icons';
 import { TafsirResource } from '@/types';
+
 import { MAX_TAFSIR_SELECTIONS } from './tafsirPanel.utils';
+
+import type React from 'react';
 
 interface TafsirSelectionListProps {
   orderedSelection: number[];

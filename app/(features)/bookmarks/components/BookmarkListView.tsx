@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Folder, Bookmark } from '@/types';
 import { motion } from 'framer-motion';
-import { ArrowLeftIcon } from '@/app/shared/icons';
-import { BookmarkCard } from './BookmarkCard';
+import React, { useState, useEffect } from 'react';
 import { FixedSizeList as List } from 'react-window';
+
+import { ArrowLeftIcon } from '@/app/shared/icons';
+import { Folder, Bookmark } from '@/types';
+
+import { BookmarkCard } from './BookmarkCard';
 
 interface BookmarkListViewProps {
   folder: Folder;

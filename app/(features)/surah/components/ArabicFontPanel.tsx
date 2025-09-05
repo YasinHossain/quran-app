@@ -1,9 +1,10 @@
 'use client';
 
 import { AlertIcon, ResetIcon } from '@/app/shared/icons';
-import { useArabicFontPanel } from './panels/arabic-font-panel/useArabicFontPanel';
 import { ResourceList } from '@/app/shared/resource-panel';
 import { useListHeight } from '@/app/shared/resource-panel/hooks/useListHeight';
+
+import { useArabicFontPanel } from './panels/arabic-font-panel/useArabicFontPanel';
 
 interface ArabicFontPanelProps {
   isOpen: boolean;

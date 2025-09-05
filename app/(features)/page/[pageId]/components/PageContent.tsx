@@ -1,10 +1,10 @@
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import type { Verse as VerseType } from '@/types';
 
 import { VerseCard } from '@/app/(features)/surah/components';
 import { Spinner } from '@/app/shared/Spinner';
+
+import type { Verse as VerseType } from '@/types';
 
 interface PageContentProps {
   verses: VerseType[];
@@ -84,4 +84,3 @@ export const PageContent = memo(function PageContent({
     </main>
   );
 });
-

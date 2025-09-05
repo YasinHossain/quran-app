@@ -1,6 +1,7 @@
-import type { Chapter } from '@/types';
-import { getJuzByPage } from '@/lib/utils/surah-navigation';
 import { SurahNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
+import { getJuzByPage } from '@/lib/utils/surah-navigation';
+
+import type { Chapter } from '@/types';
 
 interface Props {
   chapters: Chapter[];

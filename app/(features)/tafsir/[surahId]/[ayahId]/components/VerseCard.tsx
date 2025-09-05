@@ -1,11 +1,11 @@
 'use client';
-import { Verse as VerseType, Translation } from '@/types';
-import { useAudio } from '@/app/shared/player/context/AudioContext';
-import { useSettings } from '@/app/providers/SettingsContext';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
+import { useSettings } from '@/app/providers/SettingsContext';
+import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { ResponsiveVerseActions } from '@/app/shared/ResponsiveVerseActions';
 import { VerseArabic } from '@/app/shared/VerseArabic';
+import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
+import { Verse as VerseType, Translation } from '@/types';
 
 interface VerseCardProps {
   verse: VerseType;

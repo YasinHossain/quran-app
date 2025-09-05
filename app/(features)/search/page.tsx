@@ -1,10 +1,11 @@
 'use client';
-import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { searchVerses } from '@/lib/api';
-import { Verse as VerseType } from '@/types';
+import { Suspense, useEffect, useState } from 'react';
+
 import { VerseCard } from '@/app/(features)/surah/components';
+import { searchVerses } from '@/lib/api';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { Verse as VerseType } from '@/types';
 
 function SearchContent() {
   const searchParams = useSearchParams();

@@ -1,4 +1,5 @@
 import { Mic2 } from 'lucide-react';
+
 import { IconProps } from './IconProps';
 
 export const MicIcon = ({ size = 18, className = '', ...rest }: IconProps) => (

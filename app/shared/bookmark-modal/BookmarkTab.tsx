@@ -1,12 +1,14 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
+
 import { PlusIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
-import { FolderSearch } from './FolderSearch';
+
 import { CreateFolderForm } from './CreateFolderForm';
 import { FolderList } from './FolderList';
+import { FolderSearch } from './FolderSearch';
 import { BookmarkTabProps } from './types';
 
 export const BookmarkTab = ({

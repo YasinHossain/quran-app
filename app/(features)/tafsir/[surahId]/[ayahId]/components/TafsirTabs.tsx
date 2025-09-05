@@ -1,12 +1,13 @@
 'use client';
 import { useEffect, useState, useMemo } from 'react';
-import { Spinner } from '@/app/shared/Spinner';
-import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
-import { applyArabicFont } from '@/lib/tafsir/applyArabicFont';
-import { container } from '@/src/infrastructure/di/container';
-import { GetTafsirResourcesUseCase } from '@/src/application/use-cases/GetTafsirResources';
 import useSWR from 'swr';
+
 import { useSettings } from '@/app/providers/SettingsContext';
+import { Spinner } from '@/app/shared/Spinner';
+import { applyArabicFont } from '@/lib/tafsir/applyArabicFont';
+import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
+import { GetTafsirResourcesUseCase } from '@/src/application/use-cases/GetTafsirResources';
+import { container } from '@/src/infrastructure/di/container';
 
 interface TafsirTabsProps {
   verseKey: string;

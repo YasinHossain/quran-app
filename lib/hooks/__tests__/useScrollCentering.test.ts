@@ -1,4 +1,5 @@
 import { renderHook } from '@testing-library/react';
+
 import { useScrollCentering } from '@/lib/hooks/useScrollCentering';
 
 type Tab = 'Surah' | 'Juz' | 'Page';

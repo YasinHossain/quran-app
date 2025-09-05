@@ -1,6 +1,7 @@
-import React from 'react';
 import * as Slider from '@radix-ui/react-slider';
 import * as Tooltip from '@radix-ui/react-tooltip';
+import React from 'react';
+
 import { responsiveClasses } from '@/lib/responsive';
 
 interface Props {
@@ -12,14 +13,7 @@ interface Props {
   total: string;
 }
 
-export function Timeline({
-  current,
-  duration,
-  setSeek,
-  interactable,
-  elapsed,
-  total,
-}: Props) {
+export function Timeline({ current, duration, setSeek, interactable, elapsed, total }: Props) {
   return (
     <div className="flex-1 flex items-center gap-3">
       <div className="flex-1">

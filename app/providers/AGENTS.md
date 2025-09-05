@@ -37,17 +37,17 @@ interface SettingsContextType {
 export const SettingsProvider = ({ children }: { children: React.ReactNode }) => {
   const [settings, dispatch] = useReducer(reducer, defaultSettings, loadSettings);
   const settingsTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  
+
   // Debounced persistence
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (settingsTimeoutRef.current) clearTimeout(settingsTimeoutRef.current);
-    
+
     settingsTimeoutRef.current = setTimeout(() => {
       saveSettings(settings);
       settingsTimeoutRef.current = null;
     }, PERSIST_DEBOUNCE_MS);
-    
+
     return () => {
       if (settingsTimeoutRef.current) clearTimeout(settingsTimeoutRef.current);
     };
@@ -55,7 +55,7 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
 
   // Memoized actions
   const setSettings = useCallback((s: Settings) => dispatch({ type: 'SET_SETTINGS', value: s }), []);
-  
+
   const value = useMemo(() => ({
     settings,
     setSettings,
@@ -73,6 +73,7 @@ export const useSettings = () => {
 ```
 
 **Key Requirements:**
+
 - Use `useReducer` with separate reducer file
 - Implement debounced localStorage persistence
 - Memoize all callbacks and context value
@@ -109,11 +110,11 @@ const STORAGE_KEY = 'quran-app-settings';
 
 export function loadSettings(): Settings {
   if (typeof window === 'undefined') return defaultSettings;
-  
+
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return defaultSettings;
-    
+
     // Merge with defaults for version compatibility
     return { ...defaultSettings, ...JSON.parse(stored) };
   } catch (error) {
@@ -124,7 +125,7 @@ export function loadSettings(): Settings {
 
 export function saveSettings(settings: Settings): void {
   if (typeof window === 'undefined') return;
-  
+
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
   } catch (error) {
@@ -179,7 +180,7 @@ export class ProviderErrorBoundary extends Component<Props, State> {
   static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error };
   }
-  
+
   render() {
     if (this.state.hasError) {
       return <div>Something went wrong. <button onClick={() => window.location.reload()}>Reload</button></div>;
@@ -192,7 +193,7 @@ export class ProviderErrorBoundary extends Component<Props, State> {
 ## Development Checklist
 
 - [ ] Context follows reducer + storage pattern
-- [ ] All actions and state properly typed  
+- [ ] All actions and state properly typed
 - [ ] Context values and callbacks memoized
 - [ ] Storage operations wrapped in try/catch
 - [ ] Window checks for SSR compatibility

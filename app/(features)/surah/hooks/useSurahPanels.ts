@@ -1,6 +1,8 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
+
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import type { Settings } from '@/types';
 
@@ -32,15 +34,9 @@ export function useSurahPanels({
     [setIsTranslationPanelOpen]
   );
 
-  const openWordLanguagePanel = useCallback(
-    () => setIsWordPanelOpen(true),
-    [setIsWordPanelOpen]
-  );
+  const openWordLanguagePanel = useCallback(() => setIsWordPanelOpen(true), [setIsWordPanelOpen]);
 
-  const closeWordLanguagePanel = useCallback(
-    () => setIsWordPanelOpen(false),
-    [setIsWordPanelOpen]
-  );
+  const closeWordLanguagePanel = useCallback(() => setIsWordPanelOpen(false), [setIsWordPanelOpen]);
 
   const selectedTranslationName = useMemo(() => {
     // Use the first translation from translationIds array, fallback to translationId

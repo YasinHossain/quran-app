@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { SettingsSidebar } from '@/app/(features)/surah/components';
+
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
-import { PageContent } from './components/PageContent';
+import { SettingsSidebar } from '@/app/(features)/surah/components';
+
 import { PageAudioPlayer } from './components/PageAudioPlayer';
+import { PageContent } from './components/PageContent';
 import { usePageData } from './hooks/usePageData';
 
 interface PagePageProps {

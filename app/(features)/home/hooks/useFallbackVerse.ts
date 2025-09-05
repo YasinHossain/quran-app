@@ -2,8 +2,9 @@
 
 import { useCallback, useState } from 'react';
 import useSWR from 'swr';
-import { Verse } from '@/types';
+
 import { getVerseByKey } from '@/lib/api';
+import { Verse } from '@/types';
 
 // Curated verses that always work as fallback
 const FALLBACK_VERSE_KEYS = [

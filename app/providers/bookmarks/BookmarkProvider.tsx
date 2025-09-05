@@ -1,21 +1,12 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Folder, Bookmark, Chapter, MemorizationPlan } from '@/types';
+
 import { useSettings } from '@/app/providers/SettingsContext';
 import { getChapters } from '@/lib/api/chapters';
-import { BookmarkContext } from './BookmarkContext';
-import { BookmarkContextType } from './types';
-import {
-  loadBookmarksFromStorage,
-  saveBookmarksToStorage,
-  loadPinnedFromStorage,
-  savePinnedToStorage,
-  loadLastReadFromStorage,
-  saveLastReadToStorage,
-  loadMemorizationFromStorage,
-  saveMemorizationToStorage,
-} from './storage-utils';
+import { getVerseById, getVerseByKey } from '@/lib/api/verses';
+import { Folder, Bookmark, Chapter, MemorizationPlan } from '@/types';
+
 import {
   createNewFolder,
   findBookmarkInFolders,
@@ -27,7 +18,18 @@ import {
   createMemorizationPlan,
   updateMemorizationProgress,
 } from './bookmark-utils';
-import { getVerseById, getVerseByKey } from '@/lib/api/verses';
+import { BookmarkContext } from './BookmarkContext';
+import {
+  loadBookmarksFromStorage,
+  saveBookmarksToStorage,
+  loadPinnedFromStorage,
+  savePinnedToStorage,
+  loadLastReadFromStorage,
+  saveLastReadToStorage,
+  loadMemorizationFromStorage,
+  saveMemorizationToStorage,
+} from './storage-utils';
+import { BookmarkContextType } from './types';
 
 export const BookmarkProvider = ({ children }: { children: React.ReactNode }) => {
   const [folders, setFolders] = useState<Folder[]>([]);

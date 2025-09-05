@@ -1,10 +1,12 @@
 'use client';
 
 import React, { memo } from 'react';
-import { BaseCard, BaseCardProps } from '../BaseCard';
+
+import { ResponsiveVerseActions } from '@/app/shared/ResponsiveVerseActions';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { applyTajweed } from '@/lib/text/tajweed';
-import { ResponsiveVerseActions } from '@/app/shared/ResponsiveVerseActions';
+
+import { BaseCard, BaseCardProps } from '../BaseCard';
 
 /**
  * ContentBookmarkCard

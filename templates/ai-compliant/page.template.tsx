@@ -9,16 +9,16 @@
 
 import { memo, Suspense } from 'react';
 
-import { PageProvider } from '@/app/providers/PageProvider'; // If page needs specific context
-import { LoadingSpinner } from '@/app/shared/ui/LoadingSpinner';
 import { ErrorBoundary } from '@/app/shared/components/ErrorBoundary';
 
 import { PageContainer } from './components/PageContainer';
-import { PageHeader } from './components/PageHeader';
 import { PageContent } from './components/PageContent';
 import { PageFooter } from './components/PageFooter';
+import { PageHeader } from './components/PageHeader';
 
 import type { PageProps } from '@/types';
+
+import { PageProvider } from '@/app/providers/PageProvider'; // If page needs specific context
 
 interface PageNameProps {
   params: PageProps['params'];

@@ -1,5 +1,7 @@
 import Link from 'next/link';
+
 import { getSurahList } from '@/lib/api';
+
 import type { Surah } from '@/types';
 
 export default async function SurahIndexPage() {

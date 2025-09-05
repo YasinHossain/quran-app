@@ -1,4 +1,5 @@
 import { TafsirResource } from '@/types';
+
 import { apiFetch } from './client';
 
 interface ApiTafsirResource {

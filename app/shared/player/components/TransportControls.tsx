@@ -1,4 +1,5 @@
 import { memo } from 'react';
+
 import { SkipBackIcon, SkipForwardIcon, PlayIcon, PauseIcon } from '@/app/shared/icons';
 import { Button } from '@/app/shared/ui/Button';
 import { iconClasses } from '@/lib/responsive';

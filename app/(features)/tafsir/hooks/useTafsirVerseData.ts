@@ -1,13 +1,15 @@
 import useSWR from 'swr';
+
 import { useSettings } from '@/app/providers/SettingsContext';
 import { getVersesByChapter } from '@/lib/api';
-import { container } from '@/src/infrastructure/di/container';
 import { GetTafsirContentUseCase } from '@/src/application/use-cases/GetTafsirContent';
+import { container } from '@/src/infrastructure/di/container';
 import { Verse as VerseType } from '@/types';
-import { useTranslationOptions } from './useTranslationOptions';
+
 import { useTafsirOptions } from './useTafsirOptions';
-import { useWordTranslations } from './useWordTranslations';
+import { useTranslationOptions } from './useTranslationOptions';
 import { useVerseNavigation } from './useVerseNavigation';
+import { useWordTranslations } from './useWordTranslations';
 
 export const useTafsirVerseData = (surahId: string, ayahId: string) => {
   const { settings } = useSettings();

@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useEffect, useMemo } from 'react';
+
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+
 import { useModal } from './useModal';
 
 interface UseReaderClientOptions {

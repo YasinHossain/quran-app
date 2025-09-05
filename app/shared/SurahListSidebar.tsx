@@ -1,9 +1,11 @@
 'use client';
 import React, { useMemo } from 'react';
-import { Chapter } from '@/types';
-import { getChapters } from '@/lib/api';
 import useSWR from 'swr';
+
 import { useSidebar } from '@/app/providers/SidebarContext';
+import { getChapters } from '@/lib/api';
+import { Chapter } from '@/types';
+
 import { BaseSidebar } from './components/BaseSidebar';
 import { SurahListContent } from './components/SurahListContent';
 

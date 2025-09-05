@@ -2,14 +2,17 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react';
 import useSWR from 'swr';
-import { Verse } from '@/types';
-import { getSurahList } from '@/lib/api';
+
 import { useSettings } from '@/app/providers/SettingsContext';
-import { useRandomVerse } from './useRandomVerse';
-import { useFallbackVerse } from './useFallbackVerse';
-import { useVerseRotation } from './useVerseRotation';
-import type { Surah } from '@/types';
+import { getSurahList } from '@/lib/api';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { Verse } from '@/types';
+
+import { useFallbackVerse } from './useFallbackVerse';
+import { useRandomVerse } from './useRandomVerse';
+import { useVerseRotation } from './useVerseRotation';
+
+import type { Surah } from '@/types';
 
 interface UseVerseOfDayOptions {
   /**

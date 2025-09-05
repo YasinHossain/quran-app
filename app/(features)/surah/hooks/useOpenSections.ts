@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 const STORAGE_KEY = 'settings-sidebar-open-sections';

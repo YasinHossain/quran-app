@@ -1,9 +1,6 @@
+import { logger, MemoryTransport, LogLevel } from '../../../src/infrastructure/monitoring/Logger';
 import { BookmarkRepository } from '../../../src/infrastructure/repositories/BookmarkRepository';
-import {
-  logger,
-  MemoryTransport,
-  LogLevel,
-} from '../../../src/infrastructure/monitoring/Logger';
+
 import type { StoredBookmark } from '../../../src/domain/value-objects/StoredBookmark';
 
 describe('BookmarkRepository logging', () => {

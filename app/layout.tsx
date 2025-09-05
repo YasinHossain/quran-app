@@ -1,10 +1,6 @@
 // app/layout.tsx
 import './globals.css';
 import './fonts.css';
-import { TranslationProvider } from './providers/TranslationProvider';
-import { ClientProviders } from './providers/ClientProviders';
-import { ErrorBoundary } from './shared/components/ErrorBoundary';
-import localFont from 'next/font/local';
 import {
   Inter,
   Noto_Sans_Arabic,
@@ -12,7 +8,12 @@ import {
   Crimson_Text,
   Libre_Baskerville,
 } from 'next/font/google';
+import localFont from 'next/font/local';
 import { cookies } from 'next/headers';
+
+import { ClientProviders } from './providers/ClientProviders';
+import { TranslationProvider } from './providers/TranslationProvider';
+import { ErrorBoundary } from './shared/components/ErrorBoundary';
 
 const kfgqpc = localFont({
   src: '../public/fonts/KFGQPC-Uthman-Taha.ttf',

@@ -1,11 +1,13 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { useVerseListing } from '@/app/(features)/surah/hooks/useVerseListing';
 import { getSurahCoverUrl, getVersesByPage } from '@/lib/api';
 import { buildAudioUrl } from '@/lib/audio/reciters';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
-import type { LanguageCode } from '@/lib/text/languageCodes';
+
 import type { Track } from '@/app/shared/player/types';
-import { useVerseListing } from '@/app/(features)/surah/hooks/useVerseListing';
+import type { LanguageCode } from '@/lib/text/languageCodes';
 
 interface UsePageDataOptions {
   pageId: string;

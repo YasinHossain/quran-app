@@ -1,12 +1,14 @@
 'use client';
 import React, { useState } from 'react';
-import { SettingsSidebar } from '@/app/(features)/surah/components';
-import { useTafsirVerseData } from '../../hooks/useTafsirVerseData';
-import { AyahNavigation } from './components/AyahNavigation';
-import { TafsirViewer } from './components/TafsirViewer';
-import { TafsirAudioPlayer } from './components/TafsirAudioPlayer';
+
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { SettingsSidebar } from '@/app/(features)/surah/components';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
+
+import { AyahNavigation } from './components/AyahNavigation';
+import { TafsirAudioPlayer } from './components/TafsirAudioPlayer';
+import { TafsirViewer } from './components/TafsirViewer';
+import { useTafsirVerseData } from '../../hooks/useTafsirVerseData';
 
 interface TafsirVersePageProps {
   params: Promise<{ surahId: string; ayahId: string }>;

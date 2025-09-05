@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+
 import { useResponsiveFocus } from './focus';
 
 export type BreakpointKey = 'mobile' | 'tablet' | 'desktop' | 'wide';

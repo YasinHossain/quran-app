@@ -1,8 +1,9 @@
 'use client';
 
-import { Bookmark, Folder } from '@/types';
 import { BaseSidebar } from '@/app/shared/components/BaseSidebar';
 import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
+import { Bookmark, Folder } from '@/types';
+
 import { BookmarkFolderContent } from './BookmarkFolderContent';
 
 interface BookmarkFolderSidebarProps {

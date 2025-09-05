@@ -1,5 +1,5 @@
-import { searchVerses } from '@/lib/api/verses';
 import { API_BASE_URL } from '@/lib/api';
+import { searchVerses } from '@/lib/api/verses';
 
 describe('searchVerses', () => {
   afterEach(() => {

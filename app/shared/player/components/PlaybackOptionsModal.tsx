@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
+
 import { SlidersIcon, MicIcon, RepeatIcon } from '@/app/shared/icons';
+
 import { ReciterPanel } from './ReciterPanel';
 import { RepeatPanel } from './RepeatPanel';
 import { usePlaybackOptions } from '../hooks/usePlaybackOptions';

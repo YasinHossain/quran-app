@@ -1,7 +1,7 @@
 'use client';
-import type React from 'react';
-
 import { ChevronLeftIcon, ChevronRightIcon } from '@/app/shared/icons';
+
+import type React from 'react';
 
 interface ResourceTabsProps {
   languages: string[];
@@ -66,4 +66,3 @@ export const ResourceTabs = ({
     </button>
   </div>
 );
-

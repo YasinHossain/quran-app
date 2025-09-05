@@ -1,15 +1,18 @@
 'use client';
-import type React from 'react';
-import { useState } from 'react';
+import { IconSun, IconMoon, IconSettings, IconMenu2 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
-import { IconSun, IconMoon, IconSettings, IconMenu2 } from '@tabler/icons-react';
-import { SearchInput } from './components/SearchInput';
+import { useState } from 'react';
+
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { useSidebar } from '@/app/providers/SidebarContext';
 import { useTheme } from '@/app/providers/ThemeContext';
 import { useUIState } from '@/app/providers/UIStateContext';
-import { useSidebar } from '@/app/providers/SidebarContext';
 import { cn } from '@/lib/utils';
+
+import { SearchInput } from './components/SearchInput';
+
+import type React from 'react';
 
 export const Header = () => {
   const { isHidden } = useHeaderVisibility();

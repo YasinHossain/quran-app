@@ -10,16 +10,16 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { SettingsProvider } from '@/app/providers/SettingsContext';
-import { AudioProvider } from '@/app/providers/AudioContext';
 import { BookmarkProvider } from '@/app/providers/BookmarkContext';
-import { renderWithProviders } from '@/app/testUtils/contextTestUtils';
-import { validateResponsiveDesign } from '@/app/testUtils/responsiveTestUtils';
+import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { validatePerformanceOptimization } from '@/app/testUtils/performanceTestUtils';
+import { validateResponsiveDesign } from '@/app/testUtils/responsiveTestUtils';
 
 import { ComponentName } from '../ComponentName';
 
 import type { ComponentNameProps } from '../ComponentName';
+
+import { AudioProvider } from '@/app/providers/AudioContext';
 
 // ✅ REQUIRED: Mock external dependencies
 jest.mock('@/lib/api/client', () => ({

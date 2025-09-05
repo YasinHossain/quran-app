@@ -1,9 +1,10 @@
 'use client';
 
-import { Bookmark } from '@/types';
-import { useBookmarkVerse } from '../hooks/useBookmarkVerse';
-import { LoadingError } from '@/app/shared/LoadingError';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { LoadingError } from '@/app/shared/LoadingError';
+import { Bookmark } from '@/types';
+
+import { useBookmarkVerse } from '../hooks/useBookmarkVerse';
 
 interface BookmarkVerseSidebarProps {
   bookmarks: Bookmark[];
@@ -65,7 +66,7 @@ const VerseItem = ({ bookmark, isActive, onSelect }: VerseItemProps): JSX.Elemen
   );
 };
 
-export const const BookmarkVerseSidebar = ({
+export const BookmarkVerseSidebar = ({
   bookmarks,
   folder,
   activeVerseId,

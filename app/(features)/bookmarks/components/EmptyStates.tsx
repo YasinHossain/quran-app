@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+
 import { PlusIcon, BookmarkIcon, CheckIcon } from '@/app/shared/icons';
 
 interface EmptyBookmarksProps {
@@ -128,7 +129,7 @@ interface EmptySearchProps {
   onClearSearch: () => void;
 }
 
-export const const EmptySearch = ({ searchTerm, onClearSearch }: EmptySearchProps): JSX.Element => {
+export const EmptySearch = ({ searchTerm, onClearSearch }: EmptySearchProps): JSX.Element => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { useTheme } from '@/app/providers/ThemeContext';
+
 import { useSettings } from '@/app/providers/SettingsContext';
+import { useTheme } from '@/app/providers/ThemeContext';
+
 import { useTafsir } from './useTafsir';
-import { Tafsir } from '../../domain/entities/Tafsir';
 
 interface TafsirPanelData {
   id: number;

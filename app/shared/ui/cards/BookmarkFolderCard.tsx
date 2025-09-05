@@ -1,8 +1,10 @@
 'use client';
 
-import { BaseCard, BaseCardProps } from '../BaseCard';
 import { ChevronDownIcon } from '@/app/shared/icons';
 import { cn } from '@/lib/utils/cn';
+
+import { BaseCard, BaseCardProps } from '../BaseCard';
+
 import type { Folder } from '@/types/bookmark';
 
 /**

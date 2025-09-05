@@ -1,5 +1,7 @@
 import userEvent from '@testing-library/user-event';
+
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
+
 import { StandardNavigationCard } from '../StandardNavigationCard';
 
 beforeAll(() => {

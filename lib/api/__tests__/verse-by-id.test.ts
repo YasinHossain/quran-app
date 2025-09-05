@@ -1,6 +1,7 @@
-import { getVerseById } from '@/lib/api/verses';
 import { API_BASE_URL } from '@/lib/api';
+import { getVerseById } from '@/lib/api/verses';
 import { Verse } from '@/types';
+
 import type { RawVerse } from './apiMocks';
 
 describe('getVerseById', () => {

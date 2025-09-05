@@ -1,6 +1,8 @@
 import { renderHook, act } from '@testing-library/react';
-import { useSettingsSections } from '../useSettingsSections';
+
 import { logger } from '@/src/infrastructure/monitoring/Logger';
+
+import { useSettingsSections } from '../useSettingsSections';
 
 describe('useSettingsSections logging', () => {
   const originalEnv = process.env.NODE_ENV;
@@ -27,4 +29,3 @@ describe('useSettingsSections logging', () => {
     });
   });
 });
-

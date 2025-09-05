@@ -1,27 +1,11 @@
 'use client';
 
 import React from 'react';
-import { TranslationSettings } from './TranslationSettings';
-import { TafsirSettings } from './TafsirSettings';
-import { FontSettings } from './FontSettings';
-import { SettingsSidebarProps } from './SettingsSidebar';
 
-interface SettingsContentProps
-  extends Pick<
-    SettingsSidebarProps,
-    | 'onTranslationPanelOpen'
-    | 'onWordLanguagePanelOpen'
-    | 'onTafsirPanelOpen'
-    | 'selectedTranslationName'
-    | 'selectedTafsirName'
-    | 'selectedWordLanguageName'
-    | 'showTafsirSetting'
-  > {
-  activeTab: string;
-  openSections: string[];
-  onSectionToggle: (sectionId: string) => void;
-  onArabicFontPanelOpen: () => void;
-}
+import { FontSettings } from './FontSettings';
+import { TafsirSettings } from './TafsirSettings';
+import { TranslationSettings } from './TranslationSettings';
+import { SettingsContentProps } from './types';
 
 export const SettingsContent = ({
   activeTab,
@@ -73,4 +57,3 @@ export const SettingsContent = ({
 
   return null;
 };
-

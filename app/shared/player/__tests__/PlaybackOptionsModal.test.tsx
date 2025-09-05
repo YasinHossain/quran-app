@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
 import { fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React, { useEffect } from 'react';
+
 import { PlaybackOptionsModal } from '@/app/shared/player/components/PlaybackOptionsModal';
-import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
+import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 
 beforeAll(() => {
   Object.defineProperty(window, 'matchMedia', {

@@ -1,7 +1,12 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
+import { useState } from 'react';
+
+import { touchClasses } from '@/lib/responsive';
+import { cn } from '@/lib/utils';
+
+import { BookmarkModal } from '../components/BookmarkModal';
 import {
   PlayIcon,
   PauseIcon,
@@ -11,9 +16,6 @@ import {
   BookReaderIcon,
 } from '../icons';
 import { Spinner } from '../Spinner';
-import { BookmarkModal } from '../components/BookmarkModal';
-import { touchClasses } from '@/lib/responsive';
-import { cn } from '@/lib/utils';
 import { VerseActionsProps } from './types';
 import { defaultShare } from './utils';
 

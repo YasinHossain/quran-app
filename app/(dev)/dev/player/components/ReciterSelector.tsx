@@ -1,4 +1,5 @@
 import { memo, useCallback } from 'react';
+
 import type { Track } from '@/app/shared/player/types';
 
 interface ReciterSelectorProps {
@@ -46,4 +47,3 @@ export const ReciterSelector = memo(function ReciterSelector({
     </div>
   );
 });
-

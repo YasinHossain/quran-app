@@ -1,9 +1,10 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 
+import { logger } from '@/src/infrastructure/monitoring/Logger';
+
 import { GetTafsirResourcesUseCase } from '../../application/use-cases/GetTafsirResources';
 import { Tafsir } from '../../domain/entities/Tafsir';
 import { container } from '../../infrastructure/di/container';
-import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 interface UseTafsirResult {
   tafsirs: Tafsir[];

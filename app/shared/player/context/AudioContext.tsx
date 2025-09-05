@@ -8,8 +8,10 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Verse } from '@/types';
+
 import { RECITERS } from '@/lib/audio/reciters';
+import { Verse } from '@/types';
+
 import type { Reciter, RepeatOptions } from '@/app/shared/player/types';
 
 interface AudioContextType {

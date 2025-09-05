@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+
 import { getRandomVerse } from '@/lib/api/verses';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 

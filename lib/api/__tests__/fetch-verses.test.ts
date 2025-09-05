@@ -1,5 +1,6 @@
-import { fetchVerses } from '@/lib/api/verses';
 import { API_BASE_URL } from '@/lib/api';
+import { fetchVerses } from '@/lib/api/verses';
+
 import type { RawVerse } from './apiMocks';
 
 describe('fetchVerses', () => {

@@ -1,23 +1,8 @@
 'use client';
 
-import { SettingsTabs } from './SettingsTabs';
 import { SettingsContent } from './SettingsContent';
-
-interface SettingsContentWrapperProps {
-  activeTab: string;
-  onTabChange: (tab: string) => void;
-  tabOptions: Array<{ value: string; label: string }>;
-  openSections: string[];
-  onSectionToggle: (section: string) => void;
-  onArabicFontPanelOpen: () => void;
-  onTranslationPanelOpen: () => void;
-  onWordLanguagePanelOpen: () => void;
-  onTafsirPanelOpen?: () => void;
-  selectedTranslationName: string;
-  selectedTafsirName?: string;
-  selectedWordLanguageName: string;
-  showTafsirSetting: boolean;
-}
+import { SettingsTabs } from './SettingsTabs';
+import { SettingsContentWrapperProps } from './types';
 
 export const SettingsContentWrapper = ({
   activeTab,

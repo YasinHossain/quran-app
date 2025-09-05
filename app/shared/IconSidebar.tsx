@@ -1,8 +1,9 @@
 // app/components/IconSidebar.tsx
 'use client';
-import { HomeIcon, BookmarkOutlineIcon, GridIcon } from './icons';
-import { useTranslation } from 'react-i18next';
 import Link from 'next/link'; // Import Link
+import { useTranslation } from 'react-i18next';
+
+import { HomeIcon, BookmarkOutlineIcon, GridIcon } from './icons';
 
 export const IconSidebar = () => {
   const { t } = useTranslation();

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
+
 import { ResourceItem } from './ResourceItem';
 
 interface Resource {

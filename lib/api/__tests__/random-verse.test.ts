@@ -1,8 +1,7 @@
-import { getRandomVerse, clearSurahListCache } from '@/lib/api/verses';
 import { getSurahList } from '@/lib/api/chapters';
 import { apiFetch } from '@/lib/api/client';
+import { getRandomVerse, clearSurahListCache } from '@/lib/api/verses';
 import { Verse } from '@/types';
-import type { RawVerse } from './apiMocks';
 
 jest.mock('@/lib/api/chapters');
 jest.mock('@/lib/api/client');

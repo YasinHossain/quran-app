@@ -1,8 +1,9 @@
 'use client';
-import type React from 'react';
 
 import { SearchInput } from '../components/SearchInput';
+
 import type { SearchProps } from '@/types/components';
+import type React from 'react';
 
 interface SearchFieldProps extends SearchProps {
   variant?: 'main' | 'default' | 'glass' | 'header' | 'panel';

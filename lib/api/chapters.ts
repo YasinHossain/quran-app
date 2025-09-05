@@ -1,7 +1,8 @@
-import { Chapter, Surah } from '@/types';
-import { apiFetch } from './client';
 import { surahImageMap } from '@/app/(features)/surah/lib/surahImageMap';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { Chapter, Surah } from '@/types';
+
+import { apiFetch } from './client';
 
 const surahCoverCache = new Map<number, Promise<string | null>>();
 

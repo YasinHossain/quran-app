@@ -1,6 +1,6 @@
 'use client';
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 interface HeaderVisibilityState {
   isHidden: boolean;

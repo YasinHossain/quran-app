@@ -1,6 +1,7 @@
 'use client';
 
 import { GlassCard } from '@/app/shared/ui';
+
 import type { ReactNode } from 'react';
 
 interface ThemedCardProps {

@@ -1,15 +1,17 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import React, { useEffect, useMemo, useState } from 'react';
+
+import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { SettingsSidebar } from '@/app/(features)/surah/components';
+import { useSidebar } from '@/app/providers/SidebarContext';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
+
+import { useBookmarkFolderData, useBookmarkFolderPanels } from './hooks';
 import { BookmarkFolderSidebar } from '../components/BookmarkFolderSidebar';
 import { BookmarkVerseList } from '../components/BookmarkVerseList';
-import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
-import { useSidebar } from '@/app/providers/SidebarContext';
-import { SettingsSidebar } from '@/app/(features)/surah/components';
-import { useBookmarkFolderData, useBookmarkFolderPanels } from './hooks';
 import { FolderNotFound } from './components/FolderNotFound';
-import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 interface BookmarkFolderClientProps {
   folderId: string;
@@ -19,9 +21,7 @@ interface BookmarkFolderClientProps {
  * Client component for displaying bookmark folder contents with sidebar navigation.
  * Handles folder data loading, verse display, and panel management.
  */
-export function BookmarkFolderClient({
-  folderId,
-}: BookmarkFolderClientProps): React.JSX.Element {
+export function BookmarkFolderClient({ folderId }: BookmarkFolderClientProps): React.JSX.Element {
   logger.debug('BookmarkFolderClient rendering', { folderId });
   const router = useRouter();
   const { isHidden } = useHeaderVisibility();

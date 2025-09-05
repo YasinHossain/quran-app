@@ -1,9 +1,9 @@
-import { ITafsirRepository } from '../../domain/repositories/ITafsirRepository';
-import { logger as Logger } from '../../infrastructure/monitoring/Logger';
 import {
   InvalidTafsirRequestError,
   TafsirContentLoadError,
 } from '../../domain/errors/DomainErrors';
+import { ITafsirRepository } from '../../domain/repositories/ITafsirRepository';
+import { logger as Logger } from '../../infrastructure/monitoring/Logger';
 
 /**
  * Use Case: Get Tafsir Content for a Verse
@@ -54,11 +54,7 @@ export class GetTafsirContentUseCase {
         const content = await this.execute(verseKey, tafsirId);
         results.set(tafsirId, content);
       } catch (error) {
-        Logger.warn(
-          `Failed to get tafsir content for ID ${tafsirId}:`,
-          undefined,
-          error as Error,
-        );
+        Logger.warn(`Failed to get tafsir content for ID ${tafsirId}:`, undefined, error as Error);
         results.set(tafsirId, 'Failed to load tafsir content.');
       }
     });

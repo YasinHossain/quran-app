@@ -1,24 +1,11 @@
 'use client';
 
 import React from 'react';
+
+import { ArabicFontPanel } from '../ArabicFontPanel';
 import { TranslationPanel, TafsirPanel } from '../panels';
 import { WordLanguagePanel } from '../WordLanguagePanel';
-import { ArabicFontPanel } from '../ArabicFontPanel';
-import { SettingsSidebarProps } from './SettingsSidebar';
-
-interface SettingsPanelsProps
-  extends Pick<
-    SettingsSidebarProps,
-    | 'isTranslationPanelOpen'
-    | 'onTranslationPanelClose'
-    | 'isTafsirPanelOpen'
-    | 'onTafsirPanelClose'
-    | 'isWordLanguagePanelOpen'
-    | 'onWordLanguagePanelClose'
-  > {
-  isArabicFontPanelOpen: boolean;
-  onArabicFontPanelClose: () => void;
-}
+import { SettingsPanelsProps } from './types';
 
 export const SettingsPanels = ({
   isArabicFontPanelOpen,

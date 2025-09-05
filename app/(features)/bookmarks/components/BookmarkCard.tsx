@@ -1,14 +1,16 @@
 'use client';
 
-import React, { memo, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import { Bookmark } from '@/types';
-import { useAudio } from '@/app/shared/player/context/AudioContext';
-import { useSettings } from '@/app/providers/SettingsContext';
-import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { ContentBookmarkCard } from '@/app/shared/ui/cards/ContentBookmarkCard';
-import { LoadingError } from '@/app/shared/LoadingError';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
+import React, { memo, useCallback } from 'react';
+
+import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { useSettings } from '@/app/providers/SettingsContext';
+import { LoadingError } from '@/app/shared/LoadingError';
+import { useAudio } from '@/app/shared/player/context/AudioContext';
+import { ContentBookmarkCard } from '@/app/shared/ui/cards/ContentBookmarkCard';
+import { Bookmark } from '@/types';
+
 import { useBookmarkVerse } from '../hooks/useBookmarkVerse';
 
 interface BookmarkCardProps {

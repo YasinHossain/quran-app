@@ -1,8 +1,9 @@
 'use client';
 
 import { useResponsiveState } from '@/lib/responsive';
-import { MobileVerseActions } from './MobileVerseActions';
+
 import { DesktopVerseActions } from './DesktopVerseActions';
+import { MobileVerseActions } from './MobileVerseActions';
 import { VerseActionsProps } from './types';
 
 export const ResponsiveVerseActions = (props: VerseActionsProps): JSX.Element => {

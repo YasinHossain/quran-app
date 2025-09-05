@@ -1,12 +1,13 @@
-import React, { ReactNode } from 'react';
 import { render, RenderOptions, screen } from '@testing-library/react';
 import { renderHook, RenderHookOptions } from '@testing-library/react';
-import { AudioProvider, useAudio } from '@/app/shared/player/context/AudioContext';
-import { SettingsProvider, useSettings } from '@/app/providers/SettingsContext';
-import { BookmarkProvider, useBookmarks } from '@/app/providers/BookmarkContext';
-import { ThemeProvider } from '@/app/providers/ThemeContext';
-import { SidebarProvider } from '@/app/providers/SidebarContext';
+import React, { ReactNode } from 'react';
 import { SWRConfig } from 'swr';
+
+import { BookmarkProvider, useBookmarks } from '@/app/providers/BookmarkContext';
+import { SettingsProvider, useSettings } from '@/app/providers/SettingsContext';
+import { SidebarProvider } from '@/app/providers/SidebarContext';
+import { ThemeProvider } from '@/app/providers/ThemeContext';
+import { AudioProvider, useAudio } from '@/app/shared/player/context/AudioContext';
 
 /**
  * @module ContextTestUtils

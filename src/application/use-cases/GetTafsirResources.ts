@@ -1,5 +1,5 @@
-import { ITafsirRepository } from '../../domain/repositories/ITafsirRepository';
 import { Tafsir } from '../../domain/entities/Tafsir';
+import { ITafsirRepository } from '../../domain/repositories/ITafsirRepository';
 import { logger as Logger } from '../../infrastructure/monitoring/Logger';
 
 /**
@@ -65,7 +65,7 @@ export class GetTafsirResourcesUseCase {
       Logger.warn(
         `Failed to fetch tafsir resources for language ${language}:`,
         undefined,
-        error as Error,
+        error as Error
       );
 
       // For language-specific requests, filter cached data

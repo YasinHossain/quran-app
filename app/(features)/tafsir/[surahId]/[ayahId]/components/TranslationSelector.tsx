@@ -9,4 +9,3 @@ interface TranslationSelectorProps {
 export const TranslationSelector = ({ isOpen, onClose }: TranslationSelectorProps) => {
   return <TranslationPanel isOpen={isOpen} onClose={onClose} />;
 };
-

@@ -1,15 +1,4 @@
-import { createRequire } from 'module';
-
-const require = createRequire(import.meta.url);
-
-// Fallback lightweight sanitizer that works without external deps.
-// If `isomorphic-dompurify` is available at runtime, we use it.
-let DOMPurify: { sanitize: (html: string) => string } | null = null;
-try {
-  DOMPurify = require('isomorphic-dompurify');
-} catch {
-  DOMPurify = null;
-}
+import DOMPurify from 'isomorphic-dompurify';
 
 /**
  * Sanitize a string containing HTML and return a safe version.
@@ -25,20 +14,18 @@ try {
  * // => '<p>Hi</p>'
  */
 export function sanitizeHtml(html: string): string {
-  if (DOMPurify) {
-    return DOMPurify.sanitize(html);
-  }
-  // Minimal fallback: strip script/style/iframe and all tags, keep text.
-  // This is conservative to ensure safety when DOMPurify isn't installed.
   try {
-    // Remove dangerous blocks first
-    let safe = html
-      .replace(/<\/(?:script|style|iframe)[^>]*>/gi, '')
-      .replace(/<(?:script|style|iframe)(.|\n|\r)*?>/gi, '');
-    // Remove all other tags
-    safe = safe.replace(/<[^>]*>/g, '');
-    return safe;
+    return DOMPurify.sanitize(html);
   } catch {
-    return '';
+    // Minimal fallback: strip script/style/iframe and all tags, keep text.
+    try {
+      let safe = html
+        .replace(/<\/(?:script|style|iframe)[^>]*>/gi, '')
+        .replace(/<(?:script|style|iframe)(.|\n|\r)*?>/gi, '');
+      safe = safe.replace(/<[^>]*>/g, '');
+      return safe;
+    } catch {
+      return '';
+    }
   }
 }

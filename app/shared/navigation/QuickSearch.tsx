@@ -1,10 +1,10 @@
 'use client';
-import type React from 'react';
-
-import { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
 import { IconSearch, IconX, IconClock, IconTrendingUp } from '@tabler/icons-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
+import { useState, useRef, useEffect } from 'react';
+
+import type React from 'react';
 
 interface QuickSearchProps {
   isOpen: boolean;

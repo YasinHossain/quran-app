@@ -1,11 +1,14 @@
 'use client';
-import type React from 'react';
 
 import { AnimatePresence, motion } from 'framer-motion';
+
+import { useNavigation } from '@/app/providers/NavigationContext';
 import { useResponsiveState } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
-import { useNavigation } from '@/app/providers/NavigationContext';
+
 import { AdaptiveNavigation } from './AdaptiveNavigation';
+
+import type React from 'react';
 
 interface AdaptiveLayoutProps {
   children: React.ReactNode;

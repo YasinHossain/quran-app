@@ -1,10 +1,11 @@
 import { render, RenderOptions } from '@testing-library/react';
 import { SWRConfig } from 'swr';
-import { AudioProvider } from '@/app/shared/player/context/AudioContext';
-import { SettingsProvider } from '@/app/providers/SettingsContext';
+
 import { BookmarkProvider } from '@/app/providers/BookmarkContext';
-import { ThemeProvider } from '@/app/providers/ThemeContext';
+import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { SidebarProvider } from '@/app/providers/SidebarContext';
+import { ThemeProvider } from '@/app/providers/ThemeContext';
+import { AudioProvider } from '@/app/shared/player/context/AudioContext';
 
 const Providers = ({ children }: { children: React.ReactNode }) => (
   <SWRConfig value={{ provider: () => new Map() }}>

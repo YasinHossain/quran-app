@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 type Options = {

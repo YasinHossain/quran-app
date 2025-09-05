@@ -5,8 +5,8 @@
  * Supports multiple providers (Sentry, custom endpoints) based on configuration.
  */
 
-import { fetchWithTimeout } from '../../../lib/api/client';
 import { config } from '../../../config';
+import { fetchWithTimeout } from '../../../lib/api/client';
 import { ApplicationError, isApplicationError } from '../errors';
 import { logger } from './Logger';
 

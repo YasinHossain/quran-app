@@ -56,6 +56,7 @@ export default ExampleComponent;
 ```
 
 **Requirements:**
+
 - Always use `memo()` for performance
 - Define proper TypeScript interfaces
 - Use JSDoc comments
@@ -66,6 +67,7 @@ export default ExampleComponent;
 ### Responsive Design
 
 **Mobile-First Approach:**
+
 ```typescript
 // ✅ Correct
 <div className="space-y-4 md:space-y-0 md:flex md:items-center">
@@ -102,6 +104,7 @@ export function useFeatureName(initialValue?: string) {
 ```
 
 **Requirements:**
+
 - Return objects with `as const`
 - Include loading/error states
 - Use `useCallback` for functions
@@ -122,7 +125,7 @@ const Context = createContext<ContextType | undefined>(undefined);
 
 export const Provider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  
+
   const value = useMemo(() => ({
     state,
     dispatch,
@@ -140,6 +143,7 @@ export const useContextHook = () => {
 ```
 
 **Requirements:**
+
 - Use `useReducer` for complex state
 - Memoize context values
 - Throw errors for missing providers
@@ -185,7 +189,7 @@ describe('Component', () => {
   it('handles interactions', () => {
     const mockHandler = jest.fn();
     renderComponent({ onAction: mockHandler });
-    
+
     fireEvent.click(screen.getByRole('button'));
     expect(mockHandler).toHaveBeenCalledWith('test');
   });
@@ -203,18 +207,21 @@ describe('Component', () => {
 ## Code Style Requirements
 
 ### TypeScript
+
 - Use interfaces for props and public APIs
 - Use types for unions and computations
 - Always specify return types for functions
 - Use strict null checks
 
 ### React
+
 - Always memoize components and expensive calculations
 - Use proper dependency arrays
 - Handle loading and error states
 - Include accessibility attributes
 
 ### Performance
+
 - Use `React.memo()` for all components
 - Use `useCallback()` for event handlers
 - Use `useMemo()` for expensive computations

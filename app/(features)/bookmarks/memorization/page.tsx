@@ -2,9 +2,9 @@
 
 import dynamic from 'next/dynamic';
 
-import { BookmarksLayout } from '../components/shared/BookmarksLayout';
-import { useMemorizationPage } from './hooks/useMemorizationPage';
 import { MemorizationHeader, MemorizationGrid } from './components';
+import { useMemorizationPage } from './hooks/useMemorizationPage';
+import { BookmarksLayout } from '../components/shared/BookmarksLayout';
 
 // Dynamic import for heavy modal component
 const CreateMemorizationModal = dynamic(

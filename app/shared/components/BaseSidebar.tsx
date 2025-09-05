@@ -1,8 +1,9 @@
 'use client';
-import type React from 'react';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { cn } from '@/lib/utils/cn';
+
+import type React from 'react';
 
 interface BaseSidebarProps {
   isOpen: boolean;

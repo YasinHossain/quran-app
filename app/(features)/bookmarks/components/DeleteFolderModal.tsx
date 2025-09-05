@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CloseIcon } from '@/app/shared/icons';
-import { Folder } from '@/types';
+import { useState } from 'react';
+
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { CloseIcon } from '@/app/shared/icons';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { Folder } from '@/types';
 
 interface DeleteFolderModalProps {
   isOpen: boolean;

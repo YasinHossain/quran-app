@@ -1,9 +1,11 @@
 'use client';
-import type React from 'react';
 
 import { useTheme } from '@/app/providers/ThemeContext';
 import { SunIcon, MoonIcon } from '@/app/shared/icons';
+
 import { Button } from './Button';
+
+import type React from 'react';
 
 interface ThemeToggleProps {
   variant?: 'primary' | 'secondary' | 'ghost' | 'tabs' | string;

@@ -5,11 +5,12 @@ import {
   // Exported for testing
   getVerseWithCache,
 } from '../[folderId]/hooks/useBookmarkFolderData';
+
 import type { Verse } from '@/types';
 
 jest.mock('@/lib/api', () => ({
-  getVerseByKey: jest.fn(async (key: string) => ({ verse_key: key } as Verse)),
-  getVerseById: jest.fn(async (id: string) => ({ verse_key: id } as Verse)),
+  getVerseByKey: jest.fn(async (key: string) => ({ verse_key: key }) as Verse),
+  getVerseById: jest.fn(async (id: string) => ({ verse_key: id }) as Verse),
 }));
 
 describe('verse cache', () => {

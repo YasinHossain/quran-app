@@ -1,9 +1,11 @@
 'use client';
-import type React from 'react';
 
 import { GripVerticalIcon, CloseIcon } from '@/app/shared/icons';
-import { MAX_TRANSLATION_SELECTIONS } from './useTranslationPanel';
 import { TranslationResource } from '@/types';
+
+import { MAX_TRANSLATION_SELECTIONS } from './useTranslationPanel';
+
+import type React from 'react';
 
 interface TranslationSelectionListProps {
   orderedSelection: number[];
@@ -73,4 +75,3 @@ export const TranslationSelectionList = ({
     </div>
   </div>
 );
-

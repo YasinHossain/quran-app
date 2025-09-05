@@ -1,14 +1,17 @@
 'use client';
-import React from 'react';
 import { useRouter } from 'next/navigation';
-import { ErrorHandler } from '@/src/infrastructure/errors';
-import { ThemeProvider, Theme } from './ThemeContext';
-import { SettingsProvider } from './SettingsContext';
-import { BookmarkProvider } from './BookmarkContext';
-import { SidebarProvider } from './SidebarContext';
-import { UIStateProvider } from './UIStateContext';
-import { NavigationProvider } from './NavigationContext';
+import React from 'react';
+
 import { AudioProvider } from '@/app/shared/player/context/AudioContext';
+import { ErrorHandler } from '@/src/infrastructure/errors';
+
+import { BookmarkProvider } from './BookmarkContext';
+import { NavigationProvider } from './NavigationContext';
+import { SettingsProvider } from './SettingsContext';
+import { SidebarProvider } from './SidebarContext';
+import { ThemeProvider, Theme } from './ThemeContext';
+import { UIStateProvider } from './UIStateContext';
+
 // import { ApplicationProvider } from '../../src/presentation/providers/ApplicationProvider';
 
 /**

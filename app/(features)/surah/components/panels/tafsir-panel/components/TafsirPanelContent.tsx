@@ -1,12 +1,14 @@
 'use client';
 
 import React from 'react';
+
 import { AlertIcon } from '@/app/shared/icons';
 import { ResourceTabs, ResourceList } from '@/app/shared/resource-panel';
 import { TafsirResource } from '@/types';
+
+import { TafsirLimitWarning } from '../TafsirLimitWarning';
 import { TafsirSearch } from '../TafsirSearch';
 import { TafsirSelectionList } from '../TafsirSelectionList';
-import { TafsirLimitWarning } from '../TafsirLimitWarning';
 
 interface TafsirPanelContentProps {
   loading: boolean;

@@ -2,8 +2,10 @@
 
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { CircularProgress } from '../../components/CircularProgress';
+
 import { MemorizationPlan } from '@/types';
+
+import { CircularProgress } from '../../components/CircularProgress';
 
 interface MemorizationCardProps {
   surahId: string;

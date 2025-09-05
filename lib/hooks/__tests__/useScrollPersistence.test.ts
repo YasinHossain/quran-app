@@ -1,4 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
+
 import { useScrollPersistence } from '@/lib/hooks/useScrollPersistence';
 
 type Tab = 'Surah' | 'Juz' | 'Page';

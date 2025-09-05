@@ -1,13 +1,15 @@
 'use client';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSettings } from '@/app/providers/SettingsContext';
-import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
-import type { LanguageCode } from '@/lib/text/languageCodes';
+
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { useSettings } from '@/app/providers/SettingsContext';
+import { SearchInput } from '@/app/shared/components/SearchInput';
 import { ArrowLeftIcon } from '@/app/shared/icons';
 import { Button } from '@/app/shared/ui/Button';
-import { SearchInput } from '@/app/shared/components/SearchInput';
+import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
+
+import type { LanguageCode } from '@/lib/text/languageCodes';
 
 interface LanguageOption {
   name: string;
@@ -147,4 +149,3 @@ export const WordTranslationPanel = ({
     </div>
   );
 };
-

@@ -1,8 +1,10 @@
 'use client';
-import type React from 'react';
 
 import Image, { ImageProps } from 'next/image';
+
 import { useResponsiveState } from '@/lib/responsive';
+
+import type React from 'react';
 
 interface ResponsiveImageProps extends Omit<ImageProps, 'src' | 'sizes'> {
   src: string | ResponsiveImageSources;
@@ -147,7 +149,7 @@ interface ResponsiveBackgroundImageProps {
   overlayOpacity?: number;
 }
 
-export const const ResponsiveBackgroundImage = ({
+export const ResponsiveBackgroundImage = ({
   src,
   children,
   className = '',
@@ -236,4 +238,3 @@ export const useImagePreload = (sources: string[], condition = true) => {
     };
   }, [sources, condition]);
 };
-

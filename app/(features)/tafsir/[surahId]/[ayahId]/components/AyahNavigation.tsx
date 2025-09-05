@@ -75,4 +75,3 @@ export const AyahNavigation = ({
     </button>
   </div>
 );
-

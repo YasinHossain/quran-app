@@ -46,7 +46,7 @@ export class PerformanceLogger {
   async measure<T>(
     operation: string,
     fn: () => Promise<T>,
-    context?: Record<string, unknown>,
+    context?: Record<string, unknown>
   ): Promise<T> {
     this.start(operation);
     try {

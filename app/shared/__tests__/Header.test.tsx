@@ -1,6 +1,6 @@
+import { HeaderVisibilityProvider } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { Header } from '@/app/shared/Header';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
-import { HeaderVisibilityProvider } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
 // Mock the useTranslation hook
 jest.mock('react-i18next', () => ({

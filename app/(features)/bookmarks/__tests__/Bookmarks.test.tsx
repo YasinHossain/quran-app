@@ -1,7 +1,9 @@
 import { render, screen } from '@testing-library/react';
+
+import { mockTag, type MockProps } from '@/tests/mocks';
+
 import { BookmarksHeader } from '../components/BookmarksHeader';
 import { BookmarksSidebar } from '../components/BookmarksSidebar';
-import { mockTag, type MockProps } from '@/tests/mocks';
 
 // Mock the BookmarkContext
 jest.mock('@/app/providers/BookmarkContext', () => ({

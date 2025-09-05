@@ -1,15 +1,15 @@
 'use client';
 
-import { lazy, Suspense, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
 
-import { buildAudioUrl } from '@/lib/audio/reciters';
-import { getSurahCoverUrl } from '@/lib/api';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { Spinner } from '@/app/shared/Spinner';
+import { getSurahCoverUrl } from '@/lib/api';
+import { buildAudioUrl } from '@/lib/audio/reciters';
 
-import type { Verse } from '@/types';
 import type { Reciter } from '@/app/shared/player/types';
+import type { Verse } from '@/types';
 
 // Dynamic import for heavy QuranAudioPlayer component
 const QuranAudioPlayer = dynamic(
@@ -79,4 +79,3 @@ export const SurahAudioPlayer = ({
     </div>
   );
 };
-

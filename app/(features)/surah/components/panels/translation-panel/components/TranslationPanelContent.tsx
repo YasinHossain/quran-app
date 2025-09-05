@@ -1,9 +1,11 @@
 'use client';
 
 import React from 'react';
+
 import { AlertIcon } from '@/app/shared/icons';
 import { ResourceTabs, ResourceList, ResourceItem } from '@/app/shared/resource-panel';
 import { TranslationResource } from '@/types';
+
 import { TranslationSearch } from '../TranslationSearch';
 import { TranslationSelectionList } from '../TranslationSelectionList';
 

@@ -1,5 +1,6 @@
-import React, { useRef, useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
+import React, { useRef, useState } from 'react';
+
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 
 export function SpeedControl() {

@@ -1,8 +1,8 @@
 'use client';
 
+import { SearchInput } from '@/app/shared/components/SearchInput';
 import { BarsIcon, SearchIcon } from '@/app/shared/icons';
 import { PlusIcon } from '@/app/shared/icons';
-import { SearchInput } from '@/app/shared/components/SearchInput';
 import { Button } from '@/app/shared/ui/Button';
 import { useResponsiveState } from '@/lib/responsive';
 

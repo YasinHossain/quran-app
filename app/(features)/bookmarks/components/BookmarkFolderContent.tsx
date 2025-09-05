@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Bookmark, Folder } from '@/types';
+import { useState } from 'react';
+
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { FolderIcon } from '@/app/shared/icons';
 import { cn } from '@/lib/utils/cn';
+import { Bookmark, Folder } from '@/types';
 
 interface BookmarkFolderContentProps {
   bookmarks: Bookmark[];

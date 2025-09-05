@@ -1,6 +1,7 @@
 'use client';
 
 import { AlertIcon } from '@/app/shared/icons';
+
 import { MAX_TAFSIR_SELECTIONS } from './tafsirPanel.utils';
 
 interface TafsirLimitWarningProps {

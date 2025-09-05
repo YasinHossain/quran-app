@@ -1,10 +1,10 @@
 import { GetTafsirContentUseCase } from '../../../src/application/use-cases/GetTafsirContent';
-import { ITafsirRepository } from '../../../src/domain/repositories/ITafsirRepository';
-import { logger as Logger } from '../../../src/infrastructure/monitoring/Logger';
 import {
   InvalidTafsirRequestError,
   TafsirContentLoadError,
 } from '../../../src/domain/errors/DomainErrors';
+import { ITafsirRepository } from '../../../src/domain/repositories/ITafsirRepository';
+import { logger as Logger } from '../../../src/infrastructure/monitoring/Logger';
 
 // Minimal mocked repository implementing ITafsirRepository
 const createRepository = (): jest.Mocked<ITafsirRepository> => ({
@@ -44,18 +44,14 @@ describe('GetTafsirContentUseCase', () => {
   });
 
   it('throws InvalidTafsirRequestError when parameters are missing', async () => {
-    await expect(useCase.execute('', 0)).rejects.toThrow(
-      InvalidTafsirRequestError,
-    );
+    await expect(useCase.execute('', 0)).rejects.toThrow(InvalidTafsirRequestError);
   });
 
   it('throws TafsirContentLoadError when repository fails', async () => {
     repository.getTafsirByVerse.mockRejectedValue(new Error('Network error'));
     const errorSpy = jest.spyOn(Logger, 'error').mockImplementation(() => {});
 
-    await expect(useCase.execute('1:1', 1)).rejects.toThrow(
-      TafsirContentLoadError,
-    );
+    await expect(useCase.execute('1:1', 1)).rejects.toThrow(TafsirContentLoadError);
     expect(errorSpy).toHaveBeenCalled();
     errorSpy.mockRestore();
   });

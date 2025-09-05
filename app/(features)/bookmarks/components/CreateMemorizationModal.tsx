@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { Panel } from '@/app/shared/ui/Panel';
-import { Button } from '@/app/shared/ui/Button';
 import { BrainIcon, PlusIcon } from '@/app/shared/icons';
+import { Button } from '@/app/shared/ui/Button';
+import { Panel } from '@/app/shared/ui/Panel';
+
 import { SurahSelector } from './SurahSelector';
 
 interface CreateMemorizationModalProps {

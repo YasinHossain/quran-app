@@ -1,8 +1,9 @@
 'use client';
+import { useSettings } from '@/app/providers/SettingsContext';
 import { ChevronDownIcon } from '@/app/shared/icons';
 import { Spinner } from '@/app/shared/Spinner';
 import { applyArabicFont } from '@/lib/tafsir/applyArabicFont';
-import { useSettings } from '@/app/providers/SettingsContext';
+
 import { useTafsirPanels } from '../hooks/useTafsirPanels';
 
 interface TafsirPanelsProps {

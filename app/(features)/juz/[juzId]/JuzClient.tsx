@@ -2,16 +2,19 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { SettingsSidebar } from '@/app/(features)/surah/components';
-import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
-import type { LanguageCode } from '@/lib/text/languageCodes';
-import { buildAudioUrl } from '@/lib/audio/reciters';
 import { QuranAudioPlayer } from '@/app/shared/player';
 import { getSurahCoverUrl } from '@/lib/api';
-import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { buildAudioUrl } from '@/lib/audio/reciters';
+import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
+
 import { useJuzData } from '../hooks/useJuzData';
 import { JuzHeader } from './components/JuzHeader';
 import { JuzVerseList } from './components/JuzVerseList';
+
+import type { LanguageCode } from '@/lib/text/languageCodes';
 
 export function JuzClient({ juzId }: { juzId: string }) {
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);

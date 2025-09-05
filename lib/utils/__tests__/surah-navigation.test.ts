@@ -1,4 +1,5 @@
 import { getJuzByPage, getSurahByPage, JUZ_START_PAGES } from '../surah-navigation';
+
 import type { Chapter } from '@/types';
 
 const chapters: Chapter[] = [

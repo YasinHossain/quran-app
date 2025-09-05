@@ -1,7 +1,9 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
+
 import { useSettings } from '@/app/providers/SettingsContext';
+
 import type { LanguageCode } from '@/lib/text/languageCodes';
 
 interface WordLanguagePanelProps {
@@ -136,4 +138,3 @@ const CheckIcon = ({ className }: { className?: string }): JSX.Element => (
     />
   </svg>
 );
-

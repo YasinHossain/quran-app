@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { getVerseById, getVerseByKey } from '@/lib/api/verses';
-import { useSettings } from '@/app/providers/SettingsContext';
+
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { useSettings } from '@/app/providers/SettingsContext';
+import { getVerseById, getVerseByKey } from '@/lib/api/verses';
 import { Bookmark, Chapter } from '@/types';
 
 interface UseBookmarkVerseReturn {

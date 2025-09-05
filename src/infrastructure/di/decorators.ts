@@ -8,6 +8,7 @@
  */
 
 import { inject, injectable, interfaces } from 'inversify';
+
 import { TYPES, TypeKeys } from './types';
 
 /**

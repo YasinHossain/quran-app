@@ -1,6 +1,6 @@
-import { ITafsirRepository } from '../../domain/repositories/ITafsirRepository';
-import { Tafsir, TafsirData } from '../../domain/entities/Tafsir';
 import { apiFetch } from '../../../lib/api/client';
+import { Tafsir, TafsirData } from '../../domain/entities/Tafsir';
+import { ITafsirRepository } from '../../domain/repositories/ITafsirRepository';
 import { logger } from '../monitoring/Logger';
 
 interface ApiTafsirResource {

@@ -72,4 +72,3 @@ async function apiFetch<T>(
 }
 
 export { API_BASE_URL, apiFetch, fetchWithTimeout };
-

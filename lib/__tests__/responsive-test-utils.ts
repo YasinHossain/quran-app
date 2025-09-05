@@ -4,8 +4,8 @@
  */
 
 import { renderHook, act } from '@testing-library/react';
-import { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
+import { ReactElement } from 'react';
 
 /**
  * Device presets for responsive testing

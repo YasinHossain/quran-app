@@ -1,29 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
+
 import { useUIState } from '@/app/providers/UIStateContext';
 import { BaseSidebar } from '@/app/shared/components/BaseSidebar';
+
 import { SettingsContentWrapper } from './SettingsContentWrapper';
 import { SettingsPanels } from './SettingsPanels';
+import { SettingsSidebarProps } from './types';
 import { useSettingsTabState, useSettingsSections } from '../../hooks';
-
-export interface SettingsSidebarProps {
-  onTranslationPanelOpen: () => void;
-  onWordLanguagePanelOpen: () => void;
-  onTafsirPanelOpen?: () => void;
-  onReadingPanelOpen?: () => void;
-  selectedTranslationName: string;
-  selectedTafsirName?: string;
-  selectedWordLanguageName: string;
-  showTafsirSetting?: boolean;
-  isTranslationPanelOpen?: boolean;
-  onTranslationPanelClose?: () => void;
-  isTafsirPanelOpen?: boolean;
-  onTafsirPanelClose?: () => void;
-  isWordLanguagePanelOpen?: boolean;
-  onWordLanguagePanelClose?: () => void;
-  pageType?: 'verse' | 'tafsir';
-}
 
 export const SettingsSidebar = ({
   onTranslationPanelOpen,
@@ -87,4 +72,3 @@ export const SettingsSidebar = ({
     </>
   );
 };
-

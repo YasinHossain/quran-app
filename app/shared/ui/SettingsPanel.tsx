@@ -1,9 +1,11 @@
 'use client';
-import type React from 'react';
+
+import { cn } from '@/lib/utils/cn';
 
 import { Panel } from './Panel';
-import { cn } from '@/lib/utils/cn';
+
 import type { SettingsPanelProps } from '@/types/components';
+import type React from 'react';
 
 interface SettingItemProps {
   label: string;
@@ -40,7 +42,7 @@ interface ToggleSettingProps {
   disabled?: boolean;
 }
 
-const const ToggleSetting = ({
+const ToggleSetting = ({
   label,
   description,
   value,
@@ -78,7 +80,7 @@ interface SelectSettingProps {
   disabled?: boolean;
 }
 
-const const SelectSetting = ({
+const SelectSetting = ({
   label,
   description,
   value,
@@ -117,7 +119,7 @@ interface RangeSettingProps {
   showValue?: boolean;
 }
 
-const const RangeSetting = ({
+const RangeSetting = ({
   label,
   description,
   value,
@@ -156,7 +158,7 @@ interface SettingsPanelComponentProps extends SettingsPanelProps {
   actions?: React.ReactNode[];
 }
 
-export const const SettingsPanel = ({
+export const SettingsPanel = ({
   isOpen,
   onClose,
   title = 'Settings',

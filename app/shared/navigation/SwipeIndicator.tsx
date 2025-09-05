@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { IconChevronLeft, IconChevronRight, IconArrowDown } from '@tabler/icons-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+
 import { useBreakpoint } from '@/lib/responsive';
 
 interface SwipeIndicatorProps {

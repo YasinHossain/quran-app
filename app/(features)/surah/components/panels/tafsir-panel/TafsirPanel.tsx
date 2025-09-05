@@ -1,11 +1,13 @@
 'use client';
-import type React from 'react';
 
-import { useTafsirPanel } from '@/src/presentation/hooks/useTafsirPanel';
-import { useListHeight } from '@/app/shared/resource-panel/hooks/useListHeight';
-import { useTafsirSections } from './hooks/useTafsirSections';
 import { ResourcePanelHeader } from '@/app/shared/resource-panel/components/ResourcePanelHeader';
+import { useListHeight } from '@/app/shared/resource-panel/hooks/useListHeight';
+import { useTafsirPanel } from '@/src/presentation/hooks/useTafsirPanel';
+
 import { TafsirPanelContent } from './components/TafsirPanelContent';
+import { useTafsirSections } from './hooks/useTafsirSections';
+
+import type React from 'react';
 
 interface TafsirPanelProps {
   isOpen: boolean;
