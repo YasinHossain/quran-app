@@ -5,6 +5,7 @@
  * Supports multiple providers (Sentry, custom endpoints) based on configuration.
  */
 
+import { fetchWithTimeout } from '../../../lib/api/client';
 import { config } from '../../../config';
 import { ApplicationError, isApplicationError } from '../errors';
 import { logger } from './Logger';
@@ -342,31 +343,20 @@ export class RemoteErrorTracker implements IErrorTracker {
     const events = [...this.buffer];
     this.buffer = [];
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
-
     try {
-      const response = await fetch(this.endpoint, {
+      await fetchWithTimeout(this.endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           ...(this.apiKey ? { Authorization: `Bearer ${this.apiKey}` } : {}),
         },
         body: JSON.stringify({ events }),
-        signal: controller.signal,
+        errorPrefix: 'Failed to send error tracking data',
       });
-
-      if (!response.ok) {
-        logger.warn(`Failed to send error tracking data: ${response.status}`);
-        // Re-add events to buffer for retry
-        this.buffer.unshift(...events);
-      }
     } catch (error) {
-      logger.warn('Failed to send error tracking data:', error);
+      logger.warn('Failed to send error tracking data', undefined, error as Error);
       // Re-add events to buffer for retry
       this.buffer.unshift(...events);
-    } finally {
-      clearTimeout(timeoutId);
     }
   }
 

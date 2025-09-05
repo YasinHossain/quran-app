@@ -85,4 +85,3 @@ export const PageContent = memo(function PageContent({
   );
 });
 
-export default PageContent;

@@ -1,6 +1,6 @@
 import { screen, act, waitFor } from '@testing-library/react';
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
-import VerseOfDay from '@/app/(features)/home/components/VerseOfDay';
+import { VerseOfDay } from '@/app/(features)/home/components/VerseOfDay';
 import { Verse } from '@/types';
 import { getRandomVerse } from '@/lib/api';
 import { getVerseByKey } from '@/lib/api/verses';

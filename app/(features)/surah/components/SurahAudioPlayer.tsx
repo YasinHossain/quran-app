@@ -80,4 +80,3 @@ export const SurahAudioPlayer = ({
   );
 };
 
-export default SurahAudioPlayer;

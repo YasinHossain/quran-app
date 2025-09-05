@@ -83,4 +83,3 @@ export const ArabicFontSelectionList = ({
   </div>
 );
 
-export default ArabicFontSelectionList;

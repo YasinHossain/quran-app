@@ -1,4 +1,9 @@
 import { RemoteTransport, LogLevel, type LogEntry, logger } from '@infra/monitoring';
+import { fetchWithTimeout } from '../../../../lib/api/client';
+
+jest.mock('../../../../lib/api/client', () => ({
+  fetchWithTimeout: jest.fn(),
+}));
 
 describe('RemoteTransport', () => {
   const createEntry = (level: LogLevel = LogLevel.INFO): LogEntry => ({
@@ -12,9 +17,8 @@ describe('RemoteTransport', () => {
   });
 
   it('flushes buffered logs to endpoint', async () => {
-    const fetchMock = jest
-      .spyOn(global, 'fetch')
-      .mockResolvedValue({ ok: true } as Response);
+    const fetchMock = fetchWithTimeout as jest.Mock;
+    fetchMock.mockResolvedValue({ ok: true } as Response);
 
     const transport = new RemoteTransport('https://example.com');
     const entry = createEntry();
@@ -29,9 +33,8 @@ describe('RemoteTransport', () => {
   });
 
   it('flushes immediately on error level', async () => {
-    const fetchMock = jest
-      .spyOn(global, 'fetch')
-      .mockResolvedValue({ ok: true } as Response);
+    const fetchMock = fetchWithTimeout as jest.Mock;
+    fetchMock.mockResolvedValue({ ok: true } as Response);
 
     const transport = new RemoteTransport('https://example.com');
     transport.log(createEntry(LogLevel.ERROR));
@@ -42,8 +45,8 @@ describe('RemoteTransport', () => {
   });
 
   it('retries failed requests', async () => {
-    const fetchMock = jest
-      .spyOn(global, 'fetch')
+    const fetchMock = fetchWithTimeout as jest.Mock;
+    fetchMock
       .mockRejectedValueOnce(new Error('network'))
       .mockResolvedValueOnce({ ok: true } as Response);
     const warnMock = jest.spyOn(logger, 'warn').mockImplementation(() => undefined);
@@ -63,32 +66,21 @@ describe('RemoteTransport', () => {
   });
 
   it('aborts long-running requests and retries', async () => {
-    jest.useFakeTimers();
-    const fetchMock = jest
-      .spyOn(global, 'fetch')
-      .mockImplementationOnce((_url, options) => {
-        return new Promise((_, reject) => {
-          options?.signal?.addEventListener('abort', () => {
-            reject(new DOMException('Aborted', 'AbortError'));
-          });
-        });
-      })
+    const fetchMock = fetchWithTimeout as jest.Mock;
+    fetchMock
+      .mockRejectedValueOnce(new DOMException('Aborted', 'AbortError'))
       .mockResolvedValueOnce({ ok: true } as Response);
     const warnMock = jest.spyOn(logger, 'warn').mockImplementation(() => undefined);
 
     const transport = new RemoteTransport('https://example.com');
     transport.log(createEntry());
-    const flushPromise = transport.flush();
-
-    jest.runAllTimers();
-    await flushPromise;
+    await transport.flush();
 
     expect(warnMock).toHaveBeenCalled();
 
     await transport.flush();
     expect(fetchMock).toHaveBeenCalledTimes(2);
 
-    jest.useRealTimers();
     transport.destroy();
   });
 });

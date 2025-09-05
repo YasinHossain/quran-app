@@ -2,9 +2,9 @@
 import React, { useState } from 'react';
 import { SettingsSidebar } from '@/app/(features)/surah/components';
 import { useTafsirVerseData } from '../../hooks/useTafsirVerseData';
-import AyahNavigation from './components/AyahNavigation';
-import TafsirViewer from './components/TafsirViewer';
-import TafsirAudioPlayer from './components/TafsirAudioPlayer';
+import { AyahNavigation } from './components/AyahNavigation';
+import { TafsirViewer } from './components/TafsirViewer';
+import { TafsirAudioPlayer } from './components/TafsirAudioPlayer';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 

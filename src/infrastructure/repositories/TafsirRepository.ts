@@ -101,16 +101,12 @@ export class TafsirRepository implements ITafsirRepository {
 
     // Fallback to CDN endpoint
     const cdnUrl = `https://api.qurancdn.com/api/qdc/tafsirs/${tafsirId}/by_ayah/${encodeURIComponent(verseKey)}`;
-    const response = await fetch(cdnUrl, {
-      headers: { Accept: 'application/json' },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch tafsir content: ${response.status}`);
-    }
-
-    const json = (await response.json()) as { tafsir?: { text: string } };
-    return json.tafsir?.text || '';
+    const data = await apiFetch<{ tafsir?: { text: string } }>(
+      cdnUrl,
+      {},
+      'Failed to fetch tafsir content'
+    );
+    return data.tafsir?.text || '';
   }
 
   /**
@@ -185,23 +181,17 @@ export class TafsirRepository implements ITafsirRepository {
     }
 
     // Fallback to CDN API
-    const url = new URL('https://api.qurancdn.com/api/qdc/resources/tafsirs');
+    const url = 'https://api.qurancdn.com/api/qdc/resources/tafsirs';
+    const cdnParams: Record<string, string> = { per_page: '200', page: '1' };
     if (language && language !== 'all') {
-      url.searchParams.set('language', language);
+      cdnParams.language = language;
     }
-    url.searchParams.set('per_page', '200');
-    url.searchParams.set('page', '1');
-
-    const response = await fetch(url.toString(), {
-      headers: { Accept: 'application/json' },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch tafsir resources: ${response.status}`);
-    }
-
-    const json = (await response.json()) as { tafsirs: ApiTafsirResource[] };
-    return this.mapApiResponseToEntities(json.tafsirs || []);
+    const fallbackData = await apiFetch<{ tafsirs: ApiTafsirResource[] }>(
+      url,
+      cdnParams,
+      'Failed to fetch tafsir resources'
+    );
+    return this.mapApiResponseToEntities(fallbackData.tafsirs || []);
   }
 
   /**

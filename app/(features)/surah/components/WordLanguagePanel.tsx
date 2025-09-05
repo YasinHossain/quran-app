@@ -122,7 +122,7 @@ export const WordLanguagePanel = ({
   );
 };
 
-const const CheckIcon = ({ className }: { className?: string }): JSX.Element => (
+const CheckIcon = ({ className }: { className?: string }): JSX.Element => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className={className}
@@ -137,4 +137,3 @@ const const CheckIcon = ({ className }: { className?: string }): JSX.Element => 
   </svg>
 );
 
-export default WordLanguagePanel;

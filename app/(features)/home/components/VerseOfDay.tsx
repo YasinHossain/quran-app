@@ -173,4 +173,3 @@ export const VerseOfDay = memo(function VerseOfDay({
   );
 });
 
-export default VerseOfDay;

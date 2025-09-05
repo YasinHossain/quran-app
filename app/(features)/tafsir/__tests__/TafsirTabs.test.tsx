@@ -1,6 +1,6 @@
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import userEvent from '@testing-library/user-event';
-import TafsirTabs from '@/app/(features)/tafsir/[surahId]/[ayahId]/components/TafsirTabs';
+import { TafsirTabs } from '@/app/(features)/tafsir/[surahId]/[ayahId]/components/TafsirTabs';
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 import useSWR from 'swr';
 import { logger } from '@/src/infrastructure/monitoring/Logger';

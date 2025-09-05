@@ -111,4 +111,3 @@ export const Verse = memo(function Verse({ verse }: VerseProps) {
   );
 });
 
-export default Verse;

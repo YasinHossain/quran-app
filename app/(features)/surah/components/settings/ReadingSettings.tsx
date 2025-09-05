@@ -23,4 +23,3 @@ export const ReadingSettings = ({ isOpen = false, onToggle }: ReadingSettingsPro
   );
 };
 
-export default ReadingSettings;

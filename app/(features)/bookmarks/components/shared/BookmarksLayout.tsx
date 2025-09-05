@@ -1,5 +1,5 @@
 'use client';
-import type React from 'react';
+import type { ReactNode } from 'react';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookmarksSidebar } from '../BookmarksSidebar';
@@ -9,14 +9,14 @@ import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 import type { Folder } from '@/types/bookmark';
 
 interface BookmarksLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
   activeSection: SectionId;
   onSectionChange: (section: SectionId) => void;
   folders?: Folder[];
   onVerseClick?: (verseKey: string) => void;
 }
 
-export const BookmarksLayout: React.FC<BookmarksLayoutProps> = ({
+export const BookmarksLayout = ({
   children,
   activeSection,
   onSectionChange,

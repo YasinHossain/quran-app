@@ -88,4 +88,3 @@ export const FontSettings = ({
   );
 };
 
-export default FontSettings;

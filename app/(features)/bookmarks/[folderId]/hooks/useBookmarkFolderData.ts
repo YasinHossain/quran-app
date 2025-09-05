@@ -1,13 +1,64 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { getVerseById, getVerseByKey } from '@/lib/api';
-import type { Verse, Folder, Bookmark } from '@/types';
+import type { Bookmark, Folder, Verse } from '@/types';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 // Simple cache for verses
 const verseCache = new Map<string, Verse>();
+export const VERSE_CACHE_LIMIT = 100;
+
+/**
+ * Clear all cached verses. Useful for tests and stale data scenarios.
+ */
+export function clearCache(): void {
+  verseCache.clear();
+}
+
+// Expose cache for testing purposes
+export const __verseCache = verseCache;
+
+export async function getVerseWithCache(
+  verseId: string,
+  translationId: number
+): Promise<Verse> {
+  const cacheKey = `${verseId}-${translationId}`;
+
+  if (verseCache.has(cacheKey)) {
+    const verse = verseCache.get(cacheKey)!;
+    // Refresh key to maintain LRU order
+    verseCache.delete(cacheKey);
+    verseCache.set(cacheKey, verse);
+    return verse;
+  }
+
+  // Check if verseId is a composite key (e.g., "2:255") or a simple number
+  const isCompositeKey = /:/.test(verseId);
+  const isSimpleNumber = /^[0-9]+$/.test(verseId);
+
+  let verse;
+  if (isCompositeKey) {
+    // It's already a verse key like "2:255"
+    verse = await getVerseByKey(verseId, translationId);
+  } else if (isSimpleNumber) {
+    // It's a simple number like "1", "2", "3" - assume it's "1:1", "1:2", "1:3"
+    const verseKey = `1:${verseId}`;
+    verse = await getVerseByKey(verseKey, translationId);
+  } else {
+    // Try as direct verse ID
+    verse = await getVerseById(verseId, translationId);
+  }
+
+  // Enforce cache size limit (LRU)
+  if (verseCache.size >= VERSE_CACHE_LIMIT) {
+    const oldestKey = verseCache.keys().next().value as string;
+    verseCache.delete(oldestKey);
+  }
+  verseCache.set(cacheKey, verse);
+  return verse;
+}
 
 interface UseBookmarkFolderDataParams {
   folderId: string;
@@ -30,38 +81,6 @@ export function useBookmarkFolderData({ folderId }: UseBookmarkFolderDataParams)
 
   const folder = useMemo(() => folders.find((f) => f.id === folderId), [folders, folderId]);
   const bookmarks = useMemo(() => folder?.bookmarks || [], [folder]);
-
-  // Function to load verses with caching
-  const getVerseWithCache = useCallback(
-    async (verseId: string, translationId: number): Promise<Verse> => {
-      const cacheKey = `${verseId}-${translationId}`;
-
-      if (verseCache.has(cacheKey)) {
-        return verseCache.get(cacheKey)!;
-      }
-
-      // Check if verseId is a composite key (e.g., "2:255") or a simple number
-      const isCompositeKey = /:/.test(verseId);
-      const isSimpleNumber = /^[0-9]+$/.test(verseId);
-
-      let verse;
-      if (isCompositeKey) {
-        // It's already a verse key like "2:255"
-        verse = await getVerseByKey(verseId, translationId);
-      } else if (isSimpleNumber) {
-        // It's a simple number like "1", "2", "3" - assume it's "1:1", "1:2", "1:3"
-        const verseKey = `1:${verseId}`;
-        verse = await getVerseByKey(verseKey, translationId);
-      } else {
-        // Try as direct verse ID
-        verse = await getVerseById(verseId, translationId);
-      }
-
-      verseCache.set(cacheKey, verse);
-      return verse;
-    },
-    []
-  );
 
   // Load all verses immediately
   useEffect(() => {
@@ -100,4 +119,3 @@ export function useBookmarkFolderData({ folderId }: UseBookmarkFolderDataParams)
   } as const;
 }
 
-export default useBookmarkFolderData;

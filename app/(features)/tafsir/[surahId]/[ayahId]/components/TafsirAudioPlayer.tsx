@@ -94,4 +94,3 @@ export const TafsirAudioPlayer = ({
   );
 };
 
-export default TafsirAudioPlayer;

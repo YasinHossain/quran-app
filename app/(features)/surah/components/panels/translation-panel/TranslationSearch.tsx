@@ -12,4 +12,3 @@ export const TranslationSearch = ({
   setSearchTerm,
 }: TranslationSearchProps): JSX.Element => <TranslationSearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} />;
 
-export default TranslationSearch;

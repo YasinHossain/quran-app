@@ -88,4 +88,3 @@ export const SettingsSidebar = ({
   );
 };
 
-export default SettingsSidebar;

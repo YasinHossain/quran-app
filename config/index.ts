@@ -8,7 +8,7 @@
  */
 
 import { z } from 'zod';
-import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { logger } from 'src/infrastructure/monitoring/Logger';
 
 /**
  * Environment validation schema
@@ -318,7 +318,7 @@ export const shouldLog = (level: string): boolean => {
  * all required configuration is present and valid.
  */
 export function validateConfig(): void {
-  console.log(`✅ Configuration loaded for ${config.app.environment} environment`);
+  logger.info(`✅ Configuration loaded for ${config.app.environment} environment`);
 
   // Log critical configuration warnings
   if (isProduction) {

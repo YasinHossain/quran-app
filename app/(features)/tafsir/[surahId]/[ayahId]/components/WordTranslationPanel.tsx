@@ -148,4 +148,3 @@ export const WordTranslationPanel = ({
   );
 };
 
-export default WordTranslationPanel;

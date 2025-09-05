@@ -30,7 +30,7 @@ import {
 } from '@/app/testUtils/contextTestUtils';
 
 // Component under test
-import SurahView from '../SurahView.client';
+import { SurahView } from '../SurahView.client';
 
 // Mock i18n
 jest.mock('react-i18next', () => ({

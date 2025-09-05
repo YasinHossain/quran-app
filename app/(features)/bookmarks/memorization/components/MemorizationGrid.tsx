@@ -1,6 +1,5 @@
 'use client';
 
-import type React from 'react';
 import { motion } from 'framer-motion';
 import { BrainIcon, PlusIcon } from '@/app/shared/icons';
 import { MemorizationCard } from './MemorizationCard';
@@ -12,7 +11,7 @@ interface MemorizationGridProps {
   onCreatePlan: () => void;
 }
 
-export const MemorizationGrid: React.FC<MemorizationGridProps> = ({
+export const MemorizationGrid = ({
   memorization,
   chapters,
   onCreatePlan,

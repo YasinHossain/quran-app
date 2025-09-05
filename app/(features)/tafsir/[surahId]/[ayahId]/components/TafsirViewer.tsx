@@ -1,7 +1,7 @@
 'use client';
 import { Verse as VerseType, TafsirResource } from '@/types';
 import { VerseCard as VerseComponent } from '@/app/(features)/surah/components';
-import TafsirTabs from './TafsirTabs';
+import { TafsirTabs } from './TafsirTabs';
 import { useSettings } from '@/app/providers/SettingsContext';
 
 interface TafsirViewerProps {
@@ -43,4 +43,3 @@ export const TafsirViewer = ({ verse, tafsirResource, tafsirHtml }: TafsirViewer
   );
 };
 
-export default TafsirViewer;

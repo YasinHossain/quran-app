@@ -1,5 +1,5 @@
 export { SettingsContent } from './SettingsContent';
-export { default as SettingsSidebar } from './SettingsSidebar';
+export { SettingsSidebar } from './SettingsSidebar';
 export { ReadingSettings } from './ReadingSettings';
 export { FontSettings } from './FontSettings';
 export { TranslationSettings } from './TranslationSettings';

@@ -9,7 +9,7 @@ interface SurahTabProps {
   searchQuery: string;
 }
 
-export default function SurahTab({ searchQuery }: SurahTabProps) {
+export function SurahTab({ searchQuery }: SurahTabProps) {
   const [allSurahs, setAllSurahs] = useState<Surah[]>([]);
 
   useEffect(() => {

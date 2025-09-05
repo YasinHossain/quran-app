@@ -1,6 +1,5 @@
 'use client';
 
-import type React from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { CircularProgress } from '../../components/CircularProgress';
@@ -13,12 +12,12 @@ interface LastReadCardProps {
   index: number;
 }
 
-export const LastReadCard: React.FC<LastReadCardProps> = ({
+export const LastReadCard = ({
   surahId,
   verseId,
   chapter,
   index,
-}) => {
+}: LastReadCardProps): JSX.Element => {
   const router = useRouter();
   const total = chapter?.verses_count || 0;
   const percent = Math.min(100, Math.max(0, Math.round((verseId / total) * 100)));

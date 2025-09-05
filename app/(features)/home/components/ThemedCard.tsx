@@ -9,7 +9,7 @@ interface ThemedCardProps {
   className?: string;
 }
 
-export default function ThemedCard({ href, children, className }: ThemedCardProps) {
+export function ThemedCard({ href, children, className }: ThemedCardProps) {
   return (
     <GlassCard
       href={href}

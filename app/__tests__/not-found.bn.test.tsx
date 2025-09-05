@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import NotFound from '@/app/not-found';
 import { TranslationProvider } from '@/app/providers/TranslationProvider';
-import i18n from '@/app/i18n';
+import { i18n } from '@/app/i18n';
 
 jest.mock('next/link', () => {
   return ({ children, href }: { children: ReactNode; href: string }) => (

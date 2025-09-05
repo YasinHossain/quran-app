@@ -54,4 +54,3 @@ export const SurahVerseList = ({
   );
 };
 
-export default SurahVerseList;

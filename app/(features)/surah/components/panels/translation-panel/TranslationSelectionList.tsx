@@ -74,4 +74,3 @@ export const TranslationSelectionList = ({
   </div>
 );
 
-export default TranslationSelectionList;

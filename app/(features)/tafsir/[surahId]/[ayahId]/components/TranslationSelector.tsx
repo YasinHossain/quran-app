@@ -10,4 +10,3 @@ export const TranslationSelector = ({ isOpen, onClose }: TranslationSelectorProp
   return <TranslationPanel isOpen={isOpen} onClose={onClose} />;
 };
 
-export default TranslationSelector;

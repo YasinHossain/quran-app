@@ -100,4 +100,3 @@ export const RepeatModeSelector = memo(function RepeatModeSelector({
   );
 });
 
-export default RepeatModeSelector;

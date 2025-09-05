@@ -4,8 +4,8 @@ import React from 'react';
 import { SettingsSidebar } from './settings/SettingsSidebar';
 import { getVersesByChapter } from '@/lib/api';
 import { useVerseListing, useSurahPanels } from '../hooks';
-import SurahAudioPlayer from './SurahAudioPlayer';
-import SurahVerseList from './SurahVerseList';
+import { SurahAudioPlayer } from './SurahAudioPlayer';
+import { SurahVerseList } from './SurahVerseList';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
 interface SurahViewProps {
@@ -16,7 +16,7 @@ interface SurahViewProps {
  * Main client component for displaying Surah verses with settings sidebar.
  * Manages verse listing, audio playback, and responsive layout with hidden header behavior.
  */
-export default function SurahView({ surahId }: SurahViewProps) {
+export function SurahView({ surahId }: SurahViewProps) {
   const { isHidden } = useHeaderVisibility();
 
   React.useEffect(() => {

@@ -13,7 +13,7 @@ interface VerseCardProps {
 
 import { useCallback } from 'react';
 
-export default function VerseCard({ verse }: VerseCardProps) {
+export function VerseCard({ verse }: VerseCardProps) {
   const {
     playingId,
     setPlayingId,

@@ -47,4 +47,3 @@ export const ReciterSelector = memo(function ReciterSelector({
   );
 });
 
-export default ReciterSelector;

@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from '../../../lib/api/client';
 import { LogLevel, type LogEntry, type ILoggerTransport, logger } from './Logger';
 
 /**
@@ -48,31 +49,20 @@ export class RemoteTransport implements ILoggerTransport {
     const entries = [...this.buffer];
     this.buffer = [];
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
-
     try {
-      const response = await fetch(this.endpoint, {
+      await fetchWithTimeout(this.endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           ...(this.apiKey ? { Authorization: `Bearer ${this.apiKey}` } : {}),
         },
         body: JSON.stringify({ entries }),
-        signal: controller.signal,
+        errorPrefix: 'Failed to send logs',
       });
-
-      if (!response.ok) {
-        // Re-add failed entries to buffer for retry
-        this.buffer.unshift(...entries);
-        logger.warn(`Failed to send logs: ${response.status} ${response.statusText}`);
-      }
     } catch (error) {
       // Re-add failed entries to buffer for retry
       this.buffer.unshift(...entries);
-      logger.warn('Failed to send logs:', error as Error);
-    } finally {
-      clearTimeout(timeoutId);
+      logger.warn('Failed to send logs', undefined, error as Error);
     }
   }
 

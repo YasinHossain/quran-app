@@ -18,4 +18,3 @@ export const DebugInfo = memo(function DebugInfo({ track, repeatOptions }: Debug
   );
 });
 
-export default DebugInfo;

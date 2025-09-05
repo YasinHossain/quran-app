@@ -12,4 +12,3 @@ export const ArabicFontSearch = ({
   setSearchTerm,
 }: ArabicFontSearchProps): JSX.Element => <FontSearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} />;
 
-export default ArabicFontSearch;

@@ -5,9 +5,9 @@ import React, { useState } from 'react';
 import { AudioProvider } from '@/app/shared/player/context/AudioContext';
 import { QuranAudioPlayer } from '@/app/shared/player/QuranAudioPlayer';
 
-import DebugInfo from './components/DebugInfo';
-import ReciterSelector from './components/ReciterSelector';
-import RepeatModeSelector from './components/RepeatModeSelector';
+import { DebugInfo } from './components/DebugInfo';
+import { ReciterSelector } from './components/ReciterSelector';
+import { RepeatModeSelector } from './components/RepeatModeSelector';
 
 import type { Track, RepeatOptions } from '@/app/shared/player/types';
 

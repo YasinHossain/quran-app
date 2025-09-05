@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
-import SurahVerseList from '../SurahVerseList';
+import { SurahVerseList } from '../SurahVerseList';
 import type { Verse } from '@/types';
 
 jest.mock('react-i18next', () => ({

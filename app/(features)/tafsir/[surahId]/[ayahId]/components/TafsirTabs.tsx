@@ -13,7 +13,7 @@ interface TafsirTabsProps {
   tafsirIds: number[];
 }
 
-export default function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
+export function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps) {
   const repository = container.getTafsirRepository();
   const resourcesUseCase = new GetTafsirResourcesUseCase(repository);
 
