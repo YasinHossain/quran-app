@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { CloseIcon } from '@/app/shared/icons';
@@ -18,7 +18,7 @@ export const DeleteFolderModal = ({
   isOpen,
   onClose,
   folder,
-}: DeleteFolderModalProps): JSX.Element => {
+}: DeleteFolderModalProps): React.JSX.Element => {
   const { deleteFolder } = useBookmarks();
   const [isDeleting, setIsDeleting] = useState(false);
 

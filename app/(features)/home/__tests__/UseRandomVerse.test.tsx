@@ -12,7 +12,7 @@ jest.mock('@/lib/api', () => ({
 }));
 
 describe('useRandomVerse', () => {
-  const wrapper = ({ children }: { children: ReactNode }): JSX.Element => (
+  const wrapper = ({ children }: { children: ReactNode }): React.JSX.Element => (
     <SWRConfig value={{ provider: () => new Map() }}>{children}</SWRConfig>
   );
 

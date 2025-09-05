@@ -17,7 +17,7 @@ export const ConfirmDeleteModal = ({
   description = 'Are you sure you want to delete this item?',
   onConfirm,
   onCancel,
-}: ConfirmDeleteModalProps): JSX.Element => {
+}: ConfirmDeleteModalProps): React.JSX.Element => {
   const cancelRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {

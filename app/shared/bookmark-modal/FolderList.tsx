@@ -21,7 +21,7 @@ export const FolderList = ({
   onFolderSelect,
   findBookmark,
   emptyMessage = 'No folders found',
-}: FolderListProps): JSX.Element => {
+}: FolderListProps): React.JSX.Element => {
   const existingBookmark = findBookmark(verseId);
 
   if (folders.length === 0) {

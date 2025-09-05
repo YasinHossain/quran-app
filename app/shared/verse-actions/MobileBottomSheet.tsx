@@ -44,7 +44,7 @@ export const MobileBottomSheet = ({
   onShare,
   onNavigateToVerse,
   showRemove = false,
-}: MobileBottomSheetProps): JSX.Element => {
+}: MobileBottomSheetProps): React.JSX.Element => {
   const handleAction = (action: () => void) => {
     action();
     onClose();

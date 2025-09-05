@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { BaseSidebar } from '@/app/shared/components/BaseSidebar';
 import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
 import { Bookmark, Folder } from '@/types';
@@ -24,7 +25,7 @@ export const BookmarkFolderSidebar = ({
   onBack,
   isOpen,
   onClose,
-}: BookmarkFolderSidebarProps): JSX.Element => {
+}: BookmarkFolderSidebarProps): React.JSX.Element => {
   return (
     <BaseSidebar
       isOpen={isOpen}

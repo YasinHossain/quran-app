@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { SearchInput } from '@/app/shared/components/SearchInput';
 import { BarsIcon, SearchIcon } from '@/app/shared/icons';
 import { PlusIcon } from '@/app/shared/icons';
@@ -26,7 +27,7 @@ export const BookmarksHeader = ({
   sortBy = 'recent',
   onSortChange,
   stats,
-}: BookmarksHeaderProps): JSX.Element => {
+}: BookmarksHeaderProps): React.JSX.Element => {
   const { variant } = useResponsiveState();
   const showMenuButton = variant === 'compact' || variant === 'default';
 

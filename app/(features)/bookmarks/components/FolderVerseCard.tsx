@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { cn } from '@/lib/utils/cn';
 
 import type { Bookmark } from '@/types/bookmark';
@@ -14,7 +15,7 @@ export const FolderVerseCard = ({
   bookmark,
   onClick,
   className,
-}: FolderVerseCardProps): JSX.Element => {
+}: FolderVerseCardProps): React.JSX.Element => {
   // Parse verse key to get surah and ayah numbers
   const parseVerseKey = (verseKey?: string) => {
     if (!verseKey) return { surahNumber: 0, ayahNumber: 0 };

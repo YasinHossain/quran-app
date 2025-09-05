@@ -1,5 +1,5 @@
 'use client';
-import type React from 'react';
+import React from 'react';
 
 interface Resource {
   id: number;
@@ -61,7 +61,7 @@ export const ResourceItem = <T extends Resource>({
   );
 };
 
-const CheckIcon = ({ className }: { className?: string }): JSX.Element => (
+const CheckIcon = ({ className }: { className?: string }): React.JSX.Element => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className={className}

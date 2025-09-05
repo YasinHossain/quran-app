@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { DeleteFolderModal } from './DeleteFolderModal';
 import { EmptyBookmarks, EmptySearch } from './EmptyStates';
@@ -26,7 +26,7 @@ export const FolderGrid = ({
   onCreateFolder,
   searchTerm,
   onClearSearch,
-}: FolderGridProps): JSX.Element => {
+}: FolderGridProps): React.JSX.Element => {
   const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);

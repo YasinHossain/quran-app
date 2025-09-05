@@ -10,6 +10,6 @@ interface ArabicFontSearchProps {
 export const ArabicFontSearch = ({
   searchTerm,
   setSearchTerm,
-}: ArabicFontSearchProps): JSX.Element => (
+}: ArabicFontSearchProps): React.JSX.Element => (
   <FontSearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
 );

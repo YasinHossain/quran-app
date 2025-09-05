@@ -4,14 +4,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
 
-import type React from 'react';
+import React from 'react';
 
 interface QuickSearchProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const QuickSearch = ({ isOpen, onClose }: QuickSearchProps): JSX.Element => {
+export const QuickSearch = ({ isOpen, onClose }: QuickSearchProps): React.JSX.Element => {
   const [query, setQuery] = useState('');
   const [recentSearches] = useState([
     'Al-Fatiha',

@@ -5,7 +5,7 @@ import { TranslationResource } from '@/types';
 
 import { MAX_TRANSLATION_SELECTIONS } from './useTranslationPanel';
 
-import type React from 'react';
+import React from 'react';
 
 interface TranslationSelectionListProps {
   orderedSelection: number[];
@@ -27,7 +27,7 @@ export const TranslationSelectionList = ({
   handleDrop,
   handleDragEnd,
   draggedId,
-}: TranslationSelectionListProps): JSX.Element => (
+}: TranslationSelectionListProps): React.JSX.Element => (
   <div>
     <h2 className="text-sm font-semibold px-2 mb-3 flex items-center justify-between text-foreground">
       <span>

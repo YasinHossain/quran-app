@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 
 import { SearchInput } from './components/SearchInput';
 
-import type React from 'react';
+import React from 'react';
 
 export const Header = () => {
   const { isHidden } = useHeaderVisibility();

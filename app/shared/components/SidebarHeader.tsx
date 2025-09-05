@@ -3,7 +3,7 @@
 import { CloseIcon, ArrowLeftIcon } from '@/app/shared/icons';
 import { cn } from '@/lib/utils/cn';
 
-import type React from 'react';
+import React from 'react';
 
 interface SidebarHeaderProps {
   title: string;
@@ -23,7 +23,7 @@ export const SidebarHeader = ({
   showBackButton = false,
   className,
   children,
-}: SidebarHeaderProps): JSX.Element => {
+}: SidebarHeaderProps): React.JSX.Element => {
   return (
     <div
       className={cn(

@@ -6,7 +6,7 @@ import { BookmarksContent } from './BookmarksContent';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 import type { Folder } from '@/types/bookmark';
-import type React from 'react';
+import React from 'react';
 
 interface BookmarksSidebarProps {
   activeSection?: SectionId;
@@ -26,7 +26,7 @@ export const BookmarksSidebar = ({
   onVerseClick,
   isOpen,
   onClose,
-}: BookmarksSidebarProps): JSX.Element => {
+}: BookmarksSidebarProps): React.JSX.Element => {
   // If no isOpen/onClose provided, render content directly (for desktop sidebar)
   if (isOpen === undefined || onClose === undefined) {
     return (

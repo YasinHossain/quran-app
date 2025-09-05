@@ -4,7 +4,7 @@ import Image, { ImageProps } from 'next/image';
 
 import { useResponsiveState } from '@/lib/responsive';
 
-import type React from 'react';
+import React from 'react';
 
 interface ResponsiveImageProps extends Omit<ImageProps, 'src' | 'sizes'> {
   src: string | ResponsiveImageSources;
@@ -41,7 +41,7 @@ export const ResponsiveImage = ({
   className,
   priority,
   ...props
-}: ResponsiveImageProps): JSX.Element => {
+}: ResponsiveImageProps): React.JSX.Element => {
   const { variant, breakpoint } = useResponsiveState();
 
   // Determine the optimal image source based on current breakpoint
@@ -155,7 +155,7 @@ export const ResponsiveBackgroundImage = ({
   className = '',
   overlay = false,
   overlayOpacity = 0.5,
-}: ResponsiveBackgroundImageProps): JSX.Element => {
+}: ResponsiveBackgroundImageProps): React.JSX.Element => {
   const { breakpoint } = useResponsiveState();
 
   const getOptimalSource = (): string => {

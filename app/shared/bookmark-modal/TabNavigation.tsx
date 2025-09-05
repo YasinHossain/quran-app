@@ -15,7 +15,7 @@ export const TabNavigation = ({
   activeTab,
   onTabChange,
   verseKey = '',
-}: TabNavigationProps): JSX.Element => {
+}: TabNavigationProps): React.JSX.Element => {
   const tabs = [
     { id: 'pin' as const, label: 'Pin Verse', description: 'Quick access' },
     { id: 'bookmark' as const, label: 'Add to Folder', description: 'Organize & save' },

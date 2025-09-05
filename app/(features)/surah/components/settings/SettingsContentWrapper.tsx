@@ -18,7 +18,7 @@ export const SettingsContentWrapper = ({
   selectedTafsirName,
   selectedWordLanguageName,
   showTafsirSetting,
-}: SettingsContentWrapperProps): JSX.Element => {
+}: SettingsContentWrapperProps): React.JSX.Element => {
   return (
     <>
       {/* Tabs section with header separation - matches SurahListContent structure */}

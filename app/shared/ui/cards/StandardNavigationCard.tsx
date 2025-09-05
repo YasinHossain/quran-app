@@ -3,7 +3,7 @@ import { buildTextClasses } from '../../design-system/card-tokens';
 import { BaseCard, BaseCardProps } from '../BaseCard';
 import { NumberBadge } from '../NumberBadge';
 
-import type React from 'react';
+import React from 'react';
 
 /**
  * StandardNavigationCard
@@ -36,7 +36,7 @@ export const StandardNavigationCard = ({
   isActive = false,
   className = 'items-center ml-2',
   ...props
-}: StandardNavigationCardProps): JSX.Element => {
+}: StandardNavigationCardProps): React.JSX.Element => {
   const {
     id,
     title,
@@ -92,7 +92,7 @@ export const StandardNavigationCard = ({
  */
 
 // For Surah cards (complex layout with Arabic)
-export const SurahNavigationCard = (props: StandardNavigationCardProps): JSX.Element => (
+export const SurahNavigationCard = (props: StandardNavigationCardProps): React.JSX.Element => (
   <StandardNavigationCard
     {...props}
     content={{
@@ -104,7 +104,7 @@ export const SurahNavigationCard = (props: StandardNavigationCardProps): JSX.Ele
 );
 
 // For Juz cards (medium layout, no Arabic)
-export const JuzNavigationCard = (props: StandardNavigationCardProps): JSX.Element => (
+export const JuzNavigationCard = (props: StandardNavigationCardProps): React.JSX.Element => (
   <StandardNavigationCard
     {...props}
     content={{
@@ -116,7 +116,7 @@ export const JuzNavigationCard = (props: StandardNavigationCardProps): JSX.Eleme
 );
 
 // For Page cards (simple layout)
-export const PageNavigationCard = (props: StandardNavigationCardProps): JSX.Element => (
+export const PageNavigationCard = (props: StandardNavigationCardProps): React.JSX.Element => (
   <StandardNavigationCard
     {...props}
     content={{

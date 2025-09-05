@@ -28,7 +28,7 @@ export const WordLanguagePanel = ({
   isOpen,
   onClose,
   renderMode = 'panel',
-}: WordLanguagePanelProps): JSX.Element => {
+}: WordLanguagePanelProps): React.JSX.Element => {
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
 
@@ -124,7 +124,7 @@ export const WordLanguagePanel = ({
   );
 };
 
-const CheckIcon = ({ className }: { className?: string }): JSX.Element => (
+const CheckIcon = ({ className }: { className?: string }): React.JSX.Element => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className={className}

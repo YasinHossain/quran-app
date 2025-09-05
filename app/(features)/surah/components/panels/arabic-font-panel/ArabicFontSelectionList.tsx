@@ -1,7 +1,7 @@
 'use client';
 import { GripVerticalIcon, CloseIcon } from '@/app/shared/icons';
 
-import type React from 'react';
+import React from 'react';
 
 interface ArabicFont {
   id: number;
@@ -31,7 +31,7 @@ export const ArabicFontSelectionList = ({
   handleDrop,
   handleDragEnd,
   draggedId,
-}: ArabicFontSelectionListProps): JSX.Element => (
+}: ArabicFontSelectionListProps): React.JSX.Element => (
   <div>
     <h2 className="text-sm font-semibold px-2 mb-3 flex items-center justify-between text-muted">
       <span>SELECTED FONT ({orderedSelection.length}/1)</span>

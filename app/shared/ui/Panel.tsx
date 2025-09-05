@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils/cn';
 
 import { Button } from './Button';
 
-import type React from 'react';
+import React from 'react';
 
 export const PANEL_VARIANTS = {
   sidebar: 'fixed top-0 bottom-0 right-0 w-80 bg-surface shadow-lg pt-safe pb-safe',
@@ -37,7 +37,7 @@ export const Panel = ({
   className,
   showCloseButton = true,
   closeOnOverlayClick = true,
-}: PanelProps): JSX.Element => {
+}: PanelProps): React.JSX.Element => {
   if (!isOpen) return null;
 
   const variantClass =

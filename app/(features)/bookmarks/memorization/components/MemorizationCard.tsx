@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
@@ -20,7 +21,7 @@ export const MemorizationCard = ({
   surahId,
   plan,
   chapter,
-}: MemorizationCardProps): JSX.Element => {
+}: MemorizationCardProps): React.JSX.Element => {
   const router = useRouter();
   const percent = Math.min(
     100,

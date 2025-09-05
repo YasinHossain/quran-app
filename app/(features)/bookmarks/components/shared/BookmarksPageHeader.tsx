@@ -1,8 +1,9 @@
 'use client';
 
+import React from 'react';
 import { BookmarkIcon } from '@/app/shared/icons';
 
-export const BookmarksPageHeader = (): JSX.Element => {
+export const BookmarksPageHeader = (): React.JSX.Element => {
   return (
     <div className="mb-6">
       <div className="flex items-center gap-3">

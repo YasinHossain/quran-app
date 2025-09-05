@@ -3,7 +3,7 @@
 import { SearchInput } from '../components/SearchInput';
 
 import type { SearchProps } from '@/types/components';
-import type React from 'react';
+import React from 'react';
 
 interface SearchFieldProps extends SearchProps {
   variant?: 'main' | 'default' | 'glass' | 'header' | 'panel';
@@ -26,7 +26,7 @@ export const SearchField = ({
   className = '',
   label,
   onKeyDown,
-}: SearchFieldProps): JSX.Element => (
+}: SearchFieldProps): React.JSX.Element => (
   <div className={className}>
     {label && (
       <h2 className="text-sm font-semibold px-2 mb-3 text-muted uppercase tracking-wide">

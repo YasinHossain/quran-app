@@ -21,7 +21,7 @@ export const BookmarkVerseCard = ({
   bookmark,
   className,
   ...props
-}: BookmarkVerseCardProps): JSX.Element => {
+}: BookmarkVerseCardProps): React.JSX.Element => {
   // Parse verse key to get surah and ayah numbers
   const parseVerseKey = (verseKey?: string) => {
     if (!verseKey) return { surahNumber: 0, ayahNumber: 0 };

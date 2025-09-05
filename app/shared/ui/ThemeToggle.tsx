@@ -5,7 +5,7 @@ import { SunIcon, MoonIcon } from '@/app/shared/icons';
 
 import { Button } from './Button';
 
-import type React from 'react';
+import React from 'react';
 
 interface ThemeToggleProps {
   variant?: 'primary' | 'secondary' | 'ghost' | 'tabs' | string;
@@ -13,7 +13,7 @@ interface ThemeToggleProps {
   className?: string;
 }
 
-export const ThemeToggle = ({ variant = 'ghost', className }: ThemeToggleProps): JSX.Element => {
+export const ThemeToggle = ({ variant = 'ghost', className }: ThemeToggleProps): React.JSX.Element => {
   const { setTheme } = useTheme();
   const [currentTheme, setCurrentTheme] = React.useState<'light' | 'dark'>('light');
 

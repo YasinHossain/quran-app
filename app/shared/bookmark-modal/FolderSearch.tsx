@@ -13,7 +13,7 @@ export const FolderSearch = ({
   searchQuery,
   onSearchChange,
   placeholder = 'Search folders...',
-}: FolderSearchProps): JSX.Element => {
+}: FolderSearchProps): React.JSX.Element => {
   return (
     <div className="relative">
       <SearchIcon

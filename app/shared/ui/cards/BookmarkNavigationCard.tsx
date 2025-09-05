@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils/cn';
 import { colors } from '../../design-system/card-tokens';
 import { BaseCard, BaseCardProps } from '../BaseCard';
 
-import type React from 'react';
+import React from 'react';
 
 /**
  * BookmarkNavigationCard
@@ -46,7 +46,7 @@ export const BookmarkNavigationCard = ({
   className,
   onClick,
   ...props
-}: BookmarkNavigationCardProps): JSX.Element => {
+}: BookmarkNavigationCardProps): React.JSX.Element => {
   const { id, icon: IconComponent, label, description } = content;
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement | HTMLAnchorElement>) => {

@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { LoadingError } from '@/app/shared/LoadingError';
 import { Bookmark } from '@/types';
@@ -20,7 +21,7 @@ interface VerseItemProps {
   onSelect: () => void;
 }
 
-const VerseItem = ({ bookmark, isActive, onSelect }: VerseItemProps): JSX.Element => {
+const VerseItem = ({ bookmark, isActive, onSelect }: VerseItemProps): React.JSX.Element => {
   const { chapters } = useBookmarks();
   const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark, chapters);
   const ayahNumber = enrichedBookmark.verseKey?.split(':')[1];
@@ -72,7 +73,7 @@ export const BookmarkVerseSidebar = ({
   activeVerseId,
   onVerseSelect,
   onBack,
-}: BookmarkVerseSidebarProps): JSX.Element => {
+}: BookmarkVerseSidebarProps): React.JSX.Element => {
   return (
     <div className="h-full flex flex-col bg-surface">
       {/* Header */}

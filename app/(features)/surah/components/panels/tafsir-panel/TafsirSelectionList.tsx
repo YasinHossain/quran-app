@@ -5,7 +5,7 @@ import { TafsirResource } from '@/types';
 
 import { MAX_TAFSIR_SELECTIONS } from './tafsirPanel.utils';
 
-import type React from 'react';
+import React from 'react';
 
 interface TafsirSelectionListProps {
   orderedSelection: number[];
@@ -27,7 +27,7 @@ export const TafsirSelectionList = ({
   handleDrop,
   handleDragEnd,
   draggedId,
-}: TafsirSelectionListProps): JSX.Element => (
+}: TafsirSelectionListProps): React.JSX.Element => (
   <div>
     <h2 className="text-sm font-semibold px-1 mb-2 flex items-center justify-between text-muted">
       <span>

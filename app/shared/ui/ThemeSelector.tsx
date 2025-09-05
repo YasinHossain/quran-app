@@ -7,7 +7,7 @@ interface ThemeSelectorProps {
   className?: string;
 }
 
-export const ThemeSelector = ({ className }: ThemeSelectorProps): JSX.Element => {
+export const ThemeSelector = ({ className }: ThemeSelectorProps): React.JSX.Element => {
   const { theme, setTheme } = useTheme();
 
   const toggleTheme = () => {

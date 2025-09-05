@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { motion } from 'framer-motion';
 
 import { BrainIcon, PlusIcon } from '@/app/shared/icons';
@@ -17,7 +18,7 @@ export const MemorizationGrid = ({
   memorization,
   chapters,
   onCreatePlan,
-}: MemorizationGridProps): JSX.Element => {
+}: MemorizationGridProps): React.JSX.Element => {
   if (!memorization || Object.keys(memorization).length === 0) {
     return (
       <div className="text-center py-16">

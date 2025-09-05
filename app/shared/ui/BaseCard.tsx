@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 import { cn } from '@/lib/utils/cn';
 
-import type React from 'react';
+import React from 'react';
 
 // Design token types
 interface CardVariant {
@@ -299,7 +299,7 @@ export const BaseCard = ({
 export const NavigationCard = ({
   children,
   ...props
-}: Omit<BaseCardProps, 'variant' | 'animation'> & { children?: React.ReactNode }): JSX.Element => (
+}: Omit<BaseCardProps, 'variant' | 'animation'> & { children?: React.ReactNode }): React.JSX.Element => (
   <BaseCard variant="navigation" animation="navigation" {...props}>
     {children}
   </BaseCard>
@@ -308,7 +308,7 @@ export const NavigationCard = ({
 export const FolderCardBase = ({
   children,
   ...props
-}: Omit<BaseCardProps, 'variant' | 'animation'> & { children?: React.ReactNode }): JSX.Element => (
+}: Omit<BaseCardProps, 'variant' | 'animation'> & { children?: React.ReactNode }): React.JSX.Element => (
   <BaseCard variant="folder" animation="folder" {...props}>
     {children}
   </BaseCard>
@@ -317,7 +317,7 @@ export const FolderCardBase = ({
 export const BookmarkCardBase = ({
   children,
   ...props
-}: Omit<BaseCardProps, 'variant' | 'animation'> & { children?: React.ReactNode }): JSX.Element => (
+}: Omit<BaseCardProps, 'variant' | 'animation'> & { children?: React.ReactNode }): React.JSX.Element => (
   <BaseCard variant="bookmark" animation="bookmark" {...props}>
     {children}
   </BaseCard>

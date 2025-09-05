@@ -16,7 +16,7 @@ export const SwipeIndicator = ({
   show = true,
   autoHide = true,
   autoHideDelay = 5000,
-}: SwipeIndicatorProps): JSX.Element => {
+}: SwipeIndicatorProps): React.JSX.Element => {
   const [isVisible, setIsVisible] = useState(show);
 
   useEffect(() => {

@@ -13,7 +13,7 @@ export const PinTab = ({
   verseKey,
   isVersePinned,
   onTogglePin,
-}: PinTabProps): JSX.Element => {
+}: PinTabProps): React.JSX.Element => {
   return (
     <div className="p-6 flex flex-col items-center justify-center min-h-[200px] space-y-6">
       <div className="text-center space-y-3">

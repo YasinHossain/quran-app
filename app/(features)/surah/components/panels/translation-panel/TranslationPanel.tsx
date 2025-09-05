@@ -7,14 +7,14 @@ import { TranslationPanelHeader } from './components/TranslationPanelHeader';
 import { useTranslationSections } from './hooks/useTranslationSections';
 import { useTranslationPanel } from './useTranslationPanel';
 
-import type React from 'react';
+import React from 'react';
 
 interface TranslationPanelProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const TranslationPanel = ({ isOpen, onClose }: TranslationPanelProps): JSX.Element => {
+export const TranslationPanel = ({ isOpen, onClose }: TranslationPanelProps): React.JSX.Element => {
   const panelData = useTranslationPanel(isOpen);
   const { listContainerRef, listHeight } = useListHeight(isOpen);
   const { resourcesToRender, sectionsToRender } = useTranslationSections(

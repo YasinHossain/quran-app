@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 
 import { AdaptiveNavigation } from './AdaptiveNavigation';
 
-import type React from 'react';
+import React from 'react';
 
 interface AdaptiveLayoutProps {
   children: React.ReactNode;
@@ -28,7 +28,7 @@ export const AdaptiveLayout = ({
   sidebarContent,
   sidebarOpen = false,
   onSidebarToggle,
-}: AdaptiveLayoutProps): JSX.Element => {
+}: AdaptiveLayoutProps): React.JSX.Element => {
   const { variant } = useResponsiveState();
   const { showQuranSelector } = useNavigation();
 

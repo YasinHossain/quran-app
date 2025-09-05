@@ -6,7 +6,7 @@ import { DesktopVerseActions } from './DesktopVerseActions';
 import { MobileVerseActions } from './MobileVerseActions';
 import { VerseActionsProps } from './types';
 
-export const ResponsiveVerseActions = (props: VerseActionsProps): JSX.Element => {
+export const ResponsiveVerseActions = (props: VerseActionsProps): React.JSX.Element => {
   const { variant } = useResponsiveState();
 
   if (variant === 'compact') {

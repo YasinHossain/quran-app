@@ -25,7 +25,7 @@ export const BookmarksLayout = ({
   onSectionChange,
   folders = [],
   onVerseClick,
-}: BookmarksLayoutProps): JSX.Element => {
+}: BookmarksLayoutProps): React.JSX.Element => {
   const { isHidden } = useHeaderVisibility();
   const { isBookmarkSidebarOpen, setBookmarkSidebarOpen } = useSidebar();
 

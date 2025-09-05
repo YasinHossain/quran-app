@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { motion } from 'framer-motion';
 
 import { Chapter } from '@/types';
@@ -11,7 +12,7 @@ interface LastReadGridProps {
   chapters: Chapter[];
 }
 
-export const LastReadGrid = ({ lastRead, chapters }: LastReadGridProps): JSX.Element => {
+export const LastReadGrid = ({ lastRead, chapters }: LastReadGridProps): React.JSX.Element => {
   if (Object.keys(lastRead).length === 0) {
     return (
       <div className="text-center py-16">

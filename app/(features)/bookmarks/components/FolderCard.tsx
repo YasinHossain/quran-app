@@ -1,9 +1,8 @@
 'use client';
 
+import React from 'react';
 import { EnhancedFolderCard } from '@/app/shared/ui/cards/EnhancedFolderCard';
 import { Folder } from '@/types';
-
-import type React from 'react';
 
 interface FolderCardProps {
   folder: Folder;
@@ -21,7 +20,7 @@ export const FolderCard = React.memo(function FolderCard({
   onDelete,
   onRename,
   onColorChange,
-}: FolderCardProps): JSX.Element {
+}: FolderCardProps): React.JSX.Element {
   return (
     <EnhancedFolderCard
       folder={folder}

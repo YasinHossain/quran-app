@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import { motion } from 'framer-motion';
 
 import { FolderContextMenu } from '@/app/(features)/bookmarks/components/FolderContextMenu';
@@ -6,8 +7,6 @@ import { FolderIcon } from '@/app/shared/icons';
 import { cn } from '@/lib/utils/cn';
 
 import { BaseCard, BaseCardProps } from '../BaseCard';
-
-import type React from 'react';
 
 /**
  * EnhancedFolderCard
@@ -41,7 +40,7 @@ export const EnhancedFolderCard = React.memo(function EnhancedFolderCard({
   onClick,
   'aria-label': ariaLabel,
   ...props
-}: EnhancedFolderCardProps): JSX.Element {
+}: EnhancedFolderCardProps): React.JSX.Element {
   const bookmarkCount = Array.isArray(folder.bookmarks)
     ? folder.bookmarks.length
     : folder.bookmarks.length;

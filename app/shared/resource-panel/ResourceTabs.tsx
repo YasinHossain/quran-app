@@ -1,7 +1,7 @@
 'use client';
 import { ChevronLeftIcon, ChevronRightIcon } from '@/app/shared/icons';
 
-import type React from 'react';
+import React from 'react';
 
 interface ResourceTabsProps {
   languages: string[];
@@ -25,7 +25,7 @@ export const ResourceTabs = ({
   scrollTabsLeft,
   scrollTabsRight,
   className = '',
-}: ResourceTabsProps): JSX.Element => (
+}: ResourceTabsProps): React.JSX.Element => (
   <div className={`flex items-center overflow-hidden ${className}`}>
     <button
       onClick={scrollTabsLeft}

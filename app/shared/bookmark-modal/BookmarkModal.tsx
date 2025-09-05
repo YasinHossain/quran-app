@@ -19,7 +19,7 @@ export const BookmarkModal = ({
   onClose,
   verseId,
   verseKey = '',
-}: BookmarkModalProps): JSX.Element => {
+}: BookmarkModalProps): React.JSX.Element => {
   const {
     folders,
     addBookmark,

@@ -6,7 +6,7 @@ import { CloseIcon, CheckIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils';
 
-import type React from 'react';
+import React from 'react';
 
 interface CreateFolderFormProps {
   newFolderName: string;
@@ -20,7 +20,7 @@ export const CreateFolderForm = ({
   onNameChange,
   onCreateFolder,
   onCancel,
-}: CreateFolderFormProps): JSX.Element => {
+}: CreateFolderFormProps): React.JSX.Element => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onCreateFolder();

@@ -8,7 +8,7 @@ import { CloseIcon } from '@/app/shared/icons';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { Folder } from '@/types';
 
-import type React from 'react';
+import React from 'react';
 
 interface FolderSettingsModalProps {
   isOpen: boolean;
@@ -35,7 +35,7 @@ export const FolderSettingsModal = ({
   onClose,
   folder,
   mode,
-}: FolderSettingsModalProps): JSX.Element => {
+}: FolderSettingsModalProps): React.JSX.Element => {
   const { renameFolder } = useBookmarks();
   const [name, setName] = useState('');
   const [selectedColor, setSelectedColor] = useState('text-accent');

@@ -11,7 +11,7 @@ interface ArabicFontPanelProps {
   onClose: () => void;
 }
 
-export const ArabicFontPanel = ({ isOpen, onClose }: ArabicFontPanelProps): JSX.Element => {
+export const ArabicFontPanel = ({ isOpen, onClose }: ArabicFontPanelProps): React.JSX.Element => {
   const {
     loading,
     error,

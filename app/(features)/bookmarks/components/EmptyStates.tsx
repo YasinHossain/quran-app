@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { motion } from 'framer-motion';
 
 import { PlusIcon, BookmarkIcon, CheckIcon } from '@/app/shared/icons';
@@ -8,7 +9,7 @@ interface EmptyBookmarksProps {
   onCreateFolder: () => void;
 }
 
-export const EmptyBookmarks = ({ onCreateFolder }: EmptyBookmarksProps): JSX.Element => {
+export const EmptyBookmarks = ({ onCreateFolder }: EmptyBookmarksProps): React.JSX.Element => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -129,7 +130,7 @@ interface EmptySearchProps {
   onClearSearch: () => void;
 }
 
-export const EmptySearch = ({ searchTerm, onClearSearch }: EmptySearchProps): JSX.Element => {
+export const EmptySearch = ({ searchTerm, onClearSearch }: EmptySearchProps): React.JSX.Element => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

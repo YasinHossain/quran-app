@@ -9,7 +9,7 @@ interface TabToggleProps {
   className?: string;
 }
 
-export const TabToggle = ({ options, value, onChange, className }: TabToggleProps): JSX.Element => {
+export const TabToggle = ({ options, value, onChange, className }: TabToggleProps): React.JSX.Element => {
   return (
     <div
       className={cn(

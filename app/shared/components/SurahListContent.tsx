@@ -25,7 +25,7 @@ interface SurahListContentProps {
   chapters: Chapter[];
 }
 
-export const SurahListContent = ({ chapters }: SurahListContentProps): JSX.Element => {
+export const SurahListContent = ({ chapters }: SurahListContentProps): React.JSX.Element => {
   const { t } = useTranslation();
   const juzs = useMemo(() => juzData as JuzSummary[], []);
   const pages = useMemo(() => Array.from({ length: 604 }, (_, i) => i + 1), []);

@@ -8,7 +8,7 @@ interface TafsirLimitWarningProps {
   show: boolean;
 }
 
-export const TafsirLimitWarning = ({ show }: TafsirLimitWarningProps): JSX.Element => {
+export const TafsirLimitWarning = ({ show }: TafsirLimitWarningProps): React.JSX.Element => {
   if (!show) return null;
 
   return (

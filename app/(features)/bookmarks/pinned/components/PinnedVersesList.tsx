@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { motion } from 'framer-motion';
 
 import { Bookmark } from '@/types';
@@ -10,7 +11,7 @@ interface PinnedVersesListProps {
   pinnedVerses: Bookmark[];
 }
 
-export const PinnedVersesList = ({ pinnedVerses }: PinnedVersesListProps): JSX.Element => {
+export const PinnedVersesList = ({ pinnedVerses }: PinnedVersesListProps): React.JSX.Element => {
   if (pinnedVerses.length === 0) {
     return (
       <div className="text-center py-16">

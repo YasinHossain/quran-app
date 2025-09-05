@@ -3,7 +3,7 @@
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { cn } from '@/lib/utils/cn';
 
-import type React from 'react';
+import React from 'react';
 
 interface BaseSidebarProps {
   isOpen: boolean;
@@ -23,7 +23,7 @@ export const BaseSidebar = ({
   className,
   showOverlay = true,
   'aria-label': ariaLabel = 'Sidebar',
-}: BaseSidebarProps): JSX.Element => {
+}: BaseSidebarProps): React.JSX.Element => {
   const { isHidden } = useHeaderVisibility();
 
   // Calculate positioning based on header visibility and position

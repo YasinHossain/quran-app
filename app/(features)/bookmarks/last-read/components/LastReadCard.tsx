@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
@@ -19,7 +20,7 @@ export const LastReadCard = ({
   verseId,
   chapter,
   index,
-}: LastReadCardProps): JSX.Element => {
+}: LastReadCardProps): React.JSX.Element => {
   const router = useRouter();
   const total = chapter?.verses_count || 0;
   const percent = Math.min(100, Math.max(0, Math.round((verseId / total) * 100)));

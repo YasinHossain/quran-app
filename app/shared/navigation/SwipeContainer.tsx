@@ -5,7 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useSwipeGestures } from '@/app/shared/hooks/useSwipeGestures';
 import { cn } from '@/lib/utils';
 
-import type React from 'react';
+import React from 'react';
 
 interface SwipeContainerProps {
   children: React.ReactNode;
@@ -15,7 +15,7 @@ interface SwipeContainerProps {
 // Navigation routes in order for swipe navigation
 const MAIN_ROUTES = ['/home', '/surah', '/bookmarks'];
 
-export const SwipeContainer = ({ children, className }: SwipeContainerProps): JSX.Element => {
+export const SwipeContainer = ({ children, className }: SwipeContainerProps): React.JSX.Element => {
   const router = useRouter();
   const pathname = usePathname();
 

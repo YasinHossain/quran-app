@@ -9,7 +9,7 @@ import { useResponsiveState, responsiveClasses, touchClasses } from '@/lib/respo
 import { cn } from '@/lib/utils';
 
 import type { TablerIcon } from '@tabler/icons-react';
-import type React from 'react';
+import React from 'react';
 
 interface NavItem {
   id: string;
@@ -33,7 +33,7 @@ interface AdaptiveNavigationProps {
 export const AdaptiveNavigation = ({
   onSurahJump,
   className,
-}: AdaptiveNavigationProps): JSX.Element => {
+}: AdaptiveNavigationProps): React.JSX.Element => {
   const pathname = usePathname();
   const { breakpoint, variant } = useResponsiveState();
 
@@ -128,7 +128,7 @@ const MobileNavigation = ({
   navItems: NavItem[];
   onItemClick: (item: NavItem, e: React.MouseEvent) => void;
   className?: string;
-}): JSX.Element => {
+}): React.JSX.Element => {
   const pathname = usePathname();
   const { isHidden } = useHeaderVisibility();
 
@@ -213,7 +213,7 @@ const TabletNavigation = ({
   navItems: NavItem[];
   onItemClick: (item: NavItem, e: React.MouseEvent) => void;
   className?: string;
-}): JSX.Element => {
+}): React.JSX.Element => {
   // For now, use bottom navigation on tablets too
   // Can be enhanced to show sidebar based on screen ratio
   return <MobileNavigation navItems={navItems} onItemClick={onItemClick} className={className} />;
@@ -230,7 +230,7 @@ const DesktopNavigation = ({
   navItems: NavItem[];
   onItemClick: (item: NavItem, e: React.MouseEvent) => void;
   className?: string;
-}): JSX.Element => {
+}): React.JSX.Element => {
   const pathname = usePathname();
 
   return (

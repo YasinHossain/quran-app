@@ -31,7 +31,7 @@ export const DesktopVerseActions = ({
   onNavigateToVerse,
   showRemove = false,
   className = '',
-}: VerseActionsProps): JSX.Element => {
+}: VerseActionsProps): React.JSX.Element => {
   const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
   const handleShare = onShare || defaultShare;
 

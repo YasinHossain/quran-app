@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils/cn';
 import { Panel } from './Panel';
 
 import type { SettingsPanelProps } from '@/types/components';
-import type React from 'react';
+import React from 'react';
 
 interface SettingItemProps {
   label: string;
@@ -19,7 +19,7 @@ const SettingItem = ({
   description,
   children,
   disabled = false,
-}: SettingItemProps): JSX.Element => (
+}: SettingItemProps): React.JSX.Element => (
   <div
     className={cn(
       'flex items-center justify-between p-4 border-b border-border last:border-b-0',
@@ -48,7 +48,7 @@ const ToggleSetting = ({
   value,
   onChange,
   disabled = false,
-}: ToggleSettingProps): JSX.Element => (
+}: ToggleSettingProps): React.JSX.Element => (
   <SettingItem label={label} description={description} disabled={disabled}>
     <button
       onClick={() => !disabled && onChange(!value)}
@@ -87,7 +87,7 @@ const SelectSetting = ({
   options,
   onChange,
   disabled = false,
-}: SelectSettingProps): JSX.Element => (
+}: SelectSettingProps): React.JSX.Element => (
   <SettingItem label={label} description={description} disabled={disabled}>
     <select
       value={value}
@@ -129,7 +129,7 @@ const RangeSetting = ({
   onChange,
   disabled = false,
   showValue = true,
-}: RangeSettingProps): JSX.Element => (
+}: RangeSettingProps): React.JSX.Element => (
   <SettingItem label={label} description={description} disabled={disabled}>
     <div className="flex items-center space-x-3">
       <input
@@ -166,7 +166,7 @@ export const SettingsPanel = ({
   actions = [],
   className,
   children,
-}: SettingsPanelComponentProps): JSX.Element => {
+}: SettingsPanelComponentProps): React.JSX.Element => {
   return (
     <Panel
       isOpen={isOpen}

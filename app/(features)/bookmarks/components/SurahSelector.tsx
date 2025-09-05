@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 import { ChevronDownIcon } from '@/app/shared/icons';
 import { Chapter } from '@/types';
 
-import type React from 'react';
+import React from 'react';
 
 interface SurahSelectorProps {
   chapters: Chapter[];
@@ -25,7 +25,7 @@ export const SurahSelector = ({
   disabled = false,
   className = '',
   id,
-}: SurahSelectorProps): JSX.Element => {
+}: SurahSelectorProps): React.JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);

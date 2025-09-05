@@ -22,7 +22,7 @@ export const BookmarkTab = ({
   onToggleCreateFolder,
   onNewFolderNameChange,
   findBookmark,
-}: BookmarkTabProps): JSX.Element => {
+}: BookmarkTabProps): React.JSX.Element => {
   return (
     <div className="flex-1 flex flex-col">
       {/* Search and Create Folder */}

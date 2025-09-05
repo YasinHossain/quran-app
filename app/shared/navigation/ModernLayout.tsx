@@ -11,13 +11,13 @@ import { SwipeContainer } from './SwipeContainer';
 import { SwipeIndicator } from './SwipeIndicator';
 import { AdaptiveNavigation } from '../components/AdaptiveNavigation';
 
-import type React from 'react';
+import React from 'react';
 
 interface ModernLayoutProps {
   children: React.ReactNode;
 }
 
-export const ModernLayout = ({ children }: ModernLayoutProps): JSX.Element => {
+export const ModernLayout = ({ children }: ModernLayoutProps): React.JSX.Element => {
   const pathname = usePathname();
   const { isQuranBottomSheetOpen, setQuranBottomSheetOpen, navigateToSurah, showQuranSelector } =
     useNavigation();
