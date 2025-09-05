@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 
 import { useScrollPersistence } from '@/lib/hooks/useScrollPersistence';
 
@@ -46,7 +46,22 @@ describe('useScrollPersistence', () => {
     expect(scrollRef.current?.scrollTop).toBe(30);
   });
 
+  it('defaults to state value when sessionStorage is empty', () => {
+    scrollTops.Surah = 40;
+    renderHook(() =>
+      useScrollPersistence<Tab>({
+        scrollRef,
+        activeTab: 'Surah',
+        scrollTops,
+        setScrollTops,
+        storageKeys,
+      })
+    );
+    expect(scrollRef.current?.scrollTop).toBe(40);
+  });
+
   it('stores scroll on scroll event', () => {
+    const setSpy = jest.spyOn(sessionStorage, 'setItem');
     const { result } = renderHook(() =>
       useScrollPersistence<Tab>({
         scrollRef,
@@ -63,7 +78,8 @@ describe('useScrollPersistence', () => {
       } as React.UIEvent<HTMLDivElement>);
     });
     expect(setScrollTops.Surah).toHaveBeenCalledWith(42);
-    expect(sessionStorage.getItem('surahScrollTop')).toBe('42');
+    expect(setSpy).toHaveBeenCalledWith('surahScrollTop', '42');
+    setSpy.mockRestore();
   });
 
   it('prepares for tab switch', () => {
@@ -84,6 +100,7 @@ describe('useScrollPersistence', () => {
   });
 
   it('remembers scroll for a tab', () => {
+    const setSpy = jest.spyOn(sessionStorage, 'setItem');
     const { result } = renderHook(() =>
       useScrollPersistence<Tab>({
         scrollRef,
@@ -98,6 +115,7 @@ describe('useScrollPersistence', () => {
       result.current.rememberScroll('Page');
     });
     expect(setScrollTops.Page).toHaveBeenCalledWith(25);
-    expect(sessionStorage.getItem('pageScrollTop')).toBe('25');
+    expect(setSpy).toHaveBeenCalledWith('pageScrollTop', '25');
+    setSpy.mockRestore();
   });
 });

@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils/cn';
 
 import { Button } from './Button';
 
-import React from 'react';
+import React, { memo } from 'react';
 
 export const PANEL_VARIANTS = {
   sidebar: 'fixed top-0 bottom-0 right-0 w-80 bg-surface shadow-lg pt-safe pb-safe',
@@ -28,7 +28,7 @@ export interface PanelProps {
   closeOnOverlayClick?: boolean;
 }
 
-export const Panel = ({
+export const Panel = memo(function Panel({
   isOpen,
   onClose,
   variant = 'sidebar',
@@ -37,7 +37,7 @@ export const Panel = ({
   className,
   showCloseButton = true,
   closeOnOverlayClick = true,
-}: PanelProps): React.JSX.Element => {
+}: PanelProps): React.JSX.Element {
   if (!isOpen) return null;
 
   const variantClass =
@@ -135,4 +135,4 @@ export const Panel = ({
       </div>
     </>
   );
-};
+});

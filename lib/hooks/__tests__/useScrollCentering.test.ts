@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 
 import { useScrollCentering } from '@/lib/hooks/useScrollCentering';
 
@@ -19,37 +19,28 @@ const makeRect = (top: number, bottom: number): DOMRect => ({
 describe('useScrollCentering', () => {
   const scrollRef = { current: document.createElement('div') } as React.RefObject<HTMLDivElement>;
 
-  beforeEach(() => {
+  const createEls = () => {
+    const surahEl = document.createElement('div');
+    const juzEl = document.createElement('div');
+    surahEl.scrollIntoView = jest.fn();
+    juzEl.scrollIntoView = jest.fn();
     scrollRef.current!.innerHTML = '';
-    sessionStorage.clear();
-  });
-
-  const setup = () => {
-    const activeEl = document.createElement('div');
-    activeEl.dataset.active = 'true';
-    activeEl.scrollIntoView = jest.fn();
-    scrollRef.current!.appendChild(activeEl);
-    jest.spyOn(scrollRef.current!, 'getBoundingClientRect').mockReturnValue(makeRect(0, 100));
-    jest.spyOn(activeEl, 'getBoundingClientRect').mockReturnValue(makeRect(200, 250));
-    return activeEl;
+    scrollRef.current!.appendChild(surahEl);
+    scrollRef.current!.appendChild(juzEl);
+    return { surahEl, juzEl };
   };
 
-  it('centers active element when outside view', () => {
-    const activeEl = setup();
-    renderHook(() =>
-      useScrollCentering<Tab>({
-        scrollRef,
-        activeTab: 'Surah',
-        selectedIds: { Surah: 1, Juz: null, Page: null },
-        scrollTops: { Surah: 0, Juz: 0, Page: 0 },
-      })
-    );
-    expect(activeEl.scrollIntoView).toHaveBeenCalledWith({ block: 'center' });
+  beforeEach(() => {
+    sessionStorage.clear();
+    jest.restoreAllMocks();
+    scrollRef.current!.innerHTML = '';
   });
 
-  it('skips centering when flag is set', () => {
-    sessionStorage.setItem('skipCenterSurah', '1');
-    const activeEl = setup();
+  it('centers active element on initial render when outside view', () => {
+    const { surahEl } = createEls();
+    surahEl.dataset.active = 'true';
+    jest.spyOn(scrollRef.current!, 'getBoundingClientRect').mockReturnValue(makeRect(0, 100));
+    jest.spyOn(surahEl, 'getBoundingClientRect').mockReturnValue(makeRect(200, 250));
     renderHook(() =>
       useScrollCentering<Tab>({
         scrollRef,
@@ -58,11 +49,66 @@ describe('useScrollCentering', () => {
         scrollTops: { Surah: 0, Juz: 0, Page: 0 },
       })
     );
-    expect(activeEl.scrollIntoView).not.toHaveBeenCalled();
+    expect(surahEl.scrollIntoView).toHaveBeenCalledWith({ block: 'center' });
+  });
+
+  it('does not recenter when element is already in view after scrolling', () => {
+    const { surahEl } = createEls();
+    surahEl.dataset.active = 'true';
+    jest.spyOn(scrollRef.current!, 'getBoundingClientRect').mockReturnValue(makeRect(0, 100));
+    jest.spyOn(surahEl, 'getBoundingClientRect').mockReturnValue(makeRect(10, 20));
+    renderHook(() =>
+      useScrollCentering<Tab>({
+        scrollRef,
+        activeTab: 'Surah',
+        selectedIds: { Surah: 1, Juz: null, Page: null },
+        scrollTops: { Surah: 50, Juz: 0, Page: 0 },
+      })
+    );
+    expect(surahEl.scrollIntoView).not.toHaveBeenCalled();
+  });
+
+  it('centers element after switching tabs', () => {
+    const { surahEl, juzEl } = createEls();
+    surahEl.dataset.active = 'true';
+    jest.spyOn(scrollRef.current!, 'getBoundingClientRect').mockReturnValue(makeRect(0, 100));
+    jest.spyOn(juzEl, 'getBoundingClientRect').mockReturnValue(makeRect(200, 250));
+    const { result, rerender } = renderHook(
+      ({ activeTab }) =>
+        useScrollCentering<Tab>({
+          scrollRef,
+          activeTab,
+          selectedIds: { Surah: 1, Juz: 1, Page: null },
+          scrollTops: { Surah: 0, Juz: 0, Page: 0 },
+        }),
+      { initialProps: { activeTab: 'Surah' as Tab } }
+    );
+    act(() => result.current.prepareForTabSwitch('Juz'));
+    delete surahEl.dataset.active;
+    juzEl.dataset.active = 'true';
+    rerender({ activeTab: 'Juz' });
+    expect(juzEl.scrollIntoView).toHaveBeenCalledWith({ block: 'center' });
+  });
+
+  it('skipNextCentering prevents centering and clears the session flag', () => {
+    const { surahEl } = createEls();
+    surahEl.dataset.active = 'true';
+    jest.spyOn(scrollRef.current!, 'getBoundingClientRect').mockReturnValue(makeRect(0, 100));
+    jest.spyOn(surahEl, 'getBoundingClientRect').mockReturnValue(makeRect(200, 250));
+    sessionStorage.setItem('skipCenterSurah', '1');
+    renderHook(() =>
+      useScrollCentering<Tab>({
+        scrollRef,
+        activeTab: 'Surah',
+        selectedIds: { Surah: 1, Juz: null, Page: null },
+        scrollTops: { Surah: 0, Juz: 0, Page: 0 },
+      })
+    );
+    expect(surahEl.scrollIntoView).not.toHaveBeenCalled();
     expect(sessionStorage.getItem('skipCenterSurah')).toBeNull();
   });
 
-  it('exposes skipNextCentering', () => {
+  it('exposes skipNextCentering helper', () => {
     const { result } = renderHook(() =>
       useScrollCentering<Tab>({
         scrollRef,
@@ -71,7 +117,7 @@ describe('useScrollCentering', () => {
         scrollTops: { Surah: 0, Juz: 0, Page: 0 },
       })
     );
-    result.current.skipNextCentering('Surah');
+    act(() => result.current.skipNextCentering('Surah'));
     expect(sessionStorage.getItem('skipCenterSurah')).toBe('1');
   });
 });

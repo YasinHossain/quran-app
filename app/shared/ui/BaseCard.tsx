@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 import { cn } from '@/lib/utils/cn';
 
-import React from 'react';
+import React, { memo } from 'react';
 
 // Design token types
 interface CardVariant {
@@ -176,7 +176,7 @@ interface BaseCardProps {
   [key: string]: unknown;
 }
 
-export const BaseCard = ({
+export const BaseCard = memo(function BaseCard({
   children,
   className,
   href,
@@ -198,7 +198,7 @@ export const BaseCard = ({
   justify = 'start',
   gap = 'gap-4',
   ...props
-}: BaseCardProps) => {
+}: BaseCardProps): React.JSX.Element {
   // Merge variant with custom overrides
   const cardVariant = { ...CARD_VARIANTS[variant], ...customVariant };
   const animationConfig = { ...ANIMATION_CONFIGS[animation], ...customAnimation };
@@ -293,7 +293,7 @@ export const BaseCard = ({
       );
     }
   }
-};
+});
 
 // Convenience components for common patterns
 export const NavigationCard = ({

@@ -1,17 +1,19 @@
 'use client';
 
+import { memo } from 'react';
+
 import { cn } from '@/lib/utils/cn';
 
 import type { ListItemProps, NavigationItemProps } from '@/types/components';
 
-export const ListItem = ({
+export const ListItem = memo(function ListItem({
   icon: Icon,
   label,
   isActive = false,
   onClick,
   className,
   children,
-}: ListItemProps): React.JSX.Element => {
+}: ListItemProps): JSX.Element {
   const Component = onClick ? 'button' : 'div';
 
   return (
@@ -29,9 +31,9 @@ export const ListItem = ({
       {children}
     </Component>
   );
-};
+});
 
-export const NavigationItem = ({
+export const NavigationItem = memo(function NavigationItem({
   href,
   icon: Icon,
   label,
@@ -39,7 +41,7 @@ export const NavigationItem = ({
   count,
   className,
   children,
-}: NavigationItemProps): React.JSX.Element => {
+}: NavigationItemProps): JSX.Element {
   const baseClasses = cn(
     'flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
     isActive
@@ -69,4 +71,4 @@ export const NavigationItem = ({
   }
 
   return <div className={baseClasses}>{content}</div>;
-};
+});
