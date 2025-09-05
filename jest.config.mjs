@@ -1,5 +1,6 @@
-const { createRequire } = require('module');
-const nextJest = createRequire(__filename)('next/jest');
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const nextJest = require('next/jest');
 
 const createJestConfig = nextJest({
   dir: './',
@@ -83,4 +84,4 @@ const customJestConfig = {
   verbose: !!process.env.CI,
 };
 
-module.exports = createJestConfig(customJestConfig);
+export default createJestConfig(customJestConfig);
