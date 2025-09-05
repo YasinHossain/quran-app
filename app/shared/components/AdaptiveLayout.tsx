@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import { useNavigation } from '@/app/providers/NavigationContext';
 import { useResponsiveState } from '@/lib/responsive';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/cn';
 
 import { AdaptiveNavigation } from './AdaptiveNavigation';
 

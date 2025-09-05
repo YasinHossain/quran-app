@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import { touchClasses } from '@/lib/responsive';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/cn';
 
 import { BookmarkModal } from '../components/BookmarkModal';
 import {

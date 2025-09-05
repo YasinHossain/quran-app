@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import { PlusIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/cn';
 
 import { CreateFolderForm } from './CreateFolderForm';
 import { FolderList } from './FolderList';

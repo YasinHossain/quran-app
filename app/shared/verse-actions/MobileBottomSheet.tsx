@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
 import { touchClasses } from '@/lib/responsive';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/cn';
 
 import {
   PlayIcon,

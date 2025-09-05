@@ -6,7 +6,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { CloseIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/cn';
 import { Folder } from '@/types';
 
 import { BookmarkTab } from './BookmarkTab';

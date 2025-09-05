@@ -3,7 +3,7 @@
 import { useRouter, usePathname } from 'next/navigation';
 
 import { useSwipeGestures } from '@/app/shared/hooks/useSwipeGestures';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/cn';
 
 import React from 'react';
 

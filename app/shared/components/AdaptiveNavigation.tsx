@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useResponsiveState, responsiveClasses, touchClasses } from '@/lib/responsive';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/cn';
 
 import type { TablerIcon } from '@tabler/icons-react';
 import React from 'react';

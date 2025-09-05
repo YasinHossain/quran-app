@@ -26,7 +26,7 @@ jest.mock('@/lib/api/client', () => ({
   fetchData: jest.fn(),
 }));
 
-jest.mock('@/lib/utils', () => ({
+jest.mock('@/lib/utils/cn', () => ({
   transformData: jest.fn((data) => ({ ...data, processed: true })),
 }));
 

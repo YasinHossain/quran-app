@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 import { FolderIcon, CheckIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/cn';
 import { Folder, Bookmark } from '@/types';
 
 interface FolderListProps {

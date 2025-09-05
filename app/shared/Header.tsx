@@ -8,7 +8,7 @@ import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisib
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { useTheme } from '@/app/providers/ThemeContext';
 import { useUIState } from '@/app/providers/UIStateContext';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/cn';
 
 import { SearchInput } from './components/SearchInput';
 

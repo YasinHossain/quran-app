@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import { touchClasses } from '@/lib/responsive';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/cn';
 
 import { MobileBottomSheet } from './MobileBottomSheet';
 import { VerseActionsProps } from './types';

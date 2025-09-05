@@ -1,7 +1,7 @@
 'use client';
 
 import { SearchIcon } from '@/app/shared/icons';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/cn';
 
 interface FolderSearchProps {
   searchQuery: string;
