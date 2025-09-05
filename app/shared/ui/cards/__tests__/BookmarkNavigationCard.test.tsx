@@ -15,8 +15,7 @@ jest.mock('next/link', () => {
   }: MockProps<
     React.AnchorHTMLAttributes<HTMLAnchorElement> & { scroll?: boolean; href: string }
   >) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { scroll, ...rest } = props;
+    const { scroll: _scroll, ...rest } = props;
     return (
       <a
         href={href}
