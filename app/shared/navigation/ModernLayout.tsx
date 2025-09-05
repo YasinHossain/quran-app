@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
 import { useNavigation } from '@/app/providers/NavigationContext';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import { QuranBottomSheet } from './QuranBottomSheet';
 import { SwipeContainer } from './SwipeContainer';
@@ -25,10 +26,15 @@ export const ModernLayout = ({ children }: ModernLayoutProps): JSX.Element => {
   const [showSwipeIndicator, setShowSwipeIndicator] = useState(false);
 
   useEffect(() => {
-    const hasSeenSwipeGestures = localStorage.getItem('hasSeenSwipeGestures');
-    if (!hasSeenSwipeGestures) {
-      setShowSwipeIndicator(true);
-      localStorage.setItem('hasSeenSwipeGestures', 'true');
+    try {
+      const hasSeenSwipeGestures = localStorage.getItem('hasSeenSwipeGestures');
+      if (!hasSeenSwipeGestures) {
+        setShowSwipeIndicator(true);
+        localStorage.setItem('hasSeenSwipeGestures', 'true');
+      }
+    } catch (error) {
+      logger.warn('Swipe indicator storage unavailable', undefined, error as Error);
+      setShowSwipeIndicator(false);
     }
   }, []);
 

@@ -204,6 +204,4 @@ export const rules = {
 };
 
 // Export the original rule for backward compatibility
-export const rule = rules['no-theme-conditionals'];
-
-export default rule;
+export const noThemeConditionals = rules['no-theme-conditionals'];

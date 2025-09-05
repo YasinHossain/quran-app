@@ -46,7 +46,7 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import { getRandomVerse } from '@/lib/api';
 import { Verse } from '@/types';
 
-export default function ${pascal}Page() {
+export const ${pascal}Page = () => {
   const { settings } = useSettings();
   const [verse, setVerse] = useState<Verse | null>(null);
 
@@ -62,7 +62,7 @@ export default function ${pascal}Page() {
       <p>{verse.text_uthmani}</p>
     </div>
   );
-}
+};
 `;
 
   await writeFile(`${dir}/page.tsx`, page);
@@ -71,7 +71,7 @@ export default function ${pascal}Page() {
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 import * as api from '@/lib/api';
 import { Verse } from '@/types';
-import ${pascal}Page from '@/app/(features)/${name}/page';
+import { ${pascal}Page } from '@/app/(features)/${name}/page';
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
 jest.mock('@/lib/api');

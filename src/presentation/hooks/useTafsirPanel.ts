@@ -4,19 +4,10 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useTheme } from '@/app/providers/ThemeContext';
+import { useSelectableResources } from '@/lib/hooks/useSelectableResources';
+import { TafsirResource } from '@/types';
 
 import { useTafsir } from './useTafsir';
-
-interface TafsirPanelData {
-  id: number;
-  name: string;
-  lang: string;
-  selected: boolean;
-}
-
-interface GroupedTafsirs {
-  [language: string]: TafsirPanelData[];
-}
 
 const MAX_SELECTIONS = 3;
 
@@ -24,27 +15,26 @@ export const useTafsirPanel = (isOpen: boolean) => {
   const { theme } = useTheme();
   const { settings, setTafsirIds } = useSettings();
 
-  // Use clean architecture hook
-  const { tafsirs: domainTafsirs, loading: apiLoading, error: apiError, isFromCache } = useTafsir();
+  const {
+    tafsirs: domainTafsirs,
+    loading: apiLoading,
+    error: apiError,
+    isFromCache,
+  } = useTafsir();
 
-  // UI state
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeFilter, setActiveFilter] = useState('All');
   const [showLimitWarning, setShowLimitWarning] = useState(false);
-  const [draggedId, setDraggedId] = useState<number | null>(null);
 
   // Scroll state for tabs
   const tabsContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
-  // Convert domain entities to UI format
-  const tafsirs = useMemo((): TafsirPanelData[] => {
-    return domainTafsirs.map((domainTafsir) => ({
-      id: domainTafsir.id,
-      name: domainTafsir.displayName,
-      lang: domainTafsir.formattedLanguage,
-      selected: false, // This will be handled by selection logic
+  // Map domain entities to generic resource shape
+  const tafsirs = useMemo<TafsirResource[]>(() => {
+    return domainTafsirs.map((t) => ({
+      id: t.id,
+      name: t.displayName,
+      lang: t.formattedLanguage,
     }));
   }, [domainTafsirs]);
 
@@ -53,15 +43,6 @@ export const useTafsirPanel = (isOpen: boolean) => {
 
   // Error handling
   const error = apiError;
-
-  // Selection management
-  const selectedIds = useMemo(() => {
-    return new Set(settings.tafsirIds || []);
-  }, [settings.tafsirIds]);
-
-  const orderedSelection = useMemo(() => {
-    return settings.tafsirIds || [];
-  }, [settings.tafsirIds]);
 
   // Language sorting logic from domain
   const languageSort = useCallback(
@@ -83,105 +64,55 @@ export const useTafsirPanel = (isOpen: boolean) => {
     [domainTafsirs]
   );
 
-  // Filtered and grouped tafsirs
-  const filteredTafsirs = useMemo(() => {
-    if (!searchTerm) return tafsirs;
+  const {
+    searchTerm,
+    setSearchTerm,
+    languages,
+    groupedResources,
+    activeFilter,
+    setActiveFilter,
+    selectedIds,
+    orderedSelection,
+    handleSelectionToggle: baseHandleSelectionToggle,
+    handleDragStart,
+    handleDragOver,
+    handleDrop,
+    handleDragEnd,
+    draggedId,
+    setSelections,
+  } = useSelectableResources<TafsirResource>({
+    resources: tafsirs,
+    selectionLimit: MAX_SELECTIONS,
+    initialSelectedIds: settings.tafsirIds || [],
+    languageSort,
+  });
 
-    const term = searchTerm.toLowerCase();
-    return tafsirs.filter(
-      (t) => t.name.toLowerCase().includes(term) || t.lang.toLowerCase().includes(term)
-    );
-  }, [tafsirs, searchTerm]);
+  const groupedTafsirs = groupedResources;
 
-  const groupedTafsirs: GroupedTafsirs = useMemo(() => {
-    return filteredTafsirs.reduce((acc, tafsir) => {
-      (acc[tafsir.lang] = acc[tafsir.lang] || []).push(tafsir);
-      return acc;
-    }, {} as GroupedTafsirs);
-  }, [filteredTafsirs]);
-
-  // Available languages
-  const languages = useMemo(() => {
-    const unique = Array.from(new Set(tafsirs.map((t) => t.lang)));
-    const sorted = unique.sort(languageSort);
-    return ['All', ...sorted];
-  }, [tafsirs, languageSort]);
-
-  // Selection handlers
   const handleSelectionToggle = useCallback(
     (id: number): boolean => {
-      const newSelected = new Set(selectedIds);
-      let newOrder = [...orderedSelection];
-      let changed = false;
-
-      if (newSelected.has(id)) {
-        newSelected.delete(id);
-        newOrder = newOrder.filter((i) => i !== id);
-        changed = true;
-      } else {
-        if (newSelected.size >= MAX_SELECTIONS) {
-          setShowLimitWarning(true);
-          return false;
-        }
-        newSelected.add(id);
-        newOrder.push(id);
-        changed = true;
+      const changed = baseHandleSelectionToggle(id);
+      if (!changed) {
+        setShowLimitWarning(true);
+        return false;
       }
-
-      if (changed) {
-        setTafsirIds(newOrder);
-        setShowLimitWarning(false);
-      }
-      return changed;
+      setShowLimitWarning(false);
+      return true;
     },
-    [selectedIds, orderedSelection, setTafsirIds]
+    [baseHandleSelectionToggle]
   );
 
-  // Drag handlers
-  const handleDragStart = useCallback((e: React.DragEvent<HTMLDivElement>, id: number) => {
-    setDraggedId(id);
-    e.dataTransfer.effectAllowed = 'move';
-  }, []);
-
-  const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  }, []);
-
-  const handleDrop = useCallback(
-    (e: React.DragEvent<HTMLDivElement>, targetId: number) => {
-      e.preventDefault();
-      if (draggedId === null || draggedId === targetId) {
-        setDraggedId(null);
-        return;
-      }
-
-      const newOrder = [...orderedSelection];
-      const fromIndex = newOrder.indexOf(draggedId);
-      const toIndex = newOrder.indexOf(targetId);
-
-      if (fromIndex > -1 && toIndex > -1) {
-        const [movedItem] = newOrder.splice(fromIndex, 1);
-        newOrder.splice(toIndex, 0, movedItem);
-        setTafsirIds(newOrder);
-      }
-
-      setDraggedId(null);
-    },
-    [draggedId, orderedSelection, setTafsirIds]
-  );
-
-  const handleDragEnd = useCallback(() => {
-    setDraggedId(null);
-  }, []);
-
-  // Reset handler
   const handleReset = useCallback(() => {
     const englishTafsir = tafsirs.find((t) => t.lang.toLowerCase() === 'english');
     if (englishTafsir) {
-      setTafsirIds([englishTafsir.id]);
+      setSelections([englishTafsir.id]);
       setShowLimitWarning(false);
     }
-  }, [tafsirs, setTafsirIds]);
+  }, [tafsirs, setSelections]);
+
+  useEffect(() => {
+    setTafsirIds([...orderedSelection]);
+  }, [orderedSelection, setTafsirIds]);
 
   // Scroll management for tabs
   const checkScrollState = useCallback(() => {
@@ -256,5 +187,6 @@ export const useTafsirPanel = (isOpen: boolean) => {
     canScrollRight,
     scrollTabsLeft,
     scrollTabsRight,
-  };
+  } as const;
 };
+

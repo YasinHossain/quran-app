@@ -38,74 +38,82 @@ export interface ContainerConfig<T> {
 }
 
 /**
+ * Breakpoint store using matchMedia + useSyncExternalStore
+ * Expose subscribe/getSnapshot logic for testing and extensibility.
+ */
+const getBreakpointSnapshot = (): BreakpointKey => {
+  if (typeof window === 'undefined') return 'mobile';
+  if (window.matchMedia('(min-width: 1280px)').matches) return 'wide';
+  if (window.matchMedia('(min-width: 1024px)').matches) return 'desktop';
+  if (window.matchMedia('(min-width: 768px)').matches) return 'tablet';
+  return 'mobile';
+};
+
+const subscribeBreakpoint = (callback: () => void) => {
+  if (typeof window === 'undefined') return () => {};
+
+  const queries = [
+    window.matchMedia('(min-width: 768px)'),
+    window.matchMedia('(min-width: 1024px)'),
+    window.matchMedia('(min-width: 1280px)'),
+  ];
+
+  queries.forEach((q) => q.addEventListener('change', callback));
+
+  return () => {
+    queries.forEach((q) => q.removeEventListener('change', callback));
+  };
+};
+
+export const breakpointStore = {
+  subscribe: subscribeBreakpoint,
+  getSnapshot: getBreakpointSnapshot,
+  getServerSnapshot: (): BreakpointKey => 'mobile',
+};
+
+/**
  * Responsive breakpoint hook
  * Determines the current breakpoint using matchMedia listeners.
  */
-export const useBreakpoint = (): BreakpointKey => {
-  const getBreakpoint = (): BreakpointKey => {
-    if (typeof window === 'undefined') return 'mobile';
-    if (window.matchMedia('(min-width: 1280px)').matches) return 'wide';
-    if (window.matchMedia('(min-width: 1024px)').matches) return 'desktop';
-    if (window.matchMedia('(min-width: 768px)').matches) return 'tablet';
-    return 'mobile';
-  };
+export const useBreakpoint = (): BreakpointKey =>
+  React.useSyncExternalStore(
+    breakpointStore.subscribe,
+    breakpointStore.getSnapshot,
+    breakpointStore.getServerSnapshot
+  );
 
-  const [breakpoint, setBreakpoint] = React.useState<BreakpointKey>('mobile');
-  const [isClient, setIsClient] = React.useState(false);
+/**
+ * Orientation store using matchMedia + useSyncExternalStore
+ */
+const getOrientationSnapshot = (): OrientationKey => {
+  if (typeof window === 'undefined') return 'portrait';
+  return window.matchMedia('(orientation: landscape)').matches ? 'landscape' : 'portrait';
+};
 
-  React.useEffect(() => {
-    setIsClient(true);
-    setBreakpoint(getBreakpoint());
+const subscribeOrientation = (callback: () => void) => {
+  if (typeof window === 'undefined') return () => {};
 
-    const updateBreakpoint = () => setBreakpoint(getBreakpoint());
+  const orientationQuery = window.matchMedia('(orientation: landscape)');
+  orientationQuery.addEventListener('change', callback);
+  return () => orientationQuery.removeEventListener('change', callback);
+};
 
-    const queries = [
-      window.matchMedia('(min-width: 768px)'),
-      window.matchMedia('(min-width: 1024px)'),
-      window.matchMedia('(min-width: 1280px)'),
-    ];
-
-    queries.forEach((q) => q.addEventListener('change', updateBreakpoint));
-
-    return () => {
-      queries.forEach((q) => q.removeEventListener('change', updateBreakpoint));
-    };
-  }, []);
-
-  // Return mobile breakpoint during SSR to prevent hydration mismatches
-  return isClient ? breakpoint : 'mobile';
+export const orientationStore = {
+  subscribe: subscribeOrientation,
+  getSnapshot: getOrientationSnapshot,
+  getServerSnapshot: (): OrientationKey => 'portrait',
 };
 
 /**
  * Orientation detection hook
  * Determines current screen orientation using matchMedia listeners
  */
-export const useOrientation = (): OrientationKey => {
-  const getOrientation = (): OrientationKey => {
-    if (typeof window === 'undefined') return 'portrait';
-    return window.matchMedia('(orientation: landscape)').matches ? 'landscape' : 'portrait';
-  };
-
-  const [orientation, setOrientation] = React.useState<OrientationKey>('portrait');
-  const [isClient, setIsClient] = React.useState(false);
-
-  React.useEffect(() => {
-    setIsClient(true);
-    setOrientation(getOrientation());
-
-    const updateOrientation = () => setOrientation(getOrientation());
-
-    const orientationQuery = window.matchMedia('(orientation: landscape)');
-    orientationQuery.addEventListener('change', updateOrientation);
-
-    return () => {
-      orientationQuery.removeEventListener('change', updateOrientation);
-    };
-  }, []);
-
-  // Return portrait during SSR to prevent hydration mismatches
-  return isClient ? orientation : 'portrait';
-};
+export const useOrientation = (): OrientationKey =>
+  React.useSyncExternalStore(
+    orientationStore.subscribe,
+    orientationStore.getSnapshot,
+    orientationStore.getServerSnapshot
+  );
 
 /**
  * Get responsive value based on current breakpoint

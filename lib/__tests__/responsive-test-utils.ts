@@ -29,34 +29,55 @@ export type DevicePreset = keyof typeof devicePresets;
 export const createMatchMediaMock = () => {
   let currentWidth = 1024; // Default desktop width
 
-  const matchMediaMock = jest.fn((query: string) => {
+  const listeners = new Map<string, Set<(e: MediaQueryListEvent) => void>>();
+
+  const evaluate = (query: string) => {
     const minWidthMatch = query.match(/\(min-width:\s*(\d+)px\)/);
     const orientationMatch = query.match(/\(orientation:\s*(landscape|portrait)\)/);
 
-    let matches = false;
-
     if (minWidthMatch) {
       const minWidth = parseInt(minWidthMatch[1], 10);
-      matches = currentWidth >= minWidth;
-    } else if (orientationMatch) {
-      const orientation = orientationMatch[1];
-      matches = getCurrentOrientation() === orientation;
+      return currentWidth >= minWidth;
     }
+    if (orientationMatch) {
+      const orientation = orientationMatch[1];
+      return getCurrentOrientation() === orientation;
+    }
+    return false;
+  };
 
+  const matchMediaMock = jest.fn((query: string) => {
     const mockMediaQueryList = {
-      matches,
+      matches: evaluate(query),
       media: query,
-      onchange: null,
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
+      onchange: null as ((e: MediaQueryListEvent) => void) | null,
+      addEventListener: jest.fn((event: string, listener: (e: MediaQueryListEvent) => void) => {
+        if (event !== 'change') return;
+        const set = listeners.get(query) ?? new Set();
+        set.add(listener);
+        listeners.set(query, set);
+      }),
+      removeEventListener: jest.fn((event: string, listener: (e: MediaQueryListEvent) => void) => {
+        if (event !== 'change') return;
+        const set = listeners.get(query);
+        set?.delete(listener);
+      }),
       dispatchEvent: jest.fn(),
     };
 
     return mockMediaQueryList;
   });
 
+  const notify = () => {
+    listeners.forEach((set, query) => {
+      const matches = evaluate(query);
+      set.forEach((listener) => listener({ matches, media: query } as MediaQueryListEvent));
+    });
+  };
+
   const setViewportWidth = (width: number) => {
     currentWidth = width;
+    notify();
   };
 
   const getCurrentOrientation = () => {
@@ -68,7 +89,7 @@ export const createMatchMediaMock = () => {
     setViewportWidth,
     getCurrentOrientation,
     cleanup: () => {
-      // Cleanup function
+      listeners.clear();
     },
   };
 };

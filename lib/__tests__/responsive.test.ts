@@ -68,17 +68,15 @@ describe('Responsive System', () => {
       globalWithWindow.window = originalWindow;
     });
 
-    it('should update breakpoint when window resizes', async () => {
+    it('should update breakpoint when window resizes', () => {
       const { result } = renderHook(() => useBreakpoint());
 
-      matchMediaUtils.setViewportWidth(375);
-      await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 10));
+      act(() => {
+        matchMediaUtils.setViewportWidth(375);
       });
 
-      matchMediaUtils.setViewportWidth(768);
-      await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 10));
+      act(() => {
+        matchMediaUtils.setViewportWidth(768);
       });
 
       expect(result.current).toBe('tablet');
@@ -215,9 +213,8 @@ describe('Responsive System', () => {
 
       for (let i = 0; i < 20; i++) {
         const width = 375 + i * 50;
-        matchMediaUtils.setViewportWidth(width);
         await act(async () => {
-          await new Promise((resolve) => setTimeout(resolve, 1));
+          matchMediaUtils.setViewportWidth(width);
         });
       }
 

@@ -1,9 +1,9 @@
 import pwaConfig from './next-pwa.config.mjs';
+import { createRequire } from 'module';
 
 import type { NextConfig } from 'next';
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const nextPwa = require('next-pwa');
+const nextPwa = createRequire(import.meta.url)('next-pwa') as typeof import('next-pwa');
 
 // Define commonly recommended security headers
 const securityHeaders = [

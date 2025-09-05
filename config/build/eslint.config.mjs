@@ -3,8 +3,8 @@ import { fileURLToPath } from 'url';
 import { FlatCompat } from '@eslint/eslintrc';
 import unusedImports from 'eslint-plugin-unused-imports';
 import importPlugin from 'eslint-plugin-import';
-import noRawColorClasses from '../../tools/scripts/eslint/no-raw-color-classes.mjs';
-import noThemeConditionals from '../../tools/scripts/eslint/no-theme-conditionals.mjs';
+import { noRawColorClasses } from '../../tools/scripts/eslint/no-raw-color-classes.mjs';
+import { noThemeConditionals } from '../../tools/scripts/eslint/no-theme-conditionals.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

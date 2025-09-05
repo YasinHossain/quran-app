@@ -1,4 +1,5 @@
-const nextJest = require('next/jest');
+const { createRequire } = require('module');
+const nextJest = createRequire(__filename)('next/jest');
 
 const createJestConfig = nextJest({
   dir: './',

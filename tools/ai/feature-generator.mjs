@@ -10,8 +10,9 @@
 import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-class AIFeatureGenerator {
+export class AIFeatureGenerator {
   constructor() {
     this.featureName = '';
     this.featurePath = '';
@@ -1835,12 +1836,12 @@ test.describe('${this.capitalize(this.featureName)} Feature', () => {
 }
 
 // CLI interface
-if (require.main === module) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const featureName = process.argv[2];
 
   if (!featureName) {
-    console.log('Usage: node feature-generator.js <feature-name>');
-    console.log('Example: node feature-generator.js user-profile');
+    console.log('Usage: node feature-generator.mjs <feature-name>');
+    console.log('Example: node feature-generator.mjs user-profile');
     process.exit(1);
   }
 
@@ -1848,4 +1849,4 @@ if (require.main === module) {
   generator.generateFeature(featureName).catch(console.error);
 }
 
-module.exports = AIFeatureGenerator;
+export { AIFeatureGenerator };

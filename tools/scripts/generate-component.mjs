@@ -64,7 +64,7 @@ export type { ${pascalName}Props } from './${pascalName}';
     const storyContent = `import type { Meta, StoryObj } from '@storybook/react';
 import { ${pascalName} } from './${pascalName}';
 
-const meta: Meta<typeof ${pascalName}> = {
+export const meta: Meta<typeof ${pascalName}> = {
   title: 'UI/${pascalName}',
   component: ${pascalName},
   parameters: {
@@ -82,8 +82,6 @@ const meta: Meta<typeof ${pascalName}> = {
     },
   },
 };
-
-export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {

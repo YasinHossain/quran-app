@@ -1,14 +1,14 @@
 import '@testing-library/jest-dom';
 import 'cross-fetch/polyfill';
 import { jest } from '@jest/globals';
+import nodeFetch from 'node-fetch';
 
 // Ensure fetch is available in the JSDOM environment
 if (typeof globalThis.fetch === 'undefined') {
   if (typeof global.fetch === 'function') {
     globalThis.fetch = (...args) => global.fetch(...args);
   } else {
-    const fetch = require('node-fetch');
-    globalThis.fetch = (...args) => fetch.default(...args);
+    globalThis.fetch = (...args) => nodeFetch(...args);
   }
 }
 
