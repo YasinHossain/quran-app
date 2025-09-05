@@ -1,9 +1,9 @@
 'use client';
+import React from 'react';
+
 import { buildTextClasses } from '../../design-system/card-tokens';
 import { BaseCard, BaseCardProps } from '../BaseCard';
 import { NumberBadge } from '../NumberBadge';
-
-import React from 'react';
 
 /**
  * StandardNavigationCard

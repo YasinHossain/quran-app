@@ -19,23 +19,188 @@ import { TransportControls } from './components/TransportControls';
 
 import type { Track } from './types';
 
-/**
- * Clean minimal music/Quran player – Tailwind CSS + Next.js + TypeScript
- *
- * FIX: Guarded against undefined/null `track` to resolve
- * `TypeError: Cannot read properties of undefined (reading 'durationSec')`.
- * - `track` prop is optional.
- * - All reads use optional chaining + fallbacks.
- * - Disabled/skeleton state when no track is provided.
- * - Effects & sliders handle 0-duration safely.
- *
- * NEW (Quran features in same design language):
- * - Options sheet with two tabs: Reciter list & Verse Repeat.
- * - Reciter grid with radio selection.
- * - Repeat modes: off / single verse / range (A–B) / surah, with play count, repeat each, delay.
- * - ADDED: Playback speed control directly in the player bar.
- * - REMOVED: Shuffle and Repeat icons from main bar for a cleaner look.
- */
+interface MobilePlayerLayoutProps {
+  cover: string;
+  title: string;
+  artist: string;
+  current: number;
+  duration: number;
+  elapsed: string;
+  total: string;
+  interactable: boolean;
+  isPlaying: boolean;
+  volume: number;
+  togglePlay: () => void;
+  setSeek: (sec: number) => void;
+  onNext?: () => boolean;
+  onPrev?: () => boolean;
+  setVolume: (volume: number) => void;
+  playbackRate: number;
+  setMobileOptionsOpen: (open: boolean) => void;
+  closePlayer: () => void;
+}
+
+const MobilePlayerLayout = React.memo(function MobilePlayerLayout({
+  cover,
+  title,
+  artist,
+  current,
+  duration,
+  elapsed,
+  total,
+  interactable,
+  isPlaying,
+  volume,
+  togglePlay,
+  setSeek,
+  onNext,
+  onPrev,
+  setVolume,
+  playbackRate,
+  setMobileOptionsOpen,
+  closePlayer,
+}: MobilePlayerLayoutProps): React.JSX.Element {
+  return (
+    <div className="flex flex-col gap-3 sm:hidden">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          <div className="hidden min-[400px]:block flex-shrink-0">
+            <Image
+              src={cover}
+              alt="cover"
+              width={32}
+              height={32}
+              className="h-8 w-8 rounded-full shadow-sm object-cover"
+              onError={(e) => {
+                e.currentTarget.src =
+                  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><rect width='100%' height='100%' rx='6' ry='6' fill='%23e5e7eb'/></svg>";
+              }}
+            />
+          </div>
+          <div className="min-w-0">
+            <div className="text-sm font-semibold tracking-[-0.01em] truncate text-foreground">
+              {title}
+            </div>
+            <div className="text-xs -mt-0.5 truncate text-muted">{artist}</div>
+          </div>
+        </div>
+        <TransportControls
+          isPlaying={isPlaying}
+          disabled={!interactable}
+          onPlayPause={togglePlay}
+          onNext={onNext}
+          onPrev={onPrev}
+        />
+        <SpeedControl playbackRate={playbackRate} />
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setMobileOptionsOpen(true)}
+          disabled={!interactable}
+          className="p-1.5"
+        >
+          <SlidersIcon className={iconClasses.sm} />
+        </Button>
+        <Button variant="ghost" size="sm" onClick={closePlayer} className="p-1.5">
+          <CloseIcon className={iconClasses.sm} />
+        </Button>
+      </div>
+      <Timeline
+        current={current}
+        total={duration}
+        elapsed={elapsed}
+        totalFormatted={total}
+        setSeek={setSeek}
+        disabled={!interactable}
+        showVolumeControl={true}
+        volume={volume}
+        setVolume={setVolume}
+      />
+    </div>
+  );
+});
+
+interface DesktopPlayerLayoutProps extends MobilePlayerLayoutProps {
+  setDesktopOptionsOpen: (open: boolean) => void;
+}
+
+const DesktopPlayerLayout = React.memo(function DesktopPlayerLayout({
+  cover,
+  title,
+  artist,
+  current,
+  duration,
+  elapsed,
+  total,
+  interactable,
+  isPlaying,
+  volume,
+  togglePlay,
+  setSeek,
+  onNext,
+  onPrev,
+  setVolume,
+  playbackRate,
+  setMobileOptionsOpen: setDesktopOptionsOpen,
+  closePlayer,
+}: DesktopPlayerLayoutProps): React.JSX.Element {
+  return (
+    <div className="hidden sm:flex items-center gap-4">
+      <div className="flex-shrink-0">
+        <Image
+          src={cover}
+          alt="cover"
+          width={48}
+          height={48}
+          className="h-12 w-12 rounded-lg shadow-md object-cover"
+          onError={(e) => {
+            e.currentTarget.src =
+              "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48'><rect width='100%' height='100%' rx='8' ry='8' fill='%23e5e7eb'/></svg>";
+          }}
+        />
+      </div>
+      <div className="flex-1 min-w-0">
+        <TrackInfo title={title} artist={artist} />
+        <div className="flex items-center gap-3">
+          <div className="flex-1 max-w-md">
+            <Timeline
+              current={current}
+              total={duration}
+              elapsed={elapsed}
+              totalFormatted={total}
+              setSeek={setSeek}
+              disabled={!interactable}
+            />
+          </div>
+          <TransportControls
+            isPlaying={isPlaying}
+            disabled={!interactable}
+            onPlayPause={togglePlay}
+            onNext={onNext}
+            onPrev={onPrev}
+          />
+          <SpeedControl playbackRate={playbackRate} />
+          <PlayerOptions
+            onOpenSettings={() => setDesktopOptionsOpen(true)}
+            disabled={!interactable}
+            showVolumeControl={true}
+            volume={volume}
+            setVolume={setVolume}
+          />
+        </div>
+      </div>
+      <Button variant="ghost" size="sm" onClick={closePlayer} className="p-1.5">
+        <CloseIcon className={iconClasses.sm} />
+      </Button>
+    </div>
+  );
+});
+
+function mmss(seconds: number): string {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
 
 interface QuranAudioPlayerProps {
   track?: Track | null;
@@ -43,7 +208,11 @@ interface QuranAudioPlayerProps {
   onNext?: () => boolean;
 }
 
-export function QuranAudioPlayer({ track, onPrev, onNext }: QuranAudioPlayerProps) {
+export function QuranAudioPlayer({
+  track,
+  onPrev,
+  onNext,
+}: QuranAudioPlayerProps): React.JSX.Element | null {
   const {
     isPlayerVisible,
     closePlayer,
@@ -144,121 +313,37 @@ export function QuranAudioPlayer({ track, onPrev, onNext }: QuranAudioPlayerProp
 
   if (!isPlayerVisible) return null;
 
+  const playerLayoutProps = {
+    cover,
+    title,
+    artist,
+    current,
+    duration,
+    elapsed,
+    total,
+    interactable,
+    isPlaying,
+    volume,
+    togglePlay,
+    setSeek,
+    onNext,
+    onPrev,
+    setVolume,
+    playbackRate,
+    setMobileOptionsOpen,
+    closePlayer,
+  };
+
   return (
     <div className="relative w-full">
-      {/* Card */}
       <div
         className="mx-auto w-full rounded-2xl px-3 py-3 sm:px-4 sm:py-4 bg-surface shadow-lg border border-border"
         role="region"
         aria-label="Player"
       >
-        {/* Mobile Layout */}
-        <div className="flex flex-col gap-3 sm:hidden">
-          {/* Main row: Verse info + Transport controls + Speed & Settings + Close */}
-          <div className="flex items-center justify-between gap-2">
-            {/* Left: Verse info (responsive icon) */}
-            <div className="flex items-center gap-2 flex-1 min-w-0">
-              {/* Show icon only on larger mobile screens */}
-              <div className="hidden min-[400px]:block flex-shrink-0">
-                <Image
-                  src={cover}
-                  alt="cover"
-                  width={32}
-                  height={32}
-                  className="h-8 w-8 rounded-full shadow-sm object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src =
-                      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><rect width='100%' height='100%' rx='6' ry='6' fill='%23e5e7eb'/></svg>";
-                  }}
-                />
-              </div>
-              <div className="min-w-0">
-                <div className="text-sm font-semibold tracking-[-0.01em] truncate text-foreground">
-                  {title}
-                </div>
-                <div className="text-xs -mt-0.5 truncate text-muted">{artist}</div>
-              </div>
-            </div>
-            {/* Center: Transport controls */}
-            <TransportControls
-              isPlaying={isPlaying}
-              interactable={interactable}
-              onPrev={onPrev}
-              onNext={onNext}
-              togglePlay={togglePlay}
-            />
-            {/* Right: Speed, Settings, and Close */}
-            <div className="flex items-center gap-1">
-              <SpeedControl />
-              <Button
-                variant="icon-round"
-                size="icon-round"
-                className="shrink-0"
-                aria-label="Options"
-                onClick={() => {
-                  setActiveTab('reciter');
-                  setMobileOptionsOpen(true);
-                }}
-              >
-                <SlidersIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
-              </Button>
-              <Button
-                variant="icon-round"
-                size="icon-round"
-                aria-label="Close player"
-                onClick={closePlayer}
-              >
-                <CloseIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
-              </Button>
-            </div>
-          </div>
-          {/* Bottom row: Timeline */}
-          <Timeline
-            current={current}
-            duration={duration}
-            setSeek={setSeek}
-            interactable={interactable}
-            elapsed={elapsed}
-            total={total}
-          />
-        </div>
-
-        {/* Desktop Layout */}
-        <div className="hidden sm:flex items-center gap-4">
-          {/* Left media block */}
-          <TrackInfo cover={cover} title={title} artist={artist} />
-          {/* Transport controls */}
-          <TransportControls
-            isPlaying={isPlaying}
-            interactable={interactable}
-            onPrev={onPrev}
-            onNext={onNext}
-            togglePlay={togglePlay}
-          />
-          {/* Timeline & Time Labels */}
-          <Timeline
-            current={current}
-            duration={duration}
-            setSeek={setSeek}
-            interactable={interactable}
-            elapsed={elapsed}
-            total={total}
-          />
-          {/* Utilities */}
-          <div className="flex items-center gap-2">
-            <PlayerOptions />
-            <Button
-              variant="icon-round"
-              size="icon-round"
-              aria-label="Close player"
-              onClick={closePlayer}
-            >
-              <CloseIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
-            </Button>
-          </div>
-        </div>
+        <MobilePlayerLayout {...playerLayoutProps} />
+        <DesktopPlayerLayout {...playerLayoutProps} setDesktopOptionsOpen={setMobileOptionsOpen} />
       </div>
-      {/* Hidden audio element */}
       <audio ref={internalAudioRef} src={track?.src || ''} preload="metadata" onEnded={handleEnded}>
         <track kind="captions" />
       </audio>
@@ -272,11 +357,4 @@ export function QuranAudioPlayer({ track, onPrev, onNext }: QuranAudioPlayerProp
       />
     </div>
   );
-}
-
-function mmss(t: number) {
-  t = Math.max(0, Math.floor(t || 0));
-  const m = Math.floor(t / 60);
-  const s = t % 60;
-  return `${m}:${s.toString().padStart(2, '0')}`;
 }

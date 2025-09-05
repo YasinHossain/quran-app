@@ -1,5 +1,6 @@
-import pwaConfig from './next-pwa.config.mjs';
 import { createRequire } from 'module';
+
+import pwaConfig from './next-pwa.config.mjs';
 
 import type { NextConfig } from 'next';
 

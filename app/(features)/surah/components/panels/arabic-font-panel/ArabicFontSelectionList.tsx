@@ -1,7 +1,7 @@
 'use client';
-import { GripVerticalIcon, CloseIcon } from '@/app/shared/icons';
-
 import React from 'react';
+
+import { GripVerticalIcon, CloseIcon } from '@/app/shared/icons';
 
 interface ArabicFont {
   id: number;

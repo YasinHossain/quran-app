@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import React from 'react';
 
 import { useNavigation } from '@/app/providers/NavigationContext';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
@@ -10,8 +11,6 @@ import { QuranBottomSheet } from './QuranBottomSheet';
 import { SwipeContainer } from './SwipeContainer';
 import { SwipeIndicator } from './SwipeIndicator';
 import { AdaptiveNavigation } from '../components/AdaptiveNavigation';
-
-import React from 'react';
 
 interface ModernLayoutProps {
   children: React.ReactNode;

@@ -3,13 +3,13 @@
 import { IconHome, IconBook, IconBookmark } from '@tabler/icons-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import React from 'react';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useResponsiveState, responsiveClasses, touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 
 import type { TablerIcon } from '@tabler/icons-react';
-import React from 'react';
 
 interface NavItem {
   id: string;
@@ -64,20 +64,14 @@ export const AdaptiveNavigation = ({
     },
   ];
 
-  const handleItemClick = (item: NavItem, e: React.MouseEvent) => {
-    // New behavior:
-    // - On Surah pages or Bookmark pages in mobile view, tapping "Jump" should navigate to the verse page (no sidebar).
-    // - The Surah list sidebar trigger moves to the Verse page hamburger (handled elsewhere).
+  const handleItemClick = (item: NavItem, e: React.MouseEvent): void => {
     if (item.id === 'surah') {
       const isOnSurahPage = pathname.startsWith('/surah/');
       const isOnBookmarkPage = pathname.startsWith('/bookmarks');
       const isMobile = breakpoint === 'mobile';
       if ((isOnSurahPage || isOnBookmarkPage) && isMobile) {
-        // Allow default link navigation to verse page via href
-        // Don't prevent default, let the Link handle the navigation
         return;
       }
-      // For desktop or when not on surah/bookmark page, use the sidebar/selector
       if (onSurahJump) {
         e.preventDefault();
         onSurahJump();
@@ -117,6 +111,65 @@ export const AdaptiveNavigation = ({
   }
 };
 
+interface NavigationItemProps {
+  item: NavItem;
+  isActive: boolean;
+  onItemClick: (item: NavItem, e: React.MouseEvent) => void;
+}
+
+const NavigationItem = ({
+  item,
+  isActive,
+  onItemClick,
+}: NavigationItemProps): React.JSX.Element => {
+  const Icon = item.icon;
+  const commonProps = {
+    onClick: (e: React.MouseEvent) => onItemClick(item, e),
+    className: cn(
+      'relative flex flex-col items-center justify-center',
+      'min-w-[48px] py-1.5 px-2 rounded-xl',
+      'transition-all duration-200',
+      touchClasses.target,
+      touchClasses.gesture,
+      touchClasses.focus,
+      touchClasses.active,
+      'hover:bg-muted/60'
+    ),
+  };
+
+  const content = (
+    <>
+      <div className="relative z-10 mb-0.5">
+        <Icon
+          size={20}
+          className={cn(
+            'transition-all duration-200',
+            isActive ? 'text-foreground stroke-[2.5]' : 'text-muted stroke-[2]'
+          )}
+        />
+      </div>
+      <span
+        className={cn(
+          'text-xs font-medium transition-all duration-200',
+          isActive ? 'text-foreground' : 'text-muted'
+        )}
+      >
+        {item.label}
+      </span>
+    </>
+  );
+
+  return item.href ? (
+    <Link key={item.id} href={item.href} {...commonProps}>
+      {content}
+    </Link>
+  ) : (
+    <button key={item.id} type="button" {...commonProps}>
+      {content}
+    </button>
+  );
+};
+
 /**
  * Mobile variant - bottom navigation
  */
@@ -141,59 +194,18 @@ const MobileNavigation = ({
       )}
     >
       <div className="absolute inset-0 backdrop-blur-lg bg-surface/8 backdrop-saturate-150 border-t border-border/5" />
-
       <div className="relative px-4 pt-1.5 pb-safe pl-safe pr-safe">
         <div className="flex items-center justify-around w-full">
           {navItems.map((item) => {
-            const Icon = item.icon;
             const isActive =
               item.isActive?.(pathname) ?? (item.href ? pathname === item.href : false);
-
-            const commonProps = {
-              onClick: (e: React.MouseEvent) => onItemClick(item, e),
-              className: cn(
-                'relative flex flex-col items-center justify-center',
-                'min-w-[48px] py-1.5 px-2 rounded-xl',
-                'transition-all duration-200',
-                touchClasses.target,
-                touchClasses.gesture,
-                touchClasses.focus,
-                touchClasses.active,
-                'hover:bg-muted/60'
-              ),
-            };
-
-            const content = (
-              <>
-                <div className="relative z-10 mb-0.5">
-                  <Icon
-                    size={20}
-                    className={cn(
-                      'transition-all duration-200',
-                      isActive ? 'text-foreground stroke-[2.5]' : 'text-muted stroke-[2]'
-                    )}
-                  />
-                </div>
-
-                <span
-                  className={cn(
-                    'text-xs font-medium transition-all duration-200',
-                    isActive ? 'text-foreground' : 'text-muted'
-                  )}
-                >
-                  {item.label}
-                </span>
-              </>
-            );
-
-            return item.href ? (
-              <Link key={item.id} href={item.href} {...commonProps}>
-                {content}
-              </Link>
-            ) : (
-              <button key={item.id} type="button" {...commonProps}>
-                {content}
-              </button>
+            return (
+              <NavigationItem
+                key={item.id}
+                item={item}
+                isActive={isActive}
+                onItemClick={onItemClick}
+              />
             );
           })}
         </div>

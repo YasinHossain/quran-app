@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+
 import { ClockIcon } from '@/app/shared/icons';
 
 export const LastReadHeader = (): React.JSX.Element => {

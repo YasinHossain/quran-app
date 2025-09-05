@@ -7,6 +7,9 @@ interface TafsirSearchProps {
   setSearchTerm: (value: string) => void;
 }
 
-export const TafsirSearch = ({ searchTerm, setSearchTerm }: TafsirSearchProps): React.JSX.Element => (
+export const TafsirSearch = ({
+  searchTerm,
+  setSearchTerm,
+}: TafsirSearchProps): React.JSX.Element => (
   <TafsirSearchField searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
 );

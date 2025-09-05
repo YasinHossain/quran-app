@@ -32,45 +32,31 @@ interface MobileBottomSheetProps {
   showRemove?: boolean;
 }
 
-export const MobileBottomSheet = ({
-  isOpen,
-  onClose,
-  verseKey,
+// Hook to generate actions configuration
+function useVerseActions({
   isPlaying,
   isLoadingAudio,
   isBookmarked,
+  showRemove,
+  verseKey,
   onPlayPause,
   onBookmark,
   onShare,
   onNavigateToVerse,
-  showRemove = false,
-}: MobileBottomSheetProps): React.JSX.Element => {
-  const handleAction = (action: () => void) => {
-    action();
-    onClose();
-  };
-
-  const backdropVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-  };
-
-  const sheetVariants = {
-    hidden: {
-      y: '100%',
-      opacity: 0,
-    },
-    visible: {
-      y: 0,
-      opacity: 1,
-    },
-    exit: {
-      y: '100%',
-      opacity: 0,
-    },
-  };
-
-  const actions: VerseActionItem[] = [
+  handleAction,
+}: {
+  isPlaying: boolean;
+  isLoadingAudio: boolean;
+  isBookmarked: boolean;
+  showRemove: boolean;
+  verseKey: string;
+  onPlayPause: () => void;
+  onBookmark: () => void;
+  onShare: () => void;
+  onNavigateToVerse?: () => void;
+  handleAction: (action: () => void) => void;
+}): VerseActionItem[] {
+  return [
     {
       label: isPlaying ? 'Pause Audio' : 'Play Audio',
       icon: isLoadingAudio ? (
@@ -86,7 +72,7 @@ export const MobileBottomSheet = ({
     {
       label: 'View Tafsir',
       icon: <BookReaderIcon size={20} />,
-      onClick: onClose,
+      onClick: () => {},
       href: `/tafsir/${verseKey.replace(':', '/')}`,
     },
     ...(onNavigateToVerse
@@ -111,6 +97,99 @@ export const MobileBottomSheet = ({
       onClick: () => handleAction(onShare),
     },
   ];
+}
+
+interface ActionListProps {
+  actions: VerseActionItem[];
+  onClose: () => void;
+}
+
+const ActionList = ({ actions, onClose }: ActionListProps): React.JSX.Element => (
+  <div className="flex-1 overflow-y-auto p-4 pb-8">
+    <div className="space-y-2">
+      {actions.map((action, index) =>
+        action.href ? (
+          <Link
+            key={index}
+            href={action.href}
+            onClick={onClose}
+            className={cn(
+              'flex items-center gap-4 p-4 rounded-2xl transition-all duration-200',
+              'hover:bg-interactive active:bg-interactive',
+              touchClasses.target,
+              touchClasses.gesture,
+              touchClasses.focus,
+              touchClasses.active,
+              action.active && 'bg-accent/10 text-accent'
+            )}
+          >
+            <div className="flex-shrink-0">{action.icon}</div>
+            <span className="text-sm font-medium">{action.label}</span>
+          </Link>
+        ) : (
+          <button
+            key={index}
+            onClick={action.onClick}
+            className={cn(
+              'flex w-full items-center gap-4 p-4 rounded-2xl transition-all duration-200',
+              'hover:bg-interactive active:bg-interactive',
+              touchClasses.target,
+              touchClasses.gesture,
+              touchClasses.focus,
+              touchClasses.active,
+              action.active && 'bg-accent/10 text-accent'
+            )}
+          >
+            <div className="flex-shrink-0">{action.icon}</div>
+            <span className="text-sm font-medium">{action.label}</span>
+          </button>
+        )
+      )}
+    </div>
+  </div>
+);
+
+export const MobileBottomSheet = ({
+  isOpen,
+  onClose,
+  verseKey,
+  isPlaying,
+  isLoadingAudio,
+  isBookmarked,
+  onPlayPause,
+  onBookmark,
+  onShare,
+  onNavigateToVerse,
+  showRemove = false,
+}: MobileBottomSheetProps): React.JSX.Element => {
+  const handleAction = (action: () => void): void => {
+    action();
+    onClose();
+  };
+
+  const actions = useVerseActions({
+    isPlaying,
+    isLoadingAudio,
+    isBookmarked,
+    showRemove,
+    verseKey,
+    onPlayPause,
+    onBookmark,
+    onShare,
+    onNavigateToVerse,
+    handleAction,
+  });
+
+  const backdropVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
+  const sheetVariants = {
+    hidden: { y: '100%', opacity: 0 },
+    visible: { y: 0, opacity: 1 },
+    exit: { y: '100%', opacity: 0 },
+  };
 
   return (
     <AnimatePresence>
@@ -161,48 +240,7 @@ export const MobileBottomSheet = ({
               </button>
             </div>
 
-            {/* Actions */}
-            <div className="flex-1 overflow-y-auto p-4 pb-8">
-              <div className="space-y-2">
-                {actions.map((action, index) =>
-                  action.href ? (
-                    <Link
-                      key={index}
-                      href={action.href}
-                      onClick={action.onClick}
-                      className={cn(
-                        'flex items-center gap-4 p-4 rounded-2xl hover:bg-interactive transition-all duration-200',
-                        touchClasses.target,
-                        touchClasses.gesture,
-                        action.active ? 'text-accent' : 'text-foreground'
-                      )}
-                    >
-                      <div className={action.active ? 'text-accent' : 'text-muted'}>
-                        {action.icon}
-                      </div>
-                      <span className="text-base font-medium">{action.label}</span>
-                    </Link>
-                  ) : (
-                    <motion.button
-                      key={index}
-                      onClick={action.onClick}
-                      className={cn(
-                        'flex items-center gap-4 p-4 rounded-2xl hover:bg-interactive transition-all duration-200 w-full text-left',
-                        touchClasses.target,
-                        touchClasses.gesture,
-                        action.active ? 'text-accent' : 'text-foreground'
-                      )}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <div className={action.active ? 'text-accent' : 'text-muted'}>
-                        {action.icon}
-                      </div>
-                      <span className="text-base font-medium">{action.label}</span>
-                    </motion.button>
-                  )
-                )}
-              </div>
-            </div>
+            <ActionList actions={actions} onClose={onClose} />
           </motion.div>
         </>
       )}

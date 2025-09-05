@@ -1,11 +1,10 @@
 'use client';
 
 import { useRouter, usePathname } from 'next/navigation';
+import React from 'react';
 
 import { useSwipeGestures } from '@/app/shared/hooks/useSwipeGestures';
 import { cn } from '@/lib/utils/cn';
-
-import React from 'react';
 
 interface SwipeContainerProps {
   children: React.ReactNode;

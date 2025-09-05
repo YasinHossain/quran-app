@@ -2,13 +2,12 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import React from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { CloseIcon } from '@/app/shared/icons';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { Folder } from '@/types';
-
-import React from 'react';
 
 interface FolderSettingsModalProps {
   isOpen: boolean;
@@ -29,6 +28,111 @@ const FOLDER_COLORS = [
 ];
 
 const FOLDER_ICONS = ['📁', '📖', '⭐', '💎', '🌟', '📚', '🔖', '💫'];
+
+interface FolderNameInputProps {
+  name: string;
+  setName: (name: string) => void;
+}
+
+const FolderNameInput = ({ name, setName }: FolderNameInputProps): React.JSX.Element => (
+  <div className="mb-6">
+    <label htmlFor="folder-name" className="block text-sm font-medium text-foreground mb-2">
+      Folder Name
+    </label>
+    <input
+      id="folder-name"
+      type="text"
+      value={name}
+      onChange={(e) => setName(e.target.value)}
+      className="w-full px-3 py-2 bg-background border border-border rounded-lg text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent"
+      placeholder="Enter folder name"
+      required
+    />
+  </div>
+);
+
+interface ColorSelectorProps {
+  selectedColor: string;
+  setSelectedColor: (color: string) => void;
+}
+
+const ColorSelector = ({
+  selectedColor,
+  setSelectedColor,
+}: ColorSelectorProps): React.JSX.Element => (
+  <div className="mb-6">
+    <label className="block text-sm font-medium text-foreground mb-3">Color</label>
+    <div className="grid grid-cols-4 gap-3">
+      {FOLDER_COLORS.map((color) => (
+        <button
+          key={color.value}
+          type="button"
+          onClick={() => setSelectedColor(color.value)}
+          className={`p-3 rounded-lg border transition-all ${
+            selectedColor === color.value
+              ? 'border-accent bg-accent/10 ring-2 ring-accent/20'
+              : 'border-border hover:border-accent/50 hover:bg-surface-hover'
+          }`}
+        >
+          <div className={`w-4 h-4 rounded-full bg-current ${color.value} mx-auto`} />
+          <span className="text-xs text-muted mt-1 block">{color.name}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+);
+
+interface IconSelectorProps {
+  selectedIcon: string;
+  setSelectedIcon: (icon: string) => void;
+}
+
+const IconSelector = ({ selectedIcon, setSelectedIcon }: IconSelectorProps): React.JSX.Element => (
+  <div className="mb-8">
+    <label className="block text-sm font-medium text-foreground mb-3">Icon</label>
+    <div className="grid grid-cols-4 gap-2">
+      {FOLDER_ICONS.map((icon) => (
+        <button
+          key={icon}
+          type="button"
+          onClick={() => setSelectedIcon(icon)}
+          className={`p-3 text-xl rounded-lg border transition-all ${
+            selectedIcon === icon
+              ? 'border-accent bg-accent/10 ring-2 ring-accent/20'
+              : 'border-border hover:border-accent/50 hover:bg-surface-hover'
+          }`}
+        >
+          {icon}
+        </button>
+      ))}
+    </div>
+  </div>
+);
+
+interface ModalActionsProps {
+  isSubmitting: boolean;
+  onClose: () => void;
+}
+
+const ModalActions = ({ isSubmitting, onClose }: ModalActionsProps): React.JSX.Element => (
+  <div className="flex justify-end gap-3 pt-4">
+    <button
+      type="button"
+      onClick={onClose}
+      className="px-4 py-2 text-sm font-medium text-muted hover:text-foreground transition-colors"
+      disabled={isSubmitting}
+    >
+      Cancel
+    </button>
+    <button
+      type="submit"
+      disabled={isSubmitting}
+      className="px-4 py-2 bg-accent text-on-accent rounded-lg text-sm font-medium hover:bg-accent-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      {isSubmitting ? 'Saving...' : 'Save Changes'}
+    </button>
+  </div>
+);
 
 export const FolderSettingsModal = ({
   isOpen,
@@ -61,7 +165,7 @@ export const FolderSettingsModal = ({
     }
   }, [folder, isOpen]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     if (!folder || !name.trim()) return;
 
@@ -78,7 +182,7 @@ export const FolderSettingsModal = ({
     }
   };
 
-  const getModalTitle = () => {
+  const getModalTitle = (): string => {
     switch (mode) {
       case 'rename':
         return 'Rename Folder';
@@ -143,102 +247,17 @@ export const FolderSettingsModal = ({
             </div>
 
             <form onSubmit={handleSubmit}>
-              {/* Folder Name */}
-              <div className="mb-6">
-                <label
-                  htmlFor="folder-name"
-                  className="block text-sm font-medium text-foreground mb-2"
-                >
-                  Folder Name
-                </label>
-                <input
-                  id="folder-name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full px-3 py-2 bg-background border border-border rounded-lg text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent"
-                  placeholder="Enter folder name"
-                  required
-                />
-              </div>
-
-              {/* Color Selection - Only show for customize mode */}
+              <FolderNameInput name={name} setName={setName} />
               {mode === 'customize' && (
-                <div className="mb-6">
-                  <fieldset>
-                    <legend className="block text-sm font-medium text-foreground mb-3">
-                      Folder Color
-                    </legend>
-                    <div className="grid grid-cols-4 gap-2">
-                      {FOLDER_COLORS.map((color) => (
-                        <button
-                          key={color.value}
-                          type="button"
-                          onClick={() => setSelectedColor(color.value)}
-                          className={`w-12 h-12 rounded-lg border-2 transition-all ${
-                            selectedColor === color.value
-                              ? 'border-accent scale-105'
-                              : 'border-border hover:border-accent/50'
-                          } ${color.value.replace('text-', 'bg-')}`}
-                          aria-label={`Select ${color.name} color`}
-                        >
-                          {selectedColor === color.value && (
-                            <div className="w-full h-full rounded-md flex items-center justify-center text-white">
-                              ✓
-                            </div>
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  </fieldset>
-                </div>
+                <>
+                  <ColorSelector
+                    selectedColor={selectedColor}
+                    setSelectedColor={setSelectedColor}
+                  />
+                  <IconSelector selectedIcon={selectedIcon} setSelectedIcon={setSelectedIcon} />
+                </>
               )}
-
-              {/* Icon Selection - Only show for customize mode */}
-              {mode === 'customize' && (
-                <div className="mb-6">
-                  <fieldset>
-                    <legend className="block text-sm font-medium text-foreground mb-3">
-                      Folder Icon
-                    </legend>
-                    <div className="grid grid-cols-4 gap-2">
-                      {FOLDER_ICONS.map((icon) => (
-                        <button
-                          key={icon}
-                          type="button"
-                          onClick={() => setSelectedIcon(icon)}
-                          className={`w-12 h-12 rounded-lg border-2 text-xl transition-all ${
-                            selectedIcon === icon
-                              ? 'border-accent bg-accent/10 scale-105'
-                              : 'border-border hover:border-accent/50 hover:bg-surface-hover'
-                          }`}
-                          aria-label={`Select ${icon} icon`}
-                        >
-                          {icon}
-                        </button>
-                      ))}
-                    </div>
-                  </fieldset>
-                </div>
-              )}
-
-              {/* Footer */}
-              <div className="flex justify-end space-x-3">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="px-4 py-2 text-sm font-medium text-muted hover:text-foreground transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={!name.trim() || isSubmitting}
-                  className="px-4 py-2 text-sm font-medium bg-accent text-white rounded-lg hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {isSubmitting ? 'Saving...' : 'Save Changes'}
-                </button>
-              </div>
+              <ModalActions isSubmitting={isSubmitting} onClose={onClose} />
             </form>
           </motion.div>
         </>

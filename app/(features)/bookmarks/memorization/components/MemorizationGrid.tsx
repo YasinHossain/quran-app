@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
 import { motion } from 'framer-motion';
+import React from 'react';
 
 import { BrainIcon, PlusIcon } from '@/app/shared/icons';
 import { MemorizationPlan, Chapter } from '@/types';

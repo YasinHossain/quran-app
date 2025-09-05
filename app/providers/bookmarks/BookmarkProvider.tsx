@@ -31,6 +31,164 @@ import {
 } from './storage-utils';
 import { BookmarkContextType } from './types';
 
+// Custom hook for folder operations
+function useFolderOperations(
+  folders: Folder[],
+  setFolders: React.Dispatch<React.SetStateAction<Folder[]>>
+) {
+  const createFolder = useCallback(
+    (name: string, color?: string, icon?: string) => {
+      const newFolder = createNewFolder(name, color, icon);
+      setFolders((prev) => [...prev, newFolder]);
+    },
+    [setFolders]
+  );
+
+  const deleteFolder = useCallback(
+    (folderId: string) => {
+      setFolders((prev) => prev.filter((folder) => folder.id !== folderId));
+    },
+    [setFolders]
+  );
+
+  const renameFolder = useCallback(
+    (folderId: string, newName: string, color?: string, icon?: string) => {
+      setFolders((prev) =>
+        prev.map((folder) =>
+          folder.id === folderId
+            ? {
+                ...folder,
+                name: newName,
+                ...(color !== undefined ? { color } : {}),
+                ...(icon !== undefined ? { icon } : {}),
+              }
+            : folder
+        )
+      );
+    },
+    [setFolders]
+  );
+
+  return { createFolder, deleteFolder, renameFolder };
+}
+
+// Custom hook for bookmark operations
+function useBookmarkOperations(
+  folders: Folder[],
+  setFolders: React.Dispatch<React.SetStateAction<Folder[]>>,
+  pinnedVerses: Bookmark[],
+  setPinnedVerses: React.Dispatch<React.SetStateAction<Bookmark[]>>,
+  chapters: Chapter[],
+  fetchBookmarkMetadata: (verseId: string, chaptersList: Chapter[]) => void
+) {
+  const addBookmark = useCallback(
+    (verseId: string, folderId?: string) => {
+      if (folderId === 'pinned') {
+        setPinnedVerses((prev) => {
+          if (prev.some((b) => b.verseId === verseId)) {
+            return prev;
+          }
+          const newBookmark: Bookmark = { verseId, createdAt: Date.now() };
+          return [...prev, newBookmark];
+        });
+        void fetchBookmarkMetadata(verseId, chapters);
+        return;
+      }
+
+      setFolders((prev) => addBookmarkToFolder(prev, verseId, folderId));
+      void fetchBookmarkMetadata(verseId, chapters);
+    },
+    [fetchBookmarkMetadata, chapters, setFolders, setPinnedVerses]
+  );
+
+  const removeBookmark = useCallback(
+    (verseId: string, folderId: string) => {
+      if (folderId === 'pinned') {
+        setPinnedVerses((prev) => prev.filter((b) => b.verseId !== verseId));
+        return;
+      }
+      setFolders((prev) => removeBookmarkFromFolder(prev, verseId, folderId));
+    },
+    [setFolders, setPinnedVerses]
+  );
+
+  const toggleBookmark = useCallback(
+    (verseId: string, folderId?: string) => {
+      if (isVerseBookmarked(folders, verseId)) {
+        const found = findBookmarkInFolders(folders, verseId);
+        if (found) {
+          removeBookmark(verseId, found.folder.id);
+        }
+      } else {
+        addBookmark(verseId, folderId);
+      }
+    },
+    [folders, addBookmark, removeBookmark]
+  );
+
+  const updateBookmark = useCallback(
+    (verseId: string, data: Partial<Bookmark>) => {
+      setFolders((prev) => updateBookmarkInFolders(prev, verseId, data));
+      setPinnedVerses((prev) => prev.map((b) => (b.verseId === verseId ? { ...b, ...data } : b)));
+    },
+    [setFolders, setPinnedVerses]
+  );
+
+  return { addBookmark, removeBookmark, toggleBookmark, updateBookmark };
+}
+
+// Custom hook for memorization operations
+function useMemorizationOperations(
+  memorization: Record<string, MemorizationPlan>,
+  setMemorizationState: React.Dispatch<React.SetStateAction<Record<string, MemorizationPlan>>>
+) {
+  const addToMemorization = useCallback(
+    (surahId: number, targetVerses?: number) => {
+      const key = surahId.toString();
+      if (memorization[key]) return;
+
+      const plan = createMemorizationPlan(surahId, targetVerses || 10);
+      setMemorizationState((prev) => ({ ...prev, [key]: plan }));
+    },
+    [memorization, setMemorizationState]
+  );
+
+  const createMemorizationPlanCallback = useCallback(
+    (surahId: number, targetVerses: number, planName?: string) => {
+      const key = surahId.toString();
+      const plan = createMemorizationPlan(surahId, targetVerses, planName);
+      setMemorizationState((prev) => ({ ...prev, [key]: plan }));
+    },
+    [setMemorizationState]
+  );
+
+  const updateMemorizationProgressCallback = useCallback(
+    (surahId: number, completedVerses: number) => {
+      setMemorizationState((prev) => updateMemorizationProgress(prev, surahId, completedVerses));
+    },
+    [setMemorizationState]
+  );
+
+  const removeFromMemorization = useCallback(
+    (surahId: number) => {
+      const key = surahId.toString();
+      setMemorizationState((prev) => {
+        const newState = { ...prev };
+        delete newState[key];
+        return newState;
+      });
+    },
+    [setMemorizationState]
+  );
+
+  return {
+    addToMemorization,
+    createMemorizationPlan: createMemorizationPlanCallback,
+    updateMemorizationProgress: updateMemorizationProgressCallback,
+    removeFromMemorization,
+  };
+}
+
 export const BookmarkProvider = ({ children }: { children: React.ReactNode }) => {
   const [folders, setFolders] = useState<Folder[]>([]);
   const [pinnedVerses, setPinnedVerses] = useState<Bookmark[]>([]);
@@ -98,61 +256,19 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
     [settings.translationIds, settings.translationId]
   );
 
-  const createFolder = useCallback((name: string, color?: string, icon?: string) => {
-    const newFolder = createNewFolder(name, color, icon);
-    setFolders((prev) => [...prev, newFolder]);
-  }, []);
-
-  const deleteFolder = useCallback((folderId: string) => {
-    setFolders((prev) => prev.filter((folder) => folder.id !== folderId));
-  }, []);
-
-  const renameFolder = useCallback(
-    (folderId: string, newName: string, color?: string, icon?: string) => {
-      setFolders((prev) =>
-        prev.map((folder) =>
-          folder.id === folderId
-            ? {
-                ...folder,
-                name: newName,
-                ...(color !== undefined ? { color } : {}),
-                ...(icon !== undefined ? { icon } : {}),
-              }
-            : folder
-        )
-      );
-    },
-    []
+  // Use custom hooks to organize operations
+  const folderOps = useFolderOperations(folders, setFolders);
+  const bookmarkOps = useBookmarkOperations(
+    folders,
+    setFolders,
+    pinnedVerses,
+    setPinnedVerses,
+    chapters,
+    fetchBookmarkMetadata
   );
+  const memorizationOps = useMemorizationOperations(memorization, setMemorizationState);
 
-  const addBookmark = useCallback(
-    (verseId: string, folderId?: string) => {
-      if (folderId === 'pinned') {
-        setPinnedVerses((prev) => {
-          if (prev.some((b) => b.verseId === verseId)) {
-            return prev;
-          }
-          const newBookmark: Bookmark = { verseId, createdAt: Date.now() };
-          return [...prev, newBookmark];
-        });
-        void fetchBookmarkMetadata(verseId, chapters);
-        return;
-      }
-
-      setFolders((prev) => addBookmarkToFolder(prev, verseId, folderId));
-      void fetchBookmarkMetadata(verseId, chapters);
-    },
-    [fetchBookmarkMetadata, chapters]
-  );
-
-  const removeBookmark = useCallback((verseId: string, folderId: string) => {
-    if (folderId === 'pinned') {
-      setPinnedVerses((prev) => prev.filter((b) => b.verseId !== verseId));
-      return;
-    }
-    setFolders((prev) => removeBookmarkFromFolder(prev, verseId, folderId));
-  }, []);
-
+  // Simple derived values and remaining callbacks
   const isBookmarked = useCallback(
     (verseId: string) => isVerseBookmarked(folders, verseId),
     [folders]
@@ -163,37 +279,18 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
     [folders]
   );
 
-  const toggleBookmark = useCallback(
-    (verseId: string, folderId?: string) => {
-      if (isVerseBookmarked(folders, verseId)) {
-        const found = findBookmarkInFolders(folders, verseId);
-        if (found) {
-          removeBookmark(verseId, found.folder.id);
-        }
-      } else {
-        addBookmark(verseId, folderId);
-      }
-    },
-    [folders, addBookmark, removeBookmark]
-  );
-
-  const updateBookmark = useCallback((verseId: string, data: Partial<Bookmark>) => {
-    setFolders((prev) => updateBookmarkInFolders(prev, verseId, data));
-    setPinnedVerses((prev) => prev.map((b) => (b.verseId === verseId ? { ...b, ...data } : b)));
-  }, []);
-
   const bookmarkedVerses = useMemo(() => getAllBookmarkedVerses(folders), [folders]);
 
   const togglePinned = useCallback(
     (verseId: string) => {
       const isPinned = pinnedVerses.some((b) => b.verseId === verseId);
       if (isPinned) {
-        removeBookmark(verseId, 'pinned');
+        bookmarkOps.removeBookmark(verseId, 'pinned');
       } else {
-        addBookmark(verseId, 'pinned');
+        bookmarkOps.addBookmark(verseId, 'pinned');
       }
     },
-    [pinnedVerses, addBookmark, removeBookmark]
+    [pinnedVerses, bookmarkOps]
   );
 
   const isPinned = useCallback(
@@ -205,53 +302,12 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
     setLastReadState((prev) => ({ ...prev, [surahId]: verseId }));
   }, []);
 
-  const addToMemorization = useCallback(
-    (surahId: number, targetVerses?: number) => {
-      const key = surahId.toString();
-      if (memorization[key]) return;
-
-      const plan = createMemorizationPlan(surahId, targetVerses || 10);
-      setMemorizationState((prev) => ({ ...prev, [key]: plan }));
-    },
-    [memorization]
-  );
-
-  const createMemorizationPlanCallback = useCallback(
-    (surahId: number, targetVerses: number, planName?: string) => {
-      const key = surahId.toString();
-      const plan = createMemorizationPlan(surahId, targetVerses, planName);
-      setMemorizationState((prev) => ({ ...prev, [key]: plan }));
-    },
-    []
-  );
-
-  const updateMemorizationProgressCallback = useCallback(
-    (surahId: number, completedVerses: number) => {
-      setMemorizationState((prev) => updateMemorizationProgress(prev, surahId, completedVerses));
-    },
-    []
-  );
-
-  const removeFromMemorization = useCallback((surahId: number) => {
-    const key = surahId.toString();
-    setMemorizationState((prev) => {
-      const newState = { ...prev };
-      delete newState[key];
-      return newState;
-    });
-  }, []);
-
   const value: BookmarkContextType = {
     folders,
-    createFolder,
-    deleteFolder,
-    renameFolder,
-    addBookmark,
-    removeBookmark,
+    ...folderOps,
+    ...bookmarkOps,
     isBookmarked,
     findBookmark,
-    toggleBookmark,
-    updateBookmark,
     bookmarkedVerses,
     pinnedVerses,
     togglePinned,
@@ -260,10 +316,7 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
     setLastRead,
     chapters,
     memorization,
-    addToMemorization,
-    createMemorizationPlan: createMemorizationPlanCallback,
-    updateMemorizationProgress: updateMemorizationProgressCallback,
-    removeFromMemorization,
+    ...memorizationOps,
   };
 
   return <BookmarkContext.Provider value={value}>{children}</BookmarkContext.Provider>;

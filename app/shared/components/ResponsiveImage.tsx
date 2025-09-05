@@ -1,10 +1,9 @@
 'use client';
 
 import Image, { ImageProps } from 'next/image';
+import React from 'react';
 
 import { useResponsiveState } from '@/lib/responsive';
-
-import React from 'react';
 
 interface ResponsiveImageProps extends Omit<ImageProps, 'src' | 'sizes'> {
   src: string | ResponsiveImageSources;

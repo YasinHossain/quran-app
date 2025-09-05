@@ -3,6 +3,7 @@ import { IconSun, IconMoon, IconSettings, IconMenu2 } from '@tabler/icons-react'
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
+import React from 'react';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useSidebar } from '@/app/providers/SidebarContext';
@@ -11,8 +12,6 @@ import { useUIState } from '@/app/providers/UIStateContext';
 import { cn } from '@/lib/utils/cn';
 
 import { SearchInput } from './components/SearchInput';
-
-import React from 'react';
 
 export const Header = () => {
   const { isHidden } = useHeaderVisibility();

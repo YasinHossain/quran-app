@@ -9,7 +9,10 @@ interface VerseErrorFallbackProps {
   verseKey?: string;
 }
 
-export function VerseErrorFallback({ resetError, verseKey }: VerseErrorFallbackProps): React.JSX.Element {
+export function VerseErrorFallback({
+  resetError,
+  verseKey,
+}: VerseErrorFallbackProps): React.JSX.Element {
   const router = useRouter();
 
   return (

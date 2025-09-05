@@ -10,7 +10,10 @@ interface FolderContextMenuProps {
   onDelete: () => void;
 }
 
-export const FolderContextMenu = ({ onEdit, onDelete }: FolderContextMenuProps): React.JSX.Element => {
+export const FolderContextMenu = ({
+  onEdit,
+  onDelete,
+}: FolderContextMenuProps): React.JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);

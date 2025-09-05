@@ -15,12 +15,7 @@ export const useTafsirPanel = (isOpen: boolean) => {
   const { theme } = useTheme();
   const { settings, setTafsirIds } = useSettings();
 
-  const {
-    tafsirs: domainTafsirs,
-    loading: apiLoading,
-    error: apiError,
-    isFromCache,
-  } = useTafsir();
+  const { tafsirs: domainTafsirs, loading: apiLoading, error: apiError, isFromCache } = useTafsir();
 
   const [showLimitWarning, setShowLimitWarning] = useState(false);
 
@@ -189,4 +184,3 @@ export const useTafsirPanel = (isOpen: boolean) => {
     scrollTabsRight,
   } as const;
 };
-

@@ -1,17 +1,17 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import React, { memo, useCallback } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { LoadingError } from '@/app/shared/LoadingError';
-import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { ContentBookmarkCard } from '@/app/shared/ui/cards/ContentBookmarkCard';
 import { Bookmark } from '@/types';
 
+import { useBookmarkAudio } from '../hooks/useBookmarkAudio';
 import { useBookmarkVerse } from '../hooks/useBookmarkVerse';
+import { ErrorFallback, LoadingFallback } from './shared/BookmarkCardComponents';
 
 interface BookmarkCardProps {
   bookmark: Bookmark;
@@ -19,130 +19,79 @@ interface BookmarkCardProps {
   onRemove?: () => void;
 }
 
-export const BookmarkCard = memo(function BookmarkCard({
-  bookmark,
-  folderId,
-  onRemove,
-}: BookmarkCardProps) {
-  const {
-    playingId,
-    setPlayingId,
-    loadingId,
-    setLoadingId,
-    setActiveVerse,
-    audioRef,
-    setIsPlaying,
-    openPlayer,
-  } = useAudio();
-  const { settings } = useSettings();
-  const { removeBookmark, isBookmarked, chapters } = useBookmarks();
-
-  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark, chapters);
-
+const useBookmarkHandlers = (
+  enrichedBookmark: Bookmark,
+  folderId: string,
+  onRemove?: () => void
+): {
+  handleRemoveBookmark: () => void;
+  handleNavigateToVerse: () => void;
+  isVerseBookmarked: boolean;
+} => {
+  const { removeBookmark, isBookmarked } = useBookmarks();
   const router = useRouter();
 
-  const verseApiId = enrichedBookmark.verseApiId;
-
-  const handlePlayPause = useCallback(() => {
-    if (!verseApiId) return;
-    if (playingId === verseApiId) {
-      audioRef.current?.pause();
-      setPlayingId(null);
-      setLoadingId(null);
-      setActiveVerse(null);
-      setIsPlaying(false);
-    } else if (enrichedBookmark.verseKey && enrichedBookmark.verseText) {
-      const verseForAudio = {
-        id: verseApiId,
-        verse_key: enrichedBookmark.verseKey,
-        text_uthmani: enrichedBookmark.verseText,
-        translations: enrichedBookmark.translation
-          ? [
-              {
-                id: 0,
-                resource_id: 0,
-                text: enrichedBookmark.translation,
-              },
-            ]
-          : [],
-      };
-      setActiveVerse(verseForAudio);
-      setPlayingId(verseApiId);
-      setLoadingId(verseApiId);
-      setIsPlaying(true);
-      openPlayer();
-    }
-  }, [
-    verseApiId,
-    playingId,
-    enrichedBookmark.verseKey,
-    enrichedBookmark.verseText,
-    enrichedBookmark.translation,
-    audioRef,
-    setActiveVerse,
-    setPlayingId,
-    setLoadingId,
-    setIsPlaying,
-    openPlayer,
-  ]);
-
-  const handleRemoveBookmark = useCallback(() => {
+  const handleRemoveBookmark = useCallback((): void => {
     removeBookmark(enrichedBookmark.verseId, folderId);
     onRemove?.();
   }, [removeBookmark, enrichedBookmark.verseId, folderId, onRemove]);
 
-  const handleNavigateToVerse = useCallback(() => {
+  const handleNavigateToVerse = useCallback((): void => {
     if (!enrichedBookmark.verseKey) return;
     const [surahId] = enrichedBookmark.verseKey.split(':');
     router.push(`/surah/${surahId}#verse-${enrichedBookmark.verseId}`);
   }, [enrichedBookmark.verseKey, enrichedBookmark.verseId, router]);
 
-  const isPlaying = playingId === verseApiId;
-  const isLoadingAudio = loadingId === verseApiId;
   const isVerseBookmarked = isBookmarked(enrichedBookmark.verseId);
+
+  return { handleRemoveBookmark, handleNavigateToVerse, isVerseBookmarked };
+};
+
+const useBookmarkCardState = (
+  enrichedBookmark: Bookmark,
+  isLoading: boolean,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _error: unknown
+): { isDataLoading: boolean } => {
+  const isDataLoading =
+    isLoading ||
+    !enrichedBookmark.verseText ||
+    !enrichedBookmark.translation ||
+    !enrichedBookmark.verseKey ||
+    !enrichedBookmark.surahName ||
+    !enrichedBookmark.verseApiId;
+
+  return { isDataLoading };
+};
+
+export const BookmarkCard = memo(function BookmarkCard({
+  bookmark,
+  folderId,
+  onRemove,
+}: BookmarkCardProps): React.JSX.Element {
+  const { settings } = useSettings();
+  const { chapters } = useBookmarks();
+  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark, chapters);
+
+  const { handlePlayPause, isPlaying, isLoadingAudio } = useBookmarkAudio(
+    enrichedBookmark,
+    enrichedBookmark.verseApiId
+  );
+
+  const { handleRemoveBookmark, handleNavigateToVerse, isVerseBookmarked } = useBookmarkHandlers(
+    enrichedBookmark,
+    folderId,
+    onRemove
+  );
+
+  const { isDataLoading } = useBookmarkCardState(enrichedBookmark, isLoading, error);
 
   return (
     <LoadingError
-      isLoading={
-        isLoading ||
-        !enrichedBookmark.verseText ||
-        !enrichedBookmark.translation ||
-        !enrichedBookmark.verseKey ||
-        !enrichedBookmark.surahName ||
-        !enrichedBookmark.verseApiId
-      }
+      isLoading={isDataLoading}
       error={error}
-      loadingFallback={
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="rounded-xl bg-surface border border-border p-6 mb-6"
-        >
-          <div className="animate-pulse">
-            <div className="flex items-center justify-between mb-4">
-              <div className="h-4 bg-surface-hover rounded w-32"></div>
-              <div className="h-3 bg-surface-hover rounded w-20"></div>
-            </div>
-            <div className="space-y-3">
-              <div className="h-6 bg-surface-hover rounded"></div>
-              <div className="h-4 bg-surface-hover rounded w-3/4"></div>
-            </div>
-          </div>
-        </motion.div>
-      }
-      errorFallback={
-        <motion.div
-          role="alert"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="rounded-xl bg-surface border border-error/20 p-6 mb-6"
-        >
-          <div className="text-error text-center">
-            <p>Failed to load verse: {String(error)}</p>
-            <p className="text-sm text-muted mt-2">Verse ID: {bookmark.verseId}</p>
-          </div>
-        </motion.div>
-      }
+      loadingFallback={<LoadingFallback />}
+      errorFallback={<ErrorFallback error={error} verseId={bookmark.verseId} />}
     >
       <ContentBookmarkCard
         bookmark={enrichedBookmark}

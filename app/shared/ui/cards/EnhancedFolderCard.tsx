@@ -1,6 +1,6 @@
 'use client';
-import React from 'react';
 import { motion } from 'framer-motion';
+import React from 'react';
 
 import { FolderContextMenu } from '@/app/(features)/bookmarks/components/FolderContextMenu';
 import { FolderIcon } from '@/app/shared/icons';

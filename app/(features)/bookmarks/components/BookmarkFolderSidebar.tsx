@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+
 import { BaseSidebar } from '@/app/shared/components/BaseSidebar';
 import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
 import { Bookmark, Folder } from '@/types';
@@ -20,7 +21,9 @@ interface BookmarkFolderSidebarProps {
 export const BookmarkFolderSidebar = ({
   bookmarks,
   folder,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   activeVerseId,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onVerseSelect,
   onBack,
   isOpen,

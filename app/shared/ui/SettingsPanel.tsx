@@ -1,11 +1,12 @@
 'use client';
 
+import React from 'react';
+
 import { cn } from '@/lib/utils/cn';
 
 import { Panel } from './Panel';
 
 import type { SettingsPanelProps } from '@/types/components';
-import React from 'react';
 
 interface SettingItemProps {
   label: string;

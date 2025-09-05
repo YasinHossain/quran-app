@@ -1,12 +1,11 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import React from 'react';
 
 import { CloseIcon, CheckIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
-
-import React from 'react';
 
 interface CreateFolderFormProps {
   newFolderName: string;

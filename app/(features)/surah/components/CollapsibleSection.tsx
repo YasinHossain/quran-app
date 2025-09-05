@@ -1,7 +1,6 @@
 // app/(features)/surah/[surahId]/components/CollapsibleSection.tsx
 'use client';
 import { ChevronDownIcon } from '@/app/shared/icons';
-import { cn } from '@/lib/utils/cn';
 
 interface CollapsibleSectionProps {
   title: string;

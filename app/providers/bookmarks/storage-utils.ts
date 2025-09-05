@@ -1,5 +1,5 @@
-import { Folder, Bookmark, MemorizationPlan } from '@/types';
 import { getItem, setItem, removeItem } from '@/lib/utils/safeLocalStorage';
+import { Folder, Bookmark, MemorizationPlan } from '@/types';
 
 import {
   BOOKMARKS_STORAGE_KEY,

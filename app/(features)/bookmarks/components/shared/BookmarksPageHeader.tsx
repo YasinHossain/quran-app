@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+
 import { BookmarkIcon } from '@/app/shared/icons';
 
 export const BookmarksPageHeader = (): React.JSX.Element => {

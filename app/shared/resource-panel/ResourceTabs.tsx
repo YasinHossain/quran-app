@@ -1,7 +1,7 @@
 'use client';
-import { ChevronLeftIcon, ChevronRightIcon } from '@/app/shared/icons';
-
 import React from 'react';
+
+import { ChevronLeftIcon, ChevronRightIcon } from '@/app/shared/icons';
 
 interface ResourceTabsProps {
   languages: string[];

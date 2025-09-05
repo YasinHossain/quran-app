@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+
 import { BrainIcon } from '@/app/shared/icons';
 
 export const MemorizationHeader = (): React.JSX.Element => {

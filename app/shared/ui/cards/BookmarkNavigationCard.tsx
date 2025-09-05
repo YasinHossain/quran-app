@@ -1,11 +1,11 @@
 'use client';
 
+import React from 'react';
+
 import { cn } from '@/lib/utils/cn';
 
 import { colors } from '../../design-system/card-tokens';
 import { BaseCard, BaseCardProps } from '../BaseCard';
-
-import React from 'react';
 
 /**
  * BookmarkNavigationCard

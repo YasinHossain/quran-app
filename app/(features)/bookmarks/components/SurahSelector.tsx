@@ -1,11 +1,10 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import React from 'react';
 
 import { ChevronDownIcon } from '@/app/shared/icons';
 import { Chapter } from '@/types';
-
-import React from 'react';
 
 interface SurahSelectorProps {
   chapters: Chapter[];

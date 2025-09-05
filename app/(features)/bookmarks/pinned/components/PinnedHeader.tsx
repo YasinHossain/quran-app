@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+
 import { PinIcon } from '@/app/shared/icons';
 
 export const PinnedHeader = (): React.JSX.Element => {

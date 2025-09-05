@@ -1,5 +1,5 @@
-import { Settings } from '@/types';
 import { getItem, setItem } from '@/lib/utils/safeLocalStorage';
+import { Settings } from '@/types';
 
 export const ARABIC_FONTS = [
   { name: 'KFGQPC Uthman Taha', value: '"KFGQPC-Uthman-Taha", serif', category: 'Uthmani' },

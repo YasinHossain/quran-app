@@ -3,7 +3,6 @@ import { IconSearch, IconX, IconClock, IconTrendingUp } from '@tabler/icons-reac
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
-
 import React from 'react';
 
 interface QuickSearchProps {

@@ -1,13 +1,13 @@
 'use client';
 
+import React from 'react';
+
 import { useListHeight } from '@/app/shared/resource-panel/hooks/useListHeight';
 
 import { TranslationPanelContent } from './components/TranslationPanelContent';
 import { TranslationPanelHeader } from './components/TranslationPanelHeader';
 import { useTranslationSections } from './hooks/useTranslationSections';
 import { useTranslationPanel } from './useTranslationPanel';
-
-import React from 'react';
 
 interface TranslationPanelProps {
   isOpen: boolean;

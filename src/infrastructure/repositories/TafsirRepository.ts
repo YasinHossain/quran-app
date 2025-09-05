@@ -1,8 +1,9 @@
+import { getItem, setItem, removeItem } from '@/lib/utils/safeLocalStorage';
+
 import { apiFetch } from '../../../lib/api/client';
 import { Tafsir, TafsirData } from '../../domain/entities/Tafsir';
 import { ITafsirRepository } from '../../domain/repositories/ITafsirRepository';
 import { logger } from '../monitoring/Logger';
-import { getItem, setItem, removeItem } from '@/lib/utils/safeLocalStorage';
 
 interface ApiTafsirResource {
   id: number;

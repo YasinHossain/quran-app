@@ -1,9 +1,17 @@
 {
   "permissions": {
-    "allow": ["Bash(npm run build:*)", "Bash(npm run test:*)"],
+    "allow": [
+      "Bash(npm run build:*)",
+      "Bash(npm run test:*)",
+      "Bash(npx eslint:*)",
+      "Bash(find:*)",
+      "Bash(npm run lint)"
+    ],
     "deny": [],
     "ask": []
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": ["browser-console"]
+  "enabledMcpjsonServers": [
+    "browser-console"
+  ]
 }

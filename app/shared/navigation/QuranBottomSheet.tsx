@@ -13,6 +13,119 @@ import { SearchInput } from '../components/SearchInput';
 
 import type { Surah } from '@/types';
 
+interface NavigationItemProps {
+  number: number;
+  title: string;
+  subtitle?: string;
+  arabicName?: string;
+  onClick: () => void;
+}
+
+const NavigationItem = memo(function NavigationItem({
+  number,
+  title,
+  subtitle,
+  arabicName,
+  onClick,
+}: NavigationItemProps): React.JSX.Element {
+  return (
+    <motion.button
+      onClick={onClick}
+      className="flex items-center gap-4 p-4 rounded-2xl hover:bg-interactive transition-all duration-200 text-left group touch-manipulation"
+      whileTap={{ scale: 0.98 }}
+    >
+      <div className="flex-shrink-0 w-10 h-10 bg-accent/10 text-accent rounded-xl flex items-center justify-center font-semibold text-sm group-hover:bg-accent group-hover:text-on-accent transition-colors">
+        {number}
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center justify-between mb-1">
+          <h3 className="font-semibold text-foreground group-hover:text-accent transition-colors truncate">
+            {title}
+          </h3>
+          {arabicName && <span className="text-xl text-accent/70 font-arabic">{arabicName}</span>}
+        </div>
+        {subtitle && (
+          <div className="flex items-center gap-3 text-sm text-muted">
+            <span>{subtitle}</span>
+          </div>
+        )}
+      </div>
+    </motion.button>
+  );
+});
+
+interface TabContentProps {
+  activeTab: 'surah' | 'juz' | 'page';
+  filteredSurahs: Surah[];
+  filteredJuzs: JuzSummary[];
+  filteredPages: number[];
+  onSurahClick: (surahId: number) => void;
+  onJuzClick: (juzNumber: number) => void;
+  onPageClick: (page: number) => void;
+}
+
+const TabContent = memo(function TabContent({
+  activeTab,
+  filteredSurahs,
+  filteredJuzs,
+  filteredPages,
+  onSurahClick,
+  onJuzClick,
+  onPageClick,
+}: TabContentProps): React.JSX.Element {
+  if (activeTab === 'surah') {
+    return (
+      <div className="p-4">
+        <div className="grid gap-2">
+          {filteredSurahs.map((surah) => (
+            <NavigationItem
+              key={surah.number}
+              number={surah.number}
+              title={surah.name}
+              subtitle={`${surah.verses} verses`}
+              arabicName={surah.arabicName}
+              onClick={() => onSurahClick(surah.number)}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (activeTab === 'juz') {
+    return (
+      <div className="p-4">
+        <div className="grid gap-2">
+          {filteredJuzs.map((juz) => (
+            <NavigationItem
+              key={juz.number}
+              number={juz.number}
+              title={`Juz ${juz.number}`}
+              subtitle={juz.surahRange}
+              onClick={() => onJuzClick(juz.number)}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-4">
+      <div className="grid gap-2">
+        {filteredPages.map((page) => (
+          <NavigationItem
+            key={page}
+            number={page}
+            title={`Page ${page}`}
+            onClick={() => onPageClick(page)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+});
+
 interface QuranBottomSheetProps {
   isOpen: boolean;
   onClose: () => void;
@@ -203,88 +316,15 @@ export const QuranBottomSheet = memo(function QuranBottomSheet({
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto">
-              {activeTab === 'surah' && (
-                <div className="p-4">
-                  <div className="grid gap-2">
-                    {filteredSurahs.map((surah) => (
-                      <motion.button
-                        key={surah.number}
-                        onClick={() => handleSurahClick(surah.number)}
-                        className="flex items-center gap-4 p-4 rounded-2xl hover:bg-interactive transition-all duration-200 text-left group touch-manipulation"
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <div className="flex-shrink-0 w-10 h-10 bg-accent/10 text-accent rounded-xl flex items-center justify-center font-semibold text-sm group-hover:bg-accent group-hover:text-on-accent transition-colors">
-                          {surah.number}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between mb-1">
-                            <h3 className="font-semibold text-foreground group-hover:text-accent transition-colors truncate">
-                              {surah.name}
-                            </h3>
-                            <span className="text-xl text-accent/70 font-arabic">
-                              {surah.arabicName}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-3 text-sm text-muted">
-                            <span>{surah.verses} verses</span>
-                          </div>
-                        </div>
-                      </motion.button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {activeTab === 'juz' && (
-                <div className="p-4">
-                  <div className="grid gap-2">
-                    {filteredJuzs.map((juz) => (
-                      <motion.button
-                        key={juz.number}
-                        onClick={() => handleJuzClick(juz.number)}
-                        className="flex items-center gap-4 p-4 rounded-2xl hover:bg-interactive transition-all duration-200 text-left group touch-manipulation"
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <div className="flex-shrink-0 w-10 h-10 bg-accent/10 text-accent rounded-xl flex items-center justify-center font-semibold text-sm group-hover:bg-accent group-hover:text-on-accent transition-colors">
-                          {juz.number}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-foreground group-hover:text-accent transition-colors truncate mb-1">
-                            Juz {juz.number}
-                          </h3>
-                          <div className="flex items-center gap-3 text-sm text-muted">
-                            <span>{juz.surahRange}</span>
-                          </div>
-                        </div>
-                      </motion.button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {activeTab === 'page' && (
-                <div className="p-4">
-                  <div className="grid gap-2">
-                    {filteredPages.map((page) => (
-                      <motion.button
-                        key={page}
-                        onClick={() => handlePageClick(page)}
-                        className="flex items-center gap-4 p-4 rounded-2xl hover:bg-interactive transition-all duration-200 text-left group touch-manipulation"
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <div className="flex-shrink-0 w-10 h-10 bg-accent/10 text-accent rounded-xl flex items-center justify-center font-semibold text-sm group-hover:bg-accent group-hover:text-on-accent transition-colors">
-                          {page}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-foreground group-hover:text-accent transition-colors truncate">
-                            Page {page}
-                          </h3>
-                        </div>
-                      </motion.button>
-                    ))}
-                  </div>
-                </div>
-              )}
+              <TabContent
+                activeTab={activeTab}
+                filteredSurahs={filteredSurahs}
+                filteredJuzs={filteredJuzs}
+                filteredPages={filteredPages}
+                onSurahClick={handleSurahClick}
+                onJuzClick={handleJuzClick}
+                onPageClick={handlePageClick}
+              />
             </div>
           </motion.div>
         </>

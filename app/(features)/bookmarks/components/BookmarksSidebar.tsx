@@ -1,12 +1,13 @@
 'use client';
 
+import React from 'react';
+
 import { BaseSidebar } from '@/app/shared/components/BaseSidebar';
 
 import { BookmarksContent } from './BookmarksContent';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 import type { Folder } from '@/types/bookmark';
-import React from 'react';
 
 interface BookmarksSidebarProps {
   activeSection?: SectionId;

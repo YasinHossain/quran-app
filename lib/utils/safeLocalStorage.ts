@@ -36,4 +36,3 @@ export const clear = (): void => {
     logger.warn('safeLocalStorage.clear failed', undefined, error as Error);
   }
 };
-
