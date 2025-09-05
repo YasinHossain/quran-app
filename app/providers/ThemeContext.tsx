@@ -1,5 +1,6 @@
 'use client';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { getItem, setItem } from '@/lib/utils/safeLocalStorage';
 
 export type Theme = 'light' | 'dark';
 
@@ -28,7 +29,7 @@ export const ThemeProvider = ({
   // Effect to load theme from localStorage on the client side after initial render
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('theme');
+      const stored = getItem('theme');
       if (stored === 'light' || stored === 'dark') {
         setTheme(stored as Theme);
       } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -40,7 +41,7 @@ export const ThemeProvider = ({
   // Effect to save theme to localStorage and toggle the dark class whenever theme changes
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('theme', theme);
+      setItem('theme', theme);
       // Ensure the dark class is toggled for Tailwind's class strategy
       document.documentElement.classList.toggle('dark', theme === 'dark');
       document.cookie = `theme=${theme}; path=/; max-age=31536000`;

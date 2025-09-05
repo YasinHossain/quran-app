@@ -212,6 +212,9 @@ describe('BookmarkContext with Folders', () => {
       const folders: Folder[] = JSON.parse(screen.getByTestId('folders').textContent || '[]');
       expect(folders).toHaveLength(1);
       expect(folders[0].name).toBe('Uncategorized');
+      expect(folders[0].id).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+      );
       expect(folders[0].bookmarks).toHaveLength(2);
       expect(folders[0].bookmarks.map((b) => b.verseId)).toEqual(['1:1', '1:2']);
 

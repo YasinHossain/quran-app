@@ -1,4 +1,5 @@
 import { Settings } from '@/types';
+import { getItem, setItem } from '@/lib/utils/safeLocalStorage';
 
 export const ARABIC_FONTS = [
   { name: 'KFGQPC Uthman Taha', value: '"KFGQPC-Uthman-Taha", serif', category: 'Uthmani' },
@@ -30,8 +31,8 @@ const SELECTED_TRANSLATIONS_KEY = 'selected-translations';
 export const loadSettings = (defaults: Settings = defaultSettings): Settings => {
   if (typeof window === 'undefined') return defaults;
 
-  const savedSettings = localStorage.getItem(SETTINGS_KEY);
-  const savedTranslations = localStorage.getItem(SELECTED_TRANSLATIONS_KEY);
+  const savedSettings = getItem(SETTINGS_KEY);
+  const savedTranslations = getItem(SELECTED_TRANSLATIONS_KEY);
   if (!savedSettings) return defaults;
 
   try {
@@ -73,5 +74,5 @@ export const loadSettings = (defaults: Settings = defaultSettings): Settings => 
 
 export const saveSettings = (settings: Settings) => {
   if (typeof window === 'undefined') return;
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  setItem(SETTINGS_KEY, JSON.stringify(settings));
 };

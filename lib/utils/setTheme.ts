@@ -1,4 +1,5 @@
 export type TokenTheme = 'base' | 'alt';
+import { setItem } from '@/lib/utils/safeLocalStorage';
 
 /**
  * Toggle design token theme without touching component code.
@@ -9,9 +10,9 @@ export const setTheme = (theme: TokenTheme): void => {
   const root = document.documentElement;
   if (theme === 'alt') {
     root.classList.add('theme-alt');
-    localStorage.setItem('token-theme', 'alt');
+    setItem('token-theme', 'alt');
   } else {
     root.classList.remove('theme-alt');
-    localStorage.setItem('token-theme', 'base');
+    setItem('token-theme', 'base');
   }
 };

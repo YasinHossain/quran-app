@@ -2,6 +2,7 @@ import { apiFetch } from '../../../lib/api/client';
 import { Tafsir, TafsirData } from '../../domain/entities/Tafsir';
 import { ITafsirRepository } from '../../domain/repositories/ITafsirRepository';
 import { logger } from '../monitoring/Logger';
+import { getItem, setItem, removeItem } from '@/lib/utils/safeLocalStorage';
 
 interface ApiTafsirResource {
   id: number;
@@ -126,7 +127,7 @@ export class TafsirRepository implements ITafsirRepository {
         timestamp: Date.now(),
         data: tafsirs.map((t) => t.toJSON()),
       };
-      localStorage.setItem(this.CACHE_KEY, JSON.stringify(cacheData));
+      setItem(this.CACHE_KEY, JSON.stringify(cacheData));
     } catch (error) {
       logger.warn('Failed to cache tafsir resources', undefined, error as Error);
     }
@@ -137,7 +138,7 @@ export class TafsirRepository implements ITafsirRepository {
    */
   async getCachedResources(): Promise<Tafsir[]> {
     try {
-      const cached = localStorage.getItem(this.CACHE_KEY);
+      const cached = getItem(this.CACHE_KEY);
       if (!cached) return [];
 
       const cacheData = JSON.parse(cached);
@@ -145,14 +146,14 @@ export class TafsirRepository implements ITafsirRepository {
 
       // Check if cache is still valid
       if (now - cacheData.timestamp > this.CACHE_TTL) {
-        localStorage.removeItem(this.CACHE_KEY);
+        removeItem(this.CACHE_KEY);
         return [];
       }
 
       return cacheData.data.map((data: TafsirData) => Tafsir.fromJSON(data));
     } catch (error) {
       logger.warn('Failed to get cached tafsir resources', undefined, error as Error);
-      localStorage.removeItem(this.CACHE_KEY);
+      removeItem(this.CACHE_KEY);
       return [];
     }
   }
