@@ -1,8 +1,8 @@
-import { container } from '@/src/infrastructure/di/container';
+import { container } from '@/src/infrastructure/di/Container';
 
 import { CACHE_TTL, MAX_CACHE_SIZE, clearTafsirCache, getTafsirCached } from '../tafsirCache';
 
-jest.mock('@/src/infrastructure/di/container', () => ({
+jest.mock('@/src/infrastructure/di/Container', () => ({
   container: {
     getTafsirRepository: jest.fn(),
   },

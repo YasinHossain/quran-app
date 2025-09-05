@@ -4,7 +4,7 @@ import useSWR from 'swr';
 
 import { useSettings } from '@/app/providers/SettingsContext';
 import { GetTafsirResourcesUseCase } from '@/src/application/use-cases/GetTafsirResources';
-import { container } from '@/src/infrastructure/di/container';
+import { container } from '@/src/infrastructure/di/Container';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import type { TafsirResource } from '@/types';

@@ -1,5 +1,5 @@
 import { GetTafsirContentUseCase } from '@/src/application/use-cases/GetTafsirContent';
-import { container } from '@/src/infrastructure/di/container';
+import { container } from '@/src/infrastructure/di/Container';
 
 export const CACHE_TTL = 60 * 60 * 1000; // 1 hour in ms
 export const MAX_CACHE_SIZE = 50;

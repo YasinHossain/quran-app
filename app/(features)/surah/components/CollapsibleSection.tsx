@@ -31,14 +31,13 @@ export const CollapsibleSection = ({
         </div>
         <ChevronDownIcon
           size={16}
-          className={cn('text-muted transition-transform duration-300', isOpen && 'rotate-180')}
+          className={`text-muted transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
       <div
-        className={cn(
-          'grid transition-all duration-300 ease-in-out',
+        className={`grid transition-all duration-300 ease-in-out ${
           isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-        )}
+        }`}
       >
         <div className="overflow-hidden">
           <div className="p-4 pt-0">{children}</div>

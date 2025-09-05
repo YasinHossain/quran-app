@@ -3,7 +3,7 @@ import useSWR from 'swr';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { getVersesByChapter } from '@/lib/api';
 import { GetTafsirContentUseCase } from '@/src/application/use-cases/GetTafsirContent';
-import { container } from '@/src/infrastructure/di/container';
+import { container } from '@/src/infrastructure/di/Container';
 import { Verse as VerseType } from '@/types';
 
 import { useTafsirOptions } from './useTafsirOptions';

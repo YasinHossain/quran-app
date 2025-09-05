@@ -4,7 +4,7 @@ import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import { GetTafsirResourcesUseCase } from '../../application/use-cases/GetTafsirResources';
 import { Tafsir } from '../../domain/entities/Tafsir';
-import { container } from '../../infrastructure/di/container';
+import { container } from '../../infrastructure/di/Container';
 
 interface UseTafsirResult {
   tafsirs: Tafsir[];
