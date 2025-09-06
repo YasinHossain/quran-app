@@ -22,7 +22,7 @@ const tokenRules = {
 
 const eslintConfig = [
   {
-    ignores: ['mcp-server', '.next', 'node_modules', 'out', 'coverage'],
+    ignores: ['mcp-server', '.next', 'node_modules', 'out', 'coverage', 'next-env.d.ts'],
   },
   ...compat.extends(
     'next/core-web-vitals',

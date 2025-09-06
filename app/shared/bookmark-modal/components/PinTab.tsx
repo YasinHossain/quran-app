@@ -50,4 +50,4 @@ export const PinTab = memo(function PinTab({
       </motion.button>
     </div>
   );
-};
+});

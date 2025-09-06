@@ -25,8 +25,16 @@ export const ErrorFactory = {
         return new ConflictError(message, context);
       case status === 429:
         return new RateLimitError(message, undefined, context);
-      case status >= 500:
-        return new ApiError(message, (context as any)?.endpoint || 'unknown', status, context);
+      case status >= 500: {
+        const endpoint =
+          typeof context === 'object' &&
+          context !== null &&
+          'endpoint' in context &&
+          typeof (context as { endpoint?: unknown }).endpoint === 'string'
+            ? ((context as { endpoint?: string }).endpoint ?? 'unknown')
+            : 'unknown';
+        return new ApiError(message, endpoint, status, context);
+      }
       default:
         return new ApplicationError(message, 'HTTP_ERROR', status, true, context);
     }
@@ -40,8 +48,13 @@ export const ErrorFactory = {
     if (isApplicationError(error)) {
       return error;
     }
-    const anyErr = error as any;
-    const message = anyErr?.message || 'Unknown error occurred';
+    const message =
+      typeof error === 'object' &&
+      error !== null &&
+      'message' in error &&
+      typeof (error as { message?: unknown }).message === 'string'
+        ? (error as { message: string }).message
+        : 'Unknown error occurred';
     const cause = error instanceof Error ? error : undefined;
     return new ApplicationError(message, 'UNKNOWN_ERROR', 500, false, context, cause);
   },

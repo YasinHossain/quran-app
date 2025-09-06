@@ -138,5 +138,4 @@ export const BookmarkModal = memo(function BookmarkModal({
       )}
     </AnimatePresence>
   );
-};
-
+});

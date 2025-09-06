@@ -59,4 +59,4 @@ export const TabNavigation = memo(function TabNavigation({
       </div>
     </div>
   );
-};
+});
