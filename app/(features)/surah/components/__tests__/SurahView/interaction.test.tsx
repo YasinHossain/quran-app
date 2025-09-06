@@ -1,14 +1,11 @@
 import { fireEvent, screen } from '@testing-library/react';
-import React from 'react';
+import { renderSurahView, mockUseSurahPanels, defaultPanels } from './test-utils';
 
-import { renderSurahView, mockUseSurahPanels, defaultPanels } from './SurahView/test-helpers';
-
-// Open settings sidebar by default
 jest.mock('@/app/providers/UIStateContext', () => ({
   useUIState: () => ({ isSettingsOpen: true, setSettingsOpen: jest.fn() }),
 }));
 
-describe('SurahView navigation', () => {
+describe('SurahView interaction', () => {
   beforeEach(() => {
     mockUseSurahPanels.mockReturnValue({ ...defaultPanels });
   });
@@ -40,6 +37,8 @@ describe('SurahView navigation', () => {
     ).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'Translation' }));
-    expect(screen.getByRole('button', { name: 'Sahih International' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Sahih International' })
+    ).toBeInTheDocument();
   });
 });

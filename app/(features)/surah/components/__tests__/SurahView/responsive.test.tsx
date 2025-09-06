@@ -1,9 +1,7 @@
 import { screen } from '@testing-library/react';
-import React from 'react';
+import { renderSurahView } from './test-utils';
 
-import { renderSurahView } from './SurahView/test-helpers';
-
-describe('SurahView rendering', () => {
+describe('SurahView responsive', () => {
   it('applies mobile-first responsive layout', () => {
     renderSurahView();
 
@@ -14,11 +12,5 @@ describe('SurahView rendering', () => {
     expect(scrollContainer).not.toBeNull();
     expect(scrollContainer!).toHaveClass('px-4', 'sm:px-6', 'lg:px-8', 'pb-6');
     expect(scrollContainer!.className).toContain('pt-[calc(3.5rem+env(safe-area-inset-top))]');
-  });
-
-  it('renders verse content within providers', () => {
-    renderSurahView();
-    const verseEl = document.querySelector('#verse-1');
-    expect(verseEl).toBeInTheDocument();
   });
 });

@@ -45,7 +45,7 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         viewport: { width: 1280, height: 720 },
       },
-      testMatch: '**/architecture-compliance.spec.ts',
+      testMatch: '**/architecture/**/*.spec.ts',
     },
 
     {
@@ -54,7 +54,7 @@ export default defineConfig({
         ...devices['Desktop Firefox'],
         viewport: { width: 1280, height: 720 },
       },
-      testMatch: '**/architecture-compliance.spec.ts',
+      testMatch: '**/architecture/**/*.spec.ts',
     },
 
     {
@@ -63,7 +63,7 @@ export default defineConfig({
         ...devices['Desktop Safari'],
         viewport: { width: 1280, height: 720 },
       },
-      testMatch: '**/architecture-compliance.spec.ts',
+      testMatch: '**/architecture/**/*.spec.ts',
     },
 
     /* Mobile Architecture Testing */
@@ -72,7 +72,7 @@ export default defineConfig({
       use: {
         ...devices['Pixel 5'],
       },
-      testMatch: '**/architecture-compliance.spec.ts',
+      testMatch: '**/architecture/**/*.spec.ts',
     },
 
     {
@@ -80,38 +80,38 @@ export default defineConfig({
       use: {
         ...devices['iPhone 12'],
       },
-      testMatch: '**/architecture-compliance.spec.ts',
+      testMatch: '**/architecture/**/*.spec.ts',
     },
 
     /* Regular E2E Tests */
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
-      testIgnore: '**/architecture-compliance.spec.ts',
+      testIgnore: '**/architecture/**/*.spec.ts',
     },
 
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
-      testIgnore: '**/architecture-compliance.spec.ts',
+      testIgnore: '**/architecture/**/*.spec.ts',
     },
 
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
-      testIgnore: '**/architecture-compliance.spec.ts',
+      testIgnore: '**/architecture/**/*.spec.ts',
     },
 
     /* Test against mobile viewports. */
     {
       name: 'Mobile Chrome',
       use: { ...devices['Pixel 5'] },
-      testIgnore: '**/architecture-compliance.spec.ts',
+      testIgnore: '**/architecture/**/*.spec.ts',
     },
     {
       name: 'Mobile Safari',
       use: { ...devices['iPhone 12'] },
-      testIgnore: '**/architecture-compliance.spec.ts',
+      testIgnore: '**/architecture/**/*.spec.ts',
     },
   ],
 
