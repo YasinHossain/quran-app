@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 
 import { touchClasses } from '@/lib/responsive';
@@ -11,11 +12,11 @@ interface TabNavigationProps {
   verseKey?: string;
 }
 
-export const TabNavigation = ({
+export const TabNavigation = memo(function TabNavigation({
   activeTab,
   onTabChange,
   verseKey = '',
-}: TabNavigationProps): React.JSX.Element => {
+}: TabNavigationProps): React.JSX.Element {
   const tabs = [
     { id: 'pin' as const, label: 'Pin Verse', description: 'Quick access' },
     { id: 'bookmark' as const, label: 'Add to Folder', description: 'Organize & save' },

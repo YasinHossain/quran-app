@@ -7,7 +7,7 @@ import { useNavigation } from '@/app/providers/NavigationContext';
 import { useResponsiveState } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 
-import { AdaptiveNavigation } from './AdaptiveNavigation';
+import { AdaptiveNavigation } from './adaptive-navigation';
 
 interface AdaptiveLayoutProps {
   children: React.ReactNode;

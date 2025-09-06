@@ -1,114 +1,52 @@
 'use client';
 
+import { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useMemo, useEffect } from 'react';
 
-import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { CloseIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
-import { Folder } from '@/types';
 
-import { BookmarkTab } from './BookmarkTab';
-import { PinTab } from './PinTab';
-import { TabNavigation } from './TabNavigation';
+import { BookmarkTab } from './components/BookmarkTab';
+import { PinTab } from './components/PinTab';
+import { TabNavigation } from './components/TabNavigation';
+import { useBookmarkModal } from './useBookmarkModal';
 import { BookmarkModalProps } from './types';
 
-export const BookmarkModal = ({
+export const BookmarkModal = memo(function BookmarkModal({
   isOpen,
   onClose,
   verseId,
   verseKey = '',
-}: BookmarkModalProps): React.JSX.Element => {
+}: BookmarkModalProps): React.JSX.Element {
   const {
-    folders,
-    addBookmark,
-    removeBookmark,
+    activeTab,
+    setActiveTab,
+    searchQuery,
+    setSearchQuery,
+    isCreatingFolder,
+    setIsCreatingFolder,
+    newFolderName,
+    setNewFolderName,
+    filteredFolders,
+    handleFolderSelect,
+    handleCreateFolder,
+    handleTogglePin,
+    isVersePinned,
     findBookmark,
-    togglePinned,
-    isPinned,
-    createFolder,
-  } = useBookmarks();
+  } = useBookmarkModal(isOpen, verseId, onClose);
 
-  const [activeTab, setActiveTab] = useState<'bookmark' | 'pin'>('pin');
-  const [searchQuery] = useState('');
-  const [isCreatingFolder, setIsCreatingFolder] = useState(false);
-  const [newFolderName, setNewFolderName] = useState('');
-
-  const isVersePinned = isPinned(verseId);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
-
-  // Filter folders based on search query
-  const filteredFolders = useMemo(() => {
-    if (!searchQuery.trim()) return folders;
-    return folders.filter((folder) =>
-      folder.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [folders, searchQuery]);
-
-  const handleFolderSelect = (folder: Folder) => {
-    const existingBookmark = findBookmark(verseId);
-
-    if (existingBookmark && existingBookmark.folder.id === folder.id) {
-      removeBookmark(verseId, folder.id);
-    } else {
-      if (existingBookmark) {
-        removeBookmark(verseId, existingBookmark.folder.id);
-      }
-      addBookmark(verseId, folder.id);
-    }
-  };
-
-  const handleCreateFolder = () => {
-    if (newFolderName.trim()) {
-      createFolder(newFolderName.trim());
-      setNewFolderName('');
-      setIsCreatingFolder(false);
-    }
-  };
-
-  const handleTogglePin = () => {
-    togglePinned(verseId);
-  };
-
-  const backdropVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-  };
-
+  const backdropVariants = { hidden: { opacity: 0 }, visible: { opacity: 1 } };
   const modalVariants = {
-    hidden: {
-      opacity: 0,
-      scale: 0.95,
-      y: 20,
-    },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.95,
-      y: 20,
-    },
+    hidden: { opacity: 0, scale: 0.95, y: 20 },
+    visible: { opacity: 1, scale: 1, y: 0 },
+    exit: { opacity: 0, scale: 0.95, y: 20 },
   };
 
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
           <motion.div
             variants={backdropVariants}
             initial="hidden"
@@ -118,17 +56,12 @@ export const BookmarkModal = ({
             onClick={onClose}
           />
 
-          {/* Modal */}
           <motion.div
             variants={modalVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
-            transition={{
-              type: 'spring',
-              stiffness: 500,
-              damping: 40,
-            }}
+            transition={{ type: 'spring', stiffness: 500, damping: 40 }}
             className="fixed inset-0 flex items-center justify-center z-modal p-4 pointer-events-none"
           >
             <div
@@ -137,7 +70,6 @@ export const BookmarkModal = ({
               aria-label="Bookmark options"
               className="bg-surface rounded-3xl shadow-2xl w-full max-w-md max-h-[80vh] flex flex-col pointer-events-auto"
             >
-              {/* Header with Close Button */}
               <div className="flex justify-end p-4">
                 <button
                   onClick={onClose}
@@ -152,10 +84,12 @@ export const BookmarkModal = ({
                 </button>
               </div>
 
-              {/* Tab Navigation */}
-              <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} verseKey={verseKey} />
+              <TabNavigation
+                activeTab={activeTab}
+                onTabChange={setActiveTab}
+                verseKey={verseKey}
+              />
 
-              {/* Tab Content */}
               <AnimatePresence mode="wait">
                 {activeTab === 'pin' ? (
                   <motion.div
@@ -186,6 +120,7 @@ export const BookmarkModal = ({
                       folders={filteredFolders}
                       verseId={verseId}
                       searchQuery={searchQuery}
+                      onSearchChange={setSearchQuery}
                       isCreatingFolder={isCreatingFolder}
                       newFolderName={newFolderName}
                       onFolderSelect={handleFolderSelect}
@@ -204,3 +139,4 @@ export const BookmarkModal = ({
     </AnimatePresence>
   );
 };
+

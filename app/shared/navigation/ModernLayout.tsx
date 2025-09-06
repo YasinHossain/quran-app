@@ -10,7 +10,7 @@ import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { QuranBottomSheet } from './QuranBottomSheet';
 import { SwipeContainer } from './SwipeContainer';
 import { SwipeIndicator } from './SwipeIndicator';
-import { AdaptiveNavigation } from '../components/AdaptiveNavigation';
+import { AdaptiveNavigation } from '../components/adaptive-navigation';
 
 interface ModernLayoutProps {
   children: React.ReactNode;

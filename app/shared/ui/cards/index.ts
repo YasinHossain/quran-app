@@ -5,7 +5,8 @@
  */
 
 // Base system
-export { BaseCard, NavigationCard, FolderCardBase, BookmarkCardBase } from '../BaseCard';
+export { BaseCard } from '../BaseCard';
+export { NavigationCard, FolderCardBase, BookmarkCardBase } from '../base-card.variants';
 export type { BaseCardProps, CardVariant, AnimationConfig } from '../BaseCard';
 
 // Specialized card variants

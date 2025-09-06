@@ -1,20 +1,22 @@
 'use client';
 
+import { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { PlusIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 
-import { CreateFolderForm } from './CreateFolderForm';
-import { FolderList } from './FolderList';
-import { FolderSearch } from './FolderSearch';
-import { BookmarkTabProps } from './types';
+import { CreateFolderForm } from '../CreateFolderForm';
+import { FolderList } from '../FolderList';
+import { FolderSearch } from '../FolderSearch';
+import { BookmarkTabProps } from '../types';
 
-export const BookmarkTab = ({
+export const BookmarkTab = memo(function BookmarkTab({
   folders,
   verseId,
   searchQuery,
+  onSearchChange,
   isCreatingFolder,
   newFolderName,
   onFolderSelect,
@@ -22,14 +24,14 @@ export const BookmarkTab = ({
   onToggleCreateFolder,
   onNewFolderNameChange,
   findBookmark,
-}: BookmarkTabProps): React.JSX.Element => {
+}: BookmarkTabProps): React.JSX.Element {
   return (
     <div className="flex-1 flex flex-col">
       {/* Search and Create Folder */}
       <div className="px-6 py-4 space-y-4 border-b border-border">
         <FolderSearch
           searchQuery={searchQuery}
-          onSearchChange={() => {}} // This will be handled by parent
+          onSearchChange={onSearchChange}
           placeholder="Search folders..."
         />
 

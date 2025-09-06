@@ -11,6 +11,7 @@ export interface BookmarkTabProps {
   folders: Folder[];
   verseId: string;
   searchQuery: string;
+  onSearchChange: (query: string) => void;
   isCreatingFolder: boolean;
   newFolderName: string;
   onFolderSelect: (folder: Folder) => void;
