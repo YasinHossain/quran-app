@@ -2,77 +2,32 @@
 import { Bookmark } from '../../domain/entities/Bookmark';
 import { IBookmarkRepository } from '../../domain/repositories/IBookmarkRepository';
 import { BookmarkPosition } from '../../domain/value-objects/BookmarkPosition';
-import { StoredBookmark, isStoredBookmark } from '../../domain/value-objects/StoredBookmark';
+import { StoredBookmark } from '../../domain/value-objects/StoredBookmark';
 import { logger } from '../monitoring/Logger';
+import {
+  getStoredBookmarks,
+  saveStoredBookmarks,
+  mapStoredToBookmark,
+  mapBookmarkToStored,
+  isStoredBookmarkArray,
+} from './bookmark/storage';
 
 /**
  * Infrastructure implementation of bookmark repository using localStorage
  * In production, this would connect to a database or API
  */
 export class BookmarkRepository implements IBookmarkRepository {
-  private readonly storageKey = 'quran_bookmarks';
-
-  private isStoredBookmarkArray(value: unknown): value is StoredBookmark[] {
-    return Array.isArray(value) && value.every((item) => isStoredBookmark(item));
-  }
-
-  private getStoredBookmarks(): StoredBookmark[] {
-    try {
-      const stored = localStorage.getItem(this.storageKey);
-      const parsed = stored ? JSON.parse(stored) : [];
-      return this.isStoredBookmarkArray(parsed) ? parsed : [];
-    } catch (error) {
-      logger.error('Failed to parse stored bookmarks:', undefined, error as Error);
-      return [];
-    }
-  }
-
-  private saveStoredBookmarks(bookmarks: StoredBookmark[]): void {
-    try {
-      localStorage.setItem(this.storageKey, JSON.stringify(bookmarks));
-    } catch (error) {
-      logger.error('Failed to save bookmarks:', undefined, error as Error);
-    }
-  }
-
-  private mapStoredToBookmark(stored: StoredBookmark): Bookmark {
-    return new Bookmark(
-      stored.id,
-      stored.userId,
-      stored.verseId,
-      new BookmarkPosition(
-        stored.position.surahId,
-        stored.position.ayahNumber,
-        new Date(stored.position.timestamp)
-      ),
-      new Date(stored.createdAt),
-      stored.notes,
-      stored.tags || []
-    );
-  }
-
-  private mapBookmarkToStored(bookmark: Bookmark): StoredBookmark {
-    return {
-      id: bookmark.id,
-      userId: bookmark.userId,
-      verseId: bookmark.verseId,
-      position: bookmark.position.toPlainObject(),
-      createdAt: bookmark.createdAt.toISOString(),
-      notes: bookmark.notes,
-      tags: bookmark.tags,
-    };
-  }
 
   async findById(id: string): Promise<Bookmark | null> {
-    const stored = this.getStoredBookmarks();
+    const stored = getStoredBookmarks();
     const bookmark = stored.find((b) => b.id === id);
-    return bookmark ? this.mapStoredToBookmark(bookmark) : null;
+    return bookmark ? mapStoredToBookmark(bookmark) : null;
   }
 
   async save(bookmark: Bookmark): Promise<void> {
-    const stored = this.getStoredBookmarks();
+    const stored = getStoredBookmarks();
     const index = stored.findIndex((b) => b.id === bookmark.id);
-    const bookmarkData = this.mapBookmarkToStored(bookmark);
+    const bookmarkData = mapBookmarkToStored(bookmark);
 
     if (index >= 0) {
       stored[index] = bookmarkData;
@@ -80,30 +35,30 @@ export class BookmarkRepository implements IBookmarkRepository {
       stored.push(bookmarkData);
     }
 
-    this.saveStoredBookmarks(stored);
+    saveStoredBookmarks(stored);
   }
 
   async remove(id: string): Promise<void> {
-    const stored = this.getStoredBookmarks();
+    const stored = getStoredBookmarks();
     const filtered = stored.filter((b) => b.id !== id);
-    this.saveStoredBookmarks(filtered);
+    saveStoredBookmarks(filtered);
   }
 
   async exists(id: string): Promise<boolean> {
-    const stored = this.getStoredBookmarks();
+    const stored = getStoredBookmarks();
     return stored.some((b) => b.id === id);
   }
 
   async existsByUserAndVerse(userId: string, verseId: string): Promise<boolean> {
-    const stored = this.getStoredBookmarks();
+    const stored = getStoredBookmarks();
     return stored.some((b) => b.userId === userId && b.verseId === verseId);
   }
 
   async findByUser(userId: string): Promise<Bookmark[]> {
-    const stored = this.getStoredBookmarks();
+    const stored = getStoredBookmarks();
     return stored
       .filter((b) => b.userId === userId)
-      .map((b) => this.mapStoredToBookmark(b))
+      .map((b) => mapStoredToBookmark(b))
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 
@@ -149,15 +104,15 @@ export class BookmarkRepository implements IBookmarkRepository {
   }
 
   async findByVerse(verseId: string): Promise<Bookmark[]> {
-    const stored = this.getStoredBookmarks();
-    return stored.filter((b) => b.verseId === verseId).map((b) => this.mapStoredToBookmark(b));
+    const stored = getStoredBookmarks();
+    return stored.filter((b) => b.verseId === verseId).map((b) => mapStoredToBookmark(b));
   }
 
   async findBySurah(surahId: number): Promise<Bookmark[]> {
-    const stored = this.getStoredBookmarks();
+    const stored = getStoredBookmarks();
     return stored
       .filter((b) => b.position.surahId === surahId)
-      .map((b) => this.mapStoredToBookmark(b))
+      .map((b) => mapStoredToBookmark(b))
       .sort((a, b) => a.position.ayahNumber - b.position.ayahNumber);
   }
 
@@ -169,17 +124,17 @@ export class BookmarkRepository implements IBookmarkRepository {
   }
 
   async findByPosition(position: BookmarkPosition): Promise<Bookmark[]> {
-    const stored = this.getStoredBookmarks();
+    const stored = getStoredBookmarks();
     return stored
       .filter(
         (b) =>
           b.position.surahId === position.surahId && b.position.ayahNumber === position.ayahNumber
       )
-      .map((b) => this.mapStoredToBookmark(b));
+      .map((b) => mapStoredToBookmark(b));
   }
 
   async existsAtPosition(userId: string, position: BookmarkPosition): Promise<boolean> {
-    const stored = this.getStoredBookmarks();
+    const stored = getStoredBookmarks();
     return stored.some(
       (b) =>
         b.userId === userId &&
@@ -291,15 +246,15 @@ export class BookmarkRepository implements IBookmarkRepository {
   }
 
   async removeAllByUser(userId: string): Promise<void> {
-    const stored = this.getStoredBookmarks();
+    const stored = getStoredBookmarks();
     const filtered = stored.filter((b) => b.userId !== userId);
-    this.saveStoredBookmarks(filtered);
+    saveStoredBookmarks(filtered);
   }
 
   async removeBySurah(userId: string, surahId: number): Promise<void> {
-    const stored = this.getStoredBookmarks();
+    const stored = getStoredBookmarks();
     const filtered = stored.filter((b) => !(b.userId === userId && b.position.surahId === surahId));
-    this.saveStoredBookmarks(filtered);
+    saveStoredBookmarks(filtered);
   }
 
   async getCountByUser(userId: string): Promise<number> {
@@ -350,11 +305,11 @@ export class BookmarkRepository implements IBookmarkRepository {
 
   async exportBookmarks(userId: string): Promise<StoredBookmark[]> {
     const userBookmarks = await this.findByUser(userId);
-    return userBookmarks.map((bookmark) => this.mapBookmarkToStored(bookmark));
+    return userBookmarks.map((bookmark) => mapBookmarkToStored(bookmark));
   }
 
   async importBookmarks(userId: string, bookmarks: StoredBookmark[]): Promise<void> {
-    if (!this.isStoredBookmarkArray(bookmarks)) {
+    if (!isStoredBookmarkArray(bookmarks)) {
       logger.warn('Invalid bookmark data for import');
       return;
     }

@@ -11,7 +11,6 @@ import {
 import { IBookmarkRepository } from '../repositories/IBookmarkRepository';
 import { IVerseRepository } from '../repositories/IVerseRepository';
 import { BookmarkPosition } from '../value-objects/BookmarkPosition';
-import { StoredBookmark } from '../value-objects/StoredBookmark';
 
 /**
  * Domain service for bookmark operations
@@ -69,78 +68,6 @@ export class BookmarkService {
   }
 
   /**
-   * Updates bookmark notes
-   */
-  async updateBookmarkNotes(userId: string, bookmarkId: string, notes: string): Promise<Bookmark> {
-    const bookmark = await this.bookmarkRepository.findById(bookmarkId);
-    if (!bookmark) {
-      throw new BookmarkNotFoundError(bookmarkId);
-    }
-
-    if (!bookmark.belongsToUser(userId)) {
-      throw new UnauthorizedBookmarkError('Cannot update bookmark belonging to another user');
-    }
-
-    const updatedBookmark = bookmark.withNotes(notes);
-    await this.bookmarkRepository.save(updatedBookmark);
-    return updatedBookmark;
-  }
-
-  /**
-   * Updates bookmark tags
-   */
-  async updateBookmarkTags(userId: string, bookmarkId: string, tags: string[]): Promise<Bookmark> {
-    const bookmark = await this.bookmarkRepository.findById(bookmarkId);
-    if (!bookmark) {
-      throw new BookmarkNotFoundError(bookmarkId);
-    }
-
-    if (!bookmark.belongsToUser(userId)) {
-      throw new UnauthorizedBookmarkError('Cannot update bookmark belonging to another user');
-    }
-
-    const updatedBookmark = bookmark.withTags(tags);
-    await this.bookmarkRepository.save(updatedBookmark);
-    return updatedBookmark;
-  }
-
-  /**
-   * Adds a tag to a bookmark
-   */
-  async addTagToBookmark(userId: string, bookmarkId: string, tag: string): Promise<Bookmark> {
-    const bookmark = await this.bookmarkRepository.findById(bookmarkId);
-    if (!bookmark) {
-      throw new BookmarkNotFoundError(bookmarkId);
-    }
-
-    if (!bookmark.belongsToUser(userId)) {
-      throw new UnauthorizedBookmarkError('Cannot update bookmark belonging to another user');
-    }
-
-    const updatedBookmark = bookmark.withAddedTag(tag);
-    await this.bookmarkRepository.save(updatedBookmark);
-    return updatedBookmark;
-  }
-
-  /**
-   * Removes a tag from a bookmark
-   */
-  async removeTagFromBookmark(userId: string, bookmarkId: string, tag: string): Promise<Bookmark> {
-    const bookmark = await this.bookmarkRepository.findById(bookmarkId);
-    if (!bookmark) {
-      throw new BookmarkNotFoundError(bookmarkId);
-    }
-
-    if (!bookmark.belongsToUser(userId)) {
-      throw new UnauthorizedBookmarkError('Cannot update bookmark belonging to another user');
-    }
-
-    const updatedBookmark = bookmark.withRemovedTag(tag);
-    await this.bookmarkRepository.save(updatedBookmark);
-    return updatedBookmark;
-  }
-
-  /**
    * Checks if a verse is bookmarked by user
    */
   async isVerseBookmarked(userId: string, surahId: number, ayahNumber: number): Promise<boolean> {
@@ -194,64 +121,4 @@ export class BookmarkService {
     return organized;
   }
 
-  /**
-   * Imports bookmarks from external data
-   */
-  async importBookmarks(
-    userId: string,
-    importData: Array<{
-      surahId: number;
-      ayahNumber: number;
-      notes?: string;
-      tags?: string[];
-    }>
-  ): Promise<Bookmark[]> {
-    const validBookmarks: Bookmark[] = [];
-
-    for (const data of importData) {
-      try {
-        // Verify verse exists
-        const verse = await this.verseRepository.findBySurahAndAyah(data.surahId, data.ayahNumber);
-        if (!verse) {
-          continue; // Skip invalid verses
-        }
-
-        // Check if bookmark already exists
-        const position = new BookmarkPosition(data.surahId, data.ayahNumber, new Date());
-        const exists = await this.bookmarkRepository.existsAtPosition(userId, position);
-        if (exists) {
-          continue; // Skip existing bookmarks
-        }
-
-        // Create bookmark
-        const bookmark = new Bookmark(
-          uuidv4(),
-          userId,
-          verse.id,
-          position,
-          new Date(),
-          data.notes,
-          data.tags || []
-        );
-
-        validBookmarks.push(bookmark);
-      } catch (error) {
-        // Skip invalid bookmarks
-        continue;
-      }
-    }
-
-    if (validBookmarks.length > 0) {
-      await this.bookmarkRepository.saveMany(validBookmarks);
-    }
-
-    return validBookmarks;
-  }
-
-  /**
-   * Exports user bookmarks
-   */
-  async exportBookmarks(userId: string): Promise<StoredBookmark[]> {
-    return this.bookmarkRepository.exportBookmarks(userId);
-  }
 }

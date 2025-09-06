@@ -1,5 +1,7 @@
 'use client';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useBodyScrollLock } from './hooks/useBodyScrollLock';
+import { useSidebarScrollPositions } from './hooks/useSidebarScrollPositions';
 
 interface SidebarContextType {
   isSurahListOpen: boolean;
@@ -25,32 +27,15 @@ export const SidebarProvider = ({ children }: { children: React.ReactNode }) => 
   const [isSurahListOpen, _setSurahListOpen] = useState(false);
   const [isBookmarkSidebarOpen, _setBookmarkSidebarOpen] = useState(false);
 
-  // Enhanced mobile-friendly sidebar handlers
   const setSurahListOpen = useCallback((open: boolean) => {
     _setSurahListOpen(open);
-
-    // Prevent body scroll when drawer is open (mobile)
-    if (typeof window !== 'undefined') {
-      if (open) {
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.body.style.overflow = '';
-      }
-    }
   }, []);
 
   const setBookmarkSidebarOpen = useCallback((open: boolean) => {
     _setBookmarkSidebarOpen(open);
-
-    // Prevent body scroll when drawer is open (mobile)
-    if (typeof window !== 'undefined') {
-      if (open) {
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.body.style.overflow = '';
-      }
-    }
   }, []);
+
+  useBodyScrollLock(isSurahListOpen || isBookmarkSidebarOpen);
 
   // Keyboard support for closing drawers
   useEffect(() => {
@@ -69,51 +54,14 @@ export const SidebarProvider = ({ children }: { children: React.ReactNode }) => 
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isSurahListOpen, setSurahListOpen, isBookmarkSidebarOpen, setBookmarkSidebarOpen]);
 
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (typeof window !== 'undefined') {
-        document.body.style.overflow = '';
-      }
-    };
-  }, []);
-  const [surahScrollTop, _setSurahScrollTop] = useState(() => {
-    if (typeof window === 'undefined') return 0;
-    const stored = sessionStorage.getItem('surahScrollTop');
-    return stored ? Number(stored) : 0;
-  });
-  const [juzScrollTop, _setJuzScrollTop] = useState(() => {
-    if (typeof window === 'undefined') return 0;
-    const stored = sessionStorage.getItem('juzScrollTop');
-    return stored ? Number(stored) : 0;
-  });
-  const [pageScrollTop, _setPageScrollTop] = useState(() => {
-    if (typeof window === 'undefined') return 0;
-    const stored = sessionStorage.getItem('pageScrollTop');
-    return stored ? Number(stored) : 0;
-  });
-
-  const setSurahScrollTop = useCallback(
-    (top: number) => {
-      _setSurahScrollTop(top);
-      sessionStorage.setItem('surahScrollTop', top.toString());
-    },
-    [_setSurahScrollTop]
-  );
-  const setJuzScrollTop = useCallback(
-    (top: number) => {
-      _setJuzScrollTop(top);
-      sessionStorage.setItem('juzScrollTop', top.toString());
-    },
-    [_setJuzScrollTop]
-  );
-  const setPageScrollTop = useCallback(
-    (top: number) => {
-      _setPageScrollTop(top);
-      sessionStorage.setItem('pageScrollTop', top.toString());
-    },
-    [_setPageScrollTop]
-  );
+  const {
+    surahScrollTop,
+    setSurahScrollTop,
+    juzScrollTop,
+    setJuzScrollTop,
+    pageScrollTop,
+    setPageScrollTop,
+  } = useSidebarScrollPositions();
 
   const value = useMemo(
     () => ({

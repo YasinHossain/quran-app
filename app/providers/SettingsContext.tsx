@@ -1,23 +1,11 @@
 'use client';
 
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useReducer,
-  useRef,
-} from 'react';
+import React, { createContext, useCallback, useContext, useMemo } from 'react';
 
 import { Settings } from '@/types';
 
-import { reducer } from './settingsReducer';
-import { ARABIC_FONTS, defaultSettings, loadSettings, saveSettings } from './settingsStorage';
-
-// Debounce interval for persisting to localStorage.
-// Shorter intervals save sooner but risk more writes; longer ones delay persistence.
-const PERSIST_DEBOUNCE_MS = 300;
+import { ARABIC_FONTS } from './settingsStorage';
+import { usePersistentSettings } from './hooks/usePersistentSettings';
 
 interface SettingsContextType {
   settings: Settings;
@@ -42,54 +30,7 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
  * the {@link useSettings} hook to read or update them.
  */
 export const SettingsProvider = ({ children }: { children: React.ReactNode }) => {
-  // Initialize with defaults on both server and client for hydration consistency.
-  // Load from localStorage after mount to avoid SSR/CSR mismatch.
-  const [settings, dispatch] = useReducer(reducer, defaultSettings);
-
-  const settingsTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const latestSettings = useRef(settings);
-  const hasLoadedFromStorage = useRef(false);
-
-  // Load settings from storage on client after mount
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const loaded = loadSettings(defaultSettings);
-    hasLoadedFromStorage.current = true;
-    dispatch({ type: 'SET_SETTINGS', value: loaded });
-    // also keep latest ref in sync
-    latestSettings.current = loaded;
-  }, []);
-
-  // Save settings when changed (debounced)
-  useEffect(() => {
-    latestSettings.current = settings;
-    if (typeof window === 'undefined') return;
-    // Avoid saving initial defaults before we've attempted loading from storage
-    if (!hasLoadedFromStorage.current) return;
-
-    if (settingsTimeoutRef.current) {
-      clearTimeout(settingsTimeoutRef.current);
-    }
-    settingsTimeoutRef.current = setTimeout(() => {
-      saveSettings(settings);
-      settingsTimeoutRef.current = null;
-    }, PERSIST_DEBOUNCE_MS);
-
-    return () => {
-      if (settingsTimeoutRef.current) clearTimeout(settingsTimeoutRef.current);
-    };
-  }, [settings]);
-
-  // Flush any pending writes on unmount
-  useEffect(() => {
-    return () => {
-      if (typeof window === 'undefined') return;
-      if (settingsTimeoutRef.current) {
-        clearTimeout(settingsTimeoutRef.current);
-        saveSettings(latestSettings.current);
-      }
-    };
-  }, []);
+  const { settings, dispatch } = usePersistentSettings();
 
   const setSettings = useCallback(
     (s: Settings) => dispatch({ type: 'SET_SETTINGS', value: s }),

@@ -5,9 +5,9 @@
  * Supports console, file, and remote logging based on configuration.
  */
 
-import { ConsoleTransport } from './ConsoleTransport';
 import { LogLevel } from './types';
 import { config } from '../../../config';
+import { parseLogLevel, setupDefaultTransports, getSource } from './Logger.utils';
 
 import type { ILoggerTransport, LogEntry } from './types';
 
@@ -26,8 +26,8 @@ export class Logger {
   private minLevel: LogLevel;
 
   constructor() {
-    this.minLevel = this.parseLogLevel(config.logging.level);
-    this.setupDefaultTransports();
+    this.minLevel = parseLogLevel(config.logging.level);
+    setupDefaultTransports(this);
   }
 
   /**
@@ -38,38 +38,6 @@ export class Logger {
       Logger.instance = new Logger();
     }
     return Logger.instance;
-  }
-
-  /**
-   * Parse log level from string
-   */
-  private parseLogLevel(level: string): LogLevel {
-    const levelMap: Record<string, LogLevel> = {
-      debug: LogLevel.DEBUG,
-      info: LogLevel.INFO,
-      warn: LogLevel.WARN,
-      error: LogLevel.ERROR,
-    };
-    return levelMap[level.toLowerCase()] ?? LogLevel.INFO;
-  }
-
-  /**
-   * Setup default transports based on configuration
-   */
-  private setupDefaultTransports(): void {
-    if (config.logging.enableConsole) {
-      this.addTransport(new ConsoleTransport());
-    }
-
-    if (config.logging.enableRemote) {
-      // Add remote transport if endpoint is configured
-      const endpoint = process.env.LOG_ENDPOINT;
-      const apiKey = process.env.LOG_API_KEY;
-
-      if (endpoint) {
-        this.addTransport(new RemoteTransport(endpoint, { apiKey }));
-      }
-    }
   }
 
   /**
@@ -136,7 +104,7 @@ export class Logger {
       timestamp: new Date(),
       context: { ...this.contextData, ...context },
       error,
-      source: this.getSource(),
+      source: getSource(),
     };
 
     // Send to all transports
@@ -153,30 +121,6 @@ export class Logger {
         console.error('Logger transport error:', err);
       }
     });
-  }
-
-  /**
-   * Get the source location (file and line) if available
-   */
-  private getSource(): string | undefined {
-    if (typeof window !== 'undefined' && window.Error) {
-      try {
-        const stack = new Error().stack;
-        if (stack) {
-          const lines = stack.split('\n');
-          // Find the first line that's not from this logger
-          for (let i = 3; i < lines.length; i++) {
-            const line = lines[i];
-            if (line && !line.includes('Logger.ts') && !line.includes('console.')) {
-              return line.trim();
-            }
-          }
-        }
-      } catch {
-        // Ignore errors in source detection
-      }
-    }
-    return undefined;
   }
 
   /**
