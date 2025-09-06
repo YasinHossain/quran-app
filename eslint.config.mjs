@@ -235,6 +235,29 @@ const eslintConfig = [
       'no-restricted-imports': 'off',
     },
   },
+  // Allow larger functions in config and tooling files with long tables
+  {
+    files: [
+      'config/**/*.{ts,js,mjs}',
+      'tools/**/*.{ts,js,mjs}',
+      'scripts/**/*.{ts,js,mjs}',
+      'src/infrastructure/errors/**/*.{ts,js,mjs}',
+      'src/infrastructure/monitoring/**/*.{ts,js,mjs}',
+      'src/infrastructure/repositories/**/*.{ts,js,mjs}',
+      'lib/**/token-map/**/*.{ts,js,mjs}',
+    ],
+    rules: {
+      'max-lines-per-function': [
+        'warn',
+        {
+          max: 150,
+          skipBlankLines: true,
+          skipComments: true,
+          IIFEs: true,
+        },
+      ],
+    },
+  },
   // Test files can be longer and more permissive
   {
     files: ['**/__tests__/**', '**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts'],
