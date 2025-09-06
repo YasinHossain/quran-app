@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { Bookmark } from '../entities/Bookmark';
+import { Bookmark } from '../entities';
 import { IBookmarkRepository } from '../repositories/IBookmarkRepository';
 import { IVerseRepository } from '../repositories/IVerseRepository';
 import { BookmarkPosition } from '../value-objects/BookmarkPosition';

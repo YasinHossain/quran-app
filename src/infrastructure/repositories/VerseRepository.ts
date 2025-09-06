@@ -1,6 +1,6 @@
 import * as apiVerses from '../../../lib/api/verses';
 import * as apiSearch from '../../../lib/api/verses';
-import { Verse } from '../../domain/entities/Verse';
+import { Verse } from '../../domain/entities';
 import { IVerseRepository } from '../../domain/repositories/IVerseRepository';
 import { logger } from '../monitoring/Logger';
 import { mapApiVerseToDomain } from './verseMapper';

@@ -1,4 +1,4 @@
-import { Bookmark } from '../../../../src/domain/entities/Bookmark';
+import { Bookmark } from '../../../../src/domain/entities';
 import { BookmarkMutationService } from '../../../../src/domain/services/BookmarkMutationService';
 import { BookmarkPosition } from '../../../../src/domain/value-objects/BookmarkPosition';
 import {

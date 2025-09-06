@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { Bookmark } from '../entities/Bookmark';
-import { Verse } from '../entities/Verse';
+import { Bookmark, Verse } from '../entities';
 import {
   BookmarkAlreadyExistsError,
   VerseNotFoundError,

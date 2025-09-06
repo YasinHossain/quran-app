@@ -1,5 +1,4 @@
-import { Bookmark } from '../../../../src/domain/entities/Bookmark';
-import { Verse } from '../../../../src/domain/entities/Verse';
+import { Bookmark, Verse } from '../../../../src/domain/entities';
 import {
   BookmarkAlreadyExistsError,
   VerseNotFoundError,

@@ -1,4 +1,11 @@
-import { Verse } from '../../../../src/domain/entities/Verse';
+import {
+  Verse,
+  isSajdahVerse,
+  getMemorizationSegments,
+  getEstimatedReadingTime,
+  containsBismillah,
+  getWordCount,
+} from '../../../../src/domain/entities';
 import { Translation } from '../../../../src/domain/value-objects/Translation';
 
 describe('Verse Entity', () => {
@@ -111,15 +118,11 @@ describe('Verse Entity', () => {
 
   describe('isSajdahVerse', () => {
     it('should return true for known sajdah verses', () => {
-      const sajdahVerse = new Verse('verse-7-206', 7, 206, validArabicText, validUthmaniText);
-
-      expect(sajdahVerse.isSajdahVerse()).toBe(true);
+      expect(isSajdahVerse(7, 206)).toBe(true);
     });
 
     it('should return false for non-sajdah verses', () => {
-      const regularVerse = new Verse(validId, 1, 1, validArabicText, validUthmaniText);
-
-      expect(regularVerse.isSajdahVerse()).toBe(false);
+      expect(isSajdahVerse(1, 1)).toBe(false);
     });
 
     it('should return true for multiple sajdah verses', () => {
@@ -131,14 +134,7 @@ describe('Verse Entity', () => {
       ];
 
       sajdahVerses.forEach(({ surah, ayah }) => {
-        const verse = new Verse(
-          `verse-${surah}-${ayah}`,
-          surah,
-          ayah,
-          validArabicText,
-          validUthmaniText
-        );
-        expect(verse.isSajdahVerse()).toBe(true);
+        expect(isSajdahVerse(surah, ayah)).toBe(true);
       });
     });
   });
@@ -146,26 +142,23 @@ describe('Verse Entity', () => {
   describe('getMemorizationSegments', () => {
     it('should split Arabic text into segments', () => {
       const arabicText = 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ';
-      const verse = new Verse(validId, validSurahId, validAyahNumber, arabicText, validUthmaniText);
 
-      const segments = verse.getMemorizationSegments();
+      const segments = getMemorizationSegments(arabicText);
       expect(segments).toHaveLength(4);
       expect(segments).toEqual(['بِسْمِ', 'اللَّهِ', 'الرَّحْمَٰنِ', 'الرَّحِيمِ']);
     });
 
     it('should handle text with extra whitespace', () => {
       const arabicText = '  بِسْمِ   اللَّهِ  الرَّحْمَٰنِ   الرَّحِيمِ  ';
-      const verse = new Verse(validId, validSurahId, validAyahNumber, arabicText, validUthmaniText);
 
-      const segments = verse.getMemorizationSegments();
+      const segments = getMemorizationSegments(arabicText);
       expect(segments).toHaveLength(4);
     });
 
     it('should filter out empty segments', () => {
       const arabicText = 'بِسْمِ اللَّهِ   الرَّحْمَٰنِ الرَّحِيمِ';
-      const verse = new Verse(validId, validSurahId, validAyahNumber, arabicText, validUthmaniText);
 
-      const segments = verse.getMemorizationSegments();
+      const segments = getMemorizationSegments(arabicText);
       expect(segments.every((segment) => segment.length > 0)).toBe(true);
     });
   });
@@ -173,18 +166,16 @@ describe('Verse Entity', () => {
   describe('getEstimatedReadingTime', () => {
     it('should calculate reading time based on word count', () => {
       const arabicText = 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ'; // 4 words
-      const verse = new Verse(validId, validSurahId, validAyahNumber, arabicText, validUthmaniText);
 
-      const readingTime = verse.getEstimatedReadingTime();
+      const readingTime = getEstimatedReadingTime(arabicText);
       // 4 words / 150 words per minute * 60 seconds = 1.6 seconds, rounded up to 2
       expect(readingTime).toBe(2);
     });
 
     it('should return minimum 1 second for very short verses', () => {
       const arabicText = 'اللَّهِ'; // 1 word
-      const verse = new Verse(validId, validSurahId, validAyahNumber, arabicText, validUthmaniText);
 
-      const readingTime = verse.getEstimatedReadingTime();
+      const readingTime = getEstimatedReadingTime(arabicText);
       expect(readingTime).toBeGreaterThanOrEqual(1);
     });
   });
@@ -192,31 +183,22 @@ describe('Verse Entity', () => {
   describe('containsBismillah', () => {
     it('should return true for verses containing Bismillah', () => {
       const bismillahText = 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ';
-      const verse = new Verse(
-        validId,
-        validSurahId,
-        validAyahNumber,
-        bismillahText,
-        validUthmaniText
-      );
 
-      expect(verse.containsBismillah()).toBe(true);
+      expect(containsBismillah(bismillahText)).toBe(true);
     });
 
     it('should return false for verses not containing Bismillah', () => {
       const regularText = 'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ';
-      const verse = new Verse(validId, validSurahId, 2, regularText, validUthmaniText);
 
-      expect(verse.containsBismillah()).toBe(false);
+      expect(containsBismillah(regularText)).toBe(false);
     });
   });
 
   describe('getWordCount', () => {
     it('should return correct word count', () => {
       const arabicText = 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ'; // 4 words
-      const verse = new Verse(validId, validSurahId, validAyahNumber, arabicText, validUthmaniText);
 
-      expect(verse.getWordCount()).toBe(4);
+      expect(getWordCount(arabicText)).toBe(4);
     });
   });
 
@@ -288,8 +270,8 @@ describe('Verse Entity', () => {
         arabicText: validArabicText,
         uthmaniText: validUthmaniText,
         translation: translation.toPlainObject(),
-        wordCount: verse.getWordCount(),
-        estimatedReadingTime: verse.getEstimatedReadingTime(),
+        wordCount: getWordCount(validArabicText),
+        estimatedReadingTime: getEstimatedReadingTime(validArabicText),
         isFirstVerse: false,
         isSajdahVerse: false, // 2:255 is not a sajdah verse
       });

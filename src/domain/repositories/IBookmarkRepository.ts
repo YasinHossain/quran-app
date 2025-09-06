@@ -1,4 +1,4 @@
-import { Bookmark } from '../entities/Bookmark';
+import { Bookmark } from '../entities';
 import { BookmarkPosition } from '../value-objects/BookmarkPosition';
 import { StoredBookmark } from '../value-objects/StoredBookmark';
 
