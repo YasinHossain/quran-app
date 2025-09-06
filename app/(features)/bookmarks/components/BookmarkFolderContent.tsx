@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { Bookmark, Folder } from '@/types';
 
-import { FolderItem } from './shared/FolderComponents';
+import { FolderItem } from './shared/folder';
 
 interface BookmarkFolderContentProps {
   bookmarks: Bookmark[];
