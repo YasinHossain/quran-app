@@ -10,7 +10,7 @@
 
 import { memo, Suspense } from 'react';
 
-import { ErrorBoundary } from '@/app/shared/components/ErrorBoundary';
+import { ErrorBoundary } from '@/app/shared/components/error-boundary';
 
 import { PageContainer } from './components/PageContainer';
 import { PageContent } from './components/PageContent';

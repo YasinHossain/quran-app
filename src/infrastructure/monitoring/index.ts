@@ -21,4 +21,4 @@ export {
   errorTracker,
   type IErrorTracker,
   type ErrorContext,
-} from './ErrorTracker';
+} from './error-tracker';

@@ -8,7 +8,7 @@ import {
   EstimatedDaysInput,
   PlanStatistics,
   FormActions,
-} from './FormComponents';
+} from './components';
 
 import type { PlanFormData } from './types';
 import type { Chapter } from '@/types';

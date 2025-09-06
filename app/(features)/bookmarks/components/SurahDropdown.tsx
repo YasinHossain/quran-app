@@ -1,0 +1,57 @@
+import React from 'react';
+import { Chapter } from '@/types';
+import { SurahSearchInput } from './SurahSearchInput';
+import { SurahOption } from './SurahOption';
+
+interface SurahDropdownProps {
+  chapters: Chapter[];
+  value?: number;
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+  onSelect: (chapter: Chapter) => void;
+  searchInputRef: React.RefObject<HTMLInputElement>;
+  handleKeyDown: (e: React.KeyboardEvent) => void;
+}
+
+export const SurahDropdown = ({
+  chapters,
+  value,
+  searchTerm,
+  setSearchTerm,
+  onSelect,
+  searchInputRef,
+  handleKeyDown,
+}: SurahDropdownProps): React.JSX.Element => {
+  const filtered = chapters.filter(
+    (c) =>
+      c.name_simple.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.name_arabic.includes(searchTerm) ||
+      c.id.toString().includes(searchTerm)
+  );
+  return (
+    <div className="absolute z-50 w-full mt-2 bg-surface border border-border rounded-xl shadow-xl max-h-80 overflow-hidden">
+      <SurahSearchInput
+        inputRef={searchInputRef}
+        value={searchTerm}
+        onChange={setSearchTerm}
+        onKeyDown={handleKeyDown}
+      />
+      <div className="overflow-y-auto max-h-64">
+        {filtered.length > 0 ? (
+          filtered.map((chapter) => (
+            <SurahOption
+              key={chapter.id}
+              chapter={chapter}
+              selected={value === chapter.id}
+              onSelect={onSelect}
+            />
+          ))
+        ) : (
+          <div className="p-4 text-center text-muted text-sm">
+            No surahs found matching "{searchTerm}"
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};

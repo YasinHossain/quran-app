@@ -1,9 +1,14 @@
-import { AuthenticationError } from './classes/auth';
-import { AuthorizationError } from './classes/auth';
-import { NotFoundError, ConflictError, ApiError } from './classes/http';
-import { RateLimitError, NetworkError } from './classes/network';
-import { ValidationError } from './classes/validation';
-import { ApplicationError } from './core/ApplicationError';
+import {
+  AuthenticationError,
+  AuthorizationError,
+  NotFoundError,
+  ConflictError,
+  ApiError,
+  RateLimitError,
+  NetworkError,
+  ValidationError,
+} from './types';
+import { ApplicationError } from './ApplicationError';
 import { isApplicationError } from './guards';
 
 export const ErrorFactory = {

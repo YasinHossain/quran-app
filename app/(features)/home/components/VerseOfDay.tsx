@@ -1,15 +1,15 @@
 'use client';
 
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 
 import { useSettings } from '@/app/providers/SettingsContext';
 
-import { VerseContent } from './VerseContent';
-import { VerseErrorState } from './VerseErrorState';
-import { VerseLoadingState } from './VerseLoadingState';
+import { RenderStates } from './RenderStates';
 import { useVerseOfDay } from '../hooks/useVerseOfDay';
+import { useSurahName } from '../hooks/useSurahName';
+import { useVerseTransition } from '../hooks/useVerseTransition';
 
-import type { Verse, Surah } from '@/types';
+import type { Verse } from '@/types';
 
 interface VerseOfDayProps {
   className?: string;
@@ -18,101 +18,6 @@ interface VerseOfDayProps {
   /** Number of rotations before fetching a new random verse */
   randomVerseInterval?: number;
 }
-
-// Custom hook for verse transitions
-interface UseVerseTransitionProps {
-  verse: Verse | null;
-  initialLoad: boolean;
-  setInitialLoad: (value: boolean) => void;
-  setIsTransitioning: (value: boolean) => void;
-  setDisplayVerse: (verse: Verse | null) => void;
-}
-
-const useVerseTransition = ({
-  verse,
-  initialLoad,
-  setInitialLoad,
-  setIsTransitioning,
-  setDisplayVerse,
-}: UseVerseTransitionProps) => {
-  useEffect(() => {
-    if (!verse) return;
-
-    if (initialLoad) {
-      // First verse load
-      setDisplayVerse(verse);
-      setInitialLoad(false);
-      return;
-    }
-
-    // Start transition animation for verse changes
-    setIsTransitioning(true);
-
-    // After fade out completes, update verse and fade in
-    const timer = setTimeout(() => {
-      setDisplayVerse(verse);
-      setIsTransitioning(false);
-    }, 300); // Smooth transition duration
-
-    return () => clearTimeout(timer);
-  }, [verse, initialLoad, setInitialLoad, setIsTransitioning, setDisplayVerse]);
-};
-
-// Surah name lookup hook
-const useSurahName = (displayVerse: Verse | null, surahs: Surah[]) => {
-  return useMemo(() => {
-    if (!displayVerse) return null;
-    const [surahNum] = displayVerse.verse_key.split(':');
-    return surahs.find((s) => s.number === Number(surahNum))?.name;
-  }, [displayVerse, surahs]);
-};
-
-// Render states component
-interface RenderStatesProps {
-  loading: boolean;
-  initialLoad: boolean;
-  error: string | null;
-  displayVerse: Verse | null;
-  className?: string;
-  onRetry: () => void;
-  surahName: string | null;
-  tajweedEnabled: boolean;
-  isTransitioning: boolean;
-}
-
-const RenderStates = ({
-  loading,
-  initialLoad,
-  error,
-  displayVerse,
-  className,
-  onRetry,
-  surahName,
-  tajweedEnabled,
-  isTransitioning,
-}: RenderStatesProps): React.JSX.Element | null => {
-  if (loading && initialLoad) {
-    return <VerseLoadingState className={className} />;
-  }
-
-  if (error) {
-    return <VerseErrorState error={error} onRetry={onRetry} className={className} />;
-  }
-
-  if (!displayVerse) {
-    return null;
-  }
-
-  return (
-    <VerseContent
-      verse={displayVerse}
-      surahName={surahName}
-      tajweedEnabled={tajweedEnabled}
-      isTransitioning={isTransitioning}
-      className={className}
-    />
-  );
-};
 
 /**
  * Verse of the Day component with smooth transitions and mobile-first design.
@@ -138,7 +43,7 @@ export const VerseOfDay = memo(function VerseOfDay({
   });
 
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [displayVerse, setDisplayVerse] = useState(verse);
+  const [displayVerse, setDisplayVerse] = useState<Verse | null>(verse);
   const [initialLoad, setInitialLoad] = useState(true);
 
   const surahName = useSurahName(displayVerse, surahs);

@@ -1,4 +1,4 @@
-import { ApplicationError } from '../core/ApplicationError';
+import { ApplicationError } from '../ApplicationError';
 
 export class AudioError extends ApplicationError {
   constructor(

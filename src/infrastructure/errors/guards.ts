@@ -1,9 +1,11 @@
-import { AuthenticationError } from './classes/auth';
-import { NotFoundError } from './classes/http';
-import { NetworkError } from './classes/network';
-import { RateLimitError } from './classes/network';
-import { ValidationError } from './classes/validation';
-import { ApplicationError } from './core/ApplicationError';
+import {
+  AuthenticationError,
+  NotFoundError,
+  NetworkError,
+  RateLimitError,
+  ValidationError,
+} from './types';
+import { ApplicationError } from './ApplicationError';
 
 export function isApplicationError(error: unknown): error is ApplicationError {
   return error instanceof ApplicationError;

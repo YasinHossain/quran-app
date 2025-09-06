@@ -5,7 +5,7 @@ import React from 'react';
 import { GripVerticalIcon, CloseIcon } from '@/app/shared/icons';
 import { TranslationResource } from '@/types';
 
-import { MAX_TRANSLATION_SELECTIONS } from './useTranslationPanel';
+import { MAX_TRANSLATION_SELECTIONS } from './hooks/useTranslationSelection';
 
 interface TranslationSelectionListProps {
   orderedSelection: number[];
@@ -75,3 +75,4 @@ export const TranslationSelectionList = ({
     </div>
   </div>
 );
+

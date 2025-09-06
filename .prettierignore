@@ -1,1 +1,2 @@
 templates
+app/(features)/bookmarks/components/SurahSelector.tsx

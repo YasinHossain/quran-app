@@ -15,7 +15,7 @@ interface TranslationPanelProps {
 }
 
 export const TranslationPanel = ({ isOpen, onClose }: TranslationPanelProps): React.JSX.Element => {
-  const panelData = useTranslationPanel(isOpen);
+  const panelData = useTranslationPanel();
   const { listContainerRef, listHeight } = useListHeight(isOpen);
   const { resourcesToRender, sectionsToRender } = useTranslationSections(
     panelData.activeFilter,
@@ -64,3 +64,4 @@ export const TranslationPanel = ({ isOpen, onClose }: TranslationPanelProps): Re
     </div>
   );
 };
+

@@ -1,7 +1,8 @@
 'use client';
 
 import React, { memo } from 'react';
-import { useBaseCard, renderFramerMotion, renderCSS } from './base-card.utils';
+import { useBaseCard } from './base-card.utils';
+import { renderFramerMotion, renderCSS } from './base-card/renderers';
 import type { BaseCardProps } from './base-card.types';
 import type { CardVariant, AnimationConfig } from './base-card.config';
 

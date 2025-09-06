@@ -14,7 +14,7 @@ import Script from 'next/script';
 
 import { ClientProviders } from './providers/ClientProviders';
 import { TranslationProvider } from './providers/TranslationProvider';
-import { ErrorBoundary } from './shared/components/ErrorBoundary';
+import { ErrorBoundary } from './shared/components/error-boundary';
 
 const kfgqpc = localFont({
   src: '../public/fonts/KFGQPC-Uthman-Taha.ttf',

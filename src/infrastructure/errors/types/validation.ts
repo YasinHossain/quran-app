@@ -1,4 +1,4 @@
-import { ApplicationError } from '../core/ApplicationError';
+import { ApplicationError } from '../ApplicationError';
 
 export class ValidationError extends ApplicationError {
   constructor(message: string, context?: Record<string, unknown>, cause?: Error) {

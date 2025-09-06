@@ -1,4 +1,4 @@
-import { ApplicationError } from '../core/ApplicationError';
+import { ApplicationError } from '../ApplicationError';
 
 export class NotFoundError extends ApplicationError {
   constructor(resource: string, context?: Record<string, unknown>, cause?: Error) {
@@ -7,7 +7,8 @@ export class NotFoundError extends ApplicationError {
   }
 
   getUserMessage(): string {
-    return 'We could not find what you were looking for.';
+    const resource = this.context?.resource || 'Resource';
+    return `${resource} could not be found.`;
   }
 }
 
