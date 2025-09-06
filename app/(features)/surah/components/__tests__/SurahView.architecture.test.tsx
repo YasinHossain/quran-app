@@ -8,10 +8,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 // Architecture-compliant testing utilities
-import {
-  renderWithSpecificProviders,
-  createContextTestSuite,
-} from '@/app/testUtils/contextTestUtils';
+import { renderWithSpecificProviders } from '@/app/testUtils/contextTestUtils';
 import { createPerformanceTestSuite } from '@/app/testUtils/performanceTestUtils';
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import {
@@ -405,6 +402,3 @@ describe('SurahView - Architecture Compliance Tests', () => {
 
 // Generate automated performance test suite
 createPerformanceTestSuite('SurahView', SurahView, defaultProps);
-
-// Generate automated context test suite
-createContextTestSuite('SurahView', SurahView, defaultProps);

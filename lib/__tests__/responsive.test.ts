@@ -7,6 +7,7 @@ import {
   useResponsiveState,
   getResponsiveValue,
   getVariantForBreakpoint,
+  getOrientationValue,
   layoutPatterns,
 } from '../responsive';
 import { testResponsiveHook, createMatchMediaMock } from './responsive-test-utils';
@@ -154,6 +155,18 @@ describe('Responsive System', () => {
       const config = { mobile: 'fallback' };
       expect(getResponsiveValue('tablet', config)).toBe('fallback');
       expect(getResponsiveValue('desktop', config)).toBe('fallback');
+    });
+  });
+
+  describe('getOrientationValue', () => {
+    it('returns orientation-specific value when available', () => {
+      const config = { landscape: 'wide' };
+      expect(getOrientationValue(config, 'default', 'landscape')).toBe('wide');
+    });
+
+    it('falls back to default when orientation value is missing', () => {
+      const config = { portrait: 'tall' };
+      expect(getOrientationValue(config, 'default', 'landscape')).toBe('default');
     });
   });
 

@@ -1,10 +1,14 @@
 import { render, RenderResult } from '@testing-library/react';
 import { ComponentType } from 'react';
 
+export { measureRendering, measureInteractions } from './performance/measures';
+export { expectUnder, expectAverage } from './performance/assertions';
+
 /**
  * @module PerformanceTestUtils
  * @description Testing utilities for verifying memo() and performance optimizations
- * @exports testMemoization, testReRenderCount, mockPerformance, PerformanceTester
+ * @exports testMemoization, testReRenderCount, mockPerformance, PerformanceTester,
+ * measureRendering, measureInteractions, expectUnder, expectAverage
  * @example
  * ```tsx
  * import { testMemoization } from '@/app/testUtils/performanceTestUtils';

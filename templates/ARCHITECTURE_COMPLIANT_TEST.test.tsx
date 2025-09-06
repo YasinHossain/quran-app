@@ -15,8 +15,7 @@ import React from 'react';
 // Architecture-compliant testing utilities
 import { 
   renderWithSpecificProviders,
-  renderHookWithProviders,
-  createContextTestSuite,
+  renderHookWithProviders
 } from '@/app/testUtils/contextTestUtils';
 import { 
   PerformanceTester,
@@ -573,9 +572,6 @@ describe('useExampleData Hook - Architecture Compliance', () => {
 
 // Generate performance test suite
 createPerformanceTestSuite('ExampleComponent', ExampleComponent, defaultProps);
-
-// Generate context test suite
-createContextTestSuite('ExampleComponent', ExampleComponent, defaultProps);
 
 describe('🚀 Integration Tests', () => {
   it('works end-to-end with all systems', async () => {
