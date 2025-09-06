@@ -8,10 +8,10 @@ import { renderHook } from '@testing-library/react';
 import React from 'react';
 
 import { renderResponsive, devicePresets } from '../../../../lib/__tests__/responsive-test-utils';
-import { ResponsiveImage } from '../responsive-image/ResponsiveImage';
-import { ResponsiveBackgroundImage } from '../responsive-image/ResponsiveBackgroundImage';
 import { generateResponsiveUrls } from '../../hooks/image/generateResponsiveUrls';
 import { useImagePreload } from '../../hooks/image/useImagePreload';
+import { ResponsiveBackgroundImage } from '../responsive-image/ResponsiveBackgroundImage';
+import { ResponsiveImage } from '../responsive-image/ResponsiveImage';
 
 import type { BreakpointKey, ComponentVariant } from '@/lib/responsive';
 

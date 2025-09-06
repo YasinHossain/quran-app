@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils/cn';
+
 import type { AnimationConfig, CardVariant } from '../base-card.config';
 
 export function buildVariantClasses(

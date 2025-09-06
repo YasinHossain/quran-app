@@ -11,12 +11,7 @@ interface UseFolderSettingsParams {
   isOpen: boolean;
 }
 
-export const useFolderSettings = ({
-  folder,
-  mode,
-  onClose,
-  isOpen,
-}: UseFolderSettingsParams) => {
+export const useFolderSettings = ({ folder, mode, onClose, isOpen }: UseFolderSettingsParams) => {
   const { renameFolder } = useBookmarks();
   const [name, setName] = useState('');
   const [selectedColor, setSelectedColor] = useState('text-accent');
@@ -84,4 +79,3 @@ export const useFolderSettings = ({
     getModalTitle,
   };
 };
-

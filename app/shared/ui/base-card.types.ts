@@ -1,11 +1,11 @@
-import type React from 'react';
-
 import {
   CARD_VARIANTS,
   ANIMATION_CONFIGS,
   type CardVariant,
   type AnimationConfig,
 } from './base-card.config';
+
+import type React from 'react';
 
 export interface BaseCardProps {
   children: React.ReactNode;

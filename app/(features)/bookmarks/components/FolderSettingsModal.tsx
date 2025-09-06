@@ -92,7 +92,10 @@ export const FolderSettingsModal = ({
               <FolderNameInput name={name} setName={setName} />
               {mode === 'customize' && (
                 <>
-                  <ColorSelector selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
+                  <ColorSelector
+                    selectedColor={selectedColor}
+                    setSelectedColor={setSelectedColor}
+                  />
                   <IconSelector selectedIcon={selectedIcon} setSelectedIcon={setSelectedIcon} />
                 </>
               )}
@@ -104,4 +107,3 @@ export const FolderSettingsModal = ({
     </AnimatePresence>
   );
 };
-

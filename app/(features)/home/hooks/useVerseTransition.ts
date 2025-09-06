@@ -38,4 +38,3 @@ export function useVerseTransition({
     return () => clearTimeout(timer);
   }, [verse, initialLoad, setInitialLoad, setIsTransitioning, setDisplayVerse]);
 }
-

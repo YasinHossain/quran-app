@@ -23,10 +23,7 @@ export interface ErrorBoundaryProps {
   onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
 }
 
-class ErrorBoundaryClass extends React.Component<
-  ErrorBoundaryProps,
-  ErrorBoundaryState
-> {
+class ErrorBoundaryClass extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
@@ -53,9 +50,7 @@ class ErrorBoundaryClass extends React.Component<
   render() {
     if (this.state.hasError) {
       const FallbackComponent = this.props.fallback || DefaultErrorFallback;
-      return (
-        <FallbackComponent error={this.state.error} resetError={this.resetError} />
-      );
+      return <FallbackComponent error={this.state.error} resetError={this.resetError} />;
     }
 
     return this.props.children;
@@ -68,4 +63,3 @@ export function ErrorBoundary(props: ErrorBoundaryProps) {
 export { DefaultErrorFallback } from './DefaultErrorFallback';
 export { useErrorHandler } from './useErrorHandler';
 export { withErrorBoundary } from './withErrorBoundary';
-

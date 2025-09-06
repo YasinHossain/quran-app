@@ -2,9 +2,9 @@
 
 import { useTheme } from '@/app/providers/ThemeContext';
 
+import { useTabsScroll } from './hooks/useTabsScroll';
 import { useTranslationsData } from './hooks/useTranslationsData';
 import { useTranslationSelection } from './hooks/useTranslationSelection';
-import { useTabsScroll } from './hooks/useTabsScroll';
 
 export const useTranslationPanel = () => {
   const { theme } = useTheme();
@@ -26,13 +26,8 @@ export const useTranslationPanel = () => {
     draggedId,
     handleReset,
   } = useTranslationSelection(translations, languageSort);
-  const {
-    tabsContainerRef,
-    canScrollLeft,
-    canScrollRight,
-    scrollTabsLeft,
-    scrollTabsRight,
-  } = useTabsScroll(languages);
+  const { tabsContainerRef, canScrollLeft, canScrollRight, scrollTabsLeft, scrollTabsRight } =
+    useTabsScroll(languages);
 
   return {
     theme,
@@ -61,4 +56,3 @@ export const useTranslationPanel = () => {
     scrollTabsRight,
   } as const;
 };
-

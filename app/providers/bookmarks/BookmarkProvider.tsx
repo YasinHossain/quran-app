@@ -13,11 +13,10 @@ import {
   getAllBookmarkedVerses,
   updateBookmarkInFolders,
 } from './bookmark-utils';
-import useFolderOperations from './hooks/useFolderOperations';
-import useBookmarkOperations from './hooks/useBookmarkOperations';
-import useMemorizationOperations from './hooks/useMemorizationOperations';
 import { BookmarkContext } from './BookmarkContext';
-import { BookmarkContextType } from './types';
+import useBookmarkOperations from './hooks/useBookmarkOperations';
+import useFolderOperations from './hooks/useFolderOperations';
+import useMemorizationOperations from './hooks/useMemorizationOperations';
 import {
   loadBookmarksFromStorage,
   saveBookmarksToStorage,
@@ -28,6 +27,7 @@ import {
   loadMemorizationFromStorage,
   saveMemorizationToStorage,
 } from './storage-utils';
+import { BookmarkContextType } from './types';
 export const BookmarkProvider = ({ children }: { children: React.ReactNode }) => {
   const [folders, setFolders] = useState<Folder[]>([]);
   const [pinnedVerses, setPinnedVerses] = useState<Bookmark[]>([]);

@@ -1,3 +1,4 @@
+import { ApplicationError } from './ApplicationError';
 import {
   AuthenticationError,
   NotFoundError,
@@ -5,7 +6,6 @@ import {
   RateLimitError,
   ValidationError,
 } from './types';
-import { ApplicationError } from './ApplicationError';
 
 export function isApplicationError(error: unknown): error is ApplicationError {
   return error instanceof ApplicationError;

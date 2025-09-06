@@ -12,4 +12,3 @@ export function useSurahName(displayVerse: Verse | null, surahs: Surah[]): strin
     return surahs.find((s) => s.number === Number(surahNum))?.name || null;
   }, [displayVerse, surahs]);
 }
-

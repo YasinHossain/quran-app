@@ -29,4 +29,3 @@ export const useScrollPositions = () => {
     [scrollPositions, setScrollPosition, getScrollPosition]
   );
 };
-

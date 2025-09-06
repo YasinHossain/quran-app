@@ -2,9 +2,9 @@
 import React, { useState } from 'react';
 
 import { PlaybackOptionsModal } from './components/PlaybackOptionsModal';
-import { MobilePlayerLayout } from './layouts/MobilePlayerLayout';
-import { DesktopPlayerLayout } from './layouts/DesktopPlayerLayout';
 import { useQuranAudioController } from './hooks/useQuranAudioController';
+import { DesktopPlayerLayout } from './layouts/DesktopPlayerLayout';
+import { MobilePlayerLayout } from './layouts/MobilePlayerLayout';
 
 import type { Track } from './types';
 
@@ -22,8 +22,11 @@ export function QuranAudioPlayer({
   const [mobileOptionsOpen, setMobileOptionsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'reciter' | 'repeat'>('reciter');
 
-  const { isPlayerVisible, audioRef, handleEnded, playerLayoutProps } =
-    useQuranAudioController({ track, onPrev, onNext });
+  const { isPlayerVisible, audioRef, handleEnded, playerLayoutProps } = useQuranAudioController({
+    track,
+    onPrev,
+    onNext,
+  });
 
   if (!isPlayerVisible) return null;
 
@@ -34,14 +37,8 @@ export function QuranAudioPlayer({
         role="region"
         aria-label="Player"
       >
-        <MobilePlayerLayout
-          {...playerLayoutProps}
-          setMobileOptionsOpen={setMobileOptionsOpen}
-        />
-        <DesktopPlayerLayout
-          {...playerLayoutProps}
-          setDesktopOptionsOpen={setMobileOptionsOpen}
-        />
+        <MobilePlayerLayout {...playerLayoutProps} setMobileOptionsOpen={setMobileOptionsOpen} />
+        <DesktopPlayerLayout {...playerLayoutProps} setDesktopOptionsOpen={setMobileOptionsOpen} />
       </div>
       <audio ref={audioRef} src={track?.src || ''} preload="metadata" onEnded={handleEnded}>
         <track kind="captions" />

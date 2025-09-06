@@ -1,32 +1,25 @@
 'use client';
 import { memo, useCallback } from 'react';
+
+import { useQuickSearch } from './hooks/useQuickSearch';
 import { QuickSearchModal } from './QuickSearchModal';
 import { SearchSuggestions } from './SearchSuggestions';
-import { useQuickSearch } from './hooks/useQuickSearch';
 
 interface QuickSearchProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const QuickSearch = memo(function QuickSearch({
-  isOpen,
-  onClose,
-}: QuickSearchProps) {
-  const {
-    query,
-    setQuery,
-    recentSearches,
-    trendingSearches,
-    handleSearch,
-  } = useQuickSearch(onClose);
+export const QuickSearch = memo(function QuickSearch({ isOpen, onClose }: QuickSearchProps) {
+  const { query, setQuery, recentSearches, trendingSearches, handleSearch } =
+    useQuickSearch(onClose);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') handleSearch(query);
       else if (e.key === 'Escape') onClose();
     },
-    [handleSearch, query, onClose],
+    [handleSearch, query, onClose]
   );
 
   return (

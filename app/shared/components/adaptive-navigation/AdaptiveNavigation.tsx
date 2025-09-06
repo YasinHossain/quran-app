@@ -9,6 +9,7 @@ import { useResponsiveState } from '@/lib/responsive';
 import { DesktopNavigation } from './DesktopNavigation';
 import { MobileNavigation } from './MobileNavigation';
 import { TabletNavigation } from './TabletNavigation';
+
 import type { NavItem } from './types';
 
 interface AdaptiveNavigationProps {

@@ -1,7 +1,7 @@
 'use client';
 
-import { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { memo } from 'react';
 
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
@@ -111,4 +111,3 @@ export const MobileBottomSheet = memo(function MobileBottomSheet({
     </AnimatePresence>
   );
 });
-

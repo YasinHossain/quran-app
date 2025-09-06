@@ -26,4 +26,3 @@ export const FormActions = ({ canSubmit }: FormActionsProps): React.JSX.Element 
     </Button>
   </div>
 );
-

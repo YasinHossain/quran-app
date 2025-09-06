@@ -66,4 +66,3 @@ export function usePersistedAudioSettings(): UsePersistedAudioSettingsReturn {
 
   return { reciter, setReciter, volume, setVolume, playbackRate, setPlaybackRate };
 }
-

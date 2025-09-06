@@ -29,10 +29,7 @@ export const usePanelState = () => {
     });
   }, []);
 
-  const isPanelOpen = useCallback(
-    (panelId: string) => openPanels.has(panelId),
-    [openPanels]
-  );
+  const isPanelOpen = useCallback((panelId: string) => openPanels.has(panelId), [openPanels]);
 
   const closeAllPanels = useCallback(() => {
     setOpenPanels(new Set());
@@ -89,4 +86,3 @@ export const usePanelState = () => {
     ]
   );
 };
-

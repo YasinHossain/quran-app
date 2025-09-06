@@ -3,11 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { Folder } from '@/types';
 
-export function useBookmarkModal(
-  isOpen: boolean,
-  verseId: string,
-  onClose: () => void
-) {
+export function useBookmarkModal(isOpen: boolean, verseId: string, onClose: () => void) {
   const {
     folders,
     addBookmark,
@@ -85,4 +81,3 @@ export function useBookmarkModal(
     findBookmark,
   };
 }
-

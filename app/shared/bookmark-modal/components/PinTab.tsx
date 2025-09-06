@@ -1,7 +1,7 @@
 'use client';
 
-import { memo } from 'react';
 import { motion } from 'framer-motion';
+import { memo } from 'react';
 
 import { PinIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';

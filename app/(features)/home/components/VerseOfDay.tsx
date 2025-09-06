@@ -5,8 +5,8 @@ import { memo, useCallback, useState } from 'react';
 import { useSettings } from '@/app/providers/SettingsContext';
 
 import { RenderStates } from './RenderStates';
-import { useVerseOfDay } from '../hooks/useVerseOfDay';
 import { useSurahName } from '../hooks/useSurahName';
+import { useVerseOfDay } from '../hooks/useVerseOfDay';
 import { useVerseTransition } from '../hooks/useVerseTransition';
 
 import type { Verse } from '@/types';

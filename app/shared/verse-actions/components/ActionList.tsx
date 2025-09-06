@@ -1,7 +1,7 @@
 'use client';
 
-import { memo } from 'react';
 import Link from 'next/link';
+import { memo } from 'react';
 
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
@@ -62,4 +62,3 @@ export const ActionList = memo(function ActionList({
     </div>
   );
 });
-

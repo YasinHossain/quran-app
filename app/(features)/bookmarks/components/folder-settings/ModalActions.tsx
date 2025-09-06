@@ -24,4 +24,3 @@ export const ModalActions = ({ isSubmitting, onClose }: ModalActionsProps): Reac
     </button>
   </div>
 );
-

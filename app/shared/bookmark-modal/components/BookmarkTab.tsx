@@ -1,7 +1,7 @@
 'use client';
 
-import { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { memo } from 'react';
 
 import { PlusIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';

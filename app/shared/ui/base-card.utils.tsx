@@ -1,9 +1,10 @@
 import { cn } from '@/lib/utils/cn';
 
-import { CARD_VARIANTS, ANIMATION_CONFIGS } from './base-card.config';
-import type { BaseCardProps } from './base-card.types';
 import { buildLayoutClasses } from './base-card/layout';
 import { buildVariantClasses } from './base-card/variant';
+import { CARD_VARIANTS, ANIMATION_CONFIGS } from './base-card.config';
+
+import type { BaseCardProps } from './base-card.types';
 
 export function useBaseCard(props: BaseCardProps) {
   const {

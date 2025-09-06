@@ -16,7 +16,10 @@ interface ColorSelectorProps {
   setSelectedColor: (color: string) => void;
 }
 
-export const ColorSelector = ({ selectedColor, setSelectedColor }: ColorSelectorProps): React.JSX.Element => (
+export const ColorSelector = ({
+  selectedColor,
+  setSelectedColor,
+}: ColorSelectorProps): React.JSX.Element => (
   <div className="mb-6">
     <div className="block text-sm font-medium text-foreground mb-3">Color</div>
     <div className="grid grid-cols-4 gap-3">
@@ -38,4 +41,3 @@ export const ColorSelector = ({ selectedColor, setSelectedColor }: ColorSelector
     </div>
   </div>
 );
-

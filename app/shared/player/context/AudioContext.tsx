@@ -1,17 +1,12 @@
 'use client';
-import React, {
-  createContext,
-  useContext,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { createContext, useContext, useMemo, useRef, useState } from 'react';
 
 import { Verse } from '@/types';
 
-import type { Reciter, RepeatOptions } from '@/app/shared/player/types';
 import { usePersistedAudioSettings } from '../hooks/usePersistedAudioSettings';
 import { usePlayerVisibility } from '../hooks/usePlayerVisibility';
+
+import type { Reciter, RepeatOptions } from '@/app/shared/player/types';
 
 interface AudioContextType {
   playingId: number | null;
@@ -57,14 +52,8 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
     repeatEach: 1,
     delay: 0,
   });
-  const {
-    reciter,
-    setReciter,
-    volume,
-    setVolume,
-    playbackRate,
-    setPlaybackRate,
-  } = usePersistedAudioSettings();
+  const { reciter, setReciter, volume, setVolume, playbackRate, setPlaybackRate } =
+    usePersistedAudioSettings();
 
   const { isPlayerVisible, openPlayer, closePlayer } = usePlayerVisibility({
     audioRef,

@@ -5,10 +5,6 @@
  * Handles logging, user notifications, and error recovery strategies.
  */
 
-import { ApplicationError } from './ApplicationError';
-import { ErrorFactory } from './factory';
-import { isApplicationError } from './guards';
-import { logger } from '../monitoring/Logger';
 import {
   errorHandlerConfig,
   type ErrorHandlerOptions,
@@ -16,7 +12,10 @@ import {
   type ErrorReporter,
   type ErrorNotifier,
 } from './ErrorHandlerConfig';
+import { ErrorFactory } from './factory';
+import { isApplicationError } from './guards';
 import { createNotification, setRetryCallback } from './notifications';
+import { logger } from '../monitoring/Logger';
 
 /**
  * Main Error Handler Class
@@ -85,7 +84,11 @@ export class ErrorHandler {
         try {
           notifier(notification);
         } catch (notifyError) {
-          logger.error('[ErrorHandler] Failed to show notification', undefined, notifyError as Error);
+          logger.error(
+            '[ErrorHandler] Failed to show notification',
+            undefined,
+            notifyError as Error
+          );
         }
       }
     }
@@ -140,7 +143,11 @@ export class ErrorHandler {
         try {
           notifier(notification);
         } catch (notifyError) {
-          logger.error('[ErrorHandler] Failed to show notification', undefined, notifyError as Error);
+          logger.error(
+            '[ErrorHandler] Failed to show notification',
+            undefined,
+            notifyError as Error
+          );
         }
       }
     }

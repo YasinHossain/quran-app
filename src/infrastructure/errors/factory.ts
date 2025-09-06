@@ -1,3 +1,5 @@
+import { ApplicationError } from './ApplicationError';
+import { isApplicationError } from './guards';
 import {
   AuthenticationError,
   AuthorizationError,
@@ -8,8 +10,6 @@ import {
   NetworkError,
   ValidationError,
 } from './types';
-import { ApplicationError } from './ApplicationError';
-import { isApplicationError } from './guards';
 
 export const ErrorFactory = {
   fromHttpStatus(

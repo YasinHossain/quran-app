@@ -1,4 +1,5 @@
 import { ApplicationError } from './ApplicationError';
+
 import type { ErrorNotification } from './notifications';
 
 /**

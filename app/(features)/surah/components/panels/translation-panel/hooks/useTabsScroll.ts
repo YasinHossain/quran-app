@@ -37,4 +37,3 @@ export const useTabsScroll = (languages: string[]) => {
     scrollTabsRight,
   } as const;
 };
-

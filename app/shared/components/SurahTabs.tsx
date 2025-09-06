@@ -1,7 +1,7 @@
 'use client';
 
-import { memo, useMemo, useState } from 'react';
 import { useParams, usePathname } from 'next/navigation';
+import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { SidebarTabs } from '../surah-sidebar/components/SidebarTabs';
@@ -10,6 +10,7 @@ import { Juz } from '../surah-sidebar/Juz';
 import { Page } from '../surah-sidebar/Page';
 import { Surah } from '../surah-sidebar/Surah';
 import { useSidebarScroll } from '../surah-sidebar/useSidebarScroll';
+
 import type { Chapter } from '@/types';
 
 interface JuzSummary {
@@ -41,11 +42,7 @@ export const SurahTabs = memo(function SurahTabs({
     : surahId
       ? Number(surahId)
       : undefined;
-  const currentJuzId = Array.isArray(juzId)
-    ? Number(juzId[0])
-    : juzId
-      ? Number(juzId)
-      : undefined;
+  const currentJuzId = Array.isArray(juzId) ? Number(juzId[0]) : juzId ? Number(juzId) : undefined;
   const currentPageId = Array.isArray(pageId)
     ? Number(pageId[0])
     : pageId
@@ -145,4 +142,3 @@ export const SurahTabs = memo(function SurahTabs({
     </>
   );
 });
-

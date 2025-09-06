@@ -7,6 +7,7 @@ import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisib
 import { cn } from '@/lib/utils/cn';
 
 import { NavigationItem } from './NavigationItem';
+
 import type { NavItem } from './types';
 
 interface MobileNavigationProps {

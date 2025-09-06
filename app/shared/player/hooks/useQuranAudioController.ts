@@ -20,11 +20,7 @@ function mmss(seconds: number): string {
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
 
-export function useQuranAudioController({
-  track,
-  onPrev,
-  onNext,
-}: UseQuranAudioControllerProps) {
+export function useQuranAudioController({ track, onPrev, onNext }: UseQuranAudioControllerProps) {
   const {
     isPlayerVisible,
     closePlayer,

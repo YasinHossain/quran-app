@@ -21,4 +21,3 @@ export const FolderNameInput = ({ name, setName }: FolderNameInputProps): React.
     />
   </div>
 );
-

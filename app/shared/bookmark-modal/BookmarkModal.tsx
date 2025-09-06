@@ -1,7 +1,7 @@
 'use client';
 
-import { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { memo } from 'react';
 
 import { CloseIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
@@ -10,8 +10,8 @@ import { cn } from '@/lib/utils/cn';
 import { BookmarkTab } from './components/BookmarkTab';
 import { PinTab } from './components/PinTab';
 import { TabNavigation } from './components/TabNavigation';
-import { useBookmarkModal } from './useBookmarkModal';
 import { BookmarkModalProps } from './types';
+import { useBookmarkModal } from './useBookmarkModal';
 
 export const BookmarkModal = memo(function BookmarkModal({
   isOpen,
@@ -84,11 +84,7 @@ export const BookmarkModal = memo(function BookmarkModal({
                 </button>
               </div>
 
-              <TabNavigation
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-                verseKey={verseKey}
-              />
+              <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} verseKey={verseKey} />
 
               <AnimatePresence mode="wait">
                 {activeTab === 'pin' ? (

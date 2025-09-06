@@ -3,11 +3,12 @@
 import React from 'react';
 
 import { ErrorBoundary } from './ErrorBoundary';
+
 import type { ErrorFallbackProps } from './ErrorBoundary';
 
 export function withErrorBoundary<P extends object>(
   Component: React.ComponentType<P>,
-  fallback?: React.ComponentType<ErrorFallbackProps>,
+  fallback?: React.ComponentType<ErrorFallbackProps>
 ) {
   const WrappedComponent = (props: P) => (
     <ErrorBoundary fallback={fallback}>
@@ -19,4 +20,3 @@ export function withErrorBoundary<P extends object>(
 
   return WrappedComponent;
 }
-

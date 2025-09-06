@@ -75,4 +75,3 @@ export const TranslationSelectionList = ({
     </div>
   </div>
 );
-

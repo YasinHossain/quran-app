@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
+
 import { usePanelState } from './hooks/usePanelState';
 import { useScrollPositions } from './hooks/useScrollPositions';
 
@@ -38,4 +39,3 @@ export const useUIState = () => {
   }
   return context;
 };
-

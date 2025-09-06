@@ -7,7 +7,10 @@ interface IconSelectorProps {
   setSelectedIcon: (icon: string) => void;
 }
 
-export const IconSelector = ({ selectedIcon, setSelectedIcon }: IconSelectorProps): React.JSX.Element => (
+export const IconSelector = ({
+  selectedIcon,
+  setSelectedIcon,
+}: IconSelectorProps): React.JSX.Element => (
   <div className="mb-8">
     <div className="block text-sm font-medium text-foreground mb-3">Icon</div>
     <div className="grid grid-cols-4 gap-2">
@@ -28,4 +31,3 @@ export const IconSelector = ({ selectedIcon, setSelectedIcon }: IconSelectorProp
     </div>
   </div>
 );
-

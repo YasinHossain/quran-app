@@ -41,12 +41,13 @@ export function useVerseActions({
   const playPauseIcon: ReactElement = isLoadingAudio
     ? createElement(Spinner, { className: 'h-5 w-5 text-accent' })
     : isPlaying
-    ? createElement(PauseIcon, { size: 20 })
-    : createElement(PlayIcon, { size: 20 });
+      ? createElement(PauseIcon, { size: 20 })
+      : createElement(PlayIcon, { size: 20 });
 
-  const bookmarkIcon: ReactElement = isBookmarked || showRemove
-    ? createElement(BookmarkIcon, { size: 20 })
-    : createElement(BookmarkOutlineIcon, { size: 20 });
+  const bookmarkIcon: ReactElement =
+    isBookmarked || showRemove
+      ? createElement(BookmarkIcon, { size: 20 })
+      : createElement(BookmarkOutlineIcon, { size: 20 });
 
   return [
     {
@@ -71,11 +72,7 @@ export function useVerseActions({
         ]
       : []),
     {
-      label: showRemove
-        ? 'Remove Bookmark'
-        : isBookmarked
-        ? 'Remove Bookmark'
-        : 'Add Bookmark',
+      label: showRemove ? 'Remove Bookmark' : isBookmarked ? 'Remove Bookmark' : 'Add Bookmark',
       icon: bookmarkIcon,
       onClick: () => handleAction(onBookmark),
       active: isBookmarked || showRemove,
@@ -87,4 +84,3 @@ export function useVerseActions({
     },
   ];
 }
-

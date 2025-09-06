@@ -26,7 +26,7 @@ export function useQuickSearch(onClose: () => void) {
         setQuery('');
       }
     },
-    [router, onClose],
+    [router, onClose]
   );
 
   return {

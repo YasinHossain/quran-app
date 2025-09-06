@@ -42,4 +42,3 @@ export function usePlayerVisibility({
 
   return { isPlayerVisible, openPlayer, closePlayer };
 }
-

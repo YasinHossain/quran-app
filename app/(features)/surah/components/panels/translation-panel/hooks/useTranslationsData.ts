@@ -49,4 +49,3 @@ export const useTranslationsData = () => {
 
   return { translations, loading, error, languageSort } as const;
 };
-

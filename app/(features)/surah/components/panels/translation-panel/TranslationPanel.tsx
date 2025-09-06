@@ -64,4 +64,3 @@ export const TranslationPanel = ({ isOpen, onClose }: TranslationPanelProps): Re
     </div>
   );
 };
-

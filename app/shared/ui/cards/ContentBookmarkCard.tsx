@@ -1,5 +1,6 @@
 'use client';
 import React, { memo, useCallback } from 'react';
+
 import { BaseCard, BaseCardProps } from '../BaseCard';
 import { Header } from './content-bookmark/Header';
 import { VersePreview } from './content-bookmark/VersePreview';

@@ -1,5 +1,5 @@
-import { logger } from '../monitoring/Logger';
 import { ApplicationError } from './ApplicationError';
+import { logger } from '../monitoring/Logger';
 
 /**
  * Error notification interface

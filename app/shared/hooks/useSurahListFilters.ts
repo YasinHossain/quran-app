@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 
 import juzData from '@/data/juz.json';
+
 import type { Chapter } from '@/types';
 
 interface JuzSummary {
@@ -18,9 +19,7 @@ export function useSurahListFilters(chapters: Chapter[], searchTerm: string) {
   const filteredChapters = useMemo(
     () =>
       chapters.filter(
-        (c) =>
-          c.name_simple.toLowerCase().includes(term) ||
-          c.id.toString().includes(searchTerm)
+        (c) => c.name_simple.toLowerCase().includes(term) || c.id.toString().includes(searchTerm)
       ),
     [chapters, term, searchTerm]
   );
@@ -37,4 +36,3 @@ export function useSurahListFilters(chapters: Chapter[], searchTerm: string) {
 
   return { filteredChapters, filteredJuzs, filteredPages };
 }
-

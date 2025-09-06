@@ -3,6 +3,7 @@
 import React from 'react';
 
 import { MobileNavigation } from './MobileNavigation';
+
 import type { NavItem } from './types';
 
 interface TabletNavigationProps {

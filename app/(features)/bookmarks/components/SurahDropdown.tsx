@@ -1,7 +1,9 @@
 import React from 'react';
+
 import { Chapter } from '@/types';
-import { SurahSearchInput } from './SurahSearchInput';
+
 import { SurahOption } from './SurahOption';
+import { SurahSearchInput } from './SurahSearchInput';
 
 interface SurahDropdownProps {
   chapters: Chapter[];

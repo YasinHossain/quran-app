@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
 
-import { cn } from '@/lib/utils/cn';
 import { responsiveClasses, touchClasses } from '@/lib/responsive';
+import { cn } from '@/lib/utils/cn';
 
 import type { NavItem } from './types';
 

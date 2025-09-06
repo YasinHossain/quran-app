@@ -1,6 +1,7 @@
-import type { ApplicationError } from '../../errors';
 import { logger } from '../Logger';
+
 import type { ErrorContext, IErrorTracker } from './types';
+import type { ApplicationError } from '../../errors';
 
 export class ConsoleErrorTracker implements IErrorTracker {
   captureError(error: Error | ApplicationError, context?: ErrorContext): void {

@@ -28,4 +28,3 @@ export const PlanNameInput = ({ planName, onChange }: PlanNameInputProps): React
     </div>
   </div>
 );
-

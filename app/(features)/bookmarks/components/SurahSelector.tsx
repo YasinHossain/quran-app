@@ -1,8 +1,10 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
 import React from 'react';
+
 import { ChevronDownIcon } from '@/app/shared/icons';
 import { Chapter } from '@/types';
+
 import { SurahDropdown } from './SurahDropdown';
 interface SurahSelectorProps { chapters: Chapter[]; value?: number; onChange: (surahId: number) => void; placeholder?: string; disabled?: boolean; className?: string; id?: string; }
 export const SurahSelector = ({ chapters, value, onChange, placeholder = 'Select Surah', disabled = false, className = '', id, }: SurahSelectorProps): React.JSX.Element => {

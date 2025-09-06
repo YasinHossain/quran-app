@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { BaseCard } from './BaseCard';
+
 import type { ConvenienceCardProps } from './base-card.types';
 
 export const NavigationCard = (props: ConvenienceCardProps): React.JSX.Element => (

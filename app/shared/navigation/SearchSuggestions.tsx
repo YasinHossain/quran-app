@@ -21,9 +21,7 @@ export const SearchSuggestions = memo(function SearchSuggestions({
         <div>
           <div className="flex items-center gap-2 mb-3">
             <IconClock size={16} className="text-muted" />
-            <h3 className="text-sm font-medium text-muted uppercase tracking-wide">
-              Recent
-            </h3>
+            <h3 className="text-sm font-medium text-muted uppercase tracking-wide">Recent</h3>
           </div>
           <div className="space-y-1">
             {recentSearches.map((search, index) => (
@@ -42,9 +40,7 @@ export const SearchSuggestions = memo(function SearchSuggestions({
         <div>
           <div className="flex items-center gap-2 mb-3">
             <IconTrendingUp size={16} className="text-muted" />
-            <h3 className="text-sm font-medium text-muted uppercase tracking-wide">
-              Trending
-            </h3>
+            <h3 className="text-sm font-medium text-muted uppercase tracking-wide">Trending</h3>
           </div>
           <div className="space-y-1">
             {trendingSearches.map((search, index) => (
@@ -66,9 +62,7 @@ export const SearchSuggestions = memo(function SearchSuggestions({
 
   return (
     <div className="p-4">
-      <div className="text-center text-muted py-8">
-        Press Enter to search for "{query}"
-      </div>
+      <div className="text-center text-muted py-8">Press Enter to search for "{query}"</div>
     </div>
   );
 });

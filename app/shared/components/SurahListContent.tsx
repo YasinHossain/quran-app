@@ -3,11 +3,11 @@
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { Chapter } from '@/types';
-
 import { SearchInput } from './SearchInput';
 import { SurahTabs } from './SurahTabs';
 import { useSurahListFilters } from '../hooks/useSurahListFilters';
+
+import type { Chapter } from '@/types';
 
 interface SurahListContentProps {
   chapters: Chapter[];
@@ -45,4 +45,3 @@ export const SurahListContent = memo(function SurahListContent({
     />
   );
 });
-

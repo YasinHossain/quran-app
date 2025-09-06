@@ -71,4 +71,3 @@ export function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps) 
     </div>
   );
 }
-
