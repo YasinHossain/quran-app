@@ -1,4 +1,5 @@
 import { ApplicationError } from './ApplicationError';
+import { errorHandlerConfig } from './ErrorHandlerConfig';
 import { logger } from '../monitoring/Logger';
 
 /**
@@ -97,5 +98,21 @@ export function createNotification(error: ApplicationError): ErrorNotification {
       };
     default:
       return baseNotification;
+  }
+}
+
+/**
+ * Notify user about an error using configured notifier
+ */
+export function notifyError(error: ApplicationError): void {
+  const notifier = errorHandlerConfig.getNotifier();
+  if (!notifier) return;
+
+  const notification = createNotification(error);
+
+  try {
+    notifier(notification);
+  } catch (notifyError) {
+    logger.error('[ErrorHandler] Failed to show notification', undefined, notifyError as Error);
   }
 }

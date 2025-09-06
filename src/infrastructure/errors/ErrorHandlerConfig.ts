@@ -1,6 +1,6 @@
 import { ApplicationError } from './ApplicationError';
 
-import type { ErrorNotification } from './notifications';
+import type { ErrorNotification } from './errorNotifications';
 
 /**
  * Error handling options

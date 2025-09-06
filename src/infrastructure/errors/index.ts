@@ -29,4 +29,4 @@ export {
   type ErrorReporter,
   type ErrorNotifier,
 } from './ErrorHandlerConfig';
-export { type ErrorNotification } from './notifications';
+export { type ErrorNotification } from './errorNotifications';

@@ -14,12 +14,9 @@ import {
 } from './ErrorHandlerConfig';
 import { ErrorFactory } from './factory';
 import { isApplicationError } from './guards';
-import { createNotification, setRetryCallback } from './notifications';
+import { notifyError, setRetryCallback } from './errorNotifications';
 import { logger } from '../monitoring/Logger';
 
-/**
- * Main Error Handler Class
- */
 export class ErrorHandler {
   /**
    * Configure global error handler
@@ -78,19 +75,7 @@ export class ErrorHandler {
     }
 
     if (finalOptions.showUserNotification) {
-      const notifier = errorHandlerConfig.getNotifier();
-      if (notifier) {
-        const notification = createNotification(appError);
-        try {
-          notifier(notification);
-        } catch (notifyError) {
-          logger.error(
-            '[ErrorHandler] Failed to show notification',
-            undefined,
-            notifyError as Error
-          );
-        }
-      }
+      notifyError(appError);
     }
 
     if (finalOptions.rethrow) {
@@ -137,19 +122,7 @@ export class ErrorHandler {
     }
 
     if (finalOptions.showUserNotification) {
-      const notifier = errorHandlerConfig.getNotifier();
-      if (notifier) {
-        const notification = createNotification(appError);
-        try {
-          notifier(notification);
-        } catch (notifyError) {
-          logger.error(
-            '[ErrorHandler] Failed to show notification',
-            undefined,
-            notifyError as Error
-          );
-        }
-      }
+      notifyError(appError);
     }
 
     if (finalOptions.reportError && appError.isOperational) {
