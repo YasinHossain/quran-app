@@ -1,4 +1,4 @@
-import { Bookmark } from '../entities/Bookmark';
+import { Bookmark } from '../entities';
 import { BookmarkNotFoundError, UnauthorizedBookmarkError } from '../errors/DomainErrors';
 import { IBookmarkRepository } from '../repositories/IBookmarkRepository';
 

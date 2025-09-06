@@ -1,4 +1,4 @@
-import { Bookmark } from '../../../domain/entities/Bookmark';
+import { Bookmark } from '../../../domain/entities';
 import { BookmarkPosition } from '../../../domain/value-objects/BookmarkPosition';
 import { StoredBookmark, isStoredBookmark } from '../../../domain/value-objects/StoredBookmark';
 import { logger } from '../../monitoring/Logger';

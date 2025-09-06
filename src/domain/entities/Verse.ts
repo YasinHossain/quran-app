@@ -1,28 +1,14 @@
 import { Translation } from '../value-objects/Translation';
+import {
+  getEstimatedReadingTime,
+  getWordCount,
+  isSajdahVerse,
+} from './verseUtils';
 
 /**
  * Verse domain entity representing a single Quranic verse
  */
 export class Verse {
-  private static readonly SAJDAH_VERSES = [
-    { surah: 7, ayah: 206 },
-    { surah: 13, ayah: 15 },
-    { surah: 16, ayah: 50 },
-    { surah: 17, ayah: 109 },
-    { surah: 19, ayah: 58 },
-    { surah: 22, ayah: 18 },
-    { surah: 22, ayah: 77 },
-    { surah: 25, ayah: 60 },
-    { surah: 27, ayah: 26 },
-    { surah: 32, ayah: 15 },
-    { surah: 38, ayah: 24 },
-    { surah: 41, ayah: 38 },
-    { surah: 53, ayah: 62 },
-    { surah: 84, ayah: 21 },
-    { surah: 96, ayah: 19 },
-  ];
-
-  private static readonly WORDS_PER_MINUTE = 150; // Average Arabic reading speed
 
   constructor(
     public readonly id: string,
@@ -72,48 +58,6 @@ export class Verse {
   }
 
   /**
-   * Checks if this verse requires prostration (sajdah)
-   */
-  isSajdahVerse(): boolean {
-    return Verse.SAJDAH_VERSES.some(
-      (sajdah) => sajdah.surah === this.surahId && sajdah.ayah === this.ayahNumber
-    );
-  }
-
-  /**
-   * Splits the Arabic text into segments for memorization
-   */
-  getMemorizationSegments(): string[] {
-    return this.arabicText
-      .split(/\s+/)
-      .map((segment) => segment.trim())
-      .filter((segment) => segment.length > 0);
-  }
-
-  /**
-   * Estimates reading time in seconds
-   */
-  getEstimatedReadingTime(): number {
-    const wordCount = this.getWordCount();
-    const timeInSeconds = Math.ceil((wordCount / Verse.WORDS_PER_MINUTE) * 60);
-    return Math.max(timeInSeconds, 1); // Minimum 1 second
-  }
-
-  /**
-   * Checks if the verse contains Bismillah
-   */
-  containsBismillah(): boolean {
-    return this.arabicText.includes('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ');
-  }
-
-  /**
-   * Returns the word count of the Arabic text
-   */
-  getWordCount(): number {
-    return this.arabicText.split(/\s+/).filter((word) => word.trim().length > 0).length;
-  }
-
-  /**
    * Checks equality based on ID
    */
   equals(other: Verse): boolean {
@@ -146,10 +90,10 @@ export class Verse {
       arabicText: this.arabicText,
       uthmaniText: this.uthmaniText,
       translation: this.translation?.toPlainObject(),
-      wordCount: this.getWordCount(),
-      estimatedReadingTime: this.getEstimatedReadingTime(),
+      wordCount: getWordCount(this.arabicText),
+      estimatedReadingTime: getEstimatedReadingTime(this.arabicText),
       isFirstVerse: this.isFirstVerse(),
-      isSajdahVerse: this.isSajdahVerse(),
+      isSajdahVerse: isSajdahVerse(this.surahId, this.ayahNumber),
     };
   }
 }

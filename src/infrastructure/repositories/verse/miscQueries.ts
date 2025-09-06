@@ -1,5 +1,5 @@
 import * as apiVerses from '../../../../lib/api/verses';
-import { Verse } from '../../../domain/entities/Verse';
+import { Verse } from '../../../domain/entities';
 import { logger } from '../../monitoring/Logger';
 import { mapApiVerseToDomain } from '../verseMapper';
 import { findBySurah } from './surahQueries';

@@ -1,5 +1,5 @@
 import { Verse as ApiVerse } from '../../../types';
-import { Verse } from '../../domain/entities/Verse';
+import { Verse } from '../../domain/entities';
 import { Translation } from '../../domain/value-objects/Translation';
 
 /**
