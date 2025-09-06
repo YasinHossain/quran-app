@@ -1,4 +1,15 @@
-import { Surah, RevelationType } from '../../../../src/domain/entities/Surah';
+import {
+  Surah,
+  RevelationType,
+  getEstimatedReadingTime,
+  getJuzNumbers,
+  getMemorizationDifficulty,
+  isLongSurah,
+  isMediumSurah,
+  isMufassalSurah,
+  isSevenLongSurah,
+  isShortSurah,
+} from '../../../../src/domain/entities';
 
 describe('Surah Entity', () => {
   const validId = 1;
@@ -257,9 +268,9 @@ describe('Surah Entity', () => {
         RevelationType.MAKKI
       );
 
-      expect(shortSurah.isShortSurah()).toBe(true);
-      expect(shortSurah.isMediumSurah()).toBe(false);
-      expect(shortSurah.isLongSurah()).toBe(false);
+      expect(isShortSurah(shortSurah.numberOfAyahs)).toBe(true);
+      expect(isMediumSurah(shortSurah.numberOfAyahs)).toBe(false);
+      expect(isLongSurah(shortSurah.numberOfAyahs)).toBe(false);
     });
 
     it('should classify medium Surah correctly (20-100 verses)', () => {
@@ -273,17 +284,17 @@ describe('Surah Entity', () => {
         RevelationType.MAKKI
       );
 
-      expect(mediumSurah.isShortSurah()).toBe(false);
-      expect(mediumSurah.isMediumSurah()).toBe(false); // 111 > 100, so it's long
-      expect(mediumSurah.isLongSurah()).toBe(true);
+      expect(isShortSurah(mediumSurah.numberOfAyahs)).toBe(false);
+      expect(isMediumSurah(mediumSurah.numberOfAyahs)).toBe(false); // 111 > 100, so it's long
+      expect(isLongSurah(mediumSurah.numberOfAyahs)).toBe(true);
     });
 
     it('should classify medium Surah correctly (exactly 20 verses)', () => {
       const mediumSurah = new Surah(20, 'طه', 'طه', 'Ta-Ha', 'Ta-Ha', 20, RevelationType.MAKKI);
 
-      expect(mediumSurah.isShortSurah()).toBe(false);
-      expect(mediumSurah.isMediumSurah()).toBe(true);
-      expect(mediumSurah.isLongSurah()).toBe(false);
+      expect(isShortSurah(mediumSurah.numberOfAyahs)).toBe(false);
+      expect(isMediumSurah(mediumSurah.numberOfAyahs)).toBe(true);
+      expect(isLongSurah(mediumSurah.numberOfAyahs)).toBe(false);
     });
 
     it('should classify long Surah correctly (more than 100 verses)', () => {
@@ -297,9 +308,9 @@ describe('Surah Entity', () => {
         RevelationType.MADANI
       );
 
-      expect(longSurah.isShortSurah()).toBe(false);
-      expect(longSurah.isMediumSurah()).toBe(false);
-      expect(longSurah.isLongSurah()).toBe(true);
+      expect(isShortSurah(longSurah.numberOfAyahs)).toBe(false);
+      expect(isMediumSurah(longSurah.numberOfAyahs)).toBe(false);
+      expect(isLongSurah(longSurah.numberOfAyahs)).toBe(true);
     });
   });
 
@@ -315,13 +326,13 @@ describe('Surah Entity', () => {
         RevelationType.MAKKI
       );
 
-      expect(easySurah.getMemorizationDifficulty()).toBe('easy');
+      expect(getMemorizationDifficulty(easySurah.numberOfAyahs)).toBe('easy');
     });
 
     it('should return "medium" for Surahs with 11-50 verses', () => {
       const mediumSurah = new Surah(36, 'يس', 'يس', 'Ya-Sin', 'Ya-Sin', 25, RevelationType.MAKKI);
 
-      expect(mediumSurah.getMemorizationDifficulty()).toBe('medium');
+      expect(getMemorizationDifficulty(mediumSurah.numberOfAyahs)).toBe('medium');
     });
 
     it('should return "hard" for Surahs with more than 50 verses', () => {
@@ -335,7 +346,7 @@ describe('Surah Entity', () => {
         RevelationType.MAKKI
       );
 
-      expect(hardSurah.getMemorizationDifficulty()).toBe('hard');
+      expect(getMemorizationDifficulty(hardSurah.numberOfAyahs)).toBe('hard');
     });
   });
 
@@ -351,7 +362,7 @@ describe('Surah Entity', () => {
         validRevelationType
       );
 
-      const readingTime = surah.getEstimatedReadingTime();
+      const readingTime = getEstimatedReadingTime(surah.numberOfAyahs);
       // 7 verses * 15 words/verse = 105 words
       // 105 words / 150 words/minute = 0.7 minutes, rounded up to 1
       expect(readingTime).toBe(1);
@@ -368,7 +379,7 @@ describe('Surah Entity', () => {
         RevelationType.MADANI
       );
 
-      const readingTime = longSurah.getEstimatedReadingTime();
+      const readingTime = getEstimatedReadingTime(longSurah.numberOfAyahs);
       // 286 verses * 15 words/verse = 4290 words
       // 4290 words / 150 words/minute = 28.6 minutes, rounded up to 29
       expect(readingTime).toBe(29);
@@ -389,7 +400,7 @@ describe('Surah Entity', () => {
           100,
           RevelationType.MAKKI
         );
-        expect(surah.isSevenLongSurah()).toBe(true);
+        expect(isSevenLongSurah(surah.id)).toBe(true);
       });
 
       // Test a non-seven-long surah
@@ -402,7 +413,7 @@ describe('Surah Entity', () => {
         75,
         RevelationType.MADANI
       );
-      expect(regularSurah.isSevenLongSurah()).toBe(false);
+      expect(isSevenLongSurah(regularSurah.id)).toBe(false);
     });
 
     it('should correctly identify Mufassal Surahs', () => {
@@ -415,7 +426,7 @@ describe('Surah Entity', () => {
         18,
         RevelationType.MADANI
       );
-      expect(mufassalSurah.isMufassalSurah()).toBe(true);
+      expect(isMufassalSurah(mufassalSurah.id)).toBe(true);
 
       const nonMufassalSurah = new Surah(
         48,
@@ -426,7 +437,7 @@ describe('Surah Entity', () => {
         29,
         RevelationType.MADANI
       );
-      expect(nonMufassalSurah.isMufassalSurah()).toBe(false);
+      expect(isMufassalSurah(nonMufassalSurah.id)).toBe(false);
     });
   });
 
@@ -442,7 +453,7 @@ describe('Surah Entity', () => {
         validRevelationType
       );
 
-      const juzNumbers = surah.getJuzNumbers();
+      const juzNumbers = getJuzNumbers(surah.id);
       expect(Array.isArray(juzNumbers)).toBe(true);
       expect(juzNumbers.length).toBeGreaterThan(0);
       expect(juzNumbers.every((num) => num >= 1 && num <= 30)).toBe(true);
@@ -525,14 +536,14 @@ describe('Surah Entity', () => {
         isMadani: false,
         canBeReadInPrayer: true,
         startWithBismillah: true,
-        memorizationDifficulty: 'easy',
-        estimatedReadingTime: surah.getEstimatedReadingTime(),
-        isShortSurah: true,
-        isMediumSurah: false,
-        isLongSurah: false,
-        isSevenLongSurah: false,
-        isMufassalSurah: false,
-        juzNumbers: surah.getJuzNumbers(),
+        memorizationDifficulty: getMemorizationDifficulty(validNumberOfAyahs),
+        estimatedReadingTime: getEstimatedReadingTime(validNumberOfAyahs),
+        isShortSurah: isShortSurah(validNumberOfAyahs),
+        isMediumSurah: isMediumSurah(validNumberOfAyahs),
+        isLongSurah: isLongSurah(validNumberOfAyahs),
+        isSevenLongSurah: isSevenLongSurah(1),
+        isMufassalSurah: isMufassalSurah(1),
+        juzNumbers: getJuzNumbers(1),
       });
     });
   });

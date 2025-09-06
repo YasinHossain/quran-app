@@ -6,14 +6,21 @@ export enum RevelationType {
   MADANI = 'madani',
 }
 
+import {
+  getEstimatedReadingTime,
+  getJuzNumbers,
+  getMemorizationDifficulty,
+  isLongSurah,
+  isMediumSurah,
+  isMufassalSurah,
+  isSevenLongSurah,
+  isShortSurah,
+} from './surahHelpers';
+
 /**
  * Surah domain entity representing a chapter of the Quran
  */
 export class Surah {
-  private static readonly SEVEN_LONG_SURAHS = [2, 3, 4, 5, 6, 7, 9];
-  private static readonly WORDS_PER_VERSE = 15; // Estimated average
-  private static readonly WORDS_PER_MINUTE = 150; // Reading speed
-
   constructor(
     public readonly id: number,
     public readonly name: string,
@@ -49,102 +56,27 @@ export class Surah {
     }
   }
 
-  /**
-   * Checks if this Surah was revealed in Makkah
-   */
+  /** Checks if this Surah was revealed in Makkah */
   isMakki(): boolean {
     return this.revelationType === RevelationType.MAKKI;
   }
 
-  /**
-   * Checks if this Surah was revealed in Madinah
-   */
+  /** Checks if this Surah was revealed in Madinah */
   isMadani(): boolean {
     return this.revelationType === RevelationType.MADANI;
   }
 
-  /**
-   * Checks if this Surah can be read in prayer
-   * At-Tawbah (Surah 9) traditionally not read in prayer due to no Bismillah
-   */
+  /** Checks if this Surah can be read in prayer */
   canBeReadInPrayer(): boolean {
-    return this.id !== 9; // At-Tawbah
+    return this.id !== 9; // At-Tawbah has no Bismillah
   }
 
-  /**
-   * Checks if this Surah starts with Bismillah
-   * At-Tawbah (Surah 9) is the only one that doesn't
-   */
+  /** Checks if this Surah starts with Bismillah */
   startWithBismillah(): boolean {
     return this.id !== 9; // At-Tawbah
   }
 
-  /**
-   * Classifies Surah as short (< 20 verses)
-   */
-  isShortSurah(): boolean {
-    return this.numberOfAyahs < 20;
-  }
-
-  /**
-   * Classifies Surah as medium (20-100 verses)
-   */
-  isMediumSurah(): boolean {
-    return this.numberOfAyahs >= 20 && this.numberOfAyahs <= 100;
-  }
-
-  /**
-   * Classifies Surah as long (> 100 verses)
-   */
-  isLongSurah(): boolean {
-    return this.numberOfAyahs > 100;
-  }
-
-  /**
-   * Estimates memorization difficulty based on length
-   */
-  getMemorizationDifficulty(): 'easy' | 'medium' | 'hard' {
-    if (this.numberOfAyahs <= 10) return 'easy';
-    if (this.numberOfAyahs <= 50) return 'medium';
-    return 'hard';
-  }
-
-  /**
-   * Estimates reading time in minutes
-   */
-  getEstimatedReadingTime(): number {
-    const totalWords = this.numberOfAyahs * Surah.WORDS_PER_VERSE;
-    const timeInMinutes = totalWords / Surah.WORDS_PER_MINUTE;
-    return Math.ceil(timeInMinutes);
-  }
-
-  /**
-   * Checks if this is one of the Seven Long Surahs (As-Sab' al-Tiwal)
-   */
-  isSevenLongSurah(): boolean {
-    return Surah.SEVEN_LONG_SURAHS.includes(this.id);
-  }
-
-  /**
-   * Checks if this is a Mufassal Surah (detailed ones, from Surah 49 onwards)
-   */
-  isMufassalSurah(): boolean {
-    return this.id >= 49;
-  }
-
-  /**
-   * Returns the Juz (Para) numbers this Surah spans
-   * This is a simplified implementation - in practice would use actual Juz data
-   */
-  getJuzNumbers(): number[] {
-    // Simplified mapping - in real implementation would use proper Juz boundaries
-    const juzStart = Math.ceil((this.id / 114) * 30);
-    return [Math.max(1, Math.min(30, juzStart))];
-  }
-
-  /**
-   * Checks equality based on ID
-   */
+  /** Checks equality based on ID */
   equals(other: Surah): boolean {
     return this.id === other.id;
   }
@@ -166,14 +98,14 @@ export class Surah {
       isMadani: this.isMadani(),
       canBeReadInPrayer: this.canBeReadInPrayer(),
       startWithBismillah: this.startWithBismillah(),
-      memorizationDifficulty: this.getMemorizationDifficulty(),
-      estimatedReadingTime: this.getEstimatedReadingTime(),
-      isShortSurah: this.isShortSurah(),
-      isMediumSurah: this.isMediumSurah(),
-      isLongSurah: this.isLongSurah(),
-      isSevenLongSurah: this.isSevenLongSurah(),
-      isMufassalSurah: this.isMufassalSurah(),
-      juzNumbers: this.getJuzNumbers(),
+      memorizationDifficulty: getMemorizationDifficulty(this.numberOfAyahs),
+      estimatedReadingTime: getEstimatedReadingTime(this.numberOfAyahs),
+      isShortSurah: isShortSurah(this.numberOfAyahs),
+      isMediumSurah: isMediumSurah(this.numberOfAyahs),
+      isLongSurah: isLongSurah(this.numberOfAyahs),
+      isSevenLongSurah: isSevenLongSurah(this.id),
+      isMufassalSurah: isMufassalSurah(this.id),
+      juzNumbers: getJuzNumbers(this.id),
     };
   }
 }

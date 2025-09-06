@@ -1,53 +1,19 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import { testAccessibility } from '../../../lib/__tests__/responsive-test-utils';
-import { ResponsiveVerseActions } from '../ResponsiveVerseActions';
+import { ResponsiveVerseActions } from '../../ResponsiveVerseActions';
+import {
+  defaultProps,
+  setMockVariant,
+  setMockBreakpoint,
+  testAccessibility,
+} from './test-helpers';
 
-// Create mock responsive state for different breakpoints
-const mockResponsiveState = (variant: string, breakpoint: string) => ({
-  variant,
-  breakpoint,
-  isMobile: breakpoint === 'mobile',
-  isTablet: breakpoint === 'tablet',
-  isDesktop: ['desktop', 'wide'].includes(breakpoint),
-});
-
-// Mock the responsive hook with ability to change states
-let mockVariant = 'expanded';
-let mockBreakpoint = 'desktop';
-
-jest.mock('@/lib/responsive', () => ({
-  useResponsiveState: () => mockResponsiveState(mockVariant, mockBreakpoint),
-  touchClasses: {
-    target: 'min-h-touch min-w-touch',
-    gesture: 'touch-manipulation select-none',
-    focus: 'focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none',
-    active: 'active:scale-95 transition-transform',
-  },
-}));
-
-const noop = () => {};
-
-const defaultProps = {
-  verseKey: '1:1',
-  isPlaying: false,
-  isLoadingAudio: false,
-  isBookmarked: false,
-  onPlayPause: noop,
-  onBookmark: noop,
-};
-
-describe('ResponsiveVerseActions', () => {
-  beforeEach(() => {
-    mockVariant = 'expanded';
-    mockBreakpoint = 'desktop';
-  });
-
+describe('ResponsiveVerseActions render', () => {
   describe('Cross-Device Rendering', () => {
     it('should render correctly on mobile devices', () => {
-      mockVariant = 'compact';
-      mockBreakpoint = 'mobile';
+      setMockVariant('compact');
+      setMockBreakpoint('mobile');
 
       render(<ResponsiveVerseActions {...defaultProps} />);
 
@@ -57,8 +23,8 @@ describe('ResponsiveVerseActions', () => {
     });
 
     it('should render correctly on tablets', () => {
-      mockVariant = 'default';
-      mockBreakpoint = 'tablet';
+      setMockVariant('default');
+      setMockBreakpoint('tablet');
 
       render(<ResponsiveVerseActions {...defaultProps} />);
 
@@ -78,8 +44,8 @@ describe('ResponsiveVerseActions', () => {
 
   describe('Touch Target Compliance', () => {
     it('should have WCAG-compliant touch targets on mobile', () => {
-      mockVariant = 'compact';
-      mockBreakpoint = 'mobile';
+      setMockVariant('compact');
+      setMockBreakpoint('mobile');
 
       const { container } = render(<ResponsiveVerseActions {...defaultProps} />);
 
@@ -90,8 +56,8 @@ describe('ResponsiveVerseActions', () => {
     });
 
     it('should have appropriate touch targets on tablets', () => {
-      mockVariant = 'default';
-      mockBreakpoint = 'tablet';
+      setMockVariant('default');
+      setMockBreakpoint('tablet');
 
       const { container } = render(<ResponsiveVerseActions {...defaultProps} />);
 
@@ -127,70 +93,23 @@ describe('ResponsiveVerseActions', () => {
     });
   });
 
-  describe('Interactive Behavior', () => {
-    it('should handle play button clicks', () => {
-      const onPlayPause = jest.fn();
-      render(<ResponsiveVerseActions {...defaultProps} onPlayPause={onPlayPause} />);
-
-      const playButton = screen.getByRole('button', { name: /play/i });
-      fireEvent.click(playButton);
-
-      expect(onPlayPause).toHaveBeenCalledTimes(1);
-    });
-
-    it('should handle bookmark toggle', () => {
-      const onBookmark = jest.fn();
-      render(<ResponsiveVerseActions {...defaultProps} onBookmark={onBookmark} />);
-
-      const bookmarkButton = screen.getByRole('button', { name: /bookmark/i });
-      fireEvent.click(bookmarkButton);
-
-      expect(onBookmark).toHaveBeenCalledTimes(1);
-    });
-
-    it('should show correct play/pause state', () => {
-      const { rerender } = render(<ResponsiveVerseActions {...defaultProps} />);
-
-      expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
-
-      rerender(<ResponsiveVerseActions {...defaultProps} isPlaying={true} />);
-
-      expect(screen.getByRole('button', { name: /pause/i })).toBeInTheDocument();
-    });
-
-    it('should show loading state', () => {
-      render(<ResponsiveVerseActions {...defaultProps} isLoadingAudio={true} />);
-
-      expect(screen.getByRole('button', { name: /loading/i })).toBeInTheDocument();
-    });
-
-    it('should show bookmarked state', () => {
-      render(<ResponsiveVerseActions {...defaultProps} isBookmarked={true} />);
-
-      const bookmarkButton = screen.getByRole('button', { name: /remove bookmark/i });
-      expect(bookmarkButton).toBeInTheDocument();
-    });
-  });
-
   describe('Responsive Variants', () => {
     it('should apply compact variant classes for mobile', () => {
-      mockVariant = 'compact';
-      mockBreakpoint = 'mobile';
+      setMockVariant('compact');
+      setMockBreakpoint('mobile');
 
       const { container } = render(<ResponsiveVerseActions {...defaultProps} />);
 
-      // Should have mobile-appropriate styling
       const component = container.firstChild as HTMLElement;
       expect(component).toBeTruthy();
     });
 
     it('should apply expanded variant classes for desktop', () => {
-      mockVariant = 'expanded';
-      mockBreakpoint = 'desktop';
+      setMockVariant('expanded');
+      setMockBreakpoint('desktop');
 
       const { container } = render(<ResponsiveVerseActions {...defaultProps} />);
 
-      // Should have desktop-appropriate styling
       const component = container.firstChild as HTMLElement;
       expect(component).toBeTruthy();
     });
@@ -221,8 +140,8 @@ describe('ResponsiveVerseActions', () => {
             isPlaying={false}
             isLoadingAudio={false}
             isBookmarked={false}
-            onPlayPause={noop}
-            onBookmark={noop}
+            onPlayPause={defaultProps.onPlayPause}
+            onBookmark={defaultProps.onBookmark}
           />
         );
       }).not.toThrow();
