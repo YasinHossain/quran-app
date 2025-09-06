@@ -5,6 +5,17 @@ describe('BookmarkPosition Value Object', () => {
   const validAyahNumber = 1;
   const validTimestamp = new Date('2024-01-01T10:00:00Z');
 
+  // Helper function to reduce nesting levels
+  const expectBookmarkPositionToThrow = (
+    surahId: number,
+    ayahNumber: number,
+    timestamp: Date | null | undefined,
+    expectedMessage: string
+  ) => {
+    const createPosition = () => new BookmarkPosition(surahId, ayahNumber, timestamp as Date);
+    expect(createPosition).toThrow(expectedMessage);
+  };
+
   describe('constructor', () => {
     it('should create a valid BookmarkPosition with all parameters', () => {
       const position = new BookmarkPosition(validSurahId, validAyahNumber, validTimestamp);
@@ -15,33 +26,43 @@ describe('BookmarkPosition Value Object', () => {
     });
 
     it('should throw error for invalid Surah ID (below 1)', () => {
-      expect(() => new BookmarkPosition(0, validAyahNumber, validTimestamp)).toThrow(
+      expectBookmarkPositionToThrow(
+        0,
+        validAyahNumber,
+        validTimestamp,
         'Invalid Surah ID: must be between 1 and 114'
       );
     });
 
     it('should throw error for invalid Surah ID (above 114)', () => {
-      expect(() => new BookmarkPosition(115, validAyahNumber, validTimestamp)).toThrow(
+      expectBookmarkPositionToThrow(
+        115,
+        validAyahNumber,
+        validTimestamp,
         'Invalid Surah ID: must be between 1 and 114'
       );
     });
 
     it('should throw error for invalid Ayah number (below 1)', () => {
-      expect(() => new BookmarkPosition(validSurahId, 0, validTimestamp)).toThrow(
+      expectBookmarkPositionToThrow(
+        validSurahId,
+        0,
+        validTimestamp,
         'Ayah number must be positive'
       );
     });
 
     it('should throw error for null timestamp', () => {
-      expect(
-        () => new BookmarkPosition(validSurahId, validAyahNumber, null as unknown as Date)
-      ).toThrow('Timestamp is required');
+      expectBookmarkPositionToThrow(validSurahId, validAyahNumber, null, 'Timestamp is required');
     });
 
     it('should throw error for undefined timestamp', () => {
-      expect(
-        () => new BookmarkPosition(validSurahId, validAyahNumber, undefined as unknown as Date)
-      ).toThrow('Timestamp is required');
+      expectBookmarkPositionToThrow(
+        validSurahId,
+        validAyahNumber,
+        undefined,
+        'Timestamp is required'
+      );
     });
   });
 

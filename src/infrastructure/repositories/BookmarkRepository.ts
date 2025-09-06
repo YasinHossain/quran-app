@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Bookmark } from '../../domain/entities/Bookmark';
 import { IBookmarkRepository } from '../../domain/repositories/IBookmarkRepository';
 import { BookmarkPosition } from '../../domain/value-objects/BookmarkPosition';

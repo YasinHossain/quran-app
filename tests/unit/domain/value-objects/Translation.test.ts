@@ -6,6 +6,25 @@ describe('Translation Value Object', () => {
   const validText = 'In the name of Allah, the Beneficent, the Merciful.';
   const validLanguageCode = 'en';
 
+  // Helper functions to reduce nesting
+  const expectTranslationToThrow = (
+    id: number,
+    resourceId: number,
+    text: string,
+    languageCode: string,
+    expectedMessage: string
+  ) => {
+    const createTranslation = () => new Translation(id, resourceId, text, languageCode);
+    expect(createTranslation).toThrow(expectedMessage);
+  };
+
+  const testLanguageCodes = (codes: string[], expectedResult: boolean) => {
+    codes.forEach((code) => {
+      const translation = new Translation(validId, validResourceId, validText, code);
+      expect(translation.isEnglish()).toBe(expectedResult);
+    });
+  };
+
   describe('constructor', () => {
     it('should create a valid Translation with all parameters', () => {
       const translation = new Translation(validId, validResourceId, validText, validLanguageCode);
@@ -23,37 +42,61 @@ describe('Translation Value Object', () => {
     });
 
     it('should throw error for negative ID', () => {
-      expect(() => new Translation(-1, validResourceId, validText, validLanguageCode)).toThrow(
+      expectTranslationToThrow(
+        -1,
+        validResourceId,
+        validText,
+        validLanguageCode,
         'Translation ID must be non-negative'
       );
     });
 
     it('should throw error for negative resource ID', () => {
-      expect(() => new Translation(validId, -1, validText, validLanguageCode)).toThrow(
+      expectTranslationToThrow(
+        validId,
+        -1,
+        validText,
+        validLanguageCode,
         'Resource ID must be non-negative'
       );
     });
 
     it('should throw error for empty text', () => {
-      expect(() => new Translation(validId, validResourceId, '', validLanguageCode)).toThrow(
+      expectTranslationToThrow(
+        validId,
+        validResourceId,
+        '',
+        validLanguageCode,
         'Translation text cannot be empty'
       );
     });
 
     it('should throw error for whitespace-only text', () => {
-      expect(() => new Translation(validId, validResourceId, '   ', validLanguageCode)).toThrow(
+      expectTranslationToThrow(
+        validId,
+        validResourceId,
+        '   ',
+        validLanguageCode,
         'Translation text cannot be empty'
       );
     });
 
     it('should throw error for empty language code', () => {
-      expect(() => new Translation(validId, validResourceId, validText, '')).toThrow(
+      expectTranslationToThrow(
+        validId,
+        validResourceId,
+        validText,
+        '',
         'Language code cannot be empty'
       );
     });
 
     it('should throw error for whitespace-only language code', () => {
-      expect(() => new Translation(validId, validResourceId, validText, '   ')).toThrow(
+      expectTranslationToThrow(
+        validId,
+        validResourceId,
+        validText,
+        '   ',
         'Language code cannot be empty'
       );
     });
@@ -98,7 +141,7 @@ describe('Translation Value Object', () => {
     });
 
     it('should handle empty-like text (spaces only)', () => {
-      const text = '   '; // This won't be created due to constructor validation
+      // This won't be created due to constructor validation
       // We can't test this directly due to constructor validation
       const translation = new Translation(validId, validResourceId, 'a');
       expect(translation.getCharacterCount()).toBe(1);
@@ -108,20 +151,12 @@ describe('Translation Value Object', () => {
   describe('isEnglish', () => {
     it('should return true for English language codes', () => {
       const englishCodes = ['en', 'en-US', 'en-GB', 'EN'];
-
-      englishCodes.forEach((code) => {
-        const translation = new Translation(validId, validResourceId, validText, code);
-        expect(translation.isEnglish()).toBe(true);
-      });
+      testLanguageCodes(englishCodes, true);
     });
 
     it('should return false for non-English language codes', () => {
       const nonEnglishCodes = ['ar', 'fr', 'es', 'de', 'ur', 'fa'];
-
-      nonEnglishCodes.forEach((code) => {
-        const translation = new Translation(validId, validResourceId, validText, code);
-        expect(translation.isEnglish()).toBe(false);
-      });
+      testLanguageCodes(nonEnglishCodes, false);
     });
   });
 

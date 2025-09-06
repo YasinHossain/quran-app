@@ -5,43 +5,16 @@
  * Supports console, file, and remote logging based on configuration.
  */
 
-import { config } from '../../../config';
-import { ApplicationError } from '../errors';
 import { ConsoleTransport } from './ConsoleTransport';
-import { RemoteTransport } from './RemoteTransport';
+import { LogLevel } from './types';
+import { config } from '../../../config';
+
+import type { ILoggerTransport, LogEntry } from './types';
 
 /**
  * Log levels in order of severity
  */
-export enum LogLevel {
-  DEBUG = 0,
-  INFO = 1,
-  WARN = 2,
-  ERROR = 3,
-}
-
-/**
- * Log entry structure
- */
-export interface LogEntry {
-  level: LogLevel;
-  message: string;
-  timestamp: Date;
-  context?: Record<string, unknown>;
-  error?: Error | ApplicationError;
-  source?: string;
-  userId?: string;
-  sessionId?: string;
-  requestId?: string;
-}
-
-/**
- * Logger transport interface
- */
-export interface ILoggerTransport {
-  log(entry: LogEntry): void | Promise<void>;
-  flush?(): void | Promise<void>;
-}
+// Types moved to './types' to avoid cycles
 
 /**
  * Main Logger class
@@ -153,7 +126,7 @@ export class Logger {
     level: LogLevel,
     message: string,
     context?: Record<string, unknown>,
-    error?: Error | ApplicationError
+    error?: Error
   ): void {
     if (!this.shouldLog(level)) return;
 
@@ -230,11 +203,7 @@ export class Logger {
   /**
    * Error level logging
    */
-  error(
-    message: string | Error | ApplicationError,
-    context?: Record<string, unknown>,
-    error?: Error | ApplicationError
-  ): void {
+  error(message: string | Error, context?: Record<string, unknown>, error?: Error): void {
     if (message instanceof Error) {
       this.log(LogLevel.ERROR, message.message, context, message);
     } else {
@@ -257,12 +226,8 @@ export class Logger {
   async destroy(): Promise<void> {
     await this.flush();
 
-    // Cleanup any transport resources
-    this.transports.forEach((transport) => {
-      if (transport instanceof RemoteTransport) {
-        transport.destroy();
-      }
-    });
+    // Cleanup any transport resources if supported
+    await Promise.allSettled(this.transports.map((t) => t.destroy?.()));
 
     this.transports = [];
   }

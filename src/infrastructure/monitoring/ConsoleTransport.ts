@@ -1,4 +1,4 @@
-import { LogLevel, type LogEntry, type ILoggerTransport } from './Logger';
+import { LogLevel, type LogEntry, type ILoggerTransport } from './types';
 
 /**
  * Console transport implementation

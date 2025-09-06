@@ -8,7 +8,7 @@ import { getVerseById } from '@/lib/api';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { Verse } from '@/types';
 
-export const BookmarkedVersesList = () => {
+export const BookmarkedVersesList = (): JSX.Element => {
   const { bookmarkedVerses } = useBookmarks();
   const { settings } = useSettings();
   const [verses, setVerses] = useState<Verse[]>([]);
@@ -23,7 +23,7 @@ export const BookmarkedVersesList = () => {
 
     // Fetch full verse data for all bookmarks.
     // Handles network failures by capturing errors and clearing verses.
-    const fetchBookmarkedVerses = async () => {
+    const fetchBookmarkedVerses = async (): Promise<void> => {
       try {
         const fetched = await Promise.all(
           bookmarkedVerses.map((id: string) => getVerseById(id, settings.translationId))

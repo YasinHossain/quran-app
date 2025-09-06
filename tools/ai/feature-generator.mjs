@@ -7,9 +7,7 @@
  * clean architecture and atomic design patterns.
  */
 
-import { execSync } from 'child_process';
 import fs from 'fs';
-import path from 'path';
 import { fileURLToPath } from 'url';
 
 export class AIFeatureGenerator {
@@ -19,7 +17,7 @@ export class AIFeatureGenerator {
     this.domainPath = '';
   }
 
-  async generateFeature(featureName, options = {}) {
+  async generateFeature(featureName) {
     this.featureName = featureName;
     this.featurePath = `app/(features)/${featureName}`;
     this.domainPath = `src/domain/entities`;
@@ -455,10 +453,6 @@ export interface ${this.capitalize(this.featureName)}Stats {
   }
 
   generateUseCaseTemplate(useCaseName) {
-    const action = useCaseName
-      .replace(/UseCase$/, '')
-      .replace(/^(Get|Create|Update|Delete)/, '')
-      .toLowerCase();
     const operation =
       useCaseName.match(/^(Get|Create|Update|Delete)/)?.[1].toLowerCase() || 'process';
 

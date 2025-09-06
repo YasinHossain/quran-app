@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 /**
  * MANDATORY Architecture-Compliant Page Template
  * 

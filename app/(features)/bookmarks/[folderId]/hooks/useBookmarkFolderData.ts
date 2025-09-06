@@ -82,7 +82,7 @@ export function useBookmarkFolderData({ folderId }: UseBookmarkFolderDataParams)
 
   // Load all verses immediately
   useEffect(() => {
-    const loadAllVerses = async () => {
+    const loadAllVerses = async (): Promise<void> => {
       const verseIds = bookmarks.map((b) => b.verseId);
 
       if (verseIds.length === 0) {
@@ -107,7 +107,7 @@ export function useBookmarkFolderData({ folderId }: UseBookmarkFolderDataParams)
     };
 
     loadAllVerses();
-  }, [bookmarks, settings.translationId, getVerseWithCache]);
+  }, [bookmarks, settings.translationId]);
 
   return {
     folder,

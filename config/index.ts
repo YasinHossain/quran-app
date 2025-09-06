@@ -9,7 +9,7 @@
 
 import { z } from 'zod';
 
-import { logger } from 'src/infrastructure/monitoring/Logger';
+// Avoid importing logger here to prevent dependency cycles
 
 /**
  * Environment validation schema
@@ -276,12 +276,14 @@ export const config: Config = (() => {
   try {
     return configSchema.parse(rawConfig);
   } catch (error) {
-    logger.error('❌ Configuration validation failed:', undefined, error as Error);
+    // Log configuration validation errors without using the central logger to avoid cycles
+
+    console.error('❌ Configuration validation failed:', error);
 
     if (error instanceof z.ZodError) {
-      logger.error('Configuration errors:');
+      console.error('Configuration errors:');
       error.errors.forEach((err) => {
-        logger.error(`  - ${err.path.join('.')}: ${err.message}`);
+        console.error(`  - ${err.path.join('.')}: ${err.message}`);
       });
     }
 
@@ -319,16 +321,16 @@ export const shouldLog = (level: string): boolean => {
  * all required configuration is present and valid.
  */
 export function validateConfig(): void {
-  logger.info(`✅ Configuration loaded for ${config.app.environment} environment`);
+  console.info(`✅ Configuration loaded for ${config.app.environment} environment`);
 
   // Log critical configuration warnings
   if (isProduction) {
     if (!config.monitoring.sentry?.dsn && config.features.enableErrorTracking) {
-      logger.warn('⚠️  Error tracking is enabled but no Sentry DSN is configured');
+      console.warn('⚠️  Error tracking is enabled but no Sentry DSN is configured');
     }
 
     if (!config.monitoring.analytics?.googleAnalyticsId && config.features.enableAnalytics) {
-      logger.warn('⚠️  Analytics is enabled but no Google Analytics ID is configured');
+      console.warn('⚠️  Analytics is enabled but no Google Analytics ID is configured');
     }
   }
 

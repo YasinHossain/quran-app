@@ -25,7 +25,7 @@ export const SurahVerseList = ({
   loadMoreRef,
   isValidating,
   isReachingEnd,
-}: SurahVerseListProps) => {
+}: SurahVerseListProps): React.JSX.Element => {
   const { t } = useTranslation();
 
   return (

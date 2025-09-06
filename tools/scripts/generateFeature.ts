@@ -15,7 +15,7 @@ function toPascalCase(name: string): string {
     .join('');
 }
 
-async function main() {
+async function main(): Promise<void> {
   const name = process.argv[2];
   if (!name) {
     console.error('Usage: ts-node scripts/generateFeature.ts <name>');

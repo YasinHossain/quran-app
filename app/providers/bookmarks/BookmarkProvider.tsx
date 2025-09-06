@@ -253,7 +253,7 @@ export const BookmarkProvider = ({ children }: { children: React.ReactNode }) =>
         // Silent fail for metadata fetch errors
       }
     },
-    [settings.translationIds, settings.translationId]
+    [settings.translationIds, settings.translationId, setFolders, setPinnedVerses]
   );
 
   // Use custom hooks to organize operations

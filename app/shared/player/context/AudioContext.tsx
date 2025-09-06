@@ -107,7 +107,7 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
 
   const openPlayer = useCallback(() => {
     setPlayerVisible(true);
-  }, [setPlayerVisible]);
+  }, []);
 
   const closePlayer = useCallback(() => {
     setIsPlaying(false);
@@ -117,7 +117,7 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
       audioRef.current.pause();
     }
     setPlayerVisible(false);
-  }, [setIsPlaying, setPlayingId, setActiveVerse, audioRef, setPlayerVisible]);
+  }, []);
 
   const value = useMemo(
     () => ({

@@ -1,4 +1,4 @@
-import { LogLevel, type LogEntry, type ILoggerTransport, logger } from './Logger';
+import { LogLevel, type LogEntry, type ILoggerTransport } from './types';
 import { fetchWithTimeout } from '../../../lib/api/client';
 
 /**
@@ -62,7 +62,9 @@ export class RemoteTransport implements ILoggerTransport {
     } catch (error) {
       // Re-add failed entries to buffer for retry
       this.buffer.unshift(...entries);
-      logger.warn('Failed to send logs', undefined, error as Error);
+      // Avoid importing central logger here to prevent cycles
+
+      console.warn('Failed to send logs', error);
     }
   }
 

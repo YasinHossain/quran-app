@@ -47,7 +47,7 @@ class AIDocUpdater {
     try {
       const output = execSync('git diff --name-only HEAD~1', { encoding: 'utf8' });
       return output.trim().split('\n').filter(Boolean);
-    } catch (error) {
+    } catch {
       // Fallback to staged files if no previous commit
       const output = execSync('git diff --cached --name-only', { encoding: 'utf8' });
       return output.trim().split('\n').filter(Boolean);
@@ -193,7 +193,7 @@ class AIDocUpdater {
         props,
         description: this.extractDescription(content),
       };
-    } catch (error) {
+    } catch {
       console.warn(`   ⚠️  Could not parse component: ${filePath}`);
       return null;
     }

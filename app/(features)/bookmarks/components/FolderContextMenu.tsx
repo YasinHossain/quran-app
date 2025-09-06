@@ -20,7 +20,7 @@ export const FolderContextMenu = ({
 
   // Close menu when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent): void => {
       if (
         menuRef.current &&
         !menuRef.current.contains(event.target as Node) &&
@@ -40,7 +40,7 @@ export const FolderContextMenu = ({
     };
   }, [isOpen]);
 
-  const handleAction = (action: () => void) => {
+  const handleAction = (action: () => void): void => {
     action();
     setIsOpen(false);
   };

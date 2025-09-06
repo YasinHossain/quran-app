@@ -7,7 +7,6 @@
  * shared business logic and architectural consistency.
  */
 
-import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
@@ -20,7 +19,7 @@ class AIPlatformGenerator {
     };
   }
 
-  async generatePlatform(platformType, options = {}) {
+  async generatePlatform(platformType) {
     console.log(`🚀 Generating ${platformType} platform...\n`);
 
     if (!this.platforms[platformType]) {
@@ -31,7 +30,7 @@ class AIPlatformGenerator {
 
     try {
       await this.createSharedStructure();
-      await this.platforms[platformType](options);
+      await this.platforms[platformType]();
       await this.generatePlatformTests(platformType);
       await this.updateConfigurationFiles(platformType);
 
@@ -561,7 +560,7 @@ export const usePlatformConfig = () => {
   }
 
   // Platform-specific generators
-  async generateMobilePlatform(options) {
+  async generateMobilePlatform() {
     console.log('📱 Generating React Native mobile platform...');
 
     const mobileDirs = [
@@ -587,7 +586,7 @@ export const usePlatformConfig = () => {
     console.log('   Mobile platform structure created');
   }
 
-  async generateDesktopPlatform(options) {
+  async generateDesktopPlatform() {
     console.log('🖥️  Generating Electron desktop platform...');
 
     const desktopDirs = [
@@ -612,7 +611,7 @@ export const usePlatformConfig = () => {
     console.log('   Desktop platform structure created');
   }
 
-  async generateExtensionPlatform(options) {
+  async generateExtensionPlatform() {
     console.log('🧩 Generating browser extension platform...');
 
     const extensionDirs = [

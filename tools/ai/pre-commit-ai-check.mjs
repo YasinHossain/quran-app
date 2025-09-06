@@ -44,7 +44,7 @@ class PreCommitAICheck {
       const output = execSync('git diff --cached --name-only', { encoding: 'utf8' });
       this.changedFiles = output.trim().split('\n').filter(Boolean);
       console.log(`📁 Analyzing ${this.changedFiles.length} changed files`);
-    } catch (error) {
+    } catch {
       throw new Error('Failed to get changed files');
     }
   }

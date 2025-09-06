@@ -35,7 +35,7 @@ export const FolderGrid = ({
   const handleFolderAction = (
     folder: Folder,
     action: 'edit' | 'delete' | 'rename' | 'customize'
-  ) => {
+  ): void => {
     setSelectedFolder(folder);
 
     switch (action) {
@@ -51,7 +51,7 @@ export const FolderGrid = ({
     }
   };
 
-  const closeModals = () => {
+  const closeModals = (): void => {
     setSettingsModalOpen(false);
     setDeleteModalOpen(false);
     setSelectedFolder(null);

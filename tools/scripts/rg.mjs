@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import { spawn } from 'child_process';
-import path from 'path';
 
 const args = process.argv.slice(2);
 

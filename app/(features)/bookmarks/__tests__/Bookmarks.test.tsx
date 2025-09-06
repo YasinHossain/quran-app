@@ -84,6 +84,15 @@ describe('Bookmarks Responsive Components', () => {
     });
   });
 
+  // Helper function to test navigation item accessibility
+  const testNavigationItemAccessibility = (item: Element | null) => {
+    expect(item).toBeInTheDocument();
+    if (item) {
+      // These should have proper styling even if not clickable in this context
+      expect(item).toHaveClass('transition-colors');
+    }
+  };
+
   describe('BookmarksSidebar', () => {
     it('should render all navigation items', () => {
       render(<BookmarksSidebar activeSection="bookmarks" />);
@@ -101,13 +110,8 @@ describe('Bookmarks Responsive Components', () => {
       const lastReadItem = screen.getByText('Last Reads').closest('div');
 
       // Check that all items are properly accessible
-      [pinnedItem, lastReadItem].forEach((item) => {
-        expect(item).toBeInTheDocument();
-        if (item) {
-          // These should have proper styling even if not clickable in this context
-          expect(item).toHaveClass('transition-colors');
-        }
-      });
+      testNavigationItemAccessibility(pinnedItem);
+      testNavigationItemAccessibility(lastReadItem);
 
       // Check the bookmark item is active
       const bookmarkItem = screen.getByText('Bookmark');

@@ -7,7 +7,6 @@
 
 import { readFile, writeFile } from 'fs/promises';
 import { glob } from 'glob';
-import path from 'path';
 
 const MIGRATION_MAP = {
   // Background colors

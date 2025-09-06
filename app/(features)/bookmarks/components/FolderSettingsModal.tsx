@@ -61,7 +61,7 @@ const ColorSelector = ({
   setSelectedColor,
 }: ColorSelectorProps): React.JSX.Element => (
   <div className="mb-6">
-    <label className="block text-sm font-medium text-foreground mb-3">Color</label>
+    <div className="block text-sm font-medium text-foreground mb-3">Color</div>
     <div className="grid grid-cols-4 gap-3">
       {FOLDER_COLORS.map((color) => (
         <button
@@ -89,7 +89,7 @@ interface IconSelectorProps {
 
 const IconSelector = ({ selectedIcon, setSelectedIcon }: IconSelectorProps): React.JSX.Element => (
   <div className="mb-8">
-    <label className="block text-sm font-medium text-foreground mb-3">Icon</label>
+    <div className="block text-sm font-medium text-foreground mb-3">Icon</div>
     <div className="grid grid-cols-4 gap-2">
       {FOLDER_ICONS.map((icon) => (
         <button

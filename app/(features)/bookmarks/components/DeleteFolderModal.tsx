@@ -4,176 +4,23 @@ import { motion, AnimatePresence } from 'framer-motion';
 import React, { useState } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { CloseIcon } from '@/app/shared/icons';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { Folder } from '@/types';
+
+import {
+  ModalHeader,
+  FolderPreview,
+  WarningMessage,
+  ModalActions,
+  BACKDROP_VARIANTS,
+  MODAL_VARIANTS,
+} from './delete-folder-modal';
 
 interface DeleteFolderModalProps {
   isOpen: boolean;
   onClose: () => void;
   folder: Folder | null;
 }
-
-// Animation variants
-const BACKDROP_VARIANTS = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 },
-};
-
-const MODAL_VARIANTS = {
-  hidden: { opacity: 0, scale: 0.95, y: -10 },
-  visible: { opacity: 1, scale: 1, y: 0 },
-  exit: { opacity: 0, scale: 0.95, y: -10 },
-};
-
-interface ModalHeaderProps {
-  onClose: () => void;
-}
-
-const ModalHeader = ({ onClose }: ModalHeaderProps): React.JSX.Element => (
-  <div className="flex items-center justify-between p-6 pb-4">
-    <div className="flex items-center gap-3">
-      <div className="w-10 h-10 bg-error/10 rounded-xl flex items-center justify-center">
-        <svg className="w-5 h-5 text-error" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-          />
-        </svg>
-      </div>
-      <div>
-        <h2 className="text-xl font-bold text-foreground">Delete Folder</h2>
-        <p className="text-sm text-muted">This action cannot be undone</p>
-      </div>
-    </div>
-    <button
-      onClick={onClose}
-      className="rounded-xl p-2 text-muted hover:bg-surface-hover hover:text-accent transition-all duration-200"
-      aria-label="Close"
-    >
-      <CloseIcon size={20} />
-    </button>
-  </div>
-);
-
-interface FolderPreviewProps {
-  folder: Folder;
-}
-
-const FolderPreview = ({ folder }: FolderPreviewProps): React.JSX.Element => (
-  <div className="bg-surface-hover rounded-xl p-4 mb-6">
-    <div className="flex items-center gap-3 mb-3">
-      <div className="w-8 h-8 bg-gradient-to-br from-accent/20 to-accent/10 rounded-lg flex items-center justify-center">
-        {folder.icon ? (
-          <span className="text-lg">{folder.icon}</span>
-        ) : (
-          <svg
-            className="w-4 h-4 text-accent"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
-            />
-          </svg>
-        )}
-      </div>
-      <div>
-        <div className="font-semibold text-foreground">{folder.name}</div>
-        <div className="text-sm text-muted">
-          {folder.bookmarks.length} verse{folder.bookmarks.length !== 1 ? 's' : ''}
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-interface WarningMessageProps {
-  folder: Folder;
-}
-
-const WarningMessage = ({ folder }: WarningMessageProps): React.JSX.Element | null => {
-  if (folder.bookmarks.length === 0) return null;
-
-  return (
-    <div role="alert" className="bg-error/10 border border-error/20 rounded-xl p-4">
-      <div className="flex items-start gap-3">
-        <div className="w-5 h-5 text-error flex-shrink-0 mt-0.5">
-          <svg fill="currentColor" viewBox="0 0 20 20">
-            <path
-              fillRule="evenodd"
-              d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </div>
-        <div>
-          <p className="font-semibold text-error text-sm mb-1">
-            Warning: Contains bookmarked verses
-          </p>
-          <p className="text-error text-sm">
-            This folder contains{' '}
-            <strong>
-              {folder.bookmarks.length} bookmarked verse
-              {folder.bookmarks.length !== 1 ? 's' : ''}
-            </strong>
-            . All bookmarks will be permanently deleted and cannot be recovered.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-interface LoadingSpinnerProps {}
-
-const LoadingSpinner = ({}: LoadingSpinnerProps): React.JSX.Element => (
-  <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-    <path
-      className="opacity-75"
-      fill="currentColor"
-      d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-    />
-  </svg>
-);
-
-interface ModalActionsProps {
-  onClose: () => void;
-  onDelete: () => void;
-  isDeleting: boolean;
-}
-
-const ModalActions = ({ onClose, onDelete, isDeleting }: ModalActionsProps): React.JSX.Element => (
-  <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-border">
-    <button
-      onClick={onClose}
-      className="px-6 py-2.5 text-sm font-medium text-muted hover:text-foreground hover:bg-surface-hover rounded-xl transition-all duration-200"
-    >
-      Cancel
-    </button>
-    <button
-      onClick={onDelete}
-      disabled={isDeleting}
-      className="px-6 py-2.5 text-sm font-semibold bg-error text-on-error rounded-xl hover:bg-error/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 flex items-center gap-2"
-    >
-      {isDeleting ? (
-        <>
-          <LoadingSpinner />
-          <span>Deleting...</span>
-        </>
-      ) : (
-        'Delete Forever'
-      )}
-    </button>
-  </div>
-);
 
 export const DeleteFolderModal = ({
   isOpen,

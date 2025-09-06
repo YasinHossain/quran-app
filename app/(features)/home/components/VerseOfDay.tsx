@@ -9,6 +9,8 @@ import { VerseErrorState } from './VerseErrorState';
 import { VerseLoadingState } from './VerseLoadingState';
 import { useVerseOfDay } from '../hooks/useVerseOfDay';
 
+import type { Verse, Surah } from '@/types';
+
 interface VerseOfDayProps {
   className?: string;
   /** Interval in ms between automatic rotations */
@@ -19,11 +21,11 @@ interface VerseOfDayProps {
 
 // Custom hook for verse transitions
 interface UseVerseTransitionProps {
-  verse: any;
+  verse: Verse | null;
   initialLoad: boolean;
   setInitialLoad: (value: boolean) => void;
   setIsTransitioning: (value: boolean) => void;
-  setDisplayVerse: (verse: any) => void;
+  setDisplayVerse: (verse: Verse | null) => void;
 }
 
 const useVerseTransition = ({
@@ -57,7 +59,7 @@ const useVerseTransition = ({
 };
 
 // Surah name lookup hook
-const useSurahName = (displayVerse: any, surahs: any[]) => {
+const useSurahName = (displayVerse: Verse | null, surahs: Surah[]) => {
   return useMemo(() => {
     if (!displayVerse) return null;
     const [surahNum] = displayVerse.verse_key.split(':');
@@ -69,8 +71,8 @@ const useSurahName = (displayVerse: any, surahs: any[]) => {
 interface RenderStatesProps {
   loading: boolean;
   initialLoad: boolean;
-  error: any;
-  displayVerse: any;
+  error: string | null;
+  displayVerse: Verse | null;
   className?: string;
   onRetry: () => void;
   surahName: string | null;
