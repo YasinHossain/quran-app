@@ -1,0 +1,89 @@
+name: PR Verification
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  verify-pr:
+    runs-on: ubuntu-latest
+    name: Verify Pull Request
+    if: github.event.issue.pull_request && (contains(github.event.comment.body, 'verify') || contains(github.event.comment.body, 'check') || contains(github.event.comment.body, 'run tests'))
+    
+    permissions:
+      contents: read
+      pull-requests: read
+      checks: write
+      statuses: write
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Security audit
+        run: npm audit --omit=dev --audit-level=high
+        continue-on-error: false
+
+      - name: Format check
+        run: npm run format -- --check
+        continue-on-error: false
+
+      - name: Lint check
+        run: npm run lint
+        continue-on-error: false
+
+      - name: Type check
+        run: npm run type-check
+        continue-on-error: false
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+        continue-on-error: false
+
+      - name: Build verification
+        run: npm run build
+        continue-on-error: false
+
+      - name: PR Quality Check
+        run: |
+          echo "✅ All quality checks passed!"
+          echo "PR is ready for review and merge."
+        
+      - name: Comment PR on Success
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ **Automated verification passed!** All quality checks completed successfully.\n\n- ✅ Security audit\n- ✅ Code formatting\n- ✅ Linting\n- ✅ Type checking\n- ✅ Tests with coverage\n- ✅ Build verification\n\nThis PR is ready for review and merge.'
+            })
+
+      - name: Comment PR on Failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ **Automated verification failed!** Please fix the issues before this PR can be merged.\n\nCheck the workflow logs for specific error details.'
+            })
