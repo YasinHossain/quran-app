@@ -56,6 +56,7 @@ const eslintConfig = [
           IIFEs: true,
         },
       ],
+      'max-statements': ['warn', 30],
       complexity: ['warn', 10],
       'max-params': ['warn', 4],
       'max-depth': ['warn', 3],
@@ -97,6 +98,8 @@ const eslintConfig = [
       // React best practices
       'react/display-name': 'off', // Using memo properly
       'react-hooks/exhaustive-deps': 'warn',
+      // Console usage
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
     },
     settings: {
       'import/resolver': {
