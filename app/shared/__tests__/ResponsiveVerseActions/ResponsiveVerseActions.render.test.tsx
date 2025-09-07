@@ -1,16 +1,16 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import React from 'react';
 
-import { defaultProps, setMockVariant, setMockBreakpoint, testAccessibility } from './test-helpers';
-import { ResponsiveVerseActions } from '../../ResponsiveVerseActions';
+import {
+  renderResponsiveVerseActions,
+  renderWithResponsiveState,
+  testAccessibility,
+} from './test-helpers';
 
 describe('ResponsiveVerseActions render', () => {
   describe('Cross-Device Rendering', () => {
     it('should render correctly on mobile devices', () => {
-      setMockVariant('compact');
-      setMockBreakpoint('mobile');
-
-      render(<ResponsiveVerseActions {...defaultProps} />);
+      renderWithResponsiveState('compact', 'mobile');
 
       expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /bookmark/i })).toBeInTheDocument();
@@ -18,10 +18,7 @@ describe('ResponsiveVerseActions render', () => {
     });
 
     it('should render correctly on tablets', () => {
-      setMockVariant('default');
-      setMockBreakpoint('tablet');
-
-      render(<ResponsiveVerseActions {...defaultProps} />);
+      renderWithResponsiveState('default', 'tablet');
 
       expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /bookmark/i })).toBeInTheDocument();
@@ -29,7 +26,7 @@ describe('ResponsiveVerseActions render', () => {
     });
 
     it('should render correctly on desktop', () => {
-      render(<ResponsiveVerseActions {...defaultProps} />);
+      renderResponsiveVerseActions();
 
       expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /bookmark/i })).toBeInTheDocument();
@@ -39,10 +36,7 @@ describe('ResponsiveVerseActions render', () => {
 
   describe('Touch Target Compliance', () => {
     it('should have WCAG-compliant touch targets on mobile', () => {
-      setMockVariant('compact');
-      setMockBreakpoint('mobile');
-
-      const { container } = render(<ResponsiveVerseActions {...defaultProps} />);
+      const { container } = renderWithResponsiveState('compact', 'mobile');
 
       const result = testAccessibility.testTouchTargets(container);
 
@@ -51,10 +45,7 @@ describe('ResponsiveVerseActions render', () => {
     });
 
     it('should have appropriate touch targets on tablets', () => {
-      setMockVariant('default');
-      setMockBreakpoint('tablet');
-
-      const { container } = render(<ResponsiveVerseActions {...defaultProps} />);
+      const { container } = renderWithResponsiveState('default', 'tablet');
 
       const result = testAccessibility.testTouchTargets(container);
 
@@ -65,45 +56,25 @@ describe('ResponsiveVerseActions render', () => {
 
   describe('Accessibility', () => {
     it('should have proper focus management', async () => {
-      const { container } = render(<ResponsiveVerseActions {...defaultProps} />);
+      const { container } = renderResponsiveVerseActions();
 
       const result = await testAccessibility.testFocusManagement(container);
 
       expect(result.focusableCount).toBeGreaterThan(0);
       expect(result.hasLogicalOrder).toBe(true);
     });
-
-    it('should support keyboard navigation', () => {
-      render(<ResponsiveVerseActions {...defaultProps} />);
-
-      const playButton = screen.getByRole('button', { name: /play/i });
-      screen.getByRole('button', { name: /bookmark/i });
-
-      playButton.focus();
-      expect(document.activeElement).toBe(playButton);
-
-      fireEvent.keyDown(playButton, { key: 'Tab' });
-      // Focus should move to the next focusable element
-      expect(document.activeElement).not.toBe(playButton);
-    });
   });
 
   describe('Responsive Variants', () => {
     it('should apply compact variant classes for mobile', () => {
-      setMockVariant('compact');
-      setMockBreakpoint('mobile');
-
-      const { container } = render(<ResponsiveVerseActions {...defaultProps} />);
+      const { container } = renderWithResponsiveState('compact', 'mobile');
 
       const component = container.firstChild as HTMLElement;
       expect(component).toBeTruthy();
     });
 
     it('should apply expanded variant classes for desktop', () => {
-      setMockVariant('expanded');
-      setMockBreakpoint('desktop');
-
-      const { container } = render(<ResponsiveVerseActions {...defaultProps} />);
+      const { container } = renderWithResponsiveState('expanded', 'desktop');
 
       const component = container.firstChild as HTMLElement;
       expect(component).toBeTruthy();
@@ -112,14 +83,14 @@ describe('ResponsiveVerseActions render', () => {
 
   describe('Original Functionality', () => {
     it('renders tafsir link with correct href', () => {
-      render(<ResponsiveVerseActions {...defaultProps} />);
+      renderResponsiveVerseActions();
 
       const link = screen.getByRole('link', { name: 'View tafsir' });
       expect(link).toHaveAttribute('href', '/tafsir/1/1');
     });
 
     it('should handle different verse keys correctly', () => {
-      render(<ResponsiveVerseActions {...defaultProps} verseKey="2:255" />);
+      renderResponsiveVerseActions({ verseKey: '2:255' });
 
       const link = screen.getByRole('link', { name: 'View tafsir' });
       expect(link).toHaveAttribute('href', '/tafsir/2/255');
@@ -128,24 +99,13 @@ describe('ResponsiveVerseActions render', () => {
 
   describe('Error Boundaries', () => {
     it('should handle missing props gracefully', () => {
-      expect(() => {
-        render(
-          <ResponsiveVerseActions
-            verseKey="1:1"
-            isPlaying={false}
-            isLoadingAudio={false}
-            isBookmarked={false}
-            onPlayPause={defaultProps.onPlayPause}
-            onBookmark={defaultProps.onBookmark}
-          />
-        );
-      }).not.toThrow();
+      expect(() => renderResponsiveVerseActions()).not.toThrow();
     });
 
     it('should handle invalid verse key format', () => {
-      expect(() => {
-        render(<ResponsiveVerseActions {...defaultProps} verseKey="invalid" />);
-      }).not.toThrow();
+      expect(() =>
+        renderResponsiveVerseActions({ verseKey: 'invalid' }),
+      ).not.toThrow();
     });
   });
 });

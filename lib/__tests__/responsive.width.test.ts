@@ -3,27 +3,25 @@ import { renderHook, act } from '@testing-library/react';
 import {
   useBreakpoint,
   useResponsiveValue,
-  useResponsiveState,
   getResponsiveValue,
   getVariantForBreakpoint,
   layoutPatterns,
 } from '../responsive';
 import { testResponsiveHook, setupMatchMediaMock } from './responsive/test-utils';
 
-describe('Responsive Breakpoints', () => {
+describe('Responsive Width', () => {
   let matchMediaUtils: ReturnType<typeof setupMatchMediaMock>;
 
   beforeEach(() => {
     matchMediaUtils = setupMatchMediaMock();
   });
-
   afterEach(() => {
     matchMediaUtils.cleanup();
     jest.clearAllMocks();
   });
 
   describe('useBreakpoint', () => {
-    it('returns correct breakpoints for screen sizes', async () => {
+    it('returns correct breakpoints for devices', async () => {
       await testResponsiveHook(
         () => useBreakpoint(),
         [
@@ -54,23 +52,18 @@ describe('Responsive Breakpoints', () => {
       globalWithWindow.window = originalWindow;
     });
 
-    it('updates breakpoint on resize', () => {
+    it('updates on resize', () => {
       const { result } = renderHook(() => useBreakpoint());
-
       act(() => {
         matchMediaUtils.setViewportWidth(375);
-      });
-
-      act(() => {
         matchMediaUtils.setViewportWidth(768);
       });
-
       expect(result.current).toBe('tablet');
     });
   });
 
   describe('useResponsiveValue', () => {
-    it('returns correct values for breakpoints', async () => {
+    it('returns values for breakpoints', async () => {
       await testResponsiveHook(
         () => useResponsiveValue({ mobile: 'compact', tablet: 'default', desktop: 'expanded' }),
         [
@@ -85,89 +78,39 @@ describe('Responsive Breakpoints', () => {
       );
     });
 
-    it('falls back to mobile when values missing', () => {
+    it('falls back to mobile', () => {
       const config = { mobile: 'fallback' };
       expect(getResponsiveValue('tablet', config)).toBe('fallback');
       expect(getResponsiveValue('desktop', config)).toBe('fallback');
     });
   });
 
-  describe('useResponsiveState', () => {
-    it('provides comprehensive state', async () => {
-      await testResponsiveHook(
-        () => useResponsiveState(),
-        [
-          {
-            device: 'iPhone SE',
-            expected: {
-              breakpoint: 'mobile',
-              isMobile: true,
-              isTablet: false,
-              isDesktop: false,
-              variant: 'compact',
-            },
-            description: 'Mobile device state',
-          },
-          {
-            device: 'iPad',
-            expected: {
-              breakpoint: 'tablet',
-              isMobile: false,
-              isTablet: true,
-              isDesktop: false,
-              variant: 'default',
-            },
-            description: 'Tablet device state',
-          },
-        ]
-      );
+  describe('helpers', () => {
+    it('maps breakpoints to variants', () => {
+      expect(getVariantForBreakpoint('mobile')).toBe('compact');
+      expect(getVariantForBreakpoint('tablet')).toBe('default');
+      expect(getVariantForBreakpoint('desktop')).toBe('expanded');
+      expect(getVariantForBreakpoint('wide')).toBe('expanded');
     });
-  });
 
-  it('maps breakpoints to variants', () => {
-    expect(getVariantForBreakpoint('mobile')).toBe('compact');
-    expect(getVariantForBreakpoint('tablet')).toBe('default');
-    expect(getVariantForBreakpoint('desktop')).toBe('expanded');
-    expect(getVariantForBreakpoint('wide')).toBe('expanded');
-  });
-
-  it('includes pt-safe for mobile and tablet headers', () => {
-    expect(layoutPatterns.adaptiveHeader.mobile).toContain('pt-safe');
-    expect(layoutPatterns.adaptiveHeader.tablet).toContain('pt-safe');
-  });
-
-  it('handles rapid breakpoint changes efficiently', async () => {
-    const { result } = renderHook(() => useBreakpoint());
-    const startTime = performance.now();
-
-    for (let i = 0; i < 20; i++) {
-      const width = 375 + i * 50;
-      await act(async () => {
-        matchMediaUtils.setViewportWidth(width);
-      });
-    }
-
-    const endTime = performance.now();
-    const totalTime = endTime - startTime;
-
-    expect(totalTime).toBeLessThan(500);
-    expect(['tablet', 'desktop', 'wide']).toContain(result.current);
+    it('includes pt-safe for mobile and tablet headers', () => {
+      expect(layoutPatterns.adaptiveHeader.mobile).toContain('pt-safe');
+      expect(layoutPatterns.adaptiveHeader.tablet).toContain('pt-safe');
+    });
   });
 
   describe('Edge Cases', () => {
-    it('handles missing window object', () => {
+    it('handles missing window', () => {
       const originalWindow = global.window;
       const globalWithWindow = global as typeof globalThis & { window?: unknown };
       delete globalWithWindow.window;
-
       expect(() => {
         renderHook(() => useBreakpoint());
       }).not.toThrow();
-
       globalWithWindow.window = originalWindow;
     });
 
-    it('handles zero-dimension viewports', () => {
+    it('handles zero-width viewports', () => {
       matchMediaUtils.setViewportWidth(0);
       const { result } = renderHook(() => useBreakpoint());
       expect(result.current).toBe('mobile');

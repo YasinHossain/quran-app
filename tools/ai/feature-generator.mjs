@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { parseArgs } from './feature-generator/cli.ts';
-import { generateFeature } from './feature-generator/writer.ts';
+import { generateFeature } from './feature-generator/writer/index.ts';
 
 const { featureName } = parseArgs(process.argv);
 

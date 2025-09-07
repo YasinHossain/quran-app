@@ -8,23 +8,15 @@
  */
 
 import React from 'react';
-import { mockViewport, BREAKPOINTS } from '@/app/testUtils/responsiveTestUtils';
 import { createPerformanceTestSuite } from '@/app/testUtils/performanceTestUtils';
 import {
-  architectureComplianceSection,
-  responsiveDesignSection,
-  contextIntegrationSection,
-  performanceOptimizationSection,
-  accessibilitySection,
-  userInteractionsSection,
-  loadingStatesSection,
-  errorHandlingSection,
-  hookContextIntegrationSection,
-  hookPerformanceSection,
-  hookCleanupSection,
-  hookDataFetchingSection,
-  integrationTestSection,
-} from './architecture/test-sections';
+  setupTestEnvironment,
+  resetTestEnvironment,
+  clearTestEnvironment,
+  runComponentTests,
+  runHookTests,
+  runIntegrationTest,
+} from './architecture/test-utils';
 
 // Component under test
 import { ExampleComponent } from '../ExampleComponent';
@@ -72,38 +64,7 @@ jest.mock('react-i18next', () => ({
 }));
 
 // Setup responsive testing environment
-beforeAll(() => {
-  // Mock matchMedia for responsive utilities
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
-
-  // Mock IntersectionObserver
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (global as any).IntersectionObserver = jest.fn().mockImplementation(() => ({
-    observe: jest.fn(),
-    unobserve: jest.fn(),
-    disconnect: jest.fn(),
-  }));
-
-  // Mock ResizeObserver
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (global as any).ResizeObserver = jest.fn().mockImplementation(() => ({
-    observe: jest.fn(),
-    unobserve: jest.fn(),
-    disconnect: jest.fn(),
-  }));
-});
+beforeAll(setupTestEnvironment);
 
 const defaultProps = {
   id: '1',
@@ -113,60 +74,10 @@ const defaultProps = {
 };
 
 describe('ExampleComponent - Architecture Compliance', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-    localStorage.clear();
-    // Reset viewport to mobile-first
-    mockViewport(BREAKPOINTS.mobile);
-  });
+  beforeEach(resetTestEnvironment);
+  afterEach(clearTestEnvironment);
 
-  afterEach(() => {
-    jest.clearAllTimers();
-  });
-
-  architectureComplianceSection({
-    Component: ExampleComponent,
-    defaultProps,
-    mockData: mockExampleData,
-  });
-
-  responsiveDesignSection({
-    Component: ExampleComponent,
-    defaultProps,
-    mockData: mockExampleData,
-  });
-
-  contextIntegrationSection({
-    Component: ExampleComponent,
-    defaultProps,
-    mockData: mockExampleData,
-  });
-
-  performanceOptimizationSection({
-    Component: ExampleComponent,
-    defaultProps,
-    mockData: mockExampleData,
-  });
-
-  accessibilitySection({
-    Component: ExampleComponent,
-    defaultProps,
-    mockData: mockExampleData,
-  });
-
-  userInteractionsSection({
-    Component: ExampleComponent,
-    defaultProps,
-    mockData: mockExampleData,
-  });
-
-  loadingStatesSection({
-    Component: ExampleComponent,
-    defaultProps,
-    mockData: mockExampleData,
-  });
-
-  errorHandlingSection({
+  runComponentTests({
     Component: ExampleComponent,
     defaultProps,
     mockData: mockExampleData,
@@ -187,22 +98,7 @@ describe('useExampleData Hook - Architecture Compliance', () => {
     });
   });
 
-  hookContextIntegrationSection({
-    useHook: useExampleData,
-    mockData: mockExampleData,
-  });
-
-  hookPerformanceSection({
-    useHook: useExampleData,
-    mockData: mockExampleData,
-  });
-
-  hookCleanupSection({
-    useHook: useExampleData,
-    mockData: mockExampleData,
-  });
-
-  hookDataFetchingSection({
+  runHookTests({
     useHook: useExampleData,
     mockData: mockExampleData,
   });
@@ -210,8 +106,7 @@ describe('useExampleData Hook - Architecture Compliance', () => {
 
 // Generate performance test suite
 createPerformanceTestSuite('ExampleComponent', ExampleComponent, defaultProps);
-
-integrationTestSection({
+runIntegrationTest({
   Component: ExampleComponent,
   defaultProps,
   mockData: mockExampleData,

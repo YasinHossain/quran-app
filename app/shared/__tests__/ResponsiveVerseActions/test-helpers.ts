@@ -1,6 +1,10 @@
+import { render } from '@testing-library/react';
+import React from 'react';
+
 import { testAccessibility } from '../../../../lib/__tests__/responsive-test-utils';
 
 import type { VerseActionsProps } from '../../ResponsiveVerseActions';
+import { ResponsiveVerseActions } from '../../ResponsiveVerseActions';
 
 export const noop = () => {};
 
@@ -40,6 +44,25 @@ export const setMockVariant = (variant: string) => {
 
 export const setMockBreakpoint = (breakpoint: string) => {
   mockBreakpoint = breakpoint;
+};
+
+export const renderResponsiveVerseActions = (
+  props: Partial<VerseActionsProps> = {},
+) => render(<ResponsiveVerseActions {...defaultProps} {...props} />);
+
+export const rerenderResponsiveVerseActions = (
+  rerender: (ui: React.ReactElement) => void,
+  props: Partial<VerseActionsProps> = {},
+) => rerender(<ResponsiveVerseActions {...defaultProps} {...props} />);
+
+export const renderWithResponsiveState = (
+  variant: string,
+  breakpoint: string,
+  props: Partial<VerseActionsProps> = {},
+) => {
+  setMockVariant(variant);
+  setMockBreakpoint(breakpoint);
+  return renderResponsiveVerseActions(props);
 };
 
 beforeEach(() => {
