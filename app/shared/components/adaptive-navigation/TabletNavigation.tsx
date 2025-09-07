@@ -17,7 +17,5 @@ export const TabletNavigation = memo(function TabletNavigation({
   onItemClick,
   className,
 }: TabletNavigationProps): React.JSX.Element {
-  return (
-    <MobileNavigation navItems={navItems} onItemClick={onItemClick} className={className} />
-  );
+  return <MobileNavigation navItems={navItems} onItemClick={onItemClick} className={className} />;
 });

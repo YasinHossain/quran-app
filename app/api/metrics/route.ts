@@ -6,7 +6,7 @@ let errorCount = 0;
 const startTime = Date.now();
 
 // GET /api/metrics - Basic application metrics
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     requestCount++;
 
@@ -44,7 +44,12 @@ export async function GET(request: NextRequest) {
   }
 }
 
-function getMemoryMetrics() {
+function getMemoryMetrics(): {
+  rss: string;
+  heapTotal: string;
+  heapUsed: string;
+  external: string;
+} | null {
   if (typeof process !== 'undefined' && process.memoryUsage) {
     const memUsage = process.memoryUsage();
     return {
@@ -57,7 +62,11 @@ function getMemoryMetrics() {
   return null;
 }
 
-function getPerformanceMetrics() {
+function getPerformanceMetrics(): {
+  uptime_seconds: number;
+  cpu_usage: NodeJS.CpuUsage;
+  event_loop_lag: string;
+} | null {
   if (typeof process !== 'undefined' && process.hrtime) {
     const hrTime = process.hrtime();
     return {
@@ -70,6 +79,6 @@ function getPerformanceMetrics() {
 }
 
 // Increment error count (can be called from error handlers)
-function incrementErrorCount() {
+function incrementErrorCount(): void {
   errorCount++;
 }

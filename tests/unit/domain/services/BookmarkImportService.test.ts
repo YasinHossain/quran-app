@@ -1,4 +1,4 @@
-import { Bookmark, Verse } from '../../../../src/domain/entities';
+import { Verse } from '../../../../src/domain/entities';
 import { IBookmarkRepository } from '../../../../src/domain/repositories/IBookmarkRepository';
 import { IVerseRepository } from '../../../../src/domain/repositories/IVerseRepository';
 import { BookmarkImportService } from '../../../../src/domain/services/BookmarkImportService';

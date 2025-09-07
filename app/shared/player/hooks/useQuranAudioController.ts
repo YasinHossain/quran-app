@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, Dispatch, SetStateAction, RefObject } from 'react';
 
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 
@@ -14,7 +14,34 @@ interface Props {
   onNext?: () => boolean;
 }
 
-export function useQuranAudioController({ track, onPrev, onNext }: Props) {
+interface QuranAudioControllerReturn {
+  isPlayerVisible: boolean;
+  audioRef: RefObject<HTMLAudioElement>;
+  handleEnded: () => void;
+  playerLayoutProps: {
+    cover: string;
+    title: string;
+    artist: string;
+    current: number;
+    duration: number;
+    elapsed: string;
+    total: string;
+    interactable: boolean;
+    isPlaying: boolean;
+    togglePlay: () => void;
+    setSeek: (value: number) => void;
+    onNext?: () => boolean;
+    onPrev?: () => boolean;
+    closePlayer: () => void;
+    setMobileOptionsOpen: () => void;
+  };
+  mobileOptionsOpen: boolean;
+  setMobileOptionsOpen: Dispatch<SetStateAction<boolean>>;
+  activeTab: 'reciter' | 'repeat';
+  setActiveTab: Dispatch<SetStateAction<'reciter' | 'repeat'>>;
+}
+
+export function useQuranAudioController({ track, onPrev, onNext }: Props): QuranAudioControllerReturn {
   const [mobileOptionsOpen, setMobileOptionsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'reciter' | 'repeat'>('reciter');
 

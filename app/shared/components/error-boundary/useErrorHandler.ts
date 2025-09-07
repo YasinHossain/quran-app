@@ -4,7 +4,7 @@ import React from 'react';
 
 import { ErrorHandler } from '@/src/infrastructure/errors';
 
-export function useErrorHandler() {
+export function useErrorHandler(): (error: Error) => void {
   return React.useCallback((error: Error) => {
     ErrorHandler.handle(error);
 

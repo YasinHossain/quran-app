@@ -4,7 +4,7 @@ import { clickWithPerf } from './helpers';
 
 describe('mobile performance interaction', () => {
   it('measures interaction duration', () => {
-    function Component() {
+    function Component(): React.JSX.Element {
       return <button type="button">tap</button>;
     }
 

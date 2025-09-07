@@ -51,12 +51,7 @@ export const DesktopNavigation = memo(function DesktopNavigation({
             {content}
           </Link>
         ) : (
-          <button
-            key={item.id}
-            type="button"
-            onClick={handleClick(item)}
-            className={itemClass}
-          >
+          <button key={item.id} type="button" onClick={handleClick(item)} className={itemClass}>
             {content}
           </button>
         );

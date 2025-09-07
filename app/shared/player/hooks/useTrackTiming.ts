@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, MutableRefObject } from 'react';
 
 import { useAudioPlayer } from './useAudioPlayer';
 
@@ -13,10 +13,25 @@ interface Opts {
   track?: Track | null;
   volume: number;
   playbackRate: number;
-  contextRef: React.MutableRefObject<HTMLAudioElement | null>;
+  contextRef: MutableRefObject<HTMLAudioElement | null>;
 }
 
-export function useTrackTiming({ track, volume, playbackRate, contextRef }: Opts) {
+interface TrackTimingReturn {
+  audioRef: MutableRefObject<HTMLAudioElement | null>;
+  play: () => void;
+  pause: () => void;
+  seek: (sec: number) => void;
+  current: number;
+  duration: number;
+  elapsed: string;
+  total: string;
+  interactable: boolean;
+  title: string;
+  artist: string;
+  cover: string;
+}
+
+export function useTrackTiming({ track, volume, playbackRate, contextRef }: Opts): TrackTimingReturn {
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState(track?.durationSec ?? 0);
   const { audioRef, play, pause, seek, setVolume, setPlaybackRate } = useAudioPlayer({

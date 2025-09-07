@@ -7,7 +7,7 @@ import { useAudio } from '@/app/shared/player/context/AudioContext';
 /**
  * Provides mobile and desktop controls for adjusting audio volume.
  */
-export const VolumeControl = memo(function VolumeControl() {
+export const VolumeControl = memo(function VolumeControl(): React.JSX.Element {
   const { volume, setVolume } = useAudio();
   return (
     <>

@@ -6,8 +6,8 @@
  */
 import { z } from 'zod';
 
-import { appConfig, appSchema } from './app';
 import { apiConfig, apiSchema } from './api';
+import { appConfig, appSchema } from './app';
 import { audioConfig, audioSchema } from './audio';
 import { cacheConfig, cacheSchema } from './cache';
 import { featuresConfig, featuresSchema } from './features';

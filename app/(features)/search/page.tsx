@@ -7,7 +7,7 @@ import { searchVerses } from '@/lib/api';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { Verse as VerseType } from '@/types';
 
-function SearchContent() {
+function SearchContent(): React.JSX.Element {
   const searchParams = useSearchParams();
   const query = searchParams.get('query') || '';
   const [verses, setVerses] = useState<VerseType[]>([]);
@@ -46,7 +46,7 @@ function SearchContent() {
   );
 }
 
-export default function SearchPage() {
+export default function SearchPage(): React.JSX.Element {
   return (
     <Suspense fallback={<div className="p-6 max-w-4xl mx-auto">Loading...</div>}>
       <SearchContent />

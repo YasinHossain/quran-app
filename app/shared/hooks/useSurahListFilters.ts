@@ -10,7 +10,16 @@ interface JuzSummary {
   surahRange: string;
 }
 
-export function useSurahListFilters(chapters: Chapter[], searchTerm: string) {
+interface SurahListFiltersResult {
+  filteredChapters: Chapter[];
+  filteredJuzs: JuzSummary[];
+  filteredPages: number[];
+}
+
+export function useSurahListFilters(
+  chapters: Chapter[],
+  searchTerm: string
+): SurahListFiltersResult {
   const term = searchTerm.toLowerCase();
 
   const juzs = useMemo(() => juzData as JuzSummary[], []);

@@ -1,10 +1,6 @@
 import { screen, fireEvent } from '@testing-library/react';
-import React from 'react';
 
-import {
-  renderResponsiveVerseActions,
-  rerenderResponsiveVerseActions,
-} from './test-helpers';
+import { renderResponsiveVerseActions, rerenderResponsiveVerseActions } from './test-helpers';
 
 describe('ResponsiveVerseActions interactions', () => {
   it('should handle play button clicks', () => {
@@ -46,9 +42,7 @@ describe('ResponsiveVerseActions interactions', () => {
   it('should show bookmarked state', () => {
     renderResponsiveVerseActions({ isBookmarked: true });
 
-    expect(
-      screen.getByRole('button', { name: /remove bookmark/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /remove bookmark/i })).toBeInTheDocument();
   });
 
   it('should support keyboard navigation', () => {

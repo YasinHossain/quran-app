@@ -1,5 +1,5 @@
 import fs from 'fs';
-import path from 'path';
+
 import { docMappings } from '../scanner';
 import { Prop, parseProps } from './args';
 
@@ -100,7 +100,9 @@ export function generateComponentEntry(component: Component): string {
 
 export function extractMethods(content: string): string[] {
   const methods: string[] = [];
-  const methodMatches = content.matchAll(/(?:public\s+)?(\w+)\s*\([^)]*\)(?:\s*:\s*[^{]+)?(?:\s*{|\s*;)/g);
+  const methodMatches = content.matchAll(
+    /(?:public\s+)?(\w+)\s*\([^)]*\)(?:\s*:\s*[^{]+)?(?:\s*{|\s*;)/g
+  );
 
   for (const match of methodMatches) {
     if (!['constructor'].includes(match[1])) {
@@ -112,7 +114,9 @@ export function extractMethods(content: string): string[] {
 }
 
 export function generateServicesSection(services: Service[]): string {
-  return services.map((service) => `- **${service.name}Service**: ${service.methods.join(', ')}`).join('\n');
+  return services
+    .map((service) => `- **${service.name}Service**: ${service.methods.join(', ')}`)
+    .join('\n');
 }
 
 export function generateEntitiesSection(entities: Entity[]): string {

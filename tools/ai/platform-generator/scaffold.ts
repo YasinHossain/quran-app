@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
+
 import { PlatformConfig } from './config';
 
 export async function ensureDir(dir: string): Promise<void> {
@@ -25,9 +26,5 @@ export async function writeFileSafe(
 export async function scaffoldProject(config: PlatformConfig): Promise<void> {
   const base = path.join(config.targetDir, config.platform);
   await ensureDir(base);
-  await writeFileSafe(
-    path.join(base, 'README.md'),
-    `# ${config.projectName}\n`,
-    config.overwrite
-  );
+  await writeFileSafe(path.join(base, 'README.md'), `# ${config.projectName}\n`, config.overwrite);
 }

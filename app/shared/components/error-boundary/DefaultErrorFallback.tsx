@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 
 import type { ErrorFallbackProps } from './ErrorBoundary';
 
-export function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps) {
+export function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps): React.JSX.Element {
   const router = useRouter();
   const handleGoHome = useCallback(() => {
     router.push('/');

@@ -1,7 +1,7 @@
-import { entityTemplate } from './entity';
-import { useCaseTemplate } from './use-case';
-import { repositoryTemplate } from './repository';
 import { controllerTemplate } from './controller';
+import { entityTemplate } from './entity';
+import { repositoryTemplate } from './repository';
+import { useCaseTemplate } from './use-case';
 
 export const templates = {
   entity: entityTemplate,

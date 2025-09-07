@@ -14,7 +14,12 @@ interface Props {
   setActiveTab: (tab: 'reciter' | 'repeat') => void;
 }
 
-export function PlaybackOptionsModal({ open, onClose, activeTab, setActiveTab }: Props) {
+export function PlaybackOptionsModal({
+  open,
+  onClose,
+  activeTab,
+  setActiveTab,
+}: Props): React.JSX.Element | null {
   const {
     localReciter,
     setLocalReciter,

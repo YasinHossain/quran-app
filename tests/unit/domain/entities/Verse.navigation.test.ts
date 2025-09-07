@@ -1,5 +1,3 @@
-import { Verse } from '../../../../src/domain/entities';
-import { Translation } from '../../../../src/domain/value-objects/Translation';
 import {
   validId,
   validSurahId,
@@ -8,6 +6,8 @@ import {
   validUthmaniText,
   createVerse,
 } from './Verse/test-utils';
+import { Verse } from '../../../../src/domain/entities';
+import { Translation } from '../../../../src/domain/value-objects/Translation';
 
 describe('Verse entity', () => {
   describe('constructor', () => {
@@ -23,7 +23,11 @@ describe('Verse entity', () => {
     });
 
     it('creates a verse with translation', () => {
-      const translation = new Translation(1, 1, 'In the name of Allah, the Beneficent, the Merciful.');
+      const translation = new Translation(
+        1,
+        1,
+        'In the name of Allah, the Beneficent, the Merciful.'
+      );
       const verse = createVerse(translation);
 
       expect(verse.translation).toBe(translation);
@@ -48,15 +52,15 @@ describe('Verse entity', () => {
     });
 
     it('throws error for invalid Ayah number (below 1)', () => {
-      expect(
-        () => new Verse(validId, validSurahId, 0, validArabicText, validUthmaniText)
-      ).toThrow('Invalid Ayah number');
+      expect(() => new Verse(validId, validSurahId, 0, validArabicText, validUthmaniText)).toThrow(
+        'Invalid Ayah number'
+      );
     });
 
     it('throws error for empty Arabic text', () => {
-      expect(
-        () => new Verse(validId, validSurahId, validAyahNumber, '', validUthmaniText)
-      ).toThrow('Arabic text cannot be empty');
+      expect(() => new Verse(validId, validSurahId, validAyahNumber, '', validUthmaniText)).toThrow(
+        'Arabic text cannot be empty'
+      );
     });
 
     it('throws error for whitespace-only Arabic text', () => {
@@ -66,9 +70,9 @@ describe('Verse entity', () => {
     });
 
     it('throws error for empty Uthmani text', () => {
-      expect(
-        () => new Verse(validId, validSurahId, validAyahNumber, validArabicText, '')
-      ).toThrow('Uthmani text cannot be empty');
+      expect(() => new Verse(validId, validSurahId, validAyahNumber, validArabicText, '')).toThrow(
+        'Uthmani text cannot be empty'
+      );
     });
   });
 
@@ -100,7 +104,13 @@ describe('Verse entity', () => {
 
     it('returns false for verses with different IDs', () => {
       const verse1 = createVerse();
-      const verse2 = new Verse('verse-1-2', validSurahId, validAyahNumber, validArabicText, validUthmaniText);
+      const verse2 = new Verse(
+        'verse-1-2',
+        validSurahId,
+        validAyahNumber,
+        validArabicText,
+        validUthmaniText
+      );
       expect(verse1.equals(verse2)).toBe(false);
     });
   });

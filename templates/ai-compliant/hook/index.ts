@@ -5,9 +5,6 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { useSettings } from '../shared/contexts';
-
-import type { HookData, HookOptions, HookResult } from '@/types';
 import {
   apiCall,
   clearCachedData,
@@ -15,6 +12,9 @@ import {
   setCachedData,
   transformHookData,
 } from './helpers';
+import { useSettings } from '../shared/contexts';
+
+import type { HookData, HookOptions, HookResult } from '@/types';
 
 interface UseHookNameParams {
   id: string;

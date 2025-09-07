@@ -62,7 +62,9 @@ export const SearchSuggestions = memo(function SearchSuggestions({
 
   return (
     <div className="p-4">
-      <div className="text-center text-muted py-8">Press Enter to search for &quot;{query}&quot;</div>
+      <div className="text-center text-muted py-8">
+        Press Enter to search for &quot;{query}&quot;
+      </div>
     </div>
   );
 });

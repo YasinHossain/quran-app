@@ -6,7 +6,12 @@ import { CARD_VARIANTS, ANIMATION_CONFIGS } from './base-card.config';
 
 import type { BaseCardProps } from './base-card.types';
 
-export function useBaseCard(props: BaseCardProps) {
+interface BaseCardHookReturn {
+  animationConfig: unknown;
+  commonProps: Record<string, unknown>;
+}
+
+export function useBaseCard(props: BaseCardProps): BaseCardHookReturn {
   const {
     children,
     className,

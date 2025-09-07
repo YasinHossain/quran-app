@@ -1,25 +1,16 @@
-import { Verse, getWordCount, getEstimatedReadingTime, isSajdahVerse } from '../../../../src/domain/entities';
-import { Translation } from '../../../../src/domain/value-objects/Translation';
+import { validId, validArabicText, validUthmaniText, createVerse } from './Verse/test-utils';
 import {
-  validId,
-  validSurahId,
-  validAyahNumber,
-  validArabicText,
-  validUthmaniText,
-  createVerse,
-} from './Verse/test-utils';
+  Verse,
+  getWordCount,
+  getEstimatedReadingTime,
+  isSajdahVerse,
+} from '../../../../src/domain/entities';
+import { Translation } from '../../../../src/domain/value-objects/Translation';
 
 describe('Verse serialization', () => {
   it('converts to plain object with all properties', () => {
     const translation = new Translation(1, 1, 'Test translation');
-    const verse = new Verse(
-      validId,
-      2,
-      255,
-      validArabicText,
-      validUthmaniText,
-      translation
-    );
+    const verse = new Verse(validId, 2, 255, validArabicText, validUthmaniText, translation);
 
     const plain = verse.toPlainObject();
 

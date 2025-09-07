@@ -21,14 +21,13 @@ export const BookmarkTab = memo(function BookmarkTab({
   onToggleCreateFolder,
   onNewFolderNameChange,
 }: BookmarkTabProps): React.JSX.Element {
-  const { folders, findBookmark, addBookmark, removeBookmark, createFolder } =
-    useBookmarks();
+  const { folders, findBookmark, addBookmark, removeBookmark, createFolder } = useBookmarks();
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredFolders = useMemo(() => {
     if (!searchQuery.trim()) return folders;
     return folders.filter((folder) =>
-      folder.name.toLowerCase().includes(searchQuery.toLowerCase()),
+      folder.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [folders, searchQuery]);
 
@@ -44,7 +43,7 @@ export const BookmarkTab = memo(function BookmarkTab({
         addBookmark(verseId, folder.id);
       }
     },
-    [verseId, findBookmark, removeBookmark, addBookmark],
+    [verseId, findBookmark, removeBookmark, addBookmark]
   );
 
   const handleCreateFolder = useCallback(() => {
@@ -80,7 +79,7 @@ export const BookmarkTab = memo(function BookmarkTab({
                 'w-full flex items-center justify-center gap-3 p-4 border-2 border-dashed border-border rounded-2xl',
                 'hover:border-accent hover:bg-accent/5 transition-colors text-muted hover:text-accent',
                 touchClasses.target,
-                touchClasses.focus,
+                touchClasses.focus
               )}
               whileTap={{ scale: 0.98 }}
               initial={{ opacity: 0, y: -10 }}
@@ -111,4 +110,3 @@ export const BookmarkTab = memo(function BookmarkTab({
     </div>
   );
 });
-

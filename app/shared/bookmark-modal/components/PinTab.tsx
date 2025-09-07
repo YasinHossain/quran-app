@@ -10,10 +10,7 @@ import { cn } from '@/lib/utils/cn';
 
 import { PinTabProps } from '../types';
 
-export const PinTab = memo(function PinTab({
-  verseId,
-  verseKey,
-}: PinTabProps): React.JSX.Element {
+export const PinTab = memo(function PinTab({ verseId, verseKey }: PinTabProps): React.JSX.Element {
   const { isPinned, togglePinned } = useBookmarks();
   const isVersePinned = isPinned(verseId);
 
@@ -53,4 +50,3 @@ export const PinTab = memo(function PinTab({
     </div>
   );
 });
-

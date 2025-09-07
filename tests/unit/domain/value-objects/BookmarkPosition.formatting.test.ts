@@ -1,5 +1,5 @@
-import { BookmarkPosition } from '../../../../src/domain/value-objects/BookmarkPosition';
 import { validTimestamp } from './BookmarkPosition/test-utils';
+import { BookmarkPosition } from '../../../../src/domain/value-objects/BookmarkPosition';
 
 describe('BookmarkPosition formatting & display', () => {
   describe('toString and verseKey', () => {

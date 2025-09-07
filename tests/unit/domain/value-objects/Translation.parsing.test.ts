@@ -1,4 +1,3 @@
-import { Translation } from '../../../../src/domain/value-objects/Translation';
 import {
   validId,
   validResourceId,
@@ -6,6 +5,7 @@ import {
   validLanguageCode,
   expectTranslationToThrow,
 } from './Translation/test-utils';
+import { Translation } from '../../../../src/domain/value-objects/Translation';
 
 describe('Translation Parsing and Validation', () => {
   describe('constructor', () => {
@@ -23,27 +23,63 @@ describe('Translation Parsing and Validation', () => {
     });
 
     it('throws error for negative ID', () => {
-      expectTranslationToThrow(-1, validResourceId, validText, validLanguageCode, 'Translation ID must be non-negative');
+      expectTranslationToThrow(
+        -1,
+        validResourceId,
+        validText,
+        validLanguageCode,
+        'Translation ID must be non-negative'
+      );
     });
 
     it('throws error for negative resource ID', () => {
-      expectTranslationToThrow(validId, -1, validText, validLanguageCode, 'Resource ID must be non-negative');
+      expectTranslationToThrow(
+        validId,
+        -1,
+        validText,
+        validLanguageCode,
+        'Resource ID must be non-negative'
+      );
     });
 
     it('throws error for empty text', () => {
-      expectTranslationToThrow(validId, validResourceId, '', validLanguageCode, 'Translation text cannot be empty');
+      expectTranslationToThrow(
+        validId,
+        validResourceId,
+        '',
+        validLanguageCode,
+        'Translation text cannot be empty'
+      );
     });
 
     it('throws error for whitespace-only text', () => {
-      expectTranslationToThrow(validId, validResourceId, '   ', validLanguageCode, 'Translation text cannot be empty');
+      expectTranslationToThrow(
+        validId,
+        validResourceId,
+        '   ',
+        validLanguageCode,
+        'Translation text cannot be empty'
+      );
     });
 
     it('throws error for empty language code', () => {
-      expectTranslationToThrow(validId, validResourceId, validText, '', 'Language code cannot be empty');
+      expectTranslationToThrow(
+        validId,
+        validResourceId,
+        validText,
+        '',
+        'Language code cannot be empty'
+      );
     });
 
     it('throws error for whitespace-only language code', () => {
-      expectTranslationToThrow(validId, validResourceId, validText, '   ', 'Language code cannot be empty');
+      expectTranslationToThrow(
+        validId,
+        validResourceId,
+        validText,
+        '   ',
+        'Language code cannot be empty'
+      );
     });
   });
 });

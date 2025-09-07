@@ -23,4 +23,5 @@ export const writeFile = (filePath: string, content: string, message?: string): 
 
 export const fileExists = (filePath: string): boolean => fs.existsSync(filePath);
 export const readFile = (filePath: string): string => fs.readFileSync(filePath, 'utf8');
-export const appendFile = (filePath: string, content: string): void => fs.appendFileSync(filePath, content);
+export const appendFile = (filePath: string, content: string): void =>
+  fs.appendFileSync(filePath, content);

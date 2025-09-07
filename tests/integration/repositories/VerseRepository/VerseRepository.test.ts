@@ -1,6 +1,10 @@
 import { createRepository, mockApiVerse, mockApiVerses } from './test-utils';
-import { logger, MemoryTransport, LogLevel } from '../../../../src/infrastructure/monitoring/Logger';
 import { Verse as VerseEntity } from '../../../../src/domain/entities/Verse';
+import {
+  logger,
+  MemoryTransport,
+  LogLevel,
+} from '../../../../src/infrastructure/monitoring/Logger';
 
 describe('VerseRepository', () => {
   let repository: ReturnType<typeof createRepository>;
@@ -136,9 +140,7 @@ describe('VerseRepository', () => {
       const entries = memory.getEntries();
       expect(entries).toHaveLength(1);
       expect(entries[0].level).toBe(LogLevel.WARN);
-      expect(entries[0].message).toBe(
-        'Save operation not supported by read-only API'
-      );
+      expect(entries[0].message).toBe('Save operation not supported by read-only API');
     });
   });
 });

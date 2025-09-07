@@ -9,6 +9,7 @@
  */
 
 import path from 'path';
+
 import { loadConfig, validateConfig, PlatformConfig } from './config';
 import { scaffoldProject } from './scaffold';
 

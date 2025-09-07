@@ -9,7 +9,7 @@ jest.mock('@/src/infrastructure/errors', () => ({
   ErrorHandler: { handle: jest.fn() },
 }));
 
-function Boom() {
+function Boom(): never {
   throw new Error('boom');
 }
 

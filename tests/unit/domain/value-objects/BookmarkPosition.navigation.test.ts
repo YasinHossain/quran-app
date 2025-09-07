@@ -1,8 +1,7 @@
-import { BookmarkPosition } from '../../../../src/domain/value-objects/BookmarkPosition';
 import { validTimestamp } from './BookmarkPosition/test-utils';
+import { BookmarkPosition } from '../../../../src/domain/value-objects/BookmarkPosition';
 
 describe('BookmarkPosition navigation', () => {
-
   describe('getNextVerse', () => {
     it('should return next verse in same Surah', () => {
       const position = new BookmarkPosition(1, 5, validTimestamp);

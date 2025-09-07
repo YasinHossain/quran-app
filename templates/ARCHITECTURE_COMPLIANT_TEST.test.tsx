@@ -7,8 +7,9 @@
  * Required imports for architecture-compliant testing:
  */
 
-import React from 'react';
 import { createPerformanceTestSuite } from '@/app/testUtils/performanceTestUtils';
+
+import { ExampleComponent } from '../ExampleComponent';
 import {
   setupTestEnvironment,
   resetTestEnvironment,
@@ -19,7 +20,6 @@ import {
 } from './architecture/test-utils';
 
 // Component under test
-import { ExampleComponent } from '../ExampleComponent';
 import { useExampleData } from '../hooks/useExampleData';
 
 /**

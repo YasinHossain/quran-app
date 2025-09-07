@@ -1,5 +1,4 @@
 import { screen } from '@testing-library/react';
-import React from 'react';
 
 import {
   renderResponsiveVerseActions,
@@ -103,9 +102,7 @@ describe('ResponsiveVerseActions render', () => {
     });
 
     it('should handle invalid verse key format', () => {
-      expect(() =>
-        renderResponsiveVerseActions({ verseKey: 'invalid' }),
-      ).not.toThrow();
+      expect(() => renderResponsiveVerseActions({ verseKey: 'invalid' })).not.toThrow();
     });
   });
 });

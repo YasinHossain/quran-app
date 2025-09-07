@@ -1,5 +1,5 @@
-import { BookmarkPosition } from '../../../../src/domain/value-objects/BookmarkPosition';
 import { validTimestamp } from './BookmarkPosition/test-utils';
+import { BookmarkPosition } from '../../../../src/domain/value-objects/BookmarkPosition';
 describe('BookmarkPosition comparison', () => {
   describe('compareTo', () => {
     it('should return negative when this position comes before other', () => {

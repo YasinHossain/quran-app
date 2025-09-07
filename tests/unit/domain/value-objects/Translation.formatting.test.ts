@@ -1,5 +1,5 @@
-import { Translation } from '../../../../src/domain/value-objects/Translation';
 import { validId, validResourceId, validText, testLanguageCodes } from './Translation/test-utils';
+import { Translation } from '../../../../src/domain/value-objects/Translation';
 
 describe('Translation Formatting and Comparison', () => {
   describe('getWordCount', () => {
@@ -84,13 +84,13 @@ describe('Translation Formatting and Comparison', () => {
       const translation = new Translation(validId, validResourceId, longText);
       expect(translation.isLong()).toBe(true);
     });
-    test.each([
-      [Array(50).fill('word').join(' ')],
-      ['Short text'],
-    ])('returns false for %s', (text) => {
-      const translation = new Translation(validId, validResourceId, text);
-      expect(translation.isLong()).toBe(false);
-    });
+    test.each([[Array(50).fill('word').join(' ')], ['Short text']])(
+      'returns false for %s',
+      (text) => {
+        const translation = new Translation(validId, validResourceId, text);
+        expect(translation.isLong()).toBe(false);
+      }
+    );
   });
 
   describe('equals', () => {

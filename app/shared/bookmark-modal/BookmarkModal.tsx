@@ -69,7 +69,7 @@ export const BookmarkModal = memo(function BookmarkModal({
                   className={cn(
                     'p-2 rounded-full hover:bg-interactive transition-colors',
                     touchClasses.target,
-                    touchClasses.focus,
+                    touchClasses.focus
                   )}
                   aria-label="Close"
                 >
@@ -119,4 +119,3 @@ export const BookmarkModal = memo(function BookmarkModal({
     </AnimatePresence>
   );
 });
-

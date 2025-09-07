@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, MutableRefObject } from 'react';
 
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
@@ -10,13 +10,23 @@ type Options = {
   onError?: (error: unknown) => void;
 };
 
+interface AudioPlayerReturn {
+  audioRef: MutableRefObject<HTMLAudioElement | null>;
+  isPlaying: boolean;
+  play: () => void;
+  pause: () => void;
+  seek: (sec: number) => number;
+  setVolume: (vol: number) => void;
+  setPlaybackRate: (rate: number) => void;
+}
+
 /**
  * Controls an `HTMLAudioElement` and exposes playback helpers.
  *
  * @param options optional callbacks and src.
  * @returns helpers and state for audio playback.
  */
-export function useAudioPlayer(options: Options = {}) {
+export function useAudioPlayer(options: Options = {}): AudioPlayerReturn {
   const { src, defaultDuration, onTimeUpdate, onLoadedMetadata, onError } = options;
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);

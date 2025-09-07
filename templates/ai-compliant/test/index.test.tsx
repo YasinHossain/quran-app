@@ -5,13 +5,14 @@
  */
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
 import { validateResponsiveDesign } from '@/app/testUtils/responsiveTestUtils';
 
 import { ComponentName } from '../ComponentName';
+import { TestWrapper } from '../shared/test-wrapper';
 
 import type { ComponentNameProps } from '../ComponentName';
 
-import { TestWrapper } from '../shared/test-wrapper';
 
 jest.mock('@/lib/api/client', () => ({
   fetchData: jest.fn(),

@@ -1,7 +1,7 @@
 #!/usr/bin/env ts-node
 
-import sync from './ai-development-helper/sync';
 import regen from './ai-development-helper/regen';
+import sync from './ai-development-helper/sync';
 
 async function main(): Promise<void> {
   const command = process.argv[2];

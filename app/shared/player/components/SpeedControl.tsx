@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 
-export function SpeedControl() {
+export function SpeedControl(): React.JSX.Element {
   const { playbackRate, setPlaybackRate } = useAudio();
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);

@@ -9,7 +9,12 @@ interface Props {
   setRangeWarning: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-export function RepeatPanel({ localRepeat, setLocalRepeat, rangeWarning, setRangeWarning }: Props) {
+export function RepeatPanel({
+  localRepeat,
+  setLocalRepeat,
+  rangeWarning,
+  setRangeWarning,
+}: Props): React.JSX.Element {
   return (
     <div className="md:col-span-2 grid md:grid-cols-2 gap-4">
       <div className="rounded-xl border border-border p-4">
@@ -87,7 +92,7 @@ function NumberField({
   value: number;
   onChange: (v: number) => void;
   min?: number;
-}) {
+}): React.JSX.Element {
   return (
     <label className="text-sm">
       <span className="block mb-1 text-muted">{label}</span>

@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { VerseOfDay } from '@/app/(features)/home/components/VerseOfDay';
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import { getRandomVerse } from '@/lib/api';

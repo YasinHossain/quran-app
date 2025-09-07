@@ -52,12 +52,7 @@ export const NavigationItem = memo(function NavigationItem({
       {content}
     </Link>
   ) : (
-    <button
-      key={item.id}
-      type="button"
-      onClick={handleClick}
-      className={baseClass}
-    >
+    <button key={item.id} type="button" onClick={handleClick} className={baseClass}>
       {content}
     </button>
   );

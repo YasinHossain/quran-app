@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+
 import { testResponsiveDesign } from './utils';
 
 test.describe('📱 Mobile-First Responsive Design', () => {
@@ -50,7 +51,9 @@ test.describe('📱 Mobile-First Responsive Design', () => {
       await expect(page.locator('[data-testid="mobile-menu"]')).toBeVisible();
 
       // Menu items should be touch-friendly
-      const menuItems = page.locator('[data-testid="mobile-menu"] a, [data-testid="mobile-menu"] button');
+      const menuItems = page.locator(
+        '[data-testid="mobile-menu"] a, [data-testid="mobile-menu"] button'
+      );
       const count = await menuItems.count();
 
       for (let i = 0; i < Math.min(count, 3); i++) {

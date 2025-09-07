@@ -25,7 +25,7 @@ export default function useBookmarkOperations(
   fetchMetadata: (verseId: string, chaptersList: Chapter[]) => void
 ): BookmarkOperations {
   return useMemo(() => {
-    function addBookmark(verseId: string, folderId?: string) {
+    function addBookmark(verseId: string, folderId?: string): void {
       if (folderId === 'pinned') {
         setPinned((p) =>
           p.some((b) => b.verseId === verseId) ? p : [...p, { verseId, createdAt: Date.now() }]
@@ -36,14 +36,14 @@ export default function useBookmarkOperations(
       setFolders((p) => addBookmarkToFolder(p, verseId, folderId));
       void fetchMetadata(verseId, chapters);
     }
-    function removeBookmark(verseId: string, folderId: string) {
+    function removeBookmark(verseId: string, folderId: string): void {
       if (folderId === 'pinned') {
         setPinned((p) => p.filter((b) => b.verseId !== verseId));
         return;
       }
       setFolders((p) => removeBookmarkFromFolder(p, verseId, folderId));
     }
-    function toggleBookmark(verseId: string, folderId?: string) {
+    function toggleBookmark(verseId: string, folderId?: string): void {
       if (isVerseBookmarked(folders, verseId)) {
         const f = findBookmarkInFolders(folders, verseId);
         if (f) removeBookmark(verseId, f.folder.id);
@@ -51,7 +51,7 @@ export default function useBookmarkOperations(
         addBookmark(verseId, folderId);
       }
     }
-    function updateBookmark(verseId: string, data: Partial<Bookmark>) {
+    function updateBookmark(verseId: string, data: Partial<Bookmark>): void {
       setFolders((p) => updateBookmarkInFolders(p, verseId, data));
       setPinned((p) => p.map((b) => (b.verseId === verseId ? { ...b, ...data } : b)));
     }

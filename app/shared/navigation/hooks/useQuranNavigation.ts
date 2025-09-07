@@ -1,5 +1,5 @@
 import { IconBook, IconHash, IconFileText } from '@tabler/icons-react';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, Dispatch, SetStateAction } from 'react';
 
 import juzData from '@/data/juz.json';
 import { getSurahList } from '@/lib/api';
@@ -13,7 +13,18 @@ export interface JuzSummary {
   surahRange: string;
 }
 
-export function useQuranNavigation() {
+interface QuranNavigationReturn {
+  searchTerm: string;
+  setSearchTerm: Dispatch<SetStateAction<string>>;
+  activeTab: 'surah' | 'juz' | 'page';
+  setActiveTab: Dispatch<SetStateAction<'surah' | 'juz' | 'page'>>;
+  tabs: { id: 'surah' | 'juz' | 'page'; label: string; icon: typeof IconBook }[];
+  filteredSurahs: Surah[];
+  filteredJuzs: JuzSummary[];
+  filteredPages: number[];
+}
+
+export function useQuranNavigation(): QuranNavigationReturn {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState<'surah' | 'juz' | 'page'>('surah');
   const [surahs, setSurahs] = useState<Surah[]>([]);

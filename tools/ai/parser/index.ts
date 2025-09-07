@@ -1,9 +1,8 @@
 import fs from 'fs';
 import path from 'path';
+
 import {
-  updateDocContent,
   parseComponent,
-  generateComponentEntry,
   extractMethods,
   generateServicesSection,
   generateEntitiesSection,
@@ -106,13 +105,16 @@ export async function scanEntities(): Promise<Entity[]> {
 export function updateArchitectureMapContent(
   currentMap: string,
   services: Service[],
-  entities: Entity[],
+  entities: Entity[]
 ): string {
   const servicesSection = generateServicesSection(services);
   const servicesPattern = /(### Available Services[\s\S]*?)(\n###|\n##|$)/;
 
   if (servicesPattern.test(currentMap)) {
-    currentMap = currentMap.replace(servicesPattern, `### Available Services\n${servicesSection}$2`);
+    currentMap = currentMap.replace(
+      servicesPattern,
+      `### Available Services\n${servicesSection}$2`
+    );
   }
 
   const entitiesSection = generateEntitiesSection(entities);

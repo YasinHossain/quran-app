@@ -1,5 +1,5 @@
-import type React from 'react';
 import { mockViewport, BREAKPOINTS } from '@/app/testUtils/responsiveTestUtils';
+
 import {
   architectureComplianceSection,
   responsiveDesignSection,
@@ -15,6 +15,8 @@ import {
   hookDataFetchingSection,
   integrationTestSection,
 } from './test-sections';
+
+import type React from 'react';
 
 interface ComponentTestConfig {
   Component: React.ComponentType<any>;

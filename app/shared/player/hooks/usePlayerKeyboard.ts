@@ -13,7 +13,7 @@ interface Options {
  *
  * @param options current playback data and control handlers.
  */
-export function usePlayerKeyboard({ current, duration, setSeek, togglePlay, setVolume }: Options) {
+export function usePlayerKeyboard({ current, duration, setSeek, togglePlay, setVolume }: Options): void {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.target as HTMLElement)?.closest('input, textarea, [role=slider]')) return;
@@ -31,6 +31,6 @@ export function usePlayerKeyboard({ current, duration, setSeek, togglePlay, setV
   }, [current, duration, setSeek, togglePlay, setVolume]);
 }
 
-function round(n: number) {
+function round(n: number): number {
   return Math.round(n * 100) / 100;
 }

@@ -33,7 +33,7 @@ class ErrorBoundaryClass extends React.Component<ErrorBoundaryProps, ErrorBounda
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
     this.setState({ hasError: true, error, errorInfo });
     this.props.onError?.(error, errorInfo);
 
@@ -57,7 +57,7 @@ class ErrorBoundaryClass extends React.Component<ErrorBoundaryProps, ErrorBounda
   }
 }
 
-export function ErrorBoundary(props: ErrorBoundaryProps) {
+export function ErrorBoundary(props: ErrorBoundaryProps): React.JSX.Element {
   return <ErrorBoundaryClass {...props} />;
 }
 export { DefaultErrorFallback } from './DefaultErrorFallback';

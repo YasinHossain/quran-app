@@ -1,12 +1,3 @@
-import { Bookmark, Verse } from '../../../../../src/domain/entities';
-import {
-  BookmarkAlreadyExistsError,
-  VerseNotFoundError,
-  BookmarkNotFoundError,
-  UnauthorizedBookmarkError,
-} from '../../../../../src/domain/errors/DomainErrors';
-import { BookmarkService } from '../../../../../src/domain/services/BookmarkService';
-import { BookmarkPosition } from '../../../../../src/domain/value-objects/BookmarkPosition';
 import {
   createMockBookmarkRepository,
   createMockVerseRepository,
@@ -16,6 +7,15 @@ import {
   verseId,
   bookmarkId,
 } from './test-utils';
+import { Bookmark, Verse } from '../../../../../src/domain/entities';
+import {
+  BookmarkAlreadyExistsError,
+  VerseNotFoundError,
+  BookmarkNotFoundError,
+  UnauthorizedBookmarkError,
+} from '../../../../../src/domain/errors/DomainErrors';
+import { BookmarkService } from '../../../../../src/domain/services/BookmarkService';
+import { BookmarkPosition } from '../../../../../src/domain/value-objects/BookmarkPosition';
 
 describe('BookmarkService creation', () => {
   let service: BookmarkService;
@@ -144,4 +144,3 @@ describe('BookmarkService creation', () => {
     });
   });
 });
-

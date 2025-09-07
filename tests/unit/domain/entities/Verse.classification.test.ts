@@ -1,3 +1,4 @@
+import { validArabicText } from './Verse/test-utils';
 import {
   isSajdahVerse,
   getMemorizationSegments,
@@ -5,9 +6,6 @@ import {
   containsBismillah,
   getWordCount,
 } from '../../../../src/domain/entities';
-import {
-  validArabicText,
-} from './Verse/test-utils';
 
 describe('Verse classification utilities', () => {
   describe('isSajdahVerse', () => {

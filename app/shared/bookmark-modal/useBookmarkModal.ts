@@ -30,4 +30,3 @@ export function useBookmarkModal(isOpen: boolean, onClose: () => void) {
     setNewFolderName,
   } as const;
 }
-

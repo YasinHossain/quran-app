@@ -8,7 +8,7 @@ import { PlaybackOptionsModal } from './PlaybackOptionsModal';
 import { SpeedControl } from './SpeedControl';
 import { VolumeControl } from './VolumeControl';
 
-export function PlayerOptions() {
+export function PlayerOptions(): React.JSX.Element {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'reciter' | 'repeat'>('reciter');
   return (
