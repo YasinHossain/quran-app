@@ -68,24 +68,29 @@ export const FolderContextMenu = ({
     };
   }, [isOpen, handleClickOutside]);
 
-  const handleToggleMenu = useCallback((e: React.MouseEvent<HTMLButtonElement>): void => {
-    e.stopPropagation();
-    setIsOpen((prev) => !prev);
-  }, []);
+  const handleToggleMenu = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>): void => {
+      e.stopPropagation();
+      setIsOpen((prev) => !prev);
+    },
+    []
+  );
 
-  const handleEdit = useCallback((): void => {
-    onEdit();
-    handleCloseMenu();
-  }, [onEdit, handleCloseMenu]);
-
-  const handleDelete = useCallback((): void => {
-    onDelete();
-    handleCloseMenu();
-  }, [onDelete, handleCloseMenu]);
+  const handleAction = useCallback(
+    (action: 'edit' | 'delete'): void => {
+      if (action === 'edit') {
+        onEdit();
+      } else {
+        onDelete();
+      }
+      handleCloseMenu();
+    },
+    [onEdit, onDelete, handleCloseMenu]
+  );
 
   const menuItems = [
-    { label: 'Edit', onClick: handleEdit },
-    { label: 'Delete', onClick: handleDelete, destructive: true },
+    { label: 'Edit', onClick: () => handleAction('edit') },
+    { label: 'Delete', onClick: () => handleAction('delete'), destructive: true },
   ];
 
   return (

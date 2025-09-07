@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { DeleteFolderModal } from './DeleteFolderModal';
 import { EmptyBookmarks, EmptySearch } from './EmptyStates';
@@ -81,15 +81,18 @@ const useFolderModals = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'edit' | 'rename' | 'customize'>('edit');
 
-  const handleAction = (folder: Folder, action: FolderAction): void => {
-    setSelectedFolder(folder);
-    if (action === 'delete') {
-      setDeleteModalOpen(true);
-      return;
-    }
-    setModalMode(action);
-    setSettingsModalOpen(true);
-  };
+  const handleFolderAction = useCallback(
+    (folder: Folder, action: FolderAction): void => {
+      setSelectedFolder(folder);
+      if (action === 'delete') {
+        setDeleteModalOpen(true);
+        return;
+      }
+      setModalMode(action);
+      setSettingsModalOpen(true);
+    },
+    []
+  );
 
   const closeModals = (): void => {
     setSettingsModalOpen(false);
@@ -113,7 +116,7 @@ const useFolderModals = () => {
     </>
   );
 
-  return { handleAction, modals };
+  return { handleFolderAction, modals };
 };
 
 export const FolderGrid = ({
@@ -124,7 +127,7 @@ export const FolderGrid = ({
   searchTerm,
   onClearSearch,
 }: FolderGridProps): React.JSX.Element => {
-  const { handleAction, modals } = useFolderModals();
+  const { handleFolderAction, modals } = useFolderModals();
 
   if (folders.length === 0) {
     if (allFolders.length === 0) {
@@ -145,7 +148,7 @@ export const FolderGrid = ({
       <FolderCards
         folders={folders}
         onFolderSelect={onFolderSelect}
-        onAction={handleAction}
+        onAction={handleFolderAction}
       />
       {modals}
     </>

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Folder } from '@/types';
 
 import { BACKDROP_VARIANTS, ModalBody, useDeleteFolder } from './delete-folder-modal';
@@ -17,7 +17,10 @@ export const DeleteFolderModal = ({
   onClose,
   folder,
 }: DeleteFolderModalProps): React.JSX.Element => {
-  const { handleDelete, isDeleting } = useDeleteFolder(folder, onClose);
+  const { handleDelete: deleteFolder, isDeleting } = useDeleteFolder(folder, onClose);
+  const handleDelete = useCallback(() => {
+    deleteFolder();
+  }, [deleteFolder]);
 
   return (
     <AnimatePresence>
