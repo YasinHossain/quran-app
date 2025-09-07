@@ -14,6 +14,7 @@ interface ModalBodyProps {
   onClose: () => void;
   onDelete: () => void;
   isDeleting: boolean;
+  error?: string | null;
 }
 
 export const ModalBody = ({
@@ -21,6 +22,7 @@ export const ModalBody = ({
   onClose,
   onDelete,
   isDeleting,
+  error,
 }: ModalBodyProps): React.JSX.Element => (
   <motion.div
     variants={MODAL_VARIANTS}
@@ -38,6 +40,11 @@ export const ModalBody = ({
       <div className="space-y-4">
         <p className="text-foreground">Are you sure you want to permanently delete this folder?</p>
         <WarningMessage folder={folder} />
+        {error && (
+          <p role="alert" className="text-error text-sm">
+            {error}
+          </p>
+        )}
       </div>
 
       <ModalActions onClose={onClose} onDelete={onDelete} isDeleting={isDeleting} />
