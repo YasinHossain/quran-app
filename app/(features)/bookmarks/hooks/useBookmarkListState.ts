@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import type { Bookmark, Folder } from '@/types';
 
@@ -15,14 +15,15 @@ export const useBookmarkListState = (
   const [bookmarks, setBookmarks] = useState<Bookmark[]>(externalBookmarks || folder.bookmarks);
   const [listHeight, setListHeight] = useState(0);
 
+  const updateHeight = useCallback((): void => {
+    setListHeight(window.innerHeight - 200);
+  }, []);
+
   useEffect(() => {
-    const updateHeight = (): void => {
-      setListHeight(window.innerHeight - 200);
-    };
     updateHeight();
     window.addEventListener('resize', updateHeight);
     return () => window.removeEventListener('resize', updateHeight);
-  }, []);
+  }, [updateHeight]);
 
   useEffect(() => {
     if (externalBookmarks) {
@@ -32,9 +33,9 @@ export const useBookmarkListState = (
     }
   }, [externalBookmarks, folder.bookmarks]);
 
-  const handleRemoveBookmark = (verseId: string): void => {
+  const handleRemoveBookmark = useCallback((verseId: string): void => {
     setBookmarks((prev) => prev.filter((bookmark) => bookmark.verseId !== verseId));
-  };
+  }, []);
 
   return { bookmarks, listHeight, handleRemoveBookmark };
 };
