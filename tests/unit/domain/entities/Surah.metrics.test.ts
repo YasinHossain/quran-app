@@ -1,25 +1,18 @@
 import {
   Surah,
   RevelationType,
-  getEstimatedReadingTime,
   getJuzNumbers,
-  getMemorizationDifficulty,
-  isLongSurah,
-  isMediumSurah,
   isMufassalSurah,
   isSevenLongSurah,
   isShortSurah,
+  isMediumSurah,
+  isLongSurah,
+  getMemorizationDifficulty,
+  getEstimatedReadingTime,
 } from '../../../../src/domain/entities';
+import { validId, validName, validArabicName, validEnglishName, validEnglishTranslation, validNumberOfAyahs, validRevelationType } from './Surah/test-utils';
 
 describe('Surah Entity - Metrics', () => {
-  const validId = 1;
-  const validName = 'الفاتحة';
-  const validArabicName = 'الفاتحة';
-  const validEnglishName = 'Al-Fatiha';
-  const validEnglishTranslation = 'The Opening';
-  const validNumberOfAyahs = 7;
-  const validRevelationType = RevelationType.MAKKI;
-
 
   describe('length classification', () => {
     it('should classify short Surah correctly (less than 20 verses)', () => {
@@ -150,7 +143,6 @@ describe('Surah Entity - Metrics', () => {
       expect(readingTime).toBe(29);
     });
   });
-
   describe('special Surah classifications', () => {
     it('should correctly identify Seven Long Surahs', () => {
       const sevenLongSurahs = [2, 3, 4, 5, 6, 7, 9];

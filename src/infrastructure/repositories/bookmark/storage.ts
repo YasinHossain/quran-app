@@ -1,8 +1,8 @@
+import { isStoredBookmarkArray } from './bookmarkValidation';
 import { Bookmark } from '../../../domain/entities';
 import { BookmarkPosition } from '../../../domain/value-objects/BookmarkPosition';
 import { StoredBookmark } from '../../../domain/value-objects/StoredBookmark';
 import { logger } from '../../monitoring/Logger';
-import { isStoredBookmarkArray } from './bookmarkValidation';
 
 const STORAGE_KEY = 'quran_bookmarks';
 

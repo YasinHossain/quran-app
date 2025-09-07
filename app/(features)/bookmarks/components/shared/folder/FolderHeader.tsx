@@ -88,4 +88,3 @@ const MoreIcon = (): React.JSX.Element => (
     />
   </svg>
 );
-

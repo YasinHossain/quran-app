@@ -48,11 +48,6 @@ export const MobileBottomSheet = memo(function MobileBottomSheet({
   onNavigateToVerse,
   showRemove = false,
 }: MobileBottomSheetProps): React.JSX.Element {
-  const handleAction = (action: () => void): void => {
-    action();
-    onClose();
-  };
-
   const actions = useVerseActions({
     isPlaying,
     isLoadingAudio,
@@ -63,7 +58,7 @@ export const MobileBottomSheet = memo(function MobileBottomSheet({
     onBookmark,
     onShare,
     onNavigateToVerse,
-    handleAction,
+    onClose,
   });
 
   return (

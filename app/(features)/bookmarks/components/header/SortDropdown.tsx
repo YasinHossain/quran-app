@@ -21,4 +21,3 @@ export const SortDropdown = ({ sortBy, onSortChange }: SortDropdownProps): React
     </select>
   </div>
 );
-

@@ -1,8 +1,8 @@
 import { BookmarkPosition } from '../../../../domain/value-objects/BookmarkPosition';
-import { findByUser, findRecent } from '../userQueries';
 import { findByTags, existsAtPosition } from '../advancedUserQueries';
 import { findFolders, findFolderWithBookmarks } from '../folderQueries';
 import { getStoredBookmarks } from '../storage';
+import { findByUser, findRecent } from '../userQueries';
 
 jest.mock('../storage', () => {
   const actual = jest.requireActual('../storage');

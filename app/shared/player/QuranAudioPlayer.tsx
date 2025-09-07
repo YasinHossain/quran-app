@@ -1,10 +1,10 @@
 'use client';
 import React from 'react';
 
+import { PlaybackOptionsModal } from './components/PlaybackOptionsModal';
 import { useQuranAudioController } from './hooks/useQuranAudioController';
 import { DesktopPlayerLayout } from './layouts/DesktopPlayerLayout';
 import { MobilePlayerLayout } from './layouts/MobilePlayerLayout';
-import { PlaybackOptionsModal } from './components/PlaybackOptionsModal';
 
 import type { Track } from './types';
 
@@ -19,15 +19,15 @@ export function QuranAudioPlayer({
   onPrev,
   onNext,
 }: QuranAudioPlayerProps): React.JSX.Element | null {
-  const { 
-    isPlayerVisible, 
-    audioRef, 
-    handleEnded, 
-    playerLayoutProps, 
-    mobileOptionsOpen, 
+  const {
+    isPlayerVisible,
+    audioRef,
+    handleEnded,
+    playerLayoutProps,
+    mobileOptionsOpen,
     setMobileOptionsOpen,
     activeTab,
-    setActiveTab
+    setActiveTab,
   } = useQuranAudioController({
     track,
     onPrev,

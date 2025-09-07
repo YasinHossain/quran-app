@@ -15,9 +15,7 @@ export const useWordTranslationSearch = (languages: LanguageOption[]) => {
 
   const filtered = useMemo(
     () =>
-      sortedLanguages.filter((lang) =>
-        lang.name.toLowerCase().includes(searchTerm.toLowerCase())
-      ),
+      sortedLanguages.filter((lang) => lang.name.toLowerCase().includes(searchTerm.toLowerCase())),
     [sortedLanguages, searchTerm]
   );
 

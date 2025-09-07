@@ -29,4 +29,3 @@ export const ExpandedContent = ({
     </div>
   );
 };
-

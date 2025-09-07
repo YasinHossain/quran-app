@@ -5,8 +5,9 @@ import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisib
 import { SearchInput } from '@/app/shared/components/SearchInput';
 import { ArrowLeftIcon } from '@/app/shared/icons';
 import { Button } from '@/app/shared/ui/Button';
-import { WordTranslationList } from './WordTranslationList';
+
 import { useWordTranslationSearch, type LanguageOption } from './useWordTranslationSearch';
+import { WordTranslationList } from './WordTranslationList';
 
 interface WordTranslationPanelProps {
   isOpen: boolean;
@@ -23,8 +24,7 @@ export const WordTranslationPanel = ({
 }: WordTranslationPanelProps) => {
   const { t } = useTranslation();
   const { isHidden } = useHeaderVisibility();
-  const { searchTerm, setSearchTerm, filteredLanguages } =
-    useWordTranslationSearch(languages);
+  const { searchTerm, setSearchTerm, filteredLanguages } = useWordTranslationSearch(languages);
 
   return (
     <div

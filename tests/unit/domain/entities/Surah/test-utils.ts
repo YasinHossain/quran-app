@@ -7,6 +7,7 @@ export const validEnglishName = 'Al-Fatiha';
 export const validEnglishTranslation = 'The Opening';
 export const validNumberOfAyahs = 7;
 export const validRevelationType = RevelationType.MAKKI;
+export const validRevelationOrder = 5;
 
 export const createSurah = (
   id = validId,

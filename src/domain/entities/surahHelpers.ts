@@ -14,9 +14,7 @@ export function isLongSurah(numberOfAyahs: number): boolean {
   return numberOfAyahs > 100;
 }
 
-export function getMemorizationDifficulty(
-  numberOfAyahs: number
-): 'easy' | 'medium' | 'hard' {
+export function getMemorizationDifficulty(numberOfAyahs: number): 'easy' | 'medium' | 'hard' {
   if (numberOfAyahs <= 10) return 'easy';
   if (numberOfAyahs <= 50) return 'medium';
   return 'hard';

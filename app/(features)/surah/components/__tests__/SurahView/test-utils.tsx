@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
+
 import { SurahView } from '../../SurahView.client';
 
 // Mock i18n to return keys directly

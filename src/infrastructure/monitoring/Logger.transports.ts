@@ -1,9 +1,6 @@
 import type { ILoggerTransport } from './types';
 
-export const addTransport = (
-  transports: ILoggerTransport[],
-  transport: ILoggerTransport
-): void => {
+export const addTransport = (transports: ILoggerTransport[], transport: ILoggerTransport): void => {
   transports.push(transport);
 };
 
