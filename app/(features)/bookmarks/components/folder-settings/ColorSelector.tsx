@@ -24,20 +24,34 @@ export const ColorSelector = ({
     <div className="block text-sm font-medium text-foreground mb-3">Color</div>
     <div className="grid grid-cols-4 gap-3">
       {FOLDER_COLORS.map((color) => (
-        <button
+        <ColorOption
           key={color.value}
-          type="button"
-          onClick={() => setSelectedColor(color.value)}
-          className={`p-3 rounded-lg border transition-all ${
-            selectedColor === color.value
-              ? 'border-accent bg-accent/10 ring-2 ring-accent/20'
-              : 'border-border hover:border-accent/50 hover:bg-surface-hover'
-          }`}
-        >
-          <div className={`w-4 h-4 rounded-full bg-current ${color.value} mx-auto`} />
-          <span className="text-xs text-muted mt-1 block">{color.name}</span>
-        </button>
+          color={color}
+          selectedColor={selectedColor}
+          setSelectedColor={setSelectedColor}
+        />
       ))}
     </div>
   </div>
+);
+
+interface ColorOptionProps {
+  color: { name: string; value: string };
+  selectedColor: string;
+  setSelectedColor: (color: string) => void;
+}
+
+const ColorOption = ({ color, selectedColor, setSelectedColor }: ColorOptionProps): React.JSX.Element => (
+  <button
+    type="button"
+    onClick={() => setSelectedColor(color.value)}
+    className={`p-3 rounded-lg border transition-all ${
+      selectedColor === color.value
+        ? 'border-accent bg-accent/10 ring-2 ring-accent/20'
+        : 'border-border hover:border-accent/50 hover:bg-surface-hover'
+    }`}
+  >
+    <div className={`w-4 h-4 rounded-full bg-current ${color.value} mx-auto`} />
+    <span className="text-xs text-muted mt-1 block">{color.name}</span>
+  </button>
 );

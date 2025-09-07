@@ -34,14 +34,7 @@ export const BookmarkVerseList = ({
       ) : verses.length > 0 ? (
         <div className="space-y-0">
           {verses.map((verse) => (
-            <motion.div
-              key={verse.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <VerseComponent verse={verse} />
-            </motion.div>
+            <VerseItem key={verse.id} verse={verse} />
           ))}
         </div>
       ) : searchTerm ? (
@@ -54,3 +47,9 @@ export const BookmarkVerseList = ({
     </div>
   );
 };
+
+const VerseItem = ({ verse }: { verse: VerseType }): React.JSX.Element => (
+  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+    <VerseComponent verse={verse} />
+  </motion.div>
+);

@@ -30,6 +30,15 @@ export const SurahDropdown = ({
       c.name_arabic.includes(searchTerm) ||
       c.id.toString().includes(searchTerm)
   );
+  const renderSurahOption = (chapter: Chapter): React.JSX.Element => (
+    <SurahOption
+      key={chapter.id}
+      chapter={chapter}
+      selected={value === chapter.id}
+      onSelect={onSelect}
+    />
+  );
+
   return (
     <div className="absolute z-50 w-full mt-2 bg-surface border border-border rounded-xl shadow-xl max-h-80 overflow-hidden">
       <SurahSearchInput
@@ -40,14 +49,7 @@ export const SurahDropdown = ({
       />
       <div className="overflow-y-auto max-h-64">
         {filtered.length > 0 ? (
-          filtered.map((chapter) => (
-            <SurahOption
-              key={chapter.id}
-              chapter={chapter}
-              selected={value === chapter.id}
-              onSelect={onSelect}
-            />
-          ))
+          filtered.map(renderSurahOption)
         ) : (
           <div className="p-4 text-center text-muted text-sm">
             No surahs found matching &quot;{searchTerm}&quot;
