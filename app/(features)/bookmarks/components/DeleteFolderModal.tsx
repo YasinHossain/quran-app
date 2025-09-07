@@ -17,7 +17,7 @@ export const DeleteFolderModal = ({
   onClose,
   folder,
 }: DeleteFolderModalProps): React.JSX.Element => {
-  const { handleDelete, isDeleting } = useDeleteFolder(folder, onClose);
+  const { handleDelete, isDeleting, error } = useDeleteFolder(folder, onClose);
 
   return (
     <AnimatePresence>
@@ -38,6 +38,7 @@ export const DeleteFolderModal = ({
             onClose={onClose}
             onDelete={handleDelete}
             isDeleting={isDeleting}
+            error={error}
           />
         </>
       )}
