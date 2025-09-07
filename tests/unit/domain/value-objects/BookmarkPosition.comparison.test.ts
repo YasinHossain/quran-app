@@ -1,27 +1,21 @@
 import { BookmarkPosition } from '../../../../src/domain/value-objects/BookmarkPosition';
-
+import { validTimestamp } from './BookmarkPosition/test-utils';
 describe('BookmarkPosition comparison', () => {
-  const validTimestamp = new Date('2024-01-01T10:00:00Z');
-
   describe('compareTo', () => {
     it('should return negative when this position comes before other', () => {
       const position1 = new BookmarkPosition(1, 5, validTimestamp);
       const position2 = new BookmarkPosition(1, 6, validTimestamp);
-
       expect(position1.compareTo(position2)).toBeLessThan(0);
     });
-
     it('should return positive when this position comes after other', () => {
       const position1 = new BookmarkPosition(1, 6, validTimestamp);
       const position2 = new BookmarkPosition(1, 5, validTimestamp);
-
       expect(position1.compareTo(position2)).toBeGreaterThan(0);
     });
 
     it('should return zero when positions are equal', () => {
       const position1 = new BookmarkPosition(1, 5, validTimestamp);
       const position2 = new BookmarkPosition(1, 5, new Date());
-
       expect(position1.compareTo(position2)).toBe(0);
     });
 
