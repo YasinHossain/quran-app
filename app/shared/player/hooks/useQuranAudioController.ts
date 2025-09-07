@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { useTrackTiming } from './useTrackTiming';
 import { usePlayerControls } from './usePlayerControls';
@@ -11,6 +12,9 @@ interface Props {
 }
 
 export function useQuranAudioController({ track, onPrev, onNext }: Props) {
+  const [mobileOptionsOpen, setMobileOptionsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<'reciter' | 'repeat'>('reciter');
+
   const {
     isPlayerVisible,
     closePlayer,
@@ -64,14 +68,12 @@ export function useQuranAudioController({ track, onPrev, onNext }: Props) {
     total: timing.total,
     interactable: timing.interactable,
     isPlaying,
-    volume,
     togglePlay: controls.togglePlay,
     setSeek: controls.setSeek,
     onNext,
     onPrev,
-    setVolume,
-    playbackRate,
     closePlayer,
+    setMobileOptionsOpen: () => setMobileOptionsOpen(true),
   } as const;
 
   return {
@@ -79,5 +81,9 @@ export function useQuranAudioController({ track, onPrev, onNext }: Props) {
     audioRef: timing.audioRef,
     handleEnded,
     playerLayoutProps,
+    mobileOptionsOpen,
+    setMobileOptionsOpen,
+    activeTab,
+    setActiveTab,
   } as const;
 }

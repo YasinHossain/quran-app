@@ -1,3 +1,5 @@
+import { Bookmark } from '../../../domain/entities';
+import { BookmarkPosition } from '../../../domain/value-objects/BookmarkPosition';
 import { StoredBookmark } from '../../../domain/value-objects/StoredBookmark';
 import { logger } from '../../monitoring/Logger';
 import { isStoredBookmarkArray } from './bookmarkValidation';
@@ -21,4 +23,22 @@ export function saveStoredBookmarks(bookmarks: StoredBookmark[]): void {
   } catch (error) {
     logger.error('Failed to save bookmarks:', undefined, error as Error);
   }
+}
+
+export function mapStoredToBookmark(stored: StoredBookmark): Bookmark {
+  const position = new BookmarkPosition(
+    stored.position.surahId,
+    stored.position.ayahNumber,
+    new Date(stored.position.timestamp)
+  );
+
+  return new Bookmark(
+    stored.id,
+    stored.userId,
+    stored.verseId,
+    position,
+    new Date(stored.createdAt),
+    stored.notes,
+    stored.tags
+  );
 }

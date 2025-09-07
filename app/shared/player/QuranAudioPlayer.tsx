@@ -1,10 +1,10 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 
-import { PlaybackOptionsModal } from './components/PlaybackOptionsModal';
 import { useQuranAudioController } from './hooks/useQuranAudioController';
 import { DesktopPlayerLayout } from './layouts/DesktopPlayerLayout';
 import { MobilePlayerLayout } from './layouts/MobilePlayerLayout';
+import { PlaybackOptionsModal } from './components/PlaybackOptionsModal';
 
 import type { Track } from './types';
 
@@ -19,10 +19,16 @@ export function QuranAudioPlayer({
   onPrev,
   onNext,
 }: QuranAudioPlayerProps): React.JSX.Element | null {
-  const [mobileOptionsOpen, setMobileOptionsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'reciter' | 'repeat'>('reciter');
-
-  const { isPlayerVisible, audioRef, handleEnded, playerLayoutProps } = useQuranAudioController({
+  const { 
+    isPlayerVisible, 
+    audioRef, 
+    handleEnded, 
+    playerLayoutProps, 
+    mobileOptionsOpen, 
+    setMobileOptionsOpen,
+    activeTab,
+    setActiveTab
+  } = useQuranAudioController({
     track,
     onPrev,
     onNext,
@@ -37,8 +43,15 @@ export function QuranAudioPlayer({
         role="region"
         aria-label="Player"
       >
-        <MobilePlayerLayout {...playerLayoutProps} setMobileOptionsOpen={setMobileOptionsOpen} />
-        <DesktopPlayerLayout {...playerLayoutProps} setDesktopOptionsOpen={setMobileOptionsOpen} />
+        {/* Mobile Layout */}
+        <div className="flex flex-col gap-3 sm:hidden">
+          <MobilePlayerLayout {...playerLayoutProps} />
+        </div>
+
+        {/* Desktop Layout */}
+        <div className="hidden sm:flex items-center gap-4">
+          <DesktopPlayerLayout {...playerLayoutProps} />
+        </div>
       </div>
       <audio ref={audioRef} src={track?.src || ''} preload="metadata" onEnded={handleEnded}>
         <track kind="captions" />

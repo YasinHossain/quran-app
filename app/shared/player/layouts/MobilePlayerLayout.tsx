@@ -19,14 +19,11 @@ interface MobilePlayerLayoutProps {
   total: string;
   interactable: boolean;
   isPlaying: boolean;
-  volume: number;
   togglePlay: () => void;
   setSeek: (sec: number) => void;
   onNext?: () => boolean;
   onPrev?: () => boolean;
-  setVolume: (volume: number) => void;
-  playbackRate: number;
-  setMobileOptionsOpen: (open: boolean) => void;
+  setMobileOptionsOpen: () => void;
   closePlayer: () => void;
 }
 
@@ -40,20 +37,18 @@ export const MobilePlayerLayout = React.memo(function MobilePlayerLayout({
   total,
   interactable,
   isPlaying,
-  volume,
   togglePlay,
   setSeek,
   onNext,
   onPrev,
-  setVolume,
-  playbackRate,
   setMobileOptionsOpen,
   closePlayer,
 }: MobilePlayerLayoutProps): React.JSX.Element {
   return (
-    <div className="flex flex-col gap-3 sm:hidden">
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2 flex-1 min-w-0">
+    <>
+      {/* Top row uses 3-column grid to keep transport perfectly centered */}
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           <div className="hidden min-[400px]:block flex-shrink-0">
             <Image
               src={cover}
@@ -75,38 +70,48 @@ export const MobilePlayerLayout = React.memo(function MobilePlayerLayout({
           </div>
         </div>
         <TransportControls
+          /* keep controls visually centered */
+          
+          
           isPlaying={isPlaying}
-          disabled={!interactable}
-          onPlayPause={togglePlay}
-          onNext={onNext}
+          interactable={interactable}
           onPrev={onPrev}
+          onNext={onNext}
+          togglePlay={togglePlay}
+          
+          
+          
         />
-        <SpeedControl playbackRate={playbackRate} />
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setMobileOptionsOpen(true)}
-          disabled={!interactable}
-          className="p-1.5"
-        >
-          <SlidersIcon className={iconClasses.sm} />
-        </Button>
-        <Button variant="ghost" size="sm" onClick={closePlayer} className="p-1.5">
-          <CloseIcon className={iconClasses.sm} />
-        </Button>
+        <div className="flex items-center gap-1 justify-self-end">
+          <SpeedControl />
+          <Button
+            variant="icon-round"
+            size="icon-round"
+            className="shrink-0"
+            aria-label="Options"
+            onClick={setMobileOptionsOpen}
+          >
+            <SlidersIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
+          </Button>
+          <Button
+            variant="icon-round"
+            size="icon-round"
+            aria-label="Close player"
+            onClick={closePlayer}
+          >
+            <CloseIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
+          </Button>
+        </div>
       </div>
       <Timeline
         current={current}
-        total={duration}
-        elapsed={elapsed}
-        totalFormatted={total}
+        duration={duration}
         setSeek={setSeek}
-        disabled={!interactable}
-        showVolumeControl={true}
-        volume={volume}
-        setVolume={setVolume}
+        interactable={interactable}
+        elapsed={elapsed}
+        total={total}
       />
-    </div>
+    </>
   );
 });
 
