@@ -1,62 +1,35 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
-export const usePanelState = () => {
-  const [openPanels, setOpenPanels] = useState<Set<string>>(new Set());
+import { createPanelController } from './panelController';
+import { useOpenPanels } from './useOpenPanels';
 
-  const openPanel = useCallback((panelId: string) => {
-    setOpenPanels((prev) => new Set([...prev, panelId]));
-  }, []);
+export interface PanelState {
+  openPanels: Set<string>;
+  openPanel: (panelId: string) => void;
+  closePanel: (panelId: string) => void;
+  togglePanel: (panelId: string) => void;
+  isPanelOpen: (panelId: string) => boolean;
+  closeAllPanels: () => void;
+  isSurahListOpen: boolean;
+  setSurahListOpen: (open: boolean) => void;
+  isSettingsOpen: boolean;
+  setSettingsOpen: (open: boolean) => void;
+}
 
-  const closePanel = useCallback((panelId: string) => {
-    setOpenPanels((prev) => {
-      const next = new Set(prev);
-      next.delete(panelId);
-      return next;
-    });
-  }, []);
+export const usePanelState = (): PanelState => {
+  const { openPanels, openPanel, closePanel, togglePanel, closeAllPanels, isPanelOpen } =
+    useOpenPanels();
 
-  const togglePanel = useCallback((panelId: string) => {
-    setOpenPanels((prev) => {
-      const next = new Set(prev);
-      if (next.has(panelId)) {
-        next.delete(panelId);
-      } else {
-        next.add(panelId);
-      }
-      return next;
-    });
-  }, []);
-
-  const isPanelOpen = useCallback((panelId: string) => openPanels.has(panelId), [openPanels]);
-
-  const closeAllPanels = useCallback(() => {
-    setOpenPanels(new Set());
-  }, []);
-
-  const isSurahListOpen = openPanels.has('surah-list');
-  const setSurahListOpen = useCallback(
-    (open: boolean) => {
-      if (open) {
-        openPanel('surah-list');
-      } else {
-        closePanel('surah-list');
-      }
-    },
-    [openPanel, closePanel]
+  const { isOpen: isSurahListOpen, setOpen: setSurahListOpen } = useMemo(
+    () => createPanelController('surah-list', openPanels, openPanel, closePanel),
+    [openPanels, openPanel, closePanel]
   );
 
-  const isSettingsOpen = openPanels.has('settings');
-  const setSettingsOpen = useCallback(
-    (open: boolean) => {
-      if (open) {
-        openPanel('settings');
-      } else {
-        closePanel('settings');
-      }
-    },
-    [openPanel, closePanel]
+  const { isOpen: isSettingsOpen, setOpen: setSettingsOpen } = useMemo(
+    () => createPanelController('settings', openPanels, openPanel, closePanel),
+    [openPanels, openPanel, closePanel]
   );
 
   return useMemo(
