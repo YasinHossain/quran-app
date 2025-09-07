@@ -1,17 +1,17 @@
 'use client';
+import { useCallback } from 'react';
+
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { ResponsiveVerseActions } from '@/app/shared/ResponsiveVerseActions';
 import { VerseArabic } from '@/app/shared/VerseArabic';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
-import { Verse as VerseType, Translation } from '@/types';
+import { Translation, Verse as VerseType } from '@/types';
 
 interface VerseCardProps {
   verse: VerseType;
 }
-
-import { useCallback } from 'react';
 
 export function VerseCard({ verse }: VerseCardProps) {
   const {

@@ -10,12 +10,11 @@ import localFont from 'next/font/local';
 import { cookies } from 'next/headers';
 import Script from 'next/script';
 
+import './fonts.css';
+import './globals.css';
 import { ClientProviders } from './providers/ClientProviders';
 import { TranslationProvider } from './providers/TranslationProvider';
 import { ErrorBoundary } from './shared/components/error-boundary';
-
-import './fonts.css';
-import './globals.css';
 
 const kfgqpc = localFont({
   src: '../public/fonts/KFGQPC-Uthman-Taha.ttf',
@@ -87,7 +86,11 @@ export const metadata = {
   description: 'Read, Study, and Learn The Holy Quran',
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }): Promise<React.JSX.Element> {
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}): Promise<React.JSX.Element> {
   const cookieStore = await cookies();
   const stored = cookieStore.get('theme');
   const theme =
