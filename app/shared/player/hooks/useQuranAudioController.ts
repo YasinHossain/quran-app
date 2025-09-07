@@ -41,7 +41,11 @@ interface QuranAudioControllerReturn {
   setActiveTab: Dispatch<SetStateAction<'reciter' | 'repeat'>>;
 }
 
-export function useQuranAudioController({ track, onPrev, onNext }: Props): QuranAudioControllerReturn {
+export function useQuranAudioController({
+  track,
+  onPrev,
+  onNext,
+}: Props): QuranAudioControllerReturn {
   const [mobileOptionsOpen, setMobileOptionsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'reciter' | 'repeat'>('reciter');
 

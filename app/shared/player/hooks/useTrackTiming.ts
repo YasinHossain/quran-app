@@ -31,7 +31,12 @@ interface TrackTimingReturn {
   cover: string;
 }
 
-export function useTrackTiming({ track, volume, playbackRate, contextRef }: Opts): TrackTimingReturn {
+export function useTrackTiming({
+  track,
+  volume,
+  playbackRate,
+  contextRef,
+}: Opts): TrackTimingReturn {
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState(track?.durationSec ?? 0);
   const { audioRef, play, pause, seek, setVolume, setPlaybackRate } = useAudioPlayer({

@@ -13,7 +13,14 @@ interface Props {
   total: string;
 }
 
-export function Timeline({ current, duration, setSeek, interactable, elapsed, total }: Props): React.JSX.Element {
+export function Timeline({
+  current,
+  duration,
+  setSeek,
+  interactable,
+  elapsed,
+  total,
+}: Props): React.JSX.Element {
   return (
     <div className="flex-1 flex items-center gap-3">
       <div className="flex-1">

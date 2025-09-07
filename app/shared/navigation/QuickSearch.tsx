@@ -10,7 +10,10 @@ interface QuickSearchProps {
   onClose: () => void;
 }
 
-export const QuickSearch = memo(function QuickSearch({ isOpen, onClose }: QuickSearchProps): React.JSX.Element {
+export const QuickSearch = memo(function QuickSearch({
+  isOpen,
+  onClose,
+}: QuickSearchProps): React.JSX.Element {
   const { query, setQuery, recentSearches, trendingSearches, handleSearch } =
     useQuickSearch(onClose);
 

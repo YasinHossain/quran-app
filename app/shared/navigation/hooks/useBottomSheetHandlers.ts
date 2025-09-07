@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 
 export function useBottomSheetHandlers(
   onClose: () => void,
-  onSurahSelect: (surahId: number) => void,
+  onSurahSelect: (surahId: number) => void
 ) {
   const router = useRouter();
 

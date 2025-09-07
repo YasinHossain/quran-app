@@ -13,7 +13,13 @@ interface Options {
  *
  * @param options current playback data and control handlers.
  */
-export function usePlayerKeyboard({ current, duration, setSeek, togglePlay, setVolume }: Options): void {
+export function usePlayerKeyboard({
+  current,
+  duration,
+  setSeek,
+  togglePlay,
+  setVolume,
+}: Options): void {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.target as HTMLElement)?.closest('input, textarea, [role=slider]')) return;

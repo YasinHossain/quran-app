@@ -1,4 +1,9 @@
-import { controllerTemplate, entityTemplate, repositoryTemplate, useCaseTemplate } from '../templates';
+import {
+  controllerTemplate,
+  entityTemplate,
+  repositoryTemplate,
+  useCaseTemplate,
+} from '../templates';
 import { ensureDirectories, writeFile } from './file-system';
 import { capitalize } from './format';
 
@@ -20,7 +25,7 @@ export async function generateFeature(featureName: string): Promise<void> {
     writeFile(
       `src/domain/repositories/I${name}Repository.ts`,
       repositoryTemplate(featureName),
-      `I${name}Repository interface`,
+      `I${name}Repository interface`
     );
 
     for (const action of actions) {
@@ -28,14 +33,14 @@ export async function generateFeature(featureName: string): Promise<void> {
       writeFile(
         `src/application/use-cases/${useCaseName}UseCase.ts`,
         useCaseTemplate(featureName, action),
-        `${useCaseName}UseCase`,
+        `${useCaseName}UseCase`
       );
     }
 
     writeFile(
       `src/presentation/controllers/${name}Controller.ts`,
       controllerTemplate(featureName),
-      `${name}Controller`,
+      `${name}Controller`
     );
 
     console.log(`✅ Feature "${featureName}" generated successfully!`);

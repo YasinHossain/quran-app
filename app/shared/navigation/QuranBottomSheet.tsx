@@ -41,20 +41,23 @@ export const QuranBottomSheet = memo(function QuranBottomSheet({
         <>
           <Backdrop onClose={onClose} />
           <Sheet>
-            <BottomSheetContent
+            <QuranBottomSheetHeader
               onClose={onClose}
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
-              tabs={tabs}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              filteredSurahs={filteredSurahs}
-              filteredJuzs={filteredJuzs}
-              filteredPages={filteredPages}
-              handleSurahClick={handleSurahClick}
-              handleJuzClick={handleJuzClick}
-              handlePageClick={handlePageClick}
             />
+            <QuranTabBar tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
+            <div className="flex-1 overflow-y-auto">
+              <TabContent
+                activeTab={activeTab}
+                filteredSurahs={filteredSurahs}
+                filteredJuzs={filteredJuzs}
+                filteredPages={filteredPages}
+                onSurahClick={handleSurahClick}
+                onJuzClick={handleJuzClick}
+                onPageClick={handlePageClick}
+              />
+            </div>
           </Sheet>
         </>
       )}
@@ -62,55 +65,6 @@ export const QuranBottomSheet = memo(function QuranBottomSheet({
   );
 });
 
-const BottomSheetContent = memo(function BottomSheetContent({
-  onClose,
-  searchTerm,
-  setSearchTerm,
-  tabs,
-  activeTab,
-  setActiveTab,
-  filteredSurahs,
-  filteredJuzs,
-  filteredPages,
-  handleSurahClick,
-  handleJuzClick,
-  handlePageClick,
-}: {
-  onClose: () => void;
-  searchTerm: string;
-  setSearchTerm: (term: string) => void;
-  tabs: { id: string; label: string }[];
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
-  filteredSurahs: unknown[];
-  filteredJuzs: unknown[];
-  filteredPages: unknown[];
-  handleSurahClick: (id: number) => void;
-  handleJuzClick: (id: number) => void;
-  handlePageClick: (id: number) => void;
-}): React.ReactElement {
-  return (
-    <>
-      <QuranBottomSheetHeader
-        onClose={onClose}
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-      />
-      <QuranTabBar tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
-      <div className="flex-1 overflow-y-auto">
-        <TabContent
-          activeTab={activeTab}
-          filteredSurahs={filteredSurahs}
-          filteredJuzs={filteredJuzs}
-          filteredPages={filteredPages}
-          onSurahClick={handleSurahClick}
-          onJuzClick={handleJuzClick}
-          onPageClick={handlePageClick}
-        />
-      </div>
-    </>
-  );
-});
 
 const backdropVariants = { hidden: { opacity: 0 }, visible: { opacity: 1 } };
 const sheetVariants = {
