@@ -1,4 +1,5 @@
 import * as apiVerses from '../../../../lib/api/verses';
+import * as apiChapters from '../../../../lib/api/chapters';
 import { VerseRepository } from '../../../../src/infrastructure/repositories/VerseRepository';
 import { Verse } from '../../../../types';
 
@@ -11,8 +12,12 @@ jest.mock('../../../../lib/api/verses', () => ({
   searchVerses: jest.fn(),
   getRandomVerse: jest.fn(),
 }));
+jest.mock('../../../../lib/api/chapters', () => ({
+  getChapters: jest.fn(),
+}));
 
 export const mockApiVerses = apiVerses as jest.Mocked<typeof apiVerses>;
+export const mockApiChapters = apiChapters as jest.Mocked<typeof apiChapters>;
 
 export const createRepository = () => new VerseRepository();
 

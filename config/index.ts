@@ -6,6 +6,8 @@
  */
 import { z } from 'zod';
 
+import { logger } from '@/src/infrastructure/monitoring/Logger';
+
 import { apiConfig, apiSchema } from './api';
 import { appConfig, appSchema } from './app';
 import { audioConfig, audioSchema } from './audio';
@@ -57,12 +59,12 @@ export const config: Config = (() => {
   try {
     return configSchema.parse(rawConfig);
   } catch (error) {
-    console.error('❌ Configuration validation failed:', error);
+    logger.error('❌ Configuration validation failed:', undefined, error as Error);
 
     if (error instanceof z.ZodError) {
-      console.error('Configuration errors:');
+        logger.error('Configuration errors:');
       error.errors.forEach((err) => {
-        console.error(`  - ${err.path.join('.')}: ${err.message}`);
+        logger.error(`  - ${err.path.join('.')}: ${err.message}`);
       });
     }
 
@@ -99,11 +101,11 @@ export function validateConfig(): void {
 
   if (isProduction) {
     if (!config.monitoring.sentry?.dsn && config.features.enableErrorTracking) {
-      console.warn('⚠️  Error tracking is enabled but no Sentry DSN is configured');
+        logger.warn('⚠️  Error tracking is enabled but no Sentry DSN is configured');
     }
 
     if (!config.monitoring.analytics?.googleAnalyticsId && config.features.enableAnalytics) {
-      console.warn('⚠️  Analytics is enabled but no Google Analytics ID is configured');
+        logger.warn('⚠️  Analytics is enabled but no Google Analytics ID is configured');
     }
   }
 

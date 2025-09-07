@@ -1,4 +1,4 @@
-import { createRepository, mockApiVerse, mockApiVerses } from './test-utils';
+import { createRepository, mockApiVerse, mockApiVerses, mockApiChapters } from './test-utils';
 import { Verse as VerseEntity } from '../../../../src/domain/entities/Verse';
 import {
   logger,
@@ -114,6 +114,47 @@ describe('VerseRepository', () => {
       const sajdahVerses = await repository.findSajdahVerses();
 
       expect(sajdahVerses.length).toBeGreaterThanOrEqual(3);
+    });
+  });
+
+  describe('findByRevelationType', () => {
+    it('should find verses from Makki surahs', async () => {
+      mockApiChapters.getChapters.mockResolvedValue([
+        { id: 1, name_simple: 'Al-Fatihah', name_arabic: '', revelation_place: 'makkah', verses_count: 7 },
+        { id: 2, name_simple: 'Al-Baqarah', name_arabic: '', revelation_place: 'madinah', verses_count: 286 },
+      ] as any);
+      mockApiVerses.getVersesByChapter.mockResolvedValue({ verses: [mockApiVerse], totalPages: 1 });
+
+      const verses = await repository.findByRevelationType('makki');
+
+      expect(verses).toHaveLength(1);
+      expect(mockApiVerses.getVersesByChapter).toHaveBeenCalledWith(1, 20, 1, 300);
+    });
+  });
+
+  describe('offline caching', () => {
+    beforeEach(() => {
+      localStorage.clear();
+    });
+
+    it('should cache verses for offline use', async () => {
+      mockApiVerses.getVersesByChapter.mockResolvedValue({ verses: [mockApiVerse], totalPages: 1 });
+
+      await repository.cacheForOffline([1]);
+
+      const cached = localStorage.getItem('verse-cache-1');
+      expect(cached).not.toBeNull();
+      const parsed = JSON.parse(cached!);
+      expect(parsed).toHaveLength(1);
+    });
+
+    it('should clear cached verses', async () => {
+      mockApiVerses.getVersesByChapter.mockResolvedValue({ verses: [mockApiVerse], totalPages: 1 });
+
+      await repository.cacheForOffline([1]);
+      await repository.clearCache();
+
+      expect(localStorage.getItem('verse-cache-1')).toBeNull();
     });
   });
 

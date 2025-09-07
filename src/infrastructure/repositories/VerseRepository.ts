@@ -22,6 +22,7 @@ import {
 import { Verse } from '../../domain/entities';
 import { IVerseRepository } from '../../domain/repositories/IVerseRepository';
 import { logger } from '../monitoring/Logger';
+import { getChapters } from '../../../lib/api/chapters';
 
 export class VerseRepository implements IVerseRepository {
   private readonly defaultTranslationId = 20; // Default English translation
@@ -95,16 +96,47 @@ export class VerseRepository implements IVerseRepository {
   findWithTranslation = (verseId: string, translationId: number): Promise<Verse | null> =>
     queryFindWithTranslation(verseId, translationId);
 
-  findByRevelationType = async (_type: 'makki' | 'madani'): Promise<Verse[]> => {
-    logger.warn('findByRevelationType not fully implemented - requires surah metadata');
-    return [];
+  findByRevelationType = async (type: 'makki' | 'madani'): Promise<Verse[]> => {
+    try {
+      const chapters = await getChapters();
+      const place = type === 'makki' ? 'makkah' : 'madinah';
+      const surahIds = chapters
+        .filter((c) => c.revelation_place.toLowerCase() === place)
+        .map((c) => c.id);
+      const verses = await Promise.all(
+        surahIds.map((id) => queryFindBySurah(id, this.defaultTranslationId))
+      );
+      return verses.flat();
+    } catch (error) {
+      logger.error('Failed to find verses by revelation type:', { type }, error as Error);
+      return [];
+    }
   };
 
-  cacheForOffline = async (_surahIds?: number[]): Promise<void> => {
-    logger.warn('Offline caching not implemented');
+  private static readonly cachePrefix = 'verse-cache-';
+
+  cacheForOffline = async (surahIds?: number[]): Promise<void> => {
+    const ids = surahIds?.length ? surahIds : Array.from({ length: 114 }, (_, i) => i + 1);
+    for (const id of ids) {
+      try {
+        const verses = await this.findBySurah(id);
+        const serialized = verses.map((v) => v.toPlainObject());
+        localStorage.setItem(
+          `${VerseRepository.cachePrefix}${id}`,
+          JSON.stringify(serialized)
+        );
+      } catch (error) {
+        logger.error('Failed to cache verses for offline use:', { surahId: id }, error as Error);
+      }
+    }
   };
 
   clearCache = async (): Promise<void> => {
-    logger.warn('Cache clearing not implemented');
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith(VerseRepository.cachePrefix)) keysToRemove.push(key);
+    }
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
   };
 }

@@ -9,8 +9,10 @@ import { I${entity}Repository } from '../repositories/I${entity}Repository';
 export class ${useCase}UseCase {
   constructor(private readonly repo: I${entity}Repository) {}
 
-  async execute(): Promise<void> {
-    // TODO: implement ${action.toLowerCase()} logic
+  async execute(
+    ...args: Parameters<I${entity}Repository['${action}']>
+  ): Promise<ReturnType<I${entity}Repository['${action}']>> {
+    return this.repo.${action}(...(args as any));
   }
 }
 `;

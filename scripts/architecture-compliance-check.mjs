@@ -22,6 +22,7 @@ async function main() {
 }
 
 main().catch((error) => {
+  // eslint-disable-next-line no-console -- CLI fatal error output
   console.error('Fatal error:', error);
   process.exit(1);
 });

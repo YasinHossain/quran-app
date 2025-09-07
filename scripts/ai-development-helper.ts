@@ -15,10 +15,12 @@ async function main(): Promise<void> {
         await regen();
         break;
       default:
+        // eslint-disable-next-line no-console -- CLI usage error output
         console.error(`Unknown command: ${command}`);
         process.exit(1);
     }
   } catch (error) {
+    // eslint-disable-next-line no-console -- CLI error output
     console.error('Error:', (error as Error).message);
     process.exit(1);
   }

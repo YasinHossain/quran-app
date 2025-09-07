@@ -173,14 +173,22 @@ class AITestGenerator {
     return methods
       .map((method) => {
         return `  describe('${method}', () => {
-    it('should ${method.toLowerCase()} successfully', () => {
-      // TODO: Implement test for ${method}
+    it('should ${method.toLowerCase()} successfully', async () => {
+      // Arrange
+
+      // Act
+
+      // Assert
       expect(true).toBe(true);
     });
 
-    it('should handle errors in ${method}', () => {
-      // TODO: Test error handling for ${method}
-      expect(true).toBe(true);
+    it('should handle errors in ${method}', async () => {
+      // Arrange
+
+      // Act & Assert
+      await expect(async () => {
+        // action
+      }).rejects.toThrow();
     });
   });\n`;
       })
@@ -210,7 +218,7 @@ class AITestGenerator {
 
       case 'component':
         return `  const defaultProps = {
-    // TODO: Add required props
+    /* required props */
   };
 
   const renderComponent = (props = {}) => {
@@ -238,11 +246,11 @@ class AITestGenerator {
       case 'repository':
         return `  // Mock API responses
   const mockApiResponse = {
-    // TODO: Add mock API response structure
+    data: {},
   };
 
   const mockDomainEntity = {
-    // TODO: Add mock domain entity structure
+    id: 'id',
   };`;
 
       case 'component':

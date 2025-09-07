@@ -10,8 +10,8 @@ export class ${entity}Controller {
   constructor(private readonly service: ${entity}Service) {}
 
   async create(req: Request, res: Response): Promise<void> {
-    // TODO: implement
-    res.status(201).json({});
+    const result = await this.service.create(req.body);
+    res.status(201).json(result);
   }
 }
 `;

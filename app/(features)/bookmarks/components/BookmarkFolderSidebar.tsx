@@ -21,9 +21,7 @@ interface BookmarkFolderSidebarProps {
 export const BookmarkFolderSidebar = ({
   bookmarks,
   folder,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- active verse selection not implemented
   activeVerseId,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- verse selection handler to be added
   onVerseSelect,
   onBack,
   isOpen,
@@ -37,7 +35,12 @@ export const BookmarkFolderSidebar = ({
       aria-label="Bookmark folder navigation"
     >
       <SidebarHeader title="Folder" {...(onBack && { onBack })} showBackButton={!!onBack} />
-      <BookmarkFolderContent bookmarks={bookmarks} folder={folder} />
+      <BookmarkFolderContent
+        bookmarks={bookmarks}
+        folder={folder}
+        activeVerseId={activeVerseId}
+        onVerseSelect={onVerseSelect}
+      />
     </BaseSidebar>
   );
 };
