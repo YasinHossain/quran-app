@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import React, { useState } from 'react';
 
 import { DeleteFolderModal } from './DeleteFolderModal';
-import { EmptyBookmarks, EmptySearch } from './EmptyStates';
+import { EmptyBookmarks } from './EmptyStates';
 import { FolderCard } from './FolderCard';
 import { FolderSettingsModal } from './FolderSettingsModal';
 
@@ -14,9 +14,6 @@ interface FolderGridProps {
   folders: Folder[];
   allFolders: Folder[];
   onFolderSelect: (folderId: string) => void;
-  onCreateFolder: () => void;
-  searchTerm: string;
-  onClearSearch: () => void;
 }
 
 type FolderAction = 'edit' | 'delete' | 'rename' | 'customize';
@@ -120,24 +117,11 @@ export const FolderGrid = ({
   folders,
   allFolders,
   onFolderSelect,
-  onCreateFolder,
-  searchTerm,
-  onClearSearch,
 }: FolderGridProps): React.JSX.Element => {
   const { handleAction, modals } = useFolderModals();
 
   if (folders.length === 0) {
-    if (allFolders.length === 0) {
-      return <EmptyBookmarks onCreateFolder={onCreateFolder} />;
-    }
-    if (searchTerm) {
-      return <EmptySearch searchTerm={searchTerm} onClearSearch={onClearSearch} />;
-    }
-    return (
-      <div className="mt-10 text-center text-muted">
-        <p>No folders found.</p>
-      </div>
-    );
+    return <EmptyBookmarks />;
   }
 
   return (

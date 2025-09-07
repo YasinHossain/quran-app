@@ -8,11 +8,11 @@ import { Bookmark } from '@/types';
 import { BookmarkCard } from '../../components/BookmarkCard';
 
 interface PinnedVersesListProps {
-  pinnedVerses: Bookmark[];
+  pinnedVerses: Bookmark[] | undefined;
 }
 
 export const PinnedVersesList = ({ pinnedVerses }: PinnedVersesListProps): React.JSX.Element => {
-  if (pinnedVerses.length === 0) {
+  if (!pinnedVerses || pinnedVerses.length === 0) {
     return (
       <div className="text-center py-16">
         <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
@@ -36,7 +36,7 @@ export const PinnedVersesList = ({ pinnedVerses }: PinnedVersesListProps): React
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-4xl mx-auto">
       <div>
-        {pinnedVerses.map((bookmark) => (
+        {pinnedVerses?.map((bookmark) => (
           <BookmarkCard key={bookmark.verseId} bookmark={bookmark} folderId="pinned" />
         ))}
       </div>

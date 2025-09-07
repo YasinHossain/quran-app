@@ -7,7 +7,6 @@ import { useNavigation } from '@/app/providers/NavigationContext';
 import { useResponsiveState } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 
-import { AdaptiveNavigation } from './adaptive-navigation';
 
 interface AdaptiveLayoutProps {
   children: React.ReactNode;
@@ -111,8 +110,7 @@ export const AdaptiveLayout = ({
         )}
       </div>
 
-      {/* Adaptive navigation */}
-      {showNavigation && <AdaptiveNavigation onSurahJump={handleSurahJump} />}
+      {/* Navigation handled elsewhere (IconSidebar responsive) */}
     </div>
   );
 };

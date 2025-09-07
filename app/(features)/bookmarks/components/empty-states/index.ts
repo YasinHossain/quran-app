@@ -1,7 +1,6 @@
 export {
   BookmarkIllustration,
   EmptyBookmarksContent,
-  PrimaryAction,
   QuickStartGuide,
 } from './EmptyBookmarksComponents';
 

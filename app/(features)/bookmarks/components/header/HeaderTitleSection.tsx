@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { BarsIcon } from '@/app/shared/icons';
+import { BarsIcon, BookmarkIcon } from '@/app/shared/icons';
 import { Button } from '@/app/shared/ui/Button';
 
 export interface HeaderTitleSectionProps {
@@ -30,16 +30,12 @@ export const HeaderTitleSection = ({
         <BarsIcon size={18} />
       </Button>
     )}
-    <div className="min-w-0">
-      <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1">{title}</h1>
-      <p className="text-sm text-muted">
-        Organize your favorite verses
-        {stats && (
-          <span className="ml-2 text-xs bg-surface px-2 py-1 rounded-md">
-            {stats.folders} folders • {stats.verses} verses
-          </span>
-        )}
-      </p>
+    <div className="w-9 h-9 bg-accent rounded-xl flex items-center justify-center shadow-sm">
+      <BookmarkIcon size={20} className="text-on-accent" />
+    </div>
+    <div className="min-w-0 -mt-1">
+      <h1 className="text-lg font-bold text-foreground leading-tight">{title}</h1>
+      <p className="text-xs text-muted -mt-0.5">Organize your favorite verses</p>
     </div>
   </div>
 );

@@ -2,14 +2,12 @@ import { useRouter } from 'next/navigation';
 import React, { useState, useMemo } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { useModal } from '@/app/shared/hooks/useModal';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 
 export interface UseBookmarksPageReturn {
   folders: ReturnType<typeof useBookmarks>['folders'];
   sortedFolders: ReturnType<typeof useBookmarks>['folders'];
-  modal: ReturnType<typeof useModal>;
   handleFolderSelect: (folderId: string) => void;
   handleSectionChange: (section: SectionId) => void;
   handleVerseClick: (verseKey: string) => void;
@@ -17,7 +15,6 @@ export interface UseBookmarksPageReturn {
 
 export const useBookmarksPage = (): UseBookmarksPageReturn => {
   const { folders } = useBookmarks();
-  const modal = useModal();
   const [sortBy] = useState<'recent' | 'name-asc' | 'name-desc' | 'most-verses'>('recent');
   const router = useRouter();
 
@@ -69,7 +66,6 @@ export const useBookmarksPage = (): UseBookmarksPageReturn => {
   return {
     folders,
     sortedFolders,
-    modal,
     handleFolderSelect,
     handleSectionChange,
     handleVerseClick,

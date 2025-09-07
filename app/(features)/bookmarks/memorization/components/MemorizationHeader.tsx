@@ -11,9 +11,9 @@ export const MemorizationHeader = (): React.JSX.Element => {
         <div className="w-9 h-9 bg-accent rounded-xl flex items-center justify-center shadow-sm">
           <BrainIcon size={20} className="text-on-accent" />
         </div>
-        <div className="min-w-0">
-          <h1 className="text-lg font-bold text-foreground">Memorization Plan</h1>
-          <p className="text-xs text-muted">Track your memorization progress</p>
+        <div className="min-w-0 -mt-1">
+          <h1 className="text-lg font-bold text-foreground leading-tight">Memorization Plan</h1>
+          <p className="text-xs text-muted -mt-0.5">Track your memorization progress</p>
         </div>
       </div>
     </div>

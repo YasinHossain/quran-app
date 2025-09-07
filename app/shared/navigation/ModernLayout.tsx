@@ -10,7 +10,6 @@ import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { QuranBottomSheet } from './QuranBottomSheet';
 import { SwipeContainer } from './SwipeContainer';
 import { SwipeIndicator } from './SwipeIndicator';
-import { AdaptiveNavigation } from '../components/adaptive-navigation';
 
 interface ModernLayoutProps {
   children: React.ReactNode;
@@ -46,12 +45,11 @@ export const ModernLayout = ({ children }: ModernLayoutProps): React.JSX.Element
   return (
     <>
       {/* Main content with bottom padding for navigation */}
-      <SwipeContainer className={`min-h-[100dvh] ${!isHomePage ? 'bottom-nav-space lg:pb-0' : ''}`}>
+      <SwipeContainer className={`min-h-[100dvh] bottom-nav-space lg:pb-0`}>
         {children}
       </SwipeContainer>
 
-      {/* Adaptive Navigation */}
-      <AdaptiveNavigation onSurahJump={handleSurahJump} />
+      {/* Navigation handled by unified Navigation component (left rail on desktop, bottom on mobile) */}
 
       {/* Floating Quran Button removed per request */}
 
