@@ -109,11 +109,7 @@ const useFolderModals = () => {
         folder={selectedFolder}
         mode={modalMode}
       />
-      <DeleteFolderModal
-        isOpen={deleteModalOpen}
-        onClose={closeModals}
-        folder={selectedFolder}
-      />
+      <DeleteFolderModal isOpen={deleteModalOpen} onClose={closeModals} folder={selectedFolder} />
     </>
   );
 
@@ -146,11 +142,7 @@ export const FolderGrid = ({
 
   return (
     <>
-      <FolderCards
-        folders={folders}
-        onFolderSelect={onFolderSelect}
-        onAction={handleAction}
-      />
+      <FolderCards folders={folders} onFolderSelect={onFolderSelect} onAction={handleAction} />
       {modals}
     </>
   );

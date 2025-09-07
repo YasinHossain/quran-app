@@ -3,11 +3,11 @@ import React from 'react';
 
 import { Folder } from '@/types';
 
-import { ModalHeader } from './ModalHeader';
-import { FolderPreview } from './FolderPreview';
-import { WarningMessage } from './WarningMessage';
-import { ModalActions } from './ModalActions';
 import { MODAL_VARIANTS } from './animations';
+import { FolderPreview } from './FolderPreview';
+import { ModalActions } from './ModalActions';
+import { ModalHeader } from './ModalHeader';
+import { WarningMessage } from './WarningMessage';
 
 interface ModalBodyProps {
   folder: Folder;

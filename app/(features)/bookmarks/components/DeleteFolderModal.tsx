@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import React from 'react';
+
 import { Folder } from '@/types';
 
 import { BACKDROP_VARIANTS, ModalBody, useDeleteFolder } from './delete-folder-modal';

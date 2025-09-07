@@ -1,8 +1,8 @@
 'use client';
 
-import { parseVerseKey } from '@/lib/utils/verse';
-import { handleKeyboardActivation } from '@/lib/utils/keyboard';
 import { cn } from '@/lib/utils/cn';
+import { handleKeyboardActivation } from '@/lib/utils/keyboard';
+import { parseVerseKey } from '@/lib/utils/verse';
 
 import type { Bookmark } from '@/types/bookmark';
 

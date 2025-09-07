@@ -1,5 +1,6 @@
-import type React from 'react';
 import { handleKeyboardActivation } from '../keyboard';
+
+import type React from 'react';
 
 describe('handleKeyboardActivation', () => {
   it('calls callback on Enter', () => {
