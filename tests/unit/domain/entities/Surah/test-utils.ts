@@ -1,20 +1,4 @@
-import { Surah, RevelationType } from '../../../../src/domain/entities';
-
-export function createSurah(
-  numberOfAyahs: number,
-  id = 1,
-  revelationType = RevelationType.MAKKI
-): Surah {
-  return new Surah(
-    id,
-    `Surah ${id}`,
-    `السورة ${id}`,
-    `Surah ${id}`,
-    `The ${id}`,
-    numberOfAyahs,
-    revelationType
-  );
-}
+import { Surah, RevelationType } from '../../../../../src/domain/entities';
 
 export const validId = 1;
 export const validName = 'الفاتحة';
@@ -24,3 +8,24 @@ export const validEnglishTranslation = 'The Opening';
 export const validNumberOfAyahs = 7;
 export const validRevelationType = RevelationType.MAKKI;
 export const validRevelationOrder = 5;
+
+export const createSurah = (
+  id = validId,
+  name = validName,
+  arabicName = validArabicName,
+  englishName = validEnglishName,
+  englishTranslation = validEnglishTranslation,
+  numberOfAyahs = validNumberOfAyahs,
+  revelationType: RevelationType = validRevelationType,
+  revelationOrder?: number
+) =>
+  new Surah(
+    id,
+    name,
+    arabicName,
+    englishName,
+    englishTranslation,
+    numberOfAyahs,
+    revelationType,
+    revelationOrder
+  );
