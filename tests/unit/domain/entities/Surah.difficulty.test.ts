@@ -1,36 +1,33 @@
-import {
-  getEstimatedReadingTime,
-  getMemorizationDifficulty,
-} from '../../../../src/domain/entities';
+import { getEstimatedReadingTime, getMemorizationDifficulty } from '../../../../src/domain/entities';
 import { createSurah } from './Surah/test-utils';
 
-describe('Surah helpers - difficulty and reading time', () => {
+describe('Surah difficulty utilities', () => {
   describe('getMemorizationDifficulty', () => {
-    it('returns easy for Surahs with 10 or fewer verses', () => {
-      const surah = createSurah(10);
+    it('returns "easy" for 10 or fewer verses', () => {
+      const surah = createSurah({ numberOfAyahs: 4 });
       expect(getMemorizationDifficulty(surah.numberOfAyahs)).toBe('easy');
     });
 
-    it('returns medium for Surahs with 11-50 verses', () => {
-      const surah = createSurah(50);
+    it('returns "medium" for 11-50 verses', () => {
+      const surah = createSurah({ id: 36, numberOfAyahs: 25 });
       expect(getMemorizationDifficulty(surah.numberOfAyahs)).toBe('medium');
     });
 
-    it('returns hard for Surahs with more than 50 verses', () => {
-      const surah = createSurah(51);
+    it('returns "hard" for more than 50 verses', () => {
+      const surah = createSurah({ id: 18, numberOfAyahs: 110 });
       expect(getMemorizationDifficulty(surah.numberOfAyahs)).toBe('hard');
     });
   });
 
   describe('getEstimatedReadingTime', () => {
-    it('calculates reading time based on verse count', () => {
-      const surah = createSurah(7);
+    it('calculates reading time based on number of ayahs', () => {
+      const surah = createSurah({ numberOfAyahs: 7 });
       const readingTime = getEstimatedReadingTime(surah.numberOfAyahs);
       expect(readingTime).toBe(1);
     });
 
-    it('calculates reading time for long surahs', () => {
-      const surah = createSurah(286);
+    it('returns reasonable time for long Surah', () => {
+      const surah = createSurah({ id: 2, numberOfAyahs: 286 });
       const readingTime = getEstimatedReadingTime(surah.numberOfAyahs);
       expect(readingTime).toBe(29);
     });
