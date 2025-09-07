@@ -1,13 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
+import { defaultProps, setMockVariant, setMockBreakpoint, testAccessibility } from './test-helpers';
 import { ResponsiveVerseActions } from '../../ResponsiveVerseActions';
-import {
-  defaultProps,
-  setMockVariant,
-  setMockBreakpoint,
-  testAccessibility,
-} from './test-helpers';
 
 describe('ResponsiveVerseActions render', () => {
   describe('Cross-Device Rendering', () => {

@@ -1,8 +1,11 @@
 import { useState } from 'react';
+
 import { useAudio } from '@/app/shared/player/context/AudioContext';
-import { useTrackTiming } from './useTrackTiming';
-import { usePlayerControls } from './usePlayerControls';
+
 import { usePlaybackCompletion } from './usePlaybackCompletion';
+import { usePlayerControls } from './usePlayerControls';
+import { useTrackTiming } from './useTrackTiming';
+
 import type { Track } from '../types';
 
 interface Props {

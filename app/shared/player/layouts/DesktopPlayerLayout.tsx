@@ -46,7 +46,7 @@ export const DesktopPlayerLayout = React.memo(function DesktopPlayerLayout({
     <>
       {/* Left media block */}
       <TrackInfo cover={cover} title={title} artist={artist} />
-      
+
       {/* Transport controls */}
       <TransportControls
         isPlaying={isPlaying}
@@ -55,7 +55,7 @@ export const DesktopPlayerLayout = React.memo(function DesktopPlayerLayout({
         onNext={onNext}
         togglePlay={togglePlay}
       />
-      
+
       {/* Timeline & Time Labels */}
       <Timeline
         current={current}
@@ -65,7 +65,7 @@ export const DesktopPlayerLayout = React.memo(function DesktopPlayerLayout({
         elapsed={elapsed}
         total={total}
       />
-      
+
       {/* Utilities */}
       <div className="flex items-center gap-2">
         <PlayerOptions />

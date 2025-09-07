@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 
-import { useResponsiveState } from '../../responsive';
 import { setupMobilePerformanceTest } from './test-utils';
+import { useResponsiveState } from '../../responsive';
 
 describe('Accessibility Performance', () => {
   let matchMediaUtils: ReturnType<typeof setupMobilePerformanceTest>['matchMediaUtils'];

@@ -1,12 +1,3 @@
-import { Verse } from '../../domain/entities';
-import { IVerseRepository } from '../../domain/repositories/IVerseRepository';
-import { logger } from '../monitoring/Logger';
-import {
-  findById as queryFindById,
-  findBySurahAndAyah as queryFindBySurahAndAyah,
-  search as querySearch,
-  findWithTranslation as queryFindWithTranslation,
-} from './verseSingleQueries';
 import {
   findBySurah as queryFindBySurah,
   findBySurahRange as queryFindBySurahRange,
@@ -22,6 +13,15 @@ import {
   getCountBySurah as queryGetCountBySurah,
 } from './verseBulkQueries';
 import { findNext as queryFindNext, findPrevious as queryFindPrevious } from './verseNavigation';
+import {
+  findById as queryFindById,
+  findBySurahAndAyah as queryFindBySurahAndAyah,
+  search as querySearch,
+  findWithTranslation as queryFindWithTranslation,
+} from './verseSingleQueries';
+import { Verse } from '../../domain/entities';
+import { IVerseRepository } from '../../domain/repositories/IVerseRepository';
+import { logger } from '../monitoring/Logger';
 
 export class VerseRepository implements IVerseRepository {
   private readonly defaultTranslationId = 20; // Default English translation

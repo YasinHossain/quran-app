@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import { memo } from 'react';
 
 import { MobileNavigation } from './MobileNavigation';
 
@@ -12,10 +12,12 @@ interface TabletNavigationProps {
   className?: string;
 }
 
-export const TabletNavigation = ({
+export const TabletNavigation = memo(function TabletNavigation({
   navItems,
   onItemClick,
   className,
-}: TabletNavigationProps): React.JSX.Element => (
-  <MobileNavigation navItems={navItems} onItemClick={onItemClick} className={className} />
-);
+}: TabletNavigationProps): React.JSX.Element {
+  return (
+    <MobileNavigation navItems={navItems} onItemClick={onItemClick} className={className} />
+  );
+});

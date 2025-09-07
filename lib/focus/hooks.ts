@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { getFocusableElements } from './focusable';
 
 type FocusHandlers = { saveFocus: () => void; restoreFocus: () => void };

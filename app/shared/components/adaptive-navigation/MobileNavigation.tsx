@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import React from 'react';
+import { memo } from 'react';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { cn } from '@/lib/utils/cn';
@@ -16,11 +16,11 @@ interface MobileNavigationProps {
   className?: string;
 }
 
-export const MobileNavigation = ({
+export const MobileNavigation = memo(function MobileNavigation({
   navItems,
   onItemClick,
   className,
-}: MobileNavigationProps): React.JSX.Element => {
+}: MobileNavigationProps): React.JSX.Element {
   const pathname = usePathname();
   const { isHidden } = useHeaderVisibility();
 
@@ -51,4 +51,4 @@ export const MobileNavigation = ({
       </div>
     </nav>
   );
-};
+});

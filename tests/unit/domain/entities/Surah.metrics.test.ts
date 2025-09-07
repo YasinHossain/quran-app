@@ -4,50 +4,15 @@ import {
   getJuzNumbers,
   isMufassalSurah,
   isSevenLongSurah,
+  isShortSurah,
+  isMediumSurah,
+  isLongSurah,
+  getMemorizationDifficulty,
+  getEstimatedReadingTime,
 } from '../../../../src/domain/entities';
+import { validName, validArabicName, validEnglishName, validEnglishTranslation, validNumberOfAyahs, validRevelationType } from './Surah/test-utils';
 
 describe('Surah Entity - Metrics', () => {
-  const validId = 1;
-  const validName = 'الفاتحة';
-  const validArabicName = 'الفاتحة';
-  const validEnglishName = 'Al-Fatiha';
-  const validEnglishTranslation = 'The Opening';
-  const validNumberOfAyahs = 7;
-  const validRevelationType = RevelationType.MAKKI;
-
-  describe('revelation type methods', () => {
-    it('should return true for isMakki when revelation type is MAKKI', () => {
-      const makkiSurah = new Surah(
-        validId,
-        validName,
-        validArabicName,
-        validEnglishName,
-        validEnglishTranslation,
-        validNumberOfAyahs,
-        RevelationType.MAKKI
-      );
-
-      expect(makkiSurah.isMakki()).toBe(true);
-      expect(makkiSurah.isMadani()).toBe(false);
-    });
-
-    it('should return true for isMadani when revelation type is MADANI', () => {
-      const madaniSurah = new Surah(
-        2,
-        'البقرة',
-        'البقرة',
-        'Al-Baqarah',
-        'The Cow',
-        286,
-        RevelationType.MADANI
-      );
-
-      expect(madaniSurah.isMadani()).toBe(true);
-      expect(madaniSurah.isMakki()).toBe(false);
-    });
-  });
-
-
   describe('special Surah classifications', () => {
     it('should correctly identify Seven Long Surahs', () => {
       const sevenLongSurahs = [2, 3, 4, 5, 6, 7, 9];

@@ -71,16 +71,12 @@ export const MobilePlayerLayout = React.memo(function MobilePlayerLayout({
         </div>
         <TransportControls
           /* keep controls visually centered */
-          
-          
+
           isPlaying={isPlaying}
           interactable={interactable}
           onPrev={onPrev}
           onNext={onNext}
           togglePlay={togglePlay}
-          
-          
-          
         />
         <div className="flex items-center gap-1 justify-self-end">
           <SpeedControl />

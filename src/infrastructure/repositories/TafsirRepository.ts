@@ -1,12 +1,12 @@
-import { apiFetch } from '../../../lib/api/client';
-import { Tafsir } from '../../domain/entities/Tafsir';
-import { ITafsirRepository } from '../../domain/repositories/ITafsirRepository';
-import { logger } from '../monitoring/Logger';
+import { fetchResourcesForLanguage } from './tafsirApi';
 import {
   cacheResources as cacheTafsirResources,
   getCachedResources as getTafsirCachedResources,
 } from './tafsirCache';
-import { fetchResourcesForLanguage } from './tafsirApi';
+import { apiFetch } from '../../../lib/api/client';
+import { Tafsir } from '../../domain/entities/Tafsir';
+import { ITafsirRepository } from '../../domain/repositories/ITafsirRepository';
+import { logger } from '../monitoring/Logger';
 
 /**
  * Infrastructure implementation of ITafsirRepository

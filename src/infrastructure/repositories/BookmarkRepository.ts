@@ -1,11 +1,11 @@
+import { toDomain, toPersistence } from './bookmark/bookmarkMapper';
+import { isStoredBookmarkArray, dedupe } from './bookmark/bookmarkValidation';
+import * as queries from './bookmark/queries';
 import { Bookmark, hasNotes } from '../../domain/entities';
 import { IBookmarkRepository } from '../../domain/repositories/IBookmarkRepository';
 import { StoredBookmark } from '../../domain/value-objects/StoredBookmark';
 import { logger } from '../monitoring/Logger';
 import { getStoredBookmarks, saveStoredBookmarks } from './bookmark/storage';
-import { toDomain, toPersistence } from './bookmark/bookmarkMapper';
-import { isStoredBookmarkArray, dedupe } from './bookmark/bookmarkValidation';
-import * as queries from './bookmark/queries';
 
 export class BookmarkRepository implements IBookmarkRepository {
   async findById(id: string): Promise<Bookmark | null> {

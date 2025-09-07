@@ -1,7 +1,8 @@
 import { render } from '@testing-library/react';
+import React from 'react';
+
 import { BookmarkProvider, useBookmarks } from '@/app/providers/BookmarkContext';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
-import React from 'react';
 
 jest.mock('@/lib/api/chapters', () => ({
   getChapters: jest.fn().mockResolvedValue([]),
@@ -11,7 +12,7 @@ export const renderWithProviders = (ui: React.ReactElement) =>
   render(
     <SettingsProvider>
       <BookmarkProvider>{ui}</BookmarkProvider>
-    </SettingsProvider>,
+    </SettingsProvider>
   );
 
 export const BookmarkTestComponent = () => {

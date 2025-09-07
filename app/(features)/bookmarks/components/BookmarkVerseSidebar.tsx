@@ -24,11 +24,7 @@ export const BookmarkVerseSidebar = ({
 }: BookmarkVerseSidebarProps): React.JSX.Element => (
   <div className="h-full flex flex-col bg-surface">
     <SidebarHeader folder={folder} bookmarkCount={bookmarks.length} onBack={onBack} />
-    <VerseList
-      bookmarks={bookmarks}
-      activeVerseId={activeVerseId}
-      onVerseSelect={onVerseSelect}
-    />
+    <VerseList bookmarks={bookmarks} activeVerseId={activeVerseId} onVerseSelect={onVerseSelect} />
   </div>
 );
 

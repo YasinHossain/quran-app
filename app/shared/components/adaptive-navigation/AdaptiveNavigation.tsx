@@ -2,7 +2,7 @@
 
 import { IconBook, IconBookmark, IconHome } from '@tabler/icons-react';
 import { usePathname } from 'next/navigation';
-import React from 'react';
+import { memo } from 'react';
 
 import { useResponsiveState } from '@/lib/responsive';
 
@@ -41,10 +41,10 @@ const navItemsFor = (breakpoint: string): NavItem[] => [
   },
 ];
 
-export const AdaptiveNavigation = ({
+export const AdaptiveNavigation = memo(function AdaptiveNavigation({
   onSurahJump,
   className,
-}: AdaptiveNavigationProps): React.JSX.Element | null => {
+}: AdaptiveNavigationProps): React.JSX.Element | null {
   const pathname = usePathname();
   const { breakpoint, variant } = useResponsiveState();
   const navItems = React.useMemo(() => navItemsFor(breakpoint), [breakpoint]);
@@ -89,4 +89,4 @@ export const AdaptiveNavigation = ({
         <MobileNavigation navItems={navItems} onItemClick={handleItemClick} className={className} />
       );
   }
-};
+});

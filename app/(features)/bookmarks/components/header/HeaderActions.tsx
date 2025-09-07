@@ -2,8 +2,8 @@
 
 import React from 'react';
 
-import { Button } from '@/app/shared/ui/Button';
 import { PlusIcon } from '@/app/shared/icons';
+import { Button } from '@/app/shared/ui/Button';
 
 export interface HeaderActionsProps {
   onNewFolderClick: () => void;
@@ -22,4 +22,3 @@ export const HeaderActions = ({ onNewFolderClick }: HeaderActionsProps): React.J
     </Button>
   </div>
 );
-

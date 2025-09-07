@@ -42,9 +42,7 @@ export function mockViewport(width: number | BreakpointName): void {
 /**
  * Test component behavior across all breakpoints
  */
-export function testBreakpoints(
-  testFn: (breakpoint: BreakpointName, width: number) => void,
-): void {
+export function testBreakpoints(testFn: (breakpoint: BreakpointName, width: number) => void): void {
   Object.entries(BREAKPOINTS).forEach(([name, width]) => {
     testFn(name as BreakpointName, width);
   });
@@ -92,4 +90,3 @@ export function setupResponsiveTests(): void {
     disconnect: jest.fn(),
   }));
 }
-

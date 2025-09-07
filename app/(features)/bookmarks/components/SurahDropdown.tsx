@@ -50,7 +50,7 @@ export const SurahDropdown = ({
           ))
         ) : (
           <div className="p-4 text-center text-muted text-sm">
-            No surahs found matching "{searchTerm}"
+            No surahs found matching &quot;{searchTerm}&quot;
           </div>
         )}
       </div>

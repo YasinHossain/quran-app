@@ -1,6 +1,6 @@
-import type { interfaces } from 'inversify';
-
 import { TYPES, type TypeKeys } from '../types';
+
+import type { interfaces } from 'inversify';
 
 export type Factory<T> = () => T;
 export type AsyncFactory<T> = () => Promise<T>;
@@ -14,9 +14,7 @@ export type FactoryWithArgs<T, Args extends unknown[]> = (...args: Args) => T;
  * @param typeKey - Key from TYPES object
  * @returns Factory decorator
  */
-export const createFactory = <T>(
-  typeKey: TypeKeys,
-): interfaces.FactoryCreator<T> => {
+export const createFactory = <T>(typeKey: TypeKeys): interfaces.FactoryCreator<T> => {
   return (context: interfaces.Context) => {
     return () => context.container.get<T>(TYPES[typeKey]);
   };

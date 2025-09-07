@@ -22,19 +22,12 @@ export const BookmarkModal = memo(function BookmarkModal({
   const {
     activeTab,
     setActiveTab,
-    searchQuery,
-    setSearchQuery,
     isCreatingFolder,
-    setIsCreatingFolder,
+    openCreateFolder,
+    closeCreateFolder,
     newFolderName,
     setNewFolderName,
-    filteredFolders,
-    handleFolderSelect,
-    handleCreateFolder,
-    handleTogglePin,
-    isVersePinned,
-    findBookmark,
-  } = useBookmarkModal(isOpen, verseId, onClose);
+  } = useBookmarkModal(isOpen, onClose);
 
   const backdropVariants = { hidden: { opacity: 0 }, visible: { opacity: 1 } };
   const modalVariants = {
@@ -76,7 +69,7 @@ export const BookmarkModal = memo(function BookmarkModal({
                   className={cn(
                     'p-2 rounded-full hover:bg-interactive transition-colors',
                     touchClasses.target,
-                    touchClasses.focus
+                    touchClasses.focus,
                   )}
                   aria-label="Close"
                 >
@@ -96,12 +89,7 @@ export const BookmarkModal = memo(function BookmarkModal({
                     transition={{ duration: 0.2 }}
                     className="flex-1 overflow-hidden"
                   >
-                    <PinTab
-                      verseId={verseId}
-                      verseKey={verseKey}
-                      isVersePinned={isVersePinned}
-                      onTogglePin={handleTogglePin}
-                    />
+                    <PinTab verseId={verseId} verseKey={verseKey} />
                   </motion.div>
                 ) : (
                   <motion.div
@@ -113,17 +101,13 @@ export const BookmarkModal = memo(function BookmarkModal({
                     className="flex-1 overflow-hidden flex flex-col"
                   >
                     <BookmarkTab
-                      folders={filteredFolders}
                       verseId={verseId}
-                      searchQuery={searchQuery}
-                      onSearchChange={setSearchQuery}
                       isCreatingFolder={isCreatingFolder}
                       newFolderName={newFolderName}
-                      onFolderSelect={handleFolderSelect}
-                      onCreateFolder={handleCreateFolder}
-                      onToggleCreateFolder={setIsCreatingFolder}
+                      onToggleCreateFolder={(creating) =>
+                        creating ? openCreateFolder() : closeCreateFolder()
+                      }
                       onNewFolderNameChange={setNewFolderName}
-                      findBookmark={findBookmark}
                     />
                   </motion.div>
                 )}
@@ -135,3 +119,4 @@ export const BookmarkModal = memo(function BookmarkModal({
     </AnimatePresence>
   );
 });
+

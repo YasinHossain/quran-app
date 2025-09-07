@@ -4,8 +4,8 @@ import React, { createContext, useCallback, useContext, useMemo } from 'react';
 
 import { Settings } from '@/types';
 
-import { ARABIC_FONTS } from './settingsStorage';
 import { usePersistentSettings } from './hooks/usePersistentSettings';
+import { ARABIC_FONTS } from './settingsStorage';
 
 interface SettingsContextType {
   settings: Settings;
