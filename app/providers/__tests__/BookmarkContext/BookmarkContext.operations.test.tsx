@@ -1,6 +1,8 @@
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
 import { renderWithProviders, BookmarkTestComponent } from './test-utils';
+
 import type { Folder } from '@/types';
 
 const BOOKMARKS_STORAGE_KEY = 'quranAppBookmarks_v2';

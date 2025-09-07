@@ -17,7 +17,7 @@ export const findBySurahRange = async (
   surahId: number,
   fromAyah: number,
   toAyah: number,
-  translationId: number,
+  translationId: number
 ): Promise<Verse[]> => {
   try {
     const allVerses = await findBySurah(surahId, translationId);
@@ -37,4 +37,3 @@ export const getCountBySurah = async (surahId: number, translationId: number): P
     return 0;
   }
 };
-

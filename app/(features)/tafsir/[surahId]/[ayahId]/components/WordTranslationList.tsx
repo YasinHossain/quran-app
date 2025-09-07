@@ -3,8 +3,8 @@
 import { useSettings } from '@/app/providers/SettingsContext';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 
-import type { LanguageCode } from '@/lib/text/languageCodes';
 import type { LanguageOption } from './useWordTranslationSearch';
+import type { LanguageCode } from '@/lib/text/languageCodes';
 
 interface WordTranslationListProps {
   languages: LanguageOption[];

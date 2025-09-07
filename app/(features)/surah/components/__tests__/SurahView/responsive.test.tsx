@@ -1,4 +1,5 @@
 import { screen } from '@testing-library/react';
+
 import { renderSurahView } from './test-utils';
 
 describe('SurahView responsive', () => {

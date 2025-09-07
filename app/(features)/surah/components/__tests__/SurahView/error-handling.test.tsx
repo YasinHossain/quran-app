@@ -1,9 +1,6 @@
 import { screen } from '@testing-library/react';
-import {
-  renderSurahView,
-  mockUseVerseListing,
-  defaultVerseListing,
-} from './test-utils';
+
+import { renderSurahView, mockUseVerseListing, defaultVerseListing } from './test-utils';
 
 describe('SurahView error handling', () => {
   afterEach(() => {

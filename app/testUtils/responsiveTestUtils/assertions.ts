@@ -11,7 +11,7 @@ export function assertResponsiveClasses(
     md?: string[];
     lg?: string[];
     xl?: string[];
-  },
+  }
 ): void {
   expectedClasses.base.forEach((className) => {
     expect(element).toHaveClass(className);
@@ -51,11 +51,10 @@ export function assertTouchFriendly(element: HTMLElement): void {
       className.includes('h-11') ||
       className.includes('h-12') ||
       className.includes('p-3') ||
-      className.includes('p-4'),
+      className.includes('p-4')
   );
 
   if (!hasTouchClass) {
     logger.warn(`Element may not be touch-friendly: ${element.className}`);
   }
 }
-

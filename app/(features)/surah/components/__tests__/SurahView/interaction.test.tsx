@@ -1,4 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react';
+
 import { renderSurahView, mockUseSurahPanels, defaultPanels } from './test-utils';
 
 jest.mock('@/app/providers/UIStateContext', () => ({
@@ -37,8 +38,6 @@ describe('SurahView interaction', () => {
     ).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'Translation' }));
-    expect(
-      screen.getByRole('button', { name: 'Sahih International' })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Sahih International' })).toBeInTheDocument();
   });
 });

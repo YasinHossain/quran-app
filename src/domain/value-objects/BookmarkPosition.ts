@@ -1,5 +1,5 @@
-import * as navigation from './bookmarkPosition/navigation';
 import * as comparison from './bookmarkPosition/comparison';
+import * as navigation from './bookmarkPosition/navigation';
 
 export class BookmarkPosition {
   constructor(
@@ -39,11 +39,11 @@ export class BookmarkPosition {
   }
 
   getNextVerse(maxAyahInSurah: number): BookmarkPosition | null {
-    return navigation.getNextVerse(this, maxAyahInSurah);
+    return navigation.getNextVerse<BookmarkPosition>(this, maxAyahInSurah, BookmarkPosition);
   }
 
   getPreviousVerse(): BookmarkPosition | null {
-    return navigation.getPreviousVerse(this);
+    return navigation.getPreviousVerse<BookmarkPosition>(this, BookmarkPosition);
   }
 
   compareTo(other: BookmarkPosition): number {

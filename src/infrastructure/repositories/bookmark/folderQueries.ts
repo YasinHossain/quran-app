@@ -1,5 +1,5 @@
-import { Bookmark } from '../../../domain/entities';
 import { getStoredBookmarks, mapStoredToBookmark } from './storage';
+import { Bookmark } from '../../../domain/entities';
 
 const FOLDER_PREFIX = 'folder:';
 

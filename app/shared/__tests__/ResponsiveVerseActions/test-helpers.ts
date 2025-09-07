@@ -1,4 +1,5 @@
 import { testAccessibility } from '../../../../lib/__tests__/responsive-test-utils';
+
 import type { VerseActionsProps } from '../../ResponsiveVerseActions';
 
 export const noop = () => {};

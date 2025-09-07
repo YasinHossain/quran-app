@@ -2,8 +2,8 @@
 
 import React from 'react';
 
-import { Button } from '@/app/shared/ui/Button';
 import { BarsIcon } from '@/app/shared/icons';
+import { Button } from '@/app/shared/ui/Button';
 
 export interface HeaderTitleSectionProps {
   title: string;
@@ -43,4 +43,3 @@ export const HeaderTitleSection = ({
     </div>
   </div>
 );
-

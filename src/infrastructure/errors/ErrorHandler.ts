@@ -12,9 +12,9 @@ import {
   type ErrorReporter,
   type ErrorNotifier,
 } from './ErrorHandlerConfig';
+import { notifyError, setRetryCallback } from './errorNotifications';
 import { ErrorFactory } from './factory';
 import { isApplicationError } from './guards';
-import { notifyError, setRetryCallback } from './errorNotifications';
 import { logger } from '../monitoring/Logger';
 
 export class ErrorHandler {

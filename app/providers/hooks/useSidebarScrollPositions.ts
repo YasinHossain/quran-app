@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useMemo } from 'react';
+
 import { useScrollPositions } from './useScrollPositions';
 
 export const useSidebarScrollPositions = () => {

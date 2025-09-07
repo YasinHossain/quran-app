@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactElement, createElement } from 'react';
+import { ReactElement, createElement, useCallback } from 'react';
 
 import {
   PlayIcon,
@@ -23,7 +23,7 @@ interface UseVerseActionsParams {
   onBookmark: () => void;
   onShare: () => void;
   onNavigateToVerse?: () => void;
-  handleAction: (action: () => void) => void;
+  onClose: () => void;
 }
 
 export function useVerseActions({
@@ -36,8 +36,15 @@ export function useVerseActions({
   onBookmark,
   onShare,
   onNavigateToVerse,
-  handleAction,
+  onClose,
 }: UseVerseActionsParams): VerseActionItem[] {
+  const handleAction = useCallback(
+    (action: () => void) => {
+      action();
+      onClose();
+    },
+    [onClose]
+  );
   const playPauseIcon: ReactElement = isLoadingAudio
     ? createElement(Spinner, { className: 'h-5 w-5 text-accent' })
     : isPlaying

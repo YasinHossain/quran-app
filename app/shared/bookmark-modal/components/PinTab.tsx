@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { memo } from 'react';
 
+import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { PinIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
@@ -12,9 +13,10 @@ import { PinTabProps } from '../types';
 export const PinTab = memo(function PinTab({
   verseId,
   verseKey,
-  isVersePinned,
-  onTogglePin,
 }: PinTabProps): React.JSX.Element {
+  const { isPinned, togglePinned } = useBookmarks();
+  const isVersePinned = isPinned(verseId);
+
   return (
     <div className="p-6 flex flex-col items-center justify-center min-h-[200px] space-y-6">
       <div className="text-center space-y-3">
@@ -35,7 +37,7 @@ export const PinTab = memo(function PinTab({
       </div>
 
       <motion.button
-        onClick={onTogglePin}
+        onClick={() => togglePinned(verseId)}
         className={cn(
           'px-6 py-3 rounded-2xl font-medium transition-colors',
           isVersePinned
@@ -51,3 +53,4 @@ export const PinTab = memo(function PinTab({
     </div>
   );
 });
+

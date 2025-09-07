@@ -35,7 +35,7 @@ export const findByHizb = async (hizbNumber: number, translationId: number): Pro
 
 export const findByRubAlHizb = async (
   rubNumber: number,
-  translationId: number,
+  translationId: number
 ): Promise<Verse[]> => {
   const hizbNumber = Math.ceil(rubNumber / 4);
   const rubInHizb = ((rubNumber - 1) % 4) + 1;
@@ -47,4 +47,3 @@ export const findByRubAlHizb = async (
 
   return hizbVerses.slice(startIndex, endIndex);
 };
-

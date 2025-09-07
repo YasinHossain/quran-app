@@ -1,15 +1,10 @@
+import { getEstimatedReadingTime, getWordCount, isSajdahVerse } from './verseUtils';
 import { Translation } from '../value-objects/Translation';
-import {
-  getEstimatedReadingTime,
-  getWordCount,
-  isSajdahVerse,
-} from './verseUtils';
 
 /**
  * Verse domain entity representing a single Quranic verse
  */
 export class Verse {
-
   constructor(
     public readonly id: string,
     public readonly surahId: number,

@@ -4,8 +4,8 @@ import React from 'react';
 
 import { useResponsiveState } from '@/lib/responsive';
 
-import { HeaderTitleSection } from './header/HeaderTitleSection';
 import { HeaderActions } from './header/HeaderActions';
+import { HeaderTitleSection } from './header/HeaderTitleSection';
 import { SearchBar } from './header/SearchBar';
 import { SortDropdown } from './header/SortDropdown';
 
@@ -51,4 +51,3 @@ export const BookmarksHeader = ({
     </div>
   );
 };
-
