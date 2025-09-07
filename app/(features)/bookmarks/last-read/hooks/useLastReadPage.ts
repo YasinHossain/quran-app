@@ -6,17 +6,19 @@ import { useBookmarks } from '@/app/providers/BookmarkContext';
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 import type { Chapter } from '@/types';
 
-export const useLastReadPage = (): {
-  lastRead: any;
+export interface UseLastReadPageReturn {
+  lastRead: Record<string, number>;
   chapters: Chapter[];
   handleSectionChange: (section: SectionId) => void;
-} => {
+}
+
+export const useLastReadPage = (): UseLastReadPageReturn => {
   const router = useRouter();
   const { lastRead, chapters } = useBookmarks();
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
-    return () => {
+    return (): void => {
       document.body.style.overflow = '';
     };
   }, []);

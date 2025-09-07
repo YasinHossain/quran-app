@@ -16,7 +16,7 @@ export const usePinnedPage = () => {
     };
   }, []);
 
-  const handleSectionChange = (section: SectionId) => {
+  const handleSectionChange = (section: SectionId): void => {
     if (section === 'bookmarks') {
       router.push('/bookmarks');
     } else if (section === 'last-read') {

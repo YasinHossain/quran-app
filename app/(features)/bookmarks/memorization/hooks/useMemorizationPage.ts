@@ -1,28 +1,24 @@
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { useBodyScrollLock } from '@/app/providers/hooks/useBodyScrollLock';
 import { useModal } from '@/app/shared/hooks/useModal';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 import type { Chapter } from '@/types';
 
-export const useMemorizationPage = (): {
-  memorization: any;
+interface UseMemorizationPageResult {
+  memorization: ReturnType<typeof useBookmarks>['memorization'];
   chapters: Chapter[];
-  modal: any;
+  modal: ReturnType<typeof useModal>;
   handleSectionChange: (section: SectionId) => void;
-} => {
+}
+
+export const useMemorizationPage = (): UseMemorizationPageResult => {
   const router = useRouter();
   const { memorization, chapters } = useBookmarks();
   const modal = useModal();
 
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, []);
+  useBodyScrollLock(true);
 
   const handleSectionChange = (section: SectionId): void => {
     if (section === 'bookmarks') {

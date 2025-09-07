@@ -6,7 +6,7 @@ import { PinnedHeader, PinnedVersesList } from './components';
 import { usePinnedPage } from './hooks/usePinnedPage';
 import { BookmarksLayout } from '../components/shared/BookmarksLayout';
 
-export default function PinnedAyahPage() {
+export default function PinnedAyahPage(): React.JSX.Element {
   const { pinnedVerses, handleSectionChange } = usePinnedPage();
 
   return (

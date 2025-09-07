@@ -49,9 +49,7 @@ const useBookmarkHandlers = (
 
 const useBookmarkCardState = (
   enrichedBookmark: Bookmark,
-  isLoading: boolean,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- error will be handled in future
-  _error: unknown
+  isLoading: boolean
 ): { isDataLoading: boolean } => {
   const isDataLoading =
     isLoading ||
@@ -84,7 +82,7 @@ export const BookmarkCard = memo(function BookmarkCard({
     onRemove
   );
 
-  const { isDataLoading } = useBookmarkCardState(enrichedBookmark, isLoading, error);
+  const { isDataLoading } = useBookmarkCardState(enrichedBookmark, isLoading);
 
   return (
     <LoadingError

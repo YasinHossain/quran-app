@@ -1,15 +1,15 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { CreateFolderModal } from './components/CreateFolderModal';
 import { FolderGrid } from './components/FolderGrid';
+import { BookmarksHeader } from './components/BookmarksHeader';
 import { BookmarksLayout } from './components/shared/BookmarksLayout';
-import { BookmarksPageHeader } from './components/shared/BookmarksPageHeader';
 import { useBookmarksPage } from './hooks/useBookmarksPage';
 
-const BookmarksPage = () => {
+const BookmarksPage = (): React.JSX.Element => {
   const {
     folders,
     sortedFolders,
@@ -18,6 +18,20 @@ const BookmarksPage = () => {
     handleSectionChange,
     handleVerseClick,
   } = useBookmarksPage();
+
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleSearchChange = (term: string): void => {
+    setSearchTerm(term);
+  };
+
+  const handleClearSearch = (): void => {
+    setSearchTerm('');
+  };
+
+  const filteredFolders = sortedFolders.filter((folder) =>
+    folder.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <>
@@ -29,7 +43,11 @@ const BookmarksPage = () => {
         folders={folders}
         onVerseClick={handleVerseClick}
       >
-        <BookmarksPageHeader />
+        <BookmarksHeader
+          searchTerm={searchTerm}
+          onSearchChange={handleSearchChange}
+          onNewFolderClick={modal.open}
+        />
 
         <motion.div
           key="folder-grid"
@@ -38,12 +56,12 @@ const BookmarksPage = () => {
           exit={{ opacity: 0 }}
         >
           <FolderGrid
-            folders={sortedFolders}
-            allFolders={folders}
+            folders={filteredFolders}
+            allFolders={sortedFolders}
             onFolderSelect={handleFolderSelect}
             onCreateFolder={modal.open}
-            searchTerm=""
-            onClearSearch={() => {}}
+            searchTerm={searchTerm}
+            onClearSearch={handleClearSearch}
           />
         </motion.div>
       </BookmarksLayout>

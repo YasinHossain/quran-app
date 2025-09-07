@@ -6,20 +6,22 @@ import { useModal } from '@/app/shared/hooks/useModal';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 
-export const useBookmarksPage = (): {
+export interface UseBookmarksPageReturn {
   folders: ReturnType<typeof useBookmarks>['folders'];
   sortedFolders: ReturnType<typeof useBookmarks>['folders'];
   modal: ReturnType<typeof useModal>;
   handleFolderSelect: (folderId: string) => void;
   handleSectionChange: (section: SectionId) => void;
   handleVerseClick: (verseKey: string) => void;
-} => {
+}
+
+export const useBookmarksPage = (): UseBookmarksPageReturn => {
   const { folders } = useBookmarks();
   const modal = useModal();
   const [sortBy] = useState<'recent' | 'name-asc' | 'name-desc' | 'most-verses'>('recent');
   const router = useRouter();
 
-  React.useEffect(() => {
+  React.useEffect((): void => {
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = '';

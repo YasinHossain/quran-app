@@ -17,7 +17,7 @@ const CreateMemorizationModal = dynamic(
   }
 );
 
-export default function MemorizationPage() {
+export default function MemorizationPage(): React.JSX.Element {
   const { memorization, chapters, modal, handleSectionChange } = useMemorizationPage();
 
   return (
