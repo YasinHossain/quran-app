@@ -1,8 +1,9 @@
-import type { LanguageCode } from '@/lib/text/languageCodes';
 import { Verse } from '@/types';
 
 import { apiFetch } from '../client';
 import { normalizeVerse, ApiVerse } from './normalize';
+
+import type { LanguageCode } from '@/lib/text/languageCodes';
 
 export interface PaginatedVerses {
   verses: Verse[];

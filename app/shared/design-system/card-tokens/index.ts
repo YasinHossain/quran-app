@@ -1,8 +1,8 @@
+import { colors } from './colors';
+import { layout } from './layout';
+import { shadows } from './shadows';
 import { spacing } from './spacing';
 import { typography } from './typography';
-import { colors } from './colors';
-import { shadows } from './shadows';
-import { layout } from './layout';
 
 export { spacing, typography, colors, shadows, layout };
 

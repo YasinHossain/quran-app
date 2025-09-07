@@ -2,8 +2,6 @@
 
 import { useEffect, useReducer, useRef } from 'react';
 
-import { Settings } from '@/types';
-
 import { reducer } from '../settingsReducer';
 import { defaultSettings, loadSettings, saveSettings } from '../settingsStorage';
 

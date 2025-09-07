@@ -19,9 +19,7 @@ export const SAJDAH_VERSES = [
 const WORDS_PER_MINUTE = 150; // Average Arabic reading speed
 
 export function isSajdahVerse(surahId: number, ayahNumber: number): boolean {
-  return SAJDAH_VERSES.some(
-    (sajdah) => sajdah.surah === surahId && sajdah.ayah === ayahNumber
-  );
+  return SAJDAH_VERSES.some((sajdah) => sajdah.surah === surahId && sajdah.ayah === ayahNumber);
 }
 
 export function getMemorizationSegments(arabicText: string): string[] {

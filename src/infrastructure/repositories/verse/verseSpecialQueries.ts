@@ -41,7 +41,7 @@ export const findFirstVerses = async (translationId: number): Promise<Verse[]> =
 
 export const findByVerseKeys = async (
   verseKeys: string[],
-  translationId: number,
+  translationId: number
 ): Promise<Verse[]> => {
   const verses: Verse[] = [];
   for (const key of verseKeys) {
@@ -58,7 +58,7 @@ export const findByVerseKeys = async (
 export const findRandom = async (
   _count = 1,
   _surahId: number | undefined,
-  translationId: number,
+  translationId: number
 ): Promise<Verse[]> => {
   try {
     const randomVerse = await apiVerses.getRandomVerse(translationId);
@@ -70,4 +70,3 @@ export const findRandom = async (
 };
 
 export const getTotalCount = async (): Promise<number> => 6236;
-

@@ -21,4 +21,3 @@ export function renderHookWithProviders<TProps, TResult>(
   const Wrapper = createProviderWrapper(providers, { provider: () => new Map() });
   return renderHook(callback, { wrapper: Wrapper, ...options });
 }
-

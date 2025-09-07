@@ -1,8 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
+
 import { useAudioPlayer } from './useAudioPlayer';
+
 import type { Track } from '../types';
 
-const mmss = (s: number) => `${Math.floor(s / 60)}:${Math.floor(s % 60).toString().padStart(2, '0')}`;
+const mmss = (s: number) =>
+  `${Math.floor(s / 60)}:${Math.floor(s % 60)
+    .toString()
+    .padStart(2, '0')}`;
 
 interface Opts {
   track?: Track | null;
@@ -20,10 +25,19 @@ export function useTrackTiming({ track, volume, playbackRate, contextRef }: Opts
     onTimeUpdate: setCurrent,
     onLoadedMetadata: setDuration,
   });
-  useEffect(() => { contextRef.current = audioRef.current; }, [contextRef, audioRef]);
-  useEffect(() => { setCurrent(0); setDuration(track?.durationSec ?? 0); }, [track?.src, track?.durationSec]);
-  useEffect(() => { setVolume(volume); }, [volume, setVolume]);
-  useEffect(() => { setPlaybackRate(playbackRate); }, [playbackRate, setPlaybackRate]);
+  useEffect(() => {
+    contextRef.current = audioRef.current;
+  }, [contextRef, audioRef]);
+  useEffect(() => {
+    setCurrent(0);
+    setDuration(track?.durationSec ?? 0);
+  }, [track?.src, track?.durationSec]);
+  useEffect(() => {
+    setVolume(volume);
+  }, [volume, setVolume]);
+  useEffect(() => {
+    setPlaybackRate(playbackRate);
+  }, [playbackRate, setPlaybackRate]);
   const elapsed = useMemo(() => mmss(current), [current]);
   const total = useMemo(() => mmss(duration || 0), [duration]);
   const title = track?.title ?? 'No track selected';
@@ -32,5 +46,18 @@ export function useTrackTiming({ track, volume, playbackRate, contextRef }: Opts
     track?.coverUrl ||
     "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96'><rect width='100%' height='100%' rx='12' ry='12' fill='%23e5e7eb'/><text x='50%' y='52%' dominant-baseline='middle' text-anchor='middle' font-family='Inter, system-ui, sans-serif' font-size='12' fill='%239ca3af'>No cover</text></svg>";
   const interactable = Boolean(track?.src);
-  return { audioRef, play, pause, seek, current, duration, elapsed, total, interactable, title, artist, cover } as const;
+  return {
+    audioRef,
+    play,
+    pause,
+    seek,
+    current,
+    duration,
+    elapsed,
+    total,
+    interactable,
+    title,
+    artist,
+    cover,
+  } as const;
 }

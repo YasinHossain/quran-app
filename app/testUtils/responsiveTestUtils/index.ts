@@ -10,4 +10,3 @@ export {
 export { assertResponsiveClasses, assertTouchFriendly } from './assertions';
 
 export { setupResponsiveTests as default } from './viewport';
-

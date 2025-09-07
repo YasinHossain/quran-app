@@ -36,4 +36,3 @@ export function createProviderWrapper(
     return <>{wrapped}</>;
   };
 }
-

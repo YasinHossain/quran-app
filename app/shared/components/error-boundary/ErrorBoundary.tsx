@@ -62,4 +62,3 @@ export function ErrorBoundary(props: ErrorBoundaryProps) {
 }
 export { DefaultErrorFallback } from './DefaultErrorFallback';
 export { useErrorHandler } from './useErrorHandler';
-export { withErrorBoundary } from './withErrorBoundary';

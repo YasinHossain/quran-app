@@ -1,8 +1,8 @@
+import { mapApiVerseToDomain } from './verseMapper';
 import * as apiVerses from '../../../lib/api/verses';
 import * as apiSearch from '../../../lib/api/verses';
 import { Verse } from '../../domain/entities';
 import { logger } from '../monitoring/Logger';
-import { mapApiVerseToDomain } from './verseMapper';
 
 export const findById = async (id: string, translationId: number): Promise<Verse | null> => {
   try {

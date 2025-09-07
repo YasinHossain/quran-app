@@ -1,5 +1,7 @@
 import { useCallback, useEffect } from 'react';
+
 import { usePlayerKeyboard } from './usePlayerKeyboard';
+
 import type { Verse } from '@/types';
 
 interface Opts {
