@@ -1,6 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils/cn';
+import { parseVerseKey } from '@/lib/utils/verse';
 
 import { BaseCard, BaseCardProps } from '../BaseCard';
 
@@ -22,13 +23,6 @@ export const BookmarkVerseCard = ({
   className,
   ...props
 }: BookmarkVerseCardProps): React.JSX.Element => {
-  // Parse verse key to get surah and ayah numbers
-  const parseVerseKey = (verseKey?: string) => {
-    if (!verseKey) return { surahNumber: 0, ayahNumber: 0 };
-    const [surah, ayah] = verseKey.split(':').map(Number);
-    return { surahNumber: surah || 0, ayahNumber: ayah || 0 };
-  };
-
   const { surahNumber, ayahNumber } = parseVerseKey(bookmark.verseKey);
 
   return (

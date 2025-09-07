@@ -1,14 +1,9 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 import { EllipsisHIcon, CloseIcon } from '@/app/shared/icons';
-
-interface FolderContextMenuProps {
-  onEdit: () => void;
-  onDelete: () => void;
-}
 
 interface MenuItem {
   label: string;
@@ -16,50 +11,9 @@ interface MenuItem {
   destructive?: boolean;
 }
 
-const useClickOutside = (
-  isOpen: boolean,
-  setIsOpen: (open: boolean) => void,
-  menuRef: React.RefObject<HTMLDivElement>,
-  buttonRef: React.RefObject<HTMLButtonElement>
-): void => {
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent): void => {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target as Node) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen, setIsOpen, menuRef, buttonRef]);
-};
-
-const MenuDropdown = ({
-  menuRef,
-  menuItems,
-}: {
-  menuRef: React.RefObject<HTMLDivElement>;
-  menuItems: MenuItem[];
-}): React.JSX.Element => (
-  <motion.div
-    ref={menuRef}
-    initial={{ opacity: 0, scale: 0.95, y: -5 }}
-    animate={{ opacity: 1, scale: 1, y: 0 }}
-    exit={{ opacity: 0, scale: 0.95, y: -5 }}
-    transition={{ duration: 0.15 }}
-    className="absolute right-0 top-full mt-2 w-40 bg-surface border border-border rounded-lg shadow-modal z-50 py-2"
-  >
-    {menuItems.map((item) => (
+const MenuItemList = ({ items }: { items: MenuItem[] }): React.JSX.Element => (
+  <>
+    {items.map((item) => (
       <button
         key={item.label}
         onClick={item.onClick}
@@ -70,8 +24,13 @@ const MenuDropdown = ({
         {item.label}
       </button>
     ))}
-  </motion.div>
+  </>
 );
+
+interface FolderContextMenuProps {
+  onEdit: () => void;
+  onDelete: () => void;
+}
 
 export const FolderContextMenu = ({
   onEdit,
@@ -81,16 +40,52 @@ export const FolderContextMenu = ({
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  useClickOutside(isOpen, setIsOpen, menuRef, buttonRef);
-
-  const handleAction = (action: () => void): void => {
-    action();
+  const handleCloseMenu = useCallback((): void => {
     setIsOpen(false);
-  };
+  }, []);
 
-  const menuItems: MenuItem[] = [
-    { label: 'Edit', onClick: () => handleAction(onEdit) },
-    { label: 'Delete', onClick: () => handleAction(onDelete), destructive: true },
+  const handleClickOutside = useCallback(
+    (event: MouseEvent): void => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
+        handleCloseMenu();
+      }
+    },
+    [handleCloseMenu]
+  );
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, handleClickOutside]);
+
+  const handleToggleMenu = useCallback((e: React.MouseEvent<HTMLButtonElement>): void => {
+    e.stopPropagation();
+    setIsOpen((prev) => !prev);
+  }, []);
+
+  const handleEdit = useCallback((): void => {
+    onEdit();
+    handleCloseMenu();
+  }, [onEdit, handleCloseMenu]);
+
+  const handleDelete = useCallback((): void => {
+    onDelete();
+    handleCloseMenu();
+  }, [onDelete, handleCloseMenu]);
+
+  const menuItems = [
+    { label: 'Edit', onClick: handleEdit },
+    { label: 'Delete', onClick: handleDelete, destructive: true },
   ];
 
   return (
@@ -98,10 +93,7 @@ export const FolderContextMenu = ({
       <button
         ref={buttonRef}
         className="rounded-full p-1.5 text-muted hover:bg-surface-hover hover:text-accent transition-all duration-200 touch-manipulation"
-        onClick={(e) => {
-          e.stopPropagation();
-          setIsOpen(!isOpen);
-        }}
+        onClick={handleToggleMenu}
         aria-label="Folder options"
         aria-expanded={isOpen}
         aria-haspopup="true"
@@ -110,7 +102,18 @@ export const FolderContextMenu = ({
       </button>
 
       <AnimatePresence>
-        {isOpen && <MenuDropdown menuRef={menuRef} menuItems={menuItems} />}
+        {isOpen && (
+          <motion.div
+            ref={menuRef}
+            initial={{ opacity: 0, scale: 0.95, y: -5 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: -5 }}
+            transition={{ duration: 0.15 }}
+            className="absolute right-0 top-full mt-2 w-40 bg-surface border border-border rounded-lg shadow-modal z-50 py-2"
+          >
+            <MenuItemList items={menuItems} />
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
