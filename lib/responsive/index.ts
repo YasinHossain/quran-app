@@ -1,13 +1,12 @@
 import { useResponsiveFocus } from '../focus';
-
-export * from './breakpoints';
-export * from './orientation';
-export * from './variants';
-export * from './container';
-
 import { useBreakpoint } from './breakpoints';
 import { useOrientation } from './orientation';
 import { getVariantForBreakpoint } from './variants';
+
+export * from './breakpoints';
+export * from './container';
+export * from './orientation';
+export * from './variants';
 
 export const responsiveClasses = {
   container: 'w-full max-w-sm mx-auto md:max-w-2xl lg:max-w-4xl xl:max-w-6xl',

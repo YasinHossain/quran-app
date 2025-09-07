@@ -4,10 +4,10 @@ import { useCallback, useState } from 'react';
 import useSWR from 'swr';
 
 import { getRandomVerse } from '@/lib/api';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { Verse } from '@/types';
 
 export const RETRY_LIMIT = 3;
-import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 interface UseRandomVerseOptions {
   translationId: number;

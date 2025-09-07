@@ -11,15 +11,13 @@ import { createPerformanceTestSuite } from '@/app/testUtils/performanceTestUtils
 
 import { ExampleComponent } from '../ExampleComponent';
 import {
-  setupTestEnvironment,
-  resetTestEnvironment,
   clearTestEnvironment,
+  resetTestEnvironment,
   runComponentTests,
   runHookTests,
   runIntegrationTest,
+  setupTestEnvironment,
 } from './architecture/test-utils';
-
-// Component under test
 import { useExampleData } from '../hooks/useExampleData';
 
 /**
