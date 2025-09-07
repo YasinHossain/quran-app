@@ -2,7 +2,7 @@
 
 import { IconBook, IconBookmark, IconHome } from '@tabler/icons-react';
 import { usePathname } from 'next/navigation';
-import { memo } from 'react';
+import React, { memo } from 'react';
 
 import { useResponsiveState } from '@/lib/responsive';
 
