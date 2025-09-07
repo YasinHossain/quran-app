@@ -5,24 +5,27 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 import { EllipsisHIcon, CloseIcon } from '@/app/shared/icons';
 
-interface MenuItem {
+interface ContextMenuItem {
   label: string;
   onClick: () => void;
   destructive?: boolean;
 }
 
-const MenuItemList = ({ items }: { items: MenuItem[] }): React.JSX.Element => (
+const MenuItem = ({ item }: { item: ContextMenuItem }): React.JSX.Element => (
+  <button
+    onClick={item.onClick}
+    className={`w-full text-left px-4 py-2 text-sm hover:bg-surface-hover transition-colors ${
+      item.destructive ? 'text-error hover:text-error/90' : 'text-foreground'
+    }`}
+  >
+    {item.label}
+  </button>
+);
+
+const MenuItemList = ({ items }: { items: ContextMenuItem[] }): React.JSX.Element => (
   <>
     {items.map((item) => (
-      <button
-        key={item.label}
-        onClick={item.onClick}
-        className={`w-full text-left px-4 py-2 text-sm hover:bg-surface-hover transition-colors ${
-          item.destructive ? 'text-error hover:text-error/90' : 'text-foreground'
-        }`}
-      >
-        {item.label}
-      </button>
+      <MenuItem key={item.label} item={item} />
     ))}
   </>
 );
@@ -83,7 +86,7 @@ export const FolderContextMenu = ({
     handleCloseMenu();
   }, [onDelete, handleCloseMenu]);
 
-  const menuItems = [
+  const menuItems: ContextMenuItem[] = [
     { label: 'Edit', onClick: handleEdit },
     { label: 'Delete', onClick: handleDelete, destructive: true },
   ];

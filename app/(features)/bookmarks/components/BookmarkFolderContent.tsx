@@ -5,8 +5,8 @@ import React, { useState } from 'react';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { Bookmark, Folder } from '@/types';
 
-import { FolderList } from './FolderList';
 import { useFolderNavigation } from '../hooks/useFolderNavigation';
+import { FolderItem } from './shared/folder';
 
 interface BookmarkFolderContentProps {
   bookmarks: Bookmark[];
@@ -30,19 +30,33 @@ export const BookmarkFolderContent = ({
     setExpandedFolderId((currentId) => (currentId === folderId ? null : folderId));
   };
 
-  return (
-    <div className="flex-1 p-4">
-      {/* Folders List */}
-      <FolderList
-        folders={folders}
-        currentFolderId={folder.id}
-        expandedFolderId={expandedFolderId}
-        bookmarks={bookmarks}
+  const FolderListItem = ({ folderItem }: { folderItem: Folder }): React.JSX.Element => {
+    const isExpanded = expandedFolderId === folderItem.id;
+    const isCurrentFolder = folderItem.id === folder.id;
+    const folderBookmarks = isCurrentFolder ? bookmarks : folderItem.bookmarks;
+
+    return (
+      <FolderItem
+        key={folderItem.id}
+        folderItem={folderItem}
+        isExpanded={isExpanded}
+        isCurrentFolder={isCurrentFolder}
+        folderBookmarks={folderBookmarks}
         onToggle={toggleFolder}
         onSelect={handleFolderSelect}
         activeVerseId={activeVerseId}
         onVerseSelect={onVerseSelect}
       />
+    );
+  };
+
+  return (
+    <div className="flex-1 p-4">
+      <div className="space-y-3">
+        {folders.map((folderItem) => (
+          <FolderListItem key={folderItem.id} folderItem={folderItem} />
+        ))}
+      </div>
     </div>
   );
 };
