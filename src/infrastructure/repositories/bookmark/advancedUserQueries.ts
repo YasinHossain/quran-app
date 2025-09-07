@@ -1,4 +1,4 @@
-import { Bookmark } from '../../../domain/entities';
+import { Bookmark, hasTag, hasNotes } from '../../../domain/entities';
 import { BookmarkPosition } from '../../../domain/value-objects/BookmarkPosition';
 import { getStoredBookmarks } from './storage';
 import { findByUser } from './userQueries';
@@ -21,7 +21,7 @@ export async function existsAtPosition(
 
 export async function findByTags(userId: string, tags: string[]): Promise<Bookmark[]> {
   const userBookmarks = await findByUser(userId);
-  return userBookmarks.filter((bookmark) => tags.some((tag) => bookmark.hasTag(tag)));
+  return userBookmarks.filter((bookmark) => tags.some((tag) => hasTag(bookmark, tag)));
 }
 
 export async function getTagsByUser(userId: string): Promise<string[]> {
@@ -32,7 +32,7 @@ export async function getTagsByUser(userId: string): Promise<string[]> {
 
 export async function findWithNotes(userId: string): Promise<Bookmark[]> {
   const userBookmarks = await findByUser(userId);
-  return userBookmarks.filter((bookmark) => bookmark.hasNotes());
+  return userBookmarks.filter((bookmark) => hasNotes(bookmark));
 }
 
 export async function findByDateRange(

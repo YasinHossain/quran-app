@@ -1,4 +1,4 @@
-import { Bookmark } from '../entities';
+import { Bookmark, withNotes, withTags, withAddedTag, withRemovedTag } from '../entities';
 import { BookmarkNotFoundError, UnauthorizedBookmarkError } from '../errors/DomainErrors';
 import { IBookmarkRepository } from '../repositories/IBookmarkRepository';
 
@@ -21,7 +21,7 @@ export class BookmarkMutationService {
       throw new UnauthorizedBookmarkError('Cannot update bookmark belonging to another user');
     }
 
-    const updatedBookmark = bookmark.withNotes(notes);
+    const updatedBookmark = withNotes(bookmark, notes);
     await this.bookmarkRepository.save(updatedBookmark);
     return updatedBookmark;
   }
@@ -39,7 +39,7 @@ export class BookmarkMutationService {
       throw new UnauthorizedBookmarkError('Cannot update bookmark belonging to another user');
     }
 
-    const updatedBookmark = bookmark.withTags(tags);
+    const updatedBookmark = withTags(bookmark, tags);
     await this.bookmarkRepository.save(updatedBookmark);
     return updatedBookmark;
   }
@@ -57,7 +57,7 @@ export class BookmarkMutationService {
       throw new UnauthorizedBookmarkError('Cannot update bookmark belonging to another user');
     }
 
-    const updatedBookmark = bookmark.withAddedTag(tag);
+    const updatedBookmark = withAddedTag(bookmark, tag);
     await this.bookmarkRepository.save(updatedBookmark);
     return updatedBookmark;
   }
@@ -75,7 +75,7 @@ export class BookmarkMutationService {
       throw new UnauthorizedBookmarkError('Cannot update bookmark belonging to another user');
     }
 
-    const updatedBookmark = bookmark.withRemovedTag(tag);
+    const updatedBookmark = withRemovedTag(bookmark, tag);
     await this.bookmarkRepository.save(updatedBookmark);
     return updatedBookmark;
   }

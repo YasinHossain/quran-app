@@ -1,4 +1,4 @@
-import { Bookmark } from '../../domain/entities';
+import { Bookmark, hasNotes } from '../../domain/entities';
 import { IBookmarkRepository } from '../../domain/repositories/IBookmarkRepository';
 import { StoredBookmark } from '../../domain/value-objects/StoredBookmark';
 import { logger } from '../monitoring/Logger';
@@ -100,7 +100,7 @@ export class BookmarkRepository implements IBookmarkRepository {
       surahsCovered: Object.keys(surahCounts).length,
       mostBookmarkedSurah,
       tagsUsed: uniqueTags.size,
-      bookmarksWithNotes: userBookmarks.filter((b) => b.hasNotes()).length,
+      bookmarksWithNotes: userBookmarks.filter((b) => hasNotes(b)).length,
     };
   }
 
