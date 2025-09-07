@@ -50,7 +50,7 @@ const useBookmarkHandlers = (
 const useBookmarkCardState = (
   enrichedBookmark: Bookmark,
   isLoading: boolean,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- error will be handled in future
   _error: unknown
 ): { isDataLoading: boolean } => {
   const isDataLoading =

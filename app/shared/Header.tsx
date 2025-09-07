@@ -60,7 +60,7 @@ export const Header = () => {
       className={cn(
         'fixed top-0 left-0 right-0 h-[calc(3.5rem+env(safe-area-inset-top))] sm:h-[calc(4rem+env(safe-area-inset-top))] z-header transition-all duration-300',
         'backdrop-blur-lg bg-surface/8 backdrop-saturate-150',
-        'border-b border-border shadow-md shadow-black/5 dark:shadow-black/10',
+        'border-b border-border shadow-card',
         'flex items-center justify-center',
         isHidden ? '-translate-y-full' : 'translate-y-0'
       )}

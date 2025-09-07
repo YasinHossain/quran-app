@@ -42,7 +42,7 @@ export const ToggleSetting = memo(function ToggleSetting({
         <span
           aria-hidden="true"
           className={cn(
-            'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition duration-200 ease-in-out',
+            'pointer-events-none inline-block h-5 w-5 rounded-full bg-on-accent shadow transform ring-0 transition duration-200 ease-in-out',
             value ? 'translate-x-5' : 'translate-x-0'
           )}
         />

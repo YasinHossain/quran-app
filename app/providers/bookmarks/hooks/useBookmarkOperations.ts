@@ -56,5 +56,5 @@ export default function useBookmarkOperations(
       setPinned((p) => p.map((b) => (b.verseId === verseId ? { ...b, ...data } : b)));
     }
     return { addBookmark, removeBookmark, toggleBookmark, updateBookmark };
-  }, [folders, setFolders, pinned, setPinned, chapters, fetchMetadata]);
+  }, [folders, setFolders, setPinned, chapters, fetchMetadata]);
 }

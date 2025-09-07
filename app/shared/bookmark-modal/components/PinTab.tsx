@@ -39,7 +39,7 @@ export const PinTab = memo(function PinTab({ verseId, verseKey }: PinTabProps): 
           'px-6 py-3 rounded-2xl font-medium transition-colors',
           isVersePinned
             ? 'bg-accent/10 text-accent hover:bg-accent/20'
-            : 'bg-accent text-white hover:bg-accent/90',
+            : 'bg-accent text-on-accent hover:bg-accent/90',
           touchClasses.target,
           touchClasses.focus
         )}

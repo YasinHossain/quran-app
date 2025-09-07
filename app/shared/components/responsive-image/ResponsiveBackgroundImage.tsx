@@ -56,7 +56,12 @@ export const ResponsiveBackgroundImage = ({
       className={`relative bg-cover bg-center bg-no-repeat ${className}`}
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      {overlay && <div className="absolute inset-0 bg-black" style={{ opacity: overlayOpacity }} />}
+      {overlay && (
+        <div
+          className="absolute inset-0 bg-surface-overlay"
+          style={{ opacity: overlayOpacity }}
+        />
+      )}
       <div className="relative z-10">{children}</div>
     </div>
   );

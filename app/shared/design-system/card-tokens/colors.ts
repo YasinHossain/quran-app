@@ -11,7 +11,7 @@ export const colors = {
     secondary: 'text-muted',
     hoverAccent: 'group-hover:text-accent',
     accent: 'text-accent',
-    error: 'text-red-600',
+    error: 'text-error',
   },
 
   // Background colors

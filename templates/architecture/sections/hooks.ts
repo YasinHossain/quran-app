@@ -2,15 +2,21 @@ import { waitFor, act } from '@testing-library/react';
 
 import { renderHookWithProviders } from '@/app/testUtils/contextTestUtils';
 
-interface HookSectionParams {
-  useHook: (props: any) => any;
-  mockData: any;
+interface HookResult<TData> {
+  data: TData[];
+  isLoading: boolean;
+  refetch: () => Promise<void>;
 }
 
-export function hookContextIntegrationSection({
+interface HookSectionParams<TProps, TData> {
+  useHook: (props: TProps) => HookResult<TData>;
+  mockData: TData;
+}
+
+export function hookContextIntegrationSection<TProps, TData>({
   useHook,
   mockData
-}: HookSectionParams) {
+}: HookSectionParams<TProps, TData>) {
   describe('🔄 Context Integration', () => {
     it('provides data from context', async () => {
       const { result } = renderHookWithProviders(
@@ -24,9 +30,9 @@ export function hookContextIntegrationSection({
   });
 }
 
-export function hookPerformanceSection({
+export function hookPerformanceSection<TProps, TData>({
   useHook
-}: HookSectionParams) {
+}: HookSectionParams<TProps, TData>) {
   describe('⚡ Performance', () => {
     it('returns stable references', async () => {
       const { result, rerender } = renderHookWithProviders(
@@ -43,14 +49,13 @@ export function hookPerformanceSection({
   });
 }
 
-export function hookCleanupSection({
+export function hookCleanupSection<TProps, TData>({
   useHook
-}: HookSectionParams) {
+}: HookSectionParams<TProps, TData>) {
   describe('🧹 Cleanup', () => {
     it('cancels requests on unmount', () => {
       const mockAbort = jest.fn();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (global as any).AbortController = jest
+      (globalThis as { AbortController: jest.Mock }).AbortController = jest
         .fn()
         .mockImplementation(() => ({ abort: mockAbort, signal: {} }));
       const { unmount } = renderHookWithProviders(
@@ -63,10 +68,10 @@ export function hookCleanupSection({
   });
 }
 
-export function hookDataFetchingSection({
+export function hookDataFetchingSection<TProps, TData>({
   useHook,
   mockData
-}: HookSectionParams) {
+}: HookSectionParams<TProps, TData>) {
   describe('🔄 Data Fetching', () => {
     it('supports refetching', async () => {
       const { result } = renderHookWithProviders(

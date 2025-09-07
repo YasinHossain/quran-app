@@ -69,7 +69,7 @@ export const PrimaryAction = ({ onCreateFolder }: PrimaryActionProps): React.JSX
   >
     <button
       onClick={onCreateFolder}
-      className="group bg-accent text-white px-8 py-4 rounded-2xl hover:bg-accent/90 transition-all duration-300 flex items-center justify-center space-x-3 font-semibold text-lg shadow-lg hover:shadow-xl hover:-translate-y-1 mx-auto"
+      className="group bg-accent text-on-accent px-8 py-4 rounded-2xl hover:bg-accent/90 transition-all duration-300 flex items-center justify-center space-x-3 font-semibold text-lg shadow-lg hover:shadow-xl hover:-translate-y-1 mx-auto"
     >
       <PlusIcon size={24} className="group-hover:scale-110 transition-transform duration-200" />
       <span>Create Your First Folder</span>

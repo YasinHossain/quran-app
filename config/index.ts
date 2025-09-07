@@ -96,7 +96,6 @@ export const shouldLog = (level: string): boolean => {
  * configuration is present and valid.
  */
 export function validateConfig(): void {
-  console.info(`✅ Configuration loaded for ${config.app.environment} environment`);
 
   if (isProduction) {
     if (!config.monitoring.sentry?.dsn && config.features.enableErrorTracking) {

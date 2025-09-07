@@ -1,3 +1,4 @@
+/* eslint-disable no-console -- uses console methods for logging transport */
 import { LogLevel, type LogEntry, type ILoggerTransport } from './types';
 
 /**

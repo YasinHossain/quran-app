@@ -121,14 +121,16 @@ export const ResponsiveImage = ({
           e.currentTarget.src = fallback;
         } else {
           // Generate a simple SVG placeholder
-          const fallbackSvg = `data:image/svg+xml;base64,${btoa(
-            `<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
-              <rect width="100%" height="100%" fill="#f3f4f6"/>
-              <text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="#9ca3af" font-family="system-ui" font-size="14">
-                Image
-              </text>
-            </svg>`
-          )}`;
+          const fallbackSvg =
+            'data:image/svg+xml,' +
+            encodeURIComponent(
+              `<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">\n` +
+                `  <rect width="100%" height="100%" fill="rgb(var(--color-surface))"/>\n` +
+                `  <text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="rgb(var(--color-muted))" font-family="system-ui" font-size="14">\n` +
+                `    Image\n` +
+                `  </text>\n` +
+                `</svg>`
+            );
           e.currentTarget.src = fallbackSvg;
         }
       }}

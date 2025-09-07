@@ -35,7 +35,7 @@ export const BaseSidebar = ({
       return cn(
         baseClasses,
         'left-0 lg:left-16',
-        'shadow-lg shadow-black/5 dark:shadow-black/10',
+        'shadow-modal',
         isHidden ? 'top-0 h-screen' : 'top-16 h-[calc(100vh-4rem)]',
         'z-50 lg:z-10',
         isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
@@ -44,7 +44,7 @@ export const BaseSidebar = ({
       return cn(
         baseClasses,
         'right-0',
-        'shadow-lg shadow-black/5 dark:shadow-black/10',
+        'shadow-modal',
         isHidden ? 'top-0 h-screen' : 'top-16 h-[calc(100vh-4rem)]',
         'z-30',
         isOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
@@ -59,7 +59,9 @@ export const BaseSidebar = ({
         <div
           className={cn(
             'fixed inset-0 transition-opacity duration-300',
-            position === 'left' ? 'bg-black/50 lg:hidden z-40' : 'bg-black/20 lg:hidden z-25'
+            position === 'left'
+              ? 'bg-surface-overlay/50 lg:hidden z-40'
+              : 'bg-surface-overlay/20 lg:hidden z-25'
           )}
           onClick={onClose}
           onKeyDown={(e) => {

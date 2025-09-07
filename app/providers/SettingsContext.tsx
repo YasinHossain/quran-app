@@ -34,31 +34,31 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
 
   const setSettings = useCallback(
     (s: Settings) => dispatch({ type: 'SET_SETTINGS', value: s }),
-    []
+    [dispatch]
   );
   const setShowByWords = useCallback(
     (val: boolean) => dispatch({ type: 'SET_SHOW_BY_WORDS', value: val }),
-    []
+    [dispatch]
   );
   const setTajweed = useCallback(
     (val: boolean) => dispatch({ type: 'SET_TAJWEED', value: val }),
-    []
+    [dispatch]
   );
   const setWordLang = useCallback(
     (lang: string) => dispatch({ type: 'SET_WORD_LANG', value: lang }),
-    []
+    [dispatch]
   );
   const setWordTranslationId = useCallback(
     (id: number) => dispatch({ type: 'SET_WORD_TRANSLATION_ID', value: id }),
-    []
+    [dispatch]
   );
   const setTafsirIds = useCallback(
     (ids: number[]) => dispatch({ type: 'SET_TAFSIR_IDS', value: ids }),
-    []
+    [dispatch]
   );
   const setTranslationIds = useCallback(
     (ids: number[]) => dispatch({ type: 'SET_TRANSLATION_IDS', value: ids }),
-    []
+    [dispatch]
   );
 
   const value = useMemo(

@@ -60,7 +60,7 @@ export const SearchActions = ({ onClearSearch }: SearchActionsProps): React.JSX.
   >
     <button
       onClick={onClearSearch}
-      className="bg-accent text-white px-6 py-3 rounded-xl hover:bg-accent/90 transition-all duration-200 font-semibold hover:-translate-y-0.5 shadow-sm hover:shadow-md"
+      className="bg-accent text-on-accent px-6 py-3 rounded-xl hover:bg-accent/90 transition-all duration-200 font-semibold hover:-translate-y-0.5 shadow-sm hover:shadow-md"
     >
       Clear Search
     </button>

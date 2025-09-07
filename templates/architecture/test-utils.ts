@@ -18,15 +18,21 @@ import {
 
 import type React from 'react';
 
-interface ComponentTestConfig {
-  Component: React.ComponentType<any>;
-  defaultProps: any;
-  mockData: any;
+interface ComponentTestConfig<TProps, TData> {
+  Component: React.ComponentType<TProps>;
+  defaultProps: TProps;
+  mockData: TData;
 }
 
-interface HookTestConfig {
-  useHook: (props: any) => any;
-  mockData: any;
+interface HookResult<TData> {
+  data: TData[];
+  isLoading: boolean;
+  refetch: () => Promise<void>;
+}
+
+interface HookTestConfig<TProps, TData> {
+  useHook: (props: TProps) => HookResult<TData>;
+  mockData: TData;
 }
 
 export const setupTestEnvironment = () => {
@@ -44,15 +50,17 @@ export const setupTestEnvironment = () => {
     })),
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (global as any).IntersectionObserver = jest.fn().mockImplementation(() => ({
+  (globalThis as { IntersectionObserver: jest.Mock }).IntersectionObserver = jest
+    .fn()
+    .mockImplementation(() => ({
     observe: jest.fn(),
     unobserve: jest.fn(),
     disconnect: jest.fn(),
   }));
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (global as any).ResizeObserver = jest.fn().mockImplementation(() => ({
+  (globalThis as { ResizeObserver: jest.Mock }).ResizeObserver = jest
+    .fn()
+    .mockImplementation(() => ({
     observe: jest.fn(),
     unobserve: jest.fn(),
     disconnect: jest.fn(),
@@ -69,7 +77,7 @@ export const clearTestEnvironment = () => {
   jest.clearAllTimers();
 };
 
-export const runComponentTests = (config: ComponentTestConfig) => {
+export const runComponentTests = <TProps, TData>(config: ComponentTestConfig<TProps, TData>) => {
   architectureComplianceSection(config);
   responsiveDesignSection(config);
   contextIntegrationSection(config);
@@ -80,13 +88,13 @@ export const runComponentTests = (config: ComponentTestConfig) => {
   errorHandlingSection(config);
 };
 
-export const runHookTests = (config: HookTestConfig) => {
+export const runHookTests = <TProps, TData>(config: HookTestConfig<TProps, TData>) => {
   hookContextIntegrationSection(config);
   hookPerformanceSection(config);
   hookCleanupSection(config);
   hookDataFetchingSection(config);
 };
 
-export const runIntegrationTest = (config: ComponentTestConfig) => {
+export const runIntegrationTest = <TProps, TData>(config: ComponentTestConfig<TProps, TData>) => {
   integrationTestSection(config);
 };

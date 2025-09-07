@@ -27,7 +27,7 @@ export const SidebarHeader = ({
   return (
     <div
       className={cn(
-        'flex items-center justify-between px-3 sm:px-4 py-3 sm:py-4 shadow-md shadow-black/5 dark:shadow-black/10',
+        'flex items-center justify-between px-3 sm:px-4 py-3 sm:py-4 shadow-card',
         showCloseButton && 'md:justify-center', // Center title on desktop when close button is only for mobile
         className
       )}

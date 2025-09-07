@@ -24,7 +24,7 @@
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
     "noPropertyAccessFromIndexSignature": true,
-    "types": ["@types/node", "@testing-library/jest-dom"],
+    "types": ["@types/node", "@types/react", "@testing-library/jest-dom"],
     "plugins": [
       {
         "name": "next"

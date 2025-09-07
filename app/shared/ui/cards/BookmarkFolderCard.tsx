@@ -47,8 +47,11 @@ export const BookmarkFolderCard = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3 min-w-0">
           <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-semibold"
-            style={{ backgroundColor: folder.color || '#7C3AED' }}
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-on-accent text-sm font-semibold"
+            style={{
+              // Use folder color if provided, otherwise fall back to accent token
+              backgroundColor: folder.color || 'rgb(var(--color-accent))',
+            }}
           >
             {folder.name.charAt(0).toUpperCase()}
           </div>

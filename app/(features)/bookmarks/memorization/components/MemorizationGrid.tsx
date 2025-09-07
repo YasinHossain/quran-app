@@ -31,7 +31,7 @@ export const MemorizationGrid = ({
         </p>
         <button
           onClick={onCreatePlan}
-          className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-xl font-semibold hover:bg-accent-hover transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-on-accent rounded-xl font-semibold hover:bg-accent-hover transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
         >
           <PlusIcon size={20} />
           Create Memorization Plan

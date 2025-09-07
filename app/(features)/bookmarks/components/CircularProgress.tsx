@@ -44,7 +44,7 @@ const BackgroundCircle = ({
     cx={size / 2}
     cy={size / 2}
     r={radius}
-    stroke="#E5E7EB"
+    stroke="rgb(var(--color-border))"
     strokeWidth={strokeWidth}
     fill="transparent"
     className="opacity-60"
@@ -69,7 +69,7 @@ const ProgressCircle = ({
     cx={size / 2}
     cy={size / 2}
     r={radius}
-    stroke="#10B981"
+    stroke="rgb(var(--color-accent))"
     strokeWidth={strokeWidth}
     fill="transparent"
     strokeDasharray={strokeDasharray}
@@ -77,7 +77,7 @@ const ProgressCircle = ({
     strokeLinecap="round"
     className="transition-all duration-[1500ms]"
     style={{
-      filter: 'drop-shadow(0 0 5px rgba(16, 185, 129, 0.4))',
+      filter: 'drop-shadow(0 0 5px rgb(var(--color-accent) / 0.4))',
       transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
     }}
   />

@@ -21,9 +21,9 @@ interface BookmarkFolderSidebarProps {
 export const BookmarkFolderSidebar = ({
   bookmarks,
   folder,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- active verse selection not implemented
   activeVerseId,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- verse selection handler to be added
   onVerseSelect,
   onBack,
   isOpen,
