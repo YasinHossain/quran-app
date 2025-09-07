@@ -43,7 +43,7 @@ npm run test:coverage   # Test with coverage
 
 # Available AI Tools (Direct Script Execution)
 node tools/ai/feature-generator.js <name>    # Generate complete features (future mobile app support)
-node tools/ai/platform-generator.js <type>   # Generate platform-specific code (mobile/desktop)
+node tools/ai/platform-generator/index.ts <type>   # Generate platform-specific code (mobile/desktop)
 # Note: Other AI tools are integrated into GitHub Actions and run automatically
 ```
 
@@ -94,7 +94,7 @@ node tools/ai/feature-generator.js prayer-times
 # Creates: Domain entities, Use cases, Repositories, Components, Tests
 
 # Platform-Specific Code Generation (for future mobile apps)
-node tools/ai/platform-generator.js mobile
+node tools/ai/platform-generator/index.ts mobile
 # Creates: React Native mobile app structure with shared business logic
 ```
 
