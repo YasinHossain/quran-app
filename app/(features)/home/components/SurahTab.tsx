@@ -14,7 +14,7 @@ interface SurahTabProps {
   searchQuery: string;
 }
 
-export function SurahTab({ searchQuery }: SurahTabProps) {
+export function SurahTab({ searchQuery }: SurahTabProps): React.JSX.Element {
   const [allSurahs, setAllSurahs] = useState<Surah[]>([]);
 
   useEffect(() => {

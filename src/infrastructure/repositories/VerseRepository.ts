@@ -19,10 +19,10 @@ import {
   search as querySearch,
   findWithTranslation as queryFindWithTranslation,
 } from './verseSingleQueries';
+import { getChapters } from '../../../lib/api/chapters';
 import { Verse } from '../../domain/entities';
 import { IVerseRepository } from '../../domain/repositories/IVerseRepository';
 import { logger } from '../monitoring/Logger';
-import { getChapters } from '../../../lib/api/chapters';
 
 export class VerseRepository implements IVerseRepository {
   private readonly defaultTranslationId = 20; // Default English translation
@@ -30,11 +30,13 @@ export class VerseRepository implements IVerseRepository {
   findById = (id: string): Promise<Verse | null> => queryFindById(id, this.defaultTranslationId);
 
   save = async (_verse: Verse): Promise<void> => {
+    void _verse; // mark as used
     logger.warn('Save operation not supported by read-only API');
     throw new Error('Save operation not supported by read-only API');
   };
 
   remove = async (_id: string): Promise<void> => {
+    void _id; // mark as used
     logger.warn('Remove operation not supported by read-only API');
     throw new Error('Remove operation not supported by read-only API');
   };
@@ -121,10 +123,7 @@ export class VerseRepository implements IVerseRepository {
       try {
         const verses = await this.findBySurah(id);
         const serialized = verses.map((v) => v.toPlainObject());
-        localStorage.setItem(
-          `${VerseRepository.cachePrefix}${id}`,
-          JSON.stringify(serialized)
-        );
+        localStorage.setItem(`${VerseRepository.cachePrefix}${id}`, JSON.stringify(serialized));
       } catch (error) {
         logger.error('Failed to cache verses for offline use:', { surahId: id }, error as Error);
       }

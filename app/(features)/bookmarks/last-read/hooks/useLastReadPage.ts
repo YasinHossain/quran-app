@@ -4,8 +4,13 @@ import { useEffect } from 'react';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
+import type { Chapter } from '@/types';
 
-export const useLastReadPage = () => {
+export const useLastReadPage = (): {
+  lastRead: any;
+  chapters: Chapter[];
+  handleSectionChange: (section: SectionId) => void;
+} => {
   const router = useRouter();
   const { lastRead, chapters } = useBookmarks();
 
@@ -16,7 +21,7 @@ export const useLastReadPage = () => {
     };
   }, []);
 
-  const handleSectionChange = (section: SectionId) => {
+  const handleSectionChange = (section: SectionId): void => {
     if (section === 'bookmarks') {
       router.push('/bookmarks');
     } else if (section === 'pinned') {

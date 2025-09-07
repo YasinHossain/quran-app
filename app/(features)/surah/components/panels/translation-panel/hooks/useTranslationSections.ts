@@ -4,7 +4,10 @@ export const useTranslationSections = (
   activeFilter: string,
   translations: TranslationResource[],
   groupedTranslations: Record<string, TranslationResource[]>
-) => {
+): {
+  resourcesToRender: TranslationResource[];
+  sectionsToRender: Array<{ language: string; items: TranslationResource[] }>;
+} => {
   const resourcesToRender =
     activeFilter === 'All' ? translations : groupedTranslations[activeFilter] || [];
 

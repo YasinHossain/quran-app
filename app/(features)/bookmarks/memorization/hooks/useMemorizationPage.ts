@@ -5,8 +5,14 @@ import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useModal } from '@/app/shared/hooks/useModal';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
+import type { Chapter } from '@/types';
 
-export const useMemorizationPage = () => {
+export const useMemorizationPage = (): {
+  memorization: any;
+  chapters: Chapter[];
+  modal: any;
+  handleSectionChange: (section: SectionId) => void;
+} => {
   const router = useRouter();
   const { memorization, chapters } = useBookmarks();
   const modal = useModal();
@@ -18,7 +24,7 @@ export const useMemorizationPage = () => {
     };
   }, []);
 
-  const handleSectionChange = (section: SectionId) => {
+  const handleSectionChange = (section: SectionId): void => {
     if (section === 'bookmarks') {
       router.push('/bookmarks');
     } else if (section === 'pinned') {

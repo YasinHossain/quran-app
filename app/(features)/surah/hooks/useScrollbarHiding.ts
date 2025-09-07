@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, RefObject } from 'react';
 
-export const useScrollbarHiding = () => {
+export const useScrollbarHiding = (): { sidebarRef: RefObject<HTMLElement> } => {
   const sidebarRef = useRef<HTMLElement>(null);
 
   useEffect(() => {

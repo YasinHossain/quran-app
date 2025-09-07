@@ -85,7 +85,7 @@ describe('Bookmarks Responsive Components', () => {
   });
 
   // Helper function to test navigation item accessibility
-  const testNavigationItemAccessibility = (item: Element | null) => {
+  const testNavigationItemAccessibility = (item: Element | null): void => {
     expect(item).toBeInTheDocument();
     if (item) {
       // These should have proper styling even if not clickable in this context

@@ -11,7 +11,22 @@ interface UseFolderSettingsParams {
   isOpen: boolean;
 }
 
-export const useFolderSettings = ({ folder, mode, onClose, isOpen }: UseFolderSettingsParams) => {
+export const useFolderSettings = ({
+  folder,
+  mode,
+  onClose,
+  isOpen,
+}: UseFolderSettingsParams): {
+  name: string;
+  setName: (name: string) => void;
+  selectedColor: string;
+  setSelectedColor: (color: string) => void;
+  selectedIcon: string;
+  setSelectedIcon: (icon: string) => void;
+  isSubmitting: boolean;
+  handleSubmit: (e: React.FormEvent) => Promise<void>;
+  getModalTitle: () => string;
+} => {
   const { renameFolder } = useBookmarks();
   const [name, setName] = useState('');
   const [selectedColor, setSelectedColor] = useState('text-accent');
@@ -20,7 +35,7 @@ export const useFolderSettings = ({ folder, mode, onClose, isOpen }: UseFolderSe
 
   useEffect(() => {
     if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent): void => {
       if (e.key === 'Escape') {
         onClose();
       }

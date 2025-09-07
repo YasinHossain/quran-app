@@ -1,12 +1,12 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { Bookmark, Folder } from '@/types';
 
-import { FolderItem } from './shared/folder';
+import { FolderList } from './FolderList';
+import { useFolderNavigation } from '../hooks/useFolderNavigation';
 
 interface BookmarkFolderContentProps {
   bookmarks: Bookmark[];
@@ -24,42 +24,25 @@ export const BookmarkFolderContent = ({
   const { folders } = useBookmarks();
   const [expandedFolderId, setExpandedFolderId] = useState<string | null>(folder.id);
 
-  const router = useRouter();
+  const { handleFolderSelect } = useFolderNavigation(folder.id);
 
   const toggleFolder = (folderId: string): void => {
     setExpandedFolderId((currentId) => (currentId === folderId ? null : folderId));
   };
 
-  const handleFolderSelect = (folderId: string): void => {
-    if (folderId !== folder.id) {
-      router.push(`/bookmarks/${folderId}`);
-    }
-  };
-
   return (
     <div className="flex-1 p-4">
       {/* Folders List */}
-      <div className="space-y-3">
-        {folders.map((folderItem) => {
-          const isExpanded = expandedFolderId === folderItem.id;
-          const isCurrentFolder = folderItem.id === folder.id;
-          const folderBookmarks = isCurrentFolder ? bookmarks : folderItem.bookmarks;
-
-          return (
-            <FolderItem
-              key={folderItem.id}
-              folderItem={folderItem}
-              isExpanded={isExpanded}
-              isCurrentFolder={isCurrentFolder}
-              folderBookmarks={folderBookmarks}
-              onToggle={toggleFolder}
-              onSelect={handleFolderSelect}
-              activeVerseId={activeVerseId}
-              onVerseSelect={onVerseSelect}
-            />
-          );
-        })}
-      </div>
+      <FolderList
+        folders={folders}
+        currentFolderId={folder.id}
+        expandedFolderId={expandedFolderId}
+        bookmarks={bookmarks}
+        onToggle={toggleFolder}
+        onSelect={handleFolderSelect}
+        activeVerseId={activeVerseId}
+        onVerseSelect={onVerseSelect}
+      />
     </div>
   );
 };

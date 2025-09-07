@@ -31,7 +31,19 @@ export const getContainerValue = <T>(config: ContainerConfig<T>, fallback: T): T
   return fallback;
 };
 
-export const useContainer = (containerRef?: React.RefObject<HTMLElement>) => {
+interface UseContainerResult {
+  containerSize: ContainerSize;
+  isXs: boolean;
+  isSm: boolean;
+  isMd: boolean;
+  isLg: boolean;
+  isXl: boolean;
+  isSmUp: boolean;
+  isMdUp: boolean;
+  isLgUp: boolean;
+}
+
+export const useContainer = (containerRef?: React.RefObject<HTMLElement>): UseContainerResult => {
   const [containerSize, setContainerSize] = React.useState<ContainerSize>('sm');
 
   React.useEffect(() => {

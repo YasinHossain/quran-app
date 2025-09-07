@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+/* eslint-disable no-console */
 /**
  * Platform Generator
  *
@@ -26,7 +26,7 @@ async function resolveConfig(platformArg: string, configPath?: string): Promise<
   });
 }
 
-async function main() {
+async function main(): Promise<void> {
   const [, , platformArg, configPath] = process.argv;
 
   if (!platformArg) {

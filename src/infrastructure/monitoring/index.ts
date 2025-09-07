@@ -7,7 +7,6 @@
 
 // Logger exports
 export { Logger, LogLevel, logger, type LogEntry, type ILoggerTransport } from './Logger';
-export { ConsoleTransport } from './ConsoleTransport';
 export { MemoryTransport } from './MemoryTransport';
 export { RemoteTransport } from './RemoteTransport';
 export { PerformanceLogger, perfLogger } from './PerformanceLogger';

@@ -3,7 +3,7 @@ import { createMatchMediaMock, testResponsiveHook, devicePresets } from '../resp
 /**
  * Set up matchMedia mock for responsive tests
  */
-export const setupMatchMediaMock = () => {
+export const setupMatchMediaMock = (): ReturnType<typeof createMatchMediaMock> => {
   const utils = createMatchMediaMock();
   Object.defineProperty(window, 'matchMedia', {
     writable: true,

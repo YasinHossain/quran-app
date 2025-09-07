@@ -7,11 +7,13 @@ Your PR verification is configured to run **only when requested** via comments. 
 To run verification on a PR, comment with any of these keywords:
 
 ### Quality Checks
+
 - `verify` - Runs full quality verification
-- `check` - Runs all quality checks  
+- `check` - Runs all quality checks
 - `run tests` - Runs the test suite
 
 ### Claude Code Review
+
 - `@claude` - Triggers comprehensive code review
 - `review` - Requests code review
 
@@ -43,6 +45,7 @@ When triggered via comments, the system will:
 ## Examples
 
 Comment on any PR with:
+
 - `verify this PR` - Runs quality checks
 - `@claude review this code` - Gets comprehensive review
 - `check tests` - Runs test verification
@@ -50,6 +53,7 @@ Comment on any PR with:
 ## Environment Variables Required
 
 Make sure these secrets are set in repository settings:
+
 - `CLAUDE_CODE_OAUTH_TOKEN` - For Claude code review functionality
 - `CODECOV_TOKEN` - For code coverage reporting (optional)
 

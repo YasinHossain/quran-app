@@ -1,6 +1,12 @@
+/* eslint-disable no-console */
 import fs from 'fs';
 
-export const resolvePaths = (featureName: string) => ({
+export interface GeneratorPaths {
+  featurePath: string;
+  domainPath: string;
+}
+
+export const resolvePaths = (featureName: string): GeneratorPaths => ({
   featurePath: `app/(features)/${featureName}`,
   domainPath: 'src/domain/entities',
 });

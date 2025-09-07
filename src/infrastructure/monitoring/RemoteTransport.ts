@@ -59,12 +59,10 @@ export class RemoteTransport implements ILoggerTransport {
         body: JSON.stringify({ entries }),
         errorPrefix: 'Failed to send logs',
       });
-    } catch (error) {
+    } catch {
       // Re-add failed entries to buffer for retry
       this.buffer.unshift(...entries);
-      // Avoid importing central logger here to prevent cycles
-
-      console.warn('Failed to send logs', error);
+      // Unable to log the failure via central logger to avoid cycles
     }
   }
 

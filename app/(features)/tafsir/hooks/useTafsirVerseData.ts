@@ -11,7 +11,24 @@ import { useTranslationOptions } from './useTranslationOptions';
 import { useVerseNavigation } from './useVerseNavigation';
 import { useWordTranslations } from './useWordTranslations';
 
-export const useTafsirVerseData = (surahId: string, ayahId: string) => {
+interface UseTafsirVerseDataReturn {
+  verse: VerseType | undefined;
+  tafsirHtml: string | undefined;
+  tafsirResource: { id: number; name: string; lang: string } | undefined;
+  translationOptions: { id: number; name: string; lang: string }[];
+  wordLanguageOptions: { name: string; id: number }[];
+  wordLanguageMap: Record<string, number>;
+  selectedTranslationName: string;
+  selectedTafsirName: string;
+  selectedWordLanguageName: string;
+  prev: { surahId: string; ayahId: number } | null;
+  next: { surahId: string; ayahId: number } | null;
+  navigate: (target: { surahId: string; ayahId: number } | null) => void;
+  currentSurah: { number: number; verses: number; name: string } | undefined;
+  resetWordSettings: () => void;
+}
+
+export const useTafsirVerseData = (surahId: string, ayahId: string): UseTafsirVerseDataReturn => {
   const { settings } = useSettings();
 
   const { translationOptions, selectedTranslationName } = useTranslationOptions();

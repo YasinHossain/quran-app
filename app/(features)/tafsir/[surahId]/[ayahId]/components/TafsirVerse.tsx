@@ -14,7 +14,7 @@ interface TafsirVerseProps {
   tafsirIds: number[];
 }
 
-export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps) => {
+export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps): React.JSX.Element => {
   const { playingId, setPlayingId, loadingId } = useAudio();
   const { settings } = useSettings();
   const { bookmarkedVerses, toggleBookmark } = useBookmarks();

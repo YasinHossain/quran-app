@@ -6,11 +6,15 @@
       "Bash(npx eslint:*)",
       "Bash(find:*)",
       "Bash(npm run lint)",
-      "Bash(npm run lint:*)"
+      "Bash(npm run lint:*)",
+      "Bash(npm run format:*)",
+      "Bash(npm run type-check:*)"
     ],
     "deny": [],
     "ask": []
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": ["browser-console"]
+  "enabledMcpjsonServers": [
+    "browser-console"
+  ]
 }

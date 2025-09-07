@@ -56,13 +56,21 @@ export const findByVerseKeys = async (
 };
 
 export const findRandom = async (
-  _count = 1,
-  _surahId: number | undefined,
+  count = 1,
+  surahId: number | undefined,
   translationId: number
 ): Promise<Verse[]> => {
   try {
-    const randomVerse = await apiVerses.getRandomVerse(translationId);
-    return [mapApiVerseToDomain(randomVerse)];
+    if (surahId) {
+      // API does not support surah-scoped random yet; keep note for observability
+      logger.warn('Random verse by surah not supported; returning global random', { surahId });
+    }
+    const verses: Verse[] = [];
+    for (let i = 0; i < Math.max(1, count); i++) {
+      const randomVerse = await apiVerses.getRandomVerse(translationId);
+      verses.push(mapApiVerseToDomain(randomVerse));
+    }
+    return verses;
   } catch (error) {
     logger.error('Failed to find random verse:', undefined, error as Error);
     return [];

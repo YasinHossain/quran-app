@@ -1,6 +1,11 @@
 import { createMatchMediaMock, simulateDevice, testPerformance } from '../responsive-test-utils';
 
-export const setupMobilePerformanceTest = () => {
+interface MobilePerformanceTestSetup {
+  matchMediaUtils: ReturnType<typeof createMatchMediaMock>;
+  cleanup: () => void;
+}
+
+export const setupMobilePerformanceTest = (): MobilePerformanceTestSetup => {
   const matchMediaUtils = createMatchMediaMock();
   Object.defineProperty(window, 'matchMedia', {
     writable: true,

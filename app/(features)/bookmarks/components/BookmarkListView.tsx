@@ -1,16 +1,17 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import { Folder, Bookmark } from '@/types';
 
+import { VerseList } from './bookmark-list-view/VerseList';
 import {
   BookmarkListContent,
   BookmarkListHeader,
   EmptyBookmarkState,
-  SimpleEmptyState,
 } from './shared/BookmarkListComponents';
+import { useBookmarkListState } from '../hooks/useBookmarkListState';
 
 interface BookmarkListViewProps {
   folder: Folder;
@@ -18,41 +19,6 @@ interface BookmarkListViewProps {
   bookmarks?: Bookmark[];
   showAsVerseList?: boolean;
 }
-
-const useBookmarkListState = (
-  folder: Folder,
-  externalBookmarks?: Bookmark[]
-): {
-  bookmarks: Bookmark[];
-  listHeight: number;
-  handleRemoveBookmark: (verseId: string) => void;
-} => {
-  const [bookmarks, setBookmarks] = useState(externalBookmarks || folder.bookmarks);
-  const [listHeight, setListHeight] = useState(0);
-
-  useEffect(() => {
-    const updateHeight = (): void => {
-      setListHeight(window.innerHeight - 200);
-    };
-    updateHeight();
-    window.addEventListener('resize', updateHeight);
-    return () => window.removeEventListener('resize', updateHeight);
-  }, []);
-
-  useEffect(() => {
-    if (externalBookmarks) {
-      setBookmarks(externalBookmarks);
-    } else {
-      setBookmarks(folder.bookmarks);
-    }
-  }, [externalBookmarks, folder.bookmarks]);
-
-  const handleRemoveBookmark = (verseId: string): void => {
-    setBookmarks((prev) => prev.filter((bookmark) => bookmark.verseId !== verseId));
-  };
-
-  return { bookmarks, listHeight, handleRemoveBookmark };
-};
 
 export const BookmarkListView = ({
   folder,
@@ -66,16 +32,13 @@ export const BookmarkListView = ({
   );
 
   if (showAsVerseList) {
-    return bookmarks.length > 0 ? (
-      <BookmarkListContent
+    return (
+      <VerseList
         bookmarks={bookmarks}
         folder={folder}
         listHeight={listHeight}
-        itemSize={140}
         onRemoveBookmark={handleRemoveBookmark}
       />
-    ) : (
-      <SimpleEmptyState />
     );
   }
 

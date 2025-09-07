@@ -6,7 +6,12 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import { getTranslations } from '@/lib/api';
 import { TranslationResource } from '@/types';
 
-export const useTranslationOptions = () => {
+interface UseTranslationOptionsReturn {
+  translationOptions: TranslationResource[];
+  selectedTranslationName: string;
+}
+
+export const useTranslationOptions = (): UseTranslationOptionsReturn => {
   const { t } = useTranslation();
   const { settings } = useSettings();
 

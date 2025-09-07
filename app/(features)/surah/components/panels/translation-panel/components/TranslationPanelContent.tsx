@@ -63,7 +63,7 @@ export const TranslationPanelContent = ({
   selectedIds,
   listHeight,
   listContainerRef,
-}: TranslationPanelContentProps) => {
+}: TranslationPanelContentProps): React.JSX.Element => {
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -99,46 +99,27 @@ export const TranslationPanelContent = ({
         />
       </div>
 
-      {/* Sticky Tabs */}
-      <div className="sticky top-0 z-10 py-2 border-b bg-background/95 backdrop-blur-sm border-border">
-        <div className="px-4">
-          <ResourceTabs
-            languages={languages}
-            activeFilter={activeFilter}
-            onTabClick={setActiveFilter}
-            tabsContainerRef={tabsContainerRef}
-            canScrollLeft={canScrollLeft}
-            canScrollRight={canScrollRight}
-            scrollTabsLeft={scrollTabsLeft}
-            scrollTabsRight={scrollTabsRight}
-            className=""
-          />
-        </div>
-      </div>
+      <TranslationTabsHeader
+        languages={languages}
+        activeFilter={activeFilter}
+        setActiveFilter={setActiveFilter}
+        tabsContainerRef={tabsContainerRef}
+        canScrollLeft={canScrollLeft}
+        canScrollRight={canScrollRight}
+        scrollTabsLeft={scrollTabsLeft}
+        scrollTabsRight={scrollTabsRight}
+      />
 
       <div className="px-4 pb-4 pt-4">
         {activeFilter === 'All' ? (
-          <div className="space-y-6">
-            {sectionsToRender.map(({ language, items }) => (
-              <div key={language}>
-                <h3 className="text-lg font-semibold mb-4 text-foreground">{language}</h3>
-                <div className="space-y-2">
-                  {items.map((item) => (
-                    <ResourceItem
-                      key={item.id}
-                      item={item}
-                      isSelected={selectedIds.has(item.id)}
-                      onToggle={handleSelectionToggle}
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+          <TranslationsByLanguage
+            sectionsToRender={sectionsToRender}
+            selectedIds={selectedIds}
+            onToggle={handleSelectionToggle}
+          />
         ) : (
-          <ResourceList
+          <TranslationsVirtualList
             resources={resourcesToRender}
-            rowHeight={58}
             selectedIds={selectedIds}
             onToggle={handleSelectionToggle}
             height={listHeight}
@@ -148,3 +129,93 @@ export const TranslationPanelContent = ({
     </div>
   );
 };
+
+function TranslationTabsHeader({
+  languages,
+  activeFilter,
+  setActiveFilter,
+  tabsContainerRef,
+  canScrollLeft,
+  canScrollRight,
+  scrollTabsLeft,
+  scrollTabsRight,
+}: {
+  languages: string[];
+  activeFilter: string;
+  setActiveFilter: (filter: string) => void;
+  tabsContainerRef: React.RefObject<HTMLDivElement>;
+  canScrollLeft: boolean;
+  canScrollRight: boolean;
+  scrollTabsLeft: () => void;
+  scrollTabsRight: () => void;
+}): React.JSX.Element {
+  return (
+    <div className="sticky top-0 z-10 py-2 border-b bg-background/95 backdrop-blur-sm border-border">
+      <div className="px-4">
+        <ResourceTabs
+          languages={languages}
+          activeFilter={activeFilter}
+          onTabClick={setActiveFilter}
+          tabsContainerRef={tabsContainerRef}
+          canScrollLeft={canScrollLeft}
+          canScrollRight={canScrollRight}
+          scrollTabsLeft={scrollTabsLeft}
+          scrollTabsRight={scrollTabsRight}
+          className=""
+        />
+      </div>
+    </div>
+  );
+}
+
+function TranslationsByLanguage({
+  sectionsToRender,
+  selectedIds,
+  onToggle,
+}: {
+  sectionsToRender: Array<{ language: string; items: TranslationResource[] }>;
+  selectedIds: Set<number>;
+  onToggle: (id: number) => void;
+}): React.JSX.Element {
+  return (
+    <div className="space-y-6">
+      {sectionsToRender.map(({ language, items }) => (
+        <div key={language}>
+          <h3 className="text-lg font-semibold mb-4 text-foreground">{language}</h3>
+          <div className="space-y-2">
+            {items.map((item) => (
+              <ResourceItem
+                key={item.id}
+                item={item}
+                isSelected={selectedIds.has(item.id)}
+                onToggle={onToggle}
+              />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function TranslationsVirtualList({
+  resources,
+  selectedIds,
+  onToggle,
+  height,
+}: {
+  resources: TranslationResource[];
+  selectedIds: Set<number>;
+  onToggle: (id: number) => void;
+  height: number;
+}): React.JSX.Element {
+  return (
+    <ResourceList
+      resources={resources}
+      rowHeight={58}
+      selectedIds={selectedIds}
+      onToggle={onToggle}
+      height={height}
+    />
+  );
+}

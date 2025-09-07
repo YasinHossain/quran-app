@@ -8,7 +8,7 @@ interface SurahPageProps {
  * Surah page component for displaying a specific Surah.
  * Server component that handles async params and renders the SurahView.
  */
-async function SurahPage({ params }: SurahPageProps) {
+async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element> {
   const { surahId } = await params;
 
   return (

@@ -1,8 +1,9 @@
+/* eslint-disable no-console */
 import {
   controllerTemplate,
   entityTemplate,
   repositoryTemplate,
-  useCaseTemplate,
+  useCaseTemplate as buildUseCase,
 } from '../templates';
 import { ensureDirectories, writeFile } from './file-system';
 import { capitalize } from './format';
@@ -32,7 +33,7 @@ export async function generateFeature(featureName: string): Promise<void> {
       const useCaseName = `${capitalize(action)}${name}`;
       writeFile(
         `src/application/use-cases/${useCaseName}UseCase.ts`,
-        useCaseTemplate(featureName, action),
+        buildUseCase(featureName, action),
         `${useCaseName}UseCase`
       );
     }

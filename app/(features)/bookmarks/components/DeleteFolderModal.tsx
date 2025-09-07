@@ -22,11 +22,10 @@ interface DeleteFolderModalProps {
   folder: Folder | null;
 }
 
-export const DeleteFolderModal = ({
-  isOpen,
-  onClose,
-  folder,
-}: DeleteFolderModalProps): React.JSX.Element => {
+const useDeleteFolder = (
+  folder: Folder | null,
+  onClose: () => void
+): { handleDelete: () => Promise<void>; isDeleting: boolean } => {
   const { deleteFolder } = useBookmarks();
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -44,11 +43,54 @@ export const DeleteFolderModal = ({
     }
   };
 
+  return { handleDelete, isDeleting };
+};
+
+const ModalContent = ({
+  folder,
+  onClose,
+  handleDelete,
+  isDeleting,
+}: {
+  folder: Folder;
+  onClose: () => void;
+  handleDelete: () => Promise<void>;
+  isDeleting: boolean;
+}): React.JSX.Element => (
+  <motion.div
+    variants={MODAL_VARIANTS}
+    initial="hidden"
+    animate="visible"
+    exit="exit"
+    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+    className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-surface border border-border rounded-2xl shadow-modal z-modal"
+  >
+    <ModalHeader onClose={onClose} />
+
+    <div className="px-6 pb-6">
+      <FolderPreview folder={folder} />
+
+      <div className="space-y-4">
+        <p className="text-foreground">Are you sure you want to permanently delete this folder?</p>
+        <WarningMessage folder={folder} />
+      </div>
+
+      <ModalActions onClose={onClose} onDelete={handleDelete} isDeleting={isDeleting} />
+    </div>
+  </motion.div>
+);
+
+export const DeleteFolderModal = ({
+  isOpen,
+  onClose,
+  folder,
+}: DeleteFolderModalProps): React.JSX.Element => {
+  const { handleDelete, isDeleting } = useDeleteFolder(folder, onClose);
+
   return (
     <AnimatePresence>
       {isOpen && folder && (
         <>
-          {/* Backdrop */}
           <motion.div
             variants={BACKDROP_VARIANTS}
             initial="hidden"
@@ -58,30 +100,12 @@ export const DeleteFolderModal = ({
             onClick={onClose}
           />
 
-          {/* Modal */}
-          <motion.div
-            variants={MODAL_VARIANTS}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-surface border border-border rounded-2xl shadow-modal z-modal"
-          >
-            <ModalHeader onClose={onClose} />
-
-            <div className="px-6 pb-6">
-              <FolderPreview folder={folder} />
-
-              <div className="space-y-4">
-                <p className="text-foreground">
-                  Are you sure you want to permanently delete this folder?
-                </p>
-                <WarningMessage folder={folder} />
-              </div>
-
-              <ModalActions onClose={onClose} onDelete={handleDelete} isDeleting={isDeleting} />
-            </div>
-          </motion.div>
+          <ModalContent
+            folder={folder}
+            onClose={onClose}
+            handleDelete={handleDelete}
+            isDeleting={isDeleting}
+          />
         </>
       )}
     </AnimatePresence>

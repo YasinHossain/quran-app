@@ -9,7 +9,10 @@ interface TranslationPanelHeaderProps {
   onReset: () => void;
 }
 
-export const TranslationPanelHeader = ({ onClose, onReset }: TranslationPanelHeaderProps) => {
+export const TranslationPanelHeader = ({
+  onClose,
+  onReset,
+}: TranslationPanelHeaderProps): React.JSX.Element => {
   return (
     <header className="flex items-center p-4 border-b border-border">
       <button

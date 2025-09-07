@@ -11,7 +11,7 @@ interface TafsirPanelsProps {
   tafsirIds: number[];
 }
 
-export const TafsirPanels = ({ verseKey, tafsirIds }: TafsirPanelsProps) => {
+export const TafsirPanels = ({ verseKey, tafsirIds }: TafsirPanelsProps): React.JSX.Element => {
   const { settings } = useSettings();
   const { openPanels, tafsirTexts, loading, togglePanel } = useTafsirPanels(verseKey);
 

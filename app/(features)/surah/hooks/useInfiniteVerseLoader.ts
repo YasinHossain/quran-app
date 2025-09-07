@@ -14,6 +14,13 @@ interface UseInfiniteVerseLoaderParams {
   setError: (err: string) => void;
 }
 
+interface UseInfiniteVerseLoaderReturn {
+  verses: Verse[];
+  isLoading: boolean;
+  isValidating: boolean;
+  isReachingEnd: boolean;
+}
+
 export function useInfiniteVerseLoader({
   id,
   lookup,
@@ -22,12 +29,18 @@ export function useInfiniteVerseLoader({
   loadMoreRef,
   error,
   setError,
-}: UseInfiniteVerseLoaderParams) {
+}: UseInfiniteVerseLoaderParams): UseInfiniteVerseLoaderReturn {
   const { data, size, setSize, isValidating } = useSWRInfinite(
     (index) => (id ? ['verses', id, stableTranslationIds, wordLang, index + 1] : null),
     ([, pId, translationIdsStr, wl, page]) => {
       const translationIds = translationIdsStr.split(',').map(Number);
-      return lookup(pId, translationIds, page, 20, wl).catch((err) => {
+      return lookup({
+        id: pId as string,
+        translationIds,
+        page: page as number,
+        perPage: 20,
+        wordLang: wl as string,
+      }).catch((err) => {
         setError(`Failed to load content. ${err.message}`);
         return { verses: [], totalPages: 1 };
       });

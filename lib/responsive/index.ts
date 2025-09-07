@@ -1,7 +1,7 @@
 import { useResponsiveFocus } from '../focus';
-import { useBreakpoint } from './breakpoints';
-import { useOrientation } from './orientation';
-import { getVariantForBreakpoint } from './variants';
+import { useBreakpoint, type BreakpointKey } from './breakpoints';
+import { useOrientation, type OrientationKey } from './orientation';
+import { getVariantForBreakpoint, type ComponentVariant } from './variants';
 
 export * from './breakpoints';
 export * from './container';
@@ -76,7 +76,19 @@ export const layoutPatterns = {
   },
 } as const;
 
-export const useResponsiveState = (enableFocusManagement = false) => {
+interface ResponsiveState {
+  breakpoint: BreakpointKey;
+  orientation: OrientationKey;
+  isMobile: boolean;
+  isTablet: boolean;
+  isDesktop: boolean;
+  isPortrait: boolean;
+  isLandscape: boolean;
+  variant: ComponentVariant;
+  focusManagement: ReturnType<typeof useResponsiveFocus>;
+}
+
+export const useResponsiveState = (enableFocusManagement = false): ResponsiveState => {
   const breakpoint = useBreakpoint();
   const orientation = useOrientation();
 

@@ -11,7 +11,13 @@ export interface WordLanguageOption {
   id: number;
 }
 
-export function useTranslationOptions() {
+export interface UseTranslationOptionsReturn {
+  translationOptions: TranslationResource[];
+  wordLanguageOptions: WordLanguageOption[];
+  wordLanguageMap: Record<string, number>;
+}
+
+export function useTranslationOptions(): UseTranslationOptionsReturn {
   const { data: translationOptionsData } = useSWR<TranslationResource[]>(
     'translations',
     getTranslations

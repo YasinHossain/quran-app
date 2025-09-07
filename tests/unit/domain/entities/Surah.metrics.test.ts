@@ -16,57 +16,64 @@ import {
 
 describe('Surah Entity - Metrics', () => {
   describe('special Surah classifications', () => {
-    it('should correctly identify Seven Long Surahs', () => {
-      const sevenLongSurahs = [2, 3, 4, 5, 6, 7, 9];
+    describe('Seven Long Surahs', () => {
+      it('returns true for known Seven Long Surahs', () => {
+        const sevenLongSurahs = [2, 3, 4, 5, 6, 7, 9];
 
-      sevenLongSurahs.forEach((id) => {
-        const surah = new Surah(
-          id,
-          `Surah ${id}`,
-          `السورة ${id}`,
-          `Surah ${id}`,
-          `The ${id}`,
-          100,
-          RevelationType.MAKKI
-        );
-        expect(isSevenLongSurah(surah.id)).toBe(true);
+        sevenLongSurahs.forEach((id) => {
+          const surah = new Surah(
+            id,
+            `Surah ${id}`,
+            `السورة ${id}`,
+            `Surah ${id}`,
+            `The ${id}`,
+            100,
+            RevelationType.MAKKI
+          );
+          expect(isSevenLongSurah(surah.id)).toBe(true);
+        });
       });
 
-      // Test a non-seven-long surah
-      const regularSurah = new Surah(
-        8,
-        'الأنفال',
-        'الأنفال',
-        'Al-Anfal',
-        'The Spoils of War',
-        75,
-        RevelationType.MADANI
-      );
-      expect(isSevenLongSurah(regularSurah.id)).toBe(false);
+      it('returns false for non Seven Long Surahs', () => {
+        const regularSurah = new Surah(
+          8,
+          'الأنفال',
+          'الأنفال',
+          'Al-Anfal',
+          'The Spoils of War',
+          75,
+          RevelationType.MADANI
+        );
+        expect(isSevenLongSurah(regularSurah.id)).toBe(false);
+      });
     });
 
-    it('should correctly identify Mufassal Surahs', () => {
-      const mufassalSurah = new Surah(
-        49,
-        'الحجرات',
-        'الحجرات',
-        'Al-Hujurat',
-        'The Rooms',
-        18,
-        RevelationType.MADANI
-      );
-      expect(isMufassalSurah(mufassalSurah.id)).toBe(true);
+    describe('Mufassal Surahs', () => {
+      it('returns true for Mufassal Surahs', () => {
+        const mufassalSurah = new Surah(
+          49,
+          'الحجرات',
+          'الحجرات',
+          'Al-Hujurat',
+          'The Rooms',
+          18,
+          RevelationType.MADANI
+        );
+        expect(isMufassalSurah(mufassalSurah.id)).toBe(true);
+      });
 
-      const nonMufassalSurah = new Surah(
-        48,
-        'الفتح',
-        'الفتح',
-        'Al-Fath',
-        'The Victory',
-        29,
-        RevelationType.MADANI
-      );
-      expect(isMufassalSurah(nonMufassalSurah.id)).toBe(false);
+      it('returns false for non Mufassal Surahs', () => {
+        const nonMufassalSurah = new Surah(
+          48,
+          'الفتح',
+          'الفتح',
+          'Al-Fath',
+          'The Victory',
+          29,
+          RevelationType.MADANI
+        );
+        expect(isMufassalSurah(nonMufassalSurah.id)).toBe(false);
+      });
     });
   });
 

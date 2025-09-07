@@ -19,6 +19,63 @@ interface FolderGridProps {
   onClearSearch: () => void;
 }
 
+const renderEmptyState = (
+  allFolders: Folder[],
+  searchTerm: string,
+  onCreateFolder: () => void,
+  onClearSearch: () => void
+): React.JSX.Element => {
+  if (allFolders.length === 0) {
+    return <EmptyBookmarks onCreateFolder={onCreateFolder} />;
+  }
+  if (searchTerm) {
+    return <EmptySearch searchTerm={searchTerm} onClearSearch={onClearSearch} />;
+  }
+  return (
+    <div className="mt-10 text-center text-muted">
+      <p>No folders found.</p>
+    </div>
+  );
+};
+
+const renderFolderCard = (
+  folder: Folder,
+  index: number,
+  onFolderSelect: (folderId: string) => void,
+  handleFolderAction: (folder: Folder, action: 'edit' | 'delete' | 'rename' | 'customize') => void
+): React.JSX.Element => (
+  <motion.div
+    key={folder.id}
+    layout
+    initial={{ opacity: 0, scale: 0.9, y: 20 }}
+    animate={{
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: {
+        delay: index * 0.05,
+        duration: 0.4,
+        ease: 'easeOut',
+      },
+    }}
+    exit={{
+      opacity: 0,
+      scale: 0.9,
+      y: -20,
+      transition: { duration: 0.3 },
+    }}
+  >
+    <FolderCard
+      folder={folder}
+      onClick={() => onFolderSelect(folder.id)}
+      onEdit={() => handleFolderAction(folder, 'edit')}
+      onDelete={() => handleFolderAction(folder, 'delete')}
+      onRename={() => handleFolderAction(folder, 'rename')}
+      onColorChange={() => handleFolderAction(folder, 'customize')}
+    />
+  </motion.div>
+);
+
 export const FolderGrid = ({
   folders,
   allFolders,
@@ -38,16 +95,11 @@ export const FolderGrid = ({
   ): void => {
     setSelectedFolder(folder);
 
-    switch (action) {
-      case 'delete':
-        setDeleteModalOpen(true);
-        break;
-      case 'edit':
-      case 'rename':
-      case 'customize':
-        setModalMode(action);
-        setSettingsModalOpen(true);
-        break;
+    if (action === 'delete') {
+      setDeleteModalOpen(true);
+    } else {
+      setModalMode(action);
+      setSettingsModalOpen(true);
     }
   };
 
@@ -58,20 +110,7 @@ export const FolderGrid = ({
   };
 
   if (folders.length === 0) {
-    // Show different empty states based on whether there are any folders and search state
-    if (allFolders.length === 0) {
-      // No folders at all - show onboarding
-      return <EmptyBookmarks onCreateFolder={onCreateFolder} />;
-    } else if (searchTerm) {
-      // Has folders but search returned no results
-      return <EmptySearch searchTerm={searchTerm} onClearSearch={onClearSearch} />;
-    }
-    // Fallback (shouldn't reach here normally)
-    return (
-      <div className="mt-10 text-center text-muted">
-        <p>No folders found.</p>
-      </div>
-    );
+    return renderEmptyState(allFolders, searchTerm, onCreateFolder, onClearSearch);
   }
 
   return (
@@ -83,42 +122,12 @@ export const FolderGrid = ({
         transition={{ duration: 0.4, ease: 'easeOut' }}
       >
         <AnimatePresence mode="popLayout">
-          {folders.map((folder, index) => (
-            <motion.div
-              key={folder.id}
-              layout
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-                y: 0,
-                transition: {
-                  delay: index * 0.05,
-                  duration: 0.4,
-                  ease: 'easeOut',
-                },
-              }}
-              exit={{
-                opacity: 0,
-                scale: 0.9,
-                y: -20,
-                transition: { duration: 0.3 },
-              }}
-            >
-              <FolderCard
-                folder={folder}
-                onClick={() => onFolderSelect(folder.id)}
-                onEdit={() => handleFolderAction(folder, 'edit')}
-                onDelete={() => handleFolderAction(folder, 'delete')}
-                onRename={() => handleFolderAction(folder, 'rename')}
-                onColorChange={() => handleFolderAction(folder, 'customize')}
-              />
-            </motion.div>
-          ))}
+          {folders.map((folder, index) =>
+            renderFolderCard(folder, index, onFolderSelect, handleFolderAction)
+          )}
         </AnimatePresence>
       </motion.div>
 
-      {/* Modals */}
       <FolderSettingsModal
         isOpen={settingsModalOpen}
         onClose={closeModals}

@@ -10,7 +10,11 @@ interface VerseErrorStateProps {
  * Error state component for verse display
  * Shows error message with retry button
  */
-export function VerseErrorState({ error, onRetry, className }: VerseErrorStateProps) {
+export function VerseErrorState({
+  error,
+  onRetry,
+  className,
+}: VerseErrorStateProps): React.JSX.Element {
   return (
     <div
       className={`mt-8 md:mt-12 w-full max-w-xl md:max-w-4xl p-4 md:p-6 lg:p-8 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400 bg-surface-glass/60 ${className || ''}`}

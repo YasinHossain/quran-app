@@ -1,5 +1,7 @@
 import { getOrientationByWidth } from './orientation';
 
+import type { Orientation } from './orientation';
+
 /**
  * Device presets for responsive testing
  */
@@ -19,7 +21,13 @@ export type DevicePreset = keyof typeof devicePresets;
 /**
  * Mock window.matchMedia for responsive testing
  */
-export const createMatchMediaMock = () => {
+interface MatchMediaMock {
+  matchMediaMock: jest.Mock;
+  setViewportWidth: (width: number) => void;
+  cleanup: () => void;
+}
+
+export const createMatchMediaMock = (): MatchMediaMock => {
   let currentWidth = 1024; // Default desktop width
 
   const listeners = new Map<string, Set<(e: MediaQueryListEvent) => void>>();
@@ -85,7 +93,13 @@ export const createMatchMediaMock = () => {
 /**
  * Device simulation utilities
  */
-export const simulateDevice = (deviceOrWidth: DevicePreset | number) => {
+interface SimulatedDevice {
+  width: number;
+  height: number;
+  orientation: Orientation;
+}
+
+export const simulateDevice = (deviceOrWidth: DevicePreset | number): SimulatedDevice => {
   const device =
     typeof deviceOrWidth === 'number'
       ? { width: deviceOrWidth, height: 800, orientation: 'landscape' as const }

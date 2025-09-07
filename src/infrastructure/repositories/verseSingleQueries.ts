@@ -31,7 +31,7 @@ export const findBySurahAndAyah = async (
 
 export const search = async (
   query: string,
-  _options:
+  options:
     | {
         searchIn?: 'arabic' | 'translation' | 'both';
         translationId?: number;
@@ -39,11 +39,25 @@ export const search = async (
         limit?: number;
       }
     | undefined,
-  _translationId: number
+  translationId: number
 ): Promise<Verse[]> => {
   try {
     const apiResults = await apiSearch.searchVerses(query);
-    return apiResults.map((v) => mapApiVerseToDomain(v));
+    let results = apiResults.map((v) => mapApiVerseToDomain(v));
+    // Apply minimal client-side filtering to reduce noise and use parameters
+    if (options?.surahId) {
+      results = results.filter((v) => v.surahId === options.surahId);
+    }
+    if (options?.limit && options.limit > 0) {
+      results = results.slice(0, options.limit);
+    }
+    if (options?.translationId && options.translationId !== translationId) {
+      logger.warn('Search translationId ignored by API; results may not match requested id', {
+        requested: options.translationId,
+        used: translationId,
+      });
+    }
+    return results;
   } catch (error) {
     logger.error('Failed to search verses:', undefined, error as Error);
     return [];

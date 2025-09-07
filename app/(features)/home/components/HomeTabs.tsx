@@ -8,7 +8,7 @@ interface HomeTabsProps {
   searchQuery: string;
 }
 
-export function HomeTabs({ searchQuery }: HomeTabsProps) {
+export function HomeTabs({ searchQuery }: HomeTabsProps): React.JSX.Element {
   const [activeTab, setActiveTab] = useState<'Surah' | 'Juz' | 'Page'>('Surah');
 
   return (

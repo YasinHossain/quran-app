@@ -11,7 +11,11 @@ interface TafsirViewerProps {
   tafsirHtml?: string;
 }
 
-export const TafsirViewer = ({ verse, tafsirResource, tafsirHtml }: TafsirViewerProps) => {
+export const TafsirViewer = ({
+  verse,
+  tafsirResource,
+  tafsirHtml,
+}: TafsirViewerProps): React.JSX.Element | null => {
   const { settings } = useSettings();
 
   if (!verse) return null;

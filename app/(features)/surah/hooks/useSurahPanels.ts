@@ -19,7 +19,16 @@ export function useSurahPanels({
   translationOptions: Option[];
   wordLanguageOptions: Option[];
   settings: Settings;
-}) {
+}): {
+  isTranslationPanelOpen: boolean;
+  openTranslationPanel: () => void;
+  closeTranslationPanel: () => void;
+  isWordLanguagePanelOpen: boolean;
+  openWordLanguagePanel: () => void;
+  closeWordLanguagePanel: () => void;
+  selectedTranslationName: string;
+  selectedWordLanguageName: string;
+} {
   const { t } = useTranslation();
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
@@ -38,20 +47,14 @@ export function useSurahPanels({
 
   const closeWordLanguagePanel = useCallback(() => setIsWordPanelOpen(false), [setIsWordPanelOpen]);
 
-  const selectedTranslationName = useMemo(() => {
-    // Use the first translation from translationIds array, fallback to translationId
-    const primaryId = settings.translationIds?.[0] || settings.translationId;
-    return translationOptions.find((o) => o.id === primaryId)?.name || t('select_translation');
-  }, [settings.translationIds, settings.translationId, translationOptions, t]);
+  const selectedTranslationName = useMemo(
+    () => getSelectedTranslationName(settings, translationOptions, t),
+    [settings, settings.translationIds, settings.translationId, translationOptions, t]
+  );
 
   const selectedWordLanguageName = useMemo(
-    () =>
-      wordLanguageOptions.find(
-        (o) =>
-          (LANGUAGE_CODES as Record<string, LanguageCode>)[o.name.toLowerCase()] ===
-          settings.wordLang
-      )?.name || t('select_word_translation'),
-    [settings.wordLang, wordLanguageOptions, t]
+    () => getSelectedWordLanguageName(settings, wordLanguageOptions, t),
+    [settings, settings.wordLang, wordLanguageOptions, t]
   );
 
   return {
@@ -64,4 +67,25 @@ export function useSurahPanels({
     selectedTranslationName,
     selectedWordLanguageName,
   } as const;
+}
+
+function getSelectedTranslationName(
+  settings: Settings,
+  translationOptions: Option[],
+  t: (key: string) => string
+): string {
+  const primaryId = settings.translationIds?.[0] || settings.translationId;
+  return translationOptions.find((o) => o.id === primaryId)?.name || t('select_translation');
+}
+
+function getSelectedWordLanguageName(
+  settings: Settings,
+  wordLanguageOptions: Option[],
+  t: (key: string) => string
+): string {
+  const match = wordLanguageOptions.find(
+    (o) =>
+      (LANGUAGE_CODES as Record<string, LanguageCode>)[o.name.toLowerCase()] === settings.wordLang
+  );
+  return match?.name || t('select_word_translation');
 }

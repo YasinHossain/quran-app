@@ -6,7 +6,14 @@ import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 const STORAGE_KEY = 'settings-sidebar-open-sections';
 
-export const useOpenSections = (defaultSections: string[] = ['translation', 'font']) => {
+interface UseOpenSectionsReturn {
+  openSections: string[];
+  toggleSection: (sectionId: string) => void;
+}
+
+export const useOpenSections = (
+  defaultSections: string[] = ['translation', 'font']
+): UseOpenSectionsReturn => {
   const [openSections, setOpenSections] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);

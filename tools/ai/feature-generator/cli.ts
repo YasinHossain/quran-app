@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 export interface CLIOptions {
   featureName: string;
 }

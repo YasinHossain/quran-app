@@ -16,15 +16,15 @@ jest.mock('@/app/providers/SidebarContext', () => ({
   useSidebar: () => ({ isBookmarkSidebarOpen: false, setBookmarkSidebarOpen: jest.fn() }),
 }));
 
-jest.mock('@/app/(features)/surah/components', () => ({
+jest.mock('../components/Sidebar', () => ({
+  Sidebar: () => <div />,
+}));
+
+jest.mock('../components/SettingsSidebar', () => ({
   SettingsSidebar: () => <div />,
 }));
 
-jest.mock('../components/BookmarkFolderSidebar', () => ({
-  BookmarkFolderSidebar: () => <div />,
-}));
-
-jest.mock('../components/BookmarkVerseList', () => ({
+jest.mock('../../components/BookmarkVerseList', () => ({
   BookmarkVerseList: () => <div />,
 }));
 

@@ -6,7 +6,12 @@ const STORAGE_KEY = 'settings-sidebar-open-sections';
 const DEFAULT_OPEN_SECTIONS = ['translation', 'font'];
 const MAX_OPEN_SECTIONS = 2;
 
-export const useSettingsSections = () => {
+interface UseSettingsSectionsReturn {
+  openSections: string[];
+  handleSectionToggle: (sectionId: string) => void;
+}
+
+export const useSettingsSections = (): UseSettingsSectionsReturn => {
   const [openSections, setOpenSections] = useState<string[]>(() => {
     if (typeof window === 'undefined') {
       return DEFAULT_OPEN_SECTIONS;

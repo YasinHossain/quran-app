@@ -6,7 +6,7 @@ import { LastReadHeader, LastReadGrid } from './components';
 import { useLastReadPage } from './hooks/useLastReadPage';
 import { BookmarksLayout } from '../components/shared/BookmarksLayout';
 
-export default function LastReadPage() {
+export default function LastReadPage(): React.JSX.Element {
   const { lastRead, chapters, handleSectionChange } = useLastReadPage();
 
   return (

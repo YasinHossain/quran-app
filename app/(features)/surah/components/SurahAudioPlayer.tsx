@@ -41,7 +41,7 @@ export const SurahAudioPlayer = ({
   isVisible,
   onNext,
   onPrev,
-}: SurahAudioPlayerProps) => {
+}: SurahAudioPlayerProps): React.JSX.Element | null => {
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
   const { isHidden } = useHeaderVisibility();
 

@@ -46,4 +46,3 @@ describe('BookmarkFolderSidebar', () => {
     expect(handleVerseSelect).toHaveBeenCalledWith('2');
   });
 });
-

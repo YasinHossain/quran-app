@@ -4,11 +4,20 @@ interface UseSettingsTabStateProps {
   onReadingPanelOpen?: () => void;
 }
 
-export const useSettingsTabState = ({ onReadingPanelOpen }: UseSettingsTabStateProps = {}) => {
+type TabOption = { value: 'translation' | 'reading'; label: string };
+interface ReturnShape {
+  activeTab: 'translation' | 'reading';
+  handleTabChange: (tab: 'translation' | 'reading') => void;
+  tabOptions: TabOption[];
+}
+
+export const useSettingsTabState: (args?: UseSettingsTabStateProps) => ReturnShape = ({
+  onReadingPanelOpen,
+}: UseSettingsTabStateProps = {}) => {
   const [activeTab, setActiveTab] = useState('translation');
 
   const handleTabChange = useCallback(
-    (tab: string) => {
+    (tab: 'translation' | 'reading') => {
       setActiveTab(tab);
       if (tab === 'reading') {
         onReadingPanelOpen?.();
@@ -17,7 +26,7 @@ export const useSettingsTabState = ({ onReadingPanelOpen }: UseSettingsTabStateP
     [onReadingPanelOpen]
   );
 
-  const tabOptions = [
+  const tabOptions: TabOption[] = [
     { value: 'translation', label: 'Translation' },
     { value: 'reading', label: 'Mushaf' },
   ];

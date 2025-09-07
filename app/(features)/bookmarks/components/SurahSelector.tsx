@@ -14,12 +14,12 @@ export const SurahSelector = ({ chapters, value, onChange, placeholder = 'Select
   const inputRef = useRef<HTMLInputElement>(null);
   const selected = chapters.find((c) => c.id === value);
   useEffect(() => {
-    const handle = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) { setOpen(false); setTerm(''); } };
+    const handle = (e: MouseEvent): void => { if (ref.current && !ref.current.contains(e.target as Node)) { setOpen(false); setTerm(''); } };
     if (open) { document.addEventListener('mousedown', handle); setTimeout(() => inputRef.current?.focus(), 50); }
     return () => document.removeEventListener('mousedown', handle);
   }, [open]);
-  const select = (c: Chapter) => { onChange(c.id); setOpen(false); setTerm(''); };
-  const keyDown = (e: React.KeyboardEvent) => { if (e.key === 'Escape') { setOpen(false); setTerm(''); } };
+  const select = (c: Chapter): void => { onChange(c.id); setOpen(false); setTerm(''); };
+  const keyDown = (e: React.KeyboardEvent): void => { if (e.key === 'Escape') { setOpen(false); setTerm(''); } };
   const content = selected ? (<>
     <div className="w-8 h-8 bg-accent/10 rounded-lg flex items-center justify-center flex-shrink-0"><span className="text-xs font-semibold text-accent">{selected.id}</span></div>
     <div className="min-w-0 flex-1"><div className="text-sm font-semibold text-foreground truncate">{selected.name_simple}</div><div className="text-xs text-muted truncate">{selected.name_arabic}</div></div>

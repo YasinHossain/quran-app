@@ -9,7 +9,8 @@ export const expectBookmarkPositionToThrow = (
   ayahNumber: number,
   timestamp: Date | null | undefined,
   expectedMessage: string
-) => {
-  const createPosition = () => new BookmarkPosition(surahId, ayahNumber, timestamp as Date);
+): void => {
+  const createPosition = (): BookmarkPosition =>
+    new BookmarkPosition(surahId, ayahNumber, timestamp as Date);
   expect(createPosition).toThrow(expectedMessage);
 };

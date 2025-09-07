@@ -23,32 +23,60 @@ import {
 
 describe('Surah Entity - Revelation', () => {
   describe('revelation type methods', () => {
-    it('should return true for isMakki when revelation type is MAKKI', () => {
-      const makkiSurah = new Surah(
-        validId,
-        validName,
-        validArabicName,
-        validEnglishName,
-        validEnglishTranslation,
-        validNumberOfAyahs,
-        RevelationType.MAKKI
-      );
-      expect(makkiSurah.isMakki()).toBe(true);
-      expect(makkiSurah.isMadani()).toBe(false);
+    describe('isMakki', () => {
+      it('returns true when revelation type is MAKKI', () => {
+        const makkiSurah = new Surah(
+          validId,
+          validName,
+          validArabicName,
+          validEnglishName,
+          validEnglishTranslation,
+          validNumberOfAyahs,
+          RevelationType.MAKKI
+        );
+        expect(makkiSurah.isMakki()).toBe(true);
+      });
+
+      it('returns false when revelation type is MADANI', () => {
+        const madaniSurah = new Surah(
+          2,
+          'البقرة',
+          'البقرة',
+          'Al-Baqarah',
+          'The Cow',
+          286,
+          RevelationType.MADANI
+        );
+        expect(madaniSurah.isMakki()).toBe(false);
+      });
     });
 
-    it('should return true for isMadani when revelation type is MADANI', () => {
-      const madaniSurah = new Surah(
-        2,
-        'البقرة',
-        'البقرة',
-        'Al-Baqarah',
-        'The Cow',
-        286,
-        RevelationType.MADANI
-      );
-      expect(madaniSurah.isMadani()).toBe(true);
-      expect(madaniSurah.isMakki()).toBe(false);
+    describe('isMadani', () => {
+      it('returns true when revelation type is MADANI', () => {
+        const madaniSurah = new Surah(
+          2,
+          'البقرة',
+          'البقرة',
+          'Al-Baqarah',
+          'The Cow',
+          286,
+          RevelationType.MADANI
+        );
+        expect(madaniSurah.isMadani()).toBe(true);
+      });
+
+      it('returns false when revelation type is MAKKI', () => {
+        const makkiSurah = new Surah(
+          validId,
+          validName,
+          validArabicName,
+          validEnglishName,
+          validEnglishTranslation,
+          validNumberOfAyahs,
+          RevelationType.MAKKI
+        );
+        expect(makkiSurah.isMadani()).toBe(false);
+      });
     });
   });
 

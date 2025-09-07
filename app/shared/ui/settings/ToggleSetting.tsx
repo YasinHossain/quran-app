@@ -35,7 +35,6 @@ export const ToggleSetting = memo(function ToggleSetting({
           disabled && 'cursor-not-allowed'
         )}
         disabled={disabled}
-        aria-pressed={value}
         role="switch"
         aria-checked={value}
       >

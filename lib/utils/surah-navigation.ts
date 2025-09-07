@@ -12,5 +12,5 @@ export const getJuzByPage = (page: number): number => {
   return 1;
 };
 
-export const getSurahByPage = (page: number, chapters: Chapter[]) =>
+export const getSurahByPage = (page: number, chapters: Chapter[]): Chapter | undefined =>
   chapters.find((c) => c.pages && page >= c.pages[0] && page <= c.pages[1]);

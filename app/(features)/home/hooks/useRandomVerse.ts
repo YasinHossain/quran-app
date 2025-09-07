@@ -8,6 +8,12 @@ import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { Verse } from '@/types';
 
 export const RETRY_LIMIT = 3;
+const SWR_OPTIONS = {
+  revalidateOnFocus: false,
+  revalidateOnReconnect: false,
+  shouldRetryOnError: false,
+  dedupingInterval: 30000, // Don't refetch for 30 seconds
+} as const;
 
 interface UseRandomVerseOptions {
   translationId: number;
@@ -52,12 +58,7 @@ export function useRandomVerse({
     data: verse,
     error: swrError,
     mutate,
-  } = useSWR(isAvailable ? ['random-verse', translationId] : null, randomVerseFetcher, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    shouldRetryOnError: false,
-    dedupingInterval: 30000, // Don't refetch for 30 seconds
-  });
+  } = useSWR(isAvailable ? ['random-verse', translationId] : null, randomVerseFetcher, SWR_OPTIONS);
 
   const refresh = useCallback(() => {
     if (!isAvailable) {

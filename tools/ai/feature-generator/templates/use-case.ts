@@ -1,10 +1,10 @@
-export function useCaseTemplate(name: string, action: string): string {
+export function buildUseCaseTemplate(name: string, action: string): string {
   const entity = capitalize(name);
   const useCase = `${capitalize(action)}${entity}`;
   return `/**
  * ${useCase} use case
  */
-import { I${entity}Repository } from '../repositories/I${entity}Repository';
+import { I${entity}Repository } from '../../domain/repositories/I${entity}Repository';
 
 export class ${useCase}UseCase {
   constructor(private readonly repo: I${entity}Repository) {}

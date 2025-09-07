@@ -8,7 +8,7 @@ import { TYPES, type TypeKeys } from '../types';
  * Marks a class as injectable and available for dependency injection.
  * Use this on all classes that will be injected as dependencies.
  */
-export const Injectable = () => injectable();
+export const Injectable = (): ClassDecorator => injectable();
 
 /**
  * Type-safe inject decorator
@@ -18,7 +18,8 @@ export const Injectable = () => injectable();
  * @param typeKey - Key from TYPES object
  * @returns Decorator function
  */
-export const Inject = (typeKey: TypeKeys) => inject(TYPES[typeKey]);
+export const Inject = (typeKey: TypeKeys): ParameterDecorator & PropertyDecorator =>
+  inject(TYPES[typeKey]);
 
 /**
  * Named injection decorator
@@ -29,8 +30,21 @@ export const Inject = (typeKey: TypeKeys) => inject(TYPES[typeKey]);
  * @param name - Named identifier for the specific implementation
  * @returns Decorator function
  */
-export const InjectNamed = (typeKey: TypeKeys, name: string) => {
-  return inject(TYPES[typeKey]) && named(name);
+export const InjectNamed = (
+  typeKey: TypeKeys,
+  name: string
+): ParameterDecorator & PropertyDecorator => {
+  const injectDecorator = inject(TYPES[typeKey]);
+  const namedDecorator = named(name);
+  return ((target: object, key: string | symbol, index?: number) => {
+    if (typeof index === 'number') {
+      (injectDecorator as ParameterDecorator)(target, key, index);
+      (namedDecorator as ParameterDecorator)(target, key, index);
+    } else {
+      (injectDecorator as PropertyDecorator)(target, key);
+      (namedDecorator as PropertyDecorator)(target, key);
+    }
+  }) as unknown as ParameterDecorator & PropertyDecorator;
 };
 
 export { named } from 'inversify';

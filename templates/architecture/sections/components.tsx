@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { screen, fireEvent } from '@testing-library/react';
-import React from 'react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
 
-import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import { PerformanceTester } from '@/app/testUtils/performanceTestUtils';
+import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import {
   mockViewport,
   testBreakpoints,

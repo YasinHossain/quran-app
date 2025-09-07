@@ -1,6 +1,16 @@
 import { useCallback, useState } from 'react';
 
-export const useDraggableSelection = (initialOrder: number[] = []) => {
+export interface UseDraggableSelectionResult {
+  orderedSelection: number[];
+  setOrderedSelection: React.Dispatch<React.SetStateAction<number[]>>;
+  handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
+  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
+  handleDrop: (e: React.DragEvent<HTMLDivElement>, targetId: number) => void;
+  handleDragEnd: () => void;
+  draggedId: number | null;
+}
+
+export const useDraggableSelection = (initialOrder: number[] = []): UseDraggableSelectionResult => {
   const [orderedSelection, setOrderedSelection] = useState<number[]>(initialOrder);
   const [draggedId, setDraggedId] = useState<number | null>(null);
 
@@ -43,5 +53,5 @@ export const useDraggableSelection = (initialOrder: number[] = []) => {
     handleDrop,
     handleDragEnd,
     draggedId,
-  } as const;
+  };
 };

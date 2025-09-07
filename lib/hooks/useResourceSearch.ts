@@ -11,7 +11,19 @@ interface Options<T extends Resource> {
   languageSort?: (a: string, b: string) => number;
 }
 
-export const useResourceSearch = <T extends Resource>({ resources, languageSort }: Options<T>) => {
+export interface UseResourceSearchResult<T extends Resource> {
+  searchTerm: string;
+  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+  activeFilter: string;
+  setActiveFilter: React.Dispatch<React.SetStateAction<string>>;
+  languages: string[];
+  groupedResources: Record<string, T[]>;
+}
+
+export const useResourceSearch = <T extends Resource>({
+  resources,
+  languageSort,
+}: Options<T>): UseResourceSearchResult<T> => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
 
@@ -50,5 +62,5 @@ export const useResourceSearch = <T extends Resource>({ resources, languageSort 
     setActiveFilter,
     languages,
     groupedResources,
-  } as const;
+  };
 };

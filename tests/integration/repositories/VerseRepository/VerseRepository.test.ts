@@ -120,8 +120,20 @@ describe('VerseRepository', () => {
   describe('findByRevelationType', () => {
     it('should find verses from Makki surahs', async () => {
       mockApiChapters.getChapters.mockResolvedValue([
-        { id: 1, name_simple: 'Al-Fatihah', name_arabic: '', revelation_place: 'makkah', verses_count: 7 },
-        { id: 2, name_simple: 'Al-Baqarah', name_arabic: '', revelation_place: 'madinah', verses_count: 286 },
+        {
+          id: 1,
+          name_simple: 'Al-Fatihah',
+          name_arabic: '',
+          revelation_place: 'makkah',
+          verses_count: 7,
+        },
+        {
+          id: 2,
+          name_simple: 'Al-Baqarah',
+          name_arabic: '',
+          revelation_place: 'madinah',
+          verses_count: 286,
+        },
       ] as any);
       mockApiVerses.getVersesByChapter.mockResolvedValue({ verses: [mockApiVerse], totalPages: 1 });
 

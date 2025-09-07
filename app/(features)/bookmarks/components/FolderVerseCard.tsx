@@ -18,7 +18,7 @@ export const FolderVerseCard = ({
   className,
 }: FolderVerseCardProps): React.JSX.Element => {
   // Parse verse key to get surah and ayah numbers
-  const parseVerseKey = (verseKey?: string) => {
+  const parseVerseKey = (verseKey?: string): { surahNumber: number; ayahNumber: number } => {
     if (!verseKey) return { surahNumber: 0, ayahNumber: 0 };
     const [surah, ayah] = verseKey.split(':').map(Number);
     return { surahNumber: surah || 0, ayahNumber: ayah || 0 };

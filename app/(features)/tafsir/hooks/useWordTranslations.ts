@@ -11,7 +11,14 @@ import type { LanguageCode } from '@/lib/text/languageCodes';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;
 
-export const useWordTranslations = () => {
+interface UseWordTranslationsReturn {
+  wordLanguageOptions: { name: string; id: number }[];
+  wordLanguageMap: Record<string, number>;
+  selectedWordLanguageName: string;
+  resetWordSettings: () => void;
+}
+
+export const useWordTranslations = (): UseWordTranslationsReturn => {
   const { t } = useTranslation();
   const { settings, setSettings } = useSettings();
 

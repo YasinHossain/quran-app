@@ -6,6 +6,9 @@ interface TranslationSelectorProps {
   onClose: () => void;
 }
 
-export const TranslationSelector = ({ isOpen, onClose }: TranslationSelectorProps) => {
+export const TranslationSelector = ({
+  isOpen,
+  onClose,
+}: TranslationSelectorProps): React.JSX.Element => {
   return <TranslationPanel isOpen={isOpen} onClose={onClose} />;
 };

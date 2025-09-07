@@ -9,7 +9,13 @@ import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import type { TafsirResource } from '@/types';
 
-export const useTafsirOptions = () => {
+interface UseTafsirOptionsReturn {
+  tafsirOptions: TafsirResource[];
+  tafsirResource: TafsirResource | undefined;
+  selectedTafsirName: string;
+}
+
+export const useTafsirOptions = (): UseTafsirOptionsReturn => {
   const { t } = useTranslation();
   const { settings } = useSettings();
 

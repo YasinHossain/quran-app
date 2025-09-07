@@ -2,8 +2,7 @@
 
 import React from 'react';
 
-import { BreadcrumbNavigation } from './BreadcrumbNavigation';
-import { BookmarkVerseList } from '../../components/BookmarkVerseList';
+import { BookmarkVersesContent } from './BookmarkVersesContent';
 
 import type { Verse } from '@/types';
 
@@ -32,19 +31,14 @@ export const MainContent = ({
         isHidden ? 'pt-12 lg:pt-4' : 'pt-24 lg:pt-20'
       }`}
     >
-      <div>
-        <BreadcrumbNavigation
-          onNavigateToBookmarks={onNavigateToBookmarks}
-          folderName={folderName}
-          activeVerseId={activeVerseId}
-          verses={verses}
-        />
-        <BookmarkVerseList
-          verses={displayVerses}
-          isLoading={loadingVerses.size > 0 && verses.length === 0}
-          error={null}
-        />
-      </div>
+      <BookmarkVersesContent
+        onNavigateToBookmarks={onNavigateToBookmarks}
+        folderName={folderName}
+        activeVerseId={activeVerseId}
+        verses={verses}
+        displayVerses={displayVerses}
+        loadingVerses={loadingVerses}
+      />
     </div>
   </main>
 );

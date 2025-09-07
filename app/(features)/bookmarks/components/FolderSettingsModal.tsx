@@ -3,14 +3,14 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import React from 'react';
 
-import { CloseIcon } from '@/app/shared/icons';
 import { Folder } from '@/types';
 
-import { ColorSelector } from './folder-settings/ColorSelector';
-import { FolderNameInput } from './folder-settings/FolderNameInput';
-import { IconSelector } from './folder-settings/IconSelector';
-import { ModalActions } from './folder-settings/ModalActions';
 import { useFolderSettings } from './folder-settings/useFolderSettings';
+import {
+  ModalHeader,
+  SettingsForm,
+  useFolderSettingsModalAnimation,
+} from './folder-settings-modal';
 
 interface FolderSettingsModalProps {
   isOpen: boolean;
@@ -37,16 +37,7 @@ export const FolderSettingsModal = ({
     getModalTitle,
   } = useFolderSettings({ folder, mode, onClose, isOpen });
 
-  const backdropVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-  };
-
-  const modalVariants = {
-    hidden: { opacity: 0, scale: 0.95, y: -10 },
-    visible: { opacity: 1, scale: 1, y: 0 },
-    exit: { opacity: 0, scale: 0.95, y: -10 },
-  };
+  const { backdropVariants, modalVariants } = useFolderSettingsModalAnimation();
 
   return (
     <AnimatePresence>
@@ -74,33 +65,20 @@ export const FolderSettingsModal = ({
             aria-modal="true"
             aria-labelledby="folder-settings-title"
           >
-            {/* Header */}
-            <div className="flex items-center justify-between mb-6">
-              <h2 id="folder-settings-title" className="text-xl font-semibold text-foreground">
-                {getModalTitle()}
-              </h2>
-              <button
-                onClick={onClose}
-                className="rounded-full p-1.5 text-muted hover:bg-surface-hover hover:text-accent transition-colors"
-                aria-label="Close"
-              >
-                <CloseIcon size={20} />
-              </button>
-            </div>
+            <ModalHeader title={getModalTitle()} onClose={onClose} />
 
-            <form onSubmit={handleSubmit}>
-              <FolderNameInput name={name} setName={setName} />
-              {mode === 'customize' && (
-                <>
-                  <ColorSelector
-                    selectedColor={selectedColor}
-                    setSelectedColor={setSelectedColor}
-                  />
-                  <IconSelector selectedIcon={selectedIcon} setSelectedIcon={setSelectedIcon} />
-                </>
-              )}
-              <ModalActions isSubmitting={isSubmitting} onClose={onClose} />
-            </form>
+            <SettingsForm
+              mode={mode}
+              name={name}
+              setName={setName}
+              selectedColor={selectedColor}
+              setSelectedColor={setSelectedColor}
+              selectedIcon={selectedIcon}
+              setSelectedIcon={setSelectedIcon}
+              isSubmitting={isSubmitting}
+              handleSubmit={handleSubmit}
+              onClose={onClose}
+            />
           </motion.div>
         </>
       )}

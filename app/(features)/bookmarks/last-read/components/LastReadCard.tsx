@@ -25,7 +25,7 @@ export const LastReadCard = ({
   const total = chapter?.verses_count || 0;
   const percent = Math.min(100, Math.max(0, Math.round((verseId / total) * 100)));
 
-  const handleNavigate = () => {
+  const handleNavigate = (): void => {
     router.push(`/surah/${surahId}#verse-${verseId}`);
   };
 

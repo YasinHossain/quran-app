@@ -10,15 +10,18 @@ interface FolderContextMenuProps {
   onDelete: () => void;
 }
 
-export const FolderContextMenu = ({
-  onEdit,
-  onDelete,
-}: FolderContextMenuProps): React.JSX.Element => {
-  const [isOpen, setIsOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
+interface MenuItem {
+  label: string;
+  onClick: () => void;
+  destructive?: boolean;
+}
 
-  // Close menu when clicking outside
+const useClickOutside = (
+  isOpen: boolean,
+  setIsOpen: (open: boolean) => void,
+  menuRef: React.RefObject<HTMLDivElement>,
+  buttonRef: React.RefObject<HTMLButtonElement>
+): void => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
       if (
@@ -38,14 +41,54 @@ export const FolderContextMenu = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen]);
+  }, [isOpen, setIsOpen, menuRef, buttonRef]);
+};
+
+const MenuDropdown = ({
+  menuRef,
+  menuItems,
+}: {
+  menuRef: React.RefObject<HTMLDivElement>;
+  menuItems: MenuItem[];
+}): React.JSX.Element => (
+  <motion.div
+    ref={menuRef}
+    initial={{ opacity: 0, scale: 0.95, y: -5 }}
+    animate={{ opacity: 1, scale: 1, y: 0 }}
+    exit={{ opacity: 0, scale: 0.95, y: -5 }}
+    transition={{ duration: 0.15 }}
+    className="absolute right-0 top-full mt-2 w-40 bg-surface border border-border rounded-lg shadow-modal z-50 py-2"
+  >
+    {menuItems.map((item) => (
+      <button
+        key={item.label}
+        onClick={item.onClick}
+        className={`w-full text-left px-4 py-2 text-sm hover:bg-surface-hover transition-colors ${
+          item.destructive ? 'text-error hover:text-error/90' : 'text-foreground'
+        }`}
+      >
+        {item.label}
+      </button>
+    ))}
+  </motion.div>
+);
+
+export const FolderContextMenu = ({
+  onEdit,
+  onDelete,
+}: FolderContextMenuProps): React.JSX.Element => {
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useClickOutside(isOpen, setIsOpen, menuRef, buttonRef);
 
   const handleAction = (action: () => void): void => {
     action();
     setIsOpen(false);
   };
 
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     { label: 'Edit', onClick: () => handleAction(onEdit) },
     { label: 'Delete', onClick: () => handleAction(onDelete), destructive: true },
   ];
@@ -67,28 +110,7 @@ export const FolderContextMenu = ({
       </button>
 
       <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            ref={menuRef}
-            initial={{ opacity: 0, scale: 0.95, y: -5 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: -5 }}
-            transition={{ duration: 0.15 }}
-            className="absolute right-0 top-full mt-2 w-40 bg-surface border border-border rounded-lg shadow-modal z-50 py-2"
-          >
-            {menuItems.map((item) => (
-              <button
-                key={item.label}
-                onClick={item.onClick}
-                className={`w-full text-left px-4 py-2 text-sm hover:bg-surface-hover transition-colors ${
-                  item.destructive ? 'text-error hover:text-error/90' : 'text-foreground'
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
-          </motion.div>
-        )}
+        {isOpen && <MenuDropdown menuRef={menuRef} menuItems={menuItems} />}
       </AnimatePresence>
     </div>
   );

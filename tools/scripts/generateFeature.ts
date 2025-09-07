@@ -6,6 +6,7 @@
  * - `app/(features)/<name>/components/.gitkeep`
  * - `app/(features)/<name>/__tests__/<Pascal>Page.test.tsx`
  */
+/* eslint-disable no-console */
 import { mkdir, writeFile } from 'fs/promises';
 
 function toPascalCase(name: string): string {

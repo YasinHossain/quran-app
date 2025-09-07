@@ -65,7 +65,6 @@ export const QuranBottomSheet = memo(function QuranBottomSheet({
   );
 });
 
-
 const backdropVariants = { hidden: { opacity: 0 }, visible: { opacity: 1 } };
 const sheetVariants = {
   hidden: { y: '100%', opacity: 0 },

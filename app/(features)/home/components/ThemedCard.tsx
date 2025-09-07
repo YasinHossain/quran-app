@@ -10,7 +10,7 @@ interface ThemedCardProps {
   className?: string;
 }
 
-export function ThemedCard({ href, children, className }: ThemedCardProps) {
+export function ThemedCard({ href, children, className }: ThemedCardProps): React.JSX.Element {
   return (
     <GlassCard
       href={href}

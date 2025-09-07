@@ -88,12 +88,12 @@ export class Logger {
         const result = transport.log(entry);
         // Handle async transports
         if (result instanceof Promise) {
-          result.catch((err) => {
-            console.error('Logger transport error:', err);
+          result.catch(() => {
+            // Swallow transport errors to prevent recursive logging
           });
         }
-      } catch (err) {
-        console.error('Logger transport error:', err);
+      } catch {
+        // Swallow transport errors to prevent recursive logging
       }
     });
   }

@@ -40,7 +40,7 @@ export const getVariantForBreakpoint = (breakpoint: BreakpointKey): ComponentVar
 export const createResponsiveComponent = <P extends object>(
   baseComponent: React.ComponentType<P>,
   adaptations: { [K in ComponentVariant]?: Partial<P> }
-) => {
+): React.ComponentType<P> => {
   const ResponsiveComponent = (props: P) => {
     const breakpoint = useBreakpoint();
     const variant = getVariantForBreakpoint(breakpoint);

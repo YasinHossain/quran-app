@@ -4,7 +4,7 @@ import { getSurahList } from '@/lib/api';
 
 import type { Surah } from '@/types';
 
-export default async function TafsirIndexPage() {
+export default async function TafsirIndexPage(): Promise<React.JSX.Element> {
   const surahs: Surah[] = await getSurahList();
   return (
     <div className="p-6">

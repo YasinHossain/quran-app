@@ -5,7 +5,13 @@ export interface LanguageOption {
   id: number;
 }
 
-export const useWordTranslationSearch = (languages: LanguageOption[]) => {
+export const useWordTranslationSearch = (
+  languages: LanguageOption[]
+): {
+  searchTerm: string;
+  setSearchTerm: (v: string) => void;
+  filteredLanguages: LanguageOption[];
+} => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const sortedLanguages = useMemo(

@@ -1,5 +1,5 @@
-import * as apiVerses from '../../../../lib/api/verses';
 import * as apiChapters from '../../../../lib/api/chapters';
+import * as apiVerses from '../../../../lib/api/verses';
 import { VerseRepository } from '../../../../src/infrastructure/repositories/VerseRepository';
 import { Verse } from '../../../../types';
 
@@ -19,7 +19,7 @@ jest.mock('../../../../lib/api/chapters', () => ({
 export const mockApiVerses = apiVerses as jest.Mocked<typeof apiVerses>;
 export const mockApiChapters = apiChapters as jest.Mocked<typeof apiChapters>;
 
-export const createRepository = () => new VerseRepository();
+export const createRepository = (): VerseRepository => new VerseRepository();
 
 export const mockApiVerse: Verse = {
   id: 1,

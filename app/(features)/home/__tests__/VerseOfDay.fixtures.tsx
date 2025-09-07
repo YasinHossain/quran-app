@@ -26,9 +26,8 @@ jest.mock('@/lib/api/verses', () => ({
 export const mockedGetRandomVerse = getRandomVerse as jest.MockedFunction<typeof getRandomVerse>;
 export const mockedGetVerseByKey = getVerseByKey as jest.MockedFunction<typeof getVerseByKey>;
 
-export const renderVerseOfDay = (
-  props?: Partial<React.ComponentProps<typeof VerseOfDay>>
-) => renderWithProviders(<VerseOfDay {...props} />);
+export const renderVerseOfDay = (props?: Partial<React.ComponentProps<typeof VerseOfDay>>) =>
+  renderWithProviders(<VerseOfDay {...props} />);
 
 export const setupMatchMedia = () => {
   Object.defineProperty(window, 'matchMedia', {

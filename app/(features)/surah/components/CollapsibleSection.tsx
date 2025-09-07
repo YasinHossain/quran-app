@@ -18,7 +18,7 @@ export const CollapsibleSection = ({
   isLast = false,
   isOpen,
   onToggle,
-}: CollapsibleSectionProps) => {
+}: CollapsibleSectionProps): React.JSX.Element => {
   return (
     <div className={isLast ? '' : 'border-b border-border'}>
       {' '}

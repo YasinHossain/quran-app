@@ -7,7 +7,14 @@ import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import type { Surah } from '@/types';
 
-export const useVerseNavigation = (surahId: string, ayahId: string) => {
+interface UseVerseNavigationReturn {
+  prev: { surahId: string; ayahId: number } | null;
+  next: { surahId: string; ayahId: number } | null;
+  navigate: (target: { surahId: string; ayahId: number } | null) => void;
+  currentSurah: Surah | undefined;
+}
+
+export const useVerseNavigation = (surahId: string, ayahId: string): UseVerseNavigationReturn => {
   const router = useRouter();
   const { setSurahListOpen } = useSidebar();
 

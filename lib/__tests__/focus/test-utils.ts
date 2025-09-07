@@ -1,4 +1,9 @@
-export const setupDom = () => {
+interface DomSetupResult {
+  container: HTMLDivElement;
+  cleanup: () => void;
+}
+
+export const setupDom = (): DomSetupResult => {
   const container = document.createElement('div');
   container.innerHTML = `
     <button id="btn1">Button 1</button>

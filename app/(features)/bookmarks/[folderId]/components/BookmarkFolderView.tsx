@@ -2,10 +2,9 @@
 
 import React from 'react';
 
-import { SettingsSidebar } from '@/app/(features)/surah/components';
-
 import { MainContent } from './MainContent';
-import { BookmarkFolderSidebar } from '../../components/BookmarkFolderSidebar';
+import { SettingsSidebar } from './SettingsSidebar';
+import { Sidebar } from './Sidebar';
 
 import type { Bookmark, Folder, Verse } from '@/types';
 
@@ -56,7 +55,7 @@ export function BookmarkFolderView({
 }: BookmarkFolderViewProps): React.JSX.Element {
   return (
     <>
-      <BookmarkFolderSidebar
+      <Sidebar
         bookmarks={bookmarks}
         folder={folder}
         {...(activeVerseId && { activeVerseId })}
@@ -84,8 +83,8 @@ export function BookmarkFolderView({
         selectedWordLanguageName={selectedWordLanguageName}
         isTranslationPanelOpen={isTranslationPanelOpen}
         onTranslationPanelClose={onCloseTranslationPanel}
-        isWordLanguagePanelOpen={isWordPanelOpen}
-        onWordLanguagePanelClose={onCloseWordPanel}
+        isWordPanelOpen={isWordPanelOpen}
+        onWordPanelClose={onCloseWordPanel}
       />
     </>
   );

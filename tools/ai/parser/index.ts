@@ -36,7 +36,7 @@ export async function scanComponents(): Promise<Component[]> {
 function getComponentFiles(dir: string): string[] {
   const files: string[] = [];
 
-  const scan = (currentDir: string) => {
+  const scan = (currentDir: string): void => {
     const entries = fs.readdirSync(currentDir, { withFileTypes: true });
 
     for (const entry of entries) {

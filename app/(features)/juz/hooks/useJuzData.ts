@@ -8,7 +8,8 @@ import type { Juz } from '@/types';
 export function useJuzData(juzId?: string) {
   const verseListing = useVerseListing({
     ...(juzId !== undefined ? { id: juzId } : {}),
-    lookup: getVersesByJuz,
+    lookup: ({ id, translationIds, page, perPage, wordLang }) =>
+      getVersesByJuz(id, translationIds, page, perPage, wordLang),
   });
 
   const { data: juz, error: juzError } = useSWR<Juz>(

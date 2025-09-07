@@ -14,7 +14,7 @@ export const testResponsiveHook = async <T>(
     expected: Partial<T>;
     description: string;
   }>
-) => {
+): Promise<Array<{ device: DevicePreset | number; result: T; expected: Partial<T> }>> => {
   const matchMediaUtils = createMatchMediaMock();
 
   Object.defineProperty(window, 'matchMedia', {
@@ -58,7 +58,13 @@ interface ResponsiveRenderOptions extends RenderOptions {
   mockMatchMedia?: boolean;
 }
 
-export const renderResponsive = (ui: ReactElement, options: ResponsiveRenderOptions = {}) => {
+export const renderResponsive = (
+  ui: ReactElement,
+  options: ResponsiveRenderOptions = {}
+): ReturnType<typeof render> & {
+  setDevice: (newDevice: DevicePreset | number) => void;
+  cleanup: () => void;
+} => {
   const { device = 'Desktop Small', mockMatchMedia = true, ...renderOptions } = options;
 
   let matchMediaUtils: ReturnType<typeof createMatchMediaMock> | undefined;

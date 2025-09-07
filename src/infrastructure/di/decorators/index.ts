@@ -13,15 +13,15 @@ import { TYPES, type TypeKeys } from '../types';
 export * from './injection';
 export * from './factory';
 
-export const LazyInject = (typeKey: TypeKeys) => {
+export const LazyInject = (typeKey: TypeKeys): ReturnType<typeof lazyInject> => {
   return inject(TYPES[typeKey]) && lazyInject(TYPES[typeKey]);
 };
 
-export const OptionalInject = (typeKey: TypeKeys) => {
+export const OptionalInject = (typeKey: TypeKeys): ReturnType<typeof optional> => {
   return inject(TYPES[typeKey]) && optional();
 };
 
-export const MultiInject = (typeKey: TypeKeys) => {
+export const MultiInject = (typeKey: TypeKeys): ReturnType<typeof multiInject> => {
   return multiInject(TYPES[typeKey]);
 };
 

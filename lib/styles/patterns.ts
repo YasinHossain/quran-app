@@ -51,6 +51,8 @@ export const panelPatterns = {
 /**
  * Helper function to get consistent styling patterns
  */
-export const getPattern = (category: keyof typeof sidebarPatterns) => {
+export const getPattern = <K extends keyof typeof sidebarPatterns>(
+  category: K
+): (typeof sidebarPatterns)[K] => {
   return sidebarPatterns[category];
 };

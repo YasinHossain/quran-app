@@ -4,7 +4,15 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 
 import { scrollTabs, updateScrollState } from '../translationPanel.utils';
 
-export const useTabsScroll = (languages: string[]) => {
+export const useTabsScroll = (
+  languages: string[]
+): {
+  tabsContainerRef: React.RefObject<HTMLDivElement>;
+  canScrollLeft: boolean;
+  canScrollRight: boolean;
+  scrollTabsLeft: () => void;
+  scrollTabsRight: () => void;
+} => {
   const tabsContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);

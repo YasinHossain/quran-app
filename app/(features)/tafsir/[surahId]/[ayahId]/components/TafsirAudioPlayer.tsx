@@ -41,7 +41,7 @@ export const TafsirAudioPlayer = ({
   isVisible,
   onNext,
   onPrev,
-}: TafsirAudioPlayerProps) => {
+}: TafsirAudioPlayerProps): React.JSX.Element | null => {
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
   const { isHidden } = useHeaderVisibility();
 
@@ -64,14 +64,14 @@ export const TafsirAudioPlayer = ({
     src: buildAudioUrl(activeVerse.verse_key, reciter.path),
   };
 
-  const handleNext = () => {
+  const handleNext = (): boolean => {
     if (onNext) {
       return onNext();
     }
     return false;
   };
 
-  const handlePrev = () => {
+  const handlePrev = (): boolean => {
     if (onPrev) {
       return onPrev();
     }

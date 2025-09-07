@@ -6,7 +6,14 @@ import { useModal } from '@/app/shared/hooks/useModal';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 
-export const useBookmarksPage = () => {
+export const useBookmarksPage = (): {
+  folders: ReturnType<typeof useBookmarks>['folders'];
+  sortedFolders: ReturnType<typeof useBookmarks>['folders'];
+  modal: ReturnType<typeof useModal>;
+  handleFolderSelect: (folderId: string) => void;
+  handleSectionChange: (section: SectionId) => void;
+  handleVerseClick: (verseKey: string) => void;
+} => {
   const { folders } = useBookmarks();
   const modal = useModal();
   const [sortBy] = useState<'recent' | 'name-asc' | 'name-desc' | 'most-verses'>('recent');
@@ -36,11 +43,11 @@ export const useBookmarksPage = () => {
     }
   }, [filteredFolders, sortBy]);
 
-  const handleFolderSelect = (folderId: string) => {
+  const handleFolderSelect = (folderId: string): void => {
     router.push(`/bookmarks/${folderId}`);
   };
 
-  const handleSectionChange = (section: SectionId) => {
+  const handleSectionChange = (section: SectionId): void => {
     if (section === 'pinned') {
       router.push('/bookmarks/pinned');
     } else if (section === 'last-read') {
@@ -52,7 +59,7 @@ export const useBookmarksPage = () => {
     }
   };
 
-  const handleVerseClick = (verseKey: string) => {
+  const handleVerseClick = (verseKey: string): void => {
     const [surahId] = verseKey.split(':');
     router.push(`/surah/${surahId}#verse-${verseKey}`);
   };
