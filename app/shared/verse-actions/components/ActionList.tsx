@@ -20,10 +20,10 @@ export const ActionList = memo(function ActionList({
   return (
     <div className="flex-1 overflow-y-auto p-4 pb-8">
       <div className="space-y-2">
-        {actions.map((action, index) =>
+        {actions.map((action) =>
           action.href ? (
             <Link
-              key={index}
+              key={action.label}
               href={action.href}
               onClick={onClose}
               className={cn(
@@ -41,7 +41,7 @@ export const ActionList = memo(function ActionList({
             </Link>
           ) : (
             <button
-              key={index}
+              key={action.label}
               onClick={action.onClick}
               className={cn(
                 'flex w-full items-center gap-4 p-4 rounded-2xl transition-all duration-200',

@@ -1,23 +1,42 @@
 'use client';
 
-import React from 'react';
+import React, { memo } from 'react';
 
 import { cn } from '@/lib/utils/cn';
 
 import { Panel } from './Panel';
-import { SettingItem, ToggleSetting, SelectSetting, RangeSetting } from './settings';
+import {
+  SettingItem,
+  ToggleSetting,
+  SelectSetting,
+  RangeSetting,
+  type SettingItemProps,
+  type ToggleSettingProps,
+  type SelectSettingProps,
+  type RangeSettingProps,
+} from './settings';
 
 import type { SettingsPanelProps } from '@/types/components';
 
-interface SettingsPanelComponentProps extends SettingsPanelProps {
-  sections?: Array<{
-    title?: string;
-    items: React.ReactNode[];
-  }>;
-  actions?: React.ReactNode[];
+type SettingsPanelItem =
+  | ({ type: 'toggle' } & ToggleSettingProps)
+  | ({ type: 'select' } & SelectSettingProps)
+  | ({ type: 'range' } & RangeSettingProps)
+  | ({ type: 'item' } & SettingItemProps)
+  | { type: 'custom'; element: React.ReactNode };
+
+interface SettingsSection {
+  title?: string;
+  items: SettingsPanelItem[];
 }
 
-export const SettingsPanel = ({
+interface SettingsPanelComponentProps extends SettingsPanelProps {
+  sections?: SettingsSection[];
+  actions?: React.ReactNode[];
+  children?: React.ReactNode;
+}
+
+export const SettingsPanel = memo(function SettingsPanel({
   isOpen,
   onClose,
   title = 'Settings',
@@ -25,7 +44,7 @@ export const SettingsPanel = ({
   actions = [],
   className,
   children,
-}: SettingsPanelComponentProps): React.JSX.Element => {
+}: SettingsPanelComponentProps): React.JSX.Element {
   return (
     <Panel
       isOpen={isOpen}
@@ -43,9 +62,33 @@ export const SettingsPanel = ({
               </h3>
             )}
             <div className="bg-surface/50 rounded-lg mx-4 mb-4">
-              {section.items.map((item, itemIndex) => (
-                <div key={itemIndex}>{item}</div>
-              ))}
+              {section.items.map((item, itemIndex) => {
+                switch (item.type) {
+                  case 'toggle': {
+                    const { type, ...props } = item;
+                    return <ToggleSetting key={itemIndex} {...props} />;
+                  }
+                  case 'select': {
+                    const { type, ...props } = item;
+                    return <SelectSetting key={itemIndex} {...props} />;
+                  }
+                  case 'range': {
+                    const { type, ...props } = item;
+                    return <RangeSetting key={itemIndex} {...props} />;
+                  }
+                  case 'item': {
+                    const { type, children: itemChildren, ...props } = item;
+                    return (
+                      <SettingItem key={itemIndex} {...props}>
+                        {itemChildren}
+                      </SettingItem>
+                    );
+                  }
+                  case 'custom':
+                  default:
+                    return <div key={itemIndex}>{item.element}</div>;
+                }
+              })}
             </div>
           </div>
         ))}
@@ -61,6 +104,6 @@ export const SettingsPanel = ({
       )}
     </Panel>
   );
-};
+});
 
-export { SettingItem, ToggleSetting, SelectSetting, RangeSetting };
+export { SettingItem, ToggleSetting, SelectSetting, RangeSetting } from './settings';
