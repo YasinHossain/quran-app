@@ -1,7 +1,7 @@
 import { BookmarkPosition } from '../../../../src/domain/value-objects/BookmarkPosition';
 import { validTimestamp } from './BookmarkPosition/test-utils';
 
-describe('BookmarkPosition classification', () => {
+describe('BookmarkPosition classification helpers', () => {
   describe('isFirstVerse', () => {
     it('returns true for ayah number 1', () => {
       const position = new BookmarkPosition(5, 1, validTimestamp);

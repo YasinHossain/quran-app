@@ -1,7 +1,7 @@
 import { BookmarkPosition } from '../../../../src/domain/value-objects/BookmarkPosition';
 import { validTimestamp } from './BookmarkPosition/test-utils';
 
-describe('BookmarkPosition formatting', () => {
+describe('BookmarkPosition formatting & display', () => {
   describe('toString and verseKey', () => {
     it('returns correct verse key format', () => {
       const position = new BookmarkPosition(2, 255, validTimestamp);
@@ -35,7 +35,9 @@ describe('BookmarkPosition formatting', () => {
     it('returns plain object with all properties', () => {
       const position = new BookmarkPosition(2, 255, validTimestamp);
 
-      expect(position.toPlainObject()).toEqual({
+      const plainObject = position.toPlainObject();
+
+      expect(plainObject).toEqual({
         surahId: 2,
         ayahNumber: 255,
         verseKey: '2:255',
@@ -48,9 +50,10 @@ describe('BookmarkPosition formatting', () => {
     it('handles first verse correctly', () => {
       const position = new BookmarkPosition(1, 1, validTimestamp);
 
-      const plain = position.toPlainObject();
-      expect(plain.isFirstVerse).toBe(true);
-      expect(plain.verseKey).toBe('1:1');
+      const plainObject = position.toPlainObject();
+
+      expect(plainObject.isFirstVerse).toBe(true);
+      expect(plainObject.verseKey).toBe('1:1');
     });
   });
 });

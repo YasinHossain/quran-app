@@ -8,7 +8,7 @@ import {
 
 describe('BookmarkPosition constructor', () => {
   describe('constructor validation', () => {
-    it('creates a position with valid inputs', () => {
+    it('creates a valid BookmarkPosition with all parameters', () => {
       const position = new BookmarkPosition(validSurahId, validAyahNumber, validTimestamp);
 
       expect(position.surahId).toBe(validSurahId);
@@ -16,29 +16,29 @@ describe('BookmarkPosition constructor', () => {
       expect(position.timestamp).toBe(validTimestamp);
     });
 
-    it('throws for invalid Surah ID below 1', () => {
+    it('throws error for invalid Surah ID below 1', () => {
       expectBookmarkPositionToThrow(0, validAyahNumber, validTimestamp, 'Invalid Surah ID: must be between 1 and 114');
     });
 
-    it('throws for invalid Surah ID above 114', () => {
+    it('throws error for invalid Surah ID above 114', () => {
       expectBookmarkPositionToThrow(115, validAyahNumber, validTimestamp, 'Invalid Surah ID: must be between 1 and 114');
     });
 
-    it('throws for invalid Ayah number below 1', () => {
+    it('throws error for invalid Ayah number below 1', () => {
       expectBookmarkPositionToThrow(validSurahId, 0, validTimestamp, 'Ayah number must be positive');
     });
 
-    it('throws for null timestamp', () => {
+    it('throws error for null timestamp', () => {
       expectBookmarkPositionToThrow(validSurahId, validAyahNumber, null, 'Timestamp is required');
     });
 
-    it('throws for undefined timestamp', () => {
+    it('throws error for undefined timestamp', () => {
       expectBookmarkPositionToThrow(validSurahId, validAyahNumber, undefined, 'Timestamp is required');
     });
   });
 
   describe('withNewTimestamp', () => {
-    it('creates a new position with updated timestamp', () => {
+    it('creates new position with updated timestamp', () => {
       const original = new BookmarkPosition(validSurahId, 5, validTimestamp);
       const updated = original.withNewTimestamp();
 
@@ -50,7 +50,7 @@ describe('BookmarkPosition constructor', () => {
   });
 
   describe('fromVerseKey', () => {
-    it('creates position from valid verse key', () => {
+    it('creates BookmarkPosition from valid verse key', () => {
       const position = BookmarkPosition.fromVerseKey('2:255');
 
       expect(position.surahId).toBe(2);
@@ -72,23 +72,23 @@ describe('BookmarkPosition constructor', () => {
       expect(position.ayahNumber).toBe(6);
     });
 
-    it('throws for invalid format without colon', () => {
+    it('throws error for invalid format without colon', () => {
       expect(() => BookmarkPosition.fromVerseKey('2255')).toThrow('Invalid verse key format. Expected "surah:ayah"');
     });
 
-    it('throws for invalid format with too many parts', () => {
+    it('throws error for invalid format with too many parts', () => {
       expect(() => BookmarkPosition.fromVerseKey('2:255:extra')).toThrow('Invalid verse key format. Expected "surah:ayah"');
     });
 
-    it('throws for non-numeric surah', () => {
+    it('throws error for non-numeric surah', () => {
       expect(() => BookmarkPosition.fromVerseKey('abc:255')).toThrow('Invalid verse key: surah and ayah must be numbers');
     });
 
-    it('throws for non-numeric ayah', () => {
+    it('throws error for non-numeric ayah', () => {
       expect(() => BookmarkPosition.fromVerseKey('2:abc')).toThrow('Invalid verse key: surah and ayah must be numbers');
     });
 
-    it('throws for empty parts', () => {
+    it('throws error for empty parts', () => {
       expect(() => BookmarkPosition.fromVerseKey(':255')).toThrow('Invalid verse key: surah and ayah must be numbers');
     });
   });
