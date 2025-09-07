@@ -46,19 +46,37 @@ export const BookmarkedVersesList = (): JSX.Element => {
     return <p className="text-muted">Failed to load bookmarked verses. {error}</p>;
   }
 
+  const TranslationList = ({
+    translations,
+  }: {
+    translations?: Verse['translations'];
+  }): React.JSX.Element | null => {
+    if (!translations) return null;
+
+    return (
+      <>
+        {translations.map((t) => (
+          <p key={t.resource_id} dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.text) }} />
+        ))}
+      </>
+    );
+  };
+
+  const VerseItem = ({ verse }: { verse: Verse }): React.JSX.Element => (
+    <div>
+      <p className="font-semibold text-foreground">{verse.verse_key}</p>
+      <p
+        className="text-right"
+        dangerouslySetInnerHTML={{ __html: sanitizeHtml(verse.text_uthmani) }}
+      />
+      <TranslationList translations={verse.translations} />
+    </div>
+  );
+
   return (
     <div className="space-y-4">
       {verses.map((verse) => (
-        <div key={verse.id}>
-          <p className="font-semibold text-foreground">{verse.verse_key}</p>
-          <p
-            className="text-right"
-            dangerouslySetInnerHTML={{ __html: sanitizeHtml(verse.text_uthmani) }}
-          />
-          {verse.translations?.map((t) => (
-            <p key={t.resource_id} dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.text) }} />
-          ))}
-        </div>
+        <VerseItem key={verse.id} verse={verse} />
       ))}
     </div>
   );

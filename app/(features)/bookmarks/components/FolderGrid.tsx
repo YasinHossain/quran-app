@@ -31,49 +31,53 @@ const FolderCards = ({
   folders,
   onFolderSelect,
   onAction,
-}: FolderCardsProps): React.JSX.Element => (
-  <motion.div
-    className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8"
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.4, ease: 'easeOut' }}
-  >
-    <AnimatePresence mode="popLayout">
-      {folders.map((folder, index) => (
-        <motion.div
-          key={folder.id}
-          layout
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{
-            opacity: 1,
-            scale: 1,
-            y: 0,
-            transition: {
-              delay: index * 0.05,
-              duration: 0.4,
-              ease: 'easeOut',
-            },
-          }}
-          exit={{
-            opacity: 0,
-            scale: 0.9,
-            y: -20,
-            transition: { duration: 0.3 },
-          }}
-        >
-          <FolderCard
-            folder={folder}
-            onClick={() => onFolderSelect(folder.id)}
-            onEdit={() => onAction(folder, 'edit')}
-            onDelete={() => onAction(folder, 'delete')}
-            onRename={() => onAction(folder, 'rename')}
-            onColorChange={() => onAction(folder, 'customize')}
-          />
-        </motion.div>
-      ))}
-    </AnimatePresence>
-  </motion.div>
-);
+}: FolderCardsProps): React.JSX.Element => {
+  const renderFolderItem = (folder: Folder, index: number): React.JSX.Element => (
+    <motion.div
+      key={folder.id}
+      layout
+      initial={{ opacity: 0, scale: 0.9, y: 20 }}
+      animate={{
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        transition: {
+          delay: index * 0.05,
+          duration: 0.4,
+          ease: 'easeOut',
+        },
+      }}
+      exit={{
+        opacity: 0,
+        scale: 0.9,
+        y: -20,
+        transition: { duration: 0.3 },
+      }}
+    >
+      <FolderCard
+        folder={folder}
+        onClick={() => onFolderSelect(folder.id)}
+        onEdit={() => onAction(folder, 'edit')}
+        onDelete={() => onAction(folder, 'delete')}
+        onRename={() => onAction(folder, 'rename')}
+        onColorChange={() => onAction(folder, 'customize')}
+      />
+    </motion.div>
+  );
+
+  return (
+    <motion.div
+      className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+    >
+      <AnimatePresence mode="popLayout">
+        {folders.map(renderFolderItem)}
+      </AnimatePresence>
+    </motion.div>
+  );
+};
 
 const useFolderModals = () => {
   const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);

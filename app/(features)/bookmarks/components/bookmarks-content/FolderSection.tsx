@@ -4,7 +4,7 @@ import React from 'react';
 
 import { BookmarkFolderCard, BookmarkVerseCard } from '@/app/shared/ui/cards';
 
-import type { Folder } from '@/types/bookmark';
+import type { Bookmark, Folder } from '@/types/bookmark';
 
 interface FolderSectionProps {
   folders: Folder[];
@@ -13,19 +13,32 @@ interface FolderSectionProps {
   onVerseClick?: (verseKey: string) => void;
 }
 
-interface FolderItemProps {
+interface FolderPreviewItemProps {
+  bookmark: Bookmark;
+  onVerseClick?: (verseKey: string) => void;
+}
+
+const FolderPreviewItem = ({ bookmark, onVerseClick }: FolderPreviewItemProps): React.JSX.Element => (
+  <BookmarkVerseCard
+    bookmark={bookmark}
+    onClick={() => onVerseClick?.(bookmark.verseKey || bookmark.verseId)}
+    className="scale-95"
+  />
+);
+
+interface FolderListItemProps {
   folder: Folder;
   isExpanded: boolean;
   onToggleExpansion: (folderId: string) => void;
   onVerseClick?: (verseKey: string) => void;
 }
 
-const FolderItem = ({
+const FolderListItem = ({
   folder,
   isExpanded,
   onToggleExpansion,
   onVerseClick,
-}: FolderItemProps): React.JSX.Element => (
+}: FolderListItemProps): React.JSX.Element => (
   <div className="space-y-1">
     <BookmarkFolderCard
       folder={folder}
@@ -35,12 +48,7 @@ const FolderItem = ({
     {isExpanded && (
       <div className="ml-2 pl-3 border-l-2 border-border/50 space-y-2 animate-in slide-in-from-top-2 duration-200">
         {folder.bookmarks.slice(0, 5).map((bookmark) => (
-          <BookmarkVerseCard
-            key={bookmark.verseId}
-            bookmark={bookmark}
-            onClick={() => onVerseClick?.(bookmark.verseKey || bookmark.verseId)}
-            className="scale-95"
-          />
+          <FolderPreviewItem key={bookmark.verseId} bookmark={bookmark} onVerseClick={onVerseClick} />
         ))}
         {folder.bookmarks.length > 5 && (
           <div className="text-xs text-muted text-center py-2">
@@ -67,7 +75,7 @@ export const FolderSection = ({
       </div>
       <div className="space-y-2">
         {folders.map((folder) => (
-          <FolderItem
+          <FolderListItem
             key={folder.id}
             folder={folder}
             isExpanded={expandedFolders.has(folder.id)}

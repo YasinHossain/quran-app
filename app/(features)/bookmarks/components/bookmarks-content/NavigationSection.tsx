@@ -35,13 +35,29 @@ export const NavigationSection = ({
   <nav className="mb-6">
     <div className="space-y-2">
       {NAVIGATION_SECTIONS.map((section) => (
-        <BookmarkNavigationCard
+        <NavigationItem
           key={section.id}
-          content={section}
-          isActive={activeSection === section.id}
-          {...(onSectionChange && { onSectionChange })}
+          section={section}
+          activeSection={activeSection}
+          onSectionChange={onSectionChange}
         />
       ))}
     </div>
   </nav>
+);
+
+const NavigationItem = ({
+  section,
+  activeSection,
+  onSectionChange,
+}: {
+  section: BookmarkNavigationContent;
+  activeSection: SectionId;
+  onSectionChange?: (section: SectionId) => void;
+}): React.JSX.Element => (
+  <BookmarkNavigationCard
+    content={section}
+    isActive={activeSection === section.id}
+    {...(onSectionChange && { onSectionChange })}
+  />
 );
