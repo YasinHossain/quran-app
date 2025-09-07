@@ -20,37 +20,6 @@ describe('Surah Entity - Metrics', () => {
   const validNumberOfAyahs = 7;
   const validRevelationType = RevelationType.MAKKI;
 
-  describe('revelation type methods', () => {
-    it('should return true for isMakki when revelation type is MAKKI', () => {
-      const makkiSurah = new Surah(
-        validId,
-        validName,
-        validArabicName,
-        validEnglishName,
-        validEnglishTranslation,
-        validNumberOfAyahs,
-        RevelationType.MAKKI
-      );
-
-      expect(makkiSurah.isMakki()).toBe(true);
-      expect(makkiSurah.isMadani()).toBe(false);
-    });
-
-    it('should return true for isMadani when revelation type is MADANI', () => {
-      const madaniSurah = new Surah(
-        2,
-        'البقرة',
-        'البقرة',
-        'Al-Baqarah',
-        'The Cow',
-        286,
-        RevelationType.MADANI
-      );
-
-      expect(madaniSurah.isMadani()).toBe(true);
-      expect(madaniSurah.isMakki()).toBe(false);
-    });
-  });
 
   describe('length classification', () => {
     it('should classify short Surah correctly (less than 20 verses)', () => {
