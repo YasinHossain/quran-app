@@ -3,9 +3,9 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { memo } from 'react';
 
-import { TabContent } from './components/TabContent';
 import { QuranBottomSheetHeader } from './components/QuranBottomSheetHeader';
 import { QuranTabBar } from './components/QuranTabBar';
+import { TabContent } from './components/TabContent';
 import { useBottomSheetHandlers } from './hooks/useBottomSheetHandlers';
 import { useQuranNavigation } from './hooks/useQuranNavigation';
 
@@ -41,31 +41,74 @@ export const QuranBottomSheet = memo(function QuranBottomSheet({
         <>
           <Backdrop onClose={onClose} />
           <Sheet>
-            <QuranBottomSheetHeader
+            <BottomSheetContent
               onClose={onClose}
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
-            />
-            <QuranTabBar
               tabs={tabs}
               activeTab={activeTab}
-              onTabChange={setActiveTab}
+              setActiveTab={setActiveTab}
+              filteredSurahs={filteredSurahs}
+              filteredJuzs={filteredJuzs}
+              filteredPages={filteredPages}
+              handleSurahClick={handleSurahClick}
+              handleJuzClick={handleJuzClick}
+              handlePageClick={handlePageClick}
             />
-            <div className="flex-1 overflow-y-auto">
-              <TabContent
-                activeTab={activeTab}
-                filteredSurahs={filteredSurahs}
-                filteredJuzs={filteredJuzs}
-                filteredPages={filteredPages}
-                onSurahClick={handleSurahClick}
-                onJuzClick={handleJuzClick}
-                onPageClick={handlePageClick}
-              />
-            </div>
           </Sheet>
         </>
       )}
     </AnimatePresence>
+  );
+});
+
+const BottomSheetContent = memo(function BottomSheetContent({
+  onClose,
+  searchTerm,
+  setSearchTerm,
+  tabs,
+  activeTab,
+  setActiveTab,
+  filteredSurahs,
+  filteredJuzs,
+  filteredPages,
+  handleSurahClick,
+  handleJuzClick,
+  handlePageClick,
+}: {
+  onClose: () => void;
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+  tabs: { id: string; label: string }[];
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+  filteredSurahs: unknown[];
+  filteredJuzs: unknown[];
+  filteredPages: unknown[];
+  handleSurahClick: (id: number) => void;
+  handleJuzClick: (id: number) => void;
+  handlePageClick: (id: number) => void;
+}): React.ReactElement {
+  return (
+    <>
+      <QuranBottomSheetHeader
+        onClose={onClose}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+      />
+      <QuranTabBar tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
+      <div className="flex-1 overflow-y-auto">
+        <TabContent
+          activeTab={activeTab}
+          filteredSurahs={filteredSurahs}
+          filteredJuzs={filteredJuzs}
+          filteredPages={filteredPages}
+          onSurahClick={handleSurahClick}
+          onJuzClick={handleJuzClick}
+          onPageClick={handlePageClick}
+        />
+      </div>
+    </>
   );
 });
 
@@ -76,7 +119,7 @@ const sheetVariants = {
   exit: { y: '100%', opacity: 0 },
 };
 
-const Backdrop = ({ onClose }: { onClose: () => void }) => (
+const Backdrop = ({ onClose }: { onClose: () => void }): React.ReactElement => (
   <motion.div
     variants={backdropVariants}
     initial="hidden"
@@ -87,7 +130,7 @@ const Backdrop = ({ onClose }: { onClose: () => void }) => (
   />
 );
 
-const Sheet = ({ children }: { children: React.ReactNode }) => (
+const Sheet = ({ children }: { children: React.ReactNode }): React.ReactElement => (
   <motion.div
     variants={sheetVariants}
     initial="hidden"

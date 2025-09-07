@@ -17,39 +17,40 @@ interface AdaptiveNavigationProps {
   className?: string;
 }
 
-const navItemsFor = (breakpoint: string): NavItem[] => [
-  {
-    id: 'home',
-    icon: IconHome,
-    label: 'Home',
-    href: '/',
-    isActive: (path: string) => path === '/',
-  },
-  {
-    id: 'surah',
-    icon: IconBook,
-    label: breakpoint === 'mobile' ? 'Jump' : 'Jump to Surah',
-    isActive: (path: string) => path.startsWith('/surah'),
-    href: '/surah/1',
-  },
-  {
-    id: 'bookmarks',
-    icon: IconBookmark,
-    label: 'Bookmarks',
-    href: '/bookmarks',
-    isActive: (path: string) => path.startsWith('/bookmarks'),
-  },
-];
+const useNavItems = (breakpoint: string): NavItem[] =>
+  React.useMemo(
+    () => [
+      {
+        id: 'home',
+        icon: IconHome,
+        label: 'Home',
+        href: '/',
+        isActive: (path: string) => path === '/',
+      },
+      {
+        id: 'surah',
+        icon: IconBook,
+        label: breakpoint === 'mobile' ? 'Jump' : 'Jump to Surah',
+        isActive: (path: string) => path.startsWith('/surah'),
+        href: '/surah/1',
+      },
+      {
+        id: 'bookmarks',
+        icon: IconBookmark,
+        label: 'Bookmarks',
+        href: '/bookmarks',
+        isActive: (path: string) => path.startsWith('/bookmarks'),
+      },
+    ],
+    [breakpoint]
+  );
 
-export const AdaptiveNavigation = memo(function AdaptiveNavigation({
-  onSurahJump,
-  className,
-}: AdaptiveNavigationProps): React.JSX.Element | null {
-  const pathname = usePathname();
-  const { breakpoint, variant } = useResponsiveState();
-  const navItems = React.useMemo(() => navItemsFor(breakpoint), [breakpoint]);
-
-  const handleItemClick = React.useCallback(
+const useNavItemClick = (
+  onSurahJump: AdaptiveNavigationProps['onSurahJump'],
+  pathname: string,
+  breakpoint: string
+): ((item: NavItem, e: React.MouseEvent) => void) =>
+  React.useCallback(
     (item: NavItem, e: React.MouseEvent) => {
       if (item.id === 'surah') {
         const isOnSurahPage = pathname.startsWith('/surah/');
@@ -64,6 +65,15 @@ export const AdaptiveNavigation = memo(function AdaptiveNavigation({
     },
     [onSurahJump, pathname, breakpoint]
   );
+
+export const AdaptiveNavigation = memo(function AdaptiveNavigation({
+  onSurahJump,
+  className,
+}: AdaptiveNavigationProps): React.JSX.Element | null {
+  const pathname = usePathname();
+  const { breakpoint, variant } = useResponsiveState();
+  const navItems = useNavItems(breakpoint);
+  const handleItemClick = useNavItemClick(onSurahJump, pathname, breakpoint);
 
   if (pathname === '/') return null;
 
