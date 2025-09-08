@@ -3,14 +3,10 @@
 import React from 'react';
 
 interface AudioErrorFallbackProps {
-  error?: Error;
   resetError: () => void;
 }
 
-export function AudioErrorFallback({
-  error,
-  resetError,
-}: AudioErrorFallbackProps): React.JSX.Element {
+export function AudioErrorFallback({ resetError }: AudioErrorFallbackProps): React.JSX.Element {
   return (
     <div role="alert" className="bg-error/10 border border-error/20 rounded-lg p-3 mb-2">
       <div className="flex items-center">

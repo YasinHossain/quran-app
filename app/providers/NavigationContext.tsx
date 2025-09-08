@@ -3,6 +3,49 @@
 import { useRouter } from 'next/navigation';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
+// Custom hooks for cleaner component logic
+const useKeyboardShortcuts = (
+  hideAllSheets: () => void,
+  setQuranBottomSheetOpen: (open: boolean) => void
+): void => {
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') {
+        hideAllSheets();
+      }
+
+      if (event.metaKey || event.ctrlKey) {
+        switch (event.key) {
+          case 'o':
+            event.preventDefault();
+            setQuranBottomSheetOpen(true);
+            break;
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [hideAllSheets, setQuranBottomSheetOpen]);
+};
+
+const useBodyScrollLock = (shouldLock: boolean): void => {
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const { classList } = document.body;
+    if (shouldLock) {
+      classList.add('overflow-hidden', 'touch-none');
+    } else {
+      classList.remove('overflow-hidden', 'touch-none');
+    }
+
+    return () => {
+      classList.remove('overflow-hidden', 'touch-none');
+    };
+  }, [shouldLock]);
+};
+
 interface NavigationContextType {
   // Bottom sheet state
   isQuranBottomSheetOpen: boolean;
@@ -19,7 +62,11 @@ const NavigationContext = createContext<NavigationContextType | undefined>(undef
 /**
  * Modern navigation provider with bottom sheet and quick actions
  */
-export const NavigationProvider = ({ children }: { children: React.ReactNode }) => {
+export const NavigationProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}): React.JSX.Element => {
   const router = useRouter();
   const [isQuranBottomSheetOpen, setQuranBottomSheetOpen] = useState(false);
 
@@ -40,47 +87,9 @@ export const NavigationProvider = ({ children }: { children: React.ReactNode }) 
     setQuranBottomSheetOpen(false);
   }, []);
 
-  // Keyboard support
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        hideAllSheets();
-      }
-
-      // Quick shortcuts
-      if (event.metaKey || event.ctrlKey) {
-        switch (event.key) {
-          case 'o': // Cmd/Ctrl + O for Quran selector
-            event.preventDefault();
-            setQuranBottomSheetOpen(true);
-            break;
-        }
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [hideAllSheets]);
-
-  // Prevent body scroll when sheets are open
-  useEffect(() => {
-    const shouldPreventScroll = isQuranBottomSheetOpen;
-
-    if (typeof window !== 'undefined') {
-      const { classList } = document.body;
-      if (shouldPreventScroll) {
-        classList.add('overflow-hidden', 'touch-none');
-      } else {
-        classList.remove('overflow-hidden', 'touch-none');
-      }
-    }
-
-    return () => {
-      if (typeof window !== 'undefined') {
-        document.body.classList.remove('overflow-hidden', 'touch-none');
-      }
-    };
-  }, [isQuranBottomSheetOpen]);
+  // Apply custom hooks for cleaner code
+  useKeyboardShortcuts(hideAllSheets, setQuranBottomSheetOpen);
+  useBodyScrollLock(isQuranBottomSheetOpen);
 
   const value = useMemo(
     () => ({
@@ -99,7 +108,7 @@ export const NavigationProvider = ({ children }: { children: React.ReactNode }) 
 /**
  * Hook for modern navigation state and actions
  */
-export const useNavigation = () => {
+export const useNavigation = (): NavigationContextType => {
   const ctx = useContext(NavigationContext);
   if (!ctx) throw new Error('useNavigation must be used within NavigationProvider');
   return ctx;

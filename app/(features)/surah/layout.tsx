@@ -2,6 +2,10 @@
 
 import { AudioProvider } from '@/app/shared/player/context/AudioContext';
 
-export default function SurahLayout({ children }: { children: React.ReactNode }) {
+export default function SurahLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}): React.JSX.Element {
   return <AudioProvider>{children}</AudioProvider>;
 }

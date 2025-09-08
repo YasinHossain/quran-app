@@ -6,6 +6,12 @@ import { SearchIcon } from '../icons';
 type SearchVariant = 'main' | 'default' | 'glass' | 'header' | 'panel';
 type SearchSize = 'sm' | 'md' | 'lg';
 
+type SizeStyles = {
+  container: string;
+  input: string;
+  icon: { size: number; className: string };
+};
+
 interface SearchInputProps {
   value: string;
   onChange: (value: string) => void;
@@ -16,7 +22,7 @@ interface SearchInputProps {
   size?: SearchSize;
 }
 
-const getVariantStyles = (variant: SearchVariant) => {
+const getVariantStyles = (variant: SearchVariant): string => {
   switch (variant) {
     case 'header':
       return 'bg-interactive/60 text-foreground border border-border placeholder:text-muted';
@@ -29,7 +35,7 @@ const getVariantStyles = (variant: SearchVariant) => {
   }
 };
 
-const getSizeStyles = (size: SearchSize) => {
+const getSizeStyles = (size: SearchSize): SizeStyles => {
   switch (size) {
     case 'sm':
       return {
@@ -52,7 +58,7 @@ const getSizeStyles = (size: SearchSize) => {
   }
 };
 
-const getFocusStyles = (variant: SearchVariant) => {
+const getFocusStyles = (variant: SearchVariant): string => {
   switch (variant) {
     case 'panel':
       return 'focus:ring-2 focus:ring-accent focus:border-transparent';
@@ -61,7 +67,7 @@ const getFocusStyles = (variant: SearchVariant) => {
   }
 };
 
-const getHoverStyles = (variant: SearchVariant) => {
+const getHoverStyles = (variant: SearchVariant): string => {
   switch (variant) {
     case 'panel':
       return ''; // No hover effects - only focus ring appears on click
@@ -80,7 +86,7 @@ export const SearchInput = ({
   className = '',
   variant = 'default',
   size = 'md',
-}: SearchInputProps) => {
+}: SearchInputProps): JSX.Element => {
   const variantStyles = getVariantStyles(variant);
   const sizeStyles = getSizeStyles(size);
   const focusStyles = getFocusStyles(variant);
@@ -98,7 +104,7 @@ export const SearchInput = ({
       <input
         type="text"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e): void => onChange(e.target.value)}
         placeholder={placeholder}
         onKeyDown={onKeyDown}
         className={`w-full ${sizeStyles.input} rounded-lg outline-none focus:outline-none ${focusStyles} transition-all duration-300 ${hoverStyles} ${variantStyles} touch-manipulation`}

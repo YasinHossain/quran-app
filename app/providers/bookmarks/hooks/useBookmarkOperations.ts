@@ -16,14 +16,25 @@ export interface BookmarkOperations {
   toggleBookmark(verseId: string, folderId?: string): void;
   updateBookmark(verseId: string, data: Partial<Bookmark>): void;
 }
-export default function useBookmarkOperations(
-  folders: Folder[],
-  setFolders: React.Dispatch<React.SetStateAction<Folder[]>>,
-  pinned: Bookmark[],
-  setPinned: React.Dispatch<React.SetStateAction<Bookmark[]>>,
-  chapters: Chapter[],
-  fetchMetadata: (verseId: string, chaptersList: Chapter[]) => void
-): BookmarkOperations {
+export interface UseBookmarkOperationsOptions {
+  folders: Folder[];
+  setFolders: React.Dispatch<React.SetStateAction<Folder[]>>;
+  pinned: Bookmark[];
+  setPinned: React.Dispatch<React.SetStateAction<Bookmark[]>>;
+  chapters: Chapter[];
+  fetchMetadata: (verseId: string, chaptersList: Chapter[]) => void;
+}
+
+export default function useBookmarkOperations({
+  folders,
+  setFolders,
+  pinned: _pinned,
+  setPinned,
+  chapters,
+  fetchMetadata,
+}: UseBookmarkOperationsOptions): BookmarkOperations {
+  // Mark intentionally unused option to satisfy linter while preserving signature
+  void _pinned;
   return useMemo(() => {
     function addBookmark(verseId: string, folderId?: string): void {
       if (folderId === 'pinned') {

@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-export const useBodyScrollLock = (locked: boolean) => {
+export const useBodyScrollLock = (locked: boolean): void => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 

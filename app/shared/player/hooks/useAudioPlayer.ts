@@ -68,7 +68,7 @@ export function useAudioPlayer(options: Options = {}): AudioPlayerReturn {
     a.volume = vol;
   }, []);
 
-  const setPlaybackRate = useCallback((rate: number) => {
+  const setPlaybackRate = useCallback((rate: number): void => {
     const a = audioRef.current;
     if (!a) return;
     a.playbackRate = rate;
@@ -91,8 +91,8 @@ export function useAudioPlayer(options: Options = {}): AudioPlayerReturn {
   useEffect(() => {
     const a = audioRef.current;
     if (!a) return;
-    const onTime = () => onTimeUpdate?.(a.currentTime || 0);
-    const onMeta = () => onLoadedMetadata?.(a.duration || defaultDuration || 0);
+    const onTime = (): void => onTimeUpdate?.(a.currentTime || 0);
+    const onMeta = (): void => onLoadedMetadata?.(a.duration || defaultDuration || 0);
     a.addEventListener('timeupdate', onTime);
     a.addEventListener('loadedmetadata', onMeta);
     onMeta();

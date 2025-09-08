@@ -37,7 +37,7 @@ test('coerces decimal input to integer', async () => {
 test('rejects decimal repeat values', async () => {
   const onClose = jest.fn();
 
-  const Wrapper = () => {
+  const Wrapper = (): React.ReactElement => {
     const { setRepeatOptions } = useAudio();
     useEffect(() => {
       setRepeatOptions((prev) => ({ ...prev, start: 1.5 }));

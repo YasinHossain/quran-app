@@ -38,20 +38,13 @@ const AudioContext = createContext<AudioContextType | undefined>(undefined);
  * Wrap your application with this provider to share the currently
  * playing and loading audio identifiers across components.
  */
-export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
+export const AudioProvider = ({ children }: { children: React.ReactNode }): React.JSX.Element => {
   const [playingId, setPlayingId] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const [activeVerse, setActiveVerse] = useState<Verse | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [repeatOptions, setRepeatOptions] = useState<RepeatOptions>({
-    mode: 'off',
-    start: 1,
-    end: 1,
-    playCount: 1,
-    repeatEach: 1,
-    delay: 0,
-  });
+  const { repeatOptions, setRepeatOptions } = useRepeatState();
   const { reciter, setReciter, volume, setVolume, playbackRate, setPlaybackRate } =
     usePersistedAudioSettings();
 
@@ -111,12 +104,27 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
   return <AudioContext.Provider value={value}>{children}</AudioContext.Provider>;
 };
 
+function useRepeatState(): {
+  repeatOptions: RepeatOptions;
+  setRepeatOptions: React.Dispatch<React.SetStateAction<RepeatOptions>>;
+} {
+  const [repeatOptions, setRepeatOptions] = useState<RepeatOptions>({
+    mode: 'off',
+    start: 1,
+    end: 1,
+    playCount: 1,
+    repeatEach: 1,
+    delay: 0,
+  });
+  return { repeatOptions, setRepeatOptions } as const;
+}
+
 /**
  * Hook for accessing audio playback state.
  * Use within components to read or update the current playing or
  * loading audio identifiers managed by `AudioProvider`.
  */
-export const useAudio = () => {
+export const useAudio = (): AudioContextType => {
   const ctx = useContext(AudioContext);
   if (!ctx) throw new Error('useAudio must be used within AudioProvider');
   return ctx;

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 // Simple metrics storage (in production, you'd use a proper metrics system)
 let requestCount = 0;
@@ -6,7 +6,7 @@ let errorCount = 0;
 const startTime = Date.now();
 
 // GET /api/metrics - Basic application metrics
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function GET(): Promise<NextResponse> {
   try {
     requestCount++;
 
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         'Cache-Control': 'no-cache, no-store, must-revalidate',
       },
     });
-  } catch (error) {
+  } catch {
     errorCount++;
     return NextResponse.json(
       {
@@ -68,7 +68,6 @@ function getPerformanceMetrics(): {
   event_loop_lag: string;
 } | null {
   if (typeof process !== 'undefined' && process.hrtime) {
-    const hrTime = process.hrtime();
     return {
       uptime_seconds: process.uptime(),
       cpu_usage: process.cpuUsage(),
@@ -78,7 +77,4 @@ function getPerformanceMetrics(): {
   return null;
 }
 
-// Increment error count (can be called from error handlers)
-function incrementErrorCount(): void {
-  errorCount++;
-}
+// Note: errorCount is incremented in the GET handler's catch block.

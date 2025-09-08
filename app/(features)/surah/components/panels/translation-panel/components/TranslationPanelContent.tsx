@@ -3,11 +3,10 @@
 import React from 'react';
 
 import { AlertIcon } from '@/app/shared/icons';
-import { ResourceTabs, ResourceList, ResourceItem } from '@/app/shared/resource-panel';
-import { TranslationResource } from '@/types';
 
-import { TranslationSearch } from '../TranslationSearch';
-import { TranslationSelectionList } from '../TranslationSelectionList';
+import { PanelContentBody } from './TranslationPanelContentBody';
+
+import type { TranslationResource } from '@/types';
 
 interface TranslationPanelContentProps {
   loading: boolean;
@@ -37,185 +36,60 @@ interface TranslationPanelContentProps {
   listContainerRef: React.RefObject<HTMLDivElement>;
 }
 
-export const TranslationPanelContent = ({
-  loading,
-  error,
-  searchTerm,
-  setSearchTerm,
-  orderedSelection,
-  translations,
-  handleSelectionToggle,
-  handleDragStart,
-  handleDragOver,
-  handleDrop,
-  handleDragEnd,
-  draggedId,
-  languages,
-  activeFilter,
-  setActiveFilter,
-  tabsContainerRef,
-  canScrollLeft,
-  canScrollRight,
-  scrollTabsLeft,
-  scrollTabsRight,
-  sectionsToRender,
-  resourcesToRender,
-  selectedIds,
-  listHeight,
-  listContainerRef,
-}: TranslationPanelContentProps): React.JSX.Element => {
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="mx-4 mt-4 p-4 rounded-lg border bg-error/10 border-error/20 text-error">
-        <div className="flex items-center space-x-2">
-          <AlertIcon className="h-5 w-5 text-error" />
-          <span className="text-sm">{error}</span>
-        </div>
-      </div>
-    );
-  }
-
+function LoadingView(): React.JSX.Element {
   return (
-    <div className="flex-1 overflow-y-auto" ref={listContainerRef}>
-      <div className="p-4 space-y-4">
-        <TranslationSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        <TranslationSelectionList
-          orderedSelection={orderedSelection}
-          translations={translations}
-          handleSelectionToggle={handleSelectionToggle}
-          handleDragStart={handleDragStart}
-          handleDragOver={handleDragOver}
-          handleDrop={handleDrop}
-          handleDragEnd={handleDragEnd}
-          draggedId={draggedId}
-        />
-      </div>
+    <div className="flex items-center justify-center p-8">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent" />
+    </div>
+  );
+}
 
-      <TranslationTabsHeader
-        languages={languages}
-        activeFilter={activeFilter}
-        setActiveFilter={setActiveFilter}
-        tabsContainerRef={tabsContainerRef}
-        canScrollLeft={canScrollLeft}
-        canScrollRight={canScrollRight}
-        scrollTabsLeft={scrollTabsLeft}
-        scrollTabsRight={scrollTabsRight}
-      />
-
-      <div className="px-4 pb-4 pt-4">
-        {activeFilter === 'All' ? (
-          <TranslationsByLanguage
-            sectionsToRender={sectionsToRender}
-            selectedIds={selectedIds}
-            onToggle={handleSelectionToggle}
-          />
-        ) : (
-          <TranslationsVirtualList
-            resources={resourcesToRender}
-            selectedIds={selectedIds}
-            onToggle={handleSelectionToggle}
-            height={listHeight}
-          />
-        )}
+function ErrorView({ message }: { message: string }): React.JSX.Element {
+  return (
+    <div className="mx-4 mt-4 p-4 rounded-lg border bg-error/10 border-error/20 text-error">
+      <div className="flex items-center space-x-2">
+        <AlertIcon className="h-5 w-5 text-error" />
+        <span className="text-sm">{message}</span>
       </div>
     </div>
   );
+}
+
+export const TranslationPanelContent = (props: TranslationPanelContentProps): React.JSX.Element => {
+  if (props.loading) return <LoadingView />;
+  if (props.error) return <ErrorView message={props.error} />;
+  return <TranslationPanelContentBodyWrapper {...props} />;
 };
 
-function TranslationTabsHeader({
-  languages,
-  activeFilter,
-  setActiveFilter,
-  tabsContainerRef,
-  canScrollLeft,
-  canScrollRight,
-  scrollTabsLeft,
-  scrollTabsRight,
-}: {
-  languages: string[];
-  activeFilter: string;
-  setActiveFilter: (filter: string) => void;
-  tabsContainerRef: React.RefObject<HTMLDivElement>;
-  canScrollLeft: boolean;
-  canScrollRight: boolean;
-  scrollTabsLeft: () => void;
-  scrollTabsRight: () => void;
-}): React.JSX.Element {
+function TranslationPanelContentBodyWrapper(
+  props: TranslationPanelContentProps
+): React.JSX.Element {
+  const handleSelection = (id: number): void => props.handleSelectionToggle(id);
   return (
-    <div className="sticky top-0 z-10 py-2 border-b bg-background/95 backdrop-blur-sm border-border">
-      <div className="px-4">
-        <ResourceTabs
-          languages={languages}
-          activeFilter={activeFilter}
-          onTabClick={setActiveFilter}
-          tabsContainerRef={tabsContainerRef}
-          canScrollLeft={canScrollLeft}
-          canScrollRight={canScrollRight}
-          scrollTabsLeft={scrollTabsLeft}
-          scrollTabsRight={scrollTabsRight}
-          className=""
-        />
-      </div>
-    </div>
-  );
-}
-
-function TranslationsByLanguage({
-  sectionsToRender,
-  selectedIds,
-  onToggle,
-}: {
-  sectionsToRender: Array<{ language: string; items: TranslationResource[] }>;
-  selectedIds: Set<number>;
-  onToggle: (id: number) => void;
-}): React.JSX.Element {
-  return (
-    <div className="space-y-6">
-      {sectionsToRender.map(({ language, items }) => (
-        <div key={language}>
-          <h3 className="text-lg font-semibold mb-4 text-foreground">{language}</h3>
-          <div className="space-y-2">
-            {items.map((item) => (
-              <ResourceItem
-                key={item.id}
-                item={item}
-                isSelected={selectedIds.has(item.id)}
-                onToggle={onToggle}
-              />
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function TranslationsVirtualList({
-  resources,
-  selectedIds,
-  onToggle,
-  height,
-}: {
-  resources: TranslationResource[];
-  selectedIds: Set<number>;
-  onToggle: (id: number) => void;
-  height: number;
-}): React.JSX.Element {
-  return (
-    <ResourceList
-      resources={resources}
-      rowHeight={58}
-      selectedIds={selectedIds}
-      onToggle={onToggle}
-      height={height}
+    <PanelContentBody
+      searchTerm={props.searchTerm}
+      setSearchTerm={props.setSearchTerm}
+      orderedSelection={props.orderedSelection}
+      translations={props.translations}
+      handleSelection={handleSelection}
+      handleDragStart={props.handleDragStart}
+      handleDragOver={props.handleDragOver}
+      handleDrop={props.handleDrop}
+      handleDragEnd={props.handleDragEnd}
+      draggedId={props.draggedId}
+      languages={props.languages}
+      activeFilter={props.activeFilter}
+      setActiveFilter={props.setActiveFilter}
+      tabsContainerRef={props.tabsContainerRef}
+      canScrollLeft={props.canScrollLeft}
+      canScrollRight={props.canScrollRight}
+      scrollTabsLeft={props.scrollTabsLeft}
+      scrollTabsRight={props.scrollTabsRight}
+      sectionsToRender={props.sectionsToRender}
+      resourcesToRender={props.resourcesToRender}
+      selectedIds={props.selectedIds}
+      listHeight={props.listHeight}
+      listContainerRef={props.listContainerRef}
     />
   );
 }

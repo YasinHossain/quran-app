@@ -34,7 +34,7 @@ beforeAll(() => {
 });
 
 // Create a test component that mirrors the server component behavior
-const TestSurahIndexPage = () => {
+const TestSurahIndexPage = (): React.ReactElement => {
   const [surahs, setSurahs] = React.useState<Surah[]>([]);
   const [loading, setLoading] = React.useState(true);
 

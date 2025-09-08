@@ -10,7 +10,11 @@ interface ResourcePanelHeaderProps {
   onReset: () => void;
 }
 
-export const ResourcePanelHeader = ({ title, onClose, onReset }: ResourcePanelHeaderProps) => {
+export const ResourcePanelHeader = ({
+  title,
+  onClose,
+  onReset,
+}: ResourcePanelHeaderProps): React.JSX.Element => {
   return (
     <header className="flex items-center p-4 border-b border-border">
       <button

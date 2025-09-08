@@ -5,7 +5,7 @@ import { RECITERS } from '@/lib/audio/reciters';
 
 import { AudioProvider, useAudio } from '../context/AudioContext';
 
-const Consumer = () => {
+const Consumer = (): React.ReactElement => {
   const { reciter, volume, playbackRate, setReciter, setVolume, setPlaybackRate } = useAudio();
   return (
     <>

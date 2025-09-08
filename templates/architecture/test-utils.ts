@@ -35,7 +35,7 @@ interface HookTestConfig<TProps, TData> {
   mockData: TData;
 }
 
-export const setupTestEnvironment = () => {
+export const setupTestEnvironment = (): void => {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
     value: jest.fn().mockImplementation((query) => ({
@@ -67,17 +67,17 @@ export const setupTestEnvironment = () => {
   }));
 };
 
-export const resetTestEnvironment = () => {
+export const resetTestEnvironment = (): void => {
   jest.clearAllMocks();
   localStorage.clear();
   mockViewport(BREAKPOINTS.mobile);
 };
 
-export const clearTestEnvironment = () => {
+export const clearTestEnvironment = (): void => {
   jest.clearAllTimers();
 };
 
-export const runComponentTests = <TProps, TData>(config: ComponentTestConfig<TProps, TData>) => {
+export const runComponentTests = <TProps, TData>(config: ComponentTestConfig<TProps, TData>): void => {
   architectureComplianceSection(config);
   responsiveDesignSection(config);
   contextIntegrationSection(config);
@@ -88,13 +88,13 @@ export const runComponentTests = <TProps, TData>(config: ComponentTestConfig<TPr
   errorHandlingSection(config);
 };
 
-export const runHookTests = <TProps, TData>(config: HookTestConfig<TProps, TData>) => {
+export const runHookTests = <TProps, TData>(config: HookTestConfig<TProps, TData>): void => {
   hookContextIntegrationSection(config);
   hookPerformanceSection(config);
   hookCleanupSection(config);
   hookDataFetchingSection(config);
 };
 
-export const runIntegrationTest = <TProps, TData>(config: ComponentTestConfig<TProps, TData>) => {
+export const runIntegrationTest = <TProps, TData>(config: ComponentTestConfig<TProps, TData>): void => {
   integrationTestSection(config);
 };

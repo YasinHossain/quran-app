@@ -8,7 +8,7 @@ interface SelectionBoxProps {
   onClick: () => void;
 }
 
-export const SelectionBox = ({ label, value, onClick }: SelectionBoxProps) => {
+export const SelectionBox = ({ label, value, onClick }: SelectionBoxProps): React.JSX.Element => {
   return (
     <div>
       <label className="block mb-2 text-sm font-medium text-foreground">{label}</label>

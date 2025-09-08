@@ -2,10 +2,10 @@
 
 import React from 'react';
 
-import { GripVerticalIcon, CloseIcon } from '@/app/shared/icons';
 import { TranslationResource } from '@/types';
 
 import { MAX_TRANSLATION_SELECTIONS } from './hooks/useTranslationSelection';
+import { SelectedTranslationItem } from './SelectedTranslationItem';
 
 interface TranslationSelectionListProps {
   orderedSelection: number[];
@@ -47,28 +47,16 @@ export const TranslationSelectionList = ({
           const item = translations.find((t) => t.id === id);
           if (!item) return null;
           return (
-            <div
+            <SelectedTranslationItem
               key={id}
-              draggable
-              onDragStart={(e) => handleDragStart(e, id)}
+              item={item}
+              isDragging={draggedId === id}
+              onRemove={handleSelectionToggle}
+              onDragStart={handleDragStart}
               onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, id)}
+              onDrop={handleDrop}
               onDragEnd={handleDragEnd}
-              className={`flex items-center justify-between p-3 rounded-lg cursor-grab active:cursor-grabbing transition-all duration-200 ${
-                draggedId === id ? 'opacity-50' : 'opacity-100'
-              } bg-surface border border-border hover:bg-accent/10`}
-            >
-              <div className="flex items-center min-w-0">
-                <GripVerticalIcon className="h-4 w-4 mr-3 flex-shrink-0 text-muted" />
-                <span className="font-medium text-sm truncate text-foreground">{item.name}</span>
-              </div>
-              <button
-                onClick={() => handleSelectionToggle(id)}
-                className="hover:text-accent hover:bg-accent/10 transition-all duration-200 p-1.5 rounded-full flex-shrink-0 ml-2 text-muted"
-              >
-                <CloseIcon size={14} strokeWidth={2.5} />
-              </button>
-            </div>
+            />
           );
         })
       )}

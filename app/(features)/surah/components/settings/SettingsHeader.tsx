@@ -8,7 +8,7 @@ interface SettingsHeaderProps {
   onClose: () => void;
 }
 
-export const SettingsHeader = ({ onClose }: SettingsHeaderProps) => {
+export const SettingsHeader = ({ onClose }: SettingsHeaderProps): JSX.Element => {
   return (
     <header className="flex items-center justify-between px-3 sm:px-4 py-2 h-16 lg:h-12 min-h-12 border-b border-border bg-background pt-safe lg:pt-2">
       <button

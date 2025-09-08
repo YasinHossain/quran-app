@@ -11,20 +11,20 @@ import { buildAudioUrl } from '@/lib/audio/reciters';
 import type { Reciter } from '@/app/shared/player/types';
 import type { Verse } from '@/types';
 
+// Loading fallback extracted to keep component lean
+const LoadingFallback = (): JSX.Element => (
+  <div className="flex justify-center items-center p-4 bg-surface rounded-lg">
+    <Spinner className="h-4 w-4 md:h-5 md:w-5 text-accent" />
+  </div>
+);
+
 // Dynamic import for heavy QuranAudioPlayer component
 const QuranAudioPlayer = dynamic(
   () =>
     import('@/app/shared/player/QuranAudioPlayer').then((mod) => ({
       default: mod.QuranAudioPlayer,
     })),
-  {
-    loading: () => (
-      <div className="flex justify-center items-center p-4 bg-surface rounded-lg">
-        <Spinner className="h-4 w-4 md:h-5 md:w-5 text-accent" />
-      </div>
-    ),
-    ssr: false,
-  }
+  { loading: () => <LoadingFallback />, ssr: false }
 );
 
 interface TafsirAudioPlayerProps {
@@ -35,6 +35,28 @@ interface TafsirAudioPlayerProps {
   onPrev?: () => boolean;
 }
 
+// Helper: derive surah cover URL from active verse
+const useSurahCover = (verse: Verse | null): string | null => {
+  const [coverUrl, setCoverUrl] = useState<string | null>(null);
+  useEffect(() => {
+    if (!verse) return;
+    const [surahStr] = verse.verse_key.split(':');
+    const surahNumber = Number.parseInt(surahStr ?? '0', 10);
+    getSurahCoverUrl(surahNumber).then(setCoverUrl);
+  }, [verse]);
+  return coverUrl;
+};
+
+// Helper: build audio track object
+const createTrack = (verse: Verse, reciter: Reciter, coverUrl: string | null) => ({
+  id: verse.id.toString(),
+  title: `Verse ${verse.verse_key}`,
+  artist: reciter.name,
+  coverUrl: coverUrl || '',
+  durationSec: 0,
+  src: buildAudioUrl(verse.verse_key, reciter.path),
+});
+
 export const TafsirAudioPlayer = ({
   activeVerse,
   reciter,
@@ -42,41 +64,14 @@ export const TafsirAudioPlayer = ({
   onNext,
   onPrev,
 }: TafsirAudioPlayerProps): React.JSX.Element | null => {
-  const [coverUrl, setCoverUrl] = useState<string | null>(null);
   const { isHidden } = useHeaderVisibility();
-
-  useEffect(() => {
-    if (activeVerse) {
-      const [surahStr] = activeVerse.verse_key.split(':');
-      const surahNumber = Number.parseInt(surahStr ?? '0', 10);
-      getSurahCoverUrl(surahNumber).then(setCoverUrl);
-    }
-  }, [activeVerse]);
+  const coverUrl = useSurahCover(activeVerse);
 
   if (!activeVerse || !isVisible) return null;
 
-  const track = {
-    id: activeVerse.id.toString(),
-    title: `Verse ${activeVerse.verse_key}`,
-    artist: reciter.name,
-    coverUrl: coverUrl || '',
-    durationSec: 0,
-    src: buildAudioUrl(activeVerse.verse_key, reciter.path),
-  };
-
-  const handleNext = (): boolean => {
-    if (onNext) {
-      return onNext();
-    }
-    return false;
-  };
-
-  const handlePrev = (): boolean => {
-    if (onPrev) {
-      return onPrev();
-    }
-    return false;
-  };
+  const track = createTrack(activeVerse, reciter, coverUrl);
+  const handleNext = (): boolean => Boolean(onNext?.());
+  const handlePrev = (): boolean => Boolean(onPrev?.());
 
   return (
     <div

@@ -1,14 +1,12 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useSettings } from '@/app/providers/SettingsContext';
-import { FontSettingIcon } from '@/app/shared/icons';
-import { SelectionBox } from '@/app/shared/SelectionBox';
 
+import { FontSettingsContent } from './font-settings/FontSettingsContent';
 import { useFontSize } from '../../hooks/useFontSize';
-import { CollapsibleSection } from '../CollapsibleSection';
 
 interface FontSettingsProps {
   onArabicFontPanelOpen: () => void;
@@ -20,7 +18,7 @@ export const FontSettings = ({
   onArabicFontPanelOpen,
   isOpen = false,
   onToggle,
-}: FontSettingsProps) => {
+}: FontSettingsProps): JSX.Element => {
   const { settings, setSettings, arabicFonts } = useSettings();
   const { t } = useTranslation();
   const [isClient, setIsClient] = useState(false);
@@ -31,61 +29,39 @@ export const FontSettings = ({
     setIsClient(true);
   }, []);
 
-  const selectedArabicFont = isClient
-    ? arabicFonts.find((font) => font.value === settings.arabicFontFace)?.name || t('select_font')
-    : '';
+  const handleArabicFontSizeChange = useCallback(
+    (value: number): void => {
+      setSettings((prev) => ({ ...prev, arabicFontSize: value }));
+    },
+    [setSettings]
+  );
+
+  const handleTranslationFontSizeChange = useCallback(
+    (value: number): void => {
+      setSettings((prev) => ({ ...prev, translationFontSize: value }));
+    },
+    [setSettings]
+  );
+
+  const selectedArabicFont = useMemo(() => {
+    if (!isClient) return '';
+    return (
+      arabicFonts.find((font) => font.value === settings.arabicFontFace)?.name || t('select_font')
+    );
+  }, [arabicFonts, isClient, settings.arabicFontFace, t]);
 
   return (
-    <CollapsibleSection
-      title={t('font_setting')}
-      icon={<FontSettingIcon size={20} className="text-accent" />}
-      isLast
+    <FontSettingsContent
       isOpen={isOpen}
-      onToggle={onToggle || (() => {})}
-    >
-      <div className="space-y-4">
-        <div>
-          <div className="flex justify-between mb-1 text-sm">
-            <label className="text-foreground">{t('arabic_font_size')}</label>
-            <span className="font-semibold text-accent" suppressHydrationWarning>
-              {isClient ? settings.arabicFontSize : 28}
-            </span>
-          </div>
-          <input
-            type="range"
-            min="16"
-            max="48"
-            value={isClient ? settings.arabicFontSize : 28}
-            onChange={(e) => setSettings({ ...settings, arabicFontSize: +e.target.value })}
-            style={arabicStyle}
-            suppressHydrationWarning
-          />
-        </div>
-        <div>
-          <div className="flex justify-between mb-1 text-sm">
-            <label className="text-foreground">{t('translation_font_size')}</label>
-            <span className="font-semibold text-accent" suppressHydrationWarning>
-              {isClient ? settings.translationFontSize : 16}
-            </span>
-          </div>
-          <input
-            type="range"
-            min="12"
-            max="28"
-            value={isClient ? settings.translationFontSize : 16}
-            onChange={(e) => setSettings({ ...settings, translationFontSize: +e.target.value })}
-            style={translationStyle}
-            suppressHydrationWarning
-          />
-        </div>
-        <div suppressHydrationWarning>
-          <SelectionBox
-            label={t('arabic_font_face')}
-            value={selectedArabicFont}
-            onClick={onArabicFontPanelOpen}
-          />
-        </div>
-      </div>
-    </CollapsibleSection>
+      onToggle={onToggle}
+      isClient={isClient}
+      settings={settings}
+      arabicStyle={arabicStyle}
+      translationStyle={translationStyle}
+      selectedArabicFont={selectedArabicFont}
+      onArabicFontPanelOpen={onArabicFontPanelOpen}
+      handleArabicFontSizeChange={handleArabicFontSizeChange}
+      handleTranslationFontSizeChange={handleTranslationFontSizeChange}
+    />
   );
 };

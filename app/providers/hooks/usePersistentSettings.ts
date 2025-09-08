@@ -1,13 +1,21 @@
 'use client';
 
-import { useEffect, useReducer, useRef } from 'react';
+import { Dispatch, useEffect, useReducer, useRef } from 'react';
 
 import { reducer } from '../settingsReducer';
 import { defaultSettings, loadSettings, saveSettings } from '../settingsStorage';
 
+import type { Action } from '../settingsReducer';
+import type { Settings } from '@/types';
+
 const PERSIST_DEBOUNCE_MS = 300;
 
-export const usePersistentSettings = () => {
+interface UsePersistentSettingsReturn {
+  settings: Settings;
+  dispatch: Dispatch<Action>;
+}
+
+export const usePersistentSettings = (): UsePersistentSettingsReturn => {
   const [settings, dispatch] = useReducer(reducer, defaultSettings);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const latestSettings = useRef(settings);

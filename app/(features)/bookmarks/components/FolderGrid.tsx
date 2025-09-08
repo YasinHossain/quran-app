@@ -12,7 +12,6 @@ import type { Folder } from '@/types';
 
 interface FolderGridProps {
   folders: Folder[];
-  allFolders: Folder[];
   onFolderSelect: (folderId: string) => void;
 }
 
@@ -69,14 +68,17 @@ const FolderCards = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
     >
-      <AnimatePresence mode="popLayout">
-        {folders.map(renderFolderItem)}
-      </AnimatePresence>
+      <AnimatePresence mode="popLayout">{folders.map(renderFolderItem)}</AnimatePresence>
     </motion.div>
   );
 };
 
-const useFolderModals = () => {
+interface UseFolderModalsReturn {
+  handleAction: (folder: Folder, action: FolderAction) => void;
+  modals: React.JSX.Element;
+}
+
+const useFolderModals = (): UseFolderModalsReturn => {
   const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -113,11 +115,7 @@ const useFolderModals = () => {
   return { handleAction, modals };
 };
 
-export const FolderGrid = ({
-  folders,
-  allFolders,
-  onFolderSelect,
-}: FolderGridProps): React.JSX.Element => {
+export const FolderGrid = ({ folders, onFolderSelect }: FolderGridProps): React.JSX.Element => {
   const { handleAction, modals } = useFolderModals();
 
   if (folders.length === 0) {

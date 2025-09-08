@@ -1,13 +1,13 @@
-import { useEffect, useState, useMemo } from 'react';
+// no react hooks needed here; composed from shared hooks
 import { useTranslation } from 'react-i18next';
 
 import { useVerseListing } from '@/app/(features)/surah/hooks/useVerseListing';
-import { getSurahCoverUrl, getVersesByPage } from '@/lib/api';
-import { buildAudioUrl } from '@/lib/audio/reciters';
-import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
+import { useCoverAndTrack } from '@/app/shared/hooks/useCoverAndTrack';
+import { useSelectedNames } from '@/app/shared/hooks/useSelectedNames';
+import { getVersesByPage } from '@/lib/api';
 
+import type { UseVerseListingReturn } from '@/app/(features)/surah/hooks/useVerseListing';
 import type { Track } from '@/app/shared/player/types';
-import type { LanguageCode } from '@/lib/text/languageCodes';
 
 interface UsePageDataOptions {
   pageId: string;
@@ -16,8 +16,12 @@ interface UsePageDataOptions {
 /**
  * Hook for managing page data including verses, translations, and audio tracks
  */
-export function usePageData({ pageId }: UsePageDataOptions) {
-  const [coverUrl, setCoverUrl] = useState<string | null>(null);
+export function usePageData({ pageId }: UsePageDataOptions): UseVerseListingReturn & {
+  selectedTranslationName: string;
+  selectedWordLanguageName: string;
+  track: Track | null;
+  coverUrl: string | null;
+} {
   const { t } = useTranslation();
 
   const verseListingData = useVerseListing({
@@ -29,42 +33,14 @@ export function usePageData({ pageId }: UsePageDataOptions) {
   const { translationOptions, wordLanguageOptions, settings, activeVerse, reciter } =
     verseListingData;
 
-  const selectedTranslationName = useMemo(
-    () =>
-      translationOptions.find((o) => o.id === settings.translationId)?.name ||
-      t('select_translation'),
-    [settings.translationId, translationOptions, t]
-  );
+  const { selectedTranslationName, selectedWordLanguageName } = useSelectedNames({
+    settings,
+    translationOptions,
+    wordLanguageOptions,
+    t,
+  });
 
-  const selectedWordLanguageName = useMemo(
-    () =>
-      wordLanguageOptions.find(
-        (o) =>
-          (LANGUAGE_CODES as Record<string, LanguageCode>)[o.name.toLowerCase()] ===
-          settings.wordLang
-      )?.name || t('select_word_translation'),
-    [settings.wordLang, wordLanguageOptions, t]
-  );
-
-  // Load cover URL when active verse changes
-  useEffect(() => {
-    if (activeVerse) {
-      const [surahStr] = activeVerse.verse_key.split(':');
-      const surahNumber = Number.parseInt(surahStr ?? '0', 10);
-      getSurahCoverUrl(surahNumber).then(setCoverUrl);
-    }
-  }, [activeVerse]);
-
-  const track: Track | null = activeVerse
-    ? {
-        id: activeVerse.id.toString(),
-        title: `Verse ${activeVerse.verse_key}`,
-        artist: reciter.name,
-        coverUrl: coverUrl || '',
-        durationSec: 0,
-        src: buildAudioUrl(activeVerse.verse_key, reciter.path),
-      }
-    : null;
+  const { coverUrl, track } = useCoverAndTrack(activeVerse, reciter);
 
   return {
     ...verseListingData,

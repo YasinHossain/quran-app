@@ -1,4 +1,5 @@
 import { useRouter } from 'next/navigation';
+
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useBodyScrollLock } from '@/app/providers/hooks/useBodyScrollLock';
 import { useModal } from '@/app/shared/hooks/useModal';

@@ -18,6 +18,8 @@ interface Opts {
   pause: () => void;
 }
 
+type UsePlayerControlsReturn = { togglePlay: () => void; setSeek: (s: number) => void };
+
 export function usePlayerControls({
   interactable,
   isPlaying,
@@ -30,7 +32,7 @@ export function usePlayerControls({
   setVolume,
   play,
   pause,
-}: Opts) {
+}: Opts): UsePlayerControlsReturn {
   useEffect(() => {
     if (isPlaying) play();
     else pause();

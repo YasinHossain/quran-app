@@ -75,6 +75,6 @@ jest.mock('../../hooks', () => {
   };
 });
 
-export const renderSurahView = (surahId = '1') => {
+export const renderSurahView = (surahId = '1'): ReturnType<typeof renderWithProviders> => {
   return renderWithProviders(<SurahView surahId={surahId} />);
 };

@@ -1,7 +1,8 @@
 import { useRouter } from 'next/navigation';
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { useBodyScrollLock } from '@/app/providers/hooks/useBodyScrollLock';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 
@@ -13,61 +14,64 @@ export interface UseBookmarksPageReturn {
   handleVerseClick: (verseKey: string) => void;
 }
 
+type SortKey = 'recent' | 'name-asc' | 'name-desc' | 'most-verses';
+
+function sortFolders<F extends { name: string; bookmarks: unknown[]; createdAt?: number }>(
+  folders: F[],
+  sortBy: SortKey
+): F[] {
+  const items = [...folders];
+  switch (sortBy) {
+    case 'name-asc':
+      return items.sort((a, b) => a.name.localeCompare(b.name));
+    case 'name-desc':
+      return items.sort((a, b) => b.name.localeCompare(a.name));
+    case 'most-verses':
+      return items.sort((a, b) => b.bookmarks.length - a.bookmarks.length);
+    case 'recent':
+    default:
+      return items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  }
+}
+
+function sectionToPath(section: SectionId): string {
+  switch (section) {
+    case 'pinned':
+      return '/bookmarks/pinned';
+    case 'last-read':
+      return '/bookmarks/last-read';
+    case 'memorization':
+      return '/bookmarks/memorization';
+    default:
+      return '/bookmarks';
+  }
+}
+
+function verseKeyToUrl(verseKey: string): string {
+  const [surahId] = verseKey.split(':');
+  return `/surah/${surahId}#verse-${verseKey}`;
+}
+
 export const useBookmarksPage = (): UseBookmarksPageReturn => {
   const { folders } = useBookmarks();
-  const [sortBy] = useState<'recent' | 'name-asc' | 'name-desc' | 'most-verses'>('recent');
+  const [sortBy] = useState<SortKey>('recent');
   const router = useRouter();
 
-  React.useEffect((): void => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, []);
+  useBodyScrollLock(true);
 
-  const filteredFolders = folders;
-
-  const sortedFolders = useMemo(() => {
-    const items = [...filteredFolders];
-    switch (sortBy) {
-      case 'name-asc':
-        return items.sort((a, b) => a.name.localeCompare(b.name));
-      case 'name-desc':
-        return items.sort((a, b) => b.name.localeCompare(a.name));
-      case 'most-verses':
-        return items.sort((a, b) => b.bookmarks.length - a.bookmarks.length);
-      case 'recent':
-      default:
-        return items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-    }
-  }, [filteredFolders, sortBy]);
+  const sortedFolders = useMemo(() => sortFolders(folders, sortBy), [folders, sortBy]);
 
   const handleFolderSelect = (folderId: string): void => {
     router.push(`/bookmarks/${folderId}`);
   };
 
   const handleSectionChange = (section: SectionId): void => {
-    if (section === 'pinned') {
-      router.push('/bookmarks/pinned');
-    } else if (section === 'last-read') {
-      router.push('/bookmarks/last-read');
-    } else if (section === 'memorization') {
-      router.push('/bookmarks/memorization');
-    } else {
-      router.push('/bookmarks');
-    }
+    router.push(sectionToPath(section));
   };
 
   const handleVerseClick = (verseKey: string): void => {
-    const [surahId] = verseKey.split(':');
-    router.push(`/surah/${surahId}#verse-${verseKey}`);
+    router.push(verseKeyToUrl(verseKey));
   };
 
-  return {
-    folders,
-    sortedFolders,
-    handleFolderSelect,
-    handleSectionChange,
-    handleVerseClick,
-  };
+  return { folders, sortedFolders, handleFolderSelect, handleSectionChange, handleVerseClick };
 };

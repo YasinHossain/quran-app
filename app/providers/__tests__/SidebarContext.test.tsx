@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 
 import { SidebarProvider, useSidebar } from '@/app/providers/SidebarContext';
 
-const ScrollTest = () => {
+const ScrollTest = (): React.ReactElement => {
   const {
     surahScrollTop,
     setSurahScrollTop,

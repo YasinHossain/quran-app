@@ -38,12 +38,17 @@ jest.mock('@/lib/api', () => ({
 }));
 
 // Mock next/link to simply render an anchor tag
-jest.mock('next/link', () => ({ children, href }: MockProps<{ href: string }>) => (
-  <a href={href}>{children}</a>
-));
+jest.mock(
+  'next/link',
+  () =>
+    ({ children, href }: MockProps<{ href: string }>): JSX.Element => <a href={href}>{children}</a>
+);
 
 // Mock VerseOfDay to avoid fetch during tests
-jest.mock('@/app/(features)/home/components/VerseOfDay', () => () => <div>VerseOfDay</div>);
+jest.mock(
+  '@/app/(features)/home/components/VerseOfDay',
+  () => (): JSX.Element => <div>VerseOfDay</div>
+);
 
 beforeAll(() => {
   Object.defineProperty(window, 'matchMedia', {
@@ -61,7 +66,9 @@ beforeAll(() => {
   });
 });
 
-const renderHome = () => renderWithProviders(<HomePage />);
+const renderHome = (): void => {
+  renderWithProviders(<HomePage />);
+};
 
 beforeEach(() => {
   localStorage.clear();

@@ -125,7 +125,7 @@ export const patterns = {
 export const buildCardClasses = (
   variant: 'navigation' | 'folder' | 'bookmark',
   isActive = false
-) => {
+): string => {
   const base = patterns[`${variant}Card` as keyof typeof patterns] as string;
   if (variant === 'navigation') {
     const background = isActive
@@ -137,7 +137,10 @@ export const buildCardClasses = (
   return base;
 };
 
-export const buildTextClasses = (type: 'primary' | 'secondary' | 'arabic', isActive = false) => {
+export const buildTextClasses = (
+  type: 'primary' | 'secondary' | 'arabic',
+  isActive = false
+): string => {
   if (type === 'arabic') {
     return patterns.arabicText(isActive);
   }

@@ -1,7 +1,11 @@
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
-export const useFolderNavigation = (currentFolderId: string) => {
+interface UseFolderNavigationReturn {
+  handleFolderSelect: (folderId: string) => void;
+}
+
+export const useFolderNavigation = (currentFolderId: string): UseFolderNavigationReturn => {
   const router = useRouter();
 
   const handleFolderSelect = useCallback(

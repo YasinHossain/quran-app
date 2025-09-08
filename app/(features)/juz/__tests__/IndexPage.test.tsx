@@ -23,7 +23,9 @@ beforeAll(() => {
   });
 });
 
-const renderPage = () => renderWithProviders(<JuzIndexPage />);
+const renderPage = (): void => {
+  renderWithProviders(<JuzIndexPage />);
+};
 
 test('renders list of juz links', () => {
   renderPage();

@@ -13,7 +13,7 @@ function Boom(): never {
   throw new Error('boom');
 }
 
-const Fallback = ({ error, resetError }: { error?: Error; resetError: () => void }) => (
+const Fallback = ({ resetError }: { resetError: () => void }): React.ReactElement => (
   <div>
     Fallback
     <button onClick={resetError}>retry</button>

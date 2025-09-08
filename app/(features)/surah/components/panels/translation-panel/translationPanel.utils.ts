@@ -16,7 +16,7 @@ export const loadSelectedTranslations = (): number[] => {
   }
 };
 
-export const saveSelectedTranslations = (ids: number[]) => {
+export const saveSelectedTranslations = (ids: number[]): void => {
   if (typeof window === 'undefined') return;
   try {
     localStorage.setItem('selected-translations', JSON.stringify(ids));
@@ -29,7 +29,7 @@ export const scrollTabs = (
   ref: RefObject<HTMLDivElement | null>,
   direction: 'left' | 'right',
   amount = 200
-) => {
+): void => {
   if (ref.current) {
     ref.current.scrollBy({
       left: direction === 'left' ? -amount : amount,
@@ -42,7 +42,7 @@ export const updateScrollState = (
   ref: RefObject<HTMLDivElement | null>,
   setLeft: (v: boolean) => void,
   setRight: (v: boolean) => void
-) => {
+): void => {
   if (!ref.current) return;
   const { scrollLeft, scrollWidth, clientWidth } = ref.current;
   setLeft(scrollLeft > 0);
@@ -53,7 +53,7 @@ export const scrollToTab = (
   ref: RefObject<HTMLDivElement | null>,
   languages: string[],
   targetLang: string
-) => {
+): void => {
   if (!ref.current) return;
   const container = ref.current;
   const index = languages.indexOf(targetLang);

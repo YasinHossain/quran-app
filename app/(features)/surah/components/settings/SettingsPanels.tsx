@@ -16,7 +16,7 @@ export const SettingsPanels = ({
   onTafsirPanelClose,
   isWordLanguagePanelOpen,
   onWordLanguagePanelClose,
-}: SettingsPanelsProps) => {
+}: SettingsPanelsProps): React.JSX.Element => {
   return (
     <>
       <ArabicFontPanel isOpen={isArabicFontPanelOpen} onClose={onArabicFontPanelClose} />

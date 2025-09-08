@@ -9,9 +9,9 @@ describe('Player components mobile layout', () => {
   beforeAll(() => {
     // Mock ResizeObserver used by Radix UI components
     class ResizeObserverMock {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
+      observe(): void {}
+      unobserve(): void {}
+      disconnect(): void {}
     }
     window.ResizeObserver = ResizeObserverMock as unknown as typeof ResizeObserver;
   });

@@ -65,19 +65,23 @@ export const SettingsPanel = memo(function SettingsPanel({
               {section.items.map((item, itemIndex) => {
                 switch (item.type) {
                   case 'toggle': {
-                    const { type, ...props } = item;
+                    const { type: _unusedType, ...props } = item;
+                    void _unusedType;
                     return <ToggleSetting key={itemIndex} {...props} />;
                   }
                   case 'select': {
-                    const { type, ...props } = item;
+                    const { type: _unusedType, ...props } = item;
+                    void _unusedType;
                     return <SelectSetting key={itemIndex} {...props} />;
                   }
                   case 'range': {
-                    const { type, ...props } = item;
+                    const { type: _unusedType, ...props } = item;
+                    void _unusedType;
                     return <RangeSetting key={itemIndex} {...props} />;
                   }
                   case 'item': {
-                    const { type, children: itemChildren, ...props } = item;
+                    const { type: _unusedType, children: itemChildren, ...props } = item;
+                    void _unusedType;
                     return (
                       <SettingItem key={itemIndex} {...props}>
                         {itemChildren}

@@ -49,12 +49,12 @@ export function useSurahPanels({
 
   const selectedTranslationName = useMemo(
     () => getSelectedTranslationName(settings, translationOptions, t),
-    [settings, settings.translationIds, settings.translationId, translationOptions, t]
+    [settings, translationOptions, t]
   );
 
   const selectedWordLanguageName = useMemo(
     () => getSelectedWordLanguageName(settings, wordLanguageOptions, t),
-    [settings, settings.wordLang, wordLanguageOptions, t]
+    [settings, wordLanguageOptions, t]
   );
 
   return {

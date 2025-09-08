@@ -1,25 +1,11 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 
-export interface UseMultiSelectionOptions<T> {
-  defaultSelected?: T[];
-  maxSelection?: number;
-  onSelectionChange?: (selected: T[]) => void;
-}
+import { selectionOperations } from './multiSelection/selectionOperations';
+import { useSelectionState } from './multiSelection/useSelectionState';
 
-export interface UseMultiSelectionReturn<T> {
-  selected: T[];
-  select: (item: T) => void;
-  deselect: (item: T) => void;
-  toggle: (item: T) => void;
-  clear: () => void;
-  selectAll: (items: T[]) => void;
-  isSelected: (item: T) => boolean;
-  setSelected: (items: T[]) => void;
-  hasSelection: boolean;
-  selectionCount: number;
-}
+import type { UseMultiSelectionOptions, UseMultiSelectionReturn } from './multiSelection/types';
 
 /**
  * Custom hook for managing multi-selection state
@@ -30,52 +16,25 @@ export function useMultiSelection<T>(
 ): UseMultiSelectionReturn<T> {
   const { defaultSelected = [], maxSelection, onSelectionChange } = options;
 
-  const [selected, setSelectedState] = useState<T[]>(defaultSelected);
-
-  const setSelected = useCallback(
-    (updater: T[] | ((current: T[]) => T[])) => {
-      if (typeof updater === 'function') {
-        setSelectedState((current) => {
-          const newItems = updater(current);
-          onSelectionChange?.(newItems);
-          return newItems;
-        });
-      } else {
-        setSelectedState(updater);
-        onSelectionChange?.(updater);
-      }
-    },
-    [onSelectionChange]
-  );
+  const { selected, setSelected } = useSelectionState(defaultSelected, onSelectionChange);
 
   const select = useCallback(
     (item: T) => {
-      setSelected((current: T[]) => {
-        if (current.includes(item)) return current;
-        if (maxSelection && current.length >= maxSelection) return current;
-        return [...current, item];
-      });
+      setSelected((current: T[]) => selectionOperations.addItem(current, item, maxSelection));
     },
     [setSelected, maxSelection]
   );
 
   const deselect = useCallback(
     (item: T) => {
-      setSelected((current: T[]) => current.filter((i: T) => i !== item));
+      setSelected((current: T[]) => selectionOperations.removeItem(current, item));
     },
     [setSelected]
   );
 
   const toggle = useCallback(
     (item: T) => {
-      setSelected((current: T[]) => {
-        if (current.includes(item)) {
-          return current.filter((i: T) => i !== item);
-        } else if (!maxSelection || current.length < maxSelection) {
-          return [...current, item];
-        }
-        return current;
-      });
+      setSelected((current: T[]) => selectionOperations.toggleItem(current, item, maxSelection));
     },
     [setSelected, maxSelection]
   );
@@ -86,16 +45,14 @@ export function useMultiSelection<T>(
 
   const selectAll = useCallback(
     (items: T[]) => {
-      const itemsToSelect = maxSelection ? items.slice(0, maxSelection) : items;
+      const itemsToSelect = selectionOperations.selectFromList(items, maxSelection);
       setSelected(itemsToSelect);
     },
     [setSelected, maxSelection]
   );
 
   const isSelected = useCallback(
-    (item: T) => {
-      return selected.includes(item);
-    },
+    (item: T) => selectionOperations.isItemSelected(selected, item),
     [selected]
   );
 
@@ -115,3 +72,6 @@ export function useMultiSelection<T>(
     selectionCount,
   };
 }
+
+// Re-export types for convenience
+export type { UseMultiSelectionOptions, UseMultiSelectionReturn } from './multiSelection/types';

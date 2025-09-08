@@ -1,11 +1,36 @@
 'use client';
 
-import React, { createContext, useCallback, useContext, useMemo } from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
 
 import { Settings } from '@/types';
 
 import { usePersistentSettings } from './hooks/usePersistentSettings';
 import { ARABIC_FONTS } from './settingsStorage';
+
+// Helper to create setter functions
+type SettingsSetters = Pick<
+  SettingsContextType,
+  | 'setSettings'
+  | 'setShowByWords'
+  | 'setTajweed'
+  | 'setWordLang'
+  | 'setWordTranslationId'
+  | 'setTafsirIds'
+  | 'setTranslationIds'
+>;
+
+const createSetters = (
+  dispatch: ReturnType<typeof usePersistentSettings>['dispatch']
+): SettingsSetters => ({
+  setSettings: (s: Settings): void => dispatch({ type: 'SET_SETTINGS', value: s }),
+  setShowByWords: (val: boolean): void => dispatch({ type: 'SET_SHOW_BY_WORDS', value: val }),
+  setTajweed: (val: boolean): void => dispatch({ type: 'SET_TAJWEED', value: val }),
+  setWordLang: (lang: string): void => dispatch({ type: 'SET_WORD_LANG', value: lang }),
+  setWordTranslationId: (id: number): void =>
+    dispatch({ type: 'SET_WORD_TRANSLATION_ID', value: id }),
+  setTafsirIds: (ids: number[]): void => dispatch({ type: 'SET_TAFSIR_IDS', value: ids }),
+  setTranslationIds: (ids: number[]): void => dispatch({ type: 'SET_TRANSLATION_IDS', value: ids }),
+});
 
 interface SettingsContextType {
   settings: Settings;
@@ -29,37 +54,23 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
  * Wrap parts of the application that need these values with this provider and use
  * the {@link useSettings} hook to read or update them.
  */
-export const SettingsProvider = ({ children }: { children: React.ReactNode }) => {
+export const SettingsProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}): React.JSX.Element => {
   const { settings, dispatch } = usePersistentSettings();
 
-  const setSettings = useCallback(
-    (s: Settings) => dispatch({ type: 'SET_SETTINGS', value: s }),
-    [dispatch]
-  );
-  const setShowByWords = useCallback(
-    (val: boolean) => dispatch({ type: 'SET_SHOW_BY_WORDS', value: val }),
-    [dispatch]
-  );
-  const setTajweed = useCallback(
-    (val: boolean) => dispatch({ type: 'SET_TAJWEED', value: val }),
-    [dispatch]
-  );
-  const setWordLang = useCallback(
-    (lang: string) => dispatch({ type: 'SET_WORD_LANG', value: lang }),
-    [dispatch]
-  );
-  const setWordTranslationId = useCallback(
-    (id: number) => dispatch({ type: 'SET_WORD_TRANSLATION_ID', value: id }),
-    [dispatch]
-  );
-  const setTafsirIds = useCallback(
-    (ids: number[]) => dispatch({ type: 'SET_TAFSIR_IDS', value: ids }),
-    [dispatch]
-  );
-  const setTranslationIds = useCallback(
-    (ids: number[]) => dispatch({ type: 'SET_TRANSLATION_IDS', value: ids }),
-    [dispatch]
-  );
+  const setters = useMemo(() => createSetters(dispatch), [dispatch]);
+  const {
+    setSettings,
+    setShowByWords,
+    setTajweed,
+    setWordLang,
+    setWordTranslationId,
+    setTafsirIds,
+    setTranslationIds,
+  } = setters;
 
   const value = useMemo(
     () => ({
@@ -88,7 +99,7 @@ export const SettingsProvider = ({ children }: { children: React.ReactNode }) =>
   return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;
 };
 
-export const useSettings = () => {
+export const useSettings = (): SettingsContextType => {
   const ctx = useContext(SettingsContext);
   if (!ctx) throw new Error('useSettings must be used within SettingsProvider');
   return ctx;

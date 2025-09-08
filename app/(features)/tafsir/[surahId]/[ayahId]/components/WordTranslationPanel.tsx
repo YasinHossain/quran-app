@@ -21,7 +21,7 @@ export const WordTranslationPanel = ({
   onClose,
   languages,
   onReset,
-}: WordTranslationPanelProps) => {
+}: WordTranslationPanelProps): React.JSX.Element => {
   const { t } = useTranslation();
   const { isHidden } = useHeaderVisibility();
   const { searchTerm, setSearchTerm, filteredLanguages } = useWordTranslationSearch(languages);

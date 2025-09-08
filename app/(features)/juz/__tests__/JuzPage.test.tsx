@@ -56,7 +56,9 @@ beforeEach(() => {
   (api.getJuz as jest.Mock).mockResolvedValue(mockJuz);
 });
 
-const renderPage = () => renderWithProviders(<JuzClient juzId="1" />);
+const renderPage = (): void => {
+  renderWithProviders(<JuzClient juzId="1" />);
+};
 
 test('renders juz info and verses', async () => {
   renderPage();

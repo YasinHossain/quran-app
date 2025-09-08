@@ -26,7 +26,7 @@ export const useOpenSections = (
     return defaultSections;
   });
 
-  const toggleSection = (sectionId: string) => {
+  const toggleSection = (sectionId: string): void => {
     setOpenSections((prev) => {
       let newState: string[];
       if (prev.includes(sectionId)) {

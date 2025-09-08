@@ -37,7 +37,7 @@ export function PageAudioPlayer({
   isHidden,
   onNext,
   onPrev,
-}: PageAudioPlayerProps) {
+}: PageAudioPlayerProps): JSX.Element | null {
   if (!track || !isVisible) {
     return null;
   }

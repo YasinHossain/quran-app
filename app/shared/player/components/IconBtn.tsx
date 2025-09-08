@@ -11,7 +11,7 @@ export function IconBtn({
   className = '',
   disabled,
   ...rest
-}: React.ComponentProps<'button'>) {
+}: React.ComponentProps<'button'>): React.JSX.Element {
   return (
     <button
       {...rest}

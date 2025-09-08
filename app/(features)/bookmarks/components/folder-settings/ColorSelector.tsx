@@ -41,7 +41,11 @@ interface ColorOptionProps {
   setSelectedColor: (color: string) => void;
 }
 
-const ColorOption = ({ color, selectedColor, setSelectedColor }: ColorOptionProps): React.JSX.Element => (
+const ColorOption = ({
+  color,
+  selectedColor,
+  setSelectedColor,
+}: ColorOptionProps): React.JSX.Element => (
   <button
     type="button"
     onClick={() => setSelectedColor(color.value)}

@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 
 import { ThemeProvider, useTheme } from '@/app/providers/ThemeContext';
 
-const ThemeTest = () => {
+const ThemeTest = (): React.ReactElement => {
   const { theme, setTheme } = useTheme();
   return (
     <div>

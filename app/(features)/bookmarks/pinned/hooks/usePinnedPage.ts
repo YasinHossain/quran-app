@@ -4,8 +4,12 @@ import { useEffect } from 'react';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
+import type { Bookmark } from '@/types';
 
-export const usePinnedPage = () => {
+export const usePinnedPage = (): {
+  pinnedVerses: Bookmark[];
+  handleSectionChange: (section: SectionId) => void;
+} => {
   const router = useRouter();
   const { pinnedVerses } = useBookmarks();
 

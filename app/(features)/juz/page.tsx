@@ -7,7 +7,7 @@ interface JuzSummary {
   name: string;
 }
 
-export default function JuzIndexPage() {
+export default function JuzIndexPage(): React.JSX.Element {
   const juzs = juzData as JuzSummary[];
   return (
     <div className="p-6">

@@ -4,7 +4,16 @@ import { useCallback, useMemo } from 'react';
 
 import { useScrollPositions } from './useScrollPositions';
 
-export const useSidebarScrollPositions = () => {
+interface UseSidebarScrollPositionsReturn {
+  surahScrollTop: number;
+  setSurahScrollTop: (top: number) => void;
+  juzScrollTop: number;
+  setJuzScrollTop: (top: number) => void;
+  pageScrollTop: number;
+  setPageScrollTop: (top: number) => void;
+}
+
+export const useSidebarScrollPositions = (): UseSidebarScrollPositionsReturn => {
   const { getScrollPosition, setScrollPosition } = useScrollPositions();
 
   const surahScrollTop = getScrollPosition('surahScrollTop');

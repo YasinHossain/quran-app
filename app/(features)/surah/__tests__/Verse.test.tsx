@@ -19,12 +19,13 @@ const verse: Verse = {
   ],
 };
 
-const renderVerse = () =>
+const renderVerse = (): void => {
   renderWithProviders(
     <TranslationProvider>
       <VerseComponent verse={verse} />
     </TranslationProvider>
   );
+};
 
 describe('Verse word-by-word font size', () => {
   beforeAll(() => {

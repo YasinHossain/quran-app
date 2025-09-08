@@ -26,7 +26,11 @@ describe('BookmarkContext initial state', () => {
       const folders: Folder[] = JSON.parse(screen.getByTestId('folders').textContent || '[]');
       expect(folders).toHaveLength(1);
       expect(folders[0].name).toBe('Uncategorized');
-      expect(folders[0].bookmarks.map((b) => b.verseId)).toEqual(['1:1', '1:2']);
+      const verseIds: string[] = [];
+      for (const b of folders[0].bookmarks) {
+        verseIds.push(b.verseId);
+      }
+      expect(verseIds).toEqual(['1:1', '1:2']);
       expect(localStorage.getItem(OLD_BOOKMARKS_STORAGE_KEY)).toBeNull();
       expect(localStorage.getItem(BOOKMARKS_STORAGE_KEY)).toBeDefined();
     });

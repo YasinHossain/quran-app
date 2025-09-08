@@ -9,7 +9,12 @@ interface Props {
   onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
-export const HeaderSearch = ({ query, setQuery, placeholder, onKeyDown }: Props) => {
+export const HeaderSearch = ({
+  query,
+  setQuery,
+  placeholder,
+  onKeyDown,
+}: Props): React.JSX.Element => {
   return (
     <SearchInput
       value={query}

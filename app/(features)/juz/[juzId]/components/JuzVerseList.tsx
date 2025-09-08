@@ -17,7 +17,7 @@ export function JuzVerseList({
   loadMoreRef,
   isValidating,
   isReachingEnd,
-}: JuzVerseListProps) {
+}: JuzVerseListProps): JSX.Element {
   const { t } = useTranslation();
 
   if (verses.length === 0) {

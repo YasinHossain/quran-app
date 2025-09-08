@@ -13,7 +13,7 @@ export const mockResponsiveState: MockResponsiveState = {
 export const setResponsive = (
   breakpoint: BreakpointKey,
   variant: ComponentVariant = 'expanded'
-) => {
+): void => {
   mockResponsiveState.breakpoint = breakpoint;
   mockResponsiveState.variant = variant;
 };

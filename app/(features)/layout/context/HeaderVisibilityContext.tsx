@@ -8,7 +8,11 @@ interface HeaderVisibilityState {
 
 const HeaderVisibilityContext = createContext<HeaderVisibilityState>({ isHidden: false });
 
-export const HeaderVisibilityProvider = ({ children }: { children: React.ReactNode }) => {
+export const HeaderVisibilityProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}): React.JSX.Element => {
   const [isHidden, setIsHidden] = useState(false);
   const lastScrollY = useRef(0);
   const pathname = usePathname();
@@ -33,7 +37,7 @@ export const HeaderVisibilityProvider = ({ children }: { children: React.ReactNo
 
     if (!scrollEl) return;
 
-    const handleScroll = () => {
+    const handleScroll = (): void => {
       const currentY = (scrollEl as HTMLElement).scrollTop;
       const scrollHeight = (scrollEl as HTMLElement).scrollHeight;
       const clientHeight = (scrollEl as HTMLElement).clientHeight;
@@ -70,4 +74,4 @@ export const HeaderVisibilityProvider = ({ children }: { children: React.ReactNo
   );
 };
 
-export const useHeaderVisibility = () => useContext(HeaderVisibilityContext);
+export const useHeaderVisibility = (): HeaderVisibilityState => useContext(HeaderVisibilityContext);

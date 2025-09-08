@@ -57,6 +57,6 @@ export function getSurahCoverUrl(surahNumber: number): Promise<string | null> {
   return promise;
 }
 
-export function clearSurahCoverCache() {
+export function clearSurahCoverCache(): void {
   surahCoverCache.clear();
 }

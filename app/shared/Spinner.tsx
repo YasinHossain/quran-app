@@ -11,7 +11,7 @@ interface SpinnerProps {
  * @param props.className - Optional CSS classes applied to the spinner.
  * @returns The spinner SVG element.
  */
-export const Spinner = ({ className = '' }: SpinnerProps) => (
+export const Spinner = ({ className = '' }: SpinnerProps): React.JSX.Element => (
   <svg
     className={`animate-spin ${className}`}
     xmlns="http://www.w3.org/2000/svg"

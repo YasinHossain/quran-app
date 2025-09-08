@@ -11,7 +11,10 @@ interface ReadingSettingsProps {
   onToggle?: () => void;
 }
 
-export const ReadingSettings = ({ isOpen = false, onToggle }: ReadingSettingsProps) => {
+export const ReadingSettings = ({
+  isOpen = false,
+  onToggle,
+}: ReadingSettingsProps): JSX.Element => {
   return (
     <CollapsibleSection
       title="Mushaf Settings"

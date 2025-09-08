@@ -9,6 +9,20 @@ import { PageAudioPlayer } from './components/PageAudioPlayer';
 import { PageContent } from './components/PageContent';
 import { usePageData } from './hooks/usePageData';
 
+function useSettingsSidebar() {
+  const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
+  const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
+
+  return {
+    isTranslationPanelOpen,
+    isWordPanelOpen,
+    openTranslationPanel: () => setIsTranslationPanelOpen(true),
+    closeTranslationPanel: () => setIsTranslationPanelOpen(false),
+    openWordPanel: () => setIsWordPanelOpen(true),
+    closeWordPanel: () => setIsWordPanelOpen(false),
+  };
+}
+
 interface PagePageProps {
   params: Promise<{ pageId: string }>;
 }
@@ -16,11 +30,10 @@ interface PagePageProps {
 /**
  * Main page component for viewing verses by Quran page number
  */
-export default function PagePage({ params }: PagePageProps) {
+export default function PagePage({ params }: PagePageProps): JSX.Element {
   const { pageId } = React.use(params);
-  const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
-  const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
   const { isHidden } = useHeaderVisibility();
+  const settingsSidebar = useSettingsSidebar();
 
   const {
     error,
@@ -49,15 +62,15 @@ export default function PagePage({ params }: PagePageProps) {
         isHidden={isHidden}
       />
       <SettingsSidebar
-        onTranslationPanelOpen={() => setIsTranslationPanelOpen(true)}
-        onWordLanguagePanelOpen={() => setIsWordPanelOpen(true)}
+        onTranslationPanelOpen={settingsSidebar.openTranslationPanel}
+        onWordLanguagePanelOpen={settingsSidebar.openWordPanel}
         onReadingPanelOpen={() => {}}
         selectedTranslationName={selectedTranslationName}
         selectedWordLanguageName={selectedWordLanguageName}
-        isTranslationPanelOpen={isTranslationPanelOpen}
-        onTranslationPanelClose={() => setIsTranslationPanelOpen(false)}
-        isWordLanguagePanelOpen={isWordPanelOpen}
-        onWordLanguagePanelClose={() => setIsWordPanelOpen(false)}
+        isTranslationPanelOpen={settingsSidebar.isTranslationPanelOpen}
+        onTranslationPanelClose={settingsSidebar.closeTranslationPanel}
+        isWordLanguagePanelOpen={settingsSidebar.isWordPanelOpen}
+        onWordLanguagePanelClose={settingsSidebar.closeWordPanel}
       />
       <PageAudioPlayer
         track={track}

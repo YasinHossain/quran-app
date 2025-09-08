@@ -23,7 +23,7 @@ export const ThemeProvider = ({
 }: {
   children: React.ReactNode;
   initialTheme?: Theme;
-}) => {
+}): React.JSX.Element => {
   // Initialize theme with a default value or provided value
   const [theme, setTheme] = useState<Theme>(initialTheme);
 
@@ -59,7 +59,7 @@ export const ThemeProvider = ({
  * Use inside components to read or change the current theme managed by
  * `ThemeProvider`.
  */
-export const useTheme = () => {
+export const useTheme = (): ThemeContextType => {
   const ctx = useContext(ThemeContext);
   if (!ctx) throw new Error('useTheme must be used within ThemeProvider');
   return ctx;

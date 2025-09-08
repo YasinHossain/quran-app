@@ -7,8 +7,7 @@ import { CloseIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 
-import { BookmarkTab } from './components/BookmarkTab';
-import { PinTab } from './components/PinTab';
+import { TabContent } from './components/TabContent';
 import { TabNavigation } from './components/TabNavigation';
 import { BookmarkModalProps } from './types';
 import { useBookmarkModal } from './useBookmarkModal';
@@ -79,39 +78,17 @@ export const BookmarkModal = memo(function BookmarkModal({
 
               <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} verseKey={verseKey} />
 
-              <AnimatePresence mode="wait">
-                {activeTab === 'pin' ? (
-                  <motion.div
-                    key="pin"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex-1 overflow-hidden"
-                  >
-                    <PinTab verseId={verseId} verseKey={verseKey} />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="bookmark"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex-1 overflow-hidden flex flex-col"
-                  >
-                    <BookmarkTab
-                      verseId={verseId}
-                      isCreatingFolder={isCreatingFolder}
-                      newFolderName={newFolderName}
-                      onToggleCreateFolder={(creating) =>
-                        creating ? openCreateFolder() : closeCreateFolder()
-                      }
-                      onNewFolderNameChange={setNewFolderName}
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <TabContent
+                activeTab={activeTab}
+                verseId={verseId}
+                verseKey={verseKey}
+                isCreatingFolder={isCreatingFolder}
+                newFolderName={newFolderName}
+                onToggleCreateFolder={(creating) =>
+                  creating ? openCreateFolder() : closeCreateFolder()
+                }
+                onNewFolderNameChange={setNewFolderName}
+              />
             </div>
           </motion.div>
         </>

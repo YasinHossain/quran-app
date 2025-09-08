@@ -42,104 +42,78 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-describe('Bookmarks Responsive Components', () => {
-  describe('BookmarksHeader', () => {
-    it('should render without errors', () => {
-      const mockOnSidebarToggle = jest.fn();
-      const mockOnNewFolderClick = jest.fn();
-      const mockOnSearchChange = jest.fn();
+const testNavigationItemAccessibility = (item: Element | null): void => {
+  expect(item).toBeInTheDocument();
+  if (item) {
+    expect(item).toHaveClass('transition-colors');
+  }
+};
 
-      render(
-        <BookmarksHeader
-          searchTerm=""
-          onSearchChange={mockOnSearchChange}
-          onNewFolderClick={mockOnNewFolderClick}
-          onSidebarToggle={mockOnSidebarToggle}
-        />
-      );
+describe('BookmarksHeader', () => {
+  const renderBookmarksHeader = (): {
+    mockOnSidebarToggle: jest.Mock;
+    mockOnNewFolderClick: jest.Mock;
+    mockOnSearchChange: jest.Mock;
+  } => {
+    const mockOnSidebarToggle = jest.fn();
+    const mockOnNewFolderClick = jest.fn();
+    const mockOnSearchChange = jest.fn();
 
-      expect(screen.getByText('Bookmarks')).toBeInTheDocument();
-      expect(screen.getByText('New Folder')).toBeInTheDocument();
-      expect(screen.getByPlaceholderText('Search Bookmarks')).toBeInTheDocument();
-    });
+    render(
+      <BookmarksHeader
+        searchTerm=""
+        onSearchChange={mockOnSearchChange}
+        onNewFolderClick={mockOnNewFolderClick}
+        onSidebarToggle={mockOnSidebarToggle}
+      />
+    );
 
-    it('should have proper touch targets for buttons', () => {
-      const mockOnSidebarToggle = jest.fn();
-      const mockOnNewFolderClick = jest.fn();
-      const mockOnSearchChange = jest.fn();
-
-      render(
-        <BookmarksHeader
-          searchTerm=""
-          onSearchChange={mockOnSearchChange}
-          onNewFolderClick={mockOnNewFolderClick}
-          onSidebarToggle={mockOnSidebarToggle}
-        />
-      );
-
-      const newFolderButton = screen.getByRole('button', { name: 'New Folder' });
-
-      // Check touch target size (minimum 44px per WCAG)
-      expect(newFolderButton).toHaveClass('min-h-touch');
-    });
-  });
-
-  // Helper function to test navigation item accessibility
-  const testNavigationItemAccessibility = (item: Element | null): void => {
-    expect(item).toBeInTheDocument();
-    if (item) {
-      // These should have proper styling even if not clickable in this context
-      expect(item).toHaveClass('transition-colors');
-    }
+    return { mockOnSidebarToggle, mockOnNewFolderClick, mockOnSearchChange };
   };
 
-  describe('BookmarksSidebar', () => {
-    it('should render all navigation items', () => {
-      render(<BookmarksSidebar activeSection="bookmarks" />);
+  it('should render without errors', () => {
+    renderBookmarksHeader();
 
-      expect(screen.getByText('Bookmark')).toBeInTheDocument();
-      expect(screen.getByText('Pins')).toBeInTheDocument();
-      expect(screen.getByText('Last Reads')).toBeInTheDocument();
-    });
-
-    it('should have accessible navigation items', () => {
-      render(<BookmarksSidebar activeSection="bookmarks" />);
-
-      // Since there's no onClick handler, the ListItem renders as div
-      const pinnedItem = screen.getByText('Pins').closest('div');
-      const lastReadItem = screen.getByText('Last Reads').closest('div');
-
-      // Check that all items are properly accessible
-      testNavigationItemAccessibility(pinnedItem);
-      testNavigationItemAccessibility(lastReadItem);
-
-      // Check the bookmark item is active
-      const bookmarkItem = screen.getByText('Bookmark');
-      const navBookmarkItem = bookmarkItem.closest('div');
-      expect(navBookmarkItem).toBeInTheDocument();
-    });
+    expect(screen.getByText('Bookmarks')).toBeInTheDocument();
+    expect(screen.getByText('New Folder')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Search Bookmarks')).toBeInTheDocument();
   });
 
-  describe('Responsive Design System', () => {
-    it('should apply responsive classes consistently', () => {
-      const mockOnSidebarToggle = jest.fn();
-      const mockOnNewFolderClick = jest.fn();
-      const mockOnSearchChange = jest.fn();
+  it('should have proper touch targets for buttons', () => {
+    renderBookmarksHeader();
+    const newFolderButton = screen.getByRole('button', { name: 'New Folder' });
+    expect(newFolderButton).toHaveClass('min-h-touch');
+  });
 
-      render(
-        <BookmarksHeader
-          searchTerm=""
-          onSearchChange={mockOnSearchChange}
-          onNewFolderClick={mockOnNewFolderClick}
-          onSidebarToggle={mockOnSidebarToggle}
-        />
-      );
+  it('should apply responsive classes consistently', () => {
+    renderBookmarksHeader();
+    const newFolderButton = screen.getByRole('button', { name: 'New Folder' });
 
-      const newFolderButton = screen.getByRole('button', { name: 'New Folder' });
+    expect(newFolderButton).toHaveClass('touch-manipulation');
+    expect(newFolderButton).toHaveClass('select-none');
+  });
+});
 
-      // Verify responsive classes are applied
-      expect(newFolderButton).toHaveClass('touch-manipulation');
-      expect(newFolderButton).toHaveClass('select-none');
-    });
+describe('BookmarksSidebar', () => {
+  it('should render all navigation items', () => {
+    render(<BookmarksSidebar activeSection="bookmarks" />);
+
+    expect(screen.getByText('Bookmark')).toBeInTheDocument();
+    expect(screen.getByText('Pins')).toBeInTheDocument();
+    expect(screen.getByText('Last Reads')).toBeInTheDocument();
+  });
+
+  it('should have accessible navigation items', () => {
+    render(<BookmarksSidebar activeSection="bookmarks" />);
+
+    const pinnedItem = screen.getByText('Pins').closest('div');
+    const lastReadItem = screen.getByText('Last Reads').closest('div');
+
+    testNavigationItemAccessibility(pinnedItem);
+    testNavigationItemAccessibility(lastReadItem);
+
+    const bookmarkItem = screen.getByText('Bookmark');
+    const navBookmarkItem = bookmarkItem.closest('div');
+    expect(navBookmarkItem).toBeInTheDocument();
   });
 });

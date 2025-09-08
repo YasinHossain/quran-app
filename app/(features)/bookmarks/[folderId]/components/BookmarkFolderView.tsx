@@ -8,19 +8,27 @@ import { Sidebar } from './Sidebar';
 
 import type { Bookmark, Folder, Verse } from '@/types';
 
-interface BookmarkFolderViewProps {
+interface SidebarProps {
   bookmarks: Bookmark[];
   folder: Folder;
   isBookmarkSidebarOpen: boolean;
   onCloseSidebar: () => void;
   onVerseSelect: (verseId: string) => void;
   onBack: () => void;
+  activeVerseId?: string;
+}
+
+interface MainContentProps {
   isHidden: boolean;
   folderName: string;
   activeVerseId?: string;
   verses: Verse[];
   displayVerses: Verse[];
   loadingVerses: Set<string>;
+  onBack: () => void;
+}
+
+interface SettingsProps {
   onOpenTranslationPanel: () => void;
   onCloseTranslationPanel: () => void;
   isTranslationPanelOpen: boolean;
@@ -31,61 +39,52 @@ interface BookmarkFolderViewProps {
   selectedWordLanguageName?: string;
 }
 
-export function BookmarkFolderView({
-  bookmarks,
-  folder,
-  isBookmarkSidebarOpen,
-  onCloseSidebar,
-  onVerseSelect,
-  onBack,
-  isHidden,
-  folderName,
-  activeVerseId,
-  verses,
-  displayVerses,
-  loadingVerses,
-  onOpenTranslationPanel,
-  onCloseTranslationPanel,
-  isTranslationPanelOpen,
-  selectedTranslationName,
-  onOpenWordPanel,
-  onCloseWordPanel,
-  isWordPanelOpen,
-  selectedWordLanguageName,
-}: BookmarkFolderViewProps): React.JSX.Element {
+interface BookmarkFolderViewProps extends SidebarProps, MainContentProps, SettingsProps {}
+
+const renderSidebar = (sidebarProps: SidebarProps): React.JSX.Element => (
+  <Sidebar
+    bookmarks={sidebarProps.bookmarks}
+    folder={sidebarProps.folder}
+    {...(sidebarProps.activeVerseId && { activeVerseId: sidebarProps.activeVerseId })}
+    onVerseSelect={sidebarProps.onVerseSelect}
+    onBack={sidebarProps.onBack}
+    isOpen={sidebarProps.isBookmarkSidebarOpen}
+    onClose={sidebarProps.onCloseSidebar}
+  />
+);
+
+const renderMainContent = (mainProps: MainContentProps): React.JSX.Element => (
+  <MainContent
+    isHidden={mainProps.isHidden}
+    folderName={mainProps.folderName}
+    activeVerseId={mainProps.activeVerseId}
+    verses={mainProps.verses}
+    displayVerses={mainProps.displayVerses}
+    loadingVerses={mainProps.loadingVerses}
+    onNavigateToBookmarks={mainProps.onBack}
+  />
+);
+
+const renderSettingsSidebar = (settingsProps: SettingsProps): React.JSX.Element => (
+  <SettingsSidebar
+    onTranslationPanelOpen={settingsProps.onOpenTranslationPanel}
+    onWordLanguagePanelOpen={settingsProps.onOpenWordPanel}
+    onReadingPanelOpen={() => {}}
+    selectedTranslationName={settingsProps.selectedTranslationName}
+    selectedWordLanguageName={settingsProps.selectedWordLanguageName}
+    isTranslationPanelOpen={settingsProps.isTranslationPanelOpen}
+    onTranslationPanelClose={settingsProps.onCloseTranslationPanel}
+    isWordPanelOpen={settingsProps.isWordPanelOpen}
+    onWordPanelClose={settingsProps.onCloseWordPanel}
+  />
+);
+
+export function BookmarkFolderView(props: BookmarkFolderViewProps): React.JSX.Element {
   return (
     <>
-      <Sidebar
-        bookmarks={bookmarks}
-        folder={folder}
-        {...(activeVerseId && { activeVerseId })}
-        onVerseSelect={onVerseSelect}
-        onBack={onBack}
-        isOpen={isBookmarkSidebarOpen}
-        onClose={onCloseSidebar}
-      />
-
-      <MainContent
-        isHidden={isHidden}
-        folderName={folderName}
-        activeVerseId={activeVerseId}
-        verses={verses}
-        displayVerses={displayVerses}
-        loadingVerses={loadingVerses}
-        onNavigateToBookmarks={onBack}
-      />
-
-      <SettingsSidebar
-        onTranslationPanelOpen={onOpenTranslationPanel}
-        onWordLanguagePanelOpen={onOpenWordPanel}
-        onReadingPanelOpen={() => {}}
-        selectedTranslationName={selectedTranslationName}
-        selectedWordLanguageName={selectedWordLanguageName}
-        isTranslationPanelOpen={isTranslationPanelOpen}
-        onTranslationPanelClose={onCloseTranslationPanel}
-        isWordPanelOpen={isWordPanelOpen}
-        onWordPanelClose={onCloseWordPanel}
-      />
+      {renderSidebar(props)}
+      {renderMainContent(props)}
+      {renderSettingsSidebar(props)}
     </>
   );
 }

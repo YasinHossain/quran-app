@@ -24,7 +24,7 @@ export const TafsirSettings = ({
   showTafsirSetting = false,
   isOpen = false,
   onToggle,
-}: TafsirSettingsProps) => {
+}: TafsirSettingsProps): React.JSX.Element => {
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
   const { style: tafsirStyle } = useFontSize(settings.tafsirFontSize, 12, 28);

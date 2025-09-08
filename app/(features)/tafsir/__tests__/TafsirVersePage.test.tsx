@@ -100,12 +100,13 @@ beforeEach(() => {
   });
 });
 
-const renderPage = (surahId = '1', ayahId = '1') =>
+const renderPage = (surahId = '1', ayahId = '1'): void => {
   renderWithProviders(
     <TafsirVersePage
       params={{ surahId, ayahId } as unknown as Promise<{ surahId: string; ayahId: string }>}
     />
   );
+};
 
 test('navigates to next verse', async () => {
   renderPage('1', '1');

@@ -25,7 +25,7 @@ export function ClientProviders({
 }: {
   children: React.ReactNode;
   initialTheme: Theme;
-}) {
+}): React.JSX.Element {
   const router = useRouter();
 
   React.useEffect(() => {

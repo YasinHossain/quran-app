@@ -51,6 +51,6 @@ export function getTafsirCached(verseKey: string, tafsirId = 169): Promise<strin
 /**
  * Empties the in-memory tafsir cache.
  */
-export function clearTafsirCache() {
+export function clearTafsirCache(): void {
   cache.clear();
 }

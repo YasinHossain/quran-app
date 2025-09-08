@@ -42,14 +42,14 @@ function useBookmarkProviderValue(): BookmarkContextType {
   const fetchBookmarkMetadata = useBookmarkMetadata(settings, setFolders, setPinnedVerses);
 
   const folderOps = useFolderOperations(setFolders);
-  const bookmarkOps = useBookmarkOperations(
+  const bookmarkOps = useBookmarkOperations({
     folders,
     setFolders,
-    pinnedVerses,
-    setPinnedVerses,
+    pinned: pinnedVerses,
+    setPinned: setPinnedVerses,
     chapters,
-    fetchBookmarkMetadata
-  );
+    fetchMetadata: fetchBookmarkMetadata,
+  });
   const memorizationOps = useMemorizationOperations(memorization, setMemorizationState);
   const helpers = useBookmarkHelpers(folders, pinnedVerses, bookmarkOps, setLastReadState);
 

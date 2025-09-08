@@ -52,10 +52,11 @@ beforeEach(() => {
   });
 });
 
-const renderPage = () =>
+const renderPage = (): void => {
   renderWithProviders(
     <QuranPage params={{ pageId: '1' } as unknown as Promise<{ pageId: string }>} />
   );
+};
 
 test('renders page without crashing', async () => {
   await act(async () => {

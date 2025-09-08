@@ -11,6 +11,14 @@ interface ContextMenuItem {
   destructive?: boolean;
 }
 
+interface UseContextMenuResult {
+  isOpen: boolean;
+  menuRef: React.RefObject<HTMLDivElement>;
+  buttonRef: React.RefObject<HTMLButtonElement>;
+  handleToggleMenu: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  handleCloseMenu: () => void;
+}
+
 const MenuItem = ({ item }: { item: ContextMenuItem }): React.JSX.Element => (
   <button
     onClick={item.onClick}
@@ -30,15 +38,7 @@ const MenuItemList = ({ items }: { items: ContextMenuItem[] }): React.JSX.Elemen
   </>
 );
 
-interface FolderContextMenuProps {
-  onEdit: () => void;
-  onDelete: () => void;
-}
-
-export const FolderContextMenu = ({
-  onEdit,
-  onDelete,
-}: FolderContextMenuProps): React.JSX.Element => {
+const useContextMenu = (): UseContextMenuResult => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -61,6 +61,11 @@ export const FolderContextMenu = ({
     [handleCloseMenu]
   );
 
+  const handleToggleMenu = useCallback((e: React.MouseEvent<HTMLButtonElement>): void => {
+    e.stopPropagation();
+    setIsOpen((prev) => !prev);
+  }, []);
+
   useEffect(() => {
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
@@ -71,11 +76,20 @@ export const FolderContextMenu = ({
     };
   }, [isOpen, handleClickOutside]);
 
-  const handleToggleMenu = useCallback((e: React.MouseEvent<HTMLButtonElement>): void => {
-    e.stopPropagation();
-    setIsOpen((prev) => !prev);
-  }, []);
+  return {
+    isOpen,
+    menuRef,
+    buttonRef,
+    handleToggleMenu,
+    handleCloseMenu,
+  };
+};
 
+const useMenuItems = (
+  onEdit: () => void,
+  onDelete: () => void,
+  handleCloseMenu: () => void
+): ContextMenuItem[] => {
   const handleEdit = useCallback((): void => {
     onEdit();
     handleCloseMenu();
@@ -86,10 +100,23 @@ export const FolderContextMenu = ({
     handleCloseMenu();
   }, [onDelete, handleCloseMenu]);
 
-  const menuItems: ContextMenuItem[] = [
+  return [
     { label: 'Edit', onClick: handleEdit },
     { label: 'Delete', onClick: handleDelete, destructive: true },
   ];
+};
+
+interface FolderContextMenuProps {
+  onEdit: () => void;
+  onDelete: () => void;
+}
+
+export const FolderContextMenu = ({
+  onEdit,
+  onDelete,
+}: FolderContextMenuProps): React.JSX.Element => {
+  const { isOpen, menuRef, buttonRef, handleToggleMenu, handleCloseMenu } = useContextMenu();
+  const menuItems = useMenuItems(onEdit, onDelete, handleCloseMenu);
 
   return (
     <div className="relative">

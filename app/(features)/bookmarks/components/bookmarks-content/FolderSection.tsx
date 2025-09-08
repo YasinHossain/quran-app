@@ -18,7 +18,10 @@ interface FolderPreviewItemProps {
   onVerseClick?: (verseKey: string) => void;
 }
 
-const FolderPreviewItem = ({ bookmark, onVerseClick }: FolderPreviewItemProps): React.JSX.Element => (
+const FolderPreviewItem = ({
+  bookmark,
+  onVerseClick,
+}: FolderPreviewItemProps): React.JSX.Element => (
   <BookmarkVerseCard
     bookmark={bookmark}
     onClick={() => onVerseClick?.(bookmark.verseKey || bookmark.verseId)}
@@ -48,7 +51,11 @@ const FolderListItem = ({
     {isExpanded && (
       <div className="ml-2 pl-3 border-l-2 border-border/50 space-y-2 animate-in slide-in-from-top-2 duration-200">
         {folder.bookmarks.slice(0, 5).map((bookmark) => (
-          <FolderPreviewItem key={bookmark.verseId} bookmark={bookmark} onVerseClick={onVerseClick} />
+          <FolderPreviewItem
+            key={bookmark.verseId}
+            bookmark={bookmark}
+            onVerseClick={onVerseClick}
+          />
         ))}
         {folder.bookmarks.length > 5 && (
           <div className="text-xs text-muted text-center py-2">

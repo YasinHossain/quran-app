@@ -54,7 +54,9 @@ beforeEach(() => {
   (useSWRInfinite as jest.Mock).mockImplementation(jest.requireActual('swr/infinite').default);
 });
 
-const renderPage = () => renderWithProviders(<SurahClient surahId="1" />);
+const renderPage = (): void => {
+  renderWithProviders(<SurahClient surahId="1" />);
+};
 
 test('renders verses on successful fetch', async () => {
   (api.getVersesByChapter as jest.Mock).mockResolvedValue({

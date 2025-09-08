@@ -1,6 +1,6 @@
 import { createMockPage, MockPage } from './utils';
 
-describe('Translation and Reading Features', () => {
+describe('Reading - toggle translation display', () => {
   let page: MockPage;
 
   beforeEach(() => {
@@ -41,6 +41,14 @@ describe('Translation and Reading Features', () => {
       .locator('[data-testid="verse-1-1"] .translation-text')
       .textContent();
     expect(translationText).toContain('In the name of Allah');
+  });
+});
+
+describe('Reading - change translation language', () => {
+  let page: MockPage;
+
+  beforeEach(() => {
+    page = createMockPage();
   });
 
   it('should change translation language', async () => {

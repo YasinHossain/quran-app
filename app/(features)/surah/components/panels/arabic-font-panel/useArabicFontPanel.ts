@@ -15,7 +15,20 @@ interface ArabicFont {
   lang: string;
 }
 
-export const useArabicFontPanel = () => {
+interface UseArabicFontPanelResult {
+  theme: ReturnType<typeof useTheme>['theme'];
+  fonts: ArabicFont[];
+  loading: boolean;
+  error: string | undefined;
+  groupedFonts: Record<string, ArabicFont[]>;
+  activeFilter: string;
+  setActiveFilter: React.Dispatch<React.SetStateAction<string>>;
+  selectedIds: Set<number>;
+  handleSelectionToggle: (id: number) => void;
+  handleReset: () => void;
+}
+
+export const useArabicFontPanel = (): UseArabicFontPanelResult => {
   const { theme } = useTheme();
   const { settings, setSettings, arabicFonts } = useSettings();
   const [activeFilter, setActiveFilter] = useState('Uthmani');
@@ -43,7 +56,7 @@ export const useArabicFontPanel = () => {
     (id: number) => handleSelectionToggle(id, fonts),
     [handleSelectionToggle, fonts]
   );
-  const onReset = useCallback(() => handleReset(fonts), [handleReset, fonts]);
+  const onReset = useCallback((): void => handleReset(fonts), [handleReset, fonts]);
 
   return {
     theme,
@@ -74,14 +87,21 @@ function groupAndSortFonts(fonts: ArabicFont[]): Record<string, ArabicFont[]> {
   return grouped;
 }
 
+interface UseArabicFontSelectionResult {
+  selectedIds: Set<number>;
+  initializeFromSettings: (fonts: ArabicFont[]) => void;
+  handleSelectionToggle: (id: number, fonts?: ArabicFont[]) => void;
+  handleReset: (fonts?: ArabicFont[]) => void;
+}
+
 function useArabicFontSelection(
   settings: ReturnType<typeof useSettings>['settings'],
   setSettings: ReturnType<typeof useSettings>['setSettings']
-) {
+): UseArabicFontSelectionResult {
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
   const initializeFromSettings = useCallback(
-    (fonts: ArabicFont[]) => {
+    (fonts: ArabicFont[]): void => {
       if (settings.arabicFontFace && fonts.length > 0) {
         const selectedFont = fonts.find((font) => font.value === settings.arabicFontFace);
         if (selectedFont) {
@@ -93,7 +113,7 @@ function useArabicFontSelection(
   );
 
   const handleSelectionToggle = useCallback(
-    (id: number, fonts?: ArabicFont[]) => {
+    (id: number, fonts?: ArabicFont[]): void => {
       const font = (fonts || []).find((f) => f.id === id);
       if (!font) return;
       setSelectedIds(new Set([id]));
@@ -103,7 +123,7 @@ function useArabicFontSelection(
   );
 
   const handleReset = useCallback(
-    (fonts?: ArabicFont[]) => {
+    (fonts?: ArabicFont[]): void => {
       setSelectedIds(new Set());
       const defaultFont = (fonts || []).find((font) => font.category === 'Uthmani');
       if (defaultFont) {

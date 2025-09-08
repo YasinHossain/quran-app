@@ -16,7 +16,7 @@ export const LoadingError = ({
   children,
   loadingFallback,
   errorFallback,
-}: LoadingErrorProps) => {
+}: LoadingErrorProps): React.JSX.Element => {
   if (isLoading) {
     return (
       <>

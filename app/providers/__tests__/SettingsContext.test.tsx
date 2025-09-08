@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 
 import { SettingsProvider, useSettings } from '@/app/providers/SettingsContext';
 
-const SettingsTest = () => {
+const SettingsTest = (): React.ReactElement => {
   const { settings, setSettings } = useSettings();
   return (
     <div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect, useCallback, type MutableRefObject } from 'react';
 
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useSelectableResources } from '@/lib/hooks/useSelectableResources';
@@ -8,105 +8,110 @@ import { TranslationResource } from '@/types';
 
 export const MAX_TRANSLATION_SELECTIONS = 5;
 
+const DEFAULT_SAHEEH_ID = 20;
+
+const isSaheehName = (name: string): boolean => {
+  const lower = name.toLowerCase();
+  return lower.includes('saheeh international') || lower.includes('sahih international');
+};
+
+const findSaheehId = (translations: TranslationResource[]): number | undefined =>
+  translations.find((t) => isSaheehName(t.name))?.id;
+
+const computeInitialSelectionIds = (
+  translations: TranslationResource[],
+  settingsIds?: number[]
+): number[] | null => {
+  if (translations.length === 0) return null;
+  if (settingsIds && settingsIds.length > 0) return settingsIds;
+  const sahihId = findSaheehId(translations);
+  return sahihId !== undefined ? [sahihId] : [DEFAULT_SAHEEH_ID];
+};
+
+const applySelectionsSafely = (
+  setSelections: (ids: number[]) => void,
+  isUpdatingRef: MutableRefObject<boolean>,
+  ids: number[]
+): void => {
+  isUpdatingRef.current = true;
+  setSelections(ids);
+  setTimeout(() => {
+    isUpdatingRef.current = false;
+  }, 100);
+};
+
+interface UseTranslationSelectionResult {
+  searchTerm: string;
+  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+  languages: string[];
+  groupedTranslations: Record<string, TranslationResource[]>;
+  activeFilter: string;
+  setActiveFilter: React.Dispatch<React.SetStateAction<string>>;
+  selectedIds: Set<number>;
+  orderedSelection: number[];
+  handleSelectionToggle: (id: number) => boolean;
+  handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
+  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
+  handleDrop: (e: React.DragEvent<HTMLDivElement>, targetId: number) => void;
+  handleDragEnd: () => void;
+  draggedId: number | null;
+  handleReset: () => void;
+}
+
 export const useTranslationSelection = (
   translations: TranslationResource[],
   languageSort: (a: string, b: string) => number
-) => {
+): UseTranslationSelectionResult => {
   const { settings, setTranslationIds } = useSettings();
 
-  const selectable = useSelectableResources<TranslationResource>({
+  const s = useSelectableResources<TranslationResource>({
     resources: translations,
     selectionLimit: MAX_TRANSLATION_SELECTIONS,
     languageSort,
   });
 
-  const {
-    searchTerm,
-    setSearchTerm,
-    languages,
-    groupedResources,
-    activeFilter,
-    setActiveFilter,
-    selectedIds,
-    orderedSelection,
-    handleSelectionToggle,
-    handleDragStart,
-    handleDragOver,
-    handleDrop,
-    handleDragEnd,
-    draggedId,
-    setSelections,
-  } = selectable;
-
   const isUpdatingRef = useRef(false);
   const hasInitialized = useRef(false);
 
   useEffect(() => {
-    if (translations.length > 0 && !hasInitialized.current && !isUpdatingRef.current) {
-      hasInitialized.current = true;
-
-      const settingsIds = settings.translationIds || [];
-      if (settingsIds.length > 0) {
-        isUpdatingRef.current = true;
-        setSelections(settingsIds);
-        setTimeout(() => {
-          isUpdatingRef.current = false;
-        }, 100);
-      } else {
-        const sahih = translations.find(
-          (t) =>
-            t.name.toLowerCase().includes('saheeh international') ||
-            t.name.toLowerCase().includes('sahih international')
-        );
-        const defaultIds = sahih ? [sahih.id] : [20];
-        isUpdatingRef.current = true;
-        setSelections(defaultIds);
-        setTimeout(() => {
-          isUpdatingRef.current = false;
-        }, 100);
-      }
-    }
-  }, [translations, setSelections, settings.translationIds]);
+    if (isUpdatingRef.current || hasInitialized.current) return;
+    const initial = computeInitialSelectionIds(translations, settings.translationIds);
+    if (!initial) return;
+    hasInitialized.current = true;
+    applySelectionsSafely(s.setSelections, isUpdatingRef, initial);
+  }, [translations, s.setSelections, settings.translationIds]);
 
   useEffect(() => {
     if (isUpdatingRef.current) return;
     if (!hasInitialized.current) return;
 
-    const current = [...orderedSelection];
+    const current = [...s.orderedSelection];
     if (current.length === 0) {
       return;
     }
     setTranslationIds(current);
-  }, [orderedSelection, setTranslationIds]);
+  }, [s.orderedSelection, setTranslationIds]);
 
-  const handleReset = useCallback(() => {
-    const sahih = translations.find(
-      (t) =>
-        t.name.toLowerCase().includes('saheeh international') ||
-        t.name.toLowerCase().includes('sahih international')
-    );
-    if (sahih) {
-      setSelections([sahih.id]);
-    } else {
-      setSelections([]);
-    }
-  }, [translations, setSelections]);
+  const handleReset = useCallback((): void => {
+    const sahihId = findSaheehId(translations);
+    s.setSelections(sahihId !== undefined ? [sahihId] : []);
+  }, [translations, s]);
 
   return {
-    searchTerm,
-    setSearchTerm,
-    languages,
-    groupedTranslations: groupedResources,
-    activeFilter,
-    setActiveFilter,
-    selectedIds,
-    orderedSelection,
-    handleSelectionToggle,
-    handleDragStart,
-    handleDragOver,
-    handleDrop,
-    handleDragEnd,
-    draggedId,
+    searchTerm: s.searchTerm,
+    setSearchTerm: s.setSearchTerm,
+    languages: s.languages,
+    groupedTranslations: s.groupedResources,
+    activeFilter: s.activeFilter,
+    setActiveFilter: s.setActiveFilter,
+    selectedIds: s.selectedIds,
+    orderedSelection: s.orderedSelection,
+    handleSelectionToggle: s.handleSelectionToggle,
+    handleDragStart: s.handleDragStart,
+    handleDragOver: s.handleDragOver,
+    handleDrop: s.handleDrop,
+    handleDragEnd: s.handleDragEnd,
+    draggedId: s.draggedId,
     handleReset,
   } as const;
 };

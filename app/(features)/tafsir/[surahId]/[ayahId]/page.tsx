@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { SettingsSidebar } from '@/app/(features)/surah/components';
@@ -8,6 +8,7 @@ import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { AyahNavigation } from './components/AyahNavigation';
 import { TafsirAudioPlayer } from './components/TafsirAudioPlayer';
 import { TafsirViewer } from './components/TafsirViewer';
+import { useBodyScrollLock, usePanelsState } from './useTafsirPanels';
 import { useTafsirVerseData } from '../../hooks/useTafsirVerseData';
 
 interface TafsirVersePageProps {
@@ -31,19 +32,8 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps): React
     currentSurah,
   } = useTafsirVerseData(surahId, ayahId);
 
-  const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
-  const [isTafsirPanelOpen, setIsTafsirPanelOpen] = useState(false);
-  const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
-
-  // Reciter is now coming from AudioContext
-
-  // Match verse page behavior: keep body from scrolling and use internal scroll area
-  React.useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, []);
+  const panels = usePanelsState();
+  useBodyScrollLock();
 
   return (
     <>
@@ -59,21 +49,11 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps): React
         tafsirHtml={tafsirHtml}
       />
 
-      <SettingsSidebar
-        onTranslationPanelOpen={() => setIsTranslationPanelOpen(true)}
-        onWordLanguagePanelOpen={() => setIsWordPanelOpen(true)}
-        onTafsirPanelOpen={() => setIsTafsirPanelOpen(true)}
+      <TafsirSettingsSidebar
+        panels={panels}
         selectedTranslationName={selectedTranslationName}
         selectedTafsirName={selectedTafsirName}
         selectedWordLanguageName={selectedWordLanguageName}
-        showTafsirSetting
-        isTranslationPanelOpen={isTranslationPanelOpen}
-        onTranslationPanelClose={() => setIsTranslationPanelOpen(false)}
-        isTafsirPanelOpen={isTafsirPanelOpen}
-        onTafsirPanelClose={() => setIsTafsirPanelOpen(false)}
-        isWordLanguagePanelOpen={isWordPanelOpen}
-        onWordLanguagePanelClose={() => setIsWordPanelOpen(false)}
-        pageType="tafsir"
       />
 
       <TafsirAudioPlayer activeVerse={activeVerse} reciter={reciter} isVisible={isPlayerVisible} />
@@ -127,5 +107,36 @@ function TafsirMain({
         </div>
       </div>
     </main>
+  );
+}
+
+function TafsirSettingsSidebar({
+  panels,
+  selectedTranslationName,
+  selectedTafsirName,
+  selectedWordLanguageName,
+}: {
+  panels: ReturnType<typeof usePanelsState>;
+  selectedTranslationName: string | undefined;
+  selectedTafsirName: string | undefined;
+  selectedWordLanguageName: string | undefined;
+}): React.JSX.Element {
+  return (
+    <SettingsSidebar
+      onTranslationPanelOpen={panels.openTranslationPanel}
+      onWordLanguagePanelOpen={panels.openWordPanel}
+      onTafsirPanelOpen={panels.openTafsirPanel}
+      selectedTranslationName={selectedTranslationName}
+      selectedTafsirName={selectedTafsirName}
+      selectedWordLanguageName={selectedWordLanguageName}
+      showTafsirSetting
+      isTranslationPanelOpen={panels.isTranslationPanelOpen}
+      onTranslationPanelClose={panels.closeTranslationPanel}
+      isTafsirPanelOpen={panels.isTafsirPanelOpen}
+      onTafsirPanelClose={panels.closeTafsirPanel}
+      isWordLanguagePanelOpen={panels.isWordPanelOpen}
+      onWordLanguagePanelClose={panels.closeWordPanel}
+      pageType="tafsir"
+    />
   );
 }

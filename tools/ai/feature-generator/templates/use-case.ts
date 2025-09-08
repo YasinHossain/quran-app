@@ -12,6 +12,8 @@ export class ${useCase}UseCase {
   async execute(
     ...args: Parameters<I${entity}Repository['${action}']>
   ): Promise<ReturnType<I${entity}Repository['${action}']>> {
+    // Intentionally widen args to preserve repository type compatibility in generated code
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this.repo.${action}(...(args as any));
   }
 }

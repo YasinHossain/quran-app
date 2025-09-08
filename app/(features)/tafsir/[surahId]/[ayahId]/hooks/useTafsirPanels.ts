@@ -3,12 +3,19 @@ import { useState } from 'react';
 
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 
-export const useTafsirPanels = (verseKey: string) => {
+interface UseTafsirPanelsResult {
+  openPanels: Record<number, boolean>;
+  tafsirTexts: Record<number, string>;
+  loading: Record<number, boolean>;
+  togglePanel: (id: number) => Promise<void>;
+}
+
+export const useTafsirPanels = (verseKey: string): UseTafsirPanelsResult => {
   const [openPanels, setOpenPanels] = useState<Record<number, boolean>>({});
   const [tafsirTexts, setTafsirTexts] = useState<Record<number, string>>({});
   const [loading, setLoading] = useState<Record<number, boolean>>({});
 
-  const togglePanel = async (id: number) => {
+  const togglePanel = async (id: number): Promise<void> => {
     setOpenPanels((prev) => {
       const isOpen = !prev[id];
       if (isOpen && !tafsirTexts[id]) {

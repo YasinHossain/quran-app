@@ -49,7 +49,8 @@ export const EmptyBookmarksContent = (): React.JSX.Element => (
       Start Your Spiritual Journey
     </h2>
     <p className="text-lg text-muted mb-10 leading-relaxed max-w-md mx-auto">
-      Save your favorite Quran verses. Build a personal collection for study, reflection, and memorization.
+      Save your favorite Quran verses. Build a personal collection for study, reflection, and
+      memorization.
     </p>
   </motion.div>
 );

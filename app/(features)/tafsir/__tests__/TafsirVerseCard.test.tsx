@@ -15,7 +15,9 @@ const verse: Verse = {
   translations: [{ resource_id: 20, text: 'In the name of Allah' }],
 };
 
-const renderCard = () => renderWithProviders(<VerseCard verse={verse} />);
+const renderCard = (): void => {
+  renderWithProviders(<VerseCard verse={verse} />);
+};
 
 beforeAll(() => {
   Object.defineProperty(window, 'matchMedia', {

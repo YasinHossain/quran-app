@@ -8,60 +8,70 @@ import { Header } from '@/app/shared/Header';
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
-// mock translation hook
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
-// mock next/navigation for Header
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: jest.fn() }),
   usePathname: () => '/',
 }));
 
-const Wrapper = ({ children }: { children: React.ReactNode }) => (
+const Wrapper = ({ children }: { children: React.ReactNode }): React.ReactElement => (
   <HeaderVisibilityProvider>{children}</HeaderVisibilityProvider>
 );
 
-describe('SettingsSidebar interactions', () => {
-  let errorSpy: jest.SpyInstance;
-  beforeAll(() => {
-    Object.defineProperty(window, 'matchMedia', {
-      writable: true,
-      value: jest.fn().mockImplementation((query) => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: jest.fn(),
-        removeListener: jest.fn(),
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
-      })),
-    });
-    errorSpy = jest.spyOn(logger, 'error').mockImplementation(() => {});
-  });
+function createTestComponent(props: {
+  onTranslationPanelOpen?: () => void;
+  onWordLanguagePanelOpen?: () => void;
+  isWordLanguagePanelOpen?: boolean;
+  onWordLanguagePanelClose?: () => void;
+}): React.ReactElement {
+  return (
+    <Wrapper>
+      <Header />
+      <SettingsSidebar
+        onTranslationPanelOpen={props.onTranslationPanelOpen || (() => {})}
+        onWordLanguagePanelOpen={props.onWordLanguagePanelOpen || (() => {})}
+        selectedTranslationName="English"
+        selectedWordLanguageName="English"
+        isWordLanguagePanelOpen={props.isWordLanguagePanelOpen}
+        onWordLanguagePanelClose={props.onWordLanguagePanelClose}
+      />
+    </Wrapper>
+  );
+}
 
-  afterAll(() => {
-    errorSpy.mockRestore();
-  });
+let errorSpy: jest.SpyInstance;
 
-  beforeEach(() => {
-    localStorage.clear();
+beforeAll(() => {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation((query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
   });
+  errorSpy = jest.spyOn(logger, 'error').mockImplementation(() => {});
+});
 
-  it('opens via header icon, switches font tabs, and closes with back button', async () => {
-    renderWithProviders(
-      <Wrapper>
-        <Header />
-        <SettingsSidebar
-          onTranslationPanelOpen={() => {}}
-          onWordLanguagePanelOpen={() => {}}
-          selectedTranslationName="English"
-          selectedWordLanguageName="English"
-        />
-      </Wrapper>
-    );
+afterAll(() => {
+  errorSpy.mockRestore();
+});
+
+beforeEach(() => {
+  localStorage.clear();
+});
+
+describe('SettingsSidebar - Basic Interactions', () => {
+  it('opens and closes via header icon', async () => {
+    renderWithProviders(createTestComponent({}));
 
     const aside = document.querySelector('aside');
     expect(aside?.className).toContain('translate-x-full');
@@ -69,20 +79,25 @@ describe('SettingsSidebar interactions', () => {
     await userEvent.click(screen.getByLabelText('Open Settings'));
     expect(await screen.findByText('reading_setting')).toBeInTheDocument();
 
-    // Switch font tab
+    const backButtons = screen.getAllByRole('button', { name: 'Back' });
+    await userEvent.click(backButtons[1]);
+  });
+
+  it('switches font tabs correctly', async () => {
+    renderWithProviders(createTestComponent({}));
+
+    await userEvent.click(screen.getByLabelText('Open Settings'));
     const [fontButton] = screen.getAllByRole('button', { name: 'KFGQPC Uthman Taha' });
     await userEvent.click(fontButton);
 
     await userEvent.click(screen.getByRole('button', { name: 'IndoPak' }));
     expect(screen.getByText('Noto Nastaliq Urdu')).toBeInTheDocument();
-
-    // Close sidebar
-    const backButtons = screen.getAllByRole('button', { name: 'Back' });
-    await userEvent.click(backButtons[1]);
   });
+});
 
+describe('SettingsSidebar - Translation Panel', () => {
   it('clicking translation tab does not open translation panel', async () => {
-    const TestComponent = () => {
+    const TestComponent = (): React.ReactElement => {
       const [open, setOpen] = useState(false);
       return (
         <Wrapper>
@@ -105,9 +120,11 @@ describe('SettingsSidebar interactions', () => {
     const panel = screen.getByTestId('translation-panel');
     expect(panel).toHaveClass('translate-x-full');
   });
+});
 
-  it('opens the word translation panel and shows languages', async () => {
-    const TestComponent = () => {
+describe('SettingsSidebar - Word Translation Panel', () => {
+  it('opens and shows languages', async () => {
+    const TestComponent = (): React.ReactElement => {
       const [open, setOpen] = useState(false);
       return (
         <Wrapper>

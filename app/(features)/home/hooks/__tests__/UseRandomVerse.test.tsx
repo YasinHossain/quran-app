@@ -16,7 +16,7 @@ describe('useRandomVerse', () => {
     (getRandomVerse as jest.Mock).mockRejectedValue(new Error('fail'));
     const warnSpy = jest.spyOn(logger, 'warn').mockImplementation(() => {});
 
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
+    const wrapper = ({ children }: { children: React.ReactNode }): React.ReactElement => (
       <SWRConfig value={{ provider: () => new Map() }}>{children}</SWRConfig>
     );
 

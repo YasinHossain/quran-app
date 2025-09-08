@@ -36,7 +36,7 @@ beforeAll(() => {
   });
 });
 
-const renderPage = async () => {
+const renderPage = async (): Promise<void> => {
   const PageComponent = await TafsirIndexPage();
   return renderWithProviders(PageComponent);
 };

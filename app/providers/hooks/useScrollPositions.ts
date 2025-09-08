@@ -2,7 +2,13 @@
 
 import { useCallback, useMemo, useState } from 'react';
 
-export const useScrollPositions = () => {
+interface UseScrollPositionsReturn {
+  scrollPositions: Record<string, number>;
+  setScrollPosition: (key: string, position: number) => void;
+  getScrollPosition: (key: string) => number;
+}
+
+export const useScrollPositions = (): UseScrollPositionsReturn => {
   const [scrollPositions, setScrollPositions] = useState<Record<string, number>>(() => {
     if (typeof window === 'undefined') return {};
     const stored = sessionStorage.getItem('uiScrollPositions');

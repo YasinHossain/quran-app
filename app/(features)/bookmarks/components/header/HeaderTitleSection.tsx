@@ -7,14 +7,12 @@ import { Button } from '@/app/shared/ui/Button';
 
 export interface HeaderTitleSectionProps {
   title: string;
-  stats?: { folders: number; verses: number };
   showMenuButton: boolean;
   onSidebarToggle?: () => void;
 }
 
 export const HeaderTitleSection = ({
   title,
-  stats,
   showMenuButton,
   onSidebarToggle,
 }: HeaderTitleSectionProps): React.JSX.Element => (

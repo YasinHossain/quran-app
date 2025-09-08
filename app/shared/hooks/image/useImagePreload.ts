@@ -3,7 +3,7 @@ import React from 'react';
 /**
  * Hook for responsive image preloading
  */
-export const useImagePreload = (sources: string[], condition = true) => {
+export const useImagePreload = (sources: string[], condition = true): void => {
   React.useEffect(() => {
     if (!condition) return;
 
@@ -15,7 +15,7 @@ export const useImagePreload = (sources: string[], condition = true) => {
       preloadedImages.push(img);
     });
 
-    return () => {
+    return (): void => {
       // Cleanup if needed
       preloadedImages.forEach((img) => {
         img.src = '';

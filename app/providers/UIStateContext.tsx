@@ -23,7 +23,7 @@ interface UIStateContextType {
 
 const UIStateContext = createContext<UIStateContextType | undefined>(undefined);
 
-export const UIStateProvider = ({ children }: { children: React.ReactNode }) => {
+export const UIStateProvider = ({ children }: { children: React.ReactNode }): React.JSX.Element => {
   const panelState = usePanelState();
   const scrollState = useScrollPositions();
 
@@ -32,7 +32,7 @@ export const UIStateProvider = ({ children }: { children: React.ReactNode }) => 
   return <UIStateContext.Provider value={value}>{children}</UIStateContext.Provider>;
 };
 
-export const useUIState = () => {
+export const useUIState = (): UIStateContextType => {
   const context = useContext(UIStateContext);
   if (!context) {
     throw new Error('useUIState must be used within UIStateProvider');

@@ -2,6 +2,6 @@ import { Play } from 'lucide-react';
 
 import { IconProps } from './IconProps';
 
-export const PlayIcon = ({ size = 18, className = '', ...rest }: IconProps) => (
+export const PlayIcon = ({ size = 18, className = '', ...rest }: IconProps): JSX.Element => (
   <Play size={size} className={className} aria-hidden="true" {...rest} />
 );

@@ -36,7 +36,7 @@ export function usePlaybackCompletion({
   pause,
   setIsPlaying,
   setPlayingId,
-}: Options) {
+}: Options): () => void {
   const [verseRepeatsLeft, setVerseRepeatsLeft] = useState(repeatOptions.repeatEach ?? 1);
   const [playRepeatsLeft, setPlayRepeatsLeft] = useState(repeatOptions.playCount ?? 1);
 
@@ -63,66 +63,52 @@ export function usePlaybackCompletion({
     setPlayRepeatsLeft,
   });
 
-  return useCallback(() => {
+  return useCallback((): void => {
     const mode = repeatOptions.mode;
     const start = repeatOptions.start ?? 1;
     const end = repeatOptions.end ?? start;
     const delay = delayMs;
     const currentAyah = activeVerse ? parseInt(activeVerse.verse_key.split(':')[1], 10) : null;
 
-    if (mode === 'single') {
-      if (verseRepeatsLeft > 1) {
-        setVerseRepeatsLeft(verseRepeatsLeft - 1);
-        seek(0);
-        play();
-        return;
-      }
-      if (playRepeatsLeft > 1) {
-        setPlayRepeatsLeft(playRepeatsLeft - 1);
-        setVerseRepeatsLeft(repeatOptions.repeatEach ?? 1);
-        seek(0);
-        play();
-        return;
-      }
-    }
+    if (
+      mode === 'single' &&
+      handleSingleRepeatPure({
+        verseRepeatsLeft,
+        playRepeatsLeft,
+        repeatEach: repeatOptions.repeatEach ?? 1,
+        seek,
+        play,
+        setVerseRepeatsLeft,
+        setPlayRepeatsLeft,
+      })
+    )
+      return;
 
-    if (mode === 'range') {
-      if (verseRepeatsLeft > 1) {
-        setVerseRepeatsLeft(verseRepeatsLeft - 1);
-        seek(0);
-        play();
-        return;
-      }
-      setVerseRepeatsLeft(repeatOptions.repeatEach ?? 1);
-      if (currentAyah && currentAyah < end) {
-        onNext?.();
-        return;
-      }
-      if (playRepeatsLeft > 1) {
-        setPlayRepeatsLeft(playRepeatsLeft - 1);
-        const steps = end - start;
-        setTimeout(() => {
-          for (let i = 0; i < steps; i++) {
-            onPrev?.();
-          }
-        }, delay);
-        return;
-      }
-    }
-
+    if (
+      mode === 'range' &&
+      handleRangeRepeatPure({
+        start,
+        end,
+        currentAyah,
+        delay,
+        verseRepeatsLeft,
+        repeatEach: repeatOptions.repeatEach ?? 1,
+        onNext,
+        onPrev,
+        seek,
+        play,
+        setVerseRepeatsLeft,
+        setPlayRepeatsLeft,
+        playRepeatsLeft,
+      })
+    )
+      return;
     if (mode === 'surah') {
       handleSurahRepeat();
       return;
     }
 
-    const hasNext = onNext?.() ?? false;
-    setTimeout(() => {
-      if (!hasNext || !audioRef.current?.src) {
-        pause();
-        setIsPlaying(false);
-        setPlayingId(null);
-      }
-    }, 0);
+    finalizePlaybackPure({ onNext, audioRef, pause, setIsPlaying, setPlayingId });
   }, [
     repeatOptions,
     activeVerse,
@@ -139,4 +125,111 @@ export function usePlaybackCompletion({
     handleSurahRepeat,
     audioRef,
   ]);
+}
+
+function handleSingleRepeatPure({
+  verseRepeatsLeft,
+  playRepeatsLeft,
+  repeatEach,
+  seek,
+  play,
+  setVerseRepeatsLeft,
+  setPlayRepeatsLeft,
+}: {
+  verseRepeatsLeft: number;
+  playRepeatsLeft: number;
+  repeatEach: number;
+  seek: (s: number) => void;
+  play: () => void;
+  setVerseRepeatsLeft: (n: number) => void;
+  setPlayRepeatsLeft: (n: number) => void;
+}): boolean {
+  if (verseRepeatsLeft > 1) {
+    setVerseRepeatsLeft(verseRepeatsLeft - 1);
+    seek(0);
+    play();
+    return true;
+  }
+  if (playRepeatsLeft > 1) {
+    setPlayRepeatsLeft(playRepeatsLeft - 1);
+    setVerseRepeatsLeft(repeatEach);
+    seek(0);
+    play();
+    return true;
+  }
+  return false;
+}
+
+function handleRangeRepeatPure({
+  start,
+  end,
+  currentAyah,
+  delay,
+  verseRepeatsLeft,
+  repeatEach,
+  onNext,
+  onPrev,
+  seek,
+  play,
+  setVerseRepeatsLeft,
+  setPlayRepeatsLeft,
+  playRepeatsLeft,
+}: {
+  start: number;
+  end: number;
+  currentAyah: number | null;
+  delay: number;
+  verseRepeatsLeft: number;
+  repeatEach: number;
+  onNext?: () => boolean;
+  onPrev?: () => boolean;
+  seek: (s: number) => void;
+  play: () => void;
+  setVerseRepeatsLeft: (n: number) => void;
+  setPlayRepeatsLeft: (n: number) => void;
+  playRepeatsLeft: number;
+}): boolean {
+  if (verseRepeatsLeft > 1) {
+    setVerseRepeatsLeft(verseRepeatsLeft - 1);
+    seek(0);
+    play();
+    return true;
+  }
+  setVerseRepeatsLeft(repeatEach);
+  if (currentAyah && currentAyah < end) {
+    onNext?.();
+    return true;
+  }
+  if (playRepeatsLeft > 1) {
+    setPlayRepeatsLeft(playRepeatsLeft - 1);
+    const steps = end - start;
+    setTimeout(() => {
+      for (let i = 0; i < steps; i++) onPrev?.();
+    }, delay);
+    return true;
+  }
+  return false;
+}
+
+function finalizePlaybackPure({
+  onNext,
+  audioRef,
+  pause,
+  setIsPlaying,
+  setPlayingId,
+}: {
+  onNext?: () => boolean;
+  audioRef: RefObject<HTMLAudioElement | null>;
+  pause: () => void;
+  setIsPlaying: (v: boolean) => void;
+  setPlayingId: (v: number | null) => void;
+}): void {
+  const hasNext = onNext?.() ?? false;
+  setTimeout(() => {
+    if (!hasNext || !audioRef.current?.src) {
+      pause();
+      setIsPlaying(false);
+      setPlayingId(null);
+    }
+  }, 0);
 }

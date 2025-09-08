@@ -3,20 +3,14 @@
 import { motion } from 'framer-motion';
 import React from 'react';
 
-import { FolderGrid } from './components/FolderGrid';
 import { BookmarksHeader } from './components/BookmarksHeader';
+import { FolderGrid } from './components/FolderGrid';
 import { BookmarksLayout } from './components/shared/BookmarksLayout';
 import { useBookmarksPage } from './hooks/useBookmarksPage';
 
 const BookmarksPage = (): React.JSX.Element => {
-  const {
-    folders,
-    sortedFolders,
-    handleFolderSelect,
-    handleSectionChange,
-    handleVerseClick,
-  } = useBookmarksPage();
-
+  const { folders, sortedFolders, handleFolderSelect, handleSectionChange, handleVerseClick } =
+    useBookmarksPage();
 
   return (
     <>
@@ -34,11 +28,7 @@ const BookmarksPage = (): React.JSX.Element => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <FolderGrid
-            folders={sortedFolders}
-            allFolders={sortedFolders}
-            onFolderSelect={handleFolderSelect}
-          />
+          <FolderGrid folders={sortedFolders} onFolderSelect={handleFolderSelect} />
         </motion.div>
       </BookmarksLayout>
     </>

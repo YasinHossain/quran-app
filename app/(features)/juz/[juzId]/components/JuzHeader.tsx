@@ -6,7 +6,7 @@ interface JuzHeaderProps {
   juz?: Juz;
 }
 
-export function JuzHeader({ juz }: JuzHeaderProps) {
+export function JuzHeader({ juz }: JuzHeaderProps): JSX.Element | null {
   const { t } = useTranslation();
   if (!juz) return null;
   return (

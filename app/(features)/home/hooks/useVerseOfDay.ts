@@ -41,11 +41,19 @@ interface UseVerseSourceOptions {
   rotationCountRef: React.MutableRefObject<number>;
 }
 
+interface UseVerseSourceReturn {
+  activeVerse: Verse | null;
+  isLoading: boolean;
+  currentError: string | null;
+  handleRotation: () => void;
+  refreshVerse: () => void;
+}
+
 const useVerseSource = ({
   translationId,
   randomVerseInterval,
   rotationCountRef,
-}: UseVerseSourceOptions) => {
+}: UseVerseSourceOptions): UseVerseSourceReturn => {
   // Random verse hook with error handling
   const randomVerse = useRandomVerse({
     translationId,

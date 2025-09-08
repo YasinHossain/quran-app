@@ -8,14 +8,14 @@ jest.mock('@/lib/api/chapters', () => ({
   getChapters: jest.fn().mockResolvedValue([]),
 }));
 
-export const renderWithProviders = (ui: React.ReactElement) =>
+export const renderWithProviders = (ui: React.ReactElement): ReturnType<typeof render> =>
   render(
     <SettingsProvider>
       <BookmarkProvider>{ui}</BookmarkProvider>
     </SettingsProvider>
   );
 
-export const BookmarkTestComponent = () => {
+export const BookmarkTestComponent = (): React.JSX.Element => {
   const {
     folders,
     createFolder,

@@ -9,8 +9,8 @@ import type { ErrorFallbackProps } from './ErrorBoundary';
 export function withErrorBoundary<P extends object>(
   Component: React.ComponentType<P>,
   fallback?: React.ComponentType<ErrorFallbackProps>
-) {
-  const WrappedComponent = (props: P) => (
+): React.ComponentType<P> {
+  const WrappedComponent = (props: P): React.JSX.Element => (
     <ErrorBoundary fallback={fallback}>
       <Component {...props} />
     </ErrorBoundary>

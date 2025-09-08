@@ -132,6 +132,7 @@ const eslintConfig = [
       ],
     },
   },
+  //
   // Tighter limits for pages
   {
     files: ['app/**/page.tsx', 'app/**/layout.tsx'],

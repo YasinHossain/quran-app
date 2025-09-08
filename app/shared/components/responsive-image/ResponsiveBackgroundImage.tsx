@@ -31,25 +31,25 @@ export const ResponsiveBackgroundImage = ({
 }: ResponsiveBackgroundImageProps): React.JSX.Element => {
   const { breakpoint } = useResponsiveState();
 
-  const getOptimalSource = (): string => {
-    if (typeof src === 'string') {
-      return src;
-    }
-
-    switch (breakpoint) {
+  const pickBackgroundSource = (
+    s: string | ResponsiveImageSources,
+    bp: ReturnType<typeof useResponsiveState>['breakpoint']
+  ) => {
+    if (typeof s === 'string') return s;
+    switch (bp) {
       case 'mobile':
-        return src.mobile || src.fallback;
+        return s.mobile || s.fallback;
       case 'tablet':
-        return src.tablet || src.mobile || src.fallback;
+        return s.tablet || s.mobile || s.fallback;
       case 'desktop':
       case 'wide':
-        return src.desktop || src.tablet || src.fallback;
+        return s.desktop || s.tablet || s.fallback;
       default:
-        return src.fallback;
+        return s.fallback;
     }
   };
 
-  const backgroundImage = getOptimalSource();
+  const backgroundImage = pickBackgroundSource(src, breakpoint);
 
   return (
     <div

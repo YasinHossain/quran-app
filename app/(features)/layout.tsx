@@ -11,8 +11,8 @@ import { Navigation } from '@/app/shared/IconSidebar';
 import { ModernLayout } from '@/app/shared/navigation/ModernLayout';
 import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
 
-function LayoutContent({ children }: { children: React.ReactNode }) {
-  const { isHidden } = useHeaderVisibility();
+function LayoutContent({ children }: { children: React.ReactNode }): JSX.Element {
+  useHeaderVisibility();
   const pathname = usePathname();
   const isBookmarkPage = pathname.startsWith('/bookmarks');
   const isHomePage = pathname === '/';
@@ -42,7 +42,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function FeaturesLayout({ children }: { children: React.ReactNode }) {
+export default function FeaturesLayout({ children }: { children: React.ReactNode }): JSX.Element {
   return (
     <HeaderVisibilityProvider>
       <LayoutContent>{children}</LayoutContent>

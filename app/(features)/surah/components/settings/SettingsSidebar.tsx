@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 
 import { useUIState } from '@/app/providers/UIStateContext';
 import { BaseSidebar } from '@/app/shared/components/BaseSidebar';
@@ -9,66 +9,47 @@ import { SettingsContentWrapper } from './SettingsContentWrapper';
 import { SettingsPanels } from './SettingsPanels';
 import { SettingsSidebarProps } from './types';
 import { useSettingsTabState, useSettingsSections } from '../../hooks';
+import { buildContentWrapperProps } from './sidebar/SettingsContentWrapperProps';
+import { buildPanelsProps } from './sidebar/SettingsPanelsProps';
 
-export const SettingsSidebar = ({
-  onTranslationPanelOpen,
-  onWordLanguagePanelOpen,
-  onTafsirPanelOpen,
-  onReadingPanelOpen,
-  selectedTranslationName,
-  selectedTafsirName,
-  selectedWordLanguageName,
-  showTafsirSetting = false,
-  isTranslationPanelOpen = false,
-  onTranslationPanelClose,
-  isTafsirPanelOpen = false,
-  onTafsirPanelClose,
-  isWordLanguagePanelOpen = false,
-  onWordLanguagePanelClose,
-}: SettingsSidebarProps) => {
+export const SettingsSidebar = (props: SettingsSidebarProps) => {
   const { isSettingsOpen, setSettingsOpen } = useUIState();
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
 
   const { activeTab, handleTabChange, tabOptions } = useSettingsTabState({
-    ...(onReadingPanelOpen !== undefined ? { onReadingPanelOpen } : {}),
+    ...(props.onReadingPanelOpen !== undefined
+      ? { onReadingPanelOpen: props.onReadingPanelOpen }
+      : {}),
   });
   const { openSections, handleSectionToggle } = useSettingsSections();
 
-  return (
-    <>
-      <BaseSidebar
-        isOpen={isSettingsOpen}
-        onClose={() => setSettingsOpen(false)}
-        position="right"
-        aria-label="Settings panel"
-      >
-        <SettingsContentWrapper
-          activeTab={activeTab}
-          onTabChange={handleTabChange}
-          tabOptions={tabOptions}
-          openSections={openSections}
-          onSectionToggle={handleSectionToggle}
-          onArabicFontPanelOpen={() => setIsArabicFontPanelOpen(true)}
-          onTranslationPanelOpen={onTranslationPanelOpen}
-          onWordLanguagePanelOpen={onWordLanguagePanelOpen}
-          {...(onTafsirPanelOpen !== undefined ? { onTafsirPanelOpen } : {})}
-          selectedTranslationName={selectedTranslationName}
-          {...(selectedTafsirName !== undefined ? { selectedTafsirName } : {})}
-          selectedWordLanguageName={selectedWordLanguageName}
-          showTafsirSetting={showTafsirSetting}
-        />
+  const handleCloseSidebar = useCallback(() => setSettingsOpen(false), [setSettingsOpen]);
+  const handleOpenArabicFontPanel = useCallback(() => setIsArabicFontPanelOpen(true), []);
+  const handleCloseArabicFontPanel = useCallback(() => setIsArabicFontPanelOpen(false), []);
 
-        <SettingsPanels
-          isArabicFontPanelOpen={isArabicFontPanelOpen}
-          onArabicFontPanelClose={() => setIsArabicFontPanelOpen(false)}
-          isTranslationPanelOpen={isTranslationPanelOpen}
-          {...(onTranslationPanelClose !== undefined ? { onTranslationPanelClose } : {})}
-          isTafsirPanelOpen={isTafsirPanelOpen}
-          {...(onTafsirPanelClose !== undefined ? { onTafsirPanelClose } : {})}
-          isWordLanguagePanelOpen={isWordLanguagePanelOpen}
-          {...(onWordLanguagePanelClose !== undefined ? { onWordLanguagePanelClose } : {})}
-        />
-      </BaseSidebar>
-    </>
+  const contentWrapperProps = buildContentWrapperProps(props, {
+    activeTab,
+    onTabChange: handleTabChange,
+    tabOptions,
+    openSections,
+    onSectionToggle: handleSectionToggle,
+    onArabicFontPanelOpen: handleOpenArabicFontPanel,
+  });
+
+  const panelsProps = buildPanelsProps(props, {
+    isArabicFontPanelOpen,
+    onArabicFontPanelClose: handleCloseArabicFontPanel,
+  });
+
+  return (
+    <BaseSidebar
+      isOpen={isSettingsOpen}
+      onClose={handleCloseSidebar}
+      position="right"
+      aria-label="Settings panel"
+    >
+      <SettingsContentWrapper {...contentWrapperProps} />
+      <SettingsPanels {...panelsProps} />
+    </BaseSidebar>
   );
 };

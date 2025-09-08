@@ -26,27 +26,14 @@ export function usePersistedAudioSettings(): UsePersistedAudioSettingsReturn {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     try {
-      const reciterId = localStorage.getItem('reciterId');
-      if (reciterId) {
-        const parsed = Number.parseInt(reciterId, 10);
-        const found = RECITERS.find((r) => r.id === parsed);
-        if (found) setReciter(found);
-        else localStorage.removeItem('reciterId');
-      }
+      const found = loadReciterFromStorage();
+      if (found) setReciter(found);
 
-      const storedVolume = localStorage.getItem('volume');
-      if (storedVolume !== null) {
-        const parsed = Number.parseFloat(storedVolume);
-        if (!Number.isNaN(parsed) && parsed >= 0 && parsed <= 1) setVolume(parsed);
-        else localStorage.removeItem('volume');
-      }
+      const vol = loadNumberFromStorage('volume', (n) => n >= 0 && n <= 1);
+      if (vol !== null) setVolume(vol);
 
-      const storedRate = localStorage.getItem('playbackRate');
-      if (storedRate !== null) {
-        const parsed = Number.parseFloat(storedRate);
-        if (!Number.isNaN(parsed) && parsed > 0) setPlaybackRate(parsed);
-        else localStorage.removeItem('playbackRate');
-      }
+      const rate = loadNumberFromStorage('playbackRate', (n) => n > 0);
+      if (rate !== null) setPlaybackRate(rate);
     } catch {
       // ignore corrupted localStorage entries
     }
@@ -65,4 +52,27 @@ export function usePersistedAudioSettings(): UsePersistedAudioSettingsReturn {
   }, [reciter.id, volume, playbackRate]);
 
   return { reciter, setReciter, volume, setVolume, playbackRate, setPlaybackRate };
+}
+
+function loadReciterFromStorage(): Reciter | null {
+  const reciterId = localStorage.getItem('reciterId');
+  if (!reciterId) return null;
+  const parsed = Number.parseInt(reciterId, 10);
+  const found = RECITERS.find((r) => r.id === parsed) ?? null;
+  if (!found) localStorage.removeItem('reciterId');
+  return found;
+}
+
+function loadNumberFromStorage(
+  key: 'volume' | 'playbackRate',
+  isValid: (n: number) => boolean
+): number | null {
+  const raw = localStorage.getItem(key);
+  if (raw === null) return null;
+  const n = Number.parseFloat(raw);
+  if (Number.isNaN(n) || !isValid(n)) {
+    localStorage.removeItem(key);
+    return null;
+  }
+  return n;
 }

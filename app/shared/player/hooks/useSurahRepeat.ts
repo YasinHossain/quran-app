@@ -28,7 +28,7 @@ export function handleSurahRepeat({
   setPlayingId: (v: number | null) => void;
   setVerseRepeatsLeft: (n: number) => void;
   setPlayRepeatsLeft: (n: number) => void;
-}) {
+}): void {
   if (verseRepeatsLeft > 1) {
     setVerseRepeatsLeft(verseRepeatsLeft - 1);
     seek(0);
@@ -76,7 +76,7 @@ export function useSurahRepeat({
   setPlayingId,
   setVerseRepeatsLeft,
   setPlayRepeatsLeft,
-}: Parameters<typeof handleSurahRepeat>[0]) {
+}: Parameters<typeof handleSurahRepeat>[0]): () => void {
   return useCallback(
     () =>
       handleSurahRepeat({

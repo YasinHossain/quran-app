@@ -9,13 +9,18 @@ import { TranslationResource } from '@/types';
 import { initialTranslationsData } from '../translationPanel.data';
 import { capitalizeLanguageName } from '../translationPanel.utils';
 
-export const useTranslationsData = () => {
+export const useTranslationsData = (): {
+  translations: TranslationResource[];
+  loading: boolean;
+  error: string | null;
+  languageSort: (a: string, b: string) => number;
+} => {
   const [translations, setTranslations] = useState<TranslationResource[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadTranslationsAsync = async () => {
+    const loadTranslationsAsync = async (): Promise<void> => {
       try {
         setLoading(true);
         setError(null);

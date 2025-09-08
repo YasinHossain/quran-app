@@ -12,6 +12,39 @@ import {
   useFolderSettingsModalAnimation,
 } from './folder-settings-modal';
 
+const Backdrop: React.FC<{
+  variants: Parameters<typeof motion.div>[0]['variants'];
+  onClick: () => void;
+}> = ({ variants, onClick }) => (
+  <motion.div
+    variants={variants}
+    initial="hidden"
+    animate="visible"
+    exit="hidden"
+    className="fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm z-modal"
+    onClick={onClick}
+  />
+);
+
+const CenteredModal: React.FC<{
+  variants: Parameters<typeof motion.div>[0]['variants'];
+  children: React.ReactNode;
+}> = ({ variants, children }) => (
+  <motion.div
+    variants={variants}
+    initial="hidden"
+    animate="visible"
+    exit="exit"
+    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+    className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-surface border border-border rounded-2xl shadow-modal z-modal p-6"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="folder-settings-title"
+  >
+    {children}
+  </motion.div>
+);
+
 interface FolderSettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -43,28 +76,9 @@ export const FolderSettingsModal = ({
     <AnimatePresence>
       {isOpen && folder && (
         <>
-          {/* Backdrop */}
-          <motion.div
-            variants={backdropVariants}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            className="fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm z-modal"
-            onClick={onClose}
-          />
+          <Backdrop variants={backdropVariants} onClick={onClose} />
 
-          {/* Modal */}
-          <motion.div
-            variants={modalVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-surface border border-border rounded-2xl shadow-modal z-modal p-6"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="folder-settings-title"
-          >
+          <CenteredModal variants={modalVariants}>
             <ModalHeader title={getModalTitle()} onClose={onClose} />
 
             <SettingsForm
@@ -79,7 +93,7 @@ export const FolderSettingsModal = ({
               handleSubmit={handleSubmit}
               onClose={onClose}
             />
-          </motion.div>
+          </CenteredModal>
         </>
       )}
     </AnimatePresence>

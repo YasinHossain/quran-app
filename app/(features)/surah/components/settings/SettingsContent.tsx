@@ -19,7 +19,7 @@ export const SettingsContent = ({
   selectedTafsirName,
   selectedWordLanguageName,
   showTafsirSetting = false,
-}: SettingsContentProps) => {
+}: SettingsContentProps): React.JSX.Element => {
   if (activeTab === 'translation') {
     return (
       <>
@@ -55,5 +55,5 @@ export const SettingsContent = ({
     );
   }
 
-  return null;
+  return <></>;
 };

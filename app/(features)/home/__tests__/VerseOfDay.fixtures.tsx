@@ -26,10 +26,11 @@ jest.mock('@/lib/api/verses', () => ({
 export const mockedGetRandomVerse = getRandomVerse as jest.MockedFunction<typeof getRandomVerse>;
 export const mockedGetVerseByKey = getVerseByKey as jest.MockedFunction<typeof getVerseByKey>;
 
-export const renderVerseOfDay = (props?: Partial<React.ComponentProps<typeof VerseOfDay>>) =>
-  renderWithProviders(<VerseOfDay {...props} />);
+export const renderVerseOfDay = (
+  props?: Partial<React.ComponentProps<typeof VerseOfDay>>
+): ReturnType<typeof renderWithProviders> => renderWithProviders(<VerseOfDay {...props} />);
 
-export const setupMatchMedia = () => {
+export const setupMatchMedia = (): void => {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
     value: jest.fn().mockImplementation((query) => ({
@@ -45,7 +46,7 @@ export const setupMatchMedia = () => {
   });
 };
 
-export const resetTestMocks = () => {
+export const resetTestMocks = (): void => {
   jest.useFakeTimers();
   localStorage.clear();
   document.documentElement.classList.remove('dark');
@@ -53,7 +54,7 @@ export const resetTestMocks = () => {
   mockedGetVerseByKey.mockReset();
 };
 
-export const restoreTimers = () => {
+export const restoreTimers = (): void => {
   jest.useRealTimers();
 };
 

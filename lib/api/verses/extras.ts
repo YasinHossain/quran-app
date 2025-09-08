@@ -7,7 +7,7 @@ import { normalizeVerse, ApiVerse } from './normalize';
 
 let surahList: Surah[] | null = null;
 
-export function clearSurahListCache() {
+export function clearSurahListCache(): void {
   surahList = null;
 }
 

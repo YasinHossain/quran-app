@@ -1,6 +1,5 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import React from 'react';
 
@@ -16,9 +15,7 @@ interface ModernLayoutProps {
 }
 
 export const ModernLayout = ({ children }: ModernLayoutProps): React.JSX.Element => {
-  const pathname = usePathname();
-  const { isQuranBottomSheetOpen, setQuranBottomSheetOpen, navigateToSurah, showQuranSelector } =
-    useNavigation();
+  const { isQuranBottomSheetOpen, setQuranBottomSheetOpen, navigateToSurah } = useNavigation();
 
   // Show swipe indicator on first visit
   const [showSwipeIndicator, setShowSwipeIndicator] = useState(false);
@@ -36,11 +33,7 @@ export const ModernLayout = ({ children }: ModernLayoutProps): React.JSX.Element
     }
   }, []);
 
-  const handleSurahJump = () => {
-    showQuranSelector();
-  };
-
-  const isHomePage = pathname === '/' || pathname === '/home';
+  // Use selector directly when needed; remove unused helpers to satisfy lint
 
   return (
     <>

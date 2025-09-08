@@ -10,6 +10,10 @@ interface SettingsTabsProps {
   tabOptions: Array<{ value: string; label: string }>;
 }
 
-export const SettingsTabs = ({ activeTab, onTabChange, tabOptions }: SettingsTabsProps) => {
+export const SettingsTabs = ({
+  activeTab,
+  onTabChange,
+  tabOptions,
+}: SettingsTabsProps): JSX.Element => {
   return <TabToggle options={tabOptions} value={activeTab} onChange={onTabChange} />;
 };

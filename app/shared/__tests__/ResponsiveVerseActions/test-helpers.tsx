@@ -6,7 +6,7 @@ import { ResponsiveVerseActions } from '../../ResponsiveVerseActions';
 
 import type { VerseActionsProps } from '../../ResponsiveVerseActions';
 
-export const noop = () => {};
+export const noop = (): void => {};
 
 export const defaultProps: VerseActionsProps = {
   verseKey: '1:1',
@@ -20,7 +20,16 @@ export const defaultProps: VerseActionsProps = {
 let mockVariant = 'expanded';
 let mockBreakpoint = 'desktop';
 
-const mockResponsiveState = (variant: string, breakpoint: string) => ({
+const mockResponsiveState = (
+  variant: string,
+  breakpoint: string
+): {
+  variant: string;
+  breakpoint: string;
+  isMobile: boolean;
+  isTablet: boolean;
+  isDesktop: boolean;
+} => ({
   variant,
   breakpoint,
   isMobile: breakpoint === 'mobile',
@@ -38,27 +47,28 @@ jest.mock('@/lib/responsive', () => ({
   },
 }));
 
-export const setMockVariant = (variant: string) => {
+export const setMockVariant = (variant: string): void => {
   mockVariant = variant;
 };
 
-export const setMockBreakpoint = (breakpoint: string) => {
+export const setMockBreakpoint = (breakpoint: string): void => {
   mockBreakpoint = breakpoint;
 };
 
-export const renderResponsiveVerseActions = (props: Partial<VerseActionsProps> = {}) =>
-  render(<ResponsiveVerseActions {...defaultProps} {...props} />);
+export const renderResponsiveVerseActions = (
+  props: Partial<VerseActionsProps> = {}
+): ReturnType<typeof render> => render(<ResponsiveVerseActions {...defaultProps} {...props} />);
 
 export const rerenderResponsiveVerseActions = (
   rerender: (ui: React.ReactElement) => void,
   props: Partial<VerseActionsProps> = {}
-) => rerender(<ResponsiveVerseActions {...defaultProps} {...props} />);
+): void => rerender(<ResponsiveVerseActions {...defaultProps} {...props} />);
 
 export const renderWithResponsiveState = (
   variant: string,
   breakpoint: string,
   props: Partial<VerseActionsProps> = {}
-) => {
+): ReturnType<typeof renderResponsiveVerseActions> => {
   setMockVariant(variant);
   setMockBreakpoint(breakpoint);
   return renderResponsiveVerseActions(props);
