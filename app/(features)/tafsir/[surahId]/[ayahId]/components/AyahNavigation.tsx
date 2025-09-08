@@ -14,7 +14,7 @@ interface AyahNavigationProps {
   ayahId: string;
 }
 
-const ChevronLeft = (): JSX.Element => (
+const ChevronLeft = (): React.JSX.Element => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className="h-5 w-5 text-accent"
@@ -29,7 +29,7 @@ const ChevronLeft = (): JSX.Element => (
   </svg>
 );
 
-const ChevronRight = (): JSX.Element => (
+const ChevronRight = (): React.JSX.Element => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className="h-5 w-5 text-accent"
@@ -51,7 +51,7 @@ interface NavButtonProps {
   side: 'left' | 'right';
 }
 
-const NavButton = ({ label, disabled, onClick, side }: NavButtonProps): JSX.Element => (
+const NavButton = ({ label, disabled, onClick, side }: NavButtonProps): React.JSX.Element => (
   <button
     aria-label={label}
     disabled={disabled}
@@ -70,7 +70,7 @@ const NavButton = ({ label, disabled, onClick, side }: NavButtonProps): JSX.Elem
   </button>
 );
 
-const Title = ({ currentSurah, ayahId }: { currentSurah?: Surah; ayahId: string }): JSX.Element => (
+const Title = ({ currentSurah, ayahId }: { currentSurah?: Surah; ayahId: string }): React.JSX.Element => (
   <div className="flex-1 min-w-0 text-center px-2 text-on-accent font-bold text-sm sm:text-base truncate">
     {currentSurah ? (
       <>
@@ -88,7 +88,7 @@ export const AyahNavigation = ({
   navigate,
   currentSurah,
   ayahId,
-}: AyahNavigationProps) => (
+}: AyahNavigationProps): React.JSX.Element => (
   <div className="flex w-full items-center justify-between gap-2 sm:gap-3 rounded-full bg-accent text-on-accent p-2 min-w-0 overflow-hidden">
     <NavButton label="Previous" disabled={!prev} onClick={() => navigate(prev)} side="left" />
     <Title currentSurah={currentSurah} ayahId={ayahId} />

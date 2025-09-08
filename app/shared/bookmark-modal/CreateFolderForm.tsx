@@ -20,7 +20,7 @@ export const CreateFolderForm = ({
   onCreateFolder,
   onCancel,
 }: CreateFolderFormProps): React.JSX.Element => {
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     onCreateFolder();
   };

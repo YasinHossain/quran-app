@@ -9,13 +9,19 @@ interface UseLayoutStylesOptions {
   hasSidebar: boolean;
 }
 
+interface LayoutStyles {
+  getContentPadding: () => string;
+  getSidebarClasses: () => string;
+  getContainerClasses: () => string;
+}
+
 export const useLayoutStyles = ({
   variant,
   showNavigation,
   sidebarOpen,
   hasSidebar,
-}: UseLayoutStylesOptions) => {
-  const getContentPadding = () => {
+}: UseLayoutStylesOptions): LayoutStyles => {
+  const getContentPadding = (): string => {
     if (!showNavigation) return '';
 
     switch (variant) {
@@ -30,7 +36,7 @@ export const useLayoutStyles = ({
     }
   };
 
-  const getSidebarClasses = () => {
+  const getSidebarClasses = (): string => {
     if (!hasSidebar) return '';
 
     const baseClasses = 'bg-surface border-border shadow-modal transition-transform duration-300';
@@ -62,7 +68,8 @@ export const useLayoutStyles = ({
     }
   };
 
-  const getContainerClasses = () => cn('flex', variant === 'expanded' ? 'flex-row' : 'flex-col');
+  const getContainerClasses = (): string =>
+    cn('flex', variant === 'expanded' ? 'flex-row' : 'flex-col');
 
   return {
     getContentPadding,

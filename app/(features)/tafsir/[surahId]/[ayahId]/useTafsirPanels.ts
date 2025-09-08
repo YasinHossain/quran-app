@@ -9,7 +9,19 @@ export function useBodyScrollLock(): void {
   }, []);
 }
 
-export function usePanelsState() {
+interface PanelsState {
+  isTranslationPanelOpen: boolean;
+  openTranslationPanel: () => void;
+  closeTranslationPanel: () => void;
+  isTafsirPanelOpen: boolean;
+  openTafsirPanel: () => void;
+  closeTafsirPanel: () => void;
+  isWordPanelOpen: boolean;
+  openWordPanel: () => void;
+  closeWordPanel: () => void;
+}
+
+export function usePanelsState(): PanelsState {
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [isTafsirPanelOpen, setIsTafsirPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
@@ -24,5 +36,5 @@ export function usePanelsState() {
     isWordPanelOpen,
     openWordPanel: () => setIsWordPanelOpen(true),
     closeWordPanel: () => setIsWordPanelOpen(false),
-  } as const;
+  };
 }

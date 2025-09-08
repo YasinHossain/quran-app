@@ -9,7 +9,16 @@ import { PageAudioPlayer } from './components/PageAudioPlayer';
 import { PageContent } from './components/PageContent';
 import { usePageData } from './hooks/usePageData';
 
-function useSettingsSidebar() {
+interface UseSettingsSidebarReturn {
+  isTranslationPanelOpen: boolean;
+  isWordPanelOpen: boolean;
+  openTranslationPanel: () => void;
+  closeTranslationPanel: () => void;
+  openWordPanel: () => void;
+  closeWordPanel: () => void;
+}
+
+function useSettingsSidebar(): UseSettingsSidebarReturn {
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
 

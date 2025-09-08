@@ -12,7 +12,7 @@ import { useSettingsTabState, useSettingsSections } from '../../hooks';
 import { buildContentWrapperProps } from './sidebar/SettingsContentWrapperProps';
 import { buildPanelsProps } from './sidebar/SettingsPanelsProps';
 
-export const SettingsSidebar = (props: SettingsSidebarProps) => {
+export const SettingsSidebar = (props: SettingsSidebarProps): React.JSX.Element => {
   const { isSettingsOpen, setSettingsOpen } = useUIState();
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
 
@@ -23,9 +23,9 @@ export const SettingsSidebar = (props: SettingsSidebarProps) => {
   });
   const { openSections, handleSectionToggle } = useSettingsSections();
 
-  const handleCloseSidebar = useCallback(() => setSettingsOpen(false), [setSettingsOpen]);
-  const handleOpenArabicFontPanel = useCallback(() => setIsArabicFontPanelOpen(true), []);
-  const handleCloseArabicFontPanel = useCallback(() => setIsArabicFontPanelOpen(false), []);
+  const handleCloseSidebar = useCallback((): void => setSettingsOpen(false), [setSettingsOpen]);
+  const handleOpenArabicFontPanel = useCallback((): void => setIsArabicFontPanelOpen(true), []);
+  const handleCloseArabicFontPanel = useCallback((): void => setIsArabicFontPanelOpen(false), []);
 
   const contentWrapperProps = buildContentWrapperProps(props, {
     activeTab,

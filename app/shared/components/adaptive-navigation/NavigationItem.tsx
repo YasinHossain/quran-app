@@ -20,7 +20,7 @@ export const NavigationItem = memo(function NavigationItem({
   onItemClick,
 }: NavigationItemProps): React.JSX.Element {
   const Icon = item.icon;
-  const handleClick = (e: React.MouseEvent) => onItemClick(item, e);
+  const handleClick = (e: React.MouseEvent): void => onItemClick(item, e);
   const baseClass = cn(
     'relative flex flex-col items-center justify-center',
     'min-w-[48px] py-1.5 px-2 rounded-xl',

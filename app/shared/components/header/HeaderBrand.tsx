@@ -10,7 +10,7 @@ export function HeaderBrand(): JSX.Element {
   const { setSurahListOpen, setBookmarkSidebarOpen } = useSidebar();
   const pathname = usePathname();
 
-  const isNavPath = (path?: string | null) =>
+  const isNavPath = (path?: string | null): boolean =>
     Boolean(
       path &&
         (path.startsWith('/surah') ||
@@ -18,11 +18,12 @@ export function HeaderBrand(): JSX.Element {
           path.startsWith('/juz') ||
           path.startsWith('/page'))
     );
-  const isBookmarkPath = (path?: string | null) => Boolean(path && path.startsWith('/bookmarks'));
+  const isBookmarkPath = (path?: string | null): boolean =>
+    Boolean(path && path.startsWith('/bookmarks'));
 
   const shouldShowMenu = isNavPath(pathname) || isBookmarkPath(pathname);
 
-  const handleMobileNavClick = () => {
+  const handleMobileNavClick = (): void => {
     if (isBookmarkPath(pathname)) {
       setBookmarkSidebarOpen(true);
       return;
