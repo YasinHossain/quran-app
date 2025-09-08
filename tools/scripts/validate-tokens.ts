@@ -119,4 +119,4 @@ if (Object.keys(undefinedTokens).length > 0) {
   process.exit(1);
 }
 
-console.log('All token classes are defined in design-system.json');
+console.warn('All token classes are defined in design-system.json');

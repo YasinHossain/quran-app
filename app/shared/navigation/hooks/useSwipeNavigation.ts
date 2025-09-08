@@ -5,7 +5,7 @@ import { useSwipeGestures } from '@/app/shared/hooks/useSwipeGestures';
 
 const MAIN_ROUTES = ['/home', '/surah', '/bookmarks'];
 
-export function useSwipeNavigation() {
+export function useSwipeNavigation(): ReturnType<typeof useSwipeGestures> {
   const router = useRouter();
   const pathname = usePathname();
 

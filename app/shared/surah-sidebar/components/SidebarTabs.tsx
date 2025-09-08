@@ -12,7 +12,12 @@ interface Props {
   prepareForTabSwitch: (tab: 'Surah' | 'Juz' | 'Page') => void;
 }
 
-export const SidebarTabs = ({ tabs, activeTab, setActiveTab, prepareForTabSwitch }: Props) => (
+export const SidebarTabs = ({
+  tabs,
+  activeTab,
+  setActiveTab,
+  prepareForTabSwitch,
+}: Props): React.JSX.Element => (
   <div className="flex items-center p-1 rounded-full bg-interactive border border-border">
     {tabs.map(({ key, label }) => (
       <button

@@ -19,12 +19,12 @@ export const ResourceItem = <T extends Resource>({
   isSelected,
   onToggle,
   style,
-}: ResourceItemProps<T>) => {
-  const handleClick = () => {
+}: ResourceItemProps<T>): React.JSX.Element => {
+  const handleClick = (): void => {
     onToggle(item.id);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>): void => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       handleClick();

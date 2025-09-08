@@ -14,6 +14,6 @@ interface Options {
   controls: ReturnType<typeof usePlayerControls>;
 }
 
-export function usePlayerLayout(options: Options) {
+export function usePlayerLayout(options: Options): ReturnType<typeof buildPlayerLayoutProps> {
   return buildPlayerLayoutProps(options);
 }

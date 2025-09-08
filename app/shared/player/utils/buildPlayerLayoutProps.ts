@@ -20,7 +20,23 @@ export function buildPlayerLayoutProps({
   closePlayer,
   setMobileOptionsOpen,
   controls,
-}: Options) {
+}: Options): {
+  cover: ReturnType<typeof useTrackTiming>['cover'];
+  title: ReturnType<typeof useTrackTiming>['title'];
+  artist: ReturnType<typeof useTrackTiming>['artist'];
+  current: ReturnType<typeof useTrackTiming>['current'];
+  duration: ReturnType<typeof useTrackTiming>['duration'];
+  elapsed: ReturnType<typeof useTrackTiming>['elapsed'];
+  total: ReturnType<typeof useTrackTiming>['total'];
+  interactable: ReturnType<typeof useTrackTiming>['interactable'];
+  isPlaying: boolean;
+  togglePlay: ReturnType<typeof usePlayerControls>['togglePlay'];
+  setSeek: ReturnType<typeof usePlayerControls>['setSeek'];
+  onNext?: () => boolean;
+  onPrev?: () => boolean;
+  closePlayer: () => void;
+  setMobileOptionsOpen: () => void;
+} {
   return {
     cover: timing.cover,
     title: timing.title,

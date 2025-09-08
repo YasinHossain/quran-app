@@ -1,4 +1,4 @@
-import { useMemo, type DependencyList, type RefObject } from 'react';
+import { useMemo, type RefObject } from 'react';
 
 import { Verse } from '@/types';
 
@@ -65,41 +65,64 @@ function buildCompletionArgs({
   };
 }
 
-function buildDependencies({
-  repeatOptions,
-  activeVerse,
-  verseRepeatsLeft,
-  playRepeatsLeft,
-  controls,
-  setVerseRepeatsLeft,
-  setPlayRepeatsLeft,
-  handleSurahRepeat,
-  delayMs,
-}: Options): DependencyList {
-  const { audioRef, onNext, onPrev, seek, play, pause, setIsPlaying, setPlayingId } = controls;
-  return [
+//
+
+export function useCompletionHandlers(options: Options): CompletionHandlers {
+  const {
     repeatOptions,
     activeVerse,
-    delayMs,
     verseRepeatsLeft,
     playRepeatsLeft,
-    audioRef,
-    onNext,
-    onPrev,
-    seek,
-    play,
-    pause,
-    setIsPlaying,
-    setPlayingId,
+    controls,
     setVerseRepeatsLeft,
     setPlayRepeatsLeft,
     handleSurahRepeat,
-  ];
-}
+    delayMs,
+  } = options;
 
-export function useCompletionHandlers(options: Options): CompletionHandlers {
+  const { audioRef, onNext, onPrev, seek, play, pause, setIsPlaying, setPlayingId } = controls;
+
   return useMemo(
-    () => createCompletionHandlers(buildCompletionArgs(options)),
-    buildDependencies(options)
+    () =>
+      createCompletionHandlers(
+        buildCompletionArgs({
+          repeatOptions,
+          activeVerse,
+          verseRepeatsLeft,
+          playRepeatsLeft,
+          controls: {
+            audioRef,
+            onNext,
+            onPrev,
+            seek,
+            play,
+            pause,
+            setIsPlaying,
+            setPlayingId,
+          },
+          setVerseRepeatsLeft,
+          setPlayRepeatsLeft,
+          handleSurahRepeat,
+          delayMs,
+        })
+      ),
+    [
+      repeatOptions,
+      activeVerse,
+      delayMs,
+      verseRepeatsLeft,
+      playRepeatsLeft,
+      audioRef,
+      onNext,
+      onPrev,
+      seek,
+      play,
+      pause,
+      setIsPlaying,
+      setPlayingId,
+      setVerseRepeatsLeft,
+      setPlayRepeatsLeft,
+      handleSurahRepeat,
+    ]
   );
 }

@@ -11,7 +11,23 @@ interface Options {
   onNext?: () => boolean;
 }
 
-export function useAudioControllerCore({ track, onPrev, onNext }: Options) {
+export function useAudioControllerCore({ track, onPrev, onNext }: Options): {
+  isPlayerVisible: boolean;
+  closePlayer: () => void;
+  audioRef: React.RefObject<HTMLAudioElement>;
+  isPlaying: boolean;
+  setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
+  setPlayingId: React.Dispatch<React.SetStateAction<string | null>>;
+  playingId: string | null;
+  volume: number;
+  setVolume: React.Dispatch<React.SetStateAction<number>>;
+  handlePlay: () => void;
+  handlePause: () => void;
+  handleVolumeChange: (newVolume: number) => void;
+  handlePrev: () => void;
+  handleNext: () => void;
+  handleMute: () => void;
+} {
   const {
     isPlayerVisible,
     closePlayer,

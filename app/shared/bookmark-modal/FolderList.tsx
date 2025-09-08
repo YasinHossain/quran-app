@@ -8,7 +8,7 @@ import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 import { Folder, Bookmark } from '@/types';
 
-const getButtonClasses = (isSelected: boolean) =>
+const getButtonClasses = (isSelected: boolean): string =>
   cn(
     'w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 text-left',
     isSelected
@@ -18,13 +18,13 @@ const getButtonClasses = (isSelected: boolean) =>
     touchClasses.focus
   );
 
-const getIconWrapperClasses = (color?: string) =>
+const getIconWrapperClasses = (color?: string): string =>
   cn(
     'flex-shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center',
     !color && 'bg-surface-secondary'
   );
 
-const getTitleClasses = (isSelected: boolean) =>
+const getTitleClasses = (isSelected: boolean): string =>
   cn('font-medium truncate', isSelected ? 'text-accent' : 'text-foreground');
 
 interface FolderListItemProps {

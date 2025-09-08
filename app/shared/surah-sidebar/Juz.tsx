@@ -27,7 +27,7 @@ export const Juz = ({
   setSelectedPageId,
   setSelectedSurahId,
   rememberScroll,
-}: Props) => (
+}: Props): React.JSX.Element => (
   <ul className="space-y-2">
     {juzs.map((juz) => {
       const isActive = juz.number === selectedJuzId;

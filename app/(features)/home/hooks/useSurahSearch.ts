@@ -5,7 +5,11 @@ import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import type { Surah } from '@/types';
 
-export function useSurahSearch(searchQuery: string) {
+export function useSurahSearch(searchQuery: string): {
+  filteredSurahs: Surah[];
+  isLoading: boolean;
+  isEmpty: boolean;
+} {
   const [surahs, setSurahs] = useState<Surah[]>([]);
 
   useEffect(() => {

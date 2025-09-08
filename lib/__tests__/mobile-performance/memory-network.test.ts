@@ -5,12 +5,10 @@ import { useBreakpoint, useResponsiveState } from '@/lib/responsive';
 import { setupMobilePerformanceTest, testPerformance } from './test-utils';
 
 describe('Memory and Network Performance', () => {
-  let matchMediaUtils: ReturnType<typeof setupMobilePerformanceTest>['matchMediaUtils'];
   let cleanup: () => void;
 
   beforeEach(() => {
     const setup = setupMobilePerformanceTest();
-    matchMediaUtils = setup.matchMediaUtils;
     cleanup = setup.cleanup;
   });
 

@@ -6,17 +6,18 @@ export const pickImageSource = (
 ): string => {
   if (typeof src === 'string') return src;
 
-  switch (breakpoint) {
-    case 'mobile':
-      return src.mobile || src.fallback;
-    case 'tablet':
-      return src.tablet || src.mobile || src.fallback;
-    case 'desktop':
-    case 'wide':
-      return src.desktop || src.tablet || src.fallback;
-    default:
-      return src.fallback;
+  const priority: Record<typeof breakpoint, Array<keyof ResponsiveImageSources>> = {
+    mobile: ['mobile', 'fallback'],
+    tablet: ['tablet', 'mobile', 'fallback'],
+    desktop: ['desktop', 'tablet', 'fallback'],
+    wide: ['desktop', 'tablet', 'fallback'],
+  };
+
+  for (const key of priority[breakpoint]) {
+    const candidate = src[key];
+    if (candidate) return candidate as string;
   }
+  return src.fallback;
 };
 
 export const buildSizes = (sizes?: ResponsiveImageSizes | string): string => {

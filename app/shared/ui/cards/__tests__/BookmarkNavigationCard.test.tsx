@@ -14,7 +14,7 @@ jest.mock('next/link', (): unknown => {
   }: MockProps<
     React.AnchorHTMLAttributes<HTMLAnchorElement> & { scroll?: boolean; href: string }
   >): React.JSX.Element => {
-    const { scroll: _scroll, ...rest } = props;
+    const { ...rest } = props;
     return (
       <a
         href={href}

@@ -42,8 +42,8 @@ export const useTafsirSelection = (domainTafsirs: Tafsir[]): UseTafsirSelectionR
   }, [domainTafsirs]);
 
   const languageSort = useCallback(
-    (a: string, b: string) => {
-      const getDomainTafsir = (lang: string) =>
+    (a: string, b: string): number => {
+      const getDomainTafsir = (lang: string): Tafsir | undefined =>
         domainTafsirs.find((t) => t.formattedLanguage === lang);
 
       const tafsirA = getDomainTafsir(a);

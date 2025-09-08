@@ -94,7 +94,7 @@ test('renders API data', async () => {
 `;
 
   await writeFile(`${dir}/__tests__/${pascal}Page.test.tsx`, test);
-  console.log(`Generated feature '${name}' at ${dir}`);
+  console.warn(`Generated feature '${name}' at ${dir}`);
 }
 
 main().catch((err) => {

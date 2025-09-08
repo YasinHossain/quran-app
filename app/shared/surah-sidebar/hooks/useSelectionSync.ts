@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 
 import { getJuzByPage, getSurahByPage, JUZ_START_PAGES } from '@/lib/utils/surah-navigation';
 
@@ -16,7 +16,14 @@ export const useSelectionSync = ({
   currentJuzId,
   currentPageId,
   chapters,
-}: Args) => {
+}: Args): {
+  selectedSurahId: number | null;
+  setSelectedSurahId: Dispatch<SetStateAction<number | null>>;
+  selectedJuzId: number | null;
+  setSelectedJuzId: Dispatch<SetStateAction<number | null>>;
+  selectedPageId: number | null;
+  setSelectedPageId: Dispatch<SetStateAction<number | null>>;
+} => {
   const [selectedSurahId, setSelectedSurahId] = useState<number | null>(currentSurahId ?? null);
   const [selectedJuzId, setSelectedJuzId] = useState<number | null>(currentJuzId ?? null);
   const [selectedPageId, setSelectedPageId] = useState<number | null>(currentPageId ?? null);

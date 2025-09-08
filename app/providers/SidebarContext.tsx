@@ -78,7 +78,7 @@ const useSidebarToggles = (): SidebarToggles => {
 const useSidebarContextValue = (
   toggles: SidebarToggles,
   positions: ReturnType<typeof useSidebarScrollPositions>
-) =>
+): SidebarContextType =>
   useMemo(
     () => ({
       ...toggles,

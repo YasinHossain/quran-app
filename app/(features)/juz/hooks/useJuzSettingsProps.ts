@@ -8,7 +8,14 @@ export function useJuzSettingsProps(
   args: {
     t: (key: string) => string;
   } & Pick<ReturnType<typeof useJuzData>, 'settings' | 'translationOptions' | 'wordLanguageOptions'>
-) {
+): {
+  readonly isTranslationPanelOpen: boolean;
+  readonly setIsTranslationPanelOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  readonly isWordPanelOpen: boolean;
+  readonly setIsWordPanelOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  readonly selectedTranslationName: string;
+  readonly selectedWordLanguageName: string;
+} {
   const { settings, translationOptions, wordLanguageOptions, t } = args;
 
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);

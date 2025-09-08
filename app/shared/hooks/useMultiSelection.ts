@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useMemo } from 'react';
 
 import {
   createClear,
@@ -20,21 +20,21 @@ export function useMultiSelection<T>(
   const { defaultSelected = [], maxSelection, onSelectionChange } = options;
   const { selected, setSelected } = useSelectionState(defaultSelected, onSelectionChange);
 
-  const select = useCallback(createSelect<T>(setSelected, maxSelection), [
-    setSelected,
-    maxSelection,
-  ]);
-  const deselect = useCallback(createDeselect<T>(setSelected), [setSelected]);
-  const toggle = useCallback(createToggle<T>(setSelected, maxSelection), [
-    setSelected,
-    maxSelection,
-  ]);
-  const clear = useCallback(createClear<T>(setSelected), [setSelected]);
-  const selectAll = useCallback(createSelectAll<T>(setSelected, maxSelection), [
-    setSelected,
-    maxSelection,
-  ]);
-  const isSelected = useCallback(createIsSelected<T>(selected), [selected]);
+  const select = useMemo(
+    () => createSelect<T>(setSelected, maxSelection),
+    [setSelected, maxSelection]
+  );
+  const deselect = useMemo(() => createDeselect<T>(setSelected), [setSelected]);
+  const toggle = useMemo(
+    () => createToggle<T>(setSelected, maxSelection),
+    [setSelected, maxSelection]
+  );
+  const clear = useMemo(() => createClear<T>(setSelected), [setSelected]);
+  const selectAll = useMemo(
+    () => createSelectAll<T>(setSelected, maxSelection),
+    [setSelected, maxSelection]
+  );
+  const isSelected = useMemo(() => createIsSelected<T>(selected), [selected]);
 
   const hasSelection = selected.length > 0;
   const selectionCount = selected.length;

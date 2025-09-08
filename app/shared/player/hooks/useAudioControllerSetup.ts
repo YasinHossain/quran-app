@@ -28,7 +28,10 @@ export function useAudioControllerSetup({
   repeatOptions,
   onNext,
   onPrev,
-}: Options) {
+}: Options): {
+  readonly controls: { togglePlay: () => void; setSeek: (s: number) => void };
+  readonly handleEnded: () => void;
+} {
   const controls = usePlayerControls({
     interactable: timing.interactable,
     isPlaying,

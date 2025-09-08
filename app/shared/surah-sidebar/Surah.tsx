@@ -21,7 +21,7 @@ export const Surah = ({
   setSelectedJuzId,
   rememberScroll,
   isTafsirPath,
-}: Props) => (
+}: Props): React.JSX.Element => (
   <ul className="space-y-2">
     {chapters.map((chapter) => {
       const isActive = chapter.id === selectedSurahId;

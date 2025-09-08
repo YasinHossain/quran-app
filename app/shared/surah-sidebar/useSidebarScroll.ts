@@ -18,7 +18,12 @@ export const useSidebarScroll = ({
   selectedSurahId,
   selectedJuzId,
   selectedPageId,
-}: Options) => {
+}: Options): {
+  scrollRef: React.RefObject<HTMLDivElement>;
+  handleScroll: (tab: TabKey) => void;
+  prepareForTabSwitch: (nextTab: TabKey) => void;
+  rememberScroll: (tab: TabKey) => void;
+} => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const {
     surahScrollTop,
@@ -68,12 +73,12 @@ export const useSidebarScroll = ({
     },
   });
 
-  const rememberScroll = (tab: TabKey) => {
+  const rememberScroll = (tab: TabKey): void => {
     persistRememberScroll(tab);
     skipNextCentering(tab);
   };
 
-  const prepareForTabSwitch = (nextTab: TabKey) => {
+  const prepareForTabSwitch = (nextTab: TabKey): void => {
     persistencePrepare();
     centeringPrepare(nextTab);
   };

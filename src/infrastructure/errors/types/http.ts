@@ -23,14 +23,51 @@ export class ConflictError extends ApplicationError {
 }
 
 export class ApiError extends ApplicationError {
+  public readonly endpoint: string;
+
+  constructor(init: {
+    message: string;
+    endpoint: string;
+    statusCode?: number;
+    context?: Record<string, unknown>;
+    cause?: Error;
+  });
   constructor(
     message: string,
-    public readonly endpoint: string,
-    statusCode: number = 500,
+    endpoint: string,
+    statusCode?: number,
     context?: Record<string, unknown>,
     cause?: Error
-  ) {
-    super(message, 'API_ERROR', statusCode, true, { endpoint, ...context }, cause);
+  );
+  constructor(...args: unknown[]) {
+    const { message, endpoint, statusCode, context, cause } =
+      args.length === 1 && typeof args[0] === 'object' && args[0] !== null
+        ? (args[0] as {
+            message: string;
+            endpoint: string;
+            statusCode?: number;
+            context?: Record<string, unknown>;
+            cause?: Error;
+          })
+        : (() => {
+            const [message, endpoint, statusCode, context, cause] = args as [
+              string,
+              string,
+              number?,
+              Record<string, unknown>?,
+              Error?,
+            ];
+            return { message, endpoint, statusCode, context, cause };
+          })();
+    super({
+      message,
+      code: 'API_ERROR',
+      statusCode,
+      isOperational: true,
+      context: { endpoint, ...context },
+      cause,
+    });
+    this.endpoint = endpoint;
   }
 
   getUserMessage(): string {

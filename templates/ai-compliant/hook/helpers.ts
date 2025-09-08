@@ -27,7 +27,6 @@ export function clearCachedData(key: string): void {
 
 export function transformHookData(
   data: HookData,
-  settings: Record<string, unknown>,
 ): HookData {
   return data;
 }

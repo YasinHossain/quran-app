@@ -11,7 +11,7 @@ export const useLoggedCallback = <A extends unknown[], R>(
   fn: (...args: A) => Promise<R>,
   message: string,
   options: Options<R> = {}
-) => {
+): ((...args: A) => Promise<R>) => {
   const { defaultValue, rethrow } = options;
   return useCallback(
     async (...args: A): Promise<R> => {

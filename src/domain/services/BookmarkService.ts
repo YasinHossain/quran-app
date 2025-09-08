@@ -23,13 +23,40 @@ export class BookmarkService {
   /**
    * Creates a bookmark for a verse
    */
+  async bookmarkVerse(params: {
+    userId: string;
+    surahId: number;
+    ayahNumber: number;
+    notes?: string;
+    tags?: string[];
+  }): Promise<Bookmark>;
   async bookmarkVerse(
     userId: string,
     surahId: number,
     ayahNumber: number,
     notes?: string,
-    tags: string[] = []
-  ): Promise<Bookmark> {
+    tags?: string[]
+  ): Promise<Bookmark>;
+  async bookmarkVerse(...args: unknown[]): Promise<Bookmark> {
+    const { userId, surahId, ayahNumber, notes, tags } =
+      args.length === 1 && typeof args[0] === 'object' && args[0] !== null
+        ? (args[0] as {
+            userId: string;
+            surahId: number;
+            ayahNumber: number;
+            notes?: string;
+            tags?: string[];
+          })
+        : (() => {
+            const [userId, surahId, ayahNumber, notes, tags] = args as [
+              string,
+              number,
+              number,
+              string?,
+              string[]?,
+            ];
+            return { userId, surahId, ayahNumber, notes, tags };
+          })();
     // Verify verse exists
     const verse = await this.verseRepository.findBySurahAndAyah(surahId, ayahNumber);
     if (!verse) {
@@ -44,7 +71,15 @@ export class BookmarkService {
     }
 
     // Create new bookmark
-    const bookmark = new Bookmark(uuidv4(), userId, verse.id, position, new Date(), notes, tags);
+    const bookmark = new Bookmark({
+      id: uuidv4(),
+      userId,
+      verseId: verse.id,
+      position,
+      createdAt: new Date(),
+      notes,
+      tags,
+    });
 
     await this.bookmarkRepository.save(bookmark);
     return bookmark;

@@ -1,25 +1,25 @@
 import type { RuleResult } from './rules';
 
 export function report(result: RuleResult): void {
-  console.log('\n📋 ARCHITECTURE COMPLIANCE REPORT\n');
+  console.warn('\n📋 ARCHITECTURE COMPLIANCE REPORT\n');
 
   if (result.passed.length) {
-    console.log('✅ PASSED FILES:');
+    console.warn('✅ PASSED FILES:');
     for (const file of result.passed) {
-      console.log(`  ${file}`);
+      console.warn(`  ${file}`);
     }
 
-    console.log('');
+    console.warn('');
   }
 
   if (result.violations.length) {
-    console.log('❌ VIOLATIONS:');
+    console.error('❌ VIOLATIONS:');
     for (const v of result.violations) {
-      console.log(`  ${v.file}: ${v.message}`);
+      console.error(`  ${v.file}: ${v.message}`);
     }
 
-    console.log('');
+    console.warn('');
   }
 
-  console.log(`Summary: ${result.passed.length} passed, ${result.violations.length} violations`);
+  console.warn(`Summary: ${result.passed.length} passed, ${result.violations.length} violations`);
 }

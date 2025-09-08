@@ -7,15 +7,50 @@
 export class ApplicationError extends Error {
   public readonly timestamp: Date;
   public readonly stackTrace?: string;
+  public readonly code!: string;
+  public readonly statusCode!: number;
+  public readonly isOperational!: boolean;
+  public readonly context?: Record<string, unknown>;
+  public readonly cause?: Error;
 
+  constructor(init: {
+    message: string;
+    code: string;
+    statusCode?: number;
+    isOperational?: boolean;
+    context?: Record<string, unknown>;
+    cause?: Error;
+  });
   constructor(
     message: string,
-    public readonly code: string,
-    public readonly statusCode: number = 500,
-    public readonly isOperational: boolean = true,
-    public readonly context?: Record<string, unknown>,
-    public readonly cause?: Error
-  ) {
+    code: string,
+    statusCode?: number,
+    isOperational?: boolean,
+    context?: Record<string, unknown>,
+    cause?: Error
+  );
+  constructor(...args: unknown[]) {
+    const { message, code, statusCode, isOperational, context, cause } =
+      args.length === 1 && typeof args[0] === 'object' && args[0] !== null
+        ? (args[0] as {
+            message: string;
+            code: string;
+            statusCode?: number;
+            isOperational?: boolean;
+            context?: Record<string, unknown>;
+            cause?: Error;
+          })
+        : (() => {
+            const [message, code, statusCode, isOperational, context, cause] = args as [
+              string,
+              string,
+              number?,
+              boolean?,
+              Record<string, unknown>?,
+              Error?,
+            ];
+            return { message, code, statusCode, isOperational, context, cause };
+          })();
     super(message);
 
     if (Error.captureStackTrace) {
@@ -25,6 +60,11 @@ export class ApplicationError extends Error {
     this.name = this.constructor.name;
     this.timestamp = new Date();
     this.stackTrace = this.stack;
+    this.code = code;
+    this.statusCode = statusCode ?? 500;
+    this.isOperational = isOperational ?? true;
+    this.context = context;
+    this.cause = cause;
   }
 
   toJSON(): Record<string, unknown> {

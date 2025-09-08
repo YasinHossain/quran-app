@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { Folder } from '@/types';
+import { Bookmark, Folder } from '@/types';
 
 interface UseBookmarkTabParams {
   verseId: string;
@@ -15,7 +15,15 @@ export function useBookmarkTab({
   newFolderName,
   onNewFolderNameChange,
   onToggleCreateFolder,
-}: UseBookmarkTabParams) {
+}: UseBookmarkTabParams): {
+  readonly folders: Folder[];
+  readonly filteredFolders: Folder[];
+  readonly findBookmark: (verseId: string) => Bookmark | undefined;
+  readonly searchQuery: string;
+  readonly setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+  readonly handleFolderSelect: (folder: Folder) => void;
+  readonly handleCreateFolder: () => void;
+} {
   const { folders, findBookmark, addBookmark, removeBookmark, createFolder } = useBookmarks();
   const [searchQuery, setSearchQuery] = useState('');
 

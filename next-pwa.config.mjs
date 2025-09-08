@@ -1,4 +1,4 @@
-export default {
+const nextPwaConfig = {
   dest: 'public',
   disable: process.env.NODE_ENV === 'development' || process.env.NEXT_DISABLE_PWA === 'true',
   runtimeCaching: [
@@ -29,3 +29,5 @@ export default {
     },
   ],
 };
+
+export default nextPwaConfig;

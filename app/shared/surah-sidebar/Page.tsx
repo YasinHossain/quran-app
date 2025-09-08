@@ -21,7 +21,7 @@ export const Page = ({
   setSelectedJuzId,
   setSelectedSurahId,
   rememberScroll,
-}: Props) => (
+}: Props): React.JSX.Element => (
   <ul className="space-y-2">
     {pages.map((p) => {
       const isActive = p === selectedPageId;

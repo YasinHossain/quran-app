@@ -3,7 +3,9 @@ import { Tafsir } from '@/src/domain/entities/Tafsir';
 
 import { useLoggedCallback } from './useLoggedCallback';
 
-export const useTafsirSearch = (useCase: GetTafsirResourcesUseCase) =>
+export const useTafsirSearch = (
+  useCase: GetTafsirResourcesUseCase
+): ((searchTerm: string) => Promise<Tafsir[]>) =>
   useLoggedCallback((searchTerm: string) => useCase.search(searchTerm), 'Error searching tafsirs', {
     defaultValue: [] as Tafsir[],
   });

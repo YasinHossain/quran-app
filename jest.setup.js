@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import '@testing-library/jest-dom';
 import 'cross-fetch/polyfill';
 import { jest } from '@jest/globals';
@@ -18,15 +19,18 @@ class IntersectionObserverMock {
   constructor(cb) {
     this.cb = cb;
   }
-  /** @param {Element} el @returns {void} */
+
+  /** @type {(el: Element) => void} */
   observe = (el) => {
     if (this.cb) {
       this.cb([{ isIntersecting: true, target: el }]);
     }
   };
-  /** @returns {void} */
+
+  /** @type {() => void} */
   unobserve = () => {};
-  /** @returns {void} */
+
+  /** @type {() => void} */
   disconnect = () => {};
 }
 

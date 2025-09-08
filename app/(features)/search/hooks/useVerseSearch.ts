@@ -5,7 +5,11 @@ import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import type { Verse as VerseType } from '@/types';
 
-export function useVerseSearch(query: string) {
+export function useVerseSearch(query: string): {
+  readonly verses: VerseType[];
+  readonly loading: boolean;
+  readonly error: string | null;
+} {
   const [verses, setVerses] = useState<VerseType[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

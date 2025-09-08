@@ -36,4 +36,4 @@ const darkVars = baseKeys
 const css = `:root {\n${rootVars}\n}\n\n.dark {\n${darkVars}\n}\n`;
 
 writeFileSync(themePath, css);
-console.log('Generated theme tokens.');
+console.warn('Generated theme tokens.');

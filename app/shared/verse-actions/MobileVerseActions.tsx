@@ -28,7 +28,7 @@ export const MobileVerseActions = ({
   const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
   const handleShare = onShare || defaultShare;
 
-  const handleBookmarkClick = () => {
+  const handleBookmarkClick = (): void => {
     if (showRemove && onBookmark) {
       onBookmark();
     } else {

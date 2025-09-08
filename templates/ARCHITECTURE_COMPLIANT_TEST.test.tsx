@@ -48,7 +48,7 @@ jest.mock('@/lib/api/client', () => ({
 
 jest.mock('@/lib/utils/cn', () => ({
   transformData: jest.fn((data) => data),
-  applySettings: jest.fn((text, settings) => text),
+  applySettings: jest.fn((text) => text),
 }));
 
 jest.mock('@/lib/text/sanitizeHtml', () => ({

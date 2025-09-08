@@ -2,13 +2,24 @@ import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisib
 import { useCoverAndTrack } from '@/app/shared/hooks/useCoverAndTrack';
 
 import type { useJuzData } from './useJuzData';
+import type { Track } from '@/app/shared/player/types';
 
 export function useJuzPlayerBarProps(
   args: Pick<
     ReturnType<typeof useJuzData>,
     'activeVerse' | 'reciter' | 'isPlayerVisible' | 'handleNext' | 'handlePrev'
   >
-) {
+): {
+  isHidden: boolean;
+  playerBarProps: {
+    readonly isHidden: boolean;
+    readonly track: Track | null;
+    readonly activeVerseExists: boolean;
+    readonly isPlayerVisible: boolean;
+    readonly onNext: () => void;
+    readonly onPrev: () => void;
+  };
+} {
   const { activeVerse, reciter, isPlayerVisible, handleNext, handlePrev } = args;
 
   const { isHidden } = useHeaderVisibility();

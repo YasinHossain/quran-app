@@ -25,10 +25,10 @@ export const ResourceList = <T extends Resource>({
   selectedIds,
   onToggle,
   height,
-}: ResourceListProps<T>) => {
+}: ResourceListProps<T>): React.JSX.Element => {
   const itemCount = resources.length;
 
-  const Row = ({ index, style }: ListChildComponentProps) => {
+  const Row = ({ index, style }: ListChildComponentProps): React.JSX.Element => {
     const item = resources[index];
     return (
       <div style={style}>

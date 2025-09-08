@@ -15,7 +15,7 @@ export function useJuzContentProps(
     | 'isValidating'
     | 'isReachingEnd'
   >
-) {
+): typeof args {
   const {
     juzId,
     isLoading,
