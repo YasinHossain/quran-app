@@ -57,16 +57,16 @@ export const config: Config = (() => {
   try {
     return configSchema.parse(rawConfig);
   } catch (error) {
-    console.error('❌ Configuration validation failed:', error);
+    let message = '❌ Configuration validation failed';
 
     if (error instanceof z.ZodError) {
-      console.error('Configuration errors:');
-      error.errors.forEach((err) => {
-        console.error(`  - ${err.path.join('.')}: ${err.message}`);
-      });
+      const details = error.errors
+        .map((err) => `  - ${err.path.join('.')}: ${err.message}`)
+        .join('\n');
+      message += `\n${details}`;
     }
 
-    throw new Error('Invalid application configuration. Please check your environment variables.');
+    throw new Error(message);
   }
 })();
 
@@ -95,14 +95,16 @@ export const shouldLog = (level: string): boolean => {
  * Call this during application initialisation to ensure all required
  * configuration is present and valid.
  */
-export function validateConfig(): void {
+export function validateConfig(): string[] {
+  const warnings: string[] = [];
+
   if (isProduction) {
     if (!config.monitoring.sentry?.dsn && config.features.enableErrorTracking) {
-      console.warn('⚠️  Error tracking is enabled but no Sentry DSN is configured');
+      warnings.push('⚠️  Error tracking is enabled but no Sentry DSN is configured');
     }
 
     if (!config.monitoring.analytics?.googleAnalyticsId && config.features.enableAnalytics) {
-      console.warn('⚠️  Analytics is enabled but no Google Analytics ID is configured');
+      warnings.push('⚠️  Analytics is enabled but no Google Analytics ID is configured');
     }
   }
 
@@ -111,6 +113,8 @@ export function validateConfig(): void {
   } catch {
     throw new Error('Invalid Quran API base URL');
   }
+
+  return warnings;
 }
 
 /**

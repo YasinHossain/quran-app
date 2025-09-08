@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -12,16 +11,19 @@ import {
   BREAKPOINTS
 } from '@/app/testUtils/responsiveTestUtils';
 
-interface ComponentSectionParams {
-  Component: React.ComponentType<any>;
-  defaultProps: any;
-  mockData?: any;
+interface ComponentSectionParams<P> {
+  Component: React.ComponentType<P>;
+  defaultProps: P;
 }
 
-export function architectureComplianceSection({
+interface ComponentSectionWithMockData<P> extends ComponentSectionParams<P> {
+  mockData: { content: string };
+}
+
+export function architectureComplianceSection<P>({
   Component,
   defaultProps
-}: ComponentSectionParams) {
+}: ComponentSectionParams<P>): void {
   describe('🏗️ Architecture Compliance', () => {
     it('avoids unnecessary re-renders', () => {
       const tester = new PerformanceTester(Component);
@@ -35,10 +37,10 @@ export function architectureComplianceSection({
   });
 }
 
-export function responsiveDesignSection({
+export function responsiveDesignSection<P>({
   Component,
   defaultProps
-}: ComponentSectionParams) {
+}: ComponentSectionParams<P>): void {
   describe('📱 Mobile-First Responsive Design', () => {
     it('applies responsive classes', () => {
       renderWithProviders(<Component {...defaultProps} />);
@@ -54,11 +56,11 @@ export function responsiveDesignSection({
   });
 }
 
-export function contextIntegrationSection({
+export function contextIntegrationSection<P>({
   Component,
   defaultProps,
   mockData
-}: ComponentSectionParams) {
+}: ComponentSectionWithMockData<P>): void {
   describe('🔄 Context Integration', () => {
     it('renders with context data', () => {
       renderWithProviders(<Component {...defaultProps} />);
@@ -67,10 +69,10 @@ export function contextIntegrationSection({
   });
 }
 
-export function performanceOptimizationSection({
+export function performanceOptimizationSection<P>({
   Component,
   defaultProps
-}: ComponentSectionParams) {
+}: ComponentSectionParams<P>): void {
   describe('⚡ Performance Optimization', () => {
     it('cleans up effects', () => {
       const { unmount } = renderWithProviders(<Component {...defaultProps} />);
@@ -79,10 +81,10 @@ export function performanceOptimizationSection({
   });
 }
 
-export function accessibilitySection({
+export function accessibilitySection<P>({
   Component,
   defaultProps
-}: ComponentSectionParams) {
+}: ComponentSectionParams<P>): void {
   describe('♿ Accessibility', () => {
     it('supports keyboard navigation', async () => {
       const user = userEvent.setup();
@@ -94,10 +96,10 @@ export function accessibilitySection({
   });
 }
 
-export function userInteractionsSection({
+export function userInteractionsSection<P>({
   Component,
   defaultProps
-}: ComponentSectionParams) {
+}: ComponentSectionParams<P>): void {
   describe('🎯 User Interactions', () => {
     it('handles clicks', () => {
       const mockOnAction = jest.fn();
@@ -110,10 +112,10 @@ export function userInteractionsSection({
   });
 }
 
-export function loadingStatesSection({
+export function loadingStatesSection<P>({
   Component,
   defaultProps
-}: ComponentSectionParams) {
+}: ComponentSectionParams<P>): void {
   describe('🔄 Loading States', () => {
     it('shows loading indicator', () => {
       renderWithProviders(<Component {...defaultProps} />);
@@ -122,10 +124,10 @@ export function loadingStatesSection({
   });
 }
 
-export function errorHandlingSection({
+export function errorHandlingSection<P>({
   Component,
   defaultProps
-}: ComponentSectionParams) {
+}: ComponentSectionParams<P>): void {
   describe('❌ Error Handling', () => {
     it('renders error state', () => {
       renderWithProviders(<Component {...defaultProps} />);
@@ -134,10 +136,10 @@ export function errorHandlingSection({
   });
 }
 
-export function integrationTestSection({
+export function integrationTestSection<P>({
   Component,
   defaultProps
-}: ComponentSectionParams) {
+}: ComponentSectionParams<P>): void {
   describe('🚀 Integration Tests', () => {
     it('works end-to-end', () => {
       renderWithProviders(<Component {...defaultProps} />);

@@ -1,6 +1,8 @@
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { FlatCompat } from '@eslint/eslintrc';
+import js from '@eslint/js';
+import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths';
 import unusedImports from 'eslint-plugin-unused-imports';
 import importPlugin from 'eslint-plugin-import';
 import { noRawColorClasses } from './tools/scripts/eslint/no-raw-color-classes.mjs';
@@ -22,8 +24,18 @@ const tokenRules = {
 
 const eslintConfig = [
   {
-    ignores: ['mcp-server', '.next', 'node_modules', 'out', 'coverage', 'next-env.d.ts'],
+    ignores: [
+      'mcp-server',
+      '.next',
+      'node_modules',
+      'out',
+      'coverage',
+      'next-env.d.ts',
+      'public',
+      'tools/ai',
+    ],
   },
+  js.configs.recommended,
   ...compat.extends(
     'next/core-web-vitals',
     'next/typescript',
@@ -34,6 +46,7 @@ const eslintConfig = [
   {
     files: ['**/*.{js,ts,jsx,tsx}'],
     plugins: {
+      'no-relative-import-paths': noRelativeImportPaths,
       'unused-imports': unusedImports,
       import: importPlugin,
     },
@@ -84,6 +97,14 @@ const eslintConfig = [
       ],
       'import/no-cycle': 'error',
       'unused-imports/no-unused-imports': 'error',
+      'no-relative-import-paths/no-relative-import-paths': [
+        'warn',
+        {
+          allowSameFolder: true,
+          rootDir: '.',
+          prefix: '@',
+        },
+      ],
 
       // TypeScript strictness
       '@typescript-eslint/no-explicit-any': 'error',

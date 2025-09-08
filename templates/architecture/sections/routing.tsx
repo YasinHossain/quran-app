@@ -1,18 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { screen } from '@testing-library/react';
 import React from 'react';
 
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 
-interface RoutingSectionParams {
-  Component: React.ComponentType<any>;
-  defaultProps: any;
+interface RoutingSectionParams<P> {
+  Component: React.ComponentType<P>;
+  defaultProps: P;
 }
 
-export function routingSection({
+export function routingSection<P>({
   Component,
   defaultProps
-}: RoutingSectionParams) {
+}: RoutingSectionParams<P>): void {
   describe('🚦 Routing', () => {
     it('renders correct route', () => {
       renderWithProviders(<Component {...defaultProps} />);

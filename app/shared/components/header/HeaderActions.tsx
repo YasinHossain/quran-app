@@ -38,9 +38,9 @@ export function HeaderActions(): JSX.Element {
         aria-label="Toggle theme"
       >
         {theme === 'dark' ? (
-          <IconSun size={18} className="text-status-warning" />
+          <IconSun size={18} className="text-accent" />
         ) : (
-          <IconMoon size={18} className="text-muted" />
+          <IconMoon size={18} className="text-accent" />
         )}
       </button>
     </div>

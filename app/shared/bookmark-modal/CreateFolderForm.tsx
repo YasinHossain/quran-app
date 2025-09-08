@@ -39,7 +39,7 @@ export const CreateFolderForm = ({
         onChange={(e) => onNameChange(e.target.value)}
         placeholder="Folder name"
         className={cn(
-          'flex-1 bg-transparent text-foreground placeholder-muted',
+          'flex-1 bg-surface/0 text-foreground placeholder-muted',
           'focus:outline-none'
         )}
       />

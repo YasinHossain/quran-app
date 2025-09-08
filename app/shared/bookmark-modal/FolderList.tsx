@@ -58,8 +58,9 @@ export const FolderList = ({
             <div
               className={cn(
                 'flex-shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center',
-                folder.color ? `bg-[${folder.color}]` : 'bg-surface-secondary'
+                !folder.color && 'bg-surface-secondary'
               )}
+              style={folder.color ? { backgroundColor: folder.color } : undefined}
             >
               <FolderIcon size={20} className={isSelected ? 'text-accent' : 'text-foreground'} />
             </div>

@@ -7,12 +7,12 @@ import { cn } from '@/lib/utils/cn';
 export const BUTTON_VARIANTS = {
   primary: 'bg-accent text-on-accent hover:bg-accent-hover focus:ring-accent/20',
   secondary: 'bg-surface text-foreground hover:bg-interactive-hover border border-border',
-  ghost: 'bg-transparent text-foreground hover:bg-interactive-hover',
-  outline: 'bg-transparent text-foreground border border-border hover:bg-interactive-hover',
+  ghost: 'bg-surface/0 text-foreground hover:bg-interactive-hover',
+  outline: 'bg-surface/0 text-foreground border border-border hover:bg-interactive-hover',
   destructive: 'bg-error text-on-accent hover:bg-error/90 focus:ring-error/20',
-  icon: 'bg-transparent text-foreground hover:bg-interactive-hover hover:text-accent hover:-translate-y-px active:scale-95 active:bg-surface/10 focus:ring-accent/35',
+  icon: 'bg-surface/0 text-foreground hover:bg-interactive-hover hover:text-accent hover:-translate-y-px active:scale-95 active:bg-surface/10 focus:ring-accent/35',
   'icon-round':
-    'bg-transparent text-foreground hover:bg-interactive-hover hover:text-accent hover:-translate-y-px active:scale-95 active:bg-surface/10 focus:ring-accent/35 rounded-full',
+    'bg-surface/0 text-foreground hover:bg-interactive-hover hover:text-accent hover:-translate-y-px active:scale-95 active:bg-surface/10 focus:ring-accent/35 rounded-full',
 } as const;
 
 export const BUTTON_SIZES = {

@@ -207,8 +207,8 @@ class AITestGenerator {
 
       case 'repository':
         return `  let repository: ${className};
-  let mockApiClient: jest.Mocked<any>;
-  let mockCache: jest.Mocked<any>;
+  let mockApiClient: jest.Mocked<Record<string, unknown>>;
+  let mockCache: jest.Mocked<Record<string, unknown>>;
 
   beforeEach(() => {
     mockApiClient = MockHttpClient.create();

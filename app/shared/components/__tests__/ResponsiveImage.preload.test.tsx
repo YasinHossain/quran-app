@@ -18,7 +18,7 @@ describe('useImagePreload', () => {
     created = [];
     originalImage = window.Image;
     // @ts-expect-error override for testing
-    window.Image = MockImage as any;
+    window.Image = MockImage as unknown as typeof Image;
   });
 
   afterEach(() => {

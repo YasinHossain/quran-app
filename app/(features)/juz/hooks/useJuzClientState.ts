@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
+import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useCoverAndTrack } from '@/app/shared/hooks/useCoverAndTrack';
 import { useSelectedNames } from '@/app/shared/hooks/useSelectedNames';
 
@@ -72,4 +72,3 @@ export function useJuzClientState(juzId: string, t: (key: string) => string) {
 
   return { isHidden, contentProps, settingsProps, playerBarProps } as const;
 }
-

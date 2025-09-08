@@ -77,9 +77,9 @@ export const ThemeToggle = ({
       aria-label="Toggle Theme"
     >
       {currentTheme === 'dark' ? (
-        <SunIcon className="w-5 h-5 text-status-warning" />
+        <SunIcon className="w-5 h-5 text-accent" />
       ) : (
-        <MoonIcon className="w-5 h-5 text-content-secondary" />
+        <MoonIcon className="w-5 h-5 text-accent" />
       )}
     </Button>
   );

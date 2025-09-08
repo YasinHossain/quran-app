@@ -5,6 +5,7 @@ import {
   MemoryTransport,
   LogLevel,
 } from '../../../../src/infrastructure/monitoring/Logger';
+import { Chapter } from '../../../../types';
 
 describe('VerseRepository findById', () => {
   let repository: ReturnType<typeof createRepository>;
@@ -170,7 +171,7 @@ describe('VerseRepository findByRevelationType', () => {
         revelation_place: 'madinah',
         verses_count: 286,
       },
-    ] as any);
+    ] as Chapter[]);
     mockApiVerses.getVersesByChapter.mockResolvedValue({ verses: [mockApiVerse], totalPages: 1 });
 
     const verses = await repository.findByRevelationType('makki');

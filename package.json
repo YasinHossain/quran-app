@@ -14,7 +14,7 @@
     "build": "rm -f public/sw.js && next build",
     "build:analyze": "ANALYZE=true npm run build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint . --fix",
     "lint:fix": "next lint --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -23,9 +23,7 @@
     "test:architecture": "jest --testPathPattern=architecture",
     "test:responsive": "jest --testPathPattern=responsive",
     "format": "prettier --write .",
-    "lint": "eslint . --fix",
     "type-check": "tsc --noEmit",
-    "test": "jest",
     "check": "npm run format && npm run lint && npm run type-check && npm run test",
     "clean": "rm -rf .next out coverage",
     "storybook": "storybook dev -p 6006",
@@ -76,6 +74,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@eslint/js": "^9",
     "@playwright/test": "^1.55.0",
     "@rollup/plugin-terser": "^0.4.4",
     "@size-limit/preset-app": "^11.2.0",
@@ -101,6 +100,7 @@
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-prettier": "^5.5.3",
+    "eslint-plugin-no-relative-import-paths": "^1.6.1",
     "eslint-plugin-unused-imports": "^4.2.0",
     "jest": "^30.0.5",
     "jest-environment-jsdom": "^30.0.5",
@@ -114,7 +114,7 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.7.2",
     "viewport-units-buggyfill": "^0.6.2",
-    "vscode-ripgrep": "^1.13.2",
+    "@vscode/ripgrep": "^1.15.14",
     "whatwg-fetch": "^3.6.20"
   },
   "size-limit": [

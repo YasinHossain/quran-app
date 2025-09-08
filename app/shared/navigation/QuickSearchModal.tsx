@@ -56,7 +56,7 @@ export const QuickSearchModal = memo(function QuickSearchModal({
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="Search verses, surahs, topics..."
-                  className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted text-lg"
+                  className="flex-1 bg-surface/0 outline-none text-foreground placeholder:text-muted text-lg"
                 />
                 <button
                   onClick={onClose}
