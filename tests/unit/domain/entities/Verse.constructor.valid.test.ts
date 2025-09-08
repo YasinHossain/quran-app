@@ -1,3 +1,5 @@
+import { Translation } from '@/src/domain/value-objects/Translation';
+
 import {
   validSurahId,
   validAyahNumber,
@@ -5,7 +7,6 @@ import {
   validUthmaniText,
   createVerse,
 } from './Verse/test-utils';
-import { Translation } from '@/src/domain/value-objects/Translation';
 
 describe('Verse constructor (valid cases)', () => {
   it('creates a valid verse with required parameters', () => {

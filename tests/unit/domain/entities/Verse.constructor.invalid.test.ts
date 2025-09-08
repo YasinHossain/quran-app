@@ -1,3 +1,5 @@
+import { Verse } from '@/src/domain/entities';
+
 import {
   validId,
   validSurahId,
@@ -5,7 +7,6 @@ import {
   validArabicText,
   validUthmaniText,
 } from './Verse/test-utils';
-import { Verse } from '@/src/domain/entities';
 
 describe('Verse constructor (invalid cases)', () => {
   it('throws error for empty ID', () => {

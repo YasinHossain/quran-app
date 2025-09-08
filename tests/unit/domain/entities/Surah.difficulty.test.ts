@@ -1,8 +1,6 @@
+import { getEstimatedReadingTime, getMemorizationDifficulty } from '@/src/domain/entities';
+
 import { createSurah } from './Surah/test-utils';
-import {
-  getEstimatedReadingTime,
-  getMemorizationDifficulty,
-} from '../../../../src/domain/entities';
 
 describe('Surah difficulty utilities', () => {
   describe('getMemorizationDifficulty', () => {

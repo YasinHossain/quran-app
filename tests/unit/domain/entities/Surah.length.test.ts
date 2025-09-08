@@ -1,5 +1,6 @@
-import { createSurah, RevelationType } from './Surah/test-utils';
 import { isLongSurah, isMediumSurah, isShortSurah } from '@/src/domain/entities';
+
+import { createSurah, RevelationType } from './Surah/test-utils';
 
 describe('Surah length classification', () => {
   it('classifies short Surah correctly (less than 20 verses)', () => {

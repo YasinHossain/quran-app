@@ -3,12 +3,11 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { memo } from 'react';
 
+import { CreateFolderForm } from '@/app/shared/bookmark-modal/CreateFolderForm';
+import { FolderSearch } from '@/app/shared/bookmark-modal/FolderSearch';
 import { PlusIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
-
-import { CreateFolderForm } from '../CreateFolderForm';
-import { FolderSearch } from '../FolderSearch';
 
 interface BookmarkTabHeaderProps {
   searchQuery: string;
@@ -52,7 +51,7 @@ export const BookmarkTabHeader = memo(function BookmarkTabHeader({
               'w-full flex items-center justify-center gap-3 p-4 border-2 border-dashed border-border rounded-2xl',
               'hover:border-accent hover:bg-accent/5 transition-colors text-muted hover:text-accent',
               touchClasses.target,
-              touchClasses.focus,
+              touchClasses.focus
             )}
             whileTap={{ scale: 0.98 }}
             initial={{ opacity: 0, y: -10 }}
@@ -67,4 +66,3 @@ export const BookmarkTabHeader = memo(function BookmarkTabHeader({
     </div>
   );
 });
-

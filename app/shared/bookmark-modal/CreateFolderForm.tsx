@@ -30,11 +30,9 @@ const ActionButtons = memo(function ActionButtons({
         disabled={!newFolderName.trim()}
         className={cn(
           'p-2 rounded-full transition-colors',
-          newFolderName.trim()
-            ? 'text-accent hover:bg-accent/10'
-            : 'text-muted cursor-not-allowed',
+          newFolderName.trim() ? 'text-accent hover:bg-accent/10' : 'text-muted cursor-not-allowed',
           touchClasses.target,
-          touchClasses.focus,
+          touchClasses.focus
         )}
         aria-label="Create folder"
       >
@@ -47,7 +45,7 @@ const ActionButtons = memo(function ActionButtons({
         className={cn(
           'p-2 rounded-full hover:bg-interactive text-muted transition-colors',
           touchClasses.target,
-          touchClasses.focus,
+          touchClasses.focus
         )}
         aria-label="Cancel"
       >
@@ -68,7 +66,7 @@ export const CreateFolderForm = memo(function CreateFolderForm({
       e.preventDefault();
       onCreateFolder();
     },
-    [onCreateFolder],
+    [onCreateFolder]
   );
 
   return (
@@ -86,11 +84,10 @@ export const CreateFolderForm = memo(function CreateFolderForm({
         placeholder="Folder name"
         className={cn(
           'flex-1 bg-surface/0 text-foreground placeholder-muted',
-          'focus:outline-none',
+          'focus:outline-none'
         )}
       />
       <ActionButtons newFolderName={newFolderName} onCancel={onCancel} />
     </motion.form>
   );
 });
-

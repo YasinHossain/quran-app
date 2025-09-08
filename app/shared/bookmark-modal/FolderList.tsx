@@ -66,11 +66,7 @@ const FolderListItem = memo(function FolderListItem({
   );
 });
 
-const EmptyState = memo(function EmptyState({
-  message,
-}: {
-  message: string;
-}): React.JSX.Element {
+const EmptyState = memo(function EmptyState({ message }: { message: string }): React.JSX.Element {
   return (
     <div className="text-center py-8">
       <div className="w-16 h-16 bg-surface-secondary rounded-full flex items-center justify-center mx-auto mb-4">
@@ -112,4 +108,3 @@ export const FolderList = memo(function FolderList({
     </div>
   );
 });
-

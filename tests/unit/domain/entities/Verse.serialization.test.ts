@@ -1,11 +1,7 @@
-import { validId, validArabicText, validUthmaniText, createVerse } from './Verse/test-utils';
-import {
-  Verse,
-  getWordCount,
-  getEstimatedReadingTime,
-  isSajdahVerse,
-} from '../../../../src/domain/entities';
+import { Verse, getWordCount, getEstimatedReadingTime, isSajdahVerse } from '@/src/domain/entities';
 import { Translation } from '@/src/domain/value-objects/Translation';
+
+import { validId, validArabicText, validUthmaniText, createVerse } from './Verse/test-utils';
 
 describe('Verse serialization', () => {
   it('converts to plain object with all properties', () => {

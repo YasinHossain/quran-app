@@ -2,10 +2,11 @@
 
 import { memo } from 'react';
 
-import { FolderList } from '../FolderList';
-import { BookmarkTabProps } from '../types';
+import { FolderList } from '@/app/shared/bookmark-modal/FolderList';
+import { BookmarkTabProps } from '@/app/shared/bookmark-modal/types';
+import { useBookmarkTab } from '@/app/shared/bookmark-modal/useBookmarkTab';
+
 import { BookmarkTabHeader } from './BookmarkTabHeader';
-import { useBookmarkTab } from '../useBookmarkTab';
 
 export const BookmarkTab = memo(function BookmarkTab({
   verseId,
@@ -55,4 +56,3 @@ export const BookmarkTab = memo(function BookmarkTab({
     </div>
   );
 });
-

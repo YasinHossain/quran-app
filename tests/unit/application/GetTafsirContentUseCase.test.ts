@@ -2,7 +2,7 @@ import { GetTafsirContentUseCase } from '@/src/application/use-cases/GetTafsirCo
 import {
   InvalidTafsirRequestError,
   TafsirContentLoadError,
-} from '../../../src/domain/errors/DomainErrors';
+} from '@/src/domain/errors/DomainErrors';
 import { ITafsirRepository } from '@/src/domain/repositories/ITafsirRepository';
 import { logger as Logger } from '@/src/infrastructure/monitoring/Logger';
 

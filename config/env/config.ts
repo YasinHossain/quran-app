@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 const envSchema = z.object({

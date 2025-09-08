@@ -1,5 +1,6 @@
-import { validId, validResourceId } from './Translation/test-utils';
 import { Translation } from '@/src/domain/value-objects/Translation';
+
+import { validId, validResourceId } from './Translation/test-utils';
 
 describe('Translation word and character count', () => {
   it('counts words across variations', () => {

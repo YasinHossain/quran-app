@@ -1,14 +1,4 @@
 import {
-  validId,
-  validName,
-  validArabicName,
-  validEnglishName,
-  validEnglishTranslation,
-  validNumberOfAyahs,
-  validRevelationType,
-  validRevelationOrder,
-} from './Surah/test-utils';
-import {
   Surah,
   RevelationType,
   getEstimatedReadingTime,
@@ -19,7 +9,18 @@ import {
   isMufassalSurah,
   isSevenLongSurah,
   isShortSurah,
-} from '../../../../src/domain/entities';
+} from '@/src/domain/entities';
+
+import {
+  validId,
+  validName,
+  validArabicName,
+  validEnglishName,
+  validEnglishTranslation,
+  validNumberOfAyahs,
+  validRevelationType,
+  validRevelationOrder,
+} from './Surah/test-utils';
 
 describe('Surah Entity - Revelation', () => {
   describe('revelation type methods', () => {

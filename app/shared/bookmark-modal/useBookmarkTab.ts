@@ -16,14 +16,13 @@ export function useBookmarkTab({
   onNewFolderNameChange,
   onToggleCreateFolder,
 }: UseBookmarkTabParams) {
-  const { folders, findBookmark, addBookmark, removeBookmark, createFolder } =
-    useBookmarks();
+  const { folders, findBookmark, addBookmark, removeBookmark, createFolder } = useBookmarks();
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredFolders = useMemo(() => {
     if (!searchQuery.trim()) return folders;
     return folders.filter((folder) =>
-      folder.name.toLowerCase().includes(searchQuery.toLowerCase()),
+      folder.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [folders, searchQuery]);
 
@@ -33,12 +32,11 @@ export function useBookmarkTab({
       if (existingBookmark?.folder.id === folder.id) {
         removeBookmark(verseId, folder.id);
       } else {
-        if (existingBookmark)
-          removeBookmark(verseId, existingBookmark.folder.id);
+        if (existingBookmark) removeBookmark(verseId, existingBookmark.folder.id);
         addBookmark(verseId, folder.id);
       }
     },
-    [verseId, findBookmark, removeBookmark, addBookmark],
+    [verseId, findBookmark, removeBookmark, addBookmark]
   );
 
   const handleCreateFolder = useCallback(() => {
@@ -46,12 +44,7 @@ export function useBookmarkTab({
     createFolder(newFolderName.trim());
     onNewFolderNameChange('');
     onToggleCreateFolder(false);
-  }, [
-    newFolderName,
-    createFolder,
-    onNewFolderNameChange,
-    onToggleCreateFolder,
-  ]);
+  }, [newFolderName, createFolder, onNewFolderNameChange, onToggleCreateFolder]);
 
   return {
     folders,
@@ -63,4 +56,3 @@ export function useBookmarkTab({
     handleCreateFolder,
   } as const;
 }
-

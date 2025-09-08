@@ -1,10 +1,11 @@
+import { BookmarkPosition } from '@/src/domain/value-objects/BookmarkPosition';
+
 import {
   validSurahId,
   validAyahNumber,
   validTimestamp,
   expectBookmarkPositionToThrow,
 } from './BookmarkPosition/test-utils';
-import { BookmarkPosition } from '@/src/domain/value-objects/BookmarkPosition';
 
 describe('BookmarkPosition constructor validation', () => {
   it('creates a valid BookmarkPosition with all parameters', () => {

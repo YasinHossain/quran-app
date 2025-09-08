@@ -5,6 +5,8 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import { useSettings } from '@/templates/ai-compliant/shared/contexts';
+
 import {
   apiCall,
   clearCachedData,
@@ -12,7 +14,6 @@ import {
   setCachedData,
   transformHookData,
 } from './helpers';
-import { useSettings } from '@/templates/ai-compliant/shared/contexts';
 
 import type { HookData, HookOptions, HookResult } from '@/types';
 

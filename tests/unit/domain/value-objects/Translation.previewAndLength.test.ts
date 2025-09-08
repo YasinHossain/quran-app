@@ -1,9 +1,14 @@
-import { validId, validResourceId } from './Translation/test-utils';
 import { Translation } from '@/src/domain/value-objects/Translation';
+
+import { validId, validResourceId } from './Translation/test-utils';
 
 describe('Translation preview and length', () => {
   it('getPreview returns full text when within limit and truncates long text', () => {
-    const short = new Translation({ id: validId, resourceId: validResourceId, text: 'Short text here' });
+    const short = new Translation({
+      id: validId,
+      resourceId: validResourceId,
+      text: 'Short text here',
+    });
     expect(short.getPreview(5)).toBe('Short text here');
 
     const longText = 'This is a very long text that should be truncated when preview is requested';

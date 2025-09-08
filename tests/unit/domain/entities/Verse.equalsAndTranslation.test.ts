@@ -1,6 +1,7 @@
-import { createVerse } from './Verse/test-utils';
 import { Verse } from '@/src/domain/entities';
 import { Translation } from '@/src/domain/value-objects/Translation';
+
+import { createVerse } from './Verse/test-utils';
 
 describe('Verse equals and withTranslation', () => {
   it('equals returns true for verses with same ID and false otherwise', () => {

@@ -1,5 +1,6 @@
-import { validId, validResourceId, testLanguageCodes } from './Translation/test-utils';
 import { Translation } from '@/src/domain/value-objects/Translation';
+
+import { validId, validResourceId, testLanguageCodes } from './Translation/test-utils';
 
 describe('Translation language and contains', () => {
   it('detects English language codes', () => {

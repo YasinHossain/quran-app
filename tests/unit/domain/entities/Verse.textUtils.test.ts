@@ -1,10 +1,11 @@
-import { validArabicText } from './Verse/test-utils';
 import {
   getMemorizationSegments,
   getEstimatedReadingTime,
   containsBismillah,
   getWordCount,
-} from '../../../../src/domain/entities';
+} from '@/src/domain/entities';
+
+import { validArabicText } from './Verse/test-utils';
 
 describe('Verse text utilities', () => {
   it('getMemorizationSegments splits Arabic text into segments', () => {

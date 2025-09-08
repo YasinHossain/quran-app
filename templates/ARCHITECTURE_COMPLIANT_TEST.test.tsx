@@ -9,7 +9,6 @@
 
 import { createPerformanceTestSuite } from '@/app/testUtils/performanceTestUtils';
 
-import { ExampleComponent } from '@/ExampleComponent';
 import {
   clearTestEnvironment,
   resetTestEnvironment,
@@ -18,6 +17,8 @@ import {
   runIntegrationTest,
   setupTestEnvironment,
 } from './architecture/test-utils';
+
+import { ExampleComponent } from '@/ExampleComponent';
 import { useExampleData } from '@/hooks/useExampleData';
 
 /**

@@ -1,4 +1,12 @@
 import {
+  Surah,
+  RevelationType,
+  getJuzNumbers,
+  isMufassalSurah,
+  isSevenLongSurah,
+} from '@/src/domain/entities';
+
+import {
   validName,
   validArabicName,
   validEnglishName,
@@ -6,13 +14,6 @@ import {
   validNumberOfAyahs,
   validRevelationType,
 } from './Surah/test-utils';
-import {
-  Surah,
-  RevelationType,
-  getJuzNumbers,
-  isMufassalSurah,
-  isSevenLongSurah,
-} from '../../../../src/domain/entities';
 
 describe('Surah Entity - Metrics', () => {
   describe('special Surah classifications', () => {

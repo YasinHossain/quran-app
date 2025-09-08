@@ -19,11 +19,7 @@ const modalVariants = {
   exit: { opacity: 0, scale: 0.95, y: 20 },
 };
 
-const Backdrop = memo(function Backdrop({
-  onClose,
-}: {
-  onClose: () => void;
-}): React.JSX.Element {
+const Backdrop = memo(function Backdrop({ onClose }: { onClose: () => void }): React.JSX.Element {
   return (
     <motion.div
       variants={backdropVariants}
@@ -74,7 +70,7 @@ const CloseButton = memo(function CloseButton({
         className={cn(
           'p-2 rounded-full hover:bg-interactive transition-colors',
           touchClasses.target,
-          touchClasses.focus,
+          touchClasses.focus
         )}
         aria-label="Close"
       >
@@ -107,11 +103,7 @@ export const BookmarkModal = memo(function BookmarkModal({
           <Backdrop onClose={onClose} />
           <ModalShell>
             <CloseButton onClose={onClose} />
-            <TabNavigation
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-              verseKey={verseKey}
-            />
+            <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} verseKey={verseKey} />
             <TabContent
               activeTab={activeTab}
               verseId={verseId}
@@ -129,4 +121,3 @@ export const BookmarkModal = memo(function BookmarkModal({
     </AnimatePresence>
   );
 });
-

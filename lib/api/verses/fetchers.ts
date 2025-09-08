@@ -2,6 +2,7 @@ import { apiFetch } from '@/lib/api/client';
 import { Verse } from '@/types';
 
 import { normalizeVerse, ApiVerse } from './normalize';
+
 import type { LanguageCode } from '@/lib/text/languageCodes';
 
 export interface PaginatedVerses {

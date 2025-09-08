@@ -1,11 +1,9 @@
-import { createMockBookmarkRepository, userId, verseId, bookmarkId } from './test-utils';
 import { Bookmark } from '@/src/domain/entities';
-import {
-  BookmarkNotFoundError,
-  UnauthorizedBookmarkError,
-} from '../../../../../src/domain/errors/DomainErrors';
+import { BookmarkNotFoundError, UnauthorizedBookmarkError } from '@/src/domain/errors/DomainErrors';
 import { BookmarkMutationService } from '@/src/domain/services/BookmarkMutationService';
 import { BookmarkPosition } from '@/src/domain/value-objects/BookmarkPosition';
+
+import { createMockBookmarkRepository, userId, verseId, bookmarkId } from './test-utils';
 
 describe('BookmarkMutationService updateNotes', () => {
   let service: BookmarkMutationService;

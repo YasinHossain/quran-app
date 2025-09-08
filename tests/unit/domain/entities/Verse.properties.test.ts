@@ -1,5 +1,6 @@
-import { validId, validArabicText, validUthmaniText } from './Verse/test-utils';
 import { Verse } from '@/src/domain/entities';
+
+import { validId, validArabicText, validUthmaniText } from './Verse/test-utils';
 
 describe('Verse properties', () => {
   it('verseKey returns correct format', () => {

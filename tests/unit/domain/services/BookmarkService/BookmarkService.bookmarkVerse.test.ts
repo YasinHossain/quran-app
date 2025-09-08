@@ -1,3 +1,7 @@
+import { Bookmark, Verse } from '@/src/domain/entities';
+import { BookmarkAlreadyExistsError, VerseNotFoundError } from '@/src/domain/errors/DomainErrors';
+import { BookmarkService } from '@/src/domain/services/BookmarkService';
+
 import {
   createMockBookmarkRepository,
   createMockVerseRepository,
@@ -6,12 +10,6 @@ import {
   ayahNumber,
   verseId,
 } from './test-utils';
-import { Bookmark, Verse } from '@/src/domain/entities';
-import {
-  BookmarkAlreadyExistsError,
-  VerseNotFoundError,
-} from '../../../../../src/domain/errors/DomainErrors';
-import { BookmarkService } from '@/src/domain/services/BookmarkService';
 
 describe('BookmarkService bookmarkVerse', () => {
   let service: BookmarkService;
