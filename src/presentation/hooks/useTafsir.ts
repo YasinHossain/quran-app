@@ -1,10 +1,13 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useEffect, useMemo, useCallback } from 'react';
 
-import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { GetTafsirResourcesUseCase } from '@/src/application/use-cases/GetTafsirResources';
+import { Tafsir } from '@/src/domain/entities/Tafsir';
+import { container } from '@/src/infrastructure/di/Container';
 
-import { GetTafsirResourcesUseCase } from '../../application/use-cases/GetTafsirResources';
-import { Tafsir } from '../../domain/entities/Tafsir';
-import { container } from '../../infrastructure/di/Container';
+import { useTafsirById } from './useTafsirById';
+import { useTafsirContent } from './useTafsirContent';
+import { useTafsirLoader } from './useTafsirLoader';
+import { useTafsirSearch } from './useTafsirSearch';
 
 interface UseTafsirResult {
   tafsirs: Tafsir[];
@@ -17,93 +20,19 @@ interface UseTafsirResult {
   refresh: () => Promise<void>;
 }
 
-/**
- * Clean Architecture hook for Tafsir operations
- *
- * This hook follows the clean architecture pattern:
- * - Uses dependency injection to get repository
- * - Delegates business logic to use cases
- * - Only handles UI state and presentation concerns
- */
 export const useTafsir = (): UseTafsirResult => {
-  const [tafsirs, setTafsirs] = useState<Tafsir[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isFromCache, setIsFromCache] = useState(false);
-
-  // Get use case instance through DI container
   const useCase = useMemo(() => {
     const repository = container.getTafsirRepository();
     return new GetTafsirResourcesUseCase(repository);
   }, []);
 
-  // Load tafsir resources
-  const loadTafsirs = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+  const { tafsirs, loading, error, isFromCache, loadTafsirs } = useTafsirLoader(useCase);
+  const searchTafsirs = useTafsirSearch(useCase);
+  const getTafsirById = useTafsirById(useCase);
+  const getTafsirContent = useTafsirContent(useCase);
 
-    try {
-      const result = await useCase.execute();
+  const refresh = useCallback(() => loadTafsirs(), [loadTafsirs]);
 
-      setTafsirs(result.tafsirs);
-      setIsFromCache(result.isFromCache);
-
-      if (result.error) {
-        setError(result.error);
-      }
-    } catch (err) {
-      setError('Failed to load tafsir resources. Please try again.');
-      logger.error('Error loading tafsirs', undefined, err as Error);
-    } finally {
-      setLoading(false);
-    }
-  }, [useCase]);
-
-  // Search tafsirs
-  const searchTafsirs = useCallback(
-    async (searchTerm: string): Promise<Tafsir[]> => {
-      try {
-        return await useCase.search(searchTerm);
-      } catch (err) {
-        logger.error('Error searching tafsirs', undefined, err as Error);
-        return [];
-      }
-    },
-    [useCase]
-  );
-
-  // Get tafsir by ID
-  const getTafsirById = useCallback(
-    async (id: number): Promise<Tafsir | null> => {
-      try {
-        return await useCase.getById(id);
-      } catch (err) {
-        logger.error('Error getting tafsir by ID', undefined, err as Error);
-        return null;
-      }
-    },
-    [useCase]
-  );
-
-  // Get tafsir content for verse
-  const getTafsirContent = useCallback(
-    async (verseKey: string, tafsirId: number): Promise<string> => {
-      try {
-        return await useCase.getTafsirContent(verseKey, tafsirId);
-      } catch (err) {
-        logger.error('Error getting tafsir content', undefined, err as Error);
-        throw err;
-      }
-    },
-    [useCase]
-  );
-
-  // Refresh data
-  const refresh = useCallback(async () => {
-    await loadTafsirs();
-  }, [loadTafsirs]);
-
-  // Load tafsirs on mount
   useEffect(() => {
     loadTafsirs();
   }, [loadTafsirs]);

@@ -1,12 +1,12 @@
 import { useState, Dispatch, SetStateAction, RefObject } from 'react';
 
 import { useAudio } from '@/app/shared/player/context/AudioContext';
+import { buildPlayerLayoutProps } from '@/app/shared/player/utils/buildPlayerLayoutProps';
 
-import { usePlaybackCompletion } from './usePlaybackCompletion';
-import { usePlayerControls } from './usePlayerControls';
+import { useAudioControllerSetup } from './useAudioControllerSetup';
 import { useTrackTiming } from './useTrackTiming';
 
-import type { Track } from '../types';
+import type { Track } from '@/app/shared/player/types';
 
 interface Props {
   track?: Track | null;
@@ -41,42 +41,6 @@ interface QuranAudioControllerReturn {
   setActiveTab: Dispatch<SetStateAction<'reciter' | 'repeat'>>;
 }
 
-function buildPlayerLayoutProps({
-  timing,
-  isPlaying,
-  onNext,
-  onPrev,
-  closePlayer,
-  setMobileOptionsOpen,
-  controls,
-}: {
-  timing: ReturnType<typeof useTrackTiming>;
-  isPlaying: boolean;
-  onNext?: () => boolean;
-  onPrev?: () => boolean;
-  closePlayer: () => void;
-  setMobileOptionsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  controls: ReturnType<typeof usePlayerControls>;
-}) {
-  return {
-    cover: timing.cover,
-    title: timing.title,
-    artist: timing.artist,
-    current: timing.current,
-    duration: timing.duration,
-    elapsed: timing.elapsed,
-    total: timing.total,
-    interactable: timing.interactable,
-    isPlaying,
-    togglePlay: controls.togglePlay,
-    setSeek: controls.setSeek,
-    onNext,
-    onPrev,
-    closePlayer,
-    setMobileOptionsOpen: () => setMobileOptionsOpen(true),
-  } as const;
-}
-
 export function useQuranAudioController({
   track,
   onPrev,
@@ -84,7 +48,6 @@ export function useQuranAudioController({
 }: Props): QuranAudioControllerReturn {
   const [mobileOptionsOpen, setMobileOptionsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'reciter' | 'repeat'>('reciter');
-
   const {
     isPlayerVisible,
     closePlayer,
@@ -98,36 +61,18 @@ export function useQuranAudioController({
     playbackRate,
     repeatOptions,
   } = useAudio();
-
   const timing = useTrackTiming({ track, volume, playbackRate, contextRef: audioRef });
-
-  const controls = usePlayerControls({
-    interactable: timing.interactable,
+  const { controls, handleEnded } = useAudioControllerSetup({
+    timing,
     isPlaying,
     setIsPlaying,
     setPlayingId,
     activeVerse,
-    current: timing.current,
-    duration: timing.duration,
-    seek: timing.seek,
     setVolume,
-    play: timing.play,
-    pause: timing.pause,
-  });
-
-  const handleEnded = usePlaybackCompletion({
-    audioRef: timing.audioRef,
     repeatOptions,
-    activeVerse,
     onNext,
     onPrev,
-    seek: timing.seek,
-    play: timing.play,
-    pause: timing.pause,
-    setIsPlaying,
-    setPlayingId,
   });
-
   const playerLayoutProps = buildPlayerLayoutProps({
     timing,
     isPlaying,
@@ -137,7 +82,6 @@ export function useQuranAudioController({
     setMobileOptionsOpen,
     controls,
   });
-
   return {
     isPlayerVisible,
     audioRef: timing.audioRef,
