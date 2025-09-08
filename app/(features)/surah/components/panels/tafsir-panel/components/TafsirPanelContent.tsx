@@ -2,15 +2,13 @@
 
 import React from 'react';
 
+import { TafsirLimitWarning } from '@/app/(features)/surah/components/panels/tafsir-panel/TafsirLimitWarning';
 import { AlertIcon } from '@/app/shared/icons';
-// Resource list usage moved to TafsirVirtualList
 import { TafsirResource } from '@/types';
 
-import { TafsirLimitWarning } from '../TafsirLimitWarning';
-import { TafsirTabsHeader } from './TafsirTabsHeader';
-import { TafsirVirtualList } from './TafsirVirtualList';
-import { TafsirSearch } from '../TafsirSearch';
-import { TafsirSelectionList } from '../TafsirSelectionList';
+import { TafsirList, TafsirListProps } from './TafsirList';
+import { TafsirSearchSection, TafsirSearchSectionProps } from './TafsirSearchSection';
+import { TafsirTabs, TafsirTabsProps } from './TafsirTabs';
 
 interface TafsirPanelContentProps {
   loading: boolean;
@@ -40,6 +38,14 @@ interface TafsirPanelContentProps {
   listContainerRef: React.RefObject<HTMLDivElement>;
 }
 
+interface TafsirContentBodyProps {
+  showLimitWarning: boolean;
+  searchProps: TafsirSearchSectionProps;
+  tabsProps: TafsirTabsProps;
+  listProps: TafsirListProps;
+  listContainerRef: React.RefObject<HTMLDivElement>;
+}
+
 const LoadingSpinner = (): React.JSX.Element => (
   <div className="flex items-center justify-center p-8">
     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent" />
@@ -55,77 +61,120 @@ const ErrorMessage = ({ error }: { error: string }): React.JSX.Element => (
   </div>
 );
 
+const useTafsirContent = (
+  props: Omit<TafsirPanelContentProps, 'loading' | 'error'>
+): TafsirContentBodyProps => {
+  const {
+    showLimitWarning,
+    searchTerm,
+    setSearchTerm,
+    orderedSelection,
+    tafsirs,
+    handleSelectionToggle,
+    handleDragStart,
+    handleDragOver,
+    handleDrop,
+    handleDragEnd,
+    draggedId,
+    languages,
+    activeFilter,
+    setActiveFilter,
+    tabsContainerRef,
+    canScrollLeft,
+    canScrollRight,
+    scrollTabsLeft,
+    scrollTabsRight,
+    resourcesToRender,
+    selectedIds,
+    listHeight,
+    listContainerRef,
+  } = props;
+
+  return React.useMemo(
+    () => ({
+      showLimitWarning,
+      searchProps: {
+        searchTerm,
+        setSearchTerm,
+        orderedSelection,
+        tafsirs,
+        handleSelectionToggle,
+        handleDragStart,
+        handleDragOver,
+        handleDrop,
+        handleDragEnd,
+        draggedId,
+      },
+      tabsProps: {
+        languages,
+        activeFilter,
+        setActiveFilter,
+        tabsContainerRef,
+        canScrollLeft,
+        canScrollRight,
+        scrollTabsLeft,
+        scrollTabsRight,
+      },
+      listProps: {
+        resources: resourcesToRender,
+        selectedIds,
+        onToggle: handleSelectionToggle,
+        height: listHeight,
+        total: tafsirs.length,
+      },
+      listContainerRef,
+    }),
+    [
+      showLimitWarning,
+      searchTerm,
+      setSearchTerm,
+      orderedSelection,
+      tafsirs,
+      handleSelectionToggle,
+      handleDragStart,
+      handleDragOver,
+      handleDrop,
+      handleDragEnd,
+      draggedId,
+      languages,
+      activeFilter,
+      setActiveFilter,
+      tabsContainerRef,
+      canScrollLeft,
+      canScrollRight,
+      scrollTabsLeft,
+      scrollTabsRight,
+      resourcesToRender,
+      selectedIds,
+      listHeight,
+      listContainerRef,
+    ]
+  );
+};
+
 const TafsirContentBody = ({
   showLimitWarning,
-  searchTerm,
-  setSearchTerm,
-  orderedSelection,
-  tafsirs,
-  handleSelectionToggle,
-  handleDragStart,
-  handleDragOver,
-  handleDrop,
-  handleDragEnd,
-  draggedId,
-  languages,
-  activeFilter,
-  setActiveFilter,
-  tabsContainerRef,
-  canScrollLeft,
-  canScrollRight,
-  scrollTabsLeft,
-  scrollTabsRight,
-  resourcesToRender,
-  selectedIds,
-  listHeight,
+  searchProps,
+  tabsProps,
+  listProps,
   listContainerRef,
-}: Omit<TafsirPanelContentProps, 'loading' | 'error'>): React.JSX.Element => (
+}: TafsirContentBodyProps): React.JSX.Element => (
   <>
     <TafsirLimitWarning show={showLimitWarning} />
     <div className="flex-1 overflow-y-auto" ref={listContainerRef}>
-      <div className="p-4 space-y-4">
-        <TafsirSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        <TafsirSelectionList
-          orderedSelection={orderedSelection}
-          tafsirs={tafsirs}
-          handleSelectionToggle={handleSelectionToggle}
-          handleDragStart={handleDragStart}
-          handleDragOver={handleDragOver}
-          handleDrop={handleDrop}
-          handleDragEnd={handleDragEnd}
-          draggedId={draggedId}
-        />
-      </div>
-
-      <TafsirTabsHeader
-        languages={languages}
-        activeFilter={activeFilter}
-        setActiveFilter={setActiveFilter}
-        tabsContainerRef={tabsContainerRef}
-        canScrollLeft={canScrollLeft}
-        canScrollRight={canScrollRight}
-        scrollTabsLeft={scrollTabsLeft}
-        scrollTabsRight={scrollTabsRight}
-      />
-
-      <TafsirVirtualList
-        resources={resourcesToRender}
-        selectedIds={selectedIds}
-        onToggle={handleSelectionToggle}
-        height={listHeight}
-        total={tafsirs.length}
-      />
+      <TafsirSearchSection {...searchProps} />
+      <TafsirTabs {...tabsProps} />
+      <TafsirList {...listProps} />
     </div>
   </>
 );
 
 export const TafsirPanelContent = (props: TafsirPanelContentProps): React.JSX.Element => {
-  const { loading, error } = props;
+  const { loading, error, ...rest } = props;
+  const contentProps = useTafsirContent(rest);
 
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorMessage error={error} />;
 
-  return <TafsirContentBody {...props} />;
+  return <TafsirContentBody {...contentProps} />;
 };
-
-// moved to ./TafsirVirtualList

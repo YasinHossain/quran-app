@@ -19,45 +19,64 @@ export class TafsirRepository implements ITafsirRepository {
    * Get all available tafsir resources across languages
    */
   async getAllResources(): Promise<Tafsir[]> {
+    const allResources = await this.tryFetchAll();
+    if (allResources) {
+      return allResources;
+    }
+
+    return this.fetchLanguageSpecificResources();
+  }
+
+  private async tryFetchAll(): Promise<Tafsir[] | null> {
     try {
-      // Try getting comprehensive list first
       const allResources = await fetchResourcesForLanguage('all');
-      if (allResources.length > 1) {
-        await cacheTafsirResources(allResources);
-        return allResources;
+      if (allResources.length <= 1) {
+        return null;
       }
+
+      await cacheTafsirResources(allResources);
+      return allResources;
     } catch (error) {
       logger.warn(
         'Failed to fetch all tafsir resources, trying language-specific approach',
         undefined,
         error as Error
       );
+      return null;
     }
+  }
 
-    // Fallback to language-specific fetching
+  private async fetchLanguageSpecificResources(): Promise<Tafsir[]> {
     const languages = ['en', 'ar', 'bn', 'ur', 'id', 'tr', 'fa'];
     const results = await Promise.allSettled(
       languages.map((lang) => fetchResourcesForLanguage(lang))
     );
 
-    // Merge results and deduplicate by ID
+    const tafsirs = this.mergeResults(results);
+    if (tafsirs.length === 0) {
+      return [];
+    }
+
+    await cacheTafsirResources(tafsirs);
+    return tafsirs;
+  }
+
+  private mergeResults(
+    results: PromiseSettledResult<Tafsir[]>[]
+  ): Tafsir[] {
     const mergedMap = new Map<number, Tafsir>();
     for (const result of results) {
-      if (result.status === 'fulfilled') {
-        for (const tafsir of result.value) {
-          if (!mergedMap.has(tafsir.id)) {
-            mergedMap.set(tafsir.id, tafsir);
-          }
+      if (result.status !== 'fulfilled') {
+        continue;
+      }
+      for (const tafsir of result.value) {
+        if (mergedMap.has(tafsir.id)) {
+          continue;
         }
+        mergedMap.set(tafsir.id, tafsir);
       }
     }
-
-    const tafsirs = Array.from(mergedMap.values());
-    if (tafsirs.length > 0) {
-      await cacheTafsirResources(tafsirs);
-    }
-
-    return tafsirs;
+    return Array.from(mergedMap.values());
   }
 
   /**

@@ -5,6 +5,9 @@
  * Handles logging, user notifications, and error recovery strategies.
  */
 
+import { ApplicationError } from '@/src/infrastructure/errors/ApplicationError';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
+
 import {
   errorHandlerConfig,
   type ErrorHandlerOptions,
@@ -15,7 +18,6 @@ import {
 import { notifyError, setRetryCallback } from './errorNotifications';
 import { ErrorFactory } from './factory';
 import { isApplicationError } from './guards';
-import { logger } from '../monitoring/Logger';
 
 export class ErrorHandler {
   /**
@@ -41,6 +43,53 @@ export class ErrorHandler {
     if (retryCallback) setRetryCallback(retryCallback);
   }
 
+  private static strategyMap = {
+    logError(appError: ApplicationError, options: ErrorHandlerOptions) {
+      const configuredLogger = errorHandlerConfig.getLogger();
+      if (configuredLogger) {
+        configuredLogger(appError, options.context);
+      } else {
+        logger.error('[ErrorHandler]', options.context, appError);
+      }
+    },
+    reportError(appError: ApplicationError, options: ErrorHandlerOptions) {
+      if (!appError.isOperational) return;
+      const reporter = errorHandlerConfig.getReporter();
+      if (reporter) {
+        const execute = (): void => {
+          try {
+            reporter(appError, options.context);
+          } catch (reportError) {
+            logger.error('[ErrorHandler] Failed to report error', undefined, reportError as Error);
+          }
+        };
+        execute();
+      }
+    },
+    showUserNotification(appError: ApplicationError) {
+      notifyError(appError);
+    },
+  } as const;
+
+  private static applyStrategies(
+    appError: ApplicationError,
+    options: ErrorHandlerOptions,
+    mode: 'sync' | 'async'
+  ): void {
+    (Object.keys(ErrorHandler.strategyMap) as Array<keyof typeof ErrorHandler.strategyMap>).forEach(
+      (key) => {
+        if ((options as Record<string, boolean>)[key]) {
+          const handler = ErrorHandler.strategyMap[key];
+          if (key === 'reportError' && mode === 'sync') {
+            Promise.resolve().then(() => handler(appError, options));
+          } else {
+            handler(appError, options);
+          }
+        }
+      }
+    );
+  }
+
   /**
    * Handle any error with full error processing pipeline
    */
@@ -54,29 +103,7 @@ export class ErrorHandler {
       ...options,
     };
 
-    if (finalOptions.logError) {
-      const configuredLogger = errorHandlerConfig.getLogger();
-      if (configuredLogger) {
-        configuredLogger(appError, options.context);
-      } else {
-        logger.error('[ErrorHandler]', options.context, appError);
-      }
-    }
-
-    if (finalOptions.reportError && appError.isOperational) {
-      const reporter = errorHandlerConfig.getReporter();
-      if (reporter) {
-        try {
-          reporter(appError, options.context);
-        } catch (reportError) {
-          logger.error('[ErrorHandler] Failed to report error', undefined, reportError as Error);
-        }
-      }
-    }
-
-    if (finalOptions.showUserNotification) {
-      notifyError(appError);
-    }
+    ErrorHandler.applyStrategies(appError, finalOptions, 'async');
 
     if (finalOptions.rethrow) {
       throw appError;
@@ -112,31 +139,7 @@ export class ErrorHandler {
       ...options,
     };
 
-    if (finalOptions.logError) {
-      const configuredLogger = errorHandlerConfig.getLogger();
-      if (configuredLogger) {
-        configuredLogger(appError, options.context);
-      } else {
-        logger.error('[ErrorHandler]', options.context, appError);
-      }
-    }
-
-    if (finalOptions.showUserNotification) {
-      notifyError(appError);
-    }
-
-    if (finalOptions.reportError && appError.isOperational) {
-      const reporter = errorHandlerConfig.getReporter();
-      if (reporter) {
-        Promise.resolve().then(() => {
-          try {
-            reporter(appError, options.context);
-          } catch (reportError) {
-            logger.error('[ErrorHandler] Failed to report error', undefined, reportError as Error);
-          }
-        });
-      }
-    }
+    ErrorHandler.applyStrategies(appError, finalOptions, 'sync');
 
     if (finalOptions.rethrow) {
       throw appError;

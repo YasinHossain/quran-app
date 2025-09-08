@@ -177,7 +177,12 @@ describe('VerseRepository findByRevelationType', () => {
     const verses = await repository.findByRevelationType('makki');
 
     expect(verses).toHaveLength(1);
-    expect(mockApiVerses.getVersesByChapter).toHaveBeenCalledWith(1, 20, 1, 300);
+    expect(mockApiVerses.getVersesByChapter).toHaveBeenCalledWith({
+      id: 1,
+      translationIds: 20,
+      page: 1,
+      perPage: 300,
+    });
   });
 });
 

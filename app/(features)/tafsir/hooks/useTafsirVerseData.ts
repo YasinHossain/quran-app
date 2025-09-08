@@ -42,7 +42,13 @@ export const useTafsirVerseData = (surahId: string, ayahId: string): UseTafsirVe
       ? ['verse', surahId, ayahId, settings.translationId, settings.wordLang]
       : null,
     ([, s, a, trId, wordLang]) =>
-      getVersesByChapter(s, trId, Number(a), 1, wordLang).then((d) => d.verses[0])
+      getVersesByChapter({
+        id: s,
+        translationIds: trId,
+        page: Number(a),
+        perPage: 1,
+        wordLang,
+      }).then((d) => d.verses[0])
   );
   const verse: VerseType | undefined = verseData;
 

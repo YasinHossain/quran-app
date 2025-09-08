@@ -5,7 +5,12 @@ import { mapApiVerseToDomain } from '../verseMapper';
 
 export const findBySurah = async (surahId: number, translationId: number): Promise<Verse[]> => {
   try {
-    const response = await apiVerses.getVersesByChapter(surahId, translationId, 1, 300);
+    const response = await apiVerses.getVersesByChapter({
+      id: surahId,
+      translationIds: translationId,
+      page: 1,
+      perPage: 300,
+    });
     return response.verses.map((v) => mapApiVerseToDomain(v));
   } catch (error) {
     logger.error('Failed to find verses by surah:', undefined, error as Error);

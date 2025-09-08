@@ -10,27 +10,31 @@ export interface PaginatedVerses {
   totalPages: number;
 }
 
+export interface FetchVersesOptions {
+  type: 'by_chapter' | 'by_juz' | 'by_page';
+  id: string | number;
+  translationIds: number | number[];
+  page?: number;
+  perPage?: number;
+  wordLang?: string;
+}
+
 /**
  * Fetch verses grouped by chapter, juz or page and return pagination info.
  *
- * @param type            Grouping method for the verses.
- * @param id              Identifier for the grouping (chapter/juz/page).
- * @param translationIds  One or more translation IDs.
- * @param page            Page number (1-indexed).
- * @param perPage         Number of verses per page.
- * @param wordLang        Language code for word translations.
+ * @param options Describes the verse grouping and pagination preferences.
  *
  * Handles single vs array translation IDs and normalizes API pagination
  * metadata, defaulting to one page when the server omits totals.
  */
-export async function fetchVerses(
-  type: 'by_chapter' | 'by_juz' | 'by_page',
-  id: string | number,
-  translationIds: number | number[],
+export async function fetchVerses({
+  type,
+  id,
+  translationIds,
   page = 1,
   perPage = 20,
-  wordLang: string = 'en'
-): Promise<PaginatedVerses> {
+  wordLang = 'en',
+}: FetchVersesOptions): Promise<PaginatedVerses> {
   const lang = wordLang as LanguageCode;
   const translationIdsArray = Array.isArray(translationIds) ? translationIds : [translationIds];
   const translationParam = translationIdsArray.join(',');
@@ -60,32 +64,16 @@ export async function fetchVerses(
   };
 }
 
-export function getVersesByChapter(
-  chapterId: string | number,
-  translationIds: number | number[],
-  page = 1,
-  perPage = 20,
-  wordLang: string = 'en'
-): Promise<PaginatedVerses> {
-  return fetchVerses('by_chapter', chapterId, translationIds, page, perPage, wordLang);
+type VerseLookupOptions = Omit<FetchVersesOptions, 'type'>;
+
+export function getVersesByChapter(options: VerseLookupOptions): Promise<PaginatedVerses> {
+  return fetchVerses({ type: 'by_chapter', ...options });
 }
 
-export function getVersesByJuz(
-  juzId: string | number,
-  translationIds: number | number[],
-  page = 1,
-  perPage = 20,
-  wordLang: string = 'en'
-): Promise<PaginatedVerses> {
-  return fetchVerses('by_juz', juzId, translationIds, page, perPage, wordLang);
+export function getVersesByJuz(options: VerseLookupOptions): Promise<PaginatedVerses> {
+  return fetchVerses({ type: 'by_juz', ...options });
 }
 
-export function getVersesByPage(
-  pageId: string | number,
-  translationIds: number | number[],
-  page = 1,
-  perPage = 20,
-  wordLang: string = 'en'
-): Promise<PaginatedVerses> {
-  return fetchVerses('by_page', pageId, translationIds, page, perPage, wordLang);
+export function getVersesByPage(options: VerseLookupOptions): Promise<PaginatedVerses> {
+  return fetchVerses({ type: 'by_page', ...options });
 }

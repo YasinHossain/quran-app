@@ -5,7 +5,12 @@ import { mapApiVerseToDomain } from '../verseMapper';
 
 export const findByJuz = async (juzNumber: number, translationId: number): Promise<Verse[]> => {
   try {
-    const response = await apiVerses.getVersesByJuz(juzNumber, translationId, 1, 500);
+    const response = await apiVerses.getVersesByJuz({
+      id: juzNumber,
+      translationIds: translationId,
+      page: 1,
+      perPage: 500,
+    });
     return response.verses.map((v) => mapApiVerseToDomain(v));
   } catch (error) {
     logger.error('Failed to find verses by juz:', undefined, error as Error);
@@ -15,7 +20,12 @@ export const findByJuz = async (juzNumber: number, translationId: number): Promi
 
 export const findByPage = async (pageNumber: number, translationId: number): Promise<Verse[]> => {
   try {
-    const response = await apiVerses.getVersesByPage(pageNumber, translationId, 1, 50);
+    const response = await apiVerses.getVersesByPage({
+      id: pageNumber,
+      translationIds: translationId,
+      page: 1,
+      perPage: 50,
+    });
     return response.verses.map((v) => mapApiVerseToDomain(v));
   } catch (error) {
     logger.error('Failed to find verses by page:', undefined, error as Error);

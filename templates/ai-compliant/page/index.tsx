@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-undef */
 /**
  * MANDATORY Architecture-Compliant Page Template
  *
@@ -22,6 +21,16 @@ import {
 import type { PageProps } from '@/types';
 
 import { PageProvider } from '@/app/providers/PageProvider';
+
+function PageActions({ params }: { params: PageProps['params'] }): JSX.Element | null {
+  void params;
+  return null;
+}
+
+function PageSidebar({ params }: { params: PageProps['params'] }): JSX.Element | null {
+  void params;
+  return null;
+}
 
 interface PageNameProps {
   params: PageProps['params'];

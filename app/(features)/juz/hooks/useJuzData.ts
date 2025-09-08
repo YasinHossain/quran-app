@@ -36,7 +36,7 @@ export function useJuzData(juzId?: string): {
   const verseListing = useVerseListing({
     ...(juzId !== undefined ? { id: juzId } : {}),
     lookup: ({ id, translationIds, page, perPage, wordLang }) =>
-      getVersesByJuz(id, translationIds, page, perPage, wordLang),
+      getVersesByJuz({ id, translationIds, page, perPage, wordLang }),
   });
 
   const { data: juz, error: juzError } = useSWR<Juz>(

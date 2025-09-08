@@ -13,7 +13,7 @@ export const useSurahView = (surahId: string): UseSurahViewReturn => {
   const verseListing = useVerseListing({
     id: surahId,
     lookup: ({ id, translationIds, page, perPage, wordLang }) =>
-      getVersesByChapter(id, translationIds, page, perPage, wordLang),
+      getVersesByChapter({ id, translationIds, page, perPage, wordLang }),
   });
   const panels = useSurahPanels({
     translationOptions: verseListing.translationOptions,

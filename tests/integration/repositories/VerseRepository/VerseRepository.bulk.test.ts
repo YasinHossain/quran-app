@@ -26,7 +26,12 @@ describe('VerseRepository bulk retrieval', () => {
       expect(verses).toHaveLength(3);
       expect(verses[0].ayahNumber).toBe(1);
       expect(verses[1].ayahNumber).toBe(1);
-      expect(mockApiVerses.getVersesByChapter).toHaveBeenCalledWith(1, 20, 1, 300);
+      expect(mockApiVerses.getVersesByChapter).toHaveBeenCalledWith({
+        id: 1,
+        translationIds: 20,
+        page: 1,
+        perPage: 300,
+      });
     });
 
     it('should return empty array on error', async () => {
@@ -49,7 +54,12 @@ describe('VerseRepository bulk retrieval', () => {
 
       expect(verses).toHaveLength(1);
       expect(verses[0].id).toBe('1:1');
-      expect(mockApiVerses.getVersesByJuz).toHaveBeenCalledWith(1, 20, 1, 500);
+      expect(mockApiVerses.getVersesByJuz).toHaveBeenCalledWith({
+        id: 1,
+        translationIds: 20,
+        page: 1,
+        perPage: 500,
+      });
     });
   });
 
@@ -64,7 +74,12 @@ describe('VerseRepository bulk retrieval', () => {
 
       expect(verses).toHaveLength(1);
       expect(verses[0].id).toBe('1:1');
-      expect(mockApiVerses.getVersesByPage).toHaveBeenCalledWith(1, 20, 1, 50);
+      expect(mockApiVerses.getVersesByPage).toHaveBeenCalledWith({
+        id: 1,
+        translationIds: 20,
+        page: 1,
+        perPage: 50,
+      });
     });
   });
 
