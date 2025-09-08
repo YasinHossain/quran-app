@@ -64,7 +64,7 @@
     "clsx": "^2.1.1",
     "dompurify": "^3.2.6",
     "framer-motion": "^12.23.12",
-    "i18next": "^25.3.2",
+    "i18next": "^25.5.2",
     "inversify": "^7.9.1",
     "lucide-react": "^0.541.0",
     "next": "^15.5.0",
