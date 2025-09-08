@@ -24,46 +24,14 @@ export class Bookmark {
   public readonly createdAt: Date;
   public readonly notes?: string;
   public readonly tags: string[];
-
-  // Overload signatures to support both options object and legacy args
-  constructor(init: BookmarkInit);
-  constructor(
-    id: string,
-    userId: string,
-    verseId: string,
-    position: BookmarkPosition,
-    createdAt: Date,
-    notes?: string,
-    tags?: string[]
-  );
-  constructor(...args: unknown[]) {
-    if (args.length === 1 && typeof args[0] === 'object' && args[0] !== null) {
-      const { id, userId, verseId, position, createdAt, notes, tags } = args[0] as BookmarkInit;
-      this.id = id;
-      this.userId = userId;
-      this.verseId = verseId;
-      this.position = position;
-      this.createdAt = createdAt;
-      this.notes = notes;
-      this.tags = tags ?? [];
-    } else {
-      const [id, userId, verseId, position, createdAt, notes, tags] = args as [
-        string,
-        string,
-        string,
-        BookmarkPosition,
-        Date,
-        string?,
-        string[]?,
-      ];
-      this.id = id;
-      this.userId = userId;
-      this.verseId = verseId;
-      this.position = position;
-      this.createdAt = createdAt;
-      this.notes = notes;
-      this.tags = tags ?? [];
-    }
+  constructor(init: BookmarkInit) {
+    this.id = init.id;
+    this.userId = init.userId;
+    this.verseId = init.verseId;
+    this.position = init.position;
+    this.createdAt = init.createdAt;
+    this.notes = init.notes;
+    this.tags = init.tags ?? [];
     this.validateInputs();
   }
 

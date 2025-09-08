@@ -37,15 +37,15 @@ export class BookmarkImportService {
           continue;
         }
 
-        const bookmark = new Bookmark(
-          uuidv4(),
+        const bookmark = new Bookmark({
+          id: uuidv4(),
           userId,
-          verse.id,
+          verseId: verse.id,
           position,
-          new Date(),
-          data.notes,
-          data.tags || []
-        );
+          createdAt: new Date(),
+          notes: data.notes,
+          tags: data.tags || [],
+        });
 
         validBookmarks.push(bookmark);
       } catch {

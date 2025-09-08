@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { SearchInput } from '@/app/shared/components/SearchInput';
 
@@ -9,18 +9,25 @@ export function HeaderSearch(): JSX.Element {
   const router = useRouter();
   const [query, setQuery] = useState('');
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
-    if (e.key === 'Enter' && query.trim()) {
-      router.push(`/search?query=${encodeURIComponent(query.trim())}`);
-    }
-  };
+  const handleChange = useCallback((value: string): void => {
+    setQuery(value);
+  }, []);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>): void => {
+      if (e.key === 'Enter' && query.trim()) {
+        router.push(`/search?query=${encodeURIComponent(query.trim())}`);
+      }
+    },
+    [query, router]
+  );
 
   return (
     <div className="flex items-center justify-center w-1/3">
       <div className="w-full max-w-xs sm:max-w-sm lg:max-w-md">
         <SearchInput
           value={query}
-          onChange={setQuery}
+          onChange={handleChange}
           placeholder="Search verses, surahs..."
           onKeyDown={handleKeyDown}
           variant="header"

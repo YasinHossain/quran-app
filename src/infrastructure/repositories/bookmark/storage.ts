@@ -33,13 +33,13 @@ export function mapStoredToBookmark(stored: StoredBookmark): Bookmark {
     new Date(stored.position.timestamp)
   );
 
-  return new Bookmark(
-    stored.id,
-    stored.userId,
-    stored.verseId,
+  return new Bookmark({
+    id: stored.id,
+    userId: stored.userId,
+    verseId: stored.verseId,
     position,
-    new Date(stored.createdAt),
-    stored.notes,
-    stored.tags
-  );
+    createdAt: new Date(stored.createdAt),
+    notes: stored.notes,
+    tags: stored.tags,
+  });
 }

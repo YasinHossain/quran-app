@@ -1,27 +1,27 @@
 import { Bookmark } from './Bookmark';
 
 export function withNotes(bookmark: Bookmark, notes: string): Bookmark {
-  return new Bookmark(
-    bookmark.id,
-    bookmark.userId,
-    bookmark.verseId,
-    bookmark.position,
-    bookmark.createdAt,
+  return new Bookmark({
+    id: bookmark.id,
+    userId: bookmark.userId,
+    verseId: bookmark.verseId,
+    position: bookmark.position,
+    createdAt: bookmark.createdAt,
     notes,
-    bookmark.tags
-  );
+    tags: bookmark.tags,
+  });
 }
 
 export function withTags(bookmark: Bookmark, tags: string[]): Bookmark {
-  return new Bookmark(
-    bookmark.id,
-    bookmark.userId,
-    bookmark.verseId,
-    bookmark.position,
-    bookmark.createdAt,
-    bookmark.notes,
-    tags
-  );
+  return new Bookmark({
+    id: bookmark.id,
+    userId: bookmark.userId,
+    verseId: bookmark.verseId,
+    position: bookmark.position,
+    createdAt: bookmark.createdAt,
+    notes: bookmark.notes,
+    tags,
+  });
 }
 
 export function withAddedTag(bookmark: Bookmark, tag: string): Bookmark {

@@ -7,27 +7,17 @@ import type { SurahTabsState } from '@/app/shared/components/surah-tabs/useSurah
 
 import { SidebarTabs } from '@/app/shared/components/surah-sidebar/components/SidebarTabs';
 
-export const SurahTabsView = memo(function SurahTabsView({
+type TabsHeaderProps =
+  Pick<SurahTabsState, 'tabs' | 'activeTab' | 'setActiveTab' | 'prepareForTabSwitch'> &
+  Pick<SurahTabsProps, 'searchInput'>;
+
+const TabsHeader = memo(function TabsHeader({
   tabs,
   activeTab,
   setActiveTab,
   prepareForTabSwitch,
   searchInput,
-  scrollRef,
-  handleScroll,
-  filteredChapters,
-  filteredJuzs,
-  filteredPages,
-  chapters,
-  selectedSurahId,
-  setSelectedSurahId,
-  selectedJuzId,
-  setSelectedJuzId,
-  selectedPageId,
-  setSelectedPageId,
-  rememberScroll,
-  isTafsirPath,
-}: SurahTabsProps & SurahTabsState) {
+}: TabsHeaderProps) {
   return (
     <>
       <div className="p-3 sm:p-4 border-b border-border md:border-b-0 md:p-3 md:pb-1">
@@ -39,27 +29,75 @@ export const SurahTabsView = memo(function SurahTabsView({
         />
       </div>
       {searchInput}
-      <div
-        ref={scrollRef}
-        onScroll={handleScroll}
-        className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-3 touch-pan-y"
-      >
-        <TabContent
-          activeTab={activeTab}
-          filteredChapters={filteredChapters}
-          filteredJuzs={filteredJuzs}
-          filteredPages={filteredPages}
-          chapters={chapters}
-          selectedSurahId={selectedSurahId}
-          setSelectedSurahId={setSelectedSurahId}
-          selectedJuzId={selectedJuzId}
-          setSelectedJuzId={setSelectedJuzId}
-          selectedPageId={selectedPageId}
-          setSelectedPageId={setSelectedPageId}
-          rememberScroll={rememberScroll}
-          isTafsirPath={isTafsirPath}
-        />
-      </div>
+    </>
+  );
+});
+
+type ScrollableTabContentProps =
+  Pick<
+    SurahTabsProps & SurahTabsState,
+    | 'activeTab'
+    | 'filteredChapters'
+    | 'filteredJuzs'
+    | 'filteredPages'
+    | 'chapters'
+    | 'selectedSurahId'
+    | 'setSelectedSurahId'
+    | 'selectedJuzId'
+    | 'setSelectedJuzId'
+    | 'selectedPageId'
+    | 'setSelectedPageId'
+    | 'rememberScroll'
+    | 'isTafsirPath'
+    | 'scrollRef'
+    | 'handleScroll'
+  >;
+
+const ScrollableTabContent = memo(function ScrollableTabContent({
+  scrollRef,
+  handleScroll,
+  ...tabContentProps
+}: ScrollableTabContentProps) {
+  return (
+    <div
+      ref={scrollRef}
+      onScroll={handleScroll}
+      className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-3 touch-pan-y"
+    >
+      <TabContent {...tabContentProps} />
+    </div>
+  );
+});
+
+export const SurahTabsView = memo(function SurahTabsView(
+  props: SurahTabsProps & SurahTabsState,
+) {
+  const {
+    tabs,
+    activeTab,
+    setActiveTab,
+    prepareForTabSwitch,
+    searchInput,
+    scrollRef,
+    handleScroll,
+    ...tabContentProps
+  } = props;
+
+  return (
+    <>
+      <TabsHeader
+        tabs={tabs}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        prepareForTabSwitch={prepareForTabSwitch}
+        searchInput={searchInput}
+      />
+      <ScrollableTabContent
+        scrollRef={scrollRef}
+        handleScroll={handleScroll}
+        activeTab={activeTab}
+        {...tabContentProps}
+      />
     </>
   );
 });

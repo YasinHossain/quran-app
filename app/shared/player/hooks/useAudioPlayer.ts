@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, MutableRefObject } from 'react';
 
-import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { playAudioElement } from './playAudioElement';
+import { useAudioElementEvents } from './useAudioElementEvents';
 
 type Options = {
   src?: string;
@@ -34,11 +35,7 @@ export function useAudioPlayer(options: Options = {}): AudioPlayerReturn {
   const play = useCallback(() => {
     const a = audioRef.current;
     if (!a) return;
-    a.play().catch((err) => {
-      if (err instanceof DOMException && err.name === 'AbortError') return;
-      if (onError) onError(err);
-      else logger.error(err);
-    });
+    playAudioElement(a, onError);
     setIsPlaying(true);
   }, [onError]);
 
@@ -78,29 +75,19 @@ export function useAudioPlayer(options: Options = {}): AudioPlayerReturn {
     const a = audioRef.current;
     if (!a) return;
     if (isPlaying) {
-      a.play().catch((err) => {
-        if (err instanceof DOMException && err.name === 'AbortError') return;
-        if (onError) onError(err);
-        else logger.error(err);
-      });
+      playAudioElement(a, onError);
     } else {
       a.pause();
     }
   }, [isPlaying, src, onError]);
 
-  useEffect(() => {
-    const a = audioRef.current;
-    if (!a) return;
-    const onTime = (): void => onTimeUpdate?.(a.currentTime || 0);
-    const onMeta = (): void => onLoadedMetadata?.(a.duration || defaultDuration || 0);
-    a.addEventListener('timeupdate', onTime);
-    a.addEventListener('loadedmetadata', onMeta);
-    onMeta();
-    return () => {
-      a.removeEventListener('timeupdate', onTime);
-      a.removeEventListener('loadedmetadata', onMeta);
-    };
-  }, [src, defaultDuration, onTimeUpdate, onLoadedMetadata]);
+  useAudioElementEvents({
+    audioRef,
+    src,
+    defaultDuration,
+    onTimeUpdate,
+    onLoadedMetadata,
+  });
 
   return { audioRef, isPlaying, play, pause, seek, setVolume, setPlaybackRate };
 }

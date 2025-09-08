@@ -1,19 +1,24 @@
-export const formatTimeAgo = (timestamp: number): string => {
-  const now = Date.now();
-  const diff = now - timestamp;
-  const seconds = Math.floor(diff / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-  const weeks = Math.floor(days / 7);
-  const months = Math.floor(days / 30);
-  const years = Math.floor(days / 365);
+const TIME_UNITS = [
+  { label: 'year', seconds: 365 * 24 * 60 * 60 },
+  { label: 'month', seconds: 30 * 24 * 60 * 60 },
+  { label: 'week', seconds: 7 * 24 * 60 * 60 },
+  { label: 'day', seconds: 24 * 60 * 60 },
+  { label: 'hour', seconds: 60 * 60 },
+  { label: 'minute', seconds: 60 },
+];
 
-  if (years > 0) return `${years} year${years === 1 ? '' : 's'} ago`;
-  if (months > 0) return `${months} month${months === 1 ? '' : 's'} ago`;
-  if (weeks > 0) return `${weeks} week${weeks === 1 ? '' : 's'} ago`;
-  if (days > 0) return `${days} day${days === 1 ? '' : 's'} ago`;
-  if (hours > 0) return `${hours} hour${hours === 1 ? '' : 's'} ago`;
-  if (minutes > 0) return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
+const pluralize = (value: number, unit: string): string =>
+  `${value} ${unit}${value === 1 ? '' : 's'} ago`;
+
+const getTimeAgo = (seconds: number): string => {
+  for (const { label, seconds: unitSeconds } of TIME_UNITS) {
+    const value = Math.floor(seconds / unitSeconds);
+    if (value > 0) return pluralize(value, label);
+  }
   return 'Just now';
+};
+
+export const formatTimeAgo = (timestamp: number): string => {
+  const diffSeconds = Math.floor((Date.now() - timestamp) / 1000);
+  return getTimeAgo(diffSeconds);
 };

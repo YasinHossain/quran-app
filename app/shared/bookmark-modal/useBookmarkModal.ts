@@ -1,13 +1,13 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 
 export interface UseBookmarkModalReturn {
-  activeTab: 'bookmark' | 'pin';
-  setActiveTab: Dispatch<SetStateAction<'bookmark' | 'pin'>>;
-  isCreatingFolder: boolean;
-  openCreateFolder: () => void;
-  closeCreateFolder: () => void;
-  newFolderName: string;
-  setNewFolderName: Dispatch<SetStateAction<string>>;
+  readonly activeTab: 'bookmark' | 'pin';
+  readonly setActiveTab: Dispatch<SetStateAction<'bookmark' | 'pin'>>;
+  readonly isCreatingFolder: boolean;
+  readonly openCreateFolder: () => void;
+  readonly closeCreateFolder: () => void;
+  readonly newFolderName: string;
+  readonly setNewFolderName: Dispatch<SetStateAction<string>>;
 }
 
 export function useBookmarkModal(isOpen: boolean, onClose: () => void): UseBookmarkModalReturn {
@@ -24,8 +24,8 @@ export function useBookmarkModal(isOpen: boolean, onClose: () => void): UseBookm
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  const openCreateFolder = useCallback((): void => setIsCreatingFolder(true), []);
-  const closeCreateFolder = useCallback((): void => {
+  const openCreateFolder: () => void = useCallback(() => setIsCreatingFolder(true), []);
+  const closeCreateFolder: () => void = useCallback(() => {
     setIsCreatingFolder(false);
     setNewFolderName('');
   }, []);

@@ -5,23 +5,29 @@ import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import type { Surah } from '@/types';
 
-export function useSurahSearch(searchQuery: string): {
+type UseSurahSearchResult = {
   filteredSurahs: Surah[];
   isLoading: boolean;
   isEmpty: boolean;
-} {
+};
+
+export function useSurahSearch(searchQuery: string): UseSurahSearchResult {
   const [surahs, setSurahs] = useState<Surah[]>([]);
 
-  useEffect(() => {
-    getSurahList()
-      .then(setSurahs)
-      .catch((err) => logger.error(err as Error));
+  useEffect((): void => {
+    void getSurahList()
+      .then((fetchedSurahs: Surah[]): void => {
+        setSurahs(fetchedSurahs);
+      })
+      .catch((err: unknown): void => {
+        logger.error(err as Error);
+      });
   }, []);
 
-  const filteredSurahs = useMemo(() => {
+  const filteredSurahs = useMemo<Surah[]>((): Surah[] => {
     if (!searchQuery) return surahs;
     return surahs.filter(
-      (surah) =>
+      (surah: Surah): boolean =>
         surah.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         surah.number.toString().includes(searchQuery)
     );

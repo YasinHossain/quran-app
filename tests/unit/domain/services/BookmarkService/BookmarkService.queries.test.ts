@@ -28,13 +28,13 @@ describe('BookmarkService queries', () => {
   // moved to dedicated test file
 
   it('getBookmarksWithVerses returns bookmarks with verses', async () => {
-    const base = new Bookmark(
-      bookmarkId,
+    const base = new Bookmark({
+      id: bookmarkId,
       userId,
       verseId,
-      new BookmarkPosition(surahId, ayahNumber, new Date()),
-      new Date()
-    );
+      position: new BookmarkPosition(surahId, ayahNumber, new Date()),
+      createdAt: new Date(),
+    });
     const verse = new Verse({
       id: verseId,
       surahId,
@@ -49,13 +49,13 @@ describe('BookmarkService queries', () => {
   });
 
   it('getBookmarksWithVerses throws when verse missing', async () => {
-    const base = new Bookmark(
-      bookmarkId,
+    const base = new Bookmark({
+      id: bookmarkId,
       userId,
       verseId,
-      new BookmarkPosition(surahId, ayahNumber, new Date()),
-      new Date()
-    );
+      position: new BookmarkPosition(surahId, ayahNumber, new Date()),
+      createdAt: new Date(),
+    });
     mockBookmarkRepo.findByUser.mockResolvedValue([base]);
     mockVerseRepo.findById.mockResolvedValue(null);
     await expect(service.getBookmarksWithVerses(userId)).rejects.toThrow(VerseNotFoundError);
@@ -63,9 +63,27 @@ describe('BookmarkService queries', () => {
 
   it('organizeBookmarksBySurah organizes and sorts', async () => {
     const bookmarks = [
-      new Bookmark('b1', userId, 'v1', new BookmarkPosition(1, 3, new Date()), new Date()),
-      new Bookmark('b2', userId, 'v2', new BookmarkPosition(1, 1, new Date()), new Date()),
-      new Bookmark('b3', userId, 'v3', new BookmarkPosition(2, 5, new Date()), new Date()),
+      new Bookmark({
+        id: 'b1',
+        userId,
+        verseId: 'v1',
+        position: new BookmarkPosition(1, 3, new Date()),
+        createdAt: new Date(),
+      }),
+      new Bookmark({
+        id: 'b2',
+        userId,
+        verseId: 'v2',
+        position: new BookmarkPosition(1, 1, new Date()),
+        createdAt: new Date(),
+      }),
+      new Bookmark({
+        id: 'b3',
+        userId,
+        verseId: 'v3',
+        position: new BookmarkPosition(2, 5, new Date()),
+        createdAt: new Date(),
+      }),
     ];
     mockBookmarkRepo.findByUser.mockResolvedValue(bookmarks);
     const result = await service.organizeBookmarksBySurah(userId);

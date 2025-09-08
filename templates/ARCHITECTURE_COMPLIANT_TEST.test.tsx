@@ -43,12 +43,10 @@ const mockExampleData = {
  */
 jest.mock('@/lib/api/client', () => ({
   fetchExampleData: jest.fn(),
-  fetchExampleTranslations: jest.fn(),
 }));
 
 jest.mock('@/lib/utils/cn', () => ({
   transformData: jest.fn((data) => data),
-  applySettings: jest.fn((text) => text),
 }));
 
 jest.mock('@/lib/text/sanitizeHtml', () => ({

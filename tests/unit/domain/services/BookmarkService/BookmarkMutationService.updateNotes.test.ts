@@ -17,7 +17,14 @@ describe('BookmarkMutationService updateNotes', () => {
   });
 
   it('updates notes', async () => {
-    const base = new Bookmark(bookmarkId, userId, verseId, position, new Date(), 'Old notes');
+    const base = new Bookmark({
+      id: bookmarkId,
+      userId,
+      verseId,
+      position,
+      createdAt: new Date(),
+      notes: 'Old notes',
+    });
     mockRepo.findById.mockResolvedValue(base);
     const result = await service.updateBookmarkNotes(userId, bookmarkId, 'Updated notes');
     expect(result.notes).toBe('Updated notes');
@@ -32,7 +39,14 @@ describe('BookmarkMutationService updateNotes', () => {
   });
 
   it('throws on unauthorized', async () => {
-    const other = new Bookmark(bookmarkId, 'other', verseId, position, new Date(), 'Old notes');
+    const other = new Bookmark({
+      id: bookmarkId,
+      userId: 'other',
+      verseId,
+      position,
+      createdAt: new Date(),
+      notes: 'Old notes',
+    });
     mockRepo.findById.mockResolvedValue(other);
     await expect(service.updateBookmarkNotes(userId, bookmarkId, 'Updated notes')).rejects.toThrow(
       UnauthorizedBookmarkError

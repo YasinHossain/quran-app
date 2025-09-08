@@ -3,19 +3,19 @@ import { BookmarkPosition } from '@/src/domain/value-objects/BookmarkPosition';
 import { StoredBookmark } from '@/src/domain/value-objects/StoredBookmark';
 
 export function toDomain(stored: StoredBookmark): Bookmark {
-  return new Bookmark(
-    stored.id,
-    stored.userId,
-    stored.verseId,
-    new BookmarkPosition(
+  return new Bookmark({
+    id: stored.id,
+    userId: stored.userId,
+    verseId: stored.verseId,
+    position: new BookmarkPosition(
       stored.position.surahId,
       stored.position.ayahNumber,
       new Date(stored.position.timestamp)
     ),
-    new Date(stored.createdAt),
-    stored.notes,
-    stored.tags || []
-  );
+    createdAt: new Date(stored.createdAt),
+    notes: stored.notes,
+    tags: stored.tags || [],
+  });
 }
 
 export function toPersistence(bookmark: Bookmark): StoredBookmark {

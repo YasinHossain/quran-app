@@ -26,13 +26,13 @@ describe('BookmarkService removeBookmark', () => {
   });
 
   it('removes bookmark', async () => {
-    const base = new Bookmark(
-      bookmarkId,
+    const base = new Bookmark({
+      id: bookmarkId,
       userId,
       verseId,
-      new BookmarkPosition(surahId, ayahNumber, new Date()),
-      new Date()
-    );
+      position: new BookmarkPosition(surahId, ayahNumber, new Date()),
+      createdAt: new Date(),
+    });
     mockBookmarkRepo.findById.mockResolvedValue(base);
     await service.removeBookmark(userId, bookmarkId);
     expect(mockBookmarkRepo.remove).toHaveBeenCalledWith(bookmarkId);
@@ -44,13 +44,13 @@ describe('BookmarkService removeBookmark', () => {
   });
 
   it('throws on unauthorized removal', async () => {
-    const other = new Bookmark(
-      bookmarkId,
-      'other',
+    const other = new Bookmark({
+      id: bookmarkId,
+      userId: 'other',
       verseId,
-      new BookmarkPosition(surahId, ayahNumber, new Date()),
-      new Date()
-    );
+      position: new BookmarkPosition(surahId, ayahNumber, new Date()),
+      createdAt: new Date(),
+    });
     mockBookmarkRepo.findById.mockResolvedValue(other);
     await expect(service.removeBookmark(userId, bookmarkId)).rejects.toThrow(
       UnauthorizedBookmarkError

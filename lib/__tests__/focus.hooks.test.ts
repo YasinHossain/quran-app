@@ -10,6 +10,10 @@ import {
 
 import { setupDom } from './focus/test-utils';
 
+const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
+
+const waitForUpdates = (ms: number) => act(() => sleep(ms));
+
 describe('focus hooks', () => {
   let container: HTMLElement;
   let cleanup: () => void;
@@ -92,9 +96,7 @@ describe('focus hooks', () => {
       const target = container.querySelector('#btn2') as HTMLButtonElement;
       const ref = { current: target };
       renderHook(() => useAutoFocus(true, ref, 10));
-      await act(async () => {
-        await new Promise((r) => setTimeout(r, 20));
-      });
+      await waitForUpdates(20);
       expect(document.activeElement).toBe(target);
     });
 
@@ -102,9 +104,7 @@ describe('focus hooks', () => {
       const target = container.querySelector('#btn2') as HTMLButtonElement;
       const ref = { current: target };
       renderHook(() => useAutoFocus(false, ref, 10));
-      await act(async () => {
-        await new Promise((r) => setTimeout(r, 20));
-      });
+      await waitForUpdates(20);
       expect(document.activeElement).not.toBe(target);
     });
   });
