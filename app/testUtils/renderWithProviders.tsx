@@ -7,7 +7,7 @@ import { SidebarProvider } from '@/app/providers/SidebarContext';
 import { ThemeProvider } from '@/app/providers/ThemeContext';
 import { AudioProvider } from '@/app/shared/player/context/AudioContext';
 
-const Providers = ({ children }: { children: React.ReactNode }) => (
+const Providers = ({ children }: { children: React.ReactNode }): React.JSX.Element => (
   <SWRConfig value={{ provider: () => new Map() }}>
     <AudioProvider>
       <SettingsProvider>
@@ -24,6 +24,6 @@ const Providers = ({ children }: { children: React.ReactNode }) => (
 export const renderWithProviders = (
   ui: React.ReactElement,
   options?: Omit<RenderOptions, 'wrapper'>
-) => render(ui, { wrapper: Providers, ...options });
+): ReturnType<typeof render> => render(ui, { wrapper: Providers, ...options });
 
 export * from '@testing-library/react';

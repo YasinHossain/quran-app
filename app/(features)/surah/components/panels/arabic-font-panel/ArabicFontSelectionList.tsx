@@ -71,7 +71,7 @@ export const ArabicFontSelectionList = ({
   handleDragEnd,
   draggedId,
 }: ArabicFontSelectionListProps): React.JSX.Element => {
-  const handleSelection = (id: number) => handleSelectionToggle(id);
+  const handleSelection = (id: number): void => handleSelectionToggle(id);
 
   return (
     <div>

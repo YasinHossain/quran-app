@@ -4,7 +4,10 @@ import React from 'react';
 
 import { ResourcePanelHeader } from '@/app/shared/resource-panel/components/ResourcePanelHeader';
 import { useListHeight } from '@/app/shared/resource-panel/hooks/useListHeight';
-import { useTafsirPanel } from '@/src/presentation/hooks/useTafsirPanel';
+import {
+  useTafsirPanel,
+  type UseTafsirPanelReturn,
+} from '@/src/presentation/hooks/useTafsirPanel';
 
 import { TafsirPanelContent } from './components/TafsirPanelContent';
 import { useTafsirSections } from './hooks/useTafsirSections';
@@ -12,7 +15,7 @@ import { useTafsirSections } from './hooks/useTafsirSections';
 import type { TafsirResource } from '@/types';
 
 function createTafsirContentProps(
-  panelData: ReturnType<typeof useTafsirPanel>,
+  panelData: UseTafsirPanelReturn,
   resourcesToRender: TafsirResource[],
   listHeight: number,
   listContainerRef: React.RefObject<HTMLDivElement | null>

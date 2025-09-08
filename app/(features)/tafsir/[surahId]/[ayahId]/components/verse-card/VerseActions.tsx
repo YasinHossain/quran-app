@@ -14,7 +14,7 @@ interface VerseActionsProps {
   onBookmark: () => void;
 }
 
-const useVersePlayPause = (verse: VerseType) => {
+const useVersePlayPause = (verse: VerseType): (() => void) => {
   const {
     playingId,
     setPlayingId,

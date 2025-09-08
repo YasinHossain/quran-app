@@ -10,7 +10,27 @@ import { Tafsir } from '../../domain/entities/Tafsir';
 
 const MAX_SELECTIONS = 3;
 
-export const useTafsirSelection = (domainTafsirs: Tafsir[]) => {
+interface UseTafsirSelectionReturn {
+  tafsirs: TafsirResource[];
+  searchTerm: string;
+  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+  languages: string[];
+  groupedTafsirs: Record<string, TafsirResource[]>;
+  activeFilter: string;
+  setActiveFilter: React.Dispatch<React.SetStateAction<string>>;
+  selectedIds: Set<number>;
+  orderedSelection: number[];
+  handleSelectionToggle: (id: number) => boolean;
+  showLimitWarning: boolean;
+  handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
+  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
+  handleDrop: (e: React.DragEvent<HTMLDivElement>, targetId: number) => void;
+  handleDragEnd: () => void;
+  draggedId: number | null;
+  handleReset: () => void;
+}
+
+export const useTafsirSelection = (domainTafsirs: Tafsir[]): UseTafsirSelectionReturn => {
   const { settings, setTafsirIds } = useSettings();
   const [showLimitWarning, setShowLimitWarning] = useState(false);
 

@@ -90,7 +90,7 @@ export const TafsirSelectionList = ({
   handleDragEnd,
   draggedId,
 }: TafsirSelectionListProps): React.JSX.Element => {
-  const renderSelectionItems = () => {
+  const renderSelectionItems = (): React.ReactNode => {
     if (orderedSelection.length === 0) {
       return <EmptySelectionState />;
     }

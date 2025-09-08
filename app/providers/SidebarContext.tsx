@@ -37,6 +37,13 @@ interface SidebarContextType {
   setPageScrollTop: (top: number) => void;
 }
 
+interface SidebarToggles {
+  isSurahListOpen: boolean;
+  setSurahListOpen: (open: boolean) => void;
+  isBookmarkSidebarOpen: boolean;
+  setBookmarkSidebarOpen: (open: boolean) => void;
+}
+
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
 /**
@@ -45,7 +52,7 @@ const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
  * positions with this provider to synchronize their behavior.
  */
 // Local hooks to keep provider lean
-const useSidebarToggles = () => {
+const useSidebarToggles = (): SidebarToggles => {
   const [isSurahListOpen, _setSurahListOpen] = useState(false);
   const [isBookmarkSidebarOpen, _setBookmarkSidebarOpen] = useState(false);
 
@@ -69,7 +76,7 @@ const useSidebarToggles = () => {
 };
 
 const useSidebarContextValue = (
-  toggles: ReturnType<typeof useSidebarToggles>,
+  toggles: SidebarToggles,
   positions: ReturnType<typeof useSidebarScrollPositions>
 ) =>
   useMemo(

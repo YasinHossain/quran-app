@@ -109,7 +109,7 @@ export const PageContent = memo(function PageContent({
 }: PageContentProps): React.JSX.Element {
   const { t } = useTranslation();
 
-  const getContent = () => {
+  const getContent = (): React.JSX.Element => {
     if (isLoading) return <LoadingState />;
     if (error) return <ErrorState error={error} />;
     if (verses.length > 0) {

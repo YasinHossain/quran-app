@@ -1,12 +1,55 @@
 'use client';
 
+import type {
+  Dispatch,
+  SetStateAction,
+  RefObject,
+  DragEvent,
+} from 'react';
+
 import { useTheme } from '@/app/providers/ThemeContext';
+import type { Theme } from '@/app/providers/ThemeContext';
+import type { TafsirResource } from '@/types';
 
 import { useTafsir } from './useTafsir';
 import { useTafsirSelection } from './useTafsirSelection';
 import { useTafsirTabsScroll } from './useTafsirTabsScroll';
 
-export const useTafsirPanel = (isOpen: boolean) => {
+export interface UseTafsirPanelReturn {
+  theme: Theme;
+  tafsirs: TafsirResource[];
+  loading: boolean;
+  error: string | null;
+  isFromCache: boolean;
+
+  searchTerm: string;
+  setSearchTerm: Dispatch<SetStateAction<string>>;
+  languages: string[];
+  groupedTafsirs: Record<string, TafsirResource[]>;
+  activeFilter: string;
+  setActiveFilter: Dispatch<SetStateAction<string>>;
+
+  selectedIds: Set<number>;
+  orderedSelection: number[];
+  handleSelectionToggle: (id: number) => boolean;
+  showLimitWarning: boolean;
+
+  handleDragStart: (e: DragEvent<HTMLDivElement>, id: number) => void;
+  handleDragOver: (e: DragEvent<HTMLDivElement>) => void;
+  handleDrop: (e: DragEvent<HTMLDivElement>, targetId: number) => void;
+  handleDragEnd: () => void;
+  draggedId: number | null;
+
+  handleReset: () => void;
+
+  tabsContainerRef: RefObject<HTMLDivElement>;
+  canScrollLeft: boolean;
+  canScrollRight: boolean;
+  scrollTabsLeft: () => void;
+  scrollTabsRight: () => void;
+}
+
+export const useTafsirPanel = (isOpen: boolean): UseTafsirPanelReturn => {
   const { theme } = useTheme();
 
   const { tafsirs: domainTafsirs, loading: apiLoading, error: apiError, isFromCache } = useTafsir();
@@ -69,5 +112,5 @@ export const useTafsirPanel = (isOpen: boolean) => {
     canScrollRight,
     scrollTabsLeft,
     scrollTabsRight,
-  } as const;
+  };
 };
