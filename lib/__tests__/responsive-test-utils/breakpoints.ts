@@ -32,7 +32,7 @@ export const createMatchMediaMock = (): MatchMediaMock => {
 
   const listeners = new Map<string, Set<(e: MediaQueryListEvent) => void>>();
 
-  const evaluate = (query: string) => {
+  const evaluate = (query: string): boolean => {
     const minWidthMatch = query.match(/\(min-width:\s*(\d+)px\)/);
     const orientationMatch = query.match(/\(orientation:\s*(landscape|portrait)\)/);
 
@@ -47,7 +47,7 @@ export const createMatchMediaMock = (): MatchMediaMock => {
     return false;
   };
 
-  const matchMediaMock = jest.fn((query: string) => {
+  const matchMediaMock = jest.fn((query: string): MediaQueryList => {
     const mockMediaQueryList = {
       matches: evaluate(query),
       media: query,
@@ -64,19 +64,19 @@ export const createMatchMediaMock = (): MatchMediaMock => {
         set?.delete(listener);
       }),
       dispatchEvent: jest.fn(),
-    };
+    } as MediaQueryList;
 
     return mockMediaQueryList;
   });
 
-  const notify = () => {
+  const notify = (): void => {
     listeners.forEach((set, query) => {
       const matches = evaluate(query);
       set.forEach((listener) => listener({ matches, media: query } as MediaQueryListEvent));
     });
   };
 
-  const setViewportWidth = (width: number) => {
+  const setViewportWidth = (width: number): void => {
     currentWidth = width;
     notify();
   };

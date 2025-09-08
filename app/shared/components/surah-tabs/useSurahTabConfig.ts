@@ -1,7 +1,16 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export const useSurahTabConfig = () => {
+interface SurahTab {
+  key: string;
+  label: string;
+}
+
+interface UseSurahTabConfigResult {
+  tabs: SurahTab[];
+}
+
+export const useSurahTabConfig = (): UseSurahTabConfigResult => {
   const { t } = useTranslation();
 
   const tabs = useMemo(

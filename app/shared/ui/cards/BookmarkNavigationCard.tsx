@@ -48,7 +48,7 @@ export const BookmarkNavigationCard = ({
 }: BookmarkNavigationCardProps): React.JSX.Element => {
   const { id, icon: IconComponent, label, description } = content;
 
-  const handleClick = (e: React.MouseEvent<HTMLDivElement | HTMLAnchorElement>) => {
+  const handleClick = (e: React.MouseEvent<HTMLDivElement | HTMLAnchorElement>): void => {
     // Trigger section change before navigation for immediate feedback
     onSectionChange?.(id);
     if (onClick && typeof onClick === 'function') {

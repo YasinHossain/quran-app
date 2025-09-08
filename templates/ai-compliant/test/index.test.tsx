@@ -7,11 +7,11 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { validateResponsiveDesign } from '@/app/testUtils/responsiveTestUtils';
+import { ComponentName } from '@/templates/ai-compliant/component';
 import { TestWrapper } from '@/templates/ai-compliant/shared/test-wrapper';
 
-import type { ComponentNameProps } from '@/templates/ai-compliant/ComponentName';
+import type { ComponentNameProps } from '@/templates/ai-compliant/component';
 
-import { ComponentName } from '@/templates/ai-compliant/ComponentName';
 
 
 jest.mock('@/lib/api/client', () => ({
@@ -34,12 +34,12 @@ const defaultProps: ComponentNameProps = {
   onAction: jest.fn(),
 };
 
-describe('ComponentName', () => {
-  beforeEach(() => {
+describe('ComponentName', (): void => {
+  beforeEach((): void => {
     jest.clearAllMocks();
   });
 
-  it('renders and memoizes', () => {
+  it('renders and memoizes', (): void => {
     const { rerender } = render(<ComponentName {...defaultProps} />, {
       wrapper: TestWrapper,
     });
@@ -48,7 +48,7 @@ describe('ComponentName', () => {
     expect(component).toBeInTheDocument();
 
     const renderCount = jest.fn();
-    const MemoTest = () => {
+    const MemoTest = (): JSX.Element => {
       renderCount();
       return <ComponentName {...defaultProps} />;
     };
@@ -58,7 +58,7 @@ describe('ComponentName', () => {
     expect(renderCount).toHaveBeenCalledTimes(1);
   });
 
-  it('respects responsive design', () => {
+  it('respects responsive design', (): void => {
     render(<ComponentName {...defaultProps} />, { wrapper: TestWrapper });
     const container = screen.getByTestId('component-test-component');
 
@@ -68,12 +68,12 @@ describe('ComponentName', () => {
     });
   });
 
-  it('integrates with providers', () => {
+  it('integrates with providers', (): void => {
     render(<ComponentName {...defaultProps} />, { wrapper: TestWrapper });
     expect(screen.getByTestId('component-test-component')).toBeInTheDocument();
   });
 
-  it('supports keyboard activation', () => {
+  it('supports keyboard activation', (): void => {
     const mockOnAction = jest.fn();
     render(
       <ComponentName {...defaultProps} onAction={mockOnAction} />,
@@ -86,7 +86,7 @@ describe('ComponentName', () => {
     expect(mockOnAction).toHaveBeenCalledWith('test-component', 'click');
   });
 
-  it('is accessible', async () => {
+  it('is accessible', async (): Promise<void> => {
     render(<ComponentName {...defaultProps} />, { wrapper: TestWrapper });
 
     const user = userEvent.setup();

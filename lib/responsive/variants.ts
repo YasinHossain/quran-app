@@ -41,7 +41,7 @@ export const createResponsiveComponent = <P extends object>(
   baseComponent: React.ComponentType<P>,
   adaptations: { [K in ComponentVariant]?: Partial<P> }
 ): React.ComponentType<P> => {
-  const ResponsiveComponent = (props: P) => {
+  const ResponsiveComponent = (props: P): React.ReactElement => {
     const breakpoint = useBreakpoint();
     const variant = getVariantForBreakpoint(breakpoint);
     const adaptedProps = { ...props, ...adaptations[variant] };

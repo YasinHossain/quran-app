@@ -15,7 +15,7 @@ interface SidebarHeaderProps {
   children?: React.ReactNode;
 }
 
-const BackButton = ({ onBack }: { onBack: () => void }) => (
+const BackButton = ({ onBack }: { onBack: () => void }): React.JSX.Element => (
   <button
     onClick={onBack}
     className="p-2 rounded-full hover:bg-surface-hover transition-colors"
@@ -25,7 +25,13 @@ const BackButton = ({ onBack }: { onBack: () => void }) => (
   </button>
 );
 
-const CloseButton = ({ onClose, alwaysShow }: { onClose: () => void; alwaysShow: boolean }) => (
+const CloseButton = ({
+  onClose,
+  alwaysShow,
+}: {
+  onClose: () => void;
+  alwaysShow: boolean;
+}): React.JSX.Element => (
   <button
     onClick={onClose}
     className={cn(

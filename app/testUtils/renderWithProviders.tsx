@@ -1,4 +1,4 @@
-import { render, RenderOptions } from '@testing-library/react';
+import { render, RenderOptions, RenderResult } from '@testing-library/react';
 import { SWRConfig } from 'swr';
 
 import { BookmarkProvider } from '@/app/providers/BookmarkContext';
@@ -21,9 +21,11 @@ const Providers = ({ children }: { children: React.ReactNode }): React.JSX.Eleme
   </SWRConfig>
 );
 
-export const renderWithProviders = (
+export function renderWithProviders(
   ui: React.ReactElement,
   options?: Omit<RenderOptions, 'wrapper'>
-): ReturnType<typeof render> => render(ui, { wrapper: Providers, ...options });
+): RenderResult {
+  return render(ui, { wrapper: Providers, ...options });
+}
 
 export * from '@testing-library/react';

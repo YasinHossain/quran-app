@@ -97,7 +97,7 @@ export class Translation {
   /**
    * Converts to plain object for serialization
    */
-  toPlainObject() {
+  toPlainObject(): TranslationPlainObject {
     return {
       id: this.id,
       resourceId: this.resourceId,
@@ -110,4 +110,16 @@ export class Translation {
       preview: this.getPreview(),
     };
   }
+}
+
+export interface TranslationPlainObject {
+  id: number;
+  resourceId: number;
+  text: string;
+  languageCode: string;
+  wordCount: number;
+  characterCount: number;
+  isEnglish: boolean;
+  isLong: boolean;
+  preview: string;
 }

@@ -61,7 +61,7 @@ export const useContainer = (containerRef?: React.RefObject<HTMLElement>): UseCo
       return match ? match[1] : 'xs';
     };
 
-    const updateContainerSize = () => {
+    const updateContainerSize = (): void => {
       if (!containerRef.current) return;
       const { width } = containerRef.current.getBoundingClientRect();
       setContainerSize(getSizeFromWidth(width));

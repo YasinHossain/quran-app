@@ -47,9 +47,9 @@ function DraggableTafsirItem({
     <div
       key={id}
       draggable
-      onDragStart={(e) => onDragStart(e, id)}
+      onDragStart={(e: React.DragEvent<HTMLDivElement>): void => onDragStart(e, id)}
       onDragOver={onDragOver}
-      onDrop={(e) => onDrop(e, id)}
+      onDrop={(e: React.DragEvent<HTMLDivElement>): void => onDrop(e, id)}
       onDragEnd={onDragEnd}
       className={`flex items-center justify-between p-2 rounded-lg shadow-sm cursor-grab active:cursor-grabbing transition-opacity border ${
         isDragged ? 'opacity-50' : 'opacity-100'
@@ -60,7 +60,7 @@ function DraggableTafsirItem({
         <span className="font-medium text-sm truncate text-foreground">{item.name}</span>
       </div>
       <button
-        onClick={() => onToggle(id)}
+        onClick={(): void => onToggle(id)}
         className="hover:text-accent transition-colors p-1 rounded-full flex-shrink-0 ml-2 text-muted"
       >
         <CloseIcon size={16} strokeWidth={2.5} />
@@ -95,8 +95,8 @@ export const TafsirSelectionList = ({
       return <EmptySelectionState />;
     }
 
-    return orderedSelection.map((id) => {
-      const item = tafsirs.find((t) => t.id === id);
+    return orderedSelection.map((id): React.JSX.Element | null => {
+      const item = tafsirs.find((t): boolean => t.id === id);
       if (!item) return null;
 
       return (

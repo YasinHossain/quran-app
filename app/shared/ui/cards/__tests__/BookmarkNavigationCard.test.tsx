@@ -5,7 +5,7 @@ import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders
 
 import type { MockProps } from '@/tests/mocks';
 
-jest.mock('next/link', () => {
+jest.mock('next/link', (): unknown => {
   return ({
     children,
     href,
@@ -13,7 +13,7 @@ jest.mock('next/link', () => {
     ...props
   }: MockProps<
     React.AnchorHTMLAttributes<HTMLAnchorElement> & { scroll?: boolean; href: string }
-  >) => {
+  >): React.JSX.Element => {
     const { scroll: _scroll, ...rest } = props;
     return (
       <a
@@ -30,7 +30,13 @@ jest.mock('next/link', () => {
   };
 });
 
-const DummyIcon = ({ size = 16, className = '' }: { size?: number; className?: string }) => (
+const DummyIcon = ({
+  size = 16,
+  className = '',
+}: {
+  size?: number;
+  className?: string;
+}): React.JSX.Element => (
   <svg data-testid="icon" width={size} height={size} className={className} />
 );
 

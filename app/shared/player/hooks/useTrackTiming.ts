@@ -9,12 +9,14 @@ import type { Track } from '@/app/shared/player/types';
 const DEFAULT_COVER =
   "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96'><rect width='100%' height='100%' rx='12' ry='12' fill='%23e5e7eb'/><text x='50%' y='52%' dominant-baseline='middle' text-anchor='middle' font-family='Inter, system-ui, sans-serif' font-size='12' fill='%239ca3af'>No cover</text></svg>";
 
-function getTrackMeta(track?: Track | null): {
+interface TrackMeta {
   title: string;
   artist: string;
   cover: string;
   interactable: boolean;
-} {
+}
+
+function getTrackMeta(track?: Track | null): TrackMeta {
   if (!track) {
     return { title: 'No track selected', artist: '', cover: DEFAULT_COVER, interactable: false };
   }
@@ -23,7 +25,7 @@ function getTrackMeta(track?: Track | null): {
     artist: track.artist ?? '',
     cover: track.coverUrl || DEFAULT_COVER,
     interactable: Boolean(track.src),
-  } as const;
+  };
 }
 
 interface Opts {
@@ -33,7 +35,7 @@ interface Opts {
   contextRef: MutableRefObject<HTMLAudioElement | null>;
 }
 
-interface TrackTimingReturn {
+export interface TrackTimingReturn {
   audioRef: MutableRefObject<HTMLAudioElement | null>;
   play: () => void;
   pause: () => void;
@@ -89,5 +91,5 @@ export function useTrackTiming({
     title,
     artist,
     cover,
-  } as const;
+  };
 }

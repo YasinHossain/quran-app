@@ -46,7 +46,9 @@ export const SearchField = ({
 );
 
 // Predefined search fields for common use cases
-export const FontSearchField = (props: Omit<SearchFieldProps, 'placeholder' | 'label'>) => (
+export const FontSearchField = (
+  props: Omit<SearchFieldProps, 'placeholder' | 'label'>
+): React.JSX.Element => (
   <SearchField
     {...props}
     label="SEARCH FONTS"
@@ -57,14 +59,20 @@ export const FontSearchField = (props: Omit<SearchFieldProps, 'placeholder' | 'l
   />
 );
 
-export const TranslationSearchField = (props: Omit<SearchFieldProps, 'placeholder'>) => (
+export const TranslationSearchField = (
+  props: Omit<SearchFieldProps, 'placeholder'>
+): React.JSX.Element => (
   <SearchField {...props} placeholder="Search by name or style..." variant="panel" />
 );
 
-export const TafsirSearchField = (props: Omit<SearchFieldProps, 'placeholder'>) => (
+export const TafsirSearchField = (
+  props: Omit<SearchFieldProps, 'placeholder'>
+): React.JSX.Element => (
   <SearchField {...props} placeholder="Search tafsirs (exact match)..." variant="panel" />
 );
 
-export const BookmarkSearchField = (props: Omit<SearchFieldProps, 'placeholder'>) => (
+export const BookmarkSearchField = (
+  props: Omit<SearchFieldProps, 'placeholder'>
+): React.JSX.Element => (
   <SearchField {...props} placeholder="Search Bookmarks" size="sm" className="w-48" />
 );

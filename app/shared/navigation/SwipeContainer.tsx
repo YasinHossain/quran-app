@@ -11,7 +11,7 @@ interface SwipeContainerProps {
   className?: string;
 }
 
-export const SwipeContainer = ({ children, className }: SwipeContainerProps): React.JSX.Element => {
+export const SwipeContainer = ({ children, className }: SwipeContainerProps): JSX.Element => {
   const swipeGestures = useSwipeNavigation();
 
   return (

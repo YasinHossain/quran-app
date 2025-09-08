@@ -9,7 +9,9 @@ export function HeaderSearch(): JSX.Element {
   const router = useRouter();
   const [query, setQuery] = useState('');
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ): void => {
     if (e.key === 'Enter' && query.trim()) {
       router.push(`/search?query=${encodeURIComponent(query.trim())}`);
     }

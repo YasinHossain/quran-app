@@ -7,7 +7,15 @@ const toNumberParam = (param: string | string[] | undefined): number | undefined
   return Number.isNaN(num) ? undefined : num;
 };
 
-export const useSurahTabParams = () => {
+interface SurahTabParamsResult {
+  currentSurahId?: number;
+  currentJuzId?: number;
+  currentPageId?: number;
+  isTafsirPath: boolean;
+  getInitialTab: () => 'Surah' | 'Juz' | 'Page';
+}
+
+export const useSurahTabParams = (): SurahTabParamsResult => {
   const { surahId, juzId, pageId } = useParams();
   const pathname = usePathname();
 

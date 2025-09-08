@@ -128,5 +128,5 @@ export const useTafsirSelection = (domainTafsirs: Tafsir[]): UseTafsirSelectionR
     handleDragEnd,
     draggedId,
     handleReset,
-  } as const;
+  } as const satisfies UseTafsirSelectionReturn;
 };

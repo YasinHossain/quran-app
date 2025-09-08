@@ -53,7 +53,7 @@ const rawConfig = {
  *
  * Throws an error if configuration validation fails.
  */
-export const config: Config = (() => {
+export const config: Config = ((): Config => {
   try {
     return configSchema.parse(rawConfig);
   } catch (error) {
@@ -122,7 +122,18 @@ export function validateConfig(): string[] {
  *
  * Only returns configuration that's safe to expose to the browser.
  */
-export function getClientConfig() {
+export type ClientConfig = {
+  app: Pick<Config['app'], 'name' | 'version' | 'environment'>;
+  api: Pick<Config['api'], 'quranBaseUrl' | 'timeout'>;
+  features: Config['features'];
+  ui: Config['ui'];
+  audio: Config['audio'];
+  search: Config['search'];
+  cache: Pick<Config['cache'], 'ttl' | 'enableIndexedDBCache'>;
+  storage: Pick<Config['storage'], 'enableIndexedDB' | 'enableLocalStorage'>;
+};
+
+export function getClientConfig(): ClientConfig {
   return {
     app: {
       name: config.app.name,

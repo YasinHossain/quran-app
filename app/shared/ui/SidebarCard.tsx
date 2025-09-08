@@ -21,7 +21,7 @@ export const SidebarCard = ({
   scroll = false,
   'data-active': dataActive,
   ...props
-}: SidebarCardProps) => {
+}: SidebarCardProps): React.JSX.Element => {
   return (
     <Link
       href={href}

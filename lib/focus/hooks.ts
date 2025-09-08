@@ -15,7 +15,7 @@ export const useFocusTrap = (
     const focusables = getFocusableElements(containerRef.current);
     if (!focusables.length) return;
     focusables[0].focus();
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent): void => {
       if (e.key !== 'Tab') return;
       if (focusables.length === 1) {
         e.preventDefault();
@@ -44,11 +44,11 @@ export const useFocusTrap = (
 
 export const useFocusRestoration = (): FocusHandlers => {
   const saved = React.useRef<string | null>(null);
-  const saveFocus = React.useCallback(() => {
+  const saveFocus = React.useCallback((): void => {
     const el = document.activeElement as HTMLElement;
     if (el?.id) saved.current = el.id;
   }, []);
-  const restoreFocus = React.useCallback(() => {
+  const restoreFocus = React.useCallback((): void => {
     if (saved.current) {
       document.getElementById(saved.current)?.focus();
       saved.current = null;
@@ -89,7 +89,7 @@ export const useRovingTabIndex = (
   onActiveIndexChange: (index: number) => void
 ): void => {
   React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent): void => {
       if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key))
         return;
       e.preventDefault();

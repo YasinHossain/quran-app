@@ -21,7 +21,7 @@ export function usePlayerKeyboard({
   setVolume,
 }: Options): void {
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
+    const onKey = (e: KeyboardEvent): void => {
       if ((e.target as HTMLElement)?.closest('input, textarea, [role=slider]')) return;
       if (e.code === 'Space') {
         e.preventDefault();

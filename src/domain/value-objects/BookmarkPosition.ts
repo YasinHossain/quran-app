@@ -82,7 +82,7 @@ export class BookmarkPosition {
     return new BookmarkPosition(this.surahId, this.ayahNumber, new Date());
   }
 
-  toPlainObject() {
+  toPlainObject(): BookmarkPositionPlainObject {
     return {
       surahId: this.surahId,
       ayahNumber: this.ayahNumber,
@@ -105,4 +105,13 @@ export class BookmarkPosition {
     }
     return new BookmarkPosition(surahId, ayahNumber, new Date());
   }
+}
+
+export interface BookmarkPositionPlainObject {
+  surahId: number;
+  ayahNumber: number;
+  verseKey: string;
+  timestamp: string;
+  isFirstVerse: boolean;
+  displayText: string;
 }

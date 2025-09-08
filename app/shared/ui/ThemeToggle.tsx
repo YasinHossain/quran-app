@@ -20,12 +20,12 @@ export const ThemeToggle = ({
   const { setTheme } = useTheme();
   const [currentTheme, setCurrentTheme] = React.useState<'light' | 'dark'>('light');
 
-  React.useEffect(() => {
+  React.useEffect((): void => {
     const isDark = document.documentElement.classList.contains('dark');
     setCurrentTheme(isDark ? 'dark' : 'light');
   }, []);
 
-  const handleThemeChange = (theme: 'light' | 'dark') => {
+  const handleThemeChange = (theme: 'light' | 'dark'): void => {
     setTheme(theme);
     setCurrentTheme(theme);
   };
@@ -63,7 +63,7 @@ export const ThemeToggle = ({
   }
 
   // Original button style for backward compatibility
-  const toggleTheme = () => {
+  const toggleTheme = (): void => {
     const isDark = document.documentElement.classList.contains('dark');
     setTheme(isDark ? 'light' : 'dark');
   };

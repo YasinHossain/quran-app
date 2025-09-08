@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
 export function useBodyScrollLock(): void {
-  useEffect(() => {
+  useEffect((): void => {
     document.body.style.overflow = 'hidden';
-    return () => {
+    return (): void => {
       document.body.style.overflow = '';
     };
   }, []);
@@ -28,13 +28,13 @@ export function usePanelsState(): PanelsState {
 
   return {
     isTranslationPanelOpen,
-    openTranslationPanel: () => setIsTranslationPanelOpen(true),
-    closeTranslationPanel: () => setIsTranslationPanelOpen(false),
+    openTranslationPanel: (): void => setIsTranslationPanelOpen(true),
+    closeTranslationPanel: (): void => setIsTranslationPanelOpen(false),
     isTafsirPanelOpen,
-    openTafsirPanel: () => setIsTafsirPanelOpen(true),
-    closeTafsirPanel: () => setIsTafsirPanelOpen(false),
+    openTafsirPanel: (): void => setIsTafsirPanelOpen(true),
+    closeTafsirPanel: (): void => setIsTafsirPanelOpen(false),
     isWordPanelOpen,
-    openWordPanel: () => setIsWordPanelOpen(true),
-    closeWordPanel: () => setIsWordPanelOpen(false),
+    openWordPanel: (): void => setIsWordPanelOpen(true),
+    closeWordPanel: (): void => setIsWordPanelOpen(false),
   };
 }

@@ -84,7 +84,7 @@ export class Surah {
   /**
    * Converts to plain object for serialization
    */
-  toPlainObject() {
+  toPlainObject(): SurahPlainObject {
     return {
       id: this.id,
       name: this.name,
@@ -108,4 +108,27 @@ export class Surah {
       juzNumbers: getJuzNumbers(this.id),
     };
   }
+}
+
+export interface SurahPlainObject {
+  id: number;
+  name: string;
+  arabicName: string;
+  englishName: string;
+  englishTranslation: string;
+  numberOfAyahs: number;
+  revelationType: RevelationType;
+  revelationOrder?: number;
+  isMakki: boolean;
+  isMadani: boolean;
+  canBeReadInPrayer: boolean;
+  startWithBismillah: boolean;
+  memorizationDifficulty: 'easy' | 'medium' | 'hard';
+  estimatedReadingTime: number;
+  isShortSurah: boolean;
+  isMediumSurah: boolean;
+  isLongSurah: boolean;
+  isSevenLongSurah: boolean;
+  isMufassalSurah: boolean;
+  juzNumbers: number[];
 }

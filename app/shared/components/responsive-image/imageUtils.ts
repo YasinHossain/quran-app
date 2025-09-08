@@ -3,7 +3,7 @@ import type { ResponsiveImageSources, ResponsiveImageSizes } from './types';
 export const pickImageSource = (
   src: string | ResponsiveImageSources,
   breakpoint: 'mobile' | 'tablet' | 'desktop' | 'wide'
-) => {
+): string => {
   if (typeof src === 'string') return src;
 
   switch (breakpoint) {
@@ -32,7 +32,7 @@ export const buildSizes = (sizes?: ResponsiveImageSizes | string): string => {
   return sizeQueries.join(', ');
 };
 
-export const buildFallbackSvg = () =>
+export const buildFallbackSvg = (): string =>
   'data:image/svg+xml,' +
   encodeURIComponent(
     `<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">\n` +

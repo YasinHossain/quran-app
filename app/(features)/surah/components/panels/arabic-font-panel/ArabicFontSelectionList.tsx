@@ -37,9 +37,9 @@ const renderFontItem = (
   <div
     key={id}
     draggable
-    onDragStart={(e) => handlers.handleDragStart(e, id)}
+    onDragStart={(e: React.DragEvent<HTMLDivElement>): void => handlers.handleDragStart(e, id)}
     onDragOver={handlers.handleDragOver}
-    onDrop={(e) => handlers.handleDrop(e, id)}
+    onDrop={(e: React.DragEvent<HTMLDivElement>): void => handlers.handleDrop(e, id)}
     onDragEnd={handlers.handleDragEnd}
     className={`flex items-center justify-between p-3 rounded-lg cursor-grab active:cursor-grabbing transition-all duration-200 ${
       draggedId === id ? 'opacity-50' : 'opacity-100'
@@ -53,7 +53,7 @@ const renderFontItem = (
       </div>
     </div>
     <button
-      onClick={() => handlers.handleSelection(id)}
+      onClick={(): void => handlers.handleSelection(id)}
       className="hover:text-accent hover:bg-accent/10 transition-all duration-200 p-1.5 rounded-full flex-shrink-0 ml-2 text-muted"
     >
       <CloseIcon size={14} strokeWidth={2.5} />
@@ -87,7 +87,7 @@ export const ArabicFontSelectionList = ({
         {orderedSelection.length === 0 ? (
           <p className="text-center text-sm py-4 text-muted font-medium">No Arabic font selected</p>
         ) : (
-          orderedSelection.map((id) => {
+          orderedSelection.map((id): React.JSX.Element | null => {
             const item = fonts.find((font) => font.id === id);
             if (!item) return null;
             return renderFontItem(

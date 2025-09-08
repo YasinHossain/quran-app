@@ -12,14 +12,18 @@ interface Props {
   onNext?: () => boolean;
 }
 
-interface ControllerReturn extends ReturnType<typeof usePlayerOptionsState> {
+export interface UseQuranAudioControllerReturn extends ReturnType<typeof usePlayerOptionsState> {
   isPlayerVisible: boolean;
   audioRef: RefObject<HTMLAudioElement>;
   handleEnded: () => void;
   playerLayoutProps: ReturnType<typeof useControllerLayout>;
 }
 
-export function useQuranAudioController({ track, onPrev, onNext }: Props): ControllerReturn {
+export function useQuranAudioController({
+  track,
+  onPrev,
+  onNext,
+}: Props): UseQuranAudioControllerReturn {
   const options = usePlayerOptionsState();
   const core = useAudioControllerCore({ track, onPrev, onNext });
   const playerLayoutProps = useControllerLayout({
@@ -34,5 +38,5 @@ export function useQuranAudioController({ track, onPrev, onNext }: Props): Contr
     handleEnded: core.handleEnded,
     playerLayoutProps,
     ...options,
-  } as const;
+  };
 }

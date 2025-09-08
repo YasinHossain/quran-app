@@ -16,7 +16,7 @@ interface HookSectionParams<TProps, TData> {
 export function hookContextIntegrationSection<TProps, TData>({
   useHook,
   mockData
-}: HookSectionParams<TProps, TData>) {
+}: HookSectionParams<TProps, TData>): void {
   describe('🔄 Context Integration', () => {
     it('provides data from context', async () => {
       const { result } = renderHookWithProviders(
@@ -32,7 +32,7 @@ export function hookContextIntegrationSection<TProps, TData>({
 
 export function hookPerformanceSection<TProps, TData>({
   useHook
-}: HookSectionParams<TProps, TData>) {
+}: HookSectionParams<TProps, TData>): void {
   describe('⚡ Performance', () => {
     it('returns stable references', async () => {
       const { result, rerender } = renderHookWithProviders(
@@ -51,7 +51,7 @@ export function hookPerformanceSection<TProps, TData>({
 
 export function hookCleanupSection<TProps, TData>({
   useHook
-}: HookSectionParams<TProps, TData>) {
+}: HookSectionParams<TProps, TData>): void {
   describe('🧹 Cleanup', () => {
     it('cancels requests on unmount', () => {
       const mockAbort = jest.fn();
@@ -71,7 +71,7 @@ export function hookCleanupSection<TProps, TData>({
 export function hookDataFetchingSection<TProps, TData>({
   useHook,
   mockData
-}: HookSectionParams<TProps, TData>) {
+}: HookSectionParams<TProps, TData>): void {
   describe('🔄 Data Fetching', () => {
     it('supports refetching', async () => {
       const { result } = renderHookWithProviders(

@@ -25,10 +25,10 @@ function useSettingsSidebar(): UseSettingsSidebarReturn {
   return {
     isTranslationPanelOpen,
     isWordPanelOpen,
-    openTranslationPanel: () => setIsTranslationPanelOpen(true),
-    closeTranslationPanel: () => setIsTranslationPanelOpen(false),
-    openWordPanel: () => setIsWordPanelOpen(true),
-    closeWordPanel: () => setIsWordPanelOpen(false),
+    openTranslationPanel: (): void => setIsTranslationPanelOpen(true),
+    closeTranslationPanel: (): void => setIsTranslationPanelOpen(false),
+    openWordPanel: (): void => setIsWordPanelOpen(true),
+    closeWordPanel: (): void => setIsWordPanelOpen(false),
   };
 }
 
@@ -73,7 +73,7 @@ export default function PagePage({ params }: PagePageProps): JSX.Element {
       <SettingsSidebar
         onTranslationPanelOpen={settingsSidebar.openTranslationPanel}
         onWordLanguagePanelOpen={settingsSidebar.openWordPanel}
-        onReadingPanelOpen={() => {}}
+        onReadingPanelOpen={(): void => {}}
         selectedTranslationName={selectedTranslationName}
         selectedWordLanguageName={selectedWordLanguageName}
         isTranslationPanelOpen={settingsSidebar.isTranslationPanelOpen}

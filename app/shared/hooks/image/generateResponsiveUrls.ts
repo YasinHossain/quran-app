@@ -21,7 +21,7 @@ export const generateResponsiveUrls = (
   const { widths, format = 'webp', quality = 80 } = options;
 
   // This is a generic implementation - adjust based on your CDN/image service
-  const generateUrl = (width: number) => {
+  const generateUrl = (width: number): string => {
     return `${baseUrl}?w=${width}&f=${format}&q=${quality}`;
   };
 

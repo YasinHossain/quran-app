@@ -43,11 +43,11 @@ class ErrorBoundaryClass extends React.Component<ErrorBoundaryProps, ErrorBounda
     });
   }
 
-  resetError = () => {
+  resetError = (): void => {
     this.setState({ hasError: false, error: undefined, errorInfo: undefined });
   };
 
-  render() {
+  render(): React.ReactNode {
     if (this.state.hasError) {
       const FallbackComponent = this.props.fallback || DefaultErrorFallback;
       return <FallbackComponent error={this.state.error} resetError={this.resetError} />;

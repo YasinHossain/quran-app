@@ -66,9 +66,11 @@ function VersesList({
 }): React.JSX.Element {
   return (
     <div className="space-y-4 md:space-y-6">
-      {verses.map((verse: VerseType) => (
-        <VerseCard key={verse.id} verse={verse} />
-      ))}
+      {verses.map(
+        (verse: VerseType): React.JSX.Element => (
+          <VerseCard key={verse.id} verse={verse} />
+        )
+      )}
       <div ref={loadMoreRef}>
         <LoadMoreIndicator isValidating={isValidating} isReachingEnd={isReachingEnd} t={t} />
       </div>

@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * MANDATORY Architecture-Compliant Component Template
  *
@@ -7,9 +9,13 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useBookmarks, useSettings, useAudio } from '@/templates/ai-compliant/shared/contexts';
 
-import type { ComponentData, ComponentAction } from '@/types';
+import type { ComponentAction, ComponentData, Settings } from '@/types';
 
-interface ComponentNameProps {
+function transformData(data: ComponentData, settings: Settings): ComponentData {
+  return settings ? data : data;
+}
+
+export interface ComponentNameProps {
   id: string;
   data: ComponentData;
   onAction?: ComponentAction;
@@ -24,15 +30,15 @@ export const ComponentName = memo(function ComponentName({
 }: ComponentNameProps) {
   const [localState, setLocalState] = useState('');
 
-  const { settings } = useSettings();
+  const { settings: componentSettings } = useSettings();
   const { currentTrack, isPlaying } = useAudio();
   const { bookmarkedVerses, toggleBookmark } = useBookmarks();
 
   const componentRef = useRef<HTMLDivElement>(null);
 
   const processedData = useMemo(
-    () => transformData(data, settings),
-    [data, settings],
+    () => transformData(data, componentSettings),
+    [data, componentSettings],
   );
 
   const isCurrentlyPlaying = useMemo(
@@ -46,6 +52,7 @@ export const ComponentName = memo(function ComponentName({
   );
 
   const handleClick = useCallback(() => {
+    setLocalState('clicked');
     handleAction('click');
   }, [handleAction]);
 
@@ -53,8 +60,12 @@ export const ComponentName = memo(function ComponentName({
     toggleBookmark(id);
   }, [id, toggleBookmark]);
 
-  useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
+  useEffect((): void => {
+    setLocalState(componentSettings.mode || '');
+  }, [componentSettings]);
+
+  useEffect((): void => {
+    const handleKeyPress = (event: KeyboardEvent): void => {
       if (
         event.key === 'Enter' &&
         componentRef.current?.contains(document.activeElement)
@@ -76,7 +87,7 @@ export const ComponentName = memo(function ComponentName({
       <div className="space-y-4 md:space-y-0 md:flex md:items-center md:gap-6">
         <div className="flex justify-between md:w-16 md:flex-col md:pt-1">
           <button
-            className="h-11 px-4 bg-accent text-accent-foreground rounded-md"
+            className="h-11 px-4 bg-accent text-accent-foreground rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             onClick={handleClick}
             aria-label={`Action for ${data.name || id}`}
           >
@@ -84,7 +95,7 @@ export const ComponentName = memo(function ComponentName({
           </button>
 
           <button
-            className="h-11 px-4 bg-secondary text-secondary-foreground rounded-md"
+            className="h-11 px-4 bg-secondary text-secondary-foreground rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             onClick={handleToggleBookmark}
             aria-label={`Toggle bookmark for ${data.name || id}`}
           >
@@ -102,7 +113,7 @@ export const ComponentName = memo(function ComponentName({
             )}
           </div>
 
-          {processedData.items.map((item) => (
+          {processedData.items.map((item): JSX.Element => (
             <div
               key={item.id}
               className="min-h-11 p-3 bg-card text-card-foreground rounded-md border border-border"
@@ -118,6 +129,9 @@ export const ComponentName = memo(function ComponentName({
             </div>
           )}
         </div>
+        <p className="sr-only" aria-live="polite">
+          {localState}
+        </p>
       </div>
     </div>
   );

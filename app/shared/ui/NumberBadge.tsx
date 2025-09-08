@@ -18,7 +18,7 @@ export const NumberBadge = ({
   isActive = false,
   className,
   size = 'md',
-}: NumberBadgeProps) => {
+}: NumberBadgeProps): React.JSX.Element => {
   return (
     <div
       className={cn(

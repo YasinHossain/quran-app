@@ -5,7 +5,14 @@ interface UseModalKeyboardOptions {
   onCancel: () => void;
 }
 
-export const useModalKeyboard = ({ isOpen, onCancel }: UseModalKeyboardOptions) => {
+interface UseModalKeyboardResult {
+  cancelRef: React.MutableRefObject<HTMLButtonElement | null>;
+}
+
+export const useModalKeyboard = ({
+  isOpen,
+  onCancel,
+}: UseModalKeyboardOptions): UseModalKeyboardResult => {
   const cancelRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -17,7 +24,7 @@ export const useModalKeyboard = ({ isOpen, onCancel }: UseModalKeyboardOptions) 
   useEffect(() => {
     if (!isOpen) return;
 
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent): void => {
       if (e.key === 'Escape') {
         onCancel();
       }

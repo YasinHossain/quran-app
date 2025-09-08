@@ -25,7 +25,7 @@ const useVersePlayPause = (verse: VerseType): (() => void) => {
     openPlayer,
   } = useAudio();
 
-  return useCallback(() => {
+  return useCallback((): void => {
     if (playingId === verse.id) {
       audioRef.current?.pause();
       setPlayingId(null);

@@ -8,7 +8,7 @@ import { Spinner } from '@/app/shared/Spinner';
 import { getSurahCoverUrl } from '@/lib/api';
 import { buildAudioUrl } from '@/lib/audio/reciters';
 
-import type { Reciter } from '@/app/shared/player/types';
+import type { Reciter, Track } from '@/app/shared/player/types';
 import type { Verse } from '@/types';
 
 // Loading fallback extracted to keep component lean
@@ -20,11 +20,13 @@ const LoadingFallback = (): JSX.Element => (
 
 // Dynamic import for heavy QuranAudioPlayer component
 const QuranAudioPlayer = dynamic(
-  () =>
+  (): Promise<{
+    default: typeof import('@/app/shared/player/QuranAudioPlayer').QuranAudioPlayer;
+  }> =>
     import('@/app/shared/player/QuranAudioPlayer').then((mod) => ({
       default: mod.QuranAudioPlayer,
     })),
-  { loading: () => <LoadingFallback />, ssr: false }
+  { loading: (): React.JSX.Element => <LoadingFallback />, ssr: false }
 );
 
 interface TafsirAudioPlayerProps {
@@ -38,7 +40,7 @@ interface TafsirAudioPlayerProps {
 // Helper: derive surah cover URL from active verse
 const useSurahCover = (verse: Verse | null): string | null => {
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
-  useEffect(() => {
+  useEffect((): void => {
     if (!verse) return;
     const [surahStr] = verse.verse_key.split(':');
     const surahNumber = Number.parseInt(surahStr ?? '0', 10);
@@ -48,7 +50,7 @@ const useSurahCover = (verse: Verse | null): string | null => {
 };
 
 // Helper: build audio track object
-const createTrack = (verse: Verse, reciter: Reciter, coverUrl: string | null) => ({
+const createTrack = (verse: Verse, reciter: Reciter, coverUrl: string | null): Track => ({
   id: verse.id.toString(),
   title: `Verse ${verse.verse_key}`,
   artist: reciter.name,

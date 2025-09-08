@@ -6,23 +6,27 @@ import nodeFetch from 'node-fetch';
 // Ensure fetch is available in the JSDOM environment
 if (typeof globalThis.fetch === 'undefined') {
   if (typeof global.fetch === 'function') {
-    globalThis.fetch = (...args) => global.fetch(...args);
+    globalThis.fetch = /** @type {typeof fetch} */ ((...args) => global.fetch(...args));
   } else {
-    globalThis.fetch = (...args) => nodeFetch(...args);
+    globalThis.fetch = /** @type {typeof fetch} */ ((...args) => nodeFetch(...args));
   }
 }
 
 // Minimal mock that satisfies Next's useIntersection requirements
 class IntersectionObserverMock {
+  /** @param {IntersectionObserverCallback} cb */
   constructor(cb) {
     this.cb = cb;
   }
+  /** @param {Element} el @returns {void} */
   observe = (el) => {
     if (this.cb) {
       this.cb([{ isIntersecting: true, target: el }]);
     }
   };
+  /** @returns {void} */
   unobserve = () => {};
+  /** @returns {void} */
   disconnect = () => {};
 }
 

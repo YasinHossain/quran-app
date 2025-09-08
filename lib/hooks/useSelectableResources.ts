@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 
-import { useDraggableSelection } from './useDraggableSelection';
-import { useResourceSearch } from './useResourceSearch';
+import { useDraggableSelection, type UseDraggableSelectionResult } from './useDraggableSelection';
+import { useResourceSearch, type UseResourceSearchResult } from './useResourceSearch';
 
 interface Resource {
   id: number;
@@ -15,12 +15,20 @@ interface SelectableOptions<T extends Resource> {
   languageSort?: (a: string, b: string) => number;
 }
 
+export interface UseSelectableResourcesResult<T extends Resource>
+  extends UseResourceSearchResult<T>,
+    Omit<UseDraggableSelectionResult, 'setOrderedSelection'> {
+  selectedIds: Set<number>;
+  setSelections: (ids: number[]) => void;
+  handleSelectionToggle: (id: number) => boolean;
+}
+
 export const useSelectableResources = <T extends Resource>({
   resources,
   selectionLimit,
   initialSelectedIds = [],
   languageSort,
-}: SelectableOptions<T>) => {
+}: SelectableOptions<T>): UseSelectableResourcesResult<T> => {
   const [selectedIds, setSelectedIds] = useState(new Set(initialSelectedIds));
   const drag = useDraggableSelection(initialSelectedIds);
   const search = useResourceSearch<T>({ resources, languageSort });
@@ -67,5 +75,5 @@ export const useSelectableResources = <T extends Resource>({
     handleDragEnd: drag.handleDragEnd,
     draggedId: drag.draggedId,
     setSelections,
-  } as const;
+  };
 };

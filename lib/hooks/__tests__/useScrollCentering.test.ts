@@ -19,7 +19,7 @@ const makeRect = (top: number, bottom: number): DOMRect => ({
 describe('useScrollCentering', () => {
   const scrollRef = { current: document.createElement('div') } as React.RefObject<HTMLDivElement>;
 
-  const createEls = () => {
+  const createEls = (): { surahEl: HTMLDivElement; juzEl: HTMLDivElement } => {
     const surahEl = document.createElement('div');
     const juzEl = document.createElement('div');
     surahEl.scrollIntoView = jest.fn();

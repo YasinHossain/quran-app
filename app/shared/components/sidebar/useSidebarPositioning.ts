@@ -6,12 +6,16 @@ interface SidebarPositioningOptions {
   isHeaderHidden: boolean;
 }
 
+interface SidebarPositioningResult {
+  getPositionClasses: () => string;
+}
+
 export const useSidebarPositioning = ({
   position,
   isOpen,
   isHeaderHidden,
-}: SidebarPositioningOptions) => {
-  const getPositionClasses = () => {
+}: SidebarPositioningOptions): SidebarPositioningResult => {
+  const getPositionClasses = (): string => {
     const baseClasses =
       'fixed w-full sm:w-80 lg:w-[20.7rem] bg-background transition-all duration-300 ease-in-out';
 

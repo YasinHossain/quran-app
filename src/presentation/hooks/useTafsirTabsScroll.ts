@@ -54,5 +54,5 @@ export const useTafsirTabsScroll = (languages: string[]): UseTafsirTabsScrollRet
     canScrollRight,
     scrollTabsLeft,
     scrollTabsRight,
-  } as const;
+  } as const satisfies UseTafsirTabsScrollReturn;
 };

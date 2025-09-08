@@ -1,4 +1,4 @@
-import { Translation } from '@/src/domain/value-objects/Translation';
+import { Translation, TranslationPlainObject } from '@/src/domain/value-objects/Translation';
 
 import { getEstimatedReadingTime, getWordCount, isSajdahVerse } from './verseUtils';
 
@@ -92,7 +92,7 @@ export class Verse {
   /**
    * Converts to plain object for serialization
    */
-  toPlainObject() {
+  toPlainObject(): VersePlainObject {
     return {
       id: this.id,
       surahId: this.surahId,
@@ -107,4 +107,18 @@ export class Verse {
       isSajdahVerse: isSajdahVerse(this.surahId, this.ayahNumber),
     };
   }
+}
+
+export interface VersePlainObject {
+  id: string;
+  surahId: number;
+  ayahNumber: number;
+  verseKey: string;
+  arabicText: string;
+  uthmaniText: string;
+  translation?: TranslationPlainObject;
+  wordCount: number;
+  estimatedReadingTime: number;
+  isFirstVerse: boolean;
+  isSajdahVerse: boolean;
 }

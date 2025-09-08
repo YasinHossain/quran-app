@@ -7,8 +7,15 @@ import { handleSwipeDecision } from './swipeGestures/swipeDecision';
 
 import type { TouchPoint } from './swipeGestures/gestureCalculations';
 import type { SwipeGesturesOptions } from './swipeGestures/types';
+import type React from 'react';
 
-export const useSwipeGestures = (options: SwipeGesturesOptions) => {
+interface UseSwipeGesturesReturn {
+  onTouchStart: (event: React.TouchEvent) => void;
+  onTouchEnd: (event: React.TouchEvent) => void;
+  onTouchMove: (event: React.TouchEvent) => void;
+}
+
+export const useSwipeGestures = (options: SwipeGesturesOptions): UseSwipeGesturesReturn => {
   const {
     onSwipeLeft,
     onSwipeRight,
@@ -20,7 +27,7 @@ export const useSwipeGestures = (options: SwipeGesturesOptions) => {
 
   const touchStart = useRef<TouchPoint | null>(null);
 
-  const handleTouchStart = useCallback((event: React.TouchEvent) => {
+  const handleTouchStart = useCallback((event: React.TouchEvent): void => {
     const touch = event.touches[0];
     touchStart.current = {
       x: touch.clientX,
@@ -30,7 +37,7 @@ export const useSwipeGestures = (options: SwipeGesturesOptions) => {
   }, []);
 
   const handleTouchEnd = useCallback(
-    (event: React.TouchEvent) => {
+    (event: React.TouchEvent): void => {
       if (!touchStart.current) return;
 
       const touch = event.changedTouches[0];
@@ -47,7 +54,7 @@ export const useSwipeGestures = (options: SwipeGesturesOptions) => {
     [onSwipeLeft, onSwipeRight, onSwipeUp, onSwipeDown, threshold, velocity]
   );
 
-  const handleTouchMove = useCallback((event: React.TouchEvent) => {
+  const handleTouchMove = useCallback((event: React.TouchEvent): void => {
     if (touchStart.current) {
       const touch = event.touches[0];
       const currentTouch: TouchPoint = { x: touch.clientX, y: touch.clientY, time: Date.now() };

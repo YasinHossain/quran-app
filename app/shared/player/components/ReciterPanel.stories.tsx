@@ -11,7 +11,7 @@ export const meta: Meta<typeof ReciterPanel> = {
 
 type Story = StoryObj<typeof ReciterPanel>;
 
-function ReciterPanelStory() {
+function ReciterPanelStory(): JSX.Element {
   const [reciter, setReciter] = useState('1');
   return (
     <div className="p-4 bg-surface">

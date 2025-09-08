@@ -26,7 +26,7 @@ export const BookmarkFolderCard = ({
   className,
   ...props
 }: BookmarkFolderCardProps): React.JSX.Element => {
-  const handleClick = () => {
+  const handleClick = (): void => {
     onToggleExpansion?.(folder.id);
   };
 

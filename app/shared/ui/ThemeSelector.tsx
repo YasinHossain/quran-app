@@ -10,7 +10,7 @@ interface ThemeSelectorProps {
 export const ThemeSelector = ({ className }: ThemeSelectorProps): React.JSX.Element => {
   const { theme, setTheme } = useTheme();
 
-  const toggleTheme = () => {
+  const toggleTheme = (): void => {
     const html = document.documentElement;
     if (html.classList.contains('dark')) {
       html.classList.remove('dark');

@@ -96,8 +96,8 @@ export const AyahNavigation = ({
   ayahId,
 }: AyahNavigationProps): React.JSX.Element => (
   <div className="flex w-full items-center justify-between gap-2 sm:gap-3 rounded-full bg-accent text-on-accent p-2 min-w-0 overflow-hidden">
-    <NavButton label="Previous" disabled={!prev} onClick={() => navigate(prev)} side="left" />
+    <NavButton label="Previous" disabled={!prev} onClick={(): void => navigate(prev)} side="left" />
     <Title currentSurah={currentSurah} ayahId={ayahId} />
-    <NavButton label="Next" disabled={!next} onClick={() => navigate(next)} side="right" />
+    <NavButton label="Next" disabled={!next} onClick={(): void => navigate(next)} side="right" />
   </div>
 );

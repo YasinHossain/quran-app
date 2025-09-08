@@ -107,5 +107,5 @@ export const useTafsirPanel = (isOpen: boolean): UseTafsirPanelReturn => {
     canScrollRight,
     scrollTabsLeft,
     scrollTabsRight,
-  };
+  } as const satisfies UseTafsirPanelReturn;
 };

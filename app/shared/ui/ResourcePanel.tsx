@@ -39,10 +39,10 @@ export function ResourcePanel<T extends ResourceItem>({
   searchPlaceholder = 'Search...',
   variant = 'sidebar',
   renderItem,
-}: ResourcePanelProps<T>) {
+}: ResourcePanelProps<T>): React.JSX.Element {
   const [internalSearchTerm, setInternalSearchTerm] = useState('');
 
-  const filteredItems = useMemo(() => {
+  const filteredItems = useMemo((): T[] => {
     if (!internalSearchTerm.trim()) return items;
 
     const searchLower = internalSearchTerm.toLowerCase().trim();
@@ -54,7 +54,11 @@ export function ResourcePanel<T extends ResourceItem>({
     );
   }, [items, internalSearchTerm]);
 
-  const defaultRenderItem = (item: T, isSelected: boolean, onSelectItem: () => void) => (
+  const defaultRenderItem = (
+    item: T,
+    isSelected: boolean,
+    onSelectItem: () => void
+  ): React.JSX.Element => (
     <button
       key={item.id}
       onClick={onSelectItem}
@@ -109,9 +113,9 @@ export function ResourcePanel<T extends ResourceItem>({
             </div>
           ) : (
             <div className="space-y-2">
-              {filteredItems.map((item) => {
+              {filteredItems.map((item): React.JSX.Element => {
                 const isSelected = item.id === selectedId;
-                const handleSelect = () => {
+                const handleSelect = (): void => {
                   onSelect(item.id);
                   onClose();
                 };

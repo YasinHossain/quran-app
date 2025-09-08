@@ -34,7 +34,7 @@ export const ResponsiveBackgroundImage = ({
   const pickBackgroundSource = (
     s: string | ResponsiveImageSources,
     bp: ReturnType<typeof useResponsiveState>['breakpoint']
-  ) => {
+  ): string => {
     if (typeof s === 'string') return s;
     switch (bp) {
       case 'mobile':

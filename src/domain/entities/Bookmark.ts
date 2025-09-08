@@ -1,4 +1,7 @@
-import { BookmarkPosition } from '@/src/domain/value-objects/BookmarkPosition';
+import {
+  BookmarkPosition,
+  BookmarkPositionPlainObject,
+} from '@/src/domain/value-objects/BookmarkPosition';
 
 /**
  * Bookmark domain entity representing a bookmarked verse
@@ -65,7 +68,7 @@ export class Bookmark {
   /**
    * Converts to plain object for serialization
    */
-  toPlainObject() {
+  toPlainObject(): BookmarkPlainObject {
     const hasNotes = Boolean(this.notes && this.notes.trim().length > 0);
     const hasTags = this.tags.length > 0;
     return {
@@ -81,4 +84,17 @@ export class Bookmark {
       displayText: this.getDisplayText(),
     };
   }
+}
+
+export interface BookmarkPlainObject {
+  id: string;
+  userId: string;
+  verseId: string;
+  position: BookmarkPositionPlainObject;
+  createdAt: string;
+  notes?: string;
+  tags: string[];
+  hasNotes: boolean;
+  hasTags: boolean;
+  displayText: string;
 }

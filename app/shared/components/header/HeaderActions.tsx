@@ -9,7 +9,7 @@ export function HeaderActions(): JSX.Element {
   const { theme, setTheme } = useTheme();
   const { setSettingsOpen } = useUIState();
 
-  const toggleTheme = () => {
+  const toggleTheme = (): void => {
     const html = document.documentElement;
     if (html.classList.contains('dark')) {
       html.classList.remove('dark');

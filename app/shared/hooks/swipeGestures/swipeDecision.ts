@@ -6,7 +6,7 @@ export const handleSwipeDecision = (
   handlers: SwipeHandlers,
   threshold: number,
   velocity: number
-) => {
+): void => {
   const { deltaX, deltaY, velocityX, velocityY } = metrics;
   const absX = Math.abs(deltaX);
   const absY = Math.abs(deltaY);

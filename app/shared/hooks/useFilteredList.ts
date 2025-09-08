@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, type Dispatch, type SetStateAction } from 'react';
 
 interface UseFilteredListOptions<T> {
   searchFields?: (keyof T)[];
@@ -10,7 +10,7 @@ interface UseFilteredListOptions<T> {
 
 interface UseFilteredListReturn<T> {
   searchTerm: string;
-  setSearchTerm: (term: string) => void;
+  setSearchTerm: Dispatch<SetStateAction<string>>;
   filteredItems: T[];
   clearSearch: () => void;
   hasActiveFilter: boolean;
@@ -28,7 +28,7 @@ export function useFilteredList<T>(
 
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
 
-  const filteredItems = useMemo(() => {
+  const filteredItems = useMemo((): T[] => {
     if (!searchTerm.trim()) {
       return items;
     }
@@ -64,7 +64,7 @@ export function useFilteredList<T>(
     });
   }, [items, searchTerm, searchFields, caseSensitive]);
 
-  const clearSearch = () => setSearchTerm('');
+  const clearSearch = (): void => setSearchTerm('');
   const hasActiveFilter = searchTerm.trim() !== '';
 
   return {

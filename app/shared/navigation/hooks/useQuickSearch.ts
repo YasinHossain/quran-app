@@ -2,7 +2,15 @@
 import { useRouter } from 'next/navigation';
 import { useState, useCallback } from 'react';
 
-export function useQuickSearch(onClose: () => void) {
+export interface QuickSearchHandlers {
+  readonly query: string;
+  readonly setQuery: React.Dispatch<React.SetStateAction<string>>;
+  readonly recentSearches: readonly string[];
+  readonly trendingSearches: readonly string[];
+  readonly handleSearch: (searchQuery: string) => void;
+}
+
+export function useQuickSearch(onClose: () => void): QuickSearchHandlers {
   const [query, setQuery] = useState('');
   const [recentSearches] = useState([
     'Al-Fatiha',
