@@ -2,6 +2,8 @@ import { getFocusableElements, focusVisibleClasses, getFocusVisibleClasses } fro
 
 import { setupDom } from './focus/test-utils';
 
+const getIds = (elements: Element[]): string[] => elements.map((el) => el.id);
+
 describe('focus utilities', () => {
   let container: HTMLElement;
   let cleanup: () => void;
@@ -18,7 +20,7 @@ describe('focus utilities', () => {
     it('finds all focusable elements in order', () => {
       const focusable = getFocusableElements(container);
       expect(focusable).toHaveLength(5);
-      expect(focusable.map((el) => el.id)).toEqual(['btn1', 'input1', 'link1', 'btn2', 'select1']);
+      expect(getIds(focusable)).toEqual(['btn1', 'input1', 'link1', 'btn2', 'select1']);
     });
 
     it('excludes disabled elements', () => {
@@ -26,7 +28,7 @@ describe('focus utilities', () => {
       disabledButton.disabled = true;
       const focusable = getFocusableElements(container);
       expect(focusable).toHaveLength(4);
-      expect(focusable.map((el) => el.id)).not.toContain('btn1');
+      expect(getIds(focusable)).not.toContain('btn1');
     });
 
     it('excludes hidden elements', () => {
@@ -34,7 +36,7 @@ describe('focus utilities', () => {
       hiddenInput.style.display = 'none';
       const focusable = getFocusableElements(container);
       expect(focusable).toHaveLength(4);
-      expect(focusable.map((el) => el.id)).not.toContain('input1');
+      expect(getIds(focusable)).not.toContain('input1');
     });
 
     it('excludes elements with visibility hidden', () => {
@@ -42,7 +44,7 @@ describe('focus utilities', () => {
       hiddenLink.style.visibility = 'hidden';
       const focusable = getFocusableElements(container);
       expect(focusable).toHaveLength(4);
-      expect(focusable.map((el) => el.id)).not.toContain('link1');
+      expect(getIds(focusable)).not.toContain('link1');
     });
   });
 

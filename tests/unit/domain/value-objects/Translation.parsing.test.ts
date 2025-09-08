@@ -1,11 +1,54 @@
+import { Translation } from '@/src/domain/value-objects/Translation';
 import {
   validId,
   validResourceId,
   validText,
   validLanguageCode,
   expectTranslationToThrow,
-} from './Translation/test-utils';
-import { Translation } from '@/src/domain/value-objects/Translation';
+} from '@/tests/unit/domain/value-objects/Translation/test-utils';
+
+const invalidTranslations = [
+  {
+    name: 'negative ID',
+    params: {
+      id: -1,
+      resourceId: validResourceId,
+      text: validText,
+      languageCode: validLanguageCode,
+    },
+    message: 'Translation ID must be non-negative',
+  },
+  {
+    name: 'negative resource ID',
+    params: { id: validId, resourceId: -1, text: validText, languageCode: validLanguageCode },
+    message: 'Resource ID must be non-negative',
+  },
+  {
+    name: 'empty text',
+    params: { id: validId, resourceId: validResourceId, text: '', languageCode: validLanguageCode },
+    message: 'Translation text cannot be empty',
+  },
+  {
+    name: 'whitespace-only text',
+    params: {
+      id: validId,
+      resourceId: validResourceId,
+      text: '   ',
+      languageCode: validLanguageCode,
+    },
+    message: 'Translation text cannot be empty',
+  },
+  {
+    name: 'empty language code',
+    params: { id: validId, resourceId: validResourceId, text: validText, languageCode: '' },
+    message: 'Language code cannot be empty',
+  },
+  {
+    name: 'whitespace-only language code',
+    params: { id: validId, resourceId: validResourceId, text: validText, languageCode: '   ' },
+    message: 'Language code cannot be empty',
+  },
+];
 
 describe('Translation Parsing and Validation', () => {
   describe('constructor', () => {
@@ -23,68 +66,17 @@ describe('Translation Parsing and Validation', () => {
     });
 
     it('creates a Translation with default language code', () => {
-      const translation = new Translation({ id: validId, resourceId: validResourceId, text: validText });
+      const translation = new Translation({
+        id: validId,
+        resourceId: validResourceId,
+        text: validText,
+      });
       expect(translation.languageCode).toBe('en');
     });
-
-    it('throws error for negative ID', () => {
-      expectTranslationToThrow({
-        id: -1,
-        resourceId: validResourceId,
-        text: validText,
-        languageCode: validLanguageCode,
-        expectedMessage: 'Translation ID must be non-negative',
+    for (const { name, params, message } of invalidTranslations) {
+      it(`throws error for ${name}`, () => {
+        expectTranslationToThrow({ ...params, expectedMessage: message });
       });
-    });
-
-    it('throws error for negative resource ID', () => {
-      expectTranslationToThrow({
-        id: validId,
-        resourceId: -1,
-        text: validText,
-        languageCode: validLanguageCode,
-        expectedMessage: 'Resource ID must be non-negative',
-      });
-    });
-
-    it('throws error for empty text', () => {
-      expectTranslationToThrow({
-        id: validId,
-        resourceId: validResourceId,
-        text: '',
-        languageCode: validLanguageCode,
-        expectedMessage: 'Translation text cannot be empty',
-      });
-    });
-
-    it('throws error for whitespace-only text', () => {
-      expectTranslationToThrow({
-        id: validId,
-        resourceId: validResourceId,
-        text: '   ',
-        languageCode: validLanguageCode,
-        expectedMessage: 'Translation text cannot be empty',
-      });
-    });
-
-    it('throws error for empty language code', () => {
-      expectTranslationToThrow({
-        id: validId,
-        resourceId: validResourceId,
-        text: validText,
-        languageCode: '',
-        expectedMessage: 'Language code cannot be empty',
-      });
-    });
-
-    it('throws error for whitespace-only language code', () => {
-      expectTranslationToThrow({
-        id: validId,
-        resourceId: validResourceId,
-        text: validText,
-        languageCode: '   ',
-        expectedMessage: 'Language code cannot be empty',
-      });
-    });
+    }
   });
 });

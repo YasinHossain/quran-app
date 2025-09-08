@@ -1,5 +1,8 @@
-import { validSurahId, validTimestamp } from './BookmarkPosition/test-utils';
 import { BookmarkPosition } from '@/src/domain/value-objects/BookmarkPosition';
+import {
+  validSurahId,
+  validTimestamp,
+} from '@/tests/unit/domain/value-objects/BookmarkPosition/test-utils';
 
 describe('BookmarkPosition methods', () => {
   it('withNewTimestamp creates a new position with updated timestamp', () => {
@@ -28,21 +31,17 @@ describe('BookmarkPosition methods', () => {
     });
 
     it('throws on invalid formats', () => {
-      expect(() => BookmarkPosition.fromVerseKey('2255')).toThrow(
-        'Invalid verse key format. Expected "surah:ayah"'
-      );
-      expect(() => BookmarkPosition.fromVerseKey('2:255:extra')).toThrow(
-        'Invalid verse key format. Expected "surah:ayah"'
-      );
-      expect(() => BookmarkPosition.fromVerseKey('abc:255')).toThrow(
-        'Invalid verse key: surah and ayah must be numbers'
-      );
-      expect(() => BookmarkPosition.fromVerseKey('2:abc')).toThrow(
-        'Invalid verse key: surah and ayah must be numbers'
-      );
-      expect(() => BookmarkPosition.fromVerseKey(':255')).toThrow(
-        'Invalid verse key: surah and ayah must be numbers'
-      );
+      const cases = [
+        { key: '2255', message: 'Invalid verse key format. Expected "surah:ayah"' },
+        { key: '2:255:extra', message: 'Invalid verse key format. Expected "surah:ayah"' },
+        { key: 'abc:255', message: 'Invalid verse key: surah and ayah must be numbers' },
+        { key: '2:abc', message: 'Invalid verse key: surah and ayah must be numbers' },
+        { key: ':255', message: 'Invalid verse key: surah and ayah must be numbers' },
+      ];
+
+      for (const { key, message } of cases) {
+        expect(BookmarkPosition.fromVerseKey.bind(null, key)).toThrow(message);
+      }
     });
   });
 });
