@@ -22,202 +22,162 @@ import {
   validRevelationOrder,
 } from './Surah/test-utils';
 
-describe('Surah Entity - Revelation', () => {
-  describe('revelation type methods', () => {
-    describe('isMakki', () => {
-      it('returns true when revelation type is MAKKI', () => {
-        const makkiSurah = new Surah(
-          validId,
-          validName,
-          validArabicName,
-          validEnglishName,
-          validEnglishTranslation,
-          validNumberOfAyahs,
-          RevelationType.MAKKI
-        );
-        expect(makkiSurah.isMakki()).toBe(true);
-      });
+function createSurah({
+  id = validId,
+  name = validName,
+  arabicName = validArabicName,
+  englishName = validEnglishName,
+  englishTranslation = validEnglishTranslation,
+  numberOfAyahs = validNumberOfAyahs,
+  revelationType = validRevelationType,
+  revelationOrder = validRevelationOrder,
+}: {
+  id?: number;
+  name?: string;
+  arabicName?: string;
+  englishName?: string;
+  englishTranslation?: string;
+  numberOfAyahs?: number;
+  revelationType?: RevelationType;
+  revelationOrder?: number;
+} = {}): Surah {
+  return new Surah(
+    id,
+    name,
+    arabicName,
+    englishName,
+    englishTranslation,
+    numberOfAyahs,
+    revelationType,
+    revelationOrder
+  );
+}
 
-      it('returns false when revelation type is MADANI', () => {
-        const madaniSurah = new Surah(
-          2,
-          'البقرة',
-          'البقرة',
-          'Al-Baqarah',
-          'The Cow',
-          286,
-          RevelationType.MADANI
-        );
-        expect(madaniSurah.isMakki()).toBe(false);
-      });
-    });
+function createMakkiSurah(): Surah {
+  return createSurah({ revelationType: RevelationType.MAKKI });
+}
 
-    describe('isMadani', () => {
-      it('returns true when revelation type is MADANI', () => {
-        const madaniSurah = new Surah(
-          2,
-          'البقرة',
-          'البقرة',
-          'Al-Baqarah',
-          'The Cow',
-          286,
-          RevelationType.MADANI
-        );
-        expect(madaniSurah.isMadani()).toBe(true);
-      });
+function createMadaniSurah(): Surah {
+  return createSurah({
+    id: 2,
+    name: 'البقرة',
+    arabicName: 'البقرة',
+    englishName: 'Al-Baqarah',
+    englishTranslation: 'The Cow',
+    numberOfAyahs: 286,
+    revelationType: RevelationType.MADANI,
+  });
+}
 
-      it('returns false when revelation type is MAKKI', () => {
-        const makkiSurah = new Surah(
-          validId,
-          validName,
-          validArabicName,
-          validEnglishName,
-          validEnglishTranslation,
-          validNumberOfAyahs,
-          RevelationType.MAKKI
-        );
-        expect(makkiSurah.isMadani()).toBe(false);
-      });
-    });
+function createAtTawbah(): Surah {
+  return createSurah({
+    id: 9,
+    name: 'التوبة',
+    arabicName: 'التوبة',
+    englishName: 'At-Tawbah',
+    englishTranslation: 'The Repentance',
+    numberOfAyahs: 129,
+    revelationType: RevelationType.MADANI,
+  });
+}
+
+function expectPlainObject(plainObject: ReturnType<Surah['toPlainObject']>): void {
+  expect(plainObject).toEqual({
+    id: validId,
+    name: validName,
+    arabicName: validArabicName,
+    englishName: validEnglishName,
+    englishTranslation: validEnglishTranslation,
+    numberOfAyahs: validNumberOfAyahs,
+    revelationType: validRevelationType,
+    revelationOrder: validRevelationOrder,
+    isMakki: true,
+    isMadani: false,
+    canBeReadInPrayer: true,
+    startWithBismillah: true,
+    memorizationDifficulty: getMemorizationDifficulty(validNumberOfAyahs),
+    estimatedReadingTime: getEstimatedReadingTime(validNumberOfAyahs),
+    isShortSurah: isShortSurah(validNumberOfAyahs),
+    isMediumSurah: isMediumSurah(validNumberOfAyahs),
+    isLongSurah: isLongSurah(validNumberOfAyahs),
+    isSevenLongSurah: isSevenLongSurah(validId),
+    isMufassalSurah: isMufassalSurah(validId),
+    juzNumbers: getJuzNumbers(validId),
+  });
+}
+
+describe('Surah Entity - Revelation - isMakki', () => {
+  it('returns true when revelation type is MAKKI', () => {
+    const makkiSurah = createMakkiSurah();
+    expect(makkiSurah.isMakki()).toBe(true);
   });
 
-  describe('canBeReadInPrayer', () => {
-    it('should return true for most Surahs', () => {
-      const regularSurah = new Surah(
-        validId,
-        validName,
-        validArabicName,
-        validEnglishName,
-        validEnglishTranslation,
-        validNumberOfAyahs,
-        validRevelationType
-      );
-      expect(regularSurah.canBeReadInPrayer()).toBe(true);
-    });
-
-    it('should return false for At-Tawbah (Surah 9)', () => {
-      const atTawbah = new Surah(
-        9,
-        'التوبة',
-        'التوبة',
-        'At-Tawbah',
-        'The Repentance',
-        129,
-        RevelationType.MADANI
-      );
-      expect(atTawbah.canBeReadInPrayer()).toBe(false);
-    });
+  it('returns false when revelation type is MADANI', () => {
+    const madaniSurah = createMadaniSurah();
+    expect(madaniSurah.isMakki()).toBe(false);
+  });
+});
+describe('Surah Entity - Revelation - isMadani', () => {
+  it('returns true when revelation type is MADANI', () => {
+    const madaniSurah = createMadaniSurah();
+    expect(madaniSurah.isMadani()).toBe(true);
   });
 
-  describe('startWithBismillah', () => {
-    it('should return true for most Surahs', () => {
-      const regularSurah = new Surah(
-        validId,
-        validName,
-        validArabicName,
-        validEnglishName,
-        validEnglishTranslation,
-        validNumberOfAyahs,
-        validRevelationType
-      );
-      expect(regularSurah.startWithBismillah()).toBe(true);
-    });
+  it('returns false when revelation type is MAKKI', () => {
+    const makkiSurah = createMakkiSurah();
+    expect(makkiSurah.isMadani()).toBe(false);
+  });
+});
 
-    it('should return false for At-Tawbah (Surah 9)', () => {
-      const atTawbah = new Surah(
-        9,
-        'التوبة',
-        'التوبة',
-        'At-Tawbah',
-        'The Repentance',
-        129,
-        RevelationType.MADANI
-      );
-      expect(atTawbah.startWithBismillah()).toBe(false);
-    });
+describe('Surah Entity - Revelation - canBeReadInPrayer', () => {
+  it('should return true for most Surahs', () => {
+    const regularSurah = createSurah();
+    expect(regularSurah.canBeReadInPrayer()).toBe(true);
   });
 
-  describe('equals', () => {
-    it('should return true for Surahs with same ID', () => {
-      const surah1 = new Surah(
-        validId,
-        validName,
-        validArabicName,
-        validEnglishName,
-        validEnglishTranslation,
-        validNumberOfAyahs,
-        validRevelationType
-      );
-      const surah2 = new Surah(
-        validId,
-        'Different Name',
-        'اسم مختلف',
-        'Different English',
-        'Different Translation',
-        10,
-        RevelationType.MADANI
-      );
-      expect(surah1.equals(surah2)).toBe(true);
-    });
+  it('should return false for At-Tawbah (Surah 9)', () => {
+    const atTawbah = createAtTawbah();
+    expect(atTawbah.canBeReadInPrayer()).toBe(false);
+  });
+});
 
-    it('should return false for Surahs with different IDs', () => {
-      const surah1 = new Surah(
-        validId,
-        validName,
-        validArabicName,
-        validEnglishName,
-        validEnglishTranslation,
-        validNumberOfAyahs,
-        validRevelationType
-      );
-      const surah2 = new Surah(
-        2,
-        validName,
-        validArabicName,
-        validEnglishName,
-        validEnglishTranslation,
-        validNumberOfAyahs,
-        validRevelationType
-      );
-      expect(surah1.equals(surah2)).toBe(false);
-    });
+describe('Surah Entity - Revelation - startWithBismillah', () => {
+  it('should return true for most Surahs', () => {
+    const regularSurah = createSurah();
+    expect(regularSurah.startWithBismillah()).toBe(true);
   });
 
-  describe('toPlainObject', () => {
-    it('should return plain object with all properties and computed values', () => {
-      const surah = new Surah(
-        validId,
-        validName,
-        validArabicName,
-        validEnglishName,
-        validEnglishTranslation,
-        validNumberOfAyahs,
-        validRevelationType,
-        validRevelationOrder
-      );
-      const plainObject = surah.toPlainObject();
-      expect(plainObject).toEqual({
-        id: validId,
-        name: validName,
-        arabicName: validArabicName,
-        englishName: validEnglishName,
-        englishTranslation: validEnglishTranslation,
-        numberOfAyahs: validNumberOfAyahs,
-        revelationType: validRevelationType,
-        revelationOrder: validRevelationOrder,
-        isMakki: true,
-        isMadani: false,
-        canBeReadInPrayer: true,
-        startWithBismillah: true,
-        memorizationDifficulty: getMemorizationDifficulty(validNumberOfAyahs),
-        estimatedReadingTime: getEstimatedReadingTime(validNumberOfAyahs),
-        isShortSurah: isShortSurah(validNumberOfAyahs),
-        isMediumSurah: isMediumSurah(validNumberOfAyahs),
-        isLongSurah: isLongSurah(validNumberOfAyahs),
-        isSevenLongSurah: isSevenLongSurah(validId),
-        isMufassalSurah: isMufassalSurah(validId),
-        juzNumbers: getJuzNumbers(validId),
-      });
+  it('should return false for At-Tawbah (Surah 9)', () => {
+    const atTawbah = createAtTawbah();
+    expect(atTawbah.startWithBismillah()).toBe(false);
+  });
+});
+
+describe('Surah Entity - Revelation - equals', () => {
+  it('should return true for Surahs with same ID', () => {
+    const surah1 = createSurah();
+    const surah2 = createSurah({
+      name: 'Different Name',
+      arabicName: 'اسم مختلف',
+      englishName: 'Different English',
+      englishTranslation: 'Different Translation',
+      numberOfAyahs: 10,
+      revelationType: RevelationType.MADANI,
     });
+    expect(surah1.equals(surah2)).toBe(true);
+  });
+
+  it('should return false for Surahs with different IDs', () => {
+    const surah1 = createSurah();
+    const surah2 = createSurah({ id: 2 });
+    expect(surah1.equals(surah2)).toBe(false);
+  });
+});
+
+describe('Surah Entity - Revelation - toPlainObject', () => {
+  it('should return plain object with all properties and computed values', () => {
+    const surah = createSurah();
+    const plainObject = surah.toPlainObject();
+    expectPlainObject(plainObject);
   });
 });

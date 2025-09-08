@@ -65,6 +65,23 @@ const mockVerseRepository: jest.Mocked<IVerseRepository> = {
   clearCache: jest.fn(),
 };
 
+const setupFindBySurahAndAyahMocks = (verses: Array<Verse | null>): void => {
+  verses.forEach((verse) => mockVerseRepository.findBySurahAndAyah.mockResolvedValueOnce(verse));
+};
+
+const setupExistsAtPositionMocks = (values: boolean[]): void => {
+  values.forEach((value) => mockBookmarkRepository.existsAtPosition.mockResolvedValueOnce(value));
+};
+
+const createVerse = (id: string, surahId: number, ayahNumber: number): Verse =>
+  new Verse({
+    id,
+    surahId,
+    ayahNumber,
+    arabicText: `text${id}`,
+    uthmaniText: `uthmani${id}`,
+  });
+
 describe('BookmarkImportService import', () => {
   let importService: BookmarkImportService;
   const userId = 'user123';
@@ -72,6 +89,7 @@ describe('BookmarkImportService import', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     importService = new BookmarkImportService(mockBookmarkRepository, mockVerseRepository);
+    mockBookmarkRepository.saveMany.mockResolvedValue(undefined);
   });
 
   it('successfully imports valid bookmarks', async () => {
@@ -79,27 +97,10 @@ describe('BookmarkImportService import', () => {
       { surahId: 1, ayahNumber: 1, notes: 'Opening verse' },
       { surahId: 2, ayahNumber: 255, tags: ['powerful', 'ayat-kursi'] },
     ];
-    const mockVerse1 = new Verse({
-      id: 'v1',
-      surahId: 1,
-      ayahNumber: 1,
-      arabicText: 'text1',
-      uthmaniText: 'uthmani1',
-    });
-    const mockVerse2 = new Verse({
-      id: 'v2',
-      surahId: 2,
-      ayahNumber: 255,
-      arabicText: 'text2',
-      uthmaniText: 'uthmani2',
-    });
-    mockVerseRepository.findBySurahAndAyah
-      .mockResolvedValueOnce(mockVerse1)
-      .mockResolvedValueOnce(mockVerse2);
-    mockBookmarkRepository.existsAtPosition
-      .mockResolvedValueOnce(false)
-      .mockResolvedValueOnce(false);
-    mockBookmarkRepository.saveMany.mockResolvedValue(undefined);
+    const mockVerse1 = createVerse('v1', 1, 1);
+    const mockVerse2 = createVerse('v2', 2, 255);
+    setupFindBySurahAndAyahMocks([mockVerse1, mockVerse2]);
+    setupExistsAtPositionMocks([false, false]);
 
     const result = await importService.importBookmarks(userId, importData);
 
@@ -114,19 +115,8 @@ describe('BookmarkImportService import', () => {
       { surahId: 1, ayahNumber: 1 },
       { surahId: 999, ayahNumber: 999 },
     ];
-    mockVerseRepository.findBySurahAndAyah
-      .mockResolvedValueOnce(
-        new Verse({
-          id: 'v1',
-          surahId: 1,
-          ayahNumber: 1,
-          arabicText: 'text1',
-          uthmaniText: 'uthmani1',
-        })
-      )
-      .mockResolvedValueOnce(null);
-    mockBookmarkRepository.existsAtPosition.mockResolvedValueOnce(false);
-    mockBookmarkRepository.saveMany.mockResolvedValue(undefined);
+    setupFindBySurahAndAyahMocks([createVerse('v1', 1, 1), null]);
+    setupExistsAtPositionMocks([false]);
 
     const result = await importService.importBookmarks(userId, importData);
 
