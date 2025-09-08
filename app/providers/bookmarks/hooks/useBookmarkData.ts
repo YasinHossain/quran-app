@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 
-import { getChapters } from '@/lib/api/chapters';
-
 import {
   loadBookmarksFromStorage,
   saveBookmarksToStorage,
@@ -11,7 +9,8 @@ import {
   saveLastReadToStorage,
   loadMemorizationFromStorage,
   saveMemorizationToStorage,
-} from '../storage-utils';
+} from '@/app/providers/bookmarks/storage-utils';
+import { getChapters } from '@/lib/api/chapters';
 
 import type { Folder, Bookmark, Chapter, MemorizationPlan } from '@/types';
 

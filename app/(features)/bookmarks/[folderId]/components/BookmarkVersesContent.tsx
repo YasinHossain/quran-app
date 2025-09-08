@@ -2,8 +2,9 @@
 
 import React from 'react';
 
+import { BookmarkVerseList } from '@/app/(features)/bookmarks/components/BookmarkVerseList';
+
 import { BreadcrumbNavigation } from './BreadcrumbNavigation';
-import { BookmarkVerseList } from '../../components/BookmarkVerseList';
 
 import type { Verse } from '@/types';
 

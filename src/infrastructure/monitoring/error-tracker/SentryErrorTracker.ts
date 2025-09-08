@@ -1,8 +1,9 @@
-import { logger } from '../Logger';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
+
 import { ConsoleErrorTracker } from './ConsoleErrorTracker';
 
 import type { ErrorContext, IErrorTracker } from './types';
-import type { ApplicationError } from '../../errors';
+import type { ApplicationError } from '@/src/infrastructure/errors';
 
 interface SentryLike {
   withScope: (callback: (scope: SentryScope) => void) => void;

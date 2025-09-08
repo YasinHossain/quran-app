@@ -1,6 +1,7 @@
+import { Bookmark } from '@/src/domain/entities';
+import { BookmarkPosition } from '@/src/domain/value-objects/BookmarkPosition';
+
 import { getStoredBookmarks, mapStoredToBookmark } from './storage';
-import { Bookmark } from '../../../domain/entities';
-import { BookmarkPosition } from '../../../domain/value-objects/BookmarkPosition';
 
 export async function findByVerse(verseId: string): Promise<Bookmark[]> {
   const stored = getStoredBookmarks();

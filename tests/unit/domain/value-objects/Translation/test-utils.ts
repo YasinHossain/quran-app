@@ -1,4 +1,4 @@
-import { Translation } from '../../../../src/domain/value-objects/Translation';
+import { Translation } from '@/tests/src/domain/value-objects/Translation';
 
 export const validId = 1;
 export const validResourceId = 131;

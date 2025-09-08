@@ -2,10 +2,10 @@
 
 import { Dispatch, useEffect, useReducer, useRef } from 'react';
 
-import { reducer } from '../settingsReducer';
-import { defaultSettings, loadSettings, saveSettings } from '../settingsStorage';
+import { reducer } from '@/app/providers/settingsReducer';
+import { defaultSettings, loadSettings, saveSettings } from '@/app/providers/settingsStorage';
 
-import type { Action } from '../settingsReducer';
+import type { Action } from '@/app/providers/settingsReducer';
 import type { Settings } from '@/types';
 
 const PERSIST_DEBOUNCE_MS = 300;

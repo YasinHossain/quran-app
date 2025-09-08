@@ -1,5 +1,5 @@
 import { validId, validResourceId } from './Translation/test-utils';
-import { Translation } from '../../../../src/domain/value-objects/Translation';
+import { Translation } from '@/src/domain/value-objects/Translation';
 
 describe('Translation preview and length', () => {
   it('getPreview returns full text when within limit and truncates long text', () => {

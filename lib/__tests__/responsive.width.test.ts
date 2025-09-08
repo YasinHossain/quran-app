@@ -6,7 +6,8 @@ import {
   getResponsiveValue,
   getVariantForBreakpoint,
   layoutPatterns,
-} from '../responsive';
+} from '@/lib/responsive';
+
 import { testResponsiveHook, setupMatchMediaMock } from './responsive/test-utils';
 
 describe('Responsive Width', () => {

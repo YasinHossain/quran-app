@@ -2,9 +2,8 @@
 
 import React from 'react';
 
+import { VerseItem } from '@/app/(features)/bookmarks/components/bookmark-verse-sidebar/VerseItem';
 import { Bookmark } from '@/types';
-
-import { VerseItem } from '../../bookmark-verse-sidebar/VerseItem';
 
 interface ExpandedContentProps {
   isExpanded: boolean;

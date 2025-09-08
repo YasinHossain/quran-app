@@ -5,7 +5,7 @@ import {
   validLanguageCode,
   expectTranslationToThrow,
 } from './Translation/test-utils';
-import { Translation } from '../../../../src/domain/value-objects/Translation';
+import { Translation } from '@/src/domain/value-objects/Translation';
 
 describe('Translation Parsing and Validation', () => {
   describe('constructor', () => {

@@ -2,8 +2,9 @@
 
 import React from 'react';
 
-import { TranslationSearch } from '../TranslationSearch';
-import { TranslationSelectionList } from '../TranslationSelectionList';
+import { TranslationSearch } from '@/app/(features)/surah/components/panels/translation-panel/TranslationSearch';
+import { TranslationSelectionList } from '@/app/(features)/surah/components/panels/translation-panel/TranslationSelectionList';
+
 import { TranslationsByLanguage } from './TranslationsByLanguage';
 import { TranslationsVirtualList } from './TranslationsVirtualList';
 import { TranslationTabsHeader } from './TranslationTabsHeader';

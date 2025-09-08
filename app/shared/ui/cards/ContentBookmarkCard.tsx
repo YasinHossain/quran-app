@@ -1,7 +1,8 @@
 'use client';
 import React, { memo, useCallback } from 'react';
 
-import { BaseCard, BaseCardProps } from '../BaseCard';
+import { BaseCard, BaseCardProps } from '@/app/shared/ui/BaseCard';
+
 import { Header } from './content-bookmark/Header';
 import { VersePreview } from './content-bookmark/VersePreview';
 interface BookmarkData {

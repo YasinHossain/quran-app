@@ -1,8 +1,9 @@
+import { Bookmark, hasTag, hasNotes } from '@/src/domain/entities';
+import { BookmarkPosition } from '@/src/domain/value-objects/BookmarkPosition';
+
 import { findBySurah } from './coreQueries';
 import { getStoredBookmarks } from './storage';
 import { findByUser } from './userQueries';
-import { Bookmark, hasTag, hasNotes } from '../../../domain/entities';
-import { BookmarkPosition } from '../../../domain/value-objects/BookmarkPosition';
 export async function existsByUserAndVerse(userId: string, verseId: string): Promise<boolean> {
   return getStoredBookmarks().some((b) => b.userId === userId && b.verseId === verseId);
 }

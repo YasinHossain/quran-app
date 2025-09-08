@@ -1,6 +1,6 @@
-import { apiFetch } from '../../../lib/api/client';
-import { Tafsir, TafsirData } from '../../domain/entities/Tafsir';
-import { logger } from '../monitoring/Logger';
+import { apiFetch } from '@/lib/api/client';
+import { Tafsir, TafsirData } from '@/src/domain/entities/Tafsir';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 interface ApiTafsirResource {
   id: number;

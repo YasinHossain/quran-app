@@ -1,7 +1,7 @@
-import { GetTafsirResourcesUseCase } from '../../../src/application/use-cases/GetTafsirResources';
-import { Tafsir } from '../../../src/domain/entities/Tafsir';
-import { ITafsirRepository } from '../../../src/domain/repositories/ITafsirRepository';
-import { logger as Logger } from '../../../src/infrastructure/monitoring/Logger';
+import { GetTafsirResourcesUseCase } from '@/src/application/use-cases/GetTafsirResources';
+import { Tafsir } from '@/src/domain/entities/Tafsir';
+import { ITafsirRepository } from '@/src/domain/repositories/ITafsirRepository';
+import { logger as Logger } from '@/src/infrastructure/monitoring/Logger';
 
 const createRepository = (): jest.Mocked<ITafsirRepository> => ({
   getAllResources: jest.fn(),

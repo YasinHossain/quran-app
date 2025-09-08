@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import { docMappings } from '../scanner';
+import { docMappings } from '@/tools/ai/scanner';
 import { Prop, parseProps } from './args';
 
 export interface Component {

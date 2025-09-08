@@ -1,4 +1,4 @@
-import { setTheme } from '../setTheme';
+import { setTheme } from '@/lib/utils/setTheme';
 
 describe('setTheme', () => {
   afterEach(() => {

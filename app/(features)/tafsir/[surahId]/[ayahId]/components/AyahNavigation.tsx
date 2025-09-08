@@ -70,7 +70,13 @@ const NavButton = ({ label, disabled, onClick, side }: NavButtonProps): React.JS
   </button>
 );
 
-const Title = ({ currentSurah, ayahId }: { currentSurah?: Surah; ayahId: string }): React.JSX.Element => (
+const Title = ({
+  currentSurah,
+  ayahId,
+}: {
+  currentSurah?: Surah;
+  ayahId: string;
+}): React.JSX.Element => (
   <div className="flex-1 min-w-0 text-center px-2 text-on-accent font-bold text-sm sm:text-base truncate">
     {currentSurah ? (
       <>

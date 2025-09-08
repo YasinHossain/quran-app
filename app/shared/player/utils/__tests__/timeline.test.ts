@@ -1,4 +1,4 @@
-import { formatTime } from '../timeline';
+import { formatTime } from '@/app/shared/player/utils/timeline';
 
 describe('formatTime', () => {
   test('formats seconds into mm:ss', () => {

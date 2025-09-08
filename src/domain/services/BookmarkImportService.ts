@@ -1,10 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { Bookmark } from '../entities';
-import { IBookmarkRepository } from '../repositories/IBookmarkRepository';
-import { IVerseRepository } from '../repositories/IVerseRepository';
-import { BookmarkPosition } from '../value-objects/BookmarkPosition';
-import { StoredBookmark } from '../value-objects/StoredBookmark';
+import { Bookmark } from '@/src/domain/entities';
+import { IBookmarkRepository } from '@/src/domain/repositories/IBookmarkRepository';
+import { IVerseRepository } from '@/src/domain/repositories/IVerseRepository';
+import { BookmarkPosition } from '@/src/domain/value-objects/BookmarkPosition';
+import { StoredBookmark } from '@/src/domain/value-objects/StoredBookmark';
 
 /**
  * Handles bookmark import and export operations

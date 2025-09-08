@@ -1,11 +1,12 @@
+import { config } from '@/config';
+
 import { ConsoleErrorTracker } from './ConsoleErrorTracker';
 import { RemoteErrorTracker } from './RemoteErrorTracker';
 import { SentryErrorTracker } from './SentryErrorTracker';
 import { addBreadcrumb as recordBreadcrumb, getBreadcrumbs, setupGlobalHandlers } from './utils';
-import { config } from '../../../../config';
 
 import type { ErrorContext, IErrorTracker } from './types';
-import type { ApplicationError } from '../../errors';
+import type { ApplicationError } from '@/src/infrastructure/errors';
 
 export class ErrorTrackerService {
   private static instance: ErrorTrackerService;

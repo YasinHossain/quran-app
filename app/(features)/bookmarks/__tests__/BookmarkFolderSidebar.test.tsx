@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { BookmarkFolderSidebar } from '../components/BookmarkFolderSidebar';
+import { BookmarkFolderSidebar } from '@/app/(features)/bookmarks/components/BookmarkFolderSidebar';
 
 const bookmarks = [
   { verseId: '1', verseKey: '1:1', surahName: 'Al-Fatihah', createdAt: 0 },

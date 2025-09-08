@@ -2,10 +2,9 @@ import { renderHook, waitFor } from '@testing-library/react';
 import React from 'react';
 import { SWRConfig } from 'swr';
 
+import { useRandomVerse } from '@/app/(features)/home/hooks/useRandomVerse';
 import { getRandomVerse } from '@/lib/api';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
-
-import { useRandomVerse } from '../useRandomVerse';
 
 jest.mock('@/lib/api', () => ({
   getRandomVerse: jest.fn(),

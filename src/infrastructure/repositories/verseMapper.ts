@@ -1,6 +1,6 @@
-import { Verse as ApiVerse } from '../../../types';
-import { Verse } from '../../domain/entities';
-import { Translation } from '../../domain/value-objects/Translation';
+import { Verse } from '@/src/domain/entities';
+import { Translation } from '@/src/domain/value-objects/Translation';
+import { Verse as ApiVerse } from '@/types';
 
 /**
  * Maps API translation objects to domain Translation.

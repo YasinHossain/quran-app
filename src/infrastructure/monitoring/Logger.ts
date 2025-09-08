@@ -5,6 +5,8 @@
  * Supports console, file, and remote logging based on configuration.
  */
 
+import { config } from '@/config';
+
 import {
   setContext as setContextHelper,
   clearContext as clearContextHelper,
@@ -18,7 +20,6 @@ import {
 } from './Logger.transports';
 import { parseLogLevel, setupDefaultTransports, getSource } from './Logger.utils';
 import { LogLevel } from './types';
-import { config } from '../../../config';
 
 import type { ILoggerTransport, LogEntry } from './types';
 // Types moved to './types' to avoid cycles

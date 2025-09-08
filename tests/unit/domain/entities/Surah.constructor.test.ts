@@ -8,7 +8,7 @@ import {
   validRevelationType,
   validRevelationOrder,
 } from './Surah/test-utils';
-import { Surah } from '../../../../src/domain/entities';
+import { Surah } from '@/src/domain/entities';
 
 describe('Surah Constructor - valid creation', () => {
   it('creates a valid Surah with required parameters', () => {

@@ -1,4 +1,4 @@
-import type { RepeatOptions } from '../types';
+import type { RepeatOptions } from '@/app/shared/player/types';
 
 export function hasNonIntegerValues(opts: RepeatOptions): boolean {
   const numericKeys: (keyof RepeatOptions)[] = ['start', 'end', 'playCount', 'repeatEach', 'delay'];

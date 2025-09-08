@@ -1,4 +1,4 @@
-import { StoredBookmark, isStoredBookmark } from '../../../domain/value-objects/StoredBookmark';
+import { StoredBookmark, isStoredBookmark } from '@/src/domain/value-objects/StoredBookmark';
 
 export function isStoredBookmarkArray(value: unknown): value is StoredBookmark[] {
   return Array.isArray(value) && value.every((item) => isStoredBookmark(item));

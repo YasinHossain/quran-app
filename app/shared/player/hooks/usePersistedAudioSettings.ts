@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { RECITERS } from '@/lib/audio/reciters';
 
-import type { Reciter } from '../types';
+import type { Reciter } from '@/app/shared/player/types';
 
 interface UsePersistedAudioSettingsReturn {
   reciter: Reciter;

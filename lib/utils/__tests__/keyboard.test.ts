@@ -1,4 +1,4 @@
-import { handleKeyboardActivation } from '../keyboard';
+import { handleKeyboardActivation } from '@/lib/utils/keyboard';
 
 import type React from 'react';
 

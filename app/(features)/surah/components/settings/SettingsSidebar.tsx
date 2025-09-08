@@ -2,15 +2,15 @@
 
 import React, { useState, useCallback } from 'react';
 
+import { useSettingsTabState, useSettingsSections } from '@/app/(features)/surah/hooks';
 import { useUIState } from '@/app/providers/UIStateContext';
 import { BaseSidebar } from '@/app/shared/components/BaseSidebar';
 
 import { SettingsContentWrapper } from './SettingsContentWrapper';
 import { SettingsPanels } from './SettingsPanels';
-import { SettingsSidebarProps } from './types';
-import { useSettingsTabState, useSettingsSections } from '../../hooks';
 import { buildContentWrapperProps } from './sidebar/SettingsContentWrapperProps';
 import { buildPanelsProps } from './sidebar/SettingsPanelsProps';
+import { SettingsSidebarProps } from './types';
 
 export const SettingsSidebar = (props: SettingsSidebarProps): React.JSX.Element => {
   const { isSettingsOpen, setSettingsOpen } = useUIState();

@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { BookmarkFolderSidebar } from '../../components/BookmarkFolderSidebar';
+import { BookmarkFolderSidebar } from '@/app/(features)/bookmarks/components/BookmarkFolderSidebar';
 
 import type { Bookmark, Folder } from '@/types';
 

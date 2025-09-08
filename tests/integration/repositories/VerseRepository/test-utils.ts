@@ -1,7 +1,7 @@
-import * as apiChapters from '../../../../lib/api/chapters';
-import * as apiVerses from '../../../../lib/api/verses';
-import { VerseRepository } from '../../../../src/infrastructure/repositories/VerseRepository';
-import { Verse } from '../../../../types';
+import * as apiChapters from '@/lib/api/chapters';
+import * as apiVerses from '@/lib/api/verses';
+import { VerseRepository } from '@/src/infrastructure/repositories/VerseRepository';
+import { Verse } from '@/types';
 
 jest.mock('../../../../lib/api/verses', () => ({
   getVerseById: jest.fn(),

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import type { RepeatOptions } from '../types';
+import type { RepeatOptions } from '@/app/shared/player/types';
 
 interface Props {
   localRepeat: RepeatOptions;

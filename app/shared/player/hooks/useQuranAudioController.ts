@@ -1,7 +1,7 @@
 import { RefObject } from 'react';
 
 import { useAudioControllerCore } from './useAudioControllerCore';
-import { usePlayerLayout } from './usePlayerLayout';
+import { useControllerLayout } from './useControllerLayout';
 import { usePlayerOptionsState } from './usePlayerOptionsState';
 
 import type { Track } from '@/app/shared/player/types';
@@ -12,17 +12,21 @@ interface Props {
   onNext?: () => boolean;
 }
 
-export function useQuranAudioController({ track, onPrev, onNext }: Props) {
+interface ControllerReturn extends ReturnType<typeof usePlayerOptionsState> {
+  isPlayerVisible: boolean;
+  audioRef: RefObject<HTMLAudioElement>;
+  handleEnded: () => void;
+  playerLayoutProps: ReturnType<typeof useControllerLayout>;
+}
+
+export function useQuranAudioController({ track, onPrev, onNext }: Props): ControllerReturn {
   const options = usePlayerOptionsState();
   const core = useAudioControllerCore({ track, onPrev, onNext });
-  const playerLayoutProps = usePlayerLayout({
-    timing: core.timing,
-    isPlaying: core.isPlaying,
+  const playerLayoutProps = useControllerLayout({
+    core,
+    setMobileOptionsOpen: options.setMobileOptionsOpen,
     onNext,
     onPrev,
-    closePlayer: core.closePlayer,
-    setMobileOptionsOpen: options.setMobileOptionsOpen,
-    controls: core.controls,
   });
   return {
     isPlayerVisible: core.isPlayerVisible,

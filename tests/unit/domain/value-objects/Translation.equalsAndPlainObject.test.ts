@@ -1,5 +1,5 @@
 import { validId, validResourceId, validText } from './Translation/test-utils';
-import { Translation } from '../../../../src/domain/value-objects/Translation';
+import { Translation } from '@/src/domain/value-objects/Translation';
 
 describe('Translation equals and toPlainObject', () => {
   it('equals returns true for same id/resourceId and false otherwise', () => {

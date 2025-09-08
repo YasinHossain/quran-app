@@ -1,11 +1,10 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
+import { useAudio } from '@/app/shared/player/context/AudioContext';
+import { hasNonIntegerValues, adjustRange } from '@/app/shared/player/utils/repeat';
 import { RECITERS } from '@/lib/audio/reciters';
 
-import { useAudio } from '../context/AudioContext';
-import { hasNonIntegerValues, adjustRange } from '../utils/repeat';
-
-import type { RepeatOptions } from '../types';
+import type { RepeatOptions } from '@/app/shared/player/types';
 
 /**
  * Local state manager for playback options and reciter selection.

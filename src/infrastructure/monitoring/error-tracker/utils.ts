@@ -1,5 +1,5 @@
 import type { ErrorContext, IErrorTracker } from './types';
-import type { ApplicationError } from '../../errors';
+import type { ApplicationError } from '@/src/infrastructure/errors';
 
 export type Breadcrumb = Parameters<IErrorTracker['addBreadcrumb']>[0];
 

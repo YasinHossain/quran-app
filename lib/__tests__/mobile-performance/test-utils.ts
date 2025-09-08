@@ -1,4 +1,8 @@
-import { createMatchMediaMock, simulateDevice, testPerformance } from '../responsive-test-utils';
+import {
+  createMatchMediaMock,
+  simulateDevice,
+  testPerformance,
+} from '@/lib/__tests__/responsive-test-utils';
 
 interface MobilePerformanceTestSetup {
   matchMediaUtils: ReturnType<typeof createMatchMediaMock>;

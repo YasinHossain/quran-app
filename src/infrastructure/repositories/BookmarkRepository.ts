@@ -1,10 +1,11 @@
+import { Bookmark, hasNotes } from '@/src/domain/entities';
+import { IBookmarkRepository } from '@/src/domain/repositories/IBookmarkRepository';
+import { StoredBookmark } from '@/src/domain/value-objects/StoredBookmark';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
+
 import { toDomain, toPersistence } from './bookmark/bookmarkMapper';
 import { isStoredBookmarkArray, dedupe } from './bookmark/bookmarkValidation';
 import * as queries from './bookmark/queries';
-import { Bookmark, hasNotes } from '../../domain/entities';
-import { IBookmarkRepository } from '../../domain/repositories/IBookmarkRepository';
-import { StoredBookmark } from '../../domain/value-objects/StoredBookmark';
-import { logger } from '../monitoring/Logger';
 import { getStoredBookmarks, saveStoredBookmarks } from './bookmark/storage';
 
 export class BookmarkRepository implements IBookmarkRepository {

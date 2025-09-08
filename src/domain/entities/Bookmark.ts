@@ -1,4 +1,4 @@
-import { BookmarkPosition } from '../value-objects/BookmarkPosition';
+import { BookmarkPosition } from '@/src/domain/value-objects/BookmarkPosition';
 
 /**
  * Bookmark domain entity representing a bookmarked verse

@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 
 import './test-helpers';
-import { useImagePreload } from '../../hooks/image/useImagePreload';
+import { useImagePreload } from '@/app/shared/hooks/image/useImagePreload';
 
 describe('useImagePreload', () => {
   let originalImage: typeof Image;

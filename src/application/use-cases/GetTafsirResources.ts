@@ -1,8 +1,11 @@
-import { Tafsir } from '../../domain/entities/Tafsir';
-import { ITafsirRepository } from '../../domain/repositories/ITafsirRepository';
-import { logger as Logger } from '../../infrastructure/monitoring/Logger';
-import { getCachedResourcesWithFallback, getTafsirByIdWithCache } from '../getTafsirCache';
-import { getTafsirsByLanguage, searchTafsirs } from '../getTafsirFilters';
+import {
+  getCachedResourcesWithFallback,
+  getTafsirByIdWithCache,
+} from '@/src/application/getTafsirCache';
+import { getTafsirsByLanguage, searchTafsirs } from '@/src/application/getTafsirFilters';
+import { Tafsir } from '@/src/domain/entities/Tafsir';
+import { ITafsirRepository } from '@/src/domain/repositories/ITafsirRepository';
+import { logger as Logger } from '@/src/infrastructure/monitoring/Logger';
 
 /**
  * Use Case: Get Tafsir Resources

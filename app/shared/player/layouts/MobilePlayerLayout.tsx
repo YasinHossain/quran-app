@@ -2,12 +2,11 @@ import Image from 'next/image';
 import React from 'react';
 
 import { CloseIcon, SlidersIcon } from '@/app/shared/icons';
+import { SpeedControl } from '@/app/shared/player/components/SpeedControl';
+import { Timeline } from '@/app/shared/player/components/Timeline';
+import { TransportControls } from '@/app/shared/player/components/TransportControls';
 import { Button } from '@/app/shared/ui/Button';
 import { iconClasses } from '@/lib/responsive';
-
-import { SpeedControl } from '../components/SpeedControl';
-import { Timeline } from '../components/Timeline';
-import { TransportControls } from '../components/TransportControls';
 
 interface MobilePlayerLayoutProps {
   cover: string;

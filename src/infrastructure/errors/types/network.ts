@@ -1,4 +1,4 @@
-import { ApplicationError } from '../ApplicationError';
+import { ApplicationError } from '@/src/infrastructure/errors/ApplicationError';
 
 export class NetworkError extends ApplicationError {
   constructor(message: string, context?: Record<string, unknown>, cause?: Error) {

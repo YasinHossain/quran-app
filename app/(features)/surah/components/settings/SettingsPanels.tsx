@@ -2,9 +2,10 @@
 
 import React from 'react';
 
-import { ArabicFontPanel } from '../ArabicFontPanel';
-import { TranslationPanel, TafsirPanel } from '../panels';
-import { WordLanguagePanel } from '../WordLanguagePanel';
+import { ArabicFontPanel } from '@/app/(features)/surah/components/ArabicFontPanel';
+import { TranslationPanel, TafsirPanel } from '@/app/(features)/surah/components/panels';
+import { WordLanguagePanel } from '@/app/(features)/surah/components/WordLanguagePanel';
+
 import { SettingsPanelsProps } from './types';
 
 export const SettingsPanels = ({

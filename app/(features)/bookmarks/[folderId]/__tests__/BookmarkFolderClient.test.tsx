@@ -1,8 +1,7 @@
 import { render } from '@testing-library/react';
 
+import { BookmarkFolderClient } from '@/app/(features)/bookmarks/[folderId]/BookmarkFolderClient';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
-
-import { BookmarkFolderClient } from '../BookmarkFolderClient';
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: jest.fn() }),

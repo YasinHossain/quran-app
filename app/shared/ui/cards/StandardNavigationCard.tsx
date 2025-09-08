@@ -1,9 +1,9 @@
 'use client';
 import React from 'react';
 
-import { buildTextClasses } from '../../design-system/card-tokens';
-import { BaseCard, BaseCardProps } from '../BaseCard';
-import { NumberBadge } from '../NumberBadge';
+import { buildTextClasses } from '@/app/shared/design-system/card-tokens';
+import { BaseCard, BaseCardProps } from '@/app/shared/ui/BaseCard';
+import { NumberBadge } from '@/app/shared/ui/NumberBadge';
 
 /**
  * StandardNavigationCard

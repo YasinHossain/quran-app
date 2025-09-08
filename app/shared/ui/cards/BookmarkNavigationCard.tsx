@@ -2,10 +2,9 @@
 
 import React from 'react';
 
+import { colors } from '@/app/shared/design-system/card-tokens';
+import { BaseCard, BaseCardProps } from '@/app/shared/ui/BaseCard';
 import { cn } from '@/lib/utils/cn';
-
-import { colors } from '../../design-system/card-tokens';
-import { BaseCard, BaseCardProps } from '../BaseCard';
 
 /**
  * BookmarkNavigationCard

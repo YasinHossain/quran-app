@@ -1,9 +1,10 @@
 import { useMemo, type DependencyList, type RefObject } from 'react';
 
-import type { RepeatOptions } from '@/app/shared/player/types';
 import { Verse } from '@/types';
 
 import { createCompletionHandlers, type CompletionHandlers } from './playbackCompletionHandlers';
+
+import type { RepeatOptions } from '@/app/shared/player/types';
 
 interface Controls {
   audioRef: RefObject<HTMLAudioElement | null>;
@@ -99,6 +100,6 @@ function buildDependencies({
 export function useCompletionHandlers(options: Options): CompletionHandlers {
   return useMemo(
     () => createCompletionHandlers(buildCompletionArgs(options)),
-    buildDependencies(options),
+    buildDependencies(options)
   );
 }

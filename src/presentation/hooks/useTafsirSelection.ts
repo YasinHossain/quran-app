@@ -4,9 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useSelectableResources } from '@/lib/hooks/useSelectableResources';
+import { Tafsir } from '@/src/domain/entities/Tafsir';
 import { TafsirResource } from '@/types';
-
-import { Tafsir } from '../../domain/entities/Tafsir';
 
 const MAX_SELECTIONS = 3;
 

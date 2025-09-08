@@ -1,4 +1,5 @@
-import { useResponsiveFocus } from '../focus';
+import { useResponsiveFocus } from '@/lib/focus';
+
 import { useBreakpoint, type BreakpointKey } from './breakpoints';
 import { useOrientation, type OrientationKey } from './orientation';
 import { getVariantForBreakpoint, type ComponentVariant } from './variants';

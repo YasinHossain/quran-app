@@ -3,10 +3,10 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { memo } from 'react';
 
+import { CloseIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 
-import { CloseIcon } from '../icons';
 import { ActionList } from './components/ActionList';
 import { useVerseActions } from './hooks/useVerseActions';
 

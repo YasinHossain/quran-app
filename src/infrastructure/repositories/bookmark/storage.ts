@@ -1,8 +1,9 @@
+import { Bookmark } from '@/src/domain/entities';
+import { BookmarkPosition } from '@/src/domain/value-objects/BookmarkPosition';
+import { StoredBookmark } from '@/src/domain/value-objects/StoredBookmark';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
+
 import { isStoredBookmarkArray } from './bookmarkValidation';
-import { Bookmark } from '../../../domain/entities';
-import { BookmarkPosition } from '../../../domain/value-objects/BookmarkPosition';
-import { StoredBookmark } from '../../../domain/value-objects/StoredBookmark';
-import { logger } from '../../monitoring/Logger';
 
 const STORAGE_KEY = 'quran_bookmarks';
 

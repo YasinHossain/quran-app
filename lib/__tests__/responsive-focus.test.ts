@@ -1,6 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 
-import { useResponsiveFocus } from '../focus';
+import { useResponsiveFocus } from '@/lib/focus';
+
 import { setupDom } from './focus/test-utils';
 
 describe('useResponsiveFocus', () => {

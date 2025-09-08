@@ -1,5 +1,6 @@
+import { fetchWithTimeout } from '@/lib/api/client';
+
 import { LogLevel, type LogEntry, type ILoggerTransport } from './types';
-import { fetchWithTimeout } from '../../../lib/api/client';
 
 /**
  * Remote transport for sending logs to external services

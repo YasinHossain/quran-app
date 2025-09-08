@@ -1,4 +1,4 @@
-import { isSajdahVerse } from '../../../../src/domain/entities';
+import { isSajdahVerse } from '@/src/domain/entities';
 
 describe('Verse isSajdahVerse', () => {
   it('returns true for known sajdah verses', () => {

@@ -1,9 +1,12 @@
 'use client';
 import { useCallback } from 'react';
 
+import {
+  createMemorizationPlan,
+  updateMemorizationProgress,
+} from '@/app/providers/bookmarks/bookmark-utils';
 import { MemorizationPlan } from '@/types';
 
-import { createMemorizationPlan, updateMemorizationProgress } from '../bookmark-utils';
 export interface MemorizationOperations {
   addToMemorization(surahId: number, targetVerses?: number): void;
   createMemorizationPlan(surahId: number, targetVerses: number, planName?: string): void;

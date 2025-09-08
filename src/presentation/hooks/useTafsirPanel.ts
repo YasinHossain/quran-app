@@ -1,19 +1,14 @@
 'use client';
 
-import type {
-  Dispatch,
-  SetStateAction,
-  RefObject,
-  DragEvent,
-} from 'react';
-
 import { useTheme } from '@/app/providers/ThemeContext';
-import type { Theme } from '@/app/providers/ThemeContext';
-import type { TafsirResource } from '@/types';
 
 import { useTafsir } from './useTafsir';
 import { useTafsirSelection } from './useTafsirSelection';
 import { useTafsirTabsScroll } from './useTafsirTabsScroll';
+
+import type { Theme } from '@/app/providers/ThemeContext';
+import type { TafsirResource } from '@/types';
+import type { Dispatch, SetStateAction, RefObject, DragEvent } from 'react';
 
 export interface UseTafsirPanelReturn {
   theme: Theme;

@@ -7,13 +7,13 @@ import {
   verseId,
   bookmarkId,
 } from './test-utils';
-import { Bookmark } from '../../../../../src/domain/entities';
+import { Bookmark } from '@/src/domain/entities';
 import {
   BookmarkNotFoundError,
   UnauthorizedBookmarkError,
 } from '../../../../../src/domain/errors/DomainErrors';
-import { BookmarkService } from '../../../../../src/domain/services/BookmarkService';
-import { BookmarkPosition } from '../../../../../src/domain/value-objects/BookmarkPosition';
+import { BookmarkService } from '@/src/domain/services/BookmarkService';
+import { BookmarkPosition } from '@/src/domain/value-objects/BookmarkPosition';
 
 describe('BookmarkService removeBookmark', () => {
   let service: BookmarkService;

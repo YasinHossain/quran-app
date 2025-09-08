@@ -2,10 +2,10 @@
 
 import React from 'react';
 
-import { ColorSelector } from '../folder-settings/ColorSelector';
-import { FolderNameInput } from '../folder-settings/FolderNameInput';
-import { IconSelector } from '../folder-settings/IconSelector';
-import { ModalActions } from '../folder-settings/ModalActions';
+import { ColorSelector } from '@/app/(features)/bookmarks/components/folder-settings/ColorSelector';
+import { FolderNameInput } from '@/app/(features)/bookmarks/components/folder-settings/FolderNameInput';
+import { IconSelector } from '@/app/(features)/bookmarks/components/folder-settings/IconSelector';
+import { ModalActions } from '@/app/(features)/bookmarks/components/folder-settings/ModalActions';
 
 interface SettingsFormProps {
   mode: 'edit' | 'rename' | 'customize';

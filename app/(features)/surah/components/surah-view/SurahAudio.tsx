@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { SurahAudioPlayer } from '../SurahAudioPlayer';
+import { SurahAudioPlayer } from '@/app/(features)/surah/components/SurahAudioPlayer';
 
 import type { Verse, Reciter } from '@/types';
 

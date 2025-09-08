@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import React from 'react';
 
+import { useBookmarkListState } from '@/app/(features)/bookmarks/hooks/useBookmarkListState';
 import { Folder, Bookmark } from '@/types';
 
 import { VerseList } from './bookmark-list-view/VerseList';
@@ -11,7 +12,6 @@ import {
   BookmarkListHeader,
   EmptyBookmarkState,
 } from './shared/BookmarkListComponents';
-import { useBookmarkListState } from '../hooks/useBookmarkListState';
 
 interface BookmarkListViewProps {
   folder: Folder;

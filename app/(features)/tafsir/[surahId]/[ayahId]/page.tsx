@@ -3,13 +3,13 @@ import React from 'react';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { SettingsSidebar } from '@/app/(features)/surah/components';
+import { useTafsirVerseData } from '@/app/(features)/tafsir/hooks/useTafsirVerseData';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 
 import { AyahNavigation } from './components/AyahNavigation';
 import { TafsirAudioPlayer } from './components/TafsirAudioPlayer';
 import { TafsirViewer } from './components/TafsirViewer';
 import { useBodyScrollLock, usePanelsState } from './useTafsirPanels';
-import { useTafsirVerseData } from '../../hooks/useTafsirVerseData';
 
 interface TafsirVersePageProps {
   params: Promise<{ surahId: string; ayahId: string }>;

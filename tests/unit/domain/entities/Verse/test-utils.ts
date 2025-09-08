@@ -1,5 +1,5 @@
-import { Verse } from '../../../../src/domain/entities';
-import { Translation } from '../../../../src/domain/value-objects/Translation';
+import { Verse } from '@/tests/src/domain/entities';
+import { Translation } from '@/tests/src/domain/value-objects/Translation';
 
 export const validId = 'verse-1-1';
 export const validSurahId = 1;

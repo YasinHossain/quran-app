@@ -7,10 +7,10 @@ import {
   verseId,
   bookmarkId,
 } from './test-utils';
-import { Bookmark, Verse } from '../../../../../src/domain/entities';
-import { VerseNotFoundError } from '../../../../../src/domain/errors/DomainErrors';
-import { BookmarkService } from '../../../../../src/domain/services/BookmarkService';
-import { BookmarkPosition } from '../../../../../src/domain/value-objects/BookmarkPosition';
+import { Bookmark, Verse } from '@/src/domain/entities';
+import { VerseNotFoundError } from '@/src/domain/errors/DomainErrors';
+import { BookmarkService } from '@/src/domain/services/BookmarkService';
+import { BookmarkPosition } from '@/src/domain/value-objects/BookmarkPosition';
 
 describe('BookmarkService queries', () => {
   let service: BookmarkService;

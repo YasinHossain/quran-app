@@ -4,10 +4,7 @@ import React from 'react';
 
 import { ResourcePanelHeader } from '@/app/shared/resource-panel/components/ResourcePanelHeader';
 import { useListHeight } from '@/app/shared/resource-panel/hooks/useListHeight';
-import {
-  useTafsirPanel,
-  type UseTafsirPanelReturn,
-} from '@/src/presentation/hooks/useTafsirPanel';
+import { useTafsirPanel, type UseTafsirPanelReturn } from '@/src/presentation/hooks/useTafsirPanel';
 
 import { TafsirPanelContent } from './components/TafsirPanelContent';
 import { useTafsirSections } from './hooks/useTafsirSections';

@@ -8,10 +8,10 @@ import userEvent from '@testing-library/user-event';
 
 import { validateResponsiveDesign } from '@/app/testUtils/responsiveTestUtils';
 
-import { ComponentName } from '../ComponentName';
-import { TestWrapper } from '../shared/test-wrapper';
+import { ComponentName } from '@/templates/ai-compliant/ComponentName';
+import { TestWrapper } from '@/templates/ai-compliant/shared/test-wrapper';
 
-import type { ComponentNameProps } from '../ComponentName';
+import type { ComponentNameProps } from '@/templates/ai-compliant/ComponentName';
 
 
 jest.mock('@/lib/api/client', () => ({

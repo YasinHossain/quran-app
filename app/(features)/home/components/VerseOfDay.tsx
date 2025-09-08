@@ -2,12 +2,12 @@
 
 import { memo, useCallback, useState } from 'react';
 
+import { useSurahName } from '@/app/(features)/home/hooks/useSurahName';
+import { useVerseOfDay } from '@/app/(features)/home/hooks/useVerseOfDay';
+import { useVerseTransition } from '@/app/(features)/home/hooks/useVerseTransition';
 import { useSettings } from '@/app/providers/SettingsContext';
 
 import { RenderStates } from './RenderStates';
-import { useSurahName } from '../hooks/useSurahName';
-import { useVerseOfDay } from '../hooks/useVerseOfDay';
-import { useVerseTransition } from '../hooks/useVerseTransition';
 
 import type { Verse } from '@/types';
 

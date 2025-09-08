@@ -4,10 +4,9 @@ import { motion } from 'framer-motion';
 import React from 'react';
 import { FixedSizeList as List } from 'react-window';
 
+import { BookmarkCard } from '@/app/(features)/bookmarks/components/BookmarkCard';
 import { ArrowLeftIcon } from '@/app/shared/icons';
 import { Bookmark, Folder } from '@/types';
-
-import { BookmarkCard } from '../BookmarkCard';
 
 interface EmptyBookmarkStateProps {
   onBack?: () => void;

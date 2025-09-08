@@ -3,8 +3,7 @@
 import React from 'react';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
-
-import { SurahVerseList } from '../SurahVerseList';
+import { SurahVerseList } from '@/app/(features)/surah/components/SurahVerseList';
 
 import type { Verse } from '@/types';
 

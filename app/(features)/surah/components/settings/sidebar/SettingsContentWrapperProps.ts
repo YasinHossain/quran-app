@@ -1,4 +1,4 @@
-import { SettingsSidebarProps } from '../types';
+import { SettingsSidebarProps } from '@/app/(features)/surah/components/settings/types';
 
 export interface SettingsContentWrapperPropsConfig {
   activeTab: string;

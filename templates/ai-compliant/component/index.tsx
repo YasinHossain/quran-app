@@ -5,7 +5,7 @@
  */
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { useBookmarks, useSettings, useAudio } from '../shared/contexts';
+import { useBookmarks, useSettings, useAudio } from '@/templates/ai-compliant/shared/contexts';
 
 import type { ComponentData, ComponentAction } from '@/types';
 

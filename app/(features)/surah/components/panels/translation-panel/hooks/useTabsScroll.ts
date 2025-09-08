@@ -2,7 +2,10 @@
 
 import { useRef, useState, useEffect, useCallback } from 'react';
 
-import { scrollTabs, updateScrollState } from '../translationPanel.utils';
+import {
+  scrollTabs,
+  updateScrollState,
+} from '@/app/(features)/surah/components/panels/translation-panel/translationPanel.utils';
 
 export const useTabsScroll = (
   languages: string[]

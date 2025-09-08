@@ -1,6 +1,6 @@
-import { apiFetch } from '../../../lib/api/client';
-import { logger, MemoryTransport, LogLevel } from '../../../src/infrastructure/monitoring';
-import { TafsirRepository } from '../../../src/infrastructure/repositories/TafsirRepository';
+import { apiFetch } from '@/lib/api/client';
+import { logger, MemoryTransport, LogLevel } from '@/src/infrastructure/monitoring';
+import { TafsirRepository } from '@/src/infrastructure/repositories/TafsirRepository';
 
 jest.mock('../../../lib/api/client', () => ({
   apiFetch: jest.fn(),

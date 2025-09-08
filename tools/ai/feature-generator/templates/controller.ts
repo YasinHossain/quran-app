@@ -4,7 +4,7 @@ export function controllerTemplate(name: string): string {
  * ${entity} HTTP controller
  */
 import { Request, Response } from 'express';
-import { ${entity}Service } from '../services/${entity}Service';
+import { ${entity}Service } from '@/tools/ai/feature-generator/services/${entity}Service';
 
 export class ${entity}Controller {
   constructor(private readonly service: ${entity}Service) {}

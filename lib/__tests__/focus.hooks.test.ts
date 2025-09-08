@@ -6,7 +6,8 @@ import {
   useAutoFocus,
   useResponsiveFocus,
   useRovingTabIndex,
-} from '../focus';
+} from '@/lib/focus';
+
 import { setupDom } from './focus/test-utils';
 
 describe('focus hooks', () => {

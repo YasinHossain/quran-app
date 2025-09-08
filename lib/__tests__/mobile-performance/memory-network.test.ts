@@ -1,7 +1,8 @@
 import { renderHook, act } from '@testing-library/react';
 
+import { useBreakpoint, useResponsiveState } from '@/lib/responsive';
+
 import { setupMobilePerformanceTest, testPerformance } from './test-utils';
-import { useBreakpoint, useResponsiveState } from '../../responsive';
 
 describe('Memory and Network Performance', () => {
   let matchMediaUtils: ReturnType<typeof setupMobilePerformanceTest>['matchMediaUtils'];

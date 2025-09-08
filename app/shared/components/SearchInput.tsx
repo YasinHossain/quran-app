@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 
-import { SearchIcon } from '../icons';
+import { SearchIcon } from '@/app/shared/icons';
 
 type SearchVariant = 'main' | 'default' | 'glass' | 'header' | 'panel';
 type SearchSize = 'sm' | 'md' | 'lg';

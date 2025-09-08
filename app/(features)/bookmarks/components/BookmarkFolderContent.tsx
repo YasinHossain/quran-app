@@ -2,10 +2,10 @@
 
 import React, { useState } from 'react';
 
+import { useFolderNavigation } from '@/app/(features)/bookmarks/hooks/useFolderNavigation';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { Bookmark, Folder } from '@/types';
 
-import { useFolderNavigation } from '../hooks/useFolderNavigation';
 import { FolderItem } from './shared/folder';
 
 interface BookmarkFolderContentProps {

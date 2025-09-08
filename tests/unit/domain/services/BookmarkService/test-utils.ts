@@ -1,5 +1,5 @@
-import { IBookmarkRepository } from '../../../../../src/domain/repositories/IBookmarkRepository';
-import { IVerseRepository } from '../../../../../src/domain/repositories/IVerseRepository';
+import { IBookmarkRepository } from '@/src/domain/repositories/IBookmarkRepository';
+import { IVerseRepository } from '@/src/domain/repositories/IVerseRepository';
 
 export const createMockBookmarkRepository = (): jest.Mocked<IBookmarkRepository> => ({
   findById: jest.fn(),

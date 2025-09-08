@@ -1,4 +1,4 @@
-import { BookmarkPosition } from '../../../../../src/domain/value-objects/BookmarkPosition';
+import { BookmarkPosition } from '@/src/domain/value-objects/BookmarkPosition';
 
 export const validSurahId = 1;
 export const validAyahNumber = 1;

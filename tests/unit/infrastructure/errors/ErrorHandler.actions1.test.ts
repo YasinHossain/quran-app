@@ -3,7 +3,7 @@ import {
   AudioError,
   ErrorHandler,
 } from '../../../../src/infrastructure/errors';
-import { logger, MemoryTransport, LogLevel } from '../../../../src/infrastructure/monitoring';
+import { logger, MemoryTransport, LogLevel } from '@/src/infrastructure/monitoring';
 
 describe('ErrorHandler action logging (auth/audio)', () => {
   let memory: MemoryTransport;

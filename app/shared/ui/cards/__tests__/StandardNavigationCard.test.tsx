@@ -1,8 +1,7 @@
 import userEvent from '@testing-library/user-event';
 
+import { StandardNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
-
-import { StandardNavigationCard } from '../StandardNavigationCard';
 
 beforeAll(() => {
   Object.defineProperty(window, 'matchMedia', {

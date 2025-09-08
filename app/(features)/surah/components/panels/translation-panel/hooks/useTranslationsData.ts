@@ -2,12 +2,11 @@
 
 import { useState, useEffect, useCallback } from 'react';
 
+import { initialTranslationsData } from '@/app/(features)/surah/components/panels/translation-panel/translationPanel.data';
+import { capitalizeLanguageName } from '@/app/(features)/surah/components/panels/translation-panel/translationPanel.utils';
 import { getTranslations } from '@/lib/api/translations';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { TranslationResource } from '@/types';
-
-import { initialTranslationsData } from '../translationPanel.data';
-import { capitalizeLanguageName } from '../translationPanel.utils';
 
 export const useTranslationsData = (): {
   translations: TranslationResource[];

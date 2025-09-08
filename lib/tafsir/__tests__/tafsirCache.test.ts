@@ -1,6 +1,10 @@
+import {
+  CACHE_TTL,
+  MAX_CACHE_SIZE,
+  clearTafsirCache,
+  getTafsirCached,
+} from '@/lib/tafsir/tafsirCache';
 import { container } from '@/src/infrastructure/di/Container';
-
-import { CACHE_TTL, MAX_CACHE_SIZE, clearTafsirCache, getTafsirCached } from '../tafsirCache';
 
 jest.mock('@/src/infrastructure/di/Container', () => ({
   container: {

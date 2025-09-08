@@ -1,4 +1,4 @@
-import { parseVerseKey } from '../verse';
+import { parseVerseKey } from '@/lib/utils/verse';
 
 describe('parseVerseKey', () => {
   it('parses valid verse key', () => {

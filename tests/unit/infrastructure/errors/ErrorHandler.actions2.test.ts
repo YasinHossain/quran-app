@@ -1,4 +1,4 @@
-import { NetworkError, ErrorHandler } from '../../../../src/infrastructure/errors';
+import { NetworkError, ErrorHandler } from '@/src/infrastructure/errors';
 
 describe('ErrorHandler action logging (network)', () => {
   it('executes no-op retry callback by default for network errors', async () => {

@@ -1,8 +1,9 @@
+import * as apiVerses from '@/lib/api/verses';
+import { Verse } from '@/src/domain/entities/Verse';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
+
 import { findBySurah } from './verseBulkQueries';
 import { mapApiVerseToDomain } from './verseMapper';
-import * as apiVerses from '../../../lib/api/verses';
-import { Verse } from '../../domain/entities/Verse';
-import { logger } from '../monitoring/Logger';
 
 export const findNext = async (
   currentVerseId: string,

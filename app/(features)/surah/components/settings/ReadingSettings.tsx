@@ -2,9 +2,8 @@
 
 import React from 'react';
 
+import { CollapsibleSection } from '@/app/(features)/surah/components/CollapsibleSection';
 import { BookReaderIcon } from '@/app/shared/icons';
-
-import { CollapsibleSection } from '../CollapsibleSection';
 
 interface ReadingSettingsProps {
   isOpen?: boolean;

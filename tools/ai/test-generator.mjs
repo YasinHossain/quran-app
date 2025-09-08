@@ -365,7 +365,7 @@ describe('{{className}} Integration', () => {
  */
 
 {{imports}}
-import { {{className}} } from '../{{className}}';
+import { {{className}} } from '@/tools/{{className}}';
 {{mocks}}
 
 describe('{{className}}', () => {
@@ -383,7 +383,7 @@ describe('{{className}}', () => {
  */
 
 {{imports}}
-import { {{className}} } from '../{{className}}';
+import { {{className}} } from '@/tools/{{className}}';
 {{mocks}}
 
 describe('{{className}}', () => {

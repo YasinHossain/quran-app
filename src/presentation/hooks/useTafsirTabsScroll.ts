@@ -10,9 +10,7 @@ export interface UseTafsirTabsScrollReturn {
   readonly scrollTabsRight: () => void;
 }
 
-export const useTafsirTabsScroll = (
-  languages: string[]
-): UseTafsirTabsScrollReturn => {
+export const useTafsirTabsScroll = (languages: string[]): UseTafsirTabsScrollReturn => {
   const tabsContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);

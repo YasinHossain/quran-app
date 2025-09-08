@@ -1,11 +1,11 @@
 import { createRepository, mockApiVerse, mockApiVerses, mockApiChapters } from './test-utils';
-import { Verse as VerseEntity } from '../../../../src/domain/entities/Verse';
+import { Verse as VerseEntity } from '@/src/domain/entities/Verse';
 import {
   logger,
   MemoryTransport,
   LogLevel,
 } from '../../../../src/infrastructure/monitoring/Logger';
-import { Chapter } from '../../../../types';
+import { Chapter } from '@/types';
 
 describe('VerseRepository findById', () => {
   let repository: ReturnType<typeof createRepository>;

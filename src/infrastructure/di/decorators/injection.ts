@@ -1,6 +1,6 @@
 import { inject, injectable, named } from 'inversify';
 
-import { TYPES, type TypeKeys } from '../types';
+import { TYPES, type TypeKeys } from '@/src/infrastructure/di/types';
 
 /**
  * Injectable decorator with automatic registration

@@ -2,14 +2,14 @@
 
 import { useState } from 'react';
 
+import { BookmarkModal } from '@/app/shared/components/BookmarkModal';
+import { EllipsisHIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 
 import { MobileBottomSheet } from './MobileBottomSheet';
 import { VerseActionsProps } from './types';
 import { defaultShare } from './utils';
-import { BookmarkModal } from '../components/BookmarkModal';
-import { EllipsisHIcon } from '../icons';
 
 export const MobileVerseActions = ({
   verseKey,

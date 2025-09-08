@@ -1,4 +1,5 @@
-import { getFocusableElements, focusVisibleClasses, getFocusVisibleClasses } from '../focus';
+import { getFocusableElements, focusVisibleClasses, getFocusVisibleClasses } from '@/lib/focus';
+
 import { setupDom } from './focus/test-utils';
 
 describe('focus utilities', () => {

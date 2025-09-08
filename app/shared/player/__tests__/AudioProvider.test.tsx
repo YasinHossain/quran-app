@@ -1,9 +1,8 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 
+import { AudioProvider, useAudio } from '@/app/shared/player/context/AudioContext';
 import { RECITERS } from '@/lib/audio/reciters';
-
-import { AudioProvider, useAudio } from '../context/AudioContext';
 
 const Consumer = (): React.ReactElement => {
   const { reciter, volume, playbackRate, setReciter, setVolume, setPlaybackRate } = useAudio();

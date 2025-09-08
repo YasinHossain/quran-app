@@ -1,15 +1,15 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { Bookmark, Verse } from '../entities';
+import { Bookmark, Verse } from '@/src/domain/entities';
 import {
   BookmarkAlreadyExistsError,
   VerseNotFoundError,
   BookmarkNotFoundError,
   UnauthorizedBookmarkError,
-} from '../errors/DomainErrors';
-import { IBookmarkRepository } from '../repositories/IBookmarkRepository';
-import { IVerseRepository } from '../repositories/IVerseRepository';
-import { BookmarkPosition } from '../value-objects/BookmarkPosition';
+} from '@/src/domain/errors/DomainErrors';
+import { IBookmarkRepository } from '@/src/domain/repositories/IBookmarkRepository';
+import { IVerseRepository } from '@/src/domain/repositories/IVerseRepository';
+import { BookmarkPosition } from '@/src/domain/value-objects/BookmarkPosition';
 
 /**
  * Domain service for bookmark operations

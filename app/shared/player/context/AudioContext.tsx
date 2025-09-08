@@ -1,11 +1,10 @@
 'use client';
 import React, { createContext, useContext, useMemo, useRef, useState } from 'react';
 
+import { usePersistedAudioSettings } from '@/app/shared/player/hooks/usePersistedAudioSettings';
+import { usePlayerVisibility } from '@/app/shared/player/hooks/usePlayerVisibility';
+import { useRepeatState } from '@/app/shared/player/utils/repeatState';
 import { Verse } from '@/types';
-
-import { usePersistedAudioSettings } from '../hooks/usePersistedAudioSettings';
-import { usePlayerVisibility } from '../hooks/usePlayerVisibility';
-import { useRepeatState } from '../utils/repeatState';
 
 import type { Reciter, RepeatOptions } from '@/app/shared/player/types';
 

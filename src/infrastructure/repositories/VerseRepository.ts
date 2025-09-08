@@ -1,3 +1,8 @@
+import { getChapters } from '@/lib/api/chapters';
+import { Verse } from '@/src/domain/entities';
+import { IVerseRepository } from '@/src/domain/repositories/IVerseRepository';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
+
 import {
   findBySurah as queryFindBySurah,
   findBySurahRange as queryFindBySurahRange,
@@ -19,10 +24,6 @@ import {
   search as querySearch,
   findWithTranslation as queryFindWithTranslation,
 } from './verseSingleQueries';
-import { getChapters } from '../../../lib/api/chapters';
-import { Verse } from '../../domain/entities';
-import { IVerseRepository } from '../../domain/repositories/IVerseRepository';
-import { logger } from '../monitoring/Logger';
 
 export class VerseRepository implements IVerseRepository {
   private readonly defaultTranslationId = 20; // Default English translation

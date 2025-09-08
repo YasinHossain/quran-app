@@ -1,4 +1,4 @@
-import type { ApplicationError } from '../../errors';
+import type { ApplicationError } from '@/src/infrastructure/errors';
 
 export interface ErrorContext {
   userId?: string;

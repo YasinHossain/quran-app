@@ -2,9 +2,8 @@
 
 import { useCallback } from 'react';
 
+import { createNewFolder } from '@/app/providers/bookmarks/bookmark-utils';
 import { Folder } from '@/types';
-
-import { createNewFolder } from '../bookmark-utils';
 
 export interface FolderOperations {
   createFolder: (name: string, color?: string, icon?: string) => void;

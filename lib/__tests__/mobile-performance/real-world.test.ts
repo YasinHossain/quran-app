@@ -1,7 +1,8 @@
 import { renderHook, act } from '@testing-library/react';
 
+import { useResponsiveState } from '@/lib/responsive';
+
 import { setupMobilePerformanceTest, simulateDevice } from './test-utils';
-import { useResponsiveState } from '../../responsive';
 
 describe('Real-World Performance Scenarios', () => {
   let matchMediaUtils: ReturnType<typeof setupMobilePerformanceTest>['matchMediaUtils'];

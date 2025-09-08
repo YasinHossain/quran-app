@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 import React from 'react';
 
-import { testAccessibility } from '../../../../lib/__tests__/responsive-test-utils';
-import { ResponsiveVerseActions } from '../../ResponsiveVerseActions';
+import { ResponsiveVerseActions } from '@/app/shared/ResponsiveVerseActions';
+import { testAccessibility } from '@/lib/__tests__/responsive-test-utils';
 
-import type { VerseActionsProps } from '../../ResponsiveVerseActions';
+import type { VerseActionsProps } from '@/app/shared/ResponsiveVerseActions';
 
 export const noop = (): void => {};
 

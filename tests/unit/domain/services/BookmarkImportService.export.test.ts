@@ -1,8 +1,8 @@
-import { IBookmarkRepository } from '../../../../src/domain/repositories/IBookmarkRepository';
-import { IVerseRepository } from '../../../../src/domain/repositories/IVerseRepository';
-import { BookmarkImportService } from '../../../../src/domain/services/BookmarkImportService';
-import { BookmarkPosition } from '../../../../src/domain/value-objects/BookmarkPosition';
-import { StoredBookmark } from '../../../../src/domain/value-objects/StoredBookmark';
+import { IBookmarkRepository } from '@/src/domain/repositories/IBookmarkRepository';
+import { IVerseRepository } from '@/src/domain/repositories/IVerseRepository';
+import { BookmarkImportService } from '@/src/domain/services/BookmarkImportService';
+import { BookmarkPosition } from '@/src/domain/value-objects/BookmarkPosition';
+import { StoredBookmark } from '@/src/domain/value-objects/StoredBookmark';
 
 const mockBookmarkRepository: jest.Mocked<IBookmarkRepository> = {
   findById: jest.fn(),

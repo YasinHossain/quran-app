@@ -1,10 +1,9 @@
 'use client';
+import { useTafsirPanels } from '@/app/(features)/tafsir/[surahId]/[ayahId]/hooks/useTafsirPanels';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { ChevronDownIcon } from '@/app/shared/icons';
 import { Spinner } from '@/app/shared/Spinner';
 import { applyArabicFont } from '@/lib/tafsir/applyArabicFont';
-
-import { useTafsirPanels } from '../hooks/useTafsirPanels';
 
 interface TafsirPanelsProps {
   verseKey: string;

@@ -1,8 +1,7 @@
+import { apiFetch } from '@/lib/api/client';
 import { Verse } from '@/types';
 
-import { apiFetch } from '../client';
 import { normalizeVerse, ApiVerse } from './normalize';
-
 import type { LanguageCode } from '@/lib/text/languageCodes';
 
 export interface PaginatedVerses {
@@ -16,7 +15,7 @@ export interface FetchVersesOptions {
   translationIds: number | number[];
   page?: number;
   perPage?: number;
-  wordLang?: string;
+  wordLang?: LanguageCode;
 }
 
 /**
@@ -35,7 +34,6 @@ export async function fetchVerses({
   perPage = 20,
   wordLang = 'en',
 }: FetchVersesOptions): Promise<PaginatedVerses> {
-  const lang = wordLang as LanguageCode;
   const translationIdsArray = Array.isArray(translationIds) ? translationIds : [translationIds];
   const translationParam = translationIdsArray.join(',');
 
@@ -46,9 +44,9 @@ export async function fetchVerses({
   }>(
     `verses/${type}/${id}`,
     {
-      language: lang,
+      language: wordLang,
       words: 'true',
-      word_translation_language: lang,
+      word_translation_language: wordLang,
       word_fields: 'text_uthmani',
       translations: translationParam,
       fields: 'text_uthmani,audio',
@@ -60,7 +58,7 @@ export async function fetchVerses({
   const totalPages = data.meta?.total_pages ?? data.pagination?.total_pages ?? 1;
   return {
     totalPages,
-    verses: data.verses.map((v) => normalizeVerse(v, lang)),
+    verses: data.verses.map((v) => normalizeVerse(v, wordLang)),
   };
 }
 

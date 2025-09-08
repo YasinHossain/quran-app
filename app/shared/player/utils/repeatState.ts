@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import type { RepeatOptions } from '../types';
+import type { RepeatOptions } from '@/app/shared/player/types';
 
 export function useRepeatState(): {
   repeatOptions: RepeatOptions;

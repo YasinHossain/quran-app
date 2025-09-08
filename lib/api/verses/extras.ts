@@ -1,8 +1,8 @@
+import { getSurahList } from '@/lib/api/chapters';
+import { apiFetch } from '@/lib/api/client';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { Verse, Juz, Surah } from '@/types';
 
-import { getSurahList } from '../chapters';
-import { apiFetch } from '../client';
 import { normalizeVerse, ApiVerse } from './normalize';
 
 let surahList: Surah[] | null = null;

@@ -1,6 +1,7 @@
+import { logger } from '@/src/infrastructure/monitoring/Logger';
+
 import { ApplicationError } from './ApplicationError';
 import { errorHandlerConfig } from './ErrorHandlerConfig';
-import { logger } from '../monitoring/Logger';
 
 /**
  * Error notification interface

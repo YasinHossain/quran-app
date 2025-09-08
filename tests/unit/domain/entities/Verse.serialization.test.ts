@@ -5,7 +5,7 @@ import {
   getEstimatedReadingTime,
   isSajdahVerse,
 } from '../../../../src/domain/entities';
-import { Translation } from '../../../../src/domain/value-objects/Translation';
+import { Translation } from '@/src/domain/value-objects/Translation';
 
 describe('Verse serialization', () => {
   it('converts to plain object with all properties', () => {

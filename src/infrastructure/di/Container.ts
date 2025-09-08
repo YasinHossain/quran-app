@@ -1,9 +1,9 @@
-import { IBookmarkRepository } from '../../domain/repositories/IBookmarkRepository';
-import { ITafsirRepository } from '../../domain/repositories/ITafsirRepository';
-import { IVerseRepository } from '../../domain/repositories/IVerseRepository';
-import { BookmarkRepository } from '../repositories/BookmarkRepository';
-import { TafsirRepository } from '../repositories/TafsirRepository';
-import { VerseRepository } from '../repositories/VerseRepository';
+import { IBookmarkRepository } from '@/src/domain/repositories/IBookmarkRepository';
+import { ITafsirRepository } from '@/src/domain/repositories/ITafsirRepository';
+import { IVerseRepository } from '@/src/domain/repositories/IVerseRepository';
+import { BookmarkRepository } from '@/src/infrastructure/repositories/BookmarkRepository';
+import { TafsirRepository } from '@/src/infrastructure/repositories/TafsirRepository';
+import { VerseRepository } from '@/src/infrastructure/repositories/VerseRepository';
 
 /**
  * Dependency Injection Container

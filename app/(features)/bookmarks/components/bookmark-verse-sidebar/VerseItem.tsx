@@ -2,11 +2,10 @@
 
 import React from 'react';
 
+import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { LoadingError } from '@/app/shared/LoadingError';
 import { Bookmark } from '@/types';
-
-import { useBookmarkVerse } from '../../hooks/useBookmarkVerse';
 
 interface VerseItemProps {
   bookmark: Bookmark;

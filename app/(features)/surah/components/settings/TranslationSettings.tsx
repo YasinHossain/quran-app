@@ -3,11 +3,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { CollapsibleSection } from '@/app/(features)/surah/components/CollapsibleSection';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { TranslationIcon } from '@/app/shared/icons';
 import { SelectionBox } from '@/app/shared/SelectionBox';
-
-import { CollapsibleSection } from '../CollapsibleSection';
 
 interface TranslationSettingsProps {
   onTranslationPanelOpen: () => void;

@@ -1,5 +1,6 @@
+import { Translation } from '@/src/domain/value-objects/Translation';
+
 import { getEstimatedReadingTime, getWordCount, isSajdahVerse } from './verseUtils';
-import { Translation } from '../value-objects/Translation';
 
 /**
  * Verse domain entity representing a single Quranic verse
@@ -21,14 +22,7 @@ export class Verse {
   public readonly uthmaniText: string;
   public readonly translation?: Translation;
 
-  constructor({
-    id,
-    surahId,
-    ayahNumber,
-    arabicText,
-    uthmaniText,
-    translation,
-  }: VerseOptions) {
+  constructor({ id, surahId, ayahNumber, arabicText, uthmaniText, translation }: VerseOptions) {
     this.id = id;
     this.surahId = surahId;
     this.ayahNumber = ayahNumber;

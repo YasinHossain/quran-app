@@ -3,9 +3,8 @@
 import { motion } from 'framer-motion';
 import React from 'react';
 
+import { BookmarkCard } from '@/app/(features)/bookmarks/components/BookmarkCard';
 import { Bookmark } from '@/types';
-
-import { BookmarkCard } from '../../components/BookmarkCard';
 
 interface PinnedVersesListProps {
   pinnedVerses: Bookmark[] | undefined;

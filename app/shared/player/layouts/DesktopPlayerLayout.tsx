@@ -1,13 +1,12 @@
 import React from 'react';
 
 import { CloseIcon } from '@/app/shared/icons';
+import { PlayerOptions } from '@/app/shared/player/components/PlayerOptions';
+import { Timeline } from '@/app/shared/player/components/Timeline';
+import { TrackInfo } from '@/app/shared/player/components/TrackInfo';
+import { TransportControls } from '@/app/shared/player/components/TransportControls';
 import { Button } from '@/app/shared/ui/Button';
 import { iconClasses } from '@/lib/responsive';
-
-import { PlayerOptions } from '../components/PlayerOptions';
-import { Timeline } from '../components/Timeline';
-import { TrackInfo } from '../components/TrackInfo';
-import { TransportControls } from '../components/TransportControls';
 
 interface DesktopPlayerLayoutProps {
   cover: string;

@@ -1,4 +1,4 @@
-import { TYPES, type TypeKeys } from '../types';
+import { TYPES, type TypeKeys } from '@/src/infrastructure/di/types';
 
 import type { interfaces } from 'inversify';
 

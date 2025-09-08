@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
+import preview from '@/.storybook/preview';
+
 import { SearchField } from './SearchField';
-import preview from '../../../.storybook/preview';
 
 import type { Meta, StoryObj } from '@storybook/react';
 

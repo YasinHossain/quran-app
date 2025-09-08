@@ -1,4 +1,4 @@
-import { ApplicationError } from '../ApplicationError';
+import { ApplicationError } from '@/src/infrastructure/errors/ApplicationError';
 
 export class NotFoundError extends ApplicationError {
   constructor(resource: string, context?: Record<string, unknown>, cause?: Error) {

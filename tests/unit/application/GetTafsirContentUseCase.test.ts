@@ -1,10 +1,10 @@
-import { GetTafsirContentUseCase } from '../../../src/application/use-cases/GetTafsirContent';
+import { GetTafsirContentUseCase } from '@/src/application/use-cases/GetTafsirContent';
 import {
   InvalidTafsirRequestError,
   TafsirContentLoadError,
 } from '../../../src/domain/errors/DomainErrors';
-import { ITafsirRepository } from '../../../src/domain/repositories/ITafsirRepository';
-import { logger as Logger } from '../../../src/infrastructure/monitoring/Logger';
+import { ITafsirRepository } from '@/src/domain/repositories/ITafsirRepository';
+import { logger as Logger } from '@/src/infrastructure/monitoring/Logger';
 
 // Minimal mocked repository implementing ITafsirRepository
 const createRepository = (): jest.Mocked<ITafsirRepository> => ({

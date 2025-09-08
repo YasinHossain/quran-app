@@ -1,12 +1,13 @@
+import { apiFetch } from '@/lib/api/client';
+import { Tafsir } from '@/src/domain/entities/Tafsir';
+import { ITafsirRepository } from '@/src/domain/repositories/ITafsirRepository';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
+
 import { fetchResourcesForLanguage } from './tafsirApi';
 import {
   cacheResources as cacheTafsirResources,
   getCachedResources as getTafsirCachedResources,
 } from './tafsirCache';
-import { apiFetch } from '../../../lib/api/client';
-import { Tafsir } from '../../domain/entities/Tafsir';
-import { ITafsirRepository } from '../../domain/repositories/ITafsirRepository';
-import { logger } from '../monitoring/Logger';
 
 /**
  * Infrastructure implementation of ITafsirRepository
@@ -61,21 +62,20 @@ export class TafsirRepository implements ITafsirRepository {
     return tafsirs;
   }
 
-  private mergeResults(
-    results: PromiseSettledResult<Tafsir[]>[]
-  ): Tafsir[] {
+  private mergeResults(results: PromiseSettledResult<Tafsir[]>[]): Tafsir[] {
     const mergedMap = new Map<number, Tafsir>();
-    for (const result of results) {
-      if (result.status !== 'fulfilled') {
-        continue;
-      }
-      for (const tafsir of result.value) {
-        if (mergedMap.has(tafsir.id)) {
-          continue;
-        }
+
+    const addToMap = (tafsir: Tafsir): void => {
+      if (!mergedMap.has(tafsir.id)) {
         mergedMap.set(tafsir.id, tafsir);
       }
-    }
+    };
+
+    results
+      .filter((r): r is PromiseFulfilledResult<Tafsir[]> => r.status === 'fulfilled')
+      .flatMap((r) => r.value)
+      .forEach(addToMap);
+
     return Array.from(mergedMap.values());
   }
 

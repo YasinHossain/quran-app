@@ -2,7 +2,8 @@
 
 import { useTranslation } from 'react-i18next';
 
-import { useJuzClientState } from '../hooks/useJuzClientState';
+import { useJuzClientState } from '@/app/(features)/juz/hooks/useJuzClientState';
+
 import { AudioPlayerBar } from './components/AudioPlayerBar';
 import { JuzMain } from './components/JuzMain';
 import { JuzSettings } from './components/JuzSettings';

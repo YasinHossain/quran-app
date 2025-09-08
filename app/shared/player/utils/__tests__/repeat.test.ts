@@ -1,4 +1,5 @@
-import { hasNonIntegerValues, adjustRange } from '../repeat';
+import { hasNonIntegerValues, adjustRange } from '@/app/shared/player/utils/repeat';
+
 import type { RepeatOptions } from '@/app/shared/player/types';
 
 describe('repeat utilities', () => {

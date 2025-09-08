@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 
-import type { AnimationConfig } from '../base-card.config';
+import type { AnimationConfig } from '@/app/shared/ui/base-card.config';
 import type React from 'react';
 
 interface RenderFramerMotionProps {

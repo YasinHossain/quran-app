@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import { SearchInput } from '../SearchInput';
+import { SearchInput } from '@/app/shared/components/SearchInput';
 
 export function HeaderSearch(): JSX.Element {
   const router = useRouter();

@@ -8,7 +8,7 @@ import {
   preDestroy,
 } from 'inversify';
 
-import { TYPES, type TypeKeys } from '../types';
+import { TYPES, type TypeKeys } from '@/src/infrastructure/di/types';
 
 export * from './injection';
 export * from './factory';

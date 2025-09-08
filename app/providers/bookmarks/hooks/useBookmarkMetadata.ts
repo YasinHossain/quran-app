@@ -1,8 +1,7 @@
 import { useCallback, type Dispatch, type SetStateAction } from 'react';
 
+import { updateBookmarkInFolders } from '@/app/providers/bookmarks/bookmark-utils';
 import { getVerseById, getVerseByKey } from '@/lib/api/verses';
-
-import { updateBookmarkInFolders } from '../bookmark-utils';
 
 import type { Bookmark, Chapter, Folder } from '@/types';
 

@@ -1,7 +1,7 @@
 import { IconX } from '@tabler/icons-react';
 import { memo } from 'react';
 
-import { SearchInput } from '../../components/SearchInput';
+import { SearchInput } from '@/app/shared/components/SearchInput';
 
 interface QuranBottomSheetHeaderProps {
   onClose: () => void;

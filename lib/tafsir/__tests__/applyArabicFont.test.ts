@@ -1,4 +1,4 @@
-import { applyArabicFont } from '../applyArabicFont';
+import { applyArabicFont } from '@/lib/tafsir/applyArabicFont';
 
 describe('applyArabicFont', () => {
   it('wraps Arabic text with span using provided font', () => {

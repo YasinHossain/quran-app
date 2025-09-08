@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import React from 'react';
+import { memo, useCallback } from 'react';
 
 import { CloseIcon, CheckIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
@@ -14,16 +14,62 @@ interface CreateFolderFormProps {
   onCancel: () => void;
 }
 
-export const CreateFolderForm = ({
+interface ActionButtonsProps {
+  newFolderName: string;
+  onCancel: () => void;
+}
+
+const ActionButtons = memo(function ActionButtons({
+  newFolderName,
+  onCancel,
+}: ActionButtonsProps): React.JSX.Element {
+  return (
+    <div className="flex items-center gap-1">
+      <button
+        type="submit"
+        disabled={!newFolderName.trim()}
+        className={cn(
+          'p-2 rounded-full transition-colors',
+          newFolderName.trim()
+            ? 'text-accent hover:bg-accent/10'
+            : 'text-muted cursor-not-allowed',
+          touchClasses.target,
+          touchClasses.focus,
+        )}
+        aria-label="Create folder"
+      >
+        <CheckIcon size={16} />
+      </button>
+
+      <button
+        type="button"
+        onClick={onCancel}
+        className={cn(
+          'p-2 rounded-full hover:bg-interactive text-muted transition-colors',
+          touchClasses.target,
+          touchClasses.focus,
+        )}
+        aria-label="Cancel"
+      >
+        <CloseIcon size={16} />
+      </button>
+    </div>
+  );
+});
+
+export const CreateFolderForm = memo(function CreateFolderForm({
   newFolderName,
   onNameChange,
   onCreateFolder,
   onCancel,
-}: CreateFolderFormProps): React.JSX.Element => {
-  const handleSubmit = (e: React.FormEvent): void => {
-    e.preventDefault();
-    onCreateFolder();
-  };
+}: CreateFolderFormProps): React.JSX.Element {
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      onCreateFolder();
+    },
+    [onCreateFolder],
+  );
 
   return (
     <motion.form
@@ -40,40 +86,11 @@ export const CreateFolderForm = ({
         placeholder="Folder name"
         className={cn(
           'flex-1 bg-surface/0 text-foreground placeholder-muted',
-          'focus:outline-none'
+          'focus:outline-none',
         )}
       />
-
-      <div className="flex items-center gap-1">
-        <button
-          type="submit"
-          disabled={!newFolderName.trim()}
-          className={cn(
-            'p-2 rounded-full transition-colors',
-            newFolderName.trim()
-              ? 'text-accent hover:bg-accent/10'
-              : 'text-muted cursor-not-allowed',
-            touchClasses.target,
-            touchClasses.focus
-          )}
-          aria-label="Create folder"
-        >
-          <CheckIcon size={16} />
-        </button>
-
-        <button
-          type="button"
-          onClick={onCancel}
-          className={cn(
-            'p-2 rounded-full hover:bg-interactive text-muted transition-colors',
-            touchClasses.target,
-            touchClasses.focus
-          )}
-          aria-label="Cancel"
-        >
-          <CloseIcon size={16} />
-        </button>
-      </div>
+      <ActionButtons newFolderName={newFolderName} onCancel={onCancel} />
     </motion.form>
   );
-};
+});
+

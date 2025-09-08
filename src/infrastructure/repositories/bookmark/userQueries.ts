@@ -1,5 +1,6 @@
+import { Bookmark } from '@/src/domain/entities';
+
 import { getStoredBookmarks, mapStoredToBookmark } from './storage';
-import { Bookmark } from '../../../domain/entities';
 
 export async function findByUser(userId: string): Promise<Bookmark[]> {
   const stored = getStoredBookmarks();

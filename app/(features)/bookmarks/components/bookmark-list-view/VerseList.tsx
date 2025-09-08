@@ -2,9 +2,11 @@
 
 import React from 'react';
 
+import {
+  BookmarkListContent,
+  SimpleEmptyState,
+} from '@/app/(features)/bookmarks/components/shared/BookmarkListComponents';
 import { Bookmark, Folder } from '@/types';
-
-import { BookmarkListContent, SimpleEmptyState } from '../shared/BookmarkListComponents';
 
 interface VerseListProps {
   bookmarks: Bookmark[];

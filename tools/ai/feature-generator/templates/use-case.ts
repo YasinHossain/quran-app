@@ -4,7 +4,7 @@ export function buildUseCaseTemplate(name: string, action: string): string {
   return `/**
  * ${useCase} use case
  */
-import { I${entity}Repository } from '../../domain/repositories/I${entity}Repository';
+import { I${entity}Repository } from '@/tools/ai/domain/repositories/I${entity}Repository';
 
 export class ${useCase}UseCase {
   constructor(private readonly repo: I${entity}Repository) {}

@@ -1,7 +1,6 @@
 import { getItem, setItem, removeItem } from '@/lib/utils/safeLocalStorage';
-
-import { Tafsir, TafsirData } from '../../domain/entities/Tafsir';
-import { logger } from '../monitoring/Logger';
+import { Tafsir, TafsirData } from '@/src/domain/entities/Tafsir';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 const CACHE_KEY = 'tafsir-resources';
 const CACHE_TTL = 1000 * 60 * 60; // 1 hour

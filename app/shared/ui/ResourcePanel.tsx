@@ -2,10 +2,11 @@
 
 import React, { useState, useMemo } from 'react';
 
+import { SearchInput } from '@/app/shared/components/SearchInput';
+import { CheckIcon } from '@/app/shared/icons';
+import { Spinner } from '@/app/shared/Spinner';
+
 import { Panel } from './Panel';
-import { SearchInput } from '../components/SearchInput';
-import { CheckIcon } from '../icons';
-import { Spinner } from '../Spinner';
 
 import type { ResourceSelectionProps } from '@/types/components';
 

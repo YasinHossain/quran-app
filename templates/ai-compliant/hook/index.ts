@@ -12,7 +12,7 @@ import {
   setCachedData,
   transformHookData,
 } from './helpers';
-import { useSettings } from '../shared/contexts';
+import { useSettings } from '@/templates/ai-compliant/shared/contexts';
 
 import type { HookData, HookOptions, HookResult } from '@/types';
 

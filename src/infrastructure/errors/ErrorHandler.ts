@@ -43,6 +43,18 @@ export class ErrorHandler {
     if (retryCallback) setRetryCallback(retryCallback);
   }
 
+  private static safelyReport(
+    reporter: ErrorReporter,
+    appError: ApplicationError,
+    options: ErrorHandlerOptions
+  ): void {
+    try {
+      reporter(appError, options.context);
+    } catch (reportError) {
+      logger.error('[ErrorHandler] Failed to report error', undefined, reportError as Error);
+    }
+  }
+
   private static strategyMap = {
     logError(appError: ApplicationError, options: ErrorHandlerOptions) {
       const configuredLogger = errorHandlerConfig.getLogger();
@@ -56,14 +68,7 @@ export class ErrorHandler {
       if (!appError.isOperational) return;
       const reporter = errorHandlerConfig.getReporter();
       if (reporter) {
-        const execute = (): void => {
-          try {
-            reporter(appError, options.context);
-          } catch (reportError) {
-            logger.error('[ErrorHandler] Failed to report error', undefined, reportError as Error);
-          }
-        };
-        execute();
+        ErrorHandler.safelyReport(reporter, appError, options);
       }
     },
     showUserNotification(appError: ApplicationError) {
@@ -71,22 +76,28 @@ export class ErrorHandler {
     },
   } as const;
 
+  private static executeStrategy(
+    key: keyof typeof ErrorHandler.strategyMap,
+    appError: ApplicationError,
+    options: ErrorHandlerOptions,
+    mode: 'sync' | 'async'
+  ): void {
+    if (!(options as Record<string, boolean>)[key]) return;
+    const handler = ErrorHandler.strategyMap[key];
+    if (key === 'reportError' && mode === 'sync') {
+      Promise.resolve().then(() => handler(appError, options));
+    } else {
+      handler(appError, options);
+    }
+  }
+
   private static applyStrategies(
     appError: ApplicationError,
     options: ErrorHandlerOptions,
     mode: 'sync' | 'async'
   ): void {
     (Object.keys(ErrorHandler.strategyMap) as Array<keyof typeof ErrorHandler.strategyMap>).forEach(
-      (key) => {
-        if ((options as Record<string, boolean>)[key]) {
-          const handler = ErrorHandler.strategyMap[key];
-          if (key === 'reportError' && mode === 'sync') {
-            Promise.resolve().then(() => handler(appError, options));
-          } else {
-            handler(appError, options);
-          }
-        }
-      }
+      (key) => ErrorHandler.executeStrategy(key, appError, options, mode)
     );
   }
 

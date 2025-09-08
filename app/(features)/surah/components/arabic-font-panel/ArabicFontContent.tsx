@@ -1,10 +1,10 @@
 'use client';
 
+import { useArabicFontPanel } from '@/app/(features)/surah/components/panels/arabic-font-panel/useArabicFontPanel';
 import { AlertIcon } from '@/app/shared/icons';
 
 import { ArabicFontList } from './ArabicFontList';
 import { FilterToggle } from './FilterToggle';
-import { useArabicFontPanel } from '../panels/arabic-font-panel/useArabicFontPanel';
 
 function LoadingState(): React.JSX.Element {
   return (

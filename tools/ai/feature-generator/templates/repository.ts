@@ -3,7 +3,7 @@ export function repositoryTemplate(name: string): string {
   return `/**
  * Repository contract for ${entity}
  */
-import { ${entity} } from '../entities/${entity}';
+import { ${entity} } from '@/tools/ai/feature-generator/entities/${entity}';
 
 export interface I${entity}Repository {
   create(data: ${entity}): Promise<${entity}>;

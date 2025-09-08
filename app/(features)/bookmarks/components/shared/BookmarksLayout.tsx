@@ -2,10 +2,9 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 
+import { BookmarksSidebar } from '@/app/(features)/bookmarks/components/BookmarksSidebar';
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useSidebar } from '@/app/providers/SidebarContext';
-
-import { BookmarksSidebar } from '../BookmarksSidebar';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 import type { Folder } from '@/types/bookmark';

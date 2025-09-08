@@ -1,7 +1,7 @@
-import * as apiVerses from '../../../../lib/api/verses';
-import { Verse } from '../../../domain/entities';
-import { logger } from '../../monitoring/Logger';
-import { mapApiVerseToDomain } from '../verseMapper';
+import * as apiVerses from '@/lib/api/verses';
+import { Verse } from '@/src/domain/entities';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { mapApiVerseToDomain } from '@/src/infrastructure/repositories/verseMapper';
 
 export const findByJuz = async (juzNumber: number, translationId: number): Promise<Verse[]> => {
   try {

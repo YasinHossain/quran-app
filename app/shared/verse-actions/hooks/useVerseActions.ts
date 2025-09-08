@@ -9,9 +9,9 @@ import {
   BookmarkOutlineIcon,
   ShareIcon,
   BookReaderIcon,
-} from '../../icons';
-import { Spinner } from '../../Spinner';
-import { VerseActionItem } from '../types';
+} from '@/app/shared/icons';
+import { Spinner } from '@/app/shared/Spinner';
+import { VerseActionItem } from '@/app/shared/verse-actions/types';
 
 interface UseVerseActionsParams {
   isPlaying: boolean;

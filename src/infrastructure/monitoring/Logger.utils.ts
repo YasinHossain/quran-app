@@ -1,6 +1,7 @@
+import { config } from '@/config';
+
 import { RemoteTransport } from './RemoteTransport';
 import { LogLevel } from './types';
-import { config } from '../../../config';
 
 import type { Logger } from './Logger';
 

@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 
+import { ResponsiveImage } from '@/app/shared/components/responsive-image/ResponsiveImage';
+
 import { setResponsive } from './test-helpers';
-import { ResponsiveImage } from '../responsive-image/ResponsiveImage';
 
 describe('ResponsiveImage - resizing', () => {
   const responsiveSrc = {

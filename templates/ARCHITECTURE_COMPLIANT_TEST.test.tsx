@@ -9,7 +9,7 @@
 
 import { createPerformanceTestSuite } from '@/app/testUtils/performanceTestUtils';
 
-import { ExampleComponent } from '../ExampleComponent';
+import { ExampleComponent } from '@/ExampleComponent';
 import {
   clearTestEnvironment,
   resetTestEnvironment,
@@ -18,7 +18,7 @@ import {
   runIntegrationTest,
   setupTestEnvironment,
 } from './architecture/test-utils';
-import { useExampleData } from '../hooks/useExampleData';
+import { useExampleData } from '@/hooks/useExampleData';
 
 /**
  * Mock data following domain patterns

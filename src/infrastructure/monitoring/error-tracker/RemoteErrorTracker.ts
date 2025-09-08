@@ -1,9 +1,9 @@
-import { fetchWithTimeout } from '../../../../lib/api/client';
-import { isApplicationError } from '../../errors';
-import { logger } from '../Logger';
+import { fetchWithTimeout } from '@/lib/api/client';
+import { isApplicationError } from '@/src/infrastructure/errors';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import type { ErrorContext, IErrorTracker } from './types';
-import type { ApplicationError } from '../../errors';
+import type { ApplicationError } from '@/src/infrastructure/errors';
 
 export class RemoteErrorTracker implements IErrorTracker {
   private endpoint: string;

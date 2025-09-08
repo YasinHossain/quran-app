@@ -1,8 +1,14 @@
-import { BookmarkPosition } from '../../../../domain/value-objects/BookmarkPosition';
-import { findByTags, existsAtPosition } from '../advancedUserQueries';
-import { findFolders, findFolderWithBookmarks } from '../folderQueries';
-import { getStoredBookmarks } from '../storage';
-import { findByUser, findRecent } from '../userQueries';
+import { BookmarkPosition } from '@/src/domain/value-objects/BookmarkPosition';
+import {
+  findByTags,
+  existsAtPosition,
+} from '@/src/infrastructure/repositories/bookmark/advancedUserQueries';
+import {
+  findFolders,
+  findFolderWithBookmarks,
+} from '@/src/infrastructure/repositories/bookmark/folderQueries';
+import { getStoredBookmarks } from '@/src/infrastructure/repositories/bookmark/storage';
+import { findByUser, findRecent } from '@/src/infrastructure/repositories/bookmark/userQueries';
 
 jest.mock('../storage', () => {
   const actual = jest.requireActual('../storage');

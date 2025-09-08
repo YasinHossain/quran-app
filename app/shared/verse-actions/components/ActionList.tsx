@@ -3,10 +3,9 @@
 import Link from 'next/link';
 import { memo } from 'react';
 
+import { VerseActionItem } from '@/app/shared/verse-actions/types';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
-
-import { VerseActionItem } from '../types';
 
 interface ActionListProps {
   actions: VerseActionItem[];

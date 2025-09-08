@@ -1,7 +1,8 @@
+import { Tafsir } from '@/src/domain/entities/Tafsir';
+import { ITafsirRepository } from '@/src/domain/repositories/ITafsirRepository';
+import { logger as Logger } from '@/src/infrastructure/monitoring/Logger';
+
 import { getCachedResourcesWithFallback } from './getTafsirCache';
-import { Tafsir } from '../domain/entities/Tafsir';
-import { ITafsirRepository } from '../domain/repositories/ITafsirRepository';
-import { logger as Logger } from '../infrastructure/monitoring/Logger';
 
 export async function getTafsirsByLanguage(
   repository: ITafsirRepository,

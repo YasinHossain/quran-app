@@ -1,4 +1,4 @@
-import { Surah, RevelationType } from '../../../../../src/domain/entities';
+import { Surah, RevelationType } from '@/src/domain/entities';
 
 export const validId = 1;
 export const validName = 'الفاتحة';

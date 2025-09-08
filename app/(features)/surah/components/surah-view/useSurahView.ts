@@ -1,8 +1,7 @@
 'use client';
 
+import { useSurahPanels, useVerseListing } from '@/app/(features)/surah/hooks';
 import { getVersesByChapter } from '@/lib/api';
-
-import { useSurahPanels, useVerseListing } from '../../hooks';
 
 interface UseSurahViewReturn {
   verseListing: ReturnType<typeof useVerseListing>;

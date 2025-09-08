@@ -1,9 +1,9 @@
 import {
   InvalidTafsirRequestError,
   TafsirContentLoadError,
-} from '../../domain/errors/DomainErrors';
-import { ITafsirRepository } from '../../domain/repositories/ITafsirRepository';
-import { logger as Logger } from '../../infrastructure/monitoring/Logger';
+} from '@/src/domain/errors/DomainErrors';
+import { ITafsirRepository } from '@/src/domain/repositories/ITafsirRepository';
+import { logger as Logger } from '@/src/infrastructure/monitoring/Logger';
 
 /**
  * Use Case: Get Tafsir Content for a Verse

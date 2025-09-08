@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { SlidersIcon, MicIcon, RepeatIcon } from '@/app/shared/icons';
 
 export function ModalHeader({ onClose }: { onClose: () => void }): React.JSX.Element {

@@ -5,7 +5,7 @@ import {
   surahId,
   ayahNumber,
 } from './test-utils';
-import { BookmarkService } from '../../../../../src/domain/services/BookmarkService';
+import { BookmarkService } from '@/src/domain/services/BookmarkService';
 
 describe('BookmarkService isVerseBookmarked', () => {
   it('returns true then false based on repository', async () => {

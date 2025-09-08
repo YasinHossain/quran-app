@@ -1,9 +1,9 @@
 import { render, screen, act } from '@testing-library/react';
 import React from 'react';
 
-import PlayerOptions from '../components/PlayerOptions';
-import Timeline from '../components/Timeline';
-import { AudioProvider } from '../context/AudioContext';
+import PlayerOptions from '@/app/shared/player/components/PlayerOptions';
+import Timeline from '@/app/shared/player/components/Timeline';
+import { AudioProvider } from '@/app/shared/player/context/AudioContext';
 
 describe('Player components mobile layout', () => {
   beforeAll(() => {

@@ -4,9 +4,8 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
+import { CircularProgress } from '@/app/(features)/bookmarks/components/CircularProgress';
 import { MemorizationPlan } from '@/types';
-
-import { CircularProgress } from '../../components/CircularProgress';
 
 interface MemorizationCardProps {
   surahId: string;

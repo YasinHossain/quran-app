@@ -1,8 +1,7 @@
 import userEvent from '@testing-library/user-event';
 
+import { BookmarkNavigationCard } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
-
-import { BookmarkNavigationCard } from '../BookmarkNavigationCard';
 
 import type { MockProps } from '@/tests/mocks';
 

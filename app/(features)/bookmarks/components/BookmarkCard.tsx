@@ -3,14 +3,14 @@
 import { useRouter } from 'next/navigation';
 import React, { memo, useCallback } from 'react';
 
+import { useBookmarkAudio } from '@/app/(features)/bookmarks/hooks/useBookmarkAudio';
+import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { LoadingError } from '@/app/shared/LoadingError';
 import { ContentBookmarkCard } from '@/app/shared/ui/cards/ContentBookmarkCard';
 import { Bookmark } from '@/types';
 
-import { useBookmarkAudio } from '../hooks/useBookmarkAudio';
-import { useBookmarkVerse } from '../hooks/useBookmarkVerse';
 import { ErrorFallback, LoadingFallback } from './shared/BookmarkCardComponents';
 
 interface BookmarkCardProps {

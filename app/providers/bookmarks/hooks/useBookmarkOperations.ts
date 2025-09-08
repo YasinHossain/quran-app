@@ -1,15 +1,15 @@
 'use client';
 import { useMemo } from 'react';
 
-import { Bookmark, Chapter, Folder } from '@/types';
-
 import {
   addBookmarkToFolder,
   removeBookmarkFromFolder,
   updateBookmarkInFolders,
   findBookmarkInFolders,
   isVerseBookmarked,
-} from '../bookmark-utils';
+} from '@/app/providers/bookmarks/bookmark-utils';
+import { Bookmark, Chapter, Folder } from '@/types';
+
 export interface BookmarkOperations {
   addBookmark(verseId: string, folderId?: string): void;
   removeBookmark(verseId: string, folderId: string): void;

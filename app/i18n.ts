@@ -2,9 +2,9 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import commonBn from '../public/locales/bn/common.json';
-import commonEn from '../public/locales/en/common.json';
-import playerEn from '../public/locales/en/player.json';
+import commonBn from '@/public/locales/bn/common.json';
+import commonEn from '@/public/locales/en/common.json';
+import playerEn from '@/public/locales/en/player.json';
 
 i18n.use(initReactI18next).init({
   resources: {

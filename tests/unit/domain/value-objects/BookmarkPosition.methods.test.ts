@@ -1,5 +1,5 @@
 import { validSurahId, validTimestamp } from './BookmarkPosition/test-utils';
-import { BookmarkPosition } from '../../../../src/domain/value-objects/BookmarkPosition';
+import { BookmarkPosition } from '@/src/domain/value-objects/BookmarkPosition';
 
 describe('BookmarkPosition methods', () => {
   it('withNewTimestamp creates a new position with updated timestamp', () => {

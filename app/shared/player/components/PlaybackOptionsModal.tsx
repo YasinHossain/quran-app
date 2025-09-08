@@ -1,7 +1,8 @@
 import React, { memo } from 'react';
 
+import { usePlaybackOptionsModal } from '@/app/shared/player/hooks/usePlaybackOptionsModal';
+
 import { PlaybackOptionsModalContent } from './PlaybackOptionsModalContent';
-import { usePlaybackOptionsModal } from '../hooks/usePlaybackOptionsModal';
 
 interface Props {
   open: boolean;

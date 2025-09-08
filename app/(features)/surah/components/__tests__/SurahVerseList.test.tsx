@@ -1,8 +1,7 @@
 import React from 'react';
 
+import { SurahVerseList } from '@/app/(features)/surah/components/SurahVerseList';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
-
-import { SurahVerseList } from '../SurahVerseList';
 
 import type { Verse } from '@/types';
 
