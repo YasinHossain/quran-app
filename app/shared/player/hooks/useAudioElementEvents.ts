@@ -19,8 +19,7 @@ export function useAudioElementEvents({
     const a = audioRef.current;
     if (!a) return;
     const handleTime = (): void => onTimeUpdate?.(a.currentTime || 0);
-    const handleMeta = (): void =>
-      onLoadedMetadata?.(a.duration || defaultDuration || 0);
+    const handleMeta = (): void => onLoadedMetadata?.(a.duration || defaultDuration || 0);
     a.addEventListener('timeupdate', handleTime);
     a.addEventListener('loadedmetadata', handleMeta);
     handleMeta();

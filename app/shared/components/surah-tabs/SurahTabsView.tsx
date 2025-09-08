@@ -7,8 +7,10 @@ import type { SurahTabsState } from '@/app/shared/components/surah-tabs/useSurah
 
 import { SidebarTabs } from '@/app/shared/components/surah-sidebar/components/SidebarTabs';
 
-type TabsHeaderProps =
-  Pick<SurahTabsState, 'tabs' | 'activeTab' | 'setActiveTab' | 'prepareForTabSwitch'> &
+type TabsHeaderProps = Pick<
+  SurahTabsState,
+  'tabs' | 'activeTab' | 'setActiveTab' | 'prepareForTabSwitch'
+> &
   Pick<SurahTabsProps, 'searchInput'>;
 
 const TabsHeader = memo(function TabsHeader({
@@ -33,25 +35,24 @@ const TabsHeader = memo(function TabsHeader({
   );
 });
 
-type ScrollableTabContentProps =
-  Pick<
-    SurahTabsProps & SurahTabsState,
-    | 'activeTab'
-    | 'filteredChapters'
-    | 'filteredJuzs'
-    | 'filteredPages'
-    | 'chapters'
-    | 'selectedSurahId'
-    | 'setSelectedSurahId'
-    | 'selectedJuzId'
-    | 'setSelectedJuzId'
-    | 'selectedPageId'
-    | 'setSelectedPageId'
-    | 'rememberScroll'
-    | 'isTafsirPath'
-    | 'scrollRef'
-    | 'handleScroll'
-  >;
+type ScrollableTabContentProps = Pick<
+  SurahTabsProps & SurahTabsState,
+  | 'activeTab'
+  | 'filteredChapters'
+  | 'filteredJuzs'
+  | 'filteredPages'
+  | 'chapters'
+  | 'selectedSurahId'
+  | 'setSelectedSurahId'
+  | 'selectedJuzId'
+  | 'setSelectedJuzId'
+  | 'selectedPageId'
+  | 'setSelectedPageId'
+  | 'rememberScroll'
+  | 'isTafsirPath'
+  | 'scrollRef'
+  | 'handleScroll'
+>;
 
 const ScrollableTabContent = memo(function ScrollableTabContent({
   scrollRef,
@@ -69,9 +70,7 @@ const ScrollableTabContent = memo(function ScrollableTabContent({
   );
 });
 
-export const SurahTabsView = memo(function SurahTabsView(
-  props: SurahTabsProps & SurahTabsState,
-) {
+export const SurahTabsView = memo(function SurahTabsView(props: SurahTabsProps & SurahTabsState) {
   const {
     tabs,
     activeTab,
