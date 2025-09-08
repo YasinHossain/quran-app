@@ -6,7 +6,6 @@
  */
 
 import { ApplicationError } from '@/src/infrastructure/errors/ApplicationError';
-import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import {
   errorHandlerConfig,
@@ -15,9 +14,9 @@ import {
   type ErrorReporter,
   type ErrorNotifier,
 } from './ErrorHandlerConfig';
+import { logError, reportError } from './errorLogger';
+import { mapError } from './errorMapper';
 import { notifyError, setRetryCallback } from './errorNotifications';
-import { ErrorFactory } from './factory';
-import { isApplicationError } from './guards';
 
 export class ErrorHandler {
   /**
@@ -43,78 +42,34 @@ export class ErrorHandler {
     if (retryCallback) setRetryCallback(retryCallback);
   }
 
-  private static safelyReport(
-    reporter: ErrorReporter,
+  private static process(
     appError: ApplicationError,
-    options: ErrorHandlerOptions
+    options: ErrorHandlerOptions,
+    mode: 'sync' | 'async'
   ): void {
-    try {
-      reporter(appError, options.context);
-    } catch (reportError) {
-      logger.error('[ErrorHandler] Failed to report error', undefined, reportError as Error);
-    }
-  }
-
-  private static strategyMap = {
-    logError(appError: ApplicationError, options: ErrorHandlerOptions) {
-      const configuredLogger = errorHandlerConfig.getLogger();
-      if (configuredLogger) {
-        configuredLogger(appError, options.context);
+    if (options.logError) logError(appError, options);
+    if (options.reportError) {
+      if (mode === 'sync') {
+        Promise.resolve().then(() => reportError(appError, options));
       } else {
-        logger.error('[ErrorHandler]', options.context, appError);
+        reportError(appError, options);
       }
-    },
-    reportError(appError: ApplicationError, options: ErrorHandlerOptions) {
-      if (!appError.isOperational) return;
-      const reporter = errorHandlerConfig.getReporter();
-      if (reporter) {
-        ErrorHandler.safelyReport(reporter, appError, options);
-      }
-    },
-    showUserNotification(appError: ApplicationError) {
-      notifyError(appError);
-    },
-  } as const;
-
-  private static executeStrategy(
-    key: keyof typeof ErrorHandler.strategyMap,
-    appError: ApplicationError,
-    options: ErrorHandlerOptions,
-    mode: 'sync' | 'async'
-  ): void {
-    if (!(options as Record<string, boolean>)[key]) return;
-    const handler = ErrorHandler.strategyMap[key];
-    if (key === 'reportError' && mode === 'sync') {
-      Promise.resolve().then(() => handler(appError, options));
-    } else {
-      handler(appError, options);
     }
-  }
-
-  private static applyStrategies(
-    appError: ApplicationError,
-    options: ErrorHandlerOptions,
-    mode: 'sync' | 'async'
-  ): void {
-    (Object.keys(ErrorHandler.strategyMap) as Array<keyof typeof ErrorHandler.strategyMap>).forEach(
-      (key) => ErrorHandler.executeStrategy(key, appError, options, mode)
-    );
+    if (options.showUserNotification) notifyError(appError);
   }
 
   /**
    * Handle any error with full error processing pipeline
    */
   static async handle(error: unknown, options: ErrorHandlerOptions = {}): Promise<unknown> {
-    const appError = isApplicationError(error)
-      ? error
-      : ErrorFactory.fromUnknownError(error, options.context);
+    const appError = mapError(error, options.context);
 
     const finalOptions = {
       ...errorHandlerConfig.getDefaultOptions(),
       ...options,
     };
 
-    ErrorHandler.applyStrategies(appError, finalOptions, 'async');
+    ErrorHandler.process(appError, finalOptions, 'async');
 
     if (finalOptions.rethrow) {
       throw appError;
@@ -141,16 +96,14 @@ export class ErrorHandler {
    * Handle error synchronously
    */
   static handleSync(error: unknown, options: ErrorHandlerOptions = {}): unknown {
-    const appError = isApplicationError(error)
-      ? error
-      : ErrorFactory.fromUnknownError(error, options.context);
+    const appError = mapError(error, options.context);
 
     const finalOptions = {
       ...errorHandlerConfig.getDefaultOptions(),
       ...options,
     };
 
-    ErrorHandler.applyStrategies(appError, finalOptions, 'sync');
+    ErrorHandler.process(appError, finalOptions, 'sync');
 
     if (finalOptions.rethrow) {
       throw appError;

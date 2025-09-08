@@ -1,82 +1,9 @@
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { VerseCard } from '@/app/(features)/surah/components';
-import { Spinner } from '@/app/shared/Spinner';
+import { PageContentBody } from './PageContentBody';
 
 import type { Verse as VerseType } from '@/types';
-
-function LoadingState(): React.JSX.Element {
-  return (
-    <div className="flex justify-center py-12 md:py-20">
-      <Spinner className="h-6 w-6 md:h-8 md:w-8 text-accent" />
-    </div>
-  );
-}
-
-function ErrorState({ error }: { error: string }): React.JSX.Element {
-  return (
-    <div className="text-center py-12 md:py-20 text-status-error bg-surface border border-status-error/20 p-4 md:p-6 rounded-lg mx-2 md:mx-0">
-      <p className="text-sm md:text-base">{error}</p>
-    </div>
-  );
-}
-
-function EmptyState({ t }: { t: (key: string) => string }): React.JSX.Element {
-  return (
-    <div className="text-center py-12 md:py-20 text-muted">
-      <p className="text-sm md:text-base">{t('no_verses_found_on_page')}</p>
-    </div>
-  );
-}
-
-function LoadMoreIndicator({
-  isValidating,
-  isReachingEnd,
-  t,
-}: {
-  isValidating: boolean;
-  isReachingEnd: boolean;
-  t: (key: string) => string;
-}): React.JSX.Element {
-  return (
-    <div className="py-4 text-center">
-      <div className="flex items-center justify-center space-x-2">
-        {isValidating && <Spinner className="inline h-4 w-4 md:h-5 md:w-5 text-accent" />}
-        {isReachingEnd && (
-          <span className="text-muted text-sm md:text-base">{t('end_of_page')}</span>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function VersesList({
-  verses,
-  isValidating,
-  isReachingEnd,
-  loadMoreRef,
-  t,
-}: {
-  verses: VerseType[];
-  isValidating: boolean;
-  isReachingEnd: boolean;
-  loadMoreRef: React.Ref<HTMLDivElement>;
-  t: (key: string) => string;
-}): React.JSX.Element {
-  return (
-    <div className="space-y-4 md:space-y-6">
-      {verses.map(
-        (verse: VerseType): React.JSX.Element => (
-          <VerseCard key={verse.id} verse={verse} />
-        )
-      )}
-      <div ref={loadMoreRef}>
-        <LoadMoreIndicator isValidating={isValidating} isReachingEnd={isReachingEnd} t={t} />
-      </div>
-    </div>
-  );
-}
 
 interface PageContentProps {
   verses: VerseType[];
@@ -111,23 +38,6 @@ export const PageContent = memo(function PageContent({
 }: PageContentProps): React.JSX.Element {
   const { t } = useTranslation();
 
-  const getContent = (): React.JSX.Element => {
-    if (isLoading) return <LoadingState />;
-    if (error) return <ErrorState error={error} />;
-    if (verses.length > 0) {
-      return (
-        <VersesList
-          verses={verses}
-          isValidating={isValidating}
-          isReachingEnd={isReachingEnd}
-          loadMoreRef={loadMoreRef}
-          t={t}
-        />
-      );
-    }
-    return <EmptyState t={t} />;
-  };
-
   return (
     <main
       className={`
@@ -141,7 +51,17 @@ export const PageContent = memo(function PageContent({
         ${className || ''}
       `.trim()}
     >
-      <div className="w-full relative space-y-4 md:space-y-6">{getContent()}</div>
+      <div className="w-full relative space-y-4 md:space-y-6">
+        <PageContentBody
+          verses={verses}
+          isLoading={isLoading}
+          error={error}
+          isValidating={isValidating}
+          isReachingEnd={isReachingEnd}
+          loadMoreRef={loadMoreRef}
+          t={t}
+        />
+      </div>
     </main>
   );
 });

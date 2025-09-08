@@ -1,51 +1,30 @@
-import { fetchWithTimeout } from '@/lib/api/client';
-import { isApplicationError } from '@/src/infrastructure/errors';
-import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { formatError } from './formatError';
+import { sendEvents, type TrackerEvent } from './sendEvents';
+import { createTransport, type Transport } from './transport';
 
 import type { ErrorContext, IErrorTracker } from './types';
 import type { ApplicationError } from '@/src/infrastructure/errors';
 
 export class RemoteErrorTracker implements IErrorTracker {
-  private endpoint: string;
-  private apiKey?: string;
-  private buffer: Array<{
-    type: 'error' | 'message';
-    data: unknown;
-    timestamp: number;
-  }> = [];
+  private transport: Transport;
+  private buffer: TrackerEvent[] = [];
   private flushTimer?: NodeJS.Timeout;
 
   constructor(endpoint: string, apiKey?: string) {
-    this.endpoint = endpoint;
-    this.apiKey = apiKey;
+    this.transport = createTransport(endpoint, apiKey);
 
     // Auto-flush every 30 seconds
     if (typeof window === 'undefined') {
       this.flushTimer = setInterval(() => {
-        this.flush();
+        void this.flush();
       }, 30000);
     }
   }
 
   captureError(error: Error | ApplicationError, context?: ErrorContext): void {
-    const errorData = {
-      message: error.message,
-      stack: error.stack,
-      name: error.name,
-      ...(isApplicationError(error)
-        ? {
-            code: error.code,
-            statusCode: error.statusCode,
-            isOperational: error.isOperational,
-            context: error.context,
-          }
-        : {}),
-      trackingContext: context,
-    };
-
     this.buffer.push({
       type: 'error',
-      data: errorData,
+      data: formatError(error, context),
       timestamp: Date.now(),
     });
 
@@ -118,17 +97,8 @@ export class RemoteErrorTracker implements IErrorTracker {
     this.buffer = [];
 
     try {
-      await fetchWithTimeout(this.endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(this.apiKey ? { Authorization: `Bearer ${this.apiKey}` } : {}),
-        },
-        body: JSON.stringify({ events }),
-        errorPrefix: 'Failed to send error tracking data',
-      });
-    } catch (error) {
-      logger.warn('Failed to send error tracking data', undefined, error as Error);
+      await sendEvents(this.transport, events);
+    } catch {
       // Re-add events to buffer for retry
       this.buffer.unshift(...events);
     }

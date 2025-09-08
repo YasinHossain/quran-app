@@ -5,6 +5,7 @@ export { useFontSize } from './useFontSize';
 export { useHideScrollbar } from './useHideScrollbar';
 export { useInfiniteVerseLoader } from './useInfiniteVerseLoader';
 export { useTranslationOptions } from './useTranslationOptions';
+export { useWordLanguageSelection } from './useWordLanguageSelection';
 
 // Component-specific hooks
 export { useScrollbarHiding } from './useScrollbarHiding';

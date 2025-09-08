@@ -2,10 +2,10 @@
 
 import { useTranslation } from 'react-i18next';
 
-import { useSettings } from '@/app/providers/SettingsContext';
-import { CheckIcon } from '@/app/shared/icons';
+import { useWordLanguageSelection } from '@/app/(features)/surah/hooks';
 
-import type { LanguageCode } from '@/lib/text/languageCodes';
+import { LanguageList } from './LanguageList';
+import { PanelHeader } from './PanelHeader';
 
 interface WordLanguagePanelProps {
   isOpen: boolean;
@@ -13,38 +13,18 @@ interface WordLanguagePanelProps {
   renderMode?: 'panel' | 'content'; // 'panel' for slide-over, 'content' for inline in sidebar
 }
 
-// Full list of available word-by-word languages based on WORD_LANGUAGE_LABELS
-const WORD_LANGUAGES = [
-  { id: 85, name: 'English', code: 'en' as LanguageCode },
-  { id: 13, name: 'Bangla', code: 'bn' as LanguageCode },
-  { id: 54, name: 'Urdu', code: 'ur' as LanguageCode },
-  { id: 158, name: 'Hindi', code: 'hi' as LanguageCode },
-  { id: 45, name: 'Bahasa Indonesia', code: 'id' as LanguageCode },
-  { id: 46, name: 'Persian', code: 'fa' as LanguageCode },
-  { id: 38, name: 'Turkish', code: 'tr' as LanguageCode },
-  { id: 50, name: 'Tamil', code: 'ta' as LanguageCode },
-];
-
 export const WordLanguagePanel = ({
   isOpen,
   onClose,
   renderMode = 'panel',
 }: WordLanguagePanelProps): React.JSX.Element => {
-  const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
-
-  const handleLanguageSelect = (language: (typeof WORD_LANGUAGES)[0]): void => {
-    setSettings({
-      ...settings,
-      wordLang: language.code,
-      wordTranslationId: language.id,
-    });
-  };
+  const { selectedId, handleLanguageSelect } = useWordLanguageSelection();
 
   if (renderMode === 'content') {
     return (
       <div className="flex-grow p-4 space-y-4">
-        <LanguageList selectedId={settings.wordTranslationId} onSelect={handleLanguageSelect} />
+        <LanguageList selectedId={selectedId} onSelect={handleLanguageSelect} />
       </div>
     );
   }
@@ -60,103 +40,10 @@ export const WordLanguagePanel = ({
       <div className="flex-1 flex flex-col min-h-0">
         <div className="flex-1 overflow-y-auto">
           <div className="px-4 pb-4 pt-4">
-            <LanguageList selectedId={settings.wordTranslationId} onSelect={handleLanguageSelect} />
+            <LanguageList selectedId={selectedId} onSelect={handleLanguageSelect} />
           </div>
         </div>
       </div>
     </div>
   );
 };
-
-function PanelHeader({
-  title,
-  onClose,
-}: {
-  title: string;
-  onClose: () => void;
-}): React.JSX.Element {
-  return (
-    <header className="flex items-center p-4 border-b border-border">
-      <button
-        onClick={onClose}
-        className="p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent hover:bg-interactive-hover"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 text-muted"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-      <h2 className="text-lg font-bold text-center flex-grow text-foreground">{title}</h2>
-    </header>
-  );
-}
-
-function LanguageList({
-  selectedId,
-  onSelect,
-}: {
-  selectedId: number;
-  onSelect: (language: (typeof WORD_LANGUAGES)[0]) => void;
-}): React.JSX.Element {
-  return (
-    <div className="space-y-2">
-      {WORD_LANGUAGES.map((language) => (
-        <LanguageRow
-          key={language.id}
-          language={language}
-          selected={selectedId === language.id}
-          onSelect={() => onSelect(language)}
-        />
-      ))}
-    </div>
-  );
-}
-
-function LanguageRow({
-  language,
-  selected,
-  onSelect,
-}: {
-  language: (typeof WORD_LANGUAGES)[0];
-  selected: boolean;
-  onSelect: () => void;
-}): React.JSX.Element {
-  return (
-    <div
-      role="button"
-      tabIndex={0}
-      onClick={onSelect}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onSelect();
-        }
-      }}
-      className={`flex items-center justify-between px-4 py-2.5 h-[50px] rounded-lg cursor-pointer transition-all duration-200 focus:outline-none focus-visible:outline-none outline-none border-0 focus:border-0 active:outline-none ${
-        selected
-          ? 'bg-accent/20 border border-accent/30'
-          : 'bg-surface border border-border hover:bg-interactive'
-      }`}
-    >
-      <div className="flex-1 min-w-0 pr-3">
-        <p
-          className={`font-medium text-sm leading-tight truncate ${
-            selected ? 'text-accent' : 'text-foreground'
-          }`}
-          title={language.name}
-        >
-          {language.name}
-        </p>
-      </div>
-      <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-        {selected && <CheckIcon className="h-5 w-5 text-accent" />}
-      </div>
-    </div>
-  );
-}

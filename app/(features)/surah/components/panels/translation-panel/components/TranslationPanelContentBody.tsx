@@ -2,11 +2,8 @@
 
 import React from 'react';
 
-import { TranslationSearch } from '@/app/(features)/surah/components/panels/translation-panel/TranslationSearch';
-import { TranslationSelectionList } from '@/app/(features)/surah/components/panels/translation-panel/TranslationSelectionList';
-
-import { TranslationsByLanguage } from './TranslationsByLanguage';
-import { TranslationsVirtualList } from './TranslationsVirtualList';
+import { TranslationResultsSection } from './TranslationResultsSection';
+import { TranslationSelectionSection } from './TranslationSelectionSection';
 import { TranslationTabsHeader } from './TranslationTabsHeader';
 
 import type { TranslationResource } from '@/types';
@@ -40,7 +37,7 @@ interface TranslationPanelContentBodyProps {
 export function PanelContentBody(props: TranslationPanelContentBodyProps): React.JSX.Element {
   return (
     <div className="flex-1 overflow-y-auto" ref={props.listContainerRef}>
-      <HeaderSection
+      <TranslationSelectionSection
         searchTerm={props.searchTerm}
         setSearchTerm={props.setSearchTerm}
         orderedSelection={props.orderedSelection}
@@ -64,7 +61,7 @@ export function PanelContentBody(props: TranslationPanelContentBodyProps): React
         scrollTabsRight={props.scrollTabsRight}
       />
 
-      <ResultsSection
+      <TranslationResultsSection
         activeFilter={props.activeFilter}
         sectionsToRender={props.sectionsToRender}
         resourcesToRender={props.resourcesToRender}
@@ -72,77 +69,6 @@ export function PanelContentBody(props: TranslationPanelContentBodyProps): React
         onToggle={props.handleSelection}
         listHeight={props.listHeight}
       />
-    </div>
-  );
-}
-
-function HeaderSection({
-  searchTerm,
-  setSearchTerm,
-  orderedSelection,
-  translations,
-  handleSelection,
-  handleDragStart,
-  handleDragOver,
-  handleDrop,
-  handleDragEnd,
-  draggedId,
-}: Pick<
-  TranslationPanelContentBodyProps,
-  | 'searchTerm'
-  | 'setSearchTerm'
-  | 'orderedSelection'
-  | 'translations'
-  | 'handleDragStart'
-  | 'handleDragOver'
-  | 'handleDrop'
-  | 'handleDragEnd'
-  | 'draggedId'
-> & { handleSelection: (id: number) => void }): React.JSX.Element {
-  return (
-    <div className="p-4 space-y-4">
-      <TranslationSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-      <TranslationSelectionList
-        orderedSelection={orderedSelection}
-        translations={translations}
-        handleSelectionToggle={handleSelection}
-        handleDragStart={handleDragStart}
-        handleDragOver={handleDragOver}
-        handleDrop={handleDrop}
-        handleDragEnd={handleDragEnd}
-        draggedId={draggedId}
-      />
-    </div>
-  );
-}
-
-function ResultsSection({
-  activeFilter,
-  sectionsToRender,
-  resourcesToRender,
-  selectedIds,
-  onToggle,
-  listHeight,
-}: Pick<
-  TranslationPanelContentBodyProps,
-  'activeFilter' | 'sectionsToRender' | 'resourcesToRender' | 'selectedIds' | 'listHeight'
-> & { onToggle: (id: number) => void }): React.JSX.Element {
-  return (
-    <div className="px-4 pb-4 pt-4">
-      {activeFilter === 'All' ? (
-        <TranslationsByLanguage
-          sectionsToRender={sectionsToRender}
-          selectedIds={selectedIds}
-          onToggle={onToggle}
-        />
-      ) : (
-        <TranslationsVirtualList
-          resources={resourcesToRender}
-          selectedIds={selectedIds}
-          onToggle={onToggle}
-          height={listHeight}
-        />
-      )}
     </div>
   );
 }

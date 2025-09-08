@@ -1,36 +1,18 @@
-/**
- * Revelation type enum
- */
-export enum RevelationType {
-  MAKKI = 'makki',
-  MADANI = 'madani',
-}
-
 import {
-  getEstimatedReadingTime,
-  getJuzNumbers,
-  getMemorizationDifficulty,
-  isLongSurah,
-  isMediumSurah,
-  isMufassalSurah,
-  isSevenLongSurah,
-  isShortSurah,
-} from './surahHelpers';
+  canBeReadInPrayer as canBeReadInPrayerUtil,
+  isMakki as isMakkiUtil,
+  isMadani as isMadaniUtil,
+  startWithBismillah as startWithBismillahUtil,
+  toPlainObject as toPlainObjectUtil,
+  validateSurahInputs,
+} from './Surah.utils';
+
+import type { RevelationType, SurahInit, SurahPlainObject } from './Surah.types';
+export { RevelationType } from './Surah.types';
 
 /**
  * Surah domain entity representing a chapter of the Quran
  */
-export interface SurahInit {
-  id: number;
-  name: string;
-  arabicName: string;
-  englishName: string;
-  englishTranslation: string;
-  numberOfAyahs: number;
-  revelationType: RevelationType;
-  revelationOrder?: number;
-}
-
 export class Surah {
   public readonly id: number;
   public readonly name: string;
@@ -92,49 +74,27 @@ export class Surah {
       this.revelationType = revelationType;
       this.revelationOrder = revelationOrder;
     }
-    this.validateInputs();
-  }
-
-  private validateInputs(): void {
-    if (this.id < 1 || this.id > 114) {
-      throw new Error('Invalid Surah ID: must be between 1 and 114');
-    }
-
-    if (!this.name || this.name.trim() === '') {
-      throw new Error('Surah name cannot be empty');
-    }
-
-    if (!this.arabicName || this.arabicName.trim() === '') {
-      throw new Error('Arabic name cannot be empty');
-    }
-
-    if (!this.englishName || this.englishName.trim() === '') {
-      throw new Error('English name cannot be empty');
-    }
-
-    if (this.numberOfAyahs < 1) {
-      throw new Error('Number of ayahs must be positive');
-    }
+    validateSurahInputs(this);
   }
 
   /** Checks if this Surah was revealed in Makkah */
   isMakki(): boolean {
-    return this.revelationType === RevelationType.MAKKI;
+    return isMakkiUtil(this.revelationType);
   }
 
   /** Checks if this Surah was revealed in Madinah */
   isMadani(): boolean {
-    return this.revelationType === RevelationType.MADANI;
+    return isMadaniUtil(this.revelationType);
   }
 
   /** Checks if this Surah can be read in prayer */
   canBeReadInPrayer(): boolean {
-    return this.id !== 9; // At-Tawbah has no Bismillah
+    return canBeReadInPrayerUtil(this.id);
   }
 
   /** Checks if this Surah starts with Bismillah */
   startWithBismillah(): boolean {
-    return this.id !== 9; // At-Tawbah
+    return startWithBismillahUtil(this.id);
   }
 
   /** Checks equality based on ID */
@@ -146,50 +106,8 @@ export class Surah {
    * Converts to plain object for serialization
    */
   toPlainObject(): SurahPlainObject {
-    return {
-      id: this.id,
-      name: this.name,
-      arabicName: this.arabicName,
-      englishName: this.englishName,
-      englishTranslation: this.englishTranslation,
-      numberOfAyahs: this.numberOfAyahs,
-      revelationType: this.revelationType,
-      revelationOrder: this.revelationOrder,
-      isMakki: this.isMakki(),
-      isMadani: this.isMadani(),
-      canBeReadInPrayer: this.canBeReadInPrayer(),
-      startWithBismillah: this.startWithBismillah(),
-      memorizationDifficulty: getMemorizationDifficulty(this.numberOfAyahs),
-      estimatedReadingTime: getEstimatedReadingTime(this.numberOfAyahs),
-      isShortSurah: isShortSurah(this.numberOfAyahs),
-      isMediumSurah: isMediumSurah(this.numberOfAyahs),
-      isLongSurah: isLongSurah(this.numberOfAyahs),
-      isSevenLongSurah: isSevenLongSurah(this.id),
-      isMufassalSurah: isMufassalSurah(this.id),
-      juzNumbers: getJuzNumbers(this.id),
-    };
+    return toPlainObjectUtil(this);
   }
 }
 
-export interface SurahPlainObject {
-  id: number;
-  name: string;
-  arabicName: string;
-  englishName: string;
-  englishTranslation: string;
-  numberOfAyahs: number;
-  revelationType: RevelationType;
-  revelationOrder?: number;
-  isMakki: boolean;
-  isMadani: boolean;
-  canBeReadInPrayer: boolean;
-  startWithBismillah: boolean;
-  memorizationDifficulty: 'easy' | 'medium' | 'hard';
-  estimatedReadingTime: number;
-  isShortSurah: boolean;
-  isMediumSurah: boolean;
-  isLongSurah: boolean;
-  isSevenLongSurah: boolean;
-  isMufassalSurah: boolean;
-  juzNumbers: number[];
-}
+export type { SurahInit, SurahPlainObject };

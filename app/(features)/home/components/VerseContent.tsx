@@ -16,6 +16,19 @@ interface VerseContentProps {
   className?: string;
 }
 
+// Tajweed text component
+interface TajweedTextProps {
+  text: string;
+  tajweedEnabled: boolean;
+}
+
+const TajweedText = ({ text, tajweedEnabled }: TajweedTextProps): React.JSX.Element =>
+  tajweedEnabled ? (
+    <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(applyTajweed(text)) }} />
+  ) : (
+    <>{text}</>
+  );
+
 // Word tooltip component
 interface WordTooltipProps {
   word: Word;
@@ -23,16 +36,8 @@ interface WordTooltipProps {
 }
 
 const WordTooltip = ({ word, tajweedEnabled }: WordTooltipProps): React.JSX.Element => (
-  <span key={word.id} className="inline-block mx-0.5 relative group">
-    {tajweedEnabled ? (
-      <span
-        dangerouslySetInnerHTML={{
-          __html: sanitizeHtml(applyTajweed(word.uthmani)),
-        }}
-      />
-    ) : (
-      word.uthmani
-    )}
+  <span className="inline-block mx-0.5 relative group">
+    <TajweedText text={word.uthmani} tajweedEnabled={tajweedEnabled} />
     {word.en && (
       <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-1 py-0.5 rounded bg-accent text-on-accent text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 md:block hidden">
         {word.en}
@@ -60,15 +65,7 @@ const ArabicText = ({ verse, tajweedEnabled }: ArabicTextProps): React.JSX.Eleme
   }
 
   // Render as full text
-  return tajweedEnabled ? (
-    <span
-      dangerouslySetInnerHTML={{
-        __html: sanitizeHtml(applyTajweed(verse.text_uthmani)),
-      }}
-    />
-  ) : (
-    <>{verse.text_uthmani}</>
-  );
+  return <TajweedText text={verse.text_uthmani} tajweedEnabled={tajweedEnabled} />;
 };
 
 // Translation component

@@ -5,11 +5,8 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 import { EllipsisHIcon, CloseIcon } from '@/app/shared/icons';
 
-interface ContextMenuItem {
-  label: string;
-  onClick: () => void;
-  destructive?: boolean;
-}
+import { DeleteItem } from './DeleteItem';
+import { RenameItem } from './RenameItem';
 
 interface UseContextMenuResult {
   isOpen: boolean;
@@ -18,25 +15,6 @@ interface UseContextMenuResult {
   handleToggleMenu: (e: React.MouseEvent<HTMLButtonElement>) => void;
   handleCloseMenu: () => void;
 }
-
-const MenuItem = ({ item }: { item: ContextMenuItem }): React.JSX.Element => (
-  <button
-    onClick={item.onClick}
-    className={`w-full text-left px-4 py-2 text-sm hover:bg-surface-hover transition-colors ${
-      item.destructive ? 'text-error hover:text-error/90' : 'text-foreground'
-    }`}
-  >
-    {item.label}
-  </button>
-);
-
-const MenuItemList = ({ items }: { items: ContextMenuItem[] }): React.JSX.Element => (
-  <>
-    {items.map((item) => (
-      <MenuItem key={item.label} item={item} />
-    ))}
-  </>
-);
 
 const useContextMenu = (): UseContextMenuResult => {
   const [isOpen, setIsOpen] = useState(false);
@@ -85,27 +63,6 @@ const useContextMenu = (): UseContextMenuResult => {
   };
 };
 
-const useMenuItems = (
-  onEdit: () => void,
-  onDelete: () => void,
-  handleCloseMenu: () => void
-): ContextMenuItem[] => {
-  const handleEdit = useCallback((): void => {
-    onEdit();
-    handleCloseMenu();
-  }, [onEdit, handleCloseMenu]);
-
-  const handleDelete = useCallback((): void => {
-    onDelete();
-    handleCloseMenu();
-  }, [onDelete, handleCloseMenu]);
-
-  return [
-    { label: 'Edit', onClick: handleEdit },
-    { label: 'Delete', onClick: handleDelete, destructive: true },
-  ];
-};
-
 interface FolderContextMenuProps {
   onEdit: () => void;
   onDelete: () => void;
@@ -116,7 +73,6 @@ export const FolderContextMenu = ({
   onDelete,
 }: FolderContextMenuProps): React.JSX.Element => {
   const { isOpen, menuRef, buttonRef, handleToggleMenu, handleCloseMenu } = useContextMenu();
-  const menuItems = useMenuItems(onEdit, onDelete, handleCloseMenu);
 
   return (
     <div className="relative">
@@ -141,7 +97,8 @@ export const FolderContextMenu = ({
             transition={{ duration: 0.15 }}
             className="absolute right-0 top-full mt-2 w-40 bg-surface border border-border rounded-lg shadow-modal z-50 py-2"
           >
-            <MenuItemList items={menuItems} />
+            <RenameItem onRename={onEdit} closeMenu={handleCloseMenu} />
+            <DeleteItem onDelete={onDelete} closeMenu={handleCloseMenu} />
           </motion.div>
         )}
       </AnimatePresence>
