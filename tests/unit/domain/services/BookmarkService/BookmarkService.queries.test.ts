@@ -34,7 +34,13 @@ describe('BookmarkService queries', () => {
       new BookmarkPosition(surahId, ayahNumber, new Date()),
       new Date()
     );
-    const verse = new Verse(verseId, surahId, ayahNumber, 'text', 'uthmani');
+    const verse = new Verse({
+      id: verseId,
+      surahId,
+      ayahNumber,
+      arabicText: 'text',
+      uthmaniText: 'uthmani',
+    });
     mockBookmarkRepo.findByUser.mockResolvedValue([base]);
     mockVerseRepo.findById.mockResolvedValue(verse);
     const result = await service.getBookmarksWithVerses(userId);

@@ -1,42 +1,24 @@
 'use client';
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 
-import { getSurahList } from '@/lib/api';
-import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { useSurahSearch } from '@/app/(features)/home/hooks/useSurahSearch';
 
 import { SurahEmptyState } from './SurahEmptyState';
 import { SurahGrid } from './SurahGrid';
 import { SurahLoadingGrid } from './SurahLoadingGrid';
-
-import type { Surah } from '@/types';
 
 interface SurahTabProps {
   searchQuery: string;
 }
 
 export function SurahTab({ searchQuery }: SurahTabProps): React.JSX.Element {
-  const [allSurahs, setAllSurahs] = useState<Surah[]>([]);
+  const { filteredSurahs, isLoading, isEmpty } = useSurahSearch(searchQuery);
 
-  useEffect(() => {
-    getSurahList()
-      .then(setAllSurahs)
-      .catch((err) => logger.error(err as Error));
-  }, []);
-
-  const filteredSurahs = useMemo(() => {
-    if (!searchQuery) return allSurahs;
-    return allSurahs.filter(
-      (surah) =>
-        surah.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        surah.number.toString().includes(searchQuery)
-    );
-  }, [searchQuery, allSurahs]);
-
-  if (allSurahs.length === 0) {
+  if (isLoading) {
     return <SurahLoadingGrid />;
   }
 
-  if (filteredSurahs.length === 0) {
+  if (isEmpty) {
     return <SurahEmptyState />;
   }
 

@@ -1,15 +1,32 @@
 import { ApplicationError } from './ApplicationError';
 import { isApplicationError } from './guards';
 import {
+  ApiError,
   AuthenticationError,
   AuthorizationError,
-  NotFoundError,
   ConflictError,
-  ApiError,
-  RateLimitError,
   NetworkError,
+  NotFoundError,
+  RateLimitError,
   ValidationError,
 } from './types';
+
+const HTTP_ERROR_MAP: Record<
+  number,
+  (message: string, context?: Record<string, unknown>) => ApplicationError
+> = {
+  400: (message, context) => new ValidationError(message, context),
+  401: (message, context) => new AuthenticationError(message, context),
+  403: (message, context) => new AuthorizationError(message, context),
+  404: (message, context) => new NotFoundError(message || 'Resource', context),
+  409: (message, context) => new ConflictError(message, context),
+  429: (message, context) => new RateLimitError(message, undefined, context),
+};
+
+function getEndpoint(context?: Record<string, unknown>): string {
+  const endpoint = (context as { endpoint?: unknown })?.endpoint;
+  return typeof endpoint === 'string' ? endpoint : 'unknown';
+}
 
 export const ErrorFactory = {
   fromHttpStatus(
@@ -17,32 +34,14 @@ export const ErrorFactory = {
     message: string,
     context?: Record<string, unknown>
   ): ApplicationError {
-    switch (true) {
-      case status === 400:
-        return new ValidationError(message, context);
-      case status === 401:
-        return new AuthenticationError(message, context);
-      case status === 403:
-        return new AuthorizationError(message, context);
-      case status === 404:
-        return new NotFoundError(message || 'Resource', context);
-      case status === 409:
-        return new ConflictError(message, context);
-      case status === 429:
-        return new RateLimitError(message, undefined, context);
-      case status >= 500: {
-        const endpoint =
-          typeof context === 'object' &&
-          context !== null &&
-          'endpoint' in context &&
-          typeof (context as { endpoint?: unknown }).endpoint === 'string'
-            ? ((context as { endpoint?: string }).endpoint ?? 'unknown')
-            : 'unknown';
-        return new ApiError(message, endpoint, status, context);
-      }
-      default:
-        return new ApplicationError(message, 'HTTP_ERROR', status, true, context);
+    const createError = HTTP_ERROR_MAP[status];
+    if (createError) {
+      return createError(message, context);
     }
+    if (status >= 500) {
+      return new ApiError(message, getEndpoint(context), status, context);
+    }
+    return new ApplicationError(message, 'HTTP_ERROR', status, true, context);
   },
 
   fromNetworkFailure(message: string, endpoint?: string, cause?: Error): NetworkError {

@@ -10,15 +10,15 @@ describe('Translation word and character count', () => {
       ['Allah', 1],
     ];
     cases.forEach(([text, expected]) => {
-      const t = new Translation(validId, validResourceId, text);
+      const t = new Translation({ id: validId, resourceId: validResourceId, text });
       expect(t.getWordCount()).toBe(expected);
     });
   });
 
   it('returns correct character count including spaces', () => {
-    const t1 = new Translation(validId, validResourceId, 'Hello World');
+    const t1 = new Translation({ id: validId, resourceId: validResourceId, text: 'Hello World' });
     expect(t1.getCharacterCount()).toBe(11);
-    const t2 = new Translation(validId, validResourceId, 'a');
+    const t2 = new Translation({ id: validId, resourceId: validResourceId, text: 'a' });
     expect(t2.getCharacterCount()).toBe(1);
   });
 });

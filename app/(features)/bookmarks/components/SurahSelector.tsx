@@ -1,36 +1,110 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
-import React from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 import { ChevronDownIcon } from '@/app/shared/icons';
+import { cn } from '@/lib/utils/cn';
 import { Chapter } from '@/types';
 
+import {
+  buildButtonClasses,
+  buildIconClasses,
+  renderSelectedContent,
+} from './surah-selector.helpers';
 import { SurahDropdown } from './SurahDropdown';
-interface SurahSelectorProps { chapters: Chapter[]; value?: number; onChange: (surahId: number) => void; placeholder?: string; disabled?: boolean; className?: string; id?: string; }
-export const SurahSelector = ({ chapters, value, onChange, placeholder = 'Select Surah', disabled = false, className = '', id, }: SurahSelectorProps): React.JSX.Element => {
+
+interface SurahSelectorProps {
+  chapters: Chapter[];
+  value?: number;
+  onChange: (surahId: number) => void;
+  placeholder?: string;
+  disabled?: boolean;
+  className?: string;
+  id?: string;
+}
+
+export const SurahSelector = ({
+  chapters,
+  value,
+  onChange,
+  placeholder = 'Select Surah',
+  disabled = false,
+  className,
+  id,
+}: SurahSelectorProps): React.JSX.Element => {
   const [open, setOpen] = useState(false);
   const [term, setTerm] = useState('');
   const ref = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const selected = chapters.find((c) => c.id === value);
+
+  const closeDropdown = useCallback(() => {
+    setOpen(false);
+    setTerm('');
+  }, []);
+
+  const toggleOpen = useCallback(() => {
+    if (!disabled) setOpen((prev) => !prev);
+  }, [disabled]);
+
   useEffect(() => {
-    const handle = (e: MouseEvent): void => { if (ref.current && !ref.current.contains(e.target as Node)) { setOpen(false); setTerm(''); } };
-    if (open) { document.addEventListener('mousedown', handle); setTimeout(() => inputRef.current?.focus(), 50); }
-    return () => document.removeEventListener('mousedown', handle);
-  }, [open]);
-  const select = (c: Chapter): void => { onChange(c.id); setOpen(false); setTerm(''); };
-  const keyDown = (e: React.KeyboardEvent): void => { if (e.key === 'Escape') { setOpen(false); setTerm(''); } };
-  const content = selected ? (<>
-    <div className="w-8 h-8 bg-accent/10 rounded-lg flex items-center justify-center flex-shrink-0"><span className="text-xs font-semibold text-accent">{selected.id}</span></div>
-    <div className="min-w-0 flex-1"><div className="text-sm font-semibold text-foreground truncate">{selected.name_simple}</div><div className="text-xs text-muted truncate">{selected.name_arabic}</div></div>
-  </>) : (<span className="text-muted">{placeholder}</span>);
+    if (!open) return;
+
+    const handleClick = (e: MouseEvent): void => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        closeDropdown();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClick);
+    const timer = setTimeout(() => inputRef.current?.focus(), 50);
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('mousedown', handleClick);
+    };
+  }, [open, closeDropdown]);
+
+  const selectSurah = useCallback(
+    (c: Chapter): void => {
+      onChange(c.id);
+      closeDropdown();
+    },
+    [onChange, closeDropdown]
+  );
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent): void => {
+      if (e.key === 'Escape') {
+        closeDropdown();
+      }
+    },
+    [closeDropdown]
+  );
+
   return (
-    <div className={`relative ${className}`} ref={ref}>
-      <button type="button" id={id} onClick={() => !disabled && setOpen(!open)} disabled={disabled} className={`w-full flex items-center justify-between px-4 py-3.5 bg-surface border border-border rounded-xl text-left text-foreground placeholder-muted transition-all duration-200 shadow-sm ${!disabled ? 'hover:shadow-md hover:border-accent/20 focus:border-accent focus:ring-4 focus:ring-accent/10 focus:outline-none' : 'opacity-50 cursor-not-allowed'} ${open ? 'border-accent ring-4 ring-accent/10' : ''}`}>
-        <div className="flex items-center gap-3 min-w-0 flex-1">{content}</div>
-        <ChevronDownIcon size={18} className={`text-muted transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+    <div className={cn('relative', className)} ref={ref}>
+      <button
+        type="button"
+        id={id}
+        onClick={toggleOpen}
+        disabled={disabled}
+        className={buildButtonClasses(disabled, open)}
+      >
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          {renderSelectedContent(selected, placeholder)}
+        </div>
+        <ChevronDownIcon size={18} className={buildIconClasses(open)} />
       </button>
-      {open && (<SurahDropdown chapters={chapters} value={value} searchTerm={term} setSearchTerm={setTerm} onSelect={select} searchInputRef={inputRef} handleKeyDown={keyDown} />)}
+      {open && (
+        <SurahDropdown
+          chapters={chapters}
+          value={value}
+          searchTerm={term}
+          setSearchTerm={setTerm}
+          onSelect={selectSurah}
+          searchInputRef={inputRef}
+          handleKeyDown={handleKeyDown}
+        />
+      )}
     </div>
   );
 };

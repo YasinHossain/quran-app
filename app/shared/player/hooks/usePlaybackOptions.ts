@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { RECITERS } from '@/lib/audio/reciters';
 
 import { useAudio } from '../context/AudioContext';
+import { hasNonIntegerValues, adjustRange } from '../utils/repeat';
 
 import type { RepeatOptions } from '../types';
 
@@ -63,18 +64,4 @@ export function usePlaybackOptions(onClose: () => void): UsePlaybackOptionsRetur
     setRangeWarning,
     commit,
   };
-}
-
-function hasNonIntegerValues(opts: RepeatOptions): boolean {
-  const numericKeys: (keyof RepeatOptions)[] = ['start', 'end', 'playCount', 'repeatEach', 'delay'];
-  return numericKeys.some((key) => {
-    const val = opts[key];
-    return val !== undefined && !Number.isInteger(val);
-  });
-}
-
-function adjustRange(opts: RepeatOptions): { start: number; end: number; adjusted: boolean } {
-  const start = Math.max(1, opts.start ?? 1);
-  const end = Math.max(start, opts.end ?? start);
-  return { start, end, adjusted: start !== opts.start || end !== opts.end };
 }

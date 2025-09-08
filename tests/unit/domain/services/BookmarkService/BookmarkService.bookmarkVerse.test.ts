@@ -17,7 +17,13 @@ describe('BookmarkService bookmarkVerse', () => {
   let service: BookmarkService;
   let mockBookmarkRepo = createMockBookmarkRepository();
   let mockVerseRepo = createMockVerseRepository();
-  const verse = new Verse(verseId, surahId, ayahNumber, 'text', 'uthmani');
+  const verse = new Verse({
+    id: verseId,
+    surahId,
+    ayahNumber,
+    arabicText: 'text',
+    uthmaniText: 'uthmani',
+  });
 
   beforeEach(() => {
     jest.clearAllMocks();

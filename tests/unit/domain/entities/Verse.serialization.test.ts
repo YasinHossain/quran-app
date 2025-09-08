@@ -9,8 +9,15 @@ import { Translation } from '../../../../src/domain/value-objects/Translation';
 
 describe('Verse serialization', () => {
   it('converts to plain object with all properties', () => {
-    const translation = new Translation(1, 1, 'Test translation');
-    const verse = new Verse(validId, 2, 255, validArabicText, validUthmaniText, translation);
+    const translation = new Translation({ id: 1, resourceId: 1, text: 'Test translation' });
+    const verse = new Verse({
+      id: validId,
+      surahId: 2,
+      ayahNumber: 255,
+      arabicText: validArabicText,
+      uthmaniText: validUthmaniText,
+      translation,
+    });
 
     const plain = verse.toPlainObject();
 
@@ -37,18 +44,18 @@ describe('Verse serialization', () => {
   });
 
   it('reconstructs from plain object', () => {
-    const translation = new Translation(1, 1, 'Test translation');
+    const translation = new Translation({ id: 1, resourceId: 1, text: 'Test translation' });
     const verse = createVerse(translation);
     const plain = verse.toPlainObject();
 
-    const reconstructed = new Verse(
-      plain.id,
-      plain.surahId,
-      plain.ayahNumber,
-      plain.arabicText,
-      plain.uthmaniText,
-      translation
-    );
+    const reconstructed = new Verse({
+      id: plain.id,
+      surahId: plain.surahId,
+      ayahNumber: plain.ayahNumber,
+      arabicText: plain.arabicText,
+      uthmaniText: plain.uthmaniText,
+      translation,
+    });
 
     expect(reconstructed.toPlainObject()).toEqual(plain);
   });

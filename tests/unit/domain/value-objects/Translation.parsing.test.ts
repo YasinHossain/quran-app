@@ -10,7 +10,12 @@ import { Translation } from '../../../../src/domain/value-objects/Translation';
 describe('Translation Parsing and Validation', () => {
   describe('constructor', () => {
     it('creates a valid Translation with all parameters', () => {
-      const translation = new Translation(validId, validResourceId, validText, validLanguageCode);
+      const translation = new Translation({
+        id: validId,
+        resourceId: validResourceId,
+        text: validText,
+        languageCode: validLanguageCode,
+      });
       expect(translation.id).toBe(validId);
       expect(translation.resourceId).toBe(validResourceId);
       expect(translation.text).toBe(validText);
@@ -18,7 +23,7 @@ describe('Translation Parsing and Validation', () => {
     });
 
     it('creates a Translation with default language code', () => {
-      const translation = new Translation(validId, validResourceId, validText);
+      const translation = new Translation({ id: validId, resourceId: validResourceId, text: validText });
       expect(translation.languageCode).toBe('en');
     });
 

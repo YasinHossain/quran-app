@@ -1,0 +1,72 @@
+import { useState, type Dispatch, type RefObject, type SetStateAction, type UIEvent } from 'react';
+
+import { useSurahTabConfig } from '@/app/shared/components/surah-tabs/useSurahTabConfig';
+import { useSurahTabParams } from '@/app/shared/components/surah-tabs/useSurahTabParams';
+
+import type { TabKey } from '@/app/shared/components/surah-tabs/types';
+import type { Chapter } from '@/types';
+
+import { useSelectionSync } from '@/app/shared/components/surah-sidebar/hooks/useSelectionSync';
+import { useSidebarScroll } from '@/app/shared/components/surah-sidebar/useSidebarScroll';
+
+export interface SurahTabsState {
+  tabs: { key: TabKey; label: string }[];
+  activeTab: TabKey;
+  setActiveTab: Dispatch<SetStateAction<TabKey>>;
+  selectedSurahId: number | undefined;
+  setSelectedSurahId: (id: number | undefined) => void;
+  selectedJuzId: number | undefined;
+  setSelectedJuzId: (id: number | undefined) => void;
+  selectedPageId: number | undefined;
+  setSelectedPageId: (id: number | undefined) => void;
+  scrollRef: RefObject<HTMLDivElement>;
+  handleScroll: (e: UIEvent<HTMLDivElement>) => void;
+  prepareForTabSwitch: (tab: TabKey) => void;
+  rememberScroll: (tab: TabKey) => void;
+  isTafsirPath: boolean;
+}
+
+export function useSurahTabsState(chapters: Chapter[]): SurahTabsState {
+  const { currentSurahId, currentJuzId, currentPageId, isTafsirPath, getInitialTab } =
+    useSurahTabParams();
+  const { tabs } = useSurahTabConfig();
+  const [activeTab, setActiveTab] = useState<TabKey>(getInitialTab);
+
+  const {
+    selectedSurahId,
+    setSelectedSurahId,
+    selectedJuzId,
+    setSelectedJuzId,
+    selectedPageId,
+    setSelectedPageId,
+  } = useSelectionSync({
+    currentSurahId,
+    currentJuzId,
+    currentPageId,
+    chapters,
+  });
+
+  const { scrollRef, handleScroll, prepareForTabSwitch, rememberScroll } = useSidebarScroll({
+    activeTab,
+    selectedSurahId,
+    selectedJuzId,
+    selectedPageId,
+  });
+
+  return {
+    tabs,
+    activeTab,
+    setActiveTab,
+    selectedSurahId,
+    setSelectedSurahId,
+    selectedJuzId,
+    setSelectedJuzId,
+    selectedPageId,
+    setSelectedPageId,
+    scrollRef,
+    handleScroll,
+    prepareForTabSwitch,
+    rememberScroll,
+    isTafsirPath,
+  };
+}

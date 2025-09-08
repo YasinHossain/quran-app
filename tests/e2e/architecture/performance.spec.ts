@@ -1,4 +1,37 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
+
+async function getLcp(page: Page): Promise<number> {
+  return page.evaluate(() => {
+    return new Promise<number>((resolve) => {
+      const observer = new PerformanceObserver((list) => {
+        const entries = list.getEntries();
+        const lastEntry = entries[entries.length - 1];
+        resolve(lastEntry.startTime);
+        observer.disconnect();
+      });
+      observer.observe({ entryTypes: ['largest-contentful-paint'] });
+    });
+  });
+}
+
+async function getCls(page: Page): Promise<number> {
+  return page.evaluate(() => {
+    return new Promise<number>((resolve) => {
+      let clsValue = 0;
+      const observer = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries() as LayoutShift[]) {
+          if (!entry.hadRecentInput) {
+            clsValue += entry.value;
+          }
+        }
+        resolve(clsValue);
+        observer.disconnect();
+      });
+      observer.observe({ entryTypes: ['layout-shift'] });
+      setTimeout(() => resolve(clsValue), 1000);
+    });
+  });
+}
 
 test.describe('⚡ Performance Optimizations', () => {
   test('Virtual scrolling performance with large surahs', async ({ page }) => {
@@ -77,34 +110,12 @@ test.describe('📊 Performance Metrics', () => {
     await page.goto('/surah/1');
 
     // Measure Largest Contentful Paint
-    const lcp = await page.evaluate(() => {
-      return new Promise((resolve) => {
-        new PerformanceObserver((list) => {
-          const entries = list.getEntries();
-          const lastEntry = entries[entries.length - 1];
-          resolve(lastEntry.startTime);
-        }).observe({ entryTypes: ['largest-contentful-paint'] });
-      });
-    });
+    const lcp = await getLcp(page);
 
     expect(lcp).toBeLessThan(2500); // Good LCP threshold
 
     // Measure Cumulative Layout Shift
-    const cls = await page.evaluate(() => {
-      return new Promise((resolve) => {
-        let clsValue = 0;
-        new PerformanceObserver((list) => {
-          for (const entry of list.getEntries() as LayoutShift[]) {
-            if (!entry.hadRecentInput) {
-              clsValue += entry.value;
-            }
-          }
-          resolve(clsValue);
-        }).observe({ entryTypes: ['layout-shift'] });
-
-        setTimeout(() => resolve(clsValue), 1000);
-      });
-    });
+    const cls = await getCls(page);
 
     expect(cls).toBeLessThan(0.1); // Good CLS threshold
   });

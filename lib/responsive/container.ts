@@ -49,16 +49,22 @@ export const useContainer = (containerRef?: React.RefObject<HTMLElement>): UseCo
   React.useEffect(() => {
     if (!containerRef?.current) return;
 
+    const breakpoints: Array<[number, ContainerSize]> = [
+      [1280, 'xl'],
+      [1024, 'lg'],
+      [768, 'md'],
+      [384, 'sm'],
+    ];
+
+    const getSizeFromWidth = (width: number): ContainerSize => {
+      const match = breakpoints.find(([min]) => width >= min);
+      return match ? match[1] : 'xs';
+    };
+
     const updateContainerSize = () => {
       if (!containerRef.current) return;
-
       const { width } = containerRef.current.getBoundingClientRect();
-
-      if (width >= 1280) setContainerSize('xl');
-      else if (width >= 1024) setContainerSize('lg');
-      else if (width >= 768) setContainerSize('md');
-      else if (width >= 384) setContainerSize('sm');
-      else setContainerSize('xs');
+      setContainerSize(getSizeFromWidth(width));
     };
 
     updateContainerSize();

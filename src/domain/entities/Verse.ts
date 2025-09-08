@@ -4,15 +4,37 @@ import { Translation } from '../value-objects/Translation';
 /**
  * Verse domain entity representing a single Quranic verse
  */
+export interface VerseOptions {
+  id: string;
+  surahId: number;
+  ayahNumber: number;
+  arabicText: string;
+  uthmaniText: string;
+  translation?: Translation;
+}
+
 export class Verse {
-  constructor(
-    public readonly id: string,
-    public readonly surahId: number,
-    public readonly ayahNumber: number,
-    public readonly arabicText: string,
-    public readonly uthmaniText: string,
-    public readonly translation?: Translation
-  ) {
+  public readonly id: string;
+  public readonly surahId: number;
+  public readonly ayahNumber: number;
+  public readonly arabicText: string;
+  public readonly uthmaniText: string;
+  public readonly translation?: Translation;
+
+  constructor({
+    id,
+    surahId,
+    ayahNumber,
+    arabicText,
+    uthmaniText,
+    translation,
+  }: VerseOptions) {
+    this.id = id;
+    this.surahId = surahId;
+    this.ayahNumber = ayahNumber;
+    this.arabicText = arabicText;
+    this.uthmaniText = uthmaniText;
+    this.translation = translation;
     this.validateInputs();
   }
 
@@ -63,14 +85,14 @@ export class Verse {
    * Creates a new verse instance with translation
    */
   withTranslation(translation: Translation): Verse {
-    return new Verse(
-      this.id,
-      this.surahId,
-      this.ayahNumber,
-      this.arabicText,
-      this.uthmaniText,
-      translation
-    );
+    return new Verse({
+      id: this.id,
+      surahId: this.surahId,
+      ayahNumber: this.ayahNumber,
+      arabicText: this.arabicText,
+      uthmaniText: this.uthmaniText,
+      translation,
+    });
   }
 
   /**

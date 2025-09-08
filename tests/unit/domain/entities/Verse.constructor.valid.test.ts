@@ -18,11 +18,11 @@ describe('Verse constructor (valid cases)', () => {
   });
 
   it('creates a verse with translation', () => {
-    const translation = new Translation(
-      1,
-      1,
-      'In the name of Allah, the Beneficent, the Merciful.'
-    );
+    const translation = new Translation({
+      id: 1,
+      resourceId: 1,
+      text: 'In the name of Allah, the Beneficent, the Merciful.',
+    });
     const verse = createVerse(translation);
     expect(verse.translation).toBe(translation);
   });

@@ -1,13 +1,29 @@
 import { useEffect, useMemo, useState, MutableRefObject } from 'react';
 
 import { useAudioPlayer } from './useAudioPlayer';
+import { formatTime } from '../utils/timeline';
 
 import type { Track } from '../types';
 
-const mmss = (s: number) =>
-  `${Math.floor(s / 60)}:${Math.floor(s % 60)
-    .toString()
-    .padStart(2, '0')}`;
+const DEFAULT_COVER =
+  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96'><rect width='100%' height='100%' rx='12' ry='12' fill='%23e5e7eb'/><text x='50%' y='52%' dominant-baseline='middle' text-anchor='middle' font-family='Inter, system-ui, sans-serif' font-size='12' fill='%239ca3af'>No cover</text></svg>";
+
+function getTrackMeta(track?: Track | null): {
+  title: string;
+  artist: string;
+  cover: string;
+  interactable: boolean;
+} {
+  if (!track) {
+    return { title: 'No track selected', artist: '', cover: DEFAULT_COVER, interactable: false };
+  }
+  return {
+    title: track.title ?? 'No track selected',
+    artist: track.artist ?? '',
+    cover: track.coverUrl || DEFAULT_COVER,
+    interactable: Boolean(track.src),
+  } as const;
+}
 
 interface Opts {
   track?: Track | null;
@@ -54,18 +70,11 @@ export function useTrackTiming({
   }, [track?.src, track?.durationSec]);
   useEffect(() => {
     setVolume(volume);
-  }, [volume, setVolume]);
-  useEffect(() => {
     setPlaybackRate(playbackRate);
-  }, [playbackRate, setPlaybackRate]);
-  const elapsed = useMemo(() => mmss(current), [current]);
-  const total = useMemo(() => mmss(duration || 0), [duration]);
-  const title = track?.title ?? 'No track selected';
-  const artist = track?.artist ?? '';
-  const cover =
-    track?.coverUrl ||
-    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96'><rect width='100%' height='100%' rx='12' ry='12' fill='%23e5e7eb'/><text x='50%' y='52%' dominant-baseline='middle' text-anchor='middle' font-family='Inter, system-ui, sans-serif' font-size='12' fill='%239ca3af'>No cover</text></svg>";
-  const interactable = Boolean(track?.src);
+  }, [volume, playbackRate, setVolume, setPlaybackRate]);
+  const elapsed = useMemo(() => formatTime(current), [current]);
+  const total = useMemo(() => formatTime(duration || 0), [duration]);
+  const { title, artist, cover, interactable } = useMemo(() => getTrackMeta(track), [track]);
   return {
     audioRef,
     play,

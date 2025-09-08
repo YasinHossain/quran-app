@@ -10,17 +10,23 @@ export const handleSwipeDecision = (
   const { deltaX, deltaY, velocityX, velocityY } = metrics;
   const absX = Math.abs(deltaX);
   const absY = Math.abs(deltaY);
-  const isHorizontalSwipe = absX > absY && absX > threshold;
-  const isVerticalSwipe = absY > absX && absY > threshold;
 
-  if (isHorizontalSwipe && velocityX > velocity) {
-    if (deltaX > 0) handlers.onSwipeRight?.();
-    else handlers.onSwipeLeft?.();
-    return;
+  let direction: 'left' | 'right' | 'up' | 'down' | null = null;
+
+  if (absX > absY && absX > threshold && velocityX > velocity) {
+    direction = deltaX > 0 ? 'right' : 'left';
+  } else if (absY > absX && absY > threshold && velocityY > velocity) {
+    direction = deltaY > 0 ? 'down' : 'up';
   }
 
-  if (isVerticalSwipe && velocityY > velocity) {
-    if (deltaY > 0) handlers.onSwipeDown?.();
-    else handlers.onSwipeUp?.();
+  const handlersMap: Record<'left' | 'right' | 'up' | 'down', (() => void) | undefined> = {
+    left: handlers.onSwipeLeft,
+    right: handlers.onSwipeRight,
+    up: handlers.onSwipeUp,
+    down: handlers.onSwipeDown,
+  };
+
+  if (direction) {
+    handlersMap[direction]?.();
   }
 };

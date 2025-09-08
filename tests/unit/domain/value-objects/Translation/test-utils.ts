@@ -20,13 +20,19 @@ export const expectTranslationToThrow = ({
   languageCode,
   expectedMessage,
 }: ExpectTranslationParams): void => {
-  const createTranslation = (): Translation => new Translation(id, resourceId, text, languageCode);
+  const createTranslation = (): Translation =>
+    new Translation({ id, resourceId, text, languageCode });
   expect(createTranslation).toThrow(expectedMessage);
 };
 
 export const testLanguageCodes = (codes: string[], expectedResult: boolean): void => {
   codes.forEach((code) => {
-    const translation = new Translation(validId, validResourceId, validText, code);
+    const translation = new Translation({
+      id: validId,
+      resourceId: validResourceId,
+      text: validText,
+      languageCode: code,
+    });
     expect(translation.isEnglish()).toBe(expectedResult);
   });
 };

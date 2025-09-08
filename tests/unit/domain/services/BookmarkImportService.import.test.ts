@@ -79,8 +79,20 @@ describe('BookmarkImportService import', () => {
       { surahId: 1, ayahNumber: 1, notes: 'Opening verse' },
       { surahId: 2, ayahNumber: 255, tags: ['powerful', 'ayat-kursi'] },
     ];
-    const mockVerse1 = new Verse('v1', 1, 1, 'text1', 'uthmani1');
-    const mockVerse2 = new Verse('v2', 2, 255, 'text2', 'uthmani2');
+    const mockVerse1 = new Verse({
+      id: 'v1',
+      surahId: 1,
+      ayahNumber: 1,
+      arabicText: 'text1',
+      uthmaniText: 'uthmani1',
+    });
+    const mockVerse2 = new Verse({
+      id: 'v2',
+      surahId: 2,
+      ayahNumber: 255,
+      arabicText: 'text2',
+      uthmaniText: 'uthmani2',
+    });
     mockVerseRepository.findBySurahAndAyah
       .mockResolvedValueOnce(mockVerse1)
       .mockResolvedValueOnce(mockVerse2);
@@ -103,7 +115,15 @@ describe('BookmarkImportService import', () => {
       { surahId: 999, ayahNumber: 999 },
     ];
     mockVerseRepository.findBySurahAndAyah
-      .mockResolvedValueOnce(new Verse('v1', 1, 1, 'text1', 'uthmani1'))
+      .mockResolvedValueOnce(
+        new Verse({
+          id: 'v1',
+          surahId: 1,
+          ayahNumber: 1,
+          arabicText: 'text1',
+          uthmaniText: 'uthmani1',
+        })
+      )
       .mockResolvedValueOnce(null);
     mockBookmarkRepository.existsAtPosition.mockResolvedValueOnce(false);
     mockBookmarkRepository.saveMany.mockResolvedValue(undefined);

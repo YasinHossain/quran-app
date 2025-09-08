@@ -1,13 +1,24 @@
 /**
  * Translation value object for verse translations
  */
+export interface TranslationOptions {
+  id: number;
+  resourceId: number;
+  text: string;
+  languageCode?: string;
+}
+
 export class Translation {
-  constructor(
-    public readonly id: number,
-    public readonly resourceId: number,
-    public readonly text: string,
-    public readonly languageCode: string = 'en'
-  ) {
+  public readonly id: number;
+  public readonly resourceId: number;
+  public readonly text: string;
+  public readonly languageCode: string;
+
+  constructor({ id, resourceId, text, languageCode = 'en' }: TranslationOptions) {
+    this.id = id;
+    this.resourceId = resourceId;
+    this.text = text;
+    this.languageCode = languageCode;
     this.validateInputs();
   }
 

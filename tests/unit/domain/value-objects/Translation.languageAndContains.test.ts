@@ -11,7 +11,11 @@ describe('Translation language and contains', () => {
   });
 
   it('contains matches exact, partial, and case-insensitive text', () => {
-    const t = new Translation(validId, validResourceId, 'In the name of Allah');
+    const t = new Translation({
+      id: validId,
+      resourceId: validResourceId,
+      text: 'In the name of Allah',
+    });
     expect(t.contains('In the name of Allah')).toBe(true);
     ['in the', 'ALLAH', 'name of'].forEach((q) => expect(t.contains(q)).toBe(true));
     ['Goodbye', 'xyz'].forEach((q) => expect(t.contains(q)).toBe(false));

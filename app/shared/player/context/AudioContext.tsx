@@ -5,6 +5,7 @@ import { Verse } from '@/types';
 
 import { usePersistedAudioSettings } from '../hooks/usePersistedAudioSettings';
 import { usePlayerVisibility } from '../hooks/usePlayerVisibility';
+import { useRepeatState } from '../utils/repeatState';
 
 import type { Reciter, RepeatOptions } from '@/app/shared/player/types';
 
@@ -103,21 +104,6 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }): Reac
 
   return <AudioContext.Provider value={value}>{children}</AudioContext.Provider>;
 };
-
-function useRepeatState(): {
-  repeatOptions: RepeatOptions;
-  setRepeatOptions: React.Dispatch<React.SetStateAction<RepeatOptions>>;
-} {
-  const [repeatOptions, setRepeatOptions] = useState<RepeatOptions>({
-    mode: 'off',
-    start: 1,
-    end: 1,
-    playCount: 1,
-    repeatEach: 1,
-    delay: 0,
-  });
-  return { repeatOptions, setRepeatOptions } as const;
-}
 
 /**
  * Hook for accessing audio playback state.

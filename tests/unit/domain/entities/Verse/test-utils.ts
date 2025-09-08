@@ -8,12 +8,12 @@ export const validArabicText = 'بِسْمِ اللَّهِ الرَّحْمَٰ
 export const validUthmaniText = 'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ';
 
 export function createVerse(translation?: Translation): Verse {
-  return new Verse(
-    validId,
-    validSurahId,
-    validAyahNumber,
-    validArabicText,
-    validUthmaniText,
-    translation
-  );
+  return new Verse({
+    id: validId,
+    surahId: validSurahId,
+    ayahNumber: validAyahNumber,
+    arabicText: validArabicText,
+    uthmaniText: validUthmaniText,
+    translation,
+  });
 }

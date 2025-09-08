@@ -1,19 +1,14 @@
 import React from 'react';
 
-import { Juz } from '../../surah-sidebar/Juz';
-import { Page } from '../../surah-sidebar/Page';
-import { Surah } from '../../surah-sidebar/Surah';
-
+import type { JuzSummary, TabKey } from '@/app/shared/components/surah-tabs/types';
 import type { Chapter } from '@/types';
 
-interface JuzSummary {
-  number: number;
-  name: string;
-  surahRange: string;
-}
+import { Juz } from '@/app/shared/components/surah-sidebar/Juz';
+import { Page } from '@/app/shared/components/surah-sidebar/Page';
+import { Surah } from '@/app/shared/components/surah-sidebar/Surah';
 
 interface TabContentProps {
-  activeTab: 'Surah' | 'Juz' | 'Page';
+  activeTab: TabKey;
   filteredChapters: Chapter[];
   filteredJuzs: JuzSummary[];
   filteredPages: number[];
@@ -24,7 +19,7 @@ interface TabContentProps {
   setSelectedJuzId: (id: number | undefined) => void;
   selectedPageId: number | undefined;
   setSelectedPageId: (id: number | undefined) => void;
-  rememberScroll: (tab: string) => void;
+  rememberScroll: (tab: TabKey) => void;
   isTafsirPath: boolean;
 }
 

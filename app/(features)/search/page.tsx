@@ -1,33 +1,15 @@
 'use client';
 import { useSearchParams } from 'next/navigation';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense } from 'react';
 
 import { VerseCard } from '@/app/(features)/surah/components';
-import { searchVerses } from '@/lib/api';
-import { logger } from '@/src/infrastructure/monitoring/Logger';
-import { Verse as VerseType } from '@/types';
+
+import { useVerseSearch } from './hooks/useVerseSearch';
 
 function SearchContent(): React.JSX.Element {
   const searchParams = useSearchParams();
   const query = searchParams.get('query') || '';
-  const [verses, setVerses] = useState<VerseType[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!query) {
-      setVerses([]);
-      return;
-    }
-    setLoading(true);
-    searchVerses(query)
-      .then(setVerses)
-      .catch((err) => {
-        logger.error(err as Error);
-        setError('Failed to load results.');
-      })
-      .finally(() => setLoading(false));
-  }, [query]);
+  const { verses, loading, error } = useVerseSearch(query);
 
   return (
     <div className="p-6 max-w-4xl mx-auto">

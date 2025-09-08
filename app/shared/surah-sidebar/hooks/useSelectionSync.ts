@@ -22,25 +22,40 @@ export const useSelectionSync = ({
   const [selectedPageId, setSelectedPageId] = useState<number | null>(currentPageId ?? null);
 
   useEffect(() => {
-    if (currentSurahId) {
-      setSelectedSurahId(currentSurahId);
-      const chapter = chapters.find((c) => c.id === currentSurahId);
-      const page = chapter?.pages?.[0] ?? 1;
-      setSelectedPageId(page);
-      setSelectedJuzId(getJuzByPage(page));
-    } else if (currentJuzId) {
-      setSelectedJuzId(currentJuzId);
-      const page = JUZ_START_PAGES[currentJuzId - 1];
-      setSelectedPageId(page);
-      const chapter = getSurahByPage(page, chapters);
-      if (chapter) setSelectedSurahId(chapter.id);
-    } else if (currentPageId) {
-      setSelectedPageId(currentPageId);
-      const page = currentPageId;
-      setSelectedJuzId(getJuzByPage(page));
-      const chapter = getSurahByPage(page, chapters);
-      if (chapter) setSelectedSurahId(chapter.id);
-    }
+    const handlers = [
+      {
+        condition: currentSurahId !== undefined,
+        action: () => {
+          setSelectedSurahId(currentSurahId!);
+          const chapter = chapters.find((c) => c.id === currentSurahId);
+          const page = chapter?.pages?.[0] ?? 1;
+          setSelectedPageId(page);
+          setSelectedJuzId(getJuzByPage(page));
+        },
+      },
+      {
+        condition: currentJuzId !== undefined,
+        action: () => {
+          setSelectedJuzId(currentJuzId!);
+          const page = JUZ_START_PAGES[currentJuzId! - 1];
+          setSelectedPageId(page);
+          const chapter = getSurahByPage(page, chapters);
+          if (chapter) setSelectedSurahId(chapter.id);
+        },
+      },
+      {
+        condition: currentPageId !== undefined,
+        action: () => {
+          setSelectedPageId(currentPageId!);
+          const page = currentPageId!;
+          setSelectedJuzId(getJuzByPage(page));
+          const chapter = getSurahByPage(page, chapters);
+          if (chapter) setSelectedSurahId(chapter.id);
+        },
+      },
+    ];
+
+    handlers.find((h) => h.condition)?.action();
   }, [currentSurahId, currentJuzId, currentPageId, chapters]);
 
   return {
