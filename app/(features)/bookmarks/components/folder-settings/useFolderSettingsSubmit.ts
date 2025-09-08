@@ -30,6 +30,5 @@ export const useFolderSettingsSubmit = ({
         setIsSubmitting(false);
       }
     },
-    [folder, mode, name, renameFolder, onClose, selectedColor, selectedIcon, setIsSubmitting],
+    [folder, mode, name, renameFolder, onClose, selectedColor, selectedIcon, setIsSubmitting]
   );
-

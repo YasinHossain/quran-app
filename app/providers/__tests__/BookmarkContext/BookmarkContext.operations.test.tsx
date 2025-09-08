@@ -3,102 +3,121 @@ import userEvent from '@testing-library/user-event';
 
 import { renderWithProviders, BookmarkTestComponent } from './test-utils';
 
-import type { Folder } from '@/types';
+import type { Bookmark, Folder } from '@/types';
 
 const BOOKMARKS_STORAGE_KEY = 'quranAppBookmarks_v2';
 
-describe('BookmarkContext operations', () => {
-  beforeEach(() => {
-    localStorage.clear();
-  });
+const renderComponent = (): ReturnType<typeof renderWithProviders> =>
+  renderWithProviders(<BookmarkTestComponent />);
 
-  it('creates a new folder', async () => {
-    renderWithProviders(<BookmarkTestComponent />);
-    await userEvent.click(screen.getByText('Create Folder'));
-    await waitFor(() => {
-      const folders = JSON.parse(screen.getByTestId('folders').textContent || '[]');
-      expect(folders).toHaveLength(1);
-      expect(folders[0].name).toBe('Test Folder');
-    });
-  });
+const getFolders = (): Folder[] => JSON.parse(screen.getByTestId('folders').textContent || '[]');
 
-  it('adds a bookmark to a folder', async () => {
-    renderWithProviders(<BookmarkTestComponent />);
-    await userEvent.click(screen.getByText('Create Folder'));
-    await userEvent.click(screen.getByText('Add Bookmark'));
-    await waitFor(() => {
-      const folders: Folder[] = JSON.parse(screen.getByTestId('folders').textContent || '[]');
-      expect(folders[0].bookmarks).toHaveLength(1);
-      expect(folders[0].bookmarks[0].verseId).toBe('1:1');
-      expect(screen.getByTestId('is-bookmarked-1:1').textContent).toBe('true');
-    });
-  });
+const getPinned = (): Bookmark[] => JSON.parse(screen.getByTestId('pinned').textContent || '[]');
 
-  it('removes a bookmark from a folder', async () => {
-    renderWithProviders(<BookmarkTestComponent />);
-    await userEvent.click(screen.getByText('Create Folder'));
-    await userEvent.click(screen.getByText('Add Bookmark'));
-    await userEvent.click(screen.getByText('Remove Bookmark'));
-    await waitFor(() => {
-      const folders: Folder[] = JSON.parse(screen.getByTestId('folders').textContent || '[]');
-      expect(folders[0].bookmarks).toHaveLength(0);
-      expect(screen.getByTestId('is-bookmarked-1:1').textContent).toBe('false');
-    });
-  });
+const getLastRead = (): Record<string, number> =>
+  JSON.parse(screen.getByTestId('lastRead').textContent || '{}');
 
-  it('renames a folder', async () => {
-    renderWithProviders(<BookmarkTestComponent />);
-    await userEvent.click(screen.getByText('Create Folder'));
-    await userEvent.click(screen.getByText('Rename Folder'));
-    await waitFor(() => {
-      const folders: Folder[] = JSON.parse(screen.getByTestId('folders').textContent || '[]');
-      expect(folders[0].name).toBe('New Name');
-    });
-  });
+const getIsBookmarked = (): string => screen.getByTestId('is-bookmarked-1:1').textContent;
 
-  it('deletes a folder', async () => {
-    renderWithProviders(<BookmarkTestComponent />);
-    await userEvent.click(screen.getByText('Create Folder'));
-    await userEvent.click(screen.getByText('Delete Folder'));
-    await waitFor(() => {
-      expect(screen.getByTestId('folders').textContent).toBe('[]');
-    });
-  });
+const getIsPinned = (): string => screen.getByTestId('is-pinned-1:1').textContent;
 
-  it('pins and unpins a verse', async () => {
-    renderWithProviders(<BookmarkTestComponent />);
+beforeEach(() => {
+  localStorage.clear();
+});
+
+it('creates a new folder', async () => {
+  renderComponent();
+  await userEvent.click(screen.getByText('Create Folder'));
+  await waitFor(() => {
+    const folders = getFolders();
+    expect(folders).toHaveLength(1);
+    expect(folders[0].name).toBe('Test Folder');
+  });
+});
+
+it('adds a bookmark to a folder', async () => {
+  renderComponent();
+  await userEvent.click(screen.getByText('Create Folder'));
+  await userEvent.click(screen.getByText('Add Bookmark'));
+  await waitFor(() => {
+    const [folder] = getFolders();
+    expect(folder.bookmarks).toHaveLength(1);
+    expect(folder.bookmarks[0].verseId).toBe('1:1');
+    expect(getIsBookmarked()).toBe('true');
+  });
+});
+
+it('removes a bookmark from a folder', async () => {
+  renderComponent();
+  await userEvent.click(screen.getByText('Create Folder'));
+  await userEvent.click(screen.getByText('Add Bookmark'));
+  await userEvent.click(screen.getByText('Remove Bookmark'));
+  await waitFor(() => {
+    const [folder] = getFolders();
+    expect(folder.bookmarks).toHaveLength(0);
+    expect(getIsBookmarked()).toBe('false');
+  });
+});
+
+it('renames a folder', async () => {
+  renderComponent();
+  await userEvent.click(screen.getByText('Create Folder'));
+  await userEvent.click(screen.getByText('Rename Folder'));
+  await waitFor(() => {
+    const [folder] = getFolders();
+    expect(folder.name).toBe('New Name');
+  });
+});
+
+it('deletes a folder', async () => {
+  renderComponent();
+  await userEvent.click(screen.getByText('Create Folder'));
+  await userEvent.click(screen.getByText('Delete Folder'));
+  await waitFor(() => {
+    expect(getFolders()).toHaveLength(0);
+  });
+});
+
+it('persists folder color', async () => {
+  renderComponent();
+  await userEvent.click(screen.getByText('Create Folder'));
+  await userEvent.click(screen.getByText('Set Color'));
+  await waitFor(() => {
+    const [folder] = getFolders();
+    expect(folder.color).toBe('text-primary');
+    const stored: Folder[] = JSON.parse(localStorage.getItem(BOOKMARKS_STORAGE_KEY) || '[]');
+    expect(stored[0].color).toBe('text-primary');
+  });
+});
+
+describe('pin operations', () => {
+  it('pins a verse', async () => {
+    renderComponent();
     await userEvent.click(screen.getByText('Toggle Pin'));
     await waitFor(() => {
-      const pinned = JSON.parse(screen.getByTestId('pinned').textContent || '[]');
-      expect(pinned).toHaveLength(1);
-      expect(screen.getByTestId('is-pinned-1:1').textContent).toBe('true');
-    });
-    await userEvent.click(screen.getByText('Toggle Pin'));
-    await waitFor(() => {
-      const pinned = JSON.parse(screen.getByTestId('pinned').textContent || '[]');
-      expect(pinned).toHaveLength(0);
-      expect(screen.getByTestId('is-pinned-1:1').textContent).toBe('false');
+      expect(getPinned()).toHaveLength(1);
+      expect(getIsPinned()).toBe('true');
     });
   });
 
+  it('unpins a verse', async () => {
+    renderComponent();
+    await userEvent.click(screen.getByText('Toggle Pin'));
+    await userEvent.click(screen.getByText('Toggle Pin'));
+    await waitFor(() => {
+      expect(getPinned()).toHaveLength(0);
+      expect(getIsPinned()).toBe('false');
+    });
+  });
+});
+
+describe('last read', () => {
   it('sets last read verse', async () => {
-    renderWithProviders(<BookmarkTestComponent />);
+    renderComponent();
     await userEvent.click(screen.getByText('Set Last Read'));
     await waitFor(() => {
-      const last = JSON.parse(screen.getByTestId('lastRead').textContent || '{}');
+      const last = getLastRead();
       expect(last['1']).toBe(1);
-    });
-  });
-
-  it('persists folder color', async () => {
-    renderWithProviders(<BookmarkTestComponent />);
-    await userEvent.click(screen.getByText('Create Folder'));
-    await userEvent.click(screen.getByText('Set Color'));
-    await waitFor(() => {
-      const folders: Folder[] = JSON.parse(screen.getByTestId('folders').textContent || '[]');
-      expect(folders[0].color).toBe('text-primary');
-      const stored: Folder[] = JSON.parse(localStorage.getItem(BOOKMARKS_STORAGE_KEY) || '[]');
-      expect(stored[0].color).toBe('text-primary');
     });
   });
 });

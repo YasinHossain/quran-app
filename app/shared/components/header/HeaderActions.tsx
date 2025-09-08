@@ -24,7 +24,9 @@ export function HeaderActions(): JSX.Element {
     <div className="flex items-center justify-end space-x-1 sm:space-x-1.5 w-1/3 mr-1">
       {/* Settings button - only show on mobile/tablet when settings sidebar is hidden */}
       <button
-        onClick={() => setSettingsOpen(true)}
+        onClick={(): void => {
+          setSettingsOpen(true);
+        }}
         className="btn-touch p-2.5 rounded-xl hover:bg-muted/60 transition-all duration-200 active:scale-95 lg:hidden"
         aria-label="Open settings"
       >

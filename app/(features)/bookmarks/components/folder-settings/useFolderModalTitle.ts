@@ -14,4 +14,3 @@ export const useFolderModalTitle = (mode: FolderSettingsMode): string =>
         return 'Edit Folder';
     }
   }, [mode]);
-

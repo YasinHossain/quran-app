@@ -25,6 +25,28 @@ const ScrollTest = (): React.ReactElement => {
   );
 };
 
+const renderScrollTest = (): void => {
+  render(
+    <SidebarProvider>
+      <ScrollTest />
+    </SidebarProvider>
+  );
+};
+
+const clickAndAssertScroll = async (
+  buttonName: string,
+  testId: string,
+  storageKey: string,
+  value: string
+): Promise<void> => {
+  renderScrollTest();
+  await userEvent.click(screen.getByRole('button', { name: buttonName }));
+  await waitFor(() => {
+    expect(screen.getByTestId(testId).textContent).toBe(value);
+    expect(sessionStorage.setItem).toHaveBeenCalledWith(storageKey, value);
+  });
+};
+
 describe('SidebarContext scroll positions', () => {
   beforeEach(() => {
     let store: Record<string, string> = {};
@@ -50,41 +72,14 @@ describe('SidebarContext scroll positions', () => {
   });
 
   it('updates surahScrollTop and writes to sessionStorage', async () => {
-    render(
-      <SidebarProvider>
-        <ScrollTest />
-      </SidebarProvider>
-    );
-    await userEvent.click(screen.getByRole('button', { name: 'Surah' }));
-    await waitFor(() => {
-      expect(screen.getByTestId('surah').textContent).toBe('100');
-      expect(sessionStorage.setItem).toHaveBeenCalledWith('surahScrollTop', '100');
-    });
+    await clickAndAssertScroll('Surah', 'surah', 'surahScrollTop', '100');
   });
 
   it('updates juzScrollTop and writes to sessionStorage', async () => {
-    render(
-      <SidebarProvider>
-        <ScrollTest />
-      </SidebarProvider>
-    );
-    await userEvent.click(screen.getByRole('button', { name: 'Juz' }));
-    await waitFor(() => {
-      expect(screen.getByTestId('juz').textContent).toBe('200');
-      expect(sessionStorage.setItem).toHaveBeenCalledWith('juzScrollTop', '200');
-    });
+    await clickAndAssertScroll('Juz', 'juz', 'juzScrollTop', '200');
   });
 
   it('updates pageScrollTop and writes to sessionStorage', async () => {
-    render(
-      <SidebarProvider>
-        <ScrollTest />
-      </SidebarProvider>
-    );
-    await userEvent.click(screen.getByRole('button', { name: 'Page' }));
-    await waitFor(() => {
-      expect(screen.getByTestId('page').textContent).toBe('300');
-      expect(sessionStorage.setItem).toHaveBeenCalledWith('pageScrollTop', '300');
-    });
+    await clickAndAssertScroll('Page', 'page', 'pageScrollTop', '300');
   });
 });

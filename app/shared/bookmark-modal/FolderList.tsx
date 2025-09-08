@@ -38,11 +38,11 @@ const FolderListItem = memo(function FolderListItem({
   isSelected,
   onSelect,
 }: FolderListItemProps): React.JSX.Element {
-  const bookmarkCount = folder.bookmarks?.length || 0;
+  const bookmarkCount: number = folder.bookmarks?.length || 0;
 
   return (
     <motion.button
-      onClick={() => onSelect(folder)}
+      onClick={(): void => onSelect(folder)}
       className={getButtonClasses(isSelected)}
       whileTap={{ scale: 0.98 }}
     >
@@ -92,19 +92,21 @@ export const FolderList = memo(function FolderList({
   findBookmark,
   emptyMessage = 'No folders found',
 }: FolderListProps): React.JSX.Element {
-  const existingBookmark = findBookmark(verseId);
+  const existingBookmark: { folder: Folder; bookmark: Bookmark } | null = findBookmark(verseId);
   if (!folders.length) return <EmptyState message={emptyMessage} />;
 
   return (
     <div className="space-y-2">
-      {folders.map((folder) => (
-        <FolderListItem
-          key={folder.id}
-          folder={folder}
-          isSelected={existingBookmark?.folder.id === folder.id}
-          onSelect={onFolderSelect}
-        />
-      ))}
+      {folders.map(
+        (folder: Folder): React.JSX.Element => (
+          <FolderListItem
+            key={folder.id}
+            folder={folder}
+            isSelected={existingBookmark?.folder.id === folder.id}
+            onSelect={onFolderSelect}
+          />
+        )
+      )}
     </div>
   );
 });

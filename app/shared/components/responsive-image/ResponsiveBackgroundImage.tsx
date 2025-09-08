@@ -19,6 +19,39 @@ interface ResponsiveBackgroundImageProps {
   overlayOpacity?: number;
 }
 
+type Breakpoint = ReturnType<typeof useResponsiveState>['breakpoint'];
+
+const isResponsiveSource = (s: string | ResponsiveImageSources): s is ResponsiveImageSources =>
+  typeof s !== 'string';
+
+const getPreferredSource = (
+  source: ResponsiveImageSources,
+  order: (keyof ResponsiveImageSources)[]
+): string => {
+  for (const key of order) {
+    const value = source[key];
+    if (value) return value;
+  }
+  return source.fallback;
+};
+
+const resolveSourceForBreakpoint = (source: ResponsiveImageSources, bp: Breakpoint): string => {
+  switch (bp) {
+    case 'mobile':
+      return getPreferredSource(source, ['mobile']);
+    case 'tablet':
+      return getPreferredSource(source, ['tablet', 'mobile']);
+    case 'desktop':
+    case 'wide':
+      return getPreferredSource(source, ['desktop', 'tablet']);
+    default:
+      return source.fallback;
+  }
+};
+
+const pickBackgroundSource = (s: string | ResponsiveImageSources, bp: Breakpoint): string =>
+  isResponsiveSource(s) ? resolveSourceForBreakpoint(s, bp) : s;
+
 /**
  * Utility component for background images with responsive behavior
  */
@@ -30,24 +63,6 @@ export const ResponsiveBackgroundImage = ({
   overlayOpacity = 0.5,
 }: ResponsiveBackgroundImageProps): React.JSX.Element => {
   const { breakpoint } = useResponsiveState();
-
-  const pickBackgroundSource = (
-    s: string | ResponsiveImageSources,
-    bp: ReturnType<typeof useResponsiveState>['breakpoint']
-  ): string => {
-    if (typeof s === 'string') return s;
-    switch (bp) {
-      case 'mobile':
-        return s.mobile || s.fallback;
-      case 'tablet':
-        return s.tablet || s.mobile || s.fallback;
-      case 'desktop':
-      case 'wide':
-        return s.desktop || s.tablet || s.fallback;
-      default:
-        return s.fallback;
-    }
-  };
 
   const backgroundImage = pickBackgroundSource(src, breakpoint);
 

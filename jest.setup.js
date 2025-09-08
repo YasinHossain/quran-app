@@ -2,15 +2,18 @@
 import '@testing-library/jest-dom';
 import 'cross-fetch/polyfill';
 import { jest } from '@jest/globals';
-import nodeFetch from 'node-fetch';
 
-// Ensure fetch is available in the JSDOM environment
+// Ensure fetch is available in the JSDOM environment - cross-fetch/polyfill should handle this
 if (typeof globalThis.fetch === 'undefined') {
-  if (typeof global.fetch === 'function') {
-    globalThis.fetch = /** @type {typeof fetch} */ ((...args) => global.fetch(...args));
-  } else {
-    globalThis.fetch = /** @type {typeof fetch} */ ((...args) => nodeFetch(...args));
-  }
+  // Simple mock fetch for tests
+  globalThis.fetch = jest.fn(() =>
+    Promise.resolve({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve({}),
+      text: () => Promise.resolve(''),
+    })
+  );
 }
 
 // Minimal mock that satisfies Next's useIntersection requirements
@@ -45,7 +48,6 @@ Object.defineProperty(global, 'IntersectionObserver', {
   value: IntersectionObserverMock,
 });
 
-jest.mock('@/app/shared/components/adaptive-navigation', () => () => null);
 jest.mock('@/lib/api/chapters', () => ({
   getChapters: jest.fn().mockResolvedValue([
     { id: 1, name_simple: 'Al-Fatihah', verses_count: 7 },

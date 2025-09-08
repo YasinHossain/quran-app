@@ -53,8 +53,6 @@ export const SidebarHeader = ({
   className,
   children,
 }: SidebarHeaderProps): React.JSX.Element => {
-  const shouldShowBack = Boolean(showBackButton && onBack);
-  const shouldShowClose = Boolean(showCloseButton && onClose);
   const alwaysShowClose = title === 'Settings';
 
   const containerClass = cn(
@@ -62,27 +60,40 @@ export const SidebarHeader = ({
     showCloseButton && 'md:justify-center',
     className
   );
+  let backButton: React.JSX.Element | null = null;
+  let placeholder: React.JSX.Element | null = null;
+  if (showBackButton) {
+    if (onBack) {
+      backButton = <BackButton onBack={onBack} />;
+    }
+    if (!showCloseButton) {
+      placeholder = <div className="w-10 h-10" aria-hidden="true" />;
+    }
+  }
+
+  let closeButton: React.JSX.Element | null = null;
+  if (showCloseButton && onClose) {
+    closeButton = <CloseButton onClose={onClose} alwaysShow={alwaysShowClose} />;
+  }
 
   return (
     <div className={containerClass}>
-      {shouldShowBack && onBack ? <BackButton onBack={onBack} /> : null}
+      {backButton}
 
       <h2
         className={cn(
           'text-lg font-semibold text-foreground',
-          showBackButton && 'flex-1 text-center'
+          showBackButton ? 'flex-1 text-center' : undefined
         )}
       >
         {title}
       </h2>
 
-      {shouldShowClose && onClose ? (
-        <CloseButton onClose={onClose} alwaysShow={alwaysShowClose} />
-      ) : null}
+      {closeButton}
 
       {children}
 
-      {showBackButton && !showCloseButton ? <div className="w-10 h-10" aria-hidden="true" /> : null}
+      {placeholder}
     </div>
   );
 };

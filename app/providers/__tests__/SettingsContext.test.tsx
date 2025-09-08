@@ -18,6 +18,15 @@ const SettingsTest = (): React.ReactElement => {
   );
 };
 
+const renderSettings = () =>
+  render(
+    <SettingsProvider>
+      <SettingsTest />
+    </SettingsProvider>
+  );
+
+const getStoredSettings = () => JSON.parse(localStorage.getItem('quranAppSettings') || '{}');
+
 describe('SettingsContext settings state', () => {
   beforeEach(() => {
     localStorage.clear();
@@ -37,50 +46,35 @@ describe('SettingsContext settings state', () => {
     tajweed: false,
   };
 
-  it('defaults to expected values', () => {
-    render(
-      <SettingsProvider>
-        <SettingsTest />
-      </SettingsProvider>
+  const clickUpdate = () => userEvent.click(screen.getByRole('button', { name: 'Update' }));
+
+  const expectStoredFontSize = (size: number) =>
+    waitFor(() => expect(getStoredSettings().arabicFontSize).toBe(size));
+
+  const expectRenderedFontSize = (size: number) =>
+    waitFor(() =>
+      expect(screen.getByTestId('settings').textContent).toBe(
+        JSON.stringify({ ...defaultSettings, arabicFontSize: size })
+      )
     );
+
+  it('defaults to expected values', () => {
+    renderSettings();
     expect(screen.getByTestId('settings').textContent).toBe(JSON.stringify(defaultSettings));
   });
 
   it('persists settings changes in localStorage across renders', async () => {
-    const { unmount } = render(
-      <SettingsProvider>
-        <SettingsTest />
-      </SettingsProvider>
-    );
-    await userEvent.click(screen.getByRole('button', { name: 'Update' }));
-    await waitFor(() => {
-      expect(JSON.parse(localStorage.getItem('quranAppSettings') || '{}').arabicFontSize).toBe(30);
-    });
+    const { unmount } = renderSettings();
+    await clickUpdate();
+    await expectStoredFontSize(30);
     unmount();
-
-    render(
-      <SettingsProvider>
-        <SettingsTest />
-      </SettingsProvider>
-    );
-    await waitFor(() => {
-      expect(screen.getByTestId('settings').textContent).toBe(
-        JSON.stringify({ ...defaultSettings, arabicFontSize: 30 })
-      );
-    });
+    renderSettings();
+    await expectRenderedFontSize(30);
   });
 
   it('saves multiple tafsir selections', async () => {
-    render(
-      <SettingsProvider>
-        <SettingsTest />
-      </SettingsProvider>
-    );
+    renderSettings();
     await userEvent.click(screen.getByRole('button', { name: 'Tafsirs' }));
-    await waitFor(() => {
-      expect(JSON.parse(localStorage.getItem('quranAppSettings') || '{}').tafsirIds).toEqual([
-        1, 2, 3,
-      ]);
-    });
+    await waitFor(() => expect(getStoredSettings().tafsirIds).toEqual([1, 2, 3]));
   });
 });

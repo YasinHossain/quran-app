@@ -80,6 +80,11 @@ const customJestConfig = {
   resetMocks: true,
   restoreMocks: true,
 
+  // Transform ESM modules for Jest
+  transformIgnorePatterns: [
+    'node_modules/(?!(node-fetch|fetch-blob|data-uri-to-buffer|formdata-polyfill)/)',
+  ],
+
   // Verbose output in CI
   verbose: !!process.env.CI,
 };

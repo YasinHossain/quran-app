@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import { cn } from '@/lib/utils/cn';
 
 import type { ResponsiveVariant } from '@/lib/responsive';
@@ -15,28 +17,20 @@ interface LayoutStyles {
   getContainerClasses: () => string;
 }
 
-export const useLayoutStyles = ({
-  variant,
-  showNavigation,
-  sidebarOpen,
-  hasSidebar,
-}: UseLayoutStylesOptions): LayoutStyles => {
-  const getContentPadding = (): string => {
+interface SidebarClassesOptions {
+  variant: ResponsiveVariant;
+  sidebarOpen: boolean;
+  hasSidebar: boolean;
+}
+
+const useContentPadding = (variant: ResponsiveVariant, showNavigation: boolean): string =>
+  useMemo(() => {
     if (!showNavigation) return '';
+    return variant === 'expanded' ? '' : 'bottom-nav-space';
+  }, [variant, showNavigation]);
 
-    switch (variant) {
-      case 'compact':
-        return 'bottom-nav-space';
-      case 'default':
-        return 'bottom-nav-space';
-      case 'expanded':
-        return '';
-      default:
-        return 'bottom-nav-space';
-    }
-  };
-
-  const getSidebarClasses = (): string => {
+const useSidebarClasses = ({ variant, sidebarOpen, hasSidebar }: SidebarClassesOptions): string =>
+  useMemo(() => {
     if (!hasSidebar) return '';
 
     const baseClasses = 'bg-surface border-border shadow-modal transition-transform duration-300';
@@ -48,32 +42,39 @@ export const useLayoutStyles = ({
           'fixed bottom-0 left-0 right-0 max-h-[70dvh] rounded-t-2xl border-t',
           sidebarOpen ? 'translate-y-0' : 'translate-y-full'
         );
-
       case 'default':
         return cn(
           baseClasses,
           'fixed top-16 right-0 bottom-0 w-80 border-l rounded-tl-2xl',
           sidebarOpen ? 'translate-x-0' : 'translate-x-full'
         );
-
       case 'expanded':
         return cn(
           baseClasses,
           'static w-80 h-full border rounded-xl',
           sidebarOpen ? 'block' : 'hidden'
         );
-
       default:
         return baseClasses;
     }
-  };
+  }, [variant, sidebarOpen, hasSidebar]);
 
-  const getContainerClasses = (): string =>
-    cn('flex', variant === 'expanded' ? 'flex-row' : 'flex-col');
+const useContainerClasses = (variant: ResponsiveVariant): string =>
+  useMemo(() => cn('flex', variant === 'expanded' ? 'flex-row' : 'flex-col'), [variant]);
+
+export const useLayoutStyles = ({
+  variant,
+  showNavigation,
+  sidebarOpen,
+  hasSidebar,
+}: UseLayoutStylesOptions): LayoutStyles => {
+  const contentPadding = useContentPadding(variant, showNavigation);
+  const sidebarClasses = useSidebarClasses({ variant, sidebarOpen, hasSidebar });
+  const containerClasses = useContainerClasses(variant);
 
   return {
-    getContentPadding,
-    getSidebarClasses,
-    getContainerClasses,
+    getContentPadding: () => contentPadding,
+    getSidebarClasses: () => sidebarClasses,
+    getContainerClasses: () => containerClasses,
   };
 };

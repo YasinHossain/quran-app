@@ -10,12 +10,7 @@ interface UseBookmarkTabParams {
   onToggleCreateFolder: (creating: boolean) => void;
 }
 
-export function useBookmarkTab({
-  verseId,
-  newFolderName,
-  onNewFolderNameChange,
-  onToggleCreateFolder,
-}: UseBookmarkTabParams): {
+export interface UseBookmarkTabReturn {
   readonly folders: Folder[];
   readonly filteredFolders: Folder[];
   readonly findBookmark: (verseId: string) => Bookmark | undefined;
@@ -23,11 +18,18 @@ export function useBookmarkTab({
   readonly setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   readonly handleFolderSelect: (folder: Folder) => void;
   readonly handleCreateFolder: () => void;
-} {
+}
+
+export function useBookmarkTab({
+  verseId,
+  newFolderName,
+  onNewFolderNameChange,
+  onToggleCreateFolder,
+}: UseBookmarkTabParams): UseBookmarkTabReturn {
   const { folders, findBookmark, addBookmark, removeBookmark, createFolder } = useBookmarks();
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredFolders = useMemo(() => {
+  const filteredFolders = useMemo<Folder[]>(() => {
     if (!searchQuery.trim()) return folders;
     return folders.filter((folder) =>
       folder.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -35,7 +37,7 @@ export function useBookmarkTab({
   }, [folders, searchQuery]);
 
   const handleFolderSelect = useCallback(
-    (folder: Folder) => {
+    (folder: Folder): void => {
       const existingBookmark = findBookmark(verseId);
       if (existingBookmark?.folder.id === folder.id) {
         removeBookmark(verseId, folder.id);
@@ -47,7 +49,7 @@ export function useBookmarkTab({
     [verseId, findBookmark, removeBookmark, addBookmark]
   );
 
-  const handleCreateFolder = useCallback(() => {
+  const handleCreateFolder = useCallback((): void => {
     if (!newFolderName.trim()) return;
     createFolder(newFolderName.trim());
     onNewFolderNameChange('');

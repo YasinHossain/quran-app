@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, type RenderResult } from '@testing-library/react';
 
 import {
   renderResponsiveVerseActions,
@@ -6,87 +6,116 @@ import {
   testAccessibility,
 } from './test-helpers';
 
-describe('ResponsiveVerseActions render', () => {
-  it('[Cross-Device] renders correctly on mobile', () => {
-    renderWithResponsiveState('compact', 'mobile');
+type Device = 'mobile' | 'tablet' | 'desktop';
+
+const renderOnDevice = (device: Device): RenderResult => {
+  if (device === 'mobile') return renderWithResponsiveState('compact', 'mobile');
+  if (device === 'tablet') return renderWithResponsiveState('default', 'tablet');
+  return renderResponsiveVerseActions();
+};
+
+const getTouchTargets = (device: Device): ReturnType<typeof testAccessibility.testTouchTargets> => {
+  const { container } = renderOnDevice(device);
+  return testAccessibility.testTouchTargets(container);
+};
+
+const getFocusResult = async (): Promise<
+  ReturnType<typeof testAccessibility.testFocusManagement>
+> => {
+  const { container } = renderResponsiveVerseActions();
+  return testAccessibility.testFocusManagement(container);
+};
+
+const getTafsirLink = (props = {}): HTMLAnchorElement => {
+  renderResponsiveVerseActions(props);
+  return screen.getByRole('link', { name: 'View tafsir' }) as HTMLAnchorElement;
+};
+
+const devices: Device[] = ['mobile', 'tablet', 'desktop'];
+
+describe('[Cross-Device]', () => {
+  it.each(devices)('renders play button on %s', (device) => {
+    renderOnDevice(device);
     expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /bookmark/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'View tafsir' })).toBeInTheDocument();
   });
 
-  it('[Cross-Device] renders correctly on tablet', () => {
-    renderWithResponsiveState('default', 'tablet');
-    expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
+  it.each(devices)('renders bookmark button on %s', (device) => {
+    renderOnDevice(device);
     expect(screen.getByRole('button', { name: /bookmark/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'View tafsir' })).toBeInTheDocument();
   });
 
-  it('[Cross-Device] renders correctly on desktop', () => {
-    renderResponsiveVerseActions();
-    expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /bookmark/i })).toBeInTheDocument();
+  it.each(devices)('renders tafsir link on %s', (device) => {
+    renderOnDevice(device);
     expect(screen.getByRole('link', { name: 'View tafsir' })).toBeInTheDocument();
   });
+});
 
-  it('[Touch Targets] are WCAG-compliant on mobile', () => {
-    const { container } = renderWithResponsiveState('compact', 'mobile');
-    const result = testAccessibility.testTouchTargets(container);
+describe('[Touch Targets]', () => {
+  it('are WCAG-compliant on mobile', () => {
+    const result = getTouchTargets('mobile');
     expect(result.isCompliant).toBe(true);
+  });
+
+  it('have no undersized targets on mobile', () => {
+    const result = getTouchTargets('mobile');
     expect(result.undersizedTargets).toHaveLength(0);
   });
 
-  it('[Touch Targets] are appropriate on tablets', () => {
-    const { container } = renderWithResponsiveState('default', 'tablet');
-    const result = testAccessibility.testTouchTargets(container);
+  it('are WCAG-compliant on tablets', () => {
+    const result = getTouchTargets('tablet');
     expect(result.isCompliant).toBe(true);
+  });
+
+  it('detect targets on tablets', () => {
+    const result = getTouchTargets('tablet');
     expect(result.totalTargets).toBeGreaterThan(0);
   });
+});
 
-  it('[Accessibility] has proper focus management', async () => {
-    const { container } = renderResponsiveVerseActions();
-    const result = await testAccessibility.testFocusManagement(container);
+describe('[Accessibility]', () => {
+  it('has focusable elements', async () => {
+    const result = await getFocusResult();
     expect(result.focusableCount).toBeGreaterThan(0);
+  });
+
+  it('has logical focus order', async () => {
+    const result = await getFocusResult();
     expect(result.hasLogicalOrder).toBe(true);
   });
+});
 
-  it('[Variants] applies compact classes for mobile', () => {
-    const { container } = renderWithResponsiveState('compact', 'mobile');
+describe('[Variants]', () => {
+  it('applies compact classes for mobile', () => {
+    const { container } = renderOnDevice('mobile');
     const component = container.firstChild as HTMLElement;
     expect(component).toBeTruthy();
   });
 
-  it('[Variants] applies expanded classes for desktop', () => {
-    const { container } = renderWithResponsiveState('expanded', 'desktop');
+  it('applies expanded classes for desktop', () => {
+    const { container } = renderOnDevice('desktop');
     const component = container.firstChild as HTMLElement;
     expect(component).toBeTruthy();
   });
+});
 
-  it('[Functionality] tafsir link has correct href', () => {
-    renderResponsiveVerseActions();
-    const link = screen.getByRole('link', { name: 'View tafsir' });
+describe('[Functionality]', () => {
+  it('tafsir link has correct href', () => {
+    const link = getTafsirLink();
     expect(link).toHaveAttribute('href', '/tafsir/1/1');
   });
 
-  it('[Functionality] handles different verse keys', () => {
-    renderResponsiveVerseActions({ verseKey: '2:255' });
-    const link = screen.getByRole('link', { name: 'View tafsir' });
+  it('handles different verse keys', () => {
+    const link = getTafsirLink({ verseKey: '2:255' });
     expect(link).toHaveAttribute('href', '/tafsir/2/255');
   });
+});
 
-  it('[Errors] handles missing props gracefully', () => {
-    // Avoid nested callback in expect().not.toThrow
-    try {
-      renderResponsiveVerseActions();
-    } catch (e) {
-      expect(e).toBeUndefined();
-    }
+describe('[Errors]', () => {
+  it('handles missing props gracefully', () => {
+    expect(() => renderResponsiveVerseActions()).not.toThrow();
   });
 
-  it('[Errors] handles invalid verse key format', () => {
-    try {
-      renderResponsiveVerseActions({ verseKey: 'invalid' });
-    } catch (e) {
-      expect(e).toBeUndefined();
-    }
+  it('handles invalid verse key format', () => {
+    expect(() => renderResponsiveVerseActions({ verseKey: 'invalid' })).not.toThrow();
   });
 });

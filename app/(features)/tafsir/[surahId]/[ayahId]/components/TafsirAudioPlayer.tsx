@@ -12,7 +12,7 @@ import type { Reciter, Track } from '@/app/shared/player/types';
 import type { Verse } from '@/types';
 
 // Loading fallback extracted to keep component lean
-const LoadingFallback = (): JSX.Element => (
+const LoadingFallback = (): React.JSX.Element => (
   <div className="flex justify-center items-center p-4 bg-surface rounded-lg">
     <Spinner className="h-4 w-4 md:h-5 md:w-5 text-accent" />
   </div>
@@ -23,9 +23,15 @@ const QuranAudioPlayer = dynamic(
   (): Promise<{
     default: typeof import('@/app/shared/player/QuranAudioPlayer').QuranAudioPlayer;
   }> =>
-    import('@/app/shared/player/QuranAudioPlayer').then((mod) => ({
-      default: mod.QuranAudioPlayer,
-    })),
+    import('@/app/shared/player/QuranAudioPlayer').then(
+      (
+        mod: typeof import('@/app/shared/player/QuranAudioPlayer')
+      ): {
+        default: typeof import('@/app/shared/player/QuranAudioPlayer').QuranAudioPlayer;
+      } => ({
+        default: mod.QuranAudioPlayer,
+      })
+    ),
   { loading: (): React.JSX.Element => <LoadingFallback />, ssr: false }
 );
 

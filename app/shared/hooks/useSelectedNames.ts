@@ -5,10 +5,15 @@ import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 
 interface UseSelectedNamesParams {
-  settings: { translationId: number; wordLang: LanguageCode };
-  translationOptions: Array<{ id: number; name: string }>;
-  wordLanguageOptions: Array<{ name: string }>;
-  t: (key: string) => string;
+  readonly settings: { translationId: number; wordLang: LanguageCode };
+  readonly translationOptions: Array<{ id: number; name: string }>;
+  readonly wordLanguageOptions: Array<{ name: string }>;
+  readonly t: (key: string) => string;
+}
+
+interface UseSelectedNamesReturn {
+  readonly selectedTranslationName: string;
+  readonly selectedWordLanguageName: string;
 }
 
 export function useSelectedNames({
@@ -16,10 +21,7 @@ export function useSelectedNames({
   translationOptions,
   wordLanguageOptions,
   t,
-}: UseSelectedNamesParams): {
-  selectedTranslationName: string;
-  selectedWordLanguageName: string;
-} {
+}: UseSelectedNamesParams): UseSelectedNamesReturn {
   const selectedTranslationName = useMemo(
     () =>
       translationOptions.find((o) => o.id === settings.translationId)?.name ||
@@ -37,5 +39,5 @@ export function useSelectedNames({
     [settings.wordLang, wordLanguageOptions, t]
   );
 
-  return { selectedTranslationName, selectedWordLanguageName } as const;
+  return { selectedTranslationName, selectedWordLanguageName };
 }

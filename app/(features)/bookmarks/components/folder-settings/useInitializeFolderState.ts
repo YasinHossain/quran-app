@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 
 import { DEFAULT_COLOR, DEFAULT_ICON } from './constants';
+
 import type { InitStateArgs } from './types';
 
 export const useInitializeFolderState = ({
@@ -18,4 +19,3 @@ export const useInitializeFolderState = ({
     }
   }, [folder, isOpen, setName, setSelectedColor, setSelectedIcon]);
 };
-

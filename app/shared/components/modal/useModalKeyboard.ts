@@ -15,13 +15,13 @@ export const useModalKeyboard = ({
 }: UseModalKeyboardOptions): UseModalKeyboardResult => {
   const cancelRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
+  useEffect((): void => {
     if (isOpen) {
       cancelRef.current?.focus();
     }
   }, [isOpen]);
 
-  useEffect(() => {
+  useEffect((): void => {
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent): void => {
@@ -31,7 +31,9 @@ export const useModalKeyboard = ({
     };
 
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    return (): void => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, [isOpen, onCancel]);
 
   return { cancelRef };

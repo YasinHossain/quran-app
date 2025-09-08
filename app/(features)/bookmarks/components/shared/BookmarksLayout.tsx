@@ -2,6 +2,7 @@
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useSidebar } from '@/app/providers/SidebarContext';
+
 import { BookmarksDesktopSidebar } from './layout/BookmarksDesktopSidebar';
 import { BookmarksMainContent } from './layout/BookmarksMainContent';
 import { BookmarksMobileSidebarOverlay } from './layout/BookmarksMobileSidebarOverlay';
@@ -37,9 +38,7 @@ export const BookmarksLayout = ({
           folders={folders}
           onVerseClick={onVerseClick}
         />
-        <BookmarksMainContent isHeaderHidden={isHidden}>
-          {children}
-        </BookmarksMainContent>
+        <BookmarksMainContent isHeaderHidden={isHidden}>{children}</BookmarksMainContent>
       </div>
       <BookmarksMobileSidebarOverlay
         isOpen={isBookmarkSidebarOpen}
@@ -52,4 +51,3 @@ export const BookmarksLayout = ({
     </>
   );
 };
-

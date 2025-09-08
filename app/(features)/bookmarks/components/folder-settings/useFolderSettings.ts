@@ -4,10 +4,7 @@ import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useEscapeKey } from '@/app/providers/hooks/useEscapeKey';
 
 import { DEFAULT_COLOR, DEFAULT_ICON } from './constants';
-import {
-  type UseFolderSettingsParams,
-  type UseFolderSettingsResult,
-} from './types';
+import { type UseFolderSettingsParams, type UseFolderSettingsResult } from './types';
 import { useFolderModalTitle } from './useFolderModalTitle';
 import { useFolderSettingsSubmit } from './useFolderSettingsSubmit';
 import { useInitializeFolderState } from './useInitializeFolderState';
@@ -53,4 +50,3 @@ export const useFolderSettings = ({
     getModalTitle: (): string => modalTitle,
   };
 };
-
