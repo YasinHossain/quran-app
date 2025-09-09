@@ -12,9 +12,9 @@ import { setupDom } from './focus/test-utils';
 
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
 
-const waitForUpdates = (ms: number) => act(() => sleep(ms));
+const waitForUpdates = (ms: number): Promise<void> => act(() => sleep(ms));
 
-describe('focus hooks', () => {
+describe('focus hooks', (): void => {
   let container: HTMLElement;
   let cleanup: () => void;
 
@@ -26,8 +26,8 @@ describe('focus hooks', () => {
     cleanup();
   });
 
-  describe('useFocusTrap', () => {
-    it('traps focus within container and wraps on Tab', () => {
+  describe('useFocusTrap', (): void => {
+    it('traps focus within container and wraps on Tab', (): void => {
       const containerRef = { current: container };
       renderHook(() => useFocusTrap(true, containerRef));
       expect(document.activeElement?.id).toBe('btn1');
@@ -40,7 +40,7 @@ describe('focus hooks', () => {
       expect(document.activeElement?.id).toBe('btn1');
     });
 
-    it('handles Shift+Tab from first to last', () => {
+    it('handles Shift+Tab from first to last', (): void => {
       const containerRef = { current: container };
       renderHook(() => useFocusTrap(true, containerRef));
       act(() => {
@@ -54,7 +54,7 @@ describe('focus hooks', () => {
       expect(document.activeElement?.id).toBe('select1');
     });
 
-    it('restores previous focus when deactivated', () => {
+    it('restores previous focus when deactivated', (): void => {
       const external = document.createElement('button');
       document.body.appendChild(external);
       external.focus();
@@ -68,8 +68,8 @@ describe('focus hooks', () => {
     });
   });
 
-  describe('useFocusRestoration', () => {
-    it('saves and restores focus by id', () => {
+  describe('useFocusRestoration', (): void => {
+    it('saves and restores focus by id', (): void => {
       const target = container.querySelector('#btn2') as HTMLButtonElement;
       target.focus();
       const { result } = renderHook(() => useFocusRestoration());
@@ -80,7 +80,7 @@ describe('focus hooks', () => {
       expect(document.activeElement).toBe(target);
     });
 
-    it('handles elements without id', () => {
+    it('handles elements without id', (): void => {
       const btn = document.createElement('button');
       container.appendChild(btn);
       btn.focus();
@@ -91,8 +91,8 @@ describe('focus hooks', () => {
     });
   });
 
-  describe('useAutoFocus', () => {
-    it('focuses element when condition is true', async () => {
+  describe('useAutoFocus', (): void => {
+    it('focuses element when condition is true', async (): Promise<void> => {
       const target = container.querySelector('#btn2') as HTMLButtonElement;
       const ref = { current: target };
       renderHook(() => useAutoFocus(true, ref, 10));
@@ -100,7 +100,7 @@ describe('focus hooks', () => {
       expect(document.activeElement).toBe(target);
     });
 
-    it('does not focus element when condition is false', async () => {
+    it('does not focus element when condition is false', async (): Promise<void> => {
       const target = container.querySelector('#btn2') as HTMLButtonElement;
       const ref = { current: target };
       renderHook(() => useAutoFocus(false, ref, 10));
@@ -109,8 +109,8 @@ describe('focus hooks', () => {
     });
   });
 
-  describe('useResponsiveFocus', () => {
-    it('manages focus across breakpoint changes', () => {
+  describe('useResponsiveFocus', (): void => {
+    it('manages focus across breakpoint changes', (): void => {
       const target = container.querySelector('#btn1') as HTMLButtonElement;
       target.focus();
       const { rerender } = renderHook(
@@ -121,8 +121,8 @@ describe('focus hooks', () => {
     });
   });
 
-  describe('useRovingTabIndex', () => {
-    it('sets tabIndex and focuses active item', () => {
+  describe('useRovingTabIndex', (): void => {
+    it('sets tabIndex and focuses active item', (): void => {
       const button1 = container.querySelector('#btn1') as HTMLButtonElement;
       const button2 = container.querySelector('#btn2') as HTMLButtonElement;
       const input1 = container.querySelector('#input1') as HTMLInputElement;
