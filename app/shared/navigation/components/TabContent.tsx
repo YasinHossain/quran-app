@@ -25,42 +25,72 @@ export const TabContent = memo(function TabContent({
   onPageClick,
 }: TabContentProps): React.JSX.Element {
   if (activeTab === 'surah') {
-    return (
-      <div className="p-4">
-        <div className="grid gap-2">
-          {filteredSurahs.map((surah) => (
-            <NavigationItem
-              key={surah.number}
-              number={surah.number}
-              title={surah.name}
-              subtitle={`${surah.verses} verses`}
-              arabicName={surah.arabicName}
-              onClick={() => onSurahClick(surah.number)}
-            />
-          ))}
-        </div>
-      </div>
-    );
+    return <SurahList filteredSurahs={filteredSurahs} onSurahClick={onSurahClick} />;
   }
 
   if (activeTab === 'juz') {
-    return (
-      <div className="p-4">
-        <div className="grid gap-2">
-          {filteredJuzs.map((juz) => (
-            <NavigationItem
-              key={juz.number}
-              number={juz.number}
-              title={`Juz ${juz.number}`}
-              subtitle={juz.surahRange}
-              onClick={() => onJuzClick(juz.number)}
-            />
-          ))}
-        </div>
-      </div>
-    );
+    return <JuzList filteredJuzs={filteredJuzs} onJuzClick={onJuzClick} />;
   }
 
+  return <PageList filteredPages={filteredPages} onPageClick={onPageClick} />;
+});
+
+function SurahList({
+  filteredSurahs,
+  onSurahClick,
+}: {
+  filteredSurahs: Surah[];
+  onSurahClick: (surahId: number) => void;
+}): React.JSX.Element {
+  return (
+    <div className="p-4">
+      <div className="grid gap-2">
+        {filteredSurahs.map((surah) => (
+          <NavigationItem
+            key={surah.number}
+            number={surah.number}
+            title={surah.name}
+            subtitle={`${surah.verses} verses`}
+            arabicName={surah.arabicName}
+            onClick={() => onSurahClick(surah.number)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function JuzList({
+  filteredJuzs,
+  onJuzClick,
+}: {
+  filteredJuzs: JuzSummary[];
+  onJuzClick: (juzNumber: number) => void;
+}): React.JSX.Element {
+  return (
+    <div className="p-4">
+      <div className="grid gap-2">
+        {filteredJuzs.map((juz) => (
+          <NavigationItem
+            key={juz.number}
+            number={juz.number}
+            title={`Juz ${juz.number}`}
+            subtitle={juz.surahRange}
+            onClick={() => onJuzClick(juz.number)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PageList({
+  filteredPages,
+  onPageClick,
+}: {
+  filteredPages: number[];
+  onPageClick: (page: number) => void;
+}): React.JSX.Element {
   return (
     <div className="p-4">
       <div className="grid gap-2">
@@ -75,4 +105,4 @@ export const TabContent = memo(function TabContent({
       </div>
     </div>
   );
-});
+}

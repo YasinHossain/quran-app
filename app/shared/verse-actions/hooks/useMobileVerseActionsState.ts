@@ -1,9 +1,11 @@
-import { useCallback, useState } from 'react';
+'use client';
 
-import { defaultShare } from '../utils';
+import { useState, useCallback } from 'react';
+
+import { defaultShare } from '@/app/shared/verse-actions/utils';
 
 interface UseMobileVerseActionsStateParams {
-  onShare?: () => void;
+  onShare?: () => void | Promise<void>;
   onBookmark?: () => void;
   showRemove?: boolean;
 }
@@ -18,7 +20,6 @@ interface MobileVerseActionsState {
   handleBookmarkClick: () => void;
   handleShare: () => void;
 }
-
 export function useMobileVerseActionsState({
   onShare,
   onBookmark,
@@ -29,12 +30,8 @@ export function useMobileVerseActionsState({
 
   const openBottomSheet = useCallback(() => setIsBottomSheetOpen(true), []);
   const closeBottomSheet = useCallback(() => setIsBottomSheetOpen(false), []);
-
   const openBookmarkModal = useCallback(() => setIsBookmarkModalOpen(true), []);
   const closeBookmarkModal = useCallback(() => setIsBookmarkModalOpen(false), []);
-
-  const handleShare = onShare || defaultShare;
-
   const handleBookmarkClick = useCallback(() => {
     if (showRemove && onBookmark) {
       onBookmark();
@@ -42,6 +39,8 @@ export function useMobileVerseActionsState({
       openBookmarkModal();
     }
   }, [showRemove, onBookmark, openBookmarkModal]);
+
+  const handleShare = onShare || defaultShare;
 
   return {
     isBottomSheetOpen,
@@ -54,4 +53,3 @@ export function useMobileVerseActionsState({
     handleShare,
   };
 }
-

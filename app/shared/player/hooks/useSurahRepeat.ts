@@ -1,20 +1,6 @@
 import { useCallback } from 'react';
 
-export function handleSurahRepeat({
-  verseRepeatsLeft,
-  playRepeatsLeft,
-  repeatEach,
-  delay,
-  onNext,
-  onPrev,
-  seek,
-  play,
-  pause,
-  setIsPlaying,
-  setPlayingId,
-  setVerseRepeatsLeft,
-  setPlayRepeatsLeft,
-}: {
+type RepeatArgs = {
   verseRepeatsLeft: number;
   playRepeatsLeft: number;
   repeatEach: number;
@@ -28,32 +14,53 @@ export function handleSurahRepeat({
   setPlayingId: (v: number | null) => void;
   setVerseRepeatsLeft: (n: number) => void;
   setPlayRepeatsLeft: (n: number) => void;
-}): void {
-  if (verseRepeatsLeft > 1) {
-    setVerseRepeatsLeft(verseRepeatsLeft - 1);
-    seek(0);
-    play();
-    return;
-  }
+};
+
+function restartCurrentVerse({
+  verseRepeatsLeft,
+  setVerseRepeatsLeft,
+  seek,
+  play,
+}: RepeatArgs): void {
+  setVerseRepeatsLeft(verseRepeatsLeft - 1);
+  seek(0);
+  play();
+}
+
+function tryAdvanceOrLoopSurah({
+  repeatEach,
+  playRepeatsLeft,
+  setPlayRepeatsLeft,
+  setVerseRepeatsLeft,
+  onNext,
+  onPrev,
+  delay,
+}: RepeatArgs): boolean {
   setVerseRepeatsLeft(repeatEach);
   const hasNext = onNext?.() ?? false;
-  if (hasNext) return;
+  if (hasNext) return true;
   if (playRepeatsLeft > 1) {
     setPlayRepeatsLeft(playRepeatsLeft - 1);
     setVerseRepeatsLeft(repeatEach);
     setTimeout(() => {
       let hasPrev = true;
-      while (hasPrev) {
-        hasPrev = onPrev?.() ?? false;
-      }
+      while (hasPrev) hasPrev = onPrev?.() ?? false;
     }, delay);
-    return;
+    return true;
   }
-  setTimeout(() => {
-    pause();
-    setIsPlaying(false);
-    setPlayingId(null);
-  }, 0);
+  return false;
+}
+
+function stopPlayback({ pause, setIsPlaying, setPlayingId }: RepeatArgs): void {
+  pause();
+  setIsPlaying(false);
+  setPlayingId(null);
+}
+
+export function handleSurahRepeat(args: RepeatArgs): void {
+  const { verseRepeatsLeft } = args;
+  if (verseRepeatsLeft > 1) return restartCurrentVerse(args);
+  if (!tryAdvanceOrLoopSurah(args)) setTimeout(() => stopPlayback(args), 0);
 }
 
 /**

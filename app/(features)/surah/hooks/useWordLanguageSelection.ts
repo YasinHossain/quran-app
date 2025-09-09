@@ -4,7 +4,12 @@ import { useSettings } from '@/app/providers/SettingsContext';
 
 import type { WordLanguage } from '@/app/(features)/surah/components/LanguageList';
 
-export function useWordLanguageSelection() {
+interface UseWordLanguageSelectionReturn {
+  selectedId: number;
+  handleLanguageSelect: (language: WordLanguage) => void;
+}
+
+export function useWordLanguageSelection(): UseWordLanguageSelectionReturn {
   const { settings, setSettings } = useSettings();
 
   const handleLanguageSelect = useCallback(
@@ -17,6 +22,5 @@ export function useWordLanguageSelection() {
     },
     [setSettings]
   );
-
   return { selectedId: settings.wordTranslationId, handleLanguageSelect } as const;
 }
