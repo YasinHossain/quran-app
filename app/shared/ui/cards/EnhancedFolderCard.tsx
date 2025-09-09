@@ -54,7 +54,7 @@ export const EnhancedFolderCard = React.memo(function EnhancedFolderCard({
       role="button"
       tabIndex={0}
       aria-label={(ariaLabel || defaultAriaLabel) as string}
-      onKeyDown={(e) => {
+      onKeyDown={(e): void => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           onClick?.(e as unknown as React.MouseEvent<HTMLElement>);
