@@ -28,6 +28,171 @@ export interface PanelProps {
   closeOnOverlayClick?: boolean;
 }
 
+interface PanelOverlayProps {
+  onClose: () => void;
+  closeOnOverlayClick: boolean;
+  variant: 'modal-center' | 'standard';
+}
+
+const PanelOverlay = memo(function PanelOverlay({
+  onClose,
+  closeOnOverlayClick,
+  variant,
+}: PanelOverlayProps): React.JSX.Element {
+  const handleOverlayInteraction = closeOnOverlayClick ? onClose : undefined;
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (closeOnOverlayClick && (e.key === 'Escape' || e.key === 'Enter')) {
+      onClose();
+    }
+  };
+
+  const overlayClass =
+    variant === 'modal-center'
+      ? 'fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm z-40 flex items-center justify-center'
+      : 'fixed inset-0 bg-background/80 backdrop-blur-sm z-40';
+
+  return (
+    <div
+      className={overlayClass}
+      onClick={handleOverlayInteraction}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={closeOnOverlayClick ? 0 : -1}
+      aria-label="Close panel"
+    />
+  );
+});
+
+interface PanelHeaderProps {
+  title?: string;
+  showCloseButton: boolean;
+  onClose: () => void;
+  variant: 'modal-center' | 'standard';
+}
+
+const PanelHeader = memo(function PanelHeader({
+  title,
+  showCloseButton,
+  onClose,
+  variant,
+}: PanelHeaderProps): React.JSX.Element | null {
+  if (!title && !showCloseButton) return null;
+
+  const headerClass =
+    variant === 'modal-center'
+      ? 'flex items-center justify-between mb-4'
+      : 'flex items-center justify-between p-4 border-b border-border';
+
+  return (
+    <header className={headerClass}>
+      {title && <h2 className="text-lg font-semibold">{title}</h2>}
+      {showCloseButton && (
+        <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close panel">
+          <CloseIcon size={18} />
+        </Button>
+      )}
+    </header>
+  );
+});
+
+interface ModalCenterPanelProps {
+  onClose: () => void;
+  title?: string;
+  children: React.ReactNode;
+  className?: string;
+  showCloseButton: boolean;
+  closeOnOverlayClick: boolean;
+  variantClass: string;
+}
+
+const ModalCenterPanel = memo(function ModalCenterPanel({
+  onClose,
+  title,
+  children,
+  className,
+  showCloseButton,
+  closeOnOverlayClick,
+  variantClass,
+}: ModalCenterPanelProps): React.JSX.Element {
+  return (
+    <>
+      <PanelOverlay
+        onClose={onClose}
+        closeOnOverlayClick={closeOnOverlayClick}
+        variant="modal-center"
+      />
+      <div className="fixed inset-0 z-40 flex items-center justify-center">
+        <div
+          className={cn('z-50 text-foreground p-6', variantClass, className)}
+          onPointerDown={(e) => e.stopPropagation()}
+          role="dialog"
+          aria-modal="true"
+        >
+          <PanelHeader
+            title={title}
+            showCloseButton={showCloseButton}
+            onClose={onClose}
+            variant="modal-center"
+          />
+          <div className="flex-1">{children}</div>
+        </div>
+      </div>
+    </>
+  );
+});
+
+interface StandardPanelProps {
+  onClose: () => void;
+  title?: string;
+  children: React.ReactNode;
+  className?: string;
+  showCloseButton: boolean;
+  closeOnOverlayClick: boolean;
+  variantClass: string;
+  isOpen: boolean;
+  showOverlay: boolean;
+}
+
+const StandardPanel = memo(function StandardPanel({
+  onClose,
+  title,
+  children,
+  className,
+  showCloseButton,
+  closeOnOverlayClick,
+  variantClass,
+  isOpen,
+  showOverlay,
+}: StandardPanelProps): React.JSX.Element {
+  return (
+    <>
+      {showOverlay && (
+        <PanelOverlay
+          onClose={onClose}
+          closeOnOverlayClick={closeOnOverlayClick}
+          variant="standard"
+        />
+      )}
+      <div
+        className={cn(
+          'z-50 text-foreground transition-transform duration-300',
+          variantClass,
+          isOpen ? 'translate-x-0' : 'translate-x-full',
+          className
+        )}
+      >
+        <PanelHeader
+          title={title}
+          showCloseButton={showCloseButton}
+          onClose={onClose}
+          variant="standard"
+        />
+        <div className="flex-1 overflow-y-auto">{children}</div>
+      </div>
+    </>
+  );
+});
+
 export const Panel = memo(function Panel({
   isOpen,
   onClose,
@@ -50,95 +215,33 @@ export const Panel = memo(function Panel({
     variant === 'bottom-sheet' ||
     variant === 'fullscreen';
 
-  const handleOverlayKeyDown = (
-    e: React.KeyboardEvent<HTMLDivElement>
-  ): void => {
-    if (closeOnOverlayClick && (e.key === 'Escape' || e.key === 'Enter')) {
-      onClose();
-    }
-  };
-
-  const handlePointerDown = (
-    e: React.PointerEvent<HTMLDivElement>
-  ): void => {
-    e.stopPropagation();
-  };
-
-  // Modal center variant has different structure
   if (variant === 'modal-center') {
     return (
-      <div
-        className="fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm z-40 flex items-center justify-center"
-        onClick={closeOnOverlayClick ? onClose : undefined}
-        onKeyDown={handleOverlayKeyDown}
-        role="button"
-        tabIndex={closeOnOverlayClick ? 0 : -1}
-        aria-label="Close panel"
+      <ModalCenterPanel
+        onClose={onClose}
+        title={title}
+        className={className}
+        showCloseButton={showCloseButton}
+        closeOnOverlayClick={closeOnOverlayClick}
+        variantClass={variantClass}
       >
-        <div
-          className={cn('z-50 text-foreground p-6', variantClass, className)}
-          onPointerDown={handlePointerDown}
-          role="dialog"
-          aria-modal="true"
-        >
-          {/* Header */}
-          {(title || showCloseButton) && (
-            <header className="flex items-center justify-between mb-4">
-              {title && <h2 className="text-lg font-semibold">{title}</h2>}
-              {showCloseButton && (
-                <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close panel">
-                  <CloseIcon size={18} />
-                </Button>
-              )}
-            </header>
-          )}
-
-          {/* Content */}
-          <div className="flex-1">{children}</div>
-        </div>
-      </div>
+        {children}
+      </ModalCenterPanel>
     );
   }
 
-  // Standard panel variants
   return (
-    <>
-      {/* Overlay */}
-      {showOverlay && (
-        <div
-          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
-          onClick={closeOnOverlayClick ? onClose : undefined}
-          onKeyDown={handleOverlayKeyDown}
-          role="button"
-          tabIndex={closeOnOverlayClick ? 0 : -1}
-          aria-label="Close panel"
-        />
-      )}
-
-      {/* Panel */}
-      <div
-        className={cn(
-          'z-50 text-foreground transition-transform duration-300',
-          variantClass,
-          isOpen ? 'translate-x-0' : 'translate-x-full',
-          className
-        )}
-      >
-        {/* Header */}
-        {(title || showCloseButton) && (
-          <header className="flex items-center justify-between p-4 border-b border-border">
-            {title && <h2 className="text-lg font-semibold">{title}</h2>}
-            {showCloseButton && (
-              <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close panel">
-                <CloseIcon size={18} />
-              </Button>
-            )}
-          </header>
-        )}
-
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto">{children}</div>
-      </div>
-    </>
+    <StandardPanel
+      onClose={onClose}
+      title={title}
+      className={className}
+      showCloseButton={showCloseButton}
+      closeOnOverlayClick={closeOnOverlayClick}
+      variantClass={variantClass}
+      isOpen={isOpen}
+      showOverlay={showOverlay}
+    >
+      {children}
+    </StandardPanel>
   );
 });
