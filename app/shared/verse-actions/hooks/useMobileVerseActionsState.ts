@@ -10,11 +10,21 @@ interface UseMobileVerseActionsStateParams {
   showRemove?: boolean;
 }
 
+interface MobileVerseActionsState {
+  isBottomSheetOpen: boolean;
+  openBottomSheet: () => void;
+  closeBottomSheet: () => void;
+  isBookmarkModalOpen: boolean;
+  openBookmarkModal: () => void;
+  closeBookmarkModal: () => void;
+  handleBookmarkClick: () => void;
+  handleShare: () => void;
+}
 export function useMobileVerseActionsState({
   onShare,
   onBookmark,
   showRemove = false,
-}: UseMobileVerseActionsStateParams) {
+}: UseMobileVerseActionsStateParams): MobileVerseActionsState {
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
 
@@ -22,7 +32,6 @@ export function useMobileVerseActionsState({
   const closeBottomSheet = useCallback(() => setIsBottomSheetOpen(false), []);
   const openBookmarkModal = useCallback(() => setIsBookmarkModalOpen(true), []);
   const closeBookmarkModal = useCallback(() => setIsBookmarkModalOpen(false), []);
-
   const handleBookmarkClick = useCallback(() => {
     if (showRemove && onBookmark) {
       onBookmark();
@@ -42,5 +51,5 @@ export function useMobileVerseActionsState({
     closeBookmarkModal,
     handleBookmarkClick,
     handleShare,
-  } as const;
+  };
 }
