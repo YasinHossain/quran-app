@@ -6,8 +6,8 @@ import { useSurahTabParams } from '@/app/shared/components/surah-tabs/useSurahTa
 import type { TabKey } from '@/app/shared/components/surah-tabs/types';
 import type { Chapter } from '@/types';
 
-import { useSelectionSync } from '@/app/shared/components/surah-sidebar/hooks/useSelectionSync';
-import { useSidebarScroll } from '@/app/shared/components/surah-sidebar/useSidebarScroll';
+import { useSelectionSync } from '@/app/shared/surah-sidebar/hooks/useSelectionSync';
+import { useSidebarScroll } from '@/app/shared/surah-sidebar/useSidebarScroll';
 
 export interface SurahTabsState {
   tabs: { key: TabKey; label: string }[];

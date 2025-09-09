@@ -37,4 +37,3 @@ export const VerseActionTrigger = memo(function VerseActionTrigger({
     </div>
   );
 });
-

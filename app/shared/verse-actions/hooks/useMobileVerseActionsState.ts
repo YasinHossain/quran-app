@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 
-import { defaultShare } from '../utils';
+import { defaultShare } from '@/app/shared/verse-actions/utils';
 
 interface UseMobileVerseActionsStateParams {
   onShare?: () => void | Promise<void>;
@@ -44,4 +44,3 @@ export function useMobileVerseActionsState({
     handleShare,
   } as const;
 }
-

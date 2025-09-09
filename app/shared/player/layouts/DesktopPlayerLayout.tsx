@@ -43,10 +43,7 @@ export const DesktopPlayerLayout = React.memo(function DesktopPlayerLayout({
 }: DesktopPlayerLayoutProps): React.JSX.Element {
   return (
     <>
-      {/* Left media block */}
       <TrackInfo cover={cover} title={title} artist={artist} />
-
-      {/* Transport controls */}
       <TransportControls
         isPlaying={isPlaying}
         interactable={interactable}
@@ -54,8 +51,6 @@ export const DesktopPlayerLayout = React.memo(function DesktopPlayerLayout({
         onNext={onNext}
         togglePlay={togglePlay}
       />
-
-      {/* Timeline & Time Labels */}
       <Timeline
         current={current}
         duration={duration}
@@ -64,21 +59,25 @@ export const DesktopPlayerLayout = React.memo(function DesktopPlayerLayout({
         elapsed={elapsed}
         total={total}
       />
-
-      {/* Utilities */}
-      <div className="flex items-center gap-2">
-        <PlayerOptions />
-        <Button
-          variant="icon-round"
-          size="icon-round"
-          aria-label="Close player"
-          onClick={closePlayer}
-        >
-          <CloseIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
-        </Button>
-      </div>
+      <Utilities closePlayer={closePlayer} />
     </>
   );
 });
+
+function Utilities({ closePlayer }: { closePlayer: () => void }): React.JSX.Element {
+  return (
+    <div className="flex items-center gap-2">
+      <PlayerOptions />
+      <Button
+        variant="icon-round"
+        size="icon-round"
+        aria-label="Close player"
+        onClick={closePlayer}
+      >
+        <CloseIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
+      </Button>
+    </div>
+  );
+}
 
 export type { DesktopPlayerLayoutProps };

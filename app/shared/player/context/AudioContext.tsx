@@ -33,12 +33,10 @@ interface AudioContextType {
 
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
 
-/**
- * Provides global audio playback state.
- * Wrap your application with this provider to share the currently
- * playing and loading audio identifiers across components.
- */
-export const AudioProvider = ({ children }: { children: React.ReactNode }): React.JSX.Element => {
+function useAudioCoreState(): Omit<
+  AudioContextType,
+  'isPlayerVisible' | 'openPlayer' | 'closePlayer'
+> {
   const [playingId, setPlayingId] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [loadingId, setLoadingId] = useState<number | null>(null);
@@ -47,60 +45,44 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }): Reac
   const { repeatOptions, setRepeatOptions } = useRepeatState();
   const { reciter, setReciter, volume, setVolume, playbackRate, setPlaybackRate } =
     usePersistedAudioSettings();
-
-  const { isPlayerVisible, openPlayer, closePlayer } = usePlayerVisibility({
-    audioRef,
-    setIsPlaying,
+  return {
+    playingId,
     setPlayingId,
+    isPlaying,
+    setIsPlaying,
+    loadingId,
+    setLoadingId,
+    activeVerse,
     setActiveVerse,
+    audioRef,
+    repeatOptions,
+    setRepeatOptions,
+    reciter,
+    setReciter,
+    volume,
+    setVolume,
+    playbackRate,
+    setPlaybackRate,
+  } as const;
+}
+
+function useAudioContextValue(): AudioContextType {
+  const core = useAudioCoreState();
+  const { isPlayerVisible, openPlayer, closePlayer } = usePlayerVisibility({
+    audioRef: core.audioRef,
+    setIsPlaying: core.setIsPlaying,
+    setPlayingId: core.setPlayingId,
+    setActiveVerse: core.setActiveVerse,
   });
-
-  const value = useMemo(
-    () => ({
-      playingId,
-      setPlayingId,
-      isPlaying,
-      setIsPlaying,
-      loadingId,
-      setLoadingId,
-      activeVerse,
-      setActiveVerse,
-      audioRef,
-      repeatOptions,
-      setRepeatOptions,
-      reciter,
-      setReciter,
-      volume,
-      setVolume,
-      playbackRate,
-      setPlaybackRate,
-      isPlayerVisible,
-      openPlayer,
-      closePlayer,
-    }),
-    [
-      playingId,
-      setPlayingId,
-      isPlaying,
-      setIsPlaying,
-      loadingId,
-      setLoadingId,
-      activeVerse,
-      setActiveVerse,
-      repeatOptions,
-      setRepeatOptions,
-      reciter,
-      setReciter,
-      volume,
-      setVolume,
-      playbackRate,
-      setPlaybackRate,
-      isPlayerVisible,
-      openPlayer,
-      closePlayer,
-    ]
+  // memoize the full context value including controls
+  return useMemo(
+    () => ({ ...core, isPlayerVisible, openPlayer, closePlayer }),
+    [core, isPlayerVisible, openPlayer, closePlayer]
   );
+}
 
+export const AudioProvider = ({ children }: { children: React.ReactNode }): React.JSX.Element => {
+  const value = useAudioContextValue();
   return <AudioContext.Provider value={value}>{children}</AudioContext.Provider>;
 };
 

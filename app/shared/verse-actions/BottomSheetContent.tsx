@@ -1,10 +1,10 @@
 'use client';
 
-import { memo } from 'react';
 import { motion } from 'framer-motion';
+import { memo } from 'react';
 
-import { ActionList } from './components/ActionList';
 import { BottomSheetHeader } from './BottomSheetHeader';
+import { ActionList } from './components/ActionList';
 import { VerseActionItem } from './types';
 
 interface BottomSheetContentProps {
@@ -41,4 +41,3 @@ export const BottomSheetContent = memo(function BottomSheetContent({
     </motion.div>
   );
 });
-

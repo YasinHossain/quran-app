@@ -1,9 +1,10 @@
 'use client';
 
 import { BookmarkModal } from '@/app/shared/components/BookmarkModal';
-import { MobileBottomSheet } from './MobileBottomSheet';
+
 import { VerseActionTrigger } from './components/VerseActionTrigger';
 import { useMobileVerseActionsState } from './hooks/useMobileVerseActionsState';
+import { MobileBottomSheet } from './MobileBottomSheet';
 import { VerseActionsProps } from './types';
 
 export const MobileVerseActions = ({
@@ -19,8 +20,15 @@ export const MobileVerseActions = ({
   showRemove = false,
   className = '',
 }: VerseActionsProps): React.JSX.Element => {
-  const { isBottomSheetOpen, openBottomSheet, closeBottomSheet, isBookmarkModalOpen, closeBookmarkModal, handleBookmarkClick, handleShare } =
-    useMobileVerseActionsState({ onShare, onBookmark, showRemove });
+  const {
+    isBottomSheetOpen,
+    openBottomSheet,
+    closeBottomSheet,
+    isBookmarkModalOpen,
+    closeBookmarkModal,
+    handleBookmarkClick,
+    handleShare,
+  } = useMobileVerseActionsState({ onShare, onBookmark, showRemove });
 
   return (
     <>
@@ -38,8 +46,12 @@ export const MobileVerseActions = ({
         onNavigateToVerse={onNavigateToVerse}
         showRemove={showRemove}
       />
-      <BookmarkModal isOpen={isBookmarkModalOpen} onClose={closeBookmarkModal} verseId={verseId || verseKey} verseKey={verseKey} />
+      <BookmarkModal
+        isOpen={isBookmarkModalOpen}
+        onClose={closeBookmarkModal}
+        verseId={verseId || verseKey}
+        verseKey={verseKey}
+      />
     </>
   );
 };
-

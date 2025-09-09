@@ -33,4 +33,3 @@ export const BottomSheetHeader = memo(function BottomSheetHeader({
     </div>
   );
 });
-

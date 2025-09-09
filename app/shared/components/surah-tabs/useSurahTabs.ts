@@ -5,8 +5,8 @@ import { useSurahTabParams } from './useSurahTabParams';
 
 import type { Chapter } from '@/types';
 
-import { useSelectionSync } from '@/app/shared/components/surah-sidebar/hooks/useSelectionSync';
-import { useSidebarScroll } from '@/app/shared/components/surah-sidebar/useSidebarScroll';
+import { useSelectionSync } from '@/app/shared/surah-sidebar/hooks/useSelectionSync';
+import { useSidebarScroll } from '@/app/shared/surah-sidebar/useSidebarScroll';
 
 interface UseSurahTabsParams {
   chapters: Chapter[];
@@ -58,6 +58,61 @@ export function useSurahTabs({
 
   const [activeTab, setActiveTab] = useState<'Surah' | 'Juz' | 'Page'>(getInitialTab);
 
+  const selections = useSelectionSync({
+    currentSurahId,
+    currentJuzId,
+    currentPageId,
+    chapters,
+  });
+
+  const scroll = useSidebarScroll({
+    activeTab,
+    selectedSurahId: selections.selectedSurahId,
+    selectedJuzId: selections.selectedJuzId,
+    selectedPageId: selections.selectedPageId,
+  });
+
+  const tabContentProps = buildTabContentProps({
+    activeTab,
+    filteredChapters,
+    filteredJuzs,
+    filteredPages,
+    chapters,
+    selections,
+    rememberScroll: scroll.rememberScroll,
+    isTafsirPath,
+  });
+
+  return {
+    tabs,
+    activeTab,
+    setActiveTab,
+    scrollRef: scroll.scrollRef,
+    handleScroll: scroll.handleScroll,
+    prepareForTabSwitch: scroll.prepareForTabSwitch,
+    tabContentProps,
+  } as const;
+}
+
+function buildTabContentProps({
+  activeTab,
+  filteredChapters,
+  filteredJuzs,
+  filteredPages,
+  chapters,
+  selections,
+  rememberScroll,
+  isTafsirPath,
+}: {
+  activeTab: 'Surah' | 'Juz' | 'Page';
+  filteredChapters: Chapter[];
+  filteredJuzs: { number: number; name: string; surahRange: string }[];
+  filteredPages: number[];
+  chapters: Chapter[];
+  selections: ReturnType<typeof useSelectionSync>;
+  rememberScroll: (key: string, position: number) => void;
+  isTafsirPath: boolean;
+}): TabContentProps {
   const {
     selectedSurahId,
     setSelectedSurahId,
@@ -65,21 +120,9 @@ export function useSurahTabs({
     setSelectedJuzId,
     selectedPageId,
     setSelectedPageId,
-  } = useSelectionSync({
-    currentSurahId,
-    currentJuzId,
-    currentPageId,
-    chapters,
-  });
+  } = selections;
 
-  const { scrollRef, handleScroll, prepareForTabSwitch, rememberScroll } = useSidebarScroll({
-    activeTab,
-    selectedSurahId,
-    selectedJuzId,
-    selectedPageId,
-  });
-
-  const tabContentProps = {
+  return {
     activeTab,
     filteredChapters,
     filteredJuzs,
@@ -93,15 +136,5 @@ export function useSurahTabs({
     setSelectedPageId,
     rememberScroll,
     isTafsirPath,
-  } as const;
-
-  return {
-    tabs,
-    activeTab,
-    setActiveTab,
-    scrollRef,
-    handleScroll,
-    prepareForTabSwitch,
-    tabContentProps,
   } as const;
 }
