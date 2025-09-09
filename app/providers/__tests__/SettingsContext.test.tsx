@@ -1,7 +1,9 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, type RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { SettingsProvider, useSettings } from '@/app/providers/SettingsContext';
+
+import type { Settings } from '@/types';
 
 const SettingsTest = (): React.ReactElement => {
   const { settings, setSettings } = useSettings();
@@ -18,14 +20,15 @@ const SettingsTest = (): React.ReactElement => {
   );
 };
 
-const renderSettings = () =>
+const renderSettings = (): RenderResult =>
   render(
     <SettingsProvider>
       <SettingsTest />
     </SettingsProvider>
   );
 
-const getStoredSettings = () => JSON.parse(localStorage.getItem('quranAppSettings') || '{}');
+const getStoredSettings = (): Partial<Settings> =>
+  JSON.parse(localStorage.getItem('quranAppSettings') || '{}');
 
 describe('SettingsContext settings state', () => {
   beforeEach(() => {
@@ -46,12 +49,13 @@ describe('SettingsContext settings state', () => {
     tajweed: false,
   };
 
-  const clickUpdate = () => userEvent.click(screen.getByRole('button', { name: 'Update' }));
+  const clickUpdate = async (): Promise<void> =>
+    userEvent.click(screen.getByRole('button', { name: 'Update' }));
 
-  const expectStoredFontSize = (size: number) =>
+  const expectStoredFontSize = (size: number): Promise<void> =>
     waitFor(() => expect(getStoredSettings().arabicFontSize).toBe(size));
 
-  const expectRenderedFontSize = (size: number) =>
+  const expectRenderedFontSize = (size: number): Promise<void> =>
     waitFor(() =>
       expect(screen.getByTestId('settings').textContent).toBe(
         JSON.stringify({ ...defaultSettings, arabicFontSize: size })

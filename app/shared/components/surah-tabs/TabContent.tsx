@@ -1,11 +1,9 @@
 import React from 'react';
 
+import { JuzTabContent, PageTabContent, SurahTabContent } from './TabContentViews';
+
 import type { JuzSummary, TabKey } from '@/app/shared/components/surah-tabs/types';
 import type { Chapter } from '@/types';
-
-import { Juz } from '@/app/shared/components/surah-sidebar/Juz';
-import { Page } from '@/app/shared/components/surah-sidebar/Page';
-import { Surah } from '@/app/shared/components/surah-sidebar/Surah';
 
 interface TabContentProps {
   activeTab: TabKey;
@@ -23,58 +21,10 @@ interface TabContentProps {
   isTafsirPath: boolean;
 }
 
-export const TabContent = ({
-  activeTab,
-  filteredChapters,
-  filteredJuzs,
-  filteredPages,
-  chapters,
-  selectedSurahId,
-  setSelectedSurahId,
-  selectedJuzId,
-  setSelectedJuzId,
-  selectedPageId,
-  setSelectedPageId,
-  rememberScroll,
-  isTafsirPath,
-}: TabContentProps): React.JSX.Element => {
-  if (activeTab === 'Surah') {
-    return (
-      <Surah
-        chapters={filteredChapters}
-        selectedSurahId={selectedSurahId}
-        setSelectedSurahId={setSelectedSurahId}
-        setSelectedPageId={setSelectedPageId}
-        setSelectedJuzId={setSelectedJuzId}
-        rememberScroll={() => rememberScroll('Surah')}
-        isTafsirPath={isTafsirPath}
-      />
-    );
-  }
+export const TabContent = (props: TabContentProps): React.JSX.Element => renderTabContent(props);
 
-  if (activeTab === 'Juz') {
-    return (
-      <Juz
-        juzs={filteredJuzs}
-        chapters={chapters}
-        selectedJuzId={selectedJuzId}
-        setSelectedJuzId={setSelectedJuzId}
-        setSelectedPageId={setSelectedPageId}
-        setSelectedSurahId={setSelectedSurahId}
-        rememberScroll={() => rememberScroll('Juz')}
-      />
-    );
-  }
-
-  return (
-    <Page
-      pages={filteredPages}
-      chapters={chapters}
-      selectedPageId={selectedPageId}
-      setSelectedPageId={setSelectedPageId}
-      setSelectedJuzId={setSelectedJuzId}
-      setSelectedSurahId={setSelectedSurahId}
-      rememberScroll={() => rememberScroll('Page')}
-    />
-  );
-};
+function renderTabContent(props: TabContentProps): React.JSX.Element {
+  if (props.activeTab === 'Surah') return <SurahTabContent {...props} />;
+  if (props.activeTab === 'Juz') return <JuzTabContent {...props} />;
+  return <PageTabContent {...props} />;
+}

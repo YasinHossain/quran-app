@@ -1,17 +1,16 @@
 'use client';
 
-import { ReactElement, createElement, useCallback } from 'react';
+import { useCallback } from 'react';
+
+import { VerseActionItem } from '@/app/shared/verse-actions/types';
 
 import {
-  PlayIcon,
-  PauseIcon,
-  BookmarkIcon,
-  BookmarkOutlineIcon,
-  ShareIcon,
-  BookReaderIcon,
-} from '@/app/shared/icons';
-import { Spinner } from '@/app/shared/Spinner';
-import { VerseActionItem } from '@/app/shared/verse-actions/types';
+  createBookmarkAction,
+  createGoToVerseAction,
+  createPlayPauseAction,
+  createShareAction,
+  createTafsirAction,
+} from './actionCreators';
 
 interface UseVerseActionsParams {
   isPlaying: boolean;
@@ -45,49 +44,32 @@ export function useVerseActions({
     },
     [onClose]
   );
-  const playPauseIcon: ReactElement = isLoadingAudio
-    ? createElement(Spinner, { className: 'h-5 w-5 text-accent' })
-    : isPlaying
-      ? createElement(PauseIcon, { size: 20 })
-      : createElement(PlayIcon, { size: 20 });
 
-  const bookmarkIcon: ReactElement =
-    isBookmarked || showRemove
-      ? createElement(BookmarkIcon, { size: 20 })
-      : createElement(BookmarkOutlineIcon, { size: 20 });
+  const handlePlayPause = useCallback(() => handleAction(onPlayPause), [handleAction, onPlayPause]);
+
+  const handleBookmark = useCallback(() => handleAction(onBookmark), [handleAction, onBookmark]);
+
+  const handleShare = useCallback(() => handleAction(onShare), [handleAction, onShare]);
+
+  const handleGoToVerse = useCallback(() => {
+    if (onNavigateToVerse) {
+      handleAction(onNavigateToVerse);
+    }
+  }, [handleAction, onNavigateToVerse]);
 
   return [
-    {
-      label: isPlaying ? 'Pause Audio' : 'Play Audio',
-      icon: playPauseIcon,
-      onClick: () => handleAction(onPlayPause),
-      active: isPlaying,
-    },
-    {
-      label: 'View Tafsir',
-      icon: createElement(BookReaderIcon, { size: 20 }),
-      onClick: () => {},
-      href: `/tafsir/${verseKey.replace(':', '/')}`,
-    },
-    ...(onNavigateToVerse
-      ? [
-          {
-            label: 'Go to Verse',
-            icon: createElement(BookReaderIcon, { size: 20 }),
-            onClick: () => handleAction(onNavigateToVerse),
-          },
-        ]
-      : []),
-    {
-      label: showRemove ? 'Remove Bookmark' : isBookmarked ? 'Remove Bookmark' : 'Add Bookmark',
-      icon: bookmarkIcon,
-      onClick: () => handleAction(onBookmark),
-      active: isBookmarked || showRemove,
-    },
-    {
-      label: 'Share',
-      icon: createElement(ShareIcon, { size: 20 }),
-      onClick: () => handleAction(onShare),
-    },
+    createPlayPauseAction({
+      isPlaying,
+      isLoadingAudio,
+      onClick: handlePlayPause,
+    }),
+    createTafsirAction({ verseKey }),
+    ...(onNavigateToVerse ? [createGoToVerseAction({ onClick: handleGoToVerse })] : []),
+    createBookmarkAction({
+      isBookmarked,
+      showRemove,
+      onClick: handleBookmark,
+    }),
+    createShareAction({ onClick: handleShare }),
   ];
 }

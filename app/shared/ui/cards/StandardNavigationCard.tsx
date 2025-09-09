@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { memo } from 'react';
 
 import { buildTextClasses } from '@/app/shared/design-system/card-tokens';
 import { BaseCard, BaseCardProps } from '@/app/shared/ui/BaseCard';
@@ -30,22 +30,77 @@ interface StandardNavigationCardProps extends Omit<BaseCardProps, 'children'> {
   onNavigate?: (id: number) => void;
 }
 
-export const StandardNavigationCard = ({
+interface CardTitleProps {
+  title: string;
+  titleWeight: 'bold' | 'semibold';
+  isActive: boolean;
+}
+
+const CardTitle = memo(function CardTitle({
+  title,
+  titleWeight,
+  isActive,
+}: CardTitleProps): React.JSX.Element {
+  const fontClass = titleWeight === 'bold' ? 'font-bold' : 'font-semibold';
+
+  return <p className={`${fontClass} ${buildTextClasses('primary', isActive)}`}>{title}</p>;
+});
+
+interface CardSubtitleProps {
+  subtitle: string;
+  isActive: boolean;
+}
+
+const CardSubtitle = memo(function CardSubtitle({
+  subtitle,
+  isActive,
+}: CardSubtitleProps): React.JSX.Element {
+  return <p className={buildTextClasses('secondary', isActive)}>{subtitle}</p>;
+});
+
+interface CardArabicTextProps {
+  arabic: string;
+  isActive: boolean;
+}
+
+const CardArabicText = memo(function CardArabicText({
+  arabic,
+  isActive,
+}: CardArabicTextProps): React.JSX.Element {
+  return <p className={buildTextClasses('arabic', isActive)}>{arabic}</p>;
+});
+
+interface CardContentProps {
+  content: NavigationCardContent;
+  isActive: boolean;
+}
+
+const CardContent = memo(function CardContent({
+  content,
+  isActive,
+}: CardContentProps): React.JSX.Element {
+  const { title, subtitle, arabic, showArabic = false, titleWeight = 'semibold' } = content;
+
+  return (
+    <>
+      <div className={showArabic ? 'flex-grow min-w-0' : undefined}>
+        <CardTitle title={title} titleWeight={titleWeight} isActive={isActive} />
+        {subtitle && <CardSubtitle subtitle={subtitle} isActive={isActive} />}
+      </div>
+      {showArabic && arabic && <CardArabicText arabic={arabic} isActive={isActive} />}
+    </>
+  );
+});
+
+export const StandardNavigationCard = memo(function StandardNavigationCard({
   content,
   onNavigate,
   isActive = false,
   className = 'items-center ml-2',
   ...props
-}: StandardNavigationCardProps): React.JSX.Element => {
-  const {
-    id,
-    title,
-    subtitle,
-    arabic,
-    showBadge = true,
-    showArabic = false,
-    titleWeight = 'semibold',
-  } = content;
+}: StandardNavigationCardProps): React.JSX.Element {
+  const { id, showBadge = true } = content;
+  const activeState = Boolean(isActive);
 
   const handleClick: React.MouseEventHandler<HTMLDivElement | HTMLAnchorElement> = () => {
     onNavigate?.(id);
@@ -55,37 +110,16 @@ export const StandardNavigationCard = ({
     <BaseCard
       variant="navigation"
       animation="navigation"
-      isActive={Boolean(isActive)}
+      isActive={activeState}
       className={className as string}
       onClick={handleClick}
       {...props}
     >
-      {/* Number Badge */}
-      {showBadge && <NumberBadge number={id} isActive={Boolean(isActive)} />}
-
-      {/* Content Area */}
-      <div className={showArabic ? 'flex-grow min-w-0' : undefined}>
-        {/* Primary Title */}
-        <p
-          className={`
-          ${titleWeight === 'bold' ? 'font-bold' : 'font-semibold'}
-          ${buildTextClasses('primary', Boolean(isActive))}
-        `}
-        >
-          {title}
-        </p>
-
-        {/* Subtitle (if provided) */}
-        {subtitle && <p className={buildTextClasses('secondary', Boolean(isActive))}>{subtitle}</p>}
-      </div>
-
-      {/* Arabic Text (if enabled) */}
-      {showArabic && arabic && (
-        <p className={buildTextClasses('arabic', Boolean(isActive))}>{arabic}</p>
-      )}
+      {showBadge && <NumberBadge number={id} isActive={activeState} />}
+      <CardContent content={content} isActive={activeState} />
     </BaseCard>
   );
-};
+});
 
 /**
  * Convenience components for specific navigation types

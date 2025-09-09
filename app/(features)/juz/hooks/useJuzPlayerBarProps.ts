@@ -13,19 +13,28 @@ type PlayerBarProps = {
   readonly onPrev: () => void;
 };
 
+interface BuildPlayerBarPropsArgs {
+  readonly isHidden: boolean;
+  readonly track: Track | null;
+  readonly activeVerse: ReturnType<typeof useJuzData>['activeVerse'];
+  readonly isPlayerVisible: boolean;
+  readonly onNext: () => void;
+  readonly onPrev: () => void;
+}
+
 type UseJuzPlayerBarPropsReturn = {
   readonly isHidden: boolean;
   readonly playerBarProps: PlayerBarProps;
 };
 
-function buildPlayerBarProps(
-  isHidden: boolean,
-  track: Track | null,
-  activeVerse: ReturnType<typeof useJuzData>['activeVerse'],
-  isPlayerVisible: boolean,
-  onNext: () => void,
-  onPrev: () => void
-): PlayerBarProps {
+function buildPlayerBarProps({
+  isHidden,
+  track,
+  activeVerse,
+  isPlayerVisible,
+  onNext,
+  onPrev,
+}: BuildPlayerBarPropsArgs): PlayerBarProps {
   return {
     isHidden,
     track,
@@ -47,14 +56,14 @@ export function useJuzPlayerBarProps(
   const { isHidden } = useHeaderVisibility();
   const { track } = useCoverAndTrack(activeVerse, reciter);
 
-  const playerBarProps = buildPlayerBarProps(
+  const playerBarProps = buildPlayerBarProps({
     isHidden,
     track,
     activeVerse,
     isPlayerVisible,
-    handleNext,
-    handlePrev
-  );
+    onNext: handleNext,
+    onPrev: handlePrev,
+  });
 
   return { isHidden, playerBarProps };
 }

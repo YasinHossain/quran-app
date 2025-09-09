@@ -5,7 +5,7 @@ import { TabContent } from '@/app/shared/components/surah-tabs/TabContent';
 import type { SurahTabsProps } from '@/app/shared/components/surah-tabs/types';
 import type { SurahTabsState } from '@/app/shared/components/surah-tabs/useSurahTabsState';
 
-import { SidebarTabs } from '@/app/shared/components/surah-sidebar/components/SidebarTabs';
+import { SidebarTabs } from '@/app/shared/surah-sidebar/components/SidebarTabs';
 
 type TabsHeaderProps = Pick<
   SurahTabsState,
