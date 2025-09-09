@@ -50,24 +50,34 @@ export const Panel = memo(function Panel({
     variant === 'bottom-sheet' ||
     variant === 'fullscreen';
 
+  const handleOverlayKeyDown = (
+    e: React.KeyboardEvent<HTMLDivElement>
+  ): void => {
+    if (closeOnOverlayClick && (e.key === 'Escape' || e.key === 'Enter')) {
+      onClose();
+    }
+  };
+
+  const handlePointerDown = (
+    e: React.PointerEvent<HTMLDivElement>
+  ): void => {
+    e.stopPropagation();
+  };
+
   // Modal center variant has different structure
   if (variant === 'modal-center') {
     return (
       <div
         className="fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm z-40 flex items-center justify-center"
         onClick={closeOnOverlayClick ? onClose : undefined}
-        onKeyDown={(e) => {
-          if (closeOnOverlayClick && (e.key === 'Escape' || e.key === 'Enter')) {
-            onClose();
-          }
-        }}
+        onKeyDown={handleOverlayKeyDown}
         role="button"
         tabIndex={closeOnOverlayClick ? 0 : -1}
         aria-label="Close panel"
       >
         <div
           className={cn('z-50 text-foreground p-6', variantClass, className)}
-          onPointerDown={(e) => e.stopPropagation()}
+          onPointerDown={handlePointerDown}
           role="dialog"
           aria-modal="true"
         >
@@ -98,11 +108,7 @@ export const Panel = memo(function Panel({
         <div
           className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
           onClick={closeOnOverlayClick ? onClose : undefined}
-          onKeyDown={(e) => {
-            if (closeOnOverlayClick && (e.key === 'Escape' || e.key === 'Enter')) {
-              onClose();
-            }
-          }}
+          onKeyDown={handleOverlayKeyDown}
           role="button"
           tabIndex={closeOnOverlayClick ? 0 : -1}
           aria-label="Close panel"
