@@ -48,7 +48,6 @@
   },
   "dependencies": {
     "@juggle/resize-observer": "^3.4.0",
-    "@next/swc-darwin-arm64": "^15.5.3",
     "@radix-ui/react-popover": "latest",
     "@radix-ui/react-slider": "latest",
     "@radix-ui/react-tooltip": "latest",
@@ -117,6 +116,9 @@
     "typescript": "^5.7.2",
     "viewport-units-buggyfill": "^0.6.2",
     "whatwg-fetch": "^3.6.20"
+  },
+  "optionalDependencies": {
+    "@next/swc-darwin-arm64": "^15.5.3"
   },
   "size-limit": [
     {
