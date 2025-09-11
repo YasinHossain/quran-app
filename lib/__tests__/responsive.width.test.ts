@@ -8,7 +8,8 @@ import {
   layoutPatterns,
 } from '@/lib/responsive';
 
-import { testResponsiveHook, setupMatchMediaMock } from './responsive/test-utils';
+import { testResponsiveHook } from './responsive-test-utils/hooks';
+import { createMatchMediaMock } from './responsive-test-utils/breakpoints';
 
 const breakpointCases = [
   { device: 'iPhone SE', expected: 'mobile', description: 'iPhone SE should be mobile' },
@@ -37,10 +38,15 @@ const renderUseBreakpointWithoutWindow = (): 'mobile' | 'tablet' | 'desktop' | '
 };
 
 describe('Responsive Width - hooks', () => {
-  let matchMediaUtils: ReturnType<typeof setupMatchMediaMock>;
+  let matchMediaUtils: ReturnType<typeof createMatchMediaMock>;
 
   beforeEach(() => {
-    matchMediaUtils = setupMatchMediaMock();
+    matchMediaUtils = createMatchMediaMock();
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      configurable: true,
+      value: matchMediaUtils.matchMediaMock,
+    });
   });
   afterEach(() => {
     matchMediaUtils.cleanup();
@@ -100,7 +106,12 @@ describe('Responsive Width - helpers and edge cases', () => {
 
 describe('Responsive Width - zero width', () => {
   it('handles zero-width viewports', () => {
-    const matchMediaUtils = setupMatchMediaMock();
+    const matchMediaUtils = createMatchMediaMock();
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      configurable: true,
+      value: matchMediaUtils.matchMediaMock,
+    });
     matchMediaUtils.setViewportWidth(0);
     const { result } = renderHook(() => useBreakpoint());
     expect(result.current).toBe('mobile');

@@ -24,7 +24,7 @@ describe('VerseRepository bulk retrieval - findBySurah', () => {
 
     expect(verses).toHaveLength(3);
     expect(verses[0].ayahNumber).toBe(1);
-    expect(verses[1].ayahNumber).toBe(1);
+    expect(verses[1].ayahNumber).toBe(2);
     expect(mockApiVerses.getVersesByChapter).toHaveBeenCalledWith({
       id: 1,
       translationIds: 20,
@@ -132,6 +132,6 @@ describe('VerseRepository bulk retrieval - findByVerseKeys', () => {
 
     expect(verses).toHaveLength(2);
     expect(verses[0].verseKey).toBe('1:1');
-    expect(verses[1].verseKey).toBe('1:1');
+    expect(verses[1].verseKey).toBe('2:255');
   });
 });

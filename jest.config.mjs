@@ -25,8 +25,8 @@ const customJestConfig = {
   // Test file patterns - include our new test structure
   testMatch: [
     '<rootDir>/tests/**/*.test.{js,jsx,ts,tsx}',
-    '<rootDir>/app/**/__tests__/**/*.{js,jsx,ts,tsx}',
-    '<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}',
+    '<rootDir>/app/**/__tests__/**/*.test.{js,jsx,ts,tsx}',
+    '<rootDir>/src/**/__tests__/**/*.test.{js,jsx,ts,tsx}',
     '<rootDir>/**/*.test.ts?(x)', // Keep existing pattern
   ],
 
@@ -73,6 +73,9 @@ const customJestConfig = {
     '<rootDir>/node_modules/',
     '<rootDir>/out/',
     '<rootDir>/coverage/',
+    '<rootDir>/templates/',
+    '.*test-utils\\.tsx$',
+    '.*\\.fixtures\\.tsx$',
   ],
 
   // Clear mocks between tests

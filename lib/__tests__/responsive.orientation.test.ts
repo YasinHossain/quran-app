@@ -1,8 +1,8 @@
 import { renderHook } from '@testing-library/react';
 
-import { useOrientation, getOrientationValue } from '@/lib/responsive';
+import { useOrientation, getOrientationValue } from '../responsive';
 
-import { testResponsiveHook } from './responsive/test-utils';
+import { testResponsiveHook } from './responsive-test-utils/hooks';
 
 const orientationCases = [
   {

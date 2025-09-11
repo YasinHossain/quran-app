@@ -21,7 +21,7 @@ export const mapApiTranslation = (
  * Maps API verse objects to domain verse entities.
  */
 export const mapApiVerseToDomain = (apiVerse: ApiVerse): Verse => {
-  const translation = mapApiTranslation(apiVerse.translations?.[0]);
+  const translation = apiVerse.translations?.[0] ? mapApiTranslation(apiVerse.translations[0]) : undefined;
 
   return new Verse({
     id: apiVerse.verse_key,

@@ -2,7 +2,7 @@ import {
   createMatchMediaMock,
   testResponsiveHook,
   devicePresets,
-} from '@/lib/__tests__/responsive-test-utils';
+} from '@/lib/__tests__/responsive-test-utils/index';
 
 /**
  * Set up matchMedia mock for responsive tests

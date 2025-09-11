@@ -9,15 +9,26 @@ export interface OrientationConfig<T> {
 
 const getOrientationSnapshot = (): OrientationKey => {
   if (typeof window === 'undefined') return 'portrait';
-  return window.matchMedia('(orientation: landscape)').matches ? 'landscape' : 'portrait';
+  if (!window.matchMedia) return 'portrait';
+  
+  try {
+    return window.matchMedia('(orientation: landscape)').matches ? 'landscape' : 'portrait';
+  } catch {
+    return 'portrait';
+  }
 };
 
 const subscribeOrientation = (callback: () => void) => {
   if (typeof window === 'undefined') return () => {};
+  if (!window.matchMedia) return () => {};
 
-  const orientationQuery = window.matchMedia('(orientation: landscape)');
-  orientationQuery.addEventListener('change', callback);
-  return () => orientationQuery.removeEventListener('change', callback);
+  try {
+    const orientationQuery = window.matchMedia('(orientation: landscape)');
+    orientationQuery.addEventListener('change', callback);
+    return () => orientationQuery.removeEventListener('change', callback);
+  } catch {
+    return () => {};
+  }
 };
 
 export const orientationStore = {

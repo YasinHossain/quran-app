@@ -8,6 +8,11 @@ jest.mock('@/lib/api/chapters', () => ({
   getChapters: jest.fn().mockResolvedValue([]),
 }));
 
+jest.mock('@/lib/api', () => ({
+  getChapters: jest.fn().mockResolvedValue([]),
+  getSurahList: jest.fn().mockResolvedValue([]),
+}));
+
 export const renderWithProviders = (ui: React.ReactElement): ReturnType<typeof render> =>
   render(
     <SettingsProvider>

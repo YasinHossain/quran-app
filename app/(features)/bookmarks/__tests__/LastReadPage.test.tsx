@@ -2,7 +2,9 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import LastReadPage from '@/app/(features)/bookmarks/last-read/page';
-import { mockTag, type MockProps } from '@/tests/mocks';
+
+const mockTag = (tag: string) => ({ children, ...props }: any) => React.createElement(tag, props, children);
+type MockProps = { children?: React.ReactNode };
 
 const push = jest.fn();
 
@@ -36,10 +38,10 @@ jest.mock('@/app/(features)/layout/context/HeaderVisibilityContext', () => ({
 
 jest.mock('framer-motion', () => ({
   motion: {
-    div: mockTag('div'),
-    aside: mockTag('aside'),
+    div: ({ children, ...props }: any) => React.createElement('div', props, children),
+    aside: ({ children, ...props }: any) => React.createElement('aside', props, children),
   },
-  AnimatePresence: ({ children }: MockProps) => <>{children}</>,
+  AnimatePresence: ({ children }: any) => <>{children}</>,
 }));
 
 beforeAll(() => {

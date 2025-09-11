@@ -2,7 +2,19 @@ import { render, screen } from '@testing-library/react';
 
 import { BookmarksHeader } from '@/app/(features)/bookmarks/components/BookmarksHeader';
 import { BookmarksSidebar } from '@/app/(features)/bookmarks/components/BookmarksSidebar';
-import { mockTag, type MockProps } from '@/tests/mocks';
+
+import React from 'react';
+
+const mockTag = (tag: string) => ({ children, ...props }: any) => React.createElement(tag, props, children);
+type MockProps = { children?: React.ReactNode };
+
+// Mock framer-motion to avoid animation issues in tests
+jest.mock('framer-motion', () => ({
+  motion: {
+    div: ({ children, ...props }: any) => React.createElement('div', props, children),
+  },
+  AnimatePresence: ({ children }: any) => <>{children}</>,
+}));
 
 // Mock the BookmarkContext
 jest.mock('@/app/providers/BookmarkContext', () => ({
@@ -16,14 +28,6 @@ jest.mock('@/app/providers/BookmarkContext', () => ({
       { id: 2, name_simple: 'Al-Baqarah', verses_count: 286 },
     ],
   }),
-}));
-
-// Mock framer-motion to avoid animation issues in tests
-jest.mock('framer-motion', () => ({
-  motion: {
-    div: mockTag('div'),
-  },
-  AnimatePresence: ({ children }: MockProps) => <>{children}</>,
 }));
 
 // Mock matchMedia

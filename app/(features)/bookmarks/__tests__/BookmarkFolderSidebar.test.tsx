@@ -1,10 +1,14 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import mockRouter from 'next-router-mock';
+const mockRouter = { push: jest.fn(), query: {} };
 import { AppRouterContext } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 import { BookmarkFolderSidebar } from '@/app/(features)/bookmarks/components/BookmarkFolderSidebar';
 
-jest.mock('next/navigation', () => require('next-router-mock/navigation'));
+jest.mock('next/navigation', () => ({
+  useRouter: () => mockRouter,
+  usePathname: () => '/bookmarks/folder1',
+  useSearchParams: () => new URLSearchParams(),
+}));
 
 const bookmarks = [
   { verseId: '1', verseKey: '1:1', surahName: 'Al-Fatihah', createdAt: 0 },

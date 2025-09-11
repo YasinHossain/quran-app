@@ -1,5 +1,5 @@
 import { Verse as VerseEntity } from '@/src/domain/entities/Verse';
-import { logger, MemoryTransport, LogLevel } from '@/src/infrastructure/monitoring/Logger';
+import { logger, MemoryTransport, LogLevel } from '@/src/infrastructure/monitoring';
 import { Chapter } from '@/types';
 
 import { createRepository, mockApiVerse, mockApiVerses, mockApiChapters } from './test-utils';
@@ -105,13 +105,13 @@ describe('VerseRepository unsupported operations', () => {
   });
 
   it('should throw error for save operation', async () => {
-    const mockVerse = new VerseEntity(
-      '1:1',
-      1,
-      1,
-      'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
-      'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ'
-    );
+    const mockVerse = new VerseEntity({
+      id: '1:1',
+      surahId: 1,
+      ayahNumber: 1,
+      arabicText: 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
+      uthmaniText: 'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ'
+    });
 
     await expect(repository.save(mockVerse)).rejects.toThrow(
       'Save operation not supported by read-only API'

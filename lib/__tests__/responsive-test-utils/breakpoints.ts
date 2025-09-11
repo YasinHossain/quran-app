@@ -1,3 +1,5 @@
+import { act } from '@testing-library/react';
+
 import { getOrientationByWidth } from './orientation';
 
 import type { Orientation } from './orientation';
@@ -71,9 +73,11 @@ const createMql = (
 });
 
 const notifyListeners = (listeners: ListenerMap, getWidth: () => number): void => {
-  listeners.forEach((set, query) => {
-    const matches = evaluateQuery(query, getWidth());
-    set.forEach((listener) => listener({ matches, media: query } as MediaQueryListEvent));
+  act(() => {
+    listeners.forEach((set, query) => {
+      const matches = evaluateQuery(query, getWidth());
+      set.forEach((listener) => listener({ matches, media: query } as MediaQueryListEvent));
+    });
   });
 };
 

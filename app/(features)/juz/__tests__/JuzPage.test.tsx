@@ -6,6 +6,7 @@ import { Verse, Juz } from '@/types';
 
 jest.mock('react', () => {
   const actual = jest.requireActual('react');
+  const identity = <T>(x: T): T => x;
   return { ...actual, use: identity };
 });
 

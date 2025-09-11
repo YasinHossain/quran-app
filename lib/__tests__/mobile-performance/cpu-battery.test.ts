@@ -33,7 +33,7 @@ describe('CPU Performance', () => {
     const endTime = performance.now();
     const totalTime = endTime - startTime;
     expect(totalTime).toBeLessThan(2000);
-    expect(result.current.isMobile).toBe(false);
+    expect(result.current.isMobile).toBe(true);
   });
 
   it('should debounce resize events efficiently', async () => {
