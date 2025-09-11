@@ -35,7 +35,7 @@ it('rotates through verses in queue', async () => {
     translations: [],
   } as Verse);
 
-  renderVerseOfDay({ randomVerseInterval: 1 });
+  await renderVerseOfDay({ randomVerseInterval: 1 });
 
   expect(await screen.findByText('A')).toBeInTheDocument();
 
@@ -63,7 +63,7 @@ it('fetches random verse after specified rotations', async () => {
     translations: [],
   } as Verse);
 
-  renderVerseOfDay({ randomVerseInterval: 2 });
+  await renderVerseOfDay({ randomVerseInterval: 2 });
 
   expect(await screen.findByText('A')).toBeInTheDocument();
 

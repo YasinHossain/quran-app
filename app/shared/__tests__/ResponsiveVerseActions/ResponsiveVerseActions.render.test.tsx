@@ -4,7 +4,7 @@ import {
   renderResponsiveVerseActions,
   renderWithResponsiveState,
   testAccessibility,
-} from './test-helpers';
+} from '@/app/testUtils/responsiveVerseActionsTestUtils';
 
 type Device = 'mobile' | 'tablet' | 'desktop';
 

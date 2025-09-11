@@ -32,7 +32,7 @@ it('shows error message when fetching verse fails', async () => {
     translations: [],
   } as Verse);
 
-  renderVerseOfDay();
+  await renderVerseOfDay();
 
   await waitFor(
     () => expect(screen.getByText(/Unable to connect to Quran service/)).toBeInTheDocument(),

@@ -1,7 +1,7 @@
 import {
   Surah,
   RevelationType,
-  getEstimatedReadingTime,
+  getSurahEstimatedReadingTime,
   getJuzNumbers,
   getMemorizationDifficulty,
   isLongSurah,
@@ -96,7 +96,7 @@ function expectPlainObject(plainObject: ReturnType<Surah['toPlainObject']>): voi
     canBeReadInPrayer: true,
     startWithBismillah: true,
     memorizationDifficulty: getMemorizationDifficulty(validNumberOfAyahs),
-    estimatedReadingTime: getEstimatedReadingTime(validNumberOfAyahs),
+    estimatedReadingTime: getSurahEstimatedReadingTime(validNumberOfAyahs),
     isShortSurah: isShortSurah(validNumberOfAyahs),
     isMediumSurah: isMediumSurah(validNumberOfAyahs),
     isLongSurah: isLongSurah(validNumberOfAyahs),

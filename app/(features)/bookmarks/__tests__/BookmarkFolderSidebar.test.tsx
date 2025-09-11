@@ -1,6 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import mockRouter from 'next-router-mock';
+import { AppRouterContext } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 import { BookmarkFolderSidebar } from '@/app/(features)/bookmarks/components/BookmarkFolderSidebar';
+
+jest.mock('next/navigation', () => require('next-router-mock/navigation'));
 
 const bookmarks = [
   { verseId: '1', verseKey: '1:1', surahName: 'Al-Fatihah', createdAt: 0 },
@@ -27,15 +31,19 @@ describe('BookmarkFolderSidebar', () => {
   it('highlights active verse and handles verse selection', () => {
     const handleVerseSelect = jest.fn();
 
+    mockRouter.push('/bookmarks/folder1');
+
     render(
-      <BookmarkFolderSidebar
-        bookmarks={bookmarks}
-        folder={{ id: 'folder1', name: 'Folder 1', bookmarks }}
-        activeVerseId="1"
-        onVerseSelect={handleVerseSelect}
-        isOpen
-        onClose={jest.fn()}
-      />
+      <AppRouterContext.Provider value={mockRouter as any}>
+        <BookmarkFolderSidebar
+          bookmarks={bookmarks}
+          folder={{ id: 'folder1', name: 'Folder 1', bookmarks }}
+          activeVerseId="1"
+          onVerseSelect={handleVerseSelect}
+          isOpen
+          onClose={jest.fn()}
+        />
+      </AppRouterContext.Provider>
     );
 
     const activeButton = screen.getByText('1:1').closest('button');

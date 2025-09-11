@@ -2,13 +2,14 @@ import useSWRInfinite from 'swr/infinite';
 
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import * as api from '@/lib/api';
-import { identity } from '@/tests/mocks';
 import { Verse } from '@/types';
 
-import SurahClient from '@/app/(features)/surah/[surahId]/SurahClient';
+import { SurahView } from '@/app/(features)/surah/components';
+import { UIStateProvider } from '@/app/providers/UIStateContext';
 
 jest.mock('react', () => {
   const actual = jest.requireActual('react');
+  const identity = <T>(value: T): T => value;
   return { ...actual, use: identity };
 });
 
@@ -20,7 +21,12 @@ jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: jest.fn() }),
 }));
 
-jest.mock('@/lib/api');
+jest.mock('@/lib/api', () => ({
+  getTranslations: jest.fn(),
+  getWordTranslations: jest.fn(),
+  getSurahCoverUrl: jest.fn(),
+  getVersesByChapter: jest.fn(),
+}));
 jest.mock('swr/infinite', () => ({ __esModule: true, default: jest.fn() }));
 
 const mockVerse: Verse = {
@@ -55,7 +61,11 @@ beforeEach(() => {
 });
 
 const renderPage = (): void => {
-  renderWithProviders(<SurahClient surahId="1" />);
+  renderWithProviders(
+    <UIStateProvider>
+      <SurahView surahId="1" />
+    </UIStateProvider>
+  );
 };
 
 test('renders verses on successful fetch', async () => {

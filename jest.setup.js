@@ -48,6 +48,21 @@ Object.defineProperty(global, 'IntersectionObserver', {
   value: IntersectionObserverMock,
 });
 
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  configurable: true,
+  value: jest.fn().mockImplementation(() => ({
+    matches: false,
+    addListener: () => {},
+    removeListener: () => {},
+  })),
+});
+Object.defineProperty(global, 'matchMedia', {
+  writable: true,
+  configurable: true,
+  value: window.matchMedia,
+});
+
 jest.mock('@/lib/api/chapters', () => ({
   getChapters: jest.fn().mockResolvedValue([
     { id: 1, name_simple: 'Al-Fatihah', verses_count: 7 },

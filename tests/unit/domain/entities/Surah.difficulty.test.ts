@@ -1,6 +1,12 @@
-import { getEstimatedReadingTime, getMemorizationDifficulty } from '@/src/domain/entities';
+import {
+  getEstimatedReadingTime,
+  getMemorizationDifficulty,
+  getWordCount,
+} from '@/src/domain/entities';
 
 import { createSurah } from './Surah/test-utils';
+
+const validArabicText = 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ';
 
 describe('Surah difficulty utilities', () => {
   describe('getMemorizationDifficulty', () => {
@@ -21,16 +27,21 @@ describe('Surah difficulty utilities', () => {
   });
 
   describe('getEstimatedReadingTime', () => {
-    it('calculates reading time based on number of ayahs', () => {
-      const surah = createSurah({ numberOfAyahs: 7 });
-      const readingTime = getEstimatedReadingTime(surah.numberOfAyahs);
+    it('calculates reading time based on Arabic text', () => {
+      const readingTime = getEstimatedReadingTime('اللَّهِ');
       expect(readingTime).toBe(1);
     });
 
     it('returns reasonable time for long Surah', () => {
-      const surah = createSurah({ id: 2, numberOfAyahs: 286 });
-      const readingTime = getEstimatedReadingTime(surah.numberOfAyahs);
+      const longText = 'كلمة '.repeat(72).trim();
+      const readingTime = getEstimatedReadingTime(longText);
       expect(readingTime).toBe(29);
+    });
+  });
+
+  describe('getWordCount', () => {
+    it('counts words in Arabic text', () => {
+      expect(getWordCount(validArabicText)).toBe(4);
     });
   });
 });

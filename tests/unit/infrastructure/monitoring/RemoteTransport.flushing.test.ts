@@ -1,6 +1,7 @@
-import { RemoteTransport, LogLevel, type LogEntry } from '@infra/monitoring';
+import { RemoteTransport } from '@infra/monitoring';
 
 import { fetchWithTimeout } from '@/lib/api/client';
+import { LogLevel, type LogEntry } from '@/src/infrastructure/monitoring/types';
 
 jest.mock('../../../../lib/api/client', () => ({
   fetchWithTimeout: jest.fn(),

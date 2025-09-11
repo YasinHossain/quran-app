@@ -1,6 +1,9 @@
 import { screen, fireEvent } from '@testing-library/react';
 
-import { renderResponsiveVerseActions, rerenderResponsiveVerseActions } from './test-helpers';
+import {
+  renderResponsiveVerseActions,
+  rerenderResponsiveVerseActions,
+} from '@/app/testUtils/responsiveVerseActionsTestUtils';
 
 describe('ResponsiveVerseActions interactions', () => {
   it('should handle play button clicks', () => {

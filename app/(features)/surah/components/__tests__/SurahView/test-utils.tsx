@@ -65,8 +65,8 @@ export const defaultVerseListing = {
 export const mockUseSurahPanels = jest.fn().mockReturnValue(defaultPanels);
 export const mockUseVerseListing = jest.fn().mockReturnValue(defaultVerseListing);
 
-jest.mock('../../hooks', () => {
-  const actual = jest.requireActual('../../hooks');
+jest.mock('../../../hooks', () => {
+  const actual = jest.requireActual('../../../hooks');
   return {
     ...actual,
     useSurahPanels: (...args: unknown[]) => mockUseSurahPanels(...args),

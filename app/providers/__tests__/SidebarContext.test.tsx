@@ -43,7 +43,10 @@ const clickAndAssertScroll = async (
   await userEvent.click(screen.getByRole('button', { name: buttonName }));
   await waitFor(() => {
     expect(screen.getByTestId(testId).textContent).toBe(value);
-    expect(sessionStorage.setItem).toHaveBeenCalledWith(storageKey, value);
+    expect(sessionStorage.setItem).toHaveBeenCalledWith(
+      'uiScrollPositions',
+      JSON.stringify({ [storageKey]: Number(value) })
+    );
   });
 };
 
