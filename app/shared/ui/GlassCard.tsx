@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import React from 'react';
+import React, { memo } from 'react';
 
 import { cn } from '@/lib/utils/cn';
 
@@ -36,69 +36,128 @@ export interface GlassCardProps {
   animate?: boolean;
 }
 
-export const GlassCard = React.forwardRef<HTMLDivElement | HTMLAnchorElement, GlassCardProps>(
-  (
-    {
-      children,
-      variant = 'surface',
-      size = 'comfortable',
-      radius = 'xl',
-      className,
-      href,
-      onClick,
-      animate = true,
-      ...props
-    },
+interface GlassCardLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+  className: string;
+  children: React.ReactNode;
+  href: string;
+}
+
+const GlassCardLink = memo(
+  React.forwardRef<HTMLAnchorElement, GlassCardLinkProps>(function GlassCardLink(
+    { className, children, ...props },
     ref
-  ) => {
-    const baseClasses = cn(
-      'backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300',
-      animate && 'content-visibility-auto animate-fade-in-up',
-      GLASS_CARD_VARIANTS[variant],
-      GLASS_CARD_SIZES[size],
-      GLASS_CARD_RADIUS[radius],
-      className
-    );
-
-    // If href is provided, render as Link
-    if (href) {
-      return (
-        <Link
-          ref={ref as React.ForwardedRef<HTMLAnchorElement>}
-          href={href}
-          className={cn('group', baseClasses)}
-          {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
-        >
-          {children}
-        </Link>
-      );
-    }
-
-    // If onClick is provided, render as button
-    if (onClick) {
-      return (
-        <button
-          ref={ref as React.ForwardedRef<HTMLButtonElement>}
-          onClick={onClick}
-          className={cn('group text-left', baseClasses)}
-          {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
-        >
-          {children}
-        </button>
-      );
-    }
-
-    // Default: render as div
+  ) {
     return (
-      <div
-        ref={ref as React.ForwardedRef<HTMLDivElement>}
-        className={cn('group', baseClasses)}
-        {...(props as React.HTMLAttributes<HTMLDivElement>)}
-      >
+      <Link ref={ref} className={cn('group', className)} {...props}>
         {children}
-      </div>
+      </Link>
     );
-  }
+  })
+);
+GlassCardLink.displayName = 'GlassCardLink';
+
+interface GlassCardButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  className: string;
+  children: React.ReactNode;
+}
+
+const GlassCardButton = memo(
+  React.forwardRef<HTMLButtonElement, GlassCardButtonProps>(function GlassCardButton(
+    { className, children, ...props },
+    ref
+  ) {
+    return (
+      <button ref={ref} className={cn('group text-left', className)} {...props}>
+        {children}
+      </button>
+    );
+  })
+);
+GlassCardButton.displayName = 'GlassCardButton';
+
+const renderLink = (
+  ref: React.ForwardedRef<HTMLAnchorElement>,
+  href: string,
+  className: string,
+  children: React.ReactNode,
+  props: React.AnchorHTMLAttributes<HTMLAnchorElement>
+) => (
+  <GlassCardLink ref={ref} href={href} className={className} {...props}>
+    {children}
+  </GlassCardLink>
 );
 
+const renderButton = (
+  ref: React.ForwardedRef<HTMLButtonElement>,
+  onClick: () => void,
+  className: string,
+  children: React.ReactNode,
+  props: React.ButtonHTMLAttributes<HTMLButtonElement>
+) => (
+  <GlassCardButton ref={ref} onClick={onClick} className={className} {...props}>
+    {children}
+  </GlassCardButton>
+);
+
+const renderDiv = (
+  ref: React.ForwardedRef<HTMLDivElement>,
+  className: string,
+  children: React.ReactNode,
+  props: React.HTMLAttributes<HTMLDivElement>
+) => (
+  <div ref={ref} className={cn('group', className)} {...props}>
+    {children}
+  </div>
+);
+
+export const GlassCard = memo(
+  React.forwardRef<HTMLDivElement | HTMLAnchorElement | HTMLButtonElement, GlassCardProps>(
+    function GlassCard(
+      {
+        children,
+        variant = 'surface',
+        size = 'comfortable',
+        radius = 'xl',
+        className,
+        href,
+        onClick,
+        animate = true,
+        ...props
+      },
+      ref
+    ) {
+      const baseClasses = cn(
+        'backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300',
+        animate && 'content-visibility-auto animate-fade-in-up',
+        GLASS_CARD_VARIANTS[variant],
+        GLASS_CARD_SIZES[size],
+        GLASS_CARD_RADIUS[radius],
+        className
+      );
+
+      if (href)
+        return renderLink(
+          ref as React.ForwardedRef<HTMLAnchorElement>,
+          href,
+          baseClasses,
+          children,
+          props as React.AnchorHTMLAttributes<HTMLAnchorElement>
+        );
+      if (onClick)
+        return renderButton(
+          ref as React.ForwardedRef<HTMLButtonElement>,
+          onClick,
+          baseClasses,
+          children,
+          props as React.ButtonHTMLAttributes<HTMLButtonElement>
+        );
+      return renderDiv(
+        ref as React.ForwardedRef<HTMLDivElement>,
+        baseClasses,
+        children,
+        props as React.HTMLAttributes<HTMLDivElement>
+      );
+    }
+  )
+);
 GlassCard.displayName = 'GlassCard';

@@ -1,11 +1,11 @@
 import React from 'react';
 
-import type { JuzSummary, TabKey } from '@/app/shared/components/surah-tabs/types';
-import type { Chapter } from '@/types';
-
 import { Juz } from '@/app/shared/surah-sidebar/Juz';
 import { Page } from '@/app/shared/surah-sidebar/Page';
 import { Surah } from '@/app/shared/surah-sidebar/Surah';
+
+import type { JuzSummary, TabKey } from '@/app/shared/components/surah-tabs/types';
+import type { Chapter } from '@/types';
 
 interface BaseProps {
   rememberScroll: (tab: TabKey) => void;

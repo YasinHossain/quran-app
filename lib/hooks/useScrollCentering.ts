@@ -1,4 +1,11 @@
-import { RefObject, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import {
+  RefObject,
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+} from 'react';
 
 interface ScrollCenteringOptions<T extends string> {
   scrollRef: RefObject<HTMLDivElement | null>;
@@ -12,6 +19,44 @@ interface ScrollCenteringResult<T extends string> {
   prepareForTabSwitch: (nextTab: T) => void;
 }
 
+const useInitCenteringFlags = <T extends string>(
+  tabs: T[],
+  ref: MutableRefObject<Record<T, boolean>>
+): void => {
+  useLayoutEffect(() => {
+    tabs.forEach((tab) => {
+      if (sessionStorage.getItem(`skipCenter${tab}`) === '1') {
+        ref.current[tab] = false;
+        sessionStorage.removeItem(`skipCenter${tab}`);
+      }
+    });
+  }, [tabs]);
+};
+
+const useCenterActiveElement = <T extends string>(
+  activeTab: T,
+  scrollRef: RefObject<HTMLDivElement | null>,
+  scrollTops: Record<T, number>,
+  ref: MutableRefObject<Record<T, boolean>>,
+  selectedIds: Record<T, number | null>
+): void => {
+  useLayoutEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    const activeEl = container.querySelector<HTMLElement>('[data-active="true"]');
+    if (activeEl) {
+      const containerRect = container.getBoundingClientRect();
+      const activeRect = activeEl.getBoundingClientRect();
+      const isOutside =
+        activeRect.top < containerRect.top || activeRect.bottom > containerRect.bottom;
+      if (ref.current[activeTab] && (scrollTops[activeTab] === 0 || isOutside)) {
+        activeEl.scrollIntoView({ block: 'center' });
+      }
+    }
+    ref.current[activeTab] = false;
+  }, [activeTab, scrollRef, scrollTops, selectedIds]);
+};
+
 export const useScrollCentering = <T extends string>({
   scrollRef,
   activeTab,
@@ -23,14 +68,7 @@ export const useScrollCentering = <T extends string>({
     tabs.reduce((acc, t) => ({ ...acc, [t]: true }), {} as Record<T, boolean>)
   );
 
-  useLayoutEffect(() => {
-    tabs.forEach((tab) => {
-      if (sessionStorage.getItem(`skipCenter${tab}`) === '1') {
-        shouldCenterRef.current[tab] = false;
-        sessionStorage.removeItem(`skipCenter${tab}`);
-      }
-    });
-  }, [tabs]);
+  useInitCenteringFlags(tabs, shouldCenterRef);
 
   const prevIds = useRef<Record<T, number | null>>(
     tabs.reduce((acc, t) => ({ ...acc, [t]: selectedIds[t] }), {} as Record<T, number | null>)
@@ -48,21 +86,7 @@ export const useScrollCentering = <T extends string>({
     });
   }, [activeTab, selectedIds, tabs]);
 
-  useLayoutEffect(() => {
-    const container = scrollRef.current;
-    if (!container) return;
-    const activeEl = container.querySelector<HTMLElement>('[data-active="true"]');
-    if (activeEl) {
-      const containerRect = container.getBoundingClientRect();
-      const activeRect = activeEl.getBoundingClientRect();
-      const isOutside =
-        activeRect.top < containerRect.top || activeRect.bottom > containerRect.bottom;
-      if (shouldCenterRef.current[activeTab] && (scrollTops[activeTab] === 0 || isOutside)) {
-        activeEl.scrollIntoView({ block: 'center' });
-      }
-    }
-    shouldCenterRef.current[activeTab] = false;
-  }, [activeTab, scrollRef, scrollTops, selectedIds]);
+  useCenterActiveElement(activeTab, scrollRef, scrollTops, shouldCenterRef, selectedIds);
 
   const skipNextCentering = useCallback((tab: T): void => {
     sessionStorage.setItem(`skipCenter${tab}`, '1');

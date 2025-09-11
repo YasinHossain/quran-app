@@ -1,19 +1,12 @@
 'use client';
-import React, { memo, useCallback } from 'react';
+import React, { memo } from 'react';
 
 import { BaseCard, BaseCardProps } from '@/app/shared/ui/BaseCard';
 
 import { Header } from './content-bookmark/Header';
+import { BookmarkData, useContentBookmarkCard } from './content-bookmark/useContentBookmarkCard';
 import { VersePreview } from './content-bookmark/VersePreview';
-interface BookmarkData {
-  verseKey?: string;
-  verseText?: string;
-  translation?: string;
-  surahName?: string;
-  createdAt: number;
-  verseId: string | number;
-  verseApiId?: number;
-}
+
 interface ContentBookmarkCardProps extends Omit<BaseCardProps, 'children'> {
   bookmark: BookmarkData;
   isPlaying?: boolean;
@@ -28,6 +21,7 @@ interface ContentBookmarkCardProps extends Omit<BaseCardProps, 'children'> {
     tajweed?: boolean;
   };
 }
+
 export const ContentBookmarkCard = memo(function ContentBookmarkCard({
   bookmark,
   isPlaying = false,
@@ -40,42 +34,29 @@ export const ContentBookmarkCard = memo(function ContentBookmarkCard({
   onClick,
   ...props
 }: ContentBookmarkCardProps) {
-  const { verseKey, verseText, translation, surahName, createdAt } = bookmark;
-  const { arabicFontFace = 'font-amiri', arabicFontSize = 18, tajweed = false } = settings;
-  const handleCardClick = useCallback(
-    (e: React.MouseEvent<HTMLDivElement | HTMLAnchorElement>) => {
-      onNavigateToVerse?.();
-      onClick?.(e);
-    },
-    [onNavigateToVerse, onClick]
-  );
+  const { handleCardClick, headerProps, previewProps } = useContentBookmarkCard({
+    bookmark,
+    isPlaying,
+    isLoadingAudio,
+    onPlayPause,
+    isBookmarked,
+    onBookmark,
+    onNavigateToVerse,
+    settings,
+    onClick,
+  });
+
   return (
     <BaseCard
       variant="bookmark"
       animation="bookmark"
       onClick={handleCardClick}
       role="article"
-      aria-label={`Bookmark for verse ${verseKey} from ${surahName}`}
+      aria-label={`Bookmark for verse ${bookmark.verseKey} from ${bookmark.surahName}`}
       {...props}
     >
-      <Header
-        verseKey={verseKey}
-        surahName={surahName}
-        createdAt={createdAt}
-        isPlaying={isPlaying}
-        isLoadingAudio={isLoadingAudio}
-        isBookmarked={isBookmarked}
-        onPlayPause={onPlayPause}
-        onBookmark={onBookmark}
-        onNavigateToVerse={onNavigateToVerse}
-      />
-      <VersePreview
-        verseText={verseText}
-        translation={translation}
-        arabicFontFace={arabicFontFace}
-        arabicFontSize={arabicFontSize}
-        tajweed={tajweed}
-      />
+      <Header {...headerProps} />
+      <VersePreview {...previewProps} />
     </BaseCard>
   );
 });

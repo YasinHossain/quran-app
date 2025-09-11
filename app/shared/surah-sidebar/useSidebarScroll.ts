@@ -1,10 +1,9 @@
 import { useRef } from 'react';
 
-import { useSidebar } from '@/app/providers/SidebarContext';
-import { useScrollCentering } from '@/lib/hooks/useScrollCentering';
-import { useScrollPersistence } from '@/lib/hooks/useScrollPersistence';
+import { useSidebarScrollCentering } from './hooks/useSidebarScrollCentering';
+import { useSidebarScrollPersistence } from './hooks/useSidebarScrollPersistence';
 
-type TabKey = 'Surah' | 'Juz' | 'Page';
+import type { TabKey } from '@/app/shared/components/surah-tabs/types';
 
 interface Options {
   activeTab: TabKey;
@@ -12,7 +11,6 @@ interface Options {
   selectedJuzId: number | null;
   selectedPageId: number | null;
 }
-
 export const useSidebarScroll = ({
   activeTab,
   selectedSurahId,
@@ -26,64 +24,24 @@ export const useSidebarScroll = ({
 } => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const {
-    surahScrollTop,
-    setSurahScrollTop,
-    juzScrollTop,
-    setJuzScrollTop,
-    pageScrollTop,
-    setPageScrollTop,
-  } = useSidebar();
-
-  const {
     handleScroll,
     prepareForTabSwitch: persistencePrepare,
-    rememberScroll: persistRememberScroll,
-  } = useScrollPersistence<TabKey>({
+    rememberScroll: persistRemember,
+  } = useSidebarScrollPersistence({ scrollRef, activeTab });
+  const { skipNextCentering, prepareForTabSwitch: centeringPrepare } = useSidebarScrollCentering({
     scrollRef,
     activeTab,
-    scrollTops: {
-      Surah: surahScrollTop,
-      Juz: juzScrollTop,
-      Page: pageScrollTop,
-    },
-    setScrollTops: {
-      Surah: setSurahScrollTop,
-      Juz: setJuzScrollTop,
-      Page: setPageScrollTop,
-    },
-    storageKeys: {
-      Surah: 'surahScrollTop',
-      Juz: 'juzScrollTop',
-      Page: 'pageScrollTop',
-    },
+    selectedSurahId,
+    selectedJuzId,
+    selectedPageId,
   });
-
-  const { skipNextCentering, prepareForTabSwitch: centeringPrepare } = useScrollCentering<TabKey>({
-    scrollRef,
-    activeTab,
-    selectedIds: {
-      Surah: selectedSurahId,
-      Juz: selectedJuzId,
-      Page: selectedPageId,
-    },
-    scrollTops: {
-      Surah: surahScrollTop,
-      Juz: juzScrollTop,
-      Page: pageScrollTop,
-    },
-  });
-
   const rememberScroll = (tab: TabKey): void => {
-    persistRememberScroll(tab);
+    persistRemember(tab);
     skipNextCentering(tab);
   };
-
   const prepareForTabSwitch = (nextTab: TabKey): void => {
     persistencePrepare();
     centeringPrepare(nextTab);
   };
-
   return { scrollRef, handleScroll, prepareForTabSwitch, rememberScroll };
 };
-
-export type { TabKey };

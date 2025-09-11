@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
+import { useSelectionSync } from '@/app/shared/surah-sidebar/hooks/useSelectionSync';
+import { useSidebarScroll } from '@/app/shared/surah-sidebar/useSidebarScroll';
+
 import { useSurahTabConfig } from './useSurahTabConfig';
 import { useSurahTabParams } from './useSurahTabParams';
 
 import type { Chapter } from '@/types';
-
-import { useSelectionSync } from '@/app/shared/surah-sidebar/hooks/useSelectionSync';
-import { useSidebarScroll } from '@/app/shared/surah-sidebar/useSidebarScroll';
 
 interface UseSurahTabsParams {
   chapters: Chapter[];

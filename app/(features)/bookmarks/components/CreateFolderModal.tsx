@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { Panel } from '@/app/shared/ui/Panel';
+import { PanelModalCenter } from '@/app/shared/ui/PanelModalCenter';
 
 import { ModalHeader, FolderInput, FormActions, QuickSuggestions } from './create-folder-modal';
 
@@ -38,10 +38,9 @@ export const CreateFolderModal = ({
   };
 
   return (
-    <Panel
+    <PanelModalCenter
       isOpen={isOpen}
       onClose={handleClose}
-      variant="modal-center"
       title=""
       showCloseButton={true}
       closeOnOverlayClick={true}
@@ -60,6 +59,6 @@ export const CreateFolderModal = ({
 
         <QuickSuggestions onSuggestionClick={handleSuggestionClick} />
       </div>
-    </Panel>
+    </PanelModalCenter>
   );
 };

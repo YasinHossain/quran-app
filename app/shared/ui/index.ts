@@ -1,5 +1,10 @@
 export { Button, BUTTON_VARIANTS, BUTTON_SIZES, type ButtonProps } from './Button';
 export { Panel, PANEL_VARIANTS, type PanelProps } from './Panel';
+export {
+  PanelModalCenter,
+  PANEL_MODAL_CENTER_CLASS,
+  type PanelModalCenterProps,
+} from './PanelModalCenter';
 export { TabToggle } from './TabToggle';
 export { ThemeToggle } from './ThemeToggle';
 export { ThemeSelector } from './ThemeSelector';

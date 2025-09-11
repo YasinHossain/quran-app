@@ -2,12 +2,11 @@ import { useState, type Dispatch, type RefObject, type SetStateAction, type UIEv
 
 import { useSurahTabConfig } from '@/app/shared/components/surah-tabs/useSurahTabConfig';
 import { useSurahTabParams } from '@/app/shared/components/surah-tabs/useSurahTabParams';
+import { useSelectionSync } from '@/app/shared/surah-sidebar/hooks/useSelectionSync';
+import { useSidebarScroll } from '@/app/shared/surah-sidebar/useSidebarScroll';
 
 import type { TabKey } from '@/app/shared/components/surah-tabs/types';
 import type { Chapter } from '@/types';
-
-import { useSelectionSync } from '@/app/shared/surah-sidebar/hooks/useSelectionSync';
-import { useSidebarScroll } from '@/app/shared/surah-sidebar/useSidebarScroll';
 
 export interface SurahTabsState {
   tabs: { key: TabKey; label: string }[];

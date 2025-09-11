@@ -1,7 +1,52 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, type Dispatch, type SetStateAction } from 'react';
 
 import { useDraggableSelection, type UseDraggableSelectionResult } from './useDraggableSelection';
 import { useResourceSearch, type UseResourceSearchResult } from './useResourceSearch';
+
+const applySelections = (
+  ids: number[],
+  setSelectedIds: Dispatch<SetStateAction<Set<number>>>,
+  setOrderedSelection: (ids: number[]) => void
+) => {
+  setSelectedIds(new Set(ids));
+  setOrderedSelection(ids);
+};
+
+interface ToggleParams {
+  id: number;
+  selectedIds: Set<number>;
+  selectionLimit: number;
+  setSelectedIds: Dispatch<SetStateAction<Set<number>>>;
+  orderedSelection: number[];
+  setOrderedSelection: (ids: number[]) => void;
+}
+
+const toggleSelection = ({
+  id,
+  selectedIds,
+  selectionLimit,
+  setSelectedIds,
+  orderedSelection,
+  setOrderedSelection,
+}: ToggleParams): boolean => {
+  const next = new Set(selectedIds);
+  let order = [...orderedSelection];
+  let changed = false;
+  if (next.has(id)) {
+    next.delete(id);
+    order = order.filter((i) => i !== id);
+    changed = true;
+  } else if (next.size < selectionLimit) {
+    next.add(id);
+    order.push(id);
+    changed = true;
+  }
+  if (changed) {
+    setSelectedIds(next);
+    setOrderedSelection(order);
+  }
+  return changed;
+};
 
 interface Resource {
   id: number;
@@ -32,35 +77,21 @@ export const useSelectableResources = <T extends Resource>({
   const [selectedIds, setSelectedIds] = useState(new Set(initialSelectedIds));
   const drag = useDraggableSelection(initialSelectedIds);
   const search = useResourceSearch<T>({ resources, languageSort });
-
   const setSelections = useCallback(
-    (ids: number[]) => {
-      setSelectedIds(new Set(ids));
-      drag.setOrderedSelection(ids);
-    },
+    (ids: number[]) => applySelections(ids, setSelectedIds, drag.setOrderedSelection),
     [drag]
   );
 
   const handleSelectionToggle = useCallback(
-    (id: number): boolean => {
-      const next = new Set(selectedIds);
-      let order = [...drag.orderedSelection];
-      let changed = false;
-      if (next.has(id)) {
-        next.delete(id);
-        order = order.filter((i) => i !== id);
-        changed = true;
-      } else if (next.size < selectionLimit) {
-        next.add(id);
-        order.push(id);
-        changed = true;
-      }
-      if (changed) {
-        setSelectedIds(next);
-        drag.setOrderedSelection(order);
-      }
-      return changed;
-    },
+    (id: number) =>
+      toggleSelection({
+        id,
+        selectedIds,
+        selectionLimit,
+        setSelectedIds,
+        orderedSelection: drag.orderedSelection,
+        setOrderedSelection: drag.setOrderedSelection,
+      }),
     [drag, selectedIds, selectionLimit]
   );
 

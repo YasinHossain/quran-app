@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 
 import { colors } from '@/app/shared/design-system/card-tokens';
 import { BaseCard, BaseCardProps } from '@/app/shared/ui/BaseCard';
@@ -38,63 +38,81 @@ const routes: Record<SectionId, string> = {
 
 const getSectionHref = (sectionId: SectionId): string => routes[sectionId];
 
-export const BookmarkNavigationCard = ({
+interface IconBadgeProps {
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+  isActive: boolean;
+}
+
+const IconBadge = memo(function IconBadge({
+  icon: IconComponent,
+  isActive,
+}: IconBadgeProps): React.JSX.Element {
+  return (
+    <div
+      className={cn(
+        'w-8 h-8 rounded-lg flex items-center justify-center text-sm font-semibold shrink-0 transition-colors duration-200',
+        isActive
+          ? 'bg-on-accent/20 text-on-accent'
+          : `${colors.background.gradientBase} ${colors.text.accent} ${colors.background.gradientHover}`
+      )}
+    >
+      <IconComponent size={16} />
+    </div>
+  );
+});
+
+const useNavigationClick = (
+  id: SectionId,
+  onSectionChange?: (sectionId: SectionId) => void,
+  onClick?: React.MouseEventHandler<HTMLDivElement | HTMLAnchorElement>
+): React.MouseEventHandler<HTMLDivElement | HTMLAnchorElement> =>
+  useCallback(
+    (e: React.MouseEvent<HTMLDivElement | HTMLAnchorElement>) => {
+      onSectionChange?.(id);
+      onClick?.(e);
+    },
+    [id, onSectionChange, onClick]
+  );
+
+export const BookmarkNavigationCard = memo(function BookmarkNavigationCard({
   content,
   onSectionChange,
   isActive = false,
   className,
   onClick,
   ...props
-}: BookmarkNavigationCardProps): React.JSX.Element => {
-  const { id, icon: IconComponent, label, description } = content;
-
-  const handleClick = (e: React.MouseEvent<HTMLDivElement | HTMLAnchorElement>): void => {
-    // Trigger section change before navigation for immediate feedback
-    onSectionChange?.(id);
-    if (onClick && typeof onClick === 'function') {
-      onClick(e);
-    }
-  };
+}: BookmarkNavigationCardProps): React.JSX.Element {
+  const { id, icon, label, description } = content;
+  const activeState = Boolean(isActive);
+  const handleClick = useNavigationClick(id, onSectionChange, onClick);
 
   return (
     <BaseCard
       variant="navigation"
       animation="navigation"
-      isActive={Boolean(isActive)}
+      isActive={activeState}
       href={getSectionHref(id)}
       scroll={false}
       className={cn('items-center', className as string)}
       onClick={handleClick}
       {...props}
     >
-      {/* Icon Badge */}
-      <div
-        className={cn(
-          'w-8 h-8 rounded-lg flex items-center justify-center text-sm font-semibold shrink-0 transition-colors duration-200',
-          isActive
-            ? 'bg-on-accent/20 text-on-accent'
-            : `${colors.background.gradientBase} ${colors.text.accent} ${colors.background.gradientHover}`
-        )}
-      >
-        <IconComponent size={16} />
-      </div>
-
-      {/* Content */}
+      <IconBadge icon={icon} isActive={activeState} />
       <div className="flex-1 min-w-0 ml-3">
         <div
           className={cn(
             'font-semibold text-sm truncate transition-colors duration-200',
-            isActive ? 'text-on-accent' : 'text-foreground group-hover:text-accent'
+            activeState ? 'text-on-accent' : 'text-foreground group-hover:text-accent'
           )}
         >
           {label}
         </div>
         <div className="text-xs leading-tight truncate transition-colors duration-200">
-          <span className={isActive ? colors.text.activeSecondary : 'text-muted'}>
+          <span className={activeState ? colors.text.activeSecondary : 'text-muted'}>
             {description}
           </span>
         </div>
       </div>
     </BaseCard>
   );
-};
+});

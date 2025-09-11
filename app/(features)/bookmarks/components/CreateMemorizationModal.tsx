@@ -3,7 +3,7 @@
 import React from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { Panel } from '@/app/shared/ui/Panel';
+import { PanelModalCenter } from '@/app/shared/ui/PanelModalCenter';
 
 import {
   ModalHeader,
@@ -48,10 +48,9 @@ export const CreateMemorizationModal = ({
   };
 
   return (
-    <Panel
+    <PanelModalCenter
       isOpen={isOpen}
       onClose={handleClose}
-      variant="modal-center"
       title=""
       showCloseButton={true}
       closeOnOverlayClick={true}
@@ -69,6 +68,6 @@ export const CreateMemorizationModal = ({
           chapters={chapters}
         />
       </div>
-    </Panel>
+    </PanelModalCenter>
   );
 };
