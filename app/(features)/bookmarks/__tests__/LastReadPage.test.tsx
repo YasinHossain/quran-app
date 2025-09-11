@@ -3,7 +3,10 @@ import React from 'react';
 
 import LastReadPage from '@/app/(features)/bookmarks/last-read/page';
 
-const mockTag = (tag: string) => ({ children, ...props }: any) => React.createElement(tag, props, children);
+const mockTag =
+  (tag: string) =>
+  ({ children, ...props }: any) =>
+    React.createElement(tag, props, children);
 type MockProps = { children?: React.ReactNode };
 
 const push = jest.fn();

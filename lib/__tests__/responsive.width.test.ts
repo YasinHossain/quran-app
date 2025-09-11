@@ -8,8 +8,8 @@ import {
   layoutPatterns,
 } from '@/lib/responsive';
 
-import { testResponsiveHook } from './responsive-test-utils/hooks';
 import { createMatchMediaMock } from './responsive-test-utils/breakpoints';
+import { testResponsiveHook } from './responsive-test-utils/hooks';
 
 const breakpointCases = [
   { device: 'iPhone SE', expected: 'mobile', description: 'iPhone SE should be mobile' },

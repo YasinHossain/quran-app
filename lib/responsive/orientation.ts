@@ -10,7 +10,7 @@ export interface OrientationConfig<T> {
 const getOrientationSnapshot = (): OrientationKey => {
   if (typeof window === 'undefined') return 'portrait';
   if (!window.matchMedia) return 'portrait';
-  
+
   try {
     return window.matchMedia('(orientation: landscape)').matches ? 'landscape' : 'portrait';
   } catch {

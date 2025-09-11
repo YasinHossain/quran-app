@@ -110,7 +110,7 @@ describe('VerseRepository unsupported operations', () => {
       surahId: 1,
       ayahNumber: 1,
       arabicText: 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
-      uthmaniText: 'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ'
+      uthmaniText: 'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ',
     });
 
     await expect(repository.save(mockVerse)).rejects.toThrow(

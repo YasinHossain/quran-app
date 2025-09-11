@@ -1,11 +1,13 @@
 import { render, screen } from '@testing-library/react';
+import React from 'react';
 
 import { BookmarksHeader } from '@/app/(features)/bookmarks/components/BookmarksHeader';
 import { BookmarksSidebar } from '@/app/(features)/bookmarks/components/BookmarksSidebar';
 
-import React from 'react';
-
-const mockTag = (tag: string) => ({ children, ...props }: any) => React.createElement(tag, props, children);
+const mockTag =
+  (tag: string) =>
+  ({ children, ...props }: any) =>
+    React.createElement(tag, props, children);
 type MockProps = { children?: React.ReactNode };
 
 // Mock framer-motion to avoid animation issues in tests

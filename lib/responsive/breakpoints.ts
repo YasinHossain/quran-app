@@ -5,7 +5,7 @@ export type BreakpointKey = 'mobile' | 'tablet' | 'desktop' | 'wide';
 const getBreakpointSnapshot = (): BreakpointKey => {
   if (typeof window === 'undefined') return 'mobile';
   if (!window.matchMedia) return 'mobile';
-  
+
   try {
     if (window.matchMedia('(min-width: 1280px)').matches) return 'wide';
     if (window.matchMedia('(min-width: 1024px)').matches) return 'desktop';

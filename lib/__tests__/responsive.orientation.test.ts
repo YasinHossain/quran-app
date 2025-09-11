@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 
-import { useOrientation, getOrientationValue } from '../responsive';
+import { useOrientation, getOrientationValue } from '@/lib/responsive';
 
 import { testResponsiveHook } from './responsive-test-utils/hooks';
 
