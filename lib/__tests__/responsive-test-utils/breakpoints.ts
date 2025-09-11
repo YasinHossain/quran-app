@@ -27,66 +27,74 @@ interface MatchMediaMock {
   cleanup: () => void;
 }
 
+type Listener = (e: MediaQueryListEvent) => void;
+type ListenerMap = Map<string, Set<Listener>>;
+
+const parseMinWidth = (query: string): number | null => {
+  const m = query.match(/\(min-width:\s*(\d+)px\)/);
+  return m ? parseInt(m[1], 10) : null;
+};
+
+const parseOrientation = (query: string): Orientation | null => {
+  const m = query.match(/\(orientation:\s*(landscape|portrait)\)/);
+  return (m?.[1] as Orientation) ?? null;
+};
+
+const evaluateQuery = (query: string, width: number): boolean => {
+  const min = parseMinWidth(query);
+  if (min != null) return width >= min;
+  const orientation = parseOrientation(query);
+  if (orientation) return getOrientationByWidth(width) === orientation;
+  return false;
+};
+
+const createMql = (
+  query: string,
+  listeners: ListenerMap,
+  getWidth: () => number
+): MediaQueryList => ({
+  matches: evaluateQuery(query, getWidth()),
+  media: query,
+  onchange: null,
+  addEventListener: jest.fn((event: string, listener: Listener) => {
+    if (event !== 'change') return;
+    const set = listeners.get(query) ?? new Set<Listener>();
+    set.add(listener);
+    listeners.set(query, set);
+  }),
+  removeEventListener: jest.fn((event: string, listener: Listener) => {
+    if (event !== 'change') return;
+    const set = listeners.get(query);
+    set?.delete(listener);
+  }),
+  dispatchEvent: jest.fn(),
+});
+
+const notifyListeners = (listeners: ListenerMap, getWidth: () => number): void => {
+  listeners.forEach((set, query) => {
+    const matches = evaluateQuery(query, getWidth());
+    set.forEach((listener) => listener({ matches, media: query } as MediaQueryListEvent));
+  });
+};
+
 export const createMatchMediaMock = (): MatchMediaMock => {
   let currentWidth = 1024; // Default desktop width
+  const listeners: ListenerMap = new Map();
+  const getWidth = (): number => currentWidth;
 
-  const listeners = new Map<string, Set<(e: MediaQueryListEvent) => void>>();
-
-  const evaluate = (query: string): boolean => {
-    const minWidthMatch = query.match(/\(min-width:\s*(\d+)px\)/);
-    const orientationMatch = query.match(/\(orientation:\s*(landscape|portrait)\)/);
-
-    if (minWidthMatch) {
-      const minWidth = parseInt(minWidthMatch[1], 10);
-      return currentWidth >= minWidth;
-    }
-    if (orientationMatch) {
-      const orientation = orientationMatch[1];
-      return getOrientationByWidth(currentWidth) === orientation;
-    }
-    return false;
-  };
-
-  const matchMediaMock = jest.fn((query: string): MediaQueryList => {
-    const mockMediaQueryList = {
-      matches: evaluate(query),
-      media: query,
-      onchange: null as ((e: MediaQueryListEvent) => void) | null,
-      addEventListener: jest.fn((event: string, listener: (e: MediaQueryListEvent) => void) => {
-        if (event !== 'change') return;
-        const set = listeners.get(query) ?? new Set();
-        set.add(listener);
-        listeners.set(query, set);
-      }),
-      removeEventListener: jest.fn((event: string, listener: (e: MediaQueryListEvent) => void) => {
-        if (event !== 'change') return;
-        const set = listeners.get(query);
-        set?.delete(listener);
-      }),
-      dispatchEvent: jest.fn(),
-    } as MediaQueryList;
-
-    return mockMediaQueryList;
-  });
-
-  const notify = (): void => {
-    listeners.forEach((set, query) => {
-      const matches = evaluate(query);
-      set.forEach((listener) => listener({ matches, media: query } as MediaQueryListEvent));
-    });
-  };
+  const matchMediaMock = jest.fn(
+    (query: string): MediaQueryList => createMql(query, listeners, getWidth)
+  );
 
   const setViewportWidth = (width: number): void => {
     currentWidth = width;
-    notify();
+    notifyListeners(listeners, getWidth);
   };
 
   return {
     matchMediaMock,
     setViewportWidth,
-    cleanup: () => {
-      listeners.clear();
-    },
+    cleanup: () => listeners.clear(),
   };
 };
 

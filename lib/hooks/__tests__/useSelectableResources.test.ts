@@ -15,14 +15,18 @@ const resources: Item[] = [
   { id: 4, name: 'Arb B', lang: 'Arabic' },
 ];
 
-describe('useSelectableResources', () => {
-  it('groups resources by language and filters search results', () => {
+const dragStartEvt = (): React.DragEvent<HTMLDivElement> =>
+  ({ dataTransfer: { effectAllowed: '' } }) as unknown as React.DragEvent<HTMLDivElement>;
+const dropEvt = (): React.DragEvent<HTMLDivElement> =>
+  ({ preventDefault: () => {} }) as unknown as React.DragEvent<HTMLDivElement>;
+
+describe('useSelectableResources - grouping and filtering', () => {
+  it('groups by language and filters search results', () => {
     const { result } = renderHook(() =>
       useSelectableResources<Item>({ resources, selectionLimit: 3 })
     );
 
     expect(result.current.languages).toEqual(['All', 'Arabic', 'English']);
-
     const groups = result.current.groupedResources;
     expect(groups.English.map((r) => r.id)).toEqual([1, 2]);
     expect(groups.Arabic.map((r) => r.id)).toEqual([3, 4]);
@@ -31,14 +35,15 @@ describe('useSelectableResources', () => {
     expect(result.current.groupedResources.Arabic.map((r) => r.id)).toEqual([3, 4]);
     expect(result.current.groupedResources.English).toBeUndefined();
   });
+});
 
+describe('useSelectableResources - selection and reorder', () => {
   it('enforces selectionLimit and reports toggle status', () => {
     const { result } = renderHook(() =>
       useSelectableResources<Item>({ resources, selectionLimit: 2 })
     );
 
     let changed = false;
-
     act(() => {
       changed = result.current.handleSelectionToggle(1);
     });
@@ -72,23 +77,11 @@ describe('useSelectableResources', () => {
 
   it('reorders selections via drag and drop', () => {
     const { result } = renderHook(() =>
-      useSelectableResources<Item>({
-        resources,
-        selectionLimit: 3,
-        initialSelectedIds: [1, 2, 3],
-      })
+      useSelectableResources<Item>({ resources, selectionLimit: 3, initialSelectedIds: [1, 2, 3] })
     );
 
-    const dragStartEvent = {
-      dataTransfer: { effectAllowed: '' },
-    } as unknown as React.DragEvent<HTMLDivElement>;
-    act(() => result.current.handleDragStart(dragStartEvent, 1));
-
-    const dropEvent = {
-      preventDefault: () => {},
-    } as unknown as React.DragEvent<HTMLDivElement>;
-    act(() => result.current.handleDrop(dropEvent, 3));
-
+    act(() => result.current.handleDragStart(dragStartEvt(), 1));
+    act(() => result.current.handleDrop(dropEvt(), 3));
     expect(result.current.orderedSelection).toEqual([2, 3, 1]);
   });
 });

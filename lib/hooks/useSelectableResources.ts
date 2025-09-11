@@ -7,7 +7,7 @@ const applySelections = (
   ids: number[],
   setSelectedIds: Dispatch<SetStateAction<Set<number>>>,
   setOrderedSelection: (ids: number[]) => void
-) => {
+): void => {
   setSelectedIds(new Set(ids));
   setOrderedSelection(ids);
 };

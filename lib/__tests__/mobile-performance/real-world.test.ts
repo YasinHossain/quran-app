@@ -4,7 +4,7 @@ import { useResponsiveState } from '@/lib/responsive';
 
 import { setupMobilePerformanceTest, simulateDevice } from './test-utils';
 
-describe('Real-World Performance Scenarios', () => {
+describe('User Interactions Performance', () => {
   let matchMediaUtils: ReturnType<typeof setupMobilePerformanceTest>['matchMediaUtils'];
   let cleanup: () => void;
 
@@ -20,9 +20,7 @@ describe('Real-World Performance Scenarios', () => {
 
   it('should handle typical user interactions efficiently', async () => {
     simulateDevice('iPhone 12 Pro');
-
     const { result } = renderHook(() => useResponsiveState());
-
     const startTime = performance.now();
 
     const scenarios = [
@@ -41,9 +39,21 @@ describe('Real-World Performance Scenarios', () => {
 
     const endTime = performance.now();
     const totalTime = endTime - startTime;
-
     expect(totalTime).toBeLessThan(100);
     expect(result.current.isMobile).toBe(true);
+  });
+});
+
+describe('Complex Layouts Performance', () => {
+  let cleanup: () => void;
+
+  beforeEach(() => {
+    const setup = setupMobilePerformanceTest();
+    cleanup = setup.cleanup;
+  });
+
+  afterEach(() => {
+    cleanup();
   });
 
   it('should maintain performance during complex responsive layouts', async () => {
@@ -74,9 +84,7 @@ describe('Real-World Performance Scenarios', () => {
 
     const endTime = performance.now();
     const totalTime = endTime - startTime;
-
     expect(totalTime).toBeLessThan(150);
-
     document.body.removeChild(container);
   });
 });

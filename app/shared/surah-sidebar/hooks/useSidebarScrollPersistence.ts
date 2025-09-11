@@ -8,7 +8,10 @@ interface Options {
   activeTab: TabKey;
 }
 
-export const useSidebarScrollPersistence = ({ scrollRef, activeTab }: Options) => {
+export const useSidebarScrollPersistence = ({
+  scrollRef,
+  activeTab,
+}: Options): ReturnType<typeof useScrollPersistence<TabKey>> => {
   const {
     surahScrollTop,
     setSurahScrollTop,

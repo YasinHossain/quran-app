@@ -12,9 +12,42 @@ jest.mock('@/src/infrastructure/di/Container', () => ({
   },
 }));
 
-describe('getTafsirCached', () => {
-  const repository = { getTafsirByVerse: jest.fn() } as { getTafsirByVerse: jest.Mock };
+// Move shared repository mock and helpers to module scope to keep
+// the describe() callback short for max-lines-per-function.
+const repository = { getTafsirByVerse: jest.fn() } as { getTafsirByVerse: jest.Mock };
 
+async function fillCache(): Promise<void> {
+  for (let i = 0; i < MAX_CACHE_SIZE; i++) {
+    jest.setSystemTime(i);
+    await getTafsirCached(`${i}:1`);
+  }
+  expect(repository.getTafsirByVerse).toHaveBeenCalledTimes(MAX_CACHE_SIZE);
+}
+
+async function triggerEviction(): Promise<void> {
+  jest.setSystemTime(MAX_CACHE_SIZE);
+  await getTafsirCached(`${MAX_CACHE_SIZE}:1`);
+  expect(repository.getTafsirByVerse).toHaveBeenCalledTimes(MAX_CACHE_SIZE + 1);
+}
+
+async function verifyEviction(): Promise<void> {
+  jest.setSystemTime(MAX_CACHE_SIZE + 1);
+  await getTafsirCached('0:1');
+  expect(repository.getTafsirByVerse).toHaveBeenCalledTimes(MAX_CACHE_SIZE + 2);
+}
+
+async function testCacheEviction(): Promise<void> {
+  jest.useFakeTimers();
+  repository.getTafsirByVerse.mockImplementation((verseKey: string) =>
+    Promise.resolve(`tafsir-${verseKey}`)
+  );
+
+  await fillCache();
+  await triggerEviction();
+  await verifyEviction();
+}
+
+describe('getTafsirCached', () => {
   beforeEach(() => {
     clearTafsirCache();
     repository.getTafsirByVerse.mockReset();
@@ -48,21 +81,7 @@ describe('getTafsirCached', () => {
   });
 
   it('evicts oldest entry when cache limit exceeded', async () => {
-    jest.useFakeTimers();
-    repository.getTafsirByVerse.mockImplementation((verseKey: string) =>
-      Promise.resolve(`tafsir-${verseKey}`)
-    );
-    for (let i = 0; i < MAX_CACHE_SIZE; i++) {
-      jest.setSystemTime(i);
-      await getTafsirCached(`${i}:1`);
-    }
-    expect(repository.getTafsirByVerse).toHaveBeenCalledTimes(MAX_CACHE_SIZE);
-    jest.setSystemTime(MAX_CACHE_SIZE);
-    await getTafsirCached(`${MAX_CACHE_SIZE}:1`);
-    expect(repository.getTafsirByVerse).toHaveBeenCalledTimes(MAX_CACHE_SIZE + 1);
-    jest.setSystemTime(MAX_CACHE_SIZE + 1);
-    await getTafsirCached('0:1');
-    expect(repository.getTafsirByVerse).toHaveBeenCalledTimes(MAX_CACHE_SIZE + 2);
+    await testCacheEviction();
   });
 
   it('clears the cache', async () => {

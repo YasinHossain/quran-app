@@ -11,7 +11,12 @@ interface BehaviorArgs {
   disabled: boolean;
 }
 
-export function useSurahSelectorBehavior({ chapters, value, onChange, disabled }: BehaviorArgs) {
+export function useSurahSelectorBehavior({
+  chapters,
+  value,
+  onChange,
+  disabled,
+}: BehaviorArgs): ReturnType<typeof useSurahSelectorBehavior> {
   const visibility = useDropdownVisibility({ disabled });
   const selection = useSelectedChapter({
     chapters,
@@ -35,7 +40,11 @@ export function useSurahSelectorBehavior({ chapters, value, onChange, disabled }
   } as const;
 }
 
-function useDropdownVisibility({ disabled }: { disabled: boolean }) {
+function useDropdownVisibility({
+  disabled,
+}: {
+  disabled: boolean;
+}): ReturnType<typeof useDropdownVisibility> {
   const [open, setOpen] = useState(false);
   const [term, setTerm] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
@@ -94,7 +103,7 @@ function useSelectedChapter({
   value?: number;
   onChange: (surahId: number) => void;
   close: () => void;
-}) {
+}): ReturnType<typeof useSelectedChapter> {
   const selected = useMemo(() => chapters.find((c) => c.id === value), [chapters, value]);
 
   const selectSurah = useCallback(

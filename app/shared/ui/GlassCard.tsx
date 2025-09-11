@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import React, { memo } from 'react';
 
 import { cn } from '@/lib/utils/cn';
@@ -36,75 +35,56 @@ export interface GlassCardProps {
   animate?: boolean;
 }
 
-interface GlassCardLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
-  className: string;
-  children: React.ReactNode;
+import { GlassCardButton, GlassCardLink } from './GlassCardPrimitives';
+
+type RenderLinkArgs = {
+  ref: React.ForwardedRef<HTMLAnchorElement>;
   href: string;
-}
-
-const GlassCardLink = memo(
-  React.forwardRef<HTMLAnchorElement, GlassCardLinkProps>(function GlassCardLink(
-    { className, children, ...props },
-    ref
-  ) {
-    return (
-      <Link ref={ref} className={cn('group', className)} {...props}>
-        {children}
-      </Link>
-    );
-  })
-);
-GlassCardLink.displayName = 'GlassCardLink';
-
-interface GlassCardButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className: string;
   children: React.ReactNode;
-}
+  props: React.AnchorHTMLAttributes<HTMLAnchorElement>;
+};
 
-const GlassCardButton = memo(
-  React.forwardRef<HTMLButtonElement, GlassCardButtonProps>(function GlassCardButton(
-    { className, children, ...props },
-    ref
-  ) {
-    return (
-      <button ref={ref} className={cn('group text-left', className)} {...props}>
-        {children}
-      </button>
-    );
-  })
-);
-GlassCardButton.displayName = 'GlassCardButton';
-
-const renderLink = (
-  ref: React.ForwardedRef<HTMLAnchorElement>,
-  href: string,
-  className: string,
-  children: React.ReactNode,
-  props: React.AnchorHTMLAttributes<HTMLAnchorElement>
-) => (
+const renderLink = ({
+  ref,
+  href,
+  className,
+  children,
+  props,
+}: RenderLinkArgs): React.JSX.Element => (
   <GlassCardLink ref={ref} href={href} className={className} {...props}>
     {children}
   </GlassCardLink>
 );
 
-const renderButton = (
-  ref: React.ForwardedRef<HTMLButtonElement>,
-  onClick: () => void,
-  className: string,
-  children: React.ReactNode,
-  props: React.ButtonHTMLAttributes<HTMLButtonElement>
-) => (
+type RenderButtonArgs = {
+  ref: React.ForwardedRef<HTMLButtonElement>;
+  onClick: () => void;
+  className: string;
+  children: React.ReactNode;
+  props: React.ButtonHTMLAttributes<HTMLButtonElement>;
+};
+
+const renderButton = ({
+  ref,
+  onClick,
+  className,
+  children,
+  props,
+}: RenderButtonArgs): React.JSX.Element => (
   <GlassCardButton ref={ref} onClick={onClick} className={className} {...props}>
     {children}
   </GlassCardButton>
 );
 
-const renderDiv = (
-  ref: React.ForwardedRef<HTMLDivElement>,
-  className: string,
-  children: React.ReactNode,
-  props: React.HTMLAttributes<HTMLDivElement>
-) => (
+type RenderDivArgs = {
+  ref: React.ForwardedRef<HTMLDivElement>;
+  className: string;
+  children: React.ReactNode;
+  props: React.HTMLAttributes<HTMLDivElement>;
+};
+
+const renderDiv = ({ ref, className, children, props }: RenderDivArgs): React.JSX.Element => (
   <div ref={ref} className={cn('group', className)} {...props}>
     {children}
   </div>
@@ -136,27 +116,27 @@ export const GlassCard = memo(
       );
 
       if (href)
-        return renderLink(
-          ref as React.ForwardedRef<HTMLAnchorElement>,
+        return renderLink({
+          ref: ref as React.ForwardedRef<HTMLAnchorElement>,
           href,
-          baseClasses,
+          className: baseClasses,
           children,
-          props as React.AnchorHTMLAttributes<HTMLAnchorElement>
-        );
+          props: props as React.AnchorHTMLAttributes<HTMLAnchorElement>,
+        });
       if (onClick)
-        return renderButton(
-          ref as React.ForwardedRef<HTMLButtonElement>,
+        return renderButton({
+          ref: ref as React.ForwardedRef<HTMLButtonElement>,
           onClick,
-          baseClasses,
+          className: baseClasses,
           children,
-          props as React.ButtonHTMLAttributes<HTMLButtonElement>
-        );
-      return renderDiv(
-        ref as React.ForwardedRef<HTMLDivElement>,
-        baseClasses,
+          props: props as React.ButtonHTMLAttributes<HTMLButtonElement>,
+        });
+      return renderDiv({
+        ref: ref as React.ForwardedRef<HTMLDivElement>,
+        className: baseClasses,
         children,
-        props as React.HTMLAttributes<HTMLDivElement>
-      );
+        props: props as React.HTMLAttributes<HTMLDivElement>,
+      });
     }
   )
 );

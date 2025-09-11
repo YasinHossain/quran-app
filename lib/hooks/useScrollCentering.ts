@@ -30,16 +30,24 @@ const useInitCenteringFlags = <T extends string>(
         sessionStorage.removeItem(`skipCenter${tab}`);
       }
     });
-  }, [tabs]);
+  }, [tabs, ref]);
 };
 
-const useCenterActiveElement = <T extends string>(
-  activeTab: T,
-  scrollRef: RefObject<HTMLDivElement | null>,
-  scrollTops: Record<T, number>,
-  ref: MutableRefObject<Record<T, boolean>>,
-  selectedIds: Record<T, number | null>
-): void => {
+type CenterArgs<T extends string> = {
+  activeTab: T;
+  scrollRef: RefObject<HTMLDivElement | null>;
+  scrollTops: Record<T, number>;
+  ref: MutableRefObject<Record<T, boolean>>;
+  selectedIds: Record<T, number | null>;
+};
+
+const useCenterActiveElement = <T extends string>({
+  activeTab,
+  scrollRef,
+  scrollTops,
+  ref,
+  selectedIds,
+}: CenterArgs<T>): void => {
   useLayoutEffect(() => {
     const container = scrollRef.current;
     if (!container) return;
@@ -54,7 +62,7 @@ const useCenterActiveElement = <T extends string>(
       }
     }
     ref.current[activeTab] = false;
-  }, [activeTab, scrollRef, scrollTops, selectedIds]);
+  }, [activeTab, scrollRef, scrollTops, selectedIds, ref]);
 };
 
 export const useScrollCentering = <T extends string>({
@@ -86,7 +94,13 @@ export const useScrollCentering = <T extends string>({
     });
   }, [activeTab, selectedIds, tabs]);
 
-  useCenterActiveElement(activeTab, scrollRef, scrollTops, shouldCenterRef, selectedIds);
+  useCenterActiveElement({
+    activeTab,
+    scrollRef,
+    scrollTops,
+    ref: shouldCenterRef,
+    selectedIds,
+  });
 
   const skipNextCentering = useCallback((tab: T): void => {
     sessionStorage.setItem(`skipCenter${tab}`, '1');

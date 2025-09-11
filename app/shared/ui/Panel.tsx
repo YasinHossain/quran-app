@@ -1,10 +1,10 @@
 'use client';
 import React, { memo } from 'react';
 
-import { CloseIcon } from '@/app/shared/icons';
 import { cn } from '@/lib/utils/cn';
 
-import { Button } from './Button';
+import { PanelHeader } from './PanelHeader';
+import { PanelOverlay } from './PanelOverlay';
 
 export const PANEL_VARIANTS = {
   sidebar: 'fixed top-0 bottom-0 right-0 w-80 bg-surface shadow-lg pt-safe pb-safe',
@@ -34,55 +34,7 @@ export interface PanelProps {
   closeOnOverlayClick?: boolean;
 }
 
-interface PanelOverlayProps {
-  onClose: () => void;
-  closeOnOverlayClick: boolean;
-}
-
-const PanelOverlay = memo(function PanelOverlay({
-  onClose,
-  closeOnOverlayClick,
-}: PanelOverlayProps): React.JSX.Element {
-  const handleOverlayInteraction = closeOnOverlayClick ? onClose : undefined;
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!closeOnOverlayClick) return;
-    if (e.key === 'Escape' || e.key === 'Enter') onClose();
-  };
-  return (
-    <div
-      className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
-      onClick={handleOverlayInteraction}
-      onKeyDown={handleKeyDown}
-      role="button"
-      tabIndex={closeOnOverlayClick ? 0 : -1}
-      aria-label="Close panel"
-    />
-  );
-});
-
-interface PanelHeaderProps {
-  title?: string;
-  showCloseButton: boolean;
-  onClose: () => void;
-}
-
-const PanelHeader = memo(function PanelHeader({
-  title,
-  showCloseButton,
-  onClose,
-}: PanelHeaderProps): React.JSX.Element | null {
-  if (!title && !showCloseButton) return null;
-  return (
-    <header className="flex items-center justify-between p-4 border-b border-border">
-      {title && <h2 className="text-lg font-semibold">{title}</h2>}
-      {showCloseButton && (
-        <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close panel">
-          <CloseIcon size={18} />
-        </Button>
-      )}
-    </header>
-  );
-});
+// PanelOverlay and PanelHeader extracted to reduce file size
 
 interface RenderArgs {
   onClose: () => void;

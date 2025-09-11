@@ -34,52 +34,42 @@ const defaultProps: ComponentNameProps = {
   onAction: jest.fn(),
 };
 
-describe('ComponentName', (): void => {
-  beforeEach((): void => {
-    jest.clearAllMocks();
-  });
+beforeEach((): void => {
+  jest.clearAllMocks();
+});
 
+describe('ComponentName - memoization', () => {
   it('renders and memoizes', (): void => {
-    const { rerender } = render(<ComponentName {...defaultProps} />, {
-      wrapper: TestWrapper,
-    });
-
-    const component = screen.getByTestId('component-test-component');
-    expect(component).toBeInTheDocument();
+    const { rerender } = render(<ComponentName {...defaultProps} />, { wrapper: TestWrapper });
+    expect(screen.getByTestId('component-test-component')).toBeInTheDocument();
 
     const renderCount = jest.fn();
-    const MemoTest = (): JSX.Element => {
-      renderCount();
-      return <ComponentName {...defaultProps} />;
-    };
-
+    const MemoTest = (): JSX.Element => { renderCount(); return <ComponentName {...defaultProps} />; };
     rerender(<MemoTest />);
     rerender(<MemoTest />);
     expect(renderCount).toHaveBeenCalledTimes(1);
   });
+});
 
+describe('ComponentName - responsive', () => {
   it('respects responsive design', (): void => {
     render(<ComponentName {...defaultProps} />, { wrapper: TestWrapper });
     const container = screen.getByTestId('component-test-component');
-
-    validateResponsiveDesign(container, {
-      mobileClasses: ['space-y-4', 'p-4'],
-      desktopClasses: ['md:space-y-6', 'md:p-6'],
-    });
+    validateResponsiveDesign(container, { mobileClasses: ['space-y-4', 'p-4'], desktopClasses: ['md:space-y-6', 'md:p-6'] });
   });
+});
 
+describe('ComponentName - providers', () => {
   it('integrates with providers', (): void => {
     render(<ComponentName {...defaultProps} />, { wrapper: TestWrapper });
     expect(screen.getByTestId('component-test-component')).toBeInTheDocument();
   });
+});
 
+describe('ComponentName - accessibility', () => {
   it('supports keyboard activation', (): void => {
     const mockOnAction = jest.fn();
-    render(
-      <ComponentName {...defaultProps} onAction={mockOnAction} />,
-      { wrapper: TestWrapper },
-    );
-
+    render(<ComponentName {...defaultProps} onAction={mockOnAction} />, { wrapper: TestWrapper });
     const component = screen.getByTestId('component-test-component');
     component.focus();
     fireEvent.keyPress(component, { key: 'Enter', code: 'Enter' });
@@ -88,7 +78,6 @@ describe('ComponentName', (): void => {
 
   it('is accessible', async (): Promise<void> => {
     render(<ComponentName {...defaultProps} />, { wrapper: TestWrapper });
-
     const user = userEvent.setup();
     const buttons = screen.getAllByRole('button');
     for (const button of buttons) {

@@ -11,28 +11,23 @@ export async function testResponsiveDesign(page: Page, elementSelector: string):
     { name: 'Large Desktop', width: 1280, height: 1024 },
   ];
 
-  for (const breakpoint of breakpoints) {
-    await page.setViewportSize({ width: breakpoint.width, height: breakpoint.height });
-
-    const element = page.locator(elementSelector);
-    await expect(element).toBeVisible();
-
-    // Test touch-friendly interactions on mobile
-    if (breakpoint.width <= 768) {
-      const touchElements = page.locator('[role="button"], button');
-      const count = await touchElements.count();
-
-      for (let i = 0; i < Math.min(count, 3); i++) {
-        const touchEl = touchElements.nth(i);
-        if (await touchEl.isVisible()) {
-          const box = await touchEl.boundingBox();
-          if (box) {
-            // WCAG 2.1 AA: minimum 44px touch target
-            expect(Math.min(box.width, box.height)).toBeGreaterThanOrEqual(44);
-          }
-        }
-      }
+  const assertMobileTouchTargets = async (): Promise<void> => {
+    const touchElements = page.locator('[role="button"], button');
+    const count = await touchElements.count();
+    const max = Math.min(count, 3);
+    for (let i = 0; i < max; i++) {
+      const touchEl = touchElements.nth(i);
+      if (!(await touchEl.isVisible())) continue;
+      const box = await touchEl.boundingBox();
+      if (!box) continue;
+      expect(Math.min(box.width, box.height)).toBeGreaterThanOrEqual(44);
     }
+  };
+
+  for (const { width, height } of breakpoints) {
+    await page.setViewportSize({ width, height });
+    await expect(page.locator(elementSelector)).toBeVisible();
+    if (width <= 768) await assertMobileTouchTargets();
   }
 }
 
@@ -40,42 +35,38 @@ export async function testResponsiveDesign(page: Page, elementSelector: string):
  * Test context integration flows like settings, audio and bookmarks.
  */
 export async function testContextIntegration(page: Page): Promise<void> {
-  // Test Settings context - font size changes
-  const settingsButton = page.locator('[data-testid="settings-button"]');
-  if (await settingsButton.isVisible()) {
+  const testSettings = async (): Promise<void> => {
+    const settingsButton = page.locator('[data-testid="settings-button"]');
+    if (!(await settingsButton.isVisible())) return;
     await settingsButton.click();
 
     const fontSizeSlider = page.locator('[data-testid="font-size-slider"]');
-    if (await fontSizeSlider.isVisible()) {
-      await fontSizeSlider.fill('20');
+    if (!(await fontSizeSlider.isVisible())) return;
+    await fontSizeSlider.fill('20');
 
-      // Verify font size change is applied
-      const verseText = page.locator('[data-testid="verse-text"]').first();
-      const fontSize = await verseText.evaluate((el) => window.getComputedStyle(el).fontSize);
-      expect(parseInt(fontSize)).toBeGreaterThanOrEqual(20);
-    }
-  }
+    const verseText = page.locator('[data-testid="verse-text"]').first();
+    const fontSize = await verseText.evaluate((el) => window.getComputedStyle(el).fontSize);
+    expect(parseInt(fontSize)).toBeGreaterThanOrEqual(20);
+  };
 
-  // Test Audio context - playback controls
-  const playButton = page.locator('[data-testid="play-button"]').first();
-  if (await playButton.isVisible()) {
+  const testAudio = async (): Promise<void> => {
+    const playButton = page.locator('[data-testid="play-button"]').first();
+    if (!(await playButton.isVisible())) return;
     await playButton.click();
-
-    // Verify audio player appears
     await expect(page.locator('[data-testid="audio-player"]')).toBeVisible();
-
-    // Verify play state
     await expect(page.locator('[data-testid="pause-button"]')).toBeVisible();
-  }
+  };
 
-  // Test Bookmark context - bookmark functionality
-  const bookmarkButton = page.locator('[data-testid="bookmark-button"]').first();
-  if (await bookmarkButton.isVisible()) {
+  const testBookmarks = async (): Promise<void> => {
+    const bookmarkButton = page.locator('[data-testid="bookmark-button"]').first();
+    if (!(await bookmarkButton.isVisible())) return;
     await bookmarkButton.click();
-
-    // Verify bookmark is active
     await expect(bookmarkButton).toHaveClass(/active|bookmarked/);
-  }
+  };
+
+  await testSettings();
+  await testAudio();
+  await testBookmarks();
 }
 
 /**
@@ -128,13 +119,10 @@ export async function testAccessibility(page: Page): Promise<void> {
 
   for (let i = 0; i < Math.min(buttonCount, 5); i++) {
     const button = buttons.nth(i);
-    if (await button.isVisible()) {
-      const ariaLabel = await button.getAttribute('aria-label');
-      const text = await button.textContent();
-
-      // Button should have accessible text or aria-label
-      expect(ariaLabel || text?.trim()).toBeTruthy();
-    }
+    if (!(await button.isVisible())) continue;
+    const ariaLabel = await button.getAttribute('aria-label');
+    const text = await button.textContent();
+    expect(ariaLabel || text?.trim()).toBeTruthy();
   }
 
   // Test contrast ratios (basic check)
@@ -143,17 +131,11 @@ export async function testAccessibility(page: Page): Promise<void> {
 
   for (let i = 0; i < Math.min(textCount, 3); i++) {
     const textEl = textElements.nth(i);
-    if (await textEl.isVisible()) {
-      const styles = await textEl.evaluate((el) => {
-        const computed = window.getComputedStyle(el);
-        return {
-          color: computed.color,
-          backgroundColor: computed.backgroundColor,
-        };
-      });
-
-      // Basic check - elements should have color values
-      expect(styles.color).toBeTruthy();
-    }
+    if (!(await textEl.isVisible())) continue;
+    const styles = await textEl.evaluate((el) => {
+      const computed = window.getComputedStyle(el);
+      return { color: computed.color, backgroundColor: computed.backgroundColor };
+    });
+    expect(styles.color).toBeTruthy();
   }
 }

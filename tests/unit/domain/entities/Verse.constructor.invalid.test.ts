@@ -9,91 +9,25 @@ import {
 } from './Verse/test-utils';
 
 describe('Verse constructor (invalid cases)', () => {
-  it('throws error for empty ID', () => {
-    expect(
-      () =>
-        new Verse({
-          id: '',
-          surahId: validSurahId,
-          ayahNumber: validAyahNumber,
-          arabicText: validArabicText,
-          uthmaniText: validUthmaniText,
-        })
-    ).toThrow('Verse ID cannot be empty');
-  });
+  const base = {
+    id: validId,
+    surahId: validSurahId,
+    ayahNumber: validAyahNumber,
+    arabicText: validArabicText,
+    uthmaniText: validUthmaniText,
+  } as const;
 
-  it('throws error for invalid Surah ID (below 1)', () => {
-    expect(
-      () =>
-        new Verse({
-          id: validId,
-          surahId: 0,
-          ayahNumber: validAyahNumber,
-          arabicText: validArabicText,
-          uthmaniText: validUthmaniText,
-        })
-    ).toThrow('Invalid Surah ID');
-  });
-
-  it('throws error for invalid Surah ID (above 114)', () => {
-    expect(
-      () =>
-        new Verse({
-          id: validId,
-          surahId: 115,
-          ayahNumber: validAyahNumber,
-          arabicText: validArabicText,
-          uthmaniText: validUthmaniText,
-        })
-    ).toThrow('Invalid Surah ID');
-  });
-
-  it('throws error for invalid Ayah number (below 1)', () => {
-    expect(
-      () =>
-        new Verse({
-          id: validId,
-          surahId: validSurahId,
-          ayahNumber: 0,
-          arabicText: validArabicText,
-          uthmaniText: validUthmaniText,
-        })
-    ).toThrow('Invalid Ayah number');
-  });
-
-  it('throws error for empty or whitespace-only Arabic text', () => {
-    expect(
-      () =>
-        new Verse({
-          id: validId,
-          surahId: validSurahId,
-          ayahNumber: validAyahNumber,
-          arabicText: '',
-          uthmaniText: validUthmaniText,
-        })
-    ).toThrow('Arabic text cannot be empty');
-    expect(
-      () =>
-        new Verse({
-          id: validId,
-          surahId: validSurahId,
-          ayahNumber: validAyahNumber,
-          arabicText: '   ',
-          uthmaniText: validUthmaniText,
-        })
-    ).toThrow('Arabic text cannot be empty');
-  });
-
-  it('throws error for empty Uthmani text', () => {
-    expect(
-      () =>
-        new Verse({
-          id: validId,
-          surahId: validSurahId,
-          ayahNumber: validAyahNumber,
-          arabicText: validArabicText,
-          uthmaniText: '',
-        })
-    ).toThrow('Uthmani text cannot be empty');
+  it.each([
+    [{ ...base, id: '' }, 'Verse ID cannot be empty'],
+    [{ ...base, surahId: 0 }, 'Invalid Surah ID'],
+    [{ ...base, surahId: 115 }, 'Invalid Surah ID'],
+    [{ ...base, ayahNumber: 0 }, 'Invalid Ayah number'],
+    [{ ...base, arabicText: '' }, 'Arabic text cannot be empty'],
+    [{ ...base, arabicText: '   ' }, 'Arabic text cannot be empty'],
+    [{ ...base, uthmaniText: '' }, 'Uthmani text cannot be empty'],
+  ])('throws error: %s', (props, message) => {
+    expect(() => new Verse(props as unknown as ConstructorParameters<typeof Verse>[0])).toThrow(
+      message
+    );
   });
 });

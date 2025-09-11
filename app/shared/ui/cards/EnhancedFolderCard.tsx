@@ -45,7 +45,7 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
 
   const defaultAriaLabel = `Open folder ${folder.name} with ${bookmarkCount} bookmarks`;
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent): void => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       onClick?.(e as unknown as React.MouseEvent<HTMLElement>);

@@ -17,7 +17,7 @@ export const useSidebarScrollCentering = ({
   selectedSurahId,
   selectedJuzId,
   selectedPageId,
-}: Options) => {
+}: Options): ReturnType<typeof useScrollCentering<TabKey>> => {
   const { surahScrollTop, juzScrollTop, pageScrollTop } = useSidebar();
 
   return useScrollCentering<TabKey>({

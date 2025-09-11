@@ -13,21 +13,19 @@ import {
   bookmarkId,
 } from './test-utils';
 
-describe('BookmarkService queries', () => {
-  let service: BookmarkService;
-  let mockBookmarkRepo = createMockBookmarkRepository();
-  let mockVerseRepo = createMockVerseRepository();
+let service: BookmarkService;
+let mockBookmarkRepo = createMockBookmarkRepository();
+let mockVerseRepo = createMockVerseRepository();
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-    mockBookmarkRepo = createMockBookmarkRepository();
-    mockVerseRepo = createMockVerseRepository();
-    service = new BookmarkService(mockBookmarkRepo, mockVerseRepo);
-  });
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockBookmarkRepo = createMockBookmarkRepository();
+  mockVerseRepo = createMockVerseRepository();
+  service = new BookmarkService(mockBookmarkRepo, mockVerseRepo);
+});
 
-  // moved to dedicated test file
-
-  it('getBookmarksWithVerses returns bookmarks with verses', async () => {
+describe('BookmarkService.getBookmarksWithVerses', () => {
+  it('returns bookmarks with verses', async () => {
     const base = new Bookmark({
       id: bookmarkId,
       userId,
@@ -48,7 +46,7 @@ describe('BookmarkService queries', () => {
     expect(result[0]).toEqual({ bookmark: base, verse });
   });
 
-  it('getBookmarksWithVerses throws when verse missing', async () => {
+  it('throws when verse missing', async () => {
     const base = new Bookmark({
       id: bookmarkId,
       userId,
@@ -60,8 +58,10 @@ describe('BookmarkService queries', () => {
     mockVerseRepo.findById.mockResolvedValue(null);
     await expect(service.getBookmarksWithVerses(userId)).rejects.toThrow(VerseNotFoundError);
   });
+});
 
-  it('organizeBookmarksBySurah organizes and sorts', async () => {
+describe('BookmarkService.organizeBookmarksBySurah', () => {
+  it('organizes and sorts', async () => {
     const bookmarks = [
       new Bookmark({
         id: 'b1',

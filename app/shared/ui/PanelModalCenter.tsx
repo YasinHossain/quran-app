@@ -28,7 +28,7 @@ const PanelOverlay = memo(function PanelOverlay({
   closeOnOverlayClick,
 }: PanelOverlayProps): React.JSX.Element {
   const handleOverlayInteraction = closeOnOverlayClick ? onClose : undefined;
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent): void => {
     if (closeOnOverlayClick && (e.key === 'Escape' || e.key === 'Enter')) onClose();
   };
   return (

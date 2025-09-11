@@ -38,7 +38,7 @@ export function useContentBookmarkCard({
   onNavigateToVerse,
   settings,
   onClick,
-}: UseContentBookmarkCardProps) {
+}: UseContentBookmarkCardProps): ReturnType<typeof useContentBookmarkCard> {
   const handleCardClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement | HTMLAnchorElement>) => {
       onNavigateToVerse?.();
@@ -47,11 +47,58 @@ export function useContentBookmarkCard({
     [onNavigateToVerse, onClick]
   );
 
-  const headerProps = useMemo(
+  const headerProps = useHeaderProps({
+    bookmark,
+    isPlaying,
+    isLoadingAudio,
+    isBookmarked,
+    onPlayPause,
+    onBookmark,
+    onNavigateToVerse,
+  });
+
+  const previewProps = usePreviewProps({ bookmark, settings });
+
+  return { handleCardClick, headerProps, previewProps } as const;
+}
+
+function useHeaderProps(args: {
+  bookmark: BookmarkData;
+  isPlaying: boolean;
+  isLoadingAudio: boolean;
+  isBookmarked: boolean;
+  onPlayPause?: () => void;
+  onBookmark?: () => void;
+  onNavigateToVerse?: () => void;
+}): {
+  verseKey?: string;
+  surahName?: string;
+  createdAt: number;
+  isPlaying: boolean;
+  isLoadingAudio: boolean;
+  isBookmarked: boolean;
+  onPlayPause?: () => void;
+  onBookmark?: () => void;
+  onNavigateToVerse?: () => void;
+} {
+  const {
+    bookmark,
+    isPlaying,
+    isLoadingAudio,
+    isBookmarked,
+    onPlayPause,
+    onBookmark,
+    onNavigateToVerse,
+  } = args;
+  const bm = useMemo(
+    () => [bookmark.verseKey, bookmark.surahName, bookmark.createdAt] as const,
+    [bookmark.verseKey, bookmark.surahName, bookmark.createdAt]
+  );
+  return useMemo(
     () => ({
-      verseKey: bookmark.verseKey,
-      surahName: bookmark.surahName,
-      createdAt: bookmark.createdAt,
+      verseKey: bm[0],
+      surahName: bm[1],
+      createdAt: bm[2],
       isPlaying,
       isLoadingAudio,
       isBookmarked,
@@ -59,20 +106,18 @@ export function useContentBookmarkCard({
       onBookmark,
       onNavigateToVerse,
     }),
-    [
-      bookmark.verseKey,
-      bookmark.surahName,
-      bookmark.createdAt,
-      isPlaying,
-      isLoadingAudio,
-      isBookmarked,
-      onPlayPause,
-      onBookmark,
-      onNavigateToVerse,
-    ]
+    [bm, isPlaying, isLoadingAudio, isBookmarked, onPlayPause, onBookmark, onNavigateToVerse]
   );
+}
 
-  const previewProps = useMemo(
+function usePreviewProps({ bookmark, settings }: { bookmark: BookmarkData; settings: Settings }): {
+  verseText?: string;
+  translation?: string;
+  arabicFontFace: string;
+  arabicFontSize: number;
+  tajweed: boolean;
+} {
+  return useMemo(
     () => ({
       verseText: bookmark.verseText,
       translation: bookmark.translation,
@@ -88,8 +133,6 @@ export function useContentBookmarkCard({
       settings.tajweed,
     ]
   );
-
-  return { handleCardClick, headerProps, previewProps } as const;
 }
 
 export type { BookmarkData };

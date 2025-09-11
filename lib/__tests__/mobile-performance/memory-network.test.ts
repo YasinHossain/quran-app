@@ -4,7 +4,7 @@ import { useBreakpoint, useResponsiveState } from '@/lib/responsive';
 
 import { setupMobilePerformanceTest, testPerformance } from './test-utils';
 
-describe('Memory and Network Performance', () => {
+describe('Memory Usage Optimization', () => {
   let cleanup: () => void;
 
   beforeEach(() => {
@@ -16,118 +16,128 @@ describe('Memory and Network Performance', () => {
     cleanup();
   });
 
-  describe('Memory Usage Optimization', () => {
-    it('should cleanup event listeners properly', () => {
-      const addEventListenerSpy = jest.spyOn(window, 'addEventListener');
-      const removeEventListenerSpy = jest.spyOn(window, 'removeEventListener');
+  it('should cleanup event listeners properly', () => {
+    const addEventListenerSpy = jest.spyOn(window, 'addEventListener');
+    const removeEventListenerSpy = jest.spyOn(window, 'removeEventListener');
+    const { unmount } = renderHook(() => useBreakpoint());
 
-      const { unmount } = renderHook(() => useBreakpoint());
+    void addEventListenerSpy.mock.calls.length;
+    unmount();
 
-      void addEventListenerSpy.mock.calls.length;
+    const removeCalls = removeEventListenerSpy.mock.calls.length;
+    expect(removeCalls).toBeGreaterThan(0);
 
+    addEventListenerSpy.mockRestore();
+    removeEventListenerSpy.mockRestore();
+  });
+
+  it('should not create memory leaks during rapid re-renders', async () => {
+    interface PerformanceWithMemory extends Performance {
+      memory?: { usedJSHeapSize: number };
+    }
+    const performanceWithMemory = performance as PerformanceWithMemory;
+    const initialMemory = performanceWithMemory.memory
+      ? performanceWithMemory.memory.usedJSHeapSize
+      : 0;
+
+    for (let i = 0; i < 50; i++) {
+      const { unmount } = renderHook(() => useResponsiveState());
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 1));
+      });
       unmount();
+    }
 
-      const removeCalls = removeEventListenerSpy.mock.calls.length;
+    const globalWithGc = global as typeof globalThis & { gc?: () => void };
+    if (globalWithGc.gc) {
+      globalWithGc.gc();
+    }
 
-      expect(removeCalls).toBeGreaterThan(0);
+    const finalMemory = performanceWithMemory.memory
+      ? performanceWithMemory.memory.usedJSHeapSize
+      : 0;
 
-      addEventListenerSpy.mockRestore();
-      removeEventListenerSpy.mockRestore();
-    });
+    if (performanceWithMemory.memory) {
+      const memoryGrowth = finalMemory - initialMemory;
+      expect(memoryGrowth).toBeLessThan(1024 * 1024);
+    }
+  });
+});
 
-    it('should not create memory leaks during rapid re-renders', async () => {
-      interface PerformanceWithMemory extends Performance {
-        memory?: { usedJSHeapSize: number };
-      }
-      const performanceWithMemory = performance as PerformanceWithMemory;
-      const initialMemory = performanceWithMemory.memory
-        ? performanceWithMemory.memory.usedJSHeapSize
-        : 0;
+describe('Image Loading Performance', () => {
+  let cleanup: () => void;
 
-      for (let i = 0; i < 50; i++) {
-        const { unmount } = renderHook(() => useResponsiveState());
-
-        await act(async () => {
-          await new Promise((resolve) => setTimeout(resolve, 1));
-        });
-
-        unmount();
-      }
-
-      const globalWithGc = global as typeof globalThis & { gc?: () => void };
-      if (globalWithGc.gc) {
-        globalWithGc.gc();
-      }
-
-      const finalMemory = performanceWithMemory.memory
-        ? performanceWithMemory.memory.usedJSHeapSize
-        : 0;
-
-      if (performanceWithMemory.memory) {
-        const memoryGrowth = finalMemory - initialMemory;
-        expect(memoryGrowth).toBeLessThan(1024 * 1024);
-      }
-    });
+  beforeEach(() => {
+    const setup = setupMobilePerformanceTest();
+    cleanup = setup.cleanup;
   });
 
-  describe('Network Performance', () => {
-    it('should optimize image loading for mobile connections', async () => {
-      Object.defineProperty(navigator, 'connection', {
-        value: {
-          effectiveType: '3g',
-          downlink: 1.5,
-          rtt: 200,
-        },
-        configurable: true,
-      });
+  afterEach(() => {
+    cleanup();
+  });
 
-      const container = document.createElement('div');
-      container.innerHTML = `
-        <img src="/test-image-1.jpg" alt="Test 1" />
-        <img src="/test-image-2.jpg" alt="Test 2" />
-        <img src="/test-image-3.jpg" alt="Test 3" />
-      `;
-      document.body.appendChild(container);
-
-      const result = await testPerformance.testImageLoading(container);
-
-      expect(result.totalImages).toBe(3);
-
-      document.body.removeChild(container);
+  it('should optimize image loading for mobile connections', async () => {
+    Object.defineProperty(navigator, 'connection', {
+      value: {
+        effectiveType: '3g',
+        downlink: 1.5,
+        rtt: 200,
+      },
+      configurable: true,
     });
 
-    it('should preload critical resources efficiently', async () => {
-      const criticalResources = ['/critical-style.css', '/critical-script.js', '/hero-image.jpg'];
+    const container = document.createElement('div');
+    container.innerHTML = `
+      <img src="/test-image-1.jpg" alt="Test 1" />
+      <img src="/test-image-2.jpg" alt="Test 2" />
+      <img src="/test-image-3.jpg" alt="Test 3" />
+    `;
+    document.body.appendChild(container);
 
-      const startTime = performance.now();
-
-      const preloadPromises = criticalResources.map((resource) => {
-        return new Promise((resolve) => {
-          const link = document.createElement('link');
-          link.rel = 'preload';
-          link.href = resource;
-
-          const timeout = setTimeout(() => resolve(resource), 50);
-
-          link.onload = () => {
-            clearTimeout(timeout);
-            resolve(resource);
-          };
-          link.onerror = () => {
-            clearTimeout(timeout);
-            resolve(resource);
-          };
-
-          document.head.appendChild(link);
-        });
-      });
-
-      await Promise.all(preloadPromises);
-
-      const endTime = performance.now();
-      const preloadTime = endTime - startTime;
-
-      expect(preloadTime).toBeLessThan(500);
-    }, 10000);
+    const result = await testPerformance.testImageLoading(container);
+    expect(result.totalImages).toBe(3);
+    document.body.removeChild(container);
   });
+});
+
+describe('Resource Preloading Performance', () => {
+  let cleanup: () => void;
+
+  beforeEach(() => {
+    const setup = setupMobilePerformanceTest();
+    cleanup = setup.cleanup;
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should preload critical resources efficiently', async () => {
+    const criticalResources = ['/critical-style.css', '/critical-script.js', '/hero-image.jpg'];
+    const startTime = performance.now();
+
+    const createPreloadPromise = (resource: string): Promise<unknown> => {
+      return new Promise((resolve) => {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.href = resource;
+        const timeout = setTimeout(() => resolve(resource), 50);
+
+        const cleanup = (): void => {
+          clearTimeout(timeout);
+          resolve(resource);
+        };
+
+        link.onload = cleanup;
+        link.onerror = cleanup;
+        document.head.appendChild(link);
+      });
+    };
+
+    const preloadPromises = criticalResources.map(createPreloadPromise);
+    await Promise.all(preloadPromises);
+    const endTime = performance.now();
+    const preloadTime = endTime - startTime;
+    expect(preloadTime).toBeLessThan(500);
+  }, 10000);
 });

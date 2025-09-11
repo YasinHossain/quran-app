@@ -39,18 +39,7 @@ export const ResourcePanel = memo(function ResourcePanel<T extends ResourceItem>
   variant = 'sidebar',
   renderItem,
 }: ResourcePanelProps<T>): React.JSX.Element {
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const filteredItems = useMemo((): T[] => {
-    if (!searchTerm.trim()) return items;
-    const searchLower = searchTerm.toLowerCase().trim();
-    return items.filter(
-      (item) =>
-        item.name.toLowerCase().includes(searchLower) ||
-        item.description?.toLowerCase().includes(searchLower) ||
-        item.meta?.toLowerCase().includes(searchLower)
-    );
-  }, [items, searchTerm]);
+  const { searchTerm, setSearchTerm, filteredItems } = useResourceSearch(items);
 
   return (
     <Panel
@@ -81,3 +70,24 @@ export const ResourcePanel = memo(function ResourcePanel<T extends ResourceItem>
     </Panel>
   );
 });
+
+function useResourceSearch<T extends ResourceItem>(
+  items: T[]
+): {
+  searchTerm: string;
+  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+  filteredItems: T[];
+} {
+  const [searchTerm, setSearchTerm] = useState('');
+  const filteredItems = useMemo((): T[] => {
+    if (!searchTerm.trim()) return items;
+    const searchLower = searchTerm.toLowerCase().trim();
+    return items.filter(
+      (item) =>
+        item.name.toLowerCase().includes(searchLower) ||
+        item.description?.toLowerCase().includes(searchLower) ||
+        item.meta?.toLowerCase().includes(searchLower)
+    );
+  }, [items, searchTerm]);
+  return { searchTerm, setSearchTerm, filteredItems };
+}

@@ -16,20 +16,25 @@ const makeRect = (top: number, bottom: number): DOMRect => ({
   toJSON: () => ({}),
 });
 
-describe('useScrollCentering', () => {
-  const scrollRef = { current: document.createElement('div') } as React.RefObject<HTMLDivElement>;
+const scrollRef = { current: document.createElement('div') } as React.RefObject<HTMLDivElement>;
 
-  const createEls = (): { surahEl: HTMLDivElement; juzEl: HTMLDivElement } => {
-    const surahEl = document.createElement('div');
-    const juzEl = document.createElement('div');
-    surahEl.scrollIntoView = jest.fn();
-    juzEl.scrollIntoView = jest.fn();
-    scrollRef.current!.innerHTML = '';
-    scrollRef.current!.appendChild(surahEl);
-    scrollRef.current!.appendChild(juzEl);
-    return { surahEl, juzEl };
-  };
+const createEls = (): { surahEl: HTMLDivElement; juzEl: HTMLDivElement } => {
+  const surahEl = document.createElement('div');
+  const juzEl = document.createElement('div');
+  surahEl.scrollIntoView = jest.fn();
+  juzEl.scrollIntoView = jest.fn();
+  scrollRef.current!.innerHTML = '';
+  scrollRef.current!.appendChild(surahEl);
+  scrollRef.current!.appendChild(juzEl);
+  return { surahEl, juzEl };
+};
 
+const setupRects = (container: DOMRect, target: DOMRect, el: HTMLElement): void => {
+  jest.spyOn(scrollRef.current!, 'getBoundingClientRect').mockReturnValue(container);
+  jest.spyOn(el, 'getBoundingClientRect').mockReturnValue(target);
+};
+
+describe('useScrollCentering - core behavior', () => {
   beforeEach(() => {
     sessionStorage.clear();
     jest.restoreAllMocks();
@@ -39,8 +44,8 @@ describe('useScrollCentering', () => {
   it('centers active element on initial render when outside view', () => {
     const { surahEl } = createEls();
     surahEl.dataset.active = 'true';
-    jest.spyOn(scrollRef.current!, 'getBoundingClientRect').mockReturnValue(makeRect(0, 100));
-    jest.spyOn(surahEl, 'getBoundingClientRect').mockReturnValue(makeRect(200, 250));
+    setupRects(makeRect(0, 100), makeRect(200, 250), surahEl);
+
     renderHook(() =>
       useScrollCentering<Tab>({
         scrollRef,
@@ -55,8 +60,8 @@ describe('useScrollCentering', () => {
   it('does not recenter when element is already in view after scrolling', () => {
     const { surahEl } = createEls();
     surahEl.dataset.active = 'true';
-    jest.spyOn(scrollRef.current!, 'getBoundingClientRect').mockReturnValue(makeRect(0, 100));
-    jest.spyOn(surahEl, 'getBoundingClientRect').mockReturnValue(makeRect(10, 20));
+    setupRects(makeRect(0, 100), makeRect(10, 20), surahEl);
+
     renderHook(() =>
       useScrollCentering<Tab>({
         scrollRef,
@@ -67,12 +72,20 @@ describe('useScrollCentering', () => {
     );
     expect(surahEl.scrollIntoView).not.toHaveBeenCalled();
   });
+});
+
+describe('useScrollCentering - tab switching', () => {
+  beforeEach(() => {
+    sessionStorage.clear();
+    jest.restoreAllMocks();
+    scrollRef.current!.innerHTML = '';
+  });
 
   it('centers element after switching tabs', () => {
     const { surahEl, juzEl } = createEls();
     surahEl.dataset.active = 'true';
-    jest.spyOn(scrollRef.current!, 'getBoundingClientRect').mockReturnValue(makeRect(0, 100));
-    jest.spyOn(juzEl, 'getBoundingClientRect').mockReturnValue(makeRect(200, 250));
+    setupRects(makeRect(0, 100), makeRect(200, 250), juzEl);
+
     const { result, rerender } = renderHook(
       ({ activeTab }) =>
         useScrollCentering<Tab>({
@@ -89,13 +102,21 @@ describe('useScrollCentering', () => {
     rerender({ activeTab: 'Juz' });
     expect(juzEl.scrollIntoView).toHaveBeenCalledWith({ block: 'center' });
   });
+});
+
+describe('useScrollCentering - helpers', () => {
+  beforeEach(() => {
+    sessionStorage.clear();
+    jest.restoreAllMocks();
+    scrollRef.current!.innerHTML = '';
+  });
 
   it('skipNextCentering prevents centering and clears the session flag', () => {
     const { surahEl } = createEls();
     surahEl.dataset.active = 'true';
-    jest.spyOn(scrollRef.current!, 'getBoundingClientRect').mockReturnValue(makeRect(0, 100));
-    jest.spyOn(surahEl, 'getBoundingClientRect').mockReturnValue(makeRect(200, 250));
+    setupRects(makeRect(0, 100), makeRect(200, 250), surahEl);
     sessionStorage.setItem('skipCenterSurah', '1');
+
     renderHook(() =>
       useScrollCentering<Tab>({
         scrollRef,
