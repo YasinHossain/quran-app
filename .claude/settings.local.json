@@ -15,7 +15,5 @@
     "ask": []
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": [
-    "browser-console"
-  ]
+  "enabledMcpjsonServers": ["browser-console"]
 }
