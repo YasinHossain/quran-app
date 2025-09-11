@@ -20,7 +20,7 @@ export function getMemorizationDifficulty(numberOfAyahs: number): 'easy' | 'medi
   return 'hard';
 }
 
-export function getEstimatedReadingTime(numberOfAyahs: number): number {
+export function getSurahEstimatedReadingTime(numberOfAyahs: number): number {
   const totalWords = numberOfAyahs * WORDS_PER_VERSE;
   const timeInMinutes = totalWords / WORDS_PER_MINUTE;
   return Math.ceil(timeInMinutes);

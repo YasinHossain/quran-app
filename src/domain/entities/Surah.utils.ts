@@ -1,6 +1,6 @@
 import { RevelationType, SurahInit, SurahPlainObject } from './Surah.types';
 import {
-  getEstimatedReadingTime,
+  getSurahEstimatedReadingTime,
   getJuzNumbers,
   getMemorizationDifficulty,
   isLongSurah,
@@ -64,7 +64,7 @@ export const toPlainObject = (surah: Surah): SurahPlainObject => ({
   canBeReadInPrayer: canBeReadInPrayer(surah.id),
   startWithBismillah: startWithBismillah(surah.id),
   memorizationDifficulty: getMemorizationDifficulty(surah.numberOfAyahs),
-  estimatedReadingTime: getEstimatedReadingTime(surah.numberOfAyahs),
+  estimatedReadingTime: getSurahEstimatedReadingTime(surah.numberOfAyahs),
   isShortSurah: isShortSurah(surah.numberOfAyahs),
   isMediumSurah: isMediumSurah(surah.numberOfAyahs),
   isLongSurah: isLongSurah(surah.numberOfAyahs),
