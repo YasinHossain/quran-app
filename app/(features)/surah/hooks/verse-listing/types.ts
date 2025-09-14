@@ -37,4 +37,6 @@ export interface UseVerseListingParams {
   id?: string;
   /** Function to fetch verses */
   lookup: LookupFn;
+  /** Optional initial verses for testing or SSR fallback */
+  initialVerses?: Verse[];
 }

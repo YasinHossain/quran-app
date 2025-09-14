@@ -7,7 +7,11 @@ export type Action =
   | { type: 'SET_WORD_LANG'; value: string }
   | { type: 'SET_WORD_TRANSLATION_ID'; value: number }
   | { type: 'SET_TAFSIR_IDS'; value: number[] }
-  | { type: 'SET_TRANSLATION_IDS'; value: number[] };
+  | { type: 'SET_TRANSLATION_IDS'; value: number[] }
+  | { type: 'SET_ARABIC_FONT_SIZE'; value: number }
+  | { type: 'SET_TRANSLATION_FONT_SIZE'; value: number }
+  | { type: 'SET_TAFSIR_FONT_SIZE'; value: number }
+  | { type: 'SET_ARABIC_FONT_FACE'; value: string };
 
 export const reducer = (state: Settings, action: Action): Settings => {
   switch (action.type) {
@@ -29,6 +33,14 @@ export const reducer = (state: Settings, action: Action): Settings => {
         translationIds: action.value,
         translationId: action.value.length > 0 ? action.value[0] : state.translationId,
       };
+    case 'SET_ARABIC_FONT_SIZE':
+      return { ...state, arabicFontSize: action.value };
+    case 'SET_TRANSLATION_FONT_SIZE':
+      return { ...state, translationFontSize: action.value };
+    case 'SET_TAFSIR_FONT_SIZE':
+      return { ...state, tafsirFontSize: action.value };
+    case 'SET_ARABIC_FONT_FACE':
+      return { ...state, arabicFontFace: action.value };
     default:
       return state;
   }

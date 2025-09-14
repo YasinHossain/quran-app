@@ -26,3 +26,5 @@ export const useFontSize = (
 
   return { percentage, style };
 };
+
+export default useFontSize;

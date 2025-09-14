@@ -17,6 +17,10 @@ type SettingsSetters = Pick<
   | 'setWordTranslationId'
   | 'setTafsirIds'
   | 'setTranslationIds'
+  | 'setArabicFontSize'
+  | 'setTranslationFontSize'
+  | 'setTafsirFontSize'
+  | 'setArabicFontFace'
 >;
 
 const createSetters = (
@@ -30,6 +34,14 @@ const createSetters = (
     dispatch({ type: 'SET_WORD_TRANSLATION_ID', value: id }),
   setTafsirIds: (ids: number[]): void => dispatch({ type: 'SET_TAFSIR_IDS', value: ids }),
   setTranslationIds: (ids: number[]): void => dispatch({ type: 'SET_TRANSLATION_IDS', value: ids }),
+  setArabicFontSize: (size: number): void =>
+    dispatch({ type: 'SET_ARABIC_FONT_SIZE', value: size }),
+  setTranslationFontSize: (size: number): void =>
+    dispatch({ type: 'SET_TRANSLATION_FONT_SIZE', value: size }),
+  setTafsirFontSize: (size: number): void =>
+    dispatch({ type: 'SET_TAFSIR_FONT_SIZE', value: size }),
+  setArabicFontFace: (font: string): void =>
+    dispatch({ type: 'SET_ARABIC_FONT_FACE', value: font }),
 });
 
 interface SettingsContextType {
@@ -42,6 +54,10 @@ interface SettingsContextType {
   setWordTranslationId: (id: number) => void;
   setTafsirIds: (ids: number[]) => void;
   setTranslationIds: (ids: number[]) => void;
+  setArabicFontSize: (size: number) => void;
+  setTranslationFontSize: (size: number) => void;
+  setTafsirFontSize: (size: number) => void;
+  setArabicFontFace: (font: string) => void;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -70,6 +86,10 @@ export const SettingsProvider = ({
     setWordTranslationId,
     setTafsirIds,
     setTranslationIds,
+    setArabicFontSize,
+    setTranslationFontSize,
+    setTafsirFontSize,
+    setArabicFontFace,
   } = setters;
 
   const value = useMemo(
@@ -83,6 +103,10 @@ export const SettingsProvider = ({
       setWordTranslationId,
       setTafsirIds,
       setTranslationIds,
+      setArabicFontSize,
+      setTranslationFontSize,
+      setTafsirFontSize,
+      setArabicFontFace,
     }),
     [
       settings,
@@ -93,6 +117,10 @@ export const SettingsProvider = ({
       setWordTranslationId,
       setTafsirIds,
       setTranslationIds,
+      setArabicFontSize,
+      setTranslationFontSize,
+      setTafsirFontSize,
+      setArabicFontFace,
     ]
   );
 

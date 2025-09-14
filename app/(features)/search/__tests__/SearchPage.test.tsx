@@ -1,7 +1,8 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { useSearchParams } from 'next/navigation';
 
 import SearchPage from '@/app/(features)/search/page';
+import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import { searchVerses } from '@/lib/api';
 
 import type { MockProps } from '@/tests/mocks';
@@ -14,8 +15,8 @@ jest.mock('@/lib/api', () => ({
   searchVerses: jest.fn(),
 }));
 
-jest.mock('@/app/(features)/surah/components/Verse', () => ({
-  Verse: ({ verse }: MockProps<{ verse: { text_uthmani: string } }>) => (
+jest.mock('@/app/(features)/surah/components', () => ({
+  VerseCard: ({ verse }: MockProps<{ verse: { text_uthmani: string } }>) => (
     <div>{verse.text_uthmani}</div>
   ),
 }));
@@ -32,7 +33,7 @@ test('a query triggers a fetch and renders returned verses', async () => {
     { id: 1, verse_key: '1:1', text_uthmani: 'earth verse' },
   ]);
 
-  render(<SearchPage />);
+  renderWithProviders(<SearchPage />);
 
   await waitFor(() => {
     expect(searchVerses).toHaveBeenCalledWith('earth');
@@ -47,7 +48,7 @@ test('fetch rejection shows the error message', async () => {
   });
   (searchVerses as jest.Mock).mockRejectedValue(new Error('fail'));
 
-  render(<SearchPage />);
+  renderWithProviders(<SearchPage />);
 
   expect(await screen.findByText('Failed to load results.')).toBeInTheDocument();
 });

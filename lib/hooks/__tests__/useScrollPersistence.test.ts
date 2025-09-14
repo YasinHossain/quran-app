@@ -68,7 +68,7 @@ describe('useScrollPersistence - interactions', () => {
   beforeEach(resetState);
 
   it('stores scroll on scroll event', () => {
-    const setSpy = jest.spyOn(sessionStorage, 'setItem');
+    const setSpy = jest.spyOn(Storage.prototype, 'setItem');
     const { result } = renderHook(() =>
       useScrollPersistence<Tab>({
         scrollRef,
@@ -110,7 +110,7 @@ describe('useScrollPersistence - remember scroll', () => {
   beforeEach(resetState);
 
   it('remembers scroll for a tab', () => {
-    const setSpy = jest.spyOn(sessionStorage, 'setItem');
+    const setSpy = jest.spyOn(Storage.prototype, 'setItem');
     const { result } = renderHook(() =>
       useScrollPersistence<Tab>({
         scrollRef,

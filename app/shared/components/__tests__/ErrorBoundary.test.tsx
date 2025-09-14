@@ -21,6 +21,9 @@ const Fallback = ({ resetError }: { resetError: () => void }): React.ReactElemen
 
 describe('ErrorBoundary', () => {
   it('delegates errors to ErrorHandler', () => {
+    const originalError = console.error;
+    console.error = jest.fn();
+
     render(
       <ErrorBoundary fallback={Fallback}>
         <Boom />
@@ -29,5 +32,7 @@ describe('ErrorBoundary', () => {
 
     expect(ErrorHandler.handle).toHaveBeenCalled();
     expect(screen.getByText('Fallback')).toBeInTheDocument();
+
+    console.error = originalError;
   });
 });

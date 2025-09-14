@@ -16,10 +16,30 @@ afterEach(restoreTimers);
 
 it('rotates through verses in queue', async () => {
   const verses: Verse[] = [
-    { id: 1, verse_key: '1:1', text_uthmani: 'A', translations: [] },
-    { id: 2, verse_key: '1:2', text_uthmani: 'B', translations: [] },
-    { id: 3, verse_key: '1:3', text_uthmani: 'C', translations: [] },
-    { id: 4, verse_key: '1:4', text_uthmani: 'D', translations: [] },
+    {
+      id: 1,
+      verse_key: '1:1',
+      text_uthmani: 'A',
+      translations: [{ resource_id: 20, text: 'Translation A' }],
+    },
+    {
+      id: 2,
+      verse_key: '1:2',
+      text_uthmani: 'B',
+      translations: [{ resource_id: 20, text: 'Translation B' }],
+    },
+    {
+      id: 3,
+      verse_key: '1:3',
+      text_uthmani: 'C',
+      translations: [{ resource_id: 20, text: 'Translation C' }],
+    },
+    {
+      id: 4,
+      verse_key: '1:4',
+      text_uthmani: 'D',
+      translations: [{ resource_id: 20, text: 'Translation D' }],
+    },
   ];
 
   mockedGetRandomVerse
@@ -32,7 +52,7 @@ it('rotates through verses in queue', async () => {
     id: 99,
     verse_key: '2:255',
     text_uthmani: 'F',
-    translations: [],
+    translations: [{ resource_id: 20, text: 'Translation F' }],
   } as Verse);
 
   await renderVerseOfDay({ randomVerseInterval: 1 });
@@ -48,8 +68,18 @@ it('rotates through verses in queue', async () => {
 
 it('fetches random verse after specified rotations', async () => {
   const randomVerses: Verse[] = [
-    { id: 1, verse_key: '1:1', text_uthmani: 'A', translations: [] },
-    { id: 2, verse_key: '1:2', text_uthmani: 'B', translations: [] },
+    {
+      id: 1,
+      verse_key: '1:1',
+      text_uthmani: 'A',
+      translations: [{ resource_id: 20, text: 'Translation A' }],
+    },
+    {
+      id: 2,
+      verse_key: '1:2',
+      text_uthmani: 'B',
+      translations: [{ resource_id: 20, text: 'Translation B' }],
+    },
   ];
 
   mockedGetRandomVerse
@@ -60,7 +90,7 @@ it('fetches random verse after specified rotations', async () => {
     id: 100,
     verse_key: '2:255',
     text_uthmani: 'F',
-    translations: [],
+    translations: [{ resource_id: 20, text: 'Translation F' }],
   } as Verse);
 
   await renderVerseOfDay({ randomVerseInterval: 2 });

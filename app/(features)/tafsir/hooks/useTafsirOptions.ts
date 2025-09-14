@@ -37,7 +37,7 @@ export const useTafsirOptions = (): UseTafsirOptionsReturn => {
   const tafsirOptions: TafsirResource[] = useMemo(() => data || [], [data]);
 
   const tafsirResource = useMemo(
-    () => tafsirOptions.find((t) => t.id === settings.tafsirIds[0]),
+    () => tafsirOptions.find((t) => t.id === settings.tafsirIds?.[0]),
     [tafsirOptions, settings.tafsirIds]
   );
 

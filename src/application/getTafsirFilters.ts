@@ -1,12 +1,13 @@
 import { Tafsir } from '@/src/domain/entities/Tafsir';
+import { ILogger } from '@/src/domain/interfaces/ILogger';
 import { ITafsirRepository } from '@/src/domain/repositories/ITafsirRepository';
-import { logger as Logger } from '@/src/infrastructure/monitoring/Logger';
 
 import { getCachedResourcesWithFallback } from './getTafsirCache';
 
 export async function getTafsirsByLanguage(
   repository: ITafsirRepository,
-  language: string
+  language: string,
+  logger?: ILogger
 ): Promise<{
   tafsirs: Tafsir[];
   isFromCache: boolean;
@@ -16,7 +17,7 @@ export async function getTafsirsByLanguage(
     const tafsirs = await repository.getResourcesByLanguage(language);
     return { tafsirs, isFromCache: false };
   } catch (error) {
-    Logger.warn(
+    logger?.warn(
       `Failed to fetch tafsir resources for language ${language}:`,
       undefined,
       error as Error
@@ -32,7 +33,8 @@ export async function getTafsirsByLanguage(
 
 export async function searchTafsirs(
   repository: ITafsirRepository,
-  searchTerm: string
+  searchTerm: string,
+  logger?: ILogger
 ): Promise<Tafsir[]> {
   if (!searchTerm.trim()) {
     try {
@@ -40,7 +42,7 @@ export async function searchTafsirs(
       if (tafsirs.length > 0) return tafsirs;
       return (await getCachedResourcesWithFallback(repository)).tafsirs;
     } catch (error) {
-      Logger.warn('Failed to fetch fresh tafsir resources:', undefined, error as Error);
+      logger?.warn('Failed to fetch fresh tafsir resources:', undefined, error as Error);
       return (await getCachedResourcesWithFallback(repository)).tafsirs;
     }
   }
@@ -48,7 +50,7 @@ export async function searchTafsirs(
   try {
     return await repository.search(searchTerm);
   } catch (error) {
-    Logger.warn('Search failed, using cached data:', undefined, error as Error);
+    logger?.warn('Search failed, using cached data:', undefined, error as Error);
     const cached = await repository.getCachedResources();
     return cached.filter((t) => t.matchesSearch(searchTerm));
   }

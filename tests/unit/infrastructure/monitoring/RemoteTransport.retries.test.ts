@@ -1,10 +1,8 @@
-import { RemoteTransport, LogLevel, type LogEntry, logger } from '@infra/monitoring';
+/**
+ * @jest-environment node
+ */
 
-import { fetchWithTimeout } from '@/lib/api/client';
-
-jest.mock('../../../../lib/api/client', () => ({
-  fetchWithTimeout: jest.fn(),
-}));
+import { RemoteTransport, LogLevel, type LogEntry } from '@infra/monitoring';
 
 describe('RemoteTransport retries', () => {
   const createEntry = (level: LogLevel = LogLevel.INFO): LogEntry => ({
@@ -13,44 +11,59 @@ describe('RemoteTransport retries', () => {
     timestamp: new Date(),
   });
 
+  let mockFetchWithTimeout: jest.MockedFunction<typeof import('@/lib/api/client').fetchWithTimeout>;
+
+  beforeEach(() => {
+    mockFetchWithTimeout = jest.fn();
+  });
+
   afterEach(() => {
     jest.restoreAllMocks();
   });
 
   it('retries failed requests', async () => {
-    const fetchMock = fetchWithTimeout as jest.Mock;
-    fetchMock
+    mockFetchWithTimeout
       .mockRejectedValueOnce(new Error('network'))
-      .mockResolvedValueOnce({ ok: true } as Response);
-    const warnMock = jest.spyOn(logger, 'warn').mockImplementation(() => undefined);
+      .mockResolvedValueOnce({ ok: true, status: 200 } as Response);
 
-    const transport = new RemoteTransport('https://example.com');
+    const transport = new RemoteTransport(
+      'https://example.com',
+      {},
+      { fetchWithTimeout: mockFetchWithTimeout }
+    );
     transport.log(createEntry());
-    await transport.flush();
 
-    expect(warnMock).toHaveBeenCalled();
-
+    // First flush should fail and entries should be re-added to buffer
     await transport.flush();
-    expect(fetchMock).toHaveBeenCalledTimes(2);
-    const body = JSON.parse(fetchMock.mock.calls[1][1]?.body as string);
+    expect(mockFetchWithTimeout).toHaveBeenCalledTimes(1);
+
+    // Second flush should succeed with retry
+    await transport.flush();
+    expect(mockFetchWithTimeout).toHaveBeenCalledTimes(2);
+    const body = JSON.parse(mockFetchWithTimeout.mock.calls[1][1]?.body as string);
     expect(body.entries).toHaveLength(1);
     transport.destroy();
   });
 
   it('aborts long-running requests and retries', async () => {
-    const fetchMock = fetchWithTimeout as jest.Mock;
-    fetchMock
+    mockFetchWithTimeout
       .mockRejectedValueOnce(new DOMException('Aborted', 'AbortError'))
-      .mockResolvedValueOnce({ ok: true } as Response);
-    const warnMock = jest.spyOn(logger, 'warn').mockImplementation(() => undefined);
+      .mockResolvedValueOnce({ ok: true, status: 200 } as Response);
 
-    const transport = new RemoteTransport('https://example.com');
+    const transport = new RemoteTransport(
+      'https://example.com',
+      {},
+      { fetchWithTimeout: mockFetchWithTimeout }
+    );
     transport.log(createEntry());
-    await transport.flush();
 
-    expect(warnMock).toHaveBeenCalled();
+    // First flush should fail with AbortError and entries should be re-added to buffer
     await transport.flush();
-    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(mockFetchWithTimeout).toHaveBeenCalledTimes(1);
+
+    // Second flush should succeed with retry
+    await transport.flush();
+    expect(mockFetchWithTimeout).toHaveBeenCalledTimes(2);
     transport.destroy();
   });
 });

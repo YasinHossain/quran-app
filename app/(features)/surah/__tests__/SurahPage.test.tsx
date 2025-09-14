@@ -1,6 +1,7 @@
 import useSWRInfinite from 'swr/infinite';
 
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import * as api from '@/lib/api';
 import { Verse } from '@/types';
 
@@ -37,19 +38,7 @@ const mockVerse: Verse = {
 } as Verse;
 
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setMatchMedia(false);
 });
 
 beforeEach(() => {

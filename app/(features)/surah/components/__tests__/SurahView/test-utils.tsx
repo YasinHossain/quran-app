@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { SurahView } from '@/app/(features)/surah/components/SurahView.client';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 
 // Mock i18n to return keys directly
@@ -10,19 +10,13 @@ jest.mock('react-i18next', () => ({
 
 // Stable matchMedia for responsive utilities in JSDOM
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setMatchMedia(false);
+});
+
+// Ensure defaults are restored between tests even with resetMocks enabled
+beforeEach(() => {
+  mockUseSurahPanels.mockReturnValue(defaultPanels);
+  mockUseVerseListing.mockReturnValue(defaultVerseListing);
 });
 
 export const defaultPanels = {
@@ -75,5 +69,8 @@ jest.mock('@/app/(features)/surah/hooks', () => {
 });
 
 export const renderSurahView = (surahId = '1'): ReturnType<typeof renderWithProviders> => {
+  // Import after mocks are applied to ensure mocks take effect
+
+  const { SurahView } = require('@/app/(features)/surah/components/SurahView.client');
   return renderWithProviders(<SurahView surahId={surahId} />);
 };

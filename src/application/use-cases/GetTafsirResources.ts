@@ -4,8 +4,8 @@ import {
 } from '@/src/application/getTafsirCache';
 import { getTafsirsByLanguage, searchTafsirs } from '@/src/application/getTafsirFilters';
 import { Tafsir } from '@/src/domain/entities/Tafsir';
+import { ILogger } from '@/src/domain/interfaces/ILogger';
 import { ITafsirRepository } from '@/src/domain/repositories/ITafsirRepository';
-import { logger as Logger } from '@/src/infrastructure/monitoring/Logger';
 
 /**
  * Use Case: Get Tafsir Resources
@@ -14,7 +14,10 @@ import { logger as Logger } from '@/src/infrastructure/monitoring/Logger';
  * Delegates caching and filtering to helper modules.
  */
 export class GetTafsirResourcesUseCase {
-  constructor(private readonly tafsirRepository: ITafsirRepository) {}
+  constructor(
+    private readonly tafsirRepository: ITafsirRepository,
+    private readonly logger?: ILogger
+  ) {}
 
   async execute(): Promise<{
     tafsirs: Tafsir[];
@@ -28,7 +31,7 @@ export class GetTafsirResourcesUseCase {
       }
       return getCachedResourcesWithFallback(this.tafsirRepository);
     } catch (error) {
-      Logger.warn('Failed to fetch fresh tafsir resources:', undefined, error as Error);
+      this.logger?.warn('Failed to fetch fresh tafsir resources:', undefined, error as Error);
       return getCachedResourcesWithFallback(this.tafsirRepository);
     }
   }
@@ -38,15 +41,15 @@ export class GetTafsirResourcesUseCase {
     isFromCache: boolean;
     error?: string;
   }> {
-    return getTafsirsByLanguage(this.tafsirRepository, language);
+    return getTafsirsByLanguage(this.tafsirRepository, language, this.logger);
   }
 
   async search(searchTerm: string): Promise<Tafsir[]> {
-    return searchTafsirs(this.tafsirRepository, searchTerm);
+    return searchTafsirs(this.tafsirRepository, searchTerm, this.logger);
   }
 
   async getById(id: number): Promise<Tafsir | null> {
-    return getTafsirByIdWithCache(this.tafsirRepository, id);
+    return getTafsirByIdWithCache(this.tafsirRepository, id, this.logger);
   }
 
   async getTafsirContent(verseKey: string, tafsirId: number): Promise<string> {

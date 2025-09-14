@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import LastReadPage from '@/app/(features)/bookmarks/last-read/page';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
 
 const mockTag =
   (tag: string) =>
@@ -48,19 +49,7 @@ jest.mock('framer-motion', () => ({
 }));
 
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setMatchMedia(false);
 });
 
 beforeEach(() => {

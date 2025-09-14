@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { getSurahList } from '@/lib/api';
 import { Surah } from '@/types';
 
@@ -18,19 +19,7 @@ jest.mock('next/link', () => ({ href, children }: MockProps<{ href: string }>) =
 const mockedGetSurahList = getSurahList as jest.MockedFunction<typeof getSurahList>;
 
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setMatchMedia(false);
 });
 
 // Create a test component that mirrors the server component behavior

@@ -1,22 +1,11 @@
 import userEvent from '@testing-library/user-event';
 
 import { StandardNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setMatchMedia(false);
 });
 
 describe('StandardNavigationCard', () => {

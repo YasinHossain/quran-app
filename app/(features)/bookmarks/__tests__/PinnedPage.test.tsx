@@ -1,7 +1,9 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import PinnedAyahPage from '@/app/(features)/bookmarks/pinned/page';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
+import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 
 const mockTag =
   (tag: string) =>
@@ -64,19 +66,7 @@ jest.mock('framer-motion', () => ({
 }));
 
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setMatchMedia(false);
 });
 
 beforeEach(() => {
@@ -87,7 +77,7 @@ beforeEach(() => {
 
 describe('Pinned Ayah Page', () => {
   it('renders pinned verses and handles navigation', () => {
-    render(<PinnedAyahPage />);
+    renderWithProviders(<PinnedAyahPage />);
     expect(screen.getByText('Pinned Ayahs')).toBeInTheDocument();
     expect(screen.getByText('Verse 1')).toBeInTheDocument();
     fireEvent.click(screen.getByText('Last Read'));
@@ -95,14 +85,14 @@ describe('Pinned Ayah Page', () => {
   });
 
   it('removes a pinned verse', () => {
-    render(<PinnedAyahPage />);
+    renderWithProviders(<PinnedAyahPage />);
     fireEvent.click(screen.getByText('Remove'));
     expect(removeBookmark).toHaveBeenCalledWith('1', 'pinned');
   });
 
   it('shows empty state message', () => {
     pinnedVerses = [];
-    render(<PinnedAyahPage />);
+    renderWithProviders(<PinnedAyahPage />);
     expect(screen.getByText('No Pinned Verses')).toBeInTheDocument();
   });
 });

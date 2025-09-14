@@ -11,7 +11,6 @@ import { FontSizeSlider } from './FontSizeSlider';
 interface FontSettingsContentProps {
   isOpen?: boolean;
   onToggle?: () => void;
-  isClient: boolean;
   settings: ReturnType<typeof useSettings>['settings'];
   arabicStyle: React.CSSProperties;
   translationStyle: React.CSSProperties;
@@ -24,7 +23,6 @@ interface FontSettingsContentProps {
 export function FontSettingsContent({
   isOpen,
   onToggle,
-  isClient,
   settings,
   arabicStyle,
   translationStyle,
@@ -46,7 +44,7 @@ export function FontSettingsContent({
       <div className="space-y-4">
         <FontSizeSlider
           label={t('arabic_font_size')}
-          value={isClient ? settings.arabicFontSize : 28}
+          value={settings.arabicFontSize ?? 28}
           min={16}
           max={48}
           onChange={handleArabicFontSizeChange}
@@ -54,7 +52,7 @@ export function FontSettingsContent({
         />
         <FontSizeSlider
           label={t('translation_font_size')}
-          value={isClient ? settings.translationFontSize : 16}
+          value={settings.translationFontSize ?? 16}
           min={12}
           max={28}
           onChange={handleTranslationFontSizeChange}

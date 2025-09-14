@@ -33,8 +33,11 @@ export const ThemeProvider = ({
       const stored = getItem('theme');
       if (stored === 'light' || stored === 'dark') {
         setTheme(stored as Theme);
-      } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        setTheme('dark');
+      } else if (typeof window.matchMedia === 'function') {
+        const mql = window.matchMedia('(prefers-color-scheme: dark)');
+        if (mql && typeof mql.matches === 'boolean' && mql.matches) {
+          setTheme('dark');
+        }
       }
     }
   }, []); // Empty dependency array ensures this effect runs only once on mount

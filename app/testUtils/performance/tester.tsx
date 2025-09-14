@@ -1,5 +1,7 @@
-import { render, RenderResult } from '@testing-library/react';
+import { RenderResult } from '@testing-library/react';
 import { ComponentType } from 'react';
+
+import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 
 import { withRenderTracking, resetRenderTracking, getRenderCount } from './tracking';
 
@@ -36,7 +38,7 @@ export class PerformanceTester<P extends object> {
 
   render(props: P): this {
     resetRenderTracking();
-    this.renderResult = render(<this.TrackedComponent {...props} />);
+    this.renderResult = renderWithProviders(<this.TrackedComponent {...props} />);
     return this;
   }
 

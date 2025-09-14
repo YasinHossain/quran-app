@@ -134,6 +134,8 @@ describe('VerseRepository findSajdahVerses', () => {
   });
 
   it('should find sajdah verses', async () => {
+    // Provide a default for unlisted sajdah positions to avoid undefined returns
+    mockApiVerses.getVerseByKey.mockResolvedValue(mockApiVerse as any);
     mockApiVerses.getVerseByKey
       .mockResolvedValueOnce({ ...mockApiVerse, verse_key: '7:206' })
       .mockResolvedValueOnce({ ...mockApiVerse, verse_key: '13:15' })
@@ -230,7 +232,13 @@ describe('VerseRepository logging', () => {
   });
 
   it('logs warning for unsupported save operation', async () => {
-    const verse = new VerseEntity('1:1', 1, 1, '', '');
+    const verse = new VerseEntity({
+      id: '1:1',
+      surahId: 1,
+      ayahNumber: 1,
+      arabicText: 'a',
+      uthmaniText: 'a',
+    });
 
     await expect(repository.save(verse)).rejects.toThrow(
       'Save operation not supported by read-only API'

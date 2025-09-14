@@ -5,6 +5,7 @@ import useSWR from 'swr';
 
 import TafsirVersePage from '@/app/(features)/tafsir/[surahId]/[ayahId]/page';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { Verse } from '@/types';
@@ -54,24 +55,8 @@ const mockUseSWR = useSWR as jest.Mock;
 const mockGetTafsirCached = getTafsirCached as jest.Mock;
 
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setMatchMedia(false);
   jest.spyOn(logger, 'error').mockImplementation(() => {});
-});
-
-afterAll(() => {
-  (logger.error as jest.Mock).mockRestore();
 });
 
 const verse: Verse = {

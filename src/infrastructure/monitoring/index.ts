@@ -6,7 +6,8 @@
  */
 
 // Logger exports
-export { Logger, LogLevel, logger, type LogEntry, type ILoggerTransport } from './Logger';
+export { Logger, logger } from './Logger';
+export { LogLevel, type LogEntry, type ILoggerTransport } from './types';
 export { MemoryTransport } from './MemoryTransport';
 export { RemoteTransport } from './RemoteTransport';
 export { PerformanceLogger, perfLogger } from './PerformanceLogger';

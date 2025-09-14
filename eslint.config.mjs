@@ -7,6 +7,7 @@ import unusedImports from 'eslint-plugin-unused-imports';
 import importPlugin from 'eslint-plugin-import';
 import { noRawColorClasses } from './tools/scripts/eslint/no-raw-color-classes.mjs';
 import { noThemeConditionals } from './tools/scripts/eslint/no-theme-conditionals.mjs';
+import enforceArchitectureBoundaries from './tools/scripts/eslint/enforce-architecture-boundaries.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -19,6 +20,12 @@ const tokenRules = {
   rules: {
     'no-raw-color-classes': noRawColorClasses,
     'no-theme-conditionals': noThemeConditionals,
+  },
+};
+
+const architectureRules = {
+  rules: {
+    'enforce-architecture-boundaries': enforceArchitectureBoundaries,
   },
 };
 
@@ -223,6 +230,16 @@ const eslintConfig = [
           skipComments: true,
         },
       ],
+    },
+  },
+  // Architecture boundary enforcement
+  {
+    files: ['src/**/*.ts', 'app/**/*.{ts,tsx}'],
+    plugins: {
+      'architecture-rules': architectureRules,
+    },
+    rules: {
+      'architecture-rules/enforce-architecture-boundaries': 'error',
     },
   },
   // Context providers

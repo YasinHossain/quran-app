@@ -9,6 +9,8 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   // Test environment setup
   testEnvironment: 'jest-environment-jsdom',
+  // Load DOM shims first, then testing-library extensions
+  setupFiles: ['<rootDir>/tests/setup/polyfills.js', '<rootDir>/tests/setup/matchMedia.js'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
 
   // Module mapping for absolute imports
@@ -34,6 +36,7 @@ const customJestConfig = {
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
     'app/**/*.{js,jsx,ts,tsx}',
+    'lib/**/*.{js,jsx,ts,tsx}',
     '!**/*.d.ts',
     '!**/node_modules/**',
     '!**/.next/**',
@@ -62,7 +65,8 @@ const customJestConfig = {
     },
   },
 
-  // Coverage reporters
+  // Coverage provider and reporters
+  coverageProvider: 'v8',
   coverageReporters: ['text', 'text-summary', 'html', 'lcov', 'clover'],
 
   // Test timeout

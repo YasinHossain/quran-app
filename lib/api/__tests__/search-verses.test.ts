@@ -21,7 +21,8 @@ describe('searchVerses', () => {
 
     const result = await searchVerses('foo');
     expect(global.fetch).toHaveBeenCalledWith(
-      `${API_BASE_URL}/search?q=foo&size=20&translations=20`
+      `${API_BASE_URL}/search?q=foo&size=20&translations=20`,
+      expect.objectContaining({ headers: { Accept: 'application/json' } })
     );
     expect(result).toEqual([
       {

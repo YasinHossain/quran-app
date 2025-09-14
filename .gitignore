@@ -8,6 +8,9 @@
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
+
+# Jest cache
+.jest/
 !.yarn/releases
 !.yarn/versions
 

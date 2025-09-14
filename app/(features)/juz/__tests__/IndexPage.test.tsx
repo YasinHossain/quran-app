@@ -1,4 +1,5 @@
 import JuzIndexPage from '@/app/(features)/juz/page';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 
 import type { MockProps } from '@/tests/mocks';
@@ -8,19 +9,7 @@ jest.mock('next/link', () => ({ href, children }: MockProps<{ href: string }>) =
 ));
 
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setMatchMedia(false);
 });
 
 const renderPage = (): void => {

@@ -198,7 +198,7 @@ jobs:
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
-  # Job 7: Accessibility Tests
+  # Job 7: Accessibility Tests (Phase 3 Enhanced)
   test-accessibility:
     runs-on: ubuntu-latest
 
@@ -215,6 +215,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Run jest-axe accessibility tests
+        run: npm run test:accessibility
+
       - name: Build application
         run: npm run build
 
@@ -226,12 +229,51 @@ jobs:
       - name: Wait for application to be ready
         run: npx wait-on http://localhost:3000 --timeout 60000
 
-      - name: Run axe accessibility tests
+      - name: Run axe-core CLI tests on core routes
         run: |
           npm install -g @axe-core/cli
-          axe http://localhost:3000 --exit
+          axe http://localhost:3000 --exit --tags wcag2a,wcag2aa --include '#__next'
+          axe http://localhost:3000/surah --exit --tags wcag2a,wcag2aa --include '#__next'
+          axe http://localhost:3000/bookmarks --exit --tags wcag2a,wcag2aa --include '#__next'
+          axe http://localhost:3000/search --exit --tags wcag2a,wcag2aa --include '#__next'
+          axe http://localhost:3000/juz --exit --tags wcag2a,wcag2aa --include '#__next'
+          axe http://localhost:3000/tafsir --exit --tags wcag2a,wcag2aa --include '#__next'
 
-  # Job 8: Domain Tests (Phase 4 specific)
+  # Job 8: Visual Regression Testing (Phase 3 Enhanced)
+  test-visual:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Build Storybook
+        run: npm run storybook:build
+
+      - name: Run Storybook tests
+        run: npm run storybook:test:ci
+
+      - name: Upload Storybook test results
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: storybook-test-results
+          path: test-results/
+          retention-days: 30
+
+  # Job 9: Domain Tests (Phase 4 specific)
   test-domain:
     runs-on: ubuntu-latest
 
@@ -272,6 +314,7 @@ jobs:
       - code-quality
       - test-performance
       - test-accessibility
+      - test-visual
       - test-domain
     if: always()
 
@@ -318,6 +361,7 @@ jobs:
               'Code Quality': '${{ needs.code-quality.result }}',
               'Performance': '${{ needs.test-performance.result }}',
               'Accessibility': '${{ needs.test-accessibility.result }}',
+              'Visual': '${{ needs.test-visual.result }}',
               'Domain': '${{ needs.test-domain.result }}'
             };
 

@@ -3,8 +3,8 @@ import {
   InvalidTafsirRequestError,
   TafsirContentLoadError,
 } from '@/src/domain/errors/DomainErrors';
+import { ILogger } from '@/src/domain/interfaces/ILogger';
 import { ITafsirRepository } from '@/src/domain/repositories/ITafsirRepository';
-import { logger as Logger } from '@/src/infrastructure/monitoring/Logger';
 
 // Minimal mocked repository implementing ITafsirRepository
 const createRepository = (): jest.Mocked<ITafsirRepository> => ({
@@ -17,13 +17,23 @@ const createRepository = (): jest.Mocked<ITafsirRepository> => ({
   getCachedResources: jest.fn(),
 });
 
+// Minimal mocked logger implementing ILogger
+const createMockLogger = (): jest.Mocked<ILogger> => ({
+  debug: jest.fn(),
+  info: jest.fn(),
+  warn: jest.fn(),
+  error: jest.fn(),
+});
+
 describe('GetTafsirContentUseCase', () => {
   let repository: jest.Mocked<ITafsirRepository>;
+  let mockLogger: jest.Mocked<ILogger>;
   let useCase: GetTafsirContentUseCase;
 
   beforeEach(() => {
     repository = createRepository();
-    useCase = new GetTafsirContentUseCase(repository);
+    mockLogger = createMockLogger();
+    useCase = new GetTafsirContentUseCase(repository, mockLogger);
   });
 
   it('returns content when repository succeeds', async () => {
@@ -49,11 +59,13 @@ describe('GetTafsirContentUseCase', () => {
 
   it('throws TafsirContentLoadError when repository fails', async () => {
     repository.getTafsirByVerse.mockRejectedValue(new Error('Network error'));
-    const errorSpy = jest.spyOn(Logger, 'error').mockImplementation(() => {});
 
     await expect(useCase.execute('1:1', 1)).rejects.toThrow(TafsirContentLoadError);
-    expect(errorSpy).toHaveBeenCalled();
-    errorSpy.mockRestore();
+    expect(mockLogger.error).toHaveBeenCalledWith(
+      'Failed to get tafsir content:',
+      undefined,
+      expect.any(Error)
+    );
   });
 
   it('retrieves multiple tafsir contents with mixed results', async () => {
@@ -61,8 +73,6 @@ describe('GetTafsirContentUseCase', () => {
       .mockResolvedValueOnce('<p>tafsir 1</p>')
       .mockResolvedValueOnce('')
       .mockRejectedValueOnce(new Error('boom'));
-    const warnSpy = jest.spyOn(Logger, 'warn').mockImplementation(() => {});
-    const errorSpy = jest.spyOn(Logger, 'error').mockImplementation(() => {});
 
     const result = await useCase.executeMultiple('1:1', [1, 2, 3]);
 
@@ -70,8 +80,10 @@ describe('GetTafsirContentUseCase', () => {
     expect(result.get(2)).toBe('No tafsir content available for this verse.');
     expect(result.get(3)).toBe('Failed to load tafsir content.');
     expect(repository.getTafsirByVerse).toHaveBeenCalledTimes(3);
-    expect(warnSpy).toHaveBeenCalled();
-    warnSpy.mockRestore();
-    errorSpy.mockRestore();
+    expect(mockLogger.warn).toHaveBeenCalledWith(
+      'Failed to get tafsir content for ID 3:',
+      undefined,
+      expect.any(Error)
+    );
   });
 });

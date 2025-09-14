@@ -22,10 +22,14 @@ describe('getTafsirResources', () => {
 
     const result = await getTafsirResources();
     expect(global.fetch).toHaveBeenCalledWith(
-      expect.stringContaining(`${API_BASE_URL}/resources/tafsirs`)
+      expect.stringContaining(`${API_BASE_URL}/resources/tafsirs`),
+      expect.anything()
     );
-    expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('per_page=200'));
-    expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('page=1'));
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.stringContaining('per_page=200'),
+      expect.anything()
+    );
+    expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('page=1'), expect.anything());
     const expected: TafsirResource[] = [{ id: 1, name: 'Test Tafsir', lang: 'English' }];
     expect(result).toEqual(expected);
   });

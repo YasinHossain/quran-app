@@ -1,8 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * @fileoverview Playwright Configuration for Architecture Compliance E2E Tests
- * @description Week 6 E2E testing setup with cross-browser and device testing
+ * @fileoverview Playwright Configuration for E2E Tests
+ * @description E2E testing setup with cross-browser, device, and offline testing
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
@@ -83,35 +83,56 @@ export default defineConfig({
       testMatch: '**/architecture/**/*.spec.ts',
     },
 
+    /* PWA & Offline Tests */
+    {
+      name: 'pwa-desktop',
+      use: {
+        ...devices['Desktop Chrome'],
+        // Enable service worker for PWA testing
+        serviceWorkers: 'allow',
+        viewport: { width: 1280, height: 720 },
+      },
+      testMatch: '**/offline-functionality.spec.ts',
+    },
+
+    {
+      name: 'pwa-mobile',
+      use: {
+        ...devices['Pixel 5'],
+        serviceWorkers: 'allow',
+      },
+      testMatch: '**/offline-functionality.spec.ts',
+    },
+
     /* Regular E2E Tests */
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
-      testIgnore: '**/architecture/**/*.spec.ts',
+      testIgnore: ['**/architecture/**/*.spec.ts', '**/offline-functionality.spec.ts'],
     },
 
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
-      testIgnore: '**/architecture/**/*.spec.ts',
+      testIgnore: ['**/architecture/**/*.spec.ts', '**/offline-functionality.spec.ts'],
     },
 
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
-      testIgnore: '**/architecture/**/*.spec.ts',
+      testIgnore: ['**/architecture/**/*.spec.ts', '**/offline-functionality.spec.ts'],
     },
 
     /* Test against mobile viewports. */
     {
       name: 'Mobile Chrome',
       use: { ...devices['Pixel 5'] },
-      testIgnore: '**/architecture/**/*.spec.ts',
+      testIgnore: ['**/architecture/**/*.spec.ts', '**/offline-functionality.spec.ts'],
     },
     {
       name: 'Mobile Safari',
       use: { ...devices['iPhone 12'] },
-      testIgnore: '**/architecture/**/*.spec.ts',
+      testIgnore: ['**/architecture/**/*.spec.ts', '**/offline-functionality.spec.ts'],
     },
   ],
 

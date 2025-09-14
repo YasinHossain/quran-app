@@ -2,6 +2,7 @@ import userEvent from '@testing-library/user-event';
 import useSWR from 'swr';
 
 import { TafsirTabs } from '@/app/(features)/tafsir/[surahId]/[ayahId]/components/TafsirTabs';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
@@ -20,25 +21,19 @@ const resources = [
   { id: 2, name: 'Tafsir Two' },
 ];
 
+let errorSpy: jest.SpyInstance;
+
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
-  jest.spyOn(logger, 'error').mockImplementation(() => {});
+  setMatchMedia(false);
 });
 
-afterAll(() => {
-  (logger.error as jest.Mock).mockRestore();
+beforeEach(() => {
+  // Ensure a fresh spy each test regardless of global setup/restoreMocks
+  errorSpy = jest.spyOn(logger, 'error').mockImplementation(() => {});
+});
+
+afterEach(() => {
+  errorSpy?.mockRestore();
 });
 
 beforeEach(() => {

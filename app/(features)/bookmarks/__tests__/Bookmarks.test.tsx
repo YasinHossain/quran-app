@@ -3,6 +3,7 @@ import React from 'react';
 
 import { BookmarksHeader } from '@/app/(features)/bookmarks/components/BookmarksHeader';
 import { BookmarksSidebar } from '@/app/(features)/bookmarks/components/BookmarksSidebar';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
 
 const mockTag =
   (tag: string) =>
@@ -32,20 +33,8 @@ jest.mock('@/app/providers/BookmarkContext', () => ({
   }),
 }));
 
-// Mock matchMedia
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation((query) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(), // deprecated
-    removeListener: jest.fn(), // deprecated
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
-});
+// Set up matchMedia mock
+setMatchMedia(false);
 
 const testNavigationItemAccessibility = (item: Element | null): void => {
   expect(item).toBeInTheDocument();
@@ -103,21 +92,21 @@ describe('BookmarksSidebar', () => {
   it('should render all navigation items', () => {
     render(<BookmarksSidebar activeSection="bookmarks" />);
 
-    expect(screen.getByText('Bookmark')).toBeInTheDocument();
-    expect(screen.getByText('Pins')).toBeInTheDocument();
-    expect(screen.getByText('Last Reads')).toBeInTheDocument();
+    expect(screen.getByText('All Bookmarks')).toBeInTheDocument();
+    expect(screen.getByText('Pinned Verses')).toBeInTheDocument();
+    expect(screen.getByText('Recent')).toBeInTheDocument();
   });
 
   it('should have accessible navigation items', () => {
     render(<BookmarksSidebar activeSection="bookmarks" />);
 
-    const pinnedItem = screen.getByText('Pins').closest('div');
-    const lastReadItem = screen.getByText('Last Reads').closest('div');
+    const pinnedItem = screen.getByText('Pinned Verses').closest('div');
+    const lastReadItem = screen.getByText('Recent').closest('div');
 
     testNavigationItemAccessibility(pinnedItem);
     testNavigationItemAccessibility(lastReadItem);
 
-    const bookmarkItem = screen.getByText('Bookmark');
+    const bookmarkItem = screen.getByText('All Bookmarks');
     const navBookmarkItem = bookmarkItem.closest('div');
     expect(navBookmarkItem).toBeInTheDocument();
   });

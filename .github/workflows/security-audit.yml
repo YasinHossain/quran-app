@@ -1,0 +1,202 @@
+name: Security Audit
+
+on:
+  schedule:
+    # Run weekly on Sundays at 00:00 UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch: # Allow manual triggering
+  pull_request:
+    branches: [main, master]
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  security-audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      pull-requests: write
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run npm audit
+        id: audit
+        run: |
+          echo "## Security Audit Report" > audit-report.md
+          echo "" >> audit-report.md
+          
+          # Run audit and capture output
+          if npm audit --audit-level=moderate --omit=dev --json > audit-output.json 2>&1; then
+            echo "✅ **No security vulnerabilities found**" >> audit-report.md
+            echo "AUDIT_STATUS=success" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️ **Security vulnerabilities detected**" >> audit-report.md
+            echo "AUDIT_STATUS=failure" >> $GITHUB_OUTPUT
+            
+            # Parse JSON output for better reporting
+            echo "" >> audit-report.md
+            echo "### Vulnerabilities Summary" >> audit-report.md
+            
+            if command -v jq >/dev/null 2>&1; then
+              # Parse with jq if available
+              CRITICAL=$(jq -r '.metadata.vulnerabilities.critical // 0' audit-output.json)
+              HIGH=$(jq -r '.metadata.vulnerabilities.high // 0' audit-output.json)
+              MODERATE=$(jq -r '.metadata.vulnerabilities.moderate // 0' audit-output.json)
+              LOW=$(jq -r '.metadata.vulnerabilities.low // 0' audit-output.json)
+              
+              echo "- **Critical**: $CRITICAL" >> audit-report.md
+              echo "- **High**: $HIGH" >> audit-report.md
+              echo "- **Moderate**: $MODERATE" >> audit-report.md
+              echo "- **Low**: $LOW" >> audit-report.md
+            fi
+            
+            echo "" >> audit-report.md
+            echo "### Recommended Actions" >> audit-report.md
+            echo "1. Review the vulnerabilities listed below" >> audit-report.md
+            echo "2. Update affected packages to secure versions" >> audit-report.md
+            echo "3. Run \`npm audit fix\` to automatically fix issues" >> audit-report.md
+            echo "4. For manual fixes, run \`npm update\` for specific packages" >> audit-report.md
+            
+            echo "" >> audit-report.md
+            echo "<details>" >> audit-report.md
+            echo "<summary>Full Audit Output</summary>" >> audit-report.md
+            echo "" >> audit-report.md
+            echo "\`\`\`json" >> audit-report.md
+            cat audit-output.json >> audit-report.md
+            echo "\`\`\`" >> audit-report.md
+            echo "</details>" >> audit-report.md
+          fi
+
+      - name: Check for high/critical vulnerabilities
+        if: steps.audit.outputs.AUDIT_STATUS == 'failure'
+        run: |
+          # Check if there are critical or high vulnerabilities
+          if command -v jq >/dev/null 2>&1; then
+            CRITICAL=$(jq -r '.metadata.vulnerabilities.critical // 0' audit-output.json)
+            HIGH=$(jq -r '.metadata.vulnerabilities.high // 0' audit-output.json)
+            
+            if [ "$CRITICAL" -gt 0 ] || [ "$HIGH" -gt 0 ]; then
+              echo "::error::Critical or high severity vulnerabilities found!"
+              echo "Critical: $CRITICAL, High: $HIGH"
+              exit 1
+            fi
+          else
+            # Fallback for systems without jq
+            if grep -q '"severity":"critical"' audit-output.json || grep -q '"severity":"high"' audit-output.json; then
+              echo "::error::Critical or high severity vulnerabilities found!"
+              exit 1
+            fi
+          fi
+
+      - name: Comment on PR with audit results
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            let report;
+            try {
+              report = fs.readFileSync('audit-report.md', 'utf8');
+            } catch (error) {
+              report = "## Security Audit Report\n\n❌ **Audit failed to run properly**";
+            }
+            
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const existingComment = comments.find(
+              comment => comment.body.includes('Security Audit Report')
+            );
+            
+            if (existingComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: report
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: report
+              });
+            }
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-audit-report
+          path: |
+            audit-report.md
+            audit-output.json
+          retention-days: 90
+
+      - name: Create issue for security vulnerabilities
+        if: steps.audit.outputs.AUDIT_STATUS == 'failure' && github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('audit-report.md', 'utf8');
+            
+            // Check if there's already an open security issue
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'security'
+            });
+            
+            const existingIssue = issues.find(
+              issue => issue.title.includes('Security Audit')
+            );
+            
+            if (!existingIssue) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `Security Audit: Vulnerabilities Detected - ${new Date().toISOString().split('T')[0]}`,
+                body: `${report}\n\n---\n*This issue was automatically created by the security audit workflow.*`,
+                labels: ['security', 'automated']
+              });
+            }
+
+  # Dependency review for PRs
+  dependency-review:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+          allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC
+          deny-licenses: GPL-2.0, GPL-3.0

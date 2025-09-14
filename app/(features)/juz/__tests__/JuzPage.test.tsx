@@ -1,5 +1,6 @@
 import { JuzClient } from '@/app/(features)/juz/[juzId]/JuzClient';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import * as api from '@/lib/api';
 import { identity } from '@/tests/mocks';
 import { Verse, Juz } from '@/types';
@@ -36,19 +37,7 @@ const mockJuz: Juz = {
 jest.mock('@/lib/api');
 
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setMatchMedia(false);
 });
 
 beforeEach(() => {

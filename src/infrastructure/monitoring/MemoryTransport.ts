@@ -1,4 +1,4 @@
-import { type LogEntry, type ILoggerTransport } from './Logger';
+import { type LogEntry, type ILoggerTransport } from './types';
 
 /**
  * Memory transport for testing and debugging

@@ -1,6 +1,6 @@
 import { Tafsir } from '@/src/domain/entities/Tafsir';
+import { ILogger } from '@/src/domain/interfaces/ILogger';
 import { ITafsirRepository } from '@/src/domain/repositories/ITafsirRepository';
-import { logger as Logger } from '@/src/infrastructure/monitoring/Logger';
 
 export async function getCachedResourcesWithFallback(repository: ITafsirRepository): Promise<{
   tafsirs: Tafsir[];
@@ -33,12 +33,13 @@ export async function getCachedResourcesWithFallback(repository: ITafsirReposito
 
 export async function getTafsirByIdWithCache(
   repository: ITafsirRepository,
-  id: number
+  id: number,
+  logger?: ILogger
 ): Promise<Tafsir | null> {
   try {
     return await repository.getById(id);
   } catch (error) {
-    Logger.warn('Failed to get tafsir by ID, trying cache:', undefined, error as Error);
+    logger?.warn('Failed to get tafsir by ID, trying cache:', undefined, error as Error);
     const cached = await repository.getCachedResources();
     return cached.find((t) => t.id === id) || null;
   }

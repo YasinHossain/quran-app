@@ -132,4 +132,6 @@ export class Logger {
 // Export singleton instances
 export const logger = Logger.getInstance();
 
-// Types already exported as interfaces above
+// Re-export types and enums for consumers
+export { LogLevel, type LogEntry, type ILoggerTransport } from './types';
+export { MemoryTransport } from './MemoryTransport';

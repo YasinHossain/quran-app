@@ -1,11 +1,10 @@
+/**
+ * @jest-environment node
+ */
+
 import { RemoteTransport } from '@infra/monitoring';
 
-import { fetchWithTimeout } from '@/lib/api/client';
 import { LogLevel, type LogEntry } from '@/src/infrastructure/monitoring/types';
-
-jest.mock('../../../../lib/api/client', () => ({
-  fetchWithTimeout: jest.fn(),
-}));
 
 describe('RemoteTransport flushing', () => {
   const createEntry = (level: LogLevel = LogLevel.INFO): LogEntry => ({
@@ -14,34 +13,70 @@ describe('RemoteTransport flushing', () => {
     timestamp: new Date(),
   });
 
+  let mockFetchWithTimeout: jest.MockedFunction<typeof import('@/lib/api/client').fetchWithTimeout>;
+
+  beforeEach(() => {
+    mockFetchWithTimeout = jest.fn();
+  });
+
   afterEach(() => {
     jest.restoreAllMocks();
   });
 
   it('flushes buffered logs to endpoint', async () => {
-    const fetchMock = fetchWithTimeout as jest.Mock;
-    fetchMock.mockResolvedValue({ ok: true } as Response);
+    mockFetchWithTimeout.mockResolvedValue({ ok: true, status: 200 } as Response);
 
-    const transport = new RemoteTransport('https://example.com');
+    const transport = new RemoteTransport(
+      'https://example.com',
+      {},
+      { fetchWithTimeout: mockFetchWithTimeout }
+    );
     const entry = createEntry();
     transport.log(entry);
+
+    // Explicitly flush to trigger the fetch call
     await transport.flush();
 
-    expect(fetchMock).toHaveBeenCalled();
-    const body = JSON.parse(fetchMock.mock.calls[0][1]?.body as string);
+    expect(mockFetchWithTimeout).toHaveBeenCalled();
+    expect(mockFetchWithTimeout).toHaveBeenCalledWith(
+      'https://example.com',
+      expect.objectContaining({
+        method: 'POST',
+        headers: expect.objectContaining({
+          'Content-Type': 'application/json',
+        }),
+        body: expect.any(String),
+      })
+    );
+
+    const body = JSON.parse(mockFetchWithTimeout.mock.calls[0][1]?.body as string);
     expect(body.entries).toHaveLength(1);
     transport.destroy();
   });
 
   it('flushes immediately on error level', async () => {
-    const fetchMock = fetchWithTimeout as jest.Mock;
-    fetchMock.mockResolvedValue({ ok: true } as Response);
+    mockFetchWithTimeout.mockResolvedValue({ ok: true, status: 200 } as Response);
 
-    const transport = new RemoteTransport('https://example.com');
+    const transport = new RemoteTransport(
+      'https://example.com',
+      {},
+      { fetchWithTimeout: mockFetchWithTimeout }
+    );
+
+    // Log an error entry which should trigger immediate flush
     transport.log(createEntry(LogLevel.ERROR));
-    await new Promise((resolve) => setTimeout(resolve, 0));
 
-    expect(fetchMock).toHaveBeenCalled();
+    // Wait a tick for the async flush to complete
+    await new Promise((resolve) => process.nextTick(resolve));
+
+    expect(mockFetchWithTimeout).toHaveBeenCalled();
+    expect(mockFetchWithTimeout).toHaveBeenCalledWith(
+      'https://example.com',
+      expect.objectContaining({
+        method: 'POST',
+        body: expect.any(String),
+      })
+    );
     transport.destroy();
   });
 });

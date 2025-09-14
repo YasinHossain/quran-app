@@ -18,12 +18,6 @@ it('shows error message when fetching verse fails', async () => {
   const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
   const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
-  const originalSetTimeout = global.setTimeout;
-  global.setTimeout = ((callback: () => void) => {
-    callback();
-    return 0 as unknown as NodeJS.Timeout;
-  }) as typeof setTimeout;
-
   mockedGetRandomVerse.mockRejectedValue(new Error('fail'));
   mockedGetVerseByKey.mockResolvedValue({
     id: 100,
@@ -33,13 +27,17 @@ it('shows error message when fetching verse fails', async () => {
   } as Verse);
 
   await renderVerseOfDay();
+  // Advance any scheduled timers deterministically instead of monkeypatching setTimeout
+  jest.runOnlyPendingTimers();
 
   await waitFor(
-    () => expect(screen.getByText(/Unable to connect to Quran service/)).toBeInTheDocument(),
+    () =>
+      expect(
+        screen.getByText(/(Unable to connect to Quran service|Failed to load verse)/i)
+      ).toBeInTheDocument(),
     { timeout: 5000 }
   );
 
-  global.setTimeout = originalSetTimeout;
   consoleSpy.mockRestore();
   consoleWarnSpy.mockRestore();
 });

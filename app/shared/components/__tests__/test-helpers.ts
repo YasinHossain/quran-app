@@ -20,6 +20,12 @@ export const setResponsive = (
 
 jest.mock('@/lib/responsive', () => ({
   useResponsiveState: () => mockResponsiveState,
+  touchClasses: {
+    target: 'min-h-touch min-w-touch',
+    gesture: 'touch-manipulation select-none',
+    focus: 'focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none',
+    active: 'active:scale-95 transition-transform',
+  },
 }));
 
 export { renderResponsive, devicePresets } from '../../../../lib/__tests__/responsive-test-utils';

@@ -1,27 +1,19 @@
 import { renderHook, act } from '@testing-library/react';
 
-import { useVerseListing } from '@/app/(features)/surah/hooks/useVerseListing';
-
 import type { Verse } from '@/types';
 
+// Test data must be defined before mocks that capture it
 const verses: Verse[] = [
   { id: 1, verse_key: '1:1' } as Verse,
   { id: 2, verse_key: '1:2' } as Verse,
 ];
 
-let mockActiveVerse = verses[0];
-const setActiveVerse = jest.fn((v) => {
-  mockActiveVerse = v as Verse;
-});
-const openPlayer = jest.fn();
+// Import the hook lazily after mocks are applied to ensure mocked deps are used
+let useVerseListing: any;
 
-jest.mock('@/app/(features)/surah/hooks/useTranslationOptions', () => ({
+jest.mock('swr', () => ({
   __esModule: true,
-  useTranslationOptions: jest.fn(() => ({
-    translationOptions: [],
-    wordLanguageOptions: [],
-    wordLanguageMap: {},
-  })),
+  default: jest.fn(() => ({})),
 }));
 
 jest.mock('@/app/(features)/surah/hooks/useInfiniteVerseLoader', () => ({
@@ -33,6 +25,14 @@ jest.mock('@/app/(features)/surah/hooks/useInfiniteVerseLoader', () => ({
     isReachingEnd: false,
   })),
 }));
+
+let mockActiveVerse = verses[0];
+const setActiveVerse = jest.fn((v) => {
+  mockActiveVerse = v as Verse;
+});
+const openPlayer = jest.fn();
+
+// Minimal runtime patches are no longer needed due to safe defaults in the hook implementation.
 
 jest.mock('@/app/shared/player/context/AudioContext', () => ({
   useAudio: () => ({
@@ -52,14 +52,23 @@ jest.mock('@/app/providers/SettingsContext', () => ({
 }));
 
 describe('useVerseListing', () => {
+  beforeAll(() => {
+    useVerseListing = require('@/app/(features)/surah/hooks/useVerseListing').useVerseListing;
+  });
   it('handles next and previous navigation', () => {
-    const { result, rerender } = renderHook(() => useVerseListing({ id: '1', lookup: jest.fn() }));
+    const { result, rerender } = renderHook(() =>
+      useVerseListing({ id: '1', lookup: jest.fn(), initialVerses: verses })
+    );
+    expect(result.current.verses.length).toBe(2);
 
     act(() => {
-      result.current.handleNext();
+      const moved = result.current.handleNext();
+      expect(moved).toBe(true);
     });
     expect(setActiveVerse).toHaveBeenNthCalledWith(1, verses[1]);
 
+    // Simulate audio context reflecting the new active verse
+    mockActiveVerse = verses[1];
     rerender();
 
     act(() => {

@@ -8,6 +8,24 @@ const nextPwa = createRequire(import.meta.url)('next-pwa') as typeof import('nex
 
 // Define commonly recommended security headers
 // Note: Avoid HSTS in development (can break Safari by forcing HTTPS on localhost)
+// Content Security Policy for production
+const cspHeader = `
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src 'self' https://fonts.gstatic.com data:;
+  img-src 'self' data: https: blob:;
+  media-src 'self' https: blob:;
+  connect-src 'self' https://api.quran.com https://api.quran.gading.dev https://raw.githubusercontent.com https://archive.org;
+  worker-src 'self' blob:;
+  child-src 'self' blob:;
+  form-action 'self';
+  frame-ancestors 'none';
+  upgrade-insecure-requests;
+`
+  .replace(/\s{2,}/g, ' ')
+  .trim();
+
 const baseSecurityHeaders = [
   {
     key: 'X-DNS-Prefetch-Control',
@@ -27,7 +45,8 @@ const baseSecurityHeaders = [
   },
   {
     key: 'Permissions-Policy',
-    value: 'camera=(), microphone=(), geolocation=()',
+    value:
+      'camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), speaker=(self)',
   },
 ];
 
@@ -39,8 +58,18 @@ const securityHeaders = isProd
         key: 'Strict-Transport-Security',
         value: 'max-age=63072000; includeSubDomains; preload',
       },
+      {
+        key: 'Content-Security-Policy',
+        value: cspHeader,
+      },
     ]
-  : baseSecurityHeaders;
+  : [
+      ...baseSecurityHeaders,
+      {
+        key: 'Content-Security-Policy-Report-Only',
+        value: cspHeader,
+      },
+    ];
 
 const nextConfig: NextConfig = {
   // Expose the Quran API base URL to the app

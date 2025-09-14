@@ -4,22 +4,11 @@ import React, { useEffect } from 'react';
 
 import { PlaybackOptionsModal } from '@/app/shared/player/components/PlaybackOptionsModal';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setMatchMedia(false);
 });
 
 test('coerces decimal input to integer', async () => {

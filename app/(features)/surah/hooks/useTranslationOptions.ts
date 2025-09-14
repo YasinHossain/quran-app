@@ -18,17 +18,17 @@ export interface UseTranslationOptionsReturn {
 }
 
 export function useTranslationOptions(): UseTranslationOptionsReturn {
-  const { data: translationOptionsData } = useSWR<TranslationResource[]>(
-    'translations',
-    getTranslations
-  );
+  const swrTranslations = useSWR<TranslationResource[]>('translations', getTranslations);
+  const translationOptionsData = swrTranslations?.data;
   const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
 
-  const { data: wordTranslationOptionsData } = useSWR('wordTranslations', getWordTranslations);
+  const swrWord = useSWR('wordTranslations', getWordTranslations);
+  const wordTranslationOptionsData = (swrWord as any)?.data as any[] | undefined;
   const wordLanguageMap = useMemo(() => {
     const map: Record<string, number> = {};
-    (wordTranslationOptionsData || []).forEach((o) => {
-      const name = o.lang.toLowerCase();
+    (wordTranslationOptionsData || []).forEach((o: any) => {
+      const raw = o?.lang ?? o?.language_name ?? '';
+      const name = String(raw).toLowerCase();
       if (!map[name]) {
         map[name] = o.id;
       }

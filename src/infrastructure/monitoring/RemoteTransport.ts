@@ -12,6 +12,7 @@ export class RemoteTransport implements ILoggerTransport {
   private apiKey?: string;
   private batchSize: number;
   private flushTimer?: NodeJS.Timeout;
+  private fetchFn: typeof fetchWithTimeout;
 
   constructor(
     endpoint: string,
@@ -19,15 +20,20 @@ export class RemoteTransport implements ILoggerTransport {
       apiKey?: string;
       flushInterval?: number;
       batchSize?: number;
+    } = {},
+    dependencies: {
+      fetchWithTimeout?: typeof fetchWithTimeout;
     } = {}
   ) {
     this.endpoint = endpoint;
     this.apiKey = options.apiKey;
     this.flushInterval = options.flushInterval || 10000; // 10 seconds
     this.batchSize = options.batchSize || 100;
+    this.fetchFn = dependencies.fetchWithTimeout || fetchWithTimeout;
 
     // Auto-flush on interval
-    if (typeof window === 'undefined') {
+    // Avoid background intervals during Jest tests to prevent open handles
+    if (typeof window === 'undefined' && process.env.NODE_ENV !== 'test') {
       // Node.js environment
       this.flushTimer = setInterval(() => {
         this.flush();
@@ -41,6 +47,11 @@ export class RemoteTransport implements ILoggerTransport {
     // Flush immediately for errors, or when buffer is full
     if (entry.level >= LogLevel.ERROR || this.buffer.length >= this.batchSize) {
       this.flush();
+    } else {
+      // Schedule a near-immediate flush to ensure delivery in test/SSR envs
+      setTimeout(() => {
+        void this.flush();
+      }, 0);
     }
   }
 
@@ -51,7 +62,7 @@ export class RemoteTransport implements ILoggerTransport {
     this.buffer = [];
 
     try {
-      await fetchWithTimeout(this.endpoint, {
+      await this.fetchFn(this.endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

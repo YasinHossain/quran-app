@@ -1,10 +1,10 @@
 import { useMemo, useRef, useState } from 'react';
 
+import { useInfiniteVerseLoader } from '@/app/(features)/surah/hooks/useInfiniteVerseLoader';
+import { useTranslationOptions } from '@/app/(features)/surah/hooks/useTranslationOptions';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 
-import { useInfiniteVerseLoader } from './useInfiniteVerseLoader';
-import { useTranslationOptions } from './useTranslationOptions';
 import { useNavigationHandlers } from './verse-listing/useNavigationHandlers';
 import { getStableTranslationIds } from './verse-listing/utils';
 
@@ -20,20 +20,39 @@ import type { UseVerseListingParams, UseVerseListingReturn } from './verse-listi
  * Hook for managing verse listing with infinite scroll, audio controls, and settings.
  * Handles verse fetching, translation management, and audio player integration.
  */
-export function useVerseListing({ id, lookup }: UseVerseListingParams): UseVerseListingReturn {
+export function useVerseListing({
+  id,
+  lookup,
+  initialVerses,
+}: UseVerseListingParams): UseVerseListingReturn {
   const [error, setError] = useState<string | null>(null);
   const { settings, setSettings } = useSettings();
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const { activeVerse, setActiveVerse, reciter, isPlayerVisible, openPlayer } = useAudio();
-  const { translationOptions, wordLanguageOptions, wordLanguageMap } = useTranslationOptions();
+  const {
+    translationOptions = [],
+    wordLanguageOptions = [],
+    wordLanguageMap = {},
+  } = (useTranslationOptions() as
+    | {
+        translationOptions?: unknown[];
+        wordLanguageOptions?: unknown[];
+        wordLanguageMap?: Record<string, unknown>;
+      }
+    | undefined) ?? {};
 
   const stableTranslationIds = useMemo(
     () => getStableTranslationIds(settings.translationIds, settings.translationId),
     [settings.translationIds, settings.translationId]
   );
 
-  const { verses, isLoading, isValidating, isReachingEnd } = useInfiniteVerseLoader({
+  let {
+    verses = [],
+    isLoading = false,
+    isValidating = false,
+    isReachingEnd = false,
+  } = (useInfiniteVerseLoader({
     ...(id !== undefined ? { id } : {}),
     lookup,
     stableTranslationIds,
@@ -41,7 +60,13 @@ export function useVerseListing({ id, lookup }: UseVerseListingParams): UseVerse
     loadMoreRef,
     error,
     setError: (e: string) => setError(e),
-  });
+  }) as
+    | { verses?: unknown[]; isLoading?: boolean; isValidating?: boolean; isReachingEnd?: boolean }
+    | undefined) ?? {};
+
+  if (initialVerses && initialVerses.length) {
+    verses = initialVerses as any[];
+  }
 
   const { handleNext, handlePrev } = useNavigationHandlers({
     verses,

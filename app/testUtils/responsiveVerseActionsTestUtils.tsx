@@ -2,6 +2,7 @@ import { render } from '@testing-library/react';
 import React from 'react';
 
 import { ResponsiveVerseActions } from '@/app/shared/ResponsiveVerseActions';
+import { renderWithBookmarks } from '@/app/testUtils/lightweightProviders';
 import { testAccessibility } from '@/lib/__tests__/responsive-test-utils';
 
 import type { VerseActionsProps } from '@/app/shared/ResponsiveVerseActions';
@@ -57,7 +58,8 @@ export const setMockBreakpoint = (breakpoint: string): void => {
 
 export const renderResponsiveVerseActions = (
   props: Partial<VerseActionsProps> = {}
-): ReturnType<typeof render> => render(<ResponsiveVerseActions {...defaultProps} {...props} />);
+): ReturnType<typeof render> =>
+  renderWithBookmarks(<ResponsiveVerseActions {...defaultProps} {...props} />);
 
 export const rerenderResponsiveVerseActions = (
   rerender: (ui: React.ReactElement) => void,

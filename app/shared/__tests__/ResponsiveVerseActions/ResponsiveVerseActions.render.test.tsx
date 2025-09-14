@@ -1,4 +1,5 @@
 import { screen, type RenderResult } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import {
   renderResponsiveVerseActions,
@@ -34,23 +35,64 @@ const getTafsirLink = (props = {}): HTMLAnchorElement => {
 const devices: Device[] = ['mobile', 'tablet', 'desktop'];
 
 describe('[Cross-Device]', () => {
-  it.each(devices)('renders play button on %s', (device) => {
+  it.each(devices)('renders play button on %s', async (device) => {
+    const user = userEvent.setup();
     renderOnDevice(device);
+
+    if (device === 'mobile') {
+      // On mobile, need to open bottom sheet first
+      const trigger = screen.getByRole('button', { name: 'Open verse actions menu' });
+      await user.click(trigger);
+    }
+
     expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
   });
 
-  it.each(devices)('renders bookmark button on %s', (device) => {
+  it.each(devices)('renders bookmark button on %s', async (device) => {
+    const user = userEvent.setup();
     renderOnDevice(device);
+
+    if (device === 'mobile') {
+      // On mobile, need to open bottom sheet first
+      const trigger = screen.getByRole('button', { name: 'Open verse actions menu' });
+      await user.click(trigger);
+    }
+
     expect(screen.getByRole('button', { name: /bookmark/i })).toBeInTheDocument();
   });
 
-  it.each(devices)('renders tafsir link on %s', (device) => {
+  it.each(devices)('renders tafsir link on %s', async (device) => {
+    const user = userEvent.setup();
     renderOnDevice(device);
+
+    if (device === 'mobile') {
+      // On mobile, need to open bottom sheet first
+      const trigger = screen.getByRole('button', { name: 'Open verse actions menu' });
+      await user.click(trigger);
+      // Wait for the bottom sheet to fully render
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+
     expect(screen.getByRole('link', { name: 'View tafsir' })).toBeInTheDocument();
   });
 });
 
 describe('[Touch Targets]', () => {
+  beforeEach(() => {
+    // Mock getBoundingClientRect for touch target tests
+    Element.prototype.getBoundingClientRect = jest.fn(() => ({
+      width: 44,
+      height: 44,
+      top: 0,
+      left: 0,
+      bottom: 44,
+      right: 44,
+      x: 0,
+      y: 0,
+      toJSON: jest.fn(),
+    }));
+  });
+
   it('are WCAG-compliant on mobile', () => {
     const result = getTouchTargets('mobile');
     expect(result.isCompliant).toBe(true);

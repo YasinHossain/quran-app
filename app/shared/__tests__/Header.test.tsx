@@ -3,7 +3,8 @@ import React from 'react';
 import { HeaderVisibilityProvider } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { UIStateProvider } from '@/app/providers/UIStateContext';
 import { Header } from '@/app/shared/Header';
-import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
+import { renderWithProviders, screen, waitFor } from '@/app/testUtils/renderWithProviders';
 
 // Mock the useTranslation hook
 jest.mock('react-i18next', () => ({
@@ -37,19 +38,7 @@ jest.mock('@/app/providers/UIStateContext', () => ({
 }));
 
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setMatchMedia(false);
   Object.defineProperty(window, 'sessionStorage', {
     writable: true,
     value: {
@@ -60,7 +49,7 @@ beforeAll(() => {
 });
 
 describe('Header', () => {
-  it('renders the brand text', () => {
+  it('renders the brand text', async () => {
     renderWithProviders(
       <UIStateProvider>
         <HeaderVisibilityProvider>
@@ -68,10 +57,14 @@ describe('Header', () => {
         </HeaderVisibilityProvider>
       </UIStateProvider>
     );
-    expect(screen.getByText('Quran Mazid')).toBeInTheDocument();
+
+    // Wait for async provider effects to stabilize
+    await waitFor(() => {
+      expect(screen.getByText('Quran Mazid')).toBeInTheDocument();
+    });
   });
 
-  it('renders the search placeholder', () => {
+  it('renders the search placeholder', async () => {
     renderWithProviders(
       <UIStateProvider>
         <HeaderVisibilityProvider>
@@ -79,10 +72,14 @@ describe('Header', () => {
         </HeaderVisibilityProvider>
       </UIStateProvider>
     );
-    expect(screen.getByPlaceholderText('Search verses, surahs...')).toBeInTheDocument();
+
+    // Wait for async provider effects to stabilize
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText('Search verses, surahs...')).toBeInTheDocument();
+    });
   });
 
-  it('aligns content vertically centered', () => {
+  it('aligns content vertically centered', async () => {
     const { container } = renderWithProviders(
       <UIStateProvider>
         <HeaderVisibilityProvider>
@@ -90,7 +87,11 @@ describe('Header', () => {
         </HeaderVisibilityProvider>
       </UIStateProvider>
     );
-    const header = container.querySelector('header');
-    expect(header).toHaveClass('items-center');
+
+    // Wait for async provider effects to stabilize
+    await waitFor(() => {
+      const header = container.querySelector('header');
+      expect(header).toHaveClass('items-center');
+    });
   });
 });

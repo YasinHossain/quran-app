@@ -19,7 +19,7 @@ export const FontSettings = ({
   isOpen = false,
   onToggle,
 }: FontSettingsProps): JSX.Element => {
-  const { settings, setSettings, arabicFonts } = useSettings();
+  const { settings, arabicFonts, setArabicFontSize, setTranslationFontSize } = useSettings();
   const { t } = useTranslation();
   const [isClient, setIsClient] = useState(false);
   const { style: arabicStyle } = useFontSize(settings.arabicFontSize, 16, 48);
@@ -31,16 +31,16 @@ export const FontSettings = ({
 
   const handleArabicFontSizeChange = useCallback(
     (value: number): void => {
-      setSettings((prev) => ({ ...prev, arabicFontSize: value }));
+      setArabicFontSize(value);
     },
-    [setSettings]
+    [setArabicFontSize]
   );
 
   const handleTranslationFontSizeChange = useCallback(
     (value: number): void => {
-      setSettings((prev) => ({ ...prev, translationFontSize: value }));
+      setTranslationFontSize(value);
     },
-    [setSettings]
+    [setTranslationFontSize]
   );
 
   const selectedArabicFont = useMemo(() => {
@@ -54,7 +54,6 @@ export const FontSettings = ({
     <FontSettingsContent
       isOpen={isOpen}
       onToggle={onToggle}
-      isClient={isClient}
       settings={settings}
       arabicStyle={arabicStyle}
       translationStyle={translationStyle}

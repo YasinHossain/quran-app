@@ -2,8 +2,8 @@ import {
   InvalidTafsirRequestError,
   TafsirContentLoadError,
 } from '@/src/domain/errors/DomainErrors';
+import { ILogger } from '@/src/domain/interfaces/ILogger';
 import { ITafsirRepository } from '@/src/domain/repositories/ITafsirRepository';
-import { logger as Logger } from '@/src/infrastructure/monitoring/Logger';
 
 /**
  * Use Case: Get Tafsir Content for a Verse
@@ -11,7 +11,10 @@ import { logger as Logger } from '@/src/infrastructure/monitoring/Logger';
  * Handles retrieving tafsir content for specific verses with caching and fallback.
  */
 export class GetTafsirContentUseCase {
-  constructor(private readonly tafsirRepository: ITafsirRepository) {}
+  constructor(
+    private readonly tafsirRepository: ITafsirRepository,
+    private readonly logger?: ILogger
+  ) {}
 
   /**
    * Get tafsir content for a specific verse
@@ -34,7 +37,7 @@ export class GetTafsirContentUseCase {
 
       return content;
     } catch (error) {
-      Logger.error('Failed to get tafsir content:', undefined, error as Error);
+      this.logger?.error('Failed to get tafsir content:', undefined, error as Error);
       throw new TafsirContentLoadError();
     }
   }
@@ -54,7 +57,11 @@ export class GetTafsirContentUseCase {
         const content = await this.execute(verseKey, tafsirId);
         results.set(tafsirId, content);
       } catch (error) {
-        Logger.warn(`Failed to get tafsir content for ID ${tafsirId}:`, undefined, error as Error);
+        this.logger?.warn(
+          `Failed to get tafsir content for ID ${tafsirId}:`,
+          undefined,
+          error as Error
+        );
         results.set(tafsirId, 'Failed to load tafsir content.');
       }
     });

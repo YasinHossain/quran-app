@@ -3,7 +3,7 @@ import * as apiVerses from '@/lib/api/verses';
 import { VerseRepository } from '@/src/infrastructure/repositories/VerseRepository';
 import { Verse } from '@/types';
 
-jest.mock('../../../../lib/api/verses', () => ({
+jest.mock('@/lib/api/verses', () => ({
   getVerseById: jest.fn(),
   getVerseByKey: jest.fn(),
   getVersesByChapter: jest.fn(),
@@ -12,7 +12,7 @@ jest.mock('../../../../lib/api/verses', () => ({
   searchVerses: jest.fn(),
   getRandomVerse: jest.fn(),
 }));
-jest.mock('../../../../lib/api/chapters', () => ({
+jest.mock('@/lib/api/chapters', () => ({
   getChapters: jest.fn(),
 }));
 

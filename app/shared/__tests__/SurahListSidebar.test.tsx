@@ -3,6 +3,7 @@ import React from 'react';
 import useSWR from 'swr';
 
 import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 
 jest.mock('swr', () => {
@@ -43,18 +44,7 @@ const chapters = [
 ];
 
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation(() => ({
-      matches: false,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setMatchMedia(false);
 });
 
 beforeEach(() => {

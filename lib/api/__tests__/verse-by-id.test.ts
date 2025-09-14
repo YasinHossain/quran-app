@@ -37,7 +37,8 @@ describe('getVerseById', () => {
 
     const result = await getVerseById(1, 20);
     expect(global.fetch).toHaveBeenCalledWith(
-      `${API_BASE_URL}/verses/1?translations=20&fields=text_uthmani`
+      `${API_BASE_URL}/verses/1?translations=20&fields=text_uthmani`,
+      expect.objectContaining({ headers: { Accept: 'application/json' } })
     );
     expect(result).toEqual(expected);
   });

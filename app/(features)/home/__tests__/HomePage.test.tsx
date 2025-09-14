@@ -2,6 +2,7 @@ import { screen, within, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { HomePage } from '@/app/(features)/home/components/HomePage';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import { Verse } from '@/types';
 
@@ -51,19 +52,7 @@ jest.mock(
 );
 
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setMatchMedia(false);
 });
 
 const renderHome = (): void => {

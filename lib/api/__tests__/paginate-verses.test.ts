@@ -22,7 +22,8 @@ describe('getVersesByChapter', () => {
 
     await getVersesByChapter({ id: 1, translationIds: 20, page: 1, perPage: 1, wordLang: 'tr' });
     expect(global.fetch).toHaveBeenCalledWith(
-      `${API_BASE_URL}/verses/by_chapter/1?language=tr&words=true&word_translation_language=tr&word_fields=text_uthmani&translations=20&fields=text_uthmani,audio&per_page=1&page=1`
+      `${API_BASE_URL}/verses/by_chapter/1?language=tr&words=true&word_translation_language=tr&word_fields=text_uthmani&translations=20&fields=text_uthmani,audio&per_page=1&page=1`,
+      expect.objectContaining({ headers: { Accept: 'application/json' } })
     );
   });
 });
@@ -47,7 +48,8 @@ describe('getVersesByJuz', () => {
 
     await getVersesByJuz({ id: 1, translationIds: 20, page: 1, perPage: 1, wordLang: 'en' });
     expect(global.fetch).toHaveBeenCalledWith(
-      `${API_BASE_URL}/verses/by_juz/1?language=en&words=true&word_translation_language=en&word_fields=text_uthmani&translations=20&fields=text_uthmani,audio&per_page=1&page=1`
+      `${API_BASE_URL}/verses/by_juz/1?language=en&words=true&word_translation_language=en&word_fields=text_uthmani&translations=20&fields=text_uthmani,audio&per_page=1&page=1`,
+      expect.objectContaining({ headers: { Accept: 'application/json' } })
     );
   });
 });
@@ -72,7 +74,8 @@ describe('getVersesByPage', () => {
 
     await getVersesByPage({ id: 1, translationIds: 20, page: 1, perPage: 1, wordLang: 'en' });
     expect(global.fetch).toHaveBeenCalledWith(
-      `${API_BASE_URL}/verses/by_page/1?language=en&words=true&word_translation_language=en&word_fields=text_uthmani&translations=20&fields=text_uthmani,audio&per_page=1&page=1`
+      `${API_BASE_URL}/verses/by_page/1?language=en&words=true&word_translation_language=en&word_fields=text_uthmani&translations=20&fields=text_uthmani,audio&per_page=1&page=1`,
+      expect.objectContaining({ headers: { Accept: 'application/json' } })
     );
   });
 });

@@ -10,7 +10,7 @@ import {
   loadMemorizationFromStorage,
   saveMemorizationToStorage,
 } from '@/app/providers/bookmarks/storage-utils';
-import { getChapters } from '@/lib/api/chapters';
+import * as chaptersApi from '@/lib/api/chapters';
 
 import type { Folder, Bookmark, Chapter, MemorizationPlan } from '@/types';
 
@@ -32,9 +32,16 @@ export function useBookmarkData(): {
   const [chapters, setChapters] = useState<Chapter[]>([]);
 
   useEffect(() => {
-    void getChapters()
-      .then(setChapters)
-      .catch(() => {});
+    const fetchChaptersCandidate =
+      (typeof (chaptersApi as any).getChapters === 'function'
+        ? (chaptersApi as any).getChapters
+        : (chaptersApi as any).default) || null;
+
+    if (typeof fetchChaptersCandidate === 'function') {
+      void (fetchChaptersCandidate as () => Promise<Chapter[]>)()
+        .then((chs: Chapter[]) => setChapters(chs ?? []))
+        .catch(() => {});
+    }
     setFolders(loadBookmarksFromStorage());
     setPinnedVerses(loadPinnedFromStorage());
     setLastReadState(loadLastReadFromStorage());

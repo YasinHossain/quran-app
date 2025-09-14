@@ -23,7 +23,10 @@ describe('getJuz', () => {
     }) as jest.Mock;
 
     const result = await getJuz(1);
-    expect(global.fetch).toHaveBeenCalledWith(`${API_BASE_URL}/juzs/1`);
+    expect(global.fetch).toHaveBeenCalledWith(
+      `${API_BASE_URL}/juzs/1`,
+      expect.objectContaining({ headers: { Accept: 'application/json' } })
+    );
     expect(result).toEqual(mockJuz);
   });
 

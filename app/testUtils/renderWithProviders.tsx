@@ -5,19 +5,22 @@ import { BookmarkProvider } from '@/app/providers/BookmarkContext';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { SidebarProvider } from '@/app/providers/SidebarContext';
 import { ThemeProvider } from '@/app/providers/ThemeContext';
+import { UIStateProvider } from '@/app/providers/UIStateContext';
 import { AudioProvider } from '@/app/shared/player/context/AudioContext';
 
 const Providers = ({ children }: { children: React.ReactNode }): React.JSX.Element => (
   <SWRConfig value={{ provider: () => new Map() }}>
-    <AudioProvider>
-      <SettingsProvider>
-        <BookmarkProvider>
-          <ThemeProvider>
-            <SidebarProvider>{children}</SidebarProvider>
-          </ThemeProvider>
-        </BookmarkProvider>
-      </SettingsProvider>
-    </AudioProvider>
+    <UIStateProvider>
+      <AudioProvider>
+        <SettingsProvider>
+          <BookmarkProvider>
+            <ThemeProvider>
+              <SidebarProvider>{children}</SidebarProvider>
+            </ThemeProvider>
+          </BookmarkProvider>
+        </SettingsProvider>
+      </AudioProvider>
+    </UIStateProvider>
   </SWRConfig>
 );
 

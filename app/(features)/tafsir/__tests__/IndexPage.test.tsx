@@ -1,6 +1,6 @@
 import React from 'react';
 
-import TafsirIndexPage from '@/app/(features)/tafsir/page';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProviders, screen, waitFor } from '@/app/testUtils/renderWithProviders';
 
 import type { MockProps } from '@/tests/mocks';
@@ -21,23 +21,12 @@ jest.mock('@/lib/api', () => ({
 }));
 
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setMatchMedia(false);
 });
 
 const renderPage = async (): Promise<void> => {
-  const PageComponent = await TafsirIndexPage();
+  const mod = await import('@/app/(features)/tafsir/page');
+  const PageComponent = await mod.default();
   return renderWithProviders(PageComponent);
 };
 

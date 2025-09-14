@@ -19,15 +19,23 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:ci": "jest --ci --coverage --watchAll=false",
+    "test:ci": "jest --ci --coverage --watchAll=false --maxWorkers=50%",
     "test:architecture": "jest --testPathPattern=architecture",
     "test:responsive": "jest --testPathPattern=responsive",
+    "test:unit": "jest tests/unit --testEnvironment=node --maxWorkers=75%",
+    "test:integration": "jest tests/integration --testEnvironment=node --maxWorkers=50%",
+    "test:ui": "jest app/.*test --testEnvironment=jsdom --maxWorkers=50%",
+    "test:critical": "npm run test:unit && npm run test:ui -- --testPathPattern='(Header|Navigation|Player|Bookmark)'",
+    "test:accessibility": "jest tests/accessibility --testEnvironment=jsdom",
+    "test:nightly": "npm run test:unit && npm run test:integration && npm run test:ui",
     "format": "prettier --write .",
     "type-check": "tsc --noEmit",
     "check": "npm run format && npm run lint && npm run type-check && npm run test",
     "clean": "rm -rf .next out coverage",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
+    "storybook:test": "test-runner",
+    "storybook:test:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npm run storybook:build && npx http-server storybook-static --port 6006 --silent\" \"wait-on tcp:6006 && npm run storybook:test\"",
     "preview": "npm run build && npm start",
     "size-limit": "npx size-limit",
     "lighthouse": "npx lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html",
@@ -70,17 +78,21 @@
     "swr": "^2.3.4",
     "tailwind-merge": "^3.3.1",
     "uuid": "^11.1.0",
+    "web-vitals": "^5.1.0",
     "zod": "^4.1.5"
   },
   "devDependencies": {
+    "@axe-core/react": "^4.10.2",
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9",
     "@playwright/test": "^1.55.0",
     "@rollup/plugin-terser": "^0.4.4",
     "@size-limit/preset-app": "^11.2.0",
+    "@storybook/addon-coverage": "^2.0.0",
     "@storybook/addon-essentials": "^8.4.3",
     "@storybook/addon-themes": "^8.4.3",
     "@storybook/nextjs": "^8.4.3",
+    "@storybook/test-runner": "^0.23.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
@@ -93,6 +105,9 @@
     "@types/uuid": "^10.0.0",
     "@vscode/ripgrep": "^1.15.14",
     "autoprefixer": "^10.4.21",
+    "axe-playwright": "^2.2.2",
+    "chromatic": "^13.1.4",
+    "concurrently": "^9.2.1",
     "cross-fetch": "^4.1.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.0",
@@ -103,9 +118,12 @@
     "eslint-plugin-no-relative-import-paths": "^1.6.1",
     "eslint-plugin-prettier": "^5.5.3",
     "eslint-plugin-unused-imports": "^4.2.0",
+    "http-server": "^14.1.1",
     "jest": "^30.0.5",
+    "jest-axe": "^10.0.0",
     "jest-environment-jsdom": "^30.0.5",
     "knip": "^5.63.0",
+    "msw": "^2.11.2",
     "next-router-mock": "^1.0.2",
     "node-fetch": "^3.3.2",
     "prettier": "^3.6.2",
@@ -116,23 +134,54 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.7.2",
     "viewport-units-buggyfill": "^0.6.2",
+    "wait-on": "^8.0.4",
     "whatwg-fetch": "^3.6.20"
   },
   "optionalDependencies": {
-    "@next/swc-linux-x64": "^15.5.3"
+    "@next/swc-darwin-arm64": "^15.5.3"
   },
   "size-limit": [
     {
+      "name": "Surah Feature Bundle",
       "path": ".next/static/chunks/app/(features)/surah/**/*.js",
-      "limit": "50 KB"
+      "limit": "50 KB",
+      "webpack": false
     },
     {
+      "name": "Shared Components Bundle",
       "path": ".next/static/chunks/app/shared/**/*.js",
-      "limit": "30 KB"
+      "limit": "30 KB",
+      "webpack": false
     },
     {
+      "name": "Providers Bundle",
       "path": ".next/static/chunks/app/providers/**/*.js",
-      "limit": "25 KB"
+      "limit": "25 KB",
+      "webpack": false
+    },
+    {
+      "name": "Bookmarks Feature Bundle",
+      "path": ".next/static/chunks/app/(features)/bookmarks/**/*.js",
+      "limit": "45 KB",
+      "webpack": false
+    },
+    {
+      "name": "Tafsir Feature Bundle",
+      "path": ".next/static/chunks/app/(features)/tafsir/**/*.js",
+      "limit": "40 KB",
+      "webpack": false
+    },
+    {
+      "name": "Search Feature Bundle",
+      "path": ".next/static/chunks/app/(features)/search/**/*.js",
+      "limit": "35 KB",
+      "webpack": false
+    },
+    {
+      "name": "Main App Bundle",
+      "path": ".next/static/chunks/main-*.js",
+      "limit": "200 KB",
+      "webpack": false
     }
   ]
 }

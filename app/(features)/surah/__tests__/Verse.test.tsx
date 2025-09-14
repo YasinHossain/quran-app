@@ -2,6 +2,7 @@ import { screen, waitFor } from '@testing-library/react';
 
 import { VerseCard as VerseComponent } from '@/app/(features)/surah/components';
 import { TranslationProvider } from '@/app/providers/TranslationProvider';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import { Verse } from '@/types';
 
@@ -29,19 +30,7 @@ const renderVerse = (): void => {
 
 describe('Verse word-by-word font size', () => {
   beforeAll(() => {
-    Object.defineProperty(window, 'matchMedia', {
-      writable: true,
-      value: jest.fn().mockImplementation((query) => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: jest.fn(),
-        removeListener: jest.fn(),
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
-      })),
-    });
+    setMatchMedia(false);
   });
   beforeEach(() => {
     localStorage.clear();
