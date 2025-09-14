@@ -160,6 +160,11 @@ describe('SettingsContext', () => {
 
 ### API Mocking
 
+Tests use [MSW](https://mswjs.io/) to intercept network requests and prevent
+external calls. Real network access is disabled unless explicitly re-enabled.
+Set `JEST_ALLOW_NETWORK=1` before running tests to opt out and allow raw
+network requests.
+
 ```typescript
 // Mock SWR
 jest.mock('swr', () => ({
@@ -167,7 +172,7 @@ jest.mock('swr', () => ({
   default: jest.fn(() => ({ data: mockData, error: null, isLoading: false })),
 }));
 
-// Mock fetch
+// Example of manual fetch mocking if needed
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,

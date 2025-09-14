@@ -3,28 +3,29 @@ import '@testing-library/jest-dom';
 import 'jest-axe/extend-expect';
 // Provide Fetch/Response in JSDOM via whatwg-fetch so MSW interceptors work consistently
 import 'whatwg-fetch';
+
 import { ReadableStream, WritableStream, TransformStream } from 'stream/web';
+import { jest, beforeAll, afterEach, afterAll } from '@jest/globals';
 
-import { jest } from '@jest/globals';
-
+import { server } from '@tests/setup/msw/server';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 // Provide Web Streams in Node test environment for MSW/@mswjs/interceptors
 if (typeof globalThis.ReadableStream === 'undefined') {
-  // @ts-ignore - define if missing
+  // @ts-expect-error - define if missing
   globalThis.ReadableStream = ReadableStream;
 }
 if (typeof globalThis.WritableStream === 'undefined') {
-  // @ts-ignore - define if missing
+  // @ts-expect-error - define if missing
   globalThis.WritableStream = WritableStream;
 }
 if (typeof globalThis.TransformStream === 'undefined') {
-  // @ts-ignore - define if missing
+  // @ts-expect-error - define if missing
   globalThis.TransformStream = TransformStream;
 }
 // Provide BroadcastChannel stub required by MSW in Node
 if (typeof globalThis.BroadcastChannel === 'undefined') {
-  // @ts-ignore
+  // @ts-expect-error - define if missing
   globalThis.BroadcastChannel = class {
     constructor() {}
 
@@ -38,83 +39,13 @@ if (typeof globalThis.BroadcastChannel === 'undefined') {
     onmessage = null;
   };
 }
-// Lightweight network isolation: stub QDC API endpoints commonly hit in UI tests
-// to avoid real network calls and speed up test runs without starting MSW.
-// Guard behind environment flag to allow MSW to handle requests when enabled.
-if (!process.env.JEST_USE_MSW) {
-  (() => {
-    const realFetch = globalThis.fetch;
-    const QDC_BASE = 'https://api.qurancdn.com/api/qdc/';
-    function json(data) {
-      return new Response(JSON.stringify(data), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-    globalThis.fetch = async (input, init) => {
-      const url = typeof input === 'string' ? input : input?.toString?.() || '';
-      if (url.startsWith(QDC_BASE)) {
-        const u = new URL(url);
-        const path = u.pathname.replace(/^\/api\/qdc\//, '');
-        if (path === 'chapters') {
-          return json({
-            chapters: [
-              {
-                id: 1,
-                name_simple: 'Al-Fatihah',
-                name_arabic: 'الفاتحة',
-                verses_count: 7,
-                translated_name: { name: 'The Opening' },
-              },
-            ],
-          });
-        }
-        if (path.startsWith('verses/by_chapter/')) {
-          const chapterId = Number(path.split('/').pop());
-          return json({
-            verses: [
-              { id: 1, chapter_id: chapterId, verse_key: `${chapterId}:1`, text_uthmani: 'بِسْمِ' },
-            ],
-            pagination: { page: 1, per_page: 10, total_pages: 1, total_records: 1 },
-          });
-        }
-        if (path.startsWith('verses/by_key/')) {
-          const verseKey = decodeURIComponent(path.split('/').pop() || '1:1');
-          return json({ verse: { id: 1, verse_key: verseKey, text_uthmani: 'بِسْمِ' } });
-        }
-        if (path === 'resources/translations') {
-          return json({
-            translations: [
-              {
-                id: 131,
-                name: 'Sahih International',
-                author_name: 'Sahih International',
-                translated_name: { name: 'Sahih International' },
-              },
-            ],
-          });
-        }
-        if (path.startsWith('quran/translations/')) {
-          const params = u.searchParams;
-          const c = params.get('chapter_number') || '1';
-          const v = params.get('verse_number') || '1';
-          return json({
-            translations: [
-              { id: 1, resource_id: 131, verse_key: `${c}:${v}`, text: 'In the name of Allah...' },
-            ],
-          });
-        }
-        if (path === 'verses/random') {
-          return json({ verse: { id: 1, verse_key: '1:1', text_uthmani: 'بِسْمِ' } });
-        }
-        // Fallback for unrecognized QDC endpoints
-        return json({ ok: true });
-      }
-      return realFetch
-        ? realFetch(input, init)
-        : Promise.resolve(new Response('{}', { status: 200 }));
-    };
-  })();
+
+// Start MSW for tests unless explicitly disabled
+// Set JEST_ALLOW_NETWORK=1 to bypass MSW and allow real network requests
+if (!process.env.JEST_ALLOW_NETWORK) {
+  beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
 }
 
 // Ensure fetch is available in the JSDOM environment - cross-fetch/polyfill should handle this
