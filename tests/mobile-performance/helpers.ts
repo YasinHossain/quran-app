@@ -1,6 +1,21 @@
 import { perfLogger } from '@infra/monitoring';
 import { render, fireEvent } from '@testing-library/react';
 
+let nowSpy: jest.SpyInstance<number, []>;
+let current = 0;
+
+beforeEach(() => {
+  current = 0;
+  nowSpy = jest.spyOn(performance, 'now').mockImplementation(() => {
+    current += 10;
+    return current;
+  });
+});
+
+afterEach(() => {
+  nowSpy.mockRestore();
+});
+
 interface RenderWithPerfResult {
   utils: ReturnType<typeof render>;
   duration: number;
