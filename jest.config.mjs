@@ -10,8 +10,8 @@ const customJestConfig = {
   // Test environment setup
   testEnvironment: 'jest-environment-jsdom',
   // Load DOM shims first, then testing-library extensions
-  setupFiles: ['<rootDir>/tests/setup/polyfills.js', '<rootDir>/tests/setup/matchMedia.js'],
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  setupFiles: ['<rootDir>/tests/setup/polyfills.ts', '<rootDir>/tests/setup/matchMedia.ts'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
 
   // Module mapping for absolute imports
   moduleNameMapper: {
