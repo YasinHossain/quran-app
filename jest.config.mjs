@@ -9,9 +9,8 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   // Test environment setup
   testEnvironment: 'jest-environment-jsdom',
-  // Load DOM shims first, then testing-library extensions
-  setupFiles: ['<rootDir>/tests/setup/polyfills.js', '<rootDir>/tests/setup/matchMedia.js'],
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  // Shared test utilities and polyfills
+  setupFilesAfterEnv: ['<rootDir>/tests/setup/setupTests.ts'],
 
   // Module mapping for absolute imports
   moduleNameMapper: {
