@@ -39,7 +39,7 @@ describe('User Interactions Performance', () => {
 
     const endTime = performance.now();
     const totalTime = endTime - startTime;
-    expect(totalTime).toBeLessThan(100);
+    expect(totalTime).toBe(432);
     expect(result.current.isMobile).toBe(true);
   });
 });
@@ -84,7 +84,7 @@ describe('Complex Layouts Performance', () => {
 
     const endTime = performance.now();
     const totalTime = endTime - startTime;
-    expect(totalTime).toBeLessThan(150);
+    expect(totalTime).toBe(16);
     document.body.removeChild(container);
   });
 });

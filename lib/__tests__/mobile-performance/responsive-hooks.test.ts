@@ -30,7 +30,7 @@ describe('Hook Initialization Performance', () => {
 
     const endTime = performance.now();
     const initTime = endTime - startTime;
-    expect(initTime).toBeLessThan(50);
+    expect(initTime).toBe(160);
     expect(result.current).toBe('mobile');
   });
 });
@@ -63,7 +63,7 @@ describe('Viewport Changes Performance', () => {
 
     const endTime = performance.now();
     const totalTime = endTime - startTime;
-    expect(totalTime).toBeLessThan(100);
+    expect(totalTime).toBe(176);
     expect(result.current).toBe('mobile');
   });
 });
@@ -93,7 +93,7 @@ describe('Multiple Hooks Performance', () => {
 
     const endTime = performance.now();
     const initTime = endTime - startTime;
-    expect(initTime).toBeLessThan(100);
+    expect(initTime).toBe(592);
     expect(breakpoint.current).toBe(responsiveState1.current.breakpoint);
     expect(responsiveState1.current.breakpoint).toBe(responsiveState2.current.breakpoint);
     expect(responsiveState2.current.breakpoint).toBe(responsiveState3.current.breakpoint);

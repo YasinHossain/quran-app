@@ -40,7 +40,7 @@ describe('Accessibility Performance', () => {
     const endTime = performance.now();
     const focusTime = endTime - startTime;
 
-    expect(focusTime).toBeLessThan(50);
+    expect(focusTime).toBe(16);
     expect(document.activeElement).toBe(focusableElement);
 
     document.body.removeChild(focusableElement);

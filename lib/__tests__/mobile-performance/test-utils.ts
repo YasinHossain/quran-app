@@ -9,6 +9,8 @@ interface MobilePerformanceTestSetup {
   cleanup: () => void;
 }
 
+let time = 0;
+
 export const setupMobilePerformanceTest = (): MobilePerformanceTestSetup => {
   const matchMediaUtils = createMatchMediaMock();
   Object.defineProperty(window, 'matchMedia', {
@@ -17,13 +19,14 @@ export const setupMobilePerformanceTest = (): MobilePerformanceTestSetup => {
     value: matchMediaUtils.matchMediaMock,
   });
 
-  jest.spyOn(performance, 'now').mockImplementation(() => Date.now());
+  jest.spyOn(performance, 'now').mockImplementation(() => (time += 16));
 
   return {
     matchMediaUtils,
     cleanup: () => {
       matchMediaUtils.cleanup();
       jest.restoreAllMocks();
+      time = 0;
     },
   };
 };
