@@ -1,5 +1,5 @@
 'use client';
-import React, { useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import useSWR from 'swr';
 
 import { useSidebar } from '@/app/providers/SidebarContext';
@@ -18,7 +18,9 @@ interface Props {
  * Includes a search input for filtering and remembers scroll position
  * between tabs via session storage and the sidebar context.
  */
-export const SurahListSidebar = ({ initialChapters = [] }: Props): React.JSX.Element => {
+export const SurahListSidebar = memo(function SurahListSidebar({
+  initialChapters = [],
+}: Props): React.JSX.Element {
   const { data } = useSWR('chapters', getChapters, { fallbackData: initialChapters });
   const chapters = useMemo(() => data || [], [data]);
   const { isSurahListOpen, setSurahListOpen } = useSidebar();
@@ -33,4 +35,4 @@ export const SurahListSidebar = ({ initialChapters = [] }: Props): React.JSX.Ele
       <SurahListContent chapters={chapters} />
     </BaseSidebar>
   );
-};
+});

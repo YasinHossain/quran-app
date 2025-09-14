@@ -1,4 +1,6 @@
 'use client';
+import { memo } from 'react';
+
 import { useSettings } from '@/app/providers/SettingsContext';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { applyTajweed } from '@/lib/text/tajweed';
@@ -70,7 +72,9 @@ interface VerseArabicProps {
   verse: VerseType;
 }
 
-export const VerseArabic = ({ verse }: VerseArabicProps): React.JSX.Element => {
+export const VerseArabic = memo(function VerseArabic({
+  verse,
+}: VerseArabicProps): React.JSX.Element {
   const { settings } = useSettings();
   const showByWords = settings.showByWords ?? false;
   const wordLang = settings.wordLang ?? 'en';
@@ -103,4 +107,4 @@ export const VerseArabic = ({ verse }: VerseArabicProps): React.JSX.Element => {
       )}
     </p>
   );
-};
+});

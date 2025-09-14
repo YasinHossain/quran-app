@@ -1,11 +1,11 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, memo } from 'react';
 
 import { SearchInput } from '@/app/shared/components/SearchInput';
 
-export function HeaderSearch(): JSX.Element {
+export const HeaderSearch = memo(function HeaderSearch(): JSX.Element {
   const router = useRouter();
   const [query, setQuery] = useState('');
 
@@ -37,4 +37,4 @@ export function HeaderSearch(): JSX.Element {
       </div>
     </div>
   );
-}
+});

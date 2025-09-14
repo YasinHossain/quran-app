@@ -162,6 +162,9 @@ describe('SettingsContext', () => {
 
 Tests use [MSW](https://mswjs.io/) to intercept network requests and prevent
 external calls. Real network access is disabled unless explicitly re-enabled.
+
+#### Allowing real network requests
+
 Set `JEST_ALLOW_NETWORK=1` before running tests to opt out and allow raw
 network requests.
 

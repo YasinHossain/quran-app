@@ -1,5 +1,3 @@
-// @ts-nocheck
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import '@testing-library/jest-dom';
 import 'jest-axe/extend-expect';
 // Provide Fetch/Response in JSDOM via whatwg-fetch so MSW interceptors work consistently
@@ -7,10 +5,20 @@ import 'whatwg-fetch';
 
 import { ReadableStream, WritableStream, TransformStream } from 'stream/web';
 import { TextEncoder, TextDecoder } from 'util';
-import { jest, beforeAll, afterEach, afterAll } from '@jest/globals';
 
-import { server } from '@tests/setup/msw/server';
+import { jest, beforeAll, afterEach, afterAll } from '@jest/globals';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
+
+declare global {
+  interface HTMLMediaElement {
+    simulateEvent(eventType: string): void;
+    simulateTimeUpdate(time: number): void;
+    simulateLoadedData(duration?: number): void;
+    simulatePlay(): void;
+    simulatePause(): void;
+    simulateEnd(): void;
+  }
+}
 
 // Web Streams and BroadcastChannel polyfills
 if (typeof globalThis.ReadableStream === 'undefined') {
@@ -29,13 +37,18 @@ if (typeof globalThis.BroadcastChannel === 'undefined') {
   // @ts-expect-error - define if missing
   globalThis.BroadcastChannel = class {
     constructor() {}
-    postMessage() {}
-    close() {}
-    addEventListener() {}
-    removeEventListener() {}
-    onmessage = null;
+    postMessage(): void {}
+    close(): void {}
+    addEventListener(): void {}
+    removeEventListener(): void {}
+    onmessage: ((this: BroadcastChannel, ev: MessageEvent) => void) | null = null;
   };
 }
+
+// TextEncoder/TextDecoder for MSW in JSDOM
+Object.assign(global, { TextDecoder, TextEncoder });
+
+const { server } = require('@tests/setup/msw/server');
 
 // Start MSW for tests unless explicitly disabled
 // Set JEST_ALLOW_NETWORK=1 to bypass MSW and allow real network requests
@@ -44,24 +57,20 @@ if (!process.env.JEST_ALLOW_NETWORK) {
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 }
-}
-
-// TextEncoder/TextDecoder for MSW in JSDOM
-Object.assign(global, { TextDecoder, TextEncoder });
 
 // matchMedia polyfill
 const createMatchMedia =
-  (matches = false) =>
-  (query: string) => {
+  (matches = false): ((query: string) => MediaQueryList) =>
+  (query: string): MediaQueryList => {
     return {
       matches,
       media: query,
-      onchange: null as ((this: MediaQueryList, ev: MediaQueryListEvent) => any) | null,
-      addListener: () => {}, // deprecated but often referenced by libs
-      removeListener: () => {},
-      addEventListener: () => {},
-      removeEventListener: () => {},
-      dispatchEvent: () => false,
+      onchange: null as ((this: MediaQueryList, ev: MediaQueryListEvent) => void) | null,
+      addListener: (): void => {}, // deprecated but often referenced by libs
+      removeListener: (): void => {},
+      addEventListener: (): void => {},
+      removeEventListener: (): void => {},
+      dispatchEvent: (): boolean => false,
     } as unknown as MediaQueryList;
   };
 
@@ -78,13 +87,13 @@ if (typeof window !== 'undefined') {
 // IntersectionObserver mock
 class IntersectionObserverMock {
   constructor(private cb: IntersectionObserverCallback) {}
-  observe = (el: Element) => {
+  observe = (el: Element): void => {
     if (this.cb) {
-      this.cb([{ isIntersecting: true, target: el }], this);
+      this.cb([{ isIntersecting: true, target: el } as unknown as IntersectionObserverEntry], this);
     }
   };
-  unobserve = () => {};
-  disconnect = () => {};
+  unobserve = (): void => {};
+  disconnect = (): void => {};
 }
 
 if (typeof window !== 'undefined') {
@@ -102,10 +111,12 @@ Object.defineProperty(global, 'IntersectionObserver', {
 
 // ResizeObserver mock
 class ResizeObserverMock {
-  constructor(private cb: ResizeObserverCallback) {}
-  observe = () => {};
-  unobserve = () => {};
-  disconnect = () => {};
+  constructor(cb: ResizeObserverCallback) {
+    void cb;
+  }
+  observe = (): void => {};
+  unobserve = (): void => {};
+  disconnect = (): void => {};
 }
 
 if (typeof window !== 'undefined') {
@@ -137,11 +148,11 @@ if (typeof window !== 'undefined') {
 
   Object.defineProperty(HTMLMediaElement.prototype, 'currentTime', {
     get() {
-      // @ts-ignore
+      // @ts-expect-error - test shim
       return this._currentTime || 0;
     },
     set(value) {
-      // @ts-ignore
+      // @ts-expect-error - test shim
       this._currentTime = value;
     },
     configurable: true,
@@ -149,11 +160,11 @@ if (typeof window !== 'undefined') {
 
   Object.defineProperty(HTMLMediaElement.prototype, 'duration', {
     get() {
-      // @ts-ignore
+      // @ts-expect-error - test shim
       return this._duration || 0;
     },
     set(value) {
-      // @ts-ignore
+      // @ts-expect-error - test shim
       this._duration = value;
     },
     configurable: true,
@@ -161,11 +172,11 @@ if (typeof window !== 'undefined') {
 
   Object.defineProperty(HTMLMediaElement.prototype, 'volume', {
     get() {
-      // @ts-ignore
+      // @ts-expect-error - test shim
       return this._volume !== undefined ? this._volume : 1;
     },
     set(value) {
-      // @ts-ignore
+      // @ts-expect-error - test shim
       this._volume = Math.max(0, Math.min(1, value));
     },
     configurable: true,
@@ -173,11 +184,11 @@ if (typeof window !== 'undefined') {
 
   Object.defineProperty(HTMLMediaElement.prototype, 'playbackRate', {
     get() {
-      // @ts-ignore
+      // @ts-expect-error - test shim
       return this._playbackRate || 1;
     },
     set(value) {
-      // @ts-ignore
+      // @ts-expect-error - test shim
       this._playbackRate = value;
     },
     configurable: true,
@@ -185,11 +196,11 @@ if (typeof window !== 'undefined') {
 
   Object.defineProperty(HTMLMediaElement.prototype, 'paused', {
     get() {
-      // @ts-ignore
+      // @ts-expect-error - test shim
       return this._paused !== undefined ? this._paused : true;
     },
     set(value) {
-      // @ts-ignore
+      // @ts-expect-error - test shim
       this._paused = value;
     },
     configurable: true,
@@ -197,11 +208,11 @@ if (typeof window !== 'undefined') {
 
   Object.defineProperty(HTMLMediaElement.prototype, 'ended', {
     get() {
-      // @ts-ignore
+      // @ts-expect-error - test shim
       return this._ended || false;
     },
     set(value) {
-      // @ts-ignore
+      // @ts-expect-error - test shim
       this._ended = value;
     },
     configurable: true,
@@ -209,11 +220,11 @@ if (typeof window !== 'undefined') {
 
   Object.defineProperty(HTMLMediaElement.prototype, 'readyState', {
     get() {
-      // @ts-ignore
+      // @ts-expect-error - test shim
       return this._readyState || 4;
     },
     set(value) {
-      // @ts-ignore
+      // @ts-expect-error - test shim
       this._readyState = value;
     },
     configurable: true,
@@ -221,63 +232,63 @@ if (typeof window !== 'undefined') {
 
   Object.defineProperty(HTMLMediaElement.prototype, 'networkState', {
     get() {
-      // @ts-ignore
+      // @ts-expect-error - test shim
       return this._networkState || 1;
     },
     set(value) {
-      // @ts-ignore
+      // @ts-expect-error - test shim
       this._networkState = value;
     },
     configurable: true,
   });
 
-  HTMLMediaElement.prototype.simulateEvent = function (eventType: string) {
+  HTMLMediaElement.prototype.simulateEvent = function (eventType: string): void {
     const event = new Event(eventType);
     this.dispatchEvent(event);
   };
 
-  HTMLMediaElement.prototype.simulateTimeUpdate = function (time: number) {
-    // @ts-ignore
+  HTMLMediaElement.prototype.simulateTimeUpdate = function (time: number): void {
+    // @ts-expect-error - test shim
     this._currentTime = time;
-    // @ts-ignore
+    // @ts-expect-error - test shim
     this.simulateEvent('timeupdate');
   };
 
-  HTMLMediaElement.prototype.simulateLoadedData = function (duration = 60) {
-    // @ts-ignore
+  HTMLMediaElement.prototype.simulateLoadedData = function (duration = 60): void {
+    // @ts-expect-error - test shim
     this._duration = duration;
-    // @ts-ignore
+    // @ts-expect-error - test shim
     this._readyState = 4;
-    // @ts-ignore
+    // @ts-expect-error - test shim
     this.simulateEvent('loadeddata');
-    // @ts-ignore
+    // @ts-expect-error - test shim
     this.simulateEvent('canplay');
-    // @ts-ignore
+    // @ts-expect-error - test shim
     this.simulateEvent('canplaythrough');
   };
 
-  HTMLMediaElement.prototype.simulatePlay = function () {
-    // @ts-ignore
+  HTMLMediaElement.prototype.simulatePlay = function (): void {
+    // @ts-expect-error - test shim
     this._paused = false;
-    // @ts-ignore
+    // @ts-expect-error - test shim
     this.simulateEvent('play');
-    // @ts-ignore
+    // @ts-expect-error - test shim
     this.simulateEvent('playing');
   };
 
-  HTMLMediaElement.prototype.simulatePause = function () {
-    // @ts-ignore
+  HTMLMediaElement.prototype.simulatePause = function (): void {
+    // @ts-expect-error - test shim
     this._paused = true;
-    // @ts-ignore
+    // @ts-expect-error - test shim
     this.simulateEvent('pause');
   };
 
-  HTMLMediaElement.prototype.simulateEnd = function () {
-    // @ts-ignore
+  HTMLMediaElement.prototype.simulateEnd = function (): void {
+    // @ts-expect-error - test shim
     this._ended = true;
-    // @ts-ignore
+    // @ts-expect-error - test shim
     this._paused = true;
-    // @ts-ignore
+    // @ts-expect-error - test shim
     this.simulateEvent('ended');
   };
 }
@@ -286,13 +297,16 @@ if (typeof window !== 'undefined') {
 if (!process.env.JEST_USE_MSW) {
   const realFetch = globalThis.fetch;
   const QDC_BASE = 'https://api.qurancdn.com/api/qdc/';
-  function json(data: unknown) {
+  function json(data: unknown): Response {
     return new Response(JSON.stringify(data), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
   }
-  globalThis.fetch = async (input: any, init?: any) => {
+  globalThis.fetch = async (
+    input: Parameters<typeof fetch>[0],
+    init?: Parameters<typeof fetch>[1]
+  ): Promise<Response> => {
     const url = typeof input === 'string' ? input : input?.toString?.() || '';
     if (url.startsWith(QDC_BASE)) {
       const u = new URL(url);
@@ -358,7 +372,7 @@ if (!process.env.JEST_USE_MSW) {
 
 // Fallback fetch mock if needed
 if (typeof globalThis.fetch === 'undefined') {
-  // @ts-ignore
+  // @ts-expect-error - test shim
   globalThis.fetch = jest.fn(() =>
     Promise.resolve({
       ok: true,

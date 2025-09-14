@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import { ChevronDownIcon } from './icons';
 
@@ -8,7 +8,11 @@ interface SelectionBoxProps {
   onClick: () => void;
 }
 
-export const SelectionBox = ({ label, value, onClick }: SelectionBoxProps): React.JSX.Element => {
+export const SelectionBox = memo(function SelectionBox({
+  label,
+  value,
+  onClick,
+}: SelectionBoxProps): React.JSX.Element {
   return (
     <div>
       <label className="block mb-2 text-sm font-medium text-foreground">{label}</label>
@@ -22,4 +26,4 @@ export const SelectionBox = ({ label, value, onClick }: SelectionBoxProps): Reac
       </button>
     </div>
   );
-};
+});

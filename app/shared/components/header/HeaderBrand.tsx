@@ -3,10 +3,11 @@
 import { IconMenu2 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { memo, useCallback } from 'react';
 
 import { useSidebar } from '@/app/providers/SidebarContext';
 
-export function HeaderBrand(): JSX.Element {
+export const HeaderBrand = memo(function HeaderBrand(): JSX.Element {
   const { setSurahListOpen, setBookmarkSidebarOpen } = useSidebar();
   const pathname = usePathname();
 
@@ -23,7 +24,7 @@ export function HeaderBrand(): JSX.Element {
 
   const shouldShowMenu = isNavPath(pathname) || isBookmarkPath(pathname);
 
-  const handleMobileNavClick = (): void => {
+  const handleMobileNavClick = useCallback((): void => {
     if (isBookmarkPath(pathname)) {
       setBookmarkSidebarOpen(true);
       return;
@@ -31,7 +32,7 @@ export function HeaderBrand(): JSX.Element {
     if (isNavPath(pathname)) {
       setSurahListOpen(true);
     }
-  };
+  }, [pathname, setBookmarkSidebarOpen, setSurahListOpen]);
 
   return (
     <div className="flex items-center justify-start w-1/3">
@@ -59,4 +60,4 @@ export function HeaderBrand(): JSX.Element {
       </Link>
     </div>
   );
-}
+});

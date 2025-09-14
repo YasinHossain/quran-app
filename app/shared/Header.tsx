@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { memo } from 'react';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { cn } from '@/lib/utils/cn';
@@ -7,8 +7,7 @@ import { cn } from '@/lib/utils/cn';
 import { HeaderActions } from './components/header/HeaderActions';
 import { HeaderBrand } from './components/header/HeaderBrand';
 import { HeaderSearch } from './components/header/HeaderSearch';
-
-export const Header = (): React.JSX.Element => {
+export const Header = memo(function Header(): React.JSX.Element {
   const { isHidden } = useHeaderVisibility();
 
   return (
@@ -30,4 +29,4 @@ export const Header = (): React.JSX.Element => {
       </div>
     </header>
   );
-};
+});

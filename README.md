@@ -148,6 +148,9 @@ Our testing strategy follows **layer-specific approaches** for comprehensive cov
 # Run all tests
 npm run test
 
+# Allow real network requests (disable MSW)
+JEST_ALLOW_NETWORK=1 npm run test
+
 # Run with coverage (target: 80%+)
 npm run test:coverage
 

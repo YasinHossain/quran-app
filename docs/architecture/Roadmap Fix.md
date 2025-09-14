@@ -3,6 +3,7 @@
 Purpose: consolidate the next set of focused actions to get the test suite stable, fast, and CI-friendly after recent refactors.
 
 ## Targets
+
 - CI `test:ci` runtime: under 6 minutes on 2–4 vCPU runners.
 - Local `test` without coverage: 1–2 minutes.
 - No flaky tests; zero open-handle warnings.
@@ -45,7 +46,7 @@ Purpose: consolidate the next set of focused actions to get the test suite stabl
 - ✅ Reduce "act" warnings in UI tests
   - Problem: provider effects mutate state post-render (e.g., bookmarks) causing act warnings.
   - Action: in affected tests, await stabilization with `waitFor` after render.
-  - Files updated: 
+  - Files updated:
     - `app/shared/__tests__/Header.test.tsx` (added waitFor to all tests)
   - Acceptance:
     - ✅ No act warnings in test output.
@@ -71,12 +72,12 @@ Purpose: consolidate the next set of focused actions to get the test suite stabl
     - `jest.config.mjs` (updated setupFiles paths)
   - Acceptance: test suite runs successfully with improved setup.
 
-- ✅ Gate global fetch stubs
+- ✅ Remove global fetch stubs
   - Problem: `jest.setup.js` stubs QDC endpoints and may mask MSW.
-  - Action: guard stubs behind an env flag `if (!process.env.JEST_USE_MSW) { /* stub */ }`.
+  - Action: rely solely on MSW; set `JEST_ALLOW_NETWORK=1` to opt out and allow real requests.
   - Files updated:
-    - `jest.setup.js` (added environment flag guard)
-  - Acceptance: with MSW enabled, fetch is not overridden; tests use handlers.
+    - `tests/setup/setupTests.ts` (removed QDC stubs; added opt-out flag)
+  - Acceptance: MSW handles requests by default; real network allowed only when explicitly enabled.
 
 ## P2 — Performance & Maintenance
 
@@ -124,6 +125,7 @@ Purpose: consolidate the next set of focused actions to get the test suite stabl
     - Zero open handle warnings in test output
 
 ## Implementation Notes (file pointers)
+
 - `jest.config.mjs`: add `coverageProvider: 'v8'`; consider `projects` split.
 - `tests/setup/integration.setup.js`: start/stop MSW server.
 - `lib/api/__mocks__/client.ts`: manual mock for `fetchWithTimeout`.
@@ -131,17 +133,19 @@ Purpose: consolidate the next set of focused actions to get the test suite stabl
 - `tests/unit/infrastructure/monitoring/RemoteTransport.*.test.ts`: ensure manual mock is used; remove `global.window` hacks once projects split.
 
 ## Verification Checklist
+
 - Unit (Node): `npx jest --projects node --coverage=false`
 - UI (JSDOM): `npx jest --projects ui --coverage=false`
 - CI style: `npm run test:ci -- --maxWorkers=50%`
 - Flakiness: re-run the above twice; should be stable.
 
 ## Rollout Plan
-1) ✅ P0 fixes (logger injection, RemoteTransport mocking, MSW setup, act warnings) — COMPLETED
-2) ✅ P1 config improvements (coverage provider, environment setup) — COMPLETED
-3) P2 performance optimizations and maintenance — ongoing.
+
+1. ✅ P0 fixes (logger injection, RemoteTransport mocking, MSW setup, act warnings) — COMPLETED
+2. ✅ P1 config improvements (coverage provider, environment setup) — COMPLETED
+3. P2 performance optimizations and maintenance — ongoing.
 
 ## Notes
+
 - Ideal suite targets for this repo size: 3–6 minutes `test:ci` on CI; <2 minutes locally without coverage.
 - Keep integration tests minimal; prefer MSW-backed component tests over networked flows.
-

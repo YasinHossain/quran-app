@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import { Spinner } from './Spinner';
 
@@ -10,13 +10,13 @@ interface LoadingErrorProps {
   errorFallback?: React.ReactNode;
 }
 
-export const LoadingError = ({
+export const LoadingError = memo(function LoadingError({
   isLoading,
   error,
   children,
   loadingFallback,
   errorFallback,
-}: LoadingErrorProps): React.JSX.Element => {
+}: LoadingErrorProps): React.JSX.Element {
   if (isLoading) {
     return (
       <>
@@ -42,4 +42,4 @@ export const LoadingError = ({
   }
 
   return <>{children}</>;
-};
+});
