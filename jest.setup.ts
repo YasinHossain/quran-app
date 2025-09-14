@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import '@testing-library/jest-dom';
 import 'jest-axe/extend-expect';
