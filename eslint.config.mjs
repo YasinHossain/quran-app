@@ -5,6 +5,7 @@ import js from '@eslint/js';
 import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths';
 import unusedImports from 'eslint-plugin-unused-imports';
 import importPlugin from 'eslint-plugin-import';
+import testingLibrary from 'eslint-plugin-testing-library';
 import { noRawColorClasses } from './tools/scripts/eslint/no-raw-color-classes.mjs';
 import { noThemeConditionals } from './tools/scripts/eslint/no-theme-conditionals.mjs';
 import enforceArchitectureBoundaries from './tools/scripts/eslint/enforce-architecture-boundaries.mjs';
@@ -303,6 +304,9 @@ const eslintConfig = [
   // Test files can be longer and more permissive
   {
     files: ['**/__tests__/**', '**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts'],
+    plugins: {
+      'testing-library': testingLibrary,
+    },
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       'react/display-name': 'off',
@@ -315,6 +319,7 @@ const eslintConfig = [
           skipComments: true,
         },
       ],
+      'testing-library/await-async-utils': 'error',
     },
   },
 ];

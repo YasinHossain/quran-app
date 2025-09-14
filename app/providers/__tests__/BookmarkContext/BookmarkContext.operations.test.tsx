@@ -7,8 +7,13 @@ import type { Bookmark, Folder } from '@/types';
 
 const BOOKMARKS_STORAGE_KEY = 'quranAppBookmarks_v2';
 
-const renderComponent = (): ReturnType<typeof renderWithProviders> =>
-  renderWithProviders(<BookmarkTestComponent />);
+const renderComponent = async (): Promise<ReturnType<typeof renderWithProviders>> => {
+  const result = renderWithProviders(<BookmarkTestComponent />);
+  await waitFor(() => {
+    expect(screen.getByTestId('folders')).toBeInTheDocument();
+  });
+  return result;
+};
 
 const getFolders = (): Folder[] => JSON.parse(screen.getByTestId('folders').textContent || '[]');
 
@@ -26,7 +31,7 @@ beforeEach(() => {
 });
 
 it('creates a new folder', async () => {
-  renderComponent();
+  await renderComponent();
   await userEvent.click(screen.getByText('Create Folder'));
   await waitFor(() => {
     const folders = getFolders();
@@ -36,7 +41,7 @@ it('creates a new folder', async () => {
 });
 
 it('adds a bookmark to a folder', async () => {
-  renderComponent();
+  await renderComponent();
   await userEvent.click(screen.getByText('Create Folder'));
   await userEvent.click(screen.getByText('Add Bookmark'));
   await waitFor(() => {
@@ -48,7 +53,7 @@ it('adds a bookmark to a folder', async () => {
 });
 
 it('removes a bookmark from a folder', async () => {
-  renderComponent();
+  await renderComponent();
   await userEvent.click(screen.getByText('Create Folder'));
   await userEvent.click(screen.getByText('Add Bookmark'));
   await userEvent.click(screen.getByText('Remove Bookmark'));
@@ -60,7 +65,7 @@ it('removes a bookmark from a folder', async () => {
 });
 
 it('renames a folder', async () => {
-  renderComponent();
+  await renderComponent();
   await userEvent.click(screen.getByText('Create Folder'));
   await userEvent.click(screen.getByText('Rename Folder'));
   await waitFor(() => {
@@ -70,7 +75,7 @@ it('renames a folder', async () => {
 });
 
 it('deletes a folder', async () => {
-  renderComponent();
+  await renderComponent();
   await userEvent.click(screen.getByText('Create Folder'));
   await userEvent.click(screen.getByText('Delete Folder'));
   await waitFor(() => {
@@ -79,7 +84,7 @@ it('deletes a folder', async () => {
 });
 
 it('persists folder color', async () => {
-  renderComponent();
+  await renderComponent();
   await userEvent.click(screen.getByText('Create Folder'));
   await userEvent.click(screen.getByText('Set Color'));
   await waitFor(() => {
@@ -92,7 +97,7 @@ it('persists folder color', async () => {
 
 describe('pin operations', () => {
   it('pins a verse', async () => {
-    renderComponent();
+    await renderComponent();
     await userEvent.click(screen.getByText('Toggle Pin'));
     await waitFor(() => {
       expect(getPinned()).toHaveLength(1);
@@ -101,7 +106,7 @@ describe('pin operations', () => {
   });
 
   it('unpins a verse', async () => {
-    renderComponent();
+    await renderComponent();
     await userEvent.click(screen.getByText('Toggle Pin'));
     await userEvent.click(screen.getByText('Toggle Pin'));
     await waitFor(() => {
@@ -113,7 +118,7 @@ describe('pin operations', () => {
 
 describe('last read', () => {
   it('sets last read verse', async () => {
-    renderComponent();
+    await renderComponent();
     await userEvent.click(screen.getByText('Set Last Read'));
     await waitFor(() => {
       const last = getLastRead();

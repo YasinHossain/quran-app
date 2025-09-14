@@ -1,4 +1,4 @@
-import { screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
 
 import {
   renderResponsiveVerseActions,
@@ -6,58 +6,64 @@ import {
 } from '@/app/testUtils/responsiveVerseActionsTestUtils';
 
 describe('ResponsiveVerseActions interactions', () => {
-  it('should handle play button clicks', () => {
+  it('should handle play button clicks', async () => {
     const onPlayPause = jest.fn();
     renderResponsiveVerseActions({ onPlayPause });
 
-    const playButton = screen.getByRole('button', { name: /play/i });
+    const playButton = await screen.findByRole('button', { name: /play/i });
     fireEvent.click(playButton);
 
-    expect(onPlayPause).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(onPlayPause).toHaveBeenCalledTimes(1);
+    });
   });
 
-  it('should handle bookmark toggle', () => {
+  it('should handle bookmark toggle', async () => {
     const onBookmark = jest.fn();
     renderResponsiveVerseActions({ onBookmark });
 
-    const bookmarkButton = screen.getByRole('button', { name: /bookmark/i });
+    const bookmarkButton = await screen.findByRole('button', { name: /bookmark/i });
     fireEvent.click(bookmarkButton);
 
-    expect(onBookmark).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(onBookmark).toHaveBeenCalledTimes(1);
+    });
   });
 
-  it('should show correct play/pause state', () => {
+  it('should show correct play/pause state', async () => {
     const { rerender } = renderResponsiveVerseActions();
 
-    expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
+    await screen.findByRole('button', { name: /play/i });
 
     rerenderResponsiveVerseActions(rerender, { isPlaying: true });
 
-    expect(screen.getByRole('button', { name: /pause/i })).toBeInTheDocument();
+    await screen.findByRole('button', { name: /pause/i });
   });
 
-  it('should show loading state', () => {
+  it('should show loading state', async () => {
     renderResponsiveVerseActions({ isLoadingAudio: true });
 
-    expect(screen.getByRole('button', { name: /loading/i })).toBeInTheDocument();
+    await screen.findByRole('button', { name: /loading/i });
   });
 
-  it('should show bookmarked state', () => {
+  it('should show bookmarked state', async () => {
     renderResponsiveVerseActions({ isBookmarked: true });
 
-    expect(screen.getByRole('button', { name: /remove bookmark/i })).toBeInTheDocument();
+    await screen.findByRole('button', { name: /remove bookmark/i });
   });
 
-  it('should support keyboard navigation', () => {
+  it('should support keyboard navigation', async () => {
     renderResponsiveVerseActions();
 
-    const playButton = screen.getByRole('button', { name: /play/i });
-    screen.getByRole('button', { name: /bookmark/i });
+    const playButton = await screen.findByRole('button', { name: /play/i });
+    await screen.findByRole('button', { name: /bookmark/i });
 
     playButton.focus();
     expect(document.activeElement).toBe(playButton);
 
     fireEvent.keyDown(playButton, { key: 'Tab' });
-    expect(document.activeElement).not.toBe(playButton);
+    await waitFor(() => {
+      expect(document.activeElement).not.toBe(playButton);
+    });
   });
 });
