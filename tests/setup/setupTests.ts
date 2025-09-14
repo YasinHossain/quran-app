@@ -3,11 +3,11 @@ import 'jest-axe/extend-expect';
 // Provide Fetch/Response in JSDOM via whatwg-fetch so MSW interceptors work consistently
 import 'whatwg-fetch';
 
-import { ReadableStream, WritableStream, TransformStream } from 'stream/web';
-import { TextEncoder, TextDecoder } from 'util';
+import '@tests/setup/envPolyfills';
 
 import { jest, beforeAll, afterEach, afterAll } from '@jest/globals';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { server } from '@tests/setup/msw/server';
 
 declare global {
   interface HTMLMediaElement {
@@ -19,36 +19,6 @@ declare global {
     simulateEnd(): void;
   }
 }
-
-// Web Streams and BroadcastChannel polyfills
-if (typeof globalThis.ReadableStream === 'undefined') {
-  // @ts-expect-error - define if missing
-  globalThis.ReadableStream = ReadableStream;
-}
-if (typeof globalThis.WritableStream === 'undefined') {
-  // @ts-expect-error - define if missing
-  globalThis.WritableStream = WritableStream;
-}
-if (typeof globalThis.TransformStream === 'undefined') {
-  // @ts-expect-error - define if missing
-  globalThis.TransformStream = TransformStream;
-}
-if (typeof globalThis.BroadcastChannel === 'undefined') {
-  // @ts-expect-error - define if missing
-  globalThis.BroadcastChannel = class {
-    constructor() {}
-    postMessage(): void {}
-    close(): void {}
-    addEventListener(): void {}
-    removeEventListener(): void {}
-    onmessage: ((this: BroadcastChannel, ev: MessageEvent) => void) | null = null;
-  };
-}
-
-// TextEncoder/TextDecoder for MSW in JSDOM
-Object.assign(global, { TextDecoder, TextEncoder });
-
-const { server } = require('@tests/setup/msw/server');
 
 // Start MSW for tests unless explicitly disabled
 // Set JEST_ALLOW_NETWORK=1 to bypass MSW and allow real network requests
