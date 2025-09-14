@@ -23,11 +23,11 @@ This roadmap aligns the Quran App for scale: fast, reliable tests; stable UI the
 - Baseline setup (done)
   - Stable `matchMedia` polyfill in setupFiles: `tests/setup/matchMedia.ts`.
   - Defensive-but-fast Theme guard: `app/providers/ThemeContext.tsx`.
-  - IntersectionObserver shim in `jest.setup.js`.
+  - IntersectionObserver shim in `tests/setup/setupTests.ts`.
 
 - Immediate actions (Phase 1)
   - Replace ad‑hoc `Object.defineProperty(window, 'matchMedia', ...)` in tests with the helper: `app/testUtils/matchMedia.ts` (`setMatchMedia(true|false)`).
-  - Centralize DOM stubs (add to `jest.setup.js`):
+  - Centralize DOM stubs (add to `tests/setup/setupTests.ts`):
     - `ResizeObserver` (no‑op or `@juggle/resize-observer`).
     - `navigator.clipboard.writeText` (resolved Promise).
     - `HTMLMediaElement.play/pause` (no‑ops to avoid JSDOM errors).
@@ -109,7 +109,7 @@ This roadmap aligns the Quran App for scale: fast, reliable tests; stable UI the
 ### Phase 1 – ✅ COMPLETED (stabilize and standardize)
 
 - ✅ Replace ad‑hoc `matchMedia` mocks with `setMatchMedia` helper.
-- ✅ Add ResizeObserver, clipboard, and media element stubs to `jest.setup.js`.
+- ✅ Add ResizeObserver, clipboard, and media element stubs to `tests/setup/setupTests.ts`.
 - ✅ Update `test:ci` to use `--maxWorkers=50%`.
 - ✅ Track suite time in CI artifacts and docs.
 
@@ -192,7 +192,7 @@ Deliverables
 - Files introduced/updated for test stability
   - `tests/setup/matchMedia.ts` – stable polyfill loaded before imports.
   - `jest.config.mjs` – `setupFiles` includes matchMedia; Testing Library stays in `setupFilesAfterEnv`.
-  - `jest.setup.js` – IntersectionObserver shim; avoid redefining `matchMedia` here.
+  - `tests/setup/setupTests.ts` – IntersectionObserver shim; avoid redefining `matchMedia` here.
   - `app/providers/ThemeContext.tsx` – guard around `matchMedia` to keep runtime simple and fast.
   - `app/testUtils/matchMedia.ts` – `setMatchMedia(matches)` helper for per‑test overrides.
 
