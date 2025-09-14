@@ -15,8 +15,11 @@ const renderOnDevice = (device: Device): RenderResult => {
   return renderResponsiveVerseActions();
 };
 
-const getTouchTargets = (device: Device): ReturnType<typeof testAccessibility.testTouchTargets> => {
+const getTouchTargets = async (
+  device: Device
+): Promise<ReturnType<typeof testAccessibility.testTouchTargets>> => {
   const { container } = renderOnDevice(device);
+  await screen.findByRole('button', { name: /play/i });
   return testAccessibility.testTouchTargets(container);
 };
 
@@ -24,12 +27,13 @@ const getFocusResult = async (): Promise<
   ReturnType<typeof testAccessibility.testFocusManagement>
 > => {
   const { container } = renderResponsiveVerseActions();
+  await screen.findByRole('button', { name: /play/i });
   return testAccessibility.testFocusManagement(container);
 };
 
-const getTafsirLink = (props = {}): HTMLAnchorElement => {
+const getTafsirLink = async (props = {}): Promise<HTMLAnchorElement> => {
   renderResponsiveVerseActions(props);
-  return screen.getByRole('link', { name: 'View tafsir' }) as HTMLAnchorElement;
+  return (await screen.findByRole('link', { name: 'View tafsir' })) as HTMLAnchorElement;
 };
 
 const devices: Device[] = ['mobile', 'tablet', 'desktop'];
@@ -40,12 +44,12 @@ describe('[Cross-Device]', () => {
     renderOnDevice(device);
 
     if (device === 'mobile') {
-      // On mobile, need to open bottom sheet first
-      const trigger = screen.getByRole('button', { name: 'Open verse actions menu' });
+      const trigger = await screen.findByRole('button', { name: 'Open verse actions menu' });
       await user.click(trigger);
     }
 
-    expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
+    const playButton = await screen.findByRole('button', { name: /play/i });
+    expect(playButton).toBeInTheDocument();
   });
 
   it.each(devices)('renders bookmark button on %s', async (device) => {
@@ -53,12 +57,12 @@ describe('[Cross-Device]', () => {
     renderOnDevice(device);
 
     if (device === 'mobile') {
-      // On mobile, need to open bottom sheet first
-      const trigger = screen.getByRole('button', { name: 'Open verse actions menu' });
+      const trigger = await screen.findByRole('button', { name: 'Open verse actions menu' });
       await user.click(trigger);
     }
 
-    expect(screen.getByRole('button', { name: /bookmark/i })).toBeInTheDocument();
+    const bookmarkButton = await screen.findByRole('button', { name: /bookmark/i });
+    expect(bookmarkButton).toBeInTheDocument();
   });
 
   it.each(devices)('renders tafsir link on %s', async (device) => {
@@ -66,14 +70,12 @@ describe('[Cross-Device]', () => {
     renderOnDevice(device);
 
     if (device === 'mobile') {
-      // On mobile, need to open bottom sheet first
-      const trigger = screen.getByRole('button', { name: 'Open verse actions menu' });
+      const trigger = await screen.findByRole('button', { name: 'Open verse actions menu' });
       await user.click(trigger);
-      // Wait for the bottom sheet to fully render
-      await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
-    expect(screen.getByRole('link', { name: 'View tafsir' })).toBeInTheDocument();
+    const link = await screen.findByRole('link', { name: 'View tafsir' });
+    expect(link).toBeInTheDocument();
   });
 });
 
@@ -93,23 +95,23 @@ describe('[Touch Targets]', () => {
     }));
   });
 
-  it('are WCAG-compliant on mobile', () => {
-    const result = getTouchTargets('mobile');
+  it('are WCAG-compliant on mobile', async () => {
+    const result = await getTouchTargets('mobile');
     expect(result.isCompliant).toBe(true);
   });
 
-  it('have no undersized targets on mobile', () => {
-    const result = getTouchTargets('mobile');
+  it('have no undersized targets on mobile', async () => {
+    const result = await getTouchTargets('mobile');
     expect(result.undersizedTargets).toHaveLength(0);
   });
 
-  it('are WCAG-compliant on tablets', () => {
-    const result = getTouchTargets('tablet');
+  it('are WCAG-compliant on tablets', async () => {
+    const result = await getTouchTargets('tablet');
     expect(result.isCompliant).toBe(true);
   });
 
-  it('detect targets on tablets', () => {
-    const result = getTouchTargets('tablet');
+  it('detect targets on tablets', async () => {
+    const result = await getTouchTargets('tablet');
     expect(result.totalTargets).toBeGreaterThan(0);
   });
 });
@@ -127,37 +129,41 @@ describe('[Accessibility]', () => {
 });
 
 describe('[Variants]', () => {
-  it('applies compact classes for mobile', () => {
+  it('applies compact classes for mobile', async () => {
     const { container } = renderOnDevice('mobile');
+    await screen.findByRole('button', { name: /play/i });
     const component = container.firstChild as HTMLElement;
     expect(component).toBeTruthy();
   });
 
-  it('applies expanded classes for desktop', () => {
+  it('applies expanded classes for desktop', async () => {
     const { container } = renderOnDevice('desktop');
+    await screen.findByRole('button', { name: /play/i });
     const component = container.firstChild as HTMLElement;
     expect(component).toBeTruthy();
   });
 });
 
 describe('[Functionality]', () => {
-  it('tafsir link has correct href', () => {
-    const link = getTafsirLink();
+  it('tafsir link has correct href', async () => {
+    const link = await getTafsirLink();
     expect(link).toHaveAttribute('href', '/tafsir/1/1');
   });
 
-  it('handles different verse keys', () => {
-    const link = getTafsirLink({ verseKey: '2:255' });
+  it('handles different verse keys', async () => {
+    const link = await getTafsirLink({ verseKey: '2:255' });
     expect(link).toHaveAttribute('href', '/tafsir/2/255');
   });
 });
 
 describe('[Errors]', () => {
-  it('handles missing props gracefully', () => {
+  it('handles missing props gracefully', async () => {
     expect(() => renderResponsiveVerseActions()).not.toThrow();
+    await screen.findByRole('button', { name: /play/i });
   });
 
-  it('handles invalid verse key format', () => {
+  it('handles invalid verse key format', async () => {
     expect(() => renderResponsiveVerseActions({ verseKey: 'invalid' })).not.toThrow();
+    await screen.findByRole('button', { name: /play/i });
   });
 });

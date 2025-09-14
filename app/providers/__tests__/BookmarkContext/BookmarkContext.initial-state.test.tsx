@@ -12,9 +12,11 @@ describe('BookmarkContext initial state', () => {
     localStorage.clear();
   });
 
-  it('initializes with an empty array of folders', () => {
+  it('initializes with an empty array of folders', async () => {
     renderWithProviders(<BookmarkTestComponent />);
-    expect(screen.getByTestId('folders').textContent).toBe('[]');
+    await waitFor(() => {
+      expect(screen.getByTestId('folders').textContent).toBe('[]');
+    });
   });
 
   it('migrates old bookmarks from localStorage', async () => {

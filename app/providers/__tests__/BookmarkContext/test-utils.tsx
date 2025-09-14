@@ -5,7 +5,9 @@ import { BookmarkProvider, useBookmarks } from '@/app/providers/BookmarkContext'
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 
 jest.mock('@/lib/api/chapters', () => ({
+  __esModule: true,
   getChapters: jest.fn().mockResolvedValue([]),
+  default: jest.fn().mockResolvedValue([]),
 }));
 
 jest.mock('@/lib/api', () => ({
