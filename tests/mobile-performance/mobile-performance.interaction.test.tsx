@@ -11,15 +11,7 @@ describe('mobile performance interaction', () => {
 
     const { getByRole } = render(<Component />);
     const button = getByRole('button');
-
-    // Mock performance.now to return 0 first time (start), then 10 second time (end)
-    const nowSpy = jest
-      .spyOn(performance, 'now')
-      .mockReturnValueOnce(0) // Called by perfLogger.start()
-      .mockReturnValue(10); // Subsequent calls treated as end() or inner calls
-
     const duration = clickWithPerf(button);
-    nowSpy.mockRestore();
 
     expect(duration).toBe(10);
   });
