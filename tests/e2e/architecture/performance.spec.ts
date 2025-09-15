@@ -16,32 +16,24 @@ async function getLcp(page: Page): Promise<number> {
 
 async function getCls(page: Page): Promise<number> {
   await page.evaluate(() => {
-    const clsWindow = window as unknown as {
-      __clsValue: number;
-      __clsObserver: PerformanceObserver;
-    };
-    clsWindow.__clsValue = 0;
-    clsWindow.__clsObserver = new PerformanceObserver((list) => {
+    (window as any).__clsValue = 0;
+    (window as any).__clsObserver = new PerformanceObserver((list) => {
       for (const entry of list.getEntries() as LayoutShift[]) {
         if (!entry.hadRecentInput) {
-          clsWindow.__clsValue += entry.value;
+          (window as any).__clsValue += entry.value;
         }
       }
     });
-    clsWindow.__clsObserver.observe({ entryTypes: ['layout-shift'] });
+    (window as any).__clsObserver.observe({ entryTypes: ['layout-shift'] });
   });
 
   await page.waitForTimeout(1000);
 
   return page.evaluate(() => {
-    const clsWindow = window as unknown as {
-      __clsValue: number;
-      __clsObserver: PerformanceObserver;
-    };
-    clsWindow.__clsObserver.disconnect();
-    const clsValue = clsWindow.__clsValue;
-    delete clsWindow.__clsObserver;
-    delete clsWindow.__clsValue;
+    (window as any).__clsObserver.disconnect();
+    const clsValue = (window as any).__clsValue;
+    delete (window as any).__clsObserver;
+    delete (window as any).__clsValue;
     return clsValue;
   });
 }

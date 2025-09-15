@@ -7,9 +7,6 @@ import { useAudio } from '@/app/shared/player/context/AudioContext';
 
 import { useNavigationHandlers } from './verse-listing/useNavigationHandlers';
 import { getStableTranslationIds } from './verse-listing/utils';
-import type { LookupFn, UseVerseListingParams, UseVerseListingReturn } from './verse-listing/types';
-
-import type { Settings, Verse } from '@/types';
 
 export type {
   UseVerseListingReturn,
@@ -17,77 +14,7 @@ export type {
   LookupFn,
   UseVerseListingParams,
 } from './verse-listing/types';
-
-function useTranslationData(): {
-  translationOptions: unknown[];
-  wordLanguageOptions: unknown[];
-  wordLanguageMap: Record<string, unknown>;
-} {
-  const {
-    translationOptions = [],
-    wordLanguageOptions = [],
-    wordLanguageMap = {},
-  } = (useTranslationOptions() as
-    | {
-        translationOptions?: unknown[];
-        wordLanguageOptions?: unknown[];
-        wordLanguageMap?: Record<string, unknown>;
-      }
-    | undefined) ?? {};
-
-  return { translationOptions, wordLanguageOptions, wordLanguageMap };
-}
-
-function useStableIds(settings: Settings): string {
-  return useMemo(
-    () => getStableTranslationIds(settings.translationIds, settings.translationId),
-    [settings.translationIds, settings.translationId]
-  );
-}
-
-interface VerseParams {
-  id: UseVerseListingParams['id'];
-  lookup: LookupFn;
-  stableTranslationIds: string;
-  wordLang: string;
-  loadMoreRef: React.MutableRefObject<HTMLDivElement | null>;
-  error: string | null;
-  setError: (e: string) => void;
-}
-
-function useVerses({
-  id,
-  lookup,
-  stableTranslationIds,
-  wordLang,
-  loadMoreRef,
-  error,
-  setError,
-}: VerseParams): {
-  verses?: Verse[];
-  isLoading?: boolean;
-  isValidating?: boolean;
-  isReachingEnd?: boolean;
-} {
-  return (
-    (useInfiniteVerseLoader({
-      ...(id !== undefined ? { id } : {}),
-      lookup,
-      stableTranslationIds,
-      wordLang,
-      loadMoreRef,
-      error,
-      setError,
-    }) as
-      | {
-          verses?: Verse[];
-          isLoading?: boolean;
-          isValidating?: boolean;
-          isReachingEnd?: boolean;
-        }
-      | undefined) ?? {}
-  );
-}
+import type { UseVerseListingParams, UseVerseListingReturn } from './verse-listing/types';
 
 /**
  * Hook for managing verse listing with infinite scroll, audio controls, and settings.
@@ -101,34 +28,57 @@ export function useVerseListing({
   const [error, setError] = useState<string | null>(null);
   const { settings, setSettings } = useSettings();
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
   const { activeVerse, setActiveVerse, reciter, isPlayerVisible, openPlayer } = useAudio();
-  const { translationOptions, wordLanguageOptions, wordLanguageMap } = useTranslationData();
-  const stableTranslationIds = useStableIds(settings);
   const {
+    translationOptions = [],
+    wordLanguageOptions = [],
+    wordLanguageMap = {},
+  } = (useTranslationOptions() as
+    | {
+        translationOptions?: unknown[];
+        wordLanguageOptions?: unknown[];
+        wordLanguageMap?: Record<string, unknown>;
+      }
+    | undefined) ?? {};
+
+  const stableTranslationIds = useMemo(
+    () => getStableTranslationIds(settings.translationIds, settings.translationId),
+    [settings.translationIds, settings.translationId]
+  );
+
+  let {
     verses = [],
     isLoading = false,
     isValidating = false,
     isReachingEnd = false,
-  } = useVerses({
-    id,
+  } = (useInfiniteVerseLoader({
+    ...(id !== undefined ? { id } : {}),
     lookup,
     stableTranslationIds,
     wordLang: settings.wordLang,
     loadMoreRef,
     error,
-    setError,
-  });
-  const versesList = initialVerses && initialVerses.length ? initialVerses : verses;
-  const navigation = useNavigationHandlers({
-    verses: versesList,
+    setError: (e: string) => setError(e),
+  }) as
+    | { verses?: unknown[]; isLoading?: boolean; isValidating?: boolean; isReachingEnd?: boolean }
+    | undefined) ?? {};
+
+  if (initialVerses && initialVerses.length) {
+    verses = initialVerses as any[];
+  }
+
+  const { handleNext, handlePrev } = useNavigationHandlers({
+    verses,
     activeVerse,
     setActiveVerse,
     openPlayer,
   });
+
   return {
     error,
     isLoading,
-    verses: versesList,
+    verses,
     isValidating,
     isReachingEnd,
     loadMoreRef,
@@ -140,6 +90,7 @@ export function useVerseListing({
     activeVerse,
     reciter,
     isPlayerVisible,
-    ...navigation,
+    handleNext,
+    handlePrev,
   } as const;
 }

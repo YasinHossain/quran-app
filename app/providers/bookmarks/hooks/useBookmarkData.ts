@@ -32,19 +32,15 @@ export function useBookmarkData(): {
   const [chapters, setChapters] = useState<Chapter[]>([]);
 
   useEffect(() => {
-    const potentialApi = chaptersApi as {
-      getChapters?: () => Promise<Chapter[]> | Chapter[];
-      default?: () => Promise<Chapter[]> | Chapter[];
-    };
     const fetchChaptersCandidate =
-      (typeof potentialApi.getChapters === 'function'
-        ? potentialApi.getChapters
-        : potentialApi.default) || null;
+      (typeof (chaptersApi as any).getChapters === 'function'
+        ? (chaptersApi as any).getChapters
+        : (chaptersApi as any).default) || null;
 
     if (typeof fetchChaptersCandidate === 'function') {
       try {
-        const result = fetchChaptersCandidate();
-        if (result && typeof (result as Promise<unknown>).then === 'function') {
+        const result = (fetchChaptersCandidate as () => Promise<Chapter[]> | Chapter[])();
+        if (result && typeof (result as any).then === 'function') {
           void (result as Promise<Chapter[]>)
             .then((chs: Chapter[]) => setChapters(chs ?? []))
             .catch(() => {});

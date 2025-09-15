@@ -98,20 +98,20 @@ export const shouldLog = (level: string): boolean => {
 export function validateConfig(): string[] {
   const warnings: string[] = [];
 
+  if (isProduction) {
+    if (!config.monitoring.sentry?.dsn && config.features.enableErrorTracking) {
+      warnings.push('⚠️  Error tracking is enabled but no Sentry DSN is configured');
+    }
+
+    if (!config.monitoring.analytics?.googleAnalyticsId && config.features.enableAnalytics) {
+      warnings.push('⚠️  Analytics is enabled but no Google Analytics ID is configured');
+    }
+  }
+
   try {
     new URL(config.api.quranBaseUrl);
   } catch {
     throw new Error('Invalid Quran API base URL');
-  }
-
-  if (!isProduction) return warnings;
-
-  if (!config.monitoring.sentry?.dsn && config.features.enableErrorTracking) {
-    warnings.push('⚠️  Error tracking is enabled but no Sentry DSN is configured');
-  }
-
-  if (!config.monitoring.analytics?.googleAnalyticsId && config.features.enableAnalytics) {
-    warnings.push('⚠️  Analytics is enabled but no Google Analytics ID is configured');
   }
 
   return warnings;

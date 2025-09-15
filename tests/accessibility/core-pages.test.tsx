@@ -1,7 +1,5 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import { waitFor } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
-import Link from 'next/link';
 import React from 'react';
 
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
@@ -15,12 +13,9 @@ jest.mock('@/lib/api', () => ({
   getJuzList: jest.fn(),
 }));
 
-jest.mock(
-  'next/link',
-  () =>
-    ({ href, children }: { href: string; children: React.ReactElement }) =>
-      React.cloneElement(children, { href })
-);
+jest.mock('next/link', () => ({ href, children }: { href: string; children: React.ReactNode }) => (
+  <a href={href}>{children}</a>
+));
 
 const mockedGetSurahList = getSurahList as jest.MockedFunction<typeof getSurahList>;
 const mockedGetJuzList = getJuzList as jest.MockedFunction<typeof getJuzList>;
@@ -34,24 +29,16 @@ const TestHomePage: React.FC = () => (
     <nav aria-label="Main navigation">
       <ul className="space-y-2">
         <li>
-          <Link href="/surah">
-            <a>Browse Surahs</a>
-          </Link>
+          <a href="/surah">Browse Surahs</a>
         </li>
         <li>
-          <Link href="/juz">
-            <a>Browse Juz</a>
-          </Link>
+          <a href="/juz">Browse Juz</a>
         </li>
         <li>
-          <Link href="/search">
-            <a>Search</a>
-          </Link>
+          <a href="/search">Search</a>
         </li>
         <li>
-          <Link href="/bookmarks">
-            <a>Bookmarks</a>
-          </Link>
+          <a href="/bookmarks">Bookmarks</a>
         </li>
       </ul>
     </nav>
@@ -78,11 +65,9 @@ const TestSurahIndexPage: React.FC = () => {
         <ul className="space-y-2">
           {surahs.map((s: Surah) => (
             <li key={s.number}>
-              <Link href={`/surah/${s.number}`}>
-                <a aria-label={`Read ${s.name} (${s.meaning})`}>
-                  {s.name} - {s.meaning}
-                </a>
-              </Link>
+              <a href={`/surah/${s.number}`} aria-label={`Read ${s.name} (${s.meaning})`}>
+                {s.name} - {s.meaning}
+              </a>
             </li>
           ))}
         </ul>
@@ -111,9 +96,9 @@ const TestJuzIndexPage: React.FC = () => {
         <ul className="space-y-2">
           {juzList.map((juz: Juz) => (
             <li key={juz.number}>
-              <Link href={`/juz/${juz.number}`}>
-                <a aria-label={`Read Juz ${juz.number}`}>Juz {juz.number}</a>
-              </Link>
+              <a href={`/juz/${juz.number}`} aria-label={`Read Juz ${juz.number}`}>
+                Juz {juz.number}
+              </a>
             </li>
           ))}
         </ul>
@@ -128,19 +113,13 @@ const TestBookmarksPage: React.FC = () => (
     <nav aria-label="Bookmark categories">
       <ul className="space-y-2">
         <li>
-          <Link href="/bookmarks/pinned">
-            <a>Pinned</a>
-          </Link>
+          <a href="/bookmarks/pinned">Pinned</a>
         </li>
         <li>
-          <Link href="/bookmarks/last-read">
-            <a>Last Read</a>
-          </Link>
+          <a href="/bookmarks/last-read">Last Read</a>
         </li>
         <li>
-          <Link href="/bookmarks/memorization">
-            <a>Memorization</a>
-          </Link>
+          <a href="/bookmarks/memorization">Memorization</a>
         </li>
       </ul>
     </nav>
@@ -175,14 +154,10 @@ const TestTafsirIndexPage: React.FC = () => (
     <nav aria-label="Surah selection for tafsir">
       <ul className="space-y-2">
         <li>
-          <Link href="/tafsir/1/1">
-            <a>Al-Fatihah</a>
-          </Link>
+          <a href="/tafsir/1/1">Al-Fatihah</a>
         </li>
         <li>
-          <Link href="/tafsir/2/1">
-            <a>Al-Baqarah</a>
-          </Link>
+          <a href="/tafsir/2/1">Al-Baqarah</a>
         </li>
       </ul>
     </nav>

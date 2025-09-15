@@ -22,11 +22,11 @@ export function useTranslationOptions(): UseTranslationOptionsReturn {
   const translationOptionsData = swrTranslations?.data;
   const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
 
-  const swrWord = useSWR<TranslationResource[]>('wordTranslations', getWordTranslations);
-  const wordTranslationOptionsData = swrWord?.data;
+  const swrWord = useSWR('wordTranslations', getWordTranslations);
+  const wordTranslationOptionsData = (swrWord as any)?.data as any[] | undefined;
   const wordLanguageMap = useMemo(() => {
     const map: Record<string, number> = {};
-    (wordTranslationOptionsData || []).forEach((o) => {
+    (wordTranslationOptionsData || []).forEach((o: any) => {
       const raw = o?.lang ?? o?.language_name ?? '';
       const name = String(raw).toLowerCase();
       if (!map[name]) {

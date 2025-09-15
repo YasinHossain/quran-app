@@ -48,12 +48,12 @@ export class ErrorHandler {
     mode: 'sync' | 'async'
   ): void {
     if (options.logError) logError(appError, options);
-    if (!options.reportError) {
-      // no reporting needed
-    } else if (mode === 'sync') {
-      Promise.resolve().then(() => reportError(appError, options));
-    } else {
-      reportError(appError, options);
+    if (options.reportError) {
+      if (mode === 'sync') {
+        Promise.resolve().then(() => reportError(appError, options));
+      } else {
+        reportError(appError, options);
+      }
     }
     if (options.showUserNotification) notifyError(appError);
   }

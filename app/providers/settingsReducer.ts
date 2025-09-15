@@ -12,37 +12,36 @@ export type Action =
   | { type: 'SET_TRANSLATION_FONT_SIZE'; value: number }
   | { type: 'SET_TAFSIR_FONT_SIZE'; value: number }
   | { type: 'SET_ARABIC_FONT_FACE'; value: string };
-type HandlerMap = {
-  [K in Action['type']]: (state: Settings, action: Extract<Action, { type: K }>) => Settings;
-};
-
-const handlers: HandlerMap = {
-  SET_SETTINGS: (_state, action) => action.value,
-  SET_SHOW_BY_WORDS: (state, action) => ({ ...state, showByWords: action.value }),
-  SET_TAJWEED: (state, action) => ({ ...state, tajweed: action.value }),
-  SET_WORD_LANG: (state, action) => ({ ...state, wordLang: action.value }),
-  SET_WORD_TRANSLATION_ID: (state, action) => ({
-    ...state,
-    wordTranslationId: action.value,
-  }),
-  SET_TAFSIR_IDS: (state, action) => ({ ...state, tafsirIds: action.value }),
-  SET_TRANSLATION_IDS: (state, action) => ({
-    ...state,
-    translationIds: action.value,
-    translationId: action.value.length > 0 ? action.value[0] : state.translationId,
-  }),
-  SET_ARABIC_FONT_SIZE: (state, action) => ({ ...state, arabicFontSize: action.value }),
-  SET_TRANSLATION_FONT_SIZE: (state, action) => ({
-    ...state,
-    translationFontSize: action.value,
-  }),
-  SET_TAFSIR_FONT_SIZE: (state, action) => ({ ...state, tafsirFontSize: action.value }),
-  SET_ARABIC_FONT_FACE: (state, action) => ({ ...state, arabicFontFace: action.value }),
-};
 
 export const reducer = (state: Settings, action: Action): Settings => {
-  const handler = handlers[action.type] as
-    | ((state: Settings, action: Action) => Settings)
-    | undefined;
-  return handler ? handler(state, action) : state;
+  switch (action.type) {
+    case 'SET_SETTINGS':
+      return action.value;
+    case 'SET_SHOW_BY_WORDS':
+      return { ...state, showByWords: action.value };
+    case 'SET_TAJWEED':
+      return { ...state, tajweed: action.value };
+    case 'SET_WORD_LANG':
+      return { ...state, wordLang: action.value };
+    case 'SET_WORD_TRANSLATION_ID':
+      return { ...state, wordTranslationId: action.value };
+    case 'SET_TAFSIR_IDS':
+      return { ...state, tafsirIds: action.value };
+    case 'SET_TRANSLATION_IDS':
+      return {
+        ...state,
+        translationIds: action.value,
+        translationId: action.value.length > 0 ? action.value[0] : state.translationId,
+      };
+    case 'SET_ARABIC_FONT_SIZE':
+      return { ...state, arabicFontSize: action.value };
+    case 'SET_TRANSLATION_FONT_SIZE':
+      return { ...state, translationFontSize: action.value };
+    case 'SET_TAFSIR_FONT_SIZE':
+      return { ...state, tafsirFontSize: action.value };
+    case 'SET_ARABIC_FONT_FACE':
+      return { ...state, arabicFontFace: action.value };
+    default:
+      return state;
+  }
 };

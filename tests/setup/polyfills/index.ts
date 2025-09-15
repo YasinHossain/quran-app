@@ -1,2 +1,0 @@
-import './domMocks';
-import './mediaMocks';
