@@ -1,10 +1,10 @@
 import userEvent from '@testing-library/user-event';
 import useSWR from 'swr';
 
-import { push } from '@/app/testUtils/mockRouter';
 import TafsirVersePage from '@/app/(features)/tafsir/[surahId]/[ayahId]/page';
-import { renderWithProviders, screen, waitFor } from '@/app/testUtils/renderWithProviders';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
+import { push } from '@/app/testUtils/mockRouter';
+import { renderWithProviders, screen, waitFor } from '@/app/testUtils/renderWithProviders';
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { Verse } from '@/types';

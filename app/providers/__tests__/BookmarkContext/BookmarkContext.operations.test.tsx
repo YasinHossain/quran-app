@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 
 import { renderWithProvidersAsync, BookmarkTestComponent } from './test-utils';
 
-import type { Bookmark, Folder } from '@/types';
+import type { Folder } from '@/types';
 
 const BOOKMARKS_STORAGE_KEY = 'quranAppBookmarks_v2';
 

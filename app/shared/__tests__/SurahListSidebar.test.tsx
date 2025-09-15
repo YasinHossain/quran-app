@@ -1,11 +1,11 @@
 import userEvent from '@testing-library/user-event';
+import { useParams, usePathname } from 'next/navigation';
 import React from 'react';
 import useSWR from 'swr';
 
 import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
-import { useParams, usePathname } from 'next/navigation';
 
 jest.mock('swr', () => {
   const actual = jest.requireActual('swr');

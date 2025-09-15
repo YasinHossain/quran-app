@@ -1,9 +1,8 @@
 import QuranPage from '@/app/(features)/page/[pageId]/page';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProvidersAsync } from '@/app/testUtils/renderWithProviders';
 import * as api from '@/lib/api';
-import { identity } from '@/tests/mocks';
 import { Verse } from '@/types';
-import { setMatchMedia } from '@/app/testUtils/matchMedia';
 jest.mock('react', () => {
   const actual = jest.requireActual('react');
   const identity = <T,>(x: T): T => x;

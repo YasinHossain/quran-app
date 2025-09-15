@@ -1,4 +1,4 @@
-import { SurahView } from '../components';
+import { SurahView } from '@/app/(features)/surah/components';
 
 interface SurahPageProps {
   params: Promise<{ surahId: string }>;

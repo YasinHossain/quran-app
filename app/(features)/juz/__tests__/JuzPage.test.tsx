@@ -1,8 +1,7 @@
 import { JuzClient } from '@/app/(features)/juz/[juzId]/JuzClient';
-import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
+import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import * as api from '@/lib/api';
-import { identity } from '@/tests/mocks';
 import { Verse, Juz } from '@/types';
 
 jest.mock('react', () => {

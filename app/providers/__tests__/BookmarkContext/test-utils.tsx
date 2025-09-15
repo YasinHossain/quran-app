@@ -3,9 +3,8 @@ import React from 'react';
 
 import { BookmarkProvider, useBookmarks } from '@/app/providers/BookmarkContext';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
-
-import * as chaptersApi from '@/lib/api/chapters';
 import * as api from '@/lib/api';
+import * as chaptersApi from '@/lib/api/chapters';
 
 jest.mock('@/lib/api/chapters');
 jest.mock('@/lib/api');

@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { AppRouterContext } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 import { BookmarkFolderSidebar } from '@/app/(features)/bookmarks/components/BookmarkFolderSidebar';
 

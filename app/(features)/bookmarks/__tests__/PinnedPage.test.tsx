@@ -1,9 +1,9 @@
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { push } from '@/app/testUtils/mockRouter';
 import PinnedAyahPage from '@/app/(features)/bookmarks/pinned/page';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
+import { push } from '@/app/testUtils/mockRouter';
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import * as chaptersApi from '@/lib/api/chapters';
 // Router mocked via testUtils/mockRouter
