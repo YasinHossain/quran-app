@@ -4,16 +4,17 @@ import React from 'react';
 import { BookmarkProvider, useBookmarks } from '@/app/providers/BookmarkContext';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 
-jest.mock('@/lib/api/chapters', () => ({
-  __esModule: true,
-  getChapters: jest.fn().mockResolvedValue([]),
-  default: jest.fn().mockResolvedValue([]),
-}));
+import * as chaptersApi from '@/lib/api/chapters';
+import * as api from '@/lib/api';
 
-jest.mock('@/lib/api', () => ({
-  getChapters: jest.fn().mockResolvedValue([]),
-  getSurahList: jest.fn().mockResolvedValue([]),
-}));
+jest.mock('@/lib/api/chapters');
+jest.mock('@/lib/api');
+
+beforeEach(() => {
+  (chaptersApi.getChapters as jest.Mock).mockResolvedValue([]);
+  (api.getChapters as jest.Mock).mockResolvedValue([]);
+  (api.getSurahList as jest.Mock).mockResolvedValue([]);
+});
 
 export const renderWithProviders = (ui: React.ReactElement): ReturnType<typeof render> =>
   render(

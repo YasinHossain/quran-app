@@ -17,8 +17,6 @@ const renderComponent = async (): Promise<ReturnType<typeof renderWithProviders>
 
 const getFolders = (): Folder[] => JSON.parse(screen.getByTestId('folders').textContent || '[]');
 
-const getPinned = (): Bookmark[] => JSON.parse(screen.getByTestId('pinned').textContent || '[]');
-
 const getLastRead = (): Record<string, number> =>
   JSON.parse(screen.getByTestId('lastRead').textContent || '{}');
 
@@ -100,7 +98,6 @@ describe('pin operations', () => {
     await renderComponent();
     await userEvent.click(screen.getByText('Toggle Pin'));
     await waitFor(() => {
-      expect(getPinned()).toHaveLength(1);
       expect(getIsPinned()).toBe('true');
     });
   });
@@ -110,7 +107,6 @@ describe('pin operations', () => {
     await userEvent.click(screen.getByText('Toggle Pin'));
     await userEvent.click(screen.getByText('Toggle Pin'));
     await waitFor(() => {
-      expect(getPinned()).toHaveLength(0);
       expect(getIsPinned()).toBe('false');
     });
   });

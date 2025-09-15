@@ -1,12 +1,19 @@
 import { render, RenderOptions, RenderResult } from '@testing-library/react';
 import { SWRConfig } from 'swr';
 
+import * as chaptersApi from '@/lib/api/chapters';
+jest.mock('@/lib/api/chapters');
+
 import { BookmarkProvider } from '@/app/providers/BookmarkContext';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { SidebarProvider } from '@/app/providers/SidebarContext';
 import { ThemeProvider } from '@/app/providers/ThemeContext';
 import { UIStateProvider } from '@/app/providers/UIStateContext';
 import { AudioProvider } from '@/app/shared/player/context/AudioContext';
+
+beforeEach(() => {
+  (chaptersApi.getChapters as jest.Mock).mockResolvedValue([]);
+});
 
 const Providers = ({ children }: { children: React.ReactNode }): React.JSX.Element => (
   <SWRConfig value={{ provider: () => new Map() }}>

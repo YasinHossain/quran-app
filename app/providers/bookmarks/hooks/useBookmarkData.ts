@@ -38,9 +38,18 @@ export function useBookmarkData(): {
         : (chaptersApi as any).default) || null;
 
     if (typeof fetchChaptersCandidate === 'function') {
-      void (fetchChaptersCandidate as () => Promise<Chapter[]>)()
-        .then((chs: Chapter[]) => setChapters(chs ?? []))
-        .catch(() => {});
+      try {
+        const result = (fetchChaptersCandidate as () => Promise<Chapter[]> | Chapter[])();
+        if (result && typeof (result as any).then === 'function') {
+          void (result as Promise<Chapter[]>)
+            .then((chs: Chapter[]) => setChapters(chs ?? []))
+            .catch(() => {});
+        } else if (Array.isArray(result)) {
+          setChapters(result);
+        }
+      } catch {
+        // ignore fetch errors in tests
+      }
     }
     setFolders(loadBookmarksFromStorage());
     setPinnedVerses(loadPinnedFromStorage());

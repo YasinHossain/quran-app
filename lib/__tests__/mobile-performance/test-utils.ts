@@ -9,24 +9,37 @@ interface MobilePerformanceTestSetup {
   cleanup: () => void;
 }
 
-let time = 0;
+let t = 0;
+let nowSpy: jest.SpyInstance<number, []>;
+
+beforeEach(() => {
+  nowSpy = jest.spyOn(performance, 'now').mockImplementation(() => (t += 16));
+});
+
+afterEach(() => {
+  nowSpy.mockRestore();
+  t = 0;
+});
 
 export const setupMobilePerformanceTest = (): MobilePerformanceTestSetup => {
   const matchMediaUtils = createMatchMediaMock();
+  const originalMatchMedia = window.matchMedia;
+
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
     configurable: true,
     value: matchMediaUtils.matchMediaMock,
   });
 
-  jest.spyOn(performance, 'now').mockImplementation(() => (time += 16));
-
   return {
     matchMediaUtils,
     cleanup: () => {
       matchMediaUtils.cleanup();
-      jest.restoreAllMocks();
-      time = 0;
+      Object.defineProperty(window, 'matchMedia', {
+        writable: true,
+        configurable: true,
+        value: originalMatchMedia,
+      });
     },
   };
 };

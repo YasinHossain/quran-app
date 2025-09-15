@@ -1,14 +1,11 @@
-import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import LastReadPage from '@/app/(features)/bookmarks/last-read/page';
+import { LAST_READ_STORAGE_KEY } from '@/app/providers/bookmarks/constants';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
-
-const mockTag =
-  (tag: string) =>
-  ({ children, ...props }: any) =>
-    React.createElement(tag, props, children);
-type MockProps = { children?: React.ReactNode };
+import { renderWithProviders, screen, fireEvent } from '@/app/testUtils/renderWithProviders';
+import * as chaptersApi from '@/lib/api/chapters';
+jest.mock('@/lib/api/chapters');
 
 const push = jest.fn();
 
@@ -24,16 +21,6 @@ jest.mock('../components/BookmarksSidebar', () => ({
       <button onClick={() => onSectionChange('last-read')}>Last Read</button>
     </nav>
   ),
-}));
-
-let lastRead: Record<string, number> = { '1': 3 };
-let chapters = [{ id: 1, name_simple: 'Al-Fatihah', verses_count: 7 }];
-
-jest.mock('@/app/providers/BookmarkContext', () => ({
-  useBookmarks: () => ({
-    lastRead,
-    chapters,
-  }),
 }));
 
 jest.mock('@/app/(features)/layout/context/HeaderVisibilityContext', () => ({
@@ -53,23 +40,26 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
+  (chaptersApi.getChapters as jest.Mock).mockResolvedValue([
+    { id: 1, name_simple: 'Al-Fatihah', verses_count: 7 },
+  ]);
+  localStorage.clear();
+  localStorage.setItem(LAST_READ_STORAGE_KEY, JSON.stringify({ '1': 3 }));
   push.mockClear();
-  lastRead = { '1': 3 };
-  chapters = [{ id: 1, name_simple: 'Al-Fatihah', verses_count: 7 }];
 });
 
 describe('Last Read Page', () => {
   it('renders last read progress and handles navigation', async () => {
-    render(<LastReadPage />);
-    expect(await screen.findByRole('heading', { name: 'Last Read' })).toBeInTheDocument();
+    renderWithProviders(<LastReadPage />);
+    expect(await screen.findByRole('heading', { name: 'Recent' })).toBeInTheDocument();
     expect(await screen.findByText(/Verse 3 of 7/)).toBeInTheDocument();
     fireEvent.click(screen.getByText('Pins'));
     expect(push).toHaveBeenCalledWith('/bookmarks/pinned');
   });
 
   it('shows empty state message', async () => {
-    lastRead = {};
-    render(<LastReadPage />);
+    localStorage.setItem(LAST_READ_STORAGE_KEY, JSON.stringify({}));
+    renderWithProviders(<LastReadPage />);
     expect(await screen.findByText('No Recent Activity')).toBeInTheDocument();
   });
 });
