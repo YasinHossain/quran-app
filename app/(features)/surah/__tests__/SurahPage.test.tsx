@@ -10,7 +10,7 @@ import { UIStateProvider } from '@/app/providers/UIStateContext';
 
 jest.mock('react', () => {
   const actual = jest.requireActual('react');
-  const identity = <T>(value: T): T => value;
+  const identity = <T,>(value: T): T => value;
   return { ...actual, use: identity };
 });
 

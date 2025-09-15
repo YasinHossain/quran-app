@@ -52,7 +52,8 @@
     "audit:complexity": "npx eslint . --format=json | npx eslint-complexity-report",
     "refactor:check": "npx eslint . --ext .ts,.tsx --max-warnings=0",
     "clean:unused": "npx knip --fix",
-    "analyze": "ANALYZE=true npm run build"
+    "analyze": "ANALYZE=true npm run build",
+    "gemini": "gemini"
   },
   "dependencies": {
     "@juggle/resize-observer": "^3.4.0",
@@ -85,6 +86,7 @@
     "@axe-core/react": "^4.10.2",
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9",
+    "@google/gemini-cli": "^0.4.1",
     "@playwright/test": "^1.55.0",
     "@rollup/plugin-terser": "^0.4.4",
     "@size-limit/preset-app": "^11.2.0",
@@ -116,8 +118,8 @@
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-no-relative-import-paths": "^1.6.1",
-    "eslint-plugin-testing-library": "^6.2.2",
     "eslint-plugin-prettier": "^5.5.3",
+    "eslint-plugin-testing-library": "^6.2.2",
     "eslint-plugin-unused-imports": "^4.2.0",
     "http-server": "^14.1.1",
     "jest": "^30.0.5",
