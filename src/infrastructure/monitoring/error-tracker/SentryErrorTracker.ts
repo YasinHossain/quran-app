@@ -52,20 +52,23 @@ export class SentryErrorTracker implements IErrorTracker {
     }
 
     this.sentry.withScope((scope: SentryScope) => {
-      if (context) {
-        if (context.userId) scope.setUser({ id: context.userId });
-        if (context.level) scope.setLevel(context.level);
-        if (context.tags) {
-          Object.entries(context.tags).forEach(([key, value]) => {
-            scope.setTag(key, value);
-          });
-        }
-        if (context.fingerprint) scope.setFingerprint(context.fingerprint);
-        if (context.component) scope.setTag('component', context.component);
-        if (context.action) scope.setTag('action', context.action);
-        if (context.metadata) {
-          scope.setContext('metadata', context.metadata);
-        }
+      if (!context) {
+        this.sentry!.captureException(error);
+        return;
+      }
+
+      if (context.userId) scope.setUser({ id: context.userId });
+      if (context.level) scope.setLevel(context.level);
+      if (context.tags) {
+        Object.entries(context.tags).forEach(([key, value]) => {
+          scope.setTag(key, value);
+        });
+      }
+      if (context.fingerprint) scope.setFingerprint(context.fingerprint);
+      if (context.component) scope.setTag('component', context.component);
+      if (context.action) scope.setTag('action', context.action);
+      if (context.metadata) {
+        scope.setContext('metadata', context.metadata);
       }
 
       this.sentry!.captureException(error);
@@ -80,16 +83,19 @@ export class SentryErrorTracker implements IErrorTracker {
     }
 
     this.sentry.withScope((scope: SentryScope) => {
-      if (context) {
-        if (context.userId) scope.setUser({ id: context.userId });
-        if (context.tags) {
-          Object.entries(context.tags).forEach(([key, value]) => {
-            scope.setTag(key, value);
-          });
-        }
-        if (context.metadata) {
-          scope.setContext('metadata', context.metadata);
-        }
+      if (!context) {
+        this.sentry!.captureMessage(message, level);
+        return;
+      }
+
+      if (context.userId) scope.setUser({ id: context.userId });
+      if (context.tags) {
+        Object.entries(context.tags).forEach(([key, value]) => {
+          scope.setTag(key, value);
+        });
+      }
+      if (context.metadata) {
+        scope.setContext('metadata', context.metadata);
       }
 
       this.sentry!.captureMessage(message, level);

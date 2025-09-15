@@ -9,7 +9,7 @@ const verses: Verse[] = [
 ];
 
 // Import the hook lazily after mocks are applied to ensure mocked deps are used
-let useVerseListing: any;
+let useVerseListing: typeof import('@/app/(features)/surah/hooks/useVerseListing').useVerseListing;
 
 jest.mock('swr', () => ({
   __esModule: true,

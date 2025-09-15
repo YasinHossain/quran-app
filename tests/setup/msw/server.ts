@@ -7,12 +7,12 @@ import { handlers } from './handlers';
 export const server = setupServer(...handlers);
 
 // Export individual functions for test control
-export const startServer = () => server.listen();
-export const stopServer = () => server.close();
-export const resetHandlers = () => server.resetHandlers();
+export const startServer = (): void => server.listen();
+export const stopServer = (): void => server.close();
+export const resetHandlers = (): void => server.resetHandlers();
 
 // Helper to add additional handlers in tests
-export const addHandlers = (...newHandlers: Parameters<typeof server.use>) => {
+export const addHandlers = (...newHandlers: Parameters<typeof server.use>): void => {
   server.use(...newHandlers);
 };
 

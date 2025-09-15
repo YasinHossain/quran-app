@@ -7,16 +7,17 @@ import { setMatchMedia } from '@/app/testUtils/matchMedia';
 
 const mockTag =
   (tag: string) =>
-  ({ children, ...props }: any) =>
+  ({ children, ...props }: Record<string, unknown>) =>
     React.createElement(tag, props, children);
 type MockProps = { children?: React.ReactNode };
 
 // Mock framer-motion to avoid animation issues in tests
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => React.createElement('div', props, children),
+    div: ({ children, ...props }: Record<string, unknown>) =>
+      React.createElement('div', props, children),
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }));
 
 // Mock the BookmarkContext

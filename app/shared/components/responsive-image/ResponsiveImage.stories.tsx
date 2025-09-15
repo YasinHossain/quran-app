@@ -1,12 +1,11 @@
-import { ResponsiveBackgroundImage } from './ResponsiveBackgroundImage';
 import { ResponsiveImage } from './ResponsiveImage';
+import {
+  FillModeExample,
+  BackgroundImageExample,
+  GalleryExample,
+} from './ResponsiveImageStoryComponents';
 
 import type { Meta, StoryObj } from '@storybook/react';
-
-/**
- * Responsive Image component stories demonstrating
- * adaptive loading and performance optimizations
- */
 
 const meta = {
   title: 'Shared/ResponsiveImage',
@@ -32,7 +31,6 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// Basic responsive image
 export const Default: Story = {
   args: {
     src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Quran_cover.jpg/400px-Quran_cover.jpg',
@@ -43,7 +41,6 @@ export const Default: Story = {
   },
 };
 
-// With placeholder
 export const WithPlaceholder: Story = {
   args: {
     src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Quran_cover.jpg/400px-Quran_cover.jpg',
@@ -62,7 +59,6 @@ export const WithPlaceholder: Story = {
   },
 };
 
-// Different sizes for responsive behavior
 export const ResponsiveSizes: Story = {
   args: {
     src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Quran_cover.jpg/800px-Quran_cover.jpg',
@@ -74,14 +70,11 @@ export const ResponsiveSizes: Story = {
   },
   parameters: {
     docs: {
-      description: {
-        story: 'Image with responsive sizes for different screen widths.',
-      },
+      description: { story: 'Image with responsive sizes for different screen widths.' },
     },
   },
 };
 
-// Priority loading
 export const Priority: Story = {
   args: {
     src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Quran_cover.jpg/400px-Quran_cover.jpg',
@@ -92,37 +85,17 @@ export const Priority: Story = {
     className: 'rounded-lg shadow-lg',
   },
   parameters: {
-    docs: {
-      description: {
-        story: 'Image with priority loading for above-the-fold content.',
-      },
-    },
+    docs: { description: { story: 'Image with priority loading for above-the-fold content.' } },
   },
 };
 
-// Fill mode
 export const FillMode: Story = {
-  render: (args) => (
-    <div className="relative w-full h-96 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
-      <ResponsiveImage
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Quran_cover.jpg/800px-Quran_cover.jpg"
-        alt="Quran book cover"
-        fill
-        style={{ objectFit: 'cover' }}
-        {...args}
-      />
-    </div>
-  ),
+  render: (args) => <FillModeExample {...args} />,
   parameters: {
-    docs: {
-      description: {
-        story: 'Image using fill mode to cover its container.',
-      },
-    },
+    docs: { description: { story: 'Image using fill mode to cover its container.' } },
   },
 };
 
-// Error state
 export const ErrorState: Story = {
   args: {
     src: 'https://invalid-url/nonexistent-image.jpg',
@@ -132,91 +105,37 @@ export const ErrorState: Story = {
     className: 'rounded-lg shadow-lg',
   },
   parameters: {
-    docs: {
-      description: {
-        story: 'Image with error handling for failed loads.',
-      },
-    },
+    docs: { description: { story: 'Image with error handling for failed loads.' } },
   },
 };
 
-// Background Image Component
 export const BackgroundImage: Story = {
-  render: () => (
-    <ResponsiveBackgroundImage
-      src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Quran_cover.jpg/800px-Quran_cover.jpg"
-      alt="Quran background"
-      className="h-96 rounded-lg flex items-center justify-center"
-    >
-      <div className="bg-white/90 dark:bg-gray-900/90 p-6 rounded-lg backdrop-blur-sm">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Overlay Content</h2>
-        <p className="text-gray-600 dark:text-gray-300">Content displayed over background image</p>
-      </div>
-    </ResponsiveBackgroundImage>
-  ),
+  render: () => <BackgroundImageExample />,
   parameters: {
-    docs: {
-      description: {
-        story: 'Background image component with overlay content.',
-      },
-    },
+    docs: { description: { story: 'Background image component with overlay content.' } },
   },
 };
 
-// Multiple Images Gallery
 export const Gallery: Story = {
-  render: () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {[1, 2, 3, 4, 5, 6].map((index) => (
-        <div key={index} className="aspect-w-4 aspect-h-3">
-          <ResponsiveImage
-            src={`https://picsum.photos/400/300?random=${index}`}
-            alt={`Gallery image ${index}`}
-            width={400}
-            height={300}
-            className="rounded-lg shadow-md object-cover w-full h-full"
-            loading="lazy"
-          />
-        </div>
-      ))}
-    </div>
-  ),
+  render: () => <GalleryExample />,
   parameters: {
-    docs: {
-      description: {
-        story: 'Gallery of images with lazy loading.',
-      },
-    },
+    docs: { description: { story: 'Gallery of images with lazy loading.' } },
   },
 };
 
-// Mobile optimized
 export const Mobile: Story = {
   ...ResponsiveSizes,
   parameters: {
-    viewport: {
-      defaultViewport: 'mobile1',
-    },
-    docs: {
-      description: {
-        story: 'Responsive image behavior on mobile devices.',
-      },
-    },
+    viewport: { defaultViewport: 'mobile1' },
+    docs: { description: { story: 'Responsive image behavior on mobile devices.' } },
   },
 };
 
-// Dark theme
 export const DarkTheme: Story = {
   ...Default,
   parameters: {
-    backgrounds: {
-      default: 'dark',
-    },
-    docs: {
-      description: {
-        story: 'Responsive image in dark theme mode.',
-      },
-    },
+    backgrounds: { default: 'dark' },
+    docs: { description: { story: 'Responsive image in dark theme mode.' } },
   },
   decorators: [
     (Story) => (

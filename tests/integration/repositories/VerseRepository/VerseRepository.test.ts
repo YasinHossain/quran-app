@@ -135,7 +135,7 @@ describe('VerseRepository findSajdahVerses', () => {
 
   it('should find sajdah verses', async () => {
     // Provide a default for unlisted sajdah positions to avoid undefined returns
-    mockApiVerses.getVerseByKey.mockResolvedValue(mockApiVerse as any);
+    mockApiVerses.getVerseByKey.mockResolvedValue(mockApiVerse);
     mockApiVerses.getVerseByKey
       .mockResolvedValueOnce({ ...mockApiVerse, verse_key: '7:206' })
       .mockResolvedValueOnce({ ...mockApiVerse, verse_key: '13:15' })

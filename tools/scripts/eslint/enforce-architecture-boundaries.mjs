@@ -70,7 +70,7 @@ function violatesLayerBoundary(fromLayer, toLayer) {
   return fromLevel < toLevel;
 }
 
-export default {
+const enforceArchitectureBoundariesRule = {
   meta: {
     type: 'problem',
     docs: {
@@ -105,3 +105,5 @@ export default {
     };
   },
 };
+
+export default enforceArchitectureBoundariesRule;

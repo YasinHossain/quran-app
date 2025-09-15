@@ -84,16 +84,16 @@ export class LoggingService {
   /**
    * Log API calls and responses
    */
-  logApiCall(method: string, url: string, status: number, duration?: number, error?: Error): void {
-    const logMethod = status >= 400 ? this.error : this.info;
+  logApiCall(
+    details: { method: string; url: string; status: number; duration?: number },
+    error?: Error
+  ): void {
+    const logMethod = details.status >= 400 ? this.error : this.info;
     logMethod.call(
       this,
-      `API ${method} ${url} - ${status}`,
+      `API ${details.method} ${details.url} - ${details.status}`,
       {
-        method,
-        url,
-        status,
-        duration,
+        ...details,
         type: 'api_call',
       },
       error

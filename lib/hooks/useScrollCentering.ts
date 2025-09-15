@@ -85,12 +85,11 @@ export const useScrollCentering = <T extends string>({
   useEffect(() => {
     tabs.forEach((tab) => {
       const currentId = selectedIds[tab];
-      if (prevIds.current[tab] !== currentId) {
-        if (activeTab !== tab) {
-          shouldCenterRef.current[tab] = true;
-        }
-        prevIds.current[tab] = currentId;
+      if (prevIds.current[tab] === currentId) return;
+      if (activeTab !== tab) {
+        shouldCenterRef.current[tab] = true;
       }
+      prevIds.current[tab] = currentId;
     });
   }, [activeTab, selectedIds, tabs]);
 

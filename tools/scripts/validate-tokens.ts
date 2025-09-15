@@ -77,12 +77,14 @@ function getFiles(dir: string): string[] {
   const files: string[] = [];
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory() && ['node_modules', '.git', '.next', 'public'].includes(entry.name)) {
+      continue;
+    }
     if (entry.isDirectory()) {
-      if (['node_modules', '.git', '.next', 'public'].includes(entry.name)) {
-        continue;
-      }
       files.push(...getFiles(fullPath));
-    } else if (/\.(ts|tsx|js|jsx)$/.test(entry.name)) {
+      continue;
+    }
+    if (/\.(ts|tsx|js|jsx)$/.test(entry.name)) {
       files.push(fullPath);
     }
   }

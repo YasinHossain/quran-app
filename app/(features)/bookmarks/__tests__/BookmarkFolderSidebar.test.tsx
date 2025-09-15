@@ -4,6 +4,8 @@ import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 import { BookmarkFolderSidebar } from '@/app/(features)/bookmarks/components/BookmarkFolderSidebar';
 
+import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+
 const mockRouter = { push: jest.fn(), query: {} };
 
 (useRouter as jest.Mock).mockReturnValue(mockRouter);
@@ -39,7 +41,7 @@ describe('BookmarkFolderSidebar', () => {
 
     await act(async () => {
       render(
-        <AppRouterContext.Provider value={mockRouter as any}>
+        <AppRouterContext.Provider value={mockRouter as unknown as AppRouterInstance}>
           <BookmarkFolderSidebar
             bookmarks={bookmarks}
             folder={{ id: 'folder1', name: 'Folder 1', bookmarks }}
