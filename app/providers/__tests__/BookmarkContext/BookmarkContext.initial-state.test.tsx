@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react';
 
-import { renderWithProviders, BookmarkTestComponent } from './test-utils';
+import { renderWithProvidersAsync, BookmarkTestComponent } from './test-utils';
 
 import type { Folder } from '@/types';
 
@@ -13,7 +13,7 @@ describe('BookmarkContext initial state', () => {
   });
 
   it('initializes with an empty array of folders', async () => {
-    renderWithProviders(<BookmarkTestComponent />);
+    await renderWithProvidersAsync(<BookmarkTestComponent />);
     await waitFor(() => {
       expect(screen.getByTestId('folders').textContent).toBe('[]');
     });
@@ -22,7 +22,7 @@ describe('BookmarkContext initial state', () => {
   it('migrates old bookmarks from localStorage', async () => {
     localStorage.setItem(OLD_BOOKMARKS_STORAGE_KEY, JSON.stringify(['1:1', '1:2']));
 
-    renderWithProviders(<BookmarkTestComponent />);
+    await renderWithProvidersAsync(<BookmarkTestComponent />);
 
     await waitFor(() => {
       const folders: Folder[] = JSON.parse(screen.getByTestId('folders').textContent || '[]');

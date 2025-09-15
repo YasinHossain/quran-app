@@ -1,8 +1,7 @@
-import { act } from '@testing-library/react';
 import React from 'react';
 
 import { VerseOfDay } from '@/app/(features)/home/components/VerseOfDay';
-import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
+import { renderWithProvidersAsync } from '@/app/testUtils/renderWithProviders';
 import { getRandomVerse } from '@/lib/api';
 import { getVerseByKey } from '@/lib/api/verses';
 import { Verse } from '@/types';
@@ -29,13 +28,8 @@ export const mockedGetVerseByKey = getVerseByKey as jest.MockedFunction<typeof g
 
 export const renderVerseOfDay = async (
   props?: Partial<React.ComponentProps<typeof VerseOfDay>>
-): Promise<ReturnType<typeof renderWithProviders>> => {
-  let renderResult: ReturnType<typeof renderWithProviders>;
-  await act(async () => {
-    renderResult = renderWithProviders(<VerseOfDay {...props} />);
-  });
-  return renderResult!;
-};
+): Promise<ReturnType<typeof renderWithProvidersAsync>> =>
+  renderWithProvidersAsync(<VerseOfDay {...props} />);
 
 export const setupMatchMedia = (): void => {
   Object.defineProperty(window, 'matchMedia', {

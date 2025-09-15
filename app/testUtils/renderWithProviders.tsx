@@ -1,4 +1,4 @@
-import { render, RenderOptions, RenderResult } from '@testing-library/react';
+import { render, RenderOptions, RenderResult, act } from '@testing-library/react';
 import { SWRConfig } from 'swr';
 
 import * as chaptersApi from '@/lib/api/chapters';
@@ -36,6 +36,17 @@ export function renderWithProviders(
   options?: Omit<RenderOptions, 'wrapper'>
 ): RenderResult {
   return render(ui, { wrapper: Providers, ...options });
+}
+
+export async function renderWithProvidersAsync(
+  ui: React.ReactElement,
+  options?: Omit<RenderOptions, 'wrapper'>
+): Promise<RenderResult> {
+  let result: RenderResult | undefined;
+  await act(async () => {
+    result = render(ui, { wrapper: Providers, ...options });
+  });
+  return result!;
 }
 
 export * from '@testing-library/react';

@@ -37,20 +37,97 @@ module.exports = createJestConfig(customJestConfig);
 
 ### tests/setup/setupTests.ts
 
-```javascript
+```typescript
 import '@testing-library/jest-dom';
+import 'jest-axe/extend-expect';
+import 'whatwg-fetch';
+import '@tests/envPolyfills';
 
-// Mock Next.js router
-jest.mock('next/router', () => ({
-  useRouter: () => ({ route: '/', pathname: '/', query: {}, push: jest.fn() }),
-}));
+import { jest, beforeAll, afterEach, afterAll } from '@jest/globals';
+import { server } from '@tests/setup/msw/server';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
-// Mock IntersectionObserver
-global.IntersectionObserver = jest.fn(() => ({
-  observe: jest.fn(),
-  disconnect: jest.fn(),
-  unobserve: jest.fn(),
-}));
+// Start MSW for tests unless network access is explicitly allowed
+if (!process.env.JEST_ALLOW_NETWORK) {
+  beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
+}
+
+// matchMedia polyfill
+const createMatchMedia =
+  (matches = false) =>
+  (query: string): MediaQueryList => ({
+    matches,
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
+  });
+
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  configurable: true,
+  value: createMatchMedia(false),
+});
+
+// IntersectionObserver mock
+class IntersectionObserverMock {
+  constructor(private cb: IntersectionObserverCallback) {}
+  observe = (el: Element): void => {
+    if (this.cb) {
+      this.cb([{ isIntersecting: true, target: el } as unknown as IntersectionObserverEntry], this);
+    }
+  };
+  unobserve = (): void => {};
+  disconnect = (): void => {};
+}
+
+Object.defineProperty(window, 'IntersectionObserver', {
+  writable: true,
+  configurable: true,
+  value: IntersectionObserverMock,
+});
+Object.defineProperty(global, 'IntersectionObserver', {
+  writable: true,
+  configurable: true,
+  value: IntersectionObserverMock,
+});
+
+// ResizeObserver mock
+class ResizeObserverMock {
+  constructor(cb: ResizeObserverCallback) {
+    void cb;
+  }
+  observe = (): void => {};
+  unobserve = (): void => {};
+  disconnect = (): void => {};
+}
+
+Object.defineProperty(window, 'ResizeObserver', {
+  writable: true,
+  configurable: true,
+  value: ResizeObserverMock,
+});
+Object.defineProperty(global, 'ResizeObserver', {
+  writable: true,
+  configurable: true,
+  value: ResizeObserverMock,
+});
+
+// HTMLMediaElement stubs
+if (typeof window !== 'undefined') {
+  HTMLMediaElement.prototype.play = jest.fn(() => Promise.resolve());
+  HTMLMediaElement.prototype.pause = jest.fn();
+  HTMLMediaElement.prototype.load = jest.fn();
+  HTMLMediaElement.prototype.canPlayType = jest.fn(() => 'probably');
+}
+
+// Make logger.error spy-able so tests can call mockRestore()
+jest.spyOn(logger, 'error');
 ```
 
 ## Test Utilities
@@ -182,6 +259,21 @@ global.fetch = jest.fn(() =>
     json: () => Promise.resolve(mockData),
   })
 );
+```
+
+### Navigation Mocking
+
+When testing components that use the App Router, mock `next/navigation`:
+
+```typescript
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+    back: jest.fn(),
+  }),
+}));
 ```
 
 ### Component Mocking

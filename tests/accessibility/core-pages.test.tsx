@@ -3,7 +3,7 @@ import { axe, toHaveNoViolations } from 'jest-axe';
 import React from 'react';
 
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
-import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
+import { renderWithProvidersAsync } from '@/app/testUtils/renderWithProviders';
 import { getSurahList, getJuzList } from '@/lib/api';
 import { Surah, Juz } from '@/types';
 
@@ -209,20 +209,20 @@ describe('Core Pages Accessibility', () => {
 
   describe('Home Page', () => {
     it('should not have accessibility violations', async () => {
-      const { container } = renderWithProviders(<TestHomePage />);
+      const { container } = await renderWithProvidersAsync(<TestHomePage />);
       const results = await axe(container);
       expect(results).toHaveNoViolations();
     });
 
-    it('should have proper heading structure', () => {
-      renderWithProviders(<TestHomePage />);
+    it('should have proper heading structure', async () => {
+      await renderWithProvidersAsync(<TestHomePage />);
       const h1 = document.querySelector('h1');
       expect(h1).toBeInTheDocument();
       expect(h1).toBeVisible();
     });
 
-    it('should have proper landmark roles', () => {
-      renderWithProviders(<TestHomePage />);
+    it('should have proper landmark roles', async () => {
+      await renderWithProvidersAsync(<TestHomePage />);
       const main = document.querySelector('main');
       expect(main).toBeInTheDocument();
     });
@@ -230,7 +230,7 @@ describe('Core Pages Accessibility', () => {
 
   describe('Surah Index Page', () => {
     it('should not have accessibility violations', async () => {
-      const { container } = renderWithProviders(<TestSurahIndexPage />);
+      const { container } = await renderWithProvidersAsync(<TestSurahIndexPage />);
       await waitFor(() => {
         expect(container.querySelector('h1')).toBeInTheDocument();
       });
@@ -239,7 +239,7 @@ describe('Core Pages Accessibility', () => {
     });
 
     it('should have accessible navigation', async () => {
-      renderWithProviders(<TestSurahIndexPage />);
+      await renderWithProvidersAsync(<TestSurahIndexPage />);
       await waitFor(() => {
         const navElements = document.querySelectorAll('[role="navigation"], nav');
         expect(navElements.length).toBeGreaterThan(0);
@@ -249,7 +249,7 @@ describe('Core Pages Accessibility', () => {
 
   describe('Juz Index Page', () => {
     it('should not have accessibility violations', async () => {
-      const { container } = renderWithProviders(<TestJuzIndexPage />);
+      const { container } = await renderWithProvidersAsync(<TestJuzIndexPage />);
       await waitFor(() => {
         expect(container.querySelector('h1')).toBeInTheDocument();
       });
@@ -260,13 +260,13 @@ describe('Core Pages Accessibility', () => {
 
   describe('Bookmarks Page', () => {
     it('should not have accessibility violations', async () => {
-      const { container } = renderWithProviders(<TestBookmarksPage />);
+      const { container } = await renderWithProvidersAsync(<TestBookmarksPage />);
       const results = await axe(container);
       expect(results).toHaveNoViolations();
     });
 
-    it('should have proper list structure for bookmarks', () => {
-      renderWithProviders(<TestBookmarksPage />);
+    it('should have proper list structure for bookmarks', async () => {
+      await renderWithProvidersAsync(<TestBookmarksPage />);
       const lists = document.querySelectorAll('[role="list"], ul, ol');
       expect(lists.length).toBeGreaterThan(0);
     });
@@ -274,13 +274,13 @@ describe('Core Pages Accessibility', () => {
 
   describe('Search Page', () => {
     it('should not have accessibility violations', async () => {
-      const { container } = renderWithProviders(<TestSearchPage />);
+      const { container } = await renderWithProvidersAsync(<TestSearchPage />);
       const results = await axe(container);
       expect(results).toHaveNoViolations();
     });
 
-    it('should have accessible search form', () => {
-      renderWithProviders(<TestSearchPage />);
+    it('should have accessible search form', async () => {
+      await renderWithProvidersAsync(<TestSearchPage />);
       const searchInput = document.querySelector('input[type="search"]');
       expect(searchInput).toHaveAttribute('aria-label');
       expect(searchInput).toHaveAttribute('id');
@@ -292,7 +292,7 @@ describe('Core Pages Accessibility', () => {
 
   describe('Tafsir Index Page', () => {
     it('should not have accessibility violations', async () => {
-      const { container } = renderWithProviders(<TestTafsirIndexPage />);
+      const { container } = await renderWithProvidersAsync(<TestTafsirIndexPage />);
       const results = await axe(container);
       expect(results).toHaveNoViolations();
     });

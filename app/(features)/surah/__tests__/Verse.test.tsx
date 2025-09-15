@@ -3,7 +3,7 @@ import { screen, waitFor } from '@testing-library/react';
 import { VerseCard as VerseComponent } from '@/app/(features)/surah/components';
 import { TranslationProvider } from '@/app/providers/TranslationProvider';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
-import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
+import { renderWithProvidersAsync } from '@/app/testUtils/renderWithProviders';
 import { Verse } from '@/types';
 
 jest.mock('next/navigation', () => ({
@@ -20,13 +20,12 @@ const verse: Verse = {
   ],
 };
 
-const renderVerse = (): void => {
-  renderWithProviders(
+const renderVerse = () =>
+  renderWithProvidersAsync(
     <TranslationProvider>
       <VerseComponent verse={verse} />
     </TranslationProvider>
   );
-};
 
 describe('Verse word-by-word font size', () => {
   beforeAll(() => {
@@ -41,7 +40,7 @@ describe('Verse word-by-word font size', () => {
   });
 
   it('scales word translation with arabic font size', async () => {
-    renderVerse();
+    await renderVerse();
     const word = await screen.findByText('In');
     await waitFor(() => {
       expect(word).toHaveStyle('font-size: 20px');

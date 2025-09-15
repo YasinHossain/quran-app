@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, act } from '@testing-library/react';
 import React from 'react';
 
 import { BookmarkProvider, useBookmarks } from '@/app/providers/BookmarkContext';
@@ -22,6 +22,16 @@ export const renderWithProviders = (ui: React.ReactElement): ReturnType<typeof r
       <BookmarkProvider>{ui}</BookmarkProvider>
     </SettingsProvider>
   );
+
+export const renderWithProvidersAsync = async (
+  ui: React.ReactElement
+): Promise<ReturnType<typeof renderWithProviders>> => {
+  let result: ReturnType<typeof renderWithProviders> | undefined;
+  await act(async () => {
+    result = renderWithProviders(ui);
+  });
+  return result!;
+};
 
 export const BookmarkTestComponent = (): React.JSX.Element => {
   const {

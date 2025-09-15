@@ -1,14 +1,14 @@
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { renderWithProviders, BookmarkTestComponent } from './test-utils';
+import { renderWithProvidersAsync, BookmarkTestComponent } from './test-utils';
 
 import type { Bookmark, Folder } from '@/types';
 
 const BOOKMARKS_STORAGE_KEY = 'quranAppBookmarks_v2';
 
-const renderComponent = async (): Promise<ReturnType<typeof renderWithProviders>> => {
-  const result = renderWithProviders(<BookmarkTestComponent />);
+const renderComponent = async (): Promise<ReturnType<typeof renderWithProvidersAsync>> => {
+  const result = await renderWithProvidersAsync(<BookmarkTestComponent />);
   await waitFor(() => {
     expect(screen.getByTestId('folders')).toBeInTheDocument();
   });

@@ -266,3 +266,5 @@ if (typeof window !== 'undefined') {
 }
 // Make logger.error spy-able so tests can call mockRestore()
 jest.spyOn(logger, 'error');
+
+afterEach(() => (logger.error as jest.Mock).mockClear());

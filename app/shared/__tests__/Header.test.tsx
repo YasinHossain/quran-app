@@ -4,7 +4,7 @@ import { HeaderVisibilityProvider } from '@/app/(features)/layout/context/Header
 import { UIStateProvider } from '@/app/providers/UIStateContext';
 import { Header } from '@/app/shared/Header';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
-import { renderWithProviders, screen, waitFor } from '@/app/testUtils/renderWithProviders';
+import { renderWithProvidersAsync, screen } from '@/app/testUtils/renderWithProviders';
 
 // Mock the useTranslation hook
 jest.mock('react-i18next', () => ({
@@ -50,48 +50,38 @@ beforeAll(() => {
 
 describe('Header', () => {
   it('renders the brand text', async () => {
-    renderWithProviders(
+    await renderWithProvidersAsync(
       <UIStateProvider>
         <HeaderVisibilityProvider>
           <Header />
         </HeaderVisibilityProvider>
       </UIStateProvider>
     );
-
-    // Wait for async provider effects to stabilize
-    await waitFor(() => {
-      expect(screen.getByText('Quran Mazid')).toBeInTheDocument();
-    });
+    expect(screen.getByText('Quran Mazid')).toBeInTheDocument();
   });
 
   it('renders the search placeholder', async () => {
-    renderWithProviders(
+    await renderWithProvidersAsync(
       <UIStateProvider>
         <HeaderVisibilityProvider>
           <Header />
         </HeaderVisibilityProvider>
       </UIStateProvider>
     );
-
-    // Wait for async provider effects to stabilize
-    await waitFor(() => {
-      expect(screen.getByPlaceholderText('Search verses, surahs...')).toBeInTheDocument();
-    });
+    expect(
+      screen.getByPlaceholderText('Search verses, surahs...')
+    ).toBeInTheDocument();
   });
 
   it('aligns content vertically centered', async () => {
-    const { container } = renderWithProviders(
+    const { container } = await renderWithProvidersAsync(
       <UIStateProvider>
         <HeaderVisibilityProvider>
           <Header />
         </HeaderVisibilityProvider>
       </UIStateProvider>
     );
-
-    // Wait for async provider effects to stabilize
-    await waitFor(() => {
-      const header = container.querySelector('header');
-      expect(header).toHaveClass('items-center');
-    });
+    const header = container.querySelector('header');
+    expect(header).toHaveClass('items-center');
   });
 });

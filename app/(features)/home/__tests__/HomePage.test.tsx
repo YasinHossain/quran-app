@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 
 import { HomePage } from '@/app/(features)/home/components/HomePage';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
-import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
+import { renderWithProvidersAsync } from '@/app/testUtils/renderWithProviders';
 import { Verse } from '@/types';
 
 import type { MockProps } from '@/tests/mocks';
@@ -55,9 +55,7 @@ beforeAll(() => {
   setMatchMedia(false);
 });
 
-const renderHome = (): void => {
-  renderWithProviders(<HomePage />);
-};
+const renderHome = () => renderWithProvidersAsync(<HomePage />);
 
 beforeEach(() => {
   localStorage.clear();
@@ -65,7 +63,7 @@ beforeEach(() => {
 });
 
 it('search filtering returns only matching Surahs', async () => {
-  renderHome();
+  await renderHome();
   await screen.findByText('Al-Fatihah');
   const input = screen.getByPlaceholderText('What do you want to read?');
   await userEvent.type(input, 'Baqarah');
@@ -74,7 +72,7 @@ it('search filtering returns only matching Surahs', async () => {
 });
 
 it('theme toggle updates the dark class', async () => {
-  renderHome();
+  await renderHome();
   const nav = screen.getByRole('navigation');
   const themeButton = within(nav).getByRole('button');
   expect(document.documentElement.classList.contains('dark')).toBe(false);
@@ -85,7 +83,7 @@ it('theme toggle updates the dark class', async () => {
 });
 
 it('tab switching between “Surah,” “Juz,” and “Page” changes rendered content and links', async () => {
-  renderHome();
+  await renderHome();
   const surahLink = (await screen.findByText('Al-Fatihah')).closest('a');
   expect(surahLink).toHaveAttribute('href', '/surah/1');
 

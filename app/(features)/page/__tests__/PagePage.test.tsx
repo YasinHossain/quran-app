@@ -1,7 +1,5 @@
-import { act } from '@testing-library/react';
-
 import QuranPage from '@/app/(features)/page/[pageId]/page';
-import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
+import { renderWithProvidersAsync } from '@/app/testUtils/renderWithProviders';
 import * as api from '@/lib/api';
 import { identity } from '@/tests/mocks';
 import { Verse } from '@/types';
@@ -42,15 +40,12 @@ beforeEach(() => {
   });
 });
 
-const renderPage = (): void => {
-  renderWithProviders(
+const renderPage = () =>
+  renderWithProvidersAsync(
     <QuranPage params={{ pageId: '1' } as unknown as Promise<{ pageId: string }>} />
   );
-};
 
 test('renders page without crashing', async () => {
-  await act(async () => {
-    renderPage();
-  });
+  await renderPage();
   expect(api.getVersesByPage).toBeDefined();
 });
