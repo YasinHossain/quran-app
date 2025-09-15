@@ -15,10 +15,6 @@ jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push: jest.fn() }),
-}));
-
 const mockVerse: Verse = {
   id: 1,
   verse_key: '1:1',

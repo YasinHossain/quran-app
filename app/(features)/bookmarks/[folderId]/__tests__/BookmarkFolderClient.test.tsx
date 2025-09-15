@@ -3,10 +3,6 @@ import { render } from '@testing-library/react';
 import { BookmarkFolderClient } from '@/app/(features)/bookmarks/[folderId]/BookmarkFolderClient';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push: jest.fn() }),
-}));
-
 jest.mock('@/app/(features)/layout/context/HeaderVisibilityContext', () => ({
   useHeaderVisibility: () => ({ isHidden: false }),
 }));

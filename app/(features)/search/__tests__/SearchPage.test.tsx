@@ -7,9 +7,6 @@ import { searchVerses } from '@/lib/api';
 
 import type { MockProps } from '@/tests/mocks';
 
-jest.mock('next/navigation', () => ({
-  useSearchParams: jest.fn(),
-}));
 
 jest.mock('@/lib/api', () => ({
   searchVerses: jest.fn(),

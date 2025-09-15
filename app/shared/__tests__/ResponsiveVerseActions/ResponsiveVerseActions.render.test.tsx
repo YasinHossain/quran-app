@@ -18,7 +18,16 @@ const renderOnDevice = (device: Device): RenderResult => {
 const getTouchTargets = async (
   device: Device
 ): Promise<ReturnType<typeof testAccessibility.testTouchTargets>> => {
+  const user = userEvent.setup();
   const { container } = renderOnDevice(device);
+
+  if (device === 'mobile') {
+    const trigger = await screen.findByRole('button', {
+      name: 'Open verse actions menu',
+    });
+    await user.click(trigger);
+  }
+
   await screen.findByRole('button', { name: /play/i });
   return testAccessibility.testTouchTargets(container);
 };
@@ -33,7 +42,7 @@ const getFocusResult = async (): Promise<
 
 const getTafsirLink = async (props = {}): Promise<HTMLAnchorElement> => {
   renderResponsiveVerseActions(props);
-  return (await screen.findByRole('link', { name: 'View tafsir' })) as HTMLAnchorElement;
+  return (await screen.findByRole('link', { name: /view tafsir/i })) as HTMLAnchorElement;
 };
 
 const devices: Device[] = ['mobile', 'tablet', 'desktop'];
@@ -74,7 +83,7 @@ describe('[Cross-Device]', () => {
       await user.click(trigger);
     }
 
-    const link = await screen.findByRole('link', { name: 'View tafsir' });
+    const link = await screen.findByRole('link', { name: /view tafsir/i });
     expect(link).toBeInTheDocument();
   });
 });
@@ -130,7 +139,12 @@ describe('[Accessibility]', () => {
 
 describe('[Variants]', () => {
   it('applies compact classes for mobile', async () => {
+    const user = userEvent.setup();
     const { container } = renderOnDevice('mobile');
+    const trigger = await screen.findByRole('button', {
+      name: 'Open verse actions menu',
+    });
+    await user.click(trigger);
     await screen.findByRole('button', { name: /play/i });
     const component = container.firstChild as HTMLElement;
     expect(component).toBeTruthy();

@@ -13,11 +13,6 @@ jest.mock('react-i18next', () => ({
   }),
 }));
 
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push: jest.fn() }),
-  usePathname: () => '/',
-}));
-
 jest.mock('@/app/providers/UIStateContext', () => ({
   UIStateProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   useUIState: () => ({

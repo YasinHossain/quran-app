@@ -1,7 +1,6 @@
 import { screen, within, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { HomePage } from '@/app/(features)/home/components/HomePage';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProvidersAsync } from '@/app/testUtils/renderWithProviders';
 import { Verse } from '@/types';
@@ -10,33 +9,35 @@ import type { MockProps } from '@/tests/mocks';
 
 jest.mock('@/lib/api', () => ({
   __esModule: true,
-  getRandomVerse: jest.fn().mockResolvedValue({
-    id: 1,
-    verse_key: '1:1',
-    text_uthmani: 'بِسْمِ اللّهِ',
-    translations: [
+  getRandomVerse: () =>
+    Promise.resolve({
+      id: 1,
+      verse_key: '1:1',
+      text_uthmani: 'بِسْمِ اللّهِ',
+      translations: [
+        {
+          resource_id: 1,
+          text: 'In the name of Allah',
+        },
+      ],
+    } as Verse),
+  getSurahList: () =>
+    Promise.resolve([
       {
-        resource_id: 1,
-        text: 'In the name of Allah',
+        number: 1,
+        name: 'Al-Fatihah',
+        arabicName: 'الفاتحة',
+        verses: 7,
+        meaning: 'The Opening',
       },
-    ],
-  } as Verse),
-  getSurahList: jest.fn().mockResolvedValue([
-    {
-      number: 1,
-      name: 'Al-Fatihah',
-      arabicName: 'الفاتحة',
-      verses: 7,
-      meaning: 'The Opening',
-    },
-    {
-      number: 2,
-      name: 'Al-Baqarah',
-      arabicName: 'البقرة',
-      verses: 286,
-      meaning: 'The Cow',
-    },
-  ]),
+      {
+        number: 2,
+        name: 'Al-Baqarah',
+        arabicName: 'البقرة',
+        verses: 286,
+        meaning: 'The Cow',
+      },
+    ]),
 }));
 
 // Mock next/link to simply render an anchor tag
@@ -47,20 +48,35 @@ jest.mock(
 );
 
 // Mock VerseOfDay to avoid fetch during tests
-jest.mock(
-  '@/app/(features)/home/components/VerseOfDay',
-  () => (): JSX.Element => <div>VerseOfDay</div>
-);
+jest.mock('@/app/(features)/home/components/VerseOfDay', () => ({
+  __esModule: true,
+  VerseOfDay: () => <div>VerseOfDay</div>,
+}));
+
+const { HomePage } = require('@/app/(features)/home/components/HomePage');
 
 beforeAll(() => {
   setMatchMedia(false);
 });
 
-const renderHome = () => renderWithProvidersAsync(<HomePage />);
+const renderHome = (): Promise<void> => renderWithProvidersAsync(<HomePage />);
 
 beforeEach(() => {
   localStorage.clear();
   document.documentElement.classList.remove('dark');
+});
+
+it('renders without runtime warnings', async () => {
+  const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+  await renderHome();
+
+  expect(errorSpy).not.toHaveBeenCalled();
+  expect(warnSpy).not.toHaveBeenCalled();
+
+  errorSpy.mockRestore();
+  warnSpy.mockRestore();
 });
 
 it('search filtering returns only matching Surahs', async () => {

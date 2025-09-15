@@ -4,6 +4,7 @@ import { renderSurahView, mockUseSurahPanels, defaultPanels } from './test-utils
 
 jest.mock('@/app/providers/UIStateContext', () => ({
   useUIState: () => ({ isSettingsOpen: true, setSettingsOpen: jest.fn() }),
+  UIStateProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
 describe('SurahView interaction', () => {
@@ -25,7 +26,7 @@ describe('SurahView interaction', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Sahih International' }));
     expect(openTranslationPanel).toHaveBeenCalled();
 
-    fireEvent.click(screen.getByRole('button', { name: 'English' }));
+    fireEvent.click(screen.getAllByRole('button', { name: 'English' })[0]);
     expect(openWordLanguagePanel).toHaveBeenCalled();
   });
 

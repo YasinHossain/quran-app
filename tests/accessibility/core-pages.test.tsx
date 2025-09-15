@@ -17,17 +17,6 @@ jest.mock('next/link', () => ({ href, children }: { href: string; children: Reac
   <a href={href}>{children}</a>
 ));
 
-jest.mock('next/navigation', () => ({
-  useSearchParams: () => ({
-    get: jest.fn().mockReturnValue(''),
-  }),
-  useRouter: () => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-  }),
-  usePathname: () => '/',
-}));
-
 const mockedGetSurahList = getSurahList as jest.MockedFunction<typeof getSurahList>;
 const mockedGetJuzList = getJuzList as jest.MockedFunction<typeof getJuzList>;
 

@@ -21,8 +21,8 @@ export const useVerseNavigation = (surahId: string, ayahId: string): UseVerseNav
   const [surahList, setSurahList] = useState<Surah[]>([]);
 
   useEffect(() => {
-    getSurahList()
-      .then(setSurahList)
+    Promise.resolve(getSurahList())
+      .then((list) => setSurahList(list ?? []))
       .catch((err) => logger.error(err as Error));
   }, []);
 

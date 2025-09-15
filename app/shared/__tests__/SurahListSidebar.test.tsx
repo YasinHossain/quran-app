@@ -5,6 +5,7 @@ import useSWR from 'swr';
 import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
+import { useParams, usePathname } from 'next/navigation';
 
 jest.mock('swr', () => {
   const actual = jest.requireActual('swr');
@@ -15,14 +16,9 @@ jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
-jest.mock('next/navigation', () => ({
-  useParams: jest.fn(),
-  usePathname: jest.fn(),
-}));
-
 const mockUseSWR = useSWR as jest.Mock;
-const useParams = require('next/navigation').useParams as jest.Mock;
-const usePathname = require('next/navigation').usePathname as jest.Mock;
+const mockUseParams = useParams as jest.Mock;
+const mockUsePathname = usePathname as jest.Mock;
 
 const chapters = [
   {
@@ -51,8 +47,8 @@ beforeEach(() => {
   sessionStorage.clear();
   localStorage.clear();
   mockUseSWR.mockReturnValue({ data: chapters });
-  useParams.mockReturnValue({});
-  usePathname.mockReturnValue('/surah');
+  mockUseParams.mockReturnValue({});
+  mockUsePathname.mockReturnValue('/surah');
 });
 
 describe('SurahListSidebar', () => {

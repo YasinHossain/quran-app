@@ -10,6 +10,20 @@ import { server } from '@tests/setup/msw/server';
 
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(() => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+    refresh: jest.fn(),
+    back: jest.fn(),
+    forward: jest.fn(),
+  })),
+  usePathname: jest.fn(() => '/'),
+  useSearchParams: jest.fn(() => new URLSearchParams()),
+  useParams: jest.fn(() => ({})),
+}));
+
 declare global {
   interface HTMLMediaElement {
     simulateEvent(eventType: string): void;

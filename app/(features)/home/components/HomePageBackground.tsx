@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Renders the fixed gradient background and decorative blobs for the home page.
  */

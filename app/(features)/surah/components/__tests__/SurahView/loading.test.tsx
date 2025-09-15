@@ -15,6 +15,6 @@ describe('SurahView loading', () => {
     });
 
     renderSurahView();
-    expect(screen.getByText(/loading/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/loading/i)).toBeInTheDocument();
   });
 });

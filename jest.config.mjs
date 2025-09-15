@@ -9,6 +9,9 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   // Test environment setup
   testEnvironment: 'jest-environment-jsdom',
+  testEnvironmentOptions: {
+    url: 'http://localhost',
+  },
   // Shared test utilities and polyfills
   setupFilesAfterEnv: ['<rootDir>/tests/setup/setupTests.ts'],
 

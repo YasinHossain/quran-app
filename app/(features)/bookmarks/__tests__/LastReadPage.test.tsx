@@ -5,13 +5,11 @@ import { LAST_READ_STORAGE_KEY } from '@/app/providers/bookmarks/constants';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProviders, screen, fireEvent, waitFor } from '@/app/testUtils/renderWithProviders';
 import * as chaptersApi from '@/lib/api/chapters';
+import { useRouter } from 'next/navigation';
 jest.mock('@/lib/api/chapters');
 
 const push = jest.fn();
-
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push }),
-}));
+(useRouter as jest.Mock).mockReturnValue({ push });
 
 jest.mock('../components/BookmarksSidebar', () => ({
   BookmarksSidebar: ({ onSectionChange }: { onSectionChange: (section: string) => void }) => (

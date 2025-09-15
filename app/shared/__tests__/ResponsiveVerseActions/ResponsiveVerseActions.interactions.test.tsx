@@ -47,6 +47,21 @@ describe('ResponsiveVerseActions interactions', () => {
     await screen.findByRole('button', { name: /pause/i });
   });
 
+  it('toggles play and pause on user interaction', async () => {
+    const onPlayPause = jest.fn();
+    const { rerender } = renderResponsiveVerseActions({ onPlayPause });
+
+    const user = userEvent.setup();
+    const playButton = await screen.findByRole('button', { name: /play/i });
+    await user.click(playButton);
+    expect(onPlayPause).toHaveBeenCalledTimes(1);
+
+    rerenderResponsiveVerseActions(rerender, { isPlaying: true, onPlayPause });
+    const pauseButton = await screen.findByRole('button', { name: /pause/i });
+    await user.click(pauseButton);
+    expect(onPlayPause).toHaveBeenCalledTimes(2);
+  });
+
   it('should show loading state', async () => {
     renderResponsiveVerseActions({ isLoadingAudio: true });
 

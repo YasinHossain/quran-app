@@ -13,11 +13,6 @@ jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push: jest.fn() }),
-  usePathname: () => '/',
-}));
-
 const Wrapper = ({ children }: { children: React.ReactNode }): React.ReactElement => (
   <HeaderVisibilityProvider>{children}</HeaderVisibilityProvider>
 );

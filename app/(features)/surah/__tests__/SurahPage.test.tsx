@@ -18,10 +18,6 @@ jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push: jest.fn() }),
-}));
-
 jest.mock('@/lib/api', () => ({
   getTranslations: jest.fn(),
   getWordTranslations: jest.fn(),

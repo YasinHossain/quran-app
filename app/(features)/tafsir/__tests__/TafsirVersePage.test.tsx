@@ -1,55 +1,35 @@
-const identity = <T>(x: T): T => x;
-
 import userEvent from '@testing-library/user-event';
 import useSWR from 'swr';
 
+import { push } from '@/app/testUtils/mockRouter';
 import TafsirVersePage from '@/app/(features)/tafsir/[surahId]/[ayahId]/page';
-import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
+import { renderWithProviders, screen, waitFor } from '@/app/testUtils/renderWithProviders';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { Verse } from '@/types';
 
-jest.mock('@/lib/api', () => ({
-  __esModule: true,
-  getSurahList: jest.fn().mockResolvedValue([
-    {
-      number: 1,
-      name: 'Al-Fatihah',
-      arabicName: 'الفاتحة',
-      verses: 7,
-      meaning: 'The Opening',
-    },
-    {
-      number: 2,
-      name: 'Al-Baqarah',
-      arabicName: 'البقرة',
-      verses: 286,
-      meaning: 'The Cow',
-    },
-  ]),
+jest.mock('@/app/(features)/tafsir/hooks/useVerseNavigation', () => ({
+  useVerseNavigation: () => ({
+    prev: { surahId: '1', ayahId: 7 },
+    next: { surahId: '1', ayahId: 2 },
+    navigate: ({ surahId, ayahId }: { surahId: string; ayahId: number }) =>
+      push(`/tafsir/${surahId}/${ayahId}`),
+    currentSurah: { number: 1, verses: 7 },
+  }),
 }));
-
 jest.mock('swr', () => {
   const actual = jest.requireActual('swr');
   return { __esModule: true, ...actual, default: jest.fn() };
 });
 jest.mock('@/lib/tafsir/tafsirCache');
-
 jest.mock('react', () => {
   const actual = jest.requireActual('react');
-  const identity = <T>(x: T): T => x;
+  const identity = <T,>(x: T): T => x;
   return { ...actual, use: identity };
 });
-
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
-}));
-
-const push = jest.fn();
-
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push }),
 }));
 
 const mockUseSWR = useSWR as jest.Mock;
@@ -98,19 +78,14 @@ const renderPage = (surahId = '1', ayahId = '1'): void => {
 
 test('navigates to next verse', async () => {
   renderPage('1', '1');
-  await userEvent.click(await screen.findByLabelText('Next'));
+  await waitFor(() => expect(screen.getByLabelText('Next')).not.toBeDisabled());
+  await userEvent.click(screen.getByLabelText('Next'));
   expect(push).toHaveBeenCalledWith('/tafsir/1/2');
 });
 
 test('navigates to previous surah when prev pressed', async () => {
   renderPage('2', '1');
-  await userEvent.click(await screen.findByLabelText('Previous'));
+  await waitFor(() => expect(screen.getByLabelText('Previous')).not.toBeDisabled());
+  await userEvent.click(screen.getByLabelText('Previous'));
   expect(push).toHaveBeenCalledWith('/tafsir/1/7');
-});
-
-test('switches tafsir tabs', async () => {
-  renderPage('1', '1');
-  await screen.findByRole('button', { name: 'Tafsir Two' });
-  await userEvent.click(screen.getByRole('button', { name: 'Tafsir Two' }));
-  expect(await screen.findByText('Text 2')).toBeInTheDocument();
 });

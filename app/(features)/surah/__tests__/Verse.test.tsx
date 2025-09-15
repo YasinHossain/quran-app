@@ -6,10 +6,6 @@ import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProvidersAsync } from '@/app/testUtils/renderWithProviders';
 import { Verse } from '@/types';
 
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push: jest.fn() }),
-}));
-
 const verse: Verse = {
   id: 1,
   verse_key: '1:1',
