@@ -11,6 +11,7 @@ import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { Verse } from '@/types';
 
 jest.mock('@/lib/api', () => ({
+  __esModule: true,
   getSurahList: jest.fn().mockResolvedValue([
     {
       number: 1,

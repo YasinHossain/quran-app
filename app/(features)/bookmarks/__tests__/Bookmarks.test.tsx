@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import React from 'react';
 
 import { BookmarksHeader } from '@/app/(features)/bookmarks/components/BookmarksHeader';
@@ -44,43 +44,45 @@ const testNavigationItemAccessibility = (item: Element | null): void => {
 };
 
 describe('BookmarksHeader', () => {
-  const renderBookmarksHeader = (): {
+  const renderBookmarksHeader = async (): Promise<{
     mockOnSidebarToggle: jest.Mock;
     mockOnNewFolderClick: jest.Mock;
     mockOnSearchChange: jest.Mock;
-  } => {
+  }> => {
     const mockOnSidebarToggle = jest.fn();
     const mockOnNewFolderClick = jest.fn();
     const mockOnSearchChange = jest.fn();
 
-    render(
-      <BookmarksHeader
-        searchTerm=""
-        onSearchChange={mockOnSearchChange}
-        onNewFolderClick={mockOnNewFolderClick}
-        onSidebarToggle={mockOnSidebarToggle}
-      />
-    );
+    await act(async () => {
+      render(
+        <BookmarksHeader
+          searchTerm=""
+          onSearchChange={mockOnSearchChange}
+          onNewFolderClick={mockOnNewFolderClick}
+          onSidebarToggle={mockOnSidebarToggle}
+        />
+      );
+    });
 
     return { mockOnSidebarToggle, mockOnNewFolderClick, mockOnSearchChange };
   };
 
-  it('should render without errors', () => {
-    renderBookmarksHeader();
+  it('should render without errors', async () => {
+    await renderBookmarksHeader();
 
     expect(screen.getByText('Bookmarks')).toBeInTheDocument();
     expect(screen.getByText('New Folder')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Search Bookmarks')).toBeInTheDocument();
   });
 
-  it('should have proper touch targets for buttons', () => {
-    renderBookmarksHeader();
+  it('should have proper touch targets for buttons', async () => {
+    await renderBookmarksHeader();
     const newFolderButton = screen.getByRole('button', { name: 'New Folder' });
     expect(newFolderButton).toHaveClass('min-h-touch');
   });
 
-  it('should apply responsive classes consistently', () => {
-    renderBookmarksHeader();
+  it('should apply responsive classes consistently', async () => {
+    await renderBookmarksHeader();
     const newFolderButton = screen.getByRole('button', { name: 'New Folder' });
 
     expect(newFolderButton).toHaveClass('touch-manipulation');
@@ -89,16 +91,20 @@ describe('BookmarksHeader', () => {
 });
 
 describe('BookmarksSidebar', () => {
-  it('should render all navigation items', () => {
-    render(<BookmarksSidebar activeSection="bookmarks" />);
+  it('should render all navigation items', async () => {
+    await act(async () => {
+      render(<BookmarksSidebar activeSection="bookmarks" />);
+    });
 
     expect(screen.getByText('All Bookmarks')).toBeInTheDocument();
     expect(screen.getByText('Pinned Verses')).toBeInTheDocument();
     expect(screen.getByText('Recent')).toBeInTheDocument();
   });
 
-  it('should have accessible navigation items', () => {
-    render(<BookmarksSidebar activeSection="bookmarks" />);
+  it('should have accessible navigation items', async () => {
+    await act(async () => {
+      render(<BookmarksSidebar activeSection="bookmarks" />);
+    });
 
     const pinnedItem = screen.getByText('Pinned Verses').closest('div');
     const lastReadItem = screen.getByText('Recent').closest('div');

@@ -7,6 +7,7 @@ import { getVerseByKey } from '@/lib/api/verses';
 import { Verse } from '@/types';
 
 jest.mock('@/lib/api', () => ({
+  __esModule: true,
   getRandomVerse: jest.fn(),
   getSurahList: jest.fn().mockResolvedValue([
     {

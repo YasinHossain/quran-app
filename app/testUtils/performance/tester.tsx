@@ -5,24 +5,37 @@ import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 
 import { withRenderTracking, resetRenderTracking, getRenderCount } from './tracking';
 
+let t = 0;
+let nowSpy: jest.SpyInstance<number, []>;
+let originalPerformance: Performance;
+
 export const performanceMocks = {
   mockPerformanceMark: jest.fn(),
   mockPerformanceMeasure: jest.fn(),
   setup(): void {
+    t = 0;
+    originalPerformance = global.performance;
     Object.defineProperty(global, 'performance', {
       writable: true,
       value: {
         mark: this.mockPerformanceMark,
         measure: this.mockPerformanceMeasure,
-        now: jest.fn(() => Date.now()),
+        now: () => 0,
         getEntriesByType: jest.fn(() => []),
         getEntriesByName: jest.fn(() => []),
       },
     });
+    nowSpy = jest.spyOn(global.performance, 'now').mockImplementation(() => (t += 16));
   },
   reset(): void {
+    nowSpy.mockRestore();
+    Object.defineProperty(global, 'performance', {
+      writable: true,
+      value: originalPerformance,
+    });
     this.mockPerformanceMark.mockReset();
     this.mockPerformanceMeasure.mockReset();
+    t = 0;
   },
 };
 

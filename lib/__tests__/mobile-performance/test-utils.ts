@@ -12,16 +12,9 @@ interface MobilePerformanceTestSetup {
 let t = 0;
 let nowSpy: jest.SpyInstance<number, []>;
 
-beforeEach(() => {
-  nowSpy = jest.spyOn(performance, 'now').mockImplementation(() => (t += 16));
-});
-
-afterEach(() => {
-  nowSpy.mockRestore();
-  t = 0;
-});
-
 export const setupMobilePerformanceTest = (): MobilePerformanceTestSetup => {
+  t = 0;
+  nowSpy = jest.spyOn(performance, 'now').mockImplementation(() => (t += 16));
   const matchMediaUtils = createMatchMediaMock();
   const originalMatchMedia = window.matchMedia;
 
@@ -40,6 +33,8 @@ export const setupMobilePerformanceTest = (): MobilePerformanceTestSetup => {
         configurable: true,
         value: originalMatchMedia,
       });
+      nowSpy.mockRestore();
+      t = 0;
     },
   };
 };

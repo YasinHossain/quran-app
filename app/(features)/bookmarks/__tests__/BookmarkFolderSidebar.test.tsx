@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 const mockRouter = { push: jest.fn(), query: {} };
 import { AppRouterContext } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
@@ -32,29 +32,33 @@ jest.mock('@/app/(features)/layout/context/HeaderVisibilityContext', () => ({
 }));
 
 describe('BookmarkFolderSidebar', () => {
-  it('highlights active verse and handles verse selection', () => {
+  it('highlights active verse and handles verse selection', async () => {
     const handleVerseSelect = jest.fn();
 
     mockRouter.push('/bookmarks/folder1');
 
-    render(
-      <AppRouterContext.Provider value={mockRouter as any}>
-        <BookmarkFolderSidebar
-          bookmarks={bookmarks}
-          folder={{ id: 'folder1', name: 'Folder 1', bookmarks }}
-          activeVerseId="1"
-          onVerseSelect={handleVerseSelect}
-          isOpen
-          onClose={jest.fn()}
-        />
-      </AppRouterContext.Provider>
-    );
+    await act(async () => {
+      render(
+        <AppRouterContext.Provider value={mockRouter as any}>
+          <BookmarkFolderSidebar
+            bookmarks={bookmarks}
+            folder={{ id: 'folder1', name: 'Folder 1', bookmarks }}
+            activeVerseId="1"
+            onVerseSelect={handleVerseSelect}
+            isOpen
+            onClose={jest.fn()}
+          />
+        </AppRouterContext.Provider>
+      );
+    });
 
     const activeButton = screen.getByText('1:1').closest('button');
     expect(activeButton).toHaveClass('bg-accent/10');
 
     const secondButton = screen.getByText('2:255').closest('button') as HTMLButtonElement;
-    fireEvent.click(secondButton);
+    await act(async () => {
+      fireEvent.click(secondButton);
+    });
     expect(handleVerseSelect).toHaveBeenCalledWith('2');
   });
 });

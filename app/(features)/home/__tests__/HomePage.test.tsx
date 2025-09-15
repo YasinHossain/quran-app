@@ -9,6 +9,7 @@ import { Verse } from '@/types';
 import type { MockProps } from '@/tests/mocks';
 
 jest.mock('@/lib/api', () => ({
+  __esModule: true,
   getRandomVerse: jest.fn().mockResolvedValue({
     id: 1,
     verse_key: '1:1',

@@ -5,7 +5,7 @@ import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import * as api from '@/lib/api';
 import { Verse } from '@/types';
 
-import { SurahView } from '@/app/(features)/surah';
+import { SurahView } from '..';
 import { UIStateProvider } from '@/app/providers/UIStateContext';
 
 jest.mock('react', () => {

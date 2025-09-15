@@ -264,7 +264,11 @@ if (typeof window !== 'undefined') {
     this.simulateEvent('ended');
   };
 }
-// Make logger.error spy-able so tests can call mockRestore()
-jest.spyOn(logger, 'error');
-
-afterEach(() => (logger.error as jest.Mock).mockClear());
+// Ensure logger.error is spied before each test so individual tests
+// can inspect or restore it. Jest's `restoreMocks` setting resets
+// spies after every test, therefore we re-apply the spy in a
+// `beforeEach` hook instead of relying on a persistent spy that would
+// break when restored.
+beforeEach(() => {
+  jest.spyOn(logger, 'error').mockImplementation(() => {});
+});

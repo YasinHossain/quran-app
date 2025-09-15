@@ -3,7 +3,7 @@ import React from 'react';
 import LastReadPage from '@/app/(features)/bookmarks/last-read/page';
 import { LAST_READ_STORAGE_KEY } from '@/app/providers/bookmarks/constants';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
-import { renderWithProviders, screen, fireEvent, act } from '@/app/testUtils/renderWithProviders';
+import { renderWithProviders, screen, fireEvent, waitFor } from '@/app/testUtils/renderWithProviders';
 import * as chaptersApi from '@/lib/api/chapters';
 jest.mock('@/lib/api/chapters');
 
@@ -57,10 +57,8 @@ describe('Last Read Page', () => {
     renderWithProviders(<LastReadPage />);
     expect(await screen.findByRole('heading', { name: 'Recent' })).toBeInTheDocument();
     expect(await screen.findByText(/Verse 3 of 7/)).toBeInTheDocument();
-    await act(async () => {
-      fireEvent.click(screen.getByText('Pins'));
-    });
-    expect(push).toHaveBeenCalledWith('/bookmarks/pinned');
+    fireEvent.click(screen.getByText('Pins'));
+    await waitFor(() => expect(push).toHaveBeenCalledWith('/bookmarks/pinned'));
   });
 
   it('shows empty state message', async () => {
