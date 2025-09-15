@@ -105,7 +105,6 @@
     "@types/react-dom": "^19",
     "@types/react-window": "^1.8.8",
     "@types/uuid": "^10.0.0",
-    "@vscode/ripgrep": "^1.15.14",
     "autoprefixer": "^10.4.21",
     "axe-playwright": "^2.2.2",
     "chromatic": "^13.1.4",
