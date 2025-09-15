@@ -3,7 +3,7 @@ import React from 'react';
 import LastReadPage from '@/app/(features)/bookmarks/last-read/page';
 import { LAST_READ_STORAGE_KEY } from '@/app/providers/bookmarks/constants';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
-import { renderWithProviders, screen, fireEvent } from '@/app/testUtils/renderWithProviders';
+import { renderWithProviders, screen, fireEvent, act } from '@/app/testUtils/renderWithProviders';
 import * as chaptersApi from '@/lib/api/chapters';
 jest.mock('@/lib/api/chapters');
 
@@ -29,8 +29,12 @@ jest.mock('@/app/(features)/layout/context/HeaderVisibilityContext', () => ({
 
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => React.createElement('div', props, children),
-    aside: ({ children, ...props }: any) => React.createElement('aside', props, children),
+    div: ({ children, whileHover, whileTap, ...props }: any) =>
+      React.createElement('div', props, children),
+    aside: ({ children, whileHover, whileTap, ...props }: any) =>
+      React.createElement('aside', props, children),
+    button: ({ children, whileHover, whileTap, ...props }: any) =>
+      React.createElement('button', props, children),
   },
   AnimatePresence: ({ children }: any) => <>{children}</>,
 }));
@@ -53,7 +57,9 @@ describe('Last Read Page', () => {
     renderWithProviders(<LastReadPage />);
     expect(await screen.findByRole('heading', { name: 'Recent' })).toBeInTheDocument();
     expect(await screen.findByText(/Verse 3 of 7/)).toBeInTheDocument();
-    fireEvent.click(screen.getByText('Pins'));
+    await act(async () => {
+      fireEvent.click(screen.getByText('Pins'));
+    });
     expect(push).toHaveBeenCalledWith('/bookmarks/pinned');
   });
 
