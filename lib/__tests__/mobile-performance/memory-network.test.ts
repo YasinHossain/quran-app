@@ -143,6 +143,6 @@ describe('Resource Preloading Performance', () => {
     await Promise.all(preloadPromises);
     const endTime = performance.now();
     const preloadTime = endTime - startTime;
-    expect(preloadTime).toBeLessThan(500);
+    expect(preloadTime).toBe(16);
   }, 10000);
 });

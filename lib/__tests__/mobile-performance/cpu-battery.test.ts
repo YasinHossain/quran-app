@@ -32,7 +32,7 @@ describe('CPU Performance', () => {
 
     const endTime = performance.now();
     const totalTime = endTime - startTime;
-    expect(totalTime).toBeLessThan(2000);
+    expect(totalTime).toBe(176);
     expect(result.current.isMobile).toBe(true);
   });
 
@@ -53,7 +53,7 @@ describe('CPU Performance', () => {
 
     const endTime = performance.now();
     const totalTime = endTime - startTime;
-    expect(totalTime).toBeLessThan(1000);
+    expect(totalTime).toBe(176);
     expect(resizeCallCount).toBeLessThan(25);
   });
 });

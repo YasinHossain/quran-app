@@ -17,14 +17,14 @@ Comprehensive testing strategy using Jest, React Testing Library, and custom tes
 
 ## Configuration
 
-### jest.config.js
+### jest.config.mjs
 
 ```javascript
 const nextJest = require('next/jest');
 const createJestConfig = nextJest({ dir: './' });
 
 const customJestConfig = {
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  setupFilesAfterEnv: ['<rootDir>/tests/setup/setupTests.ts'],
   testEnvironment: 'jsdom',
   moduleNameMapping: { '^@/(.*)$': '<rootDir>/$1' },
   coverageThreshold: {
@@ -35,7 +35,7 @@ const customJestConfig = {
 module.exports = createJestConfig(customJestConfig);
 ```
 
-### jest.setup.js
+### tests/setup/setupTests.ts
 
 ```javascript
 import '@testing-library/jest-dom';

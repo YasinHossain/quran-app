@@ -53,11 +53,11 @@ describe('formatVerseNumber', () => {
   it('should format single digit numbers with leading zero', () => {
     expect(formatVerseNumber(5)).toBe('05');
   });
-  
+
   it('should format double digit numbers without leading zero', () => {
     expect(formatVerseNumber(15)).toBe('15');
   });
-  
+
   it('should handle edge cases', () => {
     expect(formatVerseNumber(0)).toBe('00');
     expect(formatVerseNumber(-1)).toBe('00');
@@ -79,18 +79,18 @@ import { SurahPage } from '../page';
 describe('SurahPage Integration', () => {
   it('should load verses and play audio when play button is clicked', async () => {
     const user = userEvent.setup();
-    
+
     renderWithProviders(<SurahPage params={{ id: '1' }} />);
-    
+
     // Wait for verses to load
     await waitFor(() => {
       expect(screen.getByText(/al-fatihah/i)).toBeInTheDocument();
     });
-    
+
     // Click play button
     const playButton = screen.getByRole('button', { name: /play/i });
     await user.click(playButton);
-    
+
     // Verify audio player state updated
     expect(screen.getByRole('button', { name: /pause/i })).toBeInTheDocument();
   });
@@ -109,19 +109,19 @@ test.describe('Reading Flow', () => {
   test('user can read a surah and bookmark verses', async ({ page }) => {
     // Navigate to surah
     await page.goto('/surah/1');
-    
+
     // Verify page loaded
     await expect(page.locator('h1')).toContainText('Al-Fatiha');
-    
+
     // Click bookmark on first verse
     await page.locator('[data-verse="1:1"] [data-testid="bookmark-button"]').click();
-    
+
     // Verify bookmark was added
     await expect(page.locator('.bookmark-success')).toBeVisible();
-    
+
     // Navigate to bookmarks
     await page.goto('/bookmarks');
-    
+
     // Verify bookmarked verse appears
     await expect(page.locator('[data-verse="1:1"]')).toBeVisible();
   });
@@ -148,14 +148,14 @@ describe('Modal Accessibility', () => {
         <p>Modal content</p>
       </Modal>
     );
-    
+
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
-  
+
   it('should trap focus within modal', async () => {
     const user = userEvent.setup();
-    
+
     render(
       <div>
         <button>Outside button</button>
@@ -165,14 +165,14 @@ describe('Modal Accessibility', () => {
         </Modal>
       </div>
     );
-    
+
     // Focus should be trapped in modal
     await user.tab();
     expect(screen.getByText('Modal button 1')).toHaveFocus();
-    
+
     await user.tab();
     expect(screen.getByText('Modal button 2')).toHaveFocus();
-    
+
     // Should cycle back to first modal element
     await user.tab();
     expect(screen.getByText('Modal button 1')).toHaveFocus();
@@ -190,16 +190,12 @@ Our Jest setup includes:
 // jest.config.mjs
 export default {
   testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  setupFilesAfterEnv: ['<rootDir>/tests/setup/setupTests.ts'],
   setupFiles: ['<rootDir>/tests/setup/matchMedia.ts'],
   moduleNameMapping: {
     '^@/(.*)$': '<rootDir>/$1',
   },
-  collectCoverageFrom: [
-    'app/**/*.{ts,tsx}',
-    'src/**/*.{ts,tsx}',
-    'lib/**/*.{ts,tsx}',
-  ],
+  collectCoverageFrom: ['app/**/*.{ts,tsx}', 'src/**/*.{ts,tsx}', 'lib/**/*.{ts,tsx}'],
   coverageThreshold: {
     global: {
       branches: 80,
@@ -214,7 +210,7 @@ export default {
 ### Test Environment Setup
 
 ```javascript
-// jest.setup.js
+// tests/setup/setupTests.ts
 import '@testing-library/jest-dom';
 import 'jest-axe/extend-expect';
 
@@ -252,12 +248,12 @@ describe('Component Name', () => {
       title: 'Test Title',
       onClose: jest.fn(),
     };
-    
+
     // Act - Trigger the behavior being tested
     renderWithProviders(<Component {...mockProps} />);
     const button = screen.getByRole('button', { name: /close/i });
     userEvent.click(button);
-    
+
     // Assert - Verify the expected outcome
     expect(mockProps.onClose).toHaveBeenCalledTimes(1);
   });
@@ -277,7 +273,7 @@ describe('Button', () => {
     render(<Button>Click me</Button>);
     expect(screen.getByRole('button', { name: /click me/i })).toBeInTheDocument();
   });
-  
+
   it('applies correct variant classes', () => {
     render(<Button variant="destructive">Delete</Button>);
     const button = screen.getByRole('button');
@@ -295,12 +291,12 @@ describe('SearchInput', () => {
   it('calls onChange when user types', async () => {
     const user = userEvent.setup();
     const handleChange = jest.fn();
-    
+
     render(<SearchInput value="" onChange={handleChange} />);
-    
+
     const input = screen.getByRole('searchbox');
     await user.type(input, 'test query');
-    
+
     expect(handleChange).toHaveBeenCalledWith('test query');
   });
 });
@@ -314,15 +310,15 @@ import { waitFor } from '@testing-library/react';
 describe('VerseLoader', () => {
   it('displays loading state then verses', async () => {
     render(<VerseLoader surahId={1} />);
-    
+
     // Should show loading initially
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
-    
+
     // Should show verses after loading
     await waitFor(() => {
       expect(screen.getByText(/al-fatihah/i)).toBeInTheDocument();
     });
-    
+
     // Should not show loading anymore
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
   });
@@ -338,18 +334,18 @@ import { useAudioPlayer } from '../useAudioPlayer';
 describe('useAudioPlayer', () => {
   it('should start paused', () => {
     const { result } = renderHook(() => useAudioPlayer('/test.mp3'));
-    
+
     expect(result.current.isPlaying).toBe(false);
     expect(result.current.currentTime).toBe(0);
   });
-  
+
   it('should play audio when play is called', async () => {
     const { result } = renderHook(() => useAudioPlayer('/test.mp3'));
-    
+
     await act(async () => {
       await result.current.play();
     });
-    
+
     expect(result.current.isPlaying).toBe(true);
   });
 });
@@ -384,7 +380,7 @@ export const renderWithProviders = (
       </ThemeProvider>
     </QueryClient>
   );
-  
+
   return render(ui, { wrapper: Wrapper });
 };
 ```
@@ -434,7 +430,7 @@ export const createMockVerse = (overrides?: Partial<Verse>): Verse => ({
       id: 131,
       text: 'In the name of Allah, the Beneficent, the Merciful.',
       resource_name: 'Dr. Mustafa Khattab',
-    }
+    },
   ],
   audio_url: '/audio/001001.mp3',
   ...overrides,
@@ -467,10 +463,10 @@ it('should call setState with correct parameters', () => {
 it('should increment counter when button is clicked', async () => {
   const user = userEvent.setup();
   render(<Counter />);
-  
+
   const button = screen.getByRole('button', { name: /increment/i });
   await user.click(button);
-  
+
   expect(screen.getByText('Count: 1')).toBeInTheDocument();
 });
 ```
@@ -479,13 +475,23 @@ it('should increment counter when button is clicked', async () => {
 
 ```typescript
 // ❌ Bad
-it('should work', () => { /* ... */ });
-it('handles click', () => { /* ... */ });
+it('should work', () => {
+  /* ... */
+});
+it('handles click', () => {
+  /* ... */
+});
 
 // ✅ Good
-it('should display error message when verse fails to load', () => { /* ... */ });
-it('should bookmark verse when bookmark button is clicked', () => { /* ... */ });
-it('should navigate to next page when next button is pressed', () => { /* ... */ });
+it('should display error message when verse fails to load', () => {
+  /* ... */
+});
+it('should bookmark verse when bookmark button is clicked', () => {
+  /* ... */
+});
+it('should navigate to next page when next button is pressed', () => {
+  /* ... */
+});
 ```
 
 ### 3. Test Error States
@@ -499,14 +505,14 @@ describe('VerseLoader error handling', () => {
         return res(ctx.status(500), ctx.json({ error: 'Server error' }));
       })
     );
-    
+
     render(<VerseLoader surahId={1} />);
-    
+
     await waitFor(() => {
       expect(screen.getByText(/failed to load verses/i)).toBeInTheDocument();
     });
   });
-  
+
   it('should show retry button on error', async () => {
     // Test retry functionality
   });
@@ -524,18 +530,18 @@ describe('Modal accessibility', () => {
         <button>Close</button>
       </Modal>
     );
-    
+
     expect(screen.getByRole('textbox')).toHaveFocus();
   });
-  
+
   it('should close when Escape key is pressed', async () => {
     const user = userEvent.setup();
     const onClose = jest.fn();
-    
+
     render(<Modal isOpen onClose={onClose}><div>Content</div></Modal>);
-    
+
     await user.keyboard('{Escape}');
-    
+
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 });
@@ -547,15 +553,15 @@ describe('Modal accessibility', () => {
 // ❌ Bad - Tests depend on each other
 describe('Counter', () => {
   let wrapper;
-  
+
   beforeAll(() => {
     wrapper = render(<Counter />);
   });
-  
+
   it('starts at 0', () => {
     expect(wrapper.getByText('Count: 0')).toBeInTheDocument();
   });
-  
+
   it('increments to 1', () => {
     // This test depends on the previous test's DOM state
     fireEvent.click(wrapper.getByText('Increment'));
@@ -569,13 +575,13 @@ describe('Counter', () => {
     render(<Counter />);
     expect(screen.getByText('Count: 0')).toBeInTheDocument();
   });
-  
+
   it('increments from 0 to 1 when clicked', async () => {
     const user = userEvent.setup();
     render(<Counter />);
-    
+
     await user.click(screen.getByRole('button', { name: /increment/i }));
-    
+
     expect(screen.getByText('Count: 1')).toBeInTheDocument();
   });
 });
@@ -590,32 +596,32 @@ describe('ContactForm', () => {
   it('should submit form with valid data', async () => {
     const user = userEvent.setup();
     const onSubmit = jest.fn();
-    
+
     render(<ContactForm onSubmit={onSubmit} />);
-    
+
     // Fill out form
     await user.type(screen.getByLabelText(/name/i), 'John Doe');
     await user.type(screen.getByLabelText(/email/i), 'john@example.com');
     await user.type(screen.getByLabelText(/message/i), 'Test message');
-    
+
     // Submit form
     await user.click(screen.getByRole('button', { name: /submit/i }));
-    
+
     expect(onSubmit).toHaveBeenCalledWith({
       name: 'John Doe',
       email: 'john@example.com',
       message: 'Test message',
     });
   });
-  
+
   it('should show validation errors for invalid data', async () => {
     const user = userEvent.setup();
-    
+
     render(<ContactForm onSubmit={jest.fn()} />);
-    
+
     // Submit without filling form
     await user.click(screen.getByRole('button', { name: /submit/i }));
-    
+
     expect(screen.getByText(/name is required/i)).toBeInTheDocument();
     expect(screen.getByText(/email is required/i)).toBeInTheDocument();
   });
@@ -631,7 +637,7 @@ import { rest } from 'msw';
 export const handlers = [
   rest.get('/api/surahs/:id', (req, res, ctx) => {
     const { id } = req.params;
-    
+
     if (id === '1') {
       return res(
         ctx.json({
@@ -643,7 +649,7 @@ export const handlers = [
         })
       );
     }
-    
+
     return res(ctx.status(404), ctx.json({ error: 'Surah not found' }));
   }),
 ];
@@ -651,7 +657,7 @@ export const handlers = [
 // In your test
 it('should load surah data', async () => {
   render(<SurahPage id={1} />);
-  
+
   await waitFor(() => {
     expect(screen.getByText('Al-Fatihah')).toBeInTheDocument();
   });
@@ -664,18 +670,18 @@ it('should load surah data', async () => {
 describe('ResponsiveNavigation', () => {
   it('should show hamburger menu on mobile', () => {
     setMatchMedia(true); // Mobile
-    
+
     render(<Navigation />);
-    
+
     expect(screen.getByRole('button', { name: /menu/i })).toBeInTheDocument();
     expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
   });
-  
+
   it('should show full navigation on desktop', () => {
     setMatchMedia(false); // Desktop
-    
+
     render(<Navigation />);
-    
+
     expect(screen.queryByRole('button', { name: /menu/i })).not.toBeInTheDocument();
     expect(screen.getByRole('navigation')).toBeInTheDocument();
   });
@@ -737,23 +743,23 @@ describe('Auto-saving feature', () => {
   beforeEach(() => {
     jest.useFakeTimers();
   });
-  
+
   afterEach(() => {
     jest.runOnlyPendingTimers();
     jest.useRealTimers();
   });
-  
+
   it('should auto-save after 2 seconds', async () => {
     render(<AutoSaveForm />);
-    
+
     // Type in input
     await user.type(screen.getByRole('textbox'), 'content');
-    
+
     // Fast-forward timers
     act(() => {
       jest.advanceTimersByTime(2000);
     });
-    
+
     expect(screen.getByText(/saved/i)).toBeInTheDocument();
   });
 });

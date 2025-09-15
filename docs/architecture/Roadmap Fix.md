@@ -73,7 +73,7 @@ Purpose: consolidate the next set of focused actions to get the test suite stabl
   - Acceptance: test suite runs successfully with improved setup.
 
 - ✅ Remove global fetch stubs
-  - Problem: `jest.setup.js` stubs QDC endpoints and may mask MSW.
+  - Problem: `tests/setup/setupTests.ts` stubs QDC endpoints and may mask MSW.
   - Action: rely solely on MSW; set `JEST_ALLOW_NETWORK=1` to opt out and allow real requests.
   - Files updated:
     - `tests/setup/setupTests.ts` (removed QDC stubs; added opt-out flag)
