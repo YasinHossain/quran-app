@@ -2,12 +2,13 @@ import '@testing-library/jest-dom';
 import 'jest-axe/extend-expect';
 // Provide Fetch/Response in JSDOM via whatwg-fetch so MSW interceptors work consistently
 import 'whatwg-fetch';
-
-// Using inline polyfills (new version)
+// Polyfills for environment features used in tests
+import '@tests/envPolyfills';
 
 import { jest, beforeAll, afterEach, afterAll } from '@jest/globals';
-import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { server } from '@tests/setup/msw/server';
+
+import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 declare global {
   interface HTMLMediaElement {
@@ -19,36 +20,6 @@ declare global {
     simulateEnd(): void;
   }
 }
-
-// Web Streams and BroadcastChannel polyfills
-if (typeof globalThis.ReadableStream === 'undefined') {
-  // @ts-expect-error - define if missing
-  globalThis.ReadableStream = ReadableStream;
-}
-if (typeof globalThis.WritableStream === 'undefined') {
-  // @ts-expect-error - define if missing
-  globalThis.WritableStream = WritableStream;
-}
-if (typeof globalThis.TransformStream === 'undefined') {
-  // @ts-expect-error - define if missing
-  globalThis.TransformStream = TransformStream;
-}
-if (typeof globalThis.BroadcastChannel === 'undefined') {
-  // @ts-expect-error - define if missing
-  globalThis.BroadcastChannel = class {
-    constructor() {}
-    postMessage(): void {}
-    close(): void {}
-    addEventListener(): void {}
-    removeEventListener(): void {}
-    onmessage: ((this: BroadcastChannel, ev: MessageEvent) => void) | null = null;
-  };
-}
-
-// TextEncoder/TextDecoder for MSW in JSDOM
-// Node 20 provides these globally, but ensure they exist on `global`.
-// @ts-expect-error - define if missing
-Object.assign(global, { TextDecoder, TextEncoder });
 
 // Start MSW for tests unless explicitly disabled.
 // Set JEST_ALLOW_NETWORK=1 to bypass MSW and allow real network requests.
@@ -293,19 +264,5 @@ if (typeof window !== 'undefined') {
     this.simulateEvent('ended');
   };
 }
-
-// Fallback fetch mock if needed
-if (typeof globalThis.fetch === 'undefined') {
-  // @ts-expect-error - test shim
-  globalThis.fetch = jest.fn(() =>
-    Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve({}),
-      text: () => Promise.resolve(''),
-    })
-  );
-}
-
 // Make logger.error spy-able so tests can call mockRestore()
 jest.spyOn(logger, 'error');
