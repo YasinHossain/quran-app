@@ -31,11 +31,13 @@ export default function OfflinePage(): React.JSX.Element {
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">You're Offline</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            You&apos;re Offline
+          </h1>
 
           {/* Description */}
           <p className="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-            Don't worry! You can still access previously viewed suras and play cached audio
+            Don&apos;t worry! You can still access previously viewed suras and play cached audio
             recitations. Your reading progress and bookmarks are saved locally.
           </p>
 
@@ -123,7 +125,7 @@ export default function OfflinePage(): React.JSX.Element {
 
           {/* Connection Status */}
           <div className="mt-8 text-sm text-gray-500 dark:text-gray-400">
-            <p>Connection will be restored automatically when you're back online.</p>
+            <p>Connection will be restored automatically when you&apos;re back online.</p>
           </div>
         </div>
       </div>

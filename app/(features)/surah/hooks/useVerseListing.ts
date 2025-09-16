@@ -47,22 +47,29 @@ export function useVerseListing({
     [settings.translationIds, settings.translationId]
   );
 
-  let {
-    verses = [],
+  const loaderResult =
+    (useInfiniteVerseLoader({
+      ...(id !== undefined ? { id } : {}),
+      lookup,
+      stableTranslationIds,
+      wordLang: settings.wordLang,
+      loadMoreRef,
+      error,
+      setError: (e: string) => setError(e),
+    }) as
+      | { verses?: unknown[]; isLoading?: boolean; isValidating?: boolean; isReachingEnd?: boolean }
+      | undefined) ?? {};
+
+  let { verses = [] } = (loaderResult as { verses?: unknown[] }) ?? {};
+  const {
     isLoading = false,
     isValidating = false,
     isReachingEnd = false,
-  } = (useInfiniteVerseLoader({
-    ...(id !== undefined ? { id } : {}),
-    lookup,
-    stableTranslationIds,
-    wordLang: settings.wordLang,
-    loadMoreRef,
-    error,
-    setError: (e: string) => setError(e),
-  }) as
-    | { verses?: unknown[]; isLoading?: boolean; isValidating?: boolean; isReachingEnd?: boolean }
-    | undefined) ?? {};
+  } = (loaderResult as {
+    isLoading?: boolean;
+    isValidating?: boolean;
+    isReachingEnd?: boolean;
+  }) ?? {};
 
   if (initialVerses && initialVerses.length) {
     verses = initialVerses as any[];

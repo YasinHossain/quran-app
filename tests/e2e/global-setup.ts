@@ -7,7 +7,7 @@ import { chromium, FullConfig } from '@playwright/test';
 async function globalSetup(config: FullConfig): Promise<void> {
   const baseURL = config.projects[0].use.baseURL || 'http://localhost:3000';
 
-  console.log('🚀 Setting up E2E test environment...');
+  console.warn('🚀 Setting up E2E test environment...');
 
   // Launch browser for setup
   const browser = await chromium.launch();
@@ -15,7 +15,7 @@ async function globalSetup(config: FullConfig): Promise<void> {
 
   try {
     // Navigate to app to trigger service worker registration
-    console.log('📦 Pre-caching app for offline tests...');
+    console.warn('📦 Pre-caching app for offline tests...');
     await page.goto(baseURL);
     await page.waitForLoadState('networkidle');
 
@@ -26,9 +26,9 @@ async function globalSetup(config: FullConfig): Promise<void> {
       try {
         await page.goto(`${baseURL}${path}`);
         await page.waitForLoadState('networkidle', { timeout: 10000 });
-        console.log(`✅ Cached: ${path}`);
+        console.warn(`✅ Cached: ${path}`);
       } catch (error) {
-        console.log(`⚠️  Failed to cache: ${path}`, error);
+        console.warn(`⚠️  Failed to cache: ${path}`, error);
       }
     }
 
@@ -48,12 +48,12 @@ async function globalSetup(config: FullConfig): Promise<void> {
     });
 
     if (swRegistered) {
-      console.log('✅ Service Worker registered successfully');
+      console.warn('✅ Service Worker registered successfully');
     } else {
-      console.log('⚠️  Service Worker not registered');
+      console.warn('⚠️  Service Worker not registered');
     }
 
-    console.log('🎯 E2E test environment ready');
+    console.warn('🎯 E2E test environment ready');
   } catch (error) {
     console.error('❌ Failed to set up test environment:', error);
   } finally {

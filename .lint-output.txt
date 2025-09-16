@@ -1,0 +1,183 @@
+
+/Users/yasinhossain/quran-app/app/(features)/bookmarks/__tests__/Bookmarks.test.tsx
+   8:7  warning  'mockTag' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  12:6  warning  'MockProps' is defined but never used         @typescript-eslint/no-unused-vars
+
+/Users/yasinhossain/quran-app/app/(features)/bookmarks/__tests__/LastReadPage.test.tsx
+  35:23  warning  'whileHover' is defined but never used  @typescript-eslint/no-unused-vars
+  35:35  warning  'whileTap' is defined but never used    @typescript-eslint/no-unused-vars
+  37:25  warning  'whileHover' is defined but never used  @typescript-eslint/no-unused-vars
+  37:37  warning  'whileTap' is defined but never used    @typescript-eslint/no-unused-vars
+  39:26  warning  'whileHover' is defined but never used  @typescript-eslint/no-unused-vars
+  39:38  warning  'whileTap' is defined but never used    @typescript-eslint/no-unused-vars
+
+/Users/yasinhossain/quran-app/app/(features)/page/__tests__/PagePage.test.tsx
+  37:23  warning  Missing return type on function  @typescript-eslint/explicit-function-return-type
+
+/Users/yasinhossain/quran-app/app/(features)/surah/__tests__/Verse.test.tsx
+  19:24  warning  Missing return type on function  @typescript-eslint/explicit-function-return-type
+
+/Users/yasinhossain/quran-app/app/(features)/surah/components/__tests__/SurahView/test-utils.tsx
+  73:3  error  Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable  @next/next/no-assign-module-variable
+
+/Users/yasinhossain/quran-app/app/(features)/surah/hooks/useTranslationOptions.ts
+  26:50  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:64  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:52  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/yasinhossain/quran-app/app/(features)/surah/hooks/useVerseListing.ts
+  23:8   warning  Function 'useVerseListing' has too many lines (68). Maximum allowed is 50  max-lines-per-function
+  23:8   warning  Function 'useVerseListing' has a complexity of 13. Maximum allowed is 10   complexity
+  52:5   error    'isLoading' is never reassigned. Use 'const' instead                       prefer-const
+  53:5   error    'isValidating' is never reassigned. Use 'const' instead                    prefer-const
+  54:5   error    'isReachingEnd' is never reassigned. Use 'const' instead                   prefer-const
+  68:31  error    Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+
+/Users/yasinhossain/quran-app/app/offline/page.tsx
+    8:16  warning  Function 'OfflinePage' has too many lines (119). Maximum allowed is 50      max-lines-per-function
+   34:25  error    Avoid using raw color utility "text-gray-900". Use design tokens instead    token-rules/no-raw-color-classes
+   34:84  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`             react/no-unescaped-entities
+   37:24  error    Avoid using raw color utility "text-gray-600". Use design tokens instead    token-rules/no-raw-color-classes
+   37:24  error    Avoid using raw color utility "text-gray-300". Use design tokens instead    token-rules/no-raw-color-classes
+   38:16  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`             react/no-unescaped-entities
+   43:26  error    Avoid using raw color utility "bg-gray-800". Use design tokens instead      token-rules/no-raw-color-classes
+   43:26  error    Avoid using raw color utility "border-gray-200". Use design tokens instead  token-rules/no-raw-color-classes
+   43:26  error    Avoid using raw color utility "border-gray-700". Use design tokens instead  token-rules/no-raw-color-classes
+   44:27  error    Avoid using raw color utility "text-gray-900". Use design tokens instead    token-rules/no-raw-color-classes
+   47:27  error    Avoid using raw color utility "text-gray-600". Use design tokens instead    token-rules/no-raw-color-classes
+   47:27  error    Avoid using raw color utility "text-gray-300". Use design tokens instead    token-rules/no-raw-color-classes
+  118:25  error    Avoid using raw color utility "bg-gray-100". Use design tokens instead      token-rules/no-raw-color-classes
+  118:25  error    Avoid using raw color utility "bg-gray-200". Use design tokens instead      token-rules/no-raw-color-classes
+  118:25  error    Avoid using raw color utility "bg-gray-700". Use design tokens instead      token-rules/no-raw-color-classes
+  118:25  error    Avoid using raw color utility "bg-gray-600". Use design tokens instead      token-rules/no-raw-color-classes
+  118:25  error    Avoid using raw color utility "text-gray-900". Use design tokens instead    token-rules/no-raw-color-classes
+  125:26  error    Avoid using raw color utility "text-gray-500". Use design tokens instead    token-rules/no-raw-color-classes
+  125:26  error    Avoid using raw color utility "text-gray-400". Use design tokens instead    token-rules/no-raw-color-classes
+  126:66  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`             react/no-unescaped-entities
+
+/Users/yasinhossain/quran-app/app/providers/SettingsContext.tsx
+  73:33  warning  Arrow function has too many lines (53). Maximum allowed is 50  max-lines-per-function
+
+/Users/yasinhossain/quran-app/app/providers/bookmarks/hooks/useBookmarkData.ts
+  17:8   warning  Function 'useBookmarkData' has too many lines (55). Maximum allowed is 50  max-lines-per-function
+  36:31  error    Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+  37:27  error    Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+  38:27  error    Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+  43:41  error    Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+
+/Users/yasinhossain/quran-app/app/providers/settingsReducer.ts
+  16:24  warning  Arrow function has a complexity of 13. Maximum allowed is 10  complexity
+
+/Users/yasinhossain/quran-app/app/shared/__tests__/ResponsiveVerseActions/ResponsiveVerseActions.interactions.test.tsx
+  9:49  warning  Arrow function has too many lines (64). Maximum allowed is 50  max-lines-per-function
+
+/Users/yasinhossain/quran-app/app/shared/components/error-boundary/ErrorBoundary.stories.tsx
+   28:22  error    Avoid using raw color utility "bg-gray-50". Use design tokens instead   token-rules/no-raw-color-classes
+   28:22  error    Avoid using raw color utility "bg-gray-900". Use design tokens instead  token-rules/no-raw-color-classes
+   39:76  warning  Missing return type on function                                         @typescript-eslint/explicit-function-return-type
+  175:1   warning  File has too many lines (202). Maximum allowed is 150                   max-lines
+  226:22  error    Avoid using raw color utility "bg-gray-900". Use design tokens instead  token-rules/no-raw-color-classes
+
+/Users/yasinhossain/quran-app/app/shared/components/error-boundary/FeatureErrorBoundary.tsx
+  17:1  warning  Function 'FeatureErrorFallback' has too many lines (53). Maximum allowed is 50  max-lines-per-function
+
+/Users/yasinhossain/quran-app/app/shared/components/modal/Modal.stories.tsx
+   28:22  error    Avoid using raw color utility "bg-gray-100". Use design tokens instead    token-rules/no-raw-color-classes
+   28:22  error    Avoid using raw color utility "bg-gray-900". Use design tokens instead    token-rules/no-raw-color-classes
+   43:23  error    Avoid using raw color utility "text-gray-900". Use design tokens instead  token-rules/no-raw-color-classes
+   44:22  error    Avoid using raw color utility "text-gray-600". Use design tokens instead  token-rules/no-raw-color-classes
+   44:22  error    Avoid using raw color utility "text-gray-300". Use design tokens instead  token-rules/no-raw-color-classes
+   91:25  error    Avoid using raw color utility "text-gray-900". Use design tokens instead  token-rules/no-raw-color-classes
+   93:22  error    Avoid using raw color utility "text-gray-600". Use design tokens instead  token-rules/no-raw-color-classes
+   93:22  error    Avoid using raw color utility "text-gray-300". Use design tokens instead  token-rules/no-raw-color-classes
+  126:23  error    Avoid using raw color utility "text-gray-900". Use design tokens instead  token-rules/no-raw-color-classes
+  129:24  error    Avoid using raw color utility "text-gray-600". Use design tokens instead  token-rules/no-raw-color-classes
+  129:24  error    Avoid using raw color utility "text-gray-300". Use design tokens instead  token-rules/no-raw-color-classes
+  166:1   warning  File has too many lines (196). Maximum allowed is 150                     max-lines
+  210:22  error    Avoid using raw color utility "bg-gray-900". Use design tokens instead    token-rules/no-raw-color-classes
+
+/Users/yasinhossain/quran-app/app/shared/components/responsive-image/ResponsiveImage.stories.tsx
+  106:20  error    Avoid using raw color utility "bg-gray-100". Use design tokens instead    token-rules/no-raw-color-classes
+  106:20  error    Avoid using raw color utility "bg-gray-800". Use design tokens instead    token-rules/no-raw-color-classes
+  151:22  error    Avoid using raw color utility "bg-gray-900". Use design tokens instead    token-rules/no-raw-color-classes
+  152:23  error    Avoid using raw color utility "text-gray-900". Use design tokens instead  token-rules/no-raw-color-classes
+  153:22  error    Avoid using raw color utility "text-gray-600". Use design tokens instead  token-rules/no-raw-color-classes
+  153:22  error    Avoid using raw color utility "text-gray-300". Use design tokens instead  token-rules/no-raw-color-classes
+  175:1   warning  File has too many lines (200). Maximum allowed is 150                     max-lines
+
+/Users/yasinhossain/quran-app/app/shared/player/hooks/useAudioPrefetch.ts
+   25:8  warning  Function 'useAudioPrefetch' has too many lines (165). Maximum allowed is 50  max-lines-per-function
+  154:1  warning  File has too many lines (181). Maximum allowed is 120                        max-lines
+
+/Users/yasinhossain/quran-app/app/shared/player/utils/audioSegmentPrefetch.ts
+    4:11  warning  'AudioSegment' is defined but never used                                         @typescript-eslint/no-unused-vars
+  106:3   warning  Async method 'prefetchAudioList' has too many lines (64). Maximum allowed is 50  max-lines-per-function
+  278:1   warning  File has too many lines (260). Maximum allowed is 200                            max-lines
+
+/Users/yasinhossain/quran-app/app/shared/player/utils/serviceWorkerAudioCache.ts
+  142:11  warning  Blocks are nested too deeply (4). Maximum allowed is 3  max-depth
+  154:18  warning  'error' is defined but never used                       @typescript-eslint/no-unused-vars
+  286:1   warning  File has too many lines (220). Maximum allowed is 200   max-lines
+
+/Users/yasinhossain/quran-app/app/shared/services/LoggingService.ts
+  87:3  warning  Method 'logApiCall' has too many parameters (5). Maximum allowed is 4  max-params
+
+/Users/yasinhossain/quran-app/app/testUtils/renderWithProviders.tsx
+  4:1  warning  There should be no empty line within import group                                                    import/order
+  4:1  warning  `@/lib/api/chapters` import should occur after import of `@/app/shared/player/context/AudioContext`  import/order
+
+/Users/yasinhossain/quran-app/lib/__tests__/mobile-performance/memory-network.test.ts
+  7:39  warning  Arrow function has too many lines (52). Maximum allowed is 50  max-lines-per-function
+
+/Users/yasinhossain/quran-app/tests/accessibility/core-pages.test.tsx
+   32:11  error    Do not use an `<a>` element to navigate to `/surah/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages                   @next/next/no-html-link-for-pages
+   35:11  error    Do not use an `<a>` element to navigate to `/juz/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages                     @next/next/no-html-link-for-pages
+   41:11  error    Do not use an `<a>` element to navigate to `/bookmarks/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages               @next/next/no-html-link-for-pages
+  116:11  error    Do not use an `<a>` element to navigate to `/bookmarks/pinned/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages        @next/next/no-html-link-for-pages
+  119:11  error    Do not use an `<a>` element to navigate to `/bookmarks/last-read/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages     @next/next/no-html-link-for-pages
+  122:11  error    Do not use an `<a>` element to navigate to `/bookmarks/memorization/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+  157:11  error    Do not use an `<a>` element to navigate to `/tafsir/1/1/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages              @next/next/no-html-link-for-pages
+  160:11  error    Do not use an `<a>` element to navigate to `/tafsir/2/1/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages              @next/next/no-html-link-for-pages
+  167:38  warning  Arrow function has too many lines (107). Maximum allowed is 50                                                                                                                max-lines-per-function
+  223:21  warning  Too many nested callbacks (4). Maximum allowed is 3                                                                                                                           max-nested-callbacks
+  232:21  warning  Too many nested callbacks (4). Maximum allowed is 3                                                                                                                           max-nested-callbacks
+  242:21  warning  Too many nested callbacks (4). Maximum allowed is 3                                                                                                                           max-nested-callbacks
+
+/Users/yasinhossain/quran-app/tests/e2e/global-setup.ts
+  10:3  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  18:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  29:9  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  31:9  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  51:7  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  53:7  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  56:5  warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+
+/Users/yasinhossain/quran-app/tests/e2e/offline-functionality.spec.ts
+    8:40  warning  Arrow function has too many lines (108). Maximum allowed is 50                     max-lines-per-function
+   65:7   warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+   68:7   warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  122:9   warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  173:7   warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  199:7   warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+
+/Users/yasinhossain/quran-app/tests/setup/msw/handlers.ts
+  119:11  warning  'resourceType' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  225:1   warning  File has too many lines (316). Maximum allowed is 200  max-lines
+
+/Users/yasinhossain/quran-app/tests/setup/msw/server.ts
+  10:31  warning  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  11:30  warning  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  12:33  warning  Missing return type on function  @typescript-eslint/explicit-function-return-type
+  15:76  warning  Missing return type on function  @typescript-eslint/explicit-function-return-type
+
+/Users/yasinhossain/quran-app/tests/setup/setupTests.ts
+  260:1  warning  File has too many lines (216). Maximum allowed is 200  max-lines
+
+/Users/yasinhossain/quran-app/tests/unit/infrastructure/monitoring/RemoteTransport.flushing.test.ts
+  9:38  warning  Arrow function has too many lines (58). Maximum allowed is 50  max-lines-per-function
+
+/Users/yasinhossain/quran-app/tools/scripts/eslint/enforce-architecture-boundaries.mjs
+  73:1  warning  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+✖ 120 problems (60 errors, 60 warnings)
+

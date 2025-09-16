@@ -1,12 +1,7 @@
 import { ILogger } from '@/src/domain/interfaces/ILogger';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
-interface AudioSegment {
-  url: string;
-  start: number;
-  end: number;
-  priority: 'high' | 'medium' | 'low';
-}
+// Removed unused AudioSegment type
 
 interface PrefetchResult {
   url: string;

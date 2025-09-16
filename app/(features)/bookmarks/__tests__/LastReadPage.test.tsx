@@ -32,12 +32,24 @@ jest.mock('@/app/(features)/layout/context/HeaderVisibilityContext', () => ({
 
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, whileHover, whileTap, ...props }: any) =>
-      React.createElement('div', props, children),
-    aside: ({ children, whileHover, whileTap, ...props }: any) =>
-      React.createElement('aside', props, children),
-    button: ({ children, whileHover, whileTap, ...props }: any) =>
-      React.createElement('button', props, children),
+    div: (args: any) => {
+      const { children, ...props } = args;
+      delete (props as any).whileHover;
+      delete (props as any).whileTap;
+      return React.createElement('div', props, children);
+    },
+    aside: (args: any) => {
+      const { children, ...props } = args;
+      delete (props as any).whileHover;
+      delete (props as any).whileTap;
+      return React.createElement('aside', props, children);
+    },
+    button: (args: any) => {
+      const { children, ...props } = args;
+      delete (props as any).whileHover;
+      delete (props as any).whileTap;
+      return React.createElement('button', props, children);
+    },
   },
   AnimatePresence: ({ children }: any) => <>{children}</>,
 }));
