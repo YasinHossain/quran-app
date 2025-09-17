@@ -6,10 +6,16 @@ import { renderWithProvidersAsync } from '@/app/testUtils/renderWithProviders';
 import { getJuzList, getSurahList } from '@/lib/api';
 
 import {
-  expectNoAccessibilityViolations,
+  createCorePageApiMocks,
+  expectAccessibleSearchForm,
+  expectBookmarkListStructure,
+  expectMainLandmark,
+  expectVisibleHeading,
+  runAccessibilityAudit,
   setupCorePageAccessibilitySuite,
   waitForNavigationElements,
-  waitForSelector,
+  waitForPageHeading,
+  type AsyncRender,
 } from './utils/corePages';
 
 import type { Juz, Surah } from '@/types';
@@ -27,10 +33,9 @@ jest.mock('next/link', () => ({
   ),
 }));
 
-const mockedGetSurahList = getSurahList as jest.MockedFunction<typeof getSurahList>;
-const mockedGetJuzList = getJuzList as jest.MockedFunction<typeof getJuzList>;
-
 expect.extend(toHaveNoViolations);
+
+setupCorePageAccessibilitySuite(createCorePageApiMocks({ getSurahList, getJuzList }));
 
 // Test components that simulate server component behavior
 const TestHomePage: React.FC = () => (
@@ -177,93 +182,87 @@ const TestTafsirIndexPage: React.FC = () => (
   </main>
 );
 
-describe('Home page accessibility', () => {
-  setupCorePageAccessibilitySuite({ mockedGetSurahList, mockedGetJuzList });
+const renderPageAndWaitForHeading = async (
+  component: React.ReactElement
+): ReturnType<AsyncRender> => {
+  const renderResult = await renderWithProvidersAsync(component);
+  await waitForPageHeading(renderResult.container);
+  return renderResult;
+};
 
+const renderHomePage: AsyncRender = () => renderWithProvidersAsync(<TestHomePage />);
+
+const renderSurahIndexPage: AsyncRender = () => renderPageAndWaitForHeading(<TestSurahIndexPage />);
+
+const renderJuzIndexPage: AsyncRender = () => renderPageAndWaitForHeading(<TestJuzIndexPage />);
+
+const renderBookmarksPage: AsyncRender = () => renderWithProvidersAsync(<TestBookmarksPage />);
+
+const renderSearchPage: AsyncRender = () => renderWithProvidersAsync(<TestSearchPage />);
+
+const renderTafsirIndexPage: AsyncRender = () => renderWithProvidersAsync(<TestTafsirIndexPage />);
+
+describe('Home page accessibility', () => {
   it('should not have accessibility violations', async () => {
-    const { container } = await renderWithProvidersAsync(<TestHomePage />);
-    await expectNoAccessibilityViolations(container);
+    await runAccessibilityAudit(renderHomePage);
   });
 
   it('should have proper heading structure', async () => {
-    await renderWithProvidersAsync(<TestHomePage />);
-    const heading = document.querySelector('h1');
-    expect(heading).toBeInTheDocument();
-    expect(heading).toBeVisible();
+    await renderHomePage();
+    expectVisibleHeading();
   });
 
   it('should have proper landmark roles', async () => {
-    await renderWithProvidersAsync(<TestHomePage />);
-    const main = document.querySelector('main');
-    expect(main).toBeInTheDocument();
+    await renderHomePage();
+    expectMainLandmark();
   });
 });
 
 describe('Surah index page accessibility', () => {
-  setupCorePageAccessibilitySuite({ mockedGetSurahList, mockedGetJuzList });
-
   it('should not have accessibility violations', async () => {
-    const { container } = await renderWithProvidersAsync(<TestSurahIndexPage />);
-    await waitForSelector(container, 'h1');
-    await expectNoAccessibilityViolations(container);
+    await runAccessibilityAudit(renderSurahIndexPage);
   });
 
   it('should have accessible navigation', async () => {
-    await renderWithProvidersAsync(<TestSurahIndexPage />);
+    await renderSurahIndexPage();
     await waitForNavigationElements();
   });
 });
 
 describe('Juz index page accessibility', () => {
-  setupCorePageAccessibilitySuite({ mockedGetSurahList, mockedGetJuzList });
-
   it('should not have accessibility violations', async () => {
-    const { container } = await renderWithProvidersAsync(<TestJuzIndexPage />);
-    await waitForSelector(container, 'h1');
-    await expectNoAccessibilityViolations(container);
+    await runAccessibilityAudit(renderJuzIndexPage);
   });
 });
 
 describe('Bookmarks page accessibility', () => {
-  setupCorePageAccessibilitySuite({ mockedGetSurahList, mockedGetJuzList });
-
   it('should not have accessibility violations', async () => {
-    const { container } = await renderWithProvidersAsync(<TestBookmarksPage />);
-    await expectNoAccessibilityViolations(container);
+    await runAccessibilityAudit(renderBookmarksPage);
   });
 
   it('should have proper list structure for bookmarks', async () => {
-    await renderWithProvidersAsync(<TestBookmarksPage />);
-    const lists = document.querySelectorAll('[role="list"], ul, ol');
-    expect(lists.length).toBeGreaterThan(0);
+    await renderBookmarksPage();
+    expectBookmarkListStructure();
   });
 });
 
 describe('Search page accessibility', () => {
-  setupCorePageAccessibilitySuite({ mockedGetSurahList, mockedGetJuzList });
-
   it('should not have accessibility violations', async () => {
-    const { container } = await renderWithProvidersAsync(<TestSearchPage />);
-    await expectNoAccessibilityViolations(container);
+    await runAccessibilityAudit(renderSearchPage);
   });
 
   it('should have accessible search form', async () => {
-    await renderWithProvidersAsync(<TestSearchPage />);
-    const searchInput = document.querySelector('input[type="search"]');
-    expect(searchInput).toHaveAttribute('aria-label');
-    expect(searchInput).toHaveAttribute('id');
-
-    const label = document.querySelector('label[for="search-input"]');
-    expect(label).toBeInTheDocument();
+    await renderSearchPage();
+    expectAccessibleSearchForm({
+      inputSelector: 'input[type="search"]',
+      labelFor: 'search-input',
+    });
   });
 });
 
 describe('Tafsir index page accessibility', () => {
-  setupCorePageAccessibilitySuite({ mockedGetSurahList, mockedGetJuzList });
-
   it('should not have accessibility violations', async () => {
-    const { container } = await renderWithProvidersAsync(<TestTafsirIndexPage />);
-    await expectNoAccessibilityViolations(container);
+    await runAccessibilityAudit(renderTafsirIndexPage);
   });
 });
 
