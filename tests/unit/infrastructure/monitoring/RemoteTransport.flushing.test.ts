@@ -14,34 +14,38 @@ const createEntry = (level: LogLevel = LogLevel.INFO): LogEntry => ({
   timestamp: new Date(),
 });
 
-const setupTransportMocks = () => {
+const createTransportTestContext = () => {
   let transport: RemoteTransport | undefined;
   let mockFetchWithTimeout: jest.MockedFunction<FetchWithTimeout> | undefined;
 
-  beforeEach(() => {
+  const setup = () => {
     mockFetchWithTimeout = jest.fn() as jest.MockedFunction<FetchWithTimeout>;
     transport = new RemoteTransport(
       'https://example.com',
       {},
       { fetchWithTimeout: mockFetchWithTimeout }
     );
-  });
+  };
 
-  afterEach(() => {
+  const teardown = () => {
     transport?.destroy();
+    transport = undefined;
+    mockFetchWithTimeout = undefined;
     jest.restoreAllMocks();
-  });
+  };
 
-  return () => {
+  const getContext = () => {
     if (!transport || !mockFetchWithTimeout) {
       throw new Error('Transport mocks not initialized');
     }
 
     return { transport, mockFetchWithTimeout };
   };
+
+  return { setup, teardown, getContext };
 };
 
-const expectSuccessfulFlush = (
+const expectFlushCalledWith = (
   mockFetchWithTimeout: jest.MockedFunction<FetchWithTimeout>,
   { includeHeaders = false, entries = 1 }: { includeHeaders?: boolean; entries?: number } = {}
 ) => {
@@ -81,10 +85,13 @@ const expectSuccessfulFlush = (
 };
 
 describe('RemoteTransport flushing', () => {
-  const getContext = setupTransportMocks();
+  const transportContext = createTransportTestContext();
+
+  beforeEach(transportContext.setup);
+  afterEach(transportContext.teardown);
 
   it('flushes buffered logs to endpoint', async () => {
-    const { transport, mockFetchWithTimeout } = getContext();
+    const { transport, mockFetchWithTimeout } = transportContext.getContext();
     mockFetchWithTimeout.mockResolvedValue({ ok: true, status: 200 } as Response);
 
     const entry = createEntry();
@@ -93,11 +100,11 @@ describe('RemoteTransport flushing', () => {
     // Explicitly flush to trigger the fetch call
     await transport.flush();
 
-    expectSuccessfulFlush(mockFetchWithTimeout, { includeHeaders: true, entries: 1 });
+    expectFlushCalledWith(mockFetchWithTimeout, { includeHeaders: true, entries: 1 });
   });
 
   it('flushes immediately on error level', async () => {
-    const { transport, mockFetchWithTimeout } = getContext();
+    const { transport, mockFetchWithTimeout } = transportContext.getContext();
     mockFetchWithTimeout.mockResolvedValue({ ok: true, status: 200 } as Response);
 
     // Log an error entry which should trigger immediate flush
@@ -106,6 +113,6 @@ describe('RemoteTransport flushing', () => {
     // Wait a tick for the async flush to complete
     await new Promise((resolve) => process.nextTick(resolve));
 
-    expectSuccessfulFlush(mockFetchWithTimeout, { entries: 1 });
+    expectFlushCalledWith(mockFetchWithTimeout, { entries: 1 });
   });
 });
