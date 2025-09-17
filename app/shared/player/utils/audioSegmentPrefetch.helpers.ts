@@ -1,52 +1,68 @@
-import { ILogger } from '@/src/domain/interfaces/ILogger';
+export type AudioPrefetchPriority = 'high' | 'medium' | 'low';
 
-export function getPriorityDistribution(
-  items: Array<{ priority?: 'high' | 'medium' | 'low' }>
-): Record<string, number> {
-  return items.reduce(
-    (acc, item) => {
-      const priority = item.priority || 'medium';
-      acc[priority] = (acc[priority] || 0) + 1;
-      return acc;
-    },
-    {} as Record<string, number>
-  );
+export interface AudioPrefetchItem {
+  url: string;
+  priority?: AudioPrefetchPriority;
 }
 
-export async function prefetchAudioListHelper(
-  items: Array<{ url: string; priority?: 'high' | 'medium' | 'low' }>,
-  prefetchAudioStart: (
-    url: string,
-    opts: { priority?: 'high' | 'medium' | 'low' }
-  ) => Promise<boolean>,
-  logger: ILogger,
-  options: { maxConcurrent?: number; delayBetween?: number } = {}
-) {
+export interface AudioPrefetchResult {
+  url: string;
+  success: boolean;
+  size: number;
+  duration: number;
+}
+
+export interface RunAudioBatchPrefetchOptions {
+  maxConcurrent?: number;
+  delayBetween?: number;
+}
+
+export function getPriorityDistribution(items: AudioPrefetchItem[]): Record<string, number> {
+  return items.reduce<Record<string, number>>((acc, item) => {
+    const priority = item.priority || 'medium';
+    acc[priority] = (acc[priority] || 0) + 1;
+    return acc;
+  }, {});
+}
+
+export async function runAudioBatchPrefetch(
+  items: AudioPrefetchItem[],
+  prefetchAudioStart: (url: string, opts: { priority?: AudioPrefetchPriority }) => Promise<boolean>,
+  options: RunAudioBatchPrefetchOptions = {}
+): Promise<AudioPrefetchResult[]> {
   const { maxConcurrent = 3, delayBetween = 100 } = options;
-  const priorityOrder = { high: 0, medium: 1, low: 2 } as const;
-  const sortedItems = items.sort(
+  const safeMaxConcurrent = Math.max(1, Math.floor(maxConcurrent));
+  const safeDelayBetween = Math.max(0, delayBetween);
+
+  const priorityOrder: Record<AudioPrefetchPriority, number> = { high: 0, medium: 1, low: 2 };
+  const sortedItems = [...items].sort(
     (a, b) => priorityOrder[a.priority || 'medium'] - priorityOrder[b.priority || 'medium']
   );
 
-  logger.info('Starting batch audio prefetch', {
-    total: sortedItems.length,
-    maxConcurrent,
-  });
+  const results: AudioPrefetchResult[] = [];
 
-  const results: Array<{ url: string; success: boolean; size: number; duration: number }> = [];
+  for (let i = 0; i < sortedItems.length; i += safeMaxConcurrent) {
+    const batch = sortedItems.slice(i, i + safeMaxConcurrent);
+    const batchResults = await Promise.all(
+      batch.map(async (item) => {
+        const startTime = performance.now();
+        const success = await prefetchAudioStart(item.url, { priority: item.priority });
+        const duration = performance.now() - startTime;
 
-  for (let i = 0; i < sortedItems.length; i += maxConcurrent) {
-    const batch = sortedItems.slice(i, i + maxConcurrent);
-    const batchPromises = batch.map(async (item) => {
-      const startTime = performance.now();
-      const success = await prefetchAudioStart(item.url, { priority: item.priority });
-      const duration = performance.now() - startTime;
-      return { url: item.url, success, size: 0, duration };
-    });
-    const batchResults = await Promise.all(batchPromises);
+        return {
+          url: item.url,
+          success,
+          size: 0,
+          duration,
+        } satisfies AudioPrefetchResult;
+      })
+    );
+
     results.push(...batchResults);
-    if (delayBetween > 0 && i + maxConcurrent < sortedItems.length) {
-      await new Promise((r) => setTimeout(r, delayBetween));
+
+    const hasMoreItems = i + safeMaxConcurrent < sortedItems.length;
+    if (hasMoreItems && safeDelayBetween > 0) {
+      await new Promise((resolve) => setTimeout(resolve, safeDelayBetween));
     }
   }
 
