@@ -28,3 +28,5 @@ export const layout = {
     progressFill: 'h-full bg-gradient-to-r from-accent to-accent/80 rounded-full',
   },
 } as const;
+
+export default layout;
