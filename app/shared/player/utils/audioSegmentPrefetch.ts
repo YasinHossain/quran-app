@@ -2,14 +2,12 @@ import { ILogger } from '@/src/domain/interfaces/ILogger';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import { AudioSegmentCache } from './audioSegmentCache';
-import { getPriorityDistribution, runAudioBatchPrefetch } from './audioSegmentPrefetch.helpers';
-
-interface PrefetchResult {
-  url: string;
-  success: boolean;
-  size: number;
-  duration: number;
-}
+import {
+  type AudioPrefetchItem,
+  type AudioPrefetchResult,
+  type RunAudioBatchPrefetchOptions,
+  prefetchAudioBatch,
+} from './audioSegmentPrefetch.helpers';
 
 export class AudioSegmentPrefetch {
   private readonly logger: ILogger;
@@ -88,26 +86,24 @@ export class AudioSegmentPrefetch {
    * Prefetch multiple audio segments with priority handling
    */
   async prefetchAudioList(
-    audioItems: Array<{
-      url: string;
-      priority?: 'high' | 'medium' | 'low';
-    }>,
-    options: {
-      maxConcurrent?: number;
-      delayBetween?: number;
-    } = {}
-  ): Promise<PrefetchResult[]> {
-    const { maxConcurrent = 3, delayBetween = 100 } = options;
-    this.logger.info('Starting batch audio prefetch', {
-      total: audioItems.length,
-      maxConcurrent,
-      delayBetween,
-      priorityDistribution: getPriorityDistribution(audioItems),
-    });
+    audioItems: AudioPrefetchItem[],
+    options: RunAudioBatchPrefetchOptions = {}
+  ): Promise<AudioPrefetchResult[]> {
+    if (!Array.isArray(audioItems)) {
+      throw new TypeError('audioItems must be an array of audio segment descriptors.');
+    }
 
-    return runAudioBatchPrefetch(audioItems, (url, opts) => this.prefetchAudioStart(url, opts), {
-      maxConcurrent,
-      delayBetween,
+    for (const item of audioItems) {
+      if (!item || typeof item.url !== 'string' || item.url.length === 0) {
+        throw new TypeError('Each audio prefetch item must include a non-empty url string.');
+      }
+    }
+
+    return prefetchAudioBatch({
+      items: audioItems,
+      options,
+      logger: this.logger,
+      prefetchAudioStart: (url, opts) => this.prefetchAudioStart(url, opts),
     });
   }
 
