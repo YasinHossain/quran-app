@@ -3,6 +3,8 @@ import {
   attemptOfflineNavigation,
   cacheInitialContent,
   expectAppShellStructure,
+  restoreOnline,
+  visitWhileOffline,
 } from './utils/offline';
 
 /**
@@ -10,14 +12,13 @@ import {
  * Tests core PWA offline features and fallback behavior
  */
 
-test.describe('offline page fallback', () => {
+test.describe('offline fallback page', () => {
   test.beforeEach(async ({ page }) => {
     await cacheInitialContent(page);
   });
 
   test('shows offline page when network is unavailable', async ({ page, context }) => {
-    await context.setOffline(true);
-    await page.goto('/surah/2');
+    await visitWhileOffline(page, context, '/surah/2', { waitForMs: 1000 });
 
     await expect(page).toHaveTitle(/Offline/);
     await expect(page.locator('h1')).toContainText("You're Offline");
@@ -31,15 +32,13 @@ test.describe('offline page fallback', () => {
   });
 });
 
-test.describe('cached page behavior', () => {
+test.describe('cached navigation', () => {
   test.beforeEach(async ({ page }) => {
     await cacheInitialContent(page);
   });
 
   test('loads cached pages when offline', async ({ page, context }) => {
-    await context.setOffline(true);
-    await page.goto('/surah/1');
-    await page.waitForTimeout(2000);
+    await visitWhileOffline(page, context, '/surah/1', { waitForMs: 2000 });
 
     const offlinePageCount = await page.locator('h1:has-text("You\'re Offline")').count();
 
@@ -53,18 +52,8 @@ test.describe('cached page behavior', () => {
   });
 
   test('restores functionality when back online', async ({ page, context }) => {
-    await context.setOffline(true);
-    await page.goto('/surah/3');
-    await page.waitForTimeout(1000);
-
-    await context.setOffline(false);
-
-    const tryAgainButton = page.locator('button:has-text("Try Again")');
-    if ((await tryAgainButton.count()) > 0) {
-      await tryAgainButton.click();
-    }
-
-    await page.waitForLoadState('networkidle');
+    await visitWhileOffline(page, context, '/surah/3', { waitForMs: 1000 });
+    await restoreOnline(page, context);
     await expect(page.locator('h1:has-text("You\'re Offline")')).toHaveCount(0);
   });
 
@@ -94,9 +83,10 @@ test.describe('cached page behavior', () => {
 
 test.describe('offline app shell', () => {
   test('maintains app shell structure offline', async ({ page, context }) => {
-    await context.setOffline(true);
-    await page.goto('/nonexistent-page');
-    await page.waitForLoadState('networkidle');
+    await visitWhileOffline(page, context, '/nonexistent-page', {
+      waitForNetworkIdle: true,
+      waitForMs: 500,
+    });
 
     await expectAppShellStructure(page);
   });

@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils/cn';
 
-import { buildLayoutClasses } from './base-card/layout';
+import { buildLayoutClasses } from './base-card/layoutClasses';
 import { buildVariantClasses } from './base-card/variant';
 import { CARD_VARIANTS, ANIMATION_CONFIGS } from './base-card.config';
 

@@ -4,7 +4,7 @@
 import { animations } from './animations';
 import { borderRadius } from './borders';
 import { colors } from './colors';
-import { layout } from './layout';
+import { layout } from './layoutTokens';
 import { shadows } from './shadows';
 import { spacing } from './spacing';
 import { states } from './states';

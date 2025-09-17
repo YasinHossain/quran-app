@@ -16,6 +16,85 @@ export async function cacheInitialContent(page: Page) {
   await page.waitForLoadState('networkidle');
 }
 
+export type OfflineVisitOptions = {
+  waitForNetworkIdle?: boolean;
+  waitForMs?: number;
+};
+
+const OFFLINE_ERROR_PATTERNS = ['ERR_INTERNET_DISCONNECTED', 'ERR_FAILED', 'NS_ERROR_OFFLINE'];
+
+function isExpectedOfflineNavigationError(error: unknown) {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+
+  return OFFLINE_ERROR_PATTERNS.some((pattern) => error.message.includes(pattern));
+}
+
+export async function visitWhileOffline(
+  page: Page,
+  context: BrowserContext,
+  path: string,
+  { waitForNetworkIdle = false, waitForMs }: OfflineVisitOptions = {}
+) {
+  await context.setOffline(true);
+
+  let navigationFailedOffline = false;
+
+  try {
+    await page.goto(path);
+  } catch (error) {
+    navigationFailedOffline = isExpectedOfflineNavigationError(error);
+
+    if (!navigationFailedOffline) {
+      throw error;
+    }
+  }
+
+  if (waitForNetworkIdle) {
+    try {
+      await page.waitForLoadState('networkidle', { timeout: 1000 });
+    } catch (error) {
+      if (!navigationFailedOffline && !isExpectedOfflineNavigationError(error)) {
+        throw error;
+      }
+    }
+  }
+
+  if (typeof waitForMs === 'number') {
+    await page.waitForTimeout(waitForMs);
+  } else if (navigationFailedOffline) {
+    await page.waitForTimeout(1000);
+  }
+}
+
+export type RestoreOnlineOptions = {
+  tryAgainSelector?: string;
+  waitForLoadState?: Parameters<Page['waitForLoadState']>[0] | null;
+};
+
+export async function restoreOnline(
+  page: Page,
+  context: BrowserContext,
+  {
+    tryAgainSelector = 'button:has-text("Try Again")',
+    waitForLoadState = 'networkidle',
+  }: RestoreOnlineOptions = {}
+) {
+  await context.setOffline(false);
+
+  if (tryAgainSelector) {
+    const tryAgainButton = page.locator(tryAgainSelector);
+    if ((await tryAgainButton.count()) > 0) {
+      await tryAgainButton.click();
+    }
+  }
+
+  if (waitForLoadState) {
+    await page.waitForLoadState(waitForLoadState);
+  }
+}
+
 export type OfflineNavigationResult = {
   linkCount: number;
   destinationTitle: string | null;
