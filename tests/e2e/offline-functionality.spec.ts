@@ -1,164 +1,130 @@
 import { test, expect } from '@playwright/test';
+import {
+  attemptOfflineNavigation,
+  cacheInitialContent,
+  expectAppShellStructure,
+} from './utils/offline';
 
 /**
  * E2E smoke tests for offline functionality
  * Tests core PWA offline features and fallback behavior
  */
 
-test.describe('Offline Functionality', () => {
+test.describe('offline page fallback', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to the app
-    await page.goto('/');
-
-    // Wait for initial load
-    await page.waitForLoadState('networkidle');
-
-    // Visit a few pages to populate cache
-    await page.goto('/surah/1');
-    await page.waitForLoadState('networkidle');
-
-    await page.goto('/juz/1');
-    await page.waitForLoadState('networkidle');
-
-    // Return to home
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await cacheInitialContent(page);
   });
 
-  test('should display offline page when network is unavailable', async ({ page, context }) => {
-    // Simulate offline state
+  test('shows offline page when network is unavailable', async ({ page, context }) => {
     await context.setOffline(true);
-
-    // Try to navigate to a new page
     await page.goto('/surah/2');
 
-    // Should show offline page
     await expect(page).toHaveTitle(/Offline/);
     await expect(page.locator('h1')).toContainText("You're Offline");
 
-    // Check offline page content
     await expect(page.locator('text=Previously viewed suras and verses')).toBeVisible();
     await expect(page.locator('text=Cached audio recitations')).toBeVisible();
     await expect(page.locator('text=Your bookmarks and reading progress')).toBeVisible();
 
-    // Check action buttons
     await expect(page.locator('button:has-text("Try Again")')).toBeVisible();
     await expect(page.locator('button:has-text("Go Back")')).toBeVisible();
   });
+});
 
-  test('should load cached pages when offline', async ({ page, context }) => {
-    // Go offline
+test.describe('cached page behavior', () => {
+  test.beforeEach(async ({ page }) => {
+    await cacheInitialContent(page);
+  });
+
+  test('loads cached pages when offline', async ({ page, context }) => {
     await context.setOffline(true);
-
-    // Try to navigate to previously visited page
     await page.goto('/surah/1');
+    await page.waitForTimeout(2000);
 
-    // If cached properly, should not show offline page
-    // Instead should show the actual surah page or at least attempt to load it
-    await page.waitForTimeout(2000); // Give time for cache to respond
+    const offlinePageCount = await page.locator('h1:has-text("You\'re Offline")').count();
 
-    // Check if we're not on the offline page
-    const isOfflinePage = await page.locator('h1:has-text("You\'re Offline")').count();
-
-    if (isOfflinePage === 0) {
-      // Successfully loaded from cache
+    if (offlinePageCount === 0) {
       console.warn('Page loaded from cache successfully');
     } else {
-      // Fallback to offline page (still valid behavior)
       console.warn('Showed offline page as fallback');
     }
 
-    // This test passes either way since both are valid offline behaviors
     expect(true).toBe(true);
   });
 
-  test('should restore functionality when back online', async ({ page, context }) => {
-    // Go offline first
+  test('restores functionality when back online', async ({ page, context }) => {
     await context.setOffline(true);
-
-    // Try to navigate to trigger offline state
     await page.goto('/surah/3');
     await page.waitForTimeout(1000);
 
-    // Go back online
     await context.setOffline(false);
 
-    // Click try again button if on offline page
     const tryAgainButton = page.locator('button:has-text("Try Again")');
     if ((await tryAgainButton.count()) > 0) {
       await tryAgainButton.click();
     }
 
-    // Wait for page to load
     await page.waitForLoadState('networkidle');
-
-    // Should not be on offline page anymore
     await expect(page.locator('h1:has-text("You\'re Offline")')).toHaveCount(0);
   });
 
-  test('should handle audio playback offline for cached content', async ({ page, context }) => {
-    // First, visit audio player page online to cache content
+  test('handles audio playback offline for cached content', async ({ page, context }) => {
     await page.goto('/surah/1');
     await page.waitForLoadState('networkidle');
 
-    // Look for audio player elements
     const audioPlayer = page.locator('[data-testid="audio-player"], .audio-player, audio');
 
     if ((await audioPlayer.count()) > 0) {
-      // If audio player exists, test offline behavior
       await context.setOffline(true);
 
-      // Try to use audio controls
       const playButton = page.locator(
         '[data-testid="play-button"], button:has-text("Play"), [aria-label*="Play"]'
       );
 
       if ((await playButton.count()) > 0) {
         await playButton.click();
-
-        // Audio should either play from cache or show appropriate offline message
-        // Both behaviors are acceptable
         await page.waitForTimeout(1000);
         console.warn('Audio offline behavior tested');
       }
     }
 
-    // Test passes regardless of audio availability
     expect(true).toBe(true);
   });
+});
 
-  test('should maintain app shell structure offline', async ({ page, context }) => {
-    // Go offline
+test.describe('offline app shell', () => {
+  test('maintains app shell structure offline', async ({ page, context }) => {
     await context.setOffline(true);
-
-    // Navigate to offline page
     await page.goto('/nonexistent-page');
     await page.waitForLoadState('networkidle');
 
-    // Check that basic app structure is maintained
-    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    await expectAppShellStructure(page);
+  });
+});
 
-    // Check for responsive viewport
-    const viewport = await page.viewportSize();
-    expect(viewport).toBeTruthy();
-
-    // Check for basic CSS loading (background color should be applied)
-    const bodyStyle = await page.locator('body').evaluate((el) => {
-      return window.getComputedStyle(el).backgroundColor;
-    });
-
-    // Should not be default browser background (indicates CSS loaded)
-    expect(bodyStyle).not.toBe('rgba(0, 0, 0, 0)');
+test.describe('offline navigation experience', () => {
+  test.beforeEach(async ({ page }) => {
+    await cacheInitialContent(page);
   });
 
-  test('should handle service worker registration', async ({ page }) => {
-    // Check if service worker is supported and registered
+  test('handles navigation offline', async ({ page, context }) => {
+    const { linkCount, destinationTitle } = await attemptOfflineNavigation(page, context);
+
+    if (linkCount > 0) {
+      console.warn('Navigation offline test - Current page title:', destinationTitle);
+    }
+
+    expect(true).toBe(true);
+  });
+});
+
+test.describe('service worker', () => {
+  test('handles service worker registration', async ({ page }) => {
     const swSupported = await page.evaluate(() => {
       return 'serviceWorker' in navigator;
     });
 
     if (swSupported) {
-      // Wait a bit for service worker to register
       await page.waitForTimeout(2000);
 
       const swRegistered = await page.evaluate(async () => {
@@ -173,33 +139,6 @@ test.describe('Offline Functionality', () => {
       console.warn('Service Worker registered:', swRegistered);
     }
 
-    // Test passes regardless of service worker support
-    expect(true).toBe(true);
-  });
-
-  test('should handle navigation offline', async ({ page, context }) => {
-    // Ensure we're on a page that has navigation
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
-
-    // Go offline
-    await context.setOffline(true);
-
-    // Try to use navigation if available
-    const navLinks = page.locator('nav a, [role="navigation"] a');
-    const linkCount = await navLinks.count();
-
-    if (linkCount > 0) {
-      // Click the first navigation link
-      await navLinks.first().click();
-      await page.waitForTimeout(1000);
-
-      // Should either navigate successfully (if cached) or show offline page
-      const currentTitle = await page.title();
-      console.warn('Navigation offline test - Current page title:', currentTitle);
-    }
-
-    // Test passes regardless of navigation availability
     expect(true).toBe(true);
   });
 });
