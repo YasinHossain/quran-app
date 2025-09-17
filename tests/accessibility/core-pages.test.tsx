@@ -1,12 +1,18 @@
-import { waitFor } from '@testing-library/react';
-import { axe, toHaveNoViolations } from 'jest-axe';
+import { toHaveNoViolations } from 'jest-axe';
 import Link from 'next/link';
 import React from 'react';
 
-import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProvidersAsync } from '@/app/testUtils/renderWithProviders';
-import { getSurahList, getJuzList } from '@/lib/api';
-import { Surah, Juz } from '@/types';
+import { getJuzList, getSurahList } from '@/lib/api';
+
+import {
+  expectNoAccessibilityViolations,
+  setupCorePageAccessibilitySuite,
+  waitForNavigationElements,
+  waitForSelector,
+} from './utils/corePages';
+
+import type { Juz, Surah } from '@/types';
 
 // Mock the API calls
 jest.mock('@/lib/api', () => ({
@@ -25,20 +31,6 @@ const mockedGetSurahList = getSurahList as jest.MockedFunction<typeof getSurahLi
 const mockedGetJuzList = getJuzList as jest.MockedFunction<typeof getJuzList>;
 
 expect.extend(toHaveNoViolations);
-
-type QueryRoot = Document | Element;
-
-const waitForSelector = async (root: QueryRoot, selector: string): Promise<void> => {
-  await waitFor(() => {
-    expect(root.querySelector(selector)).toBeInTheDocument();
-  });
-};
-
-const waitForNavigationElements = async (): Promise<void> => {
-  await waitFor(() => {
-    expect(document.querySelectorAll('[role="navigation"], nav').length).toBeGreaterThan(0);
-  });
-};
 
 // Test components that simulate server component behavior
 const TestHomePage: React.FC = () => (
@@ -81,10 +73,13 @@ const TestSurahIndexPage: React.FC = () => {
       <h1 className="text-xl font-bold mb-4">Surahs</h1>
       <nav aria-label="Surah list">
         <ul className="space-y-2">
-          {surahs.map((s: Surah) => (
-            <li key={s.number}>
-              <Link href={`/surah/${s.number}`} aria-label={`Read ${s.name} (${s.meaning})`}>
-                {s.name} - {s.meaning}
+          {surahs.map((surah: Surah) => (
+            <li key={surah.number}>
+              <Link
+                href={`/surah/${surah.number}`}
+                aria-label={`Read ${surah.name} (${surah.meaning})`}
+              >
+                {surah.name} - {surah.meaning}
               </Link>
             </li>
           ))}
@@ -113,9 +108,9 @@ const TestJuzIndexPage: React.FC = () => {
       <nav aria-label="Juz list">
         <ul className="space-y-2">
           {juzList.map((juz: Juz) => (
-            <li key={juz.number}>
-              <Link href={`/juz/${juz.number}`} aria-label={`Read Juz ${juz.number}`}>
-                Juz {juz.number}
+            <li key={juz.id}>
+              <Link href={`/juz/${juz.juz_number}`} aria-label={`Read Juz ${juz.juz_number}`}>
+                Juz {juz.juz_number}
               </Link>
             </li>
           ))}
@@ -182,120 +177,93 @@ const TestTafsirIndexPage: React.FC = () => (
   </main>
 );
 
-describe('Core Pages Accessibility', () => {
-  beforeAll(() => {
-    setMatchMedia(false);
+describe('Home page accessibility', () => {
+  setupCorePageAccessibilitySuite({ mockedGetSurahList, mockedGetJuzList });
+
+  it('should not have accessibility violations', async () => {
+    const { container } = await renderWithProvidersAsync(<TestHomePage />);
+    await expectNoAccessibilityViolations(container);
   });
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-
-    // Mock API responses
-    mockedGetSurahList.mockResolvedValue([
-      {
-        number: 1,
-        name: 'Al-Fatihah',
-        arabicName: 'الفاتحة',
-        verses: 7,
-        meaning: 'The Opening',
-      },
-      {
-        number: 2,
-        name: 'Al-Baqarah',
-        arabicName: 'البقرة',
-        verses: 286,
-        meaning: 'The Cow',
-      },
-    ]);
-
-    mockedGetJuzList.mockResolvedValue([
-      { number: 1, surahs: ['Al-Fatihah', 'Al-Baqarah'] },
-      { number: 2, surahs: ['Al-Baqarah'] },
-    ] as Juz[]);
+  it('should have proper heading structure', async () => {
+    await renderWithProvidersAsync(<TestHomePage />);
+    const heading = document.querySelector('h1');
+    expect(heading).toBeInTheDocument();
+    expect(heading).toBeVisible();
   });
 
-  describe('Home Page', () => {
-    it('should not have accessibility violations', async () => {
-      const { container } = await renderWithProvidersAsync(<TestHomePage />);
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
+  it('should have proper landmark roles', async () => {
+    await renderWithProvidersAsync(<TestHomePage />);
+    const main = document.querySelector('main');
+    expect(main).toBeInTheDocument();
+  });
+});
 
-    it('should have proper heading structure', async () => {
-      await renderWithProvidersAsync(<TestHomePage />);
-      const h1 = document.querySelector('h1');
-      expect(h1).toBeInTheDocument();
-      expect(h1).toBeVisible();
-    });
+describe('Surah index page accessibility', () => {
+  setupCorePageAccessibilitySuite({ mockedGetSurahList, mockedGetJuzList });
 
-    it('should have proper landmark roles', async () => {
-      await renderWithProvidersAsync(<TestHomePage />);
-      const main = document.querySelector('main');
-      expect(main).toBeInTheDocument();
-    });
+  it('should not have accessibility violations', async () => {
+    const { container } = await renderWithProvidersAsync(<TestSurahIndexPage />);
+    await waitForSelector(container, 'h1');
+    await expectNoAccessibilityViolations(container);
   });
 
-  describe('Surah Index Page', () => {
-    it('should not have accessibility violations', async () => {
-      const { container } = await renderWithProvidersAsync(<TestSurahIndexPage />);
-      await waitForSelector(container, 'h1');
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
+  it('should have accessible navigation', async () => {
+    await renderWithProvidersAsync(<TestSurahIndexPage />);
+    await waitForNavigationElements();
+  });
+});
 
-    it('should have accessible navigation', async () => {
-      await renderWithProvidersAsync(<TestSurahIndexPage />);
-      await waitForNavigationElements();
-    });
+describe('Juz index page accessibility', () => {
+  setupCorePageAccessibilitySuite({ mockedGetSurahList, mockedGetJuzList });
+
+  it('should not have accessibility violations', async () => {
+    const { container } = await renderWithProvidersAsync(<TestJuzIndexPage />);
+    await waitForSelector(container, 'h1');
+    await expectNoAccessibilityViolations(container);
+  });
+});
+
+describe('Bookmarks page accessibility', () => {
+  setupCorePageAccessibilitySuite({ mockedGetSurahList, mockedGetJuzList });
+
+  it('should not have accessibility violations', async () => {
+    const { container } = await renderWithProvidersAsync(<TestBookmarksPage />);
+    await expectNoAccessibilityViolations(container);
   });
 
-  describe('Juz Index Page', () => {
-    it('should not have accessibility violations', async () => {
-      const { container } = await renderWithProvidersAsync(<TestJuzIndexPage />);
-      await waitForSelector(container, 'h1');
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
+  it('should have proper list structure for bookmarks', async () => {
+    await renderWithProvidersAsync(<TestBookmarksPage />);
+    const lists = document.querySelectorAll('[role="list"], ul, ol');
+    expect(lists.length).toBeGreaterThan(0);
+  });
+});
+
+describe('Search page accessibility', () => {
+  setupCorePageAccessibilitySuite({ mockedGetSurahList, mockedGetJuzList });
+
+  it('should not have accessibility violations', async () => {
+    const { container } = await renderWithProvidersAsync(<TestSearchPage />);
+    await expectNoAccessibilityViolations(container);
   });
 
-  describe('Bookmarks Page', () => {
-    it('should not have accessibility violations', async () => {
-      const { container } = await renderWithProvidersAsync(<TestBookmarksPage />);
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
+  it('should have accessible search form', async () => {
+    await renderWithProvidersAsync(<TestSearchPage />);
+    const searchInput = document.querySelector('input[type="search"]');
+    expect(searchInput).toHaveAttribute('aria-label');
+    expect(searchInput).toHaveAttribute('id');
 
-    it('should have proper list structure for bookmarks', async () => {
-      await renderWithProvidersAsync(<TestBookmarksPage />);
-      const lists = document.querySelectorAll('[role="list"], ul, ol');
-      expect(lists.length).toBeGreaterThan(0);
-    });
+    const label = document.querySelector('label[for="search-input"]');
+    expect(label).toBeInTheDocument();
   });
+});
 
-  describe('Search Page', () => {
-    it('should not have accessibility violations', async () => {
-      const { container } = await renderWithProvidersAsync(<TestSearchPage />);
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
+describe('Tafsir index page accessibility', () => {
+  setupCorePageAccessibilitySuite({ mockedGetSurahList, mockedGetJuzList });
 
-    it('should have accessible search form', async () => {
-      await renderWithProvidersAsync(<TestSearchPage />);
-      const searchInput = document.querySelector('input[type="search"]');
-      expect(searchInput).toHaveAttribute('aria-label');
-      expect(searchInput).toHaveAttribute('id');
-
-      const label = document.querySelector('label[for="search-input"]');
-      expect(label).toBeInTheDocument();
-    });
-  });
-
-  describe('Tafsir Index Page', () => {
-    it('should not have accessibility violations', async () => {
-      const { container } = await renderWithProvidersAsync(<TestTafsirIndexPage />);
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
+  it('should not have accessibility violations', async () => {
+    const { container } = await renderWithProvidersAsync(<TestTafsirIndexPage />);
+    await expectNoAccessibilityViolations(container);
   });
 });
 
