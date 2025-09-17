@@ -5,10 +5,16 @@ import { setMatchMedia } from '@/app/testUtils/matchMedia';
 
 import type { getJuzList, getSurahList } from '@/lib/api';
 import type { Juz, Surah } from '@/types';
+import type { RenderResult } from '@testing-library/react';
 
-type CorePageApiMocks = {
+export type CorePageApiMocks = {
   mockedGetSurahList: jest.MockedFunction<typeof getSurahList>;
   mockedGetJuzList: jest.MockedFunction<typeof getJuzList>;
+};
+
+type CorePageApis = {
+  getSurahList: typeof getSurahList;
+  getJuzList: typeof getJuzList;
 };
 
 type QueryRoot = Document | Element;
@@ -62,6 +68,14 @@ const createJuzFixture = (): Juz[] =>
     verse_mapping: { ...juz.verse_mapping },
   }));
 
+export const createCorePageApiMocks = ({
+  getSurahList,
+  getJuzList,
+}: CorePageApis): CorePageApiMocks => ({
+  mockedGetSurahList: getSurahList as jest.MockedFunction<typeof getSurahList>,
+  mockedGetJuzList: getJuzList as jest.MockedFunction<typeof getJuzList>,
+});
+
 export const setupCorePageAccessibilitySuite = ({
   mockedGetSurahList,
   mockedGetJuzList,
@@ -83,14 +97,60 @@ export const expectNoAccessibilityViolations = async (container: HTMLElement): P
   expect(results).toHaveNoViolations();
 };
 
+export type AsyncRender = () => Promise<RenderResult>;
+
+export const runAccessibilityAudit = async (renderPage: AsyncRender): Promise<void> => {
+  const { container } = await renderPage();
+  await expectNoAccessibilityViolations(container);
+};
+
 export const waitForSelector = async (root: QueryRoot, selector: string): Promise<void> => {
   await waitFor(() => {
     expect(root.querySelector(selector)).toBeInTheDocument();
   });
 };
 
+export const waitForPageHeading = async (root: QueryRoot, selector = 'h1'): Promise<void> => {
+  await waitForSelector(root, selector);
+};
+
+export const expectVisibleHeading = (selector = 'h1'): void => {
+  const heading = document.querySelector(selector);
+  expect(heading).toBeInTheDocument();
+  expect(heading).toBeVisible();
+};
+
+export const expectMainLandmark = (): void => {
+  const main = document.querySelector('main');
+  expect(main).toBeInTheDocument();
+};
+
+export const expectBookmarkListStructure = (): void => {
+  const lists = document.querySelectorAll('[role="list"], ul, ol');
+  expect(lists.length).toBeGreaterThan(0);
+};
+
+export const expectAccessibleSearchForm = ({
+  inputSelector,
+  labelFor,
+}: {
+  inputSelector: string;
+  labelFor: string;
+}): void => {
+  const searchInput = document.querySelector<HTMLInputElement>(inputSelector);
+  expect(searchInput).toHaveAttribute('aria-label');
+  expect(searchInput).toHaveAttribute('id');
+
+  const label = document.querySelector(`label[for="${labelFor}"]`);
+  expect(label).toBeInTheDocument();
+};
+
+export const expectNavigationLandmarks = (): void => {
+  expect(document.querySelectorAll('[role="navigation"], nav').length).toBeGreaterThan(0);
+};
+
 export const waitForNavigationElements = async (): Promise<void> => {
   await waitFor(() => {
-    expect(document.querySelectorAll('[role="navigation"], nav').length).toBeGreaterThan(0);
+    expectNavigationLandmarks();
   });
 };
