@@ -21,7 +21,7 @@ type Story = StoryObj<typeof meta>;
 
 export const FillMode: Story = {
   render: (args) => (
-    <div className="relative w-full h-96 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
+    <div className="relative h-96 w-full overflow-hidden rounded-lg bg-surface">
       <ResponsiveImage
         src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Quran_cover.jpg/800px-Quran_cover.jpg"
         alt="Quran book cover"
@@ -50,9 +50,9 @@ export const BackgroundImage: Story = {
       alt="Quran background"
       className="h-96 rounded-lg flex items-center justify-center"
     >
-      <div className="bg-white/90 dark:bg-gray-900/90 p-6 rounded-lg backdrop-blur-sm">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Overlay Content</h2>
-        <p className="text-gray-600 dark:text-gray-300">Content displayed over background image</p>
+      <div className="rounded-lg bg-surface/90 p-6 backdrop-blur-sm">
+        <h2 className="mb-2 text-2xl font-bold text-foreground">Overlay Content</h2>
+        <p className="text-content-secondary">Content displayed over background image</p>
       </div>
     </ResponsiveBackgroundImage>
   ),
