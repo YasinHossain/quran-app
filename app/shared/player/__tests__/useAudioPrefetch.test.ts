@@ -85,6 +85,18 @@ function runPrefetchMissTest(getMocks: () => PrefetchMocks): void {
     expect(objectUrl).toBe('object-url');
     expect(result.current.getPrefetchedUrl(AUDIO_URL)).toBe('object-url');
     expect(mocks.abortMock).not.toHaveBeenCalled();
+
+    expect(result.current.getCacheStats()).toEqual({
+      count: 1,
+      totalSize: mocks.blob.size,
+    });
+
+    act(() => {
+      result.current.clearCache();
+    });
+
+    expect(result.current.getCacheStats()).toEqual({ count: 0, totalSize: 0 });
+    expect(mocks.revokeObjectUrlMock).toHaveBeenCalledWith('object-url');
   });
 }
 
