@@ -4,17 +4,40 @@ import { useBreakpoint, useResponsiveState } from '@/lib/responsive';
 
 import { setupMobilePerformanceTest, testPerformance } from './test-utils';
 
-const registerPerformanceLifecycle = (): void => {
-  let cleanup: () => void = () => {};
+type PerformanceTestSetup = ReturnType<typeof setupMobilePerformanceTest>;
+
+const createPerformanceHarness = () => {
+  let setup: PerformanceTestSetup | null = null;
 
   beforeEach(() => {
-    const setup = setupMobilePerformanceTest();
-    cleanup = setup.cleanup;
+    setup = setupMobilePerformanceTest();
   });
 
   afterEach(() => {
-    cleanup();
+    setup?.cleanup();
+    setup = null;
   });
+
+  const ensureSetup = (): PerformanceTestSetup => {
+    if (!setup) {
+      throw new Error(
+        'Performance harness not initialized. Ensure createPerformanceHarness is invoked within a describe block.',
+      );
+    }
+
+    return setup;
+  };
+
+  const run = <T>(callback: (context: PerformanceTestSetup) => T | Promise<T>): T | Promise<T> => {
+    return callback(ensureSetup());
+  };
+
+  const runWithoutContext = <T>(callback: () => T | Promise<T>): T | Promise<T> => {
+    ensureSetup();
+    return callback();
+  };
+
+  return { run, runWithoutContext };
 };
 
 const assertNoEventListenerLeaks = (): void => {
@@ -122,29 +145,29 @@ const assertCriticalResourcesPreloadEfficiently = async (): Promise<void> => {
 };
 
 describe('Memory Usage Optimization', () => {
-  registerPerformanceLifecycle();
+  const harness = createPerformanceHarness();
 
   it('should cleanup event listeners properly', () => {
-    assertNoEventListenerLeaks();
+    harness.runWithoutContext(assertNoEventListenerLeaks);
   });
 
   it('should not create memory leaks during rapid re-renders', async () => {
-    await assertResponsiveStateDoesNotLeak();
+    await harness.runWithoutContext(assertResponsiveStateDoesNotLeak);
   });
 });
 
 describe('Image Loading Performance', () => {
-  registerPerformanceLifecycle();
+  const harness = createPerformanceHarness();
 
   it.skip('should optimize image loading for mobile connections', async () => {
-    await assertImageLoadingOptimizedForMobileConnections();
+    await harness.runWithoutContext(assertImageLoadingOptimizedForMobileConnections);
   }, 5000);
 });
 
 describe('Resource Preloading Performance', () => {
-  registerPerformanceLifecycle();
+  const harness = createPerformanceHarness();
 
   it('should preload critical resources efficiently', async () => {
-    await assertCriticalResourcesPreloadEfficiently();
+    await harness.runWithoutContext(assertCriticalResourcesPreloadEfficiently);
   }, 10000);
 });
