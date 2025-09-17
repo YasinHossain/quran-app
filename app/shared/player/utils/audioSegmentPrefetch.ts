@@ -2,6 +2,7 @@ import { ILogger } from '@/src/domain/interfaces/ILogger';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import { AudioSegmentCache } from './audioSegmentCache';
+import { getPriorityDistribution, runAudioBatchPrefetch } from './audioSegmentPrefetch.helpers';
 
 interface PrefetchResult {
   url: string;
@@ -100,15 +101,14 @@ export class AudioSegmentPrefetch {
     this.logger.info('Starting batch audio prefetch', {
       total: audioItems.length,
       maxConcurrent,
+      delayBetween,
       priorityDistribution: getPriorityDistribution(audioItems),
     });
-    const results = await prefetchAudioListHelper(
-      audioItems,
-      (url, opts) => this.prefetchAudioStart(url, opts),
-      this.logger,
-      { maxConcurrent, delayBetween }
-    );
-    return results;
+
+    return runAudioBatchPrefetch(audioItems, (url, opts) => this.prefetchAudioStart(url, opts), {
+      maxConcurrent,
+      delayBetween,
+    });
   }
 
   /**
