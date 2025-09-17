@@ -2,7 +2,14 @@ import { MutableRefObject, useCallback, useEffect, useRef } from 'react';
 
 import { ILogger } from '@/src/domain/interfaces/ILogger';
 
-import { cleanupOldCache, clearCacheMap, getCacheStatsFromMap } from './useAudioPrefetch.cache';
+import { clearCacheMap, getCacheStatsFromMap } from './useAudioPrefetch.cache';
+import {
+  type CacheRef,
+  type PrefetchingRef,
+  type PrefetchTaskContext,
+  getCachedObjectUrl,
+  prefetchAudioTask,
+} from './useAudioPrefetch.tasks';
 
 import type { PrefetchedAudio } from './useAudioPrefetch.types';
 
@@ -19,86 +26,27 @@ interface UseAudioPrefetchCacheParams {
   logger: ILogger;
 }
 
-interface PrefetchAudioTaskParams {
-  enabled: boolean;
-  maxCacheSize: number;
-  url: string;
-  cacheRef: MutableRefObject<Map<string, PrefetchedAudio>>;
-  prefetchingRef: MutableRefObject<Set<string>>;
-  loggerRef: MutableRefObject<ILogger>;
-}
+type PrefetchAudioHandlerDeps = Omit<PrefetchTaskContext, 'url'>;
 
-async function prefetchAudioTask({
-  enabled,
-  maxCacheSize,
-  url,
-  cacheRef,
-  prefetchingRef,
-  loggerRef,
-}: PrefetchAudioTaskParams): Promise<string | null> {
-  if (!enabled || !url || cacheRef.current.has(url) || prefetchingRef.current.has(url)) {
-    return cacheRef.current.get(url)?.objectUrl || null;
-  }
+const useCacheRef = (): CacheRef => useRef<Map<string, PrefetchedAudio>>(new Map());
+const usePrefetchingRef = (): PrefetchingRef => useRef<Set<string>>(new Set());
 
-  prefetchingRef.current.add(url);
-
-  try {
-    loggerRef.current.debug('Prefetching audio', { url });
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000);
-    const response = await fetch(url, {
-      signal: controller.signal,
-      headers: { Range: 'bytes=0-1024' },
-    });
-    clearTimeout(timeoutId);
-
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-    const blob = await response.blob();
-    const objectUrl = URL.createObjectURL(blob);
-
-    cacheRef.current.set(url, {
-      url,
-      blob,
-      objectUrl,
-      timestamp: Date.now(),
-      size: blob.size,
-    });
-
-    cleanupOldCache(cacheRef.current, maxCacheSize, loggerRef.current);
-
-    loggerRef.current.debug('Audio prefetched successfully', {
-      url,
-      size: blob.size,
-      cacheSize: cacheRef.current.size,
-    });
-
-    return objectUrl;
-  } catch (error) {
-    loggerRef.current.warn('Audio prefetch failed', {
-      url,
-      error: error instanceof Error ? error.message : String(error),
-    });
-    return null;
-  } finally {
-    prefetchingRef.current.delete(url);
-  }
-}
-
-export function useAudioPrefetchCache({
-  enabled,
-  maxCacheSize,
-  logger,
-}: UseAudioPrefetchCacheParams): AudioPrefetchCacheHandlers {
-  const cacheRef = useRef<Map<string, PrefetchedAudio>>(new Map());
-  const prefetchingRef = useRef<Set<string>>(new Set());
+function useLoggerRef(logger: ILogger): MutableRefObject<ILogger> {
   const loggerRef = useRef<ILogger>(logger);
-
   useEffect(() => {
     loggerRef.current = logger;
   }, [logger]);
+  return loggerRef;
+}
 
-  const prefetchAudio = useCallback(
+const usePrefetchAudioHandler = ({
+  enabled,
+  maxCacheSize,
+  cacheRef,
+  prefetchingRef,
+  loggerRef,
+}: PrefetchAudioHandlerDeps): ((url: string) => Promise<string | null>) =>
+  useCallback(
     (url: string) =>
       prefetchAudioTask({
         enabled,
@@ -108,21 +56,46 @@ export function useAudioPrefetchCache({
         prefetchingRef,
         loggerRef,
       }),
-    [enabled, maxCacheSize]
+    [enabled, maxCacheSize, cacheRef, prefetchingRef, loggerRef]
   );
 
-  const getPrefetchedUrl = useCallback(
-    (url: string) => cacheRef.current.get(url)?.objectUrl || null,
-    []
-  );
+const useCacheLookup = (cacheRef: CacheRef): ((url: string) => string | null) =>
+  useCallback((url: string) => getCachedObjectUrl(cacheRef, url), [cacheRef]);
 
-  const clearCache = useCallback(() => {
+const useCacheClearer = (cacheRef: CacheRef, loggerRef: MutableRefObject<ILogger>): (() => void) =>
+  useCallback(() => {
     clearCacheMap(cacheRef.current, loggerRef.current);
-  }, []);
+  }, [cacheRef, loggerRef]);
 
-  const getCacheStats = useCallback(() => getCacheStatsFromMap(cacheRef.current), []);
+const useCacheStatsGetter = (cacheRef: CacheRef): (() => { count: number; totalSize: number }) =>
+  useCallback(() => getCacheStatsFromMap(cacheRef.current), [cacheRef]);
 
+const useCacheCleanupOnUnmount = (clearCache: () => void): void => {
   useEffect(() => () => clearCache(), [clearCache]);
+};
+
+export function useAudioPrefetchCache({
+  enabled,
+  maxCacheSize,
+  logger,
+}: UseAudioPrefetchCacheParams): AudioPrefetchCacheHandlers {
+  const cacheRef = useCacheRef();
+  const prefetchingRef = usePrefetchingRef();
+  const loggerRef = useLoggerRef(logger);
+
+  const prefetchAudio = usePrefetchAudioHandler({
+    enabled,
+    maxCacheSize,
+    cacheRef,
+    prefetchingRef,
+    loggerRef,
+  });
+
+  const getPrefetchedUrl = useCacheLookup(cacheRef);
+  const clearCache = useCacheClearer(cacheRef, loggerRef);
+  const getCacheStats = useCacheStatsGetter(cacheRef);
+
+  useCacheCleanupOnUnmount(clearCache);
 
   return { prefetchAudio, getPrefetchedUrl, clearCache, getCacheStats };
 }
