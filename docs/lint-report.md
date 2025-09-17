@@ -167,28 +167,28 @@ _Order: Easy → Medium → Hard; then by file path and line_
 90. (hard) [W] max-lines-per-function — app/providers/bookmarks/hooks/useBookmarkData.ts:17:8 — Function 'useBookmarkData' has too many lines (55). Maximum allowed is 50. — FIXED
 91. (hard) [W] complexity — app/providers/settingsReducer.ts:16:24 — Arrow function has a complexity of 13. Maximum allowed is 10. — FIXED
 92. (hard) [W] max-lines-per-function — app/shared/__tests__/ResponsiveVerseActions/ResponsiveVerseActions.interactions.test.tsx:9:49 — Arrow function has too many lines (64). Maximum allowed is 50. — FIXED
-93. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/error-boundary/ErrorBoundary.stories.tsx:28:22 — Avoid using raw color utility "bg-gray-50". Use design tokens instead.
-94. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/error-boundary/ErrorBoundary.stories.tsx:28:22 — Avoid using raw color utility "bg-gray-900". Use design tokens instead.
-95. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/error-boundary/ErrorBoundary.stories.tsx:226:22 — Avoid using raw color utility "bg-gray-900". Use design tokens instead.
-96. (hard) [W] max-lines-per-function — app/shared/components/error-boundary/FeatureErrorBoundary.tsx:17:1 — Function 'FeatureErrorFallback' has too many lines (53). Maximum allowed is 50.
-97. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:28:22 — Avoid using raw color utility "bg-gray-100". Use design tokens instead.
-98. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:28:22 — Avoid using raw color utility "bg-gray-900". Use design tokens instead.
-99. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:43:23 — Avoid using raw color utility "text-gray-900". Use design tokens instead.
-100. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:44:22 — Avoid using raw color utility "text-gray-600". Use design tokens instead.
-101. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:44:22 — Avoid using raw color utility "text-gray-300". Use design tokens instead.
-102. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:91:25 — Avoid using raw color utility "text-gray-900". Use design tokens instead.
-103. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:93:22 — Avoid using raw color utility "text-gray-600". Use design tokens instead.
-104. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:93:22 — Avoid using raw color utility "text-gray-300". Use design tokens instead.
-105. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:126:23 — Avoid using raw color utility "text-gray-900". Use design tokens instead.
-106. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:129:24 — Avoid using raw color utility "text-gray-600". Use design tokens instead.
-107. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:129:24 — Avoid using raw color utility "text-gray-300". Use design tokens instead.
-108. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:210:22 — Avoid using raw color utility "bg-gray-900". Use design tokens instead.
-109. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/responsive-image/ResponsiveImage.stories.tsx:106:20 — Avoid using raw color utility "bg-gray-100". Use design tokens instead.
-110. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/responsive-image/ResponsiveImage.stories.tsx:106:20 — Avoid using raw color utility "bg-gray-800". Use design tokens instead.
-111. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/responsive-image/ResponsiveImage.stories.tsx:151:22 — Avoid using raw color utility "bg-gray-900". Use design tokens instead.
-112. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/responsive-image/ResponsiveImage.stories.tsx:152:23 — Avoid using raw color utility "text-gray-900". Use design tokens instead.
-113. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/responsive-image/ResponsiveImage.stories.tsx:153:22 — Avoid using raw color utility "text-gray-600". Use design tokens instead.
-114. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/responsive-image/ResponsiveImage.stories.tsx:153:22 — Avoid using raw color utility "text-gray-300". Use design tokens instead.
+93. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/error-boundary/ErrorBoundary.stories.tsx:28:22 — Avoid using raw color utility "bg-gray-50". Use design tokens instead. — FIXED
+94. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/error-boundary/ErrorBoundary.stories.tsx:28:22 — Avoid using raw color utility "bg-gray-900". Use design tokens instead. — FIXED
+95. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/error-boundary/ErrorBoundary.stories.tsx:226:22 — Avoid using raw color utility "bg-gray-900". Use design tokens instead. — FIXED
+96. (hard) [W] max-lines-per-function — app/shared/components/error-boundary/FeatureErrorBoundary.tsx:17:1 — Function 'FeatureErrorFallback' has too many lines (53). Maximum allowed is 50. — FIXED
+97. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:28:22 — Avoid using raw color utility "bg-gray-100". Use design tokens instead. — FIXED
+98. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:28:22 — Avoid using raw color utility "bg-gray-900". Use design tokens instead. — FIXED
+99. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:43:23 — Avoid using raw color utility "text-gray-900". Use design tokens instead. — FIXED
+100. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:44:22 — Avoid using raw color utility "text-gray-600". Use design tokens instead. — FIXED
+101. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:44:22 — Avoid using raw color utility "text-gray-300". Use design tokens instead. — FIXED
+102. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:91:25 — Avoid using raw color utility "text-gray-900". Use design tokens instead. — FIXED
+103. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:93:22 — Avoid using raw color utility "text-gray-600". Use design tokens instead. — FIXED
+104. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:93:22 — Avoid using raw color utility "text-gray-300". Use design tokens instead. — FIXED
+105. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:126:23 — Avoid using raw color utility "text-gray-900". Use design tokens instead. — FIXED
+106. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:129:24 — Avoid using raw color utility "text-gray-600". Use design tokens instead. — FIXED
+107. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:129:24 — Avoid using raw color utility "text-gray-300". Use design tokens instead. — FIXED
+108. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/modal/Modal.stories.tsx:210:22 — Avoid using raw color utility "bg-gray-900". Use design tokens instead. — FIXED
+109. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/responsive-image/ResponsiveImage.stories.tsx:106:20 — Avoid using raw color utility "bg-gray-100". Use design tokens instead. — FIXED
+110. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/responsive-image/ResponsiveImage.stories.tsx:106:20 — Avoid using raw color utility "bg-gray-800". Use design tokens instead. — FIXED
+111. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/responsive-image/ResponsiveImage.stories.tsx:151:22 — Avoid using raw color utility "bg-gray-900". Use design tokens instead. — FIXED
+112. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/responsive-image/ResponsiveImage.stories.tsx:152:23 — Avoid using raw color utility "text-gray-900". Use design tokens instead. — FIXED
+113. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/responsive-image/ResponsiveImage.stories.tsx:153:22 — Avoid using raw color utility "text-gray-600". Use design tokens instead. — FIXED
+114. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/responsive-image/ResponsiveImage.stories.tsx:153:22 — Avoid using raw color utility "text-gray-300". Use design tokens instead. — FIXED
 115. (hard) [W] max-lines-per-function — app/shared/player/hooks/useAudioPrefetch.ts:25:8 — Function 'useAudioPrefetch' has too many lines (165). Maximum allowed is 50.
 116. (hard) [W] max-lines-per-function — app/shared/player/utils/audioSegmentPrefetch.ts:106:3 — Async method 'prefetchAudioList' has too many lines (64). Maximum allowed is 50.
 117. (hard) [W] max-lines-per-function — lib/__tests__/mobile-performance/memory-network.test.ts:7:39 — Arrow function has too many lines (52). Maximum allowed is 50.
