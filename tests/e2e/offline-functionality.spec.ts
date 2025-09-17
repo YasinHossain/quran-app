@@ -62,10 +62,10 @@ test.describe('Offline Functionality', () => {
 
     if (isOfflinePage === 0) {
       // Successfully loaded from cache
-      console.log('Page loaded from cache successfully');
+      console.warn('Page loaded from cache successfully');
     } else {
       // Fallback to offline page (still valid behavior)
-      console.log('Showed offline page as fallback');
+      console.warn('Showed offline page as fallback');
     }
 
     // This test passes either way since both are valid offline behaviors
@@ -119,7 +119,7 @@ test.describe('Offline Functionality', () => {
         // Audio should either play from cache or show appropriate offline message
         // Both behaviors are acceptable
         await page.waitForTimeout(1000);
-        console.log('Audio offline behavior tested');
+        console.warn('Audio offline behavior tested');
       }
     }
 
@@ -170,7 +170,7 @@ test.describe('Offline Functionality', () => {
         }
       });
 
-      console.log('Service Worker registered:', swRegistered);
+      console.warn('Service Worker registered:', swRegistered);
     }
 
     // Test passes regardless of service worker support
@@ -196,7 +196,7 @@ test.describe('Offline Functionality', () => {
 
       // Should either navigate successfully (if cached) or show offline page
       const currentTitle = await page.title();
-      console.log('Navigation offline test - Current page title:', currentTitle);
+      console.warn('Navigation offline test - Current page title:', currentTitle);
     }
 
     // Test passes regardless of navigation availability

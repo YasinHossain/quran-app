@@ -1,5 +1,6 @@
 import { waitFor } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
+import Link from 'next/link';
 import React from 'react';
 
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
@@ -13,14 +14,31 @@ jest.mock('@/lib/api', () => ({
   getJuzList: jest.fn(),
 }));
 
-jest.mock('next/link', () => ({ href, children }: { href: string; children: React.ReactNode }) => (
-  <a href={href}>{children}</a>
-));
+jest.mock('next/link', () => ({
+  __esModule: true,
+  default: ({ href, children }: { href: string; children: React.ReactNode }) => (
+    <a href={href}>{children}</a>
+  ),
+}));
 
 const mockedGetSurahList = getSurahList as jest.MockedFunction<typeof getSurahList>;
 const mockedGetJuzList = getJuzList as jest.MockedFunction<typeof getJuzList>;
 
 expect.extend(toHaveNoViolations);
+
+type QueryRoot = Document | Element;
+
+const waitForSelector = async (root: QueryRoot, selector: string): Promise<void> => {
+  await waitFor(() => {
+    expect(root.querySelector(selector)).toBeInTheDocument();
+  });
+};
+
+const waitForNavigationElements = async (): Promise<void> => {
+  await waitFor(() => {
+    expect(document.querySelectorAll('[role="navigation"], nav').length).toBeGreaterThan(0);
+  });
+};
 
 // Test components that simulate server component behavior
 const TestHomePage: React.FC = () => (
@@ -29,16 +47,16 @@ const TestHomePage: React.FC = () => (
     <nav aria-label="Main navigation">
       <ul className="space-y-2">
         <li>
-          <a href="/surah">Browse Surahs</a>
+          <Link href="/surah">Browse Surahs</Link>
         </li>
         <li>
-          <a href="/juz">Browse Juz</a>
+          <Link href="/juz">Browse Juz</Link>
         </li>
         <li>
-          <a href="/search">Search</a>
+          <Link href="/search">Search</Link>
         </li>
         <li>
-          <a href="/bookmarks">Bookmarks</a>
+          <Link href="/bookmarks">Bookmarks</Link>
         </li>
       </ul>
     </nav>
@@ -65,9 +83,9 @@ const TestSurahIndexPage: React.FC = () => {
         <ul className="space-y-2">
           {surahs.map((s: Surah) => (
             <li key={s.number}>
-              <a href={`/surah/${s.number}`} aria-label={`Read ${s.name} (${s.meaning})`}>
+              <Link href={`/surah/${s.number}`} aria-label={`Read ${s.name} (${s.meaning})`}>
                 {s.name} - {s.meaning}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
@@ -96,9 +114,9 @@ const TestJuzIndexPage: React.FC = () => {
         <ul className="space-y-2">
           {juzList.map((juz: Juz) => (
             <li key={juz.number}>
-              <a href={`/juz/${juz.number}`} aria-label={`Read Juz ${juz.number}`}>
+              <Link href={`/juz/${juz.number}`} aria-label={`Read Juz ${juz.number}`}>
                 Juz {juz.number}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
@@ -113,13 +131,13 @@ const TestBookmarksPage: React.FC = () => (
     <nav aria-label="Bookmark categories">
       <ul className="space-y-2">
         <li>
-          <a href="/bookmarks/pinned">Pinned</a>
+          <Link href="/bookmarks/pinned">Pinned</Link>
         </li>
         <li>
-          <a href="/bookmarks/last-read">Last Read</a>
+          <Link href="/bookmarks/last-read">Last Read</Link>
         </li>
         <li>
-          <a href="/bookmarks/memorization">Memorization</a>
+          <Link href="/bookmarks/memorization">Memorization</Link>
         </li>
       </ul>
     </nav>
@@ -154,10 +172,10 @@ const TestTafsirIndexPage: React.FC = () => (
     <nav aria-label="Surah selection for tafsir">
       <ul className="space-y-2">
         <li>
-          <a href="/tafsir/1/1">Al-Fatihah</a>
+          <Link href="/tafsir/1/1">Al-Fatihah</Link>
         </li>
         <li>
-          <a href="/tafsir/2/1">Al-Baqarah</a>
+          <Link href="/tafsir/2/1">Al-Baqarah</Link>
         </li>
       </ul>
     </nav>
@@ -220,28 +238,21 @@ describe('Core Pages Accessibility', () => {
   describe('Surah Index Page', () => {
     it('should not have accessibility violations', async () => {
       const { container } = await renderWithProvidersAsync(<TestSurahIndexPage />);
-      await waitFor(() => {
-        expect(container.querySelector('h1')).toBeInTheDocument();
-      });
+      await waitForSelector(container, 'h1');
       const results = await axe(container);
       expect(results).toHaveNoViolations();
     });
 
     it('should have accessible navigation', async () => {
       await renderWithProvidersAsync(<TestSurahIndexPage />);
-      await waitFor(() => {
-        const navElements = document.querySelectorAll('[role="navigation"], nav');
-        expect(navElements.length).toBeGreaterThan(0);
-      });
+      await waitForNavigationElements();
     });
   });
 
   describe('Juz Index Page', () => {
     it('should not have accessibility violations', async () => {
       const { container } = await renderWithProvidersAsync(<TestJuzIndexPage />);
-      await waitFor(() => {
-        expect(container.querySelector('h1')).toBeInTheDocument();
-      });
+      await waitForSelector(container, 'h1');
       const results = await axe(container);
       expect(results).toHaveNoViolations();
     });

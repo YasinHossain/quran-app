@@ -1,12 +1,14 @@
-import { useMemo, useRef, useState } from 'react';
-
 import { useInfiniteVerseLoader } from '@/app/(features)/surah/hooks/useInfiniteVerseLoader';
 import { useTranslationOptions } from '@/app/(features)/surah/hooks/useTranslationOptions';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 
+import {
+  resolveVerses,
+  useStableTranslationIds,
+  useVerseListingErrorState,
+} from './verse-listing/internal';
 import { useNavigationHandlers } from './verse-listing/useNavigationHandlers';
-import { getStableTranslationIds } from './verse-listing/utils';
 
 export type {
   UseVerseListingReturn,
@@ -16,88 +18,93 @@ export type {
 } from './verse-listing/types';
 import type { UseVerseListingParams, UseVerseListingReturn } from './verse-listing/types';
 
-/**
- * Hook for managing verse listing with infinite scroll, audio controls, and settings.
- * Handles verse fetching, translation management, and audio player integration.
- */
-export function useVerseListing({
-  id,
-  lookup,
-  initialVerses,
-}: UseVerseListingParams): UseVerseListingReturn {
-  const [error, setError] = useState<string | null>(null);
-  const { settings, setSettings } = useSettings();
-  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+interface CreateVerseListingResultParams {
+  error: string | null;
+  settings: UseVerseListingReturn['settings'];
+  setSettings: UseVerseListingReturn['setSettings'];
+  loadMoreRef: UseVerseListingReturn['loadMoreRef'];
+  translationOptions: UseVerseListingReturn['translationOptions'];
+  wordLanguageOptions: UseVerseListingReturn['wordLanguageOptions'];
+  wordLanguageMap: UseVerseListingReturn['wordLanguageMap'];
+  audio: Pick<ReturnType<typeof useAudio>, 'activeVerse' | 'reciter' | 'isPlayerVisible'>;
+  loaderState: ReturnType<typeof useInfiniteVerseLoader>;
+  navigation: ReturnType<typeof useNavigationHandlers>;
+  verses: UseVerseListingReturn['verses'];
+}
 
-  const { activeVerse, setActiveVerse, reciter, isPlayerVisible, openPlayer } = useAudio();
-  const {
-    translationOptions = [],
-    wordLanguageOptions = [],
-    wordLanguageMap = {},
-  } = (useTranslationOptions() as
-    | {
-        translationOptions?: unknown[];
-        wordLanguageOptions?: unknown[];
-        wordLanguageMap?: Record<string, unknown>;
-      }
-    | undefined) ?? {};
-
-  const stableTranslationIds = useMemo(
-    () => getStableTranslationIds(settings.translationIds, settings.translationId),
-    [settings.translationIds, settings.translationId]
-  );
-
-  const loaderResult =
-    (useInfiniteVerseLoader({
-      ...(id !== undefined ? { id } : {}),
-      lookup,
-      stableTranslationIds,
-      wordLang: settings.wordLang,
-      loadMoreRef,
-      error,
-      setError: (e: string) => setError(e),
-    }) as
-      | { verses?: unknown[]; isLoading?: boolean; isValidating?: boolean; isReachingEnd?: boolean }
-      | undefined) ?? {};
-
-  let { verses = [] } = (loaderResult as { verses?: unknown[] }) ?? {};
-  const {
-    isLoading = false,
-    isValidating = false,
-    isReachingEnd = false,
-  } = (loaderResult as {
-    isLoading?: boolean;
-    isValidating?: boolean;
-    isReachingEnd?: boolean;
-  }) ?? {};
-
-  if (initialVerses && initialVerses.length) {
-    verses = initialVerses as any[];
-  }
-
-  const { handleNext, handlePrev } = useNavigationHandlers({
-    verses,
-    activeVerse,
-    setActiveVerse,
-    openPlayer,
-  });
-
+function createVerseListingResult({
+  error,
+  settings,
+  setSettings,
+  loadMoreRef,
+  translationOptions,
+  wordLanguageOptions,
+  wordLanguageMap,
+  audio,
+  loaderState,
+  navigation,
+  verses,
+}: CreateVerseListingResultParams): UseVerseListingReturn {
   return {
     error,
-    isLoading,
+    isLoading: loaderState.isLoading,
     verses,
-    isValidating,
-    isReachingEnd,
+    isValidating: loaderState.isValidating,
+    isReachingEnd: loaderState.isReachingEnd,
     loadMoreRef,
     translationOptions,
     wordLanguageOptions,
     wordLanguageMap,
     settings,
     setSettings,
-    activeVerse,
-    reciter,
-    isPlayerVisible,
-    handleNext,
-    handlePrev,
-  } as const;
+    activeVerse: audio.activeVerse,
+    reciter: audio.reciter,
+    isPlayerVisible: audio.isPlayerVisible,
+    handleNext: navigation.handleNext,
+    handlePrev: navigation.handlePrev,
+  };
+}
+
+export function useVerseListing({
+  id,
+  lookup,
+  initialVerses,
+}: UseVerseListingParams): UseVerseListingReturn {
+  const errorState = useVerseListingErrorState();
+  const settingsState = useSettings();
+  const audio = useAudio();
+  const translation = useTranslationOptions();
+  const stableTranslationIds = useStableTranslationIds(settingsState.settings);
+
+  const loaderState = useInfiniteVerseLoader({
+    id,
+    lookup,
+    stableTranslationIds,
+    wordLang: settingsState.settings.wordLang,
+    loadMoreRef: errorState.loadMoreRef,
+    error: errorState.error,
+    setError: errorState.handleLoaderError,
+  });
+
+  const verses = resolveVerses(initialVerses, loaderState.verses);
+  const navigation = useNavigationHandlers({
+    verses,
+    activeVerse: audio.activeVerse,
+    setActiveVerse: audio.setActiveVerse,
+    openPlayer: audio.openPlayer,
+  });
+
+  return createVerseListingResult({
+    error: errorState.error,
+    settings: settingsState.settings,
+    setSettings: settingsState.setSettings,
+    loadMoreRef: errorState.loadMoreRef,
+    translationOptions: translation.translationOptions,
+    wordLanguageOptions: translation.wordLanguageOptions,
+    wordLanguageMap: translation.wordLanguageMap,
+    audio,
+    loaderState,
+    navigation,
+    verses,
+  });
 }

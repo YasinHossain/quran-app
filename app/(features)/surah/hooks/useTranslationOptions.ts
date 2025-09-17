@@ -22,13 +22,12 @@ export function useTranslationOptions(): UseTranslationOptionsReturn {
   const translationOptionsData = swrTranslations?.data;
   const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
 
-  const swrWord = useSWR('wordTranslations', getWordTranslations);
-  const wordTranslationOptionsData = (swrWord as any)?.data as any[] | undefined;
+  const swrWord = useSWR<TranslationResource[]>('wordTranslations', getWordTranslations);
+  const wordTranslationOptionsData = swrWord?.data;
   const wordLanguageMap = useMemo(() => {
     const map: Record<string, number> = {};
-    (wordTranslationOptionsData || []).forEach((o: any) => {
-      const raw = o?.lang ?? o?.language_name ?? '';
-      const name = String(raw).toLowerCase();
+    (wordTranslationOptionsData || []).forEach((o) => {
+      const name = String(o.lang ?? '').toLowerCase();
       if (!map[name]) {
         map[name] = o.id;
       }

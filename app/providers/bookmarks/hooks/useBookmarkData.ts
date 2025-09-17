@@ -14,7 +14,7 @@ import * as chaptersApi from '@/lib/api/chapters';
 
 import type { Folder, Bookmark, Chapter, MemorizationPlan } from '@/types';
 
-export function useBookmarkData(): {
+function useStoredBookmarkState(): {
   folders: Folder[];
   setFolders: React.Dispatch<React.SetStateAction<Folder[]>>;
   pinnedVerses: Bookmark[];
@@ -22,39 +22,23 @@ export function useBookmarkData(): {
   lastRead: Record<string, number>;
   setLastReadState: React.Dispatch<React.SetStateAction<Record<string, number>>>;
   memorization: Record<string, MemorizationPlan>;
-  setMemorizationState: React.Dispatch<React.SetStateAction<Record<string, MemorizationPlan>>>;
-  chapters: Chapter[];
+  setMemorizationState: React.Dispatch<
+    React.SetStateAction<Record<string, MemorizationPlan>>
+  >;
 } {
   const [folders, setFolders] = useState<Folder[]>([]);
   const [pinnedVerses, setPinnedVerses] = useState<Bookmark[]>([]);
   const [lastRead, setLastReadState] = useState<Record<string, number>>({});
   const [memorization, setMemorizationState] = useState<Record<string, MemorizationPlan>>({});
-  const [chapters, setChapters] = useState<Chapter[]>([]);
 
   useEffect(() => {
-    const fetchChaptersCandidate =
-      (typeof (chaptersApi as any).getChapters === 'function'
-        ? (chaptersApi as any).getChapters
-        : (chaptersApi as any).default) || null;
-
-    if (typeof fetchChaptersCandidate === 'function') {
-      try {
-        const result = (fetchChaptersCandidate as () => Promise<Chapter[]> | Chapter[])();
-        if (result && typeof (result as any).then === 'function') {
-          void (result as Promise<Chapter[]>)
-            .then((chs: Chapter[]) => setChapters(chs ?? []))
-            .catch(() => {});
-        } else if (Array.isArray(result)) {
-          setChapters(result);
-        }
-      } catch {
-        // ignore fetch errors in tests
-      }
-    }
-    setFolders(loadBookmarksFromStorage());
-    setPinnedVerses(loadPinnedFromStorage());
-    setLastReadState(loadLastReadFromStorage());
-    setMemorizationState(loadMemorizationFromStorage());
+    const load = (): void => {
+      setFolders(loadBookmarksFromStorage());
+      setPinnedVerses(loadPinnedFromStorage());
+      setLastReadState(loadLastReadFromStorage());
+      setMemorizationState(loadMemorizationFromStorage());
+    };
+    load();
   }, []);
 
   useEffect(() => saveBookmarksToStorage(folders), [folders]);
@@ -71,6 +55,44 @@ export function useBookmarkData(): {
     setLastReadState,
     memorization,
     setMemorizationState,
+  } as const;
+}
+
+function useChapters(): Chapter[] {
+  const [chapters, setChapters] = useState<Chapter[]>([]);
+
+  useEffect(() => {
+    const fetchChapters = async (): Promise<void> => {
+      try {
+        const result = await chaptersApi.getChapters();
+        if (Array.isArray(result)) setChapters(result);
+      } catch {
+        // ignore fetch errors in tests
+      }
+    };
+
+    void fetchChapters();
+  }, []);
+
+  return chapters;
+}
+
+export function useBookmarkData(): {
+  folders: Folder[];
+  setFolders: React.Dispatch<React.SetStateAction<Folder[]>>;
+  pinnedVerses: Bookmark[];
+  setPinnedVerses: React.Dispatch<React.SetStateAction<Bookmark[]>>;
+  lastRead: Record<string, number>;
+  setLastReadState: React.Dispatch<React.SetStateAction<Record<string, number>>>;
+  memorization: Record<string, MemorizationPlan>;
+  setMemorizationState: React.Dispatch<React.SetStateAction<Record<string, MemorizationPlan>>>;
+  chapters: Chapter[];
+} {
+  const storedState = useStoredBookmarkState();
+  const chapters = useChapters();
+
+  return {
+    ...storedState,
     chapters,
   } as const;
 }

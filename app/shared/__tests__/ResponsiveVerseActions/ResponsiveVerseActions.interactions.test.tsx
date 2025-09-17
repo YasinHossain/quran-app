@@ -6,8 +6,8 @@ import {
   rerenderResponsiveVerseActions,
 } from '@/app/testUtils/responsiveVerseActionsTestUtils';
 
-describe('ResponsiveVerseActions interactions', () => {
-  it('should handle play button clicks', async () => {
+describe('ResponsiveVerseActions interactions · playback', () => {
+  it('handles play button clicks', async () => {
     const onPlayPause = jest.fn();
     renderResponsiveVerseActions({ onPlayPause });
 
@@ -21,21 +21,7 @@ describe('ResponsiveVerseActions interactions', () => {
     });
   });
 
-  it('should handle bookmark toggle', async () => {
-    const onBookmark = jest.fn();
-    renderResponsiveVerseActions({ onBookmark, showRemove: true, isBookmarked: true });
-
-    const bookmarkButton = await screen.findByRole('button', { name: /remove bookmark/i });
-    await act(async () => {
-      fireEvent.click(bookmarkButton);
-    });
-
-    await waitFor(() => {
-      expect(onBookmark).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  it('should show correct play/pause state', async () => {
+  it('reflects play/pause state', async () => {
     const { rerender } = renderResponsiveVerseActions();
 
     await screen.findByRole('button', { name: /play/i });
@@ -61,20 +47,38 @@ describe('ResponsiveVerseActions interactions', () => {
     await user.click(pauseButton);
     expect(onPlayPause).toHaveBeenCalledTimes(2);
   });
+});
 
-  it('should show loading state', async () => {
+describe('ResponsiveVerseActions interactions · bookmarking', () => {
+  it('handles bookmark toggle', async () => {
+    const onBookmark = jest.fn();
+    renderResponsiveVerseActions({ onBookmark, showRemove: true, isBookmarked: true });
+
+    const bookmarkButton = await screen.findByRole('button', { name: /remove bookmark/i });
+    await act(async () => {
+      fireEvent.click(bookmarkButton);
+    });
+
+    await waitFor(() => {
+      expect(onBookmark).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('shows bookmarked state', async () => {
+    renderResponsiveVerseActions({ isBookmarked: true });
+
+    await screen.findByRole('button', { name: /remove bookmark/i });
+  });
+});
+
+describe('ResponsiveVerseActions interactions · accessibility', () => {
+  it('shows loading state', async () => {
     renderResponsiveVerseActions({ isLoadingAudio: true });
 
     await screen.findByLabelText(/loading/i, { selector: 'svg', hidden: true });
   });
 
-  it('should show bookmarked state', async () => {
-    renderResponsiveVerseActions({ isBookmarked: true });
-
-    await screen.findByRole('button', { name: /remove bookmark/i });
-  });
-
-  it('should support keyboard navigation', async () => {
+  it('supports keyboard navigation', async () => {
     renderResponsiveVerseActions();
 
     const playButton = await screen.findByRole('button', { name: /play/i });

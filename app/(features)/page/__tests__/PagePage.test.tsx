@@ -34,7 +34,7 @@ beforeEach(() => {
   });
 });
 
-const renderPage = () =>
+const renderPage = (): ReturnType<typeof renderWithProvidersAsync> =>
   renderWithProvidersAsync(
     <QuranPage params={{ pageId: '1' } as unknown as Promise<{ pageId: string }>} />
   );

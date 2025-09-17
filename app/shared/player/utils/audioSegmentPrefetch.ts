@@ -1,7 +1,7 @@
 import { ILogger } from '@/src/domain/interfaces/ILogger';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
-// Removed unused AudioSegment type
+import { AudioSegmentCache } from './audioSegmentCache';
 
 interface PrefetchResult {
   url: string;
@@ -10,26 +10,17 @@ interface PrefetchResult {
   duration: number;
 }
 
-/**
- * Audio segment prefetching service for instant play experience
- * Implements intelligent prefetching of small audio segments
- */
 export class AudioSegmentPrefetch {
   private readonly logger: ILogger;
-  private readonly cache = new Map<string, ArrayBuffer>();
   private readonly prefetchQueue = new Set<string>();
-  private readonly maxCacheSize: number;
   private readonly segmentSize: number;
+  private readonly cacheManager: AudioSegmentCache;
 
-  constructor(
-    options: {
-      maxCacheSize?: number;
-      segmentSize?: number;
-    } = {}
-  ) {
+  constructor(options: { maxCacheSize?: number; segmentSize?: number } = {}) {
     this.logger = logger;
-    this.maxCacheSize = options.maxCacheSize || 10 * 1024 * 1024; // 10MB
+    const maxCacheSize = options.maxCacheSize || 10 * 1024 * 1024; // 10MB
     this.segmentSize = options.segmentSize || 1024 * 1024; // 1MB segments
+    this.cacheManager = new AudioSegmentCache(this.logger, maxCacheSize);
   }
 
   /**
@@ -44,7 +35,7 @@ export class AudioSegmentPrefetch {
   ): Promise<boolean> {
     const { priority = 'medium', bytes = this.segmentSize } = options;
 
-    if (this.cache.has(url) || this.prefetchQueue.has(url)) {
+    if (this.cacheManager.has(url) || this.prefetchQueue.has(url)) {
       return true;
     }
 
@@ -70,17 +61,14 @@ export class AudioSegmentPrefetch {
       const arrayBuffer = await response.arrayBuffer();
       const duration = performance.now() - startTime;
 
-      // Check cache size and cleanup if needed
-      await this.ensureCacheSpace(arrayBuffer.byteLength);
-
-      // Store in cache
-      this.cache.set(url, arrayBuffer);
+      await this.cacheManager.ensureSpace(arrayBuffer.byteLength);
+      this.cacheManager.set(url, arrayBuffer);
 
       this.logger.info('Audio segment prefetched successfully', {
         url,
         size: arrayBuffer.byteLength,
         duration,
-        cacheSize: this.getCacheSize(),
+        cacheSize: this.cacheManager.getSize(),
       });
 
       return true;
@@ -109,72 +97,17 @@ export class AudioSegmentPrefetch {
     } = {}
   ): Promise<PrefetchResult[]> {
     const { maxConcurrent = 3, delayBetween = 100 } = options;
-
-    // Sort by priority: high -> medium -> low
-    const priorityOrder = { high: 0, medium: 1, low: 2 };
-    const sortedItems = audioItems.sort((a, b) => {
-      const aPriority = priorityOrder[a.priority || 'medium'];
-      const bPriority = priorityOrder[b.priority || 'medium'];
-      return aPriority - bPriority;
-    });
-
     this.logger.info('Starting batch audio prefetch', {
-      total: sortedItems.length,
+      total: audioItems.length,
       maxConcurrent,
-      priorityDistribution: this.getPriorityDistribution(sortedItems),
+      priorityDistribution: getPriorityDistribution(audioItems),
     });
-
-    const results: PrefetchResult[] = [];
-
-    // Process in batches
-    for (let i = 0; i < sortedItems.length; i += maxConcurrent) {
-      const batch = sortedItems.slice(i, i + maxConcurrent);
-
-      const batchPromises = batch.map(async (item) => {
-        const startTime = performance.now();
-        const success = await this.prefetchAudioStart(item.url, {
-          priority: item.priority,
-        });
-        const duration = performance.now() - startTime;
-
-        return {
-          url: item.url,
-          success,
-          size: success ? this.cache.get(item.url)?.byteLength || 0 : 0,
-          duration,
-        };
-      });
-
-      const batchResults = await Promise.allSettled(batchPromises);
-
-      // Collect results
-      batchResults.forEach((result, index) => {
-        if (result.status === 'fulfilled') {
-          results.push(result.value);
-        } else {
-          results.push({
-            url: batch[index].url,
-            success: false,
-            size: 0,
-            duration: 0,
-          });
-        }
-      });
-
-      // Add delay between batches to avoid overwhelming the network
-      if (i + maxConcurrent < sortedItems.length && delayBetween > 0) {
-        await new Promise((resolve) => setTimeout(resolve, delayBetween));
-      }
-    }
-
-    const successCount = results.filter((r) => r.success).length;
-    this.logger.info('Batch audio prefetch completed', {
-      successful: successCount,
-      failed: results.length - successCount,
-      totalSize: results.reduce((sum, r) => sum + r.size, 0),
-      cacheSize: this.getCacheSize(),
-    });
-
+    const results = await prefetchAudioListHelper(
+      audioItems,
+      (url, opts) => this.prefetchAudioStart(url, opts),
+      this.logger,
+      { maxConcurrent, delayBetween }
+    );
     return results;
   }
 
@@ -182,85 +115,42 @@ export class AudioSegmentPrefetch {
    * Get prefetched audio data
    */
   getPrefetchedAudio(url: string): ArrayBuffer | null {
-    return this.cache.get(url) || null;
+    return this.cacheManager.get(url);
   }
 
   /**
    * Check if audio is prefetched
    */
   isPrefetched(url: string): boolean {
-    return this.cache.has(url);
+    return this.cacheManager.has(url);
   }
 
   /**
    * Clear specific audio from cache
    */
   clearAudio(url: string): boolean {
-    const deleted = this.cache.delete(url);
-    if (deleted) {
-      this.logger.debug('Audio removed from prefetch cache', { url });
-    }
-    return deleted;
+    return this.cacheManager.clearAudio(url);
   }
 
   /**
    * Clear entire prefetch cache
    */
   clearCache(): void {
-    const size = this.getCacheSize();
-    this.cache.clear();
-    this.logger.info('Prefetch cache cleared', { clearedSize: size });
+    this.cacheManager.clearAll();
   }
 
   /**
    * Get cache statistics
    */
-  getCacheStats(): {
-    entries: number;
-    totalSize: number;
-    averageSize: number;
-    urls: string[];
-  } {
-    const entries = this.cache.size;
-    const totalSize = this.getCacheSize();
-    const averageSize = entries > 0 ? totalSize / entries : 0;
-    const urls = Array.from(this.cache.keys());
-
-    return {
-      entries,
-      totalSize,
-      averageSize,
-      urls,
-    };
+  getCacheStats(): { entries: number; totalSize: number; averageSize: number; urls: string[] } {
+    return this.cacheManager.getStats();
   }
 
   /**
    * Create blob URL from prefetched data for instant playback
    */
   createBlobUrl(url: string): string | null {
-    const data = this.cache.get(url);
-    if (!data) {
-      return null;
-    }
-
-    try {
-      const blob = new Blob([data], { type: 'audio/mpeg' });
-      const blobUrl = URL.createObjectURL(blob);
-
-      this.logger.debug('Created blob URL for prefetched audio', {
-        originalUrl: url,
-        blobUrl,
-        size: data.byteLength,
-      });
-
-      return blobUrl;
-    } catch (error) {
-      this.logger.error('Failed to create blob URL', {
-        url,
-        error: error instanceof Error ? error.message : String(error),
-      });
-      return null;
-    }
+    return this.cacheManager.createBlobUrl(url);
   }
 
   /**
@@ -302,54 +192,9 @@ export class AudioSegmentPrefetch {
   /**
    * Ensure cache doesn't exceed size limit
    */
-  private async ensureCacheSpace(newItemSize: number): Promise<void> {
-    const currentSize = this.getCacheSize();
+  // Cache size/space handled by AudioSegmentCache
 
-    if (currentSize + newItemSize > this.maxCacheSize) {
-      // Remove oldest entries until we have space
-      const entries = Array.from(this.cache.entries());
-      let removedSize = 0;
-
-      while (removedSize < newItemSize && entries.length > 0) {
-        const [url, data] = entries.shift()!;
-        this.cache.delete(url);
-        removedSize += data.byteLength;
-      }
-
-      this.logger.debug('Cache cleanup completed', {
-        removedSize,
-        remainingSize: this.getCacheSize(),
-        spaceNeeded: newItemSize,
-      });
-    }
-  }
-
-  /**
-   * Get total cache size in bytes
-   */
-  private getCacheSize(): number {
-    let totalSize = 0;
-    for (const data of this.cache.values()) {
-      totalSize += data.byteLength;
-    }
-    return totalSize;
-  }
-
-  /**
-   * Get priority distribution for logging
-   */
-  private getPriorityDistribution(
-    items: Array<{ priority?: 'high' | 'medium' | 'low' }>
-  ): Record<string, number> {
-    return items.reduce(
-      (acc, item) => {
-        const priority = item.priority || 'medium';
-        acc[priority] = (acc[priority] || 0) + 1;
-        return acc;
-      },
-      {} as Record<string, number>
-    );
-  }
+  // Priority distribution handled in helpers
 }
 
 // Export singleton instance

@@ -78,53 +78,18 @@ export const SettingsProvider = ({
   const { settings, dispatch } = usePersistentSettings();
 
   const setters = useMemo(() => createSetters(dispatch), [dispatch]);
-  const {
-    setSettings,
-    setShowByWords,
-    setTajweed,
-    setWordLang,
-    setWordTranslationId,
-    setTafsirIds,
-    setTranslationIds,
-    setArabicFontSize,
-    setTranslationFontSize,
-    setTafsirFontSize,
-    setArabicFontFace,
-  } = setters;
-
-  const value = useMemo(
+  const contextValue = useMemo<SettingsContextType>(
     () => ({
       settings,
-      setSettings,
       arabicFonts: ARABIC_FONTS,
-      setShowByWords,
-      setTajweed,
-      setWordLang,
-      setWordTranslationId,
-      setTafsirIds,
-      setTranslationIds,
-      setArabicFontSize,
-      setTranslationFontSize,
-      setTafsirFontSize,
-      setArabicFontFace,
+      ...setters,
     }),
-    [
-      settings,
-      setSettings,
-      setShowByWords,
-      setTajweed,
-      setWordLang,
-      setWordTranslationId,
-      setTafsirIds,
-      setTranslationIds,
-      setArabicFontSize,
-      setTranslationFontSize,
-      setTafsirFontSize,
-      setArabicFontFace,
-    ]
+    [settings, setters]
   );
 
-  return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;
+  return (
+    <SettingsContext.Provider value={contextValue}>{children}</SettingsContext.Provider>
+  );
 };
 
 export const useSettings = (): SettingsContextType => {

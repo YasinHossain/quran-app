@@ -16,7 +16,7 @@ const verse: Verse = {
   ],
 };
 
-const renderVerse = () =>
+const renderVerse = (): ReturnType<typeof renderWithProvidersAsync> =>
   renderWithProvidersAsync(
     <TranslationProvider>
       <VerseComponent verse={verse} />

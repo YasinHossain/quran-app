@@ -70,7 +70,7 @@ jest.mock('@/app/(features)/surah/hooks', () => {
 
 export const renderSurahView = (surahId = '1'): ReturnType<typeof renderWithProviders> => {
   // Import after mocks are applied to ensure mocks take effect
-  const module = require('../../SurahView.client.tsx');
-  const SurahView = module.SurahView ?? module.default ?? module;
+  const surahViewExports = require('../../SurahView.client.tsx');
+  const SurahView = surahViewExports.SurahView ?? surahViewExports.default ?? surahViewExports;
   return renderWithProviders(<SurahView surahId={surahId} />);
 };
