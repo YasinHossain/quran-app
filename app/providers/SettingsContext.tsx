@@ -87,9 +87,7 @@ export const SettingsProvider = ({
     [settings, setters]
   );
 
-  return (
-    <SettingsContext.Provider value={contextValue}>{children}</SettingsContext.Provider>
-  );
+  return <SettingsContext.Provider value={contextValue}>{children}</SettingsContext.Provider>;
 };
 
 export const useSettings = (): SettingsContextType => {

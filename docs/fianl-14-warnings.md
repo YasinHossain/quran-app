@@ -1,0 +1,21 @@
+# fianl 14 warnings
+
+Ordered from easiest (#1) to most involved (#14). Each entry captures the rule trigger and a quick idea for how to clear it when you have time.
+
+| # | Location | Rule | What's happening | Fix idea |
+| - | - | - | - | - |
+| 1 | tests/unit/infrastructure/monitoring/RemoteTransport.flushing.test.ts:21 | @typescript-eslint/explicit-function-return-type | setup helper is inferred as () => void. | Add an explicit () => void return annotation. |
+| 2 | tests/unit/infrastructure/monitoring/RemoteTransport.flushing.test.ts:30 | @typescript-eslint/explicit-function-return-type | teardown helper also relies on inferred void. | Annotate const teardown = (): void => { ... }. |
+| 3 | tests/unit/infrastructure/monitoring/RemoteTransport.flushing.test.ts:48 | @typescript-eslint/explicit-function-return-type | expectFlushCalledWith test helper returns nothing but lacks a type. | Declare it as (...): void => { ... }. |
+| 4 | tests/e2e/utils/offline.ts:27 | @typescript-eslint/explicit-function-return-type | isExpectedOfflineNavigationError returns a boolean without annotation. | Add function isExpected...(...): boolean. |
+| 5 | tests/e2e/utils/offline.ts:5 | @typescript-eslint/explicit-function-return-type | cacheInitialContent async helper omits its Promise<void> return type. | Append : Promise<void> to the function signature. |
+| 6 | tests/e2e/utils/offline.ts:77 | @typescript-eslint/explicit-function-return-type | restoreOnline async helper also lacks its return type. | Annotate with : Promise<void>. |
+| 7 | tests/e2e/utils/offline.ts:126 | @typescript-eslint/explicit-function-return-type | expectAppShellStructure is inferred as Promise<void>. | Add an explicit : Promise<void> return type. |
+| 8 | tests/e2e/utils/offline.ts:35 | @typescript-eslint/explicit-function-return-type | visitWhileOffline async helper omits its return type. | Declare : Promise<void> on the export. |
+| 9 | app/shared/player/hooks/useAdjacentAudioPrefetch.ts:5 | @typescript-eslint/explicit-function-return-type | The custom hook returns nothing but lacks an explicit type. | Add ): void to the hook definition. |
+|10 | tests/unit/infrastructure/monitoring/RemoteTransport.flushing.test.ts:37 | @typescript-eslint/explicit-function-return-type | getContext returns a specific object shape without annotation. | Define the return type (for example returning transport and mock). |
+|11 | tests/unit/infrastructure/monitoring/RemoteTransport.flushing.test.ts:17 | @typescript-eslint/explicit-function-return-type | createTransportTestContext returns an object of helpers, all inferred. | Create a dedicated interface or type alias and annotate the function to match. |
+|12 | lib/__tests__/mobile-performance/memory-network.test.ts:9 | @typescript-eslint/explicit-function-return-type | createPerformanceHarness factory relies on inference for a complex helper set. | Introduce a harness interface or type and annotate the factory return. |
+|13 | tests/e2e/utils/offline.ts:35 | complexity | visitWhileOffline cyclomatic complexity is 11 (>10). | Extract guard clauses or helper functions such as offline error handling to reduce branches. |
+|14 | app/shared/player/hooks/useAdjacentAudioPrefetch.ts:5 | max-lines-per-function | The hook packs 55 lines into one effect, exceeding the 50-line limit. | Split the logic into smaller helpers (for next/previous prefetch) or break the hook apart. |
+

@@ -14,10 +14,7 @@ export type Action =
   | { type: 'SET_ARABIC_FONT_FACE'; value: string };
 
 type ActionHandlerMap = {
-  [Type in Action['type']]: (
-    state: Settings,
-    action: Extract<Action, { type: Type }>
-  ) => Settings;
+  [Type in Action['type']]: (state: Settings, action: Extract<Action, { type: Type }>) => Settings;
 };
 
 const actionHandlers = {

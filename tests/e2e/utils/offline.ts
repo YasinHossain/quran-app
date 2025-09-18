@@ -1,7 +1,8 @@
 import { expect } from '@playwright/test';
+
 import type { BrowserContext, Page } from '@playwright/test';
 
-export async function cacheInitialContent(page: Page) {
+export async function cacheInitialContent(page: Page): Promise<void> {
   await page.goto('/');
   await page.waitForLoadState('networkidle');
 
@@ -23,7 +24,7 @@ export type OfflineVisitOptions = {
 
 const OFFLINE_ERROR_PATTERNS = ['ERR_INTERNET_DISCONNECTED', 'ERR_FAILED', 'NS_ERROR_OFFLINE'];
 
-function isExpectedOfflineNavigationError(error: unknown) {
+function isExpectedOfflineNavigationError(error: unknown): boolean {
   if (!(error instanceof Error)) {
     return false;
   }
@@ -31,41 +32,63 @@ function isExpectedOfflineNavigationError(error: unknown) {
   return OFFLINE_ERROR_PATTERNS.some((pattern) => error.message.includes(pattern));
 }
 
+async function navigateOffline(page: Page, path: string): Promise<boolean> {
+  try {
+    await page.goto(path);
+    return false;
+  } catch (error) {
+    if (isExpectedOfflineNavigationError(error)) {
+      return true;
+    }
+
+    throw error;
+  }
+}
+
+async function waitForOfflineNavigationIdle(
+  page: Page,
+  waitForNetworkIdle: boolean,
+  navigationFailedOffline: boolean
+): Promise<void> {
+  if (!waitForNetworkIdle) {
+    return;
+  }
+
+  try {
+    await page.waitForLoadState('networkidle', { timeout: 1000 });
+  } catch (error) {
+    if (!navigationFailedOffline || !isExpectedOfflineNavigationError(error)) {
+      throw error;
+    }
+  }
+}
+
+async function waitAfterOfflineNavigation(
+  page: Page,
+  waitForMs: number | undefined,
+  navigationFailedOffline: boolean
+): Promise<void> {
+  if (typeof waitForMs === 'number') {
+    await page.waitForTimeout(waitForMs);
+    return;
+  }
+
+  if (navigationFailedOffline) {
+    await page.waitForTimeout(1000);
+  }
+}
+
 export async function visitWhileOffline(
   page: Page,
   context: BrowserContext,
   path: string,
   { waitForNetworkIdle = false, waitForMs }: OfflineVisitOptions = {}
-) {
+): Promise<void> {
   await context.setOffline(true);
 
-  let navigationFailedOffline = false;
-
-  try {
-    await page.goto(path);
-  } catch (error) {
-    navigationFailedOffline = isExpectedOfflineNavigationError(error);
-
-    if (!navigationFailedOffline) {
-      throw error;
-    }
-  }
-
-  if (waitForNetworkIdle) {
-    try {
-      await page.waitForLoadState('networkidle', { timeout: 1000 });
-    } catch (error) {
-      if (!navigationFailedOffline && !isExpectedOfflineNavigationError(error)) {
-        throw error;
-      }
-    }
-  }
-
-  if (typeof waitForMs === 'number') {
-    await page.waitForTimeout(waitForMs);
-  } else if (navigationFailedOffline) {
-    await page.waitForTimeout(1000);
-  }
+  const navigationFailedOffline = await navigateOffline(page, path);
+  await waitForOfflineNavigationIdle(page, waitForNetworkIdle, navigationFailedOffline);
+  await waitAfterOfflineNavigation(page, waitForMs, navigationFailedOffline);
 }
 
 export type RestoreOnlineOptions = {
@@ -80,7 +103,7 @@ export async function restoreOnline(
     tryAgainSelector = 'button:has-text("Try Again")',
     waitForLoadState = 'networkidle',
   }: RestoreOnlineOptions = {}
-) {
+): Promise<void> {
   await context.setOffline(false);
 
   if (tryAgainSelector) {
@@ -122,7 +145,7 @@ export async function attemptOfflineNavigation(
   return { linkCount, destinationTitle };
 }
 
-export async function expectAppShellStructure(page: Page) {
+export async function expectAppShellStructure(page: Page): Promise<void> {
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
 
   const viewport = await page.viewportSize();

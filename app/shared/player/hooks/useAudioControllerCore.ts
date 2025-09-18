@@ -13,6 +13,7 @@ interface Options {
 
 type CoreReturn = ReturnType<typeof useTrackTiming> &
   ReturnType<typeof useAudioControllerSetup> & {
+    timing: ReturnType<typeof useTrackTiming>;
     isPlayerVisible: boolean;
     closePlayer: () => void;
     audioRef: React.RefObject<HTMLAudioElement>;
@@ -58,6 +59,7 @@ export function useAudioControllerCore({ track, onPrev, onNext }: Options): Core
     closePlayer: audio.closePlayer,
     audioRef: audio.audioRef,
     isPlaying: audio.isPlaying,
+    timing,
     ...timing,
     ...setup,
   } as const;

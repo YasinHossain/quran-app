@@ -22,9 +22,7 @@ function useStoredBookmarkState(): {
   lastRead: Record<string, number>;
   setLastReadState: React.Dispatch<React.SetStateAction<Record<string, number>>>;
   memorization: Record<string, MemorizationPlan>;
-  setMemorizationState: React.Dispatch<
-    React.SetStateAction<Record<string, MemorizationPlan>>
-  >;
+  setMemorizationState: React.Dispatch<React.SetStateAction<Record<string, MemorizationPlan>>>;
 } {
   const [folders, setFolders] = useState<Folder[]>([]);
   const [pinnedVerses, setPinnedVerses] = useState<Bookmark[]>([]);

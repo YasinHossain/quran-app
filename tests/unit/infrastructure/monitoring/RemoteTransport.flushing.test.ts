@@ -8,17 +8,26 @@ import { LogLevel, type LogEntry } from '@/src/infrastructure/monitoring/types';
 
 type FetchWithTimeout = typeof import('@/lib/api/client').fetchWithTimeout;
 
+type TransportTestContext = {
+  setup: () => void;
+  teardown: () => void;
+  getContext: () => {
+    transport: RemoteTransport;
+    mockFetchWithTimeout: jest.MockedFunction<FetchWithTimeout>;
+  };
+};
+
 const createEntry = (level: LogLevel = LogLevel.INFO): LogEntry => ({
   level,
   message: 'msg',
   timestamp: new Date(),
 });
 
-const createTransportTestContext = () => {
+const createTransportTestContext = (): TransportTestContext => {
   let transport: RemoteTransport | undefined;
   let mockFetchWithTimeout: jest.MockedFunction<FetchWithTimeout> | undefined;
 
-  const setup = () => {
+  const setup = (): void => {
     mockFetchWithTimeout = jest.fn() as jest.MockedFunction<FetchWithTimeout>;
     transport = new RemoteTransport(
       'https://example.com',
@@ -27,14 +36,17 @@ const createTransportTestContext = () => {
     );
   };
 
-  const teardown = () => {
+  const teardown = (): void => {
     transport?.destroy();
     transport = undefined;
     mockFetchWithTimeout = undefined;
     jest.restoreAllMocks();
   };
 
-  const getContext = () => {
+  const getContext = (): {
+    transport: RemoteTransport;
+    mockFetchWithTimeout: jest.MockedFunction<FetchWithTimeout>;
+  } => {
     if (!transport || !mockFetchWithTimeout) {
       throw new Error('Transport mocks not initialized');
     }
@@ -48,7 +60,7 @@ const createTransportTestContext = () => {
 const expectFlushCalledWith = (
   mockFetchWithTimeout: jest.MockedFunction<FetchWithTimeout>,
   { includeHeaders = false, entries = 1 }: { includeHeaders?: boolean; entries?: number } = {}
-) => {
+): void => {
   expect(mockFetchWithTimeout).toHaveBeenCalled();
 
   const [, requestInit] = mockFetchWithTimeout.mock.calls[0] ?? [];

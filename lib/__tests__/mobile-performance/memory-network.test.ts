@@ -6,7 +6,12 @@ import { setupMobilePerformanceTest, testPerformance } from './test-utils';
 
 type PerformanceTestSetup = ReturnType<typeof setupMobilePerformanceTest>;
 
-const createPerformanceHarness = () => {
+type PerformanceHarness = {
+  run: <T>(callback: (context: PerformanceTestSetup) => T | Promise<T>) => T | Promise<T>;
+  runWithoutContext: <T>(callback: () => T | Promise<T>) => T | Promise<T>;
+};
+
+const createPerformanceHarness = (): PerformanceHarness => {
   let setup: PerformanceTestSetup | null = null;
 
   beforeEach(() => {
@@ -21,7 +26,7 @@ const createPerformanceHarness = () => {
   const ensureSetup = (): PerformanceTestSetup => {
     if (!setup) {
       throw new Error(
-        'Performance harness not initialized. Ensure createPerformanceHarness is invoked within a describe block.',
+        'Performance harness not initialized. Ensure createPerformanceHarness is invoked within a describe block.'
       );
     }
 
