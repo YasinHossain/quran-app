@@ -2,7 +2,7 @@ import { JuzClient } from '@/app/(features)/juz/[juzId]/JuzClient';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import * as api from '@/lib/api';
-import { Verse, Juz } from '@/types';
+import { Verse } from '@/types';
 
 jest.mock('react', () => {
   const actual = jest.requireActual('react');
@@ -20,15 +20,6 @@ const mockVerse: Verse = {
   text_uthmani: 'verse text',
   words: [],
 } as Verse;
-const mockJuz: Juz = {
-  id: 1,
-  juz_number: 1,
-  verse_mapping: {},
-  first_verse_id: 1,
-  last_verse_id: 1,
-  verses_count: 1,
-};
-
 jest.mock('@/lib/api');
 
 beforeAll(() => {
@@ -38,15 +29,14 @@ beforeAll(() => {
 beforeEach(() => {
   (api.getTranslations as jest.Mock).mockResolvedValue([]);
   (api.getVersesByJuz as jest.Mock).mockResolvedValue({ verses: [mockVerse], totalPages: 1 });
-  (api.getJuz as jest.Mock).mockResolvedValue(mockJuz);
 });
 
 const renderPage = (): void => {
   renderWithProviders(<JuzClient juzId="1" />);
 };
 
-test('renders juz info and verses', async () => {
+test('renders verses for selected juz', async () => {
   renderPage();
-  expect(await screen.findByText('juz_number')).toBeInTheDocument();
   expect(await screen.findByText('verse text')).toBeInTheDocument();
+  expect(api.getVersesByJuz).toHaveBeenCalled();
 });

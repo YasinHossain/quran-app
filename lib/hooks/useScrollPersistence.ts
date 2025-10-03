@@ -6,6 +6,7 @@ interface ScrollPersistenceOptions<T extends string> {
   scrollTops: Record<T, number>;
   setScrollTops: Record<T, (top: number) => void>;
   storageKeys: Record<T, string>;
+  isEnabled?: boolean;
 }
 
 interface ScrollPersistenceResult<T extends string> {
@@ -20,36 +21,43 @@ export const useScrollPersistence = <T extends string>({
   scrollTops,
   setScrollTops,
   storageKeys,
+  isEnabled = true,
 }: ScrollPersistenceOptions<T>): ScrollPersistenceResult<T> => {
+  const enabled = isEnabled;
+
   useLayoutEffect(() => {
+    if (!enabled) return;
     const container = scrollRef.current;
     if (!container) return;
     const storageKey = storageKeys[activeTab];
     const top = Number(sessionStorage.getItem(storageKey)) || scrollTops[activeTab];
     container.scrollTop = top;
-  }, [activeTab, scrollRef, scrollTops, storageKeys]);
+  }, [activeTab, enabled, scrollRef, scrollTops, storageKeys]);
 
   const handleScroll = useCallback(
     (e: React.UIEvent<HTMLDivElement>): void => {
+      if (!enabled) return;
       const top = e.currentTarget.scrollTop;
       setScrollTops[activeTab](top);
       sessionStorage.setItem(storageKeys[activeTab], String(top));
     },
-    [activeTab, setScrollTops, storageKeys]
+    [activeTab, enabled, setScrollTops, storageKeys]
   );
 
   const prepareForTabSwitch = useCallback((): void => {
+    if (!enabled) return;
     const top = scrollRef.current?.scrollTop ?? 0;
     setScrollTops[activeTab](top);
-  }, [activeTab, scrollRef, setScrollTops]);
+  }, [activeTab, enabled, scrollRef, setScrollTops]);
 
   const rememberScroll = useCallback(
     (tab: T): void => {
+      if (!enabled) return;
       const top = scrollRef.current?.scrollTop ?? 0;
       setScrollTops[tab](top);
       sessionStorage.setItem(storageKeys[tab], String(top));
     },
-    [scrollRef, setScrollTops, storageKeys]
+    [enabled, scrollRef, setScrollTops, storageKeys]
   );
 
   return { handleScroll, prepareForTabSwitch, rememberScroll };

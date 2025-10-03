@@ -9,7 +9,7 @@ import type { Verse } from '@/types';
 interface MainContentProps {
   isHidden: boolean;
   folderName: string;
-  activeVerseId?: string;
+  activeVerseId?: string | undefined;
   verses: Verse[];
   displayVerses: Verse[];
   loadingVerses: Set<string>;

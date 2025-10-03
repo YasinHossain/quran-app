@@ -11,7 +11,7 @@ interface SurahDropdownProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   onSelect: (chapter: Chapter) => void;
-  searchInputRef: React.RefObject<HTMLInputElement>;
+  searchInputRef: React.MutableRefObject<HTMLInputElement | null>;
   handleKeyDown: (e: React.KeyboardEvent) => void;
 }
 

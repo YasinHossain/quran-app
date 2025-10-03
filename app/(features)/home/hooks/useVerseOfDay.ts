@@ -1,10 +1,9 @@
 'use client';
 
 import { useEffect, useState, useCallback, useRef } from 'react';
-import useSWR from 'swr';
 
 import { useSettings } from '@/app/providers/SettingsContext';
-import { getSurahList } from '@/lib/api';
+import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 import { Verse } from '@/types';
 
 import { useVerseRotation } from './useVerseRotation';
@@ -43,8 +42,8 @@ export function useVerseOfDay({
   const [currentVerse, setCurrentVerse] = useState<Verse | null>(null);
   const rotationCountRef = useRef(0);
 
-  // Load surahs using SWR
-  const { data: surahs = [] } = useSWR('surahs', getSurahList);
+  // Load surahs from the shared navigation dataset
+  const { surahs } = useSurahNavigationData();
 
   // Manage verse sources
   const { activeVerse, isLoading, currentError, handleRotation, refreshVerse } = useVerseSource({

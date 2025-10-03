@@ -6,11 +6,13 @@ import type { TabKey } from '@/app/shared/components/surah-tabs/types';
 interface Options {
   scrollRef: React.RefObject<HTMLDivElement>;
   activeTab: TabKey;
+  isEnabled: boolean;
 }
 
 export const useSidebarScrollPersistence = ({
   scrollRef,
   activeTab,
+  isEnabled,
 }: Options): ReturnType<typeof useScrollPersistence<TabKey>> => {
   const {
     surahScrollTop,
@@ -39,5 +41,6 @@ export const useSidebarScrollPersistence = ({
       Juz: 'juzScrollTop',
       Page: 'pageScrollTop',
     },
+    isEnabled,
   });
 };

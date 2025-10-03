@@ -10,9 +10,9 @@ import { VerseList } from './bookmark-verse-sidebar/VerseList';
 export interface BookmarkVerseSidebarProps {
   bookmarks: Bookmark[];
   folder: { id: string; name: string };
-  activeVerseId?: string;
-  onVerseSelect?: (verseId: string) => void;
-  onBack?: () => void;
+  activeVerseId?: string | undefined;
+  onVerseSelect?: ((verseId: string) => void) | undefined;
+  onBack?: (() => void) | undefined;
 }
 
 export const BookmarkVerseSidebar = ({

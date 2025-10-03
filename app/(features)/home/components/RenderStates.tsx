@@ -11,7 +11,7 @@ interface RenderStatesProps {
   initialLoad: boolean;
   error: string | null;
   displayVerse: Verse | null;
-  className?: string;
+  className?: string | undefined;
   onRetry: () => void;
   surahName: string | null;
   tajweedEnabled: boolean;

@@ -14,8 +14,8 @@ interface FolderItemProps {
   folderBookmarks: Bookmark[];
   onToggle: (folderId: string) => void;
   onSelect: (folderId: string) => void;
-  activeVerseId?: string;
-  onVerseSelect?: (verseId: string) => void;
+  activeVerseId?: string | undefined;
+  onVerseSelect?: ((verseId: string) => void) | undefined;
 }
 
 export const FolderItem = ({

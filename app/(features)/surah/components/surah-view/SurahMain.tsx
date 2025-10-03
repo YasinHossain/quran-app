@@ -14,6 +14,8 @@ interface SurahMainProps {
   loadMoreRef: React.RefObject<HTMLDivElement | null>;
   isValidating: boolean;
   isReachingEnd: boolean;
+  emptyLabelKey?: string;
+  endLabelKey?: string;
 }
 
 export function SurahMain({
@@ -23,6 +25,8 @@ export function SurahMain({
   loadMoreRef,
   isValidating,
   isReachingEnd,
+  emptyLabelKey,
+  endLabelKey,
 }: SurahMainProps): React.JSX.Element {
   const { isHidden } = useHeaderVisibility();
   return (
@@ -41,6 +45,8 @@ export function SurahMain({
           loadMoreRef={loadMoreRef}
           isValidating={isValidating}
           isReachingEnd={isReachingEnd}
+          emptyLabelKey={emptyLabelKey}
+          endLabelKey={endLabelKey}
         />
       </div>
     </main>

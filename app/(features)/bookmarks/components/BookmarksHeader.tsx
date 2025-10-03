@@ -7,13 +7,13 @@ import { useResponsiveState } from '@/lib/responsive';
 import { HeaderTitleSection } from './header/HeaderTitleSection';
 
 interface BookmarksHeaderProps {
-  onSidebarToggle?: () => void;
+  onSidebarToggle?: (() => void) | undefined;
   title?: string;
   sortBy?: 'recent' | 'name-asc' | 'name-desc' | 'most-verses';
-  onSortChange?: (sort: 'recent' | 'name-asc' | 'name-desc' | 'most-verses') => void;
+  onSortChange?: ((sort: 'recent' | 'name-asc' | 'name-desc' | 'most-verses') => void) | undefined;
   searchTerm?: string;
-  onSearchChange?: (value: string) => void;
-  onNewFolderClick?: () => void;
+  onSearchChange?: ((value: string) => void) | undefined;
+  onNewFolderClick?: (() => void) | undefined;
 }
 
 export const BookmarksHeader = ({

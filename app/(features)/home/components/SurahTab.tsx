@@ -12,7 +12,7 @@ interface SurahTabProps {
 }
 
 export function SurahTab({ searchQuery }: SurahTabProps): React.JSX.Element {
-  const { filteredSurahs, isLoading, isEmpty } = useSurahSearch(searchQuery);
+  const { filteredChapters, isLoading, isEmpty } = useSurahSearch(searchQuery);
 
   if (isLoading) {
     return <SurahLoadingGrid />;
@@ -22,5 +22,5 @@ export function SurahTab({ searchQuery }: SurahTabProps): React.JSX.Element {
     return <SurahEmptyState />;
   }
 
-  return <SurahGrid surahs={filteredSurahs} />;
+  return <SurahGrid chapters={filteredChapters} />;
 }

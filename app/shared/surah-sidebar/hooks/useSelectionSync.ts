@@ -8,7 +8,7 @@ interface Args {
   currentSurahId?: number;
   currentJuzId?: number;
   currentPageId?: number;
-  chapters: Chapter[];
+  chapters: ReadonlyArray<Chapter>;
 }
 
 type SelectionSetters = {

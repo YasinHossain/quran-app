@@ -10,12 +10,12 @@ interface FolderSectionProps {
   folders: Folder[];
   expandedFolders: Set<string>;
   toggleFolderExpansion: (folderId: string) => void;
-  onVerseClick?: (verseKey: string) => void;
+  onVerseClick?: ((verseKey: string) => void) | undefined;
 }
 
 interface FolderPreviewItemProps {
   bookmark: Bookmark;
-  onVerseClick?: (verseKey: string) => void;
+  onVerseClick?: ((verseKey: string) => void) | undefined;
 }
 
 const FolderPreviewItem = ({
@@ -33,7 +33,7 @@ interface FolderListItemProps {
   folder: Folder;
   isExpanded: boolean;
   onToggleExpansion: (folderId: string) => void;
-  onVerseClick?: (verseKey: string) => void;
+  onVerseClick?: ((verseKey: string) => void) | undefined;
 }
 
 const FolderListItem = ({

@@ -6,9 +6,24 @@ import type { Chapter } from '@/types';
 
 interface BehaviorArgs {
   chapters: Chapter[];
-  value?: number;
+  value?: number | undefined;
   onChange: (surahId: number) => void;
   disabled: boolean;
+}
+
+export interface SurahSelectorBehaviorState {
+  open: boolean;
+  term: string;
+  setTerm: React.Dispatch<React.SetStateAction<string>>;
+  containerRef: React.MutableRefObject<HTMLDivElement | null>;
+  inputRef: React.MutableRefObject<HTMLInputElement | null>;
+  toggleOpen: () => void;
+  handleKeyDown: (e: React.KeyboardEvent) => void;
+  selected?: Chapter | undefined;
+  selectSurah: (chapter: Chapter) => void;
+  chapters: Chapter[];
+  value?: number | undefined;
+  closeDropdown: () => void;
 }
 
 export function useSurahSelectorBehavior({
@@ -16,7 +31,7 @@ export function useSurahSelectorBehavior({
   value,
   onChange,
   disabled,
-}: BehaviorArgs): ReturnType<typeof useSurahSelectorBehavior> {
+}: BehaviorArgs): SurahSelectorBehaviorState {
   const visibility = useDropdownVisibility({ disabled });
   const selection = useSelectedChapter({
     chapters,
@@ -37,14 +52,22 @@ export function useSurahSelectorBehavior({
     selectSurah: selection.selectSurah,
     chapters,
     value,
-  } as const;
+    closeDropdown: visibility.closeDropdown,
+  };
 }
 
-function useDropdownVisibility({
-  disabled,
-}: {
-  disabled: boolean;
-}): ReturnType<typeof useDropdownVisibility> {
+interface DropdownVisibilityState {
+  open: boolean;
+  term: string;
+  setTerm: React.Dispatch<React.SetStateAction<string>>;
+  containerRef: React.MutableRefObject<HTMLDivElement | null>;
+  inputRef: React.MutableRefObject<HTMLInputElement | null>;
+  toggleOpen: () => void;
+  handleKeyDown: (e: React.KeyboardEvent) => void;
+  closeDropdown: () => void;
+}
+
+function useDropdownVisibility({ disabled }: { disabled: boolean }): DropdownVisibilityState {
   const [open, setOpen] = useState(false);
   const [term, setTerm] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
@@ -90,7 +113,7 @@ function useDropdownVisibility({
     toggleOpen,
     handleKeyDown,
     closeDropdown,
-  } as const;
+  };
 }
 
 function useSelectedChapter({
@@ -100,10 +123,13 @@ function useSelectedChapter({
   close,
 }: {
   chapters: Chapter[];
-  value?: number;
+  value?: number | undefined;
   onChange: (surahId: number) => void;
   close: () => void;
-}): ReturnType<typeof useSelectedChapter> {
+}): {
+  selected?: Chapter | undefined;
+  selectSurah: (chapter: Chapter) => void;
+} {
   const selected = useMemo(() => chapters.find((c) => c.id === value), [chapters, value]);
 
   const selectSurah = useCallback(
@@ -114,5 +140,5 @@ function useSelectedChapter({
     [onChange, close]
   );
 
-  return { selected, selectSurah } as const;
+  return { selected, selectSurah };
 }

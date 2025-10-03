@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import React from 'react';
 
 import { Folder } from '@/types';
@@ -13,7 +13,7 @@ import {
 } from './folder-settings-modal';
 
 const Backdrop: React.FC<{
-  variants: Parameters<typeof motion.div>[0]['variants'];
+  variants: Variants;
   onClick: () => void;
 }> = ({ variants, onClick }) => (
   <motion.div
@@ -27,7 +27,7 @@ const Backdrop: React.FC<{
 );
 
 const CenteredModal: React.FC<{
-  variants: Parameters<typeof motion.div>[0]['variants'];
+  variants: Variants;
   children: React.ReactNode;
 }> = ({ variants, children }) => (
   <motion.div

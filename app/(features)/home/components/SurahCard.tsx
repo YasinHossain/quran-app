@@ -2,42 +2,28 @@
 
 import { memo } from 'react';
 
-import { GlassCard, NumberBadge } from '@/app/shared/ui';
+import { formatSurahSubtitle } from '@/app/shared/navigation/formatSurahSubtitle';
+import { buildSurahRoute } from '@/app/shared/navigation/routes';
+import { SurahNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
 
-import type { Surah } from '@/types';
+import type { Chapter } from '@/types';
 
 interface SurahCardProps {
-  surah: Surah;
+  chapter: Chapter;
 }
 
-/**
- * Individual surah card component with responsive design
- * Displays surah number, name, meaning, and verse count
- */
-export const SurahCard = memo(function SurahCard({ surah }: SurahCardProps) {
+export const SurahCard = memo(function SurahCard({ chapter }: SurahCardProps): React.JSX.Element {
   return (
-    <GlassCard
-      href={`/surah/${surah.number}`}
-      key={surah.number}
-      variant="surface"
-      size="comfortable"
-      radius="xl"
-    >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <NumberBadge number={surah.number} />
-          <div>
-            <h3 className="font-semibold text-lg text-content-primary">{surah.name}</h3>
-            <p className="text-sm text-content-secondary">{surah.meaning}</p>
-          </div>
-        </div>
-        <div className="text-right">
-          <p className="font-amiri text-2xl text-content-primary group-hover:text-accent transition-colors">
-            {surah.arabicName}
-          </p>
-          <p className="text-sm text-content-secondary">{surah.verses} Verses</p>
-        </div>
-      </div>
-    </GlassCard>
+    <SurahNavigationCard
+      href={buildSurahRoute(chapter.id)}
+      scroll
+      className="items-center"
+      content={{
+        id: chapter.id,
+        title: chapter.name_simple,
+        subtitle: formatSurahSubtitle(chapter),
+        arabic: chapter.name_arabic,
+      }}
+    />
   );
 });

@@ -17,7 +17,7 @@ Welcome to the Quran App project! This guide will help you get started with cont
 
 ### Prerequisites
 
-- Node.js 20+ 
+- Node.js 20+
 - npm or yarn
 - Git
 
@@ -127,7 +127,7 @@ app/(features)/surah/
 app/shared/components/modal/
 ├── ModalContent.tsx     # Main component
 ├── ModalActions.tsx     # Sub-components
-├── ModalBackdrop.tsx    
+├── ModalBackdrop.tsx
 ├── Modal.stories.tsx    # Storybook stories
 ├── Modal.test.tsx       # Component tests
 └── index.ts             # Exports
@@ -182,7 +182,7 @@ describe('AudioPlayer', () => {
       <AudioPlayer src="/test-audio.mp3" />,
       { initialAudioState: { isPlaying: false } }
     );
-    
+
     expect(screen.getByRole('button', { name: /play/i })).toBeInTheDocument();
   });
 });
@@ -217,14 +217,14 @@ export interface ButtonProps {
   onClick?: () => void;
 }
 
-export const Button: React.FC<ButtonProps> = ({ 
-  variant, 
-  size, 
-  children, 
-  onClick 
+export const Button: React.FC<ButtonProps> = ({
+  variant,
+  size,
+  children,
+  onClick
 }) => {
   return (
-    <button 
+    <button
       className={cn(baseStyles, variants[variant], sizes[size])}
       onClick={onClick}
     >
@@ -273,9 +273,9 @@ export function useAudioPlayer(src: string): {
   seek: (time: number) => void;
 } {
   const [state, setState] = useState<AudioState>(initialState);
-  
+
   // Implementation...
-  
+
   return {
     isPlaying: state.isPlaying,
     currentTime: state.currentTime,
@@ -319,10 +319,10 @@ export const ResponsiveCard: React.FC<CardProps> = ({ children }) => {
 
 ```typescript
 // Accessible component example
-export const SearchInput: React.FC<SearchInputProps> = ({ 
-  value, 
-  onChange, 
-  placeholder 
+export const SearchInput: React.FC<SearchInputProps> = ({
+  value,
+  onChange,
+  placeholder
 }) => {
   return (
     <div className="relative">
@@ -363,18 +363,18 @@ interface AudioContextValue {
 }
 
 // Provider component
-export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ 
-  children 
+export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
+  children
 }) => {
   const [state, dispatch] = useReducer(audioReducer, initialState);
-  
+
   const contextValue: AudioContextValue = {
     ...state,
     play: handlePlay,
     pause: handlePause,
     setVolume: handleSetVolume,
   };
-  
+
   return (
     <AudioContext.Provider value={contextValue}>
       {children}
@@ -410,7 +410,7 @@ export const renderWithProviders = (
       </AudioProvider>
     </ThemeProvider>
   );
-  
+
   return render(ui, { wrapper: Wrapper });
 };
 ```
@@ -445,10 +445,10 @@ interface AudioPlayerProps {
   onPlay?: () => void;
 }
 
-export const AudioPlayer: React.FC<AudioPlayerProps> = ({ 
-  src, 
-  autoplay = false, 
-  onPlay 
+export const AudioPlayer: React.FC<AudioPlayerProps> = ({
+  src,
+  autoplay = false,
+  onPlay,
 }): React.JSX.Element => {
   // Implementation...
 };
@@ -488,7 +488,7 @@ NODE_ENV=production
 ### Monitoring
 
 - **Error tracking**: Comprehensive error boundaries
-- **Performance monitoring**: Web Vitals instrumentation  
+- **Performance monitoring**: Web Vitals instrumentation
 - **User analytics**: Privacy-focused usage tracking
 - **Security monitoring**: Automated vulnerability scanning
 

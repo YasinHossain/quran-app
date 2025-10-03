@@ -9,6 +9,7 @@ interface Options {
   selectedSurahId: number | null;
   selectedJuzId: number | null;
   selectedPageId: number | null;
+  isEnabled: boolean;
 }
 
 export const useSidebarScrollCentering = ({
@@ -17,6 +18,7 @@ export const useSidebarScrollCentering = ({
   selectedSurahId,
   selectedJuzId,
   selectedPageId,
+  isEnabled,
 }: Options): ReturnType<typeof useScrollCentering<TabKey>> => {
   const { surahScrollTop, juzScrollTop, pageScrollTop } = useSidebar();
 
@@ -33,5 +35,6 @@ export const useSidebarScrollCentering = ({
       Juz: juzScrollTop,
       Page: pageScrollTop,
     },
+    isEnabled,
   });
 };

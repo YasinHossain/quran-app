@@ -1,9 +1,8 @@
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { useSidebar } from '@/app/providers/SidebarContext';
-import { getSurahList } from '@/lib/api';
-import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 
 import type { Surah } from '@/types';
 
@@ -17,14 +16,7 @@ interface UseVerseNavigationReturn {
 export const useVerseNavigation = (surahId: string, ayahId: string): UseVerseNavigationReturn => {
   const router = useRouter();
   const { setSurahListOpen } = useSidebar();
-
-  const [surahList, setSurahList] = useState<Surah[]>([]);
-
-  useEffect(() => {
-    Promise.resolve(getSurahList())
-      .then((list) => setSurahList(list ?? []))
-      .catch((err) => logger.error(err as Error));
-  }, []);
+  const { surahs: surahList } = useSurahNavigationData();
 
   const totalSurahs = surahList.length;
   const currentSurahIndex = Number(surahId) - 1;

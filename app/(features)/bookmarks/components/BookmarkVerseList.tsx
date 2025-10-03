@@ -20,7 +20,7 @@ export const BookmarkVerseList = ({
   isLoading,
   error,
   searchTerm = '',
-}: BookmarkVerseListProps): JSX.Element => {
+}: BookmarkVerseListProps): React.JSX.Element => {
   return (
     <div className="w-full relative">
       {isLoading ? (

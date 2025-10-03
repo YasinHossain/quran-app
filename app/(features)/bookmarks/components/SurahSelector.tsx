@@ -10,17 +10,17 @@ import {
   buildIconClasses,
   renderSelectedContent,
 } from './surah-selector.helpers';
-import { useSurahSelectorBehavior } from './surah-selector.hooks';
+import { useSurahSelectorBehavior, type SurahSelectorBehaviorState } from './surah-selector.hooks';
 import { SurahDropdown } from './SurahDropdown';
 
 interface SurahSelectorProps {
   chapters: Chapter[];
-  value?: number;
+  value?: number | undefined;
   onChange: (surahId: number) => void;
-  placeholder?: string;
-  disabled?: boolean;
-  className?: string;
-  id?: string;
+  placeholder?: string | undefined;
+  disabled?: boolean | undefined;
+  className?: string | undefined;
+  id?: string | undefined;
 }
 
 export const SurahSelector = ({
@@ -45,7 +45,7 @@ export const SurahSelector = ({
         selected={selected}
         onClick={toggleOpen}
       />
-      <SelectorDropdown behavior={behavior} placeholder={placeholder} />
+      <SelectorDropdown behavior={behavior} />
     </div>
   );
 };
@@ -58,11 +58,11 @@ function SelectorButton({
   selected,
   onClick,
 }: {
-  id?: string;
+  id?: string | undefined;
   disabled: boolean;
   open: boolean;
   placeholder: string;
-  selected?: Chapter;
+  selected?: Chapter | undefined;
   onClick: () => void;
 }): React.JSX.Element {
   return (
@@ -81,11 +81,7 @@ function SelectorButton({
   );
 }
 
-function SelectorDropdown({
-  behavior,
-}: {
-  behavior: ReturnType<typeof useSurahSelectorBehavior>;
-}): React.JSX.Element | null {
+function SelectorDropdown({ behavior }: { behavior: SurahSelectorBehaviorState }): React.JSX.Element | null {
   const { open, chapters, value, term, setTerm, selectSurah, inputRef, handleKeyDown } = behavior;
   if (!open) return null;
   return (

@@ -2,6 +2,8 @@
 import { useRouter } from 'next/navigation';
 import { useState, useCallback } from 'react';
 
+import { buildSearchRoute } from '@/app/shared/navigation/routes';
+
 export interface QuickSearchHandlers {
   readonly query: string;
   readonly setQuery: React.Dispatch<React.SetStateAction<string>>;
@@ -29,7 +31,7 @@ export function useQuickSearch(onClose: () => void): QuickSearchHandlers {
   const handleSearch = useCallback(
     (searchQuery: string) => {
       if (searchQuery.trim()) {
-        router.push(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
+        router.push(buildSearchRoute(searchQuery.trim()));
         onClose();
         setQuery('');
       }

@@ -15,13 +15,13 @@ interface SidebarProps {
   onCloseSidebar: () => void;
   onVerseSelect: (verseId: string) => void;
   onBack: () => void;
-  activeVerseId?: string;
+  activeVerseId?: string | undefined;
 }
 
 interface MainContentProps {
   isHidden: boolean;
   folderName: string;
-  activeVerseId?: string;
+  activeVerseId?: string | undefined;
   verses: Verse[];
   displayVerses: Verse[];
   loadingVerses: Set<string>;
@@ -32,11 +32,11 @@ interface SettingsProps {
   onOpenTranslationPanel: () => void;
   onCloseTranslationPanel: () => void;
   isTranslationPanelOpen: boolean;
-  selectedTranslationName?: string;
+  selectedTranslationName?: string | undefined;
   onOpenWordPanel: () => void;
   onCloseWordPanel: () => void;
   isWordPanelOpen: boolean;
-  selectedWordLanguageName?: string;
+  selectedWordLanguageName?: string | undefined;
 }
 
 interface BookmarkFolderViewProps extends SidebarProps, MainContentProps, SettingsProps {}

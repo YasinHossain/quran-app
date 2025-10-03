@@ -3,6 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
+import { buildSurahRoute } from '@/app/shared/navigation/routes';
+
 // Custom hooks for cleaner component logic
 const useKeyboardShortcuts = (
   hideAllSheets: () => void,
@@ -73,7 +75,7 @@ export const NavigationProvider = ({
   // Navigation helpers
   const navigateToSurah = useCallback(
     (surahId: number) => {
-      router.push(`/surah/${surahId}`);
+      router.push(buildSurahRoute(surahId));
       setQuranBottomSheetOpen(false);
     },
     [router]

@@ -49,7 +49,7 @@ Generated: 2025-09-15T17:58:11.673Z
 - tests/accessibility/core-pages.test.tsx: 12
 - app/shared/components/responsive-image/ResponsiveImage.stories.tsx: 7
 - tests/e2e/global-setup.ts: 7
-- app/(features)/bookmarks/__tests__/LastReadPage.test.tsx: 6
+- app/(features)/bookmarks/**tests**/LastReadPage.test.tsx: 6
 - app/(features)/surah/hooks/useVerseListing.ts: 6
 - tests/e2e/offline-functionality.spec.ts: 6
 - app/providers/bookmarks/hooks/useBookmarkData.ts: 5
@@ -58,12 +58,12 @@ Generated: 2025-09-15T17:58:11.673Z
 - app/(features)/surah/hooks/useTranslationOptions.ts: 3
 - app/shared/player/utils/audioSegmentPrefetch.ts: 3
 - app/shared/player/utils/serviceWorkerAudioCache.ts: 3
-- app/(features)/bookmarks/__tests__/Bookmarks.test.tsx: 2
+- app/(features)/bookmarks/**tests**/Bookmarks.test.tsx: 2
 - app/shared/player/hooks/useAudioPrefetch.ts: 2
 - app/testUtils/renderWithProviders.tsx: 2
 - tests/setup/msw/handlers.ts: 2
-- app/(features)/page/__tests__/PagePage.test.tsx: 1
-- app/(features)/surah/__tests__/Verse.test.tsx: 1
+- app/(features)/page/**tests**/PagePage.test.tsx: 1
+- app/(features)/surah/**tests**/Verse.test.tsx: 1
 
 ## Difficulty Buckets (Heuristic)
 
@@ -75,14 +75,14 @@ Generated: 2025-09-15T17:58:11.673Z
 
 _Order: Easy → Medium → Hard; then by file path and line_
 
-1. (easy) [W] @typescript-eslint/no-unused-vars — app/(features)/bookmarks/__tests__/Bookmarks.test.tsx:8:7 — 'mockTag' is assigned a value but never used. — FIXED
-2. (easy) [W] @typescript-eslint/no-unused-vars — app/(features)/bookmarks/__tests__/Bookmarks.test.tsx:12:6 — 'MockProps' is defined but never used. — FIXED
-3. (easy) [W] @typescript-eslint/no-unused-vars — app/(features)/bookmarks/__tests__/LastReadPage.test.tsx:35:23 — 'whileHover' is defined but never used. — FIXED
-4. (easy) [W] @typescript-eslint/no-unused-vars — app/(features)/bookmarks/__tests__/LastReadPage.test.tsx:35:35 — 'whileTap' is defined but never used. — FIXED
-5. (easy) [W] @typescript-eslint/no-unused-vars — app/(features)/bookmarks/__tests__/LastReadPage.test.tsx:37:25 — 'whileHover' is defined but never used. — FIXED
-6. (easy) [W] @typescript-eslint/no-unused-vars — app/(features)/bookmarks/__tests__/LastReadPage.test.tsx:37:37 — 'whileTap' is defined but never used. — FIXED
-7. (easy) [W] @typescript-eslint/no-unused-vars — app/(features)/bookmarks/__tests__/LastReadPage.test.tsx:39:26 — 'whileHover' is defined but never used. — FIXED
-8. (easy) [W] @typescript-eslint/no-unused-vars — app/(features)/bookmarks/__tests__/LastReadPage.test.tsx:39:38 — 'whileTap' is defined but never used. — FIXED
+1. (easy) [W] @typescript-eslint/no-unused-vars — app/(features)/bookmarks/**tests**/Bookmarks.test.tsx:8:7 — 'mockTag' is assigned a value but never used. — FIXED
+2. (easy) [W] @typescript-eslint/no-unused-vars — app/(features)/bookmarks/**tests**/Bookmarks.test.tsx:12:6 — 'MockProps' is defined but never used. — FIXED
+3. (easy) [W] @typescript-eslint/no-unused-vars — app/(features)/bookmarks/**tests**/LastReadPage.test.tsx:35:23 — 'whileHover' is defined but never used. — FIXED
+4. (easy) [W] @typescript-eslint/no-unused-vars — app/(features)/bookmarks/**tests**/LastReadPage.test.tsx:35:35 — 'whileTap' is defined but never used. — FIXED
+5. (easy) [W] @typescript-eslint/no-unused-vars — app/(features)/bookmarks/**tests**/LastReadPage.test.tsx:37:25 — 'whileHover' is defined but never used. — FIXED
+6. (easy) [W] @typescript-eslint/no-unused-vars — app/(features)/bookmarks/**tests**/LastReadPage.test.tsx:37:37 — 'whileTap' is defined but never used. — FIXED
+7. (easy) [W] @typescript-eslint/no-unused-vars — app/(features)/bookmarks/**tests**/LastReadPage.test.tsx:39:26 — 'whileHover' is defined but never used. — FIXED
+8. (easy) [W] @typescript-eslint/no-unused-vars — app/(features)/bookmarks/**tests**/LastReadPage.test.tsx:39:38 — 'whileTap' is defined but never used. — FIXED
 9. (easy) [E] prefer-const — app/(features)/surah/hooks/useVerseListing.ts:52:5 — 'isLoading' is never reassigned. Use 'const' instead. — FIXED
 10. (easy) [E] prefer-const — app/(features)/surah/hooks/useVerseListing.ts:53:5 — 'isValidating' is never reassigned. Use 'const' instead. — FIXED
 11. (easy) [E] prefer-const — app/(features)/surah/hooks/useVerseListing.ts:54:5 — 'isReachingEnd' is never reassigned. Use 'const' instead. — FIXED
@@ -107,8 +107,8 @@ _Order: Easy → Medium → Hard; then by file path and line_
 30. (easy) [W] no-console — tests/e2e/offline-functionality.spec.ts:199:7 — Unexpected console statement. Only these console methods are allowed: warn, error. — FIXED
 31. (easy) [W] @typescript-eslint/no-unused-vars — tests/setup/msw/handlers.ts:119:11 — 'resourceType' is assigned a value but never used. — FIXED
 32. (easy) [W] import/no-anonymous-default-export — tools/scripts/eslint/enforce-architecture-boundaries.mjs:73:1 — Assign object to a variable before exporting as module default — FIXED
-33. (medium) [W] @typescript-eslint/explicit-function-return-type — app/(features)/page/__tests__/PagePage.test.tsx:37:23 — Missing return type on function. — FIXED
-34. (medium) [W] @typescript-eslint/explicit-function-return-type — app/(features)/surah/__tests__/Verse.test.tsx:19:24 — Missing return type on function. — FIXED
+33. (medium) [W] @typescript-eslint/explicit-function-return-type — app/(features)/page/**tests**/PagePage.test.tsx:37:23 — Missing return type on function. — FIXED
+34. (medium) [W] @typescript-eslint/explicit-function-return-type — app/(features)/surah/**tests**/Verse.test.tsx:19:24 — Missing return type on function. — FIXED
 35. (medium) [E] @typescript-eslint/no-explicit-any — app/(features)/surah/hooks/useTranslationOptions.ts:26:50 — Unexpected any. Specify a different type. — FIXED
 36. (medium) [E] @typescript-eslint/no-explicit-any — app/(features)/surah/hooks/useTranslationOptions.ts:26:64 — Unexpected any. Specify a different type. — FIXED
 37. (medium) [E] @typescript-eslint/no-explicit-any — app/(features)/surah/hooks/useTranslationOptions.ts:29:52 — Unexpected any. Specify a different type. — FIXED
@@ -143,7 +143,7 @@ _Order: Easy → Medium → Hard; then by file path and line_
 66. (medium) [W] @typescript-eslint/explicit-function-return-type — tests/setup/msw/server.ts:12:33 — Missing return type on function. — FIXED
 67. (medium) [W] @typescript-eslint/explicit-function-return-type — tests/setup/msw/server.ts:15:76 — Missing return type on function. — FIXED
 68. (medium) [W] max-lines — tests/setup/setupTests.ts:260:1 — File has too many lines (216). Maximum allowed is 200. — FIXED
-69. (hard) [E] @next/next/no-assign-module-variable — app/(features)/surah/components/__tests__/SurahView/test-utils.tsx:73:3 — Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable � FIXED
+69. (hard) [E] @next/next/no-assign-module-variable — app/(features)/surah/components/**tests**/SurahView/test-utils.tsx:73:3 — Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable � FIXED
 70. (hard) [W] max-lines-per-function — app/(features)/surah/hooks/useVerseListing.ts:23:8 — Function 'useVerseListing' has too many lines (68). Maximum allowed is 50. � FIXED
 71. (hard) [W] complexity — app/(features)/surah/hooks/useVerseListing.ts:23:8 — Function 'useVerseListing' has a complexity of 13. Maximum allowed is 10. � FIXED
 72. (hard) [W] max-lines-per-function — app/offline/page.tsx:8:16 — Function 'OfflinePage' has too many lines (119). Maximum allowed is 50. � FIXED
@@ -166,7 +166,7 @@ _Order: Easy → Medium → Hard; then by file path and line_
 89. (hard) [W] max-lines-per-function — app/providers/SettingsContext.tsx:73:33 — Arrow function has too many lines (53). Maximum allowed is 50. — FIXED
 90. (hard) [W] max-lines-per-function — app/providers/bookmarks/hooks/useBookmarkData.ts:17:8 — Function 'useBookmarkData' has too many lines (55). Maximum allowed is 50. — FIXED
 91. (hard) [W] complexity — app/providers/settingsReducer.ts:16:24 — Arrow function has a complexity of 13. Maximum allowed is 10. — FIXED
-92. (hard) [W] max-lines-per-function — app/shared/__tests__/ResponsiveVerseActions/ResponsiveVerseActions.interactions.test.tsx:9:49 — Arrow function has too many lines (64). Maximum allowed is 50. — FIXED
+92. (hard) [W] max-lines-per-function — app/shared/**tests**/ResponsiveVerseActions/ResponsiveVerseActions.interactions.test.tsx:9:49 — Arrow function has too many lines (64). Maximum allowed is 50. — FIXED
 93. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/error-boundary/ErrorBoundary.stories.tsx:28:22 — Avoid using raw color utility "bg-gray-50". Use design tokens instead. — FIXED
 94. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/error-boundary/ErrorBoundary.stories.tsx:28:22 — Avoid using raw color utility "bg-gray-900". Use design tokens instead. — FIXED
 95. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/error-boundary/ErrorBoundary.stories.tsx:226:22 — Avoid using raw color utility "bg-gray-900". Use design tokens instead. — FIXED
@@ -191,8 +191,7 @@ _Order: Easy → Medium → Hard; then by file path and line_
 114. (hard) [E] token-rules/no-raw-color-classes — app/shared/components/responsive-image/ResponsiveImage.stories.tsx:153:22 — Avoid using raw color utility "text-gray-300". Use design tokens instead. — FIXED
 115. (hard) [W] max-lines-per-function — app/shared/player/hooks/useAudioPrefetch.ts:25:8 — Function 'useAudioPrefetch' has too many lines (165). Maximum allowed is 50.
 116. (hard) [W] max-lines-per-function — app/shared/player/utils/audioSegmentPrefetch.ts:106:3 — Async method 'prefetchAudioList' has too many lines (64). Maximum allowed is 50.
-117. (hard) [W] max-lines-per-function — lib/__tests__/mobile-performance/memory-network.test.ts:7:39 — Arrow function has too many lines (52). Maximum allowed is 50.
+117. (hard) [W] max-lines-per-function — lib/**tests**/mobile-performance/memory-network.test.ts:7:39 — Arrow function has too many lines (52). Maximum allowed is 50.
 118. (hard) [W] max-lines-per-function — tests/accessibility/core-pages.test.tsx:167:38 — Arrow function has too many lines (107). Maximum allowed is 50.
 119. (hard) [W] max-lines-per-function — tests/e2e/offline-functionality.spec.ts:8:40 — Arrow function has too many lines (108). Maximum allowed is 50.
 120. (hard) [W] max-lines-per-function — tests/unit/infrastructure/monitoring/RemoteTransport.flushing.test.ts:9:38 — Arrow function has too many lines (58). Maximum allowed is 50.
-

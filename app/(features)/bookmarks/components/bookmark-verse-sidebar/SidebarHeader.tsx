@@ -5,7 +5,7 @@ import React from 'react';
 interface SidebarHeaderProps {
   folder: { id: string; name: string };
   bookmarkCount: number;
-  onBack?: () => void;
+  onBack?: (() => void) | undefined;
 }
 
 const BackIcon = (): React.JSX.Element => (

@@ -17,7 +17,7 @@ const bookmarks = [
 
 jest.mock('@/app/providers/BookmarkContext', () => ({
   useBookmarks: () => ({
-    folders: [{ id: 'folder1', name: 'Folder 1', bookmarks }],
+    folders: [{ id: 'folder1', name: 'Folder 1', bookmarks, createdAt: 0 }],
     chapters: [],
     updateBookmark: jest.fn(),
   }),
@@ -42,7 +42,7 @@ describe('BookmarkFolderSidebar', () => {
         <AppRouterContext.Provider value={mockRouter as any}>
           <BookmarkFolderSidebar
             bookmarks={bookmarks}
-            folder={{ id: 'folder1', name: 'Folder 1', bookmarks }}
+            folder={{ id: 'folder1', name: 'Folder 1', bookmarks, createdAt: 0 }}
             activeVerseId="1"
             onVerseSelect={handleVerseSelect}
             isOpen

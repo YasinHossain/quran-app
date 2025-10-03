@@ -34,7 +34,8 @@ export function useMemorizationCalculations(
 
   const totalVerses = calculateTotalVerses();
   const versesPerDay = estimatedDays > 0 ? Math.ceil(totalVerses / estimatedDays) : 0;
-  const isValidRange = startSurah && endSurah && startSurah <= endSurah;
+  const isValidRange =
+    typeof startSurah === 'number' && typeof endSurah === 'number' && startSurah <= endSurah;
 
   return {
     totalVerses,

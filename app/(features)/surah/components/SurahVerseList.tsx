@@ -16,6 +16,8 @@ interface SurahVerseListProps {
   loadMoreRef: React.RefObject<HTMLDivElement | null>;
   isValidating: boolean;
   isReachingEnd: boolean;
+  emptyLabelKey?: string;
+  endLabelKey?: string;
 }
 
 export const SurahVerseList = ({
@@ -25,6 +27,8 @@ export const SurahVerseList = ({
   loadMoreRef,
   isValidating,
   isReachingEnd,
+  emptyLabelKey = 'no_verses_found',
+  endLabelKey = 'end_of_surah',
 }: SurahVerseListProps): React.JSX.Element => {
   const { t } = useTranslation();
 
@@ -47,11 +51,11 @@ export const SurahVerseList = ({
           ))}
           <div ref={loadMoreRef} className="py-4 text-center space-x-2">
             {isValidating && <Spinner className="inline h-5 w-5 text-accent" />}
-            {isReachingEnd && <span className="text-muted">{t('end_of_surah')}</span>}
+            {isReachingEnd && <span className="text-muted">{t(endLabelKey)}</span>}
           </div>
         </>
       ) : (
-        <div className="text-center py-20 text-muted">{t('no_verses_found')}</div>
+        <div className="text-center py-20 text-muted">{t(emptyLabelKey)}</div>
       )}
     </div>
   );

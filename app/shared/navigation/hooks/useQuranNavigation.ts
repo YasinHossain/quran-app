@@ -1,17 +1,11 @@
 import { IconBook, IconHash, IconFileText } from '@tabler/icons-react';
-import { useState, useEffect, useMemo, Dispatch, SetStateAction } from 'react';
+import { useState, useMemo, Dispatch, SetStateAction } from 'react';
 
-import juzData from '@/data/juz.json';
-import { getSurahList } from '@/lib/api';
-import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { useNavigationDatasets } from '@/app/shared/navigation/hooks/useNavigationDatasets';
+import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 
+import type { JuzSummary } from '@/app/shared/navigation/types';
 import type { Surah } from '@/types';
-
-export interface JuzSummary {
-  number: number;
-  name: string;
-  surahRange: string;
-}
 
 interface QuranNavigationReturn {
   searchTerm: string;
@@ -27,16 +21,9 @@ interface QuranNavigationReturn {
 export function useQuranNavigation(): QuranNavigationReturn {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState<'surah' | 'juz' | 'page'>('surah');
-  const [surahs, setSurahs] = useState<Surah[]>([]);
+  const { juzs, pages } = useNavigationDatasets();
+  const { surahs } = useSurahNavigationData();
 
-  useEffect(() => {
-    getSurahList()
-      .then(setSurahs)
-      .catch((err) => logger.error(err as Error));
-  }, []);
-
-  const juzs = useMemo(() => juzData as JuzSummary[], []);
-  const pages = useMemo(() => Array.from({ length: 604 }, (_, i) => i + 1), []);
   const tabs = useMemo(
     () => [
       { id: 'surah', label: 'Surah', icon: IconBook },

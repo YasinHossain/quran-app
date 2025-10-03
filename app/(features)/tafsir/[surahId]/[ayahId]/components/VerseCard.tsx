@@ -2,6 +2,7 @@
 import { useCallback } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { Verse as VerseType } from '@/types';
 
 import { VerseActions } from './verse-card/VerseActions';
@@ -13,7 +14,10 @@ interface VerseCardProps {
 
 export function VerseCard({ verse }: VerseCardProps): JSX.Element {
   const { addBookmark, removeBookmark, findBookmark, isBookmarked } = useBookmarks();
+  const { playingId, loadingId, isPlaying: globalIsPlaying } = useAudio();
 
+  const isVersePlaying = playingId === verse.id && globalIsPlaying;
+  const isVerseLoading = loadingId === verse.id;
   const isVerseBookmarked = isBookmarked(String(verse.id));
 
   const handleBookmark = useCallback(() => {
@@ -32,8 +36,8 @@ export function VerseCard({ verse }: VerseCardProps): JSX.Element {
       <div className="space-y-4 md:space-y-0 md:flex md:items-start md:gap-x-6">
         <VerseActions
           verse={verse}
-          isPlaying={false}
-          isLoadingAudio={false}
+          isPlaying={isVersePlaying}
+          isLoadingAudio={isVerseLoading}
           isVerseBookmarked={isVerseBookmarked}
           onBookmark={handleBookmark}
         />

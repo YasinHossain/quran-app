@@ -15,7 +15,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-      
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -38,10 +38,10 @@ jobs:
         run: |
           echo "## Bundle Size Report" > size-report.md
           echo "" >> size-report.md
-          
+
           # Run size-limit and capture output
           npm run size-limit > size-output.txt 2>&1 || true
-          
+
           # Parse size-limit output
           if grep -q "FAIL" size-output.txt; then
             echo "❌ **Bundle size check failed!**" >> size-report.md
@@ -64,7 +64,7 @@ jobs:
           echo "" >> size-report.md
           echo "### Bundle Analysis" >> size-report.md
           echo "" >> size-report.md
-          
+
           # Check for large dependencies
           echo "**Largest JavaScript files:**" >> size-report.md
           echo "\`\`\`" >> size-report.md
@@ -78,18 +78,18 @@ jobs:
           script: |
             const fs = require('fs');
             const report = fs.readFileSync('size-report.md', 'utf8');
-            
+
             // Find existing comment
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
             });
-            
+
             const existingComment = comments.find(
               comment => comment.body.includes('Bundle Size Report')
             );
-            
+
             if (existingComment) {
               // Update existing comment
               await github.rest.issues.updateComment({
@@ -120,7 +120,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     needs: size-tracking
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -140,17 +140,17 @@ jobs:
       - name: Collect size metrics
         run: |
           echo "Collecting bundle size metrics for trend analysis..."
-          
+
           # Create size metrics file
           echo "{" > size-metrics.json
           echo "  \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"," >> size-metrics.json
           echo "  \"commit\": \"${{ github.sha }}\"," >> size-metrics.json
           echo "  \"branch\": \"${{ github.ref_name }}\"," >> size-metrics.json
-          
+
           # Get total build size
           TOTAL_SIZE=$(du -sh .next | cut -f1)
           echo "  \"totalSize\": \"$TOTAL_SIZE\"," >> size-metrics.json
-          
+
           # Get individual chunk sizes
           echo "  \"chunks\": [" >> size-metrics.json
           find .next/static/chunks -name "*.js" -type f | while read file; do
@@ -167,7 +167,7 @@ jobs:
         run: |
           echo "Size metrics for trend analysis:"
           cat size-metrics.json
-          
+
           # In a real implementation, you would send this to your analytics service
           # For now, we just log it for demonstration
           echo "::notice title=Bundle Size Tracking::Bundle size metrics collected for commit ${{ github.sha }}"

@@ -23,8 +23,8 @@ export type BookmarkFolderControllerReturn = {
   setIsTranslationPanelOpen: (open: boolean) => void;
   isWordPanelOpen: boolean;
   setIsWordPanelOpen: (open: boolean) => void;
-  selectedTranslationName?: string;
-  selectedWordLanguageName?: string;
+  selectedTranslationName?: string | undefined;
+  selectedWordLanguageName?: string | undefined;
   handleVerseSelect: (verseId: string) => void;
   handleNavigateToBookmarks: () => void;
 };

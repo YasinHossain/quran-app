@@ -1,5 +1,6 @@
-import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
+
+import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
 
 export interface BottomSheetHandlers {
   readonly handleSurahClick: (surahId: number) => void;
@@ -11,30 +12,31 @@ export function useBottomSheetHandlers(
   onClose: () => void,
   onSurahSelect: (surahId: number) => void
 ): BottomSheetHandlers {
-  const router = useRouter();
+  const { goToSurah, goToJuz, goToPage } = useNavigationTargets();
 
   const handleSurahClick = useCallback(
     (surahId: number) => {
       onSurahSelect(surahId);
+      goToSurah(surahId);
       onClose();
     },
-    [onSurahSelect, onClose]
+    [onSurahSelect, goToSurah, onClose]
   );
 
   const handleJuzClick = useCallback(
     (juzNumber: number) => {
-      router.push(`/juz/${juzNumber}`);
+      goToJuz(juzNumber);
       onClose();
     },
-    [router, onClose]
+    [goToJuz, onClose]
   );
 
   const handlePageClick = useCallback(
     (page: number) => {
-      router.push(`/page/${page}`);
+      goToPage(page);
       onClose();
     },
-    [router, onClose]
+    [goToPage, onClose]
   );
 
   return { handleSurahClick, handleJuzClick, handlePageClick } as const;

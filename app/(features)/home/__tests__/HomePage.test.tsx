@@ -1,4 +1,4 @@
-import { screen, within, waitFor } from '@testing-library/react';
+import { screen, within, waitFor, type RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
@@ -6,6 +6,7 @@ import { renderWithProvidersAsync } from '@/app/testUtils/renderWithProviders';
 import { Verse } from '@/types';
 
 import type { MockProps } from '@/tests/mocks';
+import type { JSX } from 'react';
 
 jest.mock('@/lib/api', () => ({
   __esModule: true,
@@ -40,6 +41,57 @@ jest.mock('@/lib/api', () => ({
     ]),
 }));
 
+jest.mock('@/app/shared/navigation/hooks/useNavigationDatasets', () => ({
+  __esModule: true,
+  useNavigationDatasets: () => ({
+    juzs: [
+      { number: 1, name: 'Juz 1', surahRange: 'Al-Fatihah - Al-Baqarah' },
+      { number: 2, name: 'Juz 2', surahRange: 'Al-Baqarah - Ali Imran' },
+    ],
+    pages: [1, 2, 3],
+  }),
+}));
+
+jest.mock('@/app/shared/navigation/hooks/useSurahNavigationData', () => ({
+  __esModule: true,
+  useSurahNavigationData: () => ({
+    chapters: [
+      {
+        id: 1,
+        name_simple: 'Al-Fatihah',
+        name_arabic: 'الفاتحة',
+        revelation_place: 'makkah',
+        verses_count: 7,
+      },
+      {
+        id: 2,
+        name_simple: 'Al-Baqarah',
+        name_arabic: 'البقرة',
+        revelation_place: 'madinah',
+        verses_count: 286,
+      },
+    ],
+    surahs: [
+      {
+        number: 1,
+        name: 'Al-Fatihah',
+        arabicName: 'الفاتحة',
+        verses: 7,
+        meaning: 'The Opening',
+      },
+      {
+        number: 2,
+        name: 'Al-Baqarah',
+        arabicName: 'البقرة',
+        verses: 286,
+        meaning: 'The Cow',
+      },
+    ],
+    isLoading: false,
+    error: undefined,
+  }),
+}));
+
 // Mock next/link to simply render an anchor tag
 jest.mock(
   'next/link',
@@ -59,7 +111,7 @@ beforeAll(() => {
   setMatchMedia(false);
 });
 
-const renderHome = (): Promise<void> => renderWithProvidersAsync(<HomePage />);
+const renderHome = (): Promise<RenderResult> => renderWithProvidersAsync(<HomePage />);
 
 beforeEach(() => {
   localStorage.clear();

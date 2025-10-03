@@ -11,8 +11,8 @@ import { FolderItem } from './shared/folder';
 interface BookmarkFolderContentProps {
   bookmarks: Bookmark[];
   folder: Folder;
-  activeVerseId?: string;
-  onVerseSelect?: (verseId: string) => void;
+  activeVerseId?: string | undefined;
+  onVerseSelect?: ((verseId: string) => void) | undefined;
 }
 
 export const BookmarkFolderContent = ({

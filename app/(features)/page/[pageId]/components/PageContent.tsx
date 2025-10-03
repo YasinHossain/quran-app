@@ -41,13 +41,13 @@ export const PageContent = memo(function PageContent({
   return (
     <main
       className={`
-        flex-grow bg-surface overflow-y-auto homepage-scrollable-area transition-all duration-300
+        flex-grow bg-background overflow-y-auto homepage-scrollable-area transition-all duration-300
         ${
           isHidden
             ? 'pt-4 md:pt-6 lg:pt-10'
             : 'pt-[calc(3.5rem+1rem+env(safe-area-inset-top))] md:pt-[calc(4rem+1.5rem+env(safe-area-inset-top))] lg:pt-[calc(4rem+2.5rem+env(safe-area-inset-top))]'
         }
-        px-4 md:px-6 lg:px-10 pb-4 md:pb-6 lg:pb-10
+        px-4 md:px-6 lg:px-10 pb-4 md:pb-6 lg:pb-10 lg:mr-[20.7rem]
         ${className || ''}
       `.trim()}
     >

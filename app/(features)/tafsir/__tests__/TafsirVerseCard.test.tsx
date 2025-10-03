@@ -2,7 +2,7 @@ import userEvent from '@testing-library/user-event';
 
 import { VerseCard } from '@/app/(features)/tafsir/[surahId]/[ayahId]/components/VerseCard';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
-import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
+import { renderWithProviders, screen, waitFor } from '@/app/testUtils/renderWithProviders';
 import { Verse } from '@/types';
 
 const verse: Verse = {
@@ -21,7 +21,7 @@ const renderCard = (): void => {
 };
 
 beforeAll(() => {
-  setMatchMedia(false);
+  setMatchMedia(true);
 });
 
 it('renders verse key and translation', () => {
@@ -34,16 +34,16 @@ it('toggles play/pause on click', async () => {
   renderCard();
   const playButton = screen.getByRole('button', { name: 'Play audio' });
   await userEvent.click(playButton);
-  expect(playButton).toHaveAttribute('aria-label', 'Pause audio');
+  await waitFor(() => expect(playButton).toHaveAttribute('aria-label', 'Pause audio'));
   await userEvent.click(playButton);
-  expect(playButton).toHaveAttribute('aria-label', 'Play audio');
+  await waitFor(() => expect(playButton).toHaveAttribute('aria-label', 'Play audio'));
 });
 
-it('bookmarks verse when icon clicked', async () => {
+it('opens bookmark modal when icon clicked', async () => {
   renderCard();
   const bookmarkButton = screen.getByRole('button', { name: 'Add bookmark' });
   await userEvent.click(bookmarkButton);
-  expect(bookmarkButton).toHaveAttribute('aria-label', 'Remove bookmark');
+  expect(await screen.findByRole('dialog', { name: 'Bookmark options' })).toBeInTheDocument();
 });
 
 it('strips malicious tags from content', () => {

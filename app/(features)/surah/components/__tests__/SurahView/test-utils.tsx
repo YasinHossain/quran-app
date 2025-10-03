@@ -8,6 +8,23 @@ jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
+jest.mock(
+  '@/app/(features)/surah/components/panels/translation-panel/hooks/useTranslationsData',
+  () => {
+    const { initialTranslationsData } = jest.requireActual(
+      '@/app/(features)/surah/components/panels/translation-panel/translationPanel.data'
+    );
+    return {
+      useTranslationsData: () => ({
+        translations: initialTranslationsData,
+        loading: false,
+        error: null,
+        languageSort: (a: string, b: string) => a.localeCompare(b),
+      }),
+    };
+  }
+);
+
 // Stable matchMedia for responsive utilities in JSDOM
 beforeAll(() => {
   setMatchMedia(false);

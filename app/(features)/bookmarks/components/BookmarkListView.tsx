@@ -15,7 +15,7 @@ import {
 
 interface BookmarkListViewProps {
   folder: Folder;
-  onBack?: () => void;
+  onBack?: (() => void) | undefined;
   bookmarks?: Bookmark[];
   showAsVerseList?: boolean;
 }

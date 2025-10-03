@@ -10,17 +10,21 @@ import { MemorizationPlan } from '@/types';
 interface MemorizationCardProps {
   surahId: string;
   plan: MemorizationPlan;
-  chapter?: {
-    name_simple: string;
-    name_arabic: string;
-  };
+  chapter?:
+    | {
+        name_simple: string;
+        name_arabic: string;
+      }
+    | undefined;
 }
 
 interface CardHeaderProps {
-  chapter?: {
-    name_simple: string;
-    name_arabic: string;
-  };
+  chapter?:
+    | {
+        name_simple: string;
+        name_arabic: string;
+      }
+    | undefined;
   surahId: string;
   percent: number;
 }

@@ -32,9 +32,15 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/dls/*": ["./quran-com/src/components/dls/*"],
+      "@/icons/*": ["./quran-com/public/icons/*"],
+      "@/public/*": ["./public/*", "./quran-com/public/*"],
+      "@/data/*": ["./data/*", "./quran-com/data/*"],
+      "@/tests/*": ["./tests/*", "./quran-com/tests/*"],
+      "@/types/*": ["./types/*", "./quran-com/types/*"],
+      "@/*": ["./*", "./quran-com/src/*", "./quran-com/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "mcp-server", "templates"]
+  "include": ["**/*.ts", "**/*.tsx", "next-env.d.ts", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", "mcp-server", "templates", ".next"]
 }

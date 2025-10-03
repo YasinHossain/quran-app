@@ -32,7 +32,8 @@ export const CreateMemorizationModal = ({
     formData.estimatedDays
   );
 
-  const canSubmit = formData.planName.trim() && isValidRange && totalVerses > 0;
+  const hasPlanName = formData.planName.trim().length > 0;
+  const canSubmit = hasPlanName && isValidRange && totalVerses > 0;
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();

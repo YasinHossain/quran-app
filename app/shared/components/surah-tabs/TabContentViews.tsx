@@ -13,10 +13,10 @@ interface BaseProps {
 
 interface SurahProps extends BaseProps {
   filteredChapters: Chapter[];
-  selectedSurahId: number | undefined;
-  setSelectedSurahId: (id: number | undefined) => void;
-  setSelectedPageId: (id: number | undefined) => void;
-  setSelectedJuzId: (id: number | undefined) => void;
+  selectedSurahId: number | null;
+  setSelectedSurahId: (id: number | null) => void;
+  setSelectedPageId: (id: number | null) => void;
+  setSelectedJuzId: (id: number | null) => void;
   isTafsirPath: boolean;
 }
 
@@ -45,11 +45,11 @@ export function SurahTabContent(props: SurahProps): React.JSX.Element {
 
 interface JuzProps extends BaseProps {
   filteredJuzs: JuzSummary[];
-  chapters: Chapter[];
-  selectedJuzId: number | undefined;
-  setSelectedJuzId: (id: number | undefined) => void;
-  setSelectedPageId: (id: number | undefined) => void;
-  setSelectedSurahId: (id: number | undefined) => void;
+  chapters: ReadonlyArray<Chapter>;
+  selectedJuzId: number | null;
+  setSelectedJuzId: (id: number | null) => void;
+  setSelectedPageId: (id: number | null) => void;
+  setSelectedSurahId: (id: number | null) => void;
 }
 
 export function JuzTabContent(props: JuzProps): React.JSX.Element {
@@ -77,11 +77,11 @@ export function JuzTabContent(props: JuzProps): React.JSX.Element {
 
 interface PageProps extends BaseProps {
   filteredPages: number[];
-  chapters: Chapter[];
-  selectedPageId: number | undefined;
-  setSelectedPageId: (id: number | undefined) => void;
-  setSelectedJuzId: (id: number | undefined) => void;
-  setSelectedSurahId: (id: number | undefined) => void;
+  chapters: ReadonlyArray<Chapter>;
+  selectedPageId: number | null;
+  setSelectedPageId: (id: number | null) => void;
+  setSelectedJuzId: (id: number | null) => void;
+  setSelectedSurahId: (id: number | null) => void;
 }
 
 export function PageTabContent(props: PageProps): React.JSX.Element {

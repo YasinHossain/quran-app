@@ -1,9 +1,9 @@
-import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import LastReadPage from '@/app/(features)/bookmarks/last-read/page';
 import { LAST_READ_STORAGE_KEY } from '@/app/providers/bookmarks/constants';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
+import { push } from '@/app/testUtils/mockRouter';
 import {
   renderWithProviders,
   screen,
@@ -12,9 +12,6 @@ import {
 } from '@/app/testUtils/renderWithProviders';
 import * as chaptersApi from '@/lib/api/chapters';
 jest.mock('@/lib/api/chapters');
-
-const push = jest.fn();
-(useRouter as jest.Mock).mockReturnValue({ push });
 
 jest.mock('../components/BookmarksSidebar', () => ({
   BookmarksSidebar: ({ onSectionChange }: { onSectionChange: (section: string) => void }) => (
@@ -62,6 +59,11 @@ beforeEach(() => {
   (chaptersApi.getChapters as jest.Mock).mockResolvedValue([
     { id: 1, name_simple: 'Al-Fatihah', verses_count: 7 },
   ]);
+  if (typeof window !== 'undefined') {
+    (window as any).__TEST_BOOKMARK_CHAPTERS__ = [
+      { id: 1, name_simple: 'Al-Fatihah', verses_count: 7 },
+    ];
+  }
   localStorage.clear();
   localStorage.setItem(LAST_READ_STORAGE_KEY, JSON.stringify({ '1': 3 }));
   push.mockClear();

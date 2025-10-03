@@ -1,14 +1,9 @@
 import { useMemo } from 'react';
 
-import juzData from '@/data/juz.json';
+import { useNavigationDatasets } from '@/app/shared/navigation/hooks/useNavigationDatasets';
 
+import type { JuzSummary } from '@/app/shared/navigation/types';
 import type { Chapter } from '@/types';
-
-interface JuzSummary {
-  number: number;
-  name: string;
-  surahRange: string;
-}
 
 interface SurahListFiltersResult {
   filteredChapters: Chapter[];
@@ -17,13 +12,11 @@ interface SurahListFiltersResult {
 }
 
 export function useSurahListFilters(
-  chapters: Chapter[],
+  chapters: ReadonlyArray<Chapter>,
   searchTerm: string
 ): SurahListFiltersResult {
   const term = searchTerm.toLowerCase();
-
-  const juzs = useMemo(() => juzData as JuzSummary[], []);
-  const pages = useMemo(() => Array.from({ length: 604 }, (_, i) => i + 1), []);
+  const { juzs, pages } = useNavigationDatasets();
 
   const filteredChapters = useMemo(
     () =>

@@ -8,8 +8,8 @@ interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;
   onWordLanguagePanelOpen: () => void;
   onReadingPanelOpen?: () => void;
-  selectedTranslationName?: string;
-  selectedWordLanguageName?: string;
+  selectedTranslationName?: string | undefined;
+  selectedWordLanguageName?: string | undefined;
   isTranslationPanelOpen: boolean;
   onTranslationPanelClose: () => void;
   isWordPanelOpen: boolean;

@@ -9,7 +9,7 @@ interface BookmarksDesktopSidebarProps {
   activeSection: SectionId;
   onSectionChange: (section: SectionId) => void;
   folders: Folder[];
-  onVerseClick?: (verseKey: string) => void;
+  onVerseClick?: ((verseKey: string) => void) | undefined;
 }
 
 export const BookmarksDesktopSidebar = ({

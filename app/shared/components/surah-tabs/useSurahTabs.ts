@@ -70,6 +70,7 @@ export function useSurahTabs({
     selectedSurahId: selections.selectedSurahId,
     selectedJuzId: selections.selectedJuzId,
     selectedPageId: selections.selectedPageId,
+    isEnabled: true,
   });
 
   const tabContentProps = buildTabContentProps({

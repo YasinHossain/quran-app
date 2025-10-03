@@ -3,7 +3,7 @@
 interface VerseErrorStateProps {
   error: string;
   onRetry: () => void;
-  className?: string;
+  className?: string | undefined;
 }
 
 /**

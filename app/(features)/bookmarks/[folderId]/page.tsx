@@ -1,6 +1,6 @@
-import React from 'react';
-
 import { BookmarkFolderClient } from './BookmarkFolderClient';
+
+import type { JSX } from 'react';
 
 export default async function BookmarkFolderPage({
   params,

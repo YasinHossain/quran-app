@@ -11,12 +11,12 @@ import type { Folder } from '@/types/bookmark';
 
 interface BookmarksSidebarProps {
   activeSection?: SectionId;
-  onSectionChange?: (section: SectionId) => void;
+  onSectionChange?: ((section: SectionId) => void) | undefined;
   children?: React.ReactNode;
   folders?: Folder[];
-  onVerseClick?: (verseKey: string) => void;
+  onVerseClick?: ((verseKey: string) => void) | undefined;
   isOpen?: boolean;
-  onClose?: () => void;
+  onClose?: (() => void) | undefined;
 }
 
 export const BookmarksSidebar = ({

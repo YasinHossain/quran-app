@@ -9,13 +9,13 @@ import { ArrowLeftIcon } from '@/app/shared/icons';
 import { Bookmark, Folder } from '@/types';
 
 interface EmptyBookmarkStateProps {
-  onBack?: () => void;
+  onBack?: (() => void) | undefined;
 }
 
 interface BookmarkListHeaderProps {
   folder: Folder;
   bookmarkCount: number;
-  onBack?: () => void;
+  onBack?: (() => void) | undefined;
 }
 
 interface BookmarkListContentProps {

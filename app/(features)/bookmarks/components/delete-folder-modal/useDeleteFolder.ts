@@ -4,16 +4,13 @@ import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { Folder } from '@/types';
 
-interface UseDeleteFolderReturn {
+interface DeleteFolderState {
   handleDelete: () => Promise<void>;
   isDeleting: boolean;
   error: string | null;
 }
 
-export const useDeleteFolder = (
-  folder: Folder | null,
-  onClose: () => void
-): UseDeleteFolderReturn => {
+export const useDeleteFolder = (folder: Folder | null, onClose: () => void): DeleteFolderState => {
   const { deleteFolder } = useBookmarks();
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,4 +34,4 @@ export const useDeleteFolder = (
   return { handleDelete, isDeleting, error };
 };
 
-export type UseDeleteFolderReturn = ReturnType<typeof useDeleteFolder>;
+export type UseDeleteFolderReturn = DeleteFolderState;

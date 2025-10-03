@@ -12,6 +12,7 @@ interface ScrollCenteringOptions<T extends string> {
   activeTab: T;
   selectedIds: Record<T, number | null>;
   scrollTops: Record<T, number>;
+  isEnabled?: boolean;
 }
 
 interface ScrollCenteringResult<T extends string> {
@@ -21,16 +22,18 @@ interface ScrollCenteringResult<T extends string> {
 
 const useInitCenteringFlags = <T extends string>(
   tabs: T[],
-  ref: MutableRefObject<Record<T, boolean>>
+  ref: MutableRefObject<Record<T, boolean>>,
+  enabled: boolean
 ): void => {
   useLayoutEffect(() => {
+    if (!enabled) return;
     tabs.forEach((tab) => {
       if (sessionStorage.getItem(`skipCenter${tab}`) === '1') {
         ref.current[tab] = false;
         sessionStorage.removeItem(`skipCenter${tab}`);
       }
     });
-  }, [tabs, ref]);
+  }, [tabs, ref, enabled]);
 };
 
 type CenterArgs<T extends string> = {
@@ -39,6 +42,7 @@ type CenterArgs<T extends string> = {
   scrollTops: Record<T, number>;
   ref: MutableRefObject<Record<T, boolean>>;
   selectedIds: Record<T, number | null>;
+  enabled: boolean;
 };
 
 const useCenterActiveElement = <T extends string>({
@@ -47,8 +51,10 @@ const useCenterActiveElement = <T extends string>({
   scrollTops,
   ref,
   selectedIds,
+  enabled,
 }: CenterArgs<T>): void => {
   useLayoutEffect(() => {
+    if (!enabled) return;
     const container = scrollRef.current;
     if (!container) return;
     const activeEl = container.querySelector<HTMLElement>('[data-active="true"]');
@@ -62,7 +68,7 @@ const useCenterActiveElement = <T extends string>({
       }
     }
     ref.current[activeTab] = false;
-  }, [activeTab, scrollRef, scrollTops, selectedIds, ref]);
+  }, [activeTab, scrollRef, scrollTops, selectedIds, ref, enabled]);
 };
 
 export const useScrollCentering = <T extends string>({
@@ -70,13 +76,15 @@ export const useScrollCentering = <T extends string>({
   activeTab,
   selectedIds,
   scrollTops,
+  isEnabled = true,
 }: ScrollCenteringOptions<T>): ScrollCenteringResult<T> => {
   const tabs = Object.keys(selectedIds) as T[];
+  const enabled = isEnabled;
   const shouldCenterRef = useRef<Record<T, boolean>>(
     tabs.reduce((acc, t) => ({ ...acc, [t]: true }), {} as Record<T, boolean>)
   );
 
-  useInitCenteringFlags(tabs, shouldCenterRef);
+  useInitCenteringFlags(tabs, shouldCenterRef, enabled);
 
   const prevIds = useRef<Record<T, number | null>>(
     tabs.reduce((acc, t) => ({ ...acc, [t]: selectedIds[t] }), {} as Record<T, number | null>)
@@ -100,6 +108,7 @@ export const useScrollCentering = <T extends string>({
     scrollTops,
     ref: shouldCenterRef,
     selectedIds,
+    enabled,
   });
 
   const skipNextCentering = useCallback((tab: T): void => {

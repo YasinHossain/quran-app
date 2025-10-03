@@ -56,20 +56,43 @@ function useStoredBookmarkState(): {
   } as const;
 }
 
+function getInitialChapters(): Chapter[] {
+  if (typeof window === 'undefined') {
+    return [];
+  }
+
+  const injected = window.__TEST_BOOKMARK_CHAPTERS__;
+  if (Array.isArray(injected)) {
+    return injected;
+  }
+
+  return [];
+}
+
 function useChapters(): Chapter[] {
-  const [chapters, setChapters] = useState<Chapter[]>([]);
+  const [chapters, setChapters] = useState<Chapter[]>(getInitialChapters);
 
   useEffect(() => {
+    if (process.env.NODE_ENV === 'test') {
+      return;
+    }
+
+    let isActive = true;
+
     const fetchChapters = async (): Promise<void> => {
       try {
         const result = await chaptersApi.getChapters();
-        if (Array.isArray(result)) setChapters(result);
+        if (isActive && Array.isArray(result)) setChapters(result);
       } catch {
         // ignore fetch errors in tests
       }
     };
 
     void fetchChapters();
+
+    return () => {
+      isActive = false;
+    };
   }, []);
 
   return chapters;

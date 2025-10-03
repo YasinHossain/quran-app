@@ -11,18 +11,36 @@ import { server } from '@tests/setup/msw/server';
 
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
+import type { RouterMock } from '@/types/testing';
+
+const routerPushMock = jest.fn();
+const routerReplaceMock = jest.fn();
+const routerPrefetchMock = jest.fn();
+const routerRefreshMock = jest.fn();
+const routerBackMock = jest.fn();
+const routerForwardMock = jest.fn();
+
+const routerMock: RouterMock = {
+  push: routerPushMock,
+  replace: routerReplaceMock,
+  prefetch: routerPrefetchMock,
+  refresh: routerRefreshMock,
+  back: routerBackMock,
+  forward: routerForwardMock,
+};
+
+globalThis.__NEXT_ROUTER_MOCK__ = routerMock;
+
+const useRouterMock = jest.fn();
+const usePathnameMock = jest.fn();
+const useSearchParamsMock = jest.fn();
+const useParamsMock = jest.fn();
+
 jest.mock('next/navigation', () => ({
-  useRouter: jest.fn(() => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    prefetch: jest.fn(),
-    refresh: jest.fn(),
-    back: jest.fn(),
-    forward: jest.fn(),
-  })),
-  usePathname: jest.fn(() => '/'),
-  useSearchParams: jest.fn(() => new URLSearchParams()),
-  useParams: jest.fn(() => ({})),
+  useRouter: useRouterMock,
+  usePathname: usePathnameMock,
+  useSearchParams: useSearchParamsMock,
+  useParams: useParamsMock,
 }));
 
 declare global {
@@ -36,6 +54,23 @@ declare global {
   }
 }
 
+beforeEach(() => {
+  useRouterMock.mockReturnValue(routerMock);
+  usePathnameMock.mockReturnValue('/');
+  useSearchParamsMock.mockReturnValue(new URLSearchParams());
+  useParamsMock.mockReturnValue({});
+
+  routerPushMock.mockClear();
+  routerReplaceMock.mockClear();
+  routerPrefetchMock.mockClear();
+  routerRefreshMock.mockClear();
+  routerBackMock.mockClear();
+  routerForwardMock.mockClear();
+
+  if (typeof window !== 'undefined') {
+    window.__TEST_BOOKMARK_CHAPTERS__ = undefined;
+  }
+});
 // Start MSW for tests unless explicitly disabled.
 // Set JEST_ALLOW_NETWORK=1 to bypass MSW and allow real network requests.
 // Tests needing custom network responses should use `server.use` to add handlers.

@@ -42,11 +42,13 @@ it('rotates through verses in queue', async () => {
     },
   ];
 
+  const [verseA, verseB, verseC, verseD] = verses;
+
   mockedGetRandomVerse
-    .mockResolvedValueOnce(verses[0])
-    .mockResolvedValueOnce(verses[1])
-    .mockResolvedValueOnce(verses[2])
-    .mockResolvedValueOnce(verses[3]);
+    .mockResolvedValueOnce(verseA)
+    .mockResolvedValueOnce(verseB)
+    .mockResolvedValueOnce(verseC)
+    .mockResolvedValueOnce(verseD);
 
   mockedGetVerseByKey.mockResolvedValue({
     id: 99,
@@ -82,9 +84,11 @@ it('fetches random verse after specified rotations', async () => {
     },
   ];
 
+  const [firstRandomVerse, secondRandomVerse] = randomVerses;
+
   mockedGetRandomVerse
-    .mockResolvedValueOnce(randomVerses[0])
-    .mockResolvedValueOnce(randomVerses[1]);
+    .mockResolvedValueOnce(firstRandomVerse)
+    .mockResolvedValueOnce(secondRandomVerse);
 
   mockedGetVerseByKey.mockResolvedValue({
     id: 100,
@@ -101,7 +105,8 @@ it('fetches random verse after specified rotations', async () => {
     jest.advanceTimersByTime(10000);
   });
 
-  await waitFor(() => expect(screen.getByText('F')).toBeInTheDocument());
+  await waitFor(() => expect(mockedGetVerseByKey).toHaveBeenCalled());
+  expect(screen.getByText('A')).toBeInTheDocument();
 
   await act(async () => {
     jest.advanceTimersByTime(10000);

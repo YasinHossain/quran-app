@@ -1,22 +1,23 @@
 'use client';
 
-import { useTranslation } from 'react-i18next';
+import React from 'react';
 
-import { useJuzClientState } from '@/app/(features)/juz/hooks/useJuzClientState';
+import { ReaderShell } from '@/app/shared/reader';
+import { getVersesByJuz } from '@/lib/api';
 
-import { AudioPlayerBar } from './components/AudioPlayerBar';
-import { JuzMain } from './components/JuzMain';
-import { JuzSettings } from './components/JuzSettings';
+interface JuzClientProps {
+  juzId: string;
+}
 
-export function JuzClient({ juzId }: { juzId: string }): JSX.Element {
-  const { t } = useTranslation();
-  const { isHidden, contentProps, settingsProps, playerBarProps } = useJuzClientState(juzId, t);
-
+export function JuzClient({ juzId }: JuzClientProps): React.JSX.Element {
   return (
-    <div className="flex flex-grow bg-surface text-foreground font-sans overflow-hidden min-h-0">
-      <JuzMain isHidden={isHidden} contentProps={contentProps} />
-      <JuzSettings {...settingsProps} />
-      <AudioPlayerBar {...playerBarProps} />
-    </div>
+    <ReaderShell
+      resourceId={juzId}
+      lookup={({ id, translationIds, page, perPage, wordLang }) =>
+        getVersesByJuz({ id, translationIds, page, perPage, wordLang })
+      }
+      emptyLabelKey="no_verses_found_in_juz"
+      endLabelKey="end_of_juz"
+    />
   );
 }

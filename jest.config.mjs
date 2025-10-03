@@ -14,23 +14,25 @@ const customJestConfig = {
   },
   // Shared test utilities and polyfills
   setupFilesAfterEnv: ['<rootDir>/tests/setup/setupTests.ts'],
+  resolver: '<rootDir>/tests/setup/jest-resolver.mjs',
 
   // Module mapping for absolute imports
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/$1',
+    '^@/(.*)$': ['<rootDir>/$1', '<rootDir>/quran-com/src/$1', '<rootDir>/quran-com/$1'],
     '^@domain/(.*)$': '<rootDir>/src/domain/$1',
     '^@app/(.*)$': '<rootDir>/src/application/$1',
     '^@infra/(.*)$': '<rootDir>/src/infrastructure/$1',
     '^@ui/(.*)$': '<rootDir>/src/presentation/$1',
     '^@shared/(.*)$': '<rootDir>/src/shared/$1',
     '^@tests/(.*)$': '<rootDir>/tests/$1',
+    '^vitest$': '<rootDir>/tests/setup/vitest-shim.ts',
   },
 
   // Test file patterns - include our new test structure
   testMatch: [
     '<rootDir>/tests/**/*.test.{js,jsx,ts,tsx}',
-    '<rootDir>/app/**/__tests__/**/*.test.{js,jsx,ts,tsx}',
-    '<rootDir>/src/**/__tests__/**/*.test.{js,jsx,ts,tsx}',
+    '<rootDir>/app/**/__tests__/**/*.test.{js,jsx,ts,tsx>',
+    '<rootDir>/src/**/__tests__/**/*.test.{js,jsx,ts,tsx>',
     '<rootDir>/**/*.test.ts?(x)', // Keep existing pattern
   ],
 

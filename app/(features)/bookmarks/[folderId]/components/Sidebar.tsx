@@ -9,7 +9,7 @@ import type { Bookmark, Folder } from '@/types';
 interface SidebarProps {
   bookmarks: Bookmark[];
   folder: Folder;
-  activeVerseId?: string;
+  activeVerseId?: string | undefined;
   onVerseSelect: (verseId: string) => void;
   onBack: () => void;
   isOpen: boolean;

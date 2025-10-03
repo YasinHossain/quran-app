@@ -1,9 +1,8 @@
 'use client';
-import React, { memo, useMemo } from 'react';
-import useSWR from 'swr';
+import React, { memo } from 'react';
 
 import { useSidebar } from '@/app/providers/SidebarContext';
-import { getChapters } from '@/lib/api';
+import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 import { Chapter } from '@/types';
 
 import { BaseSidebar } from './components/BaseSidebar';
@@ -21,8 +20,7 @@ interface Props {
 export const SurahListSidebar = memo(function SurahListSidebar({
   initialChapters = [],
 }: Props): React.JSX.Element {
-  const { data } = useSWR('chapters', getChapters, { fallbackData: initialChapters });
-  const chapters = useMemo(() => data || [], [data]);
+  const { chapters } = useSurahNavigationData({ initialChapters });
   const { isSurahListOpen, setSurahListOpen } = useSidebar();
 
   return (

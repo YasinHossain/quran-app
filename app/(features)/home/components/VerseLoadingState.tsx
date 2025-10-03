@@ -3,7 +3,7 @@
 import { Spinner } from '@/app/shared/Spinner';
 
 interface VerseLoadingStateProps {
-  className?: string;
+  className?: string | undefined;
 }
 
 /**

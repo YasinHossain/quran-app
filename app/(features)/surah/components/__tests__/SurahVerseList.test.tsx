@@ -13,11 +13,12 @@ describe('SurahVerseList', () => {
   const baseProps = {
     loadMoreRef: { current: null } as unknown as React.RefObject<HTMLDivElement | null>,
     isValidating: false,
-    isReachingEnd: false,
   };
 
   it('shows spinner while loading', () => {
-    renderWithProviders(<SurahVerseList verses={[]} isLoading error={null} {...baseProps} />);
+    renderWithProviders(
+      <SurahVerseList {...baseProps} verses={[]} isLoading error={null} isReachingEnd={false} />
+    );
 
     expect(screen.getByRole('img', { hidden: true })).toBeInTheDocument();
   });
@@ -25,10 +26,11 @@ describe('SurahVerseList', () => {
   it('shows error state', () => {
     renderWithProviders(
       <SurahVerseList
+        {...baseProps}
         verses={[]}
         isLoading={false}
         error="Failed to load content."
-        {...baseProps}
+        isReachingEnd={false}
       />
     );
     expect(screen.getByText(/Failed to load content/)).toBeInTheDocument();
@@ -37,6 +39,7 @@ describe('SurahVerseList', () => {
   it('renders verses and end-of-surah indicator', () => {
     renderWithProviders(
       <SurahVerseList
+        {...baseProps}
         verses={[
           {
             id: 1,
@@ -49,7 +52,6 @@ describe('SurahVerseList', () => {
         isLoading={false}
         error={null}
         isReachingEnd
-        {...baseProps}
       />
     );
 

@@ -11,9 +11,9 @@ import { BookmarkFolderContent } from './BookmarkFolderContent';
 interface BookmarkFolderSidebarProps {
   bookmarks: Bookmark[];
   folder: Folder;
-  activeVerseId?: string;
-  onVerseSelect?: (verseId: string) => void;
-  onBack?: () => void;
+  activeVerseId?: string | undefined;
+  onVerseSelect?: ((verseId: string) => void) | undefined;
+  onBack?: (() => void) | undefined;
   isOpen: boolean;
   onClose: () => void;
 }

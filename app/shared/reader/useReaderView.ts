@@ -1,19 +1,29 @@
 'use client';
 
 import { useSurahPanels, useVerseListing } from '@/app/(features)/surah/hooks';
-import { getVersesByChapter } from '@/lib/api';
 
-interface UseSurahViewReturn {
+import type { UseVerseListingParams } from '@/app/(features)/surah/hooks/useVerseListing';
+
+type UseReaderViewReturn = {
   verseListing: ReturnType<typeof useVerseListing>;
   panels: ReturnType<typeof useSurahPanels>;
+};
+
+interface UseReaderViewParams extends Pick<UseVerseListingParams, 'lookup' | 'initialVerses'> {
+  resourceId: string;
 }
 
-export const useSurahView = (surahId: string): UseSurahViewReturn => {
+export const useReaderView = ({
+  resourceId,
+  lookup,
+  initialVerses,
+}: UseReaderViewParams): UseReaderViewReturn => {
   const verseListing = useVerseListing({
-    id: surahId,
-    lookup: ({ id, translationIds, page, perPage, wordLang }) =>
-      getVersesByChapter({ id, translationIds, page, perPage, wordLang }),
+    id: resourceId,
+    lookup,
+    ...(initialVerses ? { initialVerses } : {}),
   });
+
   const panels = useSurahPanels({
     translationOptions: verseListing.translationOptions,
     wordLanguageOptions: verseListing.wordLanguageOptions,

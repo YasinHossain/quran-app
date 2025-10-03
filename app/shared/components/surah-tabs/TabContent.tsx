@@ -1,6 +1,7 @@
-import React from 'react';
+import dynamic from 'next/dynamic';
+import React, { type ComponentType } from 'react';
 
-import { JuzTabContent, PageTabContent, SurahTabContent } from './TabContentViews';
+import { SurahTabContent } from './TabContentViews';
 
 import type { JuzSummary, TabKey } from '@/app/shared/components/surah-tabs/types';
 import type { Chapter } from '@/types';
@@ -10,16 +11,24 @@ interface TabContentProps {
   filteredChapters: Chapter[];
   filteredJuzs: JuzSummary[];
   filteredPages: number[];
-  chapters: Chapter[];
-  selectedSurahId: number | undefined;
-  setSelectedSurahId: (id: number | undefined) => void;
-  selectedJuzId: number | undefined;
-  setSelectedJuzId: (id: number | undefined) => void;
-  selectedPageId: number | undefined;
-  setSelectedPageId: (id: number | undefined) => void;
+  chapters: ReadonlyArray<Chapter>;
+  selectedSurahId: number | null;
+  setSelectedSurahId: (id: number | null) => void;
+  selectedJuzId: number | null;
+  setSelectedJuzId: (id: number | null) => void;
+  selectedPageId: number | null;
+  setSelectedPageId: (id: number | null) => void;
   rememberScroll: (tab: TabKey) => void;
   isTafsirPath: boolean;
 }
+
+const JuzTabContent = dynamic<ComponentType<TabContentProps>>(() =>
+  import('./TabContentViews').then((mod) => ({ default: mod.JuzTabContent }))
+);
+
+const PageTabContent = dynamic<ComponentType<TabContentProps>>(() =>
+  import('./TabContentViews').then((mod) => ({ default: mod.PageTabContent }))
+);
 
 export const TabContent = (props: TabContentProps): React.JSX.Element => renderTabContent(props);
 

@@ -50,4 +50,3 @@ jobs:
           name: lighthouse-report
           path: ./**/lhr-*.json
           retention-days: 14
-

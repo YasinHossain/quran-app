@@ -10,17 +10,14 @@ interface UseWordLanguageSelectionReturn {
 }
 
 export function useWordLanguageSelection(): UseWordLanguageSelectionReturn {
-  const { settings, setSettings } = useSettings();
+  const { settings, setWordLang, setWordTranslationId } = useSettings();
 
   const handleLanguageSelect = useCallback(
     (language: WordLanguage) => {
-      setSettings((prev) => ({
-        ...prev,
-        wordLang: language.code,
-        wordTranslationId: language.id,
-      }));
+      setWordLang(language.code);
+      setWordTranslationId(language.id);
     },
-    [setSettings]
+    [setWordLang, setWordTranslationId]
   );
   return { selectedId: settings.wordTranslationId, handleLanguageSelect } as const;
 }

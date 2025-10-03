@@ -13,7 +13,7 @@ interface VerseContentProps {
   surahName: string | null;
   tajweedEnabled: boolean;
   isTransitioning: boolean;
-  className?: string;
+  className?: string | undefined;
 }
 
 // Tajweed text component
@@ -93,7 +93,7 @@ interface VerseContainerProps {
   surahName: string | null;
   tajweedEnabled: boolean;
   isTransitioning: boolean;
-  className?: string;
+  className?: string | undefined;
 }
 
 const VerseContainer = ({

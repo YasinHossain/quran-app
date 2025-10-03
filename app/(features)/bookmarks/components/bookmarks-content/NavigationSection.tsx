@@ -25,7 +25,7 @@ const NAVIGATION_SECTIONS: BookmarkNavigationContent[] = [
 
 interface NavigationSectionProps {
   activeSection: SectionId;
-  onSectionChange?: (section: SectionId) => void;
+  onSectionChange?: ((section: SectionId) => void) | undefined;
 }
 
 export const NavigationSection = ({
@@ -53,7 +53,7 @@ const NavigationItem = ({
 }: {
   section: BookmarkNavigationContent;
   activeSection: SectionId;
-  onSectionChange?: (section: SectionId) => void;
+  onSectionChange?: ((section: SectionId) => void) | undefined;
 }): React.JSX.Element => (
   <BookmarkNavigationCard
     content={section}

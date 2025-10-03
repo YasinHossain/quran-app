@@ -8,7 +8,7 @@ import { Button } from '@/app/shared/ui/Button';
 export interface HeaderTitleSectionProps {
   title: string;
   showMenuButton: boolean;
-  onSidebarToggle?: () => void;
+  onSidebarToggle?: (() => void) | undefined;
 }
 
 export const HeaderTitleSection = ({

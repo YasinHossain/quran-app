@@ -8,8 +8,8 @@ import { VerseItem } from './VerseItem';
 
 interface VerseListProps {
   bookmarks: Bookmark[];
-  activeVerseId?: string;
-  onVerseSelect?: (verseId: string) => void;
+  activeVerseId?: string | undefined;
+  onVerseSelect?: ((verseId: string) => void) | undefined;
 }
 
 export const VerseList = ({

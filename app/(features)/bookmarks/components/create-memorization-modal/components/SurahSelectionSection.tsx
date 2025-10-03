@@ -29,8 +29,8 @@ export const SurahSelectionSection = ({
         </div>
       </div>
       <SurahSelector
-        selectedSurahId={formData.startSurah}
-        onSurahSelect={(id) => onFormDataChange({ startSurah: id })}
+        value={formData.startSurah}
+        onChange={(id: number) => onFormDataChange({ startSurah: id })}
         chapters={chapters}
       />
     </div>
@@ -45,8 +45,8 @@ export const SurahSelectionSection = ({
         </div>
       </div>
       <SurahSelector
-        selectedSurahId={formData.endSurah}
-        onSurahSelect={(id) => onFormDataChange({ endSurah: id })}
+        value={formData.endSurah}
+        onChange={(id: number) => onFormDataChange({ endSurah: id })}
         chapters={chapters}
       />
     </div>

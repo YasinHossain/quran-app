@@ -2,24 +2,24 @@
 
 import { memo } from 'react';
 
+import { NavigationCardGrid } from './NavigationCardGrid';
 import { SurahCard } from './SurahCard';
 
-import type { Surah } from '@/types';
+import type { Chapter } from '@/types';
 
 interface SurahGridProps {
-  surahs: Surah[];
+  chapters: ReadonlyArray<Chapter>;
 }
 
 /**
- * Grid component for displaying surah cards
- * Uses responsive grid layout with proper spacing
+ * Grid component for displaying surah navigation cards using the shared layout.
  */
-export const SurahGrid = memo(function SurahGrid({ surahs }: SurahGridProps) {
+export const SurahGrid = memo(function SurahGrid({ chapters }: SurahGridProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {surahs.map((surah) => (
-        <SurahCard key={surah.number} surah={surah} />
+    <NavigationCardGrid>
+      {chapters.map((chapter) => (
+        <SurahCard key={chapter.id} chapter={chapter} />
       ))}
-    </div>
+    </NavigationCardGrid>
   );
 });

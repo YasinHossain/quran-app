@@ -7,7 +7,7 @@ import type { Verse } from '@/types';
 interface BreadcrumbNavigationProps {
   onNavigateToBookmarks: () => void;
   folderName: string;
-  activeVerseId?: string;
+  activeVerseId?: string | undefined;
   verses: Verse[];
 }
 

@@ -1,40 +1,40 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
-import { getSurahList } from '@/lib/api';
-import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 
-import type { Surah } from '@/types';
+import type { Chapter } from '@/types';
 
 type UseSurahSearchResult = {
-  filteredSurahs: Surah[];
+  filteredChapters: ReadonlyArray<Chapter>;
   isLoading: boolean;
   isEmpty: boolean;
 };
 
 export function useSurahSearch(searchQuery: string): UseSurahSearchResult {
-  const [surahs, setSurahs] = useState<Surah[]>([]);
+  const { chapters, isLoading } = useSurahNavigationData();
 
-  useEffect((): void => {
-    void getSurahList()
-      .then((fetchedSurahs: Surah[]): void => {
-        setSurahs(fetchedSurahs);
-      })
-      .catch((err: unknown): void => {
-        logger.error(err as Error);
-      });
-  }, []);
+  const filteredChapters = useMemo<ReadonlyArray<Chapter>>(() => {
+    const trimmedQuery = searchQuery.trim();
 
-  const filteredSurahs = useMemo<Surah[]>((): Surah[] => {
-    if (!searchQuery) return surahs;
-    return surahs.filter(
-      (surah: Surah): boolean =>
-        surah.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        surah.number.toString().includes(searchQuery)
-    );
-  }, [searchQuery, surahs]);
+    if (!trimmedQuery) {
+      return chapters;
+    }
 
-  const isLoading = surahs.length === 0;
-  const isEmpty = !isLoading && filteredSurahs.length === 0;
+    const normalizedQuery = trimmedQuery.toLowerCase();
 
-  return { filteredSurahs, isLoading, isEmpty } as const;
+    return chapters.filter((chapter) => {
+      const translation = chapter.translated_name?.name ?? '';
+      return (
+        chapter.name_simple.toLowerCase().includes(normalizedQuery) ||
+        translation.toLowerCase().includes(normalizedQuery) ||
+        chapter.name_arabic.includes(trimmedQuery) ||
+        chapter.id.toString().includes(normalizedQuery)
+      );
+    });
+  }, [chapters, searchQuery]);
+
+  const loading = Boolean(isLoading && chapters.length === 0);
+  const isEmpty = !loading && filteredChapters.length === 0;
+
+  return { filteredChapters, isLoading: loading, isEmpty } as const;
 }

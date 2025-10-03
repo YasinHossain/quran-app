@@ -11,7 +11,7 @@ import { SurahTabs } from './SurahTabs';
 import type { Chapter } from '@/types';
 
 interface SurahListContentProps {
-  chapters: Chapter[];
+  chapters: ReadonlyArray<Chapter>;
 }
 
 export const SurahListContent = memo(function SurahListContent({

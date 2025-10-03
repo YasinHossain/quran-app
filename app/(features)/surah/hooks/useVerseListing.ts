@@ -18,6 +18,18 @@ export type {
 } from './verse-listing/types';
 import type { UseVerseListingParams, UseVerseListingReturn } from './verse-listing/types';
 
+const EMPTY_LOADER_STATE: {
+  verses: UseVerseListingReturn['verses'];
+  isLoading: boolean;
+  isValidating: boolean;
+  isReachingEnd: boolean;
+} = {
+  verses: [],
+  isLoading: false,
+  isValidating: false,
+  isReachingEnd: true,
+};
+
 interface CreateVerseListingResultParams {
   error: string | null;
   settings: UseVerseListingReturn['settings'];
@@ -76,15 +88,16 @@ export function useVerseListing({
   const translation = useTranslationOptions();
   const stableTranslationIds = useStableTranslationIds(settingsState.settings);
 
-  const loaderState = useInfiniteVerseLoader({
-    id,
-    lookup,
-    stableTranslationIds,
-    wordLang: settingsState.settings.wordLang,
-    loadMoreRef: errorState.loadMoreRef,
-    error: errorState.error,
-    setError: errorState.handleLoaderError,
-  });
+  const loaderState =
+    useInfiniteVerseLoader({
+      id,
+      lookup,
+      stableTranslationIds,
+      wordLang: settingsState.settings.wordLang,
+      loadMoreRef: errorState.loadMoreRef,
+      error: errorState.error,
+      setError: errorState.handleLoaderError,
+    }) || EMPTY_LOADER_STATE;
 
   const verses = resolveVerses(initialVerses, loaderState.verses);
   const navigation = useNavigationHandlers({

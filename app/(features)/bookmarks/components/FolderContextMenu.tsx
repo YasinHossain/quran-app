@@ -10,8 +10,8 @@ import { RenameItem } from './RenameItem';
 
 interface UseContextMenuResult {
   isOpen: boolean;
-  menuRef: React.RefObject<HTMLDivElement>;
-  buttonRef: React.RefObject<HTMLButtonElement>;
+  menuRef: React.MutableRefObject<HTMLDivElement | null>;
+  buttonRef: React.MutableRefObject<HTMLButtonElement | null>;
   handleToggleMenu: (e: React.MouseEvent<HTMLButtonElement>) => void;
   handleCloseMenu: () => void;
 }
