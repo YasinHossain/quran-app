@@ -50,38 +50,55 @@ export const ErrorState: Story = {
 export const BackgroundImage: Story = {
   args: {
     src: COVER_IMAGE_SRC,
+    alt: COVER_IMAGE_ALT,
     className: 'h-96 rounded-lg flex items-center justify-center',
   },
-  render: (args) => (
-    <ResponsiveBackgroundImage src={args.src ?? COVER_IMAGE_SRC} className={args.className}>
-      <div className="rounded-lg bg-surface/90 p-6 backdrop-blur-sm">
-        <h2 className="mb-2 text-2xl font-bold text-foreground">Overlay Content</h2>
-        <p className="text-content-secondary">Content displayed over background image</p>
-      </div>
-    </ResponsiveBackgroundImage>
-  ),
+  render: (args) => {
+    const containerClass = args.className ?? 'h-96 rounded-lg flex items-center justify-center';
+    const backgroundSource = args.src ?? COVER_IMAGE_SRC;
+
+    return (
+      <ResponsiveBackgroundImage src={backgroundSource} className={containerClass}>
+        <div className="rounded-lg bg-surface/90 p-6 backdrop-blur-sm">
+          <h2 className="mb-2 text-2xl font-bold text-foreground">Overlay Content</h2>
+          <p className="text-content-secondary">Content displayed over background image</p>
+        </div>
+      </ResponsiveBackgroundImage>
+    );
+  },
 };
 
 export const Gallery: Story = {
   args: {
+    src: 'https://picsum.photos/400/300',
+    alt: 'Gallery image',
     width: 400,
     height: 300,
     className: 'rounded-lg shadow-md object-cover w-full h-full',
     loading: 'lazy',
   },
-  render: (args) => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {[1, 2, 3, 4, 5, 6].map((index) => (
-        <div key={index} className="aspect-w-4 aspect-h-3">
-          <ResponsiveImage
-            {...args}
-            src={`https://picsum.photos/400/300?random=${index}`}
-            alt={`Gallery image ${index}`}
-          />
-        </div>
-      ))}
-    </div>
-  ),
+  render: ({ src, alt, ...args }) => {
+    const baseAlt = alt ?? 'Gallery image';
+    const baseSrc = src ?? 'https://picsum.photos/400/300';
+
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[1, 2, 3, 4, 5, 6].map((index) => (
+          <div key={index} className="aspect-w-4 aspect-h-3">
+            <ResponsiveImage
+              {...args}
+              src={
+                typeof baseSrc === 'string'
+                  ? `${baseSrc}?random=${index}`
+                  : baseSrc
+              }
+              alt={`${baseAlt} ${index}`}
+            />
+          </div>
+        ))}
+      </div>
+    );
+  },
 };
 
 export const Mobile: Story = {
