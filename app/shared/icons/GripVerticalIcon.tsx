@@ -1,4 +1,5 @@
 import { GripVertical } from 'lucide-react';
+import type { JSX } from 'react';
 
 import { IconProps } from './IconProps';
 

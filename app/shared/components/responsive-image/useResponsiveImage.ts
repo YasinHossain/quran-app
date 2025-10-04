@@ -16,7 +16,7 @@ export const useResponsiveImage = ({
   src,
   sizes,
   fallback,
-  loadingStrategy = 'auto',
+  loadingStrategy,
 }: Pick<
   ResponsiveImageProps,
   'src' | 'sizes' | 'fallback' | 'loadingStrategy'
@@ -24,10 +24,12 @@ export const useResponsiveImage = ({
   const { variant, breakpoint } = useResponsiveState();
 
   const resolveLoading = (
-    strategy: ResponsiveImageProps['loadingStrategy'],
+    strategy: ResponsiveImageProps['loadingStrategy'] | undefined,
     v: ReturnType<typeof useResponsiveState>['variant']
   ): 'lazy' | 'eager' => {
-    if (strategy === 'auto') return v === 'compact' ? 'eager' : 'lazy';
+    if (strategy === undefined || strategy === 'auto') {
+      return v === 'compact' ? 'eager' : 'lazy';
+    }
     return strategy;
   };
 

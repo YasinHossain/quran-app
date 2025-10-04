@@ -1,4 +1,5 @@
 import { VolumeX } from 'lucide-react';
+import type { JSX } from 'react';
 
 import { IconProps } from './IconProps';
 

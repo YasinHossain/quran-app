@@ -1,4 +1,5 @@
 import { SkipBack } from 'lucide-react';
+import type { JSX } from 'react';
 
 import { IconProps } from './IconProps';
 

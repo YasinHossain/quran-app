@@ -1,4 +1,5 @@
 import { BookOpen } from 'lucide-react';
+import type { JSX } from 'react';
 
 import { IconProps } from './IconProps';
 

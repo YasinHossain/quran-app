@@ -1,4 +1,5 @@
 import { Volume2 } from 'lucide-react';
+import type { JSX } from 'react';
 
 import { IconProps } from './IconProps';
 

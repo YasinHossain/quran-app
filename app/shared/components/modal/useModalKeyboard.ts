@@ -21,7 +21,7 @@ export const useModalKeyboard = ({
     }
   }, [isOpen]);
 
-  useEffect((): void => {
+  useEffect(() => {
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent): void => {
@@ -31,7 +31,7 @@ export const useModalKeyboard = ({
     };
 
     document.addEventListener('keydown', handleKeyDown);
-    return (): void => {
+    return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen, onCancel]);

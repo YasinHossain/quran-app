@@ -16,7 +16,7 @@ export interface ResponsiveImageSizes {
 
 export interface ResponsiveImageProps extends Omit<ImageProps, 'src' | 'sizes'> {
   src: string | ResponsiveImageSources;
-  sizes?: ResponsiveImageSizes;
+  sizes?: ResponsiveImageSizes | string;
   fallback?: string;
   loadingStrategy?: 'lazy' | 'eager' | 'auto';
   formats?: ('webp' | 'avif' | 'png' | 'jpg')[];

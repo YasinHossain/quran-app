@@ -15,24 +15,26 @@ export const ResponsiveImage = ({
   src,
   sizes,
   fallback,
-  loadingStrategy = 'auto',
+  loadingStrategy,
   alt,
   className,
   priority,
   ...props
 }: ResponsiveImageProps): React.JSX.Element => {
+  const responsiveImageOptions: Parameters<typeof useResponsiveImage>[0] = {
+    src,
+    ...(sizes !== undefined ? { sizes } : {}),
+    ...(fallback !== undefined ? { fallback } : {}),
+    ...(loadingStrategy !== undefined ? { loadingStrategy } : {}),
+  };
+
   const {
     optimalSource,
     responsiveSizes,
     loading,
     priority: autoPriority,
     onError,
-  } = useResponsiveImage({
-    src,
-    sizes,
-    fallback,
-    loadingStrategy,
-  });
+  } = useResponsiveImage(responsiveImageOptions);
 
   return (
     <Image
@@ -40,7 +42,7 @@ export const ResponsiveImage = ({
       alt={alt}
       sizes={responsiveSizes}
       loading={loading}
-      priority={priority || autoPriority}
+      priority={priority ?? autoPriority}
       className={className}
       onError={onError}
       {...props}

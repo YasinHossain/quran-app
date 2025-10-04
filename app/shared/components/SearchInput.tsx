@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import type { JSX, KeyboardEvent } from 'react';
 
 import { SearchIcon } from '@/app/shared/icons';
 
@@ -16,7 +16,7 @@ interface SearchInputProps {
   value: string;
   onChange: (value: string) => void;
   placeholder: string;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
   className?: string;
   variant?: SearchVariant;
   size?: SearchSize;
