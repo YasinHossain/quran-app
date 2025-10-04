@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import type { ReactElement } from 'react';
 
 import { CollapsibleSection } from '@/app/(features)/surah/components/CollapsibleSection';
 import { BookReaderIcon } from '@/app/shared/icons';
@@ -13,7 +14,7 @@ interface ReadingSettingsProps {
 export const ReadingSettings = ({
   isOpen = false,
   onToggle,
-}: ReadingSettingsProps): JSX.Element => {
+}: ReadingSettingsProps): ReactElement => {
   return (
     <CollapsibleSection
       title="Mushaf Settings"

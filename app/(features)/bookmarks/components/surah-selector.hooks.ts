@@ -18,7 +18,7 @@ export interface SurahSelectorBehaviorState {
   containerRef: React.MutableRefObject<HTMLDivElement | null>;
   inputRef: React.MutableRefObject<HTMLInputElement | null>;
   toggleOpen: () => void;
-  handleKeyDown: (e: React.KeyboardEvent) => void;
+  handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   selected?: Chapter | undefined;
   selectSurah: (chapter: Chapter) => void;
   chapters: Chapter[];
@@ -63,7 +63,7 @@ interface DropdownVisibilityState {
   containerRef: React.MutableRefObject<HTMLDivElement | null>;
   inputRef: React.MutableRefObject<HTMLInputElement | null>;
   toggleOpen: () => void;
-  handleKeyDown: (e: React.KeyboardEvent) => void;
+  handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   closeDropdown: () => void;
 }
 
@@ -98,7 +98,7 @@ function useDropdownVisibility({ disabled }: { disabled: boolean }): DropdownVis
   }, [open, closeDropdown]);
 
   const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent): void => {
+    (e: React.KeyboardEvent<HTMLInputElement>): void => {
       if (e.key === 'Escape') closeDropdown();
     },
     [closeDropdown]

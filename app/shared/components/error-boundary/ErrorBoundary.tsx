@@ -8,12 +8,12 @@ import { DefaultErrorFallback } from './DefaultErrorFallback';
 
 export interface ErrorBoundaryState {
   hasError: boolean;
-  error?: Error;
-  errorInfo?: React.ErrorInfo;
+  error: Error | null;
+  errorInfo: React.ErrorInfo | null;
 }
 
 export interface ErrorFallbackProps {
-  error?: Error;
+  error: Error | null;
   resetError: () => void;
 }
 
@@ -26,14 +26,18 @@ export interface ErrorBoundaryProps {
 class ErrorBoundaryClass extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false };
+    this.state = {
+      hasError: false,
+      error: null,
+      errorInfo: null,
+    };
   }
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
+  override componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
     this.setState({ hasError: true, error, errorInfo });
     this.props.onError?.(error, errorInfo);
 
@@ -44,10 +48,10 @@ class ErrorBoundaryClass extends React.Component<ErrorBoundaryProps, ErrorBounda
   }
 
   resetError = (): void => {
-    this.setState({ hasError: false, error: undefined, errorInfo: undefined });
+    this.setState({ hasError: false, error: null, errorInfo: null });
   };
 
-  render(): React.ReactNode {
+  override render(): React.ReactNode {
     if (this.state.hasError) {
       const FallbackComponent = this.props.fallback || DefaultErrorFallback;
       return <FallbackComponent error={this.state.error} resetError={this.resetError} />;

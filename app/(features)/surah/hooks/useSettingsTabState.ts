@@ -14,7 +14,7 @@ interface ReturnShape {
 export const useSettingsTabState: (args?: UseSettingsTabStateProps) => ReturnShape = ({
   onReadingPanelOpen,
 }: UseSettingsTabStateProps = {}) => {
-  const [activeTab, setActiveTab] = useState('translation');
+  const [activeTab, setActiveTab] = useState<'translation' | 'reading'>('translation');
 
   const handleTabChange = useCallback(
     (tab: 'translation' | 'reading') => {

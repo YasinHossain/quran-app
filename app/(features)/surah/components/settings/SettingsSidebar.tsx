@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useCallback } from 'react';
+import type { ReactElement } from 'react';
 
 import { useSettingsTabState, useSettingsSections } from '@/app/(features)/surah/hooks';
 import { useUIState } from '@/app/providers/UIStateContext';
@@ -12,7 +13,7 @@ import { buildContentWrapperProps } from './sidebar/SettingsContentWrapperProps'
 import { buildPanelsProps } from './sidebar/SettingsPanelsProps';
 import { SettingsSidebarProps } from './types';
 
-export const SettingsSidebar = (props: SettingsSidebarProps): React.JSX.Element => {
+export const SettingsSidebar = (props: SettingsSidebarProps): ReactElement => {
   const { isSettingsOpen, setSettingsOpen } = useUIState();
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
 

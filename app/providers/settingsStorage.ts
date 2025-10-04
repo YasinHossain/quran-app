@@ -13,6 +13,8 @@ export const ARABIC_FONTS = [
   { name: 'Lateef', value: '"Lateef", serif', category: 'IndoPak' },
 ];
 
+const DEFAULT_ARABIC_FONT = ARABIC_FONTS[0]?.value ?? '"KFGQPC-Uthman-Taha", serif';
+
 export const defaultSettings: Settings = {
   translationId: 20,
   translationIds: [20],
@@ -20,7 +22,7 @@ export const defaultSettings: Settings = {
   arabicFontSize: 28,
   translationFontSize: 16,
   tafsirFontSize: 16,
-  arabicFontFace: ARABIC_FONTS[0].value,
+  arabicFontFace: DEFAULT_ARABIC_FONT,
   wordLang: 'en',
   wordTranslationId: 85,
   showByWords: false,

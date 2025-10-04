@@ -89,15 +89,18 @@ export function useVerseListing({
   const stableTranslationIds = useStableTranslationIds(settingsState.settings);
 
   const loaderState =
-    useInfiniteVerseLoader({
-      id,
-      lookup,
-      stableTranslationIds,
-      wordLang: settingsState.settings.wordLang,
-      loadMoreRef: errorState.loadMoreRef,
-      error: errorState.error,
-      setError: errorState.handleLoaderError,
-    }) || EMPTY_LOADER_STATE;
+    id !== undefined
+      ?
+          useInfiniteVerseLoader({
+            id,
+            lookup,
+            stableTranslationIds,
+            wordLang: settingsState.settings.wordLang,
+            loadMoreRef: errorState.loadMoreRef,
+            error: errorState.error,
+            setError: errorState.handleLoaderError,
+          }) || EMPTY_LOADER_STATE
+      : EMPTY_LOADER_STATE;
 
   const verses = resolveVerses(initialVerses, loaderState.verses);
   const navigation = useNavigationHandlers({

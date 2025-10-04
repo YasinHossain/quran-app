@@ -5,6 +5,7 @@ import { useVerseListing } from '@/app/(features)/surah/hooks/useVerseListing';
 import { useCoverAndTrack } from '@/app/shared/hooks/useCoverAndTrack';
 import { useSelectedNames } from '@/app/shared/hooks/useSelectedNames';
 import { getVersesByPage } from '@/lib/api';
+import { ensureLanguageCode } from '@/lib/text/languageCodes';
 
 import type { UseVerseListingReturn } from '@/app/(features)/surah/hooks/useVerseListing';
 import type { Track } from '@/app/shared/player/types';
@@ -27,7 +28,7 @@ export function usePageData({ pageId }: UsePageDataOptions): UseVerseListingRetu
   const verseListingData = useVerseListing({
     id: pageId,
     lookup: ({ id, translationIds, page, perPage, wordLang }) =>
-      getVersesByPage({ id, translationIds, page, perPage, wordLang }),
+      getVersesByPage({ id, translationIds, page, perPage, wordLang: ensureLanguageCode(wordLang) }),
   });
 
   const { translationOptions, wordLanguageOptions, settings, activeVerse, reciter } =

@@ -6,6 +6,9 @@ import { AlertIcon } from '@/app/shared/icons';
 import { ArabicFontList } from './ArabicFontList';
 import { FilterToggle } from './FilterToggle';
 
+type ArabicFont = ReturnType<typeof useArabicFontPanel>['fonts'][number];
+type ArabicFontFilter = ReturnType<typeof useArabicFontPanel>['activeFilter'];
+
 function LoadingState(): React.JSX.Element {
   return (
     <div className="flex-1 flex items-center justify-center p-8">
@@ -34,11 +37,11 @@ function FontContent({
   listContainerRef,
   listHeight,
 }: {
-  activeFilter: string;
-  setActiveFilter: (filter: string) => void;
-  resourcesToRender: unknown[];
-  selectedIds: Set<string>;
-  handleSelectionToggle: (id: string) => void;
+  activeFilter: ArabicFontFilter;
+  setActiveFilter: (filter: ArabicFontFilter) => void;
+  resourcesToRender: ArabicFont[];
+  selectedIds: Set<number>;
+  handleSelectionToggle: (id: number) => void;
   listContainerRef: React.RefObject<HTMLDivElement | null>;
   listHeight: number;
 }): React.JSX.Element {
@@ -47,8 +50,8 @@ function FontContent({
       <div className="flex-1 overflow-y-auto" ref={listContainerRef}>
         <div className="px-4 py-4">
           <FilterToggle
-            activeFilter={activeFilter as 'Uthmani' | 'IndoPak'}
-            setActiveFilter={setActiveFilter as (f: 'Uthmani' | 'IndoPak') => void}
+            activeFilter={activeFilter}
+            setActiveFilter={(value) => setActiveFilter(value)}
           />
         </div>
         <ArabicFontList
@@ -82,7 +85,7 @@ export function ArabicFontContent({
     selectedIds,
     handleSelectionToggle,
   } = panel;
-  const resourcesToRender = groupedFonts[activeFilter] || [];
+  const resourcesToRender = groupedFonts[activeFilter] ?? [];
 
   if (loading) return <LoadingState />;
   if (error) return <ErrorState error={error} />;

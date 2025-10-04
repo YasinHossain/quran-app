@@ -1,8 +1,10 @@
 'use client';
 
+import type { ArabicFontFilter } from '@/app/(features)/surah/components/panels/arabic-font-panel/useArabicFontPanel';
+
 interface FilterToggleProps {
-  activeFilter: 'Uthmani' | 'IndoPak';
-  setActiveFilter: (f: 'Uthmani' | 'IndoPak') => void;
+  activeFilter: ArabicFontFilter;
+  setActiveFilter: (f: ArabicFontFilter) => void;
 }
 
 export function FilterToggle({

@@ -1,13 +1,23 @@
 import { Folder, Bookmark, MemorizationPlan } from '@/types';
 
-export const createNewFolder = (name: string, color?: string, icon?: string): Folder => ({
-  id: crypto.randomUUID(),
-  name,
-  color,
-  icon,
-  createdAt: Date.now(),
-  bookmarks: [],
-});
+export const createNewFolder = (name: string, color?: string, icon?: string): Folder => {
+  const base: Folder = {
+    id: crypto.randomUUID(),
+    name,
+    createdAt: Date.now(),
+    bookmarks: [],
+  };
+
+  if (color !== undefined) {
+    base.color = color;
+  }
+
+  if (icon !== undefined) {
+    base.icon = icon;
+  }
+
+  return base;
+};
 
 export const findBookmarkInFolders = (
   folders: Folder[],

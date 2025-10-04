@@ -6,15 +6,17 @@ export interface SettingsSidebarProps {
   selectedTranslationName: string;
   selectedTafsirName?: string;
   selectedWordLanguageName: string;
-  showTafsirSetting?: boolean;
-  isTranslationPanelOpen?: boolean;
+  showTafsirSetting?: boolean | undefined;
+  isTranslationPanelOpen?: boolean | undefined;
   onTranslationPanelClose?: () => void;
-  isTafsirPanelOpen?: boolean;
+  isTafsirPanelOpen?: boolean | undefined;
   onTafsirPanelClose?: () => void;
-  isWordLanguagePanelOpen?: boolean;
+  isWordLanguagePanelOpen?: boolean | undefined;
   onWordLanguagePanelClose?: () => void;
   pageType?: 'verse' | 'tafsir';
 }
+
+export type SettingsTabValue = 'translation' | 'reading';
 
 export interface SettingsContentProps
   extends Pick<
@@ -27,16 +29,16 @@ export interface SettingsContentProps
     | 'selectedWordLanguageName'
     | 'showTafsirSetting'
   > {
-  activeTab: string;
+  activeTab: SettingsTabValue;
   openSections: string[];
   onSectionToggle: (sectionId: string) => void;
   onArabicFontPanelOpen: () => void;
 }
 
 export interface SettingsContentWrapperProps {
-  activeTab: string;
-  onTabChange: (tab: string) => void;
-  tabOptions: Array<{ value: string; label: string }>;
+  activeTab: SettingsTabValue;
+  onTabChange: (tab: SettingsTabValue) => void;
+  tabOptions: Array<{ value: SettingsTabValue; label: string }>;
   openSections: string[];
   onSectionToggle: (section: string) => void;
   onArabicFontPanelOpen: () => void;

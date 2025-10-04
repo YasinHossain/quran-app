@@ -3,8 +3,8 @@ import React from 'react';
 interface SurahSearchInputProps {
   value: string;
   onChange: (value: string) => void;
-  onKeyDown: (e: React.KeyboardEvent) => void;
-  inputRef: React.RefObject<HTMLInputElement>;
+  onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  inputRef: React.MutableRefObject<HTMLInputElement | null>;
 }
 
 export const SurahSearchInput = ({

@@ -3,11 +3,11 @@
 import { IconMenu2 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { memo, useCallback } from 'react';
+import { memo, type ReactElement, useCallback } from 'react';
 
 import { useSidebar } from '@/app/providers/SidebarContext';
 
-export const HeaderBrand = memo(function HeaderBrand(): JSX.Element {
+export const HeaderBrand = memo(function HeaderBrand(): ReactElement {
   const { setSurahListOpen, setBookmarkSidebarOpen } = useSidebar();
   const pathname = usePathname();
 

@@ -1,10 +1,11 @@
 'use client';
 
+import type { JSX } from 'react';
+
 import { useSettings } from '@/app/providers/SettingsContext';
-import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
+import { toLanguageCode } from '@/lib/text/languageCodes';
 
 import type { LanguageOption } from './useWordTranslationSearch';
-import type { LanguageCode } from '@/lib/text/languageCodes';
 
 interface WordTranslationListProps {
   languages: LanguageOption[];
@@ -12,20 +13,21 @@ interface WordTranslationListProps {
 }
 
 // Helpers
-const toLanguageCode = (name: string): LanguageCode | undefined =>
-  (LANGUAGE_CODES as Record<string, LanguageCode>)[name.toLowerCase()];
-
-const isSelectedLang = (current: LanguageCode, lang: LanguageOption): boolean =>
-  current === toLanguageCode(lang.name);
+const isSelectedLang = (current: string, lang: LanguageOption): boolean => {
+  const currentCode = toLanguageCode(current);
+  const optionCode = toLanguageCode(lang.name);
+  return Boolean(currentCode && optionCode && currentCode === optionCode);
+};
 
 const applySelection = (
   settings: ReturnType<typeof useSettings>['settings'],
   setSettings: ReturnType<typeof useSettings>['setSettings'],
   lang: LanguageOption
 ): void => {
+  const nextCode = toLanguageCode(lang.name);
   setSettings({
     ...settings,
-    wordLang: toLanguageCode(lang.name) ?? settings.wordLang,
+    wordLang: nextCode ?? settings.wordLang,
     wordTranslationId: lang.id,
   });
 };

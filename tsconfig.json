@@ -1,8 +1,11 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
+    "target": "ES2020",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
@@ -24,7 +27,13 @@
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
     "noPropertyAccessFromIndexSignature": true,
-    "types": ["@types/node", "@types/react", "@testing-library/jest-dom"],
+    "types": [
+      "@types/node",
+      "@types/react",
+      "@types/react-dom",
+      "@types/jest",
+      "@testing-library/jest-dom"
+    ],
     "plugins": [
       {
         "name": "next"
@@ -32,15 +41,40 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/dls/*": ["./quran-com/src/components/dls/*"],
-      "@/icons/*": ["./quran-com/public/icons/*"],
-      "@/public/*": ["./public/*", "./quran-com/public/*"],
-      "@/data/*": ["./data/*", "./quran-com/data/*"],
-      "@/tests/*": ["./tests/*", "./quran-com/tests/*"],
-      "@/types/*": ["./types/*", "./quran-com/types/*"],
-      "@/*": ["./*", "./quran-com/src/*", "./quran-com/*"]
-    }
+      "@/public/*": [
+        "./public/*"
+      ],
+      "@/data/*": [
+        "./data/*"
+      ],
+      "@/tests/*": [
+        "./tests/*"
+      ],
+      "@tests/*": [
+        "./tests/*"
+      ],
+      "@/types/*": [
+        "./types/*"
+      ],
+      "@infra/*": [
+        "./src/infrastructure/*"
+      ],
+      "@/*": [
+        "./*"
+      ]
+    },
+    "allowJs": true
   },
-  "include": ["**/*.ts", "**/*.tsx", "next-env.d.ts", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "mcp-server", "templates", ".next"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "mcp-server",
+    "templates",
+    ".next"
+  ]
 }

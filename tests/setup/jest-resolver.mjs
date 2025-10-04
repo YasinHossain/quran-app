@@ -60,20 +60,51 @@ function resolveWithExtensions(candidate, extensions) {
 export default function resolver(request, options) {
   const { defaultResolver, basedir, rootDir = process.cwd() } = options;
 
-  if (request.startsWith('@/')) {
-    const fromPath = basedir || rootDir;
-    const subPath = request.slice(2);
-    const isFromQuranCom = fromPath.includes(`${path.sep}quran-com${path.sep}`);
+  const aliasMatchers = [
+    {
+      match: (value) => value.startsWith('@/'),
+      resolve: (value) => {
+        const fromPath = basedir || rootDir;
+        const subPath = value.slice(2);
+        const isFromQuranCom = fromPath.includes(`${path.sep}quran-com${path.sep}`);
 
-    const candidateRoots = [];
-    if (isFromQuranCom) {
-      candidateRoots.push(path.join(rootDir, 'quran-com', 'src', subPath));
-      candidateRoots.push(path.join(rootDir, 'quran-com', subPath));
-    } else {
-      candidateRoots.push(path.join(rootDir, subPath));
+        const candidateRoots = [];
+        if (isFromQuranCom) {
+          candidateRoots.push(path.join(rootDir, 'quran-com', 'src', subPath));
+          candidateRoots.push(path.join(rootDir, 'quran-com', subPath));
+        } else {
+          candidateRoots.push(path.join(rootDir, subPath));
+        }
+
+        return candidateRoots;
+      }
+    },
+    {
+      match: (value) => value.startsWith('@tests/'),
+      resolve: (value) => {
+        const subPath = value.slice('@tests/'.length);
+        return [
+          path.join(rootDir, 'tests', subPath),
+          path.join(rootDir, 'quran-com', 'tests', subPath)
+        ];
+      }
+    },
+    {
+      match: (value) => value.startsWith('@infra/'),
+      resolve: (value) => {
+        const subPath = value.slice('@infra/'.length);
+        return [path.join(rootDir, 'src', 'infrastructure', subPath)];
+      }
+    }
+  ];
+
+  for (const alias of aliasMatchers) {
+    if (!alias.match(request)) {
+      continue;
     }
 
-    for (const candidate of candidateRoots) {
+    const candidates = alias.resolve(request);
+    for (const candidate of candidates) {
       const resolved = resolveWithExtensions(candidate, options.extensions);
       if (resolved) {
         return resolved;

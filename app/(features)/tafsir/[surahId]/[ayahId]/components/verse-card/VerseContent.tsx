@@ -1,5 +1,7 @@
 'use client';
 
+import type { JSX } from 'react';
+
 import { useSettings } from '@/app/providers/SettingsContext';
 import { VerseArabic } from '@/app/shared/VerseArabic';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';

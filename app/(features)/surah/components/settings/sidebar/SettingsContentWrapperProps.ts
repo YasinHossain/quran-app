@@ -1,20 +1,4 @@
-import { SettingsSidebarProps } from '@/app/(features)/surah/components/settings/types';
-
-export interface SettingsContentWrapperPropsConfig {
-  activeTab: string;
-  onTabChange: (tab: string) => void;
-  tabOptions: Array<{ id: string; label: string }>;
-  openSections: Record<string, boolean>;
-  onSectionToggle: (section: string) => void;
-  onArabicFontPanelOpen: () => void;
-  onTranslationPanelOpen?: () => void;
-  onWordLanguagePanelOpen?: () => void;
-  onTafsirPanelOpen?: () => void;
-  selectedTranslationName?: string;
-  selectedTafsirName?: string;
-  selectedWordLanguageName?: string;
-  showTafsirSetting: boolean;
-}
+import type { SettingsContentWrapperProps, SettingsSidebarProps, SettingsTabValue } from '@/app/(features)/surah/components/settings/types';
 
 export function buildContentWrapperProps(
   baseProps: Pick<
@@ -28,29 +12,30 @@ export function buildContentWrapperProps(
     | 'showTafsirSetting'
   >,
   stateProps: {
-    activeTab: string;
-    onTabChange: (tab: string) => void;
-    tabOptions: Array<{ id: string; label: string }>;
-    openSections: Record<string, boolean>;
+    activeTab: SettingsTabValue;
+    onTabChange: (tab: SettingsTabValue) => void;
+    tabOptions: Array<{ value: SettingsTabValue; label: string }>;
+    openSections: string[];
     onSectionToggle: (section: string) => void;
     onArabicFontPanelOpen: () => void;
   }
-): SettingsContentWrapperPropsConfig {
-  const coreProps = {
+): SettingsContentWrapperProps {
+  const coreProps: SettingsContentWrapperProps = {
     ...stateProps,
     onTranslationPanelOpen: baseProps.onTranslationPanelOpen,
     onWordLanguagePanelOpen: baseProps.onWordLanguagePanelOpen,
     selectedTranslationName: baseProps.selectedTranslationName,
     selectedWordLanguageName: baseProps.selectedWordLanguageName,
-    showTafsirSetting: baseProps.showTafsirSetting,
+    showTafsirSetting: baseProps.showTafsirSetting ?? false,
   };
 
-  // Add optional tafsir props conditionally
   if (baseProps.onTafsirPanelOpen !== undefined) {
     return {
       ...coreProps,
       onTafsirPanelOpen: baseProps.onTafsirPanelOpen,
-      selectedTafsirName: baseProps.selectedTafsirName,
+      ...(baseProps.selectedTafsirName !== undefined
+        ? { selectedTafsirName: baseProps.selectedTafsirName }
+        : {}),
     };
   }
 

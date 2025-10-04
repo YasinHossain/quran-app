@@ -17,7 +17,7 @@ function calculateColumns(width: number): number {
   return 1;
 }
 
-function useColumnCount(containerRef: React.RefObject<HTMLDivElement>): number {
+function useColumnCount(containerRef: React.RefObject<HTMLDivElement | null>): number {
   const [columns, setColumns] = useState(1);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ function useColumnCount(containerRef: React.RefObject<HTMLDivElement>): number {
   return columns;
 }
 
-function useScrollMargin(containerRef: React.RefObject<HTMLDivElement>, columns: number): number {
+function useScrollMargin(containerRef: React.RefObject<HTMLDivElement | null>, columns: number): number {
   const [scrollMargin, setScrollMargin] = useState(0);
 
   useLayoutEffect(() => {
@@ -84,7 +84,7 @@ function usePageVirtualizer(rows: number[][], scrollMargin: number): Virtualizer
 
 export const PageTab = memo(function PageTab(): React.JSX.Element {
   const { pages } = useNavigationDatasets();
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const columns = useColumnCount(containerRef);
   const scrollMargin = useScrollMargin(containerRef, columns);
   const rows = usePageRows(pages, columns);

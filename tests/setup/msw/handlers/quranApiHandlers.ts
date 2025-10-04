@@ -15,8 +15,9 @@ export const quranApiHandlers = [
     });
   }),
   http.get(`${QURAN_API_BASE}/chapters/:id`, ({ params }) => {
+    const idParam = params['id'] as string | undefined;
     return HttpResponse.json({
-      chapter: { ...mockChapter, id: parseInt(params.id as string, 10) },
+      chapter: { ...mockChapter, id: parseInt(idParam ?? '0', 10) },
     });
   }),
   http.get(`${QURAN_API_BASE}/verses/by_chapter/:chapter_id`, ({ params, request }) => {
@@ -24,8 +25,9 @@ export const quranApiHandlers = [
     const page = toNumber(url.searchParams.get('page'), '1');
     const perPage = toNumber(url.searchParams.get('per_page'), '10');
 
+    const chapterIdParam = params['chapter_id'] as string | undefined;
     return HttpResponse.json({
-      verses: [{ ...mockVerse, chapter_id: parseInt(params.chapter_id as string, 10) }],
+      verses: [{ ...mockVerse, chapter_id: parseInt(chapterIdParam ?? '0', 10) }],
       pagination: {
         page,
         per_page: perPage,
@@ -35,8 +37,9 @@ export const quranApiHandlers = [
     });
   }),
   http.get(`${QURAN_API_BASE}/verses/by_key/:verse_key`, ({ params }) => {
+    const verseKeyParam = params['verse_key'] as string | undefined;
     return HttpResponse.json({
-      verse: { ...mockVerse, verse_key: params.verse_key },
+      verse: { ...mockVerse, verse_key: verseKeyParam },
     });
   }),
   http.get(`${QURAN_API_BASE}/resources/translations`, () => {
@@ -58,11 +61,12 @@ export const quranApiHandlers = [
     const chapterNumber = url.searchParams.get('chapter_number');
     const verseNumber = url.searchParams.get('verse_number');
 
+    const translationIdParam = params['translation_id'] as string | undefined;
     return HttpResponse.json({
       translations: [
         {
           ...mockTranslation,
-          resource_id: parseInt(params.translation_id as string, 10),
+          resource_id: parseInt(translationIdParam ?? '0', 10),
           verse_key: `${chapterNumber}:${verseNumber}`,
         },
       ],
@@ -87,11 +91,12 @@ export const quranApiHandlers = [
     const chapterNumber = url.searchParams.get('chapter_number');
     const verseNumber = url.searchParams.get('verse_number');
 
+    const tafsirIdParam = params['tafsir_id'] as string | undefined;
     return HttpResponse.json({
       tafsirs: [
         {
           ...mockTafsir,
-          resource_id: parseInt(params.tafsir_id as string, 10),
+          resource_id: parseInt(tafsirIdParam ?? '0', 10),
           verse_key: `${chapterNumber}:${verseNumber}`,
         },
       ],

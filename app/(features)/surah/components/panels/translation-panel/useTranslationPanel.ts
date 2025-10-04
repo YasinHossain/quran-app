@@ -32,7 +32,7 @@ export interface UseTranslationPanelReturn {
   draggedId: number | null;
   handleReset: () => void;
 
-  tabsContainerRef: RefObject<HTMLDivElement>;
+  tabsContainerRef: RefObject<HTMLDivElement | null>;
   canScrollLeft: boolean;
   canScrollRight: boolean;
   scrollTabsLeft: () => void;

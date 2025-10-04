@@ -7,6 +7,8 @@ import { useTheme } from '@/app/providers/ThemeContext';
 
 export const MAX_ARABIC_FONT_SELECTIONS = 1; // Only one font can be selected at a time
 
+export type ArabicFontFilter = 'Uthmani' | 'IndoPak';
+
 interface ArabicFont {
   name: string;
   value: string;
@@ -21,8 +23,8 @@ interface UseArabicFontPanelResult {
   loading: boolean;
   error: string | undefined;
   groupedFonts: Record<string, ArabicFont[]>;
-  activeFilter: string;
-  setActiveFilter: React.Dispatch<React.SetStateAction<string>>;
+  activeFilter: ArabicFontFilter;
+  setActiveFilter: React.Dispatch<React.SetStateAction<ArabicFontFilter>>;
   selectedIds: Set<number>;
   handleSelectionToggle: (id: number) => void;
   handleReset: () => void;
@@ -31,7 +33,7 @@ interface UseArabicFontPanelResult {
 export const useArabicFontPanel = (): UseArabicFontPanelResult => {
   const { theme } = useTheme();
   const { settings, setSettings, arabicFonts } = useSettings();
-  const [activeFilter, setActiveFilter] = useState('Uthmani');
+  const [activeFilter, setActiveFilter] = useState<ArabicFontFilter>('Uthmani');
   const { selectedIds, handleSelectionToggle, handleReset, initializeFromSettings } =
     useArabicFontSelection(settings, setSettings);
 

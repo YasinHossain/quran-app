@@ -7,12 +7,12 @@ import { SurahSearchInput } from './SurahSearchInput';
 
 interface SurahDropdownProps {
   chapters: Chapter[];
-  value?: number;
+  value: number | undefined;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   onSelect: (chapter: Chapter) => void;
   searchInputRef: React.MutableRefObject<HTMLInputElement | null>;
-  handleKeyDown: (e: React.KeyboardEvent) => void;
+  handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 export const SurahDropdown = ({

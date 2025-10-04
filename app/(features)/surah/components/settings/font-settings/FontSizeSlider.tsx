@@ -1,4 +1,5 @@
 import React from 'react';
+import type { CSSProperties, ReactElement } from 'react';
 
 interface FontSizeSliderProps {
   label: string;
@@ -6,7 +7,7 @@ interface FontSizeSliderProps {
   min: number;
   max: number;
   onChange: (value: number) => void;
-  style: React.CSSProperties;
+  style: CSSProperties;
 }
 
 export function FontSizeSlider({
@@ -16,7 +17,7 @@ export function FontSizeSlider({
   max,
   onChange,
   style,
-}: FontSizeSliderProps): JSX.Element {
+}: FontSizeSliderProps): ReactElement {
   return (
     <div>
       <div className="flex justify-between mb-1 text-sm">

@@ -15,7 +15,7 @@ beforeEach(resetTestMocks);
 afterEach(restoreTimers);
 
 it('rotates through verses in queue', async () => {
-  const verses: Verse[] = [
+  const verses: [Verse, Verse, Verse, Verse] = [
     {
       id: 1,
       verse_key: '1:1',
@@ -69,7 +69,7 @@ it('rotates through verses in queue', async () => {
 });
 
 it('fetches random verse after specified rotations', async () => {
-  const randomVerses: Verse[] = [
+  const randomVerses: [Verse, Verse] = [
     {
       id: 1,
       verse_key: '1:1',

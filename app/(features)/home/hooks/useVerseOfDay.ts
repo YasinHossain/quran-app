@@ -26,7 +26,7 @@ interface UseVerseOfDayReturn {
   verse: Verse | null;
   loading: boolean;
   error: string | null;
-  surahs: Surah[];
+  surahs: readonly Surah[];
   refreshVerse: () => void;
   prefetchNextVerse: () => void;
 }

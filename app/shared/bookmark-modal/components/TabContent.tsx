@@ -1,5 +1,7 @@
 'use client';
 
+import type { JSX } from 'react';
+
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { BookmarkTab } from './BookmarkTab';

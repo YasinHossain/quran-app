@@ -4,17 +4,20 @@ import { useSettingsSections } from '@/app/(features)/surah/hooks/useSettingsSec
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 describe('useSettingsSections logging', () => {
-  const originalEnv = process.env.NODE_ENV;
+  const originalEnv = process.env['NODE_ENV'];
+  const setNodeEnv = (value: string): void => {
+    (process.env as Record<string, string | undefined>)['NODE_ENV'] = value;
+  };
 
   beforeEach(() => {
-    process.env.NODE_ENV = 'development';
+    setNodeEnv('development');
     jest.spyOn(logger, 'debug').mockImplementation(() => {});
     localStorage.clear();
   });
 
   afterEach(() => {
     (logger.debug as jest.Mock).mockRestore();
-    process.env.NODE_ENV = originalEnv;
+    setNodeEnv(originalEnv ?? 'test');
   });
 
   it('logs section toggle in development', () => {

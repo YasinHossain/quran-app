@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, type JSX } from 'react';
 
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { ResponsiveVerseActions } from '@/app/shared/ResponsiveVerseActions';

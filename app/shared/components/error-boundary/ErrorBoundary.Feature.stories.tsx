@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import { ErrorBoundary } from './ErrorBoundary';
 import { FeatureErrorBoundary } from './FeatureErrorBoundary';
 
@@ -35,6 +37,9 @@ const ErrorThrowingComponent = ({ shouldThrow }: { shouldThrow: boolean }): JSX.
 
 export const FeatureErrorBoundaryStory: Story = {
   name: 'Feature Error Boundary',
+  args: {
+    children: null,
+  },
   render: () => (
     <FeatureErrorBoundary
       featureName="Audio Player"
@@ -46,6 +51,9 @@ export const FeatureErrorBoundaryStory: Story = {
 };
 
 export const NestedErrorBoundaries: Story = {
+  args: {
+    children: null,
+  },
   render: () => (
     <div className="space-y-6">
       <ErrorBoundary>
@@ -73,6 +81,9 @@ export const NestedErrorBoundaries: Story = {
 };
 
 export const Mobile: Story = {
+  args: {
+    children: null,
+  },
   render: () => (
     <div className="min-h-screen">
       <ErrorBoundary>
@@ -86,6 +97,9 @@ export const Mobile: Story = {
 };
 
 export const DarkTheme: Story = {
+  args: {
+    children: null,
+  },
   render: () => (
     <div className="min-h-screen bg-background p-8 dark">
       <ErrorBoundary>

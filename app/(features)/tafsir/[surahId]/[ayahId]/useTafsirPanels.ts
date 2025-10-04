@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
 export function useBodyScrollLock(): void {
-  useEffect((): void => {
+  useEffect(() => {
     document.body.style.overflow = 'hidden';
-    return (): void => {
+    return () => {
       document.body.style.overflow = '';
     };
   }, []);

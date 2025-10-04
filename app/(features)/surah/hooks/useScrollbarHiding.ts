@@ -1,7 +1,7 @@
 import { useEffect, useRef, RefObject } from 'react';
 
-export const useScrollbarHiding = (): { sidebarRef: RefObject<HTMLElement> } => {
-  const sidebarRef = useRef<HTMLElement>(null);
+export const useScrollbarHiding = (): { sidebarRef: RefObject<HTMLElement | null> } => {
+  const sidebarRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (sidebarRef.current) {

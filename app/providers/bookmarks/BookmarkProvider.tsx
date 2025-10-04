@@ -56,6 +56,7 @@ function useBookmarkProviderValue(): BookmarkContextType {
   return useMemo(
     () => ({
       folders,
+      pinnedVerses,
       ...folderOps,
       ...bookmarkOps,
       ...helpers,
@@ -64,7 +65,17 @@ function useBookmarkProviderValue(): BookmarkContextType {
       memorization,
       ...memorizationOps,
     }),
-    [folders, folderOps, bookmarkOps, helpers, lastRead, chapters, memorization, memorizationOps]
+    [
+      folders,
+      pinnedVerses,
+      folderOps,
+      bookmarkOps,
+      helpers,
+      lastRead,
+      chapters,
+      memorization,
+      memorizationOps,
+    ]
   );
 }
 

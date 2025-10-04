@@ -68,13 +68,13 @@ beforeEach(() => {
   routerForwardMock.mockClear();
 
   if (typeof window !== 'undefined') {
-    window.__TEST_BOOKMARK_CHAPTERS__ = undefined;
+    delete window.__TEST_BOOKMARK_CHAPTERS__;
   }
 });
 // Start MSW for tests unless explicitly disabled.
 // Set JEST_ALLOW_NETWORK=1 to bypass MSW and allow real network requests.
 // Tests needing custom network responses should use `server.use` to add handlers.
-if (!process.env.JEST_ALLOW_NETWORK) {
+if (!process.env['JEST_ALLOW_NETWORK']) {
   beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());

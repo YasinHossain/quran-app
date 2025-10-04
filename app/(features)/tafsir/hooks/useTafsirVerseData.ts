@@ -2,9 +2,10 @@ import useSWR from 'swr';
 
 import { useSettings } from '@/app/providers/SettingsContext';
 import { getVersesByChapter } from '@/lib/api';
+import { ensureLanguageCode } from '@/lib/text/languageCodes';
 import { GetTafsirContentUseCase } from '@/src/application/use-cases/GetTafsirContent';
 import { container } from '@/src/infrastructure/di/Container';
-import { Verse as VerseType } from '@/types';
+import { Surah, Verse as VerseType } from '@/types';
 
 import { useTafsirOptions } from './useTafsirOptions';
 import { useTranslationOptions } from './useTranslationOptions';
@@ -24,7 +25,7 @@ interface UseTafsirVerseDataReturn {
   prev: { surahId: string; ayahId: number } | null;
   next: { surahId: string; ayahId: number } | null;
   navigate: (target: { surahId: string; ayahId: number } | null) => void;
-  currentSurah: { number: number; verses: number; name: string } | undefined;
+  currentSurah: Surah | undefined;
   resetWordSettings: () => void;
 }
 
@@ -37,17 +38,19 @@ export const useTafsirVerseData = (surahId: string, ayahId: string): UseTafsirVe
     useWordTranslations();
   const { prev, next, navigate, currentSurah } = useVerseNavigation(surahId, ayahId);
 
+  const wordLanguage = ensureLanguageCode(settings.wordLang);
+
   const { data: verseData } = useSWR(
     surahId && ayahId
-      ? ['verse', surahId, ayahId, settings.translationId, settings.wordLang]
+      ? (['verse', surahId, ayahId, settings.translationId, wordLanguage] as const)
       : null,
-    ([, s, a, trId, wordLang]) =>
+    ([, s, a, trId, lang]) =>
       getVersesByChapter({
         id: s,
         translationIds: trId,
         page: Number(a),
         perPage: 1,
-        wordLang,
+        wordLang: lang,
       }).then((d) => d.verses[0])
   );
   const verse: VerseType | undefined = verseData;

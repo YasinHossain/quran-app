@@ -1,17 +1,19 @@
 'use client';
 
 import React from 'react';
+import type { ReactElement } from 'react';
 
 import { SurahAudioPlayer } from '@/app/(features)/surah/components/SurahAudioPlayer';
 
-import type { Verse, Reciter } from '@/types';
+import type { Reciter } from '@/app/shared/player/types';
+import type { Verse } from '@/types';
 
 interface SurahAudioProps {
   activeVerse: Verse | null;
   reciter: Reciter | null;
   isVisible: boolean;
-  onNext: () => void;
-  onPrev: () => void;
+  onNext: () => boolean;
+  onPrev: () => boolean;
 }
 
 export function SurahAudio({
@@ -20,7 +22,11 @@ export function SurahAudio({
   isVisible,
   onNext,
   onPrev,
-}: SurahAudioProps): React.JSX.Element {
+}: SurahAudioProps): ReactElement | null {
+  if (!reciter) {
+    return null;
+  }
+
   return (
     <SurahAudioPlayer
       activeVerse={activeVerse}

@@ -8,12 +8,12 @@ import { ErrorBoundary, ErrorFallbackProps } from './ErrorBoundary';
 
 interface FeatureErrorFallbackProps extends ErrorFallbackProps {
   featureName: string;
-  description?: string;
+  description?: string | null;
 }
 
 interface FeatureErrorContentProps {
   description: string;
-  error?: Error;
+  error: Error | null;
   featureName: string;
   onRetry: () => void;
   showDetails: boolean;
@@ -97,7 +97,7 @@ function FeatureErrorFallback({
 interface FeatureErrorBoundaryProps {
   children: React.ReactNode;
   featureName: string;
-  description?: string;
+  description?: string | null;
 }
 
 /**
@@ -128,7 +128,11 @@ export function FeatureErrorBoundary({
   };
 
   const createFeatureFallback = (props: ErrorFallbackProps): React.JSX.Element => (
-    <FeatureErrorFallback {...props} featureName={featureName} description={description} />
+    <FeatureErrorFallback
+      {...props}
+      featureName={featureName}
+      description={description ?? null}
+    />
   );
 
   return (
@@ -147,7 +151,7 @@ export function withFeatureErrorBoundary<P extends object>(
   description?: string
 ): React.ComponentType<P> {
   const WrappedComponent: React.FC<P> = (props) => (
-    <FeatureErrorBoundary featureName={featureName} description={description}>
+    <FeatureErrorBoundary featureName={featureName} description={description ?? null}>
       <Component {...props} />
     </FeatureErrorBoundary>
   );

@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import dynamic from 'next/dynamic';
 
 import { Spinner } from '@/app/shared/Spinner';
@@ -37,7 +38,7 @@ export function PageAudioPlayer({
   isHidden,
   onNext,
   onPrev,
-}: PageAudioPlayerProps): JSX.Element | null {
+}: PageAudioPlayerProps): ReactElement | null {
   if (!track || !isVisible) {
     return null;
   }
@@ -57,3 +58,6 @@ export function PageAudioPlayer({
     </div>
   );
 }
+
+
+

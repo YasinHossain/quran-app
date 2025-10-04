@@ -26,15 +26,26 @@ const applySavedTranslations = (
   if (!settings.translationIds && savedTranslations) {
     const ids = parseJson<number[]>(savedTranslations);
     if (Array.isArray(ids) && ids.length > 0) {
+      const [primaryTranslationId] = ids;
       settings.translationIds = ids;
-      settings.translationId = ids[0];
+      if (primaryTranslationId !== undefined) {
+        settings.translationId = primaryTranslationId;
+      }
     }
   }
 
-  if (!settings.translationIds) {
-    settings.translationIds = settings.translationId
+  let translationIds = settings.translationIds;
+
+  if (!translationIds || translationIds.length === 0) {
+    translationIds = settings.translationId
       ? [settings.translationId]
       : [defaults.translationId];
+    settings.translationIds = translationIds;
+  }
+
+  if (settings.translationId === undefined) {
+    const [primaryTranslationId] = translationIds;
+    settings.translationId = primaryTranslationId ?? defaults.translationId;
   }
 };
 

@@ -1,5 +1,7 @@
 'use client';
 
+import type { ReactElement, ReactNode } from 'react';
+
 import { usePathname } from 'next/navigation';
 
 import {
@@ -11,7 +13,7 @@ import { Navigation } from '@/app/shared/IconSidebar';
 import { ModernLayout } from '@/app/shared/navigation/ModernLayout';
 import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
 
-function LayoutContent({ children }: { children: React.ReactNode }): JSX.Element {
+function LayoutContent({ children }: { children: ReactNode }): ReactElement {
   useHeaderVisibility();
   const pathname = usePathname();
   const isBookmarkPage = pathname.startsWith('/bookmarks');
@@ -42,10 +44,11 @@ function LayoutContent({ children }: { children: React.ReactNode }): JSX.Element
   );
 }
 
-export default function FeaturesLayout({ children }: { children: React.ReactNode }): JSX.Element {
+export default function FeaturesLayout({ children }: { children: ReactNode }): ReactElement {
   return (
     <HeaderVisibilityProvider>
       <LayoutContent>{children}</LayoutContent>
     </HeaderVisibilityProvider>
   );
 }
+

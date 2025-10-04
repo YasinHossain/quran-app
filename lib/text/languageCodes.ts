@@ -82,3 +82,36 @@ export const LANGUAGE_CODES = {
 } as const;
 
 export type LanguageCode = (typeof LANGUAGE_CODES)[keyof typeof LANGUAGE_CODES];
+
+const LANGUAGE_CODE_VALUES = new Set<string>(Object.values(LANGUAGE_CODES));
+
+export function toLanguageCode(value: string | null | undefined): LanguageCode | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return undefined;
+  }
+
+  const lower = trimmed.toLowerCase();
+  const fromName = (LANGUAGE_CODES as Record<string, LanguageCode>)[lower];
+  if (fromName) {
+    return fromName;
+  }
+
+  if (LANGUAGE_CODE_VALUES.has(lower)) {
+    return lower as LanguageCode;
+  }
+
+  if (LANGUAGE_CODE_VALUES.has(trimmed)) {
+    return trimmed as LanguageCode;
+  }
+
+  return undefined;
+}
+
+export function ensureLanguageCode(value: string | null | undefined, fallback: LanguageCode = 'en'): LanguageCode {
+  return toLanguageCode(value) ?? fallback;
+}

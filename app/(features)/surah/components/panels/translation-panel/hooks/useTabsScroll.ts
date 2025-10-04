@@ -10,13 +10,13 @@ import {
 export const useTabsScroll = (
   languages: string[]
 ): {
-  tabsContainerRef: React.RefObject<HTMLDivElement>;
+  tabsContainerRef: React.RefObject<HTMLDivElement | null>;
   canScrollLeft: boolean;
   canScrollRight: boolean;
   scrollTabsLeft: () => void;
   scrollTabsRight: () => void;
 } => {
-  const tabsContainerRef = useRef<HTMLDivElement>(null);
+  const tabsContainerRef = useRef<HTMLDivElement | null>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 

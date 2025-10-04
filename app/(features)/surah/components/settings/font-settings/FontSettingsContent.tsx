@@ -1,4 +1,5 @@
 import React from 'react';
+import type { CSSProperties, ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { CollapsibleSection } from '@/app/(features)/surah/components/CollapsibleSection';
@@ -12,8 +13,8 @@ interface FontSettingsContentProps {
   isOpen?: boolean;
   onToggle?: () => void;
   settings: ReturnType<typeof useSettings>['settings'];
-  arabicStyle: React.CSSProperties;
-  translationStyle: React.CSSProperties;
+  arabicStyle: CSSProperties;
+  translationStyle: CSSProperties;
   selectedArabicFont: string;
   onArabicFontPanelOpen: () => void;
   handleArabicFontSizeChange: (value: number) => void;
@@ -30,7 +31,7 @@ export function FontSettingsContent({
   onArabicFontPanelOpen,
   handleArabicFontSizeChange,
   handleTranslationFontSizeChange,
-}: FontSettingsContentProps): JSX.Element {
+}: FontSettingsContentProps): ReactElement {
   const { t } = useTranslation();
 
   return (
@@ -38,8 +39,8 @@ export function FontSettingsContent({
       title={t('font_setting')}
       icon={<FontSettingIcon size={20} className="text-accent" />}
       isLast
-      isOpen={isOpen}
-      onToggle={onToggle || (() => {})}
+      isOpen={isOpen ?? false}
+      onToggle={onToggle ?? (() => {})}
     >
       <div className="space-y-4">
         <FontSizeSlider

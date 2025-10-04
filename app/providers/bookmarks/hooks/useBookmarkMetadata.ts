@@ -18,16 +18,21 @@ export function useBookmarkMetadata(
         const verse = await (isCompositeKey
           ? getVerseByKey(verseId, translationId)
           : getVerseById(verseId, translationId));
-        const [surahIdStr] = verse.verse_key.split(':');
-        const surahInfo = chaptersList.find((chapter) => chapter.id === parseInt(surahIdStr));
+        const [surahIdStr = '0'] = verse.verse_key.split(':');
+        const surahId = Number.parseInt(surahIdStr, 10);
+        const surahInfo = chaptersList.find((chapter) => chapter.id === surahId);
 
-        const metadata = {
+        const metadata: Partial<Bookmark> = {
           verseKey: verse.verse_key,
           verseText: verse.text_uthmani,
-          surahName: surahInfo?.name_simple || `Surah ${surahIdStr}`,
-          translation: verse.translations?.[0]?.text,
+          surahName: surahInfo?.name_simple || `Surah ${surahId}`,
           verseApiId: verse.id,
         };
+
+        const primaryTranslation = verse.translations?.[0]?.text;
+        if (primaryTranslation !== undefined) {
+          metadata.translation = primaryTranslation;
+        }
 
         setFolders((prev) => updateBookmarkInFolders(prev, verseId, metadata));
         setPinnedVerses((prev) =>

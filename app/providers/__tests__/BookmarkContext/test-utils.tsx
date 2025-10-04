@@ -48,6 +48,8 @@ export const BookmarkTestComponent = (): React.JSX.Element => {
     setLastRead,
   } = useBookmarks();
 
+  const firstFolder = folders[0];
+
   return (
     <div>
       <div data-testid="folders">{JSON.stringify(folders)}</div>
@@ -57,13 +59,39 @@ export const BookmarkTestComponent = (): React.JSX.Element => {
       <div data-testid="is-pinned-1:1">{isPinned('1:1') ? 'true' : 'false'}</div>
 
       <button onClick={() => createFolder('Test Folder')}>Create Folder</button>
-      <button onClick={() => addBookmark('1:1', folders[0]?.id)}>Add Bookmark</button>
-      <button onClick={() => removeBookmark('1:1', folders[0]?.id)}>Remove Bookmark</button>
-      <button onClick={() => renameFolder(folders[0]?.id, 'New Name')}>Rename Folder</button>
-      <button onClick={() => renameFolder(folders[0]?.id, folders[0]?.name || '', 'text-primary')}>
+      <button onClick={() => addBookmark('1:1', firstFolder?.id)}>Add Bookmark</button>
+      <button
+        onClick={() => {
+          if (!firstFolder) return;
+          removeBookmark('1:1', firstFolder.id);
+        }}
+      >
+        Remove Bookmark
+      </button>
+      <button
+        onClick={() => {
+          if (!firstFolder) return;
+          renameFolder(firstFolder.id, 'New Name');
+        }}
+      >
+        Rename Folder
+      </button>
+      <button
+        onClick={() => {
+          if (!firstFolder) return;
+          renameFolder(firstFolder.id, firstFolder.name, 'text-primary');
+        }}
+      >
         Set Color
       </button>
-      <button onClick={() => deleteFolder(folders[0]?.id)}>Delete Folder</button>
+      <button
+        onClick={() => {
+          if (!firstFolder) return;
+          deleteFolder(firstFolder.id);
+        }}
+      >
+        Delete Folder
+      </button>
       <button onClick={() => togglePinned('1:1')}>Toggle Pin</button>
       <button onClick={() => setLastRead('1', 1)}>Set Last Read</button>
     </div>

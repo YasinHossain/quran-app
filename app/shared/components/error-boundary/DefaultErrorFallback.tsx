@@ -30,7 +30,7 @@ export function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps):
             We encountered an unexpected error. You can try refreshing the page or go back to
             continue reading.
           </p>
-          <ErrorDetails error={error} />
+          <ErrorDetails {...(error ? { error } : {})} />
         </div>
 
         <ErrorActions onTryAgain={resetError} onGoHome={handleGoHome} />

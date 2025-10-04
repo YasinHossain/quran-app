@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import type { ReactElement } from 'react';
 
 import { FontSettings } from './FontSettings';
 import { TafsirSettings } from './TafsirSettings';
@@ -19,7 +20,7 @@ export const SettingsContent = ({
   selectedTafsirName,
   selectedWordLanguageName,
   showTafsirSetting = false,
-}: SettingsContentProps): React.JSX.Element => {
+}: SettingsContentProps): ReactElement => {
   if (activeTab === 'translation') {
     return (
       <>

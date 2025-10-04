@@ -2,6 +2,8 @@
 
 import { SettingsContent } from './SettingsContent';
 import { SettingsTabs } from './SettingsTabs';
+import type { ReactElement } from 'react';
+
 import { SettingsContentWrapperProps } from './types';
 
 export const SettingsContentWrapper = ({
@@ -18,7 +20,7 @@ export const SettingsContentWrapper = ({
   selectedTafsirName,
   selectedWordLanguageName,
   showTafsirSetting,
-}: SettingsContentWrapperProps): React.JSX.Element => {
+}: SettingsContentWrapperProps): ReactElement => {
   return (
     <>
       {/* Tabs section with header separation - matches SurahListContent structure */}

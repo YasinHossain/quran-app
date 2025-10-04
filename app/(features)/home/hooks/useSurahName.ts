@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 
 import type { Verse, Surah } from '@/types';
 
-export function useSurahName(displayVerse: Verse | null, surahs: Surah[]): string | null {
+export function useSurahName(displayVerse: Verse | null, surahs: readonly Surah[]): string | null {
   return useMemo(() => {
     if (!displayVerse) return null;
 

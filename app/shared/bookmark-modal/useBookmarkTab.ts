@@ -13,7 +13,7 @@ interface UseBookmarkTabParams {
 export interface UseBookmarkTabReturn {
   readonly folders: Folder[];
   readonly filteredFolders: Folder[];
-  readonly findBookmark: (verseId: string) => Bookmark | undefined;
+  readonly findBookmark: (verseId: string) => { folder: Folder; bookmark: Bookmark } | null;
   readonly searchQuery: string;
   readonly setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   readonly handleFolderSelect: (folder: Folder) => void;

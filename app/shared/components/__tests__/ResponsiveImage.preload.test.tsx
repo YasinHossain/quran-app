@@ -17,7 +17,6 @@ describe('useImagePreload', () => {
   beforeEach(() => {
     created = [];
     originalImage = window.Image;
-    // @ts-expect-error override for testing
     window.Image = MockImage as unknown as typeof Image;
   });
 
@@ -38,9 +37,14 @@ describe('useImagePreload', () => {
 
   it('cleans up preloaded images on unmount', () => {
     const { unmount } = renderHook(() => useImagePreload(['/cleanup.jpg'], true));
-    expect(created[0].src).toBe('/cleanup.jpg');
+    const image = created[0];
+    expect(image).toBeDefined();
+    if (!image) {
+      return;
+    }
+    expect(image.src).toBe('/cleanup.jpg');
     unmount();
-    expect(created[0].src).toBe('');
+    expect(image.src).toBe('');
   });
 
   it('handles empty sources array', () => {

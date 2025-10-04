@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import type { ReactElement } from 'react';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { SettingsSidebar } from '@/app/(features)/surah/components';
@@ -39,7 +40,7 @@ interface PagePageProps {
 /**
  * Main page component for viewing verses by Quran page number
  */
-export default function PagePage({ params }: PagePageProps): JSX.Element {
+export default function PagePage({ params }: PagePageProps): ReactElement {
   const { pageId } = React.use(params);
   const { isHidden } = useHeaderVisibility();
   const settingsSidebar = useSettingsSidebar();
@@ -91,3 +92,4 @@ export default function PagePage({ params }: PagePageProps): JSX.Element {
     </div>
   );
 }
+

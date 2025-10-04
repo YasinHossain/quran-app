@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useFontSize } from '@/app/(features)/surah/hooks/useFontSize';
@@ -18,7 +19,7 @@ export const FontSettings = ({
   onArabicFontPanelOpen,
   isOpen = false,
   onToggle,
-}: FontSettingsProps): JSX.Element => {
+}: FontSettingsProps): ReactElement => {
   const { settings, arabicFonts, setArabicFontSize, setTranslationFontSize } = useSettings();
   const { t } = useTranslation();
   const [isClient, setIsClient] = useState(false);
@@ -53,7 +54,7 @@ export const FontSettings = ({
   return (
     <FontSettingsContent
       isOpen={isOpen}
-      onToggle={onToggle}
+      {...(onToggle ? { onToggle } : {})}
       settings={settings}
       arabicStyle={arabicStyle}
       translationStyle={translationStyle}

@@ -17,6 +17,8 @@ const Wrapper = ({ children }: { children: React.ReactNode }): React.ReactElemen
   <HeaderVisibilityProvider>{children}</HeaderVisibilityProvider>
 );
 
+const noop = (): void => {};
+
 function createTestComponent(props: {
   onTranslationPanelOpen?: () => void;
   onWordLanguagePanelOpen?: () => void;
@@ -27,12 +29,12 @@ function createTestComponent(props: {
     <Wrapper>
       <Header />
       <SettingsSidebar
-        onTranslationPanelOpen={props.onTranslationPanelOpen || (() => {})}
-        onWordLanguagePanelOpen={props.onWordLanguagePanelOpen || (() => {})}
+        onTranslationPanelOpen={props.onTranslationPanelOpen ?? noop}
+        onWordLanguagePanelOpen={props.onWordLanguagePanelOpen ?? noop}
         selectedTranslationName="English"
         selectedWordLanguageName="English"
-        isWordLanguagePanelOpen={props.isWordLanguagePanelOpen}
-        onWordLanguagePanelClose={props.onWordLanguagePanelClose}
+        isWordLanguagePanelOpen={props.isWordLanguagePanelOpen ?? false}
+        onWordLanguagePanelClose={props.onWordLanguagePanelClose ?? noop}
       />
     </Wrapper>
   );
@@ -70,10 +72,11 @@ describe('SettingsSidebar - Basic Interactions', () => {
     renderWithProviders(createTestComponent({}));
 
     await userEvent.click(screen.getByLabelText(/open settings/i));
-    const [fontButton] = screen.getAllByRole('button', { name: 'KFGQPC Uthman Taha' });
+    const fontButton = screen.getByRole<HTMLButtonElement>('button', { name: 'KFGQPC Uthman Taha' });
     await userEvent.click(fontButton);
 
-    await userEvent.click(screen.getByRole('button', { name: 'IndoPak' }));
+    const indoPakButton = screen.getByRole<HTMLButtonElement>('button', { name: 'IndoPak' });
+    await userEvent.click(indoPakButton);
     expect(screen.getByText('Noto Nastaliq Urdu')).toBeInTheDocument();
   });
 });
@@ -99,7 +102,8 @@ describe('SettingsSidebar - Translation Panel', () => {
     renderWithProviders(<TestComponent />);
 
     await userEvent.click(screen.getByLabelText(/open settings/i));
-    await userEvent.click(screen.getAllByRole('button', { name: 'Translation' })[0]);
+    const translationButton = screen.getAllByRole<HTMLButtonElement>('button', { name: 'Translation' })[0]!;
+    await userEvent.click(translationButton);
     const panel = screen.getByTestId('translation-panel');
     expect(panel).toHaveClass('translate-x-full');
   });
@@ -127,7 +131,7 @@ describe('SettingsSidebar - Word Translation Panel', () => {
     renderWithProviders(<TestComponent />);
 
     await userEvent.click(screen.getByLabelText(/open settings/i));
-    const [banglaButton] = await screen.findAllByRole('button', { name: 'Bangla' });
+    const banglaButton = await screen.findByRole<HTMLButtonElement>('button', { name: 'Bangla' });
     await userEvent.click(banglaButton);
     expect(screen.getAllByText('Bangla').length).toBeGreaterThan(1);
   });

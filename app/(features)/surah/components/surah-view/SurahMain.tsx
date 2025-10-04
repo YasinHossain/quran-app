@@ -45,8 +45,8 @@ export function SurahMain({
           loadMoreRef={loadMoreRef}
           isValidating={isValidating}
           isReachingEnd={isReachingEnd}
-          emptyLabelKey={emptyLabelKey}
-          endLabelKey={endLabelKey}
+          {...(emptyLabelKey !== undefined ? { emptyLabelKey } : {})}
+          {...(endLabelKey !== undefined ? { endLabelKey } : {})}
         />
       </div>
     </main>

@@ -1,12 +1,12 @@
 'use client';
 
 import { IconSun, IconMoon, IconSettings } from '@tabler/icons-react';
-import { memo, useCallback } from 'react';
+import { memo, type ReactElement, useCallback } from 'react';
 
 import { useTheme } from '@/app/providers/ThemeContext';
 import { useUIState } from '@/app/providers/UIStateContext';
 
-export const HeaderActions = memo(function HeaderActions(): JSX.Element {
+export const HeaderActions = memo(function HeaderActions(): ReactElement {
   const { theme, setTheme } = useTheme();
   const { setSettingsOpen } = useUIState();
 

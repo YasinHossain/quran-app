@@ -31,7 +31,7 @@ export const AdaptiveLayout = ({
         showNavigation={showNavigation}
         sidebarContent={sidebarContent}
         sidebarOpen={sidebarOpen}
-        onSidebarToggle={onSidebarToggle}
+        {...(onSidebarToggle ? { onSidebarToggle } : {})}
       >
         {children}
       </LayoutContent>

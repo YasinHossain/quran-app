@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import type { ReactElement } from 'react';
 
 import { ArabicFontPanel } from '@/app/(features)/surah/components/ArabicFontPanel';
 import { TranslationPanel, TafsirPanel } from '@/app/(features)/surah/components/panels';
@@ -17,7 +18,7 @@ export const SettingsPanels = ({
   onTafsirPanelClose,
   isWordLanguagePanelOpen,
   onWordLanguagePanelClose,
-}: SettingsPanelsProps): React.JSX.Element => {
+}: SettingsPanelsProps): ReactElement => {
   return (
     <>
       <ArabicFontPanel isOpen={isArabicFontPanelOpen} onClose={onArabicFontPanelClose} />

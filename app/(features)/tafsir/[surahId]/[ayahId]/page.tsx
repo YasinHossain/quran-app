@@ -6,6 +6,8 @@ import { SettingsSidebar } from '@/app/(features)/surah/components';
 import { useTafsirVerseData } from '@/app/(features)/tafsir/hooks/useTafsirVerseData';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 
+import { Surah } from '@/types';
+
 import { AyahNavigation } from './components/AyahNavigation';
 import { TafsirAudioPlayer } from './components/TafsirAudioPlayer';
 import { TafsirViewer } from './components/TafsirViewer';
@@ -76,7 +78,7 @@ function TafsirMain({
   prev: { surahId: string; ayahId: number } | null;
   next: { surahId: string; ayahId: number } | null;
   navigate: (target: { surahId: string; ayahId: number } | null) => void;
-  currentSurah: { number: number; verses: number; name: string } | undefined;
+  currentSurah: Surah | undefined;
   ayahId: string;
   verse: Parameters<typeof TafsirViewer>[0]['verse'];
   tafsirResource: Parameters<typeof TafsirViewer>[0]['tafsirResource'];
@@ -117,9 +119,9 @@ function TafsirSettingsSidebar({
   selectedWordLanguageName,
 }: {
   panels: ReturnType<typeof usePanelsState>;
-  selectedTranslationName: string | undefined;
-  selectedTafsirName: string | undefined;
-  selectedWordLanguageName: string | undefined;
+  selectedTranslationName: string;
+  selectedTafsirName: string;
+  selectedWordLanguageName: string;
 }): React.JSX.Element {
   return (
     <SettingsSidebar

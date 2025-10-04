@@ -1,4 +1,6 @@
 'use client';
+import type { JSX } from 'react';
+
 import { Surah } from '@/types';
 
 interface NavTarget {
@@ -10,11 +12,11 @@ interface AyahNavigationProps {
   prev: NavTarget | null;
   next: NavTarget | null;
   navigate: (target: NavTarget | null) => void;
-  currentSurah?: Surah;
+  currentSurah?: Surah | undefined;
   ayahId: string;
 }
 
-const ChevronLeft = (): React.JSX.Element => (
+const ChevronLeft = (): JSX.Element => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className="h-5 w-5 text-accent"
@@ -29,7 +31,7 @@ const ChevronLeft = (): React.JSX.Element => (
   </svg>
 );
 
-const ChevronRight = (): React.JSX.Element => (
+const ChevronRight = (): JSX.Element => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className="h-5 w-5 text-accent"
@@ -51,7 +53,7 @@ interface NavButtonProps {
   side: 'left' | 'right';
 }
 
-const NavButton = ({ label, disabled, onClick, side }: NavButtonProps): React.JSX.Element => (
+const NavButton = ({ label, disabled, onClick, side }: NavButtonProps): JSX.Element => (
   <button
     aria-label={label}
     disabled={disabled}
@@ -74,9 +76,9 @@ const Title = ({
   currentSurah,
   ayahId,
 }: {
-  currentSurah?: Surah;
+  currentSurah?: Surah | undefined;
   ayahId: string;
-}): React.JSX.Element => (
+}): JSX.Element => (
   <div className="flex-1 min-w-0 text-center px-2 text-on-accent font-bold text-sm sm:text-base truncate">
     {currentSurah ? (
       <>
@@ -94,7 +96,7 @@ export const AyahNavigation = ({
   navigate,
   currentSurah,
   ayahId,
-}: AyahNavigationProps): React.JSX.Element => (
+}: AyahNavigationProps): JSX.Element => (
   <div className="flex w-full items-center justify-between gap-2 sm:gap-3 rounded-full bg-accent text-on-accent p-2 min-w-0 overflow-hidden">
     <NavButton label="Previous" disabled={!prev} onClick={(): void => navigate(prev)} side="left" />
     <Title currentSurah={currentSurah} ayahId={ayahId} />

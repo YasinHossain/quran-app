@@ -24,11 +24,15 @@ const actionHandlers = {
   SET_WORD_LANG: (state, action) => ({ ...state, wordLang: action.value }),
   SET_WORD_TRANSLATION_ID: (state, action) => ({ ...state, wordTranslationId: action.value }),
   SET_TAFSIR_IDS: (state, action) => ({ ...state, tafsirIds: action.value }),
-  SET_TRANSLATION_IDS: (state, action) => ({
-    ...state,
-    translationIds: action.value,
-    translationId: action.value.length > 0 ? action.value[0] : state.translationId,
-  }),
+  SET_TRANSLATION_IDS: (state, action) => {
+    const [primaryTranslationId] = action.value;
+
+    return {
+      ...state,
+      translationIds: action.value,
+      translationId: primaryTranslationId ?? state.translationId,
+    };
+  },
   SET_ARABIC_FONT_SIZE: (state, action) => ({ ...state, arabicFontSize: action.value }),
   SET_TRANSLATION_FONT_SIZE: (state, action) => ({ ...state, translationFontSize: action.value }),
   SET_TAFSIR_FONT_SIZE: (state, action) => ({ ...state, tafsirFontSize: action.value }),

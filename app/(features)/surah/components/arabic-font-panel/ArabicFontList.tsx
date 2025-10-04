@@ -1,11 +1,14 @@
 'use client';
 
+import type { useArabicFontPanel } from '@/app/(features)/surah/components/panels/arabic-font-panel/useArabicFontPanel';
 import { ResourceList } from '@/app/shared/resource-panel';
 
+type ArabicFont = ReturnType<typeof useArabicFontPanel>['fonts'][number];
+
 interface ArabicFontListProps {
-  resources: unknown[];
-  selectedIds: number[] | string[];
-  onToggle: (id: number | string) => void;
+  resources: ArabicFont[];
+  selectedIds: Set<number>;
+  onToggle: (id: number) => void;
   height: number;
 }
 

@@ -2,10 +2,10 @@ import { useMemo } from 'react';
 
 import { cn } from '@/lib/utils/cn';
 
-import type { ResponsiveVariant } from '@/lib/responsive';
+import type { ComponentVariant } from '@/lib/responsive';
 
 interface UseLayoutStylesOptions {
-  variant: ResponsiveVariant;
+  variant: ComponentVariant;
   showNavigation: boolean;
   sidebarOpen: boolean;
   hasSidebar: boolean;
@@ -18,12 +18,12 @@ interface LayoutStyles {
 }
 
 interface SidebarClassesOptions {
-  variant: ResponsiveVariant;
+  variant: ComponentVariant;
   sidebarOpen: boolean;
   hasSidebar: boolean;
 }
 
-const useContentPadding = (variant: ResponsiveVariant, showNavigation: boolean): string =>
+const useContentPadding = (variant: ComponentVariant, showNavigation: boolean): string =>
   useMemo(() => {
     if (!showNavigation) return '';
     return variant === 'expanded' ? '' : 'bottom-nav-space';
@@ -59,7 +59,7 @@ const useSidebarClasses = ({ variant, sidebarOpen, hasSidebar }: SidebarClassesO
     }
   }, [variant, sidebarOpen, hasSidebar]);
 
-const useContainerClasses = (variant: ResponsiveVariant): string =>
+const useContainerClasses = (variant: ComponentVariant): string =>
   useMemo(() => cn('flex', variant === 'expanded' ? 'flex-row' : 'flex-col'), [variant]);
 
 export const useLayoutStyles = ({

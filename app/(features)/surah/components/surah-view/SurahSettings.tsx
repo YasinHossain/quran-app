@@ -30,8 +30,8 @@ export function SurahSettings({
       onTranslationPanelOpen={onTranslationPanelOpen}
       onWordLanguagePanelOpen={onWordLanguagePanelOpen}
       onReadingPanelOpen={() => {}}
-      selectedTranslationName={selectedTranslationName}
-      selectedWordLanguageName={selectedWordLanguageName}
+      selectedTranslationName={selectedTranslationName ?? ''}
+      selectedWordLanguageName={selectedWordLanguageName ?? ''}
       isTranslationPanelOpen={isTranslationPanelOpen}
       onTranslationPanelClose={onTranslationPanelClose}
       isWordLanguagePanelOpen={isWordLanguagePanelOpen}

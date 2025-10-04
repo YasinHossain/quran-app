@@ -27,9 +27,13 @@ describe('BookmarkContext initial state', () => {
     await waitFor(() => {
       const folders: Folder[] = JSON.parse(screen.getByTestId('folders').textContent || '[]');
       expect(folders).toHaveLength(1);
-      expect(folders[0].name).toBe('Uncategorized');
+      const firstFolder = folders[0];
+      if (!firstFolder) {
+        throw new Error('Expected a folder to exist after migration');
+      }
+      expect(firstFolder.name).toBe('Uncategorized');
       const verseIds: string[] = [];
-      for (const b of folders[0].bookmarks) {
+      for (const b of firstFolder.bookmarks) {
         verseIds.push(b.verseId);
       }
       expect(verseIds).toEqual(['1:1', '1:2']);

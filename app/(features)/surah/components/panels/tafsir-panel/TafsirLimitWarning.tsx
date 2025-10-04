@@ -1,5 +1,7 @@
 'use client';
 
+import type { ReactElement } from 'react';
+
 import { AlertIcon } from '@/app/shared/icons';
 
 import { MAX_TAFSIR_SELECTIONS } from './tafsirPanel.utils';
@@ -8,7 +10,7 @@ interface TafsirLimitWarningProps {
   show: boolean;
 }
 
-export const TafsirLimitWarning = ({ show }: TafsirLimitWarningProps): React.JSX.Element => {
+export const TafsirLimitWarning = ({ show }: TafsirLimitWarningProps): ReactElement | null => {
   if (!show) return null;
 
   return (

@@ -28,9 +28,9 @@ export function buildPanelsProps(
 ): SettingsPanelsPropsConfig {
   const coreProps = {
     ...localState,
-    isTranslationPanelOpen: baseProps.isTranslationPanelOpen,
-    isTafsirPanelOpen: baseProps.isTafsirPanelOpen,
-    isWordLanguagePanelOpen: baseProps.isWordLanguagePanelOpen,
+    isTranslationPanelOpen: baseProps.isTranslationPanelOpen ?? false,
+    isTafsirPanelOpen: baseProps.isTafsirPanelOpen ?? false,
+    isWordLanguagePanelOpen: baseProps.isWordLanguagePanelOpen ?? false,
   };
 
   // Add optional close handlers conditionally

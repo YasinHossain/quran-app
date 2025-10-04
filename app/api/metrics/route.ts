@@ -50,7 +50,7 @@ function getMemoryMetrics(): {
   heapUsed: string;
   external: string;
 } | null {
-  if (typeof process !== 'undefined' && process.memoryUsage) {
+  if (typeof process !== 'undefined' && typeof process.memoryUsage === 'function') {
     const memUsage = process.memoryUsage();
     return {
       rss: Math.round(memUsage.rss / 1024 / 1024) + 'MB',
@@ -67,7 +67,7 @@ function getPerformanceMetrics(): {
   cpu_usage: NodeJS.CpuUsage;
   event_loop_lag: string;
 } | null {
-  if (typeof process !== 'undefined' && process.hrtime) {
+  if (typeof process !== 'undefined' && typeof process.hrtime === 'function') {
     return {
       uptime_seconds: process.uptime(),
       cpu_usage: process.cpuUsage(),

@@ -1,5 +1,5 @@
 'use client';
-import { useCallback } from 'react';
+import { useCallback, type JSX } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useAudio } from '@/app/shared/player/context/AudioContext';

@@ -75,7 +75,7 @@ describe('ResponsiveVerseActions interactions · accessibility', () => {
   it('shows loading state', async () => {
     renderResponsiveVerseActions({ isLoadingAudio: true });
 
-    await screen.findByLabelText(/loading/i, { selector: 'svg', hidden: true });
+    await screen.findByLabelText(/loading/i, { selector: 'svg' });
   });
 
   it('supports keyboard navigation', async () => {

@@ -24,7 +24,10 @@ class IntersectionObserverMock {
 
   observe = (element: Element): void => {
     if (this.cb) {
-      this.cb([{ isIntersecting: true, target: element } as IntersectionObserverEntry], this);
+      this.cb(
+        [{ isIntersecting: true, target: element } as IntersectionObserverEntry],
+        this as unknown as IntersectionObserver
+      );
     }
   };
 
@@ -46,7 +49,8 @@ class ResizeObserverMock {
 }
 
 const defineWindowProperty = (key: string, value: unknown): void => {
-  Object.defineProperty(window as Window & Record<string, unknown>, key, {
+  const target = window as unknown as Record<string, unknown>;
+  Object.defineProperty(target, key, {
     configurable: true,
     writable: true,
     value,
@@ -54,7 +58,8 @@ const defineWindowProperty = (key: string, value: unknown): void => {
 };
 
 const defineGlobal = (key: string, value: unknown): void => {
-  Object.defineProperty(globalThis as typeof globalThis & Record<string, unknown>, key, {
+  const target = globalThis as unknown as Record<string, unknown>;
+  Object.defineProperty(target, key, {
     configurable: true,
     writable: true,
     value,
@@ -123,7 +128,10 @@ const installMediaElementMocks = (): void => {
   prototype.play = jest.fn(() => Promise.resolve());
   prototype.pause = jest.fn();
   prototype.load = jest.fn();
-  prototype.canPlayType = jest.fn(() => 'probably');
+  prototype.canPlayType = jest.fn<
+    ReturnType<HTMLMediaElement['canPlayType']>,
+    Parameters<HTMLMediaElement['canPlayType']>
+  >(() => 'probably');
 
   defineMediaProperty('currentTime', 0);
   defineMediaProperty('duration', 0);
@@ -140,32 +148,32 @@ const installMediaElementMocks = (): void => {
   };
 
   prototype.simulateTimeUpdate = function (this: MediaElementShim, time: number): void {
-    this._currentTime = time;
+    this['_currentTime'] = time;
     this.simulateEvent('timeupdate');
   };
 
   prototype.simulateLoadedData = function (this: MediaElementShim, duration = 60): void {
-    this._duration = duration;
-    this._readyState = 4;
+    this['_duration'] = duration;
+    this['_readyState'] = 4;
     this.simulateEvent('loadeddata');
     this.simulateEvent('canplay');
     this.simulateEvent('canplaythrough');
   };
 
   prototype.simulatePlay = function (this: MediaElementShim): void {
-    this._paused = false;
+    this['_paused'] = false;
     this.simulateEvent('play');
     this.simulateEvent('playing');
   };
 
   prototype.simulatePause = function (this: MediaElementShim): void {
-    this._paused = true;
+    this['_paused'] = true;
     this.simulateEvent('pause');
   };
 
   prototype.simulateEnd = function (this: MediaElementShim): void {
-    this._ended = true;
-    this._paused = true;
+    this['_ended'] = true;
+    this['_paused'] = true;
     this.simulateEvent('ended');
   };
 };

@@ -1,11 +1,11 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useCallback, useState, memo } from 'react';
+import { memo, type KeyboardEvent, type ReactElement, useCallback, useState } from 'react';
 
 import { SearchInput } from '@/app/shared/components/SearchInput';
 
-export const HeaderSearch = memo(function HeaderSearch(): JSX.Element {
+export const HeaderSearch = memo(function HeaderSearch(): ReactElement {
   const router = useRouter();
   const [query, setQuery] = useState('');
 
@@ -14,7 +14,7 @@ export const HeaderSearch = memo(function HeaderSearch(): JSX.Element {
   }, []);
 
   const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    (e: KeyboardEvent<HTMLInputElement>): void => {
       if (e.key === 'Enter' && query.trim()) {
         router.push(`/search?query=${encodeURIComponent(query.trim())}`);
       }

@@ -19,8 +19,9 @@ export const qdcHandlers = [
     const page = toNumber(url.searchParams.get('page'), '1');
     const perPage = toNumber(url.searchParams.get('per_page'), '10');
 
+    const chapterParam = params['chapter_id'] as string | undefined;
     return HttpResponse.json({
-      verses: [{ ...mockVerse, chapter_id: parseInt(params.chapter_id as string, 10) }],
+      verses: [{ ...mockVerse, chapter_id: parseInt(chapterParam ?? '0', 10) }],
       pagination: {
         page,
         per_page: perPage,
@@ -34,8 +35,9 @@ export const qdcHandlers = [
     const page = toNumber(url.searchParams.get('page'), '1');
     const perPage = toNumber(url.searchParams.get('per_page'), '10');
 
+    const juzParam = params['juz'] as string | undefined;
     return HttpResponse.json({
-      verses: [{ ...mockVerse, juz_number: parseInt(params.juz as string, 10) }],
+      verses: [{ ...mockVerse, juz_number: parseInt(juzParam ?? '0', 10) }],
       pagination: {
         page,
         per_page: perPage,
@@ -47,7 +49,8 @@ export const qdcHandlers = [
   http.get(`${QDC_API_BASE}/verses/by_page/:page`, ({ params, request }) => {
     const url = new URL(request.url);
     const perPage = toNumber(url.searchParams.get('per_page'), '10');
-    const page = parseInt(params.page as string, 10);
+    const pageParam = params['page'] as string | undefined;
+    const page = parseInt(pageParam ?? '0', 10);
 
     return HttpResponse.json({
       verses: [{ ...mockVerse, page_number: page }],
@@ -60,8 +63,9 @@ export const qdcHandlers = [
     });
   }),
   http.get(`${QDC_API_BASE}/verses/by_key/:verse_key`, ({ params }) => {
+    const verseKeyParam = params['verse_key'] as string | undefined;
     return HttpResponse.json({
-      verse: { ...mockVerse, verse_key: params.verse_key },
+      verse: { ...mockVerse, verse_key: verseKeyParam },
     });
   }),
   http.get(`${QDC_API_BASE}/resources/translations`, ({ request }) => {
@@ -87,11 +91,12 @@ export const qdcHandlers = [
     const chapterNumber = url.searchParams.get('chapter_number');
     const verseNumber = url.searchParams.get('verse_number');
 
+    const translationIdParam = params['translation_id'] as string | undefined;
     return HttpResponse.json({
       translations: [
         {
           ...mockTranslation,
-          resource_id: parseInt(params.translation_id as string, 10),
+          resource_id: parseInt(translationIdParam ?? '0', 10),
           verse_key: `${chapterNumber}:${verseNumber}`,
         },
       ],
@@ -116,11 +121,12 @@ export const qdcHandlers = [
     const chapterNumber = url.searchParams.get('chapter_number');
     const verseNumber = url.searchParams.get('verse_number');
 
+    const tafsirIdParam = params['tafsir_id'] as string | undefined;
     return HttpResponse.json({
       tafsirs: [
         {
           ...mockTafsir,
-          resource_id: parseInt(params.tafsir_id as string, 10),
+          resource_id: parseInt(tafsirIdParam ?? '0', 10),
           verse_key: `${chapterNumber}:${verseNumber}`,
         },
       ],
