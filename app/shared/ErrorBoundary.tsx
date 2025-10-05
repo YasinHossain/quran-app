@@ -1,5 +1,4 @@
 'use client';
-
 import React from 'react';
 
 interface ErrorBoundaryProps {
@@ -12,10 +11,13 @@ interface ErrorBoundaryState {
   error: Error | null;
 }
 
-const DefaultErrorFallback: React.FC<{ error: Error; resetError: () => void }> = ({
+const DefaultErrorFallback = ({
   error,
   resetError,
-}) => (
+}: {
+  error: Error;
+  resetError: () => void;
+}): React.JSX.Element => (
   <div className="min-h-[50vh] flex items-center justify-center p-4">
     <div className="max-w-md w-full text-center space-y-4">
       <div className="text-error-text">
@@ -42,7 +44,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     return { hasError: true, error };
   }
 
-  componentDidCatch() {
+  override componentDidCatch(): void {
     // Log to error reporting service in production
     if (process.env.NODE_ENV === 'production') {
       // Replace with your error reporting service
@@ -50,11 +52,11 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     }
   }
 
-  resetError = () => {
+  resetError = (): void => {
     this.setState({ hasError: false, error: null });
   };
 
-  render() {
+  override render(): React.ReactNode {
     if (this.state.hasError) {
       const FallbackComponent = this.props.fallback || DefaultErrorFallback;
       return <FallbackComponent error={this.state.error!} resetError={this.resetError} />;
@@ -65,7 +67,12 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
 }
 
 // Hook for functional components to trigger error boundaries
-export const useErrorHandler = () => {
+interface UseErrorHandlerReturn {
+  handleError: (error: Error | string) => void;
+  resetError: () => void;
+}
+
+export const useErrorHandler = (): UseErrorHandlerReturn => {
   const [error, setError] = React.useState<Error | null>(null);
 
   React.useEffect(() => {
@@ -74,16 +81,14 @@ export const useErrorHandler = () => {
     }
   }, [error]);
 
-  const resetError = React.useCallback(() => {
+  const resetError = React.useCallback((): void => {
     setError(null);
   }, []);
 
-  const handleError = React.useCallback((error: Error | string) => {
+  const handleError = React.useCallback((error: Error | string): void => {
     const errorObj = typeof error === 'string' ? new Error(error) : error;
     setError(errorObj);
   }, []);
 
   return { handleError, resetError };
 };
-
-export default ErrorBoundary;

@@ -1,22 +1,12 @@
 name: Claude Code Review
 
 on:
-  pull_request:
-    types: [opened, synchronize]
-    # Optional: Only run on specific file changes
-    # paths:
-    #   - "src/**/*.ts"
-    #   - "src/**/*.tsx"
-    #   - "src/**/*.js"
-    #   - "src/**/*.jsx"
+  issue_comment:
+    types: [created]
 
 jobs:
   claude-review:
-    # Optional: Filter by PR author
-    # if: |
-    #   github.event.pull_request.user.login == 'external-contributor' ||
-    #   github.event.pull_request.user.login == 'new-developer' ||
-    #   github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
+    if: github.event.issue.pull_request && (contains(github.event.comment.body, '@claude') || contains(github.event.comment.body, 'review'))
 
     runs-on: ubuntu-latest
     permissions:
@@ -42,17 +32,43 @@ jobs:
 
           # Direct prompt for automated review (no @claude mention needed)
           direct_prompt: |
-            Please review this pull request and provide feedback on:
-            - Code quality and best practices
-            - Potential bugs or issues
-            - Performance considerations
-            - Security concerns
-            - Test coverage
+            Please review this pull request thoroughly and provide feedback on:
 
-            Be constructive and helpful in your feedback.
+            🏗️ **Architecture & Code Quality**
+            - Clean Architecture compliance (Domain → Application → Infrastructure → Presentation)
+            - Component structure and atomic design patterns
+            - TypeScript type safety and interface usage
+            - Code organization and naming conventions
 
-          # Optional: Use sticky comments to make Claude reuse the same comment on subsequent pushes to the same PR
-          # use_sticky_comment: true
+            🐛 **Bugs & Issues**
+            - Potential runtime errors or edge cases
+            - Logic errors or incorrect implementations
+            - Missing error handling
+
+            ⚡ **Performance**
+            - React performance optimizations (memo, useMemo, useCallback)
+            - Bundle size impact and code splitting opportunities
+            - Unnecessary re-renders or expensive operations
+
+            🔒 **Security**
+            - Input validation and sanitization
+            - XSS prevention and secure coding practices
+            - API security and data handling
+
+            🧪 **Testing**
+            - Test coverage for new features
+            - Missing test cases or edge case testing
+            - Test quality and maintainability
+
+            📱 **Mobile & Accessibility**
+            - Mobile-first responsive design
+            - Touch-friendly interactions
+            - WCAG AA compliance
+
+            Please run the quality checks and provide specific, actionable feedback with code examples where helpful.
+
+          # Use sticky comments to make Claude reuse the same comment on subsequent pushes to the same PR
+          use_sticky_comment: true
 
           # Optional: Customize review based on file types
           # direct_prompt: |
@@ -68,8 +84,8 @@ jobs:
           #   'Welcome! Please review this PR from a first-time contributor. Be encouraging and provide detailed explanations for any suggestions.' ||
           #   'Please provide a thorough code review focusing on our coding standards and best practices.' }}
 
-          # Optional: Add specific tools for running tests or linting
-          # allowed_tools: "Bash(npm run test),Bash(npm run lint),Bash(npm run typecheck)"
+          # Add specific tools for running tests and quality checks
+          allowed_tools: 'Bash(npm run check),Bash(npm run test:coverage),Bash(npm run lint),Bash(npm run type-check),Bash(npm run format -- --check)'
 
           # Optional: Skip review for certain conditions
           # if: |

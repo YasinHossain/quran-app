@@ -1,5 +1,6 @@
 import React from 'react';
-import type { RepeatOptions } from '../types';
+
+import type { RepeatOptions } from '@/app/shared/player/types';
 
 interface Props {
   localRepeat: RepeatOptions;
@@ -8,74 +9,100 @@ interface Props {
   setRangeWarning: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-export default function RepeatPanel({
+export function RepeatPanel({
   localRepeat,
   setLocalRepeat,
   rangeWarning,
   setRangeWarning,
-}: Props) {
+}: Props): React.JSX.Element {
   return (
     <div className="md:col-span-2 grid md:grid-cols-2 gap-4">
-      <div className="rounded-xl border border-border p-4">
-        <div className="font-medium mb-3 text-foreground">Mode</div>
-        <div className="flex items-center p-1 rounded-full bg-interactive border border-border">
-          {(['off', 'single', 'range', 'surah'] as const).map((m) => (
-            <button
-              key={m}
-              onClick={() => setLocalRepeat({ ...localRepeat, mode: m })}
-              className={`flex-1 px-3 py-2 rounded-full text-sm font-semibold capitalize transition-colors ${
-                localRepeat.mode === m
-                  ? 'bg-surface shadow text-foreground'
-                  : 'text-muted hover:text-foreground hover:bg-surface/30'
-              }`}
-            >
-              {m}
-            </button>
-          ))}
-        </div>
+      <ModeSelector localRepeat={localRepeat} setLocalRepeat={setLocalRepeat} />
+      <RepeatFields
+        localRepeat={localRepeat}
+        setLocalRepeat={setLocalRepeat}
+        rangeWarning={rangeWarning}
+        setRangeWarning={setRangeWarning}
+      />
+    </div>
+  );
+}
+
+function ModeSelector({
+  localRepeat,
+  setLocalRepeat,
+}: {
+  localRepeat: RepeatOptions;
+  setLocalRepeat: React.Dispatch<React.SetStateAction<RepeatOptions>>;
+}): React.JSX.Element {
+  return (
+    <div className="rounded-xl border border-border p-4">
+      <div className="font-medium mb-3 text-foreground">Mode</div>
+      <div className="flex items-center p-1 rounded-full bg-interactive border border-border">
+        {(['off', 'single', 'range', 'surah'] as const).map((m) => (
+          <button
+            key={m}
+            onClick={() => setLocalRepeat({ ...localRepeat, mode: m })}
+            className={`flex-1 px-3 py-2 rounded-full text-sm font-semibold capitalize transition-colors ${
+              localRepeat.mode === m
+                ? 'bg-surface shadow text-foreground'
+                : 'text-muted hover:text-foreground hover:bg-surface/30'
+            }`}
+          >
+            {m}
+          </button>
+        ))}
       </div>
-      <div className="rounded-xl border border-border p-4 grid grid-cols-2 gap-3">
-        {rangeWarning && (
-          <div className="col-span-2 text-sm text-status-warning">{rangeWarning}</div>
-        )}
+    </div>
+  );
+}
+
+function RepeatFields({
+  localRepeat,
+  setLocalRepeat,
+  rangeWarning,
+  setRangeWarning,
+}: Props): React.JSX.Element {
+  return (
+    <div className="rounded-xl border border-border p-4 grid grid-cols-2 gap-3">
+      {rangeWarning && <div className="col-span-2 text-sm text-status-warning">{rangeWarning}</div>}
+      <NumberField
+        label="Start"
+        value={localRepeat.start ?? 1}
+        min={1}
+        onChange={(v) => {
+          setLocalRepeat({ ...localRepeat, start: v });
+          setRangeWarning(null);
+        }}
+      />
+      <NumberField
+        label="End"
+        value={localRepeat.end ?? localRepeat.start ?? 1}
+        min={1}
+        onChange={(v) => {
+          setLocalRepeat({ ...localRepeat, end: v });
+          setRangeWarning(null);
+        }}
+      />
+      <NumberField
+        label="Play count"
+        value={localRepeat.playCount ?? 1}
+        min={1}
+        onChange={(v) => setLocalRepeat({ ...localRepeat, playCount: v })}
+      />
+      <NumberField
+        label="Repeat each"
+        value={localRepeat.repeatEach ?? 1}
+        min={1}
+        onChange={(v) => setLocalRepeat({ ...localRepeat, repeatEach: v })}
+      />
+      <div className="col-span-2">
         <NumberField
-          label="Start"
-          value={localRepeat.start ?? 1}
-          min={1}
-          onChange={(v) => {
-            setLocalRepeat({ ...localRepeat, start: v });
-            setRangeWarning(null);
-          }}
+          label="Delay (s)"
+          value={localRepeat.delay ?? 0}
+          min={0}
+          onChange={(v) => setLocalRepeat({ ...localRepeat, delay: v })}
         />
-        <NumberField
-          label="End"
-          value={localRepeat.end ?? localRepeat.start ?? 1}
-          min={1}
-          onChange={(v) => {
-            setLocalRepeat({ ...localRepeat, end: v });
-            setRangeWarning(null);
-          }}
-        />
-        <NumberField
-          label="Play count"
-          value={localRepeat.playCount ?? 1}
-          min={1}
-          onChange={(v) => setLocalRepeat({ ...localRepeat, playCount: v })}
-        />
-        <NumberField
-          label="Repeat each"
-          value={localRepeat.repeatEach ?? 1}
-          min={1}
-          onChange={(v) => setLocalRepeat({ ...localRepeat, repeatEach: v })}
-        />
-        <div className="col-span-2">
-          <NumberField
-            label="Delay (s)"
-            value={localRepeat.delay ?? 0}
-            min={0}
-            onChange={(v) => setLocalRepeat({ ...localRepeat, delay: v })}
-          />
-        </div>
       </div>
     </div>
   );
@@ -91,7 +118,7 @@ function NumberField({
   value: number;
   onChange: (v: number) => void;
   min?: number;
-}) {
+}): React.JSX.Element {
   return (
     <label className="text-sm">
       <span className="block mb-1 text-muted">{label}</span>

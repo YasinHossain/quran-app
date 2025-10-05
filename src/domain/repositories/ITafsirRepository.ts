@@ -1,4 +1,4 @@
-import { Tafsir } from '../entities/Tafsir';
+import { Tafsir } from '@/src/domain/entities/Tafsir';
 
 /**
  * Repository interface for Tafsir operations

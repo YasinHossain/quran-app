@@ -9,6 +9,15 @@ export * from './juz';
 export type { Bookmark, BookmarkWithVerse, Folder, MemorizationPlan } from './bookmark';
 export * from './components';
 
+// Next.js page params type
+export interface Params {
+  surahId?: string;
+  ayahId?: string;
+  juzId?: string;
+  pageId?: string;
+  folderId?: string;
+}
+
 /**
  * Mapping and metadata for a Juz (section) of the Quran.
  */

@@ -1,10 +1,12 @@
 'use client';
 
-import React from 'react';
 import { motion } from 'framer-motion';
-import { Verse as VerseComponent } from '@/app/(features)/surah/[surahId]/components/Verse';
+import React from 'react';
+
+import { VerseCard as VerseComponent } from '@/app/(features)/surah/components';
+import { Spinner } from '@/app/shared/Spinner';
+
 import type { Verse as VerseType } from '@/types';
-import Spinner from '@/app/shared/Spinner';
 
 interface BookmarkVerseListProps {
   verses: VerseType[];
@@ -18,7 +20,7 @@ export const BookmarkVerseList = ({
   isLoading,
   error,
   searchTerm = '',
-}: BookmarkVerseListProps) => {
+}: BookmarkVerseListProps): React.JSX.Element => {
   return (
     <div className="w-full relative">
       {isLoading ? (
@@ -32,14 +34,7 @@ export const BookmarkVerseList = ({
       ) : verses.length > 0 ? (
         <div className="space-y-0">
           {verses.map((verse) => (
-            <motion.div
-              key={verse.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <VerseComponent verse={verse} />
-            </motion.div>
+            <VerseItem key={verse.id} verse={verse} />
           ))}
         </div>
       ) : searchTerm ? (
@@ -53,4 +48,12 @@ export const BookmarkVerseList = ({
   );
 };
 
-export default BookmarkVerseList;
+const VerseItem = ({ verse }: { verse: VerseType }): React.JSX.Element => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.3 }}
+  >
+    <VerseComponent verse={verse} />
+  </motion.div>
+);

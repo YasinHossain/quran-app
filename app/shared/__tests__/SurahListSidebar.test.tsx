@@ -1,8 +1,11 @@
-import React from 'react';
-import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 import userEvent from '@testing-library/user-event';
-import SurahListSidebar from '@/app/shared/SurahListSidebar';
+import { useParams, usePathname } from 'next/navigation';
+import React from 'react';
 import useSWR from 'swr';
+
+import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
+import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 
 jest.mock('swr', () => {
   const actual = jest.requireActual('swr');
@@ -13,14 +16,9 @@ jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
-jest.mock('next/navigation', () => ({
-  useParams: jest.fn(),
-  usePathname: jest.fn(),
-}));
-
 const mockUseSWR = useSWR as jest.Mock;
-const useParams = require('next/navigation').useParams as jest.Mock;
-const usePathname = require('next/navigation').usePathname as jest.Mock;
+const mockUseParams = useParams as jest.Mock;
+const mockUsePathname = usePathname as jest.Mock;
 
 const chapters = [
   {
@@ -42,26 +40,15 @@ const chapters = [
 ];
 
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation(() => ({
-      matches: false,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setMatchMedia(false);
 });
 
 beforeEach(() => {
   sessionStorage.clear();
   localStorage.clear();
   mockUseSWR.mockReturnValue({ data: chapters });
-  useParams.mockReturnValue({});
-  usePathname.mockReturnValue('/surah');
+  mockUseParams.mockReturnValue({});
+  mockUsePathname.mockReturnValue('/surah');
 });
 
 describe('SurahListSidebar', () => {

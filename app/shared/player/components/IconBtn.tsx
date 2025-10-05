@@ -1,16 +1,17 @@
 import React from 'react';
+
 import { iconClasses } from '@/lib/responsive';
 
 /**
  * @deprecated Use Button with variant="icon-round" size="icon-round" instead
  * This component will be removed in a future version
  */
-export default function IconBtn({
+export function IconBtn({
   children,
   className = '',
   disabled,
   ...rest
-}: React.ComponentProps<'button'>) {
+}: React.ComponentProps<'button'>): React.JSX.Element {
   return (
     <button
       {...rest}

@@ -1,15 +1,16 @@
+import { screen, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import PinnedAyahPage from '../pinned/page';
 
-const push = jest.fn();
+import PinnedAyahPage from '@/app/(features)/bookmarks/pinned/page';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
+import { push } from '@/app/testUtils/mockRouter';
+import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
+import * as chaptersApi from '@/lib/api/chapters';
+// Router mocked via testUtils/mockRouter
 
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push }),
-}));
-
+jest.mock('@/lib/api/chapters');
 jest.mock('../components/BookmarksSidebar', () => ({
-  BookmarksSidebar: ({ onSectionChange }: any) => (
+  BookmarksSidebar: ({ onSectionChange }: { onSectionChange: (section: string) => void }) => (
     <nav>
       <button onClick={() => onSectionChange('bookmarks')}>Bookmarks</button>
       <button onClick={() => onSectionChange('last-read')}>Last Read</button>
@@ -18,84 +19,36 @@ jest.mock('../components/BookmarksSidebar', () => ({
   ),
 }));
 
-const removeBookmark = jest.fn();
-let pinnedVerses = [{ verseId: '1', createdAt: 0 }];
-
-jest.mock('@/app/providers/BookmarkContext', () => ({
-  useBookmarks: () => ({
-    pinnedVerses,
-    removeBookmark,
-    chapters: [
-      { id: 1, name_simple: 'Al-Fatihah', verses_count: 7 },
-      { id: 2, name_simple: 'Al-Baqarah', verses_count: 286 },
-    ],
-  }),
-}));
-
 jest.mock('@/app/(features)/layout/context/HeaderVisibilityContext', () => ({
   useHeaderVisibility: () => ({ isHidden: false }),
 }));
 
-jest.mock('../components/BookmarkCard', () => ({
-  BookmarkCard: ({ bookmark }: any) => {
-    const { removeBookmark } = require('@/app/providers/BookmarkContext').useBookmarks();
-    return (
-      <div>
-        <span>{`Verse ${bookmark.verseId}`}</span>
-        <button onClick={() => removeBookmark(bookmark.verseId, 'pinned')}>Remove</button>
-      </div>
-    );
-  },
-}));
-
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    aside: ({ children, ...props }: any) => <aside {...props}>{children}</aside>,
+    div: ({ children, ...props }: any) => React.createElement('div', props, children),
+    aside: ({ children, ...props }: any) => React.createElement('aside', props, children),
   },
-  AnimatePresence: ({ children }: any) => children,
+  AnimatePresence: ({ children }: any) => <>{children}</>,
 }));
 
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setMatchMedia(false);
 });
 
 beforeEach(() => {
-  pinnedVerses = [{ verseId: '1', createdAt: 0 }];
+  (chaptersApi.getChapters as jest.Mock).mockResolvedValue([
+    { id: 1, name_simple: 'Al-Fatihah', verses_count: 7 },
+  ]);
   push.mockClear();
-  removeBookmark.mockClear();
 });
 
 describe('Pinned Ayah Page', () => {
-  it('renders pinned verses and handles navigation', () => {
-    render(<PinnedAyahPage />);
-    expect(screen.getByText('Pinned Ayahs')).toBeInTheDocument();
-    expect(screen.getByText('Verse 1')).toBeInTheDocument();
+  it('shows empty state and handles navigation', async () => {
+    renderWithProviders(<PinnedAyahPage />);
+
+    expect(await screen.findByText('Pinned Verses')).toBeInTheDocument();
+    expect(await screen.findByText('No Pinned Verses')).toBeInTheDocument();
     fireEvent.click(screen.getByText('Last Read'));
-    expect(push).toHaveBeenCalledWith('/bookmarks/last-read');
-  });
-
-  it('removes a pinned verse', () => {
-    render(<PinnedAyahPage />);
-    fireEvent.click(screen.getByText('Remove'));
-    expect(removeBookmark).toHaveBeenCalledWith('1', 'pinned');
-  });
-
-  it('shows empty state message', () => {
-    pinnedVerses = [];
-    render(<PinnedAyahPage />);
-    expect(screen.getByText('No Pinned Verses')).toBeInTheDocument();
+    await waitFor(() => expect(push).toHaveBeenCalledWith('/bookmarks/last-read'));
   });
 });

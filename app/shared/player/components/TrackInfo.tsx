@@ -1,5 +1,5 @@
-import React from 'react';
 import Image from 'next/image';
+import React from 'react';
 
 interface Props {
   cover: string;
@@ -7,7 +7,7 @@ interface Props {
   artist: string;
 }
 
-export default function TrackInfo({ cover, title, artist }: Props) {
+export function TrackInfo({ cover, title, artist }: Props): React.JSX.Element {
   const fallback =
     "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96'><rect width='100%' height='100%' rx='12' ry='12' fill='%23e5e7eb'/><text x='50%' y='52%' dominant-baseline='middle' text-anchor='middle' font-family='Inter, system-ui, sans-serif' font-size='12' fill='%239ca3af'>No cover</text></svg>";
   return (

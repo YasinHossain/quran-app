@@ -1,5 +1,6 @@
-import React from 'react';
-import Spinner from './Spinner';
+import React, { memo } from 'react';
+
+import { Spinner } from './Spinner';
 
 interface LoadingErrorProps {
   isLoading: boolean;
@@ -9,13 +10,13 @@ interface LoadingErrorProps {
   errorFallback?: React.ReactNode;
 }
 
-const LoadingError = ({
+export const LoadingError = memo(function LoadingError({
   isLoading,
   error,
   children,
   loadingFallback,
   errorFallback,
-}: LoadingErrorProps) => {
+}: LoadingErrorProps): React.JSX.Element {
   if (isLoading) {
     return (
       <>
@@ -41,6 +42,4 @@ const LoadingError = ({
   }
 
   return <>{children}</>;
-};
-
-export default LoadingError;
+});

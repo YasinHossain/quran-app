@@ -1,8 +1,9 @@
 'use client';
-import { Verse as VerseType, TafsirResource } from '@/types';
-import { Verse as VerseComponent } from '@/app/(features)/surah/[surahId]/components/Verse';
-import TafsirTabs from './TafsirTabs';
+import { VerseCard as VerseComponent } from '@/app/(features)/surah/components';
 import { useSettings } from '@/app/providers/SettingsContext';
+import { Verse as VerseType, TafsirResource } from '@/types';
+
+import { TafsirTabs } from './TafsirTabs';
 
 interface TafsirViewerProps {
   verse?: VerseType;
@@ -10,7 +11,11 @@ interface TafsirViewerProps {
   tafsirHtml?: string;
 }
 
-export const TafsirViewer = ({ verse, tafsirResource, tafsirHtml }: TafsirViewerProps) => {
+export const TafsirViewer = ({
+  verse,
+  tafsirResource,
+  tafsirHtml,
+}: TafsirViewerProps): React.JSX.Element | null => {
   const { settings } = useSettings();
 
   if (!verse) return null;
@@ -19,9 +24,9 @@ export const TafsirViewer = ({ verse, tafsirResource, tafsirHtml }: TafsirViewer
     <div className="space-y-4 w-full">
       <div className="flex flex-wrap gap-4"></div>
       <VerseComponent verse={verse} />
-      {settings.tafsirIds.length > 1 ? (
+      {settings.tafsirIds && settings.tafsirIds.length > 1 ? (
         <TafsirTabs verseKey={verse.verse_key} tafsirIds={settings.tafsirIds} />
-      ) : settings.tafsirIds.length === 1 ? (
+      ) : settings.tafsirIds && settings.tafsirIds.length === 1 ? (
         <div key={verse.verse_key} className="p-3 sm:p-4">
           {tafsirResource && (
             <h2 className="mb-4 text-center text-lg sm:text-xl font-bold text-foreground">
@@ -30,7 +35,7 @@ export const TafsirViewer = ({ verse, tafsirResource, tafsirHtml }: TafsirViewer
           )}
           <div
             className="prose max-w-none tafsir-content break-words"
-            style={{ fontSize: `${settings.tafsirFontSize}px` }}
+            style={{ fontSize: `${settings.tafsirFontSize || 16}px` }}
             dangerouslySetInnerHTML={{ __html: tafsirHtml || '' }}
           />
         </div>
@@ -42,5 +47,3 @@ export const TafsirViewer = ({ verse, tafsirResource, tafsirHtml }: TafsirViewer
     </div>
   );
 };
-
-export default TafsirViewer;

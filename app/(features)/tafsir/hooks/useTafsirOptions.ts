@@ -1,20 +1,43 @@
 import { useMemo } from 'react';
-import useSWR from 'swr';
 import { useTranslation } from 'react-i18next';
-import { useSettings } from '@/app/providers/SettingsContext';
-import { getAllTafsirResources } from '@/lib/api';
-import { TafsirResource } from '@/types';
+import useSWR from 'swr';
 
-export const useTafsirOptions = () => {
+import { useSettings } from '@/app/providers/SettingsContext';
+import { GetTafsirResourcesUseCase } from '@/src/application/use-cases/GetTafsirResources';
+import { container } from '@/src/infrastructure/di/Container';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
+
+import type { TafsirResource } from '@/types';
+
+interface UseTafsirOptionsReturn {
+  tafsirOptions: TafsirResource[];
+  tafsirResource: TafsirResource | undefined;
+  selectedTafsirName: string;
+}
+
+export const useTafsirOptions = (): UseTafsirOptionsReturn => {
   const { t } = useTranslation();
   const { settings } = useSettings();
 
+  const repository = useMemo(() => container.getTafsirRepository(), []);
+  const resourcesUseCase = useMemo(() => new GetTafsirResourcesUseCase(repository), [repository]);
+
   // Fetch a broad set so the user can pick any available tafsir
-  const { data } = useSWR('tafsir:resources:all', getAllTafsirResources);
+  const { data } = useSWR<TafsirResource[]>(
+    'tafsir:resources:all',
+    async () => {
+      const result = await resourcesUseCase.execute();
+      return result.tafsirs.map((t) => ({ id: t.id, name: t.displayName, lang: t.language }));
+    },
+    {
+      onError: (error) =>
+        logger.error('Failed to load tafsir resources:', undefined, error as Error),
+    }
+  );
   const tafsirOptions: TafsirResource[] = useMemo(() => data || [], [data]);
 
   const tafsirResource = useMemo(
-    () => tafsirOptions.find((t) => t.id === settings.tafsirIds[0]),
+    () => tafsirOptions.find((t) => t.id === settings.tafsirIds?.[0]),
     [tafsirOptions, settings.tafsirIds]
   );
 

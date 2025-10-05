@@ -1,4 +1,6 @@
+import { getItem, setItem, removeItem } from '@/lib/utils/safeLocalStorage';
 import { Folder, Bookmark, MemorizationPlan } from '@/types';
+
 import {
   BOOKMARKS_STORAGE_KEY,
   OLD_BOOKMARKS_STORAGE_KEY,
@@ -10,7 +12,7 @@ import {
 export const loadBookmarksFromStorage = (): Folder[] => {
   if (typeof window === 'undefined') return [];
 
-  const savedFolders = localStorage.getItem(BOOKMARKS_STORAGE_KEY);
+  const savedFolders = getItem(BOOKMARKS_STORAGE_KEY);
   if (savedFolders) {
     try {
       return JSON.parse(savedFolders);
@@ -20,13 +22,17 @@ export const loadBookmarksFromStorage = (): Folder[] => {
   }
 
   // Migration from old format
-  const oldBookmarks = localStorage.getItem(OLD_BOOKMARKS_STORAGE_KEY);
+  const oldBookmarks = getItem(OLD_BOOKMARKS_STORAGE_KEY);
   if (oldBookmarks) {
     try {
       const verseIds: string[] = JSON.parse(oldBookmarks);
       if (Array.isArray(verseIds) && verseIds.every((id) => typeof id === 'string')) {
         const migratedFolder: Folder = {
-          id: `migrated-${Date.now()}`,
+          id:
+            typeof globalThis.crypto !== 'undefined' &&
+            typeof globalThis.crypto.randomUUID === 'function'
+              ? globalThis.crypto.randomUUID()
+              : `migrated-${Date.now()}`,
           name: 'Uncategorized',
           createdAt: Date.now(),
           bookmarks: verseIds.map((verseId) => ({
@@ -34,7 +40,7 @@ export const loadBookmarksFromStorage = (): Folder[] => {
             createdAt: Date.now(),
           })),
         };
-        localStorage.removeItem(OLD_BOOKMARKS_STORAGE_KEY);
+        removeItem(OLD_BOOKMARKS_STORAGE_KEY);
         return [migratedFolder];
       }
     } catch {
@@ -47,14 +53,14 @@ export const loadBookmarksFromStorage = (): Folder[] => {
 
 export const saveBookmarksToStorage = (folders: Folder[]): void => {
   if (typeof window !== 'undefined') {
-    localStorage.setItem(BOOKMARKS_STORAGE_KEY, JSON.stringify(folders));
+    setItem(BOOKMARKS_STORAGE_KEY, JSON.stringify(folders));
   }
 };
 
 export const loadPinnedFromStorage = (): Bookmark[] => {
   if (typeof window === 'undefined') return [];
 
-  const savedPinned = localStorage.getItem(PINNED_STORAGE_KEY);
+  const savedPinned = getItem(PINNED_STORAGE_KEY);
   if (savedPinned) {
     try {
       return JSON.parse(savedPinned);
@@ -67,14 +73,14 @@ export const loadPinnedFromStorage = (): Bookmark[] => {
 
 export const savePinnedToStorage = (pinnedVerses: Bookmark[]): void => {
   if (typeof window !== 'undefined') {
-    localStorage.setItem(PINNED_STORAGE_KEY, JSON.stringify(pinnedVerses));
+    setItem(PINNED_STORAGE_KEY, JSON.stringify(pinnedVerses));
   }
 };
 
 export const loadLastReadFromStorage = (): Record<string, number> => {
   if (typeof window === 'undefined') return {};
 
-  const savedLastRead = localStorage.getItem(LAST_READ_STORAGE_KEY);
+  const savedLastRead = getItem(LAST_READ_STORAGE_KEY);
   if (savedLastRead) {
     try {
       return JSON.parse(savedLastRead);
@@ -87,14 +93,14 @@ export const loadLastReadFromStorage = (): Record<string, number> => {
 
 export const saveLastReadToStorage = (lastRead: Record<string, number>): void => {
   if (typeof window !== 'undefined') {
-    localStorage.setItem(LAST_READ_STORAGE_KEY, JSON.stringify(lastRead));
+    setItem(LAST_READ_STORAGE_KEY, JSON.stringify(lastRead));
   }
 };
 
 export const loadMemorizationFromStorage = (): Record<string, MemorizationPlan> => {
   if (typeof window === 'undefined') return {};
 
-  const savedMemorization = localStorage.getItem(MEMORIZATION_STORAGE_KEY);
+  const savedMemorization = getItem(MEMORIZATION_STORAGE_KEY);
   if (savedMemorization) {
     try {
       return JSON.parse(savedMemorization);
@@ -107,6 +113,6 @@ export const loadMemorizationFromStorage = (): Record<string, MemorizationPlan> 
 
 export const saveMemorizationToStorage = (memorization: Record<string, MemorizationPlan>): void => {
   if (typeof window !== 'undefined') {
-    localStorage.setItem(MEMORIZATION_STORAGE_KEY, JSON.stringify(memorization));
+    setItem(MEMORIZATION_STORAGE_KEY, JSON.stringify(memorization));
   }
 };

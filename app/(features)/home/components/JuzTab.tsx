@@ -1,37 +1,31 @@
 'use client';
-import { GlassCard, NumberBadge } from '@/app/shared/ui';
-import juzData from '@/data/juz.json';
 
-interface JuzSummary {
-  number: number;
-  name: string;
-  surahRange: string;
-}
+import { memo } from 'react';
 
-const allJuz: JuzSummary[] = juzData;
+import { useNavigationDatasets } from '@/app/shared/navigation/hooks/useNavigationDatasets';
+import { buildJuzRoute } from '@/app/shared/navigation/routes';
+import { JuzNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
 
-export default function JuzTab() {
+import { NavigationCardGrid } from './NavigationCardGrid';
+
+export const JuzTab = memo(function JuzTab(): React.JSX.Element {
+  const { juzs } = useNavigationDatasets();
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {allJuz.map((juz) => (
-        <GlassCard
-          href={`/juz/${juz.number}`}
+    <NavigationCardGrid>
+      {juzs.map((juz) => (
+        <JuzNavigationCard
           key={juz.number}
-          variant="surface"
-          size="spacious"
-          radius="xl"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <NumberBadge number={juz.number} />
-              <div>
-                <h3 className="font-semibold text-lg text-content-primary">{juz.name}</h3>
-                <p className="text-sm text-content-secondary">{juz.surahRange}</p>
-              </div>
-            </div>
-          </div>
-        </GlassCard>
+          href={buildJuzRoute(juz.number)}
+          scroll
+          className="items-center"
+          content={{
+            id: juz.number,
+            title: `Juz ${juz.number}`,
+            subtitle: juz.surahRange,
+          }}
+        />
       ))}
-    </div>
+    </NavigationCardGrid>
   );
-}
+});

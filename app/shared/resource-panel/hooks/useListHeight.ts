@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
 import { ResizeObserver as ResizeObserverPolyfill } from '@juggle/resize-observer';
+import { useEffect, useRef, useState, type RefObject } from 'react';
 
-export const useListHeight = (isOpen: boolean) => {
+export const useListHeight = (
+  isOpen: boolean
+): { listContainerRef: RefObject<HTMLDivElement | null>; listHeight: number } => {
   const listContainerRef = useRef<HTMLDivElement>(null);
   const [listHeight, setListHeight] = useState(0);
 
@@ -9,7 +11,7 @@ export const useListHeight = (isOpen: boolean) => {
     const element = listContainerRef.current;
     if (!element || !isOpen) return;
 
-    const updateHeight = () => {
+    const updateHeight = (): void => {
       const rect = element.getBoundingClientRect();
       const fallback = window.innerHeight - rect.top;
       setListHeight(rect.height || fallback);

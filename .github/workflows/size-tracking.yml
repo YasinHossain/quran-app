@@ -1,0 +1,173 @@
+name: Bundle Size Tracking
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  size-tracking:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Check bundle size
+        run: |
+          echo "## Bundle Size Report" > size-report.md
+          echo "" >> size-report.md
+
+          # Run size-limit and capture output
+          npm run size-limit > size-output.txt 2>&1 || true
+
+          # Parse size-limit output
+          if grep -q "FAIL" size-output.txt; then
+            echo "❌ **Bundle size check failed!**" >> size-report.md
+            echo "" >> size-report.md
+            echo "\`\`\`" >> size-report.md
+            cat size-output.txt >> size-report.md
+            echo "\`\`\`" >> size-report.md
+            exit 1
+          else
+            echo "✅ **Bundle size within limits**" >> size-report.md
+            echo "" >> size-report.md
+            echo "\`\`\`" >> size-report.md
+            cat size-output.txt >> size-report.md
+            echo "\`\`\`" >> size-report.md
+          fi
+
+      - name: Analyze bundle composition
+        run: |
+          # Create bundle analysis
+          echo "" >> size-report.md
+          echo "### Bundle Analysis" >> size-report.md
+          echo "" >> size-report.md
+
+          # Check for large dependencies
+          echo "**Largest JavaScript files:**" >> size-report.md
+          echo "\`\`\`" >> size-report.md
+          find .next/static/chunks -name "*.js" -type f -exec ls -lh {} + | sort -k5 -hr | head -10 >> size-report.md
+          echo "\`\`\`" >> size-report.md
+
+      - name: Comment PR with size report
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('size-report.md', 'utf8');
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const existingComment = comments.find(
+              comment => comment.body.includes('Bundle Size Report')
+            );
+
+            if (existingComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: report
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: report
+              });
+            }
+
+      - name: Upload size report
+        uses: actions/upload-artifact@v4
+        with:
+          name: size-report
+          path: size-report.md
+          retention-days: 30
+
+  # Track size trends over time
+  size-trends:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    needs: size-tracking
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Collect size metrics
+        run: |
+          echo "Collecting bundle size metrics for trend analysis..."
+
+          # Create size metrics file
+          echo "{" > size-metrics.json
+          echo "  \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"," >> size-metrics.json
+          echo "  \"commit\": \"${{ github.sha }}\"," >> size-metrics.json
+          echo "  \"branch\": \"${{ github.ref_name }}\"," >> size-metrics.json
+
+          # Get total build size
+          TOTAL_SIZE=$(du -sh .next | cut -f1)
+          echo "  \"totalSize\": \"$TOTAL_SIZE\"," >> size-metrics.json
+
+          # Get individual chunk sizes
+          echo "  \"chunks\": [" >> size-metrics.json
+          find .next/static/chunks -name "*.js" -type f | while read file; do
+            SIZE=$(stat -f%z "$file" 2>/dev/null || stat -c%s "$file")
+            NAME=$(basename "$file")
+            echo "    {\"name\": \"$NAME\", \"size\": $SIZE}," >> size-metrics.json
+          done
+          # Remove trailing comma and close array
+          sed -i '$s/,$//' size-metrics.json
+          echo "  ]" >> size-metrics.json
+          echo "}" >> size-metrics.json
+
+      - name: Store size trends (could be sent to analytics service)
+        run: |
+          echo "Size metrics for trend analysis:"
+          cat size-metrics.json
+
+          # In a real implementation, you would send this to your analytics service
+          # For now, we just log it for demonstration
+          echo "::notice title=Bundle Size Tracking::Bundle size metrics collected for commit ${{ github.sha }}"

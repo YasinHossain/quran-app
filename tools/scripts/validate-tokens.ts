@@ -97,13 +97,14 @@ for (const file of files) {
   const content = readFileSync(file, 'utf8');
   let match: RegExpExecArray | null;
   while ((match = tokenRegex.exec(content))) {
-    const prefix = match[1];
-    const token = match[2];
+    const prefix = match[1] as keyof typeof ignore;
+    const token = match?.[2];
+    if (!token) continue;
     if (ignore[prefix]?.has(token)) continue;
     if (!allowedTokens.has(token)) {
       const key = `${prefix}-${token}`;
       undefinedTokens[key] ||= new Set();
-      undefinedTokens[key].add(path.relative(rootDir, file));
+      undefinedTokens[key]!.add(path.relative(rootDir, file));
     }
   }
 }
@@ -119,4 +120,4 @@ if (Object.keys(undefinedTokens).length > 0) {
   process.exit(1);
 }
 
-console.log('All token classes are defined in design-system.json');
+console.warn('All token classes are defined in design-system.json');

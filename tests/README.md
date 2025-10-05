@@ -149,6 +149,12 @@ Mock implementations for external dependencies:
 - Access pattern tracking
 - Memory constraints
 
+### Network requests (MSW)
+
+API calls are intercepted with [Mock Service Worker](https://mswjs.io/). Default handlers live in `tests/setup/msw/handlers.ts`.
+For custom responses in a test, import `addHandlers` from `@tests/setup/msw/server` and add handlers using `server.use`.
+Avoid mocking `fetch` directly.
+
 ## 🚀 Running Tests
 
 ### Development Commands

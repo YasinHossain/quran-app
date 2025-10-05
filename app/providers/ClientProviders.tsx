@@ -1,12 +1,18 @@
 'use client';
+import { useRouter } from 'next/navigation';
 import React from 'react';
-import { ThemeProvider, Theme } from './ThemeContext';
-import { SettingsProvider } from './SettingsContext';
-import { BookmarkProvider } from './BookmarkContext';
-import { SidebarProvider } from './SidebarContext';
-import { UIStateProvider } from './UIStateContext';
-import { NavigationProvider } from './NavigationContext';
+
+import { WebVitals } from '@/app/shared/components/WebVitals';
 import { AudioProvider } from '@/app/shared/player/context/AudioContext';
+import { ErrorHandler } from '@/src/infrastructure/errors';
+
+import { BookmarkProvider } from './BookmarkContext';
+import { NavigationProvider } from './NavigationContext';
+import { SettingsProvider } from './SettingsContext';
+import { SidebarProvider } from './SidebarContext';
+import { ThemeProvider, Theme } from './ThemeContext';
+import { UIStateProvider } from './UIStateContext';
+
 // import { ApplicationProvider } from '../../src/presentation/providers/ApplicationProvider';
 
 /**
@@ -14,13 +20,19 @@ import { AudioProvider } from '@/app/shared/player/context/AudioContext';
  * and `SidebarProvider`. Wrap your component tree with this provider to give
  * descendants access to theme, settings, and sidebar contexts.
  */
-export default function ClientProviders({
+export function ClientProviders({
   children,
   initialTheme,
 }: {
   children: React.ReactNode;
   initialTheme: Theme;
-}) {
+}): React.JSX.Element {
+  const router = useRouter();
+
+  React.useEffect(() => {
+    ErrorHandler.configure({ retryCallback: () => router.refresh() });
+  }, [router]);
+
   // In development, make sure any previously-installed service worker from a
   // production run doesn't interfere with local dev (common Safari issue).
   React.useEffect(() => {
@@ -47,7 +59,10 @@ export default function ClientProviders({
           <UIStateProvider>
             <SidebarProvider>
               <NavigationProvider>
-                <AudioProvider>{children}</AudioProvider>
+                <AudioProvider>
+                  <WebVitals reportTarget="console" />
+                  {children}
+                </AudioProvider>
               </NavigationProvider>
             </SidebarProvider>
           </UIStateProvider>

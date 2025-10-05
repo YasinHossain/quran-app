@@ -1,7 +1,13 @@
-import { useCallback, useEffect, useState, RefObject } from 'react';
-import type { RepeatOptions } from '../types';
+import { useCallback, RefObject } from 'react';
+
 import { Verse } from '@/types';
-import useSurahRepeat from './useSurahRepeat';
+
+import { useCompletionHandlers, sanitizeControls, type Controls } from './useCompletionHandlers';
+import { useRepeatState } from './useRepeatState';
+import { useSurahRepeat } from './useSurahRepeat';
+
+import type { CompletionHandlers } from './playbackCompletionHandlers';
+import type { RepeatOptions } from '@/app/shared/player/types';
 
 interface Options {
   audioRef: RefObject<HTMLAudioElement | null>;
@@ -16,10 +22,8 @@ interface Options {
   setPlayingId: (v: number | null) => void;
 }
 
-export default function usePlaybackCompletion({
+const createSanitizedControls = ({
   audioRef,
-  repeatOptions,
-  activeVerse,
   onNext,
   onPrev,
   seek,
@@ -27,107 +31,62 @@ export default function usePlaybackCompletion({
   pause,
   setIsPlaying,
   setPlayingId,
-}: Options) {
-  const [verseRepeatsLeft, setVerseRepeatsLeft] = useState(repeatOptions.repeatEach ?? 1);
-  const [playRepeatsLeft, setPlayRepeatsLeft] = useState(repeatOptions.playCount ?? 1);
+}: Options): ReturnType<typeof sanitizeControls> => {
+  const rawControls: Controls = { audioRef, seek, play, pause, setIsPlaying, setPlayingId };
 
-  useEffect(() => {
-    setVerseRepeatsLeft(repeatOptions.repeatEach ?? 1);
-    setPlayRepeatsLeft(repeatOptions.playCount ?? 1);
-  }, [activeVerse, repeatOptions.repeatEach, repeatOptions.playCount]);
+  if (onNext) rawControls.onNext = onNext;
+  if (onPrev) rawControls.onPrev = onPrev;
+
+  return sanitizeControls(rawControls);
+};
+
+const runModeHandler = (mode: RepeatOptions['mode'], handlers: CompletionHandlers): boolean => {
+  const handlerMap: Partial<Record<RepeatOptions['mode'], () => boolean>> = {
+    single: handlers.single,
+    range: handlers.range,
+    surah: () => {
+      handlers.surah();
+      return true;
+    },
+  };
+  const handler = handlerMap[mode];
+  return handler ? handler() : false;
+};
+
+export function usePlaybackCompletion(options: Options): () => void {
+  const { repeatOptions, activeVerse } = options;
+
+  const { verseRepeatsLeft, playRepeatsLeft, setVerseRepeatsLeft, setPlayRepeatsLeft } =
+    useRepeatState({ repeatOptions, activeVerse });
 
   const delayMs = (repeatOptions.delay ?? 0) * 1000;
+  const controls = createSanitizedControls(options);
 
   const handleSurahRepeat = useSurahRepeat({
+    ...controls,
     verseRepeatsLeft,
     playRepeatsLeft,
     repeatEach: repeatOptions.repeatEach ?? 1,
     delay: delayMs,
-    onNext,
-    onPrev,
-    seek,
-    play,
-    pause,
-    setIsPlaying,
-    setPlayingId,
     setVerseRepeatsLeft,
     setPlayRepeatsLeft,
   });
 
-  return useCallback(() => {
-    const mode = repeatOptions.mode;
-    const start = repeatOptions.start ?? 1;
-    const end = repeatOptions.end ?? start;
-    const delay = delayMs;
-    const currentAyah = activeVerse ? parseInt(activeVerse.verse_key.split(':')[1], 10) : null;
-
-    if (mode === 'single') {
-      if (verseRepeatsLeft > 1) {
-        setVerseRepeatsLeft(verseRepeatsLeft - 1);
-        seek(0);
-        play();
-        return;
-      }
-      if (playRepeatsLeft > 1) {
-        setPlayRepeatsLeft(playRepeatsLeft - 1);
-        setVerseRepeatsLeft(repeatOptions.repeatEach ?? 1);
-        seek(0);
-        play();
-        return;
-      }
-    }
-
-    if (mode === 'range') {
-      if (verseRepeatsLeft > 1) {
-        setVerseRepeatsLeft(verseRepeatsLeft - 1);
-        seek(0);
-        play();
-        return;
-      }
-      setVerseRepeatsLeft(repeatOptions.repeatEach ?? 1);
-      if (currentAyah && currentAyah < end) {
-        onNext?.();
-        return;
-      }
-      if (playRepeatsLeft > 1) {
-        setPlayRepeatsLeft(playRepeatsLeft - 1);
-        const steps = end - start;
-        setTimeout(() => {
-          for (let i = 0; i < steps; i++) {
-            onPrev?.();
-          }
-        }, delay);
-        return;
-      }
-    }
-
-    if (mode === 'surah') {
-      handleSurahRepeat();
-      return;
-    }
-
-    const hasNext = onNext?.() ?? false;
-    setTimeout(() => {
-      if (!hasNext || !audioRef.current?.src) {
-        pause();
-        setIsPlaying(false);
-        setPlayingId(null);
-      }
-    }, 0);
-  }, [
+  const handlers = useCompletionHandlers({
     repeatOptions,
     activeVerse,
-    delayMs,
     verseRepeatsLeft,
     playRepeatsLeft,
-    onNext,
-    onPrev,
-    seek,
-    play,
-    pause,
-    setIsPlaying,
-    setPlayingId,
+    controls,
+    setVerseRepeatsLeft,
+    setPlayRepeatsLeft,
     handleSurahRepeat,
-    audioRef,
-  ]);
+    delayMs,
+  });
+
+  return useCallback(() => {
+    if (!runModeHandler(repeatOptions.mode, handlers)) {
+      handlers.default();
+    }
+  }, [handlers, repeatOptions.mode]);
 }

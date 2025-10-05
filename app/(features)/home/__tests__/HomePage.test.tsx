@@ -1,72 +1,138 @@
-import { screen, within, waitFor } from '@testing-library/react';
+import { screen, within, waitFor, type RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import HomePage from '@/app/(features)/home/components/HomePage';
-import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
+
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
+import { renderWithProvidersAsync } from '@/app/testUtils/renderWithProviders';
 import { Verse } from '@/types';
 
+import type { MockProps } from '@/tests/mocks';
+import type { JSX } from 'react';
+
 jest.mock('@/lib/api', () => ({
-  getRandomVerse: jest.fn().mockResolvedValue({
-    id: 1,
-    verse_key: '1:1',
-    text_uthmani: 'بِسْمِ اللّهِ',
-    translations: [
+  __esModule: true,
+  getRandomVerse: () =>
+    Promise.resolve({
+      id: 1,
+      verse_key: '1:1',
+      text_uthmani: 'بِسْمِ اللّهِ',
+      translations: [
+        {
+          resource_id: 1,
+          text: 'In the name of Allah',
+        },
+      ],
+    } as Verse),
+  getSurahList: () =>
+    Promise.resolve([
       {
-        resource_id: 1,
-        text: 'In the name of Allah',
+        number: 1,
+        name: 'Al-Fatihah',
+        arabicName: 'الفاتحة',
+        verses: 7,
+        meaning: 'The Opening',
+      },
+      {
+        number: 2,
+        name: 'Al-Baqarah',
+        arabicName: 'البقرة',
+        verses: 286,
+        meaning: 'The Cow',
+      },
+    ]),
+}));
+
+jest.mock('@/app/shared/navigation/hooks/useNavigationDatasets', () => ({
+  __esModule: true,
+  useNavigationDatasets: () => ({
+    juzs: [
+      { number: 1, name: 'Juz 1', surahRange: 'Al-Fatihah - Al-Baqarah' },
+      { number: 2, name: 'Juz 2', surahRange: 'Al-Baqarah - Ali Imran' },
+    ],
+    pages: [1, 2, 3],
+  }),
+}));
+
+jest.mock('@/app/shared/navigation/hooks/useSurahNavigationData', () => ({
+  __esModule: true,
+  useSurahNavigationData: () => ({
+    chapters: [
+      {
+        id: 1,
+        name_simple: 'Al-Fatihah',
+        name_arabic: 'الفاتحة',
+        revelation_place: 'makkah',
+        verses_count: 7,
+      },
+      {
+        id: 2,
+        name_simple: 'Al-Baqarah',
+        name_arabic: 'البقرة',
+        revelation_place: 'madinah',
+        verses_count: 286,
       },
     ],
-  } as Verse),
-  getSurahList: jest.fn().mockResolvedValue([
-    {
-      number: 1,
-      name: 'Al-Fatihah',
-      arabicName: 'الفاتحة',
-      verses: 7,
-      meaning: 'The Opening',
-    },
-    {
-      number: 2,
-      name: 'Al-Baqarah',
-      arabicName: 'البقرة',
-      verses: 286,
-      meaning: 'The Cow',
-    },
-  ]),
+    surahs: [
+      {
+        number: 1,
+        name: 'Al-Fatihah',
+        arabicName: 'الفاتحة',
+        verses: 7,
+        meaning: 'The Opening',
+      },
+      {
+        number: 2,
+        name: 'Al-Baqarah',
+        arabicName: 'البقرة',
+        verses: 286,
+        meaning: 'The Cow',
+      },
+    ],
+    isLoading: false,
+    error: undefined,
+  }),
 }));
 
 // Mock next/link to simply render an anchor tag
-jest.mock('next/link', () => {
-  return ({ children, href }: any) => <a href={href}>{children}</a>;
-});
+jest.mock(
+  'next/link',
+  () =>
+    ({ children, href }: MockProps<{ href: string }>): JSX.Element => <a href={href}>{children}</a>
+);
 
 // Mock VerseOfDay to avoid fetch during tests
-jest.mock('@/app/(features)/home/components/VerseOfDay', () => () => <div>VerseOfDay</div>);
+jest.mock('@/app/(features)/home/components/VerseOfDay', () => ({
+  __esModule: true,
+  VerseOfDay: () => <div>VerseOfDay</div>,
+}));
+
+const { HomePage } = require('@/app/(features)/home/components/HomePage');
 
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setMatchMedia(false);
 });
 
-const renderHome = () => renderWithProviders(<HomePage />);
+const renderHome = (): Promise<RenderResult> => renderWithProvidersAsync(<HomePage />);
 
 beforeEach(() => {
   localStorage.clear();
   document.documentElement.classList.remove('dark');
 });
 
+it('renders without runtime warnings', async () => {
+  const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+  await renderHome();
+
+  expect(errorSpy).not.toHaveBeenCalled();
+  expect(warnSpy).not.toHaveBeenCalled();
+
+  errorSpy.mockRestore();
+  warnSpy.mockRestore();
+});
+
 it('search filtering returns only matching Surahs', async () => {
-  renderHome();
+  await renderHome();
   await screen.findByText('Al-Fatihah');
   const input = screen.getByPlaceholderText('What do you want to read?');
   await userEvent.type(input, 'Baqarah');
@@ -75,7 +141,7 @@ it('search filtering returns only matching Surahs', async () => {
 });
 
 it('theme toggle updates the dark class', async () => {
-  renderHome();
+  await renderHome();
   const nav = screen.getByRole('navigation');
   const themeButton = within(nav).getByRole('button');
   expect(document.documentElement.classList.contains('dark')).toBe(false);
@@ -86,7 +152,7 @@ it('theme toggle updates the dark class', async () => {
 });
 
 it('tab switching between “Surah,” “Juz,” and “Page” changes rendered content and links', async () => {
-  renderHome();
+  await renderHome();
   const surahLink = (await screen.findByText('Al-Fatihah')).closest('a');
   expect(surahLink).toHaveAttribute('href', '/surah/1');
 

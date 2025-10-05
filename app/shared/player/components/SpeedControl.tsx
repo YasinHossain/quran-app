@@ -1,18 +1,54 @@
-import React, { useRef, useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
+import { useRef, useState, Dispatch, SetStateAction } from 'react';
+
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 
-export default function SpeedControl() {
-  const { playbackRate, setPlaybackRate } = useAudio();
+interface SpeedPopoverState {
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  triggerRef: React.RefObject<HTMLButtonElement | null>;
+  contentRef: React.RefObject<HTMLDivElement | null>;
+  close: () => void;
+}
+
+function useSpeedPopover(): SpeedPopoverState {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const speedOptions = [0.75, 1, 1.25, 1.5, 2];
 
-  const close = () => {
+  const close = (): void => {
     setOpen(false);
     triggerRef.current?.focus();
   };
+
+  return { open, setOpen, triggerRef, contentRef, close };
+}
+
+function SpeedOptionButton({
+  speed,
+  active,
+  onSelect,
+}: {
+  speed: number;
+  active: boolean;
+  onSelect: (v: number) => void;
+}): React.JSX.Element {
+  return (
+    <button
+      onClick={() => onSelect(speed)}
+      className={`w-full text-center text-sm p-1.5 rounded-md ${
+        active ? 'bg-accent text-on-accent' : 'hover:bg-interactive-hover'
+      }`}
+    >
+      {speed}x
+    </button>
+  );
+}
+
+export function SpeedControl(): React.JSX.Element {
+  const { playbackRate, setPlaybackRate } = useAudio();
+  const { open, setOpen, triggerRef, contentRef, close } = useSpeedPopover();
+  const speedOptions = [0.75, 1, 1.25, 1.5, 2];
 
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
@@ -40,18 +76,15 @@ export default function SpeedControl() {
         onInteractOutside={() => setOpen(false)}
       >
         {speedOptions.map((speed) => (
-          <button
+          <SpeedOptionButton
             key={speed}
-            onClick={() => {
-              setPlaybackRate(speed);
+            speed={speed}
+            active={playbackRate === speed}
+            onSelect={(v) => {
+              setPlaybackRate(v);
               close();
             }}
-            className={`w-full text-center text-sm p-1.5 rounded-md ${
-              playbackRate === speed ? 'bg-accent text-on-accent' : 'hover:bg-interactive-hover'
-            }`}
-          >
-            {speed}x
-          </button>
+          />
         ))}
       </Popover.Content>
     </Popover.Root>

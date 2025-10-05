@@ -1,3 +1,3 @@
-export { default as MemorizationCard } from './MemorizationCard';
-export { default as MemorizationGrid } from './MemorizationGrid';
-export { default as MemorizationHeader } from './MemorizationHeader';
+export { MemorizationCard } from './MemorizationCard';
+export { MemorizationGrid } from './MemorizationGrid';
+export { MemorizationHeader } from './MemorizationHeader';

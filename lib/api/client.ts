@@ -1,5 +1,41 @@
 // Prefer the CDN-backed QDC API for higher availability; can be overridden via env
-const API_BASE_URL = process.env.QURAN_API_BASE_URL ?? 'https://api.qurancdn.com/api/qdc';
+const API_BASE_URL = process.env['QURAN_API_BASE_URL'] ?? 'https://api.qurancdn.com/api/qdc';
+
+interface FetchWithTimeoutOptions extends RequestInit {
+  /** Message prefix used if the request fails */
+  errorPrefix?: string;
+  /** Timeout in milliseconds */
+  timeout?: number;
+}
+
+/**
+ * Generic fetch wrapper that adds timeout handling and standardized error messages.
+ */
+async function fetchWithTimeout(
+  url: string,
+  { errorPrefix = 'Request failed', timeout = 10000, ...init }: FetchWithTimeoutOptions = {}
+): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const res = await fetch(url, { ...init, signal: controller.signal });
+    if (!res.ok) {
+      throw new Error(`${errorPrefix}: ${res.status} ${res.statusText}`);
+    }
+    return res;
+  } catch (error) {
+    if (error instanceof TypeError && error.message === 'Failed to fetch') {
+      throw new Error(`${errorPrefix}: Network error - please check your internet connection`);
+    }
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error(`${errorPrefix}: Request timed out - please try again`);
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
 
 /**
  * Perform a GET request against the Quran.com API.
@@ -23,38 +59,16 @@ async function apiFetch<T>(
     url.search = search;
   }
 
-  try {
-    // Create timeout controller for better browser compatibility
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
+  const res = await fetchWithTimeout(url.toString(), {
+    // Avoid setting Content-Type on GET to prevent CORS preflight.
+    // Use Accept to indicate we expect JSON.
+    headers: {
+      Accept: 'application/json',
+    },
+    errorPrefix,
+  });
 
-    const res = await fetch(url.toString(), {
-      // Avoid setting Content-Type on GET to prevent CORS preflight.
-      // Use Accept to indicate we expect JSON.
-      headers: {
-        Accept: 'application/json',
-      },
-      signal: controller.signal,
-    });
-
-    clearTimeout(timeoutId);
-
-    if (!res.ok) {
-      throw new Error(`${errorPrefix}: ${res.status} ${res.statusText}`);
-    }
-
-    return (await res.json()) as T;
-  } catch (error) {
-    // Handle specific error types
-    if (error instanceof TypeError && error.message === 'Failed to fetch') {
-      throw new Error(`${errorPrefix}: Network error - please check your internet connection`);
-    }
-    if (error instanceof Error && error.name === 'AbortError') {
-      throw new Error(`${errorPrefix}: Request timed out - please try again`);
-    }
-    // Re-throw other errors as-is
-    throw error;
-  }
+  return (await res.json()) as T;
 }
 
-export { API_BASE_URL, apiFetch };
+export { API_BASE_URL, apiFetch, fetchWithTimeout };

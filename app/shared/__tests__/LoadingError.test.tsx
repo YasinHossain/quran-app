@@ -1,6 +1,7 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
-import LoadingError from '@/app/shared/LoadingError';
+import React from 'react';
+
+import { LoadingError } from '@/app/shared/LoadingError';
 
 it('shows loading fallback when loading', () => {
   render(

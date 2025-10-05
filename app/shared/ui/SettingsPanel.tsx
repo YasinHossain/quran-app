@@ -1,162 +1,133 @@
 'use client';
 
-import React from 'react';
-import { Panel } from './Panel';
+import React, { memo } from 'react';
+
 import { cn } from '@/lib/utils/cn';
+
+import { Panel } from './Panel';
+import {
+  SettingItem,
+  ToggleSetting,
+  SelectSetting,
+  RangeSetting,
+  type SettingItemProps,
+  type ToggleSettingProps,
+  type SelectSettingProps,
+  type RangeSettingProps,
+} from './settings';
+
 import type { SettingsPanelProps } from '@/types/components';
 
-interface SettingItemProps {
-  label: string;
-  description?: string;
-  children: React.ReactNode;
-  disabled?: boolean;
+type SettingsPanelItem =
+  | ({ type: 'toggle' } & ToggleSettingProps)
+  | ({ type: 'select' } & SelectSettingProps)
+  | ({ type: 'range' } & RangeSettingProps)
+  | ({ type: 'item' } & SettingItemProps)
+  | { type: 'custom'; element: React.ReactNode };
+
+interface SettingsSection {
+  title?: string;
+  items: SettingsPanelItem[];
 }
-
-const SettingItem: React.FC<SettingItemProps> = ({
-  label,
-  description,
-  children,
-  disabled = false,
-}) => (
-  <div
-    className={cn(
-      'flex items-center justify-between p-4 border-b border-border last:border-b-0',
-      disabled && 'opacity-50'
-    )}
-  >
-    <div className="flex-1 min-w-0 mr-4">
-      <h4 className="font-medium text-foreground">{label}</h4>
-      {description && <p className="text-sm text-muted mt-1">{description}</p>}
-    </div>
-    <div className="flex-shrink-0">{children}</div>
-  </div>
-);
-
-interface ToggleSettingProps {
-  label: string;
-  description?: string;
-  value: boolean;
-  onChange: (value: boolean) => void;
-  disabled?: boolean;
-}
-
-const ToggleSetting: React.FC<ToggleSettingProps> = ({
-  label,
-  description,
-  value,
-  onChange,
-  disabled = false,
-}) => (
-  <SettingItem label={label} description={description} disabled={disabled}>
-    <button
-      onClick={() => !disabled && onChange(!value)}
-      className={cn(
-        'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out',
-        value ? 'bg-accent' : 'bg-surface/50',
-        disabled && 'cursor-not-allowed'
-      )}
-      disabled={disabled}
-      aria-pressed={value}
-    >
-      <span
-        aria-hidden="true"
-        className={cn(
-          'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition duration-200 ease-in-out',
-          value ? 'translate-x-5' : 'translate-x-0'
-        )}
-      />
-    </button>
-  </SettingItem>
-);
-
-interface SelectSettingProps {
-  label: string;
-  description?: string;
-  value: string | number;
-  options: Array<{ label: string; value: string | number }>;
-  onChange: (value: string | number) => void;
-  disabled?: boolean;
-}
-
-const SelectSetting: React.FC<SelectSettingProps> = ({
-  label,
-  description,
-  value,
-  options,
-  onChange,
-  disabled = false,
-}) => (
-  <SettingItem label={label} description={description} disabled={disabled}>
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className={cn(
-        'rounded-md border border-border bg-surface px-3 py-2 text-sm focus:ring-2 focus:ring-accent focus:border-transparent',
-        disabled && 'cursor-not-allowed'
-      )}
-      disabled={disabled}
-    >
-      {options.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
-  </SettingItem>
-);
-
-interface RangeSettingProps {
-  label: string;
-  description?: string;
-  value: number;
-  min: number;
-  max: number;
-  step?: number;
-  onChange: (value: number) => void;
-  disabled?: boolean;
-  showValue?: boolean;
-}
-
-const RangeSetting: React.FC<RangeSettingProps> = ({
-  label,
-  description,
-  value,
-  min,
-  max,
-  step = 1,
-  onChange,
-  disabled = false,
-  showValue = true,
-}) => (
-  <SettingItem label={label} description={description} disabled={disabled}>
-    <div className="flex items-center space-x-3">
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-        className={cn(
-          'w-20 h-2 bg-surface/50 rounded-lg appearance-none cursor-pointer slider',
-          disabled && 'cursor-not-allowed'
-        )}
-        disabled={disabled}
-      />
-      {showValue && <span className="text-sm text-muted min-w-8 text-center">{value}</span>}
-    </div>
-  </SettingItem>
-);
 
 interface SettingsPanelComponentProps extends SettingsPanelProps {
-  sections?: Array<{
-    title?: string;
-    items: React.ReactNode[];
-  }>;
+  sections?: SettingsSection[];
   actions?: React.ReactNode[];
+  children?: React.ReactNode;
 }
 
-export const SettingsPanel: React.FC<SettingsPanelComponentProps> = ({
+interface SettingsSectionHeaderProps {
+  title: string;
+}
+
+const SettingsSectionHeader = memo(function SettingsSectionHeader({
+  title,
+}: SettingsSectionHeaderProps): React.JSX.Element {
+  return (
+    <h3 className="px-4 py-2 text-sm font-semibold text-muted uppercase tracking-wider">{title}</h3>
+  );
+});
+
+interface SettingsItemRendererProps {
+  item: SettingsPanelItem;
+  index: number;
+}
+
+const SettingsItemRenderer = memo(function SettingsItemRenderer({
+  item,
+  index,
+}: SettingsItemRendererProps): React.JSX.Element {
+  switch (item.type) {
+    case 'toggle': {
+      const { type: _unusedType, ...props } = item;
+      void _unusedType;
+      return <ToggleSetting key={index} {...props} />;
+    }
+    case 'select': {
+      const { type: _unusedType, ...props } = item;
+      void _unusedType;
+      return <SelectSetting key={index} {...props} />;
+    }
+    case 'range': {
+      const { type: _unusedType, ...props } = item;
+      void _unusedType;
+      return <RangeSetting key={index} {...props} />;
+    }
+    case 'item': {
+      const { type: _unusedType, children: itemChildren, ...props } = item;
+      void _unusedType;
+      return (
+        <SettingItem key={index} {...props}>
+          {itemChildren}
+        </SettingItem>
+      );
+    }
+    case 'custom':
+    default:
+      return <div key={index}>{item.element}</div>;
+  }
+});
+
+interface SettingsSectionComponentProps {
+  section: SettingsSection;
+  index: number;
+}
+
+const SettingsSectionComponent = memo(function SettingsSectionComponent({
+  section,
+  index,
+}: SettingsSectionComponentProps): React.JSX.Element {
+  return (
+    <div key={index} className="mb-6">
+      {section.title && <SettingsSectionHeader title={section.title} />}
+      <div className="bg-surface/50 rounded-lg mx-4 mb-4">
+        {section.items.map((item, itemIndex) => (
+          <SettingsItemRenderer key={itemIndex} item={item} index={itemIndex} />
+        ))}
+      </div>
+    </div>
+  );
+});
+
+interface SettingsActionsProps {
+  actions: React.ReactNode[];
+}
+
+const SettingsActions = memo(function SettingsActions({
+  actions,
+}: SettingsActionsProps): React.JSX.Element | null {
+  if (actions.length === 0) return null;
+
+  return (
+    <div className="border-t border-border p-4 space-y-2">
+      {actions.map((action, index) => (
+        <div key={index}>{action}</div>
+      ))}
+    </div>
+  );
+});
+
+export const SettingsPanel = memo(function SettingsPanel({
   isOpen,
   onClose,
   title = 'Settings',
@@ -164,7 +135,7 @@ export const SettingsPanel: React.FC<SettingsPanelComponentProps> = ({
   actions = [],
   className,
   children,
-}) => {
+}: SettingsPanelComponentProps): React.JSX.Element {
   return (
     <Panel
       isOpen={isOpen}
@@ -175,32 +146,13 @@ export const SettingsPanel: React.FC<SettingsPanelComponentProps> = ({
     >
       <div className="flex-1 overflow-y-auto">
         {sections.map((section, index) => (
-          <div key={index} className="mb-6">
-            {section.title && (
-              <h3 className="px-4 py-2 text-sm font-semibold text-muted uppercase tracking-wider">
-                {section.title}
-              </h3>
-            )}
-            <div className="bg-surface/50 rounded-lg mx-4 mb-4">
-              {section.items.map((item, itemIndex) => (
-                <div key={itemIndex}>{item}</div>
-              ))}
-            </div>
-          </div>
+          <SettingsSectionComponent key={index} section={section} index={index} />
         ))}
         {children}
       </div>
-
-      {actions.length > 0 && (
-        <div className="border-t border-border p-4 space-y-2">
-          {actions.map((action, index) => (
-            <div key={index}>{action}</div>
-          ))}
-        </div>
-      )}
+      <SettingsActions actions={actions} />
     </Panel>
   );
-};
+});
 
-// Export individual setting components for direct use
-export { SettingItem, ToggleSetting, SelectSetting, RangeSetting };
+export { SettingItem, ToggleSetting, SelectSetting, RangeSetting } from './settings';

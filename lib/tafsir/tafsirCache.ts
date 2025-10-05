@@ -1,4 +1,5 @@
-import { getTafsirByVerse } from '@/lib/api';
+import { GetTafsirContentUseCase } from '@/src/application/use-cases/GetTafsirContent';
+import { container } from '@/src/infrastructure/di/Container';
 
 export const CACHE_TTL = 60 * 60 * 1000; // 1 hour in ms
 export const MAX_CACHE_SIZE = 50;
@@ -36,11 +37,15 @@ export function getTafsirCached(verseKey: string, tafsirId = 169): Promise<strin
     const oldest = [...cache.entries()].sort((a, b) => a[1].timestamp - b[1].timestamp);
     const removeCount = cache.size - MAX_CACHE_SIZE + 1;
     for (let i = 0; i < removeCount; i++) {
-      cache.delete(oldest[i][0]);
+      const entry = oldest[i];
+      if (!entry) break;
+      cache.delete(entry[0]);
     }
   }
 
-  const value = getTafsirByVerse(verseKey, tafsirId);
+  const repository = container.getTafsirRepository();
+  const useCase = new GetTafsirContentUseCase(repository);
+  const value = useCase.execute(verseKey, tafsirId);
   cache.set(key, { value, timestamp: now });
   return value;
 }
@@ -48,6 +53,6 @@ export function getTafsirCached(verseKey: string, tafsirId = 169): Promise<strin
 /**
  * Empties the in-memory tafsir cache.
  */
-export function clearTafsirCache() {
+export function clearTafsirCache(): void {
   cache.clear();
 }

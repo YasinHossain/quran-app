@@ -2,7 +2,7 @@ import juzData from '@/data/juz.json';
 
 describe('juz.json', () => {
   it('has distinct ranges for first two juz', () => {
-    expect(juzData[0].surahRange).not.toEqual(juzData[1].surahRange);
+    expect(juzData[0]!.surahRange).not.toEqual(juzData[1]!.surahRange);
   });
 
   it('has 30 unique entries', () => {

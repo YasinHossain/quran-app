@@ -1,4 +1,5 @@
 import { TranslationResource } from '@/types';
+
 import { apiFetch } from './client';
 
 interface ApiTranslationResource {

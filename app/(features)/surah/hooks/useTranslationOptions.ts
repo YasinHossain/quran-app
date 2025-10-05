@@ -1,7 +1,9 @@
 import { useMemo } from 'react';
 import useSWR from 'swr';
+
 import { getTranslations, getWordTranslations } from '@/lib/api';
 import { WORD_LANGUAGE_LABELS } from '@/lib/text/wordLanguages';
+
 import type { TranslationResource } from '@/types';
 
 export interface WordLanguageOption {
@@ -9,18 +11,23 @@ export interface WordLanguageOption {
   id: number;
 }
 
-export function useTranslationOptions() {
-  const { data: translationOptionsData } = useSWR<TranslationResource[]>(
-    'translations',
-    getTranslations
-  );
+export interface UseTranslationOptionsReturn {
+  translationOptions: TranslationResource[];
+  wordLanguageOptions: WordLanguageOption[];
+  wordLanguageMap: Record<string, number>;
+}
+
+export function useTranslationOptions(): UseTranslationOptionsReturn {
+  const swrTranslations = useSWR<TranslationResource[]>('translations', getTranslations);
+  const translationOptionsData = swrTranslations?.data;
   const translationOptions = useMemo(() => translationOptionsData || [], [translationOptionsData]);
 
-  const { data: wordTranslationOptionsData } = useSWR('wordTranslations', getWordTranslations);
+  const swrWord = useSWR<TranslationResource[]>('wordTranslations', getWordTranslations);
+  const wordTranslationOptionsData = swrWord?.data;
   const wordLanguageMap = useMemo(() => {
     const map: Record<string, number> = {};
     (wordTranslationOptionsData || []).forEach((o) => {
-      const name = o.lang.toLowerCase();
+      const name = String(o.lang ?? '').toLowerCase();
       if (!map[name]) {
         map[name] = o.id;
       }
@@ -32,11 +39,9 @@ export function useTranslationOptions() {
     () =>
       Object.keys(wordLanguageMap)
         .filter((name) => WORD_LANGUAGE_LABELS[name])
-        .map((name) => ({ name: WORD_LANGUAGE_LABELS[name], id: wordLanguageMap[name] })),
+        .map((name) => ({ name: WORD_LANGUAGE_LABELS[name]!, id: wordLanguageMap[name]! })),
     [wordLanguageMap]
   );
 
   return { translationOptions, wordLanguageOptions, wordLanguageMap } as const;
 }
-
-export default useTranslationOptions;

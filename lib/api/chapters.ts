@@ -1,6 +1,10 @@
-import { Chapter, Surah } from '@/types';
-import { apiFetch } from './client';
 import { surahImageMap } from '@/app/(features)/surah/lib/surahImageMap';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { Chapter, Surah } from '@/types';
+
+import { apiFetch } from './client';
+
+const surahCoverCache = new Map<number, Promise<string | null>>();
 
 export async function getChapters(): Promise<Chapter[]> {
   const data = await apiFetch<{ chapters: Chapter[] }>(
@@ -30,19 +34,29 @@ export async function getSurahList(): Promise<Surah[]> {
  * Returns `null` when the surah has no mapped image, the request fails, or
  * Wikimedia responds without a usable URL.
  */
-export async function getSurahCoverUrl(surahNumber: number): Promise<string | null> {
-  const filename = surahImageMap[surahNumber];
-  if (!filename) return null;
+export function getSurahCoverUrl(surahNumber: number): Promise<string | null> {
+  const cached = surahCoverCache.get(surahNumber);
+  if (cached) return cached;
 
-  try {
-    const response = await fetch(`https://api.wikimedia.org/core/v1/commons/file/File:${filename}`);
-    if (!response.ok) {
+  const filename = surahImageMap[surahNumber];
+  if (!filename) return Promise.resolve(null);
+
+  const promise = apiFetch<{ preferred?: { url: string } }>(
+    `https://api.wikimedia.org/core/v1/commons/file/File:${filename}`,
+    {},
+    'Failed to fetch surah cover'
+  )
+    .then((data) => data.preferred?.url || null)
+    .catch((error) => {
+      logger.error('Error fetching surah cover:', undefined, error as Error);
+      surahCoverCache.delete(surahNumber);
       return null;
-    }
-    const data = await response.json();
-    return data.preferred.url || null;
-  } catch (error) {
-    console.error('Error fetching surah cover:', error);
-    return null;
-  }
+    });
+
+  surahCoverCache.set(surahNumber, promise);
+  return promise;
+}
+
+export function clearSurahCoverCache(): void {
+  surahCoverCache.clear();
 }

@@ -1,91 +1,127 @@
-import { useMemo, useRef, useState, useCallback } from 'react';
+import { useInfiniteVerseLoader } from '@/app/(features)/surah/hooks/useInfiniteVerseLoader';
+import { useTranslationOptions } from '@/app/(features)/surah/hooks/useTranslationOptions';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
-import type { Verse } from '@/types';
-import useTranslationOptions from './useTranslationOptions';
-import useInfiniteVerseLoader from './useInfiniteVerseLoader';
 
-export interface LookupFn {
-  (
-    id: string,
-    translationIds: number | number[],
-    page: number,
-    perPage: number,
-    wordLang: string
-  ): Promise<{ verses: Verse[]; totalPages: number }>;
+import {
+  resolveVerses,
+  useStableTranslationIds,
+  useVerseListingErrorState,
+} from './verse-listing/internal';
+import { useNavigationHandlers } from './verse-listing/useNavigationHandlers';
+
+export type {
+  UseVerseListingReturn,
+  LookupOptions,
+  LookupFn,
+  UseVerseListingParams,
+} from './verse-listing/types';
+import type { UseVerseListingParams, UseVerseListingReturn } from './verse-listing/types';
+
+const EMPTY_LOADER_STATE: {
+  verses: UseVerseListingReturn['verses'];
+  isLoading: boolean;
+  isValidating: boolean;
+  isReachingEnd: boolean;
+} = {
+  verses: [],
+  isLoading: false,
+  isValidating: false,
+  isReachingEnd: true,
+};
+
+interface CreateVerseListingResultParams {
+  error: string | null;
+  settings: UseVerseListingReturn['settings'];
+  setSettings: UseVerseListingReturn['setSettings'];
+  loadMoreRef: UseVerseListingReturn['loadMoreRef'];
+  translationOptions: UseVerseListingReturn['translationOptions'];
+  wordLanguageOptions: UseVerseListingReturn['wordLanguageOptions'];
+  wordLanguageMap: UseVerseListingReturn['wordLanguageMap'];
+  audio: Pick<ReturnType<typeof useAudio>, 'activeVerse' | 'reciter' | 'isPlayerVisible'>;
+  loaderState: ReturnType<typeof useInfiniteVerseLoader>;
+  navigation: ReturnType<typeof useNavigationHandlers>;
+  verses: UseVerseListingReturn['verses'];
 }
 
-interface UseVerseListingParams {
-  id?: string;
-  lookup: LookupFn;
-}
-
-export function useVerseListing({ id, lookup }: UseVerseListingParams) {
-  const [error, setError] = useState<string | null>(null);
-  const { settings, setSettings } = useSettings();
-  const loadMoreRef = useRef<HTMLDivElement | null>(null);
-
-  const { activeVerse, setActiveVerse, reciter, isPlayerVisible, openPlayer } = useAudio();
-  const { translationOptions, wordLanguageOptions, wordLanguageMap } = useTranslationOptions();
-
-  // Stabilize the translation IDs for SWR key to prevent unnecessary re-fetches
-  const stableTranslationIds = useMemo(() => {
-    const ids = settings.translationIds || [settings.translationId];
-    // Filter out any undefined/null values and ensure we have valid IDs
-    const validIds = ids.filter((id) => id && typeof id === 'number');
-    return validIds.length > 0 ? validIds.sort((a, b) => a - b).join(',') : '20'; // Default to Sahih International
-  }, [settings.translationIds, settings.translationId]);
-
-  const { verses, isLoading, isValidating, isReachingEnd } = useInfiniteVerseLoader({
-    id,
-    lookup,
-    stableTranslationIds,
-    wordLang: settings.wordLang,
-    loadMoreRef,
-    error,
-    setError: (e: string) => setError(e),
-  });
-
-  const handleNext = useCallback(() => {
-    if (!activeVerse) return false;
-    const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
-    if (currentIndex < verses.length - 1) {
-      setActiveVerse(verses[currentIndex + 1]);
-      openPlayer();
-      return true;
-    }
-    return false;
-  }, [activeVerse, verses, setActiveVerse, openPlayer]);
-
-  const handlePrev = useCallback(() => {
-    if (!activeVerse) return false;
-    const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
-    if (currentIndex > 0) {
-      setActiveVerse(verses[currentIndex - 1]);
-      openPlayer();
-      return true;
-    }
-    return false;
-  }, [activeVerse, verses, setActiveVerse, openPlayer]);
-
+function createVerseListingResult({
+  error,
+  settings,
+  setSettings,
+  loadMoreRef,
+  translationOptions,
+  wordLanguageOptions,
+  wordLanguageMap,
+  audio,
+  loaderState,
+  navigation,
+  verses,
+}: CreateVerseListingResultParams): UseVerseListingReturn {
   return {
     error,
-    isLoading,
+    isLoading: loaderState.isLoading,
     verses,
-    isValidating,
-    isReachingEnd,
+    isValidating: loaderState.isValidating,
+    isReachingEnd: loaderState.isReachingEnd,
     loadMoreRef,
     translationOptions,
     wordLanguageOptions,
     wordLanguageMap,
     settings,
     setSettings,
-    activeVerse,
-    reciter,
-    isPlayerVisible,
-    handleNext,
-    handlePrev,
-  } as const;
+    activeVerse: audio.activeVerse,
+    reciter: audio.reciter,
+    isPlayerVisible: audio.isPlayerVisible,
+    handleNext: navigation.handleNext,
+    handlePrev: navigation.handlePrev,
+  };
 }
 
-export default useVerseListing;
+export function useVerseListing({
+  id,
+  lookup,
+  initialVerses,
+}: UseVerseListingParams): UseVerseListingReturn {
+  const errorState = useVerseListingErrorState();
+  const settingsState = useSettings();
+  const audio = useAudio();
+  const translation = useTranslationOptions();
+  const stableTranslationIds = useStableTranslationIds(settingsState.settings);
+
+  const infiniteLoaderParams: Parameters<typeof useInfiniteVerseLoader>[0] = {
+    lookup,
+    stableTranslationIds,
+    wordLang: settingsState.settings.wordLang,
+    loadMoreRef: errorState.loadMoreRef,
+    error: errorState.error,
+    setError: errorState.handleLoaderError,
+    ...(id !== undefined ? { id } : {}),
+  } as const;
+
+  const infiniteLoaderState = useInfiniteVerseLoader(infiniteLoaderParams);
+
+  const loaderState =
+    id !== undefined ? { ...EMPTY_LOADER_STATE, ...infiniteLoaderState } : EMPTY_LOADER_STATE;
+
+  const verses = resolveVerses(initialVerses, loaderState.verses);
+  const navigation = useNavigationHandlers({
+    verses,
+    activeVerse: audio.activeVerse,
+    setActiveVerse: audio.setActiveVerse,
+    openPlayer: audio.openPlayer,
+  });
+
+  return createVerseListingResult({
+    error: errorState.error,
+    settings: settingsState.settings,
+    setSettings: settingsState.setSettings,
+    loadMoreRef: errorState.loadMoreRef,
+    translationOptions: translation.translationOptions,
+    wordLanguageOptions: translation.wordLanguageOptions,
+    wordLanguageMap: translation.wordLanguageMap,
+    audio,
+    loaderState,
+    navigation,
+    verses,
+  });
+}

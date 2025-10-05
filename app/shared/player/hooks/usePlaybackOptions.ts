@@ -1,9 +1,28 @@
-import { useEffect, useState } from 'react';
-import { useAudio } from '../context/AudioContext';
-import { RECITERS } from '@/lib/audio/reciters';
-import type { RepeatOptions } from '../types';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
-export default function usePlaybackOptions(onClose: () => void) {
+import { useAudio } from '@/app/shared/player/context/AudioContext';
+import { hasNonIntegerValues, adjustRange } from '@/app/shared/player/utils/repeat';
+import { RECITERS } from '@/lib/audio/reciters';
+
+import type { RepeatOptions } from '@/app/shared/player/types';
+
+/**
+ * Local state manager for playback options and reciter selection.
+ *
+ * @param onClose callback to close the options modal.
+ * @returns current selections and helpers to commit changes.
+ */
+interface UsePlaybackOptionsReturn {
+  localReciter: string;
+  setLocalReciter: Dispatch<SetStateAction<string>>;
+  localRepeat: RepeatOptions;
+  setLocalRepeat: Dispatch<SetStateAction<RepeatOptions>>;
+  rangeWarning: string | null;
+  setRangeWarning: Dispatch<SetStateAction<string | null>>;
+  commit: () => void;
+}
+
+export function usePlaybackOptions(onClose: () => void): UsePlaybackOptionsReturn {
   const { reciter, setReciter, repeatOptions, setRepeatOptions } = useAudio();
   const [localReciter, setLocalReciter] = useState(reciter.id.toString());
   const [localRepeat, setLocalRepeat] = useState<RepeatOptions>(repeatOptions);
@@ -17,28 +36,15 @@ export default function usePlaybackOptions(onClose: () => void) {
     setLocalRepeat(repeatOptions);
   }, [repeatOptions]);
 
-  const commit = () => {
-    const numericKeys: (keyof RepeatOptions)[] = [
-      'start',
-      'end',
-      'playCount',
-      'repeatEach',
-      'delay',
-    ];
-    if (
-      numericKeys.some((key) => {
-        const val = localRepeat[key];
-        return val !== undefined && !Number.isInteger(val);
-      })
-    ) {
+  const commit = (): void => {
+    if (hasNonIntegerValues(localRepeat)) {
       setRangeWarning('Please enter whole numbers only.');
       return;
     }
     const newReciter = RECITERS.find((r) => r.id.toString() === localReciter);
     if (newReciter) setReciter(newReciter);
-    const start = Math.max(1, localRepeat.start ?? 1);
-    const end = Math.max(start, localRepeat.end ?? start);
-    if (start !== localRepeat.start || end !== localRepeat.end) {
+    const { start, end, adjusted } = adjustRange(localRepeat);
+    if (adjusted) {
       setRangeWarning('Start and end values adjusted to a valid range.');
       setLocalRepeat({ ...localRepeat, start, end });
       return;

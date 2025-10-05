@@ -1,15 +1,62 @@
 'use client';
 
-import React, { useState } from 'react';
-import { EllipsisHIcon } from '../icons';
-import BookmarkModal from '../components/BookmarkModal';
-import MobileBottomSheet from './MobileBottomSheet';
-import { touchClasses } from '@/lib/responsive';
-import { cn } from '@/lib/utils';
-import { VerseActionsProps } from './types';
-import { defaultShare } from './utils';
+import { BookmarkModal } from '@/app/shared/components/BookmarkModal';
 
-const MobileVerseActions: React.FC<VerseActionsProps> = ({
+import { VerseActionTrigger } from './components/VerseActionTrigger';
+import { useMobileVerseActionsState } from './hooks/useMobileVerseActionsState';
+import { MobileBottomSheet } from './MobileBottomSheet';
+import { VerseActionsProps } from './types';
+
+import type { ComponentProps } from 'react';
+
+const buildStateConfig = ({
+  onShare,
+  onBookmark,
+  showRemove,
+}: {
+  onShare?: VerseActionsProps['onShare'];
+  onBookmark?: VerseActionsProps['onBookmark'];
+  showRemove: boolean;
+}): Parameters<typeof useMobileVerseActionsState>[0] => {
+  const config: Parameters<typeof useMobileVerseActionsState>[0] = { showRemove };
+  if (onShare) config.onShare = onShare;
+  if (onBookmark) config.onBookmark = onBookmark;
+  return config;
+};
+
+const createSheetProps = ({
+  state,
+  verseKey,
+  isPlaying,
+  isLoadingAudio,
+  isBookmarked,
+  onPlayPause,
+  showRemove,
+  onNavigateToVerse,
+}: {
+  state: ReturnType<typeof useMobileVerseActionsState>;
+  verseKey: string;
+  isPlaying: boolean;
+  isLoadingAudio: boolean;
+  isBookmarked: boolean;
+  onPlayPause: VerseActionsProps['onPlayPause'];
+  showRemove: boolean;
+  onNavigateToVerse: VerseActionsProps['onNavigateToVerse'];
+}): ComponentProps<typeof MobileBottomSheet> => ({
+  isOpen: state.isBottomSheetOpen,
+  onClose: state.closeBottomSheet,
+  verseKey,
+  isPlaying,
+  isLoadingAudio,
+  isBookmarked,
+  onPlayPause,
+  onBookmark: state.handleBookmarkClick,
+  onShare: state.handleShare,
+  showRemove,
+  ...(onNavigateToVerse ? { onNavigateToVerse } : {}),
+});
+
+export function MobileVerseActions({
   verseKey,
   verseId,
   isPlaying,
@@ -21,66 +68,33 @@ const MobileVerseActions: React.FC<VerseActionsProps> = ({
   onNavigateToVerse,
   showRemove = false,
   className = '',
-}) => {
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
-  const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
-  const handleShare = onShare || defaultShare;
-
-  const handleBookmarkClick = () => {
-    if (showRemove && onBookmark) {
-      onBookmark();
-    } else {
-      setIsBookmarkModalOpen(true);
-    }
-  };
+}: VerseActionsProps): React.JSX.Element {
+  const state = useMobileVerseActionsState(buildStateConfig({ onShare, onBookmark, showRemove }));
+  const sheetProps = createSheetProps({
+    state,
+    verseKey,
+    isPlaying,
+    isLoadingAudio,
+    isBookmarked,
+    onPlayPause,
+    showRemove,
+    onNavigateToVerse,
+  });
 
   return (
     <>
-      <div className={cn('flex items-center justify-between', className)}>
-        {/* Verse number on the left */}
-        <div className="flex-shrink-0">
-          <span className="font-semibold text-accent text-sm">{verseKey}</span>
-        </div>
-
-        {/* Three-dot menu on the right */}
-        <button
-          onClick={() => setIsBottomSheetOpen(true)}
-          className={cn(
-            'p-1 rounded-full hover:bg-interactive transition-colors',
-            touchClasses.target,
-            touchClasses.gesture,
-            touchClasses.focus
-          )}
-          aria-label="Open verse actions menu"
-        >
-          <EllipsisHIcon size={18} className="text-muted" />
-        </button>
-      </div>
-
-      {/* Bottom Sheet */}
-      <MobileBottomSheet
-        isOpen={isBottomSheetOpen}
-        onClose={() => setIsBottomSheetOpen(false)}
+      <VerseActionTrigger
         verseKey={verseKey}
-        isPlaying={isPlaying}
-        isLoadingAudio={isLoadingAudio}
-        isBookmarked={isBookmarked}
-        onPlayPause={onPlayPause}
-        onBookmark={handleBookmarkClick}
-        onShare={handleShare}
-        onNavigateToVerse={onNavigateToVerse}
-        showRemove={showRemove}
+        onOpen={state.openBottomSheet}
+        className={className}
       />
-
-      {/* BookmarkModal */}
+      <MobileBottomSheet {...sheetProps} />
       <BookmarkModal
-        isOpen={isBookmarkModalOpen}
-        onClose={() => setIsBookmarkModalOpen(false)}
+        isOpen={state.isBookmarkModalOpen}
+        onClose={state.closeBookmarkModal}
         verseId={verseId || verseKey}
         verseKey={verseKey}
       />
     </>
   );
-};
-
-export default MobileVerseActions;
+}

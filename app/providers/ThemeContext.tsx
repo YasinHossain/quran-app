@@ -1,6 +1,8 @@
 'use client';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
+import { getItem, setItem } from '@/lib/utils/safeLocalStorage';
+
 export type Theme = 'light' | 'dark';
 
 interface ThemeContextType {
@@ -21,18 +23,21 @@ export const ThemeProvider = ({
 }: {
   children: React.ReactNode;
   initialTheme?: Theme;
-}) => {
+}): React.JSX.Element => {
   // Initialize theme with a default value or provided value
   const [theme, setTheme] = useState<Theme>(initialTheme);
 
   // Effect to load theme from localStorage on the client side after initial render
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('theme');
+      const stored = getItem('theme');
       if (stored === 'light' || stored === 'dark') {
         setTheme(stored as Theme);
-      } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        setTheme('dark');
+      } else if (typeof window.matchMedia === 'function') {
+        const mql = window.matchMedia('(prefers-color-scheme: dark)');
+        if (mql && typeof mql.matches === 'boolean' && mql.matches) {
+          setTheme('dark');
+        }
       }
     }
   }, []); // Empty dependency array ensures this effect runs only once on mount
@@ -40,7 +45,7 @@ export const ThemeProvider = ({
   // Effect to save theme to localStorage and toggle the dark class whenever theme changes
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('theme', theme);
+      setItem('theme', theme);
       // Ensure the dark class is toggled for Tailwind's class strategy
       document.documentElement.classList.toggle('dark', theme === 'dark');
       document.cookie = `theme=${theme}; path=/; max-age=31536000`;
@@ -57,7 +62,7 @@ export const ThemeProvider = ({
  * Use inside components to read or change the current theme managed by
  * `ThemeProvider`.
  */
-export const useTheme = () => {
+export const useTheme = (): ThemeContextType => {
   const ctx = useContext(ThemeContext);
   if (!ctx) throw new Error('useTheme must be used within ThemeProvider');
   return ctx;

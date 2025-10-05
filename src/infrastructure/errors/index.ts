@@ -6,24 +6,9 @@
  */
 
 // Error classes
-export {
-  ApplicationError,
-  ValidationError,
-  AuthenticationError,
-  AuthorizationError,
-  NotFoundError,
-  ConflictError,
-  NetworkError,
-  ApiError,
-  RateLimitError,
-  StorageError,
-  CacheError,
-  AudioError,
-  ConfigurationError,
-  FeatureNotAvailableError,
-  TimeoutError,
-  ErrorFactory,
-} from './ApplicationError';
+export { ApplicationError } from './ApplicationError';
+export * from './types';
+export { ErrorFactory } from './factory';
 
 // Type guards
 export {
@@ -33,17 +18,15 @@ export {
   isAuthenticationError,
   isNotFoundError,
   isRateLimitError,
-} from './ApplicationError';
+} from './guards';
 
 // Error handler
+export { ErrorHandler } from './ErrorHandler';
 export {
-  ErrorHandler,
-  handleErrors,
-  handleAllErrors,
-  config as errorHandlerConfig,
+  errorHandlerConfig,
   type ErrorHandlerOptions,
-  type ErrorNotification,
   type ErrorLogger,
   type ErrorReporter,
   type ErrorNotifier,
-} from './ErrorHandler';
+} from './ErrorHandlerConfig';
+export { type ErrorNotification } from './errorNotifications';

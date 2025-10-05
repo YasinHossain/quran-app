@@ -1,5 +1,4 @@
 'use client';
-
 import React from 'react';
 
 interface Resource {
@@ -20,12 +19,12 @@ export const ResourceItem = <T extends Resource>({
   isSelected,
   onToggle,
   style,
-}: ResourceItemProps<T>) => {
-  const handleClick = () => {
+}: ResourceItemProps<T>): React.JSX.Element => {
+  const handleClick = (): void => {
     onToggle(item.id);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>): void => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       handleClick();
@@ -62,7 +61,7 @@ export const ResourceItem = <T extends Resource>({
   );
 };
 
-const CheckIcon: React.FC<{ className?: string }> = ({ className }) => (
+const CheckIcon = ({ className }: { className?: string }): React.JSX.Element => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className={className}
@@ -76,5 +75,3 @@ const CheckIcon: React.FC<{ className?: string }> = ({ className }) => (
     />
   </svg>
 );
-
-export default ResourceItem;

@@ -1,12 +1,24 @@
 'use client';
 
-import React from 'react';
-import BookmarksLayout from '../components/shared/BookmarksLayout';
-import { CreateMemorizationModal } from '../components/CreateMemorizationModal';
-import { useMemorizationPage } from './hooks/useMemorizationPage';
-import { MemorizationHeader, MemorizationGrid } from './components';
+import dynamic from 'next/dynamic';
 
-export default function MemorizationPage() {
+import { BookmarksLayout } from '@/app/(features)/bookmarks/components/shared/BookmarksLayout';
+
+import { MemorizationHeader, MemorizationGrid } from './components';
+import { useMemorizationPage } from './hooks/useMemorizationPage';
+
+// Dynamic import for heavy modal component
+const CreateMemorizationModal = dynamic(
+  () =>
+    import('../components/CreateMemorizationModal').then((mod) => ({
+      default: mod.CreateMemorizationModal,
+    })),
+  {
+    ssr: false,
+  }
+);
+
+export default function MemorizationPage(): React.JSX.Element {
   const { memorization, chapters, modal, handleSectionChange } = useMemorizationPage();
 
   return (

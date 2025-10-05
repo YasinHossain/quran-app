@@ -1,15 +1,24 @@
 import { useMemo, useCallback } from 'react';
-import useSWR from 'swr';
 import { useTranslation } from 'react-i18next';
+import useSWR from 'swr';
+
 import { useSettings } from '@/app/providers/SettingsContext';
 import { getWordTranslations } from '@/lib/api';
-import { WORD_LANGUAGE_LABELS } from '@/lib/text/wordLanguages';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
+import { WORD_LANGUAGE_LABELS } from '@/lib/text/wordLanguages';
+
 import type { LanguageCode } from '@/lib/text/languageCodes';
 
 const DEFAULT_WORD_TRANSLATION_ID = 85;
 
-export const useWordTranslations = () => {
+interface UseWordTranslationsReturn {
+  wordLanguageOptions: { name: string; id: number }[];
+  wordLanguageMap: Record<string, number>;
+  selectedWordLanguageName: string;
+  resetWordSettings: () => void;
+}
+
+export const useWordTranslations = (): UseWordTranslationsReturn => {
   const { t } = useTranslation();
   const { settings, setSettings } = useSettings();
 
@@ -30,7 +39,7 @@ export const useWordTranslations = () => {
     () =>
       Object.keys(wordLanguageMap)
         .filter((name) => WORD_LANGUAGE_LABELS[name])
-        .map((name) => ({ name: WORD_LANGUAGE_LABELS[name], id: wordLanguageMap[name] })),
+        .map((name) => ({ name: WORD_LANGUAGE_LABELS[name]!, id: wordLanguageMap[name]! })),
     [wordLanguageMap]
   );
 

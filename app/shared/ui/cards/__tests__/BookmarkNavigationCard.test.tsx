@@ -1,11 +1,22 @@
 import userEvent from '@testing-library/user-event';
-import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
-import { BookmarkNavigationCard } from '../BookmarkNavigationCard';
 
-jest.mock('next/link', () => {
-  return ({ children, href, onClick, ...props }: any) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { scroll, ...rest } = props;
+import { BookmarkNavigationCard } from '@/app/shared/ui/cards/BookmarkNavigationCard';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
+import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
+
+import type { BookmarkNavigationContent } from '@/app/shared/ui/cards/BookmarkNavigationCard';
+import type { MockProps } from '@/tests/mocks';
+
+jest.mock('next/link', (): unknown => {
+  return ({
+    children,
+    href,
+    onClick,
+    ...props
+  }: MockProps<
+    React.AnchorHTMLAttributes<HTMLAnchorElement> & { scroll?: boolean; href: string }
+  >): React.JSX.Element => {
+    const { ...rest } = props;
     return (
       <a
         href={href}
@@ -21,28 +32,22 @@ jest.mock('next/link', () => {
   };
 });
 
-const DummyIcon = ({ size = 16, className = '' }: { size?: number; className?: string }) => (
+const DummyIcon = ({
+  size = 16,
+  className = '',
+}: {
+  size?: number;
+  className?: string;
+}): React.JSX.Element => (
   <svg data-testid="icon" width={size} height={size} className={className} />
 );
 
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setMatchMedia(false);
 });
 
 describe('BookmarkNavigationCard', () => {
-  const content = {
+  const content: BookmarkNavigationContent = {
     id: 'bookmarks',
     icon: DummyIcon,
     label: 'Bookmarks',

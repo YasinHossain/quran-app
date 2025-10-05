@@ -1,5 +1,10 @@
-import { getChapters, getSurahCoverUrl, getSurahList } from '@/lib/api/chapters';
 import { API_BASE_URL } from '@/lib/api';
+import {
+  getChapters,
+  getSurahCoverUrl,
+  getSurahList,
+  clearSurahCoverCache,
+} from '@/lib/api/chapters';
 import { Chapter, Surah } from '@/types';
 
 jest.mock('@/app/(features)/surah/lib/surahImageMap', () => ({
@@ -28,7 +33,10 @@ describe('getChapters', () => {
     }) as jest.Mock;
 
     const result = await getChapters();
-    expect(global.fetch).toHaveBeenCalledWith(`${API_BASE_URL}/chapters?language=en`);
+    expect(global.fetch).toHaveBeenCalledWith(
+      `${API_BASE_URL}/chapters?language=en`,
+      expect.objectContaining({ headers: { Accept: 'application/json' } })
+    );
     expect(result).toEqual(mockChapters);
   });
 
@@ -77,6 +85,7 @@ describe('getSurahList', () => {
 describe('getSurahCoverUrl', () => {
   afterEach(() => {
     jest.restoreAllMocks();
+    clearSurahCoverCache();
   });
 
   it('returns preferred URL when available', async () => {
@@ -87,7 +96,8 @@ describe('getSurahCoverUrl', () => {
 
     const result = await getSurahCoverUrl(1);
     expect(global.fetch).toHaveBeenCalledWith(
-      'https://api.wikimedia.org/core/v1/commons/file/File:test.jpg'
+      'https://api.wikimedia.org/core/v1/commons/file/File:test.jpg',
+      expect.objectContaining({ headers: { Accept: 'application/json' } })
     );
     expect(result).toBe('http://img.test');
   });
@@ -95,5 +105,16 @@ describe('getSurahCoverUrl', () => {
   it('returns null when no mapping', async () => {
     const result = await getSurahCoverUrl(2);
     expect(result).toBeNull();
+  });
+
+  it('caches subsequent requests', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ preferred: { url: 'http://img.test' } }),
+    }) as jest.Mock;
+
+    await getSurahCoverUrl(1);
+    await getSurahCoverUrl(1);
+    expect(global.fetch).toHaveBeenCalledTimes(1);
   });
 });

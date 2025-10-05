@@ -1,20 +1,16 @@
-import { act } from '@testing-library/react';
-import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import QuranPage from '@/app/(features)/page/[pageId]/page';
-import { Verse } from '@/types';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
+import { renderWithProvidersAsync } from '@/app/testUtils/renderWithProviders';
 import * as api from '@/lib/api';
-
+import { Verse } from '@/types';
 jest.mock('react', () => {
   const actual = jest.requireActual('react');
-  return { ...actual, use: (v: any) => v };
+  const identity = <T,>(x: T): T => x;
+  return { ...actual, use: identity };
 });
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
-}));
-
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push: jest.fn() }),
 }));
 
 const mockVerse: Verse = {
@@ -27,19 +23,7 @@ const mockVerse: Verse = {
 jest.mock('@/lib/api');
 
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setMatchMedia(false);
 });
 
 beforeEach(() => {
@@ -50,14 +34,12 @@ beforeEach(() => {
   });
 });
 
-const renderPage = () =>
-  renderWithProviders(
+const renderPage = (): ReturnType<typeof renderWithProvidersAsync> =>
+  renderWithProvidersAsync(
     <QuranPage params={{ pageId: '1' } as unknown as Promise<{ pageId: string }>} />
   );
 
 test('renders page without crashing', async () => {
-  await act(async () => {
-    renderPage();
-  });
+  await renderPage();
   expect(api.getVersesByPage).toBeDefined();
 });

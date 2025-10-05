@@ -1,8 +1,13 @@
-import { renderWithProviders, screen, waitFor } from '@/app/testUtils/renderWithProviders';
-import TafsirIndexPage from '@/app/(features)/tafsir/page';
 import React from 'react';
 
-jest.mock('next/link', () => ({ href, children }: any) => <a href={href}>{children}</a>);
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
+import { renderWithProvidersAsync, screen, waitFor } from '@/app/testUtils/renderWithProviders';
+
+import type { MockProps } from '@/tests/mocks';
+
+jest.mock('next/link', () => ({ href, children }: MockProps<{ href: string }>) => (
+  <a href={href}>{children}</a>
+));
 jest.mock('@/lib/api', () => ({
   getSurahList: jest.fn().mockResolvedValue([
     {
@@ -16,24 +21,13 @@ jest.mock('@/lib/api', () => ({
 }));
 
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
-  });
+  setMatchMedia(false);
 });
 
-const renderPage = async () => {
-  const PageComponent = await TafsirIndexPage();
-  return renderWithProviders(PageComponent);
+const renderPage = async (): Promise<void> => {
+  const mod = await import('@/app/(features)/tafsir/page');
+  const PageComponent = await mod.default();
+  await renderWithProvidersAsync(PageComponent);
 };
 
 test('renders list of tafsir links', async () => {

@@ -267,11 +267,8 @@
 }
 
 @layer utilities {
-  /* Hero heading text that becomes gradient in dark theme via tokens */
+  /* Hero heading text using theme-aware gradient */
   .text-hero {
-    color: rgb(var(--color-content-primary));
-  }
-  .dark .text-hero {
     background-image: var(--gradient-background);
     -webkit-background-clip: text;
     background-clip: text;

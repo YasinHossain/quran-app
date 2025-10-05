@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { memo } from 'react';
+
 import { SearchInput } from './components/SearchInput';
 
 interface Props {
@@ -8,7 +9,12 @@ interface Props {
   onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
-const HeaderSearch = ({ query, setQuery, placeholder, onKeyDown }: Props) => {
+export const HeaderSearch = memo(function HeaderSearch({
+  query,
+  setQuery,
+  placeholder,
+  onKeyDown,
+}: Props): React.JSX.Element {
   return (
     <SearchInput
       value={query}
@@ -19,6 +25,4 @@ const HeaderSearch = ({ query, setQuery, placeholder, onKeyDown }: Props) => {
       size="md"
     />
   );
-};
-
-export default HeaderSearch;
+});

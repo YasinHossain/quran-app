@@ -1,5 +1,4 @@
-import { Verse } from '../entities/Verse';
-import { Translation } from '../value-objects/Translation';
+import { Verse } from '@/src/domain/entities';
 
 export interface IVerseRepository {
   // Basic CRUD operations

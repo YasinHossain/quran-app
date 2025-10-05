@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import { memo } from 'react';
+
 import { Panel } from './Panel';
-import { SearchInput } from '../components/SearchInput';
-import Spinner from '../Spinner';
-import { CheckIcon } from '../icons';
+import { ResourcePanelList } from './ResourcePanelList';
+import { ResourcePanelSearch } from './ResourcePanelSearch';
+
 import type { ResourceSelectionProps } from '@/types/components';
 
 interface ResourceItem {
@@ -24,7 +26,7 @@ interface ResourcePanelProps<T extends ResourceItem> extends ResourceSelectionPr
   renderItem?: (item: T, isSelected: boolean, onSelect: () => void) => React.ReactNode;
 }
 
-export function ResourcePanel<T extends ResourceItem>({
+export const ResourcePanel = memo(function ResourcePanel<T extends ResourceItem>({
   isOpen,
   onClose,
   title,
@@ -36,43 +38,8 @@ export function ResourcePanel<T extends ResourceItem>({
   searchPlaceholder = 'Search...',
   variant = 'sidebar',
   renderItem,
-}: ResourcePanelProps<T>) {
-  const [internalSearchTerm, setInternalSearchTerm] = useState('');
-
-  const filteredItems = useMemo(() => {
-    if (!internalSearchTerm.trim()) return items;
-
-    const searchLower = internalSearchTerm.toLowerCase().trim();
-    return items.filter(
-      (item) =>
-        item.name.toLowerCase().includes(searchLower) ||
-        item.description?.toLowerCase().includes(searchLower) ||
-        item.meta?.toLowerCase().includes(searchLower)
-    );
-  }, [items, internalSearchTerm]);
-
-  const defaultRenderItem = (item: T, isSelected: boolean, onSelectItem: () => void) => (
-    <button
-      key={item.id}
-      onClick={onSelectItem}
-      className={`w-full text-left p-3 rounded-lg transition-colors ${
-        isSelected
-          ? 'bg-accent/20 text-accent border border-accent/30'
-          : 'hover:bg-interactive/50 text-foreground'
-      }`}
-    >
-      <div className="flex items-center justify-between">
-        <div className="flex-1 min-w-0">
-          <h4 className="font-medium truncate">{item.name}</h4>
-          {item.description && (
-            <p className="text-sm text-muted mt-1 line-clamp-2">{item.description}</p>
-          )}
-          {item.meta && <p className="text-xs text-muted mt-1">{item.meta}</p>}
-        </div>
-        {isSelected && <CheckIcon size={18} className="text-accent ml-2 flex-shrink-0" />}
-      </div>
-    </button>
-  );
+}: ResourcePanelProps<T>): React.JSX.Element {
+  const { searchTerm, setSearchTerm, filteredItems } = useResourceSearch(items);
 
   return (
     <Panel
@@ -83,44 +50,44 @@ export function ResourcePanel<T extends ResourceItem>({
       className="flex flex-col h-full"
     >
       <div className="flex-1 flex flex-col min-h-0">
-        {/* Search */}
-        <div className="p-4 pb-2 border-b border-border">
-          <SearchInput
-            value={internalSearchTerm}
-            onChange={setInternalSearchTerm}
-            placeholder={searchPlaceholder}
-            variant="panel"
-            size="sm"
-          />
-        </div>
-
-        {/* Content */}
+        <ResourcePanelSearch
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          placeholder={searchPlaceholder}
+        />
         <div className="flex-1 overflow-y-auto p-4">
-          {loading ? (
-            <div className="flex justify-center py-8">
-              <Spinner className="h-6 w-6" />
-            </div>
-          ) : filteredItems.length === 0 ? (
-            <div className="text-center py-8 text-muted">
-              <p>{emptyStateMessage}</p>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {filteredItems.map((item) => {
-                const isSelected = item.id === selectedId;
-                const handleSelect = () => {
-                  onSelect(item.id);
-                  onClose();
-                };
-
-                return renderItem
-                  ? renderItem(item, isSelected, handleSelect)
-                  : defaultRenderItem(item, isSelected, handleSelect);
-              })}
-            </div>
-          )}
+          <ResourcePanelList
+            items={filteredItems}
+            selectedId={selectedId}
+            onSelect={onSelect}
+            onClose={onClose}
+            loading={loading}
+            emptyStateMessage={emptyStateMessage}
+            {...(renderItem ? { renderItem } : {})}
+          />
         </div>
       </div>
     </Panel>
   );
+});
+
+function useResourceSearch<T extends ResourceItem>(
+  items: T[]
+): {
+  searchTerm: string;
+  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+  filteredItems: T[];
+} {
+  const [searchTerm, setSearchTerm] = useState('');
+  const filteredItems = useMemo((): T[] => {
+    if (!searchTerm.trim()) return items;
+    const searchLower = searchTerm.toLowerCase().trim();
+    return items.filter(
+      (item) =>
+        item.name.toLowerCase().includes(searchLower) ||
+        item.description?.toLowerCase().includes(searchLower) ||
+        item.meta?.toLowerCase().includes(searchLower)
+    );
+  }, [items, searchTerm]);
+  return { searchTerm, setSearchTerm, filteredItems };
 }

@@ -1,4 +1,5 @@
-import { getJuzByPage, getSurahByPage, JUZ_START_PAGES } from '../surah-navigation';
+import { getJuzByPage, getSurahByPage, JUZ_START_PAGES } from '@/lib/utils/surah-navigation';
+
 import type { Chapter } from '@/types';
 
 const chapters: Chapter[] = [
@@ -31,7 +32,7 @@ const chapters: Chapter[] = [
 describe('surah-navigation utilities', () => {
   it('determines Juz by page', () => {
     expect(getJuzByPage(1)).toBe(1);
-    expect(getJuzByPage(JUZ_START_PAGES[1])).toBe(2);
+    expect(getJuzByPage(JUZ_START_PAGES[1]!)).toBe(2);
     expect(getJuzByPage(100)).toBeGreaterThan(2);
   });
 

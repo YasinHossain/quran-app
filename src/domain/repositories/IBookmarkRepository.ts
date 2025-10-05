@@ -1,5 +1,6 @@
-import { Bookmark } from '../entities/Bookmark';
-import { BookmarkPosition } from '../value-objects/BookmarkPosition';
+import { Bookmark } from '@/src/domain/entities';
+import { BookmarkPosition } from '@/src/domain/value-objects/BookmarkPosition';
+import { StoredBookmark } from '@/src/domain/value-objects/StoredBookmark';
 
 export interface IBookmarkRepository {
   // Basic CRUD operations
@@ -65,8 +66,8 @@ export interface IBookmarkRepository {
   }>;
 
   // Import/Export operations
-  exportBookmarks(userId: string): Promise<any[]>;
-  importBookmarks(userId: string, bookmarks: any[]): Promise<void>;
+  exportBookmarks(userId: string): Promise<StoredBookmark[]>;
+  importBookmarks(userId: string, bookmarks: StoredBookmark[]): Promise<void>;
 
   // Offline support
   cacheForOffline(userId: string): Promise<void>;

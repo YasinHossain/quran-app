@@ -8,15 +8,20 @@ interface Options {
   setVolume: Dispatch<SetStateAction<number>>;
 }
 
-export default function usePlayerKeyboard({
+/**
+ * Registers keyboard shortcuts for the audio player.
+ *
+ * @param options current playback data and control handlers.
+ */
+export function usePlayerKeyboard({
   current,
   duration,
   setSeek,
   togglePlay,
   setVolume,
-}: Options) {
+}: Options): void {
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
+    const onKey = (e: KeyboardEvent): void => {
       if ((e.target as HTMLElement)?.closest('input, textarea, [role=slider]')) return;
       if (e.code === 'Space') {
         e.preventDefault();
@@ -32,6 +37,6 @@ export default function usePlayerKeyboard({
   }, [current, duration, setSeek, togglePlay, setVolume]);
 }
 
-function round(n: number) {
+function round(n: number): number {
   return Math.round(n * 100) / 100;
 }

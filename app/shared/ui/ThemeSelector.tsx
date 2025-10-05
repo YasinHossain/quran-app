@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { useTheme } from '@/app/providers/ThemeContext';
 import { SunIcon, MoonIcon } from '@/app/shared/icons';
 
@@ -8,10 +7,10 @@ interface ThemeSelectorProps {
   className?: string;
 }
 
-export const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className }) => {
+export const ThemeSelector = ({ className }: ThemeSelectorProps): React.JSX.Element => {
   const { theme, setTheme } = useTheme();
 
-  const toggleTheme = () => {
+  const toggleTheme = (): void => {
     const html = document.documentElement;
     if (html.classList.contains('dark')) {
       html.classList.remove('dark');
@@ -29,9 +28,9 @@ export const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className }) => {
       aria-label="Toggle Theme"
     >
       {theme === 'dark' ? (
-        <SunIcon className="w-5 h-5 text-status-warning" />
+        <SunIcon className="w-5 h-5 text-accent" />
       ) : (
-        <MoonIcon className="w-5 h-5 text-content-secondary" />
+        <MoonIcon className="w-5 h-5 text-accent" />
       )}
     </button>
   );

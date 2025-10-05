@@ -1,8 +1,10 @@
 import Link from 'next/link';
+
 import { getSurahList } from '@/lib/api';
+
 import type { Surah } from '@/types';
 
-export default async function SurahIndexPage() {
+export default async function SurahIndexPage(): Promise<React.JSX.Element> {
   const surahs: Surah[] = await getSurahList();
   return (
     <div className="p-6">

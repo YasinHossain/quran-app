@@ -1,7 +1,9 @@
 'use client';
 
 import React from 'react';
-import { SearchInput } from '../components/SearchInput';
+
+import { SearchInput } from '@/app/shared/components/SearchInput';
+
 import type { SearchProps } from '@/types/components';
 
 interface SearchFieldProps extends SearchProps {
@@ -16,7 +18,7 @@ interface SearchFieldProps extends SearchProps {
  * Generic search field component with optional label
  * Replaces simple search wrapper components throughout the app
  */
-export const SearchField: React.FC<SearchFieldProps> = ({
+export const SearchField = ({
   searchTerm,
   setSearchTerm,
   placeholder = 'Search...',
@@ -25,7 +27,7 @@ export const SearchField: React.FC<SearchFieldProps> = ({
   className = '',
   label,
   onKeyDown,
-}) => (
+}: SearchFieldProps): React.JSX.Element => (
   <div className={className}>
     {label && (
       <h2 className="text-sm font-semibold px-2 mb-3 text-muted uppercase tracking-wide">
@@ -38,13 +40,15 @@ export const SearchField: React.FC<SearchFieldProps> = ({
       placeholder={placeholder}
       variant={variant}
       size={size}
-      onKeyDown={onKeyDown}
+      {...(onKeyDown ? { onKeyDown } : {})}
     />
   </div>
 );
 
 // Predefined search fields for common use cases
-export const FontSearchField = (props: Omit<SearchFieldProps, 'placeholder' | 'label'>) => (
+export const FontSearchField = (
+  props: Omit<SearchFieldProps, 'placeholder' | 'label'>
+): React.JSX.Element => (
   <SearchField
     {...props}
     label="SEARCH FONTS"
@@ -55,14 +59,20 @@ export const FontSearchField = (props: Omit<SearchFieldProps, 'placeholder' | 'l
   />
 );
 
-export const TranslationSearchField = (props: Omit<SearchFieldProps, 'placeholder'>) => (
+export const TranslationSearchField = (
+  props: Omit<SearchFieldProps, 'placeholder'>
+): React.JSX.Element => (
   <SearchField {...props} placeholder="Search by name or style..." variant="panel" />
 );
 
-export const TafsirSearchField = (props: Omit<SearchFieldProps, 'placeholder'>) => (
+export const TafsirSearchField = (
+  props: Omit<SearchFieldProps, 'placeholder'>
+): React.JSX.Element => (
   <SearchField {...props} placeholder="Search tafsirs (exact match)..." variant="panel" />
 );
 
-export const BookmarkSearchField = (props: Omit<SearchFieldProps, 'placeholder'>) => (
+export const BookmarkSearchField = (
+  props: Omit<SearchFieldProps, 'placeholder'>
+): React.JSX.Element => (
   <SearchField {...props} placeholder="Search Bookmarks" size="sm" className="w-48" />
 );

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
+
 import { ResourceItem } from './ResourceItem';
 
 interface Resource {
@@ -24,11 +25,12 @@ export const ResourceList = <T extends Resource>({
   selectedIds,
   onToggle,
   height,
-}: ResourceListProps<T>) => {
+}: ResourceListProps<T>): React.JSX.Element => {
   const itemCount = resources.length;
 
-  const Row = ({ index, style }: ListChildComponentProps) => {
+  const Row = ({ index, style }: ListChildComponentProps): React.JSX.Element => {
     const item = resources[index];
+    if (!item) return <div style={style} />;
     return (
       <div style={style}>
         <div className="px-1 pb-2">
@@ -54,5 +56,3 @@ export const ResourceList = <T extends Resource>({
     </List>
   );
 };
-
-export default ResourceList;

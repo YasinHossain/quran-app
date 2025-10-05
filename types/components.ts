@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { Settings } from './settings';
+
 /**
  * Common component prop interfaces to reduce duplication across the codebase
  */
@@ -50,8 +52,8 @@ export interface ResourceSelectionProps<T> {
 
 // Settings panel props
 export interface SettingsPanelProps extends PanelComponentProps {
-  settings: Record<string, any>;
-  onSettingChange: (key: string, value: any) => void;
+  settings: Settings;
+  onSettingChange: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
 }
 
 // Modal props

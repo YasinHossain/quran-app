@@ -1,4 +1,5 @@
 import Link from 'next/link';
+
 import { cn } from '@/lib/utils/cn';
 
 interface SidebarCardProps {
@@ -20,13 +21,13 @@ export const SidebarCard = ({
   scroll = false,
   'data-active': dataActive,
   ...props
-}: SidebarCardProps) => {
+}: SidebarCardProps): React.JSX.Element => {
   return (
     <Link
       href={href}
       scroll={scroll}
       data-active={dataActive}
-      onClick={onClick}
+      {...(onClick ? { onClick } : {})}
       className={cn(
         'group flex items-center p-4 gap-4 rounded-xl transition transform hover:scale-[1.02] h-[80px]',
         isActive

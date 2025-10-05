@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { logger } from '@/src/infrastructure/monitoring/Logger';
+
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 
@@ -13,39 +15,39 @@ const envSchema = z.object({
   ENABLE_OFFLINE_MODE: z
     .string()
     .default('true')
-    .transform((v) => v === 'true'),
+    .transform((v): boolean => v === 'true'),
 
   // Logging Configuration
   LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
   ENABLE_CONSOLE_LOGGING: z
     .string()
     .default('true')
-    .transform((v) => v === 'true'),
+    .transform((v): boolean => v === 'true'),
 
   // Performance Configuration
   ENABLE_ANALYTICS: z
     .string()
     .default('false')
-    .transform((v) => v === 'true'),
+    .transform((v): boolean => v === 'true'),
   API_TIMEOUT: z.string().default('10000').transform(Number),
 
   // Feature Flags
   ENABLE_TAFSIR: z
     .string()
     .default('true')
-    .transform((v) => v === 'true'),
+    .transform((v): boolean => v === 'true'),
   ENABLE_BOOKMARKS: z
     .string()
     .default('true')
-    .transform((v) => v === 'true'),
+    .transform((v): boolean => v === 'true'),
   ENABLE_SEARCH: z
     .string()
     .default('true')
-    .transform((v) => v === 'true'),
+    .transform((v): boolean => v === 'true'),
   ENABLE_AUDIO: z
     .string()
     .default('true')
-    .transform((v) => v === 'true'),
+    .transform((v): boolean => v === 'true'),
 });
 
 export type Config = z.infer<typeof envSchema>;
@@ -55,7 +57,7 @@ let config: Config;
 try {
   config = envSchema.parse(process.env);
 } catch (error) {
-  console.error('❌ Invalid environment configuration:', error);
+  logger.error('❌ Invalid environment configuration:', undefined, error as Error);
 
   // Provide fallback configuration in case of validation errors
   config = {
@@ -79,9 +81,9 @@ try {
 export { config };
 
 // Helper functions for environment checks
-export const isDevelopment = () => config.NODE_ENV === 'development';
-export const isProduction = () => config.NODE_ENV === 'production';
-export const isTest = () => config.NODE_ENV === 'test';
+export const isDevelopment = (): boolean => config.NODE_ENV === 'development';
+export const isProduction = (): boolean => config.NODE_ENV === 'production';
+export const isTest = (): boolean => config.NODE_ENV === 'test';
 
 // Feature flag helpers
 export const isFeatureEnabled = (

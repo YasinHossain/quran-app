@@ -1,23 +1,19 @@
 'use client';
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import {
-  PlayIcon,
-  PauseIcon,
-  BookmarkIcon,
-  BookmarkOutlineIcon,
-  ShareIcon,
-  BookReaderIcon,
-} from '../icons';
-import Spinner from '../Spinner';
-import BookmarkModal from '../components/BookmarkModal';
-import { touchClasses } from '@/lib/responsive';
-import { cn } from '@/lib/utils';
-import { VerseActionsProps } from './types';
-import { defaultShare } from './utils';
+import { useState } from 'react';
 
-const DesktopVerseActions: React.FC<VerseActionsProps> = ({
+import { BookmarkModal } from '@/app/shared/components/BookmarkModal';
+import { VerseActionsProps } from '@/app/shared/verse-actions/types';
+import { defaultShare } from '@/app/shared/verse-actions/utils';
+import { cn } from '@/lib/utils/cn';
+
+import { BookmarkButton } from './components/BookmarkButton';
+import { NavigateToVerseLink } from './components/NavigateToVerseLink';
+import { PlayPauseButton } from './components/PlayPauseButton';
+import { ShareButton } from './components/ShareButton';
+import { TafsirLink } from './components/TafsirLink';
+
+export const DesktopVerseActions = ({
   verseKey,
   verseId,
   isPlaying,
@@ -29,11 +25,11 @@ const DesktopVerseActions: React.FC<VerseActionsProps> = ({
   onNavigateToVerse,
   showRemove = false,
   className = '',
-}) => {
+}: VerseActionsProps): React.JSX.Element => {
   const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
   const handleShare = onShare || defaultShare;
 
-  const handleBookmarkClick = () => {
+  const handleBookmarkClick = (): void => {
     if (showRemove && onBookmark) {
       onBookmark();
     } else {
@@ -45,88 +41,21 @@ const DesktopVerseActions: React.FC<VerseActionsProps> = ({
     <div className={cn('text-center space-y-2 flex-shrink-0', className)}>
       <p className="font-semibold text-accent text-sm">{verseKey}</p>
       <div className="flex flex-col items-center space-y-1 text-muted">
-        <button
-          aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
-          onClick={onPlayPause}
-          title="Play/Pause"
-          className={cn(
-            'p-1.5 rounded-full hover:bg-accent/10 transition',
-            isPlaying ? 'text-accent' : 'hover:text-accent',
-            touchClasses.focus
-          )}
-        >
-          {isLoadingAudio ? (
-            <Spinner className="h-4 w-4 text-accent" />
-          ) : isPlaying ? (
-            <PauseIcon size={18} />
-          ) : (
-            <PlayIcon size={18} />
-          )}
-        </button>
-
-        <Link
-          href={`/tafsir/${verseKey.replace(':', '/')}`}
-          aria-label="View tafsir"
-          title="Tafsir"
-          className={cn(
-            'p-1.5 rounded-full hover:bg-accent/10 hover:text-accent transition',
-            touchClasses.focus
-          )}
-        >
-          <BookReaderIcon size={18} />
-        </Link>
-
-        {onNavigateToVerse && (
-          <Link
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              onNavigateToVerse();
-            }}
-            aria-label="Go to verse"
-            title="Go to verse"
-            className={cn(
-              'p-1.5 rounded-full hover:bg-accent/10 hover:text-accent transition',
-              touchClasses.focus
-            )}
-          >
-            <BookReaderIcon size={18} />
-          </Link>
-        )}
-
-        <button
-          aria-label={
-            showRemove ? 'Remove bookmark' : isBookmarked ? 'Remove bookmark' : 'Add bookmark'
-          }
-          title={showRemove ? 'Remove bookmark' : 'Bookmark'}
+        <PlayPauseButton
+          isPlaying={isPlaying}
+          isLoadingAudio={isLoadingAudio}
+          onPlayPause={onPlayPause}
+        />
+        <TafsirLink verseKey={verseKey} />
+        <NavigateToVerseLink {...(onNavigateToVerse ? { onNavigateToVerse } : {})} />
+        <BookmarkButton
+          isBookmarked={Boolean(isBookmarked)}
+          showRemove={showRemove}
           onClick={handleBookmarkClick}
-          className={cn(
-            'p-1.5 rounded-full hover:bg-accent/10 transition',
-            isBookmarked || showRemove ? 'text-accent' : 'hover:text-accent',
-            touchClasses.focus
-          )}
-        >
-          {isBookmarked || showRemove ? (
-            <BookmarkIcon size={18} />
-          ) : (
-            <BookmarkOutlineIcon size={18} />
-          )}
-        </button>
-
-        <button
-          aria-label="Share"
-          title="Share"
-          onClick={handleShare}
-          className={cn(
-            'p-1.5 rounded-full hover:bg-accent/10 hover:text-accent transition',
-            touchClasses.focus
-          )}
-        >
-          <ShareIcon size={18} />
-        </button>
+        />
+        <ShareButton onShare={handleShare} />
       </div>
 
-      {/* BookmarkModal */}
       <BookmarkModal
         isOpen={isBookmarkModalOpen}
         onClose={() => setIsBookmarkModalOpen(false)}
@@ -136,5 +65,3 @@ const DesktopVerseActions: React.FC<VerseActionsProps> = ({
     </div>
   );
 };
-
-export default DesktopVerseActions;

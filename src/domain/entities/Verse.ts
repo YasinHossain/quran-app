@@ -1,37 +1,34 @@
-import { Translation } from '../value-objects/Translation';
+import { Translation, TranslationPlainObject } from '@/src/domain/value-objects/Translation';
+
+import { getEstimatedReadingTime, getWordCount, isSajdahVerse } from './verseUtils';
 
 /**
  * Verse domain entity representing a single Quranic verse
  */
+export interface VerseOptions {
+  id: string;
+  surahId: number;
+  ayahNumber: number;
+  arabicText: string;
+  uthmaniText: string;
+  translation?: Translation;
+}
+
 export class Verse {
-  private static readonly SAJDAH_VERSES = [
-    { surah: 7, ayah: 206 },
-    { surah: 13, ayah: 15 },
-    { surah: 16, ayah: 50 },
-    { surah: 17, ayah: 109 },
-    { surah: 19, ayah: 58 },
-    { surah: 22, ayah: 18 },
-    { surah: 22, ayah: 77 },
-    { surah: 25, ayah: 60 },
-    { surah: 27, ayah: 26 },
-    { surah: 32, ayah: 15 },
-    { surah: 38, ayah: 24 },
-    { surah: 41, ayah: 38 },
-    { surah: 53, ayah: 62 },
-    { surah: 84, ayah: 21 },
-    { surah: 96, ayah: 19 },
-  ];
+  public readonly id: string;
+  public readonly surahId: number;
+  public readonly ayahNumber: number;
+  public readonly arabicText: string;
+  public readonly uthmaniText: string;
+  public readonly translation: Translation | undefined;
 
-  private static readonly WORDS_PER_MINUTE = 150; // Average Arabic reading speed
-
-  constructor(
-    public readonly id: string,
-    public readonly surahId: number,
-    public readonly ayahNumber: number,
-    public readonly arabicText: string,
-    public readonly uthmaniText: string,
-    public readonly translation?: Translation
-  ) {
+  constructor({ id, surahId, ayahNumber, arabicText, uthmaniText, translation }: VerseOptions) {
+    this.id = id;
+    this.surahId = surahId;
+    this.ayahNumber = ayahNumber;
+    this.arabicText = arabicText;
+    this.uthmaniText = uthmaniText;
+    this.translation = translation;
     this.validateInputs();
   }
 
@@ -72,48 +69,6 @@ export class Verse {
   }
 
   /**
-   * Checks if this verse requires prostration (sajdah)
-   */
-  isSajdahVerse(): boolean {
-    return Verse.SAJDAH_VERSES.some(
-      (sajdah) => sajdah.surah === this.surahId && sajdah.ayah === this.ayahNumber
-    );
-  }
-
-  /**
-   * Splits the Arabic text into segments for memorization
-   */
-  getMemorizationSegments(): string[] {
-    return this.arabicText
-      .split(/\s+/)
-      .map((segment) => segment.trim())
-      .filter((segment) => segment.length > 0);
-  }
-
-  /**
-   * Estimates reading time in seconds
-   */
-  getEstimatedReadingTime(): number {
-    const wordCount = this.getWordCount();
-    const timeInSeconds = Math.ceil((wordCount / Verse.WORDS_PER_MINUTE) * 60);
-    return Math.max(timeInSeconds, 1); // Minimum 1 second
-  }
-
-  /**
-   * Checks if the verse contains Bismillah
-   */
-  containsBismillah(): boolean {
-    return this.arabicText.includes('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ');
-  }
-
-  /**
-   * Returns the word count of the Arabic text
-   */
-  getWordCount(): number {
-    return this.arabicText.split(/\s+/).filter((word) => word.trim().length > 0).length;
-  }
-
-  /**
    * Checks equality based on ID
    */
   equals(other: Verse): boolean {
@@ -124,20 +79,20 @@ export class Verse {
    * Creates a new verse instance with translation
    */
   withTranslation(translation: Translation): Verse {
-    return new Verse(
-      this.id,
-      this.surahId,
-      this.ayahNumber,
-      this.arabicText,
-      this.uthmaniText,
-      translation
-    );
+    return new Verse({
+      id: this.id,
+      surahId: this.surahId,
+      ayahNumber: this.ayahNumber,
+      arabicText: this.arabicText,
+      uthmaniText: this.uthmaniText,
+      translation,
+    });
   }
 
   /**
    * Converts to plain object for serialization
    */
-  toPlainObject() {
+  toPlainObject(): VersePlainObject {
     return {
       id: this.id,
       surahId: this.surahId,
@@ -145,11 +100,25 @@ export class Verse {
       verseKey: this.verseKey,
       arabicText: this.arabicText,
       uthmaniText: this.uthmaniText,
-      translation: this.translation?.toPlainObject(),
-      wordCount: this.getWordCount(),
-      estimatedReadingTime: this.getEstimatedReadingTime(),
+      ...(this.translation ? { translation: this.translation.toPlainObject() } : {}),
+      wordCount: getWordCount(this.arabicText),
+      estimatedReadingTime: getEstimatedReadingTime(this.arabicText),
       isFirstVerse: this.isFirstVerse(),
-      isSajdahVerse: this.isSajdahVerse(),
+      isSajdahVerse: isSajdahVerse(this.surahId, this.ayahNumber),
     };
   }
+}
+
+export interface VersePlainObject {
+  id: string;
+  surahId: number;
+  ayahNumber: number;
+  verseKey: string;
+  arabicText: string;
+  uthmaniText: string;
+  translation?: TranslationPlainObject;
+  wordCount: number;
+  estimatedReadingTime: number;
+  isFirstVerse: boolean;
+  isSajdahVerse: boolean;
 }

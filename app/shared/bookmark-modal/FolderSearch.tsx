@@ -1,8 +1,7 @@
 'use client';
 
-import React from 'react';
 import { SearchIcon } from '@/app/shared/icons';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/cn';
 
 interface FolderSearchProps {
   searchQuery: string;
@@ -10,11 +9,11 @@ interface FolderSearchProps {
   placeholder?: string;
 }
 
-const FolderSearch: React.FC<FolderSearchProps> = ({
+export const FolderSearch = ({
   searchQuery,
   onSearchChange,
   placeholder = 'Search folders...',
-}) => {
+}: FolderSearchProps): React.JSX.Element => {
   return (
     <div className="relative">
       <SearchIcon
@@ -37,5 +36,3 @@ const FolderSearch: React.FC<FolderSearchProps> = ({
     </div>
   );
 };
-
-export default FolderSearch;

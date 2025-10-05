@@ -1,6 +1,14 @@
-import JuzClient from './JuzClient';
+import { JuzClient } from './JuzClient';
 
-export default async function Page({ params }: { params: Promise<{ juzId: string }> }) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ juzId: string }>;
+}): Promise<React.JSX.Element> {
   const { juzId } = await params;
-  return <JuzClient juzId={juzId} />;
+  return (
+    <div className="min-h-screen bg-background">
+      <JuzClient juzId={juzId} />
+    </div>
+  );
 }

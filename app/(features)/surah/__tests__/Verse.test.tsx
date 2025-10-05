@@ -1,12 +1,10 @@
 import { screen, waitFor } from '@testing-library/react';
-import { Verse as VerseComponent } from '@/app/(features)/surah/[surahId]/components/Verse';
-import TranslationProvider from '@/app/providers/TranslationProvider';
-import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
-import { Verse } from '@/types';
 
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push: jest.fn() }),
-}));
+import { VerseCard as VerseComponent } from '@/app/(features)/surah/components';
+import { TranslationProvider } from '@/app/providers/TranslationProvider';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
+import { renderWithProvidersAsync } from '@/app/testUtils/renderWithProviders';
+import { Verse } from '@/types';
 
 const verse: Verse = {
   id: 1,
@@ -18,8 +16,8 @@ const verse: Verse = {
   ],
 };
 
-const renderVerse = () =>
-  renderWithProviders(
+const renderVerse = (): ReturnType<typeof renderWithProvidersAsync> =>
+  renderWithProvidersAsync(
     <TranslationProvider>
       <VerseComponent verse={verse} />
     </TranslationProvider>
@@ -27,19 +25,7 @@ const renderVerse = () =>
 
 describe('Verse word-by-word font size', () => {
   beforeAll(() => {
-    Object.defineProperty(window, 'matchMedia', {
-      writable: true,
-      value: jest.fn().mockImplementation((query) => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: jest.fn(),
-        removeListener: jest.fn(),
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
-      })),
-    });
+    setMatchMedia(false);
   });
   beforeEach(() => {
     localStorage.clear();
@@ -50,7 +36,7 @@ describe('Verse word-by-word font size', () => {
   });
 
   it('scales word translation with arabic font size', async () => {
-    renderVerse();
+    await renderVerse();
     const word = await screen.findByText('In');
     await waitFor(() => {
       expect(word).toHaveStyle('font-size: 20px');

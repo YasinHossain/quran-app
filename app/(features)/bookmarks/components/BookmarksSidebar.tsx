@@ -1,22 +1,25 @@
 'use client';
 
 import React from 'react';
+
 import { BaseSidebar } from '@/app/shared/components/BaseSidebar';
+
 import { BookmarksContent } from './BookmarksContent';
-import type { Folder } from '@/types/bookmark';
+
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
+import type { Folder } from '@/types/bookmark';
 
 interface BookmarksSidebarProps {
   activeSection?: SectionId;
-  onSectionChange?: (section: SectionId) => void;
+  onSectionChange?: ((section: SectionId) => void) | undefined;
   children?: React.ReactNode;
   folders?: Folder[];
-  onVerseClick?: (verseKey: string) => void;
+  onVerseClick?: ((verseKey: string) => void) | undefined;
   isOpen?: boolean;
-  onClose?: () => void;
+  onClose?: (() => void) | undefined;
 }
 
-export const BookmarksSidebar: React.FC<BookmarksSidebarProps> = ({
+export const BookmarksSidebar = ({
   activeSection = 'bookmarks',
   onSectionChange,
   children,
@@ -24,15 +27,15 @@ export const BookmarksSidebar: React.FC<BookmarksSidebarProps> = ({
   onVerseClick,
   isOpen,
   onClose,
-}) => {
+}: BookmarksSidebarProps): React.JSX.Element => {
   // If no isOpen/onClose provided, render content directly (for desktop sidebar)
   if (isOpen === undefined || onClose === undefined) {
     return (
       <BookmarksContent
         activeSection={activeSection}
-        onSectionChange={onSectionChange}
+        {...(onSectionChange && { onSectionChange })}
         folders={folders}
-        onVerseClick={onVerseClick}
+        {...(onVerseClick && { onVerseClick })}
       >
         {children}
       </BookmarksContent>
@@ -49,9 +52,9 @@ export const BookmarksSidebar: React.FC<BookmarksSidebarProps> = ({
     >
       <BookmarksContent
         activeSection={activeSection}
-        onSectionChange={onSectionChange}
+        {...(onSectionChange && { onSectionChange })}
         folders={folders}
-        onVerseClick={onVerseClick}
+        {...(onVerseClick && { onVerseClick })}
       >
         {children}
       </BookmarksContent>

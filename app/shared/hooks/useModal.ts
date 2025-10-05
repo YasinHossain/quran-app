@@ -26,22 +26,22 @@ export function useModal(options: UseModalOptions = {}): UseModalReturn {
   const [isOpen, setIsOpenState] = useState(defaultOpen);
 
   const setIsOpen = useCallback(
-    (newIsOpen: boolean) => {
+    (newIsOpen: boolean): void => {
       setIsOpenState(newIsOpen);
       onOpenChange?.(newIsOpen);
     },
     [onOpenChange]
   );
 
-  const open = useCallback(() => {
+  const open = useCallback((): void => {
     setIsOpen(true);
   }, [setIsOpen]);
 
-  const close = useCallback(() => {
+  const close = useCallback((): void => {
     setIsOpen(false);
   }, [setIsOpen]);
 
-  const toggle = useCallback(() => {
+  const toggle = useCallback((): void => {
     setIsOpen(!isOpen);
   }, [isOpen, setIsOpen]);
 
@@ -49,7 +49,7 @@ export function useModal(options: UseModalOptions = {}): UseModalReturn {
   useEffect(() => {
     if (!closeOnEscape || !isOpen) return;
 
-    const handleEscape = (event: KeyboardEvent) => {
+    const handleEscape = (event: KeyboardEvent): void => {
       if (event.key === 'Escape') {
         close();
       }

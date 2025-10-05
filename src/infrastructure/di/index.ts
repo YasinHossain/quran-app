@@ -17,18 +17,8 @@
  * ```
  */
 
-// Container and initialization
-export {
-  container,
-  getContainer,
-  initializeContainer,
-  resetContainer,
-  configureRepositories,
-  configureUseCases,
-  configureServices,
-  configureExternalServices,
-  configureMonitoring,
-} from './container';
+// Container
+export { container } from './Container';
 
 // Type symbols and types
 export { TYPES, type DITypes, type TypeKeys, type TypeSymbol } from './types';
@@ -38,22 +28,15 @@ export {
   Injectable,
   Inject,
   InjectNamed,
-  LazyInject,
   OptionalInject,
   MultiInject,
   PostConstruct,
   PreDestroy,
   named,
   optional,
-  lazyInject,
   multiInject,
   postConstruct,
   preDestroy,
-  createFactory,
-  type Factory,
-  type AsyncFactory,
-  type FactoryWithArgs,
 } from './decorators';
 
-// Re-export core inversify types that might be useful
-export type { Container, interfaces } from 'inversify';
+// Note: We avoid re-exporting inversify internals to prevent version coupling

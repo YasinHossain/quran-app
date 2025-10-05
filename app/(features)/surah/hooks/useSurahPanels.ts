@@ -1,6 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
+
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import type { Settings } from '@/types';
 
@@ -9,7 +11,7 @@ interface Option {
   name: string;
 }
 
-export default function useSurahPanels({
+export function useSurahPanels({
   translationOptions,
   wordLanguageOptions,
   settings,
@@ -17,35 +19,73 @@ export default function useSurahPanels({
   translationOptions: Option[];
   wordLanguageOptions: Option[];
   settings: Settings;
-}) {
+}): {
+  isTranslationPanelOpen: boolean;
+  openTranslationPanel: () => void;
+  closeTranslationPanel: () => void;
+  isWordLanguagePanelOpen: boolean;
+  openWordLanguagePanel: () => void;
+  closeWordLanguagePanel: () => void;
+  selectedTranslationName: string;
+  selectedWordLanguageName: string;
+} {
   const { t } = useTranslation();
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
 
-  const selectedTranslationName = useMemo(() => {
-    // Use the first translation from translationIds array, fallback to translationId
-    const primaryId = settings.translationIds?.[0] || settings.translationId;
-    return translationOptions.find((o) => o.id === primaryId)?.name || t('select_translation');
-  }, [settings.translationIds, settings.translationId, translationOptions, t]);
+  const openTranslationPanel = useCallback(
+    () => setIsTranslationPanelOpen(true),
+    [setIsTranslationPanelOpen]
+  );
+
+  const closeTranslationPanel = useCallback(
+    () => setIsTranslationPanelOpen(false),
+    [setIsTranslationPanelOpen]
+  );
+
+  const openWordLanguagePanel = useCallback(() => setIsWordPanelOpen(true), [setIsWordPanelOpen]);
+
+  const closeWordLanguagePanel = useCallback(() => setIsWordPanelOpen(false), [setIsWordPanelOpen]);
+
+  const selectedTranslationName = useMemo(
+    () => getSelectedTranslationName(settings, translationOptions, t),
+    [settings, translationOptions, t]
+  );
 
   const selectedWordLanguageName = useMemo(
-    () =>
-      wordLanguageOptions.find(
-        (o) =>
-          (LANGUAGE_CODES as Record<string, LanguageCode>)[o.name.toLowerCase()] ===
-          settings.wordLang
-      )?.name || t('select_word_translation'),
-    [settings.wordLang, wordLanguageOptions, t]
+    () => getSelectedWordLanguageName(settings, wordLanguageOptions, t),
+    [settings, wordLanguageOptions, t]
   );
 
   return {
     isTranslationPanelOpen,
-    openTranslationPanel: () => setIsTranslationPanelOpen(true),
-    closeTranslationPanel: () => setIsTranslationPanelOpen(false),
+    openTranslationPanel,
+    closeTranslationPanel,
     isWordLanguagePanelOpen: isWordPanelOpen,
-    openWordLanguagePanel: () => setIsWordPanelOpen(true),
-    closeWordLanguagePanel: () => setIsWordPanelOpen(false),
+    openWordLanguagePanel,
+    closeWordLanguagePanel,
     selectedTranslationName,
     selectedWordLanguageName,
   } as const;
+}
+
+function getSelectedTranslationName(
+  settings: Settings,
+  translationOptions: Option[],
+  t: (key: string) => string
+): string {
+  const primaryId = settings.translationIds?.[0] || settings.translationId;
+  return translationOptions.find((o) => o.id === primaryId)?.name || t('select_translation');
+}
+
+function getSelectedWordLanguageName(
+  settings: Settings,
+  wordLanguageOptions: Option[],
+  t: (key: string) => string
+): string {
+  const match = wordLanguageOptions.find(
+    (o) =>
+      (LANGUAGE_CODES as Record<string, LanguageCode>)[o.name.toLowerCase()] === settings.wordLang
+  );
+  return match?.name || t('select_word_translation');
 }

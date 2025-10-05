@@ -1,23 +1,65 @@
 'use client';
 
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useMemo } from 'react';
 
-interface SwipeGesturesOptions {
-  onSwipeLeft?: () => void;
-  onSwipeRight?: () => void;
-  onSwipeUp?: () => void;
-  onSwipeDown?: () => void;
-  threshold?: number; // Minimum distance for swipe
-  velocity?: number; // Minimum velocity for swipe
+import { computeMetrics, shouldPreventDefault } from './swipeGestures/gestureCalculations';
+import { handleSwipeDecision } from './swipeGestures/swipeDecision';
+
+import type { TouchPoint } from './swipeGestures/gestureCalculations';
+import type { SwipeGesturesOptions } from './swipeGestures/types';
+import type React from 'react';
+
+type SwipeHandlers = Pick<
+  SwipeGesturesOptions,
+  'onSwipeLeft' | 'onSwipeRight' | 'onSwipeUp' | 'onSwipeDown'
+>;
+
+const createTouchPoint = (touch: React.Touch): TouchPoint => ({
+  x: touch.clientX,
+  y: touch.clientY,
+  time: Date.now(),
+});
+
+const resolveHandlers = ({
+  onSwipeLeft,
+  onSwipeRight,
+  onSwipeUp,
+  onSwipeDown,
+}: SwipeGesturesOptions): SwipeHandlers => {
+  const handlers: SwipeHandlers = {};
+  if (onSwipeLeft) handlers.onSwipeLeft = onSwipeLeft;
+  if (onSwipeRight) handlers.onSwipeRight = onSwipeRight;
+  if (onSwipeUp) handlers.onSwipeUp = onSwipeUp;
+  if (onSwipeDown) handlers.onSwipeDown = onSwipeDown;
+  return handlers;
+};
+
+const useTouchEndHandler = (
+  touchStart: React.MutableRefObject<TouchPoint | null>,
+  handlers: SwipeHandlers,
+  threshold: number,
+  velocity: number
+): React.TouchEventHandler =>
+  useCallback(
+    (event: React.TouchEvent) => {
+      if (!touchStart.current) return;
+      const touch = event.changedTouches[0];
+      if (!touch) return;
+
+      const metrics = computeMetrics(createTouchPoint(touch), touchStart.current);
+      handleSwipeDecision(metrics, handlers, threshold, velocity);
+      touchStart.current = null;
+    },
+    [handlers, threshold, touchStart, velocity]
+  );
+
+interface UseSwipeGesturesReturn {
+  onTouchStart: (event: React.TouchEvent) => void;
+  onTouchEnd: (event: React.TouchEvent) => void;
+  onTouchMove: (event: React.TouchEvent) => void;
 }
 
-interface TouchPoint {
-  x: number;
-  y: number;
-  time: number;
-}
-
-export const useSwipeGestures = (options: SwipeGesturesOptions) => {
+export function useSwipeGestures(options: SwipeGesturesOptions): UseSwipeGesturesReturn {
   const {
     onSwipeLeft,
     onSwipeRight,
@@ -29,74 +71,33 @@ export const useSwipeGestures = (options: SwipeGesturesOptions) => {
 
   const touchStart = useRef<TouchPoint | null>(null);
 
-  const handleTouchStart = useCallback((event: React.TouchEvent) => {
+  const handleTouchStart = useCallback((event: React.TouchEvent): void => {
     const touch = event.touches[0];
-    touchStart.current = {
-      x: touch.clientX,
-      y: touch.clientY,
-      time: Date.now(),
-    };
+    if (!touch) return;
+    touchStart.current = createTouchPoint(touch);
   }, []);
 
-  const handleTouchEnd = useCallback(
-    (event: React.TouchEvent) => {
-      if (!touchStart.current) return;
-
-      const touch = event.changedTouches[0];
-      const touchEnd = {
-        x: touch.clientX,
-        y: touch.clientY,
-        time: Date.now(),
-      };
-
-      const deltaX = touchEnd.x - touchStart.current.x;
-      const deltaY = touchEnd.y - touchStart.current.y;
-      const deltaTime = touchEnd.time - touchStart.current.time;
-
-      // Calculate velocity (pixels per ms)
-      const velocityX = Math.abs(deltaX) / deltaTime;
-      const velocityY = Math.abs(deltaY) / deltaTime;
-
-      // Determine if it's a significant swipe
-      const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > threshold;
-      const isVerticalSwipe = Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > threshold;
-
-      if (isHorizontalSwipe && velocityX > velocity) {
-        if (deltaX > 0) {
-          onSwipeRight?.();
-        } else {
-          onSwipeLeft?.();
-        }
-      } else if (isVerticalSwipe && velocityY > velocity) {
-        if (deltaY > 0) {
-          onSwipeDown?.();
-        } else {
-          onSwipeUp?.();
-        }
-      }
-
-      touchStart.current = null;
-    },
-    [onSwipeLeft, onSwipeRight, onSwipeUp, onSwipeDown, threshold, velocity]
+  const swipeHandlers = useMemo(
+    () =>
+      resolveHandlers({
+        ...(onSwipeLeft ? { onSwipeLeft } : {}),
+        ...(onSwipeRight ? { onSwipeRight } : {}),
+        ...(onSwipeUp ? { onSwipeUp } : {}),
+        ...(onSwipeDown ? { onSwipeDown } : {}),
+      }),
+    [onSwipeLeft, onSwipeRight, onSwipeUp, onSwipeDown]
   );
 
-  const handleTouchMove = useCallback((event: React.TouchEvent) => {
-    // Prevent default behavior for vertical swipes on main content
-    // to avoid iOS Safari bounce effect
-    if (touchStart.current) {
-      const touch = event.touches[0];
-      const deltaY = Math.abs(touch.clientY - touchStart.current.y);
-      const deltaX = Math.abs(touch.clientX - touchStart.current.x);
+  const handleTouchEnd = useTouchEndHandler(touchStart, swipeHandlers, threshold, velocity);
 
-      if (deltaY > deltaX && deltaY > 10) {
-        // This is likely a vertical scroll, allow it
-        return;
-      }
+  const handleTouchMove = useCallback((event: React.TouchEvent): void => {
+    if (!touchStart.current) return;
+    const touch = event.touches[0];
+    if (!touch) return;
 
-      if (deltaX > 10) {
-        // This is likely a horizontal swipe, prevent default
-        event.preventDefault();
-      }
+    const currentTouch = createTouchPoint(touch);
+    if (shouldPreventDefault(currentTouch, touchStart.current)) {
+      event.preventDefault();
     }
   }, []);
 
@@ -105,6 +106,4 @@ export const useSwipeGestures = (options: SwipeGesturesOptions) => {
     onTouchEnd: handleTouchEnd,
     onTouchMove: handleTouchMove,
   };
-};
-
-export default useSwipeGestures;
+}

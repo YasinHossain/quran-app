@@ -1,36 +1,120 @@
-// app/components/IconSidebar.tsx
+// app/shared/Navigation.tsx - Simple unified navigation
 'use client';
-import { HomeIcon, BookmarkOutlineIcon, GridIcon } from './icons';
+import Link from 'next/link';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import Link from 'next/link'; // Import Link
 
-const IconSidebar = () => {
-  const { t } = useTranslation();
-  const navItems = [
-    { icon: HomeIcon, label: t('home'), href: '/' },
-    { icon: GridIcon, label: t('all_surahs'), href: '/surah/1' },
-    { icon: BookmarkOutlineIcon, label: t('bookmarks'), href: '/bookmarks' },
-  ];
+import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { cn } from '@/lib/utils/cn';
+
+import { HomeIcon, BookmarkOutlineIcon, GridIcon } from './icons';
+
+interface NavItem {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  href: string;
+}
+
+// Desktop navigation component
+const DesktopNavigation = memo(function DesktopNavigation({
+  navItems,
+  linkStyles,
+}: {
+  navItems: NavItem[];
+  linkStyles: string;
+}) {
+  const desktopStyle = useMemo(() => ({ height: 'calc(100vh - 4rem)' }), []);
 
   return (
-    // CHANGE: Removed the border-r class for a cleaner look and centered content vertically
-    // Added h-full to make the sidebar take full height for vertical centering
-    <aside className="w-16 bg-background text-foreground flex flex-col justify-center py-4 h-full overflow-x-hidden">
-      <nav className="flex flex-col items-center space-y-2">
+    <nav
+      className="hidden lg:block fixed left-0 top-16 w-16 bg-background border-r border-border z-50"
+      style={desktopStyle}
+      aria-label="Primary navigation"
+    >
+      <div className="h-full flex flex-col items-center justify-center space-y-4">
         {navItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
             title={item.label}
             aria-label={item.label}
-            className="p-3 rounded-lg hover:bg-accent/10 text-foreground hover:text-accent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent border-0"
+            className={linkStyles}
           >
             <item.icon className="h-6 w-6" />
           </Link>
         ))}
-      </nav>
-    </aside>
+      </div>
+    </nav>
   );
-};
+});
 
-export default IconSidebar;
+// Mobile navigation component
+const MobileNavigation = memo(function MobileNavigation({
+  navItems,
+  linkStyles,
+  isHidden,
+}: {
+  navItems: NavItem[];
+  linkStyles: string;
+  isHidden: boolean;
+}) {
+  return (
+    <nav
+      className={cn(
+        'lg:hidden fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out',
+        isHidden ? 'translate-y-full' : 'translate-y-0'
+      )}
+      aria-label="Primary navigation"
+    >
+      <div className="backdrop-blur-lg bg-surface/80 border-t border-border/20">
+        <div className="px-4 py-2 pb-safe">
+          <div className="flex items-center justify-around">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                title={item.label}
+                aria-label={item.label}
+                className={cn(linkStyles, 'flex flex-col items-center min-w-[48px] py-2')}
+              >
+                <item.icon className="h-5 w-5 mb-1" />
+                <span className="text-xs font-medium">{item.label}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+});
+
+export const Navigation = memo(function Navigation() {
+  const { t } = useTranslation();
+  const { isHidden } = useHeaderVisibility();
+
+  const navItems = useMemo(
+    (): NavItem[] => [
+      { icon: HomeIcon, label: t('home'), href: '/' },
+      { icon: GridIcon, label: t('all_surahs'), href: '/surah/1' },
+      { icon: BookmarkOutlineIcon, label: t('bookmarks'), href: '/bookmarks' },
+    ],
+    [t]
+  );
+
+  const linkStyles = useMemo(
+    () =>
+      'p-3 rounded-lg hover:bg-accent/10 text-foreground hover:text-accent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+    []
+  );
+
+  return (
+    <>
+      <DesktopNavigation navItems={navItems} linkStyles={linkStyles} />
+      <MobileNavigation navItems={navItems} linkStyles={linkStyles} isHidden={isHidden} />
+    </>
+  );
+});
+
+// Export with legacy names for compatibility
+export const NavigationSidebar = Navigation;
+export const IconSidebar = Navigation;

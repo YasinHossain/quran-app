@@ -1,10 +1,12 @@
 'use client';
 
-import React from 'react';
 import { motion } from 'framer-motion';
+import React from 'react';
+
 import { BrainIcon, PlusIcon } from '@/app/shared/icons';
-import MemorizationCard from './MemorizationCard';
 import { MemorizationPlan, Chapter } from '@/types';
+
+import { MemorizationCard } from './MemorizationCard';
 
 interface MemorizationGridProps {
   memorization: Record<string, MemorizationPlan>;
@@ -12,11 +14,11 @@ interface MemorizationGridProps {
   onCreatePlan: () => void;
 }
 
-const MemorizationGrid: React.FC<MemorizationGridProps> = ({
+export const MemorizationGrid = ({
   memorization,
   chapters,
   onCreatePlan,
-}) => {
+}: MemorizationGridProps): React.JSX.Element => {
   if (!memorization || Object.keys(memorization).length === 0) {
     return (
       <div className="text-center py-16">
@@ -29,7 +31,7 @@ const MemorizationGrid: React.FC<MemorizationGridProps> = ({
         </p>
         <button
           onClick={onCreatePlan}
-          className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-xl font-semibold hover:bg-accent-hover transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-on-accent rounded-xl font-semibold hover:bg-accent-hover transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
         >
           <PlusIcon size={20} />
           Create Memorization Plan
@@ -46,10 +48,17 @@ const MemorizationGrid: React.FC<MemorizationGridProps> = ({
     >
       {Object.entries(memorization).map(([surahId, plan]) => {
         const chapter = chapters.find((c) => c.id === Number(surahId));
-        return <MemorizationCard key={surahId} surahId={surahId} plan={plan} chapter={chapter} />;
+        return (
+          <MemorizationCard
+            key={surahId}
+            surahId={surahId}
+            plan={plan}
+            {...(chapter && {
+              chapter: { name_simple: chapter.name_simple, name_arabic: chapter.name_arabic },
+            })}
+          />
+        );
       })}
     </motion.div>
   );
 };
-
-export default MemorizationGrid;

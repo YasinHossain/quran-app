@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { CircularProgress } from '../../components/CircularProgress';
+import React from 'react';
+
+import { CircularProgress } from '@/app/(features)/bookmarks/components/CircularProgress';
 import { Chapter } from '@/types';
 
 interface LastReadCardProps {
@@ -13,12 +14,17 @@ interface LastReadCardProps {
   index: number;
 }
 
-const LastReadCard: React.FC<LastReadCardProps> = ({ surahId, verseId, chapter, index }) => {
+export const LastReadCard = ({
+  surahId,
+  verseId,
+  chapter,
+  index,
+}: LastReadCardProps): React.JSX.Element => {
   const router = useRouter();
   const total = chapter?.verses_count || 0;
   const percent = Math.min(100, Math.max(0, Math.round((verseId / total) * 100)));
 
-  const handleNavigate = () => {
+  const handleNavigate = (): void => {
     router.push(`/surah/${surahId}#verse-${verseId}`);
   };
 
@@ -54,5 +60,3 @@ const LastReadCard: React.FC<LastReadCardProps> = ({ surahId, verseId, chapter, 
     </motion.div>
   );
 };
-
-export default LastReadCard;

@@ -1,16 +1,17 @@
 'use client';
 
-import React from 'react';
 import { motion } from 'framer-motion';
-import { BookmarkCard } from '../../components/BookmarkCard';
+import React from 'react';
+
+import { BookmarkCard } from '@/app/(features)/bookmarks/components/BookmarkCard';
 import { Bookmark } from '@/types';
 
 interface PinnedVersesListProps {
-  pinnedVerses: Bookmark[];
+  pinnedVerses: Bookmark[] | undefined;
 }
 
-const PinnedVersesList: React.FC<PinnedVersesListProps> = ({ pinnedVerses }) => {
-  if (pinnedVerses.length === 0) {
+export const PinnedVersesList = ({ pinnedVerses }: PinnedVersesListProps): React.JSX.Element => {
+  if (!pinnedVerses || pinnedVerses.length === 0) {
     return (
       <div className="text-center py-16">
         <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
@@ -34,12 +35,10 @@ const PinnedVersesList: React.FC<PinnedVersesListProps> = ({ pinnedVerses }) => 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-4xl mx-auto">
       <div>
-        {pinnedVerses.map((bookmark) => (
+        {pinnedVerses?.map((bookmark) => (
           <BookmarkCard key={bookmark.verseId} bookmark={bookmark} folderId="pinned" />
         ))}
       </div>
     </motion.div>
   );
 };
-
-export default PinnedVersesList;

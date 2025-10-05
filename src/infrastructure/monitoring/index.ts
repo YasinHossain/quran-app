@@ -6,18 +6,11 @@
  */
 
 // Logger exports
-export {
-  Logger,
-  LogLevel,
-  ConsoleTransport,
-  MemoryTransport,
-  RemoteTransport,
-  PerformanceLogger,
-  logger,
-  perfLogger,
-  type LogEntry,
-  type ILoggerTransport,
-} from './Logger';
+export { Logger, logger } from './Logger';
+export { LogLevel, type LogEntry, type ILoggerTransport } from './types';
+export { MemoryTransport } from './MemoryTransport';
+export { RemoteTransport } from './RemoteTransport';
+export { PerformanceLogger, perfLogger } from './PerformanceLogger';
 
 // Error tracker exports
 export {
@@ -28,4 +21,4 @@ export {
   errorTracker,
   type IErrorTracker,
   type ErrorContext,
-} from './ErrorTracker';
+} from './error-tracker';

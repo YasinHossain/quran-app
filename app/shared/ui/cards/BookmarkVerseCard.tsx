@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
-import { BaseCard, BaseCardProps } from '../BaseCard';
+import { BaseCard, BaseCardProps } from '@/app/shared/ui/BaseCard';
 import { cn } from '@/lib/utils/cn';
+import { parseVerseKey } from '@/lib/utils/verse';
+
 import type { Bookmark } from '@/types/bookmark';
 
 /**
@@ -16,18 +17,11 @@ interface BookmarkVerseCardProps extends Omit<BaseCardProps, 'children'> {
   bookmark: Bookmark;
 }
 
-export const BookmarkVerseCard: React.FC<BookmarkVerseCardProps> = ({
+export const BookmarkVerseCard = ({
   bookmark,
   className,
   ...props
-}) => {
-  // Parse verse key to get surah and ayah numbers
-  const parseVerseKey = (verseKey?: string) => {
-    if (!verseKey) return { surahNumber: 0, ayahNumber: 0 };
-    const [surah, ayah] = verseKey.split(':').map(Number);
-    return { surahNumber: surah || 0, ayahNumber: ayah || 0 };
-  };
-
+}: BookmarkVerseCardProps): React.JSX.Element => {
   const { surahNumber, ayahNumber } = parseVerseKey(bookmark.verseKey);
 
   return (

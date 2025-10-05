@@ -1,18 +1,19 @@
-import React from 'react';
 import { render, screen, act } from '@testing-library/react';
-import PlayerOptions from '../components/PlayerOptions';
-import Timeline from '../components/Timeline';
-import { AudioProvider } from '../context/AudioContext';
+import React from 'react';
+
+import { PlayerOptions } from '@/app/shared/player/components/PlayerOptions';
+import { Timeline } from '@/app/shared/player/components/Timeline';
+import { AudioProvider } from '@/app/shared/player/context/AudioContext';
 
 describe('Player components mobile layout', () => {
   beforeAll(() => {
     // Mock ResizeObserver used by Radix UI components
     class ResizeObserverMock {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
+      observe(): void {}
+      unobserve(): void {}
+      disconnect(): void {}
     }
-    window.ResizeObserver = ResizeObserverMock as any;
+    window.ResizeObserver = ResizeObserverMock as unknown as typeof ResizeObserver;
   });
 
   test('renders options icon and progress bar on small viewports', async () => {

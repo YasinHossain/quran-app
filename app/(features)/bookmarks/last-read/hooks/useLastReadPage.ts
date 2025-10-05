@@ -1,20 +1,29 @@
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useBookmarks } from '@/app/providers/BookmarkContext';
-import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
+import { useEffect } from 'react';
 
-export const useLastReadPage = () => {
+import { useBookmarks } from '@/app/providers/BookmarkContext';
+
+import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
+import type { Chapter } from '@/types';
+
+export interface UseLastReadPageReturn {
+  lastRead: Record<string, number>;
+  chapters: Chapter[];
+  handleSectionChange: (section: SectionId) => void;
+}
+
+export const useLastReadPage = (): UseLastReadPageReturn => {
   const router = useRouter();
   const { lastRead, chapters } = useBookmarks();
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
-    return () => {
+    return (): void => {
       document.body.style.overflow = '';
     };
   }, []);
 
-  const handleSectionChange = (section: SectionId) => {
+  const handleSectionChange = (section: SectionId): void => {
     if (section === 'bookmarks') {
       router.push('/bookmarks');
     } else if (section === 'pinned') {

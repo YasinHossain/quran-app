@@ -1,9 +1,9 @@
-import { IVerseRepository } from '../../domain/repositories/IVerseRepository';
-import { IBookmarkRepository } from '../../domain/repositories/IBookmarkRepository';
-import { ITafsirRepository } from '../../domain/repositories/ITafsirRepository';
-import { VerseRepository } from '../repositories/VerseRepository';
-import { BookmarkRepository } from '../repositories/BookmarkRepository';
-import { TafsirRepository } from '../repositories/TafsirRepository';
+import { IBookmarkRepository } from '@/src/domain/repositories/IBookmarkRepository';
+import { ITafsirRepository } from '@/src/domain/repositories/ITafsirRepository';
+import { IVerseRepository } from '@/src/domain/repositories/IVerseRepository';
+import { BookmarkRepository } from '@/src/infrastructure/repositories/BookmarkRepository';
+import { TafsirRepository } from '@/src/infrastructure/repositories/TafsirRepository';
+import { VerseRepository } from '@/src/infrastructure/repositories/VerseRepository';
 
 /**
  * Dependency Injection Container
@@ -11,9 +11,9 @@ import { TafsirRepository } from '../repositories/TafsirRepository';
  */
 class DIContainer {
   private static instance: DIContainer;
-  private verseRepository?: IVerseRepository;
-  private bookmarkRepository?: IBookmarkRepository;
-  private tafsirRepository?: ITafsirRepository;
+  private verseRepository: IVerseRepository | undefined;
+  private bookmarkRepository: IBookmarkRepository | undefined;
+  private tafsirRepository: ITafsirRepository | undefined;
 
   private constructor() {}
 

@@ -1,6 +1,8 @@
-import { getVerseById } from '@/lib/api/verses';
 import { API_BASE_URL } from '@/lib/api';
+import { getVerseById } from '@/lib/api/verses';
 import { Verse } from '@/types';
+
+import type { RawVerse } from './apiMocks';
 
 describe('getVerseById', () => {
   afterEach(() => {
@@ -8,7 +10,7 @@ describe('getVerseById', () => {
   });
 
   it('normalizes verse data', async () => {
-    const mockRaw: Verse & { words: any[] } = {
+    const mockRaw: RawVerse = {
       id: 1,
       verse_key: '1:1',
       text_uthmani: 'test',
@@ -16,7 +18,7 @@ describe('getVerseById', () => {
         { id: 1, text_uthmani: 'foo', translation: { text: 'bar' } },
         { id: 2, text: 'baz', translation: { text: 'qux' } },
       ],
-    } as any;
+    };
 
     const expected: Verse = {
       id: 1,
@@ -35,7 +37,8 @@ describe('getVerseById', () => {
 
     const result = await getVerseById(1, 20);
     expect(global.fetch).toHaveBeenCalledWith(
-      `${API_BASE_URL}/verses/1?translations=20&fields=text_uthmani`
+      `${API_BASE_URL}/verses/1?translations=20&fields=text_uthmani`,
+      expect.objectContaining({ headers: { Accept: 'application/json' } })
     );
     expect(result).toEqual(expected);
   });

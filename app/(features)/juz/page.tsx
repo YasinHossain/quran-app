@@ -1,13 +1,9 @@
 import Link from 'next/link';
-import juzData from '@/data/juz.json';
 
-interface JuzSummary {
-  number: number;
-  name: string;
-}
+import { getAllJuzs } from '@/app/shared/navigation/datasets';
 
-export default function JuzIndexPage() {
-  const juzs = juzData as JuzSummary[];
+export default function JuzIndexPage(): React.JSX.Element {
+  const juzs = getAllJuzs();
   return (
     <div className="p-6">
       <h1 className="text-xl font-bold mb-4">Juz</h1>

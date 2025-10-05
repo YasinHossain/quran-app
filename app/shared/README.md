@@ -5,7 +5,7 @@ This directory houses reusable modules that power navigation, playback, and vers
 ## Navigation
 
 - **`Header.tsx`** – fixed top bar with a search field, settings toggle, and Surah list opener. Uses icons from `app/shared/icons` and responds to theme changes.
-- **`IconSidebar.tsx`** – vertical sidebar that links to Home, the first Surah, and bookmarks using minimal icon buttons.
+- **`IconSidebar.tsx`** – the single, responsive primary navigation. It renders as a vertical left rail on desktop and as a bottom bar on mobile/tablet.
 - **`SurahListSidebar.tsx`** – tabbed sidebar for browsing Surahs, Juz, or pages. Includes a search input (currently `SidebarSearch`; replace with shared `SearchInput` when available) and remembers scroll positions via sidebar context.
 
 ## Player Modules (`player/`)

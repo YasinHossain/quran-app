@@ -346,7 +346,7 @@ import { render, screen } from '@testing-library/react';
 import { AudioProvider } from '@/app/shared/player/context/AudioContext';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { BookmarkProvider } from '@/app/providers/BookmarkContext';
-import { Verse } from '../Verse';
+import { Verse } from '@/app/(features)/Verse';
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
   <SettingsProvider>

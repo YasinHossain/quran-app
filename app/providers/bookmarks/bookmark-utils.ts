@@ -1,13 +1,23 @@
 import { Folder, Bookmark, MemorizationPlan } from '@/types';
 
-export const createNewFolder = (name: string, color?: string, icon?: string): Folder => ({
-  id: `folder-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-  name,
-  color,
-  icon,
-  createdAt: Date.now(),
-  bookmarks: [],
-});
+export const createNewFolder = (name: string, color?: string, icon?: string): Folder => {
+  const base: Folder = {
+    id: crypto.randomUUID(),
+    name,
+    createdAt: Date.now(),
+    bookmarks: [],
+  };
+
+  if (color !== undefined) {
+    base.color = color;
+  }
+
+  if (icon !== undefined) {
+    base.icon = icon;
+  }
+
+  return base;
+};
 
 export const findBookmarkInFolders = (
   folders: Folder[],
@@ -97,7 +107,7 @@ export const createMemorizationPlan = (
   targetVerses: number,
   planName?: string
 ): MemorizationPlan => ({
-  id: `memorization-${surahId}-${Date.now()}`,
+  id: crypto.randomUUID(),
   surahId,
   targetVerses,
   completedVerses: 0,

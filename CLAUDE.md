@@ -41,21 +41,10 @@ npm run type-check      # TypeScript check
 npm run test            # Jest tests
 npm run test:coverage   # Test with coverage
 
-# AI-Enhanced Development Workflow
-npm run ai:quality      # Comprehensive quality analysis with AI insights
-npm run ai:feature      # Generate complete features following clean architecture
-npm run ai:tests        # Generate test templates for files
-npm run ai:analyze      # Analyze code for refactoring opportunities
-npm run ai:refactor     # Apply architecture-compliant refactorings
-npm run ai:docs         # Update AI documentation and component registry
-npm run ai:platform     # Generate platform-specific implementations
-npm run ai:check        # Pre-commit AI analysis and validation
-
-# Quick AI Workflow Helper
-./ai-workflow.sh help   # Show all available AI workflow commands
-./ai-workflow.sh quality # Run quality analysis
-./ai-workflow.sh feature <name> # Generate complete feature
-./ai-workflow.sh analyze <file> # Analyze file for improvements
+# Available AI Tools (Direct Script Execution)
+node tools/ai/feature-generator.js <name>    # Generate complete features (future mobile app support)
+node tools/ai/platform-generator/index.ts <type>   # Generate platform-specific code (mobile/desktop)
+# Note: Other AI tools are integrated into GitHub Actions and run automatically
 ```
 
 ## AI-Enhanced Development Workflow
@@ -100,17 +89,13 @@ Grep "interface.*Props" --glob "**/*.tsx"      # Find component prop interfaces
 **AI-Assisted Feature Development:**
 
 ```bash
-# Complete Feature Generation (follows clean architecture)
-./ai-workflow.sh feature prayer-times
+# Complete Feature Generation (follows clean architecture, prepares for mobile)
+node tools/ai/feature-generator.js prayer-times
 # Creates: Domain entities, Use cases, Repositories, Components, Tests
 
-# Intelligent Analysis & Refactoring
-./ai-workflow.sh analyze src/components/LargeComponent.tsx
-# Provides: Complexity analysis, Refactoring suggestions, Performance tips
-
-# Automated Test Generation
-./ai-workflow.sh test src/domain/entities/User.ts
-# Creates: Unit tests, Integration tests, Mocks, Fixtures
+# Platform-Specific Code Generation (for future mobile apps)
+node tools/ai/platform-generator/index.ts mobile
+# Creates: React Native mobile app structure with shared business logic
 ```
 
 ## Key Features & Areas
@@ -140,7 +125,7 @@ Grep "interface.*Props" --glob "**/*.tsx"      # Find component prop interfaces
 
 **AI-Enhanced Testing:**
 
-- **Automated Test Generation**: `./ai-workflow.sh test <file>` creates appropriate test templates
+- **Automated Test Generation**: Tests are created automatically during feature generation
 - **Provider Wrapping**: Tests automatically include required context providers
 - **Coverage Monitoring**: AI quality monitor tracks and suggests coverage improvements
 - **Test Strategy Guidance**: Each layer has specific testing patterns in `tests/.ai`
@@ -242,7 +227,7 @@ Edit tool    # Precise code modifications with context preservation
 - **Task Planning**: AI uses TodoWrite for complex multi-step tasks
 - **Parallel Operations**: Multiple tool calls in single responses for performance
 - **Context Management**: AI references code locations as `file_path:line_number`
-- **Quality Checks**: AI runs comprehensive analysis with `npm run ai:quality`
+- **Quality Checks**: AI runs comprehensive analysis with `npm run check`
 - **Minimal Output**: Concise responses focused on the specific task
 
 **Terminal-Friendly Practices:**
@@ -252,108 +237,16 @@ Edit tool    # Precise code modifications with context preservation
 - **Error Handling**: Environment-agnostic fallback strategies
 - **Documentation**: Self-maintaining project context in this file
 
-## AI Architecture Compliance System
+## Core Development Patterns
 
-**CRITICAL: AI must follow established patterns exactly to maintain codebase consistency.**
-
-### 📋 Architecture Documentation
-
-- **`ARCHITECTURE_GUIDELINES.md`** - Comprehensive patterns and requirements for all development
-- **`app/(features)/*/AGENTS.md`** - Feature-specific patterns and integration points
-- **`app/shared/AGENTS.md`** - Shared component patterns and responsive design rules
-- **`app/providers/AGENTS.md`** - Context and state management patterns
-
-### 🚫 AI Development Restrictions
-
-**Before making ANY changes, AI must:**
-
-1. **Read relevant `AGENTS.md` files** for the area being modified
-2. **Follow exact patterns** shown in the architecture documentation
-3. **Use established component structures** (memo, interfaces, responsive design)
-4. **Integrate properly with contexts** (Settings, Audio, Bookmarks)
-5. **Follow mobile-first responsive patterns** with proper breakpoints
-6. **Include proper TypeScript typing** and error handling
-7. **Use memoization patterns** for performance optimization
-
-### 🔍 AI Code Review Checklist
-
-**Every AI implementation must verify:**
-
-- [ ] **Pattern Compliance**: Does it match existing component/hook patterns?
-- [ ] **Context Integration**: Properly uses SettingsContext, AudioContext, BookmarkContext?
-- [ ] **Responsive Design**: Mobile-first with `md:` breakpoints?
-- [ ] **Performance**: Memoized with `memo()`, `useCallback()`, `useMemo()`?
-- [ ] **TypeScript**: Proper interfaces, no `any` types?
-- [ ] **Testing**: Includes tests with proper provider wrappers?
-- [ ] **Accessibility**: 44px touch targets, proper ARIA labels?
-- [ ] **Import Conventions**: Uses `@/` aliases, proper import order?
-
-### ⚠️ Common AI Violations to Avoid
-
-**Do NOT:**
-
-- Create components without `memo()` wrapper
-- Skip responsive design patterns (`space-y-4 md:space-y-0 md:flex`)
-- Ignore context integration requirements
-- Create inline styles instead of Tailwind classes
-- Skip memoization of callbacks and computations
-- Use generic names like `Component` or `Hook`
-- Create hardcoded breakpoint logic instead of CSS classes
-- Skip TypeScript interfaces for props
-
-### 🎯 AI Success Pattern
-
-```typescript
-// ✅ CORRECT: Follow this exact pattern
-import { memo, useCallback, useMemo } from 'react';
-import { SomeType } from '@/types';
-import { useSettings } from '@/app/providers/SettingsContext';
-
-interface ComponentProps {
-  data: SomeType;
-  onAction: (id: string) => void;
-}
-
-export const FeatureComponent = memo(function FeatureComponent({
-  data,
-  onAction,
-}: ComponentProps) {
-  const { settings } = useSettings();
-
-  const processedData = useMemo(() =>
-    transformData(data, settings),
-    [data, settings]
-  );
-
-  const handleClick = useCallback(() => {
-    onAction(data.id);
-  }, [onAction, data.id]);
-
-  return (
-    <div className="space-y-4 md:space-y-0 md:flex md:items-center">
-      {/* Mobile-first responsive content */}
-    </div>
-  );
-});
-
-export default FeatureComponent;
-```
-
-### 🔧 AI Quality Assurance
-
-**After any changes, AI automatically runs:**
-
-```bash
-npm run check  # Format, lint, typecheck, test
-```
-
-**If checks fail, AI must fix issues before completing the task.**
+**Components:** Use `memo()` wrapper, responsive classes, TypeScript interfaces
+**Hooks:** Apply `useCallback`/`useMemo` for performance  
+**Tests:** Wrap with required providers
+**Quality:** Run `npm run check` after changes
 
 ## Recent Updates
 
-- **AI Architecture Compliance System**: Added comprehensive AI development restrictions and patterns
-- **Architecture Documentation**: Created detailed guidelines and feature-specific patterns
-- **AI Code Review Process**: Implemented mandatory compliance checklist for all changes
-- **Mobile-Responsive Architecture**: Implementing mobile-first design system with responsive breakpoints
-- **Tafsir System**: Enhanced with persistent selections, improved UI, and multiple tafsir support
+- **Streamlined AI Context**: Simplified documentation for better token efficiency
+- **Mobile-Responsive Architecture**: Mobile-first design with responsive breakpoints
+- **Tafsir System**: Enhanced with persistent selections and multiple tafsir support
 - **Settings Management**: Streamlined panels with better state management and storage

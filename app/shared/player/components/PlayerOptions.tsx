@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+
 import { SlidersIcon } from '@/app/shared/icons';
-import PlaybackOptionsModal from './PlaybackOptionsModal';
-import SpeedControl from './SpeedControl';
-import VolumeControl from './VolumeControl';
 import { Button } from '@/app/shared/ui/Button';
 import { iconClasses } from '@/lib/responsive';
 
-export default function PlayerOptions() {
+import { PlaybackOptionsModal } from './PlaybackOptionsModal';
+import { SpeedControl } from './SpeedControl';
+import { VolumeControl } from './VolumeControl';
+
+export function PlayerOptions(): React.JSX.Element {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'reciter' | 'repeat'>('reciter');
   return (

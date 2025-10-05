@@ -1,5 +1,5 @@
-import { getTranslations, getWordTranslations } from '@/lib/api/translations';
 import { API_BASE_URL } from '@/lib/api';
+import { getTranslations, getWordTranslations } from '@/lib/api/translations';
 import { TranslationResource } from '@/types';
 
 describe('getTranslations', () => {
@@ -16,7 +16,10 @@ describe('getTranslations', () => {
     }) as jest.Mock;
 
     const result = await getTranslations();
-    expect(global.fetch).toHaveBeenCalledWith(`${API_BASE_URL}/resources/translations`);
+    expect(global.fetch).toHaveBeenCalledWith(
+      `${API_BASE_URL}/resources/translations`,
+      expect.objectContaining({ headers: { Accept: 'application/json' } })
+    );
     const expected: TranslationResource[] = [{ id: 1, name: 'Saheeh', lang: 'English' }];
     expect(result).toEqual(expected);
   });
@@ -42,7 +45,8 @@ describe('getWordTranslations', () => {
 
     const result = await getWordTranslations();
     expect(global.fetch).toHaveBeenCalledWith(
-      `${API_BASE_URL}/resources/translations?resource_type=word_by_word`
+      `${API_BASE_URL}/resources/translations?resource_type=word_by_word`,
+      expect.objectContaining({ headers: { Accept: 'application/json' } })
     );
     const expected: TranslationResource[] = [{ id: 1, name: 'WBW', lang: 'English' }];
     expect(result).toEqual(expected);

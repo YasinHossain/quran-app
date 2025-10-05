@@ -6,6 +6,7 @@
  * - `app/(features)/<name>/components/.gitkeep`
  * - `app/(features)/<name>/__tests__/<Pascal>Page.test.tsx`
  */
+
 import { mkdir, writeFile } from 'fs/promises';
 
 function toPascalCase(name: string): string {
@@ -15,7 +16,7 @@ function toPascalCase(name: string): string {
     .join('');
 }
 
-async function main() {
+async function main(): Promise<void> {
   const name = process.argv[2];
   if (!name) {
     console.error('Usage: ts-node scripts/generateFeature.ts <name>');
@@ -46,7 +47,7 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import { getRandomVerse } from '@/lib/api';
 import { Verse } from '@/types';
 
-export default function ${pascal}Page() {
+export const ${pascal}Page = () => {
   const { settings } = useSettings();
   const [verse, setVerse] = useState<Verse | null>(null);
 
@@ -62,7 +63,7 @@ export default function ${pascal}Page() {
       <p>{verse.text_uthmani}</p>
     </div>
   );
-}
+};
 `;
 
   await writeFile(`${dir}/page.tsx`, page);
@@ -71,7 +72,7 @@ export default function ${pascal}Page() {
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 import * as api from '@/lib/api';
 import { Verse } from '@/types';
-import ${pascal}Page from '@/app/(features)/${name}/page';
+import { ${pascal}Page } from '@/app/(features)/${name}/page';
 
 jest.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
 jest.mock('@/lib/api');
@@ -93,7 +94,7 @@ test('renders API data', async () => {
 `;
 
   await writeFile(`${dir}/__tests__/${pascal}Page.test.tsx`, test);
-  console.log(`Generated feature '${name}' at ${dir}`);
+  console.warn(`Generated feature '${name}' at ${dir}`);
 }
 
 main().catch((err) => {

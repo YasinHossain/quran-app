@@ -1,6 +1,17 @@
-import { render, screen } from '@testing-library/react';
-import { BookmarksHeader } from '../components/BookmarksHeader';
-import { BookmarksSidebar } from '../components/BookmarksSidebar';
+import { act, render, screen } from '@testing-library/react';
+import React from 'react';
+
+import { BookmarksHeader } from '@/app/(features)/bookmarks/components/BookmarksHeader';
+import { BookmarksSidebar } from '@/app/(features)/bookmarks/components/BookmarksSidebar';
+import { setMatchMedia } from '@/app/testUtils/matchMedia';
+
+// Mock framer-motion to avoid animation issues in tests
+jest.mock('framer-motion', () => ({
+  motion: {
+    div: ({ children, ...props }: any) => React.createElement('div', props, children),
+  },
+  AnimatePresence: ({ children }: any) => <>{children}</>,
+}));
 
 // Mock the BookmarkContext
 jest.mock('@/app/providers/BookmarkContext', () => ({
@@ -16,123 +27,87 @@ jest.mock('@/app/providers/BookmarkContext', () => ({
   }),
 }));
 
-// Mock framer-motion to avoid animation issues in tests
-jest.mock('framer-motion', () => ({
-  motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-  },
-  AnimatePresence: ({ children }: any) => children,
-}));
+// Set up matchMedia mock
+setMatchMedia(false);
 
-// Mock matchMedia
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation((query) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(), // deprecated
-    removeListener: jest.fn(), // deprecated
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
+const testNavigationItemAccessibility = (item: Element | null): void => {
+  expect(item).toBeInTheDocument();
+  if (item) {
+    expect(item).toHaveClass('transition-colors');
+  }
+};
+
+describe('BookmarksHeader', () => {
+  const renderBookmarksHeader = async (): Promise<{
+    mockOnSidebarToggle: jest.Mock;
+    mockOnNewFolderClick: jest.Mock;
+    mockOnSearchChange: jest.Mock;
+  }> => {
+    const mockOnSidebarToggle = jest.fn();
+    const mockOnNewFolderClick = jest.fn();
+    const mockOnSearchChange = jest.fn();
+
+    await act(async () => {
+      render(
+        <BookmarksHeader
+          searchTerm=""
+          onSearchChange={mockOnSearchChange}
+          onNewFolderClick={mockOnNewFolderClick}
+          onSidebarToggle={mockOnSidebarToggle}
+        />
+      );
+    });
+
+    return { mockOnSidebarToggle, mockOnNewFolderClick, mockOnSearchChange };
+  };
+
+  it('should render without errors', async () => {
+    await renderBookmarksHeader();
+
+    expect(screen.getByText('Bookmarks')).toBeInTheDocument();
+    expect(screen.getByText('New Folder')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Search Bookmarks')).toBeInTheDocument();
+  });
+
+  it('should have proper touch targets for buttons', async () => {
+    await renderBookmarksHeader();
+    const newFolderButton = screen.getByRole('button', { name: 'New Folder' });
+    expect(newFolderButton).toHaveClass('min-h-touch');
+  });
+
+  it('should apply responsive classes consistently', async () => {
+    await renderBookmarksHeader();
+    const newFolderButton = screen.getByRole('button', { name: 'New Folder' });
+
+    expect(newFolderButton).toHaveClass('touch-manipulation');
+    expect(newFolderButton).toHaveClass('select-none');
+  });
 });
 
-describe('Bookmarks Responsive Components', () => {
-  describe('BookmarksHeader', () => {
-    it('should render without errors', () => {
-      const mockOnSidebarToggle = jest.fn();
-      const mockOnNewFolderClick = jest.fn();
-      const mockOnSearchChange = jest.fn();
-
-      render(
-        <BookmarksHeader
-          searchTerm=""
-          onSearchChange={mockOnSearchChange}
-          onNewFolderClick={mockOnNewFolderClick}
-          onSidebarToggle={mockOnSidebarToggle}
-        />
-      );
-
-      expect(screen.getByText('Bookmarks')).toBeInTheDocument();
-      expect(screen.getByText('New Folder')).toBeInTheDocument();
-      expect(screen.getByPlaceholderText('Search Bookmarks')).toBeInTheDocument();
+describe('BookmarksSidebar', () => {
+  it('should render all navigation items', async () => {
+    await act(async () => {
+      render(<BookmarksSidebar activeSection="bookmarks" />);
     });
 
-    it('should have proper touch targets for buttons', () => {
-      const mockOnSidebarToggle = jest.fn();
-      const mockOnNewFolderClick = jest.fn();
-      const mockOnSearchChange = jest.fn();
-
-      render(
-        <BookmarksHeader
-          searchTerm=""
-          onSearchChange={mockOnSearchChange}
-          onNewFolderClick={mockOnNewFolderClick}
-          onSidebarToggle={mockOnSidebarToggle}
-        />
-      );
-
-      const newFolderButton = screen.getByRole('button', { name: 'New Folder' });
-
-      // Check touch target size (minimum 44px per WCAG)
-      expect(newFolderButton).toHaveClass('min-h-touch');
-    });
+    expect(screen.getByText('All Bookmarks')).toBeInTheDocument();
+    expect(screen.getByText('Pinned Verses')).toBeInTheDocument();
+    expect(screen.getByText('Recent')).toBeInTheDocument();
   });
 
-  describe('BookmarksSidebar', () => {
-    it('should render all navigation items', () => {
+  it('should have accessible navigation items', async () => {
+    await act(async () => {
       render(<BookmarksSidebar activeSection="bookmarks" />);
-
-      expect(screen.getByText('Bookmark')).toBeInTheDocument();
-      expect(screen.getByText('Pins')).toBeInTheDocument();
-      expect(screen.getByText('Last Reads')).toBeInTheDocument();
     });
 
-    it('should have accessible navigation items', () => {
-      render(<BookmarksSidebar activeSection="bookmarks" />);
+    const pinnedItem = screen.getByText('Pinned Verses').closest('div');
+    const lastReadItem = screen.getByText('Recent').closest('div');
 
-      // Since there's no onClick handler, the ListItem renders as div
-      const pinnedItem = screen.getByText('Pins').closest('div');
-      const lastReadItem = screen.getByText('Last Reads').closest('div');
+    testNavigationItemAccessibility(pinnedItem);
+    testNavigationItemAccessibility(lastReadItem);
 
-      // Check that all items are properly accessible
-      [pinnedItem, lastReadItem].forEach((item) => {
-        expect(item).toBeInTheDocument();
-        if (item) {
-          // These should have proper styling even if not clickable in this context
-          expect(item).toHaveClass('transition-colors');
-        }
-      });
-
-      // Check the bookmark item is active
-      const bookmarkItem = screen.getByText('Bookmark');
-      const navBookmarkItem = bookmarkItem.closest('div');
-      expect(navBookmarkItem).toBeInTheDocument();
-    });
-  });
-
-  describe('Responsive Design System', () => {
-    it('should apply responsive classes consistently', () => {
-      const mockOnSidebarToggle = jest.fn();
-      const mockOnNewFolderClick = jest.fn();
-      const mockOnSearchChange = jest.fn();
-
-      render(
-        <BookmarksHeader
-          searchTerm=""
-          onSearchChange={mockOnSearchChange}
-          onNewFolderClick={mockOnNewFolderClick}
-          onSidebarToggle={mockOnSidebarToggle}
-        />
-      );
-
-      const newFolderButton = screen.getByRole('button', { name: 'New Folder' });
-
-      // Verify responsive classes are applied
-      expect(newFolderButton).toHaveClass('touch-manipulation');
-      expect(newFolderButton).toHaveClass('select-none');
-    });
+    const bookmarkItem = screen.getByText('All Bookmarks');
+    const navBookmarkItem = bookmarkItem.closest('div');
+    expect(navBookmarkItem).toBeInTheDocument();
   });
 });

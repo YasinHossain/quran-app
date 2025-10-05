@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 // Simple metrics storage (in production, you'd use a proper metrics system)
 let requestCount = 0;
@@ -6,7 +6,7 @@ let errorCount = 0;
 const startTime = Date.now();
 
 // GET /api/metrics - Basic application metrics
-export async function GET(request: NextRequest) {
+export async function GET(): Promise<NextResponse> {
   try {
     requestCount++;
 
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
         'Cache-Control': 'no-cache, no-store, must-revalidate',
       },
     });
-  } catch (error) {
+  } catch {
     errorCount++;
     return NextResponse.json(
       {
@@ -44,8 +44,13 @@ export async function GET(request: NextRequest) {
   }
 }
 
-function getMemoryMetrics() {
-  if (typeof process !== 'undefined' && process.memoryUsage) {
+function getMemoryMetrics(): {
+  rss: string;
+  heapTotal: string;
+  heapUsed: string;
+  external: string;
+} | null {
+  if (typeof process !== 'undefined' && typeof process.memoryUsage === 'function') {
     const memUsage = process.memoryUsage();
     return {
       rss: Math.round(memUsage.rss / 1024 / 1024) + 'MB',
@@ -57,9 +62,12 @@ function getMemoryMetrics() {
   return null;
 }
 
-function getPerformanceMetrics() {
-  if (typeof process !== 'undefined' && process.hrtime) {
-    const hrTime = process.hrtime();
+function getPerformanceMetrics(): {
+  uptime_seconds: number;
+  cpu_usage: NodeJS.CpuUsage;
+  event_loop_lag: string;
+} | null {
+  if (typeof process !== 'undefined' && typeof process.hrtime === 'function') {
     return {
       uptime_seconds: process.uptime(),
       cpu_usage: process.cpuUsage(),
@@ -69,7 +77,4 @@ function getPerformanceMetrics() {
   return null;
 }
 
-// Increment error count (can be called from error handlers)
-function incrementErrorCount() {
-  errorCount++;
-}
+// Note: errorCount is incremented in the GET handler's catch block.

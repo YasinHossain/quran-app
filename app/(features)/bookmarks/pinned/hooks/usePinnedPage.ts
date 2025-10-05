@@ -1,9 +1,15 @@
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useBookmarks } from '@/app/providers/BookmarkContext';
-import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
+import { useEffect } from 'react';
 
-export const usePinnedPage = () => {
+import { useBookmarks } from '@/app/providers/BookmarkContext';
+
+import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
+import type { Bookmark } from '@/types';
+
+export const usePinnedPage = (): {
+  pinnedVerses: Bookmark[];
+  handleSectionChange: (section: SectionId) => void;
+} => {
   const router = useRouter();
   const { pinnedVerses } = useBookmarks();
 
@@ -14,7 +20,7 @@ export const usePinnedPage = () => {
     };
   }, []);
 
-  const handleSectionChange = (section: SectionId) => {
+  const handleSectionChange = (section: SectionId): void => {
     if (section === 'bookmarks') {
       router.push('/bookmarks');
     } else if (section === 'last-read') {

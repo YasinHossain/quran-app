@@ -73,3 +73,30 @@ export class UnauthorizedAccessError extends DomainError {
     super(`Unauthorized access: ${message}`);
   }
 }
+
+/**
+ * Error thrown when unauthorized bookmark operation is attempted
+ */
+export class UnauthorizedBookmarkError extends DomainError {
+  constructor(message: string) {
+    super(`Unauthorized: ${message}`);
+  }
+}
+
+/**
+ * Error thrown when a tafsir request is invalid
+ */
+export class InvalidTafsirRequestError extends DomainError {
+  constructor(message = 'Verse key and tafsir ID are required') {
+    super(message);
+  }
+}
+
+/**
+ * Error thrown when tafsir content fails to load
+ */
+export class TafsirContentLoadError extends DomainError {
+  constructor(message = 'Failed to load tafsir content. Please try again.') {
+    super(message);
+  }
+}

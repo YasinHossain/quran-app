@@ -23,17 +23,18 @@ const colors = design.colors as Record<string, string>;
 const baseKeys = Object.keys(colors).filter((key) => !key.endsWith('Dark'));
 
 const rootVars = baseKeys
-  .map((key) => `  --color-${kebabCase(key)}: ${hexToRgb(colors[key])};`)
+  .map((key) => `  --color-${kebabCase(key)}: ${hexToRgb(colors[key]!)};`)
   .join('\n');
 
 const darkVars = baseKeys
   .map((key) => {
     const darkKey = `${key}Dark`;
-    return `  --color-${kebabCase(key)}: ${hexToRgb(colors[darkKey] || colors[key])};`;
+    const color = colors[darkKey] ?? colors[key]!;
+    return `  --color-${kebabCase(key)}: ${hexToRgb(color)};`;
   })
   .join('\n');
 
 const css = `:root {\n${rootVars}\n}\n\n.dark {\n${darkVars}\n}\n`;
 
 writeFileSync(themePath, css);
-console.log('Generated theme tokens.');
+console.warn('Generated theme tokens.');

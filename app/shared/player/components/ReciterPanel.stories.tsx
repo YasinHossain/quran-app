@@ -1,16 +1,17 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
-import ReciterPanel from './ReciterPanel';
 
-const meta: Meta<typeof ReciterPanel> = {
+import { ReciterPanel } from './ReciterPanel';
+
+import type { Meta, StoryObj } from '@storybook/react';
+
+export const meta: Meta<typeof ReciterPanel> = {
   title: 'Player/ReciterPanel',
   component: ReciterPanel,
 };
-export default meta;
 
 type Story = StoryObj<typeof ReciterPanel>;
 
-function ReciterPanelStory() {
+function ReciterPanelStory(): React.JSX.Element {
   const [reciter, setReciter] = useState('1');
   return (
     <div className="p-4 bg-surface">

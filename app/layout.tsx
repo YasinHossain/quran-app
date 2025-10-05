@@ -1,10 +1,4 @@
 // app/layout.tsx
-import './globals.css';
-import './fonts.css';
-import TranslationProvider from './providers/TranslationProvider';
-import ClientProviders from './providers/ClientProviders';
-import { ErrorBoundary } from './shared/components/ErrorBoundary';
-import localFont from 'next/font/local';
 import {
   Inter,
   Noto_Sans_Arabic,
@@ -12,7 +6,15 @@ import {
   Crimson_Text,
   Libre_Baskerville,
 } from 'next/font/google';
+import localFont from 'next/font/local';
 import { cookies } from 'next/headers';
+import Script from 'next/script';
+
+import './fonts.css';
+import './globals.css';
+import { ClientProviders } from './providers/ClientProviders';
+import { TranslationProvider } from './providers/TranslationProvider';
+import { ErrorBoundary } from './shared/components/error-boundary';
 
 const kfgqpc = localFont({
   src: '../public/fonts/KFGQPC-Uthman-Taha.ttf',
@@ -67,12 +69,28 @@ const libreBaskerville = Libre_Baskerville({
   display: 'swap',
 });
 
+export const INLINE_THEME_SCRIPT = `(() => {
+  try {
+    var t = localStorage.getItem('theme');
+    if (!t) {
+      var m = document.cookie.match(/(?:^|; )theme=([^;]+)/);
+      t = m ? m[1] : null;
+    }
+    document.documentElement.classList.toggle('dark', t === 'dark');
+    document.documentElement.setAttribute('data-theme', t || 'light');
+  } catch (e) {}
+})();`;
+
 export const metadata = {
   title: 'Quran Mazid',
   description: 'Read, Study, and Learn The Holy Quran',
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}): Promise<React.JSX.Element> {
   const cookieStore = await cookies();
   const stored = cookieStore.get('theme');
   const theme =
@@ -82,6 +100,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" data-theme={theme} className={theme}>
+      <head>
+        <Script id="theme-script" strategy="beforeInteractive">
+          {INLINE_THEME_SCRIPT}
+        </Script>
+      </head>
       <body
         className={`font-sans ${kfgqpc.variable} ${nastaliq.variable} ${amiri.variable} ${arabic.variable} ${bengali.variable} ${crimsonText.variable} ${libreBaskerville.variable} ${inter.className}`}
       >

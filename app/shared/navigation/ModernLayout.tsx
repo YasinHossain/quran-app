@@ -1,48 +1,48 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
-import QuranBottomSheet from './QuranBottomSheet';
-import SwipeContainer from './SwipeContainer';
-import SwipeIndicator from './SwipeIndicator';
-import AdaptiveNavigation from '../components/AdaptiveNavigation';
+import { useState, useEffect } from 'react';
+import React from 'react';
+
 import { useNavigation } from '@/app/providers/NavigationContext';
+import { logger } from '@/src/infrastructure/monitoring/Logger';
+
+import { QuranBottomSheet } from './QuranBottomSheet';
+import { SwipeContainer } from './SwipeContainer';
+import { SwipeIndicator } from './SwipeIndicator';
 
 interface ModernLayoutProps {
   children: React.ReactNode;
 }
 
-const ModernLayout: React.FC<ModernLayoutProps> = ({ children }) => {
-  const pathname = usePathname();
-  const { isQuranBottomSheetOpen, setQuranBottomSheetOpen, navigateToSurah, showQuranSelector } =
-    useNavigation();
+export const ModernLayout = ({ children }: ModernLayoutProps): React.JSX.Element => {
+  const { isQuranBottomSheetOpen, setQuranBottomSheetOpen, navigateToSurah } = useNavigation();
 
   // Show swipe indicator on first visit
   const [showSwipeIndicator, setShowSwipeIndicator] = useState(false);
 
   useEffect(() => {
-    const hasSeenSwipeGestures = localStorage.getItem('hasSeenSwipeGestures');
-    if (!hasSeenSwipeGestures) {
-      setShowSwipeIndicator(true);
-      localStorage.setItem('hasSeenSwipeGestures', 'true');
+    try {
+      const hasSeenSwipeGestures = localStorage.getItem('hasSeenSwipeGestures');
+      if (!hasSeenSwipeGestures) {
+        setShowSwipeIndicator(true);
+        localStorage.setItem('hasSeenSwipeGestures', 'true');
+      }
+    } catch (error) {
+      logger.warn('Swipe indicator storage unavailable', undefined, error as Error);
+      setShowSwipeIndicator(false);
     }
   }, []);
 
-  const handleSurahJump = () => {
-    showQuranSelector();
-  };
-
-  const isHomePage = pathname === '/' || pathname === '/home';
+  // Use selector directly when needed; remove unused helpers to satisfy lint
 
   return (
     <>
       {/* Main content with bottom padding for navigation */}
-      <SwipeContainer className={`min-h-[100dvh] ${!isHomePage ? 'bottom-nav-space lg:pb-0' : ''}`}>
+      <SwipeContainer className={`min-h-[100dvh] bottom-nav-space lg:pb-0`}>
         {children}
       </SwipeContainer>
 
-      {/* Adaptive Navigation */}
-      <AdaptiveNavigation onSurahJump={handleSurahJump} />
+      {/* Navigation handled by unified Navigation component (left rail on desktop, bottom on mobile) */}
 
       {/* Floating Quran Button removed per request */}
 
@@ -58,5 +58,3 @@ const ModernLayout: React.FC<ModernLayoutProps> = ({ children }) => {
     </>
   );
 };
-
-export default ModernLayout;

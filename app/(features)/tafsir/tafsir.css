@@ -104,14 +104,14 @@
   transition: all 0.3s ease;
 }
 
-/* Dark theme adjustments */
-.dark .tafsir-content [lang='ar'] {
-  background: rgba(13, 148, 136, 0.15);
-  border-color: rgba(13, 148, 136, 0.3);
+/* Theme-aware adjustments using semantic tokens */
+.tafsir-content [lang='ar'] {
+  background: rgb(var(--color-accent) / 0.15);
+  border-color: rgb(var(--color-accent) / 0.3);
 }
 
-.dark .tafsir-content p:first-child::first-letter {
-  color: rgba(13, 148, 136, 0.9);
+.tafsir-content p:first-child::first-letter {
+  color: rgb(var(--color-accent) / 0.9);
 }
 
 /* Ensure all tafsir content uses Noto Sans Bengali */

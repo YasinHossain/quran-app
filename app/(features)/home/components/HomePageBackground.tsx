@@ -1,7 +1,9 @@
+'use client';
+
 /**
  * Renders the fixed gradient background and decorative blobs for the home page.
  */
-export default function HomePageBackground() {
+export function HomePageBackground(): React.JSX.Element {
   return (
     <div className="fixed inset-0 -z-10 bg-gradient-bg">
       {/* Decorative Blobs */}

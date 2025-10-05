@@ -1,0 +1,809 @@
+app/shared/components/modal/Modal.Extras.stories.tsx(24,66): error TS2503: Cannot find namespace 'JSX'.
+app/shared/components/modal/Modal.Extras.stories.tsx(26,6): error TS2741: Property 'onClick' is missing in type '{}' but required in type 'ModalBackdropProps'.
+app/shared/components/modal/Modal.Extras.stories.tsx(33,14): error TS2322: Type '{ render: (args: { title: string; description: string; children: ReactNode; }) => JSX.Element; parameters: { viewport: { defaultViewport: string; }; docs: { description: { story: string; }; }; }; }' is not assignable to type 'StoryAnnotations<ReactRenderer, { title: string; description: string; children: ReactNode; }, { title: string; description: string; children: ReactNode; }>'.
+  Property 'args' is missing in type '{ render: (args: { title: string; description: string; children: ReactNode; }) => JSX.Element; parameters: { viewport: { defaultViewport: string; }; docs: { description: { story: string; }; }; }; }' but required in type '{ args: { title: string; description: string; children: ReactNode; }; }'.
+app/shared/components/modal/Modal.Extras.stories.tsx(34,19): error TS2503: Cannot find namespace 'JSX'.
+app/shared/components/modal/Modal.Extras.stories.tsx(41,14): error TS2322: Type '{ render: (args: { title: string; description: string; children: ReactNode; }) => JSX.Element; parameters: { backgrounds: { default: string; }; docs: { description: { story: string; }; }; }; }' is not assignable to type 'StoryAnnotations<ReactRenderer, { title: string; description: string; children: ReactNode; }, { title: string; description: string; children: ReactNode; }>'.
+  Property 'args' is missing in type '{ render: (args: { title: string; description: string; children: ReactNode; }) => JSX.Element; parameters: { backgrounds: { default: string; }; docs: { description: { story: string; }; }; }; }' but required in type '{ args: { title: string; description: string; children: ReactNode; }; }'.
+app/shared/components/modal/Modal.Extras.stories.tsx(42,19): error TS2503: Cannot find namespace 'JSX'.
+app/shared/components/modal/useModalKeyboard.ts(34,12): error TS2322: Type '() => void' is not assignable to type 'void'.
+app/shared/components/responsive-image/ResponsiveImage.Basic.stories.tsx(50,5): error TS2322: Type 'string' is not assignable to type 'ResponsiveImageSizes'.
+app/shared/components/responsive-image/ResponsiveImage.Extras.stories.tsx(22,14): error TS2322: Type '{ render: (args: { src: string | ResponsiveImageSources; sizes?: ResponsiveImageSizes; fallback?: string; loadingStrategy?: "lazy" | "auto" | "eager"; ... 303 more ...; lazyRoot?: string; }) => Element; }' is not assignable to type 'StoryAnnotations<ReactRenderer, { src: string | ResponsiveImageSources; sizes?: ResponsiveImageSizes; fallback?: string; loadingStrategy?: "lazy" | ... 1 more ... | "eager"; ... 303 more ...; lazyRoot?: string; }, { ...; }>'.
+  Property 'args' is missing in type '{ render: (args: { src: string | ResponsiveImageSources; sizes?: ResponsiveImageSizes; fallback?: string; loadingStrategy?: "lazy" | "auto" | "eager"; ... 303 more ...; lazyRoot?: string; }) => Element; }' but required in type '{ args: { src: string | ResponsiveImageSources; sizes?: ResponsiveImageSizes; fallback?: string; loadingStrategy?: "lazy" | "auto" | "eager"; ... 303 more ...; lazyRoot?: string; }; }'.
+app/shared/components/responsive-image/ResponsiveImage.Extras.stories.tsx(26,9): error TS2783: 'src' is specified more than once, so this usage will be overwritten.
+app/shared/components/responsive-image/ResponsiveImage.Extras.stories.tsx(27,9): error TS2783: 'alt' is specified more than once, so this usage will be overwritten.
+app/shared/components/responsive-image/ResponsiveImage.Extras.stories.tsx(46,14): error TS2322: Type '{ render: () => JSX.Element; }' is not assignable to type 'StoryAnnotations<ReactRenderer, { src: string | ResponsiveImageSources; sizes?: ResponsiveImageSizes; fallback?: string; loadingStrategy?: "lazy" | ... 1 more ... | "eager"; ... 303 more ...; lazyRoot?: string; }, { ...; }>'.
+  Property 'args' is missing in type '{ render: () => JSX.Element; }' but required in type '{ args: { src: string | ResponsiveImageSources; sizes?: ResponsiveImageSizes; fallback?: string; loadingStrategy?: "lazy" | "auto" | "eager"; ... 303 more ...; lazyRoot?: string; }; }'.
+app/shared/components/responsive-image/ResponsiveImage.Extras.stories.tsx(50,7): error TS2322: Type '{ children: Element; src: string; alt: string; className: string; }' is not assignable to type 'IntrinsicAttributes & ResponsiveBackgroundImageProps'.
+  Property 'alt' does not exist on type 'IntrinsicAttributes & ResponsiveBackgroundImageProps'.
+app/shared/components/responsive-image/ResponsiveImage.Extras.stories.tsx(61,14): error TS2322: Type '{ render: () => JSX.Element; }' is not assignable to type 'StoryAnnotations<ReactRenderer, { src: string | ResponsiveImageSources; sizes?: ResponsiveImageSizes; fallback?: string; loadingStrategy?: "lazy" | ... 1 more ... | "eager"; ... 303 more ...; lazyRoot?: string; }, { ...; }>'.
+  Property 'args' is missing in type '{ render: () => JSX.Element; }' but required in type '{ args: { src: string | ResponsiveImageSources; sizes?: ResponsiveImageSizes; fallback?: string; loadingStrategy?: "lazy" | "auto" | "eager"; ... 303 more ...; lazyRoot?: string; }; }'.
+app/shared/components/responsive-image/ResponsiveImage.Extras.stories.tsx(80,14): error TS2322: Type '{ render: () => JSX.Element; parameters: { viewport: { defaultViewport: string; }; }; }' is not assignable to type 'StoryAnnotations<ReactRenderer, { src: string | ResponsiveImageSources; sizes?: ResponsiveImageSizes; fallback?: string; loadingStrategy?: "lazy" | ... 1 more ... | "eager"; ... 303 more ...; lazyRoot?: string; }, { ...; }>'.
+  Property 'args' is missing in type '{ render: () => JSX.Element; parameters: { viewport: { defaultViewport: string; }; }; }' but required in type '{ args: { src: string | ResponsiveImageSources; sizes?: ResponsiveImageSizes; fallback?: string; loadingStrategy?: "lazy" | "auto" | "eager"; ... 303 more ...; lazyRoot?: string; }; }'.
+app/shared/components/responsive-image/ResponsiveImage.Extras.stories.tsx(88,9): error TS2322: Type 'string' is not assignable to type 'ResponsiveImageSizes'.
+app/shared/components/responsive-image/ResponsiveImage.Extras.stories.tsx(95,14): error TS2322: Type '{ render: () => JSX.Element; parameters: { backgrounds: { default: string; }; }; }' is not assignable to type 'StoryAnnotations<ReactRenderer, { src: string | ResponsiveImageSources; sizes?: ResponsiveImageSizes; fallback?: string; loadingStrategy?: "lazy" | ... 1 more ... | "eager"; ... 303 more ...; lazyRoot?: string; }, { ...; }>'.
+  Property 'args' is missing in type '{ render: () => JSX.Element; parameters: { backgrounds: { default: string; }; }; }' but required in type '{ args: { src: string | ResponsiveImageSources; sizes?: ResponsiveImageSizes; fallback?: string; loadingStrategy?: "lazy" | "auto" | "eager"; ... 303 more ...; lazyRoot?: string; }; }'.
+app/shared/components/responsive-image/ResponsiveImage.tsx(30,26): error TS2379: Argument of type '{ src: string | ResponsiveImageSources; sizes: ResponsiveImageSizes | undefined; fallback: string | undefined; loadingStrategy: "lazy" | ... 1 more ... | "eager"; }' is not assignable to parameter of type 'Pick<ResponsiveImageProps, "fallback" | "src" | "sizes" | "loadingStrategy">' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'fallback' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+app/shared/components/responsive-image/useResponsiveImage.ts(31,5): error TS2322: Type '"lazy" | "eager" | undefined' is not assignable to type '"lazy" | "eager"'.
+  Type 'undefined' is not assignable to type '"lazy" | "eager"'.
+app/shared/components/SearchInput.tsx(89,23): error TS2503: Cannot find namespace 'JSX'.
+app/shared/components/surah-tabs/SurahTabsView.tsx(67,8): error TS2322: Type '{ chapters: readonly Chapter[]; activeTab: TabKey; setSelectedSurahId: (id: number | null) => void; setSelectedJuzId: (id: number | null) => void; setSelectedPageId: (id: number | null) => void; ... 7 more ...; isTafsirPath: boolean; }' is not assignable to type 'TabContentProps'.
+  Types of property 'filteredChapters' are incompatible.
+    The type 'readonly Chapter[]' is 'readonly' and cannot be assigned to the mutable type 'Chapter[]'.
+app/shared/components/surah-tabs/TabContent.tsx(6,15): error TS2459: Module '"@/app/shared/components/surah-tabs/types"' declares 'JuzSummary' locally, but it is not exported.
+app/shared/components/surah-tabs/TabContent.tsx(25,63): error TS2345: Argument of type '() => Promise<React.ComponentClass<React.ComponentType<TabContentProps>, any> | React.FunctionComponent<React.ComponentType<TabContentProps>> | ComponentModule<...> | { ...; }>' is not assignable to parameter of type 'DynamicOptions<ComponentType<TabContentProps>> | Loader<ComponentType<TabContentProps>>'.
+  Type '() => Promise<React.ComponentClass<React.ComponentType<TabContentProps>, any> | React.FunctionComponent<React.ComponentType<TabContentProps>> | ComponentModule<...> | { ...; }>' is not assignable to type '() => LoaderComponent<ComponentType<TabContentProps>>'.
+    Type 'Promise<ComponentClass<ComponentType<TabContentProps>, any> | FunctionComponent<ComponentType<TabContentProps>> | ComponentModule<...> | { ...; }>' is not assignable to type 'LoaderComponent<ComponentType<TabContentProps>>'.
+      Type 'ComponentClass<ComponentType<TabContentProps>, any> | FunctionComponent<ComponentType<TabContentProps>> | ComponentModule<...> | { ...; }' is not assignable to type 'ComponentType<ComponentType<TabContentProps>> | ComponentModule<ComponentType<TabContentProps>>'.
+        Type '{ default: (props: JuzProps) => React.JSX.Element; }' is not assignable to type 'ComponentType<ComponentType<TabContentProps>> | ComponentModule<ComponentType<TabContentProps>>'.
+          Type '{ default: (props: JuzProps) => React.JSX.Element; }' is not assignable to type 'ComponentModule<ComponentType<TabContentProps>>'.
+            Types of property 'default' are incompatible.
+              Type '(props: JuzProps) => Element' is not assignable to type 'ComponentType<ComponentType<TabContentProps>>'.
+                Type '(props: JuzProps) => Element' is not assignable to type 'FunctionComponent<ComponentType<TabContentProps>>'.
+                  Types of parameters 'props' and 'props' are incompatible.
+                    Type 'ComponentType<TabContentProps>' is not assignable to type 'JuzProps'.
+                      Type 'ComponentClass<TabContentProps, any>' is missing the following properties from type 'JuzProps': filteredJuzs, chapters, selectedJuzId, setSelectedJuzId, and 3 more.
+app/shared/components/surah-tabs/TabContent.tsx(29,64): error TS2345: Argument of type '() => Promise<React.ComponentClass<React.ComponentType<TabContentProps>, any> | React.FunctionComponent<React.ComponentType<TabContentProps>> | ComponentModule<...> | { ...; }>' is not assignable to parameter of type 'DynamicOptions<ComponentType<TabContentProps>> | Loader<ComponentType<TabContentProps>>'.
+  Type '() => Promise<React.ComponentClass<React.ComponentType<TabContentProps>, any> | React.FunctionComponent<React.ComponentType<TabContentProps>> | ComponentModule<...> | { ...; }>' is not assignable to type '() => LoaderComponent<ComponentType<TabContentProps>>'.
+    Type 'Promise<ComponentClass<ComponentType<TabContentProps>, any> | FunctionComponent<ComponentType<TabContentProps>> | ComponentModule<...> | { ...; }>' is not assignable to type 'LoaderComponent<ComponentType<TabContentProps>>'.
+      Type 'ComponentClass<ComponentType<TabContentProps>, any> | FunctionComponent<ComponentType<TabContentProps>> | ComponentModule<...> | { ...; }' is not assignable to type 'ComponentType<ComponentType<TabContentProps>> | ComponentModule<ComponentType<TabContentProps>>'.
+        Type '{ default: (props: PageProps) => React.JSX.Element; }' is not assignable to type 'ComponentType<ComponentType<TabContentProps>> | ComponentModule<ComponentType<TabContentProps>>'.
+          Type '{ default: (props: PageProps) => React.JSX.Element; }' is not assignable to type 'ComponentModule<ComponentType<TabContentProps>>'.
+            Types of property 'default' are incompatible.
+              Type '(props: PageProps) => Element' is not assignable to type 'ComponentType<ComponentType<TabContentProps>>'.
+                Type '(props: PageProps) => Element' is not assignable to type 'FunctionComponent<ComponentType<TabContentProps>>'.
+                  Types of parameters 'props' and 'props' are incompatible.
+                    Type 'ComponentType<TabContentProps>' is not assignable to type 'PageProps'.
+                      Type 'ComponentClass<TabContentProps, any>' is missing the following properties from type 'PageProps': filteredPages, chapters, selectedPageId, setSelectedPageId, and 3 more.
+app/shared/components/surah-tabs/TabContent.tsx(37,42): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(props: ComponentType<TabContentProps>, context?: any): string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | ... 4 more ... | undefined', gave the following error.
+    Type '{ activeTab: TabKey; filteredChapters: Chapter[]; filteredJuzs: JuzSummary[]; filteredPages: number[]; chapters: readonly Chapter[]; selectedSurahId: number | null; setSelectedSurahId: (id: number | null) => void; ... 5 more ...; isTafsirPath: boolean; }' is not assignable to type 'IntrinsicAttributes & ComponentType<TabContentProps>'.
+  Overload 2 of 2, '(props: ComponentType<TabContentProps>): string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | ... 4 more ... | undefined', gave the following error.
+    Type '{ activeTab: TabKey; filteredChapters: Chapter[]; filteredJuzs: JuzSummary[]; filteredPages: number[]; chapters: readonly Chapter[]; selectedSurahId: number | null; setSelectedSurahId: (id: number | null) => void; ... 5 more ...; isTafsirPath: boolean; }' is not assignable to type 'IntrinsicAttributes & ComponentType<TabContentProps>'.
+app/shared/components/surah-tabs/TabContent.tsx(38,11): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(props: ComponentType<TabContentProps>, context?: any): string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | ... 4 more ... | undefined', gave the following error.
+    Type '{ activeTab: TabKey; filteredChapters: Chapter[]; filteredJuzs: JuzSummary[]; filteredPages: number[]; chapters: readonly Chapter[]; selectedSurahId: number | null; setSelectedSurahId: (id: number | null) => void; ... 5 more ...; isTafsirPath: boolean; }' is not assignable to type 'IntrinsicAttributes & ComponentType<TabContentProps>'.
+  Overload 2 of 2, '(props: ComponentType<TabContentProps>): string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | ... 4 more ... | undefined', gave the following error.
+    Type '{ activeTab: TabKey; filteredChapters: Chapter[]; filteredJuzs: JuzSummary[]; filteredPages: number[]; chapters: readonly Chapter[]; selectedSurahId: number | null; setSelectedSurahId: (id: number | null) => void; ... 5 more ...; isTafsirPath: boolean; }' is not assignable to type 'IntrinsicAttributes & ComponentType<TabContentProps>'.
+app/shared/components/surah-tabs/TabContentViews.tsx(7,15): error TS2459: Module '"@/app/shared/components/surah-tabs/types"' declares 'JuzSummary' locally, but it is not exported.
+app/shared/components/surah-tabs/useSurahTabParams.ts(33,3): error TS2375: Type '{ currentSurahId: number | undefined; currentJuzId: number | undefined; currentPageId: number | undefined; isTafsirPath: boolean; getInitialTab: () => "Surah" | "Juz" | "Page"; }' is not assignable to type 'SurahTabParamsResult' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'currentSurahId' are incompatible.
+    Type 'number | undefined' is not assignable to type 'number'.
+      Type 'undefined' is not assignable to type 'number'.
+app/shared/components/surah-tabs/useSurahTabs.ts(61,39): error TS2379: Argument of type '{ currentSurahId: number | undefined; currentJuzId: number | undefined; currentPageId: number | undefined; chapters: Chapter[]; }' is not assignable to parameter of type 'Args' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'currentSurahId' are incompatible.
+    Type 'number | undefined' is not assignable to type 'number'.
+      Type 'undefined' is not assignable to type 'number'.
+app/shared/components/surah-tabs/useSurahTabs.ts(83,5): error TS2322: Type '(tab: TabKey) => void' is not assignable to type '(key: string, position: number) => void'.
+  Types of parameters 'tab' and 'key' are incompatible.
+    Type 'string' is not assignable to type 'TabKey'.
+app/shared/components/surah-tabs/useSurahTabs.ts(90,5): error TS2322: Type 'Dispatch<SetStateAction<"Surah" | "Juz" | "Page">>' is not assignable to type 'Dispatch<SetStateAction<string>>'.
+  Type 'SetStateAction<string>' is not assignable to type 'SetStateAction<"Surah" | "Juz" | "Page">'.
+    Type 'string' is not assignable to type 'SetStateAction<"Surah" | "Juz" | "Page">'.
+app/shared/components/surah-tabs/useSurahTabs.ts(92,5): error TS2322: Type '(event: UIEvent<HTMLDivElement, UIEvent>) => void' is not assignable to type '() => void'.
+  Target signature provides too few arguments. Expected 1 or more, but got 0.
+app/shared/components/surah-tabs/useSurahTabs.ts(93,5): error TS2322: Type '(nextTab: TabKey) => void' is not assignable to type '() => void'.
+  Target signature provides too few arguments. Expected 1 or more, but got 0.
+app/shared/components/surah-tabs/useSurahTabsState.ts(55,24): error TS2379: Argument of type '{ currentSurahId: number | undefined; currentJuzId: number | undefined; currentPageId: number | undefined; chapters: readonly Chapter[]; }' is not assignable to parameter of type 'Args' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'currentSurahId' are incompatible.
+    Type 'number | undefined' is not assignable to type 'number'.
+      Type 'undefined' is not assignable to type 'number'.
+app/shared/components/surah-tabs/useSurahTabsState.ts(71,5): error TS2322: Type 'SurahTab[]' is not assignable to type '{ key: TabKey; label: string; }[]'.
+  Type 'SurahTab' is not assignable to type '{ key: TabKey; label: string; }'.
+    Types of property 'key' are incompatible.
+      Type 'string' is not assignable to type 'TabKey'.
+app/shared/components/WebVitals.tsx(14,60): error TS4111: Property 'NEXT_PUBLIC_ENABLE_WEB_VITALS' comes from an index signature, so it must be accessed with ['NEXT_PUBLIC_ENABLE_WEB_VITALS'].
+app/shared/components/WebVitals.tsx(40,20): error TS2304: Cannot find name 'gtag'.
+app/shared/components/WebVitals.tsx(41,11): error TS2304: Cannot find name 'gtag'.
+app/shared/components/WebVitals.tsx(48,25): error TS4111: Property 'NEXT_PUBLIC_ANALYTICS_ENDPOINT' comes from an index signature, so it must be accessed with ['NEXT_PUBLIC_ANALYTICS_ENDPOINT'].
+app/shared/components/WebVitals.tsx(49,29): error TS4111: Property 'NEXT_PUBLIC_ANALYTICS_ENDPOINT' comes from an index signature, so it must be accessed with ['NEXT_PUBLIC_ANALYTICS_ENDPOINT'].
+app/shared/ErrorBoundary.tsx(47,3): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'Component<ErrorBoundaryProps, ErrorBoundaryState, any>'.
+app/shared/ErrorBoundary.tsx(59,3): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'Component<ErrorBoundaryProps, ErrorBoundaryState, any>'.
+app/shared/hooks/useCoverAndTrack.ts(7,30): error TS2307: Cannot find module '@/types/reciter' or its corresponding type declarations.
+app/shared/hooks/useSwipeGestures.tsx(33,10): error TS18048: 'touch' is possibly 'undefined'.
+app/shared/hooks/useSwipeGestures.tsx(34,10): error TS18048: 'touch' is possibly 'undefined'.
+app/shared/hooks/useSwipeGestures.tsx(44,41): error TS18048: 'touch' is possibly 'undefined'.
+app/shared/hooks/useSwipeGestures.tsx(44,59): error TS18048: 'touch' is possibly 'undefined'.
+app/shared/hooks/useSwipeGestures.tsx(48,9): error TS2379: Argument of type '{ onSwipeLeft: (() => void) | undefined; onSwipeRight: (() => void) | undefined; onSwipeUp: (() => void) | undefined; onSwipeDown: (() => void) | undefined; }' is not assignable to parameter of type 'SwipeHandlers' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onSwipeLeft' are incompatible.
+    Type '(() => void) | undefined' is not assignable to type '() => void'.
+      Type 'undefined' is not assignable to type '() => void'.
+app/shared/hooks/useSwipeGestures.tsx(60,45): error TS18048: 'touch' is possibly 'undefined'.
+app/shared/hooks/useSwipeGestures.tsx(60,63): error TS18048: 'touch' is possibly 'undefined'.
+app/shared/icons/AlertIcon.tsx(5,79): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/ArrowLeftIcon.tsx(5,83): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/BarsIcon.tsx(5,78): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/BookmarkIcon.tsx(5,82): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/BookmarkOutlineIcon.tsx(9,16): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/BookReaderIcon.tsx(5,84): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/BrainIcon.tsx(5,79): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/CheckIcon.tsx(5,79): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/ChevronDownIcon.tsx(5,85): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/ChevronLeftIcon.tsx(5,85): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/ChevronRightIcon.tsx(9,16): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/ClockIcon.tsx(5,79): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/CloseIcon.tsx(5,79): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/EllipsisHIcon.tsx(5,83): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/FolderIcon.tsx(5,80): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/FontSettingIcon.tsx(5,85): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/GridIcon.tsx(5,78): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/GripVerticalIcon.tsx(9,16): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/HomeIcon.tsx(5,78): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/MicIcon.tsx(5,77): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/MoonIcon.tsx(5,78): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/PauseIcon.tsx(5,79): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/PinIcon.tsx(5,77): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/PlayIcon.tsx(5,78): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/PlusIcon.tsx(5,78): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/RepeatIcon.tsx(5,80): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/ResetIcon.tsx(5,79): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/SearchIcon.tsx(5,80): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/ShareIcon.tsx(5,79): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/SkipBackIcon.tsx(5,82): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/SkipForwardIcon.tsx(5,85): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/SlidersIcon.tsx(5,81): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/SunIcon.tsx(5,77): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/TranslationIcon.tsx(5,85): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/VolumeIcon.tsx(5,80): error TS2503: Cannot find namespace 'JSX'.
+app/shared/icons/VolumeOffIcon.tsx(5,83): error TS2503: Cannot find namespace 'JSX'.
+app/shared/navigation/components/TabContent.tsx(5,15): error TS2459: Module '"@/app/shared/navigation/hooks/useQuranNavigation"' declares 'JuzSummary' locally, but it is not exported.
+app/shared/navigation/hooks/useQuranNavigation.ts(61,5): error TS2322: Type '{ id: string; label: string; icon: ForwardRefExoticComponent<IconProps & RefAttributes<Icon>>; }[]' is not assignable to type '{ id: "page" | "surah" | "juz"; label: string; icon: ForwardRefExoticComponent<IconProps & RefAttributes<Icon>>; }[]'.
+  Type '{ id: string; label: string; icon: ForwardRefExoticComponent<IconProps & RefAttributes<Icon>>; }' is not assignable to type '{ id: "page" | "surah" | "juz"; label: string; icon: ForwardRefExoticComponent<IconProps & RefAttributes<Icon>>; }'.
+    Types of property 'id' are incompatible.
+      Type 'string' is not assignable to type '"page" | "surah" | "juz"'.
+app/shared/navigation/hooks/useSurahNavigationData.ts(36,5): error TS2412: Type 'readonly Chapter[] | undefined' is not assignable to type 'Chapter[] | Promise<Chapter[]> | undefined' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the type of the target.
+app/shared/navigation/hooks/useSurahNavigationData.ts(36,5): error TS2769: No overload matches this call.
+  Type 'readonly Chapter[] | undefined' is not assignable to type 'Chapter[] | Promise<Chapter[]> | undefined' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the type of the target.
+  Type 'readonly Chapter[] | undefined' is not assignable to type 'Chapter[] | Promise<Chapter[]> | undefined' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the type of the target.
+app/shared/navigation/hooks/useSwipeNavigation.ts(25,19): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+app/shared/navigation/QuickSearch.tsx(38,9): error TS4104: The type 'readonly string[]' is 'readonly' and cannot be assigned to the mutable type 'string[]'.
+app/shared/navigation/QuickSearch.tsx(39,9): error TS4104: The type 'readonly string[]' is 'readonly' and cannot be assigned to the mutable type 'string[]'.
+app/shared/navigation/QuickSearchModal.tsx(38,15): error TS2322: Type 'RefObject<HTMLInputElement | null>' is not assignable to type 'RefObject<HTMLInputElement>'.
+  Type 'HTMLInputElement | null' is not assignable to type 'HTMLInputElement'.
+    Type 'null' is not assignable to type 'HTMLInputElement'.
+app/shared/navigation/SwipeContainer.tsx(14,79): error TS2503: Cannot find namespace 'JSX'.
+app/shared/navigation/SwipeIndicator.tsx(35,13): error TS7030: Not all code paths return a value.
+app/shared/player/__tests__/AudioProvider.test.tsx(14,41): error TS2345: Argument of type 'Reciter | undefined' is not assignable to parameter of type 'SetStateAction<Reciter>'.
+  Type 'undefined' is not assignable to type 'SetStateAction<Reciter>'.
+app/shared/player/__tests__/AudioProvider.test.tsx(35,59): error TS2532: Object is possibly 'undefined'.
+app/shared/player/__tests__/AudioProvider.test.tsx(48,58): error TS2532: Object is possibly 'undefined'.
+app/shared/player/components/PlaybackOptionsModalContent.tsx(80,15): error TS2322: Type '(opts: RepeatOptions) => void' is not assignable to type 'Dispatch<SetStateAction<RepeatOptions>>'.
+  Types of parameters 'opts' and 'value' are incompatible.
+    Type 'SetStateAction<RepeatOptions>' is not assignable to type 'RepeatOptions'.
+      Type '(prevState: RepeatOptions) => RepeatOptions' is not assignable to type 'RepeatOptions'.
+app/shared/player/components/PlaybackOptionsModalContent.tsx(82,15): error TS2322: Type '(msg: string | null) => void' is not assignable to type 'Dispatch<SetStateAction<string | null>>'.
+  Types of parameters 'msg' and 'value' are incompatible.
+    Type 'SetStateAction<string | null>' is not assignable to type 'string | null'.
+      Type '(prevState: string | null) => string | null' is not assignable to type 'string'.
+app/shared/player/components/ReciterPanel.stories.tsx(14,31): error TS2503: Cannot find namespace 'JSX'.
+app/shared/player/components/RepeatPanel.stories.tsx(15,30): error TS2503: Cannot find namespace 'JSX'.
+app/shared/player/components/SpeedControl.tsx(24,27): error TS2322: Type 'RefObject<HTMLButtonElement | null>' is not assignable to type 'RefObject<HTMLButtonElement>'.
+  Type 'HTMLButtonElement | null' is not assignable to type 'HTMLButtonElement'.
+    Type 'null' is not assignable to type 'HTMLButtonElement'.
+app/shared/player/components/SpeedControl.tsx(24,39): error TS2322: Type 'RefObject<HTMLDivElement | null>' is not assignable to type 'RefObject<HTMLDivElement>'.
+  Type 'HTMLDivElement | null' is not assignable to type 'HTMLDivElement'.
+    Type 'null' is not assignable to type 'HTMLDivElement'.
+app/shared/player/components/SpeedControl.tsx(35,5): error TS2503: Cannot find namespace 'JSX'.
+app/shared/player/components/SpeedControl.tsx(48,33): error TS2503: Cannot find namespace 'JSX'.
+app/shared/player/components/Timeline.tsx(49,41): error TS2345: Argument of type 'number | undefined' is not assignable to parameter of type 'number'.
+  Type 'undefined' is not assignable to type 'number'.
+app/shared/player/components/VolumeControl.tsx(40,23): error TS2345: Argument of type 'number | undefined' is not assignable to parameter of type 'SetStateAction<number>'.
+  Type 'undefined' is not assignable to type 'SetStateAction<number>'.
+app/shared/player/hooks/useAdjacentAudioPrefetch.ts(56,24): error TS2379: Argument of type '{ shouldPrefetch: boolean; resolveUrl: (() => string | null) | undefined; prefetchAudio: (url: string) => Promise<string | null>; logger: ILogger; descriptor: "next"; }' is not assignable to parameter of type 'PrefetchTaskConfig' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'resolveUrl' are incompatible.
+    Type '(() => string | null) | undefined' is not assignable to type '() => string | null'.
+      Type 'undefined' is not assignable to type '() => string | null'.
+app/shared/player/hooks/useAdjacentAudioPrefetch.ts(63,24): error TS2379: Argument of type '{ shouldPrefetch: boolean; resolveUrl: (() => string | null) | undefined; prefetchAudio: (url: string) => Promise<string | null>; logger: ILogger; descriptor: "previous"; }' is not assignable to parameter of type 'PrefetchTaskConfig' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'resolveUrl' are incompatible.
+    Type '(() => string | null) | undefined' is not assignable to type '() => string | null'.
+      Type 'undefined' is not assignable to type '() => string | null'.
+app/shared/player/hooks/useAdjacentAudioPrefetch.ts(90,27): error TS2379: Argument of type '{ enabled: boolean; currentAudioUrl: string | null; prefetchNext: boolean; prefetchPrevious: boolean; getNextAudioUrl: (() => string | null) | undefined; getPreviousAudioUrl: (() => string | null) | undefined; prefetchAudio: (url: string) => Promise<string | null>; logger: ILogger; }' is not assignable to parameter of type 'AdjacentAudioPrefetchParams' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'getNextAudioUrl' are incompatible.
+    Type '(() => string | null) | undefined' is not assignable to type '() => string | null'.
+      Type 'undefined' is not assignable to type '() => string | null'.
+app/shared/player/hooks/useAudioControllerCore.ts(33,33): error TS2379: Argument of type '{ track: Track | null | undefined; volume: number; playbackRate: number; contextRef: MutableRefObject<HTMLAudioElement | null>; }' is not assignable to parameter of type 'Opts' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'track' are incompatible.
+    Type 'Track | null | undefined' is not assignable to type 'Track | null'.
+      Type 'undefined' is not assignable to type 'Track | null'.
+app/shared/player/hooks/useAudioControllerCore.ts(43,5): error TS2322: Type 'Dispatch<SetStateAction<string | null>>' is not assignable to type 'Dispatch<SetStateAction<number | null>>'.
+  Type 'SetStateAction<number | null>' is not assignable to type 'SetStateAction<string | null>'.
+    Type 'number' is not assignable to type 'SetStateAction<string | null>'.
+app/shared/player/hooks/useAudioControllerCore.ts(60,5): error TS2322: Type 'MutableRefObject<HTMLAudioElement | null>' is not assignable to type 'MutableRefObject<HTMLAudioElement | null> & RefObject<HTMLAudioElement>'.
+  Type 'MutableRefObject<HTMLAudioElement | null>' is not assignable to type 'RefObject<HTMLAudioElement>'.
+    Types of property 'current' are incompatible.
+      Type 'HTMLAudioElement | null' is not assignable to type 'HTMLAudioElement'.
+        Type 'null' is not assignable to type 'HTMLAudioElement'.
+app/shared/player/hooks/useAudioControllerCore.ts(60,5): error TS2783: 'audioRef' is specified more than once, so this usage will be overwritten.
+app/shared/player/hooks/useAudioControllerSetup.ts(49,45): error TS2379: Argument of type '{ audioRef: MutableRefObject<HTMLAudioElement | null>; repeatOptions: RepeatOptions; activeVerse: Verse | null; ... 6 more ...; setPlayingId: Dispatch<...>; }' is not assignable to parameter of type 'Options' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onNext' are incompatible.
+    Type '(() => boolean) | undefined' is not assignable to type '() => boolean'.
+      Type 'undefined' is not assignable to type '() => boolean'.
+app/shared/player/hooks/useAudioPlayer.ts(109,25): error TS2379: Argument of type '{ audioRef: RefObject<HTMLAudioElement | null>; src: string | undefined; defaultDuration: number | undefined; onTimeUpdate: ((time: number) => void) | undefined; onLoadedMetadata: ((duration: number) => void) | undefined; }' is not assignable to parameter of type 'Options' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'src' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+app/shared/player/hooks/useAudioPrefetch.tasks.ts(40,39): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(input: string | URL | Request, init?: RequestInit | undefined): Promise<Response>', gave the following error.
+    Argument of type '{ signal: AbortSignal | undefined; headers: { Range: string; }; }' is not assignable to parameter of type 'RequestInit' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+      Types of property 'signal' are incompatible.
+        Type 'AbortSignal | undefined' is not assignable to type 'AbortSignal | null'.
+          Type 'undefined' is not assignable to type 'AbortSignal | null'.
+  Overload 2 of 2, '(input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response>', gave the following error.
+    Argument of type '{ signal: AbortSignal | undefined; headers: { Range: string; }; }' is not assignable to parameter of type 'RequestInit' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+      Types of property 'signal' are incompatible.
+        Type 'AbortSignal | undefined' is not assignable to type 'AbortSignal | null'.
+          Type 'undefined' is not assignable to type 'AbortSignal | null'.
+app/shared/player/hooks/useAudioPrefetch.ts(32,28): error TS2379: Argument of type '{ enabled: boolean; currentAudioUrl: string | null; prefetchNext: boolean; prefetchPrevious: boolean; getNextAudioUrl: (() => string | null) | undefined; getPreviousAudioUrl: (() => string | null) | undefined; prefetchAudio: (url: string) => Promise<string | null>; logger: Logger; }' is not assignable to parameter of type 'AdjacentAudioPrefetchParams' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'getNextAudioUrl' are incompatible.
+    Type '(() => string | null) | undefined' is not assignable to type '() => string | null'.
+      Type 'undefined' is not assignable to type '() => string | null'.
+app/shared/player/hooks/useCompletionHandlers.ts(46,3): error TS2375: Type '{ start: number; end: number; delay: number; currentAyah: number | null; verseRepeatsLeft: number; playRepeatsLeft: number; repeatEach: number; onNext: (() => boolean) | undefined; onPrev: (() => boolean) | undefined; ... 8 more ...; handleSurahRepeat: () => void; }' is not assignable to type 'CreateHandlersArgs' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onNext' are incompatible.
+    Type '(() => boolean) | undefined' is not assignable to type '() => boolean'.
+      Type 'undefined' is not assignable to type '() => boolean'.
+app/shared/player/hooks/useCompletionHandlers.ts(50,41): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+app/shared/player/hooks/useCompletionHandlers.ts(93,11): error TS2375: Type '{ audioRef: RefObject<HTMLAudioElement | null>; onNext: (() => boolean) | undefined; onPrev: (() => boolean) | undefined; seek: (s: number) => void; play: () => void; pause: () => void; setIsPlaying: (v: boolean) => void; setPlayingId: (v: number | null) => void; }' is not assignable to type 'Controls' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onNext' are incompatible.
+    Type '(() => boolean) | undefined' is not assignable to type '() => boolean'.
+      Type 'undefined' is not assignable to type '() => boolean'.
+app/shared/player/hooks/useControllerLayout.ts(18,26): error TS2379: Argument of type '{ timing: TrackTimingReturn; isPlaying: boolean; onNext: (() => boolean) | undefined; onPrev: (() => boolean) | undefined; closePlayer: () => void; setMobileOptionsOpen: Dispatch<...>; controls: { ...; }; }' is not assignable to parameter of type 'Options' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onNext' are incompatible.
+    Type '(() => boolean) | undefined' is not assignable to type '() => boolean'.
+      Type 'undefined' is not assignable to type '() => boolean'.
+app/shared/player/hooks/usePersistedAudioSettings.ts(21,51): error TS2345: Argument of type 'Reciter | undefined' is not assignable to parameter of type 'Reciter | (() => Reciter)'.
+  Type 'undefined' is not assignable to type 'Reciter | (() => Reciter)'.
+app/shared/player/hooks/usePlaybackCompletion.ts(43,44): error TS2379: Argument of type '{ verseRepeatsLeft: number; playRepeatsLeft: number; repeatEach: number; delay: number; setVerseRepeatsLeft: (n: number) => void; setPlayRepeatsLeft: (n: number) => void; audioRef: RefObject<HTMLAudioElement | null>; ... 6 more ...; setPlayingId: (v: number | null) => void; }' is not assignable to parameter of type 'RepeatArgs' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onNext' are incompatible.
+    Type '(() => boolean) | undefined' is not assignable to type '() => boolean'.
+      Type 'undefined' is not assignable to type '() => boolean'.
+app/shared/player/hooks/usePlaybackCompletion.ts(57,5): error TS2375: Type '{ audioRef: RefObject<HTMLAudioElement | null>; onNext: (() => boolean) | undefined; onPrev: (() => boolean) | undefined; seek: (s: number) => void; play: () => void; pause: () => void; setIsPlaying: (v: boolean) => void; setPlayingId: (v: number | null) => void; }' is not assignable to type 'Controls' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onNext' are incompatible.
+    Type '(() => boolean) | undefined' is not assignable to type '() => boolean'.
+      Type 'undefined' is not assignable to type '() => boolean'.
+app/shared/player/hooks/usePlaybackCompletion.ts(65,21): error TS7053: Element implicitly has an 'any' type because expression of type '"off" | "single" | "range" | "surah"' can't be used to index type 'CompletionHandlers'.
+  Property 'off' does not exist on type 'CompletionHandlers'.
+app/shared/player/hooks/useQuranAudioController.ts(28,39): error TS2379: Argument of type '{ track: Track | null | undefined; onPrev: (() => boolean) | undefined; onNext: (() => boolean) | undefined; }' is not assignable to parameter of type 'Options' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'track' are incompatible.
+    Type 'Track | null | undefined' is not assignable to type 'Track | null'.
+      Type 'undefined' is not assignable to type 'Track | null'.
+app/shared/player/hooks/useQuranAudioController.ts(29,49): error TS2379: Argument of type '{ core: CoreReturn; setMobileOptionsOpen: Dispatch<SetStateAction<boolean>>; onNext: (() => boolean) | undefined; onPrev: (() => boolean) | undefined; }' is not assignable to parameter of type 'Options' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onPrev' are incompatible.
+    Type '(() => boolean) | undefined' is not assignable to type '() => boolean'.
+      Type 'undefined' is not assignable to type '() => boolean'.
+app/shared/player/hooks/useSurahRepeat.ts(89,25): error TS2379: Argument of type '{ verseRepeatsLeft: number; playRepeatsLeft: number; repeatEach: number; delay: number; onNext: (() => boolean) | undefined; onPrev: (() => boolean) | undefined; seek: (s: number) => void; play: () => void; ... 4 more ...; setPlayRepeatsLeft: (n: number) => void; }' is not assignable to parameter of type 'RepeatArgs' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onNext' are incompatible.
+    Type '(() => boolean) | undefined' is not assignable to type '() => boolean'.
+      Type 'undefined' is not assignable to type '() => boolean'.
+app/shared/player/hooks/useTrackTiming.ts(61,86): error TS2379: Argument of type '{ src: string | undefined; defaultDuration: number | undefined; onTimeUpdate: Dispatch<SetStateAction<number>>; onLoadedMetadata: Dispatch<SetStateAction<number>>; }' is not assignable to parameter of type 'Options' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'src' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+app/shared/player/layouts/DesktopPlayerLayout.tsx(47,8): error TS2375: Type '{ isPlaying: boolean; interactable: boolean; onPrev: (() => boolean) | undefined; onNext: (() => boolean) | undefined; togglePlay: () => void; }' is not assignable to type 'Props' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onPrev' are incompatible.
+    Type '(() => boolean) | undefined' is not assignable to type '() => void'.
+      Type 'undefined' is not assignable to type '() => void'.
+app/shared/player/layouts/MobilePlayerLayout.tsx(43,8): error TS2375: Type '{ cover: string; title: string; artist: string; isPlaying: boolean; interactable: boolean; onPrev: (() => boolean) | undefined; onNext: (() => boolean) | undefined; togglePlay: () => void; setMobileOptionsOpen: () => void; closePlayer: () => void; }' is not assignable to type 'Props' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onPrev' are incompatible.
+    Type '(() => boolean) | undefined' is not assignable to type '() => boolean'.
+      Type 'undefined' is not assignable to type '() => boolean'.
+app/shared/player/layouts/MobileTopBar.tsx(103,8): error TS2375: Type '{ isPlaying: boolean; interactable: boolean; onPrev: (() => boolean) | undefined; onNext: (() => boolean) | undefined; togglePlay: () => void; }' is not assignable to type 'Props' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onPrev' are incompatible.
+    Type '(() => boolean) | undefined' is not assignable to type '() => void'.
+      Type 'undefined' is not assignable to type '() => void'.
+app/shared/player/QuranAudioPlayer.tsx(33,31): error TS2379: Argument of type '{ track: Track | null | undefined; onPrev: (() => boolean) | undefined; onNext: (() => boolean) | undefined; }' is not assignable to parameter of type 'Props' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'track' are incompatible.
+    Type 'Track | null | undefined' is not assignable to type 'Track | null'.
+      Type 'undefined' is not assignable to type 'Track | null'.
+app/shared/player/utils/__tests__/audioSegmentPrefetch.test.ts(148,48): error TS2493: Tuple type '[]' of length '0' has no element at index '0'.
+app/shared/player/utils/audioSegmentPrefetch.helpers.ts(111,7): error TS18048: 'batch' is possibly 'undefined'.
+app/shared/player/utils/audioSegmentPrefetch.helpers.ts(113,60): error TS2379: Argument of type '{ priority: AudioPrefetchPriority | undefined; }' is not assignable to parameter of type '{ priority?: AudioPrefetchPriority; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'priority' are incompatible.
+    Type 'AudioPrefetchPriority | undefined' is not assignable to type 'AudioPrefetchPriority'.
+      Type 'undefined' is not assignable to type 'AudioPrefetchPriority'.
+app/shared/player/utils/buildPlayerLayoutProps.ts(40,3): error TS2375: Type '{ readonly cover: string; readonly title: string; readonly artist: string; readonly current: number; readonly duration: number; readonly elapsed: string; readonly total: string; readonly interactable: boolean; ... 6 more ...; readonly setMobileOptionsOpen: () => void; }' is not assignable to type '{ cover: string; title: string; artist: string; current: number; duration: number; elapsed: string; total: string; interactable: boolean; isPlaying: boolean; togglePlay: () => void; setSeek: (s: number) => void; onNext?: () => boolean; onPrev?: () => boolean; closePlayer: () => void; setMobileOptionsOpen: () => void...' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onNext' are incompatible.
+    Type '(() => boolean) | undefined' is not assignable to type '() => boolean'.
+      Type 'undefined' is not assignable to type '() => boolean'.
+app/shared/reader/ReaderShell.tsx(29,50): error TS2379: Argument of type '{ resourceId: string; lookup: LookupFn; initialVerses: Verse[] | undefined; }' is not assignable to parameter of type 'UseReaderViewParams' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'initialVerses' are incompatible.
+    Type 'Verse[] | undefined' is not assignable to type 'Verse[]'.
+      Type 'undefined' is not assignable to type 'Verse[]'.
+app/shared/reader/ReaderShell.tsx(37,8): error TS2375: Type '{ verses: Verse[]; isLoading: boolean; error: string | null; loadMoreRef: RefObject<HTMLDivElement | null>; isValidating: boolean; isReachingEnd: boolean; emptyLabelKey: string | undefined; endLabelKey: string | undefined; }' is not assignable to type 'SurahMainProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'emptyLabelKey' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+app/shared/resource-panel/hooks/useListHeight.ts(42,5): error TS2322: Type 'RefObject<HTMLDivElement | null>' is not assignable to type 'RefObject<HTMLDivElement>'.
+  Type 'HTMLDivElement | null' is not assignable to type 'HTMLDivElement'.
+    Type 'null' is not assignable to type 'HTMLDivElement'.
+app/shared/resource-panel/ResourceList.tsx(37,18): error TS18048: 'item' is possibly 'undefined'.
+app/shared/resource-panel/ResourceList.tsx(38,13): error TS2322: Type 'T | undefined' is not assignable to type 'Resource'.
+  Type 'undefined' is not assignable to type 'Resource'.
+app/shared/resource-panel/ResourceList.tsx(39,41): error TS18048: 'item' is possibly 'undefined'.
+app/shared/surah-sidebar/hooks/useSelectionSync.ts(41,27): error TS2345: Argument of type 'number | undefined' is not assignable to parameter of type 'SetStateAction<number | null>'.
+  Type 'undefined' is not assignable to type 'SetStateAction<number | null>'.
+app/shared/surah-sidebar/hooks/useSelectionSync.ts(42,40): error TS2345: Argument of type 'number | undefined' is not assignable to parameter of type 'number'.
+  Type 'undefined' is not assignable to type 'number'.
+app/shared/surah-sidebar/hooks/useSelectionSync.ts(79,7): error TS2379: Argument of type '{ currentSurahId: number | undefined; currentJuzId: number | undefined; currentPageId: number | undefined; chapters: readonly Chapter[]; }' is not assignable to parameter of type 'Args' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'currentSurahId' are incompatible.
+    Type 'number | undefined' is not assignable to type 'number'.
+      Type 'undefined' is not assignable to type 'number'.
+app/shared/surah-sidebar/Juz.tsx(48,35): error TS2345: Argument of type 'number | undefined' is not assignable to parameter of type 'number'.
+  Type 'undefined' is not assignable to type 'number'.
+app/shared/surah-sidebar/Juz.tsx(49,45): error TS2345: Argument of type 'number | undefined' is not assignable to parameter of type 'number'.
+  Type 'undefined' is not assignable to type 'number'.
+app/shared/surah-sidebar/useSidebarScroll.ts(32,37): error TS2322: Type 'RefObject<HTMLDivElement | null>' is not assignable to type 'RefObject<HTMLDivElement>'.
+  Type 'HTMLDivElement | null' is not assignable to type 'HTMLDivElement'.
+    Type 'null' is not assignable to type 'HTMLDivElement'.
+app/shared/surah-sidebar/useSidebarScroll.ts(34,5): error TS2322: Type 'RefObject<HTMLDivElement | null>' is not assignable to type 'RefObject<HTMLDivElement>'.
+  Type 'HTMLDivElement | null' is not assignable to type 'HTMLDivElement'.
+    Type 'null' is not assignable to type 'HTMLDivElement'.
+app/shared/surah-sidebar/useSidebarScroll.ts(49,12): error TS2322: Type 'RefObject<HTMLDivElement | null>' is not assignable to type 'RefObject<HTMLDivElement>'.
+  Type 'HTMLDivElement | null' is not assignable to type 'HTMLDivElement'.
+    Type 'null' is not assignable to type 'HTMLDivElement'.
+app/shared/ui/base-card.config.ts(117,15): error TS2484: Export declaration conflicts with exported declaration of 'CardVariant'.
+app/shared/ui/base-card.config.ts(117,28): error TS2484: Export declaration conflicts with exported declaration of 'AnimationConfig'.
+app/shared/ui/base-card.utils.tsx(43,25): error TS2379: Argument of type '{ padding?: string; height?: string; borderRadius?: string; background?: { inactive: string; active: string; }; hover?: { effect: "scale" | "translate" | "none"; value: string; duration: string; }; shadow?: { inactive: string; active: string; }; }' is not assignable to parameter of type 'CardVariant' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Property 'padding' is optional in type '{ padding?: string; height?: string; borderRadius?: string; background?: { inactive: string; active: string; }; hover?: { effect: "scale" | "translate" | "none"; value: string; duration: string; }; shadow?: { ...; }; }' but required in type 'CardVariant'.
+app/shared/ui/base-card.variants.tsx(8,4): error TS2322: Type '{ children?: ReactNode; variant: string; animation: string; }' is not assignable to type 'BaseCardProps'.
+  Property 'children' is optional in type '{ children?: ReactNode; variant: string; animation: string; }' but required in type 'BaseCardProps'.
+app/shared/ui/base-card.variants.tsx(12,4): error TS2322: Type '{ children?: ReactNode; variant: string; animation: string; }' is not assignable to type 'BaseCardProps'.
+  Property 'children' is optional in type '{ children?: ReactNode; variant: string; animation: string; }' but required in type 'BaseCardProps'.
+app/shared/ui/base-card.variants.tsx(16,4): error TS2322: Type '{ children?: ReactNode; variant: string; animation: string; }' is not assignable to type 'BaseCardProps'.
+  Property 'children' is optional in type '{ children?: ReactNode; variant: string; animation: string; }' but required in type 'BaseCardProps'.
+app/shared/ui/base-card/renderers.tsx(40,6): error TS2375: Type '{ children: ReactNode; className: string; onClick: MouseEventHandler<HTMLAnchorElement | HTMLDivElement> | undefined; ... 11 more ...; scroll?: boolean; }' is not assignable to type 'Omit<MotionComponentProps<Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps<any>> & LinkProps<any> & { children?: ReactNode; } & RefAttributes<...>>, "children">' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onClick' are incompatible.
+    Type 'MouseEventHandler<HTMLAnchorElement | HTMLDivElement> | undefined' is not assignable to type 'MouseEventHandler<HTMLAnchorElement>'.
+      Type 'undefined' is not assignable to type 'MouseEventHandler<HTMLAnchorElement>'.
+app/shared/ui/base-card/renderers.tsx(90,8): error TS2375: Type '{ children: ReactNode; href: string; scroll: boolean; className: string; onClick: MouseEventHandler<HTMLAnchorElement | HTMLDivElement> | undefined; "data-active": boolean | undefined; }' is not assignable to type 'LinkProps<any>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onClick' are incompatible.
+    Type 'MouseEventHandler<HTMLAnchorElement | HTMLDivElement> | undefined' is not assignable to type 'MouseEventHandler<HTMLAnchorElement>'.
+      Type 'undefined' is not assignable to type 'MouseEventHandler<HTMLAnchorElement>'.
+app/shared/ui/BaseCard.tsx(13,10): error TS18046: 'animationConfig' is of type 'unknown'.
+app/shared/ui/BaseCard.tsx(13,47): error TS18046: 'animationConfig' is of type 'unknown'.
+app/shared/ui/BaseCard.tsx(14,44): error TS2322: Type 'unknown' is not assignable to type 'AnimationConfig'.
+app/shared/ui/BaseCard.tsx(15,17): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'RenderCSSProps'.
+  Type 'Record<string, unknown>' is missing the following properties from type 'RenderCSSProps': scroll, baseClasses, children, props
+app/shared/ui/Button.stories.tsx(10,19): error TS2488: Type 'DecoratorFunction<ReactRenderer, { [x: string]: any; }> | DecoratorFunction<ReactRenderer, { [x: string]: any; }>[]' must have a '[Symbol.iterator]()' method that returns an iterator.
+app/shared/ui/cards/__tests__/BookmarkNavigationCard.test.tsx(59,31): error TS2322: Type '{ id: string; icon: ({ size, className, }: { size?: number; className?: string; }) => React.JSX.Element; label: string; description: string; }' is not assignable to type 'BookmarkNavigationContent'.
+  Types of property 'id' are incompatible.
+    Type 'string' is not assignable to type 'SectionId'.
+app/shared/ui/cards/__tests__/BookmarkNavigationCard.test.tsx(68,31): error TS2322: Type '{ id: string; icon: ({ size, className, }: { size?: number; className?: string; }) => React.JSX.Element; label: string; description: string; }' is not assignable to type 'BookmarkNavigationContent'.
+  Types of property 'id' are incompatible.
+    Type 'string' is not assignable to type 'SectionId'.
+app/shared/ui/cards/BookmarkNavigationCard.tsx(87,63): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'MouseEventHandler<HTMLAnchorElement | HTMLDivElement> | undefined'.
+app/shared/ui/cards/BookmarkVerseCard.stories.tsx(87,9): error TS2741: Property 'verseId' is missing in type '{ id: string; verseKey: string; surahName: string; ayahNumber: number; arabicText: string; translationText: string; createdAt: string; tags: string[]; note: string; folderId: string; }' but required in type 'Bookmark'.
+app/shared/ui/cards/BookmarkVerseCard.stories.tsx(95,11): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'Bookmark'.
+app/shared/ui/cards/content-bookmark/Header.tsx(54,12): error TS2375: Type '{ verseKey: string; isPlaying: boolean; isLoadingAudio: boolean; isBookmarked: boolean; onPlayPause: () => void; onBookmark: (() => void) | undefined; onNavigateToVerse: (() => void) | undefined; showRemove: true; className: string; }' is not assignable to type 'VerseActionsProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onBookmark' are incompatible.
+    Type '(() => void) | undefined' is not assignable to type '() => void'.
+      Type 'undefined' is not assignable to type '() => void'.
+app/shared/ui/cards/content-bookmark/useContentBookmarkCard.ts(41,34): error TS2577: Return type annotation circularly references itself.
+app/shared/ui/cards/content-bookmark/useContentBookmarkCard.ts(50,38): error TS2379: Argument of type '{ bookmark: BookmarkData; isPlaying: boolean; isLoadingAudio: boolean; isBookmarked: boolean; onPlayPause: (() => void) | undefined; onBookmark: (() => void) | undefined; onNavigateToVerse: (() => void) | undefined; }' is not assignable to parameter of type '{ bookmark: BookmarkData; isPlaying: boolean; isLoadingAudio: boolean; isBookmarked: boolean; onPlayPause?: () => void; onBookmark?: () => void; onNavigateToVerse?: () => void; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onPlayPause' are incompatible.
+    Type '(() => void) | undefined' is not assignable to type '() => void'.
+      Type 'undefined' is not assignable to type '() => void'.
+app/shared/ui/cards/content-bookmark/useContentBookmarkCard.ts(97,3): error TS2375: Type '{ verseKey: string | undefined; surahName: string | undefined; createdAt: number; isPlaying: boolean; isLoadingAudio: boolean; isBookmarked: boolean; onPlayPause: (() => void) | undefined; onBookmark: (() => void) | undefined; onNavigateToVerse: (() => void) | undefined; }' is not assignable to type '{ verseKey?: string; surahName?: string; createdAt: number; isPlaying: boolean; isLoadingAudio: boolean; isBookmarked: boolean; onPlayPause?: () => void; onBookmark?: () => void; onNavigateToVerse?: () => void; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'verseKey' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+app/shared/ui/cards/content-bookmark/useContentBookmarkCard.ts(120,3): error TS2375: Type '{ verseText: string | undefined; translation: string | undefined; arabicFontFace: string; arabicFontSize: number; tajweed: boolean; }' is not assignable to type '{ verseText?: string; translation?: string; arabicFontFace: string; arabicFontSize: number; tajweed: boolean; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'verseText' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+app/shared/ui/cards/ContentBookmarkCard.tsx(46,5): error TS2322: Type 'unknown' is not assignable to type '(e: MouseEvent<HTMLDivElement | HTMLAnchorElement, MouseEvent>) => void'.
+app/shared/ui/cards/EnhancedFolderCard.tsx(56,6): error TS2375: Type '{ children: Element[]; variant: string; animation: string; onClick: MouseEventHandler<HTMLAnchorElement | HTMLDivElement> | undefined; ... 4 more ...; className: string; }' is not assignable to type 'BaseCardProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onClick' are incompatible.
+    Type 'MouseEventHandler<HTMLAnchorElement | HTMLDivElement> | undefined' is not assignable to type 'MouseEventHandler<HTMLAnchorElement | HTMLDivElement>'.
+      Type 'undefined' is not assignable to type 'MouseEventHandler<HTMLAnchorElement | HTMLDivElement>'.
+app/shared/ui/cards/FolderHeader.tsx(80,11): error TS2322: Type '{ onEdit: () => void; onDelete: () => void; onRename: () => void; onColorChange: () => void; }' is not assignable to type 'IntrinsicAttributes & FolderContextMenuProps'.
+  Property 'onRename' does not exist on type 'IntrinsicAttributes & FolderContextMenuProps'.
+app/shared/ui/cards/StandardNavigationCard.stories.tsx(63,8): error TS2741: Property 'content' is missing in type '{ title: string; subtitle: string; href: string; icon: string; }' but required in type 'StandardNavigationCardProps'.
+app/shared/ui/cards/StandardNavigationCard.stories.tsx(64,8): error TS2741: Property 'content' is missing in type '{ title: string; subtitle: string; href: string; icon: string; }' but required in type 'StandardNavigationCardProps'.
+app/shared/ui/cards/StandardNavigationCard.stories.tsx(70,8): error TS2741: Property 'content' is missing in type '{ title: string; subtitle: string; href: string; }' but required in type 'StandardNavigationCardProps'.
+app/shared/ui/cards/StandardNavigationCard.tsx(156,5): error TS2375: Type '{ showArabic: false; titleWeight: "semibold"; subtitle: undefined; id: number; title: string; arabic?: string; showBadge?: boolean; }' is not assignable to type 'NavigationCardContent' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'subtitle' are incompatible.
+    Type 'undefined' is not assignable to type 'string'.
+app/shared/ui/GlassCard.tsx(55,28): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+app/shared/ui/GlassCard.tsx(55,40): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+app/shared/ui/GlassCard.tsx(75,48): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+app/shared/ui/GlassCardPrimitives.tsx(19,8): error TS2375: Type '{ children: ReactNode; href: string; download?: any; hrefLang?: string | undefined; media?: string | undefined; ping?: string | undefined; target?: HTMLAttributeAnchorTarget | undefined; ... 280 more ...; className: string; }' is not assignable to type 'LinkProps<any>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onMouseEnter' are incompatible.
+    Type 'MouseEventHandler<HTMLAnchorElement> | undefined' is not assignable to type 'MouseEventHandler<HTMLAnchorElement>'.
+      Type 'undefined' is not assignable to type 'MouseEventHandler<HTMLAnchorElement>'.
+app/shared/ui/ListItem.tsx(16,20): error TS2503: Cannot find namespace 'JSX'.
+app/shared/ui/ListItem.tsx(44,26): error TS2503: Cannot find namespace 'JSX'.
+app/shared/ui/Panel.tsx(70,12): error TS2375: Type '{ title: string | undefined; showCloseButton: boolean; onClose: () => void; }' is not assignable to type 'PanelHeaderProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'title' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+app/shared/ui/Panel.tsx(100,10): error TS2375: Type '{ title: string | undefined; showCloseButton: boolean; onClose: () => void; }' is not assignable to type 'PanelHeaderProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'title' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+app/shared/ui/Panel.tsx(129,19): error TS2379: Argument of type '{ onClose: () => void; title: string | undefined; children: React.ReactNode; className: string | undefined; showCloseButton: boolean; closeOnOverlayClick: boolean; variantClass: string; isOpen: true; showOverlay: boolean; }' is not assignable to parameter of type 'RenderArgs' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'title' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+app/shared/ui/PanelModalCenter.tsx(90,12): error TS2375: Type '{ title: string | undefined; showCloseButton: boolean; onClose: () => void; }' is not assignable to type 'PanelHeaderProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'title' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+app/shared/ui/ResourcePanel.tsx(59,12): error TS2375: Type '{ items: T[]; selectedId: string | number; onSelect: (id: string | number) => void; onClose: () => void; loading: boolean; emptyStateMessage: string; renderItem: ((item: T, isSelected: boolean, onSelect: () => void) => ReactNode) | undefined; }' is not assignable to type 'ResourcePanelListProps<T>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'renderItem' are incompatible.
+    Type '((item: T, isSelected: boolean, onSelect: () => void) => ReactNode) | undefined' is not assignable to type '(item: T, isSelected: boolean, onSelect: () => void) => ReactNode'.
+      Type 'undefined' is not assignable to type '(item: T, isSelected: boolean, onSelect: () => void) => ReactNode'.
+app/shared/ui/SearchField.stories.tsx(25,22): error TS2739: Type '{}' is missing the following properties from type 'SearchFieldProps': searchTerm, setSearchTerm
+app/shared/ui/SearchField.tsx(37,6): error TS2375: Type '{ value: string; onChange: (term: string) => void; placeholder: string; variant: "header" | "main" | "default" | "panel" | "glass"; size: "lg" | "sm" | "md"; onKeyDown: ((e: KeyboardEvent<HTMLInputElement>) => void) | undefined; }' is not assignable to type 'SearchInputProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onKeyDown' are incompatible.
+    Type '((e: KeyboardEvent<HTMLInputElement>) => void) | undefined' is not assignable to type '(e: KeyboardEvent<HTMLInputElement>) => void'.
+      Type 'undefined' is not assignable to type '(e: KeyboardEvent<HTMLInputElement>) => void'.
+app/shared/ui/settings/RangeSetting.tsx(38,6): error TS2375: Type '{ children: Element; label: string; description: string | undefined; disabled: boolean; }' is not assignable to type 'SettingItemProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'description' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+app/shared/ui/settings/SelectSetting.tsx(37,6): error TS2375: Type '{ children: Element; label: string; description: string | undefined; disabled: boolean; }' is not assignable to type 'SettingItemProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'description' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+app/shared/ui/settings/ToggleSetting.tsx(29,6): error TS2375: Type '{ children: Element; label: string; description: string | undefined; disabled: boolean; }' is not assignable to type 'SettingItemProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'description' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+app/shared/ui/SidebarCard.tsx(26,6): error TS2375: Type '{ children: ReactNode; href: string; scroll: boolean; "data-active": boolean | undefined; onClick: (() => void) | undefined; className: string; }' is not assignable to type 'LinkProps<any>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onClick' are incompatible.
+    Type '(() => void) | undefined' is not assignable to type 'MouseEventHandler<HTMLAnchorElement>'.
+      Type 'undefined' is not assignable to type 'MouseEventHandler<HTMLAnchorElement>'.
+app/shared/ui/ThemeToggle.tsx(135,8): error TS2375: Type '{ currentTheme: "light" | "dark"; onThemeChange: (theme: "light" | "dark") => void; className: string | undefined; }' is not assignable to type 'TabsVariantProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'className' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+app/shared/ui/ThemeToggle.tsx(143,11): error TS2375: Type '{ currentTheme: "light" | "dark"; onToggle: () => void; className: string | undefined; }' is not assignable to type 'ButtonVariantProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'className' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+app/shared/verse-actions/DesktopVerseActions.tsx(50,10): error TS2375: Type '{ onNavigateToVerse: (() => void) | undefined; }' is not assignable to type 'NavigateToVerseLinkProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onNavigateToVerse' are incompatible.
+    Type '(() => void) | undefined' is not assignable to type '() => void'.
+      Type 'undefined' is not assignable to type '() => void'.
+app/shared/verse-actions/MobileBottomSheet.tsx(37,35): error TS2379: Argument of type '{ isPlaying: boolean; isLoadingAudio: boolean; isBookmarked: boolean; showRemove: boolean; verseKey: string; onPlayPause: () => void; onBookmark: () => void; onShare: () => void; onNavigateToVerse: (() => void) | undefined; onClose: () => void; }' is not assignable to parameter of type 'UseVerseActionsParams' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onNavigateToVerse' are incompatible.
+    Type '(() => void) | undefined' is not assignable to type '() => void'.
+      Type 'undefined' is not assignable to type '() => void'.
+app/shared/verse-actions/MobileVerseActions.tsx(31,34): error TS2379: Argument of type '{ onShare: (() => void) | undefined; onBookmark: (() => void) | undefined; showRemove: boolean; }' is not assignable to parameter of type 'UseMobileVerseActionsStateParams' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onShare' are incompatible.
+    Type '(() => void) | undefined' is not assignable to type '() => void | Promise<void>'.
+      Type 'undefined' is not assignable to type '() => void | Promise<void>'.
+app/shared/verse-actions/MobileVerseActions.tsx(36,8): error TS2375: Type '{ isOpen: boolean; onClose: () => void; verseKey: string; isPlaying: boolean; isLoadingAudio: boolean; isBookmarked: boolean; onPlayPause: () => void; onBookmark: () => void; onShare: () => void; onNavigateToVerse: (() => void) | undefined; showRemove: boolean; }' is not assignable to type 'MobileBottomSheetProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'onNavigateToVerse' are incompatible.
+    Type '(() => void) | undefined' is not assignable to type '() => void'.
+      Type 'undefined' is not assignable to type '() => void'.
+app/testUtils/contextTestUtils.tsx(1,28): error TS1205: Re-exporting a type when 'isolatedModules' is enabled requires using 'export type'.
+app/testUtils/matchMedia.ts(24,3): error TS2578: Unused '@ts-expect-error' directive.
+app/testUtils/mockRouter.ts(16,5): error TS2707: Generic type 'Mock' requires between 0 and 1 type arguments.
+app/testUtils/performance/tracking.tsx(10,40): error TS2503: Cannot find namespace 'JSX'.
+app/testUtils/responsiveTestUtils/viewport.ts(57,39): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+base-card.config.ts(117,15): error TS2484: Export declaration conflicts with exported declaration of 'CardVariant'.
+base-card.config.ts(117,28): error TS2484: Export declaration conflicts with exported declaration of 'AnimationConfig'.
+config/index.ts(63,29): error TS2339: Property 'errors' does not exist on type 'ZodError<unknown>'.
+config/index.ts(64,15): error TS7006: Parameter 'err' implicitly has an 'any' type.
+data/__tests__/juzData.test.ts(5,12): error TS2532: Object is possibly 'undefined'.
+data/__tests__/juzData.test.ts(5,47): error TS2532: Object is possibly 'undefined'.
+lib/__tests__/focus.hooks.test.ts(162,7): error TS2322: Type 'FocusHandlers' is not assignable to type 'void'.
+lib/__tests__/focus.hooks.test.ts(165,29): error TS2322: Type '"desktop"' is not assignable to type '"mobile"'.
+lib/__tests__/responsive-focus.test.ts(23,68): error TS2345: Argument of type 'string' is not assignable to parameter of type '"mobile" | "tablet" | "desktop"'.
+lib/__tests__/responsive-focus.test.ts(42,77): error TS2345: Argument of type 'string' is not assignable to parameter of type '"mobile" | "tablet" | "desktop"'.
+lib/__tests__/responsive-test-utils/breakpoints.ts(37,23): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+lib/__tests__/responsive-test-utils/breakpoints.ts(61,3): error TS2322: Type 'Mock<void, [event: string, listener: Listener], any>' is not assignable to type '{ <K extends keyof MediaQueryListEventMap>(type: K, listener: (this: MediaQueryList, ev: MediaQueryListEventMap[K]) => any, options?: boolean | AddEventListenerOptions | undefined): void; (type: string, listener: EventListenerOrEventListenerObject, options?: boolean | ... 1 more ... | undefined): void; }'.
+  Types of parameters 'listener' and 'listener' are incompatible.
+    Type 'EventListenerOrEventListenerObject' is not assignable to type 'Listener'.
+      Type 'EventListenerObject' is not assignable to type 'Listener'.
+        Type 'EventListenerObject' provides no match for the signature '(e: MediaQueryListEvent): void'.
+lib/__tests__/responsive-test-utils/breakpoints.ts(67,3): error TS2322: Type 'Mock<void, [event: string, listener: Listener], any>' is not assignable to type '{ <K extends keyof MediaQueryListEventMap>(type: K, listener: (this: MediaQueryList, ev: MediaQueryListEventMap[K]) => any, options?: boolean | EventListenerOptions | undefined): void; (type: string, listener: EventListenerOrEventListenerObject, options?: boolean | ... 1 more ... | undefined): void; }'.
+  Types of parameters 'listener' and 'listener' are incompatible.
+    Type 'EventListenerOrEventListenerObject' is not assignable to type 'Listener'.
+      Type 'EventListenerObject' is not assignable to type 'Listener'.
+        Type 'EventListenerObject' provides no match for the signature '(e: MediaQueryListEvent): void'.
+lib/__tests__/responsive.orientation.test.ts(24,3): error TS2578: Unused '@ts-expect-error' directive.
+lib/__tests__/responsive.width.test.ts(30,3): error TS2578: Unused '@ts-expect-error' directive.
+lib/api/__tests__/random-verse.test.ts(15,3): error TS2578: Unused '@ts-expect-error' directive.
+lib/api/client.ts(2,34): error TS4111: Property 'QURAN_API_BASE_URL' comes from an index signature, so it must be accessed with ['QURAN_API_BASE_URL'].
+lib/api/verses/extras.ts(48,43): error TS18048: 'randomSurah' is possibly 'undefined'.
+lib/api/verses/extras.ts(49,25): error TS18048: 'randomSurah' is possibly 'undefined'.
+lib/api/verses/normalize.ts(25,3): error TS2375: Type '{ words: Word[] | undefined; id: number; audio?: Audio; text_uthmani: string; verse_key: string; translations?: Translation[]; }' is not assignable to type 'Verse' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'words' are incompatible.
+    Type 'Word[] | undefined' is not assignable to type 'Word[]'.
+      Type 'undefined' is not assignable to type 'Word[]'.
+lib/focus/hooks.ts(17,5): error TS2532: Object is possibly 'undefined'.
+lib/focus/hooks.ts(28,9): error TS18048: 'last' is possibly 'undefined'.
+lib/focus/hooks.ts(31,9): error TS18048: 'first' is possibly 'undefined'.
+lib/hooks/__tests__/useResourceSearch.test.ts(24,12): error TS18048: 'result.current.groupedResources.Arabic' is possibly 'undefined'.
+lib/hooks/__tests__/useResourceSearch.test.ts(24,44): error TS4111: Property 'Arabic' comes from an index signature, so it must be accessed with ['Arabic'].
+lib/hooks/__tests__/useResourceSearch.test.ts(25,44): error TS4111: Property 'English' comes from an index signature, so it must be accessed with ['English'].
+lib/hooks/__tests__/useScrollCentering.test.ts(46,21): error TS4111: Property 'active' comes from an index signature, so it must be accessed with ['active'].
+lib/hooks/__tests__/useScrollCentering.test.ts(62,21): error TS4111: Property 'active' comes from an index signature, so it must be accessed with ['active'].
+lib/hooks/__tests__/useScrollCentering.test.ts(86,21): error TS4111: Property 'active' comes from an index signature, so it must be accessed with ['active'].
+lib/hooks/__tests__/useScrollCentering.test.ts(100,28): error TS4111: Property 'active' comes from an index signature, so it must be accessed with ['active'].
+lib/hooks/__tests__/useScrollCentering.test.ts(101,19): error TS4111: Property 'active' comes from an index signature, so it must be accessed with ['active'].
+lib/hooks/__tests__/useScrollCentering.test.ts(116,21): error TS4111: Property 'active' comes from an index signature, so it must be accessed with ['active'].
+lib/hooks/__tests__/useSelectableResources.test.ts(31,12): error TS18048: 'groups.English' is possibly 'undefined'.
+lib/hooks/__tests__/useSelectableResources.test.ts(31,19): error TS4111: Property 'English' comes from an index signature, so it must be accessed with ['English'].
+lib/hooks/__tests__/useSelectableResources.test.ts(32,12): error TS18048: 'groups.Arabic' is possibly 'undefined'.
+lib/hooks/__tests__/useSelectableResources.test.ts(32,19): error TS4111: Property 'Arabic' comes from an index signature, so it must be accessed with ['Arabic'].
+lib/hooks/__tests__/useSelectableResources.test.ts(35,12): error TS18048: 'result.current.groupedResources.Arabic' is possibly 'undefined'.
+lib/hooks/__tests__/useSelectableResources.test.ts(35,44): error TS4111: Property 'Arabic' comes from an index signature, so it must be accessed with ['Arabic'].
+lib/hooks/__tests__/useSelectableResources.test.ts(36,44): error TS4111: Property 'English' comes from an index signature, so it must be accessed with ['English'].
+lib/hooks/useDraggableSelection.ts(38,32): error TS2345: Argument of type 'number | undefined' is not assignable to parameter of type 'number'.
+  Type 'undefined' is not assignable to type 'number'.
+lib/hooks/useSelectableResources.ts(79,39): error TS2379: Argument of type '{ resources: T[]; languageSort: ((a: string, b: string) => number) | undefined; }' is not assignable to parameter of type 'Options<T>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'languageSort' are incompatible.
+    Type '((a: string, b: string) => number) | undefined' is not assignable to type '(a: string, b: string) => number'.
+      Type 'undefined' is not assignable to type '(a: string, b: string) => number'.
+lib/tafsir/tafsirCache.ts(40,20): error TS2532: Object is possibly 'undefined'.
+lib/text/__tests__/languageMappings.test.ts(7,33): error TS4111: Property 'bengali' comes from an index signature, so it must be accessed with ['bengali'].
+lib/utils/__tests__/surah-navigation.test.ts(35,25): error TS2345: Argument of type 'number | undefined' is not assignable to parameter of type 'number'.
+  Type 'undefined' is not assignable to type 'number'.
+lib/utils/surah-navigation.ts(10,17): error TS2532: Object is possibly 'undefined'.
+next.config.ts(7,77): error TS7016: Could not find a declaration file for module 'next-pwa'. 'C:/Users/yasin/quran-app/node_modules/next-pwa/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/next-pwa` if it exists or add a new declaration (.d.ts) file containing `declare module 'next-pwa';`
+next.config.ts(74,7): error TS2375: Type '{ env: { QURAN_API_BASE_URL: string | undefined; }; outputFileTracingExcludes: { '*': string[]; } | undefined; images: { remotePatterns: { protocol: "https"; hostname: string; port: string; pathname: string; }[]; }; headers(): Promise<...>; }' is not assignable to type 'NextConfig' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'outputFileTracingExcludes' are incompatible.
+    Type '{ '*': string[]; } | undefined' is not assignable to type 'Record<string, string[]>'.
+      Type 'undefined' is not assignable to type 'Record<string, string[]>'.
+next.config.ts(77,37): error TS4111: Property 'QURAN_API_BASE_URL' comes from an index signature, so it must be accessed with ['QURAN_API_BASE_URL'].
+playwright.config.ts(8,29): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '{ testDir: string; fullyParallel: true; forbidOnly: boolean; retries: number; workers: number | undefined; reporter: (["html"] | ["json", { outputFile: string; }] | ["junit", { outputFile: string; }])[]; use: { ...; }; projects: ({ ...; } | ... 1 more ... | { ...; })[]; webServer: { ...; }; }' is not assignable to parameter of type 'PlaywrightTestConfig<unknown, unknown>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+      Types of property 'workers' are incompatible.
+        Type 'number | undefined' is not assignable to type 'string | number'.
+          Type 'undefined' is not assignable to type 'string | number'.
+playwright.config.ts(13,29): error TS4111: Property 'CI' comes from an index signature, so it must be accessed with ['CI'].
+playwright.config.ts(15,24): error TS4111: Property 'CI' comes from an index signature, so it must be accessed with ['CI'].
+playwright.config.ts(17,24): error TS4111: Property 'CI' comes from an index signature, so it must be accessed with ['CI'].
+playwright.config.ts(143,39): error TS4111: Property 'CI' comes from an index signature, so it must be accessed with ['CI'].
+src/application/getTafsirFilters.ts(26,5): error TS2375: Type '{ tafsirs: Tafsir[]; isFromCache: true; error: string | undefined; }' is not assignable to type '{ tafsirs: Tafsir[]; isFromCache: boolean; error?: string; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'error' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/domain/entities/Bookmark.ts(33,5): error TS2412: Type 'string | undefined' is not assignable to type 'string' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the type of the target.
+  Type 'undefined' is not assignable to type 'string'.
+src/domain/entities/Bookmark.ts(90,5): error TS2375: Type '{ id: string; userId: string; verseId: string; position: BookmarkPositionPlainObject; createdAt: string; notes: string | undefined; tags: string[]; hasNotes: boolean; hasTags: boolean; displayText: string; }' is not assignable to type 'BookmarkPlainObject' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'notes' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/domain/entities/bookmarkHelpers.ts(16,23): error TS2379: Argument of type '{ id: string; userId: string; verseId: string; position: BookmarkPosition; createdAt: Date; notes: string | undefined; tags: string[]; }' is not assignable to parameter of type 'BookmarkInit' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'notes' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/domain/entities/Surah.ts(56,7): error TS2412: Type 'number | undefined' is not assignable to type 'number' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the type of the target.
+  Type 'undefined' is not assignable to type 'number'.
+src/domain/entities/Surah.ts(75,7): error TS2412: Type 'number | undefined' is not assignable to type 'number' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the type of the target.
+  Type 'undefined' is not assignable to type 'number'.
+src/domain/entities/Surah.utils.ts(53,67): error TS2375: Type '{ id: number; name: string; arabicName: string; englishName: string; englishTranslation: string; numberOfAyahs: number; revelationType: RevelationType; revelationOrder: number | undefined; ... 11 more ...; juzNumbers: number[]; }' is not assignable to type 'SurahPlainObject' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'revelationOrder' are incompatible.
+    Type 'number | undefined' is not assignable to type 'number'.
+      Type 'undefined' is not assignable to type 'number'.
+src/domain/entities/Verse.ts(31,5): error TS2412: Type 'Translation | undefined' is not assignable to type 'Translation' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the type of the target.
+  Type 'undefined' is not assignable to type 'Translation'.
+src/domain/entities/Verse.ts(96,5): error TS2375: Type '{ id: string; surahId: number; ayahNumber: number; verseKey: string; arabicText: string; uthmaniText: string; translation: TranslationPlainObject | undefined; wordCount: number; estimatedReadingTime: number; isFirstVerse: boolean; isSajdahVerse: boolean; }' is not assignable to type 'VersePlainObject' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'translation' are incompatible.
+    Type 'TranslationPlainObject | undefined' is not assignable to type 'TranslationPlainObject'.
+      Type 'undefined' is not assignable to type 'TranslationPlainObject'.
+src/domain/services/BookmarkImportService.ts(40,39): error TS2379: Argument of type '{ id: string; userId: string; verseId: string; position: BookmarkPosition; createdAt: Date; notes: string | undefined; tags: string[]; }' is not assignable to parameter of type 'BookmarkInit' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'notes' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/domain/services/BookmarkService.ts(45,41): error TS2379: Argument of type '{ userId: string; verse: Verse; position: BookmarkPosition; notes: string | undefined; tags: string[] | undefined; }' is not assignable to parameter of type '{ userId: string; verse: Verse; position: BookmarkPosition; notes?: string; tags?: string[]; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'notes' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/domain/services/BookmarkService.ts(116,5): error TS2375: Type '{ userId: string; surahId: number; ayahNumber: number; notes: string | undefined; tags: string[] | undefined; }' is not assignable to type '{ userId: string; surahId: number; ayahNumber: number; notes?: string; tags?: string[]; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'notes' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/domain/services/BookmarkService.ts(146,25): error TS2379: Argument of type '{ id: string; userId: string; verseId: string; position: BookmarkPosition; createdAt: Date; notes: string | undefined; tags: string[] | undefined; }' is not assignable to parameter of type 'BookmarkInit' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'notes' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/domain/value-objects/BookmarkPosition.ts(101,30): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/domain/value-objects/BookmarkPosition.ts(102,33): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/domain/value-objects/BookmarkPosition.ts(103,48): error TS2532: Object is possibly 'undefined'.
+src/domain/value-objects/BookmarkPosition.ts(103,74): error TS2532: Object is possibly 'undefined'.
+src/infrastructure/di/Container.ts(61,5): error TS2412: Type 'undefined' is not assignable to type 'IVerseRepository' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the type of the target.
+src/infrastructure/di/Container.ts(62,5): error TS2412: Type 'undefined' is not assignable to type 'IBookmarkRepository' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the type of the target.
+src/infrastructure/di/Container.ts(63,5): error TS2412: Type 'undefined' is not assignable to type 'ITafsirRepository' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the type of the target.
+src/infrastructure/di/decorators/factory.ts(3,15): error TS2305: Module '"inversify"' has no exported member 'interfaces'.
+src/infrastructure/di/decorators/index.ts(3,3): error TS2305: Module '"inversify"' has no exported member 'lazyInject'.
+src/infrastructure/di/index.ts(23,3): error TS2724: '"./container"' has no exported member named 'getContainer'. Did you mean 'container'?
+src/infrastructure/di/index.ts(24,3): error TS2305: Module '"./container"' has no exported member 'initializeContainer'.
+src/infrastructure/di/index.ts(25,3): error TS2305: Module '"./container"' has no exported member 'resetContainer'.
+src/infrastructure/di/index.ts(26,3): error TS2305: Module '"./container"' has no exported member 'configureRepositories'.
+src/infrastructure/di/index.ts(27,3): error TS2305: Module '"./container"' has no exported member 'configureUseCases'.
+src/infrastructure/di/index.ts(28,3): error TS2305: Module '"./container"' has no exported member 'configureServices'.
+src/infrastructure/di/index.ts(29,3): error TS2305: Module '"./container"' has no exported member 'configureExternalServices'.
+src/infrastructure/di/index.ts(30,3): error TS2305: Module '"./container"' has no exported member 'configureMonitoring'.
+src/infrastructure/di/index.ts(31,8): error TS1149: File name 'C:/Users/yasin/quran-app/src/infrastructure/di/container.ts' differs from already included file name 'C:/Users/yasin/quran-app/src/infrastructure/di/Container.ts' only in casing.
+  The file is in the program because:
+    Imported via '@/src/infrastructure/di/Container' from file 'C:/Users/yasin/quran-app/src/presentation/hooks/useTafsir.ts'
+    Imported via '@/src/infrastructure/di/Container' from file 'C:/Users/yasin/quran-app/lib/tafsir/tafsirCache.ts'
+    Imported via '@/src/infrastructure/di/Container' from file 'C:/Users/yasin/quran-app/app/(features)/tafsir/[surahId]/[ayahId]/components/useTafsirTabsState.ts'
+    Imported via '@/src/infrastructure/di/Container' from file 'C:/Users/yasin/quran-app/app/(features)/tafsir/hooks/useTafsirOptions.ts'
+    Imported via '@/src/infrastructure/di/Container' from file 'C:/Users/yasin/quran-app/app/(features)/tafsir/hooks/useTafsirVerseData.ts'
+    Imported via '@/src/infrastructure/di/Container' from file 'C:/Users/yasin/quran-app/lib/tafsir/__tests__/tafsirCache.test.ts'
+    Matched by include pattern '**/*.ts' in 'C:/Users/yasin/quran-app/tsconfig.json'
+    Imported via './container' from file 'C:/Users/yasin/quran-app/src/infrastructure/di/index.ts'
+src/infrastructure/di/index.ts(59,26): error TS2305: Module '"inversify"' has no exported member 'interfaces'.
+src/infrastructure/errors/ApplicationError.ts(14,19): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'Error'.
+src/infrastructure/errors/ApplicationError.ts(62,5): error TS2412: Type 'string | undefined' is not assignable to type 'string' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the type of the target.
+  Type 'undefined' is not assignable to type 'string'.
+src/infrastructure/errors/ApplicationError.ts(66,5): error TS2412: Type 'Record<string, unknown> | undefined' is not assignable to type 'Record<string, unknown>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the type of the target.
+  Type 'undefined' is not assignable to type 'Record<string, unknown>'.
+src/infrastructure/errors/ApplicationError.ts(67,5): error TS2412: Type 'Error | undefined' is not assignable to type 'Error' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the type of the target.
+  Type 'undefined' is not assignable to type 'Error'.
+src/infrastructure/errors/types/auth.ts(12,3): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'ApplicationError'.
+src/infrastructure/errors/types/auth.ts(26,3): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'ApplicationError'.
+src/infrastructure/errors/types/http.ts(9,3): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'ApplicationError'.
+src/infrastructure/errors/types/http.ts(10,36): error TS4111: Property 'resource' comes from an index signature, so it must be accessed with ['resource'].
+src/infrastructure/errors/types/http.ts(20,3): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'ApplicationError'.
+src/infrastructure/errors/types/http.ts(62,11): error TS2379: Argument of type '{ message: string; code: string; statusCode: number | undefined; isOperational: true; context: { endpoint: string; }; cause: Error | undefined; }' is not assignable to parameter of type '{ message: string; code: string; statusCode?: number; isOperational?: boolean; context?: Record<string, unknown>; cause?: Error; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'statusCode' are incompatible.
+    Type 'number | undefined' is not assignable to type 'number'.
+      Type 'undefined' is not assignable to type 'number'.
+src/infrastructure/errors/types/http.ts(73,3): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'ApplicationError'.
+src/infrastructure/errors/types/misc.ts(13,3): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'ApplicationError'.
+src/infrastructure/errors/types/misc.ts(23,3): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'ApplicationError'.
+src/infrastructure/errors/types/misc.ts(34,3): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'ApplicationError'.
+src/infrastructure/errors/types/misc.ts(49,3): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'ApplicationError'.
+src/infrastructure/errors/types/network.ts(8,3): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'ApplicationError'.
+src/infrastructure/errors/types/network.ts(23,3): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'ApplicationError'.
+src/infrastructure/errors/types/storage.ts(13,3): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'ApplicationError'.
+src/infrastructure/errors/types/storage.ts(28,3): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'ApplicationError'.
+src/infrastructure/errors/types/validation.ts(8,3): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'ApplicationError'.
+src/infrastructure/monitoring/error-tracker/ConsoleErrorTracker.ts(8,52): error TS2345: Argument of type 'ErrorContext | undefined' is not assignable to parameter of type 'Record<string, unknown> | undefined'.
+  Type 'ErrorContext' is not assignable to type 'Record<string, unknown>'.
+    Index signature for type 'string' is missing in type 'ErrorContext'.
+src/infrastructure/monitoring/error-tracker/ConsoleErrorTracker.ts(14,58): error TS2345: Argument of type 'ErrorContext | undefined' is not assignable to parameter of type 'Record<string, unknown> | undefined'.
+  Type 'ErrorContext' is not assignable to type 'Record<string, unknown>'.
+    Index signature for type 'string' is missing in type 'ErrorContext'.
+src/infrastructure/monitoring/error-tracker/ConsoleErrorTracker.ts(16,57): error TS2345: Argument of type 'ErrorContext | undefined' is not assignable to parameter of type 'Record<string, unknown> | undefined'.
+  Type 'ErrorContext' is not assignable to type 'Record<string, unknown>'.
+    Index signature for type 'string' is missing in type 'ErrorContext'.
+src/infrastructure/monitoring/error-tracker/ConsoleErrorTracker.ts(18,57): error TS2345: Argument of type 'ErrorContext | undefined' is not assignable to parameter of type 'Record<string, unknown> | undefined'.
+  Type 'ErrorContext' is not assignable to type 'Record<string, unknown>'.
+    Index signature for type 'string' is missing in type 'ErrorContext'.
+src/infrastructure/monitoring/error-tracker/ErrorTrackerService.ts(36,34): error TS4111: Property 'ERROR_TRACKING_ENDPOINT' comes from an index signature, so it must be accessed with ['ERROR_TRACKING_ENDPOINT'].
+src/infrastructure/monitoring/error-tracker/ErrorTrackerService.ts(37,32): error TS4111: Property 'ERROR_TRACKING_API_KEY' comes from an index signature, so it must be accessed with ['ERROR_TRACKING_API_KEY'].
+src/infrastructure/monitoring/error-tracker/ErrorTrackerService.ts(46,11): error TS2375: Type '{ url: string | undefined; userAgent: string | undefined; userId?: string; sessionId?: string; requestId?: string; component?: string; action?: string; metadata?: Record<string, unknown>; tags?: Record<string, string>; fingerprint?: string[]; level?: "fatal" | "error" | "warning" | "info"; }' is not assignable to type 'ErrorContext' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'userAgent' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/infrastructure/monitoring/error-tracker/ErrorTrackerService.ts(82,24): error TS4111: Property 'userId' comes from an index signature, so it must be accessed with ['userId'].
+src/infrastructure/monitoring/error-tracker/ErrorTrackerService.ts(103,5): error TS2375: Type '{ component: string | undefined; action: string | undefined; metadata: Record<string, unknown> | undefined; }' is not assignable to type 'ErrorContext' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'component' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/infrastructure/monitoring/error-tracker/SentryErrorTracker.ts(37,35): error TS2307: Cannot find module '@sentry/nextjs' or its corresponding type declarations.
+src/infrastructure/monitoring/error-tracker/SentryErrorTracker.ts(135,53): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'Record<string, unknown> | undefined'.
+src/infrastructure/monitoring/error-tracker/transport.ts(12,13): error TS4111: Property 'Authorization' comes from an index signature, so it must be accessed with ['Authorization'].
+src/infrastructure/monitoring/Logger.ts(77,11): error TS2375: Type '{ level: LogLevel; message: string; timestamp: Date; context: { [x: string]: unknown; }; error: Error | undefined; source: string | undefined; }' is not assignable to type 'LogEntry' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'error' are incompatible.
+    Type 'Error | undefined' is not assignable to type 'Error'.
+      Type 'undefined' is not assignable to type 'Error'.
+src/infrastructure/monitoring/Logger.utils.ts(21,32): error TS4111: Property 'LOG_ENDPOINT' comes from an index signature, so it must be accessed with ['LOG_ENDPOINT'].
+src/infrastructure/monitoring/Logger.utils.ts(22,30): error TS4111: Property 'LOG_API_KEY' comes from an index signature, so it must be accessed with ['LOG_API_KEY'].
+src/infrastructure/monitoring/Logger.utils.ts(24,55): error TS2379: Argument of type '{ apiKey: string | undefined; }' is not assignable to parameter of type '{ apiKey?: string; flushInterval?: number; batchSize?: number; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'apiKey' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/infrastructure/monitoring/LoggerAdapter.ts(11,35): error TS2554: Expected 1-2 arguments, but got 3.
+src/infrastructure/monitoring/LoggerAdapter.ts(23,36): error TS2554: Expected 1-2 arguments, but got 3.
+src/infrastructure/monitoring/RemoteTransport.ts(29,5): error TS2412: Type 'string | undefined' is not assignable to type 'string' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the type of the target.
+  Type 'undefined' is not assignable to type 'string'.
+src/infrastructure/repositories/bookmark/__tests__/queries.test.ts(77,12): error TS2532: Object is possibly 'undefined'.
+src/infrastructure/repositories/bookmark/__tests__/queries.test.ts(83,12): error TS2532: Object is possibly 'undefined'.
+src/infrastructure/repositories/bookmark/__tests__/queries.test.ts(89,12): error TS2532: Object is possibly 'undefined'.
+src/infrastructure/repositories/bookmark/__tests__/queries.test.ts(107,12): error TS2532: Object is possibly 'undefined'.
+src/infrastructure/repositories/bookmark/bookmarkMapper.ts(6,23): error TS2379: Argument of type '{ id: string; userId: string; verseId: string; position: BookmarkPosition; createdAt: Date; notes: string | undefined; tags: string[]; }' is not assignable to parameter of type 'BookmarkInit' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'notes' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/infrastructure/repositories/bookmark/storage.ts(36,23): error TS2379: Argument of type '{ id: string; userId: string; verseId: string; position: BookmarkPosition; createdAt: Date; notes: string | undefined; tags: string[]; }' is not assignable to parameter of type 'BookmarkInit' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'notes' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/infrastructure/repositories/tafsirApi.ts(48,15): error TS4111: Property 'language' comes from an index signature, so it must be accessed with ['language'].
+src/infrastructure/repositories/verseMapper.ts(9,45): error TS2339: Property '0' does not exist on type 'Translation[] | undefined'.
+src/infrastructure/repositories/verseMapper.ts(28,20): error TS2379: Argument of type '{ id: string; surahId: number; ayahNumber: number; arabicText: string; uthmaniText: string; translation: Translation | undefined; }' is not assignable to parameter of type 'VerseOptions' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'translation' are incompatible.
+    Type 'Translation | undefined' is not assignable to type 'Translation'.
+      Type 'undefined' is not assignable to type 'Translation'.
+src/infrastructure/repositories/verseMapper.ts(30,23): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/infrastructure/repositories/verseMapper.ts(31,26): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/infrastructure/repositories/verseNavigation.ts(15,30): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/infrastructure/repositories/verseNavigation.ts(16,33): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/infrastructure/repositories/verseNavigation.ts(41,30): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/infrastructure/repositories/verseNavigation.ts(42,33): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/presentation/hooks/useTafsirSelection.ts(125,5): error TS2783: 'handleSelectionToggle' is specified more than once, so this usage will be overwritten.
+src/presentation/hooks/useTafsirTabsScroll.ts(38,13): error TS7030: Not all code paths return a value.
+src/presentation/hooks/useTafsirTabsScroll.ts(52,5): error TS2322: Type 'RefObject<HTMLDivElement | null>' is not assignable to type 'RefObject<HTMLDivElement>'.
+  Type 'HTMLDivElement | null' is not assignable to type 'HTMLDivElement'.
+    Type 'null' is not assignable to type 'HTMLDivElement'.
+tests/accessibility/core-pages.test.tsx(1,36): error TS7016: Could not find a declaration file for module 'jest-axe'. 'C:/Users/yasin/quran-app/node_modules/jest-axe/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/jest-axe` if it exists or add a new declaration (.d.ts) file containing `declare module 'jest-axe';`
+tests/accessibility/core-pages.test.tsx(6,10): error TS2305: Module '"@/lib/api"' has no exported member 'getJuzList'.
+tests/accessibility/core-pages.test.tsx(102,24): error TS7006: Parameter 'data' implicitly has an 'any' type.
+tests/accessibility/utils/corePages.ts(2,21): error TS7016: Could not find a declaration file for module 'jest-axe'. 'C:/Users/yasin/quran-app/node_modules/jest-axe/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/jest-axe` if it exists or add a new declaration (.d.ts) file containing `declare module 'jest-axe';`
+tests/accessibility/utils/corePages.ts(6,15): error TS2305: Module '"@/lib/api"' has no exported member 'getJuzList'.
+tests/accessibility/utils/corePages.ts(97,19): error TS2339: Property 'toHaveNoViolations' does not exist on type 'JestMatchers<any>'.
+tests/e2e/architecture/performance.spec.ts(9,17): error TS18048: 'lastEntry' is possibly 'undefined'.
+tests/e2e/global-setup.ts(8,19): error TS2532: Object is possibly 'undefined'.
+tests/integration/repositories/BookmarkRepository.test.ts(26,12): error TS2532: Object is possibly 'undefined'.
+tests/integration/repositories/BookmarkRepository.test.ts(27,12): error TS2532: Object is possibly 'undefined'.
+tests/integration/repositories/BookmarkRepository.test.ts(35,12): error TS2532: Object is possibly 'undefined'.
+tests/integration/repositories/BookmarkRepository.test.ts(36,12): error TS2532: Object is possibly 'undefined'.
+tests/integration/repositories/BookmarkRepository.test.ts(37,12): error TS2532: Object is possibly 'undefined'.
+tests/integration/repositories/TafsirRepository.test.ts(36,12): error TS2532: Object is possibly 'undefined'.
+tests/integration/repositories/TafsirRepository.test.ts(37,12): error TS2532: Object is possibly 'undefined'.
+tests/integration/repositories/VerseRepository/VerseRepository.bulk.test.ts(26,12): error TS2532: Object is possibly 'undefined'.
+tests/integration/repositories/VerseRepository/VerseRepository.bulk.test.ts(27,12): error TS2532: Object is possibly 'undefined'.
+tests/integration/repositories/VerseRepository/VerseRepository.bulk.test.ts(55,12): error TS2532: Object is possibly 'undefined'.
+tests/integration/repositories/VerseRepository/VerseRepository.bulk.test.ts(75,12): error TS2532: Object is possibly 'undefined'.
+tests/integration/repositories/VerseRepository/VerseRepository.bulk.test.ts(92,12): error TS2532: Object is possibly 'undefined'.
+tests/integration/repositories/VerseRepository/VerseRepository.bulk.test.ts(112,12): error TS2532: Object is possibly 'undefined'.
+tests/integration/repositories/VerseRepository/VerseRepository.bulk.test.ts(134,12): error TS2532: Object is possibly 'undefined'.
+tests/integration/repositories/VerseRepository/VerseRepository.bulk.test.ts(135,12): error TS2532: Object is possibly 'undefined'.
+tests/integration/repositories/VerseRepository/VerseRepository.test.ts(249,12): error TS2532: Object is possibly 'undefined'.
+tests/integration/repositories/VerseRepository/VerseRepository.test.ts(250,12): error TS2532: Object is possibly 'undefined'.
+tests/setup/browserMocks.ts(132,5): error TS2558: Expected 0-1 type arguments, but got 2.
+tests/unit/domain/services/BookmarkImportService.import.test.ts(108,12): error TS2532: Object is possibly 'undefined'.
+tests/unit/domain/services/BookmarkImportService.import.test.ts(109,12): error TS2532: Object is possibly 'undefined'.
+tests/unit/infrastructure/errors/ErrorHandler.actions1.test.ts(33,12): error TS2532: Object is possibly 'undefined'.
+tests/unit/infrastructure/errors/ErrorHandler.actions1.test.ts(34,12): error TS2532: Object is possibly 'undefined'.
+tests/unit/infrastructure/errors/ErrorHandler.actions1.test.ts(53,12): error TS2532: Object is possibly 'undefined'.
+tests/unit/infrastructure/errors/ErrorHandler.actions1.test.ts(54,12): error TS2532: Object is possibly 'undefined'.
+tests/unit/infrastructure/monitoring/MemoryTransport.test.ts(18,12): error TS2532: Object is possibly 'undefined'.
+tests/unit/infrastructure/monitoring/MemoryTransport.test.ts(19,12): error TS2532: Object is possibly 'undefined'.
+tests/unit/infrastructure/monitoring/RemoteTransport.retries.test.ts(43,29): error TS2532: Object is possibly 'undefined'.
+tools/ai/parser/args.ts(13,7): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+tools/ai/parser/args.ts(15,13): error TS2532: Object is possibly 'undefined'.
+tools/ai/parser/index.ts(71,9): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+tools/ai/parser/index.ts(95,9): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+tools/ai/parser/tokens.ts(58,74): error TS1501: This regular expression flag is only available when targeting 'es2018' or later.
+tools/ai/parser/tokens.ts(59,43): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+tools/ai/parser/tokens.ts(64,7): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+tools/ai/parser/tokens.ts(88,5): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+tools/ai/parser/tokens.ts(108,35): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+tools/ai/parser/tokens.ts(109,20): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+tools/scripts/generate-tokens.ts(26,58): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+tools/scripts/generate-tokens.ts(32,53): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+tools/scripts/validate-tokens.ts(102,16): error TS2538: Type 'undefined' cannot be used as an index type.
+tools/scripts/validate-tokens.ts(103,28): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.

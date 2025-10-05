@@ -1,5 +1,5 @@
-import { getJuz } from '@/lib/api/verses';
 import { API_BASE_URL } from '@/lib/api';
+import { getJuz } from '@/lib/api/verses';
 import { Juz } from '@/types';
 
 describe('getJuz', () => {
@@ -23,7 +23,10 @@ describe('getJuz', () => {
     }) as jest.Mock;
 
     const result = await getJuz(1);
-    expect(global.fetch).toHaveBeenCalledWith(`${API_BASE_URL}/juzs/1`);
+    expect(global.fetch).toHaveBeenCalledWith(
+      `${API_BASE_URL}/juzs/1`,
+      expect.objectContaining({ headers: { Accept: 'application/json' } })
+    );
     expect(result).toEqual(mockJuz);
   });
 

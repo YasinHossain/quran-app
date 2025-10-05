@@ -1,9 +1,10 @@
 'use client';
-import React, { useMemo } from 'react';
-import { Chapter } from '@/types';
-import { getChapters } from '@/lib/api';
-import useSWR from 'swr';
+import React, { memo } from 'react';
+
 import { useSidebar } from '@/app/providers/SidebarContext';
+import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
+import { Chapter } from '@/types';
+
 import { BaseSidebar } from './components/BaseSidebar';
 import { SurahListContent } from './components/SurahListContent';
 
@@ -16,9 +17,10 @@ interface Props {
  * Includes a search input for filtering and remembers scroll position
  * between tabs via session storage and the sidebar context.
  */
-const SurahListSidebar = ({ initialChapters = [] }: Props) => {
-  const { data } = useSWR('chapters', getChapters, { fallbackData: initialChapters });
-  const chapters = useMemo(() => data || [], [data]);
+export const SurahListSidebar = memo(function SurahListSidebar({
+  initialChapters = [],
+}: Props): React.JSX.Element {
+  const { chapters } = useSurahNavigationData({ initialChapters });
   const { isSurahListOpen, setSurahListOpen } = useSidebar();
 
   return (
@@ -31,6 +33,4 @@ const SurahListSidebar = ({ initialChapters = [] }: Props) => {
       <SurahListContent chapters={chapters} />
     </BaseSidebar>
   );
-};
-
-export default SurahListSidebar;
+});

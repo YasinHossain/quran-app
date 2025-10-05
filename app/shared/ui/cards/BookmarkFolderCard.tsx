@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
-import { BaseCard, BaseCardProps } from '../BaseCard';
 import { ChevronDownIcon } from '@/app/shared/icons';
+import { BaseCard, BaseCardProps } from '@/app/shared/ui/BaseCard';
 import { cn } from '@/lib/utils/cn';
+
 import type { Folder } from '@/types/bookmark';
 
 /**
@@ -19,14 +19,14 @@ interface BookmarkFolderCardProps extends Omit<BaseCardProps, 'children'> {
   onToggleExpansion?: (folderId: string) => void;
 }
 
-export const BookmarkFolderCard: React.FC<BookmarkFolderCardProps> = ({
+export const BookmarkFolderCard = ({
   folder,
   isExpanded = false,
   onToggleExpansion,
   className,
   ...props
-}) => {
-  const handleClick = () => {
+}: BookmarkFolderCardProps): React.JSX.Element => {
+  const handleClick = (): void => {
     onToggleExpansion?.(folder.id);
   };
 
@@ -46,8 +46,11 @@ export const BookmarkFolderCard: React.FC<BookmarkFolderCardProps> = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3 min-w-0">
           <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-semibold"
-            style={{ backgroundColor: folder.color || '#7C3AED' }}
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-on-accent text-sm font-semibold"
+            style={{
+              // Use folder color if provided, otherwise fall back to accent token
+              backgroundColor: folder.color || 'rgb(var(--color-accent))',
+            }}
           >
             {folder.name.charAt(0).toUpperCase()}
           </div>

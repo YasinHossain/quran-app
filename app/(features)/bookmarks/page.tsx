@@ -1,34 +1,26 @@
 'use client';
 
-import React from 'react';
 import { motion } from 'framer-motion';
-import { CreateFolderModal } from './components/CreateFolderModal';
+import React from 'react';
+
+import { BookmarksHeader } from './components/BookmarksHeader';
 import { FolderGrid } from './components/FolderGrid';
-import BookmarksLayout from './components/shared/BookmarksLayout';
-import BookmarksPageHeader from './components/shared/BookmarksPageHeader';
+import { BookmarksLayout } from './components/shared/BookmarksLayout';
 import { useBookmarksPage } from './hooks/useBookmarksPage';
 
-const BookmarksPage = () => {
-  const {
-    folders,
-    sortedFolders,
-    modal,
-    handleFolderSelect,
-    handleSectionChange,
-    handleVerseClick,
-  } = useBookmarksPage();
+const BookmarksPage = (): React.JSX.Element => {
+  const { folders, sortedFolders, handleFolderSelect, handleSectionChange, handleVerseClick } =
+    useBookmarksPage();
 
   return (
     <>
-      <CreateFolderModal isOpen={modal.isOpen} onClose={modal.close} />
-
       <BookmarksLayout
         activeSection="bookmarks"
         onSectionChange={handleSectionChange}
         folders={folders}
         onVerseClick={handleVerseClick}
       >
-        <BookmarksPageHeader />
+        <BookmarksHeader />
 
         <motion.div
           key="folder-grid"
@@ -36,14 +28,7 @@ const BookmarksPage = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <FolderGrid
-            folders={sortedFolders}
-            allFolders={folders}
-            onFolderSelect={handleFolderSelect}
-            onCreateFolder={modal.open}
-            searchTerm=""
-            onClearSearch={() => {}}
-          />
+          <FolderGrid folders={sortedFolders} onFolderSelect={handleFolderSelect} />
         </motion.div>
       </BookmarksLayout>
     </>

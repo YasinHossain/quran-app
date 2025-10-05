@@ -1,16 +1,16 @@
 'use client';
-import { ChevronDownIcon } from '@/app/shared/icons';
-import Spinner from '@/app/shared/Spinner';
-import { applyArabicFont } from '@/lib/tafsir/applyArabicFont';
+import { useTafsirPanels } from '@/app/(features)/tafsir/[surahId]/[ayahId]/hooks/useTafsirPanels';
 import { useSettings } from '@/app/providers/SettingsContext';
-import { useTafsirPanels } from '../hooks/useTafsirPanels';
+import { ChevronDownIcon } from '@/app/shared/icons';
+import { Spinner } from '@/app/shared/Spinner';
+import { applyArabicFont } from '@/lib/tafsir/applyArabicFont';
 
 interface TafsirPanelsProps {
   verseKey: string;
   tafsirIds: number[];
 }
 
-export const TafsirPanels = ({ verseKey, tafsirIds }: TafsirPanelsProps) => {
+export const TafsirPanels = ({ verseKey, tafsirIds }: TafsirPanelsProps): React.JSX.Element => {
   const { settings } = useSettings();
   const { openPanels, tafsirTexts, loading, togglePanel } = useTafsirPanels(verseKey);
 

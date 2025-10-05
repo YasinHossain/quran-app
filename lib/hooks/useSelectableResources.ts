@@ -1,11 +1,58 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useState, type Dispatch, type SetStateAction } from 'react';
+
+import { useDraggableSelection, type UseDraggableSelectionResult } from './useDraggableSelection';
+import { useResourceSearch, type UseResourceSearchResult } from './useResourceSearch';
+
+const applySelections = (
+  ids: number[],
+  setSelectedIds: Dispatch<SetStateAction<Set<number>>>,
+  setOrderedSelection: (ids: number[]) => void
+): void => {
+  setSelectedIds(new Set(ids));
+  setOrderedSelection(ids);
+};
+
+interface ToggleParams {
+  id: number;
+  selectedIds: Set<number>;
+  selectionLimit: number;
+  setSelectedIds: Dispatch<SetStateAction<Set<number>>>;
+  orderedSelection: number[];
+  setOrderedSelection: (ids: number[]) => void;
+}
+
+const toggleSelection = ({
+  id,
+  selectedIds,
+  selectionLimit,
+  setSelectedIds,
+  orderedSelection,
+  setOrderedSelection,
+}: ToggleParams): boolean => {
+  const next = new Set(selectedIds);
+  let order = [...orderedSelection];
+  let changed = false;
+  if (next.has(id)) {
+    next.delete(id);
+    order = order.filter((i) => i !== id);
+    changed = true;
+  } else if (next.size < selectionLimit) {
+    next.add(id);
+    order.push(id);
+    changed = true;
+  }
+  if (changed) {
+    setSelectedIds(next);
+    setOrderedSelection(order);
+  }
+  return changed;
+};
 
 interface Resource {
   id: number;
   name: string;
   lang: string;
 }
-
 interface SelectableOptions<T extends Resource> {
   resources: T[];
   selectionLimit: number;
@@ -13,22 +60,12 @@ interface SelectableOptions<T extends Resource> {
   languageSort?: (a: string, b: string) => number;
 }
 
-interface SelectableResult<T extends Resource> {
-  searchTerm: string;
-  setSearchTerm: (term: string) => void;
-  languages: string[];
-  groupedResources: Record<string, T[]>;
-  activeFilter: string;
-  setActiveFilter: (lang: string) => void;
+export interface UseSelectableResourcesResult<T extends Resource>
+  extends UseResourceSearchResult<T>,
+    Omit<UseDraggableSelectionResult, 'setOrderedSelection'> {
   selectedIds: Set<number>;
-  orderedSelection: number[];
-  handleSelectionToggle: (id: number) => boolean;
-  handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
-  handleDrop: (e: React.DragEvent<HTMLDivElement>, targetId: number) => void;
-  handleDragEnd: () => void;
-  draggedId: number | null;
   setSelections: (ids: number[]) => void;
+  handleSelectionToggle: (id: number) => boolean;
 }
 
 export const useSelectableResources = <T extends Resource>({
@@ -36,114 +73,38 @@ export const useSelectableResources = <T extends Resource>({
   selectionLimit,
   initialSelectedIds = [],
   languageSort,
-}: SelectableOptions<T>): SelectableResult<T> => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeFilter, setActiveFilter] = useState('All');
-  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set(initialSelectedIds));
-  const [orderedSelection, setOrderedSelection] = useState<number[]>(initialSelectedIds);
-  const [draggedId, setDraggedId] = useState<number | null>(null);
-
-  const setSelections = (ids: number[]): void => {
-    setSelectedIds(new Set(ids));
-    setOrderedSelection(ids);
-  };
-
-  const languages = useMemo(() => {
-    const unique = Array.from(new Set(resources.map((r) => r.lang)));
-    const sorted = languageSort
-      ? unique.sort(languageSort)
-      : unique.sort((a, b) => a.localeCompare(b));
-    return ['All', ...sorted];
-  }, [resources, languageSort]);
-
-  const filteredResources = useMemo(() => {
-    if (searchTerm === '') return resources;
-    const lower = searchTerm.toLowerCase();
-    return resources.filter(
-      (r) => r.name.toLowerCase().includes(lower) || r.lang.toLowerCase().includes(lower)
-    );
-  }, [resources, searchTerm]);
-
-  const groupedResources = useMemo(
-    () =>
-      filteredResources.reduce(
-        (acc, item) => {
-          (acc[item.lang] = acc[item.lang] || []).push(item);
-          return acc;
-        },
-        {} as Record<string, T[]>
-      ),
-    [filteredResources]
+}: SelectableOptions<T>): UseSelectableResourcesResult<T> => {
+  const [selectedIds, setSelectedIds] = useState(new Set(initialSelectedIds));
+  const drag = useDraggableSelection(initialSelectedIds);
+  const search = useResourceSearch<T>({ resources, ...(languageSort ? { languageSort } : {}) });
+  const setSelections = useCallback(
+    (ids: number[]) => applySelections(ids, setSelectedIds, drag.setOrderedSelection),
+    [drag]
   );
 
-  const handleSelectionToggle = (id: number): boolean => {
-    const newSelected = new Set(selectedIds);
-    let newOrder = [...orderedSelection];
-    let changed = false;
-
-    if (newSelected.has(id)) {
-      newSelected.delete(id);
-      newOrder = newOrder.filter((i) => i !== id);
-      changed = true;
-    } else {
-      if (newSelected.size >= selectionLimit) return false;
-      newSelected.add(id);
-      newOrder.push(id);
-      changed = true;
-    }
-
-    if (changed) {
-      setSelectedIds(newSelected);
-      setOrderedSelection(newOrder);
-    }
-    return changed;
-  };
-
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: number) => {
-    setDraggedId(id);
-    e.dataTransfer.effectAllowed = 'move';
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>, targetId: number) => {
-    e.preventDefault();
-    if (draggedId === null || draggedId === targetId) {
-      setDraggedId(null);
-      return;
-    }
-    setOrderedSelection((prev) => {
-      const newOrder = [...prev];
-      const from = newOrder.indexOf(draggedId);
-      const to = newOrder.indexOf(targetId);
-      const [item] = newOrder.splice(from, 1);
-      newOrder.splice(to, 0, item);
-      return newOrder;
-    });
-    setDraggedId(null);
-  };
-
-  const handleDragEnd = () => setDraggedId(null);
+  const handleSelectionToggle = useCallback(
+    (id: number) =>
+      toggleSelection({
+        id,
+        selectedIds,
+        selectionLimit,
+        setSelectedIds,
+        orderedSelection: drag.orderedSelection,
+        setOrderedSelection: drag.setOrderedSelection,
+      }),
+    [drag, selectedIds, selectionLimit]
+  );
 
   return {
-    searchTerm,
-    setSearchTerm,
-    languages,
-    groupedResources,
-    activeFilter,
-    setActiveFilter,
+    ...search,
     selectedIds,
-    orderedSelection,
+    orderedSelection: drag.orderedSelection,
     handleSelectionToggle,
-    handleDragStart,
-    handleDragOver,
-    handleDrop,
-    handleDragEnd,
-    draggedId,
+    handleDragStart: drag.handleDragStart,
+    handleDragOver: drag.handleDragOver,
+    handleDrop: drag.handleDrop,
+    handleDragEnd: drag.handleDragEnd,
+    draggedId: drag.draggedId,
     setSelections,
-  } as const;
+  };
 };
-
-export default useSelectableResources;

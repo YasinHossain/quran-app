@@ -124,7 +124,7 @@ bg-interactive-hover /* Interactive hover state */
 </Button>
 
 // Method 2: Extend design system
-// Add to design-system.json or design-system.alt.json
+// Add to design-system.json
 {
   "extensionPoints": {
     "colors": {
@@ -145,7 +145,7 @@ bg-interactive-hover /* Interactive hover state */
 
 ### Adding New Color Schemes
 
-1. Update `design-system.alt.json` with new variant:
+1. Update `design-system.json` with new variant:
 
 ```json
 {

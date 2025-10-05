@@ -1,11 +1,22 @@
 'use client';
+import { memo, useCallback } from 'react';
+
+import { useTheme } from '@/app/providers/ThemeContext';
 import { SunIcon, MoonIcon } from '@/app/shared/icons';
 import { GlassCard } from '@/app/shared/ui';
-import { useTheme } from '@/app/providers/ThemeContext';
 
-export default function HomeHeader() {
+interface HomeHeaderProps {
+  className?: string;
+}
+
+/**
+ * Header component for the home page with theme toggle functionality.
+ * Implements mobile-first responsive design and performance optimization.
+ */
+export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProps) {
   const { theme, setTheme } = useTheme();
-  const toggleTheme = () => {
+
+  const toggleTheme = useCallback(() => {
     const html = document.documentElement;
     if (html.classList.contains('dark')) {
       html.classList.remove('dark');
@@ -14,31 +25,33 @@ export default function HomeHeader() {
       html.classList.add('dark');
       setTheme('dark');
     }
-  };
+  }, [setTheme]);
 
   return (
-    <header className="w-full py-4">
+    <header className={`w-full p-4 md:py-4 md:px-0 ${className || ''}`}>
       <GlassCard
         variant="surface"
         size="comfortable"
         radius="xl"
         className="max-w-screen-2xl mx-auto"
       >
-        <nav className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold tracking-wider text-content-primary">Al Qur&apos;an</h1>
+        <nav className="flex justify-between items-center space-y-0">
+          <h1 className="text-xl md:text-2xl font-bold tracking-wider text-content-primary">
+            Al Qur&apos;an
+          </h1>
           <button
             onClick={toggleTheme}
-            className="p-2 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="min-h-11 min-w-11 p-2 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent touch-manipulation"
             aria-label="Toggle Theme"
           >
             {theme === 'dark' ? (
-              <SunIcon className="w-5 h-5 text-status-warning" />
+              <SunIcon className="w-5 h-5 text-accent" />
             ) : (
-              <MoonIcon className="w-5 h-5 text-content-secondary" />
+              <MoonIcon className="w-5 h-5 text-accent" />
             )}
           </button>
         </nav>
       </GlassCard>
     </header>
   );
-}
+});

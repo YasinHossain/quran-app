@@ -1,16 +1,13 @@
-import type { Chapter } from '@/types';
-import { getSurahByPage, JUZ_START_PAGES } from '@/lib/utils/surah-navigation';
+import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
 import { JuzNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
+import { getSurahByPage, JUZ_START_PAGES } from '@/lib/utils/surah-navigation';
 
-interface JuzSummary {
-  number: number;
-  name: string;
-  surahRange: string;
-}
+import type { JuzSummary } from '@/app/shared/navigation/types';
+import type { Chapter } from '@/types';
 
 interface Props {
-  juzs: JuzSummary[];
-  chapters: Chapter[];
+  juzs: ReadonlyArray<JuzSummary>;
+  chapters: ReadonlyArray<Chapter>;
   selectedJuzId: number | null;
   setSelectedJuzId: (id: number) => void;
   setSelectedPageId: (id: number) => void;
@@ -18,7 +15,7 @@ interface Props {
   rememberScroll: () => void;
 }
 
-const Juz = ({
+export const Juz = ({
   juzs,
   chapters,
   selectedJuzId,
@@ -26,35 +23,38 @@ const Juz = ({
   setSelectedPageId,
   setSelectedSurahId,
   rememberScroll,
-}: Props) => (
-  <ul className="space-y-2">
-    {juzs.map((juz) => {
-      const isActive = juz.number === selectedJuzId;
-      return (
-        <li key={juz.number}>
-          <JuzNavigationCard
-            href={`/juz/${juz.number}`}
-            scroll={false}
-            data-active={isActive}
-            isActive={isActive}
-            content={{
-              id: juz.number,
-              title: `Juz ${juz.number}`,
-              subtitle: juz.surahRange,
-            }}
-            onNavigate={() => {
-              setSelectedJuzId(juz.number);
-              const page = JUZ_START_PAGES[juz.number - 1];
-              setSelectedPageId(page);
-              const chap = getSurahByPage(page, chapters);
-              if (chap) setSelectedSurahId(chap.id);
-              rememberScroll();
-            }}
-          />
-        </li>
-      );
-    })}
-  </ul>
-);
+}: Props): React.JSX.Element => {
+  const { getJuzHref, goToJuz } = useNavigationTargets();
 
-export default Juz;
+  return (
+    <ul className="space-y-2">
+      {juzs.map((juz) => {
+        const isActive = juz.number === selectedJuzId;
+        return (
+          <li key={juz.number}>
+            <JuzNavigationCard
+              href={getJuzHref(juz.number)}
+              scroll={false}
+              data-active={isActive}
+              isActive={isActive}
+              content={{
+                id: juz.number,
+                title: `Juz ${juz.number}`,
+                subtitle: juz.surahRange,
+              }}
+              onNavigate={() => {
+                setSelectedJuzId(juz.number);
+                const page = JUZ_START_PAGES[juz.number - 1] ?? 1;
+                setSelectedPageId(page);
+                const chap = getSurahByPage(page, chapters);
+                if (chap) setSelectedSurahId(chap.id);
+                rememberScroll();
+                goToJuz(juz.number);
+              }}
+            />
+          </li>
+        );
+      })}
+    </ul>
+  );
+};

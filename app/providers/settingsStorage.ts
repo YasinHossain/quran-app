@@ -1,4 +1,7 @@
+import { getItem, setItem } from '@/lib/utils/safeLocalStorage';
 import { Settings } from '@/types';
+
+import { parseJson, normalizeSettings } from './settingsNormalization';
 
 export const ARABIC_FONTS = [
   { name: 'KFGQPC Uthman Taha', value: '"KFGQPC-Uthman-Taha", serif', category: 'Uthmani' },
@@ -10,6 +13,8 @@ export const ARABIC_FONTS = [
   { name: 'Lateef', value: '"Lateef", serif', category: 'IndoPak' },
 ];
 
+const DEFAULT_ARABIC_FONT = ARABIC_FONTS[0]?.value ?? '"KFGQPC-Uthman-Taha", serif';
+
 export const defaultSettings: Settings = {
   translationId: 20,
   translationIds: [20],
@@ -17,7 +22,7 @@ export const defaultSettings: Settings = {
   arabicFontSize: 28,
   translationFontSize: 16,
   tafsirFontSize: 16,
-  arabicFontFace: ARABIC_FONTS[0].value,
+  arabicFontFace: DEFAULT_ARABIC_FONT,
   wordLang: 'en',
   wordTranslationId: 85,
   showByWords: false,
@@ -30,48 +35,14 @@ const SELECTED_TRANSLATIONS_KEY = 'selected-translations';
 export const loadSettings = (defaults: Settings = defaultSettings): Settings => {
   if (typeof window === 'undefined') return defaults;
 
-  const savedSettings = localStorage.getItem(SETTINGS_KEY);
-  const savedTranslations = localStorage.getItem(SELECTED_TRANSLATIONS_KEY);
+  const savedSettings = parseJson(getItem(SETTINGS_KEY));
   if (!savedSettings) return defaults;
 
-  try {
-    const parsed = JSON.parse(savedSettings);
-
-    if (parsed.tafsirId && !parsed.tafsirIds) {
-      parsed.tafsirIds = [parsed.tafsirId];
-      delete parsed.tafsirId;
-    }
-
-    if (!parsed.translationIds && savedTranslations) {
-      try {
-        const translationIds = JSON.parse(savedTranslations);
-        if (Array.isArray(translationIds) && translationIds.length > 0) {
-          parsed.translationIds = translationIds;
-          parsed.translationId = translationIds[0];
-        }
-      } catch {
-        // Silent fail for translation parsing errors
-      }
-    }
-
-    if (!parsed.translationIds) {
-      parsed.translationIds = parsed.translationId
-        ? [parsed.translationId]
-        : [defaults.translationId];
-    }
-
-    if (!parsed.tafsirIds) {
-      parsed.tafsirIds = defaults.tafsirIds;
-    }
-
-    return { ...defaults, ...parsed } as Settings;
-  } catch {
-    // Silent fail for settings parsing errors
-    return defaults;
-  }
+  const savedTranslations = getItem(SELECTED_TRANSLATIONS_KEY);
+  return normalizeSettings(savedSettings, savedTranslations, defaults);
 };
 
-export const saveSettings = (settings: Settings) => {
+export const saveSettings = (settings: Settings): void => {
   if (typeof window === 'undefined') return;
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  setItem(SETTINGS_KEY, JSON.stringify(settings));
 };

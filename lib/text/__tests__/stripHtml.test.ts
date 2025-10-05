@@ -13,8 +13,8 @@ describe('stripHtml', () => {
   });
 
   it('returns an empty string for null or undefined input', () => {
-    expect(stripHtml(null as any)).toBe('');
-    expect(stripHtml(undefined as any)).toBe('');
+    expect(stripHtml(null as unknown as string)).toBe('');
+    expect(stripHtml(undefined as unknown as string)).toBe('');
   });
 
   it('handles strings with no HTML', () => {

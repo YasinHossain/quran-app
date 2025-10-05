@@ -1,85 +1,50 @@
-import { useRef } from 'react';
-import { useSidebar } from '@/app/providers/SidebarContext';
-import useScrollPersistence from '@/lib/hooks/useScrollPersistence';
-import useScrollCentering from '@/lib/hooks/useScrollCentering';
+import { useRef, type UIEvent } from 'react';
 
-type TabKey = 'Surah' | 'Juz' | 'Page';
+import { useSidebarScrollCentering } from './hooks/useSidebarScrollCentering';
+import { useSidebarScrollPersistence } from './hooks/useSidebarScrollPersistence';
+
+import type { TabKey } from '@/app/shared/components/surah-tabs/types';
 
 interface Options {
   activeTab: TabKey;
   selectedSurahId: number | null;
   selectedJuzId: number | null;
   selectedPageId: number | null;
+  isEnabled: boolean;
 }
-
-const useSidebarScroll = ({
+export const useSidebarScroll = ({
   activeTab,
   selectedSurahId,
   selectedJuzId,
   selectedPageId,
-}: Options) => {
+  isEnabled,
+}: Options): {
+  scrollRef: React.RefObject<HTMLDivElement | null>;
+  handleScroll: (event: UIEvent<HTMLDivElement>) => void;
+  prepareForTabSwitch: (nextTab: TabKey) => void;
+  rememberScroll: (tab: TabKey) => void;
+} => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const {
-    surahScrollTop,
-    setSurahScrollTop,
-    juzScrollTop,
-    setJuzScrollTop,
-    pageScrollTop,
-    setPageScrollTop,
-  } = useSidebar();
-
   const {
     handleScroll,
     prepareForTabSwitch: persistencePrepare,
-    rememberScroll: persistRememberScroll,
-  } = useScrollPersistence<TabKey>({
+    rememberScroll: persistRemember,
+  } = useSidebarScrollPersistence({ scrollRef, activeTab, isEnabled });
+  const { skipNextCentering, prepareForTabSwitch: centeringPrepare } = useSidebarScrollCentering({
     scrollRef,
     activeTab,
-    scrollTops: {
-      Surah: surahScrollTop,
-      Juz: juzScrollTop,
-      Page: pageScrollTop,
-    },
-    setScrollTops: {
-      Surah: setSurahScrollTop,
-      Juz: setJuzScrollTop,
-      Page: setPageScrollTop,
-    },
-    storageKeys: {
-      Surah: 'surahScrollTop',
-      Juz: 'juzScrollTop',
-      Page: 'pageScrollTop',
-    },
+    selectedSurahId,
+    selectedJuzId,
+    selectedPageId,
+    isEnabled,
   });
-
-  const { skipNextCentering, prepareForTabSwitch: centeringPrepare } = useScrollCentering<TabKey>({
-    scrollRef,
-    activeTab,
-    selectedIds: {
-      Surah: selectedSurahId,
-      Juz: selectedJuzId,
-      Page: selectedPageId,
-    },
-    scrollTops: {
-      Surah: surahScrollTop,
-      Juz: juzScrollTop,
-      Page: pageScrollTop,
-    },
-  });
-
-  const rememberScroll = (tab: TabKey) => {
-    persistRememberScroll(tab);
+  const rememberScroll = (tab: TabKey): void => {
+    persistRemember(tab);
     skipNextCentering(tab);
   };
-
-  const prepareForTabSwitch = (nextTab: TabKey) => {
+  const prepareForTabSwitch = (nextTab: TabKey): void => {
     persistencePrepare();
     centeringPrepare(nextTab);
   };
-
   return { scrollRef, handleScroll, prepareForTabSwitch, rememberScroll };
 };
-
-export default useSidebarScroll;
-
-export type { TabKey };

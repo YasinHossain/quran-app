@@ -1,0 +1,66 @@
+'use client';
+
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { CollapsibleSection } from '@/app/(features)/surah/components/CollapsibleSection';
+import { useFontSize } from '@/app/(features)/surah/hooks/useFontSize';
+import { useSettings } from '@/app/providers/SettingsContext';
+import { BookReaderIcon } from '@/app/shared/icons';
+import { SelectionBox } from '@/app/shared/SelectionBox';
+
+interface TafsirSettingsProps {
+  onTafsirPanelOpen?: () => void;
+  selectedTafsirName?: string;
+  showTafsirSetting?: boolean;
+  isOpen?: boolean;
+  onToggle?: () => void;
+}
+
+export const TafsirSettings = ({
+  onTafsirPanelOpen,
+  selectedTafsirName,
+  showTafsirSetting = false,
+  isOpen = false,
+  onToggle,
+}: TafsirSettingsProps): React.JSX.Element => {
+  const { settings, setTafsirFontSize } = useSettings();
+  const { t } = useTranslation();
+  const { style: tafsirStyle } = useFontSize(settings.tafsirFontSize, 12, 28);
+
+  return (
+    <>
+      {showTafsirSetting && (
+        <CollapsibleSection
+          title={t('tafsir_setting')}
+          icon={<BookReaderIcon size={20} className="text-accent" />}
+          isLast={true}
+          isOpen={isOpen}
+          onToggle={onToggle || (() => {})}
+        >
+          <div className="space-y-4">
+            <SelectionBox
+              label={t('select_tafsir')}
+              value={selectedTafsirName || ''}
+              onClick={() => onTafsirPanelOpen?.()}
+            />
+            <div>
+              <div className="flex justify-between mb-1 text-sm">
+                <label className="text-foreground">{t('tafsir_font_size')}</label>
+                <span className="font-semibold text-accent">{settings.tafsirFontSize || 16}</span>
+              </div>
+              <input
+                type="range"
+                min="12"
+                max="28"
+                value={settings.tafsirFontSize || 16}
+                onChange={(e) => setTafsirFontSize(+e.target.value)}
+                style={tafsirStyle}
+              />
+            </div>
+          </div>
+        </CollapsibleSection>
+      )}
+    </>
+  );
+};

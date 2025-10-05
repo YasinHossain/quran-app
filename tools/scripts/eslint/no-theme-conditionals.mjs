@@ -3,38 +3,39 @@
  * Enforces use of design tokens and prevents anti-patterns
  */
 
-const HARDCODED_COLORS = [
-  'bg-white',
-  'bg-slate-50',
-  'bg-slate-100',
-  'bg-slate-800',
-  'bg-slate-900',
-  'bg-gray-100',
-  'bg-gray-800',
-  'text-slate-900',
-  'text-slate-800',
-  'text-slate-700',
-  'text-slate-600',
-  'text-slate-500',
-  'text-slate-400',
-  'text-slate-300',
-  'text-white',
-  'border-slate-200',
-  'border-slate-700',
-  'border-gray-200',
-];
+// These constants are preserved for reference but not actively used
+// const HARDCODED_COLORS = [
+//   'bg-white',
+//   'bg-slate-50',
+//   'bg-slate-100',
+//   'bg-slate-800',
+//   'bg-slate-900',
+//   'bg-gray-100',
+//   'bg-gray-800',
+//   'text-slate-900',
+//   'text-slate-800',
+//   'text-slate-700',
+//   'text-slate-600',
+//   'text-slate-500',
+//   'text-slate-400',
+//   'text-slate-300',
+//   'text-white',
+//   'border-slate-200',
+//   'border-slate-700',
+//   'border-gray-200',
+// ];
 
-const DESIGN_TOKENS = [
-  'bg-surface',
-  'bg-background',
-  'bg-interactive',
-  'bg-accent',
-  'text-foreground',
-  'text-muted',
-  'text-accent',
-  'text-on-accent',
-  'border-border',
-];
+// const DESIGN_TOKENS = [
+//   'bg-surface',
+//   'bg-background',
+//   'bg-interactive',
+//   'bg-accent',
+//   'text-foreground',
+//   'text-muted',
+//   'text-accent',
+//   'text-on-accent',
+//   'border-border',
+// ];
 
 export const rules = {
   'no-theme-conditionals': {
@@ -204,6 +205,4 @@ export const rules = {
 };
 
 // Export the original rule for backward compatibility
-export const rule = rules['no-theme-conditionals'];
-
-export default rule;
+export const noThemeConditionals = rules['no-theme-conditionals'];

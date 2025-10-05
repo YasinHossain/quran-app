@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 
-export default function NotFound() {
+export default function NotFound(): React.JSX.Element {
   const { t } = useTranslation();
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background text-foreground p-6">

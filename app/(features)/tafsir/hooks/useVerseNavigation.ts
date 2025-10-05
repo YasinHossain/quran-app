@@ -1,20 +1,22 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSidebar } from '@/app/providers/SidebarContext';
-import type { Surah } from '@/types';
-import { getSurahList } from '@/lib/api';
+import { useCallback, useMemo } from 'react';
 
-export const useVerseNavigation = (surahId: string, ayahId: string) => {
+import { useSidebar } from '@/app/providers/SidebarContext';
+import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
+
+import type { Surah } from '@/types';
+
+interface UseVerseNavigationReturn {
+  prev: { surahId: string; ayahId: number } | null;
+  next: { surahId: string; ayahId: number } | null;
+  navigate: (target: { surahId: string; ayahId: number } | null) => void;
+  currentSurah: Surah | undefined;
+}
+
+export const useVerseNavigation = (surahId: string, ayahId: string): UseVerseNavigationReturn => {
   const router = useRouter();
   const { setSurahListOpen } = useSidebar();
-
-  const [surahList, setSurahList] = useState<Surah[]>([]);
-
-  useEffect(() => {
-    getSurahList()
-      .then(setSurahList)
-      .catch((err) => console.error(err));
-  }, []);
+  const { surahs: surahList } = useSurahNavigationData();
 
   const totalSurahs = surahList.length;
   const currentSurahIndex = Number(surahId) - 1;
@@ -24,11 +26,11 @@ export const useVerseNavigation = (surahId: string, ayahId: string) => {
     currentAyahNum > 1
       ? { surahId, ayahId: currentAyahNum - 1 }
       : currentSurahIndex > 0 && surahList.length > 0
-        ? { surahId: String(Number(surahId) - 1), ayahId: surahList[currentSurahIndex - 1].verses }
+        ? { surahId: String(Number(surahId) - 1), ayahId: surahList[currentSurahIndex - 1]!.verses }
         : null;
 
   const next =
-    surahList.length > 0 && currentAyahNum < surahList[currentSurahIndex].verses
+    surahList.length > 0 && currentAyahNum < (surahList[currentSurahIndex]?.verses ?? 0)
       ? { surahId, ayahId: currentAyahNum + 1 }
       : currentSurahIndex < totalSurahs - 1
         ? { surahId: String(Number(surahId) + 1), ayahId: 1 }

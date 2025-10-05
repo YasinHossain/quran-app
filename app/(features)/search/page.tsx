@@ -1,31 +1,15 @@
 'use client';
-import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { searchVerses } from '@/lib/api';
-import { Verse as VerseType } from '@/types';
-import { Verse } from '@/app/(features)/surah/[surahId]/components/Verse';
+import { Suspense } from 'react';
 
-function SearchContent() {
+import { VerseCard } from '@/app/(features)/surah/components';
+
+import { useVerseSearch } from './hooks/useVerseSearch';
+
+function SearchContent(): React.JSX.Element {
   const searchParams = useSearchParams();
   const query = searchParams.get('query') || '';
-  const [verses, setVerses] = useState<VerseType[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!query) {
-      setVerses([]);
-      return;
-    }
-    setLoading(true);
-    searchVerses(query)
-      .then(setVerses)
-      .catch((err) => {
-        console.error(err);
-        setError('Failed to load results.');
-      })
-      .finally(() => setLoading(false));
-  }, [query]);
+  const { verses, loading, error } = useVerseSearch(query);
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -37,14 +21,14 @@ function SearchContent() {
       )}
       <div className="space-y-8">
         {verses.map((v) => (
-          <Verse key={v.id} verse={v} />
+          <VerseCard key={v.id} verse={v} />
         ))}
       </div>
     </div>
   );
 }
 
-export default function SearchPage() {
+export default function SearchPage(): React.JSX.Element {
   return (
     <Suspense fallback={<div className="p-6 max-w-4xl mx-auto">Loading...</div>}>
       <SearchContent />

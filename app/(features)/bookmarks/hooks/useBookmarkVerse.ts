@@ -1,8 +1,47 @@
 import { useState, useEffect } from 'react';
-import { getVerseById, getVerseByKey } from '@/lib/api/verses';
-import { useSettings } from '@/app/providers/SettingsContext';
+
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { useSettings } from '@/app/providers/SettingsContext';
+import { getVerseById, getVerseByKey } from '@/lib/api/verses';
 import { Bookmark, Chapter } from '@/types';
+
+type VerseTranslation = { text?: string };
+interface VerseApiResponse {
+  id: number;
+  verse_key: string;
+  text_uthmani: string;
+  translations?: VerseTranslation[];
+}
+
+function isBookmarkComplete(b: Bookmark): boolean {
+  return Boolean(b.verseText && b.surahName && b.translation && b.verseKey && b.verseApiId);
+}
+
+function getPrimaryTranslationId(settings: {
+  translationIds: number[];
+  translationId?: number;
+}): number {
+  return settings.translationIds[0] || settings.translationId || 20;
+}
+
+function isCompositeVerseId(id: string): boolean {
+  return /:/.test(id) || /[^0-9]/.test(id);
+}
+
+async function fetchVerseByIdOrKey(
+  verseId: string,
+  translationId: number
+): Promise<VerseApiResponse> {
+  return isCompositeVerseId(verseId)
+    ? getVerseByKey(verseId, translationId)
+    : getVerseById(verseId, translationId);
+}
+
+function findSurahNameFromKey(verseKey: string, chapters: Chapter[]): string {
+  const [surahIdStr] = verseKey.split(':');
+  const surah = surahIdStr ? chapters.find((c) => c.id === parseInt(surahIdStr, 10)) : undefined;
+  return surah?.name_simple || `Surah ${surahIdStr || ''}`;
+}
 
 interface UseBookmarkVerseReturn {
   bookmark: Bookmark;
@@ -12,37 +51,26 @@ interface UseBookmarkVerseReturn {
 
 export function useBookmarkVerse(bookmark: Bookmark, chapters: Chapter[]): UseBookmarkVerseReturn {
   const { settings } = useSettings();
+  const { translationIds, translationId } = settings;
   const { updateBookmark } = useBookmarks();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchVerseData = async () => {
-      if (
-        bookmark.verseText &&
-        bookmark.surahName &&
-        bookmark.translation &&
-        bookmark.verseKey &&
-        bookmark.verseApiId
-      ) {
-        return;
-      }
+    const fetchVerseData = async (): Promise<void> => {
+      if (isBookmarkComplete(bookmark)) return;
+
       setIsLoading(true);
       setError(null);
-
       try {
-        const translationId = settings.translationIds[0] || settings.translationId || 20;
-        const isCompositeKey = /:/.test(bookmark.verseId) || /[^0-9]/.test(bookmark.verseId);
-        const verse = await (isCompositeKey
-          ? getVerseByKey(bookmark.verseId, translationId)
-          : getVerseById(bookmark.verseId, translationId));
-        const [surahIdStr] = verse.verse_key.split(':');
-        const surahInfo = chapters.find((chapter) => chapter.id === parseInt(surahIdStr));
+        const primaryTransId = getPrimaryTranslationId({ translationIds, translationId });
+        const verse = await fetchVerseByIdOrKey(bookmark.verseId, primaryTransId);
+        const surahName = findSurahNameFromKey(verse.verse_key, chapters);
         updateBookmark(bookmark.verseId, {
           verseKey: verse.verse_key,
           verseText: verse.text_uthmani,
-          surahName: surahInfo?.name_simple || `Surah ${surahIdStr}`,
-          translation: verse.translations?.[0]?.text,
+          surahName,
+          ...(verse.translations?.[0]?.text && { translation: verse.translations[0].text }),
           verseApiId: verse.id,
         });
       } catch (err) {
@@ -53,7 +81,7 @@ export function useBookmarkVerse(bookmark: Bookmark, chapters: Chapter[]): UseBo
     };
 
     fetchVerseData();
-  }, [bookmark, settings.translationIds, settings.translationId, updateBookmark, chapters]);
+  }, [bookmark, translationIds, translationId, updateBookmark, chapters]);
 
   return { bookmark, isLoading, error };
 }
