@@ -17,17 +17,39 @@ export function useVerseSearch(query: string): {
   useEffect(() => {
     if (!query) {
       setVerses([]);
+      setLoading(false);
+      setError(null);
       return;
     }
 
+    let isActive = true;
+
     setLoading(true);
+    setError(null);
+
     searchVerses(query)
-      .then(setVerses)
+      .then((results) => {
+        if (!isActive) {
+          return;
+        }
+        setVerses(results);
+      })
       .catch((err) => {
+        if (!isActive) {
+          return;
+        }
         logger.error(err as Error);
         setError('Failed to load results.');
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        if (isActive) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      isActive = false;
+    };
   }, [query]);
 
   return { verses, loading, error } as const;
