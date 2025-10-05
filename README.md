@@ -282,15 +282,6 @@ Installs: `ripgrep`, `fd`, `jq`, `tree`
 
 ## Deployment
 
-### Vercel (Recommended)
-
-Deploy instantly with the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme):
-
-```bash
-npm run build    # Production build
-npm run start    # Test locally
-```
-
 ### Production Checklist
 
 - Environment variables configured
