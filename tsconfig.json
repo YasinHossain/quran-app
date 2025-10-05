@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
@@ -41,40 +37,30 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/public/*": [
-        "./public/*"
-      ],
-      "@/data/*": [
-        "./data/*"
-      ],
-      "@/tests/*": [
-        "./tests/*"
-      ],
-      "@tests/*": [
-        "./tests/*"
-      ],
-      "@/types/*": [
-        "./types/*"
-      ],
-      "@infra/*": [
-        "./src/infrastructure/*"
-      ],
-      "@/*": [
-        "./*"
-      ]
+      "@/public/*": ["./public/*"],
+      "@/data/*": ["./data/*"],
+      "@/tests/*": ["./tests/*"],
+      "@tests/*": ["./tests/*"],
+      "@/types/*": ["./types/*"],
+      "@infra/*": ["./src/infrastructure/*"],
+      "@/*": ["./*"]
     },
     "allowJs": true
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "next-env.d.ts",
-    ".next/types/**/*.ts"
-  ],
+  "include": ["**/*.ts", "**/*.tsx", "next-env.d.ts", ".next/types/**/*.ts"],
   "exclude": [
     "node_modules",
     "mcp-server",
     "templates",
-    ".next"
+    ".next",
+    "tests",
+    ".storybook",
+    "**/__tests__/**",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/*.stories.ts",
+    "**/*.stories.tsx"
   ]
 }

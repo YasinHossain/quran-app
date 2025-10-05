@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import type { ComponentProps, JSX } from 'react';
-
 import { ModalBackdrop } from './ModalBackdrop';
 import { ModalContent } from './ModalContent';
+
+import type { Meta, StoryObj } from '@storybook/react';
+import type { ComponentProps, JSX } from 'react';
 
 const meta = {
   title: 'Shared/Modal/Extras',
@@ -39,9 +39,12 @@ export const Mobile: Story = {
     children: (
       <div className="space-y-4">
         <p className="text-sm text-foreground">
-          Use the controls below to personalize your reading experience. These preferences are saved across devices.
+          Use the controls below to personalize your reading experience. These preferences are saved
+          across devices.
         </p>
-        <button className="rounded-md bg-primary px-4 py-2 text-primary-foreground">Save changes</button>
+        <button className="rounded-md bg-primary px-4 py-2 text-primary-foreground">
+          Save changes
+        </button>
       </div>
     ),
   },
@@ -65,7 +68,9 @@ export const DarkTheme: Story = {
         <p className="text-sm text-foreground">
           Review these settings to ensure comfortable reading in low-light environments.
         </p>
-        <button className="rounded-md border border-primary px-4 py-2 text-primary">Learn more</button>
+        <button className="rounded-md border border-primary px-4 py-2 text-primary">
+          Learn more
+        </button>
       </div>
     ),
   },

@@ -19,7 +19,7 @@ export function withTags(bookmark: Bookmark, tags: string[]): Bookmark {
     verseId: bookmark.verseId,
     position: bookmark.position,
     createdAt: bookmark.createdAt,
-    notes: bookmark.notes,
+    ...(bookmark.notes ? { notes: bookmark.notes } : {}),
     tags,
   });
 }

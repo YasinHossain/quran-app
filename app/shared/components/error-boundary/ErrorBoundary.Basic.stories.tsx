@@ -1,13 +1,11 @@
 import { fn } from '@storybook/test';
 
-import type { JSX } from 'react';
-
 import { DefaultErrorFallback } from './DefaultErrorFallback';
 import { ErrorBoundary } from './ErrorBoundary';
 
 import type { ErrorFallbackProps } from './ErrorBoundary';
-
 import type { Meta, StoryObj } from '@storybook/react';
+import type { JSX } from 'react';
 
 const meta = {
   title: 'Shared/ErrorBoundary/Basic',

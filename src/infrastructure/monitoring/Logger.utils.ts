@@ -18,10 +18,11 @@ export function parseLogLevel(level: string): LogLevel {
 export function setupDefaultTransports(logger: Logger): void {
   if (!config.logging.enableRemote) return;
   // Add remote transport if endpoint is configured
-  const endpoint = process.env.LOG_ENDPOINT;
-  const apiKey = process.env.LOG_API_KEY;
+  const endpoint = process.env['LOG_ENDPOINT'];
+  const apiKey = process.env['LOG_API_KEY'];
   if (endpoint) {
-    logger.addTransport(new RemoteTransport(endpoint, { apiKey }));
+    const options = apiKey ? { apiKey } : undefined;
+    logger.addTransport(new RemoteTransport(endpoint, options));
   }
 }
 

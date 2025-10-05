@@ -25,12 +25,16 @@ export function useQuranAudioController({
   onNext,
 }: Props): UseQuranAudioControllerReturn {
   const options = usePlayerOptionsState();
-  const core = useAudioControllerCore({ track, onPrev, onNext });
+  const core = useAudioControllerCore({
+    ...(track !== undefined ? { track } : {}),
+    ...(onPrev ? { onPrev } : {}),
+    ...(onNext ? { onNext } : {}),
+  });
   const playerLayoutProps = useControllerLayout({
     core,
     setMobileOptionsOpen: options.setMobileOptionsOpen,
-    onNext,
-    onPrev,
+    ...(onNext ? { onNext } : {}),
+    ...(onPrev ? { onPrev } : {}),
   });
   return {
     isPlayerVisible: core.isPlayerVisible,

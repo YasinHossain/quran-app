@@ -28,12 +28,12 @@ describe('useSelectableResources - grouping and filtering', () => {
 
     expect(result.current.languages).toEqual(['All', 'Arabic', 'English']);
     const groups = result.current.groupedResources;
-    expect(groups.English.map((r) => r.id)).toEqual([1, 2]);
-    expect(groups.Arabic.map((r) => r.id)).toEqual([3, 4]);
+    expect(groups['English']!.map((r) => r.id)).toEqual([1, 2]);
+    expect(groups['Arabic']!.map((r) => r.id)).toEqual([3, 4]);
 
     act(() => result.current.setSearchTerm('arb'));
-    expect(result.current.groupedResources.Arabic.map((r) => r.id)).toEqual([3, 4]);
-    expect(result.current.groupedResources.English).toBeUndefined();
+    expect(result.current.groupedResources['Arabic']!.map((r) => r.id)).toEqual([3, 4]);
+    expect(result.current.groupedResources['English']).toBeUndefined();
   });
 });
 

@@ -1,5 +1,5 @@
 // Prefer the CDN-backed QDC API for higher availability; can be overridden via env
-const API_BASE_URL = process.env.QURAN_API_BASE_URL ?? 'https://api.qurancdn.com/api/qdc';
+const API_BASE_URL = process.env['QURAN_API_BASE_URL'] ?? 'https://api.qurancdn.com/api/qdc';
 
 interface FetchWithTimeoutOptions extends RequestInit {
   /** Message prefix used if the request fails */

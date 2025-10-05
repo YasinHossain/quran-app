@@ -7,7 +7,11 @@ import type { Meta, StoryObj } from '@storybook/react';
 const meta: Meta<typeof BookmarkVerseCard> = {
   title: 'Shared/UI/Cards/BookmarkVerseCard',
   component: BookmarkVerseCard,
-  decorators: [...(preview.decorators || [])],
+  decorators: Array.isArray(preview.decorators)
+    ? preview.decorators
+    : preview.decorators
+      ? [preview.decorators]
+      : [],
   parameters: {
     layout: 'centered',
     backgrounds: {
@@ -45,7 +49,14 @@ const mockBookmark = {
 
 export const Default: Story = {
   args: {
-    bookmark: mockBookmark,
+    bookmark: {
+      verseId: 'v-1',
+      createdAt: Date.now(),
+      verseKey: mockBookmark.verseKey,
+      surahName: mockBookmark.surahName,
+      verseText: mockBookmark.arabicText,
+      translation: mockBookmark.translationText,
+    },
     onEdit: () => {},
     onDelete: () => {},
     onTogglePin: () => {},
@@ -55,8 +66,12 @@ export const Default: Story = {
 export const WithoutNote: Story = {
   args: {
     bookmark: {
-      ...mockBookmark,
-      note: undefined,
+      verseId: 'v-1',
+      createdAt: Date.now(),
+      verseKey: mockBookmark.verseKey,
+      surahName: mockBookmark.surahName,
+      verseText: mockBookmark.arabicText,
+      translation: undefined,
     },
     onEdit: () => {},
     onDelete: () => {},

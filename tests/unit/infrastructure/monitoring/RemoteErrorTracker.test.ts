@@ -1,6 +1,5 @@
-import { RemoteErrorTracker, logger } from '@infra/monitoring';
-
 import { fetchWithTimeout } from '@/lib/api/client';
+import { RemoteErrorTracker, logger } from '@infra/monitoring';
 
 jest.mock('../../../../lib/api/client', () => ({
   fetchWithTimeout: jest.fn(),

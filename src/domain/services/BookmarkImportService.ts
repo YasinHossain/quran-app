@@ -43,7 +43,7 @@ export class BookmarkImportService {
           verseId: verse.id,
           position,
           createdAt: new Date(),
-          notes: data.notes,
+          ...(data.notes ? { notes: data.notes } : {}),
           tags: data.tags || [],
         });
 

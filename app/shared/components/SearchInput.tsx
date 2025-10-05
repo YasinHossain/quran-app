@@ -1,7 +1,7 @@
 'use client';
-import type { JSX, KeyboardEvent } from 'react';
-
 import { SearchIcon } from '@/app/shared/icons';
+
+import type { JSX, KeyboardEvent } from 'react';
 
 type SearchVariant = 'main' | 'default' | 'glass' | 'header' | 'panel';
 type SearchSize = 'sm' | 'md' | 'lg';

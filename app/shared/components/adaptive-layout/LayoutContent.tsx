@@ -1,12 +1,12 @@
 'use client';
 
-import type { JSX } from 'react';
-
 import { useResponsiveState } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 
 import { LayoutBackdrop } from './LayoutBackdrop';
 import { useLayoutStyles } from './useLayoutStyles';
+
+import type { JSX } from 'react';
 
 interface LayoutContentProps {
   children: React.ReactNode;

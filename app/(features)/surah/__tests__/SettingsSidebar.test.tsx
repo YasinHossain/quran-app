@@ -72,7 +72,10 @@ describe('SettingsSidebar - Basic Interactions', () => {
     renderWithProviders(createTestComponent({}));
 
     await userEvent.click(screen.getByLabelText(/open settings/i));
-    const fontButton = screen.getByRole<HTMLButtonElement>('button', { name: 'KFGQPC Uthman Taha' });
+    const fontButton = screen.getByRole<HTMLButtonElement>('button', {
+      name: /arabic_font_face/i,
+    });
+    expect(fontButton).toHaveTextContent('KFGQPC Uthman Taha');
     await userEvent.click(fontButton);
 
     const indoPakButton = screen.getByRole<HTMLButtonElement>('button', { name: 'IndoPak' });
@@ -102,7 +105,9 @@ describe('SettingsSidebar - Translation Panel', () => {
     renderWithProviders(<TestComponent />);
 
     await userEvent.click(screen.getByLabelText(/open settings/i));
-    const translationButton = screen.getAllByRole<HTMLButtonElement>('button', { name: 'Translation' })[0]!;
+    const translationButton = screen.getAllByRole<HTMLButtonElement>('button', {
+      name: 'Translation',
+    })[0]!;
     await userEvent.click(translationButton);
     const panel = screen.getByTestId('translation-panel');
     expect(panel).toHaveClass('translate-x-full');
@@ -131,7 +136,10 @@ describe('SettingsSidebar - Word Translation Panel', () => {
     renderWithProviders(<TestComponent />);
 
     await userEvent.click(screen.getByLabelText(/open settings/i));
-    const banglaButton = await screen.findByRole<HTMLButtonElement>('button', { name: 'Bangla' });
+    const banglaButton = await screen.findByRole<HTMLButtonElement>('button', {
+      name: /word_by_word_language/i,
+    });
+    expect(banglaButton).toHaveTextContent('Bangla');
     await userEvent.click(banglaButton);
     expect(screen.getAllByText('Bangla').length).toBeGreaterThan(1);
   });

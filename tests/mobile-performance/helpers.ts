@@ -1,5 +1,6 @@
-import { perfLogger } from '@infra/monitoring';
 import { render, fireEvent } from '@testing-library/react';
+
+import { perfLogger } from '@infra/monitoring';
 
 let nowSpy: jest.SpyInstance<number, []>;
 let current = 0;

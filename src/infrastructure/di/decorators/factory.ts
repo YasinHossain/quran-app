@@ -1,7 +1,5 @@
 import { TYPES, type TypeKeys } from '@/src/infrastructure/di/types';
 
-import type { interfaces } from 'inversify';
-
 export type Factory<T> = () => T;
 export type AsyncFactory<T> = () => Promise<T>;
 export type FactoryWithArgs<T, Args extends unknown[]> = (...args: Args) => T;
@@ -14,8 +12,12 @@ export type FactoryWithArgs<T, Args extends unknown[]> = (...args: Args) => T;
  * @param typeKey - Key from TYPES object
  * @returns Factory decorator
  */
-export const createFactory = <T>(typeKey: TypeKeys): interfaces.FactoryCreator<T> => {
-  return (context: interfaces.Context) => {
+// Minimal factory-creator type to avoid inversify type dependency at compile time
+type MinimalContext = { container: { get<U>(id: symbol): U } };
+export type FactoryCreator<T> = (context: MinimalContext) => Factory<T>;
+
+export const createFactory = <T>(typeKey: TypeKeys): FactoryCreator<T> => {
+  return (context) => {
     return () => context.container.get<T>(TYPES[typeKey]);
   };
 };

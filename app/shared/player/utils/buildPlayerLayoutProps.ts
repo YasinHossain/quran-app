@@ -49,8 +49,8 @@ export function buildPlayerLayoutProps({
     isPlaying,
     togglePlay: controls.togglePlay,
     setSeek: controls.setSeek,
-    onNext,
-    onPrev,
+    ...(onNext ? { onNext } : {}),
+    ...(onPrev ? { onPrev } : {}),
     closePlayer,
     setMobileOptionsOpen: () => setMobileOptionsOpen(true),
   } as const;

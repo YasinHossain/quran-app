@@ -7,7 +7,56 @@ import { useMobileVerseActionsState } from './hooks/useMobileVerseActionsState';
 import { MobileBottomSheet } from './MobileBottomSheet';
 import { VerseActionsProps } from './types';
 
-export const MobileVerseActions = ({
+import type { ComponentProps } from 'react';
+
+const buildStateConfig = ({
+  onShare,
+  onBookmark,
+  showRemove,
+}: {
+  onShare?: VerseActionsProps['onShare'];
+  onBookmark?: VerseActionsProps['onBookmark'];
+  showRemove: boolean;
+}): Parameters<typeof useMobileVerseActionsState>[0] => {
+  const config: Parameters<typeof useMobileVerseActionsState>[0] = { showRemove };
+  if (onShare) config.onShare = onShare;
+  if (onBookmark) config.onBookmark = onBookmark;
+  return config;
+};
+
+const createSheetProps = ({
+  state,
+  verseKey,
+  isPlaying,
+  isLoadingAudio,
+  isBookmarked,
+  onPlayPause,
+  showRemove,
+  onNavigateToVerse,
+}: {
+  state: ReturnType<typeof useMobileVerseActionsState>;
+  verseKey: string;
+  isPlaying: boolean;
+  isLoadingAudio: boolean;
+  isBookmarked: boolean;
+  onPlayPause: VerseActionsProps['onPlayPause'];
+  showRemove: boolean;
+  onNavigateToVerse: VerseActionsProps['onNavigateToVerse'];
+}): ComponentProps<typeof MobileBottomSheet> => ({
+  isOpen: state.isBottomSheetOpen,
+  onClose: state.closeBottomSheet,
+  verseKey,
+  isPlaying,
+  isLoadingAudio,
+  isBookmarked,
+  onPlayPause,
+  onBookmark: state.handleBookmarkClick,
+  onShare: state.handleShare,
+  showRemove,
+  ...(onNavigateToVerse ? { onNavigateToVerse } : {}),
+});
+
+export function MobileVerseActions({
   verseKey,
   verseId,
   isPlaying,
@@ -19,39 +68,33 @@ export const MobileVerseActions = ({
   onNavigateToVerse,
   showRemove = false,
   className = '',
-}: VerseActionsProps): React.JSX.Element => {
-  const {
-    isBottomSheetOpen,
-    openBottomSheet,
-    closeBottomSheet,
-    isBookmarkModalOpen,
-    closeBookmarkModal,
-    handleBookmarkClick,
-    handleShare,
-  } = useMobileVerseActionsState({ onShare, onBookmark, showRemove });
+}: VerseActionsProps): React.JSX.Element {
+  const state = useMobileVerseActionsState(buildStateConfig({ onShare, onBookmark, showRemove }));
+  const sheetProps = createSheetProps({
+    state,
+    verseKey,
+    isPlaying,
+    isLoadingAudio,
+    isBookmarked,
+    onPlayPause,
+    showRemove,
+    onNavigateToVerse,
+  });
 
   return (
     <>
-      <VerseActionTrigger verseKey={verseKey} onOpen={openBottomSheet} className={className} />
-      <MobileBottomSheet
-        isOpen={isBottomSheetOpen}
-        onClose={closeBottomSheet}
+      <VerseActionTrigger
         verseKey={verseKey}
-        isPlaying={isPlaying}
-        isLoadingAudio={isLoadingAudio}
-        isBookmarked={isBookmarked}
-        onPlayPause={onPlayPause}
-        onBookmark={handleBookmarkClick}
-        onShare={handleShare}
-        onNavigateToVerse={onNavigateToVerse}
-        showRemove={showRemove}
+        onOpen={state.openBottomSheet}
+        className={className}
       />
+      <MobileBottomSheet {...sheetProps} />
       <BookmarkModal
-        isOpen={isBookmarkModalOpen}
-        onClose={closeBookmarkModal}
+        isOpen={state.isBookmarkModalOpen}
+        onClose={state.closeBookmarkModal}
         verseId={verseId || verseKey}
         verseKey={verseKey}
       />
     </>
   );
-};
+}

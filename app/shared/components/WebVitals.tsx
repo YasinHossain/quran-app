@@ -3,6 +3,13 @@
 import { useEffect } from 'react';
 import { onCLS, onINP, onFCP, onLCP, onTTFB, type Metric } from 'web-vitals';
 
+type AnalyticsWindow = typeof window & {
+  gtag?: (command: 'event', eventName: string, params: Record<string, unknown>) => void;
+};
+
+const getAnalyticsWindow = (): AnalyticsWindow | null =>
+  typeof window === 'undefined' ? null : (window as AnalyticsWindow);
+
 interface WebVitalsProps {
   reportTarget?: 'console' | 'analytics' | 'both';
 }
@@ -11,7 +18,8 @@ export function WebVitals({ reportTarget = 'console' }: WebVitalsProps): null {
   useEffect(() => {
     // Only run in production or when explicitly enabled in development
     const shouldReport =
-      process.env.NODE_ENV === 'production' || process.env.NEXT_PUBLIC_ENABLE_WEB_VITALS === 'true';
+      process.env.NODE_ENV === 'production' ||
+      process.env['NEXT_PUBLIC_ENABLE_WEB_VITALS'] === 'true';
 
     if (!shouldReport) return;
 
@@ -37,16 +45,17 @@ export function WebVitals({ reportTarget = 'console' }: WebVitalsProps): null {
       // Send to analytics service (can be customized)
       if (reportTarget === 'analytics' || reportTarget === 'both') {
         // Example: Send to Google Analytics
-        if (typeof gtag !== 'undefined') {
-          gtag('event', metric.name, {
+        const analyticsWindow = getAnalyticsWindow();
+        if (analyticsWindow?.gtag) {
+          analyticsWindow.gtag('event', metric.name, {
             custom_parameter_1: metric.value,
             custom_parameter_2: metric.id,
           });
         }
 
         // Example: Send to a custom analytics endpoint
-        if (process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT) {
-          fetch(process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT, {
+        if (process.env['NEXT_PUBLIC_ANALYTICS_ENDPOINT']) {
+          fetch(process.env['NEXT_PUBLIC_ANALYTICS_ENDPOINT'], {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type UIEvent } from 'react';
 
 import { useSelectionSync } from '@/app/shared/surah-sidebar/hooks/useSelectionSync';
 import { useSidebarScroll } from '@/app/shared/surah-sidebar/useSidebarScroll';
@@ -6,43 +6,44 @@ import { useSidebarScroll } from '@/app/shared/surah-sidebar/useSidebarScroll';
 import { useSurahTabConfig } from './useSurahTabConfig';
 import { useSurahTabParams } from './useSurahTabParams';
 
+import type { TabKey } from '@/app/shared/components/surah-tabs/types';
 import type { Chapter } from '@/types';
 
 interface UseSurahTabsParams {
-  chapters: Chapter[];
-  filteredChapters: Chapter[];
+  chapters: ReadonlyArray<Chapter>;
+  filteredChapters: ReadonlyArray<Chapter>;
   filteredJuzs: { number: number; name: string; surahRange: string }[];
   filteredPages: number[];
 }
 
 interface SurahTab {
-  key: string;
+  key: TabKey;
   label: string;
 }
 
 interface TabContentProps {
-  activeTab: 'Surah' | 'Juz' | 'Page';
-  filteredChapters: Chapter[];
+  activeTab: TabKey;
+  filteredChapters: ReadonlyArray<Chapter>;
   filteredJuzs: { number: number; name: string; surahRange: string }[];
   filteredPages: number[];
-  chapters: Chapter[];
+  chapters: ReadonlyArray<Chapter>;
   selectedSurahId: number | null;
   setSelectedSurahId: (id: number | null) => void;
   selectedJuzId: number | null;
   setSelectedJuzId: (id: number | null) => void;
   selectedPageId: number | null;
   setSelectedPageId: (id: number | null) => void;
-  rememberScroll: (key: string, position: number) => void;
+  rememberScroll: (tab: TabKey) => void;
   isTafsirPath: boolean;
 }
 
 interface UseSurahTabsReturn {
   tabs: SurahTab[];
-  activeTab: string;
-  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
-  scrollRef: React.RefObject<HTMLDivElement>;
-  handleScroll: () => void;
-  prepareForTabSwitch: () => void;
+  activeTab: TabKey;
+  setActiveTab: React.Dispatch<React.SetStateAction<TabKey>>;
+  scrollRef: React.RefObject<HTMLDivElement | null>;
+  handleScroll: (event: UIEvent<HTMLDivElement>) => void;
+  prepareForTabSwitch: (tab: TabKey) => void;
   tabContentProps: TabContentProps;
 }
 
@@ -56,7 +57,7 @@ export function useSurahTabs({
     useSurahTabParams();
   const { tabs } = useSurahTabConfig();
 
-  const [activeTab, setActiveTab] = useState<'Surah' | 'Juz' | 'Page'>(getInitialTab);
+  const [activeTab, setActiveTab] = useState<TabKey>(getInitialTab);
 
   const selections = useSelectionSync({
     currentSurahId,
@@ -105,13 +106,13 @@ function buildTabContentProps({
   rememberScroll,
   isTafsirPath,
 }: {
-  activeTab: 'Surah' | 'Juz' | 'Page';
-  filteredChapters: Chapter[];
+  activeTab: TabKey;
+  filteredChapters: ReadonlyArray<Chapter>;
   filteredJuzs: { number: number; name: string; surahRange: string }[];
   filteredPages: number[];
-  chapters: Chapter[];
+  chapters: ReadonlyArray<Chapter>;
   selections: ReturnType<typeof useSelectionSync>;
-  rememberScroll: (key: string, position: number) => void;
+  rememberScroll: (tab: TabKey) => void;
   isTafsirPath: boolean;
 }): TabContentProps {
   const {

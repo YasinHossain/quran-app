@@ -106,7 +106,13 @@ export function useAudioPlayer(options: Options = {}): AudioPlayerReturn {
     else a.pause();
   }, [isPlaying, src, onError]);
 
-  useAudioElementEvents({ audioRef, src, defaultDuration, onTimeUpdate, onLoadedMetadata });
+  useAudioElementEvents({
+    audioRef,
+    ...(src !== undefined ? { src } : {}),
+    ...(defaultDuration !== undefined ? { defaultDuration } : {}),
+    ...(onTimeUpdate ? { onTimeUpdate } : {}),
+    ...(onLoadedMetadata ? { onLoadedMetadata } : {}),
+  });
 
   return { audioRef, isPlaying, play, pause, seek, setVolume, setPlaybackRate };
 }

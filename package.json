@@ -189,5 +189,8 @@
       "limit": "200 KB",
       "webpack": false
     }
-  ]
+  ],
+  "volta": {
+    "node": "20.19.5"
+  }
 }

@@ -33,10 +33,13 @@ function useAutoHideVisibility({ show, autoHide, autoHideDelay }: Required<Swipe
 } {
   const [isVisible, setIsVisible] = useState(show);
   useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | undefined;
     if (autoHide && show) {
-      const timer = setTimeout(() => setIsVisible(false), autoHideDelay);
-      return () => clearTimeout(timer);
+      timer = setTimeout(() => setIsVisible(false), autoHideDelay);
     }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, [autoHide, autoHideDelay, show]);
   const hide = useCallback(() => setIsVisible(false), []);
   return { isVisible, hide } as const;

@@ -35,6 +35,9 @@ export const useDraggableSelection = (initialOrder: number[] = []): UseDraggable
         const from = newOrder.indexOf(draggedId);
         const to = newOrder.indexOf(targetId);
         const [item] = newOrder.splice(from, 1);
+        if (from === -1 || to === -1 || item === undefined) {
+          return prev;
+        }
         newOrder.splice(to, 0, item);
         return newOrder;
       });

@@ -88,19 +88,20 @@ export function useVerseListing({
   const translation = useTranslationOptions();
   const stableTranslationIds = useStableTranslationIds(settingsState.settings);
 
+  const infiniteLoaderParams: Parameters<typeof useInfiniteVerseLoader>[0] = {
+    lookup,
+    stableTranslationIds,
+    wordLang: settingsState.settings.wordLang,
+    loadMoreRef: errorState.loadMoreRef,
+    error: errorState.error,
+    setError: errorState.handleLoaderError,
+    ...(id !== undefined ? { id } : {}),
+  } as const;
+
+  const infiniteLoaderState = useInfiniteVerseLoader(infiniteLoaderParams);
+
   const loaderState =
-    id !== undefined
-      ?
-          useInfiniteVerseLoader({
-            id,
-            lookup,
-            stableTranslationIds,
-            wordLang: settingsState.settings.wordLang,
-            loadMoreRef: errorState.loadMoreRef,
-            error: errorState.error,
-            setError: errorState.handleLoaderError,
-          }) || EMPTY_LOADER_STATE
-      : EMPTY_LOADER_STATE;
+    id !== undefined ? { ...EMPTY_LOADER_STATE, ...infiniteLoaderState } : EMPTY_LOADER_STATE;
 
   const verses = resolveVerses(initialVerses, loaderState.verses);
   const navigation = useNavigationHandlers({

@@ -42,17 +42,10 @@ type RenderLinkArgs = {
   href: string;
   className: string;
   children: React.ReactNode;
-  props: React.AnchorHTMLAttributes<HTMLAnchorElement>;
 };
 
-const renderLink = ({
-  ref,
-  href,
-  className,
-  children,
-  props,
-}: RenderLinkArgs): React.JSX.Element => (
-  <GlassCardLink ref={ref} href={href} className={className} {...props}>
+const renderLink = ({ ref, href, className, children }: RenderLinkArgs): React.JSX.Element => (
+  <GlassCardLink ref={ref} href={href} className={className}>
     {children}
   </GlassCardLink>
 );
@@ -62,7 +55,6 @@ type RenderButtonArgs = {
   onClick: () => void;
   className: string;
   children: React.ReactNode;
-  props: React.ButtonHTMLAttributes<HTMLButtonElement>;
 };
 
 const renderButton = ({
@@ -70,9 +62,8 @@ const renderButton = ({
   onClick,
   className,
   children,
-  props,
 }: RenderButtonArgs): React.JSX.Element => (
-  <GlassCardButton ref={ref} onClick={onClick} className={className} {...props}>
+  <GlassCardButton ref={ref} onClick={onClick} className={className}>
     {children}
   </GlassCardButton>
 );
@@ -81,11 +72,10 @@ type RenderDivArgs = {
   ref: React.ForwardedRef<HTMLDivElement>;
   className: string;
   children: React.ReactNode;
-  props: React.HTMLAttributes<HTMLDivElement>;
 };
 
-const renderDiv = ({ ref, className, children, props }: RenderDivArgs): React.JSX.Element => (
-  <div ref={ref} className={cn('group', className)} {...props}>
+const renderDiv = ({ ref, className, children }: RenderDivArgs): React.JSX.Element => (
+  <div ref={ref} className={cn('group', className)}>
     {children}
   </div>
 );
@@ -102,10 +92,11 @@ export const GlassCard = memo(
         href,
         onClick,
         animate = true,
-        ...props
+        asChild, // reserved for future slot support
       },
       ref
     ) {
+      void asChild;
       const baseClasses = cn(
         'backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300',
         animate && 'content-visibility-auto animate-fade-in-up',
@@ -121,7 +112,6 @@ export const GlassCard = memo(
           href,
           className: baseClasses,
           children,
-          props: props as React.AnchorHTMLAttributes<HTMLAnchorElement>,
         });
       if (onClick)
         return renderButton({
@@ -129,13 +119,11 @@ export const GlassCard = memo(
           onClick,
           className: baseClasses,
           children,
-          props: props as React.ButtonHTMLAttributes<HTMLButtonElement>,
         });
       return renderDiv({
         ref: ref as React.ForwardedRef<HTMLDivElement>,
         className: baseClasses,
         children,
-        props: props as React.HTMLAttributes<HTMLDivElement>,
       });
     }
   )

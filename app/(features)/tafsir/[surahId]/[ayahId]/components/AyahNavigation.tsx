@@ -1,7 +1,7 @@
 'use client';
-import type { JSX } from 'react';
-
 import { Surah } from '@/types';
+
+import type { JSX } from 'react';
 
 interface NavTarget {
   surahId: string;

@@ -1,13 +1,13 @@
 import * as Popover from '@radix-ui/react-popover';
-import { useRef, useState, Dispatch, SetStateAction, RefObject } from 'react';
+import { useRef, useState, Dispatch, SetStateAction } from 'react';
 
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 
 interface SpeedPopoverState {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  triggerRef: RefObject<HTMLButtonElement>;
-  contentRef: RefObject<HTMLDivElement>;
+  triggerRef: React.RefObject<HTMLButtonElement | null>;
+  contentRef: React.RefObject<HTMLDivElement | null>;
   close: () => void;
 }
 
@@ -32,7 +32,7 @@ function SpeedOptionButton({
   speed: number;
   active: boolean;
   onSelect: (v: number) => void;
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <button
       onClick={() => onSelect(speed)}
@@ -45,7 +45,7 @@ function SpeedOptionButton({
   );
 }
 
-export function SpeedControl(): JSX.Element {
+export function SpeedControl(): React.JSX.Element {
   const { playbackRate, setPlaybackRate } = useAudio();
   const { open, setOpen, triggerRef, contentRef, close } = useSpeedPopover();
   const speedOptions = [0.75, 1, 1.25, 1.5, 2];

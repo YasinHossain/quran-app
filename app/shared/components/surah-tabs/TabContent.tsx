@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic';
-import React, { type ComponentType } from 'react';
+import React from 'react';
 
 import { SurahTabContent } from './TabContentViews';
 
@@ -8,7 +8,7 @@ import type { Chapter } from '@/types';
 
 interface TabContentProps {
   activeTab: TabKey;
-  filteredChapters: Chapter[];
+  filteredChapters: ReadonlyArray<Chapter>;
   filteredJuzs: JuzSummary[];
   filteredPages: number[];
   chapters: ReadonlyArray<Chapter>;
@@ -22,12 +22,17 @@ interface TabContentProps {
   isTafsirPath: boolean;
 }
 
-const JuzTabContent = dynamic<ComponentType<TabContentProps>>(() =>
-  import('./TabContentViews').then((mod) => ({ default: mod.JuzTabContent }))
+// Adapt dynamically loaded components to accept TabContentProps at call sites
+const JuzTabContent = dynamic<TabContentProps>(() =>
+  import('./TabContentViews').then((mod) => ({
+    default: (props: TabContentProps) => <mod.JuzTabContent {...props} />,
+  }))
 );
 
-const PageTabContent = dynamic<ComponentType<TabContentProps>>(() =>
-  import('./TabContentViews').then((mod) => ({ default: mod.PageTabContent }))
+const PageTabContent = dynamic<TabContentProps>(() =>
+  import('./TabContentViews').then((mod) => ({
+    default: (props: TabContentProps) => <mod.PageTabContent {...props} />,
+  }))
 );
 
 export const TabContent = (props: TabContentProps): React.JSX.Element => renderTabContent(props);

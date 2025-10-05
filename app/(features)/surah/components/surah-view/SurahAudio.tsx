@@ -1,12 +1,12 @@
 'use client';
 
 import React from 'react';
-import type { ReactElement } from 'react';
 
 import { SurahAudioPlayer } from '@/app/(features)/surah/components/SurahAudioPlayer';
 
 import type { Reciter } from '@/app/shared/player/types';
 import type { Verse } from '@/types';
+import type { ReactElement } from 'react';
 
 interface SurahAudioProps {
   activeVerse: Verse | null;

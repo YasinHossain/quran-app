@@ -38,12 +38,12 @@ export const ContentBookmarkCard = memo(function ContentBookmarkCard({
     bookmark,
     isPlaying,
     isLoadingAudio,
-    onPlayPause,
+    ...(onPlayPause ? { onPlayPause } : {}),
     isBookmarked,
-    onBookmark,
-    onNavigateToVerse,
+    ...(onBookmark ? { onBookmark } : {}),
+    ...(onNavigateToVerse ? { onNavigateToVerse } : {}),
     settings,
-    onClick,
+    ...(onClick ? { onClick } : {}),
   });
 
   return (

@@ -67,7 +67,11 @@ function renderModalCenter({
           role="dialog"
           aria-modal="true"
         >
-          <PanelHeader title={title} showCloseButton={showCloseButton} onClose={onClose} />
+          <PanelHeader
+            {...(title !== undefined ? { title } : {})}
+            showCloseButton={showCloseButton}
+            onClose={onClose}
+          />
           <div className="flex-1">{children}</div>
         </div>
       </div>
@@ -97,7 +101,11 @@ function renderStandardPanel({
           className
         )}
       >
-        <PanelHeader title={title} showCloseButton={showCloseButton} onClose={onClose} />
+        <PanelHeader
+          {...(title !== undefined ? { title } : {})}
+          showCloseButton={showCloseButton}
+          onClose={onClose}
+        />
         <div className="flex-1 overflow-y-auto">{children}</div>
       </div>
     </>
@@ -128,9 +136,9 @@ export const Panel = memo(function Panel({
 
   return renderer({
     onClose,
-    title,
+    ...(title !== undefined ? { title } : {}),
     children,
-    className,
+    ...(className !== undefined ? { className } : {}),
     showCloseButton,
     closeOnOverlayClick,
     variantClass,

@@ -1,10 +1,11 @@
 import { fn } from '@storybook/test';
-import type { Meta, StoryObj } from '@storybook/react';
-import type { ReactElement } from 'react';
 
 import { ModalActions } from './ModalActions';
 import { ModalBackdrop } from './ModalBackdrop';
 import { ModalContent } from './ModalContent';
+
+import type { Meta, StoryObj } from '@storybook/react';
+import type { ReactElement } from 'react';
 
 const meta = {
   title: 'Shared/Modal/Basic',

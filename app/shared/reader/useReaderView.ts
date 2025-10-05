@@ -9,8 +9,10 @@ type UseReaderViewReturn = {
   panels: ReturnType<typeof useSurahPanels>;
 };
 
-interface UseReaderViewParams extends Pick<UseVerseListingParams, 'lookup' | 'initialVerses'> {
+interface UseReaderViewParams {
   resourceId: string;
+  lookup: UseVerseListingParams['lookup'];
+  initialVerses?: UseVerseListingParams['initialVerses'];
 }
 
 export const useReaderView = ({

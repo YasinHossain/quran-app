@@ -44,7 +44,7 @@ export const Juz = ({
               }}
               onNavigate={() => {
                 setSelectedJuzId(juz.number);
-                const page = JUZ_START_PAGES[juz.number - 1];
+                const page = JUZ_START_PAGES[juz.number - 1] ?? 1;
                 setSelectedPageId(page);
                 const chap = getSurahByPage(page, chapters);
                 if (chap) setSelectedSurahId(chap.id);

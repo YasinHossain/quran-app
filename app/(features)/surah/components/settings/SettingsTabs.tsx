@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import type { ReactElement } from 'react';
 
 import { TabToggle } from '@/app/shared/ui/TabToggle';
 
 import type { SettingsTabValue } from './types';
+import type { ReactElement } from 'react';
 
 interface SettingsTabsProps {
   activeTab: SettingsTabValue;

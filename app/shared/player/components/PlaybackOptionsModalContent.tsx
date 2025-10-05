@@ -16,9 +16,9 @@ interface ContentProps {
   localReciter: string;
   setLocalReciter: (id: string) => void;
   localRepeat: RepeatOptions;
-  setLocalRepeat: (opts: RepeatOptions) => void;
+  setLocalRepeat: React.Dispatch<React.SetStateAction<RepeatOptions>>;
   rangeWarning: string | null;
-  setRangeWarning: (msg: string | null) => void;
+  setRangeWarning: React.Dispatch<React.SetStateAction<string | null>>;
   commit: () => void;
 }
 

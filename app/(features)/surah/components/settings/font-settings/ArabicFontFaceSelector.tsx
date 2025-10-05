@@ -1,7 +1,8 @@
 import React from 'react';
-import type { ReactElement } from 'react';
 
 import { SelectionBox } from '@/app/shared/SelectionBox';
+
+import type { ReactElement } from 'react';
 
 interface ArabicFontFaceSelectorProps {
   label: string;

@@ -28,7 +28,7 @@ export function validateSurahInputs({
   arabicName,
   englishName,
   numberOfAyahs,
-}: SurahInit): void {
+}: Pick<SurahInit, 'id' | 'name' | 'arabicName' | 'englishName' | 'numberOfAyahs'>): void {
   if (id < 1 || id > 114) {
     throw new Error('Invalid Surah ID: must be between 1 and 114');
   }
@@ -58,7 +58,7 @@ export const toPlainObject = (surah: Surah): SurahPlainObject => ({
   englishTranslation: surah.englishTranslation,
   numberOfAyahs: surah.numberOfAyahs,
   revelationType: surah.revelationType,
-  revelationOrder: surah.revelationOrder,
+  ...(surah.revelationOrder !== undefined ? { revelationOrder: surah.revelationOrder } : {}),
   isMakki: isMakki(surah.revelationType),
   isMadani: isMadani(surah.revelationType),
   canBeReadInPrayer: canBeReadInPrayer(surah.id),

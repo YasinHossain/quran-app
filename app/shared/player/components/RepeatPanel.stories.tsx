@@ -12,7 +12,7 @@ export const meta: Meta<typeof RepeatPanel> = {
 
 type Story = StoryObj<typeof RepeatPanel>;
 
-function RepeatPanelStory(): JSX.Element {
+function RepeatPanelStory(): React.JSX.Element {
   const [repeat, setRepeat] = useState<RepeatOptions>({ mode: 'off' });
   const [warning, setWarning] = useState<string | null>(null);
   return (

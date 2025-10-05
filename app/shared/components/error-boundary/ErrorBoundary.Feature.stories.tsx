@@ -1,9 +1,8 @@
-import type { JSX } from 'react';
-
 import { ErrorBoundary } from './ErrorBoundary';
 import { FeatureErrorBoundary } from './FeatureErrorBoundary';
 
 import type { Meta, StoryObj } from '@storybook/react';
+import type { JSX } from 'react';
 
 const meta = {
   title: 'Shared/ErrorBoundary/Feature',

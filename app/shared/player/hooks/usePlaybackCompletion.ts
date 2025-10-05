@@ -2,10 +2,11 @@ import { useCallback, RefObject } from 'react';
 
 import { Verse } from '@/types';
 
-import { useCompletionHandlers } from './useCompletionHandlers';
+import { useCompletionHandlers, sanitizeControls, type Controls } from './useCompletionHandlers';
 import { useRepeatState } from './useRepeatState';
 import { useSurahRepeat } from './useSurahRepeat';
 
+import type { CompletionHandlers } from './playbackCompletionHandlers';
 import type { RepeatOptions } from '@/app/shared/player/types';
 
 interface Options {
@@ -21,25 +22,46 @@ interface Options {
   setPlayingId: (v: number | null) => void;
 }
 
+const createSanitizedControls = ({
+  audioRef,
+  onNext,
+  onPrev,
+  seek,
+  play,
+  pause,
+  setIsPlaying,
+  setPlayingId,
+}: Options): ReturnType<typeof sanitizeControls> => {
+  const rawControls: Controls = { audioRef, seek, play, pause, setIsPlaying, setPlayingId };
+
+  if (onNext) rawControls.onNext = onNext;
+  if (onPrev) rawControls.onPrev = onPrev;
+
+  return sanitizeControls(rawControls);
+};
+
+const runModeHandler = (mode: RepeatOptions['mode'], handlers: CompletionHandlers): boolean => {
+  const handlerMap: Partial<Record<RepeatOptions['mode'], () => boolean>> = {
+    single: handlers.single,
+    range: handlers.range,
+    surah: () => {
+      handlers.surah();
+      return true;
+    },
+  };
+  const handler = handlerMap[mode];
+  return handler ? handler() : false;
+};
+
 export function usePlaybackCompletion(options: Options): () => void {
-  const {
-    audioRef,
-    repeatOptions,
-    activeVerse,
-    onNext,
-    onPrev,
-    seek,
-    play,
-    pause,
-    setIsPlaying,
-    setPlayingId,
-  } = options;
+  const { repeatOptions, activeVerse } = options;
 
   const { verseRepeatsLeft, playRepeatsLeft, setVerseRepeatsLeft, setPlayRepeatsLeft } =
     useRepeatState({ repeatOptions, activeVerse });
 
   const delayMs = (repeatOptions.delay ?? 0) * 1000;
-  const controls = { audioRef, onNext, onPrev, seek, play, pause, setIsPlaying, setPlayingId };
+  const controls = createSanitizedControls(options);
+
   const handleSurahRepeat = useSurahRepeat({
     ...controls,
     verseRepeatsLeft,
@@ -49,6 +71,7 @@ export function usePlaybackCompletion(options: Options): () => void {
     setVerseRepeatsLeft,
     setPlayRepeatsLeft,
   });
+
   const handlers = useCompletionHandlers({
     repeatOptions,
     activeVerse,
@@ -62,7 +85,8 @@ export function usePlaybackCompletion(options: Options): () => void {
   });
 
   return useCallback(() => {
-    const handled = handlers[repeatOptions.mode]?.();
-    if (!handled) handlers.default();
+    if (!runModeHandler(repeatOptions.mode, handlers)) {
+      handlers.default();
+    }
   }, [handlers, repeatOptions.mode]);
 }

@@ -1,73 +1,30 @@
-import { useMemo, type RefObject } from 'react';
+import { useMemo } from 'react';
 
-import { Verse } from '@/types';
-
+import {
+  buildCompletionArgs,
+  sanitizeControls,
+  type CompletionOptions,
+  type Controls,
+  type SanitizedControls,
+} from './completionHandlers.shared';
 import { createCompletionHandlers, type CompletionHandlers } from './playbackCompletionHandlers';
 
-import type { RepeatOptions } from '@/app/shared/player/types';
-
-interface Controls {
-  audioRef: RefObject<HTMLAudioElement | null>;
-  onNext?: () => boolean;
-  onPrev?: () => boolean;
-  seek: (s: number) => void;
-  play: () => void;
-  pause: () => void;
-  setIsPlaying: (v: boolean) => void;
-  setPlayingId: (v: number | null) => void;
-}
-
-interface Options {
-  repeatOptions: RepeatOptions;
-  activeVerse: Verse | null;
-  verseRepeatsLeft: number;
-  playRepeatsLeft: number;
+interface UseCompletionHandlersOptions extends Omit<CompletionOptions, 'controls'> {
   controls: Controls;
-  setVerseRepeatsLeft: (n: number) => void;
-  setPlayRepeatsLeft: (n: number) => void;
-  handleSurahRepeat: () => void;
-  delayMs: number;
 }
 
-type CreateHandlersArgs = Parameters<typeof createCompletionHandlers>[0];
-
-function buildCompletionArgs({
-  repeatOptions,
-  activeVerse,
-  verseRepeatsLeft,
-  playRepeatsLeft,
-  controls,
-  setVerseRepeatsLeft,
-  setPlayRepeatsLeft,
-  handleSurahRepeat,
-  delayMs,
-}: Options): CreateHandlersArgs {
+function useSanitizedControls(controls: Controls): SanitizedControls {
   const { audioRef, onNext, onPrev, seek, play, pause, setIsPlaying, setPlayingId } = controls;
-  return {
-    start: repeatOptions.start ?? 1,
-    end: repeatOptions.end ?? repeatOptions.start ?? 1,
-    delay: delayMs,
-    currentAyah: activeVerse ? parseInt(activeVerse.verse_key.split(':')[1], 10) : null,
-    verseRepeatsLeft,
-    playRepeatsLeft,
-    repeatEach: repeatOptions.repeatEach ?? 1,
-    onNext,
-    onPrev,
-    seek,
-    play,
-    pause,
-    audioRef,
-    setVerseRepeatsLeft,
-    setPlayRepeatsLeft,
-    setIsPlaying,
-    setPlayingId,
-    handleSurahRepeat,
-  };
+
+  return useMemo(() => {
+    const rawControls: Controls = { audioRef, seek, play, pause, setIsPlaying, setPlayingId };
+    if (onNext) rawControls.onNext = onNext;
+    if (onPrev) rawControls.onPrev = onPrev;
+    return sanitizeControls(rawControls);
+  }, [audioRef, onNext, onPrev, seek, play, pause, setIsPlaying, setPlayingId]);
 }
 
-//
-
-export function useCompletionHandlers(options: Options): CompletionHandlers {
+export function useCompletionHandlers(options: UseCompletionHandlersOptions): CompletionHandlers {
   const {
     repeatOptions,
     activeVerse,
@@ -80,7 +37,7 @@ export function useCompletionHandlers(options: Options): CompletionHandlers {
     delayMs,
   } = options;
 
-  const { audioRef, onNext, onPrev, seek, play, pause, setIsPlaying, setPlayingId } = controls;
+  const sanitizedControls = useSanitizedControls(controls);
 
   return useMemo(
     () =>
@@ -90,7 +47,7 @@ export function useCompletionHandlers(options: Options): CompletionHandlers {
           activeVerse,
           verseRepeatsLeft,
           playRepeatsLeft,
-          controls: { audioRef, onNext, onPrev, seek, play, pause, setIsPlaying, setPlayingId },
+          controls: sanitizedControls,
           setVerseRepeatsLeft,
           setPlayRepeatsLeft,
           handleSurahRepeat,
@@ -100,20 +57,17 @@ export function useCompletionHandlers(options: Options): CompletionHandlers {
     [
       repeatOptions,
       activeVerse,
-      delayMs,
       verseRepeatsLeft,
       playRepeatsLeft,
-      audioRef,
-      onNext,
-      onPrev,
-      seek,
-      play,
-      pause,
-      setIsPlaying,
-      setPlayingId,
+      sanitizedControls,
       setVerseRepeatsLeft,
       setPlayRepeatsLeft,
       handleSurahRepeat,
+      delayMs,
     ]
   );
 }
+
+export type { Controls };
+
+export { sanitizeControls };

@@ -4,8 +4,8 @@ import { memo } from 'react';
 
 interface SearchSuggestionsProps {
   query: string;
-  recentSearches: string[];
-  trendingSearches: string[];
+  recentSearches: ReadonlyArray<string>;
+  trendingSearches: ReadonlyArray<string>;
   onSearch: (query: string) => void;
 }
 
@@ -37,7 +37,7 @@ function RecentList({
   recentSearches,
   onSearch,
 }: {
-  recentSearches: string[];
+  recentSearches: ReadonlyArray<string>;
   onSearch: (query: string) => void;
 }): React.JSX.Element {
   return (
@@ -67,7 +67,7 @@ function TrendingList({
   trendingSearches,
   onSearch,
 }: {
-  trendingSearches: string[];
+  trendingSearches: ReadonlyArray<string>;
   onSearch: (query: string) => void;
 }): React.JSX.Element {
   return (

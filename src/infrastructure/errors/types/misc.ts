@@ -10,7 +10,7 @@ export class AudioError extends ApplicationError {
     super(message, 'AUDIO_ERROR', 500, true, { audioUrl, ...context }, cause);
   }
 
-  getUserMessage(): string {
+  override getUserMessage(): string {
     return 'Audio playback failed. Please check your connection and try again.';
   }
 }
@@ -20,7 +20,7 @@ export class ConfigurationError extends ApplicationError {
     super(message, 'CONFIGURATION_ERROR', 500, false, context, cause);
   }
 
-  getUserMessage(): string {
+  override getUserMessage(): string {
     return 'Application configuration error. Please contact support.';
   }
 }
@@ -31,7 +31,7 @@ export class FeatureNotAvailableError extends ApplicationError {
     super(message, 'FEATURE_NOT_AVAILABLE', 503, true, { featureName, ...context }, cause);
   }
 
-  getUserMessage(): string {
+  override getUserMessage(): string {
     return 'This feature is currently unavailable.';
   }
 }
@@ -46,7 +46,7 @@ export class TimeoutError extends ApplicationError {
     super(message, 'TIMEOUT_ERROR', 408, true, { timeoutMs, ...context }, cause);
   }
 
-  getUserMessage(): string {
+  override getUserMessage(): string {
     return 'Operation timed out. Please try again.';
   }
 }

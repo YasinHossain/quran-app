@@ -1,7 +1,8 @@
 import { Bookmark } from 'lucide-react';
-import type { JSX } from 'react';
 
 import { IconProps } from './IconProps';
+
+import type { JSX } from 'react';
 
 export const BookmarkOutlineIcon = ({
   size = 18,

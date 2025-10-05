@@ -12,7 +12,6 @@ const mockSurahs = [
 ];
 
 const mockApiVerse = (key: string, id = 1, text = 'alpha'): { verse: Verse } => ({
-  // @ts-expect-error minimal shape for test
   verse: { id, verse_key: key, text_uthmani: text },
 });
 

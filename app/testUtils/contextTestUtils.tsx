@@ -1,2 +1,3 @@
-export { ContextProviders, ContextProviderName, createProviderWrapper } from './providers';
+export { ContextProviders, createProviderWrapper } from './providers';
+export type { ContextProviderName } from './providers';
 export { renderWithSpecificProviders, renderHookWithProviders } from './render';

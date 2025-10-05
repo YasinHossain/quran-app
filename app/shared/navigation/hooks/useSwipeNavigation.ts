@@ -8,9 +8,10 @@ const MAIN_ROUTES = ['/home', '/surah', '/bookmarks'];
 export function useSwipeNavigation(): ReturnType<typeof useSwipeGestures> {
   const router = useRouter();
   const pathname = usePathname();
+  const currentPath = pathname ?? '';
 
   const currentRouteIndex = MAIN_ROUTES.findIndex(
-    (route) => pathname.startsWith(route) || (route === '/home' && pathname === '/')
+    (route) => currentPath.startsWith(route) || (route === '/home' && currentPath === '/')
   );
 
   const navigateToRoute = useCallback(
@@ -22,7 +23,8 @@ export function useSwipeNavigation(): ReturnType<typeof useSwipeGestures> {
           ? (currentRouteIndex + 1) % MAIN_ROUTES.length
           : (currentRouteIndex - 1 + MAIN_ROUTES.length) % MAIN_ROUTES.length;
 
-      router.push(MAIN_ROUTES[newIndex]);
+      const target = MAIN_ROUTES[newIndex];
+      if (target) router.push(target);
     },
     [currentRouteIndex, router]
   );

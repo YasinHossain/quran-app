@@ -5,9 +5,9 @@ import { getJuzByPage, getSurahByPage, JUZ_START_PAGES } from '@/lib/utils/surah
 import type { Chapter } from '@/types';
 
 interface Args {
-  currentSurahId?: number;
-  currentJuzId?: number;
-  currentPageId?: number;
+  currentSurahId: number | undefined;
+  currentJuzId: number | undefined;
+  currentPageId: number | undefined;
   chapters: ReadonlyArray<Chapter>;
 }
 
@@ -37,7 +37,7 @@ function runSync(
       condition: currentJuzId !== undefined,
       action: () => {
         setSelectedJuzId(currentJuzId!);
-        const page = JUZ_START_PAGES[currentJuzId! - 1];
+        const page = JUZ_START_PAGES[currentJuzId! - 1] ?? 1;
         setSelectedPageId(page);
         const chapter = getSurahByPage(page, chapters);
         if (chapter) setSelectedSurahId(chapter.id);

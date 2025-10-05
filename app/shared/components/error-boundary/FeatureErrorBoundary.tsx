@@ -128,11 +128,7 @@ export function FeatureErrorBoundary({
   };
 
   const createFeatureFallback = (props: ErrorFallbackProps): React.JSX.Element => (
-    <FeatureErrorFallback
-      {...props}
-      featureName={featureName}
-      description={description ?? null}
-    />
+    <FeatureErrorFallback {...props} featureName={featureName} description={description ?? null} />
   );
 
   return (

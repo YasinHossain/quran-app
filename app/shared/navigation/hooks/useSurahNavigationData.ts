@@ -18,12 +18,12 @@ function mapChapterToSurah(chapter: Chapter): Surah {
 }
 
 interface UseSurahNavigationDataOptions {
-  initialChapters?: ReadonlyArray<Chapter>;
+  initialChapters?: Chapter[];
 }
 
 interface SurahNavigationData {
-  chapters: ReadonlyArray<Chapter>;
-  surahs: ReadonlyArray<Surah>;
+  chapters: Chapter[];
+  surahs: Surah[];
   isLoading: boolean;
   error: Error | undefined;
 }
@@ -32,9 +32,8 @@ export function useSurahNavigationData(
   options: UseSurahNavigationDataOptions = {}
 ): SurahNavigationData {
   const { initialChapters } = options;
-  const { data, error, isLoading } = useSWR(CHAPTERS_KEY, getChapters, {
-    fallbackData: initialChapters,
-  });
+  const swrConfig = initialChapters ? { fallbackData: initialChapters } : undefined;
+  const { data, error, isLoading } = useSWR(CHAPTERS_KEY, getChapters, swrConfig);
 
   const chapters = useMemo(() => data ?? initialChapters ?? [], [data, initialChapters]);
   const surahs = useMemo(() => chapters.map(mapChapterToSurah), [chapters]);

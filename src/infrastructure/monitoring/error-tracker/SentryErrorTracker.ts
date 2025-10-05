@@ -132,7 +132,11 @@ export class SentryErrorTracker implements IErrorTracker {
     try {
       await this.sentry.flush(5000); // 5 second timeout
     } catch (error) {
-      logger.warn('Failed to flush Sentry errors:', error);
+      logger.warn(
+        'Failed to flush Sentry errors',
+        undefined,
+        error instanceof Error ? error : undefined
+      );
     }
   }
 }

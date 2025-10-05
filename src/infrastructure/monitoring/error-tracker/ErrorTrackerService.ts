@@ -33,8 +33,8 @@ export class ErrorTrackerService {
       return new SentryErrorTracker();
     }
 
-    const endpoint = process.env.ERROR_TRACKING_ENDPOINT;
-    const apiKey = process.env.ERROR_TRACKING_API_KEY;
+    const endpoint = process.env['ERROR_TRACKING_ENDPOINT'];
+    const apiKey = process.env['ERROR_TRACKING_API_KEY'];
     if (endpoint) {
       return new RemoteErrorTracker(endpoint, apiKey);
     }
@@ -46,8 +46,9 @@ export class ErrorTrackerService {
     const enhancedContext: ErrorContext = {
       ...this.globalContext,
       ...context,
-      url: typeof window !== 'undefined' ? window.location.href : undefined,
-      userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : undefined,
+      ...(typeof window !== 'undefined'
+        ? { url: window.location.href, userAgent: window.navigator.userAgent }
+        : {}),
     };
 
     const breadcrumbs = getBreadcrumbs();
@@ -79,7 +80,7 @@ export class ErrorTrackerService {
 
   setUser(user: { id?: string; email?: string; username?: string }): void {
     this.tracker.setUser(user);
-    this.globalContext.userId = user.id;
+    this.globalContext['userId'] = user.id;
   }
 
   setContext(key: string, data: Record<string, unknown>): void {
@@ -101,9 +102,9 @@ export class ErrorTrackerService {
     metadata?: Record<string, unknown>
   ): ErrorContext {
     return {
-      component,
-      action,
-      metadata,
+      ...(component !== undefined ? { component } : {}),
+      ...(action !== undefined ? { action } : {}),
+      ...(metadata !== undefined ? { metadata } : {}),
       ...this.globalContext,
     };
   }

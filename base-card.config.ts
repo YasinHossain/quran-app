@@ -113,5 +113,3 @@ export const ANIMATION_CONFIGS: Record<string, AnimationConfig> = {
     },
   },
 };
-
-export type { CardVariant, AnimationConfig };

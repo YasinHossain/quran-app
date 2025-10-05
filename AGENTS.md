@@ -3,19 +3,20 @@
 ## Project Structure & Module Organization
 
 - Source: Next.js App Router in `app/` (pages, layouts, components). Shared utilities in `lib/`, types in `types/`, assets in `public/`, data in `data/`.
+- Core layers: Clean Architecture modules in `src/` — `domain/`, `application/`, `infrastructure/`, and `presentation/`.
 - Tests: Unit/integration tests in `tests/` (Jest + Testing Library).
 - Configuration: `next.config.ts`, `tailwind.config.mjs`, `eslint.config.mjs`, `tsconfig.json`.
-- Tooling: Scripts in `scripts/`, Storybook in `.storybook/`, custom Rollup plugin in `packages/rollup-plugin-terser/`.
+- Tooling: Scripts in `scripts/`, Storybook in `.storybook/`.
 
 ## Build, Test, and Development Commands
 
 - `npm run dev`: Start the app locally with Turbopack.
 - `npm run build` / `npm start`: Production build and serve.
 - `npm run test` | `test:watch` | `test:coverage`: Run Jest tests.
-- `npm run lint` | `lint:fix`: ESLint check and auto-fix.
-- `npm run format` | `format:check`: Prettier write/check.
+- `npm run lint` | `lint:fix`: ESLint check/fix.
+- `npm run format`: Prettier write.
 - `npm run type-check`: TypeScript validation.
-- `npm run check`: CI-style suite (format check, lint, type-check, tests).
+- `npm run check`: CI-style suite (format, lint, type-check, tests).
 - `npm run storybook`: Run component explorer at http://localhost:6006.
 
 ## Coding Style & Naming Conventions
@@ -23,7 +24,7 @@
 - Language: TypeScript with two-space indentation.
 - Lint/Format: ESLint + Prettier (use project configs).
 - Components: PascalCase file/folder names (e.g., `PlayerControls.tsx`).
-- Styling: Use semantic tokens (e.g., `text-primary`, `bg-surface`, `border-border`). Avoid raw Tailwind color utilities and `dark:` classes; don't use `useTheme` for colors. See `../architecture/SEMANTIC_TOKENS.md` and `STYLING.md`.
+- Styling: Use semantic tokens (e.g., `text-primary`, `bg-surface`, `border-border`). Avoid raw Tailwind color utilities and `dark:` classes; don't use `useTheme` for colors. See `docs/architecture/SEMANTIC_TOKENS.md` and `docs/development/STYLING.md`.
 
 ## Testing Guidelines
 

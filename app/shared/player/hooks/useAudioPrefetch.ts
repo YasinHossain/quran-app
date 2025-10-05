@@ -34,8 +34,8 @@ export function useAudioPrefetch(
     currentAudioUrl,
     prefetchNext,
     prefetchPrevious,
-    getNextAudioUrl,
-    getPreviousAudioUrl,
+    ...(getNextAudioUrl ? { getNextAudioUrl } : {}),
+    ...(getPreviousAudioUrl ? { getPreviousAudioUrl } : {}),
     prefetchAudio,
     logger,
   });

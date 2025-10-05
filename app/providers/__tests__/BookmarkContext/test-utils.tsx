@@ -32,7 +32,40 @@ export const renderWithProvidersAsync = async (
   return result!;
 };
 
-export const BookmarkTestComponent = (): React.JSX.Element => {
+type BookmarkContextValue = ReturnType<typeof useBookmarks>;
+
+interface ButtonConfig {
+  label: string;
+  onClick: () => void;
+}
+
+interface InfoItem {
+  id: string;
+  value: unknown;
+}
+
+const createFolderHandler =
+  <T,>(folder: T | undefined, handler: (value: T) => void): (() => void) =>
+  () => {
+    if (!folder) return;
+    handler(folder);
+  };
+
+const buildInfoItems = ({
+  folders,
+  pinnedVerses,
+  lastRead,
+  isBookmarked,
+  isPinned,
+}: BookmarkContextValue): InfoItem[] => [
+  { id: 'folders', value: folders },
+  { id: 'pinned', value: pinnedVerses },
+  { id: 'lastRead', value: lastRead },
+  { id: 'is-bookmarked-1:1', value: isBookmarked('1:1') ? 'true' : 'false' },
+  { id: 'is-pinned-1:1', value: isPinned('1:1') ? 'true' : 'false' },
+];
+
+const buildButtonConfigs = (context: BookmarkContextValue): ButtonConfig[] => {
   const {
     folders,
     createFolder,
@@ -40,60 +73,65 @@ export const BookmarkTestComponent = (): React.JSX.Element => {
     removeBookmark,
     renameFolder,
     deleteFolder,
-    isBookmarked,
-    pinnedVerses,
     togglePinned,
-    isPinned,
-    lastRead,
     setLastRead,
-  } = useBookmarks();
+  } = context;
 
   const firstFolder = folders[0];
 
-  return (
-    <div>
-      <div data-testid="folders">{JSON.stringify(folders)}</div>
-      <div data-testid="pinned">{JSON.stringify(pinnedVerses)}</div>
-      <div data-testid="lastRead">{JSON.stringify(lastRead)}</div>
-      <div data-testid="is-bookmarked-1:1">{isBookmarked('1:1') ? 'true' : 'false'}</div>
-      <div data-testid="is-pinned-1:1">{isPinned('1:1') ? 'true' : 'false'}</div>
+  return [
+    { label: 'Create Folder', onClick: () => createFolder('Test Folder') },
+    { label: 'Add Bookmark', onClick: () => addBookmark('1:1', firstFolder?.id) },
+    {
+      label: 'Remove Bookmark',
+      onClick: createFolderHandler(firstFolder, (folder) => removeBookmark('1:1', folder.id)),
+    },
+    {
+      label: 'Rename Folder',
+      onClick: createFolderHandler(firstFolder, (folder) => renameFolder(folder.id, 'New Name')),
+    },
+    {
+      label: 'Set Color',
+      onClick: createFolderHandler(firstFolder, (folder) =>
+        renameFolder(folder.id, folder.name, 'text-primary')
+      ),
+    },
+    {
+      label: 'Delete Folder',
+      onClick: createFolderHandler(firstFolder, (folder) => deleteFolder(folder.id)),
+    },
+    { label: 'Toggle Pin', onClick: () => togglePinned('1:1') },
+    { label: 'Set Last Read', onClick: () => setLastRead('1', 1) },
+  ];
+};
 
-      <button onClick={() => createFolder('Test Folder')}>Create Folder</button>
-      <button onClick={() => addBookmark('1:1', firstFolder?.id)}>Add Bookmark</button>
-      <button
-        onClick={() => {
-          if (!firstFolder) return;
-          removeBookmark('1:1', firstFolder.id);
-        }}
-      >
-        Remove Bookmark
+const InfoRow = ({ id, value }: InfoItem): React.JSX.Element => (
+  <div data-testid={id}>{typeof value === 'string' ? value : JSON.stringify(value)}</div>
+);
+
+const BookmarkTestView = ({
+  infoItems,
+  buttonConfigs,
+}: {
+  infoItems: InfoItem[];
+  buttonConfigs: ButtonConfig[];
+}): React.JSX.Element => (
+  <div>
+    {infoItems.map((item) => (
+      <InfoRow key={item.id} id={item.id} value={item.value} />
+    ))}
+    {buttonConfigs.map(({ label, onClick }) => (
+      <button key={label} onClick={onClick}>
+        {label}
       </button>
-      <button
-        onClick={() => {
-          if (!firstFolder) return;
-          renameFolder(firstFolder.id, 'New Name');
-        }}
-      >
-        Rename Folder
-      </button>
-      <button
-        onClick={() => {
-          if (!firstFolder) return;
-          renameFolder(firstFolder.id, firstFolder.name, 'text-primary');
-        }}
-      >
-        Set Color
-      </button>
-      <button
-        onClick={() => {
-          if (!firstFolder) return;
-          deleteFolder(firstFolder.id);
-        }}
-      >
-        Delete Folder
-      </button>
-      <button onClick={() => togglePinned('1:1')}>Toggle Pin</button>
-      <button onClick={() => setLastRead('1', 1)}>Set Last Read</button>
-    </div>
-  );
+    ))}
+  </div>
+);
+
+export const BookmarkTestComponent = (): React.JSX.Element => {
+  const context = useBookmarks();
+  const infoItems = buildInfoItems(context);
+  const buttonConfigs = buildButtonConfigs(context);
+
+  return <BookmarkTestView infoItems={infoItems} buttonConfigs={buttonConfigs} />;
 };

@@ -8,7 +8,8 @@ import { logger } from './Logger';
  */
 export class LoggerAdapter implements ILogger {
   info(message: string, context?: Record<string, unknown>, error?: Error): void {
-    logger.info(message, context, error);
+    const payload = error ? { ...(context ?? {}), error } : context;
+    logger.info(message, payload);
   }
 
   warn(message: string, context?: Record<string, unknown>, error?: Error): void {
@@ -20,7 +21,8 @@ export class LoggerAdapter implements ILogger {
   }
 
   debug(message: string, context?: Record<string, unknown>, error?: Error): void {
-    logger.debug(message, context, error);
+    const payload = error ? { ...(context ?? {}), error } : context;
+    logger.debug(message, payload);
   }
 }
 

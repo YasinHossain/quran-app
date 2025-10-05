@@ -5,17 +5,30 @@ import type { ApplicationError } from '@/src/infrastructure/errors';
 
 export class ConsoleErrorTracker implements IErrorTracker {
   captureError(error: Error | ApplicationError, context?: ErrorContext): void {
-    logger.error('[ErrorTracker] Error captured:', context, error);
+    logger.error(
+      '[ErrorTracker] Error captured:',
+      context as unknown as Record<string, unknown>,
+      error
+    );
   }
 
   captureMessage(message: string, level = 'info', context?: ErrorContext): void {
     const logLevel = level === 'error' ? 'error' : level === 'warning' ? 'warn' : 'info';
     if (logLevel === 'error') {
-      logger.error(`[ErrorTracker] Message: ${message}`, context);
+      logger.error(
+        `[ErrorTracker] Message: ${message}`,
+        context as unknown as Record<string, unknown>
+      );
     } else if (logLevel === 'warn') {
-      logger.warn(`[ErrorTracker] Message: ${message}`, context);
+      logger.warn(
+        `[ErrorTracker] Message: ${message}`,
+        context as unknown as Record<string, unknown>
+      );
     } else {
-      logger.info(`[ErrorTracker] Message: ${message}`, context);
+      logger.info(
+        `[ErrorTracker] Message: ${message}`,
+        context as unknown as Record<string, unknown>
+      );
     }
   }
 

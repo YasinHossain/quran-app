@@ -24,7 +24,7 @@ export function useQuranNavigation(): QuranNavigationReturn {
   const { juzs, pages } = useNavigationDatasets();
   const { surahs } = useSurahNavigationData();
 
-  const tabs = useMemo(
+  const tabs = useMemo<{ id: 'surah' | 'juz' | 'page'; label: string; icon: typeof IconBook }[]>(
     () => [
       { id: 'surah', label: 'Surah', icon: IconBook },
       { id: 'juz', label: 'Juz', icon: IconHash },

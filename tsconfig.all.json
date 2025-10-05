@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "exclude": [
+    "node_modules",
+    ".next",
+    "templates",
+    "**/*.stories.tsx",
+    "**/*.stories.ts",
+    "tests/accessibility/**",
+    "tests/integration/**",
+    "tests/e2e/**",
+    "src/**/__tests__/**",
+    "tests/unit/infrastructure/**",
+    "tests/unit/domain/**"
+  ]
+}

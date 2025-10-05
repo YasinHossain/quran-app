@@ -7,7 +7,8 @@ export const JUZ_START_PAGES = [
 
 export const getJuzByPage = (page: number): number => {
   for (let i = JUZ_START_PAGES.length - 1; i >= 0; i--) {
-    if (page >= JUZ_START_PAGES[i]) return i + 1;
+    const start = JUZ_START_PAGES[i] ?? -Infinity;
+    if (page >= start) return i + 1;
   }
   return 1;
 };
@@ -15,4 +16,8 @@ export const getJuzByPage = (page: number): number => {
 export const getSurahByPage = (
   page: number,
   chapters: ReadonlyArray<Chapter>
-): Chapter | undefined => chapters.find((c) => c.pages && page >= c.pages[0] && page <= c.pages[1]);
+): Chapter | undefined =>
+  chapters.find(
+    (c) =>
+      Array.isArray(c.pages) && c.pages.length >= 2 && page >= c.pages[0]! && page <= c.pages[1]!
+  );

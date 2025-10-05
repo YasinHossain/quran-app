@@ -1,11 +1,11 @@
 'use client';
 
-import type { JSX } from 'react';
-
 import { useSettings } from '@/app/providers/SettingsContext';
 import { VerseArabic } from '@/app/shared/VerseArabic';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { Translation, Verse as VerseType } from '@/types';
+
+import type { JSX } from 'react';
 
 interface VerseContentProps {
   verse: VerseType;

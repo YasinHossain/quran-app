@@ -10,11 +10,7 @@ if (!routerMock) {
   );
 }
 
-type RouterMethodMock<K extends keyof RouterMock> = RouterMock[K] extends (
-  ...args: infer Args
-) => infer Return
-  ? jest.Mock<Return, Args>
-  : never;
+type RouterMethodMock<K extends keyof RouterMock> = jest.MockedFunction<RouterMock[K]>;
 
 const wrapRouterMethod = <K extends keyof RouterMock>(method: K): RouterMethodMock<K> => {
   const original = routerMock[method];
@@ -23,15 +19,15 @@ const wrapRouterMethod = <K extends keyof RouterMock>(method: K): RouterMethodMo
     throw new Error(`Router mock method "${String(method)}" is not a function.`);
   }
 
-  const originalFn = original as (
-    ...args: Parameters<RouterMock[K]>
-  ) => ReturnType<RouterMock[K]>;
+  const originalFn = original as (...args: Parameters<RouterMock[K]>) => ReturnType<RouterMock[K]>;
 
-  const spy = jest.fn((...args: Parameters<RouterMock[K]>) => originalFn(...args)) as RouterMethodMock<K>;
+  const spy = jest.fn((...args: Parameters<RouterMock[K]>) => originalFn(...args));
 
-  routerMock[method] = spy as RouterMock[K];
+  // Assign the spy back onto the mock router
+  routerMock[method] = spy as unknown as RouterMock[K];
 
-  return spy;
+  // Return the typed spy
+  return routerMock[method] as RouterMethodMock<K>;
 };
 
 export const push = wrapRouterMethod('push');

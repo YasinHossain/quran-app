@@ -4,6 +4,7 @@ import { BookmarkNavigationCard } from '@/app/shared/ui/cards/BookmarkNavigation
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 
+import type { BookmarkNavigationContent } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 import type { MockProps } from '@/tests/mocks';
 
 jest.mock('next/link', (): unknown => {
@@ -46,7 +47,7 @@ beforeAll(() => {
 });
 
 describe('BookmarkNavigationCard', () => {
-  const content = {
+  const content: BookmarkNavigationContent = {
     id: 'bookmarks',
     icon: DummyIcon,
     label: 'Bookmarks',

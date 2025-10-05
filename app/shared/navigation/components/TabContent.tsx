@@ -2,7 +2,7 @@ import { memo } from 'react';
 
 import { NavigationItem } from './NavigationItem';
 
-import type { JuzSummary } from '@/app/shared/navigation/hooks/useQuranNavigation';
+import type { JuzSummary } from '@/app/shared/navigation/types';
 import type { Surah } from '@/types';
 
 interface TabContentProps {

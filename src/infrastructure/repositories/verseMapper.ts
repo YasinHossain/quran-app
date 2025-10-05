@@ -5,9 +5,9 @@ import { Verse as ApiVerse } from '@/types';
 /**
  * Maps API translation objects to domain Translation.
  */
-export const mapApiTranslation = (
-  apiTranslation?: ApiVerse['translations'][0]
-): Translation | undefined => {
+type ApiTranslationItem = NonNullable<ApiVerse['translations']>[number];
+
+export const mapApiTranslation = (apiTranslation?: ApiTranslationItem): Translation | undefined => {
   if (!apiTranslation) return undefined;
   return new Translation({
     id: apiTranslation.id || 0,
@@ -21,16 +21,15 @@ export const mapApiTranslation = (
  * Maps API verse objects to domain verse entities.
  */
 export const mapApiVerseToDomain = (apiVerse: ApiVerse): Verse => {
-  const translation = apiVerse.translations?.[0]
-    ? mapApiTranslation(apiVerse.translations[0])
-    : undefined;
+  const firstTranslation = apiVerse.translations?.[0];
+  const translation = firstTranslation ? mapApiTranslation(firstTranslation) : undefined;
 
   return new Verse({
     id: apiVerse.verse_key,
-    surahId: parseInt(apiVerse.verse_key.split(':')[0]),
-    ayahNumber: parseInt(apiVerse.verse_key.split(':')[1]),
+    surahId: parseInt(apiVerse.verse_key.split(':')[0] ?? '0'),
+    ayahNumber: parseInt(apiVerse.verse_key.split(':')[1] ?? '0'),
     arabicText: apiVerse.text_uthmani || '',
     uthmaniText: apiVerse.text_uthmani || '',
-    translation,
+    ...(translation ? { translation } : {}),
   });
 };

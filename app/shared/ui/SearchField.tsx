@@ -40,7 +40,7 @@ export const SearchField = ({
       placeholder={placeholder}
       variant={variant}
       size={size}
-      onKeyDown={onKeyDown}
+      {...(onKeyDown ? { onKeyDown } : {})}
     />
   </div>
 );

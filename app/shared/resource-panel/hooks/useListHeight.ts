@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, type RefObject } from 'react';
 
 export const useListHeight = (
   isOpen: boolean
-): { listContainerRef: RefObject<HTMLDivElement>; listHeight: number } => {
+): { listContainerRef: RefObject<HTMLDivElement | null>; listHeight: number } => {
   const listContainerRef = useRef<HTMLDivElement>(null);
   const [listHeight, setListHeight] = useState(0);
 

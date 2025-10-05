@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useFontSize } from '@/app/(features)/surah/hooks/useFontSize';
 import { useSettings } from '@/app/providers/SettingsContext';
 
 import { FontSettingsContent } from './font-settings/FontSettingsContent';
+
+import type { ReactElement } from 'react';
 
 interface FontSettingsProps {
   onArabicFontPanelOpen: () => void;

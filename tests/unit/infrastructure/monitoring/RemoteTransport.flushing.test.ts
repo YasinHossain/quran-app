@@ -2,9 +2,8 @@
  * @jest-environment node
  */
 
-import { RemoteTransport } from '@infra/monitoring';
-
 import { LogLevel, type LogEntry } from '@/src/infrastructure/monitoring/types';
+import { RemoteTransport } from '@infra/monitoring';
 
 type FetchWithTimeout = typeof import('@/lib/api/client').fetchWithTimeout;
 

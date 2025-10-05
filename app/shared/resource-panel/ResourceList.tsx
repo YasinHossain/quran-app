@@ -30,6 +30,7 @@ export const ResourceList = <T extends Resource>({
 
   const Row = ({ index, style }: ListChildComponentProps): React.JSX.Element => {
     const item = resources[index];
+    if (!item) return <div style={style} />;
     return (
       <div style={style}>
         <div className="px-1 pb-2">

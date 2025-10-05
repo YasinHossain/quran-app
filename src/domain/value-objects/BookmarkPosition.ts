@@ -94,15 +94,36 @@ export class BookmarkPosition {
   }
 
   static fromVerseKey(verseKey: string): BookmarkPosition {
-    const parts = verseKey.split(':');
-    if (parts.length !== 2) {
+    const normalizedKey = verseKey.trim();
+
+    if (!normalizedKey) {
       throw new Error('Invalid verse key format. Expected "surah:ayah"');
     }
-    const surahId = parseInt(parts[0], 10);
-    const ayahNumber = parseInt(parts[1], 10);
-    if (isNaN(surahId) || isNaN(ayahNumber) || parts[0].trim() === '' || parts[1].trim() === '') {
+
+    const delimiterCount = (normalizedKey.match(/:/g) ?? []).length;
+    if (delimiterCount !== 1) {
+      throw new Error('Invalid verse key format. Expected "surah:ayah"');
+    }
+
+    const [rawSurah, rawAyah] = normalizedKey.split(':');
+    if (rawSurah === undefined || rawAyah === undefined) {
+      throw new Error('Invalid verse key format. Expected "surah:ayah"');
+    }
+
+    const surahStr = rawSurah.trim();
+    const ayahStr = rawAyah.trim();
+
+    if (surahStr.length === 0 || ayahStr.length === 0) {
       throw new Error('Invalid verse key: surah and ayah must be numbers');
     }
+
+    const surahId = Number.parseInt(surahStr, 10);
+    const ayahNumber = Number.parseInt(ayahStr, 10);
+
+    if (!Number.isInteger(surahId) || !Number.isInteger(ayahNumber)) {
+      throw new Error('Invalid verse key: surah and ayah must be numbers');
+    }
+
     return new BookmarkPosition(surahId, ayahNumber, new Date());
   }
 }

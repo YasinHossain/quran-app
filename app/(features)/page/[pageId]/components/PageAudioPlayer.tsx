@@ -1,9 +1,9 @@
-import type { ReactElement } from 'react';
 import dynamic from 'next/dynamic';
 
 import { Spinner } from '@/app/shared/Spinner';
 
 import type { Track } from '@/app/shared/player/types';
+import type { ReactElement } from 'react';
 
 // Dynamic import for heavy QuranAudioPlayer component
 const QuranAudioPlayer = dynamic(
@@ -58,6 +58,3 @@ export function PageAudioPlayer({
     </div>
   );
 }
-
-
-

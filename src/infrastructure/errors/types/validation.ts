@@ -5,7 +5,7 @@ export class ValidationError extends ApplicationError {
     super(message, 'VALIDATION_ERROR', 400, true, context, cause);
   }
 
-  getUserMessage(): string {
+  override getUserMessage(): string {
     return 'Please check your input and try again.';
   }
 }

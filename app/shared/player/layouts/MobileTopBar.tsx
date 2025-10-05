@@ -103,8 +103,20 @@ export function MobileTopBar({
       <TransportControls
         isPlaying={isPlaying}
         interactable={interactable}
-        onPrev={onPrev}
-        onNext={onNext}
+        {...(onPrev
+          ? {
+              onPrev: () => {
+                void onPrev();
+              },
+            }
+          : {})}
+        {...(onNext
+          ? {
+              onNext: () => {
+                void onNext();
+              },
+            }
+          : {})}
         togglePlay={togglePlay}
       />
       <ActionButtons setMobileOptionsOpen={setMobileOptionsOpen} closePlayer={closePlayer} />

@@ -6,12 +6,12 @@
  */
 export class ApplicationError extends Error {
   public readonly timestamp: Date;
-  public readonly stackTrace?: string;
+  public readonly stackTrace: string | undefined;
   public readonly code!: string;
   public readonly statusCode!: number;
   public readonly isOperational!: boolean;
-  public readonly context?: Record<string, unknown>;
-  public readonly cause?: Error;
+  public readonly context: Record<string, unknown> | undefined;
+  public override readonly cause: unknown | undefined;
 
   constructor(init: {
     message: string;
@@ -19,7 +19,7 @@ export class ApplicationError extends Error {
     statusCode?: number;
     isOperational?: boolean;
     context?: Record<string, unknown>;
-    cause?: Error;
+    cause?: unknown;
   });
   constructor(
     message: string,
@@ -27,7 +27,7 @@ export class ApplicationError extends Error {
     statusCode?: number,
     isOperational?: boolean,
     context?: Record<string, unknown>,
-    cause?: Error
+    cause?: unknown
   );
   constructor(...args: unknown[]) {
     const { message, code, statusCode, isOperational, context, cause } =
@@ -38,7 +38,7 @@ export class ApplicationError extends Error {
             statusCode?: number;
             isOperational?: boolean;
             context?: Record<string, unknown>;
-            cause?: Error;
+            cause?: unknown;
           })
         : (() => {
             const [message, code, statusCode, isOperational, context, cause] = args as [
@@ -47,7 +47,7 @@ export class ApplicationError extends Error {
               number?,
               boolean?,
               Record<string, unknown>?,
-              Error?,
+              unknown?,
             ];
             return { message, code, statusCode, isOperational, context, cause };
           })();
@@ -68,17 +68,18 @@ export class ApplicationError extends Error {
   }
 
   toJSON(): Record<string, unknown> {
-    return {
+    const payload: Record<string, unknown> = {
       name: this.name,
       message: this.message,
       code: this.code,
       statusCode: this.statusCode,
       isOperational: this.isOperational,
       timestamp: this.timestamp.toISOString(),
-      context: this.context,
-      cause: this.cause?.message,
-      stack: this.stackTrace,
     };
+    if (this.context) payload['context'] = this.context;
+    if (this.stackTrace) payload['stack'] = this.stackTrace;
+    if (this.cause instanceof Error) payload['cause'] = this.cause.message;
+    return payload;
   }
 
   getUserMessage(): string {

@@ -11,9 +11,9 @@ import { VerseRepository } from '@/src/infrastructure/repositories/VerseReposito
  */
 class DIContainer {
   private static instance: DIContainer;
-  private verseRepository?: IVerseRepository;
-  private bookmarkRepository?: IBookmarkRepository;
-  private tafsirRepository?: ITafsirRepository;
+  private verseRepository: IVerseRepository | undefined;
+  private bookmarkRepository: IBookmarkRepository | undefined;
+  private tafsirRepository: ITafsirRepository | undefined;
 
   private constructor() {}
 

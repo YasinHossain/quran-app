@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import type { ReactElement } from 'react';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { SettingsSidebar } from '@/app/(features)/surah/components';
@@ -9,6 +8,8 @@ import { SettingsSidebar } from '@/app/(features)/surah/components';
 import { PageAudioPlayer } from './components/PageAudioPlayer';
 import { PageContent } from './components/PageContent';
 import { usePageData } from './hooks/usePageData';
+
+import type { ReactElement } from 'react';
 
 interface UseSettingsSidebarReturn {
   isTranslationPanelOpen: boolean;
@@ -92,4 +93,3 @@ export default function PagePage({ params }: PagePageProps): ReactElement {
     </div>
   );
 }
-

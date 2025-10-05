@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 export interface UseTafsirTabsScrollReturn {
-  readonly tabsContainerRef: React.RefObject<HTMLDivElement>;
+  readonly tabsContainerRef: React.RefObject<HTMLDivElement | null>;
   readonly canScrollLeft: boolean;
   readonly canScrollRight: boolean;
   readonly scrollTabsLeft: () => void;
@@ -37,15 +37,17 @@ export const useTafsirTabsScroll = (languages: string[]): UseTafsirTabsScrollRet
 
   useEffect(() => {
     checkScrollState();
-    if (tabsContainerRef.current) {
-      const container = tabsContainerRef.current;
+    const container = tabsContainerRef.current;
+    if (container) {
       container.addEventListener('scroll', checkScrollState);
       window.addEventListener('resize', checkScrollState);
-      return () => {
-        container.removeEventListener('scroll', checkScrollState);
-        window.removeEventListener('resize', checkScrollState);
-      };
     }
+    return () => {
+      if (container) {
+        container.removeEventListener('scroll', checkScrollState);
+      }
+      window.removeEventListener('resize', checkScrollState);
+    };
   }, [languages, checkScrollState]);
 
   return {

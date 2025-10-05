@@ -1,5 +1,7 @@
 import { useCallback, useMemo } from 'react';
 
+import type React from 'react';
+
 interface BookmarkData {
   verseKey?: string;
   verseText?: string;
@@ -38,7 +40,7 @@ export function useContentBookmarkCard({
   onNavigateToVerse,
   settings,
   onClick,
-}: UseContentBookmarkCardProps): ReturnType<typeof useContentBookmarkCard> {
+}: UseContentBookmarkCardProps): UseContentBookmarkCardReturn {
   const handleCardClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement | HTMLAnchorElement>) => {
       onNavigateToVerse?.();
@@ -62,14 +64,20 @@ export function useContentBookmarkCard({
   return { handleCardClick, headerProps, previewProps } as const;
 }
 
+interface UseContentBookmarkCardReturn {
+  handleCardClick: (event: React.MouseEvent<HTMLDivElement | HTMLAnchorElement>) => void;
+  headerProps: ReturnType<typeof useHeaderProps>;
+  previewProps: ReturnType<typeof usePreviewProps>;
+}
+
 function useHeaderProps(args: {
   bookmark: BookmarkData;
   isPlaying: boolean;
   isLoadingAudio: boolean;
   isBookmarked: boolean;
-  onPlayPause?: () => void;
-  onBookmark?: () => void;
-  onNavigateToVerse?: () => void;
+  onPlayPause?: (() => void) | undefined;
+  onBookmark?: (() => void) | undefined;
+  onNavigateToVerse?: (() => void) | undefined;
 }): {
   verseKey?: string;
   surahName?: string;
@@ -96,15 +104,15 @@ function useHeaderProps(args: {
   );
   return useMemo(
     () => ({
-      verseKey: bm[0],
-      surahName: bm[1],
+      ...(bm[0] !== undefined ? { verseKey: bm[0] } : {}),
+      ...(bm[1] !== undefined ? { surahName: bm[1] } : {}),
       createdAt: bm[2],
       isPlaying,
       isLoadingAudio,
       isBookmarked,
-      onPlayPause,
-      onBookmark,
-      onNavigateToVerse,
+      ...(onPlayPause ? { onPlayPause } : {}),
+      ...(onBookmark ? { onBookmark } : {}),
+      ...(onNavigateToVerse ? { onNavigateToVerse } : {}),
     }),
     [bm, isPlaying, isLoadingAudio, isBookmarked, onPlayPause, onBookmark, onNavigateToVerse]
   );
@@ -119,8 +127,8 @@ function usePreviewProps({ bookmark, settings }: { bookmark: BookmarkData; setti
 } {
   return useMemo(
     () => ({
-      verseText: bookmark.verseText,
-      translation: bookmark.translation,
+      ...(bookmark.verseText !== undefined ? { verseText: bookmark.verseText } : {}),
+      ...(bookmark.translation !== undefined ? { translation: bookmark.translation } : {}),
       arabicFontFace: settings.arabicFontFace ?? 'font-amiri',
       arabicFontSize: settings.arabicFontSize ?? 18,
       tajweed: settings.tajweed ?? false,

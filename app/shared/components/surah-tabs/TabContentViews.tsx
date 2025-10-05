@@ -12,7 +12,7 @@ interface BaseProps {
 }
 
 interface SurahProps extends BaseProps {
-  filteredChapters: Chapter[];
+  filteredChapters: ReadonlyArray<Chapter>;
   selectedSurahId: number | null;
   setSelectedSurahId: (id: number | null) => void;
   setSelectedPageId: (id: number | null) => void;

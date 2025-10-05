@@ -43,7 +43,7 @@ export const MobileBottomSheet = memo(function MobileBottomSheet({
     onPlayPause,
     onBookmark,
     onShare,
-    onNavigateToVerse,
+    ...(onNavigateToVerse ? { onNavigateToVerse } : {}),
     onClose,
   });
 

@@ -4,7 +4,7 @@ import { useScrollPersistence } from '@/lib/hooks/useScrollPersistence';
 import type { TabKey } from '@/app/shared/components/surah-tabs/types';
 
 interface Options {
-  scrollRef: React.RefObject<HTMLDivElement>;
+  scrollRef: React.RefObject<HTMLDivElement | null>;
   activeTab: TabKey;
   isEnabled: boolean;
 }

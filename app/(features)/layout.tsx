@@ -1,7 +1,5 @@
 'use client';
 
-import type { ReactElement, ReactNode } from 'react';
-
 import { usePathname } from 'next/navigation';
 
 import {
@@ -12,6 +10,8 @@ import { Header } from '@/app/shared/Header';
 import { Navigation } from '@/app/shared/IconSidebar';
 import { ModernLayout } from '@/app/shared/navigation/ModernLayout';
 import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
+
+import type { ReactElement, ReactNode } from 'react';
 
 function LayoutContent({ children }: { children: ReactNode }): ReactElement {
   useHeaderVisibility();
@@ -51,4 +51,3 @@ export default function FeaturesLayout({ children }: { children: ReactNode }): R
     </HeaderVisibilityProvider>
   );
 }
-

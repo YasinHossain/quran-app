@@ -112,6 +112,9 @@ export function toLanguageCode(value: string | null | undefined): LanguageCode |
   return undefined;
 }
 
-export function ensureLanguageCode(value: string | null | undefined, fallback: LanguageCode = 'en'): LanguageCode {
+export function ensureLanguageCode(
+  value: string | null | undefined,
+  fallback: LanguageCode = 'en'
+): LanguageCode {
   return toLanguageCode(value) ?? fallback;
 }

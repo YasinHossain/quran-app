@@ -35,7 +35,11 @@ export const RangeSetting = memo(function RangeSetting({
   );
 
   return (
-    <SettingItem label={label} description={description} disabled={disabled}>
+    <SettingItem
+      label={label}
+      {...(description !== undefined ? { description } : {})}
+      disabled={disabled}
+    >
       <div className="flex items-center space-x-3">
         <input
           type="range"

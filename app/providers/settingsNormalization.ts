@@ -18,34 +18,45 @@ const applyLegacyFields = (settings: RawSettings): void => {
   }
 };
 
+const readSavedTranslationIds = (savedTranslations: string | null): number[] | null => {
+  if (!savedTranslations) {
+    return null;
+  }
+  const parsed = parseJson<number[]>(savedTranslations);
+  return Array.isArray(parsed) && parsed.length > 0 ? parsed : null;
+};
+
+const resolveTranslationIds = (
+  settings: RawSettings,
+  savedTranslations: string | null,
+  defaults: Settings
+): number[] => {
+  if (settings.translationIds && settings.translationIds.length > 0) {
+    return settings.translationIds;
+  }
+
+  const savedIds = readSavedTranslationIds(savedTranslations);
+  if (savedIds) {
+    if (settings.translationId === undefined && savedIds[0] !== undefined) {
+      settings.translationId = savedIds[0];
+    }
+    return savedIds;
+  }
+
+  const fallbackPrimary = settings.translationId ?? defaults.translationId;
+  return [fallbackPrimary];
+};
+
 const applySavedTranslations = (
   settings: RawSettings,
   savedTranslations: string | null,
   defaults: Settings
 ): void => {
-  if (!settings.translationIds && savedTranslations) {
-    const ids = parseJson<number[]>(savedTranslations);
-    if (Array.isArray(ids) && ids.length > 0) {
-      const [primaryTranslationId] = ids;
-      settings.translationIds = ids;
-      if (primaryTranslationId !== undefined) {
-        settings.translationId = primaryTranslationId;
-      }
-    }
-  }
-
-  let translationIds = settings.translationIds;
-
-  if (!translationIds || translationIds.length === 0) {
-    translationIds = settings.translationId
-      ? [settings.translationId]
-      : [defaults.translationId];
-    settings.translationIds = translationIds;
-  }
+  const translationIds = resolveTranslationIds(settings, savedTranslations, defaults);
+  settings.translationIds = translationIds;
 
   if (settings.translationId === undefined) {
-    const [primaryTranslationId] = translationIds;
-    settings.translationId = primaryTranslationId ?? defaults.translationId;
+    settings.translationId = translationIds[0] ?? defaults.translationId;
   }
 };
 

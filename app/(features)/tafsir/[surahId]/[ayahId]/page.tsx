@@ -5,7 +5,6 @@ import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisib
 import { SettingsSidebar } from '@/app/(features)/surah/components';
 import { useTafsirVerseData } from '@/app/(features)/tafsir/hooks/useTafsirVerseData';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
-
 import { Surah } from '@/types';
 
 import { AyahNavigation } from './components/AyahNavigation';

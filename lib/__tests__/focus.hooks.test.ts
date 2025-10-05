@@ -158,9 +158,10 @@ describe('useResponsiveFocus', (): void => {
   it('manages focus across breakpoint changes', (): void => {
     const target = container.querySelector('#btn1') as HTMLButtonElement;
     target.focus();
-    const useTestHook = ({ bp }: { bp: 'mobile' | 'tablet' | 'desktop' }): void =>
+    const useTestHook = ({ bp }: { bp: 'mobile' | 'tablet' | 'desktop' }): void => {
       useResponsiveFocus(bp, true);
-    const initialProps = { bp: 'mobile' as const };
+    };
+    const initialProps: { bp: 'mobile' | 'tablet' | 'desktop' } = { bp: 'mobile' };
     const { rerender } = renderHook(useTestHook, { initialProps });
     expect(() => rerender({ bp: 'desktop' })).not.toThrow();
   });

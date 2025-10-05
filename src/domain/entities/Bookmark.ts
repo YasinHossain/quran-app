@@ -22,7 +22,7 @@ export class Bookmark {
   public readonly verseId: string;
   public readonly position: BookmarkPosition;
   public readonly createdAt: Date;
-  public readonly notes?: string;
+  public readonly notes: string | undefined;
   public readonly tags: string[];
   constructor(init: BookmarkInit) {
     this.id = init.id;
@@ -93,7 +93,7 @@ export class Bookmark {
       verseId: this.verseId,
       position: this.position.toPlainObject(),
       createdAt: this.createdAt.toISOString(),
-      notes: this.notes,
+      ...(this.notes ? { notes: this.notes } : {}),
       tags: this.tags,
       hasNotes,
       hasTags,

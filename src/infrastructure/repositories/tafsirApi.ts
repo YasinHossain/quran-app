@@ -45,7 +45,7 @@ export async function fetchResourcesForLanguage(language?: string): Promise<Tafs
   const url = 'https://api.qurancdn.com/api/qdc/resources/tafsirs';
   const cdnParams: Record<string, string> = { per_page: '200', page: '1' };
   if (language && language !== 'all') {
-    cdnParams.language = language;
+    cdnParams['language'] = language;
   }
   const fallbackData = await apiFetch<{ tafsirs: ApiTafsirResource[] }>(
     url,

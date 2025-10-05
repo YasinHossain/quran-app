@@ -4,7 +4,8 @@ import pwaConfig from './next-pwa.config.mjs';
 
 import type { NextConfig } from 'next';
 
-const nextPwa = createRequire(import.meta.url)('next-pwa') as typeof import('next-pwa');
+// next-pwa is a CJS module; use dynamic require and keep type loose
+const loadWithPWA = createRequire(import.meta.url)('next-pwa') as typeof import('next-pwa').default;
 
 // Define commonly recommended security headers
 // Note: Avoid HSTS in development (can break Safari by forcing HTTPS on localhost)
@@ -74,11 +75,12 @@ const securityHeaders = isProd
 const nextConfig: NextConfig = {
   // Expose the Quran API base URL to the app
   env: {
-    QURAN_API_BASE_URL: process.env.QURAN_API_BASE_URL,
+    QURAN_API_BASE_URL: process.env['QURAN_API_BASE_URL'],
   },
 
-  outputFileTracingExcludes:
-    process.env.NODE_ENV === 'production' ? { '*': ['app/(dev)/**'] } : undefined,
+  ...(isProd
+    ? { outputFileTracingExcludes: { '*': ['app/(dev)/**'] } as Record<string, string[]> }
+    : {}),
 
   // Configure external image domains
   images: {
@@ -109,6 +111,6 @@ const nextConfig: NextConfig = {
   },
 };
 
-const withPWA = nextPwa(pwaConfig) as (config: NextConfig) => NextConfig;
+const withPWA = loadWithPWA(pwaConfig);
 
 export default withPWA(nextConfig);

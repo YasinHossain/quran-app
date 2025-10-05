@@ -1,13 +1,14 @@
 'use client';
 
 import React from 'react';
-import type { ReactElement } from 'react';
 
 import { ArabicFontPanel } from '@/app/(features)/surah/components/ArabicFontPanel';
 import { TranslationPanel, TafsirPanel } from '@/app/(features)/surah/components/panels';
 import { WordLanguagePanel } from '@/app/(features)/surah/components/WordLanguagePanel';
 
 import { SettingsPanelsProps } from './types';
+
+import type { ReactElement } from 'react';
 
 export const SettingsPanels = ({
   isArabicFontPanelOpen,

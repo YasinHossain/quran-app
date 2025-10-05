@@ -53,20 +53,26 @@ const queueAdjacentPrefetch = (params: AdjacentAudioPrefetchParams): void => {
   }
 
   const tasks = [
-    createPrefetchTask({
-      shouldPrefetch: params.prefetchNext,
-      resolveUrl: params.getNextAudioUrl,
-      prefetchAudio: params.prefetchAudio,
-      logger: params.logger,
-      descriptor: 'next',
-    }),
-    createPrefetchTask({
-      shouldPrefetch: params.prefetchPrevious,
-      resolveUrl: params.getPreviousAudioUrl,
-      prefetchAudio: params.prefetchAudio,
-      logger: params.logger,
-      descriptor: 'previous',
-    }),
+    (() => {
+      const cfg: PrefetchTaskConfig = {
+        shouldPrefetch: params.prefetchNext,
+        prefetchAudio: params.prefetchAudio,
+        logger: params.logger,
+        descriptor: 'next',
+      };
+      if (params.getNextAudioUrl) cfg.resolveUrl = params.getNextAudioUrl;
+      return createPrefetchTask(cfg);
+    })(),
+    (() => {
+      const cfg: PrefetchTaskConfig = {
+        shouldPrefetch: params.prefetchPrevious,
+        prefetchAudio: params.prefetchAudio,
+        logger: params.logger,
+        descriptor: 'previous',
+      };
+      if (params.getPreviousAudioUrl) cfg.resolveUrl = params.getPreviousAudioUrl;
+      return createPrefetchTask(cfg);
+    })(),
   ].filter((task): task is Promise<void> => task !== null);
 
   if (tasks.length > 0) {
@@ -87,16 +93,17 @@ export function useAdjacentAudioPrefetch(params: AdjacentAudioPrefetchParams): v
   } = params;
 
   useEffect((): void => {
-    queueAdjacentPrefetch({
+    const cfg: AdjacentAudioPrefetchParams = {
       enabled,
       currentAudioUrl,
       prefetchNext,
       prefetchPrevious,
-      getNextAudioUrl,
-      getPreviousAudioUrl,
       prefetchAudio,
       logger,
-    });
+    };
+    if (getNextAudioUrl) cfg.getNextAudioUrl = getNextAudioUrl;
+    if (getPreviousAudioUrl) cfg.getPreviousAudioUrl = getPreviousAudioUrl;
+    queueAdjacentPrefetch(cfg);
   }, [
     enabled,
     currentAudioUrl,

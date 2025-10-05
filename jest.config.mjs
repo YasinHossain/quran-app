@@ -14,7 +14,7 @@ const customJestConfig = {
   },
   // Shared test utilities and polyfills
   setupFilesAfterEnv: ['<rootDir>/tests/setup/setupTests.ts'],
-  resolver: '<rootDir>/tests/setup/jest-resolver.mjs',
+  resolver: '<rootDir>/tests/setup/jest-resolver.cjs',
 
   // Module mapping for absolute imports
   moduleNameMapper: {

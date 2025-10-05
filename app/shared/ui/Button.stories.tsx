@@ -7,7 +7,11 @@ import type { Meta, StoryObj } from '@storybook/react';
 const meta: Meta<typeof Button> = {
   title: 'Shared/UI/Button',
   component: Button,
-  decorators: [...(preview.decorators || [])],
+  decorators: Array.isArray(preview.decorators)
+    ? preview.decorators
+    : preview.decorators
+      ? [preview.decorators]
+      : [],
 };
 
 export default meta;

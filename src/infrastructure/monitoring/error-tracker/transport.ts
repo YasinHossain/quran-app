@@ -9,7 +9,7 @@ export function createTransport(endpoint: string, apiKey?: string): Transport {
   };
 
   if (apiKey) {
-    headers.Authorization = `Bearer ${apiKey}`;
+    headers['Authorization'] = `Bearer ${apiKey}`;
   }
 
   return {

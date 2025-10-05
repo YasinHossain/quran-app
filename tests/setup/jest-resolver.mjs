@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { defaultResolver as jestDefaultResolver } from 'jest-resolve';
+import { createRequire } from 'module';
 
 const DEFAULT_EXTENSIONS = ['.ts', '.tsx', '.js', '.jsx', '.json', '.mjs', '.cjs', '.node'];
 
@@ -25,6 +25,7 @@ function readPackageMain(candidate) {
     }
   } catch {
     // ignore JSON parsing errors and fall back to index resolution
+    return null;
   }
 
   return null;
@@ -77,7 +78,7 @@ export default function resolver(request, options) {
         }
 
         return candidateRoots;
-      }
+      },
     },
     {
       match: (value) => value.startsWith('@tests/'),
@@ -85,17 +86,17 @@ export default function resolver(request, options) {
         const subPath = value.slice('@tests/'.length);
         return [
           path.join(rootDir, 'tests', subPath),
-          path.join(rootDir, 'quran-com', 'tests', subPath)
+          path.join(rootDir, 'quran-com', 'tests', subPath),
         ];
-      }
+      },
     },
     {
       match: (value) => value.startsWith('@infra/'),
       resolve: (value) => {
         const subPath = value.slice('@infra/'.length);
         return [path.join(rootDir, 'src', 'infrastructure', subPath)];
-      }
-    }
+      },
+    },
   ];
 
   for (const alias of aliasMatchers) {
@@ -116,5 +117,25 @@ export default function resolver(request, options) {
     return defaultResolver(request, options);
   }
 
-  return jestDefaultResolver(request, options);
+  // Fallback: resolve using Node's resolution algorithm relative to project root
+  try {
+    const reqFromRoot = createRequire(path.join(rootDir, 'package.json'));
+    return reqFromRoot.resolve(request);
+  } catch {
+    void 0;
+  }
+
+  // Last resort: resolve relative to basedir if provided
+  try {
+    const from = basedir || rootDir;
+    const reqFromBase = createRequire(path.join(from, 'package.json'));
+    return reqFromBase.resolve(request);
+  } catch (e) {
+    // Re-throw with context
+    const err = new Error(
+      `Custom resolver failed to resolve "${request}" from ${basedir || rootDir}: ${e.message}`
+    );
+    err.cause = e;
+    throw err;
+  }
 }

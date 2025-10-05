@@ -135,10 +135,16 @@ export const ThemeToggle = memo(function ThemeToggle({
       <TabsVariant
         currentTheme={currentTheme}
         onThemeChange={handleThemeChange}
-        className={className}
+        {...(className !== undefined ? { className } : {})}
       />
     );
   }
 
-  return <ButtonVariant currentTheme={currentTheme} onToggle={toggleTheme} className={className} />;
+  return (
+    <ButtonVariant
+      currentTheme={currentTheme}
+      onToggle={toggleTheme}
+      {...(className !== undefined ? { className } : {})}
+    />
+  );
 });

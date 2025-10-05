@@ -37,7 +37,7 @@ export const VolumeControl = memo(function VolumeControl(): React.JSX.Element {
           max={1}
           step={0.01}
           onValueChange={([v]) => {
-            setVolume(v);
+            if (typeof v === 'number') setVolume(v);
           }}
           aria-label="Volume"
         >

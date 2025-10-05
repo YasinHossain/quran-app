@@ -26,7 +26,7 @@ export async function getTafsirsByLanguage(
     return {
       tafsirs: cachedResult.tafsirs.filter((t) => t.isInLanguage(language)),
       isFromCache: true,
-      error: cachedResult.error,
+      ...(cachedResult.error ? { error: cachedResult.error } : {}),
     };
   }
 }

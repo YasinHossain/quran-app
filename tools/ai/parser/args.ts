@@ -9,10 +9,13 @@ export function parseProps(propsString: string): Prop[] {
   const propMatches = propsString.matchAll(/(\w+)(\??):\s*([^;]+)/g);
 
   for (const match of propMatches) {
+    const name = match[1] ?? '';
+    const opt = match[2] ?? '';
+    const typ = (match[3] ?? '').trim();
     props.push({
-      name: match[1],
-      optional: match[2] === '?',
-      type: match[3].trim(),
+      name,
+      optional: opt === '?',
+      type: typ,
     });
   }
 

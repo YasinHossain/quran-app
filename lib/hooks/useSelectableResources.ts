@@ -76,7 +76,7 @@ export const useSelectableResources = <T extends Resource>({
 }: SelectableOptions<T>): UseSelectableResourcesResult<T> => {
   const [selectedIds, setSelectedIds] = useState(new Set(initialSelectedIds));
   const drag = useDraggableSelection(initialSelectedIds);
-  const search = useResourceSearch<T>({ resources, languageSort });
+  const search = useResourceSearch<T>({ resources, ...(languageSort ? { languageSort } : {}) });
   const setSelections = useCallback(
     (ids: number[]) => applySelections(ids, setSelectedIds, drag.setOrderedSelection),
     [drag]

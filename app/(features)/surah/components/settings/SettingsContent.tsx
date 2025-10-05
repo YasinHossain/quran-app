@@ -1,12 +1,13 @@
 'use client';
 
 import React from 'react';
-import type { ReactElement } from 'react';
 
 import { FontSettings } from './FontSettings';
 import { TafsirSettings } from './TafsirSettings';
 import { TranslationSettings } from './TranslationSettings';
 import { SettingsContentProps } from './types';
+
+import type { ReactElement } from 'react';
 
 export const SettingsContent = ({
   activeTab,

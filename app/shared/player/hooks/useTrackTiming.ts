@@ -58,12 +58,19 @@ export function useTrackTiming({
 }: Opts): TrackTimingReturn {
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState(track?.durationSec ?? 0);
-  const { audioRef, play, pause, seek, setVolume, setPlaybackRate } = useAudioPlayer({
-    src: track?.src,
-    defaultDuration: track?.durationSec,
+  const playerOptions: {
+    src?: string;
+    defaultDuration?: number;
+    onTimeUpdate?: (time: number) => void;
+    onLoadedMetadata?: (duration: number) => void;
+  } = {
     onTimeUpdate: setCurrent,
     onLoadedMetadata: setDuration,
-  });
+  };
+  if (track?.src !== undefined) playerOptions.src = track.src;
+  if (track?.durationSec !== undefined) playerOptions.defaultDuration = track.durationSec;
+
+  const { audioRef, play, pause, seek, setVolume, setPlaybackRate } = useAudioPlayer(playerOptions);
   useEffect(() => {
     contextRef.current = audioRef.current;
   }, [contextRef, audioRef]);

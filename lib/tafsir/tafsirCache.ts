@@ -37,7 +37,9 @@ export function getTafsirCached(verseKey: string, tafsirId = 169): Promise<strin
     const oldest = [...cache.entries()].sort((a, b) => a[1].timestamp - b[1].timestamp);
     const removeCount = cache.size - MAX_CACHE_SIZE + 1;
     for (let i = 0; i < removeCount; i++) {
-      cache.delete(oldest[i][0]);
+      const entry = oldest[i];
+      if (!entry) break;
+      cache.delete(entry[0]);
     }
   }
 

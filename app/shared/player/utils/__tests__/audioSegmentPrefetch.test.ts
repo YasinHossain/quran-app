@@ -145,7 +145,8 @@ describe('prefetchAudioBatch results', () => {
       prefetchAudioStart,
     });
 
-    expect(prefetchAudioStart.mock.calls.map(([callUrl]) => callUrl)).toEqual([
+    const calls = prefetchAudioStart.mock.calls as unknown as [string, ...unknown[]][];
+    expect(calls.map(([callUrl]) => callUrl)).toEqual([
       'https://example.com/high.mp3',
       'https://example.com/medium.mp3',
       'https://example.com/low.mp3',

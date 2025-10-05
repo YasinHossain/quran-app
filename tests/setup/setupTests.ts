@@ -7,9 +7,9 @@ import '@tests/envPolyfills';
 import '@tests/setup/browserMocks';
 
 import { jest, beforeAll, beforeEach, afterEach, afterAll } from '@jest/globals';
-import { server } from '@tests/setup/msw/server';
 
 import { logger } from '@/src/infrastructure/monitoring/Logger';
+import { server } from '@tests/setup/msw/server';
 
 import type { RouterMock } from '@/types/testing';
 

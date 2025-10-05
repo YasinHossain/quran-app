@@ -31,9 +31,9 @@ export function QuranAudioPlayer({
     activeTab,
     setActiveTab,
   } = useQuranAudioController({
-    track,
-    onPrev,
-    onNext,
+    ...(track !== undefined ? { track } : {}),
+    ...(onPrev ? { onPrev } : {}),
+    ...(onNext ? { onNext } : {}),
   });
 
   if (!isPlayerVisible) return null;

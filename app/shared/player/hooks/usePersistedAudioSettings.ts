@@ -18,7 +18,7 @@ interface UsePersistedAudioSettingsReturn {
  * Loads settings on mount and writes updates when they change.
  */
 export function usePersistedAudioSettings(): UsePersistedAudioSettingsReturn {
-  const [reciter, setReciter] = useState<Reciter>(RECITERS[0]);
+  const [reciter, setReciter] = useState<Reciter>(RECITERS[0]!);
   const [volume, setVolume] = useState(0.9);
   const [playbackRate, setPlaybackRate] = useState(1);
 

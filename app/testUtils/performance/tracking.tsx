@@ -7,7 +7,7 @@ let lastProps: unknown = null;
 export function withRenderTracking<P extends object>(
   Component: ComponentType<P>
 ): ComponentType<P> {
-  const TrackedComponent = (props: P): JSX.Element => {
+  const TrackedComponent: ComponentType<P> = (props: P) => {
     renderCount++;
     lastProps = props;
     return <Component {...props} />;

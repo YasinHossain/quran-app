@@ -34,7 +34,7 @@ type ListenerMap = Map<string, Set<Listener>>;
 
 const parseMinWidth = (query: string): number | null => {
   const m = query.match(/\(min-width:\s*(\d+)px\)/);
-  return m ? parseInt(m[1], 10) : null;
+  return m?.[1] ? parseInt(m[1], 10) : null;
 };
 
 const parseOrientation = (query: string): Orientation | null => {
@@ -58,17 +58,38 @@ const createMql = (
   matches: evaluateQuery(query, getWidth()),
   media: query,
   onchange: null,
-  addEventListener: jest.fn((event: string, listener: Listener) => {
-    if (event !== 'change') return;
+  addListener: jest.fn((listener: Listener) => {
     const set = listeners.get(query) ?? new Set<Listener>();
     set.add(listener);
     listeners.set(query, set);
-  }),
-  removeEventListener: jest.fn((event: string, listener: Listener) => {
-    if (event !== 'change') return;
+  }) as unknown as MediaQueryList['addListener'],
+  removeListener: jest.fn((listener: Listener) => {
     const set = listeners.get(query);
     set?.delete(listener);
-  }),
+  }) as unknown as MediaQueryList['removeListener'],
+  addEventListener: jest.fn(
+    <K extends keyof MediaQueryListEventMap>(
+      type: K,
+      listener: (this: MediaQueryList, ev: MediaQueryListEventMap[K]) => any
+    ) => {
+      if (type !== 'change') return;
+      const set = listeners.get(query) ?? new Set<Listener>();
+      // Cast to our internal Listener type
+      set.add(listener as unknown as Listener);
+      listeners.set(query, set);
+    }
+  ) as MediaQueryList['addEventListener'],
+  removeEventListener: jest.fn(
+    <K extends keyof MediaQueryListEventMap>(
+      type: K,
+      listener: (this: MediaQueryList, ev: MediaQueryListEventMap[K]) => any
+    ) => {
+      if (type !== 'change') return;
+      const set = listeners.get(query);
+      // Cast to our internal Listener type
+      set?.delete(listener as unknown as Listener);
+    }
+  ) as MediaQueryList['removeEventListener'],
   dispatchEvent: jest.fn(),
 });
 

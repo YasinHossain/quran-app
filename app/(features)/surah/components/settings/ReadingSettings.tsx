@@ -1,10 +1,11 @@
 'use client';
 
 import React from 'react';
-import type { ReactElement } from 'react';
 
 import { CollapsibleSection } from '@/app/(features)/surah/components/CollapsibleSection';
 import { BookReaderIcon } from '@/app/shared/icons';
+
+import type { ReactElement } from 'react';
 
 interface ReadingSettingsProps {
   isOpen?: boolean;

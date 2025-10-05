@@ -27,7 +27,6 @@ const responsiveValueCases = [
 const renderUseBreakpointWithoutWindow = (): 'mobile' | 'tablet' | 'desktop' | 'wide' => {
   const originalWindow = global.window;
   const globalWithWindow = global as typeof globalThis & { window?: unknown };
-  // @ts-expect-error – simulate SSR by removing window
   delete globalWithWindow.window;
   try {
     const { result } = renderHook(() => useBreakpoint());

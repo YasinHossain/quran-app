@@ -1,5 +1,4 @@
 import React from 'react';
-import type { CSSProperties, ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { CollapsibleSection } from '@/app/(features)/surah/components/CollapsibleSection';
@@ -8,6 +7,8 @@ import { FontSettingIcon } from '@/app/shared/icons';
 
 import { ArabicFontFaceSelector } from './ArabicFontFaceSelector';
 import { FontSizeSlider } from './FontSizeSlider';
+
+import type { CSSProperties, ReactElement } from 'react';
 
 interface FontSettingsContentProps {
   isOpen?: boolean;

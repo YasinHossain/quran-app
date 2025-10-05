@@ -1,9 +1,10 @@
 'use client';
 
 import React from 'react';
-import type { ReactElement } from 'react';
 
 import { ArrowLeftIcon } from '@/app/shared/icons';
+
+import type { ReactElement } from 'react';
 
 interface SettingsHeaderProps {
   onClose: () => void;

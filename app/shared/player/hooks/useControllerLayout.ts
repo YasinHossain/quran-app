@@ -18,8 +18,8 @@ export function useControllerLayout({
   return usePlayerLayout({
     timing: core.timing,
     isPlaying: core.isPlaying,
-    onNext,
-    onPrev,
+    ...(onNext ? { onNext } : {}),
+    ...(onPrev ? { onPrev } : {}),
     closePlayer: core.closePlayer,
     setMobileOptionsOpen,
     controls: core.controls,

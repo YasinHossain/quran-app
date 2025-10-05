@@ -9,7 +9,7 @@ export class RemoteTransport implements ILoggerTransport {
   private buffer: LogEntry[] = [];
   private flushInterval: number;
   private endpoint: string;
-  private apiKey?: string;
+  private apiKey: string | undefined;
   private batchSize: number;
   private flushTimer?: NodeJS.Timeout;
   private fetchFn: typeof fetchWithTimeout;

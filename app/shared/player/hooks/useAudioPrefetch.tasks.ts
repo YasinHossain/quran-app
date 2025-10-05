@@ -38,7 +38,7 @@ const fetchAudioBlob = async (url: string, loggerRef: MutableRefObject<ILogger>)
 
   try {
     const response = await fetch(url, {
-      signal: controller?.signal,
+      signal: controller?.signal ?? null,
       headers: { Range: 'bytes=0-1024' },
     });
 

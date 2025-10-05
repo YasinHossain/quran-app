@@ -74,13 +74,15 @@ export class Logger {
   ): void {
     if (!this.shouldLog(level)) return;
 
+    const mergedContext = { ...this.contextData, ...context } as Record<string, unknown>;
+    const source = getSource();
     const entry: LogEntry = {
       level,
       message,
       timestamp: new Date(),
-      context: { ...this.contextData, ...context },
-      error,
-      source: getSource(),
+      ...(Object.keys(mergedContext).length ? { context: mergedContext } : {}),
+      ...(error ? { error } : {}),
+      ...(source ? { source } : {}),
     };
 
     // Send to all transports

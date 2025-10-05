@@ -47,8 +47,20 @@ export const DesktopPlayerLayout = React.memo(function DesktopPlayerLayout({
       <TransportControls
         isPlaying={isPlaying}
         interactable={interactable}
-        onPrev={onPrev}
-        onNext={onNext}
+        {...(onPrev
+          ? {
+              onPrev: () => {
+                void onPrev();
+              },
+            }
+          : {})}
+        {...(onNext
+          ? {
+              onNext: () => {
+                void onNext();
+              },
+            }
+          : {})}
         togglePlay={togglePlay}
       />
       <Timeline

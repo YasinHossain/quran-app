@@ -34,7 +34,11 @@ export const SelectSetting = memo(function SelectSetting({
   );
 
   return (
-    <SettingItem label={label} description={description} disabled={disabled}>
+    <SettingItem
+      label={label}
+      {...(description !== undefined ? { description } : {})}
+      disabled={disabled}
+    >
       <select
         value={value}
         onChange={handleChange}

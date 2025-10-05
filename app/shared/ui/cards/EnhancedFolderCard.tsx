@@ -56,7 +56,11 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
     <BaseCard
       variant="folder"
       animation="folder"
-      onClick={onClick as React.MouseEventHandler<HTMLDivElement | HTMLAnchorElement> | undefined}
+      {...(onClick
+        ? {
+            onClick: onClick as React.MouseEventHandler<HTMLDivElement | HTMLAnchorElement>,
+          }
+        : {})}
       role="button"
       tabIndex={0}
       aria-label={(ariaLabel || defaultAriaLabel) as string}

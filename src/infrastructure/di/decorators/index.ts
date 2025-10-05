@@ -1,21 +1,9 @@
-import {
-  inject,
-  lazyInject,
-  optional,
-  multiInject,
-  named,
-  postConstruct,
-  preDestroy,
-} from 'inversify';
+import { inject, optional, multiInject, named, postConstruct, preDestroy } from 'inversify';
 
 import { TYPES, type TypeKeys } from '@/src/infrastructure/di/types';
 
 export * from './injection';
-export * from './factory';
-
-export const LazyInject = (typeKey: TypeKeys): ReturnType<typeof lazyInject> => {
-  return inject(TYPES[typeKey]) && lazyInject(TYPES[typeKey]);
-};
+// Note: factory helpers are not used in the current DI setup
 
 export const OptionalInject = (typeKey: TypeKeys): ReturnType<typeof optional> => {
   return inject(TYPES[typeKey]) && optional();
@@ -28,7 +16,6 @@ export const MultiInject = (typeKey: TypeKeys): ReturnType<typeof multiInject> =
 export {
   named,
   optional,
-  lazyInject,
   multiInject,
   postConstruct,
   preDestroy,

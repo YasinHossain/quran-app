@@ -1,7 +1,8 @@
 'use client';
 
-import type { useArabicFontPanel } from '@/app/(features)/surah/components/panels/arabic-font-panel/useArabicFontPanel';
 import { ResourceList } from '@/app/shared/resource-panel';
+
+import type { useArabicFontPanel } from '@/app/(features)/surah/components/panels/arabic-font-panel/useArabicFontPanel';
 
 type ArabicFont = ReturnType<typeof useArabicFontPanel>['fonts'][number];
 

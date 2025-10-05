@@ -1,5 +1,7 @@
 import { useParams, usePathname } from 'next/navigation';
 
+import type { TabKey } from '@/app/shared/components/surah-tabs/types';
+
 const toNumberParam = (param: string | string[] | undefined): number | undefined => {
   if (!param) return undefined;
   const value = Array.isArray(param) ? param[0] : param;
@@ -8,11 +10,11 @@ const toNumberParam = (param: string | string[] | undefined): number | undefined
 };
 
 interface SurahTabParamsResult {
-  currentSurahId?: number;
-  currentJuzId?: number;
-  currentPageId?: number;
+  currentSurahId: number | undefined;
+  currentJuzId: number | undefined;
+  currentPageId: number | undefined;
   isTafsirPath: boolean;
-  getInitialTab: () => 'Surah' | 'Juz' | 'Page';
+  getInitialTab: () => TabKey;
 }
 
 export const useSurahTabParams = (): SurahTabParamsResult => {
@@ -24,7 +26,7 @@ export const useSurahTabParams = (): SurahTabParamsResult => {
   const currentPageId = toNumberParam(pageId);
   const isTafsirPath = pathname?.includes('/tafsir');
 
-  const getInitialTab = (): 'Surah' | 'Juz' | 'Page' => {
+  const getInitialTab = (): TabKey => {
     if (currentJuzId) return 'Juz';
     if (currentPageId) return 'Page';
     return 'Surah';

@@ -25,9 +25,14 @@ interface NavigationCardContent {
   titleWeight?: 'bold' | 'semibold';
 }
 
-interface StandardNavigationCardProps extends Omit<BaseCardProps, 'children'> {
+interface StandardNavigationCardProps extends Omit<BaseCardProps, 'children' | 'content'> {
   content: NavigationCardContent;
   onNavigate?: (id: number) => void;
+  scroll?: BaseCardProps['scroll'];
+  prefetch?: BaseCardProps['prefetch'];
+  replace?: BaseCardProps['replace'];
+  shallow?: BaseCardProps['shallow'];
+  locale?: BaseCardProps['locale'];
 }
 
 interface CardTitleProps {
@@ -157,7 +162,6 @@ export const PageNavigationCard = (props: StandardNavigationCardProps): React.JS
       ...props.content,
       showArabic: false,
       titleWeight: 'semibold',
-      subtitle: undefined, // Pages don't have subtitles
     }}
   />
 );

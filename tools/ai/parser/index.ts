@@ -66,7 +66,7 @@ export async function scanServices(): Promise<Service[]> {
     const content = fs.readFileSync(path.join(servicesDir, file), 'utf8');
     const serviceMatch = content.match(/export\s+class\s+(\w+Service)/);
 
-    if (serviceMatch) {
+    if (serviceMatch && serviceMatch[1]) {
       services.push({
         name: serviceMatch[1],
         file: file,
@@ -90,7 +90,7 @@ export async function scanEntities(): Promise<Entity[]> {
     const content = fs.readFileSync(path.join(entitiesDir, file), 'utf8');
     const entityMatch = content.match(/export\s+class\s+(\w+)/);
 
-    if (entityMatch) {
+    if (entityMatch && entityMatch[1]) {
       entities.push({
         name: entityMatch[1],
         file: file,

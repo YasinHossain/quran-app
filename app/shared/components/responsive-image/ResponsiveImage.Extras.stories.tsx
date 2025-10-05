@@ -87,11 +87,7 @@ export const Gallery: Story = {
           <div key={index} className="aspect-w-4 aspect-h-3">
             <ResponsiveImage
               {...args}
-              src={
-                typeof baseSrc === 'string'
-                  ? `${baseSrc}?random=${index}`
-                  : baseSrc
-              }
+              src={typeof baseSrc === 'string' ? `${baseSrc}?random=${index}` : baseSrc}
               alt={`${baseAlt} ${index}`}
             />
           </div>

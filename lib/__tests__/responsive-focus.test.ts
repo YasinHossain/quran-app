@@ -20,12 +20,14 @@ describe('useResponsiveFocus', () => {
     const button = container.querySelector('#btn1') as HTMLButtonElement;
     button.focus();
 
-    const { rerender } = renderHook(({ bp }) => useResponsiveFocus(bp, true), {
-      initialProps: { bp: 'mobile' },
-    });
+    const initialProps: { bp: 'mobile' | 'tablet' | 'desktop' } = { bp: 'mobile' };
+    const { rerender } = renderHook(
+      ({ bp }: { bp: 'mobile' | 'tablet' | 'desktop' }) => useResponsiveFocus(bp, true),
+      { initialProps }
+    );
 
     act(() => {
-      rerender({ bp: 'desktop' });
+      rerender({ bp: 'desktop' as const });
     });
 
     document.body.focus();
@@ -39,12 +41,18 @@ describe('useResponsiveFocus', () => {
 
   it('skips restoration when disabled', async () => {
     // Don't focus the button initially when the hook is disabled
-    const { rerender } = renderHook(({ bp, enabled }) => useResponsiveFocus(bp, enabled), {
-      initialProps: { bp: 'mobile', enabled: false },
-    });
+    const initialProps2: { bp: 'mobile' | 'tablet' | 'desktop'; enabled: boolean } = {
+      bp: 'mobile',
+      enabled: false,
+    };
+    const { rerender } = renderHook(
+      ({ bp, enabled }: { bp: 'mobile' | 'tablet' | 'desktop'; enabled: boolean }) =>
+        useResponsiveFocus(bp, enabled),
+      { initialProps: initialProps2 }
+    );
 
     act(() => {
-      rerender({ bp: 'desktop', enabled: false });
+      rerender({ bp: 'desktop' as const, enabled: false });
     });
 
     // Set focus manually to body

@@ -23,9 +23,14 @@ export interface BookmarkNavigationContent {
   description: string;
 }
 
-interface BookmarkNavigationCardProps extends Omit<BaseCardProps, 'children'> {
+interface BookmarkNavigationCardProps extends Omit<BaseCardProps, 'children' | 'content'> {
   content: BookmarkNavigationContent;
   onSectionChange?: (sectionId: SectionId) => void;
+  scroll?: BaseCardProps['scroll'];
+  prefetch?: BaseCardProps['prefetch'];
+  replace?: BaseCardProps['replace'];
+  shallow?: BaseCardProps['shallow'];
+  locale?: BaseCardProps['locale'];
 }
 
 // Map section IDs to URLs for smooth navigation
@@ -64,10 +69,10 @@ const IconBadge = memo(function IconBadge({
 const useNavigationClick = (
   id: SectionId,
   onSectionChange?: (sectionId: SectionId) => void,
-  onClick?: React.MouseEventHandler<HTMLDivElement | HTMLAnchorElement>
-): React.MouseEventHandler<HTMLDivElement | HTMLAnchorElement> =>
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>
+): React.MouseEventHandler<HTMLAnchorElement> =>
   useCallback(
-    (e: React.MouseEvent<HTMLDivElement | HTMLAnchorElement>) => {
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
       onSectionChange?.(id);
       onClick?.(e);
     },
@@ -84,7 +89,11 @@ export const BookmarkNavigationCard = memo(function BookmarkNavigationCard({
 }: BookmarkNavigationCardProps): React.JSX.Element {
   const { id, icon, label, description } = content;
   const activeState = Boolean(isActive);
-  const handleClick = useNavigationClick(id, onSectionChange, onClick);
+  const handleClick = useNavigationClick(
+    id,
+    onSectionChange,
+    onClick as React.MouseEventHandler<HTMLAnchorElement> | undefined
+  );
 
   return (
     <BaseCard

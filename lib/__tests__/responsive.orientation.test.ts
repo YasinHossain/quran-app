@@ -21,7 +21,6 @@ const orientationCases = [
 const renderUseOrientationWithoutWindow = (): 'portrait' | 'landscape' => {
   const originalWindow = global.window;
   const globalWithWindow = global as typeof globalThis & { window?: unknown };
-  // @ts-expect-error – simulate SSR by removing window
   delete globalWithWindow.window;
   try {
     const { result } = renderHook(() => useOrientation());

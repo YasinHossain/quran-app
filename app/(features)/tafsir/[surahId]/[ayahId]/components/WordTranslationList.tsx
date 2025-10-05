@@ -1,11 +1,10 @@
 'use client';
 
-import type { JSX } from 'react';
-
 import { useSettings } from '@/app/providers/SettingsContext';
 import { toLanguageCode } from '@/lib/text/languageCodes';
 
 import type { LanguageOption } from './useWordTranslationSearch';
+import type { JSX } from 'react';
 
 interface WordTranslationListProps {
   languages: LanguageOption[];

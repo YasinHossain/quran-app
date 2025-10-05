@@ -26,7 +26,11 @@ export const ToggleSetting = memo(function ToggleSetting({
   }, [disabled, onChange, value]);
 
   return (
-    <SettingItem label={label} description={description} disabled={disabled}>
+    <SettingItem
+      label={label}
+      {...(description !== undefined ? { description } : {})}
+      disabled={disabled}
+    >
       <button
         onClick={handleToggle}
         className={cn(

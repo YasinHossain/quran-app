@@ -44,8 +44,12 @@ export async function getRandomVerse(
 ): Promise<Verse> {
   try {
     const surahs = surahList ?? (surahList = await getSurahList());
-    const randomSurah = surahs[Math.floor(rng() * surahs.length)];
-    const randomAyah = Math.floor(rng() * randomSurah.verses) + 1;
+    if (!surahs.length) {
+      throw new Error('No surahs available');
+    }
+    const idx = Math.min(Math.floor(rng() * surahs.length), surahs.length - 1);
+    const randomSurah = surahs[idx]!;
+    const randomAyah = Math.min(Math.floor(rng() * randomSurah.verses) + 1, randomSurah.verses);
     const verseKey = `${randomSurah.number}:${randomAyah}`;
     const data = await apiFetch<{ verse: ApiVerse }>(
       `verses/by_key/${verseKey}`,

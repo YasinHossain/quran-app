@@ -3,8 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { getSurahCoverUrl } from '@/lib/api';
 import { buildAudioUrl } from '@/lib/audio/reciters';
 
-import type { Track } from '@/app/shared/player/types';
-import type { Reciter } from '@/types/reciter';
+import type { Track, Reciter } from '@/app/shared/player/types';
 import type { Verse } from '@/types/verse';
 
 export function useCoverAndTrack(

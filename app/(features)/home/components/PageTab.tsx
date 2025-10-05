@@ -37,7 +37,10 @@ function useColumnCount(containerRef: React.RefObject<HTMLDivElement | null>): n
   return columns;
 }
 
-function useScrollMargin(containerRef: React.RefObject<HTMLDivElement | null>, columns: number): number {
+function useScrollMargin(
+  containerRef: React.RefObject<HTMLDivElement | null>,
+  columns: number
+): number {
   const [scrollMargin, setScrollMargin] = useState(0);
 
   useLayoutEffect(() => {

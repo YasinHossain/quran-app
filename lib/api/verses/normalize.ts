@@ -22,14 +22,19 @@ export interface ApiVerse extends Omit<Verse, 'words'> {
  * Uthmani script or translations are missing.
  */
 export function normalizeVerse(raw: ApiVerse, wordLang: string = 'en'): Verse {
+  const { words: wordsRaw, ...rest } = raw;
   return {
-    ...raw,
-    words: raw.words?.map(
-      (w): Word => ({
-        id: w.id,
-        uthmani: w.text_uthmani ?? w.text,
-        [wordLang]: w.translation?.text,
-      })
-    ),
-  };
+    ...(rest as Omit<ApiVerse, 'words'>),
+    ...(wordsRaw
+      ? {
+          words: wordsRaw.map(
+            (w): Word => ({
+              id: w.id,
+              uthmani: w.text_uthmani ?? w.text,
+              [wordLang]: w.translation?.text,
+            })
+          ),
+        }
+      : {}),
+  } as unknown as Verse;
 }

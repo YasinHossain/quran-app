@@ -28,7 +28,13 @@ export function usePageData({ pageId }: UsePageDataOptions): UseVerseListingRetu
   const verseListingData = useVerseListing({
     id: pageId,
     lookup: ({ id, translationIds, page, perPage, wordLang }) =>
-      getVersesByPage({ id, translationIds, page, perPage, wordLang: ensureLanguageCode(wordLang) }),
+      getVersesByPage({
+        id,
+        translationIds,
+        page,
+        perPage,
+        wordLang: ensureLanguageCode(wordLang),
+      }),
   });
 
   const { translationOptions, wordLanguageOptions, settings, activeVerse, reciter } =

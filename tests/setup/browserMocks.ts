@@ -128,10 +128,7 @@ const installMediaElementMocks = (): void => {
   prototype.play = jest.fn(() => Promise.resolve());
   prototype.pause = jest.fn();
   prototype.load = jest.fn();
-  prototype.canPlayType = jest.fn<
-    ReturnType<HTMLMediaElement['canPlayType']>,
-    Parameters<HTMLMediaElement['canPlayType']>
-  >(() => 'probably');
+  prototype.canPlayType = jest.fn(() => 'probably') as unknown as HTMLMediaElement['canPlayType'];
 
   defineMediaProperty('currentTime', 0);
   defineMediaProperty('duration', 0);

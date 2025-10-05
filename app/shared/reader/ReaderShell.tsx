@@ -41,8 +41,8 @@ export function ReaderShell({
         loadMoreRef={verseListing.loadMoreRef}
         isValidating={verseListing.isValidating}
         isReachingEnd={verseListing.isReachingEnd}
-        emptyLabelKey={emptyLabelKey}
-        endLabelKey={endLabelKey}
+        {...(emptyLabelKey ? { emptyLabelKey } : {})}
+        {...(endLabelKey ? { endLabelKey } : {})}
       />
 
       <SurahSettings

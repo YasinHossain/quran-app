@@ -60,8 +60,8 @@ export const config: Config = ((): Config => {
     let message = '❌ Configuration validation failed';
 
     if (error instanceof z.ZodError) {
-      const details = error.errors
-        .map((err) => `  - ${err.path.join('.')}: ${err.message}`)
+      const details = error.issues
+        .map((issue: z.ZodIssue) => `  - ${issue.path.join('.')}: ${issue.message}`)
         .join('\n');
       message += `\n${details}`;
     }

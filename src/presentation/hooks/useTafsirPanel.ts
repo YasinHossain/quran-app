@@ -37,7 +37,7 @@ export interface UseTafsirPanelReturn {
 
   handleReset: () => void;
 
-  tabsContainerRef: RefObject<HTMLDivElement>;
+  tabsContainerRef: RefObject<HTMLDivElement | null>;
   canScrollLeft: boolean;
   canScrollRight: boolean;
   scrollTabsLeft: () => void;
@@ -66,7 +66,7 @@ function composeReturn(params: {
   handleDragEnd: () => void;
   draggedId: number | null;
   handleReset: () => void;
-  tabsContainerRef: RefObject<HTMLDivElement>;
+  tabsContainerRef: RefObject<HTMLDivElement | null>;
   canScrollLeft: boolean;
   canScrollRight: boolean;
   scrollTabsLeft: () => void;

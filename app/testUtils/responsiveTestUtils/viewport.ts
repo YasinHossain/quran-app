@@ -54,7 +54,7 @@ export function testBreakpoints(testFn: (breakpoint: BreakpointName, width: numb
 export function createMediaQueryMock(): jest.Mock {
   return jest.fn().mockImplementation((query: string) => {
     const match = query.match(/min-width:\s*(\d+)px/);
-    const minWidth = match ? parseInt(match[1], 10) : 0;
+    const minWidth = match?.[1] ? parseInt(match[1], 10) : 0;
 
     return {
       matches: window.innerWidth >= minWidth,

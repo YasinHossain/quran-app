@@ -5,14 +5,23 @@ import {
   type AnimationConfig,
 } from './base-card.config';
 
+import type { LinkProps } from 'next/link';
 import type React from 'react';
 
-export interface BaseCardProps {
-  children: React.ReactNode;
+type AnchorRestProps = Omit<
+  React.AnchorHTMLAttributes<HTMLAnchorElement>,
+  'children' | 'className' | 'href' | 'onClick'
+>;
+
+type DivRestProps = Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  'children' | 'className' | 'onClick'
+>;
+
+type BaseSharedProps = {
+  children?: React.ReactNode;
   className?: string;
-  href?: string;
   onClick?: React.MouseEventHandler<HTMLDivElement | HTMLAnchorElement>;
-  scroll?: boolean;
   isActive?: boolean;
   'data-active'?: boolean;
   variant?: keyof typeof CARD_VARIANTS;
@@ -28,8 +37,18 @@ export interface BaseCardProps {
   align?: 'start' | 'center' | 'end';
   justify?: 'start' | 'center' | 'end' | 'between';
   gap?: string;
-  [key: string]: unknown;
-}
+  prefetch?: LinkProps['prefetch'];
+  replace?: LinkProps['replace'];
+  shallow?: LinkProps['shallow'];
+  locale?: LinkProps['locale'];
+  scroll?: LinkProps['scroll'];
+};
+
+export type BaseCardProps = BaseSharedProps &
+  AnchorRestProps &
+  DivRestProps & {
+    href?: LinkProps['href'];
+  };
 
 export type ConvenienceCardProps = Omit<BaseCardProps, 'variant' | 'animation'> & {
   children?: React.ReactNode;

@@ -43,7 +43,7 @@ describe('useScrollCentering - core behavior', () => {
 
   it('centers active element on initial render when outside view', () => {
     const { surahEl } = createEls();
-    surahEl.dataset.active = 'true';
+    surahEl.dataset['active'] = 'true';
     setupRects(makeRect(0, 100), makeRect(200, 250), surahEl);
 
     renderHook(() =>
@@ -59,7 +59,7 @@ describe('useScrollCentering - core behavior', () => {
 
   it('does not recenter when element is already in view after scrolling', () => {
     const { surahEl } = createEls();
-    surahEl.dataset.active = 'true';
+    surahEl.dataset['active'] = 'true';
     setupRects(makeRect(0, 100), makeRect(10, 20), surahEl);
 
     renderHook(() =>
@@ -83,7 +83,7 @@ describe('useScrollCentering - tab switching', () => {
 
   it('centers element after switching tabs', () => {
     const { surahEl, juzEl } = createEls();
-    surahEl.dataset.active = 'true';
+    surahEl.dataset['active'] = 'true';
     setupRects(makeRect(0, 100), makeRect(200, 250), juzEl);
 
     const { result, rerender } = renderHook(
@@ -97,8 +97,8 @@ describe('useScrollCentering - tab switching', () => {
       { initialProps: { activeTab: 'Surah' as Tab } }
     );
     act(() => result.current.prepareForTabSwitch('Juz'));
-    delete surahEl.dataset.active;
-    juzEl.dataset.active = 'true';
+    delete surahEl.dataset['active'];
+    juzEl.dataset['active'] = 'true';
     rerender({ activeTab: 'Juz' });
     expect(juzEl.scrollIntoView).toHaveBeenCalledWith({ block: 'center' });
   });
@@ -113,7 +113,7 @@ describe('useScrollCentering - helpers', () => {
 
   it('skipNextCentering prevents centering and clears the session flag', () => {
     const { surahEl } = createEls();
-    surahEl.dataset.active = 'true';
+    surahEl.dataset['active'] = 'true';
     setupRects(makeRect(0, 100), makeRect(200, 250), surahEl);
     sessionStorage.setItem('skipCenterSurah', '1');
 

@@ -20,7 +20,7 @@ export class Verse {
   public readonly ayahNumber: number;
   public readonly arabicText: string;
   public readonly uthmaniText: string;
-  public readonly translation?: Translation;
+  public readonly translation: Translation | undefined;
 
   constructor({ id, surahId, ayahNumber, arabicText, uthmaniText, translation }: VerseOptions) {
     this.id = id;
@@ -100,7 +100,7 @@ export class Verse {
       verseKey: this.verseKey,
       arabicText: this.arabicText,
       uthmaniText: this.uthmaniText,
-      translation: this.translation?.toPlainObject(),
+      ...(this.translation ? { translation: this.translation.toPlainObject() } : {}),
       wordCount: getWordCount(this.arabicText),
       estimatedReadingTime: getEstimatedReadingTime(this.arabicText),
       isFirstVerse: this.isFirstVerse(),

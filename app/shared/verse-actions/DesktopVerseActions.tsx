@@ -47,7 +47,7 @@ export const DesktopVerseActions = ({
           onPlayPause={onPlayPause}
         />
         <TafsirLink verseKey={verseKey} />
-        <NavigateToVerseLink onNavigateToVerse={onNavigateToVerse} />
+        <NavigateToVerseLink {...(onNavigateToVerse ? { onNavigateToVerse } : {})} />
         <BookmarkButton
           isBookmarked={Boolean(isBookmarked)}
           showRemove={showRemove}

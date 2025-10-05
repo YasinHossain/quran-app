@@ -39,7 +39,7 @@ export function mapStoredToBookmark(stored: StoredBookmark): Bookmark {
     verseId: stored.verseId,
     position,
     createdAt: new Date(stored.createdAt),
-    notes: stored.notes,
+    ...(stored.notes !== undefined ? { notes: stored.notes } : {}),
     tags: stored.tags,
   });
 }

@@ -4,7 +4,7 @@ import { useScrollCentering } from '@/lib/hooks/useScrollCentering';
 import type { TabKey } from '@/app/shared/components/surah-tabs/types';
 
 interface Options {
-  scrollRef: React.RefObject<HTMLDivElement>;
+  scrollRef: React.RefObject<HTMLDivElement | null>;
   activeTab: TabKey;
   selectedSurahId: number | null;
   selectedJuzId: number | null;

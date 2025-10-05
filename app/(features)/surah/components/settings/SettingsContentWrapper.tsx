@@ -2,9 +2,9 @@
 
 import { SettingsContent } from './SettingsContent';
 import { SettingsTabs } from './SettingsTabs';
-import type { ReactElement } from 'react';
-
 import { SettingsContentWrapperProps } from './types';
+
+import type { ReactElement } from 'react';
 
 export const SettingsContentWrapper = ({
   activeTab,

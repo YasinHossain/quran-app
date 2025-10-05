@@ -45,4 +45,3 @@ export function useSelectedNames({
 
   return { selectedTranslationName, selectedWordLanguageName };
 }
-

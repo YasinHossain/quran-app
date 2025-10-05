@@ -53,10 +53,10 @@ export function parseComponent(filePath: string): Component | null {
     const nameMatch = content.match(/export\s+const\s+(\w+).*React\.FC/);
     if (!nameMatch) return null;
 
-    const name = nameMatch[1];
+    const name = nameMatch?.[1] ?? 'Unknown';
 
     const propsMatch = content.match(/interface\s+(\w+Props)\s*{([^}]*)}/s);
-    const props = propsMatch ? parseProps(propsMatch[2]) : [];
+    const props = propsMatch?.[2] ? parseProps(propsMatch[2]) : [];
 
     const type = determineComponentType(filePath);
 
@@ -85,7 +85,7 @@ function determineComponentType(filePath: string): string {
 function extractDescription(content: string): string {
   const commentMatch = content.match(/\/\*\*\s*\n\s*\*\s*(.+?)\s*\n/);
   if (commentMatch) {
-    return commentMatch[1];
+    return commentMatch[1] ?? 'Component description not available';
   }
   return 'Component description not available';
 }
@@ -105,8 +105,9 @@ export function extractMethods(content: string): string[] {
   );
 
   for (const match of methodMatches) {
-    if (!['constructor'].includes(match[1])) {
-      methods.push(match[1]);
+    const name = match[1];
+    if (name && !['constructor'].includes(name)) {
+      methods.push(name);
     }
   }
 

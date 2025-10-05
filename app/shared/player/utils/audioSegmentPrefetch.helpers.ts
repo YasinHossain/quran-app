@@ -106,11 +106,14 @@ export async function runAudioBatchPrefetch(
   const results: AudioPrefetchResult[] = [];
 
   for (let index = 0; index < batches.length; index += 1) {
-    const batch = batches[index];
+    const batch = batches[index] ?? [];
     const batchResults = await Promise.all(
       batch.map(async (item) => {
         const startTime = performance.now();
-        const success = await prefetchAudioStart(item.url, { priority: item.priority });
+        const success = await prefetchAudioStart(
+          item.url,
+          item.priority ? { priority: item.priority } : {}
+        );
         const duration = performance.now() - startTime;
 
         return {

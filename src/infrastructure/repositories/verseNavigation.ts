@@ -11,9 +11,9 @@ export const findNext = async (
 ): Promise<Verse | null> => {
   try {
     const current = await apiVerses.getVerseById(currentVerseId, translationId);
-    const [surahIdStr, ayahStr] = current.verse_key.split(':');
-    const surahId = parseInt(surahIdStr);
-    const ayahNumber = parseInt(ayahStr);
+    const parts = current.verse_key.split(':');
+    const surahId = parseInt(parts[0] ?? '0', 10);
+    const ayahNumber = parseInt(parts[1] ?? '0', 10);
 
     try {
       const next = await apiVerses.getVerseByKey(`${surahId}:${ayahNumber + 1}`, translationId);
@@ -37,9 +37,9 @@ export const findPrevious = async (
 ): Promise<Verse | null> => {
   try {
     const current = await apiVerses.getVerseById(currentVerseId, translationId);
-    const [surahIdStr, ayahStr] = current.verse_key.split(':');
-    const surahId = parseInt(surahIdStr);
-    const ayahNumber = parseInt(ayahStr);
+    const parts = current.verse_key.split(':');
+    const surahId = parseInt(parts[0] ?? '0', 10);
+    const ayahNumber = parseInt(parts[1] ?? '0', 10);
 
     if (ayahNumber > 1) {
       const prev = await apiVerses.getVerseByKey(`${surahId}:${ayahNumber - 1}`, translationId);

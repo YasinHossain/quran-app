@@ -117,7 +117,8 @@ export const useTafsirSelection = (domainTafsirs: Tafsir[]): UseTafsirSelectionR
     setTafsirIds([...core.orderedSelection]);
   }, [core.orderedSelection, setTafsirIds]);
 
-  const { ...rest } = core;
+  const { handleSelectionToggle: _handleSelectionToggle, ...rest } = core;
+  void _handleSelectionToggle;
 
   return composeSelectionReturn({
     tafsirs,

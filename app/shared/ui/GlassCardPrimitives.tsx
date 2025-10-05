@@ -4,7 +4,7 @@ import React, { memo } from 'react';
 
 import { cn } from '@/lib/utils/cn';
 
-interface GlassCardLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+interface GlassCardLinkProps {
   className: string;
   children: React.ReactNode;
   href: string;
@@ -12,11 +12,11 @@ interface GlassCardLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElemen
 
 export const GlassCardLink = memo(
   React.forwardRef<HTMLAnchorElement, GlassCardLinkProps>(function GlassCardLink(
-    { className, children, ...props },
+    { className, children, href },
     ref
   ) {
     return (
-      <Link ref={ref} className={cn('group', className)} {...props}>
+      <Link ref={ref} href={href} className={cn('group', className)}>
         {children}
       </Link>
     );

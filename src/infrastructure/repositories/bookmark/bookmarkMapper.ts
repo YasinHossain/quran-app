@@ -13,7 +13,7 @@ export function toDomain(stored: StoredBookmark): Bookmark {
       new Date(stored.position.timestamp)
     ),
     createdAt: new Date(stored.createdAt),
-    notes: stored.notes,
+    ...(stored.notes !== undefined ? { notes: stored.notes } : {}),
     tags: stored.tags || [],
   });
 }

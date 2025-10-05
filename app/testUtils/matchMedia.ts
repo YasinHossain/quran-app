@@ -21,6 +21,5 @@ export function setMatchMedia(matches: boolean): void {
     value: create(matches),
   });
   // Mirror on global for any code accessing global.matchMedia
-  // @ts-expect-error - Node typings don't include matchMedia on global
   global.matchMedia = window.matchMedia;
 }

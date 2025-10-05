@@ -21,7 +21,7 @@ export class Surah {
   public readonly englishTranslation: string;
   public readonly numberOfAyahs: number;
   public readonly revelationType: RevelationType;
-  public readonly revelationOrder?: number;
+  public readonly revelationOrder: number | undefined;
 
   constructor(init: SurahInit);
   constructor(
@@ -74,7 +74,13 @@ export class Surah {
       this.revelationType = revelationType;
       this.revelationOrder = revelationOrder;
     }
-    validateSurahInputs(this);
+    validateSurahInputs({
+      id: this.id,
+      name: this.name,
+      arabicName: this.arabicName,
+      englishName: this.englishName,
+      numberOfAyahs: this.numberOfAyahs,
+    });
   }
 
   /** Checks if this Surah was revealed in Makkah */

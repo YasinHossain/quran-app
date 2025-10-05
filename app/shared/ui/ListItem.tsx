@@ -1,6 +1,6 @@
 'use client';
 
-import { memo } from 'react';
+import React, { memo } from 'react';
 
 import { cn } from '@/lib/utils/cn';
 
@@ -13,7 +13,7 @@ export const ListItem = memo(function ListItem({
   onClick,
   className,
   children,
-}: ListItemProps): JSX.Element {
+}: ListItemProps): React.JSX.Element {
   const Component = onClick ? 'button' : 'div';
 
   return (
@@ -41,7 +41,7 @@ export const NavigationItem = memo(function NavigationItem({
   count,
   className,
   children,
-}: NavigationItemProps): JSX.Element {
+}: NavigationItemProps): React.JSX.Element {
   const baseClasses = cn(
     'flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
     isActive

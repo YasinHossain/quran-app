@@ -87,7 +87,11 @@ export const PanelModalCenter = memo(function PanelModalCenter({
           role="dialog"
           aria-modal="true"
         >
-          <PanelHeader title={title} showCloseButton={showCloseButton} onClose={onClose} />
+          <PanelHeader
+            {...(title !== undefined ? { title } : {})}
+            showCloseButton={showCloseButton}
+            onClose={onClose}
+          />
           <div className="flex-1">{children}</div>
         </div>
       </div>

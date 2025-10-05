@@ -16,7 +16,7 @@ type CoreReturn = ReturnType<typeof useTrackTiming> &
     timing: ReturnType<typeof useTrackTiming>;
     isPlayerVisible: boolean;
     closePlayer: () => void;
-    audioRef: React.RefObject<HTMLAudioElement>;
+    audioRef: React.MutableRefObject<HTMLAudioElement | null>;
     isPlaying: boolean;
   };
 
@@ -31,7 +31,7 @@ function useCoreDeps(
 } {
   const audio = useAudio();
   const timing = useTrackTiming({
-    track,
+    ...(track !== undefined ? { track } : {}),
     volume: audio.volume,
     playbackRate: audio.playbackRate,
     contextRef: audio.audioRef,
@@ -40,14 +40,12 @@ function useCoreDeps(
     timing,
     isPlaying: audio.isPlaying,
     setIsPlaying: audio.setIsPlaying,
-    setPlayingId: audio.setPlayingId as unknown as React.Dispatch<
-      React.SetStateAction<string | null>
-    >, // keep existing external type expectations
+    setPlayingId: audio.setPlayingId,
     activeVerse: audio.activeVerse,
     setVolume: audio.setVolume,
     repeatOptions: audio.repeatOptions,
-    onNext,
-    onPrev,
+    ...(onNext ? { onNext } : {}),
+    ...(onPrev ? { onPrev } : {}),
   });
   return { audio, timing, setup } as const;
 }
@@ -57,7 +55,6 @@ export function useAudioControllerCore({ track, onPrev, onNext }: Options): Core
   return {
     isPlayerVisible: audio.isPlayerVisible,
     closePlayer: audio.closePlayer,
-    audioRef: audio.audioRef,
     isPlaying: audio.isPlaying,
     timing,
     ...timing,

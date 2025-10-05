@@ -1,10 +1,10 @@
 'use client';
 
-import type { ReactElement } from 'react';
-
 import { AlertIcon } from '@/app/shared/icons';
 
 import { MAX_TAFSIR_SELECTIONS } from './tafsirPanel.utils';
+
+import type { ReactElement } from 'react';
 
 interface TafsirLimitWarningProps {
   show: boolean;

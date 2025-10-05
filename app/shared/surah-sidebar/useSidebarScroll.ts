@@ -19,7 +19,7 @@ export const useSidebarScroll = ({
   selectedPageId,
   isEnabled,
 }: Options): {
-  scrollRef: React.RefObject<HTMLDivElement>;
+  scrollRef: React.RefObject<HTMLDivElement | null>;
   handleScroll: (event: UIEvent<HTMLDivElement>) => void;
   prepareForTabSwitch: (nextTab: TabKey) => void;
   rememberScroll: (tab: TabKey) => void;

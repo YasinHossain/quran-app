@@ -46,8 +46,8 @@ export class BookmarkService {
       userId,
       verse,
       position,
-      notes,
-      tags,
+      ...(notes ? { notes } : {}),
+      ...(tags ? { tags } : {}),
     });
     await this.bookmarkRepository.save(bookmark);
     return bookmark;
@@ -113,7 +113,13 @@ export class BookmarkService {
       string?,
       string[]?,
     ];
-    return { userId, surahId, ayahNumber, notes, tags };
+    return {
+      userId,
+      surahId,
+      ayahNumber,
+      ...(notes ? { notes } : {}),
+      ...(tags ? { tags } : {}),
+    };
   }
 
   private async getVerseOrThrow(surahId: number, ayahNumber: number): Promise<Verse> {
@@ -149,8 +155,8 @@ export class BookmarkService {
       verseId: verse.id,
       position,
       createdAt: new Date(),
-      notes,
-      tags,
+      ...(notes ? { notes } : {}),
+      ...(tags ? { tags } : {}),
     });
   }
 

@@ -9,7 +9,7 @@ export class AuthenticationError extends ApplicationError {
     super(message, 'AUTHENTICATION_ERROR', 401, true, context, cause);
   }
 
-  getUserMessage(): string {
+  override getUserMessage(): string {
     return 'Please sign in to continue.';
   }
 }
@@ -23,7 +23,7 @@ export class AuthorizationError extends ApplicationError {
     super(message, 'AUTHORIZATION_ERROR', 403, true, context, cause);
   }
 
-  getUserMessage(): string {
+  override getUserMessage(): string {
     return 'You do not have permission to perform this action.';
   }
 }

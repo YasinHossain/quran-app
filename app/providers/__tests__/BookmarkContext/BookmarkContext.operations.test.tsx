@@ -31,14 +31,14 @@ beforeEach(() => {
 it('creates a new folder', async () => {
   await renderComponent();
   await userEvent.click(screen.getByText('Create Folder'));
-    await waitFor(() => {
-      const folders = getFolders();
-      expect(folders).toHaveLength(1);
-      const firstFolder = folders[0];
-      if (!firstFolder) {
-        throw new Error('Expected folder to exist when verifying creation');
-      }
-      expect(firstFolder.name).toBe('Test Folder');
+  await waitFor(() => {
+    const folders = getFolders();
+    expect(folders).toHaveLength(1);
+    const firstFolder = folders[0];
+    if (!firstFolder) {
+      throw new Error('Expected folder to exist when verifying creation');
+    }
+    expect(firstFolder.name).toBe('Test Folder');
   });
 });
 

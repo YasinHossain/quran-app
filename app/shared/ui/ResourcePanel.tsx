@@ -63,7 +63,7 @@ export const ResourcePanel = memo(function ResourcePanel<T extends ResourceItem>
             onClose={onClose}
             loading={loading}
             emptyStateMessage={emptyStateMessage}
-            renderItem={renderItem}
+            {...(renderItem ? { renderItem } : {})}
           />
         </div>
       </div>

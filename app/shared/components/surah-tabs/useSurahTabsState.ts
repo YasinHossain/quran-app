@@ -26,7 +26,7 @@ export interface SurahTabsState {
   setSelectedJuzId: (id: number | null) => void;
   selectedPageId: number | null;
   setSelectedPageId: (id: number | null) => void;
-  scrollRef: RefObject<HTMLDivElement>;
+  scrollRef: RefObject<HTMLDivElement | null>;
   handleScroll: (e: UIEvent<HTMLDivElement>) => void;
   prepareForTabSwitch: (tab: TabKey) => void;
   rememberScroll: (tab: TabKey) => void;
