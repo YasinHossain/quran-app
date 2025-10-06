@@ -8,23 +8,18 @@ import { BookmarksMainContent } from './layout/BookmarksMainContent';
 import { BookmarksMobileSidebarOverlay } from './layout/BookmarksMobileSidebarOverlay';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
-import type { Folder } from '@/types/bookmark';
 import type { ReactNode } from 'react';
 
 interface BookmarksLayoutProps {
   children: ReactNode;
   activeSection: SectionId;
   onSectionChange: (section: SectionId) => void;
-  folders?: Folder[];
-  onVerseClick?: ((verseKey: string) => void) | undefined;
 }
 
 export const BookmarksLayout = ({
   children,
   activeSection,
   onSectionChange,
-  folders = [],
-  onVerseClick,
 }: BookmarksLayoutProps): React.JSX.Element => {
   const { isHidden } = useHeaderVisibility();
   const { isBookmarkSidebarOpen, setBookmarkSidebarOpen } = useSidebar();
@@ -35,8 +30,6 @@ export const BookmarksLayout = ({
         <BookmarksDesktopSidebar
           activeSection={activeSection}
           onSectionChange={onSectionChange}
-          folders={folders}
-          onVerseClick={onVerseClick}
         />
         <BookmarksMainContent isHeaderHidden={isHidden}>{children}</BookmarksMainContent>
       </div>
@@ -45,8 +38,6 @@ export const BookmarksLayout = ({
         onClose={() => setBookmarkSidebarOpen(false)}
         activeSection={activeSection}
         onSectionChange={onSectionChange}
-        folders={folders}
-        onVerseClick={onVerseClick}
       />
     </>
   );

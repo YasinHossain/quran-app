@@ -3,44 +3,53 @@ import { render } from '@testing-library/react';
 import { BookmarkFolderClient } from '@/app/(features)/bookmarks/[folderId]/BookmarkFolderClient';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
-jest.mock('@/app/(features)/layout/context/HeaderVisibilityContext', () => ({
-  useHeaderVisibility: () => ({ isHidden: false }),
+const bookmarkFolderViewSpy = jest.fn();
+const useBookmarkFolderControllerMock = jest.fn();
+
+jest.mock('../components/BookmarkFolderView', () => ({
+  BookmarkFolderView: (props: Record<string, unknown>) => {
+    bookmarkFolderViewSpy(props);
+    return <div data-testid="bookmark-folder-view" />;
+  },
 }));
 
-jest.mock('@/app/providers/SidebarContext', () => ({
-  useSidebar: () => ({ isBookmarkSidebarOpen: false, setBookmarkSidebarOpen: jest.fn() }),
+jest.mock('../hooks/useBookmarkFolderController', () => ({
+  useBookmarkFolderController: (folderId: string) => useBookmarkFolderControllerMock(folderId),
 }));
 
-jest.mock('../components/Sidebar', () => ({
-  Sidebar: () => <div />,
-}));
+const createControllerMock = () => ({
+  folder: { id: '1', name: 'Test Folder', bookmarks: [] },
+  bookmarks: [],
+  isBookmarkSidebarOpen: false,
+  setBookmarkSidebarOpen: jest.fn(),
+  handleVerseSelect: jest.fn(),
+  handleNavigateToBookmarks: jest.fn(),
+  isHidden: false,
+  folderName: 'Test Folder',
+  activeVerseId: undefined,
+  verses: [],
+  displayVerses: [],
+  loadingVerses: new Set<string>(),
+  isTranslationPanelOpen: false,
+  setIsTranslationPanelOpen: jest.fn(),
+  isWordPanelOpen: false,
+  setIsWordPanelOpen: jest.fn(),
+  selectedTranslationName: 'English',
+  selectedWordLanguageName: 'English',
+});
 
-jest.mock('../components/SettingsSidebar', () => ({
-  SettingsSidebar: () => <div />,
-}));
+describe('BookmarkFolderClient', () => {
+  const originalEnv = process.env['NEXT_PUBLIC_THREE_COLUMN_WORKSPACE'];
 
-jest.mock('../../components/BookmarkVerseList', () => ({
-  BookmarkVerseList: () => <div />,
-}));
+  beforeEach(() => {
+    bookmarkFolderViewSpy.mockClear();
+    useBookmarkFolderControllerMock.mockReturnValue(createControllerMock());
+  });
 
-jest.mock('../hooks', () => ({
-  useBookmarkFolderData: () => ({
-    folder: { name: 'Test Folder' },
-    bookmarks: [],
-    verses: [],
-    loadingVerses: new Set(),
-  }),
-  useBookmarkFolderPanels: () => ({
-    isTranslationPanelOpen: false,
-    setIsTranslationPanelOpen: jest.fn(),
-    isWordPanelOpen: false,
-    setIsWordPanelOpen: jest.fn(),
-    selectedTranslationName: '',
-    selectedWordLanguageName: '',
-  }),
-}));
+  afterEach(() => {
+    process.env['NEXT_PUBLIC_THREE_COLUMN_WORKSPACE'] = originalEnv;
+  });
 
-describe('BookmarkFolderClient logging', () => {
   it('logs render with folderId', () => {
     const debugSpy = jest.spyOn(logger, 'debug').mockImplementation(() => {});
 
@@ -50,5 +59,25 @@ describe('BookmarkFolderClient logging', () => {
       folderId: '1',
     });
     debugSpy.mockRestore();
+  });
+
+  it('passes workspace layout when flag is enabled', () => {
+    process.env['NEXT_PUBLIC_THREE_COLUMN_WORKSPACE'] = 'true';
+
+    render(<BookmarkFolderClient folderId="123" />);
+
+    expect(bookmarkFolderViewSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ layout: 'workspace' })
+    );
+  });
+
+  it('defaults to legacy layout when flag is disabled', () => {
+    process.env['NEXT_PUBLIC_THREE_COLUMN_WORKSPACE'] = 'false';
+
+    render(<BookmarkFolderClient folderId="123" />);
+
+    expect(bookmarkFolderViewSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ layout: 'legacy' })
+    );
   });
 });

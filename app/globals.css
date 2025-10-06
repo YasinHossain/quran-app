@@ -80,6 +80,25 @@
     --z-tooltip: 80;
     /* Modals/overlays should sit above everything */
     --z-modal: 100;
+
+    /* Reader workspace layout tokens */
+    --reader-sidebar-width-left: 20.7rem;
+    --reader-sidebar-width-right: 20rem;
+    --reader-header-height: 4rem;
+    --reader-header-height-compact: 3.5rem;
+    --reader-header-height-hidden: 0px;
+
+    /* Reader safe-area tokens */
+    --reader-safe-area-top: env(safe-area-inset-top, 0px);
+    --reader-safe-area-right: env(safe-area-inset-right, 0px);
+    --reader-safe-area-bottom: env(safe-area-inset-bottom, 0px);
+    --reader-safe-area-left: env(safe-area-inset-left, 0px);
+
+    /* Precomputed safe paddings for shared utilities */
+    --reader-safe-padding-top: max(1rem, var(--reader-safe-area-top));
+    --reader-safe-padding-right: max(1rem, var(--reader-safe-area-right));
+    --reader-safe-padding-bottom: max(1rem, var(--reader-safe-area-bottom));
+    --reader-safe-padding-left: max(1rem, var(--reader-safe-area-left));
   }
 
   .dark {
@@ -224,25 +243,25 @@
 
   /* Safe area support for mobile devices */
   .pb-safe {
-    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    padding-bottom: var(--reader-safe-padding-bottom);
   }
 
   .pt-safe {
-    padding-top: max(1rem, env(safe-area-inset-top));
+    padding-top: var(--reader-safe-padding-top);
   }
 
   .pl-safe {
-    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-left: var(--reader-safe-padding-left);
   }
 
   .pr-safe {
-    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-right: var(--reader-safe-padding-right);
   }
 
   /* Bottom navigation spacing */
   .bottom-nav-space {
     padding-bottom: 3rem;
-    padding-bottom: calc(3rem + env(safe-area-inset-bottom));
+    padding-bottom: calc(3rem + var(--reader-safe-area-bottom));
   }
 
   /* Scrollbar hiding for cleaner mobile experience */
@@ -303,11 +322,11 @@
 
   /* Bottom navigation offsets */
   .bottom-nav-offset {
-    bottom: calc(5rem + env(safe-area-inset-bottom));
+    bottom: calc(5rem + var(--reader-safe-area-bottom));
   }
 
   .bottom-nav-offset-lg {
-    bottom: calc(6rem + env(safe-area-inset-bottom));
+    bottom: calc(6rem + var(--reader-safe-area-bottom));
   }
 }
 

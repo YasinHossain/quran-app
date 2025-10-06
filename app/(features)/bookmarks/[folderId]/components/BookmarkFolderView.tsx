@@ -5,6 +5,9 @@ import React from 'react';
 import { MainContent } from './MainContent';
 import { SettingsSidebar } from './SettingsSidebar';
 import { Sidebar } from './Sidebar';
+import { BookmarkVersesContent } from './BookmarkVersesContent';
+
+import { ThreeColumnWorkspace, WorkspaceMain } from '@/app/shared/reader';
 
 import type { Bookmark, Folder, Verse } from '@/types';
 
@@ -39,7 +42,9 @@ interface SettingsProps {
   selectedWordLanguageName?: string | undefined;
 }
 
-interface BookmarkFolderViewProps extends SidebarProps, MainContentProps, SettingsProps {}
+interface BookmarkFolderViewProps extends SidebarProps, MainContentProps, SettingsProps {
+  layout?: 'legacy' | 'workspace';
+}
 
 const renderSidebar = (sidebarProps: SidebarProps): React.JSX.Element => (
   <Sidebar
@@ -65,6 +70,24 @@ const renderMainContent = (mainProps: MainContentProps): React.JSX.Element => (
   />
 );
 
+const renderWorkspaceMain = (mainProps: MainContentProps): React.JSX.Element => (
+  <WorkspaceMain
+    reserveLeftSpace
+    reserveRightSpace
+    data-slot="bookmarks-workspace-main"
+    contentClassName="pb-6"
+  >
+    <BookmarkVersesContent
+      onNavigateToBookmarks={mainProps.onBack}
+      folderName={mainProps.folderName}
+      activeVerseId={mainProps.activeVerseId}
+      verses={mainProps.verses}
+      displayVerses={mainProps.displayVerses}
+      loadingVerses={mainProps.loadingVerses}
+    />
+  </WorkspaceMain>
+);
+
 const renderSettingsSidebar = (settingsProps: SettingsProps): React.JSX.Element => (
   <SettingsSidebar
     onTranslationPanelOpen={settingsProps.onOpenTranslationPanel}
@@ -79,7 +102,17 @@ const renderSettingsSidebar = (settingsProps: SettingsProps): React.JSX.Element 
   />
 );
 
-export function BookmarkFolderView(props: BookmarkFolderViewProps): React.JSX.Element {
+export function BookmarkFolderView({ layout = 'legacy', ...props }: BookmarkFolderViewProps): React.JSX.Element {
+  if (layout === 'workspace') {
+    return (
+      <>
+        {renderSidebar(props)}
+        {renderSettingsSidebar(props)}
+        <ThreeColumnWorkspace center={renderWorkspaceMain(props)} />
+      </>
+    );
+  }
+
   return (
     <>
       {renderSidebar(props)}

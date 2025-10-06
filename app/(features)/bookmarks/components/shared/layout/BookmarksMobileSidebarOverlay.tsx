@@ -5,15 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { BookmarksSidebar } from '@/app/(features)/bookmarks/components/BookmarksSidebar';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
-import type { Folder } from '@/types/bookmark';
 
 interface BookmarksMobileSidebarOverlayProps {
   isOpen: boolean;
   onClose: () => void;
   activeSection: SectionId;
   onSectionChange: (section: SectionId) => void;
-  folders: Folder[];
-  onVerseClick?: ((verseKey: string) => void) | undefined;
 }
 
 export const BookmarksMobileSidebarOverlay = ({
@@ -21,8 +18,6 @@ export const BookmarksMobileSidebarOverlay = ({
   onClose,
   activeSection,
   onSectionChange,
-  folders,
-  onVerseClick,
 }: BookmarksMobileSidebarOverlayProps): React.JSX.Element => (
   <AnimatePresence>
     {isOpen && (
@@ -44,11 +39,6 @@ export const BookmarksMobileSidebarOverlay = ({
           <BookmarksSidebar
             activeSection={activeSection}
             onSectionChange={onSectionChange}
-            folders={folders}
-            onVerseClick={(verseKey) => {
-              onVerseClick?.(verseKey);
-              onClose();
-            }}
           />
         </motion.aside>
       </>

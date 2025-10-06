@@ -21,6 +21,8 @@ interface BookmarkFolderClientProps {
 export function BookmarkFolderClient({ folderId }: BookmarkFolderClientProps): React.JSX.Element {
   logger.debug('BookmarkFolderClient rendering', { folderId });
   const controller = useBookmarkFolderController(folderId);
+  const isThreeColumnWorkspaceEnabled =
+    process.env['NEXT_PUBLIC_THREE_COLUMN_WORKSPACE'] === 'true';
 
   if (!controller.folder) {
     return <FolderNotFound />;
@@ -48,6 +50,7 @@ export function BookmarkFolderClient({ folderId }: BookmarkFolderClientProps): R
       onCloseWordPanel={() => controller.setIsWordPanelOpen(false)}
       isWordPanelOpen={controller.isWordPanelOpen}
       selectedWordLanguageName={controller.selectedWordLanguageName}
+      layout={isThreeColumnWorkspaceEnabled ? 'workspace' : 'legacy'}
     />
   );
 }

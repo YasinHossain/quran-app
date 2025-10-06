@@ -7,14 +7,11 @@ import { BaseSidebar } from '@/app/shared/components/BaseSidebar';
 import { BookmarksContent } from './BookmarksContent';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
-import type { Folder } from '@/types/bookmark';
 
 interface BookmarksSidebarProps {
   activeSection?: SectionId;
   onSectionChange?: ((section: SectionId) => void) | undefined;
   children?: React.ReactNode;
-  folders?: Folder[];
-  onVerseClick?: ((verseKey: string) => void) | undefined;
   isOpen?: boolean;
   onClose?: (() => void) | undefined;
 }
@@ -23,20 +20,13 @@ export const BookmarksSidebar = ({
   activeSection = 'bookmarks',
   onSectionChange,
   children,
-  folders = [],
-  onVerseClick,
   isOpen,
   onClose,
 }: BookmarksSidebarProps): React.JSX.Element => {
   // If no isOpen/onClose provided, render content directly (for desktop sidebar)
   if (isOpen === undefined || onClose === undefined) {
     return (
-      <BookmarksContent
-        activeSection={activeSection}
-        {...(onSectionChange && { onSectionChange })}
-        folders={folders}
-        {...(onVerseClick && { onVerseClick })}
-      >
+      <BookmarksContent activeSection={activeSection} {...(onSectionChange && { onSectionChange })}>
         {children}
       </BookmarksContent>
     );
@@ -50,12 +40,7 @@ export const BookmarksSidebar = ({
       position="left"
       aria-label="Bookmarks navigation"
     >
-      <BookmarksContent
-        activeSection={activeSection}
-        {...(onSectionChange && { onSectionChange })}
-        folders={folders}
-        {...(onVerseClick && { onVerseClick })}
-      >
+      <BookmarksContent activeSection={activeSection} {...(onSectionChange && { onSectionChange })}>
         {children}
       </BookmarksContent>
     </BaseSidebar>

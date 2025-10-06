@@ -25,7 +25,7 @@ export const MainContent = ({
   loadingVerses,
   onNavigateToBookmarks,
 }: MainContentProps): React.JSX.Element => (
-  <main className="h-screen text-foreground font-sans lg:ml-[20.7rem] overflow-hidden relative">
+  <main className="h-screen text-foreground font-sans lg:ml-[20.7rem] lg:mr-[20.7rem] overflow-hidden relative">
     <div
       className={`h-full overflow-y-auto px-4 sm:px-6 lg:px-8 pb-6 transition-all duration-300 ${
         isHidden ? 'pt-12 lg:pt-4' : 'pt-24 lg:pt-20'

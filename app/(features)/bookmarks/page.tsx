@@ -9,17 +9,11 @@ import { BookmarksLayout } from './components/shared/BookmarksLayout';
 import { useBookmarksPage } from './hooks/useBookmarksPage';
 
 const BookmarksPage = (): React.JSX.Element => {
-  const { folders, sortedFolders, handleFolderSelect, handleSectionChange, handleVerseClick } =
-    useBookmarksPage();
+  const { sortedFolders, handleFolderSelect, handleSectionChange } = useBookmarksPage();
 
   return (
     <>
-      <BookmarksLayout
-        activeSection="bookmarks"
-        onSectionChange={handleSectionChange}
-        folders={folders}
-        onVerseClick={handleVerseClick}
-      >
+      <BookmarksLayout activeSection="bookmarks" onSectionChange={handleSectionChange}>
         <BookmarksHeader />
 
         <motion.div

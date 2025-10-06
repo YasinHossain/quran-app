@@ -87,6 +87,11 @@ const config = {
         88: '22rem', // 352px
         112: '28rem', // 448px
         128: '32rem', // 512px
+        // Reader workspace layout tokens
+        'reader-sidebar-left': 'var(--reader-sidebar-width-left)',
+        'reader-sidebar-right': 'var(--reader-sidebar-width-right)',
+        'reader-header': 'var(--reader-header-height)',
+        'reader-header-compact': 'var(--reader-header-height-compact)',
       },
       // Mobile-optimized font sizes
       fontSize: {
