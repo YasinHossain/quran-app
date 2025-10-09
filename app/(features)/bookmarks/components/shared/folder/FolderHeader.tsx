@@ -4,6 +4,7 @@ import React from 'react';
 
 import { FolderIcon } from '@/app/shared/icons';
 import { cn } from '@/lib/utils/cn';
+import { applyOpacity } from '@/app/shared/ui/cards/folderColor.utils';
 import { Bookmark, Folder } from '@/types';
 
 interface FolderHeaderProps {
@@ -29,12 +30,26 @@ interface FolderActionsProps {
   folderId: string;
 }
 
-const FolderIconDisplay = ({ folderItem }: FolderIconProps): React.JSX.Element =>
-  folderItem.icon ? (
-    <span className={cn('text-2xl', folderItem.color)}>{folderItem.icon}</span>
-  ) : (
-    <FolderIcon className={cn('w-8 h-8', folderItem.color)} />
-  );
+const FolderIconDisplay = ({ folderItem }: FolderIconProps): React.JSX.Element => (
+  <div
+    className={cn(
+      'relative flex h-10 w-10 items-center justify-center rounded-xl text-accent font-semibold'
+    )}
+    style={{
+      backgroundColor: applyOpacity('rgb(var(--color-accent))', 0.1),
+      boxShadow: `0 6px 16px -12px ${applyOpacity('rgb(var(--color-accent))', 0.5)}`,
+    }}
+    aria-hidden="true"
+  >
+    {folderItem.icon ? (
+      <span className={cn('text-base leading-none', folderItem.color || 'text-accent')}>
+        {folderItem.icon}
+      </span>
+    ) : (
+      <FolderIcon className="w-5 h-5 text-accent" />
+    )}
+  </div>
+);
 
 const FolderInfo = ({ folderItem, folderBookmarks }: FolderInfoProps): React.JSX.Element => (
   <div>

@@ -55,12 +55,15 @@ export const CARD_VARIANTS: Record<string, CardVariant> = {
     padding: 'p-6',
     borderRadius: 'rounded-xl',
     background: {
-      inactive: 'bg-surface border border-border',
-      active: 'bg-surface border border-border',
+      // Align folder cards with the look used in BookmarkFolderCard
+      // Slightly translucent surface with subtle blur and lighter border
+      inactive: 'bg-surface/80 backdrop-blur-sm border border-border/40',
+      active: 'bg-surface/80 backdrop-blur-sm border border-border/40',
     },
     hover: {
       effect: 'translate',
-      value: 'hover:-translate-y-1 hover:shadow-lg hover:border-accent/20',
+      // Add hover background to better surface elevation changes
+      value: 'hover:-translate-y-1 hover:shadow-lg hover:border-accent/20 hover:bg-surface-hover',
       duration: 'transition-all duration-300',
     },
     shadow: {
