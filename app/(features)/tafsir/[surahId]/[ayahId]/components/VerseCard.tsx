@@ -1,24 +1,20 @@
 'use client';
+
 import { useCallback, type JSX } from 'react';
 
+import { useVerseCard } from '@/app/(features)/surah/components/verse-card/useVerseCard';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { useAudio } from '@/app/shared/player/context/AudioContext';
+import { ReaderVerseCard } from '@/app/shared/reader';
 import { Verse as VerseType } from '@/types';
-
-import { VerseActions } from './verse-card/VerseActions';
-import { VerseContent } from './verse-card/VerseContent';
 
 interface VerseCardProps {
   verse: VerseType;
 }
 
 export function VerseCard({ verse }: VerseCardProps): JSX.Element {
-  const { addBookmark, removeBookmark, findBookmark, isBookmarked } = useBookmarks();
-  const { playingId, loadingId, isPlaying: globalIsPlaying } = useAudio();
-
-  const isVersePlaying = playingId === verse.id && globalIsPlaying;
-  const isVerseLoading = loadingId === verse.id;
-  const isVerseBookmarked = isBookmarked(String(verse.id));
+  const { addBookmark, removeBookmark, findBookmark } = useBookmarks();
+  const { verseRef, isPlaying, isLoadingAudio, isVerseBookmarked, handlePlayPause } =
+    useVerseCard(verse);
 
   const handleBookmark = useCallback(() => {
     const verseId = String(verse.id);
@@ -26,24 +22,28 @@ export function VerseCard({ verse }: VerseCardProps): JSX.Element {
     if (bookmarkInfo) {
       removeBookmark(verseId, bookmarkInfo.folder.id);
     } else {
-      addBookmark(verseId);
+      addBookmark(verseId, undefined, {
+        verseKey: verse.verse_key,
+        verseApiId: verse.id,
+        verseText: verse.text_uthmani,
+        translation: verse.translations?.[0]?.text,
+      });
     }
-  }, [addBookmark, removeBookmark, findBookmark, verse.id]);
+  }, [addBookmark, removeBookmark, findBookmark, verse]);
 
   return (
-    <div className="relative rounded-md border bg-surface p-6 shadow">
-      {/* Mobile: stacked layout, Desktop: side-by-side */}
-      <div className="space-y-4 md:space-y-0 md:flex md:items-start md:gap-x-6">
-        <VerseActions
-          verse={verse}
-          isPlaying={isVersePlaying}
-          isLoadingAudio={isVerseLoading}
-          isVerseBookmarked={isVerseBookmarked}
-          onBookmark={handleBookmark}
-        />
-
-        <VerseContent verse={verse} />
-      </div>
-    </div>
+    <ReaderVerseCard
+      ref={verseRef}
+      verse={verse}
+      actions={{
+        verseKey: verse.verse_key,
+        verseId: String(verse.id),
+        isPlaying,
+        isLoadingAudio,
+        isBookmarked: isVerseBookmarked,
+        onPlayPause: handlePlayPause,
+        onBookmark: handleBookmark,
+      }}
+    />
   );
 }

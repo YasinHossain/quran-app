@@ -5,7 +5,7 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import { getVerseById, getVerseByKey } from '@/lib/api';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
-import type { Bookmark, Folder, Verse } from '@/types';
+import type { Bookmark, Folder, Verse, Chapter } from '@/types';
 
 // Simple cache for verses
 const verseCache = new Map<string, Verse>();
@@ -21,7 +21,28 @@ export function clearCache(): void {
 // Expose cache for testing purposes
 export const __verseCache = verseCache;
 
-export async function getVerseWithCache(verseId: string, translationId: number): Promise<Verse> {
+const inferVerseKeyFromId = (rawId: string, chapters: Chapter[]): string | null => {
+  const numericId = Number.parseInt(rawId, 10);
+  if (!Number.isFinite(numericId) || numericId <= 0) return null;
+
+  let remaining = numericId;
+  const orderedChapters = [...chapters].sort((a, b) => a.id - b.id);
+
+  for (const chapter of orderedChapters) {
+    if (remaining <= chapter.verses_count) {
+      return `${chapter.id}:${remaining}`;
+    }
+    remaining -= chapter.verses_count;
+  }
+
+  return null;
+};
+
+export async function getVerseWithCache(
+  verseId: string,
+  translationId: number,
+  chapters: Chapter[]
+): Promise<Verse> {
   const cacheKey = `${verseId}-${translationId}`;
 
   if (verseCache.has(cacheKey)) {
@@ -32,21 +53,22 @@ export async function getVerseWithCache(verseId: string, translationId: number):
     return verse;
   }
 
-  // Check if verseId is a composite key (e.g., "2:255") or a simple number
   const isCompositeKey = /:/.test(verseId);
-  const isSimpleNumber = /^[0-9]+$/.test(verseId);
+  let verse: Verse;
 
-  let verse;
   if (isCompositeKey) {
-    // It's already a verse key like "2:255"
     verse = await getVerseByKey(verseId, translationId);
-  } else if (isSimpleNumber) {
-    // It's a simple number like "1", "2", "3" - assume it's "1:1", "1:2", "1:3"
-    const verseKey = `1:${verseId}`;
-    verse = await getVerseByKey(verseKey, translationId);
   } else {
-    // Try as direct verse ID
-    verse = await getVerseById(verseId, translationId);
+    const inferredKey = inferVerseKeyFromId(verseId, chapters);
+    if (inferredKey) {
+      try {
+        verse = await getVerseByKey(inferredKey, translationId);
+      } catch {
+        verse = await getVerseById(verseId, translationId);
+      }
+    } else {
+      verse = await getVerseById(verseId, translationId);
+    }
   }
 
   // Enforce cache size limit (LRU)
@@ -72,7 +94,7 @@ export function useBookmarkFolderData({ folderId }: UseBookmarkFolderDataParams)
   verses: Verse[];
   loadingVerses: Set<string>;
 } {
-  const { folders } = useBookmarks();
+  const { folders, chapters } = useBookmarks();
   const { settings } = useSettings();
   const [verses, setVerses] = useState<Verse[]>([]);
   const [loadingVerses, setLoadingVerses] = useState<Set<string>>(new Set());
@@ -93,9 +115,13 @@ export function useBookmarkFolderData({ folderId }: UseBookmarkFolderDataParams)
 
       setLoadingVerses(new Set(verseIds));
 
+      if (!chapters.length) {
+        return;
+      }
+
       try {
         const loadedVerses = await Promise.all(
-          verseIds.map((id) => getVerseWithCache(id, settings.translationId))
+          verseIds.map((id) => getVerseWithCache(id, settings.translationId, chapters))
         );
         setVerses(loadedVerses);
       } catch (error) {
@@ -107,7 +133,7 @@ export function useBookmarkFolderData({ folderId }: UseBookmarkFolderDataParams)
     };
 
     loadAllVerses();
-  }, [bookmarks, settings.translationId]);
+  }, [bookmarks, settings.translationId, chapters]);
 
   return {
     folder,

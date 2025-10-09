@@ -45,13 +45,13 @@ const useSidebarClasses = ({ variant, sidebarOpen, hasSidebar }: SidebarClassesO
       case 'default':
         return cn(
           baseClasses,
-          'fixed top-16 right-0 bottom-0 w-80 border-l rounded-tl-2xl',
+          'fixed top-reader-header right-0 bottom-0 w-reader-sidebar-right border-l rounded-tl-2xl',
           sidebarOpen ? 'translate-x-0' : 'translate-x-full'
         );
       case 'expanded':
         return cn(
           baseClasses,
-          'static w-80 h-full border rounded-xl',
+          'static h-full w-reader-sidebar-right border rounded-xl',
           sidebarOpen ? 'block' : 'hidden'
         );
       default:

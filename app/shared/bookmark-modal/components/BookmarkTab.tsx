@@ -10,6 +10,7 @@ import { BookmarkTabHeader } from './BookmarkTabHeader';
 
 export const BookmarkTab = memo(function BookmarkTab({
   verseId,
+  verseKey,
   isCreatingFolder,
   newFolderName,
   onToggleCreateFolder,
@@ -24,6 +25,7 @@ export const BookmarkTab = memo(function BookmarkTab({
     findBookmark,
   } = useBookmarkTab({
     verseId,
+    verseKey,
     newFolderName,
     onNewFolderNameChange,
     onToggleCreateFolder,

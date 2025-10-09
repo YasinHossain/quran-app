@@ -1,15 +1,18 @@
 'use client';
 import React from 'react';
 
-import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { SettingsSidebar } from '@/app/(features)/surah/components';
+import { SurahWorkspaceNavigation } from '@/app/(features)/surah/components/surah-view/SurahWorkspaceNavigation';
 import { useTafsirVerseData } from '@/app/(features)/tafsir/hooks/useTafsirVerseData';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
+import { ThreeColumnWorkspace, WorkspaceMain } from '@/app/shared/reader';
+import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
 import { Surah } from '@/types';
 
 import { AyahNavigation } from './components/AyahNavigation';
 import { TafsirAudioPlayer } from './components/TafsirAudioPlayer';
 import { TafsirViewer } from './components/TafsirViewer';
+import { TafsirWorkspaceSettings } from './components/TafsirWorkspaceSettings';
 import { useBodyScrollLock, usePanelsState } from './useTafsirPanels';
 
 interface TafsirVersePageProps {
@@ -18,7 +21,6 @@ interface TafsirVersePageProps {
 
 export default function TafsirVersePage({ params }: TafsirVersePageProps): React.JSX.Element {
   const { surahId, ayahId } = React.use(params);
-  const { isHidden } = useHeaderVisibility();
   const { activeVerse, isPlayerVisible, reciter } = useAudio();
   const {
     verse,
@@ -38,23 +40,48 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps): React
 
   return (
     <>
-      <TafsirMain
-        isHidden={isHidden}
-        prev={prev}
-        next={next}
-        navigate={navigate}
-        currentSurah={currentSurah}
-        ayahId={ayahId}
-        verse={verse}
-        tafsirResource={tafsirResource}
-        tafsirHtml={tafsirHtml}
-      />
+      <div className="lg:hidden">
+        <SurahListSidebar />
+        <TafsirSettingsSidebar
+          panels={panels}
+          selectedTranslationName={selectedTranslationName}
+          selectedTafsirName={selectedTafsirName}
+          selectedWordLanguageName={selectedWordLanguageName}
+        />
+      </div>
 
-      <TafsirSettingsSidebar
-        panels={panels}
-        selectedTranslationName={selectedTranslationName}
-        selectedTafsirName={selectedTafsirName}
-        selectedWordLanguageName={selectedWordLanguageName}
+      <ThreeColumnWorkspace
+        left={<SurahWorkspaceNavigation />}
+        center={
+          <WorkspaceMain data-slot="tafsir-workspace-main" contentClassName="pt-4">
+            <TafsirContent
+              prev={prev}
+              next={next}
+              navigate={navigate}
+              currentSurah={currentSurah}
+              ayahId={ayahId}
+              verse={verse}
+              tafsirResource={tafsirResource}
+              tafsirHtml={tafsirHtml}
+            />
+          </WorkspaceMain>
+        }
+        right={
+          <TafsirWorkspaceSettings
+            selectedTranslationName={selectedTranslationName}
+            selectedTafsirName={selectedTafsirName}
+            selectedWordLanguageName={selectedWordLanguageName}
+            isTranslationPanelOpen={panels.isTranslationPanelOpen}
+            onTranslationPanelOpen={panels.openTranslationPanel}
+            onTranslationPanelClose={panels.closeTranslationPanel}
+            isTafsirPanelOpen={panels.isTafsirPanelOpen}
+            onTafsirPanelOpen={panels.openTafsirPanel}
+            onTafsirPanelClose={panels.closeTafsirPanel}
+            isWordLanguagePanelOpen={panels.isWordPanelOpen}
+            onWordLanguagePanelOpen={panels.openWordPanel}
+            onWordLanguagePanelClose={panels.closeWordPanel}
+          />
+        }
       />
 
       <TafsirAudioPlayer activeVerse={activeVerse} reciter={reciter} isVisible={isPlayerVisible} />
@@ -62,8 +89,7 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps): React
   );
 }
 
-function TafsirMain({
-  isHidden,
+function TafsirContent({
   prev,
   next,
   navigate,
@@ -73,7 +99,6 @@ function TafsirMain({
   tafsirResource,
   tafsirHtml,
 }: {
-  isHidden: boolean;
   prev: { surahId: string; ayahId: number } | null;
   next: { surahId: string; ayahId: number } | null;
   navigate: (target: { surahId: string; ayahId: number } | null) => void;
@@ -84,30 +109,20 @@ function TafsirMain({
   tafsirHtml: Parameters<typeof TafsirViewer>[0]['tafsirHtml'];
 }): React.JSX.Element {
   return (
-    <main className="h-screen text-foreground font-sans lg:mr-[20.7rem] overflow-hidden">
-      <div
-        className={`h-full overflow-y-auto px-4 sm:px-6 lg:px-8 pb-6 transition-all duration-300 ${
-          isHidden
-            ? 'pt-0'
-            : 'pt-[calc(3.5rem+env(safe-area-inset-top))] sm:pt-[calc(4rem+env(safe-area-inset-top))]'
-        }`}
-      >
-        <div className="w-full space-y-6 pt-4">
-          <AyahNavigation
-            prev={prev}
-            next={next}
-            navigate={navigate}
-            {...(currentSurah !== undefined ? { currentSurah } : {})}
-            ayahId={ayahId}
-          />
-          <TafsirViewer
-            {...(verse !== undefined ? { verse } : {})}
-            {...(tafsirResource !== undefined ? { tafsirResource } : {})}
-            {...(tafsirHtml !== undefined ? { tafsirHtml } : {})}
-          />
-        </div>
-      </div>
-    </main>
+    <>
+      <AyahNavigation
+        prev={prev}
+        next={next}
+        navigate={navigate}
+        {...(currentSurah !== undefined ? { currentSurah } : {})}
+        ayahId={ayahId}
+      />
+      <TafsirViewer
+        {...(verse !== undefined ? { verse } : {})}
+        {...(tafsirResource !== undefined ? { tafsirResource } : {})}
+        {...(tafsirHtml !== undefined ? { tafsirHtml } : {})}
+      />
+    </>
   );
 }
 

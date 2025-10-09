@@ -29,21 +29,23 @@ export function WorkspaceMain({
   ...rest
 }: WorkspaceMainProps): React.JSX.Element {
   const { isHidden } = useHeaderVisibility();
-  const { hasLeftSidebar, hasRightSidebar } = useWorkspaceColumns();
+  const { isRootHeaderAware } = useWorkspaceColumns();
 
-  const shouldReserveLeft = reserveLeftSpace ?? hasLeftSidebar;
-  const shouldReserveRight = reserveRightSpace ?? hasRightSidebar;
+  const shouldReserveLeft = reserveLeftSpace ?? false;
+  const shouldReserveRight = reserveRightSpace ?? false;
 
-  const topPaddingClass = isHidden
-    ? 'pt-[calc(var(--reader-safe-area-top))]'
-    : 'pt-[calc(var(--reader-header-height)+var(--reader-safe-area-top))]';
+  const topPaddingClass = isRootHeaderAware
+    ? null
+    : isHidden
+      ? 'pt-[calc(var(--reader-safe-area-top))]'
+      : 'pt-[calc(var(--reader-header-height)+var(--reader-safe-area-top))]';
 
   return (
     <Component
       {...rest}
       data-slot={dataSlot ?? 'workspace-main'}
       className={cn(
-        'relative flex min-h-screen flex-1 flex-col overflow-y-auto bg-surface text-foreground',
+        'relative flex flex-1 flex-col overflow-y-auto bg-surface text-foreground min-h-0',
         topPaddingClass,
         'pb-safe',
         shouldReserveLeft && 'lg:pl-reader-sidebar-left',
@@ -51,7 +53,12 @@ export function WorkspaceMain({
         className
       )}
     >
-      <div className={cn('flex flex-1 flex-col gap-6 px-4 pb-16 sm:px-6 lg:px-8', contentClassName)}>
+      <div
+        className={cn(
+          'flex flex-1 flex-col gap-6 px-4 pb-16 pt-6 sm:px-6 sm:pt-8 lg:px-8',
+          contentClassName
+        )}
+      >
         {children}
       </div>
     </Component>

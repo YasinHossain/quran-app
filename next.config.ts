@@ -17,7 +17,7 @@ const cspHeader = `
   font-src 'self' https://fonts.gstatic.com data:;
   img-src 'self' data: https: blob:;
   media-src 'self' https: blob:;
-  connect-src 'self' https://api.quran.com https://api.quran.gading.dev https://raw.githubusercontent.com https://archive.org;
+  connect-src 'self' https://api.quran.com https://api.quran.gading.dev https://api.qurancdn.com https://raw.githubusercontent.com https://archive.org;
   worker-src 'self' blob:;
   child-src 'self' blob:;
   form-action 'self';

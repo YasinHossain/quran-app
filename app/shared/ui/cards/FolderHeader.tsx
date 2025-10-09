@@ -16,10 +16,8 @@ interface FolderData {
 interface FolderHeaderProps {
   folder: FolderData;
   bookmarkCount: number;
-  onEdit: () => void;
   onDelete: () => void;
   onRename: () => void;
-  onColorChange: () => void;
 }
 
 const FolderIconSection = memo(function FolderIconSection({
@@ -62,10 +60,8 @@ const FolderInfoSection = memo(function FolderInfoSection({
 export const FolderHeader = memo(function FolderHeader({
   folder,
   bookmarkCount,
-  onEdit,
   onDelete,
   onRename,
-  onColorChange,
 }: FolderHeaderProps): React.JSX.Element {
   return (
     <div className="flex items-start justify-between mb-4">
@@ -75,10 +71,8 @@ export const FolderHeader = memo(function FolderHeader({
       </div>
       <div className="flex-shrink-0">
         <FolderContextMenu
-          onEdit={onEdit}
           onDelete={onDelete}
           onRename={onRename}
-          onColorChange={onColorChange}
         />
       </div>
     </div>

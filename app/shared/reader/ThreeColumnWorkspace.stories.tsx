@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import type { ReactElement } from 'react';
-
 import { ThreeColumnWorkspace } from './ThreeColumnWorkspace';
 import { WorkspaceMain } from './WorkspaceMain';
+
+import type { Meta, StoryObj } from '@storybook/react';
+import type { ReactElement } from 'react';
 
 const DemoSidebar = ({ title }: { title: string }): ReactElement => (
   <div className="flex h-full flex-col gap-4 p-4 text-sm text-content-secondary">
@@ -33,9 +33,9 @@ const DemoMain = ({ heading }: { heading: string }): ReactElement => (
       <section className="space-y-4 text-base leading-7 text-content-secondary">
         {[0, 1, 2].map((paragraph) => (
           <p key={paragraph}>
-            The shared workspace shell keeps the focus on the central reading surface while reserving
-            space for navigation and settings panels. This story helps validate token usage and slot
-            composition without wiring real feature logic.
+            The shared workspace shell keeps the focus on the central reading surface while
+            reserving space for navigation and settings panels. This story helps validate token
+            usage and slot composition without wiring real feature logic.
           </p>
         ))}
       </section>
@@ -66,9 +66,7 @@ export const AllColumns: Story = {
 };
 
 export const CenterOnly: Story = {
-  render: (): ReactElement => (
-    <ThreeColumnWorkspace center={<DemoMain heading="Center Only" />} />
-  ),
+  render: (): ReactElement => <ThreeColumnWorkspace center={<DemoMain heading="Center Only" />} />,
 };
 
 export const LeftAndCenter: Story = {

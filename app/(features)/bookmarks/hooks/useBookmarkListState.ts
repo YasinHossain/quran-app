@@ -33,7 +33,7 @@ export const useBookmarkListState = (
   }, [externalBookmarks, folder.bookmarks]);
 
   const handleRemoveBookmark = (verseId: string): void => {
-    setBookmarks((prev) => prev.filter((bookmark) => bookmark.verseId !== verseId));
+    setBookmarks((prev) => prev.filter((bookmark) => String(bookmark.verseId) !== String(verseId)));
   };
 
   return { bookmarks, listHeight, handleRemoveBookmark };

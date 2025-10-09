@@ -2,16 +2,19 @@
 
 import React, { createContext, useContext, useMemo } from 'react';
 
+import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { cn } from '@/lib/utils/cn';
 
 interface WorkspaceColumnsContextValue {
   hasLeftSidebar: boolean;
   hasRightSidebar: boolean;
+  isRootHeaderAware: boolean;
 }
 
 const WorkspaceColumnsContext = createContext<WorkspaceColumnsContextValue>({
   hasLeftSidebar: false,
   hasRightSidebar: false,
+  isRootHeaderAware: false,
 });
 
 export const useWorkspaceColumns = (): WorkspaceColumnsContextValue =>
@@ -36,11 +39,20 @@ export function ThreeColumnWorkspace({
   rightContainerClassName,
   centerContainerClassName,
 }: ThreeColumnWorkspaceProps): React.JSX.Element {
+  const { isHidden } = useHeaderVisibility();
   const hasLeftSidebar = Boolean(left);
   const hasRightSidebar = Boolean(right);
 
+  const headerOffsetClass = isHidden
+    ? 'pt-[calc(var(--reader-safe-area-top))]'
+    : 'pt-[calc(var(--reader-header-height)+var(--reader-safe-area-top))]';
+
   const workspaceValue = useMemo<WorkspaceColumnsContextValue>(
-    () => ({ hasLeftSidebar, hasRightSidebar }),
+    () => ({
+      hasLeftSidebar,
+      hasRightSidebar,
+      isRootHeaderAware: true,
+    }),
     [hasLeftSidebar, hasRightSidebar]
   );
 
@@ -48,7 +60,9 @@ export function ThreeColumnWorkspace({
     <WorkspaceColumnsContext.Provider value={workspaceValue}>
       <div
         className={cn(
-          'relative flex min-h-screen w-full bg-background text-foreground',
+          'relative flex h-[100dvh] w-full bg-background text-foreground',
+          headerOffsetClass,
+          'pb-safe',
           className
         )}
         data-slot="workspace-root"
@@ -56,8 +70,8 @@ export function ThreeColumnWorkspace({
         {left ? (
           <aside
             className={cn(
-              'hidden lg:flex lg:w-reader-sidebar-left lg:flex-shrink-0 lg:flex-col lg:gap-4',
-              'lg:border-r lg:border-border lg:bg-surface',
+              'hidden lg:flex lg:h-full lg:w-reader-sidebar-left lg:flex-shrink-0 lg:flex-col lg:gap-4',
+              'lg:border-r lg:border-border lg:bg-surface lg:py-6',
               leftContainerClassName
             )}
             data-slot="workspace-left"
@@ -67,7 +81,7 @@ export function ThreeColumnWorkspace({
         ) : null}
 
         <div
-          className={cn('flex min-w-0 flex-1 flex-col', centerContainerClassName)}
+          className={cn('flex min-h-0 min-w-0 flex-1 flex-col', centerContainerClassName)}
           data-slot="workspace-center"
         >
           {center}
@@ -76,8 +90,8 @@ export function ThreeColumnWorkspace({
         {right ? (
           <aside
             className={cn(
-              'hidden lg:flex lg:w-reader-sidebar-right lg:flex-shrink-0 lg:flex-col lg:gap-4',
-              'lg:border-l lg:border-border lg:bg-surface',
+              'hidden lg:flex lg:h-full lg:w-reader-sidebar-right lg:flex-shrink-0 lg:flex-col lg:gap-4',
+              'lg:border-l lg:border-border lg:bg-surface lg:py-6',
               rightContainerClassName
             )}
             data-slot="workspace-right"

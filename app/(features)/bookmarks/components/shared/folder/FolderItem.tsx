@@ -14,8 +14,6 @@ interface FolderItemProps {
   folderBookmarks: Bookmark[];
   onToggle: (folderId: string) => void;
   onSelect: (folderId: string) => void;
-  activeVerseId?: string | undefined;
-  onVerseSelect?: ((verseId: string) => void) | undefined;
 }
 
 export const FolderItem = ({
@@ -25,8 +23,6 @@ export const FolderItem = ({
   folderBookmarks,
   onToggle,
   onSelect,
-  activeVerseId,
-  onVerseSelect,
 }: FolderItemProps): React.JSX.Element => (
   <div
     className={`rounded-2xl shadow-sm transition-all duration-300 ease-in-out ${
@@ -44,8 +40,6 @@ export const FolderItem = ({
       isExpanded={isExpanded}
       isCurrentFolder={isCurrentFolder}
       folderBookmarks={folderBookmarks}
-      activeVerseId={activeVerseId}
-      onVerseSelect={onVerseSelect}
     />
   </div>
 );

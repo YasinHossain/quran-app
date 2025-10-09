@@ -5,6 +5,7 @@ import { Bookmark, Folder } from '@/types';
 
 interface UseBookmarkTabParams {
   verseId: string;
+  verseKey?: string;
   newFolderName: string;
   onNewFolderNameChange: (name: string) => void;
   onToggleCreateFolder: (creating: boolean) => void;
@@ -22,6 +23,7 @@ export interface UseBookmarkTabReturn {
 
 export function useBookmarkTab({
   verseId,
+  verseKey,
   newFolderName,
   onNewFolderNameChange,
   onToggleCreateFolder,
@@ -43,10 +45,10 @@ export function useBookmarkTab({
         removeBookmark(verseId, folder.id);
       } else {
         if (existingBookmark) removeBookmark(verseId, existingBookmark.folder.id);
-        addBookmark(verseId, folder.id);
+        addBookmark(verseId, folder.id, verseKey ? { verseKey } : undefined);
       }
     },
-    [verseId, findBookmark, removeBookmark, addBookmark]
+    [verseId, verseKey, findBookmark, removeBookmark, addBookmark]
   );
 
   const handleCreateFolder = useCallback((): void => {

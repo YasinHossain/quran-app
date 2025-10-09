@@ -11,15 +11,11 @@ import { FolderItem } from './shared/folder';
 interface BookmarkFolderContentProps {
   bookmarks: Bookmark[];
   folder: Folder;
-  activeVerseId?: string | undefined;
-  onVerseSelect?: ((verseId: string) => void) | undefined;
 }
 
 export const BookmarkFolderContent = ({
   bookmarks,
   folder,
-  activeVerseId,
-  onVerseSelect,
 }: BookmarkFolderContentProps): React.JSX.Element => {
   const { folders } = useBookmarks();
   const [expandedFolderId, setExpandedFolderId] = useState<string | null>(folder.id);
@@ -44,14 +40,12 @@ export const BookmarkFolderContent = ({
         folderBookmarks={folderBookmarks}
         onToggle={toggleFolder}
         onSelect={handleFolderSelect}
-        activeVerseId={activeVerseId}
-        onVerseSelect={onVerseSelect}
       />
     );
   };
 
   return (
-    <div className="flex-1 p-4">
+    <div className="flex-1 overflow-y-auto p-4">
       <div className="space-y-3">
         {folders.map((folderItem) => (
           <FolderListItem key={folderItem.id} folderItem={folderItem} />

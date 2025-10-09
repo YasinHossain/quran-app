@@ -11,11 +11,7 @@ interface SurahPageProps {
 async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element> {
   const { surahId } = await params;
 
-  return (
-    <div className="min-h-screen bg-background">
-      <SurahView surahId={surahId} />
-    </div>
-  );
+  return <SurahView surahId={surahId} />;
 }
 
 export default SurahPage;

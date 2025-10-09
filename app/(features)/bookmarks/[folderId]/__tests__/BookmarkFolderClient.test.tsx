@@ -22,13 +22,9 @@ const createControllerMock = () => ({
   bookmarks: [],
   isBookmarkSidebarOpen: false,
   setBookmarkSidebarOpen: jest.fn(),
-  handleVerseSelect: jest.fn(),
   handleNavigateToBookmarks: jest.fn(),
-  isHidden: false,
   folderName: 'Test Folder',
-  activeVerseId: undefined,
   verses: [],
-  displayVerses: [],
   loadingVerses: new Set<string>(),
   isTranslationPanelOpen: false,
   setIsTranslationPanelOpen: jest.fn(),
@@ -39,15 +35,9 @@ const createControllerMock = () => ({
 });
 
 describe('BookmarkFolderClient', () => {
-  const originalEnv = process.env['NEXT_PUBLIC_THREE_COLUMN_WORKSPACE'];
-
   beforeEach(() => {
     bookmarkFolderViewSpy.mockClear();
     useBookmarkFolderControllerMock.mockReturnValue(createControllerMock());
-  });
-
-  afterEach(() => {
-    process.env['NEXT_PUBLIC_THREE_COLUMN_WORKSPACE'] = originalEnv;
   });
 
   it('logs render with folderId', () => {
@@ -61,23 +51,12 @@ describe('BookmarkFolderClient', () => {
     debugSpy.mockRestore();
   });
 
-  it('passes workspace layout when flag is enabled', () => {
-    process.env['NEXT_PUBLIC_THREE_COLUMN_WORKSPACE'] = 'true';
-
+  it('forwards controller props to the view without layout flag', () => {
     render(<BookmarkFolderClient folderId="123" />);
 
-    expect(bookmarkFolderViewSpy).toHaveBeenCalledWith(
-      expect.objectContaining({ layout: 'workspace' })
-    );
-  });
+    const props = bookmarkFolderViewSpy.mock.calls[0][0] as Record<string, unknown>;
 
-  it('defaults to legacy layout when flag is disabled', () => {
-    process.env['NEXT_PUBLIC_THREE_COLUMN_WORKSPACE'] = 'false';
-
-    render(<BookmarkFolderClient folderId="123" />);
-
-    expect(bookmarkFolderViewSpy).toHaveBeenCalledWith(
-      expect.objectContaining({ layout: 'legacy' })
-    );
+    expect(props).toHaveProperty('folderName', 'Test Folder');
+    expect(props).not.toHaveProperty('layout');
   });
 });

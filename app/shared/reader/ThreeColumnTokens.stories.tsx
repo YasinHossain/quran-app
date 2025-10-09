@@ -40,7 +40,8 @@ const DemoPlayground = (): ReactElement => (
       <h2 className="text-xl font-semibold">Safe padding helpers</h2>
       <div className="rounded-lg bg-surface p-4 pb-safe pt-safe">
         <p className="text-sm">
-          `.pt-safe` and `.pb-safe` now expand to the precomputed safe padding variables so reader layouts inherit consistent insets.
+          `.pt-safe` and `.pb-safe` now expand to the precomputed safe padding variables so reader
+          layouts inherit consistent insets.
         </p>
       </div>
     </section>

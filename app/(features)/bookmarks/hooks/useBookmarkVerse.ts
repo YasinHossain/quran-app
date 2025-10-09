@@ -28,13 +28,42 @@ function isCompositeVerseId(id: string): boolean {
   return /:/.test(id) || /[^0-9]/.test(id);
 }
 
+const inferVerseKeyFromId = (rawId: string, chapters: Chapter[]): string | null => {
+  const numericId = Number.parseInt(rawId, 10);
+  if (!Number.isFinite(numericId) || numericId <= 0) return null;
+
+  let remaining = numericId;
+  const orderedChapters = [...chapters].sort((a, b) => a.id - b.id);
+
+  for (const chapter of orderedChapters) {
+    if (remaining <= chapter.verses_count) {
+      return `${chapter.id}:${remaining}`;
+    }
+    remaining -= chapter.verses_count;
+  }
+
+  return null;
+};
+
 async function fetchVerseByIdOrKey(
   verseId: string,
-  translationId: number
+  translationId: number,
+  chapters: Chapter[]
 ): Promise<VerseApiResponse> {
-  return isCompositeVerseId(verseId)
-    ? getVerseByKey(verseId, translationId)
-    : getVerseById(verseId, translationId);
+  if (isCompositeVerseId(verseId)) {
+    return getVerseByKey(verseId, translationId);
+  }
+
+  const inferredKey = inferVerseKeyFromId(verseId, chapters);
+  if (inferredKey) {
+    try {
+      return await getVerseByKey(inferredKey, translationId);
+    } catch {
+      // Fallback to direct ID lookup
+    }
+  }
+
+  return getVerseById(verseId, translationId);
 }
 
 function findSurahNameFromKey(verseKey: string, chapters: Chapter[]): string {
@@ -59,12 +88,13 @@ export function useBookmarkVerse(bookmark: Bookmark, chapters: Chapter[]): UseBo
   useEffect(() => {
     const fetchVerseData = async (): Promise<void> => {
       if (isBookmarkComplete(bookmark)) return;
+      if (chapters.length === 0) return;
 
       setIsLoading(true);
       setError(null);
       try {
         const primaryTransId = getPrimaryTranslationId({ translationIds, translationId });
-        const verse = await fetchVerseByIdOrKey(bookmark.verseId, primaryTransId);
+        const verse = await fetchVerseByIdOrKey(bookmark.verseId, primaryTransId, chapters);
         const surahName = findSurahNameFromKey(verse.verse_key, chapters);
         updateBookmark(bookmark.verseId, {
           verseKey: verse.verse_key,

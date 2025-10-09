@@ -64,10 +64,8 @@ const useContextMenu = (): UseContextMenuResult => {
 };
 
 interface FolderContextMenuProps {
-  onEdit: () => void;
   onDelete: () => void;
   onRename: () => void;
-  onColorChange: () => void;
 }
 
 interface FolderMenuPanelProps extends FolderContextMenuProps {
@@ -75,14 +73,7 @@ interface FolderMenuPanelProps extends FolderContextMenuProps {
   onClose: () => void;
 }
 
-const FolderMenuPanel = ({
-  menuRef,
-  onEdit,
-  onRename,
-  onColorChange,
-  onDelete,
-  onClose,
-}: FolderMenuPanelProps): React.JSX.Element => (
+const FolderMenuPanel = ({ menuRef, onRename, onDelete, onClose }: FolderMenuPanelProps): React.JSX.Element => (
   <motion.div
     ref={menuRef}
     initial={{ opacity: 0, scale: 0.95, y: -5 }}
@@ -90,36 +81,16 @@ const FolderMenuPanel = ({
     exit={{ opacity: 0, scale: 0.95, y: -5 }}
     transition={{ duration: 0.15 }}
     className="absolute right-0 top-full mt-2 w-40 bg-surface border border-border rounded-lg shadow-modal z-50 py-2"
+    onClick={(event): void => {
+      event.stopPropagation();
+    }}
   >
-    <button
-      onClick={() => {
-        onEdit();
-        onClose();
-      }}
-      className="w-full text-left px-4 py-2 text-sm hover:bg-surface-hover transition-colors text-foreground"
-    >
-      Edit details
-    </button>
     <RenameItem onRename={onRename} closeMenu={onClose} />
-    <button
-      onClick={() => {
-        onColorChange();
-        onClose();
-      }}
-      className="w-full text-left px-4 py-2 text-sm hover:bg-surface-hover transition-colors text-foreground"
-    >
-      Customize appearance
-    </button>
     <DeleteItem onDelete={onDelete} closeMenu={onClose} />
   </motion.div>
 );
 
-export const FolderContextMenu = ({
-  onEdit,
-  onDelete,
-  onRename,
-  onColorChange,
-}: FolderContextMenuProps): React.JSX.Element => {
+export const FolderContextMenu = ({ onDelete, onRename }: FolderContextMenuProps): React.JSX.Element => {
   const { isOpen, menuRef, buttonRef, handleToggleMenu, handleCloseMenu } = useContextMenu();
 
   return (
@@ -139,9 +110,7 @@ export const FolderContextMenu = ({
         {isOpen && (
           <FolderMenuPanel
             menuRef={menuRef}
-            onEdit={onEdit}
             onRename={onRename}
-            onColorChange={onColorChange}
             onDelete={onDelete}
             onClose={handleCloseMenu}
           />

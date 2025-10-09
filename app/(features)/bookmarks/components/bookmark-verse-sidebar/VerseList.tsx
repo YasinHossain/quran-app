@@ -8,15 +8,10 @@ import { VerseItem } from './VerseItem';
 
 interface VerseListProps {
   bookmarks: Bookmark[];
-  activeVerseId?: string | undefined;
   onVerseSelect?: ((verseId: string) => void) | undefined;
 }
 
-export const VerseList = ({
-  bookmarks,
-  activeVerseId,
-  onVerseSelect,
-}: VerseListProps): React.JSX.Element => (
+export const VerseList = ({ bookmarks, onVerseSelect }: VerseListProps): React.JSX.Element => (
   <div className="flex-1 overflow-y-auto">
     {bookmarks.length === 0 ? (
       <div className="p-4 text-center text-muted">
@@ -26,10 +21,11 @@ export const VerseList = ({
       <div>
         {bookmarks.map((bookmark) => (
           <VerseItem
-            key={bookmark.verseId}
+            key={String(bookmark.verseId)}
             bookmark={bookmark}
-            isActive={activeVerseId === bookmark.verseId}
-            onSelect={() => onVerseSelect?.(bookmark.verseId)}
+            {...(onVerseSelect && {
+              onSelect: () => onVerseSelect(String(bookmark.verseId)),
+            })}
           />
         ))}
       </div>

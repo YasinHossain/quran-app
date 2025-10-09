@@ -50,6 +50,7 @@ export function TabContent({
         >
           <BookmarkTab
             verseId={verseId}
+            verseKey={verseKey}
             isCreatingFolder={isCreatingFolder}
             newFolderName={newFolderName}
             onToggleCreateFolder={onToggleCreateFolder}

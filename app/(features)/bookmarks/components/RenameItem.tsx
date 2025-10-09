@@ -6,7 +6,8 @@ interface RenameItemProps {
 }
 
 export const RenameItem = ({ onRename, closeMenu }: RenameItemProps): React.JSX.Element => {
-  const handleClick = (): void => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
+    event.stopPropagation();
     onRename();
     closeMenu();
   };

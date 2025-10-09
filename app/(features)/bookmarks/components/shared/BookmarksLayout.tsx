@@ -1,10 +1,9 @@
 'use client';
 
-import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { BookmarksSidebar } from '@/app/(features)/bookmarks/components/BookmarksSidebar';
 import { useSidebar } from '@/app/providers/SidebarContext';
+import { ThreeColumnWorkspace, WorkspaceMain } from '@/app/shared/reader';
 
-import { BookmarksDesktopSidebar } from './layout/BookmarksDesktopSidebar';
-import { BookmarksMainContent } from './layout/BookmarksMainContent';
 import { BookmarksMobileSidebarOverlay } from './layout/BookmarksMobileSidebarOverlay';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
@@ -21,18 +20,22 @@ export const BookmarksLayout = ({
   activeSection,
   onSectionChange,
 }: BookmarksLayoutProps): React.JSX.Element => {
-  const { isHidden } = useHeaderVisibility();
   const { isBookmarkSidebarOpen, setBookmarkSidebarOpen } = useSidebar();
 
   return (
     <>
-      <div className="flex h-[calc(100vh-4rem)] mt-16 bg-background">
-        <BookmarksDesktopSidebar
-          activeSection={activeSection}
-          onSectionChange={onSectionChange}
-        />
-        <BookmarksMainContent isHeaderHidden={isHidden}>{children}</BookmarksMainContent>
-      </div>
+      <ThreeColumnWorkspace
+        left={<BookmarksSidebar activeSection={activeSection} onSectionChange={onSectionChange} />}
+        center={
+          <WorkspaceMain
+            data-slot="bookmarks-landing-main"
+            contentClassName="gap-4 pb-12 sm:gap-6"
+            className="bg-background"
+          >
+            <div className="flex flex-1 flex-col">{children}</div>
+          </WorkspaceMain>
+        }
+      />
       <BookmarksMobileSidebarOverlay
         isOpen={isBookmarkSidebarOpen}
         onClose={() => setBookmarkSidebarOpen(false)}
