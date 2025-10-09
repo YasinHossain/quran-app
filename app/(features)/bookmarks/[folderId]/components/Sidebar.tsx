@@ -9,8 +9,6 @@ import type { Bookmark, Folder } from '@/types';
 interface SidebarProps {
   bookmarks: Bookmark[];
   folder: Folder;
-  activeVerseId?: string | undefined;
-  onVerseSelect: (verseId: string) => void;
   onBack: () => void;
   isOpen: boolean;
   onClose: () => void;
@@ -19,8 +17,6 @@ interface SidebarProps {
 export const Sidebar = ({
   bookmarks,
   folder,
-  activeVerseId,
-  onVerseSelect,
   onBack,
   isOpen,
   onClose,
@@ -28,8 +24,6 @@ export const Sidebar = ({
   <BookmarkFolderSidebar
     bookmarks={bookmarks}
     folder={folder}
-    {...(activeVerseId && { activeVerseId })}
-    onVerseSelect={onVerseSelect}
     onBack={onBack}
     isOpen={isOpen}
     onClose={onClose}

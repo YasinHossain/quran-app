@@ -8,39 +8,47 @@ import { Bookmark, Folder } from '@/types';
 
 import { BookmarkFolderContent } from './BookmarkFolderContent';
 
-interface BookmarkFolderSidebarProps {
+interface BookmarkFolderSidebarBaseProps {
   bookmarks: Bookmark[];
   folder: Folder;
-  activeVerseId?: string | undefined;
-  onVerseSelect?: ((verseId: string) => void) | undefined;
   onBack?: (() => void) | undefined;
+}
+
+const BookmarkFolderSidebarBody = ({
+  bookmarks,
+  folder,
+  onBack,
+}: BookmarkFolderSidebarBaseProps): React.JSX.Element => (
+  <div className="flex h-full flex-col">
+    <SidebarHeader title="Folder" {...(onBack && { onBack })} showBackButton={!!onBack} />
+    <BookmarkFolderContent bookmarks={bookmarks} folder={folder} />
+  </div>
+);
+
+interface BookmarkFolderSidebarProps extends BookmarkFolderSidebarBaseProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
 export const BookmarkFolderSidebar = ({
-  bookmarks,
-  folder,
-  activeVerseId,
-  onVerseSelect,
-  onBack,
   isOpen,
   onClose,
-}: BookmarkFolderSidebarProps): React.JSX.Element => {
-  return (
-    <BaseSidebar
-      isOpen={isOpen}
-      onClose={onClose}
-      position="left"
-      aria-label="Bookmark folder navigation"
-    >
-      <SidebarHeader title="Folder" {...(onBack && { onBack })} showBackButton={!!onBack} />
-      <BookmarkFolderContent
-        bookmarks={bookmarks}
-        folder={folder}
-        activeVerseId={activeVerseId}
-        onVerseSelect={onVerseSelect}
-      />
-    </BaseSidebar>
-  );
-};
+  ...rest
+}: BookmarkFolderSidebarProps): React.JSX.Element => (
+  <BaseSidebar
+    isOpen={isOpen}
+    onClose={onClose}
+    position="left"
+    aria-label="Bookmark folder navigation"
+  >
+    <BookmarkFolderSidebarBody {...rest} />
+  </BaseSidebar>
+);
+
+export const BookmarkFolderSidebarPanel = (
+  props: BookmarkFolderSidebarBaseProps
+): React.JSX.Element => (
+  <div className="flex h-full flex-col border-r border-border bg-surface text-foreground">
+    <BookmarkFolderSidebarBody {...props} />
+  </div>
+);

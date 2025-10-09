@@ -41,7 +41,11 @@ export const LastReadGrid = ({ lastRead, chapters }: LastReadGridProps): React.J
   });
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-wrap gap-4">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4 sm:gap-5 xl:gap-6"
+    >
       {validEntries.map(([surahId, verseId], index) => {
         const chapter = chapters.find((c) => c.id === Number(surahId));
         return (

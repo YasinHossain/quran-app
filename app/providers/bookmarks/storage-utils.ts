@@ -9,13 +9,25 @@ import {
   MEMORIZATION_STORAGE_KEY,
 } from './constants';
 
+const normalizeBookmark = (bookmark: Bookmark): Bookmark => ({
+  ...bookmark,
+  verseId: String((bookmark as Bookmark & { verseId: string | number }).verseId),
+});
+
+const normalizeFolders = (folders: Folder[]): Folder[] =>
+  folders.map((folder) => ({
+    ...folder,
+    bookmarks: folder.bookmarks.map(normalizeBookmark),
+  }));
+
 export const loadBookmarksFromStorage = (): Folder[] => {
   if (typeof window === 'undefined') return [];
 
   const savedFolders = getItem(BOOKMARKS_STORAGE_KEY);
   if (savedFolders) {
     try {
-      return JSON.parse(savedFolders);
+      const parsed = JSON.parse(savedFolders) as Folder[];
+      return Array.isArray(parsed) ? normalizeFolders(parsed) : [];
     } catch {
       return [];
     }
@@ -41,7 +53,7 @@ export const loadBookmarksFromStorage = (): Folder[] => {
           })),
         };
         removeItem(OLD_BOOKMARKS_STORAGE_KEY);
-        return [migratedFolder];
+        return normalizeFolders([migratedFolder]);
       }
     } catch {
       return [];
@@ -63,7 +75,8 @@ export const loadPinnedFromStorage = (): Bookmark[] => {
   const savedPinned = getItem(PINNED_STORAGE_KEY);
   if (savedPinned) {
     try {
-      return JSON.parse(savedPinned);
+      const parsed = JSON.parse(savedPinned) as Bookmark[];
+      return Array.isArray(parsed) ? parsed.map(normalizeBookmark) : [];
     } catch {
       return [];
     }

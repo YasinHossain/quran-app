@@ -36,7 +36,7 @@ export const PinnedVersesList = ({ pinnedVerses }: PinnedVersesListProps): React
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-4xl mx-auto">
       <div>
         {pinnedVerses?.map((bookmark) => (
-          <BookmarkCard key={bookmark.verseId} bookmark={bookmark} folderId="pinned" />
+          <BookmarkCard key={String(bookmark.verseId)} bookmark={bookmark} folderId="pinned" />
         ))}
       </div>
     </motion.div>

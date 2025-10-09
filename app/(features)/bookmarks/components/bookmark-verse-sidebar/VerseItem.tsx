@@ -9,14 +9,16 @@ import { Bookmark } from '@/types';
 
 interface VerseItemProps {
   bookmark: Bookmark;
-  isActive: boolean;
-  onSelect: () => void;
+  onSelect?: (() => void) | undefined;
 }
 
-export const VerseItem = ({ bookmark, isActive, onSelect }: VerseItemProps): React.JSX.Element => {
+export const VerseItem = ({ bookmark, onSelect }: VerseItemProps): React.JSX.Element => {
   const { chapters } = useBookmarks();
   const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark, chapters);
   const ayahNumber = enrichedBookmark.verseKey?.split(':')[1];
+  const wrapperClassName = `w-full text-left p-3 border-b border-border transition-colors${
+    onSelect ? ' hover:bg-surface-hover cursor-pointer' : ''
+  }`;
 
   return (
     <LoadingError
@@ -36,25 +38,25 @@ export const VerseItem = ({ bookmark, isActive, onSelect }: VerseItemProps): Rea
         </div>
       }
     >
-      <button
-        onClick={onSelect}
-        className={`w-full text-left p-3 border-b border-border hover:bg-surface-hover transition-colors ${
-          isActive ? 'bg-accent/10 border-l-4 border-l-accent' : ''
-        }`}
-      >
-        <div className="space-y-1">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-accent">{enrichedBookmark.verseKey}</span>
-            <span className="text-xs text-muted">
-              {new Date(bookmark.createdAt).toLocaleDateString()}
-            </span>
+      {onSelect ? (
+        <button onClick={onSelect} type="button" className={wrapperClassName}>
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-foreground truncate">
+              {enrichedBookmark.surahName}
+            </p>
+            <p className="text-xs text-muted truncate">Ayah {ayahNumber}</p>
           </div>
-          <p className="text-sm font-medium text-foreground truncate">
-            {enrichedBookmark.surahName}
-          </p>
-          <p className="text-xs text-muted truncate">Ayah {ayahNumber}</p>
+        </button>
+      ) : (
+        <div className={wrapperClassName}>
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-foreground truncate">
+              {enrichedBookmark.surahName}
+            </p>
+            <p className="text-xs text-muted truncate">Ayah {ayahNumber}</p>
+          </div>
         </div>
-      </button>
+      )}
     </LoadingError>
   );
 };

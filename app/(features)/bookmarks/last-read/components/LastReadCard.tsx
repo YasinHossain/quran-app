@@ -39,15 +39,15 @@ export const LastReadCard = ({
           handleNavigate();
         }
       }}
-      className="w-[calc(50%-0.5rem)] sm:w-72 lg:w-80 h-80 bg-surface rounded-2xl shadow-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-600 hover:shadow-xl transition-all duration-300 border border-border/50 p-6 text-center flex flex-col items-center justify-between"
+      className="group flex h-full min-h-[20rem] w-full flex-col items-center justify-between rounded-2xl border border-border/50 bg-surface p-6 text-center shadow-lg transition-all duration-300 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-accent sm:p-7 lg:p-8"
       whileHover={{ y: -2, scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
     >
-      <div className="flex-1 flex items-center justify-center">
-        <CircularProgress percentage={percent} label="Complete" size={160} strokeWidth={15} />
+      <div className="flex w-full flex-1 items-center justify-center">
+        <CircularProgress percentage={percent} label="Complete" size={140} strokeWidth={15} />
       </div>
       <div className="mt-4">
         <p className="text-lg font-bold text-foreground truncate">

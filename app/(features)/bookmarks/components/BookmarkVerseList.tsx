@@ -1,9 +1,11 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import React from 'react';
+import React, { useCallback } from 'react';
 
-import { VerseCard as VerseComponent } from '@/app/(features)/surah/components';
+import { useVerseCard } from '@/app/(features)/surah/components/verse-card/useVerseCard';
+import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { ReaderVerseCard } from '@/app/shared/reader';
 import { Spinner } from '@/app/shared/Spinner';
 
 import type { Verse as VerseType } from '@/types';
@@ -48,12 +50,37 @@ export const BookmarkVerseList = ({
   );
 };
 
-const VerseItem = ({ verse }: { verse: VerseType }): React.JSX.Element => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.3 }}
-  >
-    <VerseComponent verse={verse} />
-  </motion.div>
-);
+const VerseItem = ({ verse }: { verse: VerseType }): React.JSX.Element => {
+  const { removeBookmark, findBookmark } = useBookmarks();
+  const { verseRef, isPlaying, isLoadingAudio, isVerseBookmarked, handlePlayPause } =
+    useVerseCard(verse);
+
+  const handleRemoveBookmark = useCallback(() => {
+    const bookmarkInfo = findBookmark(String(verse.id));
+    if (!bookmarkInfo) return;
+    removeBookmark(String(verse.id), bookmarkInfo.folder.id);
+  }, [findBookmark, removeBookmark, verse.id]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <ReaderVerseCard
+        ref={verseRef}
+        verse={verse}
+        actions={{
+          verseKey: verse.verse_key,
+          verseId: String(verse.id),
+          isPlaying,
+          isLoadingAudio,
+          isBookmarked: isVerseBookmarked,
+          onPlayPause: handlePlayPause,
+          onBookmark: handleRemoveBookmark,
+          showRemove: true,
+        }}
+      />
+    </motion.div>
+  );
+};

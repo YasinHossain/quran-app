@@ -5,6 +5,8 @@ import { getVerseById, getVerseByKey } from '@/lib/api/verses';
 
 import type { Bookmark, Chapter, Folder, Verse } from '@/types';
 
+const sameVerseId = (a: string | number, b: string | number): boolean => String(a) === String(b);
+
 const FALLBACK_TRANSLATION_ID = 20;
 const COMPOSITE_KEY_PATTERN = /:|[^0-9]/;
 
@@ -22,11 +24,45 @@ function resolveTranslationId(settings: {
   return FALLBACK_TRANSLATION_ID;
 }
 
-async function fetchVerseDetails(verseId: string, translationId: number): Promise<Verse> {
+const inferVerseKeyFromId = (rawId: string, chaptersList: Chapter[]): string | null => {
+  const numericId = Number.parseInt(rawId, 10);
+  if (!Number.isFinite(numericId) || numericId <= 0) {
+    return null;
+  }
+
+  let remaining = numericId;
+  const orderedChapters = [...chaptersList].sort((a, b) => a.id - b.id);
+
+  for (const chapter of orderedChapters) {
+    if (remaining <= chapter.verses_count) {
+      return `${chapter.id}:${remaining}`;
+    }
+    remaining -= chapter.verses_count;
+  }
+
+  return null;
+};
+
+async function fetchVerseDetails(
+  verseId: string,
+  translationId: number,
+  chaptersList: Chapter[]
+): Promise<Verse> {
   const shouldLookupByKey = COMPOSITE_KEY_PATTERN.test(verseId);
-  return shouldLookupByKey
-    ? getVerseByKey(verseId, translationId)
-    : getVerseById(verseId, translationId);
+  if (shouldLookupByKey) {
+    return getVerseByKey(verseId, translationId);
+  }
+
+  const inferredKey = inferVerseKeyFromId(verseId, chaptersList);
+  if (inferredKey) {
+    try {
+      return await getVerseByKey(inferredKey, translationId);
+    } catch {
+      // Fall back to direct ID lookup if key fetch fails
+    }
+  }
+
+  return getVerseById(verseId, translationId);
 }
 
 function buildBookmarkMetadata(verse: Verse, chaptersList: Chapter[]): Partial<Bookmark> {
@@ -63,12 +99,12 @@ export function useBookmarkMetadata(
           translationId !== undefined ? { translationIds, translationId } : { translationIds };
 
         const resolvedTranslationId = resolveTranslationId(translationConfig);
-        const verse = await fetchVerseDetails(verseId, resolvedTranslationId);
+        const verse = await fetchVerseDetails(verseId, resolvedTranslationId, chaptersList);
         const metadata = buildBookmarkMetadata(verse, chaptersList);
 
         setFolders((prev) => updateBookmarkInFolders(prev, verseId, metadata));
         setPinnedVerses((prev) =>
-          prev.map((b) => (b.verseId === verseId ? { ...b, ...metadata } : b))
+          prev.map((b) => (sameVerseId(b.verseId, verseId) ? { ...b, ...metadata } : b))
         );
       } catch {
         // Silent fail for metadata fetch errors

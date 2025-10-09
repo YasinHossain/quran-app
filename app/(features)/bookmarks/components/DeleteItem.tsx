@@ -6,7 +6,8 @@ interface DeleteItemProps {
 }
 
 export const DeleteItem = ({ onDelete, closeMenu }: DeleteItemProps): React.JSX.Element => {
-  const handleClick = (): void => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
+    event.stopPropagation();
     onDelete();
     closeMenu();
   };

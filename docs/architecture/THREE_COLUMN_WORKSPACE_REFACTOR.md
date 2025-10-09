@@ -177,7 +177,7 @@ Acceptance (Phase 1)
 - Unit tests assert presence of tokenized classes and correct slot ordering.
 
 Phase 2 - Bookmarks Folder Migration (behind flag)
-- 2.1 Introduce feature flag (e.g., `NEXT_PUBLIC_THREE_COLUMN_WORKSPACE`) read in `app/(features)/bookmarks/[folderId]/BookmarkFolderClient.tsx`.
+- 2.1 Introduce feature flag (e.g., `NEXT_PUBLIC_THREE_COLUMN_WORKSPACE`) read in `app/(features)/bookmarks/[folderId]/BookmarkFolderClient.tsx` (removed in Phase 6 once the workspace became the default).
 - 2.2 Add a thin adapter that renders existing content via `ThreeColumnWorkspace` when flag is on; else fall back.
 - 2.3 Replace hardcoded margins in bookmarks reader with `WorkspaceMain` and tokens.
 - 2.4 Verify desktop spacing, mobile overlays, header offset, and folder/verse selection.
@@ -211,6 +211,32 @@ Phase 5 - Verse Card Unification
 
 Acceptance (Phase 5)
 - All verse lists use one primitive; visual diffs are intentional and prop-driven.
+
+### Phase 5 Implementation Notes
+
+**Shared primitive scope**
+- Location: `app/shared/reader/VerseCard.tsx`; keep it presentation-only and accept all behavior through props so features can opt-in to actions, footer affordances, and custom body content.
+- Compose existing shared building blocks (`ResponsiveVerseActions`, `VerseArabic`, translation rendering helpers) instead of re-implementing them; expose escape hatches (`children`, `footer`, `actions`, `variant`) for feature-specific extensions.
+- Maintain compatibility with current settings contexts (`useSettings`, font controls) so migrating routes do not regress personalization.
+
+**Bookmark adoption (5.2)**
+- Replace `FolderVerseCard` internals with `ReaderVerseCard`, providing bookmark-specific actions via the `actions` prop and supplying saved-note/footer content through `footer`.
+- Ensure bookmark-specific metadata (folder labels, add/remove controls) becomes optional children so the primitive stays generic.
+- Update Storybook stories/tests under `app/shared/ui/cards/BookmarkVerseCard*` to reference the shared primitive; confirm drag-and-drop and bulk selection visuals remain intact.
+
+**Surah adoption (5.3)**
+- Create a thin adapter (e.g., `SurahWorkspaceVerse.tsx`) that maps current `useVerseCard` hook results to `ReaderVerseCard` props (playback state → `actions`, bookmarks → `footer`).
+- Remove bespoke layout classes from `app/(features)/surah/components/VerseCard.tsx` once the adapter wraps the shared component; rely on the primitive’s variants for contained vs. separated rendering.
+- Update list renderers (`SurahVerseList`, infinite scroll sentinel) to forward `idPrefix` so audio scrolling and tafsir deeplinks keep working post-migration.
+
+**Tafsir adoption (5.3 follow-on)**
+- Mirror the Surah adapter for tafsir lists, ensuring tafsir-specific CTA buttons (open tafsir tab, copy share link) are wired through `actions` or `footer`.
+- Reuse the same primitive variant to keep tafsir and surah cards visually aligned; adjust spacing tokens in tafsir CSS to remove redundant paddings.
+
+**Testing & QA**
+- Add focused unit tests for the shared primitive (slot rendering, variant classes, translation font sizing) in `tests/app/shared/reader/VerseCard.test.tsx`.
+- Update existing feature tests (`SurahVerseList`, `BookmarksContent`, tafsir integration) to assert the new data-testids and maintain coverage on audio/bookmark interactions.
+- Verify accessibility (heading levels, aria-controls for actions, focus order) once per adoption to avoid regressions when the primitive replaces bespoke markup.
 
 Phase 6 - Cleanup & Flag Removal
 - 6.1 Replace magic margins (e.g., `lg:ml-[20.7rem]`, `lg:mr-[20.7rem]`) with tokens.

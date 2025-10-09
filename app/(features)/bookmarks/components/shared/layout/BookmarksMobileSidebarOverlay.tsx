@@ -34,12 +34,9 @@ export const BookmarksMobileSidebarOverlay = ({
           animate={{ x: 0 }}
           exit={{ x: '-100%' }}
           transition={{ type: 'tween', duration: 0.3 }}
-          className="fixed top-16 left-0 h-[calc(100vh-4rem)] w-full sm:w-80 lg:w-80 bg-background text-foreground border-r border-border z-50 lg:hidden"
+          className="fixed left-0 top-reader-header z-50 h-[calc(100vh-var(--reader-header-height))] w-full bg-background text-foreground border-r border-border lg:hidden sm:w-80 lg:w-reader-sidebar-left"
         >
-          <BookmarksSidebar
-            activeSection={activeSection}
-            onSectionChange={onSectionChange}
-          />
+          <BookmarksSidebar activeSection={activeSection} onSectionChange={onSectionChange} />
         </motion.aside>
       </>
     )}

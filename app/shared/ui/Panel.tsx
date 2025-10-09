@@ -11,7 +11,8 @@ export const PANEL_VARIANTS = {
   modal: 'fixed inset-4 bg-surface rounded-lg shadow-xl max-w-2xl max-h-96 mx-auto my-auto',
   'bottom-sheet':
     'fixed bottom-0 left-0 right-0 bg-surface rounded-t-3xl shadow-2xl max-h-[90dvh] pb-safe',
-  overlay: 'fixed top-16 right-4 w-72 bg-surface rounded-lg shadow-lg border border-border',
+  overlay:
+    'fixed top-reader-header right-4 w-72 bg-surface rounded-lg shadow-lg border border-border',
   fullscreen: 'fixed inset-0 bg-surface pt-safe pb-safe',
 } as const;
 

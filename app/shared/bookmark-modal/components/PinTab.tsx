@@ -33,7 +33,7 @@ export const PinTab = memo(function PinTab({ verseId, verseKey }: PinTabProps): 
       </div>
 
       <motion.button
-        onClick={() => togglePinned(verseId)}
+        onClick={() => togglePinned(verseId, verseKey ? { verseKey } : undefined)}
         className={cn(
           'px-6 py-3 rounded-2xl font-medium transition-colors',
           isVersePinned

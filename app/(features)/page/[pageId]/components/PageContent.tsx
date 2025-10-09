@@ -45,9 +45,9 @@ export const PageContent = memo(function PageContent({
         ${
           isHidden
             ? 'pt-4 md:pt-6 lg:pt-10'
-            : 'pt-[calc(3.5rem+1rem+env(safe-area-inset-top))] md:pt-[calc(4rem+1.5rem+env(safe-area-inset-top))] lg:pt-[calc(4rem+2.5rem+env(safe-area-inset-top))]'
+            : 'pt-[calc(var(--reader-header-height-compact)+1rem+var(--reader-safe-area-top))] md:pt-[calc(var(--reader-header-height)+1.5rem+var(--reader-safe-area-top))] lg:pt-[calc(var(--reader-header-height)+2.5rem+var(--reader-safe-area-top))]'
         }
-        px-4 md:px-6 lg:px-10 pb-4 md:pb-6 lg:pb-10 lg:mr-[20.7rem]
+        px-4 md:px-6 lg:px-10 pb-4 md:pb-6 lg:pb-10 lg:mr-reader-sidebar-right
         ${className || ''}
       `.trim()}
     >

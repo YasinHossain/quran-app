@@ -25,7 +25,7 @@ const FolderPreviewItem = ({
   <BookmarkVerseCard
     bookmark={bookmark}
     onClick={() => onVerseClick?.(bookmark.verseKey || bookmark.verseId)}
-    className="scale-95"
+    className="border border-border/40 bg-surface/80 hover:bg-surface-hover hover:border-accent/30 shadow-sm transition-all duration-200"
   />
 );
 
@@ -42,26 +42,28 @@ const FolderListItem = ({
   onToggleExpansion,
   onVerseClick,
 }: FolderListItemProps): React.JSX.Element => (
-  <div className="space-y-1">
+  <div className="space-y-3">
     <BookmarkFolderCard
       folder={folder}
       isExpanded={isExpanded}
       onToggleExpansion={onToggleExpansion}
     />
     {isExpanded && (
-      <div className="ml-2 pl-3 border-l-2 border-border/50 space-y-2 animate-in slide-in-from-top-2 duration-200">
-        {folder.bookmarks.slice(0, 5).map((bookmark) => (
-          <FolderPreviewItem
-            key={bookmark.verseId}
-            bookmark={bookmark}
-            onVerseClick={onVerseClick}
-          />
-        ))}
-        {folder.bookmarks.length > 5 && (
-          <div className="text-xs text-muted text-center py-2">
+      <div className="animate-in fade-in slide-in-from-top-2 rounded-2xl border border-border/40 bg-surface/70 p-3 sm:p-4 shadow-sm">
+        <div className="grid gap-2">
+          {folder.bookmarks.slice(0, 5).map((bookmark) => (
+            <FolderPreviewItem
+              key={String(bookmark.verseId)}
+              bookmark={bookmark}
+              onVerseClick={onVerseClick}
+            />
+          ))}
+        </div>
+        {folder.bookmarks.length > 5 ? (
+          <div className="mt-3 flex items-center justify-center rounded-xl bg-surface p-2 text-xs font-medium text-muted">
             +{folder.bookmarks.length - 5} more verses
           </div>
-        )}
+        ) : null}
       </div>
     )}
   </div>
@@ -76,11 +78,11 @@ export const FolderSection = ({
   if (folders.length === 0) return null;
 
   return (
-    <div className="mb-6">
-      <div className="text-xs font-semibold text-muted uppercase tracking-wider mb-3 px-2">
+    <div className="mb-8">
+      <div className="mb-4 px-2 text-xs font-semibold uppercase tracking-wider text-muted">
         Your Folders
       </div>
-      <div className="space-y-2">
+      <div className="space-y-5">
         {folders.map((folder) => (
           <FolderListItem
             key={folder.id}

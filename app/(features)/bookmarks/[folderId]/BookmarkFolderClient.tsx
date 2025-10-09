@@ -21,8 +21,6 @@ interface BookmarkFolderClientProps {
 export function BookmarkFolderClient({ folderId }: BookmarkFolderClientProps): React.JSX.Element {
   logger.debug('BookmarkFolderClient rendering', { folderId });
   const controller = useBookmarkFolderController(folderId);
-  const isThreeColumnWorkspaceEnabled =
-    process.env['NEXT_PUBLIC_THREE_COLUMN_WORKSPACE'] === 'true';
 
   if (!controller.folder) {
     return <FolderNotFound />;
@@ -34,13 +32,9 @@ export function BookmarkFolderClient({ folderId }: BookmarkFolderClientProps): R
       folder={controller.folder}
       isBookmarkSidebarOpen={controller.isBookmarkSidebarOpen}
       onCloseSidebar={() => controller.setBookmarkSidebarOpen(false)}
-      onVerseSelect={controller.handleVerseSelect}
       onBack={controller.handleNavigateToBookmarks}
-      isHidden={controller.isHidden}
       folderName={controller.folder.name}
-      activeVerseId={controller.activeVerseId}
       verses={controller.verses}
-      displayVerses={controller.displayVerses}
       loadingVerses={controller.loadingVerses}
       onOpenTranslationPanel={() => controller.setIsTranslationPanelOpen(true)}
       onCloseTranslationPanel={() => controller.setIsTranslationPanelOpen(false)}
@@ -50,7 +44,6 @@ export function BookmarkFolderClient({ folderId }: BookmarkFolderClientProps): R
       onCloseWordPanel={() => controller.setIsWordPanelOpen(false)}
       isWordPanelOpen={controller.isWordPanelOpen}
       selectedWordLanguageName={controller.selectedWordLanguageName}
-      layout={isThreeColumnWorkspaceEnabled ? 'workspace' : 'legacy'}
     />
   );
 }

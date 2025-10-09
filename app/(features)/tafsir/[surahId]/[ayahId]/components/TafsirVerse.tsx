@@ -36,7 +36,14 @@ export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps): React.JSX.E
           onPlayPause={() =>
             setPlayingId((currentId) => (currentId === verse.id ? null : verse.id))
           }
-          onBookmark={() => toggleBookmark(String(verse.id))}
+          onBookmark={() =>
+            toggleBookmark(String(verse.id), undefined, {
+              verseKey: verse.verse_key,
+              verseApiId: verse.id,
+              verseText: verse.text_uthmani,
+              translation: verse.translations?.[0]?.text,
+            })
+          }
           className="md:w-16 md:pt-1"
         />
 

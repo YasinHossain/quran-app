@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { AppRouterContext } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
@@ -32,9 +32,7 @@ jest.mock('@/app/(features)/layout/context/HeaderVisibilityContext', () => ({
 }));
 
 describe('BookmarkFolderSidebar', () => {
-  it('highlights active verse and handles verse selection', async () => {
-    const handleVerseSelect = jest.fn();
-
+  it('renders verse details without navigation when selection is disabled', async () => {
     mockRouter.push('/bookmarks/folder1');
 
     await act(async () => {
@@ -43,8 +41,6 @@ describe('BookmarkFolderSidebar', () => {
           <BookmarkFolderSidebar
             bookmarks={bookmarks}
             folder={{ id: 'folder1', name: 'Folder 1', bookmarks, createdAt: 0 }}
-            activeVerseId="1"
-            onVerseSelect={handleVerseSelect}
             isOpen
             onClose={jest.fn()}
           />
@@ -52,13 +48,12 @@ describe('BookmarkFolderSidebar', () => {
       );
     });
 
-    const activeButton = screen.getByText('1:1').closest('button');
-    expect(activeButton).toHaveClass('bg-accent/10');
+    expect(screen.queryByText('1:1')).toBeNull();
+    expect(screen.queryByText('1/1/1970')).toBeNull();
 
-    const secondButton = screen.getByText('2:255').closest('button') as HTMLButtonElement;
-    await act(async () => {
-      fireEvent.click(secondButton);
-    });
-    expect(handleVerseSelect).toHaveBeenCalledWith('2');
+    const activeVerse = screen.getByText('Al-Fatihah');
+    const wrapper = activeVerse.parentElement?.parentElement?.parentElement;
+    expect(wrapper).not.toBeNull();
+    expect(wrapper).not.toHaveClass('bg-accent/10');
   });
 });

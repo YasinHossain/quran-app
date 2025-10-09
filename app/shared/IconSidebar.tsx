@@ -23,11 +23,11 @@ const DesktopNavigation = memo(function DesktopNavigation({
   navItems: NavItem[];
   linkStyles: string;
 }) {
-  const desktopStyle = useMemo(() => ({ height: 'calc(100vh - 4rem)' }), []);
+  const desktopStyle = useMemo(() => ({ height: 'calc(100vh - var(--reader-header-height))' }), []);
 
   return (
     <nav
-      className="hidden lg:block fixed left-0 top-16 w-16 bg-background border-r border-border z-50"
+      className="fixed left-0 top-reader-header hidden w-16 border-r border-border bg-background z-50 lg:block"
       style={desktopStyle}
       aria-label="Primary navigation"
     >

@@ -7,6 +7,7 @@ export interface BookmarkModalProps {
 
 export interface BookmarkTabProps {
   verseId: string;
+  verseKey?: string;
   isCreatingFolder: boolean;
   newFolderName: string;
   onToggleCreateFolder: (creating: boolean) => void;

@@ -88,7 +88,7 @@ function useBookmarkHelpers(
   isBookmarked: (verseId: string) => boolean;
   findBookmark: (verseId: string) => ReturnType<typeof findBookmarkInFolders>;
   bookmarkedVerses: string[];
-  togglePinned: (verseId: string) => void;
+  togglePinned: (verseId: string, metadata?: Partial<Bookmark>) => void;
   isPinned: (verseId: string) => boolean;
   setLastRead: (surahId: string, verseId: number) => void;
 } {

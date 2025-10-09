@@ -18,6 +18,8 @@ function LayoutContent({ children }: { children: ReactNode }): ReactElement {
   const pathname = usePathname();
   const isBookmarkPage = pathname.startsWith('/bookmarks');
   const isHomePage = pathname === '/';
+  const isSurahReaderPage = pathname.startsWith('/surah/');
+  const shouldRenderSurahSidebar = !isHomePage && !isBookmarkPage && !isSurahReaderPage;
 
   return (
     <ModernLayout>
@@ -28,17 +30,11 @@ function LayoutContent({ children }: { children: ReactNode }): ReactElement {
       <Navigation />
 
       {/* Surah list sidebar - for browsing surahs */}
-      {!isHomePage && !isBookmarkPage && <SurahListSidebar />}
+      {shouldRenderSurahSidebar && <SurahListSidebar />}
 
       {/* Main content area with proper margins for both sidebars */}
-      <div className="flex flex-col min-h-[100dvh]">
-        <div
-          className={`flex-grow min-h-0 transition-all duration-300 ${
-            !isHomePage && !isBookmarkPage ? 'lg:ml-96' : !isHomePage ? 'lg:ml-16' : ''
-          }`}
-        >
-          {children}
-        </div>
+      <div className={`flex flex-col min-h-[100dvh] ${!isHomePage ? 'lg:pl-16' : ''}`}>
+        <div className="flex-grow min-h-0 transition-all duration-300">{children}</div>
       </div>
     </ModernLayout>
   );

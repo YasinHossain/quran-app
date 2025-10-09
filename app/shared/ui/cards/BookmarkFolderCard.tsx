@@ -1,17 +1,19 @@
 'use client';
 
-import { ChevronDownIcon } from '@/app/shared/icons';
+import type { KeyboardEvent } from 'react';
+
+import { ClockIcon, ChevronDownIcon } from '@/app/shared/icons';
 import { BaseCard, BaseCardProps } from '@/app/shared/ui/BaseCard';
 import { cn } from '@/lib/utils/cn';
 
 import type { Folder } from '@/types/bookmark';
 
-/**
- * BookmarkFolderCard
- *
- * Specialized folder card for bookmark sidebar that maintains current design
- * while using the unified BaseCard system for consistent hover/animation behavior.
- */
+import {
+  applyOpacity,
+  getFolderGlyph,
+  isStyleColor,
+  resolveAccentColor,
+} from './folderColor.utils';
 
 interface BookmarkFolderCardProps extends Omit<BaseCardProps, 'children'> {
   folder: Folder;
@@ -30,43 +32,121 @@ export const BookmarkFolderCard = ({
     onToggleExpansion?.(folder.id);
   };
 
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>): void => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleClick();
+    }
+  };
+
+  const accentColor = resolveAccentColor(folder.color);
+  const verseCount = folder.bookmarks.length;
+  const latestBookmarkTimestamp =
+    verseCount > 0
+      ? folder.bookmarks.reduce(
+          (latest, bookmark) => Math.max(latest, bookmark.createdAt ?? 0),
+          folder.createdAt ?? 0
+        )
+      : (folder.createdAt ?? 0);
+  const formattedUpdatedAt =
+    latestBookmarkTimestamp > 0
+      ? new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' }).format(
+          new Date(latestBookmarkTimestamp)
+        )
+      : null;
+  const versePreview = folder.bookmarks.slice(0, 3);
+
   return (
     <BaseCard
-      variant="navigation" // Use navigation variant for consistent hover behavior
-      animation="navigation"
+      variant="folder"
+      animation="folder"
+      customVariant={{ padding: 'p-0' }}
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-expanded={isExpanded}
+      aria-label={`Toggle folder ${folder.name}`}
+      data-expanded={isExpanded}
       className={cn(
-        // Override with folder-specific styles while maintaining base structure
-        'p-3 rounded-lg border transition-all duration-200 cursor-pointer group h-auto',
-        'bg-surface border-border hover:border-accent/30 hover:bg-surface-hover hover:shadow-sm',
+        'group relative overflow-hidden rounded-2xl border border-border/40 bg-surface/80 backdrop-blur-sm transition-all duration-300',
+        'hover:-translate-y-1 hover:border-accent/30 hover:shadow-lg hover:bg-surface-hover',
+        'data-[expanded=true]:border-accent/40 data-[expanded=true]:shadow-lg data-[expanded=true]:bg-surface-hover',
         className as string
       )}
       {...props}
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3 min-w-0">
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-on-accent text-sm font-semibold"
-            style={{
-              // Use folder color if provided, otherwise fall back to accent token
-              backgroundColor: folder.color || 'rgb(var(--color-accent))',
-            }}
-          >
-            {folder.name.charAt(0).toUpperCase()}
-          </div>
-          <div className="min-w-0">
-            <div className="font-semibold text-sm text-foreground truncate">{folder.name}</div>
-            <div className="text-xs text-muted">
-              {folder.bookmarks.length} verse{folder.bookmarks.length !== 1 ? 's' : ''}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        style={{
+          background: `linear-gradient(135deg, ${applyOpacity(accentColor, 0.16)} 0%, transparent 60%)`,
+        }}
+      />
+      <div className="relative flex items-start gap-4 p-4 sm:p-5">
+        <div
+          className={cn(
+            'relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-accent font-semibold',
+            !isStyleColor(folder.color) && folder.color ? folder.color : ''
+          )}
+          style={{
+            color: isStyleColor(folder.color) ? folder.color : undefined,
+            backgroundColor: applyOpacity(accentColor, 0.18),
+            boxShadow: `0 10px 24px -18px ${applyOpacity(accentColor, 0.5)}`,
+          }}
+          aria-hidden="true"
+        >
+          <span className="text-base leading-none">{getFolderGlyph(folder)}</span>
+        </div>
+
+        <div className="flex flex-1 flex-col gap-3 min-w-0">
+          <div className="flex items-start gap-3">
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-semibold text-foreground line-clamp-1">
+                {folder.name}
+              </div>
+              {verseCount > 0 ? (
+                <div className="text-xs text-muted/80">
+                  {verseCount} verse{verseCount !== 1 ? 's' : ''}
+                </div>
+              ) : (
+                <div className="text-xs text-muted/70">No verses yet</div>
+              )}
+            </div>
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface hover:bg-surface-hover transition-colors">
+              <ChevronDownIcon
+                className={cn(
+                  'h-4 w-4 text-muted transition-transform duration-300',
+                  isExpanded && 'rotate-180 text-accent'
+                )}
+              />
             </div>
           </div>
+
+          {verseCount > 0 ? (
+            <div className="flex-1 min-w-0 flex items-center gap-1 sm:gap-1.5 overflow-hidden">
+              {versePreview.map((bookmark) => (
+                <span
+                  key={String(bookmark.verseId)}
+                  className="inline-flex shrink-0 items-center rounded-full bg-surface whitespace-nowrap leading-none px-2 py-0.5 text-[10px] sm:px-2.5 sm:py-1 sm:text-[11px] font-medium text-muted transition-colors duration-200 group-hover:text-foreground/80"
+                >
+                  {bookmark.verseKey || bookmark.verseId}
+                </span>
+              ))}
+              {verseCount > versePreview.length && (
+                <span className="shrink-0 whitespace-nowrap leading-none text-[10px] sm:text-[11px] font-medium uppercase tracking-wide text-muted/70">
+                  +{verseCount - versePreview.length} more
+                </span>
+              )}
+            </div>
+          ) : null}
+
+          {formattedUpdatedAt ? (
+            <div className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-muted/60">
+              <ClockIcon className="h-3.5 w-3.5" />
+              {formattedUpdatedAt}
+            </div>
+          ) : null}
         </div>
-        <ChevronDownIcon
-          className={cn(
-            'w-4 h-4 text-muted transition-transform duration-200',
-            isExpanded && 'rotate-180'
-          )}
-        />
       </div>
     </BaseCard>
   );

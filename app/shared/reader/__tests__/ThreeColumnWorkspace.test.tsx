@@ -15,18 +15,18 @@ describe('ThreeColumnWorkspace', () => {
   });
 
   it('renders center content within the workspace', () => {
-    render(
-      <ThreeColumnWorkspace
-        center={<WorkspaceMain>Center column content</WorkspaceMain>}
-      />
-    );
+    render(<ThreeColumnWorkspace center={<WorkspaceMain>Center column content</WorkspaceMain>} />);
 
     expect(screen.getByText('Center column content')).toBeInTheDocument();
+    const workspaceRoot = document.querySelector('[data-slot="workspace-root"]') as HTMLElement;
     const centerContainer = screen
       .getByText('Center column content')
       .closest('[data-slot="workspace-main"]') as HTMLElement;
 
-    expect(centerContainer).toHaveClass(
+    expect(workspaceRoot).toHaveClass(
+      'pt-[calc(var(--reader-header-height)+var(--reader-safe-area-top))]'
+    );
+    expect(centerContainer).not.toHaveClass(
       'pt-[calc(var(--reader-header-height)+var(--reader-safe-area-top))]'
     );
   });
@@ -60,7 +60,7 @@ describe('WorkspaceMain', () => {
     useHeaderVisibilityMock.mockReturnValue({ isHidden: false });
   });
 
-  it('reserves space for sidebars on desktop', () => {
+  it('does not reserve sidebar space by default', () => {
     render(
       <ThreeColumnWorkspace
         left={<div>Navigation</div>}
@@ -72,23 +72,22 @@ describe('WorkspaceMain', () => {
     const main = screen
       .getByText('Content area')
       .closest('[data-slot="workspace-main"]') as HTMLElement;
-    expect(main).toHaveClass('lg:pl-reader-sidebar-left');
-    expect(main).toHaveClass('lg:pr-reader-sidebar-right');
+    expect(main).not.toHaveClass('lg:pl-reader-sidebar-left');
+    expect(main).not.toHaveClass('lg:pr-reader-sidebar-right');
   });
 
   it('reduces top padding when the header is hidden', () => {
     useHeaderVisibilityMock.mockReturnValueOnce({ isHidden: true });
 
-    render(
-      <ThreeColumnWorkspace
-        center={<WorkspaceMain>Scroll content</WorkspaceMain>}
-      />
-    );
+    render(<ThreeColumnWorkspace center={<WorkspaceMain>Scroll content</WorkspaceMain>} />);
 
+    const workspaceRoot = document.querySelector('[data-slot="workspace-root"]') as HTMLElement;
     const main = screen
       .getByText('Scroll content')
       .closest('[data-slot="workspace-main"]') as HTMLElement;
-    expect(main).toHaveClass('pt-[calc(var(--reader-safe-area-top))]');
+
+    expect(workspaceRoot).toHaveClass('pt-[calc(var(--reader-safe-area-top))]');
+    expect(main).not.toHaveClass('pt-[calc(var(--reader-safe-area-top))]');
   });
 
   it('reserves space when explicitly requested without sidebars', () => {
