@@ -13,12 +13,14 @@ interface BookmarksLayoutProps {
   children: ReactNode;
   activeSection: SectionId;
   onSectionChange: (section: SectionId) => void;
+  rightSidebar?: React.ReactNode;
 }
 
 export const BookmarksLayout = ({
   children,
   activeSection,
   onSectionChange,
+  rightSidebar,
 }: BookmarksLayoutProps): React.JSX.Element => {
   const { isBookmarkSidebarOpen, setBookmarkSidebarOpen } = useSidebar();
 
@@ -35,6 +37,7 @@ export const BookmarksLayout = ({
             <div className="flex flex-1 flex-col">{children}</div>
           </WorkspaceMain>
         }
+        right={rightSidebar}
       />
       <BookmarksMobileSidebarOverlay
         isOpen={isBookmarkSidebarOpen}

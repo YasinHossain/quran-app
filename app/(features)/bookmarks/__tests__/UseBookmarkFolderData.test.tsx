@@ -4,7 +4,7 @@ import {
   clearCache,
   // Exported for testing
   getVerseWithCache,
-} from '@/app/(features)/bookmarks/[folderId]/hooks/useBookmarkFolderData';
+} from '@/app/(features)/bookmarks/hooks/verseCache';
 
 import type { Verse, Chapter } from '@/types';
 
