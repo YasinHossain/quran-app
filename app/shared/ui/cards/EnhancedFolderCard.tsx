@@ -51,6 +51,9 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
   const versePreview = Array.isArray(folder.bookmarks)
     ? (folder.bookmarks as Array<{ verseId: string | number; verseKey?: string }>).slice(0, 3)
     : [];
+  const remainingCount = Array.isArray(folder.bookmarks)
+    ? Math.max(0, bookmarkCount - versePreview.length)
+    : 0;
   const latestBookmarkTimestamp = Array.isArray(folder.bookmarks)
     ? folder.bookmarks.reduce((latest: number, b: any) => Math.max(latest, b?.createdAt ?? 0), 0)
     : 0;
@@ -126,6 +129,13 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
                 {b.verseKey || b.verseId}
               </span>
             ))}
+            {remainingCount > 0 ? (
+              <span
+                className="inline-flex shrink-0 items-center rounded-full bg-surface whitespace-nowrap leading-none px-2.5 py-1 text-[11px] font-medium text-muted transition-colors duration-200 group-hover:text-foreground/80 border border-border/40"
+              >
+                +{remainingCount}
+              </span>
+            ) : null}
           </div>
           {formattedUpdatedAt ? (
             <span className="ml-auto inline-flex items-center gap-1 text-[11px] font-medium text-muted/80 whitespace-nowrap text-right">
