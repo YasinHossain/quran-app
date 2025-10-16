@@ -32,6 +32,7 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
   onColorChange,
   onClick,
   'aria-label': ariaLabel,
+  className,
   ...props
 }: EnhancedFolderCardProps): React.JSX.Element {
   const bookmarkCount = Array.isArray(folder.bookmarks)
@@ -64,6 +65,10 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
     <BaseCard
       variant="folder"
       animation="folder"
+      direction="column"
+      align="start"
+      gap="gap-3"
+      customVariant={{ height: 'min-h-[148px]', padding: 'pl-6 pr-4 pb-6 pt-6' }}
       {...(onClick
         ? { onClick: onClick as React.MouseEventHandler<HTMLDivElement | HTMLAnchorElement> }
         : {})}
@@ -71,56 +76,64 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
       tabIndex={0}
       aria-label={(ariaLabel || defaultAriaLabel) as string}
       onKeyDown={handleKeyDown}
-      className="relative"
+      className={cn('group relative w-full', className)}
       {...props}
     >
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center space-x-4 flex-1 min-w-0">
+      <div className="absolute top-4 right-4">
+        <FolderContextMenu
+          onDelete={onDelete}
+          onRename={onRename}
+          onEdit={onEdit}
+          onColorChange={onColorChange}
+        />
+      </div>
+
+      <div className="flex h-full w-full flex-1 flex-col gap-3">
+        <div className="flex items-center gap-4 min-w-0 pr-8 sm:pr-12">
           <div
             className={cn(
-              'relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-accent font-semibold'
+              'relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent text-on-accent font-semibold shadow-sm'
             )}
             style={{
-              backgroundColor: applyOpacity('rgb(var(--color-accent))', 0.1),
               boxShadow: `0 10px 24px -18px ${applyOpacity('rgb(var(--color-accent))', 0.5)}`,
             }}
             aria-hidden="true"
           >
-            <FolderIcon size={20} className="text-accent" />
+            <FolderIcon size={20} className="text-on-accent" />
             {/* Count bubble */}
-            <span className="absolute -top-1 -right-1 select-none rounded-full bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-foreground shadow-sm border border-border">
+            <span className="absolute -top-1.5 -right-1.5 select-none rounded-full border border-border bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-foreground shadow-sm">
               {bookmarkCount}
             </span>
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-lg text-foreground truncate mb-1 group-hover:text-accent transition-colors duration-200">
+            <h3 className="mb-1 truncate text-lg font-semibold text-foreground transition-colors duration-200 group-hover:text-accent">
               {folder.name}
             </h3>
-            <p className="text-sm text-muted font-medium">
+            <p className="text-sm font-medium text-muted">
               {bookmarkCount} {bookmarkCount === 1 ? 'verse' : 'verses'}
             </p>
           </div>
         </div>
-        <div className="flex-shrink-0">
-          <FolderContextMenu onDelete={onDelete} onRename={onRename} onEdit={onEdit} onColorChange={onColorChange} />
-        </div>
-      </div>
 
-      {/* Verse preview chips */}
-      <div className="mt-1 flex flex-wrap items-center gap-1.5">
-        {versePreview.map((b) => (
-          <span
-            key={String(b.verseId)}
-            className="inline-flex shrink-0 items-center rounded-full bg-surface whitespace-nowrap leading-none px-2.5 py-1 text-[11px] font-medium text-muted transition-colors duration-200 group-hover:text-foreground/80 border border-border/40"
-          >
-            {b.verseKey || b.verseId}
-          </span>
-        ))}
-        {formattedUpdatedAt ? (
-          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-muted/80">
-            <ClockIcon className="h-3.5 w-3.5" /> {formattedUpdatedAt}
-          </span>
-        ) : null}
+        {/* Verse preview chips */}
+        <div className="mt-auto flex w-full items-end gap-2">
+          <div className="flex flex-wrap items-center gap-1.5">
+            {versePreview.map((b) => (
+              <span
+                key={String(b.verseId)}
+                className="inline-flex shrink-0 items-center rounded-full bg-surface whitespace-nowrap leading-none px-2.5 py-1 text-[11px] font-medium text-muted transition-colors duration-200 group-hover:text-foreground/80 border border-border/40"
+              >
+                {b.verseKey || b.verseId}
+              </span>
+            ))}
+          </div>
+          {formattedUpdatedAt ? (
+            <span className="ml-auto inline-flex items-center gap-1 text-[11px] font-medium text-muted/80 whitespace-nowrap text-right">
+              <ClockIcon className="h-3.5 w-3.5" />
+              {formattedUpdatedAt}
+            </span>
+          ) : null}
+        </div>
       </div>
     </BaseCard>
   );

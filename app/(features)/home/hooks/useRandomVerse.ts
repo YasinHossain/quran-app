@@ -47,7 +47,7 @@ export function useRandomVerse({
   onError,
 }: UseRandomVerseOptions): UseRandomVerseReturn {
   const { isAvailable, lastError, markAvailable, markUnavailable, requestRetry } =
-    useRandomVerseAvailability(onError);
+    useRandomVerseAvailability(onError, shouldPreferRemoteRandomVerse());
   const fetchRandomVerse = useRandomVerseFetcher(translationId, markAvailable, markUnavailable);
 
   const {
@@ -73,8 +73,21 @@ export function useRandomVerse({
   };
 }
 
-function useRandomVerseAvailability(onError?: (error: Error) => void): RandomVerseAvailability {
-  const [isAvailable, setIsAvailable] = useState(true);
+function shouldPreferRemoteRandomVerse(): boolean {
+  if (process.env.NEXT_PUBLIC_ENABLE_RANDOM_VERSE_API === 'true') {
+    return true;
+  }
+  if (process.env.NEXT_PUBLIC_ENABLE_RANDOM_VERSE_API === 'false') {
+    return false;
+  }
+  return process.env.NODE_ENV === 'production';
+}
+
+function useRandomVerseAvailability(
+  onError: ((error: Error) => void) | undefined,
+  preferRemote: boolean
+): RandomVerseAvailability {
+  const [isAvailable, setIsAvailable] = useState(preferRemote);
   const [, setRetryCount] = useState(0);
   const [lastError, setLastError] = useState<string | null>(null);
 

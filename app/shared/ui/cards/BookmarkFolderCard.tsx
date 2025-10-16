@@ -141,7 +141,7 @@ export const BookmarkFolderCard = ({
           ) : null}
 
           {formattedUpdatedAt ? (
-            <div className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-muted/60">
+            <div className="mt-auto self-end flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-muted/60">
               <ClockIcon className="h-3.5 w-3.5" />
               {formattedUpdatedAt}
             </div>

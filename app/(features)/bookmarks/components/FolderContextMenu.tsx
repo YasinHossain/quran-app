@@ -66,6 +66,8 @@ const useContextMenu = (): UseContextMenuResult => {
 interface FolderContextMenuProps {
   onDelete: () => void;
   onRename: () => void;
+  onEdit?: () => void;
+  onColorChange?: () => void;
 }
 
 interface FolderMenuPanelProps extends FolderContextMenuProps {
@@ -73,7 +75,14 @@ interface FolderMenuPanelProps extends FolderContextMenuProps {
   onClose: () => void;
 }
 
-const FolderMenuPanel = ({ menuRef, onRename, onDelete, onClose }: FolderMenuPanelProps): React.JSX.Element => (
+const FolderMenuPanel = ({
+  menuRef,
+  onRename,
+  onDelete,
+  onEdit,
+  onColorChange,
+  onClose,
+}: FolderMenuPanelProps): React.JSX.Element => (
   <motion.div
     ref={menuRef}
     initial={{ opacity: 0, scale: 0.95, y: -5 }}
@@ -85,12 +94,42 @@ const FolderMenuPanel = ({ menuRef, onRename, onDelete, onClose }: FolderMenuPan
       event.stopPropagation();
     }}
   >
+    {onEdit ? (
+      <button
+        onClick={(event): void => {
+          event.stopPropagation();
+          onEdit();
+          onClose();
+        }}
+        className="w-full px-4 py-2 text-left text-sm text-foreground hover:bg-surface-hover transition-colors"
+      >
+        Edit details
+      </button>
+    ) : null}
+    {onColorChange ? (
+      <button
+        onClick={(event): void => {
+          event.stopPropagation();
+          onColorChange();
+          onClose();
+        }}
+        className="w-full px-4 py-2 text-left text-sm text-foreground hover:bg-surface-hover transition-colors"
+      >
+        Customize appearance
+      </button>
+    ) : null}
+    {onEdit || onColorChange ? <div className="my-1 h-px bg-border/50" /> : null}
     <RenameItem onRename={onRename} closeMenu={onClose} />
     <DeleteItem onDelete={onDelete} closeMenu={onClose} />
   </motion.div>
 );
 
-export const FolderContextMenu = ({ onDelete, onRename }: FolderContextMenuProps): React.JSX.Element => {
+export const FolderContextMenu = ({
+  onDelete,
+  onRename,
+  onEdit,
+  onColorChange,
+}: FolderContextMenuProps): React.JSX.Element => {
   const { isOpen, menuRef, buttonRef, handleToggleMenu, handleCloseMenu } = useContextMenu();
 
   return (
@@ -113,6 +152,8 @@ export const FolderContextMenu = ({ onDelete, onRename }: FolderContextMenuProps
             onRename={onRename}
             onDelete={onDelete}
             onClose={handleCloseMenu}
+            {...(onEdit ? { onEdit } : {})}
+            {...(onColorChange ? { onColorChange } : {})}
           />
         )}
       </AnimatePresence>
