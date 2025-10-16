@@ -15,7 +15,7 @@ interface FolderGridProps {
   onFolderSelect: (folderId: string) => void;
 }
 
-type FolderAction = 'edit' | 'delete' | 'rename' | 'customize';
+type FolderAction = 'delete' | 'rename' | 'customize';
 
 interface FolderCardsProps {
   folders: Folder[];
@@ -53,7 +53,6 @@ const FolderCards = ({
       <FolderCard
         folder={folder}
         onClick={() => onFolderSelect(folder.id)}
-        onEdit={() => onAction(folder, 'edit')}
         onDelete={() => onAction(folder, 'delete')}
         onRename={() => onAction(folder, 'rename')}
         onColorChange={() => onAction(folder, 'customize')}
@@ -82,7 +81,7 @@ const useFolderModals = (): UseFolderModalsReturn => {
   const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState<'edit' | 'rename' | 'customize'>('edit');
+  const [modalMode, setModalMode] = useState<'rename' | 'customize'>('rename');
 
   const handleAction = (folder: Folder, action: FolderAction): void => {
     setSelectedFolder(folder);

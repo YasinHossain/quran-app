@@ -2,9 +2,7 @@
 
 import React from 'react';
 
-import { FolderIcon } from '@/app/shared/icons';
-import { cn } from '@/lib/utils/cn';
-import { applyOpacity } from '@/app/shared/ui/cards/folderColor.utils';
+import { FolderGlyph } from '@/app/shared/ui/cards/FolderGlyph';
 import { Bookmark, Folder } from '@/types';
 
 interface FolderHeaderProps {
@@ -31,24 +29,13 @@ interface FolderActionsProps {
 }
 
 const FolderIconDisplay = ({ folderItem }: FolderIconProps): React.JSX.Element => (
-  <div
-    className={cn(
-      'relative flex h-10 w-10 items-center justify-center rounded-xl text-accent font-semibold'
-    )}
-    style={{
-      backgroundColor: applyOpacity('rgb(var(--color-accent))', 0.1),
-      boxShadow: `0 6px 16px -12px ${applyOpacity('rgb(var(--color-accent))', 0.5)}`,
-    }}
-    aria-hidden="true"
-  >
-    {folderItem.icon ? (
-      <span className={cn('text-base leading-none', folderItem.color || 'text-accent')}>
-        {folderItem.icon}
-      </span>
-    ) : (
-      <FolderIcon className="w-5 h-5 text-accent" />
-    )}
-  </div>
+  <FolderGlyph
+    folder={folderItem}
+    size="md"
+    backgroundOpacity={0.18}
+    shadowOpacity={0.5}
+    shadowOverride="0 6px 16px -12px"
+  />
 );
 
 const FolderInfo = ({ folderItem, folderBookmarks }: FolderInfoProps): React.JSX.Element => (

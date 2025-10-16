@@ -20,7 +20,7 @@ export const useFolderSettingsSubmit = ({
       if (!folder || !name.trim()) return;
       setIsSubmitting(true);
       try {
-        if (mode === 'rename' || mode === 'edit' || mode === 'customize') {
+        if (mode === 'rename' || mode === 'customize') {
           renameFolder(folder.id, name.trim(), selectedColor, selectedIcon);
         }
         onClose();

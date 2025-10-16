@@ -1,6 +1,6 @@
 import { Folder } from '@/types';
 
-export type FolderSettingsMode = 'edit' | 'rename' | 'customize';
+export type FolderSettingsMode = 'rename' | 'customize';
 
 export interface UseFolderSettingsParams {
   folder: Folder | null;

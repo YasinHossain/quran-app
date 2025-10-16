@@ -66,7 +66,6 @@ const useContextMenu = (): UseContextMenuResult => {
 interface FolderContextMenuProps {
   onDelete: () => void;
   onRename: () => void;
-  onEdit?: () => void;
   onColorChange?: () => void;
 }
 
@@ -79,7 +78,6 @@ const FolderMenuPanel = ({
   menuRef,
   onRename,
   onDelete,
-  onEdit,
   onColorChange,
   onClose,
 }: FolderMenuPanelProps): React.JSX.Element => (
@@ -94,18 +92,6 @@ const FolderMenuPanel = ({
       event.stopPropagation();
     }}
   >
-    {onEdit ? (
-      <button
-        onClick={(event): void => {
-          event.stopPropagation();
-          onEdit();
-          onClose();
-        }}
-        className="w-full px-4 py-2 text-left text-sm text-foreground hover:bg-surface-hover transition-colors"
-      >
-        Edit details
-      </button>
-    ) : null}
     {onColorChange ? (
       <button
         onClick={(event): void => {
@@ -118,7 +104,7 @@ const FolderMenuPanel = ({
         Customize appearance
       </button>
     ) : null}
-    {onEdit || onColorChange ? <div className="my-1 h-px bg-border/50" /> : null}
+    {onColorChange ? <div className="my-1 h-px bg-border/50" /> : null}
     <RenameItem onRename={onRename} closeMenu={onClose} />
     <DeleteItem onDelete={onDelete} closeMenu={onClose} />
   </motion.div>
@@ -127,7 +113,6 @@ const FolderMenuPanel = ({
 export const FolderContextMenu = ({
   onDelete,
   onRename,
-  onEdit,
   onColorChange,
 }: FolderContextMenuProps): React.JSX.Element => {
   const { isOpen, menuRef, buttonRef, handleToggleMenu, handleCloseMenu } = useContextMenu();
@@ -152,7 +137,6 @@ export const FolderContextMenu = ({
             onRename={onRename}
             onDelete={onDelete}
             onClose={handleCloseMenu}
-            {...(onEdit ? { onEdit } : {})}
             {...(onColorChange ? { onColorChange } : {})}
           />
         )}

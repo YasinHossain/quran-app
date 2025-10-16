@@ -3,10 +3,10 @@
 import React, { memo } from 'react';
 
 import { BaseCard, BaseCardProps } from '../BaseCard';
+import { FolderGlyph } from './FolderGlyph';
 import { FolderContextMenu } from '@/app/(features)/bookmarks/components/FolderContextMenu';
-import { ClockIcon, FolderIcon } from '@/app/shared/icons';
+import { ClockIcon } from '@/app/shared/icons';
 import { cn } from '@/lib/utils/cn';
-import { applyOpacity } from './folderColor.utils';
 
 interface FolderData {
   name: string;
@@ -17,7 +17,6 @@ interface FolderData {
 
 interface EnhancedFolderCardProps extends Omit<BaseCardProps, 'children' | 'onClick'> {
   folder: FolderData;
-  onEdit: () => void;
   onDelete: () => void;
   onRename: () => void;
   onColorChange: () => void;
@@ -26,7 +25,6 @@ interface EnhancedFolderCardProps extends Omit<BaseCardProps, 'children' | 'onCl
 
 export const EnhancedFolderCard = memo(function EnhancedFolderCard({
   folder,
-  onEdit,
   onDelete,
   onRename,
   onColorChange,
@@ -86,28 +84,17 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
         <FolderContextMenu
           onDelete={onDelete}
           onRename={onRename}
-          onEdit={onEdit}
           onColorChange={onColorChange}
         />
       </div>
 
       <div className="flex h-full w-full flex-1 flex-col gap-3">
         <div className="flex items-center gap-4 min-w-0 pr-8 sm:pr-12">
-          <div
-            className={cn(
-              'relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent text-on-accent font-semibold shadow-sm'
-            )}
-            style={{
-              boxShadow: `0 10px 24px -18px ${applyOpacity('rgb(var(--color-accent))', 0.5)}`,
-            }}
-            aria-hidden="true"
-          >
-            <FolderIcon size={20} className="text-on-accent" />
-            {/* Count bubble */}
+          <FolderGlyph folder={folder}>
             <span className="absolute -top-1.5 -right-1.5 select-none rounded-full border border-border bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-foreground shadow-sm">
               {bookmarkCount}
             </span>
-          </div>
+          </FolderGlyph>
           <div className="flex-1 min-w-0">
             <h3 className="mb-1 truncate text-lg font-semibold text-foreground transition-colors duration-200 group-hover:text-accent">
               {folder.name}

@@ -1,14 +1,32 @@
 'use client';
 
-import type { Folder } from '@/types';
-
 const isHexShort = (value: string): boolean => value.length === 4;
 
 export const isStyleColor = (value?: string): boolean =>
   !!value && (/^#/.test(value) || /^rgb/.test(value) || /^hsl/.test(value) || /^var\(/.test(value));
 
-export const resolveAccentColor = (color?: string): string =>
-  isStyleColor(color) ? (color as string) : 'rgb(var(--color-accent))';
+const TOKEN_TO_CSS_VARIABLE: Record<string, string> = {
+  'text-accent': '--color-accent',
+  'text-primary': '--color-primary',
+  'text-interactive': '--color-interactive',
+  'text-status-success': '--color-status-success',
+  'text-status-warning': '--color-status-warning',
+  'text-status-error': '--color-status-error',
+  'text-status-info': '--color-status-info',
+  'text-content-accent': '--color-content-accent',
+};
+
+export const resolveAccentColor = (color?: string): string => {
+  if (!color) return 'var(--color-accent)';
+  if (isStyleColor(color)) return color;
+
+  const cssVariable = TOKEN_TO_CSS_VARIABLE[color];
+  if (cssVariable) {
+    return `var(${cssVariable})`;
+  }
+
+  return 'var(--color-accent)';
+};
 
 const expandHex = (hex: string): string =>
   `#${hex
@@ -28,6 +46,9 @@ export const applyOpacity = (color: string, alpha: number): string => {
   }
 
   if (color.startsWith('rgba(')) {
+    if (/^rgba\(\s*var\(/.test(color)) {
+      return color.replace(/^rgba\((var\([^)]+\))\)/, `rgb($1 / ${alpha})`);
+    }
     return color.replace(/rgba\(([^)]+)\)/, (_, values) => {
       const parts = values.split(',').slice(0, 3).join(',').trim();
       return `rgba(${parts}, ${alpha})`;
@@ -35,7 +56,10 @@ export const applyOpacity = (color: string, alpha: number): string => {
   }
 
   if (color.startsWith('rgb(')) {
-    return color.replace('rgb(', 'rgba(').replace(')', `, ${alpha})`);
+    if (/^rgb\(\s*var\(/.test(color)) {
+      return color.replace(/^rgb\((var\([^)]+\))\)/, `rgb($1 / ${alpha})`);
+    }
+    return color.replace(/^rgb\(([^)]+)\)/, `rgba($1, ${alpha})`);
   }
 
   if (color.startsWith('hsla(')) {
@@ -54,10 +78,4 @@ export const applyOpacity = (color: string, alpha: number): string => {
   }
 
   return `rgb(var(--color-accent) / ${alpha})`;
-};
-
-export const getFolderGlyph = (folder: Pick<Folder, 'name' | 'icon'>): string => {
-  const trimmedIcon = folder.icon?.trim();
-  if (trimmedIcon) return trimmedIcon;
-  return folder.name.charAt(0).toUpperCase();
 };

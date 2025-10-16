@@ -9,8 +9,7 @@ export const useFolderModalTitle = (mode: FolderSettingsMode): string =>
         return 'Rename Folder';
       case 'customize':
         return 'Customize Folder';
-      case 'edit':
       default:
-        return 'Edit Folder';
+        return 'Rename Folder';
     }
   }, [mode]);

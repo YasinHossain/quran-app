@@ -8,7 +8,6 @@ import { Folder } from '@/types';
 interface FolderCardProps {
   folder: Folder;
   onClick: () => void;
-  onEdit: () => void;
   onDelete: () => void;
   onRename: () => void;
   onColorChange: () => void;
@@ -17,7 +16,6 @@ interface FolderCardProps {
 export const FolderCard = React.memo(function FolderCard({
   folder,
   onClick,
-  onEdit,
   onDelete,
   onRename,
   onColorChange,
@@ -26,7 +24,6 @@ export const FolderCard = React.memo(function FolderCard({
     <EnhancedFolderCard
       folder={folder}
       onClick={onClick}
-      onEdit={onEdit}
       onDelete={onDelete}
       onRename={onRename}
       onColorChange={onColorChange}

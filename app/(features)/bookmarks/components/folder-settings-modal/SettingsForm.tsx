@@ -4,11 +4,10 @@ import React from 'react';
 
 import { ColorSelector } from '@/app/(features)/bookmarks/components/folder-settings/ColorSelector';
 import { FolderNameInput } from '@/app/(features)/bookmarks/components/folder-settings/FolderNameInput';
-import { IconSelector } from '@/app/(features)/bookmarks/components/folder-settings/IconSelector';
 import { ModalActions } from '@/app/(features)/bookmarks/components/folder-settings/ModalActions';
 
 interface SettingsFormProps {
-  mode: 'edit' | 'rename' | 'customize';
+  mode: 'rename' | 'customize';
   name: string;
   setName: (name: string) => void;
   selectedColor: string;
@@ -26,8 +25,6 @@ export const SettingsForm = ({
   setName,
   selectedColor,
   setSelectedColor,
-  selectedIcon,
-  setSelectedIcon,
   isSubmitting,
   onClose,
   handleSubmit,
@@ -37,7 +34,6 @@ export const SettingsForm = ({
     {mode === 'customize' && (
       <>
         <ColorSelector selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
-        <IconSelector selectedIcon={selectedIcon} setSelectedIcon={setSelectedIcon} />
       </>
     )}
     <ModalActions isSubmitting={isSubmitting} onClose={onClose} />

@@ -8,12 +8,8 @@ import { cn } from '@/lib/utils/cn';
 
 import type { Folder } from '@/types/bookmark';
 
-import {
-  applyOpacity,
-  getFolderGlyph,
-  isStyleColor,
-  resolveAccentColor,
-} from './folderColor.utils';
+import { FolderGlyph } from './FolderGlyph';
+import { applyOpacity, resolveAccentColor } from './folderColor.utils';
 
 interface BookmarkFolderCardProps extends Omit<BaseCardProps, 'children'> {
   folder: Folder;
@@ -83,20 +79,11 @@ export const BookmarkFolderCard = ({
         }}
       />
       <div className="relative flex items-start gap-4 p-4 sm:p-5">
-        <div
-          className={cn(
-            'relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-accent font-semibold',
-            !isStyleColor(folder.color) && folder.color ? folder.color : ''
-          )}
-          style={{
-            color: isStyleColor(folder.color) ? folder.color : undefined,
-            backgroundColor: applyOpacity(accentColor, 0.18),
-            boxShadow: `0 10px 24px -18px ${applyOpacity(accentColor, 0.5)}`,
-          }}
-          aria-hidden="true"
-        >
-          <span className="text-base leading-none">{getFolderGlyph(folder)}</span>
-        </div>
+        <FolderGlyph folder={folder}>
+          <span className="absolute -top-1.5 -right-1.5 select-none rounded-full border border-border bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-foreground shadow-sm">
+            {verseCount}
+          </span>
+        </FolderGlyph>
 
         <div className="flex flex-1 flex-col gap-3 min-w-0">
           <div className="flex items-start gap-3">
