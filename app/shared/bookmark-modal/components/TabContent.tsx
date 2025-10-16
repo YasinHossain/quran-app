@@ -35,7 +35,7 @@ export function TabContent({
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.2 }}
-          className="flex-1 overflow-hidden"
+          className="flex-1 overflow-hidden min-h-0"
         >
           <PinTab verseId={verseId} verseKey={verseKey} />
         </motion.div>
@@ -46,7 +46,7 @@ export function TabContent({
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.2 }}
-          className="flex-1 overflow-hidden flex flex-col"
+          className="flex-1 overflow-hidden flex flex-col min-h-0"
         >
           <BookmarkTab
             verseId={verseId}

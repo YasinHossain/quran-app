@@ -26,10 +26,7 @@ export const usePinnedPage = (): {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const translationId = useMemo(
-    () => settings.translationId ?? settings.translationIds?.[0] ?? 20,
-    [settings.translationId, settings.translationIds]
-  );
+  const translationIds = useMemo(() => settings.translationIds, [settings.translationIds]);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -62,7 +59,9 @@ export const usePinnedPage = (): {
       setError(null);
       try {
         const verses = await Promise.all(
-          pinnedVerses.map((bookmark) => getVerseWithCache(bookmark.verseId, translationId, chapters))
+          pinnedVerses.map((bookmark) =>
+            getVerseWithCache(bookmark.verseId, translationIds, chapters, settings.wordLang)
+          )
         );
 
         if (!isActive) return;
@@ -87,7 +86,7 @@ export const usePinnedPage = (): {
     return () => {
       isActive = false;
     };
-  }, [pinnedVerses, translationId, chapters]);
+  }, [pinnedVerses, translationIds, settings.wordLang, chapters]);
 
   const handleSectionChange = (section: SectionId): void => {
     if (section === 'bookmarks') {

@@ -49,7 +49,7 @@ export function useBookmarkFolderData({ folderId }: UseBookmarkFolderDataParams)
 
       try {
         const loadedVerses = await Promise.all(
-          verseIds.map((id) => getVerseWithCache(id, settings.translationId, chapters))
+          verseIds.map((id) => getVerseWithCache(id, settings.translationIds, chapters, settings.wordLang))
         );
         setVerses(loadedVerses);
       } catch (error) {
@@ -61,7 +61,7 @@ export function useBookmarkFolderData({ folderId }: UseBookmarkFolderDataParams)
     };
 
     loadAllVerses();
-  }, [bookmarks, settings.translationId, chapters]);
+  }, [bookmarks, settings.translationIds, settings.wordLang, chapters]);
 
   return {
     folder,

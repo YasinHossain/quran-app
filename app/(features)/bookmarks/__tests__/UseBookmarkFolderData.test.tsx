@@ -30,15 +30,15 @@ describe('verse cache', () => {
 
   it('evicts oldest entry when cache limit exceeded', async () => {
     for (let i = 0; i < VERSE_CACHE_LIMIT; i++) {
-      await getVerseWithCache(String(i), 1, chapters);
+      await getVerseWithCache(String(i), [1], chapters, 'en');
     }
 
     expect(__verseCache.size).toBe(VERSE_CACHE_LIMIT);
 
-    await getVerseWithCache('overflow', 1, chapters);
+    await getVerseWithCache('overflow', [1], chapters, 'en');
 
     expect(__verseCache.size).toBe(VERSE_CACHE_LIMIT);
-    expect(__verseCache.has('0-1')).toBe(false);
-    expect(__verseCache.has('overflow-1')).toBe(true);
+    expect(__verseCache.has('0-1-en')).toBe(false);
+    expect(__verseCache.has('overflow-1-en')).toBe(true);
   });
 });

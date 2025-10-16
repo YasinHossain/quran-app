@@ -1,6 +1,7 @@
 'use client';
 
 import { getVerseById, getVerseByKey } from '@/lib/api';
+import type { LanguageCode } from '@/lib/text/languageCodes';
 
 import type { Verse, Chapter } from '@/types';
 
@@ -41,10 +42,12 @@ const inferVerseKeyFromId = (rawId: string, chapters: Chapter[]): string | null 
  */
 export async function getVerseWithCache(
   verseId: string,
-  translationId: number,
-  chapters: Chapter[]
+  translationIds: number | number[],
+  chapters: Chapter[],
+  wordLang: LanguageCode = 'en'
 ): Promise<Verse> {
-  const cacheKey = `${verseId}-${translationId}`;
+  const translationsKey = Array.isArray(translationIds) ? translationIds.join(',') : String(translationIds);
+  const cacheKey = `${verseId}-${translationsKey}-${wordLang}`;
 
   if (verseCache.has(cacheKey)) {
     const verse = verseCache.get(cacheKey)!;
@@ -58,17 +61,17 @@ export async function getVerseWithCache(
   let verse: Verse;
 
   if (isCompositeKey) {
-    verse = await getVerseByKey(verseId, translationId);
+    verse = await getVerseByKey(verseId, translationIds, wordLang);
   } else {
     const inferredKey = inferVerseKeyFromId(verseId, chapters);
     if (inferredKey) {
       try {
-        verse = await getVerseByKey(inferredKey, translationId);
+        verse = await getVerseByKey(inferredKey, translationIds, wordLang);
       } catch {
-        verse = await getVerseById(verseId, translationId);
+        verse = await getVerseById(verseId, translationIds, wordLang);
       }
     } else {
-      verse = await getVerseById(verseId, translationId);
+      verse = await getVerseById(verseId, translationIds, wordLang);
     }
   }
 

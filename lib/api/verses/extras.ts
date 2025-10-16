@@ -2,6 +2,7 @@ import { getSurahList } from '@/lib/api/chapters';
 import { apiFetch } from '@/lib/api/client';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { Verse, Juz, Surah } from '@/types';
+import type { LanguageCode } from '@/lib/text/languageCodes';
 
 import { normalizeVerse, ApiVerse } from './normalize';
 
@@ -53,7 +54,10 @@ export async function getRandomVerse(
     const verseKey = `${randomSurah.number}:${randomAyah}`;
     const data = await apiFetch<{ verse: ApiVerse }>(
       `verses/by_key/${verseKey}`,
-      { translations: translationId.toString(), fields: 'text_uthmani' },
+      {
+        translations: translationId.toString(),
+        fields: 'text_uthmani',
+      },
       'Failed to fetch random verse'
     );
     return normalizeVerse(data.verse);
@@ -66,24 +70,47 @@ export async function getRandomVerse(
 
 export async function getVerseById(
   verseId: string | number,
-  translationId: number
+  translationIds: number | number[],
+  wordLang: LanguageCode = 'en'
 ): Promise<Verse> {
+  const translationsParam = Array.isArray(translationIds)
+    ? translationIds.join(',')
+    : translationIds.toString();
   const data = await apiFetch<{ verse: ApiVerse }>(
     `verses/${verseId}`,
-    { translations: translationId.toString(), fields: 'text_uthmani' },
+    {
+      translations: translationsParam,
+      fields: 'text_uthmani,audio',
+      words: 'true',
+      word_translation_language: wordLang,
+      word_fields: 'text_uthmani',
+    },
     'Failed to fetch verse'
   );
-  return normalizeVerse(data.verse);
+  return normalizeVerse(data.verse, wordLang);
 }
 
 /**
  * Fetch a single verse by its composite key (e.g., "2:255").
  */
-export async function getVerseByKey(verseKey: string, translationId: number): Promise<Verse> {
+export async function getVerseByKey(
+  verseKey: string,
+  translationIds: number | number[],
+  wordLang: LanguageCode = 'en'
+): Promise<Verse> {
+  const translationsParam = Array.isArray(translationIds)
+    ? translationIds.join(',')
+    : translationIds.toString();
   const data = await apiFetch<{ verse: ApiVerse }>(
     `verses/by_key/${encodeURIComponent(verseKey)}`,
-    { translations: translationId.toString(), fields: 'text_uthmani' },
+    {
+      translations: translationsParam,
+      fields: 'text_uthmani,audio',
+      words: 'true',
+      word_translation_language: wordLang,
+      word_fields: 'text_uthmani',
+    },
     'Failed to fetch verse by key'
   );
-  return normalizeVerse(data.verse);
+  return normalizeVerse(data.verse, wordLang);
 }

@@ -32,7 +32,7 @@ export const BookmarkTab = memo(function BookmarkTab({
   });
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col min-h-0">
       <BookmarkTabHeader
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -42,7 +42,7 @@ export const BookmarkTab = memo(function BookmarkTab({
         onToggleCreateFolder={onToggleCreateFolder}
         onCreateFolder={handleCreateFolder}
       />
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="flex-1 overflow-y-auto p-6 min-h-0">
         <FolderList
           folders={filteredFolders}
           verseId={verseId}

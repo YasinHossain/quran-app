@@ -48,9 +48,9 @@ describe('getVerseWithCache', () => {
   it('fetches by key when verseId contains ":"', async () => {
     getVerseByKey.mockResolvedValue(sampleVerse(1, '2:255'));
 
-    const verse = await getVerseWithCache('2:255', 20, chaptersMock);
+    const verse = await getVerseWithCache('2:255', [20], chaptersMock, 'en');
 
-    expect(getVerseByKey).toHaveBeenCalledWith('2:255', 20);
+    expect(getVerseByKey).toHaveBeenCalledWith('2:255', [20], 'en');
     expect(getVerseById).not.toHaveBeenCalled();
     expect(verse.verse_key).toBe('2:255');
   });
@@ -58,9 +58,9 @@ describe('getVerseWithCache', () => {
   it('fetches by numeric id when verseId is digits only', async () => {
     getVerseByKey.mockResolvedValue(sampleVerse(262, '2:255'));
 
-    const verse = await getVerseWithCache('262', 20, chaptersMock);
+    const verse = await getVerseWithCache('262', [20], chaptersMock, 'en');
 
-    expect(getVerseByKey).toHaveBeenCalledWith('2:255', 20);
+    expect(getVerseByKey).toHaveBeenCalledWith('2:255', [20], 'en');
     expect(getVerseById).not.toHaveBeenCalled();
     expect(verse.id).toBe(262);
   });
@@ -68,8 +68,8 @@ describe('getVerseWithCache', () => {
   it('caches results for repeated lookups', async () => {
     getVerseByKey.mockResolvedValue(sampleVerse(10, '1:10'));
 
-    await getVerseWithCache('10', 20, chaptersMock);
-    const cached = await getVerseWithCache('10', 20, chaptersMock);
+    await getVerseWithCache('10', [20], chaptersMock, 'en');
+    const cached = await getVerseWithCache('10', [20], chaptersMock, 'en');
 
     expect(getVerseByKey).toHaveBeenCalledTimes(1);
     expect(__verseCache.size).toBe(1);
@@ -82,10 +82,10 @@ describe('getVerseWithCache', () => {
     });
     getVerseById.mockResolvedValue(sampleVerse(3, '1:3'));
 
-    const verse = await getVerseWithCache('3', 20, chaptersMock);
+    const verse = await getVerseWithCache('3', [20], chaptersMock, 'en');
 
-    expect(getVerseByKey).toHaveBeenCalledWith('1:3', 20);
-    expect(getVerseById).toHaveBeenCalledWith('3', 20);
+    expect(getVerseByKey).toHaveBeenCalledWith('1:3', [20], 'en');
+    expect(getVerseById).toHaveBeenCalledWith('3', [20], 'en');
     expect(verse.verse_key).toBe('1:3');
   });
 });

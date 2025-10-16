@@ -42,12 +42,12 @@ export const useTafsirVerseData = (surahId: string, ayahId: string): UseTafsirVe
 
   const { data: verseData } = useSWR(
     surahId && ayahId
-      ? (['verse', surahId, ayahId, settings.translationId, wordLanguage] as const)
+      ? (['verse', surahId, ayahId, settings.translationIds.join(','), wordLanguage] as const)
       : null,
-    ([, s, a, trId, lang]) =>
+    ([, s, a, trIds, lang]) =>
       getVersesByChapter({
         id: s,
-        translationIds: trId,
+        translationIds: (trIds as string).split(',').map((n) => Number(n)).filter(Boolean),
         page: Number(a),
         perPage: 1,
         wordLang: lang,
