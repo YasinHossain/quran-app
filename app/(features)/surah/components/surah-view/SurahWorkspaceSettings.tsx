@@ -69,7 +69,7 @@ export function SurahWorkspaceSettings({
   );
 
   return (
-    <div className="flex h-full flex-col bg-surface text-foreground">
+    <div className="relative flex h-full flex-col bg-background text-foreground">
       <div className="flex flex-none items-center justify-between border-b border-border px-4 py-3">
         <h2 className="text-sm font-semibold text-content-primary">Settings</h2>
       </div>
