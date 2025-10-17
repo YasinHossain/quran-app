@@ -50,8 +50,10 @@ export const SettingsSidebar = (props: SettingsSidebarProps): ReactElement => {
       position="right"
       aria-label="Settings panel"
     >
-      <SettingsContentWrapper {...contentWrapperProps} />
-      <SettingsPanels {...panelsProps} />
+      <div className="relative flex flex-1 min-w-0 flex-col overflow-hidden">
+        <SettingsContentWrapper {...contentWrapperProps} />
+        <SettingsPanels {...panelsProps} />
+      </div>
     </BaseSidebar>
   );
 };

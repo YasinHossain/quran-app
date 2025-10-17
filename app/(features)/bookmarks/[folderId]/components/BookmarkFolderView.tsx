@@ -92,6 +92,8 @@ export function BookmarkFolderView({
           </WorkspaceMain>
         }
         right={<SurahWorkspaceSettings {...surahWorkspaceSettingsProps} />}
+        leftContainerClassName="lg:py-6"
+        rightContainerClassName="lg:py-6"
       />
     </>
   );

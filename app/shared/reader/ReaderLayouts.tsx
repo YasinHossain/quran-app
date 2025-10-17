@@ -42,6 +42,8 @@ export const WorkspaceReaderLayout = ({
       left={desktopLeft}
       center={<WorkspaceMain data-slot="surah-workspace-main">{main}</WorkspaceMain>}
       right={desktopRight}
+      leftContainerClassName="lg:py-0"
+      rightContainerClassName="lg:py-0"
     />
 
     <SurahAudio

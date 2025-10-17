@@ -62,7 +62,6 @@ export function ThreeColumnWorkspace({
         className={cn(
           'relative flex h-[100dvh] w-full bg-background text-foreground',
           headerOffsetClass,
-          'pb-safe',
           className
         )}
         data-slot="workspace-root"
@@ -71,7 +70,7 @@ export function ThreeColumnWorkspace({
           <aside
             className={cn(
               'hidden lg:flex lg:h-full lg:w-reader-sidebar-left lg:flex-shrink-0 lg:flex-col lg:gap-4',
-              'lg:border-r lg:border-border lg:bg-surface lg:py-6',
+              'lg:bg-background',
               leftContainerClassName
             )}
             data-slot="workspace-left"
@@ -91,7 +90,7 @@ export function ThreeColumnWorkspace({
           <aside
             className={cn(
               'hidden lg:flex lg:h-full lg:w-reader-sidebar-right lg:flex-shrink-0 lg:flex-col lg:gap-4',
-              'lg:border-l lg:border-border lg:bg-surface lg:py-6',
+              'lg:border-l lg:border-border lg:bg-background',
               rightContainerClassName
             )}
             data-slot="workspace-right"

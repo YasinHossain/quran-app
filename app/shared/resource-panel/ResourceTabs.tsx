@@ -76,11 +76,14 @@ export const ResourceTabs = ({
   scrollTabsRight,
   className = '',
 }: ResourceTabsProps): React.JSX.Element => (
-  <div className={`flex items-center overflow-hidden ${className}`}>
+  <div className={`flex min-w-0 items-center overflow-hidden ${className}`}>
     <NavButton disabled={!canScrollLeft} onClick={scrollTabsLeft} side="left">
       <ChevronLeftIcon size={20} />
     </NavButton>
-    <div ref={tabsContainerRef} className="flex items-center space-x-2 overflow-hidden flex-1">
+    <div
+      ref={tabsContainerRef}
+      className="flex flex-1 min-w-0 items-center space-x-2 overflow-hidden"
+    >
       {languages.map((lang) => (
         <Tab key={lang} lang={lang} active={activeFilter === lang} onClick={onTabClick} />
       ))}

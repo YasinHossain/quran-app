@@ -64,7 +64,10 @@ export function useSurahTabsState(chapters: ReadonlyArray<Chapter>): SurahTabsSt
     selectedSurahId,
     selectedJuzId,
     selectedPageId,
-    isEnabled: isSurahListOpen || hasOpened,
+    // Always enable scroll persistence and centering logic so desktop left nav
+    // retains its position across route changes. Mobile overlay still benefits,
+    // and guards inside the hooks prevent running without a container.
+    isEnabled: true,
   });
 
   return {

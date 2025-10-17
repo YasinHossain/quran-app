@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { cn } from '@/lib/utils/cn';
+import { useSidebar } from '@/app/providers/SidebarContext';
 
 import { HomeIcon, BookmarkOutlineIcon, GridIcon } from './icons';
 
@@ -23,12 +24,9 @@ const DesktopNavigation = memo(function DesktopNavigation({
   navItems: NavItem[];
   linkStyles: string;
 }) {
-  const desktopStyle = useMemo(() => ({ height: 'calc(100vh - var(--reader-header-height))' }), []);
-
   return (
     <nav
-      className="fixed left-0 top-reader-header hidden w-16 border-r border-border bg-background z-50 lg:block"
-      style={desktopStyle}
+      className="fixed left-0 top-reader-header bottom-0 hidden w-16 border-r border-border bg-background z-50 lg:block"
       aria-label="Primary navigation"
     >
       <div className="h-full flex flex-col items-center justify-center space-y-4">
@@ -91,6 +89,8 @@ const MobileNavigation = memo(function MobileNavigation({
 export const Navigation = memo(function Navigation() {
   const { t } = useTranslation();
   const { isHidden } = useHeaderVisibility();
+  const { isSurahListOpen, isBookmarkSidebarOpen } = useSidebar();
+  const hideMobileNav = isHidden || isSurahListOpen || isBookmarkSidebarOpen;
 
   const navItems = useMemo(
     (): NavItem[] => [
@@ -110,7 +110,7 @@ export const Navigation = memo(function Navigation() {
   return (
     <>
       <DesktopNavigation navItems={navItems} linkStyles={linkStyles} />
-      <MobileNavigation navItems={navItems} linkStyles={linkStyles} isHidden={isHidden} />
+      <MobileNavigation navItems={navItems} linkStyles={linkStyles} isHidden={hideMobileNav} />
     </>
   );
 });
