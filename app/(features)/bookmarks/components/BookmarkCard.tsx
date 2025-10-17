@@ -68,8 +68,7 @@ export const BookmarkCard = memo(function BookmarkCard({
   onRemove,
 }: BookmarkCardProps): React.JSX.Element {
   const { settings } = useSettings();
-  const { chapters } = useBookmarks();
-  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark, chapters);
+  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark);
 
   const { handlePlayPause, isPlaying, isLoadingAudio } = useBookmarkAudio(
     enrichedBookmark,

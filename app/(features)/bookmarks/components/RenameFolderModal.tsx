@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { PanelModalCenter } from '@/app/shared/ui/PanelModalCenter';
 import { Button } from '@/app/shared/ui/Button';
+import { PanelModalCenter } from '@/app/shared/ui/PanelModalCenter';
 import { cn } from '@/lib/utils/cn';
 
 import type { Folder } from '@/types';
@@ -61,7 +61,10 @@ export const RenameFolderModal = ({
     >
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
-          <label htmlFor="rename-folder-name" className="block text-sm font-semibold text-foreground">
+          <label
+            htmlFor="rename-folder-name"
+            className="block text-sm font-semibold text-foreground"
+          >
             Folder Name
           </label>
           <input

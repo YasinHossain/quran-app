@@ -107,7 +107,10 @@ function useBookmarkHelpers(
 
   const setLastRead = useCallback(
     (surahId: string, verseId: number) => {
-      setLastReadState((prev) => ({ ...prev, [surahId]: verseId }));
+      setLastReadState((prev) => {
+        if (prev[surahId] === verseId) return prev;
+        return { ...prev, [surahId]: verseId };
+      });
     },
     [setLastReadState]
   );

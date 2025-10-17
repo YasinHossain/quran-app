@@ -34,8 +34,6 @@ export function BookmarkFolderClient({ folderId }: BookmarkFolderClientProps): R
       onCloseSidebar={() => controller.setBookmarkSidebarOpen(false)}
       onBack={controller.handleNavigateToBookmarks}
       folderName={controller.folder.name}
-      verses={controller.verses}
-      loadingVerses={controller.loadingVerses}
       onOpenTranslationPanel={() => controller.setIsTranslationPanelOpen(true)}
       onCloseTranslationPanel={() => controller.setIsTranslationPanelOpen(false)}
       isTranslationPanelOpen={controller.isTranslationPanelOpen}

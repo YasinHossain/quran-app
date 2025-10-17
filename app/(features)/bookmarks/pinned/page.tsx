@@ -2,15 +2,15 @@
 
 import React, { useCallback } from 'react';
 
-import { BookmarksLayout } from '@/app/(features)/bookmarks/components/shared/BookmarksLayout';
 import { useBookmarkFolderPanels } from '@/app/(features)/bookmarks/[folderId]/hooks';
+import { BookmarksLayout } from '@/app/(features)/bookmarks/components/shared/BookmarksLayout';
 import { SurahWorkspaceSettings } from '@/app/(features)/surah/components/surah-view/SurahWorkspaceSettings';
 
 import { PinnedHeader, PinnedSettingsSidebar, PinnedVersesList } from './components';
 import { usePinnedPage } from './hooks/usePinnedPage';
 
 export default function PinnedAyahPage(): React.JSX.Element {
-  const { entries, isLoading, error, handleSectionChange } = usePinnedPage();
+  const { bookmarks, isLoading, handleSectionChange } = usePinnedPage();
   const {
     isTranslationPanelOpen,
     setIsTranslationPanelOpen,
@@ -68,7 +68,7 @@ export default function PinnedAyahPage(): React.JSX.Element {
         }
       >
         <PinnedHeader />
-        <PinnedVersesList entries={entries} isLoading={isLoading} error={error} />
+        <PinnedVersesList bookmarks={bookmarks} isLoading={isLoading} />
       </BookmarksLayout>
     </>
   );

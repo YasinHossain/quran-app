@@ -2,11 +2,12 @@ import { screen, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
 import PinnedAyahPage from '@/app/(features)/bookmarks/pinned/page';
+import { PINNED_STORAGE_KEY } from '@/app/providers/bookmarks/constants';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { push } from '@/app/testUtils/mockRouter';
 import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
-import { PINNED_STORAGE_KEY } from '@/app/providers/bookmarks/constants';
 import * as chaptersApi from '@/lib/api/chapters';
+
 import type { Verse } from '@/types';
 // Router mocked via testUtils/mockRouter
 
@@ -56,8 +57,24 @@ jest.mock('framer-motion', () => ({
   AnimatePresence: ({ children }: any) => <>{children}</>,
 }));
 
-jest.mock('@/app/(features)/bookmarks/hooks/verseCache', () => ({
-  getVerseWithCache: jest.fn(),
+jest.mock('@/app/shared/hooks/useSingleVerse', () => ({
+  useSingleVerse: jest.fn(),
+}));
+
+// Reduce render tree and memory by stubbing heavy reader components
+jest.mock('@/app/shared/reader', () => ({
+  ThreeColumnWorkspace: ({ left, center, right }: any) => (
+    <div>
+      <div data-testid="left-col">{left}</div>
+      <div data-testid="center-col">{center}</div>
+      <div data-testid="right-col">{right}</div>
+    </div>
+  ),
+  WorkspaceMain: ({ children }: any) => <div>{children}</div>,
+  // Render the primary translation text to match expectations
+  ReaderVerseCard: ({ verse }: any) => (
+    <div data-testid="reader-verse-card">{verse?.translations?.[0]?.text}</div>
+  ),
 }));
 
 beforeAll(() => {
@@ -69,10 +86,16 @@ beforeEach(() => {
     { id: 1, name_simple: 'Al-Fatihah', verses_count: 7 },
   ]);
   push.mockClear();
-  const { getVerseWithCache } = jest.requireMock('@/app/(features)/bookmarks/hooks/verseCache') as {
-    getVerseWithCache: jest.Mock;
+  const { useSingleVerse } = jest.requireMock('@/app/shared/hooks/useSingleVerse') as {
+    useSingleVerse: jest.Mock;
   };
-  getVerseWithCache.mockReset();
+  useSingleVerse.mockReset();
+  useSingleVerse.mockReturnValue({
+    verse: undefined,
+    isLoading: false,
+    error: null,
+    mutate: jest.fn(),
+  });
   window.localStorage.clear();
   (window as any).__TEST_BOOKMARK_CHAPTERS__ = [
     {
@@ -104,13 +127,18 @@ describe('Pinned Ayah Page', () => {
       id: 1,
       verse_key: '1:1',
       text_uthmani: 'بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ',
-      translations: [{ resource_id: 20, text: 'In the name of Allah, the Entirely Merciful, the Especially Merciful.' }],
+      translations: [
+        {
+          resource_id: 20,
+          text: 'In the name of Allah, the Entirely Merciful, the Especially Merciful.',
+        },
+      ],
     };
 
-    const { getVerseWithCache } = jest.requireMock('@/app/(features)/bookmarks/hooks/verseCache') as {
-      getVerseWithCache: jest.Mock;
+    const { useSingleVerse } = jest.requireMock('@/app/shared/hooks/useSingleVerse') as {
+      useSingleVerse: jest.Mock;
     };
-    getVerseWithCache.mockResolvedValue(verse);
+    useSingleVerse.mockReturnValue({ verse, isLoading: false, error: null, mutate: jest.fn() });
 
     window.localStorage.setItem(
       PINNED_STORAGE_KEY,
@@ -119,7 +147,11 @@ describe('Pinned Ayah Page', () => {
 
     renderWithProviders(<PinnedAyahPage />);
 
-    expect(await screen.findByText('In the name of Allah, the Entirely Merciful, the Especially Merciful.')).toBeInTheDocument();
-    expect(getVerseWithCache).toHaveBeenCalledWith('1', expect.any(Number), expect.any(Array));
+    expect(
+      await screen.findByText(
+        'In the name of Allah, the Entirely Merciful, the Especially Merciful.'
+      )
+    ).toBeInTheDocument();
+    expect(useSingleVerse).toHaveBeenCalledWith({ idOrKey: '1' });
   });
 });

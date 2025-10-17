@@ -1,26 +1,25 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import React, { useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import React from 'react';
 
+import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
 import { useVerseCard } from '@/app/(features)/surah/components/verse-card/useVerseCard';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { ReaderVerseCard } from '@/app/shared/reader';
 import { Spinner } from '@/app/shared/Spinner';
 
-import type { PinnedVerseEntry } from '../hooks/usePinnedPage';
+import type { Bookmark, Verse } from '@/types';
 
 interface PinnedVersesListProps {
-  entries: PinnedVerseEntry[];
+  bookmarks: Bookmark[];
   isLoading: boolean;
-  error: string | null;
 }
 
 export const PinnedVersesList = ({
-  entries,
+  bookmarks,
   isLoading,
-  error,
 }: PinnedVersesListProps): React.JSX.Element => {
   if (isLoading) {
     return (
@@ -30,15 +29,7 @@ export const PinnedVersesList = ({
     );
   }
 
-  if (error) {
-    return (
-      <div className="text-center py-20 text-status-error bg-status-error/10 p-4 rounded-lg">
-        {error}
-      </div>
-    );
-  }
-
-  if (entries.length === 0) {
+  if (bookmarks.length === 0) {
     return (
       <div className="text-center py-16">
         <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
@@ -62,31 +53,59 @@ export const PinnedVersesList = ({
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full">
       <div className="space-y-0">
-        {entries.map((entry) => (
-          <PinnedVerseItem key={entry.bookmark.verseId} entry={entry} />
+        {bookmarks.map((bookmark) => (
+          <PinnedVerseListItem key={bookmark.verseId} bookmark={bookmark} />
         ))}
       </div>
     </motion.div>
   );
 };
 
-const PinnedVerseItem = ({ entry }: { entry: PinnedVerseEntry }): React.JSX.Element => {
-  const { bookmark, verse } = entry;
+const PinnedVerseListItem = ({ bookmark }: { bookmark: Bookmark }): React.JSX.Element => {
+  const { bookmark: enrichedBookmark, verse, isLoading, error } = useBookmarkVerse(bookmark);
+
+  if (error) {
+    return (
+      <div className="text-center py-6 text-status-error bg-status-error/10 p-4 rounded-lg">
+        Failed to load verse {bookmark.verseId}. {error}
+      </div>
+    );
+  }
+
+  if (isLoading || !verse || !enrichedBookmark.verseKey) {
+    return (
+      <div className="flex justify-center py-12">
+        <Spinner className="h-6 w-6 text-accent" />
+      </div>
+    );
+  }
+
+  return <LoadedPinnedVerseItem verse={verse} bookmark={enrichedBookmark} />;
+};
+
+const LoadedPinnedVerseItem = ({
+  verse,
+  bookmark,
+}: {
+  verse: Verse;
+  bookmark: Bookmark;
+}): React.JSX.Element => {
   const router = useRouter();
   const { togglePinned, isPinned } = useBookmarks();
   const { verseRef, isPlaying, isLoadingAudio, isVerseBookmarked, handlePlayPause } =
     useVerseCard(verse);
 
-  const handleNavigateToVerse = useCallback(() => {
-    if (!verse.verse_key) return;
-    const [surahId] = verse.verse_key.split(':');
+  const handleNavigateToVerse = React.useCallback(() => {
+    const verseKey = bookmark.verseKey ?? verse.verse_key;
+    if (!verseKey) return;
+    const [surahId] = verseKey.split(':');
     if (!surahId) return;
     router.push(`/surah/${surahId}#verse-${bookmark.verseId}`);
-  }, [router, verse.verse_key, bookmark.verseId]);
+  }, [bookmark.verseId, bookmark.verseKey, router, verse.verse_key]);
 
-  const handleTogglePinned = useCallback(() => {
-    togglePinned(bookmark.verseId, { verseKey: verse.verse_key });
-  }, [togglePinned, bookmark.verseId, verse.verse_key]);
+  const handleTogglePinned = React.useCallback(() => {
+    togglePinned(bookmark.verseId, { verseKey: bookmark.verseKey ?? verse.verse_key });
+  }, [bookmark.verseId, bookmark.verseKey, togglePinned, verse.verse_key]);
 
   return (
     <motion.div
@@ -98,8 +117,8 @@ const PinnedVerseItem = ({ entry }: { entry: PinnedVerseEntry }): React.JSX.Elem
         ref={verseRef}
         verse={verse}
         actions={{
-          verseKey: verse.verse_key,
-          verseId: String(verse.id),
+          verseKey: bookmark.verseKey ?? verse.verse_key,
+          verseId: bookmark.verseId,
           isPlaying,
           isLoadingAudio,
           isBookmarked: isVerseBookmarked,

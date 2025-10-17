@@ -2,17 +2,25 @@ import { Folder, Bookmark, MemorizationPlan } from '@/types';
 
 const generateId = (): string => {
   if (typeof globalThis !== 'undefined') {
-    const { crypto } = globalThis;
-    if (crypto && typeof crypto.randomUUID === 'function') {
-      return crypto.randomUUID();
-    }
-    if (crypto && typeof crypto.getRandomValues === 'function') {
-      const bytes = new Uint8Array(16);
-      crypto.getRandomValues(bytes);
-      bytes[6] = (bytes[6] & 0x0f) | 0x40;
-      bytes[8] = (bytes[8] & 0x3f) | 0x80;
-      const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
-      return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+    const cryptoGlobal = globalThis as typeof globalThis & { crypto?: Crypto };
+    const cryptoApi = cryptoGlobal.crypto;
+
+    if (cryptoApi) {
+      const ensuredCrypto = cryptoApi;
+
+      if (typeof ensuredCrypto.randomUUID === 'function') {
+        return ensuredCrypto.randomUUID();
+      }
+
+      if (typeof ensuredCrypto.getRandomValues === 'function') {
+        const bytes = ensuredCrypto.getRandomValues(new Uint8Array(16)) as Uint8Array;
+        const sixth = bytes[6] ?? 0;
+        const eighth = bytes[8] ?? 0;
+        bytes[6] = (sixth & 0x0f) | 0x40;
+        bytes[8] = (eighth & 0x3f) | 0x80;
+        const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+        return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+      }
     }
   }
 

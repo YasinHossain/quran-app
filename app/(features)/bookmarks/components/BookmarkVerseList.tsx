@@ -1,65 +1,74 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import React, { useCallback } from 'react';
+import React from 'react';
 
+import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
 import { useVerseCard } from '@/app/(features)/surah/components/verse-card/useVerseCard';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { ReaderVerseCard } from '@/app/shared/reader';
 import { Spinner } from '@/app/shared/Spinner';
 
-import type { Verse as VerseType } from '@/types';
+import type { Bookmark, Verse } from '@/types';
 
 interface BookmarkVerseListProps {
-  verses: VerseType[];
-  isLoading: boolean;
-  error: string | null;
-  searchTerm?: string;
+  bookmarks: Bookmark[];
 }
 
-export const BookmarkVerseList = ({
-  verses,
-  isLoading,
-  error,
-  searchTerm = '',
-}: BookmarkVerseListProps): React.JSX.Element => {
+export const BookmarkVerseList = ({ bookmarks }: BookmarkVerseListProps): React.JSX.Element => {
+  if (bookmarks.length === 0) {
+    return <div className="text-center py-20 text-muted">No verses in this folder</div>;
+  }
+
   return (
     <div className="w-full relative">
-      {isLoading ? (
-        <div className="flex justify-center py-20">
-          <Spinner className="h-8 w-8 text-accent" />
-        </div>
-      ) : error ? (
-        <div className="text-center py-20 text-status-error bg-status-error/10 p-4 rounded-lg">
-          {error}
-        </div>
-      ) : verses.length > 0 ? (
-        <div className="space-y-0">
-          {verses.map((verse) => (
-            <VerseItem key={verse.id} verse={verse} />
-          ))}
-        </div>
-      ) : searchTerm ? (
-        <div className="text-center py-20 text-muted">
-          No verses found matching &quot;{searchTerm}&quot;
-        </div>
-      ) : (
-        <div className="text-center py-20 text-muted">No verses in this folder</div>
-      )}
+      <div className="space-y-0">
+        {bookmarks.map((bookmark) => (
+          <BookmarkVerseListItem key={bookmark.verseId} bookmark={bookmark} />
+        ))}
+      </div>
     </div>
   );
 };
 
-const VerseItem = ({ verse }: { verse: VerseType }): React.JSX.Element => {
+const BookmarkVerseListItem = ({ bookmark }: { bookmark: Bookmark }): React.JSX.Element => {
+  const { bookmark: enrichedBookmark, verse, isLoading, error } = useBookmarkVerse(bookmark);
+
+  if (error) {
+    return (
+      <div className="text-center py-6 text-status-error bg-status-error/10 p-4 rounded-lg">
+        Failed to load verse {bookmark.verseId}. {error}
+      </div>
+    );
+  }
+
+  if (isLoading || !verse || !enrichedBookmark.verseKey) {
+    return (
+      <div className="flex justify-center py-12">
+        <Spinner className="h-6 w-6 text-accent" />
+      </div>
+    );
+  }
+
+  return <LoadedBookmarkVerseItem verse={verse} bookmark={enrichedBookmark} />;
+};
+
+const LoadedBookmarkVerseItem = ({
+  verse,
+  bookmark,
+}: {
+  verse: Verse;
+  bookmark: Bookmark;
+}): React.JSX.Element => {
   const { removeBookmark, findBookmark } = useBookmarks();
   const { verseRef, isPlaying, isLoadingAudio, isVerseBookmarked, handlePlayPause } =
     useVerseCard(verse);
 
-  const handleRemoveBookmark = useCallback(() => {
-    const bookmarkInfo = findBookmark(String(verse.id));
+  const handleRemoveBookmark = React.useCallback(() => {
+    const bookmarkInfo = findBookmark(bookmark.verseId);
     if (!bookmarkInfo) return;
-    removeBookmark(String(verse.id), bookmarkInfo.folder.id);
-  }, [findBookmark, removeBookmark, verse.id]);
+    removeBookmark(bookmark.verseId, bookmarkInfo.folder.id);
+  }, [bookmark.verseId, findBookmark, removeBookmark]);
 
   return (
     <motion.div
@@ -71,8 +80,8 @@ const VerseItem = ({ verse }: { verse: VerseType }): React.JSX.Element => {
         ref={verseRef}
         verse={verse}
         actions={{
-          verseKey: verse.verse_key,
-          verseId: String(verse.id),
+          verseKey: bookmark.verseKey ?? verse.verse_key,
+          verseId: bookmark.verseId,
           isPlaying,
           isLoadingAudio,
           isBookmarked: isVerseBookmarked,

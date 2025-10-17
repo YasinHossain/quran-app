@@ -16,6 +16,14 @@ export const BookmarkTab = memo(function BookmarkTab({
   onToggleCreateFolder,
   onNewFolderNameChange,
 }: BookmarkTabProps): React.JSX.Element {
+  const bookmarkTabParams = {
+    verseId,
+    newFolderName,
+    onNewFolderNameChange,
+    onToggleCreateFolder,
+    ...(verseKey !== undefined ? { verseKey } : {}),
+  };
+
   const {
     searchQuery,
     setSearchQuery,
@@ -23,13 +31,7 @@ export const BookmarkTab = memo(function BookmarkTab({
     handleFolderSelect,
     handleCreateFolder,
     findBookmark,
-  } = useBookmarkTab({
-    verseId,
-    verseKey,
-    newFolderName,
-    onNewFolderNameChange,
-    onToggleCreateFolder,
-  });
+  } = useBookmarkTab(bookmarkTabParams);
 
   return (
     <div className="flex-1 flex flex-col min-h-0">

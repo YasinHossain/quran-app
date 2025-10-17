@@ -70,10 +70,7 @@ export const FolderHeader = memo(function FolderHeader({
         <FolderInfoSection folder={folder} bookmarkCount={bookmarkCount} />
       </div>
       <div className="flex-shrink-0">
-        <FolderContextMenu
-          onDelete={onDelete}
-          onRename={onRename}
-        />
+        <FolderContextMenu onDelete={onDelete} onRename={onRename} />
       </div>
     </div>
   );

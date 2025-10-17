@@ -208,46 +208,44 @@ This roadmap breaks work into small, verifiable phases suitable for step‑by‑
 
 Deliverable: all single‑verse payloads can include multiple translations + words. ✅
 
-### Phase 2 - Add `useSingleVerse` and Adopt It
+### Phase 2 — Add `useSingleVerse` and Adopt It
 
 - [x] Implement `app/shared/hooks/useSingleVerse.ts`:
   - Reads `translationIds`, `wordLang` from `SettingsContext`.
   - Infers key vs id and fetches via unified fetchers.
   - SWR key: `['single-verse', idOrKey, translationIds.join(','), wordLang]`.
 - [x] Replace ad-hoc single verse loads in:
-  - Bookmarks (folder): `app/(features)/bookmarks/[folderId]/hooks/*`
-  - Pinned: `app/(features)/bookmarks/pinned/hooks/*`
-  - (Optional) Tafsir: use the hook instead of list-API with perPage=1.
+  - [x] Bookmarks (folder): `app/(features)/bookmarks/[folderId]/hooks/*`
+  - [x] Pinned: `app/(features)/bookmarks/pinned/hooks/*`
+  - [x] (Optional) Tafsir: use the hook instead of list-API with perPage=1.
 
 Deliverable: one standard path for single‑verse fetching across features.
 
 ### Phase 3 — SWR & Prefetch Optimization
 
-- [x] Global SWR config (dedup and revalidate strategies): `app/providers/ClientProviders.tsx` or a SWRConfig provider.
-- [x] Prefetch neighbors:
+- [ ] Global SWR config (dedup and revalidate strategies): `app/providers/ClientProviders.tsx` or a SWRConfig provider.
+- [ ] Prefetch neighbors:
   - Tafsir: prefetch `ayahId ± 1` when user stops scrolling/reading.
   - Surah list: prefetch next page when nearing end (already partly handled by infinite loader).
-- [x] Virtualize long lists if needed (evaluate current perf first).
+- [ ] Virtualize long lists if needed (evaluate current perf first).
 
 Deliverable: reduced duplicate requests and smoother navigation.
 
 ### Phase 4 — Server/Edge Caching (optional, for traffic scale)
 
-- [x] Introduce Next.js Route Handlers as a caching proxy for Quran API endpoints used by the app.
-- [x] Key cache by `path | translationIds | wordLang`; add short TTL + ETag support.
-- [x] Centralize fetchers to hit the proxy first (feature‑flagged for rollout).
+- [ ] Introduce Next.js Route Handlers as a caching proxy for Quran API endpoints used by the app.
+- [ ] Key cache by `path | translationIds | wordLang`; add short TTL + ETag support.
+- [ ] Centralize fetchers to hit the proxy first (feature‑flagged for rollout).
 
 Deliverable: predictable, CDN‑friendly caching with consistent request shapes.
 
-Implementation reference: `app/api/quran/[[...path]]/route.ts` (configurable via `NEXT_PUBLIC_ENABLE_QURAN_PROXY`, `QURAN_PROXY_TTL_MS`, and `QURAN_PROXY_CACHE_SIZE`).
-
 ### Phase 5 — Observability & Tests
 
-- [x] Instrument hit/miss for verse LRU cache and log slow requests.
-- [x] Unit tests:
+- [ ] Instrument hit/miss for verse LRU cache and log slow requests.
+- [ ] Unit tests:
   - `useSingleVerse` hook: keys, id/key inference, error propagation.
   - `verseCache` LRU keys include `translationIds` + `wordLang`.
-- [x] Integration tests:
+- [ ] Integration tests:
   - Changing settings updates Tafsir/Bookmarks/Pinned to show multiple translations and words.
   - Audio controls unaffected.
 
@@ -255,29 +253,18 @@ Deliverable: confidence in behavior and performance under variation.
 
 ### Phase 6 — Cleanup & Docs
 
-- [x] Remove dead code paths for single-verse fetching (retired `app/(features)/bookmarks/hooks/verseCache.ts`, its tests, and the unused `BookmarkedVersesList`).
-- [x] Ensure Storybook states cover single vs list cards with multiple translations and words (`app/shared/reader/ReaderVerseCard.stories.tsx`).
-- [x] Finalize this doc with implementation references and lessons learned.
+- [ ] Remove dead code paths for single‑verse fetching.
+- [ ] Ensure Storybook states cover single vs list cards with multiple translations and words.
+- [ ] Finalize this doc with implementation references and lessons learned.
 
 Deliverable: lean codebase with clear docs and consistent UX.
 
-#### Phase 6 Implementation Notes
-
-- Legacy bookmark verse cache and associated unit tests removed in favour of the unified `useSingleVerse` + SWR path (`app/(features)/bookmarks/hooks/verseCache.ts`, `tests/unit/app/features/bookmarks/getVerseWithCache.test.ts`, and `app/(features)/bookmarks/__tests__/UseBookmarkFolderData.test.tsx` deleted).
-- Deprecated `BookmarkedVersesList` component dropped (`app/(features)/bookmarks/components/BookmarkedVersesList.tsx`) to prevent regressions back to direct single-translation fetches.
-- Added dedicated Storybook coverage for reader cards showcasing multiple translations and word-by-word output in both single-card and list scenarios (`app/shared/reader/ReaderVerseCard.stories.tsx`).
-
-#### Lessons Learned
-
-- SWR-based hooks with setting-aware cache keys render the bespoke LRU layer redundant; eliminating it simplifies mental models and lowers maintenance cost.
-- Documented Storybook scenarios are an effective guardrail against future regressions in payload shape or UI expectations—keep them in sync with hook capabilities whenever data contracts evolve.
-
 ## Immediate Next Steps (Actionable)
 
-- [x] Implement `useSingleVerse` hook in `app/shared/hooks/useSingleVerse.ts`.
-- [x] Migrate Bookmarks/Pinned to `useSingleVerse`.
-- [x] Add SWRConfig with `dedupingInterval` and `revalidateOnFocus=false` (tune as needed).
-- [x] Add tests for `useSingleVerse` and verify multiple translations in Tafsir/Bookmarks/Pinned.
+- [ ] Implement `useSingleVerse` hook in `app/shared/hooks/useSingleVerse.ts`.
+- [ ] Migrate Bookmarks/Pinned to `useSingleVerse`.
+- [ ] Add SWRConfig with `dedupingInterval` and `revalidateOnFocus=false` (tune as needed).
+- [ ] Add tests for `useSingleVerse` and verify multiple translations in Tafsir/Bookmarks/Pinned.
 
 ## Optional
 

@@ -74,10 +74,12 @@ export function useRandomVerse({
 }
 
 function shouldPreferRemoteRandomVerse(): boolean {
-  if (process.env.NEXT_PUBLIC_ENABLE_RANDOM_VERSE_API === 'true') {
+  const enableRandomVerseEnv = process.env['NEXT_PUBLIC_ENABLE_RANDOM_VERSE_API'];
+
+  if (enableRandomVerseEnv === 'true') {
     return true;
   }
-  if (process.env.NEXT_PUBLIC_ENABLE_RANDOM_VERSE_API === 'false') {
+  if (enableRandomVerseEnv === 'false') {
     return false;
   }
   return process.env.NODE_ENV === 'production';

@@ -5,9 +5,13 @@ import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import { mapApiVerseToDomain } from './verseMapper';
 
+import type { LanguageCode } from '@/lib/text/languageCodes';
+
+const DEFAULT_WORD_LANG: LanguageCode = 'en';
+
 export const findById = async (id: string, translationId: number): Promise<Verse | null> => {
   try {
-    const apiVerse = await apiVerses.getVerseById(id, translationId);
+    const apiVerse = await apiVerses.getVerseById(id, [translationId], DEFAULT_WORD_LANG);
     return mapApiVerseToDomain(apiVerse);
   } catch (error) {
     logger.error('Failed to find verse by ID:', undefined, error as Error);
@@ -22,7 +26,7 @@ export const findBySurahAndAyah = async (
 ): Promise<Verse | null> => {
   try {
     const verseKey = `${surahId}:${ayahNumber}`;
-    const apiVerse = await apiVerses.getVerseByKey(verseKey, translationId);
+    const apiVerse = await apiVerses.getVerseByKey(verseKey, [translationId], DEFAULT_WORD_LANG);
     return mapApiVerseToDomain(apiVerse);
   } catch (error) {
     logger.error('Failed to find verse by surah and ayah:', undefined, error as Error);
@@ -70,7 +74,7 @@ export const findWithTranslation = async (
   translationId: number
 ): Promise<Verse | null> => {
   try {
-    const apiVerse = await apiVerses.getVerseById(verseId, translationId);
+    const apiVerse = await apiVerses.getVerseById(verseId, [translationId], DEFAULT_WORD_LANG);
     return mapApiVerseToDomain(apiVerse);
   } catch (error) {
     logger.error('Failed to find verse with translation:', undefined, error as Error);

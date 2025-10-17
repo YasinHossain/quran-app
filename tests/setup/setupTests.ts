@@ -88,3 +88,35 @@ if (!process.env['JEST_ALLOW_NETWORK']) {
 beforeEach(() => {
   jest.spyOn(logger, 'error').mockImplementation(() => {});
 });
+
+// Lightweight global mock for react-i18next to avoid heavy runtime initialization in tests
+// Individual tests can override this with their own jest.mock if needed.
+jest.mock('react-i18next', () => {
+  const actual = jest.requireActual('react-i18next');
+  return {
+    ...actual,
+    useTranslation: () => ({
+      t: (key: string, options?: Record<string, unknown>) =>
+        typeof key === 'string' ? key : String(key),
+      i18n: {
+        changeLanguage: jest.fn(),
+        language: 'en',
+        languages: ['en'],
+      },
+    }),
+    Trans: ({ children }: { children: React.ReactNode }) =>
+      children as unknown as React.ReactElement,
+    initReactI18next: { type: '3rdParty', init: jest.fn() },
+  };
+});
+
+// Stub heavy verse-card hook to avoid observer/audio side-effects in DOM tests
+jest.mock('@/app/(features)/surah/components/verse-card/useVerseCard', () => ({
+  useVerseCard: () => ({
+    verseRef: { current: null },
+    isPlaying: false,
+    isLoadingAudio: false,
+    isVerseBookmarked: false,
+    handlePlayPause: jest.fn(),
+  }),
+}));

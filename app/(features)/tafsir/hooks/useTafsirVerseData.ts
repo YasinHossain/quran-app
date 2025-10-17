@@ -1,8 +1,7 @@
-import useSWR from 'swr';
+import { useCallback, useEffect, useMemo } from 'react';
+import useSWR, { useSWRConfig } from 'swr';
 
-import { useSettings } from '@/app/providers/SettingsContext';
-import { getVersesByChapter } from '@/lib/api';
-import { ensureLanguageCode } from '@/lib/text/languageCodes';
+import { usePrefetchSingleVerse, useSingleVerse } from '@/app/shared/hooks/useSingleVerse';
 import { GetTafsirContentUseCase } from '@/src/application/use-cases/GetTafsirContent';
 import { container } from '@/src/infrastructure/di/Container';
 import { Surah, Verse as VerseType } from '@/types';
@@ -29,39 +28,66 @@ interface UseTafsirVerseDataReturn {
   resetWordSettings: () => void;
 }
 
-export const useTafsirVerseData = (surahId: string, ayahId: string): UseTafsirVerseDataReturn => {
-  const { settings } = useSettings();
+const PREFETCH_IDLE_DELAY_MS = 400;
 
+export const useTafsirVerseData = (surahId: string, ayahId: string): UseTafsirVerseDataReturn => {
+  const { mutate } = useSWRConfig();
   const { translationOptions, selectedTranslationName } = useTranslationOptions();
   const { tafsirResource, selectedTafsirName } = useTafsirOptions();
   const { wordLanguageOptions, wordLanguageMap, selectedWordLanguageName, resetWordSettings } =
     useWordTranslations();
   const { prev, next, navigate, currentSurah } = useVerseNavigation(surahId, ayahId);
 
-  const wordLanguage = ensureLanguageCode(settings.wordLang);
-
-  const { data: verseData } = useSWR(
-    surahId && ayahId
-      ? (['verse', surahId, ayahId, settings.translationIds.join(','), wordLanguage] as const)
-      : null,
-    ([, s, a, trIds, lang]) =>
-      getVersesByChapter({
-        id: s,
-        translationIds: (trIds as string).split(',').map((n) => Number(n)).filter(Boolean),
-        page: Number(a),
-        perPage: 1,
-        wordLang: lang,
-      }).then((d) => d.verses[0])
-  );
-  const verse: VerseType | undefined = verseData;
+  const verseKey = surahId && ayahId ? `${surahId}:${ayahId}` : '';
+  const { verse } = useSingleVerse({ idOrKey: verseKey });
 
   const repository = container.getTafsirRepository();
-  const tafsirUseCase = new GetTafsirContentUseCase(repository);
+  const tafsirUseCase = useMemo(() => new GetTafsirContentUseCase(repository), [repository]);
+
+  const prefetchSingleVerse = usePrefetchSingleVerse();
+
+  const neighborKeys = useMemo(() => {
+    const keys: string[] = [];
+    if (prev) {
+      keys.push(`${prev.surahId}:${prev.ayahId}`);
+    }
+    if (next) {
+      keys.push(`${next.surahId}:${next.ayahId}`);
+    }
+    return keys;
+  }, [prev, next]);
+
+  const prefetchTafsir = useCallback(
+    async (keys: string[]) => {
+      if (!tafsirResource) return;
+      await Promise.all(
+        keys.map((key) =>
+          mutate(
+            ['tafsir', key, tafsirResource.id],
+            () => tafsirUseCase.execute(key, tafsirResource.id),
+            { populateCache: true, revalidate: false }
+          ).catch(() => {})
+        )
+      );
+    },
+    [mutate, tafsirResource, tafsirUseCase]
+  );
 
   const { data: tafsirHtml } = useSWR(
     verse && tafsirResource ? ['tafsir', verse.verse_key, tafsirResource.id] : null,
     ([, key, id]) => tafsirUseCase.execute(key as string, id as number)
   );
+
+  useEffect(() => {
+    if (!verse?.verse_key || neighborKeys.length === 0) return;
+
+    const timer = window.setTimeout(() => {
+      void prefetchSingleVerse(neighborKeys);
+      void prefetchTafsir(neighborKeys);
+    }, PREFETCH_IDLE_DELAY_MS);
+
+    return () => window.clearTimeout(timer);
+  }, [neighborKeys, prefetchSingleVerse, prefetchTafsir, verse?.verse_key]);
 
   return {
     verse,

@@ -9,6 +9,9 @@ import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { Verse } from '@/types';
 
+jest.mock('@/app/shared/hooks/useSingleVerse', () => ({
+  useSingleVerse: jest.fn(),
+}));
 jest.mock('@/app/(features)/tafsir/hooks/useVerseNavigation', () => ({
   useVerseNavigation: () => ({
     prev: { surahId: '1', ayahId: 7 },
@@ -34,6 +37,8 @@ jest.mock('react-i18next', () => ({
 
 const mockUseSWR = useSWR as jest.Mock;
 const mockGetTafsirCached = getTafsirCached as jest.Mock;
+const mockUseSingleVerse = jest.requireMock('@/app/shared/hooks/useSingleVerse')
+  .useSingleVerse as jest.Mock;
 
 beforeAll(() => {
   setMatchMedia(false);
@@ -63,9 +68,10 @@ beforeEach(() => {
   );
   mockUseSWR.mockImplementation((key: string | readonly unknown[]) => {
     if (key === 'tafsirs') return { data: resources };
-    if (Array.isArray(key) && key[0] === 'verse') return { data: verse };
+    if (Array.isArray(key) && key[0] === 'tafsir') return { data: `Rendered ${key[2]}` };
     return { data: undefined };
   });
+  mockUseSingleVerse.mockReturnValue({ verse, isLoading: false, error: null, mutate: jest.fn() });
 });
 
 const renderPage = (surahId = '1', ayahId = '1'): void => {

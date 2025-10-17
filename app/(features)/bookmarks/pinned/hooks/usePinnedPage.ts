@@ -1,32 +1,22 @@
-import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+'use client';
 
-import { getVerseWithCache } from '@/app/(features)/bookmarks/hooks/verseCache';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { useSettings } from '@/app/providers/SettingsContext';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
-import type { Bookmark, Verse } from '@/types';
+import type { Bookmark } from '@/types';
 
-export interface PinnedVerseEntry {
-  bookmark: Bookmark;
-  verse: Verse;
+interface UsePinnedPageReturn {
+  bookmarks: Bookmark[];
+  isLoading: boolean;
+  handleSectionChange: (section: SectionId) => void;
 }
 
-export const usePinnedPage = (): {
-  entries: PinnedVerseEntry[];
-  isLoading: boolean;
-  error: string | null;
-  handleSectionChange: (section: SectionId) => void;
-} => {
+export const usePinnedPage = (): UsePinnedPageReturn => {
   const router = useRouter();
   const { pinnedVerses, chapters } = useBookmarks();
-  const { settings } = useSettings();
-  const [entries, setEntries] = useState<PinnedVerseEntry[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const translationIds = useMemo(() => settings.translationIds, [settings.translationIds]);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -35,58 +25,7 @@ export const usePinnedPage = (): {
     };
   }, []);
 
-  useEffect(() => {
-    let isActive = true;
-
-    if (pinnedVerses.length === 0) {
-      setEntries([]);
-      setError(null);
-      setIsLoading(false);
-      return () => {
-        isActive = false;
-      };
-    }
-
-    if (!chapters.length) {
-      setIsLoading(true);
-      return () => {
-        isActive = false;
-      };
-    }
-
-    const loadVerses = async (): Promise<void> => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const verses = await Promise.all(
-          pinnedVerses.map((bookmark) =>
-            getVerseWithCache(bookmark.verseId, translationIds, chapters, settings.wordLang)
-          )
-        );
-
-        if (!isActive) return;
-
-        setEntries(
-          pinnedVerses.map((bookmark, index) => ({
-            bookmark,
-            verse: verses[index]!,
-          }))
-        );
-      } catch (err) {
-        if (!isActive) return;
-        setEntries([]);
-        setError(err instanceof Error ? err.message : 'Failed to load pinned verses');
-      } finally {
-        if (isActive) setIsLoading(false);
-      }
-    };
-
-    void loadVerses();
-
-    return () => {
-      isActive = false;
-    };
-  }, [pinnedVerses, translationIds, settings.wordLang, chapters]);
+  const isLoading = pinnedVerses.length > 0 && chapters.length === 0;
 
   const handleSectionChange = (section: SectionId): void => {
     if (section === 'bookmarks') {
@@ -101,9 +40,8 @@ export const usePinnedPage = (): {
   };
 
   return {
-    entries,
+    bookmarks: pinnedVerses,
     isLoading,
-    error,
     handleSectionChange,
   };
 };

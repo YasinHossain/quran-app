@@ -3,6 +3,10 @@ import { Verse } from '@/src/domain/entities';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { mapApiVerseToDomain } from '@/src/infrastructure/repositories/verseMapper';
 
+import type { LanguageCode } from '@/lib/text/languageCodes';
+
+const DEFAULT_WORD_LANG: LanguageCode = 'en';
+
 export const findSajdahVerses = async (translationId: number): Promise<Verse[]> => {
   const sajdahPositions = [
     { surah: 7, ayah: 206 },
@@ -24,7 +28,11 @@ export const findSajdahVerses = async (translationId: number): Promise<Verse[]> 
 
   const verses: Verse[] = [];
   for (const pos of sajdahPositions) {
-    const verse = await apiVerses.getVerseByKey(`${pos.surah}:${pos.ayah}`, translationId);
+    const verse = await apiVerses.getVerseByKey(
+      `${pos.surah}:${pos.ayah}`,
+      [translationId],
+      DEFAULT_WORD_LANG
+    );
     verses.push(mapApiVerseToDomain(verse));
   }
   return verses;
@@ -33,7 +41,7 @@ export const findSajdahVerses = async (translationId: number): Promise<Verse[]> 
 export const findFirstVerses = async (translationId: number): Promise<Verse[]> => {
   const verses: Verse[] = [];
   for (let surahId = 1; surahId <= 114; surahId++) {
-    const verse = await apiVerses.getVerseByKey(`${surahId}:1`, translationId);
+    const verse = await apiVerses.getVerseByKey(`${surahId}:1`, [translationId], DEFAULT_WORD_LANG);
     verses.push(mapApiVerseToDomain(verse));
   }
   return verses;
@@ -46,7 +54,7 @@ export const findByVerseKeys = async (
   const verses: Verse[] = [];
   for (const key of verseKeys) {
     try {
-      const apiVerse = await apiVerses.getVerseByKey(key, translationId);
+      const apiVerse = await apiVerses.getVerseByKey(key, [translationId], DEFAULT_WORD_LANG);
       verses.push(mapApiVerseToDomain(apiVerse));
     } catch (error) {
       logger.error(`Failed to fetch verse ${key}:`, undefined, error as Error);

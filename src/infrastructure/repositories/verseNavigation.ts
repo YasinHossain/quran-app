@@ -5,22 +5,38 @@ import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { findBySurah } from './verseBulkQueries';
 import { mapApiVerseToDomain } from './verseMapper';
 
+import type { LanguageCode } from '@/lib/text/languageCodes';
+
+const DEFAULT_WORD_LANG: LanguageCode = 'en';
+
 export const findNext = async (
   currentVerseId: string,
   translationId: number
 ): Promise<Verse | null> => {
   try {
-    const current = await apiVerses.getVerseById(currentVerseId, translationId);
+    const current = await apiVerses.getVerseById(
+      currentVerseId,
+      [translationId],
+      DEFAULT_WORD_LANG
+    );
     const parts = current.verse_key.split(':');
     const surahId = parseInt(parts[0] ?? '0', 10);
     const ayahNumber = parseInt(parts[1] ?? '0', 10);
 
     try {
-      const next = await apiVerses.getVerseByKey(`${surahId}:${ayahNumber + 1}`, translationId);
+      const next = await apiVerses.getVerseByKey(
+        `${surahId}:${ayahNumber + 1}`,
+        [translationId],
+        DEFAULT_WORD_LANG
+      );
       return mapApiVerseToDomain(next);
     } catch {
       if (surahId < 114) {
-        const first = await apiVerses.getVerseByKey(`${surahId + 1}:1`, translationId);
+        const first = await apiVerses.getVerseByKey(
+          `${surahId + 1}:1`,
+          [translationId],
+          DEFAULT_WORD_LANG
+        );
         return mapApiVerseToDomain(first);
       }
       return null;
@@ -36,13 +52,21 @@ export const findPrevious = async (
   translationId: number
 ): Promise<Verse | null> => {
   try {
-    const current = await apiVerses.getVerseById(currentVerseId, translationId);
+    const current = await apiVerses.getVerseById(
+      currentVerseId,
+      [translationId],
+      DEFAULT_WORD_LANG
+    );
     const parts = current.verse_key.split(':');
     const surahId = parseInt(parts[0] ?? '0', 10);
     const ayahNumber = parseInt(parts[1] ?? '0', 10);
 
     if (ayahNumber > 1) {
-      const prev = await apiVerses.getVerseByKey(`${surahId}:${ayahNumber - 1}`, translationId);
+      const prev = await apiVerses.getVerseByKey(
+        `${surahId}:${ayahNumber - 1}`,
+        [translationId],
+        DEFAULT_WORD_LANG
+      );
       return mapApiVerseToDomain(prev);
     }
 

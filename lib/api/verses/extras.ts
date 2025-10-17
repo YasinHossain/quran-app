@@ -2,9 +2,10 @@ import { getSurahList } from '@/lib/api/chapters';
 import { apiFetch } from '@/lib/api/client';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { Verse, Juz, Surah } from '@/types';
-import type { LanguageCode } from '@/lib/text/languageCodes';
 
 import { normalizeVerse, ApiVerse } from './normalize';
+
+import type { LanguageCode } from '@/lib/text/languageCodes';
 
 let surahList: Surah[] | null = null;
 

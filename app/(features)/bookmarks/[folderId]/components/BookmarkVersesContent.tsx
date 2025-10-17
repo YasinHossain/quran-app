@@ -6,27 +6,21 @@ import { BookmarkVerseList } from '@/app/(features)/bookmarks/components/Bookmar
 
 import { BreadcrumbNavigation } from './BreadcrumbNavigation';
 
-import type { Verse } from '@/types';
+import type { Bookmark } from '@/types';
 
 interface BookmarkVersesContentProps {
   onNavigateToBookmarks: () => void;
   folderName: string;
-  verses: Verse[];
-  loadingVerses: Set<string>;
+  bookmarks: Bookmark[];
 }
 
 export const BookmarkVersesContent = ({
   onNavigateToBookmarks,
   folderName,
-  verses,
-  loadingVerses,
+  bookmarks,
 }: BookmarkVersesContentProps): React.JSX.Element => (
   <div>
     <BreadcrumbNavigation onNavigateToBookmarks={onNavigateToBookmarks} folderName={folderName} />
-    <BookmarkVerseList
-      verses={verses}
-      isLoading={loadingVerses.size > 0 && verses.length === 0}
-      error={null}
-    />
+    <BookmarkVerseList bookmarks={bookmarks} />
   </div>
 );

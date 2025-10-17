@@ -14,6 +14,7 @@ export const featuresSchema = z.object({
   enableServiceWorker: z.boolean().default(true),
   enableErrorTracking: z.boolean().default(false),
   enablePerformanceMonitoring: z.boolean().default(false),
+  enableQuranApiProxy: z.boolean().default(false),
 });
 
 export type FeaturesConfig = z.infer<typeof featuresSchema>;
@@ -25,4 +26,5 @@ export const featuresConfig: FeaturesConfig = {
   enableServiceWorker: !parseBooleanEnv('NEXT_DISABLE_PWA', false),
   enableErrorTracking: parseBooleanEnv('NEXT_PUBLIC_ERROR_TRACKING', false),
   enablePerformanceMonitoring: parseBooleanEnv('NEXT_PUBLIC_PERFORMANCE_MONITORING', false),
+  enableQuranApiProxy: parseBooleanEnv('NEXT_PUBLIC_ENABLE_QURAN_PROXY', false),
 };

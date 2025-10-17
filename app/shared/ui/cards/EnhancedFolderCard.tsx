@@ -2,11 +2,12 @@
 
 import React, { memo } from 'react';
 
-import { BaseCard, BaseCardProps } from '../BaseCard';
-import { FolderGlyph } from './FolderGlyph';
 import { FolderContextMenu } from '@/app/(features)/bookmarks/components/FolderContextMenu';
 import { ClockIcon } from '@/app/shared/icons';
+import { BaseCard, BaseCardProps } from '@/app/shared/ui/BaseCard';
 import { cn } from '@/lib/utils/cn';
+
+import { FolderGlyph } from './FolderGlyph';
 
 interface FolderData {
   name: string;
@@ -81,11 +82,7 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
       {...props}
     >
       <div className="absolute top-4 right-4">
-        <FolderContextMenu
-          onDelete={onDelete}
-          onRename={onRename}
-          onColorChange={onColorChange}
-        />
+        <FolderContextMenu onDelete={onDelete} onRename={onRename} onColorChange={onColorChange} />
       </div>
 
       <div className="flex h-full w-full flex-1 flex-col gap-3">
@@ -117,9 +114,7 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
               </span>
             ))}
             {remainingCount > 0 ? (
-              <span
-                className="inline-flex shrink-0 items-center rounded-full bg-surface whitespace-nowrap leading-none px-2.5 py-1 text-[11px] font-medium text-muted transition-colors duration-200 group-hover:text-foreground/80 border border-border/40"
-              >
+              <span className="inline-flex shrink-0 items-center rounded-full bg-surface whitespace-nowrap leading-none px-2.5 py-1 text-[11px] font-medium text-muted transition-colors duration-200 group-hover:text-foreground/80 border border-border/40">
                 +{remainingCount}
               </span>
             ) : null}

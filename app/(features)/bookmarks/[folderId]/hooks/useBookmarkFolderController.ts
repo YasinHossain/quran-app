@@ -13,8 +13,6 @@ export type BookmarkFolderControllerReturn = {
   setBookmarkSidebarOpen: (open: boolean) => void;
   folder: import('@/types').Folder | undefined;
   bookmarks: import('@/types').Bookmark[];
-  verses: Verse[];
-  loadingVerses: Set<string>;
   isTranslationPanelOpen: boolean;
   setIsTranslationPanelOpen: (open: boolean) => void;
   isWordPanelOpen: boolean;
@@ -23,8 +21,6 @@ export type BookmarkFolderControllerReturn = {
   selectedWordLanguageName?: string | undefined;
   handleNavigateToBookmarks: () => void;
 };
-
-import type { Verse } from '@/types';
 
 // Helper function to manage body overflow
 function useBodyOverflow(): void {
@@ -52,7 +48,7 @@ export function useBookmarkFolderController(folderId: string): BookmarkFolderCon
   const router = useRouter();
   const { isBookmarkSidebarOpen, setBookmarkSidebarOpen } = useSidebar();
 
-  const { folder, bookmarks, verses, loadingVerses } = useBookmarkFolderData({ folderId });
+  const { folder, bookmarks } = useBookmarkFolderData({ folderId });
   const {
     isTranslationPanelOpen,
     setIsTranslationPanelOpen,
@@ -70,8 +66,6 @@ export function useBookmarkFolderController(folderId: string): BookmarkFolderCon
     setBookmarkSidebarOpen,
     folder,
     bookmarks,
-    verses,
-    loadingVerses,
     isTranslationPanelOpen,
     setIsTranslationPanelOpen,
     isWordPanelOpen,

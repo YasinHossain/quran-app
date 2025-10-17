@@ -10,7 +10,7 @@ import { BookmarkVersesContent } from './BookmarkVersesContent';
 import { SettingsSidebar } from './SettingsSidebar';
 import { Sidebar } from './Sidebar';
 
-import type { Bookmark, Folder, Verse } from '@/types';
+import type { Bookmark, Folder } from '@/types';
 
 interface BookmarkFolderViewProps {
   bookmarks: Bookmark[];
@@ -19,8 +19,6 @@ interface BookmarkFolderViewProps {
   onCloseSidebar: () => void;
   onBack: () => void;
   folderName: string;
-  verses: Verse[];
-  loadingVerses: Set<string>;
   onOpenTranslationPanel: () => void;
   onCloseTranslationPanel: () => void;
   isTranslationPanelOpen: boolean;
@@ -38,8 +36,6 @@ export function BookmarkFolderView({
   onCloseSidebar,
   onBack,
   folderName,
-  verses,
-  loadingVerses,
   onOpenTranslationPanel,
   onCloseTranslationPanel,
   isTranslationPanelOpen,
@@ -49,6 +45,17 @@ export function BookmarkFolderView({
   isWordPanelOpen,
   selectedWordLanguageName,
 }: BookmarkFolderViewProps): React.JSX.Element {
+  const surahWorkspaceSettingsProps = {
+    isTranslationPanelOpen,
+    onTranslationPanelOpen: onOpenTranslationPanel,
+    onTranslationPanelClose: onCloseTranslationPanel,
+    isWordLanguagePanelOpen: isWordPanelOpen,
+    onWordLanguagePanelOpen: onOpenWordPanel,
+    onWordLanguagePanelClose: onCloseWordPanel,
+    ...(selectedTranslationName !== undefined ? { selectedTranslationName } : {}),
+    ...(selectedWordLanguageName !== undefined ? { selectedWordLanguageName } : {}),
+  };
+
   return (
     <>
       <div className="lg:hidden">
@@ -80,23 +87,11 @@ export function BookmarkFolderView({
             <BookmarkVersesContent
               onNavigateToBookmarks={onBack}
               folderName={folderName}
-              verses={verses}
-              loadingVerses={loadingVerses}
+              bookmarks={bookmarks}
             />
           </WorkspaceMain>
         }
-        right={
-          <SurahWorkspaceSettings
-            selectedTranslationName={selectedTranslationName}
-            selectedWordLanguageName={selectedWordLanguageName}
-            isTranslationPanelOpen={isTranslationPanelOpen}
-            onTranslationPanelOpen={onOpenTranslationPanel}
-            onTranslationPanelClose={onCloseTranslationPanel}
-            isWordLanguagePanelOpen={isWordPanelOpen}
-            onWordLanguagePanelOpen={onOpenWordPanel}
-            onWordLanguagePanelClose={onCloseWordPanel}
-          />
-        }
+        right={<SurahWorkspaceSettings {...surahWorkspaceSettingsProps} />}
       />
     </>
   );

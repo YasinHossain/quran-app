@@ -2,11 +2,12 @@
 
 import React from 'react';
 
-import type { Folder } from '@/types';
-
-import { cn } from '@/lib/utils/cn';
 import { FolderIcon } from '@/app/shared/icons';
+import { cn } from '@/lib/utils/cn';
+
 import { applyOpacity, isStyleColor, resolveAccentColor } from './folderColor.utils';
+
+import type { Folder } from '@/types';
 
 type GlyphSize = 'md' | 'lg';
 

@@ -21,7 +21,7 @@ describe('VerseRepository findById', () => {
     expect(verse!.id).toBe('1:1');
     expect(verse!.surahId).toBe(1);
     expect(verse!.ayahNumber).toBe(1);
-    expect(mockApiVerses.getVerseById).toHaveBeenCalledWith('1:1', 20);
+    expect(mockApiVerses.getVerseById).toHaveBeenCalledWith('1:1', [20], 'en');
   });
 
   it('should return null for non-existent verse', async () => {
@@ -48,7 +48,7 @@ describe('VerseRepository findBySurahAndAyah', () => {
     expect(verse).toBeDefined();
     expect(verse!.surahId).toBe(1);
     expect(verse!.ayahNumber).toBe(1);
-    expect(mockApiVerses.getVerseByKey).toHaveBeenCalledWith('1:1', 20);
+    expect(mockApiVerses.getVerseByKey).toHaveBeenCalledWith('1:1', [20], 'en');
   });
 
   it('should return null if verse not found', async () => {

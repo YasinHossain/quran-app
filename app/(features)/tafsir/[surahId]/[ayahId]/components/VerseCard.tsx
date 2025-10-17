@@ -15,6 +15,7 @@ export function VerseCard({ verse }: VerseCardProps): JSX.Element {
   const { addBookmark, removeBookmark, findBookmark } = useBookmarks();
   const { verseRef, isPlaying, isLoadingAudio, isVerseBookmarked, handlePlayPause } =
     useVerseCard(verse);
+  const translation = verse.translations?.[0]?.text;
 
   const handleBookmark = useCallback(() => {
     const verseId = String(verse.id);
@@ -26,10 +27,10 @@ export function VerseCard({ verse }: VerseCardProps): JSX.Element {
         verseKey: verse.verse_key,
         verseApiId: verse.id,
         verseText: verse.text_uthmani,
-        translation: verse.translations?.[0]?.text,
+        ...(translation ? { translation } : {}),
       });
     }
-  }, [addBookmark, removeBookmark, findBookmark, verse]);
+  }, [addBookmark, removeBookmark, findBookmark, verse, translation]);
 
   return (
     <ReaderVerseCard

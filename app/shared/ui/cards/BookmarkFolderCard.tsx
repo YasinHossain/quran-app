@@ -1,15 +1,14 @@
 'use client';
 
-import type { KeyboardEvent } from 'react';
-
 import { ClockIcon, ChevronDownIcon } from '@/app/shared/icons';
 import { BaseCard, BaseCardProps } from '@/app/shared/ui/BaseCard';
 import { cn } from '@/lib/utils/cn';
 
-import type { Folder } from '@/types/bookmark';
-
-import { FolderGlyph } from './FolderGlyph';
 import { applyOpacity, resolveAccentColor } from './folderColor.utils';
+import { FolderGlyph } from './FolderGlyph';
+
+import type { Folder } from '@/types/bookmark';
+import type { KeyboardEvent } from 'react';
 
 interface BookmarkFolderCardProps extends Omit<BaseCardProps, 'children'> {
   folder: Folder;
@@ -28,7 +27,7 @@ export const BookmarkFolderCard = ({
     onToggleExpansion?.(folder.id);
   };
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>): void => {
+  const handleKeyDown = (event: KeyboardEvent): void => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       handleClick();

@@ -35,9 +35,9 @@ describe('getVerseById', () => {
       json: () => Promise.resolve({ verse: mockRaw }),
     }) as jest.Mock;
 
-    const result = await getVerseById(1, 20);
+    const result = await getVerseById(1, [20, 22], 'en');
     expect(global.fetch).toHaveBeenCalledWith(
-      `${API_BASE_URL}/verses/1?translations=20&fields=text_uthmani`,
+      `${API_BASE_URL}/verses/1?translations=20,22&fields=text_uthmani,audio&words=true&word_translation_language=en&word_fields=text_uthmani`,
       expect.objectContaining({ headers: { Accept: 'application/json' } })
     );
     expect(result).toEqual(expected);
@@ -45,6 +45,6 @@ describe('getVerseById', () => {
 
   it('throws on fetch error', async () => {
     global.fetch = jest.fn().mockResolvedValue({ ok: false, status: 404 }) as jest.Mock;
-    await expect(getVerseById(1, 20)).rejects.toThrow('Failed to fetch verse: 404');
+    await expect(getVerseById(1, [20], 'en')).rejects.toThrow('Failed to fetch verse: 404');
   });
 });

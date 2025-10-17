@@ -3,7 +3,6 @@
 import React from 'react';
 
 import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
-import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { LoadingError } from '@/app/shared/LoadingError';
 import { Bookmark } from '@/types';
 
@@ -13,8 +12,7 @@ interface VerseItemProps {
 }
 
 export const VerseItem = ({ bookmark, onSelect }: VerseItemProps): React.JSX.Element => {
-  const { chapters } = useBookmarks();
-  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark, chapters);
+  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark);
   const ayahNumber = enrichedBookmark.verseKey?.split(':')[1];
   const wrapperClassName = `w-full text-left p-3 border-b border-border transition-colors${
     onSelect ? ' hover:bg-surface-hover cursor-pointer' : ''
