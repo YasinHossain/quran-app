@@ -12,21 +12,21 @@ import {
 } from '@/app/providers/bookmarks/storage-utils';
 import * as chaptersApi from '@/lib/api/chapters';
 
-import type { Folder, Bookmark, Chapter, MemorizationPlan } from '@/types';
+import type { Folder, Bookmark, Chapter, MemorizationPlan, LastReadMap } from '@/types';
 
 function useStoredBookmarkState(): {
   folders: Folder[];
   setFolders: React.Dispatch<React.SetStateAction<Folder[]>>;
   pinnedVerses: Bookmark[];
   setPinnedVerses: React.Dispatch<React.SetStateAction<Bookmark[]>>;
-  lastRead: Record<string, number>;
-  setLastReadState: React.Dispatch<React.SetStateAction<Record<string, number>>>;
+  lastRead: LastReadMap;
+  setLastReadState: React.Dispatch<React.SetStateAction<LastReadMap>>;
   memorization: Record<string, MemorizationPlan>;
   setMemorizationState: React.Dispatch<React.SetStateAction<Record<string, MemorizationPlan>>>;
 } {
   const [folders, setFolders] = useState<Folder[]>([]);
   const [pinnedVerses, setPinnedVerses] = useState<Bookmark[]>([]);
-  const [lastRead, setLastReadState] = useState<Record<string, number>>({});
+  const [lastRead, setLastReadState] = useState<LastReadMap>({});
   const [memorization, setMemorizationState] = useState<Record<string, MemorizationPlan>>({});
 
   useEffect(() => {
@@ -103,8 +103,8 @@ export function useBookmarkData(): {
   setFolders: React.Dispatch<React.SetStateAction<Folder[]>>;
   pinnedVerses: Bookmark[];
   setPinnedVerses: React.Dispatch<React.SetStateAction<Bookmark[]>>;
-  lastRead: Record<string, number>;
-  setLastReadState: React.Dispatch<React.SetStateAction<Record<string, number>>>;
+  lastRead: LastReadMap;
+  setLastReadState: React.Dispatch<React.SetStateAction<LastReadMap>>;
   memorization: Record<string, MemorizationPlan>;
   setMemorizationState: React.Dispatch<React.SetStateAction<Record<string, MemorizationPlan>>>;
   chapters: Chapter[];

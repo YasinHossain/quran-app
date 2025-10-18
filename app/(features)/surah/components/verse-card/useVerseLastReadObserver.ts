@@ -18,8 +18,12 @@ export const useLastReadObserver = (
       (entries) => {
         const first = entries[0];
         if (first && first.isIntersecting) {
-          const [surahId] = verse.verse_key.split(':');
-          setLastRead(surahId ?? String(verse.id), verse.id);
+          const [surahId, ayah] = verse.verse_key.split(':');
+          const verseNumber = Number(ayah);
+          if (!surahId || Number.isNaN(verseNumber) || verseNumber <= 0) {
+            return;
+          }
+          setLastRead(surahId, verseNumber, verse.verse_key, verse.id);
         }
       },
       { threshold: 0.5 }

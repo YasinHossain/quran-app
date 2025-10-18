@@ -1,4 +1,4 @@
-import { Folder, Bookmark, Chapter, MemorizationPlan } from '@/types';
+import { Folder, Bookmark, Chapter, MemorizationPlan, LastReadMap } from '@/types';
 
 export interface BookmarkContextType {
   folders: Folder[];
@@ -15,8 +15,8 @@ export interface BookmarkContextType {
   pinnedVerses: Bookmark[];
   togglePinned: (verseId: string, metadata?: Partial<Bookmark>) => void;
   isPinned: (verseId: string) => boolean;
-  lastRead: Record<string, number>;
-  setLastRead: (surahId: string, verseId: number) => void;
+  lastRead: LastReadMap;
+  setLastRead: (surahId: string, verseNumber: number, verseKey?: string, globalVerseId?: number) => void;
   chapters: Chapter[];
   memorization: Record<string, MemorizationPlan>;
   addToMemorization: (surahId: number, targetVerses?: number) => void;

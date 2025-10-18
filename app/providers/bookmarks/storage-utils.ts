@@ -1,5 +1,5 @@
 import { getItem, setItem, removeItem } from '@/lib/utils/safeLocalStorage';
-import { Folder, Bookmark, MemorizationPlan } from '@/types';
+import { Folder, Bookmark, MemorizationPlan, LastReadMap, LastReadEntry } from '@/types';
 
 import {
   BOOKMARKS_STORAGE_KEY,
@@ -90,13 +90,80 @@ export const savePinnedToStorage = (pinnedVerses: Bookmark[]): void => {
   }
 };
 
-export const loadLastReadFromStorage = (): Record<string, number> => {
+const normalizeLastReadEntry = (
+  value: unknown,
+  fallbackUpdatedAt: number
+): LastReadEntry | null => {
+  if (typeof value === 'number' && Number.isFinite(value) && value > 0) {
+    return {
+      verseNumber: value,
+      verseId: value,
+      updatedAt: fallbackUpdatedAt,
+    };
+  }
+
+  if (value && typeof value === 'object') {
+    const maybeEntry = value as Partial<LastReadEntry> & { verseId?: unknown };
+
+    const verseNumber =
+      typeof maybeEntry.verseNumber === 'number' && Number.isFinite(maybeEntry.verseNumber)
+        ? maybeEntry.verseNumber
+        : typeof maybeEntry.verseId === 'number' && Number.isFinite(maybeEntry.verseId)
+          ? maybeEntry.verseId
+          : typeof maybeEntry.verseKey === 'string'
+            ? Number(maybeEntry.verseKey.split(':')[1])
+            : undefined;
+
+    if (!verseNumber || Number.isNaN(verseNumber) || verseNumber <= 0) {
+      return null;
+    }
+
+    const updatedAt =
+      typeof maybeEntry.updatedAt === 'number' && Number.isFinite(maybeEntry.updatedAt)
+        ? maybeEntry.updatedAt
+        : fallbackUpdatedAt;
+
+    const entry: LastReadEntry = {
+      verseNumber,
+      updatedAt,
+      verseKey:
+        typeof maybeEntry.verseKey === 'string' && maybeEntry.verseKey.length > 0
+          ? maybeEntry.verseKey
+          : undefined,
+      globalVerseId:
+        typeof maybeEntry.globalVerseId === 'number' && Number.isFinite(maybeEntry.globalVerseId)
+          ? maybeEntry.globalVerseId
+          : undefined,
+      verseId: verseNumber,
+    };
+
+    return entry;
+  }
+
+  return null;
+};
+
+export const loadLastReadFromStorage = (): LastReadMap => {
   if (typeof window === 'undefined') return {};
 
   const savedLastRead = getItem(LAST_READ_STORAGE_KEY);
   if (savedLastRead) {
     try {
-      return JSON.parse(savedLastRead);
+      const raw = JSON.parse(savedLastRead) as Record<string, unknown>;
+      if (!raw || typeof raw !== 'object') {
+        return {};
+      }
+
+      const entries = Object.entries(raw);
+      const now = Date.now();
+
+      return entries.reduce<LastReadMap>((acc, [surahId, value], index) => {
+        const entry = normalizeLastReadEntry(value, now - index);
+        if (entry) {
+          acc[surahId] = entry;
+        }
+        return acc;
+      }, {});
     } catch {
       return {};
     }
@@ -104,7 +171,7 @@ export const loadLastReadFromStorage = (): Record<string, number> => {
   return {};
 };
 
-export const saveLastReadToStorage = (lastRead: Record<string, number>): void => {
+export const saveLastReadToStorage = (lastRead: LastReadMap): void => {
   if (typeof window !== 'undefined') {
     setItem(LAST_READ_STORAGE_KEY, JSON.stringify(lastRead));
   }

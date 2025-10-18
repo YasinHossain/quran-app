@@ -54,6 +54,31 @@ export interface BookmarkWithVerse extends Bookmark {
 }
 
 /**
+ * Metadata describing the most recent verse interaction within a surah.
+ * Stored by surah id in local storage to power the "Recent" experience.
+ */
+export interface LastReadEntry {
+  /** Last visited ayah number within the surah (1-indexed). */
+  verseNumber: number;
+  /** Timestamp (ms since epoch) of when the visit occurred. */
+  updatedAt: number;
+  /** Verse key in `{surah}:{ayah}` format for precise lookups. */
+  verseKey?: string;
+  /** Global verse id from the API for legacy compatibility. */
+  globalVerseId?: number;
+  /**
+   * Legacy storage field (previously stored as per-surah verse number or global verse id).
+   * Retained for migration purposes.
+   */
+  verseId?: number;
+}
+
+/**
+ * Map of surah id -> last read metadata.
+ */
+export type LastReadMap = Record<string, LastReadEntry>;
+
+/**
  * A collection of bookmarks grouped under a user-defined folder.
  * Folders can be personalized with a color and icon that you can render across the UI.
  */
