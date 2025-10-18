@@ -14,12 +14,10 @@ interface FolderHeaderProps {
   onToggle: (folderId: string) => void;
   onSelect: (folderId: string) => void;
   className?: string;
-  showDivider?: boolean;
 }
 
 interface FolderIconProps {
   folderItem: Folder;
-  bookmarkCount: number;
 }
 
 interface FolderInfoProps {
@@ -28,18 +26,14 @@ interface FolderInfoProps {
   isCurrentFolder: boolean;
 }
 
-const FolderIconDisplay = ({ folderItem, bookmarkCount }: FolderIconProps): React.JSX.Element => (
+const FolderIconDisplay = ({ folderItem }: FolderIconProps): React.JSX.Element => (
   <FolderGlyph
     folder={folderItem}
     size="lg"
     backgroundOpacity={0.95}
     shadowOpacity={0.25}
     shadowOverride="0 12px 28px -18px"
-  >
-    <span className="absolute -top-1.5 -right-1.5 select-none rounded-full border border-border bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-foreground shadow-sm">
-      {bookmarkCount}
-    </span>
-  </FolderGlyph>
+  />
 );
 
 const FolderInfo = ({
@@ -63,7 +57,7 @@ const FolderInfo = ({
       </p>
       <p
         className={cn(
-          'text-base leading-[1.1] font-medium transition-colors duration-200 -mt-px',
+          'text-sm leading-[1.1] font-medium transition-colors duration-200 -mt-px',
           colors.text.secondary
         )}
       >
@@ -80,7 +74,6 @@ export const FolderHeader = ({
   onToggle,
   onSelect,
   className,
-  showDivider = false,
 }: FolderHeaderProps): React.JSX.Element => {
   const handleClick = (): void => {
     if (!isCurrentFolder) {
@@ -100,7 +93,7 @@ export const FolderHeader = ({
   return (
     <div
       className={cn(
-        'relative flex w-full min-h-[80px] items-center gap-4 cursor-pointer px-4 py-4 transition-colors duration-200',
+        'relative flex w-full min-h-[80px] items-center gap-4 cursor-pointer px-4 py-4 transition-colors duration-200 focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border/40 focus-visible:ring-offset-0',
         className
       )}
       onClick={handleClick}
@@ -112,16 +105,13 @@ export const FolderHeader = ({
       onKeyDown={handleKeyDown}
     >
       <div className="flex items-center gap-4 flex-1 min-w-0">
-        <FolderIconDisplay folderItem={folderItem} bookmarkCount={folderBookmarks.length} />
+        <FolderIconDisplay folderItem={folderItem} />
         <FolderInfo
           folderItem={folderItem}
           folderBookmarks={folderBookmarks}
           isCurrentFolder={isCurrentFolder}
         />
       </div>
-      {showDivider ? (
-        <div className="absolute bottom-0 left-4 right-4 h-px bg-border transition-opacity duration-200" />
-      ) : null}
     </div>
   );
 };

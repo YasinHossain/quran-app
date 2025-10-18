@@ -25,8 +25,6 @@ export const FolderItem = ({
   onToggle,
   onSelect,
 }: FolderItemProps): React.JSX.Element => {
-  const shouldShowExpanded = isExpanded && isCurrentFolder;
-
   return (
     <BaseCard
       variant="navigation"
@@ -42,7 +40,7 @@ export const FolderItem = ({
           inactive:
             'bg-surface-glass/70 backdrop-blur-xl text-content-primary border border-border/20',
           active:
-            'bg-surface-glass/80 backdrop-blur-xl text-content-primary border border-accent/30',
+            'bg-surface-glass/80 backdrop-blur-xl text-content-primary border border-border/30',
         },
         hover: {
           effect: 'none',
@@ -62,9 +60,11 @@ export const FolderItem = ({
         folderBookmarks={folderBookmarks}
         onToggle={onToggle}
         onSelect={onSelect}
-        showDivider={shouldShowExpanded}
       />
-      <ExpandedContent isExpanded={shouldShowExpanded} folderBookmarks={folderBookmarks} />
+      <ExpandedContent
+        isExpanded={isExpanded && isCurrentFolder}
+        folderBookmarks={folderBookmarks}
+      />
     </BaseCard>
   );
 };
