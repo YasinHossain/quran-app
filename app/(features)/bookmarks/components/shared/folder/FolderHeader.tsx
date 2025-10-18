@@ -19,6 +19,7 @@ interface FolderHeaderProps {
 
 interface FolderIconProps {
   folderItem: Folder;
+  bookmarkCount: number;
 }
 
 interface FolderInfoProps {
@@ -27,14 +28,18 @@ interface FolderInfoProps {
   isCurrentFolder: boolean;
 }
 
-const FolderIconDisplay = ({ folderItem }: FolderIconProps): React.JSX.Element => (
+const FolderIconDisplay = ({ folderItem, bookmarkCount }: FolderIconProps): React.JSX.Element => (
   <FolderGlyph
     folder={folderItem}
-    size="md"
-    backgroundOpacity={0.18}
-    shadowOpacity={0.5}
-    shadowOverride="0 6px 16px -12px"
-  />
+    size="lg"
+    backgroundOpacity={0.95}
+    shadowOpacity={0.25}
+    shadowOverride="0 12px 28px -18px"
+  >
+    <span className="absolute -top-1.5 -right-1.5 select-none rounded-full border border-border bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-foreground shadow-sm">
+      {bookmarkCount}
+    </span>
+  </FolderGlyph>
 );
 
 const FolderInfo = ({
@@ -107,7 +112,7 @@ export const FolderHeader = ({
       onKeyDown={handleKeyDown}
     >
       <div className="flex items-center gap-4 flex-1 min-w-0">
-        <FolderIconDisplay folderItem={folderItem} />
+        <FolderIconDisplay folderItem={folderItem} bookmarkCount={folderBookmarks.length} />
         <FolderInfo
           folderItem={folderItem}
           folderBookmarks={folderBookmarks}
