@@ -23,6 +23,7 @@ const createControllerMock = () => ({
   isBookmarkSidebarOpen: false,
   setBookmarkSidebarOpen: jest.fn(),
   handleNavigateToBookmarks: jest.fn(),
+  handleSectionChange: jest.fn(),
   folderName: 'Test Folder',
   isTranslationPanelOpen: false,
   setIsTranslationPanelOpen: jest.fn(),

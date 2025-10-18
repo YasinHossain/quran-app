@@ -42,6 +42,7 @@ export function BookmarkFolderClient({ folderId }: BookmarkFolderClientProps): R
       onCloseWordPanel={() => controller.setIsWordPanelOpen(false)}
       isWordPanelOpen={controller.isWordPanelOpen}
       selectedWordLanguageName={controller.selectedWordLanguageName}
+      onSectionChange={controller.handleSectionChange}
     />
   );
 }

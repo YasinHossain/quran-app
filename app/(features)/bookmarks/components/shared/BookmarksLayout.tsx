@@ -38,8 +38,6 @@ export const BookmarksLayout = ({
           </WorkspaceMain>
         }
         right={rightSidebar}
-        leftContainerClassName="lg:py-6"
-        rightContainerClassName={rightSidebar ? 'lg:py-6' : undefined}
       />
       <BookmarksMobileSidebarOverlay
         isOpen={isBookmarkSidebarOpen}

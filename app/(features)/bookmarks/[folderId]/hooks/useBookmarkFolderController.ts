@@ -8,6 +8,8 @@ import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import { useBookmarkFolderData, useBookmarkFolderPanels } from './index';
 
+import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
+
 export type BookmarkFolderControllerReturn = {
   isBookmarkSidebarOpen: boolean;
   setBookmarkSidebarOpen: (open: boolean) => void;
@@ -20,6 +22,7 @@ export type BookmarkFolderControllerReturn = {
   selectedTranslationName?: string | undefined;
   selectedWordLanguageName?: string | undefined;
   handleNavigateToBookmarks: () => void;
+  handleSectionChange: (section: SectionId) => void;
 };
 
 // Helper function to manage body overflow
@@ -35,12 +38,30 @@ function useBodyOverflow(): void {
 // Helper function to create navigation handler
 function useNavigationHandler(router: ReturnType<typeof useRouter>): {
   handleNavigateToBookmarks: () => void;
+  handleSectionChange: (section: SectionId) => void;
 } {
   const handleNavigateToBookmarks = (): void => {
     router.push('/bookmarks');
   };
 
-  return { handleNavigateToBookmarks };
+  const handleSectionChange = (section: SectionId): void => {
+    switch (section) {
+      case 'pinned':
+        router.push('/bookmarks/pinned');
+        break;
+      case 'last-read':
+        router.push('/bookmarks/last-read');
+        break;
+      case 'memorization':
+        router.push('/bookmarks/memorization');
+        break;
+      default:
+        router.push('/bookmarks');
+        break;
+    }
+  };
+
+  return { handleNavigateToBookmarks, handleSectionChange };
 }
 
 export function useBookmarkFolderController(folderId: string): BookmarkFolderControllerReturn {
@@ -59,7 +80,7 @@ export function useBookmarkFolderController(folderId: string): BookmarkFolderCon
   } = useBookmarkFolderPanels();
 
   useBodyOverflow();
-  const { handleNavigateToBookmarks } = useNavigationHandler(router);
+  const { handleNavigateToBookmarks, handleSectionChange } = useNavigationHandler(router);
 
   return {
     isBookmarkSidebarOpen,
@@ -73,5 +94,6 @@ export function useBookmarkFolderController(folderId: string): BookmarkFolderCon
     selectedTranslationName,
     selectedWordLanguageName,
     handleNavigateToBookmarks,
+    handleSectionChange,
   } as const;
 }

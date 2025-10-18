@@ -2,15 +2,17 @@
 
 import React from 'react';
 
-import { BookmarkFolderSidebarPanel } from '@/app/(features)/bookmarks/components/BookmarkFolderSidebar';
+import { BookmarksSidebar } from '@/app/(features)/bookmarks/components/BookmarksSidebar';
+import { BookmarksMobileSidebarOverlay } from '@/app/(features)/bookmarks/components/shared/layout/BookmarksMobileSidebarOverlay';
 import { SurahWorkspaceSettings } from '@/app/(features)/surah/components/surah-view/SurahWorkspaceSettings';
 import { ThreeColumnWorkspace, WorkspaceMain } from '@/app/shared/reader';
 
+import { BookmarkFolderSidebarContent } from './BookmarkFolderSidebarContent';
 import { BookmarkVersesContent } from './BookmarkVersesContent';
 import { SettingsSidebar } from './SettingsSidebar';
-import { Sidebar } from './Sidebar';
 
 import type { Bookmark, Folder } from '@/types';
+import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 
 interface BookmarkFolderViewProps {
   bookmarks: Bookmark[];
@@ -27,6 +29,7 @@ interface BookmarkFolderViewProps {
   onCloseWordPanel: () => void;
   isWordPanelOpen: boolean;
   selectedWordLanguageName?: string | undefined;
+  onSectionChange: (section: SectionId) => void;
 }
 
 export function BookmarkFolderView({
@@ -44,6 +47,7 @@ export function BookmarkFolderView({
   onCloseWordPanel,
   isWordPanelOpen,
   selectedWordLanguageName,
+  onSectionChange,
 }: BookmarkFolderViewProps): React.JSX.Element {
   const surahWorkspaceSettingsProps = {
     isTranslationPanelOpen,
@@ -58,15 +62,25 @@ export function BookmarkFolderView({
 
   return (
     <>
-      <div className="lg:hidden">
-        <Sidebar
+      <BookmarksMobileSidebarOverlay
+        isOpen={isBookmarkSidebarOpen}
+        onClose={onCloseSidebar}
+        activeSection="bookmarks"
+        onSectionChange={onSectionChange}
+        childrenTitle={null}
+        childrenContainerClassName="mt-0 pt-0 border-t-0"
+        childrenContentClassName="space-y-0"
+        showNavigation={false}
+      >
+        <BookmarkFolderSidebarContent
           bookmarks={bookmarks}
           folder={folder}
           onBack={onBack}
-          isOpen={isBookmarkSidebarOpen}
           onClose={onCloseSidebar}
         />
+      </BookmarksMobileSidebarOverlay>
 
+      <div className="lg:hidden">
         <SettingsSidebar
           onTranslationPanelOpen={onOpenTranslationPanel}
           onWordLanguagePanelOpen={onOpenWordPanel}
@@ -81,7 +95,22 @@ export function BookmarkFolderView({
       </div>
 
       <ThreeColumnWorkspace
-        left={<BookmarkFolderSidebarPanel bookmarks={bookmarks} folder={folder} onBack={onBack} />}
+        left={
+          <BookmarksSidebar
+            activeSection="bookmarks"
+            onSectionChange={onSectionChange}
+            childrenTitle={null}
+            childrenContainerClassName="mt-0 pt-0 border-t-0"
+            childrenContentClassName="space-y-0"
+            showNavigation={false}
+          >
+            <BookmarkFolderSidebarContent
+              bookmarks={bookmarks}
+              folder={folder}
+              onBack={onBack}
+            />
+          </BookmarksSidebar>
+        }
         center={
           <WorkspaceMain data-slot="bookmarks-workspace-main" contentClassName="pb-6">
             <BookmarkVersesContent
@@ -92,8 +121,6 @@ export function BookmarkFolderView({
           </WorkspaceMain>
         }
         right={<SurahWorkspaceSettings {...surahWorkspaceSettingsProps} />}
-        leftContainerClassName="lg:py-6"
-        rightContainerClassName="lg:py-6"
       />
     </>
   );

@@ -1,5 +1,7 @@
 'use client';
 
+import React from 'react';
+
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { BookmarksSidebar } from '@/app/(features)/bookmarks/components/BookmarksSidebar';
@@ -11,6 +13,11 @@ interface BookmarksMobileSidebarOverlayProps {
   onClose: () => void;
   activeSection: SectionId;
   onSectionChange: (section: SectionId) => void;
+  children?: React.ReactNode;
+  childrenTitle?: string | null;
+  childrenContainerClassName?: string;
+  childrenContentClassName?: string;
+  showNavigation?: boolean;
 }
 
 export const BookmarksMobileSidebarOverlay = ({
@@ -18,6 +25,11 @@ export const BookmarksMobileSidebarOverlay = ({
   onClose,
   activeSection,
   onSectionChange,
+  children,
+  childrenTitle,
+  childrenContainerClassName,
+  childrenContentClassName,
+  showNavigation,
 }: BookmarksMobileSidebarOverlayProps): React.JSX.Element => (
   <AnimatePresence>
     {isOpen && (
@@ -36,7 +48,16 @@ export const BookmarksMobileSidebarOverlay = ({
           transition={{ type: 'tween', duration: 0.3 }}
           className="fixed left-0 top-reader-header z-50 h-[calc(100vh-var(--reader-header-height))] w-full bg-background text-foreground border-r border-border lg:hidden sm:w-80 lg:w-reader-sidebar-left"
         >
-          <BookmarksSidebar activeSection={activeSection} onSectionChange={onSectionChange} />
+          <BookmarksSidebar
+            activeSection={activeSection}
+            onSectionChange={onSectionChange}
+            childrenTitle={childrenTitle}
+            childrenContainerClassName={childrenContainerClassName}
+            childrenContentClassName={childrenContentClassName}
+            showNavigation={showNavigation}
+          >
+            {children}
+          </BookmarksSidebar>
         </motion.aside>
       </>
     )}

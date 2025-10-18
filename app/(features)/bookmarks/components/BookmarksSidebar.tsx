@@ -12,6 +12,10 @@ interface BookmarksSidebarProps {
   activeSection?: SectionId;
   onSectionChange?: ((section: SectionId) => void) | undefined;
   children?: React.ReactNode;
+  childrenTitle?: string | null;
+  childrenContainerClassName?: string;
+  childrenContentClassName?: string;
+  showNavigation?: boolean;
   isOpen?: boolean;
   onClose?: (() => void) | undefined;
 }
@@ -20,13 +24,24 @@ export const BookmarksSidebar = ({
   activeSection = 'bookmarks',
   onSectionChange,
   children,
+  childrenTitle,
+  childrenContainerClassName,
+  childrenContentClassName,
+  showNavigation,
   isOpen,
   onClose,
 }: BookmarksSidebarProps): React.JSX.Element => {
   // If no isOpen/onClose provided, render content directly (for desktop sidebar)
   if (isOpen === undefined || onClose === undefined) {
     return (
-      <BookmarksContent activeSection={activeSection} {...(onSectionChange && { onSectionChange })}>
+      <BookmarksContent
+        activeSection={activeSection}
+        {...(onSectionChange && { onSectionChange })}
+        childrenTitle={childrenTitle}
+        childrenContainerClassName={childrenContainerClassName}
+        childrenContentClassName={childrenContentClassName}
+        showNavigation={showNavigation}
+      >
         {children}
       </BookmarksContent>
     );
@@ -40,7 +55,14 @@ export const BookmarksSidebar = ({
       position="left"
       aria-label="Bookmarks navigation"
     >
-      <BookmarksContent activeSection={activeSection} {...(onSectionChange && { onSectionChange })}>
+      <BookmarksContent
+        activeSection={activeSection}
+        {...(onSectionChange && { onSectionChange })}
+        childrenTitle={childrenTitle}
+        childrenContainerClassName={childrenContainerClassName}
+        childrenContentClassName={childrenContentClassName}
+        showNavigation={showNavigation}
+      >
         {children}
       </BookmarksContent>
     </BaseSidebar>

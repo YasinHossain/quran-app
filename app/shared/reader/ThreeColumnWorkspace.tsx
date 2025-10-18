@@ -70,7 +70,8 @@ export function ThreeColumnWorkspace({
           <aside
             className={cn(
               'hidden lg:flex lg:h-full lg:w-reader-sidebar-left lg:flex-shrink-0 lg:flex-col lg:gap-4',
-              'lg:bg-background',
+              'lg:relative lg:z-10',
+              'workspace-sidebar-left',
               leftContainerClassName
             )}
             data-slot="workspace-left"
@@ -90,7 +91,8 @@ export function ThreeColumnWorkspace({
           <aside
             className={cn(
               'hidden lg:flex lg:h-full lg:w-reader-sidebar-right lg:flex-shrink-0 lg:flex-col lg:gap-4',
-              'lg:border-l lg:border-border lg:bg-background',
+              'lg:relative lg:z-10',
+              'workspace-sidebar-right',
               rightContainerClassName
             )}
             data-slot="workspace-right"
