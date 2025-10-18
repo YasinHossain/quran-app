@@ -14,6 +14,7 @@ interface FolderHeaderProps {
   onToggle: (folderId: string) => void;
   onSelect: (folderId: string) => void;
   className?: string;
+  showDivider?: boolean;
 }
 
 interface FolderIconProps {
@@ -74,6 +75,7 @@ export const FolderHeader = ({
   onToggle,
   onSelect,
   className,
+  showDivider = false,
 }: FolderHeaderProps): React.JSX.Element => {
   const handleClick = (): void => {
     if (!isCurrentFolder) {
@@ -112,6 +114,9 @@ export const FolderHeader = ({
           isCurrentFolder={isCurrentFolder}
         />
       </div>
+      {showDivider ? (
+        <div className="absolute bottom-0 left-4 right-4 h-px bg-border transition-opacity duration-200" />
+      ) : null}
     </div>
   );
 };

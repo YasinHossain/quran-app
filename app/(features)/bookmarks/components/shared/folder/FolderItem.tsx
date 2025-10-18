@@ -25,6 +25,8 @@ export const FolderItem = ({
   onToggle,
   onSelect,
 }: FolderItemProps): React.JSX.Element => {
+  const shouldShowExpanded = isExpanded && isCurrentFolder;
+
   return (
     <BaseCard
       variant="navigation"
@@ -60,11 +62,9 @@ export const FolderItem = ({
         folderBookmarks={folderBookmarks}
         onToggle={onToggle}
         onSelect={onSelect}
+        showDivider={shouldShowExpanded}
       />
-      <ExpandedContent
-        isExpanded={isExpanded && isCurrentFolder}
-        folderBookmarks={folderBookmarks}
-      />
+      <ExpandedContent isExpanded={shouldShowExpanded} folderBookmarks={folderBookmarks} />
     </BaseCard>
   );
 };
