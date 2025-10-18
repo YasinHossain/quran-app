@@ -2,6 +2,7 @@
 
 import React from 'react';
 
+import { colors } from '@/app/shared/design-system/card-tokens';
 import { FolderGlyph } from '@/app/shared/ui/cards/FolderGlyph';
 import { cn } from '@/lib/utils/cn';
 import { Bookmark, Folder } from '@/types';
@@ -13,6 +14,7 @@ interface FolderHeaderProps {
   onToggle: (folderId: string) => void;
   onSelect: (folderId: string) => void;
   className?: string;
+  showDivider?: boolean;
 }
 
 interface FolderIconProps {
@@ -22,6 +24,7 @@ interface FolderIconProps {
 interface FolderInfoProps {
   folderItem: Folder;
   folderBookmarks: Bookmark[];
+  isCurrentFolder: boolean;
 }
 
 const FolderIconDisplay = ({ folderItem }: FolderIconProps): React.JSX.Element => (
@@ -34,14 +37,31 @@ const FolderIconDisplay = ({ folderItem }: FolderIconProps): React.JSX.Element =
   />
 );
 
-const FolderInfo = ({ folderItem, folderBookmarks }: FolderInfoProps): React.JSX.Element => (
-  <div className="min-w-0">
-    <p className="truncate text-base font-semibold text-foreground">{folderItem.name}</p>
-    <p className="text-xs text-muted">
-      {folderBookmarks.length} {folderBookmarks.length === 1 ? 'verse' : 'verses'}
-    </p>
-  </div>
-);
+const FolderInfo = ({
+  folderItem,
+  folderBookmarks,
+  isCurrentFolder,
+}: FolderInfoProps): React.JSX.Element => {
+  const verseCount = `${folderBookmarks.length} ${
+    folderBookmarks.length === 1 ? 'verse' : 'verses'
+  }`;
+
+  return (
+    <div className="min-w-0">
+      <p
+        className={cn(
+          'truncate text-sm font-semibold transition-colors duration-200',
+          isCurrentFolder ? colors.text.accent : `${colors.text.primary} ${colors.text.hoverAccent}`
+        )}
+      >
+        {folderItem.name}
+      </p>
+      <p className={cn('text-xs leading-tight transition-colors duration-200', colors.text.secondary)}>
+        {verseCount}
+      </p>
+    </div>
+  );
+};
 
 export const FolderHeader = ({
   folderItem,
@@ -50,6 +70,7 @@ export const FolderHeader = ({
   onToggle,
   onSelect,
   className,
+  showDivider = false,
 }: FolderHeaderProps): React.JSX.Element => {
   const handleClick = (): void => {
     if (!isCurrentFolder) {
@@ -68,7 +89,10 @@ export const FolderHeader = ({
 
   return (
     <div
-      className={cn('flex w-full items-center gap-4 cursor-pointer px-4 py-3', className)}
+      className={cn(
+        'relative flex w-full min-h-[80px] items-center gap-4 cursor-pointer px-4 py-4 transition-colors duration-200',
+        className
+      )}
       onClick={handleClick}
       role="button"
       tabIndex={0}
@@ -79,8 +103,15 @@ export const FolderHeader = ({
     >
       <div className="flex items-center gap-4 flex-1 min-w-0">
         <FolderIconDisplay folderItem={folderItem} />
-        <FolderInfo folderItem={folderItem} folderBookmarks={folderBookmarks} />
+        <FolderInfo
+          folderItem={folderItem}
+          folderBookmarks={folderBookmarks}
+          isCurrentFolder={isCurrentFolder}
+        />
       </div>
+      {showDivider ? (
+        <div className="absolute bottom-0 left-4 right-4 h-px bg-border transition-opacity duration-200" />
+      ) : null}
     </div>
   );
 };

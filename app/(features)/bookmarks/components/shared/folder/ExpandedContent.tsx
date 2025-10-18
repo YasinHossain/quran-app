@@ -17,7 +17,7 @@ export const ExpandedContent = ({
   if (!isExpanded) return null;
 
   return (
-    <div className="w-full border-t border-border">
+    <div className="w-full border-t border-border/20 bg-surface text-foreground">
       {folderBookmarks.length > 0 ? (
         folderBookmarks.map((bookmark, index) => (
           <VerseItem

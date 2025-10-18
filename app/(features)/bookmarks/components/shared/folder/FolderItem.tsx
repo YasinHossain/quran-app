@@ -39,17 +39,19 @@ export const FolderItem = ({
         height: 'min-h-[80px]',
         padding: 'p-0',
         background: {
-          inactive: 'bg-surface border border-border/40',
-          active: 'bg-surface border border-border/40',
-        },
-        shadow: {
-          inactive: 'shadow-sm',
-          active: 'shadow-sm',
+          inactive:
+            'bg-surface-glass/70 backdrop-blur-xl text-content-primary border border-border/20',
+          active:
+            'bg-surface-glass/80 backdrop-blur-xl text-content-primary border border-accent/30',
         },
         hover: {
           effect: 'none',
-          value: 'hover:bg-surface-hover hover:border-border/60',
-          duration: 'transition-colors duration-200',
+          value: 'hover:shadow-xl',
+          duration: 'transition-all duration-300',
+        },
+        shadow: {
+          inactive: 'shadow-lg',
+          active: 'shadow-xl',
         },
       }}
       className="w-full overflow-hidden"
@@ -60,7 +62,7 @@ export const FolderItem = ({
         folderBookmarks={folderBookmarks}
         onToggle={onToggle}
         onSelect={onSelect}
-        className="w-full min-h-[80px]"
+        showDivider={shouldShowExpanded}
       />
       <ExpandedContent isExpanded={shouldShowExpanded} folderBookmarks={folderBookmarks} />
     </BaseCard>
