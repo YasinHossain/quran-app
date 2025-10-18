@@ -11,8 +11,8 @@ import { BookmarkFolderSidebarContent } from './BookmarkFolderSidebarContent';
 import { BookmarkVersesContent } from './BookmarkVersesContent';
 import { SettingsSidebar } from './SettingsSidebar';
 
-import type { Bookmark, Folder } from '@/types';
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
+import type { Bookmark, Folder } from '@/types';
 
 interface BookmarkFolderViewProps {
   bookmarks: Bookmark[];
@@ -104,11 +104,7 @@ export function BookmarkFolderView({
             childrenContentClassName="space-y-0"
             showNavigation={false}
           >
-            <BookmarkFolderSidebarContent
-              bookmarks={bookmarks}
-              folder={folder}
-              onBack={onBack}
-            />
+            <BookmarkFolderSidebarContent bookmarks={bookmarks} folder={folder} onBack={onBack} />
           </BookmarksSidebar>
         }
         center={

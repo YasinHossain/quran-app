@@ -69,10 +69,7 @@ function resolveBookmarkVerseKey(
     return verseIdentifier;
   }
 
-  const apiIdKey = inferVerseKeyFromSequentialId(
-    parseNumericId(bookmark.verseApiId),
-    chapters
-  );
+  const apiIdKey = inferVerseKeyFromSequentialId(parseNumericId(bookmark.verseApiId), chapters);
   if (apiIdKey) return apiIdKey;
 
   const verseIdKey = inferVerseKeyFromSequentialId(parseNumericId(bookmark.verseId), chapters);
@@ -100,7 +97,10 @@ function buildFallbackVerse(bookmark: Bookmark, verseKey: string | null): Verse 
   const preferredId =
     (typeof bookmark.verseApiId === 'number' && Number.isFinite(bookmark.verseApiId)
       ? bookmark.verseApiId
-      : null) ?? parseNumericId(bookmark.verseId) ?? fallbackIdFromVerseKey(verseKey) ?? 0;
+      : null) ??
+    parseNumericId(bookmark.verseId) ??
+    fallbackIdFromVerseKey(verseKey) ??
+    0;
 
   const translationText = bookmark.translation?.trim();
   const translations = translationText
@@ -130,10 +130,7 @@ interface UseBookmarkVerseReturn {
 
 export function useBookmarkVerse(bookmark: Bookmark): UseBookmarkVerseReturn {
   const { chapters, updateBookmark } = useBookmarks();
-  const orderedChapters = useMemo(
-    () => [...chapters].sort((a, b) => a.id - b.id),
-    [chapters]
-  );
+  const orderedChapters = useMemo(() => [...chapters].sort((a, b) => a.id - b.id), [chapters]);
   const { verseIdentifier, identifierSource } = useMemo(() => {
     const asId = normaliseIdentifier(bookmark.verseId);
     if (asId) {
@@ -206,7 +203,9 @@ export function useBookmarkVerse(bookmark: Bookmark): UseBookmarkVerseReturn {
 
     const surahName = findSurahNameFromKey(resolvedVerse.verse_key, orderedChapters);
     const translationText =
-      resolvedVerse.translations?.[0]?.text ?? bookmark.translation ?? normalizedBookmark.translation;
+      resolvedVerse.translations?.[0]?.text ??
+      bookmark.translation ??
+      normalizedBookmark.translation;
 
     return {
       ...normalizedBookmark,
@@ -216,12 +215,7 @@ export function useBookmarkVerse(bookmark: Bookmark): UseBookmarkVerseReturn {
       surahName,
       ...(translationText ? { translation: translationText } : {}),
     };
-  }, [
-    normalizedBookmark,
-    resolvedVerse,
-    orderedChapters,
-    bookmark.translation,
-  ]);
+  }, [normalizedBookmark, resolvedVerse, orderedChapters, bookmark.translation]);
 
   useEffect(() => {
     if (!verseIdentifier) return;

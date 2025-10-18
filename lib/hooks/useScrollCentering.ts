@@ -66,10 +66,7 @@ const useCenterActiveElement = <T extends string>({
       const forceCenter = sessionStorage.getItem(`forceCenter${activeTab}`) === '1';
       // Center when explicitly forced (background pre-centering), or only once
       // on initial open when we haven't scrolled yet and the item is out of view.
-      if (
-        ref.current[activeTab] &&
-        (forceCenter || (scrollTops[activeTab] === 0 && isOutside))
-      ) {
+      if (ref.current[activeTab] && (forceCenter || (scrollTops[activeTab] === 0 && isOutside))) {
         activeEl.scrollIntoView({ block: 'center' });
       }
       if (forceCenter) {
@@ -120,10 +117,13 @@ export const useScrollCentering = <T extends string>({
     enabled,
   });
 
-  const skipNextCentering = useCallback((tab: T): void => {
-    shouldCenterRef.current[tab] = false;
-    sessionStorage.setItem(`skipCenter${tab}`, '1');
-  }, [shouldCenterRef]);
+  const skipNextCentering = useCallback(
+    (tab: T): void => {
+      shouldCenterRef.current[tab] = false;
+      sessionStorage.setItem(`skipCenter${tab}`, '1');
+    },
+    [shouldCenterRef]
+  );
 
   const prepareForTabSwitch = useCallback(
     (nextTab: T): void => {

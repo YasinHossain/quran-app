@@ -90,7 +90,12 @@ function useBookmarkHelpers(
   bookmarkedVerses: string[];
   togglePinned: (verseId: string, metadata?: Partial<Bookmark>) => void;
   isPinned: (verseId: string) => boolean;
-  setLastRead: (surahId: string, verseNumber: number, verseKey?: string, globalVerseId?: number) => void;
+  setLastRead: (
+    surahId: string,
+    verseNumber: number,
+    verseKey?: string,
+    globalVerseId?: number
+  ) => void;
 } {
   const isBookmarked = useCallback(
     (verseId: string) => isVerseBookmarked(folders, verseId),

@@ -20,8 +20,7 @@ const getFolders = (): Folder[] => JSON.parse(screen.getByTestId('folders').text
 const getLastRead = (): Record<
   string,
   { verseNumber: number; updatedAt: number; verseKey?: string; globalVerseId?: number }
-> =>
-  JSON.parse(screen.getByTestId('lastRead').textContent || '{}');
+> => JSON.parse(screen.getByTestId('lastRead').textContent || '{}');
 
 const getIsBookmarked = (): string => screen.getByTestId('is-bookmarked-1:1').textContent;
 

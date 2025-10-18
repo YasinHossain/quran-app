@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
 import preview from '@/.storybook/preview';
-
 import { SettingsProvider, useSettings } from '@/app/providers/SettingsContext';
 import { ReaderVerseCard } from '@/app/shared/reader/VerseCard';
 
@@ -94,10 +93,7 @@ const verseOfLight: Verse = {
 const meta: Meta<typeof ReaderVerseCard> = {
   title: 'Shared/Reader/ReaderVerseCard',
   component: ReaderVerseCard,
-  decorators: [
-    ...(Array.isArray(preview.decorators) ? preview.decorators : []),
-    withStorySettings,
-  ],
+  decorators: [...(Array.isArray(preview.decorators) ? preview.decorators : []), withStorySettings],
   parameters: {
     layout: 'fullscreen',
     backgrounds: {

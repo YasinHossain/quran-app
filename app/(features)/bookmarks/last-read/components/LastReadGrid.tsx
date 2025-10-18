@@ -34,9 +34,7 @@ export const LastReadGrid = ({ lastRead, chapters }: LastReadGridProps): React.J
     );
   }
 
-  const sortedEntries = Object.entries(lastRead).sort(
-    ([, a], [, b]) => b.updatedAt - a.updatedAt
-  );
+  const sortedEntries = Object.entries(lastRead).sort(([, a], [, b]) => b.updatedAt - a.updatedAt);
 
   const normalizedEntries: Array<{
     surahId: string;
@@ -59,11 +57,7 @@ export const LastReadGrid = ({ lastRead, chapters }: LastReadGridProps): React.J
         : undefined;
     const rawVerseNumber = entry.verseNumber ?? verseNumberFromKey ?? entry.verseId;
 
-    if (
-      typeof rawVerseNumber !== 'number' ||
-      Number.isNaN(rawVerseNumber) ||
-      rawVerseNumber <= 0
-    ) {
+    if (typeof rawVerseNumber !== 'number' || Number.isNaN(rawVerseNumber) || rawVerseNumber <= 0) {
       continue;
     }
 

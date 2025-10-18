@@ -2,9 +2,8 @@
 
 import React from 'react';
 
-import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
-
 import { BookmarkFolderContent } from '@/app/(features)/bookmarks/components/BookmarkFolderContent';
+import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
 
 import type { Bookmark, Folder } from '@/types';
 

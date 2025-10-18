@@ -16,7 +16,12 @@ export interface BookmarkContextType {
   togglePinned: (verseId: string, metadata?: Partial<Bookmark>) => void;
   isPinned: (verseId: string) => boolean;
   lastRead: LastReadMap;
-  setLastRead: (surahId: string, verseNumber: number, verseKey?: string, globalVerseId?: number) => void;
+  setLastRead: (
+    surahId: string,
+    verseNumber: number,
+    verseKey?: string,
+    globalVerseId?: number
+  ) => void;
   chapters: Chapter[];
   memorization: Record<string, MemorizationPlan>;
   addToMemorization: (surahId: number, targetVerses?: number) => void;

@@ -28,4 +28,3 @@ export function PageClient({ pageId }: PageClientProps): React.JSX.Element {
     />
   );
 }
-

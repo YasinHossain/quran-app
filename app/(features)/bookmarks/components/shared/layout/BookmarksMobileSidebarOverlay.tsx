@@ -1,8 +1,7 @@
 'use client';
 
-import React from 'react';
-
 import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
 
 import { BookmarksSidebar } from '@/app/(features)/bookmarks/components/BookmarksSidebar';
 

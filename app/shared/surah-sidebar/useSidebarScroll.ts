@@ -1,6 +1,9 @@
 import { useRef, type UIEvent } from 'react';
 
-import { useSidebarScrollCentering, useBackgroundPreCentering } from './hooks/useSidebarScrollCentering';
+import {
+  useSidebarScrollCentering,
+  useBackgroundPreCentering,
+} from './hooks/useSidebarScrollCentering';
 import { useSidebarScrollPersistence } from './hooks/useSidebarScrollPersistence';
 
 import type { TabKey } from '@/app/shared/components/surah-tabs/types';

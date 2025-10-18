@@ -62,7 +62,8 @@ export const useBackgroundPreCentering = ({
   useEffect(() => {
     const tabs: TabKey[] = ['Surah', 'Juz', 'Page'];
     tabs.forEach((tab) => {
-      const currentId = tab === 'Surah' ? selectedSurahId : tab === 'Juz' ? selectedJuzId : selectedPageId;
+      const currentId =
+        tab === 'Surah' ? selectedSurahId : tab === 'Juz' ? selectedJuzId : selectedPageId;
       const prevId = prev.current[tab];
       if (currentId !== prevId && activeTab !== tab) {
         // Reset stored scroll to enable centering and mark as force center.
@@ -73,5 +74,13 @@ export const useBackgroundPreCentering = ({
       }
     });
     prev.current = { Surah: selectedSurahId, Juz: selectedJuzId, Page: selectedPageId };
-  }, [activeTab, selectedSurahId, selectedJuzId, selectedPageId, setSurahScrollTop, setJuzScrollTop, setPageScrollTop]);
+  }, [
+    activeTab,
+    selectedSurahId,
+    selectedJuzId,
+    selectedPageId,
+    setSurahScrollTop,
+    setJuzScrollTop,
+    setPageScrollTop,
+  ]);
 };

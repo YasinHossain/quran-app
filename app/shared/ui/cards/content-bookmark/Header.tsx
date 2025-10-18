@@ -38,9 +38,11 @@ export const Header = memo(function Header({
 
   return (
     <div className="flex items-center justify-between mb-4">
-      <div className="flex items-center space-x-1 mt-1">
-        <span className="text-accent font-semibold text-sm">{verseKey}</span>
-        <span className="text-muted text-sm truncate">{surahName}</span>
+      <div className="flex items-center gap-2 mt-1 min-w-0">
+        <span className="text-accent font-semibold text-[1.08rem] leading-[1.1]">{verseKey}</span>
+        <span className="text-muted text-base leading-[1.1] font-medium truncate -mt-px">
+          {surahName}
+        </span>
       </div>
       <div className="flex items-center space-x-2">
         <span className="text-xs text-muted">{formatTimeAgo(createdAt)}</span>

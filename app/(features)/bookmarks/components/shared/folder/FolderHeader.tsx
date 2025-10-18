@@ -47,16 +47,21 @@ const FolderInfo = ({
   }`;
 
   return (
-    <div className="min-w-0">
+    <div className="min-w-0 flex flex-col">
       <p
         className={cn(
-          'truncate text-sm font-semibold transition-colors duration-200',
+          'truncate text-[1.08rem] leading-[1.1] font-semibold transition-colors duration-200',
           isCurrentFolder ? colors.text.accent : `${colors.text.primary} ${colors.text.hoverAccent}`
         )}
       >
         {folderItem.name}
       </p>
-      <p className={cn('text-xs leading-tight transition-colors duration-200', colors.text.secondary)}>
+      <p
+        className={cn(
+          'text-base leading-[1.1] font-medium transition-colors duration-200 -mt-px',
+          colors.text.secondary
+        )}
+      >
         {verseCount}
       </p>
     </div>

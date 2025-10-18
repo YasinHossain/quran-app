@@ -5,12 +5,12 @@ import { SWRConfig } from 'swr';
 import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
 import { useTafsirVerseData } from '@/app/(features)/tafsir/hooks/useTafsirVerseData';
 import { SettingsProvider, useSettings } from '@/app/providers/SettingsContext';
-import { container } from '@/src/infrastructure/di/Container';
 import { Tafsir } from '@/src/domain/entities/Tafsir';
+import { container } from '@/src/infrastructure/di/Container';
 
-import type { Bookmark, Verse, Word } from '@/types';
-import type { ITafsirRepository } from '@/src/domain/repositories/ITafsirRepository';
 import type { LanguageCode } from '@/lib/text/languageCodes';
+import type { ITafsirRepository } from '@/src/domain/repositories/ITafsirRepository';
+import type { Bookmark, Verse, Word } from '@/types';
 
 jest.mock('@/lib/api/verses', () => ({
   getVerseById: jest.fn(),
@@ -98,7 +98,7 @@ const createVersePayload = (
         id: index,
         uthmani: `word-${index}`,
         [wordLang]: `${wordLang}-word-${index}`,
-      } as Word)
+      }) as Word
   );
   return {
     id: numericId,
@@ -220,9 +220,7 @@ describe('Verse settings propagation', () => {
     );
     await waitFor(() =>
       expect(
-        result.current.verse?.words?.map(
-          (word) => (word as Record<string, string>)['fr']
-        )
+        result.current.verse?.words?.map((word) => (word as Record<string, string>)['fr'])
       ).toEqual(['fr-word-1', 'fr-word-2'])
     );
     expect(result.current.verse?.audio?.url).toBe(initialAudio);
@@ -258,9 +256,7 @@ describe('Verse settings propagation', () => {
     );
     await waitFor(() =>
       expect(
-        result.current.verse?.words?.map(
-          (word) => (word as Record<string, string>)['es']
-        )
+        result.current.verse?.words?.map((word) => (word as Record<string, string>)['es'])
       ).toEqual(['es-word-1', 'es-word-2'])
     );
     expect(result.current.verse?.audio?.url).toBe(initialAudio);
@@ -292,9 +288,7 @@ describe('Verse settings propagation', () => {
     );
     await waitFor(() =>
       expect(
-        result.current.verse?.words?.map(
-          (word) => (word as Record<string, string>)['tr']
-        )
+        result.current.verse?.words?.map((word) => (word as Record<string, string>)['tr'])
       ).toEqual(['tr-word-1', 'tr-word-2'])
     );
     expect(result.current.verse?.audio?.url).toBe(initialAudio);
