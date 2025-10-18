@@ -4,9 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 import { EllipsisHIcon, CloseIcon } from '@/app/shared/icons';
+import { cn } from '@/lib/utils/cn';
 
 import { DeleteItem } from './DeleteItem';
-import { RenameItem } from './RenameItem';
 
 interface UseContextMenuResult {
   isOpen: boolean;
@@ -65,7 +65,6 @@ const useContextMenu = (): UseContextMenuResult => {
 
 interface FolderContextMenuProps {
   onDelete: () => void;
-  onRename: () => void;
   onColorChange?: () => void;
 }
 
@@ -76,7 +75,6 @@ interface FolderMenuPanelProps extends FolderContextMenuProps {
 
 const FolderMenuPanel = ({
   menuRef,
-  onRename,
   onDelete,
   onColorChange,
   onClose,
@@ -101,24 +99,22 @@ const FolderMenuPanel = ({
         }}
         className="w-full px-4 py-2 text-left text-sm text-foreground hover:bg-surface-hover transition-colors"
       >
-        Customize appearance
+        Edit Folder
       </button>
     ) : null}
     {onColorChange ? <div className="my-1 h-px bg-border/50" /> : null}
-    <RenameItem onRename={onRename} closeMenu={onClose} />
     <DeleteItem onDelete={onDelete} closeMenu={onClose} />
   </motion.div>
 );
 
 export const FolderContextMenu = ({
   onDelete,
-  onRename,
   onColorChange,
 }: FolderContextMenuProps): React.JSX.Element => {
   const { isOpen, menuRef, buttonRef, handleToggleMenu, handleCloseMenu } = useContextMenu();
 
   return (
-    <div className="relative">
+    <div className={cn('relative', isOpen && 'z-[80]')}>
       <button
         ref={buttonRef}
         className="rounded-full p-1.5 text-muted hover:bg-surface-hover hover:text-accent transition-all duration-200 touch-manipulation"
@@ -134,7 +130,6 @@ export const FolderContextMenu = ({
         {isOpen && (
           <FolderMenuPanel
             menuRef={menuRef}
-            onRename={onRename}
             onDelete={onDelete}
             onClose={handleCloseMenu}
             {...(onColorChange ? { onColorChange } : {})}

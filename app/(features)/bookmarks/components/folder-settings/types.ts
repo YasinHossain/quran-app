@@ -1,10 +1,7 @@
 import { Folder } from '@/types';
 
-export type FolderSettingsMode = 'rename' | 'customize';
-
 export interface UseFolderSettingsParams {
   folder: Folder | null;
-  mode: FolderSettingsMode;
   onClose: () => void;
   isOpen: boolean;
 }
@@ -22,7 +19,6 @@ export interface UseFolderSettingsResult {
 }
 
 export interface UseFolderSettingsSubmitParams {
-  mode: FolderSettingsMode;
   folder: Folder | null;
   renameFolder: (id: string, name: string, color: string, icon: string) => void;
   onClose: () => void;

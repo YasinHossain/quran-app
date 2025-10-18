@@ -54,7 +54,7 @@ export const FolderItem = ({
           active: 'shadow-xl',
         },
       }}
-      className="w-full overflow-hidden"
+      className="w-full overflow-visible"
     >
       <FolderHeader
         folderItem={folderItem}

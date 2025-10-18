@@ -51,14 +51,12 @@ interface FolderSettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
   folder: Folder | null;
-  mode: 'rename' | 'customize';
 }
 
 export const FolderSettingsModal = ({
   isOpen,
   onClose,
   folder,
-  mode,
 }: FolderSettingsModalProps): React.JSX.Element => {
   const {
     name,
@@ -70,7 +68,7 @@ export const FolderSettingsModal = ({
     isSubmitting,
     handleSubmit,
     getModalTitle,
-  } = useFolderSettings({ folder, mode, onClose, isOpen });
+  } = useFolderSettings({ folder, onClose, isOpen });
 
   const { backdropVariants, modalVariants } = useFolderSettingsModalAnimation();
 
@@ -84,7 +82,6 @@ export const FolderSettingsModal = ({
             <ModalHeader title={getModalTitle()} onClose={onClose} />
 
             <SettingsForm
-              mode={mode}
               name={name}
               setName={setName}
               selectedColor={selectedColor}

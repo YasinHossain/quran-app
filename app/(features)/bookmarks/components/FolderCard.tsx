@@ -9,7 +9,6 @@ interface FolderCardProps {
   folder: Folder;
   onClick: () => void;
   onDelete: () => void;
-  onRename: () => void;
   onColorChange: () => void;
 }
 
@@ -17,7 +16,6 @@ export const FolderCard = React.memo(function FolderCard({
   folder,
   onClick,
   onDelete,
-  onRename,
   onColorChange,
 }: FolderCardProps): React.JSX.Element {
   return (
@@ -25,7 +23,6 @@ export const FolderCard = React.memo(function FolderCard({
       folder={folder}
       onClick={onClick}
       onDelete={onDelete}
-      onRename={onRename}
       onColorChange={onColorChange}
     />
   );

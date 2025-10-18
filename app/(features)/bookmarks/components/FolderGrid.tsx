@@ -15,7 +15,7 @@ interface FolderGridProps {
   onFolderSelect: (folderId: string) => void;
 }
 
-type FolderAction = 'delete' | 'rename' | 'customize';
+type FolderAction = 'delete' | 'customize';
 
 interface FolderCardsProps {
   folders: Folder[];
@@ -54,7 +54,6 @@ const FolderCards = ({
         folder={folder}
         onClick={() => onFolderSelect(folder.id)}
         onDelete={() => onAction(folder, 'delete')}
-        onRename={() => onAction(folder, 'rename')}
         onColorChange={() => onAction(folder, 'customize')}
       />
     </motion.div>
@@ -81,7 +80,6 @@ const useFolderModals = (): UseFolderModalsReturn => {
   const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState<'rename' | 'customize'>('rename');
 
   const handleAction = (folder: Folder, action: FolderAction): void => {
     setSelectedFolder(folder);
@@ -89,7 +87,6 @@ const useFolderModals = (): UseFolderModalsReturn => {
       setDeleteModalOpen(true);
       return;
     }
-    setModalMode(action);
     setSettingsModalOpen(true);
   };
 
@@ -105,7 +102,6 @@ const useFolderModals = (): UseFolderModalsReturn => {
         isOpen={settingsModalOpen}
         onClose={closeModals}
         folder={selectedFolder}
-        mode={modalMode}
       />
       <DeleteFolderModal isOpen={deleteModalOpen} onClose={closeModals} folder={selectedFolder} />
     </>

@@ -19,7 +19,6 @@ interface FolderData {
 interface EnhancedFolderCardProps extends Omit<BaseCardProps, 'children' | 'onClick'> {
   folder: FolderData;
   onDelete: () => void;
-  onRename: () => void;
   onColorChange: () => void;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
@@ -27,7 +26,6 @@ interface EnhancedFolderCardProps extends Omit<BaseCardProps, 'children' | 'onCl
 export const EnhancedFolderCard = memo(function EnhancedFolderCard({
   folder,
   onDelete,
-  onRename,
   onColorChange,
   onClick,
   'aria-label': ariaLabel,
@@ -82,7 +80,7 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
       {...props}
     >
       <div className="absolute top-4 right-4">
-        <FolderContextMenu onDelete={onDelete} onRename={onRename} onColorChange={onColorChange} />
+        <FolderContextMenu onDelete={onDelete} onColorChange={onColorChange} />
       </div>
 
       <div className="flex h-full w-full flex-1 flex-col gap-3">

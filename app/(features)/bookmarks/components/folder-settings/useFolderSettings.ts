@@ -5,13 +5,11 @@ import { useEscapeKey } from '@/app/providers/hooks/useEscapeKey';
 
 import { DEFAULT_COLOR, DEFAULT_ICON } from './constants';
 import { type UseFolderSettingsParams, type UseFolderSettingsResult } from './types';
-import { useFolderModalTitle } from './useFolderModalTitle';
 import { useFolderSettingsSubmit } from './useFolderSettingsSubmit';
 import { useInitializeFolderState } from './useInitializeFolderState';
 
 export const useFolderSettings = ({
   folder,
-  mode,
   onClose,
   isOpen,
 }: UseFolderSettingsParams): UseFolderSettingsResult => {
@@ -26,7 +24,6 @@ export const useFolderSettings = ({
   useInitializeFolderState({ folder, isOpen, setName, setSelectedColor, setSelectedIcon });
 
   const handleSubmit = useFolderSettingsSubmit({
-    mode,
     folder,
     renameFolder,
     onClose,
@@ -36,7 +33,7 @@ export const useFolderSettings = ({
     selectedIcon,
   });
 
-  const modalTitle = useFolderModalTitle(mode);
+  const modalTitle = 'Edit Folder';
 
   return {
     name,

@@ -5,7 +5,6 @@ import { logger } from '@/src/infrastructure/monitoring/Logger';
 import type { UseFolderSettingsSubmitParams } from './types';
 
 export const useFolderSettingsSubmit = ({
-  mode,
   folder,
   renameFolder,
   onClose,
@@ -20,9 +19,7 @@ export const useFolderSettingsSubmit = ({
       if (!folder || !name.trim()) return;
       setIsSubmitting(true);
       try {
-        if (mode === 'rename' || mode === 'customize') {
-          renameFolder(folder.id, name.trim(), selectedColor, selectedIcon);
-        }
+        renameFolder(folder.id, name.trim(), selectedColor, selectedIcon);
         onClose();
       } catch (error) {
         logger.error('Failed to update folder:', undefined, error as Error);
@@ -30,5 +27,5 @@ export const useFolderSettingsSubmit = ({
         setIsSubmitting(false);
       }
     },
-    [folder, mode, name, renameFolder, onClose, selectedColor, selectedIcon, setIsSubmitting]
+    [folder, name, renameFolder, onClose, selectedColor, selectedIcon, setIsSubmitting]
   );

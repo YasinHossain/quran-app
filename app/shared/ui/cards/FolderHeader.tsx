@@ -17,7 +17,6 @@ interface FolderHeaderProps {
   folder: FolderData;
   bookmarkCount: number;
   onDelete: () => void;
-  onRename: () => void;
 }
 
 const FolderIconSection = memo(function FolderIconSection({
@@ -61,7 +60,6 @@ export const FolderHeader = memo(function FolderHeader({
   folder,
   bookmarkCount,
   onDelete,
-  onRename,
 }: FolderHeaderProps): React.JSX.Element {
   return (
     <div className="flex items-start justify-between mb-4">
@@ -70,7 +68,7 @@ export const FolderHeader = memo(function FolderHeader({
         <FolderInfoSection folder={folder} bookmarkCount={bookmarkCount} />
       </div>
       <div className="flex-shrink-0">
-        <FolderContextMenu onDelete={onDelete} onRename={onRename} />
+        <FolderContextMenu onDelete={onDelete} />
       </div>
     </div>
   );
