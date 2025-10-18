@@ -2,6 +2,7 @@
 
 import React from 'react';
 
+import { BaseCard } from '@/app/shared/ui/BaseCard';
 import { Bookmark, Folder } from '@/types';
 
 import { ExpandedContent } from './ExpandedContent';
@@ -23,23 +24,45 @@ export const FolderItem = ({
   folderBookmarks,
   onToggle,
   onSelect,
-}: FolderItemProps): React.JSX.Element => (
-  <div
-    className={`rounded-2xl shadow-sm transition-all duration-300 ease-in-out ${
-      isExpanded ? 'bg-interactive ring-1 ring-border' : 'bg-surface'
-    }`}
-  >
-    <FolderHeader
-      folderItem={folderItem}
-      isCurrentFolder={isCurrentFolder}
-      folderBookmarks={folderBookmarks}
-      onToggle={onToggle}
-      onSelect={onSelect}
-    />
-    <ExpandedContent
-      isExpanded={isExpanded}
-      isCurrentFolder={isCurrentFolder}
-      folderBookmarks={folderBookmarks}
-    />
-  </div>
-);
+}: FolderItemProps): React.JSX.Element => {
+  const shouldShowExpanded = isExpanded && isCurrentFolder;
+
+  return (
+    <BaseCard
+      variant="navigation"
+      animation="navigation"
+      isActive={isCurrentFolder}
+      direction="column"
+      align="start"
+      gap="gap-0"
+      customVariant={{
+        height: 'min-h-[80px]',
+        padding: 'p-0',
+        background: {
+          inactive: 'bg-surface border border-border/40',
+          active: 'bg-surface border border-border/40',
+        },
+        shadow: {
+          inactive: 'shadow-sm',
+          active: 'shadow-sm',
+        },
+        hover: {
+          effect: 'none',
+          value: 'hover:bg-surface-hover hover:border-border/60',
+          duration: 'transition-colors duration-200',
+        },
+      }}
+      className="w-full overflow-hidden"
+    >
+      <FolderHeader
+        folderItem={folderItem}
+        isCurrentFolder={isCurrentFolder}
+        folderBookmarks={folderBookmarks}
+        onToggle={onToggle}
+        onSelect={onSelect}
+        className="w-full min-h-[80px]"
+      />
+      <ExpandedContent isExpanded={shouldShowExpanded} folderBookmarks={folderBookmarks} />
+    </BaseCard>
+  );
+};

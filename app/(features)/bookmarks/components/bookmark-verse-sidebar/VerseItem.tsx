@@ -21,7 +21,7 @@ export const VerseItem = ({
   const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark);
   const ayahNumber = enrichedBookmark.verseKey?.split(':')[1];
   const baseWrapperClassName = cn(
-    'w-full text-left py-2.5 px-4 transition-colors',
+    'flex w-full items-center justify-between gap-3 py-3 px-4 transition-colors min-h-[60px]',
     onSelect && 'hover:bg-surface-hover cursor-pointer'
   );
 
@@ -30,16 +30,16 @@ export const VerseItem = ({
       isLoading={isLoading || !enrichedBookmark.verseKey || !enrichedBookmark.surahName}
       error={error}
       loadingFallback={
-        <div className="px-4 py-2.5">
-          <div className="animate-pulse space-y-1.5">
-            <div className="h-4 bg-surface-hover rounded w-16"></div>
-            <div className="h-3 bg-surface-hover rounded w-24"></div>
+        <div className="px-4 py-3">
+          <div className="animate-pulse flex items-center justify-between gap-4">
+            <div className="h-4 bg-surface-hover rounded w-28"></div>
+            <div className="h-3 bg-surface-hover rounded w-16"></div>
           </div>
           {showDivider ? <div className="mx-4 mt-2 h-px bg-border" /> : null}
         </div>
       }
       errorFallback={
-        <div className="px-4 py-2.5">
+        <div className="px-4 py-3">
           <p className="text-center text-error text-sm">Failed to load</p>
           {showDivider ? <div className="mx-4 mt-2 h-px bg-border" /> : null}
         </div>
@@ -48,25 +48,17 @@ export const VerseItem = ({
       <>
         {onSelect ? (
           <button onClick={onSelect} type="button" className={baseWrapperClassName}>
-            <div className="flex flex-col gap-px">
-              <p className="text-sm font-medium text-foreground truncate leading-[1.05]">
-                {enrichedBookmark.surahName}
-              </p>
-              <p className="text-xs text-muted truncate leading-[1.15] -mt-0.5">
-                Ayah {ayahNumber}
-              </p>
-            </div>
+            <span className="text-sm font-medium text-foreground truncate text-left">
+              {enrichedBookmark.surahName}
+            </span>
+            <span className="text-xs text-muted shrink-0 text-right">Ayah {ayahNumber}</span>
           </button>
         ) : (
           <div className={baseWrapperClassName}>
-            <div className="flex flex-col gap-px">
-              <p className="text-sm font-medium text-foreground truncate leading-[1.05]">
-                {enrichedBookmark.surahName}
-              </p>
-              <p className="text-xs text-muted truncate leading-[1.15] -mt-0.5">
-                Ayah {ayahNumber}
-              </p>
-            </div>
+            <span className="text-sm font-medium text-foreground truncate text-left">
+              {enrichedBookmark.surahName}
+            </span>
+            <span className="text-xs text-muted shrink-0 text-right">Ayah {ayahNumber}</span>
           </div>
         )}
         {showDivider ? <div className="mx-4 h-px bg-border" /> : null}

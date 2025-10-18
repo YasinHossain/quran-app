@@ -23,11 +23,11 @@ export const BookmarkFolderSidebarContent = ({
 }: BookmarkFolderSidebarContentProps): React.JSX.Element => (
   <div className="flex h-full flex-col">
     <SidebarHeader
-      title="Folder"
+      title="Folders"
       onBack={onBack}
       showBackButton
       {...(onClose ? { onClose, showCloseButton: true } : {})}
-      className="px-4 py-3 sm:px-5 sm:py-4 border-b border-border bg-surface shadow-sm"
+      className="px-4 sm:px-5 border-b border-border shadow-none bg-transparent"
     />
     <BookmarkFolderContent bookmarks={bookmarks} folder={folder} />
   </div>

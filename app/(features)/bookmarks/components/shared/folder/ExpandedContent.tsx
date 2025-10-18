@@ -7,28 +7,28 @@ import { Bookmark } from '@/types';
 
 interface ExpandedContentProps {
   isExpanded: boolean;
-  isCurrentFolder: boolean;
   folderBookmarks: Bookmark[];
 }
 
 export const ExpandedContent = ({
   isExpanded,
-  isCurrentFolder,
   folderBookmarks,
 }: ExpandedContentProps): React.JSX.Element | null => {
-  if (!isExpanded || !isCurrentFolder) return null;
+  if (!isExpanded) return null;
 
   return (
-    <div className="px-4 pb-3">
-      <div className="border-t border-border pt-2">
-        {folderBookmarks.length > 0 ? (
-          folderBookmarks.map((bookmark) => (
-            <VerseItem key={String(bookmark.verseId)} bookmark={bookmark} />
-          ))
-        ) : (
-          <p className="py-4 text-sm text-center text-muted">This folder is empty.</p>
-        )}
-      </div>
+    <div className="w-full border-t border-border">
+      {folderBookmarks.length > 0 ? (
+        folderBookmarks.map((bookmark, index) => (
+          <VerseItem
+            key={String(bookmark.verseId)}
+            bookmark={bookmark}
+            showDivider={index < folderBookmarks.length - 1}
+          />
+        ))
+      ) : (
+        <p className="px-4 py-4 text-sm text-center text-muted">This folder is empty.</p>
+      )}
     </div>
   );
 };

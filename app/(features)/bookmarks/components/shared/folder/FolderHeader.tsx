@@ -3,6 +3,7 @@
 import React from 'react';
 
 import { FolderGlyph } from '@/app/shared/ui/cards/FolderGlyph';
+import { cn } from '@/lib/utils/cn';
 import { Bookmark, Folder } from '@/types';
 
 interface FolderHeaderProps {
@@ -11,6 +12,7 @@ interface FolderHeaderProps {
   folderBookmarks: Bookmark[];
   onToggle: (folderId: string) => void;
   onSelect: (folderId: string) => void;
+  className?: string;
 }
 
 interface FolderIconProps {
@@ -33,9 +35,11 @@ const FolderIconDisplay = ({ folderItem }: FolderIconProps): React.JSX.Element =
 );
 
 const FolderInfo = ({ folderItem, folderBookmarks }: FolderInfoProps): React.JSX.Element => (
-  <div>
-    <p className="font-bold text-foreground">{folderItem.name}</p>
-    <p className="text-sm text-muted">Total Ayah: {folderBookmarks.length}</p>
+  <div className="min-w-0">
+    <p className="truncate text-base font-semibold text-foreground">{folderItem.name}</p>
+    <p className="text-xs text-muted">
+      {folderBookmarks.length} {folderBookmarks.length === 1 ? 'verse' : 'verses'}
+    </p>
   </div>
 );
 
@@ -45,6 +49,7 @@ export const FolderHeader = ({
   folderBookmarks,
   onToggle,
   onSelect,
+  className,
 }: FolderHeaderProps): React.JSX.Element => {
   const handleClick = (): void => {
     if (!isCurrentFolder) {
@@ -62,17 +67,17 @@ export const FolderHeader = ({
   };
 
   return (
-    <div className="flex items-center justify-between p-4 cursor-pointer">
-      <div
-        className="flex items-center space-x-4 flex-1"
-        onClick={handleClick}
-        role="button"
-        tabIndex={0}
-        aria-label={
-          isCurrentFolder ? `Toggle folder ${folderItem.name}` : `Open folder ${folderItem.name}`
-        }
-        onKeyDown={handleKeyDown}
-      >
+    <div
+      className={cn('flex w-full items-center gap-4 cursor-pointer px-4 py-3', className)}
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      aria-label={
+        isCurrentFolder ? `Toggle folder ${folderItem.name}` : `Open folder ${folderItem.name}`
+      }
+      onKeyDown={handleKeyDown}
+    >
+      <div className="flex items-center gap-4 flex-1 min-w-0">
         <FolderIconDisplay folderItem={folderItem} />
         <FolderInfo folderItem={folderItem} folderBookmarks={folderBookmarks} />
       </div>
