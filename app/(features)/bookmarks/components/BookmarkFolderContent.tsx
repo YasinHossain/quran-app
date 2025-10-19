@@ -44,8 +44,9 @@ export const BookmarkFolderContent = ({
     );
   };
 
+  // Match Surah list sidebar: no nested scroll/padding here; outer wrapper handles it
   return (
-    <div className="flex-1 overflow-y-auto px-2 sm:px-3 py-4">
+    <div className="flex-1">
       <div className="space-y-3">
         {folders.map((folderItem) => (
           <FolderListItem key={folderItem.id} folderItem={folderItem} />
