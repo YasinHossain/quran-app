@@ -26,7 +26,7 @@ export default function MemorizationPage(): React.JSX.Element {
       <CreateMemorizationModal isOpen={modal.isOpen} onClose={modal.close} />
 
       <BookmarksLayout activeSection="memorization" onSectionChange={handleSectionChange}>
-        <MemorizationHeader />
+        <MemorizationHeader onCreatePlan={modal.open} />
         <MemorizationGrid
           memorization={memorization}
           chapters={chapters}

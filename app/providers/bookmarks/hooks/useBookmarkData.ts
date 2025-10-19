@@ -7,12 +7,12 @@ import {
   savePinnedToStorage,
   loadLastReadFromStorage,
   saveLastReadToStorage,
-  loadMemorizationFromStorage,
-  saveMemorizationToStorage,
+  loadPlannerFromStorage,
+  savePlannerToStorage,
 } from '@/app/providers/bookmarks/storage-utils';
 import * as chaptersApi from '@/lib/api/chapters';
 
-import type { Folder, Bookmark, Chapter, MemorizationPlan, LastReadMap } from '@/types';
+import type { Folder, Bookmark, Chapter, PlannerPlan, LastReadMap } from '@/types';
 
 function useStoredBookmarkState(): {
   folders: Folder[];
@@ -21,20 +21,20 @@ function useStoredBookmarkState(): {
   setPinnedVerses: React.Dispatch<React.SetStateAction<Bookmark[]>>;
   lastRead: LastReadMap;
   setLastReadState: React.Dispatch<React.SetStateAction<LastReadMap>>;
-  memorization: Record<string, MemorizationPlan>;
-  setMemorizationState: React.Dispatch<React.SetStateAction<Record<string, MemorizationPlan>>>;
+  planner: Record<string, PlannerPlan>;
+  setPlannerState: React.Dispatch<React.SetStateAction<Record<string, PlannerPlan>>>;
 } {
   const [folders, setFolders] = useState<Folder[]>([]);
   const [pinnedVerses, setPinnedVerses] = useState<Bookmark[]>([]);
   const [lastRead, setLastReadState] = useState<LastReadMap>({});
-  const [memorization, setMemorizationState] = useState<Record<string, MemorizationPlan>>({});
+  const [planner, setPlannerState] = useState<Record<string, PlannerPlan>>({});
 
   useEffect(() => {
     const load = (): void => {
       setFolders(loadBookmarksFromStorage());
       setPinnedVerses(loadPinnedFromStorage());
       setLastReadState(loadLastReadFromStorage());
-      setMemorizationState(loadMemorizationFromStorage());
+      setPlannerState(loadPlannerFromStorage());
     };
     load();
   }, []);
@@ -42,7 +42,7 @@ function useStoredBookmarkState(): {
   useEffect(() => saveBookmarksToStorage(folders), [folders]);
   useEffect(() => savePinnedToStorage(pinnedVerses), [pinnedVerses]);
   useEffect(() => saveLastReadToStorage(lastRead), [lastRead]);
-  useEffect(() => saveMemorizationToStorage(memorization), [memorization]);
+  useEffect(() => savePlannerToStorage(planner), [planner]);
 
   return {
     folders,
@@ -51,8 +51,8 @@ function useStoredBookmarkState(): {
     setPinnedVerses,
     lastRead,
     setLastReadState,
-    memorization,
-    setMemorizationState,
+    planner,
+    setPlannerState,
   } as const;
 }
 
@@ -105,8 +105,8 @@ export function useBookmarkData(): {
   setPinnedVerses: React.Dispatch<React.SetStateAction<Bookmark[]>>;
   lastRead: LastReadMap;
   setLastReadState: React.Dispatch<React.SetStateAction<LastReadMap>>;
-  memorization: Record<string, MemorizationPlan>;
-  setMemorizationState: React.Dispatch<React.SetStateAction<Record<string, MemorizationPlan>>>;
+  planner: Record<string, PlannerPlan>;
+  setPlannerState: React.Dispatch<React.SetStateAction<Record<string, PlannerPlan>>>;
   chapters: Chapter[];
 } {
   const storedState = useStoredBookmarkState();

@@ -110,13 +110,13 @@ export interface Folder {
 }
 
 /**
- * A memorization plan for tracking progress on memorizing specific surahs or verse ranges.
+ * A planner entry for tracking progress on memorizing specific surahs or verse ranges.
  */
-export interface MemorizationPlan {
-  /** Unique identifier for this memorization plan. */
+export interface PlannerPlan {
+  /** Unique identifier for this planner entry. */
   id: string;
 
-  /** Surah ID this memorization plan is for. */
+  /** Surah ID this planner entry is for. */
   surahId: number;
 
   /** Total number of verses targeted for memorization in this surah. */
@@ -125,12 +125,12 @@ export interface MemorizationPlan {
   /** Number of verses already memorized and confirmed. */
   completedVerses: number;
 
-  /** Timestamp when the memorization plan was created (ms since epoch). */
+  /** Timestamp when the planner entry was created (ms since epoch). */
   createdAt: number;
 
   /** Timestamp of last progress update (ms since epoch). */
   lastUpdated: number;
 
-  /** Optional notes about the memorization plan. */
+  /** Optional notes about the planner entry. */
   notes?: string;
 }

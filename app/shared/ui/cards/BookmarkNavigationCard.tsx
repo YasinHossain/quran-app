@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils/cn';
  */
 
 // Valid bookmark section identifiers
-export type SectionId = 'bookmarks' | 'pinned' | 'last-read' | 'memorization';
+export type SectionId = 'bookmarks' | 'pinned' | 'last-read' | 'planner';
 
 export interface BookmarkNavigationContent {
   id: SectionId;
@@ -38,7 +38,7 @@ const routes: Record<SectionId, string> = {
   bookmarks: '/bookmarks',
   pinned: '/bookmarks/pinned',
   'last-read': '/bookmarks/last-read',
-  memorization: '/bookmarks/memorization',
+  planner: '/bookmarks/planner',
 };
 
 const getSectionHref = (sectionId: SectionId): string => routes[sectionId];

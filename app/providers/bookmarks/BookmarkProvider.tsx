@@ -10,7 +10,7 @@ import { useBookmarkData } from './hooks/useBookmarkData';
 import { useBookmarkMetadata } from './hooks/useBookmarkMetadata';
 import useBookmarkOperations from './hooks/useBookmarkOperations';
 import useFolderOperations from './hooks/useFolderOperations';
-import useMemorizationOperations from './hooks/useMemorizationOperations';
+import usePlannerOperations from './hooks/usePlannerOperations';
 import { usePinnedBookmarks } from './hooks/usePinnedBookmarks';
 
 import type { BookmarkContextType } from './types';
@@ -33,8 +33,8 @@ function useBookmarkProviderValue(): BookmarkContextType {
     setPinnedVerses,
     lastRead,
     setLastReadState,
-    memorization,
-    setMemorizationState,
+    planner,
+    setPlannerState,
     chapters,
   } = useBookmarkData();
   const { settings } = useSettings();
@@ -50,7 +50,7 @@ function useBookmarkProviderValue(): BookmarkContextType {
     chapters,
     fetchMetadata: fetchBookmarkMetadata,
   });
-  const memorizationOps = useMemorizationOperations(memorization, setMemorizationState);
+  const plannerOps = usePlannerOperations(planner, setPlannerState);
   const helpers = useBookmarkHelpers(folders, pinnedVerses, bookmarkOps, setLastReadState);
 
   return useMemo(
@@ -62,8 +62,8 @@ function useBookmarkProviderValue(): BookmarkContextType {
       ...helpers,
       lastRead,
       chapters,
-      memorization,
-      ...memorizationOps,
+      planner,
+      ...plannerOps,
     }),
     [
       folders,
@@ -73,8 +73,8 @@ function useBookmarkProviderValue(): BookmarkContextType {
       helpers,
       lastRead,
       chapters,
-      memorization,
-      memorizationOps,
+      planner,
+      plannerOps,
     ]
   );
 }

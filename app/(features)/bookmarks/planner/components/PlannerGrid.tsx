@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import React from 'react';
 
-import { BrainIcon, PlusIcon } from '@/app/shared/icons';
+import { CalendarIcon, PlusIcon } from '@/app/shared/icons';
 import { MemorizationPlan, Chapter } from '@/types';
 
 import { MemorizationCard } from './MemorizationCard';
@@ -23,9 +23,9 @@ export const MemorizationGrid = ({
     return (
       <div className="text-center py-16">
         <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
-          <BrainIcon className="w-8 h-8 text-muted" />
+          <CalendarIcon className="w-8 h-8 text-muted" />
         </div>
-        <h3 className="text-lg font-semibold text-foreground mb-2">No Memorization Plans</h3>
+        <h3 className="text-lg font-semibold text-foreground mb-2">No Plans Yet</h3>
         <p className="text-muted max-w-md mx-auto mb-6">
           Start your memorization journey by creating a plan to track your progress.
         </p>
@@ -34,7 +34,7 @@ export const MemorizationGrid = ({
           className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-on-accent rounded-xl font-semibold hover:bg-accent-hover transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
         >
           <PlusIcon size={20} />
-          Create Memorization Plan
+          Create Plan
         </button>
       </div>
     );

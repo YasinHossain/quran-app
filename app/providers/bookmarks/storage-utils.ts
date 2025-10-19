@@ -1,12 +1,13 @@
 import { getItem, setItem, removeItem } from '@/lib/utils/safeLocalStorage';
-import { Folder, Bookmark, MemorizationPlan, LastReadMap, LastReadEntry } from '@/types';
+import { Folder, Bookmark, PlannerPlan, LastReadMap, LastReadEntry } from '@/types';
 
 import {
   BOOKMARKS_STORAGE_KEY,
   OLD_BOOKMARKS_STORAGE_KEY,
   PINNED_STORAGE_KEY,
   LAST_READ_STORAGE_KEY,
-  MEMORIZATION_STORAGE_KEY,
+  PLANNER_STORAGE_KEY,
+  LEGACY_MEMORIZATION_STORAGE_KEY,
 } from './constants';
 
 const normalizeBookmark = (bookmark: Bookmark): Bookmark => ({
@@ -177,22 +178,36 @@ export const saveLastReadToStorage = (lastRead: LastReadMap): void => {
   }
 };
 
-export const loadMemorizationFromStorage = (): Record<string, MemorizationPlan> => {
+export const loadPlannerFromStorage = (): Record<string, PlannerPlan> => {
   if (typeof window === 'undefined') return {};
 
-  const savedMemorization = getItem(MEMORIZATION_STORAGE_KEY);
-  if (savedMemorization) {
+  const savedPlanner = getItem(PLANNER_STORAGE_KEY);
+  if (savedPlanner) {
     try {
-      return JSON.parse(savedMemorization);
+      return JSON.parse(savedPlanner) as Record<string, PlannerPlan>;
     } catch {
       return {};
     }
   }
+
+  const legacy = getItem(LEGACY_MEMORIZATION_STORAGE_KEY);
+  if (legacy) {
+    try {
+      const parsed = JSON.parse(legacy) as Record<string, PlannerPlan>;
+      removeItem(LEGACY_MEMORIZATION_STORAGE_KEY);
+      setItem(PLANNER_STORAGE_KEY, JSON.stringify(parsed));
+      return parsed;
+    } catch {
+      return {};
+    }
+  }
+
   return {};
 };
 
-export const saveMemorizationToStorage = (memorization: Record<string, MemorizationPlan>): void => {
+export const savePlannerToStorage = (planner: Record<string, PlannerPlan>): void => {
   if (typeof window !== 'undefined') {
-    setItem(MEMORIZATION_STORAGE_KEY, JSON.stringify(memorization));
+    setItem(PLANNER_STORAGE_KEY, JSON.stringify(planner));
+    removeItem(LEGACY_MEMORIZATION_STORAGE_KEY);
   }
 };

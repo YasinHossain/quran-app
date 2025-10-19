@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { BookmarkIcon, PinIcon, ClockIcon, BrainIcon } from '@/app/shared/icons';
+import { BookmarkIcon, PinIcon, ClockIcon, CalendarIcon } from '@/app/shared/icons';
 import { BookmarkNavigationCard } from '@/app/shared/ui/cards';
 
 import type {
@@ -16,9 +16,9 @@ const NAVIGATION_SECTIONS: BookmarkNavigationContent[] = [
   { id: 'pinned', icon: PinIcon, label: 'Pinned Verses', description: 'Quick access' },
   { id: 'last-read', icon: ClockIcon, label: 'Recent', description: 'Last visited' },
   {
-    id: 'memorization',
-    icon: BrainIcon,
-    label: 'Memorization Plan',
+    id: 'planner',
+    icon: CalendarIcon,
+    label: 'Planner',
     description: 'Track progress',
   },
 ];

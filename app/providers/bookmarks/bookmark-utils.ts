@@ -1,4 +1,4 @@
-import { Folder, Bookmark, MemorizationPlan } from '@/types';
+import { Folder, Bookmark, PlannerPlan } from '@/types';
 
 const generateId = (): string => {
   if (typeof globalThis !== 'undefined') {
@@ -140,11 +140,11 @@ export const updateBookmarkInFolders = (
   }));
 };
 
-export const createMemorizationPlan = (
+export const createPlannerPlan = (
   surahId: number,
   targetVerses: number,
   planName?: string
-): MemorizationPlan => ({
+): PlannerPlan => ({
   id: generateId(),
   surahId,
   targetVerses,
@@ -154,18 +154,18 @@ export const createMemorizationPlan = (
   notes: planName || `Surah ${surahId} Plan`,
 });
 
-export const updateMemorizationProgress = (
-  memorization: Record<string, MemorizationPlan>,
+export const updatePlannerProgress = (
+  planner: Record<string, PlannerPlan>,
   surahId: number,
   completedVerses: number
-): Record<string, MemorizationPlan> => {
+): Record<string, PlannerPlan> => {
   const key = surahId.toString();
-  if (!memorization[key]) return memorization;
+  if (!planner[key]) return planner;
 
   return {
-    ...memorization,
+    ...planner,
     [key]: {
-      ...memorization[key],
+      ...planner[key],
       completedVerses,
       lastUpdated: Date.now(),
     },

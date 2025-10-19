@@ -32,6 +32,7 @@ export { SearchIcon } from './SearchIcon';
 export { BookmarkIcon } from './BookmarkIcon';
 export { BookmarkOutlineIcon } from './BookmarkOutlineIcon';
 export { BookReaderIcon } from './BookReaderIcon';
+export { CalendarIcon } from './CalendarIcon';
 export { BrainIcon } from './BrainIcon';
 export { ClockIcon } from './ClockIcon';
 export { FolderIcon } from './FolderIcon';

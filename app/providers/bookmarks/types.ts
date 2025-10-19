@@ -1,4 +1,4 @@
-import { Folder, Bookmark, Chapter, MemorizationPlan, LastReadMap } from '@/types';
+import { Folder, Bookmark, Chapter, PlannerPlan, LastReadMap } from '@/types';
 
 export interface BookmarkContextType {
   folders: Folder[];
@@ -23,9 +23,9 @@ export interface BookmarkContextType {
     globalVerseId?: number
   ) => void;
   chapters: Chapter[];
-  memorization: Record<string, MemorizationPlan>;
-  addToMemorization: (surahId: number, targetVerses?: number) => void;
-  createMemorizationPlan: (surahId: number, targetVerses: number, planName?: string) => void;
-  updateMemorizationProgress: (surahId: number, completedVerses: number) => void;
-  removeFromMemorization: (surahId: number) => void;
+  planner: Record<string, PlannerPlan>;
+  addToPlanner: (surahId: number, targetVerses?: number) => void;
+  createPlannerPlan: (surahId: number, targetVerses: number, planName?: string) => void;
+  updatePlannerProgress: (surahId: number, completedVerses: number) => void;
+  removeFromPlanner: (surahId: number) => void;
 }

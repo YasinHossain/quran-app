@@ -10,7 +10,7 @@ export type {
   Bookmark,
   BookmarkWithVerse,
   Folder,
-  MemorizationPlan,
+  PlannerPlan,
   LastReadEntry,
   LastReadMap,
 } from './bookmark';
