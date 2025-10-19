@@ -13,7 +13,7 @@ import {
 import type { PlanFormData } from './types';
 import type { Chapter } from '@/types';
 
-interface MemorizationFormProps {
+interface PlannerFormProps {
   formData: PlanFormData;
   onFormDataChange: (updates: Partial<PlanFormData>) => void;
   totalVerses: number;
@@ -24,7 +24,7 @@ interface MemorizationFormProps {
   chapters: Chapter[];
 }
 
-export const MemorizationForm = ({
+export const PlannerForm = ({
   formData,
   onFormDataChange,
   totalVerses,
@@ -33,7 +33,7 @@ export const MemorizationForm = ({
   canSubmit,
   onSubmit,
   chapters,
-}: MemorizationFormProps): React.JSX.Element => (
+}: PlannerFormProps): React.JSX.Element => (
   <form onSubmit={onSubmit} className="space-y-6">
     <PlanNameInput
       planName={formData.planName}

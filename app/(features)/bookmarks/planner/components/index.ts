@@ -1,3 +1,3 @@
-export { MemorizationCard } from './MemorizationCard';
-export { MemorizationGrid } from './MemorizationGrid';
-export { MemorizationHeader } from './MemorizationHeader';
+export { PlannerCard } from './PlannerCard';
+export { PlannerGrid } from './PlannerGrid';
+export { PlannerHeader } from './PlannerHeader';

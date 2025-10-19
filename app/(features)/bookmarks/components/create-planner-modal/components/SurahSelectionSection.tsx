@@ -4,7 +4,7 @@ import React from 'react';
 
 import { SurahSelector } from '@/app/(features)/bookmarks/components/SurahSelector';
 
-import type { PlanFormData } from '@/app/(features)/bookmarks/components/create-memorization-modal/types';
+import type { PlanFormData } from '../types';
 import type { Chapter } from '@/types';
 
 interface SurahSelectionSectionProps {

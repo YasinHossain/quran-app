@@ -32,8 +32,8 @@ export const usePinnedPage = (): UsePinnedPageReturn => {
       router.push('/bookmarks');
     } else if (section === 'last-read') {
       router.push('/bookmarks/last-read');
-    } else if (section === 'memorization') {
-      router.push('/bookmarks/memorization');
+    } else if (section === 'planner') {
+      router.push('/bookmarks/planner');
     } else {
       router.push('/bookmarks/pinned');
     }

@@ -28,8 +28,8 @@ export const useLastReadPage = (): UseLastReadPageReturn => {
       router.push('/bookmarks');
     } else if (section === 'pinned') {
       router.push('/bookmarks/pinned');
-    } else if (section === 'memorization') {
-      router.push('/bookmarks/memorization');
+    } else if (section === 'planner') {
+      router.push('/bookmarks/planner');
     } else {
       router.push('/bookmarks/last-read');
     }

@@ -4,22 +4,22 @@ import { motion } from 'framer-motion';
 import React from 'react';
 
 import { CalendarIcon, PlusIcon } from '@/app/shared/icons';
-import { MemorizationPlan, Chapter } from '@/types';
+import { PlannerPlan, Chapter } from '@/types';
 
-import { MemorizationCard } from './MemorizationCard';
+import { PlannerCard } from './PlannerCard';
 
-interface MemorizationGridProps {
-  memorization: Record<string, MemorizationPlan>;
+interface PlannerGridProps {
+  planner: Record<string, PlannerPlan>;
   chapters: Chapter[];
   onCreatePlan: () => void;
 }
 
-export const MemorizationGrid = ({
-  memorization,
+export const PlannerGrid = ({
+  planner,
   chapters,
   onCreatePlan,
-}: MemorizationGridProps): React.JSX.Element => {
-  if (!memorization || Object.keys(memorization).length === 0) {
+}: PlannerGridProps): React.JSX.Element => {
+  if (!planner || Object.keys(planner).length === 0) {
     return (
       <div className="text-center py-16">
         <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
@@ -27,7 +27,7 @@ export const MemorizationGrid = ({
         </div>
         <h3 className="text-lg font-semibold text-foreground mb-2">No Plans Yet</h3>
         <p className="text-muted max-w-md mx-auto mb-6">
-          Start your memorization journey by creating a plan to track your progress.
+          Start planning your memorization journey by creating a plan to track your progress.
         </p>
         <button
           onClick={onCreatePlan}
@@ -46,10 +46,10 @@ export const MemorizationGrid = ({
       animate={{ opacity: 1 }}
       className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
     >
-      {Object.entries(memorization).map(([surahId, plan]) => {
+      {Object.entries(planner).map(([surahId, plan]) => {
         const chapter = chapters.find((c) => c.id === Number(surahId));
         return (
-          <MemorizationCard
+          <PlannerCard
             key={surahId}
             surahId={surahId}
             plan={plan}

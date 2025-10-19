@@ -39,8 +39,8 @@ function sectionToPath(section: SectionId): string {
       return '/bookmarks/pinned';
     case 'last-read':
       return '/bookmarks/last-read';
-    case 'memorization':
-      return '/bookmarks/memorization';
+    case 'planner':
+      return '/bookmarks/planner';
     default:
       return '/bookmarks';
   }

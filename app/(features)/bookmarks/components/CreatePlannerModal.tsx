@@ -7,25 +7,25 @@ import { PanelModalCenter } from '@/app/shared/ui/PanelModalCenter';
 
 import {
   ModalHeader,
-  MemorizationForm,
-  useMemorizationCalculations,
+  PlannerForm,
+  usePlannerCalculations,
   useFormState,
-  createMemorizationPlansForRange,
-} from './create-memorization-modal';
+  createPlannerPlansForRange,
+} from './create-planner-modal';
 
-interface CreateMemorizationModalProps {
+interface CreatePlannerModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const CreateMemorizationModal = ({
+export const CreatePlannerModal = ({
   isOpen,
   onClose,
-}: CreateMemorizationModalProps): React.JSX.Element => {
+}: CreatePlannerModalProps): React.JSX.Element => {
   const { formData, handleFormDataChange, resetForm } = useFormState();
-  const { chapters, createMemorizationPlan } = useBookmarks();
+  const { chapters, createPlannerPlan } = useBookmarks();
 
-  const { totalVerses, versesPerDay, isValidRange } = useMemorizationCalculations(
+  const { totalVerses, versesPerDay, isValidRange } = usePlannerCalculations(
     chapters,
     formData.startSurah,
     formData.endSurah,
@@ -38,7 +38,7 @@ export const CreateMemorizationModal = ({
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     if (canSubmit) {
-      createMemorizationPlansForRange(formData, chapters, createMemorizationPlan);
+      createPlannerPlansForRange(formData, chapters, createPlannerPlan);
       handleClose();
     }
   };
@@ -58,7 +58,7 @@ export const CreateMemorizationModal = ({
     >
       <div className="p-6">
         <ModalHeader />
-        <MemorizationForm
+        <PlannerForm
           formData={formData}
           onFormDataChange={handleFormDataChange}
           totalVerses={totalVerses}

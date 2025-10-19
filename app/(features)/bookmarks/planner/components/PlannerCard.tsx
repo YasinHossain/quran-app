@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import { CircularProgress } from '@/app/(features)/bookmarks/components/CircularProgress';
-import { MemorizationPlan } from '@/types';
+import { PlannerPlan } from '@/types';
 
-interface MemorizationCardProps {
+interface PlannerCardProps {
   surahId: string;
-  plan: MemorizationPlan;
+  plan: PlannerPlan;
   chapter?:
     | {
         name_simple: string;
@@ -30,13 +30,12 @@ interface CardHeaderProps {
 }
 
 interface ProgressDetailsProps {
-  plan: MemorizationPlan;
+  plan: PlannerPlan;
   percent: number;
 }
 
 interface StatusFooterProps {
-  plan: MemorizationPlan;
-  percent: number;
+  plan: PlannerPlan;
 }
 
 const CardHeader = ({ chapter, surahId, percent }: CardHeaderProps): React.JSX.Element => (
@@ -84,21 +83,25 @@ const ProgressDetails = ({ plan, percent }: ProgressDetailsProps): React.JSX.Ele
   </div>
 );
 
-const StatusFooter = ({ plan }: StatusFooterProps): React.JSX.Element => (
-  <div className="text-xs text-muted pt-2 border-t border-border/50">
-    {plan.completedVerses === plan.targetVerses ? 'Completed' : 'In Progress'} • Started{' '}
-    {new Date(plan.createdAt).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-    })}
-  </div>
-);
+const StatusFooter = ({ plan }: StatusFooterProps): React.JSX.Element => {
+  const status = plan.completedVerses === plan.targetVerses ? 'Completed' : 'In Progress';
+  const startedOn = new Date(plan.createdAt).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+  });
 
-export const MemorizationCard = ({
+  return (
+    <div className="text-xs text-muted pt-2 border-t border-border/50">
+      {status} • Started {startedOn}
+    </div>
+  );
+};
+
+export const PlannerCard = ({
   surahId,
   plan,
   chapter,
-}: MemorizationCardProps): React.JSX.Element => {
+}: PlannerCardProps): React.JSX.Element => {
   const router = useRouter();
   const percent = Math.min(
     100,
@@ -132,7 +135,7 @@ export const MemorizationCard = ({
     >
       <CardHeader chapter={chapter} surahId={surahId} percent={percent} />
       <ProgressDetails plan={plan} percent={percent} />
-      <StatusFooter plan={plan} percent={percent} />
+      <StatusFooter plan={plan} />
     </motion.div>
   );
 };

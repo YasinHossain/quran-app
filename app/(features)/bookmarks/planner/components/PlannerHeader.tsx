@@ -4,13 +4,13 @@ import React from 'react';
 
 import { CalendarIcon, PlusIcon } from '@/app/shared/icons';
 
-interface MemorizationHeaderProps {
+interface PlannerHeaderProps {
   onCreatePlan: () => void;
 }
 
-export const MemorizationHeader = ({
+export const PlannerHeader = ({
   onCreatePlan,
-}: MemorizationHeaderProps): React.JSX.Element => {
+}: PlannerHeaderProps): React.JSX.Element => {
   return (
     <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-3">
@@ -19,7 +19,7 @@ export const MemorizationHeader = ({
         </div>
         <div className="min-w-0 -mt-1">
           <h1 className="text-lg font-bold text-foreground leading-tight">Planner</h1>
-          <p className="text-xs text-muted -mt-0.5">Track your memorization progress</p>
+          <p className="text-xs text-muted -mt-0.5">Curate plans for your memorization journey</p>
         </div>
       </div>
       <button

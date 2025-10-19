@@ -7,16 +7,16 @@ import { useModal } from '@/app/shared/hooks/useModal';
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 import type { Chapter } from '@/types';
 
-interface UseMemorizationPageResult {
-  memorization: ReturnType<typeof useBookmarks>['memorization'];
+interface UsePlannerPageResult {
+  planner: ReturnType<typeof useBookmarks>['planner'];
   chapters: Chapter[];
   modal: ReturnType<typeof useModal>;
   handleSectionChange: (section: SectionId) => void;
 }
 
-export const useMemorizationPage = (): UseMemorizationPageResult => {
+export const usePlannerPage = (): UsePlannerPageResult => {
   const router = useRouter();
-  const { memorization, chapters } = useBookmarks();
+  const { planner, chapters } = useBookmarks();
   const modal = useModal();
 
   useBodyScrollLock(true);
@@ -29,12 +29,12 @@ export const useMemorizationPage = (): UseMemorizationPageResult => {
     } else if (section === 'last-read') {
       router.push('/bookmarks/last-read');
     } else {
-      router.push('/bookmarks/memorization');
+      router.push('/bookmarks/planner');
     }
   };
 
   return {
-    memorization,
+    planner,
     chapters,
     modal,
     handleSectionChange,

@@ -1,11 +1,11 @@
 import type { PlanFormData } from './types';
 import type { Chapter } from '@/types';
 
-// Helper function to create memorization plans for a range of surahs
-export function createMemorizationPlansForRange(
+// Helper function to create planner plans for a range of surahs
+export function createPlannerPlansForRange(
   formData: PlanFormData,
   chapters: Chapter[],
-  createMemorizationPlan: (surahId: number, versesCount: number, planName: string) => void
+  createPlannerPlan: (surahId: number, versesCount: number, planName: string) => void
 ): void {
   if (!formData.startSurah || !formData.endSurah) return;
 
@@ -17,7 +17,7 @@ export function createMemorizationPlansForRange(
           ? formData.planName.trim()
           : `${formData.planName.trim()} - ${chapter.name_simple}`;
 
-      createMemorizationPlan(surahId, chapter.verses_count, planName);
+      createPlannerPlan(surahId, chapter.verses_count, planName);
     }
   }
 }

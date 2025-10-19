@@ -5,8 +5,8 @@ import { useState } from 'react';
 import type { PlanFormData } from './types';
 import type { Chapter } from '@/types';
 
-// Custom hook for memorization calculations
-export function useMemorizationCalculations(
+// Custom hook for planner calculations
+export function usePlannerCalculations(
   chapters: Chapter[],
   startSurah?: number,
   endSurah?: number,

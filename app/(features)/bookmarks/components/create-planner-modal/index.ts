@@ -1,5 +1,5 @@
 export { ModalHeader } from './ModalHeader';
-export { MemorizationForm } from './MemorizationForm';
-export { useMemorizationCalculations, useFormState } from './hooks';
-export { createMemorizationPlansForRange } from './utils';
+export { PlannerForm } from './PlannerForm';
+export { usePlannerCalculations, useFormState } from './hooks';
+export { createPlannerPlansForRange } from './utils';
 export type { PlanFormData } from './types';

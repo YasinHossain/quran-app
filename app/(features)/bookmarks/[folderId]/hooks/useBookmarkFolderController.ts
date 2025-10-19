@@ -52,8 +52,8 @@ function useNavigationHandler(router: ReturnType<typeof useRouter>): {
       case 'last-read':
         router.push('/bookmarks/last-read');
         break;
-      case 'memorization':
-        router.push('/bookmarks/memorization');
+      case 'planner':
+        router.push('/bookmarks/planner');
         break;
       default:
         router.push('/bookmarks');

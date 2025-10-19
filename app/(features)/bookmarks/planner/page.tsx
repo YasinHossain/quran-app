@@ -4,34 +4,30 @@ import dynamic from 'next/dynamic';
 
 import { BookmarksLayout } from '@/app/(features)/bookmarks/components/shared/BookmarksLayout';
 
-import { MemorizationHeader, MemorizationGrid } from './components';
-import { useMemorizationPage } from './hooks/useMemorizationPage';
+import { PlannerHeader, PlannerGrid } from './components';
+import { usePlannerPage } from './hooks/usePlannerPage';
 
 // Dynamic import for heavy modal component
-const CreateMemorizationModal = dynamic(
+const CreatePlannerModal = dynamic(
   () =>
-    import('../components/CreateMemorizationModal').then((mod) => ({
-      default: mod.CreateMemorizationModal,
+    import('../components/CreatePlannerModal').then((mod) => ({
+      default: mod.CreatePlannerModal,
     })),
   {
     ssr: false,
   }
 );
 
-export default function MemorizationPage(): React.JSX.Element {
-  const { memorization, chapters, modal, handleSectionChange } = useMemorizationPage();
+export default function PlannerPage(): React.JSX.Element {
+  const { planner, chapters, modal, handleSectionChange } = usePlannerPage();
 
   return (
     <>
-      <CreateMemorizationModal isOpen={modal.isOpen} onClose={modal.close} />
+      <CreatePlannerModal isOpen={modal.isOpen} onClose={modal.close} />
 
-      <BookmarksLayout activeSection="memorization" onSectionChange={handleSectionChange}>
-        <MemorizationHeader onCreatePlan={modal.open} />
-        <MemorizationGrid
-          memorization={memorization}
-          chapters={chapters}
-          onCreatePlan={modal.open}
-        />
+      <BookmarksLayout activeSection="planner" onSectionChange={handleSectionChange}>
+        <PlannerHeader onCreatePlan={modal.open} />
+        <PlannerGrid planner={planner} chapters={chapters} onCreatePlan={modal.open} />
       </BookmarksLayout>
     </>
   );
