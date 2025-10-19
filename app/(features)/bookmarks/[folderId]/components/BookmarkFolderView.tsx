@@ -68,8 +68,8 @@ export function BookmarkFolderView({
         activeSection="bookmarks"
         onSectionChange={onSectionChange}
         childrenTitle={null}
-        childrenContainerClassName="mt-0 pt-0 border-t-0"
-        childrenContentClassName="space-y-0"
+        childrenContainerClassName="-mt-2 sm:-mt-3 -mx-2 sm:-mx-3 pt-0 border-t-0"
+        childrenContentClassName="space-y-0 px-2 sm:px-3"
         showNavigation={false}
       >
         <BookmarkFolderSidebarContent
@@ -100,8 +100,8 @@ export function BookmarkFolderView({
             activeSection="bookmarks"
             onSectionChange={onSectionChange}
             childrenTitle={null}
-            childrenContainerClassName="mt-0 pt-0 border-t-0"
-            childrenContentClassName="space-y-0"
+            childrenContainerClassName="-mt-2 sm:-mt-3 -mx-2 sm:-mx-3 pt-0 border-t-0"
+            childrenContentClassName="space-y-0 px-2 sm:px-3"
             showNavigation={false}
           >
             <BookmarkFolderSidebarContent bookmarks={bookmarks} folder={folder} onBack={onBack} />

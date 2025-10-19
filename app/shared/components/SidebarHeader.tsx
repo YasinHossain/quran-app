@@ -12,20 +12,35 @@ interface SidebarHeaderProps {
   showCloseButton?: boolean;
   showBackButton?: boolean;
   className?: string;
+  withShadow?: boolean;
   // When true, render an edge-to-edge container so borders can span full width
   // while keeping padded content inside. Useful for sidebar headers that need
   // the divider line to touch the sidebar edges.
   edgeToEdge?: boolean;
   // Optional class for the inner content wrapper (padding/height tweaks)
   contentClassName?: string;
+  containerContentClassName?: string;
   children?: React.ReactNode;
+  backButtonClassName?: string;
+  closeButtonClassName?: string;
+  backButtonAriaLabel?: string;
+  titleAlign?: 'auto' | 'left' | 'center';
+  titleClassName?: string;
 }
 
-const BackButton = ({ onBack }: { onBack: () => void }): React.JSX.Element => (
+const BackButton = ({
+  onBack,
+  className,
+  ariaLabel = 'Go back',
+}: {
+  onBack: () => void;
+  className?: string;
+  ariaLabel?: string;
+}): React.JSX.Element => (
   <button
     onClick={onBack}
-    className="p-2 rounded-full hover:bg-surface-hover transition-colors"
-    aria-label="Go back"
+    className={cn('btn-touch p-2 rounded-full hover:bg-surface-hover transition-colors', className)}
+    aria-label={ariaLabel}
   >
     <ArrowLeftIcon size={20} className="text-foreground" />
   </button>
@@ -34,15 +49,18 @@ const BackButton = ({ onBack }: { onBack: () => void }): React.JSX.Element => (
 const CloseButton = ({
   onClose,
   alwaysShow,
+  className,
 }: {
   onClose: () => void;
   alwaysShow: boolean;
+  className?: string;
 }): React.JSX.Element => (
   <button
     onClick={onClose}
     className={cn(
       'btn-touch p-2 rounded-md hover:bg-surface/60 transition-colors',
-      alwaysShow ? '' : 'md:hidden'
+      alwaysShow ? '' : 'md:hidden',
+      className
     )}
     aria-label="Close sidebar"
   >
@@ -57,64 +75,83 @@ export const SidebarHeader = ({
   showCloseButton = false,
   showBackButton = false,
   className,
+  withShadow = true,
   edgeToEdge = false,
   contentClassName,
+  containerContentClassName,
   children,
+  backButtonClassName,
+  closeButtonClassName,
+  backButtonAriaLabel,
+  titleAlign = 'auto',
+  titleClassName,
 }: SidebarHeaderProps): React.JSX.Element => {
   const alwaysShowClose = title === 'Settings';
 
-  const baseContainer = 'flex items-center justify-between';
   const paddedContent = cn('px-3 sm:px-4 py-3 sm:py-4', contentClassName);
   const containerClass = cn(
-    baseContainer,
-    edgeToEdge ? 'px-0' : 'px-3 sm:px-4',
-    edgeToEdge ? undefined : 'py-3 sm:py-4',
-    'shadow-card',
-    showCloseButton && 'md:justify-center',
+    'relative w-full',
+    withShadow && 'shadow-card',
+    edgeToEdge ? cn('px-0', containerContentClassName) : cn('px-3 sm:px-4 py-3 sm:py-4', containerContentClassName),
     className
   );
   let backButton: React.JSX.Element | null = null;
-  let placeholder: React.JSX.Element | null = null;
-  if (showBackButton) {
-    if (onBack) {
-      backButton = <BackButton onBack={onBack} />;
-    }
-    if (!showCloseButton) {
-      placeholder = <div className="w-10 h-10" aria-hidden="true" />;
-    }
+  if (showBackButton && onBack) {
+    backButton = (
+      <BackButton
+        onBack={onBack}
+        className={backButtonClassName}
+        ariaLabel={backButtonAriaLabel}
+      />
+    );
   }
 
   let closeButton: React.JSX.Element | null = null;
   if (showCloseButton && onClose) {
-    closeButton = <CloseButton onClose={onClose} alwaysShow={alwaysShowClose} />;
-  }
-
-  const content = (
-    <>
-      {backButton}
-      <h2
-        className={cn(
-          'text-lg font-semibold text-foreground',
-          showBackButton ? 'flex-1 text-center' : undefined
-        )}
-      >
-        {title}
-      </h2>
-      {closeButton}
-      {children}
-      {placeholder}
-    </>
-  );
-
-  if (edgeToEdge) {
-    return (
-      <div className={containerClass}>
-        <div className={cn(baseContainer, paddedContent, showCloseButton && 'md:justify-center')}>
-          {content}
-        </div>
-      </div>
+    closeButton = (
+      <CloseButton
+        onClose={onClose}
+        alwaysShow={alwaysShowClose}
+        className={closeButtonClassName}
+      />
     );
   }
+
+  const hasChildren = React.Children.count(children) > 0;
+  const hasRightControls = Boolean(closeButton) || hasChildren;
+  const innerClass = cn(
+    'relative flex w-full items-center justify-center',
+    edgeToEdge ? paddedContent : undefined,
+    !edgeToEdge && contentClassName ? contentClassName : undefined
+  );
+  const computedAlign =
+    titleAlign === 'center'
+      ? 'text-center'
+      : titleAlign === 'left'
+        ? 'text-left'
+        : showBackButton || hasRightControls
+          ? 'text-center'
+          : 'text-left';
+  const titleClass = cn(
+    'w-full text-lg font-semibold text-foreground',
+    computedAlign,
+    titleClassName
+  );
+
+  const content = (
+    <div className={innerClass}>
+      {backButton ? (
+        <div className="absolute inset-y-0 left-0 flex items-center">{backButton}</div>
+      ) : null}
+      <h2 className={titleClass}>{title}</h2>
+      {hasRightControls ? (
+        <div className="absolute inset-y-0 right-0 flex items-center gap-2">
+          {closeButton}
+          {children}
+        </div>
+      ) : null}
+    </div>
+  );
 
   return <div className={containerClass}>{content}</div>;
 };

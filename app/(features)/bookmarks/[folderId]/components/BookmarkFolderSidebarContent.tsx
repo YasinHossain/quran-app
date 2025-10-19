@@ -26,11 +26,18 @@ export const BookmarkFolderSidebarContent = ({
       onBack={onBack}
       showBackButton
       {...(onClose ? { onClose, showCloseButton: true } : {})}
-      // Edge-to-edge divider with slimmer header
+      // Unified sidebar header styling
+      withShadow={false}
       edgeToEdge
-      className="px-0 sm:px-0 border-b border-border shadow-none bg-transparent mx-[-8px] sm:mx-[-12px] mb-2"
-      contentClassName="px-4 sm:px-5 py-2 sm:py-2.5"
+      titleAlign="center"
+      titleClassName="text-mobile-lg font-semibold text-foreground"
+      backButtonClassName="hover:bg-interactive-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+      className="border-b border-border bg-background shadow-none mb-2"
+      containerContentClassName="-mx-2 sm:-mx-3 py-0"
+      contentClassName="h-16 min-h-12 px-3 sm:px-4 py-0 sm:py-0"
     />
     <BookmarkFolderContent bookmarks={bookmarks} folder={folder} />
   </div>
 );
+
+

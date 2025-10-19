@@ -83,7 +83,7 @@
 
     /* Reader workspace layout tokens */
     --reader-sidebar-width-left: 20.7rem;
-    --reader-sidebar-width-right: 20rem;
+    --reader-sidebar-width-right: 20.7rem;
     --reader-header-height: 4rem;
     --reader-header-height-compact: 3.5rem;
     --reader-header-height-hidden: 0px;

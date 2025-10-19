@@ -7,6 +7,7 @@ import { SettingsPanels } from '@/app/(features)/surah/components/settings/Setti
 import { buildContentWrapperProps } from '@/app/(features)/surah/components/settings/sidebar/SettingsContentWrapperProps';
 import { buildPanelsProps } from '@/app/(features)/surah/components/settings/sidebar/SettingsPanelsProps';
 import { useSettingsSections, useSettingsTabState } from '@/app/(features)/surah/hooks';
+import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
 
 interface SurahWorkspaceSettingsProps {
   selectedTranslationName?: string;
@@ -70,9 +71,15 @@ export function SurahWorkspaceSettings({
 
   return (
     <div className="relative flex h-full flex-col bg-background text-foreground">
-      <div className="flex flex-none items-center justify-between border-b border-border px-4 py-3">
-        <h2 className="text-sm font-semibold text-content-primary">Settings</h2>
-      </div>
+      <SidebarHeader
+        title="Settings"
+        titleAlign="center"
+        titleClassName="text-mobile-lg font-semibold text-content-primary"
+        withShadow={false}
+        edgeToEdge
+        contentClassName="h-16 min-h-12 px-3 sm:px-4 py-0 sm:py-0"
+        className="border-b border-border bg-background shadow-none"
+      />
       <div className="flex-1 overflow-hidden">
         <SettingsContentWrapper {...contentWrapperProps} />
       </div>
@@ -80,3 +87,5 @@ export function SurahWorkspaceSettings({
     </div>
   );
 }
+
+
