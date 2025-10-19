@@ -26,7 +26,10 @@ export const BookmarkFolderSidebarContent = ({
       onBack={onBack}
       showBackButton
       {...(onClose ? { onClose, showCloseButton: true } : {})}
-      className="px-4 sm:px-5 border-b border-border shadow-none bg-transparent"
+      // Edge-to-edge divider with slimmer header
+      edgeToEdge
+      className="px-0 sm:px-0 border-b border-border shadow-none bg-transparent mx-[-8px] sm:mx-[-12px] mb-2"
+      contentClassName="px-4 sm:px-5 py-2 sm:py-2.5"
     />
     <BookmarkFolderContent bookmarks={bookmarks} folder={folder} />
   </div>

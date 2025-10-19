@@ -12,6 +12,12 @@ interface SidebarHeaderProps {
   showCloseButton?: boolean;
   showBackButton?: boolean;
   className?: string;
+  // When true, render an edge-to-edge container so borders can span full width
+  // while keeping padded content inside. Useful for sidebar headers that need
+  // the divider line to touch the sidebar edges.
+  edgeToEdge?: boolean;
+  // Optional class for the inner content wrapper (padding/height tweaks)
+  contentClassName?: string;
   children?: React.ReactNode;
 }
 
@@ -51,12 +57,19 @@ export const SidebarHeader = ({
   showCloseButton = false,
   showBackButton = false,
   className,
+  edgeToEdge = false,
+  contentClassName,
   children,
 }: SidebarHeaderProps): React.JSX.Element => {
   const alwaysShowClose = title === 'Settings';
 
+  const baseContainer = 'flex items-center justify-between';
+  const paddedContent = cn('px-3 sm:px-4 py-3 sm:py-4', contentClassName);
   const containerClass = cn(
-    'flex items-center justify-between px-3 sm:px-4 py-3 sm:py-4 shadow-card',
+    baseContainer,
+    edgeToEdge ? 'px-0' : 'px-3 sm:px-4',
+    edgeToEdge ? undefined : 'py-3 sm:py-4',
+    'shadow-card',
     showCloseButton && 'md:justify-center',
     className
   );
@@ -76,10 +89,9 @@ export const SidebarHeader = ({
     closeButton = <CloseButton onClose={onClose} alwaysShow={alwaysShowClose} />;
   }
 
-  return (
-    <div className={containerClass}>
+  const content = (
+    <>
       {backButton}
-
       <h2
         className={cn(
           'text-lg font-semibold text-foreground',
@@ -88,12 +100,21 @@ export const SidebarHeader = ({
       >
         {title}
       </h2>
-
       {closeButton}
-
       {children}
-
       {placeholder}
-    </div>
+    </>
   );
+
+  if (edgeToEdge) {
+    return (
+      <div className={containerClass}>
+        <div className={cn(baseContainer, paddedContent, showCloseButton && 'md:justify-center')}>
+          {content}
+        </div>
+      </div>
+    );
+  }
+
+  return <div className={containerClass}>{content}</div>;
 };
