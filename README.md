@@ -1,4 +1,4 @@
-# Quran App v1
+# Quran App
 
 A modern Quran reading application built with Next.js, TypeScript, and Clean Architecture.
 
