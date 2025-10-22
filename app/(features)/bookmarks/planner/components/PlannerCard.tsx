@@ -80,11 +80,6 @@ export const PlannerCard = ({
   const planName = plan.notes?.trim() ? plan.notes.trim() : `Plan for Surah ${surahId}`;
   const surahLabel = chapter?.name_simple || `Surah ${surahId}`;
   const isComplete = percent >= 100;
-  const status = isComplete
-    ? 'Completed'
-    : plan.completedVerses === 0
-      ? 'Getting started'
-      : 'In progress';
   const startedOn = new Date(plan.createdAt);
   const startedLabel = startedOn.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   const lastUpdatedLabel = getRelativeTimeLabel(plan.lastUpdated);
@@ -93,14 +88,6 @@ export const PlannerCard = ({
     day: 'numeric',
     year: 'numeric',
   });
-  const daysActive = Math.max(1, Math.ceil((Date.now() - plan.createdAt) / DAY_IN_MS));
-  const activeLabel = daysActive <= 1 ? 'Day 1' : `${daysActive} days in`;
-  const statusClasses =
-    isComplete
-      ? 'inline-flex items-center gap-1 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-on-accent shadow-sm'
-      : 'inline-flex items-center gap-1 rounded-full bg-accent/15 px-3 py-1 text-xs font-semibold text-accent';
-  const statusIconClasses =
-    isComplete ? 'h-3 w-3 flex-shrink-0 text-on-accent' : 'h-3 w-3 flex-shrink-0 text-accent';
   const upNextLabel = isComplete
     ? 'Plan ready for revision'
     : `Up next • Verse ${currentVerse} of ${plan.targetVerses}`;
@@ -186,21 +173,6 @@ export const PlannerCard = ({
       <div className="relative z-10 flex h-full flex-col gap-6">
         <div className="flex flex-wrap items-start justify-between gap-6">
           <div className="flex min-w-0 flex-col gap-4">
-            <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
-              <span className="inline-flex items-center gap-2 rounded-full bg-accent/15 px-3 py-1 font-semibold text-accent">
-                <Sparkles className="h-3.5 w-3.5" />
-                Planner
-              </span>
-              <span className={statusClasses}>
-                <CheckCircle2 className={statusIconClasses} />
-                {status}
-              </span>
-              <span className="inline-flex items-center gap-1 rounded-full border border-border/60 px-2.5 py-1 text-muted">
-                <Clock3 className="h-3.5 w-3.5 text-accent" />
-                {activeLabel}
-              </span>
-            </div>
-
             <div className="space-y-2 text-left">
               <h2 className="text-2xl font-semibold text-foreground">{planName}</h2>
               <div className="flex flex-wrap items-center gap-2 text-sm text-muted">
@@ -219,15 +191,52 @@ export const PlannerCard = ({
           <div className="relative flex w-full flex-col gap-3">
             <div className="w-full rounded-2xl border border-border/60 bg-background/60 px-4 py-3">
               <div className="flex items-center justify-between text-sm font-medium text-foreground">
-                <span className="text-muted">Progress</span>
+                <span className="text-muted">Currently at</span>
                 <span>{percent}%</span>
               </div>
+              {(() => {
+                const totalPagesLocal =
+                  Array.isArray(chapter?.pages) && chapter.pages.length >= 2
+                    ? Math.max(1, (chapter.pages[1] ?? 0) - (chapter.pages[0] ?? 0) + 1)
+                    : null;
+                const startPageLocal = chapter?.pages?.[0];
+                const completedPagesForPage = computePagesFromVerses(plan.completedVerses);
+                const currentPage =
+                  typeof startPageLocal === 'number' &&
+                  typeof completedPagesForPage === 'number' &&
+                  typeof totalPagesLocal === 'number'
+                    ? startPageLocal + Math.min(Math.max(0, completedPagesForPage), totalPagesLocal - 1)
+                    : typeof startPageLocal === 'number'
+                      ? startPageLocal
+                      : null;
+                const currentJuz =
+                  typeof currentPage === 'number' ? getJuzByPage(currentPage) : null;
+
+                const primaryText = `${surahLabel} ${surahId}:${currentVerse}`;
+                const secondaryParts: string[] = [];
+                if (typeof currentPage === 'number') secondaryParts.push(`Page ${currentPage}`);
+                if (typeof currentJuz === 'number') secondaryParts.push(`Juz ${currentJuz}`);
+                const secondaryText = secondaryParts.join(' • ');
+
+                return (
+                  <div className="mt-1">
+                    <p className="text-base font-semibold text-foreground sm:text-lg" aria-label={primaryText}>
+                      {primaryText}
+                    </p>
+                    {secondaryText && (
+                      <p className="mt-0.5 text-xs text-muted sm:text-sm" aria-label={secondaryText}>
+                        {secondaryText}
+                      </p>
+                    )}
+                  </div>
+                );
+              })()}
               <div
                 role="progressbar"
                 aria-valuenow={percent}
                 aria-valuemin={0}
                 aria-valuemax={100}
-                className="mt-3 h-2 w-full overflow-hidden rounded-full bg-surface/80"
+                className="mt-2 h-2 w-full overflow-hidden rounded-full bg-surface/80"
               >
                 <motion.div
                   className="h-full rounded-full bg-accent"
@@ -236,31 +245,11 @@ export const PlannerCard = ({
                   transition={{ type: 'spring', stiffness: 160, damping: 24 }}
                 />
               </div>
-              <p className="mt-3 text-sm text-muted">
-                {plan.completedVerses} of {plan.targetVerses} verses complete
-              </p>
             </div>
           </div>
         </div>
 
         <div className="grid gap-5">
-          <div className="rounded-2xl border border-border/60 bg-background/70 p-4 shadow-inner">
-            <div className="flex flex-wrap items-center justify-between gap-2 text-sm font-medium text-foreground">
-              <span className="inline-flex items-center gap-2 text-muted">
-                <Sparkles className="h-4 w-4 text-accent" />
-                Current focus
-              </span>
-              <span className="text-sm font-semibold text-foreground">
-                {isComplete ? 'All verses completed' : `Resume at verse ${currentVerse}`}
-              </span>
-            </div>
-            <p className="mt-2 text-xs text-muted">
-              {isComplete
-                ? 'Great work! Revisit the surah to reinforce your memorization.'
-                : 'Continue from your last memorized ayah to keep the momentum.'}
-            </p>
-          </div>
-
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="rounded-xl border border-border/50 bg-surface/80 p-3">
               <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted">
