@@ -140,19 +140,30 @@ export const updateBookmarkInFolders = (
   }));
 };
 
+export const DEFAULT_PLANNER_ESTIMATED_DAYS = 5;
+
 export const createPlannerPlan = (
   surahId: number,
   targetVerses: number,
-  planName?: string
-): PlannerPlan => ({
-  id: generateId(),
-  surahId,
-  targetVerses,
-  completedVerses: 0,
-  createdAt: Date.now(),
-  lastUpdated: Date.now(),
-  notes: planName || `Surah ${surahId} Plan`,
-});
+  planName?: string,
+  estimatedDays?: number
+): PlannerPlan => {
+  const normalizedEstimatedDays =
+    typeof estimatedDays === 'number' && estimatedDays > 0
+      ? Math.round(estimatedDays)
+      : undefined;
+
+  return {
+    id: generateId(),
+    surahId,
+    targetVerses,
+    completedVerses: 0,
+    createdAt: Date.now(),
+    lastUpdated: Date.now(),
+    notes: planName || `Surah ${surahId} Plan`,
+    estimatedDays: normalizedEstimatedDays ?? DEFAULT_PLANNER_ESTIMATED_DAYS,
+  };
+};
 
 export const updatePlannerProgress = (
   planner: Record<string, PlannerPlan>,

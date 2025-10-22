@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { CalendarClock, CheckCircle2, Clock3, Flag, Sparkles, Target } from 'lucide-react';
+import { CalendarClock, CheckCircle2, Flag, Sparkles, Target } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -21,32 +21,7 @@ interface PlannerCardProps {
 }
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
-
-const getRelativeTimeLabel = (timestamp: number): string => {
-  if (!timestamp) return 'Just now';
-
-  const now = Date.now();
-  const diff = now - timestamp;
-
-  if (diff <= 0) return 'Just now';
-
-  const dayDiff = Math.floor(diff / DAY_IN_MS);
-
-  if (dayDiff <= 0) return 'Today';
-  if (dayDiff === 1) return 'Yesterday';
-  if (dayDiff < 7) return `${dayDiff} days ago`;
-
-  const weekDiff = Math.floor(dayDiff / 7);
-  if (weekDiff === 1) return '1 week ago';
-  if (weekDiff < 5) return `${weekDiff} weeks ago`;
-
-  const monthDiff = Math.floor(dayDiff / 30);
-  if (monthDiff <= 1) return '1 month ago';
-  if (monthDiff < 12) return `${monthDiff} months ago`;
-
-  const yearDiff = Math.floor(dayDiff / 365);
-  return yearDiff === 1 ? '1 year ago' : `${yearDiff} years ago`;
-};
+const DEFAULT_ESTIMATED_DAYS = 5;
 
 const SecondaryStat = ({
   value,
@@ -80,24 +55,11 @@ export const PlannerCard = ({
   const planName = plan.notes?.trim() ? plan.notes.trim() : `Plan for Surah ${surahId}`;
   const surahLabel = chapter?.name_simple || `Surah ${surahId}`;
   const isComplete = percent >= 100;
-  const startedOn = new Date(plan.createdAt);
-  const startedLabel = startedOn.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  const lastUpdatedLabel = getRelativeTimeLabel(plan.lastUpdated);
-  const lastUpdatedTitle = new Date(plan.lastUpdated).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
-  const upNextLabel = isComplete
-    ? 'Plan ready for revision'
-    : `Up next • Verse ${currentVerse} of ${plan.targetVerses}`;
-  const upNextClasses = isComplete
-    ? 'inline-flex items-center gap-2 rounded-full bg-accent px-3 py-1.5 text-sm font-semibold text-on-accent shadow-sm'
-    : 'inline-flex items-center gap-2 rounded-full bg-accent/15 px-3 py-1.5 text-sm font-semibold text-accent';
-  const upNextIconClasses = isComplete ? 'h-4 w-4 text-on-accent' : 'h-4 w-4 text-accent';
+  const startPage = chapter?.pages?.[0];
+  const endPage = chapter?.pages?.[1];
   const totalPages =
-    Array.isArray(chapter?.pages) && chapter.pages.length >= 2
-      ? Math.max(1, (chapter.pages[1] ?? 0) - (chapter.pages[0] ?? 0) + 1)
+    typeof startPage === 'number' && typeof endPage === 'number'
+      ? Math.max(1, endPage - startPage + 1)
       : null;
   const computePagesFromVerses = (verses: number): number | null => {
     if (!totalPages || plan.targetVerses <= 0) return null;
@@ -117,8 +79,6 @@ export const PlannerCard = ({
     typeof remainingPages === 'number' ? Math.max(0, remainingPages) : null;
   const goalPagesCount = typeof goalPages === 'number' ? Math.max(0, goalPages) : null;
 
-  const startPage = chapter?.pages?.[0];
-  const endPage = chapter?.pages?.[1];
   const startJuz = typeof startPage === 'number' ? getJuzByPage(startPage) : null;
   const endJuz = typeof endPage === 'number' ? getJuzByPage(endPage) : null;
   const totalJuzCount =
@@ -140,6 +100,126 @@ export const PlannerCard = ({
       ? Math.max(totalJuzCount - completedJuzCount, 0)
       : null;
   const goalJuzCount = totalJuzCount;
+
+  const estimatedDays =
+    typeof plan.estimatedDays === 'number' && plan.estimatedDays > 0
+      ? plan.estimatedDays
+      : DEFAULT_ESTIMATED_DAYS;
+  const versesPerDay =
+    plan.targetVerses > 0 && estimatedDays > 0
+      ? Math.max(1, Math.ceil(plan.targetVerses / estimatedDays))
+      : plan.targetVerses;
+  const activeDayNumber =
+    estimatedDays > 0 && versesPerDay > 0
+      ? Math.min(estimatedDays, Math.max(1, Math.floor(plan.completedVerses / versesPerDay) + 1))
+      : 1;
+  const todaysStartVerse =
+    !isComplete && plan.targetVerses > 0
+      ? Math.min(plan.targetVerses, Math.max(1, plan.completedVerses + 1))
+      : null;
+  const todaysEndVerse =
+    !isComplete && typeof todaysStartVerse === 'number' && versesPerDay > 0
+      ? Math.min(plan.targetVerses, todaysStartVerse + versesPerDay - 1)
+      : null;
+  const todaysVerseCount =
+    typeof todaysStartVerse === 'number' && typeof todaysEndVerse === 'number'
+      ? todaysEndVerse - todaysStartVerse + 1
+      : 0;
+
+  const getPageForVerse = (verseNumber: number, mode: 'start' | 'end'): number | null => {
+    if (typeof startPage !== 'number' || typeof totalPages !== 'number' || totalPages <= 0) {
+      return typeof startPage === 'number' ? startPage : null;
+    }
+    if (plan.targetVerses <= 0) {
+      return startPage;
+    }
+    const clampedVerse = Math.min(Math.max(1, verseNumber), plan.targetVerses);
+    const raw =
+      mode === 'start'
+        ? Math.floor(((clampedVerse - 1) / plan.targetVerses) * totalPages)
+        : Math.ceil((clampedVerse / plan.targetVerses) * totalPages) - 1;
+    const boundedOffset = Math.max(0, Math.min(totalPages - 1, raw));
+    return startPage + boundedOffset;
+  };
+
+  const currentPage = getPageForVerse(currentVerse, 'start');
+  const currentJuz = typeof currentPage === 'number' ? getJuzByPage(currentPage) : null;
+
+  const todaysStartPage =
+    typeof todaysStartVerse === 'number' ? getPageForVerse(todaysStartVerse, 'start') : null;
+  const todaysEndPage =
+    typeof todaysEndVerse === 'number' ? getPageForVerse(todaysEndVerse, 'end') : null;
+  const todaysStartJuz =
+    typeof todaysStartPage === 'number' ? getJuzByPage(todaysStartPage) : null;
+  const todaysEndJuz =
+    typeof todaysEndPage === 'number' ? getJuzByPage(todaysEndPage) : todaysStartJuz;
+  const hasDailyGoal =
+    typeof todaysStartVerse === 'number' &&
+    typeof todaysEndVerse === 'number' &&
+    todaysEndVerse >= todaysStartVerse;
+  const remainingDays =
+    !isComplete && versesPerDay > 0
+      ? Math.max(0, Math.ceil(remainingVerses / versesPerDay))
+      : 0;
+  const projectedCompletionDate =
+    remainingDays > 0 ? new Date(Date.now() + remainingDays * DAY_IN_MS) : null;
+  const endsInLabel = isComplete
+    ? 'Completed'
+    : remainingDays <= 0
+      ? 'Today'
+      : remainingDays === 1
+        ? '1 day remaining'
+        : `${remainingDays} days remaining`;
+  const projectedCompletionLabel =
+    projectedCompletionDate !== null
+      ? projectedCompletionDate.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+        })
+      : null;
+  const currentSecondaryParts: string[] = [];
+  if (typeof currentPage === 'number') currentSecondaryParts.push(`Page ${currentPage}`);
+  if (typeof currentJuz === 'number') currentSecondaryParts.push(`Juz ${currentJuz}`);
+  const currentSecondaryText = currentSecondaryParts.join(' • ');
+
+  const goalVerseLabel =
+    hasDailyGoal && typeof todaysStartVerse === 'number' && typeof todaysEndVerse === 'number'
+      ? todaysStartVerse === todaysEndVerse
+        ? `${surahLabel} ${surahId}:${todaysStartVerse}`
+        : `${surahLabel} ${surahId}:${todaysStartVerse} to ${surahLabel} ${surahId}:${todaysEndVerse}`
+      : 'All daily goals completed';
+  const goalPageLabel =
+    typeof todaysStartPage === 'number' && typeof todaysEndPage === 'number'
+      ? todaysStartPage === todaysEndPage
+        ? `Page ${todaysStartPage}`
+        : `Pages ${todaysStartPage}-${todaysEndPage}`
+      : null;
+  const goalJuzLabel =
+    typeof todaysStartJuz === 'number' && typeof todaysEndJuz === 'number'
+      ? todaysStartJuz === todaysEndJuz
+        ? `Juz ${todaysStartJuz}`
+        : `Juz ${todaysStartJuz}-${todaysEndJuz}`
+      : null;
+  const goalMetaChips = hasDailyGoal
+    ? [
+        ...(todaysVerseCount > 0
+          ? [`${todaysVerseCount} verse${todaysVerseCount === 1 ? '' : 's'}`]
+          : []),
+        ...(goalPageLabel ? [goalPageLabel] : []),
+        ...(goalJuzLabel ? [goalJuzLabel] : []),
+      ]
+    : [];
+  const endsInMeta =
+    !isComplete && projectedCompletionLabel
+      ? `${endsInLabel} • ${projectedCompletionLabel}`
+      : endsInLabel;
+  const dayLabel = isComplete
+    ? `Completed in ${estimatedDays} day${estimatedDays === 1 ? '' : 's'}`
+    : `Day ${activeDayNumber} of ${estimatedDays}`;
+  const dailyPaceLabel =
+    versesPerDay > 0
+      ? `≈${versesPerDay} verse${versesPerDay === 1 ? '' : 's'} per day`
+      : null;
 
   const handleNavigate = (): void => {
     router.push(`/surah/${surahId}`);
@@ -188,63 +268,50 @@ export const PlannerCard = ({
             </div>
           </div>
 
-          <div className="relative flex w-full flex-col gap-3">
-            <div className="w-full rounded-2xl border border-border/60 bg-background/60 px-4 py-3">
-              <div className="flex items-center justify-between text-sm font-medium text-foreground">
-                <span className="text-muted">Currently at</span>
-                <span>{percent}%</span>
+          <div className="relative flex w-full max-w-md flex-col gap-3">
+            <div className="rounded-2xl border border-border/60 bg-background/60 px-4 py-4">
+              <div className="flex items-center justify-between text-sm font-semibold text-foreground">
+                <span className="inline-flex items-center gap-2 text-muted">
+                  <Target className="h-4 w-4 text-accent" />
+                  Today&apos;s goal
+                </span>
+                <span className="text-xs font-semibold text-muted">{dayLabel}</span>
               </div>
-              {(() => {
-                const totalPagesLocal =
-                  Array.isArray(chapter?.pages) && chapter.pages.length >= 2
-                    ? Math.max(1, (chapter.pages[1] ?? 0) - (chapter.pages[0] ?? 0) + 1)
-                    : null;
-                const startPageLocal = chapter?.pages?.[0];
-                const completedPagesForPage = computePagesFromVerses(plan.completedVerses);
-                const currentPage =
-                  typeof startPageLocal === 'number' &&
-                  typeof completedPagesForPage === 'number' &&
-                  typeof totalPagesLocal === 'number'
-                    ? startPageLocal + Math.min(Math.max(0, completedPagesForPage), totalPagesLocal - 1)
-                    : typeof startPageLocal === 'number'
-                      ? startPageLocal
-                      : null;
-                const currentJuz =
-                  typeof currentPage === 'number' ? getJuzByPage(currentPage) : null;
-
-                const primaryText = `${surahLabel} ${surahId}:${currentVerse}`;
-                const secondaryParts: string[] = [];
-                if (typeof currentPage === 'number') secondaryParts.push(`Page ${currentPage}`);
-                if (typeof currentJuz === 'number') secondaryParts.push(`Juz ${currentJuz}`);
-                const secondaryText = secondaryParts.join(' • ');
-
-                return (
-                  <div className="mt-1">
-                    <p className="text-base font-semibold text-foreground sm:text-lg" aria-label={primaryText}>
-                      {primaryText}
-                    </p>
-                    {secondaryText && (
-                      <p className="mt-0.5 text-xs text-muted sm:text-sm" aria-label={secondaryText}>
-                        {secondaryText}
-                      </p>
-                    )}
+              <div className="mt-2">
+                <p className="text-base font-semibold text-foreground sm:text-lg">
+                  {goalVerseLabel}
+                </p>
+                {hasDailyGoal && goalMetaChips.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {goalMetaChips.map((chip) => (
+                      <span
+                        key={chip}
+                        className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-surface/80 px-2.5 py-1 text-xs font-medium text-muted"
+                      >
+                        {chip}
+                      </span>
+                    ))}
                   </div>
-                );
-              })()}
-              <div
-                role="progressbar"
-                aria-valuenow={percent}
-                aria-valuemin={0}
-                aria-valuemax={100}
-                className="mt-2 h-2 w-full overflow-hidden rounded-full bg-surface/80"
-              >
-                <motion.div
-                  className="h-full rounded-full bg-accent"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${percent}%` }}
-                  transition={{ type: 'spring', stiffness: 160, damping: 24 }}
-                />
+                )}
               </div>
+              {hasDailyGoal ? (
+                <div className="mt-4 flex flex-wrap gap-3 text-xs text-muted sm:text-sm">
+                  <span className="inline-flex items-center gap-2">
+                    <CalendarClock className="h-4 w-4 text-accent" />
+                    {endsInMeta}
+                  </span>
+                  {dailyPaceLabel && (
+                    <span className="inline-flex items-center gap-2">
+                      <Sparkles className="h-4 w-4 text-accent" />
+                      {dailyPaceLabel}
+                    </span>
+                  )}
+                </div>
+              ) : (
+                <div className="mt-4 rounded-xl bg-surface/80 px-3 py-2 text-sm text-muted">
+                  All daily goals completed. Keep revisiting for retention.
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -295,19 +362,38 @@ export const PlannerCard = ({
           </div>
         </div>
 
-        <div className="mt-auto flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/60 bg-background/60 px-4 py-3 text-sm text-muted">
-          <span className="inline-flex items-center gap-2">
-            <CalendarClock className="h-4 w-4 text-accent" />
-            Started {startedLabel}
-          </span>
-          <span className="inline-flex items-center gap-2" title={lastUpdatedTitle}>
-            <Clock3 className="h-4 w-4 text-accent" />
-            Last review • {lastUpdatedLabel}
-          </span>
-          <span className={upNextClasses}>
-            <Sparkles className={upNextIconClasses} />
-            {upNextLabel}
-          </span>
+        <div className="mt-auto">
+          <div className="rounded-2xl border border-border/60 bg-background/60 px-4 py-4">
+            <div className="flex items-center justify-between text-sm font-semibold text-foreground">
+              <span className="inline-flex items-center gap-2 text-muted">
+                <Sparkles className="h-4 w-4 text-accent" />
+                Currently at
+              </span>
+              <span className="text-xs font-semibold text-muted">{percent}%</span>
+            </div>
+            <div className="mt-2">
+              <p className="text-base font-semibold text-foreground sm:text-lg">
+                {surahLabel} {surahId}:{currentVerse}
+              </p>
+              {currentSecondaryText && (
+                <p className="mt-0.5 text-xs text-muted sm:text-sm">{currentSecondaryText}</p>
+              )}
+            </div>
+            <div
+              role="progressbar"
+              aria-valuenow={percent}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              className="mt-3 h-2 w-full overflow-hidden rounded-full bg-surface/80"
+            >
+              <motion.div
+                className="h-full rounded-full bg-accent"
+                initial={{ width: 0 }}
+                animate={{ width: `${percent}%` }}
+                transition={{ type: 'spring', stiffness: 160, damping: 24 }}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </motion.div>

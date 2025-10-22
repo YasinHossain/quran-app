@@ -133,4 +133,7 @@ export interface PlannerPlan {
 
   /** Optional notes about the planner entry. */
   notes?: string;
+
+  /** Estimated number of days to complete the plan. */
+  estimatedDays?: number;
 }

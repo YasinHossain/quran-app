@@ -5,7 +5,12 @@ import type { Chapter } from '@/types';
 export function createPlannerPlansForRange(
   formData: PlanFormData,
   chapters: Chapter[],
-  createPlannerPlan: (surahId: number, versesCount: number, planName: string) => void
+  createPlannerPlan: (
+    surahId: number,
+    versesCount: number,
+    planName: string,
+    estimatedDays?: number
+  ) => void
 ): void {
   if (!formData.startSurah || !formData.endSurah) return;
 
@@ -17,7 +22,7 @@ export function createPlannerPlansForRange(
           ? formData.planName.trim()
           : `${formData.planName.trim()} - ${chapter.name_simple}`;
 
-      createPlannerPlan(surahId, chapter.verses_count, planName);
+      createPlannerPlan(surahId, chapter.verses_count, planName, formData.estimatedDays);
     }
   }
 }

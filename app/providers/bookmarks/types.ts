@@ -25,7 +25,12 @@ export interface BookmarkContextType {
   chapters: Chapter[];
   planner: Record<string, PlannerPlan>;
   addToPlanner: (surahId: number, targetVerses?: number) => void;
-  createPlannerPlan: (surahId: number, targetVerses: number, planName?: string) => void;
+  createPlannerPlan: (
+    surahId: number,
+    targetVerses: number,
+    planName?: string,
+    estimatedDays?: number
+  ) => void;
   updatePlannerProgress: (surahId: number, completedVerses: number) => void;
   removeFromPlanner: (surahId: number) => void;
 }

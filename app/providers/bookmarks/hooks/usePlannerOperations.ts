@@ -1,12 +1,20 @@
 'use client';
 import { useCallback } from 'react';
 
-import { createPlannerPlan, updatePlannerProgress } from '@/app/providers/bookmarks/bookmark-utils';
+import {
+  createPlannerPlan,
+  updatePlannerProgress,
+} from '@/app/providers/bookmarks/bookmark-utils';
 import { PlannerPlan } from '@/types';
 
 export interface PlannerOperations {
-  addToPlanner(surahId: number, targetVerses?: number): void;
-  createPlannerPlan(surahId: number, targetVerses: number, planName?: string): void;
+  addToPlanner(surahId: number, targetVerses?: number, estimatedDays?: number): void;
+  createPlannerPlan(
+    surahId: number,
+    targetVerses: number,
+    planName?: string,
+    estimatedDays?: number
+  ): void;
   updatePlannerProgress(surahId: number, completedVerses: number): void;
   removeFromPlanner(surahId: number): void;
 }
@@ -15,18 +23,18 @@ export default function usePlannerOperations(
   setPlanner: React.Dispatch<React.SetStateAction<Record<string, PlannerPlan>>>
 ): PlannerOperations {
   const addToPlanner = useCallback(
-    (surahId: number, targetVerses = 10) => {
+    (surahId: number, targetVerses = 10, estimatedDays?: number) => {
       const key = surahId.toString();
       if (planner[key]) return;
-      const plan = createPlannerPlan(surahId, targetVerses);
+      const plan = createPlannerPlan(surahId, targetVerses, undefined, estimatedDays);
       setPlanner((prev) => ({ ...prev, [key]: plan }));
     },
     [planner, setPlanner]
   );
   const createPlan = useCallback(
-    (surahId: number, targetVerses: number, planName?: string) => {
+    (surahId: number, targetVerses: number, planName?: string, estimatedDays?: number) => {
       const key = surahId.toString();
-      const plan = createPlannerPlan(surahId, targetVerses, planName);
+      const plan = createPlannerPlan(surahId, targetVerses, planName, estimatedDays);
       setPlanner((prev) => ({ ...prev, [key]: plan }));
     },
     [setPlanner]
