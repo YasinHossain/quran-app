@@ -54,7 +54,11 @@ export const PlannerGrid = ({
             surahId={surahId}
             plan={plan}
             {...(chapter && {
-              chapter: { name_simple: chapter.name_simple, name_arabic: chapter.name_arabic },
+              chapter: {
+                name_simple: chapter.name_simple,
+                name_arabic: chapter.name_arabic,
+                pages: chapter.pages,
+              },
             })}
           />
         );
