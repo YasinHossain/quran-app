@@ -231,6 +231,11 @@ export const PlannerCard = ({
     }
   };
 
+  const handleContinueClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
+    event.stopPropagation();
+    handleNavigate();
+  };
+
   return (
     <motion.div
       role="button"
@@ -384,7 +389,7 @@ export const PlannerCard = ({
               aria-valuenow={percent}
               aria-valuemin={0}
               aria-valuemax={100}
-              className="mt-3 h-2 w-full overflow-hidden rounded-full bg-surface/80"
+              className="mt-3 h-2 w-full overflow-hidden rounded-full bg-border/40 shadow-inner"
             >
               <motion.div
                 className="h-full rounded-full bg-accent"
@@ -393,6 +398,13 @@ export const PlannerCard = ({
                 transition={{ type: 'spring', stiffness: 160, damping: 24 }}
               />
             </div>
+            <button
+              type="button"
+              onClick={handleContinueClick}
+              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-on-accent shadow-sm transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              Continue reading
+            </button>
           </div>
         </div>
       </div>
