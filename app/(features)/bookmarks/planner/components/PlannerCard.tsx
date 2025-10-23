@@ -244,12 +244,6 @@ export const PlannerCard = ({
     router.push(`/surah/${surahId}`);
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent): void => {
-    if (event.key === 'Enter') {
-      handleNavigate();
-    }
-  };
-
   const handleContinueClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.stopPropagation();
     handleNavigate();
@@ -257,11 +251,6 @@ export const PlannerCard = ({
 
   return (
     <motion.div
-      role="button"
-      tabIndex={0}
-      aria-label={`Continue memorizing ${chapter?.name_simple || `Surah ${surahId}`} - ${percent}% complete`}
-      onClick={handleNavigate}
-      onKeyDown={handleKeyDown}
       className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-border/60 bg-surface p-6 shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 sm:p-7"
     >
       <div className="relative z-10 flex h-full flex-col gap-6">
@@ -383,11 +372,11 @@ export const PlannerCard = ({
               <span className="text-xs font-semibold text-muted">{percent}%</span>
             </div>
             <div className="mt-2">
-              <p className="text-base font-semibold text-foreground sm:text-lg">
+              <p className="mb-1 text-base font-semibold leading-tight text-foreground sm:text-lg">
                 {surahLabel} {surahId}:{currentVerse}
               </p>
               {currentSecondaryText && (
-                <p className="mt-0.5 text-xs text-muted sm:text-sm">{currentSecondaryText}</p>
+                <p className="mt-0 text-xs text-muted sm:text-sm">{currentSecondaryText}</p>
               )}
             </div>
             <div
