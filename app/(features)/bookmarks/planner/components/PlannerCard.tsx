@@ -22,6 +22,7 @@ interface PlannerCardProps {
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
 const DEFAULT_ESTIMATED_DAYS = 5;
+const escapeRegex = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 const SecondaryStat = ({
   value,
@@ -54,6 +55,11 @@ export const PlannerCard = ({
     plan.targetVerses > 0 ? Math.min(plan.completedVerses + 1, plan.targetVerses) : 1;
   const planName = plan.notes?.trim() ? plan.notes.trim() : `Plan for Surah ${surahId}`;
   const surahLabel = chapter?.name_simple || `Surah ${surahId}`;
+  const normalizedPlanName = planName.trim();
+  const cleanedPlanName = normalizedPlanName
+    .replace(new RegExp(`\\s*[-–—]\\s*${escapeRegex(surahLabel)}$`, 'i'), '')
+    .trim();
+  const displayPlanName = cleanedPlanName.length > 0 ? cleanedPlanName : normalizedPlanName;
   const isComplete = percent >= 100;
   const startPage = chapter?.pages?.[0];
   const endPage = chapter?.pages?.[1];
@@ -262,7 +268,7 @@ export const PlannerCard = ({
         <div className="flex flex-wrap items-start justify-between gap-6">
           <div className="flex min-w-0 flex-col gap-4">
             <div className="space-y-2 text-left">
-              <h2 className="text-2xl font-semibold text-foreground">{planName}</h2>
+              <h2 className="text-2xl font-semibold text-foreground">{displayPlanName}</h2>
               {planDetailsText && <p className="text-sm text-muted">{planDetailsText}</p>}
             </div>
           </div>
