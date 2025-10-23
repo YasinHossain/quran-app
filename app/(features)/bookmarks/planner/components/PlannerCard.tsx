@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { CalendarClock, CheckCircle2, Flag, Sparkles, Target } from 'lucide-react';
+import { CheckCircle2, Flag, Sparkles, Target } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -163,13 +163,6 @@ export const PlannerCard = ({
       : 0;
   const projectedCompletionDate =
     remainingDays > 0 ? new Date(Date.now() + remainingDays * DAY_IN_MS) : null;
-  const endsInLabel = isComplete
-    ? 'Completed'
-    : remainingDays <= 0
-      ? 'Today'
-      : remainingDays === 1
-        ? '1 day remaining'
-        : `${remainingDays} days remaining`;
   const projectedCompletionLabel =
     projectedCompletionDate !== null
       ? projectedCompletionDate.toLocaleDateString('en-US', {
@@ -200,26 +193,34 @@ export const PlannerCard = ({
         ? `Juz ${todaysStartJuz}`
         : `Juz ${todaysStartJuz}-${todaysEndJuz}`
       : null;
-  const goalMetaChips = hasDailyGoal
+  const dailyHighlights = hasDailyGoal
     ? [
-        ...(todaysVerseCount > 0
-          ? [`${todaysVerseCount} verse${todaysVerseCount === 1 ? '' : 's'}`]
-          : []),
-        ...(goalPageLabel ? [goalPageLabel] : []),
-        ...(goalJuzLabel ? [goalJuzLabel] : []),
-      ]
+        {
+          label: 'Verses today',
+          value:
+            todaysVerseCount > 0
+              ? `${todaysVerseCount} verse${todaysVerseCount === 1 ? '' : 's'}`
+              : null,
+        },
+        { label: 'Pages', value: goalPageLabel },
+        { label: 'Juz', value: goalJuzLabel },
+      ].filter(
+        (highlight): highlight is { label: string; value: string } => Boolean(highlight.value),
+      )
     : [];
-  const endsInMeta =
-    !isComplete && projectedCompletionLabel
-      ? `${endsInLabel} • ${projectedCompletionLabel}`
-      : endsInLabel;
   const dayLabel = isComplete
     ? `Completed in ${estimatedDays} day${estimatedDays === 1 ? '' : 's'}`
     : `Day ${activeDayNumber} of ${estimatedDays}`;
-  const dailyPaceLabel =
-    versesPerDay > 0
-      ? `≈${versesPerDay} verse${versesPerDay === 1 ? '' : 's'} per day`
-      : null;
+  const remainingDaysLabel = isComplete
+    ? 'Completed'
+    : remainingDays <= 0
+      ? 'Due today'
+      : remainingDays === 1
+        ? '1 day'
+        : `${remainingDays} days`;
+  const endsAtValue = !isComplete && projectedCompletionLabel ? projectedCompletionLabel : '—';
+  const remainingSummary = hasDailyGoal ? `Remaining ${remainingDaysLabel}` : null;
+  const endsAtSummary = hasDailyGoal ? `Ends at ${endsAtValue}` : null;
 
   const handleNavigate = (): void => {
     router.push(`/surah/${surahId}`);
@@ -243,77 +244,63 @@ export const PlannerCard = ({
       aria-label={`Continue memorizing ${chapter?.name_simple || `Surah ${surahId}`} - ${percent}% complete`}
       onClick={handleNavigate}
       onKeyDown={handleKeyDown}
-      className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border/60 bg-surface p-6 shadow-lg transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 hover:-translate-y-1 hover:border-accent/40 hover:shadow-2xl sm:p-7"
-      whileHover={{ y: -4, scale: 1.01 }}
-      whileTap={{ scale: 0.98 }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: parseInt(surahId, 10) * 0.1 }}
+      className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-border/60 bg-surface p-6 shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 sm:p-7"
     >
-      <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-        <div className="absolute -right-16 -top-20 h-44 w-44 rounded-full bg-accent/20 blur-3xl" />
-        <div className="absolute -left-14 bottom-0 h-36 w-36 rounded-full bg-primary/15 blur-3xl" />
-      </div>
-
       <div className="relative z-10 flex h-full flex-col gap-6">
         <div className="flex flex-wrap items-start justify-between gap-6">
           <div className="flex min-w-0 flex-col gap-4">
             <div className="space-y-2 text-left">
               <h2 className="text-2xl font-semibold text-foreground">{planName}</h2>
-              <div className="flex flex-wrap items-center gap-2 text-sm text-muted">
-                <span className="inline-flex items-center gap-1 rounded-full border border-border/60 px-2.5 py-1">
-                  <Flag className="h-3 w-3 text-accent" />
-                  Surah {surahId}
-                </span>
-                <span className="font-medium text-foreground">{surahLabel}</span>
-              </div>
-              {chapter?.name_arabic && (
-                <p className="text-sm font-medium text-primary">{chapter.name_arabic}</p>
-              )}
             </div>
           </div>
 
-          <div className="relative flex w-full max-w-md flex-col gap-3">
+          <div className="relative flex w-full min-w-[280px] flex-1 flex-col gap-3">
             <div className="rounded-2xl border border-border/60 bg-background/60 px-4 py-4">
-              <div className="flex items-center justify-between text-sm font-semibold text-foreground">
+              <div className="flex flex-wrap items-center justify-between gap-3 text-sm font-semibold text-foreground">
                 <span className="inline-flex items-center gap-2 text-muted">
                   <Target className="h-4 w-4 text-accent" />
-                  Today&apos;s goal
+                  Today&apos;s focus
                 </span>
                 <span className="text-xs font-semibold text-muted">{dayLabel}</span>
               </div>
-              <div className="mt-2">
-                <p className="text-base font-semibold text-foreground sm:text-lg">
-                  {goalVerseLabel}
-                </p>
-                {hasDailyGoal && goalMetaChips.length > 0 && (
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {goalMetaChips.map((chip) => (
-                      <span
-                        key={chip}
-                        className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-surface/80 px-2.5 py-1 text-xs font-medium text-muted"
-                      >
-                        {chip}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
               {hasDailyGoal ? (
-                <div className="mt-4 flex flex-wrap gap-3 text-xs text-muted sm:text-sm">
-                  <span className="inline-flex items-center gap-2">
-                    <CalendarClock className="h-4 w-4 text-accent" />
-                    {endsInMeta}
-                  </span>
-                  {dailyPaceLabel && (
-                    <span className="inline-flex items-center gap-2">
-                      <Sparkles className="h-4 w-4 text-accent" />
-                      {dailyPaceLabel}
-                    </span>
+                <>
+                  <div className="mt-4 space-y-1 text-left">
+                    <p className="text-base font-semibold text-foreground sm:text-lg">
+                      {goalVerseLabel}
+                    </p>
+                  </div>
+                  {dailyHighlights.length > 0 && (
+                    <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                      {dailyHighlights.map((highlight) => (
+                        <div
+                          key={highlight.label}
+                          className="rounded-xl border border-border/50 bg-surface/80 p-3"
+                        >
+                          <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+                            {highlight.label}
+                          </p>
+                          <p className="mt-2 text-sm font-semibold text-foreground">
+                            {highlight.value}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
                   )}
-                </div>
+                  {(remainingSummary || endsAtSummary) && (
+                    <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted sm:text-sm">
+                      {remainingSummary && (
+                        <span className="font-semibold text-foreground">{remainingSummary}</span>
+                      )}
+                      {remainingSummary && endsAtSummary && <span className="text-muted">•</span>}
+                      {endsAtSummary && (
+                        <span className="font-semibold text-foreground">{endsAtSummary}</span>
+                      )}
+                    </div>
+                  )}
+                </>
               ) : (
-                <div className="mt-4 rounded-xl bg-surface/80 px-3 py-2 text-sm text-muted">
+                <div className="mt-4 rounded-xl bg-surface/80 px-3 py-3 text-sm text-muted">
                   All daily goals completed. Keep revisiting for retention.
                 </div>
               )}
