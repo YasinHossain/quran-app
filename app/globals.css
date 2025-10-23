@@ -183,12 +183,17 @@
     top: 6px;
   }
 
+  /* Global paragraph line-height only; margins are scoped to .typography */
   p {
     line-height: 1.6;
+  }
+
+  /* Scoped typography styles for long-form content */
+  .typography p {
     margin-bottom: 1rem;
   }
 
-  p:last-child {
+  .typography p:last-child {
     margin-bottom: 0;
   }
 

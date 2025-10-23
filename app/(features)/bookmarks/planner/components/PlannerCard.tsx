@@ -283,12 +283,9 @@ export const PlannerCard = ({
                       {dailyHighlights.map((highlight) => (
                         <div
                           key={highlight.label}
-                          className="rounded-xl border border-border/50 bg-surface/80 p-3"
+                          className="flex h-full items-center justify-center rounded-xl border border-border/50 bg-surface/80 p-3 text-center"
                         >
-                          <p className="text-xs font-semibold uppercase tracking-wide text-muted">
-                            {highlight.label}
-                          </p>
-                          <p className="mt-2 text-sm font-semibold text-foreground">
+                          <p className="text-sm font-semibold text-foreground">
                             {highlight.value}
                           </p>
                         </div>
@@ -323,10 +320,8 @@ export const PlannerCard = ({
                 <CheckCircle2 className="h-3.5 w-3.5 text-accent" />
                 Completed
               </div>
-              <div className="mt-2">
+              <div className="mt-1 space-y-1">
                 <SecondaryStat value={plan.completedVerses} unit="verses" />
-              </div>
-              <div className="mt-3 space-y-2">
                 <SecondaryStat value={completedPagesCount} unit="pages" />
                 <SecondaryStat value={completedJuzCount} unit="juz" />
               </div>
@@ -337,10 +332,8 @@ export const PlannerCard = ({
                 <Flag className="h-3.5 w-3.5 text-accent" />
                 Remaining
               </div>
-              <div className="mt-2">
+              <div className="mt-1 space-y-1">
                 <SecondaryStat value={remainingVerses} unit="verses" />
-              </div>
-              <div className="mt-3 space-y-2">
                 <SecondaryStat value={remainingPagesCount} unit="pages" />
                 <SecondaryStat value={remainingJuzCount} unit="juz" />
               </div>
@@ -351,10 +344,8 @@ export const PlannerCard = ({
                 <Target className="h-3.5 w-3.5 text-accent" />
                 Goal
               </div>
-              <div className="mt-2">
+              <div className="mt-1 space-y-1">
                 <SecondaryStat value={plan.targetVerses} unit="verses" />
-              </div>
-              <div className="mt-3 space-y-2">
                 <SecondaryStat value={goalPagesCount} unit="pages" />
                 <SecondaryStat value={goalJuzCount} unit="juz" />
               </div>
