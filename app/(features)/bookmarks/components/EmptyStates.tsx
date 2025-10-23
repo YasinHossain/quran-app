@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import React from 'react';
 
 import { BookmarkIcon } from '@/app/shared/icons';
@@ -28,16 +27,21 @@ export const EmptyBookmarks = (): React.JSX.Element => {
 };
 
 export const EmptySearch = ({ searchTerm, onClearSearch }: EmptySearchProps): React.JSX.Element => {
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: 'easeOut' }}
-      className="text-center py-20 max-w-lg mx-auto"
+    <div
+      className={`mx-auto max-w-lg py-20 text-center transition-all duration-300 ease-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+      }`}
     >
       <SearchIcon />
       <SearchContent searchTerm={searchTerm} />
       <SearchActions onClearSearch={onClearSearch} />
-    </motion.div>
+    </div>
   );
 };

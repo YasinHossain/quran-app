@@ -99,20 +99,17 @@ export const ANIMATION_CONFIGS: Record<string, AnimationConfig> = {
     },
   },
   folder: {
-    type: 'framer',
-    framer: {
-      initial: { opacity: 0, scale: 0.95 },
-      animate: { opacity: 1, scale: 1 },
-      exit: { opacity: 0, scale: 0.95 },
-      transition: { type: 'spring', stiffness: 400, damping: 25 },
+    type: 'css',
+    css: {
+      transition: 'transition-transform duration-300 ease-out',
+      hover: 'hover:-translate-y-1',
     },
   },
   bookmark: {
-    type: 'framer',
-    framer: {
-      initial: { opacity: 0, y: 20 },
-      animate: { opacity: 1, y: 0 },
-      transition: { duration: 0.2 },
+    type: 'css',
+    css: {
+      transition: 'transition-transform duration-200 ease-out',
+      hover: 'hover:-translate-y-0.5',
     },
   },
 };

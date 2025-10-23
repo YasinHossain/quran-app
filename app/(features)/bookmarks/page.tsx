@@ -1,7 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { BookmarksHeader } from './components/BookmarksHeader';
 import { FolderGrid } from './components/FolderGrid';
@@ -12,6 +11,11 @@ import { useBookmarksPage } from './hooks/useBookmarksPage';
 const BookmarksPage = (): React.JSX.Element => {
   const { sortedFolders, handleFolderSelect, handleSectionChange } = useBookmarksPage();
   const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
+  const [isGridVisible, setIsGridVisible] = useState(false);
+
+  useEffect(() => {
+    setIsGridVisible(true);
+  }, []);
 
   const openCreateFolderModal = (): void => {
     setIsCreateFolderOpen(true);
@@ -33,14 +37,13 @@ const BookmarksPage = (): React.JSX.Element => {
       <BookmarksLayout activeSection="bookmarks" onSectionChange={handleSectionChange}>
         <BookmarksHeader onNewFolderClick={openCreateFolderModal} />
 
-        <motion.div
-          key="folder-grid"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+        <div
+          className={`transition-opacity duration-300 ease-out ${
+            isGridVisible ? 'opacity-100' : 'opacity-0'
+          }`}
         >
           <FolderGrid folders={sortedFolders} onFolderSelect={handleFolderSelect} />
-        </motion.div>
+        </div>
       </BookmarksLayout>
     </>
   );

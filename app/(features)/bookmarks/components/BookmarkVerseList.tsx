@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import React from 'react';
 
 import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
@@ -63,6 +62,11 @@ const LoadedBookmarkVerseItem = ({
   const { removeBookmark, findBookmark } = useBookmarks();
   const { verseRef, isPlaying, isLoadingAudio, isVerseBookmarked, handlePlayPause } =
     useVerseCard(verse);
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   const handleRemoveBookmark = React.useCallback(() => {
     const bookmarkInfo = findBookmark(bookmark.verseId);
@@ -71,10 +75,10 @@ const LoadedBookmarkVerseItem = ({
   }, [bookmark.verseId, findBookmark, removeBookmark]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+    <div
+      className={`transform transition-all duration-300 ease-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+      }`}
     >
       <ReaderVerseCard
         ref={verseRef}
@@ -90,6 +94,6 @@ const LoadedBookmarkVerseItem = ({
           showRemove: true,
         }}
       />
-    </motion.div>
+    </div>
   );
 };

@@ -1,59 +1,72 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import React from 'react';
 
 import { BookmarkIcon, CheckIcon } from '@/app/shared/icons';
 
-import { SCALE_VARIANTS } from './animations';
-
 // Illustration component for EmptyBookmarks
-export const BookmarkIllustration = (): React.JSX.Element => (
-  <div className="relative mb-8">
-    <motion.div
-      variants={SCALE_VARIANTS}
-      initial="initial"
-      animate="animate"
-      transition={{ delay: 0.2, duration: 0.5 }}
-      className="w-32 h-32 bg-gradient-to-br from-accent/20 to-accent/5 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-lg"
-    >
-      <BookmarkIcon size={48} className="text-accent" />
-    </motion.div>
+export const BookmarkIllustration = (): React.JSX.Element => {
+  const [isVisible, setIsVisible] = React.useState(false);
 
-    {/* Floating elements */}
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.4, duration: 0.5 }}
-      className="absolute -top-2 -right-4 w-8 h-8 bg-accent/10 rounded-full flex items-center justify-center"
-    >
-      <CheckIcon size={16} className="text-accent" />
-    </motion.div>
-    <motion.div
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.6, duration: 0.5 }}
-      className="absolute -bottom-2 -left-4 w-6 h-6 bg-accent/20 rounded-full"
-    />
-  </div>
-);
+  React.useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
+  return (
+    <div className="relative mb-8">
+      <div
+        className={`mx-auto mb-4 flex h-32 w-32 items-center justify-center rounded-3xl bg-gradient-to-br from-accent/20 to-accent/5 shadow-lg transition-all duration-500 ease-out ${
+          isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+        }`}
+        style={{ transitionDelay: '200ms' }}
+      >
+        <BookmarkIcon size={48} className="text-accent" />
+      </div>
+
+      {/* Floating elements */}
+      <div
+        className={`absolute -top-2 -right-4 flex h-8 w-8 items-center justify-center rounded-full bg-accent/10 transition-all duration-500 ease-out ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+        }`}
+        style={{ transitionDelay: '400ms' }}
+      >
+        <CheckIcon size={16} className="text-accent" />
+      </div>
+      <div
+        className={`absolute -bottom-2 -left-4 h-6 w-6 rounded-full bg-accent/20 transition-all duration-500 ease-out ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+        }`}
+        style={{ transitionDelay: '600ms' }}
+      />
+    </div>
+  );
+};
 
 // Main content for EmptyBookmarks
-export const EmptyBookmarksContent = (): React.JSX.Element => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay: 0.3, duration: 0.5 }}
-  >
-    <h2 className="text-4xl font-bold text-foreground mb-4 tracking-tight">
-      Start Your Spiritual Journey
-    </h2>
-    <p className="text-lg text-muted mb-10 leading-relaxed max-w-md mx-auto">
-      Save your favorite Quran verses. Build a personal collection for study, reflection, and
-      memorization.
-    </p>
-  </motion.div>
-);
+export const EmptyBookmarksContent = (): React.JSX.Element => {
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
+  return (
+    <div
+      className={`transition-all duration-500 ease-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+      }`}
+      style={{ transitionDelay: '300ms' }}
+    >
+      <h2 className="mb-4 text-4xl font-bold tracking-tight text-foreground">
+        Start Your Spiritual Journey
+      </h2>
+      <p className="mx-auto mb-10 max-w-md text-lg leading-relaxed text-muted">
+        Save your favorite Quran verses. Build a personal collection for study, reflection, and
+        memorization.
+      </p>
+    </div>
+  );
+};
 
 // Removed PrimaryAction component - no create folder functionality
 
@@ -75,34 +88,42 @@ const GuideStep = ({ step, title, description }: GuideStepProps): React.JSX.Elem
 );
 
 // Quick start guide section
-export const QuickStartGuide = (): React.JSX.Element => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay: 0.7, duration: 0.5 }}
-    className="bg-surface border border-border rounded-2xl p-8 shadow-sm"
-  >
-    <div className="flex items-center justify-center gap-2 mb-6">
-      <CheckIcon size={20} className="text-accent" />
-      <h3 className="font-bold text-foreground text-lg">Quick Start Guide</h3>
-    </div>
+export const QuickStartGuide = (): React.JSX.Element => {
+  const [isVisible, setIsVisible] = React.useState(false);
 
-    <div className="grid md:grid-cols-3 gap-6 text-left">
-      <GuideStep
-        step={1}
-        title="Save Verses"
-        description="Bookmark verses while reading by tapping the bookmark icon"
-      />
-      <GuideStep
-        step={2}
-        title="Organize"
-        description="Your bookmarked verses are automatically organized for easy access"
-      />
-      <GuideStep
-        step={3}
-        title="Quick Access"
-        description="Find your saved verses anytime in this bookmarks section"
-      />
+  React.useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
+  return (
+    <div
+      className={`rounded-2xl border border-border bg-surface p-8 shadow-sm transition-all duration-500 ease-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+      }`}
+      style={{ transitionDelay: '700ms' }}
+    >
+      <div className="mb-6 flex items-center justify-center gap-2">
+        <CheckIcon size={20} className="text-accent" />
+        <h3 className="text-lg font-bold text-foreground">Quick Start Guide</h3>
+      </div>
+
+      <div className="grid gap-6 text-left md:grid-cols-3">
+        <GuideStep
+          step={1}
+          title="Save Verses"
+          description="Bookmark verses while reading by tapping the bookmark icon"
+        />
+        <GuideStep
+          step={2}
+          title="Organize"
+          description="Your bookmarked verses are automatically organized for easy access"
+        />
+        <GuideStep
+          step={3}
+          title="Quick Access"
+          description="Find your saved verses anytime in this bookmarks section"
+        />
+      </div>
     </div>
-  </motion.div>
-);
+  );
+};

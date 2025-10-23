@@ -1,12 +1,10 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
-import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
+import React, { useEffect, useState } from 'react';
 
-import { DeleteFolderModal } from './DeleteFolderModal';
 import { EmptyBookmarks } from './EmptyStates';
 import { FolderCard } from './FolderCard';
-import { FolderSettingsModal } from './FolderSettingsModal';
 
 import type { Folder } from '@/types';
 
@@ -16,6 +14,35 @@ interface FolderGridProps {
 }
 
 type FolderAction = 'delete' | 'customize';
+
+interface FolderSettingsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  folder: Folder | null;
+  mode?: 'edit' | 'create';
+}
+
+interface DeleteFolderModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  folder: Folder | null;
+}
+
+const FolderSettingsModal = dynamic<FolderSettingsModalProps>(
+  () =>
+    import('./FolderSettingsModal').then((mod) => ({
+      default: mod.FolderSettingsModal,
+    })),
+  { ssr: false }
+);
+
+const DeleteFolderModal = dynamic<DeleteFolderModalProps>(
+  () =>
+    import('./DeleteFolderModal').then((mod) => ({
+      default: mod.DeleteFolderModal,
+    })),
+  { ssr: false }
+);
 
 interface FolderCardsProps {
   folders: Folder[];
@@ -28,27 +55,19 @@ const FolderCards = ({
   onFolderSelect,
   onAction,
 }: FolderCardsProps): React.JSX.Element => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const renderFolderItem = (folder: Folder, index: number): React.JSX.Element => (
-    <motion.div
+    <div
       key={folder.id}
-      layout
-      initial={{ opacity: 0, scale: 0.9, y: 20 }}
-      animate={{
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        transition: {
-          delay: index * 0.05,
-          duration: 0.4,
-          ease: 'easeOut',
-        },
-      }}
-      exit={{
-        opacity: 0,
-        scale: 0.9,
-        y: -20,
-        transition: { duration: 0.3 },
-      }}
+      className={`transform transition-all duration-300 ease-out ${
+        isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+      }`}
+      style={{ transitionDelay: `${index * 50}ms` }}
     >
       <FolderCard
         folder={folder}
@@ -56,18 +75,17 @@ const FolderCards = ({
         onDelete={() => onAction(folder, 'delete')}
         onColorChange={() => onAction(folder, 'customize')}
       />
-    </motion.div>
+    </div>
   );
 
   return (
-    <motion.div
-      className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 xl:gap-8"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: 'easeOut' }}
+    <div
+      className={`grid grid-cols-1 gap-4 transition-opacity duration-300 ease-out sm:grid-cols-2 md:gap-6 xl:grid-cols-3 xl:gap-8 ${
+        isMounted ? 'opacity-100' : 'opacity-0'
+      }`}
     >
-      <AnimatePresence mode="popLayout">{folders.map(renderFolderItem)}</AnimatePresence>
-    </motion.div>
+      {folders.map(renderFolderItem)}
+    </div>
   );
 };
 

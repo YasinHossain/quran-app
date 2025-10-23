@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import React from 'react';
 
 import { SparklesIcon } from '@/app/shared/icons';
@@ -41,11 +40,9 @@ export const PlannerProgressSection = ({
       aria-valuemax={100}
       className="mt-3 h-2 w-full overflow-hidden rounded-full bg-border/40 shadow-inner"
     >
-      <motion.div
-        className="h-full rounded-full bg-accent"
-        initial={{ width: 0 }}
-        animate={{ width: `${progress.percent}%` }}
-        transition={{ type: 'spring', stiffness: 160, damping: 24 }}
+      <div
+        className="h-full rounded-full bg-accent transition-[width] duration-500 ease-out"
+        style={{ width: `${progress.percent}%` }}
       />
     </div>
     <button

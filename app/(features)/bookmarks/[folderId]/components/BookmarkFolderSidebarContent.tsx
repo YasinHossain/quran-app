@@ -39,5 +39,3 @@ export const BookmarkFolderSidebarContent = ({
     <BookmarkFolderContent bookmarks={bookmarks} folder={folder} />
   </div>
 );
-
-

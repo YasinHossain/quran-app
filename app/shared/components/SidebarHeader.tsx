@@ -92,17 +92,15 @@ export const SidebarHeader = ({
   const containerClass = cn(
     'relative w-full',
     withShadow && 'shadow-card',
-    edgeToEdge ? cn('px-0', containerContentClassName) : cn('px-3 sm:px-4 py-3 sm:py-4', containerContentClassName),
+    edgeToEdge
+      ? cn('px-0', containerContentClassName)
+      : cn('px-3 sm:px-4 py-3 sm:py-4', containerContentClassName),
     className
   );
   let backButton: React.JSX.Element | null = null;
   if (showBackButton && onBack) {
     backButton = (
-      <BackButton
-        onBack={onBack}
-        className={backButtonClassName}
-        ariaLabel={backButtonAriaLabel}
-      />
+      <BackButton onBack={onBack} className={backButtonClassName} ariaLabel={backButtonAriaLabel} />
     );
   }
 

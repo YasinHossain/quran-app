@@ -6,6 +6,18 @@ const API_BASE_URL = process.env['QURAN_API_BASE_URL'] ?? 'https://api.qurancdn.
 const PROXY_ROUTE_PATH = '/api/quran';
 let memoizedServerProxyBase: string | null | undefined;
 
+const DEFAULT_TIMEOUT_MS = (() => {
+  const envTimeout =
+    process.env['NEXT_PUBLIC_QURAN_API_TIMEOUT'] ?? process.env['QURAN_API_TIMEOUT'];
+  if (envTimeout !== undefined) {
+    const parsed = Number.parseInt(envTimeout, 10);
+    if (Number.isFinite(parsed) && parsed > 0) {
+      return parsed;
+    }
+  }
+  return 4000;
+})();
+
 function ensureTrailingSlash(value: string): string {
   return value.endsWith('/') ? value : `${value}/`;
 }
@@ -74,7 +86,11 @@ interface FetchWithTimeoutOptions extends RequestInit {
  */
 async function fetchWithTimeout(
   url: string,
-  { errorPrefix = 'Request failed', timeout = 10000, ...init }: FetchWithTimeoutOptions = {}
+  {
+    errorPrefix = 'Request failed',
+    timeout = DEFAULT_TIMEOUT_MS,
+    ...init
+  }: FetchWithTimeoutOptions = {}
 ): Promise<Response> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);

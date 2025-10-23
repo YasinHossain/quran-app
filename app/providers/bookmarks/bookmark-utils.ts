@@ -149,9 +149,7 @@ export const createPlannerPlan = (
   estimatedDays?: number
 ): PlannerPlan => {
   const normalizedEstimatedDays =
-    typeof estimatedDays === 'number' && estimatedDays > 0
-      ? Math.round(estimatedDays)
-      : undefined;
+    typeof estimatedDays === 'number' && estimatedDays > 0 ? Math.round(estimatedDays) : undefined;
 
   return {
     id: generateId(),

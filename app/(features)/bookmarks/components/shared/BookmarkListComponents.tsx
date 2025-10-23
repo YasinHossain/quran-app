@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import React from 'react';
 import { FixedSizeList as List } from 'react-window';
 
@@ -37,25 +36,37 @@ const BookmarkIcon = (): React.JSX.Element => (
   </svg>
 );
 
-export const EmptyBookmarkState = ({ onBack }: EmptyBookmarkStateProps): React.JSX.Element => (
-  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
-    <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
-      <BookmarkIcon />
+export const EmptyBookmarkState = ({ onBack }: EmptyBookmarkStateProps): React.JSX.Element => {
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
+  return (
+    <div
+      className={`text-center py-16 transition-all duration-300 ease-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+      }`}
+    >
+      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-surface">
+        <BookmarkIcon />
+      </div>
+      <h3 className="mb-2 text-lg font-semibold text-foreground">No Bookmarks</h3>
+      <p className="mx-auto mb-4 max-w-md text-muted">
+        This folder is empty. Start bookmarking verses while reading to add them here.
+      </p>
+      {onBack && (
+        <button
+          onClick={onBack}
+          className="rounded-lg bg-accent px-4 py-2 text-on-accent transition-colors hover:bg-accent/90"
+        >
+          Back to Folders
+        </button>
+      )}
     </div>
-    <h3 className="text-lg font-semibold text-foreground mb-2">No Bookmarks</h3>
-    <p className="text-muted max-w-md mx-auto mb-4">
-      This folder is empty. Start bookmarking verses while reading to add them here.
-    </p>
-    {onBack && (
-      <button
-        onClick={onBack}
-        className="px-4 py-2 bg-accent text-on-accent rounded-lg hover:bg-accent/90 transition-colors"
-      >
-        Back to Folders
-      </button>
-    )}
-  </motion.div>
-);
+  );
+};
 
 export const SimpleEmptyState = (): React.JSX.Element => (
   <div className="text-center py-16">

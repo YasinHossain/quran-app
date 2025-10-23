@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -23,13 +22,18 @@ export const LastReadCard = ({
   const router = useRouter();
   const total = chapter?.verses_count || 0;
   const percent = Math.min(100, Math.max(0, Math.round((verseId / total) * 100)));
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   const handleNavigate = (): void => {
     router.push(`/surah/${surahId}#verse-${verseId}`);
   };
 
   return (
-    <motion.div
+    <div
       role="button"
       tabIndex={0}
       aria-label={`Continue reading ${chapter?.name_simple || `Surah ${surahId}`} at verse ${verseId}`}
@@ -39,12 +43,10 @@ export const LastReadCard = ({
           handleNavigate();
         }
       }}
-      className="group flex h-full min-h-[20rem] w-full flex-col items-center justify-between rounded-2xl border border-border/50 bg-surface p-6 text-center shadow-lg transition-all duration-300 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-accent sm:p-7 lg:p-8"
-      whileHover={{ y: -2, scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1 }}
+      className={`group flex h-full min-h-[20rem] w-full transform flex-col items-center justify-between rounded-2xl border border-border/50 bg-surface p-6 text-center shadow-lg transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent sm:p-7 lg:p-8 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+      }`}
+      style={{ transitionDelay: `${Math.min(index, 10) * 100}ms` }}
     >
       <div className="flex w-full flex-1 items-center justify-center">
         <CircularProgress percentage={percent} label="Complete" size={140} strokeWidth={15} />
@@ -57,6 +59,6 @@ export const LastReadCard = ({
           Verse {verseId} of {total}
         </p>
       </div>
-    </motion.div>
+    </div>
   );
 };

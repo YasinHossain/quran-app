@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import React from 'react';
 
 import { Chapter, LastReadMap } from '@/types';
@@ -13,6 +12,12 @@ interface LastReadGridProps {
 }
 
 export const LastReadGrid = ({ lastRead, chapters }: LastReadGridProps): React.JSX.Element => {
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
   if (Object.keys(lastRead).length === 0) {
     return (
       <div className="text-center py-16">
@@ -96,10 +101,10 @@ export const LastReadGrid = ({ lastRead, chapters }: LastReadGridProps): React.J
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4 sm:gap-5 xl:gap-6"
+    <div
+      className={`grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4 transition-opacity duration-300 ease-out sm:gap-5 xl:gap-6 ${
+        isVisible ? 'opacity-100' : 'opacity-0'
+      }`}
     >
       {normalizedEntries.map(({ surahId, verseNumber, chapter }, index) => (
         <LastReadCard
@@ -110,6 +115,6 @@ export const LastReadGrid = ({ lastRead, chapters }: LastReadGridProps): React.J
           index={index}
         />
       ))}
-    </motion.div>
+    </div>
   );
 };

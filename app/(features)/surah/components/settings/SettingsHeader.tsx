@@ -26,5 +26,3 @@ export const SettingsHeader = ({ onClose }: SettingsHeaderProps): ReactElement =
     />
   );
 };
-
-

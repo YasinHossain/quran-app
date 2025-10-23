@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -29,7 +28,7 @@ export const PlannerCard = ({ surahId, plan, chapter }: PlannerCardProps): React
   );
 
   return (
-    <motion.div className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-border/60 bg-surface p-6 shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 sm:p-7">
+    <div className="relative flex h-full transform flex-col overflow-hidden rounded-3xl border border-border/60 bg-surface p-6 shadow-lg transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 sm:p-7">
       <div className="relative z-10 flex h-full flex-col gap-6">
         <div className="flex flex-wrap items-start justify-between gap-6">
           <PlannerCardHeader
@@ -50,6 +49,6 @@ export const PlannerCard = ({ surahId, plan, chapter }: PlannerCardProps): React
           />
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };

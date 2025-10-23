@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -21,6 +20,12 @@ export const PinnedVersesList = ({
   bookmarks,
   isLoading,
 }: PinnedVersesListProps): React.JSX.Element => {
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
   if (isLoading) {
     return (
       <div className="flex justify-center py-20">
@@ -51,13 +56,17 @@ export const PinnedVersesList = ({
   }
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full">
+    <div
+      className={`w-full transition-opacity duration-300 ease-out ${
+        isVisible ? 'opacity-100' : 'opacity-0'
+      }`}
+    >
       <div className="space-y-0">
         {bookmarks.map((bookmark) => (
           <PinnedVerseListItem key={bookmark.verseId} bookmark={bookmark} />
         ))}
       </div>
-    </motion.div>
+    </div>
   );
 };
 
@@ -107,11 +116,17 @@ const LoadedPinnedVerseItem = ({
     togglePinned(bookmark.verseId, { verseKey: bookmark.verseKey ?? verse.verse_key });
   }, [bookmark.verseId, bookmark.verseKey, togglePinned, verse.verse_key]);
 
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+    <div
+      className={`transform transition-all duration-300 ease-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+      }`}
     >
       <ReaderVerseCard
         ref={verseRef}
@@ -128,6 +143,6 @@ const LoadedPinnedVerseItem = ({
           showRemove: isPinned(bookmark.verseId),
         }}
       />
-    </motion.div>
+    </div>
   );
 };

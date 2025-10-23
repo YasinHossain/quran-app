@@ -1,10 +1,7 @@
 'use client';
 import { useCallback } from 'react';
 
-import {
-  createPlannerPlan,
-  updatePlannerProgress,
-} from '@/app/providers/bookmarks/bookmark-utils';
+import { createPlannerPlan, updatePlannerProgress } from '@/app/providers/bookmarks/bookmark-utils';
 import { PlannerPlan } from '@/types';
 
 export interface PlannerOperations {

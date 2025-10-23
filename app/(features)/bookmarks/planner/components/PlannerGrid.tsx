@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import React from 'react';
 
 import { CalendarIcon, PlusIcon } from '@/app/shared/icons';
@@ -19,6 +18,12 @@ export const PlannerGrid = ({
   chapters,
   onCreatePlan,
 }: PlannerGridProps): React.JSX.Element => {
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
   if (!planner || Object.keys(planner).length === 0) {
     return (
       <div className="text-center py-16">
@@ -41,10 +46,10 @@ export const PlannerGrid = ({
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+    <div
+      className={`grid grid-cols-1 gap-4 transition-opacity duration-300 ease-out sm:grid-cols-2 lg:grid-cols-3 ${
+        isVisible ? 'opacity-100' : 'opacity-0'
+      }`}
     >
       {Object.entries(planner).map(([surahId, plan]) => {
         const chapter = chapters.find((c) => c.id === Number(surahId));
@@ -63,6 +68,6 @@ export const PlannerGrid = ({
           />
         );
       })}
-    </motion.div>
+    </div>
   );
 };

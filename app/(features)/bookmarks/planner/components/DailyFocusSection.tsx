@@ -12,9 +12,7 @@ const DailyGoalDetails = ({ focus }: DailyFocusSectionProps): React.JSX.Element 
   <>
     <div className="mt-4 space-y-3">
       <div className="flex h-full w-full items-center justify-center rounded-xl border border-border/50 bg-surface/80 p-3 text-center sm:col-span-3 sm:p-4">
-        <p className="text-sm font-semibold text-foreground sm:text-base">
-          {focus.goalVerseLabel}
-        </p>
+        <p className="text-sm font-semibold text-foreground sm:text-base">{focus.goalVerseLabel}</p>
       </div>
       {focus.dailyHighlights.length > 0 && (
         <div className="grid gap-3 sm:grid-cols-3">

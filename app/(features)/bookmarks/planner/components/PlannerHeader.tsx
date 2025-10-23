@@ -8,9 +8,7 @@ interface PlannerHeaderProps {
   onCreatePlan: () => void;
 }
 
-export const PlannerHeader = ({
-  onCreatePlan,
-}: PlannerHeaderProps): React.JSX.Element => {
+export const PlannerHeader = ({ onCreatePlan }: PlannerHeaderProps): React.JSX.Element => {
   return (
     <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-3">
