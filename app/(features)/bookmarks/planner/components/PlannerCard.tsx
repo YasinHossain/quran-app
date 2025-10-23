@@ -222,6 +222,18 @@ export const PlannerCard = ({
   const remainingSummary = hasDailyGoal ? `Remaining ${remainingDaysLabel}` : null;
   const endsAtSummary = hasDailyGoal ? `Ends at ${endsAtValue}` : null;
 
+  const goalRangeText =
+    plan.targetVerses > 0
+      ? `${surahLabel} ${surahId}:1 to ${surahLabel} ${surahId}:${plan.targetVerses}`
+      : null;
+  const planDurationText =
+    estimatedDays > 0 ? `${estimatedDays} day${estimatedDays === 1 ? '' : 's'}` : null;
+  const planDetailsParts = [goalRangeText, planDurationText].filter(
+    (part): part is string => Boolean(part)
+  );
+  const planDetailsText =
+    planDetailsParts.length > 0 ? planDetailsParts.join(' \u2022 ') : null;
+
   const handleNavigate = (): void => {
     router.push(`/surah/${surahId}`);
   };
@@ -251,6 +263,7 @@ export const PlannerCard = ({
           <div className="flex min-w-0 flex-col gap-4">
             <div className="space-y-2 text-left">
               <h2 className="text-2xl font-semibold text-foreground">{planName}</h2>
+              {planDetailsText && <p className="text-sm text-muted">{planDetailsText}</p>}
             </div>
           </div>
 
