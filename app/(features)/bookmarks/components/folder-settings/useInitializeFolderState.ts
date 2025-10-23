@@ -7,15 +7,23 @@ import type { InitStateArgs } from './types';
 export const useInitializeFolderState = ({
   folder,
   isOpen,
+  mode,
   setName,
   setSelectedColor,
   setSelectedIcon,
 }: InitStateArgs): void => {
   useEffect(() => {
-    if (folder && isOpen) {
+    if (!isOpen) return;
+    if (mode === 'edit' && folder) {
       setName(folder.name);
       setSelectedColor(folder.color || DEFAULT_COLOR);
       setSelectedIcon(folder.icon || DEFAULT_ICON);
+      return;
     }
-  }, [folder, isOpen, setName, setSelectedColor, setSelectedIcon]);
+    if (mode === 'create') {
+      setName('');
+      setSelectedColor(DEFAULT_COLOR);
+      setSelectedIcon(DEFAULT_ICON);
+    }
+  }, [folder, isOpen, mode, setName, setSelectedColor, setSelectedIcon]);
 };

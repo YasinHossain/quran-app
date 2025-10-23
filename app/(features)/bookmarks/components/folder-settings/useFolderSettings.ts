@@ -12,8 +12,9 @@ export const useFolderSettings = ({
   folder,
   onClose,
   isOpen,
+  mode,
 }: UseFolderSettingsParams): UseFolderSettingsResult => {
-  const { renameFolder } = useBookmarks();
+  const { renameFolder, createFolder } = useBookmarks();
   const [name, setName] = useState('');
   const [selectedColor, setSelectedColor] = useState(DEFAULT_COLOR);
   const [selectedIcon, setSelectedIcon] = useState(DEFAULT_ICON);
@@ -21,11 +22,13 @@ export const useFolderSettings = ({
 
   useEscapeKey(isOpen, onClose);
 
-  useInitializeFolderState({ folder, isOpen, setName, setSelectedColor, setSelectedIcon });
+  useInitializeFolderState({ folder, isOpen, mode, setName, setSelectedColor, setSelectedIcon });
 
   const handleSubmit = useFolderSettingsSubmit({
+    mode,
     folder,
     renameFolder,
+    createFolder,
     onClose,
     setIsSubmitting,
     name,
@@ -33,7 +36,9 @@ export const useFolderSettings = ({
     selectedIcon,
   });
 
-  const modalTitle = 'Edit Folder';
+  const modalTitle = mode === 'create' ? 'Create Folder' : 'Edit Folder';
+  const submitLabel = mode === 'create' ? 'Create Folder' : 'Save Changes';
+  const submittingLabel = mode === 'create' ? 'Creating...' : 'Saving...';
 
   return {
     name,
@@ -45,5 +50,7 @@ export const useFolderSettings = ({
     isSubmitting,
     handleSubmit,
     getModalTitle: (): string => modalTitle,
+    submitLabel,
+    submittingLabel,
   };
 };

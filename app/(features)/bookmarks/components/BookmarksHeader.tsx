@@ -2,6 +2,7 @@
 
 import React from 'react';
 
+import { PlusIcon } from '@/app/shared/icons';
 import { useResponsiveState } from '@/lib/responsive';
 
 import { HeaderTitleSection } from './header/HeaderTitleSection';
@@ -27,37 +28,36 @@ export const BookmarksHeader = ({
   const showMenuButton = variant === 'compact' || variant === 'default';
 
   return (
-    <div className="mb-6">
-      <div className="flex items-center gap-3">
-        <HeaderTitleSection
-          title={title}
-          showMenuButton={showMenuButton}
-          onSidebarToggle={onSidebarToggle}
-        />
-        <div className="ml-auto flex items-center gap-2">
-          {/* Search */}
-          {onSearchChange && (
-            <div>
-              <input
-                aria-label="Search Bookmarks"
-                placeholder="Search Bookmarks"
-                className="w-48 rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-                value={searchTerm}
-                onChange={(e) => onSearchChange(e.target.value)}
-              />
-            </div>
-          )}
-          {/* New Folder */}
-          {onNewFolderClick && (
-            <button
-              type="button"
-              onClick={onNewFolderClick}
-              className="inline-flex items-center justify-center font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 touch-manipulation select-none bg-accent text-on-accent hover:bg-accent-hover rounded-md px-3 py-1.5 text-sm min-h-touch"
-            >
-              New Folder
-            </button>
-          )}
-        </div>
+    <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <HeaderTitleSection
+        title={title}
+        showMenuButton={showMenuButton}
+        onSidebarToggle={onSidebarToggle}
+      />
+      <div className="flex items-center gap-3 self-start sm:self-auto">
+        {/* Search */}
+        {onSearchChange && (
+          <div>
+            <input
+              aria-label="Search Bookmarks"
+              placeholder="Search Bookmarks"
+              className="w-48 rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+              value={searchTerm}
+              onChange={(e) => onSearchChange(e.target.value)}
+            />
+          </div>
+        )}
+        {/* New Folder */}
+        {onNewFolderClick && (
+          <button
+            type="button"
+            onClick={onNewFolderClick}
+            className="inline-flex items-center gap-2 rounded-xl bg-accent px-4 py-2 font-semibold text-on-accent shadow-sm transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation select-none min-h-touch"
+          >
+            <PlusIcon size={18} />
+            Create Folder
+          </button>
+        )}
       </div>
     </div>
   );

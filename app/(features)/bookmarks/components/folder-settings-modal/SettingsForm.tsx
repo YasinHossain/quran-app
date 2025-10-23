@@ -16,17 +16,33 @@ interface SettingsFormProps {
   isSubmitting: boolean;
   onClose: () => void;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  submitLabel: string;
+  submittingLabel: string;
 }
 
 export const SettingsForm = (props: SettingsFormProps): React.JSX.Element => {
-  const { name, setName, selectedColor, setSelectedColor, isSubmitting, onClose, handleSubmit } =
-    props;
+  const {
+    name,
+    setName,
+    selectedColor,
+    setSelectedColor,
+    isSubmitting,
+    onClose,
+    handleSubmit,
+    submitLabel,
+    submittingLabel,
+  } = props;
 
   return (
     <form onSubmit={handleSubmit}>
       <FolderNameInput name={name} setName={setName} />
       <ColorSelector selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
-      <ModalActions isSubmitting={isSubmitting} onClose={onClose} />
+      <ModalActions
+        isSubmitting={isSubmitting}
+        onClose={onClose}
+        submitLabel={submitLabel}
+        submittingLabel={submittingLabel}
+      />
     </form>
   );
 };

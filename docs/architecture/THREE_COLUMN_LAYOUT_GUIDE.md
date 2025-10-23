@@ -2,10 +2,6 @@
 
 Authoritative guide for a consistent, scalable, and accessible three‑column layout across the app. This replaces ad‑hoc page layouts and prevents visual drift (shadow vs border), overlap, and spacing inconsistencies.
 
-Related docs:
-- docs/architecture/READER_LAYOUT_UNIFICATION.md
-- docs/architecture/THREE_COLUMN_SITE_UNIFICATION.md
-
 ## Goals
 
 - Consistent desktop columns and mobile overlays across reader pages and collections

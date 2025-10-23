@@ -51,12 +51,14 @@ interface FolderSettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
   folder: Folder | null;
+  mode?: 'edit' | 'create';
 }
 
 export const FolderSettingsModal = ({
   isOpen,
   onClose,
   folder,
+  mode = 'edit',
 }: FolderSettingsModalProps): React.JSX.Element => {
   const {
     name,
@@ -68,13 +70,16 @@ export const FolderSettingsModal = ({
     isSubmitting,
     handleSubmit,
     getModalTitle,
-  } = useFolderSettings({ folder, onClose, isOpen });
+    submitLabel,
+    submittingLabel,
+  } = useFolderSettings({ folder, onClose, isOpen, mode });
 
   const { backdropVariants, modalVariants } = useFolderSettingsModalAnimation();
+  const shouldRender = mode === 'edit' ? isOpen && Boolean(folder) : isOpen;
 
   return (
     <AnimatePresence>
-      {isOpen && folder && (
+      {shouldRender && (
         <>
           <Backdrop variants={backdropVariants} onClick={onClose} />
 
@@ -91,6 +96,8 @@ export const FolderSettingsModal = ({
               isSubmitting={isSubmitting}
               handleSubmit={handleSubmit}
               onClose={onClose}
+              submitLabel={submitLabel}
+              submittingLabel={submittingLabel}
             />
           </CenteredModal>
         </>

@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import React from 'react';
 
-import { BookmarkIcon, PlusIcon } from '@/app/shared/icons';
+import { BookmarkIcon } from '@/app/shared/icons';
 
 import { SearchIcon, SearchContent, SearchActions } from './empty-states';
 
@@ -19,13 +19,10 @@ export const EmptyBookmarks = (): React.JSX.Element => {
         <BookmarkIcon className="w-8 h-8 text-muted" />
       </div>
       <h3 className="text-lg font-semibold text-foreground mb-2">No Bookmark Folders</h3>
-      <p className="text-muted max-w-md mx-auto mb-6">
-        Create your first folder to start organizing your favorite verses.
+      <p className="text-muted max-w-md mx-auto">
+        Use the <span className="font-semibold text-foreground">Create Folder</span> button above to
+        start organizing your favorite verses.
       </p>
-      <button className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-on-accent rounded-xl font-semibold hover:bg-accent-hover transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-        <PlusIcon size={20} />
-        Create Bookmark Folder
-      </button>
     </div>
   );
 };

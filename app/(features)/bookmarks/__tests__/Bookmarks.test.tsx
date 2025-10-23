@@ -65,19 +65,19 @@ describe('BookmarksHeader', () => {
     await renderBookmarksHeader();
 
     expect(screen.getByText('Bookmarks')).toBeInTheDocument();
-    expect(screen.getByText('New Folder')).toBeInTheDocument();
+    expect(screen.getByText('Create Folder')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Search Bookmarks')).toBeInTheDocument();
   });
 
   it('should have proper touch targets for buttons', async () => {
     await renderBookmarksHeader();
-    const newFolderButton = screen.getByRole('button', { name: 'New Folder' });
+    const newFolderButton = screen.getByRole('button', { name: 'Create Folder' });
     expect(newFolderButton).toHaveClass('min-h-touch');
   });
 
   it('should apply responsive classes consistently', async () => {
     await renderBookmarksHeader();
-    const newFolderButton = screen.getByRole('button', { name: 'New Folder' });
+    const newFolderButton = screen.getByRole('button', { name: 'Create Folder' });
 
     expect(newFolderButton).toHaveClass('touch-manipulation');
     expect(newFolderButton).toHaveClass('select-none');
