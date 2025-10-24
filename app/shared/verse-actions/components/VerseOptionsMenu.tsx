@@ -64,7 +64,7 @@ export const VerseOptionsMenu = memo(function VerseOptionsMenu({
   }, [onAddToPlan, closeMenu]);
 
   return (
-    <div className={cn('relative z-modal', className)}>
+    <div className={cn('relative z-[200]', className)}>
       <button
         ref={buttonRef}
         type="button"
@@ -85,17 +85,8 @@ export const VerseOptionsMenu = memo(function VerseOptionsMenu({
           ref={menuRef}
           role="menu"
           aria-label="Verse options"
-          className="absolute right-0 mt-2 w-44 rounded-lg border border-border bg-surface shadow-modal z-modal py-2"
+          className="absolute top-full left-full ml-2 mt-2 w-44 rounded-lg border border-border/40 bg-surface/90 backdrop-blur-md shadow-lg z-[200] py-2"
         >
-          <button
-            type="button"
-            role="menuitem"
-            onClick={handleShareClick}
-            className="flex w-full items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-surface-hover transition-colors"
-          >
-            <ShareIcon size={18} className="text-muted" />
-            <span>Share</span>
-          </button>
           <button
             type="button"
             role="menuitem"
@@ -104,6 +95,15 @@ export const VerseOptionsMenu = memo(function VerseOptionsMenu({
           >
             <CalendarIcon size={18} className="text-muted" />
             <span>Add to Plan</span>
+          </button>
+          <button
+            type="button"
+            role="menuitem"
+            onClick={handleShareClick}
+            className="flex w-full items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-surface-hover transition-colors"
+          >
+            <ShareIcon size={18} className="text-muted" />
+            <span>Share</span>
           </button>
         </div>
       ) : null}
