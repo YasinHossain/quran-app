@@ -102,7 +102,7 @@ export const LastReadGrid = ({ lastRead, chapters }: LastReadGridProps): React.J
 
   return (
     <div
-      className={`grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4 transition-opacity duration-300 ease-out sm:gap-5 xl:gap-6 ${
+      className={`grid w-full auto-rows-fr grid-cols-[repeat(auto-fill,minmax(11rem,1fr))] gap-3 md:gap-4 transition-opacity duration-300 ease-out ${
         isVisible ? 'opacity-100' : 'opacity-0'
       }`}
     >

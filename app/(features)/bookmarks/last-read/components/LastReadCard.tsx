@@ -43,19 +43,26 @@ export const LastReadCard = ({
           handleNavigate();
         }
       }}
-      className={`group flex h-full min-h-[20rem] w-full transform flex-col items-center justify-between rounded-2xl border border-border/50 bg-surface p-6 text-center shadow-lg transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent sm:p-7 lg:p-8 ${
+      className={`group flex h-full min-h-[10rem] sm:min-h-[11rem] lg:min-h-[12rem] w-full transform flex-col items-center justify-between rounded-2xl border border-border/50 bg-surface p-3 sm:p-4 lg:p-5 text-center shadow-lg transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
       }`}
       style={{ transitionDelay: `${Math.min(index, 10) * 100}ms` }}
     >
       <div className="flex w-full flex-1 items-center justify-center">
-        <CircularProgress percentage={percent} label="Complete" size={140} strokeWidth={15} />
+        <CircularProgress
+          percentage={percent}
+          label="Complete"
+          size={100}
+          strokeWidth={10}
+          valueClassName="text-sm sm:text-base"
+          labelClassName="text-[10px]"
+        />
       </div>
       <div className="mt-4">
-        <p className="text-lg font-bold text-foreground truncate">
+        <p className="text-sm sm:text-base font-bold text-foreground truncate">
           {chapter?.name_simple || `Surah ${surahId}`}
         </p>
-        <p className="text-sm text-muted mt-1">
+        <p className="text-[11px] sm:text-xs text-muted mt-1">
           Verse {verseId} of {total}
         </p>
       </div>

@@ -80,7 +80,7 @@ const FolderCards = ({
 
   return (
     <div
-      className={`grid grid-cols-1 gap-4 transition-opacity duration-300 ease-out sm:grid-cols-2 md:gap-6 xl:grid-cols-3 xl:gap-8 ${
+      className={`grid w-full auto-rows-fr grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-y-4 md:gap-y-6 xl:gap-y-8 gap-x-3 md:gap-x-4 xl:gap-x-6 transition-opacity duration-300 ease-out ${
         isMounted ? 'opacity-100' : 'opacity-0'
       }`}
     >

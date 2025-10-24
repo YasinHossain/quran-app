@@ -304,6 +304,32 @@
   .touch-callout-none {
     -webkit-touch-callout: none;
   }
+
+  /* Layout primitives: shared, consistent responsive building blocks */
+  .app-container {
+    /* Standard page container: width bound + unified horizontal padding */
+    @apply mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .content-narrow {
+    /* For text-heavy or focused content sections */
+    @apply mx-auto w-full max-w-3xl;
+  }
+
+  .stack {
+    /* Vertical spacing stack with responsive rhythm */
+    @apply flex flex-col gap-4 md:gap-6;
+  }
+
+  .cluster {
+    /* Horizontal wrap cluster for chips/controls */
+    @apply flex flex-wrap items-center gap-2 sm:gap-3;
+  }
+
+  .cq {
+    /* Opt-in container query boundary for component-scoped responsiveness */
+    container-type: inline-size;
+  }
 }
 
 @layer utilities {
@@ -330,6 +356,18 @@
 
   .z-modal {
     z-index: var(--z-modal);
+  }
+
+  /* Intrinsic, breakpoint-light grid helper */
+  .grid-auto-fill {
+    /* Combine with `grid` and gap utilities */
+    grid-template-columns: repeat(auto-fill, minmax(var(--min-col, 12rem), 1fr));
+  }
+
+  /* Intrinsic grid helper that collapses empty tracks */
+  .grid-auto-fit {
+    /* Combine with `grid` and gap utilities */
+    grid-template-columns: repeat(auto-fit, minmax(var(--min-col, 12rem), 1fr));
   }
 
   /* Body scroll/interaction helpers */

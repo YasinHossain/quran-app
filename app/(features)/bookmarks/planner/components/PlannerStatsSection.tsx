@@ -21,7 +21,7 @@ const SecondaryStat = ({
   if (value === null || value === undefined) return null;
 
   return (
-    <div className="text-lg font-semibold text-foreground">
+    <div className="text-lg font-semibold text-foreground break-words">
       {value}
       <span className="ml-1 text-xs font-medium text-muted">{unit}</span>
     </div>
@@ -35,9 +35,9 @@ interface StatsCardProps {
 }
 
 const StatsCard = ({ title, icon: Icon, stats }: StatsCardProps): React.JSX.Element => (
-  <div className="rounded-xl border border-border/50 bg-surface/80 p-3">
+  <div className="min-w-0 rounded-xl border border-border/50 bg-surface/80 p-3">
     <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted">
-      <Icon className="h-3.5 w-3.5 text-accent" />
+      <Icon className="h-3.5 w-3.5 shrink-0 text-accent" />
       {title}
     </div>
     <div className="mt-1 space-y-1">
@@ -50,7 +50,7 @@ const StatsCard = ({ title, icon: Icon, stats }: StatsCardProps): React.JSX.Elem
 
 export const PlannerStatsSection = ({ stats }: PlannerStatsSectionProps): React.JSX.Element => (
   <div className="grid gap-5">
-    <div className="grid gap-3 sm:grid-cols-3">
+    <div className="grid min-w-0 gap-3 @[420px]:grid-cols-2 @[560px]:grid-cols-3">
       <StatsCard title="Completed" icon={CheckCircleIcon} stats={stats.completed} />
       <StatsCard title="Remaining" icon={FlagIcon} stats={stats.remaining} />
       <StatsCard title="Goal" icon={TargetIcon} stats={stats.goal} />

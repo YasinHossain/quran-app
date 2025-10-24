@@ -47,7 +47,7 @@ export const PlannerGrid = ({
 
   return (
     <div
-      className={`grid grid-cols-1 gap-4 transition-opacity duration-300 ease-out sm:grid-cols-2 lg:grid-cols-3 ${
+      className={`grid w-full auto-rows-auto grid-auto-fit [--min-col:16rem] lg:[--min-col:28rem] xl:[--min-col:30rem] 2xl:[--min-col:32rem] gap-y-4 md:gap-y-6 xl:gap-y-8 gap-x-3 md:gap-x-4 xl:gap-x-6 transition-opacity duration-300 ease-out ${
         isVisible ? 'opacity-100' : 'opacity-0'
       }`}
     >

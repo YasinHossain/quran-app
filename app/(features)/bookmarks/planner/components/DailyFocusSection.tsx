@@ -15,13 +15,13 @@ const DailyGoalDetails = ({ focus }: DailyFocusSectionProps): React.JSX.Element 
         <p className="text-sm font-semibold text-foreground sm:text-base">{focus.goalVerseLabel}</p>
       </div>
       {focus.dailyHighlights.length > 0 && (
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid min-w-0 gap-3 @[420px]:grid-cols-2 @[560px]:grid-cols-3">
           {focus.dailyHighlights.map((highlight) => (
             <div
               key={highlight.label}
-              className="flex h-full items-center justify-center rounded-xl border border-border/50 bg-surface/80 p-2 text-center sm:p-3"
+              className="flex h-full min-w-0 items-center justify-center rounded-xl border border-border/50 bg-surface/80 p-2 text-center sm:p-3"
             >
-              <p className="text-xs font-semibold text-foreground sm:text-sm">{highlight.value}</p>
+              <p className="text-xs font-semibold text-foreground sm:text-sm break-words">{highlight.value}</p>
             </div>
           ))}
         </div>
@@ -42,11 +42,11 @@ const DailyGoalDetails = ({ focus }: DailyFocusSectionProps): React.JSX.Element 
 );
 
 export const DailyFocusSection = ({ focus }: DailyFocusSectionProps): React.JSX.Element => (
-  <div className="relative flex w-full min-w-[280px] flex-1 flex-col gap-3">
+  <div className="relative flex w-full min-w-0 flex-1 basis-[14rem] flex-col gap-3">
     <div className="rounded-2xl border border-border/60 bg-background/60 px-4 py-3 sm:py-4">
       <div className="flex flex-wrap items-center justify-between gap-3 text-sm font-semibold text-foreground">
         <span className="inline-flex items-center gap-2 text-muted">
-          <TargetIcon className="h-4 w-4 text-accent" />
+          <TargetIcon className="h-4 w-4 shrink-0 text-accent" />
           Today&apos;s focus
         </span>
         <span className="text-xs font-semibold text-muted">{focus.dayLabel}</span>

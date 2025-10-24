@@ -68,7 +68,7 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
       direction="column"
       align="start"
       gap="gap-3"
-      customVariant={{ height: 'min-h-[148px]', padding: 'pl-6 pr-4 pb-6 pt-6' }}
+      customVariant={{ height: 'min-h-[136px]', padding: 'pl-6 pr-4 pb-6 pt-6' }}
       {...(onClick
         ? { onClick: onClick as React.MouseEventHandler<HTMLDivElement | HTMLAnchorElement> }
         : {})}

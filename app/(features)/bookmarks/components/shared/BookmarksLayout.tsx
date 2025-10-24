@@ -31,7 +31,7 @@ export const BookmarksLayout = ({
         center={
           <WorkspaceMain
             data-slot="bookmarks-landing-main"
-            contentClassName="gap-4 pb-12 sm:gap-6"
+            contentClassName="gap-4 pb-12 sm:gap-6 px-2 sm:px-4 lg:px-6"
             className="bg-background"
           >
             <div className="flex flex-1 flex-col">{children}</div>

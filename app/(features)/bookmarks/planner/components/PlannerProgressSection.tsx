@@ -20,13 +20,13 @@ export const PlannerProgressSection = ({
   <div className="rounded-2xl border border-border/60 bg-background/60 px-4 py-4">
     <div className="flex items-center justify-between text-sm font-semibold text-foreground">
       <span className="inline-flex items-center gap-2 text-muted">
-        <SparklesIcon className="h-4 w-4 text-accent" />
+        <SparklesIcon className="h-4 w-4 shrink-0 text-accent" />
         Currently at
       </span>
       <span className="text-xs font-semibold text-muted">{progress.percent}%</span>
     </div>
     <div className="mt-2">
-      <p className="mb-1 text-base font-semibold leading-tight text-foreground sm:text-lg">
+      <p className="mb-1 text-base font-semibold leading-tight text-foreground sm:text-lg break-words">
         {surahLabel} {surahId}:{progress.currentVerse}
       </p>
       {progress.currentSecondaryText && (
