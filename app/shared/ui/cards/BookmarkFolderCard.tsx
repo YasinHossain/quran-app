@@ -4,7 +4,6 @@ import { ClockIcon, ChevronDownIcon } from '@/app/shared/icons';
 import { BaseCard, BaseCardProps } from '@/app/shared/ui/BaseCard';
 import { cn } from '@/lib/utils/cn';
 
-import { applyOpacity, resolveAccentColor } from './folderColor.utils';
 import { FolderGlyph } from './FolderGlyph';
 
 import type { Folder } from '@/types/bookmark';
@@ -34,7 +33,6 @@ export const BookmarkFolderCard = ({
     }
   };
 
-  const accentColor = resolveAccentColor(folder.color);
   const verseCount = folder.bookmarks.length;
   const latestBookmarkTimestamp =
     verseCount > 0
@@ -55,7 +53,12 @@ export const BookmarkFolderCard = ({
     <BaseCard
       variant="folder"
       animation="folder"
-      customVariant={{ padding: 'p-0' }}
+      customVariant={{
+        padding: 'p-0',
+        hover: {
+          value: 'hover:-translate-y-1 hover:shadow-lg',
+        },
+      }}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       role="button"
@@ -65,18 +68,13 @@ export const BookmarkFolderCard = ({
       data-expanded={isExpanded}
       className={cn(
         'group relative overflow-hidden rounded-2xl border border-border/40 bg-surface/80 backdrop-blur-sm transition-all duration-300',
-        'hover:-translate-y-1 hover:border-accent/30 hover:shadow-lg hover:bg-surface-hover',
-        'data-[expanded=true]:border-accent/40 data-[expanded=true]:shadow-lg data-[expanded=true]:bg-surface-hover',
+        'hover:-translate-y-1 hover:shadow-lg',
+        'data-[expanded=true]:border-accent/40 data-[expanded=true]:shadow-lg data-[expanded=true]:bg-surface/80',
         className as string
       )}
       {...props}
     >
-      <div
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        style={{
-          background: `linear-gradient(135deg, ${applyOpacity(accentColor, 0.16)} 0%, transparent 60%)`,
-        }}
-      />
+      {/* Remove accent halo on hover */}
       <div className="relative flex items-start gap-4 p-4 sm:p-5">
         <FolderGlyph folder={folder}>
           <span className="absolute -top-1.5 -right-1.5 select-none rounded-full border border-border bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-foreground shadow-sm">

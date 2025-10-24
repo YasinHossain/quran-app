@@ -8,6 +8,7 @@ export interface VerseActionsProps {
   // With exactOptionalPropertyTypes, explicitly allow undefined when prop is present
   onBookmark?: (() => void) | undefined;
   onShare?: (() => void) | undefined;
+  onAddToPlan?: (() => void) | undefined;
   onNavigateToVerse?: (() => void) | undefined;
   showRemove?: boolean | undefined;
   className?: string | undefined;

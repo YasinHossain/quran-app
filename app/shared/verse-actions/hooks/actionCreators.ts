@@ -7,6 +7,7 @@ import {
   BookmarkOutlineIcon,
   ShareIcon,
   BookReaderIcon,
+  CalendarIcon,
 } from '@/app/shared/icons';
 import { Spinner } from '@/app/shared/Spinner';
 import { VerseActionItem } from '@/app/shared/verse-actions/types';
@@ -93,6 +94,18 @@ export function createShareAction({ onClick }: CreateShareActionParams): VerseAc
   return {
     label: 'Share',
     icon: createElement(ShareIcon, { size: 20 }),
+    onClick,
+  };
+}
+
+interface CreateAddToPlanActionParams {
+  onClick: () => void;
+}
+
+export function createAddToPlanAction({ onClick }: CreateAddToPlanActionParams): VerseActionItem {
+  return {
+    label: 'Add to Plan',
+    icon: createElement(CalendarIcon, { size: 20 }),
     onClick,
   };
 }

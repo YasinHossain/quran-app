@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { BookmarkModal } from '@/app/shared/components/BookmarkModal';
 import { VerseActionsProps } from '@/app/shared/verse-actions/types';
@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils/cn';
 import { BookmarkButton } from './components/BookmarkButton';
 import { NavigateToVerseLink } from './components/NavigateToVerseLink';
 import { PlayPauseButton } from './components/PlayPauseButton';
-import { ShareButton } from './components/ShareButton';
+import { VerseOptionsMenu } from './components/VerseOptionsMenu';
 import { TafsirLink } from './components/TafsirLink';
 
 export const DesktopVerseActions = ({
@@ -22,12 +22,16 @@ export const DesktopVerseActions = ({
   onPlayPause,
   onBookmark,
   onShare,
+  onAddToPlan,
   onNavigateToVerse,
   showRemove = false,
   className = '',
 }: VerseActionsProps): React.JSX.Element => {
   const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
   const handleShare = onShare || defaultShare;
+  const handleAddToPlan = useCallback(() => {
+    if (onAddToPlan) onAddToPlan();
+  }, [onAddToPlan]);
 
   const handleBookmarkClick = (): void => {
     if (showRemove && onBookmark) {
@@ -53,7 +57,7 @@ export const DesktopVerseActions = ({
           showRemove={showRemove}
           onClick={handleBookmarkClick}
         />
-        <ShareButton onShare={handleShare} />
+        <VerseOptionsMenu onShare={handleShare} onAddToPlan={handleAddToPlan} />
       </div>
 
       <BookmarkModal

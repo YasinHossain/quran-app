@@ -17,6 +17,7 @@ interface MobileBottomSheetProps {
   onPlayPause: () => void;
   onBookmark: () => void;
   onShare: () => void;
+  onAddToPlan: () => void;
   onNavigateToVerse?: () => void;
   showRemove?: boolean;
 }
@@ -31,6 +32,7 @@ export const MobileBottomSheet = memo(function MobileBottomSheet({
   onPlayPause,
   onBookmark,
   onShare,
+  onAddToPlan,
   onNavigateToVerse,
   showRemove = false,
 }: MobileBottomSheetProps): React.JSX.Element {
@@ -43,6 +45,7 @@ export const MobileBottomSheet = memo(function MobileBottomSheet({
     onPlayPause,
     onBookmark,
     onShare,
+    onAddToPlan,
     ...(onNavigateToVerse ? { onNavigateToVerse } : {}),
     onClose,
   });

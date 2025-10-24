@@ -68,7 +68,11 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
       direction="column"
       align="start"
       gap="gap-3"
-      customVariant={{ height: 'min-h-[136px]', padding: 'pl-6 pr-4 pb-6 pt-6' }}
+      customVariant={{
+        height: 'min-h-[136px]',
+        padding: 'pl-5 pr-4 pb-3 pt-3',
+        hover: { value: 'hover:-translate-y-1 hover:shadow-lg' },
+      }}
       {...(onClick
         ? { onClick: onClick as React.MouseEventHandler<HTMLDivElement | HTMLAnchorElement> }
         : {})}
@@ -79,7 +83,7 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
       className={cn('group relative w-full', className)}
       {...props}
     >
-      <div className="absolute top-4 right-4">
+      <div className="absolute right-3 top-3">
         <FolderContextMenu onDelete={onDelete} onColorChange={onColorChange} />
       </div>
 

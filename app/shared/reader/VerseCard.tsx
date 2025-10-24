@@ -60,11 +60,15 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
 
     return (
       <div id={`${idPrefix}-${verse.id}`} ref={ref} className={containerClasses}>
-        <div className="space-y-4 md:space-y-0 md:flex md:items-start md:gap-x-6">
+        <div className="space-y-4 md:space-y-0 md:flex md:items-stretch md:gap-x-6">
           {actions ? (
             <ResponsiveVerseActions
               {...actions}
-              className={cn('md:w-16 md:pt-1', actions?.className, actionsClassName)}
+              className={cn(
+                'md:w-16 md:h-full md:flex md:flex-col md:justify-center',
+                actions?.className,
+                actionsClassName
+              )}
             />
           ) : null}
 
