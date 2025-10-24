@@ -28,15 +28,14 @@ export const PlannerCard = ({ surahId, plan, chapter }: PlannerCardProps): React
   );
 
   return (
-    <div className="cq relative flex min-w-0 h-full transform flex-col overflow-hidden rounded-3xl border border-border/60 bg-surface p-6 shadow-lg transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 sm:p-7 lg:min-w-[28rem] xl:min-w-[30rem] 2xl:min-w-[32rem]">
+    <div className="cq relative flex min-w-0 h-full transform flex-col rounded-3xl border border-border/60 bg-surface p-6 shadow-lg transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 sm:p-7 lg:min-w-[20rem] xl:min-w-[24rem] 2xl:min-w-[28rem]">
       <div className="relative z-10 flex h-full flex-col gap-6">
-        <div className="flex flex-wrap items-start justify-between gap-6">
-          <PlannerCardHeader
-            displayPlanName={viewModel.planInfo.displayPlanName}
-            planDetailsText={viewModel.planInfo.planDetailsText}
-          />
-          <DailyFocusSection focus={viewModel.focus} />
-        </div>
+        <PlannerCardHeader
+          displayPlanName={viewModel.planInfo.displayPlanName}
+          planDetailsText={viewModel.planInfo.planDetailsText}
+        />
+
+        <DailyFocusSection focus={viewModel.focus} />
 
         <PlannerStatsSection stats={viewModel.stats} />
 
