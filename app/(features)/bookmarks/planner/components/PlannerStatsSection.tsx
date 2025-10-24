@@ -51,7 +51,7 @@ const StatsCard = ({ title, icon: Icon, stats }: StatsCardProps): React.JSX.Elem
 export const PlannerStatsSection = ({ stats }: PlannerStatsSectionProps): React.JSX.Element => (
   <div className="grid gap-5">
     {/* Use container queries so layout adapts to card width, not viewport */}
-    <div className="grid min-w-0 gap-3 [@container(min-width:24rem)]:grid-cols-3">
+    <div className="grid min-w-0 gap-3 [@container(min-width:22rem)]:grid-cols-3">
       <StatsCard title="Completed" icon={CheckCircleIcon} stats={stats.completed} />
       <StatsCard title="Remaining" icon={FlagIcon} stats={stats.remaining} />
       <StatsCard title="Goal" icon={TargetIcon} stats={stats.goal} />

@@ -26,11 +26,11 @@ export const PlannerProgressSection = ({
       <span className="text-xs font-semibold text-muted">{progress.percent}%</span>
     </div>
     <div className="mt-2">
-      <p className="mb-1 text-base font-semibold leading-tight text-foreground [@container(min-width:24rem)]:text-lg break-words">
+      <p className="mb-1 text-base font-semibold leading-tight text-foreground [@container(min-width:22rem)]:text-lg break-words">
         {surahLabel} {surahId}:{progress.currentVerse}
       </p>
       {progress.currentSecondaryText && (
-        <p className="mt-0 text-xs text-muted [@container(min-width:24rem)]:text-sm">{progress.currentSecondaryText}</p>
+        <p className="mt-0 text-xs text-muted [@container(min-width:22rem)]:text-sm">{progress.currentSecondaryText}</p>
       )}
     </div>
     <div

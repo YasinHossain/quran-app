@@ -11,24 +11,24 @@ interface DailyFocusSectionProps {
 const DailyGoalDetails = ({ focus }: DailyFocusSectionProps): React.JSX.Element => (
   <>
     <div className="mt-2 space-y-3">
-      <div className="flex h-full w-full items-center justify-center rounded-xl border border-border/50 bg-surface/80 p-3 text-center [@container(min-width:24rem)]:col-span-3 [@container(min-width:24rem)]:p-4">
-        <p className="text-sm font-semibold text-foreground [@container(min-width:24rem)]:text-base">{focus.goalVerseLabel}</p>
+      <div className="flex h-full w-full items-center justify-center rounded-xl border border-border/50 bg-surface/80 p-3 text-center [@container(min-width:22rem)]:col-span-3 [@container(min-width:22rem)]:p-4">
+        <p className="text-sm font-semibold text-foreground [@container(min-width:22rem)]:text-base">{focus.goalVerseLabel}</p>
       </div>
       {focus.dailyHighlights.length > 0 && (
-        <div className="grid min-w-0 gap-3 [@container(min-width:24rem)]:grid-cols-3">
+        <div className="grid min-w-0 gap-3 [@container(min-width:22rem)]:grid-cols-3">
           {focus.dailyHighlights.map((highlight) => (
             <div
               key={highlight.label}
-              className="flex h-full min-w-0 items-center justify-center rounded-xl border border-border/50 bg-surface/80 p-2 text-center [@container(min-width:24rem)]:p-3"
+              className="flex h-full min-w-0 items-center justify-center rounded-xl border border-border/50 bg-surface/80 p-2 text-center [@container(min-width:22rem)]:p-3"
             >
-              <p className="text-xs font-semibold text-foreground [@container(min-width:24rem)]:text-sm break-words">{highlight.value}</p>
+              <p className="text-xs font-semibold text-foreground [@container(min-width:22rem)]:text-sm break-words">{highlight.value}</p>
             </div>
           ))}
         </div>
       )}
     </div>
     {(focus.remainingSummary || focus.endsAtSummary) && (
-      <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted [@container(min-width:24rem)]:text-sm">
+      <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted [@container(min-width:22rem)]:text-sm">
         {focus.remainingSummary && (
           <span className="font-semibold text-foreground">{focus.remainingSummary}</span>
         )}
