@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback, useState, useEffect } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { CloseIcon } from '@/app/shared/icons';
@@ -36,6 +36,13 @@ const extractSurahId = (surahId: number | undefined, verseKey: string): number |
   const [surahPart] = verseKey.split(':');
   const parsed = Number(surahPart);
   return Number.isFinite(parsed) ? parsed : undefined;
+};
+
+const extractVerseNumber = (verseKey: string): number | undefined => {
+  const [, ayahPart] = verseKey.split(':');
+  if (!ayahPart) return undefined;
+  const parsed = Number(ayahPart);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
 };
 
 const buildChapterLookup = (chapters: Chapter[]): Map<number, Chapter> =>
@@ -144,15 +151,107 @@ export function AddToPlannerModal({
   onClose,
   verseSummary,
 }: AddToPlannerModalProps): React.JSX.Element | null {
-  const { planner, chapters } = useBookmarks();
+  const { planner, chapters, updatePlannerProgress } = useBookmarks();
+  const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
 
   const chapterLookup = useMemo(() => buildChapterLookup(chapters), [chapters]);
   const { title, subtitle } = useVerseHeaderLabel(verseSummary, chapterLookup);
   const plannerCards = usePlannerCards(planner, chapterLookup);
+  const plansById = useMemo(() => {
+    const map = new Map<string, PlannerPlan>();
+    Object.values(planner).forEach((plan) => {
+      map.set(plan.id, plan);
+    });
+    return map;
+  }, [planner]);
+  const verseSurahId = useMemo(
+    () => extractSurahId(verseSummary.surahId, verseSummary.verseKey),
+    [verseSummary.surahId, verseSummary.verseKey]
+  );
+  const verseNumber = useMemo(
+    () => extractVerseNumber(verseSummary.verseKey),
+    [verseSummary.verseKey]
+  );
+  const selectedPlan = useMemo(() => {
+    return selectedPlanId ? plansById.get(selectedPlanId) : undefined;
+  }, [plansById, selectedPlanId]);
+  const hasValidReference =
+    typeof verseSurahId === 'number' && typeof verseNumber === 'number' && verseNumber > 0;
+  const canSave =
+    Boolean(selectedPlan) &&
+    hasValidReference &&
+    typeof verseSurahId === 'number' &&
+    selectedPlan?.surahId === verseSurahId;
+  const mismatchSelection =
+    Boolean(selectedPlan) && typeof verseSurahId === 'number'
+      ? selectedPlan.surahId !== verseSurahId
+      : false;
+  const helperMessage = useMemo(() => {
+    if (!selectedPlan) return null;
+    if (!hasValidReference) {
+      return 'Unable to determine the current verse reference for this planner.';
+    }
+    if (mismatchSelection) {
+      const chapter = chapterLookup.get(selectedPlan.surahId);
+      const plannerName = getChapterDisplayName(selectedPlan, chapter);
+      return `This planner is for ${plannerName}. Choose a planner for this surah to continue.`;
+    }
+    return null;
+  }, [selectedPlan, hasValidReference, mismatchSelection, chapterLookup]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedPlanId(null);
+    }
+  }, [isOpen]);
+
+  const handlePlanSelect = useCallback((planId: string) => {
+    setSelectedPlanId(planId);
+  }, []);
+
+  const handleSave = useCallback(() => {
+    if (!selectedPlanId) {
+      return;
+    }
+
+    const plan = plansById.get(selectedPlanId);
+    if (!plan) {
+      return;
+    }
+
+    if (!hasValidReference || typeof verseSurahId !== 'number' || plan.surahId !== verseSurahId) {
+      return;
+    }
+
+    if (typeof verseNumber !== 'number') {
+      return;
+    }
+
+    const clampedToTarget =
+      plan.targetVerses > 0 ? Math.min(verseNumber, plan.targetVerses) : verseNumber;
+    const nextCompleted = Math.max(plan.completedVerses, clampedToTarget);
+
+    if (nextCompleted !== plan.completedVerses) {
+      updatePlannerProgress(plan.surahId, nextCompleted);
+    }
+
+    setSelectedPlanId(null);
+    onClose();
+  }, [
+    selectedPlanId,
+    plansById,
+    hasValidReference,
+    verseSurahId,
+    verseNumber,
+    updatePlannerProgress,
+    onClose,
+  ]);
 
   if (!isOpen) {
     return null;
   }
+
+  const contentContainerClass = 'mx-auto w-full max-w-lg';
 
   return (
     <PanelModalCenter
@@ -163,8 +262,8 @@ export function AddToPlannerModal({
       showCloseButton={false}
     >
       <header className="mb-6">
-        <div className="mx-auto flex w-full max-w-lg items-start justify-between gap-4">
-          <div>
+        <div className={`${contentContainerClass} flex items-start justify-between gap-4`}>
+          <div className="flex min-w-0 flex-1 flex-col gap-1">
             <h2 className="text-xl font-semibold text-content-primary">{title}</h2>
             <p className="text-sm text-content-secondary">{subtitle}</p>
           </div>
@@ -179,7 +278,24 @@ export function AddToPlannerModal({
           </Button>
         </div>
       </header>
-      <PlannerCardsSection plannerCards={plannerCards} verseSummary={verseSummary} />
+      <div className={contentContainerClass}>
+        <PlannerCardsSection
+          plannerCards={plannerCards}
+          verseSummary={verseSummary}
+          selectedPlanId={selectedPlanId}
+          onPlanSelect={handlePlanSelect}
+        />
+      </div>
+      {helperMessage ? (
+        <p className={`${contentContainerClass} mt-3 text-sm text-content-secondary`}>
+          {helperMessage}
+        </p>
+      ) : null}
+      <div className={`${contentContainerClass} mt-6 flex items-center justify-end`}>
+        <Button onClick={handleSave} disabled={!canSave}>
+          Save
+        </Button>
+      </div>
     </PanelModalCenter>
   );
 }

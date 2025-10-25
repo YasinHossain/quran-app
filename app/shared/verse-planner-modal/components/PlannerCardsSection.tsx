@@ -13,18 +13,26 @@ import type {
 interface PlannerCardsSectionProps {
   plannerCards: PlannerCardViewModel[];
   verseSummary: VerseSummaryDetails;
+  selectedPlanId: string | null;
+  onPlanSelect: (planId: string) => void;
 }
 
 export function PlannerCardsSection({
   plannerCards,
   verseSummary,
+  selectedPlanId,
+  onPlanSelect,
 }: PlannerCardsSectionProps): React.JSX.Element {
   if (plannerCards.length === 0) {
-    return <EmptyPlannerState verseLabel={verseSummary.verseKey} />;
+    return (
+      <div className="flex w-full flex-col gap-3 md:gap-4">
+        <EmptyPlannerState verseLabel={verseSummary.verseKey} />
+      </div>
+    );
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-lg flex-col gap-3 md:gap-4">
+    <div className="flex w-full flex-col gap-3 md:gap-4">
       {plannerCards.map((plan) => (
         <PlannerSelectionCard
           key={plan.id}
@@ -32,7 +40,8 @@ export function PlannerCardsSection({
           planName={plan.planName}
           verseRangeLabel={plan.verseRangeLabel}
           estimatedDays={plan.estimatedDays}
-          onSelect={() => undefined}
+          isSelected={selectedPlanId === plan.id}
+          onSelect={() => onPlanSelect(plan.id)}
         />
       ))}
     </div>
