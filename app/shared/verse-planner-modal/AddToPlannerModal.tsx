@@ -3,7 +3,9 @@
 import React, { useMemo } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { CloseIcon } from '@/app/shared/icons';
 import { PanelModalCenter } from '@/app/shared/ui/PanelModalCenter';
+import { Button } from '@/app/shared/ui/Button';
 
 import { PlannerCardsSection } from './components/PlannerCardsSection';
 
@@ -45,7 +47,7 @@ const buildChapterLookup = (chapters: Chapter[]): Map<number, Chapter> =>
 const useVerseHeaderLabel = (
   verseSummary: VerseSummaryDetails,
   chapterLookup: Map<number, Chapter>
-): string => {
+): { title: string; subtitle: string } => {
   const verseSurahId = useMemo(
     () => extractSurahId(verseSummary.surahId, verseSummary.verseKey),
     [verseSummary.surahId, verseSummary.verseKey]
@@ -63,7 +65,10 @@ const useVerseHeaderLabel = (
     return verseSummary.verseKey.split(':')[0] ?? 'Surah';
   }, [verseChapter, verseSummary.verseKey]);
 
-  return `${surahName} ${verseSummary.verseKey}`;
+  return {
+    title: 'Add to Planner',
+    subtitle: `${surahName} ${verseSummary.verseKey}`,
+  };
 };
 
 const getChapterDisplayName = (plan: PlannerPlan, chapter: Chapter | undefined): string => {
@@ -97,7 +102,7 @@ const getVerseRangeLabel = (
   chapter: Chapter | undefined,
   plan: PlannerPlan
 ): string => {
-  const versesTotal = chapter?.verses_count ?? plan.targetVerses;
+  const versesTotal = plan.targetVerses || chapter?.verses_count;
   if (!versesTotal) return chapterName;
 
   return `${chapterName} 1:1 to ${chapterName} 1:${versesTotal}`;
@@ -142,7 +147,7 @@ export function AddToPlannerModal({
   const { planner, chapters } = useBookmarks();
 
   const chapterLookup = useMemo(() => buildChapterLookup(chapters), [chapters]);
-  const verseHeaderLabel = useVerseHeaderLabel(verseSummary, chapterLookup);
+  const { title, subtitle } = useVerseHeaderLabel(verseSummary, chapterLookup);
   const plannerCards = usePlannerCards(planner, chapterLookup);
 
   if (!isOpen) {
@@ -153,10 +158,27 @@ export function AddToPlannerModal({
     <PanelModalCenter
       isOpen={isOpen}
       onClose={onClose}
-      title={verseHeaderLabel}
-      className="w-full max-w-4xl"
-      showCloseButton
+      title={undefined}
+      className="w-full max-w-xl rounded-xl border border-border/30 bg-background p-3 shadow-modal sm:rounded-2xl sm:p-5"
+      showCloseButton={false}
     >
+      <header className="mb-6">
+        <div className="mx-auto flex w-full max-w-lg items-start justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-semibold text-content-primary">{title}</h2>
+            <p className="text-sm text-content-secondary">{subtitle}</p>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            aria-label="Close planner modal"
+            className="shrink-0 text-content-secondary hover:text-content-primary"
+          >
+            <CloseIcon size={18} />
+          </Button>
+        </div>
+      </header>
       <PlannerCardsSection plannerCards={plannerCards} verseSummary={verseSummary} />
     </PanelModalCenter>
   );

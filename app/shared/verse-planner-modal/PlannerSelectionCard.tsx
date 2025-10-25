@@ -16,16 +16,24 @@ export function PlannerSelectionCard({
   estimatedDays,
   onSelect,
 }: PlannerSelectionCardProps): React.JSX.Element {
+  const detailParts = [verseRangeLabel];
+  if (estimatedDays && estimatedDays > 0) {
+    detailParts.push(`${estimatedDays} day${estimatedDays === 1 ? '' : 's'}`);
+  }
+  const detailLine = detailParts.join(' · ');
+
   return (
     <button
       type="button"
       onClick={onSelect}
-      className="flex w-full flex-col gap-1 rounded-2xl border border-border/60 bg-surface/90 px-3.5 py-2.5 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-accent/60 hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+      className="flex w-full flex-col gap-2 rounded-lg border border-border/20 bg-surface-glass/70 px-4 py-3 text-left text-content-primary shadow-lg backdrop-blur-xl transition-all duration-300 hover:border-border/30 hover:shadow-xl sm:rounded-xl sm:px-5 sm:py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30"
     >
-      <span className="text-base font-semibold text-content-primary leading-tight">{planName}</span>
-      <span className="text-sm text-content-secondary">
-        {verseRangeLabel} · {estimatedDays ?? '—'} days
-      </span>
+      <div className="flex flex-col gap-1">
+        <span className="text-base font-semibold leading-snug text-content-primary break-words">
+          {planName}
+        </span>
+        <p className="text-sm leading-snug text-muted">{detailLine}</p>
+      </div>
     </button>
   );
 }

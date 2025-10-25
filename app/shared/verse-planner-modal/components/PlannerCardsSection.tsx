@@ -24,7 +24,7 @@ export function PlannerCardsSection({
   }
 
   return (
-    <div className="space-y-3 max-w-xl">
+    <div className="mx-auto flex w-full max-w-lg flex-col gap-3 md:gap-4">
       {plannerCards.map((plan) => (
         <PlannerSelectionCard
           key={plan.id}
