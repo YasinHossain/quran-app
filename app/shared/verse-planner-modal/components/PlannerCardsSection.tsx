@@ -35,12 +35,14 @@ export function PlannerCardsSection({
     <div className="flex w-full flex-col gap-3 md:gap-4">
       {plannerCards.map((plan) => (
         <PlannerSelectionCard
-          key={plan.id}
+          key={plan.reactKey}
           id={plan.id}
           planName={plan.planName}
           verseRangeLabel={plan.verseRangeLabel}
-          estimatedDays={plan.estimatedDays}
-          isSelected={selectedPlanId === plan.id}
+          {...(typeof plan.estimatedDays === 'number' ? { estimatedDays: plan.estimatedDays } : {})}
+          isSelected={
+            typeof selectedPlanId === 'string' ? plan.planIds.includes(selectedPlanId) : false
+          }
           onSelect={() => onPlanSelect(plan.id)}
         />
       ))}

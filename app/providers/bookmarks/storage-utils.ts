@@ -178,13 +178,32 @@ export const saveLastReadToStorage = (lastRead: LastReadMap): void => {
   }
 };
 
+const normalizePlannerRecord = (input: unknown): Record<string, PlannerPlan> => {
+  if (!input || typeof input !== 'object' || Array.isArray(input)) {
+    return {};
+  }
+
+  const entries = Object.entries(input as Record<string, PlannerPlan>);
+  if (entries.length === 0) {
+    return {};
+  }
+
+  return entries.reduce<Record<string, PlannerPlan>>((acc, [, value]) => {
+    if (value && typeof value === 'object' && 'id' in value) {
+      const plan = value as PlannerPlan;
+      acc[plan.id] = plan;
+    }
+    return acc;
+  }, {});
+};
+
 export const loadPlannerFromStorage = (): Record<string, PlannerPlan> => {
   if (typeof window === 'undefined') return {};
 
   const savedPlanner = getItem(PLANNER_STORAGE_KEY);
   if (savedPlanner) {
     try {
-      return JSON.parse(savedPlanner) as Record<string, PlannerPlan>;
+      return normalizePlannerRecord(JSON.parse(savedPlanner));
     } catch {
       return {};
     }
@@ -193,7 +212,7 @@ export const loadPlannerFromStorage = (): Record<string, PlannerPlan> => {
   const legacy = getItem(LEGACY_MEMORIZATION_STORAGE_KEY);
   if (legacy) {
     try {
-      const parsed = JSON.parse(legacy) as Record<string, PlannerPlan>;
+      const parsed = normalizePlannerRecord(JSON.parse(legacy));
       removeItem(LEGACY_MEMORIZATION_STORAGE_KEY);
       setItem(PLANNER_STORAGE_KEY, JSON.stringify(parsed));
       return parsed;

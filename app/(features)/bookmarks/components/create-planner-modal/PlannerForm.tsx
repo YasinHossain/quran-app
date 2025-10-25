@@ -20,6 +20,7 @@ interface PlannerFormProps {
   versesPerDay: number;
   isValidRange: boolean;
   canSubmit: boolean;
+  duplicatePlanName?: string;
   onSubmit: (e: React.FormEvent) => void;
   chapters: Chapter[];
 }
@@ -31,6 +32,7 @@ export const PlannerForm = ({
   versesPerDay,
   isValidRange,
   canSubmit,
+  duplicatePlanName,
   onSubmit,
   chapters,
 }: PlannerFormProps): React.JSX.Element => (
@@ -38,6 +40,11 @@ export const PlannerForm = ({
     <PlanNameInput
       planName={formData.planName}
       onChange={(planName) => onFormDataChange({ planName })}
+      {...(duplicatePlanName
+        ? {
+            errorMessage: `A planner named "${duplicatePlanName}" already exists. Choose a different name.`,
+          }
+        : {})}
     />
 
     <SurahSelectionSection

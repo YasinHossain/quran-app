@@ -5,6 +5,12 @@ import React from 'react';
 import { CalendarIcon, PlusIcon } from '@/app/shared/icons';
 import { PlannerPlan, Chapter } from '@/types';
 
+import {
+  buildChapterLookup,
+  groupPlannerPlans,
+} from '@/app/(features)/bookmarks/planner/utils/planGrouping';
+import { buildPlannerGroupCardData } from '@/app/(features)/bookmarks/planner/utils/buildPlannerGroupCard';
+
 import { PlannerCard } from './PlannerCard';
 
 interface PlannerGridProps {
@@ -19,12 +25,17 @@ export const PlannerGrid = ({
   onCreatePlan,
 }: PlannerGridProps): React.JSX.Element => {
   const [isVisible, setIsVisible] = React.useState(false);
+  const chapterLookup = React.useMemo(() => buildChapterLookup(chapters), [chapters]);
+  const groupedCards = React.useMemo(() => {
+    const groups = groupPlannerPlans(planner, chapterLookup);
+    return groups.map((group) => buildPlannerGroupCardData(group, chapterLookup));
+  }, [planner, chapterLookup]);
 
   React.useEffect(() => {
     setIsVisible(true);
   }, []);
 
-  if (!planner || Object.keys(planner).length === 0) {
+  if (!planner || Object.keys(planner).length === 0 || groupedCards.length === 0) {
     return (
       <div className="text-center py-16">
         <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
@@ -51,23 +62,16 @@ export const PlannerGrid = ({
         isVisible ? 'opacity-100' : 'opacity-0'
       }`}
     >
-      {Object.entries(planner).map(([surahId, plan]) => {
-        const chapter = chapters.find((c) => c.id === Number(surahId));
-        return (
-          <PlannerCard
-            key={surahId}
-            surahId={surahId}
-            plan={plan}
-            {...(chapter && {
-              chapter: {
-                name_simple: chapter.name_simple,
-                name_arabic: chapter.name_arabic,
-                pages: chapter.pages,
-              },
-            })}
-          />
-        );
-      })}
+      {groupedCards.map((group) => (
+        <PlannerCard
+          key={group.key}
+          surahId={group.surahId}
+          plan={group.plan}
+          {...(group.chapter && { chapter: group.chapter })}
+          precomputedViewModel={group.viewModel}
+          progressLabel={group.progressLabel}
+        />
+      ))}
     </div>
   );
 };

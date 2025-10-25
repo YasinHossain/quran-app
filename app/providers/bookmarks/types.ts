@@ -31,6 +31,6 @@ export interface BookmarkContextType {
     planName?: string,
     estimatedDays?: number
   ) => void;
-  updatePlannerProgress: (surahId: number, completedVerses: number) => void;
-  removeFromPlanner: (surahId: number) => void;
+  updatePlannerProgress: (planId: string, completedVerses: number) => void;
+  removeFromPlanner: (planId: string) => void;
 }

@@ -11,9 +11,21 @@ import { createPlannerCardViewModel } from '@/app/(features)/bookmarks/planner/u
 
 import type { PlannerCardProps } from '@/app/(features)/bookmarks/planner/components/PlannerCard.types';
 
-export const PlannerCard = ({ surahId, plan, chapter }: PlannerCardProps): React.JSX.Element => {
+export const PlannerCard = ({
+  surahId,
+  plan,
+  chapter,
+  precomputedViewModel,
+  progressLabel,
+}: PlannerCardProps): React.JSX.Element => {
   const router = useRouter();
-  const viewModel = createPlannerCardViewModel({ surahId, plan, chapter });
+  const viewModel = React.useMemo(() => {
+    if (precomputedViewModel) {
+      return precomputedViewModel;
+    }
+    const params: PlannerCardProps = chapter ? { surahId, plan, chapter } : { surahId, plan };
+    return createPlannerCardViewModel(params);
+  }, [precomputedViewModel, surahId, plan, chapter]);
 
   const handleNavigate = React.useCallback((): void => {
     router.push(`/surah/${surahId}`);
@@ -44,6 +56,7 @@ export const PlannerCard = ({ surahId, plan, chapter }: PlannerCardProps): React
             progress={viewModel.progress}
             surahLabel={viewModel.planInfo.surahLabel}
             surahId={surahId}
+            {...(typeof progressLabel === 'string' ? { currentVerseLabel: progressLabel } : {})}
             onContinue={handleContinueClick}
           />
         </div>

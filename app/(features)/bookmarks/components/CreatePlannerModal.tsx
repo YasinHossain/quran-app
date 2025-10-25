@@ -10,6 +10,7 @@ import {
   PlannerForm,
   usePlannerCalculations,
   useFormState,
+  buildPlannerPlanDefinitions,
   createPlannerPlansForRange,
 } from './create-planner-modal';
 
@@ -23,7 +24,7 @@ export const CreatePlannerModal = ({
   onClose,
 }: CreatePlannerModalProps): React.JSX.Element => {
   const { formData, handleFormDataChange, resetForm } = useFormState();
-  const { chapters, createPlannerPlan } = useBookmarks();
+  const { chapters, planner, createPlannerPlan } = useBookmarks();
 
   const { totalVerses, versesPerDay, isValidRange } = usePlannerCalculations(
     chapters,
@@ -32,8 +33,42 @@ export const CreatePlannerModal = ({
     formData.estimatedDays
   );
 
+  const planDefinitions = React.useMemo(
+    () => buildPlannerPlanDefinitions(formData, chapters),
+    [formData, chapters]
+  );
+
+  const duplicatePlanName = React.useMemo(() => {
+    if (planDefinitions.length === 0) return null;
+
+    const trimmedInputName = formData.planName.trim();
+    if (trimmedInputName.length === 0) return null;
+    const normalizedInput = trimmedInputName.toLowerCase();
+
+    const hasConflict = Object.values(planner).some((plan) => {
+      const rawName = plan.notes?.trim();
+      if (!rawName) return false;
+      let normalizedExisting = rawName.toLowerCase();
+
+      const chapter = chapters.find((c) => c.id === plan.surahId);
+      const chapterName = chapter?.name_simple?.trim();
+      if (chapterName) {
+        const suffix = ` - ${chapterName}`.toLowerCase();
+        if (normalizedExisting.endsWith(suffix)) {
+          normalizedExisting = normalizedExisting
+            .slice(0, normalizedExisting.length - suffix.length)
+            .trim();
+        }
+      }
+
+      return normalizedExisting === normalizedInput;
+    });
+
+    return hasConflict ? trimmedInputName : null;
+  }, [planDefinitions, formData.planName, planner, chapters]);
+
   const hasPlanName = formData.planName.trim().length > 0;
-  const canSubmit = hasPlanName && isValidRange && totalVerses > 0;
+  const canSubmit = hasPlanName && isValidRange && totalVerses > 0 && !duplicatePlanName;
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
@@ -65,6 +100,7 @@ export const CreatePlannerModal = ({
           versesPerDay={versesPerDay}
           isValidRange={isValidRange}
           canSubmit={canSubmit}
+          {...(duplicatePlanName ? { duplicatePlanName } : {})}
           onSubmit={handleSubmit}
           chapters={chapters}
         />

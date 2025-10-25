@@ -12,8 +12,8 @@ export interface PlannerOperations {
     planName?: string,
     estimatedDays?: number
   ): void;
-  updatePlannerProgress(surahId: number, completedVerses: number): void;
-  removeFromPlanner(surahId: number): void;
+  updatePlannerProgress(planId: string, completedVerses: number): void;
+  removeFromPlanner(planId: string): void;
 }
 export default function usePlannerOperations(
   planner: Record<string, PlannerPlan>,
@@ -21,33 +21,29 @@ export default function usePlannerOperations(
 ): PlannerOperations {
   const addToPlanner = useCallback(
     (surahId: number, targetVerses = 10, estimatedDays?: number) => {
-      const key = surahId.toString();
-      if (planner[key]) return;
       const plan = createPlannerPlan(surahId, targetVerses, undefined, estimatedDays);
-      setPlanner((prev) => ({ ...prev, [key]: plan }));
+      setPlanner((prev) => ({ ...prev, [plan.id]: plan }));
     },
-    [planner, setPlanner]
+    [setPlanner]
   );
   const createPlan = useCallback(
     (surahId: number, targetVerses: number, planName?: string, estimatedDays?: number) => {
-      const key = surahId.toString();
       const plan = createPlannerPlan(surahId, targetVerses, planName, estimatedDays);
-      setPlanner((prev) => ({ ...prev, [key]: plan }));
+      setPlanner((prev) => ({ ...prev, [plan.id]: plan }));
     },
     [setPlanner]
   );
   const updateProgress = useCallback(
-    (surahId: number, completed: number) => {
-      setPlanner((prev) => updatePlannerProgress(prev, surahId, completed));
+    (planId: string, completed: number) => {
+      setPlanner((prev) => updatePlannerProgress(prev, planId, completed));
     },
     [setPlanner]
   );
   const removeFromPlanner = useCallback(
-    (surahId: number) => {
-      const key = surahId.toString();
+    (planId: string) => {
       setPlanner((prev) => {
         const next = { ...prev };
-        delete next[key];
+        delete next[planId];
         return next;
       });
     },

@@ -7,6 +7,13 @@ import { CloseIcon } from '@/app/shared/icons';
 import { PanelModalCenter } from '@/app/shared/ui/PanelModalCenter';
 import { Button } from '@/app/shared/ui/Button';
 
+import {
+  buildChapterLookup,
+  buildGroupRangeLabel,
+  getChapterDisplayName,
+  groupPlannerPlans,
+} from '@/app/(features)/bookmarks/planner/utils/planGrouping';
+
 import { PlannerCardsSection } from './components/PlannerCardsSection';
 
 import type { Chapter, PlannerPlan } from '@/types';
@@ -29,6 +36,8 @@ export interface PlannerCardViewModel {
   planName: string;
   verseRangeLabel: string;
   estimatedDays?: number;
+  planIds: string[];
+  reactKey: string;
 }
 
 const extractSurahId = (surahId: number | undefined, verseKey: string): number | undefined => {
@@ -44,12 +53,6 @@ const extractVerseNumber = (verseKey: string): number | undefined => {
   const parsed = Number(ayahPart);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
 };
-
-const buildChapterLookup = (chapters: Chapter[]): Map<number, Chapter> =>
-  chapters.reduce<Map<number, Chapter>>((lookup, chapter) => {
-    lookup.set(chapter.id, chapter);
-    return lookup;
-  }, new Map<number, Chapter>());
 
 const useVerseHeaderLabel = (
   verseSummary: VerseSummaryDetails,
@@ -77,73 +80,32 @@ const useVerseHeaderLabel = (
     subtitle: `${surahName} ${verseSummary.verseKey}`,
   };
 };
-
-const getChapterDisplayName = (plan: PlannerPlan, chapter: Chapter | undefined): string => {
-  if (chapter?.name_simple) return chapter.name_simple;
-  if (chapter?.translated_name?.name) return chapter.translated_name.name;
-  if (chapter?.name_arabic) return chapter.name_arabic;
-  return `Surah ${plan.surahId}`;
-};
-
-const stripChapterSuffix = (planName: string, chapterName: string): string => {
-  const normalizedName = planName.trim();
-  const normalizedChapter = chapterName.trim();
-
-  const suffixes = [
-    ` - ${normalizedChapter}`,
-    ` • ${normalizedChapter}`,
-    ` · ${normalizedChapter}`,
-  ];
-
-  for (const suffix of suffixes) {
-    if (normalizedName.toLowerCase().endsWith(suffix.toLowerCase())) {
-      return normalizedName.slice(0, normalizedName.length - suffix.length).trim();
-    }
-  }
-
-  return normalizedName;
-};
-
-const getVerseRangeLabel = (
-  chapterName: string,
-  chapter: Chapter | undefined,
-  plan: PlannerPlan
-): string => {
-  const versesTotal = plan.targetVerses || chapter?.verses_count;
-  if (!versesTotal) return chapterName;
-
-  return `${chapterName} 1:1 to ${chapterName} 1:${versesTotal}`;
-};
-
-const buildPlannerCardViewModel = (
-  plan: PlannerPlan,
-  chapterLookup: Map<number, Chapter>
-): PlannerCardViewModel => {
-  const chapter = chapterLookup.get(plan.surahId);
-  const chapterName = getChapterDisplayName(plan, chapter);
-  const verseRangeLabel = getVerseRangeLabel(chapterName, chapter, plan);
-  const displayPlanName = stripChapterSuffix(
-    plan.notes ?? `Surah ${plan.surahId} Plan`,
-    chapterName
-  );
-
-  return {
-    id: plan.id,
-    planName: displayPlanName,
-    verseRangeLabel,
-    estimatedDays: plan.estimatedDays,
-  };
-};
-
-function usePlannerCards(
+function usePlannerCards(
   planner: Record<string, PlannerPlan>,
-  chapterLookup: Map<number, Chapter>
+  chapterLookup: Map<number, Chapter>,
+  currentSurahId: number | undefined
 ): PlannerCardViewModel[] {
   return useMemo(() => {
-    const sortedPlans = [...Object.values(planner)].sort((a, b) => b.lastUpdated - a.lastUpdated);
-
-    return sortedPlans.map((plan) => buildPlannerCardViewModel(plan, chapterLookup));
-  }, [planner, chapterLookup]);
+    const groups = groupPlannerPlans(planner, chapterLookup);
+    return groups.map((group) => {
+      const matchingPlan =
+        typeof currentSurahId === 'number'
+          ? group.plans.find((plan) => plan.surahId === currentSurahId)
+          : undefined;
+      const primaryPlan = matchingPlan ?? group.plans[0];
+      const card: PlannerCardViewModel = {
+        id: primaryPlan?.id ?? group.planIds[0] ?? group.key,
+        planName: group.planName,
+        verseRangeLabel: buildGroupRangeLabel(group.surahIds, chapterLookup),
+        planIds: group.planIds,
+        reactKey: group.key,
+      };
+      if (primaryPlan && typeof primaryPlan.estimatedDays === 'number') {
+        card.estimatedDays = primaryPlan.estimatedDays;
+      }
+      return card;
+    });
+  }, [planner, chapterLookup, currentSurahId]);
 }
 
 export function AddToPlannerModal({
@@ -155,8 +117,12 @@ export function AddToPlannerModal({
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
 
   const chapterLookup = useMemo(() => buildChapterLookup(chapters), [chapters]);
+  const verseSurahId = useMemo(
+    () => extractSurahId(verseSummary.surahId, verseSummary.verseKey),
+    [verseSummary.surahId, verseSummary.verseKey]
+  );
   const { title, subtitle } = useVerseHeaderLabel(verseSummary, chapterLookup);
-  const plannerCards = usePlannerCards(planner, chapterLookup);
+  const plannerCards = usePlannerCards(planner, chapterLookup, verseSurahId);
   const plansById = useMemo(() => {
     const map = new Map<string, PlannerPlan>();
     Object.values(planner).forEach((plan) => {
@@ -164,10 +130,6 @@ export function AddToPlannerModal({
     });
     return map;
   }, [planner]);
-  const verseSurahId = useMemo(
-    () => extractSurahId(verseSummary.surahId, verseSummary.verseKey),
-    [verseSummary.surahId, verseSummary.verseKey]
-  );
   const verseNumber = useMemo(
     () => extractVerseNumber(verseSummary.verseKey),
     [verseSummary.verseKey]
@@ -183,7 +145,7 @@ export function AddToPlannerModal({
     typeof verseSurahId === 'number' &&
     selectedPlan?.surahId === verseSurahId;
   const mismatchSelection =
-    Boolean(selectedPlan) && typeof verseSurahId === 'number'
+    selectedPlan && typeof verseSurahId === 'number'
       ? selectedPlan.surahId !== verseSurahId
       : false;
   const helperMessage = useMemo(() => {
@@ -232,7 +194,7 @@ export function AddToPlannerModal({
     const nextCompleted = Math.max(plan.completedVerses, clampedToTarget);
 
     if (nextCompleted !== plan.completedVerses) {
-      updatePlannerProgress(plan.surahId, nextCompleted);
+      updatePlannerProgress(plan.id, nextCompleted);
     }
 
     setSelectedPlanId(null);
@@ -257,7 +219,6 @@ export function AddToPlannerModal({
     <PanelModalCenter
       isOpen={isOpen}
       onClose={onClose}
-      title={undefined}
       className="w-full max-w-xl rounded-xl border border-border/30 bg-background p-3 shadow-modal sm:rounded-2xl sm:p-5"
       showCloseButton={false}
     >

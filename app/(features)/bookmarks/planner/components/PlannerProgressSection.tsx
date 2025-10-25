@@ -8,6 +8,7 @@ interface PlannerProgressSectionProps {
   progress: PlannerCardViewModel['progress'];
   surahLabel: string;
   surahId: string;
+  currentVerseLabel?: string;
   onContinue: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
@@ -15,8 +16,15 @@ export const PlannerProgressSection = ({
   progress,
   surahLabel,
   surahId,
+  currentVerseLabel,
   onContinue,
-}: PlannerProgressSectionProps): React.JSX.Element => (
+}: PlannerProgressSectionProps): React.JSX.Element => {
+  const verseLine =
+    typeof currentVerseLabel === 'string' && currentVerseLabel.length > 0
+      ? currentVerseLabel
+      : `${surahLabel} ${surahId}:${progress.currentVerse}`;
+
+  return (
   <div className="rounded-2xl border border-border/60 bg-background/60 px-4 py-4">
     <div className="flex items-center justify-between text-sm font-semibold text-foreground">
       <span className="inline-flex items-center gap-2 text-muted">
@@ -27,7 +35,7 @@ export const PlannerProgressSection = ({
     </div>
     <div className="mt-2">
       <p className="mb-1 text-base font-semibold leading-tight text-foreground [@container(min-width:22rem)]:text-lg break-words">
-        {surahLabel} {surahId}:{progress.currentVerse}
+        {verseLine}
       </p>
       {progress.currentSecondaryText && (
         <p className="mt-0 text-xs text-muted [@container(min-width:22rem)]:text-sm">{progress.currentSecondaryText}</p>
@@ -54,3 +62,4 @@ export const PlannerProgressSection = ({
     </button>
   </div>
 );
+};

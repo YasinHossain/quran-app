@@ -165,16 +165,16 @@ export const createPlannerPlan = (
 
 export const updatePlannerProgress = (
   planner: Record<string, PlannerPlan>,
-  surahId: number,
+  planId: string,
   completedVerses: number
 ): Record<string, PlannerPlan> => {
-  const key = surahId.toString();
-  if (!planner[key]) return planner;
+  const existing = planner[planId];
+  if (!existing) return planner;
 
   return {
     ...planner,
-    [key]: {
-      ...planner[key],
+    [planId]: {
+      ...existing,
       completedVerses,
       lastUpdated: Date.now(),
     },
