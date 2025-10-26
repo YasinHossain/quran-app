@@ -222,40 +222,42 @@ export function AddToPlannerModal({
       className="w-full max-w-xl rounded-xl border border-border/30 bg-background p-3 shadow-modal sm:rounded-2xl sm:p-5"
       showCloseButton={false}
     >
-      <header className="mb-6">
-        <div className={`${contentContainerClass} flex items-start justify-between gap-4`}>
-          <div className="flex min-w-0 flex-1 flex-col gap-1">
-            <h2 className="text-xl font-semibold text-content-primary">{title}</h2>
-            <p className="text-sm text-content-secondary">{subtitle}</p>
+      <div className="flex h-full min-h-0 flex-col">
+        <header className="mb-4 shrink-0">
+          <div className={`${contentContainerClass} flex items-start justify-between gap-4`}>
+            <div className="flex min-w-0 flex-1 flex-col gap-1">
+              <h2 className="text-xl font-semibold text-content-primary">{title}</h2>
+              <p className="text-sm text-content-secondary">{subtitle}</p>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onClose}
+              aria-label="Close planner modal"
+              className="shrink-0 text-content-secondary hover:text-content-primary"
+            >
+              <CloseIcon size={18} />
+            </Button>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            aria-label="Close planner modal"
-            className="shrink-0 text-content-secondary hover:text-content-primary"
-          >
-            <CloseIcon size={18} />
+        </header>
+
+        <div className={`${contentContainerClass} flex-1 min-h-0 overflow-y-auto`}> 
+          <PlannerCardsSection
+            plannerCards={plannerCards}
+            verseSummary={verseSummary}
+            selectedPlanId={selectedPlanId}
+            onPlanSelect={handlePlanSelect}
+          />
+          {helperMessage ? (
+            <p className="mt-3 text-sm text-content-secondary">{helperMessage}</p>
+          ) : null}
+        </div>
+
+        <div className={`${contentContainerClass} mt-4 flex items-center justify-end shrink-0`}>
+          <Button onClick={handleSave} disabled={!canSave}>
+            Save
           </Button>
         </div>
-      </header>
-      <div className={contentContainerClass}>
-        <PlannerCardsSection
-          plannerCards={plannerCards}
-          verseSummary={verseSummary}
-          selectedPlanId={selectedPlanId}
-          onPlanSelect={handlePlanSelect}
-        />
-      </div>
-      {helperMessage ? (
-        <p className={`${contentContainerClass} mt-3 text-sm text-content-secondary`}>
-          {helperMessage}
-        </p>
-      ) : null}
-      <div className={`${contentContainerClass} mt-6 flex items-center justify-end`}>
-        <Button onClick={handleSave} disabled={!canSave}>
-          Save
-        </Button>
       </div>
     </PanelModalCenter>
   );

@@ -6,7 +6,8 @@ import { cn } from '@/lib/utils/cn';
 
 import { Button } from './Button';
 
-export const PANEL_MODAL_CENTER_CLASS = 'relative w-full max-w-md rounded-lg bg-surface shadow-xl';
+export const PANEL_MODAL_CENTER_CLASS =
+  'relative w-full max-w-md rounded-lg bg-surface shadow-xl max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-4rem)] overflow-hidden';
 
 export interface PanelModalCenterProps {
   isOpen: boolean;
@@ -80,9 +81,9 @@ export const PanelModalCenter = memo(function PanelModalCenter({
   return (
     <>
       <PanelOverlay onClose={onClose} closeOnOverlayClick={closeOnOverlayClick} />
-      <div className="fixed inset-0 z-40 flex items-center justify-center">
+      <div className="fixed inset-0 z-40 flex items-center justify-center p-3 sm:p-4 pt-safe pb-safe">
         <div
-          className={cn('z-50 text-foreground p-6', PANEL_MODAL_CENTER_CLASS, className)}
+          className={cn('z-50 text-foreground p-6 flex flex-col', PANEL_MODAL_CENTER_CLASS, className)}
           onPointerDown={(e) => e.stopPropagation()}
           role="dialog"
           aria-modal="true"
@@ -92,7 +93,7 @@ export const PanelModalCenter = memo(function PanelModalCenter({
             showCloseButton={showCloseButton}
             onClose={onClose}
           />
-          <div className="flex-1">{children}</div>
+          <div className="flex-1 min-h-0 flex flex-col">{children}</div>
         </div>
       </div>
     </>
