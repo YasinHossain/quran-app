@@ -37,10 +37,10 @@ export const BookmarksSidebar = ({
       <BookmarksContent
         activeSection={activeSection}
         {...(onSectionChange && { onSectionChange })}
-        childrenTitle={childrenTitle}
-        childrenContainerClassName={childrenContainerClassName}
-        childrenContentClassName={childrenContentClassName}
-        showNavigation={showNavigation}
+        {...(childrenTitle !== undefined ? { childrenTitle } : {})}
+        {...(childrenContainerClassName !== undefined ? { childrenContainerClassName } : {})}
+        {...(childrenContentClassName !== undefined ? { childrenContentClassName } : {})}
+        {...(showNavigation !== undefined ? { showNavigation } : {})}
       >
         {children}
       </BookmarksContent>
@@ -58,10 +58,10 @@ export const BookmarksSidebar = ({
       <BookmarksContent
         activeSection={activeSection}
         {...(onSectionChange && { onSectionChange })}
-        childrenTitle={childrenTitle}
-        childrenContainerClassName={childrenContainerClassName}
-        childrenContentClassName={childrenContentClassName}
-        showNavigation={showNavigation}
+        {...(childrenTitle !== undefined ? { childrenTitle } : {})}
+        {...(childrenContainerClassName !== undefined ? { childrenContainerClassName } : {})}
+        {...(childrenContentClassName !== undefined ? { childrenContentClassName } : {})}
+        {...(showNavigation !== undefined ? { showNavigation } : {})}
       >
         {children}
       </BookmarksContent>

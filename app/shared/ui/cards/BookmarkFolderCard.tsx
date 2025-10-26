@@ -56,7 +56,9 @@ export const BookmarkFolderCard = ({
       customVariant={{
         padding: 'p-0',
         hover: {
+          effect: 'translate',
           value: 'hover:-translate-y-1 hover:shadow-lg',
+          duration: 'transition-all duration-300',
         },
       }}
       onClick={handleClick}

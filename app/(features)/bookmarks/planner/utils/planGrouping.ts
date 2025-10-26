@@ -25,6 +25,18 @@ export const getChapterDisplayName = (
   return `Surah ${plan.surahId}`;
 };
 
+// More robust suffix stripper: removes any trailing separator + chapter name
+// Supported separators: hyphen variants, pipe, middle dot, bullet, colon, with flexible spacing
+const stripChapterSuffixFlexible = (planName: string, chapterName: string): string => {
+  const name = planName.trim();
+  const chapter = chapterName.trim();
+  const escape = (s: string): string => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const sepClass = '[-\u2013\u2014\u2212|\u00B7:\u2022]';
+  const pattern = new RegExp(`\\s*${sepClass}\\s*${escape(chapter)}\\s*$`, 'i');
+  if (pattern.test(name)) return name.replace(pattern, '').trim();
+  return name;
+};
+
 const stripChapterSuffix = (planName: string, chapterName: string): string => {
   const normalizedName = planName.trim();
   const normalizedChapter = chapterName.trim();
@@ -50,7 +62,10 @@ export const getDisplayPlanName = (
 ): string => {
   const chapter = chapterLookup.get(plan.surahId);
   const chapterName = getChapterDisplayName(plan, chapter);
-  const baseName = stripChapterSuffix(plan.notes ?? `Surah ${plan.surahId} Plan`, chapterName).trim();
+  const baseName = stripChapterSuffixFlexible(
+    plan.notes ?? `Surah ${plan.surahId} Plan`,
+    chapterName
+  ).trim();
   if (baseName.length > 0) {
     return baseName;
   }

@@ -50,10 +50,10 @@ export const BookmarksMobileSidebarOverlay = ({
           <BookmarksSidebar
             activeSection={activeSection}
             onSectionChange={onSectionChange}
-            childrenTitle={childrenTitle}
-            childrenContainerClassName={childrenContainerClassName}
-            childrenContentClassName={childrenContentClassName}
-            showNavigation={showNavigation}
+            {...(childrenTitle !== undefined ? { childrenTitle } : {})}
+            {...(childrenContainerClassName !== undefined ? { childrenContainerClassName } : {})}
+            {...(childrenContentClassName !== undefined ? { childrenContentClassName } : {})}
+            {...(showNavigation !== undefined ? { showNavigation } : {})}
           >
             {children}
           </BookmarksSidebar>

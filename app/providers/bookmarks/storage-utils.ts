@@ -127,14 +127,12 @@ const normalizeLastReadEntry = (
     const entry: LastReadEntry = {
       verseNumber,
       updatedAt,
-      verseKey:
-        typeof maybeEntry.verseKey === 'string' && maybeEntry.verseKey.length > 0
-          ? maybeEntry.verseKey
-          : undefined,
-      globalVerseId:
-        typeof maybeEntry.globalVerseId === 'number' && Number.isFinite(maybeEntry.globalVerseId)
-          ? maybeEntry.globalVerseId
-          : undefined,
+      ...(typeof maybeEntry.verseKey === 'string' && maybeEntry.verseKey.length > 0
+        ? { verseKey: maybeEntry.verseKey }
+        : {}),
+      ...(typeof maybeEntry.globalVerseId === 'number' && Number.isFinite(maybeEntry.globalVerseId)
+        ? { globalVerseId: maybeEntry.globalVerseId }
+        : {}),
       verseId: verseNumber,
     };
 

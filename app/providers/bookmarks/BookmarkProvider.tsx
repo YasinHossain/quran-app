@@ -117,7 +117,7 @@ function useBookmarkHelpers(
         [surahId]: {
           verseNumber,
           verseId: verseNumber,
-          verseKey,
+          ...(typeof verseKey === 'string' ? { verseKey } : {}),
           ...(typeof globalVerseId === 'number' ? { globalVerseId } : {}),
           updatedAt: Date.now(),
         },

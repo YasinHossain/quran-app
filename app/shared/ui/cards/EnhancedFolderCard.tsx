@@ -71,7 +71,11 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
       customVariant={{
         height: 'min-h-[136px]',
         padding: 'pl-5 pr-4 pb-3 pt-3',
-        hover: { value: 'hover:-translate-y-1 hover:shadow-lg' },
+        hover: {
+          effect: 'translate',
+          value: 'hover:-translate-y-1 hover:shadow-lg',
+          duration: 'transition-all duration-300',
+        },
       }}
       {...(onClick
         ? { onClick: onClick as React.MouseEventHandler<HTMLDivElement | HTMLAnchorElement> }

@@ -39,6 +39,8 @@ export interface PlannerGroupCardData {
   chapter?: PlannerCardChapter;
   viewModel: PlannerCardViewModel;
   progressLabel: string;
+  planIds: string[];
+  planName: string;
 }
 
 const sumBy = (plans: PlannerPlan[], selector: (plan: PlannerPlan) => number): number =>
@@ -274,6 +276,8 @@ export const buildPlannerGroupCardData = (
       ...(placeholderChapter ? { chapter: placeholderChapter } : {}),
       viewModel,
       progressLabel: 'No progress tracked',
+      planIds: group.planIds,
+      planName: group.planName,
     };
   }
   const activePlan = getActivePlan(plans);
@@ -378,5 +382,7 @@ export const buildPlannerGroupCardData = (
     ...(aggregatedChapter ? { chapter: aggregatedChapter } : {}),
     viewModel,
     progressLabel: buildProgressLabel(plans, progressMetrics.isComplete, chapterLookup),
+    planIds: group.planIds,
+    planName: group.planName,
   };
 };

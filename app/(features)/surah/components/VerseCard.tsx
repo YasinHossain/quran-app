@@ -23,9 +23,9 @@ export const Verse = memo(function Verse({ verse }: VerseProps): JSX.Element {
     const parsedSurah = Number(surahPart);
     return {
       verseKey: verse_key,
-      surahId: Number.isFinite(parsedSurah) ? parsedSurah : undefined,
+      ...(Number.isFinite(parsedSurah) ? { surahId: parsedSurah } : {}),
       arabicText: text_uthmani,
-      translationHtml: translations?.[0]?.text,
+      ...(translations?.[0]?.text ? { translationHtml: translations?.[0]?.text } : {}),
     };
   }, [text_uthmani, translations, verse_key]);
 

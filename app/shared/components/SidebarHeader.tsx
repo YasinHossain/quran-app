@@ -100,7 +100,11 @@ export const SidebarHeader = ({
   let backButton: React.JSX.Element | null = null;
   if (showBackButton && onBack) {
     backButton = (
-      <BackButton onBack={onBack} className={backButtonClassName} ariaLabel={backButtonAriaLabel} />
+      <BackButton
+        onBack={onBack}
+        {...(backButtonClassName !== undefined ? { className: backButtonClassName } : {})}
+        {...(backButtonAriaLabel !== undefined ? { ariaLabel: backButtonAriaLabel } : {})}
+      />
     );
   }
 
@@ -110,7 +114,7 @@ export const SidebarHeader = ({
       <CloseButton
         onClose={onClose}
         alwaysShow={alwaysShowClose}
-        className={closeButtonClassName}
+        {...(closeButtonClassName !== undefined ? { className: closeButtonClassName } : {})}
       />
     );
   }

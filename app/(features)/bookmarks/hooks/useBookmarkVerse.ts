@@ -103,20 +103,21 @@ function buildFallbackVerse(bookmark: Bookmark, verseKey: string | null): Verse 
     0;
 
   const translationText = bookmark.translation?.trim();
-  const translations = translationText
-    ? [
-        {
-          resource_id: bookmark.verseApiId ?? 0,
-          text: translationText,
-        },
-      ]
-    : undefined;
 
   return {
     id: preferredId > 0 ? preferredId : 0,
     verse_key: verseKey,
     text_uthmani: text,
-    translations,
+    ...(translationText
+      ? {
+          translations: [
+            {
+              resource_id: bookmark.verseApiId ?? 0,
+              text: translationText,
+            },
+          ],
+        }
+      : {}),
   };
 }
 

@@ -34,9 +34,13 @@ export const BookmarksContent = ({
       <NavigationSection activeSection={activeSection} onSectionChange={onSectionChange} />
     ) : null}
     <ChildrenSection
-      title={childrenTitle}
-      containerClassName={childrenContainerClassName}
-      contentClassName={childrenContentClassName}
+      {...(childrenTitle !== undefined ? { title: childrenTitle } : {})}
+      {...(childrenContainerClassName !== undefined
+        ? { containerClassName: childrenContainerClassName }
+        : {})}
+      {...(childrenContentClassName !== undefined
+        ? { contentClassName: childrenContentClassName }
+        : {})}
     >
       {children}
     </ChildrenSection>
