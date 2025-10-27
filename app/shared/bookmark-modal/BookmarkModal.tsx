@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { memo } from 'react';
 
+import { Portal } from '@/app/shared/components/Portal';
 import { TabContent } from './components/TabContent';
 import { TabNavigation } from './components/TabNavigation';
 import { BookmarkModalProps } from './types';
@@ -71,31 +72,33 @@ export const BookmarkModal = memo(function BookmarkModal({
   } = useBookmarkModal(isOpen, onClose);
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          <Backdrop onClose={onClose} />
-          <ModalShell>
-            <TabNavigation
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-              verseKey={verseKey}
-              onClose={onClose}
-            />
-            <TabContent
-              activeTab={activeTab}
-              verseId={verseId}
-              verseKey={verseKey}
-              isCreatingFolder={isCreatingFolder}
-              newFolderName={newFolderName}
-              onToggleCreateFolder={(creating) =>
-                creating ? openCreateFolder() : closeCreateFolder()
-              }
-              onNewFolderNameChange={setNewFolderName}
-            />
-          </ModalShell>
-        </>
-      )}
-    </AnimatePresence>
+    <Portal>
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            <Backdrop onClose={onClose} />
+            <ModalShell>
+              <TabNavigation
+                activeTab={activeTab}
+                onTabChange={setActiveTab}
+                verseKey={verseKey}
+                onClose={onClose}
+              />
+              <TabContent
+                activeTab={activeTab}
+                verseId={verseId}
+                verseKey={verseKey}
+                isCreatingFolder={isCreatingFolder}
+                newFolderName={newFolderName}
+                onToggleCreateFolder={(creating) =>
+                  creating ? openCreateFolder() : closeCreateFolder()
+                }
+                onNewFolderNameChange={setNewFolderName}
+              />
+            </ModalShell>
+          </>
+        )}
+      </AnimatePresence>
+    </Portal>
   );
 });

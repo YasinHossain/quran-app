@@ -3,6 +3,7 @@
 import { AnimatePresence } from 'framer-motion';
 import { memo } from 'react';
 
+import { Portal } from '@/app/shared/components/Portal';
 import { BottomSheetBackdrop } from './BottomSheetBackdrop';
 import { BottomSheetContent } from './BottomSheetContent';
 import { useVerseActions } from './hooks/useVerseActions';
@@ -51,13 +52,15 @@ export const MobileBottomSheet = memo(function MobileBottomSheet({
   });
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          <BottomSheetBackdrop onClick={onClose} />
-          <BottomSheetContent verseKey={verseKey} actions={actions} onClose={onClose} />
-        </>
-      )}
-    </AnimatePresence>
+    <Portal>
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            <BottomSheetBackdrop onClick={onClose} />
+            <BottomSheetContent verseKey={verseKey} actions={actions} onClose={onClose} />
+          </>
+        )}
+      </AnimatePresence>
+    </Portal>
   );
 });

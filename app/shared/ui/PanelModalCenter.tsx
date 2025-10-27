@@ -1,6 +1,7 @@
 'use client';
 import React, { memo } from 'react';
 
+import { Portal } from '@/app/shared/components/Portal';
 import { CloseIcon } from '@/app/shared/icons';
 import { cn } from '@/lib/utils/cn';
 
@@ -78,24 +79,31 @@ export const PanelModalCenter = memo(function PanelModalCenter({
   closeOnOverlayClick = true,
 }: PanelModalCenterProps): React.JSX.Element | null {
   if (!isOpen) return null;
+
   return (
-    <>
-      <PanelOverlay onClose={onClose} closeOnOverlayClick={closeOnOverlayClick} />
-      <div className="fixed inset-0 z-40 flex items-center justify-center p-3 sm:p-4 pt-safe pb-safe">
-        <div
-          className={cn('z-50 text-foreground p-6 flex flex-col', PANEL_MODAL_CENTER_CLASS, className)}
-          onPointerDown={(e) => e.stopPropagation()}
-          role="dialog"
-          aria-modal="true"
-        >
-          <PanelHeader
-            {...(title !== undefined ? { title } : {})}
-            showCloseButton={showCloseButton}
-            onClose={onClose}
-          />
-          <div className="flex-1 min-h-0 flex flex-col">{children}</div>
+    <Portal>
+      <>
+        <PanelOverlay onClose={onClose} closeOnOverlayClick={closeOnOverlayClick} />
+        <div className="fixed inset-0 z-40 flex items-center justify-center p-3 sm:p-4 pt-safe pb-safe">
+          <div
+            className={cn(
+              'z-50 text-foreground p-6 flex flex-col',
+              PANEL_MODAL_CENTER_CLASS,
+              className
+            )}
+            onPointerDown={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+          >
+            <PanelHeader
+              {...(title !== undefined ? { title } : {})}
+              showCloseButton={showCloseButton}
+              onClose={onClose}
+            />
+            <div className="flex-1 min-h-0 flex flex-col">{children}</div>
+          </div>
         </div>
-      </div>
-    </>
+      </>
+    </Portal>
   );
 });

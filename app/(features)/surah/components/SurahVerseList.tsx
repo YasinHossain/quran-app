@@ -21,7 +21,6 @@ interface SurahVerseListProps {
   endLabelKey?: string;
 }
 
-const VIRTUALIZATION_THRESHOLD = 40;
 const ESTIMATED_VERSE_HEIGHT = 320;
 
 function findScrollParent(start: HTMLElement | null): HTMLElement | null {
@@ -50,7 +49,7 @@ export const SurahVerseList = ({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const scrollParentRef = useRef<HTMLElement | null>(null);
   const shouldVirtualize = useMemo(
-    () => verses.length >= VIRTUALIZATION_THRESHOLD && !isLoading && !error,
+    () => verses.length > 0 && !isLoading && !error,
     [verses.length, isLoading, error]
   );
 

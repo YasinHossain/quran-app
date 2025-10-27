@@ -35,12 +35,12 @@ interface StatsCardProps {
 }
 
 const StatsCard = ({ title, icon: Icon, stats }: StatsCardProps): React.JSX.Element => (
-  <div className="min-w-0 rounded-xl border border-border/50 bg-surface/80 p-3">
-    <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted">
-      <Icon className="h-3.5 w-3.5 shrink-0 text-accent" />
+  <div className="flex min-w-0 flex-col rounded-2xl border border-border/60 bg-background/60 px-4 py-4 shadow-sm">
+    <div className="inline-flex items-center gap-2 text-sm font-semibold text-muted">
+      <Icon className="h-4 w-4 shrink-0 text-accent" />
       {title}
     </div>
-    <div className="mt-1 space-y-1">
+    <div className="mt-3 space-y-1">
       <SecondaryStat value={stats.verses} unit="verses" />
       <SecondaryStat value={stats.pages} unit="pages" />
       <SecondaryStat value={stats.juz} unit="juz" />
