@@ -189,12 +189,37 @@ export function AddToPlannerModal({
       return;
     }
 
-    const clampedToTarget =
-      plan.targetVerses > 0 ? Math.min(verseNumber, plan.targetVerses) : verseNumber;
-    const nextCompleted = Math.max(plan.completedVerses, clampedToTarget);
+    // Determine the full group that contains this selected plan
+    const groups = groupPlannerPlans(planner, chapterLookup);
+    const group = groups.find((g) => g.planIds.includes(plan.id));
 
-    if (nextCompleted !== plan.completedVerses) {
-      updatePlannerProgress(plan.id, nextCompleted);
+    // If we couldn't find the group, only update the selected plan.
+    if (!group) {
+      const clampedToTarget =
+        plan.targetVerses > 0 ? Math.min(verseNumber, plan.targetVerses) : verseNumber;
+      const nextCompleted = Math.max(plan.completedVerses, clampedToTarget);
+      if (nextCompleted !== plan.completedVerses) {
+        updatePlannerProgress(plan.id, nextCompleted);
+      }
+    } else {
+      // Cascade: mark all earlier surahs in the group as fully completed,
+      // and set the selected surah to the chosen verse number.
+      const selectedSurahId = verseSurahId;
+      for (const p of group.plans) {
+        if (p.surahId < selectedSurahId) {
+          const newCompleted = Math.max(0, Math.min(p.targetVerses, p.targetVerses));
+          if (newCompleted !== p.completedVerses) {
+            updatePlannerProgress(p.id, newCompleted);
+          }
+        } else if (p.surahId === selectedSurahId) {
+          const clampedToTarget =
+            p.targetVerses > 0 ? Math.min(verseNumber, p.targetVerses) : verseNumber;
+          const nextCompleted = Math.max(p.completedVerses, clampedToTarget);
+          if (nextCompleted !== p.completedVerses) {
+            updatePlannerProgress(p.id, nextCompleted);
+          }
+        }
+      }
     }
 
     setSelectedPlanId(null);
@@ -205,6 +230,8 @@ export function AddToPlannerModal({
     hasValidReference,
     verseSurahId,
     verseNumber,
+    planner,
+    chapterLookup,
     updatePlannerProgress,
     onClose,
   ]);

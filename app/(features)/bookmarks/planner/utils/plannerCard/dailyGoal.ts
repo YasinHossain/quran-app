@@ -24,7 +24,11 @@ const computeEndVerse = (
   versesPerDay: number
 ): number | null => {
   if (versesPerDay <= 0) return null;
-  return Math.min(plan.targetVerses, startVerse + versesPerDay - 1);
+  // Fixed session boundary: end at the end of the current session bucket.
+  // sessionIndex is 1-based and determined from the start verse.
+  const sessionIndex = Math.ceil(startVerse / versesPerDay);
+  const sessionEnd = sessionIndex * versesPerDay;
+  return Math.min(plan.targetVerses, sessionEnd);
 };
 
 const getPageRange = (

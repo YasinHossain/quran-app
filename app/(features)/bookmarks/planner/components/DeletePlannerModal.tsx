@@ -47,7 +47,7 @@ export function DeletePlannerModal({
   const countLabel = useMemo(() => {
     const count = effectivePlanIds.length;
     if (count <= 1) return null;
-    return `${count} planners will be removed`;
+    return `This plan includes ${count} surahs. All will be removed.`;
   }, [effectivePlanIds]);
 
   const handleDelete = useCallback(async (): Promise<void> => {

@@ -1,6 +1,7 @@
 import {
   buildDailyGoalWindow,
   getDailyHighlights,
+  formatGoalVerseLabel,
 } from '@/app/(features)/bookmarks/planner/utils/plannerCard/dailyGoal';
 import { NO_DAILY_GOAL_MESSAGE } from '@/app/(features)/bookmarks/planner/utils/plannerCard/constants';
 import { getJuzMetrics } from '@/app/(features)/bookmarks/planner/utils/plannerCard/juz';
@@ -203,6 +204,7 @@ const buildProgressLabel = (
     return 'No progress tracked';
   }
 
+  // If the entire group is complete, show the end of the last surah
   if (isComplete) {
     const lastPlan = plans[plans.length - 1]!;
     const chapter = chapterLookup.get(lastPlan.surahId);
@@ -211,14 +213,25 @@ const buildProgressLabel = (
     return `${chapterName} ${lastPlan.surahId}:${verseNumber}`;
   }
 
-  const activePlan = getActivePlan(plans);
-  const chapter = chapterLookup.get(activePlan.surahId);
-  const chapterName = getChapterDisplayName(activePlan, chapter);
-  const nextVerse =
-    activePlan.targetVerses > 0
-      ? Math.min(activePlan.completedVerses + 1, activePlan.targetVerses)
-      : 1;
-  return `${chapterName} ${activePlan.surahId}:${nextVerse}`;
+  // Use the most recently updated plan to reflect where the user last progressed
+  const recentPlan = plans.reduce((acc, p) => (p.lastUpdated > acc.lastUpdated ? p : acc), plans[0]!);
+  const recentCompleted = recentPlan.targetVerses > 0
+    ? Math.max(1, Math.min(recentPlan.completedVerses, recentPlan.targetVerses))
+    : 1;
+
+  // If the recent plan is already complete, fall back to the first incomplete plan (sequential start)
+  const planForLabel = recentPlan.completedVerses >= recentPlan.targetVerses
+    ? getActivePlan(plans)
+    : recentPlan;
+
+  const chapter = chapterLookup.get(planForLabel.surahId);
+  const chapterName = getChapterDisplayName(planForLabel, chapter);
+  const currentVerse = planForLabel === recentPlan ? recentCompleted : (
+    planForLabel.targetVerses > 0
+      ? Math.max(1, Math.min(planForLabel.completedVerses, planForLabel.targetVerses))
+      : 1
+  );
+  return `${chapterName} ${planForLabel.surahId}:${currentVerse}`;
 };
 
 export const buildPlannerGroupCardData = (
@@ -282,6 +295,10 @@ export const buildPlannerGroupCardData = (
   }
   const activePlan = getActivePlan(plans);
   const activeChapter = chapterLookup.get(activePlan.surahId);
+  const recentPlan = plans.reduce(
+    (acc, p) => (p.lastUpdated > acc.lastUpdated ? p : acc),
+    plans[0]!
+  );
 
   const estimatedDaysRaw =
     plans.find((plan) => typeof plan.estimatedDays === 'number' && plan.estimatedDays > 0)
@@ -304,18 +321,19 @@ export const buildPlannerGroupCardData = (
     juzMetrics,
     remainingVerses: progressMetrics.remainingVerses,
   });
-  const globalCurrentVerse = Math.min(
-    aggregatedPlan.completedVerses + 1,
-    aggregatedPlan.targetVerses
+  // Global position is the last completed verse across the aggregated plan
+  const globalCurrentVerse = Math.max(
+    1,
+    Math.min(aggregatedPlan.completedVerses, aggregatedPlan.targetVerses)
   );
+
+  // Secondary details should reflect the aggregated current position across the full group
   const currentSecondaryText = buildProgressDetails({
-    progress: {
-      ...progressMetrics,
-      currentVerse: globalCurrentVerse,
-    },
+    progress: { ...progressMetrics, currentVerse: globalCurrentVerse },
     pageMetrics,
   });
 
+  // Compute daily goal across the aggregated plan (group-centric)
   const versesPerDay = getVersesPerDay(aggregatedPlan, normalizedEstimatedDays);
   const goalWindow = buildDailyGoalWindow({
     plan: aggregatedPlan,
@@ -328,7 +346,7 @@ export const buildPlannerGroupCardData = (
     estimatedDays: normalizedEstimatedDays,
     versesPerDay,
     isComplete: progressMetrics.isComplete,
-    remainingVerses: progressMetrics.remainingVerses,
+    remainingVerses: Math.max(aggregatedPlan.targetVerses - aggregatedPlan.completedVerses, 0),
   });
   const dailyFocus = {
     hasDailyGoal: goalWindow.hasDailyGoal,
@@ -348,11 +366,6 @@ export const buildPlannerGroupCardData = (
     noGoalMessage: NO_DAILY_GOAL_MESSAGE,
   };
 
-  const currentVerseWithinActivePlan =
-    activePlan.targetVerses > 0
-      ? Math.min(activePlan.completedVerses + 1, activePlan.targetVerses)
-      : 1;
-
   const planDetailsText = formatPlanDetails(
     group,
     aggregatedPlan.targetVerses,
@@ -364,20 +377,20 @@ export const buildPlannerGroupCardData = (
     planInfo: {
       displayPlanName: group.planName,
       planDetailsText,
-      surahLabel: getChapterDisplayName(activePlan, activeChapter),
+      surahLabel: aggregatedChapter?.name_simple ?? getChapterDisplayName(activePlan, chapterLookup.get(activePlan.surahId)),
     },
     focus: dailyFocus,
     stats,
     progress: {
       percent: progressMetrics.percent,
-      currentVerse: currentVerseWithinActivePlan,
+      currentVerse: globalCurrentVerse,
       currentSecondaryText,
     },
   };
 
   return {
     key: group.key,
-    surahId: String(activePlan.surahId),
+    surahId: String(recentPlan.surahId),
     plan: aggregatedPlan,
     ...(aggregatedChapter ? { chapter: aggregatedChapter } : {}),
     viewModel,
