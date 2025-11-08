@@ -65,7 +65,7 @@ describe('BookmarksHeader', () => {
     await renderBookmarksHeader();
 
     expect(screen.getByText('Bookmarks')).toBeInTheDocument();
-    expect(screen.getByText('Create Folder')).toBeInTheDocument();
+    expect(screen.getByLabelText('Create Folder')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Search Bookmarks')).toBeInTheDocument();
   });
 
