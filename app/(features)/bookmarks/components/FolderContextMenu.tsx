@@ -1,9 +1,10 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useId } from 'react';
 
-import { EllipsisHIcon, CloseIcon } from '@/app/shared/icons';
+import { EllipsisHIcon, SlidersIcon } from '@/app/shared/icons';
+import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 
 import { DeleteItem } from './DeleteItem';
@@ -71,6 +72,7 @@ interface FolderContextMenuProps {
 interface FolderMenuPanelProps extends FolderContextMenuProps {
   menuRef: React.MutableRefObject<HTMLDivElement | null>;
   onClose: () => void;
+  menuId: string;
 }
 
 const FolderMenuPanel = ({
@@ -78,31 +80,38 @@ const FolderMenuPanel = ({
   onDelete,
   onColorChange,
   onClose,
+  menuId,
 }: FolderMenuPanelProps): React.JSX.Element => (
   <motion.div
+    id={menuId}
     ref={menuRef}
+    role="menu"
+    aria-label="Folder options"
     initial={{ opacity: 0, scale: 0.95, y: -5 }}
     animate={{ opacity: 1, scale: 1, y: 0 }}
     exit={{ opacity: 0, scale: 0.95, y: -5 }}
     transition={{ duration: 0.15 }}
-    className="absolute right-0 top-full mt-2 w-40 bg-surface border border-border rounded-lg shadow-modal z-50 py-2"
+    className="absolute right-0 top-full mt-2 min-w-[11rem] rounded-xl border border-border/40 bg-surface/90 backdrop-blur-md shadow-lg z-[200] py-2"
     onClick={(event): void => {
       event.stopPropagation();
     }}
   >
     {onColorChange ? (
       <button
+        type="button"
+        role="menuitem"
         onClick={(event): void => {
           event.stopPropagation();
           onColorChange();
           onClose();
         }}
-        className="w-full px-4 py-2 text-left text-sm text-foreground hover:bg-surface-hover transition-colors"
+        className="flex w-full items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-surface-hover transition-colors"
       >
-        Edit Folder
+        <SlidersIcon size={18} className="text-muted" aria-hidden="true" />
+        <span>Edit Folder</span>
       </button>
     ) : null}
-    {onColorChange ? <div className="my-1 h-px bg-border/50" /> : null}
+    {onColorChange ? <div className="my-1 h-px bg-border/40" /> : null}
     <DeleteItem onDelete={onDelete} closeMenu={onClose} />
   </motion.div>
 );
@@ -112,23 +121,32 @@ export const FolderContextMenu = ({
   onColorChange,
 }: FolderContextMenuProps): React.JSX.Element => {
   const { isOpen, menuRef, buttonRef, handleToggleMenu, handleCloseMenu } = useContextMenu();
+  const menuId = useId();
 
   return (
-    <div className={cn('relative', isOpen && 'z-[80]')}>
+    <div className={cn('relative', isOpen && 'z-[200]')}>
       <button
         ref={buttonRef}
-        className="rounded-full p-1.5 text-muted hover:bg-surface-hover hover:text-accent transition-all duration-200 touch-manipulation"
+        type="button"
+        className={cn(
+          'p-1.5 rounded-full text-muted hover:text-accent hover:bg-interactive transition-colors duration-200',
+          touchClasses.target,
+          touchClasses.gesture,
+          touchClasses.focus
+        )}
         onClick={handleToggleMenu}
         aria-label="Folder options"
         aria-expanded={isOpen}
         aria-haspopup="true"
+        aria-controls={isOpen ? menuId : undefined}
       >
-        {isOpen ? <CloseIcon size={16} /> : <EllipsisHIcon size={16} />}
+        <EllipsisHIcon size={16} />
       </button>
 
       <AnimatePresence>
         {isOpen && (
           <FolderMenuPanel
+            menuId={menuId}
             menuRef={menuRef}
             onDelete={onDelete}
             onClose={handleCloseMenu}
