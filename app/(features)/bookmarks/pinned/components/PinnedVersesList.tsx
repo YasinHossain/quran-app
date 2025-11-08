@@ -3,7 +3,10 @@
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
+import { useVirtualizer } from '@tanstack/react-virtual';
+
 import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
+import { useVerseListHeight } from '@/app/(features)/bookmarks/hooks/useVerseListHeight';
 import { useVerseCard } from '@/app/(features)/surah/components/verse-card/useVerseCard';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { ReaderVerseCard } from '@/app/shared/reader';
@@ -25,6 +28,21 @@ export const PinnedVersesList = ({
   React.useEffect(() => {
     setIsVisible(true);
   }, []);
+
+  const listHeight = useVerseListHeight();
+  const scrollParentRef = React.useRef<HTMLDivElement | null>(null);
+
+  const rowVirtualizer = useVirtualizer({
+    count: bookmarks.length,
+    getScrollElement: () => scrollParentRef.current,
+    estimateSize: () => 360,
+    overscan: 6,
+    getItemKey: (index) => {
+      const bookmark = bookmarks[index];
+      if (!bookmark) return index;
+      return `pinned-${bookmark.verseId}-${bookmark.verseKey ?? index}`;
+    },
+  });
 
   if (isLoading) {
     return (
@@ -61,10 +79,35 @@ export const PinnedVersesList = ({
         isVisible ? 'opacity-100' : 'opacity-0'
       }`}
     >
-      <div className="space-y-0">
-        {bookmarks.map((bookmark) => (
-          <PinnedVerseListItem key={bookmark.verseId} bookmark={bookmark} />
-        ))}
+      <div
+        ref={scrollParentRef}
+        className="relative overflow-y-auto scroll-smooth"
+        style={{ height: listHeight }}
+      >
+        <div
+          style={{
+            height: `${rowVirtualizer.getTotalSize()}px`,
+            width: '100%',
+            position: 'relative',
+          }}
+        >
+          {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+            const bookmark = bookmarks[virtualItem.index];
+            if (!bookmark) return null;
+
+            return (
+              <div
+                key={virtualItem.key}
+                ref={rowVirtualizer.measureElement}
+                data-index={virtualItem.index}
+                className="absolute left-0 top-0 w-full"
+                style={{ transform: `translateY(${virtualItem.start}px)` }}
+              >
+                <PinnedVerseListItem bookmark={bookmark} />
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
