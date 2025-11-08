@@ -54,23 +54,27 @@ export const PlannerCard = ({
   return (
     <div className="cq relative flex min-w-0 h-full transform flex-col rounded-3xl border border-border/60 bg-surface p-6 shadow-lg transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 sm:p-7 lg:min-w-[20rem] xl:min-w-[24rem] 2xl:min-w-[28rem]">
       <div className="relative z-10 flex h-full flex-col gap-6">
-        {onDelete ? (
-          <button
-            type="button"
-            aria-label="Delete planner"
-            className="absolute right-4 top-4 rounded-lg p-2 text-muted hover:bg-surface-hover hover:text-error transition-colors duration-200"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete?.();
-            }}
-          >
-            <CloseIcon size={18} />
-          </button>
-        ) : null}
-        <PlannerCardHeader
-          displayPlanName={viewModel.planInfo.displayPlanName}
-          planDetailsText={viewModel.planInfo.planDetailsText}
-        />
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0 flex-1">
+            <PlannerCardHeader
+              displayPlanName={viewModel.planInfo.displayPlanName}
+              planDetailsText={viewModel.planInfo.planDetailsText}
+            />
+          </div>
+          {onDelete ? (
+            <button
+              type="button"
+              aria-label="Delete planner"
+              className="shrink-0 rounded-lg p-2 text-muted hover:bg-surface-hover hover:text-error transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-accent/40 focus:outline-none"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete?.();
+              }}
+            >
+              <CloseIcon size={18} />
+            </button>
+          ) : null}
+        </div>
 
         <DailyFocusSection focus={viewModel.focus} />
 
