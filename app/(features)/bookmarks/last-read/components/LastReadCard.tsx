@@ -29,7 +29,8 @@ export const LastReadCard = ({
   }, []);
 
   const handleNavigate = (): void => {
-    router.push(`/surah/${surahId}#verse-${verseId}`);
+    const params = new URLSearchParams({ startVerse: String(verseId) });
+    router.push(`/surah/${surahId}?${params.toString()}`);
   };
 
   return (
