@@ -13,7 +13,6 @@ export const useFolderSettingsSubmit = ({
   setIsSubmitting,
   name,
   selectedColor,
-  selectedIcon,
 }: UseFolderSettingsSubmitParams): ((e: React.FormEvent) => Promise<void>) =>
   useCallback(
     async (e: React.FormEvent): Promise<void> => {
@@ -23,9 +22,9 @@ export const useFolderSettingsSubmit = ({
       setIsSubmitting(true);
       try {
         if (mode === 'create') {
-          createFolder(name.trim(), selectedColor, selectedIcon);
+          createFolder(name.trim(), selectedColor);
         } else if (folder) {
-          renameFolder(folder.id, name.trim(), selectedColor, selectedIcon);
+          renameFolder(folder.id, name.trim(), selectedColor);
         }
         onClose();
       } catch (error) {
@@ -43,7 +42,6 @@ export const useFolderSettingsSubmit = ({
       createFolder,
       onClose,
       selectedColor,
-      selectedIcon,
       setIsSubmitting,
     ]
   );

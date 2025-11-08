@@ -65,8 +65,6 @@ export const FolderSettingsModal = ({
     setName,
     selectedColor,
     setSelectedColor,
-    selectedIcon,
-    setSelectedIcon,
     isSubmitting,
     handleSubmit,
     getModalTitle,
@@ -91,8 +89,6 @@ export const FolderSettingsModal = ({
               setName={setName}
               selectedColor={selectedColor}
               setSelectedColor={setSelectedColor}
-              selectedIcon={selectedIcon}
-              setSelectedIcon={setSelectedIcon}
               isSubmitting={isSubmitting}
               handleSubmit={handleSubmit}
               onClose={onClose}

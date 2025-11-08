@@ -11,7 +11,6 @@ import { FolderGlyph } from './FolderGlyph';
 
 interface FolderData {
   name: string;
-  icon?: string;
   color?: string;
   bookmarks: Array<{ verseId: string | number; verseKey?: string }> | { length: number };
 }

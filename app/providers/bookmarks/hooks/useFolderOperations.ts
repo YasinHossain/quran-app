@@ -6,17 +6,17 @@ import { createNewFolder } from '@/app/providers/bookmarks/bookmark-utils';
 import { Folder } from '@/types';
 
 export interface FolderOperations {
-  createFolder: (name: string, color?: string, icon?: string) => void;
+  createFolder: (name: string, color?: string) => void;
   deleteFolder: (folderId: string) => void;
-  renameFolder: (folderId: string, newName: string, color?: string, icon?: string) => void;
+  renameFolder: (folderId: string, newName: string, color?: string) => void;
 }
 
 export const useFolderOperations = (
   setFolders: React.Dispatch<React.SetStateAction<Folder[]>>
 ): FolderOperations => {
   const createFolder = useCallback(
-    (name: string, color?: string, icon?: string) => {
-      const newFolder = createNewFolder(name, color, icon);
+    (name: string, color?: string) => {
+      const newFolder = createNewFolder(name, color);
       setFolders((prev) => [...prev, newFolder]);
     },
     [setFolders]
@@ -30,11 +30,11 @@ export const useFolderOperations = (
   );
 
   const renameFolder = useCallback(
-    (folderId: string, newName: string, color?: string, icon?: string) => {
+    (folderId: string, newName: string, color?: string) => {
       setFolders((prev) =>
         prev.map((folder) =>
           folder.id === folderId
-            ? { ...folder, name: newName, ...(color && { color }), ...(icon && { icon }) }
+            ? { ...folder, name: newName, ...(color && { color }) }
             : folder
         )
       );

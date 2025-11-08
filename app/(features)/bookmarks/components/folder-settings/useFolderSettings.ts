@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useEscapeKey } from '@/app/providers/hooks/useEscapeKey';
 
-import { DEFAULT_COLOR, DEFAULT_ICON } from './constants';
+import { DEFAULT_COLOR } from './constants';
 import { type UseFolderSettingsParams, type UseFolderSettingsResult } from './types';
 import { useFolderSettingsSubmit } from './useFolderSettingsSubmit';
 import { useInitializeFolderState } from './useInitializeFolderState';
@@ -17,12 +17,11 @@ export const useFolderSettings = ({
   const { renameFolder, createFolder } = useBookmarks();
   const [name, setName] = useState('');
   const [selectedColor, setSelectedColor] = useState(DEFAULT_COLOR);
-  const [selectedIcon, setSelectedIcon] = useState(DEFAULT_ICON);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEscapeKey(isOpen, onClose);
 
-  useInitializeFolderState({ folder, isOpen, mode, setName, setSelectedColor, setSelectedIcon });
+  useInitializeFolderState({ folder, isOpen, mode, setName, setSelectedColor });
 
   const handleSubmit = useFolderSettingsSubmit({
     mode,
@@ -33,7 +32,6 @@ export const useFolderSettings = ({
     setIsSubmitting,
     name,
     selectedColor,
-    selectedIcon,
   });
 
   const modalTitle = mode === 'create' ? 'Create Folder' : 'Edit Folder';
@@ -45,8 +43,6 @@ export const useFolderSettings = ({
     setName,
     selectedColor,
     setSelectedColor,
-    selectedIcon,
-    setSelectedIcon,
     isSubmitting,
     handleSubmit,
     getModalTitle: (): string => modalTitle,

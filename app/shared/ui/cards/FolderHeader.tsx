@@ -8,7 +8,6 @@ import { cn } from '@/lib/utils/cn';
 
 interface FolderData {
   name: string;
-  icon?: string;
   color?: string;
   bookmarks: Array<{ verseId: string; verseKey?: string }> | { length: number };
 }
@@ -26,13 +25,7 @@ const FolderIconSection = memo(function FolderIconSection({
 }): React.JSX.Element {
   return (
     <div className="flex-shrink-0 p-3 rounded-lg bg-gradient-to-br from-accent/10 to-accent/5 group-hover:from-accent/20 group-hover:to-accent/10 transition-colors duration-300">
-      {folder.icon ? (
-        <span className={cn('text-2xl', folder.color || 'text-accent')} aria-hidden="true">
-          {folder.icon}
-        </span>
-      ) : (
-        <FolderIcon size={28} className={cn(folder.color || 'text-accent')} aria-hidden="true" />
-      )}
+      <FolderIcon size={28} className={cn(folder.color || 'text-accent')} aria-hidden="true" />
     </div>
   );
 });

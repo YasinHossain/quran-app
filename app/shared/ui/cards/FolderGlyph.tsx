@@ -17,7 +17,7 @@ const SIZE_MAP: Record<GlyphSize, { wrapper: string; iconSize: number; defaultSh
 };
 
 interface FolderGlyphProps {
-  folder: Pick<Folder, 'name' | 'icon' | 'color'>;
+  folder: Pick<Folder, 'name' | 'color'>;
   size?: GlyphSize;
   className?: string;
   glyphClassName?: string;

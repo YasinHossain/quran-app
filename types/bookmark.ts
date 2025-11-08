@@ -100,13 +100,6 @@ export interface Folder {
    * This should be applied to folder badges, list items, and headers in the bookmarks UI.
    */
   color?: string;
-
-  /**
-   * Folder icon customization.
-   * Suggested values: an icon name from your icon set (e.g., "star", "bookmark", "heart")
-   * or a URL to an image if your UI supports it.
-   */
-  icon?: string;
 }
 
 /**

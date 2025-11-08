@@ -11,8 +11,6 @@ interface SettingsFormProps {
   setName: (name: string) => void;
   selectedColor: string;
   setSelectedColor: (color: string) => void;
-  selectedIcon: string;
-  setSelectedIcon: (icon: string) => void;
   isSubmitting: boolean;
   onClose: () => void;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;

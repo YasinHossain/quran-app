@@ -2,9 +2,9 @@ import { Folder, Bookmark, Chapter, PlannerPlan, LastReadMap } from '@/types';
 
 export interface BookmarkContextType {
   folders: Folder[];
-  createFolder: (name: string, color?: string, icon?: string) => void;
+  createFolder: (name: string, color?: string) => void;
   deleteFolder: (folderId: string) => void;
-  renameFolder: (folderId: string, newName: string, color?: string, icon?: string) => void;
+  renameFolder: (folderId: string, newName: string, color?: string) => void;
   addBookmark: (verseId: string, folderId?: string, metadata?: Partial<Bookmark>) => void;
   removeBookmark: (verseId: string, folderId: string) => void;
   isBookmarked: (verseId: string) => boolean;

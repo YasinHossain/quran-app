@@ -33,7 +33,7 @@ const normalizeVerseId = (id: string | number): string => String(id);
 const matchesVerseId = (bookmark: Bookmark, verseId: string | number): boolean =>
   normalizeVerseId(bookmark.verseId) === normalizeVerseId(verseId);
 
-export const createNewFolder = (name: string, color?: string, icon?: string): Folder => {
+export const createNewFolder = (name: string, color?: string): Folder => {
   const base: Folder = {
     id: generateId(),
     name,
@@ -43,10 +43,6 @@ export const createNewFolder = (name: string, color?: string, icon?: string): Fo
 
   if (color !== undefined) {
     base.color = color;
-  }
-
-  if (icon !== undefined) {
-    base.icon = icon;
   }
 
   return base;
