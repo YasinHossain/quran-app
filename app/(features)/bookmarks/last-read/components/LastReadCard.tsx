@@ -44,7 +44,7 @@ export const LastReadCard = ({
           handleNavigate();
         }
       }}
-      className={`group flex h-full min-h-[10rem] sm:min-h-[11rem] lg:min-h-[12rem] w-full transform flex-col items-center justify-between rounded-2xl border border-border/50 bg-surface p-3 sm:p-4 lg:p-5 text-center shadow-lg transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent ${
+      className={`group flex h-full min-h-[10rem] sm:min-h-[11rem] lg:min-h-[12rem] w-full transform flex-col items-center justify-between rounded-2xl border border-border/50 bg-surface p-3 sm:p-4 lg:p-5 text-center shadow-lg transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
       }`}
       style={{ transitionDelay: `${Math.min(index, 10) * 100}ms` }}

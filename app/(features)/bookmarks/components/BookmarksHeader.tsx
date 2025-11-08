@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { PlusIcon } from '@/app/shared/icons';
 import { useResponsiveState } from '@/lib/responsive';
@@ -19,20 +20,22 @@ interface BookmarksHeaderProps {
 
 export const BookmarksHeader = ({
   onSidebarToggle,
-  title = 'Bookmarks',
+  title,
   searchTerm = '',
   onSearchChange,
   onNewFolderClick,
 }: BookmarksHeaderProps): React.JSX.Element => {
+  const { t } = useTranslation();
   const { variant } = useResponsiveState();
   const showMenuButton = variant === 'compact' || variant === 'default';
+  const headerTitle = title ?? t('bookmarks');
 
   return (
     <div className="mb-6 flex flex-col gap-4">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
           <HeaderTitleSection
-            title={title}
+            title={headerTitle}
             showMenuButton={showMenuButton}
             onSidebarToggle={onSidebarToggle}
           />
@@ -40,20 +43,20 @@ export const BookmarksHeader = ({
         {onNewFolderClick && (
           <button
             type="button"
-            aria-label="Create Folder"
+            aria-label={t('bookmarks_create_folder')}
             onClick={onNewFolderClick}
             className="inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-accent font-semibold text-on-accent shadow-sm transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation select-none min-h-touch"
           >
             <PlusIcon size={20} />
-            <span className="sr-only">Create Folder</span>
+            <span className="sr-only">{t('bookmarks_create_folder')}</span>
           </button>
         )}
       </div>
       {onSearchChange && (
         <div className="flex w-full items-center justify-end">
           <input
-            aria-label="Search Bookmarks"
-            placeholder="Search Bookmarks"
+            aria-label={t('bookmarks_search_label')}
+            placeholder={t('bookmarks_search_placeholder')}
             className="w-full sm:w-64 rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}

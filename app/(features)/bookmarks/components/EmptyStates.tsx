@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { BookmarkIcon } from '@/app/shared/icons';
 
@@ -12,15 +13,22 @@ interface EmptySearchProps {
 }
 
 export const EmptyBookmarks = (): React.JSX.Element => {
+  const { t } = useTranslation();
+  const createFolderPrefix = t('bookmarks_empty_create_description_prefix');
+  const createFolderSuffix = t('bookmarks_empty_create_description_suffix');
+
   return (
     <div className="text-center py-16">
       <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
         <BookmarkIcon className="w-8 h-8 text-muted" />
       </div>
-      <h3 className="text-lg font-semibold text-foreground mb-2">Create Your First Folder</h3>
+      <h3 className="text-lg font-semibold text-foreground mb-2">
+        {t('bookmarks_empty_create_title')}
+      </h3>
       <p className="text-muted max-w-md mx-auto">
-        Tap the <span className="font-semibold text-foreground">+</span> button in the top-right
-        corner to add a folder and start organizing your favorite verses.
+        {createFolderPrefix}
+        <span className="font-semibold text-foreground">+</span>
+        {createFolderSuffix}
       </p>
     </div>
   );
