@@ -6,7 +6,6 @@ import React from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 
 import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
-import { useVerseListHeight } from '@/app/(features)/bookmarks/hooks/useVerseListHeight';
 import { useVerseCard } from '@/app/(features)/surah/components/verse-card/useVerseCard';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { ReaderVerseCard } from '@/app/shared/reader';
@@ -19,6 +18,8 @@ interface PinnedVersesListProps {
   isLoading: boolean;
 }
 
+const WORKSPACE_SCROLL_SELECTOR = '[data-slot="bookmarks-landing-main"], [data-slot="workspace-main"]';
+
 export const PinnedVersesList = ({
   bookmarks,
   isLoading,
@@ -29,12 +30,22 @@ export const PinnedVersesList = ({
     setIsVisible(true);
   }, []);
 
-  const listHeight = useVerseListHeight();
-  const scrollParentRef = React.useRef<HTMLDivElement | null>(null);
+  const [scrollElement, setScrollElement] = React.useState<HTMLElement | null>(null);
+
+  const setRootRef = React.useCallback((node: HTMLDivElement | null) => {
+    if (!node) {
+      setScrollElement(null);
+      return;
+    }
+    const workspaceScroll = node.closest<HTMLElement>(WORKSPACE_SCROLL_SELECTOR);
+    if (workspaceScroll) {
+      setScrollElement(workspaceScroll);
+    }
+  }, []);
 
   const rowVirtualizer = useVirtualizer({
     count: bookmarks.length,
-    getScrollElement: () => scrollParentRef.current,
+    getScrollElement: () => scrollElement,
     estimateSize: () => 360,
     overscan: 6,
     getItemKey: (index) => {
@@ -79,11 +90,7 @@ export const PinnedVersesList = ({
         isVisible ? 'opacity-100' : 'opacity-0'
       }`}
     >
-      <div
-        ref={scrollParentRef}
-        className="relative overflow-y-auto scroll-smooth"
-        style={{ height: listHeight }}
-      >
+      <div ref={setRootRef} className="relative w-full">
         <div
           style={{
             height: `${rowVirtualizer.getTotalSize()}px`,

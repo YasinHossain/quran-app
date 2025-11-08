@@ -5,7 +5,6 @@ import React from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 
 import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
-import { useVerseListHeight } from '@/app/(features)/bookmarks/hooks/useVerseListHeight';
 import { useVerseCard } from '@/app/(features)/surah/components/verse-card/useVerseCard';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { ReaderVerseCard } from '@/app/shared/reader';
@@ -17,17 +16,29 @@ interface BookmarkVerseListProps {
   bookmarks: Bookmark[];
 }
 
+const WORKSPACE_SCROLL_SELECTOR = '[data-slot="bookmarks-landing-main"], [data-slot="workspace-main"]';
+
 export const BookmarkVerseList = ({ bookmarks }: BookmarkVerseListProps): React.JSX.Element => {
   if (bookmarks.length === 0) {
     return <div className="text-center py-20 text-muted">No verses in this folder</div>;
   }
 
-  const listHeight = useVerseListHeight();
-  const scrollParentRef = React.useRef<HTMLDivElement | null>(null);
+  const [scrollElement, setScrollElement] = React.useState<HTMLElement | null>(null);
+
+  const setRootRef = React.useCallback((node: HTMLDivElement | null) => {
+    if (!node) {
+      setScrollElement(null);
+      return;
+    }
+    const workspaceScroll = node.closest<HTMLElement>(WORKSPACE_SCROLL_SELECTOR);
+    if (workspaceScroll) {
+      setScrollElement(workspaceScroll);
+    }
+  }, []);
 
   const rowVirtualizer = useVirtualizer({
     count: bookmarks.length,
-    getScrollElement: () => scrollParentRef.current,
+    getScrollElement: () => scrollElement,
     estimateSize: () => 360,
     overscan: 6,
     getItemKey: (index) => {
@@ -38,36 +49,30 @@ export const BookmarkVerseList = ({ bookmarks }: BookmarkVerseListProps): React.
   });
 
   return (
-    <div className="w-full relative">
+    <div className="w-full relative" ref={setRootRef}>
       <div
-        ref={scrollParentRef}
-        className="relative overflow-y-auto scroll-smooth"
-        style={{ height: listHeight }}
+        style={{
+          height: `${rowVirtualizer.getTotalSize()}px`,
+          width: '100%',
+          position: 'relative',
+        }}
       >
-        <div
-          style={{
-            height: `${rowVirtualizer.getTotalSize()}px`,
-            width: '100%',
-            position: 'relative',
-          }}
-        >
-          {rowVirtualizer.getVirtualItems().map((virtualItem) => {
-            const bookmark = bookmarks[virtualItem.index];
-            if (!bookmark) return null;
+        {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+          const bookmark = bookmarks[virtualItem.index];
+          if (!bookmark) return null;
 
-            return (
-              <div
-                key={virtualItem.key}
-                ref={rowVirtualizer.measureElement}
-                data-index={virtualItem.index}
-                className="absolute left-0 top-0 w-full"
-                style={{ transform: `translateY(${virtualItem.start}px)` }}
-              >
-                <BookmarkVerseListItem bookmark={bookmark} />
-              </div>
-            );
-          })}
-        </div>
+          return (
+            <div
+              key={virtualItem.key}
+              ref={rowVirtualizer.measureElement}
+              data-index={virtualItem.index}
+              className="absolute left-0 top-0 w-full"
+              style={{ transform: `translateY(${virtualItem.start}px)` }}
+            >
+              <BookmarkVerseListItem bookmark={bookmark} />
+            </div>
+          );
+        })}
       </div>
     </div>
   );
