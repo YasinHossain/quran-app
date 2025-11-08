@@ -27,7 +27,7 @@ export default function PlannerPage(): React.JSX.Element {
 
       <BookmarksLayout activeSection="planner" onSectionChange={handleSectionChange}>
         <PlannerHeader onCreatePlan={modal.open} />
-        <PlannerGrid planner={planner} chapters={chapters} onCreatePlan={modal.open} />
+        <PlannerGrid planner={planner} chapters={chapters} />
       </BookmarksLayout>
     </>
   );

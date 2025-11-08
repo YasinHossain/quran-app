@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import React from 'react';
 
-import { CalendarIcon, PlusIcon } from '@/app/shared/icons';
+import { CalendarIcon } from '@/app/shared/icons';
 import { PlannerPlan, Chapter } from '@/types';
 
 import {
@@ -34,13 +34,11 @@ const DeletePlannerModal = dynamic<DeletePlannerModalProps>(
 interface PlannerGridProps {
   planner: Record<string, PlannerPlan>;
   chapters: Chapter[];
-  onCreatePlan: () => void;
 }
 
 export const PlannerGrid = ({
   planner,
   chapters,
-  onCreatePlan,
 }: PlannerGridProps): React.JSX.Element => {
   const [isVisible, setIsVisible] = React.useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
@@ -84,17 +82,11 @@ export const PlannerGrid = ({
         <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
           <CalendarIcon className="w-8 h-8 text-muted" />
         </div>
-        <h3 className="text-lg font-semibold text-foreground mb-2">No Plans Yet</h3>
-        <p className="text-muted max-w-md mx-auto mb-6">
-          Start planning your memorization journey by creating a plan to track your progress.
+        <h3 className="text-lg font-semibold text-foreground mb-2">Create Your First Plan</h3>
+        <p className="text-muted max-w-md mx-auto">
+          Tap the <span className="font-semibold text-foreground">+</span> button in the top-right
+          corner to build a plan and track your memorization journey.
         </p>
-        <button
-          onClick={onCreatePlan}
-          className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-on-accent rounded-xl font-semibold hover:bg-accent-hover transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-        >
-          <PlusIcon size={20} />
-          Create Plan
-        </button>
       </div>
     );
   }

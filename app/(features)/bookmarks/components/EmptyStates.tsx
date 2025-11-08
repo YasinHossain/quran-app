@@ -17,10 +17,10 @@ export const EmptyBookmarks = (): React.JSX.Element => {
       <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
         <BookmarkIcon className="w-8 h-8 text-muted" />
       </div>
-      <h3 className="text-lg font-semibold text-foreground mb-2">No Bookmark Folders</h3>
+      <h3 className="text-lg font-semibold text-foreground mb-2">Create Your First Folder</h3>
       <p className="text-muted max-w-md mx-auto">
-        Use the <span className="font-semibold text-foreground">Create Folder</span> button above to
-        start organizing your favorite verses.
+        Tap the <span className="font-semibold text-foreground">+</span> button in the top-right
+        corner to add a folder and start organizing your favorite verses.
       </p>
     </div>
   );
