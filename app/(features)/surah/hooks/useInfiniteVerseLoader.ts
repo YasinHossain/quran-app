@@ -13,6 +13,7 @@ interface UseInfiniteVerseLoaderParams {
   loadMoreRef: React.RefObject<HTMLDivElement | null>;
   error: string | null;
   setError: (err: string) => void;
+  targetVerseNumber?: number;
 }
 
 interface UseInfiniteVerseLoaderReturn {
@@ -23,6 +24,7 @@ interface UseInfiniteVerseLoaderReturn {
 }
 
 const PREFETCH_SCROLL_THRESHOLD_PX = 800;
+const VERSES_PER_PAGE = 20;
 
 function createSWRKey(id?: string, stableTranslationIds?: string, wordLang?: string) {
   return (index: number) => (id ? ['verses', id, stableTranslationIds, wordLang, index + 1] : null);
@@ -35,7 +37,7 @@ function createFetcher(lookup: LookupFn, setError: (msg: string) => void) {
       id: pId as string,
       translationIds,
       page: page as number,
-      perPage: 20,
+      perPage: VERSES_PER_PAGE,
       wordLang: wl as string,
     }).catch((err) => {
       setError(`Failed to load content. ${err.message}`);
@@ -60,6 +62,7 @@ export function useInfiniteVerseLoader({
   loadMoreRef,
   error,
   setError,
+  targetVerseNumber,
 }: UseInfiniteVerseLoaderParams): UseInfiniteVerseLoaderReturn {
   const { mutate: mutateGlobal } = useSWRConfig();
   const prefetchedPagesRef = useRef<Set<number>>(new Set());
@@ -82,6 +85,16 @@ export function useInfiniteVerseLoader({
   useEffect(() => {
     prefetchedPagesRef.current.clear();
   }, [id, stableTranslationIds, wordLang]);
+
+  useEffect(() => {
+    if (!targetVerseNumber || targetVerseNumber <= 0) {
+      return;
+    }
+    const requiredPages = Math.max(1, Math.ceil(targetVerseNumber / VERSES_PER_PAGE));
+    if (requiredPages > size) {
+      setSize(requiredPages);
+    }
+  }, [targetVerseNumber, size, setSize, id]);
 
   const prefetchNextPage = useCallback(() => {
     if (!id || !keyFactory) return;
@@ -115,7 +128,7 @@ export function useInfiniteVerseLoader({
           id: chapterId,
           translationIds: parsedTranslationIds,
           page,
-          perPage: 20,
+          perPage: VERSES_PER_PAGE,
           wordLang: wl,
         }).catch((err) => {
           prefetchedPagesRef.current.delete(nextPageIndex);

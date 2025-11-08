@@ -1,7 +1,7 @@
 'use client';
 
 import { useVirtualizer } from '@tanstack/react-virtual';
-import React, { useLayoutEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Spinner } from '@/app/shared/Spinner';
@@ -19,6 +19,7 @@ interface SurahVerseListProps {
   isReachingEnd: boolean;
   emptyLabelKey?: string;
   endLabelKey?: string;
+  initialVerseKey?: string;
 }
 
 const ESTIMATED_VERSE_HEIGHT = 320;
@@ -44,10 +45,12 @@ export const SurahVerseList = ({
   isReachingEnd,
   emptyLabelKey = 'no_verses_found',
   endLabelKey = 'end_of_surah',
+  initialVerseKey,
 }: SurahVerseListProps): React.JSX.Element => {
   const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const scrollParentRef = useRef<HTMLElement | null>(null);
+  const initialScrollRef = useRef<string | null>(null);
   const shouldVirtualize = useMemo(
     () => verses.length > 0 && !isLoading && !error,
     [verses.length, isLoading, error]
@@ -72,6 +75,26 @@ export const SurahVerseList = ({
     if (!shouldVirtualize) return;
     virtualizer.measure();
   }, [shouldVirtualize, virtualizer, verses.length]);
+
+  useEffect(() => {
+    if (!initialVerseKey || initialScrollRef.current === initialVerseKey || verses.length === 0) {
+      return;
+    }
+    const targetIndex = verses.findIndex((verse) => verse.verse_key === initialVerseKey);
+    if (targetIndex === -1) {
+      return;
+    }
+    initialScrollRef.current = initialVerseKey;
+    if (shouldVirtualize) {
+      virtualizer.scrollToIndex(targetIndex, { align: 'center' });
+    } else {
+      const verseId = verses[targetIndex]?.id;
+      if (typeof verseId === 'number') {
+        const el = document.getElementById(`verse-${verseId}`);
+        el?.scrollIntoView({ block: 'center' });
+      }
+    }
+  }, [initialVerseKey, shouldVirtualize, verses, virtualizer]);
 
   return (
     <div ref={containerRef} className="w-full relative">

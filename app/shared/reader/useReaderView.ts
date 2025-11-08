@@ -13,17 +13,20 @@ interface UseReaderViewParams {
   resourceId: string;
   lookup: UseVerseListingParams['lookup'];
   initialVerses?: UseVerseListingParams['initialVerses'];
+  initialVerseNumber?: number;
 }
 
 export const useReaderView = ({
   resourceId,
   lookup,
   initialVerses,
+  initialVerseNumber,
 }: UseReaderViewParams): UseReaderViewReturn => {
   const verseListing = useVerseListing({
     id: resourceId,
     lookup,
     ...(initialVerses ? { initialVerses } : {}),
+    ...(typeof initialVerseNumber === 'number' ? { initialVerseNumber } : {}),
   });
 
   const panels = useSurahPanels({

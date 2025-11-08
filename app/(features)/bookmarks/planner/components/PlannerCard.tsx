@@ -18,6 +18,7 @@ export const PlannerCard = ({
   chapter,
   precomputedViewModel,
   progressLabel,
+  continueVerse,
   onDelete,
 }: PlannerCardProps & { onDelete?: () => void }): React.JSX.Element => {
   const router = useRouter();
@@ -30,8 +31,17 @@ export const PlannerCard = ({
   }, [precomputedViewModel, surahId, plan, chapter]);
 
   const handleNavigate = React.useCallback((): void => {
-    router.push(`/surah/${surahId}`);
-  }, [router, surahId]);
+    const parsedSurahId = Number.parseInt(surahId, 10);
+    const fallbackSurahId = Number.isFinite(parsedSurahId) ? parsedSurahId : surahId;
+    const resolvedSurahId = continueVerse?.surahId ?? fallbackSurahId;
+    const targetPath = `/surah/${resolvedSurahId}`;
+    if (continueVerse?.verse && continueVerse.verse > 0) {
+      const params = new URLSearchParams({ startVerse: String(continueVerse.verse) });
+      router.push(`${targetPath}?${params.toString()}`);
+      return;
+    }
+    router.push(targetPath);
+  }, [continueVerse, router, surahId]);
 
   const handleContinueClick = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>): void => {

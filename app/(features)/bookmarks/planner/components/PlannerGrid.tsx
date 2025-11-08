@@ -114,6 +114,7 @@ export const PlannerGrid = ({
             {...(group.chapter && { chapter: group.chapter })}
             precomputedViewModel={group.viewModel}
             progressLabel={group.progressLabel}
+            {...(group.continueVerse ? { continueVerse: group.continueVerse } : {})}
             onDelete={() => openDelete(group)}
           />
         ))}

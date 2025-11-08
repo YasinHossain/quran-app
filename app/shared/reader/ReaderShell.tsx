@@ -22,12 +22,14 @@ interface CreateSurahMainParams {
   verseListing: VerseListingState;
   emptyLabelKey?: string | undefined;
   endLabelKey?: string | undefined;
+  initialVerseKey?: string;
 }
 
 const createSurahMain = ({
   verseListing,
   emptyLabelKey,
   endLabelKey,
+  initialVerseKey,
 }: CreateSurahMainParams): React.ReactNode => (
   <SurahMain
     verses={verseListing.verses}
@@ -38,6 +40,7 @@ const createSurahMain = ({
     isReachingEnd={verseListing.isReachingEnd}
     {...(emptyLabelKey ? { emptyLabelKey } : {})}
     {...(endLabelKey ? { endLabelKey } : {})}
+    {...(initialVerseKey ? { initialVerseKey } : {})}
   />
 );
 
@@ -80,6 +83,8 @@ interface ReaderShellProps extends Pick<UseVerseListingParams, 'initialVerses'> 
   lookup: LookupFn;
   emptyLabelKey?: string;
   endLabelKey?: string;
+  initialVerseNumber?: number;
+  initialVerseKey?: string;
 }
 
 export function ReaderShell({
@@ -88,16 +93,24 @@ export function ReaderShell({
   initialVerses,
   emptyLabelKey,
   endLabelKey,
+  initialVerseNumber,
+  initialVerseKey,
 }: ReaderShellProps): React.JSX.Element {
   useBodyOverflowHidden();
   const readerView = useReaderView({
     resourceId,
     lookup,
     initialVerses,
+    initialVerseNumber,
   });
   const { verseListing, panels } = readerView;
 
-  const surahMain = createSurahMain({ verseListing, emptyLabelKey, endLabelKey });
+  const surahMain = createSurahMain({
+    verseListing,
+    emptyLabelKey,
+    endLabelKey,
+    initialVerseKey,
+  });
   const settingsSidebar = createSettingsSidebar(panels);
   const workspaceSettingsSidebar = createWorkspaceSettingsPanel(panels);
   const audioProps = mapToAudioProps(verseListing);

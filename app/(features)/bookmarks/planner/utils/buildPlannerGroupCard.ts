@@ -42,6 +42,11 @@ export interface PlannerGroupCardData {
   progressLabel: string;
   planIds: string[];
   planName: string;
+  continueVerse?: {
+    surahId: number;
+    verse: number;
+    verseKey: string;
+  };
 }
 
 const sumBy = (plans: PlannerPlan[], selector: (plan: PlannerPlan) => number): number =>
@@ -326,6 +331,10 @@ export const buildPlannerGroupCardData = (
     1,
     Math.min(aggregatedPlan.completedVerses, aggregatedPlan.targetVerses)
   );
+  const currentPosition =
+    globalCurrentVerse > 0
+      ? mapGlobalVerseToPosition(plans, globalCurrentVerse, chapterLookup)
+      : null;
 
   // Secondary details should reflect the aggregated current position across the full group
   const currentSecondaryText = buildProgressDetails({
@@ -397,5 +406,14 @@ export const buildPlannerGroupCardData = (
     progressLabel: buildProgressLabel(plans, progressMetrics.isComplete, chapterLookup),
     planIds: group.planIds,
     planName: group.planName,
+    ...(currentPosition
+      ? {
+          continueVerse: {
+            surahId: currentPosition.surahId,
+            verse: currentPosition.verse,
+            verseKey: `${currentPosition.surahId}:${currentPosition.verse}`,
+          },
+        }
+      : {}),
   };
 };

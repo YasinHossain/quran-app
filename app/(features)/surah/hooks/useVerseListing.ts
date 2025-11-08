@@ -81,6 +81,7 @@ export function useVerseListing({
   id,
   lookup,
   initialVerses,
+  initialVerseNumber,
 }: UseVerseListingParams): UseVerseListingReturn {
   const errorState = useVerseListingErrorState();
   const settingsState = useSettings();
@@ -95,6 +96,9 @@ export function useVerseListing({
     loadMoreRef: errorState.loadMoreRef,
     error: errorState.error,
     setError: errorState.handleLoaderError,
+    ...(typeof initialVerseNumber === 'number' && initialVerseNumber > 0
+      ? { targetVerseNumber: initialVerseNumber }
+      : {}),
     ...(id !== undefined ? { id } : {}),
   } as const;
 

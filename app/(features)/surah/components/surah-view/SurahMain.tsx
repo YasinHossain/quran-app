@@ -15,6 +15,7 @@ interface SurahMainProps {
   isReachingEnd: boolean;
   emptyLabelKey?: string;
   endLabelKey?: string;
+  initialVerseKey?: string;
 }
 
 export function SurahMain({
@@ -26,6 +27,7 @@ export function SurahMain({
   isReachingEnd,
   emptyLabelKey,
   endLabelKey,
+  initialVerseKey,
 }: SurahMainProps): React.JSX.Element {
   return (
     <SurahVerseList
@@ -37,6 +39,7 @@ export function SurahMain({
       isReachingEnd={isReachingEnd}
       {...(emptyLabelKey !== undefined ? { emptyLabelKey } : {})}
       {...(endLabelKey !== undefined ? { endLabelKey } : {})}
+      {...(initialVerseKey ? { initialVerseKey } : {})}
     />
   );
 }

@@ -13,4 +13,9 @@ export interface PlannerCardProps {
   chapter?: PlannerCardChapter;
   precomputedViewModel?: PlannerCardViewModel;
   progressLabel?: string;
+  continueVerse?: {
+    surahId: number;
+    verse: number;
+    verseKey: string;
+  };
 }
