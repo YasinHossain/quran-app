@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { memo } from 'react';
 
-import { BookReaderIcon } from '@/app/shared/icons';
+import { GoToIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 
@@ -30,7 +30,7 @@ export const NavigateToVerseLink = memo(function NavigateToVerseLink({
         touchClasses.focus
       )}
     >
-      <BookReaderIcon size={18} />
+      <GoToIcon size={18} />
     </Link>
   );
 });

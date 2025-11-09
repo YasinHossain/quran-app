@@ -10,6 +10,7 @@ import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { PinIcon } from '@/app/shared/icons';
 import { ReaderVerseCard } from '@/app/shared/reader';
 import { Spinner } from '@/app/shared/Spinner';
+import { parseVerseKey } from '@/lib/utils/verse';
 
 import type { Bookmark, Verse } from '@/types';
 
@@ -151,10 +152,11 @@ const LoadedPinnedVerseItem = ({
   const handleNavigateToVerse = React.useCallback(() => {
     const verseKey = bookmark.verseKey ?? verse.verse_key;
     if (!verseKey) return;
-    const [surahId] = verseKey.split(':');
-    if (!surahId) return;
-    router.push(`/surah/${surahId}#verse-${bookmark.verseId}`);
-  }, [bookmark.verseId, bookmark.verseKey, router, verse.verse_key]);
+    const { surahNumber, ayahNumber } = parseVerseKey(verseKey);
+    if (!surahNumber || !ayahNumber) return;
+    const params = new URLSearchParams({ startVerse: String(ayahNumber) });
+    router.push(`/surah/${surahNumber}?${params.toString()}`);
+  }, [bookmark.verseKey, router, verse.verse_key]);
 
   const handleTogglePinned = React.useCallback(() => {
     togglePinned(bookmark.verseId, { verseKey: bookmark.verseKey ?? verse.verse_key });

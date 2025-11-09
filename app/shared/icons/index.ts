@@ -5,6 +5,7 @@ export { ArrowLeftIcon } from './ArrowLeftIcon';
 export { ChevronDownIcon } from './ChevronDownIcon';
 export { ChevronLeftIcon } from './ChevronLeftIcon';
 export { ChevronRightIcon } from './ChevronRightIcon';
+export { GoToIcon } from './GoToIcon';
 
 // Media Controls
 export { MicIcon } from './MicIcon';

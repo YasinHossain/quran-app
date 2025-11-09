@@ -29,10 +29,10 @@ export function WorkspaceMain({
   ...rest
 }: WorkspaceMainProps): React.JSX.Element {
   const { isHidden } = useHeaderVisibility();
-  const { isRootHeaderAware } = useWorkspaceColumns();
+  const { isRootHeaderAware, hasLeftSidebar, hasRightSidebar } = useWorkspaceColumns();
 
-  const shouldReserveLeft = reserveLeftSpace ?? false;
-  const shouldReserveRight = reserveRightSpace ?? false;
+  const shouldReserveLeft = Boolean(reserveLeftSpace && !hasLeftSidebar);
+  const shouldReserveRight = Boolean(reserveRightSpace && !hasRightSidebar);
 
   const topPaddingClass = isRootHeaderAware
     ? null

@@ -55,7 +55,7 @@ describe('ThreeColumnWorkspace', () => {
   });
 });
 
-describe('WorkspaceMain', () => {
+describe('WorkspaceMain spacing defaults', () => {
   beforeEach(() => {
     useHeaderVisibilityMock.mockReturnValue({ isHidden: false });
   });
@@ -75,19 +75,11 @@ describe('WorkspaceMain', () => {
     expect(main).not.toHaveClass('lg:pl-reader-sidebar-left');
     expect(main).not.toHaveClass('lg:pr-reader-sidebar-right');
   });
+});
 
-  it('reduces top padding when the header is hidden', () => {
-    useHeaderVisibilityMock.mockReturnValueOnce({ isHidden: true });
-
-    render(<ThreeColumnWorkspace center={<WorkspaceMain>Scroll content</WorkspaceMain>} />);
-
-    const workspaceRoot = document.querySelector('[data-slot="workspace-root"]') as HTMLElement;
-    const main = screen
-      .getByText('Scroll content')
-      .closest('[data-slot="workspace-main"]') as HTMLElement;
-
-    expect(workspaceRoot).toHaveClass('pt-[calc(var(--reader-safe-area-top))]');
-    expect(main).not.toHaveClass('pt-[calc(var(--reader-safe-area-top))]');
+describe('WorkspaceMain spacing overrides', () => {
+  beforeEach(() => {
+    useHeaderVisibilityMock.mockReturnValue({ isHidden: false });
   });
 
   it('reserves space when explicitly requested without sidebars', () => {
@@ -106,5 +98,45 @@ describe('WorkspaceMain', () => {
       .closest('[data-slot="workspace-main"]') as HTMLElement;
     expect(main).toHaveClass('lg:pl-reader-sidebar-left');
     expect(main).toHaveClass('lg:pr-reader-sidebar-right');
+  });
+
+  it('avoids double-reserving space when matching sidebars are present', () => {
+    render(
+      <ThreeColumnWorkspace
+        left={<div>Navigation</div>}
+        right={<div>Settings</div>}
+        center={
+          <WorkspaceMain reserveLeftSpace reserveRightSpace>
+            Balanced layout
+          </WorkspaceMain>
+        }
+      />
+    );
+
+    const main = screen
+      .getByText('Balanced layout')
+      .closest('[data-slot="workspace-main"]') as HTMLElement;
+    expect(main).not.toHaveClass('lg:pl-reader-sidebar-left');
+    expect(main).not.toHaveClass('lg:pr-reader-sidebar-right');
+  });
+});
+
+describe('WorkspaceMain header awareness', () => {
+  beforeEach(() => {
+    useHeaderVisibilityMock.mockReturnValue({ isHidden: false });
+  });
+
+  it('reduces top padding when the header is hidden', () => {
+    useHeaderVisibilityMock.mockReturnValueOnce({ isHidden: true });
+
+    render(<ThreeColumnWorkspace center={<WorkspaceMain>Scroll content</WorkspaceMain>} />);
+
+    const workspaceRoot = document.querySelector('[data-slot="workspace-root"]') as HTMLElement;
+    const main = screen
+      .getByText('Scroll content')
+      .closest('[data-slot="workspace-main"]') as HTMLElement;
+
+    expect(workspaceRoot).toHaveClass('pt-[calc(var(--reader-safe-area-top))]');
+    expect(main).not.toHaveClass('pt-[calc(var(--reader-safe-area-top))]');
   });
 });

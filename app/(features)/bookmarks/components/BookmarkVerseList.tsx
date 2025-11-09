@@ -1,6 +1,7 @@
 'use client';
 
 import { useVirtualizer } from '@tanstack/react-virtual';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
@@ -8,6 +9,7 @@ import { useVerseCard } from '@/app/(features)/surah/components/verse-card/useVe
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { ReaderVerseCard } from '@/app/shared/reader';
 import { Spinner } from '@/app/shared/Spinner';
+import { parseVerseKey } from '@/lib/utils/verse';
 
 import type { Bookmark, Verse } from '@/types';
 
@@ -108,6 +110,7 @@ const LoadedBookmarkVerseItem = ({
   verse: Verse;
   bookmark: Bookmark;
 }): React.JSX.Element => {
+  const router = useRouter();
   const { removeBookmark, findBookmark } = useBookmarks();
   const { verseRef, isPlaying, isLoadingAudio, isVerseBookmarked, handlePlayPause } =
     useVerseCard(verse);
@@ -122,6 +125,14 @@ const LoadedBookmarkVerseItem = ({
     if (!bookmarkInfo) return;
     removeBookmark(bookmark.verseId, bookmarkInfo.folder.id);
   }, [bookmark.verseId, findBookmark, removeBookmark]);
+
+  const handleNavigateToVerse = React.useCallback(() => {
+    const verseKey = bookmark.verseKey ?? verse.verse_key;
+    const { surahNumber, ayahNumber } = parseVerseKey(verseKey);
+    if (!surahNumber || !ayahNumber) return;
+    const params = new URLSearchParams({ startVerse: String(ayahNumber) });
+    router.push(`/surah/${surahNumber}?${params.toString()}`);
+  }, [bookmark.verseKey, router, verse.verse_key]);
 
   return (
     <div
@@ -140,6 +151,7 @@ const LoadedBookmarkVerseItem = ({
           isBookmarked: isVerseBookmarked,
           onPlayPause: handlePlayPause,
           onBookmark: handleRemoveBookmark,
+          onNavigateToVerse: handleNavigateToVerse,
           showRemove: true,
         }}
       />

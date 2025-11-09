@@ -8,6 +8,7 @@ import {
   ShareIcon,
   BookReaderIcon,
   CalendarIcon,
+  GoToIcon,
 } from '@/app/shared/icons';
 import { Spinner } from '@/app/shared/Spinner';
 import { VerseActionItem } from '@/app/shared/verse-actions/types';
@@ -81,7 +82,7 @@ interface CreateGoToVerseActionParams {
 export function createGoToVerseAction({ onClick }: CreateGoToVerseActionParams): VerseActionItem {
   return {
     label: 'Go to Verse',
-    icon: createElement(BookReaderIcon, { size: 20 }),
+    icon: createElement(GoToIcon, { size: 20 }),
     onClick,
   };
 }
