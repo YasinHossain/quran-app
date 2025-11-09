@@ -11,6 +11,7 @@ import { Verse } from '@/types';
 
 jest.mock('@/app/shared/hooks/useSingleVerse', () => ({
   useSingleVerse: jest.fn(),
+  usePrefetchSingleVerse: () => jest.fn(),
 }));
 jest.mock('@/app/(features)/tafsir/hooks/useVerseNavigation', () => ({
   useVerseNavigation: () => ({

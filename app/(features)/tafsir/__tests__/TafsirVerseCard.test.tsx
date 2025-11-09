@@ -4,6 +4,9 @@ import { VerseCard } from '@/app/(features)/tafsir/[surahId]/[ayahId]/components
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProviders, screen, waitFor } from '@/app/testUtils/renderWithProviders';
 import { Verse } from '@/types';
+const mockUseVerseCard = jest.requireMock(
+  '@/app/(features)/surah/components/verse-card/useVerseCard'
+).useVerseCard as jest.Mock;
 
 const verse: Verse = {
   id: 1,
@@ -22,6 +25,25 @@ const renderCard = (): void => {
 
 beforeAll(() => {
   setMatchMedia(true);
+});
+
+beforeEach(() => {
+  const React = jest.requireActual('react');
+  mockUseVerseCard.mockImplementation(() => {
+    const [isPlaying, setIsPlaying] = React.useState(false);
+    const toggle = jest.fn(() => setIsPlaying((prev) => !prev));
+    return {
+      verseRef: { current: null },
+      isPlaying,
+      isLoadingAudio: false,
+      isVerseBookmarked: false,
+      handlePlayPause: toggle,
+    };
+  });
+});
+
+afterEach(() => {
+  mockUseVerseCard.mockReset();
 });
 
 it('renders verse key and translation', () => {

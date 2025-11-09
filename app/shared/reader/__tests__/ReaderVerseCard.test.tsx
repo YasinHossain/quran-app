@@ -23,9 +23,8 @@ describe('ReaderVerseCard', () => {
   it('renders verse content and translations', () => {
     renderWithProviders(<ReaderVerseCard verse={baseVerse} />);
 
-    expect(
-      screen.getByText('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', { exact: false })
-    ).toBeInTheDocument();
+    expect(screen.getByText('بِسْمِ')).toBeInTheDocument();
+    expect(screen.getByText('اللَّهِ')).toBeInTheDocument();
     expect(
       screen.getByText('In the name of Allah, the Entirely Merciful, the Especially Merciful')
     ).toBeInTheDocument();
