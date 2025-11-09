@@ -13,7 +13,7 @@ interface UseReaderViewParams {
   resourceId: string;
   lookup: UseVerseListingParams['lookup'];
   initialVerses?: UseVerseListingParams['initialVerses'];
-  initialVerseNumber?: number;
+  initialVerseNumber?: number | undefined;
 }
 
 export const useReaderView = ({

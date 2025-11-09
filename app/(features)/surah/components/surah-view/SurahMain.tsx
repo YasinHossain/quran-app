@@ -15,7 +15,7 @@ interface SurahMainProps {
   isReachingEnd: boolean;
   emptyLabelKey?: string;
   endLabelKey?: string;
-  initialVerseKey?: string;
+  initialVerseKey?: string | undefined;
 }
 
 export function SurahMain({

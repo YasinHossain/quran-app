@@ -1,9 +1,8 @@
 'use client';
 
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-
-import { useVirtualizer } from '@tanstack/react-virtual';
 
 import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
 import { useVerseCard } from '@/app/(features)/surah/components/verse-card/useVerseCard';

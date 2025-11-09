@@ -13,7 +13,11 @@ interface PortalProps {
  * Lightweight portal that defaults to `document.body` and no-ops on the server.
  * Keeps modal/dropdown layers out of transformed ancestors (e.g. virtualized lists).
  */
-export function Portal({ children, container, disabled = false }: PortalProps): React.ReactPortal | null {
+export function Portal({
+  children,
+  container,
+  disabled = false,
+}: PortalProps): React.ReactPortal | null {
   const [mountNode, setMountNode] = React.useState<Element | DocumentFragment | null>(null);
 
   React.useEffect(() => {

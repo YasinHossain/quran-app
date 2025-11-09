@@ -8,7 +8,7 @@ import { ensureLanguageCode } from '@/lib/text/languageCodes';
 
 interface SurahViewProps {
   surahId: string;
-  initialVerseNumber?: number;
+  initialVerseNumber?: number | undefined;
 }
 
 /**
@@ -35,8 +35,8 @@ export function SurahView({ surahId, initialVerseNumber }: SurahViewProps): Reac
       }
       emptyLabelKey="no_verses_found"
       endLabelKey="end_of_surah"
-      initialVerseNumber={initialVerseNumber}
-      initialVerseKey={initialVerseKey}
+      {...(typeof initialVerseNumber === 'number' ? { initialVerseNumber } : {})}
+      {...(typeof initialVerseKey === 'string' ? { initialVerseKey } : {})}
     />
   );
 }

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { memo } from 'react';
 
 import { Portal } from '@/app/shared/components/Portal';
+
 import { TabContent } from './components/TabContent';
 import { TabNavigation } from './components/TabNavigation';
 import { BookmarkModalProps } from './types';

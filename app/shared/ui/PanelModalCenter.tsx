@@ -56,10 +56,12 @@ const PanelHeader = memo(function PanelHeader({
   showCloseButton,
   onClose,
 }: PanelHeaderProps): React.JSX.Element | null {
-  if (!title && !showCloseButton) return null;
+  const hasTitle = Boolean(title);
+  if (!hasTitle && !showCloseButton) return null;
+
   return (
-    <header className="flex items-center justify-between mb-4">
-      {title && <h2 className="text-lg font-semibold">{title}</h2>}
+    <header className={cn('flex items-center mb-4', hasTitle ? 'justify-between' : 'justify-end')}>
+      {hasTitle && <h2 className="text-lg font-semibold">{title}</h2>}
       {showCloseButton && (
         <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close panel">
           <CloseIcon size={18} />

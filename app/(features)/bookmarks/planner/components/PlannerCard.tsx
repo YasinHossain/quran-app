@@ -8,9 +8,9 @@ import { PlannerCardHeader } from '@/app/(features)/bookmarks/planner/components
 import { PlannerProgressSection } from '@/app/(features)/bookmarks/planner/components/PlannerProgressSection';
 import { PlannerStatsSection } from '@/app/(features)/bookmarks/planner/components/PlannerStatsSection';
 import { createPlannerCardViewModel } from '@/app/(features)/bookmarks/planner/utils/plannerCard';
+import { CloseIcon } from '@/app/shared/icons';
 
 import type { PlannerCardProps } from '@/app/(features)/bookmarks/planner/components/PlannerCard.types';
-import { CloseIcon } from '@/app/shared/icons';
 
 export const PlannerCard = ({
   surahId,

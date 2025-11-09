@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { Button } from '@/app/shared/ui/Button';
@@ -22,11 +22,17 @@ export const RenameFolderModal = ({
 }: RenameFolderModalProps): React.JSX.Element | null => {
   const { renameFolder } = useBookmarks();
   const [folderName, setFolderName] = useState('');
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (!isOpen || !folder) return;
     setFolderName(folder.name ?? '');
   }, [folder, isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    inputRef.current?.focus();
+  }, [isOpen, folder?.id]);
 
   const handleClose = (): void => {
     onClose();
@@ -73,12 +79,12 @@ export const RenameFolderModal = ({
             value={folderName}
             onChange={(event) => setFolderName(event.target.value)}
             placeholder="Enter a new folder name"
+            ref={inputRef}
             className={cn(
               'w-full rounded-xl border border-border bg-surface px-4 py-3.5 text-foreground placeholder-muted transition-all duration-200 shadow-sm',
               'focus:border-accent focus:ring-4 focus:ring-accent/10 focus:outline-none'
             )}
             maxLength={50}
-            autoFocus
           />
           <div className="text-xs text-muted">{folderName.length}/50</div>
         </div>

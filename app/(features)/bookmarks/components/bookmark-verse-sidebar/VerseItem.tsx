@@ -3,8 +3,8 @@
 import React from 'react';
 
 import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
-import { LoadingError } from '@/app/shared/LoadingError';
 import { CloseIcon } from '@/app/shared/icons';
+import { LoadingError } from '@/app/shared/LoadingError';
 import { cn } from '@/lib/utils/cn';
 import { Bookmark } from '@/types';
 
@@ -80,9 +80,7 @@ export const VerseItem = ({
       <>
         <div className={baseWrapperClassName} {...interactiveProps}>
           <div className="flex flex-col min-w-0 text-left">
-            <span className="text-sm font-semibold text-foreground truncate">
-              {surahName}
-            </span>
+            <span className="text-sm font-semibold text-foreground truncate">{surahName}</span>
             <span className="text-xs text-muted mt-1">{verseLabel}</span>
           </div>
           {removeButton}

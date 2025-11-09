@@ -8,9 +8,8 @@ export const getProgressMetrics = (plan: PlannerPlan): ProgressMetrics => {
   const remainingVerses = Math.max(plan.targetVerses - plan.completedVerses, 0);
   // Show the last completed verse as the current position.
   // If nothing completed yet, default to the first verse.
-  const currentVerse = plan.targetVerses > 0
-    ? Math.max(1, Math.min(plan.completedVerses, plan.targetVerses))
-    : 1;
+  const currentVerse =
+    plan.targetVerses > 0 ? Math.max(1, Math.min(plan.completedVerses, plan.targetVerses)) : 1;
 
   return {
     percent,

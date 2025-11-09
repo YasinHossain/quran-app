@@ -22,7 +22,7 @@ interface CreateSurahMainParams {
   verseListing: VerseListingState;
   emptyLabelKey?: string | undefined;
   endLabelKey?: string | undefined;
-  initialVerseKey?: string;
+  initialVerseKey?: string | undefined;
 }
 
 const createSurahMain = ({
@@ -83,8 +83,8 @@ interface ReaderShellProps extends Pick<UseVerseListingParams, 'initialVerses'> 
   lookup: LookupFn;
   emptyLabelKey?: string;
   endLabelKey?: string;
-  initialVerseNumber?: number;
-  initialVerseKey?: string;
+  initialVerseNumber?: number | undefined;
+  initialVerseKey?: string | undefined;
 }
 
 export function ReaderShell({
@@ -101,15 +101,15 @@ export function ReaderShell({
     resourceId,
     lookup,
     initialVerses,
-    initialVerseNumber,
+    ...(typeof initialVerseNumber === 'number' ? { initialVerseNumber } : {}),
   });
   const { verseListing, panels } = readerView;
 
   const surahMain = createSurahMain({
     verseListing,
-    emptyLabelKey,
-    endLabelKey,
-    initialVerseKey,
+    ...(typeof emptyLabelKey === 'string' ? { emptyLabelKey } : {}),
+    ...(typeof endLabelKey === 'string' ? { endLabelKey } : {}),
+    ...(typeof initialVerseKey === 'string' ? { initialVerseKey } : {}),
   });
   const settingsSidebar = createSettingsSidebar(panels);
   const workspaceSettingsSidebar = createWorkspaceSettingsPanel(panels);

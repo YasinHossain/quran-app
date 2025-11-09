@@ -11,6 +11,21 @@ import * as chaptersApi from '@/lib/api/chapters';
 import type { Verse } from '@/types';
 // Router mocked via testUtils/mockRouter
 
+jest.mock('@tanstack/react-virtual', () => ({
+  useVirtualizer: ({ count }: { count: number }) => {
+    const items = Array.from({ length: count }, (_, index) => ({
+      key: `virtual-${index}`,
+      index,
+      start: index * 360,
+    }));
+    return {
+      getVirtualItems: () => items,
+      getTotalSize: () => count * 360,
+      measureElement: jest.fn(),
+    };
+  },
+}));
+
 jest.mock('@/lib/api/chapters');
 jest.mock('../components/BookmarksSidebar', () => ({
   BookmarksSidebar: ({ onSectionChange }: { onSectionChange: (section: string) => void }) => (
@@ -57,9 +72,13 @@ jest.mock('framer-motion', () => ({
   AnimatePresence: ({ children }: any) => <>{children}</>,
 }));
 
-jest.mock('@/app/shared/hooks/useSingleVerse', () => ({
-  useSingleVerse: jest.fn(),
-}));
+jest.mock('@/app/shared/hooks/useSingleVerse', () => {
+  const prefetchMock = jest.fn().mockResolvedValue(undefined);
+  return {
+    useSingleVerse: jest.fn(),
+    usePrefetchSingleVerse: () => prefetchMock,
+  };
+});
 
 // Reduce render tree and memory by stubbing heavy reader components
 jest.mock('@/app/shared/reader', () => ({
@@ -70,7 +89,23 @@ jest.mock('@/app/shared/reader', () => ({
       <div data-testid="right-col">{right}</div>
     </div>
   ),
-  WorkspaceMain: ({ children }: any) => <div>{children}</div>,
+  WorkspaceMain: ({ children, ...props }: any) => {
+    const {
+      ['data-slot']: dataSlot,
+      contentClassName,
+      className,
+      ...rest
+    } = props;
+    return (
+      <div
+        data-slot={dataSlot ?? 'bookmarks-landing-main'}
+        className={className}
+        {...rest}
+      >
+        {children}
+      </div>
+    );
+  },
   // Render the primary translation text to match expectations
   ReaderVerseCard: ({ verse }: any) => (
     <div data-testid="reader-verse-card">{verse?.translations?.[0]?.text}</div>

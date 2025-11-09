@@ -15,10 +15,7 @@ export const buildChapterLookup = (chapters: Chapter[]): Map<number, Chapter> =>
     return lookup;
   }, new Map<number, Chapter>());
 
-export const getChapterDisplayName = (
-  plan: PlannerPlan,
-  chapter: Chapter | undefined
-): string => {
+export const getChapterDisplayName = (plan: PlannerPlan, chapter: Chapter | undefined): string => {
   if (chapter?.name_simple) return chapter.name_simple;
   if (chapter?.translated_name?.name) return chapter.translated_name.name;
   if (chapter?.name_arabic) return chapter.name_arabic;
@@ -104,8 +101,10 @@ export const buildSurahRangeNameLabel = (
   const lastId = surahIds[surahIds.length - 1];
   const firstChapter = typeof firstId === 'number' ? chapterLookup.get(firstId) : undefined;
   const lastChapter = typeof lastId === 'number' ? chapterLookup.get(lastId) : undefined;
-  const firstName = firstChapter?.name_simple ?? (typeof firstId === 'number' ? `Surah ${firstId}` : '');
-  const lastName = lastChapter?.name_simple ?? (typeof lastId === 'number' ? `Surah ${lastId}` : '');
+  const firstName =
+    firstChapter?.name_simple ?? (typeof firstId === 'number' ? `Surah ${firstId}` : '');
+  const lastName =
+    lastChapter?.name_simple ?? (typeof lastId === 'number' ? `Surah ${lastId}` : '');
   if (firstName === lastName) return firstName;
   return `${firstName} - ${lastName}`;
 };
@@ -130,18 +129,15 @@ export const groupPlannerPlans = (
     return [];
   }
 
-  const groupedByName = plans.reduce(
-    (acc, plan) => {
-      const displayName = getDisplayPlanName(plan, chapterLookup);
-      const key = displayName.toLowerCase();
-      if (!acc.has(key)) {
-        acc.set(key, { displayName, plans: [] as PlannerPlan[] });
-      }
-      acc.get(key)?.plans.push(plan);
-      return acc;
-    },
-    new Map<string, { displayName: string; plans: PlannerPlan[] }>()
-  );
+  const groupedByName = plans.reduce((acc, plan) => {
+    const displayName = getDisplayPlanName(plan, chapterLookup);
+    const key = displayName.toLowerCase();
+    if (!acc.has(key)) {
+      acc.set(key, { displayName, plans: [] as PlannerPlan[] });
+    }
+    acc.get(key)?.plans.push(plan);
+    return acc;
+  }, new Map<string, { displayName: string; plans: PlannerPlan[] }>());
 
   const groups: PlannerPlanGroup[] = [];
 
@@ -153,10 +149,7 @@ export const groupPlannerPlans = (
       if (sequence.length === 0) return;
       const surahIds = sequence.map((plan) => plan.surahId);
       const planIds = sequence.map((plan) => plan.id);
-      const lastUpdated = sequence.reduce(
-        (latest, plan) => Math.max(latest, plan.lastUpdated),
-        0
-      );
+      const lastUpdated = sequence.reduce((latest, plan) => Math.max(latest, plan.lastUpdated), 0);
       groups.push({
         key: buildGroupKey(displayName, surahIds),
         planName: displayName,

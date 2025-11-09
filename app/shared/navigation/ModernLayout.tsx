@@ -1,8 +1,8 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import React from 'react';
-import dynamic from 'next/dynamic';
 
 import { useNavigation } from '@/app/providers/NavigationContext';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
@@ -12,10 +12,9 @@ const QuranBottomSheet = dynamic(
   { ssr: false }
 );
 import { SwipeContainer } from './SwipeContainer';
-const SwipeIndicator = dynamic(
-  () => import('./SwipeIndicator').then((m) => m.SwipeIndicator),
-  { ssr: false }
-);
+const SwipeIndicator = dynamic(() => import('./SwipeIndicator').then((m) => m.SwipeIndicator), {
+  ssr: false,
+});
 
 interface ModernLayoutProps {
   children: React.ReactNode;

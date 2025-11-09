@@ -1,8 +1,7 @@
 'use client';
 
-import React from 'react';
-
 import { useVirtualizer } from '@tanstack/react-virtual';
+import React from 'react';
 
 import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
 import { useVerseCard } from '@/app/(features)/surah/components/verse-card/useVerseCard';
@@ -20,10 +19,7 @@ const WORKSPACE_SCROLL_SELECTOR =
   '[data-slot="bookmarks-landing-main"], [data-slot="workspace-main"], [data-slot="bookmarks-workspace-main"]';
 
 export const BookmarkVerseList = ({ bookmarks }: BookmarkVerseListProps): React.JSX.Element => {
-  if (bookmarks.length === 0) {
-    return <div className="text-center py-20 text-muted">No verses in this folder</div>;
-  }
-
+  const hasBookmarks = bookmarks.length > 0;
   const [scrollElement, setScrollElement] = React.useState<HTMLElement | null>(null);
 
   const setRootRef = React.useCallback((node: HTMLDivElement | null) => {
@@ -48,6 +44,10 @@ export const BookmarkVerseList = ({ bookmarks }: BookmarkVerseListProps): React.
       return `bookmark-${bookmark.verseId}-${bookmark.verseKey ?? index}`;
     },
   });
+
+  if (!hasBookmarks) {
+    return <div className="text-center py-20 text-muted">No verses in this folder</div>;
+  }
 
   return (
     <div className="w-full relative" ref={setRootRef}>

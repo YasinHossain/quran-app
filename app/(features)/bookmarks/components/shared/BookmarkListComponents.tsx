@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { FixedSizeList as List } from 'react-window';
 import { useTranslation } from 'react-i18next';
+import { FixedSizeList as List } from 'react-window';
 
 import { BookmarkCard } from '@/app/(features)/bookmarks/components/BookmarkCard';
 import { ArrowLeftIcon, BookmarkIcon } from '@/app/shared/icons';
@@ -46,9 +46,7 @@ export const EmptyBookmarkState = ({ onBack }: EmptyBookmarkStateProps): React.J
       <h3 className="mb-2 text-lg font-semibold text-foreground">
         {t('bookmarks_empty_no_bookmarks_title')}
       </h3>
-      <p className="mx-auto mb-4 max-w-md text-muted">
-        {t('bookmarks_empty_state_description')}
-      </p>
+      <p className="mx-auto mb-4 max-w-md text-muted">{t('bookmarks_empty_state_description')}</p>
       {onBack && (
         <button
           onClick={onBack}
@@ -73,9 +71,7 @@ export const SimpleEmptyState = (): React.JSX.Element => {
         <h3 className="text-lg font-semibold text-foreground mb-2">
           {t('bookmarks_empty_no_bookmarks_title')}
         </h3>
-        <p className="text-muted mb-4">
-          {t('bookmarks_empty_state_secondary')}
-        </p>
+        <p className="text-muted mb-4">{t('bookmarks_empty_state_secondary')}</p>
       </div>
     </div>
   );

@@ -2,17 +2,16 @@
 
 import React, { useMemo, useCallback, useState, useEffect } from 'react';
 
-import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { CloseIcon } from '@/app/shared/icons';
-import { PanelModalCenter } from '@/app/shared/ui/PanelModalCenter';
-import { Button } from '@/app/shared/ui/Button';
-
 import {
   buildChapterLookup,
   buildGroupRangeLabel,
   getChapterDisplayName,
   groupPlannerPlans,
 } from '@/app/(features)/bookmarks/planner/utils/planGrouping';
+import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { CloseIcon } from '@/app/shared/icons';
+import { Button } from '@/app/shared/ui/Button';
+import { PanelModalCenter } from '@/app/shared/ui/PanelModalCenter';
 
 import { PlannerCardsSection } from './components/PlannerCardsSection';
 
@@ -80,7 +79,8 @@ const useVerseHeaderLabel = (
     subtitle: `${surahName} ${verseSummary.verseKey}`,
   };
 };
-function usePlannerCards(
+
+function usePlannerCards(
   planner: Record<string, PlannerPlan>,
   chapterLookup: Map<number, Chapter>,
   currentSurahId: number | undefined
@@ -268,7 +268,7 @@ export function AddToPlannerModal({
           </div>
         </header>
 
-        <div className={`${contentContainerClass} flex-1 min-h-0 overflow-y-auto`}> 
+        <div className={`${contentContainerClass} flex-1 min-h-0 overflow-y-auto`}>
           <PlannerCardsSection
             plannerCards={plannerCards}
             verseSummary={verseSummary}

@@ -10,8 +10,8 @@ import { cn } from '@/lib/utils/cn';
 import { BookmarkButton } from './components/BookmarkButton';
 import { NavigateToVerseLink } from './components/NavigateToVerseLink';
 import { PlayPauseButton } from './components/PlayPauseButton';
-import { VerseOptionsMenu } from './components/VerseOptionsMenu';
 import { TafsirLink } from './components/TafsirLink';
+import { VerseOptionsMenu } from './components/VerseOptionsMenu';
 
 export const DesktopVerseActions = ({
   verseKey,

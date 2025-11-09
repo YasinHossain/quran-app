@@ -3,16 +3,18 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useCallback, useMemo, useState } from 'react';
 
-import { CloseIcon } from '@/app/shared/icons';
-import { useBookmarks } from '@/app/providers/BookmarkContext';
+import {
+  BACKDROP_VARIANTS,
+  MODAL_VARIANTS,
+} from '@/app/(features)/bookmarks/components/delete-folder-modal/animations';
+import { ModalActions } from '@/app/(features)/bookmarks/components/delete-folder-modal/ModalActions';
 import {
   buildChapterLookup,
   groupPlannerPlans,
 } from '@/app/(features)/bookmarks/planner/utils/planGrouping';
+import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { CloseIcon } from '@/app/shared/icons';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
-
-import { BACKDROP_VARIANTS, MODAL_VARIANTS } from '@/app/(features)/bookmarks/components/delete-folder-modal/animations';
-import { ModalActions } from '@/app/(features)/bookmarks/components/delete-folder-modal/ModalActions';
 
 interface DeletePlannerModalProps {
   isOpen: boolean;
@@ -90,8 +92,18 @@ export function DeletePlannerModal({
               <div className="flex items-center justify-between p-6 pb-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-error/10 rounded-xl flex items-center justify-center">
-                    <svg className="w-5 h-5 text-error" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    <svg
+                      className="w-5 h-5 text-error"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
                     </svg>
                   </div>
                   <div>
@@ -111,15 +123,18 @@ export function DeletePlannerModal({
               <div className="px-6 pb-6">
                 <div className="mb-4 rounded-xl border border-border bg-surface p-4">
                   <p className="text-sm font-semibold text-foreground mb-1">{title}</p>
-                  {details ? (
-                    <p className="text-sm text-muted">{details}</p>
-                  ) : null}
+                  {details ? <p className="text-sm text-muted">{details}</p> : null}
                 </div>
 
                 <div className="space-y-4">
-                  <p className="text-foreground">Are you sure you want to permanently delete this planner?</p>
+                  <p className="text-foreground">
+                    Are you sure you want to permanently delete this planner?
+                  </p>
                   {countLabel ? (
-                    <div role="alert" className="bg-surface-hover border border-border rounded-xl p-4">
+                    <div
+                      role="alert"
+                      className="bg-surface-hover border border-border rounded-xl p-4"
+                    >
                       <p className="text-muted text-sm">{countLabel}</p>
                     </div>
                   ) : null}

@@ -19,7 +19,7 @@ interface SurahVerseListProps {
   isReachingEnd: boolean;
   emptyLabelKey?: string;
   endLabelKey?: string;
-  initialVerseKey?: string;
+  initialVerseKey?: string | undefined;
 }
 
 const ESTIMATED_VERSE_HEIGHT = 320;

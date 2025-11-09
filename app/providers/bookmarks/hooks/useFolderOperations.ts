@@ -33,9 +33,7 @@ export const useFolderOperations = (
     (folderId: string, newName: string, color?: string) => {
       setFolders((prev) =>
         prev.map((folder) =>
-          folder.id === folderId
-            ? { ...folder, name: newName, ...(color && { color }) }
-            : folder
+          folder.id === folderId ? { ...folder, name: newName, ...(color && { color }) } : folder
         )
       );
     },

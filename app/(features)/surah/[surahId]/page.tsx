@@ -23,11 +23,18 @@ async function SurahPage({ params, searchParams }: SurahPageProps): Promise<Reac
   const startVerseRaw = resolvedSearchParams?.startVerse;
   const parsedStartVerse = startVerseRaw ? Number.parseInt(startVerseRaw, 10) : undefined;
   const initialVerseNumber =
-    typeof parsedStartVerse === 'number' && Number.isFinite(parsedStartVerse) && parsedStartVerse > 0
+    typeof parsedStartVerse === 'number' &&
+    Number.isFinite(parsedStartVerse) &&
+    parsedStartVerse > 0
       ? parsedStartVerse
       : undefined;
 
-  return <SurahView surahId={resolvedParams.surahId} initialVerseNumber={initialVerseNumber} />;
+  const surahViewProps =
+    typeof initialVerseNumber === 'number'
+      ? { initialVerseNumber }
+      : ({} satisfies Record<string, never>);
+
+  return <SurahView surahId={resolvedParams.surahId} {...surahViewProps} />;
 }
 
 export default SurahPage;

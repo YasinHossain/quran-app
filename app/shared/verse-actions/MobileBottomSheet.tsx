@@ -4,6 +4,7 @@ import { AnimatePresence } from 'framer-motion';
 import { memo } from 'react';
 
 import { Portal } from '@/app/shared/components/Portal';
+
 import { BottomSheetBackdrop } from './BottomSheetBackdrop';
 import { BottomSheetContent } from './BottomSheetContent';
 import { useVerseActions } from './hooks/useVerseActions';

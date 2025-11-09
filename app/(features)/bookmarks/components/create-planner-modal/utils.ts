@@ -14,12 +14,7 @@ export const buildPlannerPlanDefinitions = (
   const { startSurah, endSurah } = formData;
   const trimmedBaseName = formData.planName.trim();
 
-  if (
-    !startSurah ||
-    !endSurah ||
-    startSurah > endSurah ||
-    trimmedBaseName.length === 0
-  ) {
+  if (!startSurah || !endSurah || startSurah > endSurah || trimmedBaseName.length === 0) {
     return [];
   }
 
