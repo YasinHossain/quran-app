@@ -14,7 +14,7 @@ Definitions
 - Plan Group: A sequence of plans with the same display name and consecutive surah IDs.
 - Aggregated Plan (virtual): Sum of target/completed across plans in a group, used for progress/statistics and daily focus.
 
-1) Currently At
+1. Currently At
 
 - Semantics: “Currently at” shows the last completed verse, not the next verse to start.
 - Single plan: current = max(1, min(completedVerses, targetVerses)).
@@ -28,12 +28,12 @@ Implemented in
 - Current metrics: `app/(features)/bookmarks/planner/utils/plannerCard/progress.ts`
 - Group details: `app/(features)/bookmarks/planner/utils/buildPlannerGroupCard.ts`
 
-2) Completed / Remaining / Progress
+2. Completed / Remaining / Progress
 
 - Grouped plans display totals across the group:
   - target = sum of targetVerses for all plans in the group.
   - completed = sum of min(completedVerses, targetVerses) per plan.
-  - percent = round((completed / target) * 100), clamped [0..100].
+  - percent = round((completed / target) \* 100), clamped [0..100].
 - Pages and Juz are estimated proportionally from verses using the group’s combined page bounds when available.
 
 User Action Semantics
@@ -48,7 +48,7 @@ Implemented in
 
 - Save cascade: `app/shared/verse-planner-modal/AddToPlannerModal.tsx` (find containing group; update earlier plans + the selected plan).
 
-3) Today’s Focus (Fixed Sessions)
+3. Today’s Focus (Fixed Sessions)
 
 - Daily Focus is computed across the aggregated plan using fixed session boundaries:
   - estimatedDays: If any plan in the group has a positive `estimatedDays`, we normalize and use it for the group; otherwise fallback to default.
@@ -56,7 +56,7 @@ Implemented in
   - Define sessions as buckets of size `versesPerDay`: [1..vpd], [vpd+1..2vpd], …
   - Daily goal window is the remainder of the current session:
     - start = completed + 1 (next verse after the last completed)
-    - end = min(target, ceil(start / vpd) * vpd)
+    - end = min(target, ceil(start / vpd) \* vpd)
   - Highlight details: page/juz labels derived from group’s page range resolver; verse count shows remaining verses in the session.
   - Remaining/Ends at: computed from remaining verses and `versesPerDay` across the group.
 - Labeling: If the daily window spans multiple surahs, show a cross-surah label (e.g., “Al‑Baqarah 2:76 – Ali ‘Imran 3:10”).

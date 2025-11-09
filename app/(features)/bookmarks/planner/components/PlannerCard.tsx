@@ -21,27 +21,8 @@ export const PlannerCard = ({
   continueVerse,
   onDelete,
 }: PlannerCardProps & { onDelete?: () => void }): React.JSX.Element => {
-  const router = useRouter();
-  const viewModel = React.useMemo(() => {
-    if (precomputedViewModel) {
-      return precomputedViewModel;
-    }
-    const params: PlannerCardProps = chapter ? { surahId, plan, chapter } : { surahId, plan };
-    return createPlannerCardViewModel(params);
-  }, [precomputedViewModel, surahId, plan, chapter]);
-
-  const handleNavigate = React.useCallback((): void => {
-    const parsedSurahId = Number.parseInt(surahId, 10);
-    const fallbackSurahId = Number.isFinite(parsedSurahId) ? parsedSurahId : surahId;
-    const resolvedSurahId = continueVerse?.surahId ?? fallbackSurahId;
-    const targetPath = `/surah/${resolvedSurahId}`;
-    if (continueVerse?.verse && continueVerse.verse > 0) {
-      const params = new URLSearchParams({ startVerse: String(continueVerse.verse) });
-      router.push(`${targetPath}?${params.toString()}`);
-      return;
-    }
-    router.push(targetPath);
-  }, [continueVerse, router, surahId]);
+  const viewModel = usePlannerViewModel({ surahId, plan, chapter, precomputedViewModel });
+  const handleNavigate = usePlannerNavigation(surahId, continueVerse);
 
   const handleContinueClick = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>): void => {
@@ -61,19 +42,7 @@ export const PlannerCard = ({
               planDetailsText={viewModel.planInfo.planDetailsText}
             />
           </div>
-          {onDelete ? (
-            <button
-              type="button"
-              aria-label="Delete planner"
-              className="shrink-0 rounded-lg p-2 text-muted hover:bg-surface-hover hover:text-error transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-accent/40 focus:outline-none"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete?.();
-              }}
-            >
-              <CloseIcon size={18} />
-            </button>
-          ) : null}
+          <PlannerCardDeleteButton onDelete={onDelete} />
         </div>
 
         <DailyFocusSection focus={viewModel.focus} />
@@ -91,5 +60,61 @@ export const PlannerCard = ({
         </div>
       </div>
     </div>
+  );
+};
+
+const usePlannerViewModel = ({
+  surahId,
+  plan,
+  chapter,
+  precomputedViewModel,
+}: Pick<PlannerCardProps, 'surahId' | 'plan' | 'chapter' | 'precomputedViewModel'>) => {
+  return React.useMemo(() => {
+    if (precomputedViewModel) {
+      return precomputedViewModel;
+    }
+    const params: PlannerCardProps = chapter ? { surahId, plan, chapter } : { surahId, plan };
+    return createPlannerCardViewModel(params);
+  }, [chapter, plan, precomputedViewModel, surahId]);
+};
+
+const usePlannerNavigation = (
+  surahId: string,
+  continueVerse: PlannerCardProps['continueVerse']
+): (() => void) => {
+  const router = useRouter();
+
+  return React.useCallback(() => {
+    const parsedSurahId = Number.parseInt(surahId, 10);
+    const fallbackSurahId = Number.isFinite(parsedSurahId) ? parsedSurahId : surahId;
+    const resolvedSurahId = continueVerse?.surahId ?? fallbackSurahId;
+    const targetPath = `/surah/${resolvedSurahId}`;
+    if (continueVerse?.verse && continueVerse.verse > 0) {
+      const params = new URLSearchParams({ startVerse: String(continueVerse.verse) });
+      router.push(`${targetPath}?${params.toString()}`);
+      return;
+    }
+    router.push(targetPath);
+  }, [continueVerse, router, surahId]);
+};
+
+const PlannerCardDeleteButton = ({
+  onDelete,
+}: {
+  onDelete?: () => void;
+}): React.JSX.Element | null => {
+  if (!onDelete) return null;
+  return (
+    <button
+      type="button"
+      aria-label="Delete planner"
+      className="shrink-0 rounded-lg p-2 text-muted hover:bg-surface-hover hover:text-error transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-accent/40 focus:outline-none"
+      onClick={(event) => {
+        event.stopPropagation();
+        onDelete();
+      }}
+    >
+      <CloseIcon size={18} />
+    </button>
   );
 };

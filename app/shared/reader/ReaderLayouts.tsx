@@ -41,11 +41,7 @@ export const WorkspaceReaderLayout = ({
     <ThreeColumnWorkspace
       left={desktopLeft}
       center={
-        <WorkspaceMain
-          data-slot="surah-workspace-main"
-          reserveLeftSpace
-          reserveRightSpace
-        >
+        <WorkspaceMain data-slot="surah-workspace-main" reserveLeftSpace reserveRightSpace>
           {main}
         </WorkspaceMain>
       }

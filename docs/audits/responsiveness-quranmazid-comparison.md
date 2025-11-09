@@ -77,7 +77,7 @@ Notes: Exact alias→value mapping is inferred from class usage and media querie
 
 ## Recommendations (Actionable)
 
-1) Make the folder grid fluid (match last‑read + theirs)
+1. Make the folder grid fluid (match last‑read + theirs)
 
 - Change the container class in `app/(features)/bookmarks/components/FolderGrid.tsx:83` from:
 
@@ -107,7 +107,7 @@ Notes: Exact alias→value mapping is inferred from class usage and media querie
   - Pick `15rem` (~240px) for parity with Quran Mazid.
   - Keep `auto-rows-fr` for uniform card heights per row.
 
-2) Align horizontal padding via a variable (optional but recommended)
+2. Align horizontal padding via a variable (optional but recommended)
 
 - Pattern (mirrors theirs): define `[--padding-x]` on a parent by breakpoint and apply `px-[--padding-x]` to children containers.
 - Example for bookmarks center area at `app/(features)/bookmarks/components/shared/BookmarksLayout.tsx`:
@@ -116,17 +116,17 @@ Notes: Exact alias→value mapping is inferred from class usage and media querie
 
     ```tsx
     // On a wrapper (e.g., WorkspaceMain content wrapper or a parent div)
-    className="[--padding-x:0.5rem] sm:[--padding-x:1rem] lg:[--padding-x:1.5rem]"
+    className = '[--padding-x:0.5rem] sm:[--padding-x:1rem] lg:[--padding-x:1.5rem]';
 
     // Then use
-    contentClassName="gap-4 pb-12 sm:gap-6 px-[--padding-x]"
+    contentClassName = 'gap-4 pb-12 sm:gap-6 px-[--padding-x]';
     ```
 
   Benefits:
   - Inheritable, uniform horizontal rhythm across nested grids/sections.
   - Fewer duplicated `px-*` class edits when adjusting spacing.
 
-3) Add readable screen aliases (optional)
+3. Add readable screen aliases (optional)
 
 - If desired for parity/clarity, add semantic aliases alongside existing screens in `tailwind.config.mjs:7–13`:
 
@@ -141,11 +141,11 @@ Notes: Exact alias→value mapping is inferred from class usage and media querie
 
   Tailwind’s `max-*` variants will then allow `max-laptop:*` style rules (e.g., `max-laptop:grid-cols-1`).
 
-4) Direction-aware variants (only if we support RTL)
+4. Direction-aware variants (only if we support RTL)
 
 - Introduce `rtl:`/`ltr:` for paddings/absolute positioning near sidebars or action buttons where left/right differs by direction.
 
-5) Verify via tests and manual checks
+5. Verify via tests and manual checks
 
 - Tests: Use the provided viewport helpers at `app/testUtils/responsiveTestUtils/viewport.ts` (tablet: 768, desktop: 1024) to assert layout at key widths.
 - Manual: Confirm folder grid column count increases fluidly and spacing matches at 360/480/768/1024/1280/1440.
@@ -175,4 +175,3 @@ Notes: Exact alias→value mapping is inferred from class usage and media querie
 2. Adopt `[--padding-x]` for bookmarks center content.
 3. Optionally define screen aliases and (if needed) add `rtl:`/`ltr:` utilities where direction matters.
 4. Validate at 480/768/1024/1280/1440px and adjust `--min-col` to align with card design.
-

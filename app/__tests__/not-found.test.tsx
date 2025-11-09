@@ -16,7 +16,7 @@ jest.mock('next/link', () => {
 
 beforeEach(() => {
   useTranslationMock.mockImplementation(() => ({
-    t: (key: string) => ({ page_not_found: 'Page not found', home: 'Home' }[key] ?? key),
+    t: (key: string) => ({ page_not_found: 'Page not found', home: 'Home' })[key] ?? key,
   }));
 });
 

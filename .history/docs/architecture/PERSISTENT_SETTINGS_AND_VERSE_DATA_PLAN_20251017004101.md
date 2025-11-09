@@ -37,7 +37,7 @@ It focuses on a single source of truth for settings and a unified data layer so 
 
 ## Data Layer Design
 
-1) List Endpoints (already good)
+1. List Endpoints (already good)
 
 - Continue using `getVersesByChapter/Juz/Page` with:
   - `translations`: comma‑separated `translationIds`
@@ -46,7 +46,7 @@ It focuses on a single source of truth for settings and a unified data layer so 
   - `fields=text_uthmani,audio`
 - Consumed by: `useVerseListing`
 
-2) Single Verse (new standard)
+2. Single Verse (new standard)
 
 - Introduce `useSingleVerse(verseIdOrKey: string)` that:
   - Reads `translationIds` and `wordLang` from `SettingsContext`.
@@ -54,12 +54,12 @@ It focuses on a single source of truth for settings and a unified data layer so 
   - Always requests a complete payload (translations + words + audio) for parity with list views.
   - Exposes SWR state (`data`, `error`, `isLoading`) and returns a normalized `Verse`.
 
-3) Normalization
+3. Normalization
 
 - Keep normalization in `lib/api/verses/normalize.ts`.
 - Ensure `Word` items include Uthmani text and a property keyed by `wordLang`.
 
-4) Caching
+4. Caching
 
 - For single‑verse fetches (bookmarks/pinned), continue to use a small LRU cache keyed by:
   - `verseKeyOrId-translationIdsJoined-wordLang`
@@ -67,27 +67,27 @@ It focuses on a single source of truth for settings and a unified data layer so 
 
 ## Page Integration Plan
 
-1) Surah / Juz / Page
+1. Surah / Juz / Page
 
 - Already powered by `useVerseListing`; verify keys include `translationIds` and `wordLang`.
 - No change expected beyond minor key stabilization (if needed).
 
-2) Tafsir
+2. Tafsir
 
 - Replace any single‑translation calls with `translationIds`.
 - Fetch verse via `getVersesByChapter(..., perPage=1)` or `useSingleVerse` if refactoring.
 - Continue fetching tafsir content via use‑case; no changes to tafsir repository needed.
 
-3) Bookmarks (Folders)
+3. Bookmarks (Folders)
 
 - Replace direct single‑translation fetch with `useSingleVerse` or call the centralized `getVerseWithCache` using `translationIds` and `wordLang`.
 - Ensure verse payload includes `words` so word‑by‑word rendering and hover/tooltips are consistent.
 
-4) Pinned Verses
+4. Pinned Verses
 
 - Same as Bookmarks; use `useSingleVerse` or updated `getVerseWithCache`.
 
-5) Search / Last‑Read / Memorization (if/when implemented)
+5. Search / Last‑Read / Memorization (if/when implemented)
 
 - Standardize on `useSingleVerse` for detail cards and `useVerseListing` for lists.
 
@@ -96,7 +96,7 @@ It focuses on a single source of truth for settings and a unified data layer so 
 ```ts
 // app/shared/hooks/useSingleVerse.ts
 export interface UseSingleVerseOptions {
-  idOrKey: string;         // e.g., "262" or "2:255"
+  idOrKey: string; // e.g., "262" or "2:255"
   suspense?: boolean;
 }
 
@@ -104,10 +104,10 @@ export interface UseSingleVerseReturn {
   verse: Verse | undefined;
   isLoading: boolean;
   error: string | null;
-  mutate: () => void;      // revalidate
+  mutate: () => void; // revalidate
 }
 
-export function useSingleVerse(opts: UseSingleVerseOptions): UseSingleVerseReturn
+export function useSingleVerse(opts: UseSingleVerseOptions): UseSingleVerseReturn;
 ```
 
 Behavior:
@@ -164,12 +164,12 @@ Examples:
 
 ## Migration Plan (Incremental)
 
-1) Add `useSingleVerse` hook.
-2) Switch Tafsir to use `translationIds` (done) or `useSingleVerse`.
-3) Update Bookmarks and Pinned to use `useSingleVerse` (or the updated cache helpers that now accept `translationIds`/`wordLang`).
-4) Standardize SWR keys across pages.
-5) Add tests for the new hook and updated consumers.
-6) (Optional) Migrate any remaining single‑verse usages to the hook.
+1. Add `useSingleVerse` hook.
+2. Switch Tafsir to use `translationIds` (done) or `useSingleVerse`.
+3. Update Bookmarks and Pinned to use `useSingleVerse` (or the updated cache helpers that now accept `translationIds`/`wordLang`).
+4. Standardize SWR keys across pages.
+5. Add tests for the new hook and updated consumers.
+6. (Optional) Migrate any remaining single‑verse usages to the hook.
 
 ## Risks & Mitigations
 

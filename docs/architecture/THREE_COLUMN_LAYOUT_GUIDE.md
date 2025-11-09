@@ -34,7 +34,8 @@ Authoritative guide for a consistent, scalable, and accessible three‑column la
 
 ## Route Archetypes
 
-1) Reader pages (Surah, Juz, Page, Tafsir detail)
+1. Reader pages (Surah, Juz, Page, Tafsir detail)
+
 - Desktop:
   - Left: navigation (`SurahWorkspaceNavigation`)
   - Center: verses/tafsir content
@@ -44,7 +45,8 @@ Authoritative guide for a consistent, scalable, and accessible three‑column la
   - Right overlay: `SettingsSidebar`
 - Source of truth: `ReaderShell` (Surah/Juz/Page). Tafsir detail composes the same workspace pattern and can adopt a `ReaderShell` variant later.
 
-2) Collections (Bookmarks and subroutes)
+2. Collections (Bookmarks and subroutes)
+
 - Desktop:
   - Left: `BookmarksSidebar`
   - Center: lists/details
@@ -52,7 +54,8 @@ Authoritative guide for a consistent, scalable, and accessible three‑column la
 - Mobile:
   - Left overlay via `BookmarksMobileSidebarOverlay`
 
-3) Index/Explorer (Home, Search, Juz Index, Tafsir Index)
+3. Index/Explorer (Home, Search, Juz Index, Tafsir Index)
+
 - Prefer center‑only with `WorkspaceMain` when no desktop rails are needed
 - Optionally add a left rail (e.g., Surah navigation or search filters) on desktop using `ThreeColumnWorkspace`
 
@@ -87,15 +90,15 @@ Authoritative guide for a consistent, scalable, and accessible three‑column la
 
 ## Migration Checklist (Per Route)
 
-1) Identify archetype (Reader, Collection, Index)
-2) Remove any globally mounted or page‑level fixed overlays on desktop
-3) Wrap page content in `ThreeColumnWorkspace` if rails are needed
+1. Identify archetype (Reader, Collection, Index)
+2. Remove any globally mounted or page‑level fixed overlays on desktop
+3. Wrap page content in `ThreeColumnWorkspace` if rails are needed
    - Provide `left` and/or `right` nodes (desktop rails)
    - Use `WorkspaceMain` for the center
-4) Provide mobile overlays guarded by `lg:hidden`
-5) Ensure colors/borders use semantic tokens; remove raw utilities
-6) Validate header offset, safe‑area, and z‑index
-7) Add tests/story for the route layout
+4. Provide mobile overlays guarded by `lg:hidden`
+5. Ensure colors/borders use semantic tokens; remove raw utilities
+6. Validate header offset, safe‑area, and z‑index
+7. Add tests/story for the route layout
 
 ## Current State (as of this change)
 

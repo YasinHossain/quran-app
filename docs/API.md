@@ -8,20 +8,20 @@ This document lists the main helpers in `lib/api/` and outlines how Quran.com AP
 
 ## Functions and Endpoints
 
-| Function                          | Endpoint                                                         | Description                              |
-| --------------------------------- | ---------------------------------------------------------------- | ---------------------------------------- |
-| `getChapters()`                   | `/chapters?language=en`                                          | Fetch list of chapters.                  |
-| `getSurahCoverUrl(surahNumber)`   | `https://api.wikimedia.org/core/v1/commons/file/File:{filename}` | Fetch Surah cover image from Wikimedia.  |
-| `getTranslations()`               | `/resources/translations`                                        | List available translations.             |
-| `getWordTranslations()`           | `/resources/translations?resource_type=word_by_word`             | List word-by-word translation resources. |
-| `getVersesByChapter({ id, ... })` | `/verses/by_chapter/:id`                                         | Fetch verses for a chapter.              |
-| `getVersesByJuz({ id, ... })`     | `/verses/by_juz/:id`                                             | Fetch verses for a juz.                  |
-| `getVersesByPage({ id, ... })`    | `/verses/by_page/:id`                                            | Fetch verses for a page.                 |
-| `searchVerses(query)`             | `/search`                                                        | Search verses.                           |
-| `getJuz(id)`                      | `/juzs/:id`                                                      | Fetch metadata for a juz.                |
-| `getRandomVerse(translationId)`                     | `/verses/random`                                                 | Retrieve a random verse.                 |
-| `getVerseById(id, translationIds, wordLang?)`       | `/verses/:id`                                                    | Fetch a single verse with full payload.  |
-| `getTafsirResources()`            | `/resources/tafsirs`                                             | List tafsir resources.                   |
+| Function                                      | Endpoint                                                         | Description                              |
+| --------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------- |
+| `getChapters()`                               | `/chapters?language=en`                                          | Fetch list of chapters.                  |
+| `getSurahCoverUrl(surahNumber)`               | `https://api.wikimedia.org/core/v1/commons/file/File:{filename}` | Fetch Surah cover image from Wikimedia.  |
+| `getTranslations()`                           | `/resources/translations`                                        | List available translations.             |
+| `getWordTranslations()`                       | `/resources/translations?resource_type=word_by_word`             | List word-by-word translation resources. |
+| `getVersesByChapter({ id, ... })`             | `/verses/by_chapter/:id`                                         | Fetch verses for a chapter.              |
+| `getVersesByJuz({ id, ... })`                 | `/verses/by_juz/:id`                                             | Fetch verses for a juz.                  |
+| `getVersesByPage({ id, ... })`                | `/verses/by_page/:id`                                            | Fetch verses for a page.                 |
+| `searchVerses(query)`                         | `/search`                                                        | Search verses.                           |
+| `getJuz(id)`                                  | `/juzs/:id`                                                      | Fetch metadata for a juz.                |
+| `getRandomVerse(translationId)`               | `/verses/random`                                                 | Retrieve a random verse.                 |
+| `getVerseById(id, translationIds, wordLang?)` | `/verses/:id`                                                    | Fetch a single verse with full payload.  |
+| `getTafsirResources()`                        | `/resources/tafsirs`                                             | List tafsir resources.                   |
 
 ## Data Flow from API to UI
 

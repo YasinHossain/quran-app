@@ -26,26 +26,26 @@ Fonts and i18n are reasonable as configured (display swap; moderate JSON), so th
 
 ## Quick Wins (Apply First)
 
-1) Switch folder/bookmark cards to CSS animations
+1. Switch folder/bookmark cards to CSS animations
 
 - Edit `app/shared/ui/base-card.config.ts`:
   - Change `ANIMATION_CONFIGS.folder` and `ANIMATION_CONFIGS.bookmark` from `type: 'framer'` to `type: 'css'` and keep simple transitions in `css.hover`.
 - This avoids framer for the busiest card type in bookmarks.
 
-2) Remove simple framer wrappers in bookmarks
+2. Remove simple framer wrappers in bookmarks
 
 - Replace `motion.div` usages that do simple fades/translates with CSS transitions.
   - `app/(features)/bookmarks/page.tsx`
   - `app/(features)/bookmarks/components/FolderGrid.tsx`
   - `app/(features)/bookmarks/planner/components/PlannerCard.tsx`
 
-3) Lower the first-visit chapters fetch timeout
+3. Lower the first-visit chapters fetch timeout
 
 - Edit `lib/api/client.ts` default timeout to ~4000 ms:
   - `fetchWithTimeout(..., { timeout: 4000 })` or set the default `timeout = 4000`.
 - Optional: expose `NEXT_PUBLIC_QURAN_API_TIMEOUT` and read it for local tweaking.
 
-4) Lazy-load heavy modals in FolderGrid
+4. Lazy-load heavy modals in FolderGrid
 
 - Convert `FolderSettingsModal` and `DeleteFolderModal` to dynamic imports so they don’t land in the initial grid chunk.
   - `app/(features)/bookmarks/components/FolderGrid.tsx`
@@ -54,7 +54,7 @@ Fonts and i18n are reasonable as configured (display swap; moderate JSON), so th
 
 ## Medium Wins (Next Pass)
 
-5) Avoid always importing framer from BaseCard
+5. Avoid always importing framer from BaseCard
 
 - Today, `BaseCard` re-exports both CSS and framer renderers via `renderers.tsx`, which pulls `framer-motion` even when you select a CSS animation.
   - `app/shared/ui/BaseCard.tsx`
@@ -83,7 +83,7 @@ export const BaseCard = memo((props: BaseCardProps) => {
 
 This reduces initial bundle size for screens that don’t need framer.
 
-6) Provide initial cached chapter data (optional UX polish)
+6. Provide initial cached chapter data (optional UX polish)
 
 - If you want zero perceived stall on first home visit, add minimal fallback data (a tiny JSON of chapter metadata) and pass it to `useSurahNavigationData({ initialChapters })`.
   - Keep SWR enabled to revalidate in the background.
@@ -116,8 +116,7 @@ This reduces initial bundle size for screens that don’t need framer.
 
 ## Rollout Order
 
-1) CSS animations for folder/bookmark; lower fetch timeout; lazy-load modals.
-2) Remove simple framer wrappers in bookmarks pages.
-3) De-couple framer imports in `BaseCard`.
-4) Optional initial data / preconnect hints.
-
+1. CSS animations for folder/bookmark; lower fetch timeout; lazy-load modals.
+2. Remove simple framer wrappers in bookmarks pages.
+3. De-couple framer imports in `BaseCard`.
+4. Optional initial data / preconnect hints.
