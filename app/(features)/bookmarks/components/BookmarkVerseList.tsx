@@ -16,7 +16,8 @@ interface BookmarkVerseListProps {
   bookmarks: Bookmark[];
 }
 
-const WORKSPACE_SCROLL_SELECTOR = '[data-slot="bookmarks-landing-main"], [data-slot="workspace-main"]';
+const WORKSPACE_SCROLL_SELECTOR =
+  '[data-slot="bookmarks-landing-main"], [data-slot="workspace-main"], [data-slot="bookmarks-workspace-main"]';
 
 export const BookmarkVerseList = ({ bookmarks }: BookmarkVerseListProps): React.JSX.Element => {
   if (bookmarks.length === 0) {

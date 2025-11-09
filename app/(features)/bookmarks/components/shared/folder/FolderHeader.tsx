@@ -47,7 +47,7 @@ const FolderInfo = ({
   }`;
 
   return (
-    <div className="min-w-0 flex flex-col">
+    <div className="min-w-0 flex flex-col gap-1">
       <p
         className={cn(
           'truncate text-[1.08rem] leading-[1.1] font-semibold transition-colors duration-200',
@@ -58,7 +58,7 @@ const FolderInfo = ({
       </p>
       <p
         className={cn(
-          'text-sm leading-[1.1] font-medium transition-colors duration-200 -mt-px',
+          'text-sm leading-[1.1] font-medium transition-colors duration-200',
           colors.text.secondary
         )}
       >

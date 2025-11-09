@@ -19,7 +19,8 @@ interface PinnedVersesListProps {
   isLoading: boolean;
 }
 
-const WORKSPACE_SCROLL_SELECTOR = '[data-slot="bookmarks-landing-main"], [data-slot="workspace-main"]';
+const WORKSPACE_SCROLL_SELECTOR =
+  '[data-slot="bookmarks-landing-main"], [data-slot="workspace-main"], [data-slot="bookmarks-workspace-main"]';
 
 export const PinnedVersesList = ({
   bookmarks,

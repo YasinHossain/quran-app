@@ -8,11 +8,13 @@ import { Bookmark } from '@/types';
 interface ExpandedContentProps {
   isExpanded: boolean;
   folderBookmarks: Bookmark[];
+  onRemoveBookmark?: (bookmark: Bookmark) => void;
 }
 
 export const ExpandedContent = ({
   isExpanded,
   folderBookmarks,
+  onRemoveBookmark,
 }: ExpandedContentProps): React.JSX.Element | null => {
   if (!isExpanded) return null;
 
@@ -24,6 +26,7 @@ export const ExpandedContent = ({
             key={String(bookmark.verseId)}
             bookmark={bookmark}
             showDivider={index < folderBookmarks.length - 1}
+            {...(onRemoveBookmark ? { onRemoveBookmark } : {})}
           />
         ))
       ) : (

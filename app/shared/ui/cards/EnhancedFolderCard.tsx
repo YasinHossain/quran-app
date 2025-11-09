@@ -86,7 +86,7 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
       className={cn('group relative w-full', className)}
       {...props}
     >
-      <div className="absolute right-3 top-3">
+      <div className="absolute right-0 top-0 z-10">
         <FolderContextMenu onDelete={onDelete} onColorChange={onColorChange} />
       </div>
 

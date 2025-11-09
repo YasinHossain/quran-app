@@ -2,6 +2,7 @@
 
 import React from 'react';
 
+import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { BaseCard } from '@/app/shared/ui/BaseCard';
 import { Bookmark, Folder } from '@/types';
 
@@ -25,6 +26,13 @@ export const FolderItem = ({
   onToggle,
   onSelect,
 }: FolderItemProps): React.JSX.Element => {
+  const { removeBookmark } = useBookmarks();
+  const handleRemoveBookmark = React.useCallback(
+    (bookmark: Bookmark): void => {
+      removeBookmark(bookmark.verseId, folderItem.id);
+    },
+    [removeBookmark, folderItem.id]
+  );
   const shouldShowExpanded = isExpanded && isCurrentFolder;
 
   return (
@@ -64,7 +72,11 @@ export const FolderItem = ({
         onSelect={onSelect}
         showDivider={shouldShowExpanded}
       />
-      <ExpandedContent isExpanded={shouldShowExpanded} folderBookmarks={folderBookmarks} />
+      <ExpandedContent
+        isExpanded={shouldShowExpanded}
+        folderBookmarks={folderBookmarks}
+        onRemoveBookmark={handleRemoveBookmark}
+      />
     </BaseCard>
   );
 };
