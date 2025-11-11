@@ -19,7 +19,7 @@ export function useBookmarkIdentifierSync(params: {
       verseIdentifier,
       identifierSource,
       currentVerseId,
-      currentVerseKey,
+      ...(currentVerseKey !== undefined ? { currentVerseKey } : {}),
     });
 
     if (updatePayload) {

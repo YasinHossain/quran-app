@@ -1,7 +1,7 @@
 export { sortChaptersById, parseNumericId } from './shared';
 export type { BookmarkUpdatePayload } from './shared';
+export type { IdentifierSource } from './identifiers';
 export {
-  IdentifierSource,
   normaliseIdentifier,
   deriveBookmarkIdentifier,
   resolveBookmarkVerseKey,

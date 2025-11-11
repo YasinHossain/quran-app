@@ -14,6 +14,9 @@ import {
   createPlannerPlansForRange,
 } from './create-planner-modal';
 
+import type { PlanFormData } from './create-planner-modal';
+import type { Chapter, PlannerPlan } from '@/types';
+
 interface CreatePlannerModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -37,8 +40,50 @@ export const CreatePlannerModal = ({
     () => buildPlannerPlanDefinitions(formData, chapters),
     [formData, chapters]
   );
+  const duplicatePlanName = useDuplicatePlanName(formData, chapters, planner, planDefinitions);
 
-  const duplicatePlanName = React.useMemo(() => {
+  const canSubmit =
+    formData.planName.trim().length > 0 && isValidRange && totalVerses > 0 && !duplicatePlanName;
+
+  const handleSubmit = (e: React.FormEvent): void => {
+    e.preventDefault();
+    if (!canSubmit) return;
+    createPlannerPlansForRange(formData, chapters, createPlannerPlan);
+    handleClose();
+  };
+
+  const handleClose = useCloseHandler(resetForm, onClose);
+
+  return (
+    <PanelModalCenter
+      isOpen={isOpen}
+      onClose={handleClose}
+      title=""
+      showCloseButton={true}
+      closeOnOverlayClick={true}
+    >
+      <CreatePlannerForm
+        formData={formData}
+        onFormDataChange={handleFormDataChange}
+        totalVerses={totalVerses}
+        versesPerDay={versesPerDay}
+        isValidRange={isValidRange}
+        canSubmit={canSubmit}
+        duplicatePlanName={duplicatePlanName}
+        onSubmit={handleSubmit}
+        chapters={chapters}
+      />
+    </PanelModalCenter>
+  );
+};
+
+function useDuplicatePlanName(
+  formData: PlanFormData,
+  chapters: Chapter[],
+  planner: Record<string, PlannerPlan>,
+  planDefinitions: ReturnType<typeof buildPlannerPlanDefinitions>
+): string | null {
+  return React.useMemo(() => {
     if (planDefinitions.length === 0) return null;
 
     const trimmedInputName = formData.planName.trim();
@@ -66,45 +111,50 @@ export const CreatePlannerModal = ({
 
     return hasConflict ? trimmedInputName : null;
   }, [planDefinitions, formData.planName, planner, chapters]);
+}
 
-  const hasPlanName = formData.planName.trim().length > 0;
-  const canSubmit = hasPlanName && isValidRange && totalVerses > 0 && !duplicatePlanName;
-
-  const handleSubmit = (e: React.FormEvent): void => {
-    e.preventDefault();
-    if (canSubmit) {
-      createPlannerPlansForRange(formData, chapters, createPlannerPlan);
-      handleClose();
-    }
-  };
-
-  const handleClose = (): void => {
+function useCloseHandler(resetForm: () => void, onClose: () => void): () => void {
+  return React.useCallback(() => {
     resetForm();
     onClose();
-  };
+  }, [resetForm, onClose]);
+}
 
+function CreatePlannerForm({
+  formData,
+  onFormDataChange,
+  totalVerses,
+  versesPerDay,
+  isValidRange,
+  canSubmit,
+  duplicatePlanName,
+  onSubmit,
+  chapters,
+}: {
+  formData: PlanFormData;
+  onFormDataChange: (updates: Partial<PlanFormData>) => void;
+  totalVerses: number;
+  versesPerDay: number;
+  isValidRange: boolean;
+  canSubmit: boolean;
+  duplicatePlanName: string | null;
+  onSubmit: (e: React.FormEvent) => void;
+  chapters: Chapter[];
+}): React.JSX.Element {
   return (
-    <PanelModalCenter
-      isOpen={isOpen}
-      onClose={handleClose}
-      title=""
-      showCloseButton={true}
-      closeOnOverlayClick={true}
-    >
-      <div className="p-6">
-        <ModalHeader />
-        <PlannerForm
-          formData={formData}
-          onFormDataChange={handleFormDataChange}
-          totalVerses={totalVerses}
-          versesPerDay={versesPerDay}
-          isValidRange={isValidRange}
-          canSubmit={canSubmit}
-          {...(duplicatePlanName ? { duplicatePlanName } : {})}
-          onSubmit={handleSubmit}
-          chapters={chapters}
-        />
-      </div>
-    </PanelModalCenter>
+    <div className="p-6">
+      <ModalHeader />
+      <PlannerForm
+        formData={formData}
+        onFormDataChange={onFormDataChange}
+        totalVerses={totalVerses}
+        versesPerDay={versesPerDay}
+        isValidRange={isValidRange}
+        canSubmit={canSubmit}
+        {...(duplicatePlanName ? { duplicatePlanName } : {})}
+        onSubmit={onSubmit}
+        chapters={chapters}
+      />
+    </div>
   );
-};
+}

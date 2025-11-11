@@ -34,25 +34,6 @@ const stripChapterSuffixFlexible = (planName: string, chapterName: string): stri
   return name;
 };
 
-const stripChapterSuffix = (planName: string, chapterName: string): string => {
-  const normalizedName = planName.trim();
-  const normalizedChapter = chapterName.trim();
-
-  const suffixes = [
-    ` - ${normalizedChapter}`,
-    ` • ${normalizedChapter}`,
-    ` · ${normalizedChapter}`,
-  ];
-
-  for (const suffix of suffixes) {
-    if (normalizedName.toLowerCase().endsWith(suffix.toLowerCase())) {
-      return normalizedName.slice(0, normalizedName.length - suffix.length).trim();
-    }
-  }
-
-  return normalizedName;
-};
-
 export const getDisplayPlanName = (
   plan: PlannerPlan,
   chapterLookup: Map<number, Chapter>
@@ -86,6 +67,12 @@ export const buildSurahRangeNumberLabel = (surahIds: number[]): string => {
   return `Surah ${firstId}-${normalizedLast}`;
 };
 
+const resolveSurahName = (chapter: Chapter | undefined, surahId: number | undefined): string => {
+  if (chapter?.name_simple) return chapter.name_simple;
+  if (typeof surahId === 'number') return `Surah ${surahId}`;
+  return '';
+};
+
 export const buildSurahRangeNameLabel = (
   surahIds: number[],
   chapterLookup: Map<number, Chapter>
@@ -95,16 +82,17 @@ export const buildSurahRangeNameLabel = (
     const onlyId = surahIds[0];
     if (typeof onlyId !== 'number') return '';
     const chapter = chapterLookup.get(onlyId);
-    return chapter?.name_simple ?? `Surah ${onlyId}`;
+    return resolveSurahName(chapter, onlyId);
   }
   const firstId = surahIds[0];
   const lastId = surahIds[surahIds.length - 1];
   const firstChapter = typeof firstId === 'number' ? chapterLookup.get(firstId) : undefined;
   const lastChapter = typeof lastId === 'number' ? chapterLookup.get(lastId) : undefined;
-  const firstName =
-    firstChapter?.name_simple ?? (typeof firstId === 'number' ? `Surah ${firstId}` : '');
-  const lastName =
-    lastChapter?.name_simple ?? (typeof lastId === 'number' ? `Surah ${lastId}` : '');
+  const firstName = resolveSurahName(
+    firstChapter,
+    typeof firstId === 'number' ? firstId : undefined
+  );
+  const lastName = resolveSurahName(lastChapter, typeof lastId === 'number' ? lastId : undefined);
   if (firstName === lastName) return firstName;
   return `${firstName} - ${lastName}`;
 };
@@ -120,6 +108,88 @@ export const buildGroupRangeLabel = (
   return `${nameLabel} (${numberLabel})`;
 };
 
+type PlanBucket = { displayName: string; plans: PlannerPlan[] };
+
+interface PlanKeyMetadata {
+  canonicalKey: string;
+  displayName: string;
+}
+
+const parsePlanKey = (plan: PlannerPlan, chapterLookup: Map<number, Chapter>): PlanKeyMetadata => {
+  const displayName = getDisplayPlanName(plan, chapterLookup);
+  return { canonicalKey: displayName.toLowerCase(), displayName };
+};
+
+const sortGroupsByChapter = (plans: PlannerPlan[]): PlannerPlan[] =>
+  plans.slice().sort((a, b) => a.surahId - b.surahId);
+
+const groupByChapterOrRange = (plans: PlannerPlan[]): PlannerPlan[][] => {
+  if (plans.length === 0) return [];
+
+  const sequences: PlannerPlan[][] = [];
+  let currentSequence: PlannerPlan[] = [];
+
+  const flush = (): void => {
+    if (currentSequence.length === 0) return;
+    sequences.push(currentSequence);
+    currentSequence = [];
+  };
+
+  plans.forEach((plan) => {
+    if (currentSequence.length === 0) {
+      currentSequence = [plan];
+      return;
+    }
+
+    const previous = currentSequence[currentSequence.length - 1]!;
+    if (plan.surahId === previous.surahId + 1) {
+      currentSequence.push(plan);
+      return;
+    }
+
+    flush();
+    currentSequence = [plan];
+  });
+
+  flush();
+  return sequences;
+};
+
+const formatGroupLabel = (
+  displayName: string,
+  surahIds: number[],
+  chapterLookup: Map<number, Chapter>
+): string => {
+  if (displayName.trim().length > 0) {
+    return displayName;
+  }
+  return buildGroupRangeLabel(surahIds, chapterLookup);
+};
+
+const buildGroupsFromBucket = (
+  bucket: PlanBucket,
+  chapterLookup: Map<number, Chapter>
+): PlannerPlanGroup[] => {
+  const sortedPlans = sortGroupsByChapter(bucket.plans);
+  const sequences = groupByChapterOrRange(sortedPlans);
+
+  return sequences.map((sequence) => {
+    const surahIds = sequence.map((plan) => plan.surahId);
+    const planIds = sequence.map((plan) => plan.id);
+    const lastUpdated = sequence.reduce((latest, plan) => Math.max(latest, plan.lastUpdated), 0);
+    const planName = formatGroupLabel(bucket.displayName, surahIds, chapterLookup);
+
+    return {
+      key: buildGroupKey(planName, surahIds),
+      planName,
+      planIds,
+      plans: sequence,
+      surahIds,
+      lastUpdated,
+    };
+  });
+};
+
 export const groupPlannerPlans = (
   planner: Record<string, PlannerPlan>,
   chapterLookup: Map<number, Chapter>
@@ -129,54 +199,17 @@ export const groupPlannerPlans = (
     return [];
   }
 
-  const groupedByName = plans.reduce((acc, plan) => {
-    const displayName = getDisplayPlanName(plan, chapterLookup);
-    const key = displayName.toLowerCase();
-    if (!acc.has(key)) {
-      acc.set(key, { displayName, plans: [] as PlannerPlan[] });
-    }
-    acc.get(key)?.plans.push(plan);
+  const groupedByName = plans.reduce<Map<string, PlanBucket>>((acc, plan) => {
+    const { canonicalKey, displayName } = parsePlanKey(plan, chapterLookup);
+    const bucket = acc.get(canonicalKey) ?? { displayName, plans: [] };
+    bucket.plans.push(plan);
+    acc.set(canonicalKey, bucket);
     return acc;
-  }, new Map<string, { displayName: string; plans: PlannerPlan[] }>());
+  }, new Map<string, PlanBucket>());
 
-  const groups: PlannerPlanGroup[] = [];
-
-  groupedByName.forEach(({ displayName, plans: groupedPlans }) => {
-    const sortedPlans = groupedPlans.slice().sort((a, b) => a.surahId - b.surahId);
-    let sequence: PlannerPlan[] = [];
-
-    const flushSequence = () => {
-      if (sequence.length === 0) return;
-      const surahIds = sequence.map((plan) => plan.surahId);
-      const planIds = sequence.map((plan) => plan.id);
-      const lastUpdated = sequence.reduce((latest, plan) => Math.max(latest, plan.lastUpdated), 0);
-      groups.push({
-        key: buildGroupKey(displayName, surahIds),
-        planName: displayName,
-        planIds,
-        plans: sequence.slice(),
-        surahIds,
-        lastUpdated,
-      });
-      sequence = [];
-    };
-
-    sortedPlans.forEach((plan) => {
-      if (sequence.length === 0) {
-        sequence = [plan];
-        return;
-      }
-      const previous = sequence[sequence.length - 1]!;
-      if (plan.surahId === previous.surahId + 1) {
-        sequence = [...sequence, plan];
-      } else {
-        flushSequence();
-        sequence = [plan];
-      }
-    });
-
-    flushSequence();
-  });
+  const groups = Array.from(groupedByName.values()).flatMap((bucket) =>
+    buildGroupsFromBucket(bucket, chapterLookup)
+  );
 
   return groups.sort((a, b) => b.lastUpdated - a.lastUpdated);
 };

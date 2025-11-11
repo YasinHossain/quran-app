@@ -11,6 +11,7 @@ import { createPlannerCardViewModel } from '@/app/(features)/bookmarks/planner/u
 import { CloseIcon } from '@/app/shared/icons';
 
 import type { PlannerCardProps } from '@/app/(features)/bookmarks/planner/components/PlannerCard.types';
+import type { PlannerCardViewModel } from '@/app/(features)/bookmarks/planner/utils/plannerCard';
 
 export const PlannerCard = ({
   surahId,
@@ -21,7 +22,12 @@ export const PlannerCard = ({
   continueVerse,
   onDelete,
 }: PlannerCardProps & { onDelete?: () => void }): React.JSX.Element => {
-  const viewModel = usePlannerViewModel({ surahId, plan, chapter, precomputedViewModel });
+  const viewModel = usePlannerViewModel({
+    surahId,
+    plan,
+    ...(chapter ? { chapter } : {}),
+    ...(precomputedViewModel ? { precomputedViewModel } : {}),
+  });
   const handleNavigate = usePlannerNavigation(surahId, continueVerse);
 
   const handleContinueClick = React.useCallback(
@@ -42,7 +48,7 @@ export const PlannerCard = ({
               planDetailsText={viewModel.planInfo.planDetailsText}
             />
           </div>
-          <PlannerCardDeleteButton onDelete={onDelete} />
+          <PlannerCardDeleteButton {...(onDelete ? { onDelete } : {})} />
         </div>
 
         <DailyFocusSection focus={viewModel.focus} />
@@ -68,8 +74,11 @@ const usePlannerViewModel = ({
   plan,
   chapter,
   precomputedViewModel,
-}: Pick<PlannerCardProps, 'surahId' | 'plan' | 'chapter' | 'precomputedViewModel'>) => {
-  return React.useMemo(() => {
+}: Pick<
+  PlannerCardProps,
+  'surahId' | 'plan' | 'chapter' | 'precomputedViewModel'
+>): PlannerCardViewModel => {
+  return React.useMemo<PlannerCardViewModel>(() => {
     if (precomputedViewModel) {
       return precomputedViewModel;
     }

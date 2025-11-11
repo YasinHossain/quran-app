@@ -4,7 +4,7 @@ import React from 'react';
 
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
-import { BookmarkFolderView } from './components/BookmarkFolderView';
+import { BookmarkFolderView } from './components/BookmarkFolderView.client';
 import { FolderNotFound } from './components/FolderNotFound';
 import { useBookmarkFolderController } from './hooks/useBookmarkFolderController';
 

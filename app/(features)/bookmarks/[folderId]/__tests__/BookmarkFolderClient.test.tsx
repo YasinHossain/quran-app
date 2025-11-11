@@ -3,10 +3,12 @@ import { render } from '@testing-library/react';
 import { BookmarkFolderClient } from '@/app/(features)/bookmarks/[folderId]/BookmarkFolderClient';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
+import type { BookmarkFolderControllerReturn } from '@/app/(features)/bookmarks/[folderId]/hooks/useBookmarkFolderController';
+
 const bookmarkFolderViewSpy = jest.fn();
 const useBookmarkFolderControllerMock = jest.fn();
 
-jest.mock('../components/BookmarkFolderView', () => ({
+jest.mock('@/app/(features)/bookmarks/[folderId]/components/BookmarkFolderView.client', () => ({
   BookmarkFolderView: (props: Record<string, unknown>) => {
     bookmarkFolderViewSpy(props);
     return <div data-testid="bookmark-folder-view" />;
@@ -17,7 +19,7 @@ jest.mock('../hooks/useBookmarkFolderController', () => ({
   useBookmarkFolderController: (folderId: string) => useBookmarkFolderControllerMock(folderId),
 }));
 
-const createControllerMock = () => ({
+const createControllerMock = (): BookmarkFolderControllerReturn => ({
   folder: { id: '1', name: 'Test Folder', bookmarks: [] },
   bookmarks: [],
   isBookmarkSidebarOpen: false,

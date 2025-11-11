@@ -84,7 +84,6 @@ export const BookmarkListHeader = ({
 }: BookmarkListHeaderProps): React.JSX.Element | null => {
   const { t } = useTranslation();
   if (!onBack) return null;
-  const backLabel = t('bookmarks_back_to_folders');
   const backAriaLabel = t('bookmarks_back_to_folders_aria');
   const bookmarkCountLabel =
     bookmarkCount === 1

@@ -99,7 +99,7 @@ export function useEnrichedBookmarkMemo(params: {
         normalizedBookmark,
         resolvedVerse,
         chapters,
-        fallbackTranslation,
+        ...(fallbackTranslation !== undefined ? { fallbackTranslation } : {}),
       }),
     [chapters, fallbackTranslation, normalizedBookmark, resolvedVerse]
   );

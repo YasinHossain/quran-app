@@ -36,14 +36,14 @@ export function useBookmarkVerse(bookmark: Bookmark): UseBookmarkVerseReturn {
     normalizedBookmark,
     resolvedVerse,
     chapters: orderedChapters,
-    fallbackTranslation: bookmark.translation,
+    fallbackTranslation: bookmark.translation ?? null,
   });
 
   useBookmarkIdentifierSync({
     verseIdentifier,
     identifierSource,
     currentVerseId: bookmark.verseId,
-    currentVerseKey: bookmark.verseKey,
+    ...(bookmark.verseKey !== undefined ? { currentVerseKey: bookmark.verseKey } : {}),
     updateBookmark,
   });
 

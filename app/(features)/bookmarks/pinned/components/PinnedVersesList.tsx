@@ -1,194 +1,33 @@
 'use client';
 
-import { useVirtualizer } from '@tanstack/react-virtual';
-import { useRouter } from 'next/navigation';
 import React from 'react';
 
-import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
-import { useVerseCard } from '@/app/(features)/surah/components/verse-card/useVerseCard';
-import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { PinIcon } from '@/app/shared/icons';
-import { ReaderVerseCard } from '@/app/shared/reader';
-import { Spinner } from '@/app/shared/Spinner';
-import { parseVerseKey } from '@/lib/utils/verse';
+import {
+  PinnedEmptyState,
+  PinnedLoading,
+  VirtualizedPinnedList,
+  useWorkspaceScrollRef,
+} from './PinnedVersesListParts';
 
-import type { Bookmark, Verse } from '@/types';
+import type { Bookmark } from '@/types';
 
 interface PinnedVersesListProps {
   bookmarks: Bookmark[];
   isLoading: boolean;
 }
 
-const WORKSPACE_SCROLL_SELECTOR =
-  '[data-slot="bookmarks-landing-main"], [data-slot="workspace-main"], [data-slot="bookmarks-workspace-main"]';
-
 export const PinnedVersesList = ({
   bookmarks,
   isLoading,
 }: PinnedVersesListProps): React.JSX.Element => {
-  const [isVisible, setIsVisible] = React.useState(false);
-
-  React.useEffect(() => {
-    setIsVisible(true);
-  }, []);
-
-  const [scrollElement, setScrollElement] = React.useState<HTMLElement | null>(null);
-
-  const setRootRef = React.useCallback((node: HTMLDivElement | null) => {
-    if (!node) {
-      setScrollElement(null);
-      return;
-    }
-    const workspaceScroll = node.closest<HTMLElement>(WORKSPACE_SCROLL_SELECTOR);
-    if (workspaceScroll) {
-      setScrollElement(workspaceScroll);
-    }
-  }, []);
-
-  const rowVirtualizer = useVirtualizer({
-    count: bookmarks.length,
-    getScrollElement: () => scrollElement,
-    estimateSize: () => 360,
-    overscan: 6,
-    getItemKey: (index) => {
-      const bookmark = bookmarks[index];
-      if (!bookmark) return index;
-      return `pinned-${bookmark.verseId}-${bookmark.verseKey ?? index}`;
-    },
-  });
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center py-20">
-        <Spinner className="h-8 w-8 text-accent" />
-      </div>
-    );
-  }
-
-  if (bookmarks.length === 0) {
-    return (
-      <div className="text-center py-16">
-        <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
-          <PinIcon size={32} className="text-muted" />
-        </div>
-        <h3 className="text-lg font-semibold text-foreground mb-2">No Pinned Verses</h3>
-        <p className="text-muted max-w-md mx-auto">
-          Pin your favorite verses while reading to access them quickly from here.
-        </p>
-      </div>
-    );
-  }
-
+  const { scrollElement, setRootRef } = useWorkspaceScrollRef();
+  if (isLoading) return <PinnedLoading />;
+  if (bookmarks.length === 0) return <PinnedEmptyState />;
   return (
-    <div
-      className={`w-full transition-opacity duration-300 ease-out ${
-        isVisible ? 'opacity-100' : 'opacity-0'
-      }`}
-    >
-      <div ref={setRootRef} className="relative w-full">
-        <div
-          style={{
-            height: `${rowVirtualizer.getTotalSize()}px`,
-            width: '100%',
-            position: 'relative',
-          }}
-        >
-          {rowVirtualizer.getVirtualItems().map((virtualItem) => {
-            const bookmark = bookmarks[virtualItem.index];
-            if (!bookmark) return null;
-
-            return (
-              <div
-                key={virtualItem.key}
-                ref={rowVirtualizer.measureElement}
-                data-index={virtualItem.index}
-                className="absolute left-0 top-0 w-full"
-                style={{ transform: `translateY(${virtualItem.start}px)` }}
-              >
-                <PinnedVerseListItem bookmark={bookmark} />
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const PinnedVerseListItem = ({ bookmark }: { bookmark: Bookmark }): React.JSX.Element => {
-  const { bookmark: enrichedBookmark, verse, isLoading, error } = useBookmarkVerse(bookmark);
-
-  if (error) {
-    return (
-      <div className="text-center py-6 text-status-error bg-status-error/10 p-4 rounded-lg">
-        Failed to load verse {bookmark.verseId}. {error}
-      </div>
-    );
-  }
-
-  if (isLoading || !verse || !enrichedBookmark.verseKey) {
-    return (
-      <div className="flex justify-center py-12">
-        <Spinner className="h-6 w-6 text-accent" />
-      </div>
-    );
-  }
-
-  return <LoadedPinnedVerseItem verse={verse} bookmark={enrichedBookmark} />;
-};
-
-const LoadedPinnedVerseItem = ({
-  verse,
-  bookmark,
-}: {
-  verse: Verse;
-  bookmark: Bookmark;
-}): React.JSX.Element => {
-  const router = useRouter();
-  const { togglePinned, isPinned } = useBookmarks();
-  const { verseRef, isPlaying, isLoadingAudio, isVerseBookmarked, handlePlayPause } =
-    useVerseCard(verse);
-
-  const handleNavigateToVerse = React.useCallback(() => {
-    const verseKey = bookmark.verseKey ?? verse.verse_key;
-    if (!verseKey) return;
-    const { surahNumber, ayahNumber } = parseVerseKey(verseKey);
-    if (!surahNumber || !ayahNumber) return;
-    const params = new URLSearchParams({ startVerse: String(ayahNumber) });
-    router.push(`/surah/${surahNumber}?${params.toString()}`);
-  }, [bookmark.verseKey, router, verse.verse_key]);
-
-  const handleTogglePinned = React.useCallback(() => {
-    togglePinned(bookmark.verseId, { verseKey: bookmark.verseKey ?? verse.verse_key });
-  }, [bookmark.verseId, bookmark.verseKey, togglePinned, verse.verse_key]);
-
-  const [isVisible, setIsVisible] = React.useState(false);
-
-  React.useEffect(() => {
-    setIsVisible(true);
-  }, []);
-
-  return (
-    <div
-      className={`transform transition-all duration-300 ease-out ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
-      }`}
-    >
-      <ReaderVerseCard
-        ref={verseRef}
-        verse={verse}
-        actions={{
-          verseKey: bookmark.verseKey ?? verse.verse_key,
-          verseId: bookmark.verseId,
-          isPlaying,
-          isLoadingAudio,
-          isBookmarked: isVerseBookmarked,
-          onPlayPause: handlePlayPause,
-          onBookmark: handleTogglePinned,
-          onNavigateToVerse: handleNavigateToVerse,
-          showRemove: isPinned(bookmark.verseId),
-        }}
-      />
-    </div>
+    <VirtualizedPinnedList
+      bookmarks={bookmarks}
+      scrollElement={scrollElement}
+      setRootRef={setRootRef}
+    />
   );
 };

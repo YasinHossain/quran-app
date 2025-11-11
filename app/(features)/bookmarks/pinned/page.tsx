@@ -13,6 +13,65 @@ import { usePinnedPage } from './hooks/usePinnedPage';
 export default function PinnedAyahPage(): React.JSX.Element {
   const { bookmarks, isLoading, handleSectionChange } = usePinnedPage();
   const prefetchSingleVerse = usePrefetchSingleVerse();
+  const panel = usePinnedPanelToggles();
+  usePrefetchPinnedVerses(bookmarks, prefetchSingleVerse);
+
+  return (
+    <>
+      <div className="lg:hidden">
+        <PinnedSettingsSidebar
+          onTranslationPanelOpen={panel.handleTranslationPanelOpen}
+          onTranslationPanelClose={panel.handleTranslationPanelClose}
+          onWordLanguagePanelOpen={panel.handleWordPanelOpen}
+          onWordPanelClose={panel.handleWordPanelClose}
+          {...(panel.selectedTranslationName !== undefined
+            ? { selectedTranslationName: panel.selectedTranslationName }
+            : {})}
+          {...(panel.selectedWordLanguageName !== undefined
+            ? { selectedWordLanguageName: panel.selectedWordLanguageName }
+            : {})}
+          isTranslationPanelOpen={panel.isTranslationPanelOpen}
+          isWordPanelOpen={panel.isWordPanelOpen}
+        />
+      </div>
+
+      <BookmarksLayout
+        activeSection="pinned"
+        onSectionChange={handleSectionChange}
+        rightSidebar={
+          <SurahWorkspaceSettings
+            {...(panel.selectedTranslationName !== undefined
+              ? { selectedTranslationName: panel.selectedTranslationName }
+              : {})}
+            {...(panel.selectedWordLanguageName !== undefined
+              ? { selectedWordLanguageName: panel.selectedWordLanguageName }
+              : {})}
+            isTranslationPanelOpen={panel.isTranslationPanelOpen}
+            onTranslationPanelOpen={panel.handleTranslationPanelOpen}
+            onTranslationPanelClose={panel.handleTranslationPanelClose}
+            isWordLanguagePanelOpen={panel.isWordPanelOpen}
+            onWordLanguagePanelOpen={panel.handleWordPanelOpen}
+            onWordLanguagePanelClose={panel.handleWordPanelClose}
+          />
+        }
+      >
+        <PinnedHeader />
+        <PinnedVersesList bookmarks={bookmarks} isLoading={isLoading} />
+      </BookmarksLayout>
+    </>
+  );
+}
+
+function usePinnedPanelToggles(): {
+  isTranslationPanelOpen: boolean;
+  isWordPanelOpen: boolean;
+  selectedTranslationName?: string;
+  selectedWordLanguageName?: string;
+  handleTranslationPanelOpen: () => void;
+  handleTranslationPanelClose: () => void;
+  handleWordPanelOpen: () => void;
+  handleWordPanelClose: () => void;
+} {
   const {
     isTranslationPanelOpen,
     setIsTranslationPanelOpen,
@@ -22,24 +81,35 @@ export default function PinnedAyahPage(): React.JSX.Element {
     selectedWordLanguageName,
   } = useBookmarkFolderPanels();
 
-  const handleTranslationPanelOpen = useCallback(() => {
-    setIsTranslationPanelOpen(true);
-  }, [setIsTranslationPanelOpen]);
+  const handleTranslationPanelOpen = useCallback(
+    () => setIsTranslationPanelOpen(true),
+    [setIsTranslationPanelOpen]
+  );
+  const handleTranslationPanelClose = useCallback(
+    () => setIsTranslationPanelOpen(false),
+    [setIsTranslationPanelOpen]
+  );
+  const handleWordPanelOpen = useCallback(() => setIsWordPanelOpen(true), [setIsWordPanelOpen]);
+  const handleWordPanelClose = useCallback(() => setIsWordPanelOpen(false), [setIsWordPanelOpen]);
 
-  const handleTranslationPanelClose = useCallback(() => {
-    setIsTranslationPanelOpen(false);
-  }, [setIsTranslationPanelOpen]);
+  return {
+    isTranslationPanelOpen,
+    isWordPanelOpen,
+    selectedTranslationName,
+    selectedWordLanguageName,
+    handleTranslationPanelOpen,
+    handleTranslationPanelClose,
+    handleWordPanelOpen,
+    handleWordPanelClose,
+  };
+}
 
-  const handleWordPanelOpen = useCallback(() => {
-    setIsWordPanelOpen(true);
-  }, [setIsWordPanelOpen]);
-
-  const handleWordPanelClose = useCallback(() => {
-    setIsWordPanelOpen(false);
-  }, [setIsWordPanelOpen]);
-
+function usePrefetchPinnedVerses(
+  bookmarks: Array<{ verseKey?: string; verseId: string }>,
+  prefetchSingleVerse: (targets: string[]) => Promise<void>
+): void {
   const verseTargets = React.useMemo(() => {
-    if (!bookmarks.length) return [];
+    if (!bookmarks.length) return [] as string[];
     return bookmarks
       .map((bookmark) => bookmark.verseKey ?? (bookmark.verseId ? String(bookmark.verseId) : null))
       .filter((value): value is string => Boolean(value));
@@ -49,41 +119,4 @@ export default function PinnedAyahPage(): React.JSX.Element {
     if (verseTargets.length === 0) return;
     void prefetchSingleVerse(verseTargets);
   }, [prefetchSingleVerse, verseTargets]);
-
-  return (
-    <>
-      <div className="lg:hidden">
-        <PinnedSettingsSidebar
-          onTranslationPanelOpen={handleTranslationPanelOpen}
-          onTranslationPanelClose={handleTranslationPanelClose}
-          onWordLanguagePanelOpen={handleWordPanelOpen}
-          onWordPanelClose={handleWordPanelClose}
-          selectedTranslationName={selectedTranslationName}
-          selectedWordLanguageName={selectedWordLanguageName}
-          isTranslationPanelOpen={isTranslationPanelOpen}
-          isWordPanelOpen={isWordPanelOpen}
-        />
-      </div>
-
-      <BookmarksLayout
-        activeSection="pinned"
-        onSectionChange={handleSectionChange}
-        rightSidebar={
-          <SurahWorkspaceSettings
-            selectedTranslationName={selectedTranslationName}
-            selectedWordLanguageName={selectedWordLanguageName}
-            isTranslationPanelOpen={isTranslationPanelOpen}
-            onTranslationPanelOpen={handleTranslationPanelOpen}
-            onTranslationPanelClose={handleTranslationPanelClose}
-            isWordLanguagePanelOpen={isWordPanelOpen}
-            onWordLanguagePanelOpen={handleWordPanelOpen}
-            onWordLanguagePanelClose={handleWordPanelClose}
-          />
-        }
-      >
-        <PinnedHeader />
-        <PinnedVersesList bookmarks={bookmarks} isLoading={isLoading} />
-      </BookmarksLayout>
-    </>
-  );
 }

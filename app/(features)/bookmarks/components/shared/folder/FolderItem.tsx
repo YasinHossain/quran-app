@@ -18,6 +18,24 @@ interface FolderItemProps {
   onSelect: (folderId: string) => void;
 }
 
+const folderNavigationCardVariant = {
+  height: 'min-h-[80px]',
+  padding: 'p-0',
+  background: {
+    inactive: 'bg-surface-glass/70 backdrop-blur-xl text-content-primary border border-border/20',
+    active: 'bg-surface-glass/80 backdrop-blur-xl text-content-primary border border-border/30',
+  },
+  hover: {
+    effect: 'none',
+    value: 'hover:shadow-xl',
+    duration: 'transition-all duration-300',
+  },
+  shadow: {
+    inactive: 'shadow-lg',
+    active: 'shadow-xl',
+  },
+} as const;
+
 export const FolderItem = ({
   folderItem,
   isExpanded,
@@ -43,25 +61,7 @@ export const FolderItem = ({
       direction="column"
       align="start"
       gap="gap-0"
-      customVariant={{
-        height: 'min-h-[80px]',
-        padding: 'p-0',
-        background: {
-          inactive:
-            'bg-surface-glass/70 backdrop-blur-xl text-content-primary border border-border/20',
-          active:
-            'bg-surface-glass/80 backdrop-blur-xl text-content-primary border border-border/30',
-        },
-        hover: {
-          effect: 'none',
-          value: 'hover:shadow-xl',
-          duration: 'transition-all duration-300',
-        },
-        shadow: {
-          inactive: 'shadow-lg',
-          active: 'shadow-xl',
-        },
-      }}
+      customVariant={folderNavigationCardVariant}
       className="w-full overflow-visible"
     >
       <FolderHeader

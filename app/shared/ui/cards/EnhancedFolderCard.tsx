@@ -9,10 +9,16 @@ import { cn } from '@/lib/utils/cn';
 
 import { FolderGlyph } from './FolderGlyph';
 
+type BookmarkEntry = {
+  verseId: string | number;
+  verseKey?: string;
+  createdAt?: number;
+};
+
 interface FolderData {
   name: string;
   color?: string;
-  bookmarks: Array<{ verseId: string | number; verseKey?: string }> | { length: number };
+  bookmarks: Array<BookmarkEntry> | { length: number };
 }
 
 interface EnhancedFolderCardProps extends Omit<BaseCardProps, 'children' | 'onClick'> {
@@ -45,13 +51,16 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
   };
 
   const versePreview = Array.isArray(folder.bookmarks)
-    ? (folder.bookmarks as Array<{ verseId: string | number; verseKey?: string }>).slice(0, 3)
+    ? (folder.bookmarks as Array<BookmarkEntry>).slice(0, 3)
     : [];
   const remainingCount = Array.isArray(folder.bookmarks)
     ? Math.max(0, bookmarkCount - versePreview.length)
     : 0;
   const latestBookmarkTimestamp = Array.isArray(folder.bookmarks)
-    ? folder.bookmarks.reduce((latest: number, b: any) => Math.max(latest, b?.createdAt ?? 0), 0)
+    ? (folder.bookmarks as Array<BookmarkEntry>).reduce(
+        (latest: number, b: BookmarkEntry) => Math.max(latest, b.createdAt ?? 0),
+        0
+      )
     : 0;
   const formattedUpdatedAt =
     latestBookmarkTimestamp > 0

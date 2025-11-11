@@ -1,0 +1,208 @@
+'use client';
+
+import { useVirtualizer } from '@tanstack/react-virtual';
+import { useRouter } from 'next/navigation';
+import React from 'react';
+
+import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
+import { useVerseCard } from '@/app/(features)/surah/components/verse-card/useVerseCard';
+import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { ReaderVerseCard } from '@/app/shared/reader';
+import { Spinner } from '@/app/shared/Spinner';
+import { parseVerseKey } from '@/lib/utils/verse';
+
+import type { Bookmark, Verse } from '@/types';
+
+interface BookmarkVerseListProps {
+  bookmarks: Bookmark[];
+}
+
+const WORKSPACE_SCROLL_SELECTOR =
+  '[data-slot="bookmarks-landing-main"], [data-slot="workspace-main"], [data-slot="bookmarks-workspace-main"]';
+
+export const BookmarkVerseList = ({ bookmarks }: BookmarkVerseListProps): React.JSX.Element => {
+  const hasBookmarks = bookmarks.length > 0;
+  const { scrollElement, setRootRef } = useWorkspaceScrollRef();
+
+  if (!hasBookmarks) return <EmptyBookmarks />;
+
+  return (
+    <VirtualizedBookmarkList
+      bookmarks={bookmarks}
+      scrollElement={scrollElement}
+      setRootRef={setRootRef}
+    />
+  );
+};
+
+const EmptyBookmarks = (): React.JSX.Element => (
+  <div className="text-center py-20 text-muted">No verses in this folder</div>
+);
+
+function useWorkspaceScrollRef(): {
+  scrollElement: HTMLElement | null;
+  setRootRef: (node: HTMLDivElement | null) => void;
+} {
+  const [scrollElement, setScrollElement] = React.useState<HTMLElement | null>(null);
+
+  const setRootRef = React.useCallback((node: HTMLDivElement | null) => {
+    if (!node) {
+      setScrollElement(null);
+      return;
+    }
+    const workspaceScroll = node.closest<HTMLElement>(WORKSPACE_SCROLL_SELECTOR);
+    if (workspaceScroll) setScrollElement(workspaceScroll);
+  }, []);
+
+  return { scrollElement, setRootRef };
+}
+
+const VirtualizedBookmarkList = ({
+  bookmarks,
+  scrollElement,
+  setRootRef,
+}: {
+  bookmarks: Bookmark[];
+  scrollElement: HTMLElement | null;
+  setRootRef: (node: HTMLDivElement | null) => void;
+}): React.JSX.Element => {
+  const rowVirtualizer = useVirtualizer({
+    count: bookmarks.length,
+    getScrollElement: () => scrollElement,
+    estimateSize: () => 360,
+    overscan: 6,
+    getItemKey: (index) => {
+      const bookmark = bookmarks[index];
+      if (!bookmark) return index;
+      return `bookmark-${bookmark.verseId}-${bookmark.verseKey ?? index}`;
+    },
+  });
+
+  return (
+    <div className="w-full relative" ref={setRootRef}>
+      <div style={{ height: `${rowVirtualizer.getTotalSize()}px`, width: '100%', position: 'relative' }}>
+        {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+          const bookmark = bookmarks[virtualItem.index];
+          if (!bookmark) return null;
+          return (
+            <BookmarkVirtualRow key={virtualItem.key} virtualStart={virtualItem.start} refFn={rowVirtualizer.measureElement}>
+              <BookmarkVerseListItem bookmark={bookmark} />
+            </BookmarkVirtualRow>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+const BookmarkVirtualRow = ({
+  children,
+  virtualStart,
+  refFn,
+}: {
+  children: React.ReactNode;
+  virtualStart: number;
+  refFn: (el: Element | null) => void;
+}): React.JSX.Element => (
+  <div
+    ref={refFn}
+    className="absolute left-0 top-0 w-full"
+    style={{ transform: `translateY(${virtualStart}px)` }}
+  >
+    {children}
+  </div>
+);
+
+const BookmarkVerseListItem = ({ bookmark }: { bookmark: Bookmark }): React.JSX.Element => {
+  const { bookmark: enrichedBookmark, verse, isLoading, error } = useBookmarkVerse(bookmark);
+
+  if (error) {
+    return (
+      <div className="text-center py-6 text-status-error bg-status-error/10 p-4 rounded-lg">
+        Failed to load verse {bookmark.verseId}. {error}
+      </div>
+    );
+  }
+
+  if (isLoading || !verse || !enrichedBookmark.verseKey) {
+    return (
+      <div className="flex justify-center py-12">
+        <Spinner className="h-6 w-6 text-accent" />
+      </div>
+    );
+  }
+
+  return <LoadedBookmarkVerseItem verse={verse} bookmark={enrichedBookmark} />;
+};
+
+const LoadedBookmarkVerseItem = ({ verse, bookmark }: { verse: Verse; bookmark: Bookmark }): React.JSX.Element => {
+  const { verseRef, actions } = useBookmarkVerseActions(verse, bookmark);
+  const isVisible = useMountVisible();
+
+  return (
+    <AnimatedMount isVisible={isVisible}>
+      <ReaderVerseCard ref={verseRef} verse={verse} actions={actions} />
+    </AnimatedMount>
+  );
+};
+
+function useBookmarkVerseActions(verse: Verse, bookmark: Bookmark): {
+  verseRef: React.Ref<any>;
+  actions: {
+    verseKey: string;
+    verseId: string | number;
+    isPlaying: boolean;
+    isLoadingAudio: boolean;
+    isBookmarked: boolean;
+    onPlayPause: () => void;
+    onBookmark: () => void;
+    onNavigateToVerse: () => void;
+    showRemove: true;
+  };
+} {
+  const router = useRouter();
+  const { removeBookmark, findBookmark } = useBookmarks();
+  const { verseRef, isPlaying, isLoadingAudio, isVerseBookmarked, handlePlayPause } = useVerseCard(verse);
+
+  const handleRemoveBookmark = React.useCallback(() => {
+    const bookmarkInfo = findBookmark(bookmark.verseId);
+    if (!bookmarkInfo) return;
+    removeBookmark(bookmark.verseId, bookmarkInfo.folder.id);
+  }, [bookmark.verseId, findBookmark, removeBookmark]);
+
+  const handleNavigateToVerse = React.useCallback(() => {
+    const verseKey = bookmark.verseKey ?? verse.verse_key;
+    const { surahNumber, ayahNumber } = parseVerseKey(verseKey);
+    if (!surahNumber || !ayahNumber) return;
+    const params = new URLSearchParams({ startVerse: String(ayahNumber) });
+    router.push(`/surah/${surahNumber}?${params.toString()}`);
+  }, [bookmark.verseKey, router, verse.verse_key]);
+
+  return {
+    verseRef,
+    actions: {
+      verseKey: bookmark.verseKey ?? verse.verse_key,
+      verseId: bookmark.verseId,
+      isPlaying,
+      isLoadingAudio,
+      isBookmarked: isVerseBookmarked,
+      onPlayPause: handlePlayPause,
+      onBookmark: handleRemoveBookmark,
+      onNavigateToVerse: handleNavigateToVerse,
+      showRemove: true as const,
+    },
+  };
+}
+
+function useMountVisible(): boolean {
+  const [isVisible, setIsVisible] = React.useState(false);
+  React.useEffect(() => setIsVisible(true), []);
+  return isVisible;
+}
+
+const AnimatedMount = ({ isVisible, children }: { isVisible: boolean; children: React.ReactNode }): React.JSX.Element => (
+  <div className={`transform transition-all duration-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
+    {children}
+  </div>
+);
+

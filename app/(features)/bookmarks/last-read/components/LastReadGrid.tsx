@@ -13,79 +13,12 @@ interface LastReadGridProps {
 }
 
 export const LastReadGrid = ({ lastRead, chapters }: LastReadGridProps): React.JSX.Element => {
-  const [isVisible, setIsVisible] = React.useState(false);
+  const isVisible = useMountVisible();
 
-  React.useEffect(() => {
-    setIsVisible(true);
-  }, []);
+  if (Object.keys(lastRead).length === 0) return <LastReadEmptyState />;
 
-  if (Object.keys(lastRead).length === 0) {
-    return (
-      <div className="text-center py-16">
-        <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
-          <ClockIcon size={32} className="text-muted" />
-        </div>
-        <h3 className="text-lg font-semibold text-foreground mb-2">No Recent Activity</h3>
-        <p className="text-muted max-w-md mx-auto">
-          Start reading the Quran and your progress will be automatically tracked here.
-        </p>
-      </div>
-    );
-  }
-
-  const sortedEntries = Object.entries(lastRead).sort(([, a], [, b]) => b.updatedAt - a.updatedAt);
-
-  const normalizedEntries: Array<{
-    surahId: string;
-    verseNumber: number;
-    chapter: Chapter;
-  }> = [];
-
-  for (const [surahId, entry] of sortedEntries) {
-    const chapter = chapters.find((c) => c.id === Number(surahId));
-    if (!chapter) {
-      continue;
-    }
-
-    const totalVerses = chapter.verses_count || 0;
-    const verseNumberFromKeyRaw =
-      typeof entry.verseKey === 'string' ? Number(entry.verseKey.split(':')[1]) : undefined;
-    const verseNumberFromKey =
-      typeof verseNumberFromKeyRaw === 'number' && !Number.isNaN(verseNumberFromKeyRaw)
-        ? verseNumberFromKeyRaw
-        : undefined;
-    const rawVerseNumber = entry.verseNumber ?? verseNumberFromKey ?? entry.verseId;
-
-    if (typeof rawVerseNumber !== 'number' || Number.isNaN(rawVerseNumber) || rawVerseNumber <= 0) {
-      continue;
-    }
-
-    const verseNumber = totalVerses > 0 ? Math.min(rawVerseNumber, totalVerses) : rawVerseNumber;
-
-    normalizedEntries.push({
-      surahId,
-      verseNumber,
-      chapter,
-    });
-
-    if (normalizedEntries.length === 5) {
-      break;
-    }
-  }
-
-  if (normalizedEntries.length === 0) {
-    return (
-      <div className="text-center py-16">
-        <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
-          <ClockIcon size={32} className="text-muted" />
-        </div>
-        <h3 className="text-lg font-semibold text-foreground mb-2">No Recent Activity</h3>
-        <p className="text-muted max-w-md mx-auto">
-          Start reading the Quran and your progress will be automatically tracked here.
-        </p>
-      </div>
-    );
-  }
+  const normalizedEntries = buildNormalizedLastReadEntries(lastRead, chapters);
+  if (normalizedEntries.length === 0) return <LastReadEmptyState />;
 
   return (
     <div
@@ -105,3 +38,72 @@ export const LastReadGrid = ({ lastRead, chapters }: LastReadGridProps): React.J
     </div>
   );
 };
+
+function LastReadEmptyState(): React.JSX.Element {
+  return (
+    <div className="text-center py-16">
+      <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
+        <ClockIcon size={32} className="text-muted" />
+      </div>
+      <h3 className="text-lg font-semibold text-foreground mb-2">No Recent Activity</h3>
+      <p className="text-muted max-w-md mx-auto">
+        Start reading the Quran and your progress will be automatically tracked here.
+      </p>
+    </div>
+  );
+}
+
+function useMountVisible(): boolean {
+  const [isVisible, setIsVisible] = React.useState(false);
+  React.useEffect(() => setIsVisible(true), []);
+  return isVisible;
+}
+
+function buildNormalizedLastReadEntries(
+  lastRead: LastReadMap,
+  chapters: Chapter[]
+): Array<{ surahId: string; verseNumber: number; chapter: Chapter }> {
+  const sortedEntries = Object.entries(lastRead).sort(([, a], [, b]) => b.updatedAt - a.updatedAt);
+  const normalizedEntries: Array<{ surahId: string; verseNumber: number; chapter: Chapter }> = [];
+  for (const [surahId, entry] of sortedEntries) {
+    const normalized = normalizeLastReadEntry(surahId, entry, chapters);
+    if (normalized) {
+      normalizedEntries.push(normalized);
+      if (normalizedEntries.length === 5) break;
+    }
+  }
+  return normalizedEntries;
+}
+
+function normalizeLastReadEntry(
+  surahId: string,
+  entry: LastReadMap[string],
+  chapters: Chapter[]
+): { surahId: string; verseNumber: number; chapter: Chapter } | null {
+  const chapter = chapters.find((c) => c.id === Number(surahId));
+  if (!chapter) return null;
+
+  const totalVerses = chapter.verses_count || 0;
+  const rawVerseNumber = getRawVerseNumber(entry);
+  if (!isValidVerseNumber(rawVerseNumber)) return null;
+  const verseNumber = clampVerseNumber(rawVerseNumber, totalVerses);
+  return { surahId, verseNumber, chapter };
+}
+
+function getRawVerseNumber(entry: LastReadMap[string]): number | undefined {
+  const verseNumberFromKeyRaw =
+    typeof entry.verseKey === 'string' ? Number(entry.verseKey.split(':')[1]) : undefined;
+  const verseNumberFromKey =
+    typeof verseNumberFromKeyRaw === 'number' && !Number.isNaN(verseNumberFromKeyRaw)
+      ? verseNumberFromKeyRaw
+      : undefined;
+  return entry.verseNumber ?? verseNumberFromKey ?? entry.verseId;
+}
+
+function isValidVerseNumber(value: unknown): value is number {
+  return typeof value === 'number' && !Number.isNaN(value) && value > 0;
+}
+
+function clampVerseNumber(num: number, total: number): number {
+  return total > 0 ? Math.min(num, total) : num;
+}

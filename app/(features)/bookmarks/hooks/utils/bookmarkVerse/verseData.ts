@@ -65,7 +65,7 @@ export function buildVerseDataPatch(params: {
       normalizedBookmark,
       verse,
       surahName,
-      translationText,
+      ...(translationText !== undefined ? { translationText } : {}),
     })
   ) {
     return null;
