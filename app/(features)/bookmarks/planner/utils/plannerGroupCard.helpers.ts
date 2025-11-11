@@ -8,72 +8,95 @@ import {
 import type { PlannerCardChapter } from '@/app/(features)/bookmarks/planner/components/PlannerCard.types';
 import type { Chapter, PlannerPlan } from '@/types';
 
-interface VersePosition {
-  plan: PlannerPlan;
-  surahId: number;
-  verse: number;
-  chapterName: string;
+export { formatGoalVerseRangeLabel, mapGlobalVerseToPosition } from './plannerGroupCard.goal';
+
+interface ProgressMergeResult {
+  totalTarget: number;
+  totalCompleted: number;
+  earliestCreated: number;
+  latestUpdated: number;
 }
 
-const sumBy = (plans: PlannerPlan[], selector: (plan: PlannerPlan) => number): number =>
-  plans.reduce((total, plan) => total + selector(plan), 0);
+const mergeProgress = (plans: PlannerPlan[]): ProgressMergeResult =>
+  plans.reduce<ProgressMergeResult>(
+    (result, plan) => {
+      const safeTarget = Math.max(0, plan.targetVerses);
+      const safeCompleted = Math.max(0, Math.min(plan.completedVerses, safeTarget));
 
-export const mapGlobalVerseToPosition = (
-  plans: PlannerPlan[],
-  globalVerse: number | null,
-  chapterLookup: Map<number, Chapter>
-): VersePosition | null => {
-  if (globalVerse === null || globalVerse <= 0) return null;
-  if (plans.length === 0) return null;
-  let remaining = globalVerse;
-  for (const plan of plans) {
-    const maxVerse = Math.max(0, plan.targetVerses);
-    if (maxVerse === 0) continue;
-    if (remaining <= maxVerse) {
-      const verse = Math.max(1, Math.min(maxVerse, remaining));
-      const chapter = chapterLookup.get(plan.surahId);
-      return {
-        plan,
-        surahId: plan.surahId,
-        verse,
-        chapterName: getChapterDisplayName(plan, chapter),
-      };
+      result.totalTarget += safeTarget;
+      result.totalCompleted += safeCompleted;
+      result.earliestCreated = Math.min(result.earliestCreated, plan.createdAt);
+      result.latestUpdated = Math.max(result.latestUpdated, plan.lastUpdated);
+
+      return result;
+    },
+    {
+      totalTarget: 0,
+      totalCompleted: 0,
+      earliestCreated: Number.POSITIVE_INFINITY,
+      latestUpdated: 0,
     }
-    remaining -= maxVerse;
-  }
+  );
 
-  const lastPlan = plans[plans.length - 1] ?? null;
-  if (!lastPlan) return null;
-  const lastVerse = Math.max(1, lastPlan.targetVerses);
-  const lastChapter = chapterLookup.get(lastPlan.surahId);
-  return {
-    plan: lastPlan,
-    surahId: lastPlan.surahId,
-    verse: lastVerse,
-    chapterName: getChapterDisplayName(lastPlan, lastChapter),
-  };
+interface BadgeParams {
+  plans: PlannerPlan[];
+  isComplete: boolean;
+  chapterLookup: Map<number, Chapter>;
+}
+
+const resolveChapter = (
+  chapterId: number | undefined,
+  chapterLookup: Map<number, Chapter>
+): Chapter | undefined =>
+  typeof chapterId === 'number' ? chapterLookup.get(chapterId) : undefined;
+
+const resolveChapterPage = (chapter: Chapter | undefined, index: 0 | 1): number | undefined => {
+  const page = chapter?.pages?.[index];
+  return typeof page === 'number' ? page : undefined;
 };
 
-export const formatGoalVerseRangeLabel = (
-  plans: PlannerPlan[],
-  goalStart: number | null,
-  goalEnd: number | null,
+const buildChapterPages = (
+  surahIds: number[],
   chapterLookup: Map<number, Chapter>
-): string => {
-  const startPosition = mapGlobalVerseToPosition(plans, goalStart, chapterLookup);
-  const endPosition = mapGlobalVerseToPosition(plans, goalEnd, chapterLookup);
-  if (!startPosition || !endPosition) {
-    return 'All daily goals completed';
-  }
+): [number, number] | undefined => {
+  if (surahIds.length === 0) return undefined;
+  const startChapter = resolveChapter(surahIds[0], chapterLookup);
+  const endChapter = resolveChapter(surahIds[surahIds.length - 1], chapterLookup);
+  const startPage = resolveChapterPage(startChapter, 0);
+  const endPage = resolveChapterPage(endChapter, 1);
+  return typeof startPage === 'number' && typeof endPage === 'number'
+    ? [startPage, endPage]
+    : undefined;
+};
 
-  if (startPosition.surahId === endPosition.surahId) {
-    if (startPosition.verse === endPosition.verse) {
-      return `${startPosition.chapterName} ${startPosition.surahId}:${startPosition.verse}`;
-    }
-    return `${startPosition.chapterName} ${startPosition.surahId}:${startPosition.verse}-${endPosition.verse}`;
+const badgeForStatus = ({ plans, isComplete, chapterLookup }: BadgeParams): string => {
+  if (isComplete) {
+    const completedPlan = plans[plans.length - 1]!;
+    const chapter = chapterLookup.get(completedPlan.surahId);
+    const chapterName = getChapterDisplayName(completedPlan, chapter);
+    const verse = Math.max(1, completedPlan.targetVerses);
+    return `${chapterName} ${completedPlan.surahId}:${verse}`;
   }
+  const recentPlan = plans.reduce(
+    (latest, plan) => (plan.lastUpdated > latest.lastUpdated ? plan : latest),
+    plans[0]!
+  );
+  const planForLabel =
+    recentPlan.completedVerses >= recentPlan.targetVerses ? getActivePlan(plans) : recentPlan;
+  const verse =
+    planForLabel === recentPlan
+      ? clampCompletedVerse(recentPlan)
+      : clampCompletedVerse(planForLabel);
+  const chapter = chapterLookup.get(planForLabel.surahId);
+  const chapterName = getChapterDisplayName(planForLabel, chapter);
+  return `${chapterName} ${planForLabel.surahId}:${verse}`;
+};
 
-  return `${startPosition.chapterName} ${startPosition.surahId}:${startPosition.verse} - ${endPosition.chapterName} ${endPosition.surahId}:${endPosition.verse}`;
+const clampCompletedVerse = (plan: PlannerPlan): number => {
+  if (plan.targetVerses <= 0) return 1;
+  const safeTarget = Math.max(1, plan.targetVerses);
+  const safeCompleted = Math.max(1, plan.completedVerses);
+  return Math.min(safeCompleted, safeTarget);
 };
 
 export const getActivePlan = (plans: PlannerPlan[]): PlannerPlan => {
@@ -89,23 +112,15 @@ export const buildAggregatedPlan = (
   activePlan: PlannerPlan,
   estimatedDays: number
 ): PlannerPlan => {
-  const totalTarget = sumBy(plans, (plan) => Math.max(0, plan.targetVerses));
-  const totalCompleted = sumBy(plans, (plan) =>
-    Math.max(0, Math.min(plan.completedVerses, plan.targetVerses))
-  );
-  const earliestCreated = plans.reduce(
-    (earliest, plan) => Math.min(earliest, plan.createdAt),
-    Number.POSITIVE_INFINITY
-  );
-  const latestUpdated = plans.reduce((latest, plan) => Math.max(latest, plan.lastUpdated), 0);
+  const progress = mergeProgress(plans);
 
   return {
     id: group.planIds[0] ?? activePlan.id,
     surahId: activePlan.surahId,
-    targetVerses: totalTarget,
-    completedVerses: totalCompleted,
-    createdAt: Number.isFinite(earliestCreated) ? earliestCreated : Date.now(),
-    lastUpdated: latestUpdated || Date.now(),
+    targetVerses: progress.totalTarget,
+    completedVerses: progress.totalCompleted,
+    createdAt: Number.isFinite(progress.earliestCreated) ? progress.earliestCreated : Date.now(),
+    lastUpdated: progress.latestUpdated || Date.now(),
     notes: group.planName,
     estimatedDays,
   };
@@ -117,29 +132,14 @@ export const buildAggregatedChapter = (
 ): PlannerCardChapter | undefined => {
   if (surahIds.length === 0) return undefined;
 
-  const startId = surahIds[0];
-  const endId = surahIds[surahIds.length - 1];
-  const startChapter = typeof startId === 'number' ? chapterLookup.get(startId) : undefined;
-  const endChapter = typeof endId === 'number' ? chapterLookup.get(endId) : undefined;
-
-  const startPage =
-    typeof startChapter?.pages?.[0] === 'number' ? startChapter.pages![0] : undefined;
-  const endPage = typeof endChapter?.pages?.[1] === 'number' ? endChapter.pages![1] : undefined;
-
   const nameLabel = buildSurahRangeNameLabel(surahIds, chapterLookup);
-
-  if (typeof startPage === 'number' && typeof endPage === 'number') {
-    return {
-      name_simple: nameLabel,
-      name_arabic: nameLabel,
-      pages: [startPage, endPage],
-    };
-  }
-
-  return {
+  const pages = buildChapterPages(surahIds, chapterLookup);
+  const baseChapter: PlannerCardChapter = {
     name_simple: nameLabel,
     name_arabic: nameLabel,
   };
+
+  return pages ? { ...baseChapter, pages } : baseChapter;
 };
 
 export const formatPlanDetails = (
@@ -167,34 +167,5 @@ export const buildProgressLabel = (
     return 'No progress tracked';
   }
 
-  if (isComplete) {
-    const lastPlan = plans[plans.length - 1]!;
-    const chapter = chapterLookup.get(lastPlan.surahId);
-    const verseNumber = Math.max(1, lastPlan.targetVerses);
-    const chapterName = getChapterDisplayName(lastPlan, chapter);
-    return `${chapterName} ${lastPlan.surahId}:${verseNumber}`;
-  }
-
-  const recentPlan = plans.reduce(
-    (acc, plan) => (plan.lastUpdated > acc.lastUpdated ? plan : acc),
-    plans[0]!
-  );
-  const recentCompleted =
-    recentPlan.targetVerses > 0
-      ? Math.max(1, Math.min(recentPlan.completedVerses, recentPlan.targetVerses))
-      : 1;
-
-  const planForLabel =
-    recentPlan.completedVerses >= recentPlan.targetVerses ? getActivePlan(plans) : recentPlan;
-
-  const chapter = chapterLookup.get(planForLabel.surahId);
-  const chapterName = getChapterDisplayName(planForLabel, chapter);
-  const currentVerse =
-    planForLabel === recentPlan
-      ? recentCompleted
-      : planForLabel.targetVerses > 0
-        ? Math.max(1, Math.min(planForLabel.completedVerses, planForLabel.targetVerses))
-        : 1;
-
-  return `${chapterName} ${planForLabel.surahId}:${currentVerse}`;
+  return badgeForStatus({ plans, isComplete, chapterLookup });
 };
