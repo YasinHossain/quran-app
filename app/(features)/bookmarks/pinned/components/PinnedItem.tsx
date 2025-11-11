@@ -9,6 +9,7 @@ import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { ReaderVerseCard } from '@/app/shared/reader';
 import { Spinner } from '@/app/shared/Spinner';
 import { parseVerseKey } from '@/lib/utils/verse';
+
 import type { Bookmark, Verse } from '@/types';
 
 export const PinnedVerseListItem = ({ bookmark }: { bookmark: Bookmark }): React.JSX.Element => {

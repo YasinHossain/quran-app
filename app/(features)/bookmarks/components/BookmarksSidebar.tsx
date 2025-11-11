@@ -31,24 +31,19 @@ export const BookmarksSidebar = ({
   isOpen,
   onClose,
 }: BookmarksSidebarProps): React.JSX.Element => {
+  const contentProps = buildBookmarksContentProps({
+    activeSection,
+    onSectionChange,
+    childrenTitle,
+    childrenContainerClassName,
+    childrenContentClassName,
+    showNavigation,
+  });
+  const renderedContent = <BookmarksContent {...contentProps}>{children}</BookmarksContent>;
+
   // If no isOpen/onClose provided, render content directly (for desktop sidebar)
   if (isOpen === undefined || onClose === undefined) {
-    return (
-      <BookmarksContent
-        activeSection={activeSection}
-        onSectionChange={onSectionChange}
-        childrenTitle={childrenTitle ?? null}
-        {...(childrenContainerClassName !== undefined
-          ? { childrenContainerClassName }
-          : {})}
-        {...(childrenContentClassName !== undefined
-          ? { childrenContentClassName }
-          : {})}
-        {...(showNavigation !== undefined ? { showNavigation } : {})}
-      >
-        {children}
-      </BookmarksContent>
-    );
+    return renderedContent;
   }
 
   // Otherwise use BaseSidebar wrapper (for mobile overlay)
@@ -59,20 +54,44 @@ export const BookmarksSidebar = ({
       position="left"
       aria-label="Bookmarks navigation"
     >
-      <BookmarksContent
-        activeSection={activeSection}
-        onSectionChange={onSectionChange}
-        childrenTitle={childrenTitle ?? null}
-        {...(childrenContainerClassName !== undefined
-          ? { childrenContainerClassName }
-          : {})}
-        {...(childrenContentClassName !== undefined
-          ? { childrenContentClassName }
-          : {})}
-        {...(showNavigation !== undefined ? { showNavigation } : {})}
-      >
-        {children}
-      </BookmarksContent>
+      {renderedContent}
     </BaseSidebar>
   );
+};
+
+const buildBookmarksContentProps = ({
+  activeSection,
+  onSectionChange,
+  childrenTitle,
+  childrenContainerClassName,
+  childrenContentClassName,
+  showNavigation,
+}: Pick<
+  BookmarksSidebarProps,
+  | 'activeSection'
+  | 'onSectionChange'
+  | 'childrenTitle'
+  | 'childrenContainerClassName'
+  | 'childrenContentClassName'
+  | 'showNavigation'
+>): React.ComponentProps<typeof BookmarksContent> => {
+  const contentProps: React.ComponentProps<typeof BookmarksContent> = {
+    activeSection,
+    onSectionChange,
+    childrenTitle: childrenTitle ?? null,
+  };
+
+  if (childrenContainerClassName !== undefined) {
+    contentProps.childrenContainerClassName = childrenContainerClassName;
+  }
+
+  if (childrenContentClassName !== undefined) {
+    contentProps.childrenContentClassName = childrenContentClassName;
+  }
+
+  if (showNavigation !== undefined) {
+    contentProps.showNavigation = showNavigation;
+  }
+
+  return contentProps;
 };

@@ -8,8 +8,9 @@ describe('SurahView responsive', () => {
 
     const main = screen.getByRole('main');
     expect(main).toHaveAttribute('data-slot', 'surah-workspace-main');
-    expect(main.className).toContain('lg:pl-reader-sidebar-left');
-    expect(main.className).toContain('lg:pr-reader-sidebar-right');
+    // With both desktop sidebars rendered, WorkspaceMain should not reserve extra gutter space.
+    expect(main.className).not.toContain('lg:pl-reader-sidebar-left');
+    expect(main.className).not.toContain('lg:pr-reader-sidebar-right');
     expect(main.className).toContain('pb-safe');
 
     const scrollContainer = document.querySelector('main > div.flex') as HTMLElement | null;

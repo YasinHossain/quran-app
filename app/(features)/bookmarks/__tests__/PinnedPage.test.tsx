@@ -89,11 +89,11 @@ jest.mock('@/app/shared/reader', () => ({
       <div data-testid="right-col">{right}</div>
     </div>
   ),
-  WorkspaceMain: ({ children, ...props }: any) => {
+  WorkspaceMain: ({ children, contentClassName, ...props }: any) => {
     const { ['data-slot']: dataSlot, className, ...rest } = props;
     return (
       <div data-slot={dataSlot ?? 'bookmarks-landing-main'} className={className} {...rest}>
-        {children}
+        <div className={contentClassName}>{children}</div>
       </div>
     );
   },

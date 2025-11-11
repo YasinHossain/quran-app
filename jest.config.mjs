@@ -1,4 +1,7 @@
 import { createRequire } from 'module';
+
+// Disable V8 transform cache to avoid ENOENT on temp dirs being cleaned mid-run
+process.env.JEST_DISABLE_V8_CODE_CACHE = '1';
 const require = createRequire(import.meta.url);
 const nextJest = require('next/jest');
 
@@ -12,6 +15,8 @@ const customJestConfig = {
   testEnvironmentOptions: {
     url: 'http://localhost',
   },
+  // Keep cache inside the repo to avoid transient OS temp deletions on WSL/CI
+  cacheDirectory: '<rootDir>/.jest-cache',
   // Shared test utilities and polyfills
   setupFilesAfterEnv: ['<rootDir>/tests/setup/setupTests.ts'],
   resolver: '<rootDir>/tests/setup/jest-resolver.cjs',
