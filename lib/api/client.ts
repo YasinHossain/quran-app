@@ -1,5 +1,78 @@
+import { features } from '@/config';
+
 // Prefer the CDN-backed QDC API for higher availability; can be overridden via env
 const API_BASE_URL = process.env['QURAN_API_BASE_URL'] ?? 'https://api.qurancdn.com/api/qdc';
+
+const PROXY_ROUTE_PATH = '/api/quran';
+let memoizedServerProxyBase: string | null | undefined;
+
+const DEFAULT_TIMEOUT_MS = (() => {
+  const envTimeout =
+    process.env['NEXT_PUBLIC_QURAN_API_TIMEOUT'] ?? process.env['QURAN_API_TIMEOUT'];
+  if (envTimeout !== undefined) {
+    const parsed = Number.parseInt(envTimeout, 10);
+    if (Number.isFinite(parsed) && parsed > 0) {
+      return parsed;
+    }
+  }
+  return 4000;
+})();
+
+function ensureTrailingSlash(value: string): string {
+  return value.endsWith('/') ? value : `${value}/`;
+}
+
+function normaliseOrigin(candidate?: string | null): string | null {
+  if (!candidate) return null;
+  const trimmed = candidate.trim();
+  if (!trimmed) return null;
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    return trimmed.replace(/\/$/, '');
+  }
+  return `https://${trimmed.replace(/\/$/, '')}`;
+}
+
+function resolveProxyBase(): string | null {
+  if (!features.enableQuranApiProxy) return null;
+
+  if (typeof window !== 'undefined' && window.location) {
+    return ensureTrailingSlash(`${window.location.origin}${PROXY_ROUTE_PATH}`);
+  }
+
+  if (memoizedServerProxyBase !== undefined) {
+    return memoizedServerProxyBase;
+  }
+
+  const originCandidates: Array<string | null | undefined> = [
+    process.env['INTERNAL_API_ORIGIN'],
+    process.env['NEXT_PUBLIC_APP_ORIGIN'],
+    process.env['APP_ORIGIN'],
+    process.env['APP_URL'],
+    process.env['SITE_URL'],
+    process.env['NEXTAUTH_URL'],
+    process.env['URL'],
+    process.env['VERCEL_URL'],
+    process.env['NEXT_PUBLIC_VERCEL_URL'],
+  ];
+
+  for (const candidate of originCandidates) {
+    const origin = normaliseOrigin(candidate);
+    if (origin) {
+      memoizedServerProxyBase = ensureTrailingSlash(`${origin}${PROXY_ROUTE_PATH}`);
+      return memoizedServerProxyBase;
+    }
+  }
+
+  const port = process.env['PORT'] ?? '3000';
+  memoizedServerProxyBase = ensureTrailingSlash(`http://127.0.0.1:${port}${PROXY_ROUTE_PATH}`);
+  return memoizedServerProxyBase;
+}
+
+function resolveBaseUrl(): string {
+  const proxyBase = resolveProxyBase();
+  if (proxyBase) return proxyBase;
+  return ensureTrailingSlash(API_BASE_URL);
+}
 
 interface FetchWithTimeoutOptions extends RequestInit {
   /** Message prefix used if the request fails */
@@ -13,7 +86,11 @@ interface FetchWithTimeoutOptions extends RequestInit {
  */
 async function fetchWithTimeout(
   url: string,
-  { errorPrefix = 'Request failed', timeout = 10000, ...init }: FetchWithTimeoutOptions = {}
+  {
+    errorPrefix = 'Request failed',
+    timeout = DEFAULT_TIMEOUT_MS,
+    ...init
+  }: FetchWithTimeoutOptions = {}
 ): Promise<Response> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
@@ -52,7 +129,7 @@ async function apiFetch<T>(
   params: Record<string, string> = {},
   errorPrefix = 'Failed to fetch'
 ): Promise<T> {
-  const base = API_BASE_URL.endsWith('/') ? API_BASE_URL : `${API_BASE_URL}/`;
+  const base = resolveBaseUrl();
   const url = new URL(path.replace(/^\//, ''), base);
   if (Object.keys(params).length) {
     const search = new URLSearchParams(params).toString().replace(/%2C/g, ',');

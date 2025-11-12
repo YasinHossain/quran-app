@@ -88,3 +88,71 @@ if (!process.env['JEST_ALLOW_NETWORK']) {
 beforeEach(() => {
   jest.spyOn(logger, 'error').mockImplementation(() => {});
 });
+
+const defaultUseTranslationImplementation = () => ({
+  t: (key: string, options?: Record<string, unknown>) =>
+    typeof key === 'string' ? key : String(key),
+  i18n: {
+    changeLanguage: jest.fn(),
+    language: 'en',
+    languages: ['en'],
+  },
+});
+
+const mockUseTranslation = jest.fn(defaultUseTranslationImplementation);
+
+// Lightweight global mock for react-i18next to avoid heavy runtime initialization in tests
+// Individual tests can override this with their own jest.mock if needed.
+jest.mock('react-i18next', () => {
+  const actual = jest.requireActual('react-i18next');
+  return {
+    ...actual,
+    useTranslation: mockUseTranslation,
+    Trans: ({ children }: { children: React.ReactNode }) =>
+      children as unknown as React.ReactElement,
+    initReactI18next: { type: '3rdParty', init: jest.fn() },
+  };
+});
+
+const createDefaultVerseCardState = () => ({
+  verseRef: { current: null },
+  isPlaying: false,
+  isLoadingAudio: false,
+  isVerseBookmarked: false,
+  handlePlayPause: jest.fn(),
+});
+
+const mockUseVerseCard = jest.fn(createDefaultVerseCardState);
+
+// Stub heavy verse-card hook to avoid observer/audio side-effects in DOM tests
+jest.mock('@/app/(features)/surah/components/verse-card/useVerseCard', () => ({
+  useVerseCard: mockUseVerseCard,
+}));
+
+// Mock virtualizer to avoid layout-dependent measurements in JSDOM
+const createVirtualizerStub = (count: number) => {
+  const items = Array.from({ length: count }, (_, index) => ({
+    key: `virtual-${index}`,
+    index,
+    start: index * 320,
+  }));
+  return {
+    getVirtualItems: () => items,
+    getTotalSize: () => count * 320,
+    measureElement: jest.fn(),
+    measure: jest.fn(),
+    scrollToIndex: jest.fn(),
+    scrollToOffset: jest.fn(),
+    getScrollElement: jest.fn(),
+  };
+};
+
+jest.mock('@tanstack/react-virtual', () => ({
+  useVirtualizer: ({ count }: { count: number }) => createVirtualizerStub(count),
+  useWindowVirtualizer: ({ count }: { count: number }) => createVirtualizerStub(count),
+}));
+
+beforeEach(() => {
+  mockUseTranslation.mockImplementation(defaultUseTranslationImplementation);
+  mockUseVerseCard.mockImplementation(createDefaultVerseCardState);
+});

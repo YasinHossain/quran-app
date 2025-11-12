@@ -3,58 +3,120 @@
 import React from 'react';
 
 import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
-import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { CloseIcon } from '@/app/shared/icons';
 import { LoadingError } from '@/app/shared/LoadingError';
+import { cn } from '@/lib/utils/cn';
 import { Bookmark } from '@/types';
 
 interface VerseItemProps {
   bookmark: Bookmark;
-  isActive: boolean;
-  onSelect: () => void;
+  onSelect?: (() => void) | undefined;
+  showDivider?: boolean;
+  onRemoveBookmark?: (bookmark: Bookmark) => void;
 }
 
-export const VerseItem = ({ bookmark, isActive, onSelect }: VerseItemProps): React.JSX.Element => {
-  const { chapters } = useBookmarks();
-  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark, chapters);
+export const VerseItem = ({
+  bookmark,
+  onSelect,
+  showDivider = true,
+  onRemoveBookmark,
+}: VerseItemProps): React.JSX.Element => {
+  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark);
   const ayahNumber = enrichedBookmark.verseKey?.split(':')[1];
+  const surahName = enrichedBookmark.surahName ?? 'bookmark';
+  const verseLabel = ayahNumber ? `Verse ${ayahNumber}` : 'Verse';
+
+  const baseWrapperClassName = cn(
+    'flex w-full items-center justify-between gap-3 py-3 px-4 transition-colors min-h-[60px]',
+    onSelect && 'hover:bg-surface-hover cursor-pointer'
+  );
+
+  const interactiveProps = useInteractiveProps(onSelect);
 
   return (
     <LoadingError
       isLoading={isLoading || !enrichedBookmark.verseKey || !enrichedBookmark.surahName}
       error={error}
-      loadingFallback={
-        <div className="p-3 border-b border-border">
-          <div className="animate-pulse">
-            <div className="h-4 bg-surface-hover rounded w-16 mb-2"></div>
-            <div className="h-3 bg-surface-hover rounded w-24"></div>
-          </div>
-        </div>
-      }
-      errorFallback={
-        <div className="p-3 border-b border-border text-center text-error text-sm">
-          Failed to load
-        </div>
-      }
+      loadingFallback={<SidebarVerseItemSkeleton withDivider={showDivider} />}
+      errorFallback={<SidebarVerseItemError withDivider={showDivider} />}
     >
-      <button
-        onClick={onSelect}
-        className={`w-full text-left p-3 border-b border-border hover:bg-surface-hover transition-colors ${
-          isActive ? 'bg-accent/10 border-l-4 border-l-accent' : ''
-        }`}
-      >
-        <div className="space-y-1">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-accent">{enrichedBookmark.verseKey}</span>
-            <span className="text-xs text-muted">
-              {new Date(bookmark.createdAt).toLocaleDateString()}
-            </span>
+      <>
+        <div className={baseWrapperClassName} {...interactiveProps}>
+          <div className="flex flex-col min-w-0 text-left">
+            <span className="text-sm font-semibold text-foreground truncate">{surahName}</span>
+            <span className="text-xs text-muted mt-1">{verseLabel}</span>
           </div>
-          <p className="text-sm font-medium text-foreground truncate">
-            {enrichedBookmark.surahName}
-          </p>
-          <p className="text-xs text-muted truncate">Ayah {ayahNumber}</p>
+          <RemoveBookmarkButton
+            label={surahName}
+            bookmark={bookmark}
+            {...(onRemoveBookmark ? { onRemove: onRemoveBookmark } : {})}
+          />
         </div>
-      </button>
+        {showDivider ? <div className="mx-4 h-px bg-border" /> : null}
+      </>
     </LoadingError>
   );
 };
+
+function useInteractiveProps(onSelect?: () => void): {
+  role?: 'button';
+  tabIndex?: number;
+  onClick?: () => void;
+  onKeyDown?: (event: React.KeyboardEvent) => void;
+} {
+  return onSelect
+    ? {
+        role: 'button' as const,
+        tabIndex: 0,
+        onClick: onSelect,
+        onKeyDown: (event: React.KeyboardEvent) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            onSelect();
+          }
+        },
+      }
+    : {};
+}
+
+const RemoveBookmarkButton = ({
+  label,
+  bookmark,
+  onRemove,
+}: {
+  label: string;
+  bookmark: Bookmark;
+  onRemove?: (b: Bookmark) => void;
+}): React.JSX.Element | null => {
+  if (typeof onRemove !== 'function') return null;
+  return (
+    <button
+      type="button"
+      aria-label={`Remove ${label} bookmark`}
+      className="ml-2 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface text-muted transition-colors duration-200 hover:bg-surface-hover hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30"
+      onClick={(event): void => {
+        event.stopPropagation();
+        onRemove(bookmark);
+      }}
+    >
+      <CloseIcon size={16} strokeWidth={2.2} />
+    </button>
+  );
+};
+
+const SidebarVerseItemSkeleton = ({ withDivider }: { withDivider: boolean }): React.JSX.Element => (
+  <div className="px-4 py-3">
+    <div className="animate-pulse flex items-center justify-between gap-4">
+      <div className="h-4 bg-surface-hover rounded w-28"></div>
+      <div className="h-3 bg-surface-hover rounded w-16"></div>
+    </div>
+    {withDivider ? <div className="mx-4 mt-2 h-px bg-border" /> : null}
+  </div>
+);
+
+const SidebarVerseItemError = ({ withDivider }: { withDivider: boolean }): React.JSX.Element => (
+  <div className="px-4 py-3">
+    <p className="text-center text-error text-sm">Failed to load</p>
+    {withDivider ? <div className="mx-4 mt-2 h-px bg-border" /> : null}
+  </div>
+);

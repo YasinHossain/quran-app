@@ -9,6 +9,7 @@ import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { LoadingError } from '@/app/shared/LoadingError';
 import { ContentBookmarkCard } from '@/app/shared/ui/cards/ContentBookmarkCard';
+import { parseVerseKey } from '@/lib/utils/verse';
 import { Bookmark } from '@/types';
 
 import { ErrorFallback, LoadingFallback } from './shared/BookmarkCardComponents';
@@ -38,9 +39,11 @@ const useBookmarkHandlers = (
 
   const handleNavigateToVerse = useCallback((): void => {
     if (!enrichedBookmark.verseKey) return;
-    const [surahId] = enrichedBookmark.verseKey.split(':');
-    router.push(`/surah/${surahId}#verse-${enrichedBookmark.verseId}`);
-  }, [enrichedBookmark.verseKey, enrichedBookmark.verseId, router]);
+    const { surahNumber, ayahNumber } = parseVerseKey(enrichedBookmark.verseKey);
+    if (!surahNumber || !ayahNumber) return;
+    const params = new URLSearchParams({ startVerse: String(ayahNumber) });
+    router.push(`/surah/${surahNumber}?${params.toString()}`);
+  }, [enrichedBookmark.verseKey, router]);
 
   const isVerseBookmarked = isBookmarked(enrichedBookmark.verseId);
 
@@ -68,8 +71,7 @@ export const BookmarkCard = memo(function BookmarkCard({
   onRemove,
 }: BookmarkCardProps): React.JSX.Element {
   const { settings } = useSettings();
-  const { chapters } = useBookmarks();
-  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark, chapters);
+  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark);
 
   const { handlePlayPause, isPlaying, isLoadingAudio } = useBookmarkAudio(
     enrichedBookmark,

@@ -1,41 +1,32 @@
 'use client';
 
 import React from 'react';
-
-import type { Verse } from '@/types';
+import { useTranslation } from 'react-i18next';
 
 interface BreadcrumbNavigationProps {
   onNavigateToBookmarks: () => void;
   folderName: string;
-  activeVerseId?: string | undefined;
-  verses: Verse[];
 }
 
 export const BreadcrumbNavigation = ({
   onNavigateToBookmarks,
   folderName,
-  activeVerseId,
-  verses,
-}: BreadcrumbNavigationProps): React.JSX.Element => (
-  <nav className="flex items-center space-x-2 text-sm mb-6 hidden lg:flex" aria-label="Breadcrumb">
-    <button
-      onClick={onNavigateToBookmarks}
-      className="text-accent hover:text-accent-hover transition-colors"
+}: BreadcrumbNavigationProps): React.JSX.Element => {
+  const { t } = useTranslation();
+
+  return (
+    <nav
+      className="flex items-center space-x-2 text-sm mb-6 hidden lg:flex"
+      aria-label={t('bookmarks_breadcrumb_label')}
     >
-      Bookmarks
-    </button>
-    <span className="text-muted">/</span>
-    <span className="text-foreground font-medium">{folderName}</span>
-    {activeVerseId && (
-      <>
-        <span className="text-muted">/</span>
-        <span className="text-muted">
-          {(() => {
-            const verse = verses.find((v) => String(v.id) === activeVerseId);
-            return verse ? verse.verse_key : 'Verse';
-          })()}
-        </span>
-      </>
-    )}
-  </nav>
-);
+      <button
+        onClick={onNavigateToBookmarks}
+        className="text-accent hover:text-accent-hover transition-colors"
+      >
+        {t('bookmarks')}
+      </button>
+      <span className="text-muted">/</span>
+      <span className="text-foreground font-medium">{folderName}</span>
+    </nav>
+  );
+};

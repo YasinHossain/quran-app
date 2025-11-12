@@ -1,12 +1,10 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
-import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
+import React, { useEffect, useState } from 'react';
 
-import { DeleteFolderModal } from './DeleteFolderModal';
 import { EmptyBookmarks } from './EmptyStates';
 import { FolderCard } from './FolderCard';
-import { FolderSettingsModal } from './FolderSettingsModal';
 
 import type { Folder } from '@/types';
 
@@ -15,7 +13,36 @@ interface FolderGridProps {
   onFolderSelect: (folderId: string) => void;
 }
 
-type FolderAction = 'edit' | 'delete' | 'rename' | 'customize';
+type FolderAction = 'delete' | 'customize';
+
+interface FolderSettingsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  folder: Folder | null;
+  mode?: 'edit' | 'create';
+}
+
+interface DeleteFolderModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  folder: Folder | null;
+}
+
+const FolderSettingsModal = dynamic<FolderSettingsModalProps>(
+  () =>
+    import('./FolderSettingsModal').then((mod) => ({
+      default: mod.FolderSettingsModal,
+    })),
+  { ssr: false }
+);
+
+const DeleteFolderModal = dynamic<DeleteFolderModalProps>(
+  () =>
+    import('./DeleteFolderModal').then((mod) => ({
+      default: mod.DeleteFolderModal,
+    })),
+  { ssr: false }
+);
 
 interface FolderCardsProps {
   folders: Folder[];
@@ -28,48 +55,37 @@ const FolderCards = ({
   onFolderSelect,
   onAction,
 }: FolderCardsProps): React.JSX.Element => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const renderFolderItem = (folder: Folder, index: number): React.JSX.Element => (
-    <motion.div
+    <div
       key={folder.id}
-      layout
-      initial={{ opacity: 0, scale: 0.9, y: 20 }}
-      animate={{
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        transition: {
-          delay: index * 0.05,
-          duration: 0.4,
-          ease: 'easeOut',
-        },
-      }}
-      exit={{
-        opacity: 0,
-        scale: 0.9,
-        y: -20,
-        transition: { duration: 0.3 },
-      }}
+      className={`transform transition-all duration-300 ease-out ${
+        isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+      }`}
+      style={{ transitionDelay: `${index * 50}ms` }}
     >
       <FolderCard
         folder={folder}
         onClick={() => onFolderSelect(folder.id)}
-        onEdit={() => onAction(folder, 'edit')}
         onDelete={() => onAction(folder, 'delete')}
-        onRename={() => onAction(folder, 'rename')}
         onColorChange={() => onAction(folder, 'customize')}
       />
-    </motion.div>
+    </div>
   );
 
   return (
-    <motion.div
-      className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: 'easeOut' }}
+    <div
+      className={`grid w-full auto-rows-fr grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-y-4 md:gap-y-6 xl:gap-y-8 gap-x-3 md:gap-x-4 xl:gap-x-6 transition-opacity duration-300 ease-out ${
+        isMounted ? 'opacity-100' : 'opacity-0'
+      }`}
     >
-      <AnimatePresence mode="popLayout">{folders.map(renderFolderItem)}</AnimatePresence>
-    </motion.div>
+      {folders.map(renderFolderItem)}
+    </div>
   );
 };
 
@@ -82,7 +98,6 @@ const useFolderModals = (): UseFolderModalsReturn => {
   const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState<'edit' | 'rename' | 'customize'>('edit');
 
   const handleAction = (folder: Folder, action: FolderAction): void => {
     setSelectedFolder(folder);
@@ -90,7 +105,6 @@ const useFolderModals = (): UseFolderModalsReturn => {
       setDeleteModalOpen(true);
       return;
     }
-    setModalMode(action);
     setSettingsModalOpen(true);
   };
 
@@ -106,7 +120,6 @@ const useFolderModals = (): UseFolderModalsReturn => {
         isOpen={settingsModalOpen}
         onClose={closeModals}
         folder={selectedFolder}
-        mode={modalMode}
       />
       <DeleteFolderModal isOpen={deleteModalOpen} onClose={closeModals} folder={selectedFolder} />
     </>

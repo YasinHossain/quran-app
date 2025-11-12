@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import React from 'react';
 
 import { useBookmarkListState } from '@/app/(features)/bookmarks/hooks/useBookmarkListState';
@@ -30,6 +29,11 @@ export const BookmarkListView = ({
     folder,
     externalBookmarks
   );
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   if (showAsVerseList) {
     return (
@@ -43,12 +47,10 @@ export const BookmarkListView = ({
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      transition={{ duration: 0.3 }}
-      className="max-w-4xl mx-auto"
+    <div
+      className={`max-w-4xl mx-auto transform transition-all duration-300 ease-out ${
+        isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-5'
+      }`}
     >
       <BookmarkListHeader folder={folder} bookmarkCount={bookmarks.length} onBack={onBack} />
       {bookmarks.length > 0 ? (
@@ -62,6 +64,6 @@ export const BookmarkListView = ({
       ) : (
         <EmptyBookmarkState onBack={onBack} />
       )}
-    </motion.div>
+    </div>
   );
 };

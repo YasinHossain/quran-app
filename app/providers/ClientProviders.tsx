@@ -1,6 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { SWRConfig } from 'swr';
 
 import { WebVitals } from '@/app/shared/components/WebVitals';
 import { AudioProvider } from '@/app/shared/player/context/AudioContext';
@@ -13,6 +14,8 @@ import { SidebarProvider } from './SidebarContext';
 import { ThemeProvider, Theme } from './ThemeContext';
 import { UIStateProvider } from './UIStateContext';
 
+import type { SWRConfiguration } from 'swr';
+
 // import { ApplicationProvider } from '../../src/presentation/providers/ApplicationProvider';
 
 /**
@@ -20,6 +23,13 @@ import { UIStateProvider } from './UIStateContext';
  * and `SidebarProvider`. Wrap your component tree with this provider to give
  * descendants access to theme, settings, and sidebar contexts.
  */
+const SWR_OPTIONS: SWRConfiguration = {
+  dedupingInterval: 2000,
+  revalidateOnFocus: false,
+  revalidateIfStale: false,
+  keepPreviousData: true,
+};
+
 export function ClientProviders({
   children,
   initialTheme,
@@ -53,21 +63,23 @@ export function ClientProviders({
   }, []);
 
   return (
-    <ThemeProvider initialTheme={initialTheme}>
-      <SettingsProvider>
-        <BookmarkProvider>
-          <UIStateProvider>
-            <SidebarProvider>
-              <NavigationProvider>
-                <AudioProvider>
-                  <WebVitals reportTarget="console" />
-                  {children}
-                </AudioProvider>
-              </NavigationProvider>
-            </SidebarProvider>
-          </UIStateProvider>
-        </BookmarkProvider>
-      </SettingsProvider>
-    </ThemeProvider>
+    <SWRConfig value={SWR_OPTIONS}>
+      <ThemeProvider initialTheme={initialTheme}>
+        <SettingsProvider>
+          <BookmarkProvider>
+            <UIStateProvider>
+              <SidebarProvider>
+                <NavigationProvider>
+                  <AudioProvider>
+                    <WebVitals reportTarget="console" />
+                    {children}
+                  </AudioProvider>
+                </NavigationProvider>
+              </SidebarProvider>
+            </UIStateProvider>
+          </BookmarkProvider>
+        </SettingsProvider>
+      </ThemeProvider>
+    </SWRConfig>
   );
 }

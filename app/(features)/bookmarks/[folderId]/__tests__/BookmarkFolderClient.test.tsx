@@ -3,44 +3,44 @@ import { render } from '@testing-library/react';
 import { BookmarkFolderClient } from '@/app/(features)/bookmarks/[folderId]/BookmarkFolderClient';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
-jest.mock('@/app/(features)/layout/context/HeaderVisibilityContext', () => ({
-  useHeaderVisibility: () => ({ isHidden: false }),
+import type { BookmarkFolderControllerReturn } from '@/app/(features)/bookmarks/[folderId]/hooks/useBookmarkFolderController';
+
+const bookmarkFolderViewSpy = jest.fn();
+const useBookmarkFolderControllerMock = jest.fn();
+
+jest.mock('@/app/(features)/bookmarks/[folderId]/components/BookmarkFolderView.client', () => ({
+  BookmarkFolderView: (props: Record<string, unknown>) => {
+    bookmarkFolderViewSpy(props);
+    return <div data-testid="bookmark-folder-view" />;
+  },
 }));
 
-jest.mock('@/app/providers/SidebarContext', () => ({
-  useSidebar: () => ({ isBookmarkSidebarOpen: false, setBookmarkSidebarOpen: jest.fn() }),
+jest.mock('../hooks/useBookmarkFolderController', () => ({
+  useBookmarkFolderController: (folderId: string) => useBookmarkFolderControllerMock(folderId),
 }));
 
-jest.mock('../components/Sidebar', () => ({
-  Sidebar: () => <div />,
-}));
+const createControllerMock = (): BookmarkFolderControllerReturn => ({
+  folder: { id: '1', name: 'Test Folder', bookmarks: [] },
+  bookmarks: [],
+  isBookmarkSidebarOpen: false,
+  setBookmarkSidebarOpen: jest.fn(),
+  handleNavigateToBookmarks: jest.fn(),
+  handleSectionChange: jest.fn(),
+  folderName: 'Test Folder',
+  isTranslationPanelOpen: false,
+  setIsTranslationPanelOpen: jest.fn(),
+  isWordPanelOpen: false,
+  setIsWordPanelOpen: jest.fn(),
+  selectedTranslationName: 'English',
+  selectedWordLanguageName: 'English',
+});
 
-jest.mock('../components/SettingsSidebar', () => ({
-  SettingsSidebar: () => <div />,
-}));
+describe('BookmarkFolderClient', () => {
+  beforeEach(() => {
+    bookmarkFolderViewSpy.mockClear();
+    useBookmarkFolderControllerMock.mockReturnValue(createControllerMock());
+  });
 
-jest.mock('../../components/BookmarkVerseList', () => ({
-  BookmarkVerseList: () => <div />,
-}));
-
-jest.mock('../hooks', () => ({
-  useBookmarkFolderData: () => ({
-    folder: { name: 'Test Folder' },
-    bookmarks: [],
-    verses: [],
-    loadingVerses: new Set(),
-  }),
-  useBookmarkFolderPanels: () => ({
-    isTranslationPanelOpen: false,
-    setIsTranslationPanelOpen: jest.fn(),
-    isWordPanelOpen: false,
-    setIsWordPanelOpen: jest.fn(),
-    selectedTranslationName: '',
-    selectedWordLanguageName: '',
-  }),
-}));
-
-describe('BookmarkFolderClient logging', () => {
   it('logs render with folderId', () => {
     const debugSpy = jest.spyOn(logger, 'debug').mockImplementation(() => {});
 
@@ -50,5 +50,14 @@ describe('BookmarkFolderClient logging', () => {
       folderId: '1',
     });
     debugSpy.mockRestore();
+  });
+
+  it('forwards controller props to the view without layout flag', () => {
+    render(<BookmarkFolderClient folderId="123" />);
+
+    const props = bookmarkFolderViewSpy.mock.calls[0][0] as Record<string, unknown>;
+
+    expect(props).toHaveProperty('folderName', 'Test Folder');
+    expect(props).not.toHaveProperty('layout');
   });
 });

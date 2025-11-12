@@ -3,9 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { memo } from 'react';
 
-import { CloseIcon } from '@/app/shared/icons';
-import { touchClasses } from '@/lib/responsive';
-import { cn } from '@/lib/utils/cn';
+import { Portal } from '@/app/shared/components/Portal';
 
 import { TabContent } from './components/TabContent';
 import { TabNavigation } from './components/TabNavigation';
@@ -58,28 +56,6 @@ const ModalShell = memo(function ModalShell({
   );
 });
 
-const CloseButton = memo(function CloseButton({
-  onClose,
-}: {
-  onClose: () => void;
-}): React.JSX.Element {
-  return (
-    <div className="flex justify-end p-4">
-      <button
-        onClick={onClose}
-        className={cn(
-          'p-2 rounded-full hover:bg-interactive transition-colors',
-          touchClasses.target,
-          touchClasses.focus
-        )}
-        aria-label="Close"
-      >
-        <CloseIcon size={20} className="text-muted" />
-      </button>
-    </div>
-  );
-});
-
 export const BookmarkModal = memo(function BookmarkModal({
   isOpen,
   onClose,
@@ -97,27 +73,33 @@ export const BookmarkModal = memo(function BookmarkModal({
   } = useBookmarkModal(isOpen, onClose);
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          <Backdrop onClose={onClose} />
-          <ModalShell>
-            <CloseButton onClose={onClose} />
-            <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} verseKey={verseKey} />
-            <TabContent
-              activeTab={activeTab}
-              verseId={verseId}
-              verseKey={verseKey}
-              isCreatingFolder={isCreatingFolder}
-              newFolderName={newFolderName}
-              onToggleCreateFolder={(creating) =>
-                creating ? openCreateFolder() : closeCreateFolder()
-              }
-              onNewFolderNameChange={setNewFolderName}
-            />
-          </ModalShell>
-        </>
-      )}
-    </AnimatePresence>
+    <Portal>
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            <Backdrop onClose={onClose} />
+            <ModalShell>
+              <TabNavigation
+                activeTab={activeTab}
+                onTabChange={setActiveTab}
+                verseKey={verseKey}
+                onClose={onClose}
+              />
+              <TabContent
+                activeTab={activeTab}
+                verseId={verseId}
+                verseKey={verseKey}
+                isCreatingFolder={isCreatingFolder}
+                newFolderName={newFolderName}
+                onToggleCreateFolder={(creating) =>
+                  creating ? openCreateFolder() : closeCreateFolder()
+                }
+                onNewFolderNameChange={setNewFolderName}
+              />
+            </ModalShell>
+          </>
+        )}
+      </AnimatePresence>
+    </Portal>
   );
 });

@@ -7,11 +7,14 @@ describe('SurahView responsive', () => {
     renderSurahView();
 
     const main = screen.getByRole('main');
-    expect(main).toHaveClass('h-screen', 'overflow-hidden', 'lg:mr-[20.7rem]');
+    expect(main).toHaveAttribute('data-slot', 'surah-workspace-main');
+    // With both desktop sidebars rendered, WorkspaceMain should not reserve extra gutter space.
+    expect(main.className).not.toContain('lg:pl-reader-sidebar-left');
+    expect(main.className).not.toContain('lg:pr-reader-sidebar-right');
+    expect(main.className).toContain('pb-safe');
 
-    const scrollContainer = document.querySelector('main .overflow-y-auto') as HTMLElement | null;
+    const scrollContainer = document.querySelector('main > div.flex') as HTMLElement | null;
     expect(scrollContainer).not.toBeNull();
-    expect(scrollContainer!).toHaveClass('px-4', 'sm:px-6', 'lg:px-8', 'pb-6');
-    expect(scrollContainer!.className).toContain('pt-[calc(3.5rem+env(safe-area-inset-top))]');
+    expect(scrollContainer!).toHaveClass('px-4', 'sm:px-6', 'lg:px-8');
   });
 });

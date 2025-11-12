@@ -3,39 +3,41 @@
 import React from 'react';
 
 import { BookmarkVerseList } from '@/app/(features)/bookmarks/components/BookmarkVerseList';
+import { usePrefetchSingleVerse } from '@/app/shared/hooks/useSingleVerse';
 
 import { BreadcrumbNavigation } from './BreadcrumbNavigation';
 
-import type { Verse } from '@/types';
+import type { Bookmark } from '@/types';
 
 interface BookmarkVersesContentProps {
   onNavigateToBookmarks: () => void;
   folderName: string;
-  activeVerseId?: string | undefined;
-  verses: Verse[];
-  displayVerses: Verse[];
-  loadingVerses: Set<string>;
+  bookmarks: Bookmark[];
 }
 
 export const BookmarkVersesContent = ({
   onNavigateToBookmarks,
   folderName,
-  activeVerseId,
-  verses,
-  displayVerses,
-  loadingVerses,
-}: BookmarkVersesContentProps): React.JSX.Element => (
-  <div>
-    <BreadcrumbNavigation
-      onNavigateToBookmarks={onNavigateToBookmarks}
-      folderName={folderName}
-      activeVerseId={activeVerseId}
-      verses={verses}
-    />
-    <BookmarkVerseList
-      verses={displayVerses}
-      isLoading={loadingVerses.size > 0 && verses.length === 0}
-      error={null}
-    />
-  </div>
-);
+  bookmarks,
+}: BookmarkVersesContentProps): React.JSX.Element => {
+  const prefetchSingleVerse = usePrefetchSingleVerse();
+
+  const verseTargets = React.useMemo(() => {
+    if (!bookmarks.length) return [];
+    return bookmarks
+      .map((bookmark) => bookmark.verseKey ?? (bookmark.verseId ? String(bookmark.verseId) : null))
+      .filter((value): value is string => Boolean(value));
+  }, [bookmarks]);
+
+  React.useEffect(() => {
+    if (verseTargets.length === 0) return;
+    void prefetchSingleVerse(verseTargets);
+  }, [prefetchSingleVerse, verseTargets]);
+
+  return (
+    <div>
+      <BreadcrumbNavigation onNavigateToBookmarks={onNavigateToBookmarks} folderName={folderName} />
+      <BookmarkVerseList bookmarks={bookmarks} />
+    </div>
+  );
+};

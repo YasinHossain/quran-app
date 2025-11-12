@@ -1,3 +1,5 @@
+'use client';
+
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -6,12 +8,15 @@ import { useBookmarks } from '@/app/providers/BookmarkContext';
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 import type { Bookmark } from '@/types';
 
-export const usePinnedPage = (): {
-  pinnedVerses: Bookmark[];
+interface UsePinnedPageReturn {
+  bookmarks: Bookmark[];
+  isLoading: boolean;
   handleSectionChange: (section: SectionId) => void;
-} => {
+}
+
+export const usePinnedPage = (): UsePinnedPageReturn => {
   const router = useRouter();
-  const { pinnedVerses } = useBookmarks();
+  const { pinnedVerses, chapters } = useBookmarks();
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -20,20 +25,23 @@ export const usePinnedPage = (): {
     };
   }, []);
 
+  const isLoading = pinnedVerses.length > 0 && chapters.length === 0;
+
   const handleSectionChange = (section: SectionId): void => {
     if (section === 'bookmarks') {
       router.push('/bookmarks');
     } else if (section === 'last-read') {
       router.push('/bookmarks/last-read');
-    } else if (section === 'memorization') {
-      router.push('/bookmarks/memorization');
+    } else if (section === 'planner') {
+      router.push('/bookmarks/planner');
     } else {
       router.push('/bookmarks/pinned');
     }
   };
 
   return {
-    pinnedVerses,
+    bookmarks: pinnedVerses,
+    isLoading,
     handleSectionChange,
   };
 };

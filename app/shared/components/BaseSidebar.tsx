@@ -46,7 +46,8 @@ export const BaseSidebar = ({
       <aside
         className={cn(
           getPositionClasses(),
-          'text-foreground flex flex-col overflow-x-hidden pt-safe pb-safe touch-pan-y',
+          // Ensure we don't override fixed positioning from getPositionClasses
+          'text-foreground flex flex-col overflow-hidden pt-safe pb-safe touch-pan-y lg:overflow-visible lg:pt-0 lg:pb-0',
           className
         )}
         role="dialog"

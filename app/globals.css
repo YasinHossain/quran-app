@@ -80,6 +80,25 @@
     --z-tooltip: 80;
     /* Modals/overlays should sit above everything */
     --z-modal: 100;
+
+    /* Reader workspace layout tokens */
+    --reader-sidebar-width-left: 20.7rem;
+    --reader-sidebar-width-right: 20.7rem;
+    --reader-header-height: 4rem;
+    --reader-header-height-compact: 3.5rem;
+    --reader-header-height-hidden: 0px;
+
+    /* Reader safe-area tokens */
+    --reader-safe-area-top: env(safe-area-inset-top, 0px);
+    --reader-safe-area-right: env(safe-area-inset-right, 0px);
+    --reader-safe-area-bottom: env(safe-area-inset-bottom, 0px);
+    --reader-safe-area-left: env(safe-area-inset-left, 0px);
+
+    /* Precomputed safe paddings for shared utilities */
+    --reader-safe-padding-top: max(1rem, var(--reader-safe-area-top));
+    --reader-safe-padding-right: max(1rem, var(--reader-safe-area-right));
+    --reader-safe-padding-bottom: max(1rem, var(--reader-safe-area-bottom));
+    --reader-safe-padding-left: max(1rem, var(--reader-safe-area-left));
   }
 
   .dark {
@@ -164,12 +183,17 @@
     top: 6px;
   }
 
+  /* Global paragraph line-height only; margins are scoped to .typography */
   p {
     line-height: 1.6;
+  }
+
+  /* Scoped typography styles for long-form content */
+  .typography p {
     margin-bottom: 1rem;
   }
 
-  p:last-child {
+  .typography p:last-child {
     margin-bottom: 0;
   }
 
@@ -190,6 +214,22 @@
   .card {
     @apply rounded-lg p-4 shadow-sm;
     background: rgb(var(--color-background));
+  }
+
+  /* Desktop workspace sidebar shadows */
+  .workspace-sidebar-left,
+  .workspace-sidebar-right {
+    box-shadow: none;
+  }
+
+  @media (min-width: 1024px) {
+    .workspace-sidebar-left {
+      box-shadow: 10px 0 28px -18px rgb(var(--color-foreground) / 0.14);
+    }
+
+    .workspace-sidebar-right {
+      box-shadow: -10px 0 28px -18px rgb(var(--color-foreground) / 0.14);
+    }
   }
 
   /* Touch-friendly interactive elements */
@@ -224,25 +264,25 @@
 
   /* Safe area support for mobile devices */
   .pb-safe {
-    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    padding-bottom: var(--reader-safe-padding-bottom);
   }
 
   .pt-safe {
-    padding-top: max(1rem, env(safe-area-inset-top));
+    padding-top: var(--reader-safe-padding-top);
   }
 
   .pl-safe {
-    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-left: var(--reader-safe-padding-left);
   }
 
   .pr-safe {
-    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-right: var(--reader-safe-padding-right);
   }
 
   /* Bottom navigation spacing */
   .bottom-nav-space {
     padding-bottom: 3rem;
-    padding-bottom: calc(3rem + env(safe-area-inset-bottom));
+    padding-bottom: calc(3rem + var(--reader-safe-area-bottom));
   }
 
   /* Scrollbar hiding for cleaner mobile experience */
@@ -263,6 +303,32 @@
   }
   .touch-callout-none {
     -webkit-touch-callout: none;
+  }
+
+  /* Layout primitives: shared, consistent responsive building blocks */
+  .app-container {
+    /* Standard page container: width bound + unified horizontal padding */
+    @apply mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .content-narrow {
+    /* For text-heavy or focused content sections */
+    @apply mx-auto w-full max-w-3xl;
+  }
+
+  .stack {
+    /* Vertical spacing stack with responsive rhythm */
+    @apply flex flex-col gap-4 md:gap-6;
+  }
+
+  .cluster {
+    /* Horizontal wrap cluster for chips/controls */
+    @apply flex flex-wrap items-center gap-2 sm:gap-3;
+  }
+
+  .cq {
+    /* Opt-in container query boundary for component-scoped responsiveness */
+    container-type: inline-size;
   }
 }
 
@@ -292,6 +358,18 @@
     z-index: var(--z-modal);
   }
 
+  /* Intrinsic, breakpoint-light grid helper */
+  .grid-auto-fill {
+    /* Combine with `grid` and gap utilities */
+    grid-template-columns: repeat(auto-fill, minmax(var(--min-col, 12rem), 1fr));
+  }
+
+  /* Intrinsic grid helper that collapses empty tracks */
+  .grid-auto-fit {
+    /* Combine with `grid` and gap utilities */
+    grid-template-columns: repeat(auto-fit, minmax(var(--min-col, 12rem), 1fr));
+  }
+
   /* Body scroll/interaction helpers */
   .overflow-hidden {
     overflow: hidden;
@@ -303,11 +381,11 @@
 
   /* Bottom navigation offsets */
   .bottom-nav-offset {
-    bottom: calc(5rem + env(safe-area-inset-bottom));
+    bottom: calc(5rem + var(--reader-safe-area-bottom));
   }
 
   .bottom-nav-offset-lg {
-    bottom: calc(6rem + env(safe-area-inset-bottom));
+    bottom: calc(6rem + var(--reader-safe-area-bottom));
   }
 }
 

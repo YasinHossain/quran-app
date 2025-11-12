@@ -16,25 +16,35 @@ export const useSidebarPositioning = ({
   isHeaderHidden,
 }: UseSidebarPositioningOptions): UseSidebarPositioningReturn => {
   const getPositionClasses = (): string => {
-    const baseClasses =
-      'fixed w-full sm:w-80 lg:w-[20.7rem] bg-background transition-all duration-300 ease-in-out';
+    const baseClasses = cn(
+      // Use !fixed to avoid being overridden by any accidental 'relative'
+      '!fixed w-full bg-background transition-all duration-300 ease-in-out',
+      'sm:w-80',
+      position === 'left' ? 'lg:w-reader-sidebar-left' : 'lg:w-reader-sidebar-right'
+    );
+    const headerAwareClasses = isHeaderHidden
+      ? 'top-0 h-screen'
+      : 'top-reader-header h-[calc(100vh-var(--reader-header-height))]';
+
+    const shadowClasses = 'shadow-modal lg:shadow-none';
+    const panelZIndex = 'z-[120]';
 
     if (position === 'left') {
       return cn(
         baseClasses,
         'left-0 lg:left-16',
-        'shadow-modal',
-        isHeaderHidden ? 'top-0 h-screen' : 'top-16 h-[calc(100vh-4rem)]',
-        'z-50 lg:z-10',
+        shadowClasses,
+        headerAwareClasses,
+        panelZIndex,
         isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       );
     }
     return cn(
       baseClasses,
       'right-0',
-      'shadow-modal',
-      isHeaderHidden ? 'top-0 h-screen' : 'top-16 h-[calc(100vh-4rem)]',
-      'z-30',
+      shadowClasses,
+      headerAwareClasses,
+      panelZIndex,
       isOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
     );
   };

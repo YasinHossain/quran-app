@@ -17,6 +17,7 @@ export { FolderProgress } from './FolderProgress';
 export { ContentBookmarkCard } from './ContentBookmarkCard';
 export { BookmarkNavigationCard } from './BookmarkNavigationCard';
 export { BookmarkFolderCard } from './BookmarkFolderCard';
+export { FolderGlyph } from './FolderGlyph';
 export { BookmarkVerseCard } from './BookmarkVerseCard';
 
 // Design system

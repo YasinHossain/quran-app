@@ -16,6 +16,7 @@ export const defaultProps: VerseActionsProps = {
   isBookmarked: false,
   onPlayPause: noop,
   onBookmark: noop,
+  onAddToPlan: noop,
 };
 
 let mockVariant = 'expanded';

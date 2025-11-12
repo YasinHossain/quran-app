@@ -16,7 +16,16 @@ beforeEach(() => {
 });
 
 const Providers = ({ children }: { children: React.ReactNode }): React.JSX.Element => (
-  <SWRConfig value={{ provider: () => new Map() }}>
+  <SWRConfig
+    value={{
+      provider: () => new Map(),
+      // Avoid noisy background refetching in tests
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      shouldRetryOnError: false,
+      dedupingInterval: 1000,
+    }}
+  >
     <UIStateProvider>
       <AudioProvider>
         <SettingsProvider>

@@ -1,6 +1,9 @@
 import { useRef, type UIEvent } from 'react';
 
-import { useSidebarScrollCentering } from './hooks/useSidebarScrollCentering';
+import {
+  useSidebarScrollCentering,
+  useBackgroundPreCentering,
+} from './hooks/useSidebarScrollCentering';
 import { useSidebarScrollPersistence } from './hooks/useSidebarScrollPersistence';
 
 import type { TabKey } from '@/app/shared/components/surah-tabs/types';
@@ -38,6 +41,8 @@ export const useSidebarScroll = ({
     selectedPageId,
     isEnabled,
   });
+  // Keep other tabs pre-centered in the background as selection changes
+  useBackgroundPreCentering({ activeTab, selectedSurahId, selectedJuzId, selectedPageId });
   const rememberScroll = (tab: TabKey): void => {
     persistRemember(tab);
     skipNextCentering(tab);

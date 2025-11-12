@@ -10,7 +10,6 @@ import { VerseList } from './bookmark-verse-sidebar/VerseList';
 export interface BookmarkVerseSidebarProps {
   bookmarks: Bookmark[];
   folder: { id: string; name: string };
-  activeVerseId?: string | undefined;
   onVerseSelect?: ((verseId: string) => void) | undefined;
   onBack?: (() => void) | undefined;
 }
@@ -18,13 +17,12 @@ export interface BookmarkVerseSidebarProps {
 export const BookmarkVerseSidebar = ({
   bookmarks,
   folder,
-  activeVerseId,
   onVerseSelect,
   onBack,
 }: BookmarkVerseSidebarProps): React.JSX.Element => (
   <div className="h-full flex flex-col bg-surface">
     <SidebarHeader folder={folder} bookmarkCount={bookmarks.length} onBack={onBack} />
-    <VerseList bookmarks={bookmarks} activeVerseId={activeVerseId} onVerseSelect={onVerseSelect} />
+    <VerseList bookmarks={bookmarks} onVerseSelect={onVerseSelect} />
   </div>
 );
 

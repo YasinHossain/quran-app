@@ -1,7 +1,9 @@
 'use client';
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
+import { PlusIcon } from '@/app/shared/icons';
 import { useResponsiveState } from '@/lib/responsive';
 
 import { HeaderTitleSection } from './header/HeaderTitleSection';
@@ -18,47 +20,49 @@ interface BookmarksHeaderProps {
 
 export const BookmarksHeader = ({
   onSidebarToggle,
-  title = 'Bookmarks',
+  title,
   searchTerm = '',
   onSearchChange,
   onNewFolderClick,
 }: BookmarksHeaderProps): React.JSX.Element => {
+  const { t } = useTranslation();
   const { variant } = useResponsiveState();
   const showMenuButton = variant === 'compact' || variant === 'default';
+  const headerTitle = title ?? t('bookmarks');
 
   return (
-    <div className="mb-6">
-      <div className="flex items-center gap-3">
-        <HeaderTitleSection
-          title={title}
-          showMenuButton={showMenuButton}
-          onSidebarToggle={onSidebarToggle}
-        />
-        <div className="ml-auto flex items-center gap-2">
-          {/* Search */}
-          {onSearchChange && (
-            <div>
-              <input
-                aria-label="Search Bookmarks"
-                placeholder="Search Bookmarks"
-                className="w-48 rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-                value={searchTerm}
-                onChange={(e) => onSearchChange(e.target.value)}
-              />
-            </div>
-          )}
-          {/* New Folder */}
-          {onNewFolderClick && (
-            <button
-              type="button"
-              onClick={onNewFolderClick}
-              className="inline-flex items-center justify-center font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 touch-manipulation select-none bg-accent text-on-accent hover:bg-accent-hover rounded-md px-3 py-1.5 text-sm min-h-touch"
-            >
-              New Folder
-            </button>
-          )}
+    <div className="mb-6 flex flex-col gap-4">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1">
+          <HeaderTitleSection
+            title={headerTitle}
+            showMenuButton={showMenuButton}
+            onSidebarToggle={onSidebarToggle}
+          />
         </div>
+        {onNewFolderClick && (
+          <button
+            type="button"
+            aria-label={t('bookmarks_create_folder')}
+            onClick={onNewFolderClick}
+            className="inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-accent font-semibold text-on-accent shadow-sm transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation select-none min-h-touch"
+          >
+            <PlusIcon size={20} />
+            <span className="sr-only">{t('bookmarks_create_folder')}</span>
+          </button>
+        )}
       </div>
+      {onSearchChange && (
+        <div className="flex w-full items-center justify-end">
+          <input
+            aria-label={t('bookmarks_search_label')}
+            placeholder={t('bookmarks_search_placeholder')}
+            className="w-full sm:w-64 rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+            value={searchTerm}
+            onChange={(e) => onSearchChange(e.target.value)}
+          />
+        </div>
+      )}
     </div>
   );
 };

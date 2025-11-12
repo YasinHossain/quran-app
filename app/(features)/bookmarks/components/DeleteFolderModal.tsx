@@ -34,13 +34,15 @@ export const DeleteFolderModal = ({
           />
 
           {/* Modal */}
-          <ModalBody
-            folder={folder}
-            onClose={onClose}
-            onDelete={handleDelete}
-            isDeleting={isDeleting}
-            error={error}
-          />
+          <div className="fixed inset-0 z-modal flex items-center justify-center px-4">
+            <ModalBody
+              folder={folder}
+              onClose={onClose}
+              onDelete={handleDelete}
+              isDeleting={isDeleting}
+              error={error}
+            />
+          </div>
         </>
       )}
     </AnimatePresence>

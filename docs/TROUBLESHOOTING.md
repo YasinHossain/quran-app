@@ -123,6 +123,8 @@ npm run analyze
 - Look for detached DOM nodes
 ```
 
+- **Verse of the Day slow to appear (dev only)**: We now default to the local fallback verse to avoid slow API retries. Set `NEXT_PUBLIC_ENABLE_RANDOM_VERSE_API=true` in `.env.local` if you need to exercise the live random-verse API during development.
+
 ## Testing Issues
 
 ### Jest Tests Failing

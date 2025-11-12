@@ -22,6 +22,7 @@ export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps): React.JSX.E
   const isPlaying = playingId === verse.id;
   const isLoadingAudio = loadingId === verse.id;
   const isBookmarked = bookmarkedVerses.includes(String(verse.id));
+  const translation = verse.translations?.[0]?.text;
 
   return (
     <div className="space-y-6">
@@ -36,7 +37,14 @@ export const TafsirVerse = ({ verse, tafsirIds }: TafsirVerseProps): React.JSX.E
           onPlayPause={() =>
             setPlayingId((currentId) => (currentId === verse.id ? null : verse.id))
           }
-          onBookmark={() => toggleBookmark(String(verse.id))}
+          onBookmark={() =>
+            toggleBookmark(String(verse.id), undefined, {
+              verseKey: verse.verse_key,
+              verseApiId: verse.id,
+              verseText: verse.text_uthmani,
+              ...(translation ? { translation } : {}),
+            })
+          }
           className="md:w-16 md:pt-1"
         />
 

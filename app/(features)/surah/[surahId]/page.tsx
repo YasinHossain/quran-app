@@ -2,20 +2,39 @@ import { SurahView } from '@/app/(features)/surah/components';
 
 interface SurahPageProps {
   params: Promise<{ surahId: string }>;
+  searchParams?:
+    | Promise<{
+        startVerse?: string;
+      }>
+    | {
+        startVerse?: string;
+      };
 }
 
 /**
  * Surah page component for displaying a specific Surah.
  * Server component that handles async params and renders the SurahView.
  */
-async function SurahPage({ params }: SurahPageProps): Promise<React.JSX.Element> {
-  const { surahId } = await params;
+async function SurahPage({ params, searchParams }: SurahPageProps): Promise<React.JSX.Element> {
+  const [resolvedParams, resolvedSearchParams] = await Promise.all([
+    params,
+    Promise.resolve(searchParams ?? {}),
+  ]);
+  const startVerseRaw = resolvedSearchParams?.startVerse;
+  const parsedStartVerse = startVerseRaw ? Number.parseInt(startVerseRaw, 10) : undefined;
+  const initialVerseNumber =
+    typeof parsedStartVerse === 'number' &&
+    Number.isFinite(parsedStartVerse) &&
+    parsedStartVerse > 0
+      ? parsedStartVerse
+      : undefined;
 
-  return (
-    <div className="min-h-screen bg-background">
-      <SurahView surahId={surahId} />
-    </div>
-  );
+  const surahViewProps =
+    typeof initialVerseNumber === 'number'
+      ? { initialVerseNumber }
+      : ({} satisfies Record<string, never>);
+
+  return <SurahView surahId={resolvedParams.surahId} {...surahViewProps} />;
 }
 
 export default SurahPage;

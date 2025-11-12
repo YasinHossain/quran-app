@@ -4,7 +4,7 @@ import React from 'react';
 
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
-import { BookmarkFolderView } from './components/BookmarkFolderView';
+import { BookmarkFolderView } from './components/BookmarkFolderView.client';
 import { FolderNotFound } from './components/FolderNotFound';
 import { useBookmarkFolderController } from './hooks/useBookmarkFolderController';
 
@@ -32,14 +32,8 @@ export function BookmarkFolderClient({ folderId }: BookmarkFolderClientProps): R
       folder={controller.folder}
       isBookmarkSidebarOpen={controller.isBookmarkSidebarOpen}
       onCloseSidebar={() => controller.setBookmarkSidebarOpen(false)}
-      onVerseSelect={controller.handleVerseSelect}
       onBack={controller.handleNavigateToBookmarks}
-      isHidden={controller.isHidden}
       folderName={controller.folder.name}
-      activeVerseId={controller.activeVerseId}
-      verses={controller.verses}
-      displayVerses={controller.displayVerses}
-      loadingVerses={controller.loadingVerses}
       onOpenTranslationPanel={() => controller.setIsTranslationPanelOpen(true)}
       onCloseTranslationPanel={() => controller.setIsTranslationPanelOpen(false)}
       isTranslationPanelOpen={controller.isTranslationPanelOpen}
@@ -48,6 +42,7 @@ export function BookmarkFolderClient({ folderId }: BookmarkFolderClientProps): R
       onCloseWordPanel={() => controller.setIsWordPanelOpen(false)}
       isWordPanelOpen={controller.isWordPanelOpen}
       selectedWordLanguageName={controller.selectedWordLanguageName}
+      onSectionChange={controller.handleSectionChange}
     />
   );
 }

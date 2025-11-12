@@ -8,27 +8,31 @@ export const useFolderSettingsSubmit = ({
   mode,
   folder,
   renameFolder,
+  createFolder,
   onClose,
   setIsSubmitting,
   name,
   selectedColor,
-  selectedIcon,
 }: UseFolderSettingsSubmitParams): ((e: React.FormEvent) => Promise<void>) =>
   useCallback(
     async (e: React.FormEvent): Promise<void> => {
       e.preventDefault();
-      if (!folder || !name.trim()) return;
+      if (!name.trim()) return;
+      if (mode === 'edit' && !folder) return;
       setIsSubmitting(true);
       try {
-        if (mode === 'rename' || mode === 'edit' || mode === 'customize') {
-          renameFolder(folder.id, name.trim(), selectedColor, selectedIcon);
+        if (mode === 'create') {
+          createFolder(name.trim(), selectedColor);
+        } else if (folder) {
+          renameFolder(folder.id, name.trim(), selectedColor);
         }
         onClose();
       } catch (error) {
-        logger.error('Failed to update folder:', undefined, error as Error);
+        const action = mode === 'create' ? 'create folder' : 'update folder';
+        logger.error(`Failed to ${action}:`, undefined, error as Error);
       } finally {
         setIsSubmitting(false);
       }
     },
-    [folder, mode, name, renameFolder, onClose, selectedColor, selectedIcon, setIsSubmitting]
+    [mode, folder, name, renameFolder, createFolder, onClose, selectedColor, setIsSubmitting]
   );

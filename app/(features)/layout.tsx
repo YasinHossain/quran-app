@@ -9,14 +9,13 @@ import {
 import { Header } from '@/app/shared/Header';
 import { Navigation } from '@/app/shared/IconSidebar';
 import { ModernLayout } from '@/app/shared/navigation/ModernLayout';
-import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
+// Surah list sidebar is now provided by reader/bookmark layouts themselves
 
 import type { ReactElement, ReactNode } from 'react';
 
 function LayoutContent({ children }: { children: ReactNode }): ReactElement {
   useHeaderVisibility();
   const pathname = usePathname();
-  const isBookmarkPage = pathname.startsWith('/bookmarks');
   const isHomePage = pathname === '/';
 
   return (
@@ -27,18 +26,11 @@ function LayoutContent({ children }: { children: ReactNode }): ReactElement {
       {/* Simple unified navigation: desktop left sidebar, mobile bottom */}
       <Navigation />
 
-      {/* Surah list sidebar - for browsing surahs */}
-      {!isHomePage && !isBookmarkPage && <SurahListSidebar />}
+      {/* Sidebars are managed per-feature (ReaderShell/BookmarksLayout) */}
 
       {/* Main content area with proper margins for both sidebars */}
-      <div className="flex flex-col min-h-[100dvh]">
-        <div
-          className={`flex-grow min-h-0 transition-all duration-300 ${
-            !isHomePage && !isBookmarkPage ? 'lg:ml-96' : !isHomePage ? 'lg:ml-16' : ''
-          }`}
-        >
-          {children}
-        </div>
+      <div className={`flex flex-col min-h-[100dvh] ${!isHomePage ? 'lg:pl-16' : ''}`}>
+        <div className="flex-grow min-h-0 transition-all duration-300">{children}</div>
       </div>
     </ModernLayout>
   );

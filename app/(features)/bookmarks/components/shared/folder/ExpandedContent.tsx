@@ -7,37 +7,31 @@ import { Bookmark } from '@/types';
 
 interface ExpandedContentProps {
   isExpanded: boolean;
-  isCurrentFolder: boolean;
   folderBookmarks: Bookmark[];
-  activeVerseId?: string | undefined;
-  onVerseSelect?: ((verseId: string) => void) | undefined;
+  onRemoveBookmark?: (bookmark: Bookmark) => void;
 }
 
 export const ExpandedContent = ({
   isExpanded,
-  isCurrentFolder,
   folderBookmarks,
-  activeVerseId,
-  onVerseSelect,
+  onRemoveBookmark,
 }: ExpandedContentProps): React.JSX.Element | null => {
-  if (!isExpanded || !isCurrentFolder) return null;
+  if (!isExpanded) return null;
 
   return (
-    <div className="px-4 pb-3">
-      <div className="border-t border-border pt-2">
-        {folderBookmarks.length > 0 ? (
-          folderBookmarks.map((bookmark) => (
-            <VerseItem
-              key={bookmark.verseId}
-              bookmark={bookmark}
-              isActive={activeVerseId === bookmark.verseId}
-              onSelect={() => onVerseSelect?.(bookmark.verseId)}
-            />
-          ))
-        ) : (
-          <p className="py-4 text-sm text-center text-muted">This folder is empty.</p>
-        )}
-      </div>
+    <div className="w-full border-t border-border/20 bg-surface-glass/80 text-foreground rounded-b-xl backdrop-blur-xl">
+      {folderBookmarks.length > 0 ? (
+        folderBookmarks.map((bookmark, index) => (
+          <VerseItem
+            key={String(bookmark.verseId)}
+            bookmark={bookmark}
+            showDivider={index < folderBookmarks.length - 1}
+            {...(onRemoveBookmark ? { onRemoveBookmark } : {})}
+          />
+        ))
+      ) : (
+        <p className="px-4 py-4 text-sm text-center text-muted">This folder is empty.</p>
+      )}
     </div>
   );
 };

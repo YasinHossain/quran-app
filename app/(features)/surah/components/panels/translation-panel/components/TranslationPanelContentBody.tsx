@@ -36,7 +36,7 @@ interface TranslationPanelContentBodyProps {
 
 export function PanelContentBody(props: TranslationPanelContentBodyProps): React.JSX.Element {
   return (
-    <div className="flex-1 overflow-y-auto" ref={props.listContainerRef}>
+    <div className="flex-1 min-w-0 overflow-y-auto" ref={props.listContainerRef}>
       <TranslationSelectionSection
         searchTerm={props.searchTerm}
         setSearchTerm={props.setSearchTerm}

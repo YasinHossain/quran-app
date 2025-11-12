@@ -17,8 +17,10 @@ const renderComponent = async (): Promise<ReturnType<typeof renderWithProvidersA
 
 const getFolders = (): Folder[] => JSON.parse(screen.getByTestId('folders').textContent || '[]');
 
-const getLastRead = (): Record<string, number> =>
-  JSON.parse(screen.getByTestId('lastRead').textContent || '{}');
+const getLastRead = (): Record<
+  string,
+  { verseNumber: number; updatedAt: number; verseKey?: string; globalVerseId?: number }
+> => JSON.parse(screen.getByTestId('lastRead').textContent || '{}');
 
 const getIsBookmarked = (): string => screen.getByTestId('is-bookmarked-1:1').textContent;
 
@@ -142,7 +144,12 @@ describe('last read', () => {
     await userEvent.click(screen.getByText('Set Last Read'));
     await waitFor(() => {
       const last = getLastRead();
-      expect(last['1']).toBe(1);
+      const entry = last['1'];
+      if (!entry) {
+        throw new Error('Expected last read entry to exist after setting');
+      }
+      expect(entry.verseNumber).toBe(1);
+      expect(typeof entry.updatedAt).toBe('number');
     });
   });
 });

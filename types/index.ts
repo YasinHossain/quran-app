@@ -6,7 +6,14 @@ export * from './settings';
 export * from './surah';
 export * from './word';
 export * from './juz';
-export type { Bookmark, BookmarkWithVerse, Folder, MemorizationPlan } from './bookmark';
+export type {
+  Bookmark,
+  BookmarkWithVerse,
+  Folder,
+  PlannerPlan,
+  LastReadEntry,
+  LastReadMap,
+} from './bookmark';
 export * from './components';
 
 // Next.js page params type

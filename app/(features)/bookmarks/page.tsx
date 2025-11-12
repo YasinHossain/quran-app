@@ -1,35 +1,49 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { BookmarksHeader } from './components/BookmarksHeader';
 import { FolderGrid } from './components/FolderGrid';
+import { FolderSettingsModal } from './components/FolderSettingsModal';
 import { BookmarksLayout } from './components/shared/BookmarksLayout';
 import { useBookmarksPage } from './hooks/useBookmarksPage';
 
 const BookmarksPage = (): React.JSX.Element => {
-  const { folders, sortedFolders, handleFolderSelect, handleSectionChange, handleVerseClick } =
-    useBookmarksPage();
+  const { sortedFolders, handleFolderSelect, handleSectionChange } = useBookmarksPage();
+  const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
+  const [isGridVisible, setIsGridVisible] = useState(false);
+
+  useEffect(() => {
+    setIsGridVisible(true);
+  }, []);
+
+  const openCreateFolderModal = (): void => {
+    setIsCreateFolderOpen(true);
+  };
+
+  const closeCreateFolderModal = (): void => {
+    setIsCreateFolderOpen(false);
+  };
 
   return (
     <>
-      <BookmarksLayout
-        activeSection="bookmarks"
-        onSectionChange={handleSectionChange}
-        folders={folders}
-        onVerseClick={handleVerseClick}
-      >
-        <BookmarksHeader />
+      <FolderSettingsModal
+        isOpen={isCreateFolderOpen}
+        onClose={closeCreateFolderModal}
+        folder={null}
+        mode="create"
+      />
 
-        <motion.div
-          key="folder-grid"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+      <BookmarksLayout activeSection="bookmarks" onSectionChange={handleSectionChange}>
+        <BookmarksHeader onNewFolderClick={openCreateFolderModal} />
+
+        <div
+          className={`transition-opacity duration-300 ease-out ${
+            isGridVisible ? 'opacity-100' : 'opacity-0'
+          }`}
         >
           <FolderGrid folders={sortedFolders} onFolderSelect={handleFolderSelect} />
-        </motion.div>
+        </div>
       </BookmarksLayout>
     </>
   );

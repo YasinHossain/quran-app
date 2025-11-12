@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { BaseCard } from '@/app/shared/ui/BaseCard';
 import { Bookmark, Folder } from '@/types';
 
 import { ExpandedContent } from './ExpandedContent';
@@ -14,9 +16,25 @@ interface FolderItemProps {
   folderBookmarks: Bookmark[];
   onToggle: (folderId: string) => void;
   onSelect: (folderId: string) => void;
-  activeVerseId?: string | undefined;
-  onVerseSelect?: ((verseId: string) => void) | undefined;
 }
+
+const folderNavigationCardVariant = {
+  height: 'min-h-[80px]',
+  padding: 'p-0',
+  background: {
+    inactive: 'bg-surface-glass/70 backdrop-blur-xl text-content-primary border border-border/20',
+    active: 'bg-surface-glass/80 backdrop-blur-xl text-content-primary border border-border/30',
+  },
+  hover: {
+    effect: 'none',
+    value: 'hover:shadow-xl',
+    duration: 'transition-all duration-300',
+  },
+  shadow: {
+    inactive: 'shadow-lg',
+    active: 'shadow-xl',
+  },
+} as const;
 
 export const FolderItem = ({
   folderItem,
@@ -25,27 +43,40 @@ export const FolderItem = ({
   folderBookmarks,
   onToggle,
   onSelect,
-  activeVerseId,
-  onVerseSelect,
-}: FolderItemProps): React.JSX.Element => (
-  <div
-    className={`rounded-2xl shadow-sm transition-all duration-300 ease-in-out ${
-      isExpanded ? 'bg-interactive ring-1 ring-border' : 'bg-surface'
-    }`}
-  >
-    <FolderHeader
-      folderItem={folderItem}
-      isCurrentFolder={isCurrentFolder}
-      folderBookmarks={folderBookmarks}
-      onToggle={onToggle}
-      onSelect={onSelect}
-    />
-    <ExpandedContent
-      isExpanded={isExpanded}
-      isCurrentFolder={isCurrentFolder}
-      folderBookmarks={folderBookmarks}
-      activeVerseId={activeVerseId}
-      onVerseSelect={onVerseSelect}
-    />
-  </div>
-);
+}: FolderItemProps): React.JSX.Element => {
+  const { removeBookmark } = useBookmarks();
+  const handleRemoveBookmark = React.useCallback(
+    (bookmark: Bookmark): void => {
+      removeBookmark(bookmark.verseId, folderItem.id);
+    },
+    [removeBookmark, folderItem.id]
+  );
+  const shouldShowExpanded = isExpanded && isCurrentFolder;
+
+  return (
+    <BaseCard
+      variant="navigation"
+      animation="navigation"
+      isActive={isCurrentFolder}
+      direction="column"
+      align="start"
+      gap="gap-0"
+      customVariant={folderNavigationCardVariant}
+      className="w-full overflow-visible"
+    >
+      <FolderHeader
+        folderItem={folderItem}
+        isCurrentFolder={isCurrentFolder}
+        folderBookmarks={folderBookmarks}
+        onToggle={onToggle}
+        onSelect={onSelect}
+        showDivider={shouldShowExpanded}
+      />
+      <ExpandedContent
+        isExpanded={shouldShowExpanded}
+        folderBookmarks={folderBookmarks}
+        onRemoveBookmark={handleRemoveBookmark}
+      />
+    </BaseCard>
+  );
+};

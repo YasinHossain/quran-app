@@ -24,10 +24,7 @@ export const SidebarOverlay = ({
   return (
     <div
       className={cn(
-        'fixed inset-0 transition-opacity duration-300',
-        position === 'left'
-          ? 'bg-surface-overlay/50 lg:hidden z-40'
-          : 'bg-surface-overlay/20 lg:hidden z-25'
+        'fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden z-40'
       )}
       onClick={onClose}
       onKeyDown={(e) => {

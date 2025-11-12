@@ -4,10 +4,10 @@ import { useEffect } from 'react';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
-import type { Chapter } from '@/types';
+import type { Chapter, LastReadMap } from '@/types';
 
 export interface UseLastReadPageReturn {
-  lastRead: Record<string, number>;
+  lastRead: LastReadMap;
   chapters: Chapter[];
   handleSectionChange: (section: SectionId) => void;
 }
@@ -28,8 +28,8 @@ export const useLastReadPage = (): UseLastReadPageReturn => {
       router.push('/bookmarks');
     } else if (section === 'pinned') {
       router.push('/bookmarks/pinned');
-    } else if (section === 'memorization') {
-      router.push('/bookmarks/memorization');
+    } else if (section === 'planner') {
+      router.push('/bookmarks/planner');
     } else {
       router.push('/bookmarks/last-read');
     }

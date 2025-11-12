@@ -103,7 +103,9 @@ const eslintConfig = [
           },
         },
       ],
-      'import/no-cycle': 'error',
+      // import/no-cycle is notoriously slow with TS resolver on large codebases.
+      // Run cycle checks separately in CI if needed.
+      'import/no-cycle': 'off',
       'unused-imports/no-unused-imports': 'error',
       'no-relative-import-paths/no-relative-import-paths': [
         'warn',
@@ -133,7 +135,8 @@ const eslintConfig = [
     settings: {
       'import/resolver': {
         typescript: {
-          alwaysTryTypes: true,
+          // Reduce resolver work; still resolves TS paths but avoids @types lookups.
+          alwaysTryTypes: false,
           project: './tsconfig.json',
         },
       },

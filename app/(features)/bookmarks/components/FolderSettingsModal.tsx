@@ -30,51 +30,54 @@ const CenteredModal: React.FC<{
   variants: Variants;
   children: React.ReactNode;
 }> = ({ variants, children }) => (
-  <motion.div
-    variants={variants}
-    initial="hidden"
-    animate="visible"
-    exit="exit"
-    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-    className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-surface border border-border rounded-2xl shadow-modal z-modal p-6"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="folder-settings-title"
-  >
-    {children}
-  </motion.div>
+  <div className="fixed inset-0 z-modal flex items-center justify-center px-4">
+    <motion.div
+      variants={variants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+      className="w-full max-w-md bg-surface border border-border rounded-2xl shadow-modal p-6"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="folder-settings-title"
+    >
+      {children}
+    </motion.div>
+  </div>
 );
 
 interface FolderSettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
   folder: Folder | null;
-  mode: 'edit' | 'rename' | 'customize';
+  mode?: 'edit' | 'create';
 }
 
 export const FolderSettingsModal = ({
   isOpen,
   onClose,
   folder,
-  mode,
+  mode = 'edit',
 }: FolderSettingsModalProps): React.JSX.Element => {
   const {
     name,
     setName,
     selectedColor,
     setSelectedColor,
-    selectedIcon,
-    setSelectedIcon,
     isSubmitting,
     handleSubmit,
     getModalTitle,
-  } = useFolderSettings({ folder, mode, onClose, isOpen });
+    submitLabel,
+    submittingLabel,
+  } = useFolderSettings({ folder, onClose, isOpen, mode });
 
   const { backdropVariants, modalVariants } = useFolderSettingsModalAnimation();
+  const shouldRender = mode === 'edit' ? isOpen && Boolean(folder) : isOpen;
 
   return (
     <AnimatePresence>
-      {isOpen && folder && (
+      {shouldRender && (
         <>
           <Backdrop variants={backdropVariants} onClick={onClose} />
 
@@ -82,16 +85,15 @@ export const FolderSettingsModal = ({
             <ModalHeader title={getModalTitle()} onClose={onClose} />
 
             <SettingsForm
-              mode={mode}
               name={name}
               setName={setName}
               selectedColor={selectedColor}
               setSelectedColor={setSelectedColor}
-              selectedIcon={selectedIcon}
-              setSelectedIcon={setSelectedIcon}
               isSubmitting={isSubmitting}
               handleSubmit={handleSubmit}
               onClose={onClose}
+              submitLabel={submitLabel}
+              submittingLabel={submittingLabel}
             />
           </CenteredModal>
         </>

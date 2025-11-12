@@ -3,6 +3,8 @@
 import { AnimatePresence } from 'framer-motion';
 import { memo } from 'react';
 
+import { Portal } from '@/app/shared/components/Portal';
+
 import { BottomSheetBackdrop } from './BottomSheetBackdrop';
 import { BottomSheetContent } from './BottomSheetContent';
 import { useVerseActions } from './hooks/useVerseActions';
@@ -17,6 +19,7 @@ interface MobileBottomSheetProps {
   onPlayPause: () => void;
   onBookmark: () => void;
   onShare: () => void;
+  onAddToPlan: () => void;
   onNavigateToVerse?: () => void;
   showRemove?: boolean;
 }
@@ -31,6 +34,7 @@ export const MobileBottomSheet = memo(function MobileBottomSheet({
   onPlayPause,
   onBookmark,
   onShare,
+  onAddToPlan,
   onNavigateToVerse,
   showRemove = false,
 }: MobileBottomSheetProps): React.JSX.Element {
@@ -43,18 +47,21 @@ export const MobileBottomSheet = memo(function MobileBottomSheet({
     onPlayPause,
     onBookmark,
     onShare,
+    onAddToPlan,
     ...(onNavigateToVerse ? { onNavigateToVerse } : {}),
     onClose,
   });
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          <BottomSheetBackdrop onClick={onClose} />
-          <BottomSheetContent verseKey={verseKey} actions={actions} onClose={onClose} />
-        </>
-      )}
-    </AnimatePresence>
+    <Portal>
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            <BottomSheetBackdrop onClick={onClose} />
+            <BottomSheetContent verseKey={verseKey} actions={actions} onClose={onClose} />
+          </>
+        )}
+      </AnimatePresence>
+    </Portal>
   );
 });

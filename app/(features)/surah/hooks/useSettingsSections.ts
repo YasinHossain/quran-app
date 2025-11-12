@@ -1,10 +1,15 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 const STORAGE_KEY = 'settings-sidebar-open-sections';
 const DEFAULT_OPEN_SECTIONS = ['translation', 'font'];
 const MAX_OPEN_SECTIONS = 2;
+
+const areSectionsEqual = (a: string[], b: string[]): boolean => {
+  if (a.length !== b.length) return false;
+  return a.every((value, index) => value === b[index]);
+};
 
 function readInitialState(): string[] {
   if (typeof window === 'undefined') return DEFAULT_OPEN_SECTIONS;
@@ -38,7 +43,12 @@ interface UseSettingsSectionsReturn {
 }
 
 export const useSettingsSections = (): UseSettingsSectionsReturn => {
-  const [openSections, setOpenSections] = useState<string[]>(readInitialState);
+  const [openSections, setOpenSections] = useState<string[]>(DEFAULT_OPEN_SECTIONS);
+
+  useEffect(() => {
+    const initialState = readInitialState();
+    setOpenSections((prev) => (areSectionsEqual(prev, initialState) ? prev : initialState));
+  }, []);
 
   const handleSectionToggle = useCallback(
     (sectionId: string) => {

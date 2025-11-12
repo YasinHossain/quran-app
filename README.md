@@ -324,8 +324,6 @@ npm run check
 - [Code of Conduct](docs/guides/CODE_OF_CONDUCT.md) - Community guidelines
 - [Debugging Guide](docs/DEBUGGING.md) - Troubleshooting tips
 
- 
-
 ## License
 
 **MIT License** - see [LICENSE](./LICENSE) for details.

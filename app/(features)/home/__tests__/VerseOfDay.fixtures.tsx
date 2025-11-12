@@ -5,6 +5,8 @@ import { renderWithProvidersAsync } from '@/app/testUtils/renderWithProviders';
 import { getRandomVerse, getVerseByKey } from '@/lib/api';
 import { Verse } from '@/types';
 
+const originalRandomVerseEnv = process.env.NEXT_PUBLIC_ENABLE_RANDOM_VERSE_API;
+
 jest.mock('@/lib/api', () => ({
   __esModule: true,
   getRandomVerse: jest.fn(),
@@ -64,6 +66,7 @@ export const setupMatchMedia = (): void => {
 
 export const resetTestMocks = (): void => {
   jest.useFakeTimers();
+  process.env.NEXT_PUBLIC_ENABLE_RANDOM_VERSE_API = 'true';
   localStorage.clear();
   document.documentElement.classList.remove('dark');
   mockedGetRandomVerse.mockReset();
@@ -72,6 +75,7 @@ export const resetTestMocks = (): void => {
 
 export const restoreTimers = (): void => {
   jest.useRealTimers();
+  process.env.NEXT_PUBLIC_ENABLE_RANDOM_VERSE_API = originalRandomVerseEnv;
 };
 
 export type { Verse };

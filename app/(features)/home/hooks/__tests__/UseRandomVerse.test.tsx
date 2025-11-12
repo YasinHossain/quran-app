@@ -10,6 +10,16 @@ jest.mock('@/lib/api', () => ({
   getRandomVerse: jest.fn(),
 }));
 
+const originalRandomVerseEnv = process.env.NEXT_PUBLIC_ENABLE_RANDOM_VERSE_API;
+
+beforeAll(() => {
+  process.env.NEXT_PUBLIC_ENABLE_RANDOM_VERSE_API = 'true';
+});
+
+afterAll(() => {
+  process.env.NEXT_PUBLIC_ENABLE_RANDOM_VERSE_API = originalRandomVerseEnv;
+});
+
 describe('useRandomVerse', () => {
   it('logs warning when API fails', async () => {
     (getRandomVerse as jest.Mock).mockRejectedValue(new Error('fail'));

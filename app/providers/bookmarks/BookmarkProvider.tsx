@@ -10,8 +10,8 @@ import { useBookmarkData } from './hooks/useBookmarkData';
 import { useBookmarkMetadata } from './hooks/useBookmarkMetadata';
 import useBookmarkOperations from './hooks/useBookmarkOperations';
 import useFolderOperations from './hooks/useFolderOperations';
-import useMemorizationOperations from './hooks/useMemorizationOperations';
 import { usePinnedBookmarks } from './hooks/usePinnedBookmarks';
+import usePlannerOperations from './hooks/usePlannerOperations';
 
 import type { BookmarkContextType } from './types';
 import type { Bookmark, Folder } from '@/types';
@@ -33,8 +33,8 @@ function useBookmarkProviderValue(): BookmarkContextType {
     setPinnedVerses,
     lastRead,
     setLastReadState,
-    memorization,
-    setMemorizationState,
+    planner,
+    setPlannerState,
     chapters,
   } = useBookmarkData();
   const { settings } = useSettings();
@@ -50,7 +50,7 @@ function useBookmarkProviderValue(): BookmarkContextType {
     chapters,
     fetchMetadata: fetchBookmarkMetadata,
   });
-  const memorizationOps = useMemorizationOperations(memorization, setMemorizationState);
+  const plannerOps = usePlannerOperations(planner, setPlannerState);
   const helpers = useBookmarkHelpers(folders, pinnedVerses, bookmarkOps, setLastReadState);
 
   return useMemo(
@@ -62,8 +62,8 @@ function useBookmarkProviderValue(): BookmarkContextType {
       ...helpers,
       lastRead,
       chapters,
-      memorization,
-      ...memorizationOps,
+      planner,
+      ...plannerOps,
     }),
     [
       folders,
@@ -73,8 +73,8 @@ function useBookmarkProviderValue(): BookmarkContextType {
       helpers,
       lastRead,
       chapters,
-      memorization,
-      memorizationOps,
+      planner,
+      plannerOps,
     ]
   );
 }
@@ -88,9 +88,14 @@ function useBookmarkHelpers(
   isBookmarked: (verseId: string) => boolean;
   findBookmark: (verseId: string) => ReturnType<typeof findBookmarkInFolders>;
   bookmarkedVerses: string[];
-  togglePinned: (verseId: string) => void;
+  togglePinned: (verseId: string, metadata?: Partial<Bookmark>) => void;
   isPinned: (verseId: string) => boolean;
-  setLastRead: (surahId: string, verseId: number) => void;
+  setLastRead: (
+    surahId: string,
+    verseNumber: number,
+    verseKey?: string,
+    globalVerseId?: number
+  ) => void;
 } {
   const isBookmarked = useCallback(
     (verseId: string) => isVerseBookmarked(folders, verseId),
@@ -106,8 +111,17 @@ function useBookmarkHelpers(
   const { togglePinned, isPinned } = usePinnedBookmarks(pinnedVerses, bookmarkOps);
 
   const setLastRead = useCallback(
-    (surahId: string, verseId: number) => {
-      setLastReadState((prev) => ({ ...prev, [surahId]: verseId }));
+    (surahId: string, verseNumber: number, verseKey?: string, globalVerseId?: number) => {
+      setLastReadState((prev) => ({
+        ...prev,
+        [surahId]: {
+          verseNumber,
+          verseId: verseNumber,
+          ...(typeof verseKey === 'string' ? { verseKey } : {}),
+          ...(typeof globalVerseId === 'number' ? { globalVerseId } : {}),
+          updatedAt: Date.now(),
+        },
+      }));
     },
     [setLastReadState]
   );

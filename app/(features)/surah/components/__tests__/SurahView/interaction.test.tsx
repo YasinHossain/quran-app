@@ -23,11 +23,12 @@ describe('SurahView interaction', () => {
 
     renderSurahView();
 
-    const translationButton = screen.getByLabelText<HTMLButtonElement>('translations');
+    const translationButton = screen.getAllByLabelText<HTMLButtonElement>('translations')[0];
     fireEvent.click(translationButton);
     expect(openTranslationPanel).toHaveBeenCalled();
 
-    const wordLanguageButton = screen.getByLabelText<HTMLButtonElement>('word_by_word_language');
+    const wordLanguageButton =
+      screen.getAllByLabelText<HTMLButtonElement>('word_by_word_language')[0];
     fireEvent.click(wordLanguageButton);
     expect(openWordLanguagePanel).toHaveBeenCalled();
   });
@@ -35,16 +36,16 @@ describe('SurahView interaction', () => {
   it('switches between translation and mushaf tabs', () => {
     renderSurahView();
 
-    const mushafButton = screen.getByRole<HTMLButtonElement>('button', { name: 'Mushaf' });
+    const mushafButton = screen.getAllByRole<HTMLButtonElement>('button', { name: 'Mushaf' })[0];
     fireEvent.click(mushafButton);
     expect(
       screen.getByText('Mushaf settings have been moved to the Translation tab.')
     ).toBeInTheDocument();
 
-    const translationButton = screen.getByRole<HTMLButtonElement>('button', {
+    const translationButton = screen.getAllByRole<HTMLButtonElement>('button', {
       name: 'Translation',
-    });
+    })[0];
     fireEvent.click(translationButton);
-    expect(screen.getByLabelText('translations')).toBeInTheDocument();
+    expect(screen.getAllByLabelText('translations')[0]).toBeInTheDocument();
   });
 });

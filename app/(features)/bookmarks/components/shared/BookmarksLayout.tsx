@@ -1,52 +1,49 @@
 'use client';
 
-import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { BookmarksSidebar } from '@/app/(features)/bookmarks/components/BookmarksSidebar';
 import { useSidebar } from '@/app/providers/SidebarContext';
+import { ThreeColumnWorkspace, WorkspaceMain } from '@/app/shared/reader';
 
-import { BookmarksDesktopSidebar } from './layout/BookmarksDesktopSidebar';
-import { BookmarksMainContent } from './layout/BookmarksMainContent';
 import { BookmarksMobileSidebarOverlay } from './layout/BookmarksMobileSidebarOverlay';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
-import type { Folder } from '@/types/bookmark';
 import type { ReactNode } from 'react';
 
 interface BookmarksLayoutProps {
   children: ReactNode;
   activeSection: SectionId;
   onSectionChange: (section: SectionId) => void;
-  folders?: Folder[];
-  onVerseClick?: ((verseKey: string) => void) | undefined;
+  rightSidebar?: React.ReactNode;
 }
 
 export const BookmarksLayout = ({
   children,
   activeSection,
   onSectionChange,
-  folders = [],
-  onVerseClick,
+  rightSidebar,
 }: BookmarksLayoutProps): React.JSX.Element => {
-  const { isHidden } = useHeaderVisibility();
   const { isBookmarkSidebarOpen, setBookmarkSidebarOpen } = useSidebar();
 
   return (
     <>
-      <div className="flex h-[calc(100vh-4rem)] mt-16 bg-background">
-        <BookmarksDesktopSidebar
-          activeSection={activeSection}
-          onSectionChange={onSectionChange}
-          folders={folders}
-          onVerseClick={onVerseClick}
-        />
-        <BookmarksMainContent isHeaderHidden={isHidden}>{children}</BookmarksMainContent>
-      </div>
+      <ThreeColumnWorkspace
+        left={<BookmarksSidebar activeSection={activeSection} onSectionChange={onSectionChange} />}
+        center={
+          <WorkspaceMain
+            data-slot="bookmarks-landing-main"
+            contentClassName="gap-4 pb-12 sm:gap-6 px-2 sm:px-4 lg:px-6"
+            className="bg-background"
+          >
+            <div className="flex flex-1 flex-col">{children}</div>
+          </WorkspaceMain>
+        }
+        right={rightSidebar}
+      />
       <BookmarksMobileSidebarOverlay
         isOpen={isBookmarkSidebarOpen}
         onClose={() => setBookmarkSidebarOpen(false)}
         activeSection={activeSection}
         onSectionChange={onSectionChange}
-        folders={folders}
-        onVerseClick={onVerseClick}
       />
     </>
   );

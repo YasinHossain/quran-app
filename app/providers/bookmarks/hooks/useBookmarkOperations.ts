@@ -10,10 +10,12 @@ import {
 } from '@/app/providers/bookmarks/bookmark-utils';
 import { Bookmark, Chapter, Folder } from '@/types';
 
+const sameVerseId = (a: string | number, b: string | number): boolean => String(a) === String(b);
+
 export interface BookmarkOperations {
-  addBookmark(verseId: string, folderId?: string): void;
+  addBookmark(verseId: string, folderId?: string, metadata?: Partial<Bookmark>): void;
   removeBookmark(verseId: string, folderId: string): void;
-  toggleBookmark(verseId: string, folderId?: string): void;
+  toggleBookmark(verseId: string, folderId?: string, metadata?: Partial<Bookmark>): void;
   updateBookmark(verseId: string, data: Partial<Bookmark>): void;
 }
 export interface UseBookmarkOperationsOptions {
@@ -36,35 +38,41 @@ export default function useBookmarkOperations({
   // Mark intentionally unused option to satisfy linter while preserving signature
   void _pinned;
   return useMemo(() => {
-    function addBookmark(verseId: string, folderId?: string): void {
+    function addBookmark(verseId: string, folderId?: string, metadata?: Partial<Bookmark>): void {
       if (folderId === 'pinned') {
         setPinned((p) =>
-          p.some((b) => b.verseId === verseId) ? p : [...p, { verseId, createdAt: Date.now() }]
+          p.some((b) => sameVerseId(b.verseId, verseId))
+            ? p
+            : [...p, { verseId, createdAt: Date.now(), ...(metadata ?? {}) }]
         );
         void fetchMetadata(verseId, chapters);
         return;
       }
-      setFolders((p) => addBookmarkToFolder(p, verseId, folderId));
+      setFolders((p) => addBookmarkToFolder(p, verseId, folderId, metadata));
       void fetchMetadata(verseId, chapters);
     }
     function removeBookmark(verseId: string, folderId: string): void {
       if (folderId === 'pinned') {
-        setPinned((p) => p.filter((b) => b.verseId !== verseId));
+        setPinned((p) => p.filter((b) => !sameVerseId(b.verseId, verseId)));
         return;
       }
       setFolders((p) => removeBookmarkFromFolder(p, verseId, folderId));
     }
-    function toggleBookmark(verseId: string, folderId?: string): void {
+    function toggleBookmark(
+      verseId: string,
+      folderId?: string,
+      metadata?: Partial<Bookmark>
+    ): void {
       if (isVerseBookmarked(folders, verseId)) {
         const f = findBookmarkInFolders(folders, verseId);
         if (f) removeBookmark(verseId, f.folder.id);
       } else {
-        addBookmark(verseId, folderId);
+        addBookmark(verseId, folderId, metadata);
       }
     }
     function updateBookmark(verseId: string, data: Partial<Bookmark>): void {
       setFolders((p) => updateBookmarkInFolders(p, verseId, data));
-      setPinned((p) => p.map((b) => (b.verseId === verseId ? { ...b, ...data } : b)));
+      setPinned((p) => p.map((b) => (sameVerseId(b.verseId, verseId) ? { ...b, ...data } : b)));
     }
     return { addBookmark, removeBookmark, toggleBookmark, updateBookmark };
   }, [folders, setFolders, setPinned, chapters, fetchMetadata]);

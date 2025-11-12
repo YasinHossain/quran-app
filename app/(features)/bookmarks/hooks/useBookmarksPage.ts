@@ -11,7 +11,6 @@ export interface UseBookmarksPageReturn {
   sortedFolders: ReturnType<typeof useBookmarks>['folders'];
   handleFolderSelect: (folderId: string) => void;
   handleSectionChange: (section: SectionId) => void;
-  handleVerseClick: (verseKey: string) => void;
 }
 
 type SortKey = 'recent' | 'name-asc' | 'name-desc' | 'most-verses';
@@ -40,16 +39,11 @@ function sectionToPath(section: SectionId): string {
       return '/bookmarks/pinned';
     case 'last-read':
       return '/bookmarks/last-read';
-    case 'memorization':
-      return '/bookmarks/memorization';
+    case 'planner':
+      return '/bookmarks/planner';
     default:
       return '/bookmarks';
   }
-}
-
-function verseKeyToUrl(verseKey: string): string {
-  const [surahId] = verseKey.split(':');
-  return `/surah/${surahId}#verse-${verseKey}`;
 }
 
 export const useBookmarksPage = (): UseBookmarksPageReturn => {
@@ -69,9 +63,5 @@ export const useBookmarksPage = (): UseBookmarksPageReturn => {
     router.push(sectionToPath(section));
   };
 
-  const handleVerseClick = (verseKey: string): void => {
-    router.push(verseKeyToUrl(verseKey));
-  };
-
-  return { folders, sortedFolders, handleFolderSelect, handleSectionChange, handleVerseClick };
+  return { folders, sortedFolders, handleFolderSelect, handleSectionChange };
 };

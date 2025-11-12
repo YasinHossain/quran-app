@@ -23,12 +23,10 @@ class IntersectionObserverMock {
   constructor(private readonly cb: IntersectionObserverCallback) {}
 
   observe = (element: Element): void => {
-    if (this.cb) {
-      this.cb(
-        [{ isIntersecting: true, target: element } as IntersectionObserverEntry],
-        this as unknown as IntersectionObserver
-      );
-    }
+    // No-op by default to avoid infinite render loops in tests where observers
+    // trigger state updates on every render. Tests can simulate intersection
+    // via component test helpers instead of relying on auto-callbacks here.
+    void element;
   };
 
   unobserve = (): void => {};

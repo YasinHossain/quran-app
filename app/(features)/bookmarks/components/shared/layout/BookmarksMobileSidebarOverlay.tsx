@@ -1,19 +1,21 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
 
 import { BookmarksSidebar } from '@/app/(features)/bookmarks/components/BookmarksSidebar';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
-import type { Folder } from '@/types/bookmark';
 
 interface BookmarksMobileSidebarOverlayProps {
   isOpen: boolean;
   onClose: () => void;
   activeSection: SectionId;
   onSectionChange: (section: SectionId) => void;
-  folders: Folder[];
-  onVerseClick?: ((verseKey: string) => void) | undefined;
+  children?: React.ReactNode;
+  childrenTitle?: string | null;
+  childrenContainerClassName?: string;
+  childrenContentClassName?: string;
+  showNavigation?: boolean;
 }
 
 export const BookmarksMobileSidebarOverlay = ({
@@ -21,37 +23,22 @@ export const BookmarksMobileSidebarOverlay = ({
   onClose,
   activeSection,
   onSectionChange,
-  folders,
-  onVerseClick,
+  children,
+  childrenTitle,
+  childrenContainerClassName,
+  childrenContentClassName,
+  showNavigation,
 }: BookmarksMobileSidebarOverlayProps): React.JSX.Element => (
-  <AnimatePresence>
-    {isOpen && (
-      <>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-          className="fixed inset-0 bg-surface-overlay/60 z-40 lg:hidden"
-        />
-        <motion.aside
-          initial={{ x: '-100%' }}
-          animate={{ x: 0 }}
-          exit={{ x: '-100%' }}
-          transition={{ type: 'tween', duration: 0.3 }}
-          className="fixed top-16 left-0 h-[calc(100vh-4rem)] w-full sm:w-80 lg:w-80 bg-background text-foreground border-r border-border z-50 lg:hidden"
-        >
-          <BookmarksSidebar
-            activeSection={activeSection}
-            onSectionChange={onSectionChange}
-            folders={folders}
-            onVerseClick={(verseKey) => {
-              onVerseClick?.(verseKey);
-              onClose();
-            }}
-          />
-        </motion.aside>
-      </>
-    )}
-  </AnimatePresence>
+  <BookmarksSidebar
+    activeSection={activeSection}
+    onSectionChange={onSectionChange}
+    isOpen={isOpen}
+    onClose={onClose}
+    {...(childrenTitle !== undefined ? { childrenTitle } : {})}
+    {...(childrenContainerClassName !== undefined ? { childrenContainerClassName } : {})}
+    {...(childrenContentClassName !== undefined ? { childrenContentClassName } : {})}
+    {...(showNavigation !== undefined ? { showNavigation } : {})}
+  >
+    {children}
+  </BookmarksSidebar>
 );

@@ -8,6 +8,7 @@ interface UseMobileVerseActionsStateParams {
   onShare?: () => void | Promise<void>;
   onBookmark?: () => void;
   showRemove?: boolean;
+  onAddToPlan?: () => void;
 }
 
 interface MobileVerseActionsState {
@@ -19,11 +20,13 @@ interface MobileVerseActionsState {
   closeBookmarkModal: () => void;
   handleBookmarkClick: () => void;
   handleShare: () => void;
+  handleAddToPlan: () => void;
 }
 export function useMobileVerseActionsState({
   onShare,
   onBookmark,
   showRemove = false,
+  onAddToPlan,
 }: UseMobileVerseActionsStateParams): MobileVerseActionsState {
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
@@ -41,6 +44,9 @@ export function useMobileVerseActionsState({
   }, [showRemove, onBookmark, openBookmarkModal]);
 
   const handleShare = onShare || defaultShare;
+  const handleAddToPlan = useCallback(() => {
+    if (onAddToPlan) onAddToPlan();
+  }, [onAddToPlan]);
 
   return {
     isBottomSheetOpen,
@@ -51,5 +57,6 @@ export function useMobileVerseActionsState({
     closeBookmarkModal,
     handleBookmarkClick,
     handleShare,
+    handleAddToPlan,
   };
 }

@@ -13,14 +13,17 @@ const buildStateConfig = ({
   onShare,
   onBookmark,
   showRemove,
+  onAddToPlan,
 }: {
   onShare?: VerseActionsProps['onShare'];
   onBookmark?: VerseActionsProps['onBookmark'];
   showRemove: boolean;
+  onAddToPlan?: VerseActionsProps['onAddToPlan'];
 }): Parameters<typeof useMobileVerseActionsState>[0] => {
   const config: Parameters<typeof useMobileVerseActionsState>[0] = { showRemove };
   if (onShare) config.onShare = onShare;
   if (onBookmark) config.onBookmark = onBookmark;
+  if (onAddToPlan) config.onAddToPlan = onAddToPlan;
   return config;
 };
 
@@ -52,6 +55,7 @@ const createSheetProps = ({
   onPlayPause,
   onBookmark: state.handleBookmarkClick,
   onShare: state.handleShare,
+  onAddToPlan: state.handleAddToPlan,
   showRemove,
   ...(onNavigateToVerse ? { onNavigateToVerse } : {}),
 });
@@ -66,10 +70,13 @@ export function MobileVerseActions({
   onBookmark,
   onShare,
   onNavigateToVerse,
+  onAddToPlan,
   showRemove = false,
   className = '',
 }: VerseActionsProps): React.JSX.Element {
-  const state = useMobileVerseActionsState(buildStateConfig({ onShare, onBookmark, showRemove }));
+  const state = useMobileVerseActionsState(
+    buildStateConfig({ onShare, onBookmark, onAddToPlan, showRemove })
+  );
   const sheetProps = createSheetProps({
     state,
     verseKey,

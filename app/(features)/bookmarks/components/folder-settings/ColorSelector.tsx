@@ -49,13 +49,15 @@ const ColorOption = ({
   <button
     type="button"
     onClick={() => setSelectedColor(color.value)}
-    className={`p-3 rounded-lg border transition-all ${
+    className={`flex h-12 w-full items-center justify-center rounded-lg border transition-all ${
       selectedColor === color.value
         ? 'border-accent bg-accent/10 ring-2 ring-accent/20'
         : 'border-border hover:border-accent/50 hover:bg-surface-hover'
     }`}
+    aria-label={`Select ${color.name} color`}
+    title={color.name}
   >
-    <div className={`w-4 h-4 rounded-full bg-current ${color.value} mx-auto`} />
-    <span className="text-xs text-muted mt-1 block">{color.name}</span>
+    <span className={`h-6 w-6 rounded-md bg-current ${color.value}`} aria-hidden="true" />
+    <span className="sr-only">{color.name}</span>
   </button>
 );

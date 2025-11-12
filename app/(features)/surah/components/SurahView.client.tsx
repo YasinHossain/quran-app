@@ -8,13 +8,19 @@ import { ensureLanguageCode } from '@/lib/text/languageCodes';
 
 interface SurahViewProps {
   surahId: string;
+  initialVerseNumber?: number | undefined;
 }
 
 /**
  * Main client component for displaying Surah verses with settings sidebar.
  * Manages verse listing, audio playback, and responsive layout with hidden header behavior.
  */
-export function SurahView({ surahId }: SurahViewProps): React.JSX.Element {
+export function SurahView({ surahId, initialVerseNumber }: SurahViewProps): React.JSX.Element {
+  const initialVerseKey =
+    typeof initialVerseNumber === 'number' && initialVerseNumber > 0
+      ? `${surahId}:${initialVerseNumber}`
+      : undefined;
+
   return (
     <ReaderShell
       resourceId={surahId}
@@ -29,6 +35,8 @@ export function SurahView({ surahId }: SurahViewProps): React.JSX.Element {
       }
       emptyLabelKey="no_verses_found"
       endLabelKey="end_of_surah"
+      {...(typeof initialVerseNumber === 'number' ? { initialVerseNumber } : {})}
+      {...(typeof initialVerseKey === 'string' ? { initialVerseKey } : {})}
     />
   );
 }

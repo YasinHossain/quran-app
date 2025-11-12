@@ -8,7 +8,6 @@ import { cn } from '@/lib/utils/cn';
 
 interface FolderData {
   name: string;
-  icon?: string;
   color?: string;
   bookmarks: Array<{ verseId: string; verseKey?: string }> | { length: number };
 }
@@ -16,10 +15,7 @@ interface FolderData {
 interface FolderHeaderProps {
   folder: FolderData;
   bookmarkCount: number;
-  onEdit: () => void;
   onDelete: () => void;
-  onRename: () => void;
-  onColorChange: () => void;
 }
 
 const FolderIconSection = memo(function FolderIconSection({
@@ -29,13 +25,7 @@ const FolderIconSection = memo(function FolderIconSection({
 }): React.JSX.Element {
   return (
     <div className="flex-shrink-0 p-3 rounded-lg bg-gradient-to-br from-accent/10 to-accent/5 group-hover:from-accent/20 group-hover:to-accent/10 transition-colors duration-300">
-      {folder.icon ? (
-        <span className={cn('text-2xl', folder.color || 'text-accent')} aria-hidden="true">
-          {folder.icon}
-        </span>
-      ) : (
-        <FolderIcon size={28} className={cn(folder.color || 'text-accent')} aria-hidden="true" />
-      )}
+      <FolderIcon size={28} className={cn(folder.color || 'text-accent')} aria-hidden="true" />
     </div>
   );
 });
@@ -62,10 +52,7 @@ const FolderInfoSection = memo(function FolderInfoSection({
 export const FolderHeader = memo(function FolderHeader({
   folder,
   bookmarkCount,
-  onEdit,
   onDelete,
-  onRename,
-  onColorChange,
 }: FolderHeaderProps): React.JSX.Element {
   return (
     <div className="flex items-start justify-between mb-4">
@@ -74,12 +61,7 @@ export const FolderHeader = memo(function FolderHeader({
         <FolderInfoSection folder={folder} bookmarkCount={bookmarkCount} />
       </div>
       <div className="flex-shrink-0">
-        <FolderContextMenu
-          onEdit={onEdit}
-          onDelete={onDelete}
-          onRename={onRename}
-          onColorChange={onColorChange}
-        />
+        <FolderContextMenu onDelete={onDelete} />
       </div>
     </div>
   );

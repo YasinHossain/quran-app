@@ -65,7 +65,10 @@ beforeEach(() => {
     ];
   }
   localStorage.clear();
-  localStorage.setItem(LAST_READ_STORAGE_KEY, JSON.stringify({ '1': 3 }));
+  localStorage.setItem(
+    LAST_READ_STORAGE_KEY,
+    JSON.stringify({ '1': { verseNumber: 3, updatedAt: 1 } })
+  );
   push.mockClear();
 });
 
@@ -82,5 +85,43 @@ describe('Last Read Page', () => {
     localStorage.setItem(LAST_READ_STORAGE_KEY, JSON.stringify({}));
     renderWithProviders(<LastReadPage />);
     expect(await screen.findByText('No Recent Activity')).toBeInTheDocument();
+  });
+
+  it('renders the five most recent entries ordered by recency', async () => {
+    const entries = {
+      '1': { verseNumber: 1, updatedAt: 10 },
+      '2': { verseNumber: 2, updatedAt: 20 },
+      '3': { verseNumber: 3, updatedAt: 30 },
+      '4': { verseNumber: 4, updatedAt: 40 },
+      '5': { verseNumber: 5, updatedAt: 50 },
+      '6': { verseNumber: 6, updatedAt: 60 },
+    };
+
+    localStorage.setItem(LAST_READ_STORAGE_KEY, JSON.stringify(entries));
+
+    const chapters = Array.from({ length: 6 }, (_, index) => ({
+      id: index + 1,
+      name_simple: `Surah ${index + 1}`,
+      verses_count: 300,
+    }));
+
+    (chaptersApi.getChapters as jest.Mock).mockResolvedValue(chapters);
+    if (typeof window !== 'undefined') {
+      (window as any).__TEST_BOOKMARK_CHAPTERS__ = chapters;
+    }
+
+    renderWithProviders(<LastReadPage />);
+
+    const cards = await screen.findAllByRole('button', { name: /Continue reading/ });
+    expect(cards).toHaveLength(5);
+
+    const labels = cards.map((card) => card.getAttribute('aria-label'));
+    expect(labels).toEqual([
+      'Continue reading Surah 6 at verse 6',
+      'Continue reading Surah 5 at verse 5',
+      'Continue reading Surah 4 at verse 4',
+      'Continue reading Surah 3 at verse 3',
+      'Continue reading Surah 2 at verse 2',
+    ]);
   });
 });

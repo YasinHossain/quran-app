@@ -5,6 +5,7 @@ export { ArrowLeftIcon } from './ArrowLeftIcon';
 export { ChevronDownIcon } from './ChevronDownIcon';
 export { ChevronLeftIcon } from './ChevronLeftIcon';
 export { ChevronRightIcon } from './ChevronRightIcon';
+export { GoToIcon } from './GoToIcon';
 
 // Media Controls
 export { MicIcon } from './MicIcon';
@@ -21,9 +22,11 @@ export { VolumeOffIcon } from './VolumeOffIcon';
 // UI Elements
 export { AlertIcon } from './AlertIcon';
 export { BarsIcon } from './BarsIcon';
+export { CheckCircleIcon } from './CheckCircleIcon';
 export { CheckIcon } from './CheckIcon';
 export { CloseIcon } from './CloseIcon';
 export { EllipsisHIcon } from './EllipsisHIcon';
+export { FlagIcon } from './FlagIcon';
 export { GripVerticalIcon } from './GripVerticalIcon';
 export { PlusIcon } from './PlusIcon';
 export { SearchIcon } from './SearchIcon';
@@ -32,6 +35,7 @@ export { SearchIcon } from './SearchIcon';
 export { BookmarkIcon } from './BookmarkIcon';
 export { BookmarkOutlineIcon } from './BookmarkOutlineIcon';
 export { BookReaderIcon } from './BookReaderIcon';
+export { CalendarIcon } from './CalendarIcon';
 export { BrainIcon } from './BrainIcon';
 export { ClockIcon } from './ClockIcon';
 export { FolderIcon } from './FolderIcon';
@@ -41,5 +45,7 @@ export { HomeIcon } from './HomeIcon';
 export { MoonIcon } from './MoonIcon';
 export { PinIcon } from './PinIcon';
 export { ShareIcon } from './ShareIcon';
+export { SparklesIcon } from './SparklesIcon';
 export { SunIcon } from './SunIcon';
+export { TargetIcon } from './TargetIcon';
 export { TranslationIcon } from './TranslationIcon';

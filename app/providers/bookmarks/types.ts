@@ -1,26 +1,36 @@
-import { Folder, Bookmark, Chapter, MemorizationPlan } from '@/types';
+import { Folder, Bookmark, Chapter, PlannerPlan, LastReadMap } from '@/types';
 
 export interface BookmarkContextType {
   folders: Folder[];
-  createFolder: (name: string, color?: string, icon?: string) => void;
+  createFolder: (name: string, color?: string) => void;
   deleteFolder: (folderId: string) => void;
-  renameFolder: (folderId: string, newName: string, color?: string, icon?: string) => void;
-  addBookmark: (verseId: string, folderId?: string) => void;
+  renameFolder: (folderId: string, newName: string, color?: string) => void;
+  addBookmark: (verseId: string, folderId?: string, metadata?: Partial<Bookmark>) => void;
   removeBookmark: (verseId: string, folderId: string) => void;
   isBookmarked: (verseId: string) => boolean;
   findBookmark: (verseId: string) => { folder: Folder; bookmark: Bookmark } | null;
-  toggleBookmark: (verseId: string, folderId?: string) => void;
+  toggleBookmark: (verseId: string, folderId?: string, metadata?: Partial<Bookmark>) => void;
   updateBookmark: (verseId: string, data: Partial<Bookmark>) => void;
   bookmarkedVerses: string[];
   pinnedVerses: Bookmark[];
-  togglePinned: (verseId: string) => void;
+  togglePinned: (verseId: string, metadata?: Partial<Bookmark>) => void;
   isPinned: (verseId: string) => boolean;
-  lastRead: Record<string, number>;
-  setLastRead: (surahId: string, verseId: number) => void;
+  lastRead: LastReadMap;
+  setLastRead: (
+    surahId: string,
+    verseNumber: number,
+    verseKey?: string,
+    globalVerseId?: number
+  ) => void;
   chapters: Chapter[];
-  memorization: Record<string, MemorizationPlan>;
-  addToMemorization: (surahId: number, targetVerses?: number) => void;
-  createMemorizationPlan: (surahId: number, targetVerses: number, planName?: string) => void;
-  updateMemorizationProgress: (surahId: number, completedVerses: number) => void;
-  removeFromMemorization: (surahId: number) => void;
+  planner: Record<string, PlannerPlan>;
+  addToPlanner: (surahId: number, targetVerses?: number) => void;
+  createPlannerPlan: (
+    surahId: number,
+    targetVerses: number,
+    planName?: string,
+    estimatedDays?: number
+  ) => void;
+  updatePlannerProgress: (planId: string, completedVerses: number) => void;
+  removeFromPlanner: (planId: string) => void;
 }

@@ -137,7 +137,7 @@ const TestBookmarksPage: React.FC = () => (
           <Link href="/bookmarks/last-read">Last Read</Link>
         </li>
         <li>
-          <Link href="/bookmarks/memorization">Memorization</Link>
+          <Link href="/bookmarks/planner">Planner</Link>
         </li>
       </ul>
     </nav>

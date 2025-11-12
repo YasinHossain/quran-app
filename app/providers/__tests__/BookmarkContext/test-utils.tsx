@@ -101,7 +101,7 @@ const buildButtonConfigs = (context: BookmarkContextValue): ButtonConfig[] => {
       onClick: createFolderHandler(firstFolder, (folder) => deleteFolder(folder.id)),
     },
     { label: 'Toggle Pin', onClick: () => togglePinned('1:1') },
-    { label: 'Set Last Read', onClick: () => setLastRead('1', 1) },
+    { label: 'Set Last Read', onClick: () => setLastRead('1', 1, '1:1', 1) },
   ];
 };
 

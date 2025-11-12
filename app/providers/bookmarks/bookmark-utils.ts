@@ -1,8 +1,41 @@
-import { Folder, Bookmark, MemorizationPlan } from '@/types';
+import { Folder, Bookmark, PlannerPlan } from '@/types';
 
-export const createNewFolder = (name: string, color?: string, icon?: string): Folder => {
+const generateId = (): string => {
+  if (typeof globalThis !== 'undefined') {
+    const cryptoGlobal = globalThis as typeof globalThis & { crypto?: Crypto };
+    const cryptoApi = cryptoGlobal.crypto;
+
+    if (cryptoApi) {
+      const ensuredCrypto = cryptoApi;
+
+      if (typeof ensuredCrypto.randomUUID === 'function') {
+        return ensuredCrypto.randomUUID();
+      }
+
+      if (typeof ensuredCrypto.getRandomValues === 'function') {
+        const bytes = ensuredCrypto.getRandomValues(new Uint8Array(16)) as Uint8Array;
+        const sixth = bytes[6] ?? 0;
+        const eighth = bytes[8] ?? 0;
+        bytes[6] = (sixth & 0x0f) | 0x40;
+        bytes[8] = (eighth & 0x3f) | 0x80;
+        const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+        return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+      }
+    }
+  }
+
+  const randomSuffix = Math.random().toString(16).slice(2);
+  return `id-${Date.now()}-${randomSuffix}`;
+};
+
+const normalizeVerseId = (id: string | number): string => String(id);
+
+const matchesVerseId = (bookmark: Bookmark, verseId: string | number): boolean =>
+  normalizeVerseId(bookmark.verseId) === normalizeVerseId(verseId);
+
+export const createNewFolder = (name: string, color?: string): Folder => {
   const base: Folder = {
-    id: crypto.randomUUID(),
+    id: generateId(),
     name,
     createdAt: Date.now(),
     bookmarks: [],
@@ -10,10 +43,6 @@ export const createNewFolder = (name: string, color?: string, icon?: string): Fo
 
   if (color !== undefined) {
     base.color = color;
-  }
-
-  if (icon !== undefined) {
-    base.icon = icon;
   }
 
   return base;
@@ -24,7 +53,7 @@ export const findBookmarkInFolders = (
   verseId: string
 ): { folder: Folder; bookmark: Bookmark } | null => {
   for (const folder of folders) {
-    const bookmark = folder.bookmarks.find((b) => b.verseId === verseId);
+    const bookmark = folder.bookmarks.find((b) => matchesVerseId(b, verseId));
     if (bookmark) {
       return { folder, bookmark };
     }
@@ -38,7 +67,7 @@ export const isVerseBookmarked = (folders: Folder[], verseId: string): boolean =
 
 export const getAllBookmarkedVerses = (folders: Folder[]): string[] => {
   const allVerses = folders.flatMap((folder) =>
-    folder.bookmarks.map((bookmark) => bookmark.verseId)
+    folder.bookmarks.map((bookmark) => normalizeVerseId(bookmark.verseId))
   );
   return [...new Set(allVerses)];
 };
@@ -46,15 +75,18 @@ export const getAllBookmarkedVerses = (folders: Folder[]): string[] => {
 export const addBookmarkToFolder = (
   folders: Folder[],
   verseId: string,
-  folderId?: string
+  folderId?: string,
+  metadata: Partial<Bookmark> = {}
 ): Folder[] => {
+  const normalizedVerseId = normalizeVerseId(verseId);
   if (isVerseBookmarked(folders, verseId)) {
     return folders;
   }
 
   const newBookmark: Bookmark = {
-    verseId,
+    verseId: normalizedVerseId,
     createdAt: Date.now(),
+    ...metadata,
   };
 
   let targetFolderId = folderId;
@@ -79,11 +111,12 @@ export const removeBookmarkFromFolder = (
   verseId: string,
   folderId: string
 ): Folder[] => {
+  const normalizedVerseId = normalizeVerseId(verseId);
   return folders.map((folder) =>
     folder.id === folderId
       ? {
           ...folder,
-          bookmarks: folder.bookmarks.filter((b) => b.verseId !== verseId),
+          bookmarks: folder.bookmarks.filter((b) => !matchesVerseId(b, normalizedVerseId)),
         }
       : folder
   );
@@ -94,40 +127,50 @@ export const updateBookmarkInFolders = (
   verseId: string,
   data: Partial<Bookmark>
 ): Folder[] => {
+  const normalizedVerseId = normalizeVerseId(verseId);
   return folders.map((folder) => ({
     ...folder,
     bookmarks: folder.bookmarks.map((bookmark) =>
-      bookmark.verseId === verseId ? { ...bookmark, ...data } : bookmark
+      matchesVerseId(bookmark, normalizedVerseId) ? { ...bookmark, ...data } : bookmark
     ),
   }));
 };
 
-export const createMemorizationPlan = (
+export const DEFAULT_PLANNER_ESTIMATED_DAYS = 5;
+
+export const createPlannerPlan = (
   surahId: number,
   targetVerses: number,
-  planName?: string
-): MemorizationPlan => ({
-  id: crypto.randomUUID(),
-  surahId,
-  targetVerses,
-  completedVerses: 0,
-  createdAt: Date.now(),
-  lastUpdated: Date.now(),
-  notes: planName || `Surah ${surahId} Plan`,
-});
-
-export const updateMemorizationProgress = (
-  memorization: Record<string, MemorizationPlan>,
-  surahId: number,
-  completedVerses: number
-): Record<string, MemorizationPlan> => {
-  const key = surahId.toString();
-  if (!memorization[key]) return memorization;
+  planName?: string,
+  estimatedDays?: number
+): PlannerPlan => {
+  const normalizedEstimatedDays =
+    typeof estimatedDays === 'number' && estimatedDays > 0 ? Math.round(estimatedDays) : undefined;
 
   return {
-    ...memorization,
-    [key]: {
-      ...memorization[key],
+    id: generateId(),
+    surahId,
+    targetVerses,
+    completedVerses: 0,
+    createdAt: Date.now(),
+    lastUpdated: Date.now(),
+    notes: planName || `Surah ${surahId} Plan`,
+    estimatedDays: normalizedEstimatedDays ?? DEFAULT_PLANNER_ESTIMATED_DAYS,
+  };
+};
+
+export const updatePlannerProgress = (
+  planner: Record<string, PlannerPlan>,
+  planId: string,
+  completedVerses: number
+): Record<string, PlannerPlan> => {
+  const existing = planner[planId];
+  if (!existing) return planner;
+
+  return {
+    ...planner,
+    [planId]: {
+      ...existing,
       completedVerses,
       lastUpdated: Date.now(),
     },

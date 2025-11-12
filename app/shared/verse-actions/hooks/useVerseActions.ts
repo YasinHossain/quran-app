@@ -10,6 +10,7 @@ import {
   createPlayPauseAction,
   createShareAction,
   createTafsirAction,
+  createAddToPlanAction,
 } from './actionCreators';
 
 interface UseVerseActionsParams {
@@ -21,6 +22,7 @@ interface UseVerseActionsParams {
   onPlayPause: () => void;
   onBookmark: () => void;
   onShare: () => void;
+  onAddToPlan: () => void;
   onNavigateToVerse?: () => void;
   onClose: () => void;
 }
@@ -34,6 +36,7 @@ export function useVerseActions({
   onPlayPause,
   onBookmark,
   onShare,
+  onAddToPlan,
   onNavigateToVerse,
   onClose,
 }: UseVerseActionsParams): VerseActionItem[] {
@@ -50,6 +53,8 @@ export function useVerseActions({
   const handleBookmark = useCallback(() => handleAction(onBookmark), [handleAction, onBookmark]);
 
   const handleShare = useCallback(() => handleAction(onShare), [handleAction, onShare]);
+
+  const handleAddToPlan = useCallback(() => handleAction(onAddToPlan), [handleAction, onAddToPlan]);
 
   const handleGoToVerse = useCallback(() => {
     if (onNavigateToVerse) {
@@ -71,5 +76,6 @@ export function useVerseActions({
       onClick: handleBookmark,
     }),
     createShareAction({ onClick: handleShare }),
+    createAddToPlanAction({ onClick: handleAddToPlan }),
   ];
 }

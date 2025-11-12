@@ -39,4 +39,6 @@ export interface UseVerseListingParams {
   lookup: LookupFn;
   /** Optional initial verses for testing or SSR fallback */
   initialVerses?: Verse[];
+  /** Verse number (within the surah) to prefetch/scroll to */
+  initialVerseNumber?: number | undefined;
 }

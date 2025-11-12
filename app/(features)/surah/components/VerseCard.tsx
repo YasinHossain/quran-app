@@ -1,39 +1,57 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, type JSX, useCallback, useMemo, useState } from 'react';
 
-import { VerseArabic } from '@/app/shared/VerseArabic';
+import { ReaderVerseCard } from '@/app/shared/reader/VerseCard';
+import { AddToPlannerModal } from '@/app/shared/verse-planner-modal';
 import { Verse as VerseType } from '@/types';
 
 import { useVerseCard } from './verse-card/useVerseCard';
-import { VerseActions } from './verse-card/VerseActions';
-import { VerseTranslations } from './verse-card/VerseTranslations';
 
 interface VerseProps {
   verse: VerseType;
 }
 
-export const Verse = memo(function Verse({ verse }: VerseProps): React.JSX.Element {
+export const Verse = memo(function Verse({ verse }: VerseProps): JSX.Element {
   const { verseRef, isPlaying, isLoadingAudio, isVerseBookmarked, handlePlayPause } =
     useVerseCard(verse);
+  const [isPlannerModalOpen, setPlannerModalOpen] = useState(false);
+  const { verse_key, text_uthmani, translations } = verse;
+
+  const verseSummary = useMemo(() => {
+    const [surahPart] = verse_key.split(':');
+    const parsedSurah = Number(surahPart);
+    return {
+      verseKey: verse_key,
+      ...(Number.isFinite(parsedSurah) ? { surahId: parsedSurah } : {}),
+      arabicText: text_uthmani,
+      ...(translations?.[0]?.text ? { translationHtml: translations?.[0]?.text } : {}),
+    };
+  }, [text_uthmani, translations, verse_key]);
+
+  const handleOpenPlannerModal = useCallback(() => setPlannerModalOpen(true), []);
+  const handleClosePlannerModal = useCallback(() => setPlannerModalOpen(false), []);
 
   return (
-    <div id={`verse-${verse.id}`} ref={verseRef} className="mb-8 pb-8 border-b border-border">
-      <div className="space-y-4 md:space-y-0 md:flex md:items-start md:gap-x-6">
-        <VerseActions
-          verseKey={verse.verse_key}
-          verseId={String(verse.id)}
-          isPlaying={isPlaying}
-          isLoadingAudio={isLoadingAudio}
-          isBookmarked={isVerseBookmarked}
-          onPlayPause={handlePlayPause}
-        />
-
-        <div className="space-y-6 md:flex-grow">
-          <VerseArabic verse={verse} />
-          <VerseTranslations verse={verse} />
-        </div>
-      </div>
-    </div>
+    <>
+      <ReaderVerseCard
+        ref={verseRef}
+        verse={verse}
+        actions={{
+          verseKey: verse.verse_key,
+          verseId: String(verse.id),
+          isPlaying,
+          isLoadingAudio,
+          isBookmarked: isVerseBookmarked,
+          onPlayPause: handlePlayPause,
+          onAddToPlan: handleOpenPlannerModal,
+        }}
+      />
+      <AddToPlannerModal
+        isOpen={isPlannerModalOpen}
+        onClose={handleClosePlannerModal}
+        verseSummary={verseSummary}
+      />
+    </>
   );
 });

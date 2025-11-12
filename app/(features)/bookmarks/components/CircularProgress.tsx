@@ -5,6 +5,9 @@ interface CircularProgressProps {
   size?: number;
   strokeWidth?: number;
   label?: string;
+  className?: string;
+  valueClassName?: string;
+  labelClassName?: string;
 }
 
 // Helper function to calculate circle properties
@@ -87,13 +90,19 @@ const ProgressCircle = ({
 const CenterText = ({
   animatedPercentage,
   label,
+  valueClassName,
+  labelClassName,
 }: {
   animatedPercentage: number;
   label: string;
+  valueClassName?: string;
+  labelClassName?: string;
 }): React.JSX.Element => (
   <div className="absolute inset-0 flex flex-col items-center justify-center">
-    <div className="text-2xl font-bold text-foreground">{Math.round(animatedPercentage)}%</div>
-    <div className="text-muted text-xs font-medium">{label}</div>
+    <div className={`font-bold text-foreground ${valueClassName ?? 'text-2xl'}`}>
+      {Math.round(animatedPercentage)}%
+    </div>
+    <div className={`text-muted font-medium ${labelClassName ?? 'text-xs'}`}>{label}</div>
   </div>
 );
 
@@ -102,6 +111,9 @@ const CircularProgress = ({
   size = 150,
   strokeWidth = 15,
   label = 'Complete',
+  className,
+  valueClassName,
+  labelClassName,
 }: CircularProgressProps): React.JSX.Element => {
   const animatedPercentage = useAnimatedPercentage(percentage);
   const { radius, circumference } = useCircleProperties(size, strokeWidth);
@@ -110,7 +122,7 @@ const CircularProgress = ({
   const strokeDashoffset = circumference - (animatedPercentage / 100) * circumference;
 
   return (
-    <div className="relative inline-flex items-center justify-center">
+    <div className={`relative inline-flex items-center justify-center ${className ?? ''}`}>
       <svg className="transform -rotate-90" width={size} height={size}>
         <BackgroundCircle size={size} radius={radius} strokeWidth={strokeWidth} />
         <ProgressCircle
@@ -121,7 +133,12 @@ const CircularProgress = ({
           strokeDashoffset={strokeDashoffset}
         />
       </svg>
-      <CenterText animatedPercentage={animatedPercentage} label={label} />
+      <CenterText
+        animatedPercentage={animatedPercentage}
+        label={label}
+        {...(valueClassName ? { valueClassName } : {})}
+        {...(labelClassName ? { labelClassName } : {})}
+      />
     </div>
   );
 };

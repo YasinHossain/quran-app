@@ -54,6 +54,31 @@ export interface BookmarkWithVerse extends Bookmark {
 }
 
 /**
+ * Metadata describing the most recent verse interaction within a surah.
+ * Stored by surah id in local storage to power the "Recent" experience.
+ */
+export interface LastReadEntry {
+  /** Last visited ayah number within the surah (1-indexed). */
+  verseNumber: number;
+  /** Timestamp (ms since epoch) of when the visit occurred. */
+  updatedAt: number;
+  /** Verse key in `{surah}:{ayah}` format for precise lookups. */
+  verseKey?: string;
+  /** Global verse id from the API for legacy compatibility. */
+  globalVerseId?: number;
+  /**
+   * Legacy storage field (previously stored as per-surah verse number or global verse id).
+   * Retained for migration purposes.
+   */
+  verseId?: number;
+}
+
+/**
+ * Map of surah id -> last read metadata.
+ */
+export type LastReadMap = Record<string, LastReadEntry>;
+
+/**
  * A collection of bookmarks grouped under a user-defined folder.
  * Folders can be personalized with a color and icon that you can render across the UI.
  */
@@ -75,23 +100,16 @@ export interface Folder {
    * This should be applied to folder badges, list items, and headers in the bookmarks UI.
    */
   color?: string;
-
-  /**
-   * Folder icon customization.
-   * Suggested values: an icon name from your icon set (e.g., "star", "bookmark", "heart")
-   * or a URL to an image if your UI supports it.
-   */
-  icon?: string;
 }
 
 /**
- * A memorization plan for tracking progress on memorizing specific surahs or verse ranges.
+ * A planner entry for tracking progress on memorizing specific surahs or verse ranges.
  */
-export interface MemorizationPlan {
-  /** Unique identifier for this memorization plan. */
+export interface PlannerPlan {
+  /** Unique identifier for this planner entry. */
   id: string;
 
-  /** Surah ID this memorization plan is for. */
+  /** Surah ID this planner entry is for. */
   surahId: number;
 
   /** Total number of verses targeted for memorization in this surah. */
@@ -100,12 +118,15 @@ export interface MemorizationPlan {
   /** Number of verses already memorized and confirmed. */
   completedVerses: number;
 
-  /** Timestamp when the memorization plan was created (ms since epoch). */
+  /** Timestamp when the planner entry was created (ms since epoch). */
   createdAt: number;
 
   /** Timestamp of last progress update (ms since epoch). */
   lastUpdated: number;
 
-  /** Optional notes about the memorization plan. */
+  /** Optional notes about the planner entry. */
   notes?: string;
+
+  /** Estimated number of days to complete the plan. */
+  estimatedDays?: number;
 }

@@ -59,7 +59,7 @@ export function useFallbackVerse({
     const verseKey = FALLBACK_VERSE_KEYS[currentIndex % FALLBACK_VERSE_KEYS.length];
     const finalTranslationId = translationId || 131;
     if (!verseKey) throw new Error('No verse key available');
-    return await getVerseByKey(verseKey, finalTranslationId);
+    return await getVerseByKey(verseKey, [finalTranslationId], 'en');
   }, [translationId, currentIndex]);
 
   const {

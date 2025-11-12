@@ -1,4 +1,4 @@
-import QuranPage from '@/app/(features)/page/[pageId]/page';
+import { PageClient } from '@/app/(features)/page/[pageId]/PageClient';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProvidersAsync } from '@/app/testUtils/renderWithProviders';
 import * as api from '@/lib/api';
@@ -35,9 +35,7 @@ beforeEach(() => {
 });
 
 const renderPage = (): ReturnType<typeof renderWithProvidersAsync> =>
-  renderWithProvidersAsync(
-    <QuranPage params={{ pageId: '1' } as unknown as Promise<{ pageId: string }>} />
-  );
+  renderWithProvidersAsync(<PageClient pageId="1" />);
 
 test('renders page without crashing', async () => {
   await renderPage();
