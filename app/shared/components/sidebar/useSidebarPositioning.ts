@@ -27,6 +27,7 @@ export const useSidebarPositioning = ({
       : 'top-reader-header h-[calc(100vh-var(--reader-header-height))]';
 
     const shadowClasses = 'shadow-modal lg:shadow-none';
+    const panelZIndex = 'z-[120]';
 
     if (position === 'left') {
       return cn(
@@ -34,8 +35,7 @@ export const useSidebarPositioning = ({
         'left-0 lg:left-16',
         shadowClasses,
         headerAwareClasses,
-        // Ensure the left sidebar overlays the audio player (z-audio-player = 110)
-        'z-[120]',
+        panelZIndex,
         isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       );
     }
@@ -44,7 +44,7 @@ export const useSidebarPositioning = ({
       'right-0',
       shadowClasses,
       headerAwareClasses,
-      'z-30',
+      panelZIndex,
       isOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
     );
   };
