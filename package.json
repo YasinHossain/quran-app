@@ -68,7 +68,7 @@
     "ajv": "^8.17.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.12",
-    "i18next": "^25.3.2",
+    "i18next": "^25.6.2",
     "inversify": "^7.10.3",
     "isomorphic-dompurify": "^2.26.0",
     "lucide-react": "^0.548.0",
