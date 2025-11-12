@@ -23,11 +23,7 @@ export const SettingsSidebar = (props: SettingsSidebarProps): ReactElement => {
       position="right"
       aria-label="Settings panel"
     >
-      <SettingsSidebarContent
-        {...contentProps}
-        showCloseButton
-        onClose={handleCloseSidebar}
-      />
+      <SettingsSidebarContent {...contentProps} showCloseButton onClose={handleCloseSidebar} />
     </BaseSidebar>
   );
 };

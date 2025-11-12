@@ -61,11 +61,7 @@ export const SurahVerseList = ({
   const [scrollElement, setScrollElement] = useState<HTMLElement | null>(null);
   const shouldVirtualize = useMemo(
     () =>
-      isDesktopBreakpoint &&
-      verses.length > 0 &&
-      !isLoading &&
-      !error &&
-      Boolean(scrollElement),
+      isDesktopBreakpoint && verses.length > 0 && !isLoading && !error && Boolean(scrollElement),
     [isDesktopBreakpoint, verses.length, isLoading, error, scrollElement]
   );
 
