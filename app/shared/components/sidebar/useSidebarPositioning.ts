@@ -17,7 +17,8 @@ export const useSidebarPositioning = ({
 }: UseSidebarPositioningOptions): UseSidebarPositioningReturn => {
   const getPositionClasses = (): string => {
     const baseClasses = cn(
-      'fixed w-full bg-surface transition-all duration-300 ease-in-out',
+      // Use !fixed to avoid being overridden by any accidental 'relative'
+      '!fixed w-full bg-background transition-all duration-300 ease-in-out',
       'sm:w-80',
       position === 'left' ? 'lg:w-reader-sidebar-left' : 'lg:w-reader-sidebar-right'
     );

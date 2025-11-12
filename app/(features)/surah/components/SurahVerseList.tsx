@@ -1,10 +1,11 @@
 'use client';
 
 import { useVirtualizer } from '@tanstack/react-virtual';
-import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Spinner } from '@/app/shared/Spinner';
+import { useBreakpoint } from '@/lib/responsive';
 
 import { Verse as VerseComponent } from './VerseCard';
 
@@ -33,7 +34,11 @@ function findScrollParent(start: HTMLElement | null): HTMLElement | null {
     }
     node = node.parentElement;
   }
-  return null;
+  const scrollingElement = document.scrollingElement;
+  if (scrollingElement instanceof HTMLElement) {
+    return scrollingElement;
+  }
+  return document.body instanceof HTMLElement ? document.body : null;
 }
 
 export const SurahVerseList = ({
@@ -48,16 +53,26 @@ export const SurahVerseList = ({
   initialVerseKey,
 }: SurahVerseListProps): React.JSX.Element => {
   const { t } = useTranslation();
+  const breakpoint = useBreakpoint();
+  const isDesktopBreakpoint = breakpoint === 'desktop' || breakpoint === 'wide';
   const containerRef = useRef<HTMLDivElement | null>(null);
   const scrollParentRef = useRef<HTMLElement | null>(null);
   const initialScrollRef = useRef<string | null>(null);
+  const [scrollElement, setScrollElement] = useState<HTMLElement | null>(null);
   const shouldVirtualize = useMemo(
-    () => verses.length > 0 && !isLoading && !error,
-    [verses.length, isLoading, error]
+    () =>
+      isDesktopBreakpoint &&
+      verses.length > 0 &&
+      !isLoading &&
+      !error &&
+      Boolean(scrollElement),
+    [isDesktopBreakpoint, verses.length, isLoading, error, scrollElement]
   );
 
   useLayoutEffect(() => {
-    scrollParentRef.current = containerRef.current ? findScrollParent(containerRef.current) : null;
+    const parent = containerRef.current ? findScrollParent(containerRef.current) : null;
+    scrollParentRef.current = parent;
+    setScrollElement((previous) => (previous === parent ? previous : parent));
   }, [verses.length]);
 
   const itemCount = shouldVirtualize ? verses.length : 0;
