@@ -10,43 +10,43 @@ Run again anytime: `npx knip` (or `npm run clean:unused` to auto‑fix where pos
 
 ## High‑Impact Buckets
 
-### 1) IDE history and backups
+### 1) IDE history and backups [x]
 
-- [ ] `.history/**` — Status: Removed. Local editor backups; safe to keep out of git.
+- [x] `.history/**` — Status: Removed. Local editor backups; safe to keep out of git.
 
-### 2) Legacy Bookmarks UI (superseded by new page)
+### 2) Legacy Bookmarks UI (superseded by new page) [x]
 
-- [ ] `app/(features)/bookmarks/components/BookmarkListView.tsx` — Status: Removed
-- [ ] `app/(features)/bookmarks/components/BookmarkVerseSidebar.tsx` — Status: Removed
-- [ ] `app/(features)/bookmarks/components/FolderVerseCard.tsx` — Status: Removed
-- [ ] `app/(features)/bookmarks/components/header/{HeaderActions,SearchBar,SortDropdown}.tsx` — Status: Removed
-- [ ] `app/(features)/bookmarks/components/shared/{BookmarkCardComponents,BookmarkListComponents,BookmarksPageHeader}.tsx` — Status: Removed
-- [ ] Hooks: `app/(features)/bookmarks/hooks/{useBookmarkListState,useVerseListHeight,useBookmarkAudio}.ts` — Status: Removed
-- [ ] Namespaced subfolders under `components/` (bookmark‑list‑view, bookmark‑verse‑sidebar, bookmarks‑content) — Status: Removed
+- [x] `app/(features)/bookmarks/components/BookmarkListView.tsx` — Status: Removed
+- [x] `app/(features)/bookmarks/components/BookmarkVerseSidebar.tsx` — Status: Removed
+- [x] `app/(features)/bookmarks/components/FolderVerseCard.tsx` — Status: Removed
+- [x] `app/(features)/bookmarks/components/header/{HeaderActions,SearchBar,SortDropdown}.tsx` — Status: Removed
+- [x] `app/(features)/bookmarks/components/shared/{BookmarkCardComponents,BookmarkListComponents,BookmarksPageHeader}.tsx` — Status: Removed
+- [x] Hooks: `app/(features)/bookmarks/hooks/{useBookmarkListState,useVerseListHeight,useBookmarkAudio}.ts` — Status: Removed
+- [x] Namespaced subfolders under `components/` (bookmark‑list‑view, bookmark‑verse‑sidebar, bookmarks‑content) — Status: Removed
 
 Rationale: Replaced by `page.tsx` + `BookmarksHeader`, `FolderGrid`, and modular planner flow.
 
-### 3) Old “page reader” feature
+### 3) Old “page reader” feature [x]
 
-- [ ] `app/(features)/page/[pageId]/components/*` — Status: Candidate
-- [ ] `app/(features)/page/[pageId]/hooks/usePageData.ts` — Status: Candidate
+- [x] `app/(features)/page/[pageId]/components/*` — Status: Candidate
+- [x] `app/(features)/page/[pageId]/hooks/usePageData.ts` — Status: Candidate
 
 Rationale: `PageClient.tsx` delegates to `ReaderShell`; older per‑page list components aren’t referenced.
 
 ### 4) Tafsir legacy components (superseded by TafsirViewer)
 
-- [x] `app/(features)/tafsir/[surahId]/[ayahId]/components/{TafsirPanels,TafsirVerse,TranslationSelector,WordTranslationPanel,WordTranslationList,useWordTranslationSearch.ts}` — Status: Removed
-- [x] `app/(features)/tafsir/[surahId]/[ayahId]/hooks/useTafsirPanels.ts` — Status: Removed
+- [x] `app/(features)/tafsir/[surahId]/[ayahId]/components/{TafsirPanels,TafsirVerse,TranslationSelector,WordTranslationPanel,WordTranslationList,useWordTranslationSearch.ts}` — Status: Candidate
+- [x] `app/(features)/tafsir/[surahId]/[ayahId]/hooks/useTafsirPanels.ts` — Status: Candidate
 
 Rationale: Route now composes `TafsirViewer` + `useTafsirVerseData`. Old panel stack not imported by current pages.
 
 ### 5) Shared components that appear unused or duplicated
 
-- [ ] `app/shared/HeaderSearch.tsx` (old) — Status: Candidate. New header search lives at `app/shared/components/header/HeaderSearch.tsx`.
-- [ ] `app/shared/components/AdaptiveLayout.tsx` — Status: Candidate
-- [ ] `app/shared/components/adaptive-*/*` — Status: Candidate
-- [ ] `app/shared/navigation/{QuickSearch.tsx,QuickSearchModal.tsx}` + `hooks/useQuickSearch.ts` — Status: Candidate
-- [ ] Error boundary wrappers under `app/shared/components/error-boundary/*` — Status: Verify (exports flagged unused; ensure no tests/stories import them).
+- [x] `app/shared/HeaderSearch.tsx` (old) — Removed; layout now uses `app/shared/components/header/HeaderSearch.tsx`.
+- [x] `app/shared/components/AdaptiveLayout.tsx` — Removed along with its private `adaptive-*` helpers.
+- [x] `app/shared/components/adaptive-*/*` — Removed (obsolete responsive helpers).
+- [x] `app/shared/navigation/{QuickSearch.tsx,QuickSearchModal.tsx}` + `hooks/useQuickSearch.ts` — Removed legacy quick search flow.
+- [x] Error boundary wrappers under `app/shared/components/error-boundary/*` — Removed unused feature-specific wrappers/HOCs; core `ErrorBoundary` + default fallback retained.
 
 ### 6) Player helpers (likely not used at runtime)
 
