@@ -5,7 +5,6 @@ import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 're
 import { useTranslation } from 'react-i18next';
 
 import { Spinner } from '@/app/shared/Spinner';
-import { useBreakpoint } from '@/lib/responsive';
 
 import { Verse as VerseComponent } from './VerseCard';
 
@@ -53,8 +52,6 @@ export const SurahVerseList = ({
   initialVerseKey,
 }: SurahVerseListProps): React.JSX.Element => {
   const { t } = useTranslation();
-  const breakpoint = useBreakpoint();
-  const isDesktopBreakpoint = breakpoint === 'desktop' || breakpoint === 'wide';
   const containerRef = useRef<HTMLDivElement | null>(null);
   const scrollParentRef = useRef<HTMLElement | null>(null);
   const initialScrollRef = useRef<string | null>(null);
@@ -63,9 +60,8 @@ export const SurahVerseList = ({
   const prevShouldVirtualizeRef = useRef<boolean>(false);
   const [scrollElement, setScrollElement] = useState<HTMLElement | null>(null);
   const shouldVirtualize = useMemo(
-    () =>
-      isDesktopBreakpoint && verses.length > 0 && !isLoading && !error && Boolean(scrollElement),
-    [isDesktopBreakpoint, verses.length, isLoading, error, scrollElement]
+    () => verses.length > 0 && !isLoading && !error && Boolean(scrollElement),
+    [verses.length, isLoading, error, scrollElement]
   );
 
   useLayoutEffect(() => {
@@ -117,19 +113,32 @@ export const SurahVerseList = ({
             const verseId = verses[targetIndex]?.id;
             if (typeof verseId === 'number') {
               const el = document.getElementById(`verse-${verseId}`);
-              el?.scrollIntoView({ block: 'center' });
-              initialScrollRef.current = initialVerseKey;
-              lastScrollModeRef.current = 'dom';
+              if (el) {
+                const parent = scrollParentRef.current ?? findScrollParent(containerRef.current);
+                if (parent && parent instanceof HTMLElement) {
+                  // Manually center within the scroll parent for consistent mobile behavior.
+                  const elRect = el.getBoundingClientRect();
+                  const parentRect = parent.getBoundingClientRect();
+                  const currentTop = parent.scrollTop;
+                  const delta =
+                    elRect.top - parentRect.top - parent.clientHeight / 2 + elRect.height / 2;
+                  parent.scrollTo({ top: currentTop + delta, behavior: 'auto' });
+                } else {
+                  el.scrollIntoView({ block: 'center' });
+                }
+                initialScrollRef.current = initialVerseKey;
+                lastScrollModeRef.current = 'dom';
+              }
             }
           }
           return;
-        }
+      }
         // If already scrolled appropriately, nothing to do.
         return;
       }
 
       // Verse not yet loaded; retry a few times while pages stream in
-      if (attempts < 20) {
+      if (attempts < 60) {
         attempts += 1;
         timer = window.setTimeout(tryScroll, 50);
       }
