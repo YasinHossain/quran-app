@@ -151,7 +151,8 @@ describe('Pinned Ayah Page', () => {
 
     expect(await screen.findByText('Pinned Verses')).toBeInTheDocument();
     expect(await screen.findByText('No Pinned Verses')).toBeInTheDocument();
-    fireEvent.click(screen.getByText('Last Read'));
+    const [lastReadButton] = await screen.findAllByRole('button', { name: 'Last Read' });
+    fireEvent.click(lastReadButton);
     await waitFor(() => expect(push).toHaveBeenCalledWith('/bookmarks/last-read'));
   });
 
