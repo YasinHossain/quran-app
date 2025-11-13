@@ -10,6 +10,9 @@ describe('navigation route helpers', () => {
   it('builds surah routes with encoding', () => {
     expect(buildSurahRoute(1)).toBe('/surah/1');
     expect(buildSurahRoute('Al-Fatihah')).toBe('/surah/Al-Fatihah');
+    expect(buildSurahRoute(2, { startVerse: 255 })).toBe('/surah/2?startVerse=255');
+    expect(buildSurahRoute(2, { startVerse: '  50 ' })).toBe('/surah/2?startVerse=50');
+    expect(buildSurahRoute(2, { startVerse: 0 })).toBe('/surah/2');
   });
 
   it('builds juz routes', () => {

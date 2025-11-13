@@ -23,6 +23,7 @@ interface CreateSurahMainParams {
   emptyLabelKey?: string | undefined;
   endLabelKey?: string | undefined;
   initialVerseKey?: string | undefined;
+  initialScrollNonce?: string | undefined;
 }
 
 const createSurahMain = ({
@@ -30,8 +31,12 @@ const createSurahMain = ({
   emptyLabelKey,
   endLabelKey,
   initialVerseKey,
+  initialScrollNonce,
 }: CreateSurahMainParams): React.ReactNode => (
   <SurahMain
+    // Force remount not only when the target verse changes, but also when a new navigation
+    // intent is fired for the same verse (via nav sequence query param)
+    key={`${initialVerseKey ?? 'no-initial-verse'}:${initialScrollNonce ?? '0'}`}
     verses={verseListing.verses}
     isLoading={verseListing.isLoading}
     error={verseListing.error}
@@ -85,6 +90,7 @@ interface ReaderShellProps extends Pick<UseVerseListingParams, 'initialVerses'> 
   endLabelKey?: string;
   initialVerseNumber?: number | undefined;
   initialVerseKey?: string | undefined;
+  initialScrollNonce?: string | undefined;
 }
 
 export function ReaderShell({
@@ -95,6 +101,7 @@ export function ReaderShell({
   endLabelKey,
   initialVerseNumber,
   initialVerseKey,
+  initialScrollNonce,
 }: ReaderShellProps): React.JSX.Element {
   useBodyOverflowHidden();
   const readerView = useReaderView({
@@ -110,6 +117,7 @@ export function ReaderShell({
     ...(typeof emptyLabelKey === 'string' ? { emptyLabelKey } : {}),
     ...(typeof endLabelKey === 'string' ? { endLabelKey } : {}),
     ...(typeof initialVerseKey === 'string' ? { initialVerseKey } : {}),
+    ...(typeof initialScrollNonce === 'string' ? { initialScrollNonce } : {}),
   });
   const settingsSidebar = createSettingsSidebar(panels);
   const workspaceSettingsSidebar = createWorkspaceSettingsPanel(panels);

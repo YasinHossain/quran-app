@@ -7,6 +7,7 @@ import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVe
 import { useVerseCard } from '@/app/(features)/surah/components/verse-card/useVerseCard';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { ReaderVerseCard } from '@/app/shared/reader';
+import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { Spinner } from '@/app/shared/Spinner';
 import { parseVerseKey } from '@/lib/utils/verse';
 
@@ -82,8 +83,9 @@ function usePinnedVerseActions(
     if (!verseKey) return;
     const { surahNumber, ayahNumber } = parseVerseKey(verseKey);
     if (!surahNumber || !ayahNumber) return;
-    const params = new URLSearchParams({ startVerse: String(ayahNumber) });
-    router.push(`/surah/${surahNumber}?${params.toString()}`);
+    router.push(buildSurahRoute(surahNumber, { startVerse: ayahNumber, forceSeq: true }), {
+      scroll: false,
+    });
   }, [bookmark.verseKey, router, verse.verse_key]);
 
   const handleTogglePinned = React.useCallback(() => {

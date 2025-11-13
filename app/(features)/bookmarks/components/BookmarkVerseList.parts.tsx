@@ -5,6 +5,7 @@ import React from 'react';
 
 import { useVerseCard } from '@/app/(features)/surah/components/verse-card/useVerseCard';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { parseVerseKey } from '@/lib/utils/verse';
 
 import type { Bookmark, Verse } from '@/types';
@@ -42,7 +43,9 @@ export function useBookmarkVerseActions(
   const handleNavigateToVerse = React.useCallback(() => {
     const { surahNumber, ayahNumber } = parseVerseKey(bookmark.verseKey ?? verse.verse_key);
     if (surahNumber && ayahNumber) {
-      router.push(buildSurahRoute(surahNumber, ayahNumber));
+      router.push(buildSurahRoute(surahNumber, { startVerse: ayahNumber, forceSeq: true }), {
+        scroll: false,
+      });
     }
   }, [bookmark.verseKey, router, verse.verse_key]);
 
@@ -60,11 +63,6 @@ export function useBookmarkVerseActions(
       showRemove: true as const,
     },
   };
-}
-
-function buildSurahRoute(surahNumber: number, ayahNumber: number): string {
-  const qs = new URLSearchParams({ startVerse: String(ayahNumber) });
-  return `/surah/${surahNumber}?${qs.toString()}`;
 }
 
 export function useMountVisible(): boolean {

@@ -12,6 +12,7 @@ import {
 
 import { SearchInput } from '@/app/shared/components/SearchInput';
 import { GoToSurahVerseForm } from '@/app/shared/components/go-to/GoToSurahVerseForm';
+import { buildSurahRoute } from '@/app/shared/navigation/routes';
 
 export const HeaderSearch = memo(function HeaderSearch(): ReactElement {
   const router = useRouter();
@@ -35,9 +36,13 @@ export const HeaderSearch = memo(function HeaderSearch(): ReactElement {
 
   const handleNavigate = useCallback(
     (surahId: number, verseNumber?: number): void => {
-      const basePath = `/surah/${surahId}`;
-      const queryString = verseNumber ? `?startVerse=${verseNumber}` : '';
-      router.push(`${basePath}${queryString}`);
+      const href =
+        typeof verseNumber === 'number'
+          ? buildSurahRoute(surahId, { startVerse: verseNumber, forceSeq: true })
+          : buildSurahRoute(surahId);
+      // Prevent default scroll-to-top and force a unique nav sequence so
+      // the reader view reliably re-centers on the requested ayah even when cached.
+      router.push(href, { scroll: false });
       setFocused(false);
     },
     [router]

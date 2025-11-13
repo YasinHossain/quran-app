@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import { CircularProgress } from '@/app/(features)/bookmarks/components/CircularProgress';
+import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { Chapter } from '@/types';
 
 interface LastReadCardProps {
@@ -24,8 +25,9 @@ export const LastReadCard = ({
   const percent = Math.min(100, Math.max(0, Math.round((verseId / total) * 100)));
   const isVisible = useMountVisible();
   const handleNavigate = React.useCallback((): void => {
-    const params = new URLSearchParams({ startVerse: String(verseId) });
-    router.push(`/surah/${surahId}?${params.toString()}`);
+    router.push(buildSurahRoute(surahId, { startVerse: verseId, forceSeq: true }), {
+      scroll: false,
+    });
   }, [router, surahId, verseId]);
 
   const ariaLabel = `Continue reading ${chapter?.name_simple || `Surah ${surahId}`} at verse ${verseId}`;

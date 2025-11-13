@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 import { ReaderShell } from '@/app/shared/reader';
 import { getVersesByChapter } from '@/lib/api';
@@ -16,9 +17,24 @@ interface SurahViewProps {
  * Manages verse listing, audio playback, and responsive layout with hidden header behavior.
  */
 export function SurahView({ surahId, initialVerseNumber }: SurahViewProps): React.JSX.Element {
+  const searchParams = useSearchParams();
+  const queryStartVerseRaw = searchParams?.get('startVerse');
+  const navSeq = searchParams?.get('nav') ?? undefined;
+
+  const resolvedInitialVerseNumber = useMemo(() => {
+    const fromQuery = queryStartVerseRaw ? Number.parseInt(queryStartVerseRaw, 10) : undefined;
+    if (typeof fromQuery === 'number' && Number.isFinite(fromQuery) && fromQuery > 0) {
+      return fromQuery;
+    }
+    if (typeof initialVerseNumber === 'number' && Number.isFinite(initialVerseNumber)) {
+      return initialVerseNumber > 0 ? initialVerseNumber : undefined;
+    }
+    return undefined;
+  }, [initialVerseNumber, queryStartVerseRaw]);
+
   const initialVerseKey =
-    typeof initialVerseNumber === 'number' && initialVerseNumber > 0
-      ? `${surahId}:${initialVerseNumber}`
+    typeof resolvedInitialVerseNumber === 'number'
+      ? `${surahId}:${resolvedInitialVerseNumber}`
       : undefined;
 
   return (
@@ -35,8 +51,11 @@ export function SurahView({ surahId, initialVerseNumber }: SurahViewProps): Reac
       }
       emptyLabelKey="no_verses_found"
       endLabelKey="end_of_surah"
-      {...(typeof initialVerseNumber === 'number' ? { initialVerseNumber } : {})}
+      {...(typeof resolvedInitialVerseNumber === 'number'
+        ? { initialVerseNumber: resolvedInitialVerseNumber }
+        : {})}
       {...(typeof initialVerseKey === 'string' ? { initialVerseKey } : {})}
+      {...(typeof navSeq === 'string' ? { initialScrollNonce: navSeq } : {})}
     />
   );
 }

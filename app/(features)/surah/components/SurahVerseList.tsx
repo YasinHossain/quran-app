@@ -58,6 +58,9 @@ export const SurahVerseList = ({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const scrollParentRef = useRef<HTMLElement | null>(null);
   const initialScrollRef = useRef<string | null>(null);
+  // Track how we last scrolled to allow a second pass once virtualization initializes.
+  const lastScrollModeRef = useRef<'none' | 'dom' | 'virtual'>('none');
+  const prevShouldVirtualizeRef = useRef<boolean>(false);
   const [scrollElement, setScrollElement] = useState<HTMLElement | null>(null);
   const shouldVirtualize = useMemo(
     () =>
@@ -87,25 +90,61 @@ export const SurahVerseList = ({
     virtualizer.measure();
   }, [shouldVirtualize, virtualizer, verses.length]);
 
+  // Robust auto-scroll: retry briefly until the target verse exists and the list is measured.
   useEffect(() => {
-    if (!initialVerseKey || initialScrollRef.current === initialVerseKey || verses.length === 0) {
-      return;
-    }
-    const targetIndex = verses.findIndex((verse) => verse.verse_key === initialVerseKey);
-    if (targetIndex === -1) {
-      return;
-    }
-    initialScrollRef.current = initialVerseKey;
-    if (shouldVirtualize) {
-      virtualizer.scrollToIndex(targetIndex, { align: 'center' });
-    } else {
-      const verseId = verses[targetIndex]?.id;
-      if (typeof verseId === 'number') {
-        const el = document.getElementById(`verse-${verseId}`);
-        el?.scrollIntoView({ block: 'center' });
+    if (!initialVerseKey) return;
+
+    let attempts = 0;
+    let timer: number | null = null;
+
+    const tryScroll = (): void => {
+      if (!initialVerseKey) return;
+      const didScrollForThisKey = initialScrollRef.current === initialVerseKey;
+
+      const targetIndex = verses.findIndex((verse) => verse.verse_key === initialVerseKey);
+      if (targetIndex !== -1) {
+        // Scroll behavior rules:
+        // - If we haven't scrolled for this key, scroll now (DOM or virtualized).
+        // - If we HAVE scrolled using DOM but virtualization just became available,
+        //   perform a second scroll using the virtualizer for precise centering.
+        if (!didScrollForThisKey || (shouldVirtualize && lastScrollModeRef.current === 'dom')) {
+          if (shouldVirtualize) {
+            virtualizer.scrollToIndex(targetIndex, { align: 'center' });
+            virtualizer.measure();
+            initialScrollRef.current = initialVerseKey;
+            lastScrollModeRef.current = 'virtual';
+          } else {
+            const verseId = verses[targetIndex]?.id;
+            if (typeof verseId === 'number') {
+              const el = document.getElementById(`verse-${verseId}`);
+              el?.scrollIntoView({ block: 'center' });
+              initialScrollRef.current = initialVerseKey;
+              lastScrollModeRef.current = 'dom';
+            }
+          }
+          return;
+        }
+        // If already scrolled appropriately, nothing to do.
+        return;
       }
-    }
+
+      // Verse not yet loaded; retry a few times while pages stream in
+      if (attempts < 20) {
+        attempts += 1;
+        timer = window.setTimeout(tryScroll, 50);
+      }
+    };
+
+    tryScroll();
+    return () => {
+      if (timer) window.clearTimeout(timer);
+    };
   }, [initialVerseKey, shouldVirtualize, verses, virtualizer]);
+
+  // Track the transition into virtualization to enable a second, virtualized scroll pass.
+  useEffect(() => {
+    prevShouldVirtualizeRef.current = shouldVirtualize;
+  }, [shouldVirtualize]);
 
   return (
     <div ref={containerRef} className="w-full relative">

@@ -9,6 +9,7 @@ import { PlannerProgressSection } from '@/app/(features)/bookmarks/planner/compo
 import { PlannerStatsSection } from '@/app/(features)/bookmarks/planner/components/PlannerStatsSection';
 import { createPlannerCardViewModel } from '@/app/(features)/bookmarks/planner/utils/plannerCard';
 import { CloseIcon } from '@/app/shared/icons';
+import { buildSurahRoute } from '@/app/shared/navigation/routes';
 
 import type { PlannerCardProps } from '@/app/(features)/bookmarks/planner/components/PlannerCard.types';
 import type { PlannerCardViewModel } from '@/app/(features)/bookmarks/planner/utils/plannerCard';
@@ -97,13 +98,13 @@ const usePlannerNavigation = (
     const parsedSurahId = Number.parseInt(surahId, 10);
     const fallbackSurahId = Number.isFinite(parsedSurahId) ? parsedSurahId : surahId;
     const resolvedSurahId = continueVerse?.surahId ?? fallbackSurahId;
-    const targetPath = `/surah/${resolvedSurahId}`;
-    if (continueVerse?.verse && continueVerse.verse > 0) {
-      const params = new URLSearchParams({ startVerse: String(continueVerse.verse) });
-      router.push(`${targetPath}?${params.toString()}`);
-      return;
-    }
-    router.push(targetPath);
+    const targetPath = buildSurahRoute(
+      resolvedSurahId,
+      continueVerse?.verse && continueVerse.verse > 0
+        ? { startVerse: continueVerse.verse, forceSeq: true }
+        : undefined
+    );
+    router.push(targetPath, { scroll: false });
   }, [continueVerse, router, surahId]);
 };
 
