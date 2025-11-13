@@ -1,4 +1,8 @@
-import { getPlanEndVerse, getPlanStartVerse } from '@/app/(features)/bookmarks/planner/utils/planRange';
+import {
+  getPlanEndVerse,
+  getPlanStartVerse,
+} from '@/app/(features)/bookmarks/planner/utils/planRange';
+import { formatPlannerRangeDetails } from '@/app/(features)/bookmarks/planner/utils/planRangeLabel';
 
 import type { PlannerCardProps } from '@/app/(features)/bookmarks/planner/components/PlannerCard.types';
 import type { PlannerCardViewModel } from '@/app/(features)/bookmarks/planner/utils/plannerCard/types';
@@ -28,16 +32,14 @@ export const buildPlanInfo = ({
 
   const startVerse = getPlanStartVerse(plan);
   const endVerse = getPlanEndVerse(plan);
-  const goalRangeText =
+  const planDetailsText =
     plan.targetVerses > 0
-      ? `${surahLabel} ${surahId}:${startVerse} to ${surahLabel} ${surahId}:${endVerse}`
+      ? formatPlannerRangeDetails({
+          start: { chapterName: surahLabel, surahId, verse: startVerse },
+          end: { chapterName: surahLabel, surahId, verse: endVerse },
+          estimatedDays,
+        })
       : null;
-  const planDurationText =
-    estimatedDays > 0 ? `${estimatedDays} day${estimatedDays === 1 ? '' : 's'}` : null;
-  const planDetailsParts = [goalRangeText, planDurationText].filter((part): part is string =>
-    Boolean(part)
-  );
-  const planDetailsText = planDetailsParts.length > 0 ? planDetailsParts.join(' \u2022 ') : null;
 
   return { displayPlanName, planDetailsText, surahLabel };
 };

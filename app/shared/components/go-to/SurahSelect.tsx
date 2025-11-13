@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
   useId,
+  useLayoutEffect,
   type ChangeEvent,
   type FocusEvent,
   type KeyboardEvent,
@@ -57,6 +58,15 @@ export const SurahSelect = memo(function SurahSelect({
   const listRef = useRef<HTMLDivElement>(null);
   const listboxId = useId();
 
+  const DROPDOWN_MAX_HEIGHT = 28 * 16;
+  const [dropdownMetrics, setDropdownMetrics] = useState<{
+    placement: 'top' | 'bottom';
+    maxHeight: number;
+  }>({
+    placement: 'bottom',
+    maxHeight: DROPDOWN_MAX_HEIGHT,
+  });
+
   const selectedOption = useMemo(() => options.find((option) => option.value === value), [options, value]);
 
   useEffect(() => {
@@ -97,6 +107,40 @@ export const SurahSelect = memo(function SurahSelect({
     },
     [isTyping, selectedOption?.label]
   );
+
+  const updateDropdownMetrics = useCallback(() => {
+    if (!open || !containerRef.current) return;
+
+    const rect = containerRef.current.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    const needsFlip = spaceBelow < 280 && spaceAbove > spaceBelow;
+    const placement: 'top' | 'bottom' = needsFlip ? 'top' : 'bottom';
+    const available = placement === 'bottom' ? spaceBelow : spaceAbove;
+    const safeSpace = Math.max(150, available - 20);
+    const maxHeight =
+      safeSpace > 0 ? Math.min(DROPDOWN_MAX_HEIGHT, safeSpace) : Math.min(DROPDOWN_MAX_HEIGHT, 320);
+
+    setDropdownMetrics((prev) => {
+      if (prev.placement === placement && prev.maxHeight === maxHeight) {
+        return prev;
+      }
+      return { placement, maxHeight };
+    });
+  }, [open]);
+
+  useLayoutEffect(() => {
+    if (!open) return;
+    updateDropdownMetrics();
+
+    const handleResize = (): void => updateDropdownMetrics();
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('scroll', handleResize, true);
+    return (): void => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleResize, true);
+    };
+  }, [open, updateDropdownMetrics]);
 
   const handleInputChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -250,9 +294,10 @@ export const SurahSelect = memo(function SurahSelect({
           aria-activedescendant={activeIndex >= 0 ? `${listboxId}-option-${activeIndex}` : undefined}
           tabIndex={-1}
           className={clsx(
-            'absolute z-dropdown mt-2 w-full max-h-[28rem] overflow-auto rounded-lg border border-border/40',
-            'bg-surface/95 backdrop-blur-md shadow-lg focus:outline-none py-2'
+            'absolute z-dropdown w-full overflow-auto rounded-lg border border-border/40 bg-surface/95 backdrop-blur-md shadow-lg focus:outline-none py-2',
+            dropdownMetrics.placement === 'bottom' ? 'top-full mt-2 origin-top' : 'bottom-full mb-2 origin-bottom'
           )}
+          style={{ maxHeight: dropdownMetrics.maxHeight }}
         >
           <div className="space-y-1 px-1">
             {options.map((option, index) => {

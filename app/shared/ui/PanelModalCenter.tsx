@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils/cn';
 import { Button } from './Button';
 
 export const PANEL_MODAL_CENTER_CLASS =
-  'relative w-full max-w-md rounded-lg bg-surface shadow-xl max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-4rem)] overflow-hidden';
+  'relative w-full max-w-md rounded-lg bg-surface shadow-xl max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-4rem)] overflow-visible';
 
 export interface PanelModalCenterProps {
   isOpen: boolean;

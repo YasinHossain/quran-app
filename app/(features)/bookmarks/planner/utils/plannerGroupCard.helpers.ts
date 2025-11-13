@@ -1,9 +1,13 @@
 import {
-  buildGroupRangeLabel,
   buildSurahRangeNameLabel,
   getChapterDisplayName,
   PlannerPlanGroup,
 } from '@/app/(features)/bookmarks/planner/utils/planGrouping';
+import { mapGlobalVerseToPosition } from '@/app/(features)/bookmarks/planner/utils/plannerGroupCard.goal';
+import {
+  formatPlannerRangeDetails,
+  PlannerRangePoint,
+} from '@/app/(features)/bookmarks/planner/utils/planRangeLabel';
 
 import type { PlannerCardChapter } from '@/app/(features)/bookmarks/planner/components/PlannerCard.types';
 import type { Chapter, PlannerPlan } from '@/types';
@@ -142,20 +146,43 @@ export const buildAggregatedChapter = (
   return pages ? { ...baseChapter, pages } : baseChapter;
 };
 
+const buildRangePoints = (
+  plans: PlannerPlan[],
+  totalTarget: number,
+  chapterLookup: Map<number, Chapter>
+): { start: PlannerRangePoint; end: PlannerRangePoint } | null => {
+  if (plans.length === 0 || totalTarget <= 0) return null;
+  const startPosition = mapGlobalVerseToPosition(plans, 1, chapterLookup);
+  const endPosition = mapGlobalVerseToPosition(plans, totalTarget, chapterLookup);
+  if (!startPosition || !endPosition) return null;
+
+  return {
+    start: {
+      chapterName: startPosition.chapterName,
+      surahId: startPosition.surahId,
+      verse: startPosition.verse,
+    },
+    end: {
+      chapterName: endPosition.chapterName,
+      surahId: endPosition.surahId,
+      verse: endPosition.verse,
+    },
+  };
+};
+
 export const formatPlanDetails = (
   group: PlannerPlanGroup,
   totalTarget: number,
   estimatedDays: number,
   chapterLookup: Map<number, Chapter>
-): string => {
-  const rangeLabel = buildGroupRangeLabel(group.surahIds, chapterLookup);
-  const versesText = totalTarget > 0 ? `${totalTarget} verse${totalTarget === 1 ? '' : 's'}` : null;
-  const daysText =
-    estimatedDays > 0 ? `${estimatedDays} day${estimatedDays === 1 ? '' : 's'}` : null;
+): string | null => {
+  const rangePoints = buildRangePoints(group.plans, totalTarget, chapterLookup);
+  if (!rangePoints) return null;
 
-  const parts = [rangeLabel, versesText, daysText].filter((part): part is string => Boolean(part));
-
-  return parts.join(' • ');
+  return formatPlannerRangeDetails({
+    ...rangePoints,
+    estimatedDays,
+  });
 };
 
 export const buildProgressLabel = (

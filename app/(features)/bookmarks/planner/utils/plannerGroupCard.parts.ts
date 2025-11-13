@@ -29,7 +29,7 @@ interface NormalizedPlannerTargetsResult {
 
 interface ChapterGroupingResult {
   aggregatedChapter?: PlannerCardChapter;
-  planDetailsText: string;
+  planDetailsText: string | null;
   surahLabel: string;
 }
 

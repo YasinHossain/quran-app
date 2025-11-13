@@ -1,4 +1,3 @@
-import { buildGroupRangeLabel } from '@/app/(features)/bookmarks/planner/utils/planGrouping';
 import { NO_DAILY_GOAL_MESSAGE } from '@/app/(features)/bookmarks/planner/utils/plannerCard/constants';
 import { buildAggregatedChapter } from '@/app/(features)/bookmarks/planner/utils/plannerGroupCard.helpers';
 
@@ -9,7 +8,7 @@ import type { Chapter, PlannerPlan } from '@/types';
 
 const buildPlaceholderViewModel = (
   planName: string,
-  planDetailsText: string,
+  planDetailsText: string | null,
   surahLabel: string
 ): PlannerCardViewModel => ({
   planInfo: {
@@ -55,9 +54,8 @@ export const buildPlaceholderCardData = (
     estimatedDays: 0,
   };
   const placeholderChapter = buildAggregatedChapter(group.surahIds, chapterLookup);
-  const rangeLabel = buildGroupRangeLabel(group.surahIds, chapterLookup);
   const surahLabel = placeholderChapter?.name_simple ?? `Surah ${placeholderPlan.surahId}`;
-  const viewModel = buildPlaceholderViewModel(group.planName, rangeLabel, surahLabel);
+  const viewModel = buildPlaceholderViewModel(group.planName, null, surahLabel);
 
   return {
     key: group.key,
