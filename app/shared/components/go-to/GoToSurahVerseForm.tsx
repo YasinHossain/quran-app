@@ -99,9 +99,18 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
 
   return (
     <form className={clsx('p-3 space-y-3', className)} onSubmit={handleSubmit}>
-      <div className="flex items-center justify-between">
-        <div className="text-sm font-medium text-foreground">{title}</div>
-        {subtitleText ? <div className="text-xs text-muted">{subtitleText}</div> : null}
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <div className="text-sm font-medium text-foreground">{title}</div>
+          {subtitleText ? <div className="text-xs text-muted">{subtitleText}</div> : null}
+        </div>
+        <button
+          type="submit"
+          className="shrink-0 px-4 py-2 rounded-xl bg-accent text-on-accent text-sm font-medium transition-colors hover:bg-accent-hover disabled:opacity-60 disabled:cursor-not-allowed"
+          disabled={disabled}
+        >
+          {buttonLabel}
+        </button>
       </div>
 
       <div className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-3">
@@ -136,16 +145,6 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
             className="w-full"
           />
         </div>
-      </div>
-
-      <div className="flex items-center justify-end">
-        <button
-          type="submit"
-          className="px-4 py-2 rounded-xl bg-accent text-on-accent text-sm font-medium transition-colors hover:bg-accent-hover disabled:opacity-60 disabled:cursor-not-allowed"
-          disabled={disabled}
-        >
-          {buttonLabel}
-        </button>
       </div>
     </form>
   );
