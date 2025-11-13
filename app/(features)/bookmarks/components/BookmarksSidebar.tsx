@@ -66,15 +66,14 @@ const buildBookmarksContentProps = ({
   childrenContainerClassName,
   childrenContentClassName,
   showNavigation,
-}: Pick<
-  BookmarksSidebarProps,
-  | 'activeSection'
-  | 'onSectionChange'
-  | 'childrenTitle'
-  | 'childrenContainerClassName'
-  | 'childrenContentClassName'
-  | 'showNavigation'
->): React.ComponentProps<typeof BookmarksContent> => {
+}: {
+  activeSection: SectionId;
+  onSectionChange?: BookmarksSidebarProps['onSectionChange'];
+  childrenTitle?: string | null | undefined;
+  childrenContainerClassName?: string | undefined;
+  childrenContentClassName?: string | undefined;
+  showNavigation?: boolean | undefined;
+}): React.ComponentProps<typeof BookmarksContent> => {
   const contentProps: React.ComponentProps<typeof BookmarksContent> = {
     activeSection,
     onSectionChange,

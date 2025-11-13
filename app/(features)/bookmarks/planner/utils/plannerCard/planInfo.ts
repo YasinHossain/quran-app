@@ -1,3 +1,5 @@
+import { getPlanEndVerse, getPlanStartVerse } from '@/app/(features)/bookmarks/planner/utils/planRange';
+
 import type { PlannerCardProps } from '@/app/(features)/bookmarks/planner/components/PlannerCard.types';
 import type { PlannerCardViewModel } from '@/app/(features)/bookmarks/planner/utils/plannerCard/types';
 
@@ -24,9 +26,11 @@ export const buildPlanInfo = ({
     .trim();
   const displayPlanName = cleanedPlanName.length > 0 ? cleanedPlanName : normalizedPlanName;
 
+  const startVerse = getPlanStartVerse(plan);
+  const endVerse = getPlanEndVerse(plan);
   const goalRangeText =
     plan.targetVerses > 0
-      ? `${surahLabel} ${surahId}:1 to ${surahLabel} ${surahId}:${plan.targetVerses}`
+      ? `${surahLabel} ${surahId}:${startVerse} to ${surahLabel} ${surahId}:${endVerse}`
       : null;
   const planDurationText =
     estimatedDays > 0 ? `${estimatedDays} day${estimatedDays === 1 ? '' : 's'}` : null;

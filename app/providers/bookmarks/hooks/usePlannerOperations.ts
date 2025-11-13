@@ -1,7 +1,11 @@
 'use client';
 import { useCallback } from 'react';
 
-import { createPlannerPlan, updatePlannerProgress } from '@/app/providers/bookmarks/bookmark-utils';
+import {
+  createPlannerPlan,
+  updatePlannerProgress,
+  type PlannerPlanRangeConfig,
+} from '@/app/providers/bookmarks/bookmark-utils';
 import { PlannerPlan } from '@/types';
 
 export interface PlannerOperations {
@@ -10,7 +14,8 @@ export interface PlannerOperations {
     surahId: number,
     targetVerses: number,
     planName?: string,
-    estimatedDays?: number
+    estimatedDays?: number,
+    range?: PlannerPlanRangeConfig
   ): void;
   updatePlannerProgress(planId: string, completedVerses: number): void;
   removeFromPlanner(planId: string): void;
@@ -27,8 +32,14 @@ export default function usePlannerOperations(
     [setPlanner]
   );
   const createPlan = useCallback(
-    (surahId: number, targetVerses: number, planName?: string, estimatedDays?: number) => {
-      const plan = createPlannerPlan(surahId, targetVerses, planName, estimatedDays);
+    (
+      surahId: number,
+      targetVerses: number,
+      planName?: string,
+      estimatedDays?: number,
+      range?: PlannerPlanRangeConfig
+    ) => {
+      const plan = createPlannerPlan(surahId, targetVerses, planName, estimatedDays, range);
       setPlanner((prev) => ({ ...prev, [plan.id]: plan }));
     },
     [setPlanner]

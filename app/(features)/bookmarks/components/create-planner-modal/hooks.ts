@@ -1,41 +1,91 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import type { PlanFormData } from './types';
 import type { Chapter } from '@/types';
 
 // Custom hook for planner calculations
+const clampVerse = (verse: number | undefined, maxVerse: number, fallback: number): number => {
+  if (maxVerse <= 0) return fallback;
+  if (typeof verse !== 'number' || !Number.isFinite(verse) || verse < 1) {
+    return fallback;
+  }
+  if (verse > maxVerse) return maxVerse;
+  return verse;
+};
+
 export function usePlannerCalculations(
   chapters: Chapter[],
   startSurah?: number,
+  startVerse?: number,
   endSurah?: number,
+  endVerse?: number,
   estimatedDays: number = 5
 ): { totalVerses: number; versesPerDay: number; isValidRange: boolean } {
+  const chapterLookup = useMemo(() => {
+    return chapters.reduce<Record<number, Chapter>>((acc, chapter) => {
+      acc[chapter.id] = chapter;
+      return acc;
+    }, {});
+  }, [chapters]);
+
+  const startChapter = typeof startSurah === 'number' ? chapterLookup[startSurah] : undefined;
+  const endChapter = typeof endSurah === 'number' ? chapterLookup[endSurah] : undefined;
+
+  const normalizedStartVerse =
+    startChapter?.verses_count != null
+      ? clampVerse(startVerse, startChapter.verses_count, 1)
+      : undefined;
+  const normalizedEndVerse =
+    endChapter?.verses_count != null && endChapter.verses_count > 0
+      ? clampVerse(endVerse, endChapter.verses_count, endChapter.verses_count)
+      : undefined;
+
   const calculateTotalVerses = (): number => {
-    if (!startSurah || !endSurah || startSurah > endSurah) return 0;
-
-    const start = chapters.find((c) => c.id === startSurah);
-    const end = chapters.find((c) => c.id === endSurah);
-
-    if (!start || !end) return 0;
+    if (
+      typeof startSurah !== 'number' ||
+      typeof endSurah !== 'number' ||
+      startSurah > endSurah ||
+      !startChapter ||
+      !endChapter ||
+      typeof normalizedStartVerse !== 'number' ||
+      typeof normalizedEndVerse !== 'number'
+    ) {
+      return 0;
+    }
 
     if (startSurah === endSurah) {
-      return start.verses_count;
+      if (normalizedStartVerse > normalizedEndVerse) return 0;
+      return normalizedEndVerse - normalizedStartVerse + 1;
     }
 
     let total = 0;
-    for (let i = startSurah; i <= endSurah; i++) {
-      const chapter = chapters.find((c) => c.id === i);
-      if (chapter) total += chapter.verses_count;
+    total += startChapter.verses_count - (normalizedStartVerse - 1);
+    total += normalizedEndVerse;
+
+    for (let surahId = startSurah + 1; surahId < endSurah; surahId++) {
+      const chapter = chapterLookup[surahId];
+      if (chapter) {
+        total += chapter.verses_count;
+      }
     }
+
     return total;
   };
 
   const totalVerses = calculateTotalVerses();
   const versesPerDay = estimatedDays > 0 ? Math.ceil(totalVerses / estimatedDays) : 0;
   const isValidRange =
-    typeof startSurah === 'number' && typeof endSurah === 'number' && startSurah <= endSurah;
+    typeof startSurah === 'number' &&
+    typeof endSurah === 'number' &&
+    startSurah <= endSurah &&
+    !!startChapter &&
+    !!endChapter &&
+    (startSurah !== endSurah ||
+      (typeof normalizedStartVerse === 'number' &&
+        typeof normalizedEndVerse === 'number' &&
+        normalizedStartVerse <= normalizedEndVerse));
 
   return {
     totalVerses,
@@ -53,7 +103,9 @@ export function useFormState(): {
   const [formData, setFormData] = useState<PlanFormData>({
     planName: '',
     startSurah: undefined,
+    startVerse: undefined,
     endSurah: undefined,
+    endVerse: undefined,
     estimatedDays: 5,
   });
 
@@ -65,7 +117,9 @@ export function useFormState(): {
     setFormData({
       planName: '',
       startSurah: undefined,
+      startVerse: undefined,
       endSurah: undefined,
+      endVerse: undefined,
       estimatedDays: 5,
     });
   };

@@ -8,6 +8,12 @@ import {
   getChapterDisplayName,
   groupPlannerPlans,
 } from '@/app/(features)/bookmarks/planner/utils/planGrouping';
+import {
+  clampActualVerseToPlanRange,
+  convertActualVerseToPlanProgress,
+  getPlanEndVerse,
+  getPlanStartVerse,
+} from '@/app/(features)/bookmarks/planner/utils/planRange';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { CloseIcon } from '@/app/shared/icons';
 import { Button } from '@/app/shared/ui/Button';
@@ -158,8 +164,18 @@ export function AddToPlannerModal({
       const plannerName = getChapterDisplayName(selectedPlan, chapter);
       return `This planner is for ${plannerName}. Choose a planner for this surah to continue.`;
     }
+    if (typeof verseNumber === 'number') {
+      const start = getPlanStartVerse(selectedPlan);
+      const end = getPlanEndVerse(selectedPlan);
+      if (verseNumber < start) {
+        return `This planner starts at verse ${start}. Progress will begin from there.`;
+      }
+      if (verseNumber > end) {
+        return `This planner ends at verse ${end}. Progress will be capped at the end of the plan.`;
+      }
+    }
     return null;
-  }, [selectedPlan, hasValidReference, mismatchSelection, chapterLookup]);
+  }, [selectedPlan, hasValidReference, mismatchSelection, chapterLookup, verseNumber]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -195,9 +211,9 @@ export function AddToPlannerModal({
 
     // If we couldn't find the group, only update the selected plan.
     if (!group) {
-      const clampedToTarget =
-        plan.targetVerses > 0 ? Math.min(verseNumber, plan.targetVerses) : verseNumber;
-      const nextCompleted = Math.max(plan.completedVerses, clampedToTarget);
+      const normalizedVerse = clampActualVerseToPlanRange(plan, verseNumber);
+      const planProgress = convertActualVerseToPlanProgress(plan, normalizedVerse);
+      const nextCompleted = Math.max(plan.completedVerses, planProgress);
       if (nextCompleted !== plan.completedVerses) {
         updatePlannerProgress(plan.id, nextCompleted);
       }
@@ -212,9 +228,9 @@ export function AddToPlannerModal({
             updatePlannerProgress(p.id, newCompleted);
           }
         } else if (p.surahId === selectedSurahId) {
-          const clampedToTarget =
-            p.targetVerses > 0 ? Math.min(verseNumber, p.targetVerses) : verseNumber;
-          const nextCompleted = Math.max(p.completedVerses, clampedToTarget);
+          const normalizedVerse = clampActualVerseToPlanRange(p, verseNumber);
+          const planProgress = convertActualVerseToPlanProgress(p, normalizedVerse);
+          const nextCompleted = Math.max(p.completedVerses, planProgress);
           if (nextCompleted !== p.completedVerses) {
             updatePlannerProgress(p.id, nextCompleted);
           }

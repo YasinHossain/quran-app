@@ -1,4 +1,8 @@
 import { getChapterDisplayName } from '@/app/(features)/bookmarks/planner/utils/planGrouping';
+import {
+  convertPlanProgressToActualVerse,
+  getPlanEndVerse,
+} from '@/app/(features)/bookmarks/planner/utils/planRange';
 
 import type { Chapter, PlannerPlan } from '@/types';
 
@@ -37,7 +41,8 @@ export const mapGlobalVerseToPosition = (
     const maxVerse = Math.max(0, plan.targetVerses);
     if (maxVerse === 0) continue;
     if (remaining <= maxVerse) {
-      const verse = Math.max(1, Math.min(maxVerse, remaining));
+      const progressVerse = Math.max(1, Math.min(maxVerse, remaining));
+      const verse = convertPlanProgressToActualVerse(plan, progressVerse);
       const chapter = chapterLookup.get(plan.surahId);
       return {
         plan,
@@ -51,12 +56,11 @@ export const mapGlobalVerseToPosition = (
 
   const lastPlan = plans[plans.length - 1] ?? null;
   if (!lastPlan) return null;
-  const lastVerse = Math.max(1, lastPlan.targetVerses);
   const lastChapter = chapterLookup.get(lastPlan.surahId);
   return {
     plan: lastPlan,
     surahId: lastPlan.surahId,
-    verse: lastVerse,
+    verse: getPlanEndVerse(lastPlan),
     chapterName: getChapterDisplayName(lastPlan, lastChapter),
   };
 };

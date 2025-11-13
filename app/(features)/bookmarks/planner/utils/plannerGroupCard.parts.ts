@@ -75,7 +75,16 @@ export const deriveChapterGrouping = (
   const surahLabel =
     aggregatedChapter?.name_simple ?? getChapterDisplayName(normalized.activePlan, activeChapter);
 
-  return { aggregatedChapter, planDetailsText, surahLabel };
+  const result: ChapterGroupingResult = {
+    planDetailsText,
+    surahLabel,
+  };
+
+  if (aggregatedChapter) {
+    result.aggregatedChapter = aggregatedChapter;
+  }
+
+  return result;
 };
 
 export const buildGroupCardHeader = (
@@ -122,6 +131,6 @@ export const buildPlannerCardFromGrouping = (
     ),
     planIds: group.planIds,
     planName: group.planName,
-    continueVerse: progressContext.continueVerse,
+    ...(progressContext.continueVerse ? { continueVerse: progressContext.continueVerse } : {}),
   };
 };

@@ -29,7 +29,8 @@ export interface BookmarkContextType {
     surahId: number,
     targetVerses: number,
     planName?: string,
-    estimatedDays?: number
+    estimatedDays?: number,
+    options?: { startVerse?: number; endVerse?: number }
   ) => void;
   updatePlannerProgress: (planId: string, completedVerses: number) => void;
   removeFromPlanner: (planId: string) => void;

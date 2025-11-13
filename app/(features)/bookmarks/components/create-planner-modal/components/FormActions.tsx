@@ -10,10 +10,7 @@ interface FormActionsProps {
 }
 
 export const FormActions = ({ canSubmit }: FormActionsProps): React.JSX.Element => (
-  <div className="flex justify-end gap-3 pt-4">
-    <Button type="button" variant="ghost" size="md" onClick={() => {}}>
-      Cancel
-    </Button>
+  <div className="flex justify-end pt-4">
     <Button
       type="submit"
       variant="primary"

@@ -30,6 +30,7 @@ interface SurahSelectProps {
   disabled?: boolean;
   className?: string;
   clearable?: boolean;
+  clearLabel?: string;
 }
 
 /**
@@ -44,6 +45,7 @@ export const SurahSelect = memo(function SurahSelect({
   disabled = false,
   className,
   clearable = false,
+  clearLabel = 'Clear selection',
 }: SurahSelectProps): ReactElement {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -114,8 +116,11 @@ export const SurahSelect = memo(function SurahSelect({
           option.value.toLowerCase().startsWith(query) || option.label.toLowerCase().includes(query)
       );
       if (matchIndex >= 0) {
-        onChange(options[matchIndex].value);
-        setActiveIndex(matchIndex);
+        const matchedOption = options[matchIndex];
+        if (matchedOption) {
+          onChange(matchedOption.value);
+          setActiveIndex(matchIndex);
+        }
       }
     },
     [onChange, open, options]
@@ -207,7 +212,7 @@ export const SurahSelect = memo(function SurahSelect({
           {clearable && !disabled && value ? (
             <button
               type="button"
-              aria-label="Clear selection"
+              aria-label={clearLabel}
               className="pointer-events-auto hover:text-foreground transition-colors"
               onClick={(event): void => {
                 event.preventDefault();

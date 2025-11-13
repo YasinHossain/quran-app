@@ -112,6 +112,12 @@ export interface PlannerPlan {
   /** Surah ID this planner entry is for. */
   surahId: number;
 
+  /** First verse included in this plan (1-indexed, clamped to surah range). */
+  startVerse?: number;
+
+  /** Last verse included in this plan (1-indexed, clamped to surah range). */
+  endVerse?: number;
+
   /** Total number of verses targeted for memorization in this surah. */
   targetVerses: number;
 

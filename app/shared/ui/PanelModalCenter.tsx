@@ -35,7 +35,7 @@ const PanelOverlay = memo(function PanelOverlay({
   };
   return (
     <div
-      className="fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm z-40"
+      className="fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm z-[900]"
       onClick={handleOverlayInteraction}
       onKeyDown={handleKeyDown}
       role="button"
@@ -86,10 +86,10 @@ export const PanelModalCenter = memo(function PanelModalCenter({
     <Portal>
       <>
         <PanelOverlay onClose={onClose} closeOnOverlayClick={closeOnOverlayClick} />
-        <div className="fixed inset-0 z-40 flex items-center justify-center p-3 sm:p-4 pt-safe pb-safe">
+        <div className="fixed inset-0 z-[905] flex items-center justify-center p-3 sm:p-4 pt-safe pb-safe">
           <div
             className={cn(
-              'z-50 text-foreground p-6 flex flex-col',
+              'z-[910] text-foreground p-6 flex flex-col',
               PANEL_MODAL_CENTER_CLASS,
               className
             )}

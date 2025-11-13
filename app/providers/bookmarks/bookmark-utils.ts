@@ -138,18 +138,38 @@ export const updateBookmarkInFolders = (
 
 export const DEFAULT_PLANNER_ESTIMATED_DAYS = 5;
 
+export interface PlannerPlanRangeConfig {
+  startVerse?: number;
+  endVerse?: number;
+}
+
+const normalizeVerseNumber = (value: number | undefined): number | undefined => {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return undefined;
+  const rounded = Math.max(1, Math.floor(value));
+  return rounded;
+};
+
 export const createPlannerPlan = (
   surahId: number,
   targetVerses: number,
   planName?: string,
-  estimatedDays?: number
+  estimatedDays?: number,
+  range?: PlannerPlanRangeConfig
 ): PlannerPlan => {
   const normalizedEstimatedDays =
     typeof estimatedDays === 'number' && estimatedDays > 0 ? Math.round(estimatedDays) : undefined;
+  const normalizedStartVerse = normalizeVerseNumber(range?.startVerse) ?? 1;
+  const explicitEnd = normalizeVerseNumber(range?.endVerse);
+  const normalizedEndVerse =
+    typeof explicitEnd === 'number' && explicitEnd >= normalizedStartVerse
+      ? explicitEnd
+      : normalizedStartVerse + Math.max(0, targetVerses - 1);
 
   return {
     id: generateId(),
     surahId,
+    startVerse: normalizedStartVerse,
+    endVerse: normalizedEndVerse,
     targetVerses,
     completedVerses: 0,
     createdAt: Date.now(),

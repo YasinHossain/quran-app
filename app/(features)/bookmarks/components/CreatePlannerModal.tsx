@@ -3,6 +3,7 @@
 import React from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { CloseIcon } from '@/app/shared/icons';
 import { PanelModalCenter } from '@/app/shared/ui/PanelModalCenter';
 
 import {
@@ -32,7 +33,9 @@ export const CreatePlannerModal = ({
   const { totalVerses, versesPerDay, isValidRange } = usePlannerCalculations(
     chapters,
     formData.startSurah,
+    formData.startVerse,
     formData.endSurah,
+    formData.endVerse,
     formData.estimatedDays
   );
 
@@ -59,8 +62,9 @@ export const CreatePlannerModal = ({
       isOpen={isOpen}
       onClose={handleClose}
       title=""
-      showCloseButton={true}
+      showCloseButton={false}
       closeOnOverlayClick={true}
+      className="max-w-lg px-3 sm:px-4 pt-4 pb-4"
     >
       <CreatePlannerForm
         formData={formData}
@@ -72,6 +76,7 @@ export const CreatePlannerModal = ({
         duplicatePlanName={duplicatePlanName}
         onSubmit={handleSubmit}
         chapters={chapters}
+        onClose={handleClose}
       />
     </PanelModalCenter>
   );
@@ -130,6 +135,7 @@ function CreatePlannerForm({
   duplicatePlanName,
   onSubmit,
   chapters,
+  onClose,
 }: {
   formData: PlanFormData;
   onFormDataChange: (updates: Partial<PlanFormData>) => void;
@@ -140,10 +146,21 @@ function CreatePlannerForm({
   duplicatePlanName: string | null;
   onSubmit: (e: React.FormEvent) => void;
   chapters: Chapter[];
+  onClose: () => void;
 }): React.JSX.Element {
   return (
-    <div className="p-6">
-      <ModalHeader />
+    <div className="px-3 sm:px-4 pt-4 pb-4">
+      <div className="flex items-start justify-between gap-4">
+        <ModalHeader />
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close planner modal"
+          className="text-muted hover:text-foreground transition-colors p-1"
+        >
+          <CloseIcon size={18} />
+        </button>
+      </div>
       <PlannerForm
         formData={formData}
         onFormDataChange={onFormDataChange}
