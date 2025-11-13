@@ -1,10 +1,10 @@
 'use client';
 
 import clsx from 'clsx';
-import { memo, type FormEvent, type ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, type FormEvent, type ReactElement, useCallback, useMemo, useState } from 'react';
 
-import { SurahSelect, type SurahOption } from '@/app/shared/components/go-to/SurahSelect';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
+import { SurahSelect, type SurahOption } from '@/app/shared/components/go-to/SurahSelect';
 
 interface GoToSurahVerseFormProps {
   onNavigate: (surahId: number, verse?: number) => void;
@@ -35,35 +35,6 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
       })),
     [chapters]
   );
-
-  const selectedChapter = useMemo(
-    () => chapters.find((chapter) => String(chapter.id) === selectedSurah),
-    [chapters, selectedSurah]
-  );
-
-  const verseOptions = useMemo(() => {
-    if (!selectedChapter?.verses_count) return [];
-    return Array.from({ length: selectedChapter.verses_count }, (_, index) => String(index + 1));
-  }, [selectedChapter]);
-
-  const verseSelectOptions: SurahOption[] = useMemo(
-    () => verseOptions.map((value) => ({ value, label: value })),
-    [verseOptions]
-  );
-
-  useEffect(() => {
-    if (!selectedSurah) {
-      setVerse('');
-      return;
-    }
-    if (!verseOptions.length) {
-      setVerse('');
-      return;
-    }
-    if (verse && !verseOptions.includes(verse)) {
-      setVerse(verseOptions[verseOptions.length - 1] ?? '');
-    }
-  }, [selectedSurah, verseOptions, verse]);
 
   const clampVerse = useCallback(
     (rawVerse: string, surahId: string): number | undefined => {
@@ -115,7 +86,6 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
             options={surahOptions}
             placeholder={isLoading ? 'Loading surahs…' : 'Select a Surah'}
             disabled={isLoading}
-            className="w-full"
           />
         </div>
 
@@ -123,18 +93,18 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
           <label className="block text-xs text-muted mb-1" htmlFor="go-to-verse">
             Verse (optional)
           </label>
-          <SurahSelect
-            value={verse}
-            onChange={setVerse}
-            options={verseSelectOptions}
-            placeholder={
-              !selectedSurah ? 'Select a surah first' : verseOptions.length ? 'Select a verse' : 'Loading verses…'
-            }
-            disabled={!selectedSurah || !verseOptions.length || isLoading}
-            clearable
-            clearLabel="Clear verse selection"
-            className="w-full"
-          />
+          <div className="rounded-lg border border-border bg-surface transition-colors duration-300 hover:bg-accent/10 focus-within:bg-accent/10">
+            <input
+              id="go-to-verse"
+              type="number"
+              inputMode="numeric"
+              min={1}
+              value={verse}
+              onChange={(event): void => setVerse(event.target.value)}
+              placeholder="e.g., 247"
+              className="w-full rounded-lg bg-transparent text-foreground text-sm px-3 py-2.5 min-h-touch focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
+            />
+          </div>
         </div>
       </div>
 

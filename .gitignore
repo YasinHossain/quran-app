@@ -9,6 +9,10 @@
 !.yarn/patches
 !.yarn/plugins
 
+ # caches
+ .eslintcache
+ .jest-cache
+
 # Jest cache
 .jest/
 .jest-cache/

@@ -1,10 +1,10 @@
 'use client';
 
 import clsx from 'clsx';
-import { memo, type FormEvent, type ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, type FormEvent, type ReactElement, useCallback, useMemo, useState } from 'react';
 
-import { SurahSelect, type SurahOption } from '@/app/shared/components/go-to/SurahSelect';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
+import { SurahSelect, type SurahOption } from '@/app/shared/components/go-to/SurahSelect';
 
 interface GoToSurahVerseFormProps {
   onNavigate: (surahId: number, verse?: number) => void;
@@ -20,7 +20,7 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
   afterNavigate,
   className,
   title = 'Search or Go To',
-  subtitle,
+  subtitle = 'Select a Surah & Verse',
   buttonLabel = 'Go',
 }: GoToSurahVerseFormProps): ReactElement {
   const [selectedSurah, setSelectedSurah] = useState('');
@@ -35,35 +35,6 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
       })),
     [chapters]
   );
-
-  const selectedChapter = useMemo(
-    () => chapters.find((chapter) => String(chapter.id) === selectedSurah),
-    [chapters, selectedSurah]
-  );
-
-  const verseOptions = useMemo(() => {
-    if (!selectedChapter?.verses_count) return [];
-    return Array.from({ length: selectedChapter.verses_count }, (_, index) => String(index + 1));
-  }, [selectedChapter]);
-
-  const verseSelectOptions: SurahOption[] = useMemo(
-    () => verseOptions.map((value) => ({ value, label: value })),
-    [verseOptions]
-  );
-
-  useEffect(() => {
-    if (!selectedSurah) {
-      setVerse('');
-      return;
-    }
-    if (!verseOptions.length) {
-      setVerse('');
-      return;
-    }
-    if (verse && !verseOptions.includes(verse)) {
-      setVerse(verseOptions[verseOptions.length - 1] ?? '');
-    }
-  }, [selectedSurah, verseOptions, verse]);
 
   const clampVerse = useCallback(
     (rawVerse: string, surahId: string): number | undefined => {
@@ -104,8 +75,8 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
         {subtitleText ? <div className="text-xs text-muted">{subtitleText}</div> : null}
       </div>
 
-      <div className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-3">
-        <div className="w-full min-w-0">
+      <div className="grid grid-cols-1 gap-2">
+        <div>
           <label className="block text-xs text-muted mb-1" htmlFor="go-to-surah">
             Surah
           </label>
@@ -113,27 +84,24 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
             value={selectedSurah}
             onChange={setSelectedSurah}
             options={surahOptions}
-            placeholder={isLoading ? 'Loading surahs…' : 'Select a Surah'}
+            placeholder={isLoading ? 'Loading surahs…' : 'Select a surah'}
             disabled={isLoading}
-            className="w-full"
           />
         </div>
 
-        <div className="w-full min-w-0">
+        <div>
           <label className="block text-xs text-muted mb-1" htmlFor="go-to-verse">
             Verse (optional)
           </label>
-          <SurahSelect
+          <input
+            id="go-to-verse"
+            type="number"
+            inputMode="numeric"
+            min={1}
             value={verse}
-            onChange={setVerse}
-            options={verseSelectOptions}
-            placeholder={
-              !selectedSurah ? 'Select a surah first' : verseOptions.length ? 'Select a verse' : 'Loading verses…'
-            }
-            disabled={!selectedSurah || !verseOptions.length || isLoading}
-            clearable
-            clearLabel="Clear verse selection"
-            className="w-full"
+            onChange={(event): void => setVerse(event.target.value)}
+            placeholder="e.g., 247"
+            className="w-full rounded-2xl border border-border bg-interactive/60 text-foreground text-sm px-3 py-2 min-h-touch focus-visible:outline-none focus-visible:border-accent transition-shadow"
           />
         </div>
       </div>

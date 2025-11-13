@@ -1,14 +1,15 @@
 'use client';
 import { SearchIcon } from '@/app/shared/icons';
 
-import type { JSX, KeyboardEvent } from 'react';
+import type { JSX, KeyboardEvent, ReactNode } from 'react';
 
 type SearchVariant = 'main' | 'default' | 'glass' | 'header' | 'panel';
 type SearchSize = 'sm' | 'md' | 'lg';
 
 type SizeStyles = {
   container: string;
-  input: string;
+  inputBase: string; // base padding without right pad
+  rightPad: string; // default right padding
   icon: { size: number; className: string };
 };
 
@@ -20,6 +21,7 @@ interface SearchInputProps {
   className?: string;
   variant?: SearchVariant;
   size?: SearchSize;
+  endAdornment?: ReactNode; // visual-only trailing content (no built-in actions)
 }
 
 const getVariantStyles = (variant: SearchVariant): string => {
@@ -40,19 +42,22 @@ const getSizeStyles = (size: SearchSize): SizeStyles => {
     case 'sm':
       return {
         container: 'text-mobile-sm',
-        input: 'pl-8 sm:pl-9 pr-3 py-2 min-h-touch',
+        inputBase: 'pl-8 sm:pl-9 py-2 min-h-touch',
+        rightPad: 'pr-3',
         icon: { size: 16, className: 'left-2.5 sm:left-3' },
       };
     case 'lg':
       return {
         container: 'text-mobile sm:text-lg',
-        input: 'pl-10 sm:pl-11 pr-4 py-3 sm:py-3.5 min-h-touch-lg',
+        inputBase: 'pl-10 sm:pl-11 py-3 sm:py-3.5 min-h-touch-lg',
+        rightPad: 'pr-4',
         icon: { size: 18, className: 'left-3 sm:left-3.5' },
       };
     default: // md
       return {
         container: 'text-mobile',
-        input: 'pl-9 sm:pl-10 pr-4 py-2.5 min-h-touch',
+        inputBase: 'pl-9 sm:pl-10 py-2.5 min-h-touch',
+        rightPad: 'pr-4',
         icon: { size: 18, className: 'left-3 sm:left-3.5' },
       };
   }
@@ -86,6 +91,7 @@ export const SearchInput = ({
   className = '',
   variant = 'default',
   size = 'md',
+  endAdornment,
 }: SearchInputProps): JSX.Element => {
   const variantStyles = getVariantStyles(variant);
   const sizeStyles = getSizeStyles(size);
@@ -94,6 +100,7 @@ export const SearchInput = ({
 
   const IconComponent = SearchIcon;
   const iconSize = sizeStyles.icon.size;
+  const rightPad = endAdornment ? 'pr-14' : sizeStyles.rightPad;
 
   return (
     <div className={`relative ${sizeStyles.container} ${className}`}>
@@ -107,13 +114,18 @@ export const SearchInput = ({
         onChange={(e): void => onChange(e.target.value)}
         placeholder={placeholder}
         onKeyDown={onKeyDown}
-        className={`w-full ${sizeStyles.input} rounded-lg outline-none focus:outline-none ${focusStyles} transition-all duration-300 ${hoverStyles} ${variantStyles} touch-manipulation`}
+        className={`w-full ${sizeStyles.inputBase} ${rightPad} rounded-lg outline-none focus:outline-none ${focusStyles} transition-all duration-300 ${hoverStyles} ${variantStyles} touch-manipulation`}
         autoCapitalize="off"
         autoComplete="off"
         autoCorrect="off"
         spellCheck="false"
         inputMode="search"
       />
+      {endAdornment && (
+        <div className="absolute right-2.5 sm:right-3 top-1/2 -translate-y-1/2 pointer-events-none select-none">
+          {endAdornment}
+        </div>
+      )}
     </div>
   );
 };
