@@ -14,13 +14,20 @@ import * as chaptersApi from '@/lib/api/chapters';
 jest.mock('@/lib/api/chapters');
 
 jest.mock('../components/BookmarksSidebar', () => ({
-  BookmarksSidebar: ({ onSectionChange }: { onSectionChange: (section: string) => void }) => (
-    <nav>
-      <button onClick={() => onSectionChange('bookmarks')}>Bookmarks</button>
-      <button onClick={() => onSectionChange('pinned')}>Pins</button>
-      <button onClick={() => onSectionChange('last-read')}>Last Read</button>
-    </nav>
-  ),
+  BookmarksSidebar: ({
+    onSectionChange,
+    isOpen,
+  }: {
+    onSectionChange: (section: string) => void;
+    isOpen?: boolean;
+  }) =>
+    isOpen === false ? null : (
+      <nav>
+        <button onClick={() => onSectionChange('bookmarks')}>Bookmarks</button>
+        <button onClick={() => onSectionChange('pinned')}>Pins</button>
+        <button onClick={() => onSectionChange('last-read')}>Last Read</button>
+      </nav>
+    ),
 }));
 
 jest.mock('@/app/(features)/layout/context/HeaderVisibilityContext', () => ({

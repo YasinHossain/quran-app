@@ -63,7 +63,13 @@ export const buildPlannerPlanDefinitions = (
   if (startSurah === endSurah) {
     if (normalizedStartVerse > normalizedEndVerse) return [];
     const definitions: PlannerPlanDefinition[] = [];
-    pushDefinition(definitions, startChapter, trimmedBaseName, normalizedStartVerse, normalizedEndVerse);
+    pushDefinition(
+      definitions,
+      startChapter,
+      trimmedBaseName,
+      normalizedStartVerse,
+      normalizedEndVerse
+    );
     return definitions;
   }
 

@@ -61,7 +61,7 @@ export const HeaderSearch = memo(function HeaderSearch(): ReactElement {
         <SearchInput
           value={query}
           onChange={handleChange}
-          placeholder="Search or go to Surah & Verse"
+          placeholder="Search verses, surahs..."
           onKeyDown={handleKeyDown}
           variant="header"
           size="sm"

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useId } from 'react';
 
 import { SurahSelect, type SurahOption } from '@/app/shared/components/go-to/SurahSelect';
 
@@ -159,6 +159,10 @@ const RangeBoundarySection = ({
   const surahString = typeof surahValue === 'number' ? String(surahValue) : '';
   const verseString = typeof verseValue === 'number' ? String(verseValue) : '';
   const hasSurahSelection = surahString.length > 0;
+  const surahInputId = useId();
+  const verseInputId = useId();
+  const surahLabel = `${label} surah`;
+  const verseLabel = `${label} verse`;
 
   return (
     <section className="space-y-3">
@@ -166,8 +170,11 @@ const RangeBoundarySection = ({
 
       <div className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-3 w-full">
         <div className="w-full min-w-0">
-          <label className="sr-only">Surah</label>
+          <label className="sr-only" htmlFor={surahInputId}>
+            {surahLabel}
+          </label>
           <SurahSelect
+            inputId={surahInputId}
             value={surahString}
             onChange={onSurahChange}
             options={surahOptions}
@@ -177,8 +184,11 @@ const RangeBoundarySection = ({
         </div>
 
         <div className="w-full min-w-0">
-          <label className="sr-only">Verse</label>
+          <label className="sr-only" htmlFor={verseInputId}>
+            {verseLabel}
+          </label>
           <SurahSelect
+            inputId={verseInputId}
             value={verseString}
             onChange={onVerseChange}
             options={verseOptions}

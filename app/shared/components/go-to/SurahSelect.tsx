@@ -32,6 +32,7 @@ interface SurahSelectProps {
   className?: string;
   clearable?: boolean;
   clearLabel?: string;
+  inputId?: string;
 }
 
 /**
@@ -47,6 +48,7 @@ export const SurahSelect = memo(function SurahSelect({
   className,
   clearable = false,
   clearLabel = 'Clear selection',
+  inputId: inputIdProp,
 }: SurahSelectProps): ReactElement {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -57,6 +59,8 @@ export const SurahSelect = memo(function SurahSelect({
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const listboxId = useId();
+  const generatedInputId = useId();
+  const inputId = inputIdProp ?? generatedInputId;
 
   const DROPDOWN_MAX_HEIGHT = 28 * 16;
   const [dropdownMetrics, setDropdownMetrics] = useState<{
@@ -238,8 +242,9 @@ export const SurahSelect = memo(function SurahSelect({
           type="text"
           role="combobox"
           aria-expanded={open}
-          aria-controls="surah-select-listbox"
+          aria-controls={listboxId}
           aria-disabled={disabled}
+          id={inputId}
           value={inputValue}
           placeholder={placeholder}
           disabled={disabled}

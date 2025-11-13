@@ -34,7 +34,7 @@ export const SidebarOverlay = ({
       }}
       role="button"
       tabIndex={-1}
-      aria-label="Close sidebar"
+      aria-label="Dismiss sidebar overlay"
     />
   );
 };

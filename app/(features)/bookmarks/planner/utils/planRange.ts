@@ -42,10 +42,7 @@ export const convertPlanProgressToActualVerse = (
   return startVerse + clampedProgress - 1;
 };
 
-export const convertActualVerseToPlanProgress = (
-  plan: PlannerPlan,
-  verse: number
-): number => {
+export const convertActualVerseToPlanProgress = (plan: PlannerPlan, verse: number): number => {
   if (plan.targetVerses <= 0) return 0;
   const startVerse = getPlanStartVerse(plan);
   const endVerse = getPlanEndVerse(plan);

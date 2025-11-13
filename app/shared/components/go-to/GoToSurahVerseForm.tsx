@@ -1,7 +1,16 @@
 'use client';
 
 import clsx from 'clsx';
-import { memo, type FormEvent, type ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  memo,
+  type FormEvent,
+  type ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useId,
+} from 'react';
 
 import { SurahSelect, type SurahOption } from '@/app/shared/components/go-to/SurahSelect';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
@@ -26,6 +35,9 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
   const [selectedSurah, setSelectedSurah] = useState('');
   const [verse, setVerse] = useState('');
   const { chapters, isLoading } = useSurahNavigationData();
+  const formInstanceId = useId();
+  const surahInputId = `${formInstanceId}-surah`;
+  const verseInputId = `${formInstanceId}-verse`;
 
   const surahOptions: SurahOption[] = useMemo(
     () =>
@@ -115,10 +127,11 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
 
       <div className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-3">
         <div className="w-full min-w-0">
-          <label className="block text-xs text-muted mb-1" htmlFor="go-to-surah">
+          <label className="block text-xs text-muted mb-1" htmlFor={surahInputId}>
             Surah
           </label>
           <SurahSelect
+            inputId={surahInputId}
             value={selectedSurah}
             onChange={setSelectedSurah}
             options={surahOptions}
@@ -129,10 +142,11 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
         </div>
 
         <div className="w-full min-w-0">
-          <label className="block text-xs text-muted mb-1" htmlFor="go-to-verse">
+          <label className="block text-xs text-muted mb-1" htmlFor={verseInputId}>
             Verse (optional)
           </label>
           <SurahSelect
+            inputId={verseInputId}
             value={verse}
             onChange={setVerse}
             options={verseSelectOptions}
