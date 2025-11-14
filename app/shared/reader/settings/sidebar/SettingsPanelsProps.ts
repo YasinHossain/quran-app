@@ -1,4 +1,4 @@
-import { SettingsSidebarProps } from '@/app/(features)/surah/components/settings/types';
+import { SettingsSidebarProps } from '@/app/shared/reader/settings/types';
 
 export interface SettingsPanelsPropsConfig {
   isArabicFontPanelOpen: boolean;

@@ -1,1 +1,0 @@
-export { Verse } from './VerseCard';

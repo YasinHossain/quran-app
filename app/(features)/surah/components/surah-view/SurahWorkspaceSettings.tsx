@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { SettingsSidebarContent } from '@/app/(features)/surah/components/settings/SettingsSidebarContent';
+import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
 
 interface SurahWorkspaceSettingsProps {
   selectedTranslationName?: string;

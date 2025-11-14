@@ -248,11 +248,10 @@ The GitHub Actions pipeline (`.github/workflows/test.yml`) includes:
 - Mobile viewport testing
 - Automatic dev server startup
 
-### Lighthouse Configuration (`lighthouserc.js`)
+### Lighthouse CLI (`npm run lighthouse`)
 
-- Performance budgets
-- PWA compliance
-- Accessibility standards
+- Uses the Lighthouse CLI defaults via `npx lighthouse http://localhost:3000`
+- Outputs `lighthouse-report.html` for local performance/accessibility regression tracking
 
 ## 📈 Phase 4 Success Metrics
 

@@ -2,7 +2,7 @@ import type {
   SettingsContentWrapperProps,
   SettingsSidebarProps,
   SettingsTabValue,
-} from '@/app/(features)/surah/components/settings/types';
+} from '@/app/shared/reader/settings/types';
 
 export function buildContentWrapperProps(
   baseProps: Pick<
