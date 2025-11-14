@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { Settings } from './settings';
-
 /**
  * Common component prop interfaces to reduce duplication across the codebase
  */
@@ -38,22 +36,6 @@ export interface ListItemProps extends BaseComponentProps {
 export interface CardProps extends BaseComponentProps {
   onClick?: () => void;
   isActive?: boolean;
-}
-
-// Resource selection props
-export interface ResourceSelectionProps<T> {
-  items: T[];
-  selectedId: string | number;
-  onSelect: (id: string | number) => void;
-  searchTerm?: string;
-  onSearch?: (term: string) => void;
-  loading?: boolean;
-}
-
-// Settings panel props
-export interface SettingsPanelProps extends PanelComponentProps {
-  settings: Settings;
-  onSettingChange: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
 }
 
 // Modal props

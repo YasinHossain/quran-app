@@ -132,7 +132,7 @@ export const SurahVerseList = ({
             }
           }
           return;
-      }
+        }
         // If already scrolled appropriately, nothing to do.
         return;
       }

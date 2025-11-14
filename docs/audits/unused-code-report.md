@@ -50,35 +50,35 @@ Rationale: Route now composes `TafsirViewer` + `useTafsirVerseData`. Old panel s
 
 ### 6) Player helpers (likely not used at runtime)
 
-- [ ] `app/shared/player/components/IconBtn.tsx` — Status: Candidate
-- [ ] `app/shared/player/utils/{audioSegmentCache.ts,audioSegmentPrefetch.ts,serviceWorkerAudioCache*.ts,playbackOptionSections.tsx}` — Status: Verify (helpers and tests exist; confirm runtime imports before removal).
+- [x] `app/shared/player/components/IconBtn.tsx` — Removed; unused button wrapper in favor of direct `IconButton` usages.
+- [x] `app/shared/player/utils/{audioSegmentCache.ts,audioSegmentPrefetch.ts,audioSegmentPrefetch.helpers.ts,serviceWorkerAudioCache*.ts,playbackOptionSections.tsx}` — Removed legacy audio prefetch/service worker helpers and related tests after confirming zero runtime imports.
 
 ### 7) Shared UI building blocks that aren’t referenced
 
-- [ ] `app/shared/ui/SettingsPanel.tsx` and `app/shared/ui/settings/*` — Status: Candidate
-- [ ] `app/shared/ui/ResourcePanel*.tsx` — Status: Candidate
-- [ ] `app/shared/ui/base-card/renderers.tsx` — Status: Candidate
+- [x] `app/shared/ui/SettingsPanel.tsx` and `app/shared/ui/settings/*` — Removed legacy planner controls that the new Surah/Bookmarks settings UIs no longer reference.
+- [x] `app/shared/ui/ResourcePanel*.tsx` — Removed unused generic resource panel helpers; Tafsir/translation flows now use dedicated components under `app/shared/resource-panel`.
+- [x] `app/shared/ui/base-card/renderers.tsx` — Removed dead barrel that re-exported renderer helpers nobody imported.
 
 ## Other Notable Candidates (from knip)
 
-- [ ] `app/shared/hooks/**`
-  - [ ] `useReaderClient.ts`, `useFilteredList.ts`, `useMultiSelection.ts`, etc. — Status: Verify (move to archive or delete if not referenced by app or tests).
-- [ ] `app/shared/components/AudioErrorFallback.tsx`, `VerseErrorFallback.tsx` — Status: Candidate
+- [x] `app/shared/hooks/**`
+  - [x] `useReaderClient.ts`, `useFilteredList.ts`, `useMultiSelection.ts`, `useSelection*.ts`, and `multiSelection/*` — Removed legacy reader/list selection hooks after confirming no imports; Surah sidebar now relies on `useSelectionSync` and feature-specific hooks.
+- [x] `app/shared/components/AudioErrorFallback.tsx`, `VerseErrorFallback.tsx` — Removed unused error fallback components (player/verse flows own bespoke fallbacks).
 
 ## Unused Dependencies (runtime)
 
 These do not appear in imports anywhere in the app:
 
-- [ ] `ajv`
-- [ ] `inversify`
-- [ ] `react-icons`
-- [ ] `reflect-metadata`
+- [x] `ajv` (removed in package cleanup)
+- [x] `inversify` (removed in package cleanup)
+- [x] `react-icons` (removed in package cleanup)
+- [x] `reflect-metadata` (removed in package cleanup)
 
 Action: Remove from `dependencies` if DI and JSON‑schema validation are no longer used.
 
 ## Unused DevDependencies (knip flagged; verify before removal)
 
-- [ ] Likely removable: `@axe-core/react`, `@rollup/plugin-terser`, `@tailwindcss/postcss`, `@types/humps`, `@umalqura/core`, `chromatic`, `cross-fetch`, `humps`, `next-router-mock`, `node-fetch`, `ts-jest`, `viewport-units-buggyfill`.
+- [x] Likely removable: `@axe-core/react`, `@rollup/plugin-terser`, `@tailwindcss/postcss`, `@types/humps`, `@umalqura/core`, `chromatic`, `cross-fetch`, `humps`, `next-router-mock`, `node-fetch`, `ts-jest`, `viewport-units-buggyfill`.
 - [ ] Likely keep (used indirectly via config or scripts, even if knip complains):
   - [ ] ESLint/Prettier stack: `eslint-config-next`, `eslint-config-prettier`, `eslint-import-resolver-typescript`, `eslint-plugin-jsx-a11y`, `eslint-plugin-prettier`.
   - [ ] Type tooling in scripts: `ts-node`.
