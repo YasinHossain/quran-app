@@ -22,7 +22,11 @@ import type { Word } from './word';
 export interface Verse {
   id: number;
   verse_key: string;
+
   text_uthmani: string;
+  verse_number?: number;
+  chapter_id?: number;
+  page_number?: number;
   audio?: Audio;
   translations?: Translation[];
   words?: Word[];

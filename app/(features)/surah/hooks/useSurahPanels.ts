@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 
 import type { LanguageCode } from '@/lib/text/languageCodes';
-import type { Settings } from '@/types';
+import type { MushafOption, Settings } from '@/types';
 
 interface Option {
   id: number;
@@ -15,10 +15,14 @@ export function useSurahPanels({
   translationOptions,
   wordLanguageOptions,
   settings,
+  setSettings,
+  mushafOptions,
 }: {
   translationOptions: Option[];
   wordLanguageOptions: Option[];
   settings: Settings;
+  setSettings: (settings: Settings) => void;
+  mushafOptions: MushafOption[];
 }): {
   isTranslationPanelOpen: boolean;
   openTranslationPanel: () => void;
@@ -28,10 +32,18 @@ export function useSurahPanels({
   closeWordLanguagePanel: () => void;
   selectedTranslationName: string;
   selectedWordLanguageName: string;
+  selectedMushafName: string;
+  selectedMushafId?: string;
+  isMushafPanelOpen: boolean;
+  openMushafPanel: () => void;
+  closeMushafPanel: () => void;
+  mushafOptions: MushafOption[];
+  onMushafChange: (id: string) => void;
 } {
   const { t } = useTranslation();
   const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
   const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
+  const [isMushafPanelOpen, setIsMushafPanelOpen] = useState(false);
 
   const openTranslationPanel = useCallback(
     () => setIsTranslationPanelOpen(true),
@@ -47,6 +59,9 @@ export function useSurahPanels({
 
   const closeWordLanguagePanel = useCallback(() => setIsWordPanelOpen(false), [setIsWordPanelOpen]);
 
+  const openMushafPanel = useCallback(() => setIsMushafPanelOpen(true), []);
+  const closeMushafPanel = useCallback(() => setIsMushafPanelOpen(false), []);
+
   const selectedTranslationName = useMemo(
     () => getSelectedTranslationName(settings, translationOptions, t),
     [settings, translationOptions, t]
@@ -55,6 +70,19 @@ export function useSurahPanels({
   const selectedWordLanguageName = useMemo(
     () => getSelectedWordLanguageName(settings, wordLanguageOptions, t),
     [settings, wordLanguageOptions, t]
+  );
+
+  const selectedMushafName = useMemo(() => {
+    const mushaf = mushafOptions.find((option) => option.id === settings.mushafId);
+    return mushaf?.name ?? t('select_mushaf', { defaultValue: 'Select mushaf' });
+  }, [mushafOptions, settings.mushafId, t]);
+
+  const handleMushafChange = useCallback(
+    (id: string) => {
+      if (settings.mushafId === id) return;
+      setSettings({ ...settings, mushafId: id });
+    },
+    [setSettings, settings]
   );
 
   return {
@@ -66,6 +94,13 @@ export function useSurahPanels({
     closeWordLanguagePanel,
     selectedTranslationName,
     selectedWordLanguageName,
+    selectedMushafName,
+    selectedMushafId: settings.mushafId,
+    isMushafPanelOpen,
+    openMushafPanel,
+    closeMushafPanel,
+    mushafOptions,
+    onMushafChange: handleMushafChange,
   } as const;
 }
 

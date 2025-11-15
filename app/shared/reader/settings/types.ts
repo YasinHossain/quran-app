@@ -1,11 +1,17 @@
+import type { MushafOption } from '@/types';
+
 export interface SettingsSidebarProps {
   onTranslationPanelOpen: () => void;
   onWordLanguagePanelOpen: () => void;
   onTafsirPanelOpen?: () => void;
   onReadingPanelOpen?: () => void;
+  onTranslationTabOpen?: () => void;
+  onMushafPanelOpen?: () => void;
   selectedTranslationName: string;
   selectedTafsirName?: string;
   selectedWordLanguageName: string;
+  selectedMushafName?: string;
+  selectedMushafId?: string;
   showTafsirSetting?: boolean | undefined;
   isTranslationPanelOpen?: boolean | undefined;
   onTranslationPanelClose?: () => void;
@@ -13,7 +19,13 @@ export interface SettingsSidebarProps {
   onTafsirPanelClose?: () => void;
   isWordLanguagePanelOpen?: boolean | undefined;
   onWordLanguagePanelClose?: () => void;
-  pageType?: 'verse' | 'tafsir';
+  isMushafPanelOpen?: boolean | undefined;
+  onMushafPanelClose?: () => void;
+  mushafOptions?: MushafOption[];
+  onMushafChange?: (mushafId: string) => void;
+  pageType: 'verse' | 'tafsir' | 'bookmarks';
+  activeReaderMode?: 'translation' | 'reading';
+  readerTabsEnabled?: boolean;
 }
 
 export type SettingsTabValue = 'translation' | 'reading';
@@ -24,9 +36,11 @@ export interface SettingsContentProps
     | 'onTranslationPanelOpen'
     | 'onWordLanguagePanelOpen'
     | 'onTafsirPanelOpen'
+    | 'onMushafPanelOpen'
     | 'selectedTranslationName'
     | 'selectedTafsirName'
     | 'selectedWordLanguageName'
+    | 'selectedMushafName'
     | 'showTafsirSetting'
   > {
   activeTab: SettingsTabValue;
@@ -45,10 +59,14 @@ export interface SettingsContentWrapperProps {
   onTranslationPanelOpen: () => void;
   onWordLanguagePanelOpen: () => void;
   onTafsirPanelOpen?: () => void;
+  onMushafPanelOpen?: () => void;
   selectedTranslationName: string;
   selectedTafsirName?: string;
   selectedWordLanguageName: string;
+  selectedMushafName?: string;
   showTafsirSetting: boolean;
+  activeTabOverride?: SettingsTabValue;
+  showTabs: boolean;
 }
 
 export interface SettingsPanelsProps
@@ -60,6 +78,11 @@ export interface SettingsPanelsProps
     | 'onTafsirPanelClose'
     | 'isWordLanguagePanelOpen'
     | 'onWordLanguagePanelClose'
+    | 'isMushafPanelOpen'
+    | 'onMushafPanelClose'
+    | 'mushafOptions'
+    | 'selectedMushafId'
+    | 'onMushafChange'
   > {
   isArabicFontPanelOpen: boolean;
   onArabicFontPanelClose: () => void;

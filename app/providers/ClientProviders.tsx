@@ -9,6 +9,7 @@ import { ErrorHandler } from '@/src/infrastructure/errors';
 
 import { BookmarkProvider } from './BookmarkContext';
 import { NavigationProvider } from './NavigationContext';
+import { ReaderModeProvider } from './ReaderModeContext';
 import { SettingsProvider } from './SettingsContext';
 import { SidebarProvider } from './SidebarContext';
 import { ThemeProvider, Theme } from './ThemeContext';
@@ -68,14 +69,16 @@ export function ClientProviders({
         <SettingsProvider>
           <BookmarkProvider>
             <UIStateProvider>
-              <SidebarProvider>
-                <NavigationProvider>
-                  <AudioProvider>
-                    <WebVitals reportTarget="console" />
-                    {children}
-                  </AudioProvider>
-                </NavigationProvider>
-              </SidebarProvider>
+              <ReaderModeProvider>
+                <SidebarProvider>
+                  <NavigationProvider>
+                    <AudioProvider>
+                      <WebVitals reportTarget="console" />
+                      {children}
+                    </AudioProvider>
+                  </NavigationProvider>
+                </SidebarProvider>
+              </ReaderModeProvider>
             </UIStateProvider>
           </BookmarkProvider>
         </SettingsProvider>

@@ -3,7 +3,7 @@
 import React from 'react';
 
 import { ArabicFontPanel } from '@/app/(features)/surah/components/ArabicFontPanel';
-import { TranslationPanel, TafsirPanel } from '@/app/(features)/surah/components/panels';
+import { TranslationPanel, TafsirPanel, MushafPanel } from '@/app/(features)/surah/components/panels';
 import { WordLanguagePanel } from '@/app/(features)/surah/components/WordLanguagePanel';
 
 import { SettingsPanelsProps } from './types';
@@ -19,6 +19,11 @@ export const SettingsPanels = ({
   onTafsirPanelClose,
   isWordLanguagePanelOpen,
   onWordLanguagePanelClose,
+  isMushafPanelOpen,
+  onMushafPanelClose,
+  mushafOptions,
+  selectedMushafId,
+  onMushafChange,
 }: SettingsPanelsProps): ReactElement => {
   return (
     <>
@@ -31,6 +36,15 @@ export const SettingsPanels = ({
       )}
       {onWordLanguagePanelClose && (
         <WordLanguagePanel isOpen={!!isWordLanguagePanelOpen} onClose={onWordLanguagePanelClose} />
+      )}
+      {onMushafPanelClose && mushafOptions && onMushafChange && (
+        <MushafPanel
+          isOpen={!!isMushafPanelOpen}
+          onClose={onMushafPanelClose}
+          options={mushafOptions}
+          selectedId={selectedMushafId}
+          onSelect={onMushafChange}
+        />
       )}
     </>
   );

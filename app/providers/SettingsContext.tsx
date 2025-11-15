@@ -21,6 +21,7 @@ type SettingsSetters = Pick<
   | 'setTranslationFontSize'
   | 'setTafsirFontSize'
   | 'setArabicFontFace'
+  | 'setMushafId'
 >;
 
 const createSetters = (
@@ -42,6 +43,7 @@ const createSetters = (
     dispatch({ type: 'SET_TAFSIR_FONT_SIZE', value: size }),
   setArabicFontFace: (font: string): void =>
     dispatch({ type: 'SET_ARABIC_FONT_FACE', value: font }),
+  setMushafId: (mushafId: string): void => dispatch({ type: 'SET_MUSHAF_ID', value: mushafId }),
 });
 
 interface SettingsContextType {
@@ -58,6 +60,7 @@ interface SettingsContextType {
   setTranslationFontSize: (size: number) => void;
   setTafsirFontSize: (size: number) => void;
   setArabicFontFace: (font: string) => void;
+  setMushafId: (mushafId: string) => void;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);

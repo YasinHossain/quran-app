@@ -11,49 +11,86 @@ import { buildContentWrapperProps } from './sidebar/SettingsContentWrapperProps'
 import { buildPanelsProps } from './sidebar/SettingsPanelsProps';
 import { SettingsSidebarProps } from './types';
 
+import type { MushafOption } from '@/types';
+
 interface SettingsSidebarContentProps {
   selectedTranslationName?: string | undefined;
   selectedTafsirName?: string | undefined;
   selectedWordLanguageName?: string | undefined;
+  selectedMushafName?: string | undefined;
+  selectedMushafId?: string | undefined;
   showTafsirSetting?: boolean | undefined;
   onTranslationPanelOpen: () => void;
   onWordLanguagePanelOpen: () => void;
   onTafsirPanelOpen?: (() => void) | undefined;
   onReadingPanelOpen?: (() => void) | undefined;
+  onTranslationTabOpen?: (() => void) | undefined;
+  onMushafPanelOpen?: (() => void) | undefined;
   isTranslationPanelOpen?: boolean | undefined;
   onTranslationPanelClose?: (() => void) | undefined;
   isTafsirPanelOpen?: boolean | undefined;
   onTafsirPanelClose?: (() => void) | undefined;
   isWordLanguagePanelOpen?: boolean | undefined;
   onWordLanguagePanelClose?: (() => void) | undefined;
+  isMushafPanelOpen?: boolean | undefined;
+  onMushafPanelClose?: (() => void) | undefined;
+  mushafOptions?: MushafOption[] | undefined;
+  onMushafChange?: ((id: string) => void) | undefined;
   title?: string | undefined;
   showCloseButton?: boolean | undefined;
   onClose?: (() => void) | undefined;
+  activeReaderMode?: 'translation' | 'reading';
+  readerTabsEnabled?: boolean;
 }
 
 export function SettingsSidebarContent({
   selectedTranslationName,
   selectedTafsirName,
   selectedWordLanguageName,
+  selectedMushafName,
+  selectedMushafId,
   showTafsirSetting,
   onTranslationPanelOpen,
   onWordLanguagePanelOpen,
   onTafsirPanelOpen,
   onReadingPanelOpen,
+  onTranslationTabOpen,
+  onMushafPanelOpen,
   isTranslationPanelOpen,
   onTranslationPanelClose,
   isTafsirPanelOpen,
   onTafsirPanelClose,
   isWordLanguagePanelOpen,
   onWordLanguagePanelClose,
+  isMushafPanelOpen,
+  onMushafPanelClose,
+  mushafOptions,
+  onMushafChange,
   title = 'Settings',
   showCloseButton,
   onClose,
+  activeReaderMode,
+  readerTabsEnabled = true,
 }: SettingsSidebarContentProps): React.JSX.Element {
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
-  const { activeTab, handleTabChange, tabOptions } = useSettingsTabState(
-    onReadingPanelOpen ? { onReadingPanelOpen } : {}
-  );
+  const tabsEnabled = readerTabsEnabled;
+  const tabState = tabsEnabled
+    ? useSettingsTabState(
+        onReadingPanelOpen || onTranslationTabOpen || activeReaderMode
+          ? {
+              ...(onReadingPanelOpen ? { onReadingPanelOpen } : {}),
+              ...(onTranslationTabOpen ? { onTranslationTabOpen } : {}),
+              ...(activeReaderMode ? { activeTabOverride: activeReaderMode } : {}),
+            }
+          : {}
+      )
+    : {
+        activeTab: 'translation' as const,
+        handleTabChange: () => {},
+        tabOptions: [{ value: 'translation', label: 'Translation' }] as const,
+      };
+
+  const { activeTab, handleTabChange, tabOptions } = tabState;
   const { openSections, handleSectionToggle } = useSettingsSections();
 
   const handleArabicFontPanelOpen = useCallback(() => setIsArabicFontPanelOpen(true), []);
@@ -68,6 +105,8 @@ export function SettingsSidebarContent({
       ...(selectedTafsirName !== undefined ? { selectedTafsirName } : {}),
       selectedWordLanguageName: selectedWordLanguageName ?? '',
       showTafsirSetting: showTafsirSetting ?? false,
+      selectedMushafName: selectedMushafName ?? '',
+      ...(onMushafPanelOpen ? { onMushafPanelOpen } : {}),
     },
     {
       activeTab,
@@ -76,6 +115,8 @@ export function SettingsSidebarContent({
       openSections,
       onSectionToggle: handleSectionToggle,
       onArabicFontPanelOpen: handleArabicFontPanelOpen,
+      activeTabOverride: activeReaderMode,
+      showTabs: tabsEnabled,
     }
   );
 
@@ -87,6 +128,11 @@ export function SettingsSidebarContent({
     | 'onTafsirPanelClose'
     | 'isWordLanguagePanelOpen'
     | 'onWordLanguagePanelClose'
+    | 'isMushafPanelOpen'
+    | 'onMushafPanelClose'
+    | 'mushafOptions'
+    | 'selectedMushafId'
+    | 'onMushafChange'
   > = {};
 
   if (typeof isTranslationPanelOpen !== 'undefined') {
@@ -106,6 +152,21 @@ export function SettingsSidebarContent({
   }
   if (onWordLanguagePanelClose) {
     panelBaseProps.onWordLanguagePanelClose = onWordLanguagePanelClose;
+  }
+  if (typeof isMushafPanelOpen !== 'undefined') {
+    panelBaseProps.isMushafPanelOpen = isMushafPanelOpen;
+  }
+  if (onMushafPanelClose) {
+    panelBaseProps.onMushafPanelClose = onMushafPanelClose;
+  }
+  if (mushafOptions) {
+    panelBaseProps.mushafOptions = mushafOptions;
+  }
+  if (selectedMushafId) {
+    panelBaseProps.selectedMushafId = selectedMushafId;
+  }
+  if (onMushafChange) {
+    panelBaseProps.onMushafChange = onMushafChange;
   }
 
   const panelsProps = buildPanelsProps(panelBaseProps, {

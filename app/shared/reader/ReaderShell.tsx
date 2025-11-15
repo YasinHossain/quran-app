@@ -1,13 +1,15 @@
 'use client';
 
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 
+import { MushafMain } from '@/app/(features)/surah/components/surah-view/MushafMain';
 import { SurahMain } from '@/app/(features)/surah/components/surah-view/SurahMain';
-import { SurahSettings } from '@/app/(features)/surah/components/surah-view/SurahSettings';
 import { SurahWorkspaceNavigation } from '@/app/(features)/surah/components/surah-view/SurahWorkspaceNavigation';
-import { SurahWorkspaceSettings } from '@/app/(features)/surah/components/surah-view/SurahWorkspaceSettings';
 import { useBodyOverflowHidden } from '@/app/(features)/surah/components/surah-view/useBodyOverflowHidden';
 import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
+import { SettingsSidebar } from '@/app/shared/reader/settings';
+import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
+import { useReaderMode } from '@/app/providers/ReaderModeContext';
 
 import { ReaderAudioProps, WorkspaceReaderLayout } from './ReaderLayouts';
 import { useReaderView } from './useReaderView';
@@ -49,29 +51,62 @@ const createSurahMain = ({
   />
 );
 
-const createSettingsSidebar = (panels: ReaderPanelsState): React.ReactNode => (
-  <SurahSettings
+const createSettingsSidebar = (
+  panels: ReaderPanelsState,
+  onReadingPanelOpen: () => void,
+  onTranslationTabOpen: () => void,
+  activeReaderMode: 'translation' | 'reading'
+): React.ReactNode => (
+  <SettingsSidebar
+    pageType="verse"
+    readerTabsEnabled
     selectedTranslationName={panels.selectedTranslationName}
     selectedWordLanguageName={panels.selectedWordLanguageName}
-    isTranslationPanelOpen={panels.isTranslationPanelOpen}
+    selectedMushafName={panels.selectedMushafName}
+    selectedMushafId={panels.selectedMushafId}
     onTranslationPanelOpen={panels.openTranslationPanel}
     onTranslationPanelClose={panels.closeTranslationPanel}
-    isWordLanguagePanelOpen={panels.isWordLanguagePanelOpen}
+    isTranslationPanelOpen={panels.isTranslationPanelOpen}
     onWordLanguagePanelOpen={panels.openWordLanguagePanel}
     onWordLanguagePanelClose={panels.closeWordLanguagePanel}
+    isWordLanguagePanelOpen={panels.isWordLanguagePanelOpen}
+    onReadingPanelOpen={onReadingPanelOpen}
+    onTranslationTabOpen={onTranslationTabOpen}
+    isMushafPanelOpen={panels.isMushafPanelOpen}
+    onMushafPanelOpen={panels.openMushafPanel}
+    onMushafPanelClose={panels.closeMushafPanel}
+    onMushafChange={panels.onMushafChange}
+    mushafOptions={panels.mushafOptions}
+    activeReaderMode={activeReaderMode}
   />
 );
 
-const createWorkspaceSettingsPanel = (panels: ReaderPanelsState): React.ReactNode => (
-  <SurahWorkspaceSettings
+const createWorkspaceSettingsPanel = (
+  panels: ReaderPanelsState,
+  onReadingPanelOpen: () => void,
+  onTranslationTabOpen: () => void,
+  activeReaderMode: 'translation' | 'reading'
+): React.ReactNode => (
+  <SettingsSidebarContent
+    readerTabsEnabled
     selectedTranslationName={panels.selectedTranslationName}
     selectedWordLanguageName={panels.selectedWordLanguageName}
-    isTranslationPanelOpen={panels.isTranslationPanelOpen}
+    selectedMushafName={panels.selectedMushafName}
+    selectedMushafId={panels.selectedMushafId}
     onTranslationPanelOpen={panels.openTranslationPanel}
     onTranslationPanelClose={panels.closeTranslationPanel}
-    isWordLanguagePanelOpen={panels.isWordLanguagePanelOpen}
+    isTranslationPanelOpen={panels.isTranslationPanelOpen}
     onWordLanguagePanelOpen={panels.openWordLanguagePanel}
     onWordLanguagePanelClose={panels.closeWordLanguagePanel}
+    isWordLanguagePanelOpen={panels.isWordLanguagePanelOpen}
+    onReadingPanelOpen={onReadingPanelOpen}
+    onTranslationTabOpen={onTranslationTabOpen}
+    isMushafPanelOpen={panels.isMushafPanelOpen}
+    onMushafPanelOpen={panels.openMushafPanel}
+    onMushafPanelClose={panels.closeMushafPanel}
+    onMushafChange={panels.onMushafChange}
+    mushafOptions={panels.mushafOptions}
+    activeReaderMode={activeReaderMode}
   />
 );
 
@@ -104,6 +139,7 @@ export function ReaderShell({
   initialScrollNonce,
 }: ReaderShellProps): React.JSX.Element {
   useBodyOverflowHidden();
+  const { mode, setMode, enableReaderMode, disableReaderMode } = useReaderMode();
   const readerView = useReaderView({
     resourceId,
     lookup,
@@ -112,6 +148,21 @@ export function ReaderShell({
   });
   const { verseListing, panels } = readerView;
 
+  useEffect(() => {
+    enableReaderMode('verse');
+    return () => {
+      disableReaderMode();
+    };
+  }, [enableReaderMode, disableReaderMode]);
+
+  const handleReadingPanelOpen = useCallback(() => {
+    setMode('mushaf');
+  }, [setMode]);
+
+  const handleTranslationTabOpen = useCallback(() => {
+    setMode('verse');
+  }, [setMode]);
+
   const surahMain = createSurahMain({
     verseListing,
     ...(typeof emptyLabelKey === 'string' ? { emptyLabelKey } : {}),
@@ -119,13 +170,36 @@ export function ReaderShell({
     ...(typeof initialVerseKey === 'string' ? { initialVerseKey } : {}),
     ...(typeof initialScrollNonce === 'string' ? { initialScrollNonce } : {}),
   });
-  const settingsSidebar = createSettingsSidebar(panels);
-  const workspaceSettingsSidebar = createWorkspaceSettingsPanel(panels);
+  const mushafMain = (
+    <MushafMain
+      mushafName={panels.selectedMushafName ?? 'Mushaf view'}
+      verses={verseListing.verses}
+      isLoading={verseListing.isLoading}
+      error={verseListing.error}
+      loadMoreRef={verseListing.loadMoreRef}
+      isValidating={verseListing.isValidating}
+      isReachingEnd={verseListing.isReachingEnd}
+    />
+  );
+  const mainContent = mode === 'mushaf' ? mushafMain : surahMain;
+  const activeReaderTab = mode === 'mushaf' ? 'reading' : 'translation';
+  const settingsSidebar = createSettingsSidebar(
+    panels,
+    handleReadingPanelOpen,
+    handleTranslationTabOpen,
+    activeReaderTab
+  );
+  const workspaceSettingsSidebar = createWorkspaceSettingsPanel(
+    panels,
+    handleReadingPanelOpen,
+    handleTranslationTabOpen,
+    activeReaderTab
+  );
   const audioProps = mapToAudioProps(verseListing);
 
   return (
     <WorkspaceReaderLayout
-      main={surahMain}
+      main={mainContent}
       desktopLeft={<SurahWorkspaceNavigation />}
       desktopRight={workspaceSettingsSidebar}
       mobileLeft={<SurahListSidebar />}

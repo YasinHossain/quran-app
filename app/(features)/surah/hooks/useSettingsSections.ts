@@ -4,6 +4,7 @@ import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 const STORAGE_KEY = 'settings-sidebar-open-sections';
 const DEFAULT_OPEN_SECTIONS = ['translation', 'font'];
+const MUSHAF_SECTION_ID = 'mushaf';
 const MAX_OPEN_SECTIONS = 2;
 
 const areSectionsEqual = (a: string[], b: string[]): boolean => {
@@ -15,11 +16,11 @@ function readInitialState(): string[] {
   if (typeof window === 'undefined') return DEFAULT_OPEN_SECTIONS;
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) return JSON.parse(saved);
+    if (saved) return ensureMushafSection(JSON.parse(saved));
   } catch (error) {
     logger.warn('Failed to parse saved sidebar sections:', undefined, error as Error);
   }
-  return DEFAULT_OPEN_SECTIONS;
+  return ensureMushafSection(DEFAULT_OPEN_SECTIONS);
 }
 
 function persistState(state: string[]): void {
@@ -33,8 +34,16 @@ function persistState(state: string[]): void {
 
 function nextOpenSections(prev: string[], sectionId: string): string[] {
   if (prev.includes(sectionId)) return prev.filter((id) => id !== sectionId);
-  if (prev.length >= MAX_OPEN_SECTIONS) return [...prev.slice(-1), sectionId];
+  if (prev.length >= MAX_OPEN_SECTIONS) {
+    const itemsToKeep = Math.max(0, MAX_OPEN_SECTIONS - 1);
+    return [...prev.slice(-itemsToKeep), sectionId];
+  }
   return [...prev, sectionId];
+}
+
+function ensureMushafSection(sections: string[]): string[] {
+  if (sections.includes(MUSHAF_SECTION_ID)) return sections;
+  return [MUSHAF_SECTION_ID, ...sections.slice(0, MAX_OPEN_SECTIONS - 1)];
 }
 
 interface UseSettingsSectionsReturn {

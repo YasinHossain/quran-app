@@ -1,5 +1,6 @@
 'use client';
 
+import { MUSHAF_OPTIONS } from '@/data/mushaf/options';
 import { useSurahPanels, useVerseListing } from '@/app/(features)/surah/hooks';
 
 import type { UseVerseListingParams } from '@/app/(features)/surah/hooks/useVerseListing';
@@ -33,6 +34,8 @@ export const useReaderView = ({
     translationOptions: verseListing.translationOptions,
     wordLanguageOptions: verseListing.wordLanguageOptions,
     settings: verseListing.settings,
+    setSettings: verseListing.setSettings,
+    mushafOptions: MUSHAF_OPTIONS,
   });
 
   return { verseListing, panels };

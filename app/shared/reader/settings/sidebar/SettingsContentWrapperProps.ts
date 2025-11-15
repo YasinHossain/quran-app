@@ -10,9 +10,11 @@ export function buildContentWrapperProps(
     | 'onTranslationPanelOpen'
     | 'onTafsirPanelOpen'
     | 'onWordLanguagePanelOpen'
+    | 'onMushafPanelOpen'
     | 'selectedTranslationName'
     | 'selectedTafsirName'
     | 'selectedWordLanguageName'
+    | 'selectedMushafName'
     | 'showTafsirSetting'
   >,
   stateProps: {
@@ -22,6 +24,8 @@ export function buildContentWrapperProps(
     openSections: string[];
     onSectionToggle: (section: string) => void;
     onArabicFontPanelOpen: () => void;
+    activeTabOverride?: SettingsTabValue;
+    showTabs: boolean;
   }
 ): SettingsContentWrapperProps {
   const coreProps: SettingsContentWrapperProps = {
@@ -30,8 +34,13 @@ export function buildContentWrapperProps(
     onWordLanguagePanelOpen: baseProps.onWordLanguagePanelOpen,
     selectedTranslationName: baseProps.selectedTranslationName,
     selectedWordLanguageName: baseProps.selectedWordLanguageName,
+    selectedMushafName: baseProps.selectedMushafName ?? '',
     showTafsirSetting: baseProps.showTafsirSetting ?? false,
   };
+
+  if (baseProps.onMushafPanelOpen) {
+    coreProps.onMushafPanelOpen = baseProps.onMushafPanelOpen;
+  }
 
   if (baseProps.onTafsirPanelOpen !== undefined) {
     return {

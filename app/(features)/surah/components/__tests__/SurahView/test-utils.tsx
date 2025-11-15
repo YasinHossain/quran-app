@@ -45,6 +45,13 @@ export const defaultPanels = {
   closeWordLanguagePanel: jest.fn(),
   selectedTranslationName: 'Sahih International',
   selectedWordLanguageName: 'English',
+  selectedMushafName: 'Unicode - Uthmani 15-line',
+  selectedMushafId: 'unicode-default',
+  isMushafPanelOpen: false,
+  openMushafPanel: jest.fn(),
+  closeMushafPanel: jest.fn(),
+  mushafOptions: [],
+  onMushafChange: jest.fn(),
 };
 
 export const defaultVerseListing = {
@@ -54,6 +61,9 @@ export const defaultVerseListing = {
     {
       id: 1,
       verse_key: '1:1',
+      verse_number: 1,
+      text_uthmani: 'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ',
+      page_number: 1,
       words: [],
       translations: [],
     },

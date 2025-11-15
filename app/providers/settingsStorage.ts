@@ -1,3 +1,4 @@
+import { DEFAULT_MUSHAF_ID } from '@/data/mushaf/options';
 import { getItem, setItem } from '@/lib/utils/safeLocalStorage';
 import { Settings } from '@/types';
 
@@ -27,6 +28,7 @@ export const defaultSettings: Settings = {
   wordTranslationId: 85,
   showByWords: false,
   tajweed: false,
+  mushafId: DEFAULT_MUSHAF_ID,
 };
 
 const SETTINGS_KEY = 'quranAppSettings';

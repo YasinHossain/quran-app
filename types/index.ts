@@ -6,6 +6,7 @@ export * from './settings';
 export * from './surah';
 export * from './word';
 export * from './juz';
+export * from './mushaf';
 export type {
   Bookmark,
   BookmarkWithVerse,

@@ -4,27 +4,32 @@ import React from 'react';
 
 import { CollapsibleSection } from '@/app/(features)/surah/components/CollapsibleSection';
 import { BookReaderIcon } from '@/app/shared/icons';
+import { SelectionBox } from '@/app/shared/SelectionBox';
 
 import type { ReactElement } from 'react';
 
-interface ReadingSettingsProps {
+interface MushafSettingsProps {
+  selectedMushafName: string;
+  onMushafPanelOpen: () => void;
   isOpen?: boolean;
   onToggle?: () => void;
 }
 
-export const ReadingSettings = ({
+export const MushafSettings = ({
+  selectedMushafName,
+  onMushafPanelOpen,
   isOpen = false,
   onToggle,
-}: ReadingSettingsProps): ReactElement => {
+}: MushafSettingsProps): ReactElement => {
   return (
     <CollapsibleSection
-      title="Mushaf Settings"
+      title="Mushaf settings"
       icon={<BookReaderIcon size={20} className="text-accent" />}
-      isLast={false}
+      isLast
       isOpen={isOpen}
       onToggle={onToggle || (() => {})}
     >
-      <div className="text-center py-8 text-muted">Coming soon...</div>
+      <SelectionBox label="Mushaf" value={selectedMushafName} onClick={onMushafPanelOpen} />
     </CollapsibleSection>
   );
 };

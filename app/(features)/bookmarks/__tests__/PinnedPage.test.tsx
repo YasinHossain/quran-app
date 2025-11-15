@@ -44,12 +44,12 @@ jest.mock('../components/BookmarksSidebar', () => ({
     ),
 }));
 
-jest.mock('@/app/(features)/surah/components/surah-view/SurahWorkspaceSettings', () => ({
-  SurahWorkspaceSettings: () => <aside data-testid="surah-settings-sidebar" />,
+jest.mock('@/app/shared/reader/settings/SettingsSidebar', () => ({
+  SettingsSidebar: () => <div data-testid="mobile-settings-sidebar" />,
 }));
 
-jest.mock('@/app/(features)/bookmarks/pinned/components/PinnedSettingsSidebar', () => ({
-  PinnedSettingsSidebar: () => <div data-testid="mobile-settings-sidebar" />,
+jest.mock('@/app/shared/reader/settings/SettingsSidebarContent', () => ({
+  SettingsSidebarContent: () => <aside data-testid="surah-settings-sidebar" />,
 }));
 
 jest.mock('@/app/(features)/bookmarks/[folderId]/hooks', () => {

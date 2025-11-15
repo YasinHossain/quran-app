@@ -12,7 +12,7 @@ import { Surah } from '@/types';
 import { AyahNavigation } from './components/AyahNavigation';
 import { TafsirAudioPlayer } from './components/TafsirAudioPlayer';
 import { TafsirViewer } from './components/TafsirViewer';
-import { TafsirWorkspaceSettings } from './components/TafsirWorkspaceSettings';
+import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
 import { useBodyScrollLock } from '@/app/providers/hooks/useBodyScrollLock';
 
 interface TafsirVersePageProps {
@@ -85,19 +85,21 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps): React
           </WorkspaceMain>
         }
         right={
-          <TafsirWorkspaceSettings
+          <SettingsSidebarContent
+            readerTabsEnabled={false}
+            showTafsirSetting
             selectedTranslationName={selectedTranslationName}
             selectedTafsirName={selectedTafsirName}
             selectedWordLanguageName={selectedWordLanguageName}
-            isTranslationPanelOpen={isTranslationPanelOpen}
             onTranslationPanelOpen={openTranslationPanel}
             onTranslationPanelClose={closeTranslationPanel}
-            isTafsirPanelOpen={isTafsirPanelOpen}
+            isTranslationPanelOpen={isTranslationPanelOpen}
             onTafsirPanelOpen={openTafsirPanel}
             onTafsirPanelClose={closeTafsirPanel}
-            isWordLanguagePanelOpen={isWordPanelOpen}
+            isTafsirPanelOpen={isTafsirPanelOpen}
             onWordLanguagePanelOpen={openWordPanel}
             onWordLanguagePanelClose={closeWordPanel}
+            isWordLanguagePanelOpen={isWordPanelOpen}
           />
         }
       />

@@ -36,16 +36,20 @@ describe('SurahView interaction', () => {
   it('switches between translation and mushaf tabs', () => {
     renderSurahView();
 
+    const mushafWrapper = (): HTMLElement =>
+      screen.getAllByTestId('mushaf-settings-wrapper')[0];
+
+    expect(mushafWrapper()).toHaveAttribute('aria-hidden', 'true');
+
     const mushafButton = screen.getAllByRole<HTMLButtonElement>('button', { name: 'Mushaf' })[0];
     fireEvent.click(mushafButton);
-    expect(
-      screen.getByText('Mushaf settings have been moved to the Translation tab.')
-    ).toBeInTheDocument();
+    expect(mushafWrapper()).toHaveAttribute('aria-hidden', 'false');
 
     const translationButton = screen.getAllByRole<HTMLButtonElement>('button', {
       name: 'Translation',
     })[0];
     fireEvent.click(translationButton);
     expect(screen.getAllByLabelText('translations')[0]).toBeInTheDocument();
+    expect(mushafWrapper()).toHaveAttribute('aria-hidden', 'true');
   });
 });
