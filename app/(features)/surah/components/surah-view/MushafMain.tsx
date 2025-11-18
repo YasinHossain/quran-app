@@ -1,24 +1,33 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useQcfMushafFont } from '@/app/(features)/surah/hooks/useQcfMushafFont';
+import {
+  fontSizeToMushafScale,
+  mushafScaleToFontSize,
+} from '@/app/(features)/surah/hooks/mushafFontScale';
+import { getQcfV1Preset } from '@/app/(features)/surah/hooks/qcfScalePresets';
+import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 import { Spinner } from '@/app/shared/Spinner';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { applyTajweed } from '@/lib/text/tajweed';
-import { cn } from '@/lib/utils/cn';
 
-import type { Verse } from '@/types';
+import type { Chapter, MushafLineGroup, MushafPageLines, MushafWord } from '@/types';
 
 interface MushafMainProps {
   mushafName: string;
-  verses: Verse[];
+  mushafId?: string;
+  pages: MushafPageLines[];
+  chapterId?: number | null;
   isLoading: boolean;
+  isLoadingMore?: boolean;
+  hasMore?: boolean;
+  onLoadMore?: () => void;
   error: string | null;
-  loadMoreRef: React.RefObject<HTMLDivElement | null>;
-  isValidating: boolean;
-  isReachingEnd: boolean;
+  endLabelKey?: string;
 }
 
 type ReaderSettings = Pick<
@@ -26,180 +35,414 @@ type ReaderSettings = Pick<
   'tajweed' | 'arabicFontFace' | 'arabicFontSize'
 >;
 
-interface PageGroup {
-  pageNumber: number | null;
-  verses: Verse[];
-}
-
-const groupVersesByPage = (verses: Verse[]): PageGroup[] => {
-  if (!verses.length) return [];
-  const buckets = new Map<number | null, Verse[]>();
-
-  verses.forEach((verse) => {
-    const key = typeof verse.page_number === 'number' ? verse.page_number : null;
-    const bucket = buckets.get(key);
-    if (bucket) {
-      bucket.push(verse);
-    } else {
-      buckets.set(key, [verse]);
-    }
-  });
-
-  return Array.from(buckets.entries())
-    .sort(([a], [b]) => {
-      if (a === null) return 1;
-      if (b === null) return -1;
-      return a - b;
-    })
-    .map(([pageNumber, versesForPage]) => ({
-      pageNumber,
-      verses: versesForPage,
-    }));
-};
+const BISMILLAH_TEXT = 'بِسْمِ ٱللّٰهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ';
+const CONTENT_MAX_WIDTH = 'max-w-[52rem]';
+const PAGE_MAX_WIDTH = 'max-w-[40rem]';
+const MIN_LINE_WIDTH_PX = 440;
+const MAX_LINE_WIDTH_PX = 540;
+const LINE_WIDTH_SCALE = 16;
 
 export function MushafMain({
   mushafName,
-  verses,
+  mushafId,
+  pages,
+  chapterId,
   isLoading,
+  isLoadingMore = false,
+  hasMore = false,
+  onLoadMore,
   error,
-  loadMoreRef,
-  isValidating,
-  isReachingEnd,
+  endLabelKey = 'end_of_surah',
 }: MushafMainProps): React.JSX.Element {
   const { t } = useTranslation();
   const { settings } = useSettings();
+  const { chapters } = useSurahNavigationData();
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const isQcfMushaf = mushafId === 'qcf-madani-v1';
 
-  const pageGroups = useMemo(() => groupVersesByPage(verses), [verses]);
-  const showEmptyState = !isLoading && !error && !verses.length;
+  const chapter = useMemo<Chapter | undefined>(() => {
+    if (typeof chapterId !== 'number') return undefined;
+    return chapters.find((entry) => entry.id === chapterId);
+  }, [chapters, chapterId]);
+  const showBismillah = Boolean(chapter?.id && chapter.id !== 9);
+  const showEmptyState = !isLoading && !error && pages.length === 0;
+
+  const pageNumbers = useMemo(
+    () =>
+      pages
+        .map((page) => page.pageNumber)
+        .filter((n): n is number => typeof n === 'number' && Number.isFinite(n)),
+    [pages]
+  );
+
+  // Load per-page QCF fonts when the QCF mushaf is selected.
+  const { getPageFontFamily, isPageFontLoaded } = useQcfMushafFont(
+    isQcfMushaf ? pageNumbers : []
+  );
+
+  useEffect(() => {
+    if (!onLoadMore || !hasMore) return;
+    const target = loadMoreRef.current;
+    if (!target) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0];
+        if (first?.isIntersecting) {
+          onLoadMore();
+        }
+      },
+      { threshold: 0.2 }
+    );
+    observer.observe(target);
+    return () => {
+      observer.disconnect();
+    };
+  }, [onLoadMore, hasMore]);
+
+  const shouldRenderLoadMore = (onLoadMore || isLoadingMore || !hasMore) && pages.length > 0;
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="rounded-2xl border border-border bg-surface/80 px-4 py-3 text-center shadow-card">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-          Mushaf mode
-        </p>
-        <p className="text-base font-medium text-foreground mt-1">{mushafName}</p>
+    <div className="flex w-full justify-center px-4 pb-20 pt-2 sm:px-6">
+      <div className={`w-full ${CONTENT_MAX_WIDTH} space-y-10`}>
+        <MushafHero
+          mushafName={mushafName}
+          chapter={chapter}
+          settings={settings}
+          showBismillah={showBismillah}
+        />
+
+        <div className="space-y-8">
+          {isLoading && !pages.length ? (
+            <div className={`mx-auto flex w-full ${PAGE_MAX_WIDTH} justify-center py-16`}>
+              <Spinner className="h-8 w-8 text-accent" />
+            </div>
+          ) : error ? (
+            <div
+              className={`mx-auto w-full ${PAGE_MAX_WIDTH} rounded-[32px] border border-status-error bg-status-error/10 px-6 py-10 text-center text-status-error`}
+            >
+              {error}
+            </div>
+          ) : showEmptyState ? (
+            <div
+              className={`mx-auto w-full ${PAGE_MAX_WIDTH} rounded-[32px] border border-border/70 bg-surface/70 px-6 py-12 text-center text-muted`}
+            >
+              {t('no_verses_found')}
+            </div>
+          ) : (
+            pages.map((page) => {
+              const pageFontLoaded =
+                isQcfMushaf &&
+                typeof page.pageNumber === 'number' &&
+                isPageFontLoaded(page.pageNumber);
+
+              const fontFamily =
+                pageFontLoaded && typeof page.pageNumber === 'number'
+                  ? getPageFontFamily(page.pageNumber)
+                  : settings.arabicFontFace;
+
+              return (
+                <MushafPage
+                  key={`page-${page.pageNumber}`}
+                  pageNumber={page.pageNumber}
+                  lines={page.lines}
+                  settings={settings}
+                  fontFamily={fontFamily}
+                  isQcfMushaf={isQcfMushaf}
+                  isFontLoaded={!isQcfMushaf || pageFontLoaded}
+                />
+              );
+            })
+          )}
+        </div>
+
+        {shouldRenderLoadMore ? (
+          <div
+            ref={loadMoreRef}
+            className={`mx-auto w-full ${PAGE_MAX_WIDTH} space-y-2 py-8 text-center`}
+          >
+            {isLoadingMore ? <Spinner className="inline h-5 w-5 text-accent" /> : null}
+            {!hasMore && !isLoadingMore ? (
+              <p className="text-sm text-muted">{t(endLabelKey)}</p>
+            ) : null}
+          </div>
+        ) : null}
       </div>
-
-      {isLoading && !verses.length ? (
-        <div className="flex justify-center py-20">
-          <Spinner className="h-8 w-8 text-accent" />
-        </div>
-      ) : error ? (
-        <div className="rounded-2xl border border-status-error bg-status-error/10 px-6 py-8 text-center text-status-error">
-          {error}
-        </div>
-      ) : showEmptyState ? (
-        <div className="text-center py-16 text-muted">{t('no_verses_found')}</div>
-      ) : (
-        pageGroups.map((page) => (
-          <MushafPage
-            key={`${page.pageNumber ?? 'na'}-${page.verses[0]?.id ?? 'empty'}`}
-            pageNumber={page.pageNumber}
-            mushafName={mushafName}
-            verses={page.verses}
-            settings={settings}
-          />
-        ))
-      )}
-
-      {verses.length > 0 ? (
-        <div ref={loadMoreRef} className="py-4 text-center space-x-2">
-          {isValidating && <Spinner className="inline h-5 w-5 text-accent" />}
-          {isReachingEnd && <span className="text-muted">{t('end_of_surah')}</span>}
-        </div>
-      ) : null}
     </div>
   );
 }
 
-interface MushafPageProps {
-  pageNumber: number | null;
-  verses: Verse[];
+interface MushafHeroProps {
   mushafName: string;
+  chapter?: Chapter;
   settings: ReaderSettings;
+  showBismillah: boolean;
 }
 
-const MushafPage = ({ pageNumber, verses, mushafName, settings }: MushafPageProps): React.JSX.Element => {
-  const rangeLabel = formatVerseRange(verses);
-  const label = pageNumber ? `Page ${pageNumber}` : mushafName;
+const MushafHero = ({
+  mushafName,
+  chapter,
+  settings,
+  showBismillah,
+}: MushafHeroProps): React.JSX.Element => {
+  const chapterNumber = chapter?.id;
+  const heroSubtitle = chapter?.translated_name?.name ?? undefined;
+  const heroFootnote = chapter
+    ? [`Surah ${chapter.name_simple}`, `${chapter.verses_count} ayat`]
+        .filter(Boolean)
+        .join(' • ')
+    : undefined;
+  const mushafScale = fontSizeToMushafScale(settings.arabicFontSize);
+  const mushafFontSize = mushafScaleToFontSize(mushafScale);
+  const bismillahFontSize = Math.max(mushafFontSize + 6, mushafFontSize);
 
   return (
     <section
-      aria-label={label}
-      className="rounded-[32px] border border-border bg-surface shadow-card overflow-hidden"
+      className={`mx-auto w-full ${PAGE_MAX_WIDTH} rounded-[44px] border border-border/80 bg-surface px-6 py-8 text-center shadow-card sm:px-10 sm:py-10`}
     >
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 bg-surface/70 px-6 py-4">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
-          {label}
+      <p className="text-[0.65rem] font-semibold uppercase tracking-[0.6em] text-muted">
+        Mushaf reading
+      </p>
+      {chapterNumber ? (
+        <p className="mt-3 text-xs font-semibold uppercase tracking-[0.45em] text-muted/80">
+          {String(chapterNumber).padStart(3, '0')}
         </p>
-        {rangeLabel ? <p className="text-sm text-muted">{rangeLabel}</p> : null}
-      </div>
-      <div className="px-5 py-6 sm:px-8 sm:py-8 bg-background">
-        <div className="space-y-6" dir="rtl">
-          {verses.map((verse) => (
-            <MushafAyah key={verse.id} verse={verse} settings={settings} />
-          ))}
-        </div>
-      </div>
+      ) : null}
+      <p className="mt-4 text-3xl font-semibold text-foreground" dir="rtl">
+        {chapter?.name_arabic ?? mushafName}
+      </p>
+      {heroSubtitle ? <p className="mt-2 text-base text-muted">{heroSubtitle}</p> : null}
+      <p className="mt-4 text-sm font-medium text-muted">{heroFootnote ?? `Mushaf · ${mushafName}`}</p>
+      <p className="mt-2 text-sm text-muted">{`Font • ${settings.arabicFontFace}`}</p>
+      {showBismillah ? (
+        <p
+          className="mt-8 text-3xl leading-snug text-foreground"
+          dir="rtl"
+          style={{
+            fontFamily: settings.arabicFontFace,
+            fontSize: `${bismillahFontSize}px`,
+          }}
+        >
+          {BISMILLAH_TEXT}
+        </p>
+      ) : null}
     </section>
   );
 };
 
-interface MushafAyahProps {
-  verse: Verse;
+interface MushafPageProps {
+  pageNumber: number;
+  lines: MushafLineGroup[];
   settings: ReaderSettings;
+  fontFamily: string;
+  isQcfMushaf: boolean;
+  isFontLoaded: boolean;
 }
 
-const MushafAyah = ({ verse, settings }: MushafAyahProps): React.JSX.Element => {
-  const verseNumber = getVerseNumber(verse);
-  const html = settings.tajweed ? applyTajweed(verse.text_uthmani) : verse.text_uthmani;
+const MushafPage = ({
+  pageNumber,
+  lines,
+  settings,
+  fontFamily,
+  isQcfMushaf,
+  isFontLoaded,
+}: MushafPageProps): React.JSX.Element => {
+  const mushafScale = fontSizeToMushafScale(settings.arabicFontSize);
+
+  const { fontSizePx, lineWidthDesktop } = isQcfMushaf
+    ? getQcfV1Preset(mushafScale)
+    : {
+        fontSizePx: mushafScaleToFontSize(mushafScale),
+        lineWidthDesktop: `${getLineWidth(mushafScaleToFontSize(mushafScale))}px`,
+      };
 
   return (
-    <div className="flex flex-row-reverse flex-wrap items-baseline gap-3 text-foreground">
-      {verseNumber ? <VerseMarker number={verseNumber} /> : null}
-      <p
-        className="flex-1 text-right leading-[2.2]"
-        dir="rtl"
-        style={{
-          fontFamily: settings.arabicFontFace,
-          fontSize: `${settings.arabicFontSize}px`,
-        }}
-        dangerouslySetInnerHTML={{ __html: sanitizeHtml(html) }}
-      />
+    <article
+      aria-label={`Page ${pageNumber}`}
+      className={`mx-auto w-full ${PAGE_MAX_WIDTH} py-6 sm:py-8${
+        isQcfMushaf ? ' overflow-x-auto' : ''
+      }`}
+    >
+      <div
+        className="flex flex-col gap-4 sm:gap-5"
+        style={
+          {
+            '--mushaf-line-width': lineWidthDesktop,
+            fontFamily,
+          } as React.CSSProperties
+        }
+      >
+        {lines.map((line) => (
+          <MushafLine
+            key={line.key}
+            line={line}
+            settings={settings}
+            isQcfMushaf={isQcfMushaf}
+            fontSizePx={fontSizePx}
+            isFontLoaded={isFontLoaded}
+          />
+        ))}
+      </div>
+      {pageNumber ? (
+        <div className="mt-6 flex justify-center sm:mt-8">
+          <span className="inline-flex h-7 min-w-[2.5rem] items-center justify-center rounded-full border border-border/60 bg-surface/80 px-3 text-[0.7rem] font-medium tracking-[0.35em] text-muted">
+            {toArabicIndicNumber(pageNumber)}
+          </span>
+        </div>
+      ) : null}
+    </article>
+  );
+};
+
+const MushafLine = ({
+  line,
+  settings,
+  isQcfMushaf,
+  fontSizePx,
+  isFontLoaded,
+}: {
+  line: MushafLineGroup;
+  settings: ReaderSettings;
+  isQcfMushaf: boolean;
+  fontSizePx: number;
+  isFontLoaded: boolean;
+}): React.JSX.Element => (
+  <div
+    dir="rtl"
+    className="mx-auto text-center"
+    style={{
+      fontSize: `${fontSizePx}px`,
+      maxWidth: 'min(var(--mushaf-line-width, 560px), 90vw)',
+      width: '100%',
+    }}
+  >
+    <div
+      className={`leading-[2.35] ${
+        isQcfMushaf ? 'flex justify-center flex-wrap' : 'flex justify-center sm:justify-between'
+      }`}
+      translate="no"
+    >
+      {line.words.map((word, index) => (
+        <MushafWordText
+          key={word.id ?? `${line.key}-${word.verseKey ?? 'word'}-${word.position}-${index}`}
+          word={word}
+          settings={settings}
+          isQcfMushaf={isQcfMushaf}
+          isFontLoaded={isFontLoaded}
+        />
+      ))}
     </div>
+  </div>
+);
+
+const MushafWordText = ({
+  word,
+  settings,
+  isQcfMushaf,
+  isFontLoaded,
+}: {
+  word: MushafWord;
+  settings: ReaderSettings;
+  isQcfMushaf: boolean;
+  isFontLoaded: boolean;
+}): React.JSX.Element | null => {
+  if (word.charType === 'end') {
+    const verseNumber = getVerseNumberFromWord(word);
+    return typeof verseNumber === 'number' ? <VerseMarker number={verseNumber} /> : null;
+  }
+
+  const baseText = word.textUthmani ?? word.textIndopak ?? '';
+  const hasGlyphCode = typeof word.codeV1 === 'string' && word.codeV1.length > 0;
+
+  if (!baseText && (!isQcfMushaf || !hasGlyphCode)) {
+    return null;
+  }
+
+  let rawHtml: string;
+
+  if (isQcfMushaf && isFontLoaded && hasGlyphCode) {
+    // When the per-page QCF font is loaded, render the glyph-encoded text
+    // so that the layout and calligraphy match Quran.com exactly.
+    rawHtml = word.codeV1 as string;
+  } else if (baseText) {
+    // Fallback to standard Uthmani/Indopak text. For non-QCF mushaf we
+    // optionally apply tajweed colouring.
+    rawHtml = !isQcfMushaf && settings.tajweed ? applyTajweed(baseText) : baseText;
+  } else {
+    rawHtml = '';
+  }
+
+  if (!rawHtml) {
+    return null;
+  }
+
+  return (
+    <span
+      className={
+        isQcfMushaf
+          ? 'inline-block text-foreground'
+          : 'inline-flex flex-none items-center px-[1px] text-foreground'
+      }
+      dangerouslySetInnerHTML={{ __html: sanitizeHtml(rawHtml) }}
+    />
   );
 };
 
 const VerseMarker = ({ number }: { number: number }): React.JSX.Element => (
   <span
     aria-label={`Ayah ${number}`}
-    className={cn(
-      'inline-flex h-8 w-8 items-center justify-center rounded-full border text-sm font-semibold',
-      'border-border bg-surface text-foreground shadow-sm'
-    )}
+    className="relative inline-flex h-8 min-w-[2rem] flex-none items-center justify-center align-middle text-[0.8rem] font-semibold text-accent mx-[4px]"
   >
-    {number}
+    <span
+      aria-hidden="true"
+      className="absolute inline-flex h-8 min-w-[2rem] items-center justify-center rounded-full border border-border/70 bg-surface shadow-[0_6px_16px_rgba(15,23,42,0.12)]"
+    />
+    <span
+      aria-hidden="true"
+      className="absolute inline-flex h-[1.6rem] min-w-[1.6rem] items-center justify-center rounded-full border border-border/40"
+    />
+    <span
+      aria-hidden="true"
+      className="absolute inline-flex h-[1.2rem] min-w-[1.2rem] items-center justify-center rounded-full border border-border/20"
+    />
+    <span className="relative inline-flex min-w-[1.2rem] items-center justify-center">
+      {toArabicIndicNumber(number)}
+    </span>
   </span>
 );
 
-const getVerseNumber = (verse: Verse): number | undefined => {
-  if (typeof verse.verse_number === 'number') {
-    return verse.verse_number;
+const getLineWidth = (fontSize: number): number => {
+  const scaled = fontSize * LINE_WIDTH_SCALE;
+  const clamped = Math.max(MIN_LINE_WIDTH_PX, Math.min(MAX_LINE_WIDTH_PX, scaled));
+
+  if (typeof window === 'undefined') {
+    return clamped;
   }
-  if (typeof verse.verse_key === 'string') {
-    const [, ayah] = verse.verse_key.split(':');
-    const parsed = Number(ayah);
-    return Number.isFinite(parsed) ? parsed : undefined;
-  }
-  return undefined;
+
+  const maxViewportWidth = Math.floor(window.innerWidth * 0.9);
+  return Math.min(clamped, maxViewportWidth);
 };
 
-const formatVerseRange = (verses: Verse[]): string => {
-  if (!verses.length) return '';
-  const first = verses[0]?.verse_key;
-  const last = verses[verses.length - 1]?.verse_key;
-  if (!first) return '';
-  if (!last || first === last) return first;
-  return `${first} - ${last}`;
+const toArabicIndicNumber = (num: number): string => {
+  const digits = '٠١٢٣٤٥٦٧٨٩';
+  return `${num}`.replace(/\d/g, (d) => digits[Number(d)]);
+};
+
+const getVerseNumberFromWord = (word: MushafWord): number | undefined => {
+  if (typeof word.verseKey === 'string') {
+    const [, ayah] = word.verseKey.split(':');
+    const parsed = Number(ayah);
+    if (Number.isFinite(parsed)) {
+      return parsed;
+    }
+  }
+
+  if (typeof word.location === 'string') {
+    const [, ayah] = word.location.split(':');
+    const parsed = Number(ayah);
+    if (Number.isFinite(parsed)) {
+      return parsed;
+    }
+  }
+
+  return undefined;
 };
