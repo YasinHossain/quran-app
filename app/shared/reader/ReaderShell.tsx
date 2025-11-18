@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 
 import { MushafMain } from '@/app/(features)/surah/components/surah-view/MushafMain';
 import { SurahMain } from '@/app/(features)/surah/components/surah-view/SurahMain';
@@ -14,7 +14,11 @@ import { useReaderMode } from '@/app/providers/ReaderModeContext';
 import { ReaderAudioProps, WorkspaceReaderLayout } from './ReaderLayouts';
 import { useReaderView } from './useReaderView';
 
-import type { LookupFn, UseVerseListingParams } from '@/app/(features)/surah/hooks/useVerseListing';
+import type {
+  LookupFn,
+  UseVerseListingParams,
+} from '@/app/(features)/surah/hooks/useVerseListing';
+import type { MushafResourceKind } from '@/app/(features)/surah/hooks/useMushafReadingView';
 
 type ReaderViewState = ReturnType<typeof useReaderView>;
 type VerseListingState = ReaderViewState['verseListing'];
@@ -120,6 +124,7 @@ const mapToAudioProps = (verseListing: VerseListingState): ReaderAudioProps => (
 
 interface ReaderShellProps extends Pick<UseVerseListingParams, 'initialVerses'> {
   resourceId: string;
+  resourceKind?: MushafResourceKind;
   lookup: LookupFn;
   emptyLabelKey?: string;
   endLabelKey?: string;
@@ -130,6 +135,7 @@ interface ReaderShellProps extends Pick<UseVerseListingParams, 'initialVerses'> 
 
 export function ReaderShell({
   resourceId,
+  resourceKind = 'surah',
   lookup,
   initialVerses,
   emptyLabelKey,
@@ -142,11 +148,12 @@ export function ReaderShell({
   const { mode, setMode, enableReaderMode, disableReaderMode } = useReaderMode();
   const readerView = useReaderView({
     resourceId,
+    resourceKind,
     lookup,
     initialVerses,
     ...(typeof initialVerseNumber === 'number' ? { initialVerseNumber } : {}),
   });
-  const { verseListing, panels } = readerView;
+  const { verseListing, panels, mushafView } = readerView;
 
   useEffect(() => {
     enableReaderMode('verse');
@@ -170,15 +177,29 @@ export function ReaderShell({
     ...(typeof initialVerseKey === 'string' ? { initialVerseKey } : {}),
     ...(typeof initialScrollNonce === 'string' ? { initialScrollNonce } : {}),
   });
+
+  const mushafChapterId = useMemo(() => {
+    if (resourceKind === 'surah') {
+      const parsed = Number.parseInt(resourceId, 10);
+      if (Number.isFinite(parsed)) {
+        return parsed;
+      }
+    }
+    return verseListing.verses[0]?.chapter_id ?? initialVerses?.[0]?.chapter_id ?? undefined;
+  }, [resourceKind, resourceId, verseListing.verses, initialVerses]);
+
   const mushafMain = (
     <MushafMain
       mushafName={panels.selectedMushafName ?? 'Mushaf view'}
-      verses={verseListing.verses}
-      isLoading={verseListing.isLoading}
-      error={verseListing.error}
-      loadMoreRef={verseListing.loadMoreRef}
-      isValidating={verseListing.isValidating}
-      isReachingEnd={verseListing.isReachingEnd}
+      mushafId={panels.selectedMushafId}
+      pages={mushafView.pages}
+      chapterId={mushafChapterId}
+      isLoading={mushafView.isLoading}
+      isLoadingMore={mushafView.isLoadingMore}
+      hasMore={mushafView.hasMore}
+      onLoadMore={mushafView.loadMore}
+      error={mushafView.error}
+      endLabelKey={endLabelKey}
     />
   );
   const mainContent = mode === 'mushaf' ? mushafMain : surahMain;

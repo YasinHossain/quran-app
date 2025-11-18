@@ -317,7 +317,7 @@ const MushafLine = ({
   >
     <div
       className={`leading-[2.35] ${
-        isQcfMushaf ? 'flex justify-center flex-wrap' : 'flex justify-center sm:justify-between'
+        isQcfMushaf ? 'flex justify-center gap-[0.2em]' : 'flex justify-center sm:justify-between'
       }`}
       translate="no"
     >

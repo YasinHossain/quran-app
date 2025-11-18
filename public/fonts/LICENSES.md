@@ -118,6 +118,12 @@ Permission is hereby granted, Free of Cost, to any person obtaining a copy of th
 2.    The Font Software is provided "AS IS", and KFGQPC makes no warranties as to its use or performance, fitness for a particular purpose. KFGQPC does not and cannot warrant the performance or results you may obtain by using the Font. In no event shall KFGQPC be liable for any Claims, Damages or other Liability, including any Damages, arising from, out of the use or inability to use the Font or from other dealings in the Font.
 ```
 
+## Quran.com King Fahad Complex glyph fonts (public/fonts/quran/hafs/v1/woff2)
+
+Source: [Quran.com](https://github.com/quran/quran.com-frontend-next) — extracted from the King Fahd Glorious Quran Printing Complex per-page glyph set used for the QCF V1 Mushaf.
+
+License: Covered by the same King Fahd Glorious Quran Printing Complex Electronic End-User License Agreement quoted above for the `KFGQPC-Uthman-Taha` fonts. The glyph assets are redistributed unmodified for high-fidelity Mushaf rendering.
+
 ## Noor-e-Hira.ttf
 
 Source: [NooreHidayat](http://www.noorehidayat.org/)

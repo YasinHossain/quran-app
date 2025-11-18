@@ -14,6 +14,7 @@ export function JuzClient({ juzId }: JuzClientProps): React.JSX.Element {
   return (
     <ReaderShell
       resourceId={juzId}
+      resourceKind="juz"
       lookup={({ id, translationIds, page, perPage, wordLang }) =>
         getVersesByJuz({
           id,

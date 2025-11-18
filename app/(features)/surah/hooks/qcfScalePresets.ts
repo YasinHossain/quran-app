@@ -1,0 +1,33 @@
+export interface QcfScalePreset {
+  fontSizePx: number;
+  lineWidthDesktop: string;
+}
+
+const clampScale = (scale: number): number => {
+  const s = Math.round(scale);
+  if (s < 1) return 1;
+  if (s > 10) return 10;
+  return s;
+};
+
+/**
+ * Approximated Quran.com QCF Madani V1 presets so the glyph layout mirrors
+ * the King Fahad Complex Mushaf as closely as possible.
+ */
+const QCF_V1_PRESETS: Record<number, QcfScalePreset> = {
+  1: { fontSizePx: 22, lineWidthDesktop: '60vh' },
+  2: { fontSizePx: 24, lineWidthDesktop: '65vh' },
+  3: { fontSizePx: 26, lineWidthDesktop: '73.5vh' },
+  4: { fontSizePx: 28, lineWidthDesktop: '74vh' },
+  5: { fontSizePx: 30, lineWidthDesktop: '81vh' },
+  6: { fontSizePx: 32, lineWidthDesktop: '102.8vh' },
+  7: { fontSizePx: 34, lineWidthDesktop: '124.6vh' },
+  8: { fontSizePx: 36, lineWidthDesktop: '146.4vh' },
+  9: { fontSizePx: 38, lineWidthDesktop: '168.2vh' },
+  10: { fontSizePx: 40, lineWidthDesktop: '190vh' },
+};
+
+export const getQcfV1Preset = (scale: number): QcfScalePreset => {
+  const key = clampScale(scale);
+  return QCF_V1_PRESETS[key];
+};

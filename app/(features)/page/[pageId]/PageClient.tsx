@@ -14,6 +14,7 @@ export function PageClient({ pageId }: PageClientProps): React.JSX.Element {
   return (
     <ReaderShell
       resourceId={pageId}
+      resourceKind="page"
       lookup={({ id, translationIds, page, perPage, wordLang }) =>
         getVersesByPage({
           id,

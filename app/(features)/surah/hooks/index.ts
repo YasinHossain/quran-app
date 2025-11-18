@@ -6,6 +6,7 @@ export { useHideScrollbar } from './useHideScrollbar';
 export { useInfiniteVerseLoader } from './useInfiniteVerseLoader';
 export { useTranslationOptions } from './useTranslationOptions';
 export { useWordLanguageSelection } from './useWordLanguageSelection';
+export { useMushafReadingView } from './useMushafReadingView';
 
 // Component-specific hooks
 export { useScrollbarHiding } from './useScrollbarHiding';
