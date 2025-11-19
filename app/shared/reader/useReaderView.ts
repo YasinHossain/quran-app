@@ -94,13 +94,15 @@ export const useReaderView = ({
   const mushafView = useMushafReadingView({
     resourceId,
     resourceKind,
-    mushafId: verseListing.settings.mushafId,
-    initialPageNumber: initialMushafPageNumber,
-    chapterId: mushafChapterId,
-    juzNumber: mushafJuzNumber,
-    reciterId: verseListing.reciter?.id,
+    ...(verseListing.settings.mushafId ? { mushafId: verseListing.settings.mushafId } : {}),
+    ...(typeof initialMushafPageNumber === 'number'
+      ? { initialPageNumber: initialMushafPageNumber }
+      : {}),
+    ...(typeof mushafChapterId === 'number' ? { chapterId: mushafChapterId } : {}),
+    ...(typeof mushafJuzNumber === 'number' ? { juzNumber: mushafJuzNumber } : {}),
+    ...(typeof verseListing.reciter?.id === 'number' ? { reciterId: verseListing.reciter.id } : {}),
     wordByWordLocale: verseListing.settings.wordLang,
-    translationIds: translationIdsParam,
+    ...(translationIdsParam ? { translationIds: translationIdsParam } : {}),
   });
 
   return { verseListing, panels, mushafView };

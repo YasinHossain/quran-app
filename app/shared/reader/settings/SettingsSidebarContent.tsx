@@ -9,7 +9,7 @@ import { SettingsContentWrapper } from './SettingsContentWrapper';
 import { SettingsPanels } from './SettingsPanels';
 import { buildContentWrapperProps } from './sidebar/SettingsContentWrapperProps';
 import { buildPanelsProps } from './sidebar/SettingsPanelsProps';
-import { SettingsSidebarProps } from './types';
+import { SettingsSidebarProps, SettingsTabValue } from './types';
 
 import type { MushafOption } from '@/types';
 
@@ -87,7 +87,10 @@ export function SettingsSidebarContent({
     : {
         activeTab: 'translation' as const,
         handleTabChange: () => {},
-        tabOptions: [{ value: 'translation', label: 'Translation' }] as const,
+        tabOptions: [{ value: 'translation', label: 'Translation' }] as Array<{
+          value: SettingsTabValue;
+          label: string;
+        }>,
       };
 
   const { activeTab, handleTabChange, tabOptions } = tabState;
@@ -115,7 +118,7 @@ export function SettingsSidebarContent({
       openSections,
       onSectionToggle: handleSectionToggle,
       onArabicFontPanelOpen: handleArabicFontPanelOpen,
-      activeTabOverride: activeReaderMode,
+      ...(activeReaderMode ? { activeTabOverride: activeReaderMode } : {}),
       showTabs: tabsEnabled,
     }
   );

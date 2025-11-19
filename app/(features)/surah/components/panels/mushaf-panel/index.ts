@@ -1,2 +1,1 @@
 export { MushafPanel } from './MushafPanel';
-

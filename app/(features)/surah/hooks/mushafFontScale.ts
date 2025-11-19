@@ -1,8 +1,8 @@
-export const MUSHAF_SCALE_MIN = 1;
-export const MUSHAF_SCALE_MAX = 10;
+export const MUSHAF_SCALE_MIN: number = 1;
+export const MUSHAF_SCALE_MAX: number = 10;
 
-const MUSHAF_FONT_MIN_PX = 20;
-const MUSHAF_FONT_MAX_PX = 44;
+const MUSHAF_FONT_MIN_PX: number = 20;
+const MUSHAF_FONT_MAX_PX: number = 44;
 
 const clamp = (value: number, min: number, max: number): number =>
   Math.min(max, Math.max(min, value));

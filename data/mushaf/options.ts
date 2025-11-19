@@ -19,7 +19,7 @@ export const MUSHAF_OPTIONS: MushafOption[] = [
   },
 ];
 
-export const getDefaultMushafOption = (): MushafOption => MUSHAF_OPTIONS[0];
+export const getDefaultMushafOption = (): MushafOption => MUSHAF_OPTIONS[0]!;
 
 export const findMushafOption = (id?: string): MushafOption | undefined =>
   id ? MUSHAF_OPTIONS.find((option) => option.id === id) : undefined;

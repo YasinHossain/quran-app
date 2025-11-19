@@ -15,19 +15,22 @@ const clampScale = (scale: number): number => {
  * the King Fahad Complex Mushaf as closely as possible.
  */
 const QCF_V1_PRESETS: Record<number, QcfScalePreset> = {
-  1: { fontSizePx: 22, lineWidthDesktop: '60vh' },
-  2: { fontSizePx: 24, lineWidthDesktop: '65vh' },
-  3: { fontSizePx: 26, lineWidthDesktop: '73.5vh' },
-  4: { fontSizePx: 28, lineWidthDesktop: '74vh' },
-  5: { fontSizePx: 30, lineWidthDesktop: '81vh' },
-  6: { fontSizePx: 32, lineWidthDesktop: '102.8vh' },
-  7: { fontSizePx: 34, lineWidthDesktop: '124.6vh' },
-  8: { fontSizePx: 36, lineWidthDesktop: '146.4vh' },
-  9: { fontSizePx: 38, lineWidthDesktop: '168.2vh' },
-  10: { fontSizePx: 40, lineWidthDesktop: '190vh' },
+  // Upscaled compared to the original mapping so that higher Arabic font
+  // sizes fill more of the center column (especially in King Fahad / QCF
+  // mode) while preserving the relative zoom steps.
+  1: { fontSizePx: 28, lineWidthDesktop: '60vh' },
+  2: { fontSizePx: 31, lineWidthDesktop: '65vh' },
+  3: { fontSizePx: 34, lineWidthDesktop: '73.5vh' },
+  4: { fontSizePx: 37, lineWidthDesktop: '74vh' },
+  5: { fontSizePx: 40, lineWidthDesktop: '81vh' },
+  6: { fontSizePx: 44, lineWidthDesktop: '102.8vh' },
+  7: { fontSizePx: 48, lineWidthDesktop: '124.6vh' },
+  8: { fontSizePx: 52, lineWidthDesktop: '146.4vh' },
+  9: { fontSizePx: 56, lineWidthDesktop: '168.2vh' },
+  10: { fontSizePx: 60, lineWidthDesktop: '190vh' },
 };
 
 export const getQcfV1Preset = (scale: number): QcfScalePreset => {
   const key = clampScale(scale);
-  return QCF_V1_PRESETS[key];
+  return (QCF_V1_PRESETS[key] ?? QCF_V1_PRESETS[1])!;
 };

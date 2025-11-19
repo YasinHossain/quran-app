@@ -11,7 +11,7 @@ export interface SettingsSidebarProps {
   selectedTafsirName?: string;
   selectedWordLanguageName: string;
   selectedMushafName?: string;
-  selectedMushafId?: string;
+  selectedMushafId?: string | undefined;
   showTafsirSetting?: boolean | undefined;
   isTranslationPanelOpen?: boolean | undefined;
   onTranslationPanelClose?: () => void;

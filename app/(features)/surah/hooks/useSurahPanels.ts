@@ -33,7 +33,7 @@ export function useSurahPanels({
   selectedTranslationName: string;
   selectedWordLanguageName: string;
   selectedMushafName: string;
-  selectedMushafId?: string;
+  selectedMushafId?: string | undefined;
   isMushafPanelOpen: boolean;
   openMushafPanel: () => void;
   closeMushafPanel: () => void;

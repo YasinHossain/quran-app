@@ -16,30 +16,30 @@ export type MushafCharType =
   | string;
 
 export interface MushafWord {
-  id?: number;
-  verseKey?: string;
-  pageNumber?: number;
-  lineNumber?: number;
+  id?: number | undefined;
+  verseKey?: string | undefined;
+  pageNumber?: number | undefined;
+  lineNumber?: number | undefined;
   position: number;
-  charType?: MushafCharType;
-  location?: string;
-  textUthmani?: string;
-  textIndopak?: string;
-  codeV1?: string;
-  codeV2?: string;
+  charType?: MushafCharType | undefined;
+  location?: string | undefined;
+  textUthmani?: string | undefined;
+  textIndopak?: string | undefined;
+  codeV1?: string | undefined;
+  codeV2?: string | undefined;
 }
 
 export interface MushafVerse {
   id: number;
   verseKey: string;
-  chapterId?: number | string;
+  chapterId?: number | string | undefined;
   pageNumber: number;
-  juzNumber?: number;
-  hizbNumber?: number;
-  rubElHizbNumber?: number;
-  textUthmani?: string;
-  textIndopak?: string;
-  textUthmaniTajweed?: string;
+  juzNumber?: number | undefined;
+  hizbNumber?: number | undefined;
+  rubElHizbNumber?: number | undefined;
+  textUthmani?: string | undefined;
+  textIndopak?: string | undefined;
+  textUthmaniTajweed?: string | undefined;
   words: MushafWord[];
 }
 

@@ -11,7 +11,7 @@ interface MushafPanelProps {
   isOpen: boolean;
   onClose: () => void;
   options: MushafOption[];
-  selectedId?: string;
+  selectedId?: string | undefined;
   onSelect: (mushafId: string) => void;
 }
 
@@ -66,7 +66,11 @@ interface MushafOptionRowProps {
   onSelect: () => void;
 }
 
-const MushafOptionRow = ({ option, selected, onSelect }: MushafOptionRowProps): React.JSX.Element => {
+const MushafOptionRow = ({
+  option,
+  selected,
+  onSelect,
+}: MushafOptionRowProps): React.JSX.Element => {
   return (
     <button
       type="button"
@@ -112,4 +116,3 @@ const MushafOptionRow = ({ option, selected, onSelect }: MushafOptionRowProps): 
     </button>
   );
 };
-

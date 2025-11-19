@@ -11,8 +11,6 @@ const API_MUSHAF_FALLBACK_ID = 2; // Madani V1 layout
 const API_MUSHAF_MAP: Record<string, number> = {
   [DEFAULT_MUSHAF_ID]: 2,
   'unicode-indopak-16': 7,
-  // QCF Madani V1 (code_v1 glyph mushaf) – mirrors Quran.com reading view default.
-  'qcf-madani-v1': 2,
 };
 
 const WORD_FIELDS = [

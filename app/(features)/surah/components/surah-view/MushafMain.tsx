@@ -14,20 +14,21 @@ import { Spinner } from '@/app/shared/Spinner';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { applyTajweed } from '@/lib/text/tajweed';
+import { cn } from '@/lib/utils/cn';
 
 import type { Chapter, MushafLineGroup, MushafPageLines, MushafWord } from '@/types';
 
 interface MushafMainProps {
   mushafName: string;
-  mushafId?: string;
+  mushafId?: string | undefined;
   pages: MushafPageLines[];
-  chapterId?: number | null;
+  chapterId?: number | null | undefined;
   isLoading: boolean;
   isLoadingMore?: boolean;
   hasMore?: boolean;
   onLoadMore?: () => void;
   error: string | null;
-  endLabelKey?: string;
+  endLabelKey?: string | undefined;
 }
 
 type ReaderSettings = Pick<
@@ -36,8 +37,6 @@ type ReaderSettings = Pick<
 >;
 
 const BISMILLAH_TEXT = 'بِسْمِ ٱللّٰهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ';
-const CONTENT_MAX_WIDTH = 'max-w-[52rem]';
-const PAGE_MAX_WIDTH = 'max-w-[40rem]';
 const MIN_LINE_WIDTH_PX = 440;
 const MAX_LINE_WIDTH_PX = 540;
 const LINE_WIDTH_SCALE = 16;
@@ -76,9 +75,7 @@ export function MushafMain({
   );
 
   // Load per-page QCF fonts when the QCF mushaf is selected.
-  const { getPageFontFamily, isPageFontLoaded } = useQcfMushafFont(
-    isQcfMushaf ? pageNumbers : []
-  );
+  const { getPageFontFamily, isPageFontLoaded } = useQcfMushafFont(isQcfMushaf ? pageNumbers : []);
 
   useEffect(() => {
     if (!onLoadMore || !hasMore) return;
@@ -102,10 +99,11 @@ export function MushafMain({
   const shouldRenderLoadMore = (onLoadMore || isLoadingMore || !hasMore) && pages.length > 0;
 
   return (
-    <div className="flex w-full justify-center px-4 pb-20 pt-2 sm:px-6">
-      <div className={`w-full ${CONTENT_MAX_WIDTH} space-y-10`}>
+    <div className="w-full pb-20 pt-2">
+      <div className="w-full space-y-10">
         <MushafHero
           mushafName={mushafName}
+          isQcfMushaf={isQcfMushaf}
           chapter={chapter}
           settings={settings}
           showBismillah={showBismillah}
@@ -113,18 +111,18 @@ export function MushafMain({
 
         <div className="space-y-8">
           {isLoading && !pages.length ? (
-            <div className={`mx-auto flex w-full ${PAGE_MAX_WIDTH} justify-center py-16`}>
+            <div className="mx-auto flex w-full justify-center py-16">
               <Spinner className="h-8 w-8 text-accent" />
             </div>
           ) : error ? (
             <div
-              className={`mx-auto w-full ${PAGE_MAX_WIDTH} rounded-[32px] border border-status-error bg-status-error/10 px-6 py-10 text-center text-status-error`}
+              className="mx-auto w-full rounded-[32px] border border-status-error bg-status-error/10 px-6 py-10 text-center text-status-error"
             >
               {error}
             </div>
           ) : showEmptyState ? (
             <div
-              className={`mx-auto w-full ${PAGE_MAX_WIDTH} rounded-[32px] border border-border/70 bg-surface/70 px-6 py-12 text-center text-muted`}
+              className="mx-auto w-full rounded-[32px] border border-border/70 bg-surface/70 px-6 py-12 text-center text-muted"
             >
               {t('no_verses_found')}
             </div>
@@ -158,7 +156,7 @@ export function MushafMain({
         {shouldRenderLoadMore ? (
           <div
             ref={loadMoreRef}
-            className={`mx-auto w-full ${PAGE_MAX_WIDTH} space-y-2 py-8 text-center`}
+            className="mx-auto w-full space-y-2 py-8 text-center"
           >
             {isLoadingMore ? <Spinner className="inline h-5 w-5 text-accent" /> : null}
             {!hasMore && !isLoadingMore ? (
@@ -173,13 +171,15 @@ export function MushafMain({
 
 interface MushafHeroProps {
   mushafName: string;
-  chapter?: Chapter;
+  isQcfMushaf: boolean;
+  chapter?: Chapter | undefined;
   settings: ReaderSettings;
   showBismillah: boolean;
 }
 
 const MushafHero = ({
   mushafName,
+  isQcfMushaf,
   chapter,
   settings,
   showBismillah,
@@ -187,9 +187,7 @@ const MushafHero = ({
   const chapterNumber = chapter?.id;
   const heroSubtitle = chapter?.translated_name?.name ?? undefined;
   const heroFootnote = chapter
-    ? [`Surah ${chapter.name_simple}`, `${chapter.verses_count} ayat`]
-        .filter(Boolean)
-        .join(' • ')
+    ? [`Surah ${chapter.name_simple}`, `${chapter.verses_count} ayat`].filter(Boolean).join(' • ')
     : undefined;
   const mushafScale = fontSizeToMushafScale(settings.arabicFontSize);
   const mushafFontSize = mushafScaleToFontSize(mushafScale);
@@ -197,7 +195,10 @@ const MushafHero = ({
 
   return (
     <section
-      className={`mx-auto w-full ${PAGE_MAX_WIDTH} rounded-[44px] border border-border/80 bg-surface px-6 py-8 text-center shadow-card sm:px-10 sm:py-10`}
+      className={cn(
+        'mx-auto w-full rounded-[44px] border border-border/80 bg-surface px-6 py-8 text-center shadow-card sm:px-10 sm:py-10',
+        isQcfMushaf && 'max-w-none'
+      )}
     >
       <p className="text-[0.65rem] font-semibold uppercase tracking-[0.6em] text-muted">
         Mushaf reading
@@ -211,7 +212,9 @@ const MushafHero = ({
         {chapter?.name_arabic ?? mushafName}
       </p>
       {heroSubtitle ? <p className="mt-2 text-base text-muted">{heroSubtitle}</p> : null}
-      <p className="mt-4 text-sm font-medium text-muted">{heroFootnote ?? `Mushaf · ${mushafName}`}</p>
+      <p className="mt-4 text-sm font-medium text-muted">
+        {heroFootnote ?? `Mushaf · ${mushafName}`}
+      </p>
       <p className="mt-2 text-sm text-muted">{`Font • ${settings.arabicFontFace}`}</p>
       {showBismillah ? (
         <p
@@ -258,12 +261,16 @@ const MushafPage = ({
   return (
     <article
       aria-label={`Page ${pageNumber}`}
-      className={`mx-auto w-full ${PAGE_MAX_WIDTH} py-6 sm:py-8${
-        isQcfMushaf ? ' overflow-x-auto' : ''
-      }`}
+      className={cn(
+        'mx-auto w-full py-6 sm:py-8',
+        isQcfMushaf ? 'max-w-none overflow-x-auto' : undefined
+      )}
     >
       <div
-        className="flex flex-col gap-4 sm:gap-5"
+        className={cn(
+          'flex flex-col',
+          isQcfMushaf ? 'gap-1 sm:gap-1.5' : 'gap-4 sm:gap-5'
+        )}
         style={
           {
             '--mushaf-line-width': lineWidthDesktop,
@@ -316,9 +323,10 @@ const MushafLine = ({
     }}
   >
     <div
-      className={`leading-[2.35] ${
-        isQcfMushaf ? 'flex justify-center gap-[0.2em]' : 'flex justify-center sm:justify-between'
-      }`}
+      className={cn(
+        isQcfMushaf ? 'leading-[1.8]' : 'leading-[2.35]',
+        'flex justify-center'
+      )}
       translate="no"
     >
       {line.words.map((word, index) => (
@@ -379,7 +387,7 @@ const MushafWordText = ({
     <span
       className={
         isQcfMushaf
-          ? 'inline-block text-foreground'
+          ? 'inline-block text-foreground font-medium'
           : 'inline-flex flex-none items-center px-[1px] text-foreground'
       }
       dangerouslySetInnerHTML={{ __html: sanitizeHtml(rawHtml) }}
@@ -424,7 +432,7 @@ const getLineWidth = (fontSize: number): number => {
 
 const toArabicIndicNumber = (num: number): string => {
   const digits = '٠١٢٣٤٥٦٧٨٩';
-  return `${num}`.replace(/\d/g, (d) => digits[Number(d)]);
+  return `${num}`.replace(/\d/g, (d) => digits[Number(d)] ?? d);
 };
 
 const getVerseNumberFromWord = (word: MushafWord): number | undefined => {

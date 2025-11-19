@@ -217,6 +217,7 @@ export function ReaderShell({
     activeReaderTab
   );
   const audioProps = mapToAudioProps(verseListing);
+  const centerContentClassName = mode === 'mushaf' ? 'px-0 sm:px-0 lg:px-0' : undefined;
 
   return (
     <WorkspaceReaderLayout
@@ -226,6 +227,7 @@ export function ReaderShell({
       mobileLeft={<SurahListSidebar />}
       mobileRight={settingsSidebar}
       audio={audioProps}
+      contentClassName={centerContentClassName}
     />
   );
 }

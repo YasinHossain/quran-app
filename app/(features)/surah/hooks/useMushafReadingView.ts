@@ -12,7 +12,7 @@ export type MushafResourceKind = 'surah' | 'juz' | 'page';
 export interface UseMushafReadingViewParams {
   resourceId: string;
   resourceKind: MushafResourceKind;
-  mushafId?: string;
+  mushafId?: string | undefined;
   initialPageNumber?: number;
   chapterId?: number | null;
   juzNumber?: number | null;
@@ -167,10 +167,12 @@ export function useMushafReadingView({
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(resourceKind !== 'page');
   const [error, setError] = useState<string | null>(null);
+  const lastInitialPageNumber =
+    initialMappedPages.length > 0
+      ? initialMappedPages[initialMappedPages.length - 1]?.pageNumber
+      : undefined;
   const [nextPageNumber, setNextPageNumber] = useState<number | null>(() =>
-    initialMappedPages.length
-      ? initialMappedPages[initialMappedPages.length - 1].pageNumber + 1
-      : startPageNumber
+    typeof lastInitialPageNumber === 'number' ? lastInitialPageNumber + 1 : startPageNumber
   );
   const requestTokenRef = useRef(0);
 
@@ -248,10 +250,12 @@ export function useMushafReadingView({
     setError(null);
     setIsLoading(initialMappedPages.length === 0);
     setIsLoadingMore(false);
+    const lastPageNumber =
+      initialMappedPages.length > 0
+        ? initialMappedPages[initialMappedPages.length - 1]?.pageNumber
+        : undefined;
     setNextPageNumber(
-      initialMappedPages.length
-        ? initialMappedPages[initialMappedPages.length - 1].pageNumber + 1
-        : startPageNumber
+      typeof lastPageNumber === 'number' ? lastPageNumber + 1 : startPageNumber
     );
 
     if (!resourceId) {

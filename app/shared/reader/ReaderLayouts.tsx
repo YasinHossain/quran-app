@@ -22,6 +22,7 @@ interface WorkspaceReaderLayoutProps {
   mobileLeft: React.ReactNode;
   mobileRight: React.ReactNode;
   audio: ReaderAudioProps;
+  contentClassName?: string;
 }
 
 export const WorkspaceReaderLayout = ({
@@ -31,6 +32,7 @@ export const WorkspaceReaderLayout = ({
   mobileLeft,
   mobileRight,
   audio,
+  contentClassName,
 }: WorkspaceReaderLayoutProps): React.JSX.Element => (
   <>
     <div className="lg:hidden">
@@ -41,7 +43,12 @@ export const WorkspaceReaderLayout = ({
     <ThreeColumnWorkspace
       left={desktopLeft}
       center={
-        <WorkspaceMain data-slot="surah-workspace-main" reserveLeftSpace reserveRightSpace>
+        <WorkspaceMain
+          data-slot="surah-workspace-main"
+          reserveLeftSpace
+          reserveRightSpace
+          contentClassName={contentClassName}
+        >
           {main}
         </WorkspaceMain>
       }

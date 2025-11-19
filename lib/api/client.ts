@@ -1,7 +1,7 @@
 import { features } from '@/config';
 
-// Prefer the CDN-backed QDC API for higher availability; can be overridden via env
-const API_BASE_URL = process.env['QURAN_API_BASE_URL'] ?? 'https://api.qurancdn.com/api/qdc';
+// Default to the Quran.com QDC API (CORS-enabled); can be overridden via env.
+const API_BASE_URL = process.env['QURAN_API_BASE_URL'] ?? 'https://api.quran.com/api/qdc';
 
 const PROXY_ROUTE_PATH = '/api/quran';
 let memoizedServerProxyBase: string | null | undefined;

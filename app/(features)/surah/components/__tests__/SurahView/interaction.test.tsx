@@ -36,8 +36,7 @@ describe('SurahView interaction', () => {
   it('switches between translation and mushaf tabs', () => {
     renderSurahView();
 
-    const mushafWrapper = (): HTMLElement =>
-      screen.getAllByTestId('mushaf-settings-wrapper')[0];
+    const mushafWrapper = (): HTMLElement => screen.getAllByTestId('mushaf-settings-wrapper')[0];
 
     expect(mushafWrapper()).toHaveAttribute('aria-hidden', 'true');
 
