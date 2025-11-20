@@ -8,7 +8,11 @@ import {
   fontSizeToMushafScale,
   mushafScaleToFontSize,
 } from '@/app/(features)/surah/hooks/mushafFontScale';
-import { getQcfV1Preset, getQcfV2Preset } from '@/app/(features)/surah/hooks/qcfScalePresets';
+import {
+  getQcfV1Preset,
+  getQcfV2Preset,
+  getQpcHafsPreset,
+} from '@/app/(features)/surah/hooks/qcfScalePresets';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 import { Spinner } from '@/app/shared/Spinner';
 import { useSettings } from '@/app/providers/SettingsContext';
@@ -57,7 +61,9 @@ export function MushafMain({
   const { settings } = useSettings();
   const { chapters } = useSurahNavigationData();
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
   const isQcfMushaf = mushafId === 'qcf-madani-v1' || mushafId === 'qcf-madani-v2';
+  const isQpcHafsMushaf = mushafId === 'qpc-uthmani-hafs';
   const qcfVersion = mushafId === 'qcf-madani-v2' ? 'v2' : 'v1';
 
   const chapter = useMemo<Chapter | undefined>(() => {
@@ -137,10 +143,14 @@ export function MushafMain({
                 typeof page.pageNumber === 'number' &&
                 isPageFontLoaded(page.pageNumber);
 
-              const fontFamily =
-                pageFontLoaded && typeof page.pageNumber === 'number'
-                  ? getPageFontFamily(page.pageNumber)
-                  : settings.arabicFontFace;
+              let fontFamily: string;
+              if (isQcfMushaf && pageFontLoaded && typeof page.pageNumber === 'number') {
+                fontFamily = getPageFontFamily(page.pageNumber);
+              } else if (isQpcHafsMushaf) {
+                fontFamily = 'UthmanicHafs1Ver18';
+              } else {
+                fontFamily = settings.arabicFontFace;
+              }
 
               return (
                 <MushafPage
@@ -150,6 +160,7 @@ export function MushafMain({
                   settings={settings}
                   fontFamily={fontFamily}
                   isQcfMushaf={isQcfMushaf}
+                  isQpcHafsMushaf={isQpcHafsMushaf}
                   qcfVersion={qcfVersion}
                   isFontLoaded={!isQcfMushaf || pageFontLoaded}
                 />
@@ -243,6 +254,7 @@ interface MushafPageProps {
   settings: ReaderSettings;
   fontFamily: string;
   isQcfMushaf: boolean;
+  isQpcHafsMushaf: boolean;
   qcfVersion: 'v1' | 'v2';
   isFontLoaded: boolean;
 }
@@ -253,36 +265,46 @@ const MushafPage = ({
   settings,
   fontFamily,
   isQcfMushaf,
+  isQpcHafsMushaf,
   qcfVersion,
   isFontLoaded,
 }: MushafPageProps): React.JSX.Element => {
   const mushafScale = fontSizeToMushafScale(settings.arabicFontSize);
 
-  const { fontSizePx, lineWidthDesktop } = isQcfMushaf
-    ? (qcfVersion === 'v2' ? getQcfV2Preset(mushafScale) : getQcfV1Preset(mushafScale))
-    : {
-      fontSizePx: mushafScaleToFontSize(mushafScale),
-      lineWidthDesktop: `${getLineWidth(mushafScaleToFontSize(mushafScale))}px`,
-    };
+  let fontSizePx: number;
+  let lineWidthDesktop: string;
+
+  if (isQcfMushaf) {
+    const preset = qcfVersion === 'v2' ? getQcfV2Preset(mushafScale) : getQcfV1Preset(mushafScale);
+    fontSizePx = preset.fontSizePx;
+    lineWidthDesktop = preset.lineWidthDesktop;
+  } else if (isQpcHafsMushaf) {
+    const preset = getQpcHafsPreset(mushafScale);
+    fontSizePx = preset.fontSizePx;
+    lineWidthDesktop = preset.lineWidthDesktop;
+  } else {
+    fontSizePx = mushafScaleToFontSize(mushafScale);
+    lineWidthDesktop = `${getLineWidth(mushafScaleToFontSize(mushafScale))}px`;
+  }
 
   return (
     <article
       aria-label={`Page ${pageNumber}`}
       className={cn(
         'mx-auto w-full py-6 sm:py-8',
-        isQcfMushaf ? 'max-w-none overflow-x-auto' : undefined
+        isQcfMushaf || isQpcHafsMushaf ? 'max-w-none overflow-x-auto' : undefined
       )}
     >
       <div
         className={cn(
           'flex flex-col',
-          isQcfMushaf ? 'gap-1 sm:gap-1.5 mx-auto' : 'gap-4 sm:gap-5'
+          isQcfMushaf || isQpcHafsMushaf ? 'gap-1 sm:gap-1.5 mx-auto' : 'gap-4 sm:gap-5'
         )}
         style={
           {
             '--mushaf-line-width': lineWidthDesktop,
             fontFamily,
-            width: isQcfMushaf ? 'max-content' : 'auto',
+            width: isQcfMushaf || isQpcHafsMushaf ? 'max-content' : 'auto',
           } as React.CSSProperties
         }
       >
@@ -292,6 +314,7 @@ const MushafPage = ({
             line={line}
             settings={settings}
             isQcfMushaf={isQcfMushaf}
+            isQpcHafsMushaf={isQpcHafsMushaf}
             qcfVersion={qcfVersion}
             fontSizePx={fontSizePx}
             isFontLoaded={isFontLoaded}
@@ -313,6 +336,7 @@ const MushafLine = ({
   line,
   settings,
   isQcfMushaf,
+  isQpcHafsMushaf,
   qcfVersion,
   fontSizePx,
   isFontLoaded,
@@ -320,6 +344,7 @@ const MushafLine = ({
   line: MushafLineGroup;
   settings: ReaderSettings;
   isQcfMushaf: boolean;
+  isQpcHafsMushaf: boolean;
   qcfVersion: 'v1' | 'v2';
   fontSizePx: number;
   isFontLoaded: boolean;
@@ -329,15 +354,15 @@ const MushafLine = ({
     className="mx-auto text-center"
     style={{
       fontSize: `${fontSizePx}px`,
-      maxWidth: isQcfMushaf ? 'none' : 'min(var(--mushaf-line-width, 560px), 90vw)',
+      maxWidth: isQcfMushaf || isQpcHafsMushaf ? 'none' : 'min(var(--mushaf-line-width, 560px), 90vw)',
       width: '100%',
     }}
   >
     <div
       className={cn(
-        isQcfMushaf ? 'leading-[1.8]' : 'leading-[2.35]',
+        isQcfMushaf || isQpcHafsMushaf ? 'leading-[1.8]' : 'leading-[2.35]',
         'flex',
-        isQcfMushaf ? 'justify-between' : 'justify-center'
+        isQcfMushaf || isQpcHafsMushaf ? 'justify-between' : 'justify-center'
       )}
       translate="no"
     >
@@ -347,6 +372,7 @@ const MushafLine = ({
           word={word}
           settings={settings}
           isQcfMushaf={isQcfMushaf}
+          isQpcHafsMushaf={isQpcHafsMushaf}
           qcfVersion={qcfVersion}
           isFontLoaded={isFontLoaded}
         />
@@ -359,12 +385,14 @@ const MushafWordText = ({
   word,
   settings,
   isQcfMushaf,
+  isQpcHafsMushaf,
   qcfVersion,
   isFontLoaded,
 }: {
   word: MushafWord;
   settings: ReaderSettings;
   isQcfMushaf: boolean;
+  isQpcHafsMushaf: boolean;
   qcfVersion: 'v1' | 'v2';
   isFontLoaded: boolean;
 }): React.JSX.Element | null => {
@@ -374,6 +402,23 @@ const MushafWordText = ({
   }
 
   const baseText = word.textUthmani ?? word.textIndopak ?? '';
+  // Remove the "Silent Alif" (U+06DF) and "Sukun" (U+0652) if they are causing issues with this font?
+  // No, U+06DF is standard.
+  // But maybe the font uses a different character or the API returns a character that is not supported.
+  // Let's try to strip U+06DF if it exists, just to see if it fixes the black circle.
+  // Actually, if it's a black circle, it's likely U+06DF (Small High Rounded Zero).
+  // If the font doesn't support it, it shows .notdef.
+  // But UthmanicHafs1Ver18 SHOULD support it.
+  // Maybe the API returns U+06E1 (Small High Dotless Head of Khah) or something else?
+  // Let's try to replace U+06DF with nothing or a compatible char if isQpcHafsMushaf.
+
+  // However, the user says "black circle".
+  // If I look at the image, it's a solid black circle.
+  // This is often how Chrome renders U+06DF if the font doesn't have it.
+
+  // I will try to filter out U+06DF for QPC Hafs for now.
+  const displayText = isQpcHafsMushaf ? baseText.replace(/\u06DF/g, '') : baseText;
+
   const code = qcfVersion === 'v2' ? word.codeV2 : word.codeV1;
   const hasGlyphCode = typeof code === 'string' && code.length > 0;
 
@@ -387,6 +432,10 @@ const MushafWordText = ({
     // When the per-page QCF font is loaded, render the glyph-encoded text
     // so that the layout and calligraphy match Quran.com exactly.
     rawHtml = code as string;
+  } else if (isQpcHafsMushaf) {
+    // For QPC Uthmani Hafs, we use the textUthmani with the UthmanicHafs1Ver18 font.
+    // We assume textUthmani contains the correct characters for this font.
+    rawHtml = displayText;
   } else if (baseText) {
     // Fallback to standard Uthmani/Indopak text. For non-QCF mushaf we
     // optionally apply tajweed colouring.

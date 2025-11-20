@@ -18,6 +18,13 @@ export const MUSHAF_OPTIONS: MushafOption[] = [
     lines: 15,
   },
   {
+    id: 'qpc-uthmani-hafs',
+    name: 'Quran.com · QPC Uthmani Hafs',
+    description: 'High-fidelity Uthmani Hafs font (text-based).',
+    script: 'uthmani',
+    lines: 15,
+  },
+  {
     id: 'unicode-indopak-16',
     name: 'Unicode IndoPak (16-line)',
     description: 'Standard text-based IndoPak mushaf.',
