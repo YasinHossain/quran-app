@@ -34,3 +34,25 @@ export const getQcfV1Preset = (scale: number): QcfScalePreset => {
   const key = clampScale(scale);
   return (QCF_V1_PRESETS[key] ?? QCF_V1_PRESETS[1])!;
 };
+
+/**
+ * Approximated Quran.com King Fahad Complex V2 presets.
+ * Based on code_v2 scales from quran-com-frontend-next.
+ */
+const QCF_V2_PRESETS: Record<number, QcfScalePreset> = {
+  1: { fontSizePx: 28, lineWidthDesktop: '52vh' },
+  2: { fontSizePx: 31, lineWidthDesktop: '54vh' },
+  3: { fontSizePx: 34, lineWidthDesktop: '56vh' },
+  4: { fontSizePx: 37, lineWidthDesktop: '61vh' },
+  5: { fontSizePx: 40, lineWidthDesktop: '64.5vh' },
+  6: { fontSizePx: 44, lineWidthDesktop: '90.4vh' },
+  7: { fontSizePx: 48, lineWidthDesktop: '116.3vh' },
+  8: { fontSizePx: 52, lineWidthDesktop: '142.2vh' },
+  9: { fontSizePx: 56, lineWidthDesktop: '168.1vh' },
+  10: { fontSizePx: 60, lineWidthDesktop: '194vh' },
+};
+
+export const getQcfV2Preset = (scale: number): QcfScalePreset => {
+  const key = clampScale(scale);
+  return (QCF_V2_PRESETS[key] ?? QCF_V2_PRESETS[1])!;
+};

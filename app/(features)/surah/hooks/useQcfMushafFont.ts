@@ -9,8 +9,11 @@ interface UseQcfFontResult {
   isPageFontLoaded: (pageNumber: number) => boolean;
 }
 
-export const useQcfMushafFont = (pageNumbers: number[]): UseQcfFontResult => {
-  const [loadedMap, setLoadedMap] = useState<Record<number, boolean>>({});
+export const useQcfMushafFont = (
+  pageNumbers: number[],
+  version: 'v1' | 'v2' = 'v1'
+): UseQcfFontResult => {
+  const [loadedMap, setLoadedMap] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (typeof document === 'undefined' || !('fonts' in document)) return;
@@ -20,11 +23,12 @@ export const useQcfMushafFont = (pageNumbers: number[]): UseQcfFontResult => {
     );
 
     uniquePages.forEach((pageNumber) => {
-      const fontFaceName = `p${pageNumber}-v1`;
-      const src = `url('/fonts/quran/hafs/v1/woff2/p${pageNumber}.woff2') format('woff2')`;
+      const fontFaceName = `p${pageNumber}-${version}`;
+      const src = `url('/fonts/quran/hafs/${version}/woff2/p${pageNumber}.woff2') format('woff2')`;
+      const key = `${version}-${pageNumber}`;
 
       // Skip if we've already marked this page as loaded.
-      if (loadedMap[pageNumber]) return;
+      if (loadedMap[key]) return;
 
       const loadFont = async (): Promise<void> => {
         const fontFace = new FontFace(fontFaceName, src);
@@ -32,7 +36,7 @@ export const useQcfMushafFont = (pageNumbers: number[]): UseQcfFontResult => {
         try {
           const loadedFace = await fontFace.load();
           (document as Document & { fonts?: FontFaceSet }).fonts?.add(loadedFace);
-          setLoadedMap((prev) => (prev[pageNumber] ? prev : { ...prev, [pageNumber]: true }));
+          setLoadedMap((prev) => (prev[key] ? prev : { ...prev, [key]: true }));
         } catch {
           // Ignore failures for individual pages; caller can fall back.
         }
@@ -40,15 +44,18 @@ export const useQcfMushafFont = (pageNumbers: number[]): UseQcfFontResult => {
 
       void loadFont();
     });
-  }, [pageNumbers, loadedMap]);
+  }, [pageNumbers, loadedMap, version]);
 
-  const getPageFontFamily = useCallback((pageNumber: number): string => {
-    return `p${pageNumber}-v1`;
-  }, []);
+  const getPageFontFamily = useCallback(
+    (pageNumber: number): string => {
+      return `p${pageNumber}-${version}`;
+    },
+    [version]
+  );
 
   const isPageFontLoaded = useCallback(
-    (pageNumber: number): boolean => Boolean(pageNumber && loadedMap[pageNumber]),
-    [loadedMap]
+    (pageNumber: number): boolean => Boolean(pageNumber && loadedMap[`${version}-${pageNumber}`]),
+    [loadedMap, version]
   );
 
   return { getPageFontFamily, isPageFontLoaded };

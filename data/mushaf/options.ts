@@ -11,6 +11,13 @@ export const MUSHAF_OPTIONS: MushafOption[] = [
     lines: 15,
   },
   {
+    id: 'qcf-madani-v2',
+    name: 'Quran.com · King Fahad Complex V2',
+    description: 'High-fidelity Uthmani glyph mushaf V2 (per-page QCF fonts).',
+    script: 'uthmani',
+    lines: 15,
+  },
+  {
     id: 'unicode-indopak-16',
     name: 'Unicode IndoPak (16-line)',
     description: 'Standard text-based IndoPak mushaf.',

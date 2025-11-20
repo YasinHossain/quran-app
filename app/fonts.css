@@ -61,3 +61,11 @@
   font-style: normal;
   font-display: swap;
 }
+
+@font-face {
+  font-family: 'UthmanicHafs1Ver18';
+  src: url('/fonts/UthmanicHafs1Ver18.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}

@@ -12,6 +12,7 @@ export const ARABIC_FONTS = [
   { name: 'Noto Nastaliq Urdu', value: '"Noto Nastaliq Urdu", serif', category: 'IndoPak' },
   { name: 'Noor-e-Hira', value: '"Noor-e-Hira", serif', category: 'IndoPak' },
   { name: 'Lateef', value: '"Lateef", serif', category: 'IndoPak' },
+  { name: 'QPC Uthmani Hafs', value: '"UthmanicHafs1Ver18", serif', category: 'Uthmani' },
 ];
 
 const DEFAULT_ARABIC_FONT = ARABIC_FONTS[0]?.value ?? '"KFGQPC-Uthman-Taha", serif';

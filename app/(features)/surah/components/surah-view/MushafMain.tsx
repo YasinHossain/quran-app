@@ -8,7 +8,7 @@ import {
   fontSizeToMushafScale,
   mushafScaleToFontSize,
 } from '@/app/(features)/surah/hooks/mushafFontScale';
-import { getQcfV1Preset } from '@/app/(features)/surah/hooks/qcfScalePresets';
+import { getQcfV1Preset, getQcfV2Preset } from '@/app/(features)/surah/hooks/qcfScalePresets';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 import { Spinner } from '@/app/shared/Spinner';
 import { useSettings } from '@/app/providers/SettingsContext';
@@ -57,7 +57,8 @@ export function MushafMain({
   const { settings } = useSettings();
   const { chapters } = useSurahNavigationData();
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
-  const isQcfMushaf = mushafId === 'qcf-madani-v1';
+  const isQcfMushaf = mushafId === 'qcf-madani-v1' || mushafId === 'qcf-madani-v2';
+  const qcfVersion = mushafId === 'qcf-madani-v2' ? 'v2' : 'v1';
 
   const chapter = useMemo<Chapter | undefined>(() => {
     if (typeof chapterId !== 'number') return undefined;
@@ -75,7 +76,10 @@ export function MushafMain({
   );
 
   // Load per-page QCF fonts when the QCF mushaf is selected.
-  const { getPageFontFamily, isPageFontLoaded } = useQcfMushafFont(isQcfMushaf ? pageNumbers : []);
+  const { getPageFontFamily, isPageFontLoaded } = useQcfMushafFont(
+    isQcfMushaf ? pageNumbers : [],
+    qcfVersion
+  );
 
   useEffect(() => {
     if (!onLoadMore || !hasMore) return;
@@ -146,6 +150,7 @@ export function MushafMain({
                   settings={settings}
                   fontFamily={fontFamily}
                   isQcfMushaf={isQcfMushaf}
+                  qcfVersion={qcfVersion}
                   isFontLoaded={!isQcfMushaf || pageFontLoaded}
                 />
               );
@@ -238,6 +243,7 @@ interface MushafPageProps {
   settings: ReaderSettings;
   fontFamily: string;
   isQcfMushaf: boolean;
+  qcfVersion: 'v1' | 'v2';
   isFontLoaded: boolean;
 }
 
@@ -247,12 +253,13 @@ const MushafPage = ({
   settings,
   fontFamily,
   isQcfMushaf,
+  qcfVersion,
   isFontLoaded,
 }: MushafPageProps): React.JSX.Element => {
   const mushafScale = fontSizeToMushafScale(settings.arabicFontSize);
 
   const { fontSizePx, lineWidthDesktop } = isQcfMushaf
-    ? getQcfV1Preset(mushafScale)
+    ? (qcfVersion === 'v2' ? getQcfV2Preset(mushafScale) : getQcfV1Preset(mushafScale))
     : {
       fontSizePx: mushafScaleToFontSize(mushafScale),
       lineWidthDesktop: `${getLineWidth(mushafScaleToFontSize(mushafScale))}px`,
@@ -285,6 +292,7 @@ const MushafPage = ({
             line={line}
             settings={settings}
             isQcfMushaf={isQcfMushaf}
+            qcfVersion={qcfVersion}
             fontSizePx={fontSizePx}
             isFontLoaded={isFontLoaded}
           />
@@ -305,12 +313,14 @@ const MushafLine = ({
   line,
   settings,
   isQcfMushaf,
+  qcfVersion,
   fontSizePx,
   isFontLoaded,
 }: {
   line: MushafLineGroup;
   settings: ReaderSettings;
   isQcfMushaf: boolean;
+  qcfVersion: 'v1' | 'v2';
   fontSizePx: number;
   isFontLoaded: boolean;
 }): React.JSX.Element => (
@@ -337,6 +347,7 @@ const MushafLine = ({
           word={word}
           settings={settings}
           isQcfMushaf={isQcfMushaf}
+          qcfVersion={qcfVersion}
           isFontLoaded={isFontLoaded}
         />
       ))}
@@ -348,11 +359,13 @@ const MushafWordText = ({
   word,
   settings,
   isQcfMushaf,
+  qcfVersion,
   isFontLoaded,
 }: {
   word: MushafWord;
   settings: ReaderSettings;
   isQcfMushaf: boolean;
+  qcfVersion: 'v1' | 'v2';
   isFontLoaded: boolean;
 }): React.JSX.Element | null => {
   if (word.charType === 'end') {
@@ -361,7 +374,8 @@ const MushafWordText = ({
   }
 
   const baseText = word.textUthmani ?? word.textIndopak ?? '';
-  const hasGlyphCode = typeof word.codeV1 === 'string' && word.codeV1.length > 0;
+  const code = qcfVersion === 'v2' ? word.codeV2 : word.codeV1;
+  const hasGlyphCode = typeof code === 'string' && code.length > 0;
 
   if (!baseText && (!isQcfMushaf || !hasGlyphCode)) {
     return null;
@@ -372,7 +386,7 @@ const MushafWordText = ({
   if (isQcfMushaf && isFontLoaded && hasGlyphCode) {
     // When the per-page QCF font is loaded, render the glyph-encoded text
     // so that the layout and calligraphy match Quran.com exactly.
-    rawHtml = word.codeV1 as string;
+    rawHtml = code as string;
   } else if (baseText) {
     // Fallback to standard Uthmani/Indopak text. For non-QCF mushaf we
     // optionally apply tajweed colouring.
