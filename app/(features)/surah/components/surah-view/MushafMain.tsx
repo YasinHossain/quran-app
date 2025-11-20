@@ -254,9 +254,9 @@ const MushafPage = ({
   const { fontSizePx, lineWidthDesktop } = isQcfMushaf
     ? getQcfV1Preset(mushafScale)
     : {
-        fontSizePx: mushafScaleToFontSize(mushafScale),
-        lineWidthDesktop: `${getLineWidth(mushafScaleToFontSize(mushafScale))}px`,
-      };
+      fontSizePx: mushafScaleToFontSize(mushafScale),
+      lineWidthDesktop: `${getLineWidth(mushafScaleToFontSize(mushafScale))}px`,
+    };
 
   return (
     <article
@@ -269,12 +269,13 @@ const MushafPage = ({
       <div
         className={cn(
           'flex flex-col',
-          isQcfMushaf ? 'gap-1 sm:gap-1.5' : 'gap-4 sm:gap-5'
+          isQcfMushaf ? 'gap-1 sm:gap-1.5 mx-auto' : 'gap-4 sm:gap-5'
         )}
         style={
           {
             '--mushaf-line-width': lineWidthDesktop,
             fontFamily,
+            width: isQcfMushaf ? 'max-content' : 'auto',
           } as React.CSSProperties
         }
       >
@@ -318,14 +319,15 @@ const MushafLine = ({
     className="mx-auto text-center"
     style={{
       fontSize: `${fontSizePx}px`,
-      maxWidth: 'min(var(--mushaf-line-width, 560px), 90vw)',
+      maxWidth: isQcfMushaf ? 'none' : 'min(var(--mushaf-line-width, 560px), 90vw)',
       width: '100%',
     }}
   >
     <div
       className={cn(
         isQcfMushaf ? 'leading-[1.8]' : 'leading-[2.35]',
-        'flex justify-center'
+        'flex',
+        isQcfMushaf ? 'justify-between' : 'justify-center'
       )}
       translate="no"
     >
