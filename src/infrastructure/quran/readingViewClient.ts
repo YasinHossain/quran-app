@@ -1,11 +1,9 @@
 import { DEFAULT_MUSHAF_ID } from '@/data/mushaf/options';
 import { apiFetch } from '@/lib/api/client';
-import type { MushafVerse } from '@/types';
 
-import {
-  mapReadingViewVerseToMushafVerse,
-  type ReadingViewApiVerse,
-} from './mapReadingViewTypes';
+import { mapReadingViewVerseToMushafVerse, type ReadingViewApiVerse } from './mapReadingViewTypes';
+
+import type { MushafVerse } from '@/types';
 
 const API_MUSHAF_FALLBACK_ID = 2; // Madani V1 layout
 const API_MUSHAF_MAP: Record<string, number> = {

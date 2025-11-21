@@ -21,6 +21,7 @@ import { applyTajweed } from '@/lib/text/tajweed';
 import { cn } from '@/lib/utils/cn';
 
 import type { Chapter, MushafLineGroup, MushafPageLines, MushafWord } from '@/types';
+import { VerseMarker } from './VerseMarker';
 
 interface MushafMainProps {
   mushafName: string;
@@ -460,28 +461,7 @@ const MushafWordText = ({
   );
 };
 
-const VerseMarker = ({ number }: { number: number }): React.JSX.Element => (
-  <span
-    aria-label={`Ayah ${number}`}
-    className="relative inline-flex h-8 min-w-[2rem] flex-none items-center justify-center align-middle text-[0.8rem] font-semibold text-accent mx-[4px]"
-  >
-    <span
-      aria-hidden="true"
-      className="absolute inline-flex h-8 min-w-[2rem] items-center justify-center rounded-full border border-border/70 bg-surface shadow-[0_6px_16px_rgba(15,23,42,0.12)]"
-    />
-    <span
-      aria-hidden="true"
-      className="absolute inline-flex h-[1.6rem] min-w-[1.6rem] items-center justify-center rounded-full border border-border/40"
-    />
-    <span
-      aria-hidden="true"
-      className="absolute inline-flex h-[1.2rem] min-w-[1.2rem] items-center justify-center rounded-full border border-border/20"
-    />
-    <span className="relative inline-flex min-w-[1.2rem] items-center justify-center">
-      {toArabicIndicNumber(number)}
-    </span>
-  </span>
-);
+
 
 const getLineWidth = (fontSize: number): number => {
   const scaled = fontSize * LINE_WIDTH_SCALE;

@@ -74,24 +74,26 @@ export function SettingsSidebarContent({
 }: SettingsSidebarContentProps): React.JSX.Element {
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
   const tabsEnabled = readerTabsEnabled;
+  const hookTabState = useSettingsTabState(
+    onReadingPanelOpen || onTranslationTabOpen || activeReaderMode
+      ? {
+        ...(onReadingPanelOpen ? { onReadingPanelOpen } : {}),
+        ...(onTranslationTabOpen ? { onTranslationTabOpen } : {}),
+        ...(activeReaderMode ? { activeTabOverride: activeReaderMode } : {}),
+      }
+      : {}
+  );
+
   const tabState = tabsEnabled
-    ? useSettingsTabState(
-        onReadingPanelOpen || onTranslationTabOpen || activeReaderMode
-          ? {
-              ...(onReadingPanelOpen ? { onReadingPanelOpen } : {}),
-              ...(onTranslationTabOpen ? { onTranslationTabOpen } : {}),
-              ...(activeReaderMode ? { activeTabOverride: activeReaderMode } : {}),
-            }
-          : {}
-      )
+    ? hookTabState
     : {
-        activeTab: 'translation' as const,
-        handleTabChange: () => {},
-        tabOptions: [{ value: 'translation', label: 'Translation' }] as Array<{
-          value: SettingsTabValue;
-          label: string;
-        }>,
-      };
+      activeTab: 'translation' as const,
+      handleTabChange: () => { },
+      tabOptions: [{ value: 'translation', label: 'Translation' }] as Array<{
+        value: SettingsTabValue;
+        label: string;
+      }>,
+    };
 
   const { activeTab, handleTabChange, tabOptions } = tabState;
   const { openSections, handleSectionToggle } = useSettingsSections();
