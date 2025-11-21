@@ -418,7 +418,8 @@ const MushafWordText = ({
   // This is often how Chrome renders U+06DF if the font doesn't have it.
 
   // I will try to filter out U+06DF for QPC Hafs for now.
-  const displayText = isQpcHafsMushaf ? baseText.replace(/\u06DF/g, '') : baseText;
+  // Also filter out U+06DD (End of Ayah) to prevent double markers (one from text, one from VerseMarker component)
+  const displayText = isQpcHafsMushaf ? baseText.replace(/[\u06DF\u06DD]/g, '') : baseText.replace(/\u06DD/g, '');
 
   const code = qcfVersion === 'v2' ? word.codeV2 : word.codeV1;
   const hasGlyphCode = typeof code === 'string' && code.length > 0;
