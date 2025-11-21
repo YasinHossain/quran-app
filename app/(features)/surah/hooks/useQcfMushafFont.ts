@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
  * Load Quran.com King Fahad Complex (Madani V1) fonts per page using the
@@ -14,6 +14,7 @@ export const useQcfMushafFont = (
   version: 'v1' | 'v2' = 'v1'
 ): UseQcfFontResult => {
   const [loadedMap, setLoadedMap] = useState<Record<string, boolean>>({});
+  const loadingRef = useRef<Record<string, boolean>>({});
 
   useEffect(() => {
     if (typeof document === 'undefined' || !('fonts' in document)) return;
@@ -27,8 +28,22 @@ export const useQcfMushafFont = (
       const src = `url('/fonts/quran/hafs/${version}/woff2/p${pageNumber}.woff2') format('woff2')`;
       const key = `${version}-${pageNumber}`;
 
+      // Check if already loaded in document.fonts
+      const isAlreadyLoaded = Array.from(document.fonts).some(
+        (f) => f.family === fontFaceName && f.status === 'loaded'
+      );
+
+      if (isAlreadyLoaded) {
+        setLoadedMap((prev) => (prev[key] ? prev : { ...prev, [key]: true }));
+        return;
+      }
+
       // Skip if we've already marked this page as loaded.
       if (loadedMap[key]) return;
+
+      // Skip if currently loading
+      if (loadingRef.current[key]) return;
+      loadingRef.current[key] = true;
 
       const loadFont = async (): Promise<void> => {
         const fontFace = new FontFace(fontFaceName, src);
@@ -37,8 +52,10 @@ export const useQcfMushafFont = (
           const loadedFace = await fontFace.load();
           (document as Document & { fonts?: FontFaceSet }).fonts?.add(loadedFace);
           setLoadedMap((prev) => (prev[key] ? prev : { ...prev, [key]: true }));
-        } catch {
-          // Ignore failures for individual pages; caller can fall back.
+        } catch (error) {
+          console.error(`Failed to load font ${fontFaceName}`, error);
+          // Reset loading state on error so we can retry if needed (e.g. on next render or user action)
+          loadingRef.current[key] = false;
         }
       };
 

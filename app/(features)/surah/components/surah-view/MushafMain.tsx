@@ -293,7 +293,7 @@ const MushafPage = ({
       aria-label={`Page ${pageNumber}`}
       className={cn(
         'mx-auto w-full py-6 sm:py-8',
-        isQcfMushaf || isQpcHafsMushaf ? 'max-w-none overflow-x-auto' : undefined
+        isQcfMushaf || isQpcHafsMushaf ? 'max-w-none overflow-x-auto px-8' : undefined
       )}
     >
       <div
@@ -305,7 +305,7 @@ const MushafPage = ({
           {
             '--mushaf-line-width': lineWidthDesktop,
             fontFamily,
-            width: isQcfMushaf || isQpcHafsMushaf ? 'max-content' : 'auto',
+            width: isQcfMushaf || isQpcHafsMushaf ? 'min(var(--mushaf-line-width), 100%)' : 'auto',
           } as React.CSSProperties
         }
       >
@@ -361,7 +361,11 @@ const MushafLine = ({
   >
     <div
       className={cn(
-        isQcfMushaf || isQpcHafsMushaf ? 'leading-[1.8]' : 'leading-[2.35]',
+        (isQcfMushaf && qcfVersion === 'v1') || isQpcHafsMushaf
+          ? 'leading-[1.6]'
+          : isQcfMushaf
+            ? 'leading-[1.8]'
+            : 'leading-[2.35]',
         'flex',
         isQcfMushaf || isQpcHafsMushaf ? 'justify-between' : 'justify-center'
       )}
