@@ -124,6 +124,10 @@ Source: [Quran.com](https://github.com/quran/quran.com-frontend-next) — extrac
 
 License: Covered by the same King Fahd Glorious Quran Printing Complex Electronic End-User License Agreement quoted above for the `KFGQPC-Uthman-Taha` fonts. The glyph assets are redistributed unmodified for high-fidelity Mushaf rendering.
 
+## IndoPak Nastaleeq Waqf Lazim (public/fonts/quran/hafs/nastaleeq/indopak)
+
+Source: [Quran.com](https://github.com/quran/quran.com-frontend-next) — IndoPak Nastaleeq Waqf Lazim v4.2.1 font files (TTF/WOFF/WOFF2) provided unmodified for compatibility with Quran.com Mushaf layouts. The font is authored by QuranWBW; refer to the upstream distribution for licensing terms.
+
 ## Noor-e-Hira.ttf
 
 Source: [NooreHidayat](http://www.noorehidayat.org/)

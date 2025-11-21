@@ -10,6 +10,7 @@ const API_MUSHAF_MAP: Record<string, number> = {
   [DEFAULT_MUSHAF_ID]: 2,
   'qcf-madani-v2': 1,
   'qpc-uthmani-hafs': 5,
+  'unicode-indopak-15': 6,
   'unicode-indopak-16': 7,
 };
 

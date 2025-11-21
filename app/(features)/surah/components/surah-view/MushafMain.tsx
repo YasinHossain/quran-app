@@ -65,6 +65,7 @@ export function MushafMain({
 
   const isQcfMushaf = mushafId === 'qcf-madani-v1' || mushafId === 'qcf-madani-v2';
   const isQpcHafsMushaf = mushafId === 'qpc-uthmani-hafs';
+  const isIndopakMushaf = mushafId === 'unicode-indopak-15' || mushafId === 'unicode-indopak-16';
   const qcfVersion = mushafId === 'qcf-madani-v2' ? 'v2' : 'v1';
 
   const chapter = useMemo<Chapter | undefined>(() => {
@@ -149,6 +150,8 @@ export function MushafMain({
                 fontFamily = getPageFontFamily(page.pageNumber);
               } else if (isQpcHafsMushaf) {
                 fontFamily = 'UthmanicHafs1Ver18';
+              } else if (isIndopakMushaf) {
+                fontFamily = 'IndoPak';
               } else {
                 fontFamily = settings.arabicFontFace;
               }
@@ -162,6 +165,7 @@ export function MushafMain({
                   fontFamily={fontFamily}
                   isQcfMushaf={isQcfMushaf}
                   isQpcHafsMushaf={isQpcHafsMushaf}
+                  isIndopakMushaf={isIndopakMushaf}
                   qcfVersion={qcfVersion}
                   isFontLoaded={!isQcfMushaf || pageFontLoaded}
                 />
@@ -256,6 +260,7 @@ interface MushafPageProps {
   fontFamily: string;
   isQcfMushaf: boolean;
   isQpcHafsMushaf: boolean;
+  isIndopakMushaf: boolean;
   qcfVersion: 'v1' | 'v2';
   isFontLoaded: boolean;
 }
@@ -267,6 +272,7 @@ const MushafPage = ({
   fontFamily,
   isQcfMushaf,
   isQpcHafsMushaf,
+  isIndopakMushaf,
   qcfVersion,
   isFontLoaded,
 }: MushafPageProps): React.JSX.Element => {
@@ -279,7 +285,7 @@ const MushafPage = ({
     const preset = qcfVersion === 'v2' ? getQcfV2Preset(mushafScale) : getQcfV1Preset(mushafScale);
     fontSizePx = preset.fontSizePx;
     lineWidthDesktop = preset.lineWidthDesktop;
-  } else if (isQpcHafsMushaf) {
+  } else if (isQpcHafsMushaf || isIndopakMushaf) {
     const preset = getQpcHafsPreset(mushafScale);
     fontSizePx = preset.fontSizePx;
     lineWidthDesktop = preset.lineWidthDesktop;
@@ -293,19 +299,26 @@ const MushafPage = ({
       aria-label={`Page ${pageNumber}`}
       className={cn(
         'mx-auto w-full py-6 sm:py-8',
-        isQcfMushaf || isQpcHafsMushaf ? 'max-w-none overflow-x-auto px-8' : undefined
+        isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf
+          ? 'max-w-none overflow-x-auto px-8'
+          : undefined
       )}
     >
       <div
-        className={cn(
-          'flex flex-col',
-          isQcfMushaf || isQpcHafsMushaf ? 'gap-1 sm:gap-1.5 mx-auto' : 'gap-4 sm:gap-5'
-        )}
+      className={cn(
+        'flex flex-col',
+        isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf
+          ? 'gap-1 sm:gap-1.5 mx-auto'
+          : 'gap-4 sm:gap-5'
+      )}
         style={
           {
             '--mushaf-line-width': lineWidthDesktop,
             fontFamily,
-            width: isQcfMushaf || isQpcHafsMushaf ? 'min(var(--mushaf-line-width), 100%)' : 'auto',
+            width:
+              isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf
+                ? 'min(var(--mushaf-line-width), 100%)'
+                : 'auto',
           } as React.CSSProperties
         }
       >
@@ -316,6 +329,7 @@ const MushafPage = ({
             settings={settings}
             isQcfMushaf={isQcfMushaf}
             isQpcHafsMushaf={isQpcHafsMushaf}
+            isIndopakMushaf={isIndopakMushaf}
             qcfVersion={qcfVersion}
             fontSizePx={fontSizePx}
             isFontLoaded={isFontLoaded}
@@ -338,6 +352,7 @@ const MushafLine = ({
   settings,
   isQcfMushaf,
   isQpcHafsMushaf,
+  isIndopakMushaf,
   qcfVersion,
   fontSizePx,
   isFontLoaded,
@@ -346,28 +361,32 @@ const MushafLine = ({
   settings: ReaderSettings;
   isQcfMushaf: boolean;
   isQpcHafsMushaf: boolean;
+  isIndopakMushaf: boolean;
   qcfVersion: 'v1' | 'v2';
   fontSizePx: number;
   isFontLoaded: boolean;
 }): React.JSX.Element => (
   <div
     dir="rtl"
-    className="mx-auto text-center"
-    style={{
-      fontSize: `${fontSizePx}px`,
-      maxWidth: isQcfMushaf || isQpcHafsMushaf ? 'none' : 'min(var(--mushaf-line-width, 560px), 90vw)',
-      width: '100%',
-    }}
-  >
-    <div
-      className={cn(
-        (isQcfMushaf && qcfVersion === 'v1') || isQpcHafsMushaf
+      className="mx-auto text-center"
+      style={{
+        fontSize: `${fontSizePx}px`,
+        maxWidth:
+          isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf
+            ? 'none'
+            : 'min(var(--mushaf-line-width, 560px), 90vw)',
+        width: '100%',
+      }}
+    >
+      <div
+        className={cn(
+        (isQcfMushaf && qcfVersion === 'v1') || isQpcHafsMushaf || isIndopakMushaf
           ? 'leading-[1.6]'
           : isQcfMushaf
             ? 'leading-[1.8]'
             : 'leading-[2.35]',
         'flex',
-        isQcfMushaf || isQpcHafsMushaf ? 'justify-between' : 'justify-center'
+        isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf ? 'justify-between' : 'justify-center'
       )}
       translate="no"
     >
@@ -378,6 +397,7 @@ const MushafLine = ({
           settings={settings}
           isQcfMushaf={isQcfMushaf}
           isQpcHafsMushaf={isQpcHafsMushaf}
+          isIndopakMushaf={isIndopakMushaf}
           qcfVersion={qcfVersion}
           isFontLoaded={isFontLoaded}
         />
@@ -391,6 +411,7 @@ const MushafWordText = ({
   settings,
   isQcfMushaf,
   isQpcHafsMushaf,
+  isIndopakMushaf,
   qcfVersion,
   isFontLoaded,
 }: {
@@ -398,6 +419,7 @@ const MushafWordText = ({
   settings: ReaderSettings;
   isQcfMushaf: boolean;
   isQpcHafsMushaf: boolean;
+  isIndopakMushaf: boolean;
   qcfVersion: 'v1' | 'v2';
   isFontLoaded: boolean;
 }): React.JSX.Element | null => {
@@ -406,7 +428,9 @@ const MushafWordText = ({
     return typeof verseNumber === 'number' ? <VerseMarker number={verseNumber} /> : null;
   }
 
-  const baseText = word.textUthmani ?? word.textIndopak ?? '';
+  const baseText = isIndopakMushaf
+    ? word.textIndopak ?? word.textUthmani ?? ''
+    : word.textUthmani ?? word.textIndopak ?? '';
   // Remove the "Silent Alif" (U+06DF) and "Sukun" (U+0652) if they are causing issues with this font?
   // No, U+06DF is standard.
   // But maybe the font uses a different character or the API returns a character that is not supported.

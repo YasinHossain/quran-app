@@ -25,9 +25,16 @@ export const MUSHAF_OPTIONS: MushafOption[] = [
     lines: 15,
   },
   {
+    id: 'unicode-indopak-15',
+    name: 'Quran.com · IndoPak (15-line)',
+    description: 'IndoPak Nastaleeq layout with 15 lines per page.',
+    script: 'indopak',
+    lines: 15,
+  },
+  {
     id: 'unicode-indopak-16',
-    name: 'Unicode IndoPak (16-line)',
-    description: 'Standard text-based IndoPak mushaf.',
+    name: 'Quran.com · IndoPak (16-line)',
+    description: 'Standard IndoPak Nastaleeq layout (16 lines per page).',
     script: 'indopak',
     lines: 16,
   },
