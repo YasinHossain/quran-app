@@ -12,6 +12,7 @@ import {
   getQcfV1Preset,
   getQcfV2Preset,
   getQpcHafsPreset,
+  getIndopak15Preset,
 } from '@/app/(features)/surah/hooks/qcfScalePresets';
 import { Spinner } from '@/app/shared/Spinner';
 import { useSettings } from '@/app/providers/SettingsContext';
@@ -120,9 +121,9 @@ const SurahCalligraphyIntro = ({
             >
               {chapter?.revelation_place === 'makkah' ? 'مكية' : 'مدنية'}
             </span>
-            <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground sm:text-sm">
+            <div className="flex items-center gap-1 text-xs font-medium uppercase tracking-wide text-muted-foreground sm:text-sm">
               <span>{translatedName}</span>
-              <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground" />
+              <span>•</span>
               <span>{chapter?.verses_count} Verses</span>
             </div>
           </div>
@@ -311,19 +312,23 @@ const MushafPage = ({
 }: MushafPageProps): React.JSX.Element => {
   const mushafScale = fontSizeToMushafScale(settings.arabicFontSize);
 
-  let fontSizePx: number;
+  let fontSize: string | number;
   let lineWidthDesktop: string;
 
   if (isQcfMushaf) {
     const preset = qcfVersion === 'v2' ? getQcfV2Preset(mushafScale) : getQcfV1Preset(mushafScale);
-    fontSizePx = preset.fontSizePx;
-    lineWidthDesktop = preset.lineWidthDesktop;
+    fontSize = preset.fontSize;
+    const numericFont =
+      typeof preset.fontSize === 'number'
+        ? preset.fontSize
+        : mushafScaleToFontSize(mushafScale);
+    lineWidthDesktop = `${getLineWidth(numericFont)}px`;
   } else if (isQpcHafsMushaf || isIndopakMushaf) {
-    const preset = getQpcHafsPreset(mushafScale);
-    fontSizePx = preset.fontSizePx;
+    const preset = isIndopakMushaf ? getIndopak15Preset(mushafScale) : getQpcHafsPreset(mushafScale);
+    fontSize = preset.fontSize;
     lineWidthDesktop = preset.lineWidthDesktop;
   } else {
-    fontSizePx = mushafScaleToFontSize(mushafScale);
+    fontSize = mushafScaleToFontSize(mushafScale);
     lineWidthDesktop = `${getLineWidth(mushafScaleToFontSize(mushafScale))}px`;
   }
 
@@ -350,7 +355,7 @@ const MushafPage = ({
             fontFamily,
             width:
               isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf
-                ? 'min(var(--mushaf-line-width), 100%)'
+                ? 'min(var(--mushaf-line-width), 95vw)'
                 : 'auto',
           } as React.CSSProperties
         }
@@ -364,7 +369,7 @@ const MushafPage = ({
             isQpcHafsMushaf={isQpcHafsMushaf}
             isIndopakMushaf={isIndopakMushaf}
             qcfVersion={qcfVersion}
-            fontSizePx={fontSizePx}
+            fontSize={fontSize}
             isFontLoaded={isFontLoaded}
           />
         ))}
@@ -387,7 +392,7 @@ const MushafLine = ({
   isQpcHafsMushaf,
   isIndopakMushaf,
   qcfVersion,
-  fontSizePx,
+  fontSize,
   isFontLoaded,
 }: {
   line: MushafLineGroup;
@@ -396,31 +401,47 @@ const MushafLine = ({
   isQpcHafsMushaf: boolean;
   isIndopakMushaf: boolean;
   qcfVersion: 'v1' | 'v2';
-  fontSizePx: number;
+  fontSize: string | number;
   isFontLoaded: boolean;
 }): React.JSX.Element => (
   <div
     dir="rtl"
-      className="mx-auto text-center"
-      style={{
-        fontSize: `${fontSizePx}px`,
-        maxWidth:
-          isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf
-            ? 'none'
-            : 'min(var(--mushaf-line-width, 560px), 90vw)',
-        width: '100%',
-      }}
-    >
-      <div
-        className={cn(
+    className="mx-auto text-center"
+    style={{
+      fontSize: typeof fontSize === 'number' ? `${fontSize}px` : fontSize,
+      maxWidth:
+        isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf
+          ? 'none'
+          : 'min(var(--mushaf-line-width, 560px), 90vw)',
+      width: '100%',
+    }}
+  >
+    <div
+      className={cn(
         (isQcfMushaf && qcfVersion === 'v1') || isQpcHafsMushaf || isIndopakMushaf
           ? 'leading-[1.6]'
           : isQcfMushaf
             ? 'leading-[1.8]'
             : 'leading-[2.35]',
         'flex',
-        isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf ? 'justify-between' : 'justify-center'
+        isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf ? 'justify-between' : 'justify-center',
+        'flex-nowrap'
       )}
+      style={
+        isQcfMushaf
+          ? ({
+              gap: '0.02em',
+              whiteSpace: 'nowrap',
+            } as React.CSSProperties)
+          : isQpcHafsMushaf || isIndopakMushaf
+            ? ({
+                gap: '0.02em',
+                whiteSpace: 'nowrap',
+              } as React.CSSProperties)
+            : ({
+                whiteSpace: 'nowrap',
+            } as React.CSSProperties)
+      }
       translate="no"
     >
       {line.words.map((word, index) => (
@@ -515,7 +536,7 @@ const MushafWordText = ({
     <span
       className={
         isQcfMushaf
-          ? 'inline-block text-foreground font-medium'
+          ? 'inline-flex flex-none items-center text-foreground font-medium'
           : 'inline-flex flex-none items-center px-[1px] text-foreground'
       }
       dangerouslySetInnerHTML={{ __html: sanitizeHtml(rawHtml) }}
