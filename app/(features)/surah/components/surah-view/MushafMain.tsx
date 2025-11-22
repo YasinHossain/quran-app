@@ -409,10 +409,7 @@ const MushafLine = ({
     className="mx-auto text-center"
     style={{
       fontSize: typeof fontSize === 'number' ? `${fontSize}px` : fontSize,
-      maxWidth:
-        isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf
-          ? 'none'
-          : 'min(var(--mushaf-line-width, 560px), 90vw)',
+      maxWidth: 'var(--mushaf-line-width, 560px)',
       width: '100%',
     }}
   >
@@ -423,23 +420,16 @@ const MushafLine = ({
           : isQcfMushaf
             ? 'leading-[1.8]'
             : 'leading-[2.35]',
-        'flex',
-        isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf ? 'justify-between' : 'justify-center',
-        'flex-nowrap'
+        'flex justify-between items-center',
       )}
       style={
         isQcfMushaf
           ? ({
-              gap: '0.02em',
               whiteSpace: 'nowrap',
+              columnGap: '0',
             } as React.CSSProperties)
-          : isQpcHafsMushaf || isIndopakMushaf
-            ? ({
-                gap: '0.02em',
-                whiteSpace: 'nowrap',
-              } as React.CSSProperties)
-            : ({
-                whiteSpace: 'nowrap',
+          : ({
+              whiteSpace: 'nowrap',
             } as React.CSSProperties)
       }
       translate="no"
