@@ -13,14 +13,15 @@ import {
   getQcfV2Preset,
   getQpcHafsPreset,
 } from '@/app/(features)/surah/hooks/qcfScalePresets';
-import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 import { Spinner } from '@/app/shared/Spinner';
 import { useSettings } from '@/app/providers/SettingsContext';
+import { formatSurahSubtitle } from '@/app/shared/navigation/formatSurahSubtitle';
+import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { applyTajweed } from '@/lib/text/tajweed';
 import { cn } from '@/lib/utils/cn';
 
-import type { Chapter, MushafLineGroup, MushafPageLines, MushafWord } from '@/types';
+import type { MushafLineGroup, MushafPageLines, MushafWord } from '@/types';
 import { VerseMarker } from './VerseMarker';
 
 interface MushafMainProps {
@@ -41,10 +42,117 @@ type ReaderSettings = Pick<
   'tajweed' | 'arabicFontFace' | 'arabicFontSize'
 >;
 
-const BISMILLAH_TEXT = 'بِسْمِ ٱللّٰهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ';
 const MIN_LINE_WIDTH_PX = 440;
 const MAX_LINE_WIDTH_PX = 540;
 const LINE_WIDTH_SCALE = 16;
+
+const SurahNameGraphic = ({ chapterId }: { chapterId: number }) => {
+  const [svgContent, setSvgContent] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    let mounted = true;
+    fetch(`/surah-names/${chapterId}.svg`)
+      .then((res) => res.text())
+      .then((text) => {
+        if (mounted) {
+          const svgMatch = text.match(/<svg[\s\S]*<\/svg>/);
+          if (svgMatch) {
+            // Inject preserveAspectRatio to crop whitespace
+            const svgWithPreserve = svgMatch[0].replace(
+              '<svg',
+              '<svg preserveAspectRatio="xMidYMid slice"'
+            );
+            setSvgContent(svgWithPreserve);
+          } else {
+            setSvgContent(text);
+          }
+        }
+      })
+      .catch((err) => console.error('Failed to load Surah SVG:', err));
+
+    return () => {
+      mounted = false;
+    };
+  }, [chapterId]);
+
+  if (!svgContent) return null;
+
+  return (
+    <div
+      className="h-full w-full overflow-hidden [&>svg]:h-full [&>svg]:w-full [&_path]:fill-foreground [&_path]:stroke-[hsl(var(--background))] [&_path]:stroke-[8]"
+      dangerouslySetInnerHTML={{ __html: svgContent }}
+    />
+  );
+};
+
+const SurahCalligraphyIntro = ({
+  chapterId,
+}: {
+  chapterId?: number | null;
+}): React.JSX.Element | null => {
+  const { chapters } = useSurahNavigationData();
+
+  const chapter = useMemo(
+    () => chapters.find((item) => item.id === chapterId),
+    [chapters, chapterId]
+  );
+
+  if (!chapterId) return null;
+
+  const surahNumberLabel = chapter?.id ?? chapterId;
+  const translatedName =
+    chapter?.translated_name?.name ?? chapter?.name_simple ?? `Surah ${surahNumberLabel}`;
+  const subtitle = chapter ? formatSurahSubtitle(chapter) : null;
+  const showBismillah = chapterId !== 9;
+
+  return (
+    <div className="mx-auto mb-8 w-full max-w-7xl px-4 sm:px-6">
+      <div className="grid w-full grid-cols-3 items-center border-y border-border/40 py-6">
+        {/* Left Side: Metadata (Revelation & Verses) */}
+        <div className="flex items-center justify-start pl-4 sm:pl-12">
+          <div className="flex flex-col items-center gap-2">
+            <span
+              className="text-2xl text-foreground sm:text-3xl"
+              style={{
+                fontFamily: "'UthmanicHafs1Ver18', serif",
+                lineHeight: 1.4,
+              }}
+            >
+              {chapter?.revelation_place === 'makkah' ? 'مكية' : 'مدنية'}
+            </span>
+            <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground sm:text-sm">
+              <span>{translatedName}</span>
+              <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground" />
+              <span>{chapter?.verses_count} Verses</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Middle: Bismillah */}
+        <div className="flex items-center justify-center">
+          {showBismillah && (
+            <p
+              dir="rtl"
+              className="text-center text-2xl leading-none text-foreground sm:text-4xl"
+              style={{
+                fontFamily: "'UthmanicHafs1Ver18', serif",
+              }}
+            >
+              ﷽
+            </p>
+          )}
+        </div>
+
+        {/* Right Side: Surah Name SVG */}
+        <div className="flex items-center justify-end">
+          <div className="relative h-16 w-40 sm:h-20 sm:w-60">
+            <SurahNameGraphic chapterId={chapterId} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export function MushafMain({
   mushafName,
@@ -60,7 +168,6 @@ export function MushafMain({
 }: MushafMainProps): React.JSX.Element {
   const { t } = useTranslation();
   const { settings } = useSettings();
-  const { chapters } = useSurahNavigationData();
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const isQcfMushaf = mushafId === 'qcf-madani-v1' || mushafId === 'qcf-madani-v2';
@@ -68,11 +175,6 @@ export function MushafMain({
   const isIndopakMushaf = mushafId === 'unicode-indopak-15' || mushafId === 'unicode-indopak-16';
   const qcfVersion = mushafId === 'qcf-madani-v2' ? 'v2' : 'v1';
 
-  const chapter = useMemo<Chapter | undefined>(() => {
-    if (typeof chapterId !== 'number') return undefined;
-    return chapters.find((entry) => entry.id === chapterId);
-  }, [chapters, chapterId]);
-  const showBismillah = Boolean(chapter?.id && chapter.id !== 9);
   const showEmptyState = !isLoading && !error && pages.length === 0;
 
   const pageNumbers = useMemo(
@@ -109,18 +211,12 @@ export function MushafMain({
   }, [onLoadMore, hasMore]);
 
   const shouldRenderLoadMore = (onLoadMore || isLoadingMore || !hasMore) && pages.length > 0;
+  const shouldRenderSurahIntro = typeof chapterId === 'number' && chapterId > 0;
 
   return (
     <div className="w-full pb-20 pt-2">
       <div className="w-full space-y-10">
-        <MushafHero
-          mushafName={mushafName}
-          isQcfMushaf={isQcfMushaf}
-          chapter={chapter}
-          settings={settings}
-          showBismillah={showBismillah}
-        />
-
+        {shouldRenderSurahIntro ? <SurahCalligraphyIntro chapterId={chapterId} /> : null}
         <div className="space-y-8">
           {isLoading && !pages.length ? (
             <div className="mx-auto flex w-full justify-center py-16">
@@ -189,69 +285,6 @@ export function MushafMain({
     </div>
   );
 }
-
-interface MushafHeroProps {
-  mushafName: string;
-  isQcfMushaf: boolean;
-  chapter?: Chapter | undefined;
-  settings: ReaderSettings;
-  showBismillah: boolean;
-}
-
-const MushafHero = ({
-  mushafName,
-  isQcfMushaf,
-  chapter,
-  settings,
-  showBismillah,
-}: MushafHeroProps): React.JSX.Element => {
-  const chapterNumber = chapter?.id;
-  const heroSubtitle = chapter?.translated_name?.name ?? undefined;
-  const heroFootnote = chapter
-    ? [`Surah ${chapter.name_simple}`, `${chapter.verses_count} ayat`].filter(Boolean).join(' • ')
-    : undefined;
-  const mushafScale = fontSizeToMushafScale(settings.arabicFontSize);
-  const mushafFontSize = mushafScaleToFontSize(mushafScale);
-  const bismillahFontSize = Math.max(mushafFontSize + 6, mushafFontSize);
-
-  return (
-    <section
-      className={cn(
-        'mx-auto w-full rounded-[44px] border border-border/80 bg-surface px-6 py-8 text-center shadow-card sm:px-10 sm:py-10',
-        isQcfMushaf && 'max-w-none'
-      )}
-    >
-      <p className="text-[0.65rem] font-semibold uppercase tracking-[0.6em] text-muted">
-        Mushaf reading
-      </p>
-      {chapterNumber ? (
-        <p className="mt-3 text-xs font-semibold uppercase tracking-[0.45em] text-muted/80">
-          {String(chapterNumber).padStart(3, '0')}
-        </p>
-      ) : null}
-      <p className="mt-4 text-3xl font-semibold text-foreground" dir="rtl">
-        {chapter?.name_arabic ?? mushafName}
-      </p>
-      {heroSubtitle ? <p className="mt-2 text-base text-muted">{heroSubtitle}</p> : null}
-      <p className="mt-4 text-sm font-medium text-muted">
-        {heroFootnote ?? `Mushaf · ${mushafName}`}
-      </p>
-      <p className="mt-2 text-sm text-muted">{`Font • ${settings.arabicFontFace}`}</p>
-      {showBismillah ? (
-        <p
-          className="mt-8 text-3xl leading-snug text-foreground"
-          dir="rtl"
-          style={{
-            fontFamily: settings.arabicFontFace,
-            fontSize: `${bismillahFontSize}px`,
-          }}
-        >
-          {BISMILLAH_TEXT}
-        </p>
-      ) : null}
-    </section>
-  );
-};
 
 interface MushafPageProps {
   pageNumber: number;
