@@ -6,19 +6,16 @@ import { MushafMain } from '@/app/(features)/surah/components/surah-view/MushafM
 import { SurahMain } from '@/app/(features)/surah/components/surah-view/SurahMain';
 import { SurahWorkspaceNavigation } from '@/app/(features)/surah/components/surah-view/SurahWorkspaceNavigation';
 import { useBodyOverflowHidden } from '@/app/(features)/surah/components/surah-view/useBodyOverflowHidden';
-import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
+import { useReaderMode } from '@/app/providers/ReaderModeContext';
 import { SettingsSidebar } from '@/app/shared/reader/settings';
 import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
-import { useReaderMode } from '@/app/providers/ReaderModeContext';
+import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
 
 import { ReaderAudioProps, WorkspaceReaderLayout } from './ReaderLayouts';
 import { useReaderView } from './useReaderView';
 
-import type {
-  LookupFn,
-  UseVerseListingParams,
-} from '@/app/(features)/surah/hooks/useVerseListing';
 import type { MushafResourceKind } from '@/app/(features)/surah/hooks/useMushafReadingView';
+import type { LookupFn, UseVerseListingParams } from '@/app/(features)/surah/hooks/useVerseListing';
 
 type ReaderViewState = ReturnType<typeof useReaderView>;
 type VerseListingState = ReaderViewState['verseListing'];
@@ -148,7 +145,7 @@ export function ReaderShell({
   initialMode = 'verse',
 }: ReaderShellProps): React.JSX.Element {
   useBodyOverflowHidden();
-  const { mode, setMode, enableReaderMode, disableReaderMode } = useReaderMode();
+  const { mode, setMode, enableReaderMode, isReaderModeAvailable } = useReaderMode();
   const readerView = useReaderView({
     resourceId,
     resourceKind,
@@ -160,11 +157,13 @@ export function ReaderShell({
   const initialModeRef = useRef(initialMode);
 
   useEffect(() => {
-    enableReaderMode(initialModeRef.current);
-    return () => {
-      disableReaderMode();
-    };
-  }, [enableReaderMode, disableReaderMode]);
+    if (!isReaderModeAvailable) {
+      enableReaderMode(initialModeRef.current);
+    } else {
+      // Preserve the previously selected reader mode across surah navigations.
+      enableReaderMode(mode);
+    }
+  }, [enableReaderMode, isReaderModeAvailable, mode]);
 
   const handleReadingPanelOpen = useCallback(() => {
     setMode('mushaf');

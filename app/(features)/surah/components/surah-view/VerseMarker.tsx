@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { cn } from '@/lib/utils/cn';
 
 /**
@@ -28,10 +29,10 @@ const toArabicIndicNumber = (num: number): string => {
 export const VerseMarker = ({ number, className, style }: VerseMarkerProps) => {
   return (
     <span
-      className={cn("text-current", className)}
+      className={cn('text-current', className)}
       style={{
         fontFamily: 'UthmanicHafs1Ver18, "KFGQPC Uthmanic Script HAFS Regular", sans-serif',
-        ...style
+        ...style,
       }}
     >
       {toArabicIndicNumber(number)}

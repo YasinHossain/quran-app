@@ -3,7 +3,6 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useQcfMushafFont } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import {
   fontSizeToMushafScale,
   mushafScaleToFontSize,
@@ -14,16 +13,18 @@ import {
   getQpcHafsPreset,
   getIndopak15Preset,
 } from '@/app/(features)/surah/hooks/qcfScalePresets';
-import { Spinner } from '@/app/shared/Spinner';
+import { useQcfMushafFont } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { formatSurahSubtitle } from '@/app/shared/navigation/formatSurahSubtitle';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
+import { Spinner } from '@/app/shared/Spinner';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { applyTajweed } from '@/lib/text/tajweed';
 import { cn } from '@/lib/utils/cn';
 
-import type { MushafLineGroup, MushafPageLines, MushafWord } from '@/types';
 import { VerseMarker } from './VerseMarker';
+
+import type { MushafLineGroup, MushafPageLines, MushafWord } from '@/types';
 
 interface MushafMainProps {
   mushafName: string;
@@ -223,9 +224,7 @@ export function MushafMain({
               <Spinner className="h-8 w-8 text-accent" />
             </div>
           ) : error ? (
-            <div
-              className="mx-auto w-full rounded-[32px] border border-status-error bg-status-error/10 px-6 py-10 text-center text-status-error"
-            >
+            <div className="mx-auto w-full rounded-[32px] border border-status-error bg-status-error/10 px-6 py-10 text-center text-status-error">
               {error}
             </div>
           ) : (
@@ -265,10 +264,7 @@ export function MushafMain({
         </div>
 
         {shouldRenderLoadMore ? (
-          <div
-            ref={loadMoreRef}
-            className="mx-auto w-full space-y-2 py-8 text-center"
-          >
+          <div ref={loadMoreRef} className="mx-auto w-full space-y-2 py-8 text-center">
             {isLoadingMore ? <Spinner className="inline h-5 w-5 text-accent" /> : null}
             {!hasMore && !isLoadingMore ? (
               <p className="text-sm text-muted">{t(endLabelKey)}</p>
@@ -316,7 +312,9 @@ const MushafPage = ({
     fontSize = preset.fontSize;
     lineWidthDesktop = preset.lineWidthDesktop;
   } else if (isQpcHafsMushaf || isIndopakMushaf) {
-    const preset = isIndopakMushaf ? getIndopak15Preset(mushafScale) : getQpcHafsPreset(mushafScale);
+    const preset = isIndopakMushaf
+      ? getIndopak15Preset(mushafScale)
+      : getQpcHafsPreset(mushafScale);
     fontSize = preset.fontSize;
     lineWidthDesktop = preset.lineWidthDesktop;
   } else {
@@ -416,17 +414,17 @@ const MushafLine = ({
           : isQcfMushaf
             ? 'leading-[1.8]'
             : 'leading-[2.35]',
-        'flex justify-between items-center',
+        'flex justify-between items-center'
       )}
       style={
         isQcfMushaf
           ? ({
-            whiteSpace: 'nowrap',
-            columnGap: '0',
-          } as React.CSSProperties)
+              whiteSpace: 'nowrap',
+              columnGap: '0',
+            } as React.CSSProperties)
           : ({
-            whiteSpace: 'nowrap',
-          } as React.CSSProperties)
+              whiteSpace: 'nowrap',
+            } as React.CSSProperties)
       }
       translate="no"
     >
@@ -487,7 +485,9 @@ const MushafWordText = ({
 
   // I will try to filter out U+06DF for QPC Hafs for now.
   // Also filter out U+06DD (End of Ayah) to prevent double markers (one from text, one from VerseMarker component)
-  const displayText = isQpcHafsMushaf ? baseText.replace(/[\u06DF\u06DD]/g, '') : baseText.replace(/\u06DD/g, '');
+  const displayText = isQpcHafsMushaf
+    ? baseText.replace(/[\u06DF\u06DD]/g, '')
+    : baseText.replace(/\u06DD/g, '');
 
   const code = qcfVersion === 'v2' ? word.codeV2 : word.codeV1;
   const hasGlyphCode = typeof code === 'string' && code.length > 0;
@@ -529,8 +529,6 @@ const MushafWordText = ({
     />
   );
 };
-
-
 
 const getLineWidth = (fontSize: number): number => {
   const scaled = fontSize * LINE_WIDTH_SCALE;

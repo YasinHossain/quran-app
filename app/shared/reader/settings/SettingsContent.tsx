@@ -69,12 +69,14 @@ export const SettingsContent = ({
         aria-hidden={!mushafVisible}
         className={cn(
           'transition-all duration-300',
-          mushafVisible ? 'max-h-[999px] opacity-100 translate-y-0' : 'max-h-0 opacity-0 -translate-y-2 pointer-events-none'
+          mushafVisible
+            ? 'max-h-[999px] opacity-100 translate-y-0'
+            : 'max-h-0 opacity-0 -translate-y-2 pointer-events-none'
         )}
       >
         <MushafSettings
           selectedMushafName={selectedMushafName}
-          onMushafPanelOpen={onMushafPanelOpen || (() => { })}
+          onMushafPanelOpen={onMushafPanelOpen || (() => {})}
           isOpen={openSections.includes('mushaf')}
           onToggle={() => onSectionToggle('mushaf')}
           {...(idPrefix ? { idPrefix: `${idPrefix}-mushaf` } : {})}

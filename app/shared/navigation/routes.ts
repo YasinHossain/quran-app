@@ -3,9 +3,7 @@ const encodeParam = (value: number | string): string => encodeURIComponent(Strin
 const normalizeStartVerse = (startVerse?: number | string | null): string | null => {
   if (startVerse === undefined || startVerse === null) return null;
   const numeric =
-    typeof startVerse === 'number'
-      ? startVerse
-      : Number.parseInt(String(startVerse).trim(), 10);
+    typeof startVerse === 'number' ? startVerse : Number.parseInt(String(startVerse).trim(), 10);
   if (!Number.isFinite(numeric) || numeric <= 0) {
     return null;
   }
@@ -17,10 +15,7 @@ interface SurahRouteOptions {
   forceSeq?: boolean;
 }
 
-export const buildSurahRoute = (
-  surahId: number | string,
-  options?: SurahRouteOptions
-): string => {
+export const buildSurahRoute = (surahId: number | string, options?: SurahRouteOptions): string => {
   const base = `/surah/${encodeParam(surahId)}`;
   const normalizedStartVerse = normalizeStartVerse(options?.startVerse);
   if (!normalizedStartVerse) return base;

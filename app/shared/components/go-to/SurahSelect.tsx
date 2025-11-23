@@ -71,7 +71,10 @@ export const SurahSelect = memo(function SurahSelect({
     maxHeight: DROPDOWN_MAX_HEIGHT,
   });
 
-  const selectedOption = useMemo(() => options.find((option) => option.value === value), [options, value]);
+  const selectedOption = useMemo(
+    () => options.find((option) => option.value === value),
+    [options, value]
+  );
 
   useEffect(() => {
     const selectedIdx = options.findIndex((option) => option.value === value);
@@ -219,8 +222,10 @@ export const SurahSelect = memo(function SurahSelect({
 
   useEffect(() => {
     if (!open || activeIndex < 0) return;
-      const optionEl = listRef.current?.querySelector<HTMLButtonElement>(`[data-index="${activeIndex}"]`);
-      optionEl?.scrollIntoView({ block: 'center' });
+    const optionEl = listRef.current?.querySelector<HTMLButtonElement>(
+      `[data-index="${activeIndex}"]`
+    );
+    optionEl?.scrollIntoView({ block: 'center' });
   }, [activeIndex, open]);
 
   const toggleList = useCallback(() => {
@@ -296,11 +301,15 @@ export const SurahSelect = memo(function SurahSelect({
           ref={listRef}
           id={listboxId}
           role="listbox"
-          aria-activedescendant={activeIndex >= 0 ? `${listboxId}-option-${activeIndex}` : undefined}
+          aria-activedescendant={
+            activeIndex >= 0 ? `${listboxId}-option-${activeIndex}` : undefined
+          }
           tabIndex={-1}
           className={clsx(
             'absolute z-dropdown w-full overflow-auto rounded-lg border border-border/40 bg-surface/95 backdrop-blur-md shadow-lg focus:outline-none py-2',
-            dropdownMetrics.placement === 'bottom' ? 'top-full mt-2 origin-top' : 'bottom-full mb-2 origin-bottom'
+            dropdownMetrics.placement === 'bottom'
+              ? 'top-full mt-2 origin-top'
+              : 'bottom-full mb-2 origin-bottom'
           )}
           style={{ maxHeight: dropdownMetrics.maxHeight }}
         >
@@ -309,24 +318,24 @@ export const SurahSelect = memo(function SurahSelect({
               const selected = option.value === value;
               const isActive = index === activeIndex;
               const optionId = `${listboxId}-option-${index}`;
-                return (
-                  <button
-                    key={option.value}
-                    id={optionId}
-                    type="button"
-                    role="option"
-                    aria-selected={selected}
-                    data-index={index}
-                    onClick={(): void => handleOptionSelect(option)}
-                    className={clsx(
-                      'w-full text-left px-4 py-2.5 rounded-lg text-sm transition-colors',
-                      selected
+              return (
+                <button
+                  key={option.value}
+                  id={optionId}
+                  type="button"
+                  role="option"
+                  aria-selected={selected}
+                  data-index={index}
+                  onClick={(): void => handleOptionSelect(option)}
+                  className={clsx(
+                    'w-full text-left px-4 py-2.5 rounded-lg text-sm transition-colors',
+                    selected
+                      ? 'bg-interactive-hover text-foreground'
+                      : isActive
                         ? 'bg-interactive-hover text-foreground'
-                        : isActive
-                          ? 'bg-interactive-hover text-foreground'
-                          : 'text-foreground hover:bg-interactive/60'
-                    )}
-                  >
+                        : 'text-foreground hover:bg-interactive/60'
+                  )}
+                >
                   <span className="block truncate">{option.label}</span>
                 </button>
               );

@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { DEFAULT_MUSHAF_ID } from '@/data/mushaf/options';
-import type { MushafPageLines, MushafVerse, MushafWord } from '@/types';
 import {
   getMushafChapterStartPage,
   getMushafJuzStartPage,
   getReadingViewPage,
 } from '@infra/quran/readingViewClient';
+
+import type { MushafPageLines, MushafVerse, MushafWord } from '@/types';
 
 const DEFAULT_PAGE_NUMBER = 1;
 const GENERIC_ERROR_MESSAGE = 'Failed to load Mushaf data.';
@@ -89,10 +90,7 @@ const mapVersesToPage = (pageNumber: number, verses: MushafVerse[]): MushafPageL
   lines: groupLinesForPage(pageNumber, verses),
 });
 
-const insertPageSorted = (
-  pages: MushafPageLines[],
-  page: MushafPageLines
-): MushafPageLines[] => {
+const insertPageSorted = (pages: MushafPageLines[], page: MushafPageLines): MushafPageLines[] => {
   const withoutDuplicate = pages.filter((existing) => existing.pageNumber !== page.pageNumber);
   return [...withoutDuplicate, page].sort((a, b) => a.pageNumber - b.pageNumber);
 };
@@ -282,12 +280,12 @@ export function useMushafReadingView({
           setError(message ?? GENERIC_ERROR_MESSAGE);
         }
       } finally {
-        if (requestTokenRef.current !== token) {
-          return;
-        }
+        const isStaleRequest = requestTokenRef.current !== token;
         if (isInitial) {
-          setIsLoading(false);
-        } else {
+          if (!isStaleRequest) {
+            setIsLoading(false);
+          }
+        } else if (!isStaleRequest) {
           setIsLoadingMore(false);
         }
       }
@@ -315,9 +313,7 @@ export function useMushafReadingView({
       initialMappedPages.length > 0
         ? initialMappedPages[initialMappedPages.length - 1]?.pageNumber
         : undefined;
-    setNextPageNumber(
-      typeof lastPageNumber === 'number' ? lastPageNumber + 1 : startPageNumber
-    );
+    setNextPageNumber(typeof lastPageNumber === 'number' ? lastPageNumber + 1 : startPageNumber);
 
     if (!resourceId) {
       setPages([]);
@@ -330,14 +326,7 @@ export function useMushafReadingView({
     if (!initialMappedPages.length) {
       void fetchPage(startPageNumber, { isInitial: true, token });
     }
-  }, [
-    resourceId,
-    resourceKind,
-    startPageNumber,
-    initialMappedPages,
-    fetchPage,
-    effectiveMushafId,
-  ]);
+  }, [resourceId, resourceKind, startPageNumber, initialMappedPages, fetchPage, effectiveMushafId]);
 
   const loadMore = useCallback(() => {
     if (!hasMore || isLoadingMore || typeof nextPageNumber !== 'number') return;

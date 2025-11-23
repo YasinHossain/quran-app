@@ -38,7 +38,7 @@ export const TafsirSettings = ({
           icon={<BookReaderIcon size={20} className="text-accent" />}
           isLast={true}
           isOpen={isOpen}
-          onToggle={onToggle || (() => { })}
+          onToggle={onToggle || (() => {})}
         >
           <div className="space-y-4">
             <SelectionBox

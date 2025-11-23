@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
@@ -7,20 +7,22 @@ const DEFAULT_OPEN_SECTIONS = ['translation', 'font'];
 const MUSHAF_SECTION_ID = 'mushaf';
 const MAX_OPEN_SECTIONS = 2;
 
-const areSectionsEqual = (a: string[], b: string[]): boolean => {
-  if (a.length !== b.length) return false;
-  return a.every((value, index) => value === b[index]);
-};
+function normalizeSections(sections: string[]): string[] {
+  const unique = sections.filter(
+    (id, idx) => typeof id === 'string' && sections.indexOf(id) === idx
+  );
+  return unique.slice(0, MAX_OPEN_SECTIONS);
+}
 
 function readInitialState(): string[] {
   if (typeof window === 'undefined') return DEFAULT_OPEN_SECTIONS;
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) return ensureMushafSection(JSON.parse(saved));
+    if (saved) return normalizeSections(JSON.parse(saved));
   } catch (error) {
     logger.warn('Failed to parse saved sidebar sections:', undefined, error as Error);
   }
-  return ensureMushafSection(DEFAULT_OPEN_SECTIONS);
+  return normalizeSections(DEFAULT_OPEN_SECTIONS);
 }
 
 function persistState(state: string[]): void {
@@ -41,23 +43,13 @@ function nextOpenSections(prev: string[], sectionId: string): string[] {
   return [...prev, sectionId];
 }
 
-function ensureMushafSection(sections: string[]): string[] {
-  if (sections.includes(MUSHAF_SECTION_ID)) return sections;
-  return [MUSHAF_SECTION_ID, ...sections.slice(0, MAX_OPEN_SECTIONS - 1)];
-}
-
 interface UseSettingsSectionsReturn {
   openSections: string[];
   handleSectionToggle: (sectionId: string) => void;
 }
 
 export const useSettingsSections = (): UseSettingsSectionsReturn => {
-  const [openSections, setOpenSections] = useState<string[]>(DEFAULT_OPEN_SECTIONS);
-
-  useEffect(() => {
-    const initialState = readInitialState();
-    setOpenSections((prev) => (areSectionsEqual(prev, initialState) ? prev : initialState));
-  }, []);
+  const [openSections, setOpenSections] = useState<string[]>(() => readInitialState());
 
   const handleSectionToggle = useCallback(
     (sectionId: string) => {

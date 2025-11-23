@@ -44,7 +44,7 @@ export const TranslationSettings = ({
       icon={<TranslationIcon size={20} className="text-accent" />}
       isLast={true}
       isOpen={isOpen}
-      onToggle={onToggle || (() => { })}
+      onToggle={onToggle || (() => {})}
     >
       <ReadingSettingsContent
         t={t}

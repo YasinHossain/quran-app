@@ -3,7 +3,11 @@
 import React from 'react';
 
 import { ArabicFontPanel } from '@/app/(features)/surah/components/ArabicFontPanel';
-import { TranslationPanel, TafsirPanel, MushafPanel } from '@/app/(features)/surah/components/panels';
+import {
+  TranslationPanel,
+  TafsirPanel,
+  MushafPanel,
+} from '@/app/(features)/surah/components/panels';
 import { WordLanguagePanel } from '@/app/(features)/surah/components/WordLanguagePanel';
 
 import { SettingsPanelsProps } from './types';

@@ -12,7 +12,7 @@ type WorkspaceMainElement = 'main' | 'div' | 'section';
 interface WorkspaceMainProps extends React.HTMLAttributes<HTMLElement> {
   as?: WorkspaceMainElement;
   children: React.ReactNode;
-  contentClassName?: string;
+  contentClassName?: string | undefined;
   'data-slot'?: string;
   reserveLeftSpace?: boolean;
   reserveRightSpace?: boolean;

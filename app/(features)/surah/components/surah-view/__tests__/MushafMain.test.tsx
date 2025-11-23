@@ -3,9 +3,14 @@
 import React from 'react';
 
 import { renderWithProvidersAsync, screen } from '@/app/testUtils/renderWithProviders';
-import * as chaptersApi from '@/lib/api/chapters';
+import * as api from '@/lib/api';
 
 import { MushafMain } from '../MushafMain';
+
+jest.mock('@/lib/api', () => ({
+  ...jest.requireActual('@/lib/api'),
+  getChapters: jest.fn(),
+}));
 
 const baseProps = {
   mushafName: 'King Fahad Complex V1',
@@ -28,7 +33,7 @@ describe('MushafMain', () => {
   });
 
   it('shows surah intro with metadata and bismillah', async () => {
-    (chaptersApi.getChapters as jest.Mock).mockResolvedValue([
+    (api.getChapters as jest.Mock).mockResolvedValue([
       {
         id: 5,
         name_simple: "Al-Ma'idah",
@@ -41,9 +46,11 @@ describe('MushafMain', () => {
 
     await renderWithProvidersAsync(<MushafMain {...baseProps} chapterId={5} />);
 
-    expect(await screen.findByText('المائدة')).toBeInTheDocument();
+    expect(await screen.findByText('The Table Spread')).toBeInTheDocument();
+    expect(screen.getByText('مدنية')).toBeInTheDocument();
     expect(screen.getByText('The Table Spread')).toBeInTheDocument();
-    expect(screen.getByText('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ')).toBeInTheDocument();
+    expect(screen.getByText('120 Verses')).toBeInTheDocument();
+    expect(screen.getByText('﷽')).toBeInTheDocument();
   });
 
   it('omits bismillah for At-Tawbah (surah 9)', async () => {

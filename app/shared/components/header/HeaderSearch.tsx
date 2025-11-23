@@ -10,8 +10,8 @@ import {
   useState,
 } from 'react';
 
-import { SearchInput } from '@/app/shared/components/SearchInput';
 import { GoToSurahVerseForm } from '@/app/shared/components/go-to/GoToSurahVerseForm';
+import { SearchInput } from '@/app/shared/components/SearchInput';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 
 export const HeaderSearch = memo(function HeaderSearch(): ReactElement {
@@ -52,6 +52,8 @@ export const HeaderSearch = memo(function HeaderSearch(): ReactElement {
     <div className="flex items-center justify-center w-1/3">
       <div
         className="w-full max-w-xs sm:max-w-sm lg:max-w-md relative"
+        role="presentation"
+        tabIndex={-1}
         onFocus={(): void => setFocused(true)}
         onBlur={(e: FocusEvent<HTMLDivElement>): void => {
           const next = e.relatedTarget as Node | null;
@@ -73,6 +75,8 @@ export const HeaderSearch = memo(function HeaderSearch(): ReactElement {
           <div className="absolute mt-2 z-dropdown left-1/2 -translate-x-1/2 w-[86vw] sm:w-[22rem] md:w-[26rem] lg:w-[28rem]">
             <div
               className="rounded-xl border border-border bg-surface shadow-card overflow-visible"
+              role="presentation"
+              tabIndex={-1}
               onMouseDown={(event): void => {
                 // Clicking the backdrop area should not close the popover
                 if (event.target === event.currentTarget) {

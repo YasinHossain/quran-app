@@ -47,7 +47,7 @@ export function FontSettingsContent({
       icon={<FontSettingIcon size={20} className="text-accent" />}
       isLast
       isOpen={isOpen ?? false}
-      onToggle={onToggle ?? (() => { })}
+      onToggle={onToggle ?? (() => {})}
     >
       <div className="space-y-4">
         <FontSizeSlider

@@ -14,7 +14,11 @@ interface ReaderModeContextValue {
 
 const ReaderModeContext = createContext<ReaderModeContextValue | undefined>(undefined);
 
-export const ReaderModeProvider = ({ children }: { children: React.ReactNode }): React.JSX.Element => {
+export const ReaderModeProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}): React.JSX.Element => {
   const [mode, setMode] = useState<ReaderMode>('verse');
   const [isReaderModeAvailable, setReaderModeAvailable] = useState(false);
 
@@ -49,4 +53,3 @@ export const useReaderMode = (): ReaderModeContextValue => {
   }
   return context;
 };
-

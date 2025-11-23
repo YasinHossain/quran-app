@@ -151,7 +151,11 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
             onChange={setVerse}
             options={verseSelectOptions}
             placeholder={
-              !selectedSurah ? 'Select a surah first' : verseOptions.length ? 'Select a verse' : 'Loading verses…'
+              !selectedSurah
+                ? 'Select a surah first'
+                : verseOptions.length
+                  ? 'Select a verse'
+                  : 'Loading verses…'
             }
             disabled={!selectedSurah || !verseOptions.length || isLoading}
             clearable

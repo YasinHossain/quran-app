@@ -1,11 +1,11 @@
 'use client';
 import { memo } from 'react';
 
+import { VerseMarker } from '@/app/(features)/surah/components/surah-view/VerseMarker';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { applyTajweed } from '@/lib/text/tajweed';
 import { Verse as VerseType, Word } from '@/types';
-import { VerseMarker } from '@/app/(features)/surah/components/surah-view/VerseMarker';
 
 import type { LanguageCode } from '@/lib/text/languageCodes';
 
@@ -16,7 +16,14 @@ interface WordDisplayProps {
   showByWords: boolean;
   wordLang: string;
   settings: { tajweed?: boolean; arabicFontSize: number };
+  isQpcHafsFont: boolean;
 }
+
+// QPC Uthmani Hafs font lacks the U+06DF glyph, which shows up as a black circle; strip it when selected.
+const stripUnsupportedQpcGlyphs = (text: string, isQpcHafsFont: boolean): string => {
+  if (!text) return '';
+  return isQpcHafsFont ? text.replace(/\u06DF/g, '') : text;
+};
 
 const WordDisplay = ({
   word,
@@ -24,6 +31,7 @@ const WordDisplay = ({
   showByWords,
   wordLang,
   settings,
+  isQpcHafsFont,
 }: WordDisplayProps): React.JSX.Element | null => {
   // Strip verse markers (U+06DD ۝, U+06DE ۞) from the text to avoid duplication with the SVG marker
   // If the word contains a verse marker, we assume it's the verse ending word and hide it completely
@@ -32,7 +40,7 @@ const WordDisplay = ({
     return null;
   }
 
-  const cleanUthmani = word.uthmani;
+  const cleanUthmani = stripUnsupportedQpcGlyphs(word.uthmani, isQpcHafsFont);
 
   if (!cleanUthmani.trim()) {
     return null;
@@ -66,14 +74,17 @@ const WordDisplay = ({
 
 // Verse text component for fallback display
 const VerseText = ({
-  verse,
+  verseText,
   settings,
+  isQpcHafsFont,
 }: {
-  verse: VerseType;
+  verseText: string;
   settings: { tajweed?: boolean };
+  isQpcHafsFont: boolean;
 }): React.JSX.Element => {
   // Strip verse markers (U+06DD ۝, U+06DE ۞)
-  const cleanText = verse.text_uthmani.replace(/[\u06DD\u06DE]/g, '');
+  const normalizedText = stripUnsupportedQpcGlyphs(verseText, isQpcHafsFont);
+  const cleanText = normalizedText.replace(/[\u06DD\u06DE]/g, '');
 
   if (settings.tajweed) {
     return (
@@ -97,6 +108,8 @@ export const VerseArabic = memo(function VerseArabic({
   const { settings } = useSettings();
   const showByWords = settings.showByWords ?? false;
   const wordLang = settings.wordLang ?? 'en';
+  const isQpcHafsFont = settings.arabicFontFace?.includes('UthmanicHafs1Ver18') ?? false;
+  const verseText = verse.text_uthmani;
 
   // Extract verse number from verse_key (format: "surah:verse")
   const verseNumber = verse.verse_key ? parseInt(verse.verse_key.split(':')[1] || '0', 10) : 0;
@@ -125,10 +138,7 @@ export const VerseArabic = memo(function VerseArabic({
             }
 
             // Also filter known marker characters anywhere (just in case)
-            if (
-              word.char_type_name === 'end' ||
-              /[\u06DD\u06DE\uFD3E\uFD3F]/.test(word.uthmani)
-            ) {
+            if (word.char_type_name === 'end' || /[\u06DD\u06DE\uFD3E\uFD3F]/.test(word.uthmani)) {
               return null;
             }
             return (
@@ -139,6 +149,7 @@ export const VerseArabic = memo(function VerseArabic({
                 showByWords={showByWords}
                 wordLang={wordLang}
                 settings={settings}
+                isQpcHafsFont={isQpcHafsFont}
               />
             );
           })}
@@ -146,10 +157,14 @@ export const VerseArabic = memo(function VerseArabic({
         </span>
       ) : (
         <span className="inline-flex items-center gap-2">
-          <VerseText verse={verse} settings={settings} />
+          <VerseText
+            verseText={verseText}
+            settings={settings}
+            isQpcHafsFont={isQpcHafsFont}
+          />
           {verseNumber > 0 && <VerseMarker number={verseNumber} style={{ marginBottom: 0 }} />}
         </span>
       )}
-    </p >
+    </p>
   );
 });

@@ -29,7 +29,7 @@ export const MushafSettings = ({
       icon={<BookReaderIcon size={20} className="text-accent" />}
       isLast
       isOpen={isOpen}
-      onToggle={onToggle || (() => { })}
+      onToggle={onToggle || (() => {})}
     >
       <SelectionBox
         {...(idPrefix ? { id: `${idPrefix}-mushaf-select` } : {})}
