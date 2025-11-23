@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
@@ -48,7 +48,12 @@ interface UseSettingsSectionsReturn {
 }
 
 export const useSettingsSections = (): UseSettingsSectionsReturn => {
-  const [openSections, setOpenSections] = useState<string[]>(() => readInitialState());
+  const [openSections, setOpenSections] = useState<string[]>(DEFAULT_OPEN_SECTIONS);
+
+  useEffect(() => {
+    const initial = readInitialState();
+    setOpenSections(initial);
+  }, []);
 
   const handleSectionToggle = useCallback(
     (sectionId: string) => {
