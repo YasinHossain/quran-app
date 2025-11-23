@@ -111,6 +111,7 @@ const createWorkspaceSettingsPanel = (
     onMushafChange={panels.onMushafChange}
     mushafOptions={panels.mushafOptions}
     activeReaderMode={activeReaderMode}
+    idPrefix="desktop-settings"
   />
 );
 
@@ -131,6 +132,7 @@ interface ReaderShellProps extends Pick<UseVerseListingParams, 'initialVerses'> 
   initialVerseNumber?: number | undefined;
   initialVerseKey?: string | undefined;
   initialScrollNonce?: string | undefined;
+  initialMode?: 'verse' | 'mushaf';
 }
 
 export function ReaderShell({
@@ -143,6 +145,7 @@ export function ReaderShell({
   initialVerseNumber,
   initialVerseKey,
   initialScrollNonce,
+  initialMode = 'verse',
 }: ReaderShellProps): React.JSX.Element {
   useBodyOverflowHidden();
   const { mode, setMode, enableReaderMode, disableReaderMode } = useReaderMode();
@@ -156,11 +159,11 @@ export function ReaderShell({
   const { verseListing, panels, mushafView } = readerView;
 
   useEffect(() => {
-    enableReaderMode('verse');
+    enableReaderMode(initialMode);
     return () => {
       disableReaderMode();
     };
-  }, [enableReaderMode, disableReaderMode]);
+  }, [enableReaderMode, disableReaderMode, initialMode]);
 
   const handleReadingPanelOpen = useCallback(() => {
     setMode('mushaf');
@@ -227,7 +230,7 @@ export function ReaderShell({
       mobileLeft={<SurahListSidebar />}
       mobileRight={settingsSidebar}
       audio={audioProps}
-      contentClassName={centerContentClassName}
+      {...(centerContentClassName ? { contentClassName: centerContentClassName } : {})}
     />
   );
 }

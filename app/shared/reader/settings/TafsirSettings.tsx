@@ -15,6 +15,7 @@ interface TafsirSettingsProps {
   showTafsirSetting?: boolean;
   isOpen?: boolean;
   onToggle?: () => void;
+  idPrefix?: string;
 }
 
 export const TafsirSettings = ({
@@ -23,6 +24,7 @@ export const TafsirSettings = ({
   showTafsirSetting = false,
   isOpen = false,
   onToggle,
+  idPrefix,
 }: TafsirSettingsProps): React.JSX.Element => {
   const { settings, setTafsirFontSize } = useSettings();
   const { t } = useTranslation();
@@ -36,10 +38,11 @@ export const TafsirSettings = ({
           icon={<BookReaderIcon size={20} className="text-accent" />}
           isLast={true}
           isOpen={isOpen}
-          onToggle={onToggle || (() => {})}
+          onToggle={onToggle || (() => { })}
         >
           <div className="space-y-4">
             <SelectionBox
+              {...(idPrefix ? { id: `${idPrefix}-tafsir-select` } : {})}
               label={t('select_tafsir')}
               value={selectedTafsirName || ''}
               onClick={() => onTafsirPanelOpen?.()}

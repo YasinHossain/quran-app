@@ -26,6 +26,7 @@ export interface SettingsSidebarProps {
   pageType: 'verse' | 'tafsir' | 'bookmarks';
   activeReaderMode?: 'translation' | 'reading';
   readerTabsEnabled?: boolean;
+  idPrefix?: string;
 }
 
 export type SettingsTabValue = 'translation' | 'reading';
@@ -47,6 +48,7 @@ export interface SettingsContentProps
   openSections: string[];
   onSectionToggle: (sectionId: string) => void;
   onArabicFontPanelOpen: () => void;
+  idPrefix?: string;
 }
 
 export interface SettingsContentWrapperProps {
@@ -67,6 +69,7 @@ export interface SettingsContentWrapperProps {
   showTafsirSetting: boolean;
   activeTabOverride?: SettingsTabValue;
   showTabs: boolean;
+  idPrefix?: string;
 }
 
 export interface SettingsPanelsProps

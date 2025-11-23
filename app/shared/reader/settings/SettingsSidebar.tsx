@@ -31,6 +31,7 @@ export const SettingsSidebar = (props: SettingsSidebarProps): ReactElement => {
         readerTabsEnabled={readerTabsEnabled}
         showCloseButton
         onClose={handleCloseSidebar}
+        idPrefix="mobile-settings"
       />
     </BaseSidebar>
   );

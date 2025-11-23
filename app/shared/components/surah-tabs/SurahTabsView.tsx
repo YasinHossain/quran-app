@@ -49,6 +49,7 @@ type ScrollableTabContentProps = Pick<
   | 'setSelectedPageId'
   | 'rememberScroll'
   | 'isTafsirPath'
+  | 'isMushafMode'
   | 'scrollRef'
   | 'handleScroll'
 >;

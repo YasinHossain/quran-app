@@ -18,16 +18,16 @@ const QCF_V1_PRESETS: Record<number, QcfScalePreset> = {
   // Upscaled compared to the original mapping so that higher Arabic font
   // sizes fill more of the center column (especially in King Fahad / QCF
   // mode) while preserving the relative zoom steps.
-  1: { fontSize: 31, lineWidthDesktop: '60vh' },
-  2: { fontSize: 34, lineWidthDesktop: '65vh' },
-  3: { fontSize: 37, lineWidthDesktop: '73.5vh' },
-  4: { fontSize: 41, lineWidthDesktop: '74vh' },
-  5: { fontSize: 44, lineWidthDesktop: '81vh' },
-  6: { fontSize: 48, lineWidthDesktop: '102.8vh' },
-  7: { fontSize: 53, lineWidthDesktop: '124.6vh' },
-  8: { fontSize: 57, lineWidthDesktop: '146.4vh' },
-  9: { fontSize: 62, lineWidthDesktop: '168.2vh' },
-  10: { fontSize: 66, lineWidthDesktop: '190vh' },
+  1: { fontSize: '3.2vh', lineWidthDesktop: '50vh' },
+  2: { fontSize: '3.5vh', lineWidthDesktop: '54vh' },
+  3: { fontSize: '4vh', lineWidthDesktop: '61vh' },
+  4: { fontSize: '4vh', lineWidthDesktop: '61.5vh' },
+  5: { fontSize: '4.4vh', lineWidthDesktop: '67.5vh' },
+  6: { fontSize: '5.56vh', lineWidthDesktop: '85.5vh' },
+  7: { fontSize: '6.72vh', lineWidthDesktop: '103.5vh' },
+  8: { fontSize: '7.88vh', lineWidthDesktop: '122vh' },
+  9: { fontSize: '9.04vh', lineWidthDesktop: '139.5vh' },
+  10: { fontSize: '10.27vh', lineWidthDesktop: '158vh' },
 };
 
 export const getQcfV1Preset = (scale: number): QcfScalePreset => {
@@ -40,16 +40,16 @@ export const getQcfV1Preset = (scale: number): QcfScalePreset => {
  * Based on code_v2 scales from quran-com-frontend-next.
  */
 const QCF_V2_PRESETS: Record<number, QcfScalePreset> = {
-  1: { fontSize: 28, lineWidthDesktop: '52vh' },
-  2: { fontSize: 31, lineWidthDesktop: '54vh' },
-  3: { fontSize: 34, lineWidthDesktop: '56vh' },
-  4: { fontSize: 37, lineWidthDesktop: '61vh' },
-  5: { fontSize: 40, lineWidthDesktop: '64.5vh' },
-  6: { fontSize: 44, lineWidthDesktop: '90.4vh' },
-  7: { fontSize: 48, lineWidthDesktop: '116.3vh' },
-  8: { fontSize: 52, lineWidthDesktop: '142.2vh' },
-  9: { fontSize: 56, lineWidthDesktop: '168.1vh' },
-  10: { fontSize: 60, lineWidthDesktop: '194vh' },
+  1: { fontSize: '2.8vh', lineWidthDesktop: '47vh' },
+  2: { fontSize: '2.9vh', lineWidthDesktop: '49vh' },
+  3: { fontSize: '3.0vh', lineWidthDesktop: '50.5vh' },
+  4: { fontSize: '3.3vh', lineWidthDesktop: '55vh' },
+  5: { fontSize: '3.5vh', lineWidthDesktop: '58vh' },
+  6: { fontSize: '4.9vh', lineWidthDesktop: '81.5vh' },
+  7: { fontSize: '6.3vh', lineWidthDesktop: '105vh' },
+  8: { fontSize: '7.7vh', lineWidthDesktop: '128vh' },
+  9: { fontSize: '9.1vh', lineWidthDesktop: '151.5vh' },
+  10: { fontSize: '10.5vh', lineWidthDesktop: '175vh' },
 };
 
 export const getQcfV2Preset = (scale: number): QcfScalePreset => {

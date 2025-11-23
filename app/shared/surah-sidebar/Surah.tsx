@@ -1,3 +1,5 @@
+import { useRouter } from 'next/navigation';
+
 import { formatSurahSubtitle } from '@/app/shared/navigation/formatSurahSubtitle';
 import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
 import { buildTafsirRoute } from '@/app/shared/navigation/routes';
@@ -14,6 +16,7 @@ interface Props {
   setSelectedJuzId: (id: number) => void;
   rememberScroll: () => void;
   isTafsirPath: boolean;
+  isMushafMode: boolean;
 }
 
 export const Surah = ({
@@ -24,17 +27,26 @@ export const Surah = ({
   setSelectedJuzId,
   rememberScroll,
   isTafsirPath,
+  isMushafMode,
 }: Props): React.JSX.Element => {
   const { getSurahHref, goToSurah } = useNavigationTargets();
+  const router = useRouter();
 
   return (
     <ul className="space-y-2">
       {chapters.map((chapter) => {
         const isActive = chapter.id === selectedSurahId;
+        const surahHref = getSurahHref(chapter.id);
+        const href = isTafsirPath
+          ? buildTafsirRoute(chapter.id, 1)
+          : isMushafMode
+            ? `${surahHref}?view=mushaf`
+            : surahHref;
+
         return (
           <li key={chapter.id}>
             <SurahNavigationCard
-              href={isTafsirPath ? buildTafsirRoute(chapter.id, 1) : getSurahHref(chapter.id)}
+              href={href}
               scroll={false}
               data-active={isActive}
               isActive={isActive}
@@ -51,7 +63,11 @@ export const Surah = ({
                 setSelectedJuzId(getJuzByPage(firstPage));
                 rememberScroll();
                 if (!isTafsirPath) {
-                  goToSurah(chapter.id);
+                  if (isMushafMode) {
+                    router.push(`${surahHref}?view=mushaf`);
+                  } else {
+                    goToSurah(chapter.id);
+                  }
                 }
               }}
             />

@@ -14,12 +14,14 @@ interface FontSettingsProps {
   onArabicFontPanelOpen: () => void;
   isOpen?: boolean;
   onToggle?: () => void;
+  idPrefix?: string;
 }
 
 export const FontSettings = ({
   onArabicFontPanelOpen,
   isOpen = false,
   onToggle,
+  idPrefix,
 }: FontSettingsProps): ReactElement => {
   const { settings, arabicFonts, setArabicFontSize, setTranslationFontSize } = useSettings();
   const { t } = useTranslation();
@@ -63,6 +65,7 @@ export const FontSettings = ({
       onArabicFontPanelOpen={onArabicFontPanelOpen}
       handleArabicFontSizeChange={handleArabicFontSizeChange}
       handleTranslationFontSizeChange={handleTranslationFontSizeChange}
+      {...(idPrefix ? { idPrefix } : {})}
     />
   );
 };

@@ -15,6 +15,7 @@ interface TranslationSettingsProps {
   selectedWordLanguageName: string;
   isOpen?: boolean;
   onToggle?: () => void;
+  idPrefix?: string;
 }
 
 export const TranslationSettings = ({
@@ -24,6 +25,7 @@ export const TranslationSettings = ({
   selectedWordLanguageName,
   isOpen = false,
   onToggle,
+  idPrefix,
 }: TranslationSettingsProps): React.JSX.Element => {
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
@@ -42,7 +44,7 @@ export const TranslationSettings = ({
       icon={<TranslationIcon size={20} className="text-accent" />}
       isLast={true}
       isOpen={isOpen}
-      onToggle={onToggle || (() => {})}
+      onToggle={onToggle || (() => { })}
     >
       <ReadingSettingsContent
         t={t}
@@ -53,6 +55,7 @@ export const TranslationSettings = ({
         selectedWordLanguageName={selectedWordLanguageName}
         onTranslationPanelOpen={onTranslationPanelOpen}
         onWordLanguagePanelOpen={onWordLanguagePanelOpen}
+        {...(idPrefix ? { idPrefix } : {})}
       />
     </CollapsibleSection>
   );
@@ -92,6 +95,7 @@ function ReadingSettingsContent({
   selectedWordLanguageName,
   onTranslationPanelOpen,
   onWordLanguagePanelOpen,
+  idPrefix,
 }: {
   t: (k: string) => string;
   settings: ReturnType<typeof useSettings>['settings'];
@@ -101,6 +105,7 @@ function ReadingSettingsContent({
   selectedWordLanguageName: string;
   onTranslationPanelOpen: () => void;
   onWordLanguagePanelOpen: () => void;
+  idPrefix?: string;
 }): React.JSX.Element {
   return (
     <div className="space-y-4">
@@ -112,12 +117,14 @@ function ReadingSettingsContent({
       <ToggleRow label={t('apply_tajweed')} active={settings.tajweed} onToggle={toggleTajweed} />
 
       <SelectionBox
+        {...(idPrefix ? { id: `${idPrefix}-translations` } : {})}
         label={t('translations')}
         value={selectedTranslationName}
         onClick={onTranslationPanelOpen}
       />
 
       <SelectionBox
+        {...(idPrefix ? { id: `${idPrefix}-wbw` } : {})}
         label={t('word_by_word_language')}
         value={selectedWordLanguageName}
         onClick={onWordLanguagePanelOpen}

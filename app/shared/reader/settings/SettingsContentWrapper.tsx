@@ -24,6 +24,7 @@ export const SettingsContentWrapper = ({
   showTafsirSetting,
   activeTabOverride,
   showTabs,
+  idPrefix,
 }: SettingsContentWrapperProps): ReactElement => {
   const resolvedTab = activeTabOverride ?? activeTab;
 
@@ -52,6 +53,7 @@ export const SettingsContentWrapper = ({
           selectedWordLanguageName={selectedWordLanguageName}
           {...(selectedMushafName !== undefined ? { selectedMushafName } : {})}
           showTafsirSetting={showTafsirSetting}
+          {...(idPrefix ? { idPrefix } : {})}
         />
       </div>
     </>

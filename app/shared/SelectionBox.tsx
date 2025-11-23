@@ -3,17 +3,20 @@ import React, { memo, useId } from 'react';
 import { ChevronDownIcon } from './icons';
 
 interface SelectionBoxProps {
+  id?: string;
   label: string;
   value: string;
   onClick: () => void;
 }
 
 export const SelectionBox = memo(function SelectionBox({
+  id,
   label,
   value,
   onClick,
 }: SelectionBoxProps): React.JSX.Element {
-  const baseId = useId();
+  const generatedId = useId();
+  const baseId = id ?? generatedId;
   const labelId = `${baseId}-label`;
   const valueId = `${baseId}-value`;
   const buttonId = `${baseId}-trigger`;

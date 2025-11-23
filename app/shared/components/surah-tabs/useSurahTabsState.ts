@@ -7,6 +7,7 @@ import {
   type UIEvent,
 } from 'react';
 
+import { useReaderMode } from '@/app/providers/ReaderModeContext';
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { useSurahTabConfig } from '@/app/shared/components/surah-tabs/useSurahTabConfig';
 import { useSurahTabParams } from '@/app/shared/components/surah-tabs/useSurahTabParams';
@@ -31,6 +32,7 @@ export interface SurahTabsState {
   prepareForTabSwitch: (tab: TabKey) => void;
   rememberScroll: (tab: TabKey) => void;
   isTafsirPath: boolean;
+  isMushafMode: boolean;
 }
 
 export function useSurahTabsState(chapters: ReadonlyArray<Chapter>): SurahTabsState {
@@ -39,6 +41,7 @@ export function useSurahTabsState(chapters: ReadonlyArray<Chapter>): SurahTabsSt
   const { tabs } = useSurahTabConfig();
   const [activeTab, setActiveTab] = useState<TabKey>(getInitialTab);
   const { isSurahListOpen } = useSidebar();
+  const { mode } = useReaderMode();
   const [hasOpened, setHasOpened] = useState(false);
 
   useEffect(() => {
@@ -85,5 +88,6 @@ export function useSurahTabsState(chapters: ReadonlyArray<Chapter>): SurahTabsSt
     prepareForTabSwitch,
     rememberScroll,
     isTafsirPath,
+    isMushafMode: mode === 'mushaf',
   };
 }

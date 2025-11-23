@@ -20,6 +20,7 @@ interface FontSettingsContentProps {
   onArabicFontPanelOpen: () => void;
   handleArabicFontSizeChange: (value: number) => void;
   handleTranslationFontSizeChange: (value: number) => void;
+  idPrefix?: string;
 }
 
 export function FontSettingsContent({
@@ -32,6 +33,7 @@ export function FontSettingsContent({
   onArabicFontPanelOpen,
   handleArabicFontSizeChange,
   handleTranslationFontSizeChange,
+  idPrefix,
 }: FontSettingsContentProps): ReactElement {
   const { t } = useTranslation();
 
@@ -41,7 +43,7 @@ export function FontSettingsContent({
       icon={<FontSettingIcon size={20} className="text-accent" />}
       isLast
       isOpen={isOpen ?? false}
-      onToggle={onToggle ?? (() => {})}
+      onToggle={onToggle ?? (() => { })}
     >
       <div className="space-y-4">
         <FontSizeSlider
@@ -61,6 +63,7 @@ export function FontSettingsContent({
           style={translationStyle}
         />
         <ArabicFontFaceSelector
+          {...(idPrefix ? { id: `${idPrefix}-font-select` } : {})}
           label={t('arabic_font_face')}
           value={selectedArabicFont}
           onClick={onArabicFontPanelOpen}

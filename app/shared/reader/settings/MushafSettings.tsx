@@ -13,6 +13,7 @@ interface MushafSettingsProps {
   onMushafPanelOpen: () => void;
   isOpen?: boolean;
   onToggle?: () => void;
+  idPrefix?: string;
 }
 
 export const MushafSettings = ({
@@ -20,6 +21,7 @@ export const MushafSettings = ({
   onMushafPanelOpen,
   isOpen = false,
   onToggle,
+  idPrefix,
 }: MushafSettingsProps): ReactElement => {
   return (
     <CollapsibleSection
@@ -27,9 +29,14 @@ export const MushafSettings = ({
       icon={<BookReaderIcon size={20} className="text-accent" />}
       isLast
       isOpen={isOpen}
-      onToggle={onToggle || (() => {})}
+      onToggle={onToggle || (() => { })}
     >
-      <SelectionBox label="Mushaf" value={selectedMushafName} onClick={onMushafPanelOpen} />
+      <SelectionBox
+        {...(idPrefix ? { id: `${idPrefix}-mushaf-select` } : {})}
+        label="Mushaf"
+        value={selectedMushafName}
+        onClick={onMushafPanelOpen}
+      />
     </CollapsibleSection>
   );
 };

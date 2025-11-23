@@ -20,6 +20,7 @@ export function SurahView({ surahId, initialVerseNumber }: SurahViewProps): Reac
   const searchParams = useSearchParams();
   const queryStartVerseRaw = searchParams?.get('startVerse');
   const navSeq = searchParams?.get('nav') ?? undefined;
+  const viewParam = searchParams?.get('view');
 
   const resolvedInitialVerseNumber = useMemo(() => {
     const fromQuery = queryStartVerseRaw ? Number.parseInt(queryStartVerseRaw, 10) : undefined;
@@ -56,6 +57,7 @@ export function SurahView({ surahId, initialVerseNumber }: SurahViewProps): Reac
         : {})}
       {...(typeof initialVerseKey === 'string' ? { initialVerseKey } : {})}
       {...(typeof navSeq === 'string' ? { initialScrollNonce: navSeq } : {})}
+      initialMode={viewParam === 'mushaf' ? 'mushaf' : 'verse'}
     />
   );
 }

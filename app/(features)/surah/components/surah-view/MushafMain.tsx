@@ -121,9 +121,8 @@ const SurahCalligraphyIntro = ({
             >
               {chapter?.revelation_place === 'makkah' ? 'مكية' : 'مدنية'}
             </span>
-            <div className="flex items-center gap-1 text-xs font-medium uppercase tracking-wide text-muted-foreground sm:text-sm">
+            <div className="flex flex-col items-center gap-0.5 text-xs font-medium uppercase tracking-wide text-muted-foreground sm:text-sm">
               <span>{translatedName}</span>
-              <span>•</span>
               <span>{chapter?.verses_count} Verses</span>
             </div>
           </div>
@@ -229,12 +228,6 @@ export function MushafMain({
             >
               {error}
             </div>
-          ) : showEmptyState ? (
-            <div
-              className="mx-auto w-full rounded-[32px] border border-border/70 bg-surface/70 px-6 py-12 text-center text-muted"
-            >
-              {t('no_verses_found')}
-            </div>
           ) : (
             pages.map((page) => {
               const pageFontLoaded =
@@ -299,6 +292,8 @@ interface MushafPageProps {
   isFontLoaded: boolean;
 }
 
+import { getJuzByPage } from '@/lib/utils/surah-navigation';
+
 const MushafPage = ({
   pageNumber,
   lines,
@@ -310,6 +305,7 @@ const MushafPage = ({
   qcfVersion,
   isFontLoaded,
 }: MushafPageProps): React.JSX.Element => {
+  const { t } = useTranslation();
   const mushafScale = fontSizeToMushafScale(settings.arabicFontSize);
 
   let fontSize: string | number;
@@ -318,11 +314,7 @@ const MushafPage = ({
   if (isQcfMushaf) {
     const preset = qcfVersion === 'v2' ? getQcfV2Preset(mushafScale) : getQcfV1Preset(mushafScale);
     fontSize = preset.fontSize;
-    const numericFont =
-      typeof preset.fontSize === 'number'
-        ? preset.fontSize
-        : mushafScaleToFontSize(mushafScale);
-    lineWidthDesktop = `${getLineWidth(numericFont)}px`;
+    lineWidthDesktop = preset.lineWidthDesktop;
   } else if (isQpcHafsMushaf || isIndopakMushaf) {
     const preset = isIndopakMushaf ? getIndopak15Preset(mushafScale) : getQpcHafsPreset(mushafScale);
     fontSize = preset.fontSize;
@@ -331,6 +323,8 @@ const MushafPage = ({
     fontSize = mushafScaleToFontSize(mushafScale);
     lineWidthDesktop = `${getLineWidth(mushafScaleToFontSize(mushafScale))}px`;
   }
+
+  const juzNumber = getJuzByPage(pageNumber);
 
   return (
     <article
@@ -343,12 +337,12 @@ const MushafPage = ({
       )}
     >
       <div
-      className={cn(
-        'flex flex-col',
-        isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf
-          ? 'gap-1 sm:gap-1.5 mx-auto'
-          : 'gap-4 sm:gap-5'
-      )}
+        className={cn(
+          'flex flex-col',
+          isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf
+            ? 'gap-1 sm:gap-1.5 mx-auto'
+            : 'gap-4 sm:gap-5'
+        )}
         style={
           {
             '--mushaf-line-width': lineWidthDesktop,
@@ -376,8 +370,10 @@ const MushafPage = ({
       </div>
       {pageNumber ? (
         <div className="mt-6 flex justify-center sm:mt-8">
-          <span className="inline-flex h-7 min-w-[2.5rem] items-center justify-center rounded-full border border-border/60 bg-surface/80 px-3 text-[0.7rem] font-medium tracking-[0.35em] text-muted">
-            {toArabicIndicNumber(pageNumber)}
+          <span className="inline-flex h-8 items-center justify-center rounded-full border border-border/60 bg-surface/80 px-4 text-xs font-medium text-muted shadow-sm backdrop-blur-sm">
+            <span className="tracking-widest">{`صفحة ${toArabicIndicNumber(pageNumber)}`}</span>
+            <span className="mx-2 text-muted-foreground/40">•</span>
+            <span>{`الجزء ${toArabicIndicNumber(juzNumber)}`}</span>
           </span>
         </div>
       ) : null}
@@ -425,12 +421,12 @@ const MushafLine = ({
       style={
         isQcfMushaf
           ? ({
-              whiteSpace: 'nowrap',
-              columnGap: '0',
-            } as React.CSSProperties)
+            whiteSpace: 'nowrap',
+            columnGap: '0',
+          } as React.CSSProperties)
           : ({
-              whiteSpace: 'nowrap',
-            } as React.CSSProperties)
+            whiteSpace: 'nowrap',
+          } as React.CSSProperties)
       }
       translate="no"
     >
@@ -473,8 +469,8 @@ const MushafWordText = ({
   }
 
   const baseText = isIndopakMushaf
-    ? word.textIndopak ?? word.textUthmani ?? ''
-    : word.textUthmani ?? word.textIndopak ?? '';
+    ? word.textIndopak || word.textUthmani || ''
+    : word.textUthmani || word.textIndopak || '';
   // Remove the "Silent Alif" (U+06DF) and "Sukun" (U+0652) if they are causing issues with this font?
   // No, U+06DF is standard.
   // But maybe the font uses a different character or the API returns a character that is not supported.

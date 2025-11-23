@@ -41,6 +41,7 @@ interface SettingsSidebarContentProps {
   onClose?: (() => void) | undefined;
   activeReaderMode?: 'translation' | 'reading';
   readerTabsEnabled?: boolean;
+  idPrefix?: string;
 }
 
 export function SettingsSidebarContent({
@@ -71,6 +72,7 @@ export function SettingsSidebarContent({
   onClose,
   activeReaderMode,
   readerTabsEnabled = true,
+  idPrefix,
 }: SettingsSidebarContentProps): React.JSX.Element {
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
   const tabsEnabled = readerTabsEnabled;
