@@ -13,6 +13,7 @@ type MushafLineProps = {
   isQpcHafsMushaf: boolean;
   isIndopakMushaf: boolean;
   qcfVersion: 'v1' | 'v2';
+  indopakVersion?: '15' | '16' | null | undefined;
   fontSize: string | number;
   isFontLoaded: boolean;
 };
@@ -41,12 +42,12 @@ const getLineClassName = (
 const getLineContentStyle = (isQcfMushaf: boolean): React.CSSProperties =>
   isQcfMushaf
     ? ({
-        whiteSpace: 'nowrap',
-        columnGap: '0',
-      } as React.CSSProperties)
+      whiteSpace: 'nowrap',
+      columnGap: '0',
+    } as React.CSSProperties)
     : ({
-        whiteSpace: 'nowrap',
-      } as React.CSSProperties);
+      whiteSpace: 'nowrap',
+    } as React.CSSProperties);
 
 export const MushafLine = ({
   line,
@@ -55,6 +56,7 @@ export const MushafLine = ({
   isQpcHafsMushaf,
   isIndopakMushaf,
   qcfVersion,
+  indopakVersion,
   fontSize,
   isFontLoaded,
 }: MushafLineProps): React.JSX.Element => (
@@ -71,6 +73,7 @@ export const MushafLine = ({
         isQpcHafsMushaf={isQpcHafsMushaf}
         isIndopakMushaf={isIndopakMushaf}
         qcfVersion={qcfVersion}
+        indopakVersion={indopakVersion}
         isFontLoaded={isFontLoaded}
       />
     </div>
@@ -84,6 +87,7 @@ const MushafLineWords = ({
   isQpcHafsMushaf,
   isIndopakMushaf,
   qcfVersion,
+  indopakVersion,
   isFontLoaded,
 }: {
   line: MushafLineGroup;
@@ -92,6 +96,7 @@ const MushafLineWords = ({
   isQpcHafsMushaf: boolean;
   isIndopakMushaf: boolean;
   qcfVersion: 'v1' | 'v2';
+  indopakVersion?: '15' | '16' | null | undefined;
   isFontLoaded: boolean;
 }): React.JSX.Element => (
   <>

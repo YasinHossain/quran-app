@@ -13,6 +13,7 @@ type MushafLinesProps = {
   isQpcHafsMushaf: boolean;
   isIndopakMushaf: boolean;
   qcfVersion: 'v1' | 'v2';
+  indopakVersion?: '15' | '16' | null;
   fontSize: string | number;
   fontFamily: string;
   lineWidthDesktop: string;
@@ -26,6 +27,7 @@ export const MushafLines = ({
   isQpcHafsMushaf,
   isIndopakMushaf,
   qcfVersion,
+  indopakVersion,
   fontSize,
   fontFamily,
   lineWidthDesktop,
@@ -58,6 +60,7 @@ export const MushafLines = ({
         isQpcHafsMushaf={isQpcHafsMushaf}
         isIndopakMushaf={isIndopakMushaf}
         qcfVersion={qcfVersion}
+        indopakVersion={indopakVersion}
         fontSize={fontSize}
         isFontLoaded={isFontLoaded}
       />

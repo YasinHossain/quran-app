@@ -4,6 +4,7 @@ import {
 } from '@/app/(features)/surah/hooks/mushafFontScale';
 import {
   getIndopak15Preset,
+  getIndopak16Preset,
   getQcfV1Preset,
   getQcfV2Preset,
   getQpcHafsPreset,
@@ -30,6 +31,7 @@ interface MushafPageProps {
   isQpcHafsMushaf: boolean;
   isIndopakMushaf: boolean;
   qcfVersion: 'v1' | 'v2';
+  indopakVersion?: '15' | '16' | null;
   isFontLoaded: boolean;
 }
 
@@ -39,12 +41,14 @@ const getMushafFontConfig = ({
   isQpcHafsMushaf,
   isIndopakMushaf,
   qcfVersion,
+  indopakVersion,
 }: {
   settings: ReaderSettings;
   isQcfMushaf: boolean;
   isQpcHafsMushaf: boolean;
   isIndopakMushaf: boolean;
   qcfVersion: 'v1' | 'v2';
+  indopakVersion?: '15' | '16' | null;
 }): { fontSize: string | number; lineWidthDesktop: string } => {
   const mushafScale = fontSizeToMushafScale(settings.arabicFontSize);
 
@@ -57,9 +61,13 @@ const getMushafFontConfig = ({
   }
 
   if (isQpcHafsMushaf || isIndopakMushaf) {
-    const preset = isIndopakMushaf
-      ? getIndopak15Preset(mushafScale)
-      : getQpcHafsPreset(mushafScale);
+    let preset;
+    if (isIndopakMushaf) {
+      preset =
+        indopakVersion === '16' ? getIndopak16Preset(mushafScale) : getIndopak15Preset(mushafScale);
+    } else {
+      preset = getQpcHafsPreset(mushafScale);
+    }
     return {
       fontSize: preset.fontSize,
       lineWidthDesktop: preset.lineWidthDesktop,
@@ -115,6 +123,7 @@ export const MushafPage = ({
   isQpcHafsMushaf,
   isIndopakMushaf,
   qcfVersion,
+  indopakVersion,
   isFontLoaded,
 }: MushafPageProps): React.JSX.Element => {
   const { fontSize, lineWidthDesktop } = getMushafFontConfig({
@@ -123,6 +132,7 @@ export const MushafPage = ({
     isQpcHafsMushaf,
     isIndopakMushaf,
     qcfVersion,
+    indopakVersion,
   });
 
   const juzNumber = getJuzByPage(pageNumber);
@@ -144,6 +154,7 @@ export const MushafPage = ({
         isQpcHafsMushaf={isQpcHafsMushaf}
         isIndopakMushaf={isIndopakMushaf}
         qcfVersion={qcfVersion}
+        indopakVersion={indopakVersion}
         fontSize={fontSize}
         fontFamily={fontFamily}
         lineWidthDesktop={lineWidthDesktop}

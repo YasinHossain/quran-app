@@ -24,4 +24,5 @@ export type MushafFlags = {
   isQpcHafsMushaf: boolean;
   isIndopakMushaf: boolean;
   qcfVersion: 'v1' | 'v2';
+  indopakVersion?: '15' | '16' | null;
 };

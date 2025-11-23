@@ -28,6 +28,8 @@ const useMushafFlags = (mushafId?: string): MushafFlags =>
       isQpcHafsMushaf: mushafId === 'qpc-uthmani-hafs',
       isIndopakMushaf: mushafId === 'unicode-indopak-15' || mushafId === 'unicode-indopak-16',
       qcfVersion: mushafId === 'qcf-madani-v2' ? 'v2' : 'v1',
+      indopakVersion:
+        mushafId === 'unicode-indopak-16' ? '16' : mushafId === 'unicode-indopak-15' ? '15' : null,
     }),
     [mushafId]
   );

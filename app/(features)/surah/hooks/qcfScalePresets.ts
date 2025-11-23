@@ -101,3 +101,25 @@ export const getIndopak15Preset = (scale: number): QcfScalePreset => {
   const key = clampScale(scale);
   return (INDOPAK_15_PRESETS[key] ?? INDOPAK_15_PRESETS[1])!;
 };
+
+/**
+ * Approximated IndoPak 16 Lines presets.
+ * Adjusted to be slightly narrower than 15 lines to ensure proper justification.
+ */
+const INDOPAK_16_PRESETS: Record<number, QcfScalePreset> = {
+  1: { fontSize: '3.2vh', lineWidthDesktop: '52vh' },
+  2: { fontSize: '3.5vh', lineWidthDesktop: '58vh' },
+  3: { fontSize: '4vh', lineWidthDesktop: '68vh' },
+  4: { fontSize: '4.2vh', lineWidthDesktop: '68vh' },
+  5: { fontSize: '4.3vh', lineWidthDesktop: '69vh' },
+  6: { fontSize: '5.64vh', lineWidthDesktop: '89vh' },
+  7: { fontSize: '6.98vh', lineWidthDesktop: '109vh' },
+  8: { fontSize: '8.32vh', lineWidthDesktop: '129vh' },
+  9: { fontSize: '9.66vh', lineWidthDesktop: '150vh' },
+  10: { fontSize: '11vh', lineWidthDesktop: '170vh' },
+};
+
+export const getIndopak16Preset = (scale: number): QcfScalePreset => {
+  const key = clampScale(scale);
+  return (INDOPAK_16_PRESETS[key] ?? INDOPAK_16_PRESETS[1])!;
+};
