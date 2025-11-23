@@ -66,8 +66,8 @@ interface MushafStartPageResponse {
 }
 
 /**
- * Fetch Mushaf data for a single page from the Quran.com reading view API and
- * map the result into {@link MushafVerse} structures.
+ * Fetch Mushaf data for a single page from the reading view API and map
+ * the result into {@link MushafVerse} structures.
  */
 export const getReadingViewPage = async ({
   pageNumber,

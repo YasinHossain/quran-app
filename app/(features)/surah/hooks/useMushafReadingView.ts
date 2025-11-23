@@ -273,7 +273,7 @@ export function useMushafReadingView({
         }
         const message = err instanceof Error ? err.message : null;
         if (typeof message === 'string' && message.includes('404')) {
-          // Quran.com API returns 404 for out-of-range page numbers; treat as end of pagination.
+          // Reading view API returns 404 for out-of-range page numbers; treat as end of pagination.
           setHasMore(false);
           if (isInitial) {
             setPages([]);

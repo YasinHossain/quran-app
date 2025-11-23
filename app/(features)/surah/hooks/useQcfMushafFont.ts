@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
- * Load Quran.com King Fahad Complex (Madani V1) fonts per page using the
- * FontFace API. Returns a helper to resolve the family name for a page.
+ * Load King Fahad Complex (Madani V1) fonts per page using the FontFace API.
+ * Returns a helper to resolve the family name for a page.
  */
 interface UseQcfFontResult {
   getPageFontFamily: (pageNumber: number) => string;

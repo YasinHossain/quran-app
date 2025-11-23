@@ -11,7 +11,7 @@ const clampScale = (scale: number): number => {
 };
 
 /**
- * Approximated Quran.com QCF Madani V1 presets so the glyph layout mirrors
+ * Approximated QCF Madani V1 presets so the glyph layout mirrors
  * the King Fahad Complex Mushaf as closely as possible.
  */
 const QCF_V1_PRESETS: Record<number, QcfScalePreset> = {
@@ -36,7 +36,7 @@ export const getQcfV1Preset = (scale: number): QcfScalePreset => {
 };
 
 /**
- * Approximated Quran.com King Fahad Complex V2 presets.
+ * Approximated King Fahad Complex V2 presets.
  * Based on code_v2 scales from quran-com-frontend-next.
  */
 const QCF_V2_PRESETS: Record<number, QcfScalePreset> = {
@@ -58,7 +58,7 @@ export const getQcfV2Preset = (scale: number): QcfScalePreset => {
 };
 
 /**
- * Approximated Quran.com QPC Uthmani Hafs presets.
+ * Approximated QPC Uthmani Hafs presets.
  * Based on qpc_uthmani_hafs scales from quran-com-frontend-next.
  */
 const QPC_HAFS_PRESETS: Record<number, QcfScalePreset> = {
@@ -80,7 +80,7 @@ export const getQpcHafsPreset = (scale: number): QcfScalePreset => {
 };
 
 /**
- * Approximated Quran.com IndoPak 15 Lines presets.
+ * Approximated IndoPak 15 Lines presets.
  * Based on text_indopak_15_lines scales from quran-com-frontend-next.
  * Note: Using tablet values as they seem to be the primary definition for larger screens.
  */

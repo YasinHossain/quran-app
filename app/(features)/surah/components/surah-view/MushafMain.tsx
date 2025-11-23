@@ -500,7 +500,7 @@ const MushafWordText = ({
 
   if (isQcfMushaf && isFontLoaded && hasGlyphCode) {
     // When the per-page QCF font is loaded, render the glyph-encoded text
-    // so that the layout and calligraphy match Quran.com exactly.
+    // so that the layout and calligraphy match the upstream QCF layout exactly.
     rawHtml = code as string;
   } else if (isQpcHafsMushaf) {
     // For QPC Uthmani Hafs, we use the textUthmani with the UthmanicHafs1Ver18 font.

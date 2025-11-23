@@ -1,7 +1,7 @@
 import type { MushafCharType, MushafVerse, MushafWord } from '@/types';
 
 /**
- * Raw word payload shape from the Quran.com QDC API for reading view endpoints.
+ * Raw word payload shape from the QDC reading view endpoints.
  */
 export interface ReadingViewApiWord {
   id?: number;
@@ -18,7 +18,7 @@ export interface ReadingViewApiWord {
 }
 
 /**
- * Raw verse payload shape from the Quran.com reading view endpoint.
+ * Raw verse payload shape from the reading view endpoint.
  */
 export interface ReadingViewApiVerse {
   id: number;
