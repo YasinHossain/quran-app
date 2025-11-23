@@ -61,6 +61,41 @@ interface PrefetchNextPageParams {
   prefetchedPagesRef: MutableRefObject<Set<number>>;
 }
 
+interface ParsedNextKey {
+  chapterId: string;
+  translationIds: number[];
+  wordLang: string;
+  page: number;
+  key: Key;
+}
+
+const parseNextKey = (nextKey: Key): ParsedNextKey | null => {
+  if (!nextKey || !Array.isArray(nextKey)) return null;
+
+  const [, chapterId, translationIdsValue, wordLang, page] = nextKey;
+  if (
+    typeof chapterId !== 'string' ||
+    typeof translationIdsValue !== 'string' ||
+    typeof wordLang !== 'string' ||
+    typeof page !== 'number'
+  ) {
+    return null;
+  }
+
+  const translationIds = translationIdsValue
+    .split(',')
+    .filter((value) => value.length > 0)
+    .map((value) => Number(value));
+
+  return {
+    chapterId,
+    translationIds,
+    wordLang,
+    page,
+    key: nextKey,
+  };
+};
+
 export const usePrefetchNextPage = ({
   id,
   keyFactory,
@@ -71,39 +106,27 @@ export const usePrefetchNextPage = ({
   prefetchedPagesRef,
 }: PrefetchNextPageParams): (() => void) => {
   return useCallback(() => {
-    if (!id || !keyFactory) return;
+    if (!id || !keyFactory || isReachingEnd) return;
+
     const nextPageIndex = size;
-    if (isReachingEnd || prefetchedPagesRef.current.has(nextPageIndex)) return;
+    if (prefetchedPagesRef.current.has(nextPageIndex)) return;
 
-    const nextKey = keyFactory(nextPageIndex);
-    if (!nextKey || !Array.isArray(nextKey)) return;
+    const parsedKey = parseNextKey(keyFactory(nextPageIndex));
+    if (!parsedKey) return;
 
-    const [, chapterId, translationIdsValue, wl, page] = nextKey;
-    if (
-      typeof chapterId !== 'string' ||
-      typeof translationIdsValue !== 'string' ||
-      typeof wl !== 'string' ||
-      typeof page !== 'number'
-    ) {
-      return;
-    }
-
-    const parsedTranslationIds = translationIdsValue
-      .split(',')
-      .filter((value) => value.length > 0)
-      .map((value) => Number(value));
+    const { chapterId, translationIds, wordLang, page, key } = parsedKey;
 
     prefetchedPagesRef.current.add(nextPageIndex);
 
     void mutateGlobal(
-      nextKey,
+      key,
       () =>
         lookup({
           id: chapterId,
-          translationIds: parsedTranslationIds,
+          translationIds,
           page,
           perPage: VERSES_PER_PAGE,
-          wordLang: wl,
+          wordLang,
         }).catch((err) => {
           prefetchedPagesRef.current.delete(nextPageIndex);
           throw err;

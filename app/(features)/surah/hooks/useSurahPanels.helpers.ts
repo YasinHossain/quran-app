@@ -1,11 +1,11 @@
 import { useCallback, useMemo, useState } from 'react';
-import type { TFunction } from 'i18next';
 
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 
 import type { PanelControls, SurahPanelOption } from './useSurahPanels.types';
 import type { LanguageCode } from '@/lib/text/languageCodes';
 import type { MushafOption, Settings } from '@/types';
+import type { TFunction } from 'i18next';
 
 export const usePanelControls = (): PanelControls => {
   const [isTranslationPanelOpen, openTranslationPanel, closeTranslationPanel] =

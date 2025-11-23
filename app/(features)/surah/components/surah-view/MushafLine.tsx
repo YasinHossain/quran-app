@@ -42,12 +42,12 @@ const getLineClassName = (
 const getLineContentStyle = (isQcfMushaf: boolean): React.CSSProperties =>
   isQcfMushaf
     ? ({
-      whiteSpace: 'nowrap',
-      columnGap: '0',
-    } as React.CSSProperties)
+        whiteSpace: 'nowrap',
+        columnGap: '0',
+      } as React.CSSProperties)
     : ({
-      whiteSpace: 'nowrap',
-    } as React.CSSProperties);
+        whiteSpace: 'nowrap',
+      } as React.CSSProperties);
 
 export const MushafLine = ({
   line,
@@ -87,7 +87,6 @@ const MushafLineWords = ({
   isQpcHafsMushaf,
   isIndopakMushaf,
   qcfVersion,
-  indopakVersion,
   isFontLoaded,
 }: {
   line: MushafLineGroup;
