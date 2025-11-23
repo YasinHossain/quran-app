@@ -75,29 +75,18 @@ const useSurahIntroDetails = (chapterId?: number | null): SurahIntroDetails | nu
 };
 
 const SurahMetadata = ({
-  translatedName,
-  versesCount,
   revelationPlace,
-}: Pick<
-  SurahIntroDetails,
-  'translatedName' | 'versesCount' | 'revelationPlace'
->): React.JSX.Element => (
+}: Pick<SurahIntroDetails, 'revelationPlace'>): React.JSX.Element => (
   <div className="flex items-center justify-start pl-4 sm:pl-12">
-    <div className="flex flex-col items-center gap-2">
-      <span
-        className="text-2xl text-foreground sm:text-3xl"
-        style={{
-          fontFamily: "'UthmanicHafs1Ver18', serif",
-          lineHeight: 1.4,
-        }}
-      >
-        {revelationPlace === 'makkah' ? 'مكية' : 'مدنية'}
-      </span>
-      <div className="flex flex-col items-center gap-0.5 text-xs font-medium uppercase tracking-wide text-muted-foreground sm:text-sm">
-        <span>{translatedName}</span>
-        <span>{versesCount} Verses</span>
-      </div>
-    </div>
+    <span
+      className="text-2xl text-foreground sm:text-3xl"
+      style={{
+        fontFamily: "'UthmanicHafs1Ver18', serif",
+        lineHeight: 1.4,
+      }}
+    >
+      {revelationPlace === 'makkah' ? 'مكية' : 'مدنية'}
+    </span>
   </div>
 );
 
@@ -138,8 +127,6 @@ export const SurahCalligraphyIntro = ({
     <div className="mx-auto mb-8 -mt-2 w-full max-w-7xl px-4 sm:-mt-3 sm:px-6">
       <div className="grid w-full grid-cols-3 items-center border-b border-border/40 pt-5 pb-8 sm:pt-6 sm:pb-9">
         <SurahMetadata
-          translatedName={introDetails.translatedName}
-          versesCount={introDetails.versesCount}
           revelationPlace={introDetails.revelationPlace}
         />
         <SurahIntroBismillah showBismillah={introDetails.showBismillah} />
