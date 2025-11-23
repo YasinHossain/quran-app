@@ -22,6 +22,7 @@ type VerseListingState = ReaderViewState['verseListing'];
 type ReaderPanelsState = ReaderViewState['panels'];
 
 interface CreateSurahMainParams {
+  surahId?: number | undefined;
   verseListing: VerseListingState;
   emptyLabelKey?: string | undefined;
   endLabelKey?: string | undefined;
@@ -30,6 +31,7 @@ interface CreateSurahMainParams {
 }
 
 const createSurahMain = ({
+  surahId,
   verseListing,
   emptyLabelKey,
   endLabelKey,
@@ -40,6 +42,7 @@ const createSurahMain = ({
     // Force remount not only when the target verse changes, but also when a new navigation
     // intent is fired for the same verse (via nav sequence query param)
     key={`${initialVerseKey ?? 'no-initial-verse'}:${initialScrollNonce ?? '0'}`}
+    surahId={surahId}
     verses={verseListing.verses}
     isLoading={verseListing.isLoading}
     error={verseListing.error}
@@ -173,7 +176,18 @@ export function ReaderShell({
     setMode('verse');
   }, [setMode]);
 
+  const surahId = useMemo(() => {
+    if (resourceKind === 'surah') {
+      const parsed = Number.parseInt(resourceId, 10);
+      if (Number.isFinite(parsed)) {
+        return parsed;
+      }
+    }
+    return verseListing.verses[0]?.chapter_id ?? initialVerses?.[0]?.chapter_id ?? undefined;
+  }, [resourceKind, resourceId, verseListing.verses, initialVerses]);
+
   const surahMain = createSurahMain({
+    surahId,
     verseListing,
     ...(typeof emptyLabelKey === 'string' ? { emptyLabelKey } : {}),
     ...(typeof endLabelKey === 'string' ? { endLabelKey } : {}),

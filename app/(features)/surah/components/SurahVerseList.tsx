@@ -3,6 +3,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { SurahNavigation } from '@/app/(features)/surah/components/SurahNavigation';
 import { VerseListBody } from '@/app/(features)/surah/components/SurahVerseListContent';
 import { useInitialVerseScroll } from '@/app/(features)/surah/hooks/useInitialVerseScroll';
 import { useVerseListVirtualization } from '@/app/(features)/surah/hooks/useVerseListVirtualization';
@@ -11,6 +12,7 @@ import { Spinner } from '@/app/shared/Spinner';
 import type { Verse as VerseType } from '@/types';
 
 interface SurahVerseListProps {
+  surahId?: number | undefined;
   verses: VerseType[];
   isLoading: boolean;
   error: string | null;
@@ -23,6 +25,7 @@ interface SurahVerseListProps {
 }
 
 export const SurahVerseList = ({
+  surahId,
   verses,
   isLoading,
   error,
@@ -66,6 +69,7 @@ export const SurahVerseList = ({
         isReachingEnd={isReachingEnd}
         endLabel={endLabel}
         hasVerses={verses.length > 0}
+        surahId={surahId}
       />
     </div>
   );
@@ -77,6 +81,7 @@ interface LoadMoreFooterProps {
   isReachingEnd: boolean;
   endLabel: string;
   hasVerses: boolean;
+  surahId?: number | undefined;
 }
 
 function LoadMoreFooter({
@@ -85,13 +90,16 @@ function LoadMoreFooter({
   isReachingEnd,
   endLabel,
   hasVerses,
+  surahId,
 }: LoadMoreFooterProps): React.JSX.Element | null {
   if (!hasVerses) return null;
 
   return (
-    <div ref={loadMoreRef} className="py-4 text-center space-x-2">
-      {isValidating && <Spinner className="inline h-5 w-5 text-accent" />}
-      {isReachingEnd && <span className="text-muted">{endLabel}</span>}
-    </div>
+    <>
+      <div ref={loadMoreRef} className="py-4 text-center space-x-2">
+        {isValidating && <Spinner className="inline h-5 w-5 text-accent" />}
+      </div>
+      {isReachingEnd && surahId && <SurahNavigation currentSurahId={surahId} />}
+    </>
   );
 }

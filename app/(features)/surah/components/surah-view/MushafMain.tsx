@@ -51,6 +51,7 @@ export function MushafMain({
             isLoadingMore={isLoadingMore}
             hasMore={hasMore}
             endLabel={state.endLabel}
+            surahId={chapterId ?? undefined}
           />
         ) : null}
       </div>

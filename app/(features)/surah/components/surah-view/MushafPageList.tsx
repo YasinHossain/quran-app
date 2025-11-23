@@ -1,3 +1,4 @@
+import { SurahNavigation } from '@/app/(features)/surah/components/SurahNavigation';
 import { Spinner } from '@/app/shared/Spinner';
 
 import { MushafPage } from './MushafPage';
@@ -139,14 +140,18 @@ export const LoadMoreSection = ({
   isLoadingMore,
   hasMore,
   endLabel,
+  surahId,
 }: {
   loadMoreRef: React.RefObject<HTMLDivElement | null>;
   isLoadingMore: boolean;
   hasMore?: boolean;
   endLabel: string;
+  surahId?: number | undefined;
 }): React.JSX.Element => (
-  <div ref={loadMoreRef} className="mx-auto w-full space-y-2 py-8 text-center">
-    {isLoadingMore ? <Spinner className="inline h-5 w-5 text-accent" /> : null}
-    {!hasMore && !isLoadingMore ? <p className="text-sm text-muted">{endLabel}</p> : null}
-  </div>
+  <>
+    <div ref={loadMoreRef} className="mx-auto w-full space-y-2 py-8 text-center">
+      {isLoadingMore ? <Spinner className="inline h-5 w-5 text-accent" /> : null}
+    </div>
+    {!hasMore && !isLoadingMore && surahId && <SurahNavigation currentSurahId={surahId} />}
+  </>
 );

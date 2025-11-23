@@ -47,7 +47,6 @@
   "translations_panel_title": "Translations",
   "could_not_play_audio": "Could not play audio.",
   "error_loading_tafsir": "Could not load tafsir.",
-
   "tafsir_language": "Tafsir Language",
   "select_tafsir_language": "Select Tafsir Language",
   "tafsir_setting": "Tafsir Setting",
@@ -76,6 +75,8 @@
   "juz_description": "A Juz (جزء) is one of thirty parts of the Quran. Each Juz contains a specific number of verses and is used for daily reading and study purposes. The Quran is divided into 30 Juz to make it easier to complete the entire text in a month, especially during Ramadan.",
   "previous": "Previous",
   "next": "Next",
+  "previous_surah": "Previous Surah",
+  "next_surah": "Next Surah",
   "pause_audio": "Pause audio",
   "play_audio": "Play audio",
   "audio_settings": "Audio Settings",

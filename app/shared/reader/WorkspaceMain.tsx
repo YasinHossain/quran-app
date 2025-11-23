@@ -34,11 +34,14 @@ export function WorkspaceMain({
   const shouldReserveLeft = Boolean(reserveLeftSpace && !hasLeftSidebar);
   const shouldReserveRight = Boolean(reserveRightSpace && !hasRightSidebar);
 
+  // ARCHITECTURE NOTE:
+  // When isRootHeaderAware is false, we apply STATIC top padding here.
+  // This ensures the content starts below the header but can scroll UP behind the transparent header.
+  // DO NOT make this padding dynamic based on isHidden, or the content will jump and the
+  // "white block" background issue will return.
   const topPaddingClass = isRootHeaderAware
     ? null
-    : isHidden
-      ? 'pt-[calc(var(--reader-safe-area-top))]'
-      : 'pt-[calc(var(--reader-header-height)+var(--reader-safe-area-top))]';
+    : 'pt-[calc(var(--reader-header-height)+var(--reader-safe-area-top))]';
 
   return (
     <Component

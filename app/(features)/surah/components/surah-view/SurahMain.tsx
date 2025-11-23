@@ -7,6 +7,7 @@ import { SurahVerseList } from '@/app/(features)/surah/components/SurahVerseList
 import type { Verse } from '@/types';
 
 interface SurahMainProps {
+  surahId?: number | undefined;
   verses: Verse[];
   isLoading: boolean;
   error: string | null;
@@ -19,6 +20,7 @@ interface SurahMainProps {
 }
 
 export function SurahMain({
+  surahId,
   verses,
   isLoading,
   error,
@@ -31,6 +33,7 @@ export function SurahMain({
 }: SurahMainProps): React.JSX.Element {
   return (
     <SurahVerseList
+      surahId={surahId}
       verses={verses}
       isLoading={isLoading}
       error={error}
