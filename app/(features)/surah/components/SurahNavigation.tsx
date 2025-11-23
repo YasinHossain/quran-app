@@ -93,28 +93,34 @@ export function SurahNavigation({
     const nextChapter = hasNext ? chapters[currentIndex + 1] : null;
 
     return (
-        <div className={`flex w-full items-center justify-center gap-4 py-8 ${className || ''}`}>
-            {/* Previous Button */}
-            <button
-                onClick={() => previousChapter && handleNavigation(previousChapter.id)}
-                disabled={!hasPrevious}
-                className="flex min-w-[140px] items-center justify-center gap-2 rounded-lg border border-border bg-surface px-6 py-3 text-base font-medium text-foreground transition-colors hover:bg-surface-hover disabled:cursor-not-allowed disabled:opacity-50"
-                aria-label={previousChapter ? `Previous: ${previousChapter.name_simple}` : 'Previous'}
-            >
-                <ChevronLeft />
-                <span>{t('previous')}</span>
-            </button>
+        <div className={`flex w-full items-center justify-center py-8 ${className || ''}`}>
+            <div className="inline-flex items-center gap-2 rounded-full bg-interactive p-1.5">
+                {/* Previous Button */}
+                <button
+                    onClick={() => previousChapter && handleNavigation(previousChapter.id)}
+                    disabled={!hasPrevious}
+                    className="group relative flex h-10 min-w-[130px] items-center justify-center rounded-full bg-surface px-8 text-sm font-medium text-foreground shadow-sm transition-all disabled:cursor-not-allowed disabled:opacity-50"
+                    aria-label={previousChapter ? `${t('previous')}: ${previousChapter.name_simple}` : t('previous')}
+                >
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-hover:text-foreground">
+                        <ChevronLeft />
+                    </span>
+                    <span>{t('previous')}</span>
+                </button>
 
-            {/* Next Button */}
-            <button
-                onClick={() => nextChapter && handleNavigation(nextChapter.id)}
-                disabled={!hasNext}
-                className="flex min-w-[140px] items-center justify-center gap-2 rounded-lg border border-border bg-surface px-6 py-3 text-base font-medium text-foreground transition-colors hover:bg-surface-hover disabled:cursor-not-allowed disabled:opacity-50"
-                aria-label={nextChapter ? `Next: ${nextChapter.name_simple}` : 'Next'}
-            >
-                <span>{t('next')}</span>
-                <ChevronRight />
-            </button>
+                {/* Next Button */}
+                <button
+                    onClick={() => nextChapter && handleNavigation(nextChapter.id)}
+                    disabled={!hasNext}
+                    className="group relative flex h-10 min-w-[130px] items-center justify-center rounded-full bg-surface px-8 text-sm font-medium text-foreground shadow-sm transition-all disabled:cursor-not-allowed disabled:opacity-50"
+                    aria-label={nextChapter ? `${t('next')}: ${nextChapter.name_simple}` : t('next')}
+                >
+                    <span>{t('next')}</span>
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-hover:text-foreground">
+                        <ChevronRight />
+                    </span>
+                </button>
+            </div>
         </div>
     );
 }
