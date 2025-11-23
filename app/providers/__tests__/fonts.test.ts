@@ -9,8 +9,10 @@ describe('ARABIC_FONTS', () => {
       'Scheherazade New',
       'Noto Naskh Arabic',
       'Noto Nastaliq Urdu',
+      'IndoPak Nastaleeq (Waqf Lazim)',
       'Noor-e-Hira',
       'Lateef',
+      'QPC Uthmani Hafs',
     ];
     expectedNames.forEach((name) => {
       expect(fontNames).toContain(name);
@@ -24,8 +26,10 @@ describe('ARABIC_FONTS', () => {
       'Scheherazade New': 'Uthmani',
       'Noto Naskh Arabic': 'Uthmani',
       'Noto Nastaliq Urdu': 'IndoPak',
+      'IndoPak Nastaleeq (Waqf Lazim)': 'IndoPak',
       'Noor-e-Hira': 'IndoPak',
       Lateef: 'IndoPak',
+      'QPC Uthmani Hafs': 'Uthmani',
     };
 
     ARABIC_FONTS.forEach((font) => {

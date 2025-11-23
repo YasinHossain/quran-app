@@ -29,6 +29,7 @@ function createTestComponent(props: {
     <Wrapper>
       <Header />
       <SettingsSidebar
+        pageType="verse"
         onTranslationPanelOpen={props.onTranslationPanelOpen ?? noop}
         onWordLanguagePanelOpen={props.onWordLanguagePanelOpen ?? noop}
         selectedTranslationName="English"
@@ -92,6 +93,7 @@ describe('SettingsSidebar - Translation Panel', () => {
         <Wrapper>
           <Header />
           <SettingsSidebar
+            pageType="verse"
             onTranslationPanelOpen={() => setOpen(true)}
             onWordLanguagePanelOpen={() => {}}
             selectedTranslationName="English"
@@ -122,6 +124,7 @@ describe('SettingsSidebar - Word Translation Panel', () => {
         <Wrapper>
           <Header />
           <SettingsSidebar
+            pageType="verse"
             onTranslationPanelOpen={() => {}}
             onWordLanguagePanelOpen={() => setOpen(true)}
             selectedTranslationName="English"

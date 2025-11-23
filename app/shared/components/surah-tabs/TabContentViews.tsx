@@ -18,6 +18,7 @@ interface SurahProps extends BaseProps {
   setSelectedPageId: (id: number | null) => void;
   setSelectedJuzId: (id: number | null) => void;
   isTafsirPath: boolean;
+  isMushafMode: boolean;
 }
 
 export function SurahTabContent(props: SurahProps): React.JSX.Element {
@@ -29,6 +30,7 @@ export function SurahTabContent(props: SurahProps): React.JSX.Element {
     setSelectedJuzId,
     rememberScroll,
     isTafsirPath,
+    isMushafMode,
   } = props;
   return (
     <Surah
@@ -39,6 +41,7 @@ export function SurahTabContent(props: SurahProps): React.JSX.Element {
       setSelectedJuzId={setSelectedJuzId}
       rememberScroll={() => rememberScroll('Surah')}
       isTafsirPath={isTafsirPath}
+      isMushafMode={isMushafMode}
     />
   );
 }
@@ -50,6 +53,7 @@ interface JuzProps extends BaseProps {
   setSelectedJuzId: (id: number | null) => void;
   setSelectedPageId: (id: number | null) => void;
   setSelectedSurahId: (id: number | null) => void;
+  isMushafMode: boolean;
 }
 
 export function JuzTabContent(props: JuzProps): React.JSX.Element {
@@ -82,6 +86,7 @@ interface PageProps extends BaseProps {
   setSelectedPageId: (id: number | null) => void;
   setSelectedJuzId: (id: number | null) => void;
   setSelectedSurahId: (id: number | null) => void;
+  isMushafMode: boolean;
 }
 
 export function PageTabContent(props: PageProps): React.JSX.Element {

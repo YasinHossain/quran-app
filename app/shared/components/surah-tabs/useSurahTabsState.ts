@@ -1,13 +1,6 @@
-import {
-  useEffect,
-  useState,
-  type Dispatch,
-  type RefObject,
-  type SetStateAction,
-  type UIEvent,
-} from 'react';
+import { useState, type Dispatch, type RefObject, type SetStateAction, type UIEvent } from 'react';
 
-import { useSidebar } from '@/app/providers/SidebarContext';
+import { useReaderMode } from '@/app/providers/ReaderModeContext';
 import { useSurahTabConfig } from '@/app/shared/components/surah-tabs/useSurahTabConfig';
 import { useSurahTabParams } from '@/app/shared/components/surah-tabs/useSurahTabParams';
 import { useSelectionSync } from '@/app/shared/surah-sidebar/hooks/useSelectionSync';
@@ -31,6 +24,7 @@ export interface SurahTabsState {
   prepareForTabSwitch: (tab: TabKey) => void;
   rememberScroll: (tab: TabKey) => void;
   isTafsirPath: boolean;
+  isMushafMode: boolean;
 }
 
 export function useSurahTabsState(chapters: ReadonlyArray<Chapter>): SurahTabsState {
@@ -38,12 +32,7 @@ export function useSurahTabsState(chapters: ReadonlyArray<Chapter>): SurahTabsSt
     useSurahTabParams();
   const { tabs } = useSurahTabConfig();
   const [activeTab, setActiveTab] = useState<TabKey>(getInitialTab);
-  const { isSurahListOpen } = useSidebar();
-  const [hasOpened, setHasOpened] = useState(false);
-
-  useEffect(() => {
-    if (isSurahListOpen) setHasOpened(true);
-  }, [isSurahListOpen]);
+  const { mode } = useReaderMode();
 
   const {
     selectedSurahId,
@@ -85,5 +74,6 @@ export function useSurahTabsState(chapters: ReadonlyArray<Chapter>): SurahTabsSt
     prepareForTabSwitch,
     rememberScroll,
     isTafsirPath,
+    isMushafMode: mode === 'mushaf',
   };
 }

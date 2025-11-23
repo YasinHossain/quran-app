@@ -4,16 +4,16 @@ import React from 'react';
 import { SettingsSidebar } from '@/app/(features)/surah/components';
 import { SurahWorkspaceNavigation } from '@/app/(features)/surah/components/surah-view/SurahWorkspaceNavigation';
 import { useTafsirVerseData } from '@/app/(features)/tafsir/hooks/useTafsirVerseData';
+import { useBodyScrollLock } from '@/app/providers/hooks/useBodyScrollLock';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { ThreeColumnWorkspace, WorkspaceMain } from '@/app/shared/reader';
+import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
 import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
 import { Surah } from '@/types';
 
 import { AyahNavigation } from './components/AyahNavigation';
 import { TafsirAudioPlayer } from './components/TafsirAudioPlayer';
 import { TafsirViewer } from './components/TafsirViewer';
-import { TafsirWorkspaceSettings } from './components/TafsirWorkspaceSettings';
-import { useBodyScrollLock } from '@/app/providers/hooks/useBodyScrollLock';
 
 interface TafsirVersePageProps {
   params: Promise<{ surahId: string; ayahId: string }>;
@@ -85,19 +85,21 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps): React
           </WorkspaceMain>
         }
         right={
-          <TafsirWorkspaceSettings
+          <SettingsSidebarContent
+            readerTabsEnabled={false}
+            showTafsirSetting
             selectedTranslationName={selectedTranslationName}
             selectedTafsirName={selectedTafsirName}
             selectedWordLanguageName={selectedWordLanguageName}
-            isTranslationPanelOpen={isTranslationPanelOpen}
             onTranslationPanelOpen={openTranslationPanel}
             onTranslationPanelClose={closeTranslationPanel}
-            isTafsirPanelOpen={isTafsirPanelOpen}
+            isTranslationPanelOpen={isTranslationPanelOpen}
             onTafsirPanelOpen={openTafsirPanel}
             onTafsirPanelClose={closeTafsirPanel}
-            isWordLanguagePanelOpen={isWordPanelOpen}
+            isTafsirPanelOpen={isTafsirPanelOpen}
             onWordLanguagePanelOpen={openWordPanel}
             onWordLanguagePanelClose={closeWordPanel}
+            isWordLanguagePanelOpen={isWordPanelOpen}
           />
         }
       />

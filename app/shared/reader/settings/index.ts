@@ -1,6 +1,6 @@
 export { SettingsContent } from './SettingsContent';
 export { SettingsSidebar } from './SettingsSidebar';
-export { ReadingSettings } from './ReadingSettings';
+export { MushafSettings } from './MushafSettings';
 export { FontSettings } from './FontSettings';
 export { TranslationSettings } from './TranslationSettings';
 export { TafsirSettings } from './TafsirSettings';

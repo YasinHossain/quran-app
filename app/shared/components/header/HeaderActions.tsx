@@ -5,7 +5,6 @@ import { memo, type ReactElement, useCallback } from 'react';
 
 import { useTheme } from '@/app/providers/ThemeContext';
 import { useUIState } from '@/app/providers/UIStateContext';
-
 export const HeaderActions = memo(function HeaderActions(): ReactElement {
   const { theme, setTheme } = useTheme();
   const { setSettingsOpen } = useUIState();
@@ -26,7 +25,7 @@ export const HeaderActions = memo(function HeaderActions(): ReactElement {
   }, [setSettingsOpen]);
 
   return (
-    <div className="flex items-center justify-end space-x-1 sm:space-x-1.5 w-1/3 mr-1">
+    <div className="flex items-center justify-end gap-2 sm:gap-2.5 w-1/3 mr-1">
       {/* Settings button - only show on mobile/tablet when settings sidebar is hidden */}
       <button
         onClick={openSettings}

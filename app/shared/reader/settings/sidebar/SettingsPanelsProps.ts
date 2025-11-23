@@ -1,5 +1,7 @@
 import { SettingsSidebarProps } from '@/app/shared/reader/settings/types';
 
+import type { MushafOption } from '@/types';
+
 export interface SettingsPanelsPropsConfig {
   isArabicFontPanelOpen: boolean;
   onArabicFontPanelClose: () => void;
@@ -9,6 +11,11 @@ export interface SettingsPanelsPropsConfig {
   onTafsirPanelClose?: () => void;
   isWordLanguagePanelOpen: boolean;
   onWordLanguagePanelClose?: () => void;
+  isMushafPanelOpen: boolean;
+  onMushafPanelClose?: () => void;
+  mushafOptions?: MushafOption[];
+  selectedMushafId?: string;
+  onMushafChange?: (id: string) => void;
 }
 
 export function buildPanelsProps(
@@ -20,6 +27,11 @@ export function buildPanelsProps(
     | 'onTafsirPanelClose'
     | 'isWordLanguagePanelOpen'
     | 'onWordLanguagePanelClose'
+    | 'isMushafPanelOpen'
+    | 'onMushafPanelClose'
+    | 'mushafOptions'
+    | 'selectedMushafId'
+    | 'onMushafChange'
   >,
   localState: {
     isArabicFontPanelOpen: boolean;
@@ -31,6 +43,7 @@ export function buildPanelsProps(
     isTranslationPanelOpen: baseProps.isTranslationPanelOpen ?? false,
     isTafsirPanelOpen: baseProps.isTafsirPanelOpen ?? false,
     isWordLanguagePanelOpen: baseProps.isWordLanguagePanelOpen ?? false,
+    isMushafPanelOpen: baseProps.isMushafPanelOpen ?? false,
   };
 
   // Add optional close handlers conditionally
@@ -46,6 +59,18 @@ export function buildPanelsProps(
 
   if (baseProps.onWordLanguagePanelClose !== undefined) {
     conditionalProps.onWordLanguagePanelClose = baseProps.onWordLanguagePanelClose;
+  }
+  if (baseProps.onMushafPanelClose !== undefined) {
+    conditionalProps.onMushafPanelClose = baseProps.onMushafPanelClose;
+  }
+  if (baseProps.mushafOptions) {
+    conditionalProps.mushafOptions = baseProps.mushafOptions;
+  }
+  if (baseProps.selectedMushafId) {
+    conditionalProps.selectedMushafId = baseProps.selectedMushafId;
+  }
+  if (baseProps.onMushafChange) {
+    conditionalProps.onMushafChange = baseProps.onMushafChange;
   }
 
   return { ...coreProps, ...conditionalProps };

@@ -39,7 +39,7 @@ Authoritative guide for a consistent, scalable, and accessible three‑column la
 - Desktop:
   - Left: navigation (`SurahWorkspaceNavigation`)
   - Center: verses/tafsir content
-  - Right: settings (`SurahWorkspaceSettings` / `TafsirWorkspaceSettings`)
+  - Right: settings (`SettingsSidebarContent` configured per page)
 - Mobile:
   - Left overlay: `SurahListSidebar`
   - Right overlay: `SettingsSidebar`

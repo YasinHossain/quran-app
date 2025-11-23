@@ -4,10 +4,11 @@ import React, { useCallback } from 'react';
 
 import { useBookmarkFolderPanels } from '@/app/(features)/bookmarks/[folderId]/hooks';
 import { BookmarksLayout } from '@/app/(features)/bookmarks/components/shared/BookmarksLayout';
-import { SurahWorkspaceSettings } from '@/app/(features)/surah/components/surah-view/SurahWorkspaceSettings';
+import { SettingsSidebar } from '@/app/shared/reader/settings/SettingsSidebar';
+import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
 import { usePrefetchSingleVerse } from '@/app/shared/hooks/useSingleVerse';
 
-import { PinnedHeader, PinnedSettingsSidebar, PinnedVersesList } from './components';
+import { PinnedHeader, PinnedVersesList } from './components';
 import { usePinnedPage } from './hooks/usePinnedPage';
 
 export default function PinnedAyahPage(): React.JSX.Element {
@@ -19,19 +20,17 @@ export default function PinnedAyahPage(): React.JSX.Element {
   return (
     <>
       <div className="lg:hidden">
-        <PinnedSettingsSidebar
+        <SettingsSidebar
+          pageType="bookmarks"
+          readerTabsEnabled={false}
+          selectedTranslationName={panel.selectedTranslationName ?? ''}
+          selectedWordLanguageName={panel.selectedWordLanguageName ?? ''}
           onTranslationPanelOpen={panel.handleTranslationPanelOpen}
           onTranslationPanelClose={panel.handleTranslationPanelClose}
-          onWordLanguagePanelOpen={panel.handleWordPanelOpen}
-          onWordPanelClose={panel.handleWordPanelClose}
-          {...(panel.selectedTranslationName !== undefined
-            ? { selectedTranslationName: panel.selectedTranslationName }
-            : {})}
-          {...(panel.selectedWordLanguageName !== undefined
-            ? { selectedWordLanguageName: panel.selectedWordLanguageName }
-            : {})}
           isTranslationPanelOpen={panel.isTranslationPanelOpen}
-          isWordPanelOpen={panel.isWordPanelOpen}
+          onWordLanguagePanelOpen={panel.handleWordPanelOpen}
+          onWordLanguagePanelClose={panel.handleWordPanelClose}
+          isWordLanguagePanelOpen={panel.isWordPanelOpen}
         />
       </div>
 
@@ -39,19 +38,16 @@ export default function PinnedAyahPage(): React.JSX.Element {
         activeSection="pinned"
         onSectionChange={handleSectionChange}
         rightSidebar={
-          <SurahWorkspaceSettings
-            {...(panel.selectedTranslationName !== undefined
-              ? { selectedTranslationName: panel.selectedTranslationName }
-              : {})}
-            {...(panel.selectedWordLanguageName !== undefined
-              ? { selectedWordLanguageName: panel.selectedWordLanguageName }
-              : {})}
-            isTranslationPanelOpen={panel.isTranslationPanelOpen}
+          <SettingsSidebarContent
+            readerTabsEnabled={false}
+            selectedTranslationName={panel.selectedTranslationName ?? ''}
+            selectedWordLanguageName={panel.selectedWordLanguageName ?? ''}
             onTranslationPanelOpen={panel.handleTranslationPanelOpen}
             onTranslationPanelClose={panel.handleTranslationPanelClose}
-            isWordLanguagePanelOpen={panel.isWordPanelOpen}
+            isTranslationPanelOpen={panel.isTranslationPanelOpen}
             onWordLanguagePanelOpen={panel.handleWordPanelOpen}
             onWordLanguagePanelClose={panel.handleWordPanelClose}
+            isWordLanguagePanelOpen={panel.isWordPanelOpen}
           />
         }
       >

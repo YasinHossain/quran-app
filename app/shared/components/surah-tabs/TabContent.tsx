@@ -20,6 +20,7 @@ interface TabContentProps {
   setSelectedPageId: (id: number | null) => void;
   rememberScroll: (tab: TabKey) => void;
   isTafsirPath: boolean;
+  isMushafMode: boolean;
 }
 
 // Adapt dynamically loaded components to accept TabContentProps at call sites

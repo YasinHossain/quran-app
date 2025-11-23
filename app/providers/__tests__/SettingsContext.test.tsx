@@ -2,6 +2,7 @@ import { render, screen, waitFor, type RenderResult } from '@testing-library/rea
 import userEvent from '@testing-library/user-event';
 
 import { SettingsProvider, useSettings } from '@/app/providers/SettingsContext';
+import { defaultSettings } from '@/app/providers/settingsStorage';
 
 import type { Settings } from '@/types';
 
@@ -35,19 +36,7 @@ describe('SettingsContext settings state', () => {
     localStorage.clear();
   });
 
-  const defaultSettings = {
-    translationId: 20,
-    translationIds: [20],
-    tafsirIds: [169],
-    arabicFontSize: 28,
-    translationFontSize: 16,
-    tafsirFontSize: 16,
-    arabicFontFace: '"KFGQPC-Uthman-Taha", serif',
-    wordLang: 'en',
-    wordTranslationId: 85,
-    showByWords: false,
-    tajweed: false,
-  };
+  const baseDefaultSettings = defaultSettings;
 
   const clickUpdate = async (): Promise<void> =>
     userEvent.click(screen.getByRole('button', { name: 'Update' }));
@@ -58,13 +47,13 @@ describe('SettingsContext settings state', () => {
   const expectRenderedFontSize = (size: number): Promise<void> =>
     waitFor(() =>
       expect(screen.getByTestId('settings').textContent).toBe(
-        JSON.stringify({ ...defaultSettings, arabicFontSize: size })
+        JSON.stringify({ ...baseDefaultSettings, arabicFontSize: size })
       )
     );
 
   it('defaults to expected values', () => {
     renderSettings();
-    expect(screen.getByTestId('settings').textContent).toBe(JSON.stringify(defaultSettings));
+    expect(screen.getByTestId('settings').textContent).toBe(JSON.stringify(baseDefaultSettings));
   });
 
   it('persists settings changes in localStorage across renders', async () => {

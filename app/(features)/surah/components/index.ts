@@ -10,7 +10,7 @@ export { WordLanguagePanel } from './WordLanguagePanel';
 export {
   SettingsContent,
   SettingsSidebar,
-  ReadingSettings,
+  MushafSettings,
   FontSettings,
 } from '@/app/shared/reader/settings';
 

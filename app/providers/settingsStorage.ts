@@ -1,3 +1,4 @@
+import { DEFAULT_MUSHAF_ID } from '@/data/mushaf/options';
 import { getItem, setItem } from '@/lib/utils/safeLocalStorage';
 import { Settings } from '@/types';
 
@@ -9,8 +10,10 @@ export const ARABIC_FONTS = [
   { name: 'Scheherazade New', value: '"Scheherazade New", serif', category: 'Uthmani' },
   { name: 'Noto Naskh Arabic', value: '"Noto Naskh Arabic", serif', category: 'Uthmani' },
   { name: 'Noto Nastaliq Urdu', value: '"Noto Nastaliq Urdu", serif', category: 'IndoPak' },
+  { name: 'IndoPak Nastaleeq (Waqf Lazim)', value: '"IndoPak", serif', category: 'IndoPak' },
   { name: 'Noor-e-Hira', value: '"Noor-e-Hira", serif', category: 'IndoPak' },
   { name: 'Lateef', value: '"Lateef", serif', category: 'IndoPak' },
+  { name: 'QPC Uthmani Hafs', value: '"UthmanicHafs1Ver18", serif', category: 'Uthmani' },
 ];
 
 const DEFAULT_ARABIC_FONT = ARABIC_FONTS[0]?.value ?? '"KFGQPC-Uthman-Taha", serif';
@@ -27,6 +30,7 @@ export const defaultSettings: Settings = {
   wordTranslationId: 85,
   showByWords: false,
   tajweed: false,
+  mushafId: DEFAULT_MUSHAF_ID,
 };
 
 const SETTINGS_KEY = 'quranAppSettings';

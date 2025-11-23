@@ -13,4 +13,5 @@ export interface Settings {
   wordTranslationId: number;
   showByWords: boolean;
   tajweed: boolean;
+  mushafId?: string;
 }

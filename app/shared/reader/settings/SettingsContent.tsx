@@ -2,7 +2,10 @@
 
 import React from 'react';
 
+import { cn } from '@/lib/utils/cn';
+
 import { FontSettings } from './FontSettings';
+import { MushafSettings } from './MushafSettings';
 import { TafsirSettings } from './TafsirSettings';
 import { TranslationSettings } from './TranslationSettings';
 import { SettingsContentProps } from './types';
@@ -17,14 +20,20 @@ export const SettingsContent = ({
   onTranslationPanelOpen,
   onWordLanguagePanelOpen,
   onTafsirPanelOpen,
+  onMushafPanelOpen,
   selectedTranslationName,
   selectedTafsirName,
   selectedWordLanguageName,
+  selectedMushafName = '',
   showTafsirSetting = false,
+  idPrefix,
+  isMushafMode = false,
 }: SettingsContentProps): ReactElement => {
-  if (activeTab === 'translation') {
-    return (
-      <>
+  const mushafVisible = isMushafMode || activeTab === 'reading';
+
+  const baseSettings = (
+    <>
+      {!isMushafMode && (
         <TranslationSettings
           onTranslationPanelOpen={onTranslationPanelOpen}
           onWordLanguagePanelOpen={onWordLanguagePanelOpen}
@@ -32,30 +41,48 @@ export const SettingsContent = ({
           selectedWordLanguageName={selectedWordLanguageName}
           isOpen={openSections.includes('translation')}
           onToggle={() => onSectionToggle('translation')}
+          {...(idPrefix ? { idPrefix: `${idPrefix}-translation` } : {})}
         />
-        <TafsirSettings
-          {...(onTafsirPanelOpen !== undefined ? { onTafsirPanelOpen } : {})}
-          {...(selectedTafsirName !== undefined ? { selectedTafsirName } : {})}
-          showTafsirSetting={showTafsirSetting}
-          isOpen={openSections.includes('tafsir')}
-          onToggle={() => onSectionToggle('tafsir')}
-        />
-        <FontSettings
-          onArabicFontPanelOpen={onArabicFontPanelOpen}
-          isOpen={openSections.includes('font')}
-          onToggle={() => onSectionToggle('font')}
-        />
-      </>
-    );
-  }
+      )}
+      <TafsirSettings
+        {...(onTafsirPanelOpen !== undefined ? { onTafsirPanelOpen } : {})}
+        {...(selectedTafsirName !== undefined ? { selectedTafsirName } : {})}
+        showTafsirSetting={showTafsirSetting}
+        isOpen={openSections.includes('tafsir')}
+        onToggle={() => onSectionToggle('tafsir')}
+        {...(idPrefix ? { idPrefix: `${idPrefix}-tafsir` } : {})}
+      />
+      <FontSettings
+        onArabicFontPanelOpen={onArabicFontPanelOpen}
+        isOpen={openSections.includes('font')}
+        onToggle={() => onSectionToggle('font')}
+        {...(idPrefix ? { idPrefix: `${idPrefix}-font` } : {})}
+        isArabicOnly={isMushafMode}
+      />
+    </>
+  );
 
-  if (activeTab === 'reading') {
-    return (
-      <div className="text-center py-8 text-muted">
-        Mushaf settings have been moved to the Translation tab.
+  return (
+    <>
+      <div
+        data-testid="mushaf-settings-wrapper"
+        aria-hidden={!mushafVisible}
+        className={cn(
+          'transition-all duration-300',
+          mushafVisible
+            ? 'max-h-[999px] opacity-100 translate-y-0'
+            : 'max-h-0 opacity-0 -translate-y-2 pointer-events-none'
+        )}
+      >
+        <MushafSettings
+          selectedMushafName={selectedMushafName}
+          onMushafPanelOpen={onMushafPanelOpen || (() => {})}
+          isOpen={openSections.includes('mushaf')}
+          onToggle={() => onSectionToggle('mushaf')}
+          {...(idPrefix ? { idPrefix: `${idPrefix}-mushaf` } : {})}
+        />
       </div>
-    );
-  }
-
-  return <></>;
+      {baseSettings}
+    </>
+  );
 };

@@ -4,12 +4,12 @@ import React from 'react';
 
 import { BookmarksSidebar } from '@/app/(features)/bookmarks/components/BookmarksSidebar';
 import { BookmarksMobileSidebarOverlay } from '@/app/(features)/bookmarks/components/shared/layout/BookmarksMobileSidebarOverlay';
-import { SurahWorkspaceSettings } from '@/app/(features)/surah/components/surah-view/SurahWorkspaceSettings';
 import { ThreeColumnWorkspace, WorkspaceMain } from '@/app/shared/reader';
+import { SettingsSidebar } from '@/app/shared/reader/settings/SettingsSidebar';
+import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
 
 import { BookmarkFolderSidebarContent } from './BookmarkFolderSidebarContent';
 import { BookmarkVersesContent } from './BookmarkVersesContent';
-import { SettingsSidebarMobile } from './SettingsSidebarMobile.client';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 import type { Bookmark, Folder } from '@/types';
@@ -114,18 +114,19 @@ export function RightSettingsPanel({
   selectedTranslationName?: string | undefined;
   selectedWordLanguageName?: string | undefined;
 }): React.JSX.Element {
-  const surahWorkspaceSettingsProps = {
-    isTranslationPanelOpen,
-    onTranslationPanelOpen: onOpenTranslationPanel,
-    onTranslationPanelClose: onCloseTranslationPanel,
-    isWordLanguagePanelOpen: isWordPanelOpen,
-    onWordLanguagePanelOpen: onOpenWordPanel,
-    onWordLanguagePanelClose: onCloseWordPanel,
-    ...(selectedTranslationName !== undefined ? { selectedTranslationName } : {}),
-    ...(selectedWordLanguageName !== undefined ? { selectedWordLanguageName } : {}),
-  } as const;
-
-  return <SurahWorkspaceSettings {...surahWorkspaceSettingsProps} />;
+  return (
+    <SettingsSidebarContent
+      readerTabsEnabled={false}
+      selectedTranslationName={selectedTranslationName ?? ''}
+      selectedWordLanguageName={selectedWordLanguageName ?? ''}
+      onTranslationPanelOpen={onOpenTranslationPanel}
+      onTranslationPanelClose={onCloseTranslationPanel}
+      isTranslationPanelOpen={isTranslationPanelOpen}
+      onWordLanguagePanelOpen={onOpenWordPanel}
+      onWordLanguagePanelClose={onCloseWordPanel}
+      isWordLanguagePanelOpen={isWordPanelOpen}
+    />
+  );
 }
 
 export interface PanelTogglesProps {
@@ -150,7 +151,20 @@ export interface DesktopWorkspaceProps extends PanelTogglesProps {
 export function BookmarkFolderDesktopWorkspace(props: DesktopWorkspaceProps): React.JSX.Element {
   return (
     <>
-      <SettingsSidebarMobile {...props} />
+      <div className="lg:hidden">
+        <SettingsSidebar
+          pageType="bookmarks"
+          readerTabsEnabled={false}
+          selectedTranslationName={props.selectedTranslationName ?? ''}
+          selectedWordLanguageName={props.selectedWordLanguageName ?? ''}
+          onTranslationPanelOpen={props.onOpenTranslationPanel}
+          onTranslationPanelClose={props.onCloseTranslationPanel}
+          isTranslationPanelOpen={props.isTranslationPanelOpen}
+          onWordLanguagePanelOpen={props.onOpenWordPanel}
+          onWordLanguagePanelClose={props.onCloseWordPanel}
+          isWordLanguagePanelOpen={props.isWordPanelOpen}
+        />
+      </div>
       <DesktopThreeColumn {...props} />
     </>
   );

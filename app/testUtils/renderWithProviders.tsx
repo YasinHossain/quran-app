@@ -2,6 +2,7 @@ import { render, RenderOptions, RenderResult, act } from '@testing-library/react
 import { SWRConfig } from 'swr';
 
 import { BookmarkProvider } from '@/app/providers/BookmarkContext';
+import { ReaderModeProvider } from '@/app/providers/ReaderModeContext';
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { SidebarProvider } from '@/app/providers/SidebarContext';
 import { ThemeProvider } from '@/app/providers/ThemeContext';
@@ -31,7 +32,9 @@ const Providers = ({ children }: { children: React.ReactNode }): React.JSX.Eleme
         <SettingsProvider>
           <BookmarkProvider>
             <ThemeProvider>
-              <SidebarProvider>{children}</SidebarProvider>
+              <ReaderModeProvider>
+                <SidebarProvider>{children}</SidebarProvider>
+              </ReaderModeProvider>
             </ThemeProvider>
           </BookmarkProvider>
         </SettingsProvider>

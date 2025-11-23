@@ -20,6 +20,8 @@ interface FontSettingsContentProps {
   onArabicFontPanelOpen: () => void;
   handleArabicFontSizeChange: (value: number) => void;
   handleTranslationFontSizeChange: (value: number) => void;
+  idPrefix?: string;
+  isArabicOnly?: boolean;
 }
 
 export function FontSettingsContent({
@@ -32,8 +34,12 @@ export function FontSettingsContent({
   onArabicFontPanelOpen,
   handleArabicFontSizeChange,
   handleTranslationFontSizeChange,
+  idPrefix,
+  isArabicOnly = false,
 }: FontSettingsContentProps): ReactElement {
   const { t } = useTranslation();
+  const showTranslationFont = !isArabicOnly;
+  const showArabicFontFace = !isArabicOnly;
 
   return (
     <CollapsibleSection
@@ -52,19 +58,24 @@ export function FontSettingsContent({
           onChange={handleArabicFontSizeChange}
           style={arabicStyle}
         />
-        <FontSizeSlider
-          label={t('translation_font_size')}
-          value={settings.translationFontSize ?? 16}
-          min={12}
-          max={28}
-          onChange={handleTranslationFontSizeChange}
-          style={translationStyle}
-        />
-        <ArabicFontFaceSelector
-          label={t('arabic_font_face')}
-          value={selectedArabicFont}
-          onClick={onArabicFontPanelOpen}
-        />
+        {showTranslationFont && (
+          <FontSizeSlider
+            label={t('translation_font_size')}
+            value={settings.translationFontSize ?? 16}
+            min={12}
+            max={28}
+            onChange={handleTranslationFontSizeChange}
+            style={translationStyle}
+          />
+        )}
+        {showArabicFontFace && (
+          <ArabicFontFaceSelector
+            {...(idPrefix ? { id: `${idPrefix}-font-select` } : {})}
+            label={t('arabic_font_face')}
+            value={selectedArabicFont}
+            onClick={onArabicFontPanelOpen}
+          />
+        )}
       </div>
     </CollapsibleSection>
   );

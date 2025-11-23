@@ -11,7 +11,8 @@ export type Action =
   | { type: 'SET_ARABIC_FONT_SIZE'; value: number }
   | { type: 'SET_TRANSLATION_FONT_SIZE'; value: number }
   | { type: 'SET_TAFSIR_FONT_SIZE'; value: number }
-  | { type: 'SET_ARABIC_FONT_FACE'; value: string };
+  | { type: 'SET_ARABIC_FONT_FACE'; value: string }
+  | { type: 'SET_MUSHAF_ID'; value: string };
 
 type ActionHandlerMap = {
   [Type in Action['type']]: (state: Settings, action: Extract<Action, { type: Type }>) => Settings;
@@ -37,6 +38,7 @@ const actionHandlers = {
   SET_TRANSLATION_FONT_SIZE: (state, action) => ({ ...state, translationFontSize: action.value }),
   SET_TAFSIR_FONT_SIZE: (state, action) => ({ ...state, tafsirFontSize: action.value }),
   SET_ARABIC_FONT_FACE: (state, action) => ({ ...state, arabicFontFace: action.value }),
+  SET_MUSHAF_ID: (state, action) => ({ ...state, mushafId: action.value }),
 } satisfies ActionHandlerMap;
 
 export const reducer = (state: Settings, action: Action): Settings =>
