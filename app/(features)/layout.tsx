@@ -6,6 +6,7 @@ import {
   HeaderVisibilityProvider,
   useHeaderVisibility,
 } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { useSidebar } from '@/app/providers/SidebarContext';
 import { Header } from '@/app/shared/Header';
 import { Navigation } from '@/app/shared/IconSidebar';
 import { ModernLayout } from '@/app/shared/navigation/ModernLayout';
@@ -14,12 +15,15 @@ import { ModernLayout } from '@/app/shared/navigation/ModernLayout';
 import type { ReactElement, ReactNode } from 'react';
 
 function LayoutContent({ children }: { children: ReactNode }): ReactElement {
-  useHeaderVisibility();
+  const { isHidden } = useHeaderVisibility();
+  const { isSurahListOpen, isBookmarkSidebarOpen } = useSidebar();
   const pathname = usePathname();
   const isHomePage = pathname === '/';
 
+  const isNavHidden = isHidden || isSurahListOpen || isBookmarkSidebarOpen;
+
   return (
-    <ModernLayout>
+    <ModernLayout isNavHidden={isNavHidden}>
       {/* Header navigation (keep intact) */}
       {!isHomePage && <Header />}
 

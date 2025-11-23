@@ -18,9 +18,10 @@ const SwipeIndicator = dynamic(() => import('./SwipeIndicator').then((m) => m.Sw
 
 interface ModernLayoutProps {
   children: React.ReactNode;
+  isNavHidden?: boolean;
 }
 
-export const ModernLayout = ({ children }: ModernLayoutProps): React.JSX.Element => {
+export const ModernLayout = ({ children, isNavHidden = false }: ModernLayoutProps): React.JSX.Element => {
   const { isQuranBottomSheetOpen, setQuranBottomSheetOpen, navigateToSurah } = useNavigation();
 
   // Show swipe indicator on first visit
@@ -44,7 +45,7 @@ export const ModernLayout = ({ children }: ModernLayoutProps): React.JSX.Element
   return (
     <>
       {/* Main content with bottom padding for navigation */}
-      <SwipeContainer className={`min-h-[100dvh] bottom-nav-space lg:pb-0`}>
+      <SwipeContainer className="min-h-[100dvh] transition-all duration-300 lg:pb-0">
         {children}
       </SwipeContainer>
 

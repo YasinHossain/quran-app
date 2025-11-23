@@ -60,26 +60,26 @@ const MobileNavigation = memo(function MobileNavigation({
     <nav
       className={cn(
         'lg:hidden fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out',
+        'backdrop-blur-lg bg-surface/8 backdrop-saturate-150',
+        'border-t border-border shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1),0_-2px_4px_-2px_rgba(0,0,0,0.1)]',
         isHidden ? 'translate-y-full' : 'translate-y-0'
       )}
       aria-label="Primary navigation"
     >
-      <div className="backdrop-blur-lg bg-surface/80 border-t border-border/20">
-        <div className="px-4 py-2 pb-safe">
-          <div className="flex items-center justify-around">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                title={item.label}
-                aria-label={item.label}
-                className={cn(linkStyles, 'flex flex-col items-center min-w-[48px] py-2')}
-              >
-                <item.icon className="h-5 w-5 mb-1" />
-                <span className="text-xs font-medium">{item.label}</span>
-              </Link>
-            ))}
-          </div>
+      <div className="px-4 py-2 pb-safe">
+        <div className="flex items-center justify-around">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              title={item.label}
+              aria-label={item.label}
+              className={cn(linkStyles, 'flex flex-col items-center min-w-[48px] py-2')}
+            >
+              <item.icon className="h-5 w-5 mb-1" />
+              <span className="text-xs font-medium">{item.label}</span>
+            </Link>
+          ))}
         </div>
       </div>
     </nav>

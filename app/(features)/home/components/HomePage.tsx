@@ -34,11 +34,11 @@ export const HomePage = memo(function HomePage({ className }: HomePageProps) {
 
   return (
     <div
-      className={`relative min-h-[100dvh] flex flex-col bg-background text-foreground overflow-hidden ${className || ''}`}
+      className={`relative h-[100dvh] flex flex-col bg-background text-foreground overflow-hidden ${className || ''}`}
     >
       <HomePageBackground />
 
-      <div className="relative z-10 flex flex-col h-full overflow-y-auto px-4 md:px-6 lg:px-8 homepage-scrollable-area">
+      <div className="relative z-10 flex flex-col h-full overflow-y-auto px-4 pb-24 md:px-6 md:pb-10 lg:px-8 homepage-scrollable-area">
         <HomeHeader />
 
         <main className="flex-grow flex flex-col items-center justify-center text-center space-y-8 pt-12 pb-6 md:pt-20 md:pb-10 md:space-y-12">
