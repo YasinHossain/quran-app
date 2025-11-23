@@ -2,10 +2,9 @@
 
 import React from 'react';
 
+import { MushafMain } from '@/app/(features)/surah/components/surah-view/MushafMain';
 import { renderWithProvidersAsync, screen } from '@/app/testUtils/renderWithProviders';
 import * as api from '@/lib/api';
-
-import { MushafMain } from '../MushafMain';
 
 jest.mock('@/lib/api', () => ({
   ...jest.requireActual('@/lib/api'),

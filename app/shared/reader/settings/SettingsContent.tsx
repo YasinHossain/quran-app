@@ -2,13 +2,13 @@
 
 import React from 'react';
 
+import { cn } from '@/lib/utils/cn';
+
 import { FontSettings } from './FontSettings';
+import { MushafSettings } from './MushafSettings';
 import { TafsirSettings } from './TafsirSettings';
 import { TranslationSettings } from './TranslationSettings';
-import { MushafSettings } from './MushafSettings';
 import { SettingsContentProps } from './types';
-
-import { cn } from '@/lib/utils/cn';
 
 import type { ReactElement } from 'react';
 

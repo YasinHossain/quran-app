@@ -65,7 +65,6 @@ export function JuzTabContent(props: JuzProps): React.JSX.Element {
     setSelectedPageId,
     setSelectedSurahId,
     rememberScroll,
-    isMushafMode,
   } = props;
   return (
     <Juz
@@ -99,7 +98,6 @@ export function PageTabContent(props: PageProps): React.JSX.Element {
     setSelectedJuzId,
     setSelectedSurahId,
     rememberScroll,
-    isMushafMode,
   } = props;
   return (
     <Page

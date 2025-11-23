@@ -166,7 +166,7 @@ export function useInfiniteVerseLoader({
     const scrollRoot = findScrollRoot(loadMoreTarget);
     if (!(scrollRoot instanceof HTMLElement)) return;
 
-    const handleScroll = () => {
+    const handleScroll = (): void => {
       const remaining = scrollRoot.scrollHeight - (scrollRoot.scrollTop + scrollRoot.clientHeight);
       if (remaining <= PREFETCH_SCROLL_THRESHOLD_PX) {
         prefetchNextPage();

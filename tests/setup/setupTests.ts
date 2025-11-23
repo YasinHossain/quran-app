@@ -89,9 +89,20 @@ beforeEach(() => {
   jest.spyOn(logger, 'error').mockImplementation(() => {});
 });
 
-const defaultUseTranslationImplementation = () => ({
-  t: (key: string, options?: Record<string, unknown>) =>
-    typeof key === 'string' ? key : String(key),
+type MockUseTranslationReturn = {
+  t: (key: string, options?: Record<string, unknown>) => string;
+  i18n: {
+    changeLanguage: jest.Mock;
+    language: string;
+    languages: string[];
+  };
+};
+
+const defaultUseTranslationImplementation = (): MockUseTranslationReturn => ({
+  t: (key: string, options?: Record<string, unknown>) => {
+    void options;
+    return typeof key === 'string' ? key : String(key);
+  },
   i18n: {
     changeLanguage: jest.fn(),
     language: 'en',
@@ -114,7 +125,15 @@ jest.mock('react-i18next', () => {
   };
 });
 
-const createDefaultVerseCardState = () => ({
+type VerseCardStateStub = {
+  verseRef: { current: null };
+  isPlaying: boolean;
+  isLoadingAudio: boolean;
+  isVerseBookmarked: boolean;
+  handlePlayPause: jest.Mock;
+};
+
+const createDefaultVerseCardState = (): VerseCardStateStub => ({
   verseRef: { current: null },
   isPlaying: false,
   isLoadingAudio: false,
@@ -130,7 +149,17 @@ jest.mock('@/app/(features)/surah/components/verse-card/useVerseCard', () => ({
 }));
 
 // Mock virtualizer to avoid layout-dependent measurements in JSDOM
-const createVirtualizerStub = (count: number) => {
+type VirtualizerStub = {
+  getVirtualItems: () => { key: string; index: number; start: number }[];
+  getTotalSize: () => number;
+  measureElement: jest.Mock;
+  measure: jest.Mock;
+  scrollToIndex: jest.Mock;
+  scrollToOffset: jest.Mock;
+  getScrollElement: jest.Mock;
+};
+
+const createVirtualizerStub = (count: number): VirtualizerStub => {
   const items = Array.from({ length: count }, (_, index) => ({
     key: `virtual-${index}`,
     index,

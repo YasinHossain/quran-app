@@ -2,12 +2,12 @@
 
 import { useMemo } from 'react';
 
-import { MUSHAF_OPTIONS } from '@/data/mushaf/options';
+import { useSurahPanels, useVerseListing } from '@/app/(features)/surah/hooks';
 import {
   useMushafReadingView,
   type MushafResourceKind,
 } from '@/app/(features)/surah/hooks/useMushafReadingView';
-import { useSurahPanels, useVerseListing } from '@/app/(features)/surah/hooks';
+import { MUSHAF_OPTIONS } from '@/data/mushaf/options';
 
 import type { UseVerseListingParams } from '@/app/(features)/surah/hooks/useVerseListing';
 

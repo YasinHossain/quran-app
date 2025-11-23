@@ -14,9 +14,10 @@ interface SidebarOverlayProps {
 export const SidebarOverlay = ({
   isOpen,
   onClose,
-  position,
+  position: _position,
   showOverlay,
 }: SidebarOverlayProps): React.JSX.Element | null => {
+  void _position;
   if (!showOverlay || !isOpen) {
     return null;
   }

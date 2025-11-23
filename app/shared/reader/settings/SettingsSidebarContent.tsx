@@ -72,8 +72,9 @@ export function SettingsSidebarContent({
   onClose,
   activeReaderMode,
   readerTabsEnabled = true,
-  idPrefix,
+  idPrefix: _idPrefix,
 }: SettingsSidebarContentProps): React.JSX.Element {
+  void _idPrefix;
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
   const tabsEnabled = readerTabsEnabled;
   const isMushafMode = activeReaderMode === 'reading';

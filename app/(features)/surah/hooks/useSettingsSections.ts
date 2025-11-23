@@ -4,7 +4,6 @@ import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 const STORAGE_KEY = 'settings-sidebar-open-sections';
 const DEFAULT_OPEN_SECTIONS = ['translation', 'font'];
-const MUSHAF_SECTION_ID = 'mushaf';
 const MAX_OPEN_SECTIONS = 2;
 
 function normalizeSections(sections: string[]): string[] {

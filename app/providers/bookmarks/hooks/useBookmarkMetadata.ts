@@ -94,10 +94,7 @@ export function useBookmarkMetadata(
   setFolders: Dispatch<SetStateAction<Folder[]>>,
   setPinnedVerses: Dispatch<SetStateAction<Bookmark[]>>
 ): (verseId: string, chaptersList: Chapter[]) => Promise<void> {
-  const resolvedTranslationIds = useMemo(
-    () => resolveTranslationIds(settings),
-    [settings.translationIds, settings.translationId]
-  );
+  const resolvedTranslationIds = useMemo(() => resolveTranslationIds(settings), [settings]);
   const wordLang = useMemo(() => ensureLanguageCode(settings.wordLang), [settings.wordLang]);
 
   return useCallback(

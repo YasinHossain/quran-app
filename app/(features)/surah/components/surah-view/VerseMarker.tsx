@@ -26,7 +26,7 @@ const toArabicIndicNumber = (num: number): string => {
   return `${num}`.replace(/\d/g, (d) => digits[Number(d)] ?? d);
 };
 
-export const VerseMarker = ({ number, className, style }: VerseMarkerProps) => {
+export const VerseMarker = ({ number, className, style }: VerseMarkerProps): React.JSX.Element => {
   return (
     <span
       className={cn('text-current', className)}

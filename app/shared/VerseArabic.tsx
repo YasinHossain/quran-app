@@ -157,11 +157,7 @@ export const VerseArabic = memo(function VerseArabic({
         </span>
       ) : (
         <span className="inline-flex items-center gap-2">
-          <VerseText
-            verseText={verseText}
-            settings={settings}
-            isQpcHafsFont={isQpcHafsFont}
-          />
+          <VerseText verseText={verseText} settings={settings} isQpcHafsFont={isQpcHafsFont} />
           {verseNumber > 0 && <VerseMarker number={verseNumber} style={{ marginBottom: 0 }} />}
         </span>
       )}

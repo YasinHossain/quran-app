@@ -1,6 +1,6 @@
-import type { MushafOption } from '@/types';
-
 import { SettingsSidebarProps } from '@/app/shared/reader/settings/types';
+
+import type { MushafOption } from '@/types';
 
 export interface SettingsPanelsPropsConfig {
   isArabicFontPanelOpen: boolean;

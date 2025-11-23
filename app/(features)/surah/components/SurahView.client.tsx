@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
+import React, { useMemo } from 'react';
 
 import { ReaderShell } from '@/app/shared/reader';
 import { getVersesByChapter } from '@/lib/api';
