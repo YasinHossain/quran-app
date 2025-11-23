@@ -9,7 +9,7 @@ export interface MushafMainProps {
   isLoading: boolean;
   isLoadingMore?: boolean;
   hasMore?: boolean;
-  onLoadMore?: () => void;
+  onLoadMore?: (() => void) | undefined;
   error: string | null;
   endLabelKey?: string | undefined;
 }

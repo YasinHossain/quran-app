@@ -15,13 +15,13 @@ interface UseMushafPaginationParams {
   resourceId: string;
   resourceKind: MushafResourceKind;
   mushafId: string;
-  chapterId?: number | null;
-  juzNumber?: number | null;
+  chapterId?: number | null | undefined;
+  juzNumber?: number | null | undefined;
   initialMappedPages: MushafPageLines[];
   startPageNumber: number;
-  reciterId?: number;
-  wordByWordLocale?: string;
-  translationIds?: string;
+  reciterId?: number | undefined;
+  wordByWordLocale?: string | undefined;
+  translationIds?: string | undefined;
 }
 
 interface FetchersParams extends UseMushafPaginationParams {

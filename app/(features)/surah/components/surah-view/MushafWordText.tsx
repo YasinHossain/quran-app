@@ -25,7 +25,7 @@ type WordHtmlArgs = {
   settings: ReaderSettings;
   baseText: string;
   displayText: string;
-  glyphCode?: string;
+  glyphCode?: string | undefined;
 };
 
 const buildWordHtml = ({

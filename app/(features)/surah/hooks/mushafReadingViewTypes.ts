@@ -6,13 +6,13 @@ export interface UseMushafReadingViewParams {
   resourceId: string;
   resourceKind: MushafResourceKind;
   mushafId?: string | undefined;
-  initialPageNumber?: number;
-  chapterId?: number | null;
-  juzNumber?: number | null;
+  initialPageNumber?: number | undefined;
+  chapterId?: number | null | undefined;
+  juzNumber?: number | null | undefined;
   initialData?: MushafVerse[];
-  reciterId?: number;
-  wordByWordLocale?: string;
-  translationIds?: string;
+  reciterId?: number | undefined;
+  wordByWordLocale?: string | undefined;
+  translationIds?: string | undefined;
 }
 
 export interface UseMushafReadingViewResult {

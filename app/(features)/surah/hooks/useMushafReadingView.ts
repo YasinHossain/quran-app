@@ -60,3 +60,5 @@ export function useMushafReadingView({
     translationIds,
   });
 }
+
+export type { MushafResourceKind } from './mushafReadingViewTypes';

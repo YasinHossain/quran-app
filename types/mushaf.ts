@@ -6,14 +6,7 @@ export interface MushafOption {
   lines?: number;
 }
 
-export type MushafCharType =
-  | 'word'
-  | 'end'
-  | 'pause'
-  | 'sajdah'
-  | 'rub'
-  | 'symbol'
-  | string;
+export type MushafCharType = 'word' | 'end' | 'pause' | 'sajdah' | 'rub' | 'symbol' | string;
 
 export interface MushafWord {
   id?: number | undefined;

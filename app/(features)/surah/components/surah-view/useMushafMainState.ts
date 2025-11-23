@@ -41,7 +41,7 @@ const useLoadMoreObserver = ({
 }: {
   loadMoreRef: React.RefObject<HTMLDivElement | null>;
   hasMore?: boolean;
-  onLoadMore?: () => void;
+  onLoadMore?: (() => void) | undefined;
 }): void => {
   useEffect(() => {
     if (!onLoadMore || !hasMore) return;

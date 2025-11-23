@@ -1,7 +1,6 @@
-import type { Dispatch, MutableRefObject, SetStateAction } from 'react';
-
-import type { MushafPageLines } from '@/types';
 import type { MushafResourceKind, UseMushafReadingViewResult } from './mushafReadingViewTypes';
+import type { MushafPageLines } from '@/types';
+import type { Dispatch, MutableRefObject, SetStateAction } from 'react';
 
 export interface PaginationState {
   pages: MushafPageLines[];

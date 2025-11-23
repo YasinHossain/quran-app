@@ -9,10 +9,10 @@ const DEFAULT_PAGE_NUMBER = 1;
 interface UseStartPageNumberParams {
   resourceKind: MushafResourceKind;
   numericResourceId: number;
-  initialPageNumber?: number;
-  firstInitialPageNumber?: number;
-  chapterId?: number | null;
-  juzNumber?: number | null;
+  initialPageNumber?: number | undefined;
+  firstInitialPageNumber?: number | undefined;
+  chapterId?: number | null | undefined;
+  juzNumber?: number | null | undefined;
   mushafId: string;
 }
 

@@ -13,11 +13,11 @@ const GENERIC_ERROR_MESSAGE = 'Failed to load Mushaf data.';
 export interface UseFetchPageParams {
   resourceKind: MushafResourceKind;
   mushafId: string;
-  chapterId?: number | null;
-  juzNumber?: number | null;
-  reciterId?: number;
-  wordByWordLocale?: string;
-  translationIds?: string;
+  chapterId?: number | null | undefined;
+  juzNumber?: number | null | undefined;
+  reciterId?: number | undefined;
+  wordByWordLocale?: string | undefined;
+  translationIds?: string | undefined;
   setPages: React.Dispatch<React.SetStateAction<MushafPageLines[]>>;
   setNextPageNumber: React.Dispatch<React.SetStateAction<number | null>>;
   setHasMore: React.Dispatch<React.SetStateAction<boolean>>;

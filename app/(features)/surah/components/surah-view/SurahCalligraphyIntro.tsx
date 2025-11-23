@@ -41,8 +41,8 @@ const SurahNameGraphic = ({ chapterId }: { chapterId: number }): React.JSX.Eleme
 };
 type SurahIntroDetails = {
   translatedName: string;
-  versesCount?: number;
-  revelationPlace?: string;
+  versesCount?: number | undefined;
+  revelationPlace?: string | undefined;
   showBismillah: boolean;
   chapterId: number;
 };
@@ -128,7 +128,7 @@ const SurahTitleBlock = ({ chapterId }: { chapterId: number }): React.JSX.Elemen
 export const SurahCalligraphyIntro = ({
   chapterId,
 }: {
-  chapterId?: number | null;
+  chapterId?: number | null | undefined;
 }): React.JSX.Element | null => {
   const introDetails = useSurahIntroDetails(chapterId);
 

@@ -8,8 +8,8 @@ import type { MushafResourceKind } from './mushafReadingViewTypes';
 interface ResolveStartPageEffectParams {
   resourceKind: MushafResourceKind;
   mushafId: string;
-  chapterId?: number | null;
-  juzNumber?: number | null;
+  chapterId?: number | null | undefined;
+  juzNumber?: number | null | undefined;
   resolveBaseStartPageNumber: () => number;
   startPageResolveTokenRef: React.MutableRefObject<number>;
   setStartPageNumber: React.Dispatch<React.SetStateAction<number>>;

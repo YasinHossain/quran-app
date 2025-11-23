@@ -1,11 +1,13 @@
 # Verse Marker Ornament Implementation
 
 ## Overview
+
 Implemented decorative circular ornaments for verse markers throughout the Quran app, similar to the style used on Quran.com. These ornaments appear after each verse ending where the verse number in Arabic is displayed.
 
 ## Changes Made
 
 ### 1. Created New VerseMarker Component
+
 **File**: `/app/(features)/surah/components/surah-view/VerseMarker.tsx`
 
 - Created a reusable component with an ornate SVG design
@@ -19,6 +21,7 @@ Implemented decorative circular ornaments for verse markers throughout the Quran
   - Responsive sizing that scales with font size
 
 ### 2. Updated MushafMain Component
+
 **File**: `/app/(features)/surah/components/surah-view/MushafMain.tsx`
 
 - Imported the new `VerseMarker` component
@@ -26,6 +29,7 @@ Implemented decorative circular ornaments for verse markers throughout the Quran
 - The marker now appears in the Mushaf page view after each verse
 
 ### 3. Updated VerseArabic Component
+
 **File**: `/app/shared/VerseArabic.tsx`
 
 - Imported the `VerseMarker` component
@@ -69,6 +73,7 @@ The ornamental design includes:
 ## Future Enhancements
 
 Potential improvements could include:
+
 - Additional ornament styles (user preference)
 - Animation on hover
 - Different designs for different Mushaf types
