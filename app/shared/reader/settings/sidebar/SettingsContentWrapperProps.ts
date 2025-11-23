@@ -26,6 +26,7 @@ export function buildContentWrapperProps(
     onArabicFontPanelOpen: () => void;
     activeTabOverride?: SettingsTabValue;
     showTabs: boolean;
+    isMushafMode?: boolean;
   }
 ): SettingsContentWrapperProps {
   const coreProps: SettingsContentWrapperProps = {

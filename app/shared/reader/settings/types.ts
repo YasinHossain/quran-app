@@ -49,6 +49,7 @@ export interface SettingsContentProps
   onSectionToggle: (sectionId: string) => void;
   onArabicFontPanelOpen: () => void;
   idPrefix?: string;
+  isMushafMode?: boolean;
 }
 
 export interface SettingsContentWrapperProps {
@@ -70,6 +71,7 @@ export interface SettingsContentWrapperProps {
   activeTabOverride?: SettingsTabValue;
   showTabs: boolean;
   idPrefix?: string;
+  isMushafMode?: boolean;
 }
 
 export interface SettingsPanelsProps

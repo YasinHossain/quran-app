@@ -76,6 +76,7 @@ export function SettingsSidebarContent({
 }: SettingsSidebarContentProps): React.JSX.Element {
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
   const tabsEnabled = readerTabsEnabled;
+  const isMushafMode = activeReaderMode === 'reading';
   const hookTabState = useSettingsTabState(
     onReadingPanelOpen || onTranslationTabOpen || activeReaderMode
       ? {
@@ -124,6 +125,7 @@ export function SettingsSidebarContent({
       onArabicFontPanelOpen: handleArabicFontPanelOpen,
       ...(activeReaderMode ? { activeTabOverride: activeReaderMode } : {}),
       showTabs: tabsEnabled,
+      isMushafMode,
     }
   );
 

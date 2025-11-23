@@ -27,20 +27,23 @@ export const SettingsContent = ({
   selectedMushafName = '',
   showTafsirSetting = false,
   idPrefix,
+  isMushafMode = false,
 }: SettingsContentProps): ReactElement => {
-  const mushafVisible = activeTab === 'reading';
+  const mushafVisible = isMushafMode || activeTab === 'reading';
 
   const baseSettings = (
     <>
-      <TranslationSettings
-        onTranslationPanelOpen={onTranslationPanelOpen}
-        onWordLanguagePanelOpen={onWordLanguagePanelOpen}
-        selectedTranslationName={selectedTranslationName}
-        selectedWordLanguageName={selectedWordLanguageName}
-        isOpen={openSections.includes('translation')}
-        onToggle={() => onSectionToggle('translation')}
-        {...(idPrefix ? { idPrefix: `${idPrefix}-translation` } : {})}
-      />
+      {!isMushafMode && (
+        <TranslationSettings
+          onTranslationPanelOpen={onTranslationPanelOpen}
+          onWordLanguagePanelOpen={onWordLanguagePanelOpen}
+          selectedTranslationName={selectedTranslationName}
+          selectedWordLanguageName={selectedWordLanguageName}
+          isOpen={openSections.includes('translation')}
+          onToggle={() => onSectionToggle('translation')}
+          {...(idPrefix ? { idPrefix: `${idPrefix}-translation` } : {})}
+        />
+      )}
       <TafsirSettings
         {...(onTafsirPanelOpen !== undefined ? { onTafsirPanelOpen } : {})}
         {...(selectedTafsirName !== undefined ? { selectedTafsirName } : {})}
@@ -54,6 +57,7 @@ export const SettingsContent = ({
         isOpen={openSections.includes('font')}
         onToggle={() => onSectionToggle('font')}
         {...(idPrefix ? { idPrefix: `${idPrefix}-font` } : {})}
+        isArabicOnly={isMushafMode}
       />
     </>
   );

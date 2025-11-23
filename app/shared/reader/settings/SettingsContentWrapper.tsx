@@ -25,6 +25,7 @@ export const SettingsContentWrapper = ({
   activeTabOverride,
   showTabs,
   idPrefix,
+  isMushafMode,
 }: SettingsContentWrapperProps): ReactElement => {
   const resolvedTab = activeTabOverride ?? activeTab;
 
@@ -54,6 +55,7 @@ export const SettingsContentWrapper = ({
           {...(selectedMushafName !== undefined ? { selectedMushafName } : {})}
           showTafsirSetting={showTafsirSetting}
           {...(idPrefix ? { idPrefix } : {})}
+          {...(typeof isMushafMode === 'boolean' ? { isMushafMode } : {})}
         />
       </div>
     </>
