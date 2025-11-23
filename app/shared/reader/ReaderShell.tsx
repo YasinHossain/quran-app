@@ -28,6 +28,7 @@ interface CreateSurahMainParams {
   endLabelKey?: string | undefined;
   initialVerseKey?: string | undefined;
   initialScrollNonce?: string | undefined;
+  chapterId?: number | undefined;
 }
 
 const createSurahMain = ({
@@ -37,6 +38,7 @@ const createSurahMain = ({
   endLabelKey,
   initialVerseKey,
   initialScrollNonce,
+  chapterId,
 }: CreateSurahMainParams): React.ReactNode => (
   <SurahMain
     // Force remount not only when the target verse changes, but also when a new navigation
@@ -52,6 +54,7 @@ const createSurahMain = ({
     {...(emptyLabelKey ? { emptyLabelKey } : {})}
     {...(endLabelKey ? { endLabelKey } : {})}
     {...(initialVerseKey ? { initialVerseKey } : {})}
+    {...(typeof chapterId === 'number' ? { chapterId } : {})}
   />
 );
 
@@ -168,6 +171,16 @@ export function ReaderShell({
     }
   }, [enableReaderMode, isReaderModeAvailable, mode]);
 
+  const chapterId = useMemo(() => {
+    if (resourceKind === 'surah') {
+      const parsed = Number.parseInt(resourceId, 10);
+      if (Number.isFinite(parsed)) {
+        return parsed;
+      }
+    }
+    return verseListing.verses[0]?.chapter_id ?? initialVerses?.[0]?.chapter_id ?? undefined;
+  }, [resourceKind, resourceId, verseListing.verses, initialVerses]);
+
   const handleReadingPanelOpen = useCallback(() => {
     setMode('mushaf');
   }, [setMode]);
@@ -193,24 +206,15 @@ export function ReaderShell({
     ...(typeof endLabelKey === 'string' ? { endLabelKey } : {}),
     ...(typeof initialVerseKey === 'string' ? { initialVerseKey } : {}),
     ...(typeof initialScrollNonce === 'string' ? { initialScrollNonce } : {}),
+    ...(resourceKind === 'surah' && typeof chapterId === 'number' ? { chapterId } : {}),
   });
-
-  const mushafChapterId = useMemo(() => {
-    if (resourceKind === 'surah') {
-      const parsed = Number.parseInt(resourceId, 10);
-      if (Number.isFinite(parsed)) {
-        return parsed;
-      }
-    }
-    return verseListing.verses[0]?.chapter_id ?? initialVerses?.[0]?.chapter_id ?? undefined;
-  }, [resourceKind, resourceId, verseListing.verses, initialVerses]);
 
   const mushafMain = (
     <MushafMain
       mushafName={panels.selectedMushafName ?? 'Mushaf view'}
       mushafId={panels.selectedMushafId}
       pages={mushafView.pages}
-      chapterId={mushafChapterId}
+      chapterId={chapterId}
       isLoading={mushafView.isLoading}
       isLoadingMore={mushafView.isLoadingMore}
       hasMore={mushafView.hasMore}
