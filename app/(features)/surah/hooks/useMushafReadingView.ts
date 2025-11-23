@@ -2,7 +2,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { DEFAULT_MUSHAF_ID } from '@/data/mushaf/options';
 import type { MushafPageLines, MushafVerse, MushafWord } from '@/types';
-import { getReadingViewPage } from '@infra/quran/readingViewClient';
+import {
+  getMushafChapterStartPage,
+  getMushafJuzStartPage,
+  getReadingViewPage,
+} from '@infra/quran/readingViewClient';
 
 const DEFAULT_PAGE_NUMBER = 1;
 const GENERIC_ERROR_MESSAGE = 'Failed to load Mushaf data.';
@@ -149,7 +153,7 @@ export function useMushafReadingView({
   const numericResourceId = Number.parseInt(resourceId, 10);
   const effectiveMushafId = mushafId ?? DEFAULT_MUSHAF_ID;
 
-  const startPageNumber = useMemo(() => {
+  const resolveBaseStartPageNumber = useCallback(() => {
     if (resourceKind === 'page' && Number.isFinite(numericResourceId)) {
       return numericResourceId;
     }
@@ -161,6 +165,10 @@ export function useMushafReadingView({
     }
     return DEFAULT_PAGE_NUMBER;
   }, [resourceKind, numericResourceId, initialPageNumber, firstInitialPageNumber]);
+
+  const [startPageNumber, setStartPageNumber] = useState<number>(() =>
+    resolveBaseStartPageNumber()
+  );
 
   const [pages, setPages] = useState<MushafPageLines[]>(initialMappedPages);
   const [isLoading, setIsLoading] = useState(initialMappedPages.length === 0);
@@ -175,6 +183,50 @@ export function useMushafReadingView({
     typeof lastInitialPageNumber === 'number' ? lastInitialPageNumber + 1 : startPageNumber
   );
   const requestTokenRef = useRef(0);
+  const startPageResolveTokenRef = useRef(0);
+
+  useEffect(() => {
+    setStartPageNumber(resolveBaseStartPageNumber());
+  }, [resolveBaseStartPageNumber]);
+
+  useEffect(() => {
+    if (resourceKind === 'page' || effectiveMushafId === DEFAULT_MUSHAF_ID) return;
+    const token = ++startPageResolveTokenRef.current;
+
+    const resolveStartPageNumber = async (): Promise<void> => {
+      try {
+        if (resourceKind === 'surah' && typeof chapterId === 'number') {
+          const page = await getMushafChapterStartPage({
+            chapterId,
+            mushafId: effectiveMushafId,
+          });
+          if (startPageResolveTokenRef.current === token && typeof page === 'number') {
+            setStartPageNumber(page);
+          }
+          return;
+        }
+
+        if (resourceKind === 'juz' && typeof juzNumber === 'number') {
+          const page = await getMushafJuzStartPage({
+            juzNumber,
+            mushafId: effectiveMushafId,
+          });
+          if (startPageResolveTokenRef.current === token && typeof page === 'number') {
+            setStartPageNumber(page);
+          }
+          return;
+        }
+      } catch {
+        // Swallow errors; we'll fall back to the base start page number below.
+      }
+
+      if (startPageResolveTokenRef.current === token) {
+        setStartPageNumber(resolveBaseStartPageNumber());
+      }
+    };
+
+    void resolveStartPageNumber();
+  }, [resourceKind, chapterId, juzNumber, effectiveMushafId, resolveBaseStartPageNumber]);
 
   const fetchPage = useCallback(
     async (
@@ -219,7 +271,16 @@ export function useMushafReadingView({
         if (requestTokenRef.current !== token) {
           return;
         }
-        setError(err instanceof Error ? err.message : GENERIC_ERROR_MESSAGE);
+        const message = err instanceof Error ? err.message : null;
+        if (typeof message === 'string' && message.includes('404')) {
+          // Quran.com API returns 404 for out-of-range page numbers; treat as end of pagination.
+          setHasMore(false);
+          if (isInitial) {
+            setPages([]);
+          }
+        } else {
+          setError(message ?? GENERIC_ERROR_MESSAGE);
+        }
       } finally {
         if (requestTokenRef.current !== token) {
           return;

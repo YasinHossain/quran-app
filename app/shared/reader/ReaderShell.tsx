@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { MushafMain } from '@/app/(features)/surah/components/surah-view/MushafMain';
 import { SurahMain } from '@/app/(features)/surah/components/surah-view/SurahMain';
@@ -157,13 +157,14 @@ export function ReaderShell({
     ...(typeof initialVerseNumber === 'number' ? { initialVerseNumber } : {}),
   });
   const { verseListing, panels, mushafView } = readerView;
+  const initialModeRef = useRef(initialMode);
 
   useEffect(() => {
-    enableReaderMode(initialMode);
+    enableReaderMode(initialModeRef.current);
     return () => {
       disableReaderMode();
     };
-  }, [enableReaderMode, disableReaderMode, initialMode]);
+  }, [enableReaderMode, disableReaderMode]);
 
   const handleReadingPanelOpen = useCallback(() => {
     setMode('mushaf');

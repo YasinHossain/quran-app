@@ -27,7 +27,7 @@ const WORD_FIELDS = [
   'char_type_name',
 ];
 
-const resolveApiMushafId = (id?: string): number =>
+export const resolveApiMushafId = (id?: string): number =>
   API_MUSHAF_MAP[id ?? DEFAULT_MUSHAF_ID] ?? API_MUSHAF_FALLBACK_ID;
 
 export interface ReadingViewRequestParams {
@@ -59,6 +59,10 @@ export interface ReadingViewRequestParams {
 
 interface ReadingViewApiResponse {
   verses: ReadingViewApiVerse[];
+}
+
+interface MushafStartPageResponse {
+  verses?: Array<{ page_number?: number }>;
 }
 
 /**
@@ -100,4 +104,46 @@ export const getReadingViewPage = async ({
   );
 
   return data.verses.map(mapReadingViewVerseToMushafVerse);
+};
+
+/**
+ * Resolve the first page number for a given surah and Mushaf layout.
+ * This allows the Mushaf view to start at the correct page when layouts
+ * use different pagination (e.g., IndoPak 15/16-line).
+ */
+export const getMushafChapterStartPage = async ({
+  chapterId,
+  mushafId,
+}: {
+  chapterId: number;
+  mushafId?: string | undefined;
+}): Promise<number | null> => {
+  const data = await apiFetch<MushafStartPageResponse>(`verses/by_chapter/${chapterId}`, {
+    page: '1',
+    per_page: '1',
+    fields: 'page_number',
+    mushaf: String(resolveApiMushafId(mushafId)),
+  });
+  const pageNumber = data.verses?.[0]?.page_number;
+  return typeof pageNumber === 'number' && Number.isFinite(pageNumber) ? pageNumber : null;
+};
+
+/**
+ * Resolve the first page number for a Juz with the given Mushaf layout.
+ */
+export const getMushafJuzStartPage = async ({
+  juzNumber,
+  mushafId,
+}: {
+  juzNumber: number;
+  mushafId?: string | undefined;
+}): Promise<number | null> => {
+  const data = await apiFetch<MushafStartPageResponse>(`verses/by_juz/${juzNumber}`, {
+    page: '1',
+    per_page: '1',
+    fields: 'page_number',
+    mushaf: String(resolveApiMushafId(mushafId)),
+  });
+  const pageNumber = data.verses?.[0]?.page_number;
+  return typeof pageNumber === 'number' && Number.isFinite(pageNumber) ? pageNumber : null;
 };
