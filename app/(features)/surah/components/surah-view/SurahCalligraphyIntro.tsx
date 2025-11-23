@@ -135,8 +135,8 @@ export const SurahCalligraphyIntro = ({
   if (!introDetails) return null;
 
   return (
-    <div className="mx-auto mb-8 w-full max-w-7xl px-4 sm:px-6">
-      <div className="grid w-full grid-cols-3 items-center border-y border-border/40 py-6">
+    <div className="mx-auto mb-8 -mt-2 w-full max-w-7xl px-4 sm:-mt-3 sm:px-6">
+      <div className="grid w-full grid-cols-3 items-center border-b border-border/40 pt-5 pb-8 sm:pt-6 sm:pb-9">
         <SurahMetadata
           translatedName={introDetails.translatedName}
           versesCount={introDetails.versesCount}
