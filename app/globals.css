@@ -269,7 +269,9 @@
 
   @media (min-width: 1024px) {
     .workspace-sidebar-left {
-      box-shadow: 10px 0 28px -18px rgb(var(--color-foreground) / 0.14);
+      box-shadow: 
+        -10px 0 28px -18px rgb(var(--color-foreground) / 0.14),
+        10px 0 28px -18px rgb(var(--color-foreground) / 0.14);
     }
 
     .workspace-sidebar-right {
