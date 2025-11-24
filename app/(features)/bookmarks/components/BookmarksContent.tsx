@@ -3,6 +3,7 @@
 import React from 'react';
 
 import { BookmarkIcon, PinIcon, ClockIcon, CalendarIcon } from '@/app/shared/icons';
+import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
 import { BookmarkNavigationCard } from '@/app/shared/ui/cards';
 import { cn } from '@/lib/utils/cn';
 
@@ -19,6 +20,7 @@ interface BookmarksContentProps {
   childrenContainerClassName?: string;
   childrenContentClassName?: string;
   showNavigation?: boolean;
+  onClose?: () => void;
 }
 
 export const BookmarksContent = ({
@@ -29,26 +31,36 @@ export const BookmarksContent = ({
   childrenContainerClassName,
   childrenContentClassName,
   showNavigation = true,
+  onClose,
 }: BookmarksContentProps): React.JSX.Element => (
-  <div
-    className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-3 touch-pan-y"
-    // Reserve scroll gutter so edge-to-edge dividers reach the sidebar edge.
-    style={{ scrollbarGutter: 'stable' }}
-  >
-    {showNavigation ? (
-      <NavigationSection activeSection={activeSection} onSectionChange={onSectionChange} />
-    ) : null}
-    <ChildrenSection
-      {...(childrenTitle !== undefined ? { title: childrenTitle } : {})}
-      {...(childrenContainerClassName !== undefined
-        ? { containerClassName: childrenContainerClassName }
-        : {})}
-      {...(childrenContentClassName !== undefined
-        ? { contentClassName: childrenContentClassName }
-        : {})}
+  <div className="flex h-full flex-col bg-background text-foreground">
+    <SidebarHeader
+      title="Bookmarks"
+      titleClassName="text-mobile-lg font-semibold text-content-primary"
+      className="shadow-none"
+      showCloseButton
+      {...(onClose ? { onClose } : {})}
+    />
+    <div
+      className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-3 touch-pan-y"
+      // Reserve scroll gutter so edge-to-edge dividers reach the sidebar edge.
+      style={{ scrollbarGutter: 'stable' }}
     >
-      {children}
-    </ChildrenSection>
+      {showNavigation ? (
+        <NavigationSection activeSection={activeSection} onSectionChange={onSectionChange} />
+      ) : null}
+      <ChildrenSection
+        {...(childrenTitle !== undefined ? { title: childrenTitle } : {})}
+        {...(childrenContainerClassName !== undefined
+          ? { containerClassName: childrenContainerClassName }
+          : {})}
+        {...(childrenContentClassName !== undefined
+          ? { contentClassName: childrenContentClassName }
+          : {})}
+      >
+        {children}
+      </ChildrenSection>
+    </div>
   </div>
 );
 

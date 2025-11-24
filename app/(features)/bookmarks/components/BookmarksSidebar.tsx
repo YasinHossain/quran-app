@@ -38,6 +38,7 @@ export const BookmarksSidebar = ({
     childrenContainerClassName,
     childrenContentClassName,
     showNavigation,
+    onClose,
   });
   const renderedContent = <BookmarksContent {...contentProps}>{children}</BookmarksContent>;
 
@@ -66,6 +67,7 @@ const buildBookmarksContentProps = ({
   childrenContainerClassName,
   childrenContentClassName,
   showNavigation,
+  onClose,
 }: {
   activeSection: SectionId;
   onSectionChange?: BookmarksSidebarProps['onSectionChange'];
@@ -73,6 +75,7 @@ const buildBookmarksContentProps = ({
   childrenContainerClassName?: string | undefined;
   childrenContentClassName?: string | undefined;
   showNavigation?: boolean | undefined;
+  onClose?: (() => void) | undefined;
 }): React.ComponentProps<typeof BookmarksContent> => {
   const contentProps: React.ComponentProps<typeof BookmarksContent> = {
     activeSection,
@@ -90,6 +93,10 @@ const buildBookmarksContentProps = ({
 
   if (showNavigation !== undefined) {
     contentProps.showNavigation = showNavigation;
+  }
+
+  if (onClose !== undefined) {
+    contentProps.onClose = onClose;
   }
 
   return contentProps;

@@ -30,7 +30,7 @@ export const SurahListSidebar = memo(function SurahListSidebar({
       position="left"
       aria-label="Surah navigation"
     >
-      <SurahListContent chapters={chapters} />
+      <SurahListContent chapters={chapters} onClose={() => setSurahListOpen(false)} />
     </BaseSidebar>
   );
 });

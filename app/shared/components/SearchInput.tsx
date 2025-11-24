@@ -66,6 +66,7 @@ const getSizeStyles = (size: SearchSize): SizeStyles => {
 const getFocusStyles = (variant: SearchVariant): string => {
   switch (variant) {
     case 'panel':
+    case 'header':
       return 'focus:ring-2 focus:ring-accent focus:border-transparent';
     default:
       return 'focus:ring-1 focus:ring-accent';
@@ -75,6 +76,7 @@ const getFocusStyles = (variant: SearchVariant): string => {
 const getHoverStyles = (variant: SearchVariant): string => {
   switch (variant) {
     case 'panel':
+    case 'header':
       return ''; // No hover effects - only focus ring appears on click
     case 'glass':
       return 'hover:shadow-xl';

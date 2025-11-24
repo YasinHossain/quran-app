@@ -24,7 +24,7 @@ export const useSidebarPositioning = ({
     );
     const headerAwareClasses = isHeaderHidden
       ? 'top-0 h-screen'
-      : 'top-reader-header h-[calc(100vh-var(--reader-header-height))]';
+      : 'top-0 h-screen lg:top-reader-header lg:h-[calc(100vh-var(--reader-header-height))]';
 
     const shadowClasses = 'shadow-modal lg:shadow-none';
     const panelZIndex = 'z-[120]';

@@ -81,23 +81,23 @@ export function SettingsSidebarContent({
   const hookTabState = useSettingsTabState(
     onReadingPanelOpen || onTranslationTabOpen || activeReaderMode
       ? {
-          ...(onReadingPanelOpen ? { onReadingPanelOpen } : {}),
-          ...(onTranslationTabOpen ? { onTranslationTabOpen } : {}),
-          ...(activeReaderMode ? { activeTabOverride: activeReaderMode } : {}),
-        }
+        ...(onReadingPanelOpen ? { onReadingPanelOpen } : {}),
+        ...(onTranslationTabOpen ? { onTranslationTabOpen } : {}),
+        ...(activeReaderMode ? { activeTabOverride: activeReaderMode } : {}),
+      }
       : {}
   );
 
   const tabState = tabsEnabled
     ? hookTabState
     : {
-        activeTab: 'translation' as const,
-        handleTabChange: () => {},
-        tabOptions: [{ value: 'translation', label: 'Translation' }] as Array<{
-          value: SettingsTabValue;
-          label: string;
-        }>,
-      };
+      activeTab: 'translation' as const,
+      handleTabChange: () => { },
+      tabOptions: [{ value: 'translation', label: 'Translation' }] as Array<{
+        value: SettingsTabValue;
+        label: string;
+      }>,
+    };
 
   const { activeTab, handleTabChange, tabOptions } = tabState;
   const { openSections, handleSectionToggle } = useSettingsSections();
@@ -190,12 +190,8 @@ export function SettingsSidebarContent({
     <div className="relative flex h-full flex-col bg-background text-foreground overflow-x-hidden">
       <SidebarHeader
         title={title}
-        titleAlign="center"
         titleClassName="text-mobile-lg font-semibold text-content-primary"
-        withShadow={false}
-        edgeToEdge
-        contentClassName="h-16 min-h-12 px-3 sm:px-4 py-0 sm:py-0"
-        className="border-b border-border bg-background shadow-none"
+        className="shadow-none"
         showCloseButton={shouldShowCloseButton}
         {...(shouldShowCloseButton && onClose ? { onClose } : {})}
       />

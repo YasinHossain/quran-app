@@ -4,6 +4,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useSurahListFilters } from '@/app/shared/hooks/useSurahListFilters';
+import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
 
 import { SearchInput } from './SearchInput';
 import { SurahTabs } from './SurahTabs';
@@ -12,10 +13,12 @@ import type { Chapter } from '@/types';
 
 interface SurahListContentProps {
   chapters: ReadonlyArray<Chapter>;
+  onClose?: () => void;
 }
 
 export const SurahListContent = memo(function SurahListContent({
   chapters,
+  onClose,
 }: SurahListContentProps): React.JSX.Element {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
@@ -37,12 +40,23 @@ export const SurahListContent = memo(function SurahListContent({
   );
 
   return (
-    <SurahTabs
-      chapters={chapters}
-      filteredChapters={filteredChapters}
-      filteredJuzs={filteredJuzs}
-      filteredPages={filteredPages}
-      searchInput={searchInput}
-    />
+    <div className="flex h-full flex-col bg-background text-foreground">
+      <SidebarHeader
+        title="Quran"
+        titleClassName="text-mobile-lg font-semibold text-content-primary"
+        className="shadow-none"
+        showCloseButton
+        {...(onClose ? { onClose } : {})}
+      />
+      <div className="flex-1 overflow-hidden flex flex-col">
+        <SurahTabs
+          chapters={chapters}
+          filteredChapters={filteredChapters}
+          filteredJuzs={filteredJuzs}
+          filteredPages={filteredPages}
+          searchInput={searchInput}
+        />
+      </div>
+    </div>
   );
 });

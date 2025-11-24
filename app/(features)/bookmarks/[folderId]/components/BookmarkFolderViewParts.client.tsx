@@ -4,6 +4,7 @@ import React from 'react';
 
 import { BookmarksSidebar } from '@/app/(features)/bookmarks/components/BookmarksSidebar';
 import { BookmarksMobileSidebarOverlay } from '@/app/(features)/bookmarks/components/shared/layout/BookmarksMobileSidebarOverlay';
+import { BaseSidebar } from '@/app/shared/components/BaseSidebar';
 import { ThreeColumnWorkspace, WorkspaceMain } from '@/app/shared/reader';
 import { SettingsSidebar } from '@/app/shared/reader/settings/SettingsSidebar';
 import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
@@ -18,7 +19,6 @@ export function BookmarkFolderMobileSidebar({
   isOpen,
   onClose,
   onBack,
-  onSectionChange,
   bookmarks,
   folder,
 }: {
@@ -30,15 +30,11 @@ export function BookmarkFolderMobileSidebar({
   folder: Folder;
 }): React.JSX.Element {
   return (
-    <BookmarksMobileSidebarOverlay
+    <BaseSidebar
       isOpen={isOpen}
       onClose={onClose}
-      activeSection="bookmarks"
-      onSectionChange={onSectionChange}
-      childrenTitle={null}
-      childrenContainerClassName="-mt-2 sm:-mt-3 -mx-2 sm:-mx-3 pt-0 border-t-0"
-      childrenContentClassName="space-y-0 px-2 sm:px-3"
-      showNavigation={false}
+      position="left"
+      aria-label="Folder details"
     >
       <BookmarkFolderSidebarContent
         bookmarks={bookmarks}
@@ -46,7 +42,7 @@ export function BookmarkFolderMobileSidebar({
         onBack={onBack}
         onClose={onClose}
       />
-    </BookmarksMobileSidebarOverlay>
+    </BaseSidebar>
   );
 }
 
