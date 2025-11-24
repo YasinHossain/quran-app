@@ -33,7 +33,8 @@ export const BookmarksContent = ({
   showNavigation = true,
   onClose,
 }: BookmarksContentProps): React.JSX.Element => (
-  <div className="flex flex-1 min-h-0 flex-col bg-background text-foreground">
+  <div className="relative flex flex-1 min-h-0 flex-col bg-background text-foreground">
+    <div className="pointer-events-none absolute inset-x-0 top-0 h-5 bg-[linear-gradient(to_bottom,rgb(var(--color-foreground)/0.08),rgb(var(--color-foreground)/0))] opacity-70" />
     <SidebarHeader
       title="Bookmarks"
       titleClassName="text-mobile-lg font-semibold text-content-primary"

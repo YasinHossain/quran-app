@@ -20,7 +20,8 @@ export const BookmarkFolderSidebarContent = ({
   onBack,
   onClose,
 }: BookmarkFolderSidebarContentProps): React.JSX.Element => (
-  <div className="flex flex-1 min-h-0 flex-col">
+  <div className="relative flex flex-1 min-h-0 flex-col">
+    <div className="pointer-events-none absolute inset-x-0 top-0 h-5 bg-[linear-gradient(to_bottom,rgb(var(--color-foreground)/0.08),rgb(var(--color-foreground)/0))] opacity-70" />
     <SidebarHeader
       title="Folders"
       onBack={onBack}
@@ -29,7 +30,7 @@ export const BookmarkFolderSidebarContent = ({
       // Unified sidebar header styling
       titleClassName="text-mobile-lg font-semibold text-foreground"
       backButtonClassName="hover:bg-interactive-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-      className="shadow-sm border-b border-border relative z-10"
+      className="sticky top-0 shadow-sm border-b border-border relative z-10 bg-background"
       forceVisible
     />
     <div className="flex-1 overflow-y-auto p-4">
