@@ -48,7 +48,7 @@ export function WorkspaceMain({
       {...rest}
       data-slot={dataSlot ?? 'workspace-main'}
       className={cn(
-        'relative flex flex-1 flex-col overflow-y-auto bg-background text-foreground min-h-0',
+        'relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden bg-background text-foreground min-h-0',
         topPaddingClass,
         'pb-safe',
         shouldReserveLeft && 'lg:pl-reader-sidebar-left',

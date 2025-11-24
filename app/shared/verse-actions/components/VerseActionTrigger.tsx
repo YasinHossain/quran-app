@@ -19,13 +19,13 @@ export const VerseActionTrigger = memo(function VerseActionTrigger({
 }: VerseActionTriggerProps) {
   return (
     <div className={cn('flex items-center justify-between', className)}>
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 pl-1">
         <span className="font-semibold text-accent text-sm">{verseKey}</span>
       </div>
       <button
         onClick={onOpen}
         className={cn(
-          'p-1 rounded-full hover:bg-interactive transition-colors',
+          'p-1 rounded-full hover:bg-interactive transition-colors -mr-5',
           touchClasses.target,
           touchClasses.gesture,
           touchClasses.focus

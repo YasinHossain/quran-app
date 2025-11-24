@@ -33,7 +33,7 @@ const getVariantClasses = (variant: VerseCardVariant): string => {
     return 'relative rounded-lg border border-border bg-surface p-6 shadow-sm';
   }
 
-  return 'mb-8 pb-8 border-b border-border';
+  return 'mb-0 pb-4 pt-4 md:mb-8 md:pb-8 md:pt-0 border-b border-border';
 };
 
 const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps>(
@@ -60,7 +60,7 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
 
     return (
       <div id={`${idPrefix}-${verse.id}`} ref={ref} className={containerClasses}>
-        <div className="space-y-4 md:space-y-0 md:flex md:items-stretch md:gap-x-6">
+        <div className="space-y-2 md:space-y-0 md:flex md:items-stretch md:gap-x-6">
           {actions ? (
             <ResponsiveVerseActions
               {...actions}

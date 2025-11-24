@@ -71,7 +71,7 @@ const VirtualizedList = ({
             width: '100%',
             transform: `translateY(${item.start}px)`,
           }}
-          className="pb-4"
+          className=""
         >
           <VerseComponent verse={verse} />
         </div>
