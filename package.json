@@ -67,7 +67,7 @@
     "@tanstack/react-virtual": "^3.13.12",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.12",
-    "i18next": "^25.3.2",
+    "i18next": "^25.6.3",
     "isomorphic-dompurify": "^2.26.0",
     "lucide-react": "^0.548.0",
     "next": "^15.5.0",
