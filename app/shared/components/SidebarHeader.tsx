@@ -40,7 +40,7 @@ export const SidebarHeader = ({
     <div
       className={cn(
         // Layout & Sizing
-        'flex items-center justify-between w-full h-14 shrink-0 pb-1',
+        'flex items-center justify-between w-full h-14 shrink-0',
         // Spacing
         'px-4',
         // Visuals

@@ -47,7 +47,7 @@ export const BaseSidebar = ({
         className={cn(
           getPositionClasses(),
           // Ensure we don't override fixed positioning from getPositionClasses
-          'text-foreground flex flex-col overflow-hidden pt-safe pb-[env(safe-area-inset-bottom,0px)] touch-pan-y lg:overflow-visible lg:pt-0 lg:pb-0',
+          'text-foreground flex flex-col overflow-hidden pb-[env(safe-area-inset-bottom,0px)] touch-pan-y lg:overflow-visible lg:pb-0',
           className
         )}
         role="dialog"
