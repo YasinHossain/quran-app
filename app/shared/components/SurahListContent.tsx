@@ -40,7 +40,7 @@ export const SurahListContent = memo(function SurahListContent({
   );
 
   return (
-    <div className="flex h-full flex-col bg-background text-foreground">
+    <div className="flex flex-1 min-h-0 flex-col bg-background text-foreground">
       <SidebarHeader
         title="Quran"
         titleClassName="text-mobile-lg font-semibold text-content-primary"

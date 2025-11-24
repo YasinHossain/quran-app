@@ -33,33 +33,41 @@ export const BookmarksContent = ({
   showNavigation = true,
   onClose,
 }: BookmarksContentProps): React.JSX.Element => (
-  <div className="flex h-full flex-col bg-background text-foreground">
+  <div className="flex flex-1 min-h-0 flex-col bg-background text-foreground">
     <SidebarHeader
       title="Bookmarks"
       titleClassName="text-mobile-lg font-semibold text-content-primary"
-      className="shadow-none"
+      className="shadow-sm relative z-10"
       showCloseButton
       {...(onClose ? { onClose } : {})}
     />
-    <div
-      className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-3 touch-pan-y"
-      // Reserve scroll gutter so edge-to-edge dividers reach the sidebar edge.
-      style={{ scrollbarGutter: 'stable' }}
-    >
+
+    <div className="flex-1 overflow-hidden flex flex-col">
+
+
       {showNavigation ? (
-        <NavigationSection activeSection={activeSection} onSectionChange={onSectionChange} />
+        <div>
+          <NavigationSection activeSection={activeSection} onSectionChange={onSectionChange} />
+        </div>
       ) : null}
-      <ChildrenSection
-        {...(childrenTitle !== undefined ? { title: childrenTitle } : {})}
-        {...(childrenContainerClassName !== undefined
-          ? { containerClassName: childrenContainerClassName }
-          : {})}
-        {...(childrenContentClassName !== undefined
-          ? { contentClassName: childrenContentClassName }
-          : {})}
+
+      <div
+        className="flex-1 min-h-0 overflow-y-auto touch-pan-y"
+        // Reserve scroll gutter so edge-to-edge dividers reach the sidebar edge.
+        style={{ scrollbarGutter: 'stable' }}
       >
-        {children}
-      </ChildrenSection>
+        <ChildrenSection
+          {...(childrenTitle !== undefined ? { title: childrenTitle } : {})}
+          {...(childrenContainerClassName !== undefined
+            ? { containerClassName: childrenContainerClassName }
+            : {})}
+          {...(childrenContentClassName !== undefined
+            ? { contentClassName: childrenContentClassName }
+            : {})}
+        >
+          {children}
+        </ChildrenSection>
+      </div>
     </div>
   </div>
 );
@@ -83,7 +91,7 @@ const NavigationSection = ({
   activeSection: SectionId;
   onSectionChange?: ((section: SectionId) => void) | undefined;
 }): React.JSX.Element => (
-  <nav className="mb-6">
+  <nav className="px-2 sm:px-3 pt-3 sm:pt-4 pb-4">
     <div className="space-y-2">
       {NAVIGATION_SECTIONS.map((section) => (
         <NavigationItem
@@ -129,7 +137,7 @@ const ChildrenSection = ({
   const heading = title === undefined ? 'More' : title;
 
   return (
-    <div className={cn('mt-6 pt-4 border-t border-border', containerClassName)}>
+    <div className={cn('pt-4 px-2 sm:px-3', containerClassName)}>
       {heading !== null ? (
         <div className="text-xs font-semibold text-muted uppercase tracking-wider mb-3 px-2">
           {heading}
