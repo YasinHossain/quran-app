@@ -25,14 +25,13 @@ export const VerseActionTrigger = memo(function VerseActionTrigger({
       <button
         onClick={onOpen}
         className={cn(
-          'p-1 rounded-full hover:bg-interactive transition-colors -mr-5',
-          touchClasses.target,
+          'p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors -mr-2 group flex items-center justify-center',
           touchClasses.gesture,
           touchClasses.focus
         )}
         aria-label="Open verse actions menu"
       >
-        <EllipsisHIcon size={18} className="text-muted" />
+        <EllipsisHIcon size={18} className="text-muted group-hover:text-accent transition-colors" />
       </button>
     </div>
   );

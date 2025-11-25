@@ -21,7 +21,7 @@ export const BottomSheetHeader = memo(function BottomSheetHeader({
       <button
         onClick={onClose}
         className={cn(
-          'p-2 rounded-full hover:bg-interactive transition-colors',
+          'p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors',
           touchClasses.target,
           touchClasses.gesture,
           touchClasses.focus

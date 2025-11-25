@@ -43,7 +43,7 @@ const ActionButtons = memo(function ActionButtons({
         type="button"
         onClick={onCancel}
         className={cn(
-          'p-2 rounded-full hover:bg-interactive text-muted transition-colors',
+          'p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 text-muted transition-colors',
           touchClasses.target,
           touchClasses.focus
         )}

@@ -14,7 +14,7 @@ export const ModalFooter = memo(function ModalFooter({
       <div className="text-muted">Tips: Space • ←/→ seek • ↑/↓ volume</div>
       <div className="flex gap-2">
         <button
-          className="px-4 py-2 rounded-xl bg-surface hover:bg-interactive-hover text-foreground"
+          className="px-4 py-2 rounded-xl bg-surface hover:bg-gray-200 dark:hover:bg-slate-700 text-foreground"
           onClick={onClose}
         >
           Cancel

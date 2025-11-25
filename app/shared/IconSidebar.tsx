@@ -121,7 +121,7 @@ export const Navigation = memo(function Navigation() {
 
   const linkStyles = useMemo(
     () =>
-      'p-3 rounded-lg hover:bg-accent/10 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+      'p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
     []
   );
 

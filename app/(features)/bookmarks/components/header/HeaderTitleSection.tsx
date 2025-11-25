@@ -23,7 +23,7 @@ export const HeaderTitleSection = ({
         size="icon"
         onClick={onSidebarToggle}
         aria-label="Toggle sidebar"
-        className="hover:shadow-sm transition-shadow flex-shrink-0"
+        className="hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-colors flex-shrink-0"
       >
         <BarsIcon size={18} />
       </Button>

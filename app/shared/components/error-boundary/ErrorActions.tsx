@@ -13,7 +13,7 @@ export const ErrorActions = ({ onTryAgain, onGoHome }: ErrorActionsProps): React
     </button>
     <button
       onClick={onGoHome}
-      className="flex-1 bg-interactive hover:bg-interactive-hover text-foreground font-medium py-2 px-4 rounded-md transition-colors"
+      className="flex-1 bg-surface border border-border hover:bg-gray-200 dark:hover:bg-slate-700 text-foreground font-medium py-2 px-4 rounded-md transition-colors"
     >
       Go Home
     </button>

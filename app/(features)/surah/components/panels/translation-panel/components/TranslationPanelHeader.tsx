@@ -17,7 +17,7 @@ export const TranslationPanelHeader = ({
     <header className="flex items-center p-4 border-b border-border">
       <button
         onClick={onClose}
-        className="p-2 rounded-full hover:bg-interactive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +35,7 @@ export const TranslationPanelHeader = ({
       </h2>
       <button
         onClick={onReset}
-        className="p-2 rounded-full text-foreground hover:bg-interactive hover:text-accent focus-visible:outline-none transition-colors"
+        className="p-2 rounded-full text-foreground hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent focus-visible:outline-none transition-colors"
         title="Reset to Default"
       >
         <ResetIcon size={20} />

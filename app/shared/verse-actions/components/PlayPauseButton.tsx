@@ -24,7 +24,7 @@ export const PlayPauseButton = memo(function PlayPauseButton({
       onClick={onPlayPause}
       title="Play/Pause"
       className={cn(
-        'p-1.5 rounded-full hover:bg-accent/10 transition',
+        'p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition',
         isPlaying ? 'text-accent' : 'hover:text-accent',
         touchClasses.focus
       )}

@@ -19,7 +19,7 @@ export const ResourcePanelHeader = ({
     <header className="flex items-center p-4 border-b border-border">
       <button
         onClick={onClose}
-        className="p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent hover:bg-interactive-hover"
+        className="p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent hover:bg-gray-200 dark:hover:bg-slate-700"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +35,7 @@ export const ResourcePanelHeader = ({
       <h2 className="text-lg font-bold text-center flex-grow text-foreground">{title}</h2>
       <button
         onClick={onReset}
-        className="p-2 rounded-full text-foreground hover:bg-interactive hover:text-accent focus-visible:outline-none transition-colors"
+        className="p-2 rounded-full text-foreground hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent focus-visible:outline-none transition-colors"
         title="Reset to Default"
       >
         <ResetIcon size={20} />

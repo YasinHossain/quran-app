@@ -30,7 +30,7 @@ export const BookmarkFolderSidebarContent = ({
       {...(onClose ? { onClose, showCloseButton: true } : {})}
       // Mobile-only header; keep subtle elevation but no divider line
       titleClassName="text-mobile-lg font-semibold text-foreground"
-      backButtonClassName="hover:bg-interactive-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+      backButtonClassName="hover:bg-gray-200 dark:hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       className="sticky top-0 shadow-none relative z-10 bg-background"
     />
     <div className="flex-1 overflow-y-auto p-4">
@@ -39,7 +39,7 @@ export const BookmarkFolderSidebarContent = ({
           <button
             type="button"
             onClick={onBack}
-            className="p-2 -ml-2 rounded-full hover:bg-surface-hover transition-colors text-foreground focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+            className="p-2 -ml-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors text-foreground focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
             aria-label="Back to bookmarks"
           >
             <ArrowLeftIcon size={20} />

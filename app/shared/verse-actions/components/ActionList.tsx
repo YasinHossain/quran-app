@@ -27,7 +27,7 @@ export const ActionList = memo(function ActionList({
               onClick={onClose}
               className={cn(
                 'flex items-center gap-4 p-4 rounded-2xl transition-all duration-200',
-                'hover:bg-interactive active:bg-interactive',
+                'hover:bg-gray-200 dark:hover:bg-slate-700 active:bg-gray-300 dark:active:bg-slate-600',
                 touchClasses.target,
                 touchClasses.gesture,
                 touchClasses.focus,
@@ -44,7 +44,7 @@ export const ActionList = memo(function ActionList({
               onClick={action.onClick}
               className={cn(
                 'flex w-full items-center gap-4 p-4 rounded-2xl transition-all duration-200',
-                'hover:bg-interactive active:bg-interactive',
+                'hover:bg-gray-200 dark:hover:bg-slate-700 active:bg-gray-300 dark:active:bg-slate-600',
                 touchClasses.target,
                 touchClasses.gesture,
                 touchClasses.focus,

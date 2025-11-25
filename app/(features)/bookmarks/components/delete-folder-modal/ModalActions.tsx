@@ -27,7 +27,7 @@ export const ModalActions = ({
   <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-border">
     <button
       onClick={onClose}
-      className="px-6 py-2.5 text-sm font-medium text-muted hover:text-foreground hover:bg-surface-hover rounded-xl transition-all duration-200"
+      className="px-6 py-2.5 text-sm font-medium text-muted hover:text-foreground hover:bg-gray-200 dark:hover:bg-slate-700 rounded-xl transition-all duration-200"
     >
       Cancel
     </button>

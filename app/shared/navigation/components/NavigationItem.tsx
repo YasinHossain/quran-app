@@ -19,7 +19,7 @@ export const NavigationItem = memo(function NavigationItem({
   return (
     <motion.button
       onClick={onClick}
-      className="flex items-center gap-4 p-4 rounded-2xl hover:bg-interactive transition-all duration-200 text-left group touch-manipulation"
+      className="flex items-center gap-4 p-4 rounded-2xl hover:bg-gray-200 dark:hover:bg-slate-700 transition-all duration-200 text-left group touch-manipulation"
       whileTap={{ scale: 0.98 }}
     >
       <div className="flex-shrink-0 w-10 h-10 bg-accent/10 text-accent rounded-xl flex items-center justify-center font-semibold text-sm group-hover:bg-accent group-hover:text-on-accent transition-colors">

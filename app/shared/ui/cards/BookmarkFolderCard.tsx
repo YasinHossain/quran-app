@@ -37,15 +37,15 @@ export const BookmarkFolderCard = ({
   const latestBookmarkTimestamp =
     verseCount > 0
       ? folder.bookmarks.reduce(
-          (latest, bookmark) => Math.max(latest, bookmark.createdAt ?? 0),
-          folder.createdAt ?? 0
-        )
+        (latest, bookmark) => Math.max(latest, bookmark.createdAt ?? 0),
+        folder.createdAt ?? 0
+      )
       : (folder.createdAt ?? 0);
   const formattedUpdatedAt =
     latestBookmarkTimestamp > 0
       ? new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' }).format(
-          new Date(latestBookmarkTimestamp)
-        )
+        new Date(latestBookmarkTimestamp)
+      )
       : null;
   const versePreview = folder.bookmarks.slice(0, 3);
 
@@ -98,7 +98,7 @@ export const BookmarkFolderCard = ({
                 <div className="text-xs text-muted/70">No verses yet</div>
               )}
             </div>
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface hover:bg-surface-hover transition-colors">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-colors">
               <ChevronDownIcon
                 className={cn(
                   'h-4 w-4 text-muted transition-transform duration-300',

@@ -25,7 +25,7 @@ export const BookmarkButton = memo(function BookmarkButton({
       title={showRemove ? 'Remove bookmark' : 'Bookmark'}
       onClick={onClick}
       className={cn(
-        'p-1.5 rounded-full hover:bg-accent/10 transition',
+        'p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition',
         isBookmarked || showRemove ? 'text-accent' : 'hover:text-accent',
         touchClasses.focus
       )}

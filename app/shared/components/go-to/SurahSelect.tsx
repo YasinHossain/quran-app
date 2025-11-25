@@ -239,7 +239,7 @@ export const SurahSelect = memo(function SurahSelect({
       <div
         className={clsx(
           'relative rounded-lg border border-border bg-surface transition-colors',
-          disabled ? 'opacity-60 cursor-not-allowed' : 'hover:bg-accent/10'
+          disabled ? 'opacity-60 cursor-not-allowed' : 'hover:bg-interactive-hover'
         )}
       >
         <input
@@ -330,10 +330,10 @@ export const SurahSelect = memo(function SurahSelect({
                   className={clsx(
                     'w-full text-left px-4 py-2.5 rounded-lg text-sm transition-colors',
                     selected
-                      ? 'bg-interactive-hover text-foreground'
+                      ? 'bg-interactive text-foreground'
                       : isActive
-                        ? 'bg-interactive-hover text-foreground'
-                        : 'text-foreground hover:bg-interactive/60'
+                        ? 'bg-interactive text-foreground'
+                        : 'text-foreground hover:bg-interactive'
                   )}
                 >
                   <span className="block truncate">{option.label}</span>

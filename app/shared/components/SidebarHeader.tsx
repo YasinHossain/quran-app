@@ -55,7 +55,7 @@ export const SidebarHeader = ({
         {showBackButton && onBack ? (
           <button
             onClick={onBack}
-            className="p-2 -ml-2 rounded-full hover:bg-surface-hover transition-colors text-foreground focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+            className="p-2 -ml-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-colors text-foreground focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
             aria-label="Go back"
           >
             <ArrowLeftIcon size={20} />
@@ -81,7 +81,7 @@ export const SidebarHeader = ({
         {showCloseButton && onClose ? (
           <button
             onClick={onClose}
-            className="p-2 -mr-2 rounded-full hover:bg-surface-hover transition-colors text-foreground focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+            className="p-2 -mr-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-colors text-foreground focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
             aria-label="Close sidebar"
           >
             <CloseIcon size={20} />

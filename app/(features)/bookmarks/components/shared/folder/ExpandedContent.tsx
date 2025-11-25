@@ -57,21 +57,21 @@ const FolderVerseItem = ({
 
   const baseWrapperClassName = cn(
     'flex w-full items-center justify-between gap-3 py-3 px-4 transition-colors min-h-[60px]',
-    onSelect && 'hover:bg-surface-hover cursor-pointer'
+    onSelect && 'hover:bg-gray-200 dark:hover:bg-slate-700 cursor-pointer'
   );
 
   const interactiveProps = onSelect
     ? {
-        role: 'button' as const,
-        tabIndex: 0,
-        onClick: onSelect,
-        onKeyDown: (event: React.KeyboardEvent) => {
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            onSelect();
-          }
-        },
-      }
+      role: 'button' as const,
+      tabIndex: 0,
+      onClick: onSelect,
+      onKeyDown: (event: React.KeyboardEvent) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onSelect();
+        }
+      },
+    }
     : {};
 
   return (
@@ -113,7 +113,7 @@ const RemoveBookmarkButton = ({
     <button
       type="button"
       aria-label={`Remove ${label} bookmark`}
-      className="ml-2 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface text-muted transition-colors duration-200 hover:bg-surface-hover hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30"
+      className="ml-2 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface text-muted transition-colors duration-200 hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30"
       onClick={(event): void => {
         event.stopPropagation();
         onRemove(bookmark);
@@ -127,8 +127,8 @@ const RemoveBookmarkButton = ({
 const SidebarVerseItemSkeleton = ({ withDivider }: { withDivider: boolean }): React.JSX.Element => (
   <div className="px-4 py-3">
     <div className="animate-pulse flex items-center justify-between gap-4">
-      <div className="h-4 bg-surface-hover rounded w-28"></div>
-      <div className="h-3 bg-surface-hover rounded w-16"></div>
+      <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded w-28"></div>
+      <div className="h-3 bg-gray-200 dark:bg-slate-700 rounded w-16"></div>
     </div>
     {withDivider ? <div className="mx-4 mt-2 h-px bg-border" /> : null}
   </div>

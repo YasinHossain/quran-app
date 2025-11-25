@@ -61,11 +61,10 @@ function LanguageRow({
           onSelect();
         }
       }}
-      className={`flex items-center justify-between px-4 py-2.5 h-[50px] rounded-lg cursor-pointer transition-all duration-200 focus:outline-none focus-visible:outline-none outline-none border-0 focus:border-0 active:outline-none ${
-        selected
-          ? 'bg-accent/20 border border-accent/30'
-          : 'bg-surface border border-border hover:bg-interactive'
-      }`}
+      className={`flex items-center justify-between px-4 py-2.5 h-[50px] rounded-lg cursor-pointer transition-all duration-200 focus:outline-none focus-visible:outline-none outline-none border-0 focus:border-0 active:outline-none ${selected
+        ? 'bg-accent/20 border border-accent/30'
+        : 'bg-surface border border-border hover:bg-interactive'
+        }`}
     >
       <div className="flex-1 min-w-0 pr-3">
         <p

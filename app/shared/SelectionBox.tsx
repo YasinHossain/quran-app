@@ -35,7 +35,7 @@ export const SelectionBox = memo(function SelectionBox({
         onClick={onClick}
         type="button"
         aria-labelledby={`${labelId} ${valueId}`}
-        className="w-full flex justify-between items-center bg-surface text-foreground border border-border rounded-lg p-2.5 text-sm text-left focus:outline-none focus-visible:outline-none focus:ring-0 transition-all duration-300 hover:bg-accent/10"
+        className="w-full flex justify-between items-center bg-surface text-foreground border border-border rounded-lg p-2.5 text-sm text-left focus:outline-none focus-visible:outline-none focus:ring-0 transition-all duration-300 hover:bg-interactive-hover"
         style={{ outline: 'none' }}
       >
         <span id={valueId} className="truncate">

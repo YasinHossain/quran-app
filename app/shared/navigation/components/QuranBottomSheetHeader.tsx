@@ -23,7 +23,7 @@ export const QuranBottomSheetHeader = memo(function QuranBottomSheetHeader({
         <h2 className="text-xl font-bold text-foreground">Select Quran</h2>
         <button
           onClick={onClose}
-          className="btn-touch p-2 rounded-full hover:bg-interactive transition-colors"
+          className="btn-touch p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
         >
           <IconX size={20} className="text-muted" />
         </button>

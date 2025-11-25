@@ -40,9 +40,8 @@ function SeekSlider({
   return (
     <Tooltip.Provider delayDuration={150}>
       <Slider.Root
-        className={`relative w-full h-2.5 group flex items-center ${
-          !interactable ? 'opacity-60 pointer-events-none' : ''
-        }`}
+        className={`relative w-full h-2.5 group flex items-center ${!interactable ? 'opacity-60 pointer-events-none' : ''
+          }`}
         value={[current]}
         max={Math.max(1, duration || 0)}
         step={0.1}
@@ -51,7 +50,7 @@ function SeekSlider({
         }}
         aria-label="Seek"
       >
-        <Slider.Track className="h-0.5 rounded-full relative w-full grow bg-surface group-hover:bg-interactive-hover">
+        <Slider.Track className="h-0.5 rounded-full relative w-full grow bg-surface group-hover:bg-gray-200 dark:group-hover:bg-slate-700">
           <Slider.Range className="h-full rounded-full absolute bg-accent" />
         </Slider.Track>
         <SeekSliderThumb tooltipLabel={tooltipLabel} />

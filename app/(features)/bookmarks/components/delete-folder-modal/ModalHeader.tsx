@@ -28,7 +28,7 @@ export const ModalHeader = ({ onClose }: ModalHeaderProps): React.JSX.Element =>
     </div>
     <button
       onClick={onClose}
-      className="rounded-xl p-2 text-muted hover:bg-surface-hover hover:text-accent transition-all duration-200"
+      className="rounded-xl p-2 text-muted hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-all duration-200"
       aria-label="Close"
     >
       <CloseIcon size={20} />

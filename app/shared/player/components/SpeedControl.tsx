@@ -36,9 +36,8 @@ function SpeedOptionButton({
   return (
     <button
       onClick={() => onSelect(speed)}
-      className={`w-full text-center text-sm p-1.5 rounded-md ${
-        active ? 'bg-accent text-on-accent' : 'hover:bg-interactive-hover'
-      }`}
+      className={`w-full text-center text-sm p-1.5 rounded-md ${active ? 'bg-accent text-on-accent' : 'hover:bg-gray-200 dark:hover:bg-slate-700'
+        }`}
     >
       {speed}x
     </button>
@@ -60,7 +59,7 @@ export function SpeedControl(): React.JSX.Element {
               setOpen(false);
             }
           }}
-          className="h-9 w-14 grid place-items-center rounded-full text-xs font-bold transition focus:outline-none focus:ring-2 text-foreground focus:ring-accent/35 hover:bg-interactive-hover"
+          className="h-9 w-14 grid place-items-center rounded-full text-xs font-bold transition focus:outline-none focus:ring-2 text-foreground focus:ring-accent/35 hover:bg-gray-200 dark:hover:bg-slate-700"
         >
           {playbackRate}x
         </button>

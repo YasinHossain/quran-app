@@ -73,7 +73,7 @@ export const VerseOptionsMenu = memo(function VerseOptionsMenu({
         aria-expanded={isOpen}
         onClick={toggleMenu}
         className={cn(
-          'p-1.5 rounded-full hover:bg-interactive transition-colors text-muted hover:text-accent',
+          'p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors text-muted hover:text-accent flex items-center justify-center',
           touchClasses.focus
         )}
       >

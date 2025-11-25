@@ -35,7 +35,7 @@ export const TabNavigation = memo(function TabNavigation({
         <button
           onClick={onClose}
           className={cn(
-            'absolute right-0 top-0 p-2 rounded-full hover:bg-interactive transition-colors',
+            'absolute right-0 top-0 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors',
             touchClasses.target,
             touchClasses.focus
           )}

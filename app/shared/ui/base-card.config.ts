@@ -63,7 +63,7 @@ export const CARD_VARIANTS: Record<string, CardVariant> = {
     hover: {
       effect: 'translate',
       // Add hover background to better surface elevation changes
-      value: 'hover:-translate-y-1 hover:shadow-lg hover:border-accent/20 hover:bg-surface-hover',
+      value: 'hover:-translate-y-1 hover:shadow-lg hover:border-accent/20 hover:bg-gray-200 dark:hover:bg-slate-700',
       duration: 'transition-all duration-300',
     },
     shadow: {
@@ -80,7 +80,7 @@ export const CARD_VARIANTS: Record<string, CardVariant> = {
     },
     hover: {
       effect: 'translate',
-      value: 'hover:-translate-y-0.5 hover:shadow-md hover:border-accent/30 hover:bg-surface-hover',
+      value: 'hover:-translate-y-0.5 hover:shadow-md hover:border-accent/30 hover:bg-gray-200 dark:hover:bg-slate-700',
       duration: 'transition-all duration-200',
     },
     shadow: {
