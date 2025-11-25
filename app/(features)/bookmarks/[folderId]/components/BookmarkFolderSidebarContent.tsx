@@ -4,6 +4,7 @@ import React from 'react';
 
 import { BookmarkFolderContent } from '@/app/(features)/bookmarks/components/BookmarkFolderContent';
 import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
+import { ArrowLeftIcon } from '@/app/shared/icons';
 
 import type { Bookmark, Folder } from '@/types';
 
@@ -31,9 +32,24 @@ export const BookmarkFolderSidebarContent = ({
       titleClassName="text-mobile-lg font-semibold text-foreground"
       backButtonClassName="hover:bg-interactive-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       className="sticky top-0 shadow-sm border-b border-border relative z-10 bg-background"
-      forceVisible
     />
     <div className="flex-1 overflow-y-auto p-4">
+      <div className="hidden md:flex items-center justify-between gap-2 pb-4">
+        <div className="flex items-center min-w-[40px]">
+          <button
+            type="button"
+            onClick={onBack}
+            className="p-2 -ml-2 rounded-full hover:bg-surface-hover transition-colors text-foreground focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+            aria-label="Back to bookmarks"
+          >
+            <ArrowLeftIcon size={20} />
+          </button>
+        </div>
+        <div className="flex-1 flex items-center justify-center px-2">
+          <h2 className="text-mobile-lg font-semibold text-foreground truncate">Folders</h2>
+        </div>
+        <div className="min-w-[40px]" />
+      </div>
       <BookmarkFolderContent bookmarks={bookmarks} folder={folder} />
     </div>
   </div>
