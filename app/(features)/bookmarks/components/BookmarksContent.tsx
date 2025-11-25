@@ -38,7 +38,7 @@ export const BookmarksContent = ({
     <SidebarHeader
       title="Bookmarks"
       titleClassName="text-mobile-lg font-semibold text-content-primary"
-      className="shadow-sm relative z-10"
+      className="relative z-10 shadow-none"
       showCloseButton
       {...(onClose ? { onClose } : {})}
     />

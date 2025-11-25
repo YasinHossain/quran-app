@@ -1,6 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 
+import { ArrowLeftIcon, ChevronLeftIcon, ChevronRightIcon } from '@/app/shared/icons';
 import { Surah } from '@/types';
 
 import type { JSX } from 'react';
@@ -19,33 +20,11 @@ interface AyahNavigationProps {
 }
 
 const ChevronLeft = (): JSX.Element => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-5 w-5 text-accent"
-    viewBox="0 0 20 20"
-    fill="currentColor"
-  >
-    <path
-      fillRule="evenodd"
-      d="M11.707 15.293a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L8.414 10l3.293 3.293a1 1 0 001.414 0z"
-      clipRule="evenodd"
-    />
-  </svg>
+  <ChevronLeftIcon size={20} className="text-accent" />
 );
 
 const ChevronRight = (): JSX.Element => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-5 w-5 text-accent"
-    viewBox="0 0 20 20"
-    fill="currentColor"
-  >
-    <path
-      fillRule="evenodd"
-      d="M8.293 4.707a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L11.586 10l-3.293-3.293a1 1 0 00-1.414 0z"
-      clipRule="evenodd"
-    />
-  </svg>
+  <ChevronRightIcon size={20} className="text-accent" />
 );
 
 interface NavButtonProps {
@@ -66,8 +45,8 @@ const NavButton = ({ label, disabled, onClick, side }: NavButtonProps): JSX.Elem
     <div
       className={
         side === 'left'
-          ? 'flex items-center justify-center w-8 h-8 rounded-full bg-surface mr-1 sm:mr-2'
-          : 'flex items-center justify-center w-8 h-8 rounded-full bg-surface ml-1 sm:ml-2'
+          ? 'flex items-center justify-center w-9 h-9 rounded-full bg-surface mr-1 sm:mr-2'
+          : 'flex items-center justify-center w-9 h-9 rounded-full bg-surface ml-1 sm:ml-2'
       }
     >
       {side === 'left' ? <ChevronLeft /> : <ChevronRight />}
@@ -82,8 +61,8 @@ const BackButton = ({ onClick }: { onClick: () => void }): JSX.Element => (
     onClick={onClick}
     className="flex items-center px-2 sm:px-3 py-2 rounded-full bg-accent text-on-accent"
   >
-    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-surface">
-      <ChevronLeft />
+    <div className="flex items-center justify-center w-9 h-9 rounded-full bg-surface">
+      <ArrowLeftIcon size={18} className="text-accent" />
     </div>
   </button>
 );
