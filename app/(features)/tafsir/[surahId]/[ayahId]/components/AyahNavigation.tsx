@@ -1,4 +1,6 @@
 'use client';
+import { useRouter } from 'next/navigation';
+
 import { Surah } from '@/types';
 
 import type { JSX } from 'react';
@@ -55,6 +57,7 @@ interface NavButtonProps {
 
 const NavButton = ({ label, disabled, onClick, side }: NavButtonProps): JSX.Element => (
   <button
+    type="button"
     aria-label={label}
     disabled={disabled}
     onClick={onClick}
@@ -68,6 +71,19 @@ const NavButton = ({ label, disabled, onClick, side }: NavButtonProps): JSX.Elem
       }
     >
       {side === 'left' ? <ChevronLeft /> : <ChevronRight />}
+    </div>
+  </button>
+);
+
+const BackButton = ({ onClick }: { onClick: () => void }): JSX.Element => (
+  <button
+    type="button"
+    aria-label="Back"
+    onClick={onClick}
+    className="flex items-center px-2 sm:px-3 py-2 rounded-full bg-accent text-on-accent"
+  >
+    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-surface">
+      <ChevronLeft />
     </div>
   </button>
 );
@@ -96,10 +112,17 @@ export const AyahNavigation = ({
   navigate,
   currentSurah,
   ayahId,
-}: AyahNavigationProps): JSX.Element => (
-  <div className="flex w-full items-center justify-between gap-2 sm:gap-3 rounded-full bg-accent text-on-accent p-2 min-w-0 overflow-hidden">
-    <NavButton label="Previous" disabled={!prev} onClick={(): void => navigate(prev)} side="left" />
-    <Title currentSurah={currentSurah} ayahId={ayahId} />
-    <NavButton label="Next" disabled={!next} onClick={(): void => navigate(next)} side="right" />
-  </div>
-);
+}: AyahNavigationProps): JSX.Element => {
+  const router = useRouter();
+
+  return (
+    <div className="flex w-full items-center justify-between gap-2 sm:gap-3 rounded-full bg-accent text-on-accent p-2 min-w-0 overflow-hidden">
+      <BackButton onClick={(): void => router.back()} />
+      <Title currentSurah={currentSurah} ayahId={ayahId} />
+      <div className="flex items-center gap-2 sm:gap-3">
+        <NavButton label="Previous" disabled={!prev} onClick={(): void => navigate(prev)} side="left" />
+        <NavButton label="Next" disabled={!next} onClick={(): void => navigate(next)} side="right" />
+      </div>
+    </div>
+  );
+};

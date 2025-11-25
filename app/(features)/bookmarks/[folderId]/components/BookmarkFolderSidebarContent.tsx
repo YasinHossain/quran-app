@@ -28,10 +28,10 @@ export const BookmarkFolderSidebarContent = ({
       onBack={onBack}
       showBackButton
       {...(onClose ? { onClose, showCloseButton: true } : {})}
-      // Unified sidebar header styling
+      // Mobile-only header; keep subtle elevation but no divider line
       titleClassName="text-mobile-lg font-semibold text-foreground"
       backButtonClassName="hover:bg-interactive-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-      className="sticky top-0 shadow-sm border-b border-border relative z-10 bg-background"
+      className="sticky top-0 shadow-none relative z-10 bg-background"
     />
     <div className="flex-1 overflow-y-auto p-4">
       <div className="hidden md:flex items-center justify-between gap-2 pb-4">
