@@ -186,6 +186,7 @@ export function DesktopThreeColumn(props: DesktopWorkspaceProps): React.JSX.Elem
         />
       }
       right={<RightSettingsPanel {...settings} />}
+      leftContainerClassName="lg:pt-2"
     />
   );
 }
