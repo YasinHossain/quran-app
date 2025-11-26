@@ -4,7 +4,6 @@ import { Timeline } from '@/app/shared/player/components/Timeline';
 import { MobileTopBar } from '@/app/shared/player/layouts/MobileTopBar';
 
 interface MobilePlayerLayoutProps {
-  cover: string;
   title: string;
   artist: string;
   current: number;
@@ -22,7 +21,6 @@ interface MobilePlayerLayoutProps {
 }
 
 export const MobilePlayerLayout = React.memo(function MobilePlayerLayout({
-  cover,
   title,
   artist,
   current,
@@ -41,7 +39,6 @@ export const MobilePlayerLayout = React.memo(function MobilePlayerLayout({
   return (
     <>
       <MobileTopBar
-        cover={cover}
         title={title}
         artist={artist}
         isPlaying={isPlaying}

@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import React from 'react';
 
 import { CloseIcon, SlidersIcon } from '@/app/shared/icons';
@@ -8,7 +7,6 @@ import { Button } from '@/app/shared/ui/Button';
 import { iconClasses } from '@/lib/responsive';
 
 interface Props {
-  cover: string;
   title: string;
   artist: string;
   isPlaying: boolean;
@@ -21,29 +19,14 @@ interface Props {
 }
 
 function CoverAndText({
-  cover,
   title,
   artist,
 }: {
-  cover: string;
   title: string;
   artist: string;
 }): React.JSX.Element {
   return (
-    <div className="flex items-center gap-2 min-w-0">
-      <div className="hidden min-[400px]:block flex-shrink-0">
-        <Image
-          src={cover}
-          alt="cover"
-          width={32}
-          height={32}
-          className="h-8 w-8 rounded-full shadow-sm object-cover"
-          onError={(e) => {
-            e.currentTarget.src =
-              "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><rect width='100%' height='100%' rx='6' ry='6' fill='%23e5e7eb'/></svg>";
-          }}
-        />
-      </div>
+    <div className="flex items-center gap-2 min-w-0 pl-1">
       <div className="min-w-0">
         <div className="text-sm font-semibold tracking-[-0.01em] truncate text-foreground">
           {title}
@@ -78,6 +61,7 @@ function ActionButtons({
         size="icon-round"
         aria-label="Close player"
         onClick={closePlayer}
+        className="hover:text-red-500"
       >
         <CloseIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
       </Button>
@@ -86,7 +70,6 @@ function ActionButtons({
 }
 
 export function MobileTopBar({
-  cover,
   title,
   artist,
   isPlaying,
@@ -99,23 +82,23 @@ export function MobileTopBar({
 }: Props): React.JSX.Element {
   return (
     <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-      <CoverAndText cover={cover} title={title} artist={artist} />
+      <CoverAndText title={title} artist={artist} />
       <TransportControls
         isPlaying={isPlaying}
         interactable={interactable}
         {...(onPrev
           ? {
-              onPrev: () => {
-                void onPrev();
-              },
-            }
+            onPrev: () => {
+              void onPrev();
+            },
+          }
           : {})}
         {...(onNext
           ? {
-              onNext: () => {
-                void onNext();
-              },
-            }
+            onNext: () => {
+              void onNext();
+            },
+          }
           : {})}
         togglePlay={togglePlay}
       />

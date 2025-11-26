@@ -9,7 +9,6 @@ import { Button } from '@/app/shared/ui/Button';
 import { iconClasses } from '@/lib/responsive';
 
 interface DesktopPlayerLayoutProps {
-  cover: string;
   title: string;
   artist: string;
   current: number;
@@ -26,7 +25,6 @@ interface DesktopPlayerLayoutProps {
 }
 
 export const DesktopPlayerLayout = React.memo(function DesktopPlayerLayout({
-  cover,
   title,
   artist,
   current,
@@ -43,23 +41,23 @@ export const DesktopPlayerLayout = React.memo(function DesktopPlayerLayout({
 }: DesktopPlayerLayoutProps): React.JSX.Element {
   return (
     <>
-      <TrackInfo cover={cover} title={title} artist={artist} />
+      <TrackInfo title={title} artist={artist} />
       <TransportControls
         isPlaying={isPlaying}
         interactable={interactable}
         {...(onPrev
           ? {
-              onPrev: () => {
-                void onPrev();
-              },
-            }
+            onPrev: () => {
+              void onPrev();
+            },
+          }
           : {})}
         {...(onNext
           ? {
-              onNext: () => {
-                void onNext();
-              },
-            }
+            onNext: () => {
+              void onNext();
+            },
+          }
           : {})}
         togglePlay={togglePlay}
       />
@@ -85,6 +83,7 @@ function Utilities({ closePlayer }: { closePlayer: () => void }): React.JSX.Elem
         size="icon-round"
         aria-label="Close player"
         onClick={closePlayer}
+        className="hover:text-red-500"
       >
         <CloseIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
       </Button>

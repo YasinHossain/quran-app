@@ -39,7 +39,7 @@ export const TransportControls = memo(function TransportControls({
         aria-label={isPlaying ? 'Pause' : 'Play'}
         onClick={togglePlay}
         disabled={!interactable}
-        className="h-10 w-10"
+        className="h-10 w-10 rounded-full"
       >
         {isPlaying ? (
           <PauseIcon className={iconClasses.touch} />

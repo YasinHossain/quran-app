@@ -41,7 +41,7 @@ export const VolumeControl = memo(function VolumeControl(): React.JSX.Element {
           }}
           aria-label="Volume"
         >
-          <Slider.Track className="h-0.5 rounded-full relative w-full grow bg-surface group-hover:bg-gray-200 dark:group-hover:bg-slate-700">
+          <Slider.Track className="h-0.5 rounded-full relative w-full grow bg-gray-200 dark:bg-slate-700">
             <Slider.Range className="h-full rounded-full absolute bg-accent" />
           </Slider.Track>
           <Slider.Thumb className="block h-3 w-3 rounded-full focus:outline-none ring-2 bg-background ring-accent" />

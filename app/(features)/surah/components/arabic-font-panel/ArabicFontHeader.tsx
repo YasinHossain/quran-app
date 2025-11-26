@@ -30,7 +30,7 @@ export function ArabicFontHeader({ onClose, onReset }: ArabicFontHeaderProps): R
       </h2>
       <button
         onClick={onReset}
-        className="p-2 rounded-full focus-visible:outline-none transition-colors text-foreground hover:bg-gray-200 dark:hover:bg-slate-700"
+        className="p-2 rounded-full focus-visible:outline-none transition-colors text-foreground hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent"
         title="Reset to Default"
       >
         <ResetIcon size={20} />

@@ -45,9 +45,9 @@ export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProp
             aria-label="Toggle Theme"
           >
             {theme === 'dark' ? (
-              <SunIcon className="w-5 h-5 text-accent" />
+              <SunIcon className="w-5 h-5 text-foreground" />
             ) : (
-              <MoonIcon className="w-5 h-5 text-accent" />
+              <MoonIcon className="w-5 h-5 text-foreground" />
             )}
           </button>
         </nav>

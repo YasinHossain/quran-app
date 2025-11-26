@@ -42,9 +42,9 @@ export const HeaderActions = memo(function HeaderActions(): ReactElement {
         aria-label="Toggle theme"
       >
         {theme === 'dark' ? (
-          <IconSun size={18} className="text-accent" />
+          <IconSun size={18} className="text-foreground" />
         ) : (
-          <IconMoon size={18} className="text-accent" />
+          <IconMoon size={18} className="text-foreground" />
         )}
       </button>
     </div>

@@ -54,12 +54,7 @@ export function SpeedControl(): React.JSX.Element {
       <Popover.Trigger asChild>
         <button
           ref={triggerRef}
-          onBlur={(e) => {
-            if (!contentRef.current?.contains(e.relatedTarget as Node)) {
-              setOpen(false);
-            }
-          }}
-          className="h-9 w-14 grid place-items-center rounded-full text-xs font-bold transition focus:outline-none focus:ring-2 text-foreground focus:ring-accent/35 hover:bg-gray-200 dark:hover:bg-slate-700"
+          className="h-9 w-14 grid place-items-center rounded-full text-xs font-bold transition focus:outline-none text-foreground hover:bg-gray-200 dark:hover:bg-slate-700"
         >
           {playbackRate}x
         </button>
@@ -70,9 +65,6 @@ export function SpeedControl(): React.JSX.Element {
         align="center"
         sideOffset={8}
         className="w-28 rounded-lg shadow-lg border p-1 bg-surface border-surface"
-        onFocusOutside={() => setOpen(false)}
-        onEscapeKeyDown={() => setOpen(false)}
-        onInteractOutside={() => setOpen(false)}
       >
         {speedOptions.map((speed) => (
           <SpeedOptionButton

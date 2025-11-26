@@ -6,24 +6,21 @@ import { useAudioPlayer } from './useAudioPlayer';
 
 import type { Track } from '@/app/shared/player/types';
 
-const DEFAULT_COVER =
-  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96'><rect width='100%' height='100%' rx='12' ry='12' fill='%23e5e7eb'/><text x='50%' y='52%' dominant-baseline='middle' text-anchor='middle' font-family='Inter, system-ui, sans-serif' font-size='12' fill='%239ca3af'>No cover</text></svg>";
+
 
 interface TrackMeta {
   title: string;
   artist: string;
-  cover: string;
   interactable: boolean;
 }
 
 function getTrackMeta(track?: Track | null): TrackMeta {
   if (!track) {
-    return { title: 'No track selected', artist: '', cover: DEFAULT_COVER, interactable: false };
+    return { title: 'No track selected', artist: '', interactable: false };
   }
   return {
     title: track.title ?? 'No track selected',
     artist: track.artist ?? '',
-    cover: track.coverUrl || DEFAULT_COVER,
     interactable: Boolean(track.src),
   };
 }
@@ -47,7 +44,6 @@ export interface TrackTimingReturn {
   interactable: boolean;
   title: string;
   artist: string;
-  cover: string;
 }
 
 export function useTrackTiming({
@@ -84,7 +80,7 @@ export function useTrackTiming({
   }, [volume, playbackRate, setVolume, setPlaybackRate]);
   const elapsed = useMemo(() => formatTime(current), [current]);
   const total = useMemo(() => formatTime(duration || 0), [duration]);
-  const { title, artist, cover, interactable } = useMemo(() => getTrackMeta(track), [track]);
+  const { title, artist, interactable } = useMemo(() => getTrackMeta(track), [track]);
   return {
     audioRef,
     play,
@@ -97,6 +93,5 @@ export function useTrackTiming({
     interactable,
     title,
     artist,
-    cover,
   };
 }

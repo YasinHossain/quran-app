@@ -77,9 +77,9 @@ const useSurahIntroDetails = (chapterId?: number | null): SurahIntroDetails | nu
 const SurahMetadata = ({
   revelationPlace,
 }: Pick<SurahIntroDetails, 'revelationPlace'>): React.JSX.Element => (
-  <div className="flex items-center justify-start pl-4 sm:pl-12">
+  <div className="flex items-center justify-start pl-2 sm:pl-12">
     <span
-      className="text-2xl text-foreground sm:text-3xl"
+      className="text-xl text-foreground sm:text-3xl"
       style={{
         fontFamily: "'UthmanicHafs1Ver18', serif",
         lineHeight: 1.4,
@@ -91,11 +91,11 @@ const SurahMetadata = ({
 );
 
 const SurahIntroBismillah = ({ showBismillah }: { showBismillah: boolean }): React.JSX.Element => (
-  <div className="flex items-center justify-center">
+  <div className="flex w-full items-center justify-end sm:justify-center">
     {showBismillah ? (
       <p
         dir="rtl"
-        className="text-center text-2xl leading-none text-foreground sm:text-4xl"
+        className="text-right text-xl leading-none text-foreground sm:text-center sm:text-4xl"
         style={{
           fontFamily: "'UthmanicHafs1Ver18', serif",
         }}
@@ -108,7 +108,7 @@ const SurahIntroBismillah = ({ showBismillah }: { showBismillah: boolean }): Rea
 
 const SurahTitleBlock = ({ chapterId }: { chapterId: number }): React.JSX.Element => (
   <div className="flex items-center justify-end">
-    <div className="relative h-16 w-40 sm:h-20 sm:w-60">
+    <div className="relative h-12 w-28 sm:h-20 sm:w-60">
       <SurahNameGraphic chapterId={chapterId} />
     </div>
   </div>
@@ -125,12 +125,18 @@ export const SurahCalligraphyIntro = ({
 
   return (
     <div className="mx-auto mb-8 -mt-2 w-full max-w-7xl px-4 sm:-mt-3 sm:px-6">
-      <div className="grid w-full grid-cols-3 items-center border-b border-border/40 pt-5 pb-8 sm:pt-6 sm:pb-9">
-        <SurahMetadata
-          revelationPlace={introDetails.revelationPlace}
-        />
-        <SurahIntroBismillah showBismillah={introDetails.showBismillah} />
-        <SurahTitleBlock chapterId={introDetails.chapterId} />
+      <div className="flex w-full flex-wrap items-center justify-between border-b border-border/40 pt-5 pb-8 sm:grid sm:grid-cols-3 sm:pt-6 sm:pb-9">
+        <div className="order-1 sm:order-none sm:col-span-1">
+          <SurahMetadata revelationPlace={introDetails.revelationPlace} />
+        </div>
+
+        <div className="order-3 mt-2 w-full sm:order-none sm:col-span-1 sm:mt-0 sm:w-auto">
+          <SurahIntroBismillah showBismillah={introDetails.showBismillah} />
+        </div>
+
+        <div className="order-2 sm:order-none sm:col-span-1">
+          <SurahTitleBlock chapterId={introDetails.chapterId} />
+        </div>
       </div>
     </div>
   );
