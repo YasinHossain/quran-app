@@ -51,7 +51,7 @@ describe('ThreeColumnWorkspace', () => {
       .closest('[data-slot="workspace-right"]') as HTMLElement;
 
     expect(leftContainer).toHaveClass('lg:w-reader-sidebar-left');
-    expect(rightContainer).toHaveClass('xl:w-reader-sidebar-right');
+    expect(rightContainer).toHaveClass('2xl:w-reader-sidebar-right');
   });
 });
 

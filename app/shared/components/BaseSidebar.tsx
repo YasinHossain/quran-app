@@ -15,7 +15,7 @@ interface BaseSidebarProps {
   children: React.ReactNode;
   className?: string;
   showOverlay?: boolean;
-  desktopBreakpoint?: 'lg' | 'xl';
+  desktopBreakpoint?: 'lg' | 'xl' | '2xl';
   'aria-label'?: string;
 }
 

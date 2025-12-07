@@ -9,7 +9,7 @@ interface SidebarOverlayProps {
   onClose: () => void;
   position: 'left' | 'right';
   showOverlay: boolean;
-  desktopBreakpoint?: 'lg' | 'xl';
+  desktopBreakpoint?: 'lg' | 'xl' | '2xl';
 }
 
 export const SidebarOverlay = ({
@@ -24,7 +24,8 @@ export const SidebarOverlay = ({
     return null;
   }
 
-  const hiddenFromBreakpoint = desktopBreakpoint === 'xl' ? 'xl:hidden' : 'lg:hidden';
+  const hiddenFromBreakpoint =
+    desktopBreakpoint === 'xl' ? 'xl:hidden' : desktopBreakpoint === '2xl' ? '2xl:hidden' : 'lg:hidden';
 
   return (
     <div

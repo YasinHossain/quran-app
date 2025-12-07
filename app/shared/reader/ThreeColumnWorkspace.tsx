@@ -101,8 +101,8 @@ export function ThreeColumnWorkspace({
         {right ? (
           <aside
             className={cn(
-              'hidden xl:flex xl:w-reader-sidebar-right xl:flex-shrink-0 xl:flex-col xl:gap-4',
-              'xl:relative xl:z-10',
+              'hidden 2xl:flex 2xl:w-reader-sidebar-right 2xl:flex-shrink-0 2xl:flex-col 2xl:gap-4',
+              '2xl:relative 2xl:z-10',
               'workspace-sidebar-right',
               'transition-all duration-300',
               sidebarMarginClass,

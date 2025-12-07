@@ -39,7 +39,7 @@ export const WorkspaceReaderLayout = ({
       {mobileLeft}
     </div>
 
-    <div className="xl:hidden">{mobileRight}</div>
+    <div className="2xl:hidden">{mobileRight}</div>
 
     <ThreeColumnWorkspace
       left={desktopLeft}

@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils/cn';
 
-type DesktopBreakpoint = 'lg' | 'xl';
+type DesktopBreakpoint = 'lg' | 'xl' | '2xl';
 
 interface UseSidebarPositioningOptions {
   position: 'left' | 'right';
@@ -19,15 +19,23 @@ export const useSidebarPositioning = ({
   isHeaderHidden,
   desktopBreakpoint = 'lg',
 }: UseSidebarPositioningOptions): UseSidebarPositioningReturn => {
-  const breakpointClass = desktopBreakpoint === 'lg' ? 'lg' : 'xl';
+  const breakpointClass = desktopBreakpoint === 'lg' ? 'lg' : desktopBreakpoint === 'xl' ? 'xl' : '2xl';
   const getPositionClasses = (): string => {
     const baseClasses = cn(
       // Use !fixed to avoid being overridden by any accidental 'relative'
       '!fixed w-full bg-background transition-all duration-300 ease-in-out',
       'sm:w-80',
       position === 'left'
-        ? ['lg:w-reader-sidebar-left', desktopBreakpoint === 'xl' && 'xl:w-reader-sidebar-left']
-        : ['lg:w-reader-sidebar-right', desktopBreakpoint === 'xl' && 'xl:w-reader-sidebar-right']
+        ? [
+            'lg:w-reader-sidebar-left',
+            desktopBreakpoint === 'xl' && 'xl:w-reader-sidebar-left',
+            desktopBreakpoint === '2xl' && '2xl:w-reader-sidebar-left',
+          ]
+        : [
+            'lg:w-reader-sidebar-right',
+            desktopBreakpoint === 'xl' && 'xl:w-reader-sidebar-right',
+            desktopBreakpoint === '2xl' && '2xl:w-reader-sidebar-right',
+          ]
     );
     const headerAwareClasses = isHeaderHidden
       ? 'top-0 h-screen'
@@ -35,11 +43,17 @@ export const useSidebarPositioning = ({
           'top-0 h-screen',
           breakpointClass === 'lg'
             ? 'lg:top-reader-header lg:h-[calc(100vh-var(--reader-header-height))]'
-            : 'xl:top-reader-header xl:h-[calc(100vh-var(--reader-header-height))]'
+            : breakpointClass === 'xl'
+              ? 'xl:top-reader-header xl:h-[calc(100vh-var(--reader-header-height))]'
+              : '2xl:top-reader-header 2xl:h-[calc(100vh-var(--reader-header-height))]'
         );
 
     const shadowClasses =
-      breakpointClass === 'lg' ? 'shadow-modal lg:shadow-none' : 'shadow-modal xl:shadow-none';
+      breakpointClass === 'lg'
+        ? 'shadow-modal lg:shadow-none'
+        : breakpointClass === 'xl'
+          ? 'shadow-modal xl:shadow-none'
+          : 'shadow-modal 2xl:shadow-none';
     const panelZIndex = 'z-[120]';
     const pinnedTranslateClass = `${breakpointClass}:translate-x-0`;
 
@@ -47,7 +61,7 @@ export const useSidebarPositioning = ({
       return cn(
         baseClasses,
         'left-0',
-        breakpointClass === 'lg' ? 'lg:left-16' : 'xl:left-16',
+        breakpointClass === 'lg' ? 'lg:left-16' : breakpointClass === 'xl' ? 'xl:left-16' : '2xl:left-16',
         shadowClasses,
         headerAwareClasses,
         panelZIndex,

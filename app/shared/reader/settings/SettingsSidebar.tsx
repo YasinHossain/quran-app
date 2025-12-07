@@ -24,7 +24,7 @@ export const SettingsSidebar = (props: SettingsSidebarProps): ReactElement => {
       isOpen={isSettingsOpen}
       onClose={handleCloseSidebar}
       position="right"
-      desktopBreakpoint="xl"
+      desktopBreakpoint="2xl"
       aria-label="Settings panel"
     >
       <SettingsSidebarContent
