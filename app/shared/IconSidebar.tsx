@@ -27,7 +27,7 @@ const DesktopNavigation = memo(function DesktopNavigation({
 }) {
   return (
     <nav
-      className="fixed left-0 top-reader-header bottom-0 hidden w-16 bg-background z-[5] lg:block"
+      className="fixed left-0 top-reader-header bottom-0 hidden w-16 bg-background z-[5] xl:block"
       aria-label="Primary navigation"
     >
       <div className="h-full flex flex-col items-center justify-center space-y-4">
@@ -62,7 +62,7 @@ const MobileNavigation = memo(function MobileNavigation({
   return (
     <nav
       className={cn(
-        'lg:hidden fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out',
+        'xl:hidden fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out',
         'backdrop-blur-lg bg-surface/8 backdrop-saturate-150',
         'shadow-[0_-10px_28px_-18px_rgb(var(--color-foreground)/0.14)]',
         isHidden ? 'translate-y-full' : 'translate-y-0'

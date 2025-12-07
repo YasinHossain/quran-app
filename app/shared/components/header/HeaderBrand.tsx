@@ -40,7 +40,7 @@ export const HeaderBrand = memo(function HeaderBrand(): ReactElement {
       {shouldShowMenu && (
         <button
           onClick={handleMobileNavClick}
-          className="btn-touch p-2.5 rounded-xl hover:bg-muted/60 transition-all duration-200 active:scale-95 mr-2 lg:hidden flex items-center justify-center"
+          className="btn-touch p-2.5 rounded-xl hover:bg-muted/60 transition-all duration-200 active:scale-95 mr-2 xl:hidden flex items-center justify-center"
           aria-label="Open navigation"
         >
           <IconMenu2 size={18} className="text-muted" />

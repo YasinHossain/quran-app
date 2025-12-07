@@ -51,8 +51,8 @@ export function WorkspaceMain({
         'relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden bg-background text-foreground min-h-0',
         topPaddingClass,
         'pb-safe',
-        shouldReserveLeft && 'lg:pl-reader-sidebar-left',
-        shouldReserveRight && 'lg:pr-reader-sidebar-right',
+        shouldReserveLeft && 'xl:pl-reader-sidebar-left',
+        shouldReserveRight && 'xl:pr-reader-sidebar-right',
         className
       )}
     >

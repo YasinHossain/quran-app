@@ -37,6 +37,13 @@ export const BaseSidebar = ({
     desktopBreakpoint,
   });
 
+  const desktopOverflowClass =
+    desktopBreakpoint === 'lg'
+      ? 'lg:overflow-visible lg:pb-0'
+      : desktopBreakpoint === 'xl'
+        ? 'xl:overflow-visible xl:pb-0'
+        : '2xl:overflow-visible 2xl:pb-0';
+
   return (
     <>
       <SidebarOverlay
@@ -51,7 +58,8 @@ export const BaseSidebar = ({
         className={cn(
           getPositionClasses(),
           // Ensure we don't override fixed positioning from getPositionClasses
-          'text-foreground flex flex-col overflow-hidden pb-[env(safe-area-inset-bottom,0px)] touch-pan-y lg:overflow-visible lg:pb-0',
+          'text-foreground flex flex-col overflow-hidden pb-[env(safe-area-inset-bottom,0px)] touch-pan-y',
+          desktopOverflowClass,
           className
         )}
         role="dialog"

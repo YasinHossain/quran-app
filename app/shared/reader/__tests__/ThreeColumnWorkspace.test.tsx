@@ -50,7 +50,7 @@ describe('ThreeColumnWorkspace', () => {
       .getByText('Right sidebar')
       .closest('[data-slot="workspace-right"]') as HTMLElement;
 
-    expect(leftContainer).toHaveClass('lg:w-reader-sidebar-left');
+    expect(leftContainer).toHaveClass('xl:w-reader-sidebar-left');
     expect(rightContainer).toHaveClass('2xl:w-reader-sidebar-right');
   });
 });
@@ -72,8 +72,8 @@ describe('WorkspaceMain spacing defaults', () => {
     const main = screen
       .getByText('Content area')
       .closest('[data-slot="workspace-main"]') as HTMLElement;
-    expect(main).not.toHaveClass('lg:pl-reader-sidebar-left');
-    expect(main).not.toHaveClass('lg:pr-reader-sidebar-right');
+    expect(main).not.toHaveClass('xl:pl-reader-sidebar-left');
+    expect(main).not.toHaveClass('xl:pr-reader-sidebar-right');
   });
 });
 
@@ -96,8 +96,8 @@ describe('WorkspaceMain spacing overrides', () => {
     const main = screen
       .getByText('Manual spacing')
       .closest('[data-slot="workspace-main"]') as HTMLElement;
-    expect(main).toHaveClass('lg:pl-reader-sidebar-left');
-    expect(main).toHaveClass('lg:pr-reader-sidebar-right');
+    expect(main).toHaveClass('xl:pl-reader-sidebar-left');
+    expect(main).toHaveClass('xl:pr-reader-sidebar-right');
   });
 
   it('avoids double-reserving space when matching sidebars are present', () => {
@@ -116,8 +116,8 @@ describe('WorkspaceMain spacing overrides', () => {
     const main = screen
       .getByText('Balanced layout')
       .closest('[data-slot="workspace-main"]') as HTMLElement;
-    expect(main).not.toHaveClass('lg:pl-reader-sidebar-left');
-    expect(main).not.toHaveClass('lg:pr-reader-sidebar-right');
+    expect(main).not.toHaveClass('xl:pl-reader-sidebar-left');
+    expect(main).not.toHaveClass('xl:pr-reader-sidebar-right');
   });
 });
 

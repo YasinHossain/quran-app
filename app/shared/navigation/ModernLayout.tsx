@@ -45,7 +45,7 @@ export const ModernLayout = ({ children, isNavHidden = false }: ModernLayoutProp
   return (
     <>
       {/* Main content with bottom padding for navigation */}
-      <SwipeContainer className="min-h-[100dvh] transition-all duration-300 lg:pb-0">
+      <SwipeContainer className="min-h-[100dvh] transition-all duration-300 xl:pb-0">
         {children}
       </SwipeContainer>
 
