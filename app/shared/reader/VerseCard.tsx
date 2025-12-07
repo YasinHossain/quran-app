@@ -79,6 +79,11 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
               <div className="space-y-4">
                 {verse.translations.map((translation: Translation) => (
                   <div key={translation.resource_id}>
+                    {translation.resource_name && (
+                      <p className="mb-2 text-xs font-normal uppercase tracking-wider text-muted-foreground">
+                        {translation.resource_name}
+                      </p>
+                    )}
                     <p
                       className="text-left leading-relaxed text-foreground"
                       style={{ fontSize: `${fontSize}px` }}

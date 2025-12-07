@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useInfiniteVerseLoader } from '@/app/(features)/surah/hooks/useInfiniteVerseLoader';
 import { useTranslationOptions } from '@/app/(features)/surah/hooks/useTranslationOptions';
 import { useSettings } from '@/app/providers/SettingsContext';
@@ -107,7 +108,29 @@ export function useVerseListing({
   const loaderState =
     id !== undefined ? { ...EMPTY_LOADER_STATE, ...infiniteLoaderState } : EMPTY_LOADER_STATE;
 
-  const verses = resolveVerses(initialVerses, loaderState.verses);
+  const rawVerses = resolveVerses(initialVerses, loaderState.verses);
+
+  const verses = useMemo(() => {
+    if (!translation.translationOptions.length) {
+      return rawVerses;
+    }
+    const resourceMap = new Map(translation.translationOptions.map((t) => [t.id, t.name]));
+    return rawVerses.map((verse) => {
+      if (!verse.translations) {
+        return verse;
+      }
+      return {
+        ...verse,
+        translations: verse.translations.map((t) => {
+          const resourceName = resourceMap.get(t.resource_id) ?? t.resource_name;
+          return {
+            ...t,
+            ...(resourceName ? { resource_name: resourceName } : {}),
+          };
+        }),
+      };
+    });
+  }, [rawVerses, translation.translationOptions]);
   const navigation = useNavigationHandlers({
     verses,
     activeVerse: audio.activeVerse,

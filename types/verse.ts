@@ -5,6 +5,7 @@ export interface Translation {
   id?: number;
   resource_id: number;
   text: string;
+  resource_name?: string;
 }
 
 /**
