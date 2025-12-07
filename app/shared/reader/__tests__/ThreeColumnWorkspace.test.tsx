@@ -23,10 +23,10 @@ describe('ThreeColumnWorkspace', () => {
       .getByText('Center column content')
       .closest('[data-slot="workspace-main"]') as HTMLElement;
 
-    expect(workspaceRoot).toHaveClass(
+    expect(workspaceRoot).not.toHaveClass(
       'pt-[calc(var(--reader-header-height)+var(--reader-safe-area-top))]'
     );
-    expect(centerContainer).not.toHaveClass(
+    expect(centerContainer).toHaveClass(
       'pt-[calc(var(--reader-header-height)+var(--reader-safe-area-top))]'
     );
   });
@@ -51,7 +51,7 @@ describe('ThreeColumnWorkspace', () => {
       .closest('[data-slot="workspace-right"]') as HTMLElement;
 
     expect(leftContainer).toHaveClass('lg:w-reader-sidebar-left');
-    expect(rightContainer).toHaveClass('lg:w-reader-sidebar-right');
+    expect(rightContainer).toHaveClass('xl:w-reader-sidebar-right');
   });
 });
 
@@ -126,7 +126,7 @@ describe('WorkspaceMain header awareness', () => {
     useHeaderVisibilityMock.mockReturnValue({ isHidden: false });
   });
 
-  it('reduces top padding when the header is hidden', () => {
+  it('keeps main padding stable even when the header is hidden', () => {
     useHeaderVisibilityMock.mockReturnValueOnce({ isHidden: true });
 
     render(<ThreeColumnWorkspace center={<WorkspaceMain>Scroll content</WorkspaceMain>} />);
@@ -136,7 +136,7 @@ describe('WorkspaceMain header awareness', () => {
       .getByText('Scroll content')
       .closest('[data-slot="workspace-main"]') as HTMLElement;
 
-    expect(workspaceRoot).toHaveClass('pt-[calc(var(--reader-safe-area-top))]');
-    expect(main).not.toHaveClass('pt-[calc(var(--reader-safe-area-top))]');
+    expect(workspaceRoot).not.toHaveClass('pt-[calc(var(--reader-safe-area-top))]');
+    expect(main).toHaveClass('pt-[calc(var(--reader-header-height)+var(--reader-safe-area-top))]');
   });
 });
