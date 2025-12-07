@@ -16,9 +16,9 @@ export const typography = {
 
   // Arabic text
   arabic: {
-    font: 'font-amiri',
-    size: 'text-xl',
-    weight: 'font-bold',
+    font: "font-['UthmanicHafs1Ver18']",
+    size: 'text-2xl',
+    weight: 'font-normal',
   },
 
   // Size variants

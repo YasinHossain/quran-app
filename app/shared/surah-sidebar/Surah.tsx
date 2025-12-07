@@ -53,7 +53,7 @@ export const Surah = ({
               content={{
                 id: chapter.id,
                 title: chapter.name_simple,
-                subtitle: formatSurahSubtitle(chapter),
+                subtitle: `${chapter.verses_count} verses`,
                 arabic: chapter.name_arabic,
               }}
               onNavigate={() => {
