@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
+import { cn } from '@/lib/utils/cn';
 
 const SurahNameGraphic = ({ chapterId }: { chapterId: number }): React.JSX.Element | null => {
   const [svgContent, setSvgContent] = React.useState<string | null>(null);
@@ -114,17 +115,26 @@ const SurahTitleBlock = ({ chapterId }: { chapterId: number }): React.JSX.Elemen
   </div>
 );
 
+
+
 export const SurahCalligraphyIntro = ({
   chapterId,
+  className,
 }: {
   chapterId?: number | null | undefined;
+  className?: string;
 }): React.JSX.Element | null => {
   const introDetails = useSurahIntroDetails(chapterId);
 
   if (!introDetails) return null;
 
   return (
-    <div className="mx-auto mb-4 -mt-4 w-full max-w-7xl px-4 sm:-mt-3 sm:px-6">
+    <div
+      className={cn(
+        'mx-auto mb-4 -mt-4 w-full max-w-7xl sm:-mt-3',
+        className
+      )}
+    >
       <div className="flex w-full flex-col items-center gap-4 border-b border-border/40 pt-0 pb-5 sm:flex-row sm:justify-evenly sm:gap-0 sm:pt-6 sm:pb-9">
         <div className="order-3 sm:order-1 sm:w-auto">
           <SurahMetadata revelationPlace={introDetails.revelationPlace} />

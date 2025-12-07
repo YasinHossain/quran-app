@@ -31,9 +31,13 @@ export function MushafMain({
   });
 
   return (
-    <div className="w-full pb-20 pt-2">
+    <div className="w-full pb-20 pt-0">
       <div className="w-full space-y-10">
-        {state.shouldRenderSurahIntro ? <SurahCalligraphyIntro chapterId={chapterId} /> : null}
+        {state.shouldRenderSurahIntro ? (
+          <div className="px-4 sm:px-6 lg:px-8">
+            <SurahCalligraphyIntro chapterId={chapterId} />
+          </div>
+        ) : null}
 
         <MushafPageList
           pages={pages}
