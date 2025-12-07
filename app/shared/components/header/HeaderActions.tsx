@@ -29,7 +29,7 @@ export const HeaderActions = memo(function HeaderActions(): ReactElement {
       {/* Settings button - only show on mobile/tablet when settings sidebar is hidden */}
       <button
         onClick={openSettings}
-        className="btn-touch p-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-all duration-200 active:scale-95 lg:hidden flex items-center justify-center"
+        className="btn-touch p-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-all duration-200 active:scale-95 xl:hidden flex items-center justify-center"
         aria-label="Open settings"
       >
         <IconSettings size={18} className="text-muted" />

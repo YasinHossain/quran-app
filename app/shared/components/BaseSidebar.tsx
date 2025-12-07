@@ -15,6 +15,7 @@ interface BaseSidebarProps {
   children: React.ReactNode;
   className?: string;
   showOverlay?: boolean;
+  desktopBreakpoint?: 'lg' | 'xl';
   'aria-label'?: string;
 }
 
@@ -25,6 +26,7 @@ export const BaseSidebar = ({
   children,
   className,
   showOverlay = true,
+  desktopBreakpoint = 'lg',
   'aria-label': ariaLabel = 'Sidebar',
 }: BaseSidebarProps): React.JSX.Element => {
   const { isHidden } = useHeaderVisibility();
@@ -32,6 +34,7 @@ export const BaseSidebar = ({
     position,
     isOpen,
     isHeaderHidden: isHidden,
+    desktopBreakpoint,
   });
 
   return (
@@ -41,6 +44,7 @@ export const BaseSidebar = ({
         onClose={onClose}
         position={position}
         showOverlay={showOverlay}
+        desktopBreakpoint={desktopBreakpoint}
       />
 
       <aside
