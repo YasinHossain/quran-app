@@ -34,7 +34,9 @@ export function BookmarkFolderMobileSidebar({
       isOpen={isOpen}
       onClose={onClose}
       position="left"
+      desktopBreakpoint="xl"
       aria-label="Folder details"
+      className="xl:hidden"
     >
       <BookmarkFolderSidebarContent
         bookmarks={bookmarks}

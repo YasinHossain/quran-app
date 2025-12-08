@@ -18,6 +18,7 @@ interface BookmarksSidebarProps {
   showNavigation?: boolean;
   isOpen?: boolean;
   onClose?: (() => void) | undefined;
+  className?: string;
 }
 
 export const BookmarksSidebar = ({
@@ -30,6 +31,7 @@ export const BookmarksSidebar = ({
   showNavigation,
   isOpen,
   onClose,
+  className,
 }: BookmarksSidebarProps): React.JSX.Element => {
   const contentProps = buildBookmarksContentProps({
     activeSection,
@@ -53,7 +55,9 @@ export const BookmarksSidebar = ({
       isOpen={isOpen}
       onClose={onClose}
       position="left"
+      desktopBreakpoint="xl"
       aria-label="Bookmarks navigation"
+      {...(className ? { className } : {})}
     >
       {renderedContent}
     </BaseSidebar>

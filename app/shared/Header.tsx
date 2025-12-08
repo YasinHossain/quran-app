@@ -22,7 +22,7 @@ export const Header = memo(function Header(): React.JSX.Element {
       style={{ paddingTop: 'env(safe-area-inset-top)' }}
     >
       {/* Content container centered within available height */}
-      <div className="flex items-center justify-between gap-2 sm:gap-3 w-full h-14 sm:h-16 px-4 sm:px-6 lg:px-8">
+      <div className="flex items-center justify-between gap-2 sm:gap-3 w-full h-14 sm:h-16 px-4 sm:px-6 xl:px-8">
         <HeaderBrand />
         <HeaderSearch />
         <HeaderActions />

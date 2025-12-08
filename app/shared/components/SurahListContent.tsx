@@ -44,9 +44,10 @@ export const SurahListContent = memo(function SurahListContent({
       <SidebarHeader
         title="Quran"
         titleClassName="text-mobile-lg font-semibold text-content-primary"
-        className="shadow-none"
+        className="shadow-none xl:hidden"
         showCloseButton
         {...(onClose ? { onClose } : {})}
+        forceVisible
       />
       <div className="flex-1 overflow-hidden flex flex-col">
         <SurahTabs

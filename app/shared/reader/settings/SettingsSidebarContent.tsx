@@ -191,9 +191,10 @@ export function SettingsSidebarContent({
       <SidebarHeader
         title={title}
         titleClassName="text-mobile-lg font-semibold text-content-primary"
-        className="shadow-none"
+        className="shadow-none 2xl:hidden"
         showCloseButton={shouldShowCloseButton}
         {...(shouldShowCloseButton && onClose ? { onClose } : {})}
+        forceVisible
       />
       <div className="flex-1 overflow-hidden">
         <SettingsContentWrapper {...contentWrapperProps} />

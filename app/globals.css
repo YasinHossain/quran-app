@@ -267,7 +267,7 @@
     box-shadow: none;
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: 1280px) {
     .workspace-sidebar-left {
       box-shadow:
         -10px 0 28px -18px rgb(var(--color-foreground) / 0.14),
@@ -352,21 +352,6 @@
 
   .touch-manipulation {
     touch-action: manipulation;
-  }
-
-  .touch-callout-none {
-    -webkit-touch-callout: none;
-  }
-
-  /* Layout primitives: shared, consistent responsive building blocks */
-  .app-container {
-    /* Standard page container: width bound + unified horizontal padding */
-    @apply mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-8;
-  }
-
-  .content-narrow {
-    /* For text-heavy or focused content sections */
-    @apply mx-auto w-full max-w-3xl;
   }
 
   .stack {

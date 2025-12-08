@@ -58,7 +58,7 @@ export function WorkspaceMain({
     >
       <div
         className={cn(
-          'flex flex-1 flex-col gap-6 px-4 pb-16 pt-6 sm:px-6 sm:pt-8 lg:px-8',
+          'flex flex-1 flex-col gap-6 px-4 pb-16 pt-6 sm:px-6 sm:pt-8 xl:px-8',
           contentClassName
         )}
       >

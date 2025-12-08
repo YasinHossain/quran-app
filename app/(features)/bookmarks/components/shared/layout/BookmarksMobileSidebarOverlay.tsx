@@ -38,6 +38,7 @@ export const BookmarksMobileSidebarOverlay = ({
     {...(childrenContainerClassName !== undefined ? { childrenContainerClassName } : {})}
     {...(childrenContentClassName !== undefined ? { childrenContentClassName } : {})}
     {...(showNavigation !== undefined ? { showNavigation } : {})}
+    className="xl:hidden"
   >
     {children}
   </BookmarksSidebar>
