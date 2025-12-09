@@ -44,7 +44,7 @@ export const TranslationSettings = ({
       icon={<TranslationIcon size={20} className="text-accent" />}
       isLast={true}
       isOpen={isOpen}
-      onToggle={onToggle || (() => {})}
+      onToggle={onToggle || (() => { })}
     >
       <ReadingSettingsContent
         t={t}
@@ -71,15 +71,19 @@ function ToggleRow({
   onToggle: () => void;
 }): React.JSX.Element {
   return (
-    <div className="flex items-center justify-between pt-2">
+    <div className="flex items-center justify-between">
       <span className="text-sm text-foreground">{label}</span>
       <button
         onClick={onToggle}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full ${active ? 'bg-accent' : 'bg-muted'}`}
+        className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 ${active
+            ? 'bg-emerald-500 shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]'
+            : 'bg-gray-200 dark:bg-gray-700 shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]'
+          }`}
         aria-pressed={active}
       >
         <span
-          className={`inline-block h-4 w-4 transform rounded-full bg-surface transition ${active ? 'translate-x-6' : 'translate-x-1'}`}
+          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-[0_2px_4px_rgba(0,0,0,0.2)] ring-0 transition-transform duration-300 ${active ? 'translate-x-6' : 'translate-x-1'
+            }`}
         />
       </button>
     </div>

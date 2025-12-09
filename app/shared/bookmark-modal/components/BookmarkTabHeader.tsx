@@ -4,14 +4,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { memo } from 'react';
 
 import { CreateFolderForm } from '@/app/shared/bookmark-modal/CreateFolderForm';
-import { FolderSearch } from '@/app/shared/bookmark-modal/FolderSearch';
 import { PlusIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 
 interface BookmarkTabHeaderProps {
-  searchQuery: string;
-  onSearchChange: (query: string) => void;
   isCreatingFolder: boolean;
   newFolderName: string;
   onNewFolderNameChange: (name: string) => void;
@@ -20,8 +17,6 @@ interface BookmarkTabHeaderProps {
 }
 
 export const BookmarkTabHeader = memo(function BookmarkTabHeader({
-  searchQuery,
-  onSearchChange,
   isCreatingFolder,
   newFolderName,
   onNewFolderNameChange,
@@ -29,13 +24,7 @@ export const BookmarkTabHeader = memo(function BookmarkTabHeader({
   onCreateFolder,
 }: BookmarkTabHeaderProps): React.JSX.Element {
   return (
-    <div className="px-6 py-4 space-y-4 border-b border-border">
-      <FolderSearch
-        searchQuery={searchQuery}
-        onSearchChange={onSearchChange}
-        placeholder="Search folders..."
-      />
-
+    <div className="px-6 py-4 border-b border-border">
       <AnimatePresence mode="wait">
         {isCreatingFolder ? (
           <CreateFolderForm

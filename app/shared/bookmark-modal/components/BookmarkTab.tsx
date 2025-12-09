@@ -25,19 +25,15 @@ export const BookmarkTab = memo(function BookmarkTab({
   };
 
   const {
-    searchQuery,
-    setSearchQuery,
-    filteredFolders,
     handleFolderSelect,
     handleCreateFolder,
     findBookmark,
+    folders,
   } = useBookmarkTab(bookmarkTabParams);
 
   return (
     <div className="flex-1 flex flex-col min-h-0">
       <BookmarkTabHeader
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
         isCreatingFolder={isCreatingFolder}
         newFolderName={newFolderName}
         onNewFolderNameChange={onNewFolderNameChange}
@@ -46,15 +42,11 @@ export const BookmarkTab = memo(function BookmarkTab({
       />
       <div className="flex-1 overflow-y-auto p-6 min-h-0">
         <FolderList
-          folders={filteredFolders}
+          folders={folders}
           verseId={verseId}
           onFolderSelect={handleFolderSelect}
           findBookmark={findBookmark}
-          emptyMessage={
-            searchQuery
-              ? 'No folders match your search'
-              : 'No folders yet. Create one to get started!'
-          }
+          emptyMessage="No folders yet. Create one to get started!"
         />
       </div>
     </div>
