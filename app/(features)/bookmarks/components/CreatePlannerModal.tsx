@@ -64,7 +64,7 @@ export const CreatePlannerModal = ({
       title=""
       showCloseButton={false}
       closeOnOverlayClick={true}
-      className="max-w-lg px-3 sm:px-4 pt-4 pb-4"
+      className="max-w-lg bg-background px-3 sm:px-4 pt-4 pb-4"
     >
       <CreatePlannerForm
         formData={formData}

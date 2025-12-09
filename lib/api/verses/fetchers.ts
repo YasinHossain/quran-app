@@ -51,6 +51,7 @@ export async function fetchVerses({
       word_fields: 'text_uthmani',
       translations: translationParam,
       fields: 'text_uthmani,audio',
+      translation_fields: 'resource_name',
       per_page: perPage.toString(),
       page: page.toString(),
     },

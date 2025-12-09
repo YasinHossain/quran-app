@@ -1,6 +1,6 @@
 import React, { memo, useId } from 'react';
 
-import { ChevronDownIcon } from './icons';
+import { ChevronRightIcon } from './icons';
 
 interface SelectionBoxProps {
   id?: string;
@@ -41,7 +41,7 @@ export const SelectionBox = memo(function SelectionBox({
         <span id={valueId} className="truncate">
           {value}
         </span>
-        <ChevronDownIcon className="text-muted" aria-hidden="true" focusable="false" />
+        <ChevronRightIcon className="text-muted" aria-hidden="true" focusable="false" />
       </button>
     </div>
   );

@@ -58,6 +58,7 @@ export async function getRandomVerse(
       {
         translations: translationId.toString(),
         fields: 'text_uthmani',
+        translation_fields: 'resource_name',
       },
       'Failed to fetch random verse'
     );
@@ -85,6 +86,7 @@ export async function getVerseById(
       words: 'true',
       word_translation_language: wordLang,
       word_fields: 'text_uthmani',
+      translation_fields: 'resource_name',
     },
     'Failed to fetch verse'
   );
@@ -110,6 +112,7 @@ export async function getVerseByKey(
       words: 'true',
       word_translation_language: wordLang,
       word_fields: 'text_uthmani',
+      translation_fields: 'resource_name',
     },
     'Failed to fetch verse by key'
   );

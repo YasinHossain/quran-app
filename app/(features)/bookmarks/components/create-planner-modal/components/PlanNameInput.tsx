@@ -29,10 +29,10 @@ export const PlanNameInput = ({
           value={planName}
           onChange={(e) => onChange(e.target.value)}
           placeholder="Enter Plan Name"
-          className={`w-full rounded-xl border bg-surface px-4 py-3.5 text-foreground placeholder-muted transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none ${
+          className={`w-full rounded-lg border px-4 pr-12 py-3 text-foreground placeholder:text-muted bg-interactive/60 focus:outline-none transition-colors duration-150 ${
             hasError
-              ? 'border-error focus:border-error focus:ring-4 focus:ring-error/20'
-              : 'border-border focus:border-accent focus:ring-4 focus:ring-accent/10'
+              ? 'border-error focus:border-error focus:ring-2 focus:ring-error/20'
+              : 'border-border focus:border-transparent focus:ring-2 focus:ring-accent'
           }`}
           aria-invalid={hasError}
           aria-describedby={hasError ? errorId : undefined}

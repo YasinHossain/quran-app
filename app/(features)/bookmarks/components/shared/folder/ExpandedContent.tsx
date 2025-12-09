@@ -2,11 +2,13 @@
 
 import React from 'react';
 
+import { useBookmarkVerseActions } from '@/app/(features)/bookmarks/components/BookmarkVerseList.parts';
 import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
+import { ReaderVerseCard } from '@/app/shared/reader';
 import { CloseIcon } from '@/app/shared/icons';
 import { LoadingError } from '@/app/shared/LoadingError';
 import { cn } from '@/lib/utils/cn';
-import { Bookmark } from '@/types';
+import { Bookmark, Verse } from '@/types';
 
 interface ExpandedContentProps {
   isExpanded: boolean;
@@ -50,77 +52,65 @@ const FolderVerseItem = ({
   showDivider?: boolean;
   onRemoveBookmark?: (bookmark: Bookmark) => void;
 }): React.JSX.Element => {
-  const { bookmark: enrichedBookmark, isLoading, error } = useBookmarkVerse(bookmark);
-  const ayahNumber = enrichedBookmark.verseKey?.split(':')[1];
-  const surahName = enrichedBookmark.surahName ?? 'bookmark';
-  const verseLabel = ayahNumber ? `Verse ${ayahNumber}` : 'Verse';
-
-  const baseWrapperClassName = cn(
-    'flex w-full items-center justify-between gap-3 py-3 px-4 transition-colors min-h-[60px]',
-    onSelect && 'hover:bg-gray-200 dark:hover:bg-slate-700 cursor-pointer'
-  );
-
-  const interactiveProps = onSelect
-    ? {
-      role: 'button' as const,
-      tabIndex: 0,
-      onClick: onSelect,
-      onKeyDown: (event: React.KeyboardEvent) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          onSelect();
-        }
-      },
-    }
-    : {};
+  const { bookmark: enrichedBookmark, verse, isLoading, error } = useBookmarkVerse(bookmark);
 
   return (
     <LoadingError
-      isLoading={isLoading || !enrichedBookmark.verseKey || !enrichedBookmark.surahName}
+      isLoading={isLoading || !enrichedBookmark.verseKey || !enrichedBookmark.surahName || !verse}
       error={error}
       loadingFallback={<SidebarVerseItemSkeleton withDivider={showDivider} />}
       errorFallback={<SidebarVerseItemError withDivider={showDivider} />}
     >
-      <>
-        <div className={baseWrapperClassName} {...interactiveProps}>
-          <div className="flex flex-col min-w-0 text-left">
-            <span className="text-sm font-semibold text-foreground truncate">{surahName}</span>
-            <span className="text-xs text-muted mt-1">{verseLabel}</span>
-          </div>
-          <RemoveBookmarkButton
-            label={surahName}
-            bookmark={bookmark}
-            {...(onRemoveBookmark ? { onRemove: onRemoveBookmark } : {})}
-          />
-        </div>
-        {showDivider ? <div className="mx-4 h-px bg-border" /> : null}
-      </>
+      {verse ? (
+        <LoadedFolderVerseItem
+          verse={verse}
+          bookmark={enrichedBookmark}
+          onRemoveBookmark={onRemoveBookmark}
+          showDivider={showDivider}
+        />
+      ) : null}
     </LoadingError>
   );
 };
 
-const RemoveBookmarkButton = ({
-  label,
+const LoadedFolderVerseItem = ({
+  verse,
   bookmark,
-  onRemove,
+  onRemoveBookmark,
+  showDivider,
 }: {
-  label: string;
+  verse: Verse;
   bookmark: Bookmark;
-  onRemove?: (b: Bookmark) => void;
-}): React.JSX.Element | null => {
-  if (typeof onRemove !== 'function') return null;
+  onRemoveBookmark: ((bookmark: Bookmark) => void) | undefined;
+  showDivider: boolean;
+}): React.JSX.Element => {
+  const { verseRef, actions } = useBookmarkVerseActions(verse, bookmark);
+
+  const handleRemove = React.useCallback(() => {
+    onRemoveBookmark?.(bookmark);
+  }, [onRemoveBookmark, bookmark]);
+
+  const customActions = React.useMemo(
+    () => ({
+      ...actions,
+      onBookmark: handleRemove,
+      isBookmarked: true,
+    }),
+    [actions, handleRemove]
+  );
+
   return (
-    <button
-      type="button"
-      aria-label={`Remove ${label} bookmark`}
-      className="ml-2 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface text-muted transition-colors duration-200 hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30"
-      onClick={(event): void => {
-        event.stopPropagation();
-        onRemove(bookmark);
-      }}
-    >
-      <CloseIcon size={16} strokeWidth={2.2} />
-    </button>
+    <>
+      <div className="px-2 py-2">
+        <ReaderVerseCard
+          ref={verseRef}
+          verse={verse}
+          actions={customActions}
+          className="border-none mb-0 pb-0 pt-0"
+        />
+      </div>
+      {showDivider ? <div className="mx-4 h-px bg-border" /> : null}
+    </>
   );
 };
 

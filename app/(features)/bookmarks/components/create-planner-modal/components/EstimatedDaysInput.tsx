@@ -22,7 +22,7 @@ export const EstimatedDaysInput = ({
       max="365"
       value={estimatedDays}
       onChange={(e) => onChange(parseInt(e.target.value) || 1)}
-      className="w-full rounded-xl border border-border bg-surface px-4 py-3.5 text-foreground focus:border-accent focus:ring-4 focus:ring-accent/10 focus:outline-none transition-all duration-200 shadow-sm hover:shadow-md"
+      className="w-full rounded-lg border border-border bg-interactive/60 px-4 py-3 text-foreground placeholder:text-muted focus:border-transparent focus:ring-2 focus:ring-accent focus:outline-none transition-colors duration-150"
     />
   </div>
 );
