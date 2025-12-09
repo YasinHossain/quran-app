@@ -71,13 +71,13 @@ function ToggleRow({
   onToggle: () => void;
 }): React.JSX.Element {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between py-1">
       <span className="text-sm text-foreground">{label}</span>
       <button
         onClick={onToggle}
-        className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 ${active
-            ? 'bg-emerald-500 shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]'
-            : 'bg-gray-200 dark:bg-gray-700 shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]'
+        className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-300 outline-none ring-0 focus:ring-0 focus:ring-offset-0 focus:outline-none ${active
+          ? 'bg-accent shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]'
+          : 'bg-gray-200 dark:bg-gray-700 shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]'
           }`}
         aria-pressed={active}
       >
