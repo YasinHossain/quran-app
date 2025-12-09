@@ -24,17 +24,21 @@ export const ModalActions = ({
   onDelete,
   isDeleting,
 }: ModalActionsProps): React.JSX.Element => (
-  <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-border">
+  <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-border/60">
     <button
       onClick={onClose}
-      className="px-6 py-2.5 text-sm font-medium text-muted hover:text-foreground hover:bg-gray-200 dark:hover:bg-slate-700 rounded-xl transition-all duration-200"
+      className="px-4 py-2 text-sm font-medium text-muted rounded-full hover:bg-interactive-hover hover:text-foreground transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-accent/30 focus:outline-none"
+      type="button"
+      aria-label="Cancel delete folder"
     >
       Cancel
     </button>
     <button
       onClick={onDelete}
       disabled={isDeleting}
-      className="px-6 py-2.5 text-sm font-semibold bg-error text-on-error rounded-xl hover:bg-error/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 flex items-center gap-2"
+      className="px-5 py-2.5 text-sm font-semibold bg-error text-on-accent rounded-xl hover:bg-error/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 shadow-sm focus-visible:ring-2 focus-visible:ring-error/30 focus:outline-none flex items-center gap-2"
+      type="button"
+      aria-label="Confirm delete folder"
     >
       {isDeleting ? (
         <>

@@ -17,7 +17,7 @@ export const ModalActions = ({
     <button
       type="button"
       onClick={onClose}
-      className="px-4 py-2 text-sm font-medium text-muted hover:text-foreground transition-colors"
+      className="px-4 py-2 text-sm font-medium text-muted rounded-full hover:bg-interactive-hover hover:text-foreground transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-accent/30 focus:outline-none"
       disabled={isSubmitting}
     >
       Cancel
@@ -25,7 +25,7 @@ export const ModalActions = ({
     <button
       type="submit"
       disabled={isSubmitting}
-      className="px-4 py-2 bg-accent text-on-accent rounded-lg text-sm font-medium hover:bg-accent-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      className="px-4 py-2 bg-accent text-on-accent rounded-lg text-sm font-medium hover:bg-accent-hover transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm focus-visible:ring-2 focus-visible:ring-accent/30 focus:outline-none"
     >
       {isSubmitting ? submittingLabel : submitLabel}
     </button>

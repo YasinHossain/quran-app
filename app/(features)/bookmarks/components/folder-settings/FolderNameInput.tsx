@@ -15,7 +15,7 @@ export const FolderNameInput = ({ name, setName }: FolderNameInputProps): React.
       type="text"
       value={name}
       onChange={(e) => setName(e.target.value)}
-      className="w-full px-3 py-2 bg-background border border-border rounded-lg text-foreground placeholder-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent"
+      className="w-full rounded-lg border border-border bg-interactive/60 px-4 py-3 text-foreground placeholder:text-muted focus:border-transparent focus:ring-2 focus:ring-accent focus:outline-none transition-colors duration-150"
       placeholder="Enter folder name"
       required
     />

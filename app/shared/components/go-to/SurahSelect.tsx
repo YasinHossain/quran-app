@@ -238,8 +238,8 @@ export const SurahSelect = memo(function SurahSelect({
     <div className={clsx('relative', className)} ref={containerRef} onBlur={handleContainerBlur}>
       <div
         className={clsx(
-          'relative rounded-lg border border-border bg-surface transition-colors',
-          disabled ? 'opacity-60 cursor-not-allowed' : 'hover:bg-interactive-hover'
+          'relative rounded-lg border border-border bg-interactive/60 transition-colors focus-within:border-transparent focus-within:ring-2 focus-within:ring-accent',
+          disabled ? 'opacity-60 cursor-not-allowed' : ''
         )}
       >
         <input
@@ -259,7 +259,7 @@ export const SurahSelect = memo(function SurahSelect({
           }}
           onKeyDown={handleInputKeyDown}
           className={clsx(
-            'w-full bg-transparent text-foreground text-sm px-3 py-2.5 pr-16 rounded-lg outline-none placeholder:text-muted'
+            'w-full bg-transparent text-foreground text-sm px-4 py-3 pr-16 rounded-lg outline-none placeholder:text-muted'
           )}
         />
         <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center gap-2 text-muted">

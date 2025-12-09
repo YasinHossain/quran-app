@@ -16,7 +16,7 @@ export const ModalHeader = ({ title, onClose }: ModalHeaderProps): React.JSX.Ele
     </h2>
     <button
       onClick={onClose}
-      className="rounded-full p-1.5 text-muted hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-colors"
+      className="shrink-0 rounded-full p-2.5 text-muted hover:bg-interactive-hover hover:text-error transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-accent/40 focus:outline-none"
       aria-label="Close"
     >
       <CloseIcon size={20} />
