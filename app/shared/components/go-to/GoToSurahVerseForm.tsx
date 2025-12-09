@@ -110,11 +110,11 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
   const subtitleText = subtitle ?? (isLoading ? 'Loading surahs…' : undefined);
 
   return (
-    <form className={clsx('p-3 space-y-3', className)} onSubmit={handleSubmit}>
+    <form className={clsx('p-4 sm:p-5 space-y-4', className)} onSubmit={handleSubmit}>
       <div className="flex items-center justify-between gap-3">
         <div>
-          <div className="text-sm font-medium text-foreground">{title}</div>
-          {subtitleText ? <div className="text-xs text-muted">{subtitleText}</div> : null}
+          <div className="text-lg font-semibold text-foreground leading-tight">{title}</div>
+          {subtitleText ? <div className="text-sm text-muted">{subtitleText}</div> : null}
         </div>
         <button
           type="submit"
@@ -127,7 +127,7 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
 
       <div className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-3">
         <div className="w-full min-w-0">
-          <label className="block text-xs text-muted mb-1" htmlFor={surahInputId}>
+          <label className="block text-sm font-semibold text-foreground mb-2" htmlFor={surahInputId}>
             Surah
           </label>
           <SurahSelect
@@ -142,7 +142,7 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
         </div>
 
         <div className="w-full min-w-0">
-          <label className="block text-xs text-muted mb-1" htmlFor={verseInputId}>
+          <label className="block text-sm font-semibold text-foreground mb-2" htmlFor={verseInputId}>
             Verse (optional)
           </label>
           <SurahSelect
