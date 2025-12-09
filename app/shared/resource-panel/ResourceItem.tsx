@@ -1,16 +1,16 @@
 'use client';
 import React from 'react';
 
-interface Resource {
-  id: number;
+export interface Resource {
+  id: number | string;
   name: string;
   lang: string;
 }
 
-interface ResourceItemProps<T extends Resource> {
+export interface ResourceItemProps<T extends Resource> {
   item: T;
   isSelected: boolean;
-  onToggle: (id: number) => void;
+  onToggle: (id: number | string) => void;
   style?: React.CSSProperties;
 }
 
@@ -37,15 +37,15 @@ export const ResourceItem = <T extends Resource>({
       onKeyDown={handleKeyDown}
       role="button"
       tabIndex={0}
-      className={`flex items-center justify-between px-4 py-2.5 min-h-touch rounded-lg cursor-pointer transition-all duration-200 focus:outline-none focus-visible:outline-none outline-none border-0 focus:border-0 active:outline-none ${isSelected
-        ? 'bg-accent/20 border border-accent/30'
+      className={`flex items-center justify-between px-4 py-2.5 h-[50px] rounded-lg cursor-pointer transition-all duration-200 focus:outline-none focus-visible:outline-none outline-none border-0 focus:border-0 active:outline-none ${isSelected
+        ? 'bg-accent border border-accent'
         : 'bg-surface border border-border hover:bg-interactive'
         }`}
       style={style}
     >
       <div className="flex-1 min-w-0 pr-3">
         <p
-          className={`font-medium text-sm leading-tight truncate ${isSelected ? 'text-accent' : 'text-foreground'
+          className={`font-medium text-sm leading-tight truncate ${isSelected ? 'text-white' : 'text-foreground'
             }`}
           title={item.name}
         >
@@ -53,7 +53,7 @@ export const ResourceItem = <T extends Resource>({
         </p>
       </div>
       <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-        {isSelected && <CheckIcon className="h-5 w-5 text-accent" />}
+        {isSelected && <CheckIcon className="h-5 w-5 text-white" />}
       </div>
     </div>
   );

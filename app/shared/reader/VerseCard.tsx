@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, memo, type ReactNode } from 'react';
+import { forwardRef, memo, useMemo, type ReactNode } from 'react';
 
 import { useSettings } from '@/app/providers/SettingsContext';
 import { ResponsiveVerseActions } from '@/app/shared/ResponsiveVerseActions';
@@ -58,6 +58,27 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
     const containerClasses = cn(getVariantClasses(variant), className);
     const fontSize = translationFontSize ?? settings.translationFontSize ?? 16;
 
+    const sortedTranslations = useMemo(() => {
+      if (!verse.translations || verse.translations.length === 0) {
+        return [];
+      }
+
+      if (!settings.translationIds || settings.translationIds.length === 0) {
+        return verse.translations;
+      }
+
+      const orderMap = new Map<number, number>();
+      settings.translationIds.forEach((id, index) => {
+        orderMap.set(id, index);
+      });
+
+      return [...verse.translations].sort((a, b) => {
+        const indexA = orderMap.has(a.resource_id) ? orderMap.get(a.resource_id)! : 9999;
+        const indexB = orderMap.has(b.resource_id) ? orderMap.get(b.resource_id)! : 9999;
+        return indexA - indexB;
+      });
+    }, [verse.translations, settings.translationIds]);
+
     return (
       <div id={`${idPrefix}-${verse.id}`} ref={ref} className={containerClasses}>
         <div className="space-y-2 md:space-y-0 md:flex md:items-stretch md:gap-x-6">
@@ -75,9 +96,9 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
           <div className={cn('space-y-6 md:flex-grow', contentClassName)}>
             {showArabic ? <VerseArabic verse={verse} /> : null}
 
-            {showTranslations && verse.translations?.length ? (
+            {showTranslations && sortedTranslations.length ? (
               <div className="space-y-4">
-                {verse.translations.map((translation: Translation) => (
+                {sortedTranslations.map((translation: Translation) => (
                   <div key={translation.resource_id}>
                     {translation.resource_name && (
                       <p className="mb-2 text-xs font-normal uppercase tracking-wider text-muted-foreground">

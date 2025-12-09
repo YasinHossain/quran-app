@@ -6,7 +6,7 @@ import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 import { ResourceItem } from './ResourceItem';
 
 interface Resource {
-  id: number;
+  id: number | string;
   name: string;
   lang: string;
 }
@@ -14,8 +14,8 @@ interface Resource {
 interface ResourceListProps<T extends Resource> {
   resources: T[];
   rowHeight: number;
-  selectedIds: Set<number>;
-  onToggle: (id: number) => void;
+  selectedIds: Set<number | string>;
+  onToggle: (id: number | string) => void;
   height: number;
 }
 
@@ -33,7 +33,7 @@ export const ResourceList = <T extends Resource>({
     if (!item) return <div style={style} />;
     return (
       <div style={style}>
-        <div className="px-1 pb-2">
+        <div className="pb-2">
           <ResourceItem
             key={item.id}
             item={item}
