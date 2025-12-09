@@ -24,7 +24,7 @@ export function usePlaybackOptionsModal(
     rangeWarning,
     setRangeWarning,
     commit,
-  } = usePlaybackOptions(onClose);
+  } = usePlaybackOptions(open, onClose);
 
   useEffect(() => {
     if (!open) setRangeWarning(null);

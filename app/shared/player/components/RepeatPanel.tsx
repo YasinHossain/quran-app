@@ -37,8 +37,8 @@ function ModeSelector({
 }): React.JSX.Element {
   return (
     <div className="rounded-xl border border-border p-4">
-      <div className="font-medium mb-3 text-foreground">Mode</div>
-      <div className="flex items-center p-1 rounded-full bg-interactive border border-border">
+      <div className="font-semibold mb-3 text-foreground">Mode</div>
+      <div className="flex items-center p-1.5 rounded-full bg-interactive border border-border">
         {(['off', 'single', 'range', 'surah'] as const).map((m) => (
           <button
             key={m}
@@ -121,7 +121,7 @@ function NumberField({
 }): React.JSX.Element {
   return (
     <label className="text-sm">
-      <span className="block mb-1 text-muted">{label}</span>
+      <span className="block mb-1 text-sm font-semibold text-foreground">{label}</span>
       <input
         type="number"
         value={Number.isFinite(value) ? value : 0}
@@ -131,7 +131,7 @@ function NumberField({
           const v = parseInt(e.target.value, 10);
           onChange(Number.isNaN(v) ? (min ?? value) : v);
         }}
-        className="w-full rounded-xl border border-border bg-surface px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent/35"
+        className="w-full rounded-lg border border-border bg-interactive/60 px-3 py-2 text-foreground placeholder:text-muted focus:border-transparent focus:ring-2 focus:ring-accent focus:outline-none transition-colors duration-150"
       />
     </label>
   );

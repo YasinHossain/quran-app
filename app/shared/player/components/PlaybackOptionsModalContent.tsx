@@ -62,7 +62,7 @@ export const PlaybackOptionsModalContent = memo(function PlaybackOptionsModalCon
   return (
     <ModalContainer onClose={onClose}>
       <div
-        className="w-full max-w-3xl rounded-2xl border border-border bg-surface p-4 md:p-6 shadow-2xl"
+        className="w-full max-w-3xl rounded-2xl bg-background p-4 md:p-6 shadow-xl"
         role="dialog"
         aria-modal="true"
         tabIndex={-1}

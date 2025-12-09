@@ -22,19 +22,18 @@ interface UsePlaybackOptionsReturn {
   commit: () => void;
 }
 
-export function usePlaybackOptions(onClose: () => void): UsePlaybackOptionsReturn {
+export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePlaybackOptionsReturn {
   const { reciter, setReciter, repeatOptions, setRepeatOptions } = useAudio();
   const [localReciter, setLocalReciter] = useState(reciter.id.toString());
   const [localRepeat, setLocalRepeat] = useState<RepeatOptions>(repeatOptions);
   const [rangeWarning, setRangeWarning] = useState<string | null>(null);
 
   useEffect(() => {
-    setLocalReciter(reciter.id.toString());
-  }, [reciter]);
-
-  useEffect(() => {
-    setLocalRepeat(repeatOptions);
-  }, [repeatOptions]);
+    if (isOpen) {
+      setLocalReciter(reciter.id.toString());
+      setLocalRepeat(repeatOptions);
+    }
+  }, [isOpen, reciter, repeatOptions]);
 
   const commit = (): void => {
     if (hasNonIntegerValues(localRepeat)) {

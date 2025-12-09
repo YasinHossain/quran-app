@@ -57,7 +57,7 @@ type PlayerLayoutProps = DesktopPlayerLayoutProps & MobilePlayerLayoutProps;
 const PlayerLayouts = React.memo(function PlayerLayouts(props: PlayerLayoutProps) {
   return (
     <div
-      className="mx-auto w-full rounded-2xl px-3 py-3 sm:px-4 sm:py-4 bg-surface shadow-lg border border-border"
+      className="mx-auto w-full rounded-2xl px-3 py-3 sm:px-4 sm:py-4 bg-surface shadow-lg"
       role="region"
       aria-label="Player"
     >

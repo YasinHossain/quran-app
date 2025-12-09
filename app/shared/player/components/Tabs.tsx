@@ -12,10 +12,11 @@ export const Tabs = memo(function Tabs({ activeTab, setActiveTab }: Props): Reac
     <div className="mb-4 flex justify-center gap-2">
       <button
         onClick={() => setActiveTab('reciter')}
-        className={`px-3 py-1.5 rounded-full text-sm ${activeTab === 'reciter'
-          ? 'bg-accent/10 text-accent'
-          : 'bg-surface hover:bg-gray-200 dark:hover:bg-slate-700'
-          }`}
+        className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-colors ${
+          activeTab === 'reciter'
+            ? 'bg-accent text-on-accent shadow-sm'
+            : 'bg-interactive hover:bg-interactive-hover text-foreground'
+        }`}
       >
         <span className="inline-flex items-center gap-2">
           <MicIcon className="h-4 w-4" />
@@ -24,10 +25,11 @@ export const Tabs = memo(function Tabs({ activeTab, setActiveTab }: Props): Reac
       </button>
       <button
         onClick={() => setActiveTab('repeat')}
-        className={`px-3 py-1.5 rounded-full text-sm ${activeTab === 'repeat'
-          ? 'bg-accent/10 text-accent'
-          : 'bg-surface hover:bg-gray-200 dark:hover:bg-slate-700'
-          }`}
+        className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-colors ${
+          activeTab === 'repeat'
+            ? 'bg-accent text-on-accent shadow-sm'
+            : 'bg-interactive hover:bg-interactive-hover text-foreground'
+        }`}
       >
         <span className="inline-flex items-center gap-2">
           <RepeatIcon className="h-4 w-4" />

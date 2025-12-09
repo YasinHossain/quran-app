@@ -2,12 +2,9 @@
 
 import React from 'react';
 
-import { useBookmarkVerseActions } from '@/app/(features)/bookmarks/components/BookmarkVerseList.parts';
 import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
-import { ReaderVerseCard } from '@/app/shared/reader';
 import { CloseIcon } from '@/app/shared/icons';
 import { LoadingError } from '@/app/shared/LoadingError';
-import { cn } from '@/lib/utils/cn';
 import { Bookmark, Verse } from '@/types';
 
 interface ExpandedContentProps {
@@ -84,30 +81,26 @@ const LoadedFolderVerseItem = ({
   onRemoveBookmark: ((bookmark: Bookmark) => void) | undefined;
   showDivider: boolean;
 }): React.JSX.Element => {
-  const { verseRef, actions } = useBookmarkVerseActions(verse, bookmark);
-
   const handleRemove = React.useCallback(() => {
     onRemoveBookmark?.(bookmark);
   }, [onRemoveBookmark, bookmark]);
 
-  const customActions = React.useMemo(
-    () => ({
-      ...actions,
-      onBookmark: handleRemove,
-      isBookmarked: true,
-    }),
-    [actions, handleRemove]
-  );
-
   return (
     <>
-      <div className="px-2 py-2">
-        <ReaderVerseCard
-          ref={verseRef}
-          verse={verse}
-          actions={customActions}
-          className="border-none mb-0 pb-0 pt-0"
-        />
+      <div className="flex items-center justify-between px-4 py-3 group hover:bg-surface-secondary/50 transition-colors">
+        <div className="flex flex-col gap-0.5">
+          <span className="text-sm font-medium text-foreground">{bookmark.surahName}</span>
+          <span className="text-xs text-muted-foreground">
+            Verse {bookmark.verseKey?.split(':')[1]}
+          </span>
+        </div>
+        <button
+          onClick={handleRemove}
+          className="p-1.5 rounded-full text-muted-foreground hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-error transition-colors"
+          aria-label="Remove bookmark"
+        >
+          <CloseIcon className="w-4 h-4" />
+        </button>
       </div>
       {showDivider ? <div className="mx-4 h-px bg-border" /> : null}
     </>
