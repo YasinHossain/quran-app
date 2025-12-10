@@ -71,7 +71,16 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
               end: repeatOptions.verseNumber ?? activeVerseNumber ?? repeatOptions.end,
             }
           : {};
-      setLocalRepeat({ ...repeatOptions, ...singleDefaults });
+      const surahDefaults: Partial<RepeatOptions> =
+        repeatOptions.mode === 'surah'
+          ? {
+              surahId: repeatOptions.surahId ?? activeVerse?.chapter_id,
+              verseNumber: undefined,
+              start: 1,
+              end: 1,
+            }
+          : {};
+      setLocalRepeat({ ...repeatOptions, ...singleDefaults, ...surahDefaults });
     }
   }, [isOpen, reciter, repeatOptions, activeVerse]);
 
@@ -119,6 +128,40 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
           onClose();
         } catch (error) {
           setRangeWarning('Unable to load the selected verse. Please try again.');
+        }
+        return;
+      }
+
+      if (localRepeat.mode === 'surah') {
+        const surahId = localRepeat.surahId ?? activeVerse?.chapter_id;
+        if (!surahId) {
+          setRangeWarning('Select a surah to repeat.');
+          return;
+        }
+        const nextRepeat: RepeatOptions = {
+          ...localRepeat,
+          mode: 'surah',
+          surahId,
+          verseNumber: undefined,
+          start: 1,
+          end: 1,
+          playCount: localRepeat.playCount ?? 1,
+          repeatEach: localRepeat.repeatEach ?? 1,
+          delay: localRepeat.delay ?? 0,
+        };
+        try {
+          const verseKey = `${surahId}:1`;
+          const verse = await getVerseByKey(verseKey, translationIds, wordLang);
+          setActiveVerse(verse);
+          setPlayingId(verse.id);
+          setLoadingId(verse.id);
+          setIsPlaying(true);
+          openPlayer();
+          setRangeWarning(null);
+          setRepeatOptions(nextRepeat);
+          onClose();
+        } catch (error) {
+          setRangeWarning('Unable to load the selected surah. Please try again.');
         }
         return;
       }

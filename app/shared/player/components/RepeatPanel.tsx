@@ -71,6 +71,8 @@ function RepeatFields({
   setRangeWarning,
 }: Props): React.JSX.Element {
   const isSingle = localRepeat.mode === 'single';
+  const isSurah = localRepeat.mode === 'surah';
+  const { chapters, isLoading } = useSurahNavigationData();
 
   return (
     <div className="rounded-xl border border-border p-4 grid grid-cols-2 gap-3">
@@ -80,6 +82,16 @@ function RepeatFields({
           localRepeat={localRepeat}
           setLocalRepeat={setLocalRepeat}
           setRangeWarning={setRangeWarning}
+          chapters={chapters}
+          isLoading={isLoading}
+        />
+      ) : isSurah ? (
+        <SurahFields
+          localRepeat={localRepeat}
+          setLocalRepeat={setLocalRepeat}
+          setRangeWarning={setRangeWarning}
+          chapters={chapters}
+          isLoading={isLoading}
         />
       ) : (
         <>
@@ -134,13 +146,15 @@ function SingleVerseFields({
   localRepeat,
   setLocalRepeat,
   setRangeWarning,
+  chapters,
+  isLoading,
 }: {
   localRepeat: RepeatOptions;
   setLocalRepeat: React.Dispatch<React.SetStateAction<RepeatOptions>>;
   setRangeWarning: React.Dispatch<React.SetStateAction<string | null>>;
+  chapters: ReturnType<typeof useSurahNavigationData>['chapters'];
+  isLoading: boolean;
 }): React.JSX.Element {
-  const { chapters, isLoading } = useSurahNavigationData();
-
   // Validate verse number if loaded
   const selectedSurah = useMemo(
     () => chapters.find((chapter) => chapter.id === localRepeat.surahId),
@@ -177,6 +191,43 @@ function SingleVerseFields({
         selectedVerse={localRepeat.verseNumber}
         onSurahChange={handleSurahChange}
         onVerseChange={handleVerseChange}
+      />
+    </div>
+  );
+}
+
+function SurahFields({
+  localRepeat,
+  setLocalRepeat,
+  setRangeWarning,
+  chapters,
+  isLoading,
+}: {
+  localRepeat: RepeatOptions;
+  setLocalRepeat: React.Dispatch<React.SetStateAction<RepeatOptions>>;
+  setRangeWarning: React.Dispatch<React.SetStateAction<string | null>>;
+  chapters: ReturnType<typeof useSurahNavigationData>['chapters'];
+  isLoading: boolean;
+}): React.JSX.Element {
+  const noopVerseChange = useCallback(() => undefined, []);
+  const handleSurahChange = useCallback(
+    (id: number | undefined) => {
+      setLocalRepeat((prev) => ({ ...prev, surahId: id, verseNumber: undefined }));
+      setRangeWarning(null);
+    },
+    [setLocalRepeat, setRangeWarning]
+  );
+
+  return (
+    <div className="col-span-2">
+      <SurahVerseSelector
+        chapters={chapters}
+        isLoading={isLoading}
+        selectedSurah={localRepeat.surahId}
+        selectedVerse={undefined}
+        onSurahChange={handleSurahChange}
+        onVerseChange={noopVerseChange}
+        hideVerse
       />
     </div>
   );

@@ -1,3 +1,5 @@
+import { restartVerseWithDelay } from './repeatHelpers';
+
 interface SingleRepeatArgs {
   verseRepeatsLeft: number;
   playRepeatsLeft: number;
@@ -19,28 +21,16 @@ export function createSingleRepeatHandler({
   setVerseRepeatsLeft,
   setPlayRepeatsLeft,
 }: SingleRepeatArgs): () => boolean {
-  const restartWithDelay = (): void => {
-    if (delay > 0) {
-      setTimeout(() => {
-        seek(0);
-        play();
-      }, delay);
-      return;
-    }
-    seek(0);
-    play();
-  };
-
   return () => {
     if (verseRepeatsLeft > 1) {
       setVerseRepeatsLeft(verseRepeatsLeft - 1);
-      restartWithDelay();
+      restartVerseWithDelay({ delay, seek, play });
       return true;
     }
     if (playRepeatsLeft > 1) {
       setPlayRepeatsLeft(playRepeatsLeft - 1);
       setVerseRepeatsLeft(repeatEach);
-      restartWithDelay();
+      restartVerseWithDelay({ delay, seek, play });
       return true;
     }
     return false;

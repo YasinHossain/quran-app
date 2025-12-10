@@ -1,5 +1,7 @@
 import { useCallback } from 'react';
 
+import { restartVerseWithDelay } from './repeatHelpers';
+
 type RepeatArgs = {
   verseRepeatsLeft: number;
   playRepeatsLeft: number;
@@ -18,37 +20,26 @@ type RepeatArgs = {
 
 function restartCurrentVerse({
   verseRepeatsLeft,
+  delay,
   setVerseRepeatsLeft,
   seek,
   play,
 }: RepeatArgs): void {
   setVerseRepeatsLeft(verseRepeatsLeft - 1);
-  seek(0);
-  play();
+  restartVerseWithDelay({ delay, seek, play });
 }
 
-function tryAdvanceOrLoopSurah({
-  repeatEach,
-  playRepeatsLeft,
-  setPlayRepeatsLeft,
-  setVerseRepeatsLeft,
-  onNext,
-  onPrev,
-  delay,
-}: RepeatArgs): boolean {
-  setVerseRepeatsLeft(repeatEach);
-  const hasNext = onNext?.() ?? false;
-  if (hasNext) return true;
-  if (playRepeatsLeft > 1) {
-    setPlayRepeatsLeft(playRepeatsLeft - 1);
-    setVerseRepeatsLeft(repeatEach);
-    setTimeout(() => {
-      let hasPrev = true;
-      while (hasPrev) hasPrev = onPrev?.() ?? false;
-    }, delay);
-    return true;
+function rewindToSurahStart({ onPrev, delay }: RepeatArgs): void {
+  if (!onPrev) return;
+  const rewind = (): void => {
+    let hasPrev = true;
+    while (hasPrev) hasPrev = onPrev?.() ?? false;
+  };
+  if (delay > 0) {
+    setTimeout(rewind, delay);
+    return;
   }
-  return false;
+  rewind();
 }
 
 function stopPlayback({ pause, setIsPlaying, setPlayingId }: RepeatArgs): void {
@@ -58,9 +49,26 @@ function stopPlayback({ pause, setIsPlaying, setPlayingId }: RepeatArgs): void {
 }
 
 export function handleSurahRepeat(args: RepeatArgs): void {
-  const { verseRepeatsLeft } = args;
-  if (verseRepeatsLeft > 1) return restartCurrentVerse(args);
-  if (!tryAdvanceOrLoopSurah(args)) setTimeout(() => stopPlayback(args), 0);
+  const { verseRepeatsLeft, repeatEach, playRepeatsLeft, setVerseRepeatsLeft, setPlayRepeatsLeft } =
+    args;
+
+  if (verseRepeatsLeft > 1) {
+    restartCurrentVerse(args);
+    return;
+  }
+
+  setVerseRepeatsLeft(repeatEach);
+  const hasAdvanced = args.onNext?.() ?? false;
+  if (hasAdvanced) return;
+
+  if (playRepeatsLeft > 1 && args.onPrev) {
+    setPlayRepeatsLeft(playRepeatsLeft - 1);
+    setVerseRepeatsLeft(repeatEach);
+    rewindToSurahStart(args);
+    return;
+  }
+
+  setTimeout(() => stopPlayback(args), 0);
 }
 
 /**

@@ -85,3 +85,18 @@ test('hides play count in single mode', async () => {
   expect(screen.queryByLabelText('Play count')).not.toBeInTheDocument();
   expect(screen.getByLabelText('Repeat each')).toBeInTheDocument();
 });
+
+test('surah mode uses surah selector without verse or range inputs', async () => {
+  const onClose = jest.fn();
+  renderWithProviders(
+    <PlaybackOptionsModal open onClose={onClose} activeTab="repeat" setActiveTab={() => {}} />
+  );
+
+  await userEvent.click(screen.getByRole('button', { name: /^surah$/i }));
+
+  expect(screen.getByLabelText('Surah')).toBeInTheDocument();
+  expect(screen.queryByLabelText('Verse')).not.toBeInTheDocument();
+  expect(screen.queryByLabelText('Start')).not.toBeInTheDocument();
+  expect(screen.queryByLabelText('End')).not.toBeInTheDocument();
+  expect(screen.getByLabelText('Play count')).toBeInTheDocument();
+});

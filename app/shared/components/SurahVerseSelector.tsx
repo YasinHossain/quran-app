@@ -29,6 +29,7 @@ interface SurahVerseSelectorProps {
     surahLabel?: string;
     verseLabel?: string;
     className?: string; // Wrapper class
+    hideVerse?: boolean;
 }
 
 export function SurahVerseSelector({
@@ -41,6 +42,7 @@ export function SurahVerseSelector({
     surahLabel = 'Surah',
     verseLabel = 'Verse',
     className,
+    hideVerse = false,
 }: SurahVerseSelectorProps): ReactElement {
     const surahInputId = useId();
     const verseInputId = useId();
@@ -57,18 +59,21 @@ export function SurahVerseSelector({
 
     // Find active chapter to get verse count
     const activeChapter = useMemo(
-        () => (selectedSurah ? chapters.find((c) => c.id === selectedSurah) : undefined),
-        [chapters, selectedSurah]
+        () =>
+            selectedSurah && !hideVerse
+                ? chapters.find((c) => c.id === selectedSurah)
+                : undefined,
+        [chapters, hideVerse, selectedSurah]
     );
 
     // Generate verse options based on active chapter
     const verseOptions: SurahOption[] = useMemo(() => {
-        if (!activeChapter?.verses_count) return [];
+        if (hideVerse || !activeChapter?.verses_count) return [];
         return Array.from({ length: activeChapter.verses_count }, (_, index) => ({
             value: String(index + 1),
             label: String(index + 1),
         }));
-    }, [activeChapter]);
+    }, [activeChapter, hideVerse]);
 
     // Handlers to parse string back to number
     const handleSurahChange = (val: string) => {
@@ -82,7 +87,13 @@ export function SurahVerseSelector({
     };
 
     return (
-        <div className={clsx('grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-3', className)}>
+        <div
+            className={clsx(
+                'grid gap-3',
+                hideVerse ? 'grid-cols-1' : 'grid-cols-[minmax(0,3fr)_minmax(0,2fr)]',
+                className
+            )}
+        >
             <div className="w-full min-w-0">
                 <label className="block text-sm font-semibold text-foreground mb-2" htmlFor={surahInputId}>
                     {surahLabel}
@@ -98,22 +109,24 @@ export function SurahVerseSelector({
                 />
             </div>
 
-            <div className="w-full min-w-0">
-                <label className="block text-sm font-semibold text-foreground mb-2" htmlFor={verseInputId}>
-                    {verseLabel}
-                </label>
-                <SurahSelect
-                    inputId={verseInputId}
-                    value={selectedVerse ? String(selectedVerse) : ''}
-                    onChange={handleVerseChange}
-                    options={verseOptions}
-                    placeholder={
-                        !selectedSurah || verseOptions.length ? 'Select Verse' : 'Loading verses…'
-                    }
-                    disabled={!selectedSurah || !verseOptions.length || isLoading}
-                    className="w-full"
-                />
-            </div>
+            {!hideVerse && (
+                <div className="w-full min-w-0">
+                    <label className="block text-sm font-semibold text-foreground mb-2" htmlFor={verseInputId}>
+                        {verseLabel}
+                    </label>
+                    <SurahSelect
+                        inputId={verseInputId}
+                        value={selectedVerse ? String(selectedVerse) : ''}
+                        onChange={handleVerseChange}
+                        options={verseOptions}
+                        placeholder={
+                            !selectedSurah || verseOptions.length ? 'Select Verse' : 'Loading verses…'
+                        }
+                        disabled={!selectedSurah || !verseOptions.length || isLoading}
+                        className="w-full"
+                    />
+                </div>
+            )}
         </div>
     );
 }

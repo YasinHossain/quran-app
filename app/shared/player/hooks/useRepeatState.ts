@@ -23,7 +23,23 @@ export function useRepeatState({ repeatOptions, activeVerse }: Options): RepeatS
   useEffect(() => {
     setVerseRepeatsLeft(repeatOptions.repeatEach ?? 1);
     setPlayRepeatsLeft(repeatOptions.playCount ?? 1);
-  }, [activeVerse, repeatOptions.repeatEach, repeatOptions.playCount]);
+  }, [
+    repeatOptions.mode,
+    repeatOptions.playCount,
+    repeatOptions.repeatEach,
+    repeatOptions.surahId,
+    repeatOptions.start,
+    repeatOptions.end,
+    repeatOptions.verseNumber,
+  ]);
+
+  useEffect(() => {
+    if (!activeVerse) return;
+    setVerseRepeatsLeft(repeatOptions.repeatEach ?? 1);
+    if (repeatOptions.mode === 'single') {
+      setPlayRepeatsLeft(repeatOptions.playCount ?? 1);
+    }
+  }, [activeVerse?.id, repeatOptions.mode, repeatOptions.repeatEach, repeatOptions.playCount]);
 
   return {
     verseRepeatsLeft,

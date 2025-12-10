@@ -23,26 +23,40 @@ export function useNavigationHandlers({
   openPlayer,
 }: UseNavigationHandlersParams): UseNavigationHandlersReturn {
   const handleNext = useCallback((): boolean => {
-    if (!activeVerse) return false;
-    const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
-    if (currentIndex < verses.length - 1) {
-      setActiveVerse(verses[currentIndex + 1]!);
+    let nextVerse: Verse | undefined;
+    setActiveVerse((prev) => {
+      if (!prev) return prev;
+      const currentIndex = verses.findIndex((v) => v.id === prev.id);
+      if (currentIndex < verses.length - 1) {
+        nextVerse = verses[currentIndex + 1]!;
+        return nextVerse;
+      }
+      return prev;
+    });
+    if (nextVerse) {
       openPlayer();
       return true;
     }
     return false;
-  }, [activeVerse, verses, setActiveVerse, openPlayer]);
+  }, [verses, setActiveVerse, openPlayer]);
 
   const handlePrev = useCallback((): boolean => {
-    if (!activeVerse) return false;
-    const currentIndex = verses.findIndex((v) => v.id === activeVerse.id);
-    if (currentIndex > 0) {
-      setActiveVerse(verses[currentIndex - 1]!);
+    let nextVerse: Verse | undefined;
+    setActiveVerse((prev) => {
+      if (!prev) return prev;
+      const currentIndex = verses.findIndex((v) => v.id === prev.id);
+      if (currentIndex > 0) {
+        nextVerse = verses[currentIndex - 1]!;
+        return nextVerse;
+      }
+      return prev;
+    });
+    if (nextVerse) {
       openPlayer();
       return true;
     }
     return false;
-  }, [activeVerse, verses, setActiveVerse, openPlayer]);
+  }, [verses, setActiveVerse, openPlayer]);
 
   return { handleNext, handlePrev } as const;
 }
