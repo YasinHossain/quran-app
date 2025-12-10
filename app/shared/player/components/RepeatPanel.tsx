@@ -1,5 +1,9 @@
-import React from 'react';
+'use client';
 
+import React, { useEffect, useMemo, useCallback } from 'react';
+
+import { SurahVerseSelector } from '@/app/shared/components/SurahVerseSelector';
+import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 import type { RepeatOptions } from '@/app/shared/player/types';
 
 interface Props {
@@ -15,6 +19,10 @@ export function RepeatPanel({
   rangeWarning,
   setRangeWarning,
 }: Props): React.JSX.Element {
+  useEffect(() => {
+    setRangeWarning(null);
+  }, [localRepeat.mode, setRangeWarning]);
+
   return (
     <div className="md:col-span-2 grid md:grid-cols-2 gap-4">
       <ModeSelector localRepeat={localRepeat} setLocalRepeat={setLocalRepeat} />
@@ -43,11 +51,10 @@ function ModeSelector({
           <button
             key={m}
             onClick={() => setLocalRepeat({ ...localRepeat, mode: m })}
-            className={`flex-1 px-3 py-2 rounded-full text-sm font-semibold capitalize transition-colors ${
-              localRepeat.mode === m
-                ? 'bg-surface shadow text-foreground'
-                : 'text-muted hover:text-foreground hover:bg-surface/30'
-            }`}
+            className={`flex-1 px-3 py-2 rounded-full text-sm font-semibold capitalize transition-colors ${localRepeat.mode === m
+              ? 'bg-surface shadow text-foreground'
+              : 'text-muted hover:text-foreground hover:bg-surface/30'
+              }`}
           >
             {m}
           </button>
@@ -63,38 +70,53 @@ function RepeatFields({
   rangeWarning,
   setRangeWarning,
 }: Props): React.JSX.Element {
+  const isSingle = localRepeat.mode === 'single';
+
   return (
     <div className="rounded-xl border border-border p-4 grid grid-cols-2 gap-3">
       {rangeWarning && <div className="col-span-2 text-sm text-status-warning">{rangeWarning}</div>}
-      <NumberField
-        label="Start"
-        value={localRepeat.start ?? 1}
-        min={1}
-        onChange={(v) => {
-          setLocalRepeat({ ...localRepeat, start: v });
-          setRangeWarning(null);
-        }}
-      />
-      <NumberField
-        label="End"
-        value={localRepeat.end ?? localRepeat.start ?? 1}
-        min={1}
-        onChange={(v) => {
-          setLocalRepeat({ ...localRepeat, end: v });
-          setRangeWarning(null);
-        }}
-      />
-      <NumberField
-        label="Play count"
-        value={localRepeat.playCount ?? 1}
-        min={1}
-        onChange={(v) => setLocalRepeat({ ...localRepeat, playCount: v })}
-      />
+      {isSingle ? (
+        <SingleVerseFields
+          localRepeat={localRepeat}
+          setLocalRepeat={setLocalRepeat}
+          setRangeWarning={setRangeWarning}
+        />
+      ) : (
+        <>
+          <NumberField
+            label="Start"
+            value={localRepeat.start ?? 1}
+            min={1}
+            onChange={(v) => {
+              setLocalRepeat({ ...localRepeat, start: v });
+              setRangeWarning(null);
+            }}
+          />
+          <NumberField
+            label="End"
+            value={localRepeat.end ?? localRepeat.start ?? 1}
+            min={1}
+            onChange={(v) => {
+              setLocalRepeat({ ...localRepeat, end: v });
+              setRangeWarning(null);
+            }}
+          />
+        </>
+      )}
+      {!isSingle && (
+        <NumberField
+          label="Play count"
+          value={localRepeat.playCount ?? 1}
+          min={1}
+          onChange={(v) => setLocalRepeat({ ...localRepeat, playCount: v })}
+        />
+      )}
       <NumberField
         label="Repeat each"
         value={localRepeat.repeatEach ?? 1}
         min={1}
         onChange={(v) => setLocalRepeat({ ...localRepeat, repeatEach: v })}
+        className={isSingle ? 'col-span-2' : undefined}
       />
       <div className="col-span-2">
         <NumberField
@@ -108,19 +130,73 @@ function RepeatFields({
   );
 }
 
+function SingleVerseFields({
+  localRepeat,
+  setLocalRepeat,
+  setRangeWarning,
+}: {
+  localRepeat: RepeatOptions;
+  setLocalRepeat: React.Dispatch<React.SetStateAction<RepeatOptions>>;
+  setRangeWarning: React.Dispatch<React.SetStateAction<string | null>>;
+}): React.JSX.Element {
+  const { chapters, isLoading } = useSurahNavigationData();
+
+  // Validate verse number if loaded
+  const selectedSurah = useMemo(
+    () => chapters.find((chapter) => chapter.id === localRepeat.surahId),
+    [chapters, localRepeat.surahId]
+  );
+
+  useEffect(() => {
+    if (!selectedSurah?.verses_count || !localRepeat.verseNumber) return;
+    if (localRepeat.verseNumber > selectedSurah.verses_count) {
+      setLocalRepeat((prev) => ({ ...prev, verseNumber: selectedSurah.verses_count }));
+    }
+  }, [localRepeat.verseNumber, selectedSurah, setLocalRepeat]);
+
+  const handleSurahChange = useCallback((id: number | undefined) => {
+    setLocalRepeat((prev) => ({
+      ...prev,
+      surahId: id,
+      verseNumber: undefined,
+    } as unknown as RepeatOptions));
+    setRangeWarning(null);
+  }, [setLocalRepeat, setRangeWarning]);
+
+  const handleVerseChange = useCallback((verse: number | undefined) => {
+    setLocalRepeat((prev) => ({ ...prev, verseNumber: verse } as unknown as RepeatOptions));
+    setRangeWarning(null);
+  }, [setLocalRepeat, setRangeWarning]);
+
+  return (
+    <div className="col-span-2">
+      <SurahVerseSelector
+        chapters={chapters}
+        isLoading={isLoading}
+        selectedSurah={localRepeat.surahId}
+        selectedVerse={localRepeat.verseNumber}
+        onSurahChange={handleSurahChange}
+        onVerseChange={handleVerseChange}
+      />
+    </div>
+  );
+}
+
 function NumberField({
   label,
   value,
   onChange,
   min = 0,
+  className,
 }: {
   label: string;
   value: number;
   onChange: (v: number) => void;
   min?: number;
+  className?: string;
 }): React.JSX.Element {
   return (
-    <label className="text-sm">
+    <label className={`text-sm ${className ?? ''}`}>
       <span className="block mb-1 text-sm font-semibold text-foreground">{label}</span>
       <input
         type="number"

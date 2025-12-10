@@ -26,6 +26,8 @@ export interface RepeatOptions {
   mode: 'off' | 'single' | 'range' | 'surah';
   start?: number;
   end?: number;
+  surahId?: number;
+  verseNumber?: number;
   playCount?: number;
   repeatEach?: number;
   delay?: number;

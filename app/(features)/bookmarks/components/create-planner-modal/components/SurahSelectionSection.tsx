@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useCallback, useMemo, useId } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
-import { SurahSelect, type SurahOption } from '@/app/shared/components/go-to/SurahSelect';
+import { SurahVerseSelector } from '@/app/shared/components/SurahVerseSelector';
 
 import type { PlanFormData } from '@/app/(features)/bookmarks/components/create-planner-modal/types';
 import type { Chapter } from '@/types';
@@ -12,26 +12,6 @@ interface SurahSelectionSectionProps {
   onFormDataChange: (updates: Partial<PlanFormData>) => void;
   chapters: Chapter[];
 }
-
-const parseNumericValue = (value: string): number | undefined => {
-  if (!value) return undefined;
-  const parsed = Number.parseInt(value, 10);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
-};
-
-const buildSurahOptions = (chapters: Chapter[]): SurahOption[] =>
-  chapters.map((chapter) => ({
-    value: String(chapter.id),
-    label: `${String(chapter.id).padStart(3, '0')} • ${chapter.name_simple}`,
-  }));
-
-const buildVerseOptions = (chapter?: Chapter): SurahOption[] => {
-  if (!chapter?.verses_count) return [];
-  return Array.from({ length: chapter.verses_count }, (_, index) => {
-    const value = String(index + 1);
-    return { value, label: value };
-  });
-};
 
 const clampVerseToChapter = (
   verse: number | undefined,
@@ -57,16 +37,8 @@ export const SurahSelectionSection = ({
     }, {});
   }, [chapters]);
 
-  const surahOptions = useMemo(() => buildSurahOptions(chapters), [chapters]);
-  const startChapter = formData.startSurah ? chapterLookup[formData.startSurah] : undefined;
-  const endChapter = formData.endSurah ? chapterLookup[formData.endSurah] : undefined;
-
-  const startVerseOptions = useMemo(() => buildVerseOptions(startChapter), [startChapter]);
-  const endVerseOptions = useMemo(() => buildVerseOptions(endChapter), [endChapter]);
-
   const handleStartSurahChange = useCallback(
-    (value: string) => {
-      const nextSurah = parseNumericValue(value);
+    (nextSurah: number | undefined) => {
       const chapter = nextSurah ? chapterLookup[nextSurah] : undefined;
       const updates: Partial<PlanFormData> = { startSurah: nextSurah };
       if (!chapter) {
@@ -80,8 +52,7 @@ export const SurahSelectionSection = ({
   );
 
   const handleEndSurahChange = useCallback(
-    (value: string) => {
-      const nextSurah = parseNumericValue(value);
+    (nextSurah: number | undefined) => {
       const chapter = nextSurah ? chapterLookup[nextSurah] : undefined;
       const updates: Partial<PlanFormData> = { endSurah: nextSurah };
       if (!chapter) {
@@ -99,15 +70,15 @@ export const SurahSelectionSection = ({
   );
 
   const handleStartVerseChange = useCallback(
-    (value: string) => {
-      onFormDataChange({ startVerse: parseNumericValue(value) });
+    (nextVerse: number | undefined) => {
+      onFormDataChange({ startVerse: nextVerse });
     },
     [onFormDataChange]
   );
 
   const handleEndVerseChange = useCallback(
-    (value: string) => {
-      onFormDataChange({ endVerse: parseNumericValue(value) });
+    (nextVerse: number | undefined) => {
+      onFormDataChange({ endVerse: nextVerse });
     },
     [onFormDataChange]
   );
@@ -118,8 +89,7 @@ export const SurahSelectionSection = ({
         label="Start"
         surahValue={formData.startSurah}
         verseValue={formData.startVerse}
-        surahOptions={surahOptions}
-        verseOptions={startVerseOptions}
+        chapters={chapters}
         onSurahChange={handleStartSurahChange}
         onVerseChange={handleStartVerseChange}
       />
@@ -128,8 +98,7 @@ export const SurahSelectionSection = ({
         label="End"
         surahValue={formData.endSurah}
         verseValue={formData.endVerse}
-        surahOptions={surahOptions}
-        verseOptions={endVerseOptions}
+        chapters={chapters}
         onSurahChange={handleEndSurahChange}
         onVerseChange={handleEndVerseChange}
       />
@@ -141,63 +110,36 @@ interface RangeBoundarySectionProps {
   label: string;
   surahValue: number | undefined;
   verseValue: number | undefined;
-  surahOptions: SurahOption[];
-  verseOptions: SurahOption[];
-  onSurahChange: (value: string) => void;
-  onVerseChange: (value: string) => void;
+  chapters: Chapter[];
+  onSurahChange: (value: number | undefined) => void;
+  onVerseChange: (value: number | undefined) => void;
 }
 
 const RangeBoundarySection = ({
   label,
   surahValue,
   verseValue,
-  surahOptions,
-  verseOptions,
+  chapters,
   onSurahChange,
   onVerseChange,
 }: RangeBoundarySectionProps): React.JSX.Element => {
-  const surahString = typeof surahValue === 'number' ? String(surahValue) : '';
-  const verseString = typeof verseValue === 'number' ? String(verseValue) : '';
-  const hasSurahSelection = surahString.length > 0;
-  const surahInputId = useId();
-  const verseInputId = useId();
-  const surahLabel = `${label} surah`;
-  const verseLabel = `${label} verse`;
-
   return (
     <section className="space-y-3">
       <div className="text-sm font-semibold text-foreground">{label}</div>
-
-      <div className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-3 w-full">
-        <div className="w-full min-w-0">
-          <label className="sr-only" htmlFor={surahInputId}>
-            {surahLabel}
-          </label>
-          <SurahSelect
-            inputId={surahInputId}
-            value={surahString}
-            onChange={onSurahChange}
-            options={surahOptions}
-            placeholder="Select a Surah"
-            className="w-full"
-          />
-        </div>
-
-        <div className="w-full min-w-0">
-          <label className="sr-only" htmlFor={verseInputId}>
-            {verseLabel}
-          </label>
-          <SurahSelect
-            inputId={verseInputId}
-            value={verseString}
-            onChange={onVerseChange}
-            options={verseOptions}
-            placeholder="Verse"
-            disabled={!hasSurahSelection || verseOptions.length === 0}
-            className="w-full"
-          />
-        </div>
-      </div>
+      <SurahVerseSelector
+        chapters={chapters}
+        selectedSurah={surahValue}
+        selectedVerse={verseValue}
+        onSurahChange={onSurahChange}
+        onVerseChange={onVerseChange}
+        surahLabel={`${label} surah`}
+        verseLabel={`${label} verse`}
+      // We do not hide labels here as per discussion, but if we wanted to match previous visual exactly:
+      // We could pass classNames.
+      // Actually, previous was sr-only. 
+      // My component doesn't support hiding labels yet.
+      // But for unification, visible labels are generally better.
+      />
     </section>
   );
 };

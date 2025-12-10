@@ -1,7 +1,15 @@
 import type { RepeatOptions } from '@/app/shared/player/types';
 
 export function hasNonIntegerValues(opts: RepeatOptions): boolean {
-  const numericKeys: (keyof RepeatOptions)[] = ['start', 'end', 'playCount', 'repeatEach', 'delay'];
+  const numericKeys: (keyof RepeatOptions)[] = [
+    'start',
+    'end',
+    'surahId',
+    'verseNumber',
+    'playCount',
+    'repeatEach',
+    'delay',
+  ];
   return numericKeys.some((key) => {
     const val = opts[key];
     return val !== undefined && !Number.isInteger(val);

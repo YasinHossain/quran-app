@@ -7,6 +7,18 @@ import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 
+jest.mock('@/app/shared/navigation/hooks/useSurahNavigationData', () => ({
+  useSurahNavigationData: () => ({
+    chapters: [
+      { id: 1, name_simple: 'Al-Fatihah', verses_count: 7 },
+      { id: 2, name_simple: 'Al-Baqarah', verses_count: 286 },
+    ],
+    surahs: [],
+    isLoading: false,
+    error: undefined,
+  }),
+}));
+
 beforeAll(() => {
   setMatchMedia(false);
 });
@@ -42,4 +54,34 @@ test('rejects decimal repeat values', async () => {
   await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
   expect(onClose).not.toHaveBeenCalled();
   expect(screen.getByText('Please enter whole numbers only.')).toBeInTheDocument();
+});
+
+test('requires surah and verse when using single mode', async () => {
+  const onClose = jest.fn();
+
+  renderWithProviders(
+    <PlaybackOptionsModal open onClose={onClose} activeTab="repeat" setActiveTab={() => {}} />
+  );
+
+  await userEvent.click(screen.getByRole('button', { name: /^single$/i }));
+
+  expect(screen.getByLabelText('Surah')).toBeInTheDocument();
+  expect(screen.getByLabelText('Verse')).toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
+
+  expect(onClose).not.toHaveBeenCalled();
+  expect(screen.getByText('Select a surah and verse to repeat.')).toBeInTheDocument();
+});
+
+test('hides play count in single mode', async () => {
+  const onClose = jest.fn();
+  renderWithProviders(
+    <PlaybackOptionsModal open onClose={onClose} activeTab="repeat" setActiveTab={() => {}} />
+  );
+
+  await userEvent.click(screen.getByRole('button', { name: /^single$/i }));
+
+  expect(screen.queryByLabelText('Play count')).not.toBeInTheDocument();
+  expect(screen.getByLabelText('Repeat each')).toBeInTheDocument();
 });

@@ -12,7 +12,7 @@ import {
   useId,
 } from 'react';
 
-import { SurahSelect, type SurahOption } from '@/app/shared/components/go-to/SurahSelect';
+import { SurahVerseSelector } from '@/app/shared/components/SurahVerseSelector';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 
 interface GoToSurahVerseFormProps {
@@ -32,78 +32,39 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
   subtitle,
   buttonLabel = 'Go',
 }: GoToSurahVerseFormProps): ReactElement {
-  const [selectedSurah, setSelectedSurah] = useState('');
-  const [verse, setVerse] = useState('');
+  /* State is now stored as numbers to match SurahVerseSelector */
+  const [selectedSurah, setSelectedSurah] = useState<number | undefined>(undefined);
+  const [verse, setVerse] = useState<number | undefined>(undefined);
   const { chapters, isLoading } = useSurahNavigationData();
-  const formInstanceId = useId();
-  const surahInputId = `${formInstanceId}-surah`;
-  const verseInputId = `${formInstanceId}-verse`;
 
-  const surahOptions: SurahOption[] = useMemo(
-    () =>
-      chapters.map((chapter) => ({
-        value: String(chapter.id),
-        label: `${String(chapter.id).padStart(3, '0')} • ${chapter.name_simple}`,
-      })),
-    [chapters]
-  );
-
-  const selectedChapter = useMemo(
-    () => chapters.find((chapter) => String(chapter.id) === selectedSurah),
+  const activeChapter = useMemo(
+    () => (selectedSurah ? chapters.find((c) => c.id === selectedSurah) : undefined),
     [chapters, selectedSurah]
   );
 
-  const verseOptions = useMemo(() => {
-    if (!selectedChapter?.verses_count) return [];
-    return Array.from({ length: selectedChapter.verses_count }, (_, index) => String(index + 1));
-  }, [selectedChapter]);
-
-  const verseSelectOptions: SurahOption[] = useMemo(
-    () => verseOptions.map((value) => ({ value, label: value })),
-    [verseOptions]
-  );
-
+  // Reset verse if surah changes or if invalid
   useEffect(() => {
     if (!selectedSurah) {
-      setVerse('');
+      setVerse(undefined);
       return;
     }
-    if (!verseOptions.length) {
-      setVerse('');
-      return;
+    // Logic to clamp verse or clear it if out of bounds could go here
+    // But the Selector handles the UI options. 
+    // We just ensure data consistency.
+    if (activeChapter?.verses_count && verse && verse > activeChapter.verses_count) {
+      setVerse(activeChapter.verses_count);
     }
-    if (verse && !verseOptions.includes(verse)) {
-      setVerse(verseOptions[verseOptions.length - 1] ?? '');
-    }
-  }, [selectedSurah, verseOptions, verse]);
-
-  const clampVerse = useCallback(
-    (rawVerse: string, surahId: string): number | undefined => {
-      const trimmed = rawVerse.trim();
-      if (!trimmed) return undefined;
-      const parsed = Number.parseInt(trimmed, 10);
-      if (!Number.isFinite(parsed)) return undefined;
-      const minClamped = Math.max(parsed, 1);
-      const chapter = chapters.find((c) => String(c.id) === surahId);
-      if (chapter?.verses_count) {
-        return Math.min(minClamped, chapter.verses_count);
-      }
-      return minClamped;
-    },
-    [chapters]
-  );
+  }, [selectedSurah, activeChapter, verse]);
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>): void => {
       event.preventDefault();
       if (!selectedSurah) return;
-      const surahId = Number.parseInt(selectedSurah, 10);
-      if (!Number.isFinite(surahId)) return;
-      const verseNumber = clampVerse(verse, selectedSurah);
-      onNavigate(surahId, verseNumber);
+      // Verse is optional in logic, but if provided, use it
+      onNavigate(selectedSurah, verse);
       afterNavigate?.();
     },
-    [afterNavigate, clampVerse, onNavigate, selectedSurah, verse]
+    [afterNavigate, onNavigate, selectedSurah, verse]
   );
 
   const disabled = !selectedSurah || isLoading;
@@ -125,45 +86,15 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
         </button>
       </div>
 
-      <div className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-3">
-        <div className="w-full min-w-0">
-          <label className="block text-sm font-semibold text-foreground mb-2" htmlFor={surahInputId}>
-            Surah
-          </label>
-          <SurahSelect
-            inputId={surahInputId}
-            value={selectedSurah}
-            onChange={setSelectedSurah}
-            options={surahOptions}
-            placeholder={isLoading ? 'Loading surahs…' : 'Select a Surah'}
-            disabled={isLoading}
-            className="w-full"
-          />
-        </div>
-
-        <div className="w-full min-w-0">
-          <label className="block text-sm font-semibold text-foreground mb-2" htmlFor={verseInputId}>
-            Verse (optional)
-          </label>
-          <SurahSelect
-            inputId={verseInputId}
-            value={verse}
-            onChange={setVerse}
-            options={verseSelectOptions}
-            placeholder={
-              !selectedSurah
-                ? 'Select a surah first'
-                : verseOptions.length
-                  ? 'Select a verse'
-                  : 'Loading verses…'
-            }
-            disabled={!selectedSurah || !verseOptions.length || isLoading}
-            clearable
-            clearLabel="Clear verse selection"
-            className="w-full"
-          />
-        </div>
-      </div>
+      <SurahVerseSelector
+        chapters={chapters}
+        isLoading={isLoading}
+        selectedSurah={selectedSurah}
+        selectedVerse={verse}
+        onSurahChange={setSelectedSurah}
+        onVerseChange={setVerse}
+        verseLabel="Verse (optional)"
+      />
     </form>
   );
 });

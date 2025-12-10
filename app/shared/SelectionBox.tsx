@@ -1,3 +1,5 @@
+'use client';
+
 import React, { memo, useId } from 'react';
 
 import { ChevronRightIcon } from './icons';
