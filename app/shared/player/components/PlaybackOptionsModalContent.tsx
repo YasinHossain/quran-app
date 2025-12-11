@@ -62,29 +62,35 @@ export const PlaybackOptionsModalContent = memo(function PlaybackOptionsModalCon
   return (
     <ModalContainer onClose={onClose}>
       <div
-        className="w-full max-w-3xl rounded-2xl bg-background p-4 md:p-6 shadow-xl"
+        className="flex flex-col w-full max-w-3xl max-h-[85vh] rounded-2xl bg-background shadow-xl"
         role="dialog"
         aria-modal="true"
         tabIndex={-1}
       >
-        <ModalHeader onClose={onClose} />
-        <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
-
-        <div className="grid md:grid-cols-2 gap-4">
-          {activeTab === 'reciter' && (
-            <ReciterPanel localReciter={localReciter} setLocalReciter={setLocalReciter} />
-          )}
-          {activeTab === 'repeat' && (
-            <RepeatPanel
-              localRepeat={localRepeat}
-              setLocalRepeat={setLocalRepeat}
-              rangeWarning={rangeWarning}
-              setRangeWarning={setRangeWarning}
-            />
-          )}
+        <div className="flex-shrink-0 px-4 pt-4 md:px-6 md:pt-6">
+          <ModalHeader onClose={onClose} />
+          <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
         </div>
 
-        <ModalFooter onClose={onClose} onApply={commit} />
+        <div className="flex-1 overflow-y-auto min-h-0 px-4 md:px-6">
+          <div className="grid md:grid-cols-2 gap-4 pb-1">
+            {activeTab === 'reciter' && (
+              <ReciterPanel localReciter={localReciter} setLocalReciter={setLocalReciter} />
+            )}
+            {activeTab === 'repeat' && (
+              <RepeatPanel
+                localRepeat={localRepeat}
+                setLocalRepeat={setLocalRepeat}
+                rangeWarning={rangeWarning}
+                setRangeWarning={setRangeWarning}
+              />
+            )}
+          </div>
+        </div>
+
+        <div className="flex-shrink-0 px-4 pb-4 md:px-6 md:pb-6">
+          <ModalFooter onClose={onClose} onApply={commit} />
+        </div>
       </div>
     </ModalContainer>
   );

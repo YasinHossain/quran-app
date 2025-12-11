@@ -24,16 +24,16 @@ export interface Track {
 
 export interface RepeatOptions {
   mode: 'off' | 'single' | 'range' | 'surah';
-  start?: number;
-  end?: number;
-  surahId?: number;
-  verseNumber?: number;
-  startSurahId?: number;
-  startVerseNumber?: number;
-  endSurahId?: number;
-  endVerseNumber?: number;
-  rangeSize?: number;
-  playCount?: number;
-  repeatEach?: number;
-  delay?: number;
+  start?: number | undefined;
+  end?: number | undefined;
+  surahId?: number | undefined;
+  verseNumber?: number | undefined;
+  startSurahId?: number | undefined;
+  startVerseNumber?: number | undefined;
+  endSurahId?: number | undefined;
+  endVerseNumber?: number | undefined;
+  rangeSize?: number | undefined;
+  playCount?: number | undefined;
+  repeatEach?: number | undefined;
+  delay?: number | undefined;
 }

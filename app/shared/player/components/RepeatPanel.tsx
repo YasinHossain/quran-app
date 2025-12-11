@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useCallback } from 'react';
+import { Minus, Plus } from 'lucide-react';
 
 import { SurahVerseSelector } from '@/app/shared/components/SurahVerseSelector';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
@@ -24,7 +25,7 @@ export function RepeatPanel({
     }, [localRepeat.mode, setRangeWarning]);
 
     return (
-        <div className="md:col-span-2 grid md:grid-cols-2 gap-4">
+        <div className="md:col-span-2 flex flex-col gap-4">
             <ModeSelector localRepeat={localRepeat} setLocalRepeat={setLocalRepeat} />
             <RepeatFields
                 localRepeat={localRepeat}
@@ -44,22 +45,19 @@ function ModeSelector({
     setLocalRepeat: React.Dispatch<React.SetStateAction<RepeatOptions>>;
 }): React.JSX.Element {
     return (
-        <div className="rounded-xl border border-border p-4">
-            <div className="font-semibold mb-3 text-foreground">Mode</div>
-            <div className="flex items-center p-1.5 rounded-full bg-interactive border border-border">
-                {(['off', 'single', 'range', 'surah'] as const).map((m) => (
-                    <button
-                        key={m}
-                        onClick={() => setLocalRepeat({ ...localRepeat, mode: m })}
-                        className={`flex-1 px-3 py-2 rounded-full text-sm font-semibold capitalize transition-colors ${localRepeat.mode === m
-                            ? 'bg-surface shadow text-foreground'
-                            : 'text-muted hover:text-foreground hover:bg-surface/30'
-                            }`}
-                    >
-                        {m}
-                    </button>
-                ))}
-            </div>
+        <div className="flex items-center p-1.5 rounded-full bg-interactive border border-border">
+            {(['single', 'range', 'surah'] as const).map((m) => (
+                <button
+                    key={m}
+                    onClick={() => setLocalRepeat({ ...localRepeat, mode: m })}
+                    className={`flex-1 px-3 py-2 rounded-full text-sm font-semibold capitalize transition-colors ${localRepeat.mode === m
+                        ? 'bg-surface shadow text-foreground'
+                        : 'text-muted hover:text-foreground hover:bg-surface/30'
+                        }`}
+                >
+                    {m}
+                </button>
+            ))}
         </div>
     );
 }
@@ -72,12 +70,15 @@ function RepeatFields({
 }: Props): React.JSX.Element {
     const isSingle = localRepeat.mode === 'single';
     const isSurah = localRepeat.mode === 'surah';
+    // Include 'off' in showRange for backward compatibility
     const showRange = localRepeat.mode === 'range' || localRepeat.mode === 'off';
     const { chapters, isLoading } = useSurahNavigationData();
 
     return (
-        <div className="rounded-xl border border-border p-4 grid grid-cols-2 gap-3">
-            {rangeWarning && <div className="col-span-2 text-sm text-status-warning">{rangeWarning}</div>}
+        <div className="rounded-xl border border-border p-4 flex flex-col gap-4">
+            {rangeWarning && <div className="text-sm text-status-warning">{rangeWarning}</div>}
+
+            {/* Main Selection Area */}
             {isSingle ? (
                 <SingleVerseFields
                     localRepeat={localRepeat}
@@ -102,25 +103,26 @@ function RepeatFields({
                     chapters={chapters}
                     isLoading={isLoading}
                 />
-            ) : (
-                <></>
-            )}
-            {!isSingle && (
+            ) : null}
+
+            {/* Settings Section */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {!isSingle && (
+                    <NumberField
+                        label="Play Count"
+                        value={localRepeat.playCount ?? 1}
+                        min={1}
+                        onChange={(v) => setLocalRepeat({ ...localRepeat, playCount: v })}
+                    />
+                )}
                 <NumberField
-                    label="Play count"
-                    value={localRepeat.playCount ?? 1}
+                    label="Repeat Each"
+                    value={localRepeat.repeatEach ?? 1}
                     min={1}
-                    onChange={(v) => setLocalRepeat({ ...localRepeat, playCount: v })}
+                    onChange={(v) => setLocalRepeat({ ...localRepeat, repeatEach: v })}
+                    // If Play Count is hidden (isSingle), make this span 2 columns to fill better on larger screens
+                    className={isSingle ? 'sm:col-span-2' : ''}
                 />
-            )}
-            <NumberField
-                label="Repeat each"
-                value={localRepeat.repeatEach ?? 1}
-                min={1}
-                onChange={(v) => setLocalRepeat({ ...localRepeat, repeatEach: v })}
-                className={isSingle ? 'col-span-2' : undefined}
-            />
-            <div className="col-span-2">
                 <NumberField
                     label="Delay (s)"
                     value={localRepeat.delay ?? 0}
@@ -145,7 +147,6 @@ function SingleVerseFields({
     chapters: ReturnType<typeof useSurahNavigationData>['chapters'];
     isLoading: boolean;
 }): React.JSX.Element {
-    // Validate verse number if loaded
     const selectedSurah = useMemo(
         () => chapters.find((chapter) => chapter.id === localRepeat.surahId),
         [chapters, localRepeat.surahId]
@@ -173,16 +174,14 @@ function SingleVerseFields({
     }, [setLocalRepeat, setRangeWarning]);
 
     return (
-        <div className="col-span-2">
-            <SurahVerseSelector
-                chapters={chapters}
-                isLoading={isLoading}
-                selectedSurah={localRepeat.surahId}
-                selectedVerse={localRepeat.verseNumber}
-                onSurahChange={handleSurahChange}
-                onVerseChange={handleVerseChange}
-            />
-        </div>
+        <SurahVerseSelector
+            chapters={chapters}
+            isLoading={isLoading}
+            selectedSurah={localRepeat.surahId}
+            selectedVerse={localRepeat.verseNumber}
+            onSurahChange={handleSurahChange}
+            onVerseChange={handleVerseChange}
+        />
     );
 }
 
@@ -209,17 +208,15 @@ function SurahFields({
     );
 
     return (
-        <div className="col-span-2">
-            <SurahVerseSelector
-                chapters={chapters}
-                isLoading={isLoading}
-                selectedSurah={localRepeat.surahId}
-                selectedVerse={undefined}
-                onSurahChange={handleSurahChange}
-                onVerseChange={noopVerseChange}
-                hideVerse
-            />
-        </div>
+        <SurahVerseSelector
+            chapters={chapters}
+            isLoading={isLoading}
+            selectedSurah={localRepeat.surahId}
+            selectedVerse={undefined}
+            onSurahChange={handleSurahChange}
+            onVerseChange={noopVerseChange}
+            hideVerse
+        />
     );
 }
 
@@ -347,10 +344,10 @@ function RangeFields({
                 selectedVerse={selectedStartVerse}
                 onSurahChange={handleStartSurahChange}
                 onVerseChange={handleStartVerseChange}
-                surahLabel="Start"
-                verseLabel="Start verse"
-                className="col-span-2"
+                surahLabel="Start Surah"
+                verseLabel="Start Verse"
             />
+
             <SurahVerseSelector
                 chapters={chapters}
                 isLoading={isLoading}
@@ -358,9 +355,8 @@ function RangeFields({
                 selectedVerse={selectedEndVerse}
                 onSurahChange={handleEndSurahChange}
                 onVerseChange={handleEndVerseChange}
-                surahLabel="End"
-                verseLabel="End verse"
-                className="col-span-2"
+                surahLabel="End Surah"
+                verseLabel="End Verse"
             />
         </>
     );
@@ -379,20 +375,44 @@ function NumberField({
     min?: number;
     className?: string;
 }): React.JSX.Element {
+    const handleIncrement = () => onChange(value + 1);
+    const handleDecrement = () => {
+        if (value > min) {
+            onChange(value - 1);
+        }
+    };
+
     return (
-        <label className={`text-sm ${className ?? ''}`}>
+        <div className={className}>
             <span className="block mb-1 text-sm font-semibold text-foreground">{label}</span>
-            <input
-                type="number"
-                value={Number.isFinite(value) ? value : 0}
-                min={min}
-                step={1}
-                onChange={(e) => {
-                    const v = parseInt(e.target.value, 10);
-                    onChange(Number.isNaN(v) ? (min ?? value) : v);
-                }}
-                className="w-full rounded-lg border border-border bg-interactive/60 px-3 py-2 text-foreground placeholder:text-muted focus:border-transparent focus:ring-2 focus:ring-accent focus:outline-none transition-colors duration-150"
-            />
-        </label>
+            <div className="flex items-center w-full rounded-lg border border-border bg-interactive/60 text-foreground focus-within:border-accent focus-within:ring-1 focus-within:ring-accent transition-colors duration-150">
+                <button
+                    type="button"
+                    onClick={handleDecrement}
+                    disabled={value <= min}
+                    className="p-2.5 text-muted hover:text-foreground disabled:opacity-30 disabled:hover:text-muted transition-colors"
+                >
+                    <Minus size={16} />
+                </button>
+                <input
+                    type="number"
+                    value={Number.isFinite(value) ? value : 0}
+                    min={min}
+                    step={1}
+                    onChange={(e) => {
+                        const v = parseInt(e.target.value, 10);
+                        onChange(Number.isNaN(v) ? (min ?? value) : v);
+                    }}
+                    className="flex-1 min-w-0 bg-transparent p-2 text-center text-foreground placeholder:text-muted focus:outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                />
+                <button
+                    type="button"
+                    onClick={handleIncrement}
+                    className="p-2.5 text-muted hover:text-foreground transition-colors"
+                >
+                    <Plus size={16} />
+                </button>
+            </div>
+        </div>
     );
 }
