@@ -28,6 +28,11 @@ export interface RepeatOptions {
   end?: number;
   surahId?: number;
   verseNumber?: number;
+  startSurahId?: number;
+  startVerseNumber?: number;
+  endSurahId?: number;
+  endVerseNumber?: number;
+  rangeSize?: number;
   playCount?: number;
   repeatEach?: number;
   delay?: number;

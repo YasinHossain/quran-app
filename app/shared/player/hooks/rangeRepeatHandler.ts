@@ -1,7 +1,14 @@
+import { compareVerseKeys } from '@/app/shared/player/utils/repeat';
+
+import { restartVerseWithDelay } from './repeatHelpers';
+
 interface RangeRepeatArgs {
   start: number;
   end: number;
+  startKey?: string | null;
+  endKey?: string | null;
   currentAyah: number | null;
+  currentKey?: string | null;
   delay: number;
   verseRepeatsLeft: number;
   repeatEach: number;
@@ -12,12 +19,16 @@ interface RangeRepeatArgs {
   setVerseRepeatsLeft: (n: number) => void;
   setPlayRepeatsLeft: (n: number) => void;
   playRepeatsLeft: number;
+  rangeSize?: number;
 }
 
 export function createRangeRepeatHandler({
   start,
   end,
+  startKey,
+  endKey,
   currentAyah,
+  currentKey,
   delay,
   verseRepeatsLeft,
   repeatEach,
@@ -28,25 +39,48 @@ export function createRangeRepeatHandler({
   setVerseRepeatsLeft,
   setPlayRepeatsLeft,
   playRepeatsLeft,
+  rangeSize,
 }: RangeRepeatArgs): () => boolean {
+  const shouldAdvance = (): boolean => {
+    if (currentKey && endKey) {
+      return compareVerseKeys(currentKey, endKey) < 0;
+    }
+    if (currentAyah !== null) return currentAyah < end;
+    return false;
+  };
+
+  const getRewindSteps = (): number => {
+    if (rangeSize && rangeSize > 0) return Math.max(0, rangeSize - 1);
+    return Math.max(0, end - start);
+  };
+
+  const restartRange = (): void => {
+    const steps = getRewindSteps();
+    if (steps <= 0) {
+      restartVerseWithDelay({ delay, seek, play });
+      return;
+    }
+    setTimeout(() => {
+      for (let i = 0; i < steps; i += 1) {
+        onPrev?.();
+      }
+    }, delay);
+  };
+
   return () => {
     if (verseRepeatsLeft > 1) {
       setVerseRepeatsLeft(verseRepeatsLeft - 1);
-      seek(0);
-      play();
+      restartVerseWithDelay({ delay, seek, play });
       return true;
     }
     setVerseRepeatsLeft(repeatEach);
-    if (currentAyah && currentAyah < end) {
+    if (shouldAdvance()) {
       onNext?.();
       return true;
     }
     if (playRepeatsLeft > 1) {
       setPlayRepeatsLeft(playRepeatsLeft - 1);
-      const steps = end - start;
-      setTimeout(() => {
-        for (let i = 0; i < steps; i++) onPrev?.();
-      }, delay);
+      restartRange();
       return true;
     }
     return false;

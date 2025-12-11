@@ -1,8 +1,11 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { useSettings } from '@/app/providers/SettingsContext';
+import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
+import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
-import { hasNonIntegerValues, adjustRange } from '@/app/shared/player/utils/repeat';
+import { hasNonIntegerValues, adjustRange, deriveRangeBoundaries } from '@/app/shared/player/utils/repeat';
 import { getVerseByKey } from '@/lib/api/verses';
 import { RECITERS } from '@/lib/audio/reciters';
 import { ensureLanguageCode } from '@/lib/text/languageCodes';
@@ -26,6 +29,7 @@ interface UsePlaybackOptionsReturn {
 }
 
 export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePlaybackOptionsReturn {
+  const router = useRouter();
   const {
     reciter,
     setReciter,
@@ -39,6 +43,7 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
     openPlayer,
   } = useAudio();
   const { settings } = useSettings();
+  const { chapters } = useSurahNavigationData();
   const translationIds = useMemo(() => {
     const ids = settings.translationIds?.filter((id) => Number.isFinite(id));
     if (ids?.length) return ids;
@@ -62,25 +67,57 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
     if (isOpen) {
       setLocalReciter(reciter.id.toString());
       const activeVerseNumber = parseActiveVerseNumber();
+      const activeSurahId = activeVerse?.chapter_id;
       const singleDefaults: Partial<RepeatOptions> =
         repeatOptions.mode === 'single'
           ? {
-              surahId: repeatOptions.surahId ?? activeVerse?.chapter_id,
-              verseNumber: repeatOptions.verseNumber ?? activeVerseNumber,
-              start: repeatOptions.verseNumber ?? activeVerseNumber ?? repeatOptions.start,
-              end: repeatOptions.verseNumber ?? activeVerseNumber ?? repeatOptions.end,
-            }
+            surahId: repeatOptions.surahId ?? activeVerse?.chapter_id,
+            verseNumber: repeatOptions.verseNumber ?? activeVerseNumber,
+            start: repeatOptions.verseNumber ?? activeVerseNumber ?? repeatOptions.start,
+            end: repeatOptions.verseNumber ?? activeVerseNumber ?? repeatOptions.end,
+          }
           : {};
       const surahDefaults: Partial<RepeatOptions> =
         repeatOptions.mode === 'surah'
           ? {
-              surahId: repeatOptions.surahId ?? activeVerse?.chapter_id,
-              verseNumber: undefined,
-              start: 1,
-              end: 1,
-            }
+            surahId: repeatOptions.surahId ?? activeVerse?.chapter_id,
+            verseNumber: undefined,
+            start: 1,
+            end: 1,
+          }
           : {};
-      setLocalRepeat({ ...repeatOptions, ...singleDefaults, ...surahDefaults });
+      const baseRangeDefaults: Partial<RepeatOptions> = {
+        startSurahId: repeatOptions.startSurahId ?? repeatOptions.surahId ?? activeSurahId,
+        endSurahId:
+          repeatOptions.endSurahId ??
+          repeatOptions.startSurahId ??
+          repeatOptions.surahId ??
+          activeSurahId,
+        startVerseNumber:
+          repeatOptions.startVerseNumber ?? repeatOptions.start ?? activeVerseNumber ?? 1,
+        endVerseNumber:
+          repeatOptions.endVerseNumber ??
+          repeatOptions.end ??
+          repeatOptions.startVerseNumber ??
+          repeatOptions.start ??
+          activeVerseNumber ??
+          1,
+        rangeSize: repeatOptions.rangeSize,
+      };
+      const rangeDefaults: Partial<RepeatOptions> =
+        repeatOptions.mode === 'range'
+          ? {
+            ...baseRangeDefaults,
+            start: baseRangeDefaults.startVerseNumber ?? repeatOptions.start ?? activeVerseNumber ?? 1,
+            end:
+              baseRangeDefaults.endVerseNumber ??
+              baseRangeDefaults.startVerseNumber ??
+              repeatOptions.end ??
+              activeVerseNumber ??
+              1,
+          }
+          : baseRangeDefaults;
+      setLocalRepeat({ ...repeatOptions, ...singleDefaults, ...surahDefaults, ...rangeDefaults });
     }
   }, [isOpen, reciter, repeatOptions, activeVerse]);
 
@@ -125,6 +162,10 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
           openPlayer();
           setRangeWarning(null);
           setRepeatOptions(nextRepeat);
+
+          const href = buildSurahRoute(surahId, { startVerse: normalizedVerse, forceSeq: true });
+          router.push(href, { scroll: false });
+
           onClose();
         } catch (error) {
           setRangeWarning('Unable to load the selected verse. Please try again.');
@@ -159,9 +200,57 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
           openPlayer();
           setRangeWarning(null);
           setRepeatOptions(nextRepeat);
+
+          const href = buildSurahRoute(surahId, { startVerse: 1, forceSeq: true });
+          router.push(href, { scroll: false });
+
           onClose();
         } catch (error) {
           setRangeWarning('Unable to load the selected surah. Please try again.');
+        }
+        return;
+      }
+
+      if (localRepeat.mode === 'range') {
+        const range = deriveRangeBoundaries(localRepeat, chapters);
+        if (!range) {
+          setRangeWarning('Select a start and end surah and verse to repeat.');
+          return;
+        }
+        const nextRepeat: RepeatOptions = {
+          ...localRepeat,
+          mode: 'range',
+          surahId: range.startSurahId,
+          startSurahId: range.startSurahId,
+          startVerseNumber: range.startVerseNumber,
+          endSurahId: range.endSurahId,
+          endVerseNumber: range.endVerseNumber,
+          start: range.startVerseNumber,
+          end: range.endVerseNumber,
+          rangeSize: range.rangeSize,
+          playCount: localRepeat.playCount ?? 1,
+          repeatEach: localRepeat.repeatEach ?? 1,
+          delay: localRepeat.delay ?? 0,
+        };
+        try {
+          const verse = await getVerseByKey(range.startKey, translationIds, wordLang);
+          setActiveVerse(verse);
+          setPlayingId(verse.id);
+          setLoadingId(verse.id);
+          setIsPlaying(true);
+          openPlayer();
+          setRangeWarning(null);
+          setRepeatOptions(nextRepeat);
+
+          const href = buildSurahRoute(range.startSurahId, {
+            startVerse: range.startVerseNumber,
+            forceSeq: true,
+          });
+          router.push(href, { scroll: false });
+
+          onClose();
+        } catch (error) {
+          setRangeWarning('Unable to load the selected range. Please try again.');
         }
         return;
       }
