@@ -7,7 +7,7 @@ interface Props {
 
 export function TrackInfo({ title, artist }: Props): React.JSX.Element {
   return (
-    <div className="flex items-center gap-3 min-w-0 flex-shrink-0 sm:min-w-[220px] pl-1">
+    <div className="flex items-center gap-3 min-w-0 pl-1">
       <div className="min-w-0 flex-1 sm:flex-initial">
         <div
           className="text-sm font-semibold tracking-[-0.01em] truncate text-foreground"

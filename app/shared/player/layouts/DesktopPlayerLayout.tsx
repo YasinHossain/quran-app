@@ -41,26 +41,28 @@ export const DesktopPlayerLayout = React.memo(function DesktopPlayerLayout({
 }: DesktopPlayerLayoutProps): React.JSX.Element {
   return (
     <>
-      <TrackInfo title={title} artist={artist} />
-      <TransportControls
-        isPlaying={isPlaying}
-        interactable={interactable}
-        {...(onPrev
-          ? {
-            onPrev: () => {
-              void onPrev();
-            },
-          }
-          : {})}
-        {...(onNext
-          ? {
-            onNext: () => {
-              void onNext();
-            },
-          }
-          : {})}
-        togglePlay={togglePlay}
-      />
+      <div className="flex items-center gap-4 min-w-0">
+        <TrackInfo title={title} artist={artist} />
+        <TransportControls
+          isPlaying={isPlaying}
+          interactable={interactable}
+          {...(onPrev
+            ? {
+              onPrev: () => {
+                void onPrev();
+              },
+            }
+            : {})}
+          {...(onNext
+            ? {
+              onNext: () => {
+                void onNext();
+              },
+            }
+            : {})}
+          togglePlay={togglePlay}
+        />
+      </div>
       <Timeline
         current={current}
         duration={duration}
