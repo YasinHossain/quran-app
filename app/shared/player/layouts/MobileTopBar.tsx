@@ -81,8 +81,10 @@ export function MobileTopBar({
   closePlayer,
 }: Props): React.JSX.Element {
   return (
-    <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-      <CoverAndText title={title} artist={artist} />
+    <div className="flex items-center justify-between gap-2 min-[450px]:grid min-[450px]:grid-cols-[1fr_auto_1fr]">
+      <div className="hidden min-[450px]:block min-w-0">
+        <CoverAndText title={title} artist={artist} />
+      </div>
       <TransportControls
         isPlaying={isPlaying}
         interactable={interactable}

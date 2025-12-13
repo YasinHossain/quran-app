@@ -42,7 +42,9 @@ export const DesktopPlayerLayout = React.memo(function DesktopPlayerLayout({
   return (
     <>
       <div className="flex items-center gap-4 min-w-0">
-        <TrackInfo title={title} artist={artist} />
+        <div className="hidden md:block min-w-0">
+          <TrackInfo title={title} artist={artist} />
+        </div>
         <TransportControls
           isPlaying={isPlaying}
           interactable={interactable}
