@@ -74,7 +74,7 @@ export const HeaderSearch = memo(function HeaderSearch(): ReactElement {
         {showPopover && (
           <div className="absolute mt-2 z-dropdown left-1/2 -translate-x-1/2 w-[86vw] sm:w-[22rem] md:w-[26rem] lg:w-[28rem]">
             <div
-              className="rounded-2xl bg-background shadow-xl overflow-visible"
+              className="rounded-2xl bg-surface shadow-xl overflow-visible"
               role="presentation"
               tabIndex={-1}
               onMouseDown={(event): void => {

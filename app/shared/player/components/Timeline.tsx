@@ -64,7 +64,7 @@ function SeekSliderThumb({ tooltipLabel }: { tooltipLabel: string }): React.JSX.
     <Tooltip.Root>
       <Tooltip.Trigger asChild>
         <Slider.Thumb
-          className="block h-3 w-3 rounded-full shadow-[0_1px_2px_rgba(2,6,23,0.15)] focus:outline-none focus:ring-2 focus:ring-offset-2 bg-accent relative z-[120]"
+          className="block h-3 w-3 rounded-full shadow-[0_1px_2px_rgba(2,6,23,0.15)] focus:outline-none bg-accent relative z-[120] transition-transform active:scale-110 active:ring-2 active:ring-offset-2 cursor-pointer"
           aria-label="Position"
         />
       </Tooltip.Trigger>

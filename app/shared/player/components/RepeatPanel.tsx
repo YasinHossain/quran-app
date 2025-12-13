@@ -6,6 +6,7 @@ import { Minus, Plus } from 'lucide-react';
 import { SurahVerseSelector } from '@/app/shared/components/SurahVerseSelector';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 import type { RepeatOptions } from '@/app/shared/player/types';
+import { TabToggle } from '@/app/shared/ui/TabToggle';
 
 interface Props {
     localRepeat: RepeatOptions;
@@ -44,21 +45,18 @@ function ModeSelector({
     localRepeat: RepeatOptions;
     setLocalRepeat: React.Dispatch<React.SetStateAction<RepeatOptions>>;
 }): React.JSX.Element {
+    const options = useMemo(() => [
+        { value: 'single', label: 'Single' },
+        { value: 'range', label: 'Range' },
+        { value: 'surah', label: 'Surah' },
+    ], []);
+
     return (
-        <div className="flex items-center p-1.5 rounded-full bg-interactive border border-border">
-            {(['single', 'range', 'surah'] as const).map((m) => (
-                <button
-                    key={m}
-                    onClick={() => setLocalRepeat({ ...localRepeat, mode: m })}
-                    className={`flex-1 px-3 py-2 rounded-full text-sm font-semibold capitalize transition-colors ${localRepeat.mode === m
-                        ? 'bg-surface shadow text-foreground'
-                        : 'text-muted hover:text-foreground hover:bg-surface/30'
-                        }`}
-                >
-                    {m}
-                </button>
-            ))}
-        </div>
+        <TabToggle
+            options={options}
+            value={localRepeat.mode}
+            onChange={(val) => setLocalRepeat({ ...localRepeat, mode: val as any })}
+        />
     );
 }
 

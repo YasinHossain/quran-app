@@ -5,6 +5,8 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePathname } from 'next/navigation';
 
+import { useSidebar } from '@/app/providers/SidebarContext';
+
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 
 import { cn } from '@/lib/utils/cn';
@@ -62,7 +64,7 @@ const MobileNavigation = memo(function MobileNavigation({
   return (
     <nav
       className={cn(
-        'xl:hidden fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out',
+        'xl:hidden fixed bottom-0 left-0 right-0 z-30 transition-all duration-300 ease-in-out',
         'backdrop-blur-lg bg-surface/8 backdrop-saturate-150',
         'shadow-[0_-10px_28px_-18px_rgb(var(--color-foreground)/0.14)]',
         isHidden ? 'translate-y-full' : 'translate-y-0'
@@ -108,6 +110,8 @@ export const Navigation = memo(function Navigation() {
   const pathname = usePathname();
   const { t } = useTranslation();
   const { isHidden } = useHeaderVisibility();
+  // Mobile nav only hides on scroll (isHidden), not when sidebar opens.
+  // We handle sidebar blur via z-index (nav is z-30, sidebar overlay is z-40).
   const hideMobileNav = isHidden;
 
   const navItems = useMemo(

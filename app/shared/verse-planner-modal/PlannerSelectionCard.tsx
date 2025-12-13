@@ -25,15 +25,15 @@ export function PlannerSelectionCard({
   const detailLine = detailParts.join(' · ');
 
   const composedClassName = [
-    'flex w-full flex-col gap-2 rounded-xl border px-4 py-3 text-left transition-all duration-300 sm:px-5 sm:py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 backdrop-blur-sm',
+    'flex w-full flex-col gap-2 rounded-xl border px-4 py-3 text-left transition-all duration-300 sm:px-5 sm:py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 backdrop-blur-sm group',
     isSelected
       ? 'border-accent/50 bg-accent text-on-accent shadow-lg shadow-accent/30'
-      : 'border-border/40 bg-surface/80 text-content-primary shadow-sm backdrop-blur-sm hover:-translate-y-1 hover:shadow-lg hover:border-border/30',
+      : 'border-border/40 bg-surface/80 text-content-primary shadow-sm backdrop-blur-sm',
   ].join(' ');
 
   const titleClassName = isSelected
     ? 'text-base font-semibold leading-snug text-on-accent break-words'
-    : 'text-base font-semibold leading-snug text-content-primary break-words';
+    : 'text-base font-semibold leading-snug text-content-primary break-words group-hover:text-accent transition-colors';
 
   const detailClassName = isSelected
     ? 'text-sm leading-snug text-on-accent/80'
