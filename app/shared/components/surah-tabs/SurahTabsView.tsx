@@ -52,6 +52,7 @@ type ScrollableTabContentProps = Pick<
   | 'isMushafMode'
   | 'scrollRef'
   | 'handleScroll'
+  | 'onClose'
 >;
 
 const ScrollableTabContent = memo(function ScrollableTabContent({

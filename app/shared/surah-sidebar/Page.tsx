@@ -12,6 +12,7 @@ interface Props {
   setSelectedJuzId: (id: number) => void;
   setSelectedSurahId: (id: number) => void;
   rememberScroll: () => void;
+  onClose?: (() => void) | undefined;
 }
 
 export const Page = ({
@@ -22,6 +23,7 @@ export const Page = ({
   setSelectedJuzId,
   setSelectedSurahId,
   rememberScroll,
+  onClose,
 }: Props): React.JSX.Element => {
   const { getPageHref, goToPage } = useNavigationTargets();
 
@@ -41,6 +43,7 @@ export const Page = ({
                 title: `Page ${p}`,
               }}
               onNavigate={() => {
+                onClose?.();
                 setSelectedPageId(p);
                 setSelectedJuzId(getJuzByPage(p));
                 const chap = getSurahByPage(p, chapters);

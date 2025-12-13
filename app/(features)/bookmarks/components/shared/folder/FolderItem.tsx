@@ -60,8 +60,8 @@ export const FolderItem = ({
       isActive={isCurrentFolder}
       direction="column"
       align="start"
-      gap="gap-0"
       customVariant={folderNavigationCardVariant}
+      gap="gap-0"
       className="w-full overflow-visible"
     >
       <FolderHeader

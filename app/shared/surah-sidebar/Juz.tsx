@@ -13,6 +13,7 @@ interface Props {
   setSelectedPageId: (id: number) => void;
   setSelectedSurahId: (id: number) => void;
   rememberScroll: () => void;
+  onClose?: (() => void) | undefined;
 }
 
 export const Juz = ({
@@ -23,6 +24,7 @@ export const Juz = ({
   setSelectedPageId,
   setSelectedSurahId,
   rememberScroll,
+  onClose,
 }: Props): React.JSX.Element => {
   const { getJuzHref, goToJuz } = useNavigationTargets();
 
@@ -43,6 +45,7 @@ export const Juz = ({
                 subtitle: juz.surahRange,
               }}
               onNavigate={() => {
+                onClose?.();
                 setSelectedJuzId(juz.number);
                 const page = JUZ_START_PAGES[juz.number - 1] ?? 1;
                 setSelectedPageId(page);

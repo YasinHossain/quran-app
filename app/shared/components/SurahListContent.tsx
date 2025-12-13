@@ -56,6 +56,7 @@ export const SurahListContent = memo(function SurahListContent({
           filteredJuzs={filteredJuzs}
           filteredPages={filteredPages}
           searchInput={searchInput}
+          onClose={onClose}
         />
       </div>
     </div>

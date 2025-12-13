@@ -43,7 +43,10 @@ export const BookmarksLayout = ({
         isOpen={isBookmarkSidebarOpen}
         onClose={() => setBookmarkSidebarOpen(false)}
         activeSection={activeSection}
-        onSectionChange={onSectionChange}
+        onSectionChange={(section) => {
+          setBookmarkSidebarOpen(false);
+          onSectionChange(section);
+        }}
       />
     </>
   );

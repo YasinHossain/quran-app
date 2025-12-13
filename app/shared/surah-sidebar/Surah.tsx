@@ -17,6 +17,7 @@ interface Props {
   rememberScroll: () => void;
   isTafsirPath: boolean;
   isMushafMode: boolean;
+  onClose?: (() => void) | undefined;
 }
 
 export const Surah = ({
@@ -28,6 +29,7 @@ export const Surah = ({
   rememberScroll,
   isTafsirPath,
   isMushafMode,
+  onClose,
 }: Props): React.JSX.Element => {
   const { getSurahHref, goToSurah } = useNavigationTargets();
   const router = useRouter();
@@ -57,6 +59,7 @@ export const Surah = ({
                 arabic: chapter.name_arabic,
               }}
               onNavigate={() => {
+                onClose?.(); // Close sidebar on selection
                 setSelectedSurahId(chapter.id);
                 const firstPage = chapter.pages?.[0] ?? 1;
                 setSelectedPageId(firstPage);
