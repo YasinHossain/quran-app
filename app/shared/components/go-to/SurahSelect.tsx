@@ -15,6 +15,7 @@ import {
   type KeyboardEvent,
   type ReactElement,
 } from 'react';
+import { createPortal } from 'react-dom';
 
 import { ChevronDownIcon } from '@/app/shared/icons';
 
@@ -63,11 +64,15 @@ export const SurahSelect = memo(function SurahSelect({
   const inputId = inputIdProp ?? generatedInputId;
 
   const DROPDOWN_MAX_HEIGHT = 28 * 16;
-  const [dropdownMetrics, setDropdownMetrics] = useState<{
-    placement: 'top' | 'bottom';
+  const [dropdownStyle, setDropdownStyle] = useState<{
+    top?: number;
+    bottom?: number;
+    left: number;
+    width: number;
     maxHeight: number;
   }>({
-    placement: 'bottom',
+    left: 0,
+    width: 0,
     maxHeight: DROPDOWN_MAX_HEIGHT,
   });
 
@@ -95,7 +100,7 @@ export const SurahSelect = memo(function SurahSelect({
     if (!open) return;
     const handler = (event: MouseEvent): void => {
       const target = event.target as Node | null;
-      if (containerRef.current?.contains(target)) return;
+      if (containerRef.current?.contains(target) || listRef.current?.contains(target)) return;
       if (isTyping) setIsTyping(false);
       setInputValue(selectedOption?.label ?? '');
       setOpen(false);
@@ -107,7 +112,7 @@ export const SurahSelect = memo(function SurahSelect({
   const handleContainerBlur = useCallback(
     (event: FocusEvent<HTMLDivElement>) => {
       const next = event.relatedTarget as Node | null;
-      if (next && containerRef.current?.contains(next)) return;
+      if (next && (containerRef.current?.contains(next) || listRef.current?.contains(next))) return;
       if (isTyping) setIsTyping(false);
       setInputValue(selectedOption?.label ?? '');
       setOpen(false);
@@ -122,18 +127,30 @@ export const SurahSelect = memo(function SurahSelect({
     const spaceBelow = window.innerHeight - rect.bottom;
     const spaceAbove = rect.top;
     const needsFlip = spaceBelow < 280 && spaceAbove > spaceBelow;
-    const placement: 'top' | 'bottom' = needsFlip ? 'top' : 'bottom';
-    const available = placement === 'bottom' ? spaceBelow : spaceAbove;
-    const safeSpace = Math.max(150, available - 20);
-    const maxHeight =
-      safeSpace > 0 ? Math.min(DROPDOWN_MAX_HEIGHT, safeSpace) : Math.min(DROPDOWN_MAX_HEIGHT, 320);
 
-    setDropdownMetrics((prev) => {
-      if (prev.placement === placement && prev.maxHeight === maxHeight) {
-        return prev;
-      }
-      return { placement, maxHeight };
-    });
+    const width = rect.width;
+    const left = rect.left;
+
+    if (needsFlip) {
+      // Position above
+      setDropdownStyle({
+        bottom: window.innerHeight - rect.top + 8,
+        left,
+        width,
+        maxHeight: Math.min(DROPDOWN_MAX_HEIGHT, spaceAbove - 20),
+      });
+    } else {
+      // Position below
+      setDropdownStyle({
+        top: rect.bottom + 8,
+        left,
+        width,
+        maxHeight: Math.min(
+          DROPDOWN_MAX_HEIGHT,
+          Math.max(150, spaceBelow - 20)
+        ),
+      });
+    }
   }, [open]);
 
   useLayoutEffect(() => {
@@ -296,53 +313,61 @@ export const SurahSelect = memo(function SurahSelect({
         </div>
       </div>
 
-      {open ? (
-        <div
-          ref={listRef}
-          id={listboxId}
-          role="listbox"
-          aria-activedescendant={
-            activeIndex >= 0 ? `${listboxId}-option-${activeIndex}` : undefined
-          }
-          tabIndex={-1}
-          className={clsx(
-            'absolute z-dropdown w-full overflow-auto rounded-lg border border-border/40 bg-surface/95 backdrop-blur-md shadow-lg focus:outline-none py-2',
-            dropdownMetrics.placement === 'bottom'
-              ? 'top-full mt-2 origin-top'
-              : 'bottom-full mb-2 origin-bottom'
-          )}
-          style={{ maxHeight: dropdownMetrics.maxHeight }}
-        >
-          <div className="space-y-1 px-1">
-            {options.map((option, index) => {
-              const selected = option.value === value;
-              const isActive = index === activeIndex;
-              const optionId = `${listboxId}-option-${index}`;
-              return (
-                <button
-                  key={option.value}
-                  id={optionId}
-                  type="button"
-                  role="option"
-                  aria-selected={selected}
-                  data-index={index}
-                  onClick={(): void => handleOptionSelect(option)}
-                  className={clsx(
-                    'w-full text-left px-4 py-2.5 rounded-lg text-sm transition-colors',
-                    selected
-                      ? 'bg-interactive text-foreground'
-                      : isActive
+      {open && typeof document !== 'undefined'
+        ? createPortal(
+          <div
+            ref={listRef}
+            id={listboxId}
+            role="listbox"
+            aria-activedescendant={
+              activeIndex >= 0
+                ? `${listboxId}-option-${activeIndex}`
+                : undefined
+            }
+            tabIndex={-1}
+            className={clsx(
+              'fixed z-[200] overflow-auto rounded-lg border border-border/40 bg-surface/95 backdrop-blur-md shadow-lg focus:outline-none py-2'
+            )}
+            style={{
+              top: dropdownStyle.top,
+              bottom: dropdownStyle.bottom,
+              left: dropdownStyle.left,
+              width: dropdownStyle.width,
+              maxHeight: dropdownStyle.maxHeight,
+            }}
+          >
+            <div className="space-y-1 px-1">
+              {options.map((option, index) => {
+                const selected = option.value === value;
+                const isActive = index === activeIndex;
+                const optionId = `${listboxId}-option-${index}`;
+                return (
+                  <button
+                    key={option.value}
+                    id={optionId}
+                    type="button"
+                    role="option"
+                    aria-selected={selected}
+                    data-index={index}
+                    onClick={(): void => handleOptionSelect(option)}
+                    className={clsx(
+                      'w-full text-left px-4 py-2.5 rounded-lg text-sm transition-colors',
+                      selected
                         ? 'bg-interactive text-foreground'
-                        : 'text-foreground hover:bg-interactive'
-                  )}
-                >
-                  <span className="block truncate">{option.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      ) : null}
+                        : isActive
+                          ? 'bg-interactive text-foreground'
+                          : 'text-foreground hover:bg-interactive'
+                    )}
+                  >
+                    <span className="block truncate">{option.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>,
+          document.body
+        )
+        : null}
     </div>
   );
 });

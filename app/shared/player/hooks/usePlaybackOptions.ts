@@ -68,8 +68,10 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
       setLocalReciter(reciter.id.toString());
       const activeVerseNumber = parseActiveVerseNumber();
       const activeSurahId = activeVerse?.chapter_id;
+      const effectiveMode = repeatOptions.mode === 'off' ? 'single' : repeatOptions.mode;
+
       const singleDefaults: Partial<RepeatOptions> =
-        repeatOptions.mode === 'single'
+        effectiveMode === 'single'
           ? {
             surahId: repeatOptions.surahId ?? activeVerse?.chapter_id,
             verseNumber: repeatOptions.verseNumber ?? activeVerseNumber,
@@ -78,7 +80,7 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
           }
           : {};
       const surahDefaults: Partial<RepeatOptions> =
-        repeatOptions.mode === 'surah'
+        effectiveMode === 'surah'
           ? {
             surahId: repeatOptions.surahId ?? activeVerse?.chapter_id,
             verseNumber: undefined,
@@ -105,7 +107,7 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
         rangeSize: repeatOptions.rangeSize,
       };
       const rangeDefaults: Partial<RepeatOptions> =
-        repeatOptions.mode === 'range'
+        effectiveMode === 'range'
           ? {
             ...baseRangeDefaults,
             start: baseRangeDefaults.startVerseNumber ?? repeatOptions.start ?? activeVerseNumber ?? 1,
@@ -117,7 +119,7 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
               1,
           }
           : baseRangeDefaults;
-      setLocalRepeat({ ...repeatOptions, ...singleDefaults, ...surahDefaults, ...rangeDefaults });
+      setLocalRepeat({ ...repeatOptions, mode: effectiveMode, ...singleDefaults, ...surahDefaults, ...rangeDefaults });
     }
   }, [isOpen, reciter, repeatOptions, activeVerse]);
 

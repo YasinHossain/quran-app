@@ -10,11 +10,10 @@ export const ModalFooter = memo(function ModalFooter({
   onApply,
 }: Props): React.JSX.Element {
   return (
-    <div className="mt-5 flex items-center justify-between text-sm">
-      <div className="text-muted">Tips: Space • ←/→ seek • ↑/↓ volume</div>
+    <div className="mt-5 flex items-center justify-end text-sm">
       <div className="flex gap-2">
         <button
-          className="px-4 py-2 rounded-xl bg-surface hover:bg-gray-200 dark:hover:bg-slate-700 text-foreground"
+          className="px-4 py-2 rounded-full font-semibold transition-colors bg-interactive hover:bg-interactive-hover text-foreground"
           onClick={onClose}
         >
           Cancel

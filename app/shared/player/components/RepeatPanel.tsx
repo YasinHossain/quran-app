@@ -106,7 +106,7 @@ function RepeatFields({
             ) : null}
 
             {/* Settings Section */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className={`grid grid-cols-1 gap-3 ${isSingle ? 'sm:grid-cols-2' : 'sm:grid-cols-3'}`}>
                 {!isSingle && (
                     <NumberField
                         label="Play Count"
@@ -120,8 +120,6 @@ function RepeatFields({
                     value={localRepeat.repeatEach ?? 1}
                     min={1}
                     onChange={(v) => setLocalRepeat({ ...localRepeat, repeatEach: v })}
-                    // If Play Count is hidden (isSingle), make this span 2 columns to fill better on larger screens
-                    className={isSingle ? 'sm:col-span-2' : ''}
                 />
                 <NumberField
                     label="Delay (s)"
