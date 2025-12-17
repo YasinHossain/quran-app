@@ -25,11 +25,7 @@ export interface UseTranslationPanelReturn {
   selectedIds: Set<number>;
   orderedSelection: number[];
   handleSelectionToggle: (id: number) => boolean;
-  handleDragStart: (e: DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragOver: (e: DragEvent<HTMLDivElement>) => void;
-  handleDrop: (e: DragEvent<HTMLDivElement>, targetId: number) => void;
-  handleDragEnd: () => void;
-  draggedId: number | null;
+  setSelections: (ids: number[]) => void;
   handleReset: () => void;
 
   tabsContainerRef: RefObject<HTMLDivElement | null>;
@@ -52,11 +48,7 @@ export const useTranslationPanel = (): UseTranslationPanelReturn => {
     selectedIds,
     orderedSelection,
     handleSelectionToggle,
-    handleDragStart,
-    handleDragOver,
-    handleDrop,
-    handleDragEnd,
-    draggedId,
+    setSelections,
     handleReset,
   } = useTranslationSelection(translations, languageSort);
   const { tabsContainerRef, canScrollLeft, canScrollRight, scrollTabsLeft, scrollTabsRight } =
@@ -76,11 +68,7 @@ export const useTranslationPanel = (): UseTranslationPanelReturn => {
     selectedIds,
     orderedSelection,
     handleSelectionToggle,
-    handleDragStart,
-    handleDragOver,
-    handleDrop,
-    handleDragEnd,
-    draggedId,
+    setSelections,
     handleReset,
     tabsContainerRef,
     canScrollLeft,

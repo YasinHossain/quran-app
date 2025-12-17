@@ -50,11 +50,7 @@ interface UseTranslationSelectionResult {
   selectedIds: Set<number>;
   orderedSelection: number[];
   handleSelectionToggle: (id: number) => boolean;
-  handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
-  handleDrop: (e: React.DragEvent<HTMLDivElement>, targetId: number) => void;
-  handleDragEnd: () => void;
-  draggedId: number | null;
+  setSelections: (ids: number[]) => void;
   handleReset: () => void;
 }
 
@@ -107,11 +103,7 @@ export const useTranslationSelection = (
     selectedIds: s.selectedIds,
     orderedSelection: s.orderedSelection,
     handleSelectionToggle: s.handleSelectionToggle,
-    handleDragStart: s.handleDragStart,
-    handleDragOver: s.handleDragOver,
-    handleDrop: s.handleDrop,
-    handleDragEnd: s.handleDragEnd,
-    draggedId: s.draggedId,
+    setSelections: s.setSelections,
     handleReset,
   } as const;
 };

@@ -13,11 +13,7 @@ interface TranslationSelectionSectionProps {
   orderedSelection: number[];
   translations: TranslationResource[];
   handleSelection: (id: number) => void;
-  handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
-  handleDrop: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragEnd: () => void;
-  draggedId: number | null;
+  onReorder: (ids: number[]) => void;
 }
 
 export function TranslationSelectionSection(
@@ -30,11 +26,7 @@ export function TranslationSelectionSection(
         orderedSelection={props.orderedSelection}
         translations={props.translations}
         handleSelectionToggle={props.handleSelection}
-        handleDragStart={props.handleDragStart}
-        handleDragOver={props.handleDragOver}
-        handleDrop={props.handleDrop}
-        handleDragEnd={props.handleDragEnd}
-        draggedId={props.draggedId}
+        onReorder={props.onReorder}
       />
     </div>
   );

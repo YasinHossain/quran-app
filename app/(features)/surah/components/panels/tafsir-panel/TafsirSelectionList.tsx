@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { Reorder, useDragControls } from 'framer-motion';
 
 import { GripVerticalIcon, CloseIcon } from '@/app/shared/icons';
 import { TafsirResource } from '@/types';
@@ -24,48 +25,44 @@ function EmptySelectionState(): React.JSX.Element {
   return <p className="text-center text-sm py-2 text-muted">No tafsirs selected</p>;
 }
 
-function DraggableTafsirItem({
-  id,
+function TafsirItem({
   item,
-  isDragged,
-  onDragStart,
-  onDragOver,
-  onDrop,
-  onDragEnd,
   onToggle,
+  onDragEnd,
 }: {
-  id: number;
   item: TafsirResource;
-  isDragged: boolean;
-  onDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  onDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
-  onDrop: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  onDragEnd: () => void;
   onToggle: (id: number) => void;
+  onDragEnd: () => void;
 }): React.JSX.Element {
+  const controls = useDragControls();
+
   return (
-    <div
-      key={id}
-      draggable
-      onDragStart={(e: React.DragEvent<HTMLDivElement>): void => onDragStart(e, id)}
-      onDragOver={onDragOver}
-      onDrop={(e: React.DragEvent<HTMLDivElement>): void => onDrop(e, id)}
+    <Reorder.Item
+      value={item.id}
+      dragListener={false}
+      dragControls={controls}
+      className="relative"
       onDragEnd={onDragEnd}
-      className={`flex items-center justify-between p-2 rounded-lg shadow-sm cursor-grab active:cursor-grabbing transition-opacity border ${
-        isDragged ? 'opacity-50' : 'opacity-100'
-      } bg-background border-border`}
     >
-      <div className="flex items-center min-w-0">
-        <GripVerticalIcon className="h-5 w-5 mr-2 flex-shrink-0 text-muted" />
-        <span className="font-medium text-sm truncate text-foreground">{item.name}</span>
+      <div className="flex items-center justify-between p-2 rounded-lg border bg-background border-border shadow-sm hover:bg-accent/5 transition-colors">
+        <div className="flex items-center min-w-0">
+          <div
+            onPointerDown={(e) => controls.start(e)}
+            className="cursor-grab active:cursor-grabbing touch-none p-1 mr-2 text-muted hover:text-foreground"
+          >
+            <GripVerticalIcon className="h-5 w-5" />
+          </div>
+          <span className="font-medium text-sm truncate text-foreground select-none">{item.name}</span>
+        </div>
+        <button
+          onClick={(): void => onToggle(item.id)}
+          className="hover:text-accent transition-colors p-1 rounded-full flex-shrink-0 ml-2 text-muted"
+          onPointerDown={(e) => e.stopPropagation()} // Prevent drag start when clicking button
+        >
+          <CloseIcon size={16} strokeWidth={2.5} />
+        </button>
       </div>
-      <button
-        onClick={(): void => onToggle(id)}
-        className="hover:text-accent transition-colors p-1 rounded-full flex-shrink-0 ml-2 text-muted"
-      >
-        <CloseIcon size={16} strokeWidth={2.5} />
-      </button>
-    </div>
+    </Reorder.Item>
   );
 }
 
@@ -73,53 +70,56 @@ interface TafsirSelectionListProps {
   orderedSelection: number[];
   tafsirs: TafsirResource[];
   handleSelectionToggle: (id: number) => void;
-  handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
-  handleDrop: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragEnd: () => void;
-  draggedId: number | null;
+  onReorder?: (ids: number[]) => void;
 }
 
 export const TafsirSelectionList = ({
   orderedSelection,
   tafsirs,
   handleSelectionToggle,
-  handleDragStart,
-  handleDragOver,
-  handleDrop,
-  handleDragEnd,
-  draggedId,
+  onReorder,
 }: TafsirSelectionListProps): React.JSX.Element => {
-  const renderSelectionItems = (): React.ReactNode => {
-    if (orderedSelection.length === 0) {
-      return <EmptySelectionState />;
-    }
+  const [localOrder, setLocalOrder] = React.useState(orderedSelection);
 
-    return orderedSelection.map((id): React.JSX.Element | null => {
-      const item = tafsirs.find((t): boolean => t.id === id);
-      if (!item) return null;
+  React.useEffect(() => {
+    setLocalOrder(orderedSelection);
+  }, [orderedSelection]);
 
-      return (
-        <DraggableTafsirItem
-          key={id}
-          id={id}
-          item={item}
-          isDragged={draggedId === id}
-          onDragStart={handleDragStart}
-          onDragOver={handleDragOver}
-          onDrop={handleDrop}
-          onDragEnd={handleDragEnd}
-          onToggle={handleSelectionToggle}
-        />
-      );
-    });
+  const handleReorder = (newOrder: number[]) => {
+    setLocalOrder(newOrder);
   };
+
+  const handleDragEnd = () => {
+    if (onReorder) {
+      onReorder(localOrder);
+    }
+  };
+
+  if (orderedSelection.length === 0) {
+    return (
+      <div>
+        <SelectionHeader selectionCount={0} />
+        <div className="space-y-2 min-h-[40px] rounded-lg p-2 bg-background border border-border">
+          <EmptySelectionState />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
-      <SelectionHeader selectionCount={orderedSelection.length} />
+      <SelectionHeader selectionCount={localOrder.length} />
       <div className="space-y-2 min-h-[40px] rounded-lg p-2 bg-background border border-border">
-        {renderSelectionItems()}
+        <Reorder.Group axis="y" values={localOrder} onReorder={handleReorder} className="space-y-2">
+          {localOrder.map((id) => {
+            const item = tafsirs.find((t) => t.id === id);
+            if (!item) return null;
+
+            return (
+              <TafsirItem key={id} item={item} onToggle={handleSelectionToggle} onDragEnd={handleDragEnd} />
+            );
+          })}
+        </Reorder.Group>
       </div>
     </div>
   );

@@ -16,11 +16,7 @@ interface TranslationPanelContentProps {
   orderedSelection: number[];
   translations: TranslationResource[];
   handleSelectionToggle: (id: number) => void;
-  handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
-  handleDrop: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragEnd: () => void;
-  draggedId: number | null;
+  onReorder: (ids: number[]) => void;
   languages: string[];
   activeFilter: string;
   setActiveFilter: (filter: string) => void;
@@ -72,11 +68,7 @@ function TranslationPanelContentBodyWrapper(
       orderedSelection={props.orderedSelection}
       translations={props.translations}
       handleSelection={handleSelection}
-      handleDragStart={props.handleDragStart}
-      handleDragOver={props.handleDragOver}
-      handleDrop={props.handleDrop}
-      handleDragEnd={props.handleDragEnd}
-      draggedId={props.draggedId}
+      onReorder={props.onReorder}
       languages={props.languages}
       activeFilter={props.activeFilter}
       setActiveFilter={props.setActiveFilter}

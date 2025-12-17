@@ -29,11 +29,7 @@ export interface UseTafsirPanelReturn {
   handleSelectionToggle: (id: number) => boolean;
   showLimitWarning: boolean;
 
-  handleDragStart: (e: DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragOver: (e: DragEvent<HTMLDivElement>) => void;
-  handleDrop: (e: DragEvent<HTMLDivElement>, targetId: number) => void;
-  handleDragEnd: () => void;
-  draggedId: number | null;
+  setSelections: (ids: number[]) => void;
 
   handleReset: () => void;
 
@@ -60,11 +56,7 @@ function composeReturn(params: {
   orderedSelection: number[];
   handleSelectionToggle: (id: number) => boolean;
   showLimitWarning: boolean;
-  handleDragStart: (e: DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragOver: (e: DragEvent<HTMLDivElement>) => void;
-  handleDrop: (e: DragEvent<HTMLDivElement>, targetId: number) => void;
-  handleDragEnd: () => void;
-  draggedId: number | null;
+  setSelections: (ids: number[]) => void;
   handleReset: () => void;
   tabsContainerRef: RefObject<HTMLDivElement | null>;
   canScrollLeft: boolean;

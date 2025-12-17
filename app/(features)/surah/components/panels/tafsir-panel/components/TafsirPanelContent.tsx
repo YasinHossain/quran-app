@@ -20,11 +20,7 @@ interface TafsirPanelContentProps {
   orderedSelection: number[];
   tafsirs: TafsirResource[];
   handleSelectionToggle: (id: number) => void;
-  handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
-  handleDrop: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragEnd: () => void;
-  draggedId: number | null;
+  onReorder: (ids: number[]) => void;
   languages: string[];
   activeFilter: string;
   setActiveFilter: (filter: string) => void;

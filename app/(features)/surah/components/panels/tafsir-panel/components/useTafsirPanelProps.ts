@@ -13,11 +13,7 @@ interface SearchPropsArgs {
   orderedSelection: number[];
   tafsirs: TafsirResource[];
   handleSelectionToggle: (id: number) => void;
-  handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
-  handleDrop: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragEnd: () => void;
-  draggedId: number | null;
+  onReorder: (ids: number[]) => void;
 }
 
 interface TabsPropsArgs {
@@ -45,11 +41,7 @@ export const useTafsirSearchProps = ({
   orderedSelection,
   tafsirs,
   handleSelectionToggle,
-  handleDragStart,
-  handleDragOver,
-  handleDrop,
-  handleDragEnd,
-  draggedId,
+  onReorder,
 }: SearchPropsArgs): TafsirSearchSectionProps =>
   React.useMemo(
     () => ({
@@ -58,11 +50,7 @@ export const useTafsirSearchProps = ({
       orderedSelection,
       tafsirs,
       handleSelectionToggle,
-      handleDragStart,
-      handleDragOver,
-      handleDrop,
-      handleDragEnd,
-      draggedId,
+      onReorder,
     }),
     [
       searchTerm,
@@ -70,11 +58,7 @@ export const useTafsirSearchProps = ({
       orderedSelection,
       tafsirs,
       handleSelectionToggle,
-      handleDragStart,
-      handleDragOver,
-      handleDrop,
-      handleDragEnd,
-      draggedId,
+      onReorder,
     ]
   );
 
