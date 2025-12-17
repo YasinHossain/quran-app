@@ -54,16 +54,19 @@ function TabsHeader({
   onSelect: (id: number) => void;
 }): React.JSX.Element {
   return (
-    <div className="flex w-full flex-nowrap items-center p-1 rounded-full bg-interactive border border-border mx-0 sm:mx-4 overflow-x-auto scrollbar-hide gap-1">
+    <div
+      onTouchStart={(e) => e.stopPropagation()}
+      onTouchEnd={(e) => e.stopPropagation()}
+      className="flex w-full flex-nowrap items-center p-1 rounded-full bg-interactive border border-border mx-0 sm:mx-4 overflow-x-auto scrollbar-hide gap-1"
+    >
       {tabs.map((t) => (
         <button
           key={t.id}
           onClick={() => onSelect(t.id)}
-          className={`flex-1 text-center py-2.5 px-4 sm:py-3 sm:px-5 rounded-full text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap ${
-            activeId === t.id
-              ? 'bg-surface shadow text-foreground'
-              : 'text-muted hover:text-foreground hover:bg-surface/30'
-          }`}
+          className={`flex-1 text-center py-2.5 px-4 sm:py-3 sm:px-5 rounded-full text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap ${activeId === t.id
+            ? 'bg-surface shadow text-foreground'
+            : 'text-muted hover:text-foreground hover:bg-surface/30'
+            }`}
         >
           {t.name}
         </button>

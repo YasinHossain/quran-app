@@ -17,7 +17,7 @@ export const ActionList = memo(function ActionList({
   onClose,
 }: ActionListProps): React.JSX.Element {
   return (
-    <div className="flex-1 overflow-y-auto p-4 pb-8">
+    <div className="flex-1 overflow-y-auto px-4 pt-4 pb-2">
       <div className="space-y-2">
         {actions.map((action) =>
           action.href ? (

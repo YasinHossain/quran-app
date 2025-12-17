@@ -325,8 +325,9 @@ export const SurahSelect = memo(function SurahSelect({
                 : undefined
             }
             tabIndex={-1}
+            data-surah-select-portal="true"
             className={clsx(
-              'fixed z-[200] overflow-auto rounded-lg border border-border/40 bg-surface/95 backdrop-blur-md shadow-lg focus:outline-none py-2'
+              'fixed z-[9999] overflow-auto rounded-lg border border-border/40 bg-surface/95 backdrop-blur-md shadow-lg focus:outline-none py-2'
             )}
             style={{
               top: dropdownStyle.top,
