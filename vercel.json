@@ -1,5 +1,5 @@
 {
     "git": {
-        "ignore": "exit 0"
+        "ignore": "exit 1"
     }
 }
