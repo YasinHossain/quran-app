@@ -8,12 +8,14 @@ interface ResourcePanelHeaderProps {
   title: string;
   onClose: () => void;
   onReset: () => void;
+  backIconClassName?: string;
 }
 
 export const ResourcePanelHeader = ({
   title,
   onClose,
   onReset,
+  backIconClassName = 'h-6 w-6 text-muted',
 }: ResourcePanelHeaderProps): React.JSX.Element => {
   return (
     <header className="flex items-center p-4 border-b border-border">
@@ -23,7 +25,7 @@ export const ResourcePanelHeader = ({
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 text-muted"
+          className={backIconClassName}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

@@ -2,9 +2,10 @@
 
 import React from 'react';
 
+import { ResourceTabsHeader } from '@/app/shared/resource-panel/components/ResourceTabsHeader';
+
 import { TranslationResultsSection } from './TranslationResultsSection';
 import { TranslationSelectionSection } from './TranslationSelectionSection';
-import { TranslationTabsHeader } from './TranslationTabsHeader';
 
 import type { TranslationResource } from '@/types';
 
@@ -42,10 +43,10 @@ export function PanelContentBody(props: TranslationPanelContentBodyProps): React
         onReorder={props.onReorder}
       />
 
-      <TranslationTabsHeader
+      <ResourceTabsHeader
         languages={props.languages}
         activeFilter={props.activeFilter}
-        setActiveFilter={props.setActiveFilter}
+        onTabClick={props.setActiveFilter}
         tabsContainerRef={props.tabsContainerRef}
         canScrollLeft={props.canScrollLeft}
         canScrollRight={props.canScrollRight}

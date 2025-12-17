@@ -1,10 +1,10 @@
 'use client';
 
 import { useTheme } from '@/app/providers/ThemeContext';
+import { useTabsScroll } from '@/app/shared/resource-panel/hooks/useTabsScroll';
 
 import { useTafsir } from './useTafsir';
 import { useTafsirSelection } from './useTafsirSelection';
-import { useTafsirTabsScroll } from './useTafsirTabsScroll';
 
 import type { Theme } from '@/app/providers/ThemeContext';
 import type { TafsirResource } from '@/types';
@@ -75,7 +75,7 @@ export const useTafsirPanel = (isOpen: boolean): UseTafsirPanelReturn => {
   const selection = useTafsirSelection(domainTafsirs);
 
   const { tabsContainerRef, canScrollLeft, canScrollRight, scrollTabsLeft, scrollTabsRight } =
-    useTafsirTabsScroll(selection.languages);
+    useTabsScroll(selection.languages);
 
   const loading = isOpen && apiLoading;
   const error = apiError;

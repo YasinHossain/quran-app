@@ -25,7 +25,7 @@ export function ArabicFontList({
         resources={resources}
         rowHeight={58}
         selectedIds={selectedIds}
-        onToggle={onToggle}
+        onToggle={(id) => onToggle(id as number)}
         height={height}
       />
     </div>

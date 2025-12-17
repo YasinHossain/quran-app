@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-export interface UseTafsirTabsScrollReturn {
+export interface UseTabsScrollReturn {
   readonly tabsContainerRef: React.RefObject<HTMLDivElement | null>;
   readonly canScrollLeft: boolean;
   readonly canScrollRight: boolean;
@@ -10,30 +10,25 @@ export interface UseTafsirTabsScrollReturn {
   readonly scrollTabsRight: () => void;
 }
 
-export const useTafsirTabsScroll = (languages: string[]): UseTafsirTabsScrollReturn => {
-  const tabsContainerRef = useRef<HTMLDivElement>(null);
+export const useTabsScroll = (languages: string[], scrollAmount = 200): UseTabsScrollReturn => {
+  const tabsContainerRef = useRef<HTMLDivElement | null>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
   const checkScrollState = useCallback(() => {
-    if (tabsContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = tabsContainerRef.current;
-      setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 1);
-    }
+    if (!tabsContainerRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = tabsContainerRef.current;
+    setCanScrollLeft(scrollLeft > 0);
+    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 1);
   }, []);
 
   const scrollTabsLeft = useCallback(() => {
-    if (tabsContainerRef.current) {
-      tabsContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
-    }
-  }, []);
+    tabsContainerRef.current?.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+  }, [scrollAmount]);
 
   const scrollTabsRight = useCallback(() => {
-    if (tabsContainerRef.current) {
-      tabsContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
-    }
-  }, []);
+    tabsContainerRef.current?.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  }, [scrollAmount]);
 
   useEffect(() => {
     checkScrollState();
@@ -42,6 +37,7 @@ export const useTafsirTabsScroll = (languages: string[]): UseTafsirTabsScrollRet
       container.addEventListener('scroll', checkScrollState);
       window.addEventListener('resize', checkScrollState);
     }
+
     return () => {
       if (container) {
         container.removeEventListener('scroll', checkScrollState);
@@ -56,5 +52,6 @@ export const useTafsirTabsScroll = (languages: string[]): UseTafsirTabsScrollRet
     canScrollRight,
     scrollTabsLeft,
     scrollTabsRight,
-  } as const satisfies UseTafsirTabsScrollReturn;
+  } as const satisfies UseTabsScrollReturn;
 };
+

@@ -2,10 +2,10 @@
 
 import React from 'react';
 
+import { ResourcePanelHeader } from '@/app/shared/resource-panel/components/ResourcePanelHeader';
 import { useListHeight } from '@/app/shared/resource-panel/hooks/useListHeight';
 
 import { TranslationPanelContent } from './components/TranslationPanelContent';
-import { TranslationPanelHeader } from './components/TranslationPanelHeader';
 import { useTranslationSections } from './hooks/useTranslationSections';
 import { useTranslationPanel } from './useTranslationPanel';
 
@@ -30,7 +30,12 @@ export const TranslationPanel = ({ isOpen, onClose }: TranslationPanelProps): Re
       className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${isOpen ? 'translate-x-0' : 'translate-x-full'
         } bg-background text-foreground`}
     >
-      <TranslationPanelHeader onClose={onClose} onReset={panelData.handleReset} />
+      <ResourcePanelHeader
+        title="Manage Translations"
+        onClose={onClose}
+        onReset={panelData.handleReset}
+        backIconClassName="h-6 w-6 text-foreground"
+      />
 
       <div className="flex-1 flex flex-col min-h-0">
         <TranslationPanelContent

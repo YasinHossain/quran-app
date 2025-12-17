@@ -3,10 +3,13 @@
 import React from 'react';
 
 import { TafsirLimitWarning } from '@/app/(features)/surah/components/panels/tafsir-panel/TafsirLimitWarning';
+import {
+  ResourcePanelErrorMessage,
+  ResourcePanelLoadingSpinner,
+} from '@/app/shared/resource-panel/components/ResourcePanelFallbacks';
 import { TafsirResource } from '@/types';
 
 import { TafsirList } from './TafsirList';
-import { LoadingSpinner, ErrorMessage } from './TafsirPanelFallbacks';
 import { TafsirSearchSection } from './TafsirSearchSection';
 import { TafsirTabs } from './TafsirTabs';
 import { useTafsirContent, TafsirContentBodyProps } from './useTafsirContent';
@@ -58,8 +61,8 @@ export const TafsirPanelContent = (props: TafsirPanelContentProps): React.JSX.El
   const { loading, error, ...rest } = props;
   const contentProps = useTafsirContent(rest);
 
-  if (loading) return <LoadingSpinner />;
-  if (error) return <ErrorMessage error={error} />;
+  if (loading) return <ResourcePanelLoadingSpinner />;
+  if (error) return <ResourcePanelErrorMessage error={error} />;
 
   return <TafsirContentBody {...contentProps} />;
 };

@@ -4,6 +4,12 @@ import pwaConfig from './next-pwa.config.mjs';
 
 import type { NextConfig } from 'next';
 
+type NextConfigWithEslint = NextConfig & {
+  eslint?: {
+    ignoreDuringBuilds?: boolean;
+  };
+};
+
 // next-pwa is a CJS module; use dynamic require and keep type loose
 const loadWithPWA = createRequire(import.meta.url)('next-pwa') as typeof import('next-pwa').default;
 
@@ -72,7 +78,7 @@ const securityHeaders = isProd
     },
   ];
 
-const nextConfig: NextConfig = {
+const nextConfig: NextConfigWithEslint = {
   // Expose the Quran API base URL to the app
   env: {
     QURAN_API_BASE_URL: process.env['QURAN_API_BASE_URL'],

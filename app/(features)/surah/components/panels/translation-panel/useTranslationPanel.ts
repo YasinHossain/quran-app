@@ -1,8 +1,8 @@
 'use client';
 
 import { useTheme } from '@/app/providers/ThemeContext';
+import { useTabsScroll } from '@/app/shared/resource-panel/hooks/useTabsScroll';
 
-import { useTabsScroll } from './hooks/useTabsScroll';
 import { useTranslationsData } from './hooks/useTranslationsData';
 import { useTranslationSelection } from './hooks/useTranslationSelection';
 

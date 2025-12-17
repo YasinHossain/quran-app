@@ -132,7 +132,7 @@ export const MushafPage = ({
     isQpcHafsMushaf,
     isIndopakMushaf,
     qcfVersion,
-    indopakVersion,
+    ...(indopakVersion !== undefined ? { indopakVersion } : {}),
   });
 
   const juzNumber = getJuzByPage(pageNumber);
@@ -154,7 +154,7 @@ export const MushafPage = ({
         isQpcHafsMushaf={isQpcHafsMushaf}
         isIndopakMushaf={isIndopakMushaf}
         qcfVersion={qcfVersion}
-        indopakVersion={indopakVersion}
+        {...(indopakVersion !== undefined ? { indopakVersion } : {})}
         fontSize={fontSize}
         fontFamily={fontFamily}
         lineWidthDesktop={lineWidthDesktop}

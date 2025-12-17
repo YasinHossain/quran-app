@@ -1,11 +1,13 @@
 'use client';
 
+import React, { memo } from 'react';
+
 import { ResourceTabs } from '@/app/shared/resource-panel';
 
-interface TafsirTabsHeaderProps {
+interface ResourceTabsHeaderProps {
   languages: string[];
   activeFilter: string;
-  setActiveFilter: (filter: string) => void;
+  onTabClick: (filter: string) => void;
   tabsContainerRef: React.RefObject<HTMLDivElement>;
   canScrollLeft: boolean;
   canScrollRight: boolean;
@@ -13,23 +15,23 @@ interface TafsirTabsHeaderProps {
   scrollTabsRight: () => void;
 }
 
-export function TafsirTabsHeader({
+export const ResourceTabsHeader = memo(function ResourceTabsHeader({
   languages,
   activeFilter,
-  setActiveFilter,
+  onTabClick,
   tabsContainerRef,
   canScrollLeft,
   canScrollRight,
   scrollTabsLeft,
   scrollTabsRight,
-}: TafsirTabsHeaderProps): React.JSX.Element {
+}: ResourceTabsHeaderProps): React.JSX.Element {
   return (
     <div className="sticky top-0 z-10 py-2 border-b bg-background/95 backdrop-blur-sm border-border">
       <div className="px-4">
         <ResourceTabs
           languages={languages}
           activeFilter={activeFilter}
-          onTabClick={setActiveFilter}
+          onTabClick={onTabClick}
           tabsContainerRef={tabsContainerRef}
           canScrollLeft={canScrollLeft}
           canScrollRight={canScrollRight}
@@ -40,4 +42,5 @@ export function TafsirTabsHeader({
       </div>
     </div>
   );
-}
+});
+

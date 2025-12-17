@@ -26,7 +26,7 @@ export function TafsirVirtualList({
           resources={resources}
           rowHeight={58}
           selectedIds={selectedIds}
-          onToggle={onToggle}
+          onToggle={(id) => onToggle(id as number)}
           height={height}
         />
       ) : (
