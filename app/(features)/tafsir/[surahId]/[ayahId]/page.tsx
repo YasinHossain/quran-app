@@ -128,8 +128,43 @@ function TafsirContent({
   tafsirResource: Parameters<typeof TafsirViewer>[0]['tafsirResource'];
   tafsirHtml: Parameters<typeof TafsirViewer>[0]['tafsirHtml'];
 }): React.JSX.Element {
+  const touchStart = React.useRef<{ x: number; y: number } | null>(null);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    if (touch) {
+      touchStart.current = { x: touch.clientX, y: touch.clientY };
+    }
+  };
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (!touchStart.current) return;
+    const touch = e.changedTouches[0];
+    if (!touch) return;
+
+    const touchEnd = { x: touch.clientX, y: touch.clientY };
+    const diffX = touchStart.current.x - touchEnd.x;
+    const diffY = touchStart.current.y - touchEnd.y;
+
+    // Threshold for swipe (50px) and check if horizontal swipe is dominant
+    if (Math.abs(diffX) > 50 && Math.abs(diffX) > Math.abs(diffY)) {
+      if (diffX > 0) {
+        // Swipe Left -> Next
+        if (next) navigate(next);
+      } else {
+        // Swipe Right -> Prev
+        if (prev) navigate(prev);
+      }
+    }
+    touchStart.current = null;
+  };
+
   return (
-    <>
+    <div
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+      className="min-h-full touch-pan-y"
+    >
       <AyahNavigation
         prev={prev}
         next={next}
@@ -142,7 +177,7 @@ function TafsirContent({
         {...(tafsirResource !== undefined ? { tafsirResource } : {})}
         {...(tafsirHtml !== undefined ? { tafsirHtml } : {})}
       />
-    </>
+    </div>
   );
 }
 
