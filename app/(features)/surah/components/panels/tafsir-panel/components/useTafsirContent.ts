@@ -30,6 +30,7 @@ export interface TafsirPanelContentPropsLite {
   scrollTabsLeft: () => void;
   scrollTabsRight: () => void;
   resourcesToRender: TafsirResource[];
+  sectionsToRender: Array<{ language: string; items: TafsirResource[] }>;
   selectedIds: Set<number>;
   listHeight: number;
   listContainerRef: React.RefObject<HTMLDivElement>;
@@ -65,6 +66,8 @@ export function useTafsirContent(props: TafsirPanelContentPropsLite): TafsirCont
   });
 
   const listProps = useTafsirListProps({
+    activeFilter: props.activeFilter,
+    sectionsToRender: props.sectionsToRender,
     resources: props.resourcesToRender,
     selectedIds: props.selectedIds,
     onToggle: props.handleSelectionToggle,

@@ -28,6 +28,8 @@ interface TabsPropsArgs {
 }
 
 interface ListPropsArgs {
+  activeFilter: string;
+  sectionsToRender: Array<{ language: string; items: TafsirResource[] }>;
   resources: TafsirResource[];
   selectedIds: Set<number>;
   onToggle: (id: number) => void;
@@ -96,6 +98,8 @@ export const useTafsirTabsProps = ({
   );
 
 export const useTafsirListProps = ({
+  activeFilter,
+  sectionsToRender,
   resources,
   selectedIds,
   onToggle,
@@ -103,6 +107,6 @@ export const useTafsirListProps = ({
   total,
 }: ListPropsArgs): TafsirListProps =>
   React.useMemo(
-    () => ({ resources, selectedIds, onToggle, height, total }),
-    [resources, selectedIds, onToggle, height, total]
+    () => ({ activeFilter, sectionsToRender, resources, selectedIds, onToggle, height, total }),
+    [activeFilter, sectionsToRender, resources, selectedIds, onToggle, height, total]
   );

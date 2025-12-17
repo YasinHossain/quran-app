@@ -33,6 +33,7 @@ interface TafsirPanelContentProps {
   scrollTabsLeft: () => void;
   scrollTabsRight: () => void;
   resourcesToRender: TafsirResource[];
+  sectionsToRender: Array<{ language: string; items: TafsirResource[] }>;
   selectedIds: Set<number>;
   listHeight: number;
   listContainerRef: React.RefObject<HTMLDivElement>;

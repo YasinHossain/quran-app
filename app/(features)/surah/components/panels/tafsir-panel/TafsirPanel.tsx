@@ -14,6 +14,7 @@ import type { TafsirResource } from '@/types';
 function createTafsirContentProps(
   panelData: UseTafsirPanelReturn,
   resourcesToRender: TafsirResource[],
+  sectionsToRender: Array<{ language: string; items: TafsirResource[] }>,
   listHeight: number,
   listContainerRef: React.RefObject<HTMLDivElement | null>
 ): React.ComponentProps<typeof TafsirPanelContent> {
@@ -35,6 +36,7 @@ function createTafsirContentProps(
     scrollTabsLeft: panelData.scrollTabsLeft,
     scrollTabsRight: panelData.scrollTabsRight,
     resourcesToRender,
+    sectionsToRender,
     selectedIds: panelData.selectedIds,
     listHeight,
     listContainerRef: listContainerRef as React.RefObject<HTMLDivElement>,
@@ -50,15 +52,17 @@ interface TafsirPanelProps {
 export const TafsirPanel = ({ isOpen, onClose }: TafsirPanelProps): React.JSX.Element => {
   const panelData = useTafsirPanel(isOpen);
   const { listContainerRef, listHeight } = useListHeight(isOpen);
-  const { resourcesToRender } = useTafsirSections(
+  const { resourcesToRender, sectionsToRender } = useTafsirSections(
     panelData.activeFilter,
     panelData.tafsirs,
-    panelData.groupedTafsirs
+    panelData.groupedTafsirs,
+    panelData.languages
   );
 
   const contentProps = createTafsirContentProps(
     panelData,
     resourcesToRender,
+    sectionsToRender,
     listHeight,
     listContainerRef
   );
