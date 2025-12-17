@@ -1,5 +1,5 @@
 {
     "git": {
-        "ignore": "exit 1"
+        "ignore": "git log -1 --pretty=%B | grep -qF '[deploy]' && exit 1 || exit 0"
     }
 }
