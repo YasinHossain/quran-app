@@ -71,8 +71,8 @@ const MobileNavigation = memo(function MobileNavigation({
       )}
       aria-label="Primary navigation"
     >
-      <div className="px-4 py-2 pb-safe">
-        <div className="flex items-center justify-around">
+      <div className="px-2 sm:px-4 py-2 pb-safe">
+        <div className="flex items-center w-full">
           {navItems.map((item) => {
             const isActive =
               item.href === '/'
@@ -90,13 +90,14 @@ const MobileNavigation = memo(function MobileNavigation({
                 title={item.label}
                 aria-label={item.label}
                 className={cn(
-                  linkStyles,
-                  'flex flex-col items-center min-w-[48px] py-2',
-                  isActive ? 'text-accent' : 'text-muted'
+                  'flex-1 flex flex-col items-center justify-center min-w-0 py-2 px-1 rounded-lg transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent gap-1',
+                  isActive ? 'text-accent' : 'text-muted hover:bg-black/5 dark:hover:bg-white/5'
                 )}
               >
-                <item.icon className="h-6 w-6 mb-1" />
-                <span className="text-xs font-medium">{item.label}</span>
+                <div className="flex items-center justify-center h-6 w-6">
+                  <item.icon className="h-5 w-5 sm:h-6 sm:w-6" />
+                </div>
+                <span className="text-[10px] sm:text-xs font-medium truncate w-full text-center leading-none">{item.label}</span>
               </Link>
             );
           })}
@@ -117,7 +118,7 @@ export const Navigation = memo(function Navigation() {
   const navItems = useMemo(
     (): NavItem[] => [
       { icon: HomeIcon, label: t('home'), href: '/' },
-      { icon: GridIcon, label: t('all_surahs'), href: '/surah/1' },
+      { icon: GridIcon, label: 'Surah', href: '/surah/1' },
       { icon: BookmarkOutlineIcon, label: t('bookmarks'), href: '/bookmarks' },
     ],
     [t]

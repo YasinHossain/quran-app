@@ -38,14 +38,14 @@ export const useSidebarPositioning = ({
         ]
     );
     const headerAwareClasses = isHeaderHidden
-      ? 'top-0 h-screen'
+      ? 'top-0 h-dvh'
       : cn(
-        'top-0 h-screen',
+        'top-0 h-dvh',
         breakpointClass === 'lg'
-          ? 'lg:top-reader-header lg:h-[calc(100vh-var(--reader-header-height))]'
+          ? 'lg:top-reader-header lg:h-[calc(100dvh-var(--reader-header-height))]'
           : breakpointClass === 'xl'
-            ? 'xl:top-reader-header xl:h-[calc(100vh-var(--reader-header-height))]'
-            : '2xl:top-reader-header 2xl:h-[calc(100vh-var(--reader-header-height))]'
+            ? 'xl:top-reader-header xl:h-[calc(100dvh-var(--reader-header-height))]'
+            : '2xl:top-reader-header 2xl:h-[calc(100dvh-var(--reader-header-height))]'
       );
 
     const shadowClasses =
