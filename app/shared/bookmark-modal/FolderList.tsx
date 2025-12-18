@@ -25,7 +25,7 @@ const getIconWrapperClasses = (color?: string): string =>
   );
 
 const getTitleClasses = (isSelected: boolean): string =>
-  cn('font-medium truncate', isSelected ? 'text-accent' : 'text-foreground');
+  cn('flex-1 font-medium truncate', isSelected ? 'text-accent' : 'text-foreground');
 
 interface FolderListItemProps {
   folder: Folder;

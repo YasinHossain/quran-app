@@ -54,7 +54,7 @@ export function SpeedControl(): React.JSX.Element {
       <Popover.Trigger asChild>
         <button
           ref={triggerRef}
-          className="h-9 w-14 grid place-items-center rounded-full text-xs font-bold transition focus:outline-none text-foreground hover:bg-gray-200 dark:hover:bg-slate-700"
+          className="h-8 w-10 sm:h-9 sm:w-14 grid place-items-center rounded-full text-xs font-bold transition focus:outline-none text-foreground hover:bg-gray-200 dark:hover:bg-slate-700"
         >
           {playbackRate}x
         </button>

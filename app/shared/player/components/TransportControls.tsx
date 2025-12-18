@@ -23,13 +23,14 @@ export const TransportControls = memo(function TransportControls({
   togglePlay,
 }: Props) {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1 xs:gap-2">
       <Button
         variant="icon-round"
         size="icon-round"
         aria-label="Previous track"
         onClick={onPrev}
         disabled={!interactable}
+        className="h-8 w-8 min-h-8 min-w-8 xs:min-h-touch xs:min-w-touch xs:h-9 xs:w-9"
       >
         <SkipBackIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
       </Button>
@@ -39,7 +40,7 @@ export const TransportControls = memo(function TransportControls({
         aria-label={isPlaying ? 'Pause' : 'Play'}
         onClick={togglePlay}
         disabled={!interactable}
-        className="h-10 w-10 rounded-full"
+        className="h-8 w-8 min-h-8 min-w-8 rounded-full sm:h-10 sm:w-10 sm:min-h-10 sm:min-w-10"
       >
         {isPlaying ? (
           <PauseIcon className={iconClasses.touch} />
@@ -53,6 +54,7 @@ export const TransportControls = memo(function TransportControls({
         aria-label="Next track"
         onClick={onNext}
         disabled={!interactable}
+        className="h-8 w-8 min-h-8 min-w-8 xs:min-h-touch xs:min-w-touch xs:h-9 xs:w-9"
       >
         <SkipForwardIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
       </Button>

@@ -24,7 +24,20 @@ const ActionButtons = memo(function ActionButtons({
   onCancel,
 }: ActionButtonsProps): React.JSX.Element {
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-0">
+      <button
+        type="button"
+        onClick={onCancel}
+        className={cn(
+          'p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 text-muted transition-colors',
+          touchClasses.target,
+          touchClasses.focus
+        )}
+        aria-label="Cancel"
+      >
+        <CloseIcon size={16} />
+      </button>
+
       <button
         type="submit"
         disabled={!newFolderName.trim()}
@@ -37,19 +50,6 @@ const ActionButtons = memo(function ActionButtons({
         aria-label="Create folder"
       >
         <CheckIcon size={16} />
-      </button>
-
-      <button
-        type="button"
-        onClick={onCancel}
-        className={cn(
-          'p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 text-muted transition-colors',
-          touchClasses.target,
-          touchClasses.focus
-        )}
-        aria-label="Cancel"
-      >
-        <CloseIcon size={16} />
       </button>
     </div>
   );
@@ -75,7 +75,7 @@ export const CreateFolderForm = memo(function CreateFolderForm({
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className="flex items-center gap-2 p-4 bg-surface-secondary rounded-2xl border border-border"
+      className="flex items-center gap-1 p-4 bg-surface-secondary rounded-2xl border border-border"
     >
       <input
         type="text"
@@ -83,7 +83,7 @@ export const CreateFolderForm = memo(function CreateFolderForm({
         onChange={(e) => onNameChange(e.target.value)}
         placeholder="Folder name"
         className={cn(
-          'flex-1 bg-surface/0 text-foreground placeholder-muted',
+          'flex-1 min-w-0 bg-surface/0 text-foreground placeholder-muted',
           'focus:outline-none'
         )}
       />

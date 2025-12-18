@@ -45,12 +45,12 @@ function ActionButtons({
   closePlayer: () => void;
 }): React.JSX.Element {
   return (
-    <div className="flex items-center gap-1 justify-self-end">
+    <div className="flex items-center gap-0.5 xs:gap-1 justify-self-end">
       <SpeedControl />
       <Button
         variant="icon-round"
         size="icon-round"
-        className="shrink-0"
+        className="shrink-0 h-8 w-8 min-h-8 min-w-8 xs:min-h-touch xs:min-w-touch xs:h-9 xs:w-9"
         aria-label="Options"
         onClick={setMobileOptionsOpen}
       >
@@ -61,7 +61,7 @@ function ActionButtons({
         size="icon-round"
         aria-label="Close player"
         onClick={closePlayer}
-        className="hover:text-red-500"
+        className="hover:text-red-500 h-8 w-8 min-h-8 min-w-8 xs:min-h-touch xs:min-w-touch xs:h-9 xs:w-9"
       >
         <CloseIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
       </Button>
@@ -81,7 +81,7 @@ export function MobileTopBar({
   closePlayer,
 }: Props): React.JSX.Element {
   return (
-    <div className="flex items-center justify-between gap-2 min-[450px]:grid min-[450px]:grid-cols-[1fr_auto_1fr]">
+    <div className="flex items-center justify-center gap-3 xs:gap-6 min-[450px]:gap-2 min-[450px]:grid min-[450px]:grid-cols-[1fr_auto_1fr]">
       <div className="hidden min-[450px]:block min-w-0">
         <CoverAndText title={title} artist={artist} />
       </div>

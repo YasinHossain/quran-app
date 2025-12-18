@@ -48,7 +48,7 @@ const CardTitle = memo(function CardTitle({
 }: CardTitleProps): React.JSX.Element {
   const fontClass = titleWeight === 'bold' ? 'font-bold' : 'font-semibold';
 
-  return <p className={`${fontClass} ${buildTextClasses('primary', isActive)}`}>{title}</p>;
+  return <p className={`${fontClass} ${buildTextClasses('primary', isActive)} truncate`}>{title}</p>;
 });
 
 interface CardSubtitleProps {
