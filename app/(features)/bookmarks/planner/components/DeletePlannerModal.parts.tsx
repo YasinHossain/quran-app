@@ -1,13 +1,7 @@
-import { motion } from 'framer-motion';
-
-import {
-  BACKDROP_VARIANTS,
-  MODAL_VARIANTS,
-} from '@/app/(features)/bookmarks/components/delete-folder-modal/animations';
 import { ModalActions } from '@/app/(features)/bookmarks/components/delete-folder-modal/ModalActions';
 import { CloseIcon } from '@/app/shared/icons';
 
-import type { JSX, ReactNode } from 'react';
+import type { JSX } from 'react';
 
 interface DeletePlannerModalBodyProps {
   title: string;
@@ -19,41 +13,11 @@ interface DeletePlannerModalBodyProps {
   onConfirm: () => void | Promise<void>;
 }
 
-export function DeletePlannerModalBackdrop({ onClose }: { onClose: () => void }): JSX.Element {
-  return (
-    <motion.div
-      variants={BACKDROP_VARIANTS}
-      initial="hidden"
-      animate="visible"
-      exit="hidden"
-      className="fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm z-modal"
-      onClick={onClose}
-    />
-  );
-}
-
-export function DeletePlannerModalShell({ children }: { children: ReactNode }): JSX.Element {
-  return (
-    <div className="fixed inset-0 z-modal flex items-center justify-center px-4">
-      <motion.div
-        variants={MODAL_VARIANTS}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
-        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        className="relative w-full max-w-lg bg-surface border border-border rounded-2xl shadow-modal pointer-events-auto"
-      >
-        {children}
-      </motion.div>
-    </div>
-  );
-}
-
 export function DeletePlannerModalHeader({ onClose }: { onClose: () => void }): JSX.Element {
   return (
-    <div className="flex items-center justify-between p-6 pb-4">
+    <div className="flex items-center justify-between py-2">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-error/10 rounded-xl flex items-center justify-center">
+        <div className="w-10 h-10 bg-error/10 rounded-xl flex items-center justify-center shrink-0">
           <svg className="w-5 h-5 text-error" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
@@ -89,7 +53,7 @@ export function DeletePlannerModalBody({
   onConfirm,
 }: DeletePlannerModalBodyProps): JSX.Element {
   return (
-    <div className="px-6 pb-6">
+    <div className="pt-2">
       <PlannerSummaryCard title={title} details={details} />
       <DeletePlannerWarnings countLabel={countLabel} error={error} />
       <ModalActions onClose={onCancel} onDelete={onConfirm} isDeleting={isDeleting} />

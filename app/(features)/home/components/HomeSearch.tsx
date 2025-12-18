@@ -36,8 +36,8 @@ export const HomeSearch = memo(function HomeSearch({
 
   return (
     <div className={`space-y-4 md:space-y-6 ${className || ''}`}>
-      {/* Mobile-optimized search container */}
-      <div className="w-full max-w-xs md:max-w-lg lg:max-w-2xl mx-auto px-4 md:px-0 content-visibility-auto animate-fade-in-up animation-delay-200">
+      {/* Mobile-optimized search container - Wider than shortcuts, narrower than Title */}
+      <div className="w-full max-w-lg md:max-w-xl lg:max-w-3xl mx-auto px-4 md:px-0 content-visibility-auto animate-fade-in-up animation-delay-200">
         <SearchInput
           value={searchQuery}
           onChange={setSearchQuery}
@@ -48,14 +48,14 @@ export const HomeSearch = memo(function HomeSearch({
         />
       </div>
 
-      {/* Mobile-optimized shortcut buttons */}
+      {/* Mobile-optimized shortcut buttons - Narrower than search box */}
       <div className="px-4 md:px-0 content-visibility-auto animate-fade-in-up animation-delay-200">
-        <div className="flex flex-wrap justify-center gap-2 md:gap-3 max-w-sm md:max-w-lg lg:max-w-2xl mx-auto">
+        <div className="flex flex-nowrap justify-center items-center gap-2 max-w-sm md:max-w-md lg:max-w-lg mx-auto overflow-x-auto scrollbar-hide">
           {shortcutSurahs.map((name) => (
             <button
               key={name}
               onClick={() => handleShortcutClick(name)}
-              className="min-h-11 px-3 md:px-4 lg:px-5 py-2 md:py-2.5 rounded-full font-medium text-sm md:text-base shadow-sm transition-all duration-200 bg-button-secondary border border-border text-content-primary hover:bg-button-secondary-hover hover:shadow-md active:scale-95 backdrop-blur-md touch-manipulation"
+              className="flex-shrink-0 min-h-[2.5rem] md:min-h-11 px-4 py-1.5 md:py-2.5 rounded-full font-medium text-xs md:text-base transition-all duration-200 bg-surface-glass/60 text-foreground hover:bg-surface-glass/80 border-none ring-0 shadow-none hover:shadow-none active:scale-95 backdrop-blur-xl touch-manipulation"
             >
               {name}
             </button>

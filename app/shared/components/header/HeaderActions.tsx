@@ -26,15 +26,6 @@ export const HeaderActions = memo(function HeaderActions(): ReactElement {
 
   return (
     <div className="flex items-center justify-end gap-2 sm:gap-2.5 w-1/3 mr-1">
-      {/* Settings button - only show on mobile/tablet when settings sidebar is hidden */}
-      <button
-        onClick={openSettings}
-        className="btn-touch p-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-all duration-200 active:scale-95 xl:hidden flex items-center justify-center"
-        aria-label="Open settings"
-      >
-        <IconSettings size={18} className="text-muted" />
-      </button>
-
       {/* Theme toggle */}
       <button
         onClick={toggleTheme}
@@ -46,6 +37,15 @@ export const HeaderActions = memo(function HeaderActions(): ReactElement {
         ) : (
           <IconMoon size={18} className="text-foreground" />
         )}
+      </button>
+
+      {/* Settings button - Swapped position: now right of theme toggle */}
+      <button
+        onClick={openSettings}
+        className="btn-touch p-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-all duration-200 active:scale-95 xl:hidden flex items-center justify-center"
+        aria-label="Open settings"
+      >
+        <IconSettings size={18} className="text-muted" />
       </button>
     </div>
   );

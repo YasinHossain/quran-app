@@ -9,12 +9,14 @@ interface HomeTabsProps {
 }
 
 export function HomeTabs({ searchQuery }: HomeTabsProps): React.JSX.Element {
-  const [activeTab, setActiveTab] = useState<'Surah' | 'Juz' | 'Page'>('Surah');
+  const [activeTab, setActiveTab] = useState<'Surah' | 'Juz'>('Surah');
 
   return (
     <section id="surahs" className="py-20 max-w-screen-2xl mx-auto w-full">
       <div className="flex justify-between items-center mb-8 content-visibility-auto animate-fade-in-up animation-delay-600">
-        <h2 className="text-3xl font-bold text-content-primary">All Surahs</h2>
+        <h2 className="text-3xl font-bold text-content-primary">
+          {activeTab === 'Surah' ? 'All Surahs' : 'All Juz'}
+        </h2>
         <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
       </div>
 

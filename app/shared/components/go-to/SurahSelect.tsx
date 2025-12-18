@@ -157,7 +157,17 @@ export const SurahSelect = memo(function SurahSelect({
     if (!open) return;
     updateDropdownMetrics();
 
-    const handleResize = (): void => updateDropdownMetrics();
+    const handleResize = (event?: Event): void => {
+      if (
+        event?.type === 'scroll' &&
+        listRef.current &&
+        event.target === listRef.current
+      ) {
+        return;
+      }
+      updateDropdownMetrics();
+    };
+
     window.addEventListener('resize', handleResize);
     window.addEventListener('scroll', handleResize, true);
     return (): void => {
@@ -238,11 +248,20 @@ export const SurahSelect = memo(function SurahSelect({
   );
 
   useEffect(() => {
-    if (!open || activeIndex < 0) return;
-    const optionEl = listRef.current?.querySelector<HTMLButtonElement>(
+    if (!open || activeIndex < 0 || !listRef.current) return;
+    const optionEl = listRef.current.querySelector<HTMLButtonElement>(
       `[data-index="${activeIndex}"]`
     );
-    optionEl?.scrollIntoView({ block: 'center' });
+
+    if (optionEl && listRef.current) {
+      const container = listRef.current;
+      const scrollOffset =
+        optionEl.offsetTop - container.offsetTop - container.clientHeight / 2 + optionEl.clientHeight / 2;
+      container.scrollTo({
+        top: scrollOffset,
+        behavior: 'instant', // Use instant to prevent fighting with user scroll
+      });
+    }
   }, [activeIndex, open]);
 
   const toggleList = useCallback(() => {

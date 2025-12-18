@@ -41,14 +41,11 @@ export const HomePage = memo(function HomePage({ className }: HomePageProps) {
       <div className="relative z-10 flex flex-col h-full overflow-y-auto px-4 pb-24 md:px-6 md:pb-10 lg:px-8 homepage-scrollable-area">
         <HomeHeader />
 
-        <main className="flex-grow flex flex-col items-center justify-center text-center space-y-8 pt-12 pb-6 md:pt-20 md:pb-10 md:space-y-12">
+        <main className="flex-grow flex flex-col items-center justify-center text-center space-y-8 pt-6 pb-6 md:pt-16 md:pb-10 md:space-y-12">
           <div className="content-visibility-auto animate-fade-in-up space-y-4 md:space-y-6">
-            <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-hero leading-tight">
-              The Noble Qur&apos;an
+            <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-foreground leading-tight">
+              Al Qur&apos;an
             </h2>
-            <p className="text-base md:text-lg lg:text-xl max-w-xl md:max-w-2xl mx-auto text-content-secondary px-4 md:px-0">
-              Read! In the name of your Lord
-            </p>
           </div>
 
           <HomeSearch searchQuery={searchQuery} setSearchQuery={handleSearchChange} />

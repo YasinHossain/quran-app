@@ -1,6 +1,5 @@
 'use client';
 
-import { AnimatePresence } from 'framer-motion';
 import React, { useCallback, useState } from 'react';
 
 import {
@@ -8,12 +7,11 @@ import {
   usePlanCountLabel,
 } from '@/app/(features)/bookmarks/planner/components/DeletePlannerModal.hooks';
 import {
-  DeletePlannerModalBackdrop,
   DeletePlannerModalBody,
   DeletePlannerModalHeader,
-  DeletePlannerModalShell,
 } from '@/app/(features)/bookmarks/planner/components/DeletePlannerModal.parts';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { PanelModalCenter } from '@/app/shared/ui/PanelModalCenter';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 interface DeletePlannerModalProps {
@@ -52,26 +50,27 @@ export function DeletePlannerModal({
   const shouldRender = isOpen && effectivePlanIds.length > 0;
 
   return (
-    <AnimatePresence>
-      {shouldRender ? (
-        <>
-          <DeletePlannerModalBackdrop onClose={handleCancel} />
-
-          <DeletePlannerModalShell>
-            <DeletePlannerModalHeader onClose={handleCancel} />
-            <DeletePlannerModalBody
-              title={title}
-              details={details}
-              countLabel={countLabel}
-              error={error}
-              onCancel={handleCancel}
-              onConfirm={handleDelete}
-              isDeleting={isDeleting}
-            />
-          </DeletePlannerModalShell>
-        </>
-      ) : null}
-    </AnimatePresence>
+    <PanelModalCenter
+      isOpen={shouldRender}
+      onClose={handleCancel}
+      title=""
+      showCloseButton={false}
+      closeOnOverlayClick={true}
+      className="max-w-lg bg-background px-3 sm:px-4 pt-4 pb-4"
+    >
+      <div className="px-1 sm:px-2">
+        <DeletePlannerModalHeader onClose={handleCancel} />
+        <DeletePlannerModalBody
+          title={title}
+          details={details}
+          countLabel={countLabel}
+          error={error}
+          onCancel={handleCancel}
+          onConfirm={handleDelete}
+          isDeleting={isDeleting}
+        />
+      </div>
+    </PanelModalCenter>
   );
 }
 
