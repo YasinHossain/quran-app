@@ -18,15 +18,11 @@ type MushafReflowContentProps = {
 };
 
 /**
- * MushafReflowContent - Mobile reflow mode component
+ * MushafReflowContent - Mobile reflow mode component (quran.com style)
  *
- * This component is used ONLY on mobile when the mushaf content would overflow
- * the screen. Instead of keeping the line-by-line structure (which causes
- * single words to appear alone on lines), this flattens ALL words from all
- * lines into a single continuous paragraph-like flow.
- *
- * The words naturally fill each line before wrapping to the next, creating
- * a balanced, readable layout that fills the screen properly.
+ * Based on quran.com's approach: when text would overflow on mobile,
+ * use centered text with words displayed inline. Words flow naturally
+ * and wrap to fill the screen.
  */
 export const MushafReflowContent = ({
     lines,
@@ -35,7 +31,6 @@ export const MushafReflowContent = ({
     isQpcHafsMushaf,
     isIndopakMushaf,
     qcfVersion,
-    indopakVersion,
     fontSize,
     fontFamily,
     isFontLoaded,
@@ -52,20 +47,18 @@ export const MushafReflowContent = ({
     return (
         <div
             dir="rtl"
-            className="w-full px-4"
+            className="w-full"
             style={{
                 fontFamily,
                 fontSize: typeof fontSize === 'number' ? `${fontSize}px` : fontSize,
             }}
         >
+            {/* Container with centered text - like quran.com's .mobileCenterText */}
             <div
-                className="text-right leading-[1.8]"
+                className="leading-[1.8] mx-auto"
                 style={{
-                    // Allow natural text wrapping
-                    whiteSpace: 'normal',
-                    wordBreak: 'keep-all', // Keep Arabic words intact
-                    textAlign: 'justify', // Justify text to fill lines evenly
-                    textAlignLast: 'right', // Last line aligned right (RTL)
+                    textAlign: 'center',
+                    direction: 'rtl',
                 }}
                 translate="no"
             >
@@ -85,3 +78,6 @@ export const MushafReflowContent = ({
         </div>
     );
 };
+
+
+
