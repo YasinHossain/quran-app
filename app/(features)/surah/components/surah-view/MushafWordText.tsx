@@ -1,5 +1,6 @@
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { applyTajweed } from '@/lib/text/tajweed';
+import { cn } from '@/lib/utils/cn';
 
 import { VerseMarker } from './VerseMarker';
 
@@ -121,11 +122,12 @@ export const MushafWordText = ({
 
   return (
     <span
-      className={
+      className={cn(
         isQcfMushaf
           ? 'inline-flex flex-none items-center text-foreground font-medium'
-          : 'inline-flex flex-none items-center px-[1px] text-foreground'
-      }
+          : 'inline-flex flex-none items-center px-[1px] text-foreground',
+        isQcfMushaf && !isFontLoaded && hasGlyphCode && 'opacity-0'
+      )}
       dangerouslySetInnerHTML={{ __html: sanitizeHtml(rawHtml) }}
     />
   );
