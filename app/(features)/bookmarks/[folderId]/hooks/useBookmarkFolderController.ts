@@ -36,15 +36,20 @@ function useBodyOverflow(): void {
 }
 
 // Helper function to create navigation handler
-function useNavigationHandler(router: ReturnType<typeof useRouter>): {
+function useNavigationHandler(
+  router: ReturnType<typeof useRouter>,
+  setBookmarkSidebarOpen: (open: boolean) => void
+): {
   handleNavigateToBookmarks: () => void;
   handleSectionChange: (section: SectionId) => void;
 } {
   const handleNavigateToBookmarks = (): void => {
+    setBookmarkSidebarOpen(false);
     router.push('/bookmarks');
   };
 
   const handleSectionChange = (section: SectionId): void => {
+    setBookmarkSidebarOpen(false);
     switch (section) {
       case 'pinned':
         router.push('/bookmarks/pinned');
@@ -80,7 +85,10 @@ export function useBookmarkFolderController(folderId: string): BookmarkFolderCon
   } = useBookmarkFolderPanels();
 
   useBodyOverflow();
-  const { handleNavigateToBookmarks, handleSectionChange } = useNavigationHandler(router);
+  const { handleNavigateToBookmarks, handleSectionChange } = useNavigationHandler(
+    router,
+    setBookmarkSidebarOpen
+  );
 
   return {
     isBookmarkSidebarOpen,

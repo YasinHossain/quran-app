@@ -101,7 +101,7 @@ export const StandardNavigationCard = memo(function StandardNavigationCard({
   content,
   onNavigate,
   isActive = false,
-  className = 'items-center ml-2',
+  className = 'items-center w-full',
   ...props
 }: StandardNavigationCardProps): React.JSX.Element {
   const { id, showBadge = true } = content;

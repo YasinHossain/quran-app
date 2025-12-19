@@ -52,8 +52,7 @@ export const BookmarkFolderSidebarContent = ({
     <div
       className="flex-1 overflow-y-auto touch-pan-y p-2 sm:p-3"
     >
-      {/* Top fade gradient */}
-      <div className="sticky top-0 z-10 w-full h-5 bg-gradient-to-b from-background to-transparent pointer-events-none -mt-2 -mx-2 sm:-mx-3 mb-2" />
+
       <BookmarkFolderContent bookmarks={bookmarks} folder={folder} />
     </div>
   </div>

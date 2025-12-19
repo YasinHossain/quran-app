@@ -1,6 +1,7 @@
 'use client';
 import { memo } from 'react';
 
+import { useState } from 'react';
 import { VerseMarker } from '@/app/(features)/surah/components/surah-view/VerseMarker';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
@@ -33,9 +34,9 @@ const WordDisplay = ({
   settings,
   isQpcHafsFont,
 }: WordDisplayProps): React.JSX.Element | null => {
-  // Strip verse markers (U+06DD ۝, U+06DE ۞) from the text to avoid duplication with the SVG marker
-  // If the word contains a verse marker, we assume it's the verse ending word and hide it completely
-  // because we are rendering our own custom VerseMarker component.
+  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+
+  // Strip verse markers
   if (/[\u06DD\u06DE\uFD3E\uFD3F]/.test(word.uthmani)) {
     return null;
   }
@@ -48,15 +49,25 @@ const WordDisplay = ({
 
   return (
     <span key={`${word.id}-${index}`} className="text-center">
-      <span className="relative group cursor-pointer inline-block">
+      <span
+        className="relative group cursor-pointer inline-block select-none outline-none"
+        onClick={() => setIsTooltipOpen(!isTooltipOpen)}
+        onMouseLeave={() => setIsTooltipOpen(false)}
+        tabIndex={0}
+      >
         <span
           dangerouslySetInnerHTML={{
             __html: sanitizeHtml(settings.tajweed ? applyTajweed(cleanUthmani) : cleanUthmani),
           }}
         />
         {!showByWords && (
-          <span className="absolute left-1/2 -translate-x-1/2 -top-7 hidden group-hover:block bg-accent text-on-accent text-xs px-2 py-1 rounded shadow z-10 whitespace-nowrap">
+          <span
+            className={`absolute right-0 bottom-full mb-3 bg-accent text-on-accent text-base px-3 py-2 rounded-md shadow-lg z-[100] pointer-events-none transition-opacity duration-200 max-w-[200px] whitespace-normal text-center w-max ${isTooltipOpen ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+              }`}
+          >
             {word[wordLang as LanguageCode] as string}
+            {/* Arrow pointing down */}
+            <span className="absolute -bottom-1.5 right-3 w-3 h-3 bg-accent rotate-45"></span>
           </span>
         )}
       </span>
