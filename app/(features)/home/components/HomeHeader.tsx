@@ -41,7 +41,7 @@ export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProp
           </h1>
           <button
             onClick={toggleTheme}
-            className="min-h-11 min-w-11 p-2 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent touch-manipulation"
+            className="p-1.5 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent touch-manipulation flex items-center justify-center"
             aria-label="Toggle Theme"
           >
             {theme === 'dark' ? (

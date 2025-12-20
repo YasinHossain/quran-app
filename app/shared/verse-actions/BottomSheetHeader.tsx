@@ -21,14 +21,13 @@ export const BottomSheetHeader = memo(function BottomSheetHeader({
       <button
         onClick={onClose}
         className={cn(
-          'p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors',
-          touchClasses.target,
+          'p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center',
           touchClasses.gesture,
           touchClasses.focus
         )}
         aria-label="Close"
       >
-        <CloseIcon size={20} className="text-muted" />
+        <CloseIcon size={18} className="text-muted" />
       </button>
     </div>
   );

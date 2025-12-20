@@ -30,7 +30,7 @@ export const ModalBody = ({
     animate="visible"
     exit="exit"
     transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-    className="relative w-full max-w-lg bg-background rounded-2xl shadow-xl pointer-events-auto overflow-hidden"
+    className="relative w-full max-w-lg bg-background rounded-lg shadow-xl pointer-events-auto overflow-hidden"
   >
     <ModalHeader onClose={onClose} />
 

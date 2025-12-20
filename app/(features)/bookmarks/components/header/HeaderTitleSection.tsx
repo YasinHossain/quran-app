@@ -18,15 +18,13 @@ export const HeaderTitleSection = ({
 }: HeaderTitleSectionProps): React.JSX.Element => (
   <div className="flex items-center gap-3 min-w-0 flex-1">
     {showMenuButton && onSidebarToggle && (
-      <Button
-        variant="icon-round"
-        size="icon"
+      <button
         onClick={onSidebarToggle}
         aria-label="Toggle sidebar"
-        className="hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-colors flex-shrink-0"
+        className="p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-colors flex items-center justify-center flex-shrink-0"
       >
         <BarsIcon size={18} />
-      </Button>
+      </button>
     )}
     <div className="w-9 h-9 bg-accent rounded-xl flex items-center justify-center shadow-sm">
       <BookmarkIcon size={20} className="text-on-accent" />

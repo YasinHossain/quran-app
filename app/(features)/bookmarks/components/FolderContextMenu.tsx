@@ -139,7 +139,7 @@ export const FolderContextMenu = ({
         aria-haspopup="true"
         aria-controls={isOpen ? menuId : undefined}
       >
-        <EllipsisHIcon size={16} />
+        <EllipsisHIcon size={18} />
       </button>
 
       <AnimatePresence>

@@ -82,15 +82,13 @@ function Utilities({ closePlayer }: { closePlayer: () => void }): React.JSX.Elem
   return (
     <div className="flex items-center gap-2">
       <PlayerOptions />
-      <Button
-        variant="icon-round"
-        size="icon-round"
+      <button
         aria-label="Close player"
         onClick={closePlayer}
-        className="hover:text-red-500"
+        className="p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center hover:text-red-500"
       >
-        <CloseIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
-      </Button>
+        <CloseIcon size={18} />
+      </button>
     </div>
   );
 }

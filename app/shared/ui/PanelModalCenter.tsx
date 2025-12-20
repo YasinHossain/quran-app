@@ -63,9 +63,13 @@ const PanelHeader = memo(function PanelHeader({
     <header className={cn('flex items-center mb-4', hasTitle ? 'justify-between' : 'justify-end')}>
       {hasTitle && <h2 className="text-lg font-semibold">{title}</h2>}
       {showCloseButton && (
-        <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close panel">
+        <button
+          onClick={onClose}
+          className="p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center"
+          aria-label="Close panel"
+        >
           <CloseIcon size={18} />
-        </Button>
+        </button>
       )}
     </header>
   );

@@ -156,7 +156,7 @@ function CreatePlannerForm({
           type="button"
           onClick={onClose}
           aria-label="Close planner modal"
-          className="shrink-0 rounded-full p-2.5 text-muted hover:bg-interactive-hover hover:text-error transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-accent/40 focus:outline-none"
+          className="shrink-0 p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center text-muted hover:text-foreground"
         >
           <CloseIcon size={18} />
         </button>

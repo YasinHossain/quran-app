@@ -37,7 +37,7 @@ const CenteredModal: React.FC<{
       animate="visible"
       exit="exit"
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-      className="w-full max-w-md bg-background rounded-2xl shadow-xl p-6"
+      className="w-full max-w-md bg-background rounded-lg shadow-xl p-6"
       role="dialog"
       aria-modal="true"
       aria-labelledby="folder-settings-title"

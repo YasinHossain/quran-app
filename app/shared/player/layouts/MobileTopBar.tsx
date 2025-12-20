@@ -40,33 +40,41 @@ function CoverAndText({
 function ActionButtons({
   setMobileOptionsOpen,
   closePlayer,
+  className,
 }: {
   setMobileOptionsOpen: () => void;
   closePlayer: () => void;
+  className?: string; // Allow overriding layout
 }): React.JSX.Element {
   return (
-    <div className="flex items-center gap-0.5 xs:gap-1 justify-self-end">
+    <div className={className || "flex items-center gap-0.5 xs:gap-1 justify-self-end"}>
       <SpeedControl />
-      <Button
-        variant="icon-round"
-        size="icon-round"
-        className="shrink-0 h-8 w-8 min-h-8 min-w-8 xs:min-h-touch xs:min-w-touch xs:h-9 xs:w-9"
+      <button
+        className="p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center shrink-0"
         aria-label="Options"
         onClick={setMobileOptionsOpen}
       >
-        <SlidersIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
-      </Button>
-      <Button
-        variant="icon-round"
-        size="icon-round"
+        <SlidersIcon size={18} />
+      </button>
+      <button
         aria-label="Close player"
         onClick={closePlayer}
-        className="hover:text-red-500 h-8 w-8 min-h-8 min-w-8 xs:min-h-touch xs:min-w-touch xs:h-9 xs:w-9"
+        className="p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center hover:text-red-500"
       >
-        <CloseIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
-      </Button>
+        <CloseIcon size={18} />
+      </button>
     </div>
   );
+}
+
+function formatMobileTitle(title: string): string {
+  if (title.toLowerCase().startsWith('verse')) {
+    return title.replace(/^Verse/i, 'Surah');
+  }
+  if (/^\d+:\d+$/.test(title)) {
+    return `Surah ${title}`;
+  }
+  return title;
 }
 
 export function MobileTopBar({
@@ -81,30 +89,55 @@ export function MobileTopBar({
   closePlayer,
 }: Props): React.JSX.Element {
   return (
-    <div className="flex items-center justify-center gap-3 xs:gap-6 min-[450px]:gap-2 min-[450px]:grid min-[450px]:grid-cols-[1fr_auto_1fr]">
-      <div className="hidden min-[450px]:block min-w-0">
+    <div className="flex flex-col gap-1 w-full min-[450px]:grid min-[450px]:grid-cols-[1fr_auto_1fr] min-[450px]:gap-2 min-[450px]:items-center">
+      {/* Mobile Text Header */}
+      <div className="flex justify-between items-center px-1 mb-1 min-[450px]:hidden order-1">
+        <div className="text-sm font-semibold truncate text-foreground min-w-0">
+          {formatMobileTitle(title)}
+        </div>
+        <div className="text-xs text-muted truncate max-w-[50%] text-right shrink-0">{artist}</div>
+      </div>
+
+      {/* Desktop Text - Hidden on mobile */}
+      <div className="hidden min-[450px]:block min-w-0 justify-self-start order-first">
         <CoverAndText title={title} artist={artist} />
       </div>
-      <TransportControls
-        isPlaying={isPlaying}
-        interactable={interactable}
-        {...(onPrev
-          ? {
-            onPrev: () => {
-              void onPrev();
-            },
-          }
-          : {})}
-        {...(onNext
-          ? {
-            onNext: () => {
-              void onNext();
-            },
-          }
-          : {})}
-        togglePlay={togglePlay}
-      />
-      <ActionButtons setMobileOptionsOpen={setMobileOptionsOpen} closePlayer={closePlayer} />
+
+      {/* Controls Container */}
+      <div className="grid grid-cols-6 items-center justify-items-center w-full min-[450px]:contents order-2">
+        {/* Transport Controls */}
+        <div className="contents min-[450px]:flex min-[450px]:items-center min-[450px]:justify-center">
+          <TransportControls
+            isPlaying={isPlaying}
+            interactable={interactable}
+            {...(onPrev
+              ? {
+                onPrev: () => {
+                  void onPrev();
+                },
+              }
+              : {})}
+            {...(onNext
+              ? {
+                onNext: () => {
+                  void onNext();
+                },
+              }
+              : {})}
+            togglePlay={togglePlay}
+            className="contents min-[450px]:flex min-[450px]:items-center min-[450px]:gap-2"
+          />
+        </div>
+
+        {/* Action Buttons */}
+        <div className="contents min-[450px]:flex min-[450px]:items-center min-[450px]:justify-end min-[450px]:justify-self-end">
+          <ActionButtons
+            setMobileOptionsOpen={setMobileOptionsOpen}
+            closePlayer={closePlayer}
+            className="contents min-[450px]:flex min-[450px]:items-center min-[450px]:gap-1"
+          />
+        </div>
+      </div>
     </div>
   );
 }

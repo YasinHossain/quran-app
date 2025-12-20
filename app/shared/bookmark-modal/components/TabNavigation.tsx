@@ -25,8 +25,8 @@ export const TabNavigation = memo(function TabNavigation({
   ];
 
   return (
-    <div className="px-6 py-4">
-      <div className="relative flex w-full items-start justify-center">
+    <div className="px-6 py-4 relative">
+      <div className="flex w-full items-start justify-center">
         <div className="space-y-1 text-center">
           <h2 className="text-xl font-semibold text-foreground">Add to Collections</h2>
           {verseKey && <p className="text-sm text-muted">Verse {verseKey}</p>}
@@ -34,13 +34,12 @@ export const TabNavigation = memo(function TabNavigation({
         <button
           onClick={onClose}
           className={cn(
-            'absolute right-0 top-0 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors',
-            touchClasses.target,
+            'absolute right-3 top-3 p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center',
             touchClasses.focus
           )}
           aria-label="Close"
         >
-          <CloseIcon size={20} className="text-muted" />
+          <CloseIcon size={18} className="text-muted" />
         </button>
       </div>
 
@@ -54,7 +53,6 @@ export const TabNavigation = memo(function TabNavigation({
               activeTab === tab.id
                 ? 'bg-surface shadow text-foreground'
                 : 'text-muted hover:text-foreground hover:bg-surface/30',
-              touchClasses.target,
               touchClasses.focus
             )}
           >

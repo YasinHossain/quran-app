@@ -262,7 +262,7 @@ export function AddToPlannerModal({
     <PanelModalCenter
       isOpen={isOpen}
       onClose={onClose}
-      className="w-full max-w-xl rounded-xl border border-border/30 bg-background p-4 shadow-modal sm:rounded-2xl sm:p-6"
+      className="w-full max-w-xl rounded-lg bg-background p-4 shadow-xl sm:p-6"
       showCloseButton={false}
     >
       <div className="flex h-full min-h-0 flex-col">
@@ -272,15 +272,13 @@ export function AddToPlannerModal({
               <h2 className="text-xl font-semibold text-content-primary">{title}</h2>
               <p className="text-sm text-content-secondary">{subtitle}</p>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
+            <button
               onClick={onClose}
+              className="p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors text-content-secondary hover:text-content-primary shrink-0 flex items-center justify-center"
               aria-label="Close planner modal"
-              className="shrink-0 text-content-secondary hover:text-content-primary"
             >
               <CloseIcon size={18} />
-            </Button>
+            </button>
           </div>
         </header>
 

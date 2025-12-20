@@ -89,11 +89,9 @@ const ButtonVariant = memo(function ButtonVariant({
   className,
 }: ButtonVariantProps): React.JSX.Element {
   return (
-    <Button
-      variant="icon-round"
-      size="icon"
+    <button
       onClick={onToggle}
-      className={`bg-button-secondary/40 hover:bg-button-secondary-hover/60 ${className || ''}`}
+      className={`p-1.5 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none flex items-center justify-center ${className || ''}`}
       aria-label="Toggle Theme"
     >
       {currentTheme === 'dark' ? (
@@ -101,7 +99,7 @@ const ButtonVariant = memo(function ButtonVariant({
       ) : (
         <MoonIcon className="w-5 h-5 text-accent" />
       )}
-    </Button>
+    </button>
   );
 });
 

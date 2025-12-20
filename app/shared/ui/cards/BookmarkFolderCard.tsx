@@ -98,10 +98,10 @@ export const BookmarkFolderCard = ({
                 <div className="text-xs text-muted/70">No verses yet</div>
               )}
             </div>
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-colors">
+            <div className="p-1.5 flex items-center justify-center rounded-full bg-surface hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-colors">
               <ChevronDownIcon
                 className={cn(
-                  'h-4 w-4 text-muted transition-transform duration-300',
+                  'h-5 w-5 text-muted transition-transform duration-300',
                   isExpanded && 'rotate-180 text-accent'
                 )}
               />

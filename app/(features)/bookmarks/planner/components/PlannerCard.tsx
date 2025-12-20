@@ -108,6 +108,8 @@ const usePlannerNavigation = (
   }, [continueVerse, router, surahId]);
 };
 
+
+
 const PlannerCardDeleteButton = ({
   onDelete,
 }: {
@@ -118,7 +120,7 @@ const PlannerCardDeleteButton = ({
     <button
       type="button"
       aria-label="Delete planner"
-      className="shrink-0 rounded-full p-2.5 text-muted hover:bg-interactive-hover hover:text-error transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-accent/40 focus:outline-none"
+      className="shrink-0 p-1.5 rounded-full text-muted hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-error transition-colors duration-200 flex items-center justify-center focus-visible:ring-2 focus-visible:ring-accent/40 focus:outline-none"
       onClick={(event) => {
         event.stopPropagation();
         onDelete();

@@ -26,7 +26,7 @@ export const NavigateToVerseLink = memo(function NavigateToVerseLink({
       aria-label="Go to verse"
       title="Go to verse"
       className={cn(
-        'p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition',
+        'p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition flex items-center justify-center',
         touchClasses.focus
       )}
     >
