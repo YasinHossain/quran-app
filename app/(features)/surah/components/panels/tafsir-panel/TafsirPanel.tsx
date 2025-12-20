@@ -2,7 +2,8 @@
 
 import React from 'react';
 
-import { ResourcePanelHeader } from '@/app/shared/resource-panel/components/ResourcePanelHeader';
+import { SlideOverPanel } from '@/app/shared/components/SlideOverPanel';
+import { SettingsPanelHeader } from '@/app/shared/resource-panel/components/ResourcePanelHeader';
 import { useListHeight } from '@/app/shared/resource-panel/hooks/useListHeight';
 import { useTafsirPanel, type UseTafsirPanelReturn } from '@/src/presentation/hooks/useTafsirPanel';
 
@@ -41,15 +42,21 @@ function createTafsirContentProps(
     listHeight,
     listContainerRef: listContainerRef as React.RefObject<HTMLDivElement>,
     onReorder: panelData.setSelections,
+    onReset: panelData.handleReset,
   };
 }
 
 interface TafsirPanelProps {
   isOpen: boolean;
   onClose: () => void;
+  onCloseSidebar?: () => void;
 }
 
-export const TafsirPanel = ({ isOpen, onClose }: TafsirPanelProps): React.JSX.Element => {
+export const TafsirPanel = ({
+  isOpen,
+  onClose,
+  onCloseSidebar,
+}: TafsirPanelProps): React.JSX.Element => {
   const panelData = useTafsirPanel(isOpen);
   const { listContainerRef, listHeight } = useListHeight(isOpen);
   const { resourcesToRender, sectionsToRender } = useTafsirSections(
@@ -68,22 +75,16 @@ export const TafsirPanel = ({ isOpen, onClose }: TafsirPanelProps): React.JSX.El
   );
 
   return (
-    <div
-      data-testid="tafsir-panel"
-      aria-hidden={!isOpen}
-      className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
-        isOpen ? 'translate-x-0' : 'translate-x-full'
-      } bg-background text-foreground`}
-    >
-      <ResourcePanelHeader
+    <SlideOverPanel isOpen={isOpen} testId="tafsir-panel">
+      <SettingsPanelHeader
         title="Manage Tafsirs"
         onClose={onClose}
-        onReset={panelData.handleReset}
+        {...(onCloseSidebar ? { onCloseSidebar } : {})}
       />
 
       <div className="flex-1 flex flex-col min-h-0">
         <TafsirPanelContent {...contentProps} />
       </div>
-    </div>
+    </SlideOverPanel>
   );
 };

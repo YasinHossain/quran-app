@@ -14,6 +14,7 @@ interface SearchPropsArgs {
   tafsirs: TafsirResource[];
   handleSelectionToggle: (id: number) => void;
   onReorder: (ids: number[]) => void;
+  onReset: () => void;
 }
 
 interface TabsPropsArgs {
@@ -44,6 +45,7 @@ export const useTafsirSearchProps = ({
   tafsirs,
   handleSelectionToggle,
   onReorder,
+  onReset,
 }: SearchPropsArgs): TafsirSearchSectionProps =>
   React.useMemo(
     () => ({
@@ -53,8 +55,9 @@ export const useTafsirSearchProps = ({
       tafsirs,
       handleSelectionToggle,
       onReorder,
+      onReset,
     }),
-    [searchTerm, setSearchTerm, orderedSelection, tafsirs, handleSelectionToggle, onReorder]
+    [searchTerm, setSearchTerm, orderedSelection, tafsirs, handleSelectionToggle, onReorder, onReset]
   );
 
 export const useTafsirTabsProps = ({

@@ -13,6 +13,7 @@ interface TranslationSelectionListProps {
   translations: TranslationResource[];
   handleSelectionToggle: (id: number) => void;
   onReorder?: (ids: number[]) => void;
+  onReset?: () => void;
 }
 
 export const TranslationSelectionList = ({
@@ -20,6 +21,7 @@ export const TranslationSelectionList = ({
   translations,
   handleSelectionToggle,
   onReorder,
+  onReset,
 }: TranslationSelectionListProps): React.JSX.Element => {
   return (
     <ReorderableSelectionList
@@ -28,6 +30,7 @@ export const TranslationSelectionList = ({
       resources={translations}
       onRemove={handleSelectionToggle}
       {...(onReorder ? { onReorder } : {})}
+      onReset={onReset}
       maxSelections={MAX_TRANSLATION_SELECTIONS}
       emptyText="No translations selected"
       removeAriaLabel="Remove translation"

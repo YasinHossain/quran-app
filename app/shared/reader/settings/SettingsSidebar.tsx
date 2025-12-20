@@ -12,9 +12,22 @@ import type { ReactElement } from 'react';
 
 export const SettingsSidebar = (props: SettingsSidebarProps): ReactElement => {
   const { isSettingsOpen, setSettingsOpen } = useUIState();
-  const handleCloseSidebar = useCallback((): void => setSettingsOpen(false), [setSettingsOpen]);
 
   const { pageType, readerTabsEnabled: readerTabsOverride, ...contentProps } = props;
+
+  const handleCloseSidebar = useCallback((): void => {
+    setSettingsOpen(false);
+    props.onTranslationPanelClose?.();
+    props.onTafsirPanelClose?.();
+    props.onWordLanguagePanelClose?.();
+    props.onMushafPanelClose?.();
+  }, [
+    setSettingsOpen,
+    props.onTranslationPanelClose,
+    props.onTafsirPanelClose,
+    props.onWordLanguagePanelClose,
+    props.onMushafPanelClose,
+  ]);
 
   const readerTabsEnabled =
     typeof readerTabsOverride === 'boolean' ? readerTabsOverride : pageType === 'verse';

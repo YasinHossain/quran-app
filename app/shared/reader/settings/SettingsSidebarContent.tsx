@@ -81,23 +81,23 @@ export function SettingsSidebarContent({
   const hookTabState = useSettingsTabState(
     onReadingPanelOpen || onTranslationTabOpen || activeReaderMode
       ? {
-          ...(onReadingPanelOpen ? { onReadingPanelOpen } : {}),
-          ...(onTranslationTabOpen ? { onTranslationTabOpen } : {}),
-          ...(activeReaderMode ? { activeTabOverride: activeReaderMode } : {}),
-        }
+        ...(onReadingPanelOpen ? { onReadingPanelOpen } : {}),
+        ...(onTranslationTabOpen ? { onTranslationTabOpen } : {}),
+        ...(activeReaderMode ? { activeTabOverride: activeReaderMode } : {}),
+      }
       : {}
   );
 
   const tabState = tabsEnabled
     ? hookTabState
     : {
-        activeTab: 'translation' as const,
-        handleTabChange: () => {},
-        tabOptions: [{ value: 'translation', label: 'Translation' }] as Array<{
-          value: SettingsTabValue;
-          label: string;
-        }>,
-      };
+      activeTab: 'translation' as const,
+      handleTabChange: () => { },
+      tabOptions: [{ value: 'translation', label: 'Translation' }] as Array<{
+        value: SettingsTabValue;
+        label: string;
+      }>,
+    };
 
   const { activeTab, handleTabChange, tabOptions } = tabState;
   const { openSections, handleSectionToggle } = useSettingsSections();
@@ -199,7 +199,7 @@ export function SettingsSidebarContent({
       <div className="flex-1 overflow-hidden flex flex-col">
         <SettingsContentWrapper {...contentWrapperProps} />
       </div>
-      <SettingsPanels {...panelsProps} />
+      <SettingsPanels {...panelsProps} {...(onClose ? { onCloseSidebar: onClose } : {})} />
     </div>
   );
 }

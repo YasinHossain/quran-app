@@ -13,6 +13,7 @@ export interface TafsirSearchSectionProps {
   tafsirs: TafsirResource[];
   handleSelectionToggle: (id: number) => void;
   onReorder: (ids: number[]) => void;
+  onReset: () => void;
 }
 
 export const TafsirSearchSection = ({
@@ -22,6 +23,7 @@ export const TafsirSearchSection = ({
   tafsirs,
   handleSelectionToggle,
   onReorder,
+  onReset,
 }: TafsirSearchSectionProps): React.JSX.Element => (
   <div className="p-4 space-y-4">
     <TafsirSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
@@ -30,6 +32,7 @@ export const TafsirSearchSection = ({
       tafsirs={tafsirs}
       handleSelectionToggle={handleSelectionToggle}
       onReorder={onReorder}
+      onReset={onReset}
     />
   </div>
 );

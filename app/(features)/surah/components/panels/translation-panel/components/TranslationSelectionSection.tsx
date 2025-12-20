@@ -14,6 +14,7 @@ interface TranslationSelectionSectionProps {
   translations: TranslationResource[];
   handleSelection: (id: number) => void;
   onReorder: (ids: number[]) => void;
+  onReset: () => void;
 }
 
 export function TranslationSelectionSection(
@@ -27,6 +28,7 @@ export function TranslationSelectionSection(
         translations={props.translations}
         handleSelectionToggle={props.handleSelection}
         onReorder={props.onReorder}
+        onReset={props.onReset}
       />
     </div>
   );

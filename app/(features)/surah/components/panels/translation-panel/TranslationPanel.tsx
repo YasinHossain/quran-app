@@ -2,7 +2,8 @@
 
 import React from 'react';
 
-import { ResourcePanelHeader } from '@/app/shared/resource-panel/components/ResourcePanelHeader';
+import { SlideOverPanel } from '@/app/shared/components/SlideOverPanel';
+import { SettingsPanelHeader } from '@/app/shared/resource-panel/components/ResourcePanelHeader';
 import { useListHeight } from '@/app/shared/resource-panel/hooks/useListHeight';
 
 import { TranslationPanelContent } from './components/TranslationPanelContent';
@@ -12,9 +13,14 @@ import { useTranslationPanel } from './useTranslationPanel';
 interface TranslationPanelProps {
   isOpen: boolean;
   onClose: () => void;
+  onCloseSidebar?: () => void;
 }
 
-export const TranslationPanel = ({ isOpen, onClose }: TranslationPanelProps): React.JSX.Element => {
+export const TranslationPanel = ({
+  isOpen,
+  onClose,
+  onCloseSidebar,
+}: TranslationPanelProps): React.JSX.Element => {
   const panelData = useTranslationPanel();
   const { listContainerRef, listHeight } = useListHeight(isOpen);
   const { resourcesToRender, sectionsToRender } = useTranslationSections(
@@ -24,18 +30,12 @@ export const TranslationPanel = ({ isOpen, onClose }: TranslationPanelProps): Re
   );
 
   return (
-    <div
-      data-testid="translation-panel"
-      aria-hidden={!isOpen}
-      className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
-        isOpen ? 'translate-x-0' : 'translate-x-full'
-      } bg-background text-foreground`}
-    >
-      <ResourcePanelHeader
+    <SlideOverPanel isOpen={isOpen} testId="translation-panel">
+      <SettingsPanelHeader
         title="Manage Translations"
         onClose={onClose}
-        onReset={panelData.handleReset}
         backIconClassName="h-6 w-6 text-foreground"
+        {...(onCloseSidebar ? { onCloseSidebar } : {})}
       />
 
       <div className="flex-1 flex flex-col min-h-0">
@@ -48,6 +48,7 @@ export const TranslationPanel = ({ isOpen, onClose }: TranslationPanelProps): Re
           translations={panelData.translations}
           handleSelectionToggle={panelData.handleSelectionToggle}
           onReorder={panelData.setSelections}
+          onReset={panelData.handleReset}
           languages={panelData.languages}
           activeFilter={panelData.activeFilter}
           setActiveFilter={panelData.setActiveFilter}
@@ -63,6 +64,6 @@ export const TranslationPanel = ({ isOpen, onClose }: TranslationPanelProps): Re
           listContainerRef={listContainerRef as React.RefObject<HTMLDivElement>}
         />
       </div>
-    </div>
+    </SlideOverPanel>
   );
 };

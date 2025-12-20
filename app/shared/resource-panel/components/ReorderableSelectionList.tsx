@@ -3,7 +3,7 @@
 import { Reorder, useDragControls, motion, PanInfo } from 'framer-motion';
 import React, { memo } from 'react';
 
-import { CloseIcon, GripVerticalIcon } from '@/app/shared/icons';
+import { CloseIcon, GripVerticalIcon, ResetIcon } from '@/app/shared/icons';
 
 type BasicResource = {
   id: number;
@@ -55,11 +55,12 @@ interface ReorderableSelectionListProps {
   orderedSelection: number[];
   resources: BasicResource[];
   onRemove: (id: number) => void;
-  onReorder?: (ids: number[]) => void;
+  onReorder?: ((ids: number[]) => void) | undefined;
+  onReset?: (() => void) | undefined;
   maxSelections: number;
   emptyText: string;
   variant: SelectionListVariant;
-  removeAriaLabel?: string;
+  removeAriaLabel?: string | undefined;
 }
 
 export const ReorderableSelectionList = memo(function ReorderableSelectionList(
@@ -87,14 +88,25 @@ export const ReorderableSelectionList = memo(function ReorderableSelectionList(
 
   return (
     <div>
-      <h2 className={styles.headerClassName}>
-        <span>
+      <div className={styles.headerClassName}>
+        <span className="uppercase">
           MY SELECTIONS ({selectionCount}/{props.maxSelections})
         </span>
-        {selectionCount >= props.maxSelections && (
-          <span className={styles.maxBadgeClassName}>MAX</span>
-        )}
-      </h2>
+        <div className="flex items-center gap-2">
+          {selectionCount >= props.maxSelections && (
+            <span className={styles.maxBadgeClassName}>MAX</span>
+          )}
+          {props.onReset && (
+            <button
+              onClick={props.onReset}
+              className="p-1.5 rounded-full text-foreground hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-colors"
+              title="Reset to Default"
+            >
+              <ResetIcon size={16} />
+            </button>
+          )}
+        </div>
+      </div>
 
       <div className={styles.containerClassName}>
         {selectionCount === 0 ? (

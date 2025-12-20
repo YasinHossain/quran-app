@@ -28,18 +28,35 @@ export const SettingsPanels = ({
   mushafOptions,
   selectedMushafId,
   onMushafChange,
+  onCloseSidebar,
 }: SettingsPanelsProps): ReactElement => {
   return (
     <>
-      <ArabicFontPanel isOpen={isArabicFontPanelOpen} onClose={onArabicFontPanelClose} />
+      <ArabicFontPanel
+        isOpen={isArabicFontPanelOpen}
+        onClose={onArabicFontPanelClose}
+        {...(onCloseSidebar ? { onCloseSidebar } : {})}
+      />
       {onTranslationPanelClose && (
-        <TranslationPanel isOpen={!!isTranslationPanelOpen} onClose={onTranslationPanelClose} />
+        <TranslationPanel
+          isOpen={!!isTranslationPanelOpen}
+          onClose={onTranslationPanelClose}
+          {...(onCloseSidebar ? { onCloseSidebar } : {})}
+        />
       )}
       {onTafsirPanelClose && (
-        <TafsirPanel isOpen={!!isTafsirPanelOpen} onClose={onTafsirPanelClose} />
+        <TafsirPanel
+          isOpen={!!isTafsirPanelOpen}
+          onClose={onTafsirPanelClose}
+          {...(onCloseSidebar ? { onCloseSidebar } : {})}
+        />
       )}
       {onWordLanguagePanelClose && (
-        <WordLanguagePanel isOpen={!!isWordLanguagePanelOpen} onClose={onWordLanguagePanelClose} />
+        <WordLanguagePanel
+          isOpen={!!isWordLanguagePanelOpen}
+          onClose={onWordLanguagePanelClose}
+          {...(onCloseSidebar ? { onCloseSidebar } : {})}
+        />
       )}
       {onMushafPanelClose && mushafOptions && onMushafChange && (
         <MushafPanel
@@ -48,6 +65,7 @@ export const SettingsPanels = ({
           options={mushafOptions}
           selectedId={selectedMushafId}
           onSelect={onMushafChange}
+          {...(onCloseSidebar ? { onCloseSidebar } : {})}
         />
       )}
     </>

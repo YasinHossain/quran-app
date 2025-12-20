@@ -24,6 +24,7 @@ interface TafsirPanelContentProps {
   tafsirs: TafsirResource[];
   handleSelectionToggle: (id: number) => void;
   onReorder: (ids: number[]) => void;
+  onReset: () => void;
   languages: string[];
   activeFilter: string;
   setActiveFilter: (filter: string) => void;

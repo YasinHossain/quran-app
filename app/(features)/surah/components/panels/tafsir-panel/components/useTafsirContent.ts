@@ -21,6 +21,7 @@ export interface TafsirPanelContentPropsLite {
   tafsirs: TafsirResource[];
   handleSelectionToggle: (id: number) => void;
   onReorder: (ids: number[]) => void;
+  onReset: () => void;
   languages: string[];
   activeFilter: string;
   setActiveFilter: (filter: string) => void;
@@ -52,6 +53,7 @@ export function useTafsirContent(props: TafsirPanelContentPropsLite): TafsirCont
     tafsirs: props.tafsirs,
     handleSelectionToggle: props.handleSelectionToggle,
     onReorder: props.onReorder,
+    onReset: props.onReset,
   });
 
   const tabsProps = useTafsirTabsProps({

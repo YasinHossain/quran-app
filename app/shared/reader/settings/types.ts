@@ -91,4 +91,5 @@ export interface SettingsPanelsProps
   > {
   isArabicFontPanelOpen: boolean;
   onArabicFontPanelClose: () => void;
+  onCloseSidebar?: () => void;
 }

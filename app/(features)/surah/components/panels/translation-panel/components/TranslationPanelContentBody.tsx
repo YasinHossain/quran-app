@@ -16,6 +16,7 @@ interface TranslationPanelContentBodyProps {
   translations: TranslationResource[];
   handleSelection: (id: number) => void;
   onReorder: (ids: number[]) => void;
+  onReset: () => void;
   languages: string[];
   activeFilter: string;
   setActiveFilter: (filter: string) => void;
@@ -41,6 +42,7 @@ export function PanelContentBody(props: TranslationPanelContentBodyProps): React
         translations={props.translations}
         handleSelection={props.handleSelection}
         onReorder={props.onReorder}
+        onReset={props.onReset}
       />
 
       <ResourceTabsHeader

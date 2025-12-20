@@ -20,6 +20,7 @@ interface TranslationPanelContentProps {
   translations: TranslationResource[];
   handleSelectionToggle: (id: number) => void;
   onReorder: (ids: number[]) => void;
+  onReset: () => void;
   languages: string[];
   activeFilter: string;
   setActiveFilter: (filter: string) => void;
@@ -53,6 +54,7 @@ function TranslationPanelContentBodyWrapper(
       translations={props.translations}
       handleSelection={handleSelection}
       onReorder={props.onReorder}
+      onReset={props.onReset}
       languages={props.languages}
       activeFilter={props.activeFilter}
       setActiveFilter={props.setActiveFilter}

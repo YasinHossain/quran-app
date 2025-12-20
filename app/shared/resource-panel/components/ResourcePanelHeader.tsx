@@ -2,12 +2,13 @@
 
 import React from 'react';
 
-import { ResetIcon } from '@/app/shared/icons';
+import { CloseIcon, ResetIcon } from '@/app/shared/icons';
 
 interface ResourcePanelHeaderProps {
   title: string;
   onClose: () => void;
-  onReset: () => void;
+  onReset?: () => void;
+  onCloseSidebar?: () => void;
   backIconClassName?: string;
 }
 
@@ -15,6 +16,7 @@ export const ResourcePanelHeader = ({
   title,
   onClose,
   onReset,
+  onCloseSidebar,
   backIconClassName = 'h-6 w-6 text-muted',
 }: ResourcePanelHeaderProps): React.JSX.Element => {
   return (
@@ -22,6 +24,7 @@ export const ResourcePanelHeader = ({
       <button
         onClick={onClose}
         className="p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent hover:bg-gray-200 dark:hover:bg-slate-700"
+        aria-label="Back"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -35,13 +38,29 @@ export const ResourcePanelHeader = ({
         </svg>
       </button>
       <h2 className="text-lg font-bold text-center flex-grow text-foreground">{title}</h2>
-      <button
-        onClick={onReset}
-        className="p-2 rounded-full text-foreground hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent focus-visible:outline-none transition-colors"
-        title="Reset to Default"
-      >
-        <ResetIcon size={20} />
-      </button>
+      {onReset ? (
+        <button
+          onClick={onReset}
+          className="p-2 rounded-full text-foreground hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent focus-visible:outline-none transition-colors"
+          title="Reset to Default"
+        >
+          <ResetIcon size={20} />
+        </button>
+      ) : onCloseSidebar ? null : (
+        <div className="w-10" /> // Spacer to keep title centered if no reset button
+      )}
+      {onCloseSidebar && (
+        <button
+          onClick={onCloseSidebar}
+          className="p-2 rounded-full text-foreground hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent focus-visible:outline-none transition-colors"
+          title="Close Sidebar"
+        >
+          <CloseIcon size={20} />
+        </button>
+      )}
     </header>
   );
 };
+
+export const SettingsPanelHeader = ResourcePanelHeader;
+

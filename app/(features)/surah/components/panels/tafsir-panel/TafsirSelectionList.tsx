@@ -12,7 +12,8 @@ interface TafsirSelectionListProps {
   orderedSelection: number[];
   tafsirs: TafsirResource[];
   handleSelectionToggle: (id: number) => void;
-  onReorder?: (ids: number[]) => void;
+  onReorder?: ((ids: number[]) => void) | undefined;
+  onReset?: (() => void) | undefined;
 }
 
 export const TafsirSelectionList = ({
@@ -20,6 +21,7 @@ export const TafsirSelectionList = ({
   tafsirs,
   handleSelectionToggle,
   onReorder,
+  onReset,
 }: TafsirSelectionListProps): React.JSX.Element => {
   return (
     <ReorderableSelectionList
@@ -28,6 +30,7 @@ export const TafsirSelectionList = ({
       resources={tafsirs}
       onRemove={handleSelectionToggle}
       {...(onReorder ? { onReorder } : {})}
+      onReset={onReset}
       maxSelections={MAX_TAFSIR_SELECTIONS}
       emptyText="No tafsirs selected"
     />
