@@ -9,11 +9,11 @@ import {
   useEffect,
   useMemo,
   useState,
-  useId,
 } from 'react';
 
 import { SurahVerseSelector } from '@/app/shared/components/SurahVerseSelector';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
+import { Button } from '@/app/shared/ui/Button';
 
 interface GoToSurahVerseFormProps {
   onNavigate: (surahId: number, verse?: number) => void;
@@ -49,7 +49,7 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
       return;
     }
     // Logic to clamp verse or clear it if out of bounds could go here
-    // But the Selector handles the UI options. 
+    // But the Selector handles the UI options.
     // We just ensure data consistency.
     if (activeChapter?.verses_count && verse && verse > activeChapter.verses_count) {
       setVerse(activeChapter.verses_count);
@@ -87,13 +87,14 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
           <div className="text-lg font-semibold text-foreground leading-tight">{title}</div>
           {subtitleText ? <div className="text-sm text-muted">{subtitleText}</div> : null}
         </div>
-        <button
+        <Button
           type="submit"
-          className="shrink-0 px-4 py-2 rounded-xl bg-accent text-on-accent text-sm font-medium transition-colors hover:bg-accent-hover disabled:opacity-60 disabled:cursor-not-allowed"
           disabled={disabled}
+          size="sm"
+          className="rounded-lg px-6 min-h-0 h-8"
         >
           {buttonLabel}
-        </button>
+        </Button>
       </div>
 
       <SurahVerseSelector

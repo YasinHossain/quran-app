@@ -30,10 +30,11 @@ function NavButton({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`p-1 rounded-full ${side === 'left' ? 'mr-2' : 'ml-2'} transition-colors ${disabled
-        ? 'text-muted cursor-not-allowed'
-        : 'text-muted hover:text-foreground hover:bg-gray-200 dark:hover:bg-slate-700'
-        }`}
+      className={`p-1 rounded-full ${side === 'left' ? 'mr-2' : 'ml-2'} transition-colors ${
+        disabled
+          ? 'text-muted cursor-not-allowed'
+          : 'text-muted hover:text-foreground hover:bg-gray-200 dark:hover:bg-slate-700'
+      }`}
     >
       {children}
     </button>
@@ -53,10 +54,11 @@ function Tab({
     <button
       key={lang}
       onClick={() => onClick(lang)}
-      className={`flex-shrink-0 px-3 py-1 text-sm font-semibold border-b-2 transition-colors flex items-center justify-center ${active
-        ? 'border-accent text-accent'
-        : 'border-transparent text-muted hover:text-foreground hover:border-border'
-        }`}
+      className={`flex-shrink-0 px-3 py-1 text-sm font-semibold border-b-2 transition-colors flex items-center justify-center ${
+        active
+          ? 'border-accent text-accent'
+          : 'border-transparent text-muted hover:text-foreground hover:border-border'
+      }`}
     >
       {lang}
     </button>

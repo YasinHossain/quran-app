@@ -1,14 +1,11 @@
 // app/shared/Navigation.tsx - Simple unified navigation
 'use client';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { usePathname } from 'next/navigation';
-
-import { useSidebar } from '@/app/providers/SidebarContext';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
-
 import { cn } from '@/lib/utils/cn';
 
 import { HomeIcon, BookmarkOutlineIcon, GridIcon } from './icons';
@@ -80,8 +77,8 @@ const MobileNavigation = memo(function MobileNavigation({
                 : item.href === '/bookmarks'
                   ? pathname.startsWith('/bookmarks')
                   : pathname.startsWith('/surah') ||
-                  pathname.startsWith('/juz') ||
-                  pathname.startsWith('/page');
+                    pathname.startsWith('/juz') ||
+                    pathname.startsWith('/page');
 
             return (
               <Link
@@ -97,7 +94,9 @@ const MobileNavigation = memo(function MobileNavigation({
                 <div className="flex items-center justify-center h-6 w-6">
                   <item.icon className="h-5 w-5 sm:h-6 sm:w-6" />
                 </div>
-                <span className="text-[10px] sm:text-xs font-medium truncate w-full text-center leading-none">{item.label}</span>
+                <span className="text-[10px] sm:text-xs font-medium truncate w-full text-center leading-none">
+                  {item.label}
+                </span>
               </Link>
             );
           })}
@@ -132,8 +131,16 @@ export const Navigation = memo(function Navigation() {
 
   return (
     <>
-      <DesktopNavigation navItems={navItems} linkStyles={`${linkStyles} text-foreground hover:text-accent`} />
-      <MobileNavigation navItems={navItems} linkStyles={linkStyles} isHidden={hideMobileNav} pathname={pathname} />
+      <DesktopNavigation
+        navItems={navItems}
+        linkStyles={`${linkStyles} text-foreground hover:text-accent`}
+      />
+      <MobileNavigation
+        navItems={navItems}
+        linkStyles={linkStyles}
+        isHidden={hideMobileNav}
+        pathname={pathname}
+      />
     </>
   );
 });

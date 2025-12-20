@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+
 import { ResourceItem } from '@/app/shared/resource-panel/ResourceItem';
 
 import type { LanguageCode } from '@/lib/text/languageCodes';
@@ -44,5 +45,3 @@ export function LanguageList({ selectedId, onSelect }: LanguageListProps): React
 }
 
 export default LanguageList;
-
-

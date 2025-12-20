@@ -3,7 +3,6 @@
 import React from 'react';
 
 import { BarsIcon, BookmarkIcon } from '@/app/shared/icons';
-import { Button } from '@/app/shared/ui/Button';
 
 export interface HeaderTitleSectionProps {
   title: string;

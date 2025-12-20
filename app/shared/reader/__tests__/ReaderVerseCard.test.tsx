@@ -1,6 +1,6 @@
+import { defaultSettings } from '@/app/providers/settingsStorage';
 import { ReaderVerseCard } from '@/app/shared/reader';
 import { renderWithProviders, screen, waitFor } from '@/app/testUtils/renderWithProviders';
-import { defaultSettings } from '@/app/providers/settingsStorage';
 
 import type { Verse } from '@/types';
 

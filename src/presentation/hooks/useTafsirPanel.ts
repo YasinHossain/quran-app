@@ -8,7 +8,7 @@ import { useTafsirSelection } from './useTafsirSelection';
 
 import type { Theme } from '@/app/providers/ThemeContext';
 import type { TafsirResource } from '@/types';
-import type { Dispatch, SetStateAction, RefObject, DragEvent } from 'react';
+import type { Dispatch, SetStateAction, RefObject } from 'react';
 
 export interface UseTafsirPanelReturn {
   theme: Theme;

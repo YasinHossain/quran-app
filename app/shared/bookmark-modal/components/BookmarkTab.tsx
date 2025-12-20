@@ -24,12 +24,8 @@ export const BookmarkTab = memo(function BookmarkTab({
     ...(verseKey !== undefined ? { verseKey } : {}),
   };
 
-  const {
-    handleFolderSelect,
-    handleCreateFolder,
-    findBookmark,
-    folders,
-  } = useBookmarkTab(bookmarkTabParams);
+  const { handleFolderSelect, handleCreateFolder, findBookmark, folders } =
+    useBookmarkTab(bookmarkTabParams);
 
   return (
     <div className="flex-1 flex flex-col min-h-0">
@@ -40,7 +36,7 @@ export const BookmarkTab = memo(function BookmarkTab({
         onToggleCreateFolder={onToggleCreateFolder}
         onCreateFolder={handleCreateFolder}
       />
-      <div className="flex-1 overflow-y-auto p-6 min-h-0">
+      <div className="flex-1 overflow-y-auto px-6 py-6 min-h-0">
         <FolderList
           folders={folders}
           verseId={verseId}

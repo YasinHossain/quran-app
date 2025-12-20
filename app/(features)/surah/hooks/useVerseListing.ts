@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+
 import { useInfiniteVerseLoader } from '@/app/(features)/surah/hooks/useInfiniteVerseLoader';
 import { useTranslationOptions } from '@/app/(features)/surah/hooks/useTranslationOptions';
 import { useSettings } from '@/app/providers/SettingsContext';

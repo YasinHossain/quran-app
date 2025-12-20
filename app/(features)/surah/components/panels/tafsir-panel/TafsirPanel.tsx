@@ -71,8 +71,9 @@ export const TafsirPanel = ({ isOpen, onClose }: TafsirPanelProps): React.JSX.El
     <div
       data-testid="tafsir-panel"
       aria-hidden={!isOpen}
-      className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${isOpen ? 'translate-x-0' : 'translate-x-full'
-        } bg-background text-foreground`}
+      className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
+        isOpen ? 'translate-x-0' : 'translate-x-full'
+      } bg-background text-foreground`}
     >
       <ResourcePanelHeader
         title="Manage Tafsirs"

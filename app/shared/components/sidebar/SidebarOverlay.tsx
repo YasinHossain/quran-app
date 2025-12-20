@@ -25,7 +25,11 @@ export const SidebarOverlay = ({
   }
 
   const hiddenFromBreakpoint =
-    desktopBreakpoint === 'xl' ? 'xl:hidden' : desktopBreakpoint === '2xl' ? '2xl:hidden' : 'lg:hidden';
+    desktopBreakpoint === 'xl'
+      ? 'xl:hidden'
+      : desktopBreakpoint === '2xl'
+        ? '2xl:hidden'
+        : 'lg:hidden';
 
   return (
     <div

@@ -57,10 +57,7 @@ export const HeaderSearch = memo(function HeaderSearch(): ReactElement {
         onFocus={(): void => setFocused(true)}
         onBlur={(e: FocusEvent<HTMLDivElement>): void => {
           const next = e.relatedTarget as HTMLElement | null;
-          if (
-            !e.currentTarget.contains(next) &&
-            !next?.closest('[data-surah-select-portal]')
-          ) {
+          if (!e.currentTarget.contains(next) && !next?.closest('[data-surah-select-portal]')) {
             setFocused(false);
           }
         }}

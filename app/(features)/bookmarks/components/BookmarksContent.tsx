@@ -2,8 +2,8 @@
 
 import React from 'react';
 
-import { BookmarkIcon, PinIcon, ClockIcon, CalendarIcon } from '@/app/shared/icons';
 import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
+import { BookmarkIcon, PinIcon, ClockIcon, CalendarIcon } from '@/app/shared/icons';
 import { BookmarkNavigationCard } from '@/app/shared/ui/cards';
 import { cn } from '@/lib/utils/cn';
 
@@ -44,8 +44,6 @@ export const BookmarksContent = ({
     />
 
     <div className="flex-1 overflow-hidden flex flex-col">
-
-
       {showNavigation ? (
         <div>
           <NavigationSection activeSection={activeSection} onSectionChange={onSectionChange} />

@@ -37,7 +37,7 @@ export const BookmarkTabHeader = memo(function BookmarkTabHeader({
           <motion.button
             onClick={() => onToggleCreateFolder(true)}
             className={cn(
-              'w-full flex items-center justify-center gap-3 p-4 border-2 border-dashed border-border rounded-2xl',
+              'w-full flex items-center justify-center gap-3 p-4 border-2 border-dashed border-border rounded-xl',
               'hover:border-accent hover:bg-accent/5 transition-colors text-muted hover:text-accent',
               touchClasses.target,
               touchClasses.focus

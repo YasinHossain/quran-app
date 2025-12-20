@@ -1,11 +1,15 @@
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
-import { hasNonIntegerValues, adjustRange, deriveRangeBoundaries } from '@/app/shared/player/utils/repeat';
+import {
+  hasNonIntegerValues,
+  adjustRange,
+  deriveRangeBoundaries,
+} from '@/app/shared/player/utils/repeat';
 import { getVerseByKey } from '@/lib/api/verses';
 import { RECITERS } from '@/lib/audio/reciters';
 import { ensureLanguageCode } from '@/lib/text/languageCodes';
@@ -73,20 +77,20 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
       const singleDefaults: Partial<RepeatOptions> =
         effectiveMode === 'single'
           ? {
-            surahId: repeatOptions.surahId ?? activeVerse?.chapter_id,
-            verseNumber: repeatOptions.verseNumber ?? activeVerseNumber,
-            start: repeatOptions.verseNumber ?? activeVerseNumber ?? repeatOptions.start,
-            end: repeatOptions.verseNumber ?? activeVerseNumber ?? repeatOptions.end,
-          }
+              surahId: repeatOptions.surahId ?? activeVerse?.chapter_id,
+              verseNumber: repeatOptions.verseNumber ?? activeVerseNumber,
+              start: repeatOptions.verseNumber ?? activeVerseNumber ?? repeatOptions.start,
+              end: repeatOptions.verseNumber ?? activeVerseNumber ?? repeatOptions.end,
+            }
           : {};
       const surahDefaults: Partial<RepeatOptions> =
         effectiveMode === 'surah'
           ? {
-            surahId: repeatOptions.surahId ?? activeVerse?.chapter_id,
-            verseNumber: undefined,
-            start: 1,
-            end: 1,
-          }
+              surahId: repeatOptions.surahId ?? activeVerse?.chapter_id,
+              verseNumber: undefined,
+              start: 1,
+              end: 1,
+            }
           : {};
       const baseRangeDefaults: Partial<RepeatOptions> = {
         startSurahId: repeatOptions.startSurahId ?? repeatOptions.surahId ?? activeSurahId,
@@ -109,17 +113,24 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
       const rangeDefaults: Partial<RepeatOptions> =
         effectiveMode === 'range'
           ? {
-            ...baseRangeDefaults,
-            start: baseRangeDefaults.startVerseNumber ?? repeatOptions.start ?? activeVerseNumber ?? 1,
-            end:
-              baseRangeDefaults.endVerseNumber ??
-              baseRangeDefaults.startVerseNumber ??
-              repeatOptions.end ??
-              activeVerseNumber ??
-              1,
-          }
+              ...baseRangeDefaults,
+              start:
+                baseRangeDefaults.startVerseNumber ?? repeatOptions.start ?? activeVerseNumber ?? 1,
+              end:
+                baseRangeDefaults.endVerseNumber ??
+                baseRangeDefaults.startVerseNumber ??
+                repeatOptions.end ??
+                activeVerseNumber ??
+                1,
+            }
           : baseRangeDefaults;
-      setLocalRepeat({ ...repeatOptions, mode: effectiveMode, ...singleDefaults, ...surahDefaults, ...rangeDefaults });
+      setLocalRepeat({
+        ...repeatOptions,
+        mode: effectiveMode,
+        ...singleDefaults,
+        ...surahDefaults,
+        ...rangeDefaults,
+      });
     }
   }, [isOpen, reciter, repeatOptions, activeVerse]);
 

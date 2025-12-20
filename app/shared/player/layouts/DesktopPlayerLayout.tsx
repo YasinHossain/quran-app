@@ -5,8 +5,6 @@ import { PlayerOptions } from '@/app/shared/player/components/PlayerOptions';
 import { Timeline } from '@/app/shared/player/components/Timeline';
 import { TrackInfo } from '@/app/shared/player/components/TrackInfo';
 import { TransportControls } from '@/app/shared/player/components/TransportControls';
-import { Button } from '@/app/shared/ui/Button';
-import { iconClasses } from '@/lib/responsive';
 
 interface DesktopPlayerLayoutProps {
   title: string;
@@ -50,17 +48,17 @@ export const DesktopPlayerLayout = React.memo(function DesktopPlayerLayout({
           interactable={interactable}
           {...(onPrev
             ? {
-              onPrev: () => {
-                void onPrev();
-              },
-            }
+                onPrev: () => {
+                  void onPrev();
+                },
+              }
             : {})}
           {...(onNext
             ? {
-              onNext: () => {
-                void onNext();
-              },
-            }
+                onNext: () => {
+                  void onNext();
+                },
+              }
             : {})}
           togglePlay={togglePlay}
         />

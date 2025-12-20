@@ -2,8 +2,6 @@
 
 import React from 'react';
 
-import { BookmarksSidebar } from '@/app/(features)/bookmarks/components/BookmarksSidebar';
-import { BookmarksMobileSidebarOverlay } from '@/app/(features)/bookmarks/components/shared/layout/BookmarksMobileSidebarOverlay';
 import { BaseSidebar } from '@/app/shared/components/BaseSidebar';
 import { ThreeColumnWorkspace, WorkspaceMain } from '@/app/shared/reader';
 import { SettingsSidebar } from '@/app/shared/reader/settings/SettingsSidebar';
@@ -58,9 +56,7 @@ export function LeftBookmarksSidebar({
   folder: Folder;
   onBack: () => void;
 }): React.JSX.Element {
-  return (
-    <BookmarkFolderSidebarContent bookmarks={bookmarks} folder={folder} onBack={onBack} />
-  );
+  return <BookmarkFolderSidebarContent bookmarks={bookmarks} folder={folder} onBack={onBack} />;
 }
 
 export function CenterWorkspaceContent({

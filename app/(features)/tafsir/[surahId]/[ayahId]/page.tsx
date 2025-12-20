@@ -160,11 +160,7 @@ function TafsirContent({
   };
 
   return (
-    <div
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
-      className="min-h-full touch-pan-y"
-    >
+    <div onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} className="min-h-full touch-pan-y">
       <AyahNavigation
         prev={prev}
         next={next}

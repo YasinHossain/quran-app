@@ -1,6 +1,5 @@
 import { useRouter } from 'next/navigation';
 
-import { formatSurahSubtitle } from '@/app/shared/navigation/formatSurahSubtitle';
 import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
 import { buildTafsirRoute } from '@/app/shared/navigation/routes';
 import { SurahNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';

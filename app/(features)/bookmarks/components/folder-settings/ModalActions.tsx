@@ -14,14 +14,7 @@ export const ModalActions = ({
   submittingLabel,
 }: ModalActionsProps): React.JSX.Element => (
   <div className="flex justify-end gap-3 pt-4">
-    <button
-      type="button"
-      onClick={onClose}
-      className="px-4 py-2 text-sm font-medium text-muted rounded-full hover:bg-interactive-hover hover:text-foreground transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-accent/30 focus:outline-none"
-      disabled={isSubmitting}
-    >
-      Cancel
-    </button>
+
     <button
       type="submit"
       disabled={isSubmitting}

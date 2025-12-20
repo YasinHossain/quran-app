@@ -68,10 +68,7 @@ export function ThreeColumnWorkspace({
   return (
     <WorkspaceColumnsContext.Provider value={workspaceValue}>
       <div
-        className={cn(
-          'relative flex h-[100dvh] w-full bg-background text-foreground',
-          className
-        )}
+        className={cn('relative flex h-[100dvh] w-full bg-background text-foreground', className)}
         data-slot="workspace-root"
       >
         {left ? (

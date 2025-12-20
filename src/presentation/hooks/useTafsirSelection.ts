@@ -49,20 +49,20 @@ const mapToResources = (tafsirs: Tafsir[]): TafsirResource[] =>
 
 const createLanguageSort =
   (domainTafsirs: Tafsir[]) =>
-    (a: string, b: string): number => {
-      const getDomainTafsir = (lang: string): Tafsir | undefined =>
-        domainTafsirs.find((t) => t.formattedLanguage === lang);
+  (a: string, b: string): number => {
+    const getDomainTafsir = (lang: string): Tafsir | undefined =>
+      domainTafsirs.find((t) => t.formattedLanguage === lang);
 
-      const tafsirA = getDomainTafsir(a);
-      const tafsirB = getDomainTafsir(b);
+    const tafsirA = getDomainTafsir(a);
+    const tafsirB = getDomainTafsir(b);
 
-      if (!tafsirA || !tafsirB) return a.localeCompare(b);
+    if (!tafsirA || !tafsirB) return a.localeCompare(b);
 
-      const priorityA = tafsirA.getLanguagePriority();
-      const priorityB = tafsirB.getLanguagePriority();
+    const priorityA = tafsirA.getLanguagePriority();
+    const priorityB = tafsirB.getLanguagePriority();
 
-      return priorityA !== priorityB ? priorityA - priorityB : a.localeCompare(b);
-    };
+    return priorityA !== priorityB ? priorityA - priorityB : a.localeCompare(b);
+  };
 
 const findEnglishTafsirId = (resources: TafsirResource[]): number | undefined =>
   resources.find((t) => t.lang.toLowerCase() === 'english')?.id;

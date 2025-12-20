@@ -24,25 +24,17 @@ const ActionButtons = memo(function ActionButtons({
   onCancel,
 }: ActionButtonsProps): React.JSX.Element {
   return (
-    <div className="flex items-center gap-0">
-      <button
-        type="button"
-        onClick={onCancel}
-        className={cn(
-          'p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 text-muted transition-colors flex items-center justify-center',
-          touchClasses.focus
-        )}
-        aria-label="Cancel"
-      >
-        <CloseIcon size={16} />
-      </button>
+    <div className="flex items-center gap-2">
+
 
       <button
         type="submit"
         disabled={!newFolderName.trim()}
         className={cn(
-          'p-1.5 rounded-full transition-colors flex items-center justify-center',
-          newFolderName.trim() ? 'text-accent hover:bg-accent/10' : 'text-muted cursor-not-allowed',
+          'p-1.5 rounded-lg transition-colors flex items-center justify-center',
+          newFolderName.trim()
+            ? 'text-accent hover:bg-interactive-hover'
+            : 'text-muted cursor-not-allowed',
           touchClasses.focus
         )}
         aria-label="Create folder"
@@ -73,7 +65,7 @@ export const CreateFolderForm = memo(function CreateFolderForm({
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className="flex items-center gap-2 pl-4 pr-2 py-2 bg-surface-secondary rounded-lg border border-border"
+      className="flex items-center gap-2 pl-4 pr-3 py-3 bg-interactive/60 rounded-lg border border-border focus-within:ring-2 focus-within:ring-accent focus-within:border-transparent transition-all duration-300"
     >
       <input
         type="text"

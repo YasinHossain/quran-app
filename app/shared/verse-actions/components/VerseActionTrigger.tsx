@@ -25,7 +25,7 @@ export const VerseActionTrigger = memo(function VerseActionTrigger({
       <button
         onClick={onOpen}
         className={cn(
-          'p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors -mr-2 group flex items-center justify-center',
+          'p-1.5 rounded-full hover:bg-interactive-hover transition-colors -mr-2 group flex items-center justify-center',
           touchClasses.gesture,
           touchClasses.focus
         )}

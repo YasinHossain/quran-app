@@ -43,4 +43,3 @@ export const ResourceTabsHeader = memo(function ResourceTabsHeader({
     </div>
   );
 });
-

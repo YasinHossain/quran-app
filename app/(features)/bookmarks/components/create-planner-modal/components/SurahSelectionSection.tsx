@@ -134,11 +134,11 @@ const RangeBoundarySection = ({
         onVerseChange={onVerseChange}
         surahLabel={`${label} surah`}
         verseLabel={`${label} verse`}
-      // We do not hide labels here as per discussion, but if we wanted to match previous visual exactly:
-      // We could pass classNames.
-      // Actually, previous was sr-only. 
-      // My component doesn't support hiding labels yet.
-      // But for unification, visible labels are generally better.
+        // We do not hide labels here as per discussion, but if we wanted to match previous visual exactly:
+        // We could pass classNames.
+        // Actually, previous was sr-only.
+        // My component doesn't support hiding labels yet.
+        // But for unification, visible labels are generally better.
       />
     </section>
   );

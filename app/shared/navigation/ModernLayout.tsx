@@ -15,7 +15,10 @@ interface ModernLayoutProps {
   isNavHidden?: boolean;
 }
 
-export const ModernLayout = ({ children, isNavHidden = false }: ModernLayoutProps): React.JSX.Element => {
+export const ModernLayout = ({
+  children,
+  isNavHidden = false,
+}: ModernLayoutProps): React.JSX.Element => {
   const { isQuranBottomSheetOpen, setQuranBottomSheetOpen, navigateToSurah } = useNavigation();
 
   // Use selector directly when needed; remove unused helpers to satisfy lint
@@ -23,9 +26,7 @@ export const ModernLayout = ({ children, isNavHidden = false }: ModernLayoutProp
   return (
     <>
       {/* Main content with bottom padding for navigation */}
-      <div className="min-h-[100dvh] transition-all duration-300 xl:pb-0">
-        {children}
-      </div>
+      <div className="min-h-[100dvh] transition-all duration-300 xl:pb-0">{children}</div>
 
       {/* Navigation handled by unified Navigation component (left rail on desktop, bottom on mobile) */}
 

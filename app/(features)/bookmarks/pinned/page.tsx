@@ -4,9 +4,9 @@ import React, { useCallback } from 'react';
 
 import { useBookmarkFolderPanels } from '@/app/(features)/bookmarks/[folderId]/hooks';
 import { BookmarksLayout } from '@/app/(features)/bookmarks/components/shared/BookmarksLayout';
+import { usePrefetchSingleVerse } from '@/app/shared/hooks/useSingleVerse';
 import { SettingsSidebar } from '@/app/shared/reader/settings/SettingsSidebar';
 import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
-import { usePrefetchSingleVerse } from '@/app/shared/hooks/useSingleVerse';
 
 import { PinnedHeader, PinnedVersesList } from './components';
 import { usePinnedPage } from './hooks/usePinnedPage';

@@ -273,8 +273,8 @@ export function AddToPlannerModal({
               <p className="text-sm text-content-secondary">{subtitle}</p>
             </div>
             <button
+              className="p-1.5 rounded-full hover:bg-interactive-hover transition-colors text-content-secondary hover:text-content-primary shrink-0 flex items-center justify-center"
               onClick={onClose}
-              className="p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors text-content-secondary hover:text-content-primary shrink-0 flex items-center justify-center"
               aria-label="Close planner modal"
             >
               <CloseIcon size={18} />
@@ -282,7 +282,9 @@ export function AddToPlannerModal({
           </div>
         </header>
 
-        <div className={`${contentContainerClass} flex-1 min-h-0 overflow-y-auto scrollbar-hide py-4`}>
+        <div
+          className={`${contentContainerClass} flex-1 min-h-0 overflow-y-auto scrollbar-hide py-4`}
+        >
           <PlannerCardsSection
             plannerCards={plannerCards}
             verseSummary={verseSummary}
@@ -295,11 +297,7 @@ export function AddToPlannerModal({
         </div>
 
         <div className={`${contentContainerClass} mt-6 flex items-center justify-end shrink-0`}>
-          <Button
-            onClick={handleSave}
-            disabled={!canSave}
-            className="rounded-xl sm:rounded-2xl px-5"
-          >
+          <Button onClick={handleSave} disabled={!canSave} className="rounded-lg px-5">
             Save
           </Button>
         </div>

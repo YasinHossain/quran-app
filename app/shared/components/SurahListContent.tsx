@@ -3,8 +3,8 @@
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useSurahListFilters } from '@/app/shared/hooks/useSurahListFilters';
 import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
+import { useSurahListFilters } from '@/app/shared/hooks/useSurahListFilters';
 
 import { SearchInput } from './SearchInput';
 import { SurahTabs } from './SurahTabs';

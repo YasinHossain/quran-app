@@ -54,4 +54,3 @@ export const useTabsScroll = (languages: string[], scrollAmount = 200): UseTabsS
     scrollTabsRight,
   } as const satisfies UseTabsScrollReturn;
 };
-

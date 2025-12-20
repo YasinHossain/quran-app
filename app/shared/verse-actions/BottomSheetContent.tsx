@@ -33,7 +33,6 @@ export const BottomSheetContent = memo(function BottomSheetContent({
       transition={{ type: 'spring', stiffness: 500, damping: 40 }}
       className="fixed bottom-0 left-0 right-0 bg-surface rounded-t-3xl shadow-2xl z-modal touch-pan-y pb-safe flex flex-col max-h-[90dvh]"
     >
-
       <BottomSheetHeader verseKey={verseKey} onClose={onClose} />
       <ActionList actions={actions} onClose={onClose} />
     </motion.div>

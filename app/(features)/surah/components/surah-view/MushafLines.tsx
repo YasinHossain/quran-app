@@ -5,7 +5,6 @@ import { cn } from '@/lib/utils/cn';
 import { MushafLine } from './MushafLine';
 import { MushafReflowContent } from './MushafReflowContent';
 
-
 import type { ReaderSettings } from './MushafMain.types';
 import type { MushafLineGroup } from '@/types';
 import type React from 'react';
@@ -140,4 +139,3 @@ export const MushafLines = ({
     </>
   );
 };
-

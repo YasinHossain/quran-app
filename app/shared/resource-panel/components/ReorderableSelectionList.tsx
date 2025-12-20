@@ -1,7 +1,7 @@
 'use client';
 
-import React, { memo } from 'react';
 import { Reorder, useDragControls, motion, PanInfo } from 'framer-motion';
+import React, { memo } from 'react';
 
 import { CloseIcon, GripVerticalIcon } from '@/app/shared/icons';
 
@@ -27,8 +27,7 @@ const VARIANT_STYLES: Record<SelectionListVariant, VariantStyles> = {
   translation: {
     headerClassName:
       'text-sm font-semibold px-2 mb-3 flex items-center justify-between text-foreground',
-    maxBadgeClassName:
-      'text-xs px-2.5 py-1 rounded-full bg-accent/10 text-accent font-medium',
+    maxBadgeClassName: 'text-xs px-2.5 py-1 rounded-full bg-accent/10 text-accent font-medium',
     containerClassName: 'space-y-2 min-h-[60px] rounded-lg p-3 bg-surface border border-border',
     emptyTextClassName: 'text-center text-sm py-4 text-muted font-medium',
     itemRowClassName:
@@ -39,8 +38,7 @@ const VARIANT_STYLES: Record<SelectionListVariant, VariantStyles> = {
     removeIconSize: 14,
   },
   tafsir: {
-    headerClassName:
-      'text-sm font-semibold px-1 mb-2 flex items-center justify-between text-muted',
+    headerClassName: 'text-sm font-semibold px-1 mb-2 flex items-center justify-between text-muted',
     maxBadgeClassName: 'text-xs px-2 py-1 rounded-full bg-accent/10 text-accent',
     containerClassName: 'space-y-2 min-h-[40px] rounded-lg p-2 bg-background border border-border',
     emptyTextClassName: 'text-center text-sm py-2 text-muted',

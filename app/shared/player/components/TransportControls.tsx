@@ -25,7 +25,7 @@ export const TransportControls = memo(function TransportControls({
   className,
 }: Props) {
   return (
-    <div className={className || "flex items-center gap-1 xs:gap-2"}>
+    <div className={className || 'flex items-center gap-1 xs:gap-2'}>
       <Button
         variant="icon-round"
         size="icon-round"

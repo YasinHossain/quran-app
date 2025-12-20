@@ -34,7 +34,7 @@ export function DeletePlannerModalHeader({ onClose }: { onClose: () => void }): 
       </div>
       <button
         onClick={onClose}
-        className="shrink-0 p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center text-muted hover:text-foreground"
+        className="shrink-0 p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center text-muted hover:text-foreground"
         aria-label="Close"
       >
         <CloseIcon size={18} />
@@ -87,7 +87,10 @@ function DeletePlannerWarnings({
     <div className="space-y-4">
       <p className="text-foreground">Are you sure you want to permanently delete this planner?</p>
       {countLabel ? (
-        <div role="alert" className="bg-gray-200 dark:bg-slate-700 border border-border rounded-lg p-4">
+        <div
+          role="alert"
+          className="bg-gray-200 dark:bg-slate-700 border border-border rounded-lg p-4"
+        >
           <p className="text-muted text-sm">{countLabel}</p>
         </div>
       ) : null}

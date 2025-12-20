@@ -6,8 +6,6 @@ import { useAudioPlayer } from './useAudioPlayer';
 
 import type { Track } from '@/app/shared/player/types';
 
-
-
 interface TrackMeta {
   title: string;
   artist: string;

@@ -108,8 +108,6 @@ const usePlannerNavigation = (
   }, [continueVerse, router, surahId]);
 };
 
-
-
 const PlannerCardDeleteButton = ({
   onDelete,
 }: {

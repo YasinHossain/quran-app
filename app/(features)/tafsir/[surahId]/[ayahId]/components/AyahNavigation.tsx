@@ -19,13 +19,9 @@ interface AyahNavigationProps {
   ayahId: string;
 }
 
-const ChevronLeft = (): JSX.Element => (
-  <ChevronLeftIcon size={20} className="text-accent" />
-);
+const ChevronLeft = (): JSX.Element => <ChevronLeftIcon size={20} className="text-accent" />;
 
-const ChevronRight = (): JSX.Element => (
-  <ChevronRightIcon size={20} className="text-accent" />
-);
+const ChevronRight = (): JSX.Element => <ChevronRightIcon size={20} className="text-accent" />;
 
 interface NavButtonProps {
   label: string;
@@ -99,8 +95,18 @@ export const AyahNavigation = ({
       <BackButton onClick={(): void => router.back()} />
       <Title currentSurah={currentSurah} ayahId={ayahId} />
       <div className="flex items-center gap-2 sm:gap-3">
-        <NavButton label="Previous" disabled={!prev} onClick={(): void => navigate(prev)} side="left" />
-        <NavButton label="Next" disabled={!next} onClick={(): void => navigate(next)} side="right" />
+        <NavButton
+          label="Previous"
+          disabled={!prev}
+          onClick={(): void => navigate(prev)}
+          side="left"
+        />
+        <NavButton
+          label="Next"
+          disabled={!next}
+          onClick={(): void => navigate(next)}
+          side="right"
+        />
       </div>
     </div>
   );

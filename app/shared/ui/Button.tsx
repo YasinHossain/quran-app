@@ -6,13 +6,13 @@ import { cn } from '@/lib/utils/cn';
 
 export const BUTTON_VARIANTS = {
   primary: 'bg-accent text-on-accent hover:bg-accent-hover focus:ring-accent/20',
-  secondary: 'bg-surface text-foreground hover:bg-gray-200 dark:hover:bg-slate-700 border border-border',
-  ghost: 'bg-surface/0 text-foreground hover:bg-gray-200 dark:hover:bg-slate-700',
-  outline: 'bg-surface/0 text-foreground border border-border hover:bg-gray-200 dark:hover:bg-slate-700',
+  secondary: 'bg-surface text-foreground hover:bg-interactive-hover border border-border',
+  ghost: 'bg-surface/0 text-foreground hover:bg-interactive-hover',
+  outline: 'bg-surface/0 text-foreground border border-border hover:bg-interactive-hover',
   destructive: 'bg-error text-on-accent hover:bg-error/90 focus:ring-error/20',
-  icon: 'bg-surface/0 text-foreground hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent hover:-translate-y-px active:scale-95 active:bg-surface/10 focus:ring-accent/35',
+  icon: 'bg-surface/0 text-foreground hover:bg-interactive-hover hover:text-accent hover:-translate-y-px active:scale-95 active:bg-surface/10 focus:ring-accent/35',
   'icon-round':
-    'bg-surface/0 text-foreground hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent hover:-translate-y-px active:scale-95 active:bg-surface/10 focus:ring-accent/35 rounded-full',
+    'bg-surface/0 text-foreground hover:bg-interactive-hover hover:text-accent hover:-translate-y-px active:scale-95 active:bg-surface/10 focus:ring-accent/35 rounded-full',
 } as const;
 
 export const BUTTON_SIZES = {
@@ -51,7 +51,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={cn(
-          'inline-flex items-center justify-center rounded-md font-medium transition-colors',
+          'inline-flex items-center justify-center rounded-lg font-medium transition-colors',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
           'disabled:pointer-events-none disabled:opacity-50',
           'touch-manipulation select-none', // Better mobile interaction

@@ -6,8 +6,8 @@ import React from 'react';
 import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
 import { useVerseCard } from '@/app/(features)/surah/components/verse-card/useVerseCard';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { ReaderVerseCard } from '@/app/shared/reader';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
+import { ReaderVerseCard } from '@/app/shared/reader';
 import { Spinner } from '@/app/shared/Spinner';
 import { parseVerseKey } from '@/lib/utils/verse';
 

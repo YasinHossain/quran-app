@@ -4,17 +4,14 @@ import { motion } from 'framer-motion';
 import { memo } from 'react';
 
 import { FolderIcon, CheckIcon } from '@/app/shared/icons';
+import { FolderGlyph } from '@/app/shared/ui/cards/FolderGlyph';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 import { Folder, Bookmark } from '@/types';
 
-import { FolderGlyph } from '@/app/shared/ui/cards/FolderGlyph';
-
-import { resolveAccentColor, applyOpacity } from '@/app/shared/ui/cards/folderColor.utils';
-
 const getButtonClasses = (isSelected: boolean): string =>
   cn(
-    'w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 text-left',
+    'w-full flex items-center gap-4 p-4 rounded-xl transition-all duration-200 text-left',
     isSelected
       ? 'bg-accent border border-accent'
       : 'hover:bg-gray-200 dark:hover:bg-slate-700 border border-transparent',
@@ -44,11 +41,7 @@ const FolderListItem = memo(function FolderListItem({
       className={getButtonClasses(isSelected)}
       whileTap={{ scale: 0.98 }}
     >
-      <FolderGlyph
-        folder={folder}
-        size="md"
-        className={isSelected ? 'border border-white' : ''}
-      />
+      <FolderGlyph folder={folder} size="md" className={isSelected ? 'border border-white' : ''} />
 
       <div className="flex-1 min-w-0">
         <h3 className={getTitleClasses(isSelected)}>{folder.name}</h3>
@@ -92,7 +85,7 @@ export const FolderList = memo(function FolderList({
   if (!folders.length) return <EmptyState message={emptyMessage} />;
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 w-full mx-auto">
       {folders.map(
         (folder: Folder): React.JSX.Element => (
           <FolderListItem

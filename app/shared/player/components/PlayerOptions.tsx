@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 
 import { SlidersIcon } from '@/app/shared/icons';
-import { Button } from '@/app/shared/ui/Button';
-import { iconClasses } from '@/lib/responsive';
 
 import { PlaybackOptionsModal } from './PlaybackOptionsModal';
 import { SpeedControl } from './SpeedControl';

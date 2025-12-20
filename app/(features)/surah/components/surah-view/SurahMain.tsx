@@ -2,8 +2,9 @@
 
 import React from 'react';
 
-import { SurahCalligraphyIntro } from './SurahCalligraphyIntro';
 import { SurahVerseList } from '@/app/(features)/surah/components/SurahVerseList';
+
+import { SurahCalligraphyIntro } from './SurahCalligraphyIntro';
 
 import type { Verse } from '@/types';
 

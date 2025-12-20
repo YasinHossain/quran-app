@@ -3,8 +3,6 @@ import React from 'react';
 import { CloseIcon, SlidersIcon } from '@/app/shared/icons';
 import { SpeedControl } from '@/app/shared/player/components/SpeedControl';
 import { TransportControls } from '@/app/shared/player/components/TransportControls';
-import { Button } from '@/app/shared/ui/Button';
-import { iconClasses } from '@/lib/responsive';
 
 interface Props {
   title: string;
@@ -18,13 +16,7 @@ interface Props {
   closePlayer: () => void;
 }
 
-function CoverAndText({
-  title,
-  artist,
-}: {
-  title: string;
-  artist: string;
-}): React.JSX.Element {
+function CoverAndText({ title, artist }: { title: string; artist: string }): React.JSX.Element {
   return (
     <div className="flex items-center gap-2 min-w-0 pl-1">
       <div className="min-w-0">
@@ -47,7 +39,7 @@ function ActionButtons({
   className?: string; // Allow overriding layout
 }): React.JSX.Element {
   return (
-    <div className={className || "flex items-center gap-0.5 xs:gap-1 justify-self-end"}>
+    <div className={className || 'flex items-center gap-0.5 xs:gap-1 justify-self-end'}>
       <SpeedControl />
       <button
         className="p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center shrink-0"
@@ -112,17 +104,17 @@ export function MobileTopBar({
             interactable={interactable}
             {...(onPrev
               ? {
-                onPrev: () => {
-                  void onPrev();
-                },
-              }
+                  onPrev: () => {
+                    void onPrev();
+                  },
+                }
               : {})}
             {...(onNext
               ? {
-                onNext: () => {
-                  void onNext();
-                },
-              }
+                  onNext: () => {
+                    void onNext();
+                  },
+                }
               : {})}
             togglePlay={togglePlay}
             className="contents min-[450px]:flex min-[450px]:items-center min-[450px]:gap-2"

@@ -9,7 +9,7 @@ interface HeaderVisibilityState {
 
 const HeaderVisibilityContext = createContext<HeaderVisibilityState>({
   isHidden: false,
-  setScrollContainer: () => { },
+  setScrollContainer: () => {},
 });
 
 export const HeaderVisibilityProvider = ({

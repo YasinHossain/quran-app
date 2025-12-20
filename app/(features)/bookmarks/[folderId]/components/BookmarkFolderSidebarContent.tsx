@@ -49,10 +49,7 @@ export const BookmarkFolderSidebarContent = ({
       <div className="min-w-[40px]" />
     </div>
 
-    <div
-      className="flex-1 overflow-y-auto touch-pan-y p-2 sm:p-3"
-    >
-
+    <div className="flex-1 overflow-y-auto touch-pan-y p-2 sm:p-3">
       <BookmarkFolderContent bookmarks={bookmarks} folder={folder} />
     </div>
   </div>

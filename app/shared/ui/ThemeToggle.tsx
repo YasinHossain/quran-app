@@ -5,8 +5,6 @@ import React, { memo } from 'react';
 import { useTheme } from '@/app/providers/ThemeContext';
 import { SunIcon, MoonIcon } from '@/app/shared/icons';
 
-import { Button } from './Button';
-
 interface ThemeToggleProps {
   variant?: 'primary' | 'secondary' | 'ghost' | 'tabs' | string;
   size?: 'sm' | 'md' | 'lg' | 'icon';

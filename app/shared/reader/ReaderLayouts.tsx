@@ -35,9 +35,7 @@ export const WorkspaceReaderLayout = ({
   contentClassName,
 }: WorkspaceReaderLayoutProps): React.JSX.Element => (
   <>
-    <div className="xl:hidden">
-      {mobileLeft}
-    </div>
+    <div className="xl:hidden">{mobileLeft}</div>
 
     <div className="2xl:hidden">{mobileRight}</div>
 

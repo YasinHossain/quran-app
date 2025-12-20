@@ -4,13 +4,15 @@ import React, { memo } from 'react';
 
 import { AlertIcon } from '@/app/shared/icons';
 
-export const ResourcePanelLoadingSpinner = memo(function ResourcePanelLoadingSpinner(): React.JSX.Element {
-  return (
-    <div className="flex items-center justify-center p-8">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent" />
-    </div>
-  );
-});
+export const ResourcePanelLoadingSpinner = memo(
+  function ResourcePanelLoadingSpinner(): React.JSX.Element {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent" />
+      </div>
+    );
+  }
+);
 
 export const ResourcePanelErrorMessage = memo(function ResourcePanelErrorMessage({
   error,
@@ -26,4 +28,3 @@ export const ResourcePanelErrorMessage = memo(function ResourcePanelErrorMessage
     </div>
   );
 });
-

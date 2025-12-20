@@ -40,8 +40,9 @@ function SeekSlider({
   return (
     <Tooltip.Provider delayDuration={150}>
       <Slider.Root
-        className={`relative w-full h-2.5 group flex items-center ${!interactable ? 'opacity-60 pointer-events-none' : ''
-          }`}
+        className={`relative w-full h-2.5 group flex items-center ${
+          !interactable ? 'opacity-60 pointer-events-none' : ''
+        }`}
         value={[current]}
         max={Math.max(1, duration || 0)}
         step={0.1}

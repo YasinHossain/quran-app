@@ -115,8 +115,6 @@ const SurahTitleBlock = ({ chapterId }: { chapterId: number }): React.JSX.Elemen
   </div>
 );
 
-
-
 export const SurahCalligraphyIntro = ({
   chapterId,
   className,
@@ -129,12 +127,7 @@ export const SurahCalligraphyIntro = ({
   if (!introDetails) return null;
 
   return (
-    <div
-      className={cn(
-        'mx-auto mb-4 -mt-4 w-full max-w-7xl sm:-mt-3',
-        className
-      )}
-    >
+    <div className={cn('mx-auto mb-4 -mt-4 w-full max-w-7xl sm:-mt-3', className)}>
       <div className="flex w-full flex-col items-center gap-4 border-b border-border/40 pt-0 pb-5 sm:flex-row sm:justify-evenly sm:gap-0 sm:pt-6 sm:pb-9">
         <div className="order-3 sm:order-1 sm:w-auto">
           <SurahMetadata revelationPlace={introDetails.revelationPlace} />

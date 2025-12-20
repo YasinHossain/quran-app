@@ -1,11 +1,11 @@
 'use client';
 
 import { IconSun, IconMoon, IconSettings } from '@tabler/icons-react';
+import { usePathname } from 'next/navigation';
 import { memo, type ReactElement, useCallback } from 'react';
 
 import { useTheme } from '@/app/providers/ThemeContext';
 import { useUIState } from '@/app/providers/UIStateContext';
-import { usePathname } from 'next/navigation';
 
 export const HeaderActions = memo(function HeaderActions(): ReactElement {
   const { theme, setTheme } = useTheme();

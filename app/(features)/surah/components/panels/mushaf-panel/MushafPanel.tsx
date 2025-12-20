@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useId } from 'react';
-import { ResourceItem } from '@/app/shared/resource-panel/ResourceItem';
+
 import { PanelHeader } from '@/app/(features)/surah/components/PanelHeader';
+import { ResourceItem } from '@/app/shared/resource-panel/ResourceItem';
 import { cn } from '@/lib/utils/cn';
 
 import type { MushafOption } from '@/types';

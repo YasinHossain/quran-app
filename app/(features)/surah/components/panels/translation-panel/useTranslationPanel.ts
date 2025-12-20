@@ -8,7 +8,7 @@ import { useTranslationSelection } from './hooks/useTranslationSelection';
 
 import type { Theme } from '@/app/providers/ThemeContext';
 import type { TranslationResource } from '@/types';
-import type { Dispatch, SetStateAction, RefObject, DragEvent } from 'react';
+import type { Dispatch, SetStateAction, RefObject } from 'react';
 
 export interface UseTranslationPanelReturn {
   theme: Theme;
