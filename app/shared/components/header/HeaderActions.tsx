@@ -5,9 +5,22 @@ import { memo, type ReactElement, useCallback } from 'react';
 
 import { useTheme } from '@/app/providers/ThemeContext';
 import { useUIState } from '@/app/providers/UIStateContext';
+import { usePathname } from 'next/navigation';
+
 export const HeaderActions = memo(function HeaderActions(): ReactElement {
   const { theme, setTheme } = useTheme();
   const { setSettingsOpen } = useUIState();
+  const pathname = usePathname();
+
+  // Settings sidebar is not present on these pages on PC, so hide the gear icon on mobile too.
+  const NO_SETTINGS_SIDEBAR_ROUTES = [
+    '/bookmarks',
+    '/bookmarks/last-read',
+    '/bookmarks/planner',
+    '/search',
+  ];
+
+  const shouldHideSettings = NO_SETTINGS_SIDEBAR_ROUTES.includes(pathname);
 
   const toggleTheme = useCallback((): void => {
     const html = document.documentElement;
@@ -40,13 +53,15 @@ export const HeaderActions = memo(function HeaderActions(): ReactElement {
       </button>
 
       {/* Settings button - Swapped position: now right of theme toggle */}
-      <button
-        onClick={openSettings}
-        className="btn-touch p-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-all duration-200 active:scale-95 xl:hidden flex items-center justify-center"
-        aria-label="Open settings"
-      >
-        <IconSettings size={18} className="text-muted" />
-      </button>
+      {!shouldHideSettings && (
+        <button
+          onClick={openSettings}
+          className="btn-touch p-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-all duration-200 active:scale-95 xl:hidden flex items-center justify-center"
+          aria-label="Open settings"
+        >
+          <IconSettings size={18} className="text-muted" />
+        </button>
+      )}
     </div>
   );
 });

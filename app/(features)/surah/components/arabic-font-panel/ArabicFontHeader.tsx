@@ -1,13 +1,7 @@
-'use client';
+// ... imports
+// ... interface
 
-import { ResetIcon } from '@/app/shared/icons';
-
-interface ArabicFontHeaderProps {
-  onClose: () => void;
-  onReset: () => void;
-}
-
-export function ArabicFontHeader({ onClose, onReset }: ArabicFontHeaderProps): React.JSX.Element {
+export function ArabicFontHeader({ onClose }: { onClose: () => void }): React.JSX.Element {
   return (
     <header className="flex items-center p-4 border-b border-border">
       <button
@@ -28,13 +22,7 @@ export function ArabicFontHeader({ onClose, onReset }: ArabicFontHeaderProps): R
       <h2 className="text-lg font-bold text-center flex-grow text-foreground">
         Arabic Font Selection
       </h2>
-      <button
-        onClick={onReset}
-        className="p-2 rounded-full focus-visible:outline-none transition-colors text-foreground hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent"
-        title="Reset to Default"
-      >
-        <ResetIcon size={20} />
-      </button>
+      <div className="w-10" /> {/* Spacer to balance the header since reset button is gone */}
     </header>
   );
 }

@@ -262,11 +262,11 @@ export function AddToPlannerModal({
     <PanelModalCenter
       isOpen={isOpen}
       onClose={onClose}
-      className="w-full max-w-xl rounded-xl border border-border/30 bg-background p-3 shadow-modal sm:rounded-2xl sm:p-5"
+      className="w-full max-w-xl rounded-xl border border-border/30 bg-background p-4 shadow-modal sm:rounded-2xl sm:p-6"
       showCloseButton={false}
     >
       <div className="flex h-full min-h-0 flex-col">
-        <header className="mb-4 shrink-0">
+        <header className="mb-6 shrink-0">
           <div className={`${contentContainerClass} flex items-start justify-between gap-4`}>
             <div className="flex min-w-0 flex-1 flex-col gap-1">
               <h2 className="text-xl font-semibold text-content-primary">{title}</h2>
@@ -284,7 +284,7 @@ export function AddToPlannerModal({
           </div>
         </header>
 
-        <div className={`${contentContainerClass} flex-1 min-h-0 overflow-y-auto scrollbar-hide`}>
+        <div className={`${contentContainerClass} flex-1 min-h-0 overflow-y-auto scrollbar-hide py-4`}>
           <PlannerCardsSection
             plannerCards={plannerCards}
             verseSummary={verseSummary}
@@ -296,8 +296,12 @@ export function AddToPlannerModal({
           ) : null}
         </div>
 
-        <div className={`${contentContainerClass} mt-4 flex items-center justify-end shrink-0`}>
-          <Button onClick={handleSave} disabled={!canSave}>
+        <div className={`${contentContainerClass} mt-6 flex items-center justify-end shrink-0`}>
+          <Button
+            onClick={handleSave}
+            disabled={!canSave}
+            className="rounded-xl sm:rounded-2xl px-5"
+          >
             Save
           </Button>
         </div>

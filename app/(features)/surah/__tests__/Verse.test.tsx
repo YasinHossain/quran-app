@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 
 import { VerseCard as VerseComponent } from '@/app/(features)/surah/components';
 import { TranslationProvider } from '@/app/providers/TranslationProvider';
@@ -11,8 +11,8 @@ const verse: Verse = {
   verse_key: '1:1',
   text_uthmani: 'بِسْمِ الله',
   words: [
-    { id: 1, uthmani: 'بِسْمِ', en: 'In' },
-    { id: 2, uthmani: 'الله', en: 'Allah' },
+    { id: 1, uthmani: 'بِسْمِ', en: 'WBW_In' },
+    { id: 2, uthmani: 'الله', en: 'WBW_Allah' },
   ],
 };
 
@@ -37,9 +37,27 @@ describe('Verse word-by-word font size', () => {
 
   it('scales word translation with arabic font size', async () => {
     await renderVerse();
-    const word = await screen.findByText('In');
+    const word = await screen.findByText('WBW_In');
     await waitFor(() => {
       expect(word).toHaveStyle('font-size: 20px');
     });
+  });
+});
+
+describe('Verse word translation popover', () => {
+  beforeAll(() => {
+    setMatchMedia(false);
+  });
+  beforeEach(() => {
+    localStorage.clear();
+    localStorage.setItem('quranAppSettings', JSON.stringify({ showByWords: false }));
+  });
+
+  it('shows word translation on click', async () => {
+    await renderVerse();
+
+    expect(screen.queryByText('WBW_In')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByText('بِسْمِ'));
+    expect(await screen.findByText('WBW_In')).toBeInTheDocument();
   });
 });

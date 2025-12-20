@@ -25,9 +25,9 @@ export function PlannerSelectionCard({
   const detailLine = detailParts.join(' · ');
 
   const composedClassName = [
-    'flex w-full flex-col gap-2 rounded-xl border px-4 py-3 text-left transition-all duration-300 sm:px-5 sm:py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 backdrop-blur-sm group',
+    'flex w-full flex-col gap-2 rounded-xl border px-4 py-4 text-left transition-all duration-300 sm:px-5 sm:py-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 backdrop-blur-sm group',
     isSelected
-      ? 'border-accent/50 bg-accent text-on-accent shadow-lg shadow-accent/30'
+      ? 'border-accent/50 bg-accent text-on-accent'
       : 'border-border/40 bg-surface/80 text-content-primary shadow-sm backdrop-blur-sm',
   ].join(' ');
 

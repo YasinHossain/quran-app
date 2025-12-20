@@ -1,15 +1,33 @@
-'use client';
+import React, { useMemo, memo } from 'react';
+import { FixedSizeList as List, ListChildComponentProps, areEqual } from 'react-window';
 
-import React from 'react';
-import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
+import { ResourceItem, Resource } from './ResourceItem';
 
-import { ResourceItem } from './ResourceItem';
-
-interface Resource {
-  id: number | string;
-  name: string;
-  lang: string;
+interface ItemData {
+  resources: Resource[];
+  selectedIds: Set<number | string>;
+  onToggle: (id: number | string) => void;
 }
+
+const Row = memo(({ index, style, data }: ListChildComponentProps<ItemData>) => {
+  const { resources, selectedIds, onToggle } = data;
+  const item = resources[index];
+  if (!item) return <div style={style} />;
+  return (
+    <div style={style}>
+      <div className="pb-2">
+        <ResourceItem
+          key={item.id}
+          item={item}
+          isSelected={selectedIds.has(item.id)}
+          onToggle={onToggle}
+        />
+      </div>
+    </div>
+  );
+}, areEqual);
+
+Row.displayName = 'ResourceListRow';
 
 interface ResourceListProps<T extends Resource> {
   resources: T[];
@@ -28,22 +46,14 @@ export const ResourceList = <T extends Resource>({
 }: ResourceListProps<T>): React.JSX.Element => {
   const itemCount = resources.length;
 
-  const Row = ({ index, style }: ListChildComponentProps): React.JSX.Element => {
-    const item = resources[index];
-    if (!item) return <div style={style} />;
-    return (
-      <div style={style}>
-        <div className="pb-2">
-          <ResourceItem
-            key={item.id}
-            item={item}
-            isSelected={selectedIds.has(item.id)}
-            onToggle={onToggle}
-          />
-        </div>
-      </div>
-    );
-  };
+  const itemData = useMemo(
+    () => ({
+      resources,
+      selectedIds,
+      onToggle,
+    }),
+    [resources, selectedIds, onToggle]
+  );
 
   return (
     <List
@@ -51,6 +61,7 @@ export const ResourceList = <T extends Resource>({
       width="100%"
       itemCount={itemCount}
       itemSize={rowHeight}
+      itemData={itemData}
     >
       {Row}
     </List>

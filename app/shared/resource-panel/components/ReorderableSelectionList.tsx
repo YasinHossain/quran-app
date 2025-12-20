@@ -1,7 +1,7 @@
 'use client';
 
 import React, { memo } from 'react';
-import { Reorder, useDragControls } from 'framer-motion';
+import { Reorder, useDragControls, motion, PanInfo } from 'framer-motion';
 
 import { CloseIcon, GripVerticalIcon } from '@/app/shared/icons';
 
@@ -155,7 +155,18 @@ function SelectionListItem({
       className="relative"
       onDragEnd={onDragEnd}
     >
-      <div className={styles.itemRowClassName}>
+      <motion.div
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.5}
+        onDragEnd={(_, info: PanInfo) => {
+          if (Math.abs(info.offset.x) > 100) {
+            onRemove(item.id);
+          }
+        }}
+        className={styles.itemRowClassName}
+        style={{ touchAction: 'pan-y' }}
+      >
         <div className="flex items-center min-w-0">
           <div
             onPointerDown={(e) => controls.start(e)}
@@ -176,7 +187,7 @@ function SelectionListItem({
         >
           <CloseIcon size={styles.removeIconSize} strokeWidth={2.5} />
         </button>
-      </div>
+      </motion.div>
     </Reorder.Item>
   );
 }

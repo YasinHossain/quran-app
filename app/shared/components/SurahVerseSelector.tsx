@@ -1,8 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useMemo, useId, type ReactElement } from 'react';
-
+import { useMemo, useId, useRef, type ReactElement } from 'react';
 import { SurahSelect } from '@/app/shared/components/go-to/SurahSelect';
 import type { Chapter } from '@/types';
 
@@ -24,6 +23,7 @@ interface SurahVerseSelectorProps {
     // Handlers
     onSurahChange: (surahId: number | undefined) => void;
     onVerseChange: (verseNumber: number | undefined) => void;
+    onVerseSelectionComplete?: (verseNumber: number) => void;
 
     // Customization
     surahLabel?: string;
@@ -39,6 +39,7 @@ export function SurahVerseSelector({
     selectedVerse,
     onSurahChange,
     onVerseChange,
+    onVerseSelectionComplete,
     surahLabel = 'Surah',
     verseLabel = 'Verse',
     className,
@@ -46,6 +47,7 @@ export function SurahVerseSelector({
 }: SurahVerseSelectorProps): ReactElement {
     const surahInputId = useId();
     const verseInputId = useId();
+    const verseInputRef = useRef<HTMLInputElement>(null);
 
     // Convert chapters to options
     const surahOptions: SurahOption[] = useMemo(
@@ -106,6 +108,11 @@ export function SurahVerseSelector({
                     placeholder={isLoading ? 'Loading surahs…' : 'Select Surah'}
                     disabled={isLoading}
                     className="w-full"
+                    onSelectionComplete={() => {
+                        if (!hideVerse) {
+                            verseInputRef.current?.focus();
+                        }
+                    }}
                 />
             </div>
 
@@ -115,6 +122,7 @@ export function SurahVerseSelector({
                         {verseLabel}
                     </label>
                     <SurahSelect
+                        ref={verseInputRef}
                         inputId={verseInputId}
                         value={selectedVerse ? String(selectedVerse) : ''}
                         onChange={handleVerseChange}
@@ -124,6 +132,12 @@ export function SurahVerseSelector({
                         }
                         disabled={!selectedSurah || !verseOptions.length || isLoading}
                         className="w-full"
+                        onSelectionComplete={(val) => {
+                            const parsed = parseInt(val, 10);
+                            if (Number.isFinite(parsed)) {
+                                onVerseSelectionComplete?.(parsed);
+                            }
+                        }}
                     />
                 </div>
             )}

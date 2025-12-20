@@ -31,8 +31,8 @@ function NavButton({
       onClick={onClick}
       disabled={disabled}
       className={`p-1 rounded-full ${side === 'left' ? 'mr-2' : 'ml-2'} transition-colors ${disabled
-          ? 'text-muted cursor-not-allowed'
-          : 'text-muted hover:text-foreground hover:bg-gray-200 dark:hover:bg-slate-700'
+        ? 'text-muted cursor-not-allowed'
+        : 'text-muted hover:text-foreground hover:bg-gray-200 dark:hover:bg-slate-700'
         }`}
     >
       {children}
@@ -54,8 +54,8 @@ function Tab({
       key={lang}
       onClick={() => onClick(lang)}
       className={`flex-shrink-0 px-3 py-1 text-sm font-semibold border-b-2 transition-colors flex items-center justify-center ${active
-          ? 'border-accent text-accent'
-          : 'border-transparent text-muted hover:text-foreground hover:border-border'
+        ? 'border-accent text-accent'
+        : 'border-transparent text-muted hover:text-foreground hover:border-border'
         }`}
     >
       {lang}
@@ -80,7 +80,8 @@ export const ResourceTabs = ({
     </NavButton>
     <div
       ref={tabsContainerRef}
-      className="flex flex-1 min-w-0 items-center space-x-2 overflow-hidden"
+      className="flex flex-1 min-w-0 items-center space-x-2 overflow-x-auto [&::-webkit-scrollbar]:hidden"
+      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
     >
       {languages.map((lang) => (
         <Tab key={lang} lang={lang} active={activeFilter === lang} onClick={onTabClick} />

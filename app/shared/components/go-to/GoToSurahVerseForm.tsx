@@ -67,6 +67,16 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
     [afterNavigate, onNavigate, selectedSurah, verse]
   );
 
+  const handleVerseComplete = useCallback(
+    (verseNum: number) => {
+      if (selectedSurah) {
+        onNavigate(selectedSurah, verseNum);
+        afterNavigate?.();
+      }
+    },
+    [afterNavigate, onNavigate, selectedSurah]
+  );
+
   const disabled = !selectedSurah || isLoading;
   const subtitleText = subtitle ?? (isLoading ? 'Loading surahs…' : undefined);
 
@@ -93,6 +103,7 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
         selectedVerse={verse}
         onSurahChange={setSelectedSurah}
         onVerseChange={setVerse}
+        onVerseSelectionComplete={handleVerseComplete}
         verseLabel="Verse"
       />
     </form>

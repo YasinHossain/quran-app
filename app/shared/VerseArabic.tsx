@@ -1,7 +1,7 @@
 'use client';
-import { memo } from 'react';
+import * as Popover from '@radix-ui/react-popover';
+import { memo, useState } from 'react';
 
-import { useState } from 'react';
 import { VerseMarker } from '@/app/(features)/surah/components/surah-view/VerseMarker';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
@@ -34,7 +34,7 @@ const WordDisplay = ({
   settings,
   isQpcHafsFont,
 }: WordDisplayProps): React.JSX.Element | null => {
-  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   // Strip verse markers
   if (/[\u06DD\u06DE\uFD3E\uFD3F]/.test(word.uthmani)) {
@@ -47,36 +47,62 @@ const WordDisplay = ({
     return null;
   }
 
+  const translation = word[wordLang as LanguageCode] as string | undefined;
+  const hasTranslation = Boolean(translation && translation.trim());
+
   return (
     <span key={`${word.id}-${index}`} className="text-center">
-      <span
-        className="relative group cursor-pointer inline-block select-none outline-none"
-        onClick={() => setIsTooltipOpen(!isTooltipOpen)}
-        onMouseLeave={() => setIsTooltipOpen(false)}
-        tabIndex={0}
-      >
-        <span
-          dangerouslySetInnerHTML={{
-            __html: sanitizeHtml(settings.tajweed ? applyTajweed(cleanUthmani) : cleanUthmani),
-          }}
-        />
-        {!showByWords && (
+      {!showByWords && hasTranslation ? (
+        <Popover.Root open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+          <Popover.Trigger asChild>
+            <button
+              type="button"
+              className="relative cursor-pointer inline-block select-none outline-none bg-transparent p-0 text-inherit"
+              onPointerEnter={(e) => {
+                if (e.pointerType === 'mouse') setIsPopoverOpen(true);
+              }}
+              onPointerLeave={(e) => {
+                if (e.pointerType === 'mouse') setIsPopoverOpen(false);
+              }}
+            >
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: sanitizeHtml(
+                    settings.tajweed ? applyTajweed(cleanUthmani) : cleanUthmani
+                  ),
+                }}
+              />
+            </button>
+          </Popover.Trigger>
+          <Popover.Portal>
+            <Popover.Content
+              dir="auto"
+              side="top"
+              align="center"
+              sideOffset={10}
+              collisionPadding={12}
+              className="rounded-md bg-accent text-on-accent text-sm px-3 py-2 shadow-lg z-tooltip pointer-events-none max-w-[min(16rem,calc(100vw-1.5rem))] whitespace-normal text-center"
+            >
+              {translation}
+              <Popover.Arrow className="fill-accent" />
+            </Popover.Content>
+          </Popover.Portal>
+        </Popover.Root>
+      ) : (
+        <span className="inline-block select-none">
           <span
-            className={`absolute right-0 bottom-full mb-3 bg-accent text-on-accent text-base px-3 py-2 rounded-md shadow-lg z-[100] pointer-events-none transition-opacity duration-200 max-w-[200px] whitespace-normal text-center w-max ${isTooltipOpen ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-              }`}
-          >
-            {word[wordLang as LanguageCode] as string}
-            {/* Arrow pointing down */}
-            <span className="absolute -bottom-1.5 right-3 w-3 h-3 bg-accent rotate-45"></span>
-          </span>
-        )}
-      </span>
+            dangerouslySetInnerHTML={{
+              __html: sanitizeHtml(settings.tajweed ? applyTajweed(cleanUthmani) : cleanUthmani),
+            }}
+          />
+        </span>
+      )}
       {showByWords && (
         <span
           className="mt-0.5 block text-muted mx-1"
           style={{ fontSize: `${settings.arabicFontSize * 0.5}px` }}
         >
-          {word[wordLang as LanguageCode] as string}
+          {translation}
         </span>
       )}
     </span>

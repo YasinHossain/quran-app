@@ -75,7 +75,7 @@ export const CreateFolderForm = memo(function CreateFolderForm({
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className="flex items-center gap-1 p-4 bg-surface-secondary rounded-2xl border border-border"
+      className="flex items-center gap-2 pl-4 pr-2 py-2 bg-surface-secondary rounded-2xl border border-border"
     >
       <input
         type="text"

@@ -3,6 +3,7 @@
 import clsx from 'clsx';
 import {
   memo,
+  forwardRef,
   useCallback,
   useEffect,
   useMemo,
@@ -10,6 +11,7 @@ import {
   useState,
   useId,
   useLayoutEffect,
+  useImperativeHandle,
   type ChangeEvent,
   type FocusEvent,
   type KeyboardEvent,
@@ -34,13 +36,14 @@ interface SurahSelectProps {
   clearable?: boolean;
   clearLabel?: string;
   inputId?: string;
+  onSelectionComplete?: (value: string) => void;
 }
 
 /**
  * Searchable combobox used for Surah and verse selection.
  * Users can type values directly while still getting a styled dropdown list.
  */
-export const SurahSelect = memo(function SurahSelect({
+export const SurahSelect = memo(forwardRef<HTMLInputElement, SurahSelectProps>(function SurahSelect({
   value,
   onChange,
   options,
@@ -50,7 +53,8 @@ export const SurahSelect = memo(function SurahSelect({
   clearable = false,
   clearLabel = 'Clear selection',
   inputId: inputIdProp,
-}: SurahSelectProps): ReactElement {
+  onSelectionComplete,
+}, ref): ReactElement {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
@@ -62,6 +66,8 @@ export const SurahSelect = memo(function SurahSelect({
   const listboxId = useId();
   const generatedInputId = useId();
   const inputId = inputIdProp ?? generatedInputId;
+
+  useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
 
   const DROPDOWN_MAX_HEIGHT = 28 * 16;
   const [dropdownStyle, setDropdownStyle] = useState<{
@@ -210,8 +216,9 @@ export const SurahSelect = memo(function SurahSelect({
       setInputValue(option.label);
       setIsTyping(false);
       setOpen(false);
+      onSelectionComplete?.(option.value);
     },
-    [onChange]
+    [onChange, onSelectionComplete]
   );
 
   const handleInputKeyDown = useCallback(
@@ -390,4 +397,4 @@ export const SurahSelect = memo(function SurahSelect({
         : null}
     </div>
   );
-});
+}));

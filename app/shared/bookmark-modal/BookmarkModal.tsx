@@ -48,7 +48,7 @@ const ModalShell = memo(function ModalShell({
         role="dialog"
         aria-modal="true"
         aria-label="Bookmark options"
-        className="bg-background rounded-3xl shadow-2xl w-full max-w-md max-h-[80vh] flex flex-col pointer-events-auto"
+        className="bg-background rounded-lg shadow-xl w-full max-w-md max-h-[80vh] flex flex-col pointer-events-auto"
       >
         {children}
       </div>
