@@ -36,7 +36,7 @@ export const BookmarkTab = memo(function BookmarkTab({
         onToggleCreateFolder={onToggleCreateFolder}
         onCreateFolder={handleCreateFolder}
       />
-      <div className="flex-1 overflow-y-auto px-6 py-6 min-h-0">
+      <div className="flex-1 overflow-y-auto px-3 py-6 min-h-0">
         <FolderList
           folders={folders}
           verseId={verseId}

@@ -77,8 +77,8 @@ const MobileNavigation = memo(function MobileNavigation({
                 : item.href === '/bookmarks'
                   ? pathname.startsWith('/bookmarks')
                   : pathname.startsWith('/surah') ||
-                    pathname.startsWith('/juz') ||
-                    pathname.startsWith('/page');
+                  pathname.startsWith('/juz') ||
+                  pathname.startsWith('/page');
 
             return (
               <Link
@@ -88,7 +88,7 @@ const MobileNavigation = memo(function MobileNavigation({
                 aria-label={item.label}
                 className={cn(
                   'flex-1 flex flex-col items-center justify-center min-w-0 py-2 px-1 rounded-lg transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent gap-1',
-                  isActive ? 'text-accent' : 'text-muted hover:bg-black/5 dark:hover:bg-white/5'
+                  isActive ? 'text-accent' : 'text-muted'
                 )}
               >
                 <div className="flex items-center justify-center h-6 w-6">
@@ -125,7 +125,7 @@ export const Navigation = memo(function Navigation() {
 
   const linkStyles = useMemo(
     () =>
-      'p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+      'p-3 rounded-lg hover:text-accent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
     []
   );
 

@@ -24,7 +24,7 @@ export const BookmarkTabHeader = memo(function BookmarkTabHeader({
   onCreateFolder,
 }: BookmarkTabHeaderProps): React.JSX.Element {
   return (
-    <div className="px-6 py-4 border-b border-border">
+    <div className="px-3 py-4 border-b border-border">
       <AnimatePresence mode="wait">
         {isCreatingFolder ? (
           <CreateFolderForm

@@ -55,9 +55,8 @@ const WordDisplay = ({
       {!showByWords && hasTranslation ? (
         <Popover.Root open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
           <Popover.Trigger asChild>
-            <button
-              type="button"
-              className="relative cursor-pointer inline-block select-none outline-none bg-transparent p-0 text-inherit"
+            <span
+              className="relative cursor-pointer inline-block outline-none bg-transparent p-0 text-inherit"
               onPointerEnter={(e) => {
                 if (e.pointerType === 'mouse') setIsPopoverOpen(true);
               }}
@@ -72,7 +71,7 @@ const WordDisplay = ({
                   ),
                 }}
               />
-            </button>
+            </span>
           </Popover.Trigger>
           <Popover.Portal>
             <Popover.Content
@@ -89,7 +88,7 @@ const WordDisplay = ({
           </Popover.Portal>
         </Popover.Root>
       ) : (
-        <span className="inline-block select-none">
+        <span className="inline-block">
           <span
             dangerouslySetInnerHTML={{
               __html: sanitizeHtml(settings.tajweed ? applyTajweed(cleanUthmani) : cleanUthmani),

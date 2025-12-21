@@ -73,6 +73,7 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps): React
         center={
           <WorkspaceMain data-slot="tafsir-workspace-main" contentClassName="pt-4">
             <TafsirContent
+              surahId={surahId}
               prev={prev}
               next={next}
               navigate={navigate}
@@ -110,6 +111,7 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps): React
 }
 
 function TafsirContent({
+  surahId,
   prev,
   next,
   navigate,
@@ -119,6 +121,7 @@ function TafsirContent({
   tafsirResource,
   tafsirHtml,
 }: {
+  surahId: string;
   prev: { surahId: string; ayahId: number } | null;
   next: { surahId: string; ayahId: number } | null;
   navigate: (target: { surahId: string; ayahId: number } | null) => void;
@@ -167,6 +170,7 @@ function TafsirContent({
         navigate={navigate}
         {...(currentSurah !== undefined ? { currentSurah } : {})}
         ayahId={ayahId}
+        surahId={surahId}
       />
       <TafsirViewer
         {...(verse !== undefined ? { verse } : {})}

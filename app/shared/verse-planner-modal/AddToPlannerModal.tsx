@@ -262,7 +262,7 @@ export function AddToPlannerModal({
     <PanelModalCenter
       isOpen={isOpen}
       onClose={onClose}
-      className="w-full max-w-xl rounded-lg bg-background p-4 shadow-xl sm:p-6"
+      className="w-full max-w-xl rounded-lg bg-background px-4 pb-4 pt-8 shadow-xl sm:px-6 sm:pb-6 sm:pt-8"
       showCloseButton={false}
     >
       <div className="flex h-full min-h-0 flex-col">

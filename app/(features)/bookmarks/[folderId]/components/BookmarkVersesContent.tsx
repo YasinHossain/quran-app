@@ -34,10 +34,19 @@ export const BookmarkVersesContent = ({
     void prefetchSingleVerse(verseTargets);
   }, [prefetchSingleVerse, verseTargets]);
 
+  React.useLayoutEffect(() => {
+    const scrollContainer = document.querySelector(
+      '[data-slot="bookmarks-landing-main"], [data-slot="workspace-main"], [data-slot="bookmarks-workspace-main"]'
+    );
+    if (scrollContainer) {
+      scrollContainer.scrollTop = 0;
+    }
+  }, [folderName]);
+
   return (
     <div>
       <BreadcrumbNavigation onNavigateToBookmarks={onNavigateToBookmarks} folderName={folderName} />
-      <BookmarkVerseList bookmarks={bookmarks} />
+      <BookmarkVerseList bookmarks={bookmarks} key={folderName} />
     </div>
   );
 };

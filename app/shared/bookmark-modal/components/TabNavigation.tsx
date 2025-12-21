@@ -25,11 +25,11 @@ export const TabNavigation = memo(function TabNavigation({
   ];
 
   return (
-    <div className="px-6 py-4 relative">
+    <div className="px-3 py-4 relative">
       <div className="flex w-full items-start justify-center">
         <div className="space-y-1 text-center">
           <h2 className="text-xl font-semibold text-foreground">Add to Collections</h2>
-          {verseKey && <p className="text-sm text-muted">Verse {verseKey}</p>}
+          {verseKey && <p className="text-sm text-muted">Surah {verseKey}</p>}
         </div>
         <button
           onClick={onClose}

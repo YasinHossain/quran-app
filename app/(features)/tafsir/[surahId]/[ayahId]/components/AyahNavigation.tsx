@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation';
 
 import { ArrowLeftIcon, ChevronLeftIcon, ChevronRightIcon } from '@/app/shared/icons';
+import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { Surah } from '@/types';
 
 import type { JSX } from 'react';
@@ -17,6 +18,7 @@ interface AyahNavigationProps {
   navigate: (target: NavTarget | null) => void;
   currentSurah?: Surah | undefined;
   ayahId: string;
+  surahId: string;
 }
 
 const ChevronLeft = (): JSX.Element => <ChevronLeftIcon size={20} className="text-accent" />;
@@ -87,12 +89,15 @@ export const AyahNavigation = ({
   navigate,
   currentSurah,
   ayahId,
+  surahId,
 }: AyahNavigationProps): JSX.Element => {
   const router = useRouter();
 
   return (
     <div className="flex w-full items-center justify-between gap-2 sm:gap-3 rounded-full bg-accent text-on-accent p-2 min-w-0 overflow-hidden">
-      <BackButton onClick={(): void => router.back()} />
+      <BackButton
+        onClick={(): void => router.push(buildSurahRoute(surahId, { startVerse: ayahId }))}
+      />
       <Title currentSurah={currentSurah} ayahId={ayahId} />
       <div className="flex items-center gap-2 sm:gap-3">
         <NavButton
@@ -111,3 +116,4 @@ export const AyahNavigation = ({
     </div>
   );
 };
+
