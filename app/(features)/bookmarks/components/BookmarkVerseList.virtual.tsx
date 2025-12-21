@@ -64,6 +64,7 @@ export const VirtualizedBookmarkList = ({
           return (
             <BookmarkVirtualRow
               key={virtualItem.key}
+              index={virtualItem.index}
               virtualStart={virtualItem.start}
               refFn={rowVirtualizer.measureElement}
             >
@@ -80,13 +81,16 @@ export const BookmarkVirtualRow = ({
   children,
   virtualStart,
   refFn,
+  index,
 }: {
   children: React.ReactNode;
   virtualStart: number;
   refFn: (el: Element | null) => void;
+  index: number;
 }): React.JSX.Element => (
   <div
     ref={refFn}
+    data-index={index}
     className="absolute left-0 top-0 w-full"
     style={{ transform: `translateY(${virtualStart}px)` }}
   >

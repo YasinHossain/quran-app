@@ -63,8 +63,12 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
         return [];
       }
 
-      if (!settings.translationIds || settings.translationIds.length === 0) {
+      if (!settings.translationIds) {
         return verse.translations;
+      }
+
+      if (settings.translationIds.length === 0) {
+        return [];
       }
 
       const orderMap = new Map<number, number>();

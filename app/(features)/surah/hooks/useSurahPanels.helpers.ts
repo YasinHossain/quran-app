@@ -78,7 +78,20 @@ function getSelectedTranslationName(
   translationOptions: SurahPanelOption[],
   t: TFunction<'translation'>
 ): string {
-  const primaryId = settings.translationIds?.[0] || settings.translationId;
+  if (settings.translationIds) {
+    if (settings.translationIds.length === 0) return '';
+    const primaryId = settings.translationIds[0];
+    const primaryName = translationOptions.find((o) => o.id === primaryId)?.name || t('select_translation');
+
+    const extraCount = settings.translationIds.length - 1;
+    if (extraCount > 0) {
+      return `${primaryName}, +${extraCount}`;
+    }
+
+    return primaryName;
+  }
+
+  const primaryId = settings.translationId;
   return translationOptions.find((o) => o.id === primaryId)?.name || t('select_translation');
 }
 

@@ -23,7 +23,7 @@ const computeInitialSelectionIds = (
   settingsIds?: number[]
 ): number[] | null => {
   if (translations.length === 0) return null;
-  if (settingsIds && settingsIds.length > 0) return settingsIds;
+  if (settingsIds) return settingsIds;
   const sahihId = findSaheehId(translations);
   return sahihId !== undefined ? [sahihId] : [DEFAULT_SAHEEH_ID];
 };
@@ -82,9 +82,7 @@ export const useTranslationSelection = (
     if (!hasInitialized.current) return;
 
     const current = [...s.orderedSelection];
-    if (current.length === 0) {
-      return;
-    }
+
     setTranslationIds(current);
   }, [s.orderedSelection, setTranslationIds]);
 

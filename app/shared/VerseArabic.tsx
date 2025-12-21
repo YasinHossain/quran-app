@@ -51,7 +51,7 @@ const WordDisplay = ({
   const hasTranslation = Boolean(translation && translation.trim());
 
   return (
-    <span key={`${word.id}-${index}`} className="text-center">
+    <span key={`${word.id}-${index}`} className="inline-block text-center align-middle ml-1.5 lg:ml-3">
       {!showByWords && hasTranslation ? (
         <Popover.Root open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
           <Popover.Trigger asChild>
@@ -161,7 +161,7 @@ export const VerseArabic = memo(function VerseArabic({
       }}
     >
       {verse.words && verse.words.length > 0 ? (
-        <span className="flex flex-wrap gap-x-3 gap-y-1 justify-start items-center">
+        <span>
           {verse.words.map((word: Word, index: number) => {
             // Heuristic: If the last word contains no Arabic letters (only symbols/numbers),
             // it is likely a verse marker. Hide it to avoid duplication.
