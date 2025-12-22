@@ -200,9 +200,33 @@
     padding: 0;
     width: 100%;
     height: 100%;
-    overflow: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Desktop and tablets: use container scrolling (overflow hidden on body) */
+  @media (pointer: fine),
+  (min-width: 768px) {
+
+    html,
+    body {
+      overflow: hidden;
+    }
+  }
+
+  /* Touch mobile phones: allow body scroll for Chrome address bar auto-hide */
+  @media (pointer: coarse) and (max-width: 767px) {
+    html {
+      overflow: hidden;
+      overflow-y: auto;
+    }
+
+    body {
+      overflow: visible;
+      overflow-y: auto;
+      height: auto;
+      min-height: 100%;
+    }
   }
 
   /* Focus visible improvements for better keyboard navigation */

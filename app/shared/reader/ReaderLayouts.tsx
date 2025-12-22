@@ -23,6 +23,8 @@ interface WorkspaceReaderLayoutProps {
   mobileRight: React.ReactNode;
   audio: ReaderAudioProps;
   contentClassName?: string;
+  /** When true, uses body scrolling for touch mobile (enables Chrome address bar auto-hide) */
+  isTouchMobile?: boolean;
 }
 
 export const WorkspaceReaderLayout = ({
@@ -33,6 +35,7 @@ export const WorkspaceReaderLayout = ({
   mobileRight,
   audio,
   contentClassName,
+  isTouchMobile = false,
 }: WorkspaceReaderLayoutProps): React.JSX.Element => (
   <>
     <div className="xl:hidden">{mobileLeft}</div>
@@ -47,6 +50,7 @@ export const WorkspaceReaderLayout = ({
           reserveLeftSpace
           reserveRightSpace
           contentClassName={contentClassName}
+          isTouchMobile={isTouchMobile}
         >
           {main}
         </WorkspaceMain>
@@ -54,6 +58,7 @@ export const WorkspaceReaderLayout = ({
       right={desktopRight}
       leftContainerClassName="lg:py-0"
       rightContainerClassName="lg:py-0"
+      isTouchMobile={isTouchMobile}
     />
 
     <SurahAudio

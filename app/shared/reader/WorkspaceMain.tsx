@@ -1,8 +1,6 @@
 'use client';
 
 import React from 'react';
-
-import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { cn } from '@/lib/utils/cn';
 
 import { useWorkspaceColumns } from './ThreeColumnWorkspace';
@@ -16,6 +14,8 @@ interface WorkspaceMainProps extends React.HTMLAttributes<HTMLElement> {
   'data-slot'?: string;
   reserveLeftSpace?: boolean;
   reserveRightSpace?: boolean;
+  /** When true, uses body scrolling for touch mobile (enables Chrome address bar auto-hide) */
+  isTouchMobile?: boolean;
 }
 
 export function WorkspaceMain({
@@ -26,30 +26,45 @@ export function WorkspaceMain({
   reserveLeftSpace,
   'data-slot': dataSlot,
   reserveRightSpace,
+  isTouchMobile = false,
   ...rest
 }: WorkspaceMainProps): React.JSX.Element {
-  const { isHidden } = useHeaderVisibility();
   const { isRootHeaderAware, hasLeftSidebar, hasRightSidebar } = useWorkspaceColumns();
 
   const shouldReserveLeft = Boolean(reserveLeftSpace && !hasLeftSidebar);
   const shouldReserveRight = Boolean(reserveRightSpace && !hasRightSidebar);
 
   // ARCHITECTURE NOTE:
-  // When isRootHeaderAware is false, we apply STATIC top padding here.
-  // This ensures the content starts below the header but can scroll UP behind the transparent header.
-  // DO NOT make this padding dynamic based on isHidden, or the content will jump and the
-  // "white block" background issue will return.
-  const topPaddingClass = isRootHeaderAware
-    ? null
-    : 'mt-[calc(var(--reader-header-height)+var(--reader-safe-area-top))]';
+  // Content scrolls BEHIND the transparent glass header. We use padding (not margin)
+  // to offset the initial content position, but scrolling moves content up behind header.
+  // The header has backdrop-blur which creates the glass effect over scrolling content.
+  let topClass: string | null = null;
+  if (!isRootHeaderAware) {
+    if (isTouchMobile) {
+      // Touch mobile: use padding to push content below header initially
+      topClass = 'pt-[calc(var(--reader-header-height-compact)+var(--reader-safe-area-top))]';
+    } else {
+      // Desktop: use padding to push content below header initially
+      // Content scrolls behind the transparent header naturally
+      topClass = 'pt-[calc(var(--reader-header-height)+var(--reader-safe-area-top))]';
+    }
+  }
+
+  // On touch mobile, we DON'T use overflow-y-auto so the body can scroll
+  // This enables Chrome's address bar auto-hide on mobile
+  // On desktop, we keep overflow-y-auto for container scrolling
+  const overflowClass = isTouchMobile
+    ? 'overflow-visible'
+    : 'overflow-y-auto overflow-x-hidden min-h-0';
 
   return (
     <Component
       {...rest}
       data-slot={dataSlot ?? 'workspace-main'}
       className={cn(
-        'relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden bg-background text-foreground min-h-0',
-        topPaddingClass,
+        'relative flex flex-1 flex-col text-foreground',
+        overflowClass,
+        topClass,
         'pb-safe',
         shouldReserveLeft && 'xl:pl-reader-sidebar-left',
         shouldReserveRight && 'xl:pr-reader-sidebar-right',

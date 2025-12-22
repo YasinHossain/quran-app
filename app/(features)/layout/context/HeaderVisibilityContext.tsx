@@ -9,8 +9,20 @@ interface HeaderVisibilityState {
 
 const HeaderVisibilityContext = createContext<HeaderVisibilityState>({
   isHidden: false,
-  setScrollContainer: () => {},
+  setScrollContainer: () => { },
 });
+
+/**
+ * Detects if the device is a touch-primary mobile device.
+ * This matches the CSS media query: @media (pointer: coarse) and (max-width: 767px)
+ * Used to determine scroll behavior - touch mobiles use body scrolling.
+ */
+const checkIsTouchMobile = (): boolean => {
+  if (typeof window === 'undefined') return false;
+
+  // Match CSS media query: (pointer: coarse) and (max-width: 767px)
+  return window.matchMedia('(pointer: coarse) and (max-width: 767px)').matches;
+};
 
 export const HeaderVisibilityProvider = ({
   children,
@@ -19,15 +31,49 @@ export const HeaderVisibilityProvider = ({
 }): React.JSX.Element => {
   const [isHidden, setIsHidden] = useState(false);
   const [scrollContainer, setScrollContainer] = useState<HTMLElement | null>(null);
+  const [isTouchMobile, setIsTouchMobile] = useState(false);
   const lastScrollY = useRef(0);
   const pathname = usePathname();
+
+  // Detect touch mobile on mount and resize
+  useEffect(() => {
+    const handleResize = (): void => {
+      setIsTouchMobile(checkIsTouchMobile());
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     // Reset state on every page navigation
     lastScrollY.current = 0;
     setIsHidden(false);
 
-    // Use explicitly registered container or try to find one
+    // On touch mobile, we listen to window scroll (body scrolling)
+    if (isTouchMobile) {
+      const handleWindowScroll = (): void => {
+        const currentY = window.scrollY || window.pageYOffset;
+        const scrollDelta = Math.abs(currentY - lastScrollY.current);
+
+        if (scrollDelta > 5) {
+          // Hide header when scrolling down past threshold
+          if (currentY > lastScrollY.current && currentY > 50) {
+            setIsHidden(true);
+          } else if (currentY < lastScrollY.current) {
+            setIsHidden(false);
+          }
+        }
+
+        lastScrollY.current = currentY;
+      };
+
+      window.addEventListener('scroll', handleWindowScroll, { passive: true });
+      return () => window.removeEventListener('scroll', handleWindowScroll);
+    }
+
+    // Desktop: Use container-based scrolling (original behavior)
     let scrollEl = scrollContainer;
 
     if (!scrollEl) {
@@ -75,7 +121,7 @@ export const HeaderVisibilityProvider = ({
 
     // Cleanup by removing the event listener
     return () => scrollEl.removeEventListener('scroll', handleScroll);
-  }, [pathname, scrollContainer]); // Re-run when scrollContainer changes
+  }, [pathname, scrollContainer, isTouchMobile]);
 
   return (
     <HeaderVisibilityContext.Provider value={{ isHidden, setScrollContainer }}>
@@ -85,3 +131,4 @@ export const HeaderVisibilityProvider = ({
 };
 
 export const useHeaderVisibility = (): HeaderVisibilityState => useContext(HeaderVisibilityContext);
+

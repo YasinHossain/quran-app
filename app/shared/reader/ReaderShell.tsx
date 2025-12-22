@@ -150,7 +150,7 @@ export function ReaderShell({
   initialScrollNonce,
   initialMode = 'verse',
 }: ReaderShellProps): React.JSX.Element {
-  useBodyOverflowHidden();
+  const { isTouchMobile } = useBodyOverflowHidden();
   const { mode, setMode, enableReaderMode, isReaderModeAvailable } = useReaderMode();
   const readerView = useReaderView({
     resourceId,
@@ -248,6 +248,7 @@ export function ReaderShell({
       mobileLeft={<SurahListSidebar />}
       mobileRight={settingsSidebar}
       audio={audioProps}
+      isTouchMobile={isTouchMobile}
       {...(centerContentClassName ? { contentClassName: centerContentClassName } : {})}
     />
   );

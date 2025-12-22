@@ -28,6 +28,8 @@ interface ThreeColumnWorkspaceProps {
   leftContainerClassName?: string;
   rightContainerClassName?: string;
   centerContainerClassName?: string;
+  /** When true, uses body scrolling for touch mobile (enables Chrome address bar auto-hide) */
+  isTouchMobile?: boolean;
 }
 
 export function ThreeColumnWorkspace({
@@ -38,6 +40,7 @@ export function ThreeColumnWorkspace({
   leftContainerClassName,
   rightContainerClassName,
   centerContainerClassName,
+  isTouchMobile = false,
 }: ThreeColumnWorkspaceProps): React.JSX.Element {
   // ARCHITECTURE NOTE:
   // We explicitly set isRootHeaderAware to false and remove padding from the root container.
@@ -56,6 +59,12 @@ export function ThreeColumnWorkspace({
     ? 'h-[calc(100dvh-var(--reader-safe-area-top))]'
     : 'h-[calc(100dvh-var(--reader-header-height)-var(--reader-safe-area-top))]';
 
+  // On touch mobile, use min-height instead of fixed height so body can scroll
+  // This enables Chrome's address bar auto-hide on mobile phones
+  const rootHeightClass = isTouchMobile
+    ? 'min-h-[100dvh]'
+    : 'h-[100dvh]';
+
   const workspaceValue = useMemo<WorkspaceColumnsContextValue>(
     () => ({
       hasLeftSidebar,
@@ -68,7 +77,7 @@ export function ThreeColumnWorkspace({
   return (
     <WorkspaceColumnsContext.Provider value={workspaceValue}>
       <div
-        className={cn('relative flex h-[100dvh] w-full bg-background text-foreground', className)}
+        className={cn('relative flex w-full bg-background text-foreground', rootHeightClass, className)}
         data-slot="workspace-root"
       >
         {left ? (
@@ -115,3 +124,4 @@ export function ThreeColumnWorkspace({
     </WorkspaceColumnsContext.Provider>
   );
 }
+
