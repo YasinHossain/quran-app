@@ -41,7 +41,7 @@ export function WorkspaceMain({
   // "white block" background issue will return.
   const topPaddingClass = isRootHeaderAware
     ? null
-    : 'pt-[calc(var(--reader-header-height)+var(--reader-safe-area-top))]';
+    : 'mt-[calc(var(--reader-header-height)+var(--reader-safe-area-top))]';
 
   return (
     <Component
