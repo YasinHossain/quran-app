@@ -105,12 +105,11 @@ export const SurahVerseList = ({
   const initialVerseNumber = parseInitialVerseNumber(initialVerseKey);
 
   const hasNoContent = verseListing.verses.length === 0;
+  const isQuranComMode =
+    verseListing.mode === 'quran-com' && typeof verseListing.totalVerses === 'number';
 
-  if (verseListing.isLoading) return <LoadingState />;
-  if (verseListing.error && hasNoContent) return <ErrorState message={verseListing.error} />;
-  if (hasNoContent && verseListing.mode !== 'quran-com') return <EmptyState label={emptyLabel} />;
-
-  if (verseListing.mode === 'quran-com' && typeof verseListing.totalVerses === 'number') {
+  if (isQuranComMode) {
+    if (verseListing.error && hasNoContent) return <ErrorState message={verseListing.error} />;
     return (
       <QuranComList
         verseListing={verseListing}
@@ -120,6 +119,10 @@ export const SurahVerseList = ({
       />
     );
   }
+
+  if (verseListing.isLoading) return <LoadingState />;
+  if (verseListing.error && hasNoContent) return <ErrorState message={verseListing.error} />;
+  if (hasNoContent) return <EmptyState label={emptyLabel} />;
 
   return (
     <InfiniteList

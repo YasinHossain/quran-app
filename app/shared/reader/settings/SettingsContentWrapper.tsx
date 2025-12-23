@@ -39,7 +39,7 @@ export const SettingsContentWrapper = ({
       )}
 
       {/* Content section */}
-      <div className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-3 touch-pan-y">
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-2 sm:p-3 touch-pan-y">
         <SettingsContent
           activeTab={resolvedTab}
           openSections={openSections}

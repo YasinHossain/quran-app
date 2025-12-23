@@ -64,7 +64,7 @@ const ScrollableTabContent = memo(function ScrollableTabContent({
     <div
       ref={scrollRef}
       onScroll={handleScroll}
-      className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-3 touch-pan-y"
+      className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-2 sm:p-3 touch-pan-y"
     >
       <TabContent {...tabContentProps} />
     </div>

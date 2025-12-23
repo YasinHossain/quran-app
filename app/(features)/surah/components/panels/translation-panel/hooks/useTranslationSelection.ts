@@ -18,12 +18,35 @@ const isSaheehName = (name: string): boolean => {
 const findSaheehId = (translations: TranslationResource[]): number | undefined =>
   translations.find((t) => isSaheehName(t.name))?.id;
 
+const normalizeSelectionIds = (
+  translations: TranslationResource[],
+  ids: number[]
+): number[] => {
+  if (ids.length === 0) return [];
+  const validIds = new Set(translations.map((t) => t.id));
+  const seen = new Set<number>();
+  const normalized: number[] = [];
+
+  ids.forEach((id) => {
+    if (!Number.isFinite(id)) return;
+    if (!validIds.has(id)) return;
+    if (seen.has(id)) return;
+    seen.add(id);
+    normalized.push(id);
+  });
+
+  return normalized;
+};
+
 const computeInitialSelectionIds = (
   translations: TranslationResource[],
   settingsIds?: number[]
 ): number[] | null => {
   if (translations.length === 0) return null;
-  if (settingsIds) return settingsIds;
+  if (settingsIds) {
+    const normalized = normalizeSelectionIds(translations, settingsIds);
+    if (normalized.length > 0) return normalized;
+  }
   const sahihId = findSaheehId(translations);
   return sahihId !== undefined ? [sahihId] : [DEFAULT_SAHEEH_ID];
 };

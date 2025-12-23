@@ -35,15 +35,19 @@ const useBodyScrollLock = (shouldLock: boolean): void => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const { classList } = document.body;
+    const bodyClassList = document.body.classList;
+    const rootClassList = document.documentElement.classList;
     if (shouldLock) {
-      classList.add('overflow-hidden', 'touch-none');
+      bodyClassList.add('overflow-hidden', 'touch-none');
+      rootClassList.add('overflow-hidden', 'touch-none');
     } else {
-      classList.remove('overflow-hidden', 'touch-none');
+      bodyClassList.remove('overflow-hidden', 'touch-none');
+      rootClassList.remove('overflow-hidden', 'touch-none');
     }
 
     return () => {
-      classList.remove('overflow-hidden', 'touch-none');
+      bodyClassList.remove('overflow-hidden', 'touch-none');
+      rootClassList.remove('overflow-hidden', 'touch-none');
     };
   }, [shouldLock]);
 };
