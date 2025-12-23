@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 
 interface SpinnerProps {
   className?: string;
+  label?: string;
 }
 
 /**
@@ -11,16 +12,19 @@ interface SpinnerProps {
  * @param props.className - Optional CSS classes applied to the spinner.
  * @returns The spinner SVG element.
  */
-export const Spinner = memo(function Spinner({ className = '' }: SpinnerProps): React.JSX.Element {
+export const Spinner = memo(function Spinner({
+  className = '',
+  label,
+}: SpinnerProps): React.JSX.Element {
   return (
     <svg
       className={`animate-spin ${className}`}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
-      aria-hidden="true"
+      aria-hidden={label ? undefined : true}
       role="img"
-      aria-label="Loading"
+      aria-label={label}
     >
       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
       <path

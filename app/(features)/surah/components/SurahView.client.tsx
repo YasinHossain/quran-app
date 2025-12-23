@@ -7,16 +7,27 @@ import { ReaderShell } from '@/app/shared/reader';
 import { getVersesByChapter } from '@/lib/api';
 import { ensureLanguageCode } from '@/lib/text/languageCodes';
 
+import type { Verse } from '@/types';
+
 interface SurahViewProps {
   surahId: string;
   initialVerseNumber?: number | undefined;
+  initialVerses?: Verse[] | undefined;
+  totalVerses?: number | undefined;
+  initialVersesParams?: { translationIds: number[]; wordLang: string } | undefined;
 }
 
 /**
  * Main client component for displaying Surah verses with settings sidebar.
  * Manages verse listing, audio playback, and responsive layout with hidden header behavior.
  */
-export function SurahView({ surahId, initialVerseNumber }: SurahViewProps): React.JSX.Element {
+export function SurahView({
+  surahId,
+  initialVerseNumber,
+  initialVerses,
+  totalVerses,
+  initialVersesParams,
+}: SurahViewProps): React.JSX.Element {
   const searchParams = useSearchParams();
   const queryStartVerseRaw = searchParams?.get('startVerse');
   const navSeq = searchParams?.get('nav') ?? undefined;
@@ -52,6 +63,9 @@ export function SurahView({ surahId, initialVerseNumber }: SurahViewProps): Reac
       }
       emptyLabelKey="no_verses_found"
       endLabelKey="end_of_surah"
+      {...(typeof totalVerses === 'number' ? { totalVerses } : {})}
+      {...(initialVerses ? { initialVerses } : {})}
+      {...(initialVersesParams ? { initialVersesParams } : {})}
       {...(typeof resolvedInitialVerseNumber === 'number'
         ? { initialVerseNumber: resolvedInitialVerseNumber }
         : {})}

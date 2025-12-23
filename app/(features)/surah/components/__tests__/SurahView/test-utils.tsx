@@ -55,7 +55,9 @@ export const defaultPanels = {
 };
 
 export const defaultVerseListing = {
+  mode: 'infinite',
   error: null,
+  setError: jest.fn(),
   isLoading: false,
   verses: [
     {
@@ -71,6 +73,15 @@ export const defaultVerseListing = {
   isValidating: false,
   isReachingEnd: true,
   loadMoreRef: { current: null },
+  totalVerses: undefined,
+  perPage: 20,
+  apiPageToVersesMap: {},
+  setApiPageToVersesMap: jest.fn(),
+  lookup: jest.fn(),
+  resourceId: '1',
+  translationIds: [20],
+  wordLang: 'en',
+  initialVerses: undefined,
   translationOptions: [],
   wordLanguageOptions: [],
   wordLanguageMap: {},

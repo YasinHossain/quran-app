@@ -2,6 +2,8 @@ import { createRequire } from 'module';
 
 // Disable V8 transform cache to avoid ENOENT on temp dirs being cleaned mid-run
 process.env.JEST_DISABLE_V8_CODE_CACHE = '1';
+// Avoid Next.js unhandled rejection filter recursion in Jest (see next/dist/.../unhandled-rejection.js)
+process.env.NEXT_UNHANDLED_REJECTION_FILTER = 'disabled';
 const require = createRequire(import.meta.url);
 const nextJest = require('next/jest');
 

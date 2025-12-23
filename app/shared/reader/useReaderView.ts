@@ -22,6 +22,8 @@ interface UseReaderViewParams {
   resourceKind: MushafResourceKind;
   lookup: UseVerseListingParams['lookup'];
   initialVerses?: UseVerseListingParams['initialVerses'];
+  totalVerses?: UseVerseListingParams['totalVerses'];
+  initialVersesParams?: UseVerseListingParams['initialVersesParams'];
   initialVerseNumber?: number | undefined;
 }
 
@@ -44,10 +46,15 @@ export const useReaderView = ({
   resourceKind,
   lookup,
   initialVerses,
+  totalVerses,
+  initialVersesParams,
   initialVerseNumber,
 }: UseReaderViewParams): UseReaderViewReturn => {
   const verseListing = useVerseListing({
     id: resourceId,
+    resourceKind,
+    ...(typeof totalVerses === 'number' ? { totalVerses } : {}),
+    ...(initialVersesParams ? { initialVersesParams } : {}),
     lookup,
     ...(initialVerses ? { initialVerses } : {}),
     ...(typeof initialVerseNumber === 'number' ? { initialVerseNumber } : {}),

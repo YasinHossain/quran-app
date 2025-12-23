@@ -6,16 +6,11 @@ import { SurahVerseList } from '@/app/(features)/surah/components/SurahVerseList
 
 import { SurahCalligraphyIntro } from './SurahCalligraphyIntro';
 
-import type { Verse } from '@/types';
+import type { UseVerseListingReturn } from '@/app/(features)/surah/hooks/useVerseListing';
 
 interface SurahMainProps {
   surahId?: number | undefined;
-  verses: Verse[];
-  isLoading: boolean;
-  error: string | null;
-  loadMoreRef: React.RefObject<HTMLDivElement | null>;
-  isValidating: boolean;
-  isReachingEnd: boolean;
+  verseListing: UseVerseListingReturn;
   emptyLabelKey?: string;
   endLabelKey?: string;
   initialVerseKey?: string | undefined;
@@ -24,12 +19,7 @@ interface SurahMainProps {
 
 export function SurahMain({
   surahId,
-  verses,
-  isLoading,
-  error,
-  loadMoreRef,
-  isValidating,
-  isReachingEnd,
+  verseListing,
   emptyLabelKey,
   endLabelKey,
   initialVerseKey,
@@ -42,12 +32,7 @@ export function SurahMain({
       {shouldRenderIntro ? <SurahCalligraphyIntro chapterId={chapterId} /> : null}
       <SurahVerseList
         surahId={surahId}
-        verses={verses}
-        isLoading={isLoading}
-        error={error}
-        loadMoreRef={loadMoreRef}
-        isValidating={isValidating}
-        isReachingEnd={isReachingEnd}
+        verseListing={verseListing}
         {...(emptyLabelKey !== undefined ? { emptyLabelKey } : {})}
         {...(endLabelKey !== undefined ? { endLabelKey } : {})}
         {...(initialVerseKey ? { initialVerseKey } : {})}

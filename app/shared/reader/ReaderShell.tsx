@@ -5,7 +5,6 @@ import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { MushafMain } from '@/app/(features)/surah/components/surah-view/MushafMain';
 import { SurahMain } from '@/app/(features)/surah/components/surah-view/SurahMain';
 import { SurahWorkspaceNavigation } from '@/app/(features)/surah/components/surah-view/SurahWorkspaceNavigation';
-import { useBodyOverflowHidden } from '@/app/(features)/surah/components/surah-view/useBodyOverflowHidden';
 import { useReaderMode } from '@/app/providers/ReaderModeContext';
 import { SettingsSidebar } from '@/app/shared/reader/settings';
 import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
@@ -45,12 +44,7 @@ const createSurahMain = ({
     // intent is fired for the same verse (via nav sequence query param)
     key={`${initialVerseKey ?? 'no-initial-verse'}:${initialScrollNonce ?? '0'}`}
     surahId={surahId}
-    verses={verseListing.verses}
-    isLoading={verseListing.isLoading}
-    error={verseListing.error}
-    loadMoreRef={verseListing.loadMoreRef}
-    isValidating={verseListing.isValidating}
-    isReachingEnd={verseListing.isReachingEnd}
+    verseListing={verseListing}
     {...(emptyLabelKey ? { emptyLabelKey } : {})}
     {...(endLabelKey ? { endLabelKey } : {})}
     {...(initialVerseKey ? { initialVerseKey } : {})}
@@ -132,6 +126,8 @@ interface ReaderShellProps extends Pick<UseVerseListingParams, 'initialVerses'> 
   lookup: LookupFn;
   emptyLabelKey?: string;
   endLabelKey?: string;
+  totalVerses?: number | undefined;
+  initialVersesParams?: UseVerseListingParams['initialVersesParams'];
   initialVerseNumber?: number | undefined;
   initialVerseKey?: string | undefined;
   initialScrollNonce?: string | undefined;
@@ -145,18 +141,21 @@ export function ReaderShell({
   initialVerses,
   emptyLabelKey,
   endLabelKey,
+  totalVerses,
+  initialVersesParams,
   initialVerseNumber,
   initialVerseKey,
   initialScrollNonce,
   initialMode = 'verse',
 }: ReaderShellProps): React.JSX.Element {
-  useBodyOverflowHidden();
   const { mode, setMode, enableReaderMode, isReaderModeAvailable } = useReaderMode();
   const readerView = useReaderView({
     resourceId,
     resourceKind,
     lookup,
     initialVerses,
+    ...(typeof totalVerses === 'number' ? { totalVerses } : {}),
+    ...(initialVersesParams ? { initialVersesParams } : {}),
     ...(typeof initialVerseNumber === 'number' ? { initialVerseNumber } : {}),
   });
   const { verseListing, panels, mushafView } = readerView;

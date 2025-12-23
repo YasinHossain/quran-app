@@ -85,10 +85,14 @@ const useQcfFontLoader = ({
       loadingRef.current[key] = true;
 
       const loadFont = async (): Promise<void> => {
-        const src = `url('/fonts/quran/hafs/${version}/woff2/p${pageNumber}.woff2') format('woff2')`;
-        const fontFace = new FontFace(fontFaceName, src);
-        fontFace.display = 'block';
         try {
+          if (typeof FontFace === 'undefined') {
+            loadingRef.current[key] = false;
+            return;
+          }
+          const src = `url('/fonts/quran/hafs/${version}/woff2/p${pageNumber}.woff2') format('woff2')`;
+          const fontFace = new FontFace(fontFaceName, src);
+          fontFace.display = 'block';
           const loadedFace = await fontFace.load();
           (document as Document & { fonts?: FontFaceSet }).fonts?.add(loadedFace);
           setLoadedMap((prev) => (prev[key] ? prev : { ...prev, [key]: true }));

@@ -1,80 +1,251 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
 import { useTranslation } from 'react-i18next';
 
 import { SurahNavigation } from '@/app/(features)/surah/components/SurahNavigation';
-import { VerseListBody } from '@/app/(features)/surah/components/SurahVerseListContent';
-import { useInitialVerseScroll } from '@/app/(features)/surah/hooks/useInitialVerseScroll';
-import { useVerseListVirtualization } from '@/app/(features)/surah/hooks/useVerseListVirtualization';
+import { useDedupedFetchVerse } from '@/app/(features)/surah/hooks/verse-listing/useDedupedFetchVerse';
 import { Spinner } from '@/app/shared/Spinner';
 
-import type { Verse as VerseType } from '@/types';
+import { Verse as VerseComponent } from './VerseCard';
+
+import type { UseVerseListingReturn } from '@/app/(features)/surah/hooks/useVerseListing';
+
+const INCREASE_VIEWPORT_BY_PX = 1000;
 
 interface SurahVerseListProps {
   surahId?: number | undefined;
-  verses: VerseType[];
-  isLoading: boolean;
-  error: string | null;
-  loadMoreRef: React.RefObject<HTMLDivElement | null>;
-  isValidating: boolean;
-  isReachingEnd: boolean;
+  verseListing: UseVerseListingReturn;
   emptyLabelKey?: string;
   endLabelKey?: string;
   initialVerseKey?: string | undefined;
 }
 
+const parseInitialVerseNumber = (initialVerseKey?: string): number | null => {
+  if (!initialVerseKey) return null;
+  const [, versePart] = initialVerseKey.split(':');
+  const parsed = Number.parseInt(versePart ?? '', 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+};
+
+const VerseSkeleton = ({ index }: { index: number }): React.JSX.Element => (
+  <div
+    aria-hidden="true"
+    className={`border-b border-border/60 pb-4 pt-4 md:pb-8 animate-pulse ${
+      index === 0 ? 'border-t border-border/60' : ''
+    }`}
+  >
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        <div className="h-7 w-7 rounded-md bg-interactive" />
+        <div className="h-7 w-7 rounded-md bg-interactive" />
+        <div className="h-7 w-7 rounded-md bg-interactive" />
+        <div className="h-7 w-7 rounded-md bg-interactive" />
+      </div>
+      <div className="h-7 w-7 rounded-md bg-interactive" />
+    </div>
+
+    <div className="mt-6 h-12 w-full rounded-md bg-interactive" />
+  </div>
+);
+
+function QuranComVerseRow({
+  verseIdx,
+  verseListing,
+}: {
+  verseIdx: number;
+  verseListing: UseVerseListingReturn;
+}): React.JSX.Element {
+  const { verse } = useDedupedFetchVerse({
+    resourceId: verseListing.resourceId ?? '',
+    verseIdx,
+    perPage: verseListing.perPage,
+    lookup: verseListing.lookup,
+    translationIds: verseListing.translationIds,
+    wordLang: verseListing.wordLang,
+    ...(verseListing.initialVerses ? { initialPageVerses: verseListing.initialVerses } : {}),
+    setApiPageToVersesMap: verseListing.setApiPageToVersesMap,
+    onError: verseListing.setError,
+    enabled: Boolean(verseListing.resourceId),
+  });
+
+  if (!verse) {
+    return <VerseSkeleton index={verseIdx} />;
+  }
+
+  return <VerseComponent verse={verse} />;
+}
+
+function QuranComEndOfList({
+  endLabel,
+  surahId,
+}: {
+  endLabel: string;
+  surahId?: number | undefined;
+}): React.JSX.Element {
+  return (
+    <div className="py-10 text-center space-y-6">
+      <p className="text-muted-foreground">{endLabel}</p>
+      {surahId ? <SurahNavigation currentSurahId={surahId} /> : null}
+    </div>
+  );
+}
+
 export const SurahVerseList = ({
   surahId,
-  verses,
-  isLoading,
-  error,
-  loadMoreRef,
-  isValidating,
-  isReachingEnd,
+  verseListing,
   emptyLabelKey = 'no_verses_found',
   endLabelKey = 'end_of_surah',
   initialVerseKey,
 }: SurahVerseListProps): React.JSX.Element => {
   const { t } = useTranslation();
-  const virtualization = useVerseListVirtualization({ verses, isLoading, error });
-
-  useInitialVerseScroll({
-    initialVerseKey,
-    verses,
-    shouldVirtualize: virtualization.shouldVirtualize,
-    virtualizer: virtualization.virtualizer,
-    containerRef: virtualization.containerRef,
-    scrollParentRef: virtualization.scrollParentRef,
-  });
-
   const emptyLabel = t(emptyLabelKey);
   const endLabel = t(endLabelKey);
+  const initialVerseNumber = parseInitialVerseNumber(initialVerseKey);
+
+  const hasNoContent = verseListing.verses.length === 0;
+
+  if (verseListing.isLoading) return <LoadingState />;
+  if (verseListing.error && hasNoContent) return <ErrorState message={verseListing.error} />;
+  if (hasNoContent && verseListing.mode !== 'quran-com') return <EmptyState label={emptyLabel} />;
+
+  if (verseListing.mode === 'quran-com' && typeof verseListing.totalVerses === 'number') {
+    return (
+      <QuranComList
+        verseListing={verseListing}
+        surahId={surahId}
+        endLabel={endLabel}
+        initialVerseNumber={initialVerseNumber}
+      />
+    );
+  }
 
   return (
-    <div ref={virtualization.containerRef} className="w-full relative">
-      <VerseListBody
-        verses={verses}
-        isLoading={isLoading}
-        error={error}
-        emptyLabel={emptyLabel}
-        shouldVirtualize={virtualization.shouldVirtualize}
-        virtualItems={virtualization.virtualItems}
-        totalHeight={virtualization.virtualizer.getTotalSize()}
-        measureElement={virtualization.virtualizer.measureElement}
-        scrollMargin={virtualization.scrollMargin}
+    <InfiniteList
+      verseListing={verseListing}
+      surahId={surahId}
+      endLabel={endLabel}
+      emptyLabel={emptyLabel}
+      initialVerseKey={initialVerseKey}
+    />
+  );
+};
+
+function QuranComList({
+  verseListing,
+  surahId,
+  endLabel,
+  initialVerseNumber,
+}: {
+  verseListing: UseVerseListingReturn;
+  surahId?: number | undefined;
+  endLabel: string;
+  initialVerseNumber: number | null;
+}): React.JSX.Element {
+  const totalVerses = verseListing.totalVerses ?? 0;
+  const virtuosoRef = useRef<VirtuosoHandle>(null);
+  const [shouldReadjustScroll, setShouldReadjustScroll] = useState(false);
+
+  useEffect(() => {
+    if (!initialVerseNumber || totalVerses <= 0) return;
+    const targetIndex = Math.min(Math.max(0, initialVerseNumber - 1), totalVerses - 1);
+    virtuosoRef.current?.scrollToIndex({ index: targetIndex, align: 'center' });
+    setShouldReadjustScroll(true);
+  }, [initialVerseNumber, totalVerses]);
+
+  useEffect(() => {
+    if (!shouldReadjustScroll) return;
+    if (!initialVerseNumber || totalVerses <= 0) return;
+
+    const targetIndex = Math.min(Math.max(0, initialVerseNumber - 1), totalVerses - 1);
+    const pageNumber = Math.floor(targetIndex / verseListing.perPage) + 1;
+    const isLoaded = Boolean(verseListing.apiPageToVersesMap[pageNumber]);
+    if (!isLoaded) return;
+
+    const timeout = window.setTimeout(() => {
+      virtuosoRef.current?.scrollToIndex({ index: targetIndex, align: 'center' });
+      setShouldReadjustScroll(false);
+    }, 250);
+
+    return () => window.clearTimeout(timeout);
+  }, [
+    initialVerseNumber,
+    shouldReadjustScroll,
+    totalVerses,
+    verseListing.apiPageToVersesMap,
+    verseListing.perPage,
+  ]);
+
+  return (
+    <Virtuoso
+      ref={virtuosoRef}
+      useWindowScroll
+      totalCount={totalVerses + 1}
+      initialItemCount={1}
+      increaseViewportBy={INCREASE_VIEWPORT_BY_PX}
+      computeItemKey={(index) => (index === totalVerses ? `end:${surahId ?? 'unknown'}` : `${verseListing.resourceId}:${index + 1}`)}
+      itemContent={(index) =>
+        index === totalVerses ? (
+          <QuranComEndOfList endLabel={endLabel} surahId={surahId} />
+        ) : (
+          <QuranComVerseRow verseIdx={index} verseListing={verseListing} />
+        )
+      }
+    />
+  );
+}
+
+function InfiniteList({
+  verseListing,
+  surahId,
+  endLabel,
+  emptyLabel,
+  initialVerseKey,
+}: {
+  verseListing: UseVerseListingReturn;
+  surahId?: number | undefined;
+  endLabel: string;
+  emptyLabel: string;
+  initialVerseKey?: string | undefined;
+}): React.JSX.Element {
+  useEffect(() => {
+    if (!initialVerseKey) return;
+    const target = verseListing.verses.find((verse) => verse.verse_key === initialVerseKey);
+    if (!target) return;
+    const el = document.getElementById(`verse-${target.id}`);
+    el?.scrollIntoView({ block: 'center' });
+  }, [initialVerseKey, verseListing.verses]);
+
+  if (verseListing.error) {
+    return <ErrorState message={verseListing.error} />;
+  }
+
+  if (verseListing.verses.length === 0) {
+    return <EmptyState label={emptyLabel} />;
+  }
+
+  return (
+    <div className="w-full">
+      <Virtuoso
+        useWindowScroll
+        data={verseListing.verses}
+        initialItemCount={1}
+        increaseViewportBy={INCREASE_VIEWPORT_BY_PX}
+        computeItemKey={(index, verse) => `${verse.verse_key}:${verse.id}:${index}`}
+        itemContent={(_index, verse) => <VerseComponent verse={verse} />}
       />
       <LoadMoreFooter
-        loadMoreRef={loadMoreRef}
-        isValidating={isValidating}
-        isReachingEnd={isReachingEnd}
+        loadMoreRef={verseListing.loadMoreRef}
+        isValidating={verseListing.isValidating}
+        isReachingEnd={verseListing.isReachingEnd}
         endLabel={endLabel}
-        hasVerses={verses.length > 0}
+        hasVerses={verseListing.verses.length > 0}
         surahId={surahId}
       />
     </div>
   );
-};
+}
 
 interface LoadMoreFooterProps {
   loadMoreRef: React.RefObject<HTMLDivElement | null>;
@@ -100,7 +271,32 @@ function LoadMoreFooter({
       <div ref={loadMoreRef} className="py-4 text-center space-x-2">
         {isValidating && <Spinner className="inline h-5 w-5 text-accent" />}
       </div>
-      {isReachingEnd && surahId && <SurahNavigation currentSurahId={surahId} />}
+      {isReachingEnd ? (
+        <div className="py-10 text-center space-y-6">
+          <p className="text-muted-foreground">{endLabel}</p>
+          {surahId ? <SurahNavigation currentSurahId={surahId} /> : null}
+        </div>
+      ) : null}
     </>
   );
 }
+
+const LoadingState = (): React.JSX.Element => (
+  <div role="status" aria-label="Loading" className="w-full">
+    <VerseSkeleton index={0} />
+    <VerseSkeleton index={1} />
+    <VerseSkeleton index={2} />
+    <VerseSkeleton index={3} />
+    <VerseSkeleton index={4} />
+  </div>
+);
+
+const ErrorState = ({ message }: { message: string }): React.JSX.Element => (
+  <div className="text-center py-20 text-status-error bg-status-error/10 p-4 rounded-lg">
+    {message}
+  </div>
+);
+
+const EmptyState = ({ label }: { label: string }): React.JSX.Element => (
+  <div className="text-center py-20 text-muted">{label}</div>
+);

@@ -27,9 +27,7 @@ jest.mock('@/app/(features)/surah/hooks/useInfiniteVerseLoader', () => ({
 }));
 
 let mockActiveVerse = verses[0];
-const setActiveVerse = jest.fn((v) => {
-  mockActiveVerse = v as Verse;
-});
+const setActiveVerse = jest.fn();
 const openPlayer = jest.fn();
 
 // Minimal runtime patches are no longer needed due to safe defaults in the hook implementation.
@@ -55,6 +53,18 @@ describe('useVerseListing', () => {
   beforeAll(() => {
     useVerseListing = require('@/app/(features)/surah/hooks/useVerseListing').useVerseListing;
   });
+
+  beforeEach(() => {
+    mockActiveVerse = verses[0];
+    setActiveVerse.mockImplementation((value) => {
+      if (typeof value === 'function') {
+        mockActiveVerse = (value as (prev: Verse | null) => Verse | null)(mockActiveVerse) as Verse;
+        return;
+      }
+      mockActiveVerse = value as Verse;
+    });
+  });
+
   it('handles next and previous navigation', () => {
     const { result, rerender } = renderHook(() =>
       useVerseListing({ id: '1', lookup: jest.fn(), initialVerses: verses })
@@ -65,7 +75,7 @@ describe('useVerseListing', () => {
       const moved = result.current.handleNext();
       expect(moved).toBe(true);
     });
-    expect(setActiveVerse).toHaveBeenNthCalledWith(1, verses[1]);
+    expect(mockActiveVerse).toBe(verses[1]);
 
     // Simulate audio context reflecting the new active verse
     mockActiveVerse = verses[1];
@@ -74,7 +84,7 @@ describe('useVerseListing', () => {
     act(() => {
       result.current.handlePrev();
     });
-    expect(setActiveVerse).toHaveBeenNthCalledWith(2, verses[0]);
+    expect(mockActiveVerse).toBe(verses[0]);
     expect(openPlayer).toHaveBeenCalledTimes(2);
   });
 });
