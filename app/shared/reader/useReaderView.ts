@@ -3,10 +3,7 @@
 import { useMemo } from 'react';
 
 import { useSurahPanels, useVerseListing } from '@/app/(features)/surah/hooks';
-import {
-  useMushafReadingView,
-  type MushafResourceKind,
-} from '@/app/(features)/surah/hooks/useMushafReadingView';
+import { type MushafResourceKind } from '@/app/(features)/surah/hooks/mushafReadingViewTypes';
 import { MUSHAF_OPTIONS } from '@/data/mushaf/options';
 
 import type { UseVerseListingParams } from '@/app/(features)/surah/hooks/useVerseListing';
@@ -14,7 +11,14 @@ import type { UseVerseListingParams } from '@/app/(features)/surah/hooks/useVers
 type UseReaderViewReturn = {
   verseListing: ReturnType<typeof useVerseListing>;
   panels: ReturnType<typeof useSurahPanels>;
-  mushafView: ReturnType<typeof useMushafReadingView>;
+  mushafParams: {
+    initialPageNumber?: number | undefined;
+    chapterId?: number | undefined;
+    juzNumber?: number | undefined;
+    reciterId?: number | undefined;
+    wordByWordLocale?: string | undefined;
+    translationIds?: string | undefined;
+  };
 };
 
 interface UseReaderViewParams {
@@ -98,19 +102,18 @@ export const useReaderView = ({
     verseListing.settings.translationIds
   );
 
-  const mushafView = useMushafReadingView({
-    resourceId,
-    resourceKind,
-    ...(verseListing.settings.mushafId ? { mushafId: verseListing.settings.mushafId } : {}),
-    ...(typeof initialMushafPageNumber === 'number'
-      ? { initialPageNumber: initialMushafPageNumber }
-      : {}),
-    ...(typeof mushafChapterId === 'number' ? { chapterId: mushafChapterId } : {}),
-    ...(typeof mushafJuzNumber === 'number' ? { juzNumber: mushafJuzNumber } : {}),
-    ...(typeof verseListing.reciter?.id === 'number' ? { reciterId: verseListing.reciter.id } : {}),
-    wordByWordLocale: verseListing.settings.wordLang,
-    ...(translationIdsParam ? { translationIds: translationIdsParam } : {}),
-  });
-
-  return { verseListing, panels, mushafView };
+  return {
+    verseListing,
+    panels,
+    mushafParams: {
+      ...(typeof initialMushafPageNumber === 'number'
+        ? { initialPageNumber: initialMushafPageNumber }
+        : {}),
+      ...(typeof mushafChapterId === 'number' ? { chapterId: mushafChapterId } : {}),
+      ...(typeof mushafJuzNumber === 'number' ? { juzNumber: mushafJuzNumber } : {}),
+      ...(typeof verseListing.reciter?.id === 'number' ? { reciterId: verseListing.reciter.id } : {}),
+      wordByWordLocale: verseListing.settings.wordLang,
+      ...(translationIdsParam ? { translationIds: translationIdsParam } : {}),
+    },
+  };
 };

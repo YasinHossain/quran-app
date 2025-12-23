@@ -55,6 +55,16 @@ export interface ReadingViewRequestParams {
    * Optional comma-separated list of translation resource IDs.
    */
   translationIds?: string;
+
+  /**
+   * Restrict verses returned to a specific range (verse keys).
+   */
+  from?: string;
+
+  /**
+   * Restrict verses returned to a specific range (verse keys).
+   */
+  to?: string;
 }
 
 interface ReadingViewApiResponse {
@@ -75,6 +85,8 @@ export const getReadingViewPage = async ({
   reciterId,
   wordByWordLocale,
   translationIds,
+  from,
+  to,
 }: ReadingViewRequestParams): Promise<MushafVerse[]> => {
   const params: Record<string, string> = {
     words: 'true',
@@ -95,6 +107,14 @@ export const getReadingViewPage = async ({
 
   if (typeof reciterId === 'number') {
     params['reciter'] = String(reciterId);
+  }
+
+  if (from) {
+    params['from'] = from;
+  }
+
+  if (to) {
+    params['to'] = to;
   }
 
   const data = await apiFetch<ReadingViewApiResponse>(

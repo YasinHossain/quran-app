@@ -13,7 +13,7 @@ import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
 import { ReaderAudioProps, WorkspaceReaderLayout } from './ReaderLayouts';
 import { useReaderView } from './useReaderView';
 
-import type { MushafResourceKind } from '@/app/(features)/surah/hooks/useMushafReadingView';
+import type { MushafResourceKind } from '@/app/(features)/surah/hooks/mushafReadingViewTypes';
 import type { LookupFn, UseVerseListingParams } from '@/app/(features)/surah/hooks/useVerseListing';
 
 type ReaderViewState = ReturnType<typeof useReaderView>;
@@ -158,7 +158,7 @@ export function ReaderShell({
     ...(initialVersesParams ? { initialVersesParams } : {}),
     ...(typeof initialVerseNumber === 'number' ? { initialVerseNumber } : {}),
   });
-  const { verseListing, panels, mushafView } = readerView;
+  const { verseListing, panels, mushafParams } = readerView;
   const initialModeRef = useRef(initialMode);
 
   useEffect(() => {
@@ -212,13 +212,19 @@ export function ReaderShell({
     <MushafMain
       mushafName={panels.selectedMushafName ?? 'Mushaf view'}
       mushafId={panels.selectedMushafId}
-      pages={mushafView.pages}
+      resourceId={resourceId}
+      resourceKind={resourceKind}
+      {...(typeof mushafParams.initialPageNumber === 'number'
+        ? { initialPageNumber: mushafParams.initialPageNumber }
+        : {})}
+      {...(typeof initialVerseKey === 'string' ? { initialVerseKey } : {})}
       chapterId={chapterId}
-      isLoading={mushafView.isLoading}
-      isLoadingMore={mushafView.isLoadingMore}
-      hasMore={mushafView.hasMore}
-      onLoadMore={mushafView.loadMore}
-      error={mushafView.error}
+      {...(typeof mushafParams.juzNumber === 'number' ? { juzNumber: mushafParams.juzNumber } : {})}
+      {...(typeof mushafParams.reciterId === 'number'
+        ? { reciterId: mushafParams.reciterId }
+        : {})}
+      {...(mushafParams.wordByWordLocale ? { wordByWordLocale: mushafParams.wordByWordLocale } : {})}
+      {...(mushafParams.translationIds ? { translationIds: mushafParams.translationIds } : {})}
       endLabelKey={endLabelKey}
     />
   );

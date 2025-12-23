@@ -107,6 +107,18 @@ const SurahIntroBismillah = ({ showBismillah }: { showBismillah: boolean }): Rea
   </div>
 );
 
+const SurahIntroSummary = ({
+  translatedName,
+  versesCount,
+}: Pick<SurahIntroDetails, 'translatedName' | 'versesCount'>): React.JSX.Element => (
+  <div className="flex flex-col items-center gap-1 text-center">
+    <p className="text-base font-semibold text-foreground sm:text-lg">{translatedName}</p>
+    {typeof versesCount === 'number' ? (
+      <p className="text-sm text-muted-foreground">{`${versesCount} Verses`}</p>
+    ) : null}
+  </div>
+);
+
 const SurahTitleBlock = ({ chapterId }: { chapterId: number }): React.JSX.Element => (
   <div className="flex items-center justify-center">
     <div className="relative h-16 w-36 sm:h-20 sm:w-full sm:max-w-[15rem]">
@@ -134,7 +146,13 @@ export const SurahCalligraphyIntro = ({
         </div>
 
         <div className="order-2 w-full sm:order-2 sm:w-auto">
-          <SurahIntroBismillah showBismillah={introDetails.showBismillah} />
+          <div className="flex flex-col items-center gap-3">
+            <SurahIntroBismillah showBismillah={introDetails.showBismillah} />
+            <SurahIntroSummary
+              translatedName={introDetails.translatedName}
+              versesCount={introDetails.versesCount}
+            />
+          </div>
         </div>
 
         <div className="order-1 sm:order-3 sm:w-auto">

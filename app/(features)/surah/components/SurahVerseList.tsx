@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { SurahNavigation } from '@/app/(features)/surah/components/SurahNavigation';
 import { useDedupedFetchVerse } from '@/app/(features)/surah/hooks/verse-listing/useDedupedFetchVerse';
+import { LoadingStatus } from '@/app/shared/LoadingStatus';
 import { Spinner } from '@/app/shared/Spinner';
 
 import { Verse as VerseComponent } from './VerseCard';
@@ -285,13 +286,13 @@ function LoadMoreFooter({
 }
 
 const LoadingState = (): React.JSX.Element => (
-  <div role="status" aria-label="Loading" className="w-full">
+  <LoadingStatus>
     <VerseSkeleton index={0} />
     <VerseSkeleton index={1} />
     <VerseSkeleton index={2} />
     <VerseSkeleton index={3} />
     <VerseSkeleton index={4} />
-  </div>
+  </LoadingStatus>
 );
 
 const ErrorState = ({ message }: { message: string }): React.JSX.Element => (

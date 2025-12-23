@@ -1,16 +1,18 @@
 import type { useSettings } from '@/app/providers/SettingsContext';
-import type { MushafPageLines } from '@/types';
+import type { MushafResourceKind } from '@/app/(features)/surah/hooks/mushafReadingViewTypes';
 
 export interface MushafMainProps {
   mushafName: string;
   mushafId?: string | undefined;
-  pages: MushafPageLines[];
+  resourceId: string;
+  resourceKind: MushafResourceKind;
+  initialPageNumber?: number | undefined;
+  initialVerseKey?: string | undefined;
   chapterId?: number | null | undefined;
-  isLoading: boolean;
-  isLoadingMore?: boolean;
-  hasMore?: boolean;
-  onLoadMore?: (() => void) | undefined;
-  error: string | null;
+  juzNumber?: number | null | undefined;
+  reciterId?: number | undefined;
+  wordByWordLocale?: string | undefined;
+  translationIds?: string | undefined;
   endLabelKey?: string | undefined;
 }
 
