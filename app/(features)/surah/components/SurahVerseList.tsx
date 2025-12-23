@@ -62,6 +62,7 @@ export const SurahVerseList = ({
         virtualItems={virtualization.virtualItems}
         totalHeight={virtualization.virtualizer.getTotalSize()}
         measureElement={virtualization.virtualizer.measureElement}
+        scrollMargin={virtualization.scrollMargin}
       />
       <LoadMoreFooter
         loadMoreRef={loadMoreRef}

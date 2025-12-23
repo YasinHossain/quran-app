@@ -6,6 +6,7 @@ import { Verse as VerseComponent } from './VerseCard';
 
 import type { Verse as VerseType } from '@/types';
 import type { VirtualItem } from '@tanstack/react-virtual';
+
 interface VerseListBodyProps {
   verses: VerseType[];
   isLoading: boolean;
@@ -15,6 +16,7 @@ interface VerseListBodyProps {
   virtualItems: VirtualItem[];
   totalHeight: number;
   measureElement: (element: Element | null) => void;
+  scrollMargin?: number;
 }
 
 export const VerseListBody = ({
@@ -26,6 +28,7 @@ export const VerseListBody = ({
   virtualItems,
   totalHeight,
   measureElement,
+  scrollMargin = 0,
 }: VerseListBodyProps): React.JSX.Element => {
   if (isLoading) return <LoadingState />;
   if (error) return <ErrorState message={error} />;
@@ -37,6 +40,7 @@ export const VerseListBody = ({
         virtualItems={virtualItems}
         totalHeight={totalHeight}
         measureElement={measureElement}
+        scrollMargin={scrollMargin}
       />
     );
   }
@@ -48,37 +52,64 @@ const VirtualizedList = ({
   virtualItems,
   totalHeight,
   measureElement,
+  scrollMargin,
 }: {
   verses: VerseType[];
   virtualItems: VirtualItem[];
   totalHeight: number;
   measureElement: (element: Element | null) => void;
-}): React.JSX.Element => (
-  <div style={{ height: totalHeight, position: 'relative' }}>
-    {virtualItems.map((item) => {
-      const verse = verses[item.index];
-      if (!verse) return null;
+  scrollMargin: number;
+}): React.JSX.Element => {
+  // For useWindowVirtualizer, item.start includes scrollMargin
+  // We need to subtract it for correct positioning within the container
+  const offsetTop = virtualItems[0]?.start ?? 0;
 
-      return (
-        <div
-          key={item.key}
-          data-index={item.index}
-          ref={measureElement}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            transform: `translateY(${item.start}px)`,
-          }}
-          className=""
-        >
-          <VerseComponent verse={verse} />
-        </div>
-      );
-    })}
-  </div>
-);
+  return (
+    <div
+      style={{
+        height: totalHeight,
+        width: '100%',
+        position: 'relative',
+      }}
+    >
+      {/* Inner container positioned based on first visible item */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          // Offset by the first visible item's position minus scrollMargin
+          transform: `translateY(${offsetTop - scrollMargin}px)`,
+        }}
+      >
+        {virtualItems.map((item) => {
+          const verse = verses[item.index];
+          if (!verse) return null;
+
+          return (
+            <div
+              key={item.key}
+              data-index={item.index}
+              ref={measureElement}
+              style={{
+                // Each item is positioned relative to the inner container
+                // item.start - offsetTop gives position relative to first visible item
+                transform: `translateY(${item.start - offsetTop}px)`,
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+              }}
+            >
+              <VerseComponent verse={verse} />
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
 
 const StaticList = ({ verses }: { verses: VerseType[] }): React.JSX.Element => (
   <>
@@ -103,3 +134,4 @@ const ErrorState = ({ message }: { message: string }): React.JSX.Element => (
 const EmptyState = ({ label }: { label: string }): React.JSX.Element => (
   <div className="text-center py-20 text-muted">{label}</div>
 );
+

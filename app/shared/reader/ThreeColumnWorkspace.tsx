@@ -28,8 +28,6 @@ interface ThreeColumnWorkspaceProps {
   leftContainerClassName?: string;
   rightContainerClassName?: string;
   centerContainerClassName?: string;
-  /** When true, uses body scrolling for touch mobile (enables Chrome address bar auto-hide) */
-  isTouchMobile?: boolean;
 }
 
 export function ThreeColumnWorkspace({
@@ -40,30 +38,24 @@ export function ThreeColumnWorkspace({
   leftContainerClassName,
   rightContainerClassName,
   centerContainerClassName,
-  isTouchMobile = false,
 }: ThreeColumnWorkspaceProps): React.JSX.Element {
-  // ARCHITECTURE NOTE:
-  // We explicitly set isRootHeaderAware to false and remove padding from the root container.
-  // This allows the center content (WorkspaceMain) to scroll BEHIND the transparent glass header.
-  // Sidebars use MARGIN (not padding) to position themselves below the header.
-  // This ensures the entire sidebar (including background/borders) moves/slides with the header.
+  // ARCHITECTURE NOTE for Body Scrolling (like Quran.com):
+  // - The page uses body scrolling, so scrollbar is on the right edge of browser
+  // - Sidebars use `position: fixed` to stay in place while main content scrolls
+  // - Header slides up/down based on scroll direction
   const { isHidden } = useHeaderVisibility();
   const hasLeftSidebar = Boolean(left);
   const hasRightSidebar = Boolean(right);
 
-  const sidebarMarginClass = isHidden
-    ? 'mt-[calc(var(--reader-safe-area-top))]'
-    : 'mt-[calc(var(--reader-header-height)+var(--reader-safe-area-top))]';
+  // Sidebar positioning: fixed with top offset based on header visibility
+  const sidebarTopClass = isHidden
+    ? 'top-[var(--reader-safe-area-top)]'
+    : 'top-[calc(var(--reader-header-height)+var(--reader-safe-area-top))]';
 
+  // Sidebar height: viewport minus header (when visible) and safe area
   const sidebarHeightClass = isHidden
     ? 'h-[calc(100dvh-var(--reader-safe-area-top))]'
     : 'h-[calc(100dvh-var(--reader-header-height)-var(--reader-safe-area-top))]';
-
-  // On touch mobile, use min-height instead of fixed height so body can scroll
-  // This enables Chrome's address bar auto-hide on mobile phones
-  const rootHeightClass = isTouchMobile
-    ? 'min-h-[100dvh]'
-    : 'h-[100dvh]';
 
   const workspaceValue = useMemo<WorkspaceColumnsContextValue>(
     () => ({
@@ -77,17 +69,18 @@ export function ThreeColumnWorkspace({
   return (
     <WorkspaceColumnsContext.Provider value={workspaceValue}>
       <div
-        className={cn('relative flex w-full bg-background text-foreground', rootHeightClass, className)}
+        className={cn('relative flex w-full bg-background text-foreground workspace-root-height', className)}
         data-slot="workspace-root"
       >
+        {/* Fixed Left Sidebar - positioned after the 64px icon sidebar */}
         {left ? (
           <aside
             className={cn(
-              'hidden xl:flex xl:w-reader-sidebar-left xl:flex-shrink-0 xl:flex-col xl:gap-4',
-              'xl:relative xl:z-10',
+              'hidden xl:flex xl:w-reader-sidebar-left xl:flex-col xl:gap-4',
+              'xl:fixed xl:left-16 xl:z-10',
               'workspace-sidebar-left',
               'transition-all duration-300',
-              sidebarMarginClass,
+              sidebarTopClass,
               sidebarHeightClass,
               leftContainerClassName
             )}
@@ -97,21 +90,29 @@ export function ThreeColumnWorkspace({
           </aside>
         ) : null}
 
+        {/* Main content area - reserves space for fixed sidebars and icon sidebar */}
         <div
-          className={cn('flex min-h-0 min-w-0 flex-1 flex-col', centerContainerClassName)}
+          className={cn(
+            'flex min-w-0 flex-1 flex-col',
+            // Account for icon sidebar (64px) + left sidebar on xl screens
+            hasLeftSidebar && 'xl:ml-[calc(4rem+var(--reader-sidebar-width-left))]',
+            hasRightSidebar && '2xl:mr-reader-sidebar-right',
+            centerContainerClassName
+          )}
           data-slot="workspace-center"
         >
           {center}
         </div>
 
+        {/* Fixed Right Sidebar - stays in place while content scrolls */}
         {right ? (
           <aside
             className={cn(
-              'hidden 2xl:flex 2xl:w-reader-sidebar-right 2xl:flex-shrink-0 2xl:flex-col 2xl:gap-4',
-              '2xl:relative 2xl:z-10',
+              'hidden 2xl:flex 2xl:w-reader-sidebar-right 2xl:flex-col 2xl:gap-4',
+              '2xl:fixed 2xl:right-0 2xl:z-10',
               'workspace-sidebar-right',
               'transition-all duration-300',
-              sidebarMarginClass,
+              sidebarTopClass,
               sidebarHeightClass,
               rightContainerClassName
             )}
@@ -124,4 +125,3 @@ export function ThreeColumnWorkspace({
     </WorkspaceColumnsContext.Provider>
   );
 }
-

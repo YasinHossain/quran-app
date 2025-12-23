@@ -16,7 +16,8 @@ interface UseInitialVerseScrollParams {
   initialVerseKey?: string | undefined;
   verses: VerseType[];
   shouldVirtualize: boolean;
-  virtualizer: Virtualizer<HTMLElement, Element>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  virtualizer: Virtualizer<any, Element>;
   containerRef: RefObject<HTMLDivElement | null>;
   scrollParentRef: MutableRefObject<HTMLElement | null>;
 }
@@ -42,7 +43,8 @@ function scrollDomToVerse({ verses, index, containerRef, scrollParentRef }: Scro
 }
 
 function scrollWithVirtualizer(
-  virtualizer: Virtualizer<HTMLElement, Element>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  virtualizer: Virtualizer<any, Element>,
   index: number
 ): boolean {
   virtualizer.scrollToIndex(index, { align: 'center' });

@@ -199,34 +199,23 @@
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Desktop and tablets: use container scrolling (overflow hidden on body) */
-  @media (pointer: fine),
-  (min-width: 768px) {
-
-    html,
-    body {
-      overflow: hidden;
-    }
+  /* Body scrolling everywhere (like Quran.com) - enables Chrome address bar auto-hide on mobile */
+  html {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: auto;
+    min-height: 100%;
   }
 
-  /* Touch mobile phones: allow body scroll for Chrome address bar auto-hide */
-  @media (pointer: coarse) and (max-width: 767px) {
-    html {
-      overflow: hidden;
-      overflow-y: auto;
-    }
-
-    body {
-      overflow: visible;
-      overflow-y: auto;
-      height: auto;
-      min-height: 100%;
-    }
+  body {
+    overflow: visible;
+    overflow-y: auto;
+    height: auto;
+    min-height: 100%;
   }
 
   /* Focus visible improvements for better keyboard navigation */
@@ -283,6 +272,18 @@
   .card {
     @apply rounded-lg p-4 shadow-sm;
     background: rgb(var(--color-background));
+  }
+
+  /* Workspace main - content flows naturally with body scrolling */
+  .workspace-main-scroll {
+    overflow: visible;
+    /* Body handles scrolling */
+  }
+
+  /* Workspace root height - min-height allows body to grow with content */
+  .workspace-root-height {
+    min-height: 100dvh;
+    height: auto;
   }
 
   /* Desktop workspace sidebar shadows */
