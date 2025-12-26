@@ -17,4 +17,5 @@ export interface BookmarkTabProps {
 export interface PinTabProps {
   verseId: string;
   verseKey?: string;
+  onClose?: (() => void) | undefined;
 }

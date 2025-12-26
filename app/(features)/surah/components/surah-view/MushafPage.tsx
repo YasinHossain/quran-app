@@ -33,6 +33,7 @@ interface MushafPageProps {
   qcfVersion: 'v1' | 'v2';
   indopakVersion?: '15' | '16' | null;
   isFontLoaded: boolean;
+  className?: string;
 }
 
 const getMushafFontConfig = ({
@@ -89,7 +90,7 @@ const MushafPageFooter = ({
   juzNumber: number;
 }): React.JSX.Element => (
   <div className="mt-6 flex justify-center sm:mt-8">
-    <span className="inline-flex h-8 items-center justify-center rounded-full border border-border/60 bg-surface/80 px-4 text-xs font-medium text-muted shadow-sm backdrop-blur-sm">
+    <span className="inline-flex items-center justify-center rounded-xl bg-surface px-6 py-2 text-xs font-medium text-muted shadow-sm">
       <span className="tracking-widest">{`صفحة ${toArabicIndicNumber(pageNumber)}`}</span>
       <span className="mx-2 text-muted-foreground/40">•</span>
       <span>{`الجزء ${toArabicIndicNumber(juzNumber)}`}</span>
@@ -125,6 +126,7 @@ export const MushafPage = ({
   qcfVersion,
   indopakVersion,
   isFontLoaded,
+  className,
 }: MushafPageProps): React.JSX.Element => {
   const { fontSize, lineWidthDesktop } = getMushafFontConfig({
     settings,
@@ -144,7 +146,8 @@ export const MushafPage = ({
         'mx-auto w-full py-6 sm:py-8',
         isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf
           ? 'max-w-none overflow-x-auto px-8'
-          : undefined
+          : undefined,
+        className
       )}
     >
       <MushafLines
