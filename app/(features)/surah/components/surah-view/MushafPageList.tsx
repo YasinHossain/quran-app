@@ -152,7 +152,6 @@ const MushafEndOfList = ({
   surahId?: number | undefined;
 }): React.JSX.Element => (
   <div className="py-10 text-center space-y-6">
-    <p className="text-muted-foreground">{endLabel}</p>
     {surahId ? <SurahNavigation currentSurahId={surahId} /> : null}
   </div>
 );

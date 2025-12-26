@@ -33,9 +33,8 @@ const parseInitialVerseNumber = (initialVerseKey?: string): number | null => {
 const VerseSkeleton = ({ index }: { index: number }): React.JSX.Element => (
   <div
     aria-hidden="true"
-    className={`border-b border-border/60 pb-4 pt-4 md:pb-8 animate-pulse ${
-      index === 0 ? 'border-t border-border/60' : ''
-    }`}
+    className={`border-b border-border/60 pb-4 pt-4 md:pb-8 animate-pulse ${index === 0 ? 'border-t border-border/60' : ''
+      }`}
   >
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2">
@@ -54,9 +53,13 @@ const VerseSkeleton = ({ index }: { index: number }): React.JSX.Element => (
 function QuranComVerseRow({
   verseIdx,
   verseListing,
+  isLastVerse,
+  surahId,
 }: {
   verseIdx: number;
   verseListing: UseVerseListingReturn;
+  isLastVerse?: boolean;
+  surahId?: number | undefined;
 }): React.JSX.Element {
   const { verse } = useDedupedFetchVerse({
     resourceId: verseListing.resourceId ?? '',
@@ -75,7 +78,16 @@ function QuranComVerseRow({
     return <VerseSkeleton index={verseIdx} />;
   }
 
-  return <VerseComponent verse={verse} />;
+  return (
+    <>
+      <VerseComponent verse={verse} />
+      {isLastVerse && surahId ? (
+        <div className="mt-2 text-center pb-10">
+          <SurahNavigation currentSurahId={surahId} className="!py-6" />
+        </div>
+      ) : null}
+    </>
+  );
 }
 
 function QuranComEndOfList({
@@ -185,17 +197,16 @@ function QuranComList({
     <Virtuoso
       ref={virtuosoRef}
       useWindowScroll
-      totalCount={totalVerses + 1}
-      initialItemCount={1}
-      increaseViewportBy={INCREASE_VIEWPORT_BY_PX}
-      computeItemKey={(index) => (index === totalVerses ? `end:${surahId ?? 'unknown'}` : `${verseListing.resourceId}:${index + 1}`)}
-      itemContent={(index) =>
-        index === totalVerses ? (
-          <QuranComEndOfList endLabel={endLabel} surahId={surahId} />
-        ) : (
-          <QuranComVerseRow verseIdx={index} verseListing={verseListing} />
-        )
-      }
+      totalCount={totalVerses}
+      computeItemKey={(index) => `${verseListing.resourceId}:${index + 1}`}
+      itemContent={(index) => (
+        <QuranComVerseRow
+          verseIdx={index}
+          verseListing={verseListing}
+          isLastVerse={index === totalVerses - 1}
+          surahId={surahId}
+        />
+      )}
     />
   );
 }
@@ -277,7 +288,6 @@ function LoadMoreFooter({
       </div>
       {isReachingEnd ? (
         <div className="py-10 text-center space-y-6">
-          <p className="text-muted-foreground">{endLabel}</p>
           {surahId ? <SurahNavigation currentSurahId={surahId} /> : null}
         </div>
       ) : null}
