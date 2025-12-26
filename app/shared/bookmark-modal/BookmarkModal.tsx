@@ -95,6 +95,7 @@ export const BookmarkModal = memo(function BookmarkModal({
                   creating ? openCreateFolder() : closeCreateFolder()
                 }
                 onNewFolderNameChange={setNewFolderName}
+                onClose={onClose}
               />
             </ModalShell>
           </>

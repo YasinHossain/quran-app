@@ -15,6 +15,7 @@ interface TabContentProps {
   newFolderName: string;
   onToggleCreateFolder: (creating: boolean) => void;
   onNewFolderNameChange: (name: string) => void;
+  onClose?: () => void;
 }
 
 export function TabContent({
@@ -25,6 +26,7 @@ export function TabContent({
   newFolderName,
   onToggleCreateFolder,
   onNewFolderNameChange,
+  onClose,
 }: TabContentProps): JSX.Element {
   return (
     <AnimatePresence mode="wait">
@@ -37,7 +39,7 @@ export function TabContent({
           transition={{ duration: 0.2 }}
           className="flex-1 overflow-hidden min-h-0"
         >
-          <PinTab verseId={verseId} verseKey={verseKey} />
+          <PinTab verseId={verseId} verseKey={verseKey} onClose={onClose} />
         </motion.div>
       ) : (
         <motion.div

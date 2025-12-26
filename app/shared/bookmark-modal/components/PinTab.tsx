@@ -9,7 +9,7 @@ import { PinIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 
-export const PinTab = memo(function PinTab({ verseId, verseKey }: PinTabProps): React.JSX.Element {
+export const PinTab = memo(function PinTab({ verseId, verseKey, onClose }: PinTabProps): React.JSX.Element {
   const { isPinned, togglePinned } = useBookmarks();
   const isVersePinned = isPinned(verseId);
 
@@ -26,14 +26,17 @@ export const PinTab = memo(function PinTab({ verseId, verseKey }: PinTabProps): 
           </h3>
           <p className="text-sm text-muted text-center max-w-xs">
             {isVersePinned
-              ? `Verse ${verseKey || verseId} is pinned to your quick access.`
-              : `Pin verse ${verseKey || verseId} for quick access from anywhere in the app.`}
+              ? `Verse ${verseKey || verseId} is pinned to your pin verse section.`
+              : `Pin verse ${verseKey || verseId} for quick access from the pin verse section of the bookmark page.`}
           </p>
         </div>
       </div>
 
       <motion.button
-        onClick={() => togglePinned(verseId, verseKey ? { verseKey } : undefined)}
+        onClick={() => {
+          togglePinned(verseId, verseKey ? { verseKey } : undefined);
+          onClose?.();
+        }}
         className={cn(
           'px-6 py-3 rounded-lg font-medium transition-colors',
           isVersePinned

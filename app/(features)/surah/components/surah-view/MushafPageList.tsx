@@ -174,6 +174,7 @@ const MushafVirtualizedPageRow = ({
   mushafFlags,
   getPageFontFamily,
   isPageFontLoaded,
+  className,
 }: {
   pageNumber: number;
   verseRange: { from: string; to: string } | undefined;
@@ -185,6 +186,7 @@ const MushafVirtualizedPageRow = ({
   mushafFlags: MushafFlags;
   getPageFontFamily: (pageNumber: number) => string;
   isPageFontLoaded: (pageNumber: number) => boolean;
+  className?: string;
 }): React.JSX.Element => {
   const { page, isLoading, error } = useDedupedFetchMushafPage({
     pageNumber,
@@ -222,6 +224,7 @@ const MushafVirtualizedPageRow = ({
       isIndopakMushaf={mushafFlags.isIndopakMushaf}
       qcfVersion={mushafFlags.qcfVersion}
       isFontLoaded={isFontLoaded}
+      {...(className ? { className } : {})}
     />
   );
 };
@@ -375,6 +378,7 @@ export const MushafPageList = ({
               mushafFlags={mushafFlags}
               getPageFontFamily={getPageFontFamily}
               isPageFontLoaded={isPageFontLoaded}
+              {...(index === 0 ? { className: 'pt-0 sm:pt-0' } : {})}
             />
           </div>
         );
