@@ -95,7 +95,7 @@ export function ThreeColumnWorkspace({
           className={cn(
             'flex min-w-0 flex-1 flex-col',
             // Account for icon sidebar (64px) + left sidebar on xl screens
-            hasLeftSidebar && 'xl:ml-[calc(4rem+var(--reader-sidebar-width-left))]',
+            hasLeftSidebar && 'xl:ml-[var(--reader-sidebar-width-left)]',
             hasRightSidebar && '2xl:mr-reader-sidebar-right',
             centerContainerClassName
           )}
@@ -104,7 +104,7 @@ export function ThreeColumnWorkspace({
           {center}
         </div>
 
-        {/* Fixed Right Sidebar - stays in place while content scrolls */}
+        {/* Fixed Right Sidebar - TEMPORARILY CENTERED FOR DEBUGGING */}
         {right ? (
           <aside
             className={cn(

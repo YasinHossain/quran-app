@@ -24,8 +24,8 @@ export const SlideOverPanel = ({
             data-testid={testId}
             aria-hidden={!isOpen}
             className={cn(
-                'absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg bg-background text-foreground',
-                isOpen ? 'translate-x-0' : 'translate-x-full',
+                'absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out z-50 bg-background text-foreground',
+                isOpen ? 'translate-x-0 shadow-lg' : 'translate-x-full shadow-none',
                 className
             )}
         >

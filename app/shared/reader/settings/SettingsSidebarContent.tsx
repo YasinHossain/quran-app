@@ -187,7 +187,7 @@ export function SettingsSidebarContent({
   const shouldShowCloseButton = Boolean(showCloseButton && onClose);
 
   return (
-    <div className="relative flex h-full flex-col bg-background text-foreground">
+    <div className="relative flex h-full flex-col bg-background text-foreground overflow-hidden">
       <SidebarHeader
         title={title}
         titleClassName="text-mobile-lg font-semibold text-content-primary"
