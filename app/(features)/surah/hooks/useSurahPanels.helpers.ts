@@ -1,5 +1,6 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 
+import { useUIState } from '@/app/providers/UIStateContext';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 
 import type { PanelControls, SurahPanelOption } from './useSurahPanels.types';
@@ -9,9 +10,11 @@ import type { TFunction } from 'i18next';
 
 export const usePanelControls = (): PanelControls => {
   const [isTranslationPanelOpen, openTranslationPanel, closeTranslationPanel] =
-    usePanelVisibility();
-  const [isWordPanelOpen, openWordLanguagePanel, closeWordLanguagePanel] = usePanelVisibility();
-  const [isMushafPanelOpen, openMushafPanel, closeMushafPanel] = usePanelVisibility();
+    usePanelVisibility('verse:translation-panel');
+  const [isWordPanelOpen, openWordLanguagePanel, closeWordLanguagePanel] =
+    usePanelVisibility('verse:word-language-panel');
+  const [isMushafPanelOpen, openMushafPanel, closeMushafPanel] =
+    usePanelVisibility('verse:mushaf-panel');
 
   return {
     isTranslationPanelOpen,
@@ -116,9 +119,10 @@ function getSelectedMushafName(
   return mushaf?.name ?? t('select_mushaf', { defaultValue: 'Select mushaf' });
 }
 
-function usePanelVisibility(): [boolean, () => void, () => void] {
-  const [isOpen, setIsOpen] = useState(false);
-  const open = useCallback(() => setIsOpen(true), []);
-  const close = useCallback(() => setIsOpen(false), []);
+function usePanelVisibility(panelId: string): [boolean, () => void, () => void] {
+  const { isPanelOpen, openPanel, closePanel } = useUIState();
+  const isOpen = isPanelOpen(panelId);
+  const open = useCallback(() => openPanel(panelId), [openPanel, panelId]);
+  const close = useCallback(() => closePanel(panelId), [closePanel, panelId]);
   return [isOpen, open, close];
 }

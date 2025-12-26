@@ -4,7 +4,7 @@ import { memo } from 'react';
 
 import { TabButton } from './TabButton';
 
-type TabType = 'Surah' | 'Juz';
+type TabType = 'Surah' | 'Juz' | 'Page';
 
 interface TabConfig {
   id: TabType;
@@ -19,6 +19,7 @@ interface TabNavigationProps {
 const TAB_CONFIGS: TabConfig[] = [
   { id: 'Surah', label: 'Surah' },
   { id: 'Juz', label: 'Juz' },
+  { id: 'Page', label: 'Page' },
 ];
 
 /**

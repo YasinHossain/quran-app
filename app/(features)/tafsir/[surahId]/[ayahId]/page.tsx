@@ -4,7 +4,7 @@ import React from 'react';
 import { SettingsSidebar } from '@/app/(features)/surah/components';
 import { SurahWorkspaceNavigation } from '@/app/(features)/surah/components/surah-view/SurahWorkspaceNavigation';
 import { useTafsirVerseData } from '@/app/(features)/tafsir/hooks/useTafsirVerseData';
-import { useBodyScrollLock } from '@/app/providers/hooks/useBodyScrollLock';
+import { useUIState } from '@/app/providers/UIStateContext';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { ThreeColumnWorkspace, WorkspaceMain } from '@/app/shared/reader';
 import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
@@ -18,6 +18,18 @@ import { TafsirViewer } from './components/TafsirViewer';
 interface TafsirVersePageProps {
   params: Promise<{ surahId: string; ayahId: string }>;
 }
+
+const TRANSLATION_PANEL_ID = 'tafsir:translation-panel';
+const TAFSIR_PANEL_ID = 'tafsir:tafsir-panel';
+const WORD_LANGUAGE_PANEL_ID = 'tafsir:word-language-panel';
+
+const useUIPanelVisibility = (panelId: string): [boolean, () => void, () => void] => {
+  const { isPanelOpen, openPanel, closePanel } = useUIState();
+  const isOpen = isPanelOpen(panelId);
+  const open = React.useCallback(() => openPanel(panelId), [openPanel, panelId]);
+  const close = React.useCallback(() => closePanel(panelId), [closePanel, panelId]);
+  return [isOpen, open, close];
+};
 
 export default function TafsirVersePage({ params }: TafsirVersePageProps): React.JSX.Element {
   const { surahId, ayahId } = React.use(params);
@@ -35,18 +47,10 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps): React
     currentSurah,
   } = useTafsirVerseData(surahId, ayahId);
 
-  const [isTranslationPanelOpen, setIsTranslationPanelOpen] = React.useState(false);
-  const [isTafsirPanelOpen, setIsTafsirPanelOpen] = React.useState(false);
-  const [isWordPanelOpen, setIsWordPanelOpen] = React.useState(false);
-
-  const openTranslationPanel = React.useCallback(() => setIsTranslationPanelOpen(true), []);
-  const closeTranslationPanel = React.useCallback(() => setIsTranslationPanelOpen(false), []);
-  const openTafsirPanel = React.useCallback(() => setIsTafsirPanelOpen(true), []);
-  const closeTafsirPanel = React.useCallback(() => setIsTafsirPanelOpen(false), []);
-  const openWordPanel = React.useCallback(() => setIsWordPanelOpen(true), []);
-  const closeWordPanel = React.useCallback(() => setIsWordPanelOpen(false), []);
-
-  useBodyScrollLock(true);
+  const [isTranslationPanelOpen, openTranslationPanel, closeTranslationPanel] =
+    useUIPanelVisibility(TRANSLATION_PANEL_ID);
+  const [isTafsirPanelOpen, openTafsirPanel, closeTafsirPanel] = useUIPanelVisibility(TAFSIR_PANEL_ID);
+  const [isWordPanelOpen, openWordPanel, closeWordPanel] = useUIPanelVisibility(WORD_LANGUAGE_PANEL_ID);
 
   return (
     <>
