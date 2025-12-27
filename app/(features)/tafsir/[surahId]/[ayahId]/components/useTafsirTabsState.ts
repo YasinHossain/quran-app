@@ -15,6 +15,9 @@ export type UseTafsirTabsStateReturn = {
   loading: Record<number, boolean>;
 };
 
+// Global variable to persist selection across navigation/remounts
+let globalLastActiveTafsirId: number | undefined;
+
 export function useTafsirTabsState(
   verseKey: string,
   tafsirIds: number[]
@@ -36,12 +39,34 @@ export function useTafsirTabsState(
   }, [tafsirIds, data]);
 
   const [activeId, setActiveId] = useState<number | undefined>(() => {
+    // Try to restore previous selection if valid
+    if (globalLastActiveTafsirId && tabs.find((t) => t.id === globalLastActiveTafsirId)) {
+      return globalLastActiveTafsirId;
+    }
     return tabs.length > 0 ? tabs[0]?.id : undefined;
   });
 
+  // Keep global state in sync
   useEffect(() => {
-    if (tabs.length > 0 && !tabs.find((t) => t.id === activeId)) {
-      setActiveId(tabs[0]!.id);
+    if (activeId) {
+      globalLastActiveTafsirId = activeId;
+    }
+  }, [activeId]);
+
+  // Handle updates to tabs (e.g. initial load)
+  useEffect(() => {
+    if (tabs.length === 0) return;
+
+    const isActiveValid = activeId && tabs.find((t) => t.id === activeId);
+
+    if (!isActiveValid) {
+      // Try to restore from global last active
+      if (globalLastActiveTafsirId && tabs.find((t) => t.id === globalLastActiveTafsirId)) {
+        setActiveId(globalLastActiveTafsirId);
+      } else {
+        // Default to first
+        setActiveId(tabs[0]!.id);
+      }
     }
   }, [tabs, activeId]);
 

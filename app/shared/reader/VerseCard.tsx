@@ -26,6 +26,7 @@ export interface ReaderVerseCardProps {
   children?: ReactNode;
   footer?: ReactNode;
   idPrefix?: string;
+  resourceLanguages?: Record<number, string>;
 }
 
 const getVariantClasses = (variant: VerseCardVariant): string => {
@@ -51,6 +52,7 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
       children,
       footer,
       idPrefix = 'verse',
+      resourceLanguages,
     },
     ref
   ) => {
@@ -85,7 +87,7 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
 
     return (
       <div id={`${idPrefix}-${verse.id}`} ref={ref} className={containerClasses}>
-        <div className="space-y-2 md:space-y-0 md:flex md:items-stretch md:gap-x-6">
+        <div className="space-y-4 md:space-y-0 md:flex md:items-stretch md:gap-x-6">
           {actions ? (
             <ResponsiveVerseActions
               {...actions}
@@ -101,21 +103,30 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
             {showArabic ? <VerseArabic verse={verse} /> : null}
 
             {showTranslations && sortedTranslations.length ? (
-              <div className="space-y-4">
-                {sortedTranslations.map((translation: Translation) => (
-                  <div key={translation.resource_id}>
-                    {translation.resource_name && (
-                      <p className="mb-2 text-xs font-normal uppercase tracking-wider text-muted-foreground">
-                        {translation.resource_name}
-                      </p>
-                    )}
-                    <p
-                      className="text-left leading-relaxed text-foreground"
-                      style={{ fontSize: `${fontSize}px` }}
-                      dangerouslySetInnerHTML={{ __html: sanitizeHtml(translation.text) }}
-                    />
-                  </div>
-                ))}
+              <div className="space-y-6">
+                {sortedTranslations.map((translation: Translation) => {
+                  const lang = resourceLanguages?.[translation.resource_id];
+                  const isEnglish = lang === 'en';
+                  return (
+                    <div key={translation.resource_id} className="group">
+                      {translation.resource_name && (
+                        <p className="mb-2 text-xs font-normal uppercase tracking-wider text-muted-foreground">
+                          {translation.resource_name}
+                        </p>
+                      )}
+                      <p
+                        className={cn(
+                          "text-left leading-relaxed text-slate-900 dark:text-slate-50",
+                          isEnglish ? "font-[family-name:var(--font-crimson-text)]" : ""
+                        )}
+                        lang={lang}
+                        dir="auto"
+                        style={{ fontSize: `${fontSize}px` }}
+                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(translation.text) }}
+                      />
+                    </div>
+                  );
+                })}
               </div>
             ) : null}
 

@@ -263,6 +263,13 @@
   [lang='bn'] {
     font-family: var(--font-noto-sans-bengali), 'Noto Sans Bengali', sans-serif !important;
   }
+
+  [lang='ur'] {
+    font-family: var(--font-nastaliq), 'Noto Nastaliq Urdu', serif !important;
+    line-height: 2 !important;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
 }
 
 @layer components {

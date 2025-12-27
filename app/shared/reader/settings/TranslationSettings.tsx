@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { CollapsibleSection } from '@/app/(features)/surah/components/CollapsibleSection';
 import { useSettings } from '@/app/providers/SettingsContext';
+import { useTheme } from '@/app/providers/ThemeContext';
 import { TranslationIcon } from '@/app/shared/icons';
 import { SelectionBox } from '@/app/shared/SelectionBox';
 
@@ -76,8 +77,8 @@ function ToggleRow({
       <button
         onClick={onToggle}
         className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-300 outline-none ring-0 focus:ring-0 focus:ring-offset-0 focus:outline-none ${active
-            ? 'bg-accent shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]'
-            : 'bg-gray-200 dark:bg-gray-700 shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]'
+          ? 'bg-accent shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]'
+          : 'bg-gray-200 dark:bg-gray-700 shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]'
           }`}
         aria-pressed={active}
       >
@@ -111,15 +112,21 @@ function ReadingSettingsContent({
   onWordLanguagePanelOpen: () => void;
   idPrefix?: string;
 }): React.JSX.Element {
+  const { theme, setTheme } = useTheme();
+
+  const toggleTheme = React.useCallback((): void => {
+    const html = document.documentElement;
+    if (html.classList.contains('dark')) {
+      html.classList.remove('dark');
+      setTheme('light');
+    } else {
+      html.classList.add('dark');
+      setTheme('dark');
+    }
+  }, [setTheme]);
+
   return (
     <div className="space-y-4">
-      <ToggleRow
-        label={t('show_word_by_word')}
-        active={settings.showByWords}
-        onToggle={toggleShowByWords}
-      />
-      <ToggleRow label={t('apply_tajweed')} active={settings.tajweed} onToggle={toggleTajweed} />
-
       <SelectionBox
         {...(idPrefix ? { id: `${idPrefix}-translations` } : {})}
         label={t('translations')}
@@ -133,6 +140,20 @@ function ReadingSettingsContent({
         value={selectedWordLanguageName}
         onClick={onWordLanguagePanelOpen}
       />
+
+      <ToggleRow
+        label={t('show_word_by_word')}
+        active={settings.showByWords}
+        onToggle={toggleShowByWords}
+      />
+
+      <ToggleRow
+        label={t('night_mode') === 'night_mode' ? 'Night Mode' : t('night_mode')}
+        active={theme === 'dark'}
+        onToggle={toggleTheme}
+      />
+
+      <ToggleRow label={t('apply_tajweed')} active={settings.tajweed} onToggle={toggleTajweed} />
     </div>
   );
 }
