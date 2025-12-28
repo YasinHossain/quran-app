@@ -111,8 +111,11 @@ export const useTranslationSelection = (
 
   const handleReset = useCallback((): void => {
     const sahihId = findSaheehId(translations);
-    s.setSelections(sahihId !== undefined ? [sahihId] : []);
-  }, [translations, s]);
+    const resetIds = sahihId !== undefined ? [sahihId] : [];
+    s.setSelections(resetIds);
+    // Directly update settings to ensure immediate sync with verse page
+    setTranslationIds(resetIds);
+  }, [translations, s, setTranslationIds]);
 
   return {
     searchTerm: s.searchTerm,

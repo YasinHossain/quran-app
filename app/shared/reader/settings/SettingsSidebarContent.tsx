@@ -42,6 +42,9 @@ interface SettingsSidebarContentProps {
   activeReaderMode?: 'translation' | 'reading';
   readerTabsEnabled?: boolean;
   idPrefix?: string;
+  isArabicFontPanelOpen?: boolean;
+  onArabicFontPanelOpen?: () => void;
+  onArabicFontPanelClose?: () => void;
 }
 
 export function SettingsSidebarContent({
@@ -73,9 +76,15 @@ export function SettingsSidebarContent({
   activeReaderMode,
   readerTabsEnabled = true,
   idPrefix: _idPrefix,
+  isArabicFontPanelOpen: isArabicFontPanelOpenProp,
+  onArabicFontPanelOpen: onArabicFontPanelOpenProp,
+  onArabicFontPanelClose: onArabicFontPanelCloseProp,
 }: SettingsSidebarContentProps): React.JSX.Element {
   void _idPrefix;
-  const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
+  const [internalArabicFontPanelOpen, setInternalArabicFontPanelOpen] = useState(false);
+
+  const isArabicFontPanelOpen = isArabicFontPanelOpenProp ?? internalArabicFontPanelOpen;
+
   const tabsEnabled = readerTabsEnabled;
   const isMushafMode = activeReaderMode === 'reading';
   const hookTabState = useSettingsTabState(
@@ -102,8 +111,15 @@ export function SettingsSidebarContent({
   const { activeTab, handleTabChange, tabOptions } = tabState;
   const { openSections, handleSectionToggle } = useSettingsSections();
 
-  const handleArabicFontPanelOpen = useCallback(() => setIsArabicFontPanelOpen(true), []);
-  const handleArabicFontPanelClose = useCallback(() => setIsArabicFontPanelOpen(false), []);
+  const handleArabicFontPanelOpen = useCallback(() => {
+    onArabicFontPanelOpenProp?.();
+    setInternalArabicFontPanelOpen(true);
+  }, [onArabicFontPanelOpenProp]);
+
+  const handleArabicFontPanelClose = useCallback(() => {
+    onArabicFontPanelCloseProp?.();
+    setInternalArabicFontPanelOpen(false);
+  }, [onArabicFontPanelCloseProp]);
 
   const contentWrapperProps = buildContentWrapperProps(
     {

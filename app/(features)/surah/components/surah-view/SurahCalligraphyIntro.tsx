@@ -41,22 +41,13 @@ const SurahNameGraphic = ({ chapterId }: { chapterId: number }): React.JSX.Eleme
   );
 };
 type SurahIntroDetails = {
-  translatedName: string;
-  versesCount?: number | undefined;
   revelationPlace?: string | undefined;
   showBismillah: boolean;
   chapterId: number;
 };
 type SurahNavChapter = ReturnType<typeof useSurahNavigationData>['chapters'][number];
 
-const getTranslatedSurahName = (
-  chapter: SurahNavChapter | undefined,
-  fallbackChapterId: number
-): string => {
-  if (chapter?.translated_name?.name) return chapter.translated_name.name;
-  if (chapter?.name_simple) return chapter.name_simple;
-  return `Surah ${fallbackChapterId}`;
-};
+
 
 const useSurahIntroDetails = (chapterId?: number | null): SurahIntroDetails | null => {
   const { chapters } = useSurahNavigationData();
@@ -67,8 +58,6 @@ const useSurahIntroDetails = (chapterId?: number | null): SurahIntroDetails | nu
   const surahNumberLabel = chapter?.id ?? chapterId;
 
   return {
-    translatedName: getTranslatedSurahName(chapter, surahNumberLabel),
-    versesCount: chapter?.verses_count,
     revelationPlace: chapter?.revelation_place,
     showBismillah: chapterId !== 9 && chapterId !== 1,
     chapterId: surahNumberLabel,
@@ -107,17 +96,7 @@ const SurahIntroBismillah = ({ showBismillah }: { showBismillah: boolean }): Rea
   </div>
 );
 
-const SurahIntroSummary = ({
-  translatedName,
-  versesCount,
-}: Pick<SurahIntroDetails, 'translatedName' | 'versesCount'>): React.JSX.Element => (
-  <div className="flex flex-col items-center gap-1 text-center">
-    <p className="text-base font-semibold text-foreground sm:text-lg">{translatedName}</p>
-    {typeof versesCount === 'number' ? (
-      <p className="text-sm text-muted-foreground">{`${versesCount} Verses`}</p>
-    ) : null}
-  </div>
-);
+
 
 const SurahTitleBlock = ({ chapterId }: { chapterId: number }): React.JSX.Element => (
   <div className="flex items-center justify-center">
@@ -148,10 +127,6 @@ export const SurahCalligraphyIntro = ({
         <div className="order-2 w-full sm:order-2 sm:w-auto">
           <div className="flex flex-col items-center gap-3">
             <SurahIntroBismillah showBismillah={introDetails.showBismillah} />
-            <SurahIntroSummary
-              translatedName={introDetails.translatedName}
-              versesCount={introDetails.versesCount}
-            />
           </div>
         </div>
 

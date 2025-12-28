@@ -85,10 +85,10 @@ export function useVerseListing({
     Boolean(initialVersesParams) &&
     initialVersesParams?.wordLang === wordLang &&
     stableTranslationIds ===
-      (initialVersesParams?.translationIds ?? [])
-        .filter((value) => Number.isFinite(value))
-        .sort((a, b) => a - b)
-        .join(',');
+    (initialVersesParams?.translationIds ?? [])
+      .filter((value) => Number.isFinite(value))
+      .sort((a, b) => a - b)
+      .join(',');
 
   const effectiveInitialVerses = mode === 'quran-com' ? (canUseInitialVerses ? initialVerses : undefined) : initialVerses;
 
@@ -100,8 +100,8 @@ export function useVerseListing({
     error: errorState.error,
     setError: errorState.handleLoaderError,
     ...(mode === 'infinite' &&
-    typeof initialVerseNumber === 'number' &&
-    initialVerseNumber > 0
+      typeof initialVerseNumber === 'number' &&
+      initialVerseNumber > 0
       ? { targetVerseNumber: initialVerseNumber }
       : {}),
     ...(mode === 'infinite' && id !== undefined ? { id } : {}),

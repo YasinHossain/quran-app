@@ -73,16 +73,23 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
         return [];
       }
 
+      // Create a set for O(1) lookup of selected translation IDs
+      const selectedIdsSet = new Set(settings.translationIds);
+
+      // Create order map for sorting
       const orderMap = new Map<number, number>();
       settings.translationIds.forEach((id, index) => {
         orderMap.set(id, index);
       });
 
-      return [...verse.translations].sort((a, b) => {
-        const indexA = orderMap.has(a.resource_id) ? orderMap.get(a.resource_id)! : 9999;
-        const indexB = orderMap.has(b.resource_id) ? orderMap.get(b.resource_id)! : 9999;
-        return indexA - indexB;
-      });
+      // Filter to only include selected translations, then sort by order
+      return verse.translations
+        .filter((t) => selectedIdsSet.has(t.resource_id))
+        .sort((a, b) => {
+          const indexA = orderMap.get(a.resource_id) ?? 9999;
+          const indexB = orderMap.get(b.resource_id) ?? 9999;
+          return indexA - indexB;
+        });
     }, [verse.translations, settings.translationIds]);
 
     return (
