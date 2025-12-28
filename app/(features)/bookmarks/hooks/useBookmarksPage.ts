@@ -2,7 +2,6 @@ import { useRouter } from 'next/navigation';
 import { useState, useMemo } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { useBodyScrollLock } from '@/app/providers/hooks/useBodyScrollLock';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 
@@ -50,8 +49,6 @@ export const useBookmarksPage = (): UseBookmarksPageReturn => {
   const { folders } = useBookmarks();
   const [sortBy] = useState<SortKey>('recent');
   const router = useRouter();
-
-  useBodyScrollLock(true);
 
   const sortedFolders = useMemo(() => sortFolders(folders, sortBy), [folders, sortBy]);
 
