@@ -1,6 +1,7 @@
 import { MushafOption } from '@/types';
 
 export const DEFAULT_MUSHAF_ID = 'qcf-madani-v1';
+export const TAJWEED_MUSHAF_ID = 'qcf-tajweed-v4';
 
 export const MUSHAF_OPTIONS: MushafOption[] = [
   {
@@ -15,6 +16,13 @@ export const MUSHAF_OPTIONS: MushafOption[] = [
     name: 'King Fahad Complex V2',
     description: 'High-fidelity Uthmani glyph mushaf V2 (per-page QCF fonts).',
     script: 'uthmani',
+    lines: 15,
+  },
+  {
+    id: 'qcf-tajweed-v4',
+    name: 'Tajweed Colors',
+    description: 'King Fahad Complex V4 with Tajweed color-coded glyphs.',
+    script: 'tajweed',
     lines: 15,
   },
   {

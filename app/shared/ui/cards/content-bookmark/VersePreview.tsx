@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
-import { applyTajweed } from '@/lib/text/tajweed';
 
 interface VersePreviewProps {
   verseText?: string;
@@ -31,7 +30,7 @@ export const VersePreview = memo(function VersePreview({
               lineHeight: 1.8,
             }}
             dangerouslySetInnerHTML={{
-              __html: tajweed ? sanitizeHtml(applyTajweed(verseText)) : sanitizeHtml(verseText),
+              __html: sanitizeHtml(verseText),
             }}
           />
         </div>

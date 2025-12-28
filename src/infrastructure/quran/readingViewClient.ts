@@ -9,6 +9,7 @@ const API_MUSHAF_FALLBACK_ID = 2; // Madani V1 layout
 const API_MUSHAF_MAP: Record<string, number> = {
   [DEFAULT_MUSHAF_ID]: 2,
   'qcf-madani-v2': 1,
+  'qcf-tajweed-v4': 19, // QCF Tajweed V4 with color-coded glyphs
   'qpc-uthmani-hafs': 5,
   'unicode-indopak-15': 6,
   'unicode-indopak-16': 7,

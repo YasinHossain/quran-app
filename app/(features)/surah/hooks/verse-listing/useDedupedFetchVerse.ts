@@ -13,6 +13,8 @@ interface UseDedupedFetchVerseParams {
   lookup: LookupFn;
   translationIds: number[];
   wordLang: string;
+  /** When true, fetches code_v2 and page_number for Tajweed rendering */
+  tajweed?: boolean;
   initialPageVerses?: Verse[];
   setApiPageToVersesMap: React.Dispatch<React.SetStateAction<ApiPageToVersesMap>>;
   onError?: (message: string) => void;
@@ -35,6 +37,7 @@ export function useDedupedFetchVerse({
   lookup,
   translationIds,
   wordLang,
+  tajweed = false,
   initialPageVerses,
   setApiPageToVersesMap,
   onError,
@@ -43,8 +46,9 @@ export function useDedupedFetchVerse({
   const pageNumber = useMemo(() => getPageNumberFromIndex(verseIdx, perPage), [verseIdx, perPage]);
   const idxInPage = verseIdx % perPage;
 
+  // Include tajweed in the cache key so SWR refetches when tajweed changes
   const requestKey = enabled
-    ? ['verses', resourceId, translationIds.join(','), wordLang, pageNumber, perPage]
+    ? ['verses', resourceId, translationIds.join(','), wordLang, pageNumber, perPage, String(tajweed)]
     : null;
 
   const { data: versesInPage, error, isLoading } = useSWRImmutable<Verse[]>(
@@ -56,11 +60,13 @@ export function useDedupedFetchVerse({
         page: pageNumber,
         perPage,
         wordLang,
+        tajweed,
       });
       return result.verses;
     },
     {
-      ...(pageNumber === 1 && initialPageVerses ? { fallbackData: initialPageVerses } : {}),
+      // Don't use fallbackData when tajweed is true, since initial verses don't have codeV2
+      ...(pageNumber === 1 && initialPageVerses && !tajweed ? { fallbackData: initialPageVerses } : {}),
     }
   );
 
@@ -83,3 +89,4 @@ export function useDedupedFetchVerse({
     isLoading,
   };
 }
+

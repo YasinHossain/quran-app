@@ -64,6 +64,7 @@ export function useVerseListing({
 
   const stableTranslationIds = useStableTranslationIds(settingsState.settings);
   const wordLang = settingsState.settings.wordLang;
+  const tajweed = settingsState.settings.tajweed ?? false;
   const translationIds = useMemo(
     () =>
       stableTranslationIds
@@ -83,6 +84,7 @@ export function useVerseListing({
     mode === 'quran-com' &&
     Boolean(initialVerses?.length) &&
     Boolean(initialVersesParams) &&
+    !tajweed &&
     initialVersesParams?.wordLang === wordLang &&
     stableTranslationIds ===
     (initialVersesParams?.translationIds ?? [])
@@ -117,12 +119,12 @@ export function useVerseListing({
     effectiveInitialVerses?.length ? { 1: effectiveInitialVerses } : {}
   );
   const prefetchedPagesRef = useRef<Set<number>>(new Set());
-
   useEffect(() => {
     prefetchedPagesRef.current.clear();
     if (mode !== 'quran-com') return;
+
     setApiPageToVersesMap(effectiveInitialVerses?.length ? { 1: effectiveInitialVerses } : {});
-  }, [effectiveInitialVerses, mode, id, stableTranslationIds, wordLang]);
+  }, [effectiveInitialVerses, mode, id, stableTranslationIds, wordLang, tajweed, lookup, translationIds]);
 
   const prefetchVersePage = useCallback(
     async (verseNumber: number): Promise<void> => {
@@ -143,13 +145,14 @@ export function useVerseListing({
           page: pageNumber,
           perPage: VERSES_PER_PAGE,
           wordLang,
+          tajweed,
         });
         setApiPageToVersesMap((prev) => ({ ...prev, [pageNumber]: result.verses }));
       } catch (error) {
         prefetchedPagesRef.current.delete(pageNumber);
       }
     },
-    [apiPageToVersesMap, id, lookup, mode, translationIds, wordLang]
+    [apiPageToVersesMap, id, lookup, mode, translationIds, wordLang, tajweed]
   );
 
   // Keep the next verse's page warm for audio next/auto-advance.

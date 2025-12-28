@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { SurahNavigation } from '@/app/(features)/surah/components/SurahNavigation';
 import { useDedupedFetchVerse } from '@/app/(features)/surah/hooks/verse-listing/useDedupedFetchVerse';
+import { useSettings } from '@/app/providers/SettingsContext';
 import { LoadingStatus } from '@/app/shared/LoadingStatus';
 import { Spinner } from '@/app/shared/Spinner';
 
@@ -61,6 +62,9 @@ function QuranComVerseRow({
   isLastVerse?: boolean;
   surahId?: number | undefined;
 }): React.JSX.Element {
+  const { settings } = useSettings();
+  const tajweed = settings.tajweed ?? false;
+
   const { verse } = useDedupedFetchVerse({
     resourceId: verseListing.resourceId ?? '',
     verseIdx,
@@ -68,6 +72,7 @@ function QuranComVerseRow({
     lookup: verseListing.lookup,
     translationIds: verseListing.translationIds,
     wordLang: verseListing.wordLang,
+    tajweed,
     ...(verseListing.initialVerses ? { initialPageVerses: verseListing.initialVerses } : {}),
     setApiPageToVersesMap: verseListing.setApiPageToVersesMap,
     onError: verseListing.setError,

@@ -4,7 +4,6 @@ import { memo } from 'react';
 
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { stripHtml } from '@/lib/text/stripHtml';
-import { applyTajweed } from '@/lib/text/tajweed';
 
 import type { Verse, Word } from '@/types';
 
@@ -23,8 +22,9 @@ interface TajweedTextProps {
 }
 
 const TajweedText = ({ text, tajweedEnabled }: TajweedTextProps): React.JSX.Element =>
+  // tajweedEnabled prop kept for future reimplementation
   tajweedEnabled ? (
-    <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(applyTajweed(text)) }} />
+    <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(text) }} />
   ) : (
     <>{text}</>
   );

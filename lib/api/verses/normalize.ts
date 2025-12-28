@@ -5,6 +5,8 @@ export interface ApiWord {
   text: string;
   text_uthmani?: string;
   translation?: { text?: string };
+  code_v2?: string;
+  page_number?: number;
   [key: string]: unknown;
 }
 
@@ -27,14 +29,16 @@ export function normalizeVerse(raw: ApiVerse, wordLang: string = 'en'): Verse {
     ...(rest as Omit<ApiVerse, 'words'>),
     ...(wordsRaw
       ? {
-          words: wordsRaw.map(
-            (w): Word => ({
-              id: w.id,
-              uthmani: w.text_uthmani ?? w.text,
-              [wordLang]: w.translation?.text,
-            })
-          ),
-        }
+        words: wordsRaw.map(
+          (w): Word => ({
+            id: w.id,
+            uthmani: w.text_uthmani ?? w.text,
+            [wordLang]: w.translation?.text,
+            ...(w.code_v2 ? { codeV2: w.code_v2 } : {}),
+            ...(w.page_number ? { pageNumber: w.page_number } : {}),
+          })
+        ),
+      }
       : {}),
   } as unknown as Verse;
 }

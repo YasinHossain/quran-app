@@ -15,6 +15,7 @@ import { getJuzByPage } from '@/lib/utils/surah-navigation';
 import { MushafLines } from './MushafLines';
 
 import type { ReaderSettings } from './MushafMain.types';
+import type { QcfFontVersion } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import type { MushafLineGroup } from '@/types';
 import type React from 'react';
 
@@ -30,7 +31,7 @@ interface MushafPageProps {
   isQcfMushaf: boolean;
   isQpcHafsMushaf: boolean;
   isIndopakMushaf: boolean;
-  qcfVersion: 'v1' | 'v2';
+  qcfVersion: QcfFontVersion;
   indopakVersion?: '15' | '16' | null;
   isFontLoaded: boolean;
   className?: string;
@@ -48,13 +49,17 @@ const getMushafFontConfig = ({
   isQcfMushaf: boolean;
   isQpcHafsMushaf: boolean;
   isIndopakMushaf: boolean;
-  qcfVersion: 'v1' | 'v2';
+  qcfVersion: QcfFontVersion;
   indopakVersion?: '15' | '16' | null;
 }): { fontSize: string | number; lineWidthDesktop: string } => {
   const mushafScale = fontSizeToMushafScale(settings.arabicFontSize);
 
   if (isQcfMushaf) {
-    const preset = qcfVersion === 'v2' ? getQcfV2Preset(mushafScale) : getQcfV1Preset(mushafScale);
+    // V4 (Tajweed) uses the same sizing as V1
+    const preset =
+      qcfVersion === 'v2'
+        ? getQcfV2Preset(mushafScale)
+        : getQcfV1Preset(mushafScale);
     return {
       fontSize: preset.fontSize,
       lineWidthDesktop: preset.lineWidthDesktop,

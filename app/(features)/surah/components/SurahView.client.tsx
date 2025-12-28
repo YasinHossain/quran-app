@@ -52,13 +52,14 @@ export function SurahView({
   return (
     <ReaderShell
       resourceId={surahId}
-      lookup={({ id, translationIds, page, perPage, wordLang }) =>
+      lookup={({ id, translationIds, page, perPage, wordLang, tajweed }) =>
         getVersesByChapter({
           id,
           translationIds,
           page,
           perPage,
           wordLang: ensureLanguageCode(wordLang),
+          tajweed: tajweed ?? false,
         })
       }
       emptyLabelKey="no_verses_found"

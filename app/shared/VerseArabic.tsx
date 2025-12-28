@@ -1,11 +1,11 @@
 'use client';
 import * as Popover from '@radix-ui/react-popover';
-import { memo, useState } from 'react';
+import { memo, useState, useMemo } from 'react';
 
 import { VerseMarker } from '@/app/(features)/surah/components/surah-view/VerseMarker';
+import { useQcfMushafFont } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
-import { applyTajweed } from '@/lib/text/tajweed';
 import { Verse as VerseType, Word } from '@/types';
 
 import type { LanguageCode } from '@/lib/text/languageCodes';
@@ -16,8 +16,12 @@ interface WordDisplayProps {
   index: number;
   showByWords: boolean;
   wordLang: string;
-  settings: { tajweed?: boolean; arabicFontSize: number };
+  settings: { arabicFontSize: number };
   isQpcHafsFont: boolean;
+  /** When true and word.codeV2 is available, render Tajweed glyph code */
+  tajweed?: boolean;
+  /** V4 font family to use for Tajweed rendering */
+  tajweedFontFamily?: string | undefined;
 }
 
 // QPC Uthmani Hafs font lacks the U+06DF glyph, which shows up as a black circle; strip it when selected.
@@ -33,6 +37,8 @@ const WordDisplay = ({
   wordLang,
   settings,
   isQpcHafsFont,
+  tajweed = false,
+  tajweedFontFamily,
 }: WordDisplayProps): React.JSX.Element | null => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
@@ -41,14 +47,19 @@ const WordDisplay = ({
     return null;
   }
 
-  const cleanUthmani = stripUnsupportedQpcGlyphs(word.uthmani, isQpcHafsFont);
+  // Use codeV2 for Tajweed when available, otherwise fall back to uthmani
+  const useTajweed = tajweed && word.codeV2;
+  const displayText = useTajweed ? word.codeV2 : stripUnsupportedQpcGlyphs(word.uthmani, isQpcHafsFont);
 
-  if (!cleanUthmani.trim()) {
+  if (!displayText?.trim()) {
     return null;
   }
 
   const translation = word[wordLang as LanguageCode] as string | undefined;
   const hasTranslation = Boolean(translation && translation.trim());
+
+  // Style for Tajweed words - use V4 font
+  const tajweedStyle = useTajweed && tajweedFontFamily ? { fontFamily: tajweedFontFamily } : undefined;
 
   return (
     <span key={`${word.id}-${index}`} className="inline-block text-center align-middle ml-1.5 lg:ml-3">
@@ -57,6 +68,7 @@ const WordDisplay = ({
           <Popover.Trigger asChild>
             <span
               className="relative cursor-pointer inline-block outline-none bg-transparent p-0 text-inherit"
+              style={tajweedStyle}
               onPointerEnter={(e) => {
                 if (e.pointerType === 'mouse') setIsPopoverOpen(true);
               }}
@@ -64,13 +76,15 @@ const WordDisplay = ({
                 if (e.pointerType === 'mouse') setIsPopoverOpen(false);
               }}
             >
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: sanitizeHtml(
-                    settings.tajweed ? applyTajweed(cleanUthmani) : cleanUthmani
-                  ),
-                }}
-              />
+              {useTajweed ? (
+                <span>{displayText}</span>
+              ) : (
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: sanitizeHtml(displayText),
+                  }}
+                />
+              )}
             </span>
           </Popover.Trigger>
           <Popover.Portal>
@@ -88,12 +102,16 @@ const WordDisplay = ({
           </Popover.Portal>
         </Popover.Root>
       ) : (
-        <span className="inline-block">
-          <span
-            dangerouslySetInnerHTML={{
-              __html: sanitizeHtml(settings.tajweed ? applyTajweed(cleanUthmani) : cleanUthmani),
-            }}
-          />
+        <span className="inline-block" style={tajweedStyle}>
+          {useTajweed ? (
+            <span>{displayText}</span>
+          ) : (
+            <span
+              dangerouslySetInnerHTML={{
+                __html: sanitizeHtml(displayText),
+              }}
+            />
+          )}
         </span>
       )}
       {showByWords && (
@@ -111,26 +129,15 @@ const WordDisplay = ({
 // Verse text component for fallback display
 const VerseText = ({
   verseText,
-  settings,
   isQpcHafsFont,
 }: {
   verseText: string;
-  settings: { tajweed?: boolean };
   isQpcHafsFont: boolean;
 }): React.JSX.Element => {
   // Strip verse markers (U+06DD ۝, U+06DE ۞)
   const normalizedText = stripUnsupportedQpcGlyphs(verseText, isQpcHafsFont);
   const cleanText = normalizedText.replace(/[\u06DD\u06DE]/g, '');
 
-  if (settings.tajweed) {
-    return (
-      <span
-        dangerouslySetInnerHTML={{
-          __html: sanitizeHtml(applyTajweed(cleanText)),
-        }}
-      />
-    );
-  }
   return <>{cleanText}</>;
 };
 
@@ -146,16 +153,52 @@ export const VerseArabic = memo(function VerseArabic({
   const wordLang = settings.wordLang ?? 'en';
   const isQpcHafsFont = settings.arabicFontFace?.includes('UthmanicHafs1Ver18') ?? false;
   const verseText = verse.text_uthmani;
+  const tajweed = settings.tajweed ?? false;
 
   // Extract verse number from verse_key (format: "surah:verse")
   const verseNumber = verse.verse_key ? parseInt(verse.verse_key.split(':')[1] || '0', 10) : 0;
+
+  // Get unique page numbers from words for V4 font loading
+  const pageNumbers = useMemo(() => {
+    if (!tajweed || !verse.words) return [];
+    const pages = new Set<number>();
+    verse.words.forEach((word) => {
+      if (word.pageNumber) {
+        pages.add(word.pageNumber);
+      }
+    });
+    return Array.from(pages);
+  }, [tajweed, verse.words]);
+
+  // Load V4 fonts for the pages used by this verse's words
+  const { getPageFontFamily, isPageFontLoaded } = useQcfMushafFont(
+    tajweed ? pageNumbers : [],
+    'v4'
+  );
+
+  // Get the font family for a specific word based on its page
+  const getTajweedFontFamily = (word: Word): string | undefined => {
+    if (!tajweed || !word.pageNumber) return undefined;
+    if (!isPageFontLoaded(word.pageNumber)) return undefined;
+    return getPageFontFamily(word.pageNumber);
+  };
+
+  // Determine the base font - for Tajweed without page info, use first loaded page font
+  const baseFontFamily = useMemo(() => {
+    if (!tajweed) return settings.arabicFontFace;
+    const firstPage = pageNumbers[0];
+    if (typeof firstPage === 'number' && isPageFontLoaded(firstPage)) {
+      return getPageFontFamily(firstPage);
+    }
+    return settings.arabicFontFace;
+  }, [tajweed, pageNumbers, settings.arabicFontFace, getPageFontFamily, isPageFontLoaded]);
 
   return (
     <p
       dir="rtl"
       className="text-right leading-loose text-foreground"
       style={{
-        fontFamily: settings.arabicFontFace,
+        fontFamily: baseFontFamily,
         fontSize: `${settings.arabicFontSize}px`,
         lineHeight: 2.2,
       }}
@@ -186,6 +229,8 @@ export const VerseArabic = memo(function VerseArabic({
                 wordLang={wordLang}
                 settings={settings}
                 isQpcHafsFont={isQpcHafsFont}
+                tajweed={tajweed}
+                tajweedFontFamily={getTajweedFontFamily(word)}
               />
             );
           })}
@@ -193,10 +238,11 @@ export const VerseArabic = memo(function VerseArabic({
         </span>
       ) : (
         <span className="inline-flex items-center gap-2">
-          <VerseText verseText={verseText} settings={settings} isQpcHafsFont={isQpcHafsFont} />
+          <VerseText verseText={verseText} isQpcHafsFont={isQpcHafsFont} />
           {verseNumber > 0 && <VerseMarker number={verseNumber} style={{ marginBottom: 0 }} />}
         </span>
       )}
     </p>
   );
 });
+

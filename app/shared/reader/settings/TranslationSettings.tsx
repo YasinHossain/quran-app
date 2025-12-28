@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { CollapsibleSection } from '@/app/(features)/surah/components/CollapsibleSection';
@@ -8,6 +8,7 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import { useTheme } from '@/app/providers/ThemeContext';
 import { TranslationIcon } from '@/app/shared/icons';
 import { SelectionBox } from '@/app/shared/SelectionBox';
+import { DEFAULT_MUSHAF_ID, TAJWEED_MUSHAF_ID } from '@/data/mushaf/options';
 
 interface TranslationSettingsProps {
   onTranslationPanelOpen: () => void;
@@ -30,13 +31,33 @@ export const TranslationSettings = ({
 }: TranslationSettingsProps): React.JSX.Element => {
   const { settings, setSettings } = useSettings();
   const { t } = useTranslation();
+  // Store the previous mushaf ID when switching to tajweed
+  const previousMushafIdRef = useRef<string | undefined>(undefined);
 
   const toggleShowByWords = React.useCallback(() => {
     setSettings({ ...settings, showByWords: !settings.showByWords });
   }, [setSettings, settings]);
 
   const toggleTajweed = React.useCallback(() => {
-    setSettings({ ...settings, tajweed: !settings.tajweed });
+    const newTajweedState = !settings.tajweed;
+
+    if (newTajweedState) {
+      // Enabling tajweed - store current mushaf and switch to tajweed mushaf
+      previousMushafIdRef.current = settings.mushafId;
+      setSettings({
+        ...settings,
+        tajweed: true,
+        mushafId: TAJWEED_MUSHAF_ID,
+      });
+    } else {
+      // Disabling tajweed - restore previous mushaf
+      setSettings({
+        ...settings,
+        tajweed: false,
+        mushafId: previousMushafIdRef.current || DEFAULT_MUSHAF_ID,
+      });
+      previousMushafIdRef.current = undefined;
+    }
   }, [setSettings, settings]);
 
   return (

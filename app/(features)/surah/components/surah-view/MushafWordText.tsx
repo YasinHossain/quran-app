@@ -1,10 +1,10 @@
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
-import { applyTajweed } from '@/lib/text/tajweed';
 import { cn } from '@/lib/utils/cn';
 
 import { VerseMarker } from './VerseMarker';
 
 import type { ReaderSettings } from './MushafMain.types';
+import type { QcfFontVersion } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import type { MushafWord } from '@/types';
 import type React from 'react';
 
@@ -16,8 +16,9 @@ const getBaseText = (word: MushafWord, isIndopakMushaf: boolean): string =>
 const stripAyahMarkers = (text: string, isQpcHafsMushaf: boolean): string =>
   isQpcHafsMushaf ? text.replace(/[\u06DF\u06DD]/g, '') : text.replace(/\u06DD/g, '');
 
-const getGlyphCode = (word: MushafWord, qcfVersion: 'v1' | 'v2'): string | undefined =>
-  qcfVersion === 'v2' ? word.codeV2 : word.codeV1;
+// V4 (Tajweed) uses the same glyph codes as V2 (code_v2 field), with the COLRv1 color font
+const getGlyphCode = (word: MushafWord, qcfVersion: QcfFontVersion): string | undefined =>
+  qcfVersion === 'v2' || qcfVersion === 'v4' ? word.codeV2 : word.codeV1;
 
 type WordHtmlArgs = {
   isQcfMushaf: boolean;
@@ -47,7 +48,7 @@ const buildWordHtml = ({
   }
 
   if (baseText) {
-    return !isQcfMushaf && settings.tajweed ? applyTajweed(baseText) : baseText;
+    return baseText;
   }
 
   return '';
@@ -79,7 +80,7 @@ type MushafWordTextProps = {
   isQcfMushaf: boolean;
   isQpcHafsMushaf: boolean;
   isIndopakMushaf: boolean;
-  qcfVersion: 'v1' | 'v2';
+  qcfVersion: QcfFontVersion;
   isFontLoaded: boolean;
 };
 

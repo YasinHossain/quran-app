@@ -6,6 +6,7 @@ import { MushafLine } from './MushafLine';
 import { MushafReflowContent } from './MushafReflowContent';
 
 import type { ReaderSettings } from './MushafMain.types';
+import type { QcfFontVersion } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import type { MushafLineGroup } from '@/types';
 import type React from 'react';
 
@@ -15,7 +16,7 @@ type MushafLinesProps = {
   isQcfMushaf: boolean;
   isQpcHafsMushaf: boolean;
   isIndopakMushaf: boolean;
-  qcfVersion: 'v1' | 'v2';
+  qcfVersion: QcfFontVersion;
   indopakVersion?: '15' | '16' | null | undefined;
   fontSize: string | number;
   fontFamily: string;

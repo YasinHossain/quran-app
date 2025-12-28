@@ -1,5 +1,6 @@
 import type { useSettings } from '@/app/providers/SettingsContext';
 import type { MushafResourceKind } from '@/app/(features)/surah/hooks/mushafReadingViewTypes';
+import type { QcfFontVersion } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 
 export interface MushafMainProps {
   mushafName: string;
@@ -25,6 +26,7 @@ export type MushafFlags = {
   isQcfMushaf: boolean;
   isQpcHafsMushaf: boolean;
   isIndopakMushaf: boolean;
-  qcfVersion: 'v1' | 'v2';
+  isTajweedMushaf: boolean;
+  qcfVersion: QcfFontVersion;
   indopakVersion?: '15' | '16' | null;
 };

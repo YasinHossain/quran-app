@@ -42,6 +42,8 @@ export interface LookupOptions {
   page: number;
   perPage: number;
   wordLang: string;
+  /** When true, fetches code_v2 and page_number fields for Tajweed V4 font rendering */
+  tajweed?: boolean;
 }
 
 export type LookupFn = (options: LookupOptions) => Promise<{ verses: Verse[]; totalPages: number }>;

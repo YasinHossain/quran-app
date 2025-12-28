@@ -8,8 +8,10 @@ import {
   type SetStateAction,
 } from 'react';
 
+export type QcfFontVersion = 'v1' | 'v2' | 'v4';
+
 /**
- * Load King Fahad Complex (Madani V1) fonts per page using the FontFace API.
+ * Load King Fahad Complex (Madani V1/V2/V4 Tajweed) fonts per page using the FontFace API.
  * Returns a helper to resolve the family name for a page.
  */
 interface UseQcfFontResult {
@@ -19,7 +21,7 @@ interface UseQcfFontResult {
 
 export const useQcfMushafFont = (
   pageNumbers: number[],
-  version: 'v1' | 'v2' = 'v1'
+  version: QcfFontVersion = 'v1'
 ): UseQcfFontResult => {
   const [loadedMap, setLoadedMap] = useState<Record<string, boolean>>({});
   const loadingRef = useRef<Record<string, boolean>>({});
@@ -41,14 +43,23 @@ export const useQcfMushafFont = (
   return { getPageFontFamily, isPageFontLoaded };
 };
 
-const getFontFaceName = (pageNumber: number, version: 'v1' | 'v2'): string =>
+const getFontFaceName = (pageNumber: number, version: QcfFontVersion): string =>
   `p${pageNumber}-${version}`;
 
-const getFontKey = (pageNumber: number, version: 'v1' | 'v2'): string => `${version}-${pageNumber}`;
+const getFontKey = (pageNumber: number, version: QcfFontVersion): string => `${version}-${pageNumber}`;
+
+/**
+ * Get the font source URL for a given page and version.
+ * All versions use local paths. V4 fonts are proxied to qurancdn.com via Next.js rewrites.
+ */
+const getFontSource = (pageNumber: number, version: QcfFontVersion): string => {
+  // All versions now use local paths - V4 is proxied via next.config.ts rewrites
+  return `url('/fonts/quran/hafs/${version}/woff2/p${pageNumber}.woff2') format('woff2')`;
+};
 
 interface FontLoaderConfig {
   pageNumbers: number[];
-  version: 'v1' | 'v2';
+  version: QcfFontVersion;
   loadedMap: Record<string, boolean>;
   setLoadedMap: Dispatch<SetStateAction<Record<string, boolean>>>;
   loadingRef: MutableRefObject<Record<string, boolean>>;
@@ -90,7 +101,7 @@ const useQcfFontLoader = ({
             loadingRef.current[key] = false;
             return;
           }
-          const src = `url('/fonts/quran/hafs/${version}/woff2/p${pageNumber}.woff2') format('woff2')`;
+          const src = getFontSource(pageNumber, version);
           const fontFace = new FontFace(fontFaceName, src);
           fontFace.display = 'block';
           const loadedFace = await fontFace.load();
@@ -106,3 +117,4 @@ const useQcfFontLoader = ({
     });
   }, [pageNumbers, loadedMap, version, setLoadedMap, loadingRef]);
 };
+

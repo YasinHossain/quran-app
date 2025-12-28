@@ -70,7 +70,15 @@ export const useMushafChange = (
   return useCallback(
     (id: string) => {
       if (settings.mushafId === id) return;
-      setSettings({ ...settings, mushafId: id });
+
+      // Sync tajweed setting with mushaf selection
+      const isTajweedMushaf = id === 'qcf-tajweed-v4';
+
+      setSettings({
+        ...settings,
+        mushafId: id,
+        tajweed: isTajweedMushaf,
+      });
     },
     [setSettings, settings]
   );
