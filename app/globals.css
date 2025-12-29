@@ -484,7 +484,10 @@ input[type='range']::-webkit-slider-thumb {
   border: 2px solid rgb(var(--color-border));
   border-radius: 50%;
   cursor: pointer;
-  margin-top: -3px;
+  position: relative;
+  top: 50%;
+  margin-top: 0;
+  transform: translateY(-50%);
   transition:
     background 0.3s,
     box-shadow 0.3s;
