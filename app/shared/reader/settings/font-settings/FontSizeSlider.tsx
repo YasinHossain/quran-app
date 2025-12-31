@@ -8,7 +8,7 @@ interface FontSizeSliderProps {
   min: number;
   max: number;
   onChange: (value: number) => void;
-  style?: CSSProperties;
+  style: CSSProperties;
 }
 
 export function FontSizeSlider({
@@ -17,11 +17,13 @@ export function FontSizeSlider({
   min,
   max,
   onChange,
-  style: styleOverride = {},
+  style: _pStyle,
+  // we ignore the passed style for the gradient to ensure it syncs with local value
+  // but we keep the prop in the interface effectively for compatibility
 }: FontSizeSliderProps): ReactElement {
   const [isActive, setIsActive] = useState(false);
   const [internalValue, setInternalValue] = useState(value);
-  const [, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   // Sync internal value if prop changes externally
@@ -38,7 +40,7 @@ export function FontSizeSlider({
     };
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = +e.target.value;
     setInternalValue(newValue);
 
@@ -62,14 +64,6 @@ export function FontSizeSlider({
     } as CSSProperties;
   }, [internalValue, min, max]);
 
-  const sliderStyle = useMemo(
-    () => ({
-      ...styleOverride,
-      ...dynamicStyle,
-    }),
-    [dynamicStyle, styleOverride]
-  );
-
   return (
     <div>
       <div className="flex justify-between mb-1 text-sm">
@@ -88,7 +82,7 @@ export function FontSizeSlider({
         onPointerDown={() => setIsActive(true)}
         onPointerUp={() => setIsActive(false)}
         onPointerCancel={() => setIsActive(false)}
-        style={sliderStyle}
+        style={dynamicStyle}
         suppressHydrationWarning
       />
     </div>
