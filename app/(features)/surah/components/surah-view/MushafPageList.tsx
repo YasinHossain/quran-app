@@ -6,6 +6,7 @@ import { useQcfMushafFont } from '@/app/(features)/surah/hooks/useQcfMushafFont'
 import { useDedupedFetchMushafPage } from '@/app/(features)/surah/hooks/useDedupedFetchMushafPage';
 import { useMushafPagesLookup } from '@/app/(features)/surah/hooks/useMushafPagesLookup';
 import { LoadingStatus } from '@/app/shared/LoadingStatus';
+import { TajweedFontPalettes } from '@/app/shared/TajweedFontPalettes';
 
 import { MushafPage } from './MushafPage';
 
@@ -338,50 +339,53 @@ export const MushafPageList = ({
   }
 
   return (
-    <Virtuoso
-      ref={virtuosoRef}
-      useWindowScroll
-      increaseViewportBy={INCREASE_VIEWPORT_BY_PIXELS}
-      initialItemCount={1}
-      totalCount={totalPages + 1}
-      rangeChanged={setVisibleRange}
-      computeItemKey={(index) =>
-        index === totalPages
-          ? `end:${resourceKind}:${resourceId}:${mushafId}`
-          : `page:${firstPageNumber + index}`
-      }
-      itemContent={(index) => {
-        const wrapperClassName = index === 0 ? undefined : 'mt-8';
+    <>
+      <TajweedFontPalettes pageNumbers={qcfFontPageNumbers} version={mushafFlags.qcfVersion} />
+      <Virtuoso
+        ref={virtuosoRef}
+        useWindowScroll
+        increaseViewportBy={INCREASE_VIEWPORT_BY_PIXELS}
+        initialItemCount={1}
+        totalCount={totalPages + 1}
+        rangeChanged={setVisibleRange}
+        computeItemKey={(index) =>
+          index === totalPages
+            ? `end:${resourceKind}:${resourceId}:${mushafId}`
+            : `page:${firstPageNumber + index}`
+        }
+        itemContent={(index) => {
+          const wrapperClassName = index === 0 ? undefined : 'mt-8';
 
-        if (index === totalPages) {
+          if (index === totalPages) {
+            return (
+              <div className={wrapperClassName}>
+                <MushafEndOfList endLabel={endLabel} {...(surahId ? { surahId } : {})} />
+              </div>
+            );
+          }
+
+          const pageNumber = firstPageNumber + index;
+          const verseRange = lookupData.pages[pageNumber];
+
           return (
             <div className={wrapperClassName}>
-              <MushafEndOfList endLabel={endLabel} {...(surahId ? { surahId } : {})} />
+              <MushafVirtualizedPageRow
+                pageNumber={pageNumber}
+                verseRange={verseRange ? { from: verseRange.from, to: verseRange.to } : undefined}
+                mushafId={mushafId}
+                {...(typeof reciterId === 'number' ? { reciterId } : {})}
+                {...(wordByWordLocale ? { wordByWordLocale } : {})}
+                {...(translationIds ? { translationIds } : {})}
+                settings={settings}
+                mushafFlags={mushafFlags}
+                getPageFontFamily={getPageFontFamily}
+                isPageFontLoaded={isPageFontLoaded}
+                {...(index === 0 ? { className: 'pt-0 sm:pt-0' } : {})}
+              />
             </div>
           );
-        }
-
-        const pageNumber = firstPageNumber + index;
-        const verseRange = lookupData.pages[pageNumber];
-
-        return (
-          <div className={wrapperClassName}>
-            <MushafVirtualizedPageRow
-              pageNumber={pageNumber}
-              verseRange={verseRange ? { from: verseRange.from, to: verseRange.to } : undefined}
-              mushafId={mushafId}
-              {...(typeof reciterId === 'number' ? { reciterId } : {})}
-              {...(wordByWordLocale ? { wordByWordLocale } : {})}
-              {...(translationIds ? { translationIds } : {})}
-              settings={settings}
-              mushafFlags={mushafFlags}
-              getPageFontFamily={getPageFontFamily}
-              isPageFontLoaded={isPageFontLoaded}
-              {...(index === 0 ? { className: 'pt-0 sm:pt-0' } : {})}
-            />
-          </div>
-        );
-      }}
-    />
+        }}
+      />
+    </>
   );
 };

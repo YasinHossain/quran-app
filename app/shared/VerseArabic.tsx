@@ -6,6 +6,7 @@ import { VerseMarker } from '@/app/(features)/surah/components/surah-view/VerseM
 import { useQcfMushafFont } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
+import { TajweedFontPalettes } from '@/app/shared/TajweedFontPalettes';
 import { Verse as VerseType, Word } from '@/types';
 
 import type { LanguageCode } from '@/lib/text/languageCodes';
@@ -194,55 +195,58 @@ export const VerseArabic = memo(function VerseArabic({
   }, [tajweed, pageNumbers, settings.arabicFontFace, getPageFontFamily, isPageFontLoaded]);
 
   return (
-    <p
-      dir="rtl"
-      className="text-right leading-loose text-foreground"
-      style={{
-        fontFamily: baseFontFamily,
-        fontSize: `${settings.arabicFontSize}px`,
-        lineHeight: 2.2,
-      }}
-    >
-      {verse.words && verse.words.length > 0 ? (
-        <span>
-          {verse.words.map((word: Word, index: number) => {
-            // Heuristic: If the last word contains no Arabic letters (only symbols/numbers),
-            // it is likely a verse marker. Hide it to avoid duplication.
-            // Arabic letters range: \u0621-\u064A (Hamza to Yeh), plus extended characters.
-            const hasArabicLetters = /[\u0621-\u064A\u0671-\u06D3]/.test(word.uthmani);
-            const isLastWord = index === (verse.words?.length ?? 0) - 1;
+    <>
+      <TajweedFontPalettes pageNumbers={pageNumbers} version="v4" />
+      <p
+        dir="rtl"
+        className={`text-right leading-loose text-foreground${tajweed ? ' tajweed-palette' : ''}`}
+        style={{
+          fontFamily: baseFontFamily,
+          fontSize: `${settings.arabicFontSize}px`,
+          lineHeight: 2.2,
+        }}
+      >
+        {verse.words && verse.words.length > 0 ? (
+          <span>
+            {verse.words.map((word: Word, index: number) => {
+              // Heuristic: If the last word contains no Arabic letters (only symbols/numbers),
+              // it is likely a verse marker. Hide it to avoid duplication.
+              // Arabic letters range: \u0621-\u064A (Hamza to Yeh), plus extended characters.
+              const hasArabicLetters = /[\u0621-\u064A\u0671-\u06D3]/.test(word.uthmani);
+              const isLastWord = index === (verse.words?.length ?? 0) - 1;
 
-            if (isLastWord && !hasArabicLetters) {
-              return null;
-            }
+              if (isLastWord && !hasArabicLetters) {
+                return null;
+              }
 
-            // Also filter known marker characters anywhere (just in case)
-            if (word.char_type_name === 'end' || /[\u06DD\u06DE\uFD3E\uFD3F]/.test(word.uthmani)) {
-              return null;
-            }
-            return (
-              <WordDisplay
-                key={`${word.id}-${index}`}
-                word={word}
-                index={index}
-                showByWords={showByWords}
-                wordLang={wordLang}
-                settings={settings}
-                isQpcHafsFont={isQpcHafsFont}
-                tajweed={tajweed}
-                tajweedFontFamily={getTajweedFontFamily(word)}
-              />
-            );
-          })}
-          {verseNumber > 0 && <VerseMarker number={verseNumber} style={{ marginBottom: 0 }} />}
-        </span>
-      ) : (
-        <span className="inline-flex items-center gap-2">
-          <VerseText verseText={verseText} isQpcHafsFont={isQpcHafsFont} />
-          {verseNumber > 0 && <VerseMarker number={verseNumber} style={{ marginBottom: 0 }} />}
-        </span>
-      )}
-    </p>
+              // Also filter known marker characters anywhere (just in case)
+              if (word.char_type_name === 'end' || /[\u06DD\u06DE\uFD3E\uFD3F]/.test(word.uthmani)) {
+                return null;
+              }
+              return (
+                <WordDisplay
+                  key={`${word.id}-${index}`}
+                  word={word}
+                  index={index}
+                  showByWords={showByWords}
+                  wordLang={wordLang}
+                  settings={settings}
+                  isQpcHafsFont={isQpcHafsFont}
+                  tajweed={tajweed}
+                  tajweedFontFamily={getTajweedFontFamily(word)}
+                />
+              );
+            })}
+            {verseNumber > 0 && <VerseMarker number={verseNumber} style={{ marginBottom: 0 }} />}
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-2">
+            <VerseText verseText={verseText} isQpcHafsFont={isQpcHafsFont} />
+            {verseNumber > 0 && <VerseMarker number={verseNumber} style={{ marginBottom: 0 }} />}
+          </span>
+        )}
+      </p>
+    </>
   );
 });
 

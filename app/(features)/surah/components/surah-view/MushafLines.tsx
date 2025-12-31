@@ -92,7 +92,8 @@ export const MushafLines = ({
             'mushaf-standard-view flex flex-col',
             isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf
               ? 'gap-1 sm:gap-1.5 mx-auto'
-              : 'gap-4 sm:gap-5'
+              : 'gap-4 sm:gap-5',
+            isQcfMushaf && qcfVersion === 'v4' && 'tajweed-palette'
           )}
           style={
             {
@@ -122,7 +123,12 @@ export const MushafLines = ({
         </div>
 
         {/* Reflow Layout (Mobile Overflow) */}
-        <div className="mushaf-reflow-view">
+        <div
+          className={cn(
+            'mushaf-reflow-view',
+            isQcfMushaf && qcfVersion === 'v4' && 'tajweed-palette'
+          )}
+        >
           <MushafReflowContent
             lines={lines}
             settings={settings}

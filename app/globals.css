@@ -404,6 +404,13 @@
 }
 
 @layer utilities {
+  .tajweed-palette {
+    font-palette: --tajweed-light;
+  }
+
+  .dark .tajweed-palette {
+    font-palette: --tajweed-dark;
+  }
 
   /* Hero heading text using theme-aware gradient */
   .text-hero {
