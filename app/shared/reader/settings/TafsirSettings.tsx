@@ -1,13 +1,12 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { CollapsibleSection } from '@/app/(features)/surah/components/CollapsibleSection';
 import { useFontSize } from '@/app/(features)/surah/hooks/useFontSize';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { BookReaderIcon } from '@/app/shared/icons';
-import { FontSizeSlider } from '@/app/shared/reader/settings/font-settings/FontSizeSlider';
 import { SelectionBox } from '@/app/shared/SelectionBox';
 
 interface TafsirSettingsProps {
@@ -30,12 +29,6 @@ export const TafsirSettings = ({
   const { settings, setTafsirFontSize } = useSettings();
   const { t } = useTranslation();
   const { style: tafsirStyle } = useFontSize(settings.tafsirFontSize, 12, 28);
-  const handleTafsirFontSizeChange = useCallback(
-    (value: number): void => {
-      setTafsirFontSize(value);
-    },
-    [setTafsirFontSize]
-  );
 
   return (
     <>
@@ -54,14 +47,20 @@ export const TafsirSettings = ({
               value={selectedTafsirName || ''}
               onClick={() => onTafsirPanelOpen?.()}
             />
-            <FontSizeSlider
-              label={t('tafsir_font_size')}
-              value={settings.tafsirFontSize || 16}
-              min={12}
-              max={28}
-              onChange={handleTafsirFontSizeChange}
-              style={tafsirStyle}
-            />
+            <div>
+              <div className="flex justify-between mb-1 text-sm">
+                <label className="text-foreground">{t('tafsir_font_size')}</label>
+                <span className="font-semibold text-accent">{settings.tafsirFontSize || 16}</span>
+              </div>
+              <input
+                type="range"
+                min="12"
+                max="28"
+                value={settings.tafsirFontSize || 16}
+                onChange={(e) => setTafsirFontSize(+e.target.value)}
+                style={tafsirStyle}
+              />
+            </div>
           </div>
         </CollapsibleSection>
       )}
