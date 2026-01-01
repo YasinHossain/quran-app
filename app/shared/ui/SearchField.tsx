@@ -62,13 +62,13 @@ export const FontSearchField = (
 export const TranslationSearchField = (
   props: Omit<SearchFieldProps, 'placeholder'>
 ): React.JSX.Element => (
-  <SearchField {...props} placeholder="Search by name or style..." variant="panel" />
+  <SearchField {...props} placeholder="Search translations or languages..." variant="panel" />
 );
 
 export const TafsirSearchField = (
   props: Omit<SearchFieldProps, 'placeholder'>
 ): React.JSX.Element => (
-  <SearchField {...props} placeholder="Search tafsirs (exact match)..." variant="panel" />
+  <SearchField {...props} placeholder="Search tafsirs or languages..." variant="panel" />
 );
 
 export const BookmarkSearchField = (

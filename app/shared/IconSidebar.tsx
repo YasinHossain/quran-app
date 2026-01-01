@@ -20,10 +20,16 @@ interface NavItem {
 const DesktopNavigation = memo(function DesktopNavigation({
   navItems,
   linkStyles,
+  pathname,
 }: {
   navItems: NavItem[];
   linkStyles: string;
+  pathname: string;
 }) {
+  if (pathname === '/') {
+    return null;
+  }
+
   return (
     <nav
       className="fixed left-0 top-reader-header bottom-0 hidden w-16 bg-background z-[5] xl:block"
@@ -134,6 +140,7 @@ export const Navigation = memo(function Navigation() {
       <DesktopNavigation
         navItems={navItems}
         linkStyles={`${linkStyles} text-foreground hover:text-accent`}
+        pathname={pathname}
       />
       <MobileNavigation
         navItems={navItems}

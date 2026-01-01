@@ -148,18 +148,17 @@ function ReadingSettingsContent({
 
   return (
     <div className="space-y-4">
+      <ToggleRow
+        label={t('night_mode') === 'night_mode' ? 'Night Mode' : t('night_mode')}
+        active={theme === 'dark'}
+        onToggle={toggleTheme}
+      />
+
       <SelectionBox
         {...(idPrefix ? { id: `${idPrefix}-translations` } : {})}
         label={t('translations')}
         value={selectedTranslationName || 'No translation selected'}
         onClick={onTranslationPanelOpen}
-      />
-
-      <SelectionBox
-        {...(idPrefix ? { id: `${idPrefix}-wbw` } : {})}
-        label={t('word_by_word_language')}
-        value={selectedWordLanguageName}
-        onClick={onWordLanguagePanelOpen}
       />
 
       <ToggleRow
@@ -168,10 +167,11 @@ function ReadingSettingsContent({
         onToggle={toggleShowByWords}
       />
 
-      <ToggleRow
-        label={t('night_mode') === 'night_mode' ? 'Night Mode' : t('night_mode')}
-        active={theme === 'dark'}
-        onToggle={toggleTheme}
+      <SelectionBox
+        {...(idPrefix ? { id: `${idPrefix}-wbw` } : {})}
+        label={t('word_by_word_language')}
+        value={selectedWordLanguageName}
+        onClick={onWordLanguagePanelOpen}
       />
 
       <ToggleRow label={t('apply_tajweed')} active={settings.tajweed} onToggle={toggleTajweed} />
