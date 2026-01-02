@@ -261,17 +261,19 @@ export const SurahSelect = memo(
 
       if (optionEl && listRef.current) {
         const container = listRef.current;
-        const scrollOffset =
-          optionEl.offsetTop -
-          container.offsetTop -
-          container.clientHeight / 2 +
-          optionEl.clientHeight / 2;
+        const containerRect = container.getBoundingClientRect();
+        const optionRect = optionEl.getBoundingClientRect();
+        const optionOffset = optionRect.top - containerRect.top + container.scrollTop;
+        const topOffset = 8;
+        const scrollOffset = isTyping
+          ? Math.max(optionOffset - topOffset, 0)
+          : optionOffset - container.clientHeight / 2 + optionEl.clientHeight / 2;
         container.scrollTo({
           top: scrollOffset,
           behavior: 'instant', // Use instant to prevent fighting with user scroll
         });
       }
-    }, [activeIndex, open]);
+    }, [activeIndex, isTyping, open]);
 
     const toggleList = useCallback(() => {
       if (disabled || !options.length) return;
@@ -390,6 +392,13 @@ export const SurahSelect = memo(
                       </button>
                     );
                   })}
+                  {isTyping ? (
+                    <div
+                      aria-hidden="true"
+                      className="pointer-events-none"
+                      style={{ height: dropdownStyle.maxHeight }}
+                    />
+                  ) : null}
                 </div>
               </div>,
               document.body

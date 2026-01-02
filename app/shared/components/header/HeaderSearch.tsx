@@ -5,8 +5,9 @@ import {
   memo,
   type KeyboardEvent,
   type ReactElement,
-  type FocusEvent,
   useCallback,
+  useEffect,
+  useRef,
   useState,
 } from 'react';
 
@@ -18,6 +19,7 @@ export const HeaderSearch = memo(function HeaderSearch(): ReactElement {
   const router = useRouter();
   const [query, setQuery] = useState('');
   const [focused, setFocused] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const handleChange = useCallback((value: string): void => {
     setQuery(value);
@@ -48,6 +50,19 @@ export const HeaderSearch = memo(function HeaderSearch(): ReactElement {
     [router]
   );
 
+  useEffect(() => {
+    if (!focused) return;
+    const handlePointerDown = (event: PointerEvent): void => {
+      const target = event.target as HTMLElement | null;
+      if (!target) return;
+      if (containerRef.current?.contains(target)) return;
+      if (target.closest('[data-surah-select-portal]')) return;
+      setFocused(false);
+    };
+    window.addEventListener('pointerdown', handlePointerDown);
+    return () => window.removeEventListener('pointerdown', handlePointerDown);
+  }, [focused]);
+
   return (
     <div className="flex items-center justify-center flex-1 sm:flex-none sm:w-1/3">
       <div
@@ -55,12 +70,7 @@ export const HeaderSearch = memo(function HeaderSearch(): ReactElement {
         role="presentation"
         tabIndex={-1}
         onFocus={(): void => setFocused(true)}
-        onBlur={(e: FocusEvent<HTMLDivElement>): void => {
-          const next = e.relatedTarget as HTMLElement | null;
-          if (!e.currentTarget.contains(next) && !next?.closest('[data-surah-select-portal]')) {
-            setFocused(false);
-          }
-        }}
+        ref={containerRef}
       >
         <SearchInput
           value={query}
