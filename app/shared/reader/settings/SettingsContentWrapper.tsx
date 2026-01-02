@@ -13,6 +13,7 @@ export const SettingsContentWrapper = ({
   openSections,
   onSectionToggle,
   onArabicFontPanelOpen,
+  onTajweedRulesPanelOpen,
   onTranslationPanelOpen,
   onWordLanguagePanelOpen,
   onTafsirPanelOpen,
@@ -45,6 +46,7 @@ export const SettingsContentWrapper = ({
           openSections={openSections}
           onSectionToggle={onSectionToggle}
           onArabicFontPanelOpen={onArabicFontPanelOpen}
+          onTajweedRulesPanelOpen={onTajweedRulesPanelOpen}
           onTranslationPanelOpen={onTranslationPanelOpen}
           onWordLanguagePanelOpen={onWordLanguagePanelOpen}
           {...(onTafsirPanelOpen !== undefined ? { onTafsirPanelOpen } : {})}

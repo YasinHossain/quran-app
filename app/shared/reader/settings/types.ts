@@ -48,6 +48,7 @@ export interface SettingsContentProps
   openSections: string[];
   onSectionToggle: (sectionId: string) => void;
   onArabicFontPanelOpen: () => void;
+  onTajweedRulesPanelOpen?: (() => void) | undefined;
   idPrefix?: string;
   isMushafMode?: boolean;
 }
@@ -59,6 +60,7 @@ export interface SettingsContentWrapperProps {
   openSections: string[];
   onSectionToggle: (section: string) => void;
   onArabicFontPanelOpen: () => void;
+  onTajweedRulesPanelOpen?: (() => void) | undefined;
   onTranslationPanelOpen: () => void;
   onWordLanguagePanelOpen: () => void;
   onTafsirPanelOpen?: () => void;
@@ -91,5 +93,7 @@ export interface SettingsPanelsProps
   > {
   isArabicFontPanelOpen: boolean;
   onArabicFontPanelClose: () => void;
+  isTajweedRulesPanelOpen?: boolean;
+  onTajweedRulesPanelClose?: () => void;
   onCloseSidebar?: () => void;
 }

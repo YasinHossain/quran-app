@@ -17,6 +17,7 @@ export const SettingsContent = ({
   openSections,
   onSectionToggle,
   onArabicFontPanelOpen,
+  onTajweedRulesPanelOpen,
   onTranslationPanelOpen,
   onWordLanguagePanelOpen,
   onTafsirPanelOpen,
@@ -37,6 +38,7 @@ export const SettingsContent = ({
         <TranslationSettings
           onTranslationPanelOpen={onTranslationPanelOpen}
           onWordLanguagePanelOpen={onWordLanguagePanelOpen}
+          onTajweedRulesPanelOpen={onTajweedRulesPanelOpen}
           selectedTranslationName={selectedTranslationName}
           selectedWordLanguageName={selectedWordLanguageName}
           isOpen={openSections.includes('translation')}
@@ -76,7 +78,7 @@ export const SettingsContent = ({
       >
         <MushafSettings
           selectedMushafName={selectedMushafName}
-          onMushafPanelOpen={onMushafPanelOpen || (() => {})}
+          onMushafPanelOpen={onMushafPanelOpen || (() => { })}
           isOpen={openSections.includes('mushaf')}
           onToggle={() => onSectionToggle('mushaf')}
           {...(idPrefix ? { idPrefix: `${idPrefix}-mushaf` } : {})}

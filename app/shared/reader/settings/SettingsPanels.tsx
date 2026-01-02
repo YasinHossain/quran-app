@@ -7,6 +7,7 @@ import {
   TranslationPanel,
   TafsirPanel,
   MushafPanel,
+  TajweedRulesPanel,
 } from '@/app/(features)/surah/components/panels';
 import { WordLanguagePanel } from '@/app/(features)/surah/components/WordLanguagePanel';
 
@@ -28,6 +29,8 @@ export const SettingsPanels = ({
   mushafOptions,
   selectedMushafId,
   onMushafChange,
+  isTajweedRulesPanelOpen,
+  onTajweedRulesPanelClose,
   onCloseSidebar,
 }: SettingsPanelsProps): ReactElement => {
   return (
@@ -68,6 +71,14 @@ export const SettingsPanels = ({
           {...(onCloseSidebar ? { onCloseSidebar } : {})}
         />
       )}
+      {onTajweedRulesPanelClose && (
+        <TajweedRulesPanel
+          isOpen={!!isTajweedRulesPanelOpen}
+          onClose={onTajweedRulesPanelClose}
+          {...(onCloseSidebar ? { onCloseSidebar } : {})}
+        />
+      )}
     </>
   );
 };
+

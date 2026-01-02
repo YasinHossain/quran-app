@@ -16,6 +16,8 @@ export interface SettingsPanelsPropsConfig {
   mushafOptions?: MushafOption[];
   selectedMushafId?: string;
   onMushafChange?: (id: string) => void;
+  isTajweedRulesPanelOpen?: boolean;
+  onTajweedRulesPanelClose?: () => void;
 }
 
 export function buildPanelsProps(
@@ -36,6 +38,8 @@ export function buildPanelsProps(
   localState: {
     isArabicFontPanelOpen: boolean;
     onArabicFontPanelClose: () => void;
+    isTajweedRulesPanelOpen?: boolean;
+    onTajweedRulesPanelClose?: () => void;
   }
 ): SettingsPanelsPropsConfig {
   const coreProps = {

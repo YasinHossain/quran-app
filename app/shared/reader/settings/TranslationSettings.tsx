@@ -13,6 +13,7 @@ import { DEFAULT_MUSHAF_ID, TAJWEED_MUSHAF_ID } from '@/data/mushaf/options';
 interface TranslationSettingsProps {
   onTranslationPanelOpen: () => void;
   onWordLanguagePanelOpen: () => void;
+  onTajweedRulesPanelOpen?: (() => void) | undefined;
   selectedTranslationName: string;
   selectedWordLanguageName: string;
   isOpen?: boolean;
@@ -23,6 +24,7 @@ interface TranslationSettingsProps {
 export const TranslationSettings = ({
   onTranslationPanelOpen,
   onWordLanguagePanelOpen,
+  onTajweedRulesPanelOpen,
   selectedTranslationName,
   selectedWordLanguageName,
   isOpen = false,
@@ -77,6 +79,7 @@ export const TranslationSettings = ({
         selectedWordLanguageName={selectedWordLanguageName}
         onTranslationPanelOpen={onTranslationPanelOpen}
         onWordLanguagePanelOpen={onWordLanguagePanelOpen}
+        onTajweedRulesPanelOpen={onTajweedRulesPanelOpen}
         {...(idPrefix ? { idPrefix } : {})}
       />
     </CollapsibleSection>
@@ -121,6 +124,7 @@ function ReadingSettingsContent({
   selectedWordLanguageName,
   onTranslationPanelOpen,
   onWordLanguagePanelOpen,
+  onTajweedRulesPanelOpen,
   idPrefix,
 }: {
   t: (k: string) => string;
@@ -131,6 +135,7 @@ function ReadingSettingsContent({
   selectedWordLanguageName: string;
   onTranslationPanelOpen: () => void;
   onWordLanguagePanelOpen: () => void;
+  onTajweedRulesPanelOpen?: (() => void) | undefined;
   idPrefix?: string;
 }): React.JSX.Element {
   const { theme, setTheme } = useTheme();
@@ -175,6 +180,15 @@ function ReadingSettingsContent({
       />
 
       <ToggleRow label={t('apply_tajweed')} active={settings.tajweed} onToggle={toggleTajweed} />
+
+      {settings.tajweed && onTajweedRulesPanelOpen && (
+        <SelectionBox
+          {...(idPrefix ? { id: `${idPrefix}-tajweed-rules` } : {})}
+          label={t('tajweed_colors') === 'tajweed_colors' ? 'Tajweed Colors' : t('tajweed_colors')}
+          value={t('view_color_rules') === 'view_color_rules' ? 'View Color Rules' : t('view_color_rules')}
+          onClick={onTajweedRulesPanelOpen}
+        />
+      )}
     </div>
   );
 }

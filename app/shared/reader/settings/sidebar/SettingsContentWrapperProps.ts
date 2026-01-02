@@ -24,6 +24,7 @@ export function buildContentWrapperProps(
     openSections: string[];
     onSectionToggle: (section: string) => void;
     onArabicFontPanelOpen: () => void;
+    onTajweedRulesPanelOpen?: (() => void) | undefined;
     activeTabOverride?: SettingsTabValue;
     showTabs: boolean;
     isMushafMode?: boolean;
