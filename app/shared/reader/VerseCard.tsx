@@ -58,7 +58,7 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
   ) => {
     const { settings } = useSettings();
     const containerClasses = cn(getVariantClasses(variant), className);
-    const fontSize = translationFontSize ?? settings.translationFontSize ?? 16;
+    const fontSize = translationFontSize ?? settings.translationFontSize ?? 18;
 
     const sortedTranslations = useMemo(() => {
       if (!verse.translations || verse.translations.length === 0) {

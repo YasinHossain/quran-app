@@ -16,15 +16,17 @@ export const ARABIC_FONTS = [
   { name: 'QPC Uthmani Hafs', value: '"UthmanicHafs1Ver18", serif', category: 'Uthmani' },
 ];
 
-const DEFAULT_ARABIC_FONT = ARABIC_FONTS[0]?.value ?? '"KFGQPC-Uthman-Taha", serif';
+const DEFAULT_ARABIC_FONT =
+  ARABIC_FONTS.find((font) => font.name === 'QPC Uthmani Hafs')?.value ??
+  '"UthmanicHafs1Ver18", serif';
 
 export const defaultSettings: Settings = {
   translationId: 20,
   translationIds: [20],
   tafsirIds: [169],
-  arabicFontSize: 28,
-  translationFontSize: 16,
-  tafsirFontSize: 16,
+  arabicFontSize: 34,
+  translationFontSize: 18,
+  tafsirFontSize: 18,
   arabicFontFace: DEFAULT_ARABIC_FONT,
   wordLang: 'en',
   wordTranslationId: 85,

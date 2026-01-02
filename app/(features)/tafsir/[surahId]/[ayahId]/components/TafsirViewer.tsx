@@ -35,7 +35,7 @@ export const TafsirViewer = ({
           )}
           <div
             className="prose max-w-none tafsir-content break-words"
-            style={{ fontSize: `${settings.tafsirFontSize || 16}px` }}
+            style={{ fontSize: `${settings.tafsirFontSize || 18}px` }}
             dangerouslySetInnerHTML={{ __html: tafsirHtml || '' }}
           />
         </div>

@@ -50,7 +50,7 @@ export const TafsirSettings = ({
             />
             <FontSizeSlider
               label={t('tafsir_font_size')}
-              value={settings.tafsirFontSize || 16}
+              value={settings.tafsirFontSize || 18}
               min={12}
               max={28}
               onChange={setTafsirFontSize}

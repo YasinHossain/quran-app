@@ -52,7 +52,7 @@ export function FontSettingsContent({
       <div className="space-y-4">
         <FontSizeSlider
           label={t('arabic_font_size')}
-          value={settings.arabicFontSize ?? 28}
+          value={settings.arabicFontSize ?? 34}
           min={16}
           max={48}
           onChange={handleArabicFontSizeChange}
@@ -61,7 +61,7 @@ export function FontSettingsContent({
         {showTranslationFont && (
           <FontSizeSlider
             label={t('translation_font_size')}
-            value={settings.translationFontSize ?? 16}
+            value={settings.translationFontSize ?? 18}
             min={12}
             max={28}
             onChange={handleTranslationFontSizeChange}

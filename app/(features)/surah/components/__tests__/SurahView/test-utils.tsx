@@ -85,7 +85,7 @@ export const defaultVerseListing = {
   translationOptions: [],
   wordLanguageOptions: [],
   wordLanguageMap: {},
-  settings: { translationFontSize: 16 },
+  settings: { translationFontSize: 18 },
   setSettings: jest.fn(),
   activeVerse: null,
   reciter: { id: 1, name: 'Reciter', path: 'reciter' },
