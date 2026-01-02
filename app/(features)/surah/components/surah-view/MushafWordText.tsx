@@ -107,6 +107,7 @@ export const MushafWordText = ({
   }
 
   const displayText = stripAyahMarkers(baseText, isQpcHafsMushaf);
+  const copyText = displayText.trim();
   const rawHtml = buildWordHtml({
     isQcfMushaf,
     isQpcHafsMushaf,
@@ -123,6 +124,8 @@ export const MushafWordText = ({
 
   return (
     <span
+      data-mushaf-word="true"
+      data-copy-text={copyText || undefined}
       className={cn(
         isQcfMushaf
           ? 'inline-flex flex-none items-center text-foreground font-medium'

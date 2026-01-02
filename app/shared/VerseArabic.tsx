@@ -51,6 +51,7 @@ const WordDisplay = ({
   // Use codeV2 for Tajweed when available, otherwise fall back to uthmani
   const useTajweed = tajweed && word.codeV2;
   const displayText = useTajweed ? word.codeV2 : stripUnsupportedQpcGlyphs(word.uthmani, isQpcHafsFont);
+  const copyText = stripUnsupportedQpcGlyphs(word.uthmani, isQpcHafsFont).trim();
 
   if (!displayText?.trim()) {
     return null;
@@ -63,7 +64,12 @@ const WordDisplay = ({
   const tajweedStyle = useTajweed && tajweedFontFamily ? { fontFamily: tajweedFontFamily } : undefined;
 
   return (
-    <span key={`${word.id}-${index}`} className="inline-block text-center align-middle">
+    <span
+      key={`${word.id}-${index}`}
+      className="inline-block text-center align-middle"
+      data-verse-word="true"
+      data-copy-text={copyText || undefined}
+    >
       {!showByWords && hasTranslation ? (
         <Popover.Root open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
           <Popover.Trigger asChild>
@@ -156,6 +162,33 @@ export const VerseArabic = memo(function VerseArabic({
   const verseText = verse.text_uthmani;
   const tajweed = settings.tajweed ?? false;
 
+  const handleCopy = (event: React.ClipboardEvent<HTMLParagraphElement>): void => {
+    if (typeof window === 'undefined') return;
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+    const range = selection.getRangeAt(0);
+    const container = event.currentTarget;
+    const wordNodes = Array.from(
+      container.querySelectorAll<HTMLElement>('[data-verse-word="true"]')
+    );
+    const selectedWords = wordNodes
+      .filter((node) => {
+        try {
+          return range.intersectsNode(node);
+        } catch {
+          return false;
+        }
+      })
+      .map((node) => node.dataset.copyText?.trim())
+      .filter((text): text is string => Boolean(text));
+    const normalized = selectedWords.length
+      ? selectedWords.join(' ')
+      : selection.toString().replace(/\s+/g, ' ').trim();
+    if (!normalized) return;
+    event.preventDefault();
+    event.clipboardData.setData('text/plain', normalized);
+  };
+
   // Extract verse number from verse_key (format: "surah:verse")
   const verseNumber = verse.verse_key ? parseInt(verse.verse_key.split(':')[1] || '0', 10) : 0;
 
@@ -205,6 +238,7 @@ export const VerseArabic = memo(function VerseArabic({
           fontSize: `${settings.arabicFontSize}px`,
           lineHeight: 2.2,
         }}
+        onCopy={handleCopy}
       >
         {verse.words && verse.words.length > 0 ? (
           <span>

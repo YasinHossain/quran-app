@@ -37,6 +37,33 @@ export const MushafLines = ({
   lineWidthDesktop,
   isFontLoaded,
 }: MushafLinesProps): React.JSX.Element => {
+  const handleCopy = (event: React.ClipboardEvent<HTMLDivElement>): void => {
+    if (typeof window === 'undefined') return;
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+    const range = selection.getRangeAt(0);
+    const container = event.currentTarget;
+    const wordNodes = Array.from(
+      container.querySelectorAll<HTMLElement>('[data-mushaf-word="true"]')
+    );
+    const selectedWords = wordNodes
+      .filter((node) => {
+        try {
+          return range.intersectsNode(node);
+        } catch {
+          return false;
+        }
+      })
+      .map((node) => node.dataset.copyText?.trim())
+      .filter((text): text is string => Boolean(text));
+    const normalized = selectedWords.length
+      ? selectedWords.join(' ')
+      : selection.toString().replace(/\s+/g, ' ').trim();
+    if (!normalized) return;
+    event.preventDefault();
+    event.clipboardData.setData('text/plain', normalized);
+  };
+
   // Calculate the media query for when to switch to reflow mode
   // This replaces the JS-based useMushafReflow hook to prevent layout shifts/jumps
   const getReflowMediaQuery = (): string => {
@@ -85,7 +112,7 @@ export const MushafLines = ({
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: styleCss }} />
-      <div className={scopeId}>
+      <div className={scopeId} onCopy={handleCopy}>
         {/* Standard Lines Layout (Desktop / Wide Mobile) */}
         <div
           className={cn(
