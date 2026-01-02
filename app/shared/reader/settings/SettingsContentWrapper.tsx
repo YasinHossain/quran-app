@@ -33,7 +33,7 @@ export const SettingsContentWrapper = ({
     <>
       {/* Tabs section with header separation - matches SurahListContent structure */}
       {showTabs && (
-        <div className="p-3 sm:p-4 border-b border-border md:p-3 md:pb-3">
+        <div className="flex flex-col justify-center h-[73px] px-3 sm:px-4 border-b border-border md:px-3">
           <SettingsTabs activeTab={resolvedTab} onTabChange={onTabChange} tabOptions={tabOptions} />
         </div>
       )}

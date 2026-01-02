@@ -25,7 +25,7 @@ export const HeaderActions = memo(function HeaderActions(): ReactElement {
   }, [setSettingsOpen]);
 
   return (
-    <div className="flex items-center justify-end gap-2 sm:gap-2.5 w-1/3 mr-1">
+    <div className="flex items-center justify-end gap-2 sm:gap-2.5 w-auto sm:w-1/3 mr-1">
       {/* Settings button */}
       {!shouldHideSettings && (
         <button

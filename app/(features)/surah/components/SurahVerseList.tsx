@@ -171,7 +171,7 @@ function QuranComList({
   useEffect(() => {
     if (!initialVerseNumber || totalVerses <= 0) return;
     const targetIndex = Math.min(Math.max(0, initialVerseNumber - 1), totalVerses - 1);
-    virtuosoRef.current?.scrollToIndex({ index: targetIndex, align: 'center' });
+    virtuosoRef.current?.scrollToIndex({ index: targetIndex, align: 'start' });
     setShouldReadjustScroll(true);
   }, [initialVerseNumber, totalVerses]);
 
@@ -185,7 +185,7 @@ function QuranComList({
     if (!isLoaded) return;
 
     const timeout = window.setTimeout(() => {
-      virtuosoRef.current?.scrollToIndex({ index: targetIndex, align: 'center' });
+      virtuosoRef.current?.scrollToIndex({ index: targetIndex, align: 'start' });
       setShouldReadjustScroll(false);
     }, 250);
 
@@ -234,7 +234,7 @@ function InfiniteList({
     const target = verseListing.verses.find((verse) => verse.verse_key === initialVerseKey);
     if (!target) return;
     const el = document.getElementById(`verse-${target.id}`);
-    el?.scrollIntoView({ block: 'center' });
+    el?.scrollIntoView({ block: 'start' });
   }, [initialVerseKey, verseListing.verses]);
 
   if (verseListing.error) {

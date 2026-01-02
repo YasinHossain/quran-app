@@ -36,7 +36,7 @@ export const HeaderBrand = memo(function HeaderBrand(): ReactElement {
   }, [pathname, setBookmarkSidebarOpen, setSurahListOpen]);
 
   return (
-    <div className="flex items-center justify-start w-1/3 gap-1">
+    <div className="flex items-center justify-start w-auto sm:w-1/3 gap-1">
       {/* Mobile Navigation Menu Button */}
       {shouldShowMenu && (
         <button
