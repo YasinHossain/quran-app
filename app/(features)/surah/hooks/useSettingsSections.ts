@@ -4,13 +4,9 @@ import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 const STORAGE_KEY = 'settings-sidebar-open-sections';
 const DEFAULT_OPEN_SECTIONS = ['translation', 'font'];
-const MAX_OPEN_SECTIONS = 2;
 
 function normalizeSections(sections: string[]): string[] {
-  const unique = sections.filter(
-    (id, idx) => typeof id === 'string' && sections.indexOf(id) === idx
-  );
-  return unique.slice(0, MAX_OPEN_SECTIONS);
+  return sections.filter((id, idx) => typeof id === 'string' && sections.indexOf(id) === idx);
 }
 
 function readInitialState(): string[] {
@@ -35,10 +31,6 @@ function persistState(state: string[]): void {
 
 function nextOpenSections(prev: string[], sectionId: string): string[] {
   if (prev.includes(sectionId)) return prev.filter((id) => id !== sectionId);
-  if (prev.length >= MAX_OPEN_SECTIONS) {
-    const itemsToKeep = Math.max(0, MAX_OPEN_SECTIONS - 1);
-    return [...prev.slice(-itemsToKeep), sectionId];
-  }
   return [...prev, sectionId];
 }
 

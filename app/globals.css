@@ -454,6 +454,10 @@
     overflow: hidden;
   }
 
+  .sidebar-scroll-lock {
+    overflow: hidden;
+  }
+
   .touch-none {
     touch-action: none;
   }

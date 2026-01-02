@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { cn } from '@/lib/utils/cn';
@@ -19,6 +19,12 @@ interface BaseSidebarProps {
   'aria-label'?: string;
 }
 
+const getDesktopMinWidth = (desktopBreakpoint: 'lg' | 'xl' | '2xl'): number => {
+  if (desktopBreakpoint === 'xl') return 1280;
+  if (desktopBreakpoint === '2xl') return 1536;
+  return 1024;
+};
+
 export const BaseSidebar = ({
   isOpen,
   onClose,
@@ -36,6 +42,36 @@ export const BaseSidebar = ({
     isHeaderHidden: isHidden,
     desktopBreakpoint,
   });
+
+  useEffect(() => {
+    if (!isOpen) return;
+    if (typeof window === 'undefined') return;
+
+    const minWidth = getDesktopMinWidth(desktopBreakpoint);
+    const mediaQuery = window.matchMedia(`(min-width: ${minWidth}px)`);
+    const root = document.documentElement;
+    const body = document.body;
+    const lockClass = 'sidebar-scroll-lock';
+
+    const syncScrollLock = (): void => {
+      if (mediaQuery.matches) {
+        root.classList.remove(lockClass);
+        body.classList.remove(lockClass);
+        return;
+      }
+      root.classList.add(lockClass);
+      body.classList.add(lockClass);
+    };
+
+    syncScrollLock();
+    mediaQuery.addEventListener('change', syncScrollLock);
+
+    return () => {
+      mediaQuery.removeEventListener('change', syncScrollLock);
+      root.classList.remove(lockClass);
+      body.classList.remove(lockClass);
+    };
+  }, [desktopBreakpoint, isOpen]);
 
   const desktopOverflowClass =
     desktopBreakpoint === 'lg'
