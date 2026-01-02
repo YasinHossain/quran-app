@@ -1,6 +1,6 @@
 'use client';
 import * as Popover from '@radix-ui/react-popover';
-import { memo, useState, useMemo } from 'react';
+import { Fragment, memo, useMemo, useState } from 'react';
 
 import { VerseMarker } from '@/app/(features)/surah/components/surah-view/VerseMarker';
 import { useQcfMushafFont } from '@/app/(features)/surah/hooks/useQcfMushafFont';
@@ -63,7 +63,7 @@ const WordDisplay = ({
   const tajweedStyle = useTajweed && tajweedFontFamily ? { fontFamily: tajweedFontFamily } : undefined;
 
   return (
-    <span key={`${word.id}-${index}`} className="inline-block text-center align-middle ml-1.5 lg:ml-3">
+    <span key={`${word.id}-${index}`} className="inline-block text-center align-middle">
       {!showByWords && hasTranslation ? (
         <Popover.Root open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
           <Popover.Trigger asChild>
@@ -208,35 +208,48 @@ export const VerseArabic = memo(function VerseArabic({
       >
         {verse.words && verse.words.length > 0 ? (
           <span>
-            {verse.words.map((word: Word, index: number) => {
-              // Heuristic: If the last word contains no Arabic letters (only symbols/numbers),
-              // it is likely a verse marker. Hide it to avoid duplication.
-              // Arabic letters range: \u0621-\u064A (Hamza to Yeh), plus extended characters.
-              const hasArabicLetters = /[\u0621-\u064A\u0671-\u06D3]/.test(word.uthmani);
-              const isLastWord = index === (verse.words?.length ?? 0) - 1;
+            {verse.words
+              .filter((word: Word, index: number, words: Word[]) => {
+                // Heuristic: If the last word contains no Arabic letters (only symbols/numbers),
+                // it is likely a verse marker. Hide it to avoid duplication.
+                // Arabic letters range: \u0621-\u064A (Hamza to Yeh), plus extended characters.
+                const hasArabicLetters = /[\u0621-\u064A\u0671-\u06D3]/.test(word.uthmani);
+                const isLastWord = index === words.length - 1;
+                const displayText =
+                  tajweed && word.codeV2
+                    ? word.codeV2
+                    : stripUnsupportedQpcGlyphs(word.uthmani, isQpcHafsFont);
 
-              if (isLastWord && !hasArabicLetters) {
-                return null;
-              }
+                if (isLastWord && !hasArabicLetters) {
+                  return false;
+                }
 
-              // Also filter known marker characters anywhere (just in case)
-              if (word.char_type_name === 'end' || /[\u06DD\u06DE\uFD3E\uFD3F]/.test(word.uthmani)) {
-                return null;
-              }
-              return (
-                <WordDisplay
-                  key={`${word.id}-${index}`}
-                  word={word}
-                  index={index}
-                  showByWords={showByWords}
-                  wordLang={wordLang}
-                  settings={settings}
-                  isQpcHafsFont={isQpcHafsFont}
-                  tajweed={tajweed}
-                  tajweedFontFamily={getTajweedFontFamily(word)}
-                />
-              );
-            })}
+                // Also filter known marker characters anywhere (just in case)
+                if (word.char_type_name === 'end' || /[\u06DD\u06DE\uFD3E\uFD3F]/.test(word.uthmani)) {
+                  return false;
+                }
+
+                if (!displayText?.trim()) {
+                  return false;
+                }
+
+                return true;
+              })
+              .map((word: Word, index: number) => (
+                <Fragment key={`${word.id}-${index}`}>
+                  {index > 0 ? ' ' : null}
+                  <WordDisplay
+                    word={word}
+                    index={index}
+                    showByWords={showByWords}
+                    wordLang={wordLang}
+                    settings={settings}
+                    isQpcHafsFont={isQpcHafsFont}
+                    tajweed={tajweed}
+                    tajweedFontFamily={getTajweedFontFamily(word)}
+                  />
+                </Fragment>
+              ))}
             {verseNumber > 0 && <VerseMarker number={verseNumber} style={{ marginBottom: 0 }} />}
           </span>
         ) : (
