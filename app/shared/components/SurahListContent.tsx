@@ -28,7 +28,7 @@ export const SurahListContent = memo(function SurahListContent({
   );
 
   const searchInput = (
-    <div className="p-3 sm:p-4 border-b border-border md:border-b-0 md:pb-2">
+    <div className="p-3 sm:p-4 md:border-b-0 md:pb-2">
       <SearchInput
         value={searchTerm}
         onChange={setSearchTerm}
@@ -44,7 +44,7 @@ export const SurahListContent = memo(function SurahListContent({
       <SidebarHeader
         title="Quran"
         titleClassName="text-mobile-lg font-semibold text-content-primary"
-        className="shadow-none xl:hidden"
+        className="xl:hidden"
         showCloseButton
         {...(onClose ? { onClose } : {})}
         forceVisible

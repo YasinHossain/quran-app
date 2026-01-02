@@ -20,7 +20,7 @@ export const ResourcePanelHeader = ({
   backIconClassName = 'h-6 w-6 text-muted',
 }: ResourcePanelHeaderProps): React.JSX.Element => {
   return (
-    <header className="flex items-center p-4 border-b border-border">
+    <header className="flex items-center p-4 bg-background shadow-[0_4px_20px_-12px_rgb(var(--color-foreground)/0.15)] relative z-10">
       <button
         onClick={onClose}
         className="p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent hover:bg-gray-200 dark:hover:bg-slate-700"

@@ -207,7 +207,7 @@ export function SettingsSidebarContent({
       <SidebarHeader
         title={title}
         titleClassName="text-mobile-lg font-semibold text-content-primary"
-        className="shadow-none 2xl:hidden"
+        className="2xl:hidden"
         showCloseButton={shouldShowCloseButton}
         {...(shouldShowCloseButton && onClose ? { onClose } : {})}
         forceVisible

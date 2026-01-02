@@ -44,7 +44,7 @@ export const SidebarHeader = ({
         // Spacing
         'px-4',
         // Visuals
-        'bg-background',
+        'bg-background shadow-[0_4px_20px_-12px_rgb(var(--color-foreground)/0.15)] relative z-10',
         // Visibility: Mobile only (hidden on desktop) unless forced
         !forceVisible && 'md:hidden',
         className

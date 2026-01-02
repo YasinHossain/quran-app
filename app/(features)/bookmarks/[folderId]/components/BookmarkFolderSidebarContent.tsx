@@ -30,7 +30,7 @@ export const BookmarkFolderSidebarContent = ({
       // Mobile-only header; keep subtle elevation but no divider line
       titleClassName="text-mobile-lg font-semibold text-foreground"
       backButtonClassName="hover:bg-gray-200 dark:hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-      className="sticky top-0 shadow-none relative z-10 bg-background xl:hidden"
+      className="sticky top-0 xl:hidden"
       forceVisible
     />
 
