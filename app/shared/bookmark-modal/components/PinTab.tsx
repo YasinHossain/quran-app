@@ -11,7 +11,8 @@ import { cn } from '@/lib/utils/cn';
 
 export const PinTab = memo(function PinTab({ verseId, verseKey, onClose }: PinTabProps): React.JSX.Element {
   const { isPinned, togglePinned } = useBookmarks();
-  const isVersePinned = isPinned(verseId);
+  // Check both verseId and verseKey to find pins regardless of storage format
+  const isVersePinned = isPinned(verseId) || (verseKey ? isPinned(verseKey) : false);
 
   return (
     <div className="p-6 flex flex-col items-center justify-center min-h-[200px] space-y-6">

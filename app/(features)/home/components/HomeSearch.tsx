@@ -41,7 +41,7 @@ export const HomeSearch = memo(function HomeSearch({
         <SearchInput
           value={searchQuery}
           onChange={setSearchQuery}
-          placeholder="What do you want to read?"
+          placeholder="Search by Surah Name or Number..."
           size="lg"
           variant="glass"
           className="text-base md:text-lg"

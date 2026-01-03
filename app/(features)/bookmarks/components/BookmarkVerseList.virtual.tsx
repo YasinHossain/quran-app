@@ -1,7 +1,7 @@
 'use client';
 
-import { useVirtualizer } from '@tanstack/react-virtual';
 import React from 'react';
+import { Virtuoso } from 'react-virtuoso';
 
 import type { Bookmark } from '@/types';
 
@@ -35,65 +35,21 @@ export const VirtualizedBookmarkList = ({
   bookmarks: Bookmark[];
   scrollElement: HTMLElement | null;
   setRootRef: (node: HTMLDivElement | null) => void;
-  renderItem: (bm: Bookmark) => React.ReactNode;
+// ...
+  renderItem: (bm: Bookmark, index: number) => React.ReactNode;
 }): React.JSX.Element => {
-  const rowVirtualizer = useVirtualizer({
-    count: bookmarks.length,
-    getScrollElement: () => scrollElement,
-    estimateSize: () => 360,
-    overscan: 6,
-    getItemKey: (index) => {
-      const bm = bookmarks[index];
-      if (!bm) return index;
-      return `bookmark-${bm.verseId}-${bm.verseKey ?? index}`;
-    },
-  });
-
   return (
-    <div className="w-full relative" ref={setRootRef}>
-      <div
-        style={{
-          height: `${rowVirtualizer.getTotalSize()}px`,
-          width: '100%',
-          position: 'relative',
-        }}
-      >
-        {rowVirtualizer.getVirtualItems().map((virtualItem) => {
-          const bookmark = bookmarks[virtualItem.index];
-          if (!bookmark) return null;
-          return (
-            <BookmarkVirtualRow
-              key={virtualItem.key}
-              index={virtualItem.index}
-              virtualStart={virtualItem.start}
-              refFn={rowVirtualizer.measureElement}
-            >
-              {renderItem(bookmark)}
-            </BookmarkVirtualRow>
-          );
-        })}
-      </div>
+    <div className="w-full h-full relative" ref={setRootRef}>
+      <Virtuoso
+        useWindowScroll={!scrollElement}
+        customScrollParent={scrollElement ?? undefined}
+        data={bookmarks}
+        itemContent={(index, bookmark) => renderItem(bookmark, index)}
+        computeItemKey={(index, bookmark) =>
+          `bookmark-${bookmark.verseId}-${bookmark.verseKey ?? index}`
+        }
+        increaseViewportBy={1000}
+      />
     </div>
   );
 };
-
-export const BookmarkVirtualRow = ({
-  children,
-  virtualStart,
-  refFn,
-  index,
-}: {
-  children: React.ReactNode;
-  virtualStart: number;
-  refFn: (el: Element | null) => void;
-  index: number;
-}): React.JSX.Element => (
-  <div
-    ref={refFn}
-    data-index={index}
-    className="absolute left-0 top-0 w-full"
-    style={{ transform: `translateY(${virtualStart}px)` }}
-  >
-    {children}
-  </div>
-);

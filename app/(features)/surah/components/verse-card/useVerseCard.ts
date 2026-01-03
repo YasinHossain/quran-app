@@ -33,7 +33,8 @@ export const useVerseCard = (verse: VerseType): UseVerseCardReturn => {
   const verseRef = useRef<HTMLDivElement | null>(null);
   const isPlaying = playingId === verse.id;
   const isLoadingAudio = loadingId === verse.id;
-  const isVerseBookmarked = isPinned(String(verse.id));
+  // Check both numeric ID and verseKey format to find pins regardless of storage format
+  const isVerseBookmarked = isPinned(String(verse.id)) || isPinned(verse.verse_key);
 
   useLastReadObserver(verse, verseRef);
 
