@@ -104,7 +104,7 @@ const VerseContainer = ({
   className,
 }: VerseContainerProps): React.JSX.Element => (
   <div
-    className={`mt-8 md:mt-12 w-full max-w-xl md:max-w-4xl p-4 md:p-6 lg:p-8 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400 bg-surface-glass/60 ${className || ''}`}
+    className={`w-full p-4 md:p-6 lg:p-8 rounded-2xl shadow-lg backdrop-blur-xl bg-surface-glass/60 ${className || ''}`}
   >
     <div
       className={`transition-opacity duration-300 ease-in-out space-y-4 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}

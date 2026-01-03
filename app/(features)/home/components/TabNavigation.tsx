@@ -30,7 +30,7 @@ export const TabNavigation = memo(function TabNavigation({
   onTabChange,
 }: TabNavigationProps) {
   return (
-    <div className="flex items-center p-1 sm:p-2 rounded-full bg-interactive">
+    <div className="flex items-center p-1 sm:p-2 rounded-full bg-interactive flex-shrink-0">
       {TAB_CONFIGS.map((tab) => (
         <TabButton
           key={tab.id}

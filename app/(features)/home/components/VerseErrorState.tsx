@@ -17,7 +17,7 @@ export function VerseErrorState({
 }: VerseErrorStateProps): React.JSX.Element {
   return (
     <div
-      className={`mt-8 md:mt-12 w-full max-w-xl md:max-w-4xl p-4 md:p-6 lg:p-8 rounded-2xl shadow-lg backdrop-blur-xl content-visibility-auto animate-fade-in-up animation-delay-400 bg-surface-glass/60 ${className || ''}`}
+      className={`w-full p-4 md:p-6 lg:p-8 rounded-2xl shadow-lg backdrop-blur-xl bg-surface-glass/60 ${className || ''}`}
     >
       <div className="text-center py-6 md:py-8 space-y-4">
         <p className="text-status-error text-sm md:text-base">{error}</p>

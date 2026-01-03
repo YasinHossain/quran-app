@@ -38,19 +38,32 @@ export const HomePage = memo(function HomePage({ className }: HomePageProps) {
     >
       <HomePageBackground />
 
-      <div className="relative z-10 flex flex-col px-4 pb-24 md:px-6 md:pb-10 lg:px-8">
+      <div className="relative z-10 flex flex-col px-2 sm:px-4 pb-24 md:px-6 md:pb-10 lg:px-8">
         <HomeHeader />
 
-        <main className="flex-grow flex flex-col items-center justify-center text-center space-y-8 pt-6 pb-6 md:pt-16 md:pb-10 md:space-y-12">
-          <div className="content-visibility-auto animate-fade-in-up space-y-4 md:space-y-6">
-            <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-foreground leading-tight">
+        <main className="flex-grow flex flex-col items-center justify-center text-center space-y-6 pt-6 pb-6 md:pt-12 md:pb-10 md:space-y-8">
+          {/* Title - scales with content */}
+          <div className="content-visibility-auto animate-fade-in-up">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-tight">
               Al Qur&apos;an
             </h2>
           </div>
 
-          <HomeSearch searchQuery={searchQuery} setSearchQuery={handleSearchChange} />
+          {/* Search bar - Third widest */}
+          <div 
+            className="w-full mx-auto animate-fade-in-up animation-delay-200"
+            style={{ maxWidth: 'clamp(16rem, 70vw, 44rem)' }}
+          >
+            <HomeSearch searchQuery={searchQuery} setSearchQuery={handleSearchChange} />
+          </div>
 
-          <VerseOfDay />
+          {/* Verse of the Day - Second widest (wider than search) */}
+          <div 
+            className="w-full mx-auto animate-fade-in-up animation-delay-400"
+            style={{ maxWidth: 'clamp(18rem, 80vw, 64rem)' }}
+          >
+            <VerseOfDay />
+          </div>
         </main>
 
         <HomeTabs searchQuery={searchQuery} />

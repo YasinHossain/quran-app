@@ -35,9 +35,9 @@ export const HomeSearch = memo(function HomeSearch({
   );
 
   return (
-    <div className={`space-y-4 md:space-y-6 ${className || ''}`}>
-      {/* Mobile-optimized search container - Wider than shortcuts, narrower than Title */}
-      <div className="w-full max-w-lg md:max-w-xl lg:max-w-3xl mx-auto px-4 md:px-0 content-visibility-auto animate-fade-in-up animation-delay-200">
+    <div className={`w-full space-y-4 md:space-y-5 ${className || ''}`}>
+      {/* Search container - full width, parent controls the max-width */}
+      <div className="w-full">
         <SearchInput
           value={searchQuery}
           onChange={setSearchQuery}
@@ -48,14 +48,17 @@ export const HomeSearch = memo(function HomeSearch({
         />
       </div>
 
-      {/* Mobile-optimized shortcut buttons - Narrower than search box */}
-      <div className="px-4 md:px-0 content-visibility-auto animate-fade-in-up animation-delay-200">
-        <div className="flex flex-nowrap justify-center items-center gap-2 max-w-sm md:max-w-md lg:max-w-lg mx-auto overflow-x-auto scrollbar-hide">
+      {/* Shortcut buttons - Narrowest element, with its own width constraint */}
+      <div 
+        className="w-full mx-auto"
+        style={{ maxWidth: 'clamp(14rem, 65vw, 28rem)' }}
+      >
+        <div className="flex flex-nowrap justify-center items-center gap-1 sm:gap-1.5 md:gap-2">
           {shortcutSurahs.map((name) => (
             <button
               key={name}
               onClick={() => handleShortcutClick(name)}
-              className="flex-shrink-0 min-h-[2.5rem] md:min-h-11 px-4 py-1.5 md:py-2.5 rounded-full font-medium text-xs md:text-base transition-all duration-200 bg-surface-glass/60 text-foreground hover:bg-surface-glass/80 border-none ring-0 shadow-none hover:shadow-none active:scale-95 backdrop-blur-xl touch-manipulation"
+              className="flex-shrink-0 min-h-[2rem] sm:min-h-[2.25rem] md:min-h-10 px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full font-medium text-[0.65rem] sm:text-xs md:text-sm transition-all duration-200 bg-surface-glass/60 text-foreground hover:bg-surface-glass/80 border-none ring-0 shadow-sm hover:shadow-md active:scale-95 backdrop-blur-xl touch-manipulation"
             >
               {name}
             </button>

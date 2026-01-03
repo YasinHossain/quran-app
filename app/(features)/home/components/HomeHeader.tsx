@@ -28,15 +28,18 @@ export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProp
   }, [setTheme]);
 
   return (
-    <header className={`w-full p-4 md:py-4 md:px-0 ${className || ''}`}>
-      <GlassCard
-        variant="surface"
-        size="comfortable"
-        radius="xl"
-        className="max-w-screen-2xl mx-auto"
+    <header className={`w-full py-4 ${className || ''}`}>
+      <div 
+        className="mx-auto w-full"
+        style={{ maxWidth: 'clamp(20rem, 98vw, 90rem)' }}
       >
+        <GlassCard
+          variant="surface"
+          size="comfortable"
+          radius="xl"
+        >
         <nav className="flex justify-between items-center space-y-0">
-          <h1 className="text-xl md:text-2xl font-bold tracking-wider text-content-primary">
+          <h1 className="text-2xl sm:text-3xl md:text-3xl font-bold tracking-wider text-content-primary">
             Al Qur&apos;an
           </h1>
           <button
@@ -52,6 +55,7 @@ export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProp
           </button>
         </nav>
       </GlassCard>
+      </div>
     </header>
   );
 });
