@@ -107,6 +107,7 @@ export function useVerseListing({
       ? { targetVerseNumber: initialVerseNumber }
       : {}),
     ...(mode === 'infinite' && id !== undefined ? { id } : {}),
+    tajweed,
   } as const;
 
   const infiniteLoaderState = useInfiniteVerseLoader(infiniteLoaderParams);

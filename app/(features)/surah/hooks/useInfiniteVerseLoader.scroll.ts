@@ -16,11 +16,12 @@ export const useResetPrefetchedPages = (
   prefetchedPagesRef: MutableRefObject<Set<number>>,
   id?: string,
   stableTranslationIds?: string,
-  wordLang?: string
+  wordLang?: string,
+  tajweed?: boolean
 ): void => {
   useEffect(() => {
     prefetchedPagesRef.current.clear();
-  }, [prefetchedPagesRef, id, stableTranslationIds, wordLang]);
+  }, [prefetchedPagesRef, id, stableTranslationIds, wordLang, tajweed]);
 };
 
 interface LoadMoreParams {

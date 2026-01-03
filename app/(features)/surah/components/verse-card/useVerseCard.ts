@@ -28,12 +28,12 @@ export const useVerseCard = (verse: VerseType): UseVerseCardReturn => {
     setIsPlaying,
     openPlayer,
   } = useAudio();
-  const { isBookmarked } = useBookmarks();
+  const { isPinned } = useBookmarks();
 
   const verseRef = useRef<HTMLDivElement | null>(null);
   const isPlaying = playingId === verse.id;
   const isLoadingAudio = loadingId === verse.id;
-  const isVerseBookmarked = isBookmarked(String(verse.id));
+  const isVerseBookmarked = isPinned(String(verse.id));
 
   useLastReadObserver(verse, verseRef);
 

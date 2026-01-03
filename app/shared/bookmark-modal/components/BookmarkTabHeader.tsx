@@ -43,9 +43,9 @@ export const BookmarkTabHeader = memo(function BookmarkTabHeader({
               touchClasses.focus
             )}
             whileTap={{ scale: 0.98 }}
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
             <PlusIcon size={20} />
             <span className="font-medium">Create new folder</span>

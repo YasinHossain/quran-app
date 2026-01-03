@@ -62,9 +62,9 @@ export const CreateFolderForm = memo(function CreateFolderForm({
   return (
     <motion.form
       onSubmit={handleSubmit}
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       className="flex items-center gap-2 pl-4 pr-3 py-3 bg-interactive/60 rounded-lg border border-border focus-within:ring-2 focus-within:ring-accent focus-within:border-transparent transition-all duration-300"
     >
       <input

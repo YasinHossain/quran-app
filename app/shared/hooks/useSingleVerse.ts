@@ -28,16 +28,17 @@ const COMPOSITE_VERSE_ID_PATTERN = /:|[^0-9]/;
 function fetchSingleVerse(
   target: string,
   translationIds: number[],
-  wordLang: LanguageCode
+  wordLang: LanguageCode,
+  tajweed: boolean
 ): Promise<Verse> {
   const normalizedTarget = target.trim();
   if (!normalizedTarget) {
     return Promise.reject(new Error('Verse identifier is required'));
   }
   if (COMPOSITE_VERSE_ID_PATTERN.test(normalizedTarget)) {
-    return getVerseByKey(normalizedTarget, translationIds, wordLang);
+    return getVerseByKey(normalizedTarget, translationIds, wordLang, tajweed);
   }
-  return getVerseById(normalizedTarget, translationIds, wordLang);
+  return getVerseById(normalizedTarget, translationIds, wordLang, tajweed);
 }
 
 function resolveTranslationIds(translationIds: number[], fallbackTranslationId: number): number[] {
@@ -51,13 +52,14 @@ function resolveTranslationIds(translationIds: number[], fallbackTranslationId: 
 function createSWRKey(
   idOrKey: string,
   translationIdsKey: string,
-  wordLang: LanguageCode
-): [string, string, string, LanguageCode] | null {
+  wordLang: LanguageCode,
+  tajweed: boolean
+): [string, string, string, LanguageCode, boolean] | null {
   const normalizedId = idOrKey.trim();
   if (!normalizedId) {
     return null;
   }
-  return ['single-verse', normalizedId, translationIdsKey, wordLang];
+  return ['single-verse', normalizedId, translationIdsKey, wordLang, tajweed];
 }
 
 export function usePrefetchSingleVerse(): (
@@ -86,9 +88,9 @@ export function usePrefetchSingleVerse(): (
 
       await Promise.all(
         normalizedTargets.map(async (target) => {
-          const key = createSWRKey(target, translationIdsKey, wordLang);
+          const key = createSWRKey(target, translationIdsKey, wordLang, settings.tajweed ?? false);
           if (!key) return;
-          await mutate(key, () => fetchSingleVerse(target, translationIds, wordLang), {
+          await mutate(key, () => fetchSingleVerse(target, translationIds, wordLang, settings.tajweed ?? false), {
             populateCache: true,
             revalidate: false,
           }).catch(() => {});
@@ -116,8 +118,8 @@ export function useSingleVerse({
   );
 
   const swrKey = useMemo(
-    () => createSWRKey(idOrKey, translationIdsKey, wordLang),
-    [idOrKey, translationIdsKey, wordLang]
+    () => createSWRKey(idOrKey, translationIdsKey, wordLang, settings.tajweed ?? false),
+    [idOrKey, translationIdsKey, wordLang, settings.tajweed]
   );
 
   const fetchVerse = useCallback(async (): Promise<Verse> => {
@@ -125,8 +127,8 @@ export function useSingleVerse({
     if (!target) {
       throw new Error('Verse identifier is required');
     }
-    return fetchSingleVerse(target, translationIds, wordLang);
-  }, [idOrKey, translationIds, wordLang]);
+    return fetchSingleVerse(target, translationIds, wordLang, settings.tajweed ?? false);
+  }, [idOrKey, translationIds, wordLang, settings.tajweed]);
 
   const { data, error, isLoading, mutate } = useSWR<Verse>(swrKey, fetchVerse, {
     suspense,
