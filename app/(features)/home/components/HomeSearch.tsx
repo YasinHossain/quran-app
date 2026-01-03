@@ -1,7 +1,9 @@
 'use client';
 
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 
+import Link from 'next/link';
+import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { SearchInput } from '@/app/shared/components/SearchInput';
 
 interface HomeSearchProps {
@@ -25,14 +27,12 @@ export const HomeSearch = memo(function HomeSearch({
   setSearchQuery,
   className,
 }: HomeSearchProps) {
-  const shortcutSurahs = useMemo(() => ['Al-Mulk', 'Al-Kahf', 'Ya-Sin', 'Al-Ikhlas'], []);
-
-  const handleShortcutClick = useCallback(
-    (surahName: string) => {
-      setSearchQuery(surahName);
-    },
-    [setSearchQuery]
-  );
+  const shortcutSurahs = useMemo(() => [
+    { name: 'Al-Mulk', id: 67 },
+    { name: 'Al-Kahf', id: 18 },
+    { name: 'Ya-Sin', id: 36 },
+    { name: 'Al-Ikhlas', id: 112 },
+  ], []);
 
   return (
     <div className={`w-full space-y-4 md:space-y-5 ${className || ''}`}>
@@ -54,14 +54,14 @@ export const HomeSearch = memo(function HomeSearch({
         style={{ maxWidth: 'clamp(14rem, 65vw, 28rem)' }}
       >
         <div className="flex flex-nowrap justify-center items-center gap-1 sm:gap-1.5 md:gap-2">
-          {shortcutSurahs.map((name) => (
-            <button
+          {shortcutSurahs.map(({ name, id }) => (
+            <Link
               key={name}
-              onClick={() => handleShortcutClick(name)}
-              className="flex-shrink-0 min-h-[2rem] sm:min-h-[2.25rem] md:min-h-10 px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full font-medium text-[0.65rem] sm:text-xs md:text-sm transition-all duration-200 bg-surface-glass/60 text-foreground hover:bg-surface-glass/80 border-none ring-0 shadow-sm hover:shadow-md active:scale-95 backdrop-blur-xl touch-manipulation"
+              href={buildSurahRoute(id)}
+              className="flex-shrink-0 min-h-[2rem] sm:min-h-[2.25rem] md:min-h-10 px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full font-medium text-[0.65rem] sm:text-xs md:text-sm transition-all duration-200 bg-surface-glass/60 text-foreground hover:bg-surface-glass/80 border-none ring-0 shadow-sm hover:shadow-md active:scale-95 backdrop-blur-xl touch-manipulation flex items-center justify-center"
             >
               {name}
-            </button>
+            </Link>
           ))}
         </div>
       </div>
