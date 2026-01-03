@@ -77,6 +77,18 @@ export function FontSettingsContent({
           />
         )}
       </div>
+      <div className="mt-6 rounded-lg border border-border bg-surface p-4 text-center lg:hidden">
+        <p
+          dir="rtl"
+          className="text-foreground leading-loose"
+          style={{
+            fontSize: settings.arabicFontSize,
+            fontFamily: settings.arabicFontFace,
+          }}
+        >
+          ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَـٰلَمِينَ
+        </p>
+      </div>
     </CollapsibleSection>
   );
 }

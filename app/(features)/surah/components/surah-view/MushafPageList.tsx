@@ -14,19 +14,8 @@ import type { MushafResourceKind } from '@/app/(features)/surah/hooks/mushafRead
 import type { MushafFlags, ReaderSettings } from './MushafMain.types';
 import type { PagesLookupRecord } from '@infra/quran/pagesLookupClient';
 
-const MUSHAF_SKELETON_LINE_WIDTHS = [
-  'w-full',
-  'w-[96%]',
-  'w-[92%]',
-  'w-[88%]',
-  'w-[84%]',
-  'w-[80%]',
-  'w-[76%]',
-];
-
-const MUSHAF_SKELETON_LINES = Array.from({ length: 12 }, (_value, index) => ({
+const MUSHAF_SKELETON_LINES = Array.from({ length: 15 }, (_value, index) => ({
   key: `mushaf-skeleton-line-${index + 1}`,
-  widthClass: MUSHAF_SKELETON_LINE_WIDTHS[index % MUSHAF_SKELETON_LINE_WIDTHS.length],
 }));
 
 const MushafPageSkeleton = ({ index }: { index: number }): React.JSX.Element => {
@@ -35,15 +24,15 @@ const MushafPageSkeleton = ({ index }: { index: number }): React.JSX.Element => 
       aria-hidden="true"
       className={`mx-auto w-full py-6 sm:py-8 animate-pulse ${index === 0 ? 'pt-0' : ''}`}
     >
-      <div className="mx-auto flex w-full max-w-[560px] flex-col gap-3 px-4 sm:gap-4 sm:px-0">
+      <div className="mx-auto flex w-full max-w-[560px] flex-col gap-4 px-4 sm:gap-5 sm:px-0">
         {MUSHAF_SKELETON_LINES.map((line) => (
           <div
             key={`${line.key}-${index}`}
-            className={`ml-auto h-6 rounded-md bg-interactive ${line.widthClass}`}
+            className="h-6 w-full rounded-md bg-interactive/80"
           />
         ))}
       </div>
-      <div className="mt-6 flex justify-center sm:mt-8">
+      <div className="mt-8 flex justify-center">
         <div className="h-8 w-44 rounded-full bg-interactive" />
       </div>
     </article>
