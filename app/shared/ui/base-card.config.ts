@@ -47,8 +47,8 @@ export const CARD_VARIANTS: Record<string, CardVariant> = {
       duration: 'transition-all duration-300',
     },
     shadow: {
-      inactive: 'shadow-lg',
-      active: 'shadow-xl shadow-accent/40',
+      inactive: 'shadow-md',
+      active: 'shadow-lg shadow-accent/40',
     },
   },
   folder: {

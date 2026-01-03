@@ -43,7 +43,7 @@ export const HomePage = memo(function HomePage({ className }: HomePageProps) {
 
         <main className="flex-grow flex flex-col items-center justify-center text-center space-y-6 pt-6 pb-6 md:pt-12 md:pb-10 md:space-y-8">
           {/* Title - scales with content */}
-          <div className="content-visibility-auto animate-fade-in-up">
+          <div className="content-visibility-auto animate-fade-in-up mb-4 md:mb-6">
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-tight">
               Al Qur&apos;an
             </h2>
