@@ -576,3 +576,24 @@ body::-webkit-scrollbar-thumb:hover,
 .scrollbar-hide::-webkit-scrollbar-thumb {
   display: none !important;
 }
+
+/* ===== Search Result Highlighting ===== */
+/* Style for highlighted search terms in dropdown results */
+.search-result-text em,
+.search-result-text mark {
+  color: rgb(var(--color-accent));
+  font-style: normal;
+  font-weight: 600;
+  background: transparent;
+}
+
+/* Subtle background highlight variant */
+.search-result-text-bg em,
+.search-result-text-bg mark {
+  color: rgb(var(--color-accent));
+  font-style: normal;
+  font-weight: 500;
+  background: rgb(var(--color-accent) / 0.1);
+  padding: 0.1em 0.2em;
+  border-radius: 0.2em;
+}

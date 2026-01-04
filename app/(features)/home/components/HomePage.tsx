@@ -1,5 +1,5 @@
 'use client';
-import { memo, useCallback, useState } from 'react';
+import { memo } from 'react';
 
 import { HomeHeader } from './HomeHeader';
 import { HomePageBackground } from './HomePageBackground';
@@ -15,7 +15,7 @@ interface HomePageProps {
  * Home page for the Qur'an application with mobile-first responsive design.
  *
  * Features:
- * - Search functionality for Surahs, Juz, and Pages
+ * - Comprehensive search functionality with instant results
  * - Tab navigation between different content views
  * - Verse of the Day display
  * - Theme toggle functionality
@@ -26,12 +26,6 @@ interface HomePageProps {
  * - Includes proper TypeScript interfaces
  */
 export const HomePage = memo(function HomePage({ className }: HomePageProps) {
-  const [searchQuery, setSearchQuery] = useState<string>('');
-
-  const handleSearchChange = useCallback((query: string) => {
-    setSearchQuery(query);
-  }, []);
-
   return (
     <div
       className={`relative min-h-[100dvh] flex flex-col bg-background text-foreground ${className || ''}`}
@@ -54,7 +48,7 @@ export const HomePage = memo(function HomePage({ className }: HomePageProps) {
             className="w-full mx-auto animate-fade-in-up animation-delay-200"
             style={{ maxWidth: 'clamp(16rem, 70vw, 44rem)' }}
           >
-            <HomeSearch searchQuery={searchQuery} setSearchQuery={handleSearchChange} />
+            <HomeSearch />
           </div>
 
           {/* Verse of the Day - Second widest (wider than search) */}
@@ -66,8 +60,9 @@ export const HomePage = memo(function HomePage({ className }: HomePageProps) {
           </div>
         </main>
 
-        <HomeTabs searchQuery={searchQuery} />
+        <HomeTabs />
       </div>
     </div>
   );
 });
+

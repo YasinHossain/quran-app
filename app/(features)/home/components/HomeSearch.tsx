@@ -1,60 +1,56 @@
 'use client';
 
-import { memo, useMemo } from 'react';
+import { memo, type ReactElement } from 'react';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
+import { ComprehensiveSearch } from '@/app/shared/search';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
-import { SearchInput } from '@/app/shared/components/SearchInput';
 
 interface HomeSearchProps {
-  searchQuery: string;
-  setSearchQuery: (value: string) => void;
+  /** Search query for filtering (passed to parent for tab filtering) */
+  searchQuery?: string;
+  /** Callback when search query changes (for tab filtering) */
+  setSearchQuery?: (value: string) => void;
+  /** Additional CSS class */
   className?: string;
 }
 
+const SHORTCUT_SURAHS = [
+  { name: 'Al-Mulk', id: 67 },
+  { name: 'Al-Kahf', id: 18 },
+  { name: 'Ya-Sin', id: 36 },
+  { name: 'Al-Ikhlas', id: 112 },
+];
+
 /**
- * Home search component with Surah shortcuts.
- * Implements mobile-first responsive design and performance optimization.
- *
- * Features:
- * - Search input with glass effect
- * - Popular Surah shortcuts
- * - Touch-friendly buttons
- * - Mobile-first responsive layout
+ * Home search component with comprehensive search functionality.
+ * Features advanced search with instant results, navigation detection,
+ * and quick Surah shortcuts.
  */
 export const HomeSearch = memo(function HomeSearch({
-  searchQuery,
-  setSearchQuery,
   className,
-}: HomeSearchProps) {
-  const shortcutSurahs = useMemo(() => [
-    { name: 'Al-Mulk', id: 67 },
-    { name: 'Al-Kahf', id: 18 },
-    { name: 'Ya-Sin', id: 36 },
-    { name: 'Al-Ikhlas', id: 112 },
-  ], []);
+}: HomeSearchProps): ReactElement {
+  const router = useRouter();
 
   return (
-    <div className={`w-full space-y-4 md:space-y-5 ${className || ''}`}>
-      {/* Search container - full width, parent controls the max-width */}
+    <div className={`w-full space-y-4 md:space-y-5 ${className ?? ''}`}>
+      {/* Comprehensive Search */}
       <div className="w-full">
-        <SearchInput
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder="Search by Surah Name or Number..."
-          size="lg"
-          variant="glass"
-          className="text-base md:text-lg"
+        <ComprehensiveSearch
+          variant="home"
+          placeholder="Search Surahs, Verses, or Topics..."
         />
       </div>
 
-      {/* Shortcut buttons - Narrowest element, with its own width constraint */}
-      <div 
+      {/* Shortcut buttons */}
+      <div
         className="w-full mx-auto"
         style={{ maxWidth: 'clamp(14rem, 65vw, 28rem)' }}
       >
         <div className="flex flex-nowrap justify-center items-center gap-1 sm:gap-1.5 md:gap-2">
-          {shortcutSurahs.map(({ name, id }) => (
+          {SHORTCUT_SURAHS.map(({ name, id }) => (
             <Link
               key={name}
               href={buildSurahRoute(id)}

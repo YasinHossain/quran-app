@@ -5,10 +5,10 @@ import { TabContent } from './TabContent';
 import { TabNavigation } from './TabNavigation';
 
 interface HomeTabsProps {
-  searchQuery: string;
+  searchQuery?: string;
 }
 
-export function HomeTabs({ searchQuery }: HomeTabsProps): React.JSX.Element {
+export function HomeTabs({ searchQuery = '' }: HomeTabsProps): React.JSX.Element {
   const [activeTab, setActiveTab] = useState<'Surah' | 'Juz'>('Surah');
 
   return (
@@ -24,3 +24,4 @@ export function HomeTabs({ searchQuery }: HomeTabsProps): React.JSX.Element {
     </section>
   );
 }
+

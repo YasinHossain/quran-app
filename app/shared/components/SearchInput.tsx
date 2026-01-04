@@ -18,6 +18,7 @@ interface SearchInputProps {
   onChange: (value: string) => void;
   placeholder: string;
   onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
+  onFocus?: () => void;
   className?: string;
   variant?: SearchVariant;
   size?: SearchSize;
@@ -90,6 +91,7 @@ export const SearchInput = ({
   onChange,
   placeholder,
   onKeyDown,
+  onFocus,
   className = '',
   variant = 'default',
   size = 'md',
@@ -116,6 +118,7 @@ export const SearchInput = ({
         onChange={(e): void => onChange(e.target.value)}
         placeholder={placeholder}
         onKeyDown={onKeyDown}
+        onFocus={onFocus}
         className={`w-full ${sizeStyles.inputBase} ${rightPad} rounded-lg outline-none focus:outline-none ${focusStyles} transition-all duration-300 ${hoverStyles} ${variantStyles} touch-manipulation`}
         autoCapitalize="off"
         autoComplete="off"
