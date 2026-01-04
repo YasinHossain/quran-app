@@ -31,6 +31,8 @@ export enum SearchMode {
 
 const SEARCH_PROXY_ROUTE_PATH = '/api/proxy/search';
 const QDC_SEARCH_BASE_URL = 'https://api.qurancdn.com/api/qdc';
+const USE_QURAN_FOUNDATION_SEARCH =
+  process.env['NEXT_PUBLIC_USE_QURAN_FOUNDATION_SEARCH'] === 'true';
 let memoizedSearchProxyBase: string | null | undefined;
 
 function ensureTrailingSlash(value: string): string {
@@ -142,7 +144,6 @@ async function qdcSearchFetch<T>(
 }
 
 function shouldFallbackToQdc(error: unknown): boolean {
-  if (process.env.NODE_ENV !== 'development') return false;
   const message = error instanceof Error ? error.message : '';
   return (
     message.includes('Quran search gateway URL is not configured') ||
@@ -442,6 +443,16 @@ export async function comprehensiveSearch(
         totalRecords: 0,
       },
     };
+  }
+
+  if (!USE_QURAN_FOUNDATION_SEARCH) {
+    return fetchQdcSearch(query, {
+      size,
+      perPage,
+      page,
+      translationIds,
+      mode,
+    });
   }
 
   try {
