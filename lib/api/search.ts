@@ -659,8 +659,8 @@ export async function comprehensiveSearch(
  * When Quran Foundation Search is enabled (via NEXT_PUBLIC_USE_QURAN_FOUNDATION_SEARCH=true),
  * uses the same backend as quran.com which provides proper exact phrase matching.
  * 
- * When not enabled, uses public APIs with client-side filtering to approximate
- * exact phrase matching (with limitations since APIs don't prioritize exact phrases).
+ * When not enabled, uses public APIs with client-side exact phrase sorting
+ * to keep the preview relevant.
  */
 export async function quickSearch(
   query: string,
@@ -681,46 +681,54 @@ export async function quickSearch(
   }
   
   // Fallback: Use public APIs with client-side phrase matching workaround
-  try {
-    // Request more results to find exact phrase matches (API doesn't prioritize them)
-    // 50 is a good balance between finding exact matches and API response time
-    const fetchSize = 50;
-    
-    // Use V4 API for verse results - it searches across ALL translations
-    const v4Results = await fetchV4Search(query, fetchSize);
-    
-    // Get navigation results from QDC API (surah names, juz, page detection)
-    const qdcResults = await fetchQdcSearch(query, {
-      size: 5,
-      perPage: 5,
-      page: 1,
-      translationIds,
-      mode: SearchMode.Quick,
-    });
-    
-    // Filter and sort to prioritize exact phrase matches
-    const filteredVerses = filterAndSortByExactPhrase(v4Results.verses, query, perPage);
-    
-    // Merge: QDC navigation + filtered V4 verses
-    return {
-      navigation: qdcResults.navigation,
-      verses: filteredVerses,
-      pagination: {
-        ...v4Results.pagination,
-        totalRecords: v4Results.pagination.totalRecords,
-      },
-    };
-  } catch (error) {
-    console.error('Quick search error, falling back to QDC:', error);
-    // Fallback to QDC-only search
-    return fetchQdcSearch(query, {
+  // Fetch a larger pool to prioritize exact phrase matches
+  const fetchSize = 100;
+  const [v4Result, qdcResult] = await Promise.allSettled([
+    fetchV4Search(query, fetchSize),
+    fetchQdcSearch(query, {
       size: perPage,
       perPage,
       page: 1,
       translationIds,
       mode: SearchMode.Quick,
-    });
+    }),
+  ]);
+
+  const v4Results = v4Result.status === 'fulfilled' ? v4Result.value : null;
+  const qdcResults = qdcResult.status === 'fulfilled' ? qdcResult.value : null;
+
+  if (v4Result.status === 'rejected') {
+    console.error('Quick search V4 error:', v4Result.reason);
   }
+
+  if (qdcResult.status === 'rejected') {
+    console.error('Quick search QDC error:', qdcResult.reason);
+  }
+
+  if (!v4Results && qdcResults) {
+    return qdcResults;
+  }
+
+  if (!v4Results) {
+    console.error('Quick search failed for both V4 and QDC.', {
+      v4Error: v4Result.status === 'rejected' ? v4Result.reason : null,
+      qdcError: qdcResult.status === 'rejected' ? qdcResult.reason : null,
+    });
+    throw new Error('Quick search failed for both V4 and QDC');
+  }
+
+  // Filter and sort to prioritize exact phrase matches
+  const filteredVerses = filterAndSortByExactPhrase(v4Results.verses, query, perPage);
+
+  // Merge: QDC navigation + preview verses
+  return {
+    navigation: qdcResults?.navigation ?? [],
+    verses: filteredVerses,
+    pagination: {
+      ...v4Results.pagination,
+      totalRecords: v4Results.pagination.totalRecords,
+    },
+  };
 }
 
 /**
@@ -816,8 +824,7 @@ function normalizeForSearch(text: string): string {
  * Advanced search for the search results page.
  * 
  * When Quran Foundation Search is enabled, uses their proper exact phrase matching.
- * When not enabled, uses V4 API with client-side exact phrase filtering
- * (same logic as quickSearch for consistent results).
+ * When not enabled, uses V4 API with client-side exact phrase filtering.
  * 
  * This is what appears on the /search page after pressing Enter.
  */

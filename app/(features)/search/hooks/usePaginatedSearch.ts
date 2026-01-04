@@ -1,10 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { advancedSearch, type SearchVerseResult } from '@/lib/api/search';
 import { getVerseByKey } from '@/lib/api/verses';
 import { useSettings } from '@/app/providers/SettingsContext';
+import { estimateVerseTotal } from '@/lib/utils/searchTotals';
 
 import type { Verse } from '@/types';
 
@@ -40,6 +41,7 @@ interface UsePaginatedSearchReturn extends PaginatedSearchState {
  */
 export function usePaginatedSearch(query: string): UsePaginatedSearchReturn {
   const { settings } = useSettings();
+  const requestIdRef = useRef(0);
   const [state, setState] = useState<PaginatedSearchState>({
     verses: [],
     isLoading: false,
@@ -98,6 +100,7 @@ export function usePaginatedSearch(query: string): UsePaginatedSearchReturn {
   // Fetch search results for a specific page
   const fetchPage = useCallback(
     async (page: number, isPageChange = false) => {
+      const requestId = ++requestIdRef.current;
       if (!query.trim()) {
         setState({
           verses: [],
@@ -128,8 +131,19 @@ export function usePaginatedSearch(query: string): UsePaginatedSearchReturn {
           translationIds: settings.translationIds?.length ? settings.translationIds : [20],
         });
 
+        if (requestId !== requestIdRef.current) return;
+
         // Fetch full verse data for each result
         const fullVerses = await fetchVerseDetails(searchResponse.verses);
+        if (requestId !== requestIdRef.current) return;
+
+        const totalResults = estimateVerseTotal({
+          totalPages: searchResponse.pagination.totalPages,
+          pageSize: PAGE_SIZE,
+          reportedTotal: searchResponse.pagination.totalRecords,
+          currentPage: page,
+          currentPageCount: searchResponse.verses.length,
+        });
 
         setState({
           verses: fullVerses,
@@ -138,11 +152,12 @@ export function usePaginatedSearch(query: string): UsePaginatedSearchReturn {
           error: null,
           currentPage: page,
           totalPages: searchResponse.pagination.totalPages,
-          totalResults: searchResponse.pagination.totalRecords,
+          totalResults,
           hasNextPage: searchResponse.pagination.nextPage !== null,
           hasPrevPage: page > 1,
         });
       } catch (error) {
+        if (requestId !== requestIdRef.current) return;
         console.error('Search error:', error);
         const message =
           error instanceof Error

@@ -270,10 +270,8 @@ export function filterHighlyRelevant(
 /**
  * Get the best matches for dropdown display.
  * 
- * Since quickSearch now does proper exact phrase filtering and sorting,
- * we just add relevance scores for display and limit results.
- * We DON'T re-sort because the API results are already properly ordered
- * with exact phrase matches first.
+ * For dropdown preview, we keep the API order and only add relevance
+ * scores for display. We don't re-sort to keep the preview lightweight.
  */
 export function getBestMatchesForDropdown(
   verses: SearchVerseResult[],

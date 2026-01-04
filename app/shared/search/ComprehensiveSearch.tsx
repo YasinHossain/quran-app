@@ -50,6 +50,7 @@ interface RecentSearch {
 const RECENT_SEARCHES_KEY = 'quran-recent-searches';
 const MAX_RECENT_SEARCHES = 5;
 const DEBOUNCE_MS = 300;
+const QUICK_SEARCH_PAGE_SIZE = 10;
 
 const QUICK_LINKS = [
   { name: 'Al-Mulk', id: 67 },
@@ -113,7 +114,6 @@ interface SearchDropdownProps {
   onSelectRecent: (query: string) => void;
   onClearRecent: () => void;
   onSearchPage: () => void;
-  totalResults: number;
 }
 
 const SearchDropdown = memo(function SearchDropdown({
@@ -128,7 +128,6 @@ const SearchDropdown = memo(function SearchDropdown({
   onSelectRecent,
   onClearRecent,
   onSearchPage,
-  totalResults,
 }: SearchDropdownProps): ReactElement {
   const { settings } = useSettings();
   const hasQuery = searchQuery.trim().length > 0;
@@ -139,7 +138,8 @@ const SearchDropdown = memo(function SearchDropdown({
   let itemIndex = 0;
 
   // Maximum verses to display in dropdown
-  const maxVersesToShow = 10;
+  const maxVersesToShow = QUICK_SEARCH_PAGE_SIZE;
+  const visibleVerseCount = Math.min(verseResults.length, maxVersesToShow);
 
   return (
     <div className="absolute top-full left-1/2 -translate-x-1/2 w-[calc(100vw-32px)] md:w-[44rem] mt-2 z-50 bg-surface rounded-xl shadow-2xl border border-border/50 overflow-hidden backdrop-blur-xl">
@@ -218,7 +218,7 @@ const SearchDropdown = memo(function SearchDropdown({
         <div className="py-2 border-b border-border/50">
           <div className="px-4 py-1.5 flex items-center justify-between">
             <span className="text-xs font-medium text-muted uppercase tracking-wider">Search Results</span>
-            <span className="text-xs text-muted">{totalResults} total</span>
+            <span className="text-xs text-muted">Showing {visibleVerseCount}</span>
           </div>
         </div>
       )}
@@ -317,6 +317,7 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
   const { settings } = useSettings();
   const containerRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const requestIdRef = useRef(0);
 
   // State
   const [query, setQuery] = useState('');
@@ -326,17 +327,15 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
   const [recentSearches, setRecentSearches] = useState<RecentSearch[]>([]);
   const [navigationResults, setNavigationResults] = useState<SearchNavigationResult[]>([]);
   const [verseResults, setVerseResults] = useState<SearchVerseResult[]>([]);
-  const [totalResults, setTotalResults] = useState(0);
   const translationIds = useMemo(
     () => (settings.translationIds?.length ? settings.translationIds : [20]),
     [settings.translationIds]
   );
 
-  // Sort verse results by relevance for dropdown display
-  // This prioritizes exact matches and sorts by match quality
+  // Add relevance scores for dropdown display and limit results
   const sortedVerseResults = useMemo((): ScoredVerseResult[] => {
     if (!verseResults.length || !query.trim()) return [];
-    return getBestMatchesForDropdown(verseResults, query, 10);
+    return getBestMatchesForDropdown(verseResults, query, QUICK_SEARCH_PAGE_SIZE);
   }, [verseResults, query]);
 
   // Load recent searches on mount
@@ -364,10 +363,11 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
       clearTimeout(debounceRef.current);
     }
 
+    const requestId = ++requestIdRef.current;
+
     if (!query.trim()) {
       setNavigationResults([]);
       setVerseResults([]);
-      setTotalResults(0);
       setIsLoading(false);
       return;
     }
@@ -384,18 +384,21 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
     debounceRef.current = setTimeout(async () => {
       try {
         const results = await quickSearch(query, {
-          perPage: 10,
+          perPage: QUICK_SEARCH_PAGE_SIZE,
           translationIds,
         });
+        if (requestId !== requestIdRef.current) return;
         setNavigationResults(results.navigation);
         setVerseResults(results.verses);
-        setTotalResults(results.pagination.totalRecords);
       } catch (error) {
+        if (requestId !== requestIdRef.current) return;
         console.error('Search failed:', error);
         setNavigationResults([]);
         setVerseResults([]);
       } finally {
-        setIsLoading(false);
+        if (requestId === requestIdRef.current) {
+          setIsLoading(false);
+        }
       }
     }, DEBOUNCE_MS);
 
@@ -572,7 +575,6 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
           onSelectRecent={handleRecentSelect}
           onClearRecent={handleClearRecent}
           onSearchPage={navigateToSearchPage}
-          totalResults={totalResults}
         />
       )}
 
