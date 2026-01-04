@@ -8,7 +8,7 @@ import { memo, type ReactElement, useCallback } from 'react';
 import { useSidebar } from '@/app/providers/SidebarContext';
 
 export const HeaderBrand = memo(function HeaderBrand(): ReactElement {
-  const { setSurahListOpen, setBookmarkSidebarOpen } = useSidebar();
+  const { setSurahListOpen, setBookmarkSidebarOpen, setSearchSidebarOpen } = useSidebar();
 
   const pathname = usePathname();
 
@@ -22,18 +22,24 @@ export const HeaderBrand = memo(function HeaderBrand(): ReactElement {
     );
   const isBookmarkPath = (path?: string | null): boolean =>
     Boolean(path && path.startsWith('/bookmarks'));
+  const isSearchPath = (path?: string | null): boolean =>
+    Boolean(path && path.startsWith('/search'));
 
-  const shouldShowMenu = isNavPath(pathname) || isBookmarkPath(pathname);
+  const shouldShowMenu = isNavPath(pathname) || isBookmarkPath(pathname) || isSearchPath(pathname);
 
   const handleMobileNavClick = useCallback((): void => {
     if (isBookmarkPath(pathname)) {
       setBookmarkSidebarOpen(true);
       return;
     }
+    if (isSearchPath(pathname)) {
+      setSearchSidebarOpen(true);
+      return;
+    }
     if (isNavPath(pathname)) {
       setSurahListOpen(true);
     }
-  }, [pathname, setBookmarkSidebarOpen, setSurahListOpen]);
+  }, [pathname, setBookmarkSidebarOpen, setSearchSidebarOpen, setSurahListOpen]);
 
   return (
     <div className="flex items-center justify-start w-auto sm:w-1/3 gap-1">

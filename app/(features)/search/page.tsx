@@ -1,10 +1,76 @@
 'use client';
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useCallback, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { useTranslationOptions } from '@/app/(features)/surah/hooks/useTranslationOptions';
+import { useSettings } from '@/app/providers/SettingsContext';
+import { SettingsSidebar } from '@/app/shared/reader/settings/SettingsSidebar';
+import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
+import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 
 import { usePaginatedSearch } from './hooks/usePaginatedSearch';
 import { SearchResultsContent } from './components/SearchResultsContent';
+import { SearchLayout } from './components/SearchLayout';
+
+import type { LanguageCode } from '@/lib/text/languageCodes';
+
+// ============================================================================
+// Panel Toggles Hook (similar to bookmarks pattern)
+// ============================================================================
+
+function useSearchPanelToggles(): {
+  isTranslationPanelOpen: boolean;
+  isWordPanelOpen: boolean;
+  selectedTranslationName: string;
+  selectedWordLanguageName: string;
+  handleTranslationPanelOpen: () => void;
+  handleTranslationPanelClose: () => void;
+  handleWordPanelOpen: () => void;
+  handleWordPanelClose: () => void;
+} {
+  const { settings } = useSettings();
+  const { t } = useTranslation();
+  const { translationOptions, wordLanguageOptions } = useTranslationOptions();
+
+  const [isTranslationPanelOpen, setIsTranslationPanelOpen] = useState(false);
+  const [isWordPanelOpen, setIsWordPanelOpen] = useState(false);
+
+  const selectedTranslationName = useMemo(
+    () =>
+      translationOptions.find((o) => o.id === settings.translationId)?.name ||
+      t('select_translation'),
+    [settings.translationId, translationOptions, t]
+  );
+
+  const selectedWordLanguageName = useMemo(
+    () =>
+      wordLanguageOptions.find(
+        (o) =>
+          (LANGUAGE_CODES as Record<string, LanguageCode>)[o.name.toLowerCase()] ===
+          settings.wordLang
+      )?.name || t('select_word_translation'),
+    [settings.wordLang, wordLanguageOptions, t]
+  );
+
+  const handleTranslationPanelOpen = useCallback(() => setIsTranslationPanelOpen(true), []);
+  const handleTranslationPanelClose = useCallback(() => setIsTranslationPanelOpen(false), []);
+  const handleWordPanelOpen = useCallback(() => setIsWordPanelOpen(true), []);
+  const handleWordPanelClose = useCallback(() => setIsWordPanelOpen(false), []);
+
+  return {
+    isTranslationPanelOpen,
+    isWordPanelOpen,
+    selectedTranslationName,
+    selectedWordLanguageName,
+    handleTranslationPanelOpen,
+    handleTranslationPanelClose,
+    handleWordPanelOpen,
+    handleWordPanelClose,
+  };
+}
 
 // ============================================================================
 // Search Page Content
@@ -13,6 +79,7 @@ import { SearchResultsContent } from './components/SearchResultsContent';
 function SearchPageContent(): React.JSX.Element {
   const searchParams = useSearchParams();
   const query = searchParams.get('query') || '';
+  const panel = useSearchPanelToggles();
 
   const {
     verses,
@@ -30,21 +97,59 @@ function SearchPageContent(): React.JSX.Element {
   } = usePaginatedSearch(query);
 
   return (
-    <SearchResultsContent
-      query={query}
-      verses={verses}
-      isLoading={isLoading}
-      isLoadingMore={isLoadingMore}
-      error={error}
-      currentPage={currentPage}
-      totalPages={totalPages}
-      totalResults={totalResults}
-      hasNextPage={hasNextPage}
-      hasPrevPage={hasPrevPage}
-      onNextPage={goToNextPage}
-      onPrevPage={goToPrevPage}
-      onGoToPage={goToPage}
-    />
+    <>
+      {/* Mobile settings sidebar */}
+      <div className="2xl:hidden">
+        <SettingsSidebar
+          pageType="bookmarks"
+          readerTabsEnabled={false}
+          selectedTranslationName={panel.selectedTranslationName}
+          selectedWordLanguageName={panel.selectedWordLanguageName}
+          onTranslationPanelOpen={panel.handleTranslationPanelOpen}
+          onTranslationPanelClose={panel.handleTranslationPanelClose}
+          isTranslationPanelOpen={panel.isTranslationPanelOpen}
+          onWordLanguagePanelOpen={panel.handleWordPanelOpen}
+          onWordLanguagePanelClose={panel.handleWordPanelClose}
+          isWordLanguagePanelOpen={panel.isWordPanelOpen}
+        />
+      </div>
+
+      <SearchLayout
+        query={query}
+        verses={verses}
+        totalResults={totalResults}
+        isLoading={isLoading}
+        rightSidebar={
+          <SettingsSidebarContent
+            readerTabsEnabled={false}
+            selectedTranslationName={panel.selectedTranslationName}
+            selectedWordLanguageName={panel.selectedWordLanguageName}
+            onTranslationPanelOpen={panel.handleTranslationPanelOpen}
+            onTranslationPanelClose={panel.handleTranslationPanelClose}
+            isTranslationPanelOpen={panel.isTranslationPanelOpen}
+            onWordLanguagePanelOpen={panel.handleWordPanelOpen}
+            onWordLanguagePanelClose={panel.handleWordPanelClose}
+            isWordLanguagePanelOpen={panel.isWordPanelOpen}
+          />
+        }
+      >
+        <SearchResultsContent
+          query={query}
+          verses={verses}
+          isLoading={isLoading}
+          isLoadingMore={isLoadingMore}
+          error={error}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalResults={totalResults}
+          hasNextPage={hasNextPage}
+          hasPrevPage={hasPrevPage}
+          onNextPage={goToNextPage}
+          onPrevPage={goToPrevPage}
+          onGoToPage={goToPage}
+        />
+      </SearchLayout>
+    </>
   );
 }
 
@@ -89,11 +194,9 @@ function SearchPageLoading(): React.JSX.Element {
 export default function SearchPage(): React.JSX.Element {
   return (
     <div className="min-h-screen bg-background">
-      <div className="p-4 md:p-6 pt-20 md:pt-24 max-w-4xl mx-auto">
-        <Suspense fallback={<SearchPageLoading />}>
-          <SearchPageContent />
-        </Suspense>
-      </div>
+      <Suspense fallback={<SearchPageLoading />}>
+        <SearchPageContent />
+      </Suspense>
     </div>
   );
 }

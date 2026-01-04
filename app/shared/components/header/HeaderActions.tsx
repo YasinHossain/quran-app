@@ -15,7 +15,6 @@ export const HeaderActions = memo(function HeaderActions(): ReactElement {
     '/bookmarks',
     '/bookmarks/last-read',
     '/bookmarks/planner',
-    '/search',
   ];
 
   const shouldHideSettings = NO_SETTINGS_SIDEBAR_ROUTES.includes(pathname);
