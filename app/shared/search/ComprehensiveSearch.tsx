@@ -19,6 +19,7 @@ import { buildSurahRoute, buildJuzRoute, buildPageRoute, buildSearchRoute } from
 import { useSettings } from '@/app/providers/SettingsContext';
 import { quickSearch, analyzeQuery, type SearchNavigationResult, type SearchVerseResult } from '@/lib/api/search';
 import { SearchIcon, BookOpenIcon, HashIcon } from '@/app/shared/icons';
+import { getBestMatchesForDropdown, highlightMissingQueryWords, type ScoredVerseResult } from '@/lib/utils/searchRelevance';
 
 // ============================================================================
 // Types
@@ -103,7 +104,7 @@ function clearRecentSearches(): void {
 interface SearchDropdownProps {
   isLoading: boolean;
   navigationResults: SearchNavigationResult[];
-  verseResults: SearchVerseResult[];
+  verseResults: (SearchVerseResult | ScoredVerseResult)[];
   recentSearches: RecentSearch[];
   searchQuery: string;
   highlightedIndex: number;
@@ -129,6 +130,7 @@ const SearchDropdown = memo(function SearchDropdown({
   onSearchPage,
   totalResults,
 }: SearchDropdownProps): ReactElement {
+  const { settings } = useSettings();
   const hasQuery = searchQuery.trim().length > 0;
   const hasResults = navigationResults.length > 0 || verseResults.length > 0;
   const showRecents = !hasQuery && recentSearches.length > 0;
@@ -237,30 +239,35 @@ const SearchDropdown = memo(function SearchDropdown({
             return (
               <button
                 key={verse.verseKey}
-                type="button"
-                onClick={() => onSelectVerse(verse)}
-                className={`w-full px-4 py-4 text-left transition-colors border-b border-border/30 last:border-b-0 ${
-                  isHighlighted ? 'bg-accent/15' : 'hover:bg-interactive/50'
-                }`}
-              >
-                <div className="flex items-start gap-3">
-                  {/* Verse key badge */}
-                  <div className="flex-shrink-0 mt-0.5">
-                    <span className="inline-flex items-center justify-center min-w-[3rem] px-2 py-1 rounded-md bg-accent text-white text-xs font-semibold">
-                      {verse.verseKey}
-                    </span>
+                  type="button"
+                  onClick={() => onSelectVerse(verse)}
+                  className={`w-full px-4 py-4 text-left transition-colors border-b border-border/30 last:border-b-0 ${
+                    isHighlighted ? 'bg-accent/15' : 'hover:bg-interactive/50'
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    {/* Verse key badge */}
+                    <div className="flex-shrink-0 mt-0.5">
+                      <span className="inline-flex items-center justify-center min-w-[3rem] px-2 py-1 rounded-md bg-accent text-white text-xs font-semibold">
+                        {verse.verseKey}
+                      </span>
+                    </div>
+                    {/* Full verse translation text */}
+                    <div className="flex-1 min-w-0">
+                      <p
+                        className="text-sm text-foreground leading-relaxed search-result-text"
+                        style={{ 
+                          fontSize: `${settings.translationFontSize ? Math.max(14, settings.translationFontSize - 2) : 16}px` 
+                        }}
+                        dangerouslySetInnerHTML={{ 
+                          __html: highlightMissingQueryWords(verse.highlightedTranslation, searchQuery) 
+                        }}
+                      />
+                    </div>
                   </div>
-                  {/* Full verse translation text */}
-                  <div className="flex-1 min-w-0">
-                    <p
-                      className="text-sm text-foreground leading-relaxed search-result-text"
-                      dangerouslySetInnerHTML={{ __html: verse.highlightedTranslation }}
-                    />
-                  </div>
-                </div>
-              </button>
-            );
-          })}
+                </button>
+              );
+            })}
         </div>
       )}
 
@@ -324,6 +331,13 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
     () => (settings.translationIds?.length ? settings.translationIds : [20]),
     [settings.translationIds]
   );
+
+  // Sort verse results by relevance for dropdown display
+  // This prioritizes exact matches and sorts by match quality
+  const sortedVerseResults = useMemo((): ScoredVerseResult[] => {
+    if (!verseResults.length || !query.trim()) return [];
+    return getBestMatchesForDropdown(verseResults, query, 10);
+  }, [verseResults, query]);
 
   // Load recent searches on mount
   useEffect(() => {
@@ -549,7 +563,7 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
         <SearchDropdown
           isLoading={isLoading}
           navigationResults={navigationResults}
-          verseResults={verseResults}
+          verseResults={sortedVerseResults}
           recentSearches={recentSearches}
           searchQuery={query}
           highlightedIndex={highlightedIndex}

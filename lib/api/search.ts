@@ -31,6 +31,8 @@ export enum SearchMode {
 
 const SEARCH_PROXY_ROUTE_PATH = '/api/proxy/search';
 const QDC_SEARCH_BASE_URL = 'https://api.qurancdn.com/api/qdc';
+// V4 API searches across ALL translations (like quran.com)
+const V4_SEARCH_BASE_URL = 'https://api.quran.com/api/v4';
 const USE_QURAN_FOUNDATION_SEARCH =
   process.env['NEXT_PUBLIC_USE_QURAN_FOUNDATION_SEARCH'] === 'true';
 let memoizedSearchProxyBase: string | null | undefined;
@@ -332,6 +334,111 @@ async function fetchQdcSearch(
 }
 
 // ============================================================================
+// V4 API Search (searches across ALL translations like quran.com)
+// ============================================================================
+
+interface V4ApiTranslation {
+  text: string;
+  resource_id: number;
+  name: string;
+  language_name: string;
+}
+
+interface V4ApiWord {
+  char_type: string;
+  text: string;
+}
+
+interface V4ApiSearchResult {
+  verse_key: string;
+  verse_id: number;
+  text: string;
+  highlighted: string | null;
+  words: V4ApiWord[];
+  translations: V4ApiTranslation[];
+}
+
+interface V4ApiSearchResponse {
+  search: {
+    query: string;
+    total_results: number;
+    current_page: number;
+    total_pages: number;
+    results: V4ApiSearchResult[];
+  };
+}
+
+/**
+ * Fetch search results from V4 API.
+ * This API searches across ALL translations (not just one),
+ * which enables finding exact phrase matches that may only exist
+ * in certain translations (e.g., "Book of Allah" in Yusuf Ali).
+ * 
+ * The V4 API automatically detects the query language and returns
+ * translations in that language. So if you search in Bangla, you
+ * get Bangla results; if you search in English, you get English results.
+ */
+async function fetchV4Search(
+  query: string,
+  size: number = 10,
+  page: number = 1
+): Promise<SearchResponse> {
+  const url = new URL('search', ensureTrailingSlash(V4_SEARCH_BASE_URL));
+  url.searchParams.set('q', query.trim());
+  url.searchParams.set('size', size.toString());
+  url.searchParams.set('page', page.toString());
+  // Don't force language - let API auto-detect from query
+
+  const res = await fetchWithTimeout(url.toString(), {
+    headers: {
+      Accept: 'application/json',
+    },
+    cache: 'no-store',
+    errorPrefix: 'V4 Search failed',
+  });
+
+  const data = (await res.json()) as V4ApiSearchResponse;
+
+  // V4 API doesn't return navigation results, just verses
+  const navigation: SearchNavigationResult[] = [];
+
+  const verses: SearchVerseResult[] = data.search.results.map((result) => {
+    const { surahNumber, ayahNumber } = parseVerseKey(result.verse_key);
+    
+    // Get Arabic text from words
+    const arabicText = result.words
+      .filter(w => w.char_type === 'word')
+      .map(w => w.text)
+      .join(' ');
+    
+    // Get the first translation - the API returns the best matching one
+    // based on the query language
+    const translation = result.translations?.[0];
+
+    return {
+      verseKey: result.verse_key,
+      verseId: result.verse_id,
+      surahNumber,
+      verseNumber: ayahNumber,
+      textArabic: arabicText || result.text,
+      highlightedTranslation: translation?.text ?? '',
+      translationName: translation?.name ?? '',
+    };
+  });
+
+  return {
+    navigation,
+    verses,
+    pagination: {
+      currentPage: data.search.current_page,
+      nextPage: data.search.current_page < data.search.total_pages ? data.search.current_page + 1 : null,
+      totalPages: data.search.total_pages,
+      totalRecords: data.search.total_results,
+    },
+  };
+}
+
+// ============================================================================
 // Query Parsing
 // ============================================================================
 
@@ -500,8 +607,8 @@ export async function comprehensiveSearch(
         resultType: result.result_type,
         key: result.key,
         name: result.name,
-        isArabic: result.isArabic,
-        isTransliteration: result.isTransliteration,
+        ...(result.isArabic !== undefined && { isArabic: result.isArabic }),
+        ...(result.isTransliteration !== undefined && { isTransliteration: result.isTransliteration }),
       }));
 
     const verses: SearchVerseResult[] = allResults
@@ -548,8 +655,12 @@ export async function comprehensiveSearch(
 
 /**
  * Quick search for autocomplete/dropdown.
- * Uses Quick mode which prioritizes navigation results and exact matches.
- * This is what appears in the dropdown when typing.
+ * 
+ * When Quran Foundation Search is enabled (via NEXT_PUBLIC_USE_QURAN_FOUNDATION_SEARCH=true),
+ * uses the same backend as quran.com which provides proper exact phrase matching.
+ * 
+ * When not enabled, uses public APIs with client-side filtering to approximate
+ * exact phrase matching (with limitations since APIs don't prioritize exact phrases).
  */
 export async function quickSearch(
   query: string,
@@ -559,16 +670,155 @@ export async function quickSearch(
   } = {}
 ): Promise<SearchResponse> {
   const { perPage = 10, translationIds = [20] } = options;
-  return comprehensiveSearch(query, {
-    perPage,
-    translationIds,
-    mode: SearchMode.Quick,
+  
+  // If Quran Foundation Search is enabled, use it for proper exact phrase matching
+  if (USE_QURAN_FOUNDATION_SEARCH) {
+    return comprehensiveSearch(query, {
+      perPage,
+      translationIds,
+      mode: SearchMode.Quick,
+    });
+  }
+  
+  // Fallback: Use public APIs with client-side phrase matching workaround
+  try {
+    // Request more results to find exact phrase matches (API doesn't prioritize them)
+    // 50 is a good balance between finding exact matches and API response time
+    const fetchSize = 50;
+    
+    // Use V4 API for verse results - it searches across ALL translations
+    const v4Results = await fetchV4Search(query, fetchSize);
+    
+    // Get navigation results from QDC API (surah names, juz, page detection)
+    const qdcResults = await fetchQdcSearch(query, {
+      size: 5,
+      perPage: 5,
+      page: 1,
+      translationIds,
+      mode: SearchMode.Quick,
+    });
+    
+    // Filter and sort to prioritize exact phrase matches
+    const filteredVerses = filterAndSortByExactPhrase(v4Results.verses, query, perPage);
+    
+    // Merge: QDC navigation + filtered V4 verses
+    return {
+      navigation: qdcResults.navigation,
+      verses: filteredVerses,
+      pagination: {
+        ...v4Results.pagination,
+        totalRecords: v4Results.pagination.totalRecords,
+      },
+    };
+  } catch (error) {
+    console.error('Quick search error, falling back to QDC:', error);
+    // Fallback to QDC-only search
+    return fetchQdcSearch(query, {
+      size: perPage,
+      perPage,
+      page: 1,
+      translationIds,
+      mode: SearchMode.Quick,
+    });
+  }
+}
+
+/**
+ * Filter and sort verses to prioritize exact phrase matches.
+ * 
+ * This implements client-side exact phrase matching since the public APIs
+ * only do basic word matching. It:
+ * 1. Finds verses containing the EXACT phrase (consecutive words)
+ * 2. If no exact matches, finds verses with ALL query words
+ * 3. Falls back to verses with most query word matches
+ */
+function filterAndSortByExactPhrase(
+  verses: SearchVerseResult[],
+  query: string,
+  maxResults: number
+): SearchVerseResult[] {
+  const normalizedQuery = normalizeForSearch(query);
+  const queryWords = normalizedQuery.split(/\s+/).filter(w => w.length > 2); // Ignore short words like "of", "the"
+  
+  // Score each verse
+  const scoredVerses = verses.map(verse => {
+    const text = normalizeForSearch(verse.highlightedTranslation.replace(/<[^>]+>/g, ''));
+    
+    // Check for exact phrase match
+    const hasExactPhrase = text.includes(normalizedQuery);
+    
+    // Count matched query words
+    const matchedWords = queryWords.filter(word => text.includes(word)).length;
+    const matchRatio = queryWords.length > 0 ? matchedWords / queryWords.length : 0;
+    
+    // Count highlights (API highlighting)
+    const highlightCount = (verse.highlightedTranslation.match(/<em>/gi) || []).length;
+    
+    // Calculate score: exact match = 100, partial matches < 100
+    let score = 0;
+    if (hasExactPhrase) {
+      score = 100 + highlightCount; // Exact phrase match is highest priority
+    } else if (matchRatio === 1) {
+      score = 80 + highlightCount; // All words present (but not consecutive)
+    } else {
+      score = matchRatio * 50 + highlightCount;
+    }
+    
+    return { verse, score, hasExactPhrase, matchRatio };
   });
+  
+  // Sort by score (highest first)
+  scoredVerses.sort((a, b) => b.score - a.score);
+  
+  // Return top results, prioritizing exact matches
+  const exactMatches = scoredVerses.filter(s => s.hasExactPhrase);
+  const partialMatches = scoredVerses.filter(s => !s.hasExactPhrase);
+  
+  // If we have exact matches, show those first
+  const results: SearchVerseResult[] = [];
+  
+  // Add exact matches first (capped at maxResults)
+  for (const s of exactMatches) {
+    if (results.length >= maxResults) break;
+    results.push(s.verse);
+  }
+  
+  // Fill remaining slots with best partial matches
+  for (const s of partialMatches) {
+    if (results.length >= maxResults) break;
+    results.push(s.verse);
+  }
+  
+  return results;
+}
+
+/**
+ * Normalize text for search comparison.
+ * Handles all scripts (Latin, Bangla, Arabic, etc.)
+ * - Converts to lowercase
+ * - Removes diacritics (for Latin scripts)
+ * - Removes punctuation while preserving letters from all scripts
+ * - Normalizes whitespace
+ */
+function normalizeForSearch(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritics (accents)
+    // Remove punctuation but keep letters from all scripts (Unicode property escapes)
+    // This preserves Bangla, Arabic, Hebrew, etc.
+    .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 /**
  * Advanced search for the search results page.
- * Uses Advanced mode with partial matching for comprehensive results.
+ * 
+ * When Quran Foundation Search is enabled, uses their proper exact phrase matching.
+ * When not enabled, uses V4 API with client-side exact phrase filtering
+ * (same logic as quickSearch for consistent results).
+ * 
  * This is what appears on the /search page after pressing Enter.
  */
 export async function advancedSearch(
@@ -581,13 +831,76 @@ export async function advancedSearch(
 ): Promise<SearchResponse> {
   const { page = 1, size = 10, translationIds = [20] } = options;
 
-  return comprehensiveSearch(query, {
-    size,
-    page,
-    translationIds,
-    mode: SearchMode.Advanced,
-    exactMatchesOnly: false, // Include partial matches
-  });
+  // If Quran Foundation Search is enabled, use it for proper exact phrase matching
+  if (USE_QURAN_FOUNDATION_SEARCH) {
+    return comprehensiveSearch(query, {
+      size,
+      page,
+      translationIds,
+      mode: SearchMode.Advanced,
+      exactMatchesOnly: false, // Include partial matches
+    });
+  }
+
+  // Fallback: Use V4 API with client-side exact phrase filtering
+  try {
+    // Cap at 50 to prevent API timeout. This serves as our "Best Match" pool.
+    const sortWindowSize = 50;
+    
+    // 1. Fetch the "Best Match" pool (first 50 results)
+    // We always want to check the top 50 global results to see if any are exact matches
+    const bestMatchPool = await fetchV4Search(query, sortWindowSize, 1);
+    
+    // 2. Sort the pool by exact phrase match
+    const sortedPool = filterAndSortByExactPhrase(bestMatchPool.verses, query, bestMatchPool.verses.length);
+    
+    // 3. Determine which results to return
+    let versesToReturn: SearchVerseResult[] = [];
+    const startIndex = (page - 1) * size;
+    const endIndex = startIndex + size;
+    
+    // If the requested page falls strictly within our sorted pool, use the sorted results
+    if (endIndex <= sortedPool.length) {
+      versesToReturn = sortedPool.slice(startIndex, endIndex);
+    } else {
+      // PRO TIP: The user is asking for page 6+ (results 51+).
+      // Our sorted pool only has top 50.
+      // At this depth, we abandon "Best Match" sorting and return standard API pagination.
+      // We fetch the specific page requested.
+      const standardPage = await fetchV4Search(query, size, page);
+      versesToReturn = standardPage.verses;
+    }
+    
+    // Get navigation results from QDC API (only needed for page 1 usually, but cheap to fetch)
+    const qdcResults = await fetchQdcSearch(query, {
+      size: 5,
+      perPage: 5,
+      page: 1,
+      translationIds,
+      mode: SearchMode.Quick,
+    });
+    
+    return {
+      navigation: qdcResults.navigation,
+      verses: versesToReturn,
+      pagination: {
+        currentPage: page,
+        nextPage: page < bestMatchPool.pagination.totalPages ? page + 1 : null,
+        totalPages: bestMatchPool.pagination.totalPages,
+        totalRecords: bestMatchPool.pagination.totalRecords, // Use REAL total from API
+      },
+    };
+  } catch (error) {
+    console.error('Advanced search error, falling back to QDC:', error);
+    // Fallback to comprehensiveSearch which uses QDC
+    return comprehensiveSearch(query, {
+      size,
+      page,
+      translationIds,
+      mode: SearchMode.Advanced,
+      exactMatchesOnly: false,
+    });
+  }
 }
 
 /**

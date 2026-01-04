@@ -578,22 +578,35 @@ body::-webkit-scrollbar-thumb:hover,
 }
 
 /* ===== Search Result Highlighting ===== */
-/* Style for highlighted search terms in dropdown results */
+/* Style for highlighted search terms in dropdown and search page results */
 .search-result-text em,
 .search-result-text mark {
-  color: rgb(var(--color-accent));
+  /* Deep teal color matching the slider accent */
+  color: rgb(6, 128, 117);
   font-style: normal;
   font-weight: 600;
   background: transparent;
 }
 
+.dark .search-result-text em,
+.dark .search-result-text mark {
+  /* Brighter teal for dark mode visibility */
+  color: rgb(20, 184, 166);
+}
+
 /* Subtle background highlight variant */
 .search-result-text-bg em,
 .search-result-text-bg mark {
-  color: rgb(var(--color-accent));
+  color: rgb(6, 128, 117);
   font-style: normal;
   font-weight: 500;
-  background: rgb(var(--color-accent) / 0.1);
+  background: rgb(6 128 117 / 0.1);
   padding: 0.1em 0.2em;
   border-radius: 0.2em;
+}
+
+.dark .search-result-text-bg em,
+.dark .search-result-text-bg mark {
+  color: rgb(20, 184, 166);
+  background: rgb(20 184 166 / 0.15);
 }

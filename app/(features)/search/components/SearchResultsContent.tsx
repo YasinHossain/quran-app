@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { ReaderVerseCard } from '@/app/shared/reader/VerseCard';
@@ -8,6 +8,8 @@ import { VerseSkeleton } from '@/app/shared/components/VerseSkeleton';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { parseVerseKey } from '@/lib/utils/verse';
 import { SearchIcon, ChevronLeftIcon, ChevronRightIcon } from '@/app/shared/icons';
+import { useSettings } from '@/app/providers/SettingsContext';
+import { highlightMissingQueryWords } from '@/lib/utils/searchRelevance';
 
 import type { VerseWithHighlight } from '../hooks/usePaginatedSearch';
 
@@ -214,10 +216,19 @@ const Pagination = ({
 interface SearchVerseItemProps {
   verse: VerseWithHighlight;
   index: number;
+  query: string;
 }
 
-const SearchVerseItem = ({ verse, index }: SearchVerseItemProps): React.JSX.Element => {
+const SearchVerseItem = ({ verse, index, query }: SearchVerseItemProps): React.JSX.Element => {
   const router = useRouter();
+  const { settings } = useSettings();
+  const translationFontSize = settings.translationFontSize ?? 18;
+
+  // Highlight any missing query words that the API didn't highlight
+  const enhancedHighlightedText = useMemo(
+    () => highlightMissingQueryWords(verse.highlightedTranslation, query),
+    [verse.highlightedTranslation, query]
+  );
 
   const handleNavigateToVerse = useCallback(() => {
     const { surahNumber, ayahNumber } = parseVerseKey(verse.verse_key);
@@ -239,11 +250,6 @@ const SearchVerseItem = ({ verse, index }: SearchVerseItemProps): React.JSX.Elem
     onNavigateToVerse: handleNavigateToVerse,
   };
 
-  // Transform <em> tags to <mark> with styling for better highlighting visibility
-  const highlightedHtml = verse.highlightedTranslation
-    .replace(/<em>/g, '<mark style="background-color: rgba(251, 191, 36, 0.5); color: inherit; font-style: normal; padding: 0.1em 0.25em; border-radius: 0.2em; font-weight: 600;">')
-    .replace(/<\/em>/g, '</mark>');
-
   return (
     <div
       className="transform transition-all duration-300 ease-out opacity-100 translate-y-0"
@@ -256,15 +262,15 @@ const SearchVerseItem = ({ verse, index }: SearchVerseItemProps): React.JSX.Elem
         idPrefix="search-verse"
         showTranslations={false}
       >
-        {/* Highlighted translation with search term styling */}
+        {/* Highlighted translation with search term styling - same as dropdown */}
         <div className="mt-4">
           <p className="mb-2 text-xs font-normal uppercase tracking-wider text-muted-foreground">
             Search Match
           </p>
           <p
-            className="text-left leading-relaxed text-slate-900 dark:text-slate-50 font-[family-name:var(--font-crimson-text)]"
-            style={{ fontSize: '18px' }}
-            dangerouslySetInnerHTML={{ __html: highlightedHtml }}
+            className="text-left leading-relaxed text-slate-900 dark:text-slate-50 font-[family-name:var(--font-crimson-text)] search-result-text"
+            style={{ fontSize: `${translationFontSize}px` }}
+            dangerouslySetInnerHTML={{ __html: enhancedHighlightedText }}
           />
         </div>
       </ReaderVerseCard>
@@ -364,6 +370,7 @@ export const SearchResultsContent = ({
               key={`${verse.verse_key}-${currentPage}`}
               verse={verse}
               index={index}
+              query={query}
             />
           ))}
         </div>
