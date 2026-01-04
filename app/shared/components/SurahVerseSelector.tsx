@@ -91,7 +91,7 @@ export function SurahVerseSelector({
     <div
       className={clsx(
         'grid gap-3',
-        hideVerse ? 'grid-cols-1' : 'grid-cols-[minmax(0,3fr)_minmax(0,2fr)]',
+        hideVerse ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]',
         className
       )}
     >

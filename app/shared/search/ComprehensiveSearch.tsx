@@ -4,6 +4,7 @@ import {
   memo,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type KeyboardEvent,
@@ -15,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import { GoToSurahVerseForm } from '@/app/shared/components/go-to/GoToSurahVerseForm';
 import { SearchInput } from '@/app/shared/components/SearchInput';
 import { buildSurahRoute, buildJuzRoute, buildPageRoute, buildSearchRoute } from '@/app/shared/navigation/routes';
+import { useSettings } from '@/app/providers/SettingsContext';
 import { quickSearch, analyzeQuery, type SearchNavigationResult, type SearchVerseResult } from '@/lib/api/search';
 import { SearchIcon, BookOpenIcon, HashIcon } from '@/app/shared/icons';
 
@@ -135,10 +137,10 @@ const SearchDropdown = memo(function SearchDropdown({
   let itemIndex = 0;
 
   // Maximum verses to display in dropdown
-  const maxVersesToShow = 20;
+  const maxVersesToShow = 10;
 
   return (
-    <div className="absolute top-full left-0 right-0 mt-2 z-50 bg-surface rounded-xl shadow-2xl border border-border/50 overflow-hidden backdrop-blur-xl">
+    <div className="absolute top-full left-1/2 -translate-x-1/2 w-[calc(100vw-32px)] md:w-[44rem] mt-2 z-50 bg-surface rounded-xl shadow-2xl border border-border/50 overflow-hidden backdrop-blur-xl">
       {/* Loading state */}
       {isLoading && hasQuery && (
         <div className="p-4 flex items-center justify-center gap-2 text-muted">
@@ -305,6 +307,7 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
   showShortcuts = false,
 }: ComprehensiveSearchProps): ReactElement {
   const router = useRouter();
+  const { settings } = useSettings();
   const containerRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -317,6 +320,10 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
   const [navigationResults, setNavigationResults] = useState<SearchNavigationResult[]>([]);
   const [verseResults, setVerseResults] = useState<SearchVerseResult[]>([]);
   const [totalResults, setTotalResults] = useState(0);
+  const translationIds = useMemo(
+    () => (settings.translationIds?.length ? settings.translationIds : [20]),
+    [settings.translationIds]
+  );
 
   // Load recent searches on mount
   useEffect(() => {
@@ -362,7 +369,10 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
 
     debounceRef.current = setTimeout(async () => {
       try {
-        const results = await quickSearch(query);
+        const results = await quickSearch(query, {
+          perPage: 10,
+          translationIds,
+        });
         setNavigationResults(results.navigation);
         setVerseResults(results.verses);
         setTotalResults(results.pagination.totalRecords);
@@ -380,7 +390,7 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
         clearTimeout(debounceRef.current);
       }
     };
-  }, [query]);
+  }, [query, translationIds]);
 
   // Navigation handlers
   const navigateToNavResult = useCallback(
@@ -513,7 +523,7 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
 
       {/* Go To Form - shown when focused but no query */}
       {isOpen && !query.trim() && (
-        <div className="absolute top-full left-0 right-0 mt-2 z-50 bg-surface rounded-xl shadow-2xl border border-border/50 overflow-hidden backdrop-blur-xl">
+        <div className="absolute top-full left-1/2 -translate-x-1/2 w-[calc(100vw-32px)] md:w-[44rem] mt-2 z-50 bg-surface rounded-xl shadow-2xl border border-border/50 overflow-hidden backdrop-blur-xl">
           <GoToSurahVerseForm
             onNavigate={(surahId, verse) => {
               const href = typeof verse === 'number'

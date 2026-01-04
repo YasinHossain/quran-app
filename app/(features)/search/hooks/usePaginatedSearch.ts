@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
-import { comprehensiveSearch, type SearchVerseResult } from '@/lib/api/search';
+import { advancedSearch, type SearchVerseResult } from '@/lib/api/search';
 import { getVerseByKey } from '@/lib/api/verses';
 import { useSettings } from '@/app/providers/SettingsContext';
 
@@ -122,10 +122,10 @@ export function usePaginatedSearch(query: string): UsePaginatedSearchReturn {
 
       try {
         // Get search results from API
-        const searchResponse = await comprehensiveSearch(query, {
+        const searchResponse = await advancedSearch(query, {
           page,
           size: PAGE_SIZE,
-          translationId: settings.translationIds?.[0] ?? 20,
+          translationIds: settings.translationIds?.length ? settings.translationIds : [20],
         });
 
         // Fetch full verse data for each result
@@ -144,11 +144,15 @@ export function usePaginatedSearch(query: string): UsePaginatedSearchReturn {
         });
       } catch (error) {
         console.error('Search error:', error);
+        const message =
+          error instanceof Error
+            ? error.message
+            : 'Failed to load search results. Please try again.';
         setState((prev) => ({
           ...prev,
           isLoading: false,
           isLoadingMore: false,
-          error: 'Failed to load search results. Please try again.',
+          error: message,
         }));
       }
     },
