@@ -3,6 +3,7 @@
 import React from 'react';
 
 import { CloseIcon, ResetIcon } from '@/app/shared/icons';
+import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
 
 interface ResourcePanelHeaderProps {
   title: string;
@@ -17,48 +18,28 @@ export const ResourcePanelHeader = ({
   onClose,
   onReset,
   onCloseSidebar,
-  backIconClassName = 'h-6 w-6 text-muted',
 }: ResourcePanelHeaderProps): React.JSX.Element => {
   return (
-    <header className="flex items-center p-4 bg-background shadow-[0_4px_6px_-4px_rgb(var(--color-foreground)/0.15)] relative z-10">
-      <button
-        onClick={onClose}
-        className="p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent hover:bg-gray-200 dark:hover:bg-slate-700"
-        aria-label="Back"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className={backIconClassName}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-      <h2 className="text-lg font-bold text-center flex-grow text-foreground">{title}</h2>
-      {onReset ? (
+    <SidebarHeader
+      title={title}
+      onBack={onClose}
+      showBackButton
+      {...(onCloseSidebar ? { onClose: onCloseSidebar } : {})}
+      showCloseButton={!!onCloseSidebar}
+      forceVisible
+      className="md:flex" // Ensure it shows on tablet/desktop if panels are used there, though panels are mostly mobile slide-overs or sidebars. SidebarHeader has 'md:hidden' by default unless forceVisible.
+      // forceVisible overrides md:hidden in SidebarHeader implementation: !forceVisible && 'md:hidden'
+    >
+      {onReset && (
         <button
           onClick={onReset}
-          className="p-2 rounded-full text-foreground hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent focus-visible:outline-none transition-colors"
+          className="p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-colors text-foreground focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none flex items-center justify-center"
           title="Reset to Default"
         >
-          <ResetIcon size={20} />
-        </button>
-      ) : onCloseSidebar ? null : (
-        <div className="w-10" /> // Spacer to keep title centered if no reset button
-      )}
-      {onCloseSidebar && (
-        <button
-          onClick={onCloseSidebar}
-          className="p-2 rounded-full text-foreground hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent focus-visible:outline-none transition-colors"
-          title="Close Sidebar"
-        >
-          <CloseIcon size={20} />
+          <ResetIcon size={18} />
         </button>
       )}
-    </header>
+    </SidebarHeader>
   );
 };
 

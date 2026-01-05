@@ -6,6 +6,7 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import { FontSettingIcon } from '@/app/shared/icons';
 
 import { ArabicFontFaceSelector } from './ArabicFontFaceSelector';
+import { ArabicVersePreview } from './ArabicVersePreview';
 import { FontSizeSlider } from './FontSizeSlider';
 
 import type { CSSProperties, ReactElement } from 'react';
@@ -77,17 +78,12 @@ export function FontSettingsContent({
           />
         )}
       </div>
-      <div className="mt-6 rounded-lg border border-border bg-surface p-4 text-center lg:hidden">
-        <p
-          dir="rtl"
-          className="text-foreground leading-loose"
-          style={{
-            fontSize: settings.arabicFontSize,
-            fontFamily: settings.arabicFontFace,
-          }}
-        >
-          ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَـٰلَمِينَ
-        </p>
+      <div className="lg:hidden">
+        <ArabicVersePreview
+          fontFamily={settings.arabicFontFace}
+          fontSize={settings.arabicFontSize}
+          className="mt-6 rounded-lg border border-border bg-surface p-4"
+        />
       </div>
     </CollapsibleSection>
   );
