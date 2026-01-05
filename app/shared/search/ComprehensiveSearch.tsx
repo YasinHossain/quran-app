@@ -64,6 +64,18 @@ const QUICK_LINKS = [
 // Helpers
 // ============================================================================
 
+/**
+ * Detects if a query is primarily in Arabic script
+ */
+function isArabicQuery(query: string): boolean {
+  if (!query.trim()) return false;
+  // Count Arabic characters (Arabic Unicode range)
+  const arabicChars = query.match(/[\u0600-\u06FF]/g) || [];
+  const totalChars = query.replace(/\s/g, '').length;
+  // If more than 50% of characters are Arabic, consider it an Arabic query
+  return totalChars > 0 && arabicChars.length / totalChars > 0.5;
+}
+
 function getRecentSearches(): RecentSearch[] {
   if (typeof window === 'undefined') return [];
   try {
@@ -236,6 +248,8 @@ const SearchDropdown = memo(function SearchDropdown({
           {verseResults.slice(0, maxVersesToShow).map((verse) => {
             const currentIndex = itemIndex++;
             const isHighlighted = currentIndex === highlightedIndex;
+            // Detect if the query is in Arabic
+            const isArabic = isArabicQuery(searchQuery);
             
             return (
               <button
@@ -253,17 +267,40 @@ const SearchDropdown = memo(function SearchDropdown({
                         {verse.verseKey}
                       </span>
                     </div>
-                    {/* Full verse translation text */}
+                    {/* Verse content - show ONLY Arabic for Arabic queries, ONLY translation for other languages */}
                     <div className="flex-1 min-w-0">
-                      <p
-                        className="text-sm text-foreground leading-relaxed search-result-text"
-                        style={{ 
-                          fontSize: `${settings.translationFontSize ? Math.max(14, settings.translationFontSize - 2) : 16}px` 
-                        }}
-                        dangerouslySetInnerHTML={{ 
-                          __html: highlightMissingQueryWords(verse.highlightedTranslation, searchQuery) 
-                        }}
-                      />
+                      {isArabic ? (
+                        // Arabic query → Show ONLY Arabic text with highlighting
+                        verse.textArabic && (
+                          <p 
+                            className="text-right leading-loose arabic-text"
+                            style={{ 
+                              fontSize: `${settings.arabicFontSize || 28}px`,
+                              fontFamily: settings.arabicFontFace || '"UthmanicHafs1Ver18", serif',
+                            }}
+                            dir="rtl"
+                            lang="ar"
+                            dangerouslySetInnerHTML={{ 
+                              // Clean unwanted Quranic marks before highlighting, just like in the search page
+                              __html: highlightMissingQueryWords(
+                                verse.textArabic.replace(/[\u06D6-\u06DC\u06DF-\u06E4\u06E9-\u06ED\u06DD]/g, ''), 
+                                searchQuery
+                              ) 
+                            }}
+                          />
+                        )
+                      ) : (
+                        // Non-Arabic query → Show ONLY translation with highlighting
+                        <p
+                          className="text-sm text-foreground leading-relaxed search-result-text"
+                          style={{ 
+                            fontSize: `${settings.translationFontSize ? Math.max(14, settings.translationFontSize - 2) : 16}px` 
+                          }}
+                          dangerouslySetInnerHTML={{ 
+                            __html: highlightMissingQueryWords(verse.highlightedTranslation, searchQuery) 
+                          }}
+                        />
+                      )}
                     </div>
                   </div>
                 </button>

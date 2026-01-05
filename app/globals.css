@@ -580,18 +580,22 @@ body::-webkit-scrollbar-thumb:hover,
 /* ===== Search Result Highlighting ===== */
 /* Style for highlighted search terms in dropdown and search page results */
 .search-result-text em,
-.search-result-text mark {
+.search-result-text mark,
+.arabic-text em,
+.arabic-text mark {
   /* Deep teal color matching the slider accent */
-  color: rgb(6, 128, 117);
+  color: rgb(6, 128, 117) !important;
   font-style: normal;
   font-weight: 600;
   background: transparent;
 }
 
 .dark .search-result-text em,
-.dark .search-result-text mark {
+.dark .search-result-text mark,
+.dark .arabic-text em,
+.dark .arabic-text mark {
   /* Brighter teal for dark mode visibility */
-  color: rgb(20, 184, 166);
+  color: rgb(20, 184, 166) !important;
 }
 
 /* Subtle background highlight variant */

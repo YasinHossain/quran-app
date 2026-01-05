@@ -224,11 +224,35 @@ const SearchVerseItem = ({ verse, index, query }: SearchVerseItemProps): React.J
   const { settings } = useSettings();
   const translationFontSize = settings.translationFontSize ?? 18;
 
-  // Highlight any missing query words that the API didn't highlight
-  const enhancedHighlightedText = useMemo(
-    () => highlightMissingQueryWords(verse.highlightedTranslation, query),
-    [verse.highlightedTranslation, query]
-  );
+  // Detect if query is in Arabic
+  const isArabicQuery = useMemo(() => {
+    const arabicChars = query.match(/[\u0600-\u06FF]/g) || [];
+    const totalChars = query.replace(/\s/g, '').length;
+    return totalChars > 0 && arabicChars.length / totalChars > 0.5;
+  }, [query]);
+
+  // Highlight the appropriate text based on query language
+  const highlightedText = useMemo(() => {
+    if (isArabicQuery) {
+      // Arabic query: highlight Arabic text if available
+      let arabicText = verse.text_uthmani || '';
+      
+      // Clean unwanted Quranic marks (stops, pauses, decorations) for cleaner search display
+      // Keeps: standard diacritics, superscript alef (0670), small waw/yeh (06E5-06E6)
+      // Removes: 
+      // - 06D6-06DC: Small pause marks
+      // - 06DF-06E4: High/Low small marks (zeros, etc)
+      // - 06E9: Place of Sajdah
+      // - 06EA-06ED: Stops/Dots (The "circles" user reported)
+      // - 06DD: End of Ayah marker
+      if (arabicText) {
+        arabicText = arabicText.replace(/[\u06D6-\u06DC\u06DF-\u06E4\u06E9-\u06ED\u06DD]/g, '');
+        return highlightMissingQueryWords(arabicText, query);
+      }
+    }
+    // Non-Arabic query or no Arabic text: highlight translation
+    return highlightMissingQueryWords(verse.highlightedTranslation || '', query);
+  }, [isArabicQuery, verse.text_uthmani, verse.highlightedTranslation, query]);
 
   const handleNavigateToVerse = useCallback(() => {
     const { surahNumber, ayahNumber } = parseVerseKey(verse.verse_key);
@@ -261,17 +285,33 @@ const SearchVerseItem = ({ verse, index, query }: SearchVerseItemProps): React.J
         actions={actions}
         idPrefix="search-verse"
         showTranslations={false}
+        showArabic={!isArabicQuery}
       >
-        {/* Highlighted translation with search term styling - same as dropdown */}
+        {/* Highlighted text with search term styling */}
         <div className="mt-4">
           <p className="mb-2 text-xs font-normal uppercase tracking-wider text-muted-foreground">
             Search Match
           </p>
-          <p
-            className="text-left leading-relaxed text-slate-900 dark:text-slate-50 font-[family-name:var(--font-crimson-text)] search-result-text"
-            style={{ fontSize: `${translationFontSize}px` }}
-            dangerouslySetInnerHTML={{ __html: enhancedHighlightedText }}
-          />
+          {isArabicQuery ? (
+            // Arabic query: show highlighted Arabic text
+            <p
+              className="text-right leading-loose text-foreground arabic-text"
+              style={{
+                fontSize: `${settings.arabicFontSize || 28}px`,
+                fontFamily: settings.arabicFontFace || '"UthmanicHafs1Ver18", serif',
+              }}
+              dir="rtl"
+              lang="ar"
+              dangerouslySetInnerHTML={{ __html: highlightedText }}
+            />
+          ) : (
+            // Non-Arabic query: show highlighted translation
+            <p
+              className="text-left leading-relaxed text-foreground font-[family-name:var(--font-crimson-text)] search-result-text"
+              style={{ fontSize: `${translationFontSize}px` }}
+              dangerouslySetInnerHTML={{ __html: highlightedText }}
+            />
+          )}
         </div>
       </ReaderVerseCard>
     </div>

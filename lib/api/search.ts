@@ -357,7 +357,7 @@ async function fetchQdcSearch(
     size: (mode === SearchMode.Quick ? perPage : size).toString(),
     page: page.toString(),
     translations: translationsParam,
-    language: 'en',
+    // Don't force language - let API auto-detect from query (Arabic, English, Bangla, etc.)
   };
 
   const data = await qdcSearchFetch<QdcApiSearchResponse>(qdcParams, 'Search failed');

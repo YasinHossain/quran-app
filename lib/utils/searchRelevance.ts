@@ -60,16 +60,46 @@ function extractHighlightInfo(highlightedText: string): {
 }
 
 /**
+ * Remove Arabic diacritics (tashkeel/harakat) from text
+ * These marks include: َ ِ ُ ّ ْ ً ٌ ٍ ٰ ٓ etc.
+ */
+function removeArabicDiacritics(text: string): string {
+  // Arabic diacritic marks range: U+064B to U+065F, U+0670, U+06D6 to U+06ED
+  return text.replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, '');
+}
+
+/**
+ * Normalize Arabic text variations:
+ * - Normalize different forms of Alef: إ أ آ ٱ → ا
+ * - Normalize different forms of Hamza: ء ئ ؤ → (removed or normalized)
+ * - Normalize Teh Marbuta: ة → ه
+ * This allows flexible matching of Arabic text
+ */
+function normalizeArabicLetters(text: string): string {
+  return text
+    // Normalize all Alef variations to simple Alef
+    .replace(/[إأآٱ]/g, 'ا')
+    // Normalize Hamza variations
+    .replace(/[ئؤ]/g, 'ء')
+    // Normalize Teh Marbuta to Heh
+    .replace(/ة/g, 'ه')
+    // Normalize Yeh variations (if needed)
+    .replace(/ى/g, 'ي');
+}
+
+/**
  * Normalize text for comparison:
+ * - Remove Arabic diacritics first (for Arabic text)
+ * - Normalize Arabic letter variations
  * - Lowercase
- * - Remove diacritics/accents (ā → a, etc.)
+ * - Remove Latin diacritics/accents (ā → a, etc.)
  * - Remove punctuation
  * - Normalize spaces
  */
 function normalizeText(text: string): string {
-  return text
+  return normalizeArabicLetters(removeArabicDiacritics(text))
     .toLowerCase()
-    // Remove diacritics/accents (ā → a, Allāh → allah)
+    // Remove Latin diacritics/accents (ā → a, Allāh → allah)
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     // Replace punctuation with spaces (Unicode-aware for all scripts)
@@ -92,6 +122,10 @@ function getQueryWords(query: string): string[] {
  * Highlight missing query words in the text.
  * The API highlights important words but skips common ones (the, to, of, etc.)
  * This function adds <em> tags to query words that weren't already highlighted.
+ * 
+ * Works with both Arabic and Latin scripts.
+ * For Arabic, it removes diacritics before matching so that queries without
+ * diacritics can match Quranic text with diacritics.
  */
 export function highlightMissingQueryWords(
   highlightedText: string,
@@ -116,15 +150,68 @@ export function highlightMissingQueryWords(
   
   if (wordsToHighlight.length === 0) return highlightedText;
   
-  // Create regex to match these words (case-insensitive, word boundaries)
+  // For Arabic text, we need to match without diacritics but highlight with them
   let result = highlightedText;
+  
   for (const word of wordsToHighlight) {
-    // Escape special regex characters
-    const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    // Match the word with word boundaries (case-insensitive)
-    const wordRegex = new RegExp(`\\b(${escapedWord})\\b`, 'gi');
-    result = result.replace(wordRegex, '<em>$1</em>');
+    const isArabicWord = /[\u0600-\u06FF]/.test(word);
+    
+    if (isArabicWord) {
+      // Arabic: Build a regex that matches each character with optional diacritics
+      // AND matches letter variations (e.g., ا matches إ, أ, آ, etc.)
+      const chars = word.split('');
+      
+      // Enhanced diacritic pattern to include:
+      // - Standard diacritics (064B-065F)
+      // - Superscript Alef (0670)
+      // - Arabic Letter High Hamza (0674-0678)
+      // - Small phonetic letters: Small Waw (06E5), Small Yeh (06E6), Small High Yeh (06E7), Small High Noon (06E8)
+      // EXCLUDES: Pause marks (06D6-06DC), Stops/Dots (06EA-06ED), End of Ayah (06DD)
+      const diacriticPattern = '[\\u064B-\\u065F\\u0670\\u0674-\\u0678\\u06E5-\\u06E8]*';
+      
+      const regexPattern = chars.map(char => {
+        let charPattern = '';
+        
+        // Create character class that matches the letter and its variations
+        if (char === 'ا') {
+          // Match any form of Alef including those with hamza and madda
+          charPattern = '[اإأآٱ]';
+        } else if (char === 'ه') {
+          // Match Heh or Teh Marbuta
+          charPattern = '[هة]';
+        } else if (char === 'ي') {
+          // Match Yeh variations
+          charPattern = '[يى]';
+        } else if (char === 'ء') {
+          // Match Hamza variations
+          charPattern = '[ءئؤإأ]';
+        } else {
+          // Escape special regex characters for other letters
+          charPattern = char.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+        
+        // Add optional diacritics after each character
+        return charPattern + diacriticPattern;
+      }).join('');
+      
+      // Simpler word boundary pattern for Arabic
+      // Match word at start/end of string or surrounded by spaces/punctuation
+      const wordRegex = new RegExp(
+        `(^|\\s|>)(${regexPattern})(?=\\s|$|<|[\\u060C\\u061B\\u061F])`,
+        'g'
+      );
+      result = result.replace(wordRegex, '$1<em>$2</em>');
+    } else {
+      // Latin: Use word boundaries
+      const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const wordRegex = new RegExp(`\\b(${escapedWord})\\b`, 'gi');
+      result = result.replace(wordRegex, '<em>$1</em>');
+    }
   }
+  
+  // Clean up any nested or duplicate em tags
+  result = result.replace(/<em>([^<]*)<em>([^<]*)<\/em>([^<]*)<\/em>/g, '<em>$1$2$3</em>');
+  result = result.replace(/<em><\/em>/g, '');
   
   return result;
 }
