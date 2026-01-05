@@ -35,7 +35,73 @@ const QDC_SEARCH_BASE_URL = 'https://api.qurancdn.com/api/qdc';
 const V4_SEARCH_BASE_URL = 'https://api.quran.com/api/v4';
 const USE_QURAN_FOUNDATION_SEARCH =
   process.env['NEXT_PUBLIC_USE_QURAN_FOUNDATION_SEARCH'] === 'true';
+const SEARCH_CACHE_TTL_MS = 30_000;
 let memoizedSearchProxyBase: string | null | undefined;
+
+type CachedSearchResult = {
+  expiresAt: number;
+  value: SearchResponse;
+};
+
+const quickSearchCache = new Map<string, CachedSearchResult>();
+const quickSearchInFlight = new Map<string, Promise<SearchResponse>>();
+const v4SearchCache = new Map<string, CachedSearchResult>();
+const v4SearchInFlight = new Map<string, Promise<SearchResponse>>();
+
+function normalizeQueryForCache(query: string): string {
+  return query.trim();
+}
+
+function normalizeTranslationIdsForKey(translationIds: number[]): number[] {
+  return Array.from(
+    new Set(
+      translationIds
+        .map((id) => Number.parseInt(String(id), 10))
+        .filter((id) => Number.isFinite(id))
+    )
+  ).sort((a, b) => a - b);
+}
+
+function buildQuickSearchCacheKey(
+  query: string,
+  perPage: number,
+  translationIds: number[],
+  mode: SearchMode
+): string {
+  const normalizedQuery = normalizeQueryForCache(query);
+  const translationKey = normalizeTranslationIdsForKey(translationIds).join(',');
+  const backendKey = USE_QURAN_FOUNDATION_SEARCH ? 'qfs' : 'public';
+  return [backendKey, mode, perPage.toString(), translationKey, normalizedQuery].join('|');
+}
+
+function buildV4SearchCacheKey(query: string, size: number, page: number): string {
+  const normalizedQuery = normalizeQueryForCache(query);
+  return [normalizedQuery, size.toString(), page.toString()].join('|');
+}
+
+function getCachedSearchResult(
+  cache: Map<string, CachedSearchResult>,
+  key: string
+): SearchResponse | null {
+  const cached = cache.get(key);
+  if (!cached) return null;
+  if (Date.now() >= cached.expiresAt) {
+    cache.delete(key);
+    return null;
+  }
+  return cached.value;
+}
+
+function setCachedSearchResult(
+  cache: Map<string, CachedSearchResult>,
+  key: string,
+  value: SearchResponse
+): void {
+  cache.set(key, {
+    value,
+    expiresAt: Date.now() + SEARCH_CACHE_TTL_MS,
+  });
+}
 
 function ensureTrailingSlash(value: string): string {
   return value.endsWith('/') ? value : `${value}/`;
@@ -308,7 +374,21 @@ async function fetchQdcSearch(
       .filter((w) => w.char_type === 'word')
       .map((w) => w.text)
       .join(' ');
-    const translation = verse.translations?.[0];
+
+    // PICK BEST TRANSLATION
+    // Instead of just taking the first one, look for the one that matches our query!
+    const translations = verse.translations ?? [];
+    let bestTranslation = translations[0];
+    
+    if (query && translations.length > 1) {
+      const normalizedQuery = normalizeForSearch(query);
+      const exactMatch = translations.find(t => 
+        normalizeForSearch(t.text).includes(normalizedQuery)
+      );
+      if (exactMatch) {
+        bestTranslation = exactMatch;
+      }
+    }
 
     return {
       verseKey: verse.verse_key,
@@ -316,8 +396,8 @@ async function fetchQdcSearch(
       surahNumber,
       verseNumber: ayahNumber,
       textArabic: arabicText,
-      highlightedTranslation: translation?.text ?? '',
-      translationName: translation?.resource_name ?? '',
+      highlightedTranslation: bestTranslation?.text ?? '',
+      translationName: bestTranslation?.resource_name ?? '',
     };
   });
 
@@ -383,59 +463,81 @@ async function fetchV4Search(
   size: number = 10,
   page: number = 1
 ): Promise<SearchResponse> {
-  const url = new URL('search', ensureTrailingSlash(V4_SEARCH_BASE_URL));
-  url.searchParams.set('q', query.trim());
-  url.searchParams.set('size', size.toString());
-  url.searchParams.set('page', page.toString());
-  // Don't force language - let API auto-detect from query
+  const cacheKey = buildV4SearchCacheKey(query, size, page);
+  const cached = getCachedSearchResult(v4SearchCache, cacheKey);
+  if (cached) return cached;
 
-  const res = await fetchWithTimeout(url.toString(), {
-    headers: {
-      Accept: 'application/json',
-    },
-    cache: 'no-store',
-    errorPrefix: 'V4 Search failed',
-  });
+  const inFlight = v4SearchInFlight.get(cacheKey);
+  if (inFlight) return inFlight;
 
-  const data = (await res.json()) as V4ApiSearchResponse;
+  const request = (async (): Promise<SearchResponse> => {
+    const url = new URL('search', ensureTrailingSlash(V4_SEARCH_BASE_URL));
+    url.searchParams.set('q', query.trim());
+    url.searchParams.set('size', size.toString());
+    url.searchParams.set('page', page.toString());
+    // Don't force language - let API auto-detect from query
 
-  // V4 API doesn't return navigation results, just verses
-  const navigation: SearchNavigationResult[] = [];
+    const res = await fetchWithTimeout(url.toString(), {
+      headers: {
+        Accept: 'application/json',
+      },
+      cache: 'no-store',
+      errorPrefix: 'V4 Search failed',
+    });
 
-  const verses: SearchVerseResult[] = data.search.results.map((result) => {
-    const { surahNumber, ayahNumber } = parseVerseKey(result.verse_key);
-    
-    // Get Arabic text from words
-    const arabicText = result.words
-      .filter(w => w.char_type === 'word')
-      .map(w => w.text)
-      .join(' ');
-    
-    // Get the first translation - the API returns the best matching one
-    // based on the query language
-    const translation = result.translations?.[0];
+    const data = (await res.json()) as V4ApiSearchResponse;
+
+    // V4 API doesn't return navigation results, just verses
+    const navigation: SearchNavigationResult[] = [];
+
+    const verses: SearchVerseResult[] = data.search.results.map((result) => {
+      const { surahNumber, ayahNumber } = parseVerseKey(result.verse_key);
+
+      // Get Arabic text from words
+      const arabicText = result.words
+        .filter((w) => w.char_type === 'word')
+        .map((w) => w.text)
+        .join(' ');
+
+      // Get the first translation - the API returns the best matching one
+      // based on the query language
+      const translation = result.translations?.[0];
+
+      return {
+        verseKey: result.verse_key,
+        verseId: result.verse_id,
+        surahNumber,
+        verseNumber: ayahNumber,
+        textArabic: arabicText || result.text,
+        highlightedTranslation: translation?.text ?? '',
+        translationName: translation?.name ?? '',
+      };
+    });
 
     return {
-      verseKey: result.verse_key,
-      verseId: result.verse_id,
-      surahNumber,
-      verseNumber: ayahNumber,
-      textArabic: arabicText || result.text,
-      highlightedTranslation: translation?.text ?? '',
-      translationName: translation?.name ?? '',
+      navigation,
+      verses,
+      pagination: {
+        currentPage: data.search.current_page,
+        nextPage:
+          data.search.current_page < data.search.total_pages
+            ? data.search.current_page + 1
+            : null,
+        totalPages: data.search.total_pages,
+        totalRecords: data.search.total_results,
+      },
     };
-  });
+  })();
 
-  return {
-    navigation,
-    verses,
-    pagination: {
-      currentPage: data.search.current_page,
-      nextPage: data.search.current_page < data.search.total_pages ? data.search.current_page + 1 : null,
-      totalPages: data.search.total_pages,
-      totalRecords: data.search.total_results,
-    },
-  };
+  v4SearchInFlight.set(cacheKey, request);
+
+  try {
+    const result = await request;
+    setCachedSearchResult(v4SearchCache, cacheKey, result);
+    return result;
+  } finally {
+    v4SearchInFlight.delete(cacheKey);
+  }
 }
 
 // ============================================================================
@@ -670,75 +772,131 @@ export async function quickSearch(
   } = {}
 ): Promise<SearchResponse> {
   const { perPage = 10, translationIds = [20] } = options;
-  
+  const cacheKey = buildQuickSearchCacheKey(query, perPage, translationIds, SearchMode.Quick);
+  const cached = getCachedSearchResult(quickSearchCache, cacheKey);
+  if (cached) return cached;
+
+  const inFlight = quickSearchInFlight.get(cacheKey);
+  if (inFlight) return inFlight;
+
+  const request = (async (): Promise<SearchResponse> => {
   // If Quran Foundation Search is enabled, use it for proper exact phrase matching
-  if (USE_QURAN_FOUNDATION_SEARCH) {
-    return comprehensiveSearch(query, {
-      perPage,
-      translationIds,
-      mode: SearchMode.Quick,
-    });
+    if (USE_QURAN_FOUNDATION_SEARCH) {
+      return comprehensiveSearch(query, {
+        perPage,
+        translationIds,
+        mode: SearchMode.Quick,
+      });
+    }
+
+    // Fallback: Use public APIs with client-side phrase matching workaround
+    // Fetch a larger pool to prioritize exact phrase matches
+    // QUICK WIN: Increased from 100 to 150 for better coverage
+    const fetchSize = 150;
+    
+    // SMART SEARCH: Keep the user's selected translation, but ALSO search
+    // popular English translations to maximize finding exact phrase matches.
+    // (If query is English-like)
+    const expandedTranslationIds = [...translationIds];
+    const isEnglish = /^[a-zA-Z0-9\s\p{P}]+$/u.test(query);
+    if (isEnglish) {
+      // Add The Clear Quran (131), Abdel Haleem (85), Yusuf Ali (22), Saheeh (20)
+      const popularIds = [131, 85, 22, 20];
+      for (const id of popularIds) {
+        if (!expandedTranslationIds.includes(id)) {
+          expandedTranslationIds.push(id);
+        }
+      }
+    }
+
+    const [v4Result, qdcResult] = await Promise.allSettled([
+      fetchV4Search(query, fetchSize),
+      fetchQdcSearch(query, {
+        size: perPage,
+        perPage,
+        page: 1,
+        translationIds: expandedTranslationIds, // Use expanded list
+        mode: SearchMode.Quick,
+      }),
+    ]);
+
+    const v4Results = v4Result.status === 'fulfilled' ? v4Result.value : null;
+    const qdcResults = qdcResult.status === 'fulfilled' ? qdcResult.value : null;
+
+    if (v4Result.status === 'rejected') {
+      console.error('Quick search V4 error:', v4Result.reason);
+    }
+
+    if (qdcResult.status === 'rejected') {
+      console.error('Quick search QDC error:', qdcResult.reason);
+    }
+
+    if (!v4Results && qdcResults) {
+      return qdcResults;
+    }
+
+    if (!v4Results) {
+      console.error('Quick search failed for both V4 and QDC.', {
+        v4Error: v4Result.status === 'rejected' ? v4Result.reason : null,
+        qdcError: qdcResult.status === 'rejected' ? qdcResult.reason : null,
+      });
+      throw new Error('Quick search failed for both V4 and QDC');
+    }
+
+    // Filter and sort to prioritize exact phrase matches
+    // Merge V4 results with QDC results (which now include best translations)
+    const combinedVerses = [...v4Results.verses];
+    if (qdcResults?.verses) {
+        // Add QDC verses if not already in V4 list
+        // Note: QDC verses are often BETTER because we explicitly fetched the
+        // best matching translation text! We should actually prefer them if duplicates exist.
+        for (const v of qdcResults.verses) {
+            const existingIdx = combinedVerses.findIndex(cv => cv.verseKey === v.verseKey);
+            if (existingIdx !== -1) {
+                // If the QDC result has a better match (exact phrase), replace the V4 one
+                if (normalizeForSearch(v.highlightedTranslation).includes(normalizeForSearch(query))) {
+                     combinedVerses[existingIdx] = v;
+                }
+            } else {
+                combinedVerses.push(v);
+            }
+        }
+    }
+
+    const filteredVerses = filterAndSortByExactPhrase(combinedVerses, query, perPage);
+
+    // Merge: QDC navigation + preview verses
+    return {
+      navigation: qdcResults?.navigation ?? [],
+      verses: filteredVerses,
+      pagination: {
+        ...v4Results.pagination,
+        totalRecords: v4Results.pagination.totalRecords,
+      },
+    };
+  })();
+
+  quickSearchInFlight.set(cacheKey, request);
+
+  try {
+    const result = await request;
+    setCachedSearchResult(quickSearchCache, cacheKey, result);
+    return result;
+  } finally {
+    quickSearchInFlight.delete(cacheKey);
   }
-  
-  // Fallback: Use public APIs with client-side phrase matching workaround
-  // Fetch a larger pool to prioritize exact phrase matches
-  const fetchSize = 100;
-  const [v4Result, qdcResult] = await Promise.allSettled([
-    fetchV4Search(query, fetchSize),
-    fetchQdcSearch(query, {
-      size: perPage,
-      perPage,
-      page: 1,
-      translationIds,
-      mode: SearchMode.Quick,
-    }),
-  ]);
-
-  const v4Results = v4Result.status === 'fulfilled' ? v4Result.value : null;
-  const qdcResults = qdcResult.status === 'fulfilled' ? qdcResult.value : null;
-
-  if (v4Result.status === 'rejected') {
-    console.error('Quick search V4 error:', v4Result.reason);
-  }
-
-  if (qdcResult.status === 'rejected') {
-    console.error('Quick search QDC error:', qdcResult.reason);
-  }
-
-  if (!v4Results && qdcResults) {
-    return qdcResults;
-  }
-
-  if (!v4Results) {
-    console.error('Quick search failed for both V4 and QDC.', {
-      v4Error: v4Result.status === 'rejected' ? v4Result.reason : null,
-      qdcError: qdcResult.status === 'rejected' ? qdcResult.reason : null,
-    });
-    throw new Error('Quick search failed for both V4 and QDC');
-  }
-
-  // Filter and sort to prioritize exact phrase matches
-  const filteredVerses = filterAndSortByExactPhrase(v4Results.verses, query, perPage);
-
-  // Merge: QDC navigation + preview verses
-  return {
-    navigation: qdcResults?.navigation ?? [],
-    verses: filteredVerses,
-    pagination: {
-      ...v4Results.pagination,
-      totalRecords: v4Results.pagination.totalRecords,
-    },
-  };
 }
 
 /**
- * Filter and sort verses to prioritize exact phrase matches.
+ * Enhanced search scoring with multiple relevance signals.
  * 
- * This implements client-side exact phrase matching since the public APIs
- * only do basic word matching. It:
- * 1. Finds verses containing the EXACT phrase (consecutive words)
- * 2. If no exact matches, finds verses with ALL query words
- * 3. Falls back to verses with most query word matches
+ * QUICK WINS implemented:
+ * 1. N-gram matching (2-word, 3-word consecutive matches)
+ * 2. Position weighting (phrase at start of verse scores higher)
+ * 3. Word proximity scoring (words closer together score higher)
+ * 4. Keeps ALL words for phrase matching (including "of", "the")
+ * 5. Word order sensitivity (preserves query word order importance)
+ * 6. Substring matching for partial word matches
  */
 function filterAndSortByExactPhrase(
   verses: SearchVerseResult[],
@@ -746,58 +904,154 @@ function filterAndSortByExactPhrase(
   maxResults: number
 ): SearchVerseResult[] {
   const normalizedQuery = normalizeForSearch(query);
-  const queryWords = normalizedQuery.split(/\s+/).filter(w => w.length > 2); // Ignore short words like "of", "the"
   
-  // Score each verse
+  // Keep ALL words for exact phrase matching (don't filter short words)
+  const allQueryWords = normalizedQuery.split(/\s+/).filter(w => w.length > 0);
+  // Filter for individual word matching (skip very short words)
+  const significantWords = allQueryWords.filter(w => w.length > 2);
+  
+  // Generate n-grams (2-word and 3-word consecutive phrases)
+  const bigrams = generateNgrams(allQueryWords, 2);
+  const trigrams = generateNgrams(allQueryWords, 3);
+  
+  // Score each verse with enhanced algorithm
   const scoredVerses = verses.map(verse => {
-    const text = normalizeForSearch(verse.highlightedTranslation.replace(/<[^>]+>/g, ''));
+    const rawText = verse.highlightedTranslation.replace(/<[^>]+>/g, '');
+    const text = normalizeForSearch(rawText);
+    const textWords = text.split(/\s+/);
     
-    // Check for exact phrase match
+    // === SCORING COMPONENTS ===
+    
+    // 1. EXACT PHRASE MATCH (highest priority)
     const hasExactPhrase = text.includes(normalizedQuery);
+    const exactPhraseScore = hasExactPhrase ? 1000 : 0;
     
-    // Count matched query words
-    const matchedWords = queryWords.filter(word => text.includes(word)).length;
-    const matchRatio = queryWords.length > 0 ? matchedWords / queryWords.length : 0;
-    
-    // Count highlights (API highlighting)
-    const highlightCount = (verse.highlightedTranslation.match(/<em>/gi) || []).length;
-    
-    // Calculate score: exact match = 100, partial matches < 100
-    let score = 0;
+    // 2. POSITION BONUS (phrase appears near start of verse)
+    let positionScore = 0;
     if (hasExactPhrase) {
-      score = 100 + highlightCount; // Exact phrase match is highest priority
-    } else if (matchRatio === 1) {
-      score = 80 + highlightCount; // All words present (but not consecutive)
-    } else {
-      score = matchRatio * 50 + highlightCount;
+      const position = text.indexOf(normalizedQuery);
+      const relativePosition = position / text.length;
+      // Score higher if phrase is at the beginning (0-25% = full bonus)
+      positionScore = Math.max(0, 100 * (1 - relativePosition * 2));
     }
     
-    return { verse, score, hasExactPhrase, matchRatio };
+    // 3. N-GRAM MATCHING (partial consecutive word matches)
+    let ngramScore = 0;
+    // Trigram matches (3 consecutive words) = 150 points each
+    for (const trigram of trigrams) {
+      if (text.includes(trigram)) ngramScore += 150;
+    }
+    // Bigram matches (2 consecutive words) = 75 points each
+    for (const bigram of bigrams) {
+      if (text.includes(bigram)) ngramScore += 75;
+    }
+    
+    // 4. WORD PROXIMITY SCORING (how close are matched words to each other?)
+    let proximityScore = 0;
+    if (significantWords.length >= 2) {
+      const wordPositions: number[] = [];
+      for (const word of significantWords) {
+        const idx = textWords.findIndex(tw => tw.includes(word) || word.includes(tw));
+        if (idx !== -1) wordPositions.push(idx);
+      }
+      if (wordPositions.length >= 2) {
+        wordPositions.sort((a, b) => a - b);
+        // Calculate average distance between matched words
+        let totalDistance = 0;
+        for (let i = 1; i < wordPositions.length; i++) {
+          totalDistance += wordPositions[i]! - wordPositions[i - 1]!;
+        }
+        const avgDistance = totalDistance / (wordPositions.length - 1);
+        // Lower distance = higher score (max 100 when words are adjacent)
+        proximityScore = Math.max(0, 100 - avgDistance * 10);
+      }
+    }
+    
+    // 5. WORD MATCH RATIO
+    const matchedSignificantWords = significantWords.filter(word => 
+      textWords.some(tw => tw.includes(word) || word.includes(tw))
+    ).length;
+    const matchRatio = significantWords.length > 0 
+      ? matchedSignificantWords / significantWords.length 
+      : 0;
+    const matchRatioScore = matchRatio * 200; // Up to 200 points for all words matching
+    
+    // 6. WORD ORDER PRESERVATION
+    let orderScore = 0;
+    if (matchedSignificantWords >= 2) {
+      const positions = significantWords
+        .map(word => textWords.findIndex(tw => tw.includes(word) || word.includes(tw)))
+        .filter(pos => pos !== -1);
+      
+      // Check if positions are in ascending order (same as query)
+      let inOrder = true;
+      for (let i = 1; i < positions.length; i++) {
+        if (positions[i]! <= positions[i - 1]!) {
+          inOrder = false;
+          break;
+        }
+      }
+      orderScore = inOrder ? 50 : 0;
+    }
+    
+    // 7. API HIGHLIGHT BONUS (trust the API's relevance signals)
+    const highlightCount = (verse.highlightedTranslation.match(/<em>/gi) || []).length;
+    const highlightScore = highlightCount * 10;
+    
+    // 8. FULL WORD MATCH BONUS (not just substring)
+    let fullWordMatchScore = 0;
+    for (const word of significantWords) {
+      if (textWords.includes(word)) fullWordMatchScore += 25;
+    }
+    
+    // === COMBINE ALL SCORES ===
+    const totalScore = 
+      exactPhraseScore +
+      positionScore +
+      ngramScore +
+      proximityScore +
+      matchRatioScore +
+      orderScore +
+      highlightScore +
+      fullWordMatchScore;
+    
+    return { 
+      verse, 
+      score: totalScore, 
+      hasExactPhrase, 
+      matchRatio,
+      // Debug info (can be removed in production)
+      _debug: {
+        exactPhraseScore,
+        positionScore,
+        ngramScore,
+        proximityScore,
+        matchRatioScore,
+        orderScore,
+        highlightScore,
+        fullWordMatchScore,
+      }
+    };
   });
   
-  // Sort by score (highest first)
+  // Sort by total score (highest first)
   scoredVerses.sort((a, b) => b.score - a.score);
   
-  // Return top results, prioritizing exact matches
-  const exactMatches = scoredVerses.filter(s => s.hasExactPhrase);
-  const partialMatches = scoredVerses.filter(s => !s.hasExactPhrase);
-  
-  // If we have exact matches, show those first
-  const results: SearchVerseResult[] = [];
-  
-  // Add exact matches first (capped at maxResults)
-  for (const s of exactMatches) {
-    if (results.length >= maxResults) break;
-    results.push(s.verse);
+  // Return top results
+  return scoredVerses.slice(0, maxResults).map(s => s.verse);
+}
+
+/**
+ * Generate n-grams (consecutive word sequences) from word array.
+ * Example: ["book", "of", "Allah"] with n=2 -> ["book of", "of Allah"]
+ */
+function generateNgrams(words: string[], n: number): string[] {
+  if (words.length < n) return [];
+  const ngrams: string[] = [];
+  for (let i = 0; i <= words.length - n; i++) {
+    ngrams.push(words.slice(i, i + n).join(' '));
   }
-  
-  // Fill remaining slots with best partial matches
-  for (const s of partialMatches) {
-    if (results.length >= maxResults) break;
-    results.push(s.verse);
-  }
-  
-  return results;
+  return ngrams;
 }
 
 /**

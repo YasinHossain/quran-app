@@ -51,6 +51,7 @@ const RECENT_SEARCHES_KEY = 'quran-recent-searches';
 const MAX_RECENT_SEARCHES = 5;
 const DEBOUNCE_MS = 300;
 const QUICK_SEARCH_PAGE_SIZE = 10;
+const MIN_TEXT_QUERY_LENGTH = 3;
 
 const QUICK_LINKS = [
   { name: 'Al-Mulk', id: 67 },
@@ -364,15 +365,14 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
     }
 
     const requestId = ++requestIdRef.current;
+    const trimmedQuery = query.trim();
 
-    if (!query.trim()) {
+    if (!trimmedQuery) {
       setNavigationResults([]);
       setVerseResults([]);
       setIsLoading(false);
       return;
     }
-
-    setIsLoading(true);
 
     // Quick parse for immediate navigation feedback
     const parsed = analyzeQuery(query);
@@ -380,6 +380,19 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
       // Create a quick navigation result even before API response
       // API will provide more details
     }
+
+    const isShortTextQuery =
+      trimmedQuery.length < MIN_TEXT_QUERY_LENGTH &&
+      !(parsed.type === 'navigation' && parsed.navigationType);
+
+    if (isShortTextQuery) {
+      setNavigationResults([]);
+      setVerseResults([]);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
 
     debounceRef.current = setTimeout(async () => {
       try {
