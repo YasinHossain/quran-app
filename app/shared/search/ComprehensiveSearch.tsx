@@ -386,7 +386,14 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
     if (!isOpen) return;
 
     const handleClickOutside = (event: MouseEvent): void => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      const target = event.target as HTMLElement;
+      const isPortal = target.closest('[data-surah-select-portal="true"]');
+      
+      if (
+        containerRef.current && 
+        !containerRef.current.contains(target as Node) && 
+        !isPortal
+      ) {
         setIsOpen(false);
       }
     };

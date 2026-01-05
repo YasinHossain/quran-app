@@ -104,7 +104,7 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
   const subtitleText = subtitle ?? (isLoading ? 'Loading surahs…' : undefined);
 
   return (
-    <form className={clsx('p-6 sm:p-8 space-y-4', className)} onSubmit={handleSubmit}>
+    <form className={clsx('p-6 sm:p-8 space-y-4 text-left', className)} onSubmit={handleSubmit}>
       <div className="space-y-1">
         <div className="flex items-center justify-between gap-3">
           <div className="text-lg font-semibold text-foreground leading-tight">{title}</div>
