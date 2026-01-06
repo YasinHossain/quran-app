@@ -7,6 +7,7 @@ export interface ApiWord {
   translation?: { text?: string };
   code_v2?: string;
   page_number?: number;
+  position?: number;
   [key: string]: unknown;
 }
 
@@ -36,6 +37,7 @@ export function normalizeVerse(raw: ApiVerse, wordLang: string = 'en'): Verse {
             [wordLang]: w.translation?.text,
             ...(w.code_v2 ? { codeV2: w.code_v2 } : {}),
             ...(w.page_number ? { pageNumber: w.page_number } : {}),
+            ...(typeof w.position === 'number' ? { position: w.position } : {}),
           })
         ),
       }

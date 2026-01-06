@@ -1,38 +1,48 @@
 import { useEffect, useState } from 'react';
 
-import { RECITERS } from '@/lib/audio/reciters';
+import { DEFAULT_RECITER, useReciters } from '@/app/shared/player/hooks/useReciters';
 
 import type { Reciter } from '@/app/shared/player/types';
 
 interface UsePersistedAudioSettingsReturn {
   reciter: Reciter;
-  setReciter: React.Dispatch<React.SetStateAction<Reciter>>;
+  setReciterId: (id: number) => void;
   volume: number;
   setVolume: React.Dispatch<React.SetStateAction<number>>;
   playbackRate: number;
   setPlaybackRate: React.Dispatch<React.SetStateAction<number>>;
 }
 
+const STORAGE_KEY_RECITER = 'reciterId';
+const STORAGE_KEY_VOLUME = 'volume';
+const STORAGE_KEY_PLAYBACK_RATE = 'playbackRate';
+
 /**
  * Manages audio settings with localStorage persistence.
  * Loads settings on mount and writes updates when they change.
  */
 export function usePersistedAudioSettings(): UsePersistedAudioSettingsReturn {
-  const [reciter, setReciter] = useState<Reciter>(RECITERS[0]!);
+  const [reciterId, setReciterId] = useState<number>(DEFAULT_RECITER.id);
   const [volume, setVolume] = useState(0.9);
   const [playbackRate, setPlaybackRate] = useState(1);
+  const { reciters } = useReciters();
 
   // Load persisted settings on mount
   useEffect(() => {
     if (typeof window === 'undefined') return;
     try {
-      const found = loadReciterFromStorage();
-      if (found) setReciter(found);
+      const storedId = localStorage.getItem(STORAGE_KEY_RECITER);
+      if (storedId) {
+        const parsed = Number.parseInt(storedId, 10);
+        if (Number.isFinite(parsed) && parsed > 0) {
+          setReciterId(parsed);
+        }
+      }
 
-      const vol = loadNumberFromStorage('volume', (n) => n >= 0 && n <= 1);
+      const vol = loadNumberFromStorage(STORAGE_KEY_VOLUME, (n) => n >= 0 && n <= 1);
       if (vol !== null) setVolume(vol);
 
-      const rate = loadNumberFromStorage('playbackRate', (n) => n > 0);
+      const rate = loadNumberFromStorage(STORAGE_KEY_PLAYBACK_RATE, (n) => n > 0);
       if (rate !== null) setPlaybackRate(rate);
     } catch {
       // ignore corrupted localStorage entries
@@ -43,30 +53,29 @@ export function usePersistedAudioSettings(): UsePersistedAudioSettingsReturn {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     try {
-      localStorage.setItem('reciterId', String(reciter.id));
-      localStorage.setItem('volume', String(volume));
-      localStorage.setItem('playbackRate', String(playbackRate));
+      localStorage.setItem(STORAGE_KEY_RECITER, String(reciterId));
+      localStorage.setItem(STORAGE_KEY_VOLUME, String(volume));
+      localStorage.setItem(STORAGE_KEY_PLAYBACK_RATE, String(playbackRate));
     } catch {
       // ignore write errors
     }
-  }, [reciter.id, volume, playbackRate]);
+  }, [reciterId, volume, playbackRate]);
 
-  return { reciter, setReciter, volume, setVolume, playbackRate, setPlaybackRate };
+  // Resolve reciter object from ID
+  const reciter: Reciter =
+    reciters.find((r) => r.id === reciterId) ?? { ...DEFAULT_RECITER, id: reciterId };
+
+  return {
+    reciter,
+    setReciterId,
+    volume,
+    setVolume,
+    playbackRate,
+    setPlaybackRate,
+  };
 }
 
-function loadReciterFromStorage(): Reciter | null {
-  const reciterId = localStorage.getItem('reciterId');
-  if (!reciterId) return null;
-  const parsed = Number.parseInt(reciterId, 10);
-  const found = RECITERS.find((r) => r.id === parsed) ?? null;
-  if (!found) localStorage.removeItem('reciterId');
-  return found;
-}
-
-function loadNumberFromStorage(
-  key: 'volume' | 'playbackRate',
-  isValid: (n: number) => boolean
-): number | null {
+function loadNumberFromStorage(key: string, isValid: (n: number) => boolean): number | null {
   const raw = localStorage.getItem(key);
   if (raw === null) return null;
   const n = Number.parseFloat(raw);

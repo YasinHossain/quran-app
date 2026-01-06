@@ -8,6 +8,8 @@ import { SurahCalligraphyIntro } from './SurahCalligraphyIntro';
 
 import type { UseVerseListingReturn } from '@/app/(features)/surah/hooks/useVerseListing';
 
+import { useVerseAudioWordSync } from './useVerseAudioWordSync';
+
 interface SurahMainProps {
   surahId?: number | undefined;
   verseListing: UseVerseListingReturn;
@@ -26,6 +28,8 @@ export function SurahMain({
   chapterId,
 }: SurahMainProps): React.JSX.Element {
   const shouldRenderIntro = typeof chapterId === 'number' && chapterId > 0;
+
+  useVerseAudioWordSync();
 
   return (
     <div className="w-full space-y-10">

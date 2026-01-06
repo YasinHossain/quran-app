@@ -13,8 +13,8 @@ interface ContentProps {
   onClose: () => void;
   activeTab: 'reciter' | 'repeat';
   setActiveTab: (tab: 'reciter' | 'repeat') => void;
-  localReciter: string;
-  setLocalReciter: (id: string) => void;
+  localReciter: number;
+  setLocalReciter: (id: number) => void;
   localRepeat: RepeatOptions;
   setLocalRepeat: React.Dispatch<React.SetStateAction<RepeatOptions>>;
   rangeWarning: string | null;

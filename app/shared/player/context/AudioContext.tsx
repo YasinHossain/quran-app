@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useMemo, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { usePersistedAudioSettings } from '@/app/shared/player/hooks/usePersistedAudioSettings';
 import { usePlayerVisibility } from '@/app/shared/player/hooks/usePlayerVisibility';
@@ -21,7 +21,7 @@ interface AudioContextType {
   repeatOptions: RepeatOptions;
   setRepeatOptions: React.Dispatch<React.SetStateAction<RepeatOptions>>;
   reciter: Reciter;
-  setReciter: React.Dispatch<React.SetStateAction<Reciter>>;
+  setReciterId: (id: number) => void;
   volume: number;
   setVolume: React.Dispatch<React.SetStateAction<number>>;
   playbackRate: number;
@@ -43,7 +43,7 @@ function useAudioCoreState(): Omit<
   const [activeVerse, setActiveVerse] = useState<Verse | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { repeatOptions, setRepeatOptions } = useRepeatState();
-  const { reciter, setReciter, volume, setVolume, playbackRate, setPlaybackRate } =
+  const { reciter, setReciterId, volume, setVolume, playbackRate, setPlaybackRate } =
     usePersistedAudioSettings();
   return {
     playingId,
@@ -58,7 +58,7 @@ function useAudioCoreState(): Omit<
     repeatOptions,
     setRepeatOptions,
     reciter,
-    setReciter,
+    setReciterId,
     volume,
     setVolume,
     playbackRate,
@@ -74,6 +74,18 @@ function useAudioContextValue(): AudioContextType {
     setPlayingId: core.setPlayingId,
     setActiveVerse: core.setActiveVerse,
   });
+
+  // Keep the playing id in sync with the active verse while playing.
+  useEffect(() => {
+    if (core.isPlaying && core.activeVerse) {
+      core.setPlayingId(core.activeVerse.id);
+      return;
+    }
+    if (!core.isPlaying) {
+      core.setPlayingId(null);
+    }
+  }, [core.isPlaying, core.activeVerse, core.setPlayingId]);
+
   // memoize the full context value including controls
   return useMemo(
     () => ({ ...core, isPlayerVisible, openPlayer, closePlayer }),

@@ -1,17 +1,17 @@
+// This file is kept for backward compatibility but is no longer used.
+// All reciters are now fetched from the QDC API.
+// See: app/shared/player/hooks/useReciters.ts
+
 import type { Reciter } from '@/app/shared/player/types';
 
-export const RECITERS: Reciter[] = [
-  { id: 2, name: 'Abdul Basit (Murattal)', path: 'AbdulBaset/Murattal' },
-  { id: 1, name: 'Abdul Basit (Mujawwad)', path: 'AbdulBaset/Mujawwad' },
-  { id: 7, name: 'Mishari Rashid Alafasy', path: 'Alafasy' },
-  { id: 3, name: 'Abdurrahman as-Sudais', path: 'Sudais' },
-  { id: 4, name: 'Abu Bakr al-Shatri', path: 'Shatri' },
-];
+/**
+ * @deprecated Use useReciters() hook instead which fetches from QDC API
+ */
+export const RECITERS: Reciter[] = [];
 
-export function buildAudioUrl(verseKey: string, reciterPath: string): string {
-  const [surah, ayah] = verseKey.split(':').map((s) => s.padStart(3, '0'));
-  if (reciterPath.startsWith('http') || reciterPath.startsWith('//')) {
-    return `${reciterPath}${surah}${ayah}.mp3`;
-  }
-  return `https://verses.quran.com/${reciterPath}/mp3/${surah}${ayah}.mp3`;
+/**
+ * @deprecated No longer needed - all audio is served via QDC API
+ */
+export function buildAudioUrl(_verseKey: string, _reciterPath: string): string {
+  throw new Error('buildAudioUrl is deprecated. Use QDC API instead.');
 }

@@ -69,7 +69,7 @@ export function VirtualizedPinnedList({
     <div className="relative w-full h-full" ref={setRootRef}>
       <Virtuoso
         useWindowScroll={!scrollElement}
-        customScrollParent={scrollElement ?? undefined}
+        {...(scrollElement ? { customScrollParent: scrollElement } : {})}
         data={bookmarks}
         computeItemKey={(index, bookmark) =>
           `pinned-${index}-${bookmark.verseId}-${bookmark.createdAt ?? index}`

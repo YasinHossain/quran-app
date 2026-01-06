@@ -12,7 +12,7 @@ import { parseVerseKey } from '@/lib/utils/verse';
 import { fetchWithTimeout } from './client';
 
 // ============================================================================
-// Search Modes (matches quran.com implementation)
+// Search Modes
 // ============================================================================
 
 /**
@@ -31,7 +31,7 @@ export enum SearchMode {
 
 const SEARCH_PROXY_ROUTE_PATH = '/api/proxy/search';
 const QDC_SEARCH_BASE_URL = 'https://api.qurancdn.com/api/qdc';
-// V4 API searches across ALL translations (like quran.com)
+// V4 API searches across ALL translations
 const V4_SEARCH_BASE_URL = 'https://api.quran.com/api/v4';
 const USE_QURAN_FOUNDATION_SEARCH =
   process.env['NEXT_PUBLIC_USE_QURAN_FOUNDATION_SEARCH'] === 'true';
@@ -414,7 +414,7 @@ async function fetchQdcSearch(
 }
 
 // ============================================================================
-// V4 API Search (searches across ALL translations like quran.com)
+// V4 API Search (searches across ALL translations)
 // ============================================================================
 
 interface V4ApiTranslation {
@@ -759,7 +759,7 @@ export async function comprehensiveSearch(
  * Quick search for autocomplete/dropdown.
  * 
  * When Quran Foundation Search is enabled (via NEXT_PUBLIC_USE_QURAN_FOUNDATION_SEARCH=true),
- * uses the same backend as quran.com which provides proper exact phrase matching.
+ * uses the same backend which provides proper exact phrase matching.
  * 
  * When not enabled, uses public APIs with client-side exact phrase sorting
  * to keep the preview relevant.

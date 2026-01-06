@@ -1,7 +1,6 @@
 export interface Reciter {
   id: number;
   name: string;
-  path: string;
   locale?: string;
 }
 
@@ -9,6 +8,12 @@ export interface AyahTiming {
   ayah: number;
   start: number;
   duration: number;
+}
+
+export interface WordSegmentTiming {
+  word: number;
+  start: number;
+  end: number;
 }
 
 export interface Track {
@@ -20,6 +25,9 @@ export interface Track {
   durationSec?: number;
   reciter?: Reciter;
   timings?: AyahTiming[];
+  segmentStartSec?: number;
+  segmentEndSec?: number;
+  wordSegments?: WordSegmentTiming[];
 }
 
 export interface RepeatOptions {

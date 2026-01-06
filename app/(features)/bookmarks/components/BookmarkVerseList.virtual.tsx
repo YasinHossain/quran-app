@@ -42,7 +42,7 @@ export const VirtualizedBookmarkList = ({
     <div className="w-full h-full relative" ref={setRootRef}>
       <Virtuoso
         useWindowScroll={!scrollElement}
-        customScrollParent={scrollElement ?? undefined}
+        {...(scrollElement ? { customScrollParent: scrollElement } : {})}
         data={bookmarks}
         itemContent={(index, bookmark) => renderItem(bookmark, index)}
         computeItemKey={(index, bookmark) =>

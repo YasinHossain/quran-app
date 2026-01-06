@@ -27,14 +27,22 @@ export interface ReaderVerseCardProps {
   footer?: ReactNode;
   idPrefix?: string;
   resourceLanguages?: Record<number, string>;
+  /** When true, applies a highlight style to indicate the verse is being played */
+  isPlaying?: boolean;
 }
 
-const getVariantClasses = (variant: VerseCardVariant): string => {
+const getVariantClasses = (variant: VerseCardVariant, isPlaying?: boolean): string => {
+  const playingHighlight = isPlaying
+    ? 'bg-accent/5 rounded-lg transition-colors duration-300 md:-mt-8 md:pt-8 px-3 -mx-3'
+    : '';
+
   if (variant === 'contained') {
-    return 'relative rounded-lg border border-border bg-surface p-6 shadow-sm';
+    const base = 'relative rounded-lg border border-border bg-surface p-6 shadow-sm';
+    return isPlaying ? `${base} ring-2 ring-accent/30` : base;
   }
 
-  return 'mb-0 pb-4 pt-4 md:mb-8 md:pb-8 md:pt-0 border-b border-border';
+  const base = 'mb-0 pb-4 pt-4 md:mb-8 md:pb-8 md:pt-0 border-b border-border';
+  return `${base} ${playingHighlight}`.trim();
 };
 
 const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps>(
@@ -53,11 +61,12 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
       footer,
       idPrefix = 'verse',
       resourceLanguages,
+      isPlaying = false,
     },
     ref
   ) => {
     const { settings } = useSettings();
-    const containerClasses = cn(getVariantClasses(variant), className);
+    const containerClasses = cn(getVariantClasses(variant, isPlaying), className);
     const fontSize = translationFontSize ?? settings.translationFontSize ?? 18;
 
     const sortedTranslations = useMemo(() => {

@@ -23,6 +23,10 @@ interface WordDisplayProps {
   tajweed?: boolean;
   /** V4 font family to use for Tajweed rendering */
   tajweedFontFamily?: string | undefined;
+  /** Verse key for audio word sync highlighting */
+  verseKey: string;
+  /** Word position (1-indexed) for audio word sync highlighting */
+  wordPosition: number;
 }
 
 // QPC Uthmani Hafs font lacks the U+06DF glyph, which shows up as a black circle; strip it when selected.
@@ -40,6 +44,8 @@ const WordDisplay = ({
   isQpcHafsFont,
   tajweed = false,
   tajweedFontFamily,
+  verseKey,
+  wordPosition,
 }: WordDisplayProps): React.JSX.Element | null => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
@@ -66,8 +72,10 @@ const WordDisplay = ({
   return (
     <span
       key={`${word.id}-${index}`}
-      className="inline-block text-center align-middle"
+      className="inline-block text-center align-middle verse-audio-word"
       data-verse-word="true"
+      data-verse-key={verseKey}
+      data-word-position={wordPosition}
       data-copy-text={copyText || undefined}
     >
       {!showByWords && hasTranslation ? (
@@ -179,7 +187,7 @@ export const VerseArabic = memo(function VerseArabic({
           return false;
         }
       })
-      .map((node) => node.dataset.copyText?.trim())
+      .map((node) => node.dataset['copyText']?.trim())
       .filter((text): text is string => Boolean(text));
     const normalized = selectedWords.length
       ? selectedWords.join(' ')
@@ -281,6 +289,8 @@ export const VerseArabic = memo(function VerseArabic({
                     isQpcHafsFont={isQpcHafsFont}
                     tajweed={tajweed}
                     tajweedFontFamily={getTajweedFontFamily(word)}
+                    verseKey={verse.verse_key}
+                    wordPosition={word.position ?? index + 1}
                   />
                 </Fragment>
               ))}
@@ -296,4 +306,3 @@ export const VerseArabic = memo(function VerseArabic({
     </>
   );
 });
-

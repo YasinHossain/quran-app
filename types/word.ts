@@ -11,5 +11,6 @@ export interface Word extends Partial<Record<Exclude<LanguageCode, 'id'>, string
   codeV2?: string;
   /** Page number for V4 Tajweed font loading */
   pageNumber?: number;
+  /** 1-indexed position of the word within the verse (for audio word sync) */
+  position?: number;
 }
-

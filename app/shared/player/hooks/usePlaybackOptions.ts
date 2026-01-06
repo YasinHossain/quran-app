@@ -5,13 +5,13 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
+import { useReciters } from '@/app/shared/player/hooks/useReciters';
 import {
   hasNonIntegerValues,
   adjustRange,
   deriveRangeBoundaries,
 } from '@/app/shared/player/utils/repeat';
 import { getVerseByKey } from '@/lib/api/verses';
-import { RECITERS } from '@/lib/audio/reciters';
 import { ensureLanguageCode } from '@/lib/text/languageCodes';
 
 import type { RepeatOptions } from '@/app/shared/player/types';
@@ -23,8 +23,8 @@ import type { RepeatOptions } from '@/app/shared/player/types';
  * @returns current selections and helpers to commit changes.
  */
 interface UsePlaybackOptionsReturn {
-  localReciter: string;
-  setLocalReciter: Dispatch<SetStateAction<string>>;
+  localReciter: number;
+  setLocalReciter: Dispatch<SetStateAction<number>>;
   localRepeat: RepeatOptions;
   setLocalRepeat: Dispatch<SetStateAction<RepeatOptions>>;
   rangeWarning: string | null;
@@ -36,7 +36,7 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
   const router = useRouter();
   const {
     reciter,
-    setReciter,
+    setReciterId,
     repeatOptions,
     setRepeatOptions,
     activeVerse,
@@ -46,6 +46,7 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
     setIsPlaying,
     openPlayer,
   } = useAudio();
+  const { reciters } = useReciters();
   const { settings } = useSettings();
   const { chapters } = useSurahNavigationData();
   const translationIds = useMemo(() => {
@@ -55,7 +56,7 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
     return [20];
   }, [settings.translationId, settings.translationIds]);
   const wordLang = useMemo(() => ensureLanguageCode(settings.wordLang), [settings.wordLang]);
-  const [localReciter, setLocalReciter] = useState(reciter.id.toString());
+  const [localReciter, setLocalReciter] = useState(reciter.id);
   const [localRepeat, setLocalRepeat] = useState<RepeatOptions>(repeatOptions);
   const [rangeWarning, setRangeWarning] = useState<string | null>(null);
 
@@ -69,7 +70,7 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
 
   useEffect(() => {
     if (isOpen) {
-      setLocalReciter(reciter.id.toString());
+      setLocalReciter(reciter.id);
       const activeVerseNumber = parseActiveVerseNumber();
       const activeSurahId = activeVerse?.chapter_id;
       const effectiveMode = repeatOptions.mode === 'off' ? 'single' : repeatOptions.mode;
@@ -142,8 +143,11 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
         setRangeWarning('Please enter whole numbers only.');
         return;
       }
-      const newReciter = RECITERS.find((r) => r.id.toString() === localReciter);
-      if (newReciter) setReciter(newReciter);
+
+      // Update reciter if changed
+      if (localReciter !== reciter.id) {
+        setReciterId(localReciter);
+      }
 
       if (localRepeat.mode === 'single') {
         const surahId = localRepeat.surahId ?? activeVerse?.chapter_id;

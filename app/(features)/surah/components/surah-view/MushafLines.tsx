@@ -54,7 +54,7 @@ export const MushafLines = ({
           return false;
         }
       })
-      .map((node) => node.dataset.copyText?.trim())
+      .map((node) => node.dataset['copyText']?.trim())
       .filter((text): text is string => Boolean(text));
     const normalized = selectedWords.length
       ? selectedWords.join(' ')

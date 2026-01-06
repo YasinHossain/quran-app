@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, MutableRefObject } from 'react';
+import { useCallback, useEffect, useMemo, useState, MutableRefObject } from 'react';
 
 import { formatTime } from '@/app/shared/player/utils/timeline';
 
@@ -52,26 +52,105 @@ export function useTrackTiming({
 }: Opts): TrackTimingReturn {
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState(track?.durationSec ?? 0);
+
+  const segment = useMemo(() => {
+    const start = track?.segmentStartSec;
+    const end = track?.segmentEndSec;
+    if (typeof start !== 'number' || typeof end !== 'number') return null;
+    if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) return null;
+    return { start, end, duration: end - start };
+  }, [track?.segmentStartSec, track?.segmentEndSec]);
+
+  const handleTimeUpdate = useCallback(
+    (timeSec: number): void => {
+      if (!segment) {
+        setCurrent(timeSec);
+        return;
+      }
+      const relative = timeSec - segment.start;
+      setCurrent(Math.max(0, Math.min(segment.duration, relative)));
+    },
+    [segment]
+  );
+
+  const handleLoadedMetadata = useCallback(
+    (loadedDuration: number): void => {
+      if (segment) {
+        setDuration(segment.duration);
+        return;
+      }
+      setDuration(loadedDuration);
+    },
+    [segment]
+  );
+
   const playerOptions: {
     src?: string;
     defaultDuration?: number;
     onTimeUpdate?: (time: number) => void;
     onLoadedMetadata?: (duration: number) => void;
   } = {
-    onTimeUpdate: setCurrent,
-    onLoadedMetadata: setDuration,
+    onTimeUpdate: handleTimeUpdate,
+    onLoadedMetadata: handleLoadedMetadata,
   };
   if (track?.src !== undefined) playerOptions.src = track.src;
   if (track?.durationSec !== undefined) playerOptions.defaultDuration = track.durationSec;
 
-  const { audioRef, play, pause, seek, setVolume, setPlaybackRate } = useAudioPlayer(playerOptions);
+  const {
+    audioRef,
+    play,
+    pause,
+    seek: rawSeek,
+    setVolume,
+    setPlaybackRate,
+  } = useAudioPlayer(playerOptions);
+
+  const seek = useCallback(
+    (sec: number): void => {
+      if (!segment) {
+        rawSeek(sec);
+        return;
+      }
+      const a = audioRef.current;
+      if (!a) return;
+      const clamped = Math.max(0, Math.min(segment.duration, sec));
+      try {
+        a.currentTime = segment.start + clamped;
+      } catch {
+        // ignore invalid seek states (e.g., before metadata is loaded)
+      }
+      setCurrent(clamped);
+    },
+    [audioRef, rawSeek, segment]
+  );
+
   useEffect(() => {
     contextRef.current = audioRef.current;
   }, [contextRef, audioRef]);
   useEffect(() => {
     setCurrent(0);
-    setDuration(track?.durationSec ?? 0);
-  }, [track?.src, track?.durationSec]);
+    setDuration(segment?.duration ?? track?.durationSec ?? 0);
+  }, [segment?.duration, track?.durationSec, track?.id, track?.src]);
+  useEffect(() => {
+    if (!segment) return;
+    // Seek to start of segment when segment changes
+    const a = audioRef.current;
+    if (!a) return;
+    try {
+      // Check if we're already close to the start time (continuous playback)
+      // If within 0.3s, don't seek to avoid audio hiccups
+      const diff = Math.abs(a.currentTime - segment.start);
+      if (diff > 0.3) {
+        a.currentTime = segment.start;
+        setCurrent(0);
+      } else {
+        // Just sync the internal state
+        setCurrent(Math.max(0, a.currentTime - segment.start));
+      }
+    } catch {
+      // ignore invalid seek states
+    }
+  }, [segment?.start, audioRef]);
   useEffect(() => {
     setVolume(volume);
     setPlaybackRate(playbackRate);

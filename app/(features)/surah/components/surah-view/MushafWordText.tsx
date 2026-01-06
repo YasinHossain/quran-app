@@ -74,6 +74,21 @@ const getVerseNumberFromWord = (word: MushafWord): number | undefined => {
   return undefined;
 };
 
+const getVerseKeyFromWord = (word: MushafWord): string | undefined => {
+  if (typeof word.verseKey === 'string') {
+    return word.verseKey;
+  }
+
+  if (typeof word.location === 'string') {
+    const [surah, ayah] = word.location.split(':');
+    if (surah && ayah) {
+      return `${surah}:${ayah}`;
+    }
+  }
+
+  return undefined;
+};
+
 type MushafWordTextProps = {
   word: MushafWord;
   settings: ReaderSettings;
@@ -99,6 +114,7 @@ export const MushafWordText = ({
   }
 
   const baseText = getBaseText(word, isIndopakMushaf);
+  const verseKey = getVerseKeyFromWord(word);
   const glyphCode = getGlyphCode(word, qcfVersion);
   const hasGlyphCode = typeof glyphCode === 'string' && glyphCode.length > 0;
 
@@ -126,6 +142,8 @@ export const MushafWordText = ({
     <span
       data-mushaf-word="true"
       data-copy-text={copyText || undefined}
+      {...(verseKey ? { 'data-verse-key': verseKey } : {})}
+      data-word-position={String(word.position)}
       className={cn(
         isQcfMushaf
           ? 'inline-flex flex-none items-center text-foreground font-medium'

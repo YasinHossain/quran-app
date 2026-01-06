@@ -99,12 +99,21 @@ const customJestConfig = {
   restoreMocks: true,
 
   // Transform ESM modules for Jest
-  transformIgnorePatterns: [
-    'node_modules/(?!(node-fetch|fetch-blob|data-uri-to-buffer|formdata-polyfill)/)',
-  ],
+  transformIgnorePatterns: [],
 
   // Verbose output in CI
   verbose: !!process.env.CI,
 };
 
-export default createJestConfig(customJestConfig);
+const nextJestConfig = createJestConfig(customJestConfig);
+
+export default async (...args) => {
+  const config = await nextJestConfig(...args);
+  // Override Next.js defaults so ESM dependencies used in tests (e.g. MSW) are transformed.
+  config.transformIgnorePatterns = [
+    '/node_modules/(?!.pnpm)(?!(geist|node-fetch|fetch-blob|data-uri-to-buffer|formdata-polyfill|msw|until-async)/)',
+    '/node_modules/.pnpm/(?!(geist|node-fetch|fetch-blob|data-uri-to-buffer|formdata-polyfill|msw|until-async)@)',
+    '^.+\\.module\\.(css|sass|scss)$',
+  ];
+  return config;
+};

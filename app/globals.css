@@ -614,3 +614,13 @@ body::-webkit-scrollbar-thumb:hover,
   color: rgb(20, 184, 166);
   background: rgb(20 184 166 / 0.15);
 }
+
+/* ===== Mushaf Audio Word Sync ===== */
+.mushaf-audio-highlight {
+  background: rgb(var(--color-accent) / 0.16);
+  border-radius: 0.25rem;
+}
+
+.word-audio-highlight {
+  color: rgb(var(--color-accent)) !important;
+}

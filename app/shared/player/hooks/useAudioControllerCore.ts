@@ -1,6 +1,7 @@
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 
 import { useAudioControllerSetup } from './useAudioControllerSetup';
+import { useSegmentCompletion } from './useSegmentCompletion';
 import { useTrackTiming } from './useTrackTiming';
 
 import type { Track } from '@/app/shared/player/types';
@@ -52,6 +53,21 @@ function useCoreDeps(
 
 export function useAudioControllerCore({ track, onPrev, onNext }: Options): CoreReturn {
   const { audio, timing, setup } = useCoreDeps(track, onPrev, onNext);
+  useSegmentCompletion({
+    ...(track !== undefined ? { track } : {}),
+    isPlaying: audio.isPlaying,
+    current: timing.current,
+    duration: timing.duration,
+    handleEnded: setup.handleEnded,
+  });
+
+  const ignoreNativeEnded =
+    typeof track?.segmentStartSec === 'number' &&
+    Number.isFinite(track.segmentStartSec) &&
+    typeof track?.segmentEndSec === 'number' &&
+    Number.isFinite(track.segmentEndSec) &&
+    track.segmentEndSec > track.segmentStartSec;
+
   return {
     isPlayerVisible: audio.isPlayerVisible,
     closePlayer: audio.closePlayer,
@@ -59,5 +75,6 @@ export function useAudioControllerCore({ track, onPrev, onNext }: Options): Core
     timing,
     ...timing,
     ...setup,
+    handleEnded: ignoreNativeEnded ? () => {} : setup.handleEnded,
   } as const;
 }
