@@ -12,12 +12,12 @@ const QDC_RECITERS_KEY = 'qdc-audio-reciters';
 export const DEFAULT_RECITER: Reciter = {
   id: 7,
   name: 'Mishari Rashid al-`Afasy',
-  locale: 'Murattal • Hafs',
+  locale: 'Murattal',
 };
 
 function mapQdcReciterToReciter(reciter: QdcAudioReciterApi): Reciter {
   const displayName = reciter.translated_name?.name || reciter.name;
-  const localeParts = [reciter.style?.name, reciter.qirat?.name].filter(
+  const localeParts = [reciter.style?.name].filter(
     (part): part is string => Boolean(part)
   );
   const locale = localeParts.join(' • ');

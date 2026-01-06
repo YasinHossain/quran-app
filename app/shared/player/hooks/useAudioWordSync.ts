@@ -127,4 +127,53 @@ export function useAudioWordSync({ highlightClass, selectorBuilder }: UseAudioWo
       previousWordRef.current = null;
     };
   }, [audio.isPlaying, audio.audioRef, verseKey, verseTiming, highlightClass, selectorBuilder]);
+
+  // Handle clicking on words to seek
+  useEffect(() => {
+    const handleDocumentClick = (e: MouseEvent): void => {
+      if (!audio.isPlayerVisible) return;
+
+      const target = e.target as HTMLElement;
+      const wordElement = target.closest('[data-verse-word="true"]');
+      if (!wordElement) return;
+
+      const elementVerseKey = wordElement.getAttribute('data-verse-key');
+      const elementWordPosition = wordElement.getAttribute('data-word-position');
+
+      if (!elementVerseKey || !elementWordPosition || !audioFile?.verseTimings) return;
+
+      // Find timing for the clicked verse
+      const timing = resolveVerseTiming(audioFile.verseTimings, elementVerseKey);
+      if (!timing) return;
+
+      const wordPosition = parseInt(elementWordPosition, 10);
+      const segments = timing?.segments;
+      if (!segments) return;
+      
+      const segment = segments.find((s) => s[0] === wordPosition);
+
+      if (segment) {
+        // segment[1] is start timestamp in ms
+        const seekTimeSeconds = segment[1] / 1000;
+        
+        const audioEl = audio.audioRef.current;
+        if (audioEl) {
+          audioEl.currentTime = seekTimeSeconds;
+          
+          if (audioEl.paused) {
+             audioEl.play().then(() => {
+               audio.setIsPlaying(true);
+             }).catch(() => {
+               // ignore play errors (e.g. if no source loaded yet)
+             });
+          }
+        }
+      }
+    };
+
+    document.addEventListener('click', handleDocumentClick);
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+    };
+  }, [audio, audioFile]);
 }

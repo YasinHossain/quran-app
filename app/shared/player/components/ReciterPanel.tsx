@@ -15,16 +15,13 @@ export function ReciterPanel({ localReciter, setLocalReciter }: Props): React.JS
   return (
     <div className="md:col-span-2">
       <div className="space-y-3">
-        <div>
-          <div className="text-sm font-semibold text-foreground">Select Reciter</div>
-          <div className="text-xs text-muted">
-            {isLoading
-              ? 'Loading reciters…'
-              : error
-                ? 'Unable to load reciters.'
-                : 'All reciters support word-by-word synchronisation.'}
+        {(isLoading || error) && (
+          <div>
+            <div className="text-xs text-muted">
+              {isLoading ? 'Loading reciters…' : 'Unable to load reciters.'}
+            </div>
           </div>
-        </div>
+        )}
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 p-1">
           {reciters.map((r) => {
             const isSelected = localReciter === r.id;

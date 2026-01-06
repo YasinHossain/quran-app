@@ -14,7 +14,7 @@ interface VerseProps {
 }
 
 export const Verse = memo(function Verse({ verse }: VerseProps): JSX.Element {
-  const { verseRef, isPlaying, isLoadingAudio, isVerseBookmarked, handlePlayPause } =
+  const { verseRef, isPlaying, isCurrent, isLoadingAudio, isVerseBookmarked, handlePlayPause } =
     useVerseCard(verse);
   const { resourceLanguagesMap } = useTranslationOptions();
   const [isPlannerModalOpen, setPlannerModalOpen] = useState(false);
@@ -39,7 +39,7 @@ export const Verse = memo(function Verse({ verse }: VerseProps): JSX.Element {
       <ReaderVerseCard
         ref={verseRef}
         verse={verse}
-        isPlaying={isPlaying}
+        isPlaying={isCurrent}
         actions={{
           verseKey: verse.verse_key,
           verseId: String(verse.id),
