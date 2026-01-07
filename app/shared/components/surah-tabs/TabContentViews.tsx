@@ -9,6 +9,7 @@ import type { Chapter } from '@/types';
 
 interface BaseProps {
   rememberScroll: (tab: TabKey) => void;
+  scrollParent: HTMLElement;
   onClose?: (() => void) | undefined;
 }
 
@@ -30,6 +31,7 @@ export function SurahTabContent(props: SurahProps): React.JSX.Element {
     setSelectedPageId,
     setSelectedJuzId,
     rememberScroll,
+    scrollParent,
     isTafsirPath,
     isMushafMode,
     onClose,
@@ -42,6 +44,7 @@ export function SurahTabContent(props: SurahProps): React.JSX.Element {
       setSelectedPageId={setSelectedPageId}
       setSelectedJuzId={setSelectedJuzId}
       rememberScroll={() => rememberScroll('Surah')}
+      scrollParent={scrollParent}
       isTafsirPath={isTafsirPath}
       isMushafMode={isMushafMode}
       onClose={onClose}
@@ -68,6 +71,7 @@ export function JuzTabContent(props: JuzProps): React.JSX.Element {
     setSelectedPageId,
     setSelectedSurahId,
     rememberScroll,
+    scrollParent,
     onClose,
   } = props;
   return (
@@ -79,6 +83,7 @@ export function JuzTabContent(props: JuzProps): React.JSX.Element {
       setSelectedPageId={setSelectedPageId}
       setSelectedSurahId={setSelectedSurahId}
       rememberScroll={() => rememberScroll('Juz')}
+      scrollParent={scrollParent}
       onClose={onClose}
     />
   );
@@ -103,6 +108,7 @@ export function PageTabContent(props: PageProps): React.JSX.Element {
     setSelectedJuzId,
     setSelectedSurahId,
     rememberScroll,
+    scrollParent,
     onClose,
   } = props;
   return (
@@ -114,6 +120,7 @@ export function PageTabContent(props: PageProps): React.JSX.Element {
       setSelectedJuzId={setSelectedJuzId}
       setSelectedSurahId={setSelectedSurahId}
       rememberScroll={() => rememberScroll('Page')}
+      scrollParent={scrollParent}
       onClose={onClose}
     />
   );

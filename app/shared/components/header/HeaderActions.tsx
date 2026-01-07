@@ -1,6 +1,6 @@
 'use client';
 
-import { IconSettings } from '@tabler/icons-react';
+import { Settings } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { memo, type ReactElement, useCallback } from 'react';
 
@@ -28,7 +28,7 @@ export const HeaderActions = memo(function HeaderActions(): ReactElement {
           className="btn-touch p-2.5 rounded-xl hover:bg-interactive-hover hover:text-accent transition-all duration-200 active:scale-95 xl:hidden flex items-center justify-center"
           aria-label="Open settings"
         >
-          <IconSettings size={18} className="text-muted" />
+          <Settings size={18} className="text-muted" />
         </button>
       )}
     </div>

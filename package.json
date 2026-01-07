@@ -65,7 +65,8 @@
     "refactor:check": "npx eslint . --ext .ts,.tsx --max-warnings=0",
     "clean:unused": "npx knip --fix",
     "analyze": "ANALYZE=true npm run build",
-    "gemini": "gemini"
+    "gemini": "gemini",
+    "start:chrome": "google-chrome --headless=new --remote-debugging-port=9222 --remote-debugging-address=0.0.0.0 --no-sandbox --disable-gpu > /dev/null 2>&1 &"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
@@ -73,9 +74,7 @@
     "@radix-ui/react-popover": "latest",
     "@radix-ui/react-slider": "latest",
     "@radix-ui/react-tooltip": "latest",
-    "@tabler/icons-react": "^3.34.1",
     "@tailwindcss/container-queries": "^0.1.1",
-    "@tanstack/react-virtual": "^3.13.12",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.12",
     "i18next": "^25.3.2",
@@ -99,6 +98,7 @@
     "@eslint/js": "^9",
     "@playwright/test": "^1.55.0",
     "@size-limit/preset-app": "^11.2.0",
+    "@size-limit/webpack": "^12.0.0",
     "@storybook/addon-coverage": "^2.0.0",
     "@storybook/addon-essentials": "^8.4.3",
     "@storybook/addon-themes": "^8.4.3",

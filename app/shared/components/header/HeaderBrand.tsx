@@ -1,6 +1,6 @@
 'use client';
 
-import { IconMenu2 } from '@tabler/icons-react';
+import { Menu } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { memo, type ReactElement, useCallback } from 'react';
@@ -50,7 +50,7 @@ export const HeaderBrand = memo(function HeaderBrand(): ReactElement {
           className="btn-touch p-2.5 rounded-xl hover:bg-muted/60 transition-all duration-200 active:scale-95 xl:hidden flex items-center justify-center"
           aria-label="Open navigation"
         >
-          <IconMenu2 size={18} className="text-muted" />
+          <Menu size={18} className="text-muted" />
         </button>
       )}
 

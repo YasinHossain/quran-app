@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef } from 'react';
+import { memo, useRef } from 'react';
 import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
 
 import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
@@ -15,6 +15,7 @@ interface Props {
   setSelectedJuzId: (id: number) => void;
   setSelectedSurahId: (id: number) => void;
   rememberScroll: () => void;
+  scrollParent?: HTMLElement;
   onClose?: (() => void) | undefined;
 }
 
@@ -35,6 +36,7 @@ const PageItem = memo(function PageItem({
     <div className="pb-2">
       <PageNavigationCard
         href={getPageHref(page)}
+        prefetch={false}
         scroll={false}
         data-active={isActive}
         isActive={isActive}
@@ -56,23 +58,14 @@ export const Page = ({
   setSelectedJuzId,
   setSelectedSurahId,
   rememberScroll,
+  scrollParent,
   onClose,
 }: Props): React.JSX.Element => {
-  const { getPageHref, goToPage } = useNavigationTargets();
+  const { getPageHref } = useNavigationTargets();
   const virtuosoRef = useRef<VirtuosoHandle>(null);
 
-  // Scroll to selected page when it changes (e.g., when switching tabs)
-  useEffect(() => {
-    if (selectedPageId === null) return;
-    const selectedIndex = pages.findIndex((p) => p === selectedPageId);
-    if (selectedIndex !== -1) {
-      virtuosoRef.current?.scrollToIndex({
-        index: selectedIndex,
-        align: 'center',
-        behavior: 'auto',
-      });
-    }
-  }, [selectedPageId, pages]);
+  // Note: Scroll centering is handled by the parent useScrollCentering hook
+  // which uses [data-active] attributes and scrollIntoView for consistency
 
   const handleNavigate = (p: number): void => {
     onClose?.();
@@ -81,13 +74,15 @@ export const Page = ({
     const chap = getSurahByPage(p, chapters);
     if (chap) setSelectedSurahId(chap.id);
     rememberScroll();
-    goToPage(p);
   };
 
   return (
     <Virtuoso
       ref={virtuosoRef}
       data={pages as number[]}
+      fixedItemHeight={88}
+      computeItemKey={(_, page) => page}
+      {...(scrollParent ? { customScrollParent: scrollParent } : {})}
       style={{ height: '100%' }}
       itemContent={(_, page) => (
         <PageItem

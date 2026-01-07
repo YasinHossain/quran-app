@@ -1,4 +1,4 @@
-import { IconX } from '@tabler/icons-react';
+import { X } from 'lucide-react';
 import { memo } from 'react';
 
 import { SearchInput } from '@/app/shared/components/SearchInput';
@@ -25,7 +25,7 @@ export const QuranBottomSheetHeader = memo(function QuranBottomSheetHeader({
           onClick={onClose}
           className="btn-touch p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center"
         >
-          <IconX size={18} className="text-muted" />
+          <X size={18} className="text-muted" />
         </button>
       </div>
       <div className="px-6 py-4 border-b border-border">

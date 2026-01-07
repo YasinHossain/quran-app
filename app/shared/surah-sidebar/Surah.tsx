@@ -1,7 +1,5 @@
-import { memo, useEffect, useRef } from 'react';
+import { memo, useRef } from 'react';
 import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
-
-import { useRouter } from 'next/navigation';
 
 import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
 import { buildTafsirRoute } from '@/app/shared/navigation/routes';
@@ -17,6 +15,7 @@ interface Props {
   setSelectedPageId: (id: number) => void;
   setSelectedJuzId: (id: number) => void;
   rememberScroll: () => void;
+  scrollParent?: HTMLElement;
   isTafsirPath: boolean;
   isMushafMode: boolean;
   onClose?: (() => void) | undefined;
@@ -39,6 +38,7 @@ const SurahItem = memo(function SurahItem({
     <div className="pb-2">
       <SurahNavigationCard
         href={href}
+        prefetch={false}
         scroll={false}
         data-active={isActive}
         isActive={isActive}
@@ -61,26 +61,16 @@ export const Surah = ({
   setSelectedPageId,
   setSelectedJuzId,
   rememberScroll,
+  scrollParent,
   isTafsirPath,
   isMushafMode,
   onClose,
 }: Props): React.JSX.Element => {
-  const { getSurahHref, goToSurah } = useNavigationTargets();
-  const router = useRouter();
+  const { getSurahHref } = useNavigationTargets();
   const virtuosoRef = useRef<VirtuosoHandle>(null);
 
-  // Scroll to selected surah when it changes (e.g., when switching tabs)
-  useEffect(() => {
-    if (selectedSurahId === null) return;
-    const selectedIndex = chapters.findIndex((c) => c.id === selectedSurahId);
-    if (selectedIndex !== -1) {
-      virtuosoRef.current?.scrollToIndex({
-        index: selectedIndex,
-        align: 'center',
-        behavior: 'auto',
-      });
-    }
-  }, [selectedSurahId, chapters]);
+  // Note: Scroll centering is handled by the parent useScrollCentering hook
+  // which uses [data-active] attributes and scrollIntoView for consistency
 
   const handleNavigate = (chapter: Chapter): void => {
     onClose?.();
@@ -89,14 +79,6 @@ export const Surah = ({
     setSelectedPageId(firstPage);
     setSelectedJuzId(getJuzByPage(firstPage));
     rememberScroll();
-    if (!isTafsirPath) {
-      const surahHref = getSurahHref(chapter.id);
-      if (isMushafMode) {
-        router.push(`${surahHref}?view=mushaf`);
-      } else {
-        goToSurah(chapter.id);
-      }
-    }
   };
 
   const getHref = (chapter: Chapter): string => {
@@ -110,6 +92,9 @@ export const Surah = ({
     <Virtuoso
       ref={virtuosoRef}
       data={chapters as Chapter[]}
+      fixedItemHeight={88}
+      computeItemKey={(_, chapter) => chapter.id}
+      {...(scrollParent ? { customScrollParent: scrollParent } : {})}
       style={{ height: '100%' }}
       itemContent={(_, chapter) => (
         <SurahItem

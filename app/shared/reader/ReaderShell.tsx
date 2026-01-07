@@ -1,14 +1,29 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 
-import { MushafMain } from '@/app/(features)/surah/components/surah-view/MushafMain';
 import { SurahMain } from '@/app/(features)/surah/components/surah-view/SurahMain';
-import { SurahWorkspaceNavigation } from '@/app/(features)/surah/components/surah-view/SurahWorkspaceNavigation';
+import { useSurahLayoutSidebar } from '@/app/(features)/surah/layout';
 import { useReaderMode } from '@/app/providers/ReaderModeContext';
 import { SettingsSidebar } from '@/app/shared/reader/settings';
 import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
-import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
+
+// Dynamic import for MushafMain - only loaded when user switches to reading/mushaf mode
+const MushafMain = dynamic(
+  () =>
+    import('@/app/(features)/surah/components/surah-view/MushafMain').then(
+      (mod) => mod.MushafMain
+    ),
+  {
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-pulse text-muted">Loading Mushaf view...</div>
+      </div>
+    ),
+    ssr: false,
+  }
+);
 
 import { ReaderAudioProps, WorkspaceReaderLayout } from './ReaderLayouts';
 import { useReaderView } from './useReaderView';
@@ -245,12 +260,15 @@ export function ReaderShell({
   const audioProps = mapToAudioProps(verseListing);
   const centerContentClassName = mode === 'mushaf' ? 'px-0 sm:px-0 lg:px-0' : undefined;
 
+  // Get sidebar from layout context (persists across navigations)
+  const layoutSidebar = useSurahLayoutSidebar();
+
   return (
     <WorkspaceReaderLayout
       main={mainContent}
-      desktopLeft={<SurahWorkspaceNavigation />}
+      desktopLeft={layoutSidebar?.desktopLeftSidebar ?? null}
       desktopRight={workspaceSettingsSidebar}
-      mobileLeft={<SurahListSidebar />}
+      mobileLeft={null} // Mobile sidebar is now rendered in surah/layout.tsx
       mobileRight={settingsSidebar}
       audio={audioProps}
       {...(centerContentClassName ? { contentClassName: centerContentClassName } : {})}

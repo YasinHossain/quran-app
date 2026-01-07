@@ -38,7 +38,8 @@ export const CARD_VARIANTS: Record<string, CardVariant> = {
     height: 'h-[80px]',
     borderRadius: 'rounded-xl',
     background: {
-      inactive: 'bg-surface dark:bg-surface/60 text-content-primary border border-border/30 dark:border-border/20',
+      inactive:
+        'bg-surface-navigation text-content-primary border border-border/30 dark:border-border/20',
       active: 'bg-accent text-on-accent border border-accent/30',
     },
     hover: {

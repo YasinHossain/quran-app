@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef } from 'react';
+import { memo, useRef } from 'react';
 import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
 
 import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
@@ -16,6 +16,7 @@ interface Props {
   setSelectedPageId: (id: number) => void;
   setSelectedSurahId: (id: number) => void;
   rememberScroll: () => void;
+  scrollParent?: HTMLElement;
   onClose?: (() => void) | undefined;
 }
 
@@ -36,6 +37,7 @@ const JuzItem = memo(function JuzItem({
     <div className="pb-2">
       <JuzNavigationCard
         href={getJuzHref(juz.number)}
+        prefetch={false}
         scroll={false}
         data-active={isActive}
         isActive={isActive}
@@ -58,23 +60,14 @@ export const Juz = ({
   setSelectedPageId,
   setSelectedSurahId,
   rememberScroll,
+  scrollParent,
   onClose,
 }: Props): React.JSX.Element => {
-  const { getJuzHref, goToJuz } = useNavigationTargets();
+  const { getJuzHref } = useNavigationTargets();
   const virtuosoRef = useRef<VirtuosoHandle>(null);
 
-  // Scroll to selected juz when it changes (e.g., when switching tabs)
-  useEffect(() => {
-    if (selectedJuzId === null) return;
-    const selectedIndex = juzs.findIndex((j) => j.number === selectedJuzId);
-    if (selectedIndex !== -1) {
-      virtuosoRef.current?.scrollToIndex({
-        index: selectedIndex,
-        align: 'center',
-        behavior: 'auto',
-      });
-    }
-  }, [selectedJuzId, juzs]);
+  // Note: Scroll centering is handled by the parent useScrollCentering hook
+  // which uses [data-active] attributes and scrollIntoView for consistency
 
   const handleNavigate = (juz: JuzSummary): void => {
     onClose?.();
@@ -84,13 +77,15 @@ export const Juz = ({
     const chap = getSurahByPage(page, chapters);
     if (chap) setSelectedSurahId(chap.id);
     rememberScroll();
-    goToJuz(juz.number);
   };
 
   return (
     <Virtuoso
       ref={virtuosoRef}
       data={juzs as JuzSummary[]}
+      fixedItemHeight={88}
+      computeItemKey={(_, juz) => juz.number}
+      {...(scrollParent ? { customScrollParent: scrollParent } : {})}
       style={{ height: '100%' }}
       itemContent={(_, juz) => (
         <JuzItem

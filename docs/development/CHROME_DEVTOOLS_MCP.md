@@ -19,42 +19,38 @@ setup.
 
 ## Quick start
 
-1. From the project root, run `npx -y chrome-devtools-mcp@latest`.
-2. Wait for the terminal message indicating that Chrome was launched and the
-   MCP server is ready.
-3. Inside your MCP-aware client (Codex CLI, Claude Desktop, etc.) tell the
-   agent to start or use the `chrome-devtools` server. The CLI reads
-   `.mcp.json`, finds the entry we added, and connects automatically.
+1. Start Chrome in headless mode: `npm run start:chrome`.
+2. The MCP server is configured in `.mcp.json` to connect to this local instance at `http://localhost:9222`.
+3. Inside your MCP-aware client, start the `chrome-devtools` server.
 
-Because we invoke the server through `npx` with the `@latest` tag, you’ll always
-pick up the newest release whenever the agent launches it.
+## Configuration
 
-## Optional flags you can pass
+The default `.mcp.json` is configured for a Linux container environment, assuming Chrome is running on `localhost:9222`.
 
-You can supply the same flags documented upstream via `.mcp.json` or when
-starting manually. A few useful examples:
-
-- `--channel=beta` – launch Chrome Beta instead of Stable.
-- `--headless=true` – run Chrome without a visible window for CI environments.
-- `--browser-url=http://127.0.0.1:9222` – connect to an already-running Chrome
-  that you started with `--remote-debugging-port`.
-
-To change the defaults repo-wide, edit `.mcp.json` and append the flag to the
-`args` array.
-
-## Running Chrome with remote debugging (optional)
-
-If you would rather connect to an existing Chrome profile, start Chrome with a
-custom user data directory and an open debugging port:
-
-```bash
-"C:\Program Files\Google\Chrome\Application\chrome.exe" ^
-  --remote-debugging-port=9222 ^
-  --user-data-dir="%TEMP%\\chrome-profile-stable"
+```json
+{
+  "mcpServers": {
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest", "--browser-url=http://localhost:9222"]
+    }
+  }
+}
 ```
 
-Then update `.mcp.json` (or start the server manually) with
-`--browser-url=http://127.0.0.1:9222`.
+## Running Chrome with remote debugging (Window/WSL Legacy)
+
+If you are running outside a container or want to connect to a Windows Chrome instance:
+
+1. Start Chrome with remote debugging:
+
+   ```bash
+   "C:\Program Files\Google\Chrome\Application\chrome.exe" ^
+     --remote-debugging-port=9222 ^
+     --user-data-dir="%TEMP%\\chrome-profile-stable"
+   ```
+
+2. Update `.mcp.json` to point to the host IP (e.g. `172.xx.xx.xx`) or use proper port forwarding.
 
 ## Troubleshooting tips
 

@@ -1,19 +1,47 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import React from 'react';
 
 import { ArabicFontPanel } from '@/app/(features)/surah/components/ArabicFontPanel';
-import {
-  TranslationPanel,
-  TafsirPanel,
-  MushafPanel,
-  TajweedRulesPanel,
-} from '@/app/(features)/surah/components/panels';
 import { WordLanguagePanel } from '@/app/(features)/surah/components/WordLanguagePanel';
 
 import { SettingsPanelsProps } from './types';
 
 import type { ReactElement } from 'react';
+
+// Dynamic imports for heavy panels - only loaded when user opens them
+const TranslationPanel = dynamic(
+  () =>
+    import('@/app/(features)/surah/components/panels/translation-panel').then(
+      (mod) => mod.TranslationPanel
+    ),
+  { ssr: false }
+);
+
+const TafsirPanel = dynamic(
+  () =>
+    import('@/app/(features)/surah/components/panels/tafsir-panel').then(
+      (mod) => mod.TafsirPanel
+    ),
+  { ssr: false }
+);
+
+const MushafPanel = dynamic(
+  () =>
+    import('@/app/(features)/surah/components/panels/mushaf-panel').then(
+      (mod) => mod.MushafPanel
+    ),
+  { ssr: false }
+);
+
+const TajweedRulesPanel = dynamic(
+  () =>
+    import('@/app/(features)/surah/components/panels/tajweed-rules-panel').then(
+      (mod) => mod.TajweedRulesPanel
+    ),
+  { ssr: false }
+);
 
 export const SettingsPanels = ({
   isArabicFontPanelOpen,

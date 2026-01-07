@@ -50,13 +50,20 @@ const useCenterActiveElement = <T extends string>({
   scrollRef,
   scrollTops,
   ref,
-  selectedIds,
   enabled,
-}: CenterArgs<T>): void => {
+}: Omit<CenterArgs<T>, 'selectedIds'>): void => {
+  // Track the previous active tab to detect tab switches
+  const prevTabRef = useRef<T | null>(null);
+
   useLayoutEffect(() => {
     if (!enabled) return;
+
+    const isTabSwitch = prevTabRef.current !== null && prevTabRef.current !== activeTab;
+    prevTabRef.current = activeTab;
+
     const container = scrollRef.current;
     if (!container) return;
+
     const activeEl = container.querySelector<HTMLElement>('[data-active="true"]');
     if (activeEl) {
       const containerRect = container.getBoundingClientRect();
@@ -64,9 +71,17 @@ const useCenterActiveElement = <T extends string>({
       const isOutside =
         activeRect.top < containerRect.top || activeRect.bottom > containerRect.bottom;
       const forceCenter = sessionStorage.getItem(`forceCenter${activeTab}`) === '1';
-      // Center when explicitly forced (background pre-centering), or only once
-      // on initial open when we haven't scrolled yet and the item is out of view.
-      if (ref.current[activeTab] && (forceCenter || (scrollTops[activeTab] === 0 && isOutside))) {
+
+      // Only center in these specific cases:
+      // 1. forceCenter flag is set (background selection changed)
+      // 2. Tab switch occurred and scrollTops is 0 (fresh tab with no saved scroll)
+      // 3. Initial open (shouldCenterRef is true) with no saved scroll and item is out of view
+      const shouldCenter =
+        forceCenter ||
+        (ref.current[activeTab] && isTabSwitch) ||
+        (ref.current[activeTab] && scrollTops[activeTab] === 0 && isOutside);
+
+      if (shouldCenter) {
         activeEl.scrollIntoView({ block: 'center' });
       }
       if (forceCenter) {
@@ -74,7 +89,7 @@ const useCenterActiveElement = <T extends string>({
       }
     }
     ref.current[activeTab] = false;
-  }, [activeTab, scrollRef, scrollTops, selectedIds, ref, enabled]);
+  }, [activeTab, scrollRef, scrollTops, ref, enabled]);
 };
 
 export const useScrollCentering = <T extends string>({
@@ -113,7 +128,6 @@ export const useScrollCentering = <T extends string>({
     scrollRef,
     scrollTops,
     ref: shouldCenterRef,
-    selectedIds,
     enabled,
   });
 

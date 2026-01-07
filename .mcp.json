@@ -1,13 +1,8 @@
 {
   "mcpServers": {
     "chrome-devtools": {
-      "command": "/mnt/c/Windows/system32/cmd.exe",
-      "args": ["/c", "npx", "-y", "chrome-devtools-mcp@latest"],
-      "env": {
-        "SystemRoot": "C:\\\\Windows",
-        "PROGRAMFILES": "C:\\\\Program Files"
-      },
-      "startup_timeout_ms": 20000
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest", "--browser-url=http://localhost:9222"]
     }
   }
 }

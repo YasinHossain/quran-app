@@ -46,6 +46,8 @@
     /* white with opacity */
     --color-surface-glass: 255 255 255;
     /* white with opacity for glass effect */
+    --color-surface-navigation: 255 255 255;
+    /* navigation card surface */
 
     /* Button colors */
     --color-button-primary: 243 244 246;
@@ -161,6 +163,8 @@
     /* slate-700 with opacity */
     --color-surface-glass: 30 41 59;
     /* slate-700 with opacity for glass effect */
+    --color-surface-navigation: 24 35 51;
+    /* navigation card surface */
 
     /* Button colors - Dark Mode */
     --color-button-primary: 51 65 85;
