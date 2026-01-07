@@ -1,11 +1,8 @@
-import { createRequire } from 'module';
+import withPWA from '@ducanh2912/next-pwa';
 
 import pwaConfig from './next-pwa.config.mjs';
 
 import type { NextConfig } from 'next';
-
-// next-pwa is a CJS module; use dynamic require and keep type loose
-const loadWithPWA = createRequire(import.meta.url)('next-pwa') as typeof import('next-pwa').default;
 
 // Define commonly recommended security headers
 // Note: Avoid HSTS in development (can break Safari by forcing HTTPS on localhost)
@@ -103,6 +100,8 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // Allow webpack to be used by next-pwa while silencing Turbopack warnings
+  turbopack: {},
   // Add security headers
   async headers() {
     return [
@@ -114,8 +113,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-const withPWA = loadWithPWA(pwaConfig);
-
-// export default withPWA(nextConfig);
-export default nextConfig;
-// Force restart
+export default withPWA(pwaConfig)(nextConfig);

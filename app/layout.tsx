@@ -82,7 +82,7 @@ export const INLINE_THEME_SCRIPT = `(() => {
 })();`;
 
 export const metadata = {
-  title: 'Quran Mazid',
+  title: 'Al Quran',
   description: 'Read, Study, and Learn The Holy Quran',
 };
 
