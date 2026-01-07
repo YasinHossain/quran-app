@@ -38,41 +38,26 @@ const resolveVerseNumber = (verse?: Verse | null): number | null => {
   return parseVerseNumberFromKey(verse.verse_key);
 };
 
-const CENTER_TOLERANCE_PX = 24;
+const TOP_TOLERANCE_PX = 8;
 
-const resolveAudioPlayerHeight = (): number => {
-  const player = document.querySelector<HTMLElement>('.z-audio-player');
-  if (!player) return 0;
-  const rect = player.getBoundingClientRect();
-  return rect.height;
-};
-
-const ensureVerseVisible = (
+const ensureVerseAtTop = (
   verse: Verse,
   targetIndex: number | null,
   scrollToIndex: (index: number, offset: number) => void
 ): void => {
   if (typeof document === 'undefined') return;
   const targetEl = document.getElementById(`verse-${verse.id}`);
-  const viewHeight = window.innerHeight || document.documentElement.clientHeight;
-  const bottomInset = resolveAudioPlayerHeight();
-  const safeTop = 0;
-  const safeBottom = Math.max(0, viewHeight - bottomInset);
-  const safeCenter = (safeTop + safeBottom) / 2;
-
   if (targetEl) {
     const rect = targetEl.getBoundingClientRect();
-    const elementCenter = rect.top + rect.height / 2;
-    const centerDistance = Math.abs(elementCenter - safeCenter);
-    if (centerDistance <= CENTER_TOLERANCE_PX) return;
-
-    const nextScrollTop = Math.max(0, window.scrollY + (elementCenter - safeCenter));
+    const delta = rect.top - SCROLL_OFFSET_TOP_PX;
+    if (Math.abs(delta) <= TOP_TOLERANCE_PX) return;
+    const nextScrollTop = Math.max(0, window.scrollY + delta);
     window.scrollTo({ top: nextScrollTop, behavior: 'smooth' });
     return;
   }
 
   if (typeof targetIndex === 'number' && targetIndex >= 0) {
-    scrollToIndex(targetIndex, Math.round(bottomInset / 2));
+    scrollToIndex(targetIndex, -SCROLL_OFFSET_TOP_PX);
   }
 };
 
@@ -253,8 +238,8 @@ function QuranComList({
     if (!verseNumber) return;
 
     const targetIndex = Math.min(Math.max(0, verseNumber - 1), totalVerses - 1);
-    ensureVerseVisible(activeVerse, targetIndex, (index, offset) => {
-      virtuosoRef.current?.scrollToIndex({ index, align: 'center', offset, behavior: 'smooth' });
+    ensureVerseAtTop(activeVerse, targetIndex, (index, offset) => {
+      virtuosoRef.current?.scrollToIndex({ index, align: 'start', offset, behavior: 'smooth' });
     });
   }, [activeVerse, isAutoScrollEnabled, totalVerses]);
 
@@ -310,8 +295,8 @@ function InfiniteList({
     if (!isAutoScrollEnabled || !activeVerse) return;
     const targetIndex = verseListing.verses.findIndex((verse) => verse.id === activeVerse.id);
     if (targetIndex === -1) return;
-    ensureVerseVisible(activeVerse, targetIndex, (index, offset) => {
-      virtuosoRef.current?.scrollToIndex({ index, align: 'center', offset, behavior: 'smooth' });
+    ensureVerseAtTop(activeVerse, targetIndex, (index, offset) => {
+      virtuosoRef.current?.scrollToIndex({ index, align: 'start', offset, behavior: 'smooth' });
     });
   }, [activeVerse, isAutoScrollEnabled, verseListing.verses]);
 

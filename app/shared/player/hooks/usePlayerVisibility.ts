@@ -24,7 +24,7 @@ export function usePlayerVisibility({
   setPlayingId,
   setActiveVerse,
 }: Options): UsePlayerVisibilityReturn {
-  const [isPlayerVisible, setPlayerVisible] = useState(true);
+  const [isPlayerVisible, setPlayerVisible] = useState(false);
 
   const openPlayer = useCallback(() => {
     setPlayerVisible(true);
