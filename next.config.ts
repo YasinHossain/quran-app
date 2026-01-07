@@ -98,7 +98,7 @@ const nextConfig: NextConfig = {
   },
 
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   // Allow webpack to be used by next-pwa while silencing Turbopack warnings
   turbopack: {},
