@@ -34,7 +34,7 @@ export const SidebarOverlay = ({
   return (
     <div
       className={cn(
-        'fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm transition-opacity duration-300 z-40',
+        'fixed inset-0 bg-black/50 transition-opacity duration-300 z-40',
         hiddenFromBreakpoint
       )}
       onClick={onClose}
