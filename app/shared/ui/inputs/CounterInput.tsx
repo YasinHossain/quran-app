@@ -120,8 +120,11 @@ export const CounterInput = ({
           onMouseDown={() => handleMouseDown('dec')}
           onMouseUp={stopCounter}
           onMouseLeave={stopCounter}
+          onTouchStart={() => handleMouseDown('dec')}
+          onTouchEnd={stopCounter}
+          onTouchCancel={stopCounter}
           disabled={min !== undefined && value <= min}
-          className="p-3 text-muted hover:text-foreground disabled:opacity-30 disabled:hover:text-muted transition-colors focus:outline-none"
+          className="p-3 text-muted hover:text-foreground disabled:opacity-30 disabled:hover:text-muted transition-colors focus:outline-none touch-none"
           aria-label="Decrease"
         >
           <Minus size={16} />
@@ -140,8 +143,11 @@ export const CounterInput = ({
           onMouseDown={() => handleMouseDown('inc')}
           onMouseUp={stopCounter}
           onMouseLeave={stopCounter}
+          onTouchStart={() => handleMouseDown('inc')}
+          onTouchEnd={stopCounter}
+          onTouchCancel={stopCounter}
           disabled={max !== undefined && value >= max}
-          className="p-3 text-muted hover:text-foreground disabled:opacity-30 disabled:hover:text-muted transition-colors focus:outline-none"
+          className="p-3 text-muted hover:text-foreground disabled:opacity-30 disabled:hover:text-muted transition-colors focus:outline-none touch-none"
           aria-label="Increase"
         >
           <Plus size={16} />

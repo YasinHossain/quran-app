@@ -38,17 +38,17 @@ export const CARD_VARIANTS: Record<string, CardVariant> = {
     height: 'h-[80px]',
     borderRadius: 'rounded-xl',
     background: {
-      inactive: 'bg-surface-glass/70 backdrop-blur-xl text-content-primary border border-border/20',
-      active: 'bg-accent text-on-accent backdrop-blur-xl border border-accent/30',
+      inactive: 'bg-surface dark:bg-surface/60 text-content-primary border border-border/30 dark:border-border/20',
+      active: 'bg-accent text-on-accent border border-accent/30',
     },
     hover: {
       effect: 'none',
-      value: 'hover:shadow-xl',
-      duration: 'transition-all duration-300',
+      value: '',
+      duration: '',
     },
     shadow: {
       inactive: 'shadow-md',
-      active: 'shadow-lg shadow-accent/40',
+      active: 'shadow-lg',
     },
   },
   folder: {
@@ -96,8 +96,8 @@ export const ANIMATION_CONFIGS: Record<string, AnimationConfig> = {
   navigation: {
     type: 'css',
     css: {
-      transition: 'transition-all duration-300',
-      hover: 'hover:shadow-xl',
+      transition: '',
+      hover: '',
     },
   },
   folder: {
