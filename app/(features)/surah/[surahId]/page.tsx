@@ -65,16 +65,15 @@ async function SurahPage({ params, searchParams }: SurahPageProps): Promise<Reac
     initialVerses = versesResult.value.verses;
   }
 
-  const surahViewProps =
-    ({
-      ...(typeof initialVerseNumber === 'number' ? { initialVerseNumber } : {}),
-      ...(typeof totalVerses === 'number' ? { totalVerses } : {}),
-      ...(initialVerses ? { initialVerses } : {}),
-      initialVersesParams: {
-        translationIds: DEFAULT_INITIAL_TRANSLATION_IDS,
-        wordLang: language,
-      },
-    } satisfies Record<string, unknown>);
+  const surahViewProps = {
+    ...(typeof initialVerseNumber === 'number' ? { initialVerseNumber } : {}),
+    ...(typeof totalVerses === 'number' ? { totalVerses } : {}),
+    ...(initialVerses ? { initialVerses } : {}),
+    initialVersesParams: {
+      translationIds: DEFAULT_INITIAL_TRANSLATION_IDS,
+      wordLang: language,
+    },
+  } satisfies Record<string, unknown>;
 
   return <SurahView surahId={resolvedParams.surahId} {...surahViewProps} />;
 }

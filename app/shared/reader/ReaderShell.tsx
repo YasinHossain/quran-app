@@ -220,10 +220,10 @@ export function ReaderShell({
       {...(typeof initialVerseKey === 'string' ? { initialVerseKey } : {})}
       chapterId={chapterId}
       {...(typeof mushafParams.juzNumber === 'number' ? { juzNumber: mushafParams.juzNumber } : {})}
-      {...(typeof mushafParams.reciterId === 'number'
-        ? { reciterId: mushafParams.reciterId }
+      {...(typeof mushafParams.reciterId === 'number' ? { reciterId: mushafParams.reciterId } : {})}
+      {...(mushafParams.wordByWordLocale
+        ? { wordByWordLocale: mushafParams.wordByWordLocale }
         : {})}
-      {...(mushafParams.wordByWordLocale ? { wordByWordLocale: mushafParams.wordByWordLocale } : {})}
       {...(mushafParams.translationIds ? { translationIds: mushafParams.translationIds } : {})}
       endLabelKey={endLabelKey}
     />

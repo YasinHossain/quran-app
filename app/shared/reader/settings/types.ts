@@ -31,19 +31,18 @@ export interface SettingsSidebarProps {
 
 export type SettingsTabValue = 'translation' | 'reading';
 
-export interface SettingsContentProps
-  extends Pick<
-    SettingsSidebarProps,
-    | 'onTranslationPanelOpen'
-    | 'onWordLanguagePanelOpen'
-    | 'onTafsirPanelOpen'
-    | 'onMushafPanelOpen'
-    | 'selectedTranslationName'
-    | 'selectedTafsirName'
-    | 'selectedWordLanguageName'
-    | 'selectedMushafName'
-    | 'showTafsirSetting'
-  > {
+export interface SettingsContentProps extends Pick<
+  SettingsSidebarProps,
+  | 'onTranslationPanelOpen'
+  | 'onWordLanguagePanelOpen'
+  | 'onTafsirPanelOpen'
+  | 'onMushafPanelOpen'
+  | 'selectedTranslationName'
+  | 'selectedTafsirName'
+  | 'selectedWordLanguageName'
+  | 'selectedMushafName'
+  | 'showTafsirSetting'
+> {
   activeTab: SettingsTabValue;
   openSections: string[];
   onSectionToggle: (sectionId: string) => void;
@@ -51,6 +50,7 @@ export interface SettingsContentProps
   onTajweedRulesPanelOpen?: (() => void) | undefined;
   idPrefix?: string;
   isMushafMode?: boolean;
+  pageType?: 'verse' | 'tafsir' | 'bookmarks' | undefined;
 }
 
 export interface SettingsContentWrapperProps {
@@ -74,23 +74,23 @@ export interface SettingsContentWrapperProps {
   showTabs: boolean;
   idPrefix?: string;
   isMushafMode?: boolean;
+  pageType?: 'verse' | 'tafsir' | 'bookmarks' | undefined;
 }
 
-export interface SettingsPanelsProps
-  extends Pick<
-    SettingsSidebarProps,
-    | 'isTranslationPanelOpen'
-    | 'onTranslationPanelClose'
-    | 'isTafsirPanelOpen'
-    | 'onTafsirPanelClose'
-    | 'isWordLanguagePanelOpen'
-    | 'onWordLanguagePanelClose'
-    | 'isMushafPanelOpen'
-    | 'onMushafPanelClose'
-    | 'mushafOptions'
-    | 'selectedMushafId'
-    | 'onMushafChange'
-  > {
+export interface SettingsPanelsProps extends Pick<
+  SettingsSidebarProps,
+  | 'isTranslationPanelOpen'
+  | 'onTranslationPanelClose'
+  | 'isTafsirPanelOpen'
+  | 'onTafsirPanelClose'
+  | 'isWordLanguagePanelOpen'
+  | 'onWordLanguagePanelClose'
+  | 'isMushafPanelOpen'
+  | 'onMushafPanelClose'
+  | 'mushafOptions'
+  | 'selectedMushafId'
+  | 'onMushafChange'
+> {
   isArabicFontPanelOpen: boolean;
   onArabicFontPanelClose: () => void;
   isTajweedRulesPanelOpen?: boolean;

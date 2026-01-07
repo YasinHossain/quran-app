@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+
 import { cn } from '@/lib/utils/cn';
 
 import { useWorkspaceColumns } from './ThreeColumnWorkspace';
@@ -65,4 +66,3 @@ export function WorkspaceMain({
     </Component>
   );
 }
-

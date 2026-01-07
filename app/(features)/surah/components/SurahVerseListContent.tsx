@@ -134,4 +134,3 @@ const ErrorState = ({ message }: { message: string }): React.JSX.Element => (
 const EmptyState = ({ label }: { label: string }): React.JSX.Element => (
   <div className="text-center py-20 text-muted">{label}</div>
 );
-

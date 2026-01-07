@@ -6,17 +6,17 @@ import type { Bookmark } from '@/types';
 /**
  * Check if a verseId matches a bookmark by comparing against multiple identifiers.
  * This handles cases where pins were created with different ID formats:
- * - Numeric API ID (e.g., "1" for verse 1:1)  
+ * - Numeric API ID (e.g., "1" for verse 1:1)
  * - VerseKey format (e.g., "1:1")
  * - VerseApiId field
  */
 const matchesBookmark = (bookmark: Bookmark, searchId: string): boolean => {
   const id = String(searchId);
   const bookmarkVerseId = String(bookmark.verseId);
-  
+
   // Direct match on verseId
   if (bookmarkVerseId === id) return true;
-  
+
   // Match on verseKey (handles both directions)
   if (bookmark.verseKey) {
     const verseKey = String(bookmark.verseKey);
@@ -27,10 +27,10 @@ const matchesBookmark = (bookmark: Bookmark, searchId: string): boolean => {
       if (String(bookmark.verseApiId) === id) return true;
     }
   }
-  
+
   // Match on verseApiId if available
   if (bookmark.verseApiId && String(bookmark.verseApiId) === id) return true;
-  
+
   // Handle case where bookmark.verseId is in verseKey format but searchId is numeric
   // by checking if searchId matches the verseApiId or if they share the same verseKey
   if (bookmarkVerseId.includes(':') && !id.includes(':')) {
@@ -39,7 +39,7 @@ const matchesBookmark = (bookmark: Bookmark, searchId: string): boolean => {
     // But check verseApiId as fallback
     if (bookmark.verseApiId && String(bookmark.verseApiId) === id) return true;
   }
-  
+
   return false;
 };
 

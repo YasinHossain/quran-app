@@ -69,7 +69,10 @@ export function ThreeColumnWorkspace({
   return (
     <WorkspaceColumnsContext.Provider value={workspaceValue}>
       <div
-        className={cn('relative flex w-full bg-background text-foreground workspace-root-height', className)}
+        className={cn(
+          'relative flex w-full bg-background text-foreground workspace-root-height',
+          className
+        )}
         data-slot="workspace-root"
       >
         {/* Fixed Left Sidebar - positioned after the 64px icon sidebar */}

@@ -1,15 +1,16 @@
 'use client';
 import * as Popover from '@radix-ui/react-popover';
-import { Fragment, memo, useMemo, useState } from 'react';
+import { Fragment, memo, useContext, useMemo, useState } from 'react';
 
 import { VerseMarker } from '@/app/(features)/surah/components/surah-view/VerseMarker';
 import { useQcfMushafFont } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import { useSettings } from '@/app/providers/SettingsContext';
-import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { TajweedFontPalettes } from '@/app/shared/TajweedFontPalettes';
+import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { Verse as VerseType, Word } from '@/types';
 
 import type { LanguageCode } from '@/lib/text/languageCodes';
+import { AudioContext } from '@/app/shared/player/context/AudioContext';
 
 // Word rendering component
 interface WordDisplayProps {
@@ -48,7 +49,9 @@ const WordDisplay = ({
   wordPosition,
 }: WordDisplayProps): React.JSX.Element | null => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-
+  const audioCtx = useContext(AudioContext);
+  const isPlayerVisible = audioCtx?.isPlayerVisible ?? false;
+  
   // Strip verse markers
   if (/[\u06DD\u06DE\uFD3E\uFD3F]/.test(word.uthmani)) {
     return null;
@@ -56,7 +59,9 @@ const WordDisplay = ({
 
   // Use codeV2 for Tajweed when available, otherwise fall back to uthmani
   const useTajweed = tajweed && word.codeV2;
-  const displayText = useTajweed ? word.codeV2 : stripUnsupportedQpcGlyphs(word.uthmani, isQpcHafsFont);
+  const displayText = useTajweed
+    ? word.codeV2
+    : stripUnsupportedQpcGlyphs(word.uthmani, isQpcHafsFont);
   const copyText = stripUnsupportedQpcGlyphs(word.uthmani, isQpcHafsFont).trim();
 
   if (!displayText?.trim()) {
@@ -65,9 +70,11 @@ const WordDisplay = ({
 
   const translation = word[wordLang as LanguageCode] as string | undefined;
   const hasTranslation = Boolean(translation && translation.trim());
+  const showTooltip = !showByWords && hasTranslation;
 
   // Style for Tajweed words - use V4 font
-  const tajweedStyle = useTajweed && tajweedFontFamily ? { fontFamily: tajweedFontFamily } : undefined;
+  const tajweedStyle =
+    useTajweed && tajweedFontFamily ? { fontFamily: tajweedFontFamily } : undefined;
 
   return (
     <span
@@ -78,11 +85,11 @@ const WordDisplay = ({
       data-word-position={wordPosition}
       data-copy-text={copyText || undefined}
     >
-      {!showByWords && hasTranslation ? (
-        <Popover.Root open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+      {showTooltip ? (
+        <Popover.Root open={isPopoverOpen && !isPlayerVisible} onOpenChange={setIsPopoverOpen}>
           <Popover.Trigger asChild>
             <span
-              className="relative cursor-pointer inline-block outline-none bg-transparent p-0 text-inherit"
+              className="relative cursor-pointer inline-block outline-none bg-transparent p-0 text-inherit caret-transparent"
               style={tajweedStyle}
               onPointerEnter={(e) => {
                 if (e.pointerType === 'mouse') setIsPopoverOpen(true);
@@ -117,7 +124,10 @@ const WordDisplay = ({
           </Popover.Portal>
         </Popover.Root>
       ) : (
-        <span className="inline-block" style={tajweedStyle}>
+        <span
+          className={`inline-block ${isPlayerVisible ? 'cursor-pointer caret-transparent' : ''}`}
+          style={tajweedStyle}
+        >
           {useTajweed ? (
             <span>{displayText}</span>
           ) : (
@@ -267,7 +277,10 @@ export const VerseArabic = memo(function VerseArabic({
                 }
 
                 // Also filter known marker characters anywhere (just in case)
-                if (word.char_type_name === 'end' || /[\u06DD\u06DE\uFD3E\uFD3F]/.test(word.uthmani)) {
+                if (
+                  word.char_type_name === 'end' ||
+                  /[\u06DD\u06DE\uFD3E\uFD3F]/.test(word.uthmani)
+                ) {
                   return false;
                 }
 

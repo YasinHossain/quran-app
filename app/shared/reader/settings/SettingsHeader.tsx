@@ -19,7 +19,6 @@ export const SettingsHeader = ({ onClose }: SettingsHeaderProps): ReactElement =
       backButtonClassName="lg:hidden hover:bg-gray-200 dark:hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       backButtonAriaLabel="Close settings"
       titleClassName="text-mobile-lg font-semibold text-foreground"
-
     />
   );
 };

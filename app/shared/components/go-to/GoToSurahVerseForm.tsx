@@ -12,9 +12,9 @@ import {
 } from 'react';
 
 import { SurahVerseSelector } from '@/app/shared/components/SurahVerseSelector';
+import { BookOpenIcon, HashIcon } from '@/app/shared/icons';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 import { Button } from '@/app/shared/ui/Button';
-import { BookOpenIcon, HashIcon } from '@/app/shared/icons';
 
 // Search suggestion examples - just labels to fill the search box
 const SEARCH_SUGGESTIONS = [
@@ -105,19 +105,19 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
 
   return (
     <form className={clsx('p-6 sm:p-8 space-y-4 text-left', className)} onSubmit={handleSubmit}>
-      <div className="space-y-1">
-        <div className="flex items-center justify-between gap-3">
+      <div className="flex items-start justify-between gap-3">
+        <div className="space-y-1 min-w-0">
           <div className="text-lg font-semibold text-foreground leading-tight">{title}</div>
-          <Button
-            type="submit"
-            disabled={disabled}
-            size="sm"
-            className="rounded-lg px-6 min-h-0 h-8"
-          >
-            {buttonLabel}
-          </Button>
+          {subtitleText ? <div className="text-sm text-muted">{subtitleText}</div> : null}
         </div>
-        {subtitleText ? <div className="text-sm text-muted">{subtitleText}</div> : null}
+        <Button
+          type="submit"
+          disabled={disabled}
+          size="sm"
+          className="rounded-lg px-6 min-h-0 h-8 flex-shrink-0"
+        >
+          {buttonLabel}
+        </Button>
       </div>
 
       <SurahVerseSelector
@@ -155,4 +155,3 @@ export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
     </form>
   );
 });
-

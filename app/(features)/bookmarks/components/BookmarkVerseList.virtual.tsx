@@ -35,7 +35,7 @@ export const VirtualizedBookmarkList = ({
   bookmarks: Bookmark[];
   scrollElement: HTMLElement | null;
   setRootRef: (node: HTMLDivElement | null) => void;
-// ...
+  // ...
   renderItem: (bm: Bookmark, index: number) => React.ReactNode;
 }): React.JSX.Element => {
   return (

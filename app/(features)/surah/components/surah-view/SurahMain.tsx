@@ -5,10 +5,9 @@ import React from 'react';
 import { SurahVerseList } from '@/app/(features)/surah/components/SurahVerseList';
 
 import { SurahCalligraphyIntro } from './SurahCalligraphyIntro';
+import { useVerseAudioWordSync } from './useVerseAudioWordSync';
 
 import type { UseVerseListingReturn } from '@/app/(features)/surah/hooks/useVerseListing';
-
-import { useVerseAudioWordSync } from './useVerseAudioWordSync';
 
 interface SurahMainProps {
   surahId?: number | undefined;

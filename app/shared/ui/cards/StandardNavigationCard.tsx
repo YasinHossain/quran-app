@@ -62,7 +62,11 @@ const CardSubtitle = memo(function CardSubtitle({
   subtitle,
   isActive,
 }: CardSubtitleProps): React.JSX.Element {
-  return <p className={`${buildTextClasses('secondary', isActive)} truncate whitespace-nowrap`}>{subtitle}</p>;
+  return (
+    <p className={`${buildTextClasses('secondary', isActive)} truncate whitespace-nowrap`}>
+      {subtitle}
+    </p>
+  );
 });
 
 interface CardArabicTextProps {

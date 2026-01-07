@@ -5,7 +5,6 @@ import React from 'react';
 import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
 import { VerseSkeleton } from '@/app/shared/components/VerseSkeleton';
 import { ReaderVerseCard } from '@/app/shared/reader';
-import { Spinner } from '@/app/shared/Spinner';
 
 import {
   AnimatedMount,

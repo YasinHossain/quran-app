@@ -70,7 +70,7 @@ export const initialTranslationsData: TranslationResource[] = [
   { id: 37, name: 'Malayalam Translation(Abdul Hameed and Kunhi)', lang: 'Malayalam' },
   { id: 80, name: 'Muhammad Karakunnu and Vanidas Elayavoor', lang: 'Malayalam' },
   { id: 38, name: 'Maranao', lang: 'Maranao' },
-  { id: 226, name: "Muhammad Shafi’i Ansari", lang: 'Marathi' },
+  { id: 226, name: 'Muhammad Shafi’i Ansari', lang: 'Marathi' },
   { id: 108, name: 'Ahl Al-Hadith Central Society of Nepal', lang: 'Nepali' },
   { id: 41, name: 'Norwegian', lang: 'Norwegian' },
   { id: 111, name: 'Ghali Apapur Apaghuna', lang: 'Oromo' },

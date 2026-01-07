@@ -70,7 +70,6 @@ export async function fetchVerses({
   };
 }
 
-
 type VerseLookupOptions = Omit<FetchVersesOptions, 'type'>;
 
 export function getVersesByChapter(options: VerseLookupOptions): Promise<PaginatedVerses> {

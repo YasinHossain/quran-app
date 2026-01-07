@@ -2,9 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { useSettings } from '@/app/providers/SettingsContext';
 import { advancedSearch, type SearchVerseResult } from '@/lib/api/search';
 import { getVerseByKey } from '@/lib/api/verses';
-import { useSettings } from '@/app/providers/SettingsContext';
 import { estimateVerseTotal } from '@/lib/utils/searchTotals';
 
 import type { Verse } from '@/types';
@@ -57,9 +57,7 @@ export function usePaginatedSearch(query: string): UsePaginatedSearchReturn {
   // Fetch full verse data for search results
   const fetchVerseDetails = useCallback(
     async (searchResults: SearchVerseResult[]): Promise<VerseWithHighlight[]> => {
-      const translationIds = settings.translationIds?.length
-        ? settings.translationIds
-        : [20]; // Default to Sahih International
+      const translationIds = settings.translationIds?.length ? settings.translationIds : [20]; // Default to Sahih International
 
       const versePromises = searchResults.map(async (result) => {
         try {

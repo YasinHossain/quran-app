@@ -29,40 +29,58 @@ export const SettingsContent = ({
   showTafsirSetting = false,
   idPrefix,
   isMushafMode = false,
+  pageType,
 }: SettingsContentProps): ReactElement => {
   const mushafVisible = isMushafMode || activeTab === 'reading';
 
-  const baseSettings = (
-    <>
-      {!isMushafMode && (
-        <TranslationSettings
-          onTranslationPanelOpen={onTranslationPanelOpen}
-          onWordLanguagePanelOpen={onWordLanguagePanelOpen}
-          onTajweedRulesPanelOpen={onTajweedRulesPanelOpen}
-          selectedTranslationName={selectedTranslationName}
-          selectedWordLanguageName={selectedWordLanguageName}
-          isOpen={openSections.includes('translation')}
-          onToggle={() => onSectionToggle('translation')}
-          {...(idPrefix ? { idPrefix: `${idPrefix}-translation` } : {})}
-        />
-      )}
-      <TafsirSettings
-        {...(onTafsirPanelOpen !== undefined ? { onTafsirPanelOpen } : {})}
-        {...(selectedTafsirName !== undefined ? { selectedTafsirName } : {})}
-        showTafsirSetting={showTafsirSetting}
-        isOpen={openSections.includes('tafsir')}
-        onToggle={() => onSectionToggle('tafsir')}
-        {...(idPrefix ? { idPrefix: `${idPrefix}-tafsir` } : {})}
-      />
-      <FontSettings
-        onArabicFontPanelOpen={onArabicFontPanelOpen}
-        isOpen={openSections.includes('font')}
-        onToggle={() => onSectionToggle('font')}
-        {...(idPrefix ? { idPrefix: `${idPrefix}-font` } : {})}
-        isArabicOnly={isMushafMode}
-      />
-    </>
+  const translationSettings = (
+    <TranslationSettings
+      onTranslationPanelOpen={onTranslationPanelOpen}
+      onWordLanguagePanelOpen={onWordLanguagePanelOpen}
+      onTajweedRulesPanelOpen={onTajweedRulesPanelOpen}
+      selectedTranslationName={selectedTranslationName}
+      selectedWordLanguageName={selectedWordLanguageName}
+      isOpen={openSections.includes('translation')}
+      onToggle={() => onSectionToggle('translation')}
+      {...(idPrefix ? { idPrefix: `${idPrefix}-translation` } : {})}
+    />
   );
+
+  const tafsirSettings = (
+    <TafsirSettings
+      {...(onTafsirPanelOpen !== undefined ? { onTafsirPanelOpen } : {})}
+      {...(selectedTafsirName !== undefined ? { selectedTafsirName } : {})}
+      showTafsirSetting={showTafsirSetting}
+      isOpen={openSections.includes('tafsir')}
+      onToggle={() => onSectionToggle('tafsir')}
+      {...(idPrefix ? { idPrefix: `${idPrefix}-tafsir` } : {})}
+    />
+  );
+
+  const fontSettings = (
+    <FontSettings
+      onArabicFontPanelOpen={onArabicFontPanelOpen}
+      isOpen={openSections.includes('font')}
+      onToggle={() => onSectionToggle('font')}
+      {...(idPrefix ? { idPrefix: `${idPrefix}-font` } : {})}
+      isArabicOnly={isMushafMode}
+    />
+  );
+
+  const baseSettings =
+    pageType === 'tafsir' ? (
+      <>
+        {tafsirSettings}
+        {!isMushafMode && translationSettings}
+        {fontSettings}
+      </>
+    ) : (
+      <>
+        {!isMushafMode && translationSettings}
+        {tafsirSettings}
+        {fontSettings}
+      </>
+    );
 
   return (
     <>
@@ -78,7 +96,7 @@ export const SettingsContent = ({
       >
         <MushafSettings
           selectedMushafName={selectedMushafName}
-          onMushafPanelOpen={onMushafPanelOpen || (() => { })}
+          onMushafPanelOpen={onMushafPanelOpen || (() => {})}
           isOpen={openSections.includes('mushaf')}
           onToggle={() => onSectionToggle('mushaf')}
           {...(idPrefix ? { idPrefix: `${idPrefix}-mushaf` } : {})}

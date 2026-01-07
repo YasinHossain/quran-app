@@ -1,9 +1,9 @@
 /**
  * Search Relevance Scoring Utility
- * 
+ *
  * Provides client-side relevance scoring for search results to improve
  * the ordering and display of results in both dropdown and search page.
- * 
+ *
  * This compensates for limitations in the API's default ranking by:
  * 1. Prioritizing exact phrase matches
  * 2. Counting matched words in highlighted text
@@ -48,14 +48,14 @@ function extractHighlightInfo(highlightedText: string): {
   const emRegex = /<em>([^<]+)<\/em>/gi;
   const highlightedWords: string[] = [];
   let match;
-  
+
   while ((match = emRegex.exec(highlightedText)) !== null) {
     highlightedWords.push(match[1]!.toLowerCase().trim());
   }
-  
+
   // Remove HTML tags to get plain text
   const plainText = highlightedText.replace(/<[^>]+>/g, '').toLowerCase();
-  
+
   return { plainText, highlightedWords };
 }
 
@@ -76,15 +76,17 @@ function removeArabicDiacritics(text: string): string {
  * This allows flexible matching of Arabic text
  */
 function normalizeArabicLetters(text: string): string {
-  return text
-    // Normalize all Alef variations to simple Alef
-    .replace(/[إأآٱ]/g, 'ا')
-    // Normalize Hamza variations
-    .replace(/[ئؤ]/g, 'ء')
-    // Normalize Teh Marbuta to Heh
-    .replace(/ة/g, 'ه')
-    // Normalize Yeh variations (if needed)
-    .replace(/ى/g, 'ي');
+  return (
+    text
+      // Normalize all Alef variations to simple Alef
+      .replace(/[إأآٱ]/g, 'ا')
+      // Normalize Hamza variations
+      .replace(/[ئؤ]/g, 'ء')
+      // Normalize Teh Marbuta to Heh
+      .replace(/ة/g, 'ه')
+      // Normalize Yeh variations (if needed)
+      .replace(/ى/g, 'ي')
+  );
 }
 
 /**
@@ -97,16 +99,18 @@ function normalizeArabicLetters(text: string): string {
  * - Normalize spaces
  */
 function normalizeText(text: string): string {
-  return normalizeArabicLetters(removeArabicDiacritics(text))
-    .toLowerCase()
-    // Remove Latin diacritics/accents (ā → a, Allāh → allah)
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    // Replace punctuation with spaces (Unicode-aware for all scripts)
-    .replace(/[^\p{L}\p{N}\s]/gu, ' ')
-    // Normalize multiple spaces
-    .replace(/\s+/g, ' ')
-    .trim();
+  return (
+    normalizeArabicLetters(removeArabicDiacritics(text))
+      .toLowerCase()
+      // Remove Latin diacritics/accents (ā → a, Allāh → allah)
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      // Replace punctuation with spaces (Unicode-aware for all scripts)
+      .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+      // Normalize multiple spaces
+      .replace(/\s+/g, ' ')
+      .trim()
+  );
 }
 
 /**
@@ -115,52 +119,51 @@ function normalizeText(text: string): string {
 function getQueryWords(query: string): string[] {
   return normalizeText(query)
     .split(' ')
-    .filter(word => word.length > 0);
+    .filter((word) => word.length > 0);
 }
 
 /**
  * Highlight missing query words in the text.
  * The API highlights important words but skips common ones (the, to, of, etc.)
  * This function adds <em> tags to query words that weren't already highlighted.
- * 
+ *
  * Works with both Arabic and Latin scripts.
  * For Arabic, it removes diacritics before matching so that queries without
  * diacritics can match Quranic text with diacritics.
  */
-export function highlightMissingQueryWords(
-  highlightedText: string,
-  query: string
-): string {
+export function highlightMissingQueryWords(highlightedText: string, query: string): string {
   const queryWords = getQueryWords(query);
   if (queryWords.length === 0) return highlightedText;
-  
+
   // Find words already highlighted by the API
   const alreadyHighlighted = new Set<string>();
   const emRegex = /<em>([^<]+)<\/em>/gi;
   let match;
   while ((match = emRegex.exec(highlightedText)) !== null) {
     // Normalize the highlighted word for comparison
-    normalizeText(match[1]!).split(' ').forEach(w => alreadyHighlighted.add(w));
+    normalizeText(match[1]!)
+      .split(' ')
+      .forEach((w) => alreadyHighlighted.add(w));
   }
-  
+
   // Find query words that need highlighting
   const wordsToHighlight = queryWords.filter(
-    word => !alreadyHighlighted.has(word) && word.length > 1
+    (word) => !alreadyHighlighted.has(word) && word.length > 1
   );
-  
+
   if (wordsToHighlight.length === 0) return highlightedText;
-  
+
   // For Arabic text, we need to match without diacritics but highlight with them
   let result = highlightedText;
-  
+
   for (const word of wordsToHighlight) {
     const isArabicWord = /[\u0600-\u06FF]/.test(word);
-    
+
     if (isArabicWord) {
       // Arabic: Build a regex that matches each character with optional diacritics
       // AND matches letter variations (e.g., ا matches إ, أ, آ, etc.)
       const chars = word.split('');
-      
+
       // Enhanced diacritic pattern to include:
       // - Standard diacritics (064B-065F)
       // - Superscript Alef (0670)
@@ -168,32 +171,34 @@ export function highlightMissingQueryWords(
       // - Small phonetic letters: Small Waw (06E5), Small Yeh (06E6), Small High Yeh (06E7), Small High Noon (06E8)
       // EXCLUDES: Pause marks (06D6-06DC), Stops/Dots (06EA-06ED), End of Ayah (06DD)
       const diacriticPattern = '[\\u064B-\\u065F\\u0670\\u0674-\\u0678\\u06E5-\\u06E8]*';
-      
-      const regexPattern = chars.map(char => {
-        let charPattern = '';
-        
-        // Create character class that matches the letter and its variations
-        if (char === 'ا') {
-          // Match any form of Alef including those with hamza and madda
-          charPattern = '[اإأآٱ]';
-        } else if (char === 'ه') {
-          // Match Heh or Teh Marbuta
-          charPattern = '[هة]';
-        } else if (char === 'ي') {
-          // Match Yeh variations
-          charPattern = '[يى]';
-        } else if (char === 'ء') {
-          // Match Hamza variations
-          charPattern = '[ءئؤإأ]';
-        } else {
-          // Escape special regex characters for other letters
-          charPattern = char.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        }
-        
-        // Add optional diacritics after each character
-        return charPattern + diacriticPattern;
-      }).join('');
-      
+
+      const regexPattern = chars
+        .map((char) => {
+          let charPattern = '';
+
+          // Create character class that matches the letter and its variations
+          if (char === 'ا') {
+            // Match any form of Alef including those with hamza and madda
+            charPattern = '[اإأآٱ]';
+          } else if (char === 'ه') {
+            // Match Heh or Teh Marbuta
+            charPattern = '[هة]';
+          } else if (char === 'ي') {
+            // Match Yeh variations
+            charPattern = '[يى]';
+          } else if (char === 'ء') {
+            // Match Hamza variations
+            charPattern = '[ءئؤإأ]';
+          } else {
+            // Escape special regex characters for other letters
+            charPattern = char.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          }
+
+          // Add optional diacritics after each character
+          return charPattern + diacriticPattern;
+        })
+        .join('');
+
       // Simpler word boundary pattern for Arabic
       // Match word at start/end of string or surrounded by spaces/punctuation
       const wordRegex = new RegExp(
@@ -208,11 +213,11 @@ export function highlightMissingQueryWords(
       result = result.replace(wordRegex, '<em>$1</em>');
     }
   }
-  
+
   // Clean up any nested or duplicate em tags
   result = result.replace(/<em>([^<]*)<em>([^<]*)<\/em>([^<]*)<\/em>/g, '<em>$1$2$3</em>');
   result = result.replace(/<em><\/em>/g, '');
-  
+
   return result;
 }
 
@@ -225,18 +230,18 @@ export function highlightMissingQueryWords(
 function containsExactPhrase(text: string, phrase: string): boolean {
   const normalizedText = normalizeText(text);
   const normalizedPhrase = normalizeText(phrase);
-  
+
   // Simple containment check after normalization
   if (normalizedText.includes(normalizedPhrase)) {
     return true;
   }
-  
+
   // Also check word-by-word for consecutive matches
   const textWords = normalizedText.split(' ');
   const phraseWords = normalizedPhrase.split(' ');
-  
+
   if (phraseWords.length === 0) return false;
-  
+
   // Sliding window to find consecutive word matches
   for (let i = 0; i <= textWords.length - phraseWords.length; i++) {
     let allMatch = true;
@@ -250,20 +255,17 @@ function containsExactPhrase(text: string, phrase: string): boolean {
       return true;
     }
   }
-  
+
   return false;
 }
 
 /**
  * Calculate relevance score for a verse result
  */
-export function calculateRelevanceScore(
-  verse: SearchVerseResult,
-  query: string
-): RelevanceScore {
+export function calculateRelevanceScore(verse: SearchVerseResult, query: string): RelevanceScore {
   const queryWords = getQueryWords(query);
   const totalQueryWords = queryWords.length;
-  
+
   if (totalQueryWords === 0) {
     return {
       score: 0,
@@ -273,48 +275,46 @@ export function calculateRelevanceScore(
       matchRatio: 0,
     };
   }
-  
-  const { plainText, highlightedWords } = extractHighlightInfo(
-    verse.highlightedTranslation
-  );
-  
+
+  const { plainText, highlightedWords } = extractHighlightInfo(verse.highlightedTranslation);
+
   // Check for exact phrase match using robust comparison
   const isExactMatch = containsExactPhrase(plainText, query);
-  
+
   // Count how many query words appear in highlighted words
   let matchedWordCount = 0;
   for (const queryWord of queryWords) {
     // Check if any highlighted word contains or matches this query word
     const isMatched = highlightedWords.some(
-      hw => hw.includes(queryWord) || queryWord.includes(hw)
+      (hw) => hw.includes(queryWord) || queryWord.includes(hw)
     );
     if (isMatched) {
       matchedWordCount++;
     }
   }
-  
+
   const matchRatio = matchedWordCount / totalQueryWords;
-  
+
   // Calculate overall score (0-100)
   let score = 0;
-  
+
   // Base score from match ratio (0-50 points)
   score += matchRatio * 50;
-  
+
   // Bonus for exact phrase match (30 points)
   if (isExactMatch) {
     score += 30;
   }
-  
+
   // Bonus for all words matched (20 points)
   if (matchedWordCount === totalQueryWords) {
     score += 20;
   }
-  
+
   // Small bonus for more highlighted words (indicates stronger match)
   const highlightDensity = Math.min(highlightedWords.length / 10, 1);
   score += highlightDensity * 10;
-  
+
   return {
     score: Math.min(100, Math.round(score)),
     isExactMatch,
@@ -332,14 +332,14 @@ export function scoreAndSortVerses(
   query: string
 ): ScoredVerseResult[] {
   // Calculate scores for all verses
-  const scoredVerses: ScoredVerseResult[] = verses.map(verse => ({
+  const scoredVerses: ScoredVerseResult[] = verses.map((verse) => ({
     ...verse,
     relevanceScore: calculateRelevanceScore(verse, query),
   }));
-  
+
   // Sort by score (highest first)
   scoredVerses.sort((a, b) => b.relevanceScore.score - a.relevanceScore.score);
-  
+
   return scoredVerses;
 }
 
@@ -351,12 +351,12 @@ export function filterHighlyRelevant(
   verses: ScoredVerseResult[],
   minScore: number = 40
 ): ScoredVerseResult[] {
-  return verses.filter(v => v.relevanceScore.score >= minScore);
+  return verses.filter((v) => v.relevanceScore.score >= minScore);
 }
 
 /**
  * Get the best matches for dropdown display.
- * 
+ *
  * For dropdown preview, we keep the API order and only add relevance
  * scores for display. We don't re-sort to keep the preview lightweight.
  */
@@ -366,11 +366,11 @@ export function getBestMatchesForDropdown(
   maxResults: number = 10
 ): ScoredVerseResult[] {
   // Just add scores without re-sorting (API already sorted by relevance)
-  const scored: ScoredVerseResult[] = verses.slice(0, maxResults).map(verse => ({
+  const scored: ScoredVerseResult[] = verses.slice(0, maxResults).map((verse) => ({
     ...verse,
     relevanceScore: calculateRelevanceScore(verse, query),
   }));
-  
+
   return scored;
 }
 

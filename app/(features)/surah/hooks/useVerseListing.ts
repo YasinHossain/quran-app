@@ -5,13 +5,13 @@ import { useTranslationOptions } from '@/app/(features)/surah/hooks/useTranslati
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 
+import { VERSES_PER_PAGE } from './useInfiniteVerseLoader.fetcher';
 import {
   resolveVerses,
   useStableTranslationIds,
   useVerseListingErrorState,
 } from './verse-listing/internal';
 import { useNavigationHandlers } from './verse-listing/useNavigationHandlers';
-import { VERSES_PER_PAGE } from './useInfiniteVerseLoader.fetcher';
 
 export type {
   UseVerseListingReturn,
@@ -87,12 +87,13 @@ export function useVerseListing({
     !tajweed &&
     initialVersesParams?.wordLang === wordLang &&
     stableTranslationIds ===
-    (initialVersesParams?.translationIds ?? [])
-      .filter((value) => Number.isFinite(value))
-      .sort((a, b) => a - b)
-      .join(',');
+      (initialVersesParams?.translationIds ?? [])
+        .filter((value) => Number.isFinite(value))
+        .sort((a, b) => a - b)
+        .join(',');
 
-  const effectiveInitialVerses = mode === 'quran-com' ? (canUseInitialVerses ? initialVerses : undefined) : initialVerses;
+  const effectiveInitialVerses =
+    mode === 'quran-com' ? (canUseInitialVerses ? initialVerses : undefined) : initialVerses;
 
   const infiniteLoaderParams: Parameters<typeof useInfiniteVerseLoader>[0] = {
     lookup,
@@ -101,9 +102,7 @@ export function useVerseListing({
     loadMoreRef: errorState.loadMoreRef,
     error: errorState.error,
     setError: errorState.handleLoaderError,
-    ...(mode === 'infinite' &&
-      typeof initialVerseNumber === 'number' &&
-      initialVerseNumber > 0
+    ...(mode === 'infinite' && typeof initialVerseNumber === 'number' && initialVerseNumber > 0
       ? { targetVerseNumber: initialVerseNumber }
       : {}),
     ...(mode === 'infinite' && id !== undefined ? { id } : {}),
@@ -125,7 +124,16 @@ export function useVerseListing({
     if (mode !== 'quran-com') return;
 
     setApiPageToVersesMap(effectiveInitialVerses?.length ? { 1: effectiveInitialVerses } : {});
-  }, [effectiveInitialVerses, mode, id, stableTranslationIds, wordLang, tajweed, lookup, translationIds]);
+  }, [
+    effectiveInitialVerses,
+    mode,
+    id,
+    stableTranslationIds,
+    wordLang,
+    tajweed,
+    lookup,
+    translationIds,
+  ]);
 
   const prefetchVersePage = useCallback(
     async (verseNumber: number): Promise<void> => {
@@ -176,9 +184,10 @@ export function useVerseListing({
     [apiPageToVersesMap]
   );
 
-  const rawVerses = mode === 'quran-com'
-    ? quranComLoadedVerses
-    : resolveVerses(initialVerses, infiniteState.verses);
+  const rawVerses =
+    mode === 'quran-com'
+      ? quranComLoadedVerses
+      : resolveVerses(initialVerses, infiniteState.verses);
 
   const verses = useMemo(() => {
     if (!translation.translationOptions.length) {
@@ -239,14 +248,7 @@ export function useVerseListing({
     audio.setActiveVerse(nextVerse);
     audio.openPlayer();
     return true;
-  }, [
-    audio,
-    getVerseByNumber,
-    infiniteNavigation,
-    mode,
-    prefetchVersePage,
-    totalVerses,
-  ]);
+  }, [audio, getVerseByNumber, infiniteNavigation, mode, prefetchVersePage, totalVerses]);
 
   const handlePrev = useCallback((): boolean => {
     if (mode !== 'quran-com') return infiniteNavigation.handlePrev();

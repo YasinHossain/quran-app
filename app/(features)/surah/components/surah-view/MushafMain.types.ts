@@ -1,6 +1,6 @@
-import type { useSettings } from '@/app/providers/SettingsContext';
 import type { MushafResourceKind } from '@/app/(features)/surah/hooks/mushafReadingViewTypes';
 import type { QcfFontVersion } from '@/app/(features)/surah/hooks/useQcfMushafFont';
+import type { useSettings } from '@/app/providers/SettingsContext';
 
 export interface MushafMainProps {
   mushafName: string;

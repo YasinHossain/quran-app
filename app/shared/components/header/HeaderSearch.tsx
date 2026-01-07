@@ -11,14 +11,8 @@ import { ComprehensiveSearch } from '@/app/shared/search';
 export const HeaderSearch = memo(function HeaderSearch(): ReactElement {
   return (
     <div className="flex items-center justify-center flex-1 sm:flex-none sm:w-1/3">
-      <div
-        className="w-full max-w-[55vw] sm:max-w-sm lg:max-w-md relative"
-        role="presentation"
-      >
-        <ComprehensiveSearch
-          variant="header"
-          placeholder="Search verses, surahs..."
-        />
+      <div className="w-full max-w-[55vw] sm:max-w-sm lg:max-w-md relative" role="presentation">
+        <ComprehensiveSearch variant="header" placeholder="Search verses, surahs..." />
       </div>
     </div>
   );

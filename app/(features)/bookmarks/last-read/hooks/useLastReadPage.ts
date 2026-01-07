@@ -10,11 +10,12 @@ export interface UseLastReadPageReturn {
   lastRead: LastReadMap;
   chapters: Chapter[];
   handleSectionChange: (section: SectionId) => void;
+  removeLastRead: (surahId: string) => void;
 }
 
 export const useLastReadPage = (): UseLastReadPageReturn => {
   const router = useRouter();
-  const { lastRead, chapters } = useBookmarks();
+  const { lastRead, chapters, removeLastRead } = useBookmarks();
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -39,5 +40,6 @@ export const useLastReadPage = (): UseLastReadPageReturn => {
     lastRead,
     chapters,
     handleSectionChange,
+    removeLastRead,
   };
 };

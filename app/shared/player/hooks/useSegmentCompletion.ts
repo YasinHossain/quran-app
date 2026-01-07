@@ -54,6 +54,13 @@ export function useSegmentCompletion({
     if (!nearEnd) {
       wasAtEndRef.current = false;
     }
-  }, [track?.segmentStartSec, track?.segmentEndSec, isPlaying, current, duration, handleEnded, track]);
+  }, [
+    track?.segmentStartSec,
+    track?.segmentEndSec,
+    isPlaying,
+    current,
+    duration,
+    handleEnded,
+    track,
+  ]);
 }
-

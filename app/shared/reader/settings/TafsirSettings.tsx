@@ -7,6 +7,7 @@ import { CollapsibleSection } from '@/app/(features)/surah/components/Collapsibl
 import { useSettings } from '@/app/providers/SettingsContext';
 import { BookReaderIcon } from '@/app/shared/icons';
 import { SelectionBox } from '@/app/shared/SelectionBox';
+
 import { FontSizeSlider } from './font-settings/FontSizeSlider';
 
 interface TafsirSettingsProps {
@@ -17,8 +18,6 @@ interface TafsirSettingsProps {
   onToggle?: () => void;
   idPrefix?: string;
 }
-
-
 
 export const TafsirSettings = ({
   onTafsirPanelOpen,
@@ -39,7 +38,7 @@ export const TafsirSettings = ({
           icon={<BookReaderIcon size={20} className="text-accent" />}
           isLast={true}
           isOpen={isOpen}
-          onToggle={onToggle || (() => { })}
+          onToggle={onToggle || (() => {})}
         >
           <div className="space-y-4">
             <SelectionBox

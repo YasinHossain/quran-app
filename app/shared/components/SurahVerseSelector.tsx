@@ -56,7 +56,7 @@ export function SurahVerseSelector({
     () =>
       chapters.map((chapter) => ({
         value: String(chapter.id),
-        label: `${String(chapter.id).padStart(3, '0')} • ${chapter.name_simple}`,
+        label: `${String(chapter.id)} • ${chapter.name_simple}`,
       })),
     [chapters]
   );

@@ -5,8 +5,8 @@ import useSWRImmutable from 'swr/immutable';
 
 import { getMushafPagesLookup } from '@infra/quran/pagesLookupClient';
 
-import type { PagesLookupResult } from '@infra/quran/pagesLookupClient';
 import type { MushafResourceKind } from './mushafReadingViewTypes';
+import type { PagesLookupResult } from '@infra/quran/pagesLookupClient';
 
 type UseMushafPagesLookupParams = {
   resourceId: string;
@@ -30,20 +30,17 @@ export function useMushafPagesLookup({
 
   const requestKey = isEnabled ? ['pages-lookup', resourceKind, resourceId, mushafId] : null;
 
-  const { data, error, isLoading } = useSWRImmutable<PagesLookupResult>(
-    requestKey,
-    async () => {
-      if (!Number.isFinite(numericResourceId) || numericResourceId <= 0) {
-        throw new Error('Invalid resource identifier for pages lookup.');
-      }
-
-      return getMushafPagesLookup({
-        resourceKind,
-        resourceId: numericResourceId,
-        mushafId,
-      });
+  const { data, error, isLoading } = useSWRImmutable<PagesLookupResult>(requestKey, async () => {
+    if (!Number.isFinite(numericResourceId) || numericResourceId <= 0) {
+      throw new Error('Invalid resource identifier for pages lookup.');
     }
-  );
+
+    return getMushafPagesLookup({
+      resourceKind,
+      resourceId: numericResourceId,
+      mushafId,
+    });
+  });
 
   return {
     data: data ?? null,
@@ -51,4 +48,3 @@ export function useMushafPagesLookup({
     error: error instanceof Error ? error.message : error ? String(error) : null,
   };
 }
-

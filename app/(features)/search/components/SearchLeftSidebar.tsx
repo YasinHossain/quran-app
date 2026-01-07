@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { SearchIcon, BookOpenIcon, SparklesIcon } from '@/app/shared/icons';
+
 import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
+import { SearchIcon, BookOpenIcon, SparklesIcon } from '@/app/shared/icons';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 import { cn } from '@/lib/utils/cn';
 
-import type { VerseWithHighlight } from '../hooks/usePaginatedSearch';
+import type { VerseWithHighlight } from '@/app/(features)/search/hooks/usePaginatedSearch';
 
 // ============================================================================
 // Types
@@ -47,11 +48,7 @@ const SectionHeader = ({
   </div>
 );
 
-const BreakdownItem = ({
-  surahNumber,
-  surahName,
-  count,
-}: SurahBreakdown): React.JSX.Element => (
+const BreakdownItem = ({ surahNumber, surahName, count }: SurahBreakdown): React.JSX.Element => (
   <div className="flex items-center justify-between py-1.5 px-2 rounded-md hover:bg-interactive/40 transition-colors">
     <div className="flex items-center gap-2 min-w-0">
       <span className="w-6 h-6 flex items-center justify-center text-xs font-medium rounded bg-interactive/60 text-muted-foreground shrink-0">
@@ -144,68 +141,70 @@ export function SearchLeftSidebar({
       />
       <div className="flex-1 overflow-y-auto">
         <div className="p-4 space-y-6">
-        {/* Search Summary */}
-        <div className="p-4 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center">
-              <SearchIcon size={20} className="text-accent" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-foreground">Search Query</p>
-              <p className="text-xs text-muted-foreground truncate max-w-[160px]">
-                &quot;{query}&quot;
-              </p>
-            </div>
-          </div>
-          {!isLoading && (
-            <div className="mt-3 pt-3 border-t border-accent/20">
-              <p className="text-2xl font-bold text-accent">{totalResults}</p>
-              <p className="text-xs text-muted-foreground">total results found</p>
-            </div>
-          )}
-        </div>
-
-        {/* Results Breakdown by Surah */}
-        <div>
-          <SectionHeader icon={BookOpenIcon} title="On This Page" />
-          {isLoading ? (
-            <LoadingSkeleton />
-          ) : showBreakdown ? (
-            <div className="space-y-1">
-              {surahBreakdown.slice(0, 8).map((item) => (
-                <BreakdownItem key={item.surahNumber} {...item} />
-              ))}
-              {surahBreakdown.length > 8 && (
-                <p className="text-xs text-muted-foreground text-center pt-2">
-                  +{surahBreakdown.length - 8} more surahs
+          {/* Search Summary */}
+          <div className="p-4 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center">
+                <SearchIcon size={20} className="text-accent" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-foreground">Search Query</p>
+                <p className="text-xs text-muted-foreground truncate max-w-[160px]">
+                  &quot;{query}&quot;
                 </p>
-              )}
+              </div>
             </div>
-          ) : (
-            <p className="text-sm text-muted-foreground italic">
-              {query.trim() ? 'No results to display' : 'Enter a search query'}
-            </p>
-          )}
-        </div>
+            {!isLoading && (
+              <div className="mt-3 pt-3 border-t border-accent/20">
+                <p className="text-2xl font-bold text-accent">{totalResults}</p>
+                <p className="text-xs text-muted-foreground">total results found</p>
+              </div>
+            )}
+          </div>
 
-        {/* Search Tips */}
-        <div>
-          <SectionHeader icon={SparklesIcon} title="Search Tips" />
-          <ul className="space-y-2">
-            <SearchTip>
-              Use quotes for exact phrases: <code className="text-xs bg-interactive/60 px-1 rounded">&quot;day of judgment&quot;</code>
-            </SearchTip>
-            <SearchTip>
-              Go to a verse: <code className="text-xs bg-interactive/60 px-1 rounded">2:255</code>
-            </SearchTip>
-            <SearchTip>
-              Search by surah name: <code className="text-xs bg-interactive/60 px-1 rounded">Surah Yasin</code>
-            </SearchTip>
-            <SearchTip>
-              Search works in Arabic and translations
-            </SearchTip>
-          </ul>
-        </div>
+          {/* Results Breakdown by Surah */}
+          <div>
+            <SectionHeader icon={BookOpenIcon} title="On This Page" />
+            {isLoading ? (
+              <LoadingSkeleton />
+            ) : showBreakdown ? (
+              <div className="space-y-1">
+                {surahBreakdown.slice(0, 8).map((item) => (
+                  <BreakdownItem key={item.surahNumber} {...item} />
+                ))}
+                {surahBreakdown.length > 8 && (
+                  <p className="text-xs text-muted-foreground text-center pt-2">
+                    +{surahBreakdown.length - 8} more surahs
+                  </p>
+                )}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground italic">
+                {query.trim() ? 'No results to display' : 'Enter a search query'}
+              </p>
+            )}
+          </div>
+
+          {/* Search Tips */}
+          <div>
+            <SectionHeader icon={SparklesIcon} title="Search Tips" />
+            <ul className="space-y-2">
+              <SearchTip>
+                Use quotes for exact phrases:{' '}
+                <code className="text-xs bg-interactive/60 px-1 rounded">
+                  &quot;day of judgment&quot;
+                </code>
+              </SearchTip>
+              <SearchTip>
+                Go to a verse: <code className="text-xs bg-interactive/60 px-1 rounded">2:255</code>
+              </SearchTip>
+              <SearchTip>
+                Search by surah name:{' '}
+                <code className="text-xs bg-interactive/60 px-1 rounded">Surah Yasin</code>
+              </SearchTip>
+              <SearchTip>Search works in Arabic and translations</SearchTip>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

@@ -111,7 +111,9 @@ export const useReaderView = ({
         : {}),
       ...(typeof mushafChapterId === 'number' ? { chapterId: mushafChapterId } : {}),
       ...(typeof mushafJuzNumber === 'number' ? { juzNumber: mushafJuzNumber } : {}),
-      ...(typeof verseListing.reciter?.id === 'number' ? { reciterId: verseListing.reciter.id } : {}),
+      ...(typeof verseListing.reciter?.id === 'number'
+        ? { reciterId: verseListing.reciter.id }
+        : {}),
       wordByWordLocale: verseListing.settings.wordLang,
       ...(translationIdsParam ? { translationIds: translationIdsParam } : {}),
     },

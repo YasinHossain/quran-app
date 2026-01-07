@@ -3,8 +3,9 @@ import React from 'react';
 export const VerseSkeleton = ({ index }: { index: number }): React.JSX.Element => (
   <div
     aria-hidden="true"
-    className={`border-b border-border/60 py-8 animate-pulse ${index === 0 ? 'border-t border-border/60' : ''
-      }`}
+    className={`border-b border-border/60 py-8 animate-pulse ${
+      index === 0 ? 'border-t border-border/60' : ''
+    }`}
   >
     <div className="space-y-4 md:space-y-0 md:flex md:items-start md:gap-x-6">
       <div className="hidden md:flex md:w-16 flex-col gap-3 pt-1">

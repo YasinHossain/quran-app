@@ -90,10 +90,14 @@ export function usePrefetchSingleVerse(): (
         normalizedTargets.map(async (target) => {
           const key = createSWRKey(target, translationIdsKey, wordLang, settings.tajweed ?? false);
           if (!key) return;
-          await mutate(key, () => fetchSingleVerse(target, translationIds, wordLang, settings.tajweed ?? false), {
-            populateCache: true,
-            revalidate: false,
-          }).catch(() => {});
+          await mutate(
+            key,
+            () => fetchSingleVerse(target, translationIds, wordLang, settings.tajweed ?? false),
+            {
+              populateCache: true,
+              revalidate: false,
+            }
+          ).catch(() => {});
         })
       );
     },

@@ -62,8 +62,10 @@ export function usePersistedAudioSettings(): UsePersistedAudioSettingsReturn {
   }, [reciterId, volume, playbackRate]);
 
   // Resolve reciter object from ID
-  const reciter: Reciter =
-    reciters.find((r) => r.id === reciterId) ?? { ...DEFAULT_RECITER, id: reciterId };
+  const reciter: Reciter = reciters.find((r) => r.id === reciterId) ?? {
+    ...DEFAULT_RECITER,
+    id: reciterId,
+  };
 
   return {
     reciter,

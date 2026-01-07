@@ -15,10 +15,10 @@ export const HeaderBrand = memo(function HeaderBrand(): ReactElement {
   const isNavPath = (path?: string | null): boolean =>
     Boolean(
       path &&
-        (path.startsWith('/surah') ||
-          path.startsWith('/tafsir') ||
-          path.startsWith('/juz') ||
-          path.startsWith('/page'))
+      (path.startsWith('/surah') ||
+        path.startsWith('/tafsir') ||
+        path.startsWith('/juz') ||
+        path.startsWith('/page'))
     );
   const isBookmarkPath = (path?: string | null): boolean =>
     Boolean(path && path.startsWith('/bookmarks'));

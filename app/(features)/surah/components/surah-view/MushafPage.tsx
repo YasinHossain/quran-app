@@ -56,10 +56,7 @@ const getMushafFontConfig = ({
 
   if (isQcfMushaf) {
     // V4 (Tajweed) uses the same sizing as V1
-    const preset =
-      qcfVersion === 'v2'
-        ? getQcfV2Preset(mushafScale)
-        : getQcfV1Preset(mushafScale);
+    const preset = qcfVersion === 'v2' ? getQcfV2Preset(mushafScale) : getQcfV1Preset(mushafScale);
     return {
       fontSize: preset.fontSize,
       lineWidthDesktop: preset.lineWidthDesktop,

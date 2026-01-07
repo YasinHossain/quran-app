@@ -48,10 +48,22 @@ export function useDedupedFetchVerse({
 
   // Include tajweed in the cache key so SWR refetches when tajweed changes
   const requestKey = enabled
-    ? ['verses', resourceId, translationIds.join(','), wordLang, pageNumber, perPage, String(tajweed)]
+    ? [
+        'verses',
+        resourceId,
+        translationIds.join(','),
+        wordLang,
+        pageNumber,
+        perPage,
+        String(tajweed),
+      ]
     : null;
 
-  const { data: versesInPage, error, isLoading } = useSWRImmutable<Verse[]>(
+  const {
+    data: versesInPage,
+    error,
+    isLoading,
+  } = useSWRImmutable<Verse[]>(
     requestKey,
     async () => {
       const result = await lookup({
@@ -66,7 +78,9 @@ export function useDedupedFetchVerse({
     },
     {
       // Don't use fallbackData when tajweed is true, since initial verses don't have codeV2
-      ...(pageNumber === 1 && initialPageVerses && !tajweed ? { fallbackData: initialPageVerses } : {}),
+      ...(pageNumber === 1 && initialPageVerses && !tajweed
+        ? { fallbackData: initialPageVerses }
+        : {}),
     }
   );
 
@@ -89,4 +103,3 @@ export function useDedupedFetchVerse({
     isLoading,
   };
 }
-

@@ -1,10 +1,10 @@
 'use client';
 
-import { Minus, Plus } from 'lucide-react';
-import React, { useEffect, useMemo, useCallback } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 
 import { SurahVerseSelector } from '@/app/shared/components/SurahVerseSelector';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
+import { CounterInput } from '@/app/shared/ui/inputs/CounterInput';
 import { TabToggle } from '@/app/shared/ui/TabToggle';
 
 import type { RepeatOptions } from '@/app/shared/player/types';
@@ -110,20 +110,20 @@ function RepeatFields({
       {/* Settings Section */}
       <div className={`grid grid-cols-1 gap-3 ${isSingle ? 'sm:grid-cols-2' : 'sm:grid-cols-3'}`}>
         {!isSingle && (
-          <NumberField
+          <CounterInput
             label="Play Count"
             value={localRepeat.playCount ?? 1}
             min={1}
             onChange={(v) => setLocalRepeat({ ...localRepeat, playCount: v })}
           />
         )}
-        <NumberField
+        <CounterInput
           label="Repeat Each"
           value={localRepeat.repeatEach ?? 1}
           min={1}
           onChange={(v) => setLocalRepeat({ ...localRepeat, repeatEach: v })}
         />
-        <NumberField
+        <CounterInput
           label="Delay (s)"
           value={localRepeat.delay ?? 0}
           min={0}
@@ -369,60 +369,5 @@ function RangeFields({
         verseLabel="End Verse"
       />
     </>
-  );
-}
-
-function NumberField({
-  label,
-  value,
-  onChange,
-  min = 0,
-  className,
-}: {
-  label: string;
-  value: number;
-  onChange: (v: number) => void;
-  min?: number;
-  className?: string;
-}): React.JSX.Element {
-  const handleIncrement = () => onChange(value + 1);
-  const handleDecrement = () => {
-    if (value > min) {
-      onChange(value - 1);
-    }
-  };
-
-  return (
-    <div className={className}>
-      <span className="block mb-1 text-sm font-semibold text-foreground">{label}</span>
-      <div className="flex items-center w-full rounded-lg border border-border bg-interactive/60 text-foreground focus-within:border-accent focus-within:ring-1 focus-within:ring-accent transition-colors duration-150">
-        <button
-          type="button"
-          onClick={handleDecrement}
-          disabled={value <= min}
-          className="p-2.5 text-muted hover:text-foreground disabled:opacity-30 disabled:hover:text-muted transition-colors"
-        >
-          <Minus size={16} />
-        </button>
-        <input
-          type="number"
-          value={Number.isFinite(value) ? value : 0}
-          min={min}
-          step={1}
-          onChange={(e) => {
-            const v = parseInt(e.target.value, 10);
-            onChange(Number.isNaN(v) ? (min ?? value) : v);
-          }}
-          className="flex-1 min-w-0 bg-transparent p-2 text-center text-foreground placeholder:text-muted focus:outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-        />
-        <button
-          type="button"
-          onClick={handleIncrement}
-          className="p-2.5 text-muted hover:text-foreground transition-colors"
-        >
-          <Plus size={16} />
-        </button>
-      </div>
-    </div>
   );
 }

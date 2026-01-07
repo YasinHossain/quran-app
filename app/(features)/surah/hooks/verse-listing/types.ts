@@ -1,8 +1,8 @@
 import { useSettings } from '@/app/providers/SettingsContext';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 
-import type { Verse } from '@/types';
 import type { MushafResourceKind } from '@/app/(features)/surah/hooks/mushafReadingViewTypes';
+import type { Verse } from '@/types';
 
 export type VerseListingMode = 'infinite' | 'quran-com';
 

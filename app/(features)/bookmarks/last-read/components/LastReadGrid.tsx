@@ -10,9 +10,14 @@ import { LastReadCard } from './LastReadCard';
 interface LastReadGridProps {
   lastRead: LastReadMap;
   chapters: Chapter[];
+  onRemove: (surahId: string) => void;
 }
 
-export const LastReadGrid = ({ lastRead, chapters }: LastReadGridProps): React.JSX.Element => {
+export const LastReadGrid = ({
+  lastRead,
+  chapters,
+  onRemove,
+}: LastReadGridProps): React.JSX.Element => {
   const isVisible = useMountVisible();
 
   if (Object.keys(lastRead).length === 0) return <LastReadEmptyState />;
@@ -33,6 +38,7 @@ export const LastReadGrid = ({ lastRead, chapters }: LastReadGridProps): React.J
           verseId={verseNumber}
           chapter={chapter}
           index={index}
+          onRemove={() => onRemove(surahId)}
         />
       ))}
     </div>

@@ -96,6 +96,7 @@ function useBookmarkHelpers(
     verseKey?: string,
     globalVerseId?: number
   ) => void;
+  removeLastRead: (surahId: string) => void;
 } {
   const isBookmarked = useCallback(
     (verseId: string) => isVerseBookmarked(folders, verseId),
@@ -126,6 +127,17 @@ function useBookmarkHelpers(
     [setLastReadState]
   );
 
+  const removeLastRead = useCallback(
+    (surahId: string) => {
+      setLastReadState((prev) => {
+        const next = { ...prev };
+        delete next[surahId];
+        return next;
+      });
+    },
+    [setLastReadState]
+  );
+
   return {
     isBookmarked,
     findBookmark,
@@ -133,5 +145,6 @@ function useBookmarkHelpers(
     togglePinned,
     isPinned,
     setLastRead,
+    removeLastRead,
   } as const;
 }

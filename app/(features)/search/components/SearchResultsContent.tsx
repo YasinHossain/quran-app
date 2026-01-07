@@ -1,22 +1,21 @@
 'use client';
 
-import React, { useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import React, { useCallback, useMemo } from 'react';
 
-import { ReaderVerseCard } from '@/app/shared/reader/VerseCard';
-import { VerseSkeleton } from '@/app/shared/components/VerseSkeleton';
-import { buildSurahRoute } from '@/app/shared/navigation/routes';
-import { parseVerseKey } from '@/lib/utils/verse';
-import { SearchIcon, ChevronLeftIcon, ChevronRightIcon } from '@/app/shared/icons';
 import { useSettings } from '@/app/providers/SettingsContext';
+import { VerseSkeleton } from '@/app/shared/components/VerseSkeleton';
+import { SearchIcon, ChevronLeftIcon, ChevronRightIcon } from '@/app/shared/icons';
+import { buildSurahRoute } from '@/app/shared/navigation/routes';
+import { ReaderVerseCard } from '@/app/shared/reader/VerseCard';
 import { highlightMissingQueryWords } from '@/lib/utils/searchRelevance';
+import { parseVerseKey } from '@/lib/utils/verse';
 
-import type { VerseWithHighlight } from '../hooks/usePaginatedSearch';
+import type { VerseWithHighlight } from '@/app/(features)/search/hooks/usePaginatedSearch';
 
 // ============================================================================
 // Types
 // ============================================================================
-
 
 interface SearchResultsContentProps {
   query: string;
@@ -55,13 +54,12 @@ const SearchHeader = ({
         <SearchIcon size={20} className="text-accent" />
       </div>
       <div>
-        <h1 className="text-xl md:text-2xl font-bold text-foreground">
-          Search Results
-        </h1>
+        <h1 className="text-xl md:text-2xl font-bold text-foreground">Search Results</h1>
         <p className="text-sm text-muted">
           {totalResults > 0 ? (
             <>
-              <span className="font-medium text-accent">{totalResults}</span> results for &quot;{query}&quot;
+              <span className="font-medium text-accent">{totalResults}</span> results for &quot;
+              {query}&quot;
               {totalPages > 1 && (
                 <span className="ml-2">
                   · Page {currentPage} of {totalPages}
@@ -84,7 +82,8 @@ const EmptyState = ({ query }: { query: string }): React.JSX.Element => (
     </div>
     <h2 className="text-lg font-semibold text-foreground mb-2">No results found</h2>
     <p className="text-muted text-sm max-w-md mx-auto">
-      We couldn&apos;t find any verses matching &quot;{query}&quot;. Try different keywords or check your spelling.
+      We couldn&apos;t find any verses matching &quot;{query}&quot;. Try different keywords or check
+      your spelling.
     </p>
   </div>
 );
@@ -236,10 +235,10 @@ const SearchVerseItem = ({ verse, index, query }: SearchVerseItemProps): React.J
     if (isArabicQuery) {
       // Arabic query: highlight Arabic text if available
       let arabicText = verse.text_uthmani || '';
-      
+
       // Clean unwanted Quranic marks (stops, pauses, decorations) for cleaner search display
       // Keeps: standard diacritics, superscript alef (0670), small waw/yeh (06E5-06E6)
-      // Removes: 
+      // Removes:
       // - 06D6-06DC: Small pause marks
       // - 06DF-06E4: High/Low small marks (zeros, etc)
       // - 06E9: Place of Sajdah
@@ -359,12 +358,7 @@ export const SearchResultsContent = ({
   if (isLoading) {
     return (
       <div>
-        <SearchHeader
-          query={query}
-          totalResults={0}
-          currentPage={1}
-          totalPages={0}
-        />
+        <SearchHeader query={query} totalResults={0} currentPage={1} totalPages={0} />
         <LoadingSkeletons />
       </div>
     );
@@ -374,12 +368,7 @@ export const SearchResultsContent = ({
   if (verses.length === 0) {
     return (
       <div>
-        <SearchHeader
-          query={query}
-          totalResults={0}
-          currentPage={1}
-          totalPages={0}
-        />
+        <SearchHeader query={query} totalResults={0} currentPage={1} totalPages={0} />
         <EmptyState query={query} />
       </div>
     );

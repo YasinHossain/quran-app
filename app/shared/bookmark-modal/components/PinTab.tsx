@@ -9,7 +9,11 @@ import { PinIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 
-export const PinTab = memo(function PinTab({ verseId, verseKey, onClose }: PinTabProps): React.JSX.Element {
+export const PinTab = memo(function PinTab({
+  verseId,
+  verseKey,
+  onClose,
+}: PinTabProps): React.JSX.Element {
   const { isPinned, togglePinned } = useBookmarks();
   // Check both verseId and verseKey to find pins regardless of storage format
   const isVersePinned = isPinned(verseId) || (verseKey ? isPinned(verseKey) : false);

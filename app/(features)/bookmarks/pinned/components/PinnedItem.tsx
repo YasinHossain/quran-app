@@ -6,9 +6,9 @@ import React from 'react';
 import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
 import { useVerseCard } from '@/app/(features)/surah/components/verse-card/useVerseCard';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { VerseSkeleton } from '@/app/shared/components/VerseSkeleton';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
 import { ReaderVerseCard } from '@/app/shared/reader';
-import { VerseSkeleton } from '@/app/shared/components/VerseSkeleton';
 import { parseVerseKey } from '@/lib/utils/verse';
 
 import type { Bookmark, Verse } from '@/types';

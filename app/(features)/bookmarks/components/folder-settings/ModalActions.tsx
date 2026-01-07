@@ -14,7 +14,6 @@ export const ModalActions = ({
   submittingLabel,
 }: ModalActionsProps): React.JSX.Element => (
   <div className="flex justify-end gap-3 pt-4">
-
     <button
       type="submit"
       disabled={isSubmitting}

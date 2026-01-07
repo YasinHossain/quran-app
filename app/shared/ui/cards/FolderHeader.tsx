@@ -39,7 +39,7 @@ const FolderInfoSection = memo(function FolderInfoSection({
 }): React.JSX.Element {
   return (
     <div className="flex-1 min-w-0">
-      <h3 className="font-bold text-lg text-foreground truncate mb-1 group-hover:text-accent transition-colors duration-200">
+      <h3 className="font-bold text-lg text-foreground line-clamp-2 mb-1 group-hover:text-accent transition-colors duration-200">
         {folder.name}
       </h3>
       <p className="text-sm text-muted font-medium">

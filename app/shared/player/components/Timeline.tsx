@@ -40,7 +40,7 @@ function SeekSlider({
   return (
     <Tooltip.Provider delayDuration={150}>
       <Slider.Root
-        className={`relative w-full h-2.5 group flex items-center ${
+        className={`relative w-full h-2.5 group flex items-center touch-none select-none ${
           !interactable ? 'opacity-60 pointer-events-none' : ''
         }`}
         value={[current]}

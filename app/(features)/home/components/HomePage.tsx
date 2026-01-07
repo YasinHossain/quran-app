@@ -44,7 +44,7 @@ export const HomePage = memo(function HomePage({ className }: HomePageProps) {
           </div>
 
           {/* Search bar - Third widest */}
-          <div 
+          <div
             className="w-full mx-auto animate-fade-in-up animation-delay-200"
             style={{ maxWidth: 'clamp(16rem, 70vw, 44rem)' }}
           >
@@ -52,7 +52,7 @@ export const HomePage = memo(function HomePage({ className }: HomePageProps) {
           </div>
 
           {/* Verse of the Day - Second widest (wider than search) */}
-          <div 
+          <div
             className="w-full mx-auto animate-fade-in-up animation-delay-400"
             style={{ maxWidth: 'clamp(18rem, 80vw, 64rem)' }}
           >
@@ -65,4 +65,3 @@ export const HomePage = memo(function HomePage({ className }: HomePageProps) {
     </div>
   );
 });
-

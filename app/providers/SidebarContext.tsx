@@ -24,7 +24,14 @@ const useSidebarKeyboard = (
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isSurahListOpen, setSurahListOpen, isBookmarkSidebarOpen, setBookmarkSidebarOpen, isSearchSidebarOpen, setSearchSidebarOpen]);
+  }, [
+    isSurahListOpen,
+    setSurahListOpen,
+    isBookmarkSidebarOpen,
+    setBookmarkSidebarOpen,
+    isSearchSidebarOpen,
+    setSearchSidebarOpen,
+  ]);
 };
 
 interface SidebarContextType {
@@ -86,7 +93,14 @@ const useSidebarToggles = (): SidebarToggles => {
     setSearchSidebarOpen
   );
 
-  return { isSurahListOpen, setSurahListOpen, isBookmarkSidebarOpen, setBookmarkSidebarOpen, isSearchSidebarOpen, setSearchSidebarOpen };
+  return {
+    isSurahListOpen,
+    setSurahListOpen,
+    isBookmarkSidebarOpen,
+    setBookmarkSidebarOpen,
+    isSearchSidebarOpen,
+    setSearchSidebarOpen,
+  };
 };
 
 const useSidebarContextValue = (

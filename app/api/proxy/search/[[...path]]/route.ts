@@ -33,7 +33,11 @@ function buildGatewayUrl(pathname: string, search: string): string {
   return url.toString();
 }
 
-function generateSignature(url: string, token: string, timestamp?: string): {
+function generateSignature(
+  url: string,
+  token: string,
+  timestamp?: string
+): {
   signature: string;
   timestamp: string;
 } {

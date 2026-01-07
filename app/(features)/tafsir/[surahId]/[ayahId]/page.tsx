@@ -49,8 +49,10 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps): React
 
   const [isTranslationPanelOpen, openTranslationPanel, closeTranslationPanel] =
     useUIPanelVisibility(TRANSLATION_PANEL_ID);
-  const [isTafsirPanelOpen, openTafsirPanel, closeTafsirPanel] = useUIPanelVisibility(TAFSIR_PANEL_ID);
-  const [isWordPanelOpen, openWordPanel, closeWordPanel] = useUIPanelVisibility(WORD_LANGUAGE_PANEL_ID);
+  const [isTafsirPanelOpen, openTafsirPanel, closeTafsirPanel] =
+    useUIPanelVisibility(TAFSIR_PANEL_ID);
+  const [isWordPanelOpen, openWordPanel, closeWordPanel] =
+    useUIPanelVisibility(WORD_LANGUAGE_PANEL_ID);
 
   return (
     <>
@@ -93,6 +95,7 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps): React
           <SettingsSidebarContent
             readerTabsEnabled={false}
             showTafsirSetting
+            pageType="tafsir"
             selectedTranslationName={selectedTranslationName}
             selectedTafsirName={selectedTafsirName}
             selectedWordLanguageName={selectedWordLanguageName}

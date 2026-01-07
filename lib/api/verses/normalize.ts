@@ -30,17 +30,17 @@ export function normalizeVerse(raw: ApiVerse, wordLang: string = 'en'): Verse {
     ...(rest as Omit<ApiVerse, 'words'>),
     ...(wordsRaw
       ? {
-        words: wordsRaw.map(
-          (w): Word => ({
-            id: w.id,
-            uthmani: w.text_uthmani ?? w.text,
-            [wordLang]: w.translation?.text,
-            ...(w.code_v2 ? { codeV2: w.code_v2 } : {}),
-            ...(w.page_number ? { pageNumber: w.page_number } : {}),
-            ...(typeof w.position === 'number' ? { position: w.position } : {}),
-          })
-        ),
-      }
+          words: wordsRaw.map(
+            (w): Word => ({
+              id: w.id,
+              uthmani: w.text_uthmani ?? w.text,
+              [wordLang]: w.translation?.text,
+              ...(w.code_v2 ? { codeV2: w.code_v2 } : {}),
+              ...(w.page_number ? { pageNumber: w.page_number } : {}),
+              ...(typeof w.position === 'number' ? { position: w.position } : {}),
+            })
+          ),
+        }
       : {}),
   } as unknown as Verse;
 }

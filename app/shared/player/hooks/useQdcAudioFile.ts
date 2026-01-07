@@ -24,10 +24,7 @@ export function useQdcAudioFile(
   const key = buildKey(reciterId, chapterId, segments);
   const fetcher = ([, rId, cId, withSegments]: Key): Promise<QdcAudioFile> =>
     getQdcAudioFile({ reciterId: rId, chapterId: cId, segments: withSegments });
-  const { data, error, isLoading } = useSWR<QdcAudioFile>(
-    key,
-    fetcher
-  );
+  const { data, error, isLoading } = useSWR<QdcAudioFile>(key, fetcher);
   return {
     audioFile: data,
     isLoading: Boolean(isLoading && !data),

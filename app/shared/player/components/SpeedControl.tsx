@@ -36,8 +36,9 @@ function SpeedOptionButton({
   return (
     <button
       onClick={() => onSelect(speed)}
-      className={`w-full text-center text-sm p-1.5 rounded-lg transition-colors ${active ? 'bg-accent text-on-accent' : 'hover:bg-interactive-hover'
-        }`}
+      className={`w-full text-center text-sm p-1.5 rounded-lg transition-colors ${
+        active ? 'bg-accent text-on-accent' : 'hover:bg-interactive-hover'
+      }`}
     >
       {speed}x
     </button>

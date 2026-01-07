@@ -74,9 +74,7 @@ export function VirtualizedPinnedList({
         computeItemKey={(index, bookmark) =>
           `pinned-${index}-${bookmark.verseId}-${bookmark.createdAt ?? index}`
         }
-        itemContent={(index, bookmark) => (
-          <PinnedVerseListItem bookmark={bookmark} index={index} />
-        )}
+        itemContent={(index, bookmark) => <PinnedVerseListItem bookmark={bookmark} index={index} />}
         increaseViewportBy={1000}
       />
     </div>

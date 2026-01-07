@@ -18,10 +18,7 @@ const isSaheehName = (name: string): boolean => {
 const findSaheehId = (translations: TranslationResource[]): number | undefined =>
   translations.find((t) => isSaheehName(t.name))?.id;
 
-const normalizeSelectionIds = (
-  translations: TranslationResource[],
-  ids: number[]
-): number[] => {
+const normalizeSelectionIds = (translations: TranslationResource[], ids: number[]): number[] => {
   if (ids.length === 0) return [];
   const validIds = new Set(translations.map((t) => t.id));
   const seen = new Set<number>();

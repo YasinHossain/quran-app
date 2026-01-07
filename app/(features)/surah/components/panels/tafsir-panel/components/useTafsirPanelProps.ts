@@ -57,7 +57,15 @@ export const useTafsirSearchProps = ({
       onReorder,
       onReset,
     }),
-    [searchTerm, setSearchTerm, orderedSelection, tafsirs, handleSelectionToggle, onReorder, onReset]
+    [
+      searchTerm,
+      setSearchTerm,
+      orderedSelection,
+      tafsirs,
+      handleSelectionToggle,
+      onReorder,
+      onReset,
+    ]
   );
 
 export const useTafsirTabsProps = ({

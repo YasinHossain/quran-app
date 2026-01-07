@@ -65,4 +65,3 @@ export function useDedupedFetchMushafPage({
     error: error instanceof Error ? error.message : error ? String(error) : null,
   };
 }
-

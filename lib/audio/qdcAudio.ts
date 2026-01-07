@@ -110,9 +110,7 @@ export async function getQdcAudioFile({
   chapterId,
   segments,
 }: GetQdcAudioFileParams): Promise<QdcAudioFile> {
-  const url = new URL(
-    `${normaliseBaseUrl(QDC_AUDIO_BASE_URL)}/reciters/${reciterId}/audio_files`
-  );
+  const url = new URL(`${normaliseBaseUrl(QDC_AUDIO_BASE_URL)}/reciters/${reciterId}/audio_files`);
   url.searchParams.set('chapter', String(chapterId));
   if (segments) {
     url.searchParams.set('segments', 'true');
@@ -129,4 +127,3 @@ export async function getQdcAudioFile({
   }
   return normalizeQdcAudioFile(first);
 }
-

@@ -39,7 +39,6 @@ if (typeof originalFetch === 'function') {
     return originalFetch(...args).catch((error) => {
       const label = getErrorLabel(error);
       if (label?.startsWith('InvalidStateError')) {
-        // eslint-disable-next-line no-console
         console.error(`[tests] fetch rejected: ${target}`, label);
       }
       throw error;
@@ -50,7 +49,6 @@ if (typeof originalFetch === 'function') {
 process.on('unhandledRejection', (reason) => {
   const label = getErrorLabel(reason);
   if (label?.startsWith('InvalidStateError')) {
-    // eslint-disable-next-line no-console
     console.error(`[tests] unhandledRejection: ${label}`);
   }
   unhandledRejections.push(reason);

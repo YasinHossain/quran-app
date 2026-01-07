@@ -1,12 +1,11 @@
 'use client';
 
-import { memo, type ReactElement } from 'react';
-
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { memo, type ReactElement } from 'react';
 
-import { ComprehensiveSearch } from '@/app/shared/search';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
+import { ComprehensiveSearch } from '@/app/shared/search';
 
 interface HomeSearchProps {
   /** Search query for filtering (passed to parent for tab filtering) */
@@ -29,26 +28,18 @@ const SHORTCUT_SURAHS = [
  * Features advanced search with instant results, navigation detection,
  * and quick Surah shortcuts.
  */
-export const HomeSearch = memo(function HomeSearch({
-  className,
-}: HomeSearchProps): ReactElement {
+export const HomeSearch = memo(function HomeSearch({ className }: HomeSearchProps): ReactElement {
   const router = useRouter();
 
   return (
     <div className={`w-full space-y-4 md:space-y-5 ${className ?? ''}`}>
       {/* Comprehensive Search */}
       <div className="w-full">
-        <ComprehensiveSearch
-          variant="home"
-          placeholder="Search Surahs, Verses, or Topics..."
-        />
+        <ComprehensiveSearch variant="home" placeholder="Search Surahs, Verses, or Topics..." />
       </div>
 
       {/* Shortcut buttons */}
-      <div
-        className="w-full mx-auto"
-        style={{ maxWidth: 'clamp(14rem, 65vw, 28rem)' }}
-      >
+      <div className="w-full mx-auto" style={{ maxWidth: 'clamp(14rem, 65vw, 28rem)' }}>
         <div className="flex flex-nowrap justify-center items-center gap-1 sm:gap-1.5 md:gap-2">
           {SHORTCUT_SURAHS.map(({ name, id }) => (
             <Link

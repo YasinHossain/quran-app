@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import {
   memo,
   useCallback,
@@ -11,15 +12,27 @@ import {
   type ReactElement,
 } from 'react';
 
-import { useRouter } from 'next/navigation';
-
+import { useSettings } from '@/app/providers/SettingsContext';
 import { GoToSurahVerseForm } from '@/app/shared/components/go-to/GoToSurahVerseForm';
 import { SearchInput } from '@/app/shared/components/SearchInput';
-import { buildSurahRoute, buildJuzRoute, buildPageRoute, buildSearchRoute } from '@/app/shared/navigation/routes';
-import { useSettings } from '@/app/providers/SettingsContext';
-import { quickSearch, analyzeQuery, type SearchNavigationResult, type SearchVerseResult } from '@/lib/api/search';
 import { SearchIcon, BookOpenIcon, HashIcon } from '@/app/shared/icons';
-import { getBestMatchesForDropdown, highlightMissingQueryWords, type ScoredVerseResult } from '@/lib/utils/searchRelevance';
+import {
+  buildSurahRoute,
+  buildJuzRoute,
+  buildPageRoute,
+  buildSearchRoute,
+} from '@/app/shared/navigation/routes';
+import {
+  quickSearch,
+  analyzeQuery,
+  type SearchNavigationResult,
+  type SearchVerseResult,
+} from '@/lib/api/search';
+import {
+  getBestMatchesForDropdown,
+  highlightMissingQueryWords,
+  type ScoredVerseResult,
+} from '@/lib/utils/searchRelevance';
 
 // ============================================================================
 // Types
@@ -168,7 +181,9 @@ const SearchDropdown = memo(function SearchDropdown({
       {showRecents && (
         <div className="py-2">
           <div className="px-4 py-2 flex items-center justify-between">
-            <span className="text-xs font-medium text-muted uppercase tracking-wider">Recent Searches</span>
+            <span className="text-xs font-medium text-muted uppercase tracking-wider">
+              Recent Searches
+            </span>
             <button
               type="button"
               onClick={onClearRecent}
@@ -200,7 +215,7 @@ const SearchDropdown = memo(function SearchDropdown({
           {navigationResults.map((result) => {
             const currentIndex = itemIndex++;
             const isHighlighted = currentIndex === highlightedIndex;
-            
+
             return (
               <button
                 key={`${result.resultType}-${result.key}`}
@@ -211,10 +226,16 @@ const SearchDropdown = memo(function SearchDropdown({
                 }`}
               >
                 <div className="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center flex-shrink-0">
-                  {result.resultType === 'surah' && <BookOpenIcon size={16} className="text-accent" />}
+                  {result.resultType === 'surah' && (
+                    <BookOpenIcon size={16} className="text-accent" />
+                  )}
                   {result.resultType === 'ayah' && <HashIcon size={16} className="text-accent" />}
-                  {result.resultType === 'juz' && <span className="text-xs font-bold text-accent">J</span>}
-                  {result.resultType === 'page' && <span className="text-xs font-bold text-accent">P</span>}
+                  {result.resultType === 'juz' && (
+                    <span className="text-xs font-bold text-accent">J</span>
+                  )}
+                  {result.resultType === 'page' && (
+                    <span className="text-xs font-bold text-accent">P</span>
+                  )}
                 </div>
                 <div>
                   <div className="text-sm font-medium text-foreground">{result.name}</div>
@@ -230,7 +251,9 @@ const SearchDropdown = memo(function SearchDropdown({
       {verseResults.length > 0 && (
         <div className="py-2 border-b border-border/50">
           <div className="px-4 py-1.5 flex items-center justify-between">
-            <span className="text-xs font-medium text-muted uppercase tracking-wider">Search Results</span>
+            <span className="text-xs font-medium text-muted uppercase tracking-wider">
+              Search Results
+            </span>
             <span className="text-xs text-muted">Showing {visibleVerseCount}</span>
           </div>
         </div>
@@ -238,7 +261,7 @@ const SearchDropdown = memo(function SearchDropdown({
 
       {/* Scrollable verse results container */}
       {verseResults.length > 0 && (
-        <div 
+        <div
           className="max-h-[400px] overflow-y-auto overscroll-contain"
           style={{
             scrollbarWidth: 'thin',
@@ -250,69 +273,77 @@ const SearchDropdown = memo(function SearchDropdown({
             const isHighlighted = currentIndex === highlightedIndex;
             // Detect if the query is in Arabic
             const isArabic = isArabicQuery(searchQuery);
-            
+
             return (
               <button
                 key={verse.verseKey}
-                  type="button"
-                  onClick={() => onSelectVerse(verse)}
-                  className={`w-full px-4 py-4 text-left transition-colors border-b border-border/30 last:border-b-0 ${
-                    isHighlighted ? 'bg-accent/15' : 'hover:bg-interactive/50'
-                  }`}
-                >
-                  <div className="flex items-start gap-3">
-                    {/* Verse key badge */}
-                    <div className="flex-shrink-0 mt-0.5">
-                      <span className="inline-flex items-center justify-center min-w-[3rem] px-2 py-1 rounded-md bg-accent text-white text-xs font-semibold">
-                        {verse.verseKey}
-                      </span>
-                    </div>
-                    {/* Verse content - show ONLY Arabic for Arabic queries, ONLY translation for other languages */}
-                    <div className="flex-1 min-w-0">
-                      {isArabic ? (
-                        // Arabic query → Show ONLY Arabic text with highlighting
-                        verse.textArabic && (
-                          <p 
-                            className="text-right leading-loose arabic-text"
-                            style={{ 
-                              fontSize: `${settings.arabicFontSize || 28}px`,
-                              fontFamily: settings.arabicFontFace || '"UthmanicHafs1Ver18", serif',
-                            }}
-                            dir="rtl"
-                            lang="ar"
-                            dangerouslySetInnerHTML={{ 
-                              // Clean unwanted Quranic marks before highlighting, just like in the search page
-                              __html: highlightMissingQueryWords(
-                                verse.textArabic.replace(/[\u06D6-\u06DC\u06DF-\u06E4\u06E9-\u06ED\u06DD]/g, ''), 
-                                searchQuery
-                              ) 
-                            }}
-                          />
-                        )
-                      ) : (
-                        // Non-Arabic query → Show ONLY translation with highlighting
+                type="button"
+                onClick={() => onSelectVerse(verse)}
+                className={`w-full px-4 py-4 text-left transition-colors border-b border-border/30 last:border-b-0 ${
+                  isHighlighted ? 'bg-accent/15' : 'hover:bg-interactive/50'
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  {/* Verse key badge */}
+                  <div className="flex-shrink-0 mt-0.5">
+                    <span className="inline-flex items-center justify-center min-w-[3rem] px-2 py-1 rounded-md bg-accent text-white text-xs font-semibold">
+                      {verse.verseKey}
+                    </span>
+                  </div>
+                  {/* Verse content - show ONLY Arabic for Arabic queries, ONLY translation for other languages */}
+                  <div className="flex-1 min-w-0">
+                    {isArabic ? (
+                      // Arabic query → Show ONLY Arabic text with highlighting
+                      verse.textArabic && (
                         <p
-                          className="text-sm text-foreground leading-relaxed search-result-text"
-                          style={{ 
-                            fontSize: `${settings.translationFontSize ? Math.max(14, settings.translationFontSize - 2) : 16}px` 
+                          className="text-right leading-loose arabic-text"
+                          style={{
+                            fontSize: `${settings.arabicFontSize || 28}px`,
+                            fontFamily: settings.arabicFontFace || '"UthmanicHafs1Ver18", serif',
                           }}
-                          dangerouslySetInnerHTML={{ 
-                            __html: highlightMissingQueryWords(verse.highlightedTranslation, searchQuery) 
+                          dir="rtl"
+                          lang="ar"
+                          dangerouslySetInnerHTML={{
+                            // Clean unwanted Quranic marks before highlighting, just like in the search page
+                            __html: highlightMissingQueryWords(
+                              verse.textArabic.replace(
+                                /[\u06D6-\u06DC\u06DF-\u06E4\u06E9-\u06ED\u06DD]/g,
+                                ''
+                              ),
+                              searchQuery
+                            ),
                           }}
                         />
-                      )}
-                    </div>
+                      )
+                    ) : (
+                      // Non-Arabic query → Show ONLY translation with highlighting
+                      <p
+                        className="text-sm text-foreground leading-relaxed search-result-text"
+                        style={{
+                          fontSize: `${settings.translationFontSize ? Math.max(14, settings.translationFontSize - 2) : 16}px`,
+                        }}
+                        dangerouslySetInnerHTML={{
+                          __html: highlightMissingQueryWords(
+                            verse.highlightedTranslation,
+                            searchQuery
+                          ),
+                        }}
+                      />
+                    )}
                   </div>
-                </button>
-              );
-            })}
+                </div>
+              </button>
+            );
+          })}
         </div>
       )}
 
       {/* No results */}
       {hasQuery && !isLoading && !hasResults && (
         <div className="p-6 text-center">
-          <div className="text-muted text-sm mb-3">No results found for &quot;{searchQuery}&quot;</div>
+          <div className="text-muted text-sm mb-3">
+            No results found for &quot;{searchQuery}&quot;
+          </div>
           <button
             type="button"
             onClick={onSearchPage}
@@ -388,12 +419,8 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
     const handleClickOutside = (event: MouseEvent): void => {
       const target = event.target as HTMLElement;
       const isPortal = target.closest('[data-surah-select-portal="true"]');
-      
-      if (
-        containerRef.current && 
-        !containerRef.current.contains(target as Node) && 
-        !isPortal
-      ) {
+
+      if (containerRef.current && !containerRef.current.contains(target as Node) && !isPortal) {
         setIsOpen(false);
       }
     };
@@ -515,13 +542,10 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
     }
   }, [query, router, onNavigate]);
 
-  const handleRecentSelect = useCallback(
-    (recentQuery: string): void => {
-      setQuery(recentQuery);
-      // Will trigger search via useEffect
-    },
-    []
-  );
+  const handleRecentSelect = useCallback((recentQuery: string): void => {
+    setQuery(recentQuery);
+    // Will trigger search via useEffect
+  }, []);
 
   const handleClearRecent = useCallback((): void => {
     clearRecentSearches();
@@ -560,7 +584,15 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
           break;
       }
     },
-    [highlightedIndex, navigationResults, verseResults, navigateToNavResult, navigateToVerse, navigateToSearchPage, query]
+    [
+      highlightedIndex,
+      navigationResults,
+      verseResults,
+      navigateToNavResult,
+      navigateToVerse,
+      navigateToSearchPage,
+      query,
+    ]
   );
 
   // Input handlers
@@ -580,10 +612,7 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
   const inputSize = isHeader ? 'sm' : 'lg';
 
   return (
-    <div
-      className={`relative ${className}`}
-      ref={containerRef}
-    >
+    <div className={`relative ${className}`} ref={containerRef}>
       <SearchInput
         value={query}
         onChange={handleInputChange}
@@ -600,9 +629,10 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
         <div className="absolute top-full left-1/2 -translate-x-1/2 w-[calc(100vw-32px)] md:w-[44rem] mt-2 z-50 bg-surface rounded-xl shadow-2xl border border-border/50 overflow-hidden backdrop-blur-xl">
           <GoToSurahVerseForm
             onNavigate={(surahId, verse) => {
-              const href = typeof verse === 'number'
-                ? buildSurahRoute(surahId, { startVerse: verse })
-                : buildSurahRoute(surahId);
+              const href =
+                typeof verse === 'number'
+                  ? buildSurahRoute(surahId, { startVerse: verse })
+                  : buildSurahRoute(surahId);
               router.push(href);
               setIsOpen(false);
               onNavigate?.();

@@ -61,8 +61,7 @@ interface SelectableOptions<T extends Resource> {
 }
 
 export interface UseSelectableResourcesResult<T extends Resource>
-  extends UseResourceSearchResult<T>,
-    Omit<UseDraggableSelectionResult, 'setOrderedSelection'> {
+  extends UseResourceSearchResult<T>, Omit<UseDraggableSelectionResult, 'setOrderedSelection'> {
   selectedIds: Set<number>;
   setSelections: (ids: number[]) => void;
   handleSelectionToggle: (id: number) => boolean;

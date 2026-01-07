@@ -2,8 +2,6 @@ import React from 'react';
 
 import { useReciters } from '@/app/shared/player/hooks/useReciters';
 
-import type { Reciter } from '@/app/shared/player/types';
-
 interface Props {
   localReciter: number;
   setLocalReciter: (id: number) => void;

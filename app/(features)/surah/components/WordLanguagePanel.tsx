@@ -3,7 +3,6 @@
 import { useTranslation } from 'react-i18next';
 
 import { useWordLanguageSelection } from '@/app/(features)/surah/hooks';
-
 import { SlideOverPanel } from '@/app/shared/components/SlideOverPanel';
 import { SettingsPanelHeader } from '@/app/shared/resource-panel/components/ResourcePanelHeader';
 

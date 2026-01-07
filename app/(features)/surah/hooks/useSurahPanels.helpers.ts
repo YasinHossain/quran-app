@@ -11,8 +11,9 @@ import type { TFunction } from 'i18next';
 export const usePanelControls = (): PanelControls => {
   const [isTranslationPanelOpen, openTranslationPanel, closeTranslationPanel] =
     usePanelVisibility('verse:translation-panel');
-  const [isWordPanelOpen, openWordLanguagePanel, closeWordLanguagePanel] =
-    usePanelVisibility('verse:word-language-panel');
+  const [isWordPanelOpen, openWordLanguagePanel, closeWordLanguagePanel] = usePanelVisibility(
+    'verse:word-language-panel'
+  );
   const [isMushafPanelOpen, openMushafPanel, closeMushafPanel] =
     usePanelVisibility('verse:mushaf-panel');
 
@@ -92,7 +93,8 @@ function getSelectedTranslationName(
   if (settings.translationIds) {
     if (settings.translationIds.length === 0) return '';
     const primaryId = settings.translationIds[0];
-    const primaryName = translationOptions.find((o) => o.id === primaryId)?.name || t('select_translation');
+    const primaryName =
+      translationOptions.find((o) => o.id === primaryId)?.name || t('select_translation');
 
     const extraCount = settings.translationIds.length - 1;
     if (extraCount > 0) {

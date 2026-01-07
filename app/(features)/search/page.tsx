@@ -1,7 +1,7 @@
 'use client';
 
-import React, { Suspense, useCallback, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import React, { Suspense, useCallback, useState } from 'react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -11,9 +11,9 @@ import { SettingsSidebar } from '@/app/shared/reader/settings/SettingsSidebar';
 import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 
-import { usePaginatedSearch } from './hooks/usePaginatedSearch';
-import { SearchResultsContent } from './components/SearchResultsContent';
 import { SearchLayout } from './components/SearchLayout';
+import { SearchResultsContent } from './components/SearchResultsContent';
+import { usePaginatedSearch } from './hooks/usePaginatedSearch';
 
 import type { LanguageCode } from '@/lib/text/languageCodes';
 

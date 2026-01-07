@@ -47,6 +47,7 @@ export const SettingsSidebar = (props: SettingsSidebarProps): ReactElement => {
     >
       <SettingsSidebarContent
         {...contentProps}
+        pageType={pageType}
         readerTabsEnabled={readerTabsEnabled}
         showCloseButton
         onClose={handleCloseSidebar}

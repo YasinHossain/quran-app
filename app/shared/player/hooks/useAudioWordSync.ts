@@ -37,14 +37,21 @@ function resolveVerseTiming(
   return timings.find((t) => t.verseKey === verseKey) ?? null;
 }
 
-export type SelectorBuilder = (verseKey: string, activeWord: number, cssEscape: (val: string) => string) => string;
+export type SelectorBuilder = (
+  verseKey: string,
+  activeWord: number,
+  cssEscape: (val: string) => string
+) => string;
 
 interface UseAudioWordSyncOptions {
   highlightClass: string;
   selectorBuilder: SelectorBuilder;
 }
 
-export function useAudioWordSync({ highlightClass, selectorBuilder }: UseAudioWordSyncOptions): void {
+export function useAudioWordSync({
+  highlightClass,
+  selectorBuilder,
+}: UseAudioWordSyncOptions): void {
   const audio = useAudio();
 
   const chapterId = useMemo(() => {
@@ -149,23 +156,26 @@ export function useAudioWordSync({ highlightClass, selectorBuilder }: UseAudioWo
       const wordPosition = parseInt(elementWordPosition, 10);
       const segments = timing?.segments;
       if (!segments) return;
-      
+
       const segment = segments.find((s) => s[0] === wordPosition);
 
       if (segment) {
         // segment[1] is start timestamp in ms
         const seekTimeSeconds = segment[1] / 1000;
-        
+
         const audioEl = audio.audioRef.current;
         if (audioEl) {
           audioEl.currentTime = seekTimeSeconds;
-          
+
           if (audioEl.paused) {
-             audioEl.play().then(() => {
-               audio.setIsPlaying(true);
-             }).catch(() => {
-               // ignore play errors (e.g. if no source loaded yet)
-             });
+            audioEl
+              .play()
+              .then(() => {
+                audio.setIsPlaying(true);
+              })
+              .catch(() => {
+                // ignore play errors (e.g. if no source loaded yet)
+              });
           }
         }
       }

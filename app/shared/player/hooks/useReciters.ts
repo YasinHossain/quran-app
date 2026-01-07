@@ -3,8 +3,8 @@ import useSWR from 'swr';
 
 import { getQdcAudioReciters } from '@/lib/audio/qdcAudio';
 
-import type { QdcAudioReciterApi } from '@/lib/audio/qdcAudio';
 import type { Reciter } from '@/app/shared/player/types';
+import type { QdcAudioReciterApi } from '@/lib/audio/qdcAudio';
 
 const QDC_RECITERS_KEY = 'qdc-audio-reciters';
 
@@ -17,9 +17,7 @@ export const DEFAULT_RECITER: Reciter = {
 
 function mapQdcReciterToReciter(reciter: QdcAudioReciterApi): Reciter {
   const displayName = reciter.translated_name?.name || reciter.name;
-  const localeParts = [reciter.style?.name].filter(
-    (part): part is string => Boolean(part)
-  );
+  const localeParts = [reciter.style?.name].filter((part): part is string => Boolean(part));
   const locale = localeParts.join(' • ');
   return {
     id: reciter.id,

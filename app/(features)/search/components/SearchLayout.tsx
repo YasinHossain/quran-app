@@ -8,7 +8,7 @@ import { ThreeColumnWorkspace, WorkspaceMain } from '@/app/shared/reader';
 
 import { SearchLeftSidebar, SearchWorkspaceNavigation } from './SearchLeftSidebar';
 
-import type { VerseWithHighlight } from '../hooks/usePaginatedSearch';
+import type { VerseWithHighlight } from '@/app/(features)/search/hooks/usePaginatedSearch';
 import type { ReactNode } from 'react';
 
 // ============================================================================

@@ -64,7 +64,7 @@ export const VerseOptionsMenu = memo(function VerseOptionsMenu({
   }, [onAddToPlan, closeMenu]);
 
   return (
-    <div className={cn('relative z-[200]', className)}>
+    <div className={cn('relative', className)}>
       <button
         ref={buttonRef}
         type="button"

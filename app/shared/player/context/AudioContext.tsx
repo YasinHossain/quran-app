@@ -31,7 +31,7 @@ interface AudioContextType {
   closePlayer: () => void;
 }
 
-const AudioContext = createContext<AudioContextType | undefined>(undefined);
+export const AudioContext = createContext<AudioContextType | undefined>(undefined);
 
 function useAudioCoreState(): Omit<
   AudioContextType,

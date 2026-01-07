@@ -87,7 +87,7 @@ export const BookmarkFolderCard = ({
         <div className="flex flex-1 flex-col gap-3 min-w-0">
           <div className="flex items-start gap-3">
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-semibold text-foreground line-clamp-1">
+              <div className="text-sm font-semibold text-foreground line-clamp-2">
                 {folder.name}
               </div>
               {verseCount > 0 ? (

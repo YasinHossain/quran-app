@@ -47,8 +47,6 @@ type SurahIntroDetails = {
 };
 type SurahNavChapter = ReturnType<typeof useSurahNavigationData>['chapters'][number];
 
-
-
 const useSurahIntroDetails = (chapterId?: number | null): SurahIntroDetails | null => {
   const { chapters } = useSurahNavigationData();
 
@@ -95,8 +93,6 @@ const SurahIntroBismillah = ({ showBismillah }: { showBismillah: boolean }): Rea
     ) : null}
   </div>
 );
-
-
 
 const SurahTitleBlock = ({ chapterId }: { chapterId: number }): React.JSX.Element => (
   <div className="flex items-center justify-center">

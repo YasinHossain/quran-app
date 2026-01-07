@@ -52,5 +52,10 @@ export function useTranslationOptions(): UseTranslationOptionsReturn {
     return map;
   }, [translationOptions]);
 
-  return { translationOptions, wordLanguageOptions, wordLanguageMap, resourceLanguagesMap } as const;
+  return {
+    translationOptions,
+    wordLanguageOptions,
+    wordLanguageMap,
+    resourceLanguagesMap,
+  } as const;
 }

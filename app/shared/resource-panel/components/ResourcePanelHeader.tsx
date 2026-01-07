@@ -2,8 +2,8 @@
 
 import React from 'react';
 
-import { CloseIcon, ResetIcon } from '@/app/shared/icons';
 import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
+import { ResetIcon } from '@/app/shared/icons';
 
 interface ResourcePanelHeaderProps {
   title: string;
@@ -44,4 +44,3 @@ export const ResourcePanelHeader = ({
 };
 
 export const SettingsPanelHeader = ResourcePanelHeader;
-

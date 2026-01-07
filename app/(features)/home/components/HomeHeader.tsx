@@ -29,32 +29,25 @@ export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProp
 
   return (
     <header className={`w-full py-4 ${className || ''}`}>
-      <div 
-        className="mx-auto w-full"
-        style={{ maxWidth: 'clamp(20rem, 98vw, 90rem)' }}
-      >
-        <GlassCard
-          variant="surface"
-          size="comfortable"
-          radius="xl"
-        >
-        <nav className="flex justify-between items-center space-y-0">
-          <h1 className="text-2xl sm:text-3xl md:text-3xl font-bold tracking-wider text-content-primary">
-            Al Qur&apos;an
-          </h1>
-          <button
-            onClick={toggleTheme}
-            className="p-1.5 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent touch-manipulation flex items-center justify-center"
-            aria-label="Toggle Theme"
-          >
-            {theme === 'dark' ? (
-              <SunIcon className="w-5 h-5 text-foreground" />
-            ) : (
-              <MoonIcon className="w-5 h-5 text-foreground" />
-            )}
-          </button>
-        </nav>
-      </GlassCard>
+      <div className="mx-auto w-full" style={{ maxWidth: 'clamp(20rem, 98vw, 90rem)' }}>
+        <GlassCard variant="surface" size="comfortable" radius="xl">
+          <nav className="flex justify-between items-center space-y-0">
+            <h1 className="text-2xl sm:text-3xl md:text-3xl font-bold tracking-wider text-content-primary">
+              Al Qur&apos;an
+            </h1>
+            <button
+              onClick={toggleTheme}
+              className="p-1.5 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent touch-manipulation flex items-center justify-center"
+              aria-label="Toggle Theme"
+            >
+              {theme === 'dark' ? (
+                <SunIcon className="w-5 h-5 text-foreground" />
+              ) : (
+                <MoonIcon className="w-5 h-5 text-foreground" />
+              )}
+            </button>
+          </nav>
+        </GlassCard>
       </div>
     </header>
   );

@@ -50,7 +50,7 @@ const FolderInfo = ({
     <div className="min-w-0 flex flex-col gap-1">
       <p
         className={cn(
-          'truncate text-[1.08rem] leading-[1.1] font-semibold transition-colors duration-200',
+          'line-clamp-2 text-[1.08rem] leading-[1.1] font-semibold transition-colors duration-200',
           isCurrentFolder ? colors.text.accent : `${colors.text.primary} ${colors.text.hoverAccent}`
         )}
       >

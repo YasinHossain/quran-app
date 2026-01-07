@@ -35,7 +35,7 @@ interface StatsCardProps {
 }
 
 const StatsCard = ({ title, icon: Icon, stats }: StatsCardProps): React.JSX.Element => (
-  <div className="flex min-w-0 flex-col rounded-2xl border border-border/60 bg-background/60 px-4 py-4 shadow-sm">
+  <div className="flex min-w-0 flex-col rounded-lg border border-border/60 bg-background/60 px-4 py-4 shadow-sm">
     <div className="inline-flex items-center gap-2 text-sm font-semibold text-muted">
       <Icon className="h-4 w-4 shrink-0 text-accent" />
       {title}

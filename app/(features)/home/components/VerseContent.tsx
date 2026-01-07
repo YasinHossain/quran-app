@@ -23,11 +23,7 @@ interface TajweedTextProps {
 
 const TajweedText = ({ text, tajweedEnabled }: TajweedTextProps): React.JSX.Element =>
   // tajweedEnabled prop kept for future reimplementation
-  tajweedEnabled ? (
-    <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(text) }} />
-  ) : (
-    <>{text}</>
-  );
+  tajweedEnabled ? <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(text) }} /> : <>{text}</>;
 
 // Word tooltip component
 interface WordTooltipProps {

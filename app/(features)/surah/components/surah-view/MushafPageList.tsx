@@ -2,16 +2,16 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
 
 import { SurahNavigation } from '@/app/(features)/surah/components/SurahNavigation';
-import { useQcfMushafFont } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import { useDedupedFetchMushafPage } from '@/app/(features)/surah/hooks/useDedupedFetchMushafPage';
 import { useMushafPagesLookup } from '@/app/(features)/surah/hooks/useMushafPagesLookup';
+import { useQcfMushafFont } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import { LoadingStatus } from '@/app/shared/LoadingStatus';
 import { TajweedFontPalettes } from '@/app/shared/TajweedFontPalettes';
 
 import { MushafPage } from './MushafPage';
 
-import type { MushafResourceKind } from '@/app/(features)/surah/hooks/mushafReadingViewTypes';
 import type { MushafFlags, ReaderSettings } from './MushafMain.types';
+import type { MushafResourceKind } from '@/app/(features)/surah/hooks/mushafReadingViewTypes';
 import type { PagesLookupRecord } from '@infra/quran/pagesLookupClient';
 
 const MUSHAF_SKELETON_LINES = Array.from({ length: 15 }, (_value, index) => ({
@@ -26,10 +26,7 @@ const MushafPageSkeleton = ({ index }: { index: number }): React.JSX.Element => 
     >
       <div className="mx-auto flex w-full max-w-[560px] flex-col gap-4 px-4 sm:gap-5 sm:px-0">
         {MUSHAF_SKELETON_LINES.map((line) => (
-          <div
-            key={`${line.key}-${index}`}
-            className="h-6 w-full rounded-md bg-interactive/80"
-          />
+          <div key={`${line.key}-${index}`} className="h-6 w-full rounded-md bg-interactive/80" />
         ))}
       </div>
       <div className="mt-8 flex justify-center">
@@ -249,7 +246,11 @@ export const MushafPageList = ({
   endLabel,
   surahId,
 }: MushafPageListProps): React.JSX.Element => {
-  const { data: lookupData, isLoading, error } = useMushafPagesLookup({
+  const {
+    data: lookupData,
+    isLoading,
+    error,
+  } = useMushafPagesLookup({
     resourceId,
     resourceKind,
     mushafId,
@@ -273,7 +274,10 @@ export const MushafPageList = ({
     const maxIndex = totalPages - 1;
     const startIndex = clampIndex(visibleRange.startIndex - QCF_VISIBLE_BUFFER_PAGES, maxIndex);
     const endIndex = clampIndex(visibleRange.endIndex + QCF_VISIBLE_BUFFER_PAGES, maxIndex);
-    return Array.from({ length: endIndex - startIndex + 1 }, (_value, idx) => firstPageNumber + startIndex + idx);
+    return Array.from(
+      { length: endIndex - startIndex + 1 },
+      (_value, idx) => firstPageNumber + startIndex + idx
+    );
   }, [firstPageNumber, mushafFlags.isQcfMushaf, totalPages, visibleRange]);
 
   const { getPageFontFamily, isPageFontLoaded } = useQcfMushafFont(

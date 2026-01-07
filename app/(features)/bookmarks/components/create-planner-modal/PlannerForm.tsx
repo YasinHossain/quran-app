@@ -2,13 +2,9 @@
 
 import React from 'react';
 
-import {
-  PlanNameInput,
-  SurahSelectionSection,
-  EstimatedDaysInput,
-  PlanStatistics,
-  FormActions,
-} from './components';
+import { CounterInput } from '@/app/shared/ui/inputs/CounterInput';
+
+import { PlanNameInput, SurahSelectionSection, PlanStatistics, FormActions } from './components';
 
 import type { PlanFormData } from './types';
 import type { Chapter } from '@/types';
@@ -53,10 +49,15 @@ export const PlannerForm = ({
       chapters={chapters}
     />
 
-    <EstimatedDaysInput
-      estimatedDays={formData.estimatedDays}
-      onChange={(estimatedDays) => onFormDataChange({ estimatedDays })}
-    />
+    <div className="space-y-2">
+      <CounterInput
+        label="Estimated Days"
+        value={formData.estimatedDays}
+        onChange={(estimatedDays) => onFormDataChange({ estimatedDays })}
+        min={1}
+        max={365}
+      />
+    </div>
 
     <PlanStatistics
       isValidRange={isValidRange}

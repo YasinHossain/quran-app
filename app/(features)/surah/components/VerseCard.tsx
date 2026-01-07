@@ -2,12 +2,12 @@
 
 import { memo, type JSX, useCallback, useMemo, useState } from 'react';
 
+import { useTranslationOptions } from '@/app/(features)/surah/hooks/useTranslationOptions';
 import { ReaderVerseCard } from '@/app/shared/reader/VerseCard';
 import { AddToPlannerModal } from '@/app/shared/verse-planner-modal';
 import { Verse as VerseType } from '@/types';
 
 import { useVerseCard } from './verse-card/useVerseCard';
-import { useTranslationOptions } from '../hooks/useTranslationOptions';
 
 interface VerseProps {
   verse: VerseType;

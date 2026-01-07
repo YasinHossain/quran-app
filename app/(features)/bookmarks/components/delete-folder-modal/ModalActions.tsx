@@ -25,7 +25,6 @@ export const ModalActions = ({
   isDeleting,
 }: ModalActionsProps): React.JSX.Element => (
   <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-border/60">
-
     <button
       onClick={onDelete}
       disabled={isDeleting}

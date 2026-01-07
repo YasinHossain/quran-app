@@ -46,7 +46,8 @@ export const useQcfMushafFont = (
 const getFontFaceName = (pageNumber: number, version: QcfFontVersion): string =>
   `p${pageNumber}-${version}`;
 
-const getFontKey = (pageNumber: number, version: QcfFontVersion): string => `${version}-${pageNumber}`;
+const getFontKey = (pageNumber: number, version: QcfFontVersion): string =>
+  `${version}-${pageNumber}`;
 
 /**
  * Get the font source URL for a given page and version.
@@ -117,4 +118,3 @@ const useQcfFontLoader = ({
     });
   }, [pageNumbers, loadedMap, version, setLoadedMap, loadingRef]);
 };
-

@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { memo, useCallback } from 'react';
 
-import { CloseIcon, CheckIcon } from '@/app/shared/icons';
+import { CheckIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 
@@ -25,8 +25,6 @@ const ActionButtons = memo(function ActionButtons({
 }: ActionButtonsProps): React.JSX.Element {
   return (
     <div className="flex items-center gap-2">
-
-
       <button
         type="submit"
         disabled={!newFolderName.trim()}
@@ -72,6 +70,7 @@ export const CreateFolderForm = memo(function CreateFolderForm({
         value={newFolderName}
         onChange={(e) => onNameChange(e.target.value)}
         placeholder="Folder name"
+        maxLength={30}
         className={cn(
           'flex-1 min-w-0 bg-surface/0 text-foreground placeholder-muted',
           'focus:outline-none'

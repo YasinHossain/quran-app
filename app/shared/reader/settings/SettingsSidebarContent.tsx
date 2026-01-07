@@ -45,6 +45,7 @@ interface SettingsSidebarContentProps {
   isArabicFontPanelOpen?: boolean;
   onArabicFontPanelOpen?: () => void;
   onArabicFontPanelClose?: () => void;
+  pageType?: 'verse' | 'tafsir' | 'bookmarks';
 }
 
 export function SettingsSidebarContent({
@@ -79,6 +80,7 @@ export function SettingsSidebarContent({
   isArabicFontPanelOpen: isArabicFontPanelOpenProp,
   onArabicFontPanelOpen: onArabicFontPanelOpenProp,
   onArabicFontPanelClose: onArabicFontPanelCloseProp,
+  pageType,
 }: SettingsSidebarContentProps): React.JSX.Element {
   void _idPrefix;
   const [internalArabicFontPanelOpen, setInternalArabicFontPanelOpen] = useState(false);
@@ -92,23 +94,23 @@ export function SettingsSidebarContent({
   const hookTabState = useSettingsTabState(
     onReadingPanelOpen || onTranslationTabOpen || activeReaderMode
       ? {
-        ...(onReadingPanelOpen ? { onReadingPanelOpen } : {}),
-        ...(onTranslationTabOpen ? { onTranslationTabOpen } : {}),
-        ...(activeReaderMode ? { activeTabOverride: activeReaderMode } : {}),
-      }
+          ...(onReadingPanelOpen ? { onReadingPanelOpen } : {}),
+          ...(onTranslationTabOpen ? { onTranslationTabOpen } : {}),
+          ...(activeReaderMode ? { activeTabOverride: activeReaderMode } : {}),
+        }
       : {}
   );
 
   const tabState = tabsEnabled
     ? hookTabState
     : {
-      activeTab: 'translation' as const,
-      handleTabChange: () => { },
-      tabOptions: [{ value: 'translation', label: 'Translation' }] as Array<{
-        value: SettingsTabValue;
-        label: string;
-      }>,
-    };
+        activeTab: 'translation' as const,
+        handleTabChange: () => {},
+        tabOptions: [{ value: 'translation', label: 'Translation' }] as Array<{
+          value: SettingsTabValue;
+          label: string;
+        }>,
+      };
 
   const { activeTab, handleTabChange, tabOptions } = tabState;
   const { openSections, handleSectionToggle } = useSettingsSections();
@@ -233,9 +235,12 @@ export function SettingsSidebarContent({
         forceVisible
       />
       <div className="flex-1 overflow-hidden flex flex-col">
-        <SettingsContentWrapper {...contentWrapperProps} />
+        <SettingsContentWrapper {...contentWrapperProps} pageType={pageType} />
       </div>
-      <SettingsPanels {...panelsProps} {...(onClose ? { onCloseSidebar: handleSidebarClose } : {})} />
+      <SettingsPanels
+        {...panelsProps}
+        {...(onClose ? { onCloseSidebar: handleSidebarClose } : {})}
+      />
     </div>
   );
 }

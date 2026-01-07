@@ -107,7 +107,7 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
             </span>
           </FolderGlyph>
           <div className="flex-1 min-w-0">
-            <h3 className="mb-1 truncate text-lg font-semibold text-foreground transition-colors duration-200 group-hover:text-accent">
+            <h3 className="mb-1 line-clamp-2 text-lg font-semibold text-foreground transition-colors duration-200 group-hover:text-accent">
               {folder.name}
             </h3>
             <p className="text-sm font-medium text-muted">

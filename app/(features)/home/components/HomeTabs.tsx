@@ -24,4 +24,3 @@ export function HomeTabs({ searchQuery = '' }: HomeTabsProps): React.JSX.Element
     </section>
   );
 }
-

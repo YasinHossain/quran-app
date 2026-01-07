@@ -4,8 +4,8 @@ import dynamic from 'next/dynamic';
 import { useMemo } from 'react';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
-import { Spinner } from '@/app/shared/Spinner';
 import { useQdcAudioFile } from '@/app/shared/player/hooks/useQdcAudioFile';
+import { Spinner } from '@/app/shared/Spinner';
 
 import type { Reciter, Track } from '@/app/shared/player/types';
 import type { Verse } from '@/types';
@@ -69,7 +69,7 @@ const createTrack = (
   }));
   return {
     id: verse.id.toString(),
-    title: `Verse ${verse.verse_key}`,
+    title: `Surah ${verse.verse_key}`,
     artist: reciter.name,
     durationSec: durationMs / 1000,
     src: audioUrl,
@@ -121,9 +121,7 @@ export const AppAudioPlayer = ({
   } lg:left-1/2 lg:-translate-x-1/2 lg:right-auto lg:w-[min(90vw,60rem)]`;
 
   const containerStyle = {
-    bottom: isHidden
-      ? 'env(safe-area-inset-bottom)'
-      : 'calc(5rem + env(safe-area-inset-bottom))',
+    bottom: isHidden ? 'env(safe-area-inset-bottom)' : 'calc(5rem + env(safe-area-inset-bottom))',
   };
 
   if (isLoading) {
