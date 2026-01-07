@@ -69,7 +69,7 @@ describe('ReaderVerseCard', () => {
       verse_key: '1:2',
       translations: [
         {
-          resource_id: 21,
+          resource_id: 20,
           text: '<script>alert("bad")</script>Safe content',
         },
       ],

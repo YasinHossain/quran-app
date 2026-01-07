@@ -186,6 +186,6 @@ describe('Pinned Ayah Page', () => {
         'In the name of Allah, the Entirely Merciful, the Especially Merciful.'
       )
     ).toBeInTheDocument();
-    expect(useSingleVerse).toHaveBeenCalledWith({ idOrKey: '1' });
+    expect(useSingleVerse).toHaveBeenCalledWith({ idOrKey: '1:1' });
   });
 });

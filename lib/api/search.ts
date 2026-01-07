@@ -561,7 +561,7 @@ function parseQuery(query: string): ParsedQuery {
   const trimmed = query.trim().toLowerCase();
 
   // Ayah pattern: "2:255" or "2-255" or "2.255"
-  const ayahMatch = trimmed.match(/^(\d{1,3})[:.\-](\d{1,3})$/);
+  const ayahMatch = trimmed.match(/^(\d{1,3})[:.-](\d{1,3})$/);
   if (ayahMatch) {
     return {
       type: 'navigation',

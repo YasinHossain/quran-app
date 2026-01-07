@@ -51,7 +51,7 @@ function SeekSlider({
         }}
         aria-label="Seek"
       >
-        <Slider.Track className="h-0.5 rounded-full relative w-full grow bg-gray-200 dark:bg-slate-700">
+        <Slider.Track className="h-0.5 rounded-full relative w-full grow bg-border">
           <Slider.Range className="h-full rounded-full absolute bg-accent" />
         </Slider.Track>
         <SeekSliderThumb tooltipLabel={tooltipLabel} />

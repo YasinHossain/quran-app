@@ -14,7 +14,7 @@ const getButtonClasses = (isSelected: boolean): string =>
     'w-full flex items-center gap-4 p-4 rounded-xl transition-all duration-200 text-left',
     isSelected
       ? 'bg-accent border border-accent'
-      : 'hover:bg-gray-200 dark:hover:bg-slate-700 border border-transparent',
+      : 'hover:bg-interactive-hover border border-transparent',
     touchClasses.target,
     touchClasses.focus
   );

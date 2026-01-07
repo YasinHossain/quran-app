@@ -33,7 +33,7 @@ function NavButton({
       className={`p-1 rounded-full ${side === 'left' ? 'mr-2' : 'ml-2'} transition-colors ${
         disabled
           ? 'text-muted cursor-not-allowed'
-          : 'text-muted hover:text-foreground hover:bg-gray-200 dark:hover:bg-slate-700'
+          : 'text-muted hover:text-foreground hover:bg-interactive-hover'
       }`}
     >
       {children}

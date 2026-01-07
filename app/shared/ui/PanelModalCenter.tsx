@@ -63,7 +63,7 @@ const PanelHeader = memo(function PanelHeader({
       {showCloseButton && (
         <button
           onClick={onClose}
-          className="p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center"
+          className="p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center"
           aria-label="Close panel"
         >
           <CloseIcon size={18} />

@@ -96,7 +96,7 @@ const LoadedFolderVerseItem = ({
         </div>
         <button
           onClick={handleRemove}
-          className="p-1.5 rounded-full text-muted-foreground hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-error transition-colors"
+          className="p-1.5 rounded-full text-muted-foreground hover:bg-interactive-hover hover:text-error transition-colors"
           aria-label="Remove bookmark"
         >
           <CloseIcon className="w-4 h-4" />
@@ -110,8 +110,8 @@ const LoadedFolderVerseItem = ({
 const SidebarVerseItemSkeleton = ({ withDivider }: { withDivider: boolean }): React.JSX.Element => (
   <div className="px-4 py-3">
     <div className="animate-pulse flex items-center justify-between gap-4">
-      <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded w-28"></div>
-      <div className="h-3 bg-gray-200 dark:bg-slate-700 rounded w-16"></div>
+      <div className="h-4 bg-interactive/70 rounded w-28"></div>
+      <div className="h-3 bg-interactive/70 rounded w-16"></div>
     </div>
     {withDivider ? <div className="mx-4 mt-2 h-px bg-border" /> : null}
   </div>

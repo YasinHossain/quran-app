@@ -20,7 +20,7 @@ export const TafsirLink = memo(function TafsirLink({
       aria-label="View tafsir"
       title="Tafsir"
       className={cn(
-        'p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition flex items-center justify-center',
+        'p-1.5 rounded-full hover:bg-interactive-hover hover:text-accent transition flex items-center justify-center',
         touchClasses.focus
       )}
     >

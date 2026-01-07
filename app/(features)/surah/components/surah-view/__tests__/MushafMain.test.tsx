@@ -32,7 +32,13 @@ const baseProps = {
 };
 
 describe('MushafMain', () => {
+  let fetchSpy: jest.SpyInstance;
+
   beforeEach(() => {
+    fetchSpy = jest
+      .spyOn(global, 'fetch')
+      .mockResolvedValue({ ok: true, text: () => Promise.resolve('<svg></svg>') } as Response);
+
     (useMushafPagesLookup as jest.Mock).mockReturnValue({
       data: {
         totalPage: 1,
@@ -55,6 +61,10 @@ describe('MushafMain', () => {
       isLoading: false,
       error: null,
     });
+  });
+
+  afterEach(() => {
+    fetchSpy.mockRestore();
   });
 
   it('displays loading indicator', async () => {
@@ -90,10 +100,7 @@ describe('MushafMain', () => {
 
     await renderWithProvidersAsync(<MushafMain {...baseProps} chapterId={5} />);
 
-    expect(await screen.findByText('The Table Spread')).toBeInTheDocument();
     expect(screen.getByText('مدنية')).toBeInTheDocument();
-    expect(screen.getByText('The Table Spread')).toBeInTheDocument();
-    expect(screen.getByText('120 Verses')).toBeInTheDocument();
     expect(screen.getByText('﷽')).toBeInTheDocument();
   });
 

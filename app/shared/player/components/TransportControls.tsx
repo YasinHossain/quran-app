@@ -32,7 +32,7 @@ export const TransportControls = memo(function TransportControls({
         aria-label="Previous track"
         onClick={onPrev}
         disabled={!interactable}
-        className="!h-9 !w-9 !min-h-9 !min-w-9 hover:bg-transparent hover:text-foreground hover:translate-y-0 [@media(hover:hover)]:hover:bg-interactive-hover [@media(hover:hover)]:hover:text-accent [@media(hover:hover)]:hover:-translate-y-px active:ring-2 active:ring-gray-400/50 active:text-accent transition-none"
+        className="!h-9 !w-9 !min-h-9 !min-w-9 hover:bg-transparent hover:text-foreground hover:translate-y-0 [@media(hover:hover)]:hover:bg-interactive-hover [@media(hover:hover)]:hover:text-accent [@media(hover:hover)]:hover:-translate-y-px active:ring-2 active:ring-accent/35 active:text-accent transition-none"
       >
         <SkipBackIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
       </Button>
@@ -42,7 +42,7 @@ export const TransportControls = memo(function TransportControls({
         aria-label={isPlaying ? 'Pause' : 'Play'}
         onClick={togglePlay}
         disabled={!interactable}
-        className="!h-12 !w-12 !min-h-12 !min-w-12 rounded-full hover:bg-accent [@media(hover:hover)]:hover:bg-accent-hover active:ring-2 active:ring-gray-400/50 transition-none"
+        className="!h-12 !w-12 !min-h-12 !min-w-12 rounded-full hover:bg-accent [@media(hover:hover)]:hover:bg-accent-hover active:ring-2 active:ring-accent/35 transition-none"
       >
         {isPlaying ? (
           <PauseIcon className={iconClasses.touch} />
@@ -56,7 +56,7 @@ export const TransportControls = memo(function TransportControls({
         aria-label="Next track"
         onClick={onNext}
         disabled={!interactable}
-        className="!h-9 !w-9 !min-h-9 !min-w-9 hover:bg-transparent hover:text-foreground hover:translate-y-0 [@media(hover:hover)]:hover:bg-interactive-hover [@media(hover:hover)]:hover:text-accent [@media(hover:hover)]:hover:-translate-y-px active:ring-2 active:ring-gray-400/50 active:text-accent transition-none"
+        className="!h-9 !w-9 !min-h-9 !min-w-9 hover:bg-transparent hover:text-foreground hover:translate-y-0 [@media(hover:hover)]:hover:bg-interactive-hover [@media(hover:hover)]:hover:text-accent [@media(hover:hover)]:hover:-translate-y-px active:ring-2 active:ring-accent/35 active:text-accent transition-none"
       >
         <SkipForwardIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
       </Button>

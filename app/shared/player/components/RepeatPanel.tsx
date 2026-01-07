@@ -59,7 +59,7 @@ function ModeSelector({
     <TabToggle
       options={options}
       value={localRepeat.mode}
-      onChange={(val) => setLocalRepeat({ ...localRepeat, mode: val as any })}
+      onChange={(val) => setLocalRepeat({ ...localRepeat, mode: val as RepeatOptions['mode'] })}
     />
   );
 }

@@ -99,7 +99,7 @@ export const ReorderableSelectionList = memo(function ReorderableSelectionList(
           {props.onReset && (
             <button
               onClick={props.onReset}
-              className="p-1.5 rounded-full text-foreground hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-colors"
+              className="p-1.5 rounded-full text-foreground hover:bg-interactive-hover hover:text-accent transition-colors"
               title="Reset to Default"
             >
               <ResetIcon size={16} />

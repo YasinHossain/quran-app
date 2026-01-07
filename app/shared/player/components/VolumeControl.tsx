@@ -13,7 +13,7 @@ export const VolumeControl = memo(function VolumeControl(): React.JSX.Element {
     <>
       {/* Mobile: Volume icon only */}
       <button
-        className="h-8 w-8 grid place-items-center rounded-full transition hover:bg-gray-200 dark:hover:bg-slate-700 md:hidden"
+        className="h-8 w-8 grid place-items-center rounded-full transition hover:bg-interactive-hover md:hidden"
         onClick={() => setVolume(volume === 0 ? 0.8 : 0)}
         aria-label={volume === 0 ? 'Unmute' : 'Mute'}
       >
@@ -41,7 +41,7 @@ export const VolumeControl = memo(function VolumeControl(): React.JSX.Element {
           }}
           aria-label="Volume"
         >
-          <Slider.Track className="h-0.5 rounded-full relative w-full grow bg-gray-200 dark:bg-slate-700">
+          <Slider.Track className="h-0.5 rounded-full relative w-full grow bg-border">
             <Slider.Range className="h-full rounded-full absolute bg-accent" />
           </Slider.Track>
           <Slider.Thumb className="block h-3 w-3 rounded-full shadow-[0_1px_2px_rgba(2,6,23,0.15)] focus:outline-none bg-accent transition-transform active:scale-110 active:ring-2 active:ring-offset-2 cursor-pointer" />

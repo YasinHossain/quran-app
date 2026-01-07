@@ -1,7 +1,9 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
+import React, { useEffect } from 'react';
 
 import { VerseCard as VerseComponent } from '@/app/(features)/surah/components';
 import { TranslationProvider } from '@/app/providers/TranslationProvider';
+import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProvidersAsync } from '@/app/testUtils/renderWithProviders';
 import { Verse } from '@/types';
@@ -16,10 +18,22 @@ const verse: Verse = {
   ],
 };
 
-const renderVerse = (): ReturnType<typeof renderWithProvidersAsync> =>
+const VerseWrapper = ({ hidePlayer }: { hidePlayer?: boolean }): React.JSX.Element => {
+  const { closePlayer } = useAudio();
+  useEffect(() => {
+    if (hidePlayer) {
+      closePlayer();
+    }
+  }, [closePlayer, hidePlayer]);
+  return <VerseComponent verse={verse} />;
+};
+
+const renderVerse = (options?: {
+  hidePlayer?: boolean;
+}): ReturnType<typeof renderWithProvidersAsync> =>
   renderWithProvidersAsync(
     <TranslationProvider>
-      <VerseComponent verse={verse} />
+      <VerseWrapper hidePlayer={options?.hidePlayer} />
     </TranslationProvider>
   );
 
@@ -54,9 +68,10 @@ describe('Verse word translation popover', () => {
   });
 
   it('shows word translation on click', async () => {
-    await renderVerse();
+    await renderVerse({ hidePlayer: true });
 
     expect(screen.queryByText('WBW_In')).not.toBeInTheDocument();
+    await screen.findByText('بِسْمِ');
     fireEvent.click(screen.getByText('بِسْمِ'));
     expect(await screen.findByText('WBW_In')).toBeInTheDocument();
   });

@@ -3,12 +3,43 @@ import { http, HttpResponse } from 'msw';
 import { mockChapter, mockTafsir, mockTranslation, mockVerse } from '@/tests/setup/msw/mockData';
 
 const QURAN_API_BASE = 'https://api.quran.com/api/v4';
+const QDC_API_BASE = 'https://api.qurancdn.com/api/qdc';
 
 const toNumber = (value: string | null, fallback: string): number => {
   return parseInt(value ?? fallback, 10);
 };
 
 export const quranApiHandlers = [
+  http.get(`${QDC_API_BASE}/resources/translations`, ({ request }) => {
+    const url = new URL(request.url);
+    const resourceType = url.searchParams.get('resource_type');
+    return HttpResponse.json({
+      translations: [
+        {
+          id: resourceType === 'word_by_word' ? 85 : 131,
+          name: resourceType === 'word_by_word' ? 'English (WBW)' : 'Sahih International',
+          language_name: 'english',
+        },
+      ],
+    });
+  }),
+  http.get(`${QDC_API_BASE}/chapters`, () => {
+    return HttpResponse.json({
+      chapters: [mockChapter],
+    });
+  }),
+  http.get(`${QDC_API_BASE}/chapters/:id`, ({ params }) => {
+    const idParam = params['id'] as string | undefined;
+    return HttpResponse.json({
+      chapter: { ...mockChapter, id: parseInt(idParam ?? '0', 10) },
+    });
+  }),
+  http.get(`${QDC_API_BASE}/verses/by_key/:verse_key`, ({ params }) => {
+    const verseKeyParam = params['verse_key'] as string | undefined;
+    return HttpResponse.json({
+      verse: { ...mockVerse, verse_key: verseKeyParam },
+    });
+  }),
   http.get(`${QURAN_API_BASE}/chapters`, () => {
     return HttpResponse.json({
       chapters: [mockChapter],
@@ -129,6 +160,18 @@ export const quranApiHandlers = [
   http.get(`${QURAN_API_BASE}/verses/random`, () => {
     return HttpResponse.json({
       verse: mockVerse,
+    });
+  }),
+  http.get('https://api.quran.com/api/qdc/audio/reciters', () => {
+    return HttpResponse.json({
+      reciters: [
+        {
+          id: 1,
+          name: 'Mishari Rashid Al-Afasy',
+          reciter_id: 1,
+          slug: 'mishari_al_afasy',
+        },
+      ],
     });
   }),
 ];

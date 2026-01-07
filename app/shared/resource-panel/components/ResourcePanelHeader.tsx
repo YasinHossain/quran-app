@@ -33,7 +33,7 @@ export const ResourcePanelHeader = ({
       {onReset && (
         <button
           onClick={onReset}
-          className="p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 hover:text-accent transition-colors text-foreground focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none flex items-center justify-center"
+          className="p-1.5 rounded-full hover:bg-interactive-hover hover:text-accent transition-colors text-foreground focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none flex items-center justify-center"
           title="Reset to Default"
         >
           <ResetIcon size={18} />

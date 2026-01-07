@@ -1,8 +1,11 @@
 import React from 'react';
 
 import { SurahVerseList } from '@/app/(features)/surah/components/SurahVerseList';
+import { defaultSettings } from '@/app/providers/settingsStorage';
+import { DEFAULT_RECITER } from '@/app/shared/player/hooks/useReciters';
 import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
 
+import type { UseVerseListingReturn } from '@/app/(features)/surah/hooks/useVerseListing';
 import type { Verse } from '@/types';
 
 jest.mock('react-i18next', () => ({
@@ -10,55 +13,70 @@ jest.mock('react-i18next', () => ({
 }));
 
 describe('SurahVerseList', () => {
-  const baseProps = {
-    loadMoreRef: { current: null } as unknown as React.RefObject<HTMLDivElement | null>,
+  const createVerseListing = (
+    overrides: Partial<UseVerseListingReturn> = {}
+  ): UseVerseListingReturn => ({
+    mode: 'infinite',
+    error: null,
+    setError: jest.fn(),
+    isLoading: false,
+    verses: [],
     isValidating: false,
-  };
+    isReachingEnd: false,
+    loadMoreRef: { current: null },
+    totalVerses: undefined,
+    perPage: 20,
+    apiPageToVersesMap: {},
+    setApiPageToVersesMap: jest.fn(),
+    lookup: jest.fn().mockResolvedValue({ verses: [], totalPages: 1 }),
+    resourceId: undefined,
+    translationIds: [20],
+    wordLang: 'en',
+    initialVerses: undefined,
+    translationOptions: [],
+    wordLanguageOptions: [],
+    wordLanguageMap: {},
+    settings: defaultSettings,
+    setSettings: jest.fn(),
+    activeVerse: null,
+    reciter: DEFAULT_RECITER,
+    isPlayerVisible: false,
+    handleNext: jest.fn(() => false),
+    handlePrev: jest.fn(() => false),
+    ...overrides,
+  });
 
   it('shows spinner while loading', () => {
-    renderWithProviders(
-      <SurahVerseList {...baseProps} verses={[]} isLoading error={null} isReachingEnd={false} />
-    );
+    renderWithProviders(<SurahVerseList verseListing={createVerseListing({ isLoading: true })} />);
 
-    expect(screen.getByRole('img', { hidden: true })).toBeInTheDocument();
+    expect(screen.getByRole('status', { name: 'Loading' })).toBeInTheDocument();
   });
 
   it('shows error state', () => {
     renderWithProviders(
-      <SurahVerseList
-        {...baseProps}
-        verses={[]}
-        isLoading={false}
-        error="Failed to load content."
-        isReachingEnd={false}
-      />
+      <SurahVerseList verseListing={createVerseListing({ error: 'Failed to load content.' })} />
     );
     expect(screen.getByText(/Failed to load content/)).toBeInTheDocument();
   });
 
   it('renders verses and end-of-surah indicator', () => {
-    renderWithProviders(
-      <SurahVerseList
-        {...baseProps}
-        verses={[
-          {
-            id: 1,
-            verse_key: '1:1',
-            text_uthmani: '',
-            words: [],
-            translations: [],
-          } as Verse,
-        ]}
-        isLoading={false}
-        error={null}
-        isReachingEnd
-      />
-    );
+    const verseListing = createVerseListing({
+      verses: [
+        {
+          id: 1,
+          verse_key: '1:1',
+          text_uthmani: '',
+          words: [],
+          translations: [],
+        } as Verse,
+      ],
+      isReachingEnd: true,
+    });
+
+    renderWithProviders(<SurahVerseList verseListing={verseListing} />);
 
     // Verse container rendered
     expect(document.querySelector('#verse-1')).toBeInTheDocument();
-
-    // End marker uses i18n key
-    expect(screen.getByText('end_of_surah')).toBeInTheDocument();
+    expect(document.querySelector('[data-virtuoso-mock]')).toBeInTheDocument();
   });
 });

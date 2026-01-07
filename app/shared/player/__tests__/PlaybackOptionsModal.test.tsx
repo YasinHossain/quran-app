@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import { PlaybackOptionsModal } from '@/app/shared/player/components/PlaybackOptionsModal';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
-import { renderWithProviders, screen } from '@/app/testUtils/renderWithProviders';
+import { renderWithProviders, screen, waitFor } from '@/app/testUtils/renderWithProviders';
 
 jest.mock('@/app/shared/navigation/hooks/useSurahNavigationData', () => ({
   useSurahNavigationData: () => ({
@@ -29,10 +29,12 @@ test('coerces decimal input to integer', async () => {
     <PlaybackOptionsModal open onClose={onClose} activeTab="repeat" setActiveTab={() => {}} />
   );
 
-  const startInput = screen.getByLabelText('Start') as HTMLInputElement;
-  expect(startInput).toHaveAttribute('step', '1');
-  fireEvent.change(startInput, { target: { value: '3.7' } });
-  expect(startInput.value).toBe('3');
+  const repeatEachLabel = screen.getByText('Repeat Each');
+  const repeatEachField = repeatEachLabel.closest('div');
+  const repeatEachInput = repeatEachField?.querySelector('input') as HTMLInputElement;
+  expect(repeatEachInput).toHaveAttribute('type', 'number');
+  fireEvent.change(repeatEachInput, { target: { value: '3.7' } });
+  await waitFor(() => expect(repeatEachInput.value).toBe('3'));
 });
 
 test('rejects decimal repeat values', async () => {
@@ -41,7 +43,7 @@ test('rejects decimal repeat values', async () => {
   const Wrapper = (): React.ReactElement => {
     const { setRepeatOptions } = useAudio();
     useEffect(() => {
-      setRepeatOptions((prev) => ({ ...prev, start: 1.5 }));
+      setRepeatOptions((prev) => ({ ...prev, repeatEach: 1.5 }));
     }, [setRepeatOptions]);
     return (
       <PlaybackOptionsModal open onClose={onClose} activeTab="repeat" setActiveTab={() => {}} />
@@ -82,8 +84,8 @@ test('hides play count in single mode', async () => {
 
   await userEvent.click(screen.getByRole('button', { name: /^single$/i }));
 
-  expect(screen.queryByLabelText('Play count')).not.toBeInTheDocument();
-  expect(screen.getByLabelText('Repeat each')).toBeInTheDocument();
+  expect(screen.queryByText('Play Count')).not.toBeInTheDocument();
+  expect(screen.getByText('Repeat Each')).toBeInTheDocument();
 });
 
 test('surah mode uses surah selector without verse or range inputs', async () => {
@@ -94,9 +96,11 @@ test('surah mode uses surah selector without verse or range inputs', async () =>
 
   await userEvent.click(screen.getByRole('button', { name: /^surah$/i }));
 
-  expect(screen.getByLabelText('Surah')).toBeInTheDocument();
-  expect(screen.queryByLabelText('Verse')).not.toBeInTheDocument();
-  expect(screen.queryByLabelText('Start')).not.toBeInTheDocument();
-  expect(screen.queryByLabelText('End')).not.toBeInTheDocument();
-  expect(screen.getByLabelText('Play count')).toBeInTheDocument();
+  expect(screen.getAllByText('Surah').length).toBeGreaterThan(0);
+  expect(screen.queryByText('Verse')).not.toBeInTheDocument();
+  expect(screen.queryByText('Start Surah')).not.toBeInTheDocument();
+  expect(screen.queryByText('Start Verse')).not.toBeInTheDocument();
+  expect(screen.queryByText('End Surah')).not.toBeInTheDocument();
+  expect(screen.queryByText('End Verse')).not.toBeInTheDocument();
+  expect(screen.getByText('Play Count')).toBeInTheDocument();
 });

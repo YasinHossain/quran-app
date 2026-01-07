@@ -31,7 +31,7 @@ export const BookmarkVerseCard = ({
       className={cn(
         // Override with verse-specific styles while maintaining base behavior
         'p-2.5 rounded-lg border transition-all duration-200 cursor-pointer group h-auto',
-        'bg-surface/60 border-border/60 hover:border-accent/30 hover:bg-gray-200 dark:hover:bg-slate-700 hover:shadow-sm',
+        'bg-surface/60 border-border/60 hover:border-accent/30 hover:bg-interactive-hover hover:shadow-sm',
         'min-h-0', // Allow shrinking
         className as string
       )}

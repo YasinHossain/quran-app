@@ -16,7 +16,7 @@ export function PlayerOptions(): React.JSX.Element {
         <VolumeControl />
       </div>
       <button
-        className="p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center shrink-0"
+        className="p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center shrink-0"
         aria-label="Options"
         onClick={() => {
           setActiveTab('reciter');

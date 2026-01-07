@@ -16,7 +16,7 @@ export const DEFAULT_RECITER: Reciter = {
 };
 
 function mapQdcReciterToReciter(reciter: QdcAudioReciterApi): Reciter {
-  const displayName = reciter.translated_name?.name || reciter.name;
+  const displayName = reciter.translated_name?.name || reciter.name || 'Unknown reciter';
   const localeParts = [reciter.style?.name].filter((part): part is string => Boolean(part));
   const locale = localeParts.join(' • ');
   return {

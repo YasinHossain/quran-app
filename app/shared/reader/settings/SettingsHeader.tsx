@@ -16,7 +16,7 @@ export const SettingsHeader = ({ onClose }: SettingsHeaderProps): ReactElement =
       title="Settings"
       onBack={onClose}
       showBackButton
-      backButtonClassName="lg:hidden hover:bg-gray-200 dark:hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+      backButtonClassName="lg:hidden hover:bg-interactive-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       backButtonAriaLabel="Close settings"
       titleClassName="text-mobile-lg font-semibold text-foreground"
     />

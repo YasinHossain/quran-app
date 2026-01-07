@@ -42,7 +42,7 @@ function ActionButtons({
     <div className={className || 'flex items-center gap-0.5 xs:gap-1 justify-self-end'}>
       <SpeedControl />
       <button
-        className="p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center shrink-0"
+        className="p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center shrink-0"
         aria-label="Options"
         onClick={setMobileOptionsOpen}
       >
@@ -51,7 +51,7 @@ function ActionButtons({
       <button
         aria-label="Close player"
         onClick={closePlayer}
-        className="p-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center hover:text-red-500"
+        className="p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center hover:text-red-500"
       >
         <CloseIcon size={18} />
       </button>

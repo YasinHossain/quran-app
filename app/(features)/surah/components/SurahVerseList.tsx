@@ -210,7 +210,11 @@ function QuranComList({
   useEffect(() => {
     if (!initialVerseNumber || totalVerses <= 0) return;
     const targetIndex = Math.min(Math.max(0, initialVerseNumber - 1), totalVerses - 1);
-    virtuosoRef.current?.scrollToIndex({ index: targetIndex, align: 'start', offset: -SCROLL_OFFSET_TOP_PX });
+    virtuosoRef.current?.scrollToIndex({
+      index: targetIndex,
+      align: 'start',
+      offset: -SCROLL_OFFSET_TOP_PX,
+    });
     setShouldReadjustScroll(true);
   }, [initialVerseNumber, totalVerses]);
 
@@ -224,7 +228,11 @@ function QuranComList({
     if (!isLoaded) return;
 
     const timeout = window.setTimeout(() => {
-      virtuosoRef.current?.scrollToIndex({ index: targetIndex, align: 'start', offset: -SCROLL_OFFSET_TOP_PX });
+      virtuosoRef.current?.scrollToIndex({
+        index: targetIndex,
+        align: 'start',
+        offset: -SCROLL_OFFSET_TOP_PX,
+      });
       setShouldReadjustScroll(false);
     }, 250);
 

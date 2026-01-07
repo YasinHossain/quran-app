@@ -103,7 +103,7 @@ function ToggleRow({
         className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-300 outline-none ring-0 focus:ring-0 focus:ring-offset-0 focus:outline-none ${
           active
             ? 'bg-accent shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]'
-            : 'bg-gray-200 dark:bg-gray-700 shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]'
+            : 'bg-interactive shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]'
         }`}
         aria-pressed={active}
       >

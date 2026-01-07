@@ -76,7 +76,7 @@ describe('SettingsSidebar - Basic Interactions', () => {
     const fontButton = screen.getByRole<HTMLButtonElement>('button', {
       name: /arabic_font_face/i,
     });
-    expect(fontButton).toHaveTextContent('KFGQPC Uthman Taha');
+    expect(fontButton).toHaveTextContent('QPC Uthmani Hafs');
     await userEvent.click(fontButton);
 
     const indoPakButton = screen.getByRole<HTMLButtonElement>('button', { name: 'IndoPak' });

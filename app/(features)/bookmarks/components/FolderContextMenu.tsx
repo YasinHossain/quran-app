@@ -129,7 +129,7 @@ export const FolderContextMenu = ({
         ref={buttonRef}
         type="button"
         className={cn(
-          'p-1.5 rounded-full text-muted hover:text-accent hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors duration-200 flex items-center justify-center',
+          'p-1.5 rounded-full text-muted hover:text-accent hover:bg-interactive-hover transition-colors duration-200 flex items-center justify-center',
           touchClasses.gesture,
           touchClasses.focus
         )}

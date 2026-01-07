@@ -17,7 +17,7 @@ export const colors = {
   // Background colors
   background: {
     surface: 'bg-surface',
-    surfaceHover: 'hover:bg-gray-200 dark:hover:bg-slate-700',
+    surfaceHover: 'hover:bg-interactive-hover',
     accent: 'bg-accent',
     border: 'border border-border',
     borderHover: 'hover:border-accent/20',

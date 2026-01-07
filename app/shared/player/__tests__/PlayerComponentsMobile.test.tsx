@@ -1,9 +1,9 @@
-import { render, screen, act } from '@testing-library/react';
+import { screen, act } from '@testing-library/react';
 import React from 'react';
 
 import { PlayerOptions } from '@/app/shared/player/components/PlayerOptions';
 import { Timeline } from '@/app/shared/player/components/Timeline';
-import { AudioProvider } from '@/app/shared/player/context/AudioContext';
+import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 
 describe('Player components mobile layout', () => {
   beforeAll(() => {
@@ -20,20 +20,18 @@ describe('Player components mobile layout', () => {
     window.innerWidth = 375;
     window.dispatchEvent(new Event('resize'));
     await act(async () => {
-      render(
-        <AudioProvider>
-          <div>
-            <PlayerOptions />
-            <Timeline
-              current={0}
-              duration={10}
-              setSeek={() => {}}
-              interactable
-              elapsed="0:00"
-              total="0:10"
-            />
-          </div>
-        </AudioProvider>
+      renderWithProviders(
+        <div>
+          <PlayerOptions />
+          <Timeline
+            current={0}
+            duration={10}
+            setSeek={() => {}}
+            interactable
+            elapsed="0:00"
+            total="0:10"
+          />
+        </div>
       );
     });
     expect(screen.getByLabelText('Options')).toBeInTheDocument();

@@ -5,12 +5,12 @@ import { Fragment, memo, useContext, useMemo, useState } from 'react';
 import { VerseMarker } from '@/app/(features)/surah/components/surah-view/VerseMarker';
 import { useQcfMushafFont } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import { useSettings } from '@/app/providers/SettingsContext';
+import { AudioContext } from '@/app/shared/player/context/AudioContext';
 import { TajweedFontPalettes } from '@/app/shared/TajweedFontPalettes';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { Verse as VerseType, Word } from '@/types';
 
 import type { LanguageCode } from '@/lib/text/languageCodes';
-import { AudioContext } from '@/app/shared/player/context/AudioContext';
 
 // Word rendering component
 interface WordDisplayProps {
@@ -51,7 +51,7 @@ const WordDisplay = ({
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const audioCtx = useContext(AudioContext);
   const isPlayerVisible = audioCtx?.isPlayerVisible ?? false;
-  
+
   // Strip verse markers
   if (/[\u06DD\u06DE\uFD3E\uFD3F]/.test(word.uthmani)) {
     return null;
