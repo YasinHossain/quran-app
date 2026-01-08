@@ -101,6 +101,14 @@ export default async function RootLayout({
   return (
     <html lang="en" data-theme={theme} className={theme}>
       <head>
+        {/* Preload critical Arabic font to reduce request chain */}
+        <link
+          rel="preload"
+          href="/fonts/UthmanicHafs1Ver18.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
         <Script id="theme-script" strategy="beforeInteractive">
           {INLINE_THEME_SCRIPT}
         </Script>
