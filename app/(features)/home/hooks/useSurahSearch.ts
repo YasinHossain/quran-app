@@ -10,8 +10,13 @@ type UseSurahSearchResult = {
   isEmpty: boolean;
 };
 
-export function useSurahSearch(searchQuery: string): UseSurahSearchResult {
-  const { chapters, isLoading } = useSurahNavigationData();
+export function useSurahSearch(
+  searchQuery: string,
+  initialChapters?: ReadonlyArray<Chapter>
+): UseSurahSearchResult {
+  // Pass initialChapters to prevent client-side fetch when data is available
+  const options = initialChapters ? { initialChapters: [...initialChapters] } : {};
+  const { chapters, isLoading } = useSurahNavigationData(options);
 
   const filteredChapters = useMemo<ReadonlyArray<Chapter>>(() => {
     const trimmedQuery = searchQuery.trim();
