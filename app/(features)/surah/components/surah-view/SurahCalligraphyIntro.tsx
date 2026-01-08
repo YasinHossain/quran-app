@@ -31,12 +31,13 @@ const SurahNameGraphic = ({ chapterId }: { chapterId: number }): React.JSX.Eleme
     };
   }, [chapterId]);
 
-  if (!svgContent) return null;
-
   return (
     <div
-      className="h-full w-full overflow-hidden [&>svg]:h-full [&>svg]:w-full [&>svg]:origin-center [&>svg]:scale-[1.4] [&_path]:fill-foreground [&_path]:stroke-[hsl(var(--background))] [&_path]:stroke-[8]"
-      dangerouslySetInnerHTML={{ __html: svgContent }}
+      className={cn(
+        "h-full w-full overflow-hidden transition-opacity duration-300 [&>svg]:h-full [&>svg]:w-full [&>svg]:origin-center [&>svg]:scale-[1.25] sm:[&>svg]:scale-[1.5] [&_path]:fill-foreground [&_path]:stroke-[hsl(var(--background))] [&_path]:stroke-[8]",
+        svgContent ? "opacity-100" : "opacity-0"
+      )}
+      dangerouslySetInnerHTML={{ __html: svgContent || '' }}
     />
   );
 };
@@ -79,24 +80,25 @@ const SurahMetadata = ({
 );
 
 const SurahIntroBismillah = ({ showBismillah }: { showBismillah: boolean }): React.JSX.Element => (
-  <div className="flex w-full items-center justify-center">
-    {showBismillah ? (
-      <p
-        dir="rtl"
-        className="text-center text-3xl leading-none text-foreground sm:text-center sm:text-4xl"
-        style={{
-          fontFamily: "'UthmanicHafs1Ver18', serif",
-        }}
-      >
-        ﷽
-      </p>
-    ) : null}
+  <div className={cn(
+    "flex w-full items-center justify-center overflow-hidden transition-all duration-300",
+    showBismillah ? "h-auto opacity-100" : "h-0 opacity-0"
+  )}>
+    <p
+      dir="rtl"
+      className="text-center text-3xl leading-none text-foreground sm:text-center sm:text-4xl"
+      style={{
+        fontFamily: "'UthmanicHafs1Ver18', serif",
+      }}
+    >
+      ﷽
+    </p>
   </div>
 );
 
 const SurahTitleBlock = ({ chapterId }: { chapterId: number }): React.JSX.Element => (
   <div className="flex items-center justify-center">
-    <div className="relative h-16 w-36 sm:h-20 sm:w-full sm:max-w-[15rem]">
+    <div className="relative h-14 w-36 sm:h-24 sm:w-full sm:max-w-[20rem]">
       <SurahNameGraphic chapterId={chapterId} />
     </div>
   </div>
@@ -116,7 +118,7 @@ export const SurahCalligraphyIntro = ({
   return (
     <div className={cn('mx-auto mb-4 -mt-4 w-full max-w-7xl sm:-mt-3', className)}>
       <div className="flex w-full flex-col items-center gap-4 border-b border-border/40 pt-0 pb-5 sm:flex-row sm:justify-evenly sm:gap-0 sm:pt-6 sm:pb-9">
-        <div className="order-3 sm:order-1 sm:w-auto">
+        <div className="order-3 sm:order-1 sm:min-w-[6rem] sm:w-auto">
           <SurahMetadata revelationPlace={introDetails.revelationPlace} />
         </div>
 
@@ -126,7 +128,7 @@ export const SurahCalligraphyIntro = ({
           </div>
         </div>
 
-        <div className="order-1 sm:order-3 sm:w-auto">
+        <div className="order-1 sm:order-3 sm:min-w-[6rem] sm:w-auto">
           <SurahTitleBlock chapterId={introDetails.chapterId} />
         </div>
       </div>

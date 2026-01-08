@@ -20,7 +20,7 @@ interface HomePageClientProps {
     /** Pre-fetched chapters from server */
     initialChapters: ReadonlyArray<Chapter>;
     /** Pre-fetched verse of the day from server */
-    initialVerse?: Verse;
+    initialVerse?: Verse | undefined;
     /** Server-rendered Surah grid (children) */
     children?: React.ReactNode;
 }

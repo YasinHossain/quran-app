@@ -24,13 +24,13 @@ const MushafPageSkeleton = ({ index }: { index: number }): React.JSX.Element => 
       aria-hidden="true"
       className={`mx-auto w-full py-6 sm:py-8 animate-pulse ${index === 0 ? 'pt-0' : ''}`}
     >
-      <div className="mx-auto flex w-full max-w-[560px] flex-col gap-4 px-4 sm:gap-5 sm:px-0">
+      <div className="mx-auto flex w-full max-w-[560px] flex-col gap-3 px-4 sm:gap-3 sm:px-0">
         {MUSHAF_SKELETON_LINES.map((line) => (
-          <div key={`${line.key}-${index}`} className="h-6 w-full rounded-md bg-interactive/80" />
+          <div key={`${line.key}-${index}`} className="h-10 w-full rounded-md bg-border/20" />
         ))}
       </div>
       <div className="mt-8 flex justify-center">
-        <div className="h-8 w-44 rounded-full bg-interactive" />
+        <div className="h-8 w-44 rounded-full bg-border/20" />
       </div>
     </article>
   );
