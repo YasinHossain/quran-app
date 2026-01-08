@@ -50,9 +50,9 @@ const getSizeStyles = (size: SearchSize): SizeStyles => {
     case 'lg':
       return {
         container: 'text-mobile sm:text-lg',
-        inputBase: 'pl-3.5 sm:pl-4 py-3 sm:py-3.5 min-h-touch-lg',
+        inputBase: 'pl-11 sm:pl-12 py-3 sm:py-3.5 min-h-touch-lg',
         rightPad: 'pr-4',
-        icon: { size: 16, className: 'left-0.5 sm:left-1' },
+        icon: { size: 20, className: 'left-3.5 sm:left-4' },
       };
     default: // md
       return {
