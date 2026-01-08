@@ -53,9 +53,7 @@ test.describe('Accessibility', () => {
       });
 
       // Should have some focus indicator (outline or box-shadow)
-      const hasFocusIndicator = 
-        styles.outlineWidth !== '0px' || 
-        styles.boxShadow !== 'none';
+      const hasFocusIndicator = styles.outlineWidth !== '0px' || styles.boxShadow !== 'none';
 
       if (hasFocusIndicator) {
         expect(hasFocusIndicator).toBe(true);
@@ -81,11 +79,8 @@ test.describe('Accessibility', () => {
       const title = await button.getAttribute('title');
 
       // Button should have accessible name
-      const hasAccessibleName = 
-        ariaLabel || 
-        ariaLabelledBy || 
-        (textContent && textContent.trim()) ||
-        title;
+      const hasAccessibleName =
+        ariaLabel || ariaLabelledBy || (textContent && textContent.trim()) || title;
 
       if (hasAccessibleName) accessibleCount++;
     }
@@ -97,7 +92,7 @@ test.describe('Accessibility', () => {
   test('should have proper heading hierarchy', async ({ page }) => {
     const headings = await page.evaluate(() => {
       const h = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-      return Array.from(h).map(el => ({
+      return Array.from(h).map((el) => ({
         level: parseInt(el.tagName[1]),
         text: el.textContent?.trim().slice(0, 50),
       }));
@@ -107,7 +102,7 @@ test.describe('Accessibility', () => {
     expect(headings.length).toBeGreaterThan(0);
 
     // Should have only one h1
-    const h1Count = headings.filter(h => h.level === 1).length;
+    const h1Count = headings.filter((h) => h.level === 1).length;
     expect(h1Count).toBeLessThanOrEqual(1);
   });
 

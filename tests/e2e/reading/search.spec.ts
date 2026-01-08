@@ -10,22 +10,26 @@ test.describe('Search Functionality', () => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
-    const searchInput = page.locator(
-      'input[type="search"], ' +
-      'input[placeholder*="search" i], ' +
-      '[data-testid*="search-input"], ' +
-      '[role="searchbox"]'
-    ).first();
+    const searchInput = page
+      .locator(
+        'input[type="search"], ' +
+          'input[placeholder*="search" i], ' +
+          '[data-testid*="search-input"], ' +
+          '[role="searchbox"]'
+      )
+      .first();
 
     // Either visible on home or accessible via search button
     const isVisible = await searchInput.isVisible().catch(() => false);
-    
+
     if (!isVisible) {
-      const searchButton = page.locator(
-        'button[aria-label*="search" i], ' +
-        '[data-testid="search-button"], ' +
-        'a[href*="search"]'
-      ).first();
+      const searchButton = page
+        .locator(
+          'button[aria-label*="search" i], ' +
+            '[data-testid="search-button"], ' +
+            'a[href*="search"]'
+        )
+        .first();
 
       if (await searchButton.isVisible()) {
         await searchButton.click();
@@ -41,9 +45,12 @@ test.describe('Search Functionality', () => {
     await page.waitForLoadState('networkidle');
 
     // Should be on search page or redirected appropriately
-    const isSearchPage = 
+    const isSearchPage =
       page.url().includes('search') ||
-      await page.locator('input[type="search"], [role="searchbox"]').isVisible().catch(() => false);
+      (await page
+        .locator('input[type="search"], [role="searchbox"]')
+        .isVisible()
+        .catch(() => false));
 
     expect(isSearchPage).toBe(true);
   });
@@ -52,11 +59,9 @@ test.describe('Search Functionality', () => {
     await page.goto('/search');
     await page.waitForLoadState('networkidle');
 
-    const searchInput = page.locator(
-      'input[type="search"], ' +
-      'input[placeholder*="search" i], ' +
-      '[role="searchbox"]'
-    ).first();
+    const searchInput = page
+      .locator('input[type="search"], ' + 'input[placeholder*="search" i], ' + '[role="searchbox"]')
+      .first();
 
     if (await searchInput.isVisible()) {
       // Search for a common Quranic term
@@ -67,23 +72,28 @@ test.describe('Search Functionality', () => {
       await page.waitForTimeout(3000);
 
       // Check for results using multiple possible selectors
-      const hasResults = await page.locator(
-        '[data-testid*="search-result"], ' +
-        '.search-result, ' +
-        '[data-testid="verse-card"], ' +
-        '.verse-item, ' +
-        'article, ' +
-        '[data-verse-key]'
-      ).count() > 0;
+      const hasResults =
+        (await page
+          .locator(
+            '[data-testid*="search-result"], ' +
+              '.search-result, ' +
+              '[data-testid="verse-card"], ' +
+              '.verse-item, ' +
+              'article, ' +
+              '[data-verse-key]'
+          )
+          .count()) > 0;
 
-      const hasNoResultsMessage = await page.locator(
-        'text=/no results|not found|try again|no matches/i'
-      ).isVisible().catch(() => false);
+      const hasNoResultsMessage = await page
+        .locator('text=/no results|not found|try again|no matches/i')
+        .isVisible()
+        .catch(() => false);
 
       // The search page might be loading or show pagination
-      const hasLoadingOrPagination = await page.locator(
-        '.loading, .spinner, [role="progressbar"], nav[aria-label*="pagination"]'
-      ).isVisible().catch(() => false);
+      const hasLoadingOrPagination = await page
+        .locator('.loading, .spinner, [role="progressbar"], nav[aria-label*="pagination"]')
+        .isVisible()
+        .catch(() => false);
 
       // Accept any of these outcomes as valid
       expect(hasResults || hasNoResultsMessage || hasLoadingOrPagination || true).toBe(true);
@@ -94,9 +104,7 @@ test.describe('Search Functionality', () => {
     await page.goto('/search');
     await page.waitForLoadState('networkidle');
 
-    const searchInput = page.locator(
-      'input[type="search"], [role="searchbox"]'
-    ).first();
+    const searchInput = page.locator('input[type="search"], [role="searchbox"]').first();
 
     if (await searchInput.isVisible()) {
       await searchInput.fill('mercy');
@@ -105,15 +113,14 @@ test.describe('Search Functionality', () => {
       await page.waitForTimeout(2000);
 
       // Check for highlighted text (common patterns)
-      const highlights = page.locator(
-        'mark, .highlight, [data-highlight], strong.search-match'
-      );
+      const highlights = page.locator('mark, .highlight, [data-highlight], strong.search-match');
 
       const highlightCount = await highlights.count();
-      
+
       // Either has highlights or the search worked without highlighting
-      const searchWorked = highlightCount > 0 || 
-        await page.locator('[data-testid*="search-result"], .search-result').count() > 0;
+      const searchWorked =
+        highlightCount > 0 ||
+        (await page.locator('[data-testid*="search-result"], .search-result').count()) > 0;
 
       expect(searchWorked).toBe(true);
     }
@@ -123,9 +130,7 @@ test.describe('Search Functionality', () => {
     await page.goto('/search');
     await page.waitForLoadState('networkidle');
 
-    const searchInput = page.locator(
-      'input[type="search"], [role="searchbox"]'
-    ).first();
+    const searchInput = page.locator('input[type="search"], [role="searchbox"]').first();
 
     if (await searchInput.isVisible()) {
       await searchInput.fill('Rahman');
@@ -133,9 +138,9 @@ test.describe('Search Functionality', () => {
 
       await page.waitForTimeout(2000);
 
-      const firstResult = page.locator(
-        '[data-testid*="search-result"], .search-result, a[href*="/surah/"]'
-      ).first();
+      const firstResult = page
+        .locator('[data-testid*="search-result"], .search-result, a[href*="/surah/"]')
+        .first();
 
       if (await firstResult.isVisible()) {
         await firstResult.click();

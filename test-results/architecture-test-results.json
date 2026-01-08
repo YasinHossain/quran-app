@@ -15,10 +15,7 @@
     },
     "preserveOutput": "always",
     "reporter": [
-      [
-        "html",
-        null
-      ],
+      ["html", null],
       [
         "json",
         {
@@ -49,9 +46,7 @@
         "name": "chromium-architecture",
         "testDir": "/home/devcontainers/quran-app/tests/e2e",
         "testIgnore": [],
-        "testMatch": [
-          "**/architecture/**/*.spec.ts"
-        ],
+        "testMatch": ["**/architecture/**/*.spec.ts"],
         "timeout": 30000
       },
       {
@@ -65,9 +60,7 @@
         "name": "firefox-architecture",
         "testDir": "/home/devcontainers/quran-app/tests/e2e",
         "testIgnore": [],
-        "testMatch": [
-          "**/architecture/**/*.spec.ts"
-        ],
+        "testMatch": ["**/architecture/**/*.spec.ts"],
         "timeout": 30000
       },
       {
@@ -81,9 +74,7 @@
         "name": "webkit-architecture",
         "testDir": "/home/devcontainers/quran-app/tests/e2e",
         "testIgnore": [],
-        "testMatch": [
-          "**/architecture/**/*.spec.ts"
-        ],
+        "testMatch": ["**/architecture/**/*.spec.ts"],
         "timeout": 30000
       },
       {
@@ -97,9 +88,7 @@
         "name": "mobile-chrome-architecture",
         "testDir": "/home/devcontainers/quran-app/tests/e2e",
         "testIgnore": [],
-        "testMatch": [
-          "**/architecture/**/*.spec.ts"
-        ],
+        "testMatch": ["**/architecture/**/*.spec.ts"],
         "timeout": 30000
       },
       {
@@ -113,9 +102,7 @@
         "name": "mobile-safari-architecture",
         "testDir": "/home/devcontainers/quran-app/tests/e2e",
         "testIgnore": [],
-        "testMatch": [
-          "**/architecture/**/*.spec.ts"
-        ],
+        "testMatch": ["**/architecture/**/*.spec.ts"],
         "timeout": 30000
       },
       {
@@ -129,9 +116,7 @@
         "name": "pwa-desktop",
         "testDir": "/home/devcontainers/quran-app/tests/e2e",
         "testIgnore": [],
-        "testMatch": [
-          "**/offline-functionality.spec.ts"
-        ],
+        "testMatch": ["**/offline-functionality.spec.ts"],
         "timeout": 30000
       },
       {
@@ -145,9 +130,7 @@
         "name": "pwa-mobile",
         "testDir": "/home/devcontainers/quran-app/tests/e2e",
         "testIgnore": [],
-        "testMatch": [
-          "**/offline-functionality.spec.ts"
-        ],
+        "testMatch": ["**/offline-functionality.spec.ts"],
         "timeout": 30000
       },
       {
@@ -160,13 +143,8 @@
         "id": "chromium",
         "name": "chromium",
         "testDir": "/home/devcontainers/quran-app/tests/e2e",
-        "testIgnore": [
-          "**/architecture/**/*.spec.ts",
-          "**/offline-functionality.spec.ts"
-        ],
-        "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
-        ],
+        "testIgnore": ["**/architecture/**/*.spec.ts", "**/offline-functionality.spec.ts"],
+        "testMatch": ["**/*.@(spec|test).?(c|m)[jt]s?(x)"],
         "timeout": 30000
       },
       {
@@ -179,13 +157,8 @@
         "id": "firefox",
         "name": "firefox",
         "testDir": "/home/devcontainers/quran-app/tests/e2e",
-        "testIgnore": [
-          "**/architecture/**/*.spec.ts",
-          "**/offline-functionality.spec.ts"
-        ],
-        "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
-        ],
+        "testIgnore": ["**/architecture/**/*.spec.ts", "**/offline-functionality.spec.ts"],
+        "testMatch": ["**/*.@(spec|test).?(c|m)[jt]s?(x)"],
         "timeout": 30000
       },
       {
@@ -198,13 +171,8 @@
         "id": "webkit",
         "name": "webkit",
         "testDir": "/home/devcontainers/quran-app/tests/e2e",
-        "testIgnore": [
-          "**/architecture/**/*.spec.ts",
-          "**/offline-functionality.spec.ts"
-        ],
-        "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
-        ],
+        "testIgnore": ["**/architecture/**/*.spec.ts", "**/offline-functionality.spec.ts"],
+        "testMatch": ["**/*.@(spec|test).?(c|m)[jt]s?(x)"],
         "timeout": 30000
       },
       {
@@ -217,13 +185,8 @@
         "id": "Mobile Chrome",
         "name": "Mobile Chrome",
         "testDir": "/home/devcontainers/quran-app/tests/e2e",
-        "testIgnore": [
-          "**/architecture/**/*.spec.ts",
-          "**/offline-functionality.spec.ts"
-        ],
-        "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
-        ],
+        "testIgnore": ["**/architecture/**/*.spec.ts", "**/offline-functionality.spec.ts"],
+        "testMatch": ["**/*.@(spec|test).?(c|m)[jt]s?(x)"],
         "timeout": 30000
       },
       {
@@ -236,13 +199,8 @@
         "id": "Mobile Safari",
         "name": "Mobile Safari",
         "testDir": "/home/devcontainers/quran-app/tests/e2e",
-        "testIgnore": [
-          "**/architecture/**/*.spec.ts",
-          "**/offline-functionality.spec.ts"
-        ],
-        "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
-        ],
+        "testIgnore": ["**/architecture/**/*.spec.ts", "**/offline-functionality.spec.ts"],
+        "testMatch": ["**/*.@(spec|test).?(c|m)[jt]s?(x)"],
         "timeout": 30000
       }
     ],

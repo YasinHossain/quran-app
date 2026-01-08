@@ -1,4 +1,3 @@
-
 const fs = require('fs');
 const report = JSON.parse(fs.readFileSync('lighthouse-mobile.report.json', 'utf8'));
 
@@ -14,10 +13,10 @@ console.log(`Total Blocking Time: ${audits['total-blocking-time'].displayValue}`
 console.log(`Cumulative Layout Shift: ${audits['cumulative-layout-shift'].displayValue}`);
 
 console.log('\n--- Critical Issues (Score < 0.5) ---');
-Object.values(audits).forEach(audit => {
-    if (audit.score !== null && audit.score < 0.5 && audit.scoreDisplayMode !== 'informative') {
-        console.log(`[${audit.score}] ${audit.title}`);
-    }
+Object.values(audits).forEach((audit) => {
+  if (audit.score !== null && audit.score < 0.5 && audit.scoreDisplayMode !== 'informative') {
+    console.log(`[${audit.score}] ${audit.title}`);
+  }
 });
 
 console.log('\n--- Environment ---');

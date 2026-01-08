@@ -23,9 +23,9 @@ test.describe('Responsive Design', () => {
       await expect(mainContent).toBeVisible();
 
       // Verse content should be visible
-      const verseContent = page.locator(
-        '[data-testid="verse-card"], .verse-card, [data-verse-key]'
-      ).first();
+      const verseContent = page
+        .locator('[data-testid="verse-card"], .verse-card, [data-verse-key]')
+        .first();
       await expect(verseContent).toBeVisible({ timeout: 10000 });
 
       // Content should not overflow horizontally
@@ -44,12 +44,14 @@ test.describe('Responsive Design', () => {
     await page.waitForLoadState('networkidle');
 
     // Look for mobile menu trigger (hamburger icon)
-    const mobileMenuTrigger = page.locator(
-      '[data-testid="mobile-menu-trigger"], ' +
-      'button[aria-label*="menu" i], ' +
-      '.hamburger-menu, ' +
-      '[data-testid="menu-button"]'
-    ).first();
+    const mobileMenuTrigger = page
+      .locator(
+        '[data-testid="mobile-menu-trigger"], ' +
+          'button[aria-label*="menu" i], ' +
+          '.hamburger-menu, ' +
+          '[data-testid="menu-button"]'
+      )
+      .first();
 
     const hasMobileMenu = await mobileMenuTrigger.isVisible().catch(() => false);
 
@@ -93,18 +95,16 @@ test.describe('Responsive Design', () => {
     await page.waitForLoadState('networkidle');
 
     // Trigger audio player
-    const playButton = page.locator(
-      '[data-testid*="play"], button[aria-label*="play" i]'
-    ).first();
+    const playButton = page.locator('[data-testid*="play"], button[aria-label*="play" i]').first();
 
     if (await playButton.isVisible()) {
       await playButton.click();
       await page.waitForTimeout(500);
 
       // Audio player should be visible and fit the screen
-      const audioPlayer = page.locator(
-        '[data-testid="audio-player"], .audio-player, .player-container'
-      ).first();
+      const audioPlayer = page
+        .locator('[data-testid="audio-player"], .audio-player, .player-container')
+        .first();
 
       if (await audioPlayer.isVisible()) {
         const box = await audioPlayer.boundingBox();

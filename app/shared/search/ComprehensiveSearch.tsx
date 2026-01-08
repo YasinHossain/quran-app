@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import {
   memo,
   useCallback,
@@ -12,6 +12,7 @@ import {
   type ReactElement,
 } from 'react';
 
+import { useDynamicFontLoader } from '@/app/hooks/useDynamicFontLoader';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { GoToSurahVerseForm } from '@/app/shared/components/go-to/GoToSurahVerseForm';
 import { SearchInput } from '@/app/shared/components/SearchInput';
@@ -156,6 +157,10 @@ const SearchDropdown = memo(function SearchDropdown({
   onSearchPage,
 }: SearchDropdownProps): ReactElement {
   const { settings } = useSettings();
+
+  // Load Arabic font dynamically when displaying search results
+  useDynamicFontLoader(settings.arabicFontFace);
+
   const hasQuery = searchQuery.trim().length > 0;
   const hasResults = navigationResults.length > 0 || verseResults.length > 0;
   const showRecents = !hasQuery && recentSearches.length > 0;
@@ -221,9 +226,8 @@ const SearchDropdown = memo(function SearchDropdown({
                 key={`${result.resultType}-${result.key}`}
                 type="button"
                 onClick={() => onSelectNavigation(result)}
-                className={`w-full px-4 py-3 text-left transition-colors flex items-center gap-3 ${
-                  isHighlighted ? 'bg-accent/20' : 'hover:bg-interactive/60'
-                }`}
+                className={`w-full px-4 py-3 text-left transition-colors flex items-center gap-3 ${isHighlighted ? 'bg-accent/20' : 'hover:bg-interactive/60'
+                  }`}
               >
                 <div className="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center flex-shrink-0">
                   {result.resultType === 'surah' && (
@@ -279,9 +283,8 @@ const SearchDropdown = memo(function SearchDropdown({
                 key={verse.verseKey}
                 type="button"
                 onClick={() => onSelectVerse(verse)}
-                className={`w-full px-4 py-4 text-left transition-colors border-b border-border/30 last:border-b-0 ${
-                  isHighlighted ? 'bg-accent/15' : 'hover:bg-interactive/50'
-                }`}
+                className={`w-full px-4 py-4 text-left transition-colors border-b border-border/30 last:border-b-0 ${isHighlighted ? 'bg-accent/15' : 'hover:bg-interactive/50'
+                  }`}
               >
                 <div className="flex items-start gap-3">
                   {/* Verse key badge */}
@@ -428,6 +431,12 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen]);
+
+  // Close dropdown when route changes
+  const pathname = usePathname();
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
 
   // Search with debounce
   useEffect(() => {

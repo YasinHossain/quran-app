@@ -17,21 +17,22 @@ test.describe('Bookmarking Functionality', () => {
   });
 
   test('should display bookmark buttons on verses', async ({ page }) => {
-    const bookmarkButton = page.locator(
-      '[data-testid*="bookmark"], ' +
-      'button[aria-label*="bookmark" i], ' +
-      '[role="button"][aria-label*="bookmark" i], ' +
-      '.bookmark-button'
-    ).first();
+    const bookmarkButton = page
+      .locator(
+        '[data-testid*="bookmark"], ' +
+          'button[aria-label*="bookmark" i], ' +
+          '[role="button"][aria-label*="bookmark" i], ' +
+          '.bookmark-button'
+      )
+      .first();
 
     await expect(bookmarkButton).toBeVisible({ timeout: 10000 });
   });
 
   test('should toggle bookmark state when clicked', async ({ page }) => {
-    const bookmarkButton = page.locator(
-      '[data-testid*="bookmark"], ' +
-      'button[aria-label*="bookmark" i]'
-    ).first();
+    const bookmarkButton = page
+      .locator('[data-testid*="bookmark"], ' + 'button[aria-label*="bookmark" i]')
+      .first();
 
     if (await bookmarkButton.isVisible()) {
       // Click the bookmark button
@@ -53,8 +54,8 @@ test.describe('Bookmarking Functionality', () => {
     // Check localStorage for bookmark storage key
     const bookmarks = await page.evaluate(() => {
       // The app uses 'quranAppBookmarks_v2' as the storage key
-      const stored = localStorage.getItem('quranAppBookmarks_v2') || 
-                     localStorage.getItem('quranAppBookmarks');
+      const stored =
+        localStorage.getItem('quranAppBookmarks_v2') || localStorage.getItem('quranAppBookmarks');
       return stored;
     });
 
@@ -65,21 +66,28 @@ test.describe('Bookmarking Functionality', () => {
 
   test('should navigate to bookmarks page or sidebar', async ({ page }) => {
     // Look for bookmarks link/button in navigation
-    const bookmarksLink = page.locator(
-      'a[href*="bookmark"], ' +
-      '[data-testid*="bookmarks-link"], ' +
-      'nav a:has-text("Bookmark"), ' +
-      'button[aria-label*="bookmark" i]'
-    ).first();
+    const bookmarksLink = page
+      .locator(
+        'a[href*="bookmark"], ' +
+          '[data-testid*="bookmarks-link"], ' +
+          'nav a:has-text("Bookmark"), ' +
+          'button[aria-label*="bookmark" i]'
+      )
+      .first();
 
     if (await bookmarksLink.isVisible()) {
       await bookmarksLink.click();
       await page.waitForTimeout(500);
 
       // Should either navigate to bookmarks page or open sidebar/modal
-      const isBookmarksView = 
+      const isBookmarksView =
         page.url().includes('bookmark') ||
-        await page.locator('[data-testid="bookmarks-sidebar"], [data-testid="bookmarks-panel"], .bookmarks-list').isVisible().catch(() => false);
+        (await page
+          .locator(
+            '[data-testid="bookmarks-sidebar"], [data-testid="bookmarks-panel"], .bookmarks-list'
+          )
+          .isVisible()
+          .catch(() => false));
 
       expect(isBookmarksView).toBe(true);
     }
@@ -87,9 +95,9 @@ test.describe('Bookmarking Functionality', () => {
 
   test('should show bookmarked verses in bookmarks view', async ({ page }) => {
     // First, create a bookmark
-    const bookmarkButton = page.locator(
-      '[data-testid*="bookmark"], button[aria-label*="bookmark" i]'
-    ).first();
+    const bookmarkButton = page
+      .locator('[data-testid*="bookmark"], button[aria-label*="bookmark" i]')
+      .first();
 
     if (await bookmarkButton.isVisible()) {
       await bookmarkButton.click();
@@ -102,9 +110,7 @@ test.describe('Bookmarking Functionality', () => {
       // If bookmarks page exists, check for bookmark items
       if (!page.url().includes('404')) {
         const bookmarkItems = page.locator(
-          '[data-testid*="bookmark-item"], ' +
-          '.bookmark-item, ' +
-          '[data-bookmark-key]'
+          '[data-testid*="bookmark-item"], ' + '.bookmark-item, ' + '[data-bookmark-key]'
         );
 
         const count = await bookmarkItems.count();

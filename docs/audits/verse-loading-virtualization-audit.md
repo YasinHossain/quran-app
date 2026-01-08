@@ -13,10 +13,10 @@ This document captures how each site loads and renders verses, identifies likely
 
 Before changing code, pick which “good” behavior you want to match:
 
-1) **Stable scrollbar from the start (quran.com-style)**  
-   The scrollbar represents the *full* surah immediately. Verses render as you scroll; not-yet-fetched verses show placeholders/skeletons.
+1. **Stable scrollbar from the start (quran.com-style)**  
+   The scrollbar represents the _full_ surah immediately. Verses render as you scroll; not-yet-fetched verses show placeholders/skeletons.
 
-2) **Scrollbar grows/shrinks as more content arrives (quranmazid-style as described)**  
+2. **Scrollbar grows/shrinks as more content arrives (quranmazid-style as described)**  
    Load a small initial chunk very fast (e.g., 20 verses), then load the rest shortly after; scrollbar visibly changes as total content height increases.
 
 Both can be “correct”. The implementation trade-offs differ.
@@ -103,18 +103,18 @@ This mismatch is a big red flag: if the Surah reader scrolls inside a container 
 
 These are ordered by how commonly they cause the exact symptom (items visually stacking/overlapping):
 
-1) **Scroll container mismatch (window vs internal scroller)**  
+1. **Scroll container mismatch (window vs internal scroller)**  
    If the actual scrolling element is not `window`, `useWindowVirtualizer` will produce incorrect `start` values → items can collapse/overlap.
 
-2) **Missing re-measure on dynamic height changes**  
+2. **Missing re-measure on dynamic height changes**  
    Verse heights change when:
    - Arabic/translation font sizes change
    - Translation set changes (0 → 1+ translations)
    - Fonts finish loading (layout shifts)
    - Container width changes (responsive wrapping)
-   In `quran-app`, `virtualizer.measure()` is not tied to these settings changes, so cached sizes can become wrong.
+     In `quran-app`, `virtualizer.measure()` is not tied to these settings changes, so cached sizes can become wrong.
 
-3) **Manual absolute-positioning implementation risk**  
+3. **Manual absolute-positioning implementation risk**  
    The current renderer re-implements a tricky part of virtualization (item placement). It can work, but it is brittle compared to a battle-tested library like `react-virtuoso`.
 
 ## Recommendation (What To Build)
@@ -312,6 +312,6 @@ Option C:
 
 ## Open Questions (Answer These Before We Implement)
 
-1) Which UX do you want: **Option A (quran.com)** or **Option B/C (quranmazid-like)**?
-2) On desktop in your app, does the Surah reader scroll the **window** or a **container**?
-3) Do you want “jump to verse” to work instantly for deep links (requires totalCount known early)?
+1. Which UX do you want: **Option A (quran.com)** or **Option B/C (quranmazid-like)**?
+2. On desktop in your app, does the Surah reader scroll the **window** or a **container**?
+3. Do you want “jump to verse” to work instantly for deep links (requires totalCount known early)?

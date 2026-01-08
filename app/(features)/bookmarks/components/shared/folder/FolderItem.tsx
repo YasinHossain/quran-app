@@ -23,8 +23,10 @@ const folderNavigationCardVariant = {
   padding: 'p-0',
   background: {
     // Use solid colors like Surah navigation cards for better performance (no backdrop-blur)
-    inactive: 'bg-surface-navigation text-content-primary border border-border/30 dark:border-border/20',
-    active: 'bg-surface-navigation text-content-primary border border-border/40 dark:border-border/30',
+    inactive:
+      'bg-surface-navigation text-content-primary border border-border/30 dark:border-border/20',
+    active:
+      'bg-surface-navigation text-content-primary border border-border/40 dark:border-border/30',
   },
   hover: {
     effect: 'none',

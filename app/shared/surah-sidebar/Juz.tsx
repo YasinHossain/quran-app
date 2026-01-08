@@ -78,7 +78,15 @@ export const Juz = ({
       rememberScroll();
       goToJuz(juz.number);
     },
-    [onClose, setSelectedJuzId, setSelectedPageId, setSelectedSurahId, chapters, rememberScroll, goToJuz]
+    [
+      onClose,
+      setSelectedJuzId,
+      setSelectedPageId,
+      setSelectedSurahId,
+      chapters,
+      rememberScroll,
+      goToJuz,
+    ]
   );
 
   return (

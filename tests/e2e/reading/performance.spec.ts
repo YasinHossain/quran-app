@@ -18,9 +18,9 @@ test.describe('Performance', () => {
     expect(loadTime).toBeLessThan(5000);
 
     // Verses should be visible
-    const verseCard = page.locator(
-      '[data-testid="verse-card"], .verse-card, [data-verse-key]'
-    ).first();
+    const verseCard = page
+      .locator('[data-testid="verse-card"], .verse-card, [data-verse-key]')
+      .first();
     await expect(verseCard).toBeVisible({ timeout: 10000 });
   });
 
@@ -30,9 +30,7 @@ test.describe('Performance', () => {
     await page.waitForLoadState('networkidle');
 
     // Count initially rendered verses
-    const initialVerses = page.locator(
-      '[data-testid="verse-card"], .verse-card, [data-verse-key]'
-    );
+    const initialVerses = page.locator('[data-testid="verse-card"], .verse-card, [data-verse-key]');
     const initialCount = await initialVerses.count();
 
     // Scroll down
@@ -95,9 +93,9 @@ test.describe('Performance', () => {
     }
 
     // Check that page is still responsive
-    const verseCard = page.locator(
-      '[data-testid="verse-card"], .verse-card, [data-verse-key]'
-    ).first();
+    const verseCard = page
+      .locator('[data-testid="verse-card"], .verse-card, [data-verse-key]')
+      .first();
     await expect(verseCard).toBeVisible({ timeout: 5000 });
   });
 

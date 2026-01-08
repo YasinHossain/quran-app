@@ -12,12 +12,12 @@ export const revalidate = 3600;
 interface SurahPageProps {
   params: Promise<{ surahId: string }>;
   searchParams?:
-  | Promise<{
-    startVerse?: string;
-  }>
-  | {
-    startVerse?: string;
-  };
+    | Promise<{
+        startVerse?: string;
+      }>
+    | {
+        startVerse?: string;
+      };
 }
 
 /**
@@ -34,8 +34,8 @@ async function SurahPage({ params, searchParams }: SurahPageProps): Promise<Reac
   const parsedStartVerse = startVerseRaw ? Number.parseInt(startVerseRaw, 10) : undefined;
   const initialVerseNumber =
     typeof parsedStartVerse === 'number' &&
-      Number.isFinite(parsedStartVerse) &&
-      parsedStartVerse > 0
+    Number.isFinite(parsedStartVerse) &&
+    parsedStartVerse > 0
       ? parsedStartVerse
       : undefined;
 

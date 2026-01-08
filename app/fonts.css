@@ -1,3 +1,70 @@
+/* =================================================================
+   FONTS.CSS - Font Definitions
+   
+   PERFORMANCE OPTIMIZATION:
+   - Only UthmanicHafs1Ver18 is preloaded (default Arabic font)
+   - All other Arabic fonts are loaded dynamically via useDynamicFontLoader
+   - UI fonts (Inter) are loaded with font-display: swap
+   - Translation fonts (Bengali, etc.) load on-demand
+   ================================================================= */
+
+/* -----------------------------------------------------------------
+   CRITICAL UI FONTS - Loaded immediately for LCP
+   ----------------------------------------------------------------- */
+
+/* Inter - Primary UI Font (local files) */
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* -----------------------------------------------------------------
+   DEFAULT ARABIC FONT - Preloaded in layout.tsx <head>
+   ----------------------------------------------------------------- */
+
+@font-face {
+  font-family: 'UthmanicHafs1Ver18';
+  src:
+    local('KFGQPC HAFS Uthmanic Script'),
+    url('/fonts/UthmanicHafs1Ver18.woff2') format('woff2'),
+    url('/fonts/UthmanicHafs1Ver18.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* -----------------------------------------------------------------
+   ARABIC FONTS - Lazy loaded via useDynamicFontLoader
+   These @font-face definitions are fallbacks if FontFace API fails
+   ----------------------------------------------------------------- */
+
 @font-face {
   font-family: 'KFGQPC-Uthman-Taha';
   src: url('/fonts/KFGQPC-Uthman-Taha.ttf') format('truetype');
@@ -63,27 +130,109 @@
 }
 
 @font-face {
-  font-family: 'UthmanicHafs1Ver18';
+  font-family: 'IndoPak';
   src:
-    local('KFGQPC HAFS Uthmanic Script'),
-    url('/fonts/UthmanicHafs1Ver18.woff2') format('woff2'),
-    url('/fonts/UthmanicHafs1Ver18.ttf') format('truetype');
+    local('AlQuran IndoPak by QuranWBW'),
+    url('/fonts/quran/hafs/nastaleeq/indopak/indopak-nastaleeq-waqf-lazim-v4.2.1.woff2') format('woff2'),
+    url('/fonts/quran/hafs/nastaleeq/indopak/indopak-nastaleeq-waqf-lazim-v4.2.1.woff') format('woff'),
+    url('/fonts/quran/hafs/nastaleeq/indopak/indopak-nastaleeq-waqf-lazim-v4.2.1.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
+/* -----------------------------------------------------------------
+   TRANSLATION FONTS - Lazy loaded when translation is displayed
+   ----------------------------------------------------------------- */
+
+/* Noto Sans Arabic - For Arabic translations (local) */
 @font-face {
-  font-family: 'IndoPak';
-  src:
-    local('AlQuran IndoPak by QuranWBW'),
-    url('/fonts/quran/hafs/nastaleeq/indopak/indopak-nastaleeq-waqf-lazim-v4.2.1.woff2')
-      format('woff2'),
-    url('/fonts/quran/hafs/nastaleeq/indopak/indopak-nastaleeq-waqf-lazim-v4.2.1.woff')
-      format('woff'),
-    url('/fonts/quran/hafs/nastaleeq/indopak/indopak-nastaleeq-waqf-lazim-v4.2.1.ttf')
-      format('truetype');
-  font-weight: normal;
+  font-family: 'Noto Sans Arabic';
+  src: url('/fonts/NotoSansArabic-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Sans Arabic';
+  src: url('/fonts/NotoSansArabic-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Noto Sans Bengali - For Bengali translations (local) */
+@font-face {
+  font-family: 'Noto Sans Bengali';
+  src: url('/fonts/NotoSansBengali-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Sans Bengali';
+  src: url('/fonts/NotoSansBengali-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Sans Bengali';
+  src: url('/fonts/NotoSansBengali-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Sans Bengali';
+  src: url('/fonts/NotoSansBengali-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Crimson Text - For elegant English translations (local) */
+@font-face {
+  font-family: 'Crimson Text';
+  src: url('/fonts/CrimsonText-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Crimson Text';
+  src: url('/fonts/CrimsonText-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Crimson Text';
+  src: url('/fonts/CrimsonText-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Libre Baskerville - For classic English translations (local) */
+@font-face {
+  font-family: 'Libre Baskerville';
+  src: url('/fonts/LibreBaskerville-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Libre Baskerville';
+  src: url('/fonts/LibreBaskerville-Bold.woff2') format('woff2');
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }

@@ -13,9 +13,7 @@ import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
 // Dynamic import for MushafMain - only loaded when user switches to reading/mushaf mode
 const MushafMain = dynamic(
   () =>
-    import('@/app/(features)/surah/components/surah-view/MushafMain').then(
-      (mod) => mod.MushafMain
-    ),
+    import('@/app/(features)/surah/components/surah-view/MushafMain').then((mod) => mod.MushafMain),
   {
     loading: () => (
       <div className="flex items-center justify-center h-64">

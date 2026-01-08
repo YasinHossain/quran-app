@@ -4,7 +4,8 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Al Quran',
     short_name: 'Al Quran',
-    description: 'Read, Study, and Learn The Holy Quran - Your complete Quran companion with translations, tafsir, audio recitations, and more.',
+    description:
+      'Read, Study, and Learn The Holy Quran - Your complete Quran companion with translations, tafsir, audio recitations, and more.',
     start_url: '/',
     display: 'standalone',
     background_color: '#0a0a0a',

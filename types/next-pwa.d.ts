@@ -6,4 +6,3 @@ declare module '@ducanh2912/next-pwa' {
 
   export default function withPWA(config: PWAConfig): (nextConfig: NextConfig) => NextConfig;
 }
-

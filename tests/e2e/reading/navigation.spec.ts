@@ -40,11 +40,12 @@ test.describe('Navigation and Verse Display', () => {
 
     // Check page has loaded with surah content
     const pageContent = await page.content();
-    
+
     // Al-Fatiha should have identifying information
-    const hasSurahName = pageContent.includes('Fatiha') || 
-                         pageContent.includes('الفاتحة') ||
-                         pageContent.includes('Opening');
+    const hasSurahName =
+      pageContent.includes('Fatiha') ||
+      pageContent.includes('الفاتحة') ||
+      pageContent.includes('Opening');
     expect(hasSurahName).toBe(true);
   });
 
@@ -53,12 +54,14 @@ test.describe('Navigation and Verse Display', () => {
     await page.waitForLoadState('networkidle');
 
     // Look for next surah navigation
-    const nextButton = page.locator(
-      '[data-testid="next-surah-button"], ' +
-      'a[href*="/surah/2"], ' +
-      'button:has-text("Next"), ' +
-      '[aria-label*="next" i]'
-    ).first();
+    const nextButton = page
+      .locator(
+        '[data-testid="next-surah-button"], ' +
+          'a[href*="/surah/2"], ' +
+          'button:has-text("Next"), ' +
+          '[aria-label*="next" i]'
+      )
+      .first();
 
     if (await nextButton.isVisible()) {
       await nextButton.click();

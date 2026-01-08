@@ -76,7 +76,15 @@ export const Page = ({
       rememberScroll();
       goToPage(p);
     },
-    [onClose, setSelectedPageId, setSelectedJuzId, setSelectedSurahId, chapters, rememberScroll, goToPage]
+    [
+      onClose,
+      setSelectedPageId,
+      setSelectedJuzId,
+      setSelectedSurahId,
+      chapters,
+      rememberScroll,
+      goToPage,
+    ]
   );
 
   return (

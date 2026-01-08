@@ -21,17 +21,13 @@ const TranslationPanel = dynamic(
 
 const TafsirPanel = dynamic(
   () =>
-    import('@/app/(features)/surah/components/panels/tafsir-panel').then(
-      (mod) => mod.TafsirPanel
-    ),
+    import('@/app/(features)/surah/components/panels/tafsir-panel').then((mod) => mod.TafsirPanel),
   { ssr: false }
 );
 
 const MushafPanel = dynamic(
   () =>
-    import('@/app/(features)/surah/components/panels/mushaf-panel').then(
-      (mod) => mod.MushafPanel
-    ),
+    import('@/app/(features)/surah/components/panels/mushaf-panel').then((mod) => mod.MushafPanel),
   { ssr: false }
 );
 

@@ -13,29 +13,34 @@ test.describe('Audio Functionality', () => {
 
   test('should show play button for verses', async ({ page }) => {
     // Look for any play button
-    const playButton = page.locator(
-      '[data-testid*="play"], ' +
-      'button[aria-label*="play" i], ' +
-      '[role="button"][aria-label*="play" i], ' +
-      '.play-button'
-    ).first();
+    const playButton = page
+      .locator(
+        '[data-testid*="play"], ' +
+          'button[aria-label*="play" i], ' +
+          '[role="button"][aria-label*="play" i], ' +
+          '.play-button'
+      )
+      .first();
 
     // Either a play button exists or there's an audio player area
     const hasPlayButton = await playButton.isVisible().catch(() => false);
-    const hasAudioArea = await page.locator(
-      '[data-testid="audio-player"], .audio-player, .player-controls'
-    ).isVisible().catch(() => false);
+    const hasAudioArea = await page
+      .locator('[data-testid="audio-player"], .audio-player, .player-controls')
+      .isVisible()
+      .catch(() => false);
 
     expect(hasPlayButton || hasAudioArea).toBe(true);
   });
 
   test('should display audio player when play is triggered', async ({ page }) => {
     // Find and click a play button
-    const playButton = page.locator(
-      '[data-testid*="play"], ' +
-      'button[aria-label*="play" i], ' +
-      '[role="button"][aria-label*="play" i]'
-    ).first();
+    const playButton = page
+      .locator(
+        '[data-testid*="play"], ' +
+          'button[aria-label*="play" i], ' +
+          '[role="button"][aria-label*="play" i]'
+      )
+      .first();
 
     if (await playButton.isVisible()) {
       await playButton.click();
@@ -44,19 +49,24 @@ test.describe('Audio Functionality', () => {
       // The actual <audio> element is hidden, but the player UI should be visible
       const playerUI = page.locator(
         '[role="region"][aria-label*="Player" i], ' +
-        '.z-audio-player, ' +
-        '[data-testid="player-controls"], ' +
-        '.player-container'
+          '.z-audio-player, ' +
+          '[data-testid="player-controls"], ' +
+          '.player-container'
       );
 
       // Give it time to load
       await page.waitForTimeout(1000);
 
       // Either player UI is visible OR there's a pause button (indicating play worked)
-      const playerVisible = await playerUI.first().isVisible().catch(() => false);
-      const pauseVisible = await page.locator(
-        'button[aria-label*="pause" i], [data-testid*="pause"]'
-      ).first().isVisible().catch(() => false);
+      const playerVisible = await playerUI
+        .first()
+        .isVisible()
+        .catch(() => false);
+      const pauseVisible = await page
+        .locator('button[aria-label*="pause" i], [data-testid*="pause"]')
+        .first()
+        .isVisible()
+        .catch(() => false);
 
       expect(playerVisible || pauseVisible).toBe(true);
     }
@@ -65,10 +75,10 @@ test.describe('Audio Functionality', () => {
   test('should have accessible audio controls', async ({ page }) => {
     const audioControls = page.locator(
       '[role="slider"][aria-label*="progress" i], ' +
-      '[role="slider"][aria-label*="volume" i], ' +
-      'button[aria-label*="play" i], ' +
-      'button[aria-label*="pause" i], ' +
-      '[data-testid*="audio"]'
+        '[role="slider"][aria-label*="volume" i], ' +
+        'button[aria-label*="play" i], ' +
+        'button[aria-label*="pause" i], ' +
+        '[data-testid*="audio"]'
     );
 
     const controlCount = await audioControls.count();
@@ -88,9 +98,7 @@ test.describe('Audio Functionality', () => {
 
   test('should support keyboard shortcuts for audio', async ({ page }) => {
     // Trigger play first
-    const playButton = page.locator(
-      '[data-testid*="play"], button[aria-label*="play" i]'
-    ).first();
+    const playButton = page.locator('[data-testid*="play"], button[aria-label*="play" i]').first();
 
     if (await playButton.isVisible()) {
       await playButton.focus();
@@ -104,9 +112,9 @@ test.describe('Audio Functionality', () => {
       await page.waitForTimeout(200);
 
       // Verify player is still visible (didn't crash)
-      const playerArea = page.locator(
-        '[data-testid="audio-player"], .audio-player, .player-container'
-      ).first();
+      const playerArea = page
+        .locator('[data-testid="audio-player"], .audio-player, .player-container')
+        .first();
 
       if (await playerArea.isVisible()) {
         expect(await playerArea.isVisible()).toBe(true);

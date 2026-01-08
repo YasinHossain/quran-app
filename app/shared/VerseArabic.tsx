@@ -4,6 +4,7 @@ import { Fragment, memo, useContext, useMemo, useState } from 'react';
 
 import { VerseMarker } from '@/app/(features)/surah/components/surah-view/VerseMarker';
 import { useQcfMushafFont } from '@/app/(features)/surah/hooks/useQcfMushafFont';
+import { useDynamicFontLoader } from '@/app/hooks/useDynamicFontLoader';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { AudioContext } from '@/app/shared/player/context/AudioContext';
 import { TajweedFontPalettes } from '@/app/shared/TajweedFontPalettes';
@@ -174,6 +175,10 @@ export const VerseArabic = memo(function VerseArabic({
   verse,
 }: VerseArabicProps): React.JSX.Element {
   const { settings } = useSettings();
+
+  // Dynamically load Arabic font when user changes their selection
+  useDynamicFontLoader(settings.arabicFontFace);
+
   const showByWords = settings.showByWords ?? false;
   const wordLang = settings.wordLang ?? 'en';
   const isQpcHafsFont = settings.arabicFontFace?.includes('UthmanicHafs1Ver18') ?? false;
