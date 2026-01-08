@@ -12,9 +12,9 @@ import { useBookmarkModal } from './useBookmarkModal';
 
 const backdropVariants = { hidden: { opacity: 0 }, visible: { opacity: 1 } };
 const modalVariants = {
-  hidden: { opacity: 0, scale: 0.95, y: 20 },
+  hidden: { opacity: 0, scale: 0.95, y: 10 },
   visible: { opacity: 1, scale: 1, y: 0 },
-  exit: { opacity: 0, scale: 0.95, y: 20 },
+  exit: { opacity: 0, scale: 0.95, y: 10 },
 };
 
 const Backdrop = memo(function Backdrop({ onClose }: { onClose: () => void }): React.JSX.Element {
@@ -24,7 +24,8 @@ const Backdrop = memo(function Backdrop({ onClose }: { onClose: () => void }): R
       initial="hidden"
       animate="visible"
       exit="hidden"
-      className="fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm z-modal touch-none"
+      transition={{ duration: 0.2 }}
+      className="fixed inset-0 bg-surface-overlay/60 z-modal touch-none"
       onClick={onClose}
     />
   );
@@ -41,7 +42,8 @@ const ModalShell = memo(function ModalShell({
       initial="hidden"
       animate="visible"
       exit="exit"
-      transition={{ type: 'spring', stiffness: 500, damping: 40 }}
+      transition={{ type: 'spring', damping: 25, stiffness: 350, mass: 0.8 }}
+      style={{ willChange: 'transform, opacity' }}
       className="fixed inset-0 flex items-center justify-center z-modal p-4 pointer-events-none"
     >
       <div

@@ -20,6 +20,7 @@ interface UseVerseOfDayOptions {
    * Number of rotations before fetching a new random verse
    */
   randomVerseInterval?: number;
+  initialVerse?: Verse | undefined;
 }
 
 interface UseVerseOfDayReturn {
@@ -37,9 +38,10 @@ interface UseVerseOfDayReturn {
 export function useVerseOfDay({
   rotationInterval = 10000,
   randomVerseInterval = 3,
+  initialVerse,
 }: UseVerseOfDayOptions = {}): UseVerseOfDayReturn {
   const { settings } = useSettings();
-  const [currentVerse, setCurrentVerse] = useState<Verse | null>(null);
+  const [currentVerse, setCurrentVerse] = useState<Verse | null>(initialVerse || null);
   const rotationCountRef = useRef(0);
 
   // Load surahs from the shared navigation dataset

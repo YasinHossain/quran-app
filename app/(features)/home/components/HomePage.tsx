@@ -1,6 +1,8 @@
 'use client';
 import { memo } from 'react';
 
+import { Verse } from '@/types';
+
 import { HomeHeader } from './HomeHeader';
 import { HomePageBackground } from './HomePageBackground';
 import { HomeSearch } from './HomeSearch';
@@ -9,6 +11,7 @@ import { VerseOfDay } from './VerseOfDay';
 
 interface HomePageProps {
   className?: string;
+  initialVerse?: Verse | undefined;
 }
 
 /**
@@ -25,7 +28,7 @@ interface HomePageProps {
  * - Implements mobile-first responsive design
  * - Includes proper TypeScript interfaces
  */
-export const HomePage = memo(function HomePage({ className }: HomePageProps) {
+export const HomePage = memo(function HomePage({ className, initialVerse }: HomePageProps) {
   return (
     <div
       className={`relative min-h-[100dvh] flex flex-col bg-background text-foreground ${className || ''}`}
@@ -56,7 +59,7 @@ export const HomePage = memo(function HomePage({ className }: HomePageProps) {
             className="w-full mx-auto animate-fade-in-up animation-delay-400"
             style={{ maxWidth: 'clamp(18rem, 80vw, 64rem)' }}
           >
-            <VerseOfDay />
+            <VerseOfDay initialVerse={initialVerse} />
           </div>
         </main>
 

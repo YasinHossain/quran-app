@@ -17,6 +17,7 @@ interface VerseOfDayProps {
   rotationInterval?: number;
   /** Number of rotations before fetching a new random verse */
   randomVerseInterval?: number;
+  initialVerse?: Verse | undefined;
 }
 
 /**
@@ -35,11 +36,13 @@ export const VerseOfDay = memo(function VerseOfDay({
   className,
   rotationInterval,
   randomVerseInterval,
+  initialVerse,
 }: VerseOfDayProps): React.JSX.Element | null {
   const { settings } = useSettings();
   const { verse, loading, error, surahs, refreshVerse } = useVerseOfDay({
     ...(rotationInterval !== undefined ? { rotationInterval } : {}),
     ...(randomVerseInterval !== undefined ? { randomVerseInterval } : {}),
+    initialVerse,
   });
 
   const [isTransitioning, setIsTransitioning] = useState(false);
