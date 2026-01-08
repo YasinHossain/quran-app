@@ -32,7 +32,7 @@ const getVariantStyles = (variant: SearchVariant): string => {
     case 'panel':
       return 'bg-interactive/60 border border-border text-foreground placeholder:text-muted';
     case 'glass':
-      return 'bg-surface-glass/60 text-lg text-foreground border-none placeholder:text-input-placeholder backdrop-blur-xl shadow-lg hover:shadow-xl';
+      return 'bg-surface-navigation text-lg text-foreground border border-border/30 dark:border-border/20 placeholder:text-input-placeholder shadow-lg hover:shadow-xl';
     default:
       return 'bg-interactive/60 text-foreground border border-border placeholder:text-muted';
   }

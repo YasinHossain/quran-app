@@ -22,17 +22,18 @@ const folderNavigationCardVariant = {
   height: 'min-h-[80px]',
   padding: 'p-0',
   background: {
-    inactive: 'bg-surface-glass/70 backdrop-blur-xl text-content-primary border border-border/20',
-    active: 'bg-surface-glass/80 backdrop-blur-xl text-content-primary border border-border/30',
+    // Use solid colors like Surah navigation cards for better performance (no backdrop-blur)
+    inactive: 'bg-surface-navigation text-content-primary border border-border/30 dark:border-border/20',
+    active: 'bg-surface-navigation text-content-primary border border-border/40 dark:border-border/30',
   },
   hover: {
     effect: 'none',
-    value: 'hover:shadow-xl',
+    value: 'hover:shadow-lg',
     duration: 'transition-all duration-300',
   },
   shadow: {
-    inactive: 'shadow-lg',
-    active: 'shadow-xl',
+    inactive: 'shadow-md',
+    active: 'shadow-lg',
   },
 } as const;
 

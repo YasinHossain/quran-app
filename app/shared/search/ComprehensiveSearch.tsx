@@ -168,7 +168,7 @@ const SearchDropdown = memo(function SearchDropdown({
   const visibleVerseCount = Math.min(verseResults.length, maxVersesToShow);
 
   return (
-    <div className="absolute top-full left-1/2 -translate-x-1/2 w-[calc(100vw-32px)] md:w-[44rem] mt-2 z-50 bg-surface rounded-xl shadow-2xl border border-border/50 overflow-hidden backdrop-blur-xl">
+    <div className="absolute top-full left-1/2 -translate-x-1/2 w-[calc(100vw-32px)] md:w-[44rem] mt-2 z-50 bg-surface-navigation rounded-xl shadow-2xl border border-border/30 dark:border-border/20 overflow-hidden">
       {/* Loading state */}
       {isLoading && hasQuery && (
         <div className="p-4 flex items-center justify-center gap-2 text-muted">
@@ -626,7 +626,7 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
 
       {/* Go To Form - shown when focused but no query */}
       {isOpen && !query.trim() && (
-        <div className="absolute top-full left-1/2 -translate-x-1/2 w-[calc(100vw-32px)] md:w-[44rem] mt-2 z-50 bg-surface rounded-xl shadow-2xl border border-border/50 overflow-hidden backdrop-blur-xl">
+        <div className="absolute top-full left-1/2 -translate-x-1/2 w-[calc(100vw-32px)] md:w-[44rem] mt-2 z-50 bg-surface-navigation rounded-xl shadow-2xl border border-border/30 dark:border-border/20 overflow-hidden">
           <GoToSurahVerseForm
             onNavigate={(surahId, verse) => {
               const href =
@@ -680,7 +680,7 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
                   router.push(buildSurahRoute(id));
                   onNavigate?.();
                 }}
-                className="flex-shrink-0 min-h-[2rem] sm:min-h-[2.25rem] md:min-h-10 px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full font-medium text-[0.65rem] sm:text-xs md:text-sm transition-all duration-200 bg-surface-glass/60 text-foreground hover:bg-surface-glass/80 border-none ring-0 shadow-sm hover:shadow-md active:scale-95 backdrop-blur-xl touch-manipulation flex items-center justify-center"
+                className="flex-shrink-0 min-h-[2rem] sm:min-h-[2.25rem] md:min-h-10 px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full font-medium text-[0.65rem] sm:text-xs md:text-sm transition-all duration-200 bg-surface-navigation text-foreground hover:bg-surface-navigation/90 border border-border/30 dark:border-border/20 shadow-sm hover:shadow-md active:scale-95 touch-manipulation flex items-center justify-center"
               >
                 {name}
               </button>

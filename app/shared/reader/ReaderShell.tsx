@@ -4,10 +4,11 @@ import dynamic from 'next/dynamic';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { SurahMain } from '@/app/(features)/surah/components/surah-view/SurahMain';
-import { useSurahLayoutSidebar } from '@/app/(features)/surah/layout';
+import { SurahWorkspaceNavigation } from '@/app/(features)/surah/components/surah-view/SurahWorkspaceNavigation';
 import { useReaderMode } from '@/app/providers/ReaderModeContext';
 import { SettingsSidebar } from '@/app/shared/reader/settings';
 import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
+import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
 
 // Dynamic import for MushafMain - only loaded when user switches to reading/mushaf mode
 const MushafMain = dynamic(
@@ -260,15 +261,12 @@ export function ReaderShell({
   const audioProps = mapToAudioProps(verseListing);
   const centerContentClassName = mode === 'mushaf' ? 'px-0 sm:px-0 lg:px-0' : undefined;
 
-  // Get sidebar from layout context (persists across navigations)
-  const layoutSidebar = useSurahLayoutSidebar();
-
   return (
     <WorkspaceReaderLayout
       main={mainContent}
-      desktopLeft={layoutSidebar?.desktopLeftSidebar ?? null}
+      desktopLeft={<SurahWorkspaceNavigation />}
       desktopRight={workspaceSettingsSidebar}
-      mobileLeft={null} // Mobile sidebar is now rendered in surah/layout.tsx
+      mobileLeft={<SurahListSidebar />}
       mobileRight={settingsSidebar}
       audio={audioProps}
       {...(centerContentClassName ? { contentClassName: centerContentClassName } : {})}

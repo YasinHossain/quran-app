@@ -45,7 +45,7 @@ export const HomeSearch = memo(function HomeSearch({ className }: HomeSearchProp
             <Link
               key={name}
               href={buildSurahRoute(id)}
-              className="flex-shrink-0 min-h-[2rem] sm:min-h-[2.25rem] md:min-h-10 px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full font-medium text-[0.65rem] sm:text-xs md:text-sm transition-all duration-200 bg-surface-glass/60 text-foreground hover:bg-surface-glass/80 border-none ring-0 shadow-sm hover:shadow-md active:scale-95 backdrop-blur-xl touch-manipulation flex items-center justify-center"
+              className="flex-shrink-0 min-h-[2rem] sm:min-h-[2.25rem] md:min-h-10 px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full font-medium text-[0.65rem] sm:text-xs md:text-sm transition-all duration-200 bg-surface-navigation text-foreground hover:bg-surface-navigation/90 border border-border/30 dark:border-border/20 shadow-sm hover:shadow-md active:scale-95 touch-manipulation flex items-center justify-center"
             >
               {name}
             </Link>
