@@ -1,5 +1,7 @@
-import { memo, useRef } from 'react';
-import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
+'use client';
+
+import React, { memo, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
 import { buildTafsirRoute } from '@/app/shared/navigation/routes';
@@ -15,7 +17,6 @@ interface Props {
   setSelectedPageId: (id: number) => void;
   setSelectedJuzId: (id: number) => void;
   rememberScroll: () => void;
-  scrollParent?: HTMLElement;
   isTafsirPath: boolean;
   isMushafMode: boolean;
   onClose?: (() => void) | undefined;
@@ -25,20 +26,23 @@ interface SurahItemProps {
   chapter: Chapter;
   isActive: boolean;
   href: string;
-  onNavigate: (chapter: Chapter) => void;
+  onNavigate: () => void;
 }
 
+/**
+ * Memoized individual Surah item to prevent re-renders when other surahs change.
+ * Only re-renders when its own props change.
+ */
 const SurahItem = memo(function SurahItem({
   chapter,
   isActive,
   href,
   onNavigate,
-}: SurahItemProps) {
+}: SurahItemProps): React.JSX.Element {
   return (
-    <div className="pb-2">
+    <li style={{ contain: 'layout style' }}>
       <SurahNavigationCard
         href={href}
-        prefetch={false}
         scroll={false}
         data-active={isActive}
         isActive={isActive}
@@ -48,9 +52,9 @@ const SurahItem = memo(function SurahItem({
           subtitle: `${chapter.verses_count} verses`,
           arabic: chapter.name_arabic,
         }}
-        onNavigate={() => onNavigate(chapter)}
+        onNavigate={onNavigate}
       />
-    </div>
+    </li>
   );
 });
 
@@ -61,49 +65,64 @@ export const Surah = ({
   setSelectedPageId,
   setSelectedJuzId,
   rememberScroll,
-  scrollParent,
   isTafsirPath,
   isMushafMode,
   onClose,
 }: Props): React.JSX.Element => {
-  const { getSurahHref } = useNavigationTargets();
-  const virtuosoRef = useRef<VirtuosoHandle>(null);
+  const { getSurahHref, goToSurah } = useNavigationTargets();
+  const router = useRouter();
 
-  // Note: Scroll centering is handled by the parent useScrollCentering hook
-  // which uses [data-active] attributes and scrollIntoView for consistency
-
-  const handleNavigate = (chapter: Chapter): void => {
-    onClose?.();
-    setSelectedSurahId(chapter.id);
-    const firstPage = chapter.pages?.[0] ?? 1;
-    setSelectedPageId(firstPage);
-    setSelectedJuzId(getJuzByPage(firstPage));
-    rememberScroll();
-  };
-
-  const getHref = (chapter: Chapter): string => {
-    const surahHref = getSurahHref(chapter.id);
-    if (isTafsirPath) return buildTafsirRoute(chapter.id, 1);
-    if (isMushafMode) return `${surahHref}?view=mushaf`;
-    return surahHref;
-  };
+  // Create a stable callback factory for navigation handlers
+  const createNavigateHandler = useCallback(
+    (chapter: Chapter, surahHref: string) => () => {
+      onClose?.();
+      setSelectedSurahId(chapter.id);
+      const firstPage = chapter.pages?.[0] ?? 1;
+      setSelectedPageId(firstPage);
+      setSelectedJuzId(getJuzByPage(firstPage));
+      rememberScroll();
+      if (!isTafsirPath) {
+        if (isMushafMode) {
+          router.push(`${surahHref}?view=mushaf`);
+        } else {
+          goToSurah(chapter.id);
+        }
+      }
+    },
+    [
+      onClose,
+      setSelectedSurahId,
+      setSelectedPageId,
+      setSelectedJuzId,
+      rememberScroll,
+      isTafsirPath,
+      isMushafMode,
+      router,
+      goToSurah,
+    ]
+  );
 
   return (
-    <Virtuoso
-      ref={virtuosoRef}
-      data={chapters as Chapter[]}
-      fixedItemHeight={88}
-      computeItemKey={(_, chapter) => chapter.id}
-      {...(scrollParent ? { customScrollParent: scrollParent } : {})}
-      style={{ height: '100%' }}
-      itemContent={(_, chapter) => (
-        <SurahItem
-          chapter={chapter}
-          isActive={chapter.id === selectedSurahId}
-          href={getHref(chapter)}
-          onNavigate={handleNavigate}
-        />
-      )}
-    />
+    <ul className="space-y-2">
+      {chapters.map((chapter) => {
+        const isActive = chapter.id === selectedSurahId;
+        const surahHref = getSurahHref(chapter.id);
+        const href = isTafsirPath
+          ? buildTafsirRoute(chapter.id, 1)
+          : isMushafMode
+            ? `${surahHref}?view=mushaf`
+            : surahHref;
+
+        return (
+          <SurahItem
+            key={chapter.id}
+            chapter={chapter}
+            isActive={isActive}
+            href={href}
+            onNavigate={createNavigateHandler(chapter, surahHref)}
+          />
+        );
+      })}
+    </ul>
   );
 };

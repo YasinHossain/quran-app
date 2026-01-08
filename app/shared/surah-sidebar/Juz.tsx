@@ -1,5 +1,6 @@
-import { memo, useRef } from 'react';
-import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
+'use client';
+
+import React, { memo, useCallback } from 'react';
 
 import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
 import { JuzNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
@@ -16,28 +17,29 @@ interface Props {
   setSelectedPageId: (id: number) => void;
   setSelectedSurahId: (id: number) => void;
   rememberScroll: () => void;
-  scrollParent?: HTMLElement;
   onClose?: (() => void) | undefined;
 }
 
 interface JuzItemProps {
   juz: JuzSummary;
   isActive: boolean;
-  getJuzHref: (n: number) => string;
-  onNavigate: (juz: JuzSummary) => void;
+  href: string;
+  onNavigate: () => void;
 }
 
+/**
+ * Memoized individual Juz item to prevent re-renders when other juzs change.
+ */
 const JuzItem = memo(function JuzItem({
   juz,
   isActive,
-  getJuzHref,
+  href,
   onNavigate,
-}: JuzItemProps) {
+}: JuzItemProps): React.JSX.Element {
   return (
-    <div className="pb-2">
+    <li style={{ contain: 'layout style' }}>
       <JuzNavigationCard
-        href={getJuzHref(juz.number)}
-        prefetch={false}
+        href={href}
         scroll={false}
         data-active={isActive}
         isActive={isActive}
@@ -46,9 +48,9 @@ const JuzItem = memo(function JuzItem({
           title: `Juz ${juz.number}`,
           subtitle: juz.surahRange,
         }}
-        onNavigate={() => onNavigate(juz)}
+        onNavigate={onNavigate}
       />
-    </div>
+    </li>
   );
 });
 
@@ -60,41 +62,39 @@ export const Juz = ({
   setSelectedPageId,
   setSelectedSurahId,
   rememberScroll,
-  scrollParent,
   onClose,
 }: Props): React.JSX.Element => {
-  const { getJuzHref } = useNavigationTargets();
-  const virtuosoRef = useRef<VirtuosoHandle>(null);
+  const { getJuzHref, goToJuz } = useNavigationTargets();
 
-  // Note: Scroll centering is handled by the parent useScrollCentering hook
-  // which uses [data-active] attributes and scrollIntoView for consistency
-
-  const handleNavigate = (juz: JuzSummary): void => {
-    onClose?.();
-    setSelectedJuzId(juz.number);
-    const page = JUZ_START_PAGES[juz.number - 1] ?? 1;
-    setSelectedPageId(page);
-    const chap = getSurahByPage(page, chapters);
-    if (chap) setSelectedSurahId(chap.id);
-    rememberScroll();
-  };
+  // Create a stable callback factory for navigation handlers
+  const createNavigateHandler = useCallback(
+    (juz: JuzSummary) => () => {
+      onClose?.();
+      setSelectedJuzId(juz.number);
+      const page = JUZ_START_PAGES[juz.number - 1] ?? 1;
+      setSelectedPageId(page);
+      const chap = getSurahByPage(page, chapters);
+      if (chap) setSelectedSurahId(chap.id);
+      rememberScroll();
+      goToJuz(juz.number);
+    },
+    [onClose, setSelectedJuzId, setSelectedPageId, setSelectedSurahId, chapters, rememberScroll, goToJuz]
+  );
 
   return (
-    <Virtuoso
-      ref={virtuosoRef}
-      data={juzs as JuzSummary[]}
-      fixedItemHeight={88}
-      computeItemKey={(_, juz) => juz.number}
-      {...(scrollParent ? { customScrollParent: scrollParent } : {})}
-      style={{ height: '100%' }}
-      itemContent={(_, juz) => (
-        <JuzItem
-          juz={juz}
-          isActive={juz.number === selectedJuzId}
-          getJuzHref={getJuzHref}
-          onNavigate={handleNavigate}
-        />
-      )}
-    />
+    <ul className="space-y-2">
+      {juzs.map((juz) => {
+        const isActive = juz.number === selectedJuzId;
+        return (
+          <JuzItem
+            key={juz.number}
+            juz={juz}
+            isActive={isActive}
+            href={getJuzHref(juz.number)}
+            onNavigate={createNavigateHandler(juz)}
+          />
+        );
+      })}
+    </ul>
   );
 };

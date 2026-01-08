@@ -1,4 +1,4 @@
-import { memo, useCallback, useState, type MutableRefObject } from 'react';
+import { memo } from 'react';
 
 import { TabContent } from '@/app/shared/components/surah-tabs/TabContent';
 import { SidebarTabs } from '@/app/shared/surah-sidebar/components/SidebarTabs';
@@ -60,22 +60,13 @@ const ScrollableTabContent = memo(function ScrollableTabContent({
   handleScroll,
   ...tabContentProps
 }: ScrollableTabContentProps) {
-  const [scrollParent, setScrollParent] = useState<HTMLDivElement | null>(null);
-  const setContainerRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      (scrollRef as MutableRefObject<HTMLDivElement | null>).current = node;
-      setScrollParent(node);
-    },
-    [scrollRef]
-  );
-
   return (
     <div
-      ref={setContainerRef}
+      ref={scrollRef}
       onScroll={handleScroll}
       className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-2 sm:p-3 touch-pan-y"
     >
-      {scrollParent && <TabContent {...tabContentProps} scrollParent={scrollParent} />}
+      <TabContent {...tabContentProps} />
     </div>
   );
 });

@@ -8,7 +8,6 @@ import type { Chapter } from '@/types';
 
 interface TabContentProps {
   activeTab: TabKey;
-  scrollParent: HTMLElement;
   filteredChapters: ReadonlyArray<Chapter>;
   filteredJuzs: JuzSummary[];
   filteredPages: number[];

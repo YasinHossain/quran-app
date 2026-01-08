@@ -1,5 +1,6 @@
-import { memo, useRef } from 'react';
-import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
+'use client';
+
+import React, { memo, useCallback } from 'react';
 
 import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
 import { PageNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
@@ -15,28 +16,30 @@ interface Props {
   setSelectedJuzId: (id: number) => void;
   setSelectedSurahId: (id: number) => void;
   rememberScroll: () => void;
-  scrollParent?: HTMLElement;
   onClose?: (() => void) | undefined;
 }
 
 interface PageItemProps {
   page: number;
   isActive: boolean;
-  getPageHref: (p: number) => string;
-  onNavigate: (p: number) => void;
+  href: string;
+  onNavigate: () => void;
 }
 
+/**
+ * Memoized individual Page item to prevent re-renders when other pages change.
+ * This is especially important for Pages list which has 604 items.
+ */
 const PageItem = memo(function PageItem({
   page,
   isActive,
-  getPageHref,
+  href,
   onNavigate,
-}: PageItemProps) {
+}: PageItemProps): React.JSX.Element {
   return (
-    <div className="pb-2">
+    <li style={{ contain: 'layout style' }}>
       <PageNavigationCard
-        href={getPageHref(page)}
-        prefetch={false}
+        href={href}
         scroll={false}
         data-active={isActive}
         isActive={isActive}
@@ -44,9 +47,9 @@ const PageItem = memo(function PageItem({
           id: page,
           title: `Page ${page}`,
         }}
-        onNavigate={() => onNavigate(page)}
+        onNavigate={onNavigate}
       />
-    </div>
+    </li>
   );
 });
 
@@ -58,40 +61,38 @@ export const Page = ({
   setSelectedJuzId,
   setSelectedSurahId,
   rememberScroll,
-  scrollParent,
   onClose,
 }: Props): React.JSX.Element => {
-  const { getPageHref } = useNavigationTargets();
-  const virtuosoRef = useRef<VirtuosoHandle>(null);
+  const { getPageHref, goToPage } = useNavigationTargets();
 
-  // Note: Scroll centering is handled by the parent useScrollCentering hook
-  // which uses [data-active] attributes and scrollIntoView for consistency
-
-  const handleNavigate = (p: number): void => {
-    onClose?.();
-    setSelectedPageId(p);
-    setSelectedJuzId(getJuzByPage(p));
-    const chap = getSurahByPage(p, chapters);
-    if (chap) setSelectedSurahId(chap.id);
-    rememberScroll();
-  };
+  // Create a stable callback factory for navigation handlers
+  const createNavigateHandler = useCallback(
+    (p: number) => () => {
+      onClose?.();
+      setSelectedPageId(p);
+      setSelectedJuzId(getJuzByPage(p));
+      const chap = getSurahByPage(p, chapters);
+      if (chap) setSelectedSurahId(chap.id);
+      rememberScroll();
+      goToPage(p);
+    },
+    [onClose, setSelectedPageId, setSelectedJuzId, setSelectedSurahId, chapters, rememberScroll, goToPage]
+  );
 
   return (
-    <Virtuoso
-      ref={virtuosoRef}
-      data={pages as number[]}
-      fixedItemHeight={88}
-      computeItemKey={(_, page) => page}
-      {...(scrollParent ? { customScrollParent: scrollParent } : {})}
-      style={{ height: '100%' }}
-      itemContent={(_, page) => (
-        <PageItem
-          page={page}
-          isActive={page === selectedPageId}
-          getPageHref={getPageHref}
-          onNavigate={handleNavigate}
-        />
-      )}
-    />
+    <ul className="space-y-2">
+      {pages.map((p) => {
+        const isActive = p === selectedPageId;
+        return (
+          <PageItem
+            key={p}
+            page={p}
+            isActive={isActive}
+            href={getPageHref(p)}
+            onNavigate={createNavigateHandler(p)}
+          />
+        );
+      })}
+    </ul>
   );
 };

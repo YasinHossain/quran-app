@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useEffect, useRef } from 'react';
+import { RefObject, useCallback, useLayoutEffect } from 'react';
 
 interface ScrollPersistenceOptions<T extends string> {
   scrollRef: RefObject<HTMLDivElement | null>;
@@ -24,50 +24,14 @@ export const useScrollPersistence = <T extends string>({
   isEnabled = true,
 }: ScrollPersistenceOptions<T>): ScrollPersistenceResult<T> => {
   const enabled = isEnabled;
-  const hasRestoredRef = useRef(false);
 
-  // Restore scroll position after Virtuoso has rendered
-  // Use effect (not layout effect) to ensure DOM is fully painted
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!enabled) return;
-    if (hasRestoredRef.current) return;
-
     const container = scrollRef.current;
     if (!container) return;
-
     const storageKey = storageKeys[activeTab];
     const top = Number(sessionStorage.getItem(storageKey)) || scrollTops[activeTab];
-
-    let timeoutId: ReturnType<typeof setTimeout> | undefined;
-    let rafId1: number | undefined;
-    let rafId2: number | undefined;
-
-    if (top > 0) {
-      // Use multiple requestAnimationFrame calls to ensure Virtuoso has rendered
-      // This is necessary because Virtuoso renders items asynchronously
-      rafId1 = requestAnimationFrame(() => {
-        rafId2 = requestAnimationFrame(() => {
-          if (container.scrollHeight > container.clientHeight) {
-            container.scrollTop = top;
-            hasRestoredRef.current = true;
-          } else {
-            // Virtuoso hasn't rendered yet, try again after a short delay
-            timeoutId = setTimeout(() => {
-              container.scrollTop = top;
-              hasRestoredRef.current = true;
-            }, 50);
-          }
-        });
-      });
-    } else {
-      hasRestoredRef.current = true;
-    }
-
-    return () => {
-      if (rafId1) cancelAnimationFrame(rafId1);
-      if (rafId2) cancelAnimationFrame(rafId2);
-      if (timeoutId) clearTimeout(timeoutId);
-    };
+    container.scrollTop = top;
   }, [activeTab, enabled, scrollRef, scrollTops, storageKeys]);
 
   const handleScroll = useCallback(
