@@ -1,7 +1,4 @@
-import { fetchWithTimeout } from '@/lib/api/client';
-
-const QDC_AUDIO_BASE_URL =
-  process.env['NEXT_PUBLIC_QDC_AUDIO_BASE_URL'] ?? 'https://api.quran.com/api/qdc/audio';
+import { apiFetch } from '@/lib/api/client';
 
 export interface QdcAudioTranslatedName {
   name: string;
@@ -70,10 +67,6 @@ export interface QdcAudioFile {
   verseTimings: QdcAudioVerseTiming[];
 }
 
-function normaliseBaseUrl(raw: string): string {
-  return raw.endsWith('/') ? raw.slice(0, -1) : raw;
-}
-
 export function normalizeQdcAudioFile(apiFile: QdcAudioFileApi): QdcAudioFile {
   return {
     id: apiFile.id,
@@ -90,12 +83,11 @@ export function normalizeQdcAudioFile(apiFile: QdcAudioFileApi): QdcAudioFile {
 }
 
 export async function getQdcAudioReciters(): Promise<QdcAudioReciterApi[]> {
-  const url = `${normaliseBaseUrl(QDC_AUDIO_BASE_URL)}/reciters`;
-  const res = await fetchWithTimeout(url, {
-    headers: { Accept: 'application/json' },
-    errorPrefix: 'Failed to fetch QDC audio reciters',
-  });
-  const json = (await res.json()) as QdcAudioRecitersResponse;
+  const json = await apiFetch<QdcAudioRecitersResponse>(
+    'audio/reciters',
+    {},
+    'Failed to fetch QDC audio reciters'
+  );
   return Array.isArray(json.reciters) ? json.reciters : [];
 }
 
@@ -110,20 +102,23 @@ export async function getQdcAudioFile({
   chapterId,
   segments,
 }: GetQdcAudioFileParams): Promise<QdcAudioFile> {
-  const url = new URL(`${normaliseBaseUrl(QDC_AUDIO_BASE_URL)}/reciters/${reciterId}/audio_files`);
-  url.searchParams.set('chapter', String(chapterId));
+  const params: Record<string, string> = {
+    chapter: String(chapterId),
+  };
   if (segments) {
-    url.searchParams.set('segments', 'true');
+    params['segments'] = 'true';
   }
 
-  const res = await fetchWithTimeout(url.toString(), {
-    headers: { Accept: 'application/json' },
-    errorPrefix: 'Failed to fetch QDC surah audio',
-  });
-  const json = (await res.json()) as QdcAudioFilesResponse;
+  const json = await apiFetch<QdcAudioFilesResponse>(
+    `audio/reciters/${reciterId}/audio_files`,
+    params,
+    'Failed to fetch QDC surah audio'
+  );
+
   const first = json.audio_files?.[0];
   if (!first) {
     throw new Error('Failed to fetch QDC surah audio: No audio file returned');
   }
   return normalizeQdcAudioFile(first);
 }
+
