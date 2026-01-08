@@ -14,7 +14,7 @@ const cspHeader = `
   font-src 'self' https://fonts.gstatic.com data:;
   img-src 'self' data: https: blob:;
   media-src 'self' https: blob:;
-  connect-src 'self' https://api.quran.com https://api.quran.gading.dev https://api.qurancdn.com https://raw.githubusercontent.com https://archive.org;
+  connect-src 'self' https://api.quran.com https://api.quran.gading.dev https://api.qurancdn.com https://verses.quran.com https://download.quranicaudio.com https://raw.githubusercontent.com https://archive.org;
   worker-src 'self' blob:;
   child-src 'self' blob:;
   form-action 'self';
@@ -51,23 +51,23 @@ const baseSecurityHeaders = [
 const isProd = process.env.NODE_ENV === 'production';
 const securityHeaders = isProd
   ? [
-      ...baseSecurityHeaders,
-      {
-        key: 'Strict-Transport-Security',
-        value: 'max-age=63072000; includeSubDomains; preload',
-      },
-      {
-        key: 'Content-Security-Policy',
-        value: cspHeader,
-      },
-    ]
+    ...baseSecurityHeaders,
+    {
+      key: 'Strict-Transport-Security',
+      value: 'max-age=63072000; includeSubDomains; preload',
+    },
+    {
+      key: 'Content-Security-Policy',
+      value: cspHeader,
+    },
+  ]
   : [
-      ...baseSecurityHeaders,
-      {
-        key: 'Content-Security-Policy-Report-Only',
-        value: cspHeader,
-      },
-    ];
+    ...baseSecurityHeaders,
+    {
+      key: 'Content-Security-Policy-Report-Only',
+      value: cspHeader,
+    },
+  ];
 
 const nextConfig: NextConfig = {
   // Expose the Quran API base URL to the app
