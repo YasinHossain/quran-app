@@ -16,22 +16,19 @@
  * 3. JavaScript hydrates for interactivity
  */
 
-import { getChaptersServer, getVerseOfDayServer } from '@/lib/api/server';
+import { getChaptersServer, getVersesOfDayServer } from '@/lib/api/server';
 
 import { HomePageClient } from './(features)/home/components/HomePageClient';
 import { SurahGridServer } from './(features)/home/components/SurahGridServer';
 import FeaturesLayout from './(features)/layout';
 
 export default async function Page(): Promise<React.JSX.Element> {
-  // Fetch chapters on the server - cached for 24 hours
-  const [chapters, verseOfDay] = await Promise.all([
-    getChaptersServer(),
-    getVerseOfDayServer(),
-  ]);
+  // Fetch chapters and verses on the server - cached for 1 hour
+  const [chapters, versesOfDay] = await Promise.all([getChaptersServer(), getVersesOfDayServer()]);
 
   return (
     <FeaturesLayout>
-      <HomePageClient initialChapters={chapters} initialVerse={verseOfDay}>
+      <HomePageClient initialChapters={chapters} initialVerses={versesOfDay}>
         {/* Server-rendered Surah grid - appears instantly */}
         <SurahGridServer chapters={chapters} />
       </HomePageClient>

@@ -119,8 +119,8 @@ beforeEach(() => {
 });
 
 it('renders without runtime warnings', async () => {
-  const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-  const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+  const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => { });
 
   await renderHome();
 

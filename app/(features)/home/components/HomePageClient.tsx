@@ -19,8 +19,8 @@ interface HomePageClientProps {
     className?: string;
     /** Pre-fetched chapters from server */
     initialChapters: ReadonlyArray<Chapter>;
-    /** Pre-fetched verse of the day from server */
-    initialVerse?: Verse | undefined;
+    /** Pre-fetched verses of the day from server (up to 5) */
+    initialVerses?: Verse[] | undefined;
     /** Server-rendered Surah grid (children) */
     children?: React.ReactNode;
 }
@@ -31,7 +31,7 @@ interface HomePageClientProps {
  * Features:
  * - Comprehensive search functionality with instant results
  * - Tab navigation between different content views
- * - Verse of the Day display
+ * - Verse of the Day display with smooth rotation
  * - Theme toggle functionality
  *
  * Architecture compliance:
@@ -42,7 +42,7 @@ interface HomePageClientProps {
 export const HomePageClient = memo(function HomePageClient({
     className,
     initialChapters,
-    initialVerse,
+    initialVerses,
     children,
 }: HomePageClientProps) {
     return (
@@ -70,19 +70,19 @@ export const HomePageClient = memo(function HomePageClient({
                         <HomeSearch />
                     </div>
 
-                    {/* Verse of the Day - Second widest (wider than search) */}
-                    <div
-                        className="w-full mx-auto animate-fade-in-up animation-delay-400"
-                        style={{ maxWidth: 'clamp(18rem, 80vw, 64rem)' }}
-                    >
-                        <VerseOfDay initialVerse={initialVerse} />
-                    </div>
+                    {/* Verse of the Day - Simple, performant version */}
+                    {initialVerses && initialVerses.length > 0 && (
+                        <div
+                            className="w-full mx-auto animate-fade-in-up animation-delay-400"
+                            style={{ maxWidth: 'clamp(18rem, 80vw, 64rem)' }}
+                        >
+                            <VerseOfDay verses={initialVerses} />
+                        </div>
+                    )}
                 </main>
 
                 {/* Tabs section with server-rendered grid as children */}
-                <HomeTabsClient initialChapters={initialChapters}>
-                    {children}
-                </HomeTabsClient>
+                <HomeTabsClient initialChapters={initialChapters}>{children}</HomeTabsClient>
             </div>
         </div>
     );
