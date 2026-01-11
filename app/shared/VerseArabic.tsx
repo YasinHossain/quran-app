@@ -1,8 +1,6 @@
 'use client';
 import * as Popover from '@radix-ui/react-popover';
 import { Fragment, memo, useContext, useMemo, useState } from 'react';
-
-import { VerseMarker } from '@/app/(features)/surah/components/surah-view/VerseMarker';
 import { useQcfMushafFont } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import { useDynamicFontLoader } from '@/app/hooks/useDynamicFontLoader';
 import { useSettings } from '@/app/providers/SettingsContext';
@@ -53,8 +51,8 @@ const WordDisplay = ({
   const audioCtx = useContext(AudioContext);
   const isPlayerVisible = audioCtx?.isPlayerVisible ?? false;
 
-  // Strip verse markers
-  if (/[\u06DD\u06DE\uFD3E\uFD3F]/.test(word.uthmani)) {
+  // Skip only Sajdah/Rub markers (keep verse end markers for font rendering)
+  if (/[\u06DE\uFD3E\uFD3F]/.test(word.uthmani) && !/[\u06DD]/.test(word.uthmani)) {
     return null;
   }
 
@@ -267,24 +265,14 @@ export const VerseArabic = memo(function VerseArabic({
           <span>
             {verse.words
               .filter((word: Word, index: number, words: Word[]) => {
-                // Heuristic: If the last word contains no Arabic letters (only symbols/numbers),
-                // it is likely a verse marker. Hide it to avoid duplication.
-                // Arabic letters range: \u0621-\u064A (Hamza to Yeh), plus extended characters.
-                const hasArabicLetters = /[\u0621-\u064A\u0671-\u06D3]/.test(word.uthmani);
-                const isLastWord = index === words.length - 1;
                 const displayText =
                   tajweed && word.codeV2
                     ? word.codeV2
                     : stripUnsupportedQpcGlyphs(word.uthmani, isQpcHafsFont);
 
-                if (isLastWord && !hasArabicLetters) {
-                  return false;
-                }
-
-                // Also filter known marker characters anywhere (just in case)
+                // Filter only Sajdah/Rub markers (keep verse end markers)
                 if (
-                  word.char_type_name === 'end' ||
-                  /[\u06DD\u06DE\uFD3E\uFD3F]/.test(word.uthmani)
+                  /[\u06DE\uFD3E\uFD3F]/.test(word.uthmani) && !/[\u06DD]/.test(word.uthmani)
                 ) {
                   return false;
                 }
@@ -312,12 +300,10 @@ export const VerseArabic = memo(function VerseArabic({
                   />
                 </Fragment>
               ))}
-            {verseNumber > 0 && <VerseMarker number={verseNumber} style={{ marginBottom: 0 }} />}
           </span>
         ) : (
           <span className="inline-flex items-center gap-2">
             <VerseText verseText={verseText} isQpcHafsFont={isQpcHafsFont} />
-            {verseNumber > 0 && <VerseMarker number={verseNumber} style={{ marginBottom: 0 }} />}
           </span>
         )}
       </p>
