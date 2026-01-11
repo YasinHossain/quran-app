@@ -27,15 +27,20 @@ const toArabicIndicNumber = (num: number): string => {
 };
 
 export const VerseMarker = ({ number, className, style }: VerseMarkerProps): React.JSX.Element => {
+  // Use U+06DD (Arabic End of Ayah) which encircles the number
+  // This character works with fonts that support it like UthmanicHafs1Ver18
+  const arabicNumber = toArabicIndicNumber(number);
+
   return (
     <span
-      className={cn('text-current', className)}
+      className={cn('text-current whitespace-nowrap', className)}
       style={{
-        fontFamily: 'UthmanicHafs1Ver18, "KFGQPC Uthmanic Script HAFS Regular", sans-serif',
+        fontFamily: 'UthmanicHafs1Ver18, "KFGQPC Uthmanic Script HAFS Regular", serif',
         ...style,
       }}
     >
-      {toArabicIndicNumber(number)}
+      {/* U+06DD is the Arabic End of Ayah character that creates an ornamental circle around text */}
+      {`\u06DD${arabicNumber}`}
     </span>
   );
 };

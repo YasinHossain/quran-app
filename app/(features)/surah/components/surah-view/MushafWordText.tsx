@@ -1,8 +1,6 @@
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { cn } from '@/lib/utils/cn';
 
-import { VerseMarker } from './VerseMarker';
-
 import type { ReaderSettings } from './MushafMain.types';
 import type { QcfFontVersion } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import type { MushafWord } from '@/types';
@@ -13,8 +11,17 @@ const getBaseText = (word: MushafWord, isIndopakMushaf: boolean): string =>
     ? word.textIndopak || word.textUthmani || ''
     : word.textUthmani || word.textIndopak || '';
 
-const stripAyahMarkers = (text: string, isQpcHafsMushaf: boolean): string =>
-  isQpcHafsMushaf ? text.replace(/[\u06DF\u06DD]/g, '') : text.replace(/\u06DD/g, '');
+// For QCF mushafs, we strip ayah markers since they use special glyph codes
+// For IndoPak and QPC Hafs, the font renders markers naturally - no stripping needed
+const stripAyahMarkers = (text: string, isQcfMushaf: boolean): string => {
+  if (!isQcfMushaf) {
+    // IndoPak and QPC Hafs: keep the markers as the font renders them beautifully
+    return text;
+  }
+  // QCF mushafs use glyph codes, so strip Unicode markers from text fallback
+  return text.replace(/[\u06DF\u06DD]/g, '');
+};
+
 
 // V4 (Tajweed) uses the same glyph codes as V2 (code_v2 field), with the COLRv1 color font
 const getGlyphCode = (word: MushafWord, qcfVersion: QcfFontVersion): string | undefined =>
@@ -108,9 +115,46 @@ export const MushafWordText = ({
   qcfVersion,
   isFontLoaded,
 }: MushafWordTextProps): React.JSX.Element | null => {
+  // Handle verse end markers (charType === 'end')
   if (word.charType === 'end') {
-    const verseNumber = getVerseNumberFromWord(word);
-    return typeof verseNumber === 'number' ? <VerseMarker number={verseNumber} /> : null;
+    const verseKey = getVerseKeyFromWord(word);
+
+    // For QCF Mushafs (V1, V2, V4), use the glyph code for proper verse marker rendering
+    if (isQcfMushaf && isFontLoaded) {
+      const glyphCode = getGlyphCode(word, qcfVersion);
+      if (glyphCode) {
+        return (
+          <span
+            data-mushaf-word="true"
+            data-verse-key={verseKey || undefined}
+            data-word-position={String(word.position)}
+            className="inline-flex flex-none items-center text-foreground"
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(glyphCode) }}
+          />
+        );
+      }
+    }
+
+    // For QPC Uthmani Hafs and IndoPak: the font already renders beautiful verse markers
+    // Just render the text directly - no SVG overlay needed
+    const markerText = isIndopakMushaf
+      ? (word.textIndopak || word.textUthmani || '')
+      : (word.textUthmani || '');
+
+    if (markerText) {
+      return (
+        <span
+          data-mushaf-word="true"
+          data-verse-key={verseKey || undefined}
+          data-word-position={String(word.position)}
+          className="inline-flex flex-none items-center text-foreground"
+        >
+          {markerText}
+        </span>
+      );
+    }
+
+    return null;
   }
 
   const baseText = getBaseText(word, isIndopakMushaf);
@@ -122,7 +166,7 @@ export const MushafWordText = ({
     return null;
   }
 
-  const displayText = stripAyahMarkers(baseText, isQpcHafsMushaf);
+  const displayText = stripAyahMarkers(baseText, isQcfMushaf);
   const copyText = displayText.trim();
   const rawHtml = buildWordHtml({
     isQcfMushaf,
@@ -145,9 +189,8 @@ export const MushafWordText = ({
       {...(verseKey ? { 'data-verse-key': verseKey } : {})}
       data-word-position={String(word.position)}
       className={cn(
-        isQcfMushaf
-          ? 'inline-flex flex-none items-center text-foreground font-medium'
-          : 'inline-flex flex-none items-center px-[1px] text-foreground',
+        'inline-flex flex-none items-center text-foreground',
+        isQcfMushaf && 'font-medium',
         isQcfMushaf && !isFontLoaded && hasGlyphCode && 'opacity-0'
       )}
       dangerouslySetInnerHTML={{ __html: sanitizeHtml(rawHtml) }}

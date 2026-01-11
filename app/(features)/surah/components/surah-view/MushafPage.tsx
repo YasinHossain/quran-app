@@ -93,9 +93,9 @@ const MushafPageFooter = ({
 }): React.JSX.Element => (
   <div className="mt-6 flex justify-center sm:mt-8">
     <span className="inline-flex items-center justify-center rounded-xl bg-surface px-6 py-2 text-xs font-medium text-muted shadow-sm">
-      <span className="tracking-widest">{`صفحة ${toArabicIndicNumber(pageNumber)}`}</span>
+      <span className="tracking-widest">{`Page ${pageNumber}`}</span>
       <span className="mx-2 text-muted-foreground/40">•</span>
-      <span>{`الجزء ${toArabicIndicNumber(juzNumber)}`}</span>
+      <span>{`Juz ${juzNumber}`}</span>
     </span>
   </div>
 );
@@ -110,11 +110,6 @@ const getLineWidth = (fontSize: number): number => {
 
   const maxViewportWidth = Math.floor(window.innerWidth * 0.9);
   return Math.min(clamped, maxViewportWidth);
-};
-
-const toArabicIndicNumber = (num: number): string => {
-  const digits = '٠١٢٣٤٥٦٧٨٩';
-  return `${num}`.replace(/\d/g, (d) => digits[Number(d)] ?? d);
 };
 
 export const MushafPage = ({
