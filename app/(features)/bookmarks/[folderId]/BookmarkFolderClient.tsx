@@ -7,6 +7,7 @@ import { logger } from '@/src/infrastructure/monitoring/Logger';
 import { BookmarkFolderView } from './components/BookmarkFolderView.client';
 import { FolderNotFound } from './components/FolderNotFound';
 import { useBookmarkFolderController } from './hooks/useBookmarkFolderController';
+import { usePrefetchSingleVerse } from '@/app/shared/hooks/useSingleVerse';
 
 interface BookmarkFolderClientProps {
   folderId: string;
@@ -25,6 +26,19 @@ export function BookmarkFolderClient({ folderId }: BookmarkFolderClientProps): R
   if (!controller.folder) {
     return <FolderNotFound />;
   }
+
+  // Prefetch first 20 bookmarks to mitigate waterfall loading
+  const prefetch = usePrefetchSingleVerse();
+
+  React.useEffect(() => {
+    const targets = controller.bookmarks
+      .slice(0, 20)
+      .map(b => b.verseKey ? String(b.verseKey) : b.verseId ? String(b.verseId) : null);
+
+    if (targets.length > 0) {
+      void prefetch(targets);
+    }
+  }, [controller.bookmarks, prefetch]);
 
   return (
     <BookmarkFolderView

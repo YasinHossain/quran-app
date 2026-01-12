@@ -35,7 +35,7 @@ interface BookmarkNavigationCardProps extends Omit<BaseCardProps, 'children' | '
 
 // Map section IDs to URLs for smooth navigation
 const routes: Record<SectionId, string> = {
-  bookmarks: '/bookmarks',
+  bookmarks: '/bookmarks/folders',
   pinned: '/bookmarks/pinned',
   'last-read': '/bookmarks/last-read',
   planner: '/bookmarks/planner',

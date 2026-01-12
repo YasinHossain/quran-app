@@ -37,15 +37,15 @@ export const BookmarkFolderCard = ({
   const latestBookmarkTimestamp =
     verseCount > 0
       ? folder.bookmarks.reduce(
-          (latest, bookmark) => Math.max(latest, bookmark.createdAt ?? 0),
-          folder.createdAt ?? 0
-        )
+        (latest, bookmark) => Math.max(latest, bookmark.createdAt ?? 0),
+        folder.createdAt ?? 0
+      )
       : (folder.createdAt ?? 0);
   const formattedUpdatedAt =
     latestBookmarkTimestamp > 0
       ? new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' }).format(
-          new Date(latestBookmarkTimestamp)
-        )
+        new Date(latestBookmarkTimestamp)
+      )
       : null;
   const versePreview = folder.bookmarks.slice(0, 3);
 
@@ -56,9 +56,9 @@ export const BookmarkFolderCard = ({
       customVariant={{
         padding: 'p-0',
         hover: {
-          effect: 'translate',
-          value: 'hover:-translate-y-1 hover:shadow-lg',
-          duration: 'transition-all duration-300',
+          effect: 'none',
+          value: '',
+          duration: '',
         },
       }}
       onClick={handleClick}
@@ -70,7 +70,7 @@ export const BookmarkFolderCard = ({
       data-expanded={isExpanded}
       className={cn(
         'group relative overflow-hidden rounded-2xl border border-border/40 bg-surface/80 backdrop-blur-sm transition-all duration-300',
-        'hover:-translate-y-1 hover:shadow-lg',
+
         'data-[expanded=true]:border-accent/40 data-[expanded=true]:shadow-lg data-[expanded=true]:bg-surface/80',
         className as string
       )}

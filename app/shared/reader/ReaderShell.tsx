@@ -6,6 +6,7 @@ import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { SurahMain } from '@/app/(features)/surah/components/surah-view/SurahMain';
 import { SurahWorkspaceNavigation } from '@/app/(features)/surah/components/surah-view/SurahWorkspaceNavigation';
 import { useReaderMode } from '@/app/providers/ReaderModeContext';
+import { useUIState } from '@/app/providers/UIStateContext';
 import { SettingsSidebar } from '@/app/shared/reader/settings';
 import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
 import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
@@ -163,6 +164,7 @@ export function ReaderShell({
   initialMode = 'verse',
 }: ReaderShellProps): React.JSX.Element {
   const { mode, setMode, enableReaderMode, isReaderModeAvailable } = useReaderMode();
+  const { setSettingsOpen } = useUIState();
   const readerView = useReaderView({
     resourceId,
     resourceKind,
@@ -196,7 +198,8 @@ export function ReaderShell({
 
   const handleReadingPanelOpen = useCallback(() => {
     setMode('mushaf');
-  }, [setMode]);
+    setSettingsOpen(false);
+  }, [setMode, setSettingsOpen]);
 
   const handleTranslationTabOpen = useCallback(() => {
     setMode('verse');

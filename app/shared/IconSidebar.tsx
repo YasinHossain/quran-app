@@ -80,11 +80,11 @@ const MobileNavigation = memo(function MobileNavigation({
             const isActive =
               item.href === '/'
                 ? pathname === '/'
-                : item.href === '/bookmarks'
+                : item.href === '/bookmarks/last-read'
                   ? pathname.startsWith('/bookmarks')
                   : pathname.startsWith('/surah') ||
-                    pathname.startsWith('/juz') ||
-                    pathname.startsWith('/page');
+                  pathname.startsWith('/juz') ||
+                  pathname.startsWith('/page');
 
             return (
               <Link
@@ -124,7 +124,7 @@ export const Navigation = memo(function Navigation() {
     (): NavItem[] => [
       { icon: HomeIcon, label: t('home'), href: '/' },
       { icon: GridIcon, label: 'Surah', href: '/surah/1' },
-      { icon: BookmarkOutlineIcon, label: t('bookmarks'), href: '/bookmarks' },
+      { icon: BookmarkOutlineIcon, label: t('bookmarks'), href: '/bookmarks/last-read' },
     ],
     [t]
   );

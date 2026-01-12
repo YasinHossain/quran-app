@@ -11,7 +11,7 @@ export const HeaderActions = memo(function HeaderActions(): ReactElement {
   const pathname = usePathname();
 
   // Settings sidebar is not present on these pages on PC, so hide the gear icon on mobile too.
-  const NO_SETTINGS_SIDEBAR_ROUTES = ['/bookmarks', '/bookmarks/last-read', '/bookmarks/planner'];
+  const NO_SETTINGS_SIDEBAR_ROUTES = ['/bookmarks/folders', '/bookmarks/last-read', '/bookmarks/planner'];
 
   const shouldHideSettings = NO_SETTINGS_SIDEBAR_ROUTES.includes(pathname);
 

@@ -72,9 +72,9 @@ export const BookmarksContent = ({
 );
 
 const NAVIGATION_SECTIONS: BookmarkNavigationContent[] = [
+  { id: 'last-read', icon: ClockIcon, label: 'Recent', description: 'Last visited' },
   { id: 'bookmarks', icon: BookmarkIcon, label: 'All Bookmarks', description: 'Manage folders' },
   { id: 'pinned', icon: PinIcon, label: 'Pinned Verses', description: 'Quick access' },
-  { id: 'last-read', icon: ClockIcon, label: 'Recent', description: 'Last visited' },
   {
     id: 'planner',
     icon: CalendarIcon,

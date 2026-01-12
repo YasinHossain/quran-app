@@ -40,7 +40,7 @@ export const PlannerCard = ({
   );
 
   return (
-    <div className="cq relative flex min-w-0 h-full transform flex-col rounded-lg border border-border/50 bg-surface p-6 shadow-lg transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 sm:p-7 lg:min-w-[20rem] xl:min-w-[24rem] 2xl:min-w-[28rem]">
+    <div className="cq relative flex min-w-0 h-full flex-col rounded-lg border border-border/50 bg-surface p-6 shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 sm:p-7 lg:min-w-[20rem] xl:min-w-[24rem] 2xl:min-w-[28rem]">
       <div className="relative z-10 flex h-full flex-col gap-6">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0 flex-1">

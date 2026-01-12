@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import { cn } from '@/lib/utils/cn';
 
 import { MushafLine } from './MushafLine';
@@ -64,9 +66,7 @@ export const MushafLines = ({
     event.clipboardData.setData('text/plain', normalized);
   };
 
-  // Calculate the media query for when to switch to reflow mode
-  // This replaces the JS-based useMushafReflow hook to prevent layout shifts/jumps
-  const getReflowMediaQuery = (): string => {
+  const getReflowQueryCondition = (): string => {
     // 1. Mobile constraint (must be < 1280px)
     const mobileQuery = '(max-width: 1279px)';
 
@@ -92,28 +92,62 @@ export const MushafLines = ({
       overflowQuery = `(max-width: ${pxLimit}px)`;
     }
 
-    return `@media ${mobileQuery} and ${overflowQuery}`;
+    return `${mobileQuery} and ${overflowQuery}`;
   };
 
-  const scopeId = `mushaf-layout-${lineWidthDesktop.replace(/[^a-z0-9]/gi, '')}`;
-  const mediaQuery = getReflowMediaQuery();
+  // Determine if we should use the reflow layout (mobile/overflow)
+  // We perform this check in JS to conditionally render ONLY the active view
+  // This avoids double-rendering DOM nodes (Standard + Reflow) which causes
+  // major performance issues on mobile scrolling.
+  const [shouldUseReflow, setShouldUseReflow] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia(getReflowQueryCondition()).matches;
+  });
 
-  // Styles to toggle visibility based on the media query
-  const styleCss = `
-    .${scopeId} .mushaf-reflow-view { display: none; }
-    .${scopeId} .mushaf-standard-view { display: block; }
-    
-    ${mediaQuery} {
-      .${scopeId} .mushaf-reflow-view { display: block !important; }
-      .${scopeId} .mushaf-standard-view { display: none !important; }
-    }
-  `;
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const query = getReflowQueryCondition();
+    const matcher = window.matchMedia(query);
+
+    const handler = (e: MediaQueryListEvent) => {
+      setShouldUseReflow(e.matches);
+    };
+
+    // Update state in case it changed
+    setShouldUseReflow(matcher.matches);
+
+    matcher.addEventListener('change', handler);
+    return () => matcher.removeEventListener('change', handler);
+  }, [lineWidthDesktop]);
+
+  const scopeId = `mushaf-layout-${lineWidthDesktop.replace(/[^a-z0-9]/gi, '')}`;
 
   return (
-    <>
-      <style dangerouslySetInnerHTML={{ __html: styleCss }} />
-      <div className={scopeId} onCopy={handleCopy}>
-        {/* Standard Lines Layout (Desktop / Wide Mobile) */}
+    <div className={scopeId} onCopy={handleCopy}>
+      {shouldUseReflow ? (
+        // Reflow Layout (Mobile Overflow)
+        <div
+          className={cn(
+            'mushaf-reflow-view',
+            isQcfMushaf && qcfVersion === 'v4' && 'tajweed-palette'
+          )}
+        >
+          <MushafReflowContent
+            lines={lines}
+            settings={settings}
+            isQcfMushaf={isQcfMushaf}
+            isQpcHafsMushaf={isQpcHafsMushaf}
+            isIndopakMushaf={isIndopakMushaf}
+            qcfVersion={qcfVersion}
+            indopakVersion={indopakVersion}
+            fontSize={fontSize}
+            fontFamily={fontFamily}
+            isFontLoaded={isFontLoaded}
+          />
+        </div>
+      ) : (
+        // Standard Lines Layout (Desktop / Wide Mobile)
         <div
           className={cn(
             'mushaf-standard-view flex flex-col',
@@ -148,28 +182,7 @@ export const MushafLines = ({
             />
           ))}
         </div>
-
-        {/* Reflow Layout (Mobile Overflow) */}
-        <div
-          className={cn(
-            'mushaf-reflow-view',
-            isQcfMushaf && qcfVersion === 'v4' && 'tajweed-palette'
-          )}
-        >
-          <MushafReflowContent
-            lines={lines}
-            settings={settings}
-            isQcfMushaf={isQcfMushaf}
-            isQpcHafsMushaf={isQpcHafsMushaf}
-            isIndopakMushaf={isIndopakMushaf}
-            qcfVersion={qcfVersion}
-            indopakVersion={indopakVersion}
-            fontSize={fontSize}
-            fontFamily={fontFamily}
-            isFontLoaded={isFontLoaded}
-          />
-        </div>
-      </div>
-    </>
+      )}
+    </div>
   );
 };

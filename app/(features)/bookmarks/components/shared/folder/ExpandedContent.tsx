@@ -18,22 +18,43 @@ export const ExpandedContent = ({
   folderBookmarks,
   onRemoveBookmark,
 }: ExpandedContentProps): React.JSX.Element | null => {
-  if (!isExpanded) return null;
+  const [shouldRender, setShouldRender] = React.useState(isExpanded);
+
+  React.useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    if (isExpanded) {
+      setShouldRender(true);
+    } else {
+      timeoutId = setTimeout(() => {
+        setShouldRender(false);
+      }, 500);
+    }
+    return () => clearTimeout(timeoutId);
+  }, [isExpanded]);
 
   return (
-    <div className="w-full border-t border-border/30 dark:border-border/20 bg-surface-navigation text-foreground rounded-b-xl">
-      {folderBookmarks.length > 0 ? (
-        folderBookmarks.map((bookmark, index) => (
-          <FolderVerseItem
-            key={String(bookmark.verseId)}
-            bookmark={bookmark}
-            showDivider={index < folderBookmarks.length - 1}
-            {...(onRemoveBookmark ? { onRemoveBookmark } : {})}
-          />
-        ))
-      ) : (
-        <p className="px-4 py-4 text-sm text-center text-muted">This folder is empty.</p>
-      )}
+    <div
+      className={`grid w-full transition-[grid-template-rows] duration-500 ease-in-out ${isExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+        }`}
+    >
+      <div className="overflow-hidden">
+        {shouldRender && (
+          <div className="w-full border-t border-border/30 dark:border-border/20 bg-surface-navigation text-foreground rounded-b-xl">
+            {folderBookmarks.length > 0 ? (
+              folderBookmarks.map((bookmark, index) => (
+                <FolderVerseItem
+                  key={String(bookmark.verseId)}
+                  bookmark={bookmark}
+                  showDivider={index < folderBookmarks.length - 1}
+                  {...(onRemoveBookmark ? { onRemoveBookmark } : {})}
+                />
+              ))
+            ) : (
+              <p className="px-4 py-4 text-sm text-center text-muted">This folder is empty.</p>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

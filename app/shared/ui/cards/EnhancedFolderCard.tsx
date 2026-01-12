@@ -58,15 +58,15 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
     : 0;
   const latestBookmarkTimestamp = Array.isArray(folder.bookmarks)
     ? (folder.bookmarks as Array<BookmarkEntry>).reduce(
-        (latest: number, b: BookmarkEntry) => Math.max(latest, b.createdAt ?? 0),
-        0
-      )
+      (latest: number, b: BookmarkEntry) => Math.max(latest, b.createdAt ?? 0),
+      0
+    )
     : 0;
   const formattedUpdatedAt =
     latestBookmarkTimestamp > 0
       ? new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' }).format(
-          new Date(latestBookmarkTimestamp)
-        )
+        new Date(latestBookmarkTimestamp)
+      )
       : null;
 
   return (
@@ -80,9 +80,9 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
         height: 'min-h-[136px]',
         padding: 'pl-5 pr-4 pb-3 pt-3',
         hover: {
-          effect: 'translate',
-          value: 'hover:-translate-y-1 hover:shadow-lg',
-          duration: 'transition-all duration-300',
+          effect: 'none',
+          value: 'hover:shadow-lg',
+          duration: '',
         },
       }}
       {...(onClick

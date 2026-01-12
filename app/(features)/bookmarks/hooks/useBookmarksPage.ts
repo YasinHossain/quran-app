@@ -41,7 +41,7 @@ function sectionToPath(section: SectionId): string {
     case 'planner':
       return '/bookmarks/planner';
     default:
-      return '/bookmarks';
+      return '/bookmarks/folders';
   }
 }
 

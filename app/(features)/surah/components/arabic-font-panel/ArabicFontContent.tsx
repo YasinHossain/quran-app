@@ -52,7 +52,7 @@ function FontContent({
   return (
     <div className="flex-1 flex flex-col min-h-0">
       <div className="flex-1 overflow-y-auto" ref={listContainerRef}>
-        <div className="px-4 py-4 pb-0">
+        <div className="px-4 py-4 pb-0 lg:pb-4">
           <FilterToggle
             activeFilter={activeFilter}
             setActiveFilter={(value) => setActiveFilter(value)}

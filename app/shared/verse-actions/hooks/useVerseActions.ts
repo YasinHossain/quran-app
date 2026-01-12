@@ -75,7 +75,7 @@ export function useVerseActions({
       showRemove,
       onClick: handleBookmark,
     }),
-    createShareAction({ onClick: handleShare }),
     createAddToPlanAction({ onClick: handleAddToPlan }),
+    createShareAction({ onClick: handleShare }),
   ];
 }

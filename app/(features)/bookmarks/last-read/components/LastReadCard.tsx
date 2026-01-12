@@ -52,7 +52,7 @@ export const LastReadCard = ({
     >
       <button
         onClick={handleRemove}
-        className="absolute top-2 right-2 p-1.5 rounded-full text-muted hover:text-red-500 hover:bg-red-500/10 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none z-10"
+        className="absolute top-2 right-2 p-1.5 rounded-full text-muted hover:text-red-500 hover:bg-red-500/10 transition-colors opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 focus:outline-none z-10"
         aria-label="Remove from recent"
         title="Remove"
       >
@@ -104,9 +104,8 @@ function CardContainer({
       aria-label={ariaLabel}
       onClick={onActivate}
       onKeyDown={onKeyDown}
-      className={`group relative flex h-full min-h-[10rem] sm:min-h-[11rem] lg:min-h-[12rem] w-full transform flex-col items-center justify-between rounded-lg border border-border/50 bg-surface p-3 sm:p-4 lg:p-5 text-center shadow-lg transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-      }`}
+      className={`group relative flex h-full min-h-[10rem] sm:min-h-[11rem] lg:min-h-[12rem] w-full transform flex-col items-center justify-between rounded-lg border border-border/50 bg-surface p-3 sm:p-4 lg:p-5 text-center shadow-lg transition-[transform,opacity] duration-300 ease-out active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+        }`}
       style={{ transitionDelay: `${Math.min(index, 10) * 100}ms` }}
     >
       {children}

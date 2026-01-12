@@ -20,7 +20,7 @@ export const usePlannerPage = (): UsePlannerPageResult => {
 
   const handleSectionChange = (section: SectionId): void => {
     if (section === 'bookmarks') {
-      router.push('/bookmarks');
+      router.push('/bookmarks/folders');
     } else if (section === 'pinned') {
       router.push('/bookmarks/pinned');
     } else if (section === 'last-read') {

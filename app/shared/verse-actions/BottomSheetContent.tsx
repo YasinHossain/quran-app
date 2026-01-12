@@ -30,7 +30,7 @@ export const BottomSheetContent = memo(function BottomSheetContent({
       initial="hidden"
       animate="visible"
       exit="exit"
-      transition={{ type: 'spring', damping: 25, stiffness: 350, mass: 0.8 }}
+      transition={{ type: 'tween', ease: 'easeOut', duration: 0.2 }}
       style={{ willChange: 'transform' }}
       className="fixed bottom-0 left-0 right-0 bg-surface rounded-t-3xl shadow-2xl z-modal touch-pan-y pb-safe flex flex-col max-h-[90dvh]"
     >
