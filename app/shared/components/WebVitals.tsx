@@ -16,10 +16,9 @@ interface WebVitalsProps {
 
 export function WebVitals({ reportTarget = 'console' }: WebVitalsProps): null {
   useEffect(() => {
-    // Only run in production or when explicitly enabled in development
+    // Run in production or development
     const shouldReport =
-      process.env.NODE_ENV === 'production' ||
-      process.env['NEXT_PUBLIC_ENABLE_WEB_VITALS'] === 'true';
+      process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'development';
 
     if (!shouldReport) return;
 

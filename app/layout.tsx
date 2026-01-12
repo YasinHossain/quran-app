@@ -7,6 +7,7 @@ import './globals.css';
 import { ClientProviders } from './providers/ClientProviders';
 import { TranslationProvider } from './providers/TranslationProvider';
 import { ErrorBoundary } from './shared/components/error-boundary';
+import { WebVitals } from './shared/components/WebVitals';
 
 /**
  * FONT LOADING STRATEGY (Performance Optimized):
@@ -80,6 +81,7 @@ export default async function RootLayout({
         </Script>
       </head>
       <body className="font-sans">
+        <WebVitals />
         <ErrorBoundary>
           <TranslationProvider>
             <ClientProviders initialTheme={theme}>{children}</ClientProviders>

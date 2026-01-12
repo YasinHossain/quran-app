@@ -56,7 +56,7 @@ export const HomePageClient = memo(function HomePageClient({
 
                 <main className="flex-grow flex flex-col items-center justify-center text-center space-y-6 pt-6 pb-6 md:pt-12 md:pb-10 md:space-y-8">
                     {/* Title - scales with content */}
-                    <div className="content-visibility-auto animate-fade-in-up mb-4 md:mb-6">
+                    <div className="content-visibility-auto mb-4 md:mb-6">
                         <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-tight">
                             Al Qur&apos;an
                         </h2>
@@ -64,7 +64,7 @@ export const HomePageClient = memo(function HomePageClient({
 
                     {/* Search bar - Third widest */}
                     <div
-                        className="w-full mx-auto animate-fade-in-up animation-delay-200"
+                        className="w-full mx-auto"
                         style={{ maxWidth: 'clamp(16rem, 70vw, 44rem)' }}
                     >
                         <HomeSearch />
@@ -73,7 +73,7 @@ export const HomePageClient = memo(function HomePageClient({
                     {/* Verse of the Day - Simple, performant version */}
                     {initialVerses && initialVerses.length > 0 && (
                         <div
-                            className="w-full mx-auto animate-fade-in-up animation-delay-400"
+                            className="w-full mx-auto"
                             style={{ maxWidth: 'clamp(18rem, 80vw, 64rem)' }}
                         >
                             <VerseOfDay verses={initialVerses} />

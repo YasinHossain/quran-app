@@ -1,3 +1,4 @@
+import withBundleAnalyzer from '@next/bundle-analyzer';
 import withPWA from '@ducanh2912/next-pwa';
 
 import pwaConfig from './next-pwa.config.mjs';
@@ -113,4 +114,8 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withPWA(pwaConfig)(nextConfig);
+const bundleAnalyzer = withBundleAnalyzer({
+  enabled: process.env['ANALYZE'] === 'true',
+});
+
+export default withPWA(pwaConfig)(bundleAnalyzer(nextConfig));

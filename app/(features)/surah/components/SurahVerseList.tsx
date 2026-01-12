@@ -248,6 +248,8 @@ function QuranComList({
       ref={virtuosoRef}
       useWindowScroll
       totalCount={totalVerses}
+      initialItemCount={1}
+      increaseViewportBy={INCREASE_VIEWPORT_BY_PX}
       computeItemKey={(index) => `${verseListing.resourceId}:${index + 1}`}
       itemContent={(index) => (
         <QuranComVerseRow

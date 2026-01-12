@@ -5,11 +5,11 @@ const pwaConfig = {
     document: '/offline',
   },
   runtimeCaching: [
-    // API caching with network-first strategy
+    // Quran API caching (QDC + V4 + optional proxy) - these endpoints are effectively immutable.
     {
       urlPattern:
-        /^https:\/\/api\.quran\.com\/api\/v4\/(chapters|juzs|verses\/by_(chapter|juz|page))/,
-      handler: 'NetworkFirst',
+        /^https:\/\/api\.(?:quran\.com\/api\/v4|qurancdn\.com\/api\/qdc)\/(chapters|juzs|verses|resources|audio)(?:\/|\?|$)/,
+      handler: 'StaleWhileRevalidate',
       options: {
         cacheName: 'api-cache',
         expiration: {
@@ -17,7 +17,19 @@ const pwaConfig = {
           maxAgeSeconds: 24 * 60 * 60, // 24 hours
         },
         cacheableResponse: { statuses: [0, 200] },
-        networkTimeoutSeconds: 10,
+      },
+    },
+    {
+      urlPattern:
+        /^https?:\/\/[^/]+\/api\/quran\/(chapters|juzs|verses|resources|audio)(?:\/|\?|$)/,
+      handler: 'StaleWhileRevalidate',
+      options: {
+        cacheName: 'api-cache',
+        expiration: {
+          maxEntries: 100,
+          maxAgeSeconds: 24 * 60 * 60, // 24 hours
+        },
+        cacheableResponse: { statuses: [0, 200] },
       },
     },
     // Audio caching strategy for Quran recitations
