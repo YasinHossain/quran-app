@@ -27,6 +27,7 @@ interface AudioContextType {
   playbackRate: number;
   setPlaybackRate: React.Dispatch<React.SetStateAction<number>>;
   isPlayerVisible: boolean;
+  playbackSessionId: number;
   openPlayer: () => void;
   closePlayer: () => void;
 }
@@ -35,7 +36,7 @@ export const AudioContext = createContext<AudioContextType | undefined>(undefine
 
 function useAudioCoreState(): Omit<
   AudioContextType,
-  'isPlayerVisible' | 'openPlayer' | 'closePlayer'
+  'isPlayerVisible' | 'playbackSessionId' | 'openPlayer' | 'closePlayer'
 > {
   const [playingId, setPlayingId] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -68,7 +69,7 @@ function useAudioCoreState(): Omit<
 
 function useAudioContextValue(): AudioContextType {
   const core = useAudioCoreState();
-  const { isPlayerVisible, openPlayer, closePlayer } = usePlayerVisibility({
+  const { isPlayerVisible, playbackSessionId, openPlayer, closePlayer } = usePlayerVisibility({
     audioRef: core.audioRef,
     setIsPlaying: core.setIsPlaying,
     setPlayingId: core.setPlayingId,
@@ -88,8 +89,8 @@ function useAudioContextValue(): AudioContextType {
 
   // memoize the full context value including controls
   return useMemo(
-    () => ({ ...core, isPlayerVisible, openPlayer, closePlayer }),
-    [core, isPlayerVisible, openPlayer, closePlayer]
+    () => ({ ...core, isPlayerVisible, playbackSessionId, openPlayer, closePlayer }),
+    [core, isPlayerVisible, playbackSessionId, openPlayer, closePlayer]
   );
 }
 

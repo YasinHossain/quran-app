@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import type { Verse } from '@/types';
 
@@ -11,6 +11,7 @@ interface Options {
 
 interface UsePlayerVisibilityReturn {
   isPlayerVisible: boolean;
+  playbackSessionId: number;
   openPlayer: () => void;
   closePlayer: () => void;
 }
@@ -25,8 +26,13 @@ export function usePlayerVisibility({
   setActiveVerse,
 }: Options): UsePlayerVisibilityReturn {
   const [isPlayerVisible, setPlayerVisible] = useState(false);
+  const [playbackSessionId, setPlaybackSessionId] = useState(0);
+  const sessionIdRef = useRef(0);
 
   const openPlayer = useCallback(() => {
+    // Increment session ID to force effects to re-run
+    sessionIdRef.current += 1;
+    setPlaybackSessionId(sessionIdRef.current);
     setPlayerVisible(true);
   }, []);
 
@@ -36,9 +42,10 @@ export function usePlayerVisibility({
     setActiveVerse(null);
     if (audioRef.current) {
       audioRef.current.pause();
+      audioRef.current.currentTime = 0;
     }
     setPlayerVisible(false);
   }, [audioRef, setIsPlaying, setPlayingId, setActiveVerse]);
 
-  return { isPlayerVisible, openPlayer, closePlayer };
+  return { isPlayerVisible, playbackSessionId, openPlayer, closePlayer };
 }

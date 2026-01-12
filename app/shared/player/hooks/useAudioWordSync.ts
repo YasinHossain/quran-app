@@ -64,21 +64,22 @@ export function useAudioWordSync({
 
   const { audioFile } = useQdcAudioFile(audio.reciter.id, chapterId, true);
 
-  const verseTiming = useMemo(
-    () => (verseKey ? resolveVerseTiming(audioFile?.verseTimings, verseKey) : null),
-    [audioFile?.verseTimings, verseKey]
-  );
+  const verseTiming = useMemo(() => {
+    if (!verseKey) return null;
+    const timing = resolveVerseTiming(audioFile?.verseTimings, verseKey);
+    // Spread into new object to ensure fresh reference when player reopens
+    return timing ? { ...timing } : null;
+  }, [audioFile?.verseTimings, verseKey, audio.playbackSessionId]);
 
   const previousElRef = useRef<HTMLElement | null>(null);
   const previousWordRef = useRef<number | null>(null);
 
   useEffect(() => {
-    previousElRef.current?.classList.remove(highlightClass);
-    previousElRef.current = null;
-    previousWordRef.current = null;
-  }, [verseKey, audio.isPlaying, audio.reciter.id, highlightClass]);
+    // We do NOT perform a global cleanup here anymore because it can cause race conditions
+    // where highlights are removed when the effect re-runs (e.g. playbackSessionId change)
+    // but the new highlight hasn't been applied yet.
+    // We rely on the return cleanup (below) and the internal logic of handleTimeUpdate.
 
-  useEffect(() => {
     if (!audio.isPlaying) return;
     if (!verseKey) return;
 
@@ -114,7 +115,10 @@ export function useAudioWordSync({
     const attach = (): void => {
       if (cancelled) return;
       const el = audio.audioRef.current;
-      if (!el) {
+      // Ensure we have an element AND it is actually in the DOM.
+      // If the player was just closed/re-opened, the ref might still point to the
+      // old unmounted (detached) element until the new one mounts and updates the ref.
+      if (!el || !el.isConnected) {
         rafId = requestAnimationFrame(attach);
         return;
       }
@@ -132,8 +136,13 @@ export function useAudioWordSync({
       previousElRef.current?.classList.remove(highlightClass);
       previousElRef.current = null;
       previousWordRef.current = null;
+
+      // Failsafe: ensure no stuck highlights remain when unmounting or changing verses
+      document.querySelectorAll(`.${highlightClass}`).forEach((el) => {
+        el.classList.remove(highlightClass);
+      });
     };
-  }, [audio.isPlaying, audio.audioRef, verseKey, verseTiming, highlightClass, selectorBuilder]);
+  }, [audio.isPlaying, audio.playbackSessionId, audio.audioRef, verseKey, verseTiming, highlightClass, selectorBuilder]);
 
   // Handle clicking on words to seek
   useEffect(() => {
