@@ -5,11 +5,44 @@ import { useQcfMushafFont } from '@/app/(features)/surah/hooks/useQcfMushafFont'
 import { useDynamicFontLoader } from '@/app/hooks/useDynamicFontLoader';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { AudioContext } from '@/app/shared/player/context/AudioContext';
+import {
+  HybridVerseMarker,
+  fontHasNativeOrnament,
+} from '@/app/shared/components/verse-marker/VerseMarker';
 import { TajweedFontPalettes } from '@/app/shared/TajweedFontPalettes';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { Verse as VerseType, Word } from '@/types';
 
 import type { LanguageCode } from '@/lib/text/languageCodes';
+
+// Helper to determine if a word IS the verse number (and extract it)
+const getVerseNumber = (text: string): number | null => {
+  if (!text) return null;
+  const trimmed = text.trim();
+
+  // 1. Check for pure Arabic-Indic numerals (e.g. "١")
+  if (/^[\u0660-\u0669]+$/.test(trimmed)) {
+    const arabicIndicDigits = '٠١٢٣٤٥٦٧٨٩';
+    const western = trimmed
+      .split('')
+      .map((d) => arabicIndicDigits.indexOf(d))
+      .join('');
+    return parseInt(western, 10);
+  }
+
+  // 2. Check for U+06DD followed by Arabic-Indic numerals (e.g. "۝١")
+  const matchWithMarker = trimmed.match(/\u06DD([\u0660-\u0669]+)/);
+  if (matchWithMarker && matchWithMarker[1]) {
+    const arabicIndicDigits = '٠١٢٣٤٥٦٧٨٩';
+    const western = matchWithMarker[1]
+      .split('')
+      .map((d) => arabicIndicDigits.indexOf(d))
+      .join('');
+    return parseInt(western, 10);
+  }
+
+  return null;
+};
 
 // Word rendering component
 interface WordDisplayProps {
@@ -17,7 +50,7 @@ interface WordDisplayProps {
   index: number;
   showByWords: boolean;
   wordLang: string;
-  settings: { arabicFontSize: number };
+  settings: { arabicFontSize: number; arabicFontFace?: string };
   isQpcHafsFont: boolean;
   /** When true and word.codeV2 is available, render Tajweed glyph code */
   tajweed?: boolean;
@@ -27,13 +60,27 @@ interface WordDisplayProps {
   verseKey: string;
   /** Word position (1-indexed) for audio word sync highlighting */
   wordPosition: number;
+  /** Current font family for hybrid verse marker detection */
+  fontFamily?: string;
 }
 
 // QPC Uthmani Hafs font lacks the U+06DF glyph, which shows up as a black circle; strip it when selected.
-const stripUnsupportedQpcGlyphs = (text: string, isQpcHafsFont: boolean): string => {
+// ALSO strip U+06DD from text nodes because we handle the verse marker separately.
+const cleanTextContent = (text: string, isQpcHafsFont: boolean): string => {
   if (!text) return '';
-  return isQpcHafsFont ? text.replace(/\u06DF/g, '') : text;
+  let cleaned = text;
+  // Always strip the verse marker (۝) from text words to prevent duplication/double markers
+  // The marker is only re-added by the HybridVerseMarker for the actual verse number word.
+  cleaned = cleaned.replace(/\u06DD/g, '');
+
+  if (isQpcHafsFont) {
+    cleaned = cleaned.replace(/\u06DF/g, '');
+  }
+  return cleaned;
 };
+
+// Legacy name alias for other components in this file using it
+const stripUnsupportedQpcGlyphs = cleanTextContent;
 
 const WordDisplay = ({
   word,
@@ -46,23 +93,61 @@ const WordDisplay = ({
   tajweedFontFamily,
   verseKey,
   wordPosition,
+  fontFamily,
 }: WordDisplayProps): React.JSX.Element | null => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const audioCtx = useContext(AudioContext);
   const isPlayerVisible = audioCtx?.isPlayerVisible ?? false;
+  const verticalAlignClass = showByWords ? 'align-top' : 'align-baseline';
 
-  // Skip only Sajdah/Rub markers (keep verse end markers for font rendering)
+  // Skip rendering for Rub/Sajdah markers if that's all the word is
   if (/[\u06DE\uFD3E\uFD3F]/.test(word.uthmani) && !/[\u06DD]/.test(word.uthmani)) {
     return null;
   }
 
+  // Check if this word is the verse number
+  const verseNum = getVerseNumber(word.uthmani);
+  // Also check if the word is formally typed as an 'end' marker in the API data.
+  // This helps identify standalone markers that might be "empty" of digits.
+  const isEndWord = word.char_type_name === 'end';
+
+  // Logic: Use HybridVerseMarker if we have a valid number, or if it's explicitly an 'end' word.
+  if (verseNum !== null || isEndWord) {
+    // If we have a valid verse number, render the Unified Verse Marker
+    if (verseNum !== null) {
+      return (
+        <span
+          key={`${word.id}-${index}`}
+          className={`inline-block text-center ${verticalAlignClass} verse-audio-word`}
+          data-verse-word="true"
+          data-verse-key={verseKey}
+          data-word-position={wordPosition}
+        >
+          <HybridVerseMarker
+            verseNumber={verseNum}
+            {...(fontFamily ? { fontFamily } : {})}
+          />
+        </span>
+      );
+    }
+
+    // If it's an 'end' word but NO extracted number (e.g. standalone bubble), HIDE IT.
+    // This solves the "double marker" / "ghost marker" issue where the API sends 
+    // a separate word for the marker bubble.
+    return null;
+  }
+
+  // CASE 2: It is regular text (or a standalone marker that failed num extraction)
+  // Logic: Strip any U+06DD characters so they don't appear as duplicates.
   // Use codeV2 for Tajweed when available, otherwise fall back to uthmani
   const useTajweed = tajweed && word.codeV2;
-  const displayText = useTajweed
-    ? word.codeV2
-    : stripUnsupportedQpcGlyphs(word.uthmani, isQpcHafsFont);
-  const copyText = stripUnsupportedQpcGlyphs(word.uthmani, isQpcHafsFont).trim();
+  const rawText = (useTajweed ? word.codeV2 : word.uthmani) || '';
 
+  // Clean the text (removes \u06DD and other unsupported glyphs)
+  const displayText = cleanTextContent(rawText, isQpcHafsFont);
+  const copyText = cleanTextContent(word.uthmani, isQpcHafsFont).trim();
+
+  // If text is empty after cleaning (e.g. it was just "۝"), hide it.
   if (!displayText?.trim()) {
     return null;
   }
@@ -78,7 +163,7 @@ const WordDisplay = ({
   return (
     <span
       key={`${word.id}-${index}`}
-      className="inline-block text-center align-middle verse-audio-word"
+      className={`inline-block text-center ${verticalAlignClass} verse-audio-word`}
       data-verse-word="true"
       data-verse-key={verseKey}
       data-word-position={wordPosition}
@@ -297,6 +382,7 @@ export const VerseArabic = memo(function VerseArabic({
                     tajweedFontFamily={getTajweedFontFamily(word)}
                     verseKey={verse.verse_key}
                     wordPosition={word.position ?? index + 1}
+                    fontFamily={settings.arabicFontFace}
                   />
                 </Fragment>
               ))}

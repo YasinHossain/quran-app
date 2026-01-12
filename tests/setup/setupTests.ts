@@ -234,10 +234,14 @@ const createVirtualizerStub = (count: number): VirtualizerStub => {
   };
 };
 
-jest.mock('@tanstack/react-virtual', () => ({
-  useVirtualizer: ({ count }: { count: number }) => createVirtualizerStub(count),
-  useWindowVirtualizer: ({ count }: { count: number }) => createVirtualizerStub(count),
-}));
+jest.mock(
+  '@tanstack/react-virtual',
+  () => ({
+    useVirtualizer: ({ count }: { count: number }) => createVirtualizerStub(count),
+    useWindowVirtualizer: ({ count }: { count: number }) => createVirtualizerStub(count),
+  }),
+  { virtual: true }
+);
 
 // Mock react-virtuoso to avoid relying on layout measurements in JSDOM.
 jest.mock('react-virtuoso', () => {

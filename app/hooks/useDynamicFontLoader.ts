@@ -16,16 +16,24 @@ const FONT_SOURCES: Record<
         { src: '/fonts/KFGQPC-Uthman-Taha.ttf', weight: 'normal' },
         { src: '/fonts/KFGQPC-Uthman-Taha-Bold.ttf', weight: 'bold' },
     ],
-    '"Amiri", serif': [{ src: '/fonts/Amiri.ttf', weight: 'normal' }],
+    '"KFGQ V2", serif': [
+        { src: '/fonts/KFGQPC-Uthman-Taha.ttf', weight: 'normal' },
+        { src: '/fonts/KFGQPC-Uthman-Taha-Bold.ttf', weight: 'bold' },
+    ],
+
+    '"Amiri Quran", serif': [{ src: '/fonts/AmiriQuran.ttf', weight: 'normal' }],
     '"Scheherazade New", serif': [{ src: '/fonts/Scheherazade-New.ttf', weight: 'normal' }],
     '"Noto Naskh Arabic", serif': [{ src: '/fonts/Noto-Naskh-Arabic.ttf', weight: 'normal' }],
-    '"Noto Nastaliq Urdu", serif': [{ src: '/fonts/Noto Nastaliq Urdu.ttf', weight: 'normal' }],
+
+    '"Me Quran", serif': [{ src: '/fonts/me_quran.ttf', weight: 'normal' }],
     '"IndoPak", serif': [
         {
             src: '/fonts/quran/hafs/nastaleeq/indopak/indopak-nastaleeq-waqf-lazim-v4.2.1.woff2',
             weight: 'normal',
         },
     ],
+    '"Noor-e-Huda", serif': [{ src: '/fonts/Noor-e-Huda.ttf', weight: 'normal' }],
+    '"Noor-e-Hidayat", serif': [{ src: '/fonts/Noor-e-Hidayat.ttf', weight: 'normal' }],
     '"Noor-e-Hira", serif': [{ src: '/fonts/Noor-e-Hira.ttf', weight: 'normal' }],
     '"Lateef", serif': [{ src: '/fonts/Lateef.ttf', weight: 'normal' }],
     // UthmanicHafs is preloaded - no need to lazy load
@@ -58,7 +66,7 @@ async function loadFontFile(
     weight: number | string,
     style: string = 'normal'
 ): Promise<void> {
-    const fontFace = new FontFace(familyName, `url(${src})`, {
+    const fontFace = new FontFace(familyName, `url("${src}")`, {
         weight: String(weight),
         style,
         display: 'swap',

@@ -1,3 +1,4 @@
+import { HybridVerseMarker } from '@/app/shared/components/verse-marker/VerseMarker';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { cn } from '@/lib/utils/cn';
 
@@ -20,6 +21,24 @@ const stripAyahMarkers = (text: string, isQcfMushaf: boolean): string => {
   }
   // QCF mushafs use glyph codes, so strip Unicode markers from text fallback
   return text.replace(/[\u06DF\u06DD]/g, '');
+};
+
+/**
+ * Wraps U+06DF (Arabic Small High Rounded Zero - ۟) in a span with Scheherazade New font.
+ * This is needed because UthmanicHafs1Ver18 doesn't have a glyph for this character,
+ * causing it to render as a dotted circle. CSS unicode-range fallback doesn't work
+ * for combining marks, so we need to explicitly wrap the character with a different font.
+ */
+const wrapUnsupportedGlyphs = (text: string, isQpcHafsMushaf: boolean): string => {
+  if (!isQpcHafsMushaf) {
+    return text;
+  }
+  // Replace U+06DF with a span that uses Scheherazade New
+  // The span uses inline style to ensure the fallback font is used
+  return text.replace(
+    /\u06DF/g,
+    '<span style="font-family: \'Scheherazade New\', serif;">۟</span>'
+  );
 };
 
 
@@ -51,7 +70,8 @@ const buildWordHtml = ({
   }
 
   if (isQpcHafsMushaf) {
-    return displayText;
+    // Wrap unsupported glyphs (U+06DF) with fallback font for proper rendering
+    return wrapUnsupportedGlyphs(displayText, true);
   }
 
   if (baseText) {
@@ -135,12 +155,32 @@ export const MushafWordText = ({
       }
     }
 
-    // For QPC Uthmani Hafs and IndoPak: the font already renders beautiful verse markers
-    // Just render the text directly - no SVG overlay needed
-    const markerText = isIndopakMushaf
-      ? (word.textIndopak || word.textUthmani || '')
-      : (word.textUthmani || '');
+    // For IndoPak: the font doesn't combine U+06DD with numerals into a ligature.
+    // Render a lightweight overlay marker so the verse number appears inside the ornament.
+    if (isIndopakMushaf) {
+      const verseNum = getVerseNumberFromWord(word);
+      if (verseNum !== undefined) {
+        return (
+          <span
+            data-mushaf-word="true"
+            data-verse-key={verseKey || undefined}
+            data-word-position={String(word.position)}
+            className="inline-flex flex-none items-center text-foreground"
+          >
+            <HybridVerseMarker
+              verseNumber={verseNum}
+              {...(settings.arabicFontFace ? { fontFamily: settings.arabicFontFace } : {})}
+              className="mx-0.5"
+            />
+          </span>
+        );
+      }
+      return null;
+    }
 
+    // For QPC Uthmani Hafs: the font renders beautiful verse markers natively
+    // Just render the text directly - no SVG overlay needed
+    const markerText = word.textUthmani || '';
     if (markerText) {
       return (
         <span

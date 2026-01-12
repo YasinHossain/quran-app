@@ -5,20 +5,25 @@ import { Settings } from '@/types';
 import { parseJson, normalizeSettings } from './settingsNormalization';
 
 export const ARABIC_FONTS = [
-  { name: 'KFGQPC Uthman Taha', value: '"KFGQPC-Uthman-Taha", serif', category: 'Uthmani' },
-  { name: 'Amiri', value: '"Amiri", serif', category: 'Uthmani' },
+  { name: 'KFGQ', value: '"UthmanicHafs1Ver18", serif', category: 'Uthmani' },
+  { name: 'KFGQ V2', value: '"KFGQ V2", serif', category: 'Uthmani' },
+  { name: 'Me Quran', value: '"Me Quran", serif', category: 'Uthmani' },
+  { name: 'Amiri Quran', value: '"Amiri Quran", serif', category: 'Uthmani' },
+
   { name: 'Scheherazade New', value: '"Scheherazade New", serif', category: 'Uthmani' },
   { name: 'Noto Naskh Arabic', value: '"Noto Naskh Arabic", serif', category: 'Uthmani' },
-  { name: 'Noto Nastaliq Urdu', value: '"Noto Nastaliq Urdu", serif', category: 'IndoPak' },
+
   { name: 'IndoPak Nastaleeq (Waqf Lazim)', value: '"IndoPak", serif', category: 'IndoPak' },
+  { name: 'Noor-e-Huda', value: '"Noor-e-Huda", serif', category: 'IndoPak' },
+  { name: 'Noor-e-Hidayat', value: '"Noor-e-Hidayat", serif', category: 'IndoPak' },
   { name: 'Noor-e-Hira', value: '"Noor-e-Hira", serif', category: 'IndoPak' },
   { name: 'Lateef', value: '"Lateef", serif', category: 'IndoPak' },
-  { name: 'QPC Uthmani Hafs', value: '"UthmanicHafs1Ver18", serif', category: 'Uthmani' },
 ];
 
+const DEFAULT_ARABIC_FONT_VALUE = '"UthmanicHafs1Ver18", serif';
 const DEFAULT_ARABIC_FONT =
-  ARABIC_FONTS.find((font) => font.name === 'QPC Uthmani Hafs')?.value ??
-  '"UthmanicHafs1Ver18", serif';
+  ARABIC_FONTS.find((font) => font.value === DEFAULT_ARABIC_FONT_VALUE)?.value ??
+  DEFAULT_ARABIC_FONT_VALUE;
 
 export const defaultSettings: Settings = {
   translationId: 20,

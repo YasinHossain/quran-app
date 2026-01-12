@@ -3,13 +3,13 @@ import { applyArabicFont } from '@/lib/tafsir/applyArabicFont';
 describe('applyArabicFont', () => {
   it('wraps Arabic text with span using provided font', () => {
     const html = 'Hello سلام world';
-    const result = applyArabicFont(html, 'Amiri');
-    expect(result).toBe('Hello <span style="font-family:&quot;Amiri&quot;;">سلام</span> world');
+    const result = applyArabicFont(html, 'Scheherazade New');
+    expect(result).toBe('Hello <span style="font-family:&quot;Scheherazade New&quot;;">سلام</span> world');
   });
 
   it('leaves strings without Arabic characters unchanged', () => {
     const html = 'Hello world';
-    expect(applyArabicFont(html, 'Amiri')).toBe(html);
+    expect(applyArabicFont(html, 'Scheherazade New')).toBe(html);
   });
 
   it('replaces existing spans to avoid nesting', () => {

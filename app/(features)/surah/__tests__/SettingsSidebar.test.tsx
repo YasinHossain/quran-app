@@ -17,7 +17,7 @@ const Wrapper = ({ children }: { children: React.ReactNode }): React.ReactElemen
   <HeaderVisibilityProvider>{children}</HeaderVisibilityProvider>
 );
 
-const noop = (): void => {};
+const noop = (): void => { };
 
 function createTestComponent(props: {
   onTranslationPanelOpen?: () => void;
@@ -45,7 +45,7 @@ let errorSpy: jest.SpyInstance;
 
 beforeAll(() => {
   setMatchMedia(false);
-  errorSpy = jest.spyOn(logger, 'error').mockImplementation(() => {});
+  errorSpy = jest.spyOn(logger, 'error').mockImplementation(() => { });
 });
 
 afterAll(() => {
@@ -81,7 +81,7 @@ describe('SettingsSidebar - Basic Interactions', () => {
 
     const indoPakButton = screen.getByRole<HTMLButtonElement>('button', { name: 'IndoPak' });
     await userEvent.click(indoPakButton);
-    expect(screen.getByText('Noto Nastaliq Urdu')).toBeInTheDocument();
+    expect(screen.getByText('IndoPak Nastaleeq (Waqf Lazim)')).toBeInTheDocument();
   });
 });
 
@@ -95,7 +95,7 @@ describe('SettingsSidebar - Translation Panel', () => {
           <SettingsSidebar
             pageType="verse"
             onTranslationPanelOpen={() => setOpen(true)}
-            onWordLanguagePanelOpen={() => {}}
+            onWordLanguagePanelOpen={() => { }}
             selectedTranslationName="English"
             selectedWordLanguageName="English"
           />
@@ -125,7 +125,7 @@ describe('SettingsSidebar - Word Translation Panel', () => {
           <Header />
           <SettingsSidebar
             pageType="verse"
-            onTranslationPanelOpen={() => {}}
+            onTranslationPanelOpen={() => { }}
             onWordLanguagePanelOpen={() => setOpen(true)}
             selectedTranslationName="English"
             selectedWordLanguageName="Bangla"
