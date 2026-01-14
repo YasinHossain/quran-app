@@ -271,6 +271,11 @@ const SearchDropdown = memo(function SearchDropdown({
             scrollbarWidth: 'thin',
             scrollbarColor: 'var(--color-border) transparent',
           }}
+          onScroll={() => {
+            if (document.activeElement instanceof HTMLElement) {
+              document.activeElement.blur();
+            }
+          }}
         >
           {verseResults.slice(0, maxVersesToShow).map((verse) => {
             const currentIndex = itemIndex++;
@@ -339,7 +344,8 @@ const SearchDropdown = memo(function SearchDropdown({
             );
           })}
         </div>
-      )}
+      )
+      }
 
       {/* No results */}
       {hasQuery && !isLoading && !hasResults && (
@@ -358,19 +364,21 @@ const SearchDropdown = memo(function SearchDropdown({
       )}
 
       {/* View all results */}
-      {hasQuery && hasResults && (
-        <div className="p-3 border-t border-border/50 bg-surface sticky bottom-0">
-          <button
-            type="button"
-            onClick={onSearchPage}
-            className="w-full py-2.5 px-4 text-sm font-medium text-accent hover:bg-accent/10 rounded-lg transition-colors flex items-center justify-center gap-2"
-          >
-            <SearchIcon size={16} />
-            View all results for &quot;{searchQuery}&quot;
-          </button>
-        </div>
-      )}
-    </div>
+      {
+        hasQuery && hasResults && (
+          <div className="p-3 border-t border-border/50 bg-surface sticky bottom-0">
+            <button
+              type="button"
+              onClick={onSearchPage}
+              className="w-full py-2.5 px-4 text-sm font-medium text-accent hover:bg-accent/10 rounded-lg transition-colors flex items-center justify-center gap-2"
+            >
+              <SearchIcon size={16} />
+              View all results for &quot;{searchQuery}&quot;
+            </button>
+          </div>
+        )
+      }
+    </div >
   );
 });
 

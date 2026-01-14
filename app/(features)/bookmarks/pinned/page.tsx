@@ -19,7 +19,7 @@ export default function PinnedAyahPage(): React.JSX.Element {
 
   return (
     <>
-      <div className="lg:hidden">
+      <div className="2xl:hidden">
         <SettingsSidebar
           pageType="bookmarks"
           readerTabsEnabled={false}

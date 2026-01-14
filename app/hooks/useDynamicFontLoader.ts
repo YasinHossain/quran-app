@@ -12,14 +12,6 @@ const FONT_SOURCES: Record<
     { src: string; weight: number | string; style?: string }[]
 > = {
     // Arabic Script Fonts (lazy loaded)
-    '"KFGQPC-Uthman-Taha", serif': [
-        { src: '/fonts/KFGQPC-Uthman-Taha.ttf', weight: 'normal' },
-        { src: '/fonts/KFGQPC-Uthman-Taha-Bold.ttf', weight: 'bold' },
-    ],
-    '"KFGQ V2", serif': [
-        { src: '/fonts/KFGQPC-Uthman-Taha.ttf', weight: 'normal' },
-        { src: '/fonts/KFGQPC-Uthman-Taha-Bold.ttf', weight: 'bold' },
-    ],
 
     '"Amiri Quran", serif': [{ src: '/fonts/AmiriQuran.ttf', weight: 'normal' }],
     '"Scheherazade New", serif': [{ src: '/fonts/Scheherazade-New.ttf', weight: 'normal' }],

@@ -64,32 +64,63 @@ const checkShouldReflow = (containerWidth: number, lineWidthDesktop: string): bo
  * Custom hook that detects when to use reflow mode.
  * Uses ResizeObserver to measure the actual container width (not window width).
  * This properly accounts for sidebars and other layout elements.
+ *
+ * Optimized to prevent layout jumps during scroll:
+ * - Only updates state when reflow mode actually needs to change
+ * - Uses RAF to batch updates and avoid layout thrashing
+ * - Debounces rapid resize events
  */
 const useReflowMode = (
   containerRef: React.RefObject<HTMLDivElement | null>,
   lineWidthDesktop: string
 ): boolean => {
   const [shouldReflow, setShouldReflow] = useState(false);
-  const prevLineWidthRef = useRef(lineWidthDesktop);
+  const rafIdRef = useRef<number | null>(null);
+  const lastContainerWidthRef = useRef<number>(0);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    // Function to check and update reflow state
+    // Function to check and update reflow state (debounced via RAF)
     const checkReflow = (): void => {
-      const containerWidth = container.clientWidth;
-      const newShouldReflow = checkShouldReflow(containerWidth, lineWidthDesktop);
-      setShouldReflow(newShouldReflow);
+      // Cancel any pending RAF to debounce rapid updates
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
+      }
+
+      rafIdRef.current = requestAnimationFrame(() => {
+        const containerWidth = container.clientWidth;
+
+        // Skip check if container width hasn't changed significantly (within 5px)
+        // This prevents jumps from minor layout adjustments
+        if (Math.abs(containerWidth - lastContainerWidthRef.current) < 5) {
+          // Still check if lineWidthDesktop changed though
+          const newShouldReflow = checkShouldReflow(containerWidth, lineWidthDesktop);
+          if (newShouldReflow !== shouldReflow) {
+            setShouldReflow(newShouldReflow);
+          }
+          return;
+        }
+
+        lastContainerWidthRef.current = containerWidth;
+        const newShouldReflow = checkShouldReflow(containerWidth, lineWidthDesktop);
+
+        // Only update state if it actually changed
+        if (newShouldReflow !== shouldReflow) {
+          setShouldReflow(newShouldReflow);
+        }
+
+        rafIdRef.current = null;
+      });
     };
 
-    // Check immediately
-    checkReflow();
-
-    // Also check when lineWidthDesktop changes
-    if (prevLineWidthRef.current !== lineWidthDesktop) {
-      prevLineWidthRef.current = lineWidthDesktop;
-      checkReflow();
+    // Check immediately on mount
+    const containerWidth = container.clientWidth;
+    lastContainerWidthRef.current = containerWidth;
+    const initialReflow = checkShouldReflow(containerWidth, lineWidthDesktop);
+    if (initialReflow !== shouldReflow) {
+      setShouldReflow(initialReflow);
     }
 
     // Use ResizeObserver to detect container size changes
@@ -102,8 +133,11 @@ const useReflowMode = (
 
     return () => {
       resizeObserver.disconnect();
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
+      }
     };
-  }, [containerRef, lineWidthDesktop]);
+  }, [containerRef, lineWidthDesktop, shouldReflow]);
 
   return shouldReflow;
 };

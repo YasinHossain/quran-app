@@ -22,15 +22,20 @@ const MushafPageSkeleton = ({ index }: { index: number }): React.JSX.Element => 
   return (
     <article
       aria-hidden="true"
-      className={`mx-auto w-full py-6 sm:py-8 animate-pulse ${index === 0 ? 'pt-0' : ''}`}
+      className={`mx-auto w-full py-6 sm:py-8 ${index === 0 ? 'pt-0' : ''}`}
       style={{
         // Match the containment of MushafPage for consistent layout
         contain: 'layout style paint',
+        // Minimum height to reduce layout shift when content loads
+        minHeight: '600px',
       }}
     >
       <div className="mx-auto flex w-full max-w-[560px] flex-col gap-3 px-4 sm:gap-3 sm:px-0">
         {MUSHAF_SKELETON_LINES.map((line) => (
-          <div key={`${line.key}-${index}`} className="h-10 w-full rounded-md bg-border/20" />
+          <div
+            key={`${line.key}-${index}`}
+            className="h-10 w-full rounded-md bg-border/20"
+          />
         ))}
       </div>
       <div className="mt-8 flex justify-center">
@@ -345,6 +350,8 @@ export const MushafPageList = ({
         initialItemCount={1}
         totalCount={totalPages + 1}
         rangeChanged={setVisibleRange}
+        // Provide default height estimate to reduce scroll jumps
+        defaultItemHeight={650}
         computeItemKey={(index) =>
           index === totalPages
             ? `end:${resourceKind}:${resourceId}:${mushafId}`

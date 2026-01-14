@@ -20,7 +20,7 @@ export const SidebarOverlay = ({
   desktopBreakpoint = 'lg',
 }: SidebarOverlayProps): React.JSX.Element | null => {
   void _position;
-  if (!showOverlay || !isOpen) {
+  if (!showOverlay) {
     return null;
   }
 
@@ -35,7 +35,8 @@ export const SidebarOverlay = ({
     <div
       className={cn(
         'fixed inset-0 bg-black/50 transition-opacity duration-300 z-40',
-        hiddenFromBreakpoint
+        hiddenFromBreakpoint,
+        isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
       )}
       onClick={onClose}
       onKeyDown={(e) => {
