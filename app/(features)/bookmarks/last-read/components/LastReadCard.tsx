@@ -104,8 +104,9 @@ function CardContainer({
       aria-label={ariaLabel}
       onClick={onActivate}
       onKeyDown={onKeyDown}
-      className={`group relative flex h-full min-h-[10rem] sm:min-h-[11rem] lg:min-h-[12rem] w-full transform flex-col items-center justify-between rounded-lg border border-border/50 bg-surface p-3 sm:p-4 lg:p-5 text-center shadow-lg transition-[transform,opacity] duration-300 ease-out active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-        }`}
+      className={`group relative flex h-full min-h-[10rem] sm:min-h-[11rem] lg:min-h-[12rem] w-full transform flex-col items-center justify-between rounded-lg border border-border/50 bg-surface p-3 sm:p-4 lg:p-5 text-center shadow-lg transition-[transform,opacity] duration-300 ease-out active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+      }`}
       style={{ transitionDelay: `${Math.min(index, 10) * 100}ms` }}
     >
       {children}

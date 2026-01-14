@@ -9,14 +9,14 @@
  * for interactivity.
  */
 
-import { SurahCard } from './SurahCard';
 import { NavigationCardGrid } from './NavigationCardGrid';
+import { SurahCard } from './SurahCard';
 
 import type { Chapter } from '@/types';
 
 interface SurahGridServerProps {
-    chapters: ReadonlyArray<Chapter>;
-    className?: string;
+  chapters: ReadonlyArray<Chapter>;
+  className?: string;
 }
 
 /**
@@ -25,11 +25,11 @@ interface SurahGridServerProps {
  * Pre-renders all 114 Surah cards for instant display.
  */
 export function SurahGridServer({ chapters, className }: SurahGridServerProps): React.JSX.Element {
-    return (
-        <NavigationCardGrid className={className ? `pb-4 ${className}` : 'pb-4'}>
-            {chapters.map((chapter) => (
-                <SurahCard key={chapter.id} chapter={chapter} />
-            ))}
-        </NavigationCardGrid>
-    );
+  return (
+    <NavigationCardGrid className={className ? `pb-4 ${className}` : 'pb-4'}>
+      {chapters.map((chapter) => (
+        <SurahCard key={chapter.id} chapter={chapter} />
+      ))}
+    </NavigationCardGrid>
+  );
 }

@@ -81,8 +81,7 @@ export const CARD_VARIANTS: Record<string, CardVariant> = {
     },
     hover: {
       effect: 'none',
-      value:
-        'hover:shadow-md hover:border-accent/30 hover:bg-interactive-hover',
+      value: 'hover:shadow-md hover:border-accent/30 hover:bg-interactive-hover',
       duration: '',
     },
     shadow: {

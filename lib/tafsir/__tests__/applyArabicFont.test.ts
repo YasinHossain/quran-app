@@ -4,7 +4,9 @@ describe('applyArabicFont', () => {
   it('wraps Arabic text with span using provided font', () => {
     const html = 'Hello سلام world';
     const result = applyArabicFont(html, 'Scheherazade New');
-    expect(result).toBe('Hello <span style="font-family:&quot;Scheherazade New&quot;;">سلام</span> world');
+    expect(result).toBe(
+      'Hello <span style="font-family:&quot;Scheherazade New&quot;;">سلام</span> world'
+    );
   });
 
   it('leaves strings without Arabic characters unchanged', () => {

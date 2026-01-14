@@ -226,8 +226,9 @@ const SearchDropdown = memo(function SearchDropdown({
                 key={`${result.resultType}-${result.key}`}
                 type="button"
                 onClick={() => onSelectNavigation(result)}
-                className={`w-full px-4 py-3 text-left transition-colors flex items-center gap-3 ${isHighlighted ? 'bg-accent/20' : 'hover:bg-interactive/60'
-                  }`}
+                className={`w-full px-4 py-3 text-left transition-colors flex items-center gap-3 ${
+                  isHighlighted ? 'bg-accent/20' : 'hover:bg-interactive/60'
+                }`}
               >
                 <div className="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center flex-shrink-0">
                   {result.resultType === 'surah' && (
@@ -288,8 +289,9 @@ const SearchDropdown = memo(function SearchDropdown({
                 key={verse.verseKey}
                 type="button"
                 onClick={() => onSelectVerse(verse)}
-                className={`w-full px-4 py-4 text-left transition-colors border-b border-border/30 last:border-b-0 ${isHighlighted ? 'bg-accent/15' : 'hover:bg-interactive/50'
-                  }`}
+                className={`w-full px-4 py-4 text-left transition-colors border-b border-border/30 last:border-b-0 ${
+                  isHighlighted ? 'bg-accent/15' : 'hover:bg-interactive/50'
+                }`}
               >
                 <div className="flex items-start gap-3">
                   {/* Verse key badge */}
@@ -344,8 +346,7 @@ const SearchDropdown = memo(function SearchDropdown({
             );
           })}
         </div>
-      )
-      }
+      )}
 
       {/* No results */}
       {hasQuery && !isLoading && !hasResults && (
@@ -364,21 +365,19 @@ const SearchDropdown = memo(function SearchDropdown({
       )}
 
       {/* View all results */}
-      {
-        hasQuery && hasResults && (
-          <div className="p-3 border-t border-border/50 bg-surface sticky bottom-0">
-            <button
-              type="button"
-              onClick={onSearchPage}
-              className="w-full py-2.5 px-4 text-sm font-medium text-accent hover:bg-accent/10 rounded-lg transition-colors flex items-center justify-center gap-2"
-            >
-              <SearchIcon size={16} />
-              View all results for &quot;{searchQuery}&quot;
-            </button>
-          </div>
-        )
-      }
-    </div >
+      {hasQuery && hasResults && (
+        <div className="p-3 border-t border-border/50 bg-surface sticky bottom-0">
+          <button
+            type="button"
+            onClick={onSearchPage}
+            className="w-full py-2.5 px-4 text-sm font-medium text-accent hover:bg-accent/10 rounded-lg transition-colors flex items-center justify-center gap-2"
+          >
+            <SearchIcon size={16} />
+            View all results for &quot;{searchQuery}&quot;
+          </button>
+        </div>
+      )}
+    </div>
   );
 });
 

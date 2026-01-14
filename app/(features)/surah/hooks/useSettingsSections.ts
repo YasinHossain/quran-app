@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
@@ -40,12 +40,9 @@ interface UseSettingsSectionsReturn {
 }
 
 export const useSettingsSections = (): UseSettingsSectionsReturn => {
-  const [openSections, setOpenSections] = useState<string[]>(DEFAULT_OPEN_SECTIONS);
-
-  useEffect(() => {
-    const initial = readInitialState();
-    setOpenSections(initial);
-  }, []);
+  // Use lazy initialization to read from localStorage synchronously on first render
+  // This prevents the flash caused by useEffect updating state after initial mount
+  const [openSections, setOpenSections] = useState<string[]>(readInitialState);
 
   const handleSectionToggle = useCallback(
     (sectionId: string) => {

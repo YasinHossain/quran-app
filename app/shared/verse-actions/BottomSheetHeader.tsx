@@ -1,6 +1,5 @@
 'use client';
 
-
 import { memo } from 'react';
 
 import { surahImageMap } from '@/app/(features)/surah/lib/surahImageMap';
@@ -44,4 +43,3 @@ export const BottomSheetHeader = memo(function BottomSheetHeader({
     </div>
   );
 });
-

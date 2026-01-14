@@ -73,7 +73,7 @@ export async function getRandomVerse(
 /**
  * Fetch multiple random verses for the Verse of the Day rotation.
  * Pre-fetches at build time for instant LCP.
- * 
+ *
  * @param count Number of verses to fetch (default: 5)
  * @param translationId Translation ID to use
  * @returns Array of random verses
@@ -85,7 +85,8 @@ export async function getRandomVerses(
   try {
     // Use a seeded approach based on current hour to get consistent verses per hour
     const now = new Date();
-    const hourSeed = now.getFullYear() * 1000000 +
+    const hourSeed =
+      now.getFullYear() * 1000000 +
       (now.getMonth() + 1) * 10000 +
       now.getDate() * 100 +
       now.getHours();
@@ -102,9 +103,7 @@ export async function getRandomVerses(
     const rng = seededRng(hourSeed);
 
     // Fetch verses in parallel
-    const versePromises = Array.from({ length: count }, () =>
-      getRandomVerse(translationId, rng)
-    );
+    const versePromises = Array.from({ length: count }, () => getRandomVerse(translationId, rng));
 
     const verses = await Promise.all(versePromises);
     return verses;

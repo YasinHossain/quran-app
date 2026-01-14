@@ -2,50 +2,51 @@
 
 import React, { useEffect, useState } from 'react';
 
-import { BookmarksHeader } from '../components/BookmarksHeader';
-import { FolderGrid } from '../components/FolderGrid';
-import { FolderSettingsModal } from '../components/FolderSettingsModal';
-import { BookmarksLayout } from '../components/shared/BookmarksLayout';
-import { useBookmarksPage } from '../hooks/useBookmarksPage';
+import { BookmarksHeader } from '@/app/(features)/bookmarks/components/BookmarksHeader';
+import { FolderGrid } from '@/app/(features)/bookmarks/components/FolderGrid';
+import { FolderSettingsModal } from '@/app/(features)/bookmarks/components/FolderSettingsModal';
+import { BookmarksLayout } from '@/app/(features)/bookmarks/components/shared/BookmarksLayout';
+import { useBookmarksPage } from '@/app/(features)/bookmarks/hooks/useBookmarksPage';
 
 const BookmarksPage = (): React.JSX.Element => {
-    const { sortedFolders, handleFolderSelect, handleSectionChange } = useBookmarksPage();
-    const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
-    const [isGridVisible, setIsGridVisible] = useState(false);
+  const { sortedFolders, handleFolderSelect, handleSectionChange } = useBookmarksPage();
+  const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
+  const [isGridVisible, setIsGridVisible] = useState(false);
 
-    useEffect(() => {
-        setIsGridVisible(true);
-    }, []);
+  useEffect(() => {
+    setIsGridVisible(true);
+  }, []);
 
-    const openCreateFolderModal = (): void => {
-        setIsCreateFolderOpen(true);
-    };
+  const openCreateFolderModal = (): void => {
+    setIsCreateFolderOpen(true);
+  };
 
-    const closeCreateFolderModal = (): void => {
-        setIsCreateFolderOpen(false);
-    };
+  const closeCreateFolderModal = (): void => {
+    setIsCreateFolderOpen(false);
+  };
 
-    return (
-        <>
-            <FolderSettingsModal
-                isOpen={isCreateFolderOpen}
-                onClose={closeCreateFolderModal}
-                folder={null}
-                mode="create"
-            />
+  return (
+    <>
+      <FolderSettingsModal
+        isOpen={isCreateFolderOpen}
+        onClose={closeCreateFolderModal}
+        folder={null}
+        mode="create"
+      />
 
-            <BookmarksLayout activeSection="bookmarks" onSectionChange={handleSectionChange}>
-                <BookmarksHeader onNewFolderClick={openCreateFolderModal} />
+      <BookmarksLayout activeSection="bookmarks" onSectionChange={handleSectionChange}>
+        <BookmarksHeader onNewFolderClick={openCreateFolderModal} />
 
-                <div
-                    className={`transition-opacity duration-300 ease-out ${isGridVisible ? 'opacity-100' : 'opacity-0'
-                        }`}
-                >
-                    <FolderGrid folders={sortedFolders} onFolderSelect={handleFolderSelect} />
-                </div>
-            </BookmarksLayout>
-        </>
-    );
+        <div
+          className={`transition-opacity duration-300 ease-out ${
+            isGridVisible ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <FolderGrid folders={sortedFolders} onFolderSelect={handleFolderSelect} />
+        </div>
+      </BookmarksLayout>
+    </>
+  );
 };
 
 export default BookmarksPage;

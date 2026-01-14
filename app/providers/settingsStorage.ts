@@ -6,6 +6,7 @@ import { parseJson, normalizeSettings } from './settingsNormalization';
 
 export const ARABIC_FONTS = [
   { name: 'KFGQ', value: '"UthmanicHafs1Ver18", serif', category: 'Uthmani' },
+  { name: 'KFGQ V2', value: '"KFGQ V2", serif', category: 'Uthmani' },
   { name: 'Me Quran', value: '"Me Quran", serif', category: 'Uthmani' },
   { name: 'Amiri Quran', value: '"Amiri Quran", serif', category: 'Uthmani' },
 

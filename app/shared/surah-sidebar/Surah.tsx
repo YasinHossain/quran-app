@@ -1,7 +1,7 @@
 'use client';
 
-import React, { memo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import React, { memo, useCallback } from 'react';
 
 import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
 import { buildTafsirRoute } from '@/app/shared/navigation/routes';

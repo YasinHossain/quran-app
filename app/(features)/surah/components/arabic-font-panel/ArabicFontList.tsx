@@ -4,7 +4,7 @@ import React, { useMemo, memo, useCallback } from 'react';
 import { FixedSizeList as List, ListChildComponentProps, areEqual } from 'react-window';
 
 import { preloadFont } from '@/app/hooks/useDynamicFontLoader';
-import { ResourceItem, Resource } from '@/app/shared/resource-panel/ResourceItem';
+import { ResourceItem } from '@/app/shared/resource-panel/ResourceItem';
 
 import type { useArabicFontPanel } from '@/app/(features)/surah/components/panels/arabic-font-panel/useArabicFontPanel';
 

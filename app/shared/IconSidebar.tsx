@@ -91,8 +91,8 @@ const MobileNavigation = memo(function MobileNavigation({
                 : item.href === '/bookmarks/last-read'
                   ? pathname.startsWith('/bookmarks')
                   : pathname.startsWith('/surah') ||
-                  pathname.startsWith('/juz') ||
-                  pathname.startsWith('/page');
+                    pathname.startsWith('/juz') ||
+                    pathname.startsWith('/page');
 
             return (
               <Link

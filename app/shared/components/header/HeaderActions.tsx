@@ -12,11 +12,15 @@ export const HeaderActions = memo(function HeaderActions(): ReactElement {
 
   // These pages have NO settings sidebar at all (not even on desktop 2xl),
   // so we should hide the gear icon completely and show a placeholder for centering
-  const NO_SETTINGS_PAGES = ['/bookmarks/folders', '/bookmarks/last-read', '/bookmarks/planner', '/bookmarks'];
+  const NO_SETTINGS_PAGES = [
+    '/bookmarks/folders',
+    '/bookmarks/last-read',
+    '/bookmarks/planner',
+    '/bookmarks',
+  ];
 
   // Check for exact match or if it starts with bookmarks but is not pinned/folder detail
-  const isNoSettingsPage = NO_SETTINGS_PAGES.includes(pathname) ||
-    (pathname === '/bookmarks');
+  const isNoSettingsPage = NO_SETTINGS_PAGES.includes(pathname) || pathname === '/bookmarks';
 
   const openSettings = useCallback((): void => {
     setSettingsOpen(true);
@@ -26,12 +30,7 @@ export const HeaderActions = memo(function HeaderActions(): ReactElement {
   // On mobile (< xl): show 44px placeholder to match hamburger menu button
   // On desktop (>= sm): use w-1/3 to match HeaderBrand's w-1/3
   if (isNoSettingsPage) {
-    return (
-      <div
-        className="w-11 h-11 sm:w-1/3 shrink-0"
-        aria-hidden="true"
-      />
-    );
+    return <div className="w-11 h-11 sm:w-1/3 shrink-0" aria-hidden="true" />;
   }
 
   // Pages that have settings sidebar (shows at 2xl) - show gear icon below 2xl
@@ -48,4 +47,3 @@ export const HeaderActions = memo(function HeaderActions(): ReactElement {
     </div>
   );
 });
-

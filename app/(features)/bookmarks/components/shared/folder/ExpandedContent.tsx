@@ -34,8 +34,9 @@ export const ExpandedContent = ({
 
   return (
     <div
-      className={`grid w-full transition-[grid-template-rows] duration-500 ease-in-out ${isExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
-        }`}
+      className={`grid w-full transition-[grid-template-rows] duration-500 ease-in-out ${
+        isExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+      }`}
     >
       <div className="overflow-hidden">
         {shouldRender && (

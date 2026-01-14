@@ -1,14 +1,12 @@
 'use client';
 import * as Popover from '@radix-ui/react-popover';
 import { Fragment, memo, useContext, useMemo, useState } from 'react';
+
 import { useQcfMushafFont } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import { useDynamicFontLoader } from '@/app/hooks/useDynamicFontLoader';
 import { useSettings } from '@/app/providers/SettingsContext';
+import { HybridVerseMarker } from '@/app/shared/components/verse-marker/VerseMarker';
 import { AudioContext } from '@/app/shared/player/context/AudioContext';
-import {
-  HybridVerseMarker,
-  fontHasNativeOrnament,
-} from '@/app/shared/components/verse-marker/VerseMarker';
 import { TajweedFontPalettes } from '@/app/shared/TajweedFontPalettes';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { Verse as VerseType, Word } from '@/types';
@@ -123,16 +121,13 @@ const WordDisplay = ({
           data-verse-key={verseKey}
           data-word-position={wordPosition}
         >
-          <HybridVerseMarker
-            verseNumber={verseNum}
-            {...(fontFamily ? { fontFamily } : {})}
-          />
+          <HybridVerseMarker verseNumber={verseNum} {...(fontFamily ? { fontFamily } : {})} />
         </span>
       );
     }
 
     // If it's an 'end' word but NO extracted number (e.g. standalone bubble), HIDE IT.
-    // This solves the "double marker" / "ghost marker" issue where the API sends 
+    // This solves the "double marker" / "ghost marker" issue where the API sends
     // a separate word for the marker bubble.
     return null;
   }
@@ -356,9 +351,7 @@ export const VerseArabic = memo(function VerseArabic({
                     : stripUnsupportedQpcGlyphs(word.uthmani, isQpcHafsFont);
 
                 // Filter only Sajdah/Rub markers (keep verse end markers)
-                if (
-                  /[\u06DE\uFD3E\uFD3F]/.test(word.uthmani) && !/[\u06DD]/.test(word.uthmani)
-                ) {
+                if (/[\u06DE\uFD3E\uFD3F]/.test(word.uthmani) && !/[\u06DD]/.test(word.uthmani)) {
                   return false;
                 }
 

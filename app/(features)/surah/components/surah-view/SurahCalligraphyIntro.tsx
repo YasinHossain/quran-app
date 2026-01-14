@@ -34,8 +34,8 @@ const SurahNameGraphic = ({ chapterId }: { chapterId: number }): React.JSX.Eleme
   return (
     <div
       className={cn(
-        "h-full w-full overflow-hidden transition-opacity duration-300 [&>svg]:h-full [&>svg]:w-full [&>svg]:origin-center [&>svg]:scale-[1.25] sm:[&>svg]:scale-[1.5] [&_path]:fill-foreground [&_path]:stroke-[hsl(var(--background))] [&_path]:stroke-[8]",
-        svgContent ? "opacity-100" : "opacity-0"
+        'h-full w-full overflow-hidden transition-opacity duration-300 [&>svg]:h-full [&>svg]:w-full [&>svg]:origin-center [&>svg]:scale-[1.25] sm:[&>svg]:scale-[1.5] [&_path]:fill-foreground [&_path]:stroke-[hsl(var(--background))] [&_path]:stroke-[8]',
+        svgContent ? 'opacity-100' : 'opacity-0'
       )}
       dangerouslySetInnerHTML={{ __html: svgContent || '' }}
     />
@@ -80,10 +80,12 @@ const SurahMetadata = ({
 );
 
 const SurahIntroBismillah = ({ showBismillah }: { showBismillah: boolean }): React.JSX.Element => (
-  <div className={cn(
-    "flex w-full items-center justify-center overflow-hidden transition-all duration-300",
-    showBismillah ? "h-auto opacity-100" : "h-0 opacity-0"
-  )}>
+  <div
+    className={cn(
+      'flex w-full items-center justify-center overflow-hidden transition-all duration-300',
+      showBismillah ? 'h-auto opacity-100' : 'h-0 opacity-0'
+    )}
+  >
     <p
       dir="rtl"
       className="text-center text-3xl leading-none text-foreground sm:text-center sm:text-4xl"

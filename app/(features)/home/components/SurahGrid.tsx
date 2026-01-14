@@ -2,8 +2,8 @@
 
 import { memo } from 'react';
 
-import { SurahCard } from './SurahCard';
 import { NavigationCardGrid } from './NavigationCardGrid';
+import { SurahCard } from './SurahCard';
 
 import type { Chapter } from '@/types';
 

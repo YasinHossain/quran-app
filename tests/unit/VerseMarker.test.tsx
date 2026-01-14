@@ -5,9 +5,7 @@ import { HybridVerseMarker, VerseMarker } from '@/app/shared/components/verse-ma
 
 describe('VerseMarker', () => {
   it('returns null when the current font has a native ornament', () => {
-    const { container } = render(
-      <VerseMarker verseNumber={1} fontFamily="UthmanicHafs1Ver18" />
-    );
+    const { container } = render(<VerseMarker verseNumber={1} fontFamily="UthmanicHafs1Ver18" />);
 
     expect(container).toBeEmptyDOMElement();
   });
@@ -18,7 +16,9 @@ describe('VerseMarker', () => {
   });
 
   it('renders a lightweight text marker without SVG for non-native fonts', () => {
-    const { container } = render(<HybridVerseMarker verseNumber={12} fontFamily="Scheherazade New" />);
+    const { container } = render(
+      <HybridVerseMarker verseNumber={12} fontFamily="Scheherazade New" />
+    );
 
     expect(screen.getByLabelText('Verse 12')).toBeInTheDocument();
     expect(container.querySelector('svg')).toBeNull();

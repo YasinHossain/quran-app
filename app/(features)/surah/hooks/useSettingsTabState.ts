@@ -19,7 +19,8 @@ export const useSettingsTabState: (args?: UseSettingsTabStateProps) => ReturnSha
   onTranslationTabOpen,
   activeTabOverride,
 }: UseSettingsTabStateProps = {}) => {
-  const [activeTab, setActiveTab] = useState<TabValue>('translation');
+  // Initialize with override value directly to prevent flash
+  const [activeTab, setActiveTab] = useState<TabValue>(activeTabOverride ?? 'translation');
 
   const handleTabChange = useCallback(
     (tab: TabValue) => {
@@ -33,6 +34,7 @@ export const useSettingsTabState: (args?: UseSettingsTabStateProps) => ReturnSha
     [onReadingPanelOpen, onTranslationTabOpen]
   );
 
+  // Sync when activeTabOverride changes externally (e.g., user switches surah while in mushaf mode)
   useEffect(() => {
     if (activeTabOverride && activeTabOverride !== activeTab) {
       setActiveTab(activeTabOverride);

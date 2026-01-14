@@ -77,10 +77,30 @@
    These @font-face definitions are fallbacks if FontFace API fails
    ----------------------------------------------------------------- */
 
+/* KFGQ V2 uses the KFGQPC-Uthman-Taha sources */
+
+
+
 @font-face {
   font-family: 'Amiri Quran';
   src: url('/fonts/AmiriQuran.ttf') format('truetype');
   font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'KFGQ V2';
+  src: url('/fonts/KFGQPC-Uthman-Taha.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'KFGQ V2';
+  src: url('/fonts/KFGQPC-Uthman-Taha-Bold.ttf') format('truetype');
+  font-weight: bold;
   font-style: normal;
   font-display: swap;
 }

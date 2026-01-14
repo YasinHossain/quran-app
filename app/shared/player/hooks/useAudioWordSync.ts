@@ -142,7 +142,15 @@ export function useAudioWordSync({
         el.classList.remove(highlightClass);
       });
     };
-  }, [audio.isPlaying, audio.playbackSessionId, audio.audioRef, verseKey, verseTiming, highlightClass, selectorBuilder]);
+  }, [
+    audio.isPlaying,
+    audio.playbackSessionId,
+    audio.audioRef,
+    verseKey,
+    verseTiming,
+    highlightClass,
+    selectorBuilder,
+  ]);
 
   // Handle clicking on words to seek
   useEffect(() => {
