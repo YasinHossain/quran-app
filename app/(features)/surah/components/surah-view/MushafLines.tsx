@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { cn } from '@/lib/utils/cn';
 
@@ -26,6 +26,88 @@ type MushafLinesProps = {
   isFontLoaded: boolean;
 };
 
+/**
+ * Parse lineWidthDesktop value to pixels.
+ * Handles px and vh units.
+ */
+const parseLineWidthToPx = (lineWidthDesktop: string): number => {
+  const pxMatch = lineWidthDesktop.match(/^(\d+(?:\.\d+)?)px$/);
+  if (pxMatch?.[1]) {
+    return parseFloat(pxMatch[1]);
+  }
+
+  const vhMatch = lineWidthDesktop.match(/^(\d+(?:\.\d+)?)vh$/);
+  if (vhMatch?.[1] && typeof window !== 'undefined') {
+    return (parseFloat(vhMatch[1]) / 100) * window.innerHeight;
+  }
+
+  return 560; // default fallback
+};
+
+/**
+ * Check if reflow mode should be used based on container width and line width.
+ * @param containerWidth - The actual available width of the content container
+ * @param lineWidthDesktop - The desired line width (in px or vh units)
+ * @returns true if reflow mode should be used (line would overflow container)
+ */
+const checkShouldReflow = (containerWidth: number, lineWidthDesktop: string): boolean => {
+  if (containerWidth <= 0) return false;
+
+  const lineWidthPx = parseLineWidthToPx(lineWidthDesktop);
+  // Allow 5% margin - if line would take more than 95% of container, use reflow
+  const maxAllowedWidth = containerWidth * 0.95;
+
+  return lineWidthPx > maxAllowedWidth;
+};
+
+/**
+ * Custom hook that detects when to use reflow mode.
+ * Uses ResizeObserver to measure the actual container width (not window width).
+ * This properly accounts for sidebars and other layout elements.
+ */
+const useReflowMode = (
+  containerRef: React.RefObject<HTMLDivElement | null>,
+  lineWidthDesktop: string
+): boolean => {
+  const [shouldReflow, setShouldReflow] = useState(false);
+  const prevLineWidthRef = useRef(lineWidthDesktop);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Function to check and update reflow state
+    const checkReflow = (): void => {
+      const containerWidth = container.clientWidth;
+      const newShouldReflow = checkShouldReflow(containerWidth, lineWidthDesktop);
+      setShouldReflow(newShouldReflow);
+    };
+
+    // Check immediately
+    checkReflow();
+
+    // Also check when lineWidthDesktop changes
+    if (prevLineWidthRef.current !== lineWidthDesktop) {
+      prevLineWidthRef.current = lineWidthDesktop;
+      checkReflow();
+    }
+
+    // Use ResizeObserver to detect container size changes
+    // This handles: window resize, sidebar open/close, layout changes
+    const resizeObserver = new ResizeObserver(() => {
+      checkReflow();
+    });
+
+    resizeObserver.observe(container);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [containerRef, lineWidthDesktop]);
+
+  return shouldReflow;
+};
+
 export const MushafLines = ({
   lines,
   settings,
@@ -39,7 +121,10 @@ export const MushafLines = ({
   lineWidthDesktop,
   isFontLoaded,
 }: MushafLinesProps): React.JSX.Element => {
-  const handleCopy = (event: React.ClipboardEvent<HTMLDivElement>): void => {
+  // Container ref to measure actual available width
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleCopy = useCallback((event: React.ClipboardEvent<HTMLDivElement>): void => {
     if (typeof window === 'undefined') return;
     const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0) return;
@@ -64,69 +149,30 @@ export const MushafLines = ({
     if (!normalized) return;
     event.preventDefault();
     event.clipboardData.setData('text/plain', normalized);
-  };
+  }, []);
 
-  const getReflowQueryCondition = (): string => {
-    // 1. Mobile constraint (must be < 1280px)
-    const mobileQuery = '(max-width: 1279px)';
+  // Detect reflow mode based on actual container width AND font size (lineWidthDesktop)
+  const shouldUseReflow = useReflowMode(containerRef, lineWidthDesktop);
 
-    // 2. Overflow constraint (lineWidth > 95vw)
-    // Means: viewportWidth < lineWidth / 0.95
-    let overflowQuery = '';
-
-    const vhMatch = lineWidthDesktop.match(/^(\d+(?:\.\d+)?)vh$/);
-    const pxMatch = lineWidthDesktop.match(/^(\d+(?:\.\d+)?)px$/);
-
-    if (vhMatch?.[1]) {
-      // vh unit: width < (vh/100 * height) / 0.95
-      // width/height < vh / 95
-      const ratio = parseFloat(vhMatch[1]) / 95;
-      overflowQuery = `(max-aspect-ratio: ${ratio})`;
-    } else {
-      let px = 560;
-      if (pxMatch?.[1]) {
-        px = parseFloat(pxMatch[1]);
-      }
-      // px unit: width < px / 0.95
-      const pxLimit = px / 0.95;
-      overflowQuery = `(max-width: ${pxLimit}px)`;
-    }
-
-    return `${mobileQuery} and ${overflowQuery}`;
-  };
-
-  // Determine if we should use the reflow layout (mobile/overflow)
-  // We perform this check in JS to conditionally render ONLY the active view
-  // This avoids double-rendering DOM nodes (Standard + Reflow) which causes
-  // major performance issues on mobile scrolling.
-  const [shouldUseReflow, setShouldUseReflow] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.matchMedia(getReflowQueryCondition()).matches;
-  });
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const query = getReflowQueryCondition();
-    const matcher = window.matchMedia(query);
-
-    const handler = (e: MediaQueryListEvent) => {
-      setShouldUseReflow(e.matches);
-    };
-
-    // Update state in case it changed
-    setShouldUseReflow(matcher.matches);
-
-    matcher.addEventListener('change', handler);
-    return () => matcher.removeEventListener('change', handler);
-  }, [lineWidthDesktop]);
-
-  const scopeId = `mushaf-layout-${lineWidthDesktop.replace(/[^a-z0-9]/gi, '')}`;
+  const scopeId = useMemo(
+    () => `mushaf-layout-${lineWidthDesktop.replace(/[^a-z0-9]/gi, '')}`,
+    [lineWidthDesktop]
+  );
 
   return (
-    <div className={scopeId} onCopy={handleCopy}>
+    <div
+      ref={containerRef}
+      className={scopeId}
+      onCopy={handleCopy}
+      style={{
+        // Constrain width to parent's available space for proper measurement
+        width: '100%',
+        // Prevent content from expanding container - forces reflow mode instead
+        overflow: 'hidden',
+      }}
+    >
       {shouldUseReflow ? (
-        // Reflow Layout (Mobile Overflow)
+        // Reflow Layout (Mobile/Overflow mode)
         <div
           className={cn(
             'mushaf-reflow-view',
@@ -147,7 +193,7 @@ export const MushafLines = ({
           />
         </div>
       ) : (
-        // Standard Lines Layout (Desktop / Wide Mobile)
+        // Standard Lines Layout (Desktop / Wide view)
         <div
           className={cn(
             'mushaf-standard-view flex flex-col',
@@ -164,6 +210,8 @@ export const MushafLines = ({
                 isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf
                   ? 'min(var(--mushaf-line-width), 95vw)'
                   : 'auto',
+              // CSS containment for improved scroll performance
+              contain: 'layout style',
             } as React.CSSProperties
           }
         >

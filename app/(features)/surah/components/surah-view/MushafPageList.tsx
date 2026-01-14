@@ -23,6 +23,10 @@ const MushafPageSkeleton = ({ index }: { index: number }): React.JSX.Element => 
     <article
       aria-hidden="true"
       className={`mx-auto w-full py-6 sm:py-8 animate-pulse ${index === 0 ? 'pt-0' : ''}`}
+      style={{
+        // Match the containment of MushafPage for consistent layout
+        contain: 'layout style paint',
+      }}
     >
       <div className="mx-auto flex w-full max-w-[560px] flex-col gap-3 px-4 sm:gap-3 sm:px-0">
         {MUSHAF_SKELETON_LINES.map((line) => (
@@ -361,7 +365,13 @@ export const MushafPageList = ({
           const verseRange = lookupData.pages[pageNumber];
 
           return (
-            <div className={wrapperClassName}>
+            <div
+              className={wrapperClassName}
+              style={{
+                // CSS containment for improved scroll performance
+                contain: 'layout style',
+              }}
+            >
               <MushafVirtualizedPageRow
                 pageNumber={pageNumber}
                 verseRange={verseRange ? { from: verseRange.from, to: verseRange.to } : undefined}

@@ -52,6 +52,8 @@ export const MushafReflowContent = ({
       style={{
         fontFamily,
         fontSize: typeof fontSize === 'number' ? `${fontSize}px` : fontSize,
+        // CSS containment for improved scroll performance on mobile
+        contain: 'layout style',
       }}
     >
       {/* Container with centered text - like quran.com's .mobileCenterText */}

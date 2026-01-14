@@ -1,8 +1,8 @@
 // app/shared/Navigation.tsx - Simple unified navigation
 'use client';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { memo, useMemo } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { memo, useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
@@ -21,10 +21,12 @@ const DesktopNavigation = memo(function DesktopNavigation({
   navItems,
   linkStyles,
   pathname,
+  onPrefetch,
 }: {
   navItems: NavItem[];
   linkStyles: string;
   pathname: string;
+  onPrefetch: (href: string) => void;
 }) {
   if (pathname === '/') {
     return null;
@@ -40,9 +42,13 @@ const DesktopNavigation = memo(function DesktopNavigation({
           <Link
             key={item.href}
             href={item.href}
+            prefetch
             title={item.label}
             aria-label={item.label}
             className={linkStyles}
+            onMouseEnter={() => onPrefetch(item.href)}
+            onFocus={() => onPrefetch(item.href)}
+            onTouchStart={() => onPrefetch(item.href)}
           >
             <item.icon className="h-6 w-6" />
           </Link>
@@ -58,11 +64,13 @@ const MobileNavigation = memo(function MobileNavigation({
   linkStyles,
   isHidden,
   pathname,
+  onPrefetch,
 }: {
   navItems: NavItem[];
   linkStyles: string;
   isHidden: boolean;
   pathname: string;
+  onPrefetch: (href: string) => void;
 }) {
   return (
     <nav
@@ -90,12 +98,16 @@ const MobileNavigation = memo(function MobileNavigation({
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch
                 title={item.label}
                 aria-label={item.label}
                 className={cn(
                   'flex-1 flex flex-col items-center justify-center min-w-0 py-2 px-1 rounded-lg transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent gap-1',
                   isActive ? 'text-accent' : 'text-muted'
                 )}
+                onMouseEnter={() => onPrefetch(item.href)}
+                onFocus={() => onPrefetch(item.href)}
+                onTouchStart={() => onPrefetch(item.href)}
               >
                 <div className="flex items-center justify-center h-6 w-6">
                   <item.icon className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -114,6 +126,7 @@ const MobileNavigation = memo(function MobileNavigation({
 
 export const Navigation = memo(function Navigation() {
   const pathname = usePathname();
+  const router = useRouter();
   const { t } = useTranslation();
   const { isHidden } = useHeaderVisibility();
   // Mobile nav only hides on scroll (isHidden), not when sidebar opens.
@@ -135,18 +148,42 @@ export const Navigation = memo(function Navigation() {
     []
   );
 
+  const prefetch = useCallback(
+    (href: string) => {
+      // Prefetch on intent for snappy "tab-like" navigation on mobile.
+      // Ignore failures (e.g., during dev or if Next skips prefetch).
+      try {
+        router.prefetch(href);
+      } catch {
+        // no-op
+      }
+    },
+    [router]
+  );
+
+  useEffect(() => {
+    // Warm the router cache for primary destinations so switching is near-instant.
+    for (const item of navItems) {
+      if (item.href !== pathname) {
+        prefetch(item.href);
+      }
+    }
+  }, [navItems, pathname, prefetch]);
+
   return (
     <>
       <DesktopNavigation
         navItems={navItems}
         linkStyles={`${linkStyles} text-foreground hover:text-accent`}
         pathname={pathname}
+        onPrefetch={prefetch}
       />
       <MobileNavigation
         navItems={navItems}
         linkStyles={linkStyles}
         isHidden={hideMobileNav}
         pathname={pathname}
+        onPrefetch={prefetch}
       />
     </>
   );

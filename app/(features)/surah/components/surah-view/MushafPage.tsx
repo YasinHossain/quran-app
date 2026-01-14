@@ -1,3 +1,5 @@
+import React, { memo } from 'react';
+
 import {
   fontSizeToMushafScale,
   mushafScaleToFontSize,
@@ -17,7 +19,6 @@ import { MushafLines } from './MushafLines';
 import type { ReaderSettings } from './MushafMain.types';
 import type { QcfFontVersion } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import type { MushafLineGroup } from '@/types';
-import type React from 'react';
 
 const MIN_LINE_WIDTH_PX = 440;
 const MAX_LINE_WIDTH_PX = 540;
@@ -112,7 +113,7 @@ const getLineWidth = (fontSize: number): number => {
   return Math.min(clamped, maxViewportWidth);
 };
 
-export const MushafPage = ({
+export const MushafPage = memo(function MushafPage({
   pageNumber,
   lines,
   settings,
@@ -124,7 +125,7 @@ export const MushafPage = ({
   indopakVersion,
   isFontLoaded,
   className,
-}: MushafPageProps): React.JSX.Element => {
+}: MushafPageProps): React.JSX.Element {
   const { fontSize, lineWidthDesktop } = getMushafFontConfig({
     settings,
     isQcfMushaf,
@@ -146,6 +147,10 @@ export const MushafPage = ({
           : undefined,
         className
       )}
+      style={{
+        // CSS containment for improved scroll performance
+        contain: 'layout style paint',
+      }}
     >
       <MushafLines
         lines={lines}
@@ -163,4 +168,4 @@ export const MushafPage = ({
       {pageNumber ? <MushafPageFooter pageNumber={pageNumber} juzNumber={juzNumber} /> : null}
     </article>
   );
-};
+});
