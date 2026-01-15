@@ -37,7 +37,6 @@ export const SettingsForm = (props: SettingsFormProps): React.JSX.Element => {
       <ColorSelector selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
       <ModalActions
         isSubmitting={isSubmitting}
-        onClose={onClose}
         submitLabel={submitLabel}
         submittingLabel={submittingLabel}
       />

@@ -94,23 +94,23 @@ export function SettingsSidebarContent({
   const hookTabState = useSettingsTabState(
     onReadingPanelOpen || onTranslationTabOpen || activeReaderMode
       ? {
-          ...(onReadingPanelOpen ? { onReadingPanelOpen } : {}),
-          ...(onTranslationTabOpen ? { onTranslationTabOpen } : {}),
-          ...(activeReaderMode ? { activeTabOverride: activeReaderMode } : {}),
-        }
+        ...(onReadingPanelOpen ? { onReadingPanelOpen } : {}),
+        ...(onTranslationTabOpen ? { onTranslationTabOpen } : {}),
+        ...(activeReaderMode ? { activeTabOverride: activeReaderMode } : {}),
+      }
       : {}
   );
 
   const tabState = tabsEnabled
     ? hookTabState
     : {
-        activeTab: 'translation' as const,
-        handleTabChange: () => {},
-        tabOptions: [{ value: 'translation', label: 'Translation' }] as Array<{
-          value: SettingsTabValue;
-          label: string;
-        }>,
-      };
+      activeTab: 'translation' as const,
+      handleTabChange: () => { },
+      tabOptions: [{ value: 'translation', label: 'Translation' }] as Array<{
+        value: SettingsTabValue;
+        label: string;
+      }>,
+    };
 
   const { activeTab, handleTabChange, tabOptions } = tabState;
   const { openSections, handleSectionToggle } = useSettingsSections();
@@ -229,7 +229,7 @@ export function SettingsSidebarContent({
       <SidebarHeader
         title={title}
         titleClassName="text-mobile-lg font-semibold text-content-primary"
-        className="2xl:hidden"
+        className="2xl:hidden !z-0"
         showCloseButton={shouldShowCloseButton}
         {...(shouldShowCloseButton && onClose ? { onClose: handleSidebarClose } : {})}
         forceVisible

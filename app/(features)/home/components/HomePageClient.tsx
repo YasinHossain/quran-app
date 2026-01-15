@@ -9,6 +9,7 @@ import { memo } from 'react';
 
 import { HomeHeader } from './HomeHeader';
 import { HomePageBackground } from './HomePageBackground';
+import { HomeQuickLinks } from './HomeQuickLinks';
 import { HomeSearch } from './HomeSearch';
 import { HomeTabsClient } from './HomeTabsClient';
 import { VerseOfDay } from './VerseOfDay';
@@ -73,6 +74,11 @@ export const HomePageClient = memo(function HomePageClient({
               <VerseOfDay verses={initialVerses} />
             </div>
           )}
+
+          {/* Quick Links - Navigation to bookmarks sections */}
+          <div className="w-full mx-auto mt-12 md:mt-14 -mb-4 md:-mb-6" style={{ maxWidth: 'clamp(16rem, 75vw, 36rem)' }}>
+            <HomeQuickLinks />
+          </div>
         </main>
 
         {/* Tabs section with server-rendered grid as children */}

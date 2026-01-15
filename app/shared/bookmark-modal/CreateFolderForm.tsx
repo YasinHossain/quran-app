@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { memo, useCallback } from 'react';
 
 import { CheckIcon } from '@/app/shared/icons';
+import { UnifiedInput } from '@/app/shared/ui/inputs/UnifiedInput';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 
@@ -11,17 +12,14 @@ interface CreateFolderFormProps {
   newFolderName: string;
   onNameChange: (name: string) => void;
   onCreateFolder: () => void;
-  onCancel: () => void;
 }
 
 interface ActionButtonsProps {
   newFolderName: string;
-  onCancel: () => void;
 }
 
 const ActionButtons = memo(function ActionButtons({
   newFolderName,
-  onCancel,
 }: ActionButtonsProps): React.JSX.Element {
   return (
     <div className="flex items-center gap-2">
@@ -47,7 +45,6 @@ export const CreateFolderForm = memo(function CreateFolderForm({
   newFolderName,
   onNameChange,
   onCreateFolder,
-  onCancel,
 }: CreateFolderFormProps): React.JSX.Element {
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -63,20 +60,18 @@ export const CreateFolderForm = memo(function CreateFolderForm({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex items-center gap-2 pl-4 pr-3 py-3 bg-interactive/60 rounded-lg border border-border focus-within:ring-2 focus-within:ring-accent focus-within:border-transparent transition-all duration-300"
+      className="transition-all duration-300"
     >
-      <input
+      <UnifiedInput
+        variant="compact"
         type="text"
         value={newFolderName}
         onChange={(e) => onNameChange(e.target.value)}
         placeholder="Folder name"
         maxLength={30}
-        className={cn(
-          'flex-1 min-w-0 bg-surface/0 text-foreground placeholder-muted',
-          'focus:outline-none'
-        )}
+        wrapperClassName="transition-all duration-300"
+        rightSlot={<ActionButtons newFolderName={newFolderName} />}
       />
-      <ActionButtons newFolderName={newFolderName} onCancel={onCancel} />
     </motion.form>
   );
 });

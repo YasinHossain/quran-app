@@ -31,7 +31,6 @@ export const BookmarkTabHeader = memo(function BookmarkTabHeader({
             newFolderName={newFolderName}
             onNameChange={onNewFolderNameChange}
             onCreateFolder={onCreateFolder}
-            onCancel={() => onToggleCreateFolder(false)}
           />
         ) : (
           <motion.button

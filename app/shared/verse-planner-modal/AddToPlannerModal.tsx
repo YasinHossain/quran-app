@@ -15,6 +15,7 @@ import {
   getPlanStartVerse,
 } from '@/app/(features)/bookmarks/planner/utils/planRange';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { ModalFooter } from '@/app/shared/components/modal/ModalFooter';
 import { UnifiedModal } from '@/app/shared/components/modal/UnifiedModal';
 import { CloseIcon } from '@/app/shared/icons';
 import { Button } from '@/app/shared/ui/Button';
@@ -292,10 +293,14 @@ export function AddToPlannerModal({
           ) : null}
         </div>
 
-        <div className={`${contentContainerClass} mt-6 flex items-center justify-end shrink-0`}>
-          <Button onClick={handleSave} disabled={!canSave} className="rounded-lg px-5">
-            Save
-          </Button>
+        <div className={`${contentContainerClass} mt-6 shrink-0`}>
+          <ModalFooter
+            right={
+              <Button onClick={handleSave} disabled={!canSave} className="rounded-lg px-5">
+                Save
+              </Button>
+            }
+          />
         </div>
       </div>
     </UnifiedModal>

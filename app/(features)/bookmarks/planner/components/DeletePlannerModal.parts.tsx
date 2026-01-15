@@ -56,7 +56,7 @@ export function DeletePlannerModalBody({
     <div className="pt-2">
       <PlannerSummaryCard title={title} details={details} />
       <DeletePlannerWarnings countLabel={countLabel} error={error} />
-      <ModalActions onClose={onCancel} onDelete={onConfirm} isDeleting={isDeleting} />
+      <ModalActions onDelete={onConfirm} isDeleting={isDeleting} />
     </div>
   );
 }

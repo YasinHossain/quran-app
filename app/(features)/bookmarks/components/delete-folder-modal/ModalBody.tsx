@@ -38,7 +38,7 @@ export const ModalBody = ({
         )}
       </div>
 
-      <ModalActions onClose={onClose} onDelete={onDelete} isDeleting={isDeleting} />
+      <ModalActions onDelete={onDelete} isDeleting={isDeleting} />
     </div>
   </div>
 );
