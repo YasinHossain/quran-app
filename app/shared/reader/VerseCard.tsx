@@ -21,6 +21,11 @@ export interface ReaderVerseCardProps {
   actionsClassName?: string;
   contentClassName?: string;
   showArabic?: boolean;
+  /**
+   * Extends the Arabic selection area into the WorkspaceMain right gutter.
+   * Helps prevent accidental selection jumping when dragging into the gutter next to the sidebar.
+   */
+  extendArabicSelectionGutter?: boolean;
   showTranslations?: boolean;
   translationFontSize?: number;
   children?: ReactNode;
@@ -55,6 +60,7 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
       actionsClassName,
       contentClassName,
       showArabic = true,
+      extendArabicSelectionGutter = false,
       showTranslations = true,
       translationFontSize,
       children,
@@ -68,6 +74,9 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
     const { settings } = useSettings();
     const containerClasses = cn(getVariantClasses(variant, isPlaying), className);
     const fontSize = translationFontSize ?? settings.translationFontSize ?? 18;
+    const arabicSelectionGutterClassName = extendArabicSelectionGutter
+      ? '-mr-4 pr-1 sm:-mr-6 sm:pr-3 xl:-mr-6 xl:pr-3'
+      : undefined;
 
     const sortedTranslations = useMemo(() => {
       if (!verse.translations || verse.translations.length === 0) {
@@ -116,7 +125,9 @@ const ReaderVerseCardComponent = forwardRef<HTMLDivElement, ReaderVerseCardProps
           ) : null}
 
           <div className={cn('space-y-6 md:flex-grow', contentClassName)}>
-            {showArabic ? <VerseArabic verse={verse} /> : null}
+            {showArabic ? (
+              <VerseArabic verse={verse} className={arabicSelectionGutterClassName} />
+            ) : null}
 
             {showTranslations && sortedTranslations.length ? (
               <div className="space-y-6">

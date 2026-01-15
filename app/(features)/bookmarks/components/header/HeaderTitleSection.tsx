@@ -25,12 +25,12 @@ export const HeaderTitleSection = ({
         <BarsIcon size={18} />
       </button>
     )}
-    <div className="w-9 h-9 bg-accent rounded-xl flex items-center justify-center shadow-sm">
+    <div className="w-9 h-9 bg-accent rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
       <BookmarkIcon size={20} className="text-on-accent" />
     </div>
-    <div className="min-w-0 -mt-1">
-      <h1 className="text-lg font-bold text-foreground leading-tight">{title}</h1>
-      <p className="text-xs text-muted -mt-0.5">Organize your favorite verses</p>
+    <div className="min-w-0">
+      <h1 className="text-lg font-bold text-foreground">{title}</h1>
+      <p className="text-xs text-muted">Save and organize verses</p>
     </div>
   </div>
 );

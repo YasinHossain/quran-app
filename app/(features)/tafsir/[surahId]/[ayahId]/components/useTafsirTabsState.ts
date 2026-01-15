@@ -18,16 +18,22 @@ export type UseTafsirTabsStateReturn = {
 // Global variable to persist selection across navigation/remounts
 let globalLastActiveTafsirId: number | undefined;
 
+// Module-level singleton for stable SWR fetching (avoids stale closure issues)
+const fetchTafsirResources = async (): Promise<{ id: number; name: string; lang: string }[]> => {
+  const repository = container.getTafsirRepository();
+  const useCase = new GetTafsirResourcesUseCase(repository);
+  const result = await useCase.execute();
+  return result.tafsirs.map((t) => ({ id: t.id, name: t.displayName, lang: t.language }));
+};
+
 export function useTafsirTabsState(
   verseKey: string,
   tafsirIds: number[]
 ): UseTafsirTabsStateReturn {
-  const repository = container.getTafsirRepository();
-  const resourcesUseCase = new GetTafsirResourcesUseCase(repository);
-
-  const { data } = useSWR('tafsir:resources:all', async () => {
-    const result = await resourcesUseCase.execute();
-    return result.tafsirs.map((t) => ({ id: t.id, name: t.displayName, lang: t.language }));
+  // Use stable fetcher reference for SWR deduplication
+  const { data } = useSWR('tafsir:resources:all', fetchTafsirResources, {
+    revalidateOnFocus: false,
+    dedupingInterval: 60000, // 1 minute deduplication
   });
 
   const tabs: TafsirTab[] = useMemo(() => {

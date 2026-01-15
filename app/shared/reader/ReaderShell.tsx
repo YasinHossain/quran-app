@@ -203,7 +203,8 @@ export function ReaderShell({
 
   const handleTranslationTabOpen = useCallback(() => {
     setMode('verse');
-  }, [setMode]);
+    setSettingsOpen(false);
+  }, [setMode, setSettingsOpen]);
 
   const surahId = useMemo(() => {
     if (resourceKind === 'surah') {

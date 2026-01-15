@@ -40,6 +40,7 @@ export const Verse = memo(function Verse({ verse }: VerseProps): JSX.Element {
         ref={verseRef}
         verse={verse}
         isPlaying={isCurrent}
+        extendArabicSelectionGutter
         actions={{
           verseKey: verse.verse_key,
           verseId: String(verse.id),

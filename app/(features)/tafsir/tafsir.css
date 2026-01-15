@@ -66,7 +66,7 @@
 }
 
 /* Better spacing for long paragraphs */
-.tafsir-content p + p {
+.tafsir-content p+p {
   margin-top: 1.5rem;
 }
 
@@ -99,10 +99,7 @@
   opacity: 0.9;
 }
 
-/* Better paragraph transitions */
-.tafsir-content p {
-  transition: all 0.3s ease;
-}
+/* NOTE: Removed paragraph transitions for performance - causes layout thrashing with long content */
 
 /* Theme-aware adjustments using semantic tokens */
 .tafsir-content [lang='ar'] {
@@ -148,7 +145,8 @@
 
   .tafsir-content p {
     margin-bottom: 1.1rem;
-    text-indent: 0; /* Remove indent on small screens for readability */
+    text-indent: 0;
+    /* Remove indent on small screens for readability */
   }
 
   /* Neutralize drop cap on small screens */
@@ -171,7 +169,7 @@
     margin: 1rem 0;
   }
 
-  .tafsir-content p + p {
+  .tafsir-content p+p {
     margin-top: 1rem;
   }
 }

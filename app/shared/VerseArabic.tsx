@@ -9,6 +9,7 @@ import { HybridVerseMarker } from '@/app/shared/components/verse-marker/VerseMar
 import { AudioContext } from '@/app/shared/player/context/AudioContext';
 import { TajweedFontPalettes } from '@/app/shared/TajweedFontPalettes';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
+import { cn } from '@/lib/utils/cn';
 import { Verse as VerseType, Word } from '@/types';
 
 import type { LanguageCode } from '@/lib/text/languageCodes';
@@ -247,10 +248,12 @@ const VerseText = ({
 
 interface VerseArabicProps {
   verse: VerseType;
+  className?: string | undefined;
 }
 
 export const VerseArabic = memo(function VerseArabic({
   verse,
+  className,
 }: VerseArabicProps): React.JSX.Element {
   const { settings } = useSettings();
 
@@ -333,7 +336,11 @@ export const VerseArabic = memo(function VerseArabic({
       <TajweedFontPalettes pageNumbers={pageNumbers} version="v4" />
       <p
         dir="rtl"
-        className={`text-right leading-loose text-foreground${tajweed ? ' tajweed-palette' : ''}`}
+        className={cn(
+          'w-full text-right leading-loose text-foreground',
+          tajweed && 'tajweed-palette',
+          className
+        )}
         style={{
           fontFamily: baseFontFamily,
           fontSize: `${settings.arabicFontSize}px`,

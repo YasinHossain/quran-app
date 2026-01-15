@@ -31,7 +31,7 @@ const VARIANT_STYLES: Record<SelectionListVariant, VariantStyles> = {
     containerClassName: 'space-y-2 min-h-[60px] rounded-lg p-3 bg-surface border border-border',
     emptyTextClassName: 'text-center text-sm py-4 text-muted font-medium',
     itemRowClassName:
-      'flex items-center justify-between p-3 rounded-lg bg-surface border border-border hover:bg-accent/10 transition-colors',
+      'flex items-center justify-between p-3 rounded-lg bg-background border border-border hover:bg-accent/10 transition-colors',
     gripIconClassName: 'h-5 w-5',
     removeButtonClassName:
       'hover:text-accent hover:bg-accent/10 transition-all duration-200 p-1.5 rounded-full flex-shrink-0 ml-2 text-muted',
