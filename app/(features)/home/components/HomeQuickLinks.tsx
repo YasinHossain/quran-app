@@ -17,28 +17,28 @@ import { BookmarkOutlineIcon, CalendarIcon, ClockIcon, PinIcon } from '@/app/sha
  */
 
 const QUICK_LINKS = [
-    { href: '/bookmarks/last-read', icon: ClockIcon, label: 'Recent' },
-    { href: '/bookmarks/folders', icon: BookmarkOutlineIcon, label: 'Bookmarks' },
-    { href: '/bookmarks/pinned', icon: PinIcon, label: 'Pinned' },
-    { href: '/bookmarks/planner', icon: CalendarIcon, label: 'Planner' },
+  { href: '/bookmarks/last-read', icon: ClockIcon, label: 'Recent' },
+  { href: '/bookmarks/folders', icon: BookmarkOutlineIcon, label: 'Bookmarks' },
+  { href: '/bookmarks/pinned', icon: PinIcon, label: 'Pinned' },
+  { href: '/bookmarks/planner', icon: CalendarIcon, label: 'Planner' },
 ] as const;
 
 interface HomeQuickLinksProps {
-    className?: string;
+  className?: string;
 }
 
 export const HomeQuickLinks = memo(function HomeQuickLinks({
-    className,
+  className,
 }: HomeQuickLinksProps): ReactElement {
-    return (
-        <div className={`w-full ${className ?? ''}`}>
-            {/* 2x2 grid on mobile, single row on md+ */}
-            <div className="grid grid-cols-2 gap-2 sm:gap-2.5 md:flex md:flex-wrap md:justify-center md:gap-3">
-                {QUICK_LINKS.map(({ href, icon: Icon, label }) => (
-                    <Link
-                        key={href}
-                        href={href}
-                        className="
+  return (
+    <div className={`w-full ${className ?? ''}`}>
+      {/* 2x2 grid on mobile, single row on md+ */}
+      <div className="grid grid-cols-2 gap-2 sm:gap-2.5 md:flex md:flex-wrap md:justify-center md:gap-3">
+        {QUICK_LINKS.map(({ href, icon: Icon, label }) => (
+          <Link
+            key={href}
+            href={href}
+            className="
               flex items-center justify-center gap-2
               min-h-[2.5rem] sm:min-h-[2.75rem] md:min-h-12
               px-4 sm:px-5 md:px-6
@@ -54,12 +54,12 @@ export const HomeQuickLinks = memo(function HomeQuickLinks({
               active:scale-95
               touch-manipulation
             "
-                    >
-                        <Icon size={16} className="shrink-0 text-foreground" />
-                        <span>{label}</span>
-                    </Link>
-                ))}
-            </div>
-        </div>
-    );
+          >
+            <Icon size={16} className="shrink-0 text-foreground" />
+            <span>{label}</span>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
 });

@@ -4,8 +4,10 @@ import React, { memo, useId } from 'react';
 
 import { cn } from '@/lib/utils/cn';
 
-export interface UnifiedInputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'children'> {
+export interface UnifiedInputProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'children'
+> {
   label?: string;
   helperText?: string;
   errorMessage?: string;
@@ -70,7 +72,9 @@ export const UnifiedInput = memo(function UnifiedInput({
           aria-describedby={describedBy}
           {...props}
         />
-        {rightSlot ? <div className="absolute right-3 top-1/2 -translate-y-1/2">{rightSlot}</div> : null}
+        {rightSlot ? (
+          <div className="absolute right-3 top-1/2 -translate-y-1/2">{rightSlot}</div>
+        ) : null}
       </div>
 
       {hasError ? (
@@ -85,4 +89,3 @@ export const UnifiedInput = memo(function UnifiedInput({
     </div>
   );
 });
-

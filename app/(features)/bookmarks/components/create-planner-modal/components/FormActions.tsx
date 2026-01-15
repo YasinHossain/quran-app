@@ -2,8 +2,8 @@
 
 import React from 'react';
 
-import { PlusIcon } from '@/app/shared/icons';
 import { ModalFooter } from '@/app/shared/components/modal/ModalFooter';
+import { PlusIcon } from '@/app/shared/icons';
 import { Button } from '@/app/shared/ui/Button';
 
 interface FormActionsProps {

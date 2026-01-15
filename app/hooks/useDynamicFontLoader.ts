@@ -7,10 +7,7 @@ import { useEffect, useRef, useCallback } from 'react';
  * Key: The font-family value used in CSS (e.g., "Amiri", serif)
  * Value: Array of font file sources to load
  */
-const FONT_SOURCES: Record<
-  string,
-  { src: string; weight: number | string; style?: string }[]
-> = {
+const FONT_SOURCES: Record<string, { src: string; weight: number | string; style?: string }[]> = {
   // Arabic Script Fonts (lazy loaded)
   '"KFGQPC-Uthman-Taha", serif': [
     { src: '/fonts/KFGQPC-Uthman-Taha.ttf', weight: 'normal' },
@@ -108,9 +105,7 @@ async function loadFont(fontFamilyValue: string): Promise<void> {
     try {
       // Load all weights/styles for this font
       await Promise.all(
-        sources.map((source) =>
-          loadFontFile(familyName, source.src, source.weight, source.style)
-        )
+        sources.map((source) => loadFontFile(familyName, source.src, source.weight, source.style))
       );
       loadedFonts.add(fontFamilyValue);
     } finally {

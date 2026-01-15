@@ -49,7 +49,6 @@ export function DeletePlannerModalBody({
   countLabel,
   error,
   isDeleting,
-  onCancel,
   onConfirm,
 }: DeletePlannerModalBodyProps): JSX.Element {
   return (

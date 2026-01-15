@@ -41,7 +41,6 @@ const wrapUnsupportedGlyphs = (text: string, isQpcHafsMushaf: boolean): string =
   );
 };
 
-
 // V4 (Tajweed) uses the same glyph codes as V2 (code_v2 field), with the COLRv1 color font
 const getGlyphCode = (word: MushafWord, qcfVersion: QcfFontVersion): string | undefined =>
   qcfVersion === 'v2' || qcfVersion === 'v4' ? word.codeV2 : word.codeV1;

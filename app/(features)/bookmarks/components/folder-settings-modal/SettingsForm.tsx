@@ -25,7 +25,6 @@ export const SettingsForm = (props: SettingsFormProps): React.JSX.Element => {
     selectedColor,
     setSelectedColor,
     isSubmitting,
-    onClose,
     handleSubmit,
     submitLabel,
     submittingLabel,

@@ -37,15 +37,15 @@ export const BookmarkFolderCard = ({
   const latestBookmarkTimestamp =
     verseCount > 0
       ? folder.bookmarks.reduce(
-        (latest, bookmark) => Math.max(latest, bookmark.createdAt ?? 0),
-        folder.createdAt ?? 0
-      )
+          (latest, bookmark) => Math.max(latest, bookmark.createdAt ?? 0),
+          folder.createdAt ?? 0
+        )
       : (folder.createdAt ?? 0);
   const formattedUpdatedAt =
     latestBookmarkTimestamp > 0
       ? new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' }).format(
-        new Date(latestBookmarkTimestamp)
-      )
+          new Date(latestBookmarkTimestamp)
+        )
       : null;
   const versePreview = folder.bookmarks.slice(0, 3);
 

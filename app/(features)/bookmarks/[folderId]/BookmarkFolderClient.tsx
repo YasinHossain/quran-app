@@ -23,14 +23,12 @@ export function BookmarkFolderClient({ folderId }: BookmarkFolderClientProps): R
   logger.debug('BookmarkFolderClient rendering', { folderId });
   const controller = useBookmarkFolderController(folderId);
 
-  if (!controller.folder) {
-    return <FolderNotFound />;
-  }
-
   // Prefetch first 20 bookmarks to mitigate waterfall loading
   const prefetch = usePrefetchSingleVerse();
 
   React.useEffect(() => {
+    if (!controller.bookmarks) return;
+
     const targets = controller.bookmarks
       .slice(0, 20)
       .map((b) => (b.verseKey ? String(b.verseKey) : b.verseId ? String(b.verseId) : null));
@@ -39,6 +37,10 @@ export function BookmarkFolderClient({ folderId }: BookmarkFolderClientProps): R
       void prefetch(targets);
     }
   }, [controller.bookmarks, prefetch]);
+
+  if (!controller.folder) {
+    return <FolderNotFound />;
+  }
 
   return (
     <BookmarkFolderView

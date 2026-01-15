@@ -44,16 +44,16 @@ const getLineClassName = (
 const getLineContentStyle = (isQcfMushaf: boolean): React.CSSProperties =>
   isQcfMushaf
     ? ({
-      whiteSpace: 'nowrap',
-      columnGap: '0',
-      // CSS containment for improved scroll performance
-      contain: 'layout style',
-    } as React.CSSProperties)
+        whiteSpace: 'nowrap',
+        columnGap: '0',
+        // CSS containment for improved scroll performance
+        contain: 'layout style',
+      } as React.CSSProperties)
     : ({
-      whiteSpace: 'nowrap',
-      // CSS containment for improved scroll performance
-      contain: 'layout style',
-    } as React.CSSProperties);
+        whiteSpace: 'nowrap',
+        // CSS containment for improved scroll performance
+        contain: 'layout style',
+      } as React.CSSProperties);
 
 export const MushafLine = memo(function MushafLine({
   line,

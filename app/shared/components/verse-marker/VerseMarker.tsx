@@ -74,7 +74,7 @@ interface VerseMarkerProps {
  *
  * Avoids inline SVG for performance, while keeping a consistent verse marker
  * experience for fonts that don't support native ornament+number shaping.
- * 
+ *
  * Note: This component is largely deprecated in favor of the "Unified Hafs Marker"
  * strategy in HybridVerseMarker, but kept for fallback or explicit usage.
  */
@@ -207,9 +207,7 @@ export const HybridVerseMarker = ({
   // 1. If the current font supports native ornament (e.g. Uthmanic Hafs), use it.
   // This preserves the specific style of the main Quran font if it's capable.
   if (fontHasNativeOrnament(fontFamily)) {
-    return (
-      <NativeVerseMarker verseNumber={verseNumber} className={className} {...optionalProps} />
-    );
+    return <NativeVerseMarker verseNumber={verseNumber} className={className} {...optionalProps} />;
   }
 
   // 2. For ALL other fonts (Amiri, Me Quran, Lateef, etc.), use the Uthmanic Hafs font

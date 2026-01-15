@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { memo, type ReactElement } from 'react';
 
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
@@ -29,8 +28,6 @@ const SHORTCUT_SURAHS = [
  * and quick Surah shortcuts.
  */
 export const HomeSearch = memo(function HomeSearch({ className }: HomeSearchProps): ReactElement {
-  const router = useRouter();
-
   return (
     <div className={`w-full space-y-4 md:space-y-5 ${className ?? ''}`}>
       {/* Comprehensive Search */}

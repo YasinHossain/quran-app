@@ -10,10 +10,7 @@ interface ModalActionsProps {
   isDeleting: boolean;
 }
 
-export const ModalActions = ({
-  onDelete,
-  isDeleting,
-}: ModalActionsProps): React.JSX.Element => (
+export const ModalActions = ({ onDelete, isDeleting }: ModalActionsProps): React.JSX.Element => (
   <div className="mt-8 pt-6 border-t border-border/60">
     <ModalFooter
       right={

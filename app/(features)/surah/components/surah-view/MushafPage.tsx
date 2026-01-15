@@ -36,7 +36,6 @@ interface MushafPageProps {
   indopakVersion?: '15' | '16' | null;
   isFontLoaded: boolean;
   className?: string;
-  minHeight?: number;
   isMobile?: boolean;
 }
 
@@ -127,7 +126,6 @@ export const MushafPage = memo(function MushafPage({
   indopakVersion,
   isFontLoaded,
   className,
-  minHeight = 600,
   isMobile = false,
 }: MushafPageProps): React.JSX.Element {
   const { fontSize, lineWidthDesktop } = getMushafFontConfig({

@@ -15,8 +15,9 @@ export const BookmarkIllustration = (): React.JSX.Element => {
   return (
     <div className="relative mb-8">
       <div
-        className={`mx-auto mb-4 flex h-32 w-32 items-center justify-center rounded-3xl bg-gradient-to-br from-accent/20 to-accent/5 shadow-lg transition-all duration-500 ease-out ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-          }`}
+        className={`mx-auto mb-4 flex h-32 w-32 items-center justify-center rounded-3xl bg-gradient-to-br from-accent/20 to-accent/5 shadow-lg transition-all duration-500 ease-out ${
+          isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+        }`}
         style={{ transitionDelay: '200ms' }}
       >
         <BookmarkIcon size={48} className="text-accent" />
@@ -24,15 +25,17 @@ export const BookmarkIllustration = (): React.JSX.Element => {
 
       {/* Floating elements */}
       <div
-        className={`absolute -top-2 -right-4 flex h-8 w-8 items-center justify-center rounded-full bg-accent/10 transition-all duration-500 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
-          }`}
+        className={`absolute -top-2 -right-4 flex h-8 w-8 items-center justify-center rounded-full bg-accent/10 transition-all duration-500 ease-out ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+        }`}
         style={{ transitionDelay: '400ms' }}
       >
         <CheckIcon size={16} className="text-accent" />
       </div>
       <div
-        className={`absolute -bottom-2 -left-4 h-6 w-6 rounded-full bg-accent/20 transition-all duration-500 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
-          }`}
+        className={`absolute -bottom-2 -left-4 h-6 w-6 rounded-full bg-accent/20 transition-all duration-500 ease-out ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+        }`}
         style={{ transitionDelay: '600ms' }}
       />
     </div>
@@ -49,8 +52,9 @@ export const EmptyBookmarksContent = (): React.JSX.Element => {
 
   return (
     <div
-      className={`transition-all duration-500 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-        }`}
+      className={`transition-all duration-500 ease-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+      }`}
       style={{ transitionDelay: '300ms' }}
     >
       <h2 className="mb-4 text-4xl font-bold tracking-tight text-foreground">
@@ -92,8 +96,9 @@ export const QuickStartGuide = (): React.JSX.Element => {
 
   return (
     <div
-      className={`rounded-2xl border border-border bg-surface p-8 shadow-sm transition-all duration-500 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-        }`}
+      className={`rounded-2xl border border-border bg-surface p-8 shadow-sm transition-all duration-500 ease-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+      }`}
       style={{ transitionDelay: '700ms' }}
     >
       <div className="mb-6 flex items-center justify-center gap-2">

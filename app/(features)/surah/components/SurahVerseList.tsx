@@ -113,32 +113,15 @@ function QuranComVerseRow({
   );
 }
 
-function QuranComEndOfList({
-  endLabel,
-  surahId,
-}: {
-  endLabel: string;
-  surahId?: number | undefined;
-}): React.JSX.Element {
-  return (
-    <div className="py-10 text-center space-y-6">
-      <p className="text-muted-foreground">{endLabel}</p>
-      {surahId ? <SurahNavigation currentSurahId={surahId} /> : null}
-    </div>
-  );
-}
-
 export const SurahVerseList = ({
   surahId,
   verseListing,
   emptyLabelKey = 'no_verses_found',
-  endLabelKey = 'end_of_surah',
   initialVerseKey,
 }: SurahVerseListProps): React.JSX.Element => {
   const { t } = useTranslation();
   const audio = useAudio();
   const emptyLabel = t(emptyLabelKey);
-  const endLabel = t(endLabelKey);
   const initialVerseNumber = parseInitialVerseNumber(initialVerseKey);
 
   const hasNoContent = verseListing.verses.length === 0;
@@ -151,7 +134,6 @@ export const SurahVerseList = ({
       <QuranComList
         verseListing={verseListing}
         surahId={surahId}
-        endLabel={endLabel}
         initialVerseNumber={initialVerseNumber}
         isAutoScrollEnabled={audio.isPlaying}
       />
@@ -166,7 +148,6 @@ export const SurahVerseList = ({
     <InfiniteList
       verseListing={verseListing}
       surahId={surahId}
-      endLabel={endLabel}
       emptyLabel={emptyLabel}
       initialVerseKey={initialVerseKey}
       isAutoScrollEnabled={audio.isPlaying}
@@ -177,13 +158,11 @@ export const SurahVerseList = ({
 function QuranComList({
   verseListing,
   surahId,
-  endLabel,
   initialVerseNumber,
   isAutoScrollEnabled,
 }: {
   verseListing: UseVerseListingReturn;
   surahId?: number | undefined;
-  endLabel: string;
   initialVerseNumber: number | null;
   isAutoScrollEnabled: boolean;
 }): React.JSX.Element {
@@ -266,14 +245,12 @@ function QuranComList({
 function InfiniteList({
   verseListing,
   surahId,
-  endLabel,
   emptyLabel,
   initialVerseKey,
   isAutoScrollEnabled,
 }: {
   verseListing: UseVerseListingReturn;
   surahId?: number | undefined;
-  endLabel: string;
   emptyLabel: string;
   initialVerseKey?: string | undefined;
   isAutoScrollEnabled: boolean;
@@ -325,7 +302,6 @@ function InfiniteList({
         loadMoreRef={verseListing.loadMoreRef}
         isValidating={verseListing.isValidating}
         isReachingEnd={verseListing.isReachingEnd}
-        endLabel={endLabel}
         hasVerses={verseListing.verses.length > 0}
         surahId={surahId}
       />
@@ -337,7 +313,6 @@ interface LoadMoreFooterProps {
   loadMoreRef: React.RefObject<HTMLDivElement | null>;
   isValidating: boolean;
   isReachingEnd: boolean;
-  endLabel: string;
   hasVerses: boolean;
   surahId?: number | undefined;
 }
@@ -346,7 +321,6 @@ function LoadMoreFooter({
   loadMoreRef,
   isValidating,
   isReachingEnd,
-  endLabel,
   hasVerses,
   surahId,
 }: LoadMoreFooterProps): React.JSX.Element | null {

@@ -90,10 +90,11 @@ function TabsHeader({
         <button
           key={t.id}
           onClick={() => onSelect(t.id)}
-          className={`flex-1 text-center py-2.5 px-4 sm:py-3 sm:px-5 rounded-full text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap ${activeId === t.id
-            ? 'bg-surface shadow text-foreground'
-            : 'text-muted hover:text-foreground hover:bg-surface/30'
-            }`}
+          className={`flex-1 text-center py-2.5 px-4 sm:py-3 sm:px-5 rounded-full text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap ${
+            activeId === t.id
+              ? 'bg-surface shadow text-foreground'
+              : 'text-muted hover:text-foreground hover:bg-surface/30'
+          }`}
         >
           {t.name}
         </button>
@@ -111,25 +112,24 @@ interface TafsirContentProps {
   fontSizePx: number;
 }
 
-const TafsirContent = forwardRef<HTMLDivElement, TafsirContentProps>(
-  function TafsirContent({ title, isLoading, html, fontSizePx }, ref) {
-    return (
-      <div ref={ref} className="p-3 sm:p-4 mt-3 sm:mt-4 w-full">
-        <h2 className="mb-6 sm:mb-8 text-center text-lg sm:text-xl font-bold text-foreground">
-          {title}
-        </h2>
-        {isLoading ? (
-          <TafsirSkeleton />
-        ) : (
-          <div
-            className="prose max-w-none tafsir-content break-words"
-            style={{ fontSize: `${fontSizePx}px` }}
-            dangerouslySetInnerHTML={{ __html: html }}
-          />
-        )}
-      </div>
-    );
-  }
-);
-
-
+const TafsirContent = forwardRef<HTMLDivElement, TafsirContentProps>(function TafsirContent(
+  { title, isLoading, html, fontSizePx },
+  ref
+) {
+  return (
+    <div ref={ref} className="p-3 sm:p-4 mt-3 sm:mt-4 w-full">
+      <h2 className="mb-6 sm:mb-8 text-center text-lg sm:text-xl font-bold text-foreground">
+        {title}
+      </h2>
+      {isLoading ? (
+        <TafsirSkeleton />
+      ) : (
+        <div
+          className="prose max-w-none tafsir-content break-words"
+          style={{ fontSize: `${fontSizePx}px` }}
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      )}
+    </div>
+  );
+});

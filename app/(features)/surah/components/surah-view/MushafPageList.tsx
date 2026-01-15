@@ -45,10 +45,7 @@ const MushafPageSkeleton = ({
     >
       <div className="mx-auto flex w-full max-w-[560px] flex-col gap-3 px-4 sm:gap-3 sm:px-0">
         {MUSHAF_SKELETON_LINES.map((line) => (
-          <div
-            key={`${line.key}-${index}`}
-            className="h-10 w-full rounded-md bg-border/20"
-          />
+          <div key={`${line.key}-${index}`} className="h-10 w-full rounded-md bg-border/20" />
         ))}
       </div>
       <div className="mt-8 flex justify-center">
@@ -153,13 +150,7 @@ const resolvePageNumberForVerseKey = (
   return null;
 };
 
-const MushafEndOfList = ({
-  endLabel,
-  surahId,
-}: {
-  endLabel: string;
-  surahId?: number | undefined;
-}): React.JSX.Element => (
+const MushafEndOfList = ({ surahId }: { surahId?: number | undefined }): React.JSX.Element => (
   <div className="py-10 text-center space-y-6">
     {surahId ? <SurahNavigation currentSurahId={surahId} /> : null}
   </div>
@@ -270,7 +261,6 @@ export const MushafPageList = ({
   translationIds,
   settings,
   mushafFlags,
-  endLabel,
   surahId,
 }: MushafPageListProps): React.JSX.Element => {
   // Calculate height estimates based on font size
@@ -407,7 +397,7 @@ export const MushafPageList = ({
           if (index === totalPages) {
             return (
               <div className={wrapperClassName}>
-                <MushafEndOfList endLabel={endLabel} {...(surahId ? { surahId } : {})} />
+                <MushafEndOfList {...(surahId ? { surahId } : {})} />
               </div>
             );
           }
@@ -418,10 +408,12 @@ export const MushafPageList = ({
           return (
             <div
               className={wrapperClassName}
-              style={{
-                // Minimal containment to avoid interfering with Virtuoso's measurement
-                contain: 'layout',
-              } as React.CSSProperties}
+              style={
+                {
+                  // Minimal containment to avoid interfering with Virtuoso's measurement
+                  contain: 'layout',
+                } as React.CSSProperties
+              }
             >
               <MushafVirtualizedPageRow
                 pageNumber={pageNumber}

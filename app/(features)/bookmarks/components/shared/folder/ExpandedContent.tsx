@@ -5,7 +5,7 @@ import React from 'react';
 import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
 import { CloseIcon } from '@/app/shared/icons';
 import { LoadingError } from '@/app/shared/LoadingError';
-import { Bookmark, Verse } from '@/types';
+import { Bookmark } from '@/types';
 
 interface ExpandedContentProps {
   isExpanded: boolean;
@@ -62,12 +62,10 @@ export const ExpandedContent = ({
 
 const FolderVerseItem = ({
   bookmark,
-  onSelect,
   showDivider = true,
   onRemoveBookmark,
 }: {
   bookmark: Bookmark;
-  onSelect?: (() => void) | undefined;
   showDivider?: boolean;
   onRemoveBookmark?: (bookmark: Bookmark) => void;
 }): React.JSX.Element => {
@@ -82,7 +80,6 @@ const FolderVerseItem = ({
     >
       {verse ? (
         <LoadedFolderVerseItem
-          verse={verse}
           bookmark={enrichedBookmark}
           onRemoveBookmark={onRemoveBookmark}
           showDivider={showDivider}
@@ -93,12 +90,10 @@ const FolderVerseItem = ({
 };
 
 const LoadedFolderVerseItem = ({
-  verse,
   bookmark,
   onRemoveBookmark,
   showDivider,
 }: {
-  verse: Verse;
   bookmark: Bookmark;
   onRemoveBookmark: ((bookmark: Bookmark) => void) | undefined;
   showDivider: boolean;
