@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
@@ -40,9 +40,13 @@ interface UseSettingsSectionsReturn {
 }
 
 export const useSettingsSections = (): UseSettingsSectionsReturn => {
-  // Use lazy initialization to read from localStorage synchronously on first render
-  // This prevents the flash caused by useEffect updating state after initial mount
-  const [openSections, setOpenSections] = useState<string[]>(readInitialState);
+  // Initialize with defaults to avoid hydration mismatch
+  // Sync with localStorage in useEffect (may cause minor flash but strictly required for hydration)
+  const [openSections, setOpenSections] = useState<string[]>(DEFAULT_OPEN_SECTIONS);
+
+  useEffect(() => {
+    setOpenSections(readInitialState());
+  }, []);
 
   const handleSectionToggle = useCallback(
     (sectionId: string) => {
