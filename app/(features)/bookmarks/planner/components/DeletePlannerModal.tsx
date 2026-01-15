@@ -11,7 +11,7 @@ import {
   DeletePlannerModalHeader,
 } from '@/app/(features)/bookmarks/planner/components/DeletePlannerModal.parts';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { PanelModalCenter } from '@/app/shared/ui/PanelModalCenter';
+import { UnifiedModal } from '@/app/shared/components/modal/UnifiedModal';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 interface DeletePlannerModalProps {
@@ -50,15 +50,13 @@ export function DeletePlannerModal({
   const shouldRender = isOpen && effectivePlanIds.length > 0;
 
   return (
-    <PanelModalCenter
+    <UnifiedModal
       isOpen={shouldRender}
       onClose={handleCancel}
-      title=""
-      showCloseButton={false}
-      closeOnOverlayClick={true}
-      className="max-w-lg bg-background px-3 sm:px-4 pt-4 pb-4"
+      ariaLabel="Delete planner"
+      contentClassName="max-w-lg max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-4rem)] overflow-hidden px-3 sm:px-4 pt-4 pb-4"
     >
-      <div className="px-1 sm:px-2">
+      <div className="max-h-full overflow-y-auto scrollbar-hide px-1 sm:px-2">
         <DeletePlannerModalHeader onClose={handleCancel} />
         <DeletePlannerModalBody
           title={title}
@@ -70,7 +68,7 @@ export function DeletePlannerModal({
           isDeleting={isDeleting}
         />
       </div>
-    </PanelModalCenter>
+    </UnifiedModal>
   );
 }
 

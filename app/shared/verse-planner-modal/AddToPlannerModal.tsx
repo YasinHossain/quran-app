@@ -15,9 +15,9 @@ import {
   getPlanStartVerse,
 } from '@/app/(features)/bookmarks/planner/utils/planRange';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { UnifiedModal } from '@/app/shared/components/modal/UnifiedModal';
 import { CloseIcon } from '@/app/shared/icons';
 import { Button } from '@/app/shared/ui/Button';
-import { PanelModalCenter } from '@/app/shared/ui/PanelModalCenter';
 
 import { PlannerCardsSection } from './components/PlannerCardsSection';
 
@@ -252,18 +252,14 @@ export function AddToPlannerModal({
     onClose,
   ]);
 
-  if (!isOpen) {
-    return null;
-  }
-
   const contentContainerClass = 'mx-auto w-full max-w-lg';
 
   return (
-    <PanelModalCenter
+    <UnifiedModal
       isOpen={isOpen}
       onClose={onClose}
-      className="w-full max-w-xl rounded-lg bg-background px-4 pb-4 pt-8 shadow-xl sm:px-6 sm:pb-6 sm:pt-8"
-      showCloseButton={false}
+      ariaLabel="Add to Planner"
+      contentClassName="w-full max-w-xl mx-auto max-h-[calc(100dvh-2rem)] overflow-hidden px-4 pb-4 pt-8 sm:px-6 sm:pb-6 sm:pt-8"
     >
       <div className="flex h-full min-h-0 flex-col">
         <header className="mb-6 shrink-0">
@@ -302,6 +298,6 @@ export function AddToPlannerModal({
           </Button>
         </div>
       </div>
-    </PanelModalCenter>
+    </UnifiedModal>
   );
 }

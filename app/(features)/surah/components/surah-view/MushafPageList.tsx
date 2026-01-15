@@ -18,7 +18,20 @@ const MUSHAF_SKELETON_LINES = Array.from({ length: 15 }, (_value, index) => ({
   key: `mushaf-skeleton-line-${index + 1}`,
 }));
 
-const MushafPageSkeleton = ({ index }: { index: number }): React.JSX.Element => {
+// Consistent height estimate for both skeleton and loaded content
+// This value is calibrated to minimize scroll jumps during virtualization
+// Base height estimates at default font size (arabicFontSize ≈ 18)
+const MUSHAF_PAGE_HEIGHT_DESKTOP_BASE = 1100;
+const MUSHAF_PAGE_HEIGHT_MOBILE_BASE = 1700;
+const DEFAULT_ARABIC_FONT_SIZE = 18;
+
+const MushafPageSkeleton = ({
+  index,
+  minHeight = MUSHAF_PAGE_HEIGHT_DESKTOP_BASE,
+}: {
+  index: number;
+  minHeight?: number;
+}): React.JSX.Element => {
   return (
     <article
       aria-hidden="true"
@@ -26,8 +39,8 @@ const MushafPageSkeleton = ({ index }: { index: number }): React.JSX.Element => 
       style={{
         // Match the containment of MushafPage for consistent layout
         contain: 'layout style paint',
-        // Minimum height to reduce layout shift when content loads
-        minHeight: '600px',
+        // Use exact height to match defaultItemHeight and prevent scroll jumps
+        minHeight: `${minHeight}px`,
       }}
     >
       <div className="mx-auto flex w-full max-w-[560px] flex-col gap-3 px-4 sm:gap-3 sm:px-0">
@@ -86,7 +99,7 @@ const resolvePageFont = ({
   };
 };
 
-const INCREASE_VIEWPORT_BY_PIXELS = 1200;
+const INCREASE_VIEWPORT_BY_PIXELS = 2000; // Increased buffer for smoother measurement
 const QCF_VISIBLE_BUFFER_PAGES = 2;
 
 const resolveFirstPageNumber = (pages: Record<number, PagesLookupRecord>): number | null => {
@@ -170,6 +183,8 @@ const MushafVirtualizedPageRow = ({
   getPageFontFamily,
   isPageFontLoaded,
   className,
+  estimatedHeight,
+  isMobile,
 }: {
   pageNumber: number;
   verseRange: { from: string; to: string } | undefined;
@@ -182,6 +197,8 @@ const MushafVirtualizedPageRow = ({
   getPageFontFamily: (pageNumber: number) => string;
   isPageFontLoaded: (pageNumber: number) => boolean;
   className?: string;
+  estimatedHeight: number;
+  isMobile: boolean;
 }): React.JSX.Element => {
   const { page, isLoading, error } = useDedupedFetchMushafPage({
     pageNumber,
@@ -205,7 +222,7 @@ const MushafVirtualizedPageRow = ({
   }
 
   if (isLoading || !page || (mushafFlags.isQcfMushaf && !isFontLoaded)) {
-    return <MushafPageSkeleton index={pageNumber} />;
+    return <MushafPageSkeleton index={pageNumber} minHeight={estimatedHeight} />;
   }
 
   return (
@@ -220,6 +237,7 @@ const MushafVirtualizedPageRow = ({
       qcfVersion={mushafFlags.qcfVersion}
       isFontLoaded={isFontLoaded}
       {...(className ? { className } : {})}
+      isMobile={isMobile}
     />
   );
 };
@@ -255,6 +273,32 @@ export const MushafPageList = ({
   endLabel,
   surahId,
 }: MushafPageListProps): React.JSX.Element => {
+  // Calculate height estimates based on font size
+  // Font size directly affects page height - larger fonts = taller pages
+  const fontScaleFactor = settings.arabicFontSize / DEFAULT_ARABIC_FONT_SIZE;
+  const scaledDesktopHeight = Math.round(MUSHAF_PAGE_HEIGHT_DESKTOP_BASE * fontScaleFactor);
+  const scaledMobileHeight = Math.round(MUSHAF_PAGE_HEIGHT_MOBILE_BASE * fontScaleFactor);
+
+  // Detect mobile viewport to adjust height estimate
+  const [isMobile, setIsMobile] = useState(false);
+  const [estimatedHeight, setEstimatedHeight] = useState(scaledDesktopHeight);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      // 640px is standard Tailwind sm breakpoint
+      const mobile = window.innerWidth < 640;
+      setIsMobile(mobile);
+      setEstimatedHeight(mobile ? scaledMobileHeight : scaledDesktopHeight);
+    };
+
+    // Check on mount
+    checkMobile();
+
+    // Check on resize
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, [scaledMobileHeight, scaledDesktopHeight]);
+
   const {
     data: lookupData,
     isLoading,
@@ -322,8 +366,8 @@ export const MushafPageList = ({
   if (isLoading) {
     return (
       <LoadingStatus className="space-y-8">
-        <MushafPageSkeleton index={0} />
-        <MushafPageSkeleton index={1} />
+        <MushafPageSkeleton index={0} minHeight={estimatedHeight} />
+        <MushafPageSkeleton index={1} minHeight={estimatedHeight} />
       </LoadingStatus>
     );
   }
@@ -350,8 +394,8 @@ export const MushafPageList = ({
         initialItemCount={1}
         totalCount={totalPages + 1}
         rangeChanged={setVisibleRange}
-        // Provide default height estimate to reduce scroll jumps
-        defaultItemHeight={650}
+        // Provide default height estimate matching skeleton to reduce scroll jumps
+        defaultItemHeight={estimatedHeight}
         computeItemKey={(index) =>
           index === totalPages
             ? `end:${resourceKind}:${resourceId}:${mushafId}`
@@ -375,9 +419,9 @@ export const MushafPageList = ({
             <div
               className={wrapperClassName}
               style={{
-                // CSS containment for improved scroll performance
-                contain: 'layout style',
-              }}
+                // Minimal containment to avoid interfering with Virtuoso's measurement
+                contain: 'layout',
+              } as React.CSSProperties}
             >
               <MushafVirtualizedPageRow
                 pageNumber={pageNumber}
@@ -391,6 +435,8 @@ export const MushafPageList = ({
                 getPageFontFamily={getPageFontFamily}
                 isPageFontLoaded={isPageFontLoaded}
                 {...(index === 0 ? { className: 'pt-0 sm:pt-0' } : {})}
+                estimatedHeight={estimatedHeight}
+                isMobile={isMobile}
               />
             </div>
           );

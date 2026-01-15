@@ -3,8 +3,8 @@
 import React from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { UnifiedModal } from '@/app/shared/components/modal/UnifiedModal';
 import { CloseIcon } from '@/app/shared/icons';
-import { PanelModalCenter } from '@/app/shared/ui/PanelModalCenter';
 
 import {
   ModalHeader,
@@ -58,27 +58,27 @@ export const CreatePlannerModal = ({
   const handleClose = useCloseHandler(resetForm, onClose);
 
   return (
-    <PanelModalCenter
+    <UnifiedModal
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
-      closeOnOverlayClick={true}
-      className="max-w-lg bg-background px-3 sm:px-4 pt-4 pb-4"
+      ariaLabel="Create planner"
+      contentClassName="max-w-lg max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-4rem)] overflow-hidden"
     >
-      <CreatePlannerForm
-        formData={formData}
-        onFormDataChange={handleFormDataChange}
-        totalVerses={totalVerses}
-        versesPerDay={versesPerDay}
-        isValidRange={isValidRange}
-        canSubmit={canSubmit}
-        duplicatePlanName={duplicatePlanName}
-        onSubmit={handleSubmit}
-        chapters={chapters}
-        onClose={handleClose}
-      />
-    </PanelModalCenter>
+      <div className="max-h-full overflow-y-auto scrollbar-hide">
+        <CreatePlannerForm
+          formData={formData}
+          onFormDataChange={handleFormDataChange}
+          totalVerses={totalVerses}
+          versesPerDay={versesPerDay}
+          isValidRange={isValidRange}
+          canSubmit={canSubmit}
+          duplicatePlanName={duplicatePlanName}
+          onSubmit={handleSubmit}
+          chapters={chapters}
+          onClose={handleClose}
+        />
+      </div>
+    </UnifiedModal>
   );
 };
 

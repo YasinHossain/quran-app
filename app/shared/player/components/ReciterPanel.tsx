@@ -1,13 +1,19 @@
-import React from 'react';
+import { motion } from 'framer-motion';
+import React, { memo } from 'react';
 
 import { useReciters } from '@/app/shared/player/hooks/useReciters';
+import { touchClasses } from '@/lib/responsive';
+import { cn } from '@/lib/utils/cn';
 
 interface Props {
   localReciter: number;
   setLocalReciter: (id: number) => void;
 }
 
-export function ReciterPanel({ localReciter, setLocalReciter }: Props): React.JSX.Element {
+export const ReciterPanel = memo(function ReciterPanel({
+  localReciter,
+  setLocalReciter,
+}: Props): React.JSX.Element {
   const { reciters, isLoading, error } = useReciters();
 
   return (
@@ -24,14 +30,18 @@ export function ReciterPanel({ localReciter, setLocalReciter }: Props): React.JS
           {reciters.map((r) => {
             const isSelected = localReciter === r.id;
             return (
-              <button
+              <motion.button
                 key={r.id}
                 onClick={() => setLocalReciter(r.id)}
-                className={`group relative flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 ${
+                className={cn(
+                  'group relative flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-left transition-colors duration-200',
                   isSelected
-                    ? 'border-transparent ring-2 ring-accent shadow-sm z-10'
-                    : 'border-border hover:border-accent/50 hover:bg-surface-secondary/50'
-                }`}
+                    ? 'border-accent bg-accent/10'
+                    : 'border-border hover:border-accent/50 hover:bg-interactive-hover',
+                  touchClasses.target,
+                  touchClasses.focus
+                )}
+                whileTap={{ scale: 0.98 }}
               >
                 <div className="min-w-0 flex-1">
                   <div className="text-sm font-medium truncate text-foreground">{r.name}</div>
@@ -48,11 +58,11 @@ export function ReciterPanel({ localReciter, setLocalReciter }: Props): React.JS
                     }`}
                   />
                 </div>
-              </button>
+              </motion.button>
             );
           })}
         </div>
       </div>
     </div>
   );
-}
+});

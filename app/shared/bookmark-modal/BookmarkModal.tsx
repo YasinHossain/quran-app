@@ -1,62 +1,13 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
 import { memo } from 'react';
 
-import { Portal } from '@/app/shared/components/Portal';
+import { UnifiedModal } from '@/app/shared/components/modal/UnifiedModal';
 
 import { TabContent } from './components/TabContent';
 import { TabNavigation } from './components/TabNavigation';
 import { BookmarkModalProps } from './types';
 import { useBookmarkModal } from './useBookmarkModal';
-
-const backdropVariants = { hidden: { opacity: 0 }, visible: { opacity: 1 } };
-const modalVariants = {
-  hidden: { opacity: 0, scale: 0.95, y: 10 },
-  visible: { opacity: 1, scale: 1, y: 0 },
-  exit: { opacity: 0, scale: 0.95, y: 10 },
-};
-
-const Backdrop = memo(function Backdrop({ onClose }: { onClose: () => void }): React.JSX.Element {
-  return (
-    <motion.div
-      variants={backdropVariants}
-      initial="hidden"
-      animate="visible"
-      exit="hidden"
-      transition={{ duration: 0.2 }}
-      className="fixed inset-0 bg-surface-overlay/60 z-modal touch-none"
-      onClick={onClose}
-    />
-  );
-});
-
-const ModalShell = memo(function ModalShell({
-  children,
-}: {
-  children: React.ReactNode;
-}): React.JSX.Element {
-  return (
-    <motion.div
-      variants={modalVariants}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-      transition={{ type: 'spring', damping: 25, stiffness: 350, mass: 0.8 }}
-      style={{ willChange: 'transform, opacity' }}
-      className="fixed inset-0 flex items-center justify-center z-modal p-4 pointer-events-none"
-    >
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label="Bookmark options"
-        className="bg-background rounded-lg shadow-xl w-full max-w-md max-h-[80vh] flex flex-col pointer-events-auto"
-      >
-        {children}
-      </div>
-    </motion.div>
-  );
-});
 
 export const BookmarkModal = memo(function BookmarkModal({
   isOpen,
@@ -72,37 +23,32 @@ export const BookmarkModal = memo(function BookmarkModal({
     closeCreateFolder,
     newFolderName,
     setNewFolderName,
-  } = useBookmarkModal(isOpen, onClose);
+  } = useBookmarkModal();
 
   return (
-    <Portal>
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            <Backdrop onClose={onClose} />
-            <ModalShell>
-              <TabNavigation
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-                verseKey={verseKey}
-                onClose={onClose}
-              />
-              <TabContent
-                activeTab={activeTab}
-                verseId={verseId}
-                verseKey={verseKey}
-                isCreatingFolder={isCreatingFolder}
-                newFolderName={newFolderName}
-                onToggleCreateFolder={(creating) =>
-                  creating ? openCreateFolder() : closeCreateFolder()
-                }
-                onNewFolderNameChange={setNewFolderName}
-                onClose={onClose}
-              />
-            </ModalShell>
-          </>
-        )}
-      </AnimatePresence>
-    </Portal>
+    <UnifiedModal
+      isOpen={isOpen}
+      onClose={onClose}
+      ariaLabel="Bookmark options"
+      backdropClassName="touch-none"
+      contentClassName="max-w-md mx-auto max-h-[80vh] overflow-hidden flex flex-col"
+    >
+      <TabNavigation
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        verseKey={verseKey}
+        onClose={onClose}
+      />
+      <TabContent
+        activeTab={activeTab}
+        verseId={verseId}
+        verseKey={verseKey}
+        isCreatingFolder={isCreatingFolder}
+        newFolderName={newFolderName}
+        onToggleCreateFolder={(creating) => (creating ? openCreateFolder() : closeCreateFolder())}
+        onNewFolderNameChange={setNewFolderName}
+        onClose={onClose}
+      />
+    </UnifiedModal>
   );
 });

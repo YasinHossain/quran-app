@@ -19,10 +19,9 @@ export const PlaybackOptionsModal = memo(function PlaybackOptionsModal({
 }: Props) {
   const modalState = usePlaybackOptionsModal(open, onClose);
 
-  if (!open) return null;
-
   return (
     <PlaybackOptionsModalContent
+      open={open}
       onClose={onClose}
       activeTab={activeTab}
       setActiveTab={setActiveTab}

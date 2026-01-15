@@ -24,6 +24,7 @@ type MushafLinesProps = {
   fontFamily: string;
   lineWidthDesktop: string;
   isFontLoaded: boolean;
+  forceReflow?: boolean;
 };
 
 /**
@@ -60,6 +61,10 @@ const checkShouldReflow = (containerWidth: number, lineWidthDesktop: string): bo
   return lineWidthPx > maxAllowedWidth;
 };
 
+// Hysteresis threshold to prevent rapid mode switching during scroll
+// Once in a mode, require a larger width change to switch modes
+const REFLOW_HYSTERESIS_PX = 20;
+
 /**
  * Custom hook that detects when to use reflow mode.
  * Uses ResizeObserver to measure the actual container width (not window width).
@@ -69,18 +74,45 @@ const checkShouldReflow = (containerWidth: number, lineWidthDesktop: string): bo
  * - Only updates state when reflow mode actually needs to change
  * - Uses RAF to batch updates and avoid layout thrashing
  * - Debounces rapid resize events
+ * - Uses hysteresis to prevent rapid mode switching at boundary
  */
 const useReflowMode = (
   containerRef: React.RefObject<HTMLDivElement | null>,
   lineWidthDesktop: string
 ): boolean => {
-  const [shouldReflow, setShouldReflow] = useState(false);
+  // Track whether we've done the initial calculation
+  const isInitializedRef = useRef(false);
+  const [shouldReflow, setShouldReflow] = useState(() => {
+    // SSR-safe initial calculation
+    if (typeof window === 'undefined') return false;
+    return false; // Will be set on mount
+  });
   const rafIdRef = useRef<number | null>(null);
   const lastContainerWidthRef = useRef<number>(0);
+  // Track the last stable reflow state to apply hysteresis
+  const stableReflowRef = useRef<boolean | null>(null);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+
+    // Function to check reflow with hysteresis
+    const checkReflowWithHysteresis = (containerWidth: number): boolean => {
+      const baseReflow = checkShouldReflow(containerWidth, lineWidthDesktop);
+
+      // If we have a stable state and the new state differs, apply hysteresis
+      if (stableReflowRef.current !== null && stableReflowRef.current !== baseReflow) {
+        // Recalculate with hysteresis - need a larger margin to switch
+        const lineWidthPx = parseLineWidthToPx(lineWidthDesktop);
+        const threshold = stableReflowRef.current
+          ? containerWidth * 0.95 + REFLOW_HYSTERESIS_PX // Coming out of reflow: need more space
+          : containerWidth * 0.95 - REFLOW_HYSTERESIS_PX; // Going into reflow: need less space
+
+        return lineWidthPx > threshold;
+      }
+
+      return baseReflow;
+    };
 
     // Function to check and update reflow state (debounced via RAF)
     const checkReflow = (): void => {
@@ -92,22 +124,19 @@ const useReflowMode = (
       rafIdRef.current = requestAnimationFrame(() => {
         const containerWidth = container.clientWidth;
 
-        // Skip check if container width hasn't changed significantly (within 5px)
-        // This prevents jumps from minor layout adjustments
-        if (Math.abs(containerWidth - lastContainerWidthRef.current) < 5) {
-          // Still check if lineWidthDesktop changed though
-          const newShouldReflow = checkShouldReflow(containerWidth, lineWidthDesktop);
-          if (newShouldReflow !== shouldReflow) {
-            setShouldReflow(newShouldReflow);
-          }
+        // Skip check if container width hasn't changed significantly (within 10px)
+        // This prevents jumps from minor layout adjustments during virtualization
+        if (Math.abs(containerWidth - lastContainerWidthRef.current) < 10) {
+          rafIdRef.current = null;
           return;
         }
 
         lastContainerWidthRef.current = containerWidth;
-        const newShouldReflow = checkShouldReflow(containerWidth, lineWidthDesktop);
+        const newShouldReflow = checkReflowWithHysteresis(containerWidth);
 
         // Only update state if it actually changed
         if (newShouldReflow !== shouldReflow) {
+          stableReflowRef.current = newShouldReflow;
           setShouldReflow(newShouldReflow);
         }
 
@@ -115,12 +144,16 @@ const useReflowMode = (
       });
     };
 
-    // Check immediately on mount
-    const containerWidth = container.clientWidth;
-    lastContainerWidthRef.current = containerWidth;
-    const initialReflow = checkShouldReflow(containerWidth, lineWidthDesktop);
-    if (initialReflow !== shouldReflow) {
-      setShouldReflow(initialReflow);
+    // Check immediately on mount (synchronous for initial render)
+    if (!isInitializedRef.current) {
+      const containerWidth = container.clientWidth;
+      lastContainerWidthRef.current = containerWidth;
+      const initialReflow = checkShouldReflow(containerWidth, lineWidthDesktop);
+      stableReflowRef.current = initialReflow;
+      if (initialReflow !== shouldReflow) {
+        setShouldReflow(initialReflow);
+      }
+      isInitializedRef.current = true;
     }
 
     // Use ResizeObserver to detect container size changes
@@ -154,6 +187,7 @@ export const MushafLines = ({
   fontFamily,
   lineWidthDesktop,
   isFontLoaded,
+  forceReflow = false,
 }: MushafLinesProps): React.JSX.Element => {
   // Container ref to measure actual available width
   const containerRef = useRef<HTMLDivElement>(null);
@@ -186,7 +220,8 @@ export const MushafLines = ({
   }, []);
 
   // Detect reflow mode based on actual container width AND font size (lineWidthDesktop)
-  const shouldUseReflow = useReflowMode(containerRef, lineWidthDesktop);
+  const isReflowDetected = useReflowMode(containerRef, lineWidthDesktop);
+  const shouldUseReflow = forceReflow || isReflowDetected;
 
   const scopeId = useMemo(
     () => `mushaf-layout-${lineWidthDesktop.replace(/[^a-z0-9]/gi, '')}`,

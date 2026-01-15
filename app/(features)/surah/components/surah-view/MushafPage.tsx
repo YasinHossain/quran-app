@@ -36,6 +36,8 @@ interface MushafPageProps {
   indopakVersion?: '15' | '16' | null;
   isFontLoaded: boolean;
   className?: string;
+  minHeight?: number;
+  isMobile?: boolean;
 }
 
 const getMushafFontConfig = ({
@@ -125,6 +127,8 @@ export const MushafPage = memo(function MushafPage({
   indopakVersion,
   isFontLoaded,
   className,
+  minHeight = 600,
+  isMobile = false,
 }: MushafPageProps): React.JSX.Element {
   const { fontSize, lineWidthDesktop } = getMushafFontConfig({
     settings,
@@ -150,6 +154,8 @@ export const MushafPage = memo(function MushafPage({
       style={{
         // CSS containment for improved scroll performance
         contain: 'layout style paint',
+        // Let content determine natural height - don't enforce minHeight
+        // Virtuoso will measure the actual height after render for accurate scrolling
       }}
     >
       <MushafLines
@@ -161,6 +167,8 @@ export const MushafPage = memo(function MushafPage({
         qcfVersion={qcfVersion}
         {...(indopakVersion !== undefined ? { indopakVersion } : {})}
         fontSize={fontSize}
+        // Force reflow on mobile to prevent layout shift during mount
+        forceReflow={isMobile}
         fontFamily={fontFamily}
         lineWidthDesktop={lineWidthDesktop}
         isFontLoaded={isFontLoaded}

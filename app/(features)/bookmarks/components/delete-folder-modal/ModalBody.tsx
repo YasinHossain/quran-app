@@ -1,9 +1,7 @@
-import { motion } from 'framer-motion';
 import React from 'react';
 
 import { Folder } from '@/types';
 
-import { MODAL_VARIANTS } from './animations';
 import { FolderPreview } from './FolderPreview';
 import { ModalActions } from './ModalActions';
 import { ModalHeader } from './ModalHeader';
@@ -24,14 +22,7 @@ export const ModalBody = ({
   isDeleting,
   error,
 }: ModalBodyProps): React.JSX.Element => (
-  <motion.div
-    variants={MODAL_VARIANTS}
-    initial="hidden"
-    animate="visible"
-    exit="exit"
-    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-    className="relative w-full max-w-lg bg-background rounded-lg shadow-xl pointer-events-auto overflow-hidden"
-  >
+  <div>
     <ModalHeader onClose={onClose} />
 
     <div className="px-6 pb-6">
@@ -49,5 +40,5 @@ export const ModalBody = ({
 
       <ModalActions onClose={onClose} onDelete={onDelete} isDeleting={isDeleting} />
     </div>
-  </motion.div>
+  </div>
 );
