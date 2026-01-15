@@ -58,15 +58,15 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
     : 0;
   const latestBookmarkTimestamp = Array.isArray(folder.bookmarks)
     ? (folder.bookmarks as Array<BookmarkEntry>).reduce(
-        (latest: number, b: BookmarkEntry) => Math.max(latest, b.createdAt ?? 0),
-        0
-      )
+      (latest: number, b: BookmarkEntry) => Math.max(latest, b.createdAt ?? 0),
+      0
+    )
     : 0;
   const formattedUpdatedAt =
     latestBookmarkTimestamp > 0
       ? new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' }).format(
-          new Date(latestBookmarkTimestamp)
-        )
+        new Date(latestBookmarkTimestamp)
+      )
       : null;
 
   return (
@@ -101,11 +101,7 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
 
       <div className="flex h-full w-full flex-1 flex-col gap-3">
         <div className="flex items-center gap-4 min-w-0 pr-8 sm:pr-12">
-          <FolderGlyph folder={folder}>
-            <span className="absolute -top-1.5 -right-1.5 select-none rounded-full border border-border bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-foreground shadow-sm">
-              {bookmarkCount}
-            </span>
-          </FolderGlyph>
+          <FolderGlyph folder={folder} />
           <div className="flex-1 min-w-0">
             <h3 className="mb-1 line-clamp-2 text-lg font-semibold text-foreground transition-colors duration-200 group-hover:text-accent">
               {folder.name}

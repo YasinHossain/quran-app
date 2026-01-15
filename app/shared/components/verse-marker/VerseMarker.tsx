@@ -150,7 +150,7 @@ export const NativeVerseMarker = ({
   size?: number;
 }): React.JSX.Element => {
   const arabicNumber = toArabicIndic(verseNumber);
-  const markerScale = 1.25;
+  const markerScale = 1.15;
   const baselineShiftEm = 0.08;
   const scaledFontSize =
     typeof size === 'number' ? `${Math.round(size * markerScale)}px` : `${markerScale}em`;

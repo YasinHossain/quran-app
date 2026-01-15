@@ -37,15 +37,15 @@ export const BookmarkFolderCard = ({
   const latestBookmarkTimestamp =
     verseCount > 0
       ? folder.bookmarks.reduce(
-          (latest, bookmark) => Math.max(latest, bookmark.createdAt ?? 0),
-          folder.createdAt ?? 0
-        )
+        (latest, bookmark) => Math.max(latest, bookmark.createdAt ?? 0),
+        folder.createdAt ?? 0
+      )
       : (folder.createdAt ?? 0);
   const formattedUpdatedAt =
     latestBookmarkTimestamp > 0
       ? new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' }).format(
-          new Date(latestBookmarkTimestamp)
-        )
+        new Date(latestBookmarkTimestamp)
+      )
       : null;
   const versePreview = folder.bookmarks.slice(0, 3);
 
@@ -78,11 +78,7 @@ export const BookmarkFolderCard = ({
     >
       {/* Remove accent halo on hover */}
       <div className="relative flex items-start gap-4 p-4 sm:p-5">
-        <FolderGlyph folder={folder}>
-          <span className="absolute -top-1.5 -right-1.5 select-none rounded-full border border-border bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-foreground shadow-sm">
-            {verseCount}
-          </span>
-        </FolderGlyph>
+        <FolderGlyph folder={folder} />
 
         <div className="flex flex-1 flex-col gap-3 min-w-0">
           <div className="flex items-start gap-3">
