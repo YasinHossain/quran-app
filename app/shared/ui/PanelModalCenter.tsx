@@ -33,7 +33,7 @@ const PanelOverlay = memo(function PanelOverlay({
   };
   return (
     <div
-      className="fixed inset-0 bg-background/85 z-[900]"
+      className="fixed inset-0 bg-background/85 z-[900] transition-opacity duration-200 ease-in-out"
       onClick={handleOverlayInteraction}
       onKeyDown={handleKeyDown}
       role="button"
@@ -92,6 +92,7 @@ export const PanelModalCenter = memo(function PanelModalCenter({
           <div
             className={cn(
               'z-[910] text-foreground p-6 flex flex-col',
+              'animate-in fade-in zoom-in-95 duration-200 ease-out',
               PANEL_MODAL_CENTER_CLASS,
               className
             )}

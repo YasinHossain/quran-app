@@ -10,8 +10,6 @@ import { SearchInput } from './SearchInput';
 import { SurahTabs } from './SurahTabs';
 
 import type { Chapter } from '@/types';
-import type { TabKey } from '@/app/shared/components/surah-tabs/types';
-
 
 interface SurahListContentProps {
   chapters: ReadonlyArray<Chapter>;
@@ -24,12 +22,10 @@ export const SurahListContent = memo(function SurahListContent({
 }: SurahListContentProps): React.JSX.Element {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeTab, setActiveTab] = useState<TabKey>('Surah');
 
   const { filteredChapters, filteredJuzs, filteredPages } = useSurahListFilters(
     chapters,
-    searchTerm,
-    activeTab
+    searchTerm
   );
 
   const searchInput = (
@@ -62,7 +58,6 @@ export const SurahListContent = memo(function SurahListContent({
           filteredPages={filteredPages}
           searchInput={searchInput}
           onClose={onClose}
-          onActiveTabChange={setActiveTab}
         />
       </div>
     </div>

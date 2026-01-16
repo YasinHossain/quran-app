@@ -25,10 +25,10 @@ export const SlideOverPanel = ({
       aria-hidden={!isOpen}
       className={cn(
         'absolute inset-0 flex flex-col z-50 bg-background text-foreground',
-        'transition-[transform,opacity] duration-300 ease-in-out',
+        'transition-transform duration-300 will-change-transform',
         isOpen
-          ? 'translate-x-0 shadow-lg opacity-100'
-          : 'translate-x-[calc(100%+8px)] shadow-none opacity-0 pointer-events-none',
+          ? 'translate-x-0 shadow-lg ease-in-out'
+          : 'translate-x-full shadow-none ease-in-out pointer-events-none',
         className
       )}
     >
