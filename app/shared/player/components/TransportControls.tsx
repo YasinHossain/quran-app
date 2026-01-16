@@ -32,7 +32,7 @@ export const TransportControls = memo(function TransportControls({
         aria-label="Previous track"
         onClick={onPrev}
         disabled={!interactable}
-        className="!h-9 !w-9 !min-h-9 !min-w-9 hover:bg-transparent hover:text-foreground hover:translate-y-0 [@media(hover:hover)]:hover:bg-interactive-hover [@media(hover:hover)]:hover:text-accent [@media(hover:hover)]:hover:-translate-y-px active:ring-2 active:ring-accent/35 active:text-accent transition-none"
+        className="!h-9 !w-9 !min-h-9 !min-w-9 hover:bg-transparent hover:text-foreground hover:translate-y-0 [@media(hover:hover)]:hover:bg-interactive-hover [@media(hover:hover)]:hover:text-accent [@media(hover:hover)]:hover:-translate-y-px focus:ring-0 transition-none"
       >
         <SkipBackIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
       </Button>
@@ -56,7 +56,7 @@ export const TransportControls = memo(function TransportControls({
         aria-label="Next track"
         onClick={onNext}
         disabled={!interactable}
-        className="!h-9 !w-9 !min-h-9 !min-w-9 hover:bg-transparent hover:text-foreground hover:translate-y-0 [@media(hover:hover)]:hover:bg-interactive-hover [@media(hover:hover)]:hover:text-accent [@media(hover:hover)]:hover:-translate-y-px active:ring-2 active:ring-accent/35 active:text-accent transition-none"
+        className="!h-9 !w-9 !min-h-9 !min-w-9 hover:bg-transparent hover:text-foreground hover:translate-y-0 [@media(hover:hover)]:hover:bg-interactive-hover [@media(hover:hover)]:hover:text-accent [@media(hover:hover)]:hover:-translate-y-px focus:ring-0 transition-none"
       >
         <SkipForwardIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
       </Button>

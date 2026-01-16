@@ -10,6 +10,7 @@ export interface SurahTabsProps {
   filteredPages: number[];
   searchInput: React.ReactNode;
   onClose?: (() => void) | undefined;
+  onActiveTabChange?: (tab: TabKey) => void;
 }
 
 // Re-export for local consumers to avoid deep import coupling

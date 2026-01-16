@@ -17,7 +17,7 @@ export const PanelOverlay = memo(function PanelOverlay({
   };
   return (
     <div
-      className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
+      className="fixed inset-0 bg-background/85 z-40"
       onClick={handleOverlayInteraction}
       onKeyDown={handleKeyDown}
       role="button"

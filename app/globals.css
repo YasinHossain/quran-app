@@ -328,7 +328,7 @@
 
   /* Drawer and overlay patterns (for mobile sidebars/modals) */
   .drawer-overlay {
-    @apply fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm;
+    @apply fixed inset-0 bg-background/85;
     @apply transition-opacity duration-300;
     /* Ensure overlays sit above header/bottom navigation */
     z-index: var(--z-modal);
@@ -484,11 +484,9 @@ input[type='range'] {
   border-radius: 5px;
   outline: none;
   touch-action: none;
-  background: linear-gradient(
-    to right,
-    rgb(var(--color-accent)) var(--value-percent, 0%),
-    rgb(var(--color-border)) var(--value-percent, 0%)
-  );
+  background: linear-gradient(to right,
+      rgb(var(--color-accent)) var(--value-percent, 0%),
+      rgb(var(--color-border)) var(--value-percent, 0%));
 }
 
 input[type='range']::-webkit-slider-thumb {

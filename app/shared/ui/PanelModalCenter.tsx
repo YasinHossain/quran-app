@@ -33,7 +33,7 @@ const PanelOverlay = memo(function PanelOverlay({
   };
   return (
     <div
-      className="fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm z-[900]"
+      className="fixed inset-0 bg-background/85 z-[900]"
       onClick={handleOverlayInteraction}
       onKeyDown={handleKeyDown}
       role="button"

@@ -21,6 +21,92 @@ jest.mock('framer-motion', () => ({
 }));
 
 describe('UnifiedModal', () => {
+  it('locks page scrolling while open', async () => {
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+
+    document.documentElement.style.overflow = 'auto';
+    document.body.style.overflow = 'auto';
+
+    const { rerender } = render(
+      <UnifiedModal isOpen onClose={jest.fn()} ariaLabel="Test modal">
+        Content
+      </UnifiedModal>
+    );
+
+    await screen.findByRole('dialog', { name: 'Test modal' });
+
+    expect(document.documentElement.style.overflow).toBe('hidden');
+    expect(document.body.style.overflow).toBe('hidden');
+
+    rerender(
+      <UnifiedModal isOpen={false} onClose={jest.fn()} ariaLabel="Test modal">
+        Content
+      </UnifiedModal>
+    );
+
+    expect(document.documentElement.style.overflow).toBe('auto');
+    expect(document.body.style.overflow).toBe('auto');
+
+    document.documentElement.style.overflow = previousHtmlOverflow;
+    document.body.style.overflow = previousBodyOverflow;
+  });
+
+  it('keeps scrolling locked until all modals close', async () => {
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+
+    document.documentElement.style.overflow = 'auto';
+    document.body.style.overflow = 'auto';
+
+    const { rerender } = render(
+      <>
+        <UnifiedModal isOpen onClose={jest.fn()} ariaLabel="Modal A">
+          A
+        </UnifiedModal>
+        <UnifiedModal isOpen onClose={jest.fn()} ariaLabel="Modal B">
+          B
+        </UnifiedModal>
+      </>
+    );
+
+    expect(await screen.findByRole('dialog', { name: 'Modal A' })).toBeInTheDocument();
+    expect(screen.getByRole('dialog', { name: 'Modal B' })).toBeInTheDocument();
+    expect(document.documentElement.style.overflow).toBe('hidden');
+    expect(document.body.style.overflow).toBe('hidden');
+
+    rerender(
+      <>
+        <UnifiedModal isOpen={false} onClose={jest.fn()} ariaLabel="Modal A">
+          A
+        </UnifiedModal>
+        <UnifiedModal isOpen onClose={jest.fn()} ariaLabel="Modal B">
+          B
+        </UnifiedModal>
+      </>
+    );
+
+    expect(document.documentElement.style.overflow).toBe('hidden');
+    expect(document.body.style.overflow).toBe('hidden');
+
+    rerender(
+      <>
+        <UnifiedModal isOpen={false} onClose={jest.fn()} ariaLabel="Modal A">
+          A
+        </UnifiedModal>
+        <UnifiedModal isOpen={false} onClose={jest.fn()} ariaLabel="Modal B">
+          B
+        </UnifiedModal>
+      </>
+    );
+
+    expect(document.documentElement.style.overflow).toBe('auto');
+    expect(document.body.style.overflow).toBe('auto');
+
+    document.documentElement.style.overflow = previousHtmlOverflow;
+    document.body.style.overflow = previousBodyOverflow;
+  });
+
   it('does not render when closed', () => {
     render(
       <UnifiedModal isOpen={false} onClose={jest.fn()}>

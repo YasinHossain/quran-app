@@ -37,15 +37,15 @@ export const BookmarkFolderCard = ({
   const latestBookmarkTimestamp =
     verseCount > 0
       ? folder.bookmarks.reduce(
-          (latest, bookmark) => Math.max(latest, bookmark.createdAt ?? 0),
-          folder.createdAt ?? 0
-        )
+        (latest, bookmark) => Math.max(latest, bookmark.createdAt ?? 0),
+        folder.createdAt ?? 0
+      )
       : (folder.createdAt ?? 0);
   const formattedUpdatedAt =
     latestBookmarkTimestamp > 0
       ? new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' }).format(
-          new Date(latestBookmarkTimestamp)
-        )
+        new Date(latestBookmarkTimestamp)
+      )
       : null;
   const versePreview = folder.bookmarks.slice(0, 3);
 
@@ -69,9 +69,9 @@ export const BookmarkFolderCard = ({
       aria-label={`Toggle folder ${folder.name}`}
       data-expanded={isExpanded}
       className={cn(
-        'group relative overflow-hidden rounded-2xl border border-border/40 bg-surface/80 backdrop-blur-sm transition-all duration-300',
+        'group relative overflow-hidden rounded-2xl border border-border/40 bg-surface transition-all duration-300',
 
-        'data-[expanded=true]:border-accent/40 data-[expanded=true]:shadow-lg data-[expanded=true]:bg-surface/80',
+        'data-[expanded=true]:border-accent/40 data-[expanded=true]:shadow-lg data-[expanded=true]:bg-surface',
         className as string
       )}
       {...props}

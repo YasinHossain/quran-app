@@ -26,7 +26,7 @@ export const ResourceTabsHeader = memo(function ResourceTabsHeader({
   scrollTabsRight,
 }: ResourceTabsHeaderProps): React.JSX.Element {
   return (
-    <div className="sticky top-0 z-10 py-2 border-b bg-background/95 backdrop-blur-sm border-border">
+    <div className="sticky top-0 z-10 py-2 border-b bg-background border-border">
       <div className="px-4">
         <ResourceTabs
           languages={languages}

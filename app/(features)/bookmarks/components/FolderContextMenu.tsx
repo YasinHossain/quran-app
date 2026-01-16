@@ -87,11 +87,11 @@ const FolderMenuPanel = ({
     ref={menuRef}
     role="menu"
     aria-label="Folder options"
-    initial={{ opacity: 0, scale: 0.95, y: -5 }}
-    animate={{ opacity: 1, scale: 1, y: 0 }}
-    exit={{ opacity: 0, scale: 0.95, y: -5 }}
-    transition={{ duration: 0.15 }}
-    className="absolute right-0 top-full mt-2 min-w-[11rem] rounded-xl border border-border/40 bg-surface/90 backdrop-blur-md shadow-lg z-[200] py-2"
+    initial={{ opacity: 0, y: -8 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -8 }}
+    transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+    className="absolute right-0 top-full mt-2 min-w-[11rem] rounded-xl border border-border/40 bg-surface shadow-lg z-[200] py-2"
     onClick={(event): void => {
       event.stopPropagation();
     }}

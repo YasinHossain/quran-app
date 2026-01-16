@@ -356,83 +356,83 @@ export const SurahSelect = memo(
 
         {open && typeof document !== 'undefined'
           ? createPortal(
-              <div
-                ref={listRef}
-                id={listboxId}
-                role="listbox"
-                aria-activedescendant={
-                  activeIndex >= 0 ? `${listboxId}-option-${activeIndex}` : undefined
-                }
-                tabIndex={-1}
-                data-surah-select-portal="true"
-                className={clsx(
-                  'fixed z-[9999] overflow-auto rounded-lg border border-border/40 bg-surface/95 backdrop-blur-md shadow-lg focus:outline-none py-2'
-                )}
-                style={{
-                  top: dropdownStyle.top,
-                  bottom: dropdownStyle.bottom,
-                  left: dropdownStyle.left,
-                  width: dropdownStyle.width,
-                  maxHeight: dropdownStyle.maxHeight,
-                }}
-                onPointerDown={() => {
-                  // Mark interaction to prevent close on blur (works for both mouse and touch)
-                  isInteractingWithListRef.current = true;
-                  // On touch, blur input to hide keyboard
-                  inputRef.current?.blur();
-                }}
-                onPointerUp={() => {
-                  setTimeout(() => {
-                    isInteractingWithListRef.current = false;
-                  }, 100);
-                }}
-                onScroll={() => {
-                  // Hide keyboard when scrolling
-                  isInteractingWithListRef.current = true;
-                  inputRef.current?.blur();
-                  setTimeout(() => {
-                    isInteractingWithListRef.current = false;
-                  }, 100);
-                }}
-              >
-                <div className="space-y-1 px-1">
-                  {options.map((option, index) => {
-                    const selected = option.value === value;
-                    const isActive = index === activeIndex;
-                    const optionId = `${listboxId}-option-${index}`;
-                    return (
-                      <button
-                        key={option.value}
-                        id={optionId}
-                        type="button"
-                        role="option"
-                        aria-selected={selected}
-                        data-index={index}
-                        onClick={(): void => handleOptionSelect(option)}
-                        className={clsx(
-                          'w-full text-left px-4 py-2.5 rounded-lg text-sm transition-colors',
-                          selected
+            <div
+              ref={listRef}
+              id={listboxId}
+              role="listbox"
+              aria-activedescendant={
+                activeIndex >= 0 ? `${listboxId}-option-${activeIndex}` : undefined
+              }
+              tabIndex={-1}
+              data-surah-select-portal="true"
+              className={clsx(
+                'fixed z-[9999] overflow-auto rounded-lg border border-border/40 bg-surface shadow-lg focus:outline-none py-2'
+              )}
+              style={{
+                top: dropdownStyle.top,
+                bottom: dropdownStyle.bottom,
+                left: dropdownStyle.left,
+                width: dropdownStyle.width,
+                maxHeight: dropdownStyle.maxHeight,
+              }}
+              onPointerDown={() => {
+                // Mark interaction to prevent close on blur (works for both mouse and touch)
+                isInteractingWithListRef.current = true;
+                // On touch, blur input to hide keyboard
+                inputRef.current?.blur();
+              }}
+              onPointerUp={() => {
+                setTimeout(() => {
+                  isInteractingWithListRef.current = false;
+                }, 100);
+              }}
+              onScroll={() => {
+                // Hide keyboard when scrolling
+                isInteractingWithListRef.current = true;
+                inputRef.current?.blur();
+                setTimeout(() => {
+                  isInteractingWithListRef.current = false;
+                }, 100);
+              }}
+            >
+              <div className="space-y-1 px-1">
+                {options.map((option, index) => {
+                  const selected = option.value === value;
+                  const isActive = index === activeIndex;
+                  const optionId = `${listboxId}-option-${index}`;
+                  return (
+                    <button
+                      key={option.value}
+                      id={optionId}
+                      type="button"
+                      role="option"
+                      aria-selected={selected}
+                      data-index={index}
+                      onClick={(): void => handleOptionSelect(option)}
+                      className={clsx(
+                        'w-full text-left px-4 py-2.5 rounded-lg text-sm transition-colors',
+                        selected
+                          ? 'bg-interactive text-foreground'
+                          : isActive
                             ? 'bg-interactive text-foreground'
-                            : isActive
-                              ? 'bg-interactive text-foreground'
-                              : 'text-foreground hover:bg-interactive'
-                        )}
-                      >
-                        <span className="block truncate">{option.label}</span>
-                      </button>
-                    );
-                  })}
-                  {isTyping ? (
-                    <div
-                      aria-hidden="true"
-                      className="pointer-events-none"
-                      style={{ height: dropdownStyle.maxHeight }}
-                    />
-                  ) : null}
-                </div>
-              </div>,
-              document.body
-            )
+                            : 'text-foreground hover:bg-interactive'
+                      )}
+                    >
+                      <span className="block truncate">{option.label}</span>
+                    </button>
+                  );
+                })}
+                {isTyping ? (
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none"
+                    style={{ height: dropdownStyle.maxHeight }}
+                  />
+                ) : null}
+              </div>
+            </div>,
+            document.body
+          )
           : null}
       </div>
     );

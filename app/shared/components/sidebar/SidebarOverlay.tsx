@@ -34,7 +34,7 @@ export const SidebarOverlay = ({
   return (
     <div
       className={cn(
-        'fixed inset-0 bg-black/50 transition-opacity duration-300 z-40',
+        'fixed inset-0 bg-background/85 transition-opacity duration-300 z-40',
         hiddenFromBreakpoint,
         isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
       )}

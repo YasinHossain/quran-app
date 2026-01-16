@@ -9,7 +9,7 @@ interface HeaderVisibilityState {
 
 const HeaderVisibilityContext = createContext<HeaderVisibilityState>({
   isHidden: false,
-  setScrollContainer: () => {},
+  setScrollContainer: () => { },
 });
 
 export const HeaderVisibilityProvider = ({
@@ -22,25 +22,27 @@ export const HeaderVisibilityProvider = ({
   const pathname = usePathname();
 
   // Dummy setter for backward compatibility (no longer needed with window scrolling)
-  const setScrollContainer = (): void => {};
+  const setScrollContainer = (): void => { };
 
   useEffect(() => {
     // Reset state on every page navigation
-    lastScrollY.current = 0;
-    setIsHidden(false);
+    let pivotY = window.scrollY;
 
-    // Always use window scroll (body scrolling like Quran.com)
     const handleScroll = (): void => {
       const currentY = window.scrollY;
+      const isScrollingDown = currentY > lastScrollY.current;
 
-      // Immediate response to scroll direction
-      // Hide header when scrolling down past 20px
-      if (currentY > lastScrollY.current && currentY > 20) {
-        setIsHidden(true);
-      }
-      // Show header when scrolling up
-      else if (currentY < lastScrollY.current) {
+      // Reset pivot when direction changes
+      if (isScrollingDown && currentY < pivotY) pivotY = currentY;
+      if (!isScrollingDown && currentY > pivotY) pivotY = currentY;
+
+      // Always show at top, otherwise apply 100px threshold
+      if (currentY < 50) {
         setIsHidden(false);
+        pivotY = currentY;
+      } else if (Math.abs(currentY - pivotY) > 100) {
+        setIsHidden(isScrollingDown);
+        pivotY = currentY; // Reset pivot to prevent continuous flickering if logic differs
       }
 
       lastScrollY.current = currentY;

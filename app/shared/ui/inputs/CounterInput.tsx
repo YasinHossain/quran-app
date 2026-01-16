@@ -81,7 +81,7 @@ export const CounterInput = ({
     }
   };
 
-  const handleMouseDown = (action: 'inc' | 'dec') => {
+  const handlePressStart = (action: 'inc' | 'dec') => {
     const update = () => {
       const current = valueRef.current;
       let next: number;
@@ -117,12 +117,14 @@ export const CounterInput = ({
       <div className="flex items-center w-full rounded-lg border border-border bg-interactive/60 text-foreground focus-within:border-accent focus-within:ring-1 focus-within:ring-accent transition-colors duration-150">
         <button
           type="button"
-          onMouseDown={() => handleMouseDown('dec')}
-          onMouseUp={stopCounter}
-          onMouseLeave={stopCounter}
-          onTouchStart={() => handleMouseDown('dec')}
-          onTouchEnd={stopCounter}
-          onTouchCancel={stopCounter}
+          onPointerDown={(e) => {
+            if (e.button !== 0) return;
+            handlePressStart('dec');
+          }}
+          onPointerUp={stopCounter}
+          onPointerLeave={stopCounter}
+          onPointerCancel={stopCounter}
+          onContextMenu={(e) => e.preventDefault()}
           disabled={min !== undefined && value <= min}
           className="p-3 text-muted hover:text-foreground disabled:opacity-30 disabled:hover:text-muted transition-colors focus:outline-none touch-none"
           aria-label="Decrease"
@@ -140,12 +142,14 @@ export const CounterInput = ({
         />
         <button
           type="button"
-          onMouseDown={() => handleMouseDown('inc')}
-          onMouseUp={stopCounter}
-          onMouseLeave={stopCounter}
-          onTouchStart={() => handleMouseDown('inc')}
-          onTouchEnd={stopCounter}
-          onTouchCancel={stopCounter}
+          onPointerDown={(e) => {
+            if (e.button !== 0) return;
+            handlePressStart('inc');
+          }}
+          onPointerUp={stopCounter}
+          onPointerLeave={stopCounter}
+          onPointerCancel={stopCounter}
+          onContextMenu={(e) => e.preventDefault()}
           disabled={max !== undefined && value >= max}
           className="p-3 text-muted hover:text-foreground disabled:opacity-30 disabled:hover:text-muted transition-colors focus:outline-none touch-none"
           aria-label="Increase"

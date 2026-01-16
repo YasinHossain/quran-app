@@ -1,4 +1,11 @@
-import { useState, type Dispatch, type RefObject, type SetStateAction, type UIEvent } from 'react';
+import {
+  useEffect,
+  useState,
+  type Dispatch,
+  type RefObject,
+  type SetStateAction,
+  type UIEvent,
+} from 'react';
 
 import { useReaderMode } from '@/app/providers/ReaderModeContext';
 import { useSurahTabConfig } from '@/app/shared/components/surah-tabs/useSurahTabConfig';
@@ -27,12 +34,20 @@ export interface SurahTabsState {
   isMushafMode: boolean;
 }
 
-export function useSurahTabsState(chapters: ReadonlyArray<Chapter>): SurahTabsState {
+export function useSurahTabsState(
+  chapters: ReadonlyArray<Chapter>,
+  onActiveTabChange?: (tab: TabKey) => void
+): SurahTabsState {
   const { currentSurahId, currentJuzId, currentPageId, isTafsirPath, getInitialTab } =
     useSurahTabParams();
   const { tabs } = useSurahTabConfig();
   const [activeTab, setActiveTab] = useState<TabKey>(getInitialTab);
   const { mode } = useReaderMode();
+
+  // Notify parent component when active tab changes
+  useEffect(() => {
+    onActiveTabChange?.(activeTab);
+  }, [activeTab, onActiveTabChange]);
 
   const {
     selectedSurahId,

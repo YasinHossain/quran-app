@@ -52,7 +52,7 @@ export function QuranAudioPlayer({
   return (
     <div className="relative w-full">
       {playbackError && (
-        <div className="absolute bottom-full mb-2 left-0 right-0 bg-red-500/10 text-red-600 dark:text-red-400 p-2 text-xs rounded-lg text-center border border-red-500/20 backdrop-blur-sm">
+        <div className="absolute bottom-full mb-2 left-0 right-0 bg-red-500/20 text-red-600 dark:text-red-400 p-2 text-xs rounded-lg text-center border border-red-500/20">
           Playback failed. Please check your connection.
         </div>
       )}

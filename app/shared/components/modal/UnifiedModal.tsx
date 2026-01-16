@@ -3,6 +3,7 @@
 import { AnimatePresence } from 'framer-motion';
 import React, { memo, useCallback } from 'react';
 
+import { useBodyScrollLock } from '@/app/shared/hooks/useBodyScrollLock';
 import { Portal } from '@/app/shared/components/Portal';
 
 import { UnifiedModalBackdrop, UnifiedModalFrame, useCloseOnEscape } from './UnifiedModalParts';
@@ -39,6 +40,7 @@ export const UnifiedModal = memo(function UnifiedModal({
   role = 'dialog',
 }: UnifiedModalProps): React.JSX.Element {
   useCloseOnEscape(isOpen && closeOnEscape, onClose);
+  useBodyScrollLock(isOpen);
 
   const handleBackdropClick = useCallback((): void => {
     if (closeOnOverlayClick) onClose();
