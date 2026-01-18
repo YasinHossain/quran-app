@@ -1,7 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, startTransition } from 'react';
 
 import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
 import { buildTafsirRoute } from '@/app/shared/navigation/routes';
@@ -44,6 +43,7 @@ const SurahItem = memo(function SurahItem({
       <SurahNavigationCard
         href={href}
         scroll={false}
+        prefetch={true}
         data-active={isActive}
         isActive={isActive}
         content={{
@@ -69,25 +69,26 @@ export const Surah = ({
   isMushafMode,
   onClose,
 }: Props): React.JSX.Element => {
-  const { getSurahHref, goToSurah } = useNavigationTargets();
-  const router = useRouter();
+  const { getSurahHref } = useNavigationTargets();
 
   // Create a stable callback factory for navigation handlers
+  // State updates are wrapped in startTransition to avoid blocking navigation
+  // The Link component handles actual navigation - no router.push needed
   const createNavigateHandler = useCallback(
-    (chapter: Chapter, surahHref: string) => () => {
+    (chapter: Chapter) => () => {
+      // Close sidebar immediately for instant feedback
       onClose?.();
-      setSelectedSurahId(chapter.id);
-      const firstPage = chapter.pages?.[0] ?? 1;
-      setSelectedPageId(firstPage);
-      setSelectedJuzId(getJuzByPage(firstPage));
-      rememberScroll();
-      if (!isTafsirPath) {
-        if (isMushafMode) {
-          router.push(`${surahHref}?view=mushaf`);
-        } else {
-          goToSurah(chapter.id);
-        }
-      }
+
+      // Use startTransition for non-urgent state updates
+      // This allows navigation to start immediately without waiting for re-renders
+      startTransition(() => {
+        setSelectedSurahId(chapter.id);
+        const firstPage = chapter.pages?.[0] ?? 1;
+        setSelectedPageId(firstPage);
+        setSelectedJuzId(getJuzByPage(firstPage));
+        rememberScroll();
+      });
+      // Navigation is handled by the Link component's href - no router.push needed
     },
     [
       onClose,
@@ -95,10 +96,6 @@ export const Surah = ({
       setSelectedPageId,
       setSelectedJuzId,
       rememberScroll,
-      isTafsirPath,
-      isMushafMode,
-      router,
-      goToSurah,
     ]
   );
 
@@ -119,7 +116,7 @@ export const Surah = ({
             chapter={chapter}
             isActive={isActive}
             href={href}
-            onNavigate={createNavigateHandler(chapter, surahHref)}
+            onNavigate={createNavigateHandler(chapter)}
           />
         );
       })}

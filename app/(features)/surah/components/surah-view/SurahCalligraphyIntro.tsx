@@ -16,7 +16,7 @@ const SurahNameGraphic = ({ chapterId }: { chapterId: number }): React.JSX.Eleme
           if (svgMatch) {
             const svgWithPreserve = svgMatch[0].replace(
               '<svg',
-              '<svg preserveAspectRatio="xMidYMid slice"'
+              '<svg preserveAspectRatio="xMidYMid meet"'
             );
             setSvgContent(svgWithPreserve);
           } else {
@@ -34,7 +34,7 @@ const SurahNameGraphic = ({ chapterId }: { chapterId: number }): React.JSX.Eleme
   return (
     <div
       className={cn(
-        'h-full w-full overflow-hidden transition-opacity duration-300 [&>svg]:h-full [&>svg]:w-full [&>svg]:origin-center [&>svg]:scale-[1.25] sm:[&>svg]:scale-[1.5] [&_path]:fill-foreground [&_path]:stroke-[hsl(var(--background))] [&_path]:stroke-[8]',
+        'h-full w-full flex items-center justify-center transition-opacity duration-300 [&>svg]:h-full [&>svg]:w-full [&_path]:fill-foreground [&_path]:stroke-[hsl(var(--background))] [&_path]:stroke-[8]',
         svgContent ? 'opacity-100' : 'opacity-0'
       )}
       dangerouslySetInnerHTML={{ __html: svgContent || '' }}

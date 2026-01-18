@@ -1,6 +1,6 @@
 'use client';
 
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, startTransition } from 'react';
 
 import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
 import { JuzNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
@@ -41,6 +41,7 @@ const JuzItem = memo(function JuzItem({
       <JuzNavigationCard
         href={href}
         scroll={false}
+        prefetch={true}
         data-active={isActive}
         isActive={isActive}
         content={{
@@ -64,19 +65,27 @@ export const Juz = ({
   rememberScroll,
   onClose,
 }: Props): React.JSX.Element => {
-  const { getJuzHref, goToJuz } = useNavigationTargets();
+  const { getJuzHref } = useNavigationTargets();
 
   // Create a stable callback factory for navigation handlers
+  // State updates are wrapped in startTransition to avoid blocking navigation
+  // The Link component handles actual navigation - no goToJuz needed
   const createNavigateHandler = useCallback(
     (juz: JuzSummary) => () => {
+      // Close sidebar immediately for instant feedback
       onClose?.();
-      setSelectedJuzId(juz.number);
-      const page = JUZ_START_PAGES[juz.number - 1] ?? 1;
-      setSelectedPageId(page);
-      const chap = getSurahByPage(page, chapters);
-      if (chap) setSelectedSurahId(chap.id);
-      rememberScroll();
-      goToJuz(juz.number);
+
+      // Use startTransition for non-urgent state updates
+      // This allows navigation to start immediately without waiting for re-renders
+      startTransition(() => {
+        setSelectedJuzId(juz.number);
+        const page = JUZ_START_PAGES[juz.number - 1] ?? 1;
+        setSelectedPageId(page);
+        const chap = getSurahByPage(page, chapters);
+        if (chap) setSelectedSurahId(chap.id);
+        rememberScroll();
+      });
+      // Navigation is handled by the Link component's href - no goToJuz needed
     },
     [
       onClose,
@@ -85,7 +94,6 @@ export const Juz = ({
       setSelectedSurahId,
       chapters,
       rememberScroll,
-      goToJuz,
     ]
   );
 

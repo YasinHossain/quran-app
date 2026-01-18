@@ -17,6 +17,7 @@ export const SurahCard = memo(function SurahCard({ chapter }: SurahCardProps): R
     <SurahNavigationCard
       href={buildSurahRoute(chapter.id)}
       scroll
+      prefetch={true}
       className="items-center"
       content={{
         id: chapter.id,

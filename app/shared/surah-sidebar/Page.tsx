@@ -1,6 +1,6 @@
 'use client';
 
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, startTransition } from 'react';
 
 import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
 import { PageNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
@@ -41,6 +41,7 @@ const PageItem = memo(function PageItem({
       <PageNavigationCard
         href={href}
         scroll={false}
+        prefetch={true}
         data-active={isActive}
         isActive={isActive}
         content={{
@@ -63,18 +64,26 @@ export const Page = ({
   rememberScroll,
   onClose,
 }: Props): React.JSX.Element => {
-  const { getPageHref, goToPage } = useNavigationTargets();
+  const { getPageHref } = useNavigationTargets();
 
   // Create a stable callback factory for navigation handlers
+  // State updates are wrapped in startTransition to avoid blocking navigation
+  // The Link component handles actual navigation - no goToPage needed
   const createNavigateHandler = useCallback(
     (p: number) => () => {
+      // Close sidebar immediately for instant feedback
       onClose?.();
-      setSelectedPageId(p);
-      setSelectedJuzId(getJuzByPage(p));
-      const chap = getSurahByPage(p, chapters);
-      if (chap) setSelectedSurahId(chap.id);
-      rememberScroll();
-      goToPage(p);
+
+      // Use startTransition for non-urgent state updates
+      // This allows navigation to start immediately without waiting for re-renders
+      startTransition(() => {
+        setSelectedPageId(p);
+        setSelectedJuzId(getJuzByPage(p));
+        const chap = getSurahByPage(p, chapters);
+        if (chap) setSelectedSurahId(chap.id);
+        rememberScroll();
+      });
+      // Navigation is handled by the Link component's href - no goToPage needed
     },
     [
       onClose,
@@ -83,7 +92,6 @@ export const Page = ({
       setSelectedSurahId,
       chapters,
       rememberScroll,
-      goToPage,
     ]
   );
 

@@ -18,6 +18,7 @@ export const JuzTab = memo(function JuzTab(): React.JSX.Element {
           key={juz.number}
           href={buildJuzRoute(juz.number)}
           scroll
+          prefetch={true}
           className="items-center"
           content={{
             id: juz.number,
