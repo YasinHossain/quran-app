@@ -196,8 +196,14 @@ export const MushafLines = ({
     if (typeof window === 'undefined') return;
     const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0) return;
-    const range = selection.getRangeAt(0);
     const container = event.currentTarget;
+    const anchorNode = selection.anchorNode;
+    const focusNode = selection.focusNode;
+    if (!anchorNode || !focusNode) return;
+    if (!container.contains(anchorNode) || !container.contains(focusNode)) {
+      return;
+    }
+    const range = selection.getRangeAt(0);
     const wordNodes = Array.from(
       container.querySelectorAll<HTMLElement>('[data-mushaf-word="true"]')
     );
