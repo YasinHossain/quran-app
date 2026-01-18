@@ -223,6 +223,22 @@
     min-height: 100%;
   }
 
+  /* Theme toggle icon swap (avoid JS/theme hydration flicker) */
+  .theme-toggle-icon--dark,
+  .theme-toggle-icon--light {
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  html[data-theme='light'] .theme-toggle-icon--light {
+    display: inline-flex;
+  }
+
+  html[data-theme='dark'] .theme-toggle-icon--dark {
+    display: inline-flex;
+  }
+
   /* Focus visible improvements for better keyboard navigation */
   *:focus-visible {
     outline: none !important;
@@ -484,9 +500,11 @@ input[type='range'] {
   border-radius: 5px;
   outline: none;
   touch-action: none;
-  background: linear-gradient(to right,
-      rgb(var(--color-accent)) var(--value-percent, 0%),
-      rgb(var(--color-border)) var(--value-percent, 0%));
+  background: linear-gradient(
+    to right,
+    rgb(var(--color-accent)) var(--value-percent, 0%),
+    rgb(var(--color-border)) var(--value-percent, 0%)
+  );
 }
 
 input[type='range']::-webkit-slider-thumb {

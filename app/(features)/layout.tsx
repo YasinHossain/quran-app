@@ -18,7 +18,9 @@ function LayoutContent({ children }: { children: ReactNode }): ReactElement {
   const { isHidden } = useHeaderVisibility();
   const { isSurahListOpen, isBookmarkSidebarOpen } = useSidebar();
   const pathname = usePathname();
-  const isHomePage = pathname === '/';
+  // During static pre-rendering (home), Next may not provide a pathname on the server.
+  // Treat an empty pathname as home to prevent the header flashing on initial paint.
+  const isHomePage = !pathname || pathname === '/';
 
   const isNavHidden = isHidden || isSurahListOpen || isBookmarkSidebarOpen;
 

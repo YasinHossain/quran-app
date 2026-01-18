@@ -32,7 +32,7 @@ import { WebVitals } from './shared/components/WebVitals';
  * This script runs synchronously before any paint occurs to set the correct theme class.
  * Must use dangerouslySetInnerHTML instead of next/Script for truly synchronous execution.
  */
-export const INLINE_THEME_SCRIPT = `(function(){try{var t=localStorage.getItem('theme');if(!t){var m=document.cookie.match(/(?:^|; )theme=([^;]+)/);t=m?m[1]:null}if(t==='dark'){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark')}else{document.documentElement.classList.remove('dark');document.documentElement.setAttribute('data-theme',t||'light')}}catch(e){}})()`;
+export const INLINE_THEME_SCRIPT = `(function(){try{var t=null;try{t=localStorage.getItem('theme')}catch(e){}if(!t){try{var m=document.cookie.match(/(?:^|; )theme=([^;]+)/);t=m?m[1]:null}catch(e){}}if(t!=='light'&&t!=='dark'){try{var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');if(mq&&mq.matches)t='dark'}catch(e){} }if(t==='dark'){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark')}else{document.documentElement.classList.remove('dark');document.documentElement.setAttribute('data-theme','light')}}catch(e){}})()`;
 
 export const metadata = {
   title: 'Al Quran',

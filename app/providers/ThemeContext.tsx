@@ -55,6 +55,7 @@ export const ThemeProvider = ({
       setItem('theme', theme);
       // Ensure the dark class is toggled for Tailwind's class strategy
       document.documentElement.classList.toggle('dark', theme === 'dark');
+      document.documentElement.setAttribute('data-theme', theme);
       document.cookie = `theme=${theme}; path=/; max-age=31536000`;
     }
   }, [theme, isInitialized]);
