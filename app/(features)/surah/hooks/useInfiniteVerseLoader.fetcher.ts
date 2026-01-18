@@ -3,7 +3,7 @@ import { useCallback, useEffect, type MutableRefObject } from 'react';
 import type { LookupFn } from './useVerseListing';
 import type { Key, MutatorCallback, MutatorOptions } from 'swr';
 
-export const VERSES_PER_PAGE = 20;
+export const VERSES_PER_PAGE = 10;
 
 export type SetSize = (size: number | ((size: number) => number)) => Promise<unknown>;
 type Mutate = <Data = unknown>(
@@ -145,6 +145,6 @@ export const usePrefetchNextPage = ({
           throw err;
         }),
       { populateCache: true, revalidate: false }
-    ).catch(() => {});
+    ).catch(() => { });
   }, [id, keyFactory, isReachingEnd, mutateGlobal, lookup, size, prefetchedPagesRef]);
 };

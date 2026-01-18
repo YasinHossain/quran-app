@@ -24,6 +24,7 @@ export const DesktopVerseActions = ({
   onShare,
   onAddToPlan,
   onNavigateToVerse,
+  navigateHref,
   showRemove = false,
   className = '',
 }: VerseActionsProps): React.JSX.Element => {
@@ -51,7 +52,10 @@ export const DesktopVerseActions = ({
           onPlayPause={onPlayPause}
         />
         <TafsirLink verseKey={verseKey} />
-        <NavigateToVerseLink {...(onNavigateToVerse ? { onNavigateToVerse } : {})} />
+        <NavigateToVerseLink
+          {...(onNavigateToVerse ? { onNavigateToVerse } : {})}
+          {...(navigateHref ? { href: navigateHref } : {})}
+        />
         <BookmarkButton
           isBookmarked={Boolean(isBookmarked)}
           showRemove={showRemove}

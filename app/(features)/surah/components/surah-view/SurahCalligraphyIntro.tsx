@@ -3,50 +3,13 @@ import React from 'react';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
 import { cn } from '@/lib/utils/cn';
 
-const SurahNameGraphic = ({ chapterId }: { chapterId: number }): React.JSX.Element | null => {
-  const [svgContent, setSvgContent] = React.useState<string | null>(null);
-
-  React.useEffect(() => {
-    let mounted = true;
-    fetch(`/surah-names/${chapterId}.svg`)
-      .then((res) => res.text())
-      .then((text) => {
-        if (mounted) {
-          const svgMatch = text.match(/<svg[\s\S]*<\/svg>/);
-          if (svgMatch) {
-            const svgWithPreserve = svgMatch[0].replace(
-              '<svg',
-              '<svg preserveAspectRatio="xMidYMid meet"'
-            );
-            setSvgContent(svgWithPreserve);
-          } else {
-            setSvgContent(text);
-          }
-        }
-      })
-      .catch((err) => console.error('Failed to load Surah SVG:', err));
-
-    return () => {
-      mounted = false;
-    };
-  }, [chapterId]);
-
-  return (
-    <div
-      className={cn(
-        'h-full w-full flex items-center justify-center transition-opacity duration-300 [&>svg]:h-full [&>svg]:w-full [&_path]:fill-foreground [&_path]:stroke-[hsl(var(--background))] [&_path]:stroke-[8]',
-        svgContent ? 'opacity-100' : 'opacity-0'
-      )}
-      dangerouslySetInnerHTML={{ __html: svgContent || '' }}
-    />
-  );
-};
 type SurahIntroDetails = {
   revelationPlace?: string | undefined;
   showBismillah: boolean;
   chapterId: number;
+  surahName: string;
+  versesCount: number;
 };
-type SurahNavChapter = ReturnType<typeof useSurahNavigationData>['chapters'][number];
 
 const useSurahIntroDetails = (chapterId?: number | null): SurahIntroDetails | null => {
   const { chapters } = useSurahNavigationData();
@@ -55,11 +18,15 @@ const useSurahIntroDetails = (chapterId?: number | null): SurahIntroDetails | nu
 
   const chapter = chapters.find((item) => item.id === chapterId);
   const surahNumberLabel = chapter?.id ?? chapterId;
+  const surahName = chapter?.name_simple ?? `Surah ${chapterId}`;
+  const versesCount = chapter?.verses_count ?? 0;
 
   return {
     revelationPlace: chapter?.revelation_place,
     showBismillah: chapterId !== 9 && chapterId !== 1,
     chapterId: surahNumberLabel,
+    surahName,
+    versesCount,
   };
 };
 
@@ -98,11 +65,25 @@ const SurahIntroBismillah = ({ showBismillah }: { showBismillah: boolean }): Rea
   </div>
 );
 
-const SurahTitleBlock = ({ chapterId }: { chapterId: number }): React.JSX.Element => (
-  <div className="flex items-center justify-center">
-    <div className="relative h-14 w-36 sm:h-24 sm:w-full sm:max-w-[20rem]">
-      <SurahNameGraphic chapterId={chapterId} />
-    </div>
+const SurahTitleBlock = ({
+  surahName,
+  versesCount,
+}: {
+  surahName: string;
+  versesCount: number;
+}): React.JSX.Element => (
+  <div className="flex flex-col items-center justify-center gap-1">
+    <h1
+      className="text-lg font-semibold text-foreground sm:text-xl"
+      style={{
+        fontFamily: "'Inter', 'Outfit', sans-serif",
+      }}
+    >
+      {surahName}
+    </h1>
+    <span className="text-xs text-muted-foreground/50 sm:text-sm">
+      {versesCount} Verses
+    </span>
   </div>
 );
 
@@ -131,7 +112,7 @@ export const SurahCalligraphyIntro = ({
         </div>
 
         <div className="order-1 sm:order-3 sm:min-w-[6rem] sm:w-auto">
-          <SurahTitleBlock chapterId={introDetails.chapterId} />
+          <SurahTitleBlock surahName={introDetails.surahName} versesCount={introDetails.versesCount} />
         </div>
       </div>
     </div>

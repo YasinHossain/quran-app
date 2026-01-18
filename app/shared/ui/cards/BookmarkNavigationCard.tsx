@@ -1,6 +1,6 @@
 'use client';
 
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, startTransition } from 'react';
 
 import { colors } from '@/app/shared/design-system/card-tokens';
 import { BaseCard, BaseCardProps } from '@/app/shared/ui/BaseCard';
@@ -73,7 +73,13 @@ const useNavigationClick = (
 ): React.MouseEventHandler<HTMLAnchorElement> =>
   useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
-      onSectionChange?.(id);
+      // Wrap state updates in startTransition to avoid blocking navigation
+      // The Link component handles actual navigation via href
+      if (onSectionChange) {
+        startTransition(() => {
+          onSectionChange(id);
+        });
+      }
       onClick?.(e);
     },
     [id, onSectionChange, onClick]
@@ -102,6 +108,7 @@ export const BookmarkNavigationCard = memo(function BookmarkNavigationCard({
       isActive={activeState}
       href={getSectionHref(id)}
       scroll={false}
+      prefetch={true}
       className={cn('items-center', className as string)}
       onClick={handleClick}
       {...props}

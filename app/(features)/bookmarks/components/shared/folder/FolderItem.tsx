@@ -45,7 +45,6 @@ export const FolderItem = ({
   isCurrentFolder,
   folderBookmarks,
   onToggle,
-  onSelect,
 }: FolderItemProps): React.JSX.Element => {
   const { removeBookmark } = useBookmarks();
   const handleRemoveBookmark = React.useCallback(
@@ -55,6 +54,9 @@ export const FolderItem = ({
     [removeBookmark, folderItem.id]
   );
   const shouldShowExpanded = isExpanded && isCurrentFolder;
+
+  // Build href for Link-based navigation with prefetching
+  const folderHref = `/bookmarks/${folderItem.id}`;
 
   return (
     <BaseCard
@@ -72,7 +74,7 @@ export const FolderItem = ({
         isCurrentFolder={isCurrentFolder}
         folderBookmarks={folderBookmarks}
         onToggle={onToggle}
-        onSelect={onSelect}
+        href={folderHref}
         showDivider={shouldShowExpanded}
       />
       <ExpandedContent

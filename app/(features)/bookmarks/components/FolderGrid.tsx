@@ -10,7 +10,6 @@ import type { Folder } from '@/types';
 
 interface FolderGridProps {
   folders: Folder[];
-  onFolderSelect: (folderId: string) => void;
 }
 
 type FolderAction = 'delete' | 'customize';
@@ -46,13 +45,11 @@ const DeleteFolderModal = dynamic<DeleteFolderModalProps>(
 
 interface FolderCardsProps {
   folders: Folder[];
-  onFolderSelect: (id: string) => void;
   onAction: (folder: Folder, action: FolderAction) => void;
 }
 
 const FolderCards = ({
   folders,
-  onFolderSelect,
   onAction,
 }: FolderCardsProps): React.JSX.Element => {
   const [isMounted, setIsMounted] = useState(false);
@@ -64,14 +61,13 @@ const FolderCards = ({
   const renderFolderItem = (folder: Folder, index: number): React.JSX.Element => (
     <div
       key={folder.id}
-      className={`transform transition-all duration-300 ease-out ${
-        isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
-      }`}
+      className={`transform transition-all duration-300 ease-out ${isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+        }`}
       style={{ transitionDelay: `${index * 50}ms` }}
     >
       <FolderCard
         folder={folder}
-        onClick={() => onFolderSelect(folder.id)}
+        href={`/bookmarks/${folder.id}`}
         onDelete={() => onAction(folder, 'delete')}
         onColorChange={() => onAction(folder, 'customize')}
       />
@@ -80,9 +76,8 @@ const FolderCards = ({
 
   return (
     <div
-      className={`grid w-full auto-rows-fr grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-4 md:gap-y-6 xl:gap-y-8 gap-x-3 md:gap-x-4 xl:gap-x-6 transition-opacity duration-300 ease-out ${
-        isMounted ? 'opacity-100' : 'opacity-0'
-      }`}
+      className={`grid w-full auto-rows-fr grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-4 md:gap-y-6 xl:gap-y-8 gap-x-3 md:gap-x-4 xl:gap-x-6 transition-opacity duration-300 ease-out ${isMounted ? 'opacity-100' : 'opacity-0'
+        }`}
     >
       {folders.map(renderFolderItem)}
     </div>
@@ -128,7 +123,7 @@ const useFolderModals = (): UseFolderModalsReturn => {
   return { handleAction, modals };
 };
 
-export const FolderGrid = ({ folders, onFolderSelect }: FolderGridProps): React.JSX.Element => {
+export const FolderGrid = ({ folders }: FolderGridProps): React.JSX.Element => {
   const { handleAction, modals } = useFolderModals();
 
   if (folders.length === 0) {
@@ -137,7 +132,7 @@ export const FolderGrid = ({ folders, onFolderSelect }: FolderGridProps): React.
 
   return (
     <>
-      <FolderCards folders={folders} onFolderSelect={onFolderSelect} onAction={handleAction} />
+      <FolderCards folders={folders} onAction={handleAction} />
       {modals}
     </>
   );

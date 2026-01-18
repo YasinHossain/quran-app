@@ -181,11 +181,10 @@ const Pagination = ({
               type="button"
               onClick={() => onGoToPage(page)}
               disabled={isLoading}
-              className={`w-9 h-9 text-sm font-medium rounded-lg transition-colors ${
-                page === currentPage
+              className={`w-9 h-9 text-sm font-medium rounded-lg transition-colors ${page === currentPage
                   ? 'bg-accent text-white'
                   : 'hover:bg-interactive/60 text-foreground'
-              }`}
+                }`}
             >
               {page}
             </button>
@@ -269,8 +268,15 @@ const SearchVerseItem = ({ verse, index, query }: SearchVerseItemProps): React.J
     isPlaying: false,
     isLoadingAudio: false,
     isBookmarked: false,
-    onPlayPause: () => {}, // Noop - audio not supported in search results
+    onPlayPause: () => { }, // Noop - audio not supported in search results
     onNavigateToVerse: handleNavigateToVerse,
+    navigateHref: (() => {
+      const { surahNumber, ayahNumber } = parseVerseKey(verse.verse_key);
+      if (surahNumber && ayahNumber) {
+        return buildSurahRoute(surahNumber, { startVerse: ayahNumber, forceSeq: true });
+      }
+      return undefined;
+    })(),
   };
 
   return (

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import {
   memo,
@@ -129,6 +130,24 @@ function clearRecentSearches(): void {
 // Sub-components
 // ============================================================================
 
+// Helper to generate hrefs for navigation results
+function getNavResultHref(result: SearchNavigationResult, query: string): string {
+  switch (result.resultType) {
+    case 'surah':
+      return buildSurahRoute(Number(result.key));
+    case 'ayah': {
+      const [surah, ayahNum] = String(result.key).split(':').map(Number);
+      return buildSurahRoute(surah!, { startVerse: ayahNum ?? 1 });
+    }
+    case 'juz':
+      return buildJuzRoute(Number(result.key));
+    case 'page':
+      return buildPageRoute(Number(result.key));
+    default:
+      return buildSearchRoute(query);
+  }
+}
+
 interface SearchDropdownProps {
   isLoading: boolean;
   navigationResults: SearchNavigationResult[];
@@ -136,8 +155,7 @@ interface SearchDropdownProps {
   recentSearches: RecentSearch[];
   searchQuery: string;
   highlightedIndex: number;
-  onSelectNavigation: (result: SearchNavigationResult) => void;
-  onSelectVerse: (result: SearchVerseResult) => void;
+  onLinkClick: () => void;
   onSelectRecent: (query: string) => void;
   onClearRecent: () => void;
   onSearchPage: () => void;
@@ -150,8 +168,7 @@ const SearchDropdown = memo(function SearchDropdown({
   recentSearches,
   searchQuery,
   highlightedIndex,
-  onSelectNavigation,
-  onSelectVerse,
+  onLinkClick,
   onSelectRecent,
   onClearRecent,
   onSearchPage,
@@ -222,13 +239,13 @@ const SearchDropdown = memo(function SearchDropdown({
             const isHighlighted = currentIndex === highlightedIndex;
 
             return (
-              <button
+              <Link
                 key={`${result.resultType}-${result.key}`}
-                type="button"
-                onClick={() => onSelectNavigation(result)}
-                className={`w-full px-4 py-3 text-left transition-colors flex items-center gap-3 ${
-                  isHighlighted ? 'bg-accent/20' : 'hover:bg-interactive/60'
-                }`}
+                href={getNavResultHref(result, searchQuery)}
+                prefetch={true}
+                onClick={onLinkClick}
+                className={`w-full px-4 py-3 text-left transition-colors flex items-center gap-3 ${isHighlighted ? 'bg-accent/20' : 'hover:bg-interactive/60'
+                  }`}
               >
                 <div className="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center flex-shrink-0">
                   {result.resultType === 'surah' && (
@@ -246,7 +263,7 @@ const SearchDropdown = memo(function SearchDropdown({
                   <div className="text-sm font-medium text-foreground">{result.name}</div>
                   <div className="text-xs text-muted capitalize">{result.resultType}</div>
                 </div>
-              </button>
+              </Link>
             );
           })}
         </div>
@@ -285,13 +302,13 @@ const SearchDropdown = memo(function SearchDropdown({
             const isArabic = isArabicQuery(searchQuery);
 
             return (
-              <button
+              <Link
                 key={verse.verseKey}
-                type="button"
-                onClick={() => onSelectVerse(verse)}
-                className={`w-full px-4 py-4 text-left transition-colors border-b border-border/30 last:border-b-0 ${
-                  isHighlighted ? 'bg-accent/15' : 'hover:bg-interactive/50'
-                }`}
+                href={buildSurahRoute(verse.surahNumber, { startVerse: verse.verseNumber })}
+                prefetch={true}
+                onClick={onLinkClick}
+                className={`w-full block px-4 py-4 text-left transition-colors border-b border-border/30 last:border-b-0 ${isHighlighted ? 'bg-accent/15' : 'hover:bg-interactive/50'
+                  }`}
               >
                 <div className="flex items-start gap-3">
                   {/* Verse key badge */}
@@ -342,7 +359,7 @@ const SearchDropdown = memo(function SearchDropdown({
                     )}
                   </div>
                 </div>
-              </button>
+              </Link>
             );
           })}
         </div>
@@ -658,7 +675,6 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
             }}
             afterNavigate={() => setIsOpen(false)}
             title="Go To"
-            subtitle="Select a Surah and optionally a verse"
             buttonLabel="Go"
           />
         </div>
@@ -673,8 +689,11 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
           recentSearches={recentSearches}
           searchQuery={query}
           highlightedIndex={highlightedIndex}
-          onSelectNavigation={navigateToNavResult}
-          onSelectVerse={navigateToVerse}
+          onLinkClick={() => {
+            saveRecentSearch(query);
+            setIsOpen(false);
+            onNavigate?.();
+          }}
           onSelectRecent={handleRecentSelect}
           onClearRecent={handleClearRecent}
           onSearchPage={navigateToSearchPage}
@@ -689,17 +708,17 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
         >
           <div className="flex flex-nowrap justify-center items-center gap-1 sm:gap-1.5 md:gap-2">
             {QUICK_LINKS.map(({ name, id }) => (
-              <button
+              <Link
                 key={name}
-                type="button"
+                href={buildSurahRoute(id)}
+                prefetch={true}
                 onClick={() => {
-                  router.push(buildSurahRoute(id));
                   onNavigate?.();
                 }}
                 className="flex-shrink-0 min-h-[2rem] sm:min-h-[2.25rem] md:min-h-10 px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full font-medium text-[0.65rem] sm:text-xs md:text-sm transition-all duration-200 bg-surface-navigation text-foreground hover:bg-surface-navigation/90 border border-border/30 dark:border-border/20 shadow-sm hover:shadow-md active:scale-95 touch-manipulation flex items-center justify-center"
               >
                 {name}
-              </button>
+              </Link>
             ))}
           </div>
         </div>

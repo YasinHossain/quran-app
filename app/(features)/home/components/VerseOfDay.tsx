@@ -2,14 +2,16 @@
 
 import { memo, useState, useEffect, useRef, useMemo } from 'react';
 
-import { stripHtml } from '@/lib/text/stripHtml';
+import { cleanTranslationText } from '@/lib/text/cleanTranslationText';
 
-import type { Verse } from '@/types';
+import type { Chapter, Verse } from '@/types';
 
 // Renamed from VerseOfDaySimple
 interface VerseOfDayProps {
   /** Pre-fetched verses from server (up to 5) */
   verses: readonly Verse[];
+  /** Pre-fetched chapters for name lookup */
+  chapters: ReadonlyArray<Chapter>;
   className?: string;
 }
 
@@ -23,7 +25,7 @@ interface VerseOfDayProps {
  * - No loading states - content is always available from SSG
  * - Minimal client-side logic for best performance
  */
-export const VerseOfDay = memo(function VerseOfDay({ verses, className }: VerseOfDayProps) {
+export const VerseOfDay = memo(function VerseOfDay({ verses, chapters, className }: VerseOfDayProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -31,7 +33,15 @@ export const VerseOfDay = memo(function VerseOfDay({ verses, className }: VerseO
   const hasVerses = verses && verses.length > 0;
   const versesLength = verses?.length ?? 0;
 
-  // Rotate verse every 10 seconds
+  const chapterNameById = useMemo(() => {
+    const map = new Map<number, string>();
+    for (const chapter of chapters) {
+      map.set(chapter.id, chapter.name_simple);
+    }
+    return map;
+  }, [chapters]);
+
+  // Rotate verse every 15 seconds
   useEffect(() => {
     if (!hasVerses || versesLength <= 1) return;
 
@@ -43,7 +53,7 @@ export const VerseOfDay = memo(function VerseOfDay({ verses, className }: VerseO
         setCurrentIndex((prev) => (prev + 1) % versesLength);
         setIsTransitioning(false);
       }, 300);
-    }, 10000);
+    }, 15000);
 
     return () => {
       if (timerRef.current) {
@@ -59,9 +69,10 @@ export const VerseOfDay = memo(function VerseOfDay({ verses, className }: VerseO
     if (!verse) return null;
 
     const [surahNum, ayahNum] = verse.verse_key.split(':');
+    const sahihTranslation = verse.translations?.find((t) => t.resource_id === 20)?.text;
     return {
       text: verse.text_uthmani,
-      translation: verse.translations?.[0]?.text,
+      translation: sahihTranslation ?? verse.translations?.[0]?.text,
       surahNum,
       ayahNum,
     };
@@ -74,6 +85,12 @@ export const VerseOfDay = memo(function VerseOfDay({ verses, className }: VerseO
 
   // Remove unwanted marks like "Small High Rounded Zero" (0x06DF) which renders as a large circle in this font
   const cleanArabicText = verseData.text.replace(/[\u06df\u06e0]/g, '');
+  const referenceChapterName =
+    chapterNameById.get(Number(verseData.surahNum)) ?? `Surah ${verseData.surahNum}`;
+  const referenceText = `${referenceChapterName} ${verseData.surahNum}:${verseData.ayahNum}`;
+  const cleanedTranslation = verseData.translation
+    ? cleanTranslationText(verseData.translation)
+    : null;
 
   return (
     <div
@@ -92,10 +109,9 @@ export const VerseOfDay = memo(function VerseOfDay({ verses, className }: VerseO
         </h3>
 
         {/* Translation - uses system font */}
-        {verseData.translation && (
+        {cleanedTranslation && (
           <p className="text-left text-sm md:text-base text-content-secondary">
-            &quot;{stripHtml(verseData.translation)}&quot; - [Surah {verseData.surahNum}, Ayah{' '}
-            {verseData.ayahNum}]
+            &quot;{cleanedTranslation}&quot; - [{referenceText}]
           </p>
         )}
       </div>

@@ -71,7 +71,7 @@ export const HomePageClient = memo(function HomePageClient({
           {/* Verse of the Day - Simple, performant version */}
           {initialVerses && initialVerses.length > 0 && (
             <div className="w-full mx-auto" style={{ maxWidth: 'clamp(18rem, 80vw, 64rem)' }}>
-              <VerseOfDay verses={initialVerses} />
+              <VerseOfDay verses={initialVerses} chapters={initialChapters} />
             </div>
           )}
 

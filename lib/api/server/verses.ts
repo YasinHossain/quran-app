@@ -4,8 +4,8 @@ import { Verse } from '@/types';
 
 import { getChaptersServer } from './chapters';
 
-// Default translation ID (e.g. 131 - Clear Quran)
-const DEFAULT_TRANSLATION = 131;
+// Default translation ID (20 - Saheeh/Sahih International)
+const DEFAULT_TRANSLATION = 20;
 
 // Number of verses to pre-fetch for rotation
 const VERSE_COUNT = 5;

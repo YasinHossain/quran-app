@@ -1,6 +1,5 @@
 // app/layout.tsx
 import { cookies } from 'next/headers';
-import Script from 'next/script';
 
 import './fonts.css';
 import './globals.css';
@@ -28,17 +27,12 @@ import { WebVitals } from './shared/components/WebVitals';
  * significantly improving LCP (Largest Contentful Paint).
  */
 
-export const INLINE_THEME_SCRIPT = `(() => {
-  try {
-    var t = localStorage.getItem('theme');
-    if (!t) {
-      var m = document.cookie.match(/(?:^|; )theme=([^;]+)/);
-      t = m ? m[1] : null;
-    }
-    document.documentElement.classList.toggle('dark', t === 'dark');
-    document.documentElement.setAttribute('data-theme', t || 'light');
-  } catch (e) {}
-})();`;
+/**
+ * CRITICAL: Inline theme script to prevent FOUC (Flash of Unstyled Content).
+ * This script runs synchronously before any paint occurs to set the correct theme class.
+ * Must use dangerouslySetInnerHTML instead of next/Script for truly synchronous execution.
+ */
+export const INLINE_THEME_SCRIPT = `(function(){try{var t=localStorage.getItem('theme');if(!t){var m=document.cookie.match(/(?:^|; )theme=([^;]+)/);t=m?m[1]:null}if(t==='dark'){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark')}else{document.documentElement.classList.remove('dark');document.documentElement.setAttribute('data-theme',t||'light')}}catch(e){}})()`;
 
 export const metadata = {
   title: 'Al Quran',
@@ -58,8 +52,14 @@ export default async function RootLayout({
       : 'light';
 
   return (
-    <html lang="en" data-theme={theme} className={theme}>
+    <html lang="en" data-theme={theme} className={theme} suppressHydrationWarning>
       <head>
+        {/* 
+          CRITICAL: Synchronous theme script to prevent FOUC.
+          This MUST run before any content is painted.
+          Using dangerouslySetInnerHTML ensures it's inline in the HTML, not injected by JS.
+        */}
+        <script dangerouslySetInnerHTML={{ __html: INLINE_THEME_SCRIPT }} />
         {/* Preload critical Arabic font to reduce request chain */}
         <link
           rel="preload"
@@ -76,9 +76,6 @@ export default async function RootLayout({
           type="font/woff2"
           crossOrigin="anonymous"
         />
-        <Script id="theme-script" strategy="beforeInteractive">
-          {INLINE_THEME_SCRIPT}
-        </Script>
       </head>
       <body className="font-sans">
         <WebVitals />

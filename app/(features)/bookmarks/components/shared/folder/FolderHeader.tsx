@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import React from 'react';
 
 import { colors } from '@/app/shared/design-system/card-tokens';
@@ -12,7 +13,7 @@ interface FolderHeaderProps {
   isCurrentFolder: boolean;
   folderBookmarks: Bookmark[];
   onToggle: (folderId: string) => void;
-  onSelect: (folderId: string) => void;
+  href: string;
   className?: string;
   showDivider?: boolean;
 }
@@ -42,9 +43,8 @@ const FolderInfo = ({
   folderBookmarks,
   isCurrentFolder,
 }: FolderInfoProps): React.JSX.Element => {
-  const verseCount = `${folderBookmarks.length} ${
-    folderBookmarks.length === 1 ? 'verse' : 'verses'
-  }`;
+  const verseCount = `${folderBookmarks.length} ${folderBookmarks.length === 1 ? 'verse' : 'verses'
+    }`;
 
   return (
     <div className="min-w-0 flex flex-col gap-1">
@@ -73,39 +73,32 @@ export const FolderHeader = ({
   isCurrentFolder,
   folderBookmarks,
   onToggle,
-  onSelect,
+  href,
   className,
   showDivider = false,
 }: FolderHeaderProps): React.JSX.Element => {
-  const handleClick = (): void => {
-    if (!isCurrentFolder) {
-      onSelect(folderItem.id);
-    } else {
+  // If already on the current folder, clicking toggles expand/collapse
+  // Otherwise, navigation is handled by the Link
+  const handleClick = (e: React.MouseEvent): void => {
+    if (isCurrentFolder) {
+      e.preventDefault();
       onToggle(folderItem.id);
     }
+    // Let Link handle navigation for non-current folders
   };
 
   const handleKeyDown = (e: React.KeyboardEvent): void => {
     if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      handleClick();
+      if (isCurrentFolder) {
+        e.preventDefault();
+        onToggle(folderItem.id);
+      }
+      // Let Link handle navigation for non-current folders
     }
   };
 
-  return (
-    <div
-      className={cn(
-        'relative flex w-full min-h-[80px] items-center gap-4 cursor-pointer px-4 py-4 transition-colors duration-200 focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border/40 focus-visible:ring-offset-0',
-        className
-      )}
-      onClick={handleClick}
-      role="button"
-      tabIndex={0}
-      aria-label={
-        isCurrentFolder ? `Toggle folder ${folderItem.name}` : `Open folder ${folderItem.name}`
-      }
-      onKeyDown={handleKeyDown}
-    >
+  const content = (
+    <>
       <div className="flex items-center gap-4 flex-1 min-w-0">
         <FolderIconDisplay folderItem={folderItem} />
         <FolderInfo
@@ -117,6 +110,27 @@ export const FolderHeader = ({
       {showDivider ? (
         <div className="absolute bottom-0 left-4 right-4 h-px bg-border transition-opacity duration-200" />
       ) : null}
-    </div>
+    </>
+  );
+
+  const sharedClassName = cn(
+    'relative flex w-full min-h-[80px] items-center gap-4 cursor-pointer px-4 py-4 transition-colors duration-200 focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border/40 focus-visible:ring-offset-0',
+    className
+  );
+
+  return (
+    <Link
+      href={href}
+      prefetch={true}
+      scroll={false}
+      className={sharedClassName}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      aria-label={
+        isCurrentFolder ? `Toggle folder ${folderItem.name}` : `Open folder ${folderItem.name}`
+      }
+    >
+      {content}
+    </Link>
   );
 };

@@ -545,9 +545,73 @@ async function fetchV4Search(
 interface ParsedQuery {
   type: 'navigation' | 'text';
   navigationType?: SearchNavigationType;
+  /**
+   * True when the query explicitly specified the navigation type,
+   * e.g. "page 2", "juz 30", "surah 1".
+   *
+   * This helps distinguish ambiguous numeric queries like "2" (which could be
+   * surah, page, juz) from explicit intent queries.
+   */
+  isExplicit?: boolean;
   value?: string | number;
   surah?: number;
   verse?: number;
+}
+
+function normalizeNumeralsToAscii(input: string): string {
+  return input.replace(
+    /[\u0660-\u0669\u06F0-\u06F9\u09E6-\u09EF\u0966-\u096F]/g,
+    (digit) => {
+      const codePoint = digit.codePointAt(0);
+      if (codePoint === undefined) return digit;
+
+      // Arabic-Indic digits
+      if (codePoint >= 0x0660 && codePoint <= 0x0669) {
+        return String(codePoint - 0x0660);
+      }
+
+      // Eastern Arabic-Indic digits
+      if (codePoint >= 0x06f0 && codePoint <= 0x06f9) {
+        return String(codePoint - 0x06f0);
+      }
+
+      // Bengali digits
+      if (codePoint >= 0x09e6 && codePoint <= 0x09ef) {
+        return String(codePoint - 0x09e6);
+      }
+
+      // Devanagari digits
+      if (codePoint >= 0x0966 && codePoint <= 0x096f) {
+        return String(codePoint - 0x0966);
+      }
+
+      return digit;
+    }
+  );
+}
+
+function buildExactNavigationResult(parsed: ParsedQuery): SearchNavigationResult | null {
+  if (parsed.type !== 'navigation' || !parsed.navigationType) return null;
+
+  switch (parsed.navigationType) {
+    case 'page': {
+      const pageNumber = typeof parsed.value === 'number' ? parsed.value : Number(parsed.value);
+      if (!Number.isFinite(pageNumber) || pageNumber < 1 || pageNumber > 604) return null;
+      return { resultType: 'page', key: pageNumber, name: `Page ${pageNumber}` };
+    }
+    case 'juz': {
+      const juzNumber = typeof parsed.value === 'number' ? parsed.value : Number(parsed.value);
+      if (!Number.isFinite(juzNumber) || juzNumber < 1 || juzNumber > 30) return null;
+      return { resultType: 'juz', key: juzNumber, name: `Juz ${juzNumber}` };
+    }
+    case 'surah': {
+      const surahNumber = typeof parsed.value === 'number' ? parsed.value : Number(parsed.value);
+      if (!Number.isFinite(surahNumber) || surahNumber < 1 || surahNumber > 114) return null;
+      return { resultType: 'surah', key: surahNumber, name: `Surah ${surahNumber}` };
+    }
+    default:
+      return null;
+  }
 }
 
 /**
@@ -558,7 +622,7 @@ interface ParsedQuery {
  * - "yasin" or "36" -> surah search
  */
 function parseQuery(query: string): ParsedQuery {
-  const trimmed = query.trim().toLowerCase();
+  const trimmed = normalizeNumeralsToAscii(query.trim().toLowerCase()).replace(/\s+/g, ' ');
 
   // Ayah pattern: "2:255" or "2-255" or "2.255"
   const ayahMatch = trimmed.match(/^(\d{1,3})[:.-](\d{1,3})$/);
@@ -577,6 +641,7 @@ function parseQuery(query: string): ParsedQuery {
     return {
       type: 'navigation',
       navigationType: 'juz',
+      isExplicit: true,
       value: parseInt(juzMatch[1]!, 10),
     };
   }
@@ -587,8 +652,23 @@ function parseQuery(query: string): ParsedQuery {
     return {
       type: 'navigation',
       navigationType: 'page',
+      isExplicit: true,
       value: parseInt(pageMatch[1]!, 10),
     };
+  }
+
+  // Surah pattern: "surah 36", "sura 36", "surat 36", "chapter 36"
+  const surahMatch = trimmed.match(/^(?:surah|sura|surat|chapter)\s*(\d{1,3})$/);
+  if (surahMatch) {
+    const num = parseInt(surahMatch[1]!, 10);
+    if (num >= 1 && num <= 114) {
+      return {
+        type: 'navigation',
+        navigationType: 'surah',
+        isExplicit: true,
+        value: num,
+      };
+    }
   }
 
   // Surah number only: "36", "1", "114"
@@ -599,6 +679,7 @@ function parseQuery(query: string): ParsedQuery {
       return {
         type: 'navigation',
         navigationType: 'surah',
+        isExplicit: false,
         value: num,
       };
     }
@@ -650,6 +731,26 @@ export async function comprehensiveSearch(
         totalRecords: 0,
       },
     };
+  }
+
+  // QDC search treats queries like "page 2" / "surah 2" as plain text and frequently
+  // returns confusing navigation matches (e.g., "Page 22", "Surah 22").
+  // Prefer exact client-side parsing for explicit navigation queries.
+  const parsed = parseQuery(query);
+  if (parsed.type === 'navigation' && parsed.isExplicit) {
+    const exactNavigation = buildExactNavigationResult(parsed);
+    if (exactNavigation) {
+      return {
+        navigation: [exactNavigation],
+        verses: [],
+        pagination: {
+          currentPage: 1,
+          nextPage: null,
+          totalPages: 1,
+          totalRecords: 0,
+        },
+      };
+    }
   }
 
   if (!USE_QURAN_FOUNDATION_SEARCH) {
@@ -778,6 +879,23 @@ export async function quickSearch(
   if (inFlight) return inFlight;
 
   const request = (async (): Promise<SearchResponse> => {
+    const parsed = parseQuery(query);
+    if (parsed.type === 'navigation' && parsed.isExplicit) {
+      const exactNavigation = buildExactNavigationResult(parsed);
+      if (exactNavigation) {
+        return {
+          navigation: [exactNavigation],
+          verses: [],
+          pagination: {
+            currentPage: 1,
+            nextPage: null,
+            totalPages: 1,
+            totalRecords: 0,
+          },
+        };
+      }
+    }
+
     // If Quran Foundation Search is enabled, use it for proper exact phrase matching
     if (USE_QURAN_FOUNDATION_SEARCH) {
       return comprehensiveSearch(query, {
@@ -830,7 +948,11 @@ export async function quickSearch(
     }
 
     if (!v4Results && qdcResults) {
-      return qdcResults;
+      // Sort navigation to prioritize exact number matches
+      return {
+        ...qdcResults,
+        navigation: sortNavigationByExactMatch(qdcResults.navigation, query),
+      };
     }
 
     if (!v4Results) {
@@ -864,8 +986,9 @@ export async function quickSearch(
     const filteredVerses = filterAndSortByExactPhrase(combinedVerses, query, perPage);
 
     // Merge: QDC navigation + preview verses
+    // Sort navigation to prioritize exact number matches (e.g., "Page 3" before "Page 30")
     return {
-      navigation: qdcResults?.navigation ?? [],
+      navigation: sortNavigationByExactMatch(qdcResults?.navigation ?? [], query),
       verses: filteredVerses,
       pagination: {
         ...v4Results.pagination,
@@ -1039,6 +1162,86 @@ function filterAndSortByExactPhrase(
 }
 
 /**
+ * Sort navigation results to prioritize exact number matches.
+ * 
+ * This fixes the issue where searching "page 3" shows "Page 30" first.
+ * The function extracts numbers from the query and results, then:
+ * 1. Prioritizes exact number matches (e.g., "3" matches "Page 3" exactly)
+ * 2. Then shows results that start with the query number (e.g., "Page 30", "Page 31")
+ * 3. Then shows all other results
+ * 
+ * @param navigation - Navigation results from the API
+ * @param query - The user's search query
+ * @returns Sorted navigation results with exact matches first
+ */
+function sortNavigationByExactMatch(
+  navigation: SearchNavigationResult[],
+  query: string
+): SearchNavigationResult[] {
+  if (!navigation.length) return navigation;
+
+  // Extract numbers from the query
+  const queryNumbers = normalizeNumeralsToAscii(query).match(/\d+/g);
+  if (!queryNumbers || queryNumbers.length === 0) {
+    // No numbers in query, return results as-is
+    return navigation;
+  }
+
+  // The primary number we're looking for (usually the first or only number)
+  const queryNumber = queryNumbers[0]!;
+  const queryNumberInt = parseInt(queryNumber, 10);
+
+  // Score each navigation result
+  const scored = navigation.map((nav) => {
+    // Extract number from the navigation key (which is the actual ID like "3" or "30")
+    const navKey = String(nav.key);
+    const navKeyNumber = parseInt(navKey, 10);
+
+    // Also extract number from the name (e.g., "Page 30" -> "30")
+    const navNameNumbers = nav.name.match(/\d+/g);
+    const navNameNumber = navNameNumbers ? navNameNumbers[0] : null;
+    const navNameNumberInt = navNameNumber ? parseInt(navNameNumber, 10) : null;
+
+    let score = 0;
+
+    // HIGHEST PRIORITY: Exact key match (e.g., key "3" matches query "3")
+    if (navKeyNumber === queryNumberInt) {
+      score = 1000;
+    }
+    // HIGH PRIORITY: Exact name number match
+    else if (navNameNumberInt === queryNumberInt) {
+      score = 900;
+    }
+    // MEDIUM PRIORITY: Key starts with the query number (e.g., key "30" starts with "3")
+    else if (navKey.startsWith(queryNumber)) {
+      // Prefer shorter numbers (30 over 300)
+      score = 500 - navKey.length * 10;
+    }
+    // LOW PRIORITY: Name contains the query number
+    else if (navNameNumber && navNameNumber.startsWith(queryNumber)) {
+      score = 400 - navNameNumber.length * 10;
+    }
+    // LOWEST: Other results
+    else {
+      score = 100;
+    }
+
+    return { nav, score };
+  });
+
+  // Sort by score (highest first), then by key length (shorter first for tie-breaking)
+  scored.sort((a, b) => {
+    if (b.score !== a.score) {
+      return b.score - a.score;
+    }
+    // Tie-breaker: prefer shorter keys (Page 3 before Page 30)
+    return String(a.nav.key).length - String(b.nav.key).length;
+  });
+
+  return scored.map((s) => s.nav);
+}
+
+/**
  * Generate n-grams (consecutive word sequences) from word array.
  * Example: ["book", "of", "Allah"] with n=2 -> ["book of", "of Allah"]
  */
@@ -1090,6 +1293,23 @@ export async function advancedSearch(
   } = {}
 ): Promise<SearchResponse> {
   const { page = 1, size = 10, translationIds = [20] } = options;
+
+  const parsed = parseQuery(query);
+  if (parsed.type === 'navigation' && parsed.isExplicit) {
+    const exactNavigation = buildExactNavigationResult(parsed);
+    if (exactNavigation) {
+      return {
+        navigation: [exactNavigation],
+        verses: [],
+        pagination: {
+          currentPage: 1,
+          nextPage: null,
+          totalPages: 1,
+          totalRecords: 0,
+        },
+      };
+    }
+  }
 
   // If Quran Foundation Search is enabled, use it for proper exact phrase matching
   if (USE_QURAN_FOUNDATION_SEARCH) {
@@ -1144,8 +1364,9 @@ export async function advancedSearch(
       mode: SearchMode.Quick,
     });
 
+    // Sort navigation to prioritize exact number matches (e.g., "Page 3" before "Page 30")
     return {
-      navigation: qdcResults.navigation,
+      navigation: sortNavigationByExactMatch(qdcResults.navigation, query),
       verses: versesToReturn,
       pagination: {
         currentPage: page,

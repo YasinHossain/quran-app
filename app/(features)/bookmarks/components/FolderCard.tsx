@@ -7,13 +7,15 @@ import { Folder } from '@/types';
 
 interface FolderCardProps {
   folder: Folder;
-  onClick: () => void;
+  href?: string;
+  onClick?: () => void;
   onDelete: () => void;
   onColorChange: () => void;
 }
 
 export const FolderCard = React.memo(function FolderCard({
   folder,
+  href,
   onClick,
   onDelete,
   onColorChange,
@@ -21,7 +23,8 @@ export const FolderCard = React.memo(function FolderCard({
   return (
     <EnhancedFolderCard
       folder={folder}
-      onClick={onClick}
+      {...(href ? { href } : {})}
+      {...(onClick ? { onClick } : {})}
       onDelete={onDelete}
       onColorChange={onColorChange}
     />

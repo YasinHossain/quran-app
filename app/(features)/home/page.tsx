@@ -8,7 +8,7 @@ export const dynamic = 'force-static';
 export const revalidate = 3600;
 
 export default async function Page(): Promise<React.JSX.Element> {
-  const DEFAULT_TRANSLATION_ID = 131; // Dr. Mustafa Khattab
+  const DEFAULT_TRANSLATION_ID = 20; // Sahih International
   let initialVerses;
   try {
     // Fetch 5 random verses at build time for the rotation

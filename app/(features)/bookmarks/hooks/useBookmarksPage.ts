@@ -8,7 +8,6 @@ import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 export interface UseBookmarksPageReturn {
   folders: ReturnType<typeof useBookmarks>['folders'];
   sortedFolders: ReturnType<typeof useBookmarks>['folders'];
-  handleFolderSelect: (folderId: string) => void;
   handleSectionChange: (section: SectionId) => void;
 }
 
@@ -52,13 +51,9 @@ export const useBookmarksPage = (): UseBookmarksPageReturn => {
 
   const sortedFolders = useMemo(() => sortFolders(folders, sortBy), [folders, sortBy]);
 
-  const handleFolderSelect = (folderId: string): void => {
-    router.push(`/bookmarks/${folderId}`);
-  };
-
   const handleSectionChange = (section: SectionId): void => {
     router.push(sectionToPath(section));
   };
 
-  return { folders, sortedFolders, handleFolderSelect, handleSectionChange };
+  return { folders, sortedFolders, handleSectionChange };
 };

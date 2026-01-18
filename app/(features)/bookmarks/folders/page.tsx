@@ -9,7 +9,7 @@ import { BookmarksLayout } from '@/app/(features)/bookmarks/components/shared/Bo
 import { useBookmarksPage } from '@/app/(features)/bookmarks/hooks/useBookmarksPage';
 
 const BookmarksPage = (): React.JSX.Element => {
-  const { sortedFolders, handleFolderSelect, handleSectionChange } = useBookmarksPage();
+  const { sortedFolders, handleSectionChange } = useBookmarksPage();
   const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
   const [isGridVisible, setIsGridVisible] = useState(false);
 
@@ -38,11 +38,10 @@ const BookmarksPage = (): React.JSX.Element => {
         <BookmarksHeader onNewFolderClick={openCreateFolderModal} />
 
         <div
-          className={`transition-opacity duration-300 ease-out ${
-            isGridVisible ? 'opacity-100' : 'opacity-0'
-          }`}
+          className={`transition-opacity duration-300 ease-out ${isGridVisible ? 'opacity-100' : 'opacity-0'
+            }`}
         >
-          <FolderGrid folders={sortedFolders} onFolderSelect={handleFolderSelect} />
+          <FolderGrid folders={sortedFolders} />
         </div>
       </BookmarksLayout>
     </>

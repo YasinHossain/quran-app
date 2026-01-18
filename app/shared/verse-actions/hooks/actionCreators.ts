@@ -51,7 +51,7 @@ export function createBookmarkAction({
       : createElement(BookmarkOutlineIcon, { size: 20 });
 
   return {
-    label: showRemove ? 'Remove Bookmark' : isBookmarked ? 'Remove Bookmark' : 'Add Bookmark',
+    label: showRemove ? 'Remove Bookmark' : isBookmarked ? 'Remove Bookmark' : 'Pin or Bookmark',
     icon,
     onClick,
     active: isBookmarked || showRemove,
@@ -66,7 +66,7 @@ export function createTafsirAction({ verseKey }: CreateTafsirActionParams): Vers
   return {
     label: 'View Tafsir',
     icon: createElement(BookReaderIcon, { size: 20 }),
-    onClick: () => {},
+    onClick: () => { },
     href: `/tafsir/${verseKey.replace(':', '/')}`,
   };
 }

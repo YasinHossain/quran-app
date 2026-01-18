@@ -19,13 +19,6 @@ export const MUSHAF_OPTIONS: MushafOption[] = [
     lines: 15,
   },
   {
-    id: 'qcf-tajweed-v4',
-    name: 'Tajweed Colors',
-    description: 'King Fahad Complex V4 with Tajweed color-coded glyphs.',
-    script: 'tajweed',
-    lines: 15,
-  },
-  {
     id: 'qpc-uthmani-hafs',
     name: 'QPC Uthmani Hafs',
     description: 'High-fidelity Uthmani Hafs font (text-based).',
@@ -45,6 +38,13 @@ export const MUSHAF_OPTIONS: MushafOption[] = [
     description: 'Standard IndoPak Nastaleeq layout (16 lines per page).',
     script: 'indopak',
     lines: 16,
+  },
+  {
+    id: 'qcf-tajweed-v4',
+    name: 'Tajweed Colors',
+    description: 'King Fahad Complex V4 with Tajweed color-coded glyphs.',
+    script: 'tajweed',
+    lines: 15,
   },
 ];
 
