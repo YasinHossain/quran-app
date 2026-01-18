@@ -26,6 +26,7 @@ export const SidebarCard = ({
     <Link
       href={href}
       scroll={scroll}
+      prefetch={true}
       data-active={dataActive}
       {...(onClick ? { onClick } : {})}
       className={cn(

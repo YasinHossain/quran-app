@@ -90,8 +90,8 @@ const NavigationSection = ({
   activeSection: SectionId;
   onSectionChange?: ((section: SectionId) => void) | undefined;
 }): React.JSX.Element => (
-  <nav className="px-2 sm:px-3 pt-3 sm:pt-4 pb-4">
-    <div className="space-y-2">
+  <nav className="px-2 sm:px-3 pt-2 sm:pt-2.5 pb-1.5">
+    <div className="space-y-1.5">
       {NAVIGATION_SECTIONS.map((section) => (
         <NavigationItem
           key={section.id}
@@ -136,9 +136,9 @@ const ChildrenSection = ({
   const heading = title === undefined ? 'More' : title;
 
   return (
-    <div className={cn('pt-4 px-2 sm:px-3', containerClassName)}>
+    <div className={cn('pt-1.5 px-2 sm:px-3', containerClassName)}>
       {heading !== null ? (
-        <div className="text-xs font-semibold text-muted uppercase tracking-wider mb-3 px-2">
+        <div className="text-xs font-semibold text-muted uppercase tracking-wider mb-2 px-2">
           {heading}
         </div>
       ) : null}

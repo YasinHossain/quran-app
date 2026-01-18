@@ -31,7 +31,7 @@ export const BookmarksHeader = ({
   const headerTitle = title ?? t('bookmarks');
 
   return (
-    <div className="mb-6 flex flex-col gap-4">
+    <div className="mb-2 flex flex-col gap-4">
       <div className="flex items-center justify-between gap-3">
         <div className="flex-1">
           <HeaderTitleSection

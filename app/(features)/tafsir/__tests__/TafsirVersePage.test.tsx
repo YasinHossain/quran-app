@@ -1,9 +1,7 @@
-import userEvent from '@testing-library/user-event';
 import useSWR from 'swr';
 
 import TafsirVersePage from '@/app/(features)/tafsir/[surahId]/[ayahId]/page';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
-import { push } from '@/app/testUtils/mockRouter';
 import { renderWithProviders, screen, waitFor } from '@/app/testUtils/renderWithProviders';
 import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
@@ -17,8 +15,6 @@ jest.mock('@/app/(features)/tafsir/hooks/useVerseNavigation', () => ({
   useVerseNavigation: () => ({
     prev: { surahId: '1', ayahId: 7 },
     next: { surahId: '1', ayahId: 2 },
-    navigate: ({ surahId, ayahId }: { surahId: string; ayahId: number }) =>
-      push(`/tafsir/${surahId}/${ayahId}`),
     currentSurah: { number: 1, verses: 7 },
   }),
 }));
@@ -43,7 +39,7 @@ const mockUseSingleVerse = jest.requireMock('@/app/shared/hooks/useSingleVerse')
 
 beforeAll(() => {
   setMatchMedia(false);
-  jest.spyOn(logger, 'error').mockImplementation(() => {});
+  jest.spyOn(logger, 'error').mockImplementation(() => { });
 });
 
 const verse: Verse = {
@@ -83,16 +79,17 @@ const renderPage = (surahId = '1', ayahId = '1'): void => {
   );
 };
 
-test('navigates to next verse', async () => {
+test('next link points to next verse', async () => {
   renderPage('1', '1');
-  await waitFor(() => expect(screen.getByLabelText('Next')).not.toBeDisabled());
-  await userEvent.click(screen.getByLabelText('Next'));
-  expect(push).toHaveBeenCalledWith('/tafsir/1/2');
+  await waitFor(() => expect(screen.getByLabelText('Next')).toBeInTheDocument());
+  const nextLink = screen.getByLabelText('Next');
+  expect(nextLink).toHaveAttribute('href', '/tafsir/1/2');
 });
 
-test('navigates to previous surah when prev pressed', async () => {
+test('previous link points to previous verse', async () => {
   renderPage('2', '1');
-  await waitFor(() => expect(screen.getByLabelText('Previous')).not.toBeDisabled());
-  await userEvent.click(screen.getByLabelText('Previous'));
-  expect(push).toHaveBeenCalledWith('/tafsir/1/7');
+  await waitFor(() => expect(screen.getByLabelText('Previous')).toBeInTheDocument());
+  const prevLink = screen.getByLabelText('Previous');
+  expect(prevLink).toHaveAttribute('href', '/tafsir/1/7');
 });
+

@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { memo, type ReactElement } from 'react';
+import { useRouter } from 'next/navigation';
+import { memo, useCallback, useEffect, type ReactElement } from 'react';
 
 import { BookmarkOutlineIcon, CalendarIcon, ClockIcon, PinIcon } from '@/app/shared/icons';
 
@@ -30,6 +31,27 @@ interface HomeQuickLinksProps {
 export const HomeQuickLinks = memo(function HomeQuickLinks({
   className,
 }: HomeQuickLinksProps): ReactElement {
+  const router = useRouter();
+
+  // Prefetch handler for intent-based prefetching
+  const prefetchRoute = useCallback(
+    (href: string) => {
+      try {
+        router.prefetch(href);
+      } catch {
+        // Ignore prefetch errors
+      }
+    },
+    [router]
+  );
+
+  // Warm cache on mount - prefetch all quick links immediately
+  useEffect(() => {
+    for (const link of QUICK_LINKS) {
+      prefetchRoute(link.href);
+    }
+  }, [prefetchRoute]);
+
   return (
     <div className={`w-full ${className ?? ''}`}>
       {/* 2x2 grid on mobile, single row on md+ */}
@@ -38,6 +60,10 @@ export const HomeQuickLinks = memo(function HomeQuickLinks({
           <Link
             key={href}
             href={href}
+            prefetch={true}
+            onMouseEnter={() => prefetchRoute(href)}
+            onFocus={() => prefetchRoute(href)}
+            onTouchStart={() => prefetchRoute(href)}
             className="
               flex items-center justify-center gap-2
               min-h-[2.5rem] sm:min-h-[2.75rem] md:min-h-12
@@ -63,3 +89,4 @@ export const HomeQuickLinks = memo(function HomeQuickLinks({
     </div>
   );
 });
+

@@ -113,16 +113,30 @@ function useBookmarkHelpers(
 
   const setLastRead = useCallback(
     (surahId: string, verseNumber: number, verseKey?: string, globalVerseId?: number) => {
-      setLastReadState((prev) => ({
-        ...prev,
-        [surahId]: {
-          verseNumber,
-          verseId: verseNumber,
-          ...(typeof verseKey === 'string' ? { verseKey } : {}),
-          ...(typeof globalVerseId === 'number' ? { globalVerseId } : {}),
-          updatedAt: Date.now(),
-        },
-      }));
+      setLastReadState((prev) => {
+        const updated = {
+          ...prev,
+          [surahId]: {
+            verseNumber,
+            verseId: verseNumber,
+            ...(typeof verseKey === 'string' ? { verseKey } : {}),
+            ...(typeof globalVerseId === 'number' ? { globalVerseId } : {}),
+            updatedAt: Date.now(),
+          },
+        };
+
+        // Limit to 5 most recent entries
+        const entries = Object.entries(updated);
+        if (entries.length <= 5) {
+          return updated;
+        }
+
+        // Sort by updatedAt (most recent first) and keep only top 5
+        const sorted = entries.sort(([, a], [, b]) => b.updatedAt - a.updatedAt);
+        const limited = sorted.slice(0, 5);
+
+        return Object.fromEntries(limited);
+      });
     },
     [setLastReadState]
   );

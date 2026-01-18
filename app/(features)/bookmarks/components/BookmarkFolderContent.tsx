@@ -47,7 +47,7 @@ export const BookmarkFolderContent = ({
   // Match Surah list sidebar: no nested scroll/padding here; outer wrapper handles it
   return (
     <div className="flex-1">
-      <div className="space-y-3">
+      <div className="space-y-1.5">
         {folders.map((folderItem) => (
           <FolderListItem key={folderItem.id} folderItem={folderItem} />
         ))}

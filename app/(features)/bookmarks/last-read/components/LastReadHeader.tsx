@@ -6,7 +6,7 @@ import { ClockIcon } from '@/app/shared/icons';
 
 export const LastReadHeader = (): React.JSX.Element => {
   return (
-    <div className="mb-6">
+    <div className="mb-2">
       <div className="flex items-center gap-3">
         <div className="w-9 h-9 bg-accent rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
           <ClockIcon size={20} className="text-on-accent" />

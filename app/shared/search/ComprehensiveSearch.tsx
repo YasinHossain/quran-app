@@ -159,6 +159,7 @@ interface SearchDropdownProps {
   onSelectRecent: (query: string) => void;
   onClearRecent: () => void;
   onSearchPage: () => void;
+  onClose: () => void;
 }
 
 const SearchDropdown = memo(function SearchDropdown({
@@ -172,6 +173,7 @@ const SearchDropdown = memo(function SearchDropdown({
   onSelectRecent,
   onClearRecent,
   onSearchPage,
+  onClose,
 }: SearchDropdownProps): ReactElement {
   const { settings } = useSettings();
 
@@ -276,7 +278,29 @@ const SearchDropdown = memo(function SearchDropdown({
             <span className="text-xs font-medium text-muted uppercase tracking-wider">
               Search Results
             </span>
-            <span className="text-xs text-muted">Showing {visibleVerseCount}</span>
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-muted">Showing {visibleVerseCount}</span>
+              <button
+                type="button"
+                onClick={onClose}
+                className="text-muted hover:text-foreground transition-colors p-1 rounded hover:bg-interactive/50"
+                aria-label="Close search preview"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="12" y1="4" x2="4" y2="12" />
+                  <line x1="4" y1="4" x2="12" y2="12" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -697,6 +721,7 @@ export const ComprehensiveSearch = memo(function ComprehensiveSearch({
           onSelectRecent={handleRecentSelect}
           onClearRecent={handleClearRecent}
           onSearchPage={navigateToSearchPage}
+          onClose={() => setIsOpen(false)}
         />
       )}
 

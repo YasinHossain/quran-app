@@ -24,6 +24,7 @@ export const ActionList = memo(function ActionList({
             <Link
               key={action.label}
               href={action.href}
+              prefetch={true}
               onClick={onClose}
               className={cn(
                 'flex items-center gap-4 p-4 rounded-2xl transition-all duration-200',

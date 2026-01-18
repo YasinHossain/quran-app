@@ -1,4 +1,5 @@
 'use client';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import { SettingsSidebar } from '@/app/(features)/surah/components';
@@ -43,7 +44,6 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps): React
     selectedWordLanguageName,
     prev,
     next,
-    navigate,
     currentSurah,
   } = useTafsirVerseData(surahId, ayahId);
 
@@ -82,7 +82,6 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps): React
               surahId={surahId}
               prev={prev}
               next={next}
-              navigate={navigate}
               currentSurah={currentSurah}
               ayahId={ayahId}
               verse={verse}
@@ -121,7 +120,6 @@ function TafsirContent({
   surahId,
   prev,
   next,
-  navigate,
   currentSurah,
   ayahId,
   verse,
@@ -131,14 +129,19 @@ function TafsirContent({
   surahId: string;
   prev: { surahId: string; ayahId: number } | null;
   next: { surahId: string; ayahId: number } | null;
-  navigate: (target: { surahId: string; ayahId: number } | null) => void;
   currentSurah: Surah | undefined;
   ayahId: string;
   verse: Parameters<typeof TafsirViewer>[0]['verse'];
   tafsirResource: Parameters<typeof TafsirViewer>[0]['tafsirResource'];
   tafsirHtml: Parameters<typeof TafsirViewer>[0]['tafsirHtml'];
 }): React.JSX.Element {
+  const router = useRouter();
   const touchStart = React.useRef<{ x: number; y: number } | null>(null);
+
+  const navigateTo = React.useCallback((target: { surahId: string; ayahId: number }) => {
+    // Use Next.js router for client-side navigation (faster than full page reload)
+    router.push(`/tafsir/${target.surahId}/${target.ayahId}`);
+  }, [router]);
 
   const onTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];
@@ -160,10 +163,10 @@ function TafsirContent({
     if (Math.abs(diffX) > 50 && Math.abs(diffX) > Math.abs(diffY)) {
       if (diffX > 0) {
         // Swipe Left -> Next
-        if (next) navigate(next);
+        if (next) navigateTo(next);
       } else {
         // Swipe Right -> Prev
-        if (prev) navigate(prev);
+        if (prev) navigateTo(prev);
       }
     }
     touchStart.current = null;
@@ -174,7 +177,6 @@ function TafsirContent({
       <AyahNavigation
         prev={prev}
         next={next}
-        navigate={navigate}
         {...(currentSurah !== undefined ? { currentSurah } : {})}
         ayahId={ayahId}
         surahId={surahId}

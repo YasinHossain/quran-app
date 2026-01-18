@@ -17,6 +17,7 @@ export const TafsirLink = memo(function TafsirLink({
   return (
     <Link
       href={`/tafsir/${verseKey.replace(':', '/')}`}
+      prefetch={true}
       aria-label="View tafsir"
       title="Tafsir"
       className={cn(

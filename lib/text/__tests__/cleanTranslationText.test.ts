@@ -16,5 +16,12 @@ describe('cleanTranslationText', () => {
   it('strips HTML before cleaning', () => {
     expect(cleanTranslationText('<p>[2:3] Foo <b>bar</b></p>')).toBe('Foo bar');
   });
-});
 
+  it('removes Quran.com footnote sup tags', () => {
+    expect(
+      cleanTranslationText(
+        'Allāh - there is no deity except Him<sup foot_note=123>1</sup> and He knows.'
+      )
+    ).toBe('Allāh - there is no deity except Him and He knows.');
+  });
+});

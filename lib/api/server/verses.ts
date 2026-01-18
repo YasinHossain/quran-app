@@ -10,17 +10,19 @@ const DEFAULT_TRANSLATION = 20;
 // Number of verses to pre-fetch for rotation
 const VERSE_COUNT = 5;
 
-// Interface for Search API response items
-interface SearchResultItem {
-  verse_key: string;
-  verse_id: number;
-  text: string; // The text_uthmani
-  translations?: Array<{
-    id?: number;
-    resource_id: number;
-    text: string;
-    resource_name?: string;
-  }>;
+// Quran.com API response for verses/by_key
+interface VerseByKeyResponse {
+  verse: {
+    id: number;
+    verse_key: string;
+    text_uthmani: string;
+    translations?: Array<{
+      id?: number;
+      resource_id: number;
+      text: string;
+      resource_name?: string;
+    }>;
+  };
 }
 
 async function fetchRandomVerse(seed: number): Promise<Verse> {
@@ -42,11 +44,9 @@ async function fetchRandomVerse(seed: number): Promise<Verse> {
   const randomAyah = Math.floor(rng() * randomChapter.verses_count) + 1;
   const verseKey = `${randomChapter.id}:${randomAyah}`;
 
-  // Use the Search API as it reliably returns translations unlike the verses/by_key endpoint
-  // We use q={verseKey} to find the specific verse
-  const searchUrl = `https://api.quran.com/api/v4/search?q=${verseKey}&translations=${DEFAULT_TRANSLATION}&fields=text_uthmani&size=1`;
+  const verseUrl = `https://api.quran.com/api/v4/verses/by_key/${encodeURIComponent(verseKey)}?translations=${DEFAULT_TRANSLATION}&fields=text_uthmani&translation_fields=resource_name`;
 
-  const response = await fetch(searchUrl, {
+  const response = await fetch(verseUrl, {
     headers: { Accept: 'application/json' },
     next: { revalidate: 3600 }, // Cache fetch for 1 hour
   });
@@ -55,17 +55,13 @@ async function fetchRandomVerse(seed: number): Promise<Verse> {
     throw new Error(`Failed to fetch verse: ${response.status}`);
   }
 
-  const data = await response.json();
-  const result = data.search?.results?.[0] as SearchResultItem;
-
-  if (!result) {
-    throw new Error('No verse found');
-  }
+  const data = (await response.json()) as VerseByKeyResponse;
+  const result = data.verse;
 
   const verse: Verse = {
-    id: result.verse_id,
+    id: result.id,
     verse_key: result.verse_key,
-    text_uthmani: result.text,
+    text_uthmani: result.text_uthmani,
     words: [],
   };
 
@@ -124,7 +120,7 @@ export const getVerseOfDayServer = unstable_cache(
     const verses = await fetchRandomVerses();
     return verses[0] ?? null;
   },
-  ['verse-of-day-server'],
+  ['verse-of-day-server-v2'],
   {
     revalidate: 3600, // Cache for 1 hour
     tags: ['verse-of-day'],
@@ -135,7 +131,7 @@ export const getVerseOfDayServer = unstable_cache(
  * Get multiple random verses for the Verse of the Day rotation (server-side).
  * Cached for 1 hour to rotate verses periodically.
  */
-export const getVersesOfDayServer = unstable_cache(fetchRandomVerses, ['verses-of-day-server'], {
+export const getVersesOfDayServer = unstable_cache(fetchRandomVerses, ['verses-of-day-server-v2'], {
   revalidate: 3600, // Cache for 1 hour
   tags: ['verses-of-day'],
 });

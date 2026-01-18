@@ -10,7 +10,7 @@ interface PlannerHeaderProps {
 
 export const PlannerHeader = ({ onCreatePlan }: PlannerHeaderProps): React.JSX.Element => {
   return (
-    <div className="mb-6 flex flex-col gap-4">
+    <div className="mb-2 flex flex-col gap-4">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0 flex-1">
           <div className="w-9 h-9 bg-accent rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
