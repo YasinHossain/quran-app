@@ -43,6 +43,20 @@ const getVerseNumber = (text: string): number | null => {
   return null;
 };
 
+const INDOPAK_FONT_FACES = new Set([
+  '"IndoPak", serif',
+  '"Noor-e-Huda", serif',
+  '"Noor-e-Hidayat", serif',
+  '"Noor-e-Hira", serif',
+  '"Lateef", serif',
+]);
+
+const resolveWordText = (word: Word, isIndopakFont: boolean): string =>
+  isIndopakFont ? word.indopak ?? word.uthmani : word.uthmani;
+
+const resolveVerseText = (verse: VerseType, isIndopakFont: boolean): string =>
+  isIndopakFont ? verse.text_indopak ?? verse.text_uthmani : verse.text_uthmani;
+
 // Word rendering component
 interface WordDisplayProps {
   word: Word;
@@ -61,6 +75,7 @@ interface WordDisplayProps {
   wordPosition: number;
   /** Current font family for hybrid verse marker detection */
   fontFamily?: string;
+  isIndopakFont: boolean;
 }
 
 // QPC Uthmani Hafs font lacks the U+06DF glyph, which shows up as a black circle; strip it when selected.
@@ -93,19 +108,21 @@ const WordDisplay = ({
   verseKey,
   wordPosition,
   fontFamily,
+  isIndopakFont,
 }: WordDisplayProps): React.JSX.Element | null => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const audioCtx = useContext(AudioContext);
   const isPlayerVisible = audioCtx?.isPlayerVisible ?? false;
   const verticalAlignClass = showByWords ? 'align-top' : 'align-baseline';
+  const baseWordText = resolveWordText(word, isIndopakFont);
 
   // Skip rendering for Rub/Sajdah markers if that's all the word is
-  if (/[\u06DE\uFD3E\uFD3F]/.test(word.uthmani) && !/[\u06DD]/.test(word.uthmani)) {
+  if (/[\u06DE\uFD3E\uFD3F]/.test(baseWordText) && !/[\u06DD]/.test(baseWordText)) {
     return null;
   }
 
   // Check if this word is the verse number
-  const verseNum = getVerseNumber(word.uthmani);
+  const verseNum = getVerseNumber(baseWordText);
   // Also check if the word is formally typed as an 'end' marker in the API data.
   // This helps identify standalone markers that might be "empty" of digits.
   const isEndWord = word.char_type_name === 'end';
@@ -137,11 +154,11 @@ const WordDisplay = ({
   // Logic: Strip any U+06DD characters so they don't appear as duplicates.
   // Use codeV2 for Tajweed when available, otherwise fall back to uthmani
   const useTajweed = tajweed && word.codeV2;
-  const rawText = (useTajweed ? word.codeV2 : word.uthmani) || '';
+  const rawText = (useTajweed ? word.codeV2 : baseWordText) || '';
 
   // Clean the text (removes \u06DD and other unsupported glyphs)
   const displayText = cleanTextContent(rawText, isQpcHafsFont);
-  const copyText = cleanTextContent(word.uthmani, isQpcHafsFont).trim();
+  const copyText = cleanTextContent(baseWordText, isQpcHafsFont).trim();
 
   // If text is empty after cleaning (e.g. it was just "۝"), hide it.
   if (!displayText?.trim()) {
@@ -263,7 +280,10 @@ export const VerseArabic = memo(function VerseArabic({
   const showByWords = settings.showByWords ?? false;
   const wordLang = settings.wordLang ?? 'en';
   const isQpcHafsFont = settings.arabicFontFace?.includes('UthmanicHafs1Ver18') ?? false;
-  const verseText = verse.text_uthmani;
+  const isIndopakFont = settings.arabicFontFace
+    ? INDOPAK_FONT_FACES.has(settings.arabicFontFace)
+    : false;
+  const verseText = resolveVerseText(verse, isIndopakFont);
   const tajweed = settings.tajweed ?? false;
 
   const handleCopy = (event: React.ClipboardEvent<HTMLParagraphElement>): void => {
@@ -361,10 +381,14 @@ export const VerseArabic = memo(function VerseArabic({
                 const displayText =
                   tajweed && word.codeV2
                     ? word.codeV2
-                    : stripUnsupportedQpcGlyphs(word.uthmani, isQpcHafsFont);
+                    : stripUnsupportedQpcGlyphs(
+                        resolveWordText(word, isIndopakFont),
+                        isQpcHafsFont
+                      );
 
                 // Filter only Sajdah/Rub markers (keep verse end markers)
-                if (/[\u06DE\uFD3E\uFD3F]/.test(word.uthmani) && !/[\u06DD]/.test(word.uthmani)) {
+                const sourceText = resolveWordText(word, isIndopakFont);
+                if (/[\u06DE\uFD3E\uFD3F]/.test(sourceText) && !/[\u06DD]/.test(sourceText)) {
                   return false;
                 }
 
@@ -389,6 +413,7 @@ export const VerseArabic = memo(function VerseArabic({
                     verseKey={verse.verse_key}
                     wordPosition={word.position ?? index + 1}
                     fontFamily={settings.arabicFontFace}
+                    isIndopakFont={isIndopakFont}
                   />
                 </Fragment>
               ))}
