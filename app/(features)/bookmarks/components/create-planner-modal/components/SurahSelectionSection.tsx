@@ -124,21 +124,15 @@ const RangeBoundarySection = ({
   onVerseChange,
 }: RangeBoundarySectionProps): React.JSX.Element => {
   return (
-    <section className="space-y-3">
-      <div className="text-sm font-semibold text-foreground">{label}</div>
+    <section>
       <SurahVerseSelector
         chapters={chapters}
         selectedSurah={surahValue}
         selectedVerse={verseValue}
         onSurahChange={onSurahChange}
         onVerseChange={onVerseChange}
-        surahLabel={`${label} surah`}
-        verseLabel={`${label} verse`}
-        // We do not hide labels here as per discussion, but if we wanted to match previous visual exactly:
-        // We could pass classNames.
-        // Actually, previous was sr-only.
-        // My component doesn't support hiding labels yet.
-        // But for unification, visible labels are generally better.
+        surahLabel={`${label} Surah`}
+        verseLabel="Verse"
       />
     </section>
   );
