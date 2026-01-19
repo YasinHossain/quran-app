@@ -13,7 +13,6 @@ interface UseBookmarkTabParams {
 
 export interface UseBookmarkTabReturn {
   readonly folders: Folder[];
-  readonly findBookmark: (verseId: string) => { folder: Folder; bookmark: Bookmark } | null;
   readonly handleFolderSelect: (folder: Folder) => void;
   readonly handleCreateFolder: () => void;
 }
@@ -25,19 +24,20 @@ export function useBookmarkTab({
   onNewFolderNameChange,
   onToggleCreateFolder,
 }: UseBookmarkTabParams): UseBookmarkTabReturn {
-  const { folders, findBookmark, addBookmark, removeBookmark, createFolder } = useBookmarks();
+  const { folders, addBookmark, removeBookmark, createFolder } = useBookmarks();
 
   const handleFolderSelect = useCallback(
     (folder: Folder): void => {
-      const existingBookmark = findBookmark(verseId);
-      if (existingBookmark?.folder.id === folder.id) {
+      const isAlreadySelected = folder.bookmarks.some(
+        (bookmark: Bookmark) => String(bookmark.verseId) === String(verseId)
+      );
+      if (isAlreadySelected) {
         removeBookmark(verseId, folder.id);
       } else {
-        if (existingBookmark) removeBookmark(verseId, existingBookmark.folder.id);
         addBookmark(verseId, folder.id, verseKey ? { verseKey } : undefined);
       }
     },
-    [verseId, verseKey, findBookmark, removeBookmark, addBookmark]
+    [verseId, verseKey, removeBookmark, addBookmark]
   );
 
   const handleCreateFolder = useCallback((): void => {
@@ -49,7 +49,6 @@ export function useBookmarkTab({
 
   return {
     folders,
-    findBookmark,
     handleFolderSelect,
     handleCreateFolder,
   } as const;

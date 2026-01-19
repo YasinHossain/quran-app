@@ -70,7 +70,6 @@ interface FolderListProps {
   folders: Folder[];
   verseId: string;
   onFolderSelect: (folder: Folder) => void;
-  findBookmark: (verseId: string) => { folder: Folder; bookmark: Bookmark } | null;
   emptyMessage?: string;
 }
 
@@ -78,10 +77,8 @@ export const FolderList = memo(function FolderList({
   folders,
   verseId,
   onFolderSelect,
-  findBookmark,
   emptyMessage = 'No folders found',
 }: FolderListProps): React.JSX.Element {
-  const existingBookmark: { folder: Folder; bookmark: Bookmark } | null = findBookmark(verseId);
   if (!folders.length) return <EmptyState message={emptyMessage} />;
 
   return (
@@ -91,7 +88,9 @@ export const FolderList = memo(function FolderList({
           <FolderListItem
             key={folder.id}
             folder={folder}
-            isSelected={existingBookmark?.folder.id === folder.id}
+            isSelected={folder.bookmarks.some(
+              (bookmark: Bookmark) => String(bookmark.verseId) === String(verseId)
+            )}
             onSelect={onFolderSelect}
           />
         )

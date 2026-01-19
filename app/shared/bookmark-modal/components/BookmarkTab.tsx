@@ -24,8 +24,7 @@ export const BookmarkTab = memo(function BookmarkTab({
     ...(verseKey !== undefined ? { verseKey } : {}),
   };
 
-  const { handleFolderSelect, handleCreateFolder, findBookmark, folders } =
-    useBookmarkTab(bookmarkTabParams);
+  const { handleFolderSelect, handleCreateFolder, folders } = useBookmarkTab(bookmarkTabParams);
 
   return (
     <div className="flex-1 flex flex-col min-h-0">
@@ -41,7 +40,6 @@ export const BookmarkTab = memo(function BookmarkTab({
           folders={folders}
           verseId={verseId}
           onFolderSelect={handleFolderSelect}
-          findBookmark={findBookmark}
           emptyMessage="No folders yet. Create one to get started!"
         />
       </div>
