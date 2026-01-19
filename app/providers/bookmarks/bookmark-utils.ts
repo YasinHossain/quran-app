@@ -79,16 +79,6 @@ export const addBookmarkToFolder = (
   metadata: Partial<Bookmark> = {}
 ): Folder[] => {
   const normalizedVerseId = normalizeVerseId(verseId);
-  if (isVerseBookmarked(folders, verseId)) {
-    return folders;
-  }
-
-  const newBookmark: Bookmark = {
-    verseId: normalizedVerseId,
-    createdAt: Date.now(),
-    ...metadata,
-  };
-
   let targetFolderId = folderId;
   if (!targetFolderId) {
     let defaultFolder = folders.find((f) => f.name === 'Uncategorized');
@@ -98,6 +88,17 @@ export const addBookmarkToFolder = (
     }
     targetFolderId = defaultFolder.id;
   }
+
+  const targetFolder = folders.find((folder) => folder.id === targetFolderId);
+  if (targetFolder?.bookmarks.some((bookmark) => matchesVerseId(bookmark, normalizedVerseId))) {
+    return folders;
+  }
+
+  const newBookmark: Bookmark = {
+    verseId: normalizedVerseId,
+    createdAt: Date.now(),
+    ...metadata,
+  };
 
   return folders.map((folder) =>
     folder.id === targetFolderId
