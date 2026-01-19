@@ -42,7 +42,9 @@ export async function fetchVerses({
   const translationParam = translationIdsArray.join(',');
 
   // Include code_v2 and page_number when tajweed is enabled for V4 font rendering
-  const wordFields = tajweed ? 'text_uthmani,code_v2,page_number' : 'text_uthmani';
+  const wordFields = tajweed
+    ? 'text_uthmani,text_indopak,code_v2,page_number'
+    : 'text_uthmani,text_indopak';
 
   const data = await apiFetch<{
     verses: ApiVerse[];
@@ -56,7 +58,7 @@ export async function fetchVerses({
       word_translation_language: wordLang,
       word_fields: wordFields,
       translations: translationParam,
-      fields: 'text_uthmani,audio',
+      fields: 'text_uthmani,text_indopak,audio',
       translation_fields: 'resource_name',
       per_page: perPage.toString(),
       page: page.toString(),

@@ -4,6 +4,7 @@ export interface ApiWord {
   id: number;
   text: string;
   text_uthmani?: string;
+  text_indopak?: string;
   translation?: { text?: string };
   code_v2?: string;
   page_number?: number;
@@ -34,6 +35,7 @@ export function normalizeVerse(raw: ApiVerse, wordLang: string = 'en'): Verse {
             (w): Word => ({
               id: w.id,
               uthmani: w.text_uthmani ?? w.text,
+              ...(w.text_indopak ? { indopak: w.text_indopak } : {}),
               [wordLang]: w.translation?.text,
               ...(w.code_v2 ? { codeV2: w.code_v2 } : {}),
               ...(w.page_number ? { pageNumber: w.page_number } : {}),
