@@ -85,14 +85,7 @@ export const Page = ({
       });
       // Navigation is handled by the Link component's href - no goToPage needed
     },
-    [
-      onClose,
-      setSelectedPageId,
-      setSelectedJuzId,
-      setSelectedSurahId,
-      chapters,
-      rememberScroll,
-    ]
+    [onClose, setSelectedPageId, setSelectedJuzId, setSelectedSurahId, chapters, rememberScroll]
   );
 
   return (

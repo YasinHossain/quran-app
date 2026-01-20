@@ -6,8 +6,8 @@ import { memo } from 'react';
 import { useSettings } from '@/app/providers/SettingsContext';
 import { usePrefetchSingleVerse } from '@/app/shared/hooks/useSingleVerse';
 import { BookReaderIcon } from '@/app/shared/icons';
-import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 import { touchClasses } from '@/lib/responsive';
+import { getTafsirCached } from '@/lib/tafsir/tafsirCache';
 import { cn } from '@/lib/utils/cn';
 
 interface TafsirLinkProps {

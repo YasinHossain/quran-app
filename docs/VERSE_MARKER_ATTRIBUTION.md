@@ -4,7 +4,7 @@
 
 The verse marker ornament used in this application comes from the **KFGQPC Uthmanic Script HAFS Regular** font (loaded as `UthmanicHafs1Ver18`).
 
-In this font, Arabic-Indic digits (٠-٩) are drawn as the end-of-ayah ornament with the number inside (as seen on Quran.com). The font also contains the Unicode character U+06DD (ARABIC END OF AYAH), which renders as an *empty* ornament and is not used for numbered verse markers.
+In this font, Arabic-Indic digits (٠-٩) are drawn as the end-of-ayah ornament with the number inside (as seen on Quran.com). The font also contains the Unicode character U+06DD (ARABIC END OF AYAH), which renders as an _empty_ ornament and is not used for numbered verse markers.
 
 ### Design Source
 

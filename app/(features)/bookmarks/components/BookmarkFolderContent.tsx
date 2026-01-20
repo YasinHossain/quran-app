@@ -24,7 +24,7 @@ export const BookmarkFolderContent = ({
   };
 
   // No-op since FolderItem now uses Link-based navigation with href
-  const handleFolderSelect = (): void => { };
+  const handleFolderSelect = (): void => {};
 
   const FolderListItem = ({ folderItem }: { folderItem: Folder }): React.JSX.Element => {
     const isExpanded = expandedFolderId === folderItem.id;

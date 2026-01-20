@@ -79,8 +79,6 @@
 
 /* KFGQ V2 uses the KFGQPC-Uthman-Taha sources */
 
-
-
 @font-face {
   font-family: 'Amiri Quran';
   src: url('/fonts/AmiriQuran.ttf') format('truetype');
@@ -120,8 +118,6 @@
   font-style: normal;
   font-display: swap;
 }
-
-
 
 @font-face {
   font-family: 'Noor-e-Hira';
@@ -167,9 +163,12 @@
   font-family: 'IndoPak';
   src:
     local('AlQuran IndoPak by QuranWBW'),
-    url('/fonts/quran/hafs/nastaleeq/indopak/indopak-nastaleeq-waqf-lazim-v4.2.1.woff2') format('woff2'),
-    url('/fonts/quran/hafs/nastaleeq/indopak/indopak-nastaleeq-waqf-lazim-v4.2.1.woff') format('woff'),
-    url('/fonts/quran/hafs/nastaleeq/indopak/indopak-nastaleeq-waqf-lazim-v4.2.1.ttf') format('truetype');
+    url('/fonts/quran/hafs/nastaleeq/indopak/indopak-nastaleeq-waqf-lazim-v4.2.1.woff2')
+      format('woff2'),
+    url('/fonts/quran/hafs/nastaleeq/indopak/indopak-nastaleeq-waqf-lazim-v4.2.1.woff')
+      format('woff'),
+    url('/fonts/quran/hafs/nastaleeq/indopak/indopak-nastaleeq-waqf-lazim-v4.2.1.ttf')
+      format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;

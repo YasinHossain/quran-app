@@ -89,4 +89,3 @@ export const HomeQuickLinks = memo(function HomeQuickLinks({
     </div>
   );
 });
-

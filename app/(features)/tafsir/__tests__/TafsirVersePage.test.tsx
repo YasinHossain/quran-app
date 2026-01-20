@@ -39,7 +39,7 @@ const mockUseSingleVerse = jest.requireMock('@/app/shared/hooks/useSingleVerse')
 
 beforeAll(() => {
   setMatchMedia(false);
-  jest.spyOn(logger, 'error').mockImplementation(() => { });
+  jest.spyOn(logger, 'error').mockImplementation(() => {});
 });
 
 const verse: Verse = {
@@ -92,4 +92,3 @@ test('previous link points to previous verse', async () => {
   const prevLink = screen.getByLabelText('Previous');
   expect(prevLink).toHaveAttribute('href', '/tafsir/1/7');
 });
-

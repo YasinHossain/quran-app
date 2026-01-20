@@ -246,8 +246,9 @@ const SearchDropdown = memo(function SearchDropdown({
                 href={getNavResultHref(result, searchQuery)}
                 prefetch={true}
                 onClick={onLinkClick}
-                className={`w-full px-4 py-3 text-left transition-colors flex items-center gap-3 ${isHighlighted ? 'bg-accent/20' : 'hover:bg-interactive/60'
-                  }`}
+                className={`w-full px-4 py-3 text-left transition-colors flex items-center gap-3 ${
+                  isHighlighted ? 'bg-accent/20' : 'hover:bg-interactive/60'
+                }`}
               >
                 <div className="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center flex-shrink-0">
                   {result.resultType === 'surah' && (
@@ -331,8 +332,9 @@ const SearchDropdown = memo(function SearchDropdown({
                 href={buildSurahRoute(verse.surahNumber, { startVerse: verse.verseNumber })}
                 prefetch={true}
                 onClick={onLinkClick}
-                className={`w-full block px-4 py-4 text-left transition-colors border-b border-border/30 last:border-b-0 ${isHighlighted ? 'bg-accent/15' : 'hover:bg-interactive/50'
-                  }`}
+                className={`w-full block px-4 py-4 text-left transition-colors border-b border-border/30 last:border-b-0 ${
+                  isHighlighted ? 'bg-accent/15' : 'hover:bg-interactive/50'
+                }`}
               >
                 <div className="flex items-start gap-3">
                   {/* Verse key badge */}

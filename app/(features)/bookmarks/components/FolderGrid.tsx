@@ -48,10 +48,7 @@ interface FolderCardsProps {
   onAction: (folder: Folder, action: FolderAction) => void;
 }
 
-const FolderCards = ({
-  folders,
-  onAction,
-}: FolderCardsProps): React.JSX.Element => {
+const FolderCards = ({ folders, onAction }: FolderCardsProps): React.JSX.Element => {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -61,8 +58,9 @@ const FolderCards = ({
   const renderFolderItem = (folder: Folder, index: number): React.JSX.Element => (
     <div
       key={folder.id}
-      className={`transform transition-all duration-300 ease-out ${isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
-        }`}
+      className={`transform transition-all duration-300 ease-out ${
+        isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+      }`}
       style={{ transitionDelay: `${index * 50}ms` }}
     >
       <FolderCard
@@ -76,8 +74,9 @@ const FolderCards = ({
 
   return (
     <div
-      className={`grid w-full auto-rows-fr grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-4 md:gap-y-6 xl:gap-y-8 gap-x-3 md:gap-x-4 xl:gap-x-6 transition-opacity duration-300 ease-out ${isMounted ? 'opacity-100' : 'opacity-0'
-        }`}
+      className={`grid w-full auto-rows-fr grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-4 md:gap-y-6 xl:gap-y-8 gap-x-3 md:gap-x-4 xl:gap-x-6 transition-opacity duration-300 ease-out ${
+        isMounted ? 'opacity-100' : 'opacity-0'
+      }`}
     >
       {folders.map(renderFolderItem)}
     </div>

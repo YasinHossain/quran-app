@@ -6,7 +6,9 @@ describe('cleanTranslationText', () => {
   });
 
   it('removes "See ..." parenthetical references', () => {
-    expect(cleanTranslationText('They are a people. (See V. 21:98-101)')).toBe('They are a people.');
+    expect(cleanTranslationText('They are a people. (See V. 21:98-101)')).toBe(
+      'They are a people.'
+    );
   });
 
   it('keeps non-reference parentheses', () => {

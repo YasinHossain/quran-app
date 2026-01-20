@@ -87,14 +87,7 @@ export const Juz = ({
       });
       // Navigation is handled by the Link component's href - no goToJuz needed
     },
-    [
-      onClose,
-      setSelectedJuzId,
-      setSelectedPageId,
-      setSelectedSurahId,
-      chapters,
-      rememberScroll,
-    ]
+    [onClose, setSelectedJuzId, setSelectedPageId, setSelectedSurahId, chapters, rememberScroll]
   );
 
   return (

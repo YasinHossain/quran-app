@@ -162,7 +162,7 @@ export const quranApiHandlers = [
       verse: mockVerse,
     });
   }),
-  http.get('https://api.quran.com/api/qdc/audio/reciters', () => {
+  http.get(`${QDC_API_BASE}/audio/reciters`, () => {
     return HttpResponse.json({
       reciters: [
         {

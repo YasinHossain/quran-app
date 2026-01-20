@@ -81,9 +81,7 @@ const SurahTitleBlock = ({
     >
       {surahName}
     </h1>
-    <span className="text-xs text-muted-foreground/50 sm:text-sm">
-      {versesCount} Verses
-    </span>
+    <span className="text-xs text-muted-foreground/50 sm:text-sm">{versesCount} Verses</span>
   </div>
 );
 
@@ -112,7 +110,10 @@ export const SurahCalligraphyIntro = ({
         </div>
 
         <div className="order-1 sm:order-3 sm:min-w-[6rem] sm:w-auto">
-          <SurahTitleBlock surahName={introDetails.surahName} versesCount={introDetails.versesCount} />
+          <SurahTitleBlock
+            surahName={introDetails.surahName}
+            versesCount={introDetails.versesCount}
+          />
         </div>
       </div>
     </div>

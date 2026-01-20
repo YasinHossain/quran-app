@@ -66,4 +66,3 @@ describe('search navigation intent', () => {
     expect(result.navigation).toEqual([{ resultType: 'surah', key: 2, name: 'Surah 2' }]);
   });
 });
-

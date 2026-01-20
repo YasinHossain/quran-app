@@ -24,8 +24,7 @@ const ChevronLeft = (): JSX.Element => <ChevronLeftIcon size={20} className="tex
 
 const ChevronRight = (): JSX.Element => <ChevronRightIcon size={20} className="text-accent" />;
 
-const buildTafsirUrl = (target: NavTarget): string =>
-  `/tafsir/${target.surahId}/${target.ayahId}`;
+const buildTafsirUrl = (target: NavTarget): string => `/tafsir/${target.surahId}/${target.ayahId}`;
 
 interface NavLinkProps {
   label: string;
@@ -34,17 +33,16 @@ interface NavLinkProps {
 }
 
 const NavLink = ({ label, target, side }: NavLinkProps): JSX.Element => {
-  const baseClasses = "flex items-center px-1 py-2 sm:px-4 rounded-full bg-accent text-on-accent font-bold";
-  const iconWrapperClasses = side === 'left'
-    ? 'flex items-center justify-center w-9 h-9 rounded-full bg-surface mr-0 sm:mr-2'
-    : 'flex items-center justify-center w-9 h-9 rounded-full bg-surface ml-0 sm:ml-2';
+  const baseClasses =
+    'flex items-center px-1 py-2 sm:px-4 rounded-full bg-accent text-on-accent font-bold';
+  const iconWrapperClasses =
+    side === 'left'
+      ? 'flex items-center justify-center w-9 h-9 rounded-full bg-surface mr-0 sm:mr-2'
+      : 'flex items-center justify-center w-9 h-9 rounded-full bg-surface ml-0 sm:ml-2';
 
   if (!target) {
     return (
-      <span
-        aria-label={label}
-        className={`${baseClasses} opacity-50 cursor-not-allowed`}
-      >
+      <span aria-label={label} className={`${baseClasses} opacity-50 cursor-not-allowed`}>
         <div className={iconWrapperClasses}>
           {side === 'left' ? <ChevronLeft /> : <ChevronRight />}
         </div>
@@ -53,12 +51,7 @@ const NavLink = ({ label, target, side }: NavLinkProps): JSX.Element => {
   }
 
   return (
-    <Link
-      href={buildTafsirUrl(target)}
-      prefetch={true}
-      aria-label={label}
-      className={baseClasses}
-    >
+    <Link href={buildTafsirUrl(target)} prefetch={true} aria-label={label} className={baseClasses}>
       <div className={iconWrapperClasses}>
         {side === 'left' ? <ChevronLeft /> : <ChevronRight />}
       </div>

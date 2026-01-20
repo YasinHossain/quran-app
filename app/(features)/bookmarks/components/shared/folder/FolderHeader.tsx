@@ -43,8 +43,9 @@ const FolderInfo = ({
   folderBookmarks,
   isCurrentFolder,
 }: FolderInfoProps): React.JSX.Element => {
-  const verseCount = `${folderBookmarks.length} ${folderBookmarks.length === 1 ? 'verse' : 'verses'
-    }`;
+  const verseCount = `${folderBookmarks.length} ${
+    folderBookmarks.length === 1 ? 'verse' : 'verses'
+  }`;
 
   return (
     <div className="min-w-0 flex flex-col gap-1">

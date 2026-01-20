@@ -38,8 +38,9 @@ const BookmarksPage = (): React.JSX.Element => {
         <BookmarksHeader onNewFolderClick={openCreateFolderModal} />
 
         <div
-          className={`transition-opacity duration-300 ease-out ${isGridVisible ? 'opacity-100' : 'opacity-0'
-            }`}
+          className={`transition-opacity duration-300 ease-out ${
+            isGridVisible ? 'opacity-100' : 'opacity-0'
+          }`}
         >
           <FolderGrid folders={sortedFolders} />
         </div>

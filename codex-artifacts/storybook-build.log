@@ -1,0 +1,48 @@
+
+> quran-app-v1@0.2.0 storybook:build
+> storybook build
+
+Error loading global settings SB_CORE-SERVER_0001 (SavingGlobalSettingsFileError): Unable to save global settings file to /home/devcontainers/.storybook/settings.json
+Reason: Error: EACCES: permission denied, mkdir '/home/devcontainers/.storybook'
+    at Qe.save (/mnt/c/Users/yasin/quran-app/node_modules/@storybook/core/dist/cli/bin/index.cjs:5997:13)
+    at async globalSettings (/mnt/c/Users/yasin/quran-app/node_modules/@storybook/core/dist/cli/bin/index.cjs:5973:61)
+    at async Object.callback (/mnt/c/Users/yasin/quran-app/node_modules/@storybook/core/dist/cli/bin/index.cjs:6015:5) {
+  data: {
+    filePath: '/home/devcontainers/.storybook/settings.json',
+    error: Error: EACCES: permission denied, mkdir '/home/devcontainers/.storybook'
+        at async Object.mkdir (node:internal/fs/promises:858:10)
+        at async Qe.save (/mnt/c/Users/yasin/quran-app/node_modules/@storybook/core/dist/cli/bin/index.cjs:5994:7)
+        at async globalSettings (/mnt/c/Users/yasin/quran-app/node_modules/@storybook/core/dist/cli/bin/index.cjs:5973:61)
+        at async Object.callback (/mnt/c/Users/yasin/quran-app/node_modules/@storybook/core/dist/cli/bin/index.cjs:6015:5) {
+      errno: -13,
+      code: 'EACCES',
+      syscall: 'mkdir',
+      path: '/home/devcontainers/.storybook'
+    }
+  },
+  fromStorybook: true,
+  category: 'CORE-SERVER',
+  documentation: false,
+  code: 1
+}
+@storybook/core v8.6.15
+
+info => Cleaning outputDir: storybook-static
+info => Loading presets
+[38;2;241;97;97mError: Cannot find module 'next/config'
+Require stack:
+- ./node_modules/@storybook/nextjs/dist/preset.js
+- ./node_modules/@storybook/core/dist/common/index.cjs
+- ./node_modules/storybook/dist/proxy.cjs
+- ./node_modules/storybook/bin/index.cjs[39m
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+    at Module._resolveFilename (./node_modules/esbuild-register/dist/node.js:4794:36)
+    at ./node_modules/next/dist/server/require-hook.js:57:36
+    at Function.resolve (node:internal/modules/helpers:193:19)
+    at scopedResolve (./node_modules/@storybook/nextjs/dist/preset.js:1:9564)
+    at addScopedAlias (./node_modules/@storybook/nextjs/dist/preset.js:1:9339)
+    at configureConfig (./node_modules/@storybook/nextjs/dist/preset.js:1:26405)
+    at async Object.core (./node_modules/@storybook/nextjs/dist/preset.js:1:32750)
+    at async buildStaticStandalone (./node_modules/@storybook/core/dist/core-server/index.cjs:35440:25)
+    at async withTelemetry (./node_modules/@storybook/core/dist/core-server/index.cjs:35788:12)
+[?25l[2K[1G[36m?[39m [1mWould you like to help improve Storybook by sending anonymous crash reports?[22m [90m›[39m [90m(Y/n)[39m

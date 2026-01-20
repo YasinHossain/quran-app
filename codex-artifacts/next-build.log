@@ -1,0 +1,56 @@
+
+> quran-app-v1@0.2.0 build
+> node -e "const fs=require('fs');const file='public/sw.js';if(fs.existsSync(file)){fs.rmSync(file);}" && node node_modules/next/dist/bin/next build --webpack
+
+▲ Next.js 16.1.1 (webpack)
+
+  Creating an optimized production build ...
+ ✓ (pwa) Compiling for server...
+ ✓ (pwa) Compiling for server...
+ ✓ (pwa) Compiling for client (static)...
+ ○ (pwa) Service worker: /mnt/c/Users/yasin/quran-app/public/sw.js
+ ○ (pwa)   URL: /sw.js
+ ○ (pwa)   Scope: /
+ ○ (pwa) This app will fallback to these precached routes when fetching from the cache and the network fails:
+ ○ (pwa)   Documents (pages): /offline
+ ○ (pwa) Custom runtimeCaching array found, using it to extend the default one.
+✓ Compiled successfully in 11.5s
+  Running TypeScript ...
+  Collecting page data using 15 workers ...
+  Generating static pages using 15 workers (0/17) ...
+  Generating static pages using 15 workers (4/17) 
+  Generating static pages using 15 workers (8/17) 
+  Generating static pages using 15 workers (12/17) 
+✓ Generating static pages using 15 workers (17/17) in 9.1s
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)                        Revalidate  Expire
+┌ ○ /                                      1h      1y
+├ ƒ /_not-found
+├ ƒ /api/metrics
+├ ƒ /api/proxy/search/[[...path]]
+├ ƒ /api/quran/[[...path]]
+├ ƒ /api/verses/random
+├ ƒ /bookmarks
+├ ƒ /bookmarks/[folderId]
+├ ƒ /bookmarks/folders
+├ ƒ /bookmarks/last-read
+├ ƒ /bookmarks/pinned
+├ ƒ /bookmarks/planner
+├ ○ /home                                  1h      1y
+├ ƒ /juz
+├ ƒ /juz/[juzId]
+├ ○ /manifest.webmanifest
+├ ƒ /offline
+├ ƒ /page/[pageId]
+├ ƒ /search
+├ ƒ /surah
+├ ƒ /surah/[surahId]
+├ ƒ /tafsir
+└ ƒ /tafsir/[surahId]/[ayahId]
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

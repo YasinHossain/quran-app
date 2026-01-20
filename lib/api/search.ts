@@ -559,35 +559,32 @@ interface ParsedQuery {
 }
 
 function normalizeNumeralsToAscii(input: string): string {
-  return input.replace(
-    /[\u0660-\u0669\u06F0-\u06F9\u09E6-\u09EF\u0966-\u096F]/g,
-    (digit) => {
-      const codePoint = digit.codePointAt(0);
-      if (codePoint === undefined) return digit;
+  return input.replace(/[\u0660-\u0669\u06F0-\u06F9\u09E6-\u09EF\u0966-\u096F]/g, (digit) => {
+    const codePoint = digit.codePointAt(0);
+    if (codePoint === undefined) return digit;
 
-      // Arabic-Indic digits
-      if (codePoint >= 0x0660 && codePoint <= 0x0669) {
-        return String(codePoint - 0x0660);
-      }
-
-      // Eastern Arabic-Indic digits
-      if (codePoint >= 0x06f0 && codePoint <= 0x06f9) {
-        return String(codePoint - 0x06f0);
-      }
-
-      // Bengali digits
-      if (codePoint >= 0x09e6 && codePoint <= 0x09ef) {
-        return String(codePoint - 0x09e6);
-      }
-
-      // Devanagari digits
-      if (codePoint >= 0x0966 && codePoint <= 0x096f) {
-        return String(codePoint - 0x0966);
-      }
-
-      return digit;
+    // Arabic-Indic digits
+    if (codePoint >= 0x0660 && codePoint <= 0x0669) {
+      return String(codePoint - 0x0660);
     }
-  );
+
+    // Eastern Arabic-Indic digits
+    if (codePoint >= 0x06f0 && codePoint <= 0x06f9) {
+      return String(codePoint - 0x06f0);
+    }
+
+    // Bengali digits
+    if (codePoint >= 0x09e6 && codePoint <= 0x09ef) {
+      return String(codePoint - 0x09e6);
+    }
+
+    // Devanagari digits
+    if (codePoint >= 0x0966 && codePoint <= 0x096f) {
+      return String(codePoint - 0x0966);
+    }
+
+    return digit;
+  });
 }
 
 function buildExactNavigationResult(parsed: ParsedQuery): SearchNavigationResult | null {
@@ -1163,13 +1160,13 @@ function filterAndSortByExactPhrase(
 
 /**
  * Sort navigation results to prioritize exact number matches.
- * 
+ *
  * This fixes the issue where searching "page 3" shows "Page 30" first.
  * The function extracts numbers from the query and results, then:
  * 1. Prioritizes exact number matches (e.g., "3" matches "Page 3" exactly)
  * 2. Then shows results that start with the query number (e.g., "Page 30", "Page 31")
  * 3. Then shows all other results
- * 
+ *
  * @param navigation - Navigation results from the API
  * @param query - The user's search query
  * @returns Sorted navigation results with exact matches first

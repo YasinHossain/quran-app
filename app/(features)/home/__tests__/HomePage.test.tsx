@@ -7,6 +7,7 @@ import { Verse } from '@/types';
 
 import type { MockProps } from '@/tests/mocks';
 import type { JSX } from 'react';
+import type { Chapter } from '@/types';
 
 jest.mock('@/lib/api', () => ({
   __esModule: true,
@@ -105,13 +106,36 @@ jest.mock('@/app/(features)/home/components/VerseOfDay', () => ({
   VerseOfDay: () => <div>VerseOfDay</div>,
 }));
 
-const { HomePage } = require('@/app/(features)/home/components/HomePage');
-
 beforeAll(() => {
   setMatchMedia(false);
 });
 
-const renderHome = (): Promise<RenderResult> => renderWithProvidersAsync(<HomePage />);
+const { HomePageClient } = require('@/app/(features)/home/components/HomePageClient');
+const { SurahGridServer } = require('@/app/(features)/home/components/SurahGridServer');
+
+const initialChapters: Chapter[] = [
+  {
+    id: 1,
+    name_simple: 'Al-Fatihah',
+    name_arabic: 'الفاتحة',
+    revelation_place: 'makkah',
+    verses_count: 7,
+  },
+  {
+    id: 2,
+    name_simple: 'Al-Baqarah',
+    name_arabic: 'البقرة',
+    revelation_place: 'madinah',
+    verses_count: 286,
+  },
+];
+
+const renderHome = (): Promise<RenderResult> =>
+  renderWithProvidersAsync(
+    <HomePageClient initialChapters={initialChapters}>
+      <SurahGridServer chapters={initialChapters} />
+    </HomePageClient>
+  );
 
 beforeEach(() => {
   localStorage.clear();

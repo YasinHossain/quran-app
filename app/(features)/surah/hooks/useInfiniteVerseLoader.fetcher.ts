@@ -145,6 +145,6 @@ export const usePrefetchNextPage = ({
           throw err;
         }),
       { populateCache: true, revalidate: false }
-    ).catch(() => { });
+    ).catch(() => {});
   }, [id, keyFactory, isReachingEnd, mutateGlobal, lookup, size, prefetchedPagesRef]);
 };

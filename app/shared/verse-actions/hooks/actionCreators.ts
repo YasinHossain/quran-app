@@ -66,7 +66,7 @@ export function createTafsirAction({ verseKey }: CreateTafsirActionParams): Vers
   return {
     label: 'View Tafsir',
     icon: createElement(BookReaderIcon, { size: 20 }),
-    onClick: () => { },
+    onClick: () => {},
     href: `/tafsir/${verseKey.replace(':', '/')}`,
   };
 }

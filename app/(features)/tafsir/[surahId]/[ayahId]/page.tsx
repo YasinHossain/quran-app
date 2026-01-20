@@ -138,10 +138,13 @@ function TafsirContent({
   const router = useRouter();
   const touchStart = React.useRef<{ x: number; y: number } | null>(null);
 
-  const navigateTo = React.useCallback((target: { surahId: string; ayahId: number }) => {
-    // Use Next.js router for client-side navigation (faster than full page reload)
-    router.push(`/tafsir/${target.surahId}/${target.ayahId}`);
-  }, [router]);
+  const navigateTo = React.useCallback(
+    (target: { surahId: string; ayahId: number }) => {
+      // Use Next.js router for client-side navigation (faster than full page reload)
+      router.push(`/tafsir/${target.surahId}/${target.ayahId}`);
+    },
+    [router]
+  );
 
   const onTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];

@@ -52,10 +52,10 @@ const INDOPAK_FONT_FACES = new Set([
 ]);
 
 const resolveWordText = (word: Word, isIndopakFont: boolean): string =>
-  isIndopakFont ? word.indopak ?? word.uthmani : word.uthmani;
+  isIndopakFont ? (word.indopak ?? word.uthmani) : word.uthmani;
 
 const resolveVerseText = (verse: VerseType, isIndopakFont: boolean): string =>
-  isIndopakFont ? verse.text_indopak ?? verse.text_uthmani : verse.text_uthmani;
+  isIndopakFont ? (verse.text_indopak ?? verse.text_uthmani) : verse.text_uthmani;
 
 // Word rendering component
 interface WordDisplayProps {

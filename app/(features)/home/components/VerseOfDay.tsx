@@ -25,7 +25,11 @@ interface VerseOfDayProps {
  * - No loading states - content is always available from SSG
  * - Minimal client-side logic for best performance
  */
-export const VerseOfDay = memo(function VerseOfDay({ verses, chapters, className }: VerseOfDayProps) {
+export const VerseOfDay = memo(function VerseOfDay({
+  verses,
+  chapters,
+  className,
+}: VerseOfDayProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);

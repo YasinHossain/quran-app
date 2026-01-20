@@ -3,8 +3,8 @@
 import { AnimatePresence } from 'framer-motion';
 import React, { memo, useCallback } from 'react';
 
-import { useBodyScrollLock } from '@/app/shared/hooks/useBodyScrollLock';
 import { Portal } from '@/app/shared/components/Portal';
+import { useBodyScrollLock } from '@/app/shared/hooks/useBodyScrollLock';
 
 import { UnifiedModalBackdrop, UnifiedModalFrame, useCloseOnEscape } from './UnifiedModalParts';
 

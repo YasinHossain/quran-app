@@ -9,7 +9,7 @@ interface HeaderVisibilityState {
 
 const HeaderVisibilityContext = createContext<HeaderVisibilityState>({
   isHidden: false,
-  setScrollContainer: () => { },
+  setScrollContainer: () => {},
 });
 
 export const HeaderVisibilityProvider = ({
@@ -22,7 +22,7 @@ export const HeaderVisibilityProvider = ({
   const pathname = usePathname();
 
   // Dummy setter for backward compatibility (no longer needed with window scrolling)
-  const setScrollContainer = (): void => { };
+  const setScrollContainer = (): void => {};
 
   useEffect(() => {
     // Reset state on every page navigation

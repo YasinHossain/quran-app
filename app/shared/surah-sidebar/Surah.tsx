@@ -90,13 +90,7 @@ export const Surah = ({
       });
       // Navigation is handled by the Link component's href - no router.push needed
     },
-    [
-      onClose,
-      setSelectedSurahId,
-      setSelectedPageId,
-      setSelectedJuzId,
-      rememberScroll,
-    ]
+    [onClose, setSelectedSurahId, setSelectedPageId, setSelectedJuzId, rememberScroll]
   );
 
   return (
