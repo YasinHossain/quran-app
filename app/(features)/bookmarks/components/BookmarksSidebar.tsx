@@ -18,6 +18,7 @@ interface BookmarksSidebarProps {
   showNavigation?: boolean;
   isOpen?: boolean;
   onClose?: (() => void) | undefined;
+  className?: string;
 }
 
 export const BookmarksSidebar = ({
@@ -30,6 +31,7 @@ export const BookmarksSidebar = ({
   showNavigation,
   isOpen,
   onClose,
+  className,
 }: BookmarksSidebarProps): React.JSX.Element => {
   const contentProps = buildBookmarksContentProps({
     activeSection,
@@ -38,6 +40,7 @@ export const BookmarksSidebar = ({
     childrenContainerClassName,
     childrenContentClassName,
     showNavigation,
+    onClose,
   });
   const renderedContent = <BookmarksContent {...contentProps}>{children}</BookmarksContent>;
 
@@ -52,7 +55,9 @@ export const BookmarksSidebar = ({
       isOpen={isOpen}
       onClose={onClose}
       position="left"
+      desktopBreakpoint="xl"
       aria-label="Bookmarks navigation"
+      {...(className ? { className } : {})}
     >
       {renderedContent}
     </BaseSidebar>
@@ -66,6 +71,7 @@ const buildBookmarksContentProps = ({
   childrenContainerClassName,
   childrenContentClassName,
   showNavigation,
+  onClose,
 }: {
   activeSection: SectionId;
   onSectionChange?: BookmarksSidebarProps['onSectionChange'];
@@ -73,6 +79,7 @@ const buildBookmarksContentProps = ({
   childrenContainerClassName?: string | undefined;
   childrenContentClassName?: string | undefined;
   showNavigation?: boolean | undefined;
+  onClose?: (() => void) | undefined;
 }): React.ComponentProps<typeof BookmarksContent> => {
   const contentProps: React.ComponentProps<typeof BookmarksContent> = {
     activeSection,
@@ -90,6 +97,10 @@ const buildBookmarksContentProps = ({
 
   if (showNavigation !== undefined) {
     contentProps.showNavigation = showNavigation;
+  }
+
+  if (onClose !== undefined) {
+    contentProps.onClose = onClose;
   }
 
   return contentProps;

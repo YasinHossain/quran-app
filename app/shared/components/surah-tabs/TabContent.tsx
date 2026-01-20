@@ -21,6 +21,7 @@ interface TabContentProps {
   rememberScroll: (tab: TabKey) => void;
   isTafsirPath: boolean;
   isMushafMode: boolean;
+  onClose?: (() => void) | undefined;
 }
 
 // Adapt dynamically loaded components to accept TabContentProps at call sites

@@ -21,11 +21,7 @@ interface UseTafsirSelectionReturn {
   orderedSelection: number[];
   handleSelectionToggle: (id: number) => boolean;
   showLimitWarning: boolean;
-  handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
-  handleDrop: (e: React.DragEvent<HTMLDivElement>, targetId: number) => void;
-  handleDragEnd: () => void;
-  draggedId: number | null;
+  setSelections: (ids: number[]) => void;
   handleReset: () => void;
 }
 
@@ -41,11 +37,7 @@ function composeSelectionReturn(params: {
   orderedSelection: number[];
   handleSelectionToggle: (id: number) => boolean;
   showLimitWarning: boolean;
-  handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
-  handleDrop: (e: React.DragEvent<HTMLDivElement>, targetId: number) => void;
-  handleDragEnd: () => void;
-  draggedId: number | null;
+  setSelections: (ids: number[]) => void;
   handleReset: () => void;
 }): UseTafsirSelectionReturn {
   return { ...params } as const;
@@ -126,7 +118,19 @@ export const useTafsirSelection = (domainTafsirs: Tafsir[]): UseTafsirSelectionR
     handleSelectionToggle,
     showLimitWarning,
     handleReset,
-    // expose the rest from selectable resources
-    ...rest,
+    setSelections: rest.setSelections,
+    // expose the relevant parts from selectable resources manually to avoid TS errors
+    // about unused drag props if we spread rest and the interface is strict
+    // But since rest contains drag props and our interface doesn't, we can just spread it if we want functionality
+    // but here we are cleaning up. So we pick what we need.
+    // Actually, spreading rest is dangerous if we want to be strict.
+    // Let's manually pick what we need from rest.
+    searchTerm: rest.searchTerm,
+    setSearchTerm: rest.setSearchTerm,
+    languages: rest.languages,
+    activeFilter: rest.activeFilter,
+    setActiveFilter: rest.setActiveFilter,
+    selectedIds: rest.selectedIds,
+    orderedSelection: rest.orderedSelection,
   });
 };

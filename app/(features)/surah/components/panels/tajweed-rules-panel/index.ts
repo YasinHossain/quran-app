@@ -1,0 +1,1 @@
+export { TajweedRulesPanel } from './TajweedRulesPanel';

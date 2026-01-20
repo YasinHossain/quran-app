@@ -48,7 +48,9 @@ const CardTitle = memo(function CardTitle({
 }: CardTitleProps): React.JSX.Element {
   const fontClass = titleWeight === 'bold' ? 'font-bold' : 'font-semibold';
 
-  return <p className={`${fontClass} ${buildTextClasses('primary', isActive)}`}>{title}</p>;
+  return (
+    <p className={`${fontClass} ${buildTextClasses('primary', isActive)} truncate`}>{title}</p>
+  );
 });
 
 interface CardSubtitleProps {
@@ -60,7 +62,11 @@ const CardSubtitle = memo(function CardSubtitle({
   subtitle,
   isActive,
 }: CardSubtitleProps): React.JSX.Element {
-  return <p className={buildTextClasses('secondary', isActive)}>{subtitle}</p>;
+  return (
+    <p className={`${buildTextClasses('secondary', isActive)} truncate whitespace-nowrap`}>
+      {subtitle}
+    </p>
+  );
 });
 
 interface CardArabicTextProps {
@@ -101,7 +107,7 @@ export const StandardNavigationCard = memo(function StandardNavigationCard({
   content,
   onNavigate,
   isActive = false,
-  className = 'items-center ml-2',
+  className = 'items-center w-full',
   ...props
 }: StandardNavigationCardProps): React.JSX.Element {
   const { id, showBadge = true } = content;

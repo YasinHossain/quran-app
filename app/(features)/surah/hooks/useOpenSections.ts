@@ -28,16 +28,9 @@ export const useOpenSections = (
 
   const toggleSection = (sectionId: string): void => {
     setOpenSections((prev) => {
-      let newState: string[];
-      if (prev.includes(sectionId)) {
-        newState = prev.filter((id) => id !== sectionId);
-      } else {
-        if (prev.length >= 2) {
-          newState = [...prev.slice(-1), sectionId];
-        } else {
-          newState = [...prev, sectionId];
-        }
-      }
+      const newState = prev.includes(sectionId)
+        ? prev.filter((id) => id !== sectionId)
+        : [...prev, sectionId];
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
       } catch (error) {

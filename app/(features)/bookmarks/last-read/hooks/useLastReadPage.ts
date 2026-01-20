@@ -10,11 +10,12 @@ export interface UseLastReadPageReturn {
   lastRead: LastReadMap;
   chapters: Chapter[];
   handleSectionChange: (section: SectionId) => void;
+  removeLastRead: (surahId: string) => void;
 }
 
 export const useLastReadPage = (): UseLastReadPageReturn => {
   const router = useRouter();
-  const { lastRead, chapters } = useBookmarks();
+  const { lastRead, chapters, removeLastRead } = useBookmarks();
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -25,7 +26,7 @@ export const useLastReadPage = (): UseLastReadPageReturn => {
 
   const handleSectionChange = (section: SectionId): void => {
     if (section === 'bookmarks') {
-      router.push('/bookmarks');
+      router.push('/bookmarks/folders');
     } else if (section === 'pinned') {
       router.push('/bookmarks/pinned');
     } else if (section === 'planner') {
@@ -39,5 +40,6 @@ export const useLastReadPage = (): UseLastReadPageReturn => {
     lastRead,
     chapters,
     handleSectionChange,
+    removeLastRead,
   };
 };

@@ -28,9 +28,10 @@ export const SurahListSidebar = memo(function SurahListSidebar({
       isOpen={isSurahListOpen}
       onClose={() => setSurahListOpen(false)}
       position="left"
+      desktopBreakpoint="xl"
       aria-label="Surah navigation"
     >
-      <SurahListContent chapters={chapters} />
+      <SurahListContent chapters={chapters} onClose={() => setSurahListOpen(false)} />
     </BaseSidebar>
   );
 });

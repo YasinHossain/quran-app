@@ -17,6 +17,8 @@ export interface FetchVersesOptions {
   page?: number;
   perPage?: number;
   wordLang?: LanguageCode;
+  /** When true, fetches code_v2 and page_number fields for Tajweed V4 font rendering */
+  tajweed?: boolean;
 }
 
 /**
@@ -34,9 +36,15 @@ export async function fetchVerses({
   page = 1,
   perPage = 20,
   wordLang = 'en',
+  tajweed = false,
 }: FetchVersesOptions): Promise<PaginatedVerses> {
   const translationIdsArray = Array.isArray(translationIds) ? translationIds : [translationIds];
   const translationParam = translationIdsArray.join(',');
+
+  // Include code_v2 and page_number when tajweed is enabled for V4 font rendering
+  const wordFields = tajweed
+    ? 'text_uthmani,text_indopak,code_v2,page_number'
+    : 'text_uthmani,text_indopak';
 
   const data = await apiFetch<{
     verses: ApiVerse[];
@@ -48,9 +56,10 @@ export async function fetchVerses({
       language: wordLang,
       words: 'true',
       word_translation_language: wordLang,
-      word_fields: 'text_uthmani',
+      word_fields: wordFields,
       translations: translationParam,
-      fields: 'text_uthmani,audio',
+      fields: 'text_uthmani,text_indopak,audio',
+      translation_fields: 'resource_name',
       per_page: perPage.toString(),
       page: page.toString(),
     },

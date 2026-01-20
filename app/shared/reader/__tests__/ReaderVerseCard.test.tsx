@@ -1,6 +1,6 @@
+import { defaultSettings } from '@/app/providers/settingsStorage';
 import { ReaderVerseCard } from '@/app/shared/reader';
 import { renderWithProviders, screen, waitFor } from '@/app/testUtils/renderWithProviders';
-import { defaultSettings } from '@/app/providers/settingsStorage';
 
 import type { Verse } from '@/types';
 
@@ -69,7 +69,7 @@ describe('ReaderVerseCard', () => {
       verse_key: '1:2',
       translations: [
         {
-          resource_id: 21,
+          resource_id: 20,
           text: '<script>alert("bad")</script>Safe content',
         },
       ],

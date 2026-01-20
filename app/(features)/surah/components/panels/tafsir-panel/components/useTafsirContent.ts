@@ -20,11 +20,8 @@ export interface TafsirPanelContentPropsLite {
   orderedSelection: number[];
   tafsirs: TafsirResource[];
   handleSelectionToggle: (id: number) => void;
-  handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
-  handleDrop: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragEnd: () => void;
-  draggedId: number | null;
+  onReorder: (ids: number[]) => void;
+  onReset: () => void;
   languages: string[];
   activeFilter: string;
   setActiveFilter: (filter: string) => void;
@@ -34,6 +31,7 @@ export interface TafsirPanelContentPropsLite {
   scrollTabsLeft: () => void;
   scrollTabsRight: () => void;
   resourcesToRender: TafsirResource[];
+  sectionsToRender: Array<{ language: string; items: TafsirResource[] }>;
   selectedIds: Set<number>;
   listHeight: number;
   listContainerRef: React.RefObject<HTMLDivElement>;
@@ -54,11 +52,8 @@ export function useTafsirContent(props: TafsirPanelContentPropsLite): TafsirCont
     orderedSelection: props.orderedSelection,
     tafsirs: props.tafsirs,
     handleSelectionToggle: props.handleSelectionToggle,
-    handleDragStart: props.handleDragStart,
-    handleDragOver: props.handleDragOver,
-    handleDrop: props.handleDrop,
-    handleDragEnd: props.handleDragEnd,
-    draggedId: props.draggedId,
+    onReorder: props.onReorder,
+    onReset: props.onReset,
   });
 
   const tabsProps = useTafsirTabsProps({
@@ -73,6 +68,8 @@ export function useTafsirContent(props: TafsirPanelContentPropsLite): TafsirCont
   });
 
   const listProps = useTafsirListProps({
+    activeFilter: props.activeFilter,
+    sectionsToRender: props.sectionsToRender,
     resources: props.resourcesToRender,
     selectedIds: props.selectedIds,
     onToggle: props.handleSelectionToggle,

@@ -1,38 +1,68 @@
-import React from 'react';
+import { motion } from 'framer-motion';
+import React, { memo } from 'react';
 
-import { RECITERS } from '@/lib/audio/reciters';
+import { useReciters } from '@/app/shared/player/hooks/useReciters';
+import { touchClasses } from '@/lib/responsive';
+import { cn } from '@/lib/utils/cn';
 
 interface Props {
-  localReciter: string;
-  setLocalReciter: (id: string) => void;
+  localReciter: number;
+  setLocalReciter: (id: number) => void;
 }
 
-export function ReciterPanel({ localReciter, setLocalReciter }: Props): React.JSX.Element {
+export const ReciterPanel = memo(function ReciterPanel({
+  localReciter,
+  setLocalReciter,
+}: Props): React.JSX.Element {
+  const { reciters, isLoading, error } = useReciters();
+
   return (
     <div className="md:col-span-2">
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-80 overflow-auto pr-1">
-        {RECITERS.map((r) => (
-          <button
-            key={r.id}
-            onClick={() => setLocalReciter(r.id.toString())}
-            className={`flex items-center justify-between gap-3 rounded-xl border px-3 py-2 text-left transition ${
-              localReciter === r.id.toString()
-                ? 'border-accent bg-accent/10'
-                : 'border-border hover:bg-interactive'
-            }`}
-          >
-            <div className="min-w-0">
-              <div className="text-sm font-medium truncate text-foreground">{r.name}</div>
-              {r.locale && <div className="text-xs text-muted">{r.locale}</div>}
+      <div className="space-y-3">
+        {(isLoading || error) && (
+          <div>
+            <div className="text-xs text-muted">
+              {isLoading ? 'Loading reciters…' : 'Unable to load reciters.'}
             </div>
-            <div
-              className={`h-4 w-4 rounded-full border ${
-                localReciter === r.id.toString() ? 'bg-accent border-accent' : 'border-border'
-              }`}
-            />
-          </button>
-        ))}
+          </div>
+        )}
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 p-1">
+          {reciters.map((r) => {
+            const isSelected = localReciter === r.id;
+            return (
+              <motion.button
+                key={r.id}
+                onClick={() => setLocalReciter(r.id)}
+                className={cn(
+                  'group relative flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-left transition-colors duration-200',
+                  isSelected
+                    ? 'border-accent bg-accent/10'
+                    : 'border-border hover:border-accent/50 hover:bg-interactive-hover',
+                  touchClasses.target,
+                  touchClasses.focus
+                )}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm font-medium truncate text-foreground">{r.name}</div>
+                  {r.locale && <div className="text-xs text-muted truncate">{r.locale}</div>}
+                </div>
+                <div
+                  className={`flex-shrink-0 h-5 w-5 rounded-full border-2 flex items-center justify-center transition-colors duration-200 ${
+                    isSelected ? 'border-accent' : 'border-muted'
+                  }`}
+                >
+                  <div
+                    className={`h-2.5 w-2.5 rounded-full bg-accent transition-transform duration-200 ${
+                      isSelected ? 'scale-100' : 'scale-0'
+                    }`}
+                  />
+                </div>
+              </motion.button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
-}
+});

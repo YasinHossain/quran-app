@@ -21,14 +21,14 @@ export function deriveBookmarkIdentifier(bookmark: Bookmark): {
   verseIdentifier: string;
   identifierSource: IdentifierSource;
 } {
-  const asId = normaliseIdentifier(bookmark.verseId);
-  if (asId) {
-    return { verseIdentifier: asId, identifierSource: 'verseId' };
-  }
-
   const asKey = normaliseIdentifier(bookmark.verseKey);
   if (asKey) {
     return { verseIdentifier: asKey, identifierSource: 'verseKey' };
+  }
+
+  const asId = normaliseIdentifier(bookmark.verseId);
+  if (asId) {
+    return { verseIdentifier: asId, identifierSource: 'verseId' };
   }
 
   const asApiId = normaliseIdentifier(bookmark.verseApiId);

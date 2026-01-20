@@ -5,9 +5,10 @@ import React, { memo } from 'react';
 import { cn } from '@/lib/utils/cn';
 
 export const GLASS_CARD_VARIANTS = {
-  surface: 'bg-surface-glass/60',
-  primary: 'bg-surface/60',
-  input: 'bg-input-background backdrop-blur-xl bg-surface-glass/60',
+  // Using solid colors for better performance (no backdrop-blur)
+  surface: 'bg-surface-navigation border border-border/30 dark:border-border/20',
+  primary: 'bg-surface border border-border/30 dark:border-border/20',
+  input: 'bg-input-background bg-surface-navigation border border-border/30 dark:border-border/20',
 } as const;
 
 export const GLASS_CARD_SIZES = {
@@ -98,7 +99,7 @@ export const GlassCard = memo(
     ) {
       void asChild;
       const baseClasses = cn(
-        'backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300',
+        'shadow-lg hover:shadow-xl transition-all duration-300',
         animate && 'content-visibility-auto animate-fade-in-up',
         GLASS_CARD_VARIANTS[variant],
         GLASS_CARD_SIZES[size],

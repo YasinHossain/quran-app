@@ -19,11 +19,28 @@ interface RepeatState {
 export function useRepeatState({ repeatOptions, activeVerse }: Options): RepeatState {
   const [verseRepeatsLeft, setVerseRepeatsLeft] = useState(repeatOptions.repeatEach ?? 1);
   const [playRepeatsLeft, setPlayRepeatsLeft] = useState(repeatOptions.playCount ?? 1);
+  const activeVerseId = activeVerse?.id;
 
   useEffect(() => {
     setVerseRepeatsLeft(repeatOptions.repeatEach ?? 1);
     setPlayRepeatsLeft(repeatOptions.playCount ?? 1);
-  }, [activeVerse, repeatOptions.repeatEach, repeatOptions.playCount]);
+  }, [
+    repeatOptions.mode,
+    repeatOptions.playCount,
+    repeatOptions.repeatEach,
+    repeatOptions.surahId,
+    repeatOptions.start,
+    repeatOptions.end,
+    repeatOptions.verseNumber,
+  ]);
+
+  useEffect(() => {
+    if (!activeVerseId) return;
+    setVerseRepeatsLeft(repeatOptions.repeatEach ?? 1);
+    if (repeatOptions.mode === 'single') {
+      setPlayRepeatsLeft(repeatOptions.playCount ?? 1);
+    }
+  }, [activeVerseId, repeatOptions.mode, repeatOptions.repeatEach, repeatOptions.playCount]);
 
   return {
     verseRepeatsLeft,

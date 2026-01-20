@@ -4,7 +4,7 @@ import { memo } from 'react';
 
 import { TabButton } from './TabButton';
 
-type TabType = 'Surah' | 'Juz' | 'Page';
+type TabType = 'Surah' | 'Juz';
 
 interface TabConfig {
   id: TabType;
@@ -19,7 +19,6 @@ interface TabNavigationProps {
 const TAB_CONFIGS: TabConfig[] = [
   { id: 'Surah', label: 'Surah' },
   { id: 'Juz', label: 'Juz' },
-  { id: 'Page', label: 'Page' },
 ];
 
 /**
@@ -31,7 +30,7 @@ export const TabNavigation = memo(function TabNavigation({
   onTabChange,
 }: TabNavigationProps) {
   return (
-    <div className="flex items-center p-1 sm:p-2 rounded-full bg-interactive">
+    <div className="flex items-center p-1 sm:p-2 rounded-full bg-interactive flex-shrink-0">
       {TAB_CONFIGS.map((tab) => (
         <TabButton
           key={tab.id}

@@ -2,6 +2,7 @@
 
 import React from 'react';
 
+import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
 import { BookmarkIcon, PinIcon, ClockIcon, CalendarIcon } from '@/app/shared/icons';
 import { BookmarkNavigationCard } from '@/app/shared/ui/cards';
 import { cn } from '@/lib/utils/cn';
@@ -19,6 +20,7 @@ interface BookmarksContentProps {
   childrenContainerClassName?: string;
   childrenContentClassName?: string;
   showNavigation?: boolean;
+  onClose?: () => void;
 }
 
 export const BookmarksContent = ({
@@ -29,33 +31,50 @@ export const BookmarksContent = ({
   childrenContainerClassName,
   childrenContentClassName,
   showNavigation = true,
+  onClose,
 }: BookmarksContentProps): React.JSX.Element => (
-  <div
-    className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-3 touch-pan-y"
-    // Reserve scroll gutter so edge-to-edge dividers reach the sidebar edge.
-    style={{ scrollbarGutter: 'stable' }}
-  >
-    {showNavigation ? (
-      <NavigationSection activeSection={activeSection} onSectionChange={onSectionChange} />
-    ) : null}
-    <ChildrenSection
-      {...(childrenTitle !== undefined ? { title: childrenTitle } : {})}
-      {...(childrenContainerClassName !== undefined
-        ? { containerClassName: childrenContainerClassName }
-        : {})}
-      {...(childrenContentClassName !== undefined
-        ? { contentClassName: childrenContentClassName }
-        : {})}
-    >
-      {children}
-    </ChildrenSection>
+  <div className="relative flex flex-1 min-h-0 flex-col bg-background text-foreground">
+    <SidebarHeader
+      title="Bookmarks"
+      titleClassName="text-mobile-lg font-semibold text-content-primary"
+      className="xl:hidden"
+      showCloseButton
+      {...(onClose ? { onClose } : {})}
+      forceVisible
+    />
+
+    <div className="flex-1 overflow-hidden flex flex-col">
+      {showNavigation ? (
+        <div>
+          <NavigationSection activeSection={activeSection} onSectionChange={onSectionChange} />
+        </div>
+      ) : null}
+
+      <div
+        className="flex-1 min-h-0 overflow-y-auto touch-pan-y"
+        // Reserve scroll gutter so edge-to-edge dividers reach the sidebar edge.
+        style={{ scrollbarGutter: 'stable' }}
+      >
+        <ChildrenSection
+          {...(childrenTitle !== undefined ? { title: childrenTitle } : {})}
+          {...(childrenContainerClassName !== undefined
+            ? { containerClassName: childrenContainerClassName }
+            : {})}
+          {...(childrenContentClassName !== undefined
+            ? { contentClassName: childrenContentClassName }
+            : {})}
+        >
+          {children}
+        </ChildrenSection>
+      </div>
+    </div>
   </div>
 );
 
 const NAVIGATION_SECTIONS: BookmarkNavigationContent[] = [
+  { id: 'last-read', icon: ClockIcon, label: 'Recent', description: 'Last visited' },
   { id: 'bookmarks', icon: BookmarkIcon, label: 'All Bookmarks', description: 'Manage folders' },
   { id: 'pinned', icon: PinIcon, label: 'Pinned Verses', description: 'Quick access' },
-  { id: 'last-read', icon: ClockIcon, label: 'Recent', description: 'Last visited' },
   {
     id: 'planner',
     icon: CalendarIcon,
@@ -71,8 +90,8 @@ const NavigationSection = ({
   activeSection: SectionId;
   onSectionChange?: ((section: SectionId) => void) | undefined;
 }): React.JSX.Element => (
-  <nav className="mb-6">
-    <div className="space-y-2">
+  <nav className="px-2 sm:px-3 pt-2 sm:pt-2.5 pb-1.5">
+    <div className="space-y-1.5">
       {NAVIGATION_SECTIONS.map((section) => (
         <NavigationItem
           key={section.id}
@@ -117,9 +136,9 @@ const ChildrenSection = ({
   const heading = title === undefined ? 'More' : title;
 
   return (
-    <div className={cn('mt-6 pt-4 border-t border-border', containerClassName)}>
+    <div className={cn('pt-1.5 px-2 sm:px-3', containerClassName)}>
       {heading !== null ? (
-        <div className="text-xs font-semibold text-muted uppercase tracking-wider mb-3 px-2">
+        <div className="text-xs font-semibold text-muted uppercase tracking-wider mb-2 px-2">
           {heading}
         </div>
       ) : null}

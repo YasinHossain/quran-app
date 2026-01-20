@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import { Verse as VerseEntity } from '@/src/domain/entities/Verse';
 import { logger, MemoryTransport, LogLevel } from '@/src/infrastructure/monitoring';
 import { Chapter } from '@/types';

@@ -1,20 +1,34 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 
-import { MushafMain } from '@/app/(features)/surah/components/surah-view/MushafMain';
 import { SurahMain } from '@/app/(features)/surah/components/surah-view/SurahMain';
 import { SurahWorkspaceNavigation } from '@/app/(features)/surah/components/surah-view/SurahWorkspaceNavigation';
-import { useBodyOverflowHidden } from '@/app/(features)/surah/components/surah-view/useBodyOverflowHidden';
 import { useReaderMode } from '@/app/providers/ReaderModeContext';
+import { useUIState } from '@/app/providers/UIStateContext';
 import { SettingsSidebar } from '@/app/shared/reader/settings';
 import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
 import { SurahListSidebar } from '@/app/shared/SurahListSidebar';
 
+// Dynamic import for MushafMain - only loaded when user switches to reading/mushaf mode
+const MushafMain = dynamic(
+  () =>
+    import('@/app/(features)/surah/components/surah-view/MushafMain').then((mod) => mod.MushafMain),
+  {
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-pulse text-muted">Loading Mushaf view...</div>
+      </div>
+    ),
+    ssr: false,
+  }
+);
+
 import { ReaderAudioProps, WorkspaceReaderLayout } from './ReaderLayouts';
 import { useReaderView } from './useReaderView';
 
-import type { MushafResourceKind } from '@/app/(features)/surah/hooks/useMushafReadingView';
+import type { MushafResourceKind } from '@/app/(features)/surah/hooks/mushafReadingViewTypes';
 import type { LookupFn, UseVerseListingParams } from '@/app/(features)/surah/hooks/useVerseListing';
 
 type ReaderViewState = ReturnType<typeof useReaderView>;
@@ -22,33 +36,34 @@ type VerseListingState = ReaderViewState['verseListing'];
 type ReaderPanelsState = ReaderViewState['panels'];
 
 interface CreateSurahMainParams {
+  surahId?: number | undefined;
   verseListing: VerseListingState;
   emptyLabelKey?: string | undefined;
   endLabelKey?: string | undefined;
   initialVerseKey?: string | undefined;
   initialScrollNonce?: string | undefined;
+  chapterId?: number | undefined;
 }
 
 const createSurahMain = ({
+  surahId,
   verseListing,
   emptyLabelKey,
   endLabelKey,
   initialVerseKey,
   initialScrollNonce,
+  chapterId,
 }: CreateSurahMainParams): React.ReactNode => (
   <SurahMain
     // Force remount not only when the target verse changes, but also when a new navigation
     // intent is fired for the same verse (via nav sequence query param)
     key={`${initialVerseKey ?? 'no-initial-verse'}:${initialScrollNonce ?? '0'}`}
-    verses={verseListing.verses}
-    isLoading={verseListing.isLoading}
-    error={verseListing.error}
-    loadMoreRef={verseListing.loadMoreRef}
-    isValidating={verseListing.isValidating}
-    isReachingEnd={verseListing.isReachingEnd}
+    surahId={surahId}
+    verseListing={verseListing}
     {...(emptyLabelKey ? { emptyLabelKey } : {})}
     {...(endLabelKey ? { endLabelKey } : {})}
     {...(initialVerseKey ? { initialVerseKey } : {})}
+    {...(typeof chapterId === 'number' ? { chapterId } : {})}
   />
 );
 
@@ -126,6 +141,8 @@ interface ReaderShellProps extends Pick<UseVerseListingParams, 'initialVerses'> 
   lookup: LookupFn;
   emptyLabelKey?: string;
   endLabelKey?: string;
+  totalVerses?: number | undefined;
+  initialVersesParams?: UseVerseListingParams['initialVersesParams'];
   initialVerseNumber?: number | undefined;
   initialVerseKey?: string | undefined;
   initialScrollNonce?: string | undefined;
@@ -139,21 +156,25 @@ export function ReaderShell({
   initialVerses,
   emptyLabelKey,
   endLabelKey,
+  totalVerses,
+  initialVersesParams,
   initialVerseNumber,
   initialVerseKey,
   initialScrollNonce,
   initialMode = 'verse',
 }: ReaderShellProps): React.JSX.Element {
-  useBodyOverflowHidden();
   const { mode, setMode, enableReaderMode, isReaderModeAvailable } = useReaderMode();
+  const { setSettingsOpen } = useUIState();
   const readerView = useReaderView({
     resourceId,
     resourceKind,
     lookup,
     initialVerses,
+    ...(typeof totalVerses === 'number' ? { totalVerses } : {}),
+    ...(initialVersesParams ? { initialVersesParams } : {}),
     ...(typeof initialVerseNumber === 'number' ? { initialVerseNumber } : {}),
   });
-  const { verseListing, panels, mushafView } = readerView;
+  const { verseListing, panels, mushafParams } = readerView;
   const initialModeRef = useRef(initialMode);
 
   useEffect(() => {
@@ -165,23 +186,7 @@ export function ReaderShell({
     }
   }, [enableReaderMode, isReaderModeAvailable, mode]);
 
-  const handleReadingPanelOpen = useCallback(() => {
-    setMode('mushaf');
-  }, [setMode]);
-
-  const handleTranslationTabOpen = useCallback(() => {
-    setMode('verse');
-  }, [setMode]);
-
-  const surahMain = createSurahMain({
-    verseListing,
-    ...(typeof emptyLabelKey === 'string' ? { emptyLabelKey } : {}),
-    ...(typeof endLabelKey === 'string' ? { endLabelKey } : {}),
-    ...(typeof initialVerseKey === 'string' ? { initialVerseKey } : {}),
-    ...(typeof initialScrollNonce === 'string' ? { initialScrollNonce } : {}),
-  });
-
-  const mushafChapterId = useMemo(() => {
+  const chapterId = useMemo(() => {
     if (resourceKind === 'surah') {
       const parsed = Number.parseInt(resourceId, 10);
       if (Number.isFinite(parsed)) {
@@ -191,17 +196,53 @@ export function ReaderShell({
     return verseListing.verses[0]?.chapter_id ?? initialVerses?.[0]?.chapter_id ?? undefined;
   }, [resourceKind, resourceId, verseListing.verses, initialVerses]);
 
+  const handleReadingPanelOpen = useCallback(() => {
+    setMode('mushaf');
+    setSettingsOpen(false);
+  }, [setMode, setSettingsOpen]);
+
+  const handleTranslationTabOpen = useCallback(() => {
+    setMode('verse');
+    setSettingsOpen(false);
+  }, [setMode, setSettingsOpen]);
+
+  const surahId = useMemo(() => {
+    if (resourceKind === 'surah') {
+      const parsed = Number.parseInt(resourceId, 10);
+      if (Number.isFinite(parsed)) {
+        return parsed;
+      }
+    }
+    return verseListing.verses[0]?.chapter_id ?? initialVerses?.[0]?.chapter_id ?? undefined;
+  }, [resourceKind, resourceId, verseListing.verses, initialVerses]);
+
+  const surahMain = createSurahMain({
+    surahId,
+    verseListing,
+    ...(typeof emptyLabelKey === 'string' ? { emptyLabelKey } : {}),
+    ...(typeof endLabelKey === 'string' ? { endLabelKey } : {}),
+    ...(typeof initialVerseKey === 'string' ? { initialVerseKey } : {}),
+    ...(typeof initialScrollNonce === 'string' ? { initialScrollNonce } : {}),
+    ...(resourceKind === 'surah' && typeof chapterId === 'number' ? { chapterId } : {}),
+  });
+
   const mushafMain = (
     <MushafMain
       mushafName={panels.selectedMushafName ?? 'Mushaf view'}
       mushafId={panels.selectedMushafId}
-      pages={mushafView.pages}
-      chapterId={mushafChapterId}
-      isLoading={mushafView.isLoading}
-      isLoadingMore={mushafView.isLoadingMore}
-      hasMore={mushafView.hasMore}
-      onLoadMore={mushafView.loadMore}
-      error={mushafView.error}
+      resourceId={resourceId}
+      resourceKind={resourceKind}
+      {...(typeof mushafParams.initialPageNumber === 'number'
+        ? { initialPageNumber: mushafParams.initialPageNumber }
+        : {})}
+      {...(typeof initialVerseKey === 'string' ? { initialVerseKey } : {})}
+      chapterId={chapterId}
+      {...(typeof mushafParams.juzNumber === 'number' ? { juzNumber: mushafParams.juzNumber } : {})}
+      {...(typeof mushafParams.reciterId === 'number' ? { reciterId: mushafParams.reciterId } : {})}
+      {...(mushafParams.wordByWordLocale
+        ? { wordByWordLocale: mushafParams.wordByWordLocale }
+        : {})}
+      {...(mushafParams.translationIds ? { translationIds: mushafParams.translationIds } : {})}
       endLabelKey={endLabelKey}
     />
   );

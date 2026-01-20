@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 
 import { SlidersIcon } from '@/app/shared/icons';
-import { Button } from '@/app/shared/ui/Button';
-import { iconClasses } from '@/lib/responsive';
 
 import { PlaybackOptionsModal } from './PlaybackOptionsModal';
 import { SpeedControl } from './SpeedControl';
@@ -17,18 +15,16 @@ export function PlayerOptions(): React.JSX.Element {
       <div className="hidden sm:block">
         <VolumeControl />
       </div>
-      <Button
-        variant="icon-round"
-        size="icon-round"
-        className="shrink-0"
+      <button
+        className="p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center shrink-0"
         aria-label="Options"
         onClick={() => {
           setActiveTab('reciter');
           setOpen(true);
         }}
       >
-        <SlidersIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
-      </Button>
+        <SlidersIcon size={18} />
+      </button>
       <PlaybackOptionsModal
         open={open}
         onClose={() => setOpen(false)}

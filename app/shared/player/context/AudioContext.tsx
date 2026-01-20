@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useMemo, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { usePersistedAudioSettings } from '@/app/shared/player/hooks/usePersistedAudioSettings';
 import { usePlayerVisibility } from '@/app/shared/player/hooks/usePlayerVisibility';
@@ -21,21 +21,22 @@ interface AudioContextType {
   repeatOptions: RepeatOptions;
   setRepeatOptions: React.Dispatch<React.SetStateAction<RepeatOptions>>;
   reciter: Reciter;
-  setReciter: React.Dispatch<React.SetStateAction<Reciter>>;
+  setReciterId: (id: number) => void;
   volume: number;
   setVolume: React.Dispatch<React.SetStateAction<number>>;
   playbackRate: number;
   setPlaybackRate: React.Dispatch<React.SetStateAction<number>>;
   isPlayerVisible: boolean;
+  playbackSessionId: number;
   openPlayer: () => void;
   closePlayer: () => void;
 }
 
-const AudioContext = createContext<AudioContextType | undefined>(undefined);
+export const AudioContext = createContext<AudioContextType | undefined>(undefined);
 
 function useAudioCoreState(): Omit<
   AudioContextType,
-  'isPlayerVisible' | 'openPlayer' | 'closePlayer'
+  'isPlayerVisible' | 'playbackSessionId' | 'openPlayer' | 'closePlayer'
 > {
   const [playingId, setPlayingId] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -43,7 +44,7 @@ function useAudioCoreState(): Omit<
   const [activeVerse, setActiveVerse] = useState<Verse | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { repeatOptions, setRepeatOptions } = useRepeatState();
-  const { reciter, setReciter, volume, setVolume, playbackRate, setPlaybackRate } =
+  const { reciter, setReciterId, volume, setVolume, playbackRate, setPlaybackRate } =
     usePersistedAudioSettings();
   return {
     playingId,
@@ -58,7 +59,7 @@ function useAudioCoreState(): Omit<
     repeatOptions,
     setRepeatOptions,
     reciter,
-    setReciter,
+    setReciterId,
     volume,
     setVolume,
     playbackRate,
@@ -68,16 +69,30 @@ function useAudioCoreState(): Omit<
 
 function useAudioContextValue(): AudioContextType {
   const core = useAudioCoreState();
-  const { isPlayerVisible, openPlayer, closePlayer } = usePlayerVisibility({
+  const { isPlayerVisible, playbackSessionId, openPlayer, closePlayer } = usePlayerVisibility({
     audioRef: core.audioRef,
     setIsPlaying: core.setIsPlaying,
     setPlayingId: core.setPlayingId,
     setActiveVerse: core.setActiveVerse,
   });
+
+  const { isPlaying, activeVerse, setPlayingId } = core;
+
+  // Keep the playing id in sync with the active verse while playing.
+  useEffect(() => {
+    if (isPlaying && activeVerse) {
+      setPlayingId(activeVerse.id);
+      return;
+    }
+    if (!isPlaying) {
+      setPlayingId(null);
+    }
+  }, [isPlaying, activeVerse, setPlayingId]);
+
   // memoize the full context value including controls
   return useMemo(
-    () => ({ ...core, isPlayerVisible, openPlayer, closePlayer }),
-    [core, isPlayerVisible, openPlayer, closePlayer]
+    () => ({ ...core, isPlayerVisible, playbackSessionId, openPlayer, closePlayer }),
+    [core, isPlayerVisible, playbackSessionId, openPlayer, closePlayer]
   );
 }
 

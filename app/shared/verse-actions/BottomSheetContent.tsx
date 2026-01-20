@@ -14,9 +14,16 @@ interface BottomSheetContentProps {
 }
 
 const sheetVariants = {
-  hidden: { y: '100%', opacity: 0 },
-  visible: { y: 0, opacity: 1 },
-  exit: { y: '100%', opacity: 0 },
+  hidden: { y: '100%' },
+  visible: { y: 0 },
+  exit: { y: '100%' },
+};
+
+// Fast, smooth easing curve - similar to iOS sheet animations
+const sheetTransition = {
+  type: 'tween' as const,
+  ease: [0.32, 0.72, 0, 1] as [number, number, number, number], // Snappy entrance with natural deceleration
+  duration: 0.18, // Faster for more responsive feel
 };
 
 export const BottomSheetContent = memo(function BottomSheetContent({
@@ -30,12 +37,10 @@ export const BottomSheetContent = memo(function BottomSheetContent({
       initial="hidden"
       animate="visible"
       exit="exit"
-      transition={{ type: 'spring', stiffness: 500, damping: 40 }}
+      transition={sheetTransition}
+      style={{ willChange: 'transform' }}
       className="fixed bottom-0 left-0 right-0 bg-surface rounded-t-3xl shadow-2xl z-modal touch-pan-y pb-safe flex flex-col max-h-[90dvh]"
     >
-      <div className="flex justify-center pt-4 pb-2">
-        <div className="w-10 h-1 bg-border rounded-full" />
-      </div>
       <BottomSheetHeader verseKey={verseKey} onClose={onClose} />
       <ActionList actions={actions} onClose={onClose} />
     </motion.div>

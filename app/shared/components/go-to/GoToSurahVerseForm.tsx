@@ -9,14 +9,25 @@ import {
   useEffect,
   useMemo,
   useState,
-  useId,
 } from 'react';
 
-import { SurahSelect, type SurahOption } from '@/app/shared/components/go-to/SurahSelect';
+import { SurahVerseSelector } from '@/app/shared/components/SurahVerseSelector';
+import { BookOpenIcon, HashIcon } from '@/app/shared/icons';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
+import { Button } from '@/app/shared/ui/Button';
+
+// Search suggestion examples - just labels to fill the search box
+const SEARCH_SUGGESTIONS = [
+  { label: 'Juz 1', icon: 'juz' },
+  { label: 'Page 1', icon: 'page' },
+  { label: 'Surah Yasin', icon: 'surah' },
+  { label: '2:255', icon: 'ayah' },
+];
 
 interface GoToSurahVerseFormProps {
   onNavigate: (surahId: number, verse?: number) => void;
+  /** Called when user clicks a search suggestion - fills the search box */
+  onSearchSuggestion?: (query: string) => void;
   afterNavigate?: () => void;
   className?: string;
   title?: string;
@@ -26,144 +37,124 @@ interface GoToSurahVerseFormProps {
 
 export const GoToSurahVerseForm = memo(function GoToSurahVerseForm({
   onNavigate,
+  onSearchSuggestion,
   afterNavigate,
   className,
   title = 'Search or Go To',
   subtitle,
   buttonLabel = 'Go',
 }: GoToSurahVerseFormProps): ReactElement {
-  const [selectedSurah, setSelectedSurah] = useState('');
-  const [verse, setVerse] = useState('');
+  const [selectedSurah, setSelectedSurah] = useState<number | undefined>(undefined);
+  const [verse, setVerse] = useState<number | undefined>(undefined);
   const { chapters, isLoading } = useSurahNavigationData();
-  const formInstanceId = useId();
-  const surahInputId = `${formInstanceId}-surah`;
-  const verseInputId = `${formInstanceId}-verse`;
 
-  const surahOptions: SurahOption[] = useMemo(
-    () =>
-      chapters.map((chapter) => ({
-        value: String(chapter.id),
-        label: `${String(chapter.id).padStart(3, '0')} • ${chapter.name_simple}`,
-      })),
-    [chapters]
-  );
-
-  const selectedChapter = useMemo(
-    () => chapters.find((chapter) => String(chapter.id) === selectedSurah),
+  const activeChapter = useMemo(
+    () => (selectedSurah ? chapters.find((c) => c.id === selectedSurah) : undefined),
     [chapters, selectedSurah]
   );
 
-  const verseOptions = useMemo(() => {
-    if (!selectedChapter?.verses_count) return [];
-    return Array.from({ length: selectedChapter.verses_count }, (_, index) => String(index + 1));
-  }, [selectedChapter]);
-
-  const verseSelectOptions: SurahOption[] = useMemo(
-    () => verseOptions.map((value) => ({ value, label: value })),
-    [verseOptions]
-  );
-
+  // Reset verse if surah changes or if invalid
   useEffect(() => {
     if (!selectedSurah) {
-      setVerse('');
+      setVerse(undefined);
       return;
     }
-    if (!verseOptions.length) {
-      setVerse('');
-      return;
+    if (activeChapter?.verses_count && verse && verse > activeChapter.verses_count) {
+      setVerse(activeChapter.verses_count);
     }
-    if (verse && !verseOptions.includes(verse)) {
-      setVerse(verseOptions[verseOptions.length - 1] ?? '');
-    }
-  }, [selectedSurah, verseOptions, verse]);
-
-  const clampVerse = useCallback(
-    (rawVerse: string, surahId: string): number | undefined => {
-      const trimmed = rawVerse.trim();
-      if (!trimmed) return undefined;
-      const parsed = Number.parseInt(trimmed, 10);
-      if (!Number.isFinite(parsed)) return undefined;
-      const minClamped = Math.max(parsed, 1);
-      const chapter = chapters.find((c) => String(c.id) === surahId);
-      if (chapter?.verses_count) {
-        return Math.min(minClamped, chapter.verses_count);
-      }
-      return minClamped;
-    },
-    [chapters]
-  );
+  }, [selectedSurah, activeChapter, verse]);
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>): void => {
       event.preventDefault();
       if (!selectedSurah) return;
-      const surahId = Number.parseInt(selectedSurah, 10);
-      if (!Number.isFinite(surahId)) return;
-      const verseNumber = clampVerse(verse, selectedSurah);
-      onNavigate(surahId, verseNumber);
+      onNavigate(selectedSurah, verse);
       afterNavigate?.();
     },
-    [afterNavigate, clampVerse, onNavigate, selectedSurah, verse]
+    [afterNavigate, onNavigate, selectedSurah, verse]
   );
+
+  const handleVerseComplete = useCallback(
+    (verseNum: number) => {
+      if (selectedSurah) {
+        onNavigate(selectedSurah, verseNum);
+        afterNavigate?.();
+      }
+    },
+    [afterNavigate, onNavigate, selectedSurah]
+  );
+
+  // Get icon for suggestion type
+  const getSuggestionIcon = (iconType: string): ReactElement => {
+    switch (iconType) {
+      case 'juz':
+        return <span className="text-[10px] font-bold text-accent">J</span>;
+      case 'page':
+        return <span className="text-[10px] font-bold text-accent">P</span>;
+      case 'surah':
+        return <BookOpenIcon size={14} className="text-accent" />;
+      case 'ayah':
+        return <HashIcon size={14} className="text-accent" />;
+      default:
+        return <BookOpenIcon size={14} className="text-accent" />;
+    }
+  };
 
   const disabled = !selectedSurah || isLoading;
   const subtitleText = subtitle ?? (isLoading ? 'Loading surahs…' : undefined);
 
   return (
-    <form className={clsx('p-3 space-y-3', className)} onSubmit={handleSubmit}>
+    <form
+      className={clsx('pt-4 px-6 pb-6 sm:pt-5 sm:px-8 sm:pb-8 space-y-4 text-left', className)}
+      onSubmit={handleSubmit}
+    >
       <div className="flex items-center justify-between gap-3">
-        <div>
-          <div className="text-sm font-medium text-foreground">{title}</div>
-          {subtitleText ? <div className="text-xs text-muted">{subtitleText}</div> : null}
+        <div className="space-y-1 min-w-0">
+          <div className="text-lg font-semibold text-foreground leading-tight">{title}</div>
+          {subtitleText ? <div className="text-sm text-muted">{subtitleText}</div> : null}
         </div>
-        <button
+        <Button
           type="submit"
-          className="shrink-0 px-4 py-2 rounded-xl bg-accent text-on-accent text-sm font-medium transition-colors hover:bg-accent-hover disabled:opacity-60 disabled:cursor-not-allowed"
           disabled={disabled}
+          size="sm"
+          className="rounded-lg px-6 min-h-0 h-8 flex-shrink-0"
         >
           {buttonLabel}
-        </button>
+        </Button>
       </div>
 
-      <div className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-3">
-        <div className="w-full min-w-0">
-          <label className="block text-xs text-muted mb-1" htmlFor={surahInputId}>
-            Surah
-          </label>
-          <SurahSelect
-            inputId={surahInputId}
-            value={selectedSurah}
-            onChange={setSelectedSurah}
-            options={surahOptions}
-            placeholder={isLoading ? 'Loading surahs…' : 'Select a Surah'}
-            disabled={isLoading}
-            className="w-full"
-          />
-        </div>
+      <SurahVerseSelector
+        chapters={chapters}
+        isLoading={isLoading}
+        selectedSurah={selectedSurah}
+        selectedVerse={verse}
+        onSurahChange={setSelectedSurah}
+        onVerseChange={setVerse}
+        onVerseSelectionComplete={handleVerseComplete}
+        verseLabel="Verse"
+      />
 
-        <div className="w-full min-w-0">
-          <label className="block text-xs text-muted mb-1" htmlFor={verseInputId}>
-            Verse (optional)
-          </label>
-          <SurahSelect
-            inputId={verseInputId}
-            value={verse}
-            onChange={setVerse}
-            options={verseSelectOptions}
-            placeholder={
-              !selectedSurah
-                ? 'Select a surah first'
-                : verseOptions.length
-                  ? 'Select a verse'
-                  : 'Loading verses…'
-            }
-            disabled={!selectedSurah || !verseOptions.length || isLoading}
-            clearable
-            clearLabel="Clear verse selection"
-            className="w-full"
-          />
+      {/* Search Suggestions - clicking fills the search box */}
+      {onSearchSuggestion && (
+        <div className="pt-3 border-t border-border/50">
+          <div className="text-xs font-medium text-muted mb-2">Or try searching</div>
+          <div className="grid grid-cols-2 gap-1.5">
+            {SEARCH_SUGGESTIONS.map((suggestion) => (
+              <button
+                key={suggestion.label}
+                type="button"
+                onClick={() => onSearchSuggestion(suggestion.label)}
+                className="flex items-center gap-2 px-2.5 py-2 rounded-lg text-left transition-colors hover:bg-interactive/60 group"
+              >
+                <div className="w-5 h-5 rounded bg-accent/10 flex items-center justify-center flex-shrink-0 group-hover:bg-accent/20 transition-colors">
+                  {getSuggestionIcon(suggestion.icon)}
+                </div>
+                <span className="text-sm text-foreground truncate">{suggestion.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </form>
   );
 });

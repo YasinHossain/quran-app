@@ -7,10 +7,16 @@ The following fonts are distributed with this application. Each font is provided
 The following fonts are licensed under the SIL Open Font License 1.1:
 
 - **Amiri.ttf** — Source: [Amiri Font Project](http://www.amirifont.org)
+- **AmiriQuran.ttf** — Source: [Amiri Font Project](http://www.amirifont.org)
 - **Scheherazade-New.ttf** — Source: [SIL](https://software.sil.org/scheherazade)
 - **Lateef.ttf** — Source: [SIL](https://software.sil.org/lateef)
 - **Noto-Naskh-Arabic.ttf** — Source: [Google Noto Fonts](http://www.google.com/get/noto/)
 - **Noto Nastaliq Urdu.ttf** — Source: [Google Noto Fonts](http://www.google.com/get/noto/)
+- **NotoSansArabic-\*.woff2** — Source: [Google Noto Fonts](http://www.google.com/get/noto/)
+- **NotoSansBengali-\*.woff2** — Source: [Google Noto Fonts](http://www.google.com/get/noto/)
+- **Inter-\*.woff2** — Source: [Inter Font by Rasmus Andersson](https://rsms.me/inter/)
+- **CrimsonText-\*.woff2** — Source: [Crimson Text](https://github.com/skosch/Crimson)
+- **LibreBaskerville-\*.woff2** — Source: [Libre Baskerville by Impallari Type](https://github.com/impallari/Libre-Baskerville)
 
 ```
 -----------------------------------------------------------
@@ -118,6 +124,10 @@ Permission is hereby granted, Free of Cost, to any person obtaining a copy of th
 2.    The Font Software is provided "AS IS", and KFGQPC makes no warranties as to its use or performance, fitness for a particular purpose. KFGQPC does not and cannot warrant the performance or results you may obtain by using the Font. In no event shall KFGQPC be liable for any Claims, Damages or other Liability, including any Damages, arising from, out of the use or inability to use the Font or from other dealings in the Font.
 ```
 
+## UthmanicHafs1Ver18.ttf and UthmanicHafs1Ver18.woff2
+
+Source: King Fahd Glorious Quran Printing Complex (KFGQPC). The font metadata contains the same Electronic End-User License Agreement as the `KFGQPC-Uthman-Taha` fonts above.
+
 ## Quran.com King Fahad Complex glyph fonts (public/fonts/quran/hafs/v1/woff2)
 
 Source: [Quran.com](https://github.com/quran/quran.com-frontend-next) — extracted from the King Fahd Glorious Quran Printing Complex per-page glyph set used for the QCF V1 Mushaf.
@@ -143,4 +153,20 @@ The Font is provided free of cost from NooreHidayat website (www.noorehidayat.or
 NooreHidayat
 +92 321 5027 658
 Website: www.noorehidayat.org
+```
+
+## Noor-e-Huda.ttf
+
+Source: [NooreHidayat](http://www.noorehidayat.org/) — distributed with the same NooreHidayat End User License Agreement as `Noor-e-Hira.ttf` above.
+
+## Noor-e-Hidayat.ttf
+
+Source: [NooreHidayat](http://www.noorehidayat.org/) — the font metadata does not include license text; treat it as copyrighted unless you have permission to redistribute.
+
+## me_quran.ttf
+
+Copyright notice from the font metadata:
+
+```
+Typeface and data © 2005, Meor Ridzuan. Free for non commercial use. Other use, contact meory@yahoo.com
 ```

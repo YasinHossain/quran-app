@@ -1,13 +1,13 @@
 import { test, expect } from '@playwright/test';
 
-import { testResponsiveDesign } from './utils';
+import { gotoApp, testResponsiveDesign } from './utils';
 
 test.describe('📱 Mobile-First Responsive Design', () => {
   test('All components adapt correctly across breakpoints', async ({ page }) => {
     const testUrls = ['/surah/1', '/bookmarks', '/search', '/tafsir'];
 
     for (const url of testUrls) {
-      await page.goto(url);
+      await gotoApp(page, url);
       await testResponsiveDesign(page, 'body');
 
       // Verify no horizontal scroll on mobile
@@ -21,7 +21,7 @@ test.describe('📱 Mobile-First Responsive Design', () => {
 
   test('Touch interactions work properly on mobile', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
-    await page.goto('/surah/1');
+    await gotoApp(page, '/surah/1');
 
     // Test touch-friendly verse actions
     const verseActionButton = page.locator('[data-testid="verse-action-button"]').first();
@@ -40,7 +40,7 @@ test.describe('📱 Mobile-First Responsive Design', () => {
 
   test('Navigation adapts correctly for mobile', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
-    await page.goto('/surah/1');
+    await gotoApp(page, '/surah/1');
 
     // Mobile navigation should be accessible
     const mobileMenuTrigger = page.locator('[data-testid="mobile-menu-trigger"]');

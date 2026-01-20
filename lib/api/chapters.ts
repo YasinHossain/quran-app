@@ -5,6 +5,25 @@ import { Chapter, Surah } from '@/types';
 import { apiFetch } from './client';
 
 const surahCoverCache = new Map<number, Promise<string | null>>();
+const chapterCache = new Map<string, Promise<Chapter>>();
+
+export async function getChapter(id: number, language = 'en'): Promise<Chapter> {
+  const cacheKey = `${id}:${language}`;
+  const cached = chapterCache.get(cacheKey);
+  if (cached) return cached;
+
+  const promise = apiFetch<{ chapter: Chapter }>(
+    `chapters/${id}`,
+    { language },
+    'Failed to fetch chapter'
+  ).then((data) => data.chapter as Chapter);
+
+  chapterCache.set(cacheKey, promise);
+  return promise.catch((error) => {
+    chapterCache.delete(cacheKey);
+    throw error;
+  });
+}
 
 export async function getChapters(): Promise<Chapter[]> {
   const data = await apiFetch<{ chapters: Chapter[] }>(
@@ -59,4 +78,8 @@ export function getSurahCoverUrl(surahNumber: number): Promise<string | null> {
 
 export function clearSurahCoverCache(): void {
   surahCoverCache.clear();
+}
+
+export function clearChapterCache(): void {
+  chapterCache.clear();
 }

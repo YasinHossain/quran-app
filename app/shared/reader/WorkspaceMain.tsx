@@ -2,7 +2,6 @@
 
 import React from 'react';
 
-import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { cn } from '@/lib/utils/cn';
 
 import { useWorkspaceColumns } from './ThreeColumnWorkspace';
@@ -28,34 +27,37 @@ export function WorkspaceMain({
   reserveRightSpace,
   ...rest
 }: WorkspaceMainProps): React.JSX.Element {
-  const { isHidden } = useHeaderVisibility();
   const { isRootHeaderAware, hasLeftSidebar, hasRightSidebar } = useWorkspaceColumns();
 
   const shouldReserveLeft = Boolean(reserveLeftSpace && !hasLeftSidebar);
   const shouldReserveRight = Boolean(reserveRightSpace && !hasRightSidebar);
 
-  const topPaddingClass = isRootHeaderAware
+  // ARCHITECTURE NOTE:
+  // Content scrolls BEHIND the transparent glass header. We use padding (not margin)
+  // to offset the initial content position, but scrolling moves content up behind header.
+  // The header has backdrop-blur which creates the glass effect over scrolling content.
+  const topClass = isRootHeaderAware
     ? null
-    : isHidden
-      ? 'pt-[calc(var(--reader-safe-area-top))]'
-      : 'pt-[calc(var(--reader-header-height)+var(--reader-safe-area-top))]';
+    : 'pt-[calc(var(--reader-header-height)+var(--reader-safe-area-top))] sm:pt-[calc(var(--reader-header-height)+var(--reader-safe-area-top))]';
 
+  // Body scrolling like Quran.com - content flows naturally, body handles scroll
+  // This enables Chrome address bar auto-hide on mobile and consistent scrollbar position
   return (
     <Component
       {...rest}
       data-slot={dataSlot ?? 'workspace-main'}
       className={cn(
-        'relative flex flex-1 flex-col overflow-y-auto bg-background text-foreground min-h-0',
-        topPaddingClass,
+        'relative flex flex-1 flex-col text-foreground workspace-main-scroll',
+        topClass,
         'pb-safe',
-        shouldReserveLeft && 'lg:pl-reader-sidebar-left',
-        shouldReserveRight && 'lg:pr-reader-sidebar-right',
+        shouldReserveLeft && 'xl:pl-reader-sidebar-left',
+        shouldReserveRight && 'xl:pr-reader-sidebar-right',
         className
       )}
     >
       <div
         className={cn(
-          'flex flex-1 flex-col gap-6 px-4 pb-16 pt-6 sm:px-6 sm:pt-8 lg:px-8',
+          'flex flex-1 flex-col gap-6 px-4 pb-16 pt-6 sm:px-6 sm:pt-8 xl:px-6',
           contentClassName
         )}
       >

@@ -2,6 +2,7 @@
 
 import { memo, type JSX, useCallback, useMemo, useState } from 'react';
 
+import { useTranslationOptions } from '@/app/(features)/surah/hooks/useTranslationOptions';
 import { ReaderVerseCard } from '@/app/shared/reader/VerseCard';
 import { AddToPlannerModal } from '@/app/shared/verse-planner-modal';
 import { Verse as VerseType } from '@/types';
@@ -13,8 +14,9 @@ interface VerseProps {
 }
 
 export const Verse = memo(function Verse({ verse }: VerseProps): JSX.Element {
-  const { verseRef, isPlaying, isLoadingAudio, isVerseBookmarked, handlePlayPause } =
+  const { verseRef, isPlaying, isCurrent, isLoadingAudio, isVerseBookmarked, handlePlayPause } =
     useVerseCard(verse);
+  const { resourceLanguagesMap } = useTranslationOptions();
   const [isPlannerModalOpen, setPlannerModalOpen] = useState(false);
   const { verse_key, text_uthmani, translations } = verse;
 
@@ -37,6 +39,8 @@ export const Verse = memo(function Verse({ verse }: VerseProps): JSX.Element {
       <ReaderVerseCard
         ref={verseRef}
         verse={verse}
+        isPlaying={isCurrent}
+        extendArabicSelectionGutter
         actions={{
           verseKey: verse.verse_key,
           verseId: String(verse.id),
@@ -46,6 +50,7 @@ export const Verse = memo(function Verse({ verse }: VerseProps): JSX.Element {
           onPlayPause: handlePlayPause,
           onAddToPlan: handleOpenPlannerModal,
         }}
+        resourceLanguages={resourceLanguagesMap}
       />
       <AddToPlannerModal
         isOpen={isPlannerModalOpen}

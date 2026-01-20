@@ -10,7 +10,6 @@ import type { Folder } from '@/types';
 
 interface FolderGridProps {
   folders: Folder[];
-  onFolderSelect: (folderId: string) => void;
 }
 
 type FolderAction = 'delete' | 'customize';
@@ -46,15 +45,10 @@ const DeleteFolderModal = dynamic<DeleteFolderModalProps>(
 
 interface FolderCardsProps {
   folders: Folder[];
-  onFolderSelect: (id: string) => void;
   onAction: (folder: Folder, action: FolderAction) => void;
 }
 
-const FolderCards = ({
-  folders,
-  onFolderSelect,
-  onAction,
-}: FolderCardsProps): React.JSX.Element => {
+const FolderCards = ({ folders, onAction }: FolderCardsProps): React.JSX.Element => {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -71,7 +65,7 @@ const FolderCards = ({
     >
       <FolderCard
         folder={folder}
-        onClick={() => onFolderSelect(folder.id)}
+        href={`/bookmarks/${folder.id}`}
         onDelete={() => onAction(folder, 'delete')}
         onColorChange={() => onAction(folder, 'customize')}
       />
@@ -80,7 +74,7 @@ const FolderCards = ({
 
   return (
     <div
-      className={`grid w-full auto-rows-fr grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-y-4 md:gap-y-6 xl:gap-y-8 gap-x-3 md:gap-x-4 xl:gap-x-6 transition-opacity duration-300 ease-out ${
+      className={`grid w-full auto-rows-fr grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-4 md:gap-y-6 xl:gap-y-8 gap-x-3 md:gap-x-4 xl:gap-x-6 transition-opacity duration-300 ease-out ${
         isMounted ? 'opacity-100' : 'opacity-0'
       }`}
     >
@@ -128,7 +122,7 @@ const useFolderModals = (): UseFolderModalsReturn => {
   return { handleAction, modals };
 };
 
-export const FolderGrid = ({ folders, onFolderSelect }: FolderGridProps): React.JSX.Element => {
+export const FolderGrid = ({ folders }: FolderGridProps): React.JSX.Element => {
   const { handleAction, modals } = useFolderModals();
 
   if (folders.length === 0) {
@@ -137,7 +131,7 @@ export const FolderGrid = ({ folders, onFolderSelect }: FolderGridProps): React.
 
   return (
     <>
-      <FolderCards folders={folders} onFolderSelect={onFolderSelect} onAction={handleAction} />
+      <FolderCards folders={folders} onAction={handleAction} />
       {modals}
     </>
   );

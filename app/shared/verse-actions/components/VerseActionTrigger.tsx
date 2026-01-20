@@ -19,20 +19,20 @@ export const VerseActionTrigger = memo(function VerseActionTrigger({
 }: VerseActionTriggerProps) {
   return (
     <div className={cn('flex items-center justify-between', className)}>
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 pl-1">
         <span className="font-semibold text-accent text-sm">{verseKey}</span>
       </div>
       <button
         onClick={onOpen}
         className={cn(
-          'p-1 rounded-full hover:bg-interactive transition-colors',
+          'p-1.5 rounded-full hover:bg-interactive-hover transition-colors -mr-2 group flex items-center justify-center',
           touchClasses.target,
           touchClasses.gesture,
           touchClasses.focus
         )}
         aria-label="Open verse actions menu"
       >
-        <EllipsisHIcon size={18} className="text-muted" />
+        <EllipsisHIcon size={18} className="text-muted group-hover:text-accent transition-colors" />
       </button>
     </div>
   );

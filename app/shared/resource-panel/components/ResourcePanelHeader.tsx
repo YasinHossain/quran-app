@@ -2,44 +2,45 @@
 
 import React from 'react';
 
+import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
 import { ResetIcon } from '@/app/shared/icons';
 
 interface ResourcePanelHeaderProps {
   title: string;
   onClose: () => void;
-  onReset: () => void;
+  onReset?: () => void;
+  onCloseSidebar?: () => void;
+  backIconClassName?: string;
 }
 
 export const ResourcePanelHeader = ({
   title,
   onClose,
   onReset,
+  onCloseSidebar,
 }: ResourcePanelHeaderProps): React.JSX.Element => {
   return (
-    <header className="flex items-center p-4 border-b border-border">
-      <button
-        onClick={onClose}
-        className="p-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent hover:bg-interactive-hover"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 text-muted"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth="2"
+    <SidebarHeader
+      title={title}
+      onBack={onClose}
+      showBackButton
+      {...(onCloseSidebar ? { onClose: onCloseSidebar } : {})}
+      showCloseButton={!!onCloseSidebar}
+      forceVisible
+      className="md:flex" // Ensure it shows on tablet/desktop if panels are used there, though panels are mostly mobile slide-overs or sidebars. SidebarHeader has 'md:hidden' by default unless forceVisible.
+      // forceVisible overrides md:hidden in SidebarHeader implementation: !forceVisible && 'md:hidden'
+    >
+      {onReset && (
+        <button
+          onClick={onReset}
+          className="p-1.5 rounded-full hover:bg-interactive-hover hover:text-accent transition-colors text-foreground focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none flex items-center justify-center"
+          title="Reset to Default"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-      <h2 className="text-lg font-bold text-center flex-grow text-foreground">{title}</h2>
-      <button
-        onClick={onReset}
-        className="p-2 rounded-full text-foreground hover:bg-interactive hover:text-accent focus-visible:outline-none transition-colors"
-        title="Reset to Default"
-      >
-        <ResetIcon size={20} />
-      </button>
-    </header>
+          <ResetIcon size={18} />
+        </button>
+      )}
+    </SidebarHeader>
   );
 };
+
+export const SettingsPanelHeader = ResourcePanelHeader;

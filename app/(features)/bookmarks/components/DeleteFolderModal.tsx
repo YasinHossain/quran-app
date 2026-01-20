@@ -1,11 +1,11 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
 import React from 'react';
 
+import { UnifiedModal } from '@/app/shared/components/modal/UnifiedModal';
 import { Folder } from '@/types';
 
-import { BACKDROP_VARIANTS, ModalBody, useDeleteFolder } from './delete-folder-modal';
+import { ModalBody, useDeleteFolder } from './delete-folder-modal';
 
 interface DeleteFolderModalProps {
   isOpen: boolean;
@@ -19,32 +19,24 @@ export const DeleteFolderModal = ({
   folder,
 }: DeleteFolderModalProps): React.JSX.Element => {
   const { handleDelete, isDeleting, error } = useDeleteFolder(folder, onClose);
+  const shouldRender = isOpen && Boolean(folder);
 
   return (
-    <AnimatePresence>
-      {isOpen && folder && (
-        <>
-          <motion.div
-            variants={BACKDROP_VARIANTS}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            className="fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm z-modal"
-            onClick={onClose}
-          />
-
-          {/* Modal */}
-          <div className="fixed inset-0 z-modal flex items-center justify-center px-4">
-            <ModalBody
-              folder={folder}
-              onClose={onClose}
-              onDelete={handleDelete}
-              isDeleting={isDeleting}
-              error={error}
-            />
-          </div>
-        </>
+    <UnifiedModal
+      isOpen={shouldRender}
+      onClose={onClose}
+      ariaLabel="Delete folder"
+      contentClassName="max-w-lg mx-auto overflow-hidden"
+    >
+      {folder && (
+        <ModalBody
+          folder={folder}
+          onClose={onClose}
+          onDelete={handleDelete}
+          isDeleting={isDeleting}
+          error={error}
+        />
       )}
-    </AnimatePresence>
+    </UnifiedModal>
   );
 };

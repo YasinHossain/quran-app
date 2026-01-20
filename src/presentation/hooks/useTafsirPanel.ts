@@ -1,14 +1,14 @@
 'use client';
 
 import { useTheme } from '@/app/providers/ThemeContext';
+import { useTabsScroll } from '@/app/shared/resource-panel/hooks/useTabsScroll';
 
 import { useTafsir } from './useTafsir';
 import { useTafsirSelection } from './useTafsirSelection';
-import { useTafsirTabsScroll } from './useTafsirTabsScroll';
 
 import type { Theme } from '@/app/providers/ThemeContext';
 import type { TafsirResource } from '@/types';
-import type { Dispatch, SetStateAction, RefObject, DragEvent } from 'react';
+import type { Dispatch, SetStateAction, RefObject } from 'react';
 
 export interface UseTafsirPanelReturn {
   theme: Theme;
@@ -29,11 +29,7 @@ export interface UseTafsirPanelReturn {
   handleSelectionToggle: (id: number) => boolean;
   showLimitWarning: boolean;
 
-  handleDragStart: (e: DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragOver: (e: DragEvent<HTMLDivElement>) => void;
-  handleDrop: (e: DragEvent<HTMLDivElement>, targetId: number) => void;
-  handleDragEnd: () => void;
-  draggedId: number | null;
+  setSelections: (ids: number[]) => void;
 
   handleReset: () => void;
 
@@ -60,11 +56,7 @@ function composeReturn(params: {
   orderedSelection: number[];
   handleSelectionToggle: (id: number) => boolean;
   showLimitWarning: boolean;
-  handleDragStart: (e: DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragOver: (e: DragEvent<HTMLDivElement>) => void;
-  handleDrop: (e: DragEvent<HTMLDivElement>, targetId: number) => void;
-  handleDragEnd: () => void;
-  draggedId: number | null;
+  setSelections: (ids: number[]) => void;
   handleReset: () => void;
   tabsContainerRef: RefObject<HTMLDivElement | null>;
   canScrollLeft: boolean;
@@ -83,7 +75,7 @@ export const useTafsirPanel = (isOpen: boolean): UseTafsirPanelReturn => {
   const selection = useTafsirSelection(domainTafsirs);
 
   const { tabsContainerRef, canScrollLeft, canScrollRight, scrollTabsLeft, scrollTabsRight } =
-    useTafsirTabsScroll(selection.languages);
+    useTabsScroll(selection.languages);
 
   const loading = isOpen && apiLoading;
   const error = apiError;

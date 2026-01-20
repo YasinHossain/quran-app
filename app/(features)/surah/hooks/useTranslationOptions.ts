@@ -15,6 +15,7 @@ export interface UseTranslationOptionsReturn {
   translationOptions: TranslationResource[];
   wordLanguageOptions: WordLanguageOption[];
   wordLanguageMap: Record<string, number>;
+  resourceLanguagesMap: Record<number, string>;
 }
 
 export function useTranslationOptions(): UseTranslationOptionsReturn {
@@ -43,5 +44,18 @@ export function useTranslationOptions(): UseTranslationOptionsReturn {
     [wordLanguageMap]
   );
 
-  return { translationOptions, wordLanguageOptions, wordLanguageMap } as const;
+  const resourceLanguagesMap = useMemo(() => {
+    const map: Record<number, string> = {};
+    (translationOptions || []).forEach((t) => {
+      map[t.id] = t.lang;
+    });
+    return map;
+  }, [translationOptions]);
+
+  return {
+    translationOptions,
+    wordLanguageOptions,
+    wordLanguageMap,
+    resourceLanguagesMap,
+  } as const;
 }

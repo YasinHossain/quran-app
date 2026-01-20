@@ -1,6 +1,5 @@
 'use client';
 
-import { AnimatePresence } from 'framer-motion';
 import React, { useCallback, useState } from 'react';
 
 import {
@@ -8,12 +7,11 @@ import {
   usePlanCountLabel,
 } from '@/app/(features)/bookmarks/planner/components/DeletePlannerModal.hooks';
 import {
-  DeletePlannerModalBackdrop,
   DeletePlannerModalBody,
   DeletePlannerModalHeader,
-  DeletePlannerModalShell,
 } from '@/app/(features)/bookmarks/planner/components/DeletePlannerModal.parts';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { UnifiedModal } from '@/app/shared/components/modal/UnifiedModal';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 interface DeletePlannerModalProps {
@@ -52,26 +50,25 @@ export function DeletePlannerModal({
   const shouldRender = isOpen && effectivePlanIds.length > 0;
 
   return (
-    <AnimatePresence>
-      {shouldRender ? (
-        <>
-          <DeletePlannerModalBackdrop onClose={handleCancel} />
-
-          <DeletePlannerModalShell>
-            <DeletePlannerModalHeader onClose={handleCancel} />
-            <DeletePlannerModalBody
-              title={title}
-              details={details}
-              countLabel={countLabel}
-              error={error}
-              onCancel={handleCancel}
-              onConfirm={handleDelete}
-              isDeleting={isDeleting}
-            />
-          </DeletePlannerModalShell>
-        </>
-      ) : null}
-    </AnimatePresence>
+    <UnifiedModal
+      isOpen={shouldRender}
+      onClose={handleCancel}
+      ariaLabel="Delete planner"
+      contentClassName="max-w-lg max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-4rem)] overflow-hidden px-3 sm:px-4 pt-4 pb-4"
+    >
+      <div className="max-h-full overflow-y-auto scrollbar-hide px-1 sm:px-2">
+        <DeletePlannerModalHeader onClose={handleCancel} />
+        <DeletePlannerModalBody
+          title={title}
+          details={details}
+          countLabel={countLabel}
+          error={error}
+          onCancel={handleCancel}
+          onConfirm={handleDelete}
+          isDeleting={isDeleting}
+        />
+      </div>
+    </UnifiedModal>
   );
 }
 

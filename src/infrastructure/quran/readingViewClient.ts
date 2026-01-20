@@ -9,6 +9,7 @@ const API_MUSHAF_FALLBACK_ID = 2; // Madani V1 layout
 const API_MUSHAF_MAP: Record<string, number> = {
   [DEFAULT_MUSHAF_ID]: 2,
   'qcf-madani-v2': 1,
+  'qcf-tajweed-v4': 19, // QCF Tajweed V4 with color-coded glyphs
   'qpc-uthmani-hafs': 5,
   'unicode-indopak-15': 6,
   'unicode-indopak-16': 7,
@@ -55,6 +56,16 @@ export interface ReadingViewRequestParams {
    * Optional comma-separated list of translation resource IDs.
    */
   translationIds?: string;
+
+  /**
+   * Restrict verses returned to a specific range (verse keys).
+   */
+  from?: string;
+
+  /**
+   * Restrict verses returned to a specific range (verse keys).
+   */
+  to?: string;
 }
 
 interface ReadingViewApiResponse {
@@ -75,6 +86,8 @@ export const getReadingViewPage = async ({
   reciterId,
   wordByWordLocale,
   translationIds,
+  from,
+  to,
 }: ReadingViewRequestParams): Promise<MushafVerse[]> => {
   const params: Record<string, string> = {
     words: 'true',
@@ -95,6 +108,14 @@ export const getReadingViewPage = async ({
 
   if (typeof reciterId === 'number') {
     params['reciter'] = String(reciterId);
+  }
+
+  if (from) {
+    params['from'] = from;
+  }
+
+  if (to) {
+    params['to'] = to;
   }
 
   const data = await apiFetch<ReadingViewApiResponse>(

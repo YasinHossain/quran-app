@@ -9,6 +9,7 @@ export interface SurahTabsProps {
   filteredJuzs: JuzSummary[];
   filteredPages: number[];
   searchInput: React.ReactNode;
+  onClose?: (() => void) | undefined;
 }
 
 // Re-export for local consumers to avoid deep import coupling

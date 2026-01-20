@@ -1,5 +1,6 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 
+import { useUIState } from '@/app/providers/UIStateContext';
 import { LANGUAGE_CODES } from '@/lib/text/languageCodes';
 
 import type { PanelControls, SurahPanelOption } from './useSurahPanels.types';
@@ -9,9 +10,12 @@ import type { TFunction } from 'i18next';
 
 export const usePanelControls = (): PanelControls => {
   const [isTranslationPanelOpen, openTranslationPanel, closeTranslationPanel] =
-    usePanelVisibility();
-  const [isWordPanelOpen, openWordLanguagePanel, closeWordLanguagePanel] = usePanelVisibility();
-  const [isMushafPanelOpen, openMushafPanel, closeMushafPanel] = usePanelVisibility();
+    usePanelVisibility('verse:translation-panel');
+  const [isWordPanelOpen, openWordLanguagePanel, closeWordLanguagePanel] = usePanelVisibility(
+    'verse:word-language-panel'
+  );
+  const [isMushafPanelOpen, openMushafPanel, closeMushafPanel] =
+    usePanelVisibility('verse:mushaf-panel');
 
   return {
     isTranslationPanelOpen,
@@ -67,7 +71,15 @@ export const useMushafChange = (
   return useCallback(
     (id: string) => {
       if (settings.mushafId === id) return;
-      setSettings({ ...settings, mushafId: id });
+
+      // Sync tajweed setting with mushaf selection
+      const isTajweedMushaf = id === 'qcf-tajweed-v4';
+
+      setSettings({
+        ...settings,
+        mushafId: id,
+        tajweed: isTajweedMushaf,
+      });
     },
     [setSettings, settings]
   );
@@ -78,7 +90,21 @@ function getSelectedTranslationName(
   translationOptions: SurahPanelOption[],
   t: TFunction<'translation'>
 ): string {
-  const primaryId = settings.translationIds?.[0] || settings.translationId;
+  if (settings.translationIds) {
+    if (settings.translationIds.length === 0) return '';
+    const primaryId = settings.translationIds[0];
+    const primaryName =
+      translationOptions.find((o) => o.id === primaryId)?.name || t('select_translation');
+
+    const extraCount = settings.translationIds.length - 1;
+    if (extraCount > 0) {
+      return `${primaryName}, +${extraCount}`;
+    }
+
+    return primaryName;
+  }
+
+  const primaryId = settings.translationId;
   return translationOptions.find((o) => o.id === primaryId)?.name || t('select_translation');
 }
 
@@ -103,9 +129,10 @@ function getSelectedMushafName(
   return mushaf?.name ?? t('select_mushaf', { defaultValue: 'Select mushaf' });
 }
 
-function usePanelVisibility(): [boolean, () => void, () => void] {
-  const [isOpen, setIsOpen] = useState(false);
-  const open = useCallback(() => setIsOpen(true), []);
-  const close = useCallback(() => setIsOpen(false), []);
+function usePanelVisibility(panelId: string): [boolean, () => void, () => void] {
+  const { isPanelOpen, openPanel, closePanel } = useUIState();
+  const isOpen = isPanelOpen(panelId);
+  const open = useCallback(() => openPanel(panelId), [openPanel, panelId]);
+  const close = useCallback(() => closePanel(panelId), [closePanel, panelId]);
   return [isOpen, open, close];
 }

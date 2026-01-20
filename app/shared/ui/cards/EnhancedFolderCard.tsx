@@ -26,6 +26,8 @@ interface EnhancedFolderCardProps extends Omit<BaseCardProps, 'children' | 'onCl
   onDelete: () => void;
   onColorChange: () => void;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
+  href?: string;
+  prefetch?: boolean;
 }
 
 export const EnhancedFolderCard = memo(function EnhancedFolderCard({
@@ -33,6 +35,8 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
   onDelete,
   onColorChange,
   onClick,
+  href,
+  prefetch = true,
   'aria-label': ariaLabel,
   className,
   ...props
@@ -58,89 +62,90 @@ export const EnhancedFolderCard = memo(function EnhancedFolderCard({
     : 0;
   const latestBookmarkTimestamp = Array.isArray(folder.bookmarks)
     ? (folder.bookmarks as Array<BookmarkEntry>).reduce(
-        (latest: number, b: BookmarkEntry) => Math.max(latest, b.createdAt ?? 0),
-        0
-      )
+      (latest: number, b: BookmarkEntry) => Math.max(latest, b.createdAt ?? 0),
+      0
+    )
     : 0;
   const formattedUpdatedAt =
     latestBookmarkTimestamp > 0
       ? new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' }).format(
-          new Date(latestBookmarkTimestamp)
-        )
+        new Date(latestBookmarkTimestamp)
+      )
       : null;
 
   return (
-    <BaseCard
-      variant="folder"
-      animation="folder"
-      direction="column"
-      align="start"
-      gap="gap-3"
-      customVariant={{
-        height: 'min-h-[136px]',
-        padding: 'pl-5 pr-4 pb-3 pt-3',
-        hover: {
-          effect: 'translate',
-          value: 'hover:-translate-y-1 hover:shadow-lg',
-          duration: 'transition-all duration-300',
-        },
-      }}
-      {...(onClick
-        ? { onClick: onClick as React.MouseEventHandler<HTMLDivElement | HTMLAnchorElement> }
-        : {})}
-      role="button"
-      tabIndex={0}
-      aria-label={(ariaLabel || defaultAriaLabel) as string}
-      onKeyDown={handleKeyDown}
-      className={cn('group relative w-full', className)}
-      {...props}
-    >
-      <div className="absolute right-0 top-0 z-10">
+    <div className={cn('group relative w-full', className)} {...props}>
+      <div
+        className="absolute right-3 top-3 z-10"
+        onClick={(e) => e.stopPropagation()}
+      >
         <FolderContextMenu onDelete={onDelete} onColorChange={onColorChange} />
       </div>
 
-      <div className="flex h-full w-full flex-1 flex-col gap-3">
-        <div className="flex items-center gap-4 min-w-0 pr-8 sm:pr-12">
-          <FolderGlyph folder={folder}>
-            <span className="absolute -top-1.5 -right-1.5 select-none rounded-full border border-border bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-foreground shadow-sm">
-              {bookmarkCount}
-            </span>
-          </FolderGlyph>
-          <div className="flex-1 min-w-0">
-            <h3 className="mb-1 truncate text-lg font-semibold text-foreground transition-colors duration-200 group-hover:text-accent">
-              {folder.name}
-            </h3>
-            <p className="text-sm font-medium text-muted">
-              {bookmarkCount} {bookmarkCount === 1 ? 'verse' : 'verses'}
-            </p>
+      <BaseCard
+        variant="folder"
+        animation="folder"
+        direction="column"
+        align="start"
+        gap="gap-3"
+        customVariant={{
+          height: 'min-h-[136px]',
+          padding: 'pl-5 pr-4 pb-3 pt-3',
+          hover: {
+            effect: 'none',
+            value: 'group-hover:shadow-lg',
+            duration: '',
+          },
+        }}
+        {...(href ? { href, prefetch, scroll: false } : {})}
+        {...(onClick && !href
+          ? { onClick: onClick as React.MouseEventHandler<HTMLDivElement | HTMLAnchorElement> }
+          : {})}
+        role="button"
+        tabIndex={0}
+        aria-label={(ariaLabel || defaultAriaLabel) as string}
+        onKeyDown={handleKeyDown}
+        className="h-full w-full"
+      >
+        <div className="flex h-full w-full flex-1 flex-col gap-3">
+          <div className="flex items-center gap-4 min-w-0 pr-8 sm:pr-12">
+            <FolderGlyph folder={folder} />
+            <div className="flex-1 min-w-0">
+              <h3 className="mb-1 line-clamp-2 text-lg font-semibold text-foreground transition-colors duration-200 group-hover:text-accent">
+                {folder.name}
+              </h3>
+              <p className="text-sm font-medium text-muted">
+                {bookmarkCount} {bookmarkCount === 1 ? 'verse' : 'verses'}
+              </p>
+            </div>
           </div>
-        </div>
 
-        {/* Verse preview chips */}
-        <div className="mt-auto flex w-full items-end gap-2">
-          <div className="flex flex-wrap items-center gap-1.5">
-            {versePreview.map((b) => (
-              <span
-                key={String(b.verseId)}
-                className="inline-flex shrink-0 items-center rounded-full bg-surface whitespace-nowrap leading-none px-2.5 py-1 text-[11px] font-medium text-muted transition-colors duration-200 group-hover:text-foreground/80 border border-border/40"
-              >
-                {b.verseKey || b.verseId}
-              </span>
-            ))}
-            {remainingCount > 0 ? (
-              <span className="inline-flex shrink-0 items-center rounded-full bg-surface whitespace-nowrap leading-none px-2.5 py-1 text-[11px] font-medium text-muted transition-colors duration-200 group-hover:text-foreground/80 border border-border/40">
-                +{remainingCount}
+          {/* Verse preview chips */}
+          <div className="mt-auto flex w-full items-end gap-2">
+            <div className="flex flex-wrap items-center gap-1.5">
+              {versePreview.map((b) => (
+                <span
+                  key={String(b.verseId)}
+                  className="inline-flex shrink-0 items-center rounded-full bg-surface whitespace-nowrap leading-none px-2.5 py-1 text-[11px] font-medium text-muted transition-colors duration-200 group-hover:text-foreground/80 border border-border/40"
+                >
+                  {b.verseKey || b.verseId}
+                </span>
+              ))}
+              {remainingCount > 0 ? (
+                <span className="inline-flex shrink-0 items-center rounded-full bg-surface whitespace-nowrap leading-none px-2.5 py-1 text-[11px] font-medium text-muted transition-colors duration-200 group-hover:text-foreground/80 border border-border/40">
+                  +{remainingCount}
+                </span>
+              ) : null}
+            </div>
+            {formattedUpdatedAt ? (
+              <span className="ml-auto inline-flex items-center gap-1 text-[11px] font-medium text-muted/80 whitespace-nowrap text-right">
+                <ClockIcon className="h-3.5 w-3.5" />
+                {formattedUpdatedAt}
               </span>
             ) : null}
           </div>
-          {formattedUpdatedAt ? (
-            <span className="ml-auto inline-flex items-center gap-1 text-[11px] font-medium text-muted/80 whitespace-nowrap text-right">
-              <ClockIcon className="h-3.5 w-3.5" />
-              {formattedUpdatedAt}
-            </span>
-          ) : null}
         </div>
-      </div>
-    </BaseCard>
+      </BaseCard>
+    </div>
   );
 });

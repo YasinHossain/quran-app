@@ -30,7 +30,7 @@ export const ModalActions = forwardRef<HTMLButtonElement, ModalActionsProps>(
           ref={ref}
           onClick={onCancel}
           aria-label={`Cancel ${confirmText.toLowerCase()}`}
-          className="px-4 py-2 text-sm font-medium text-muted hover:text-foreground transition-colors"
+          className="px-4 py-2 text-sm font-medium text-muted hover:text-foreground hover:bg-interactive-hover rounded-lg transition-colors"
         >
           {cancelText}
         </button>

@@ -4,6 +4,7 @@ import React from 'react';
 
 import { BookmarkFolderContent } from '@/app/(features)/bookmarks/components/BookmarkFolderContent';
 import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
+import { ArrowLeftIcon } from '@/app/shared/icons';
 
 import type { Bookmark, Folder } from '@/types';
 
@@ -20,22 +21,36 @@ export const BookmarkFolderSidebarContent = ({
   onBack,
   onClose,
 }: BookmarkFolderSidebarContentProps): React.JSX.Element => (
-  <div className="flex h-full flex-col">
+  <div className="relative flex flex-1 min-h-0 flex-col bg-background text-foreground">
     <SidebarHeader
       title="Folders"
       onBack={onBack}
       showBackButton
       {...(onClose ? { onClose, showCloseButton: true } : {})}
-      // Unified sidebar header styling
-      withShadow={false}
-      edgeToEdge
-      titleAlign="center"
+      // Mobile-only header; keep subtle elevation but no divider line
       titleClassName="text-mobile-lg font-semibold text-foreground"
       backButtonClassName="hover:bg-interactive-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-      className="border-b border-border bg-background shadow-none mb-2"
-      containerContentClassName="-mx-2 sm:-mx-3 py-0"
-      contentClassName="h-16 min-h-12 px-3 sm:px-4 py-0 sm:py-0"
+      className="sticky top-0 xl:hidden"
+      forceVisible
     />
-    <BookmarkFolderContent bookmarks={bookmarks} folder={folder} />
+
+    {/* Desktop Header: Hidden on mobile, Flex on xl+ */}
+    <div className="hidden xl:flex items-center justify-between px-4 pb-4 pt-2 shrink-0">
+      <button
+        type="button"
+        onClick={onBack}
+        className="p-1 -ml-1 hover:bg-interactive-hover rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        aria-label="Back"
+      >
+        <ArrowLeftIcon />
+      </button>
+      <span className="font-semibold text-lg text-foreground">Folders</span>
+      {/* Spacer to keep title centered */}
+      <div className="min-w-[40px]" />
+    </div>
+
+    <div className="flex-1 overflow-y-auto touch-pan-y p-2 sm:p-3">
+      <BookmarkFolderContent bookmarks={bookmarks} folder={folder} key={folder.id} />
+    </div>
   </div>
 );

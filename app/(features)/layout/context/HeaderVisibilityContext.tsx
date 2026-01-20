@@ -4,9 +4,13 @@ import { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 interface HeaderVisibilityState {
   isHidden: boolean;
+  setScrollContainer: (element: HTMLElement | null) => void;
 }
 
-const HeaderVisibilityContext = createContext<HeaderVisibilityState>({ isHidden: false });
+const HeaderVisibilityContext = createContext<HeaderVisibilityState>({
+  isHidden: false,
+  setScrollContainer: () => {},
+});
 
 export const HeaderVisibilityProvider = ({
   children,
@@ -17,58 +21,39 @@ export const HeaderVisibilityProvider = ({
   const lastScrollY = useRef(0);
   const pathname = usePathname();
 
+  // Dummy setter for backward compatibility (no longer needed with window scrolling)
+  const setScrollContainer = (): void => {};
+
   useEffect(() => {
     // Reset state on every page navigation
-    lastScrollY.current = 0;
-    setIsHidden(false);
-
-    // Try to find the scrollable container based on the current page
-    let scrollEl = document.querySelector('.homepage-scrollable-area');
-
-    // If not found, try to find the surah page scrollable container
-    if (!scrollEl) {
-      scrollEl = document.querySelector('main .overflow-y-auto');
-    }
-
-    // If still not found, try the main content area
-    if (!scrollEl) {
-      scrollEl = document.querySelector('main[class*="overflow-y-auto"]');
-    }
-
-    if (!scrollEl) return;
+    let pivotY = window.scrollY;
 
     const handleScroll = (): void => {
-      const currentY = (scrollEl as HTMLElement).scrollTop;
-      const scrollHeight = (scrollEl as HTMLElement).scrollHeight;
-      const clientHeight = (scrollEl as HTMLElement).clientHeight;
-      const maxScrollableHeight = scrollHeight - clientHeight;
+      const currentY = window.scrollY;
+      const isScrollingDown = currentY > lastScrollY.current;
 
-      // Calculate scroll delta to prevent rapid toggling
-      const scrollDelta = Math.abs(currentY - lastScrollY.current);
+      // Reset pivot when direction changes
+      if (isScrollingDown && currentY < pivotY) pivotY = currentY;
+      if (!isScrollingDown && currentY > pivotY) pivotY = currentY;
 
-      // For short content, require larger scroll delta to prevent shaking
-      const minScrollDelta = maxScrollableHeight < 150 ? 20 : 5;
-
-      if (scrollDelta > minScrollDelta) {
-        // Hide header when scrolling down past threshold
-        if (currentY > lastScrollY.current && currentY > 50) {
-          setIsHidden(true);
-        } else if (currentY < lastScrollY.current) {
-          setIsHidden(false);
-        }
+      // Always show at top, otherwise apply 100px threshold
+      if (currentY < 50) {
+        setIsHidden(false);
+        pivotY = currentY;
+      } else if (Math.abs(currentY - pivotY) > 100) {
+        setIsHidden(isScrollingDown);
+        pivotY = currentY; // Reset pivot to prevent continuous flickering if logic differs
       }
 
       lastScrollY.current = currentY;
     };
 
-    scrollEl.addEventListener('scroll', handleScroll);
-
-    // Cleanup by removing the event listener
-    return () => scrollEl.removeEventListener('scroll', handleScroll);
-  }, [pathname]); // This effect re-runs on every route change
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [pathname]);
 
   return (
-    <HeaderVisibilityContext.Provider value={{ isHidden }}>
+    <HeaderVisibilityContext.Provider value={{ isHidden, setScrollContainer }}>
       {children}
     </HeaderVisibilityContext.Provider>
   );

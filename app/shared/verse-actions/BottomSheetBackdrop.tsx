@@ -21,7 +21,8 @@ export const BottomSheetBackdrop = memo(function BottomSheetBackdrop({
       initial="hidden"
       animate="visible"
       exit="hidden"
-      className="fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm z-modal touch-none"
+      transition={{ duration: 0.15, ease: 'linear' }}
+      className="fixed inset-0 bg-surface-overlay/60 z-modal touch-none"
       onClick={onClick}
     />
   );

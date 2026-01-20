@@ -17,17 +17,18 @@ export const ActionList = memo(function ActionList({
   onClose,
 }: ActionListProps): React.JSX.Element {
   return (
-    <div className="flex-1 overflow-y-auto p-4 pb-8">
+    <div className="flex-1 overflow-y-auto px-4 pt-4 pb-2">
       <div className="space-y-2">
         {actions.map((action) =>
           action.href ? (
             <Link
               key={action.label}
               href={action.href}
+              prefetch={true}
               onClick={onClose}
               className={cn(
                 'flex items-center gap-4 p-4 rounded-2xl transition-all duration-200',
-                'hover:bg-interactive active:bg-interactive',
+                'hover:bg-interactive-hover active:bg-interactive',
                 touchClasses.target,
                 touchClasses.gesture,
                 touchClasses.focus,
@@ -44,7 +45,7 @@ export const ActionList = memo(function ActionList({
               onClick={action.onClick}
               className={cn(
                 'flex w-full items-center gap-4 p-4 rounded-2xl transition-all duration-200',
-                'hover:bg-interactive active:bg-interactive',
+                'hover:bg-interactive-hover active:bg-interactive',
                 touchClasses.target,
                 touchClasses.gesture,
                 touchClasses.focus,

@@ -1,7 +1,9 @@
-import { screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
+import React, { useEffect } from 'react';
 
 import { VerseCard as VerseComponent } from '@/app/(features)/surah/components';
 import { TranslationProvider } from '@/app/providers/TranslationProvider';
+import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProvidersAsync } from '@/app/testUtils/renderWithProviders';
 import { Verse } from '@/types';
@@ -11,15 +13,27 @@ const verse: Verse = {
   verse_key: '1:1',
   text_uthmani: 'بِسْمِ الله',
   words: [
-    { id: 1, uthmani: 'بِسْمِ', en: 'In' },
-    { id: 2, uthmani: 'الله', en: 'Allah' },
+    { id: 1, uthmani: 'بِسْمِ', en: 'WBW_In' },
+    { id: 2, uthmani: 'الله', en: 'WBW_Allah' },
   ],
 };
 
-const renderVerse = (): ReturnType<typeof renderWithProvidersAsync> =>
+const VerseWrapper = ({ hidePlayer }: { hidePlayer?: boolean }): React.JSX.Element => {
+  const { closePlayer } = useAudio();
+  useEffect(() => {
+    if (hidePlayer) {
+      closePlayer();
+    }
+  }, [closePlayer, hidePlayer]);
+  return <VerseComponent verse={verse} />;
+};
+
+const renderVerse = (options?: {
+  hidePlayer?: boolean;
+}): ReturnType<typeof renderWithProvidersAsync> =>
   renderWithProvidersAsync(
     <TranslationProvider>
-      <VerseComponent verse={verse} />
+      <VerseWrapper hidePlayer={options?.hidePlayer} />
     </TranslationProvider>
   );
 
@@ -37,9 +51,28 @@ describe('Verse word-by-word font size', () => {
 
   it('scales word translation with arabic font size', async () => {
     await renderVerse();
-    const word = await screen.findByText('In');
+    const word = await screen.findByText('WBW_In');
     await waitFor(() => {
       expect(word).toHaveStyle('font-size: 20px');
     });
+  });
+});
+
+describe('Verse word translation popover', () => {
+  beforeAll(() => {
+    setMatchMedia(false);
+  });
+  beforeEach(() => {
+    localStorage.clear();
+    localStorage.setItem('quranAppSettings', JSON.stringify({ showByWords: false }));
+  });
+
+  it('shows word translation on click', async () => {
+    await renderVerse({ hidePlayer: true });
+
+    expect(screen.queryByText('WBW_In')).not.toBeInTheDocument();
+    await screen.findByText('بِسْمِ');
+    fireEvent.click(screen.getByText('بِسْمِ'));
+    expect(await screen.findByText('WBW_In')).toBeInTheDocument();
   });
 });

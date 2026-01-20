@@ -3,20 +3,23 @@
 import { useTranslation } from 'react-i18next';
 
 import { useWordLanguageSelection } from '@/app/(features)/surah/hooks';
+import { SlideOverPanel } from '@/app/shared/components/SlideOverPanel';
+import { SettingsPanelHeader } from '@/app/shared/resource-panel/components/ResourcePanelHeader';
 
 import { LanguageList } from './LanguageList';
-import { PanelHeader } from './PanelHeader';
 
 interface WordLanguagePanelProps {
   isOpen: boolean;
   onClose: () => void;
   renderMode?: 'panel' | 'content'; // 'panel' for slide-over, 'content' for inline in sidebar
+  onCloseSidebar?: () => void;
 }
 
 export const WordLanguagePanel = ({
   isOpen,
   onClose,
   renderMode = 'panel',
+  onCloseSidebar,
 }: WordLanguagePanelProps): React.JSX.Element => {
   const { t } = useTranslation();
   const { selectedId, handleLanguageSelect } = useWordLanguageSelection();
@@ -30,14 +33,13 @@ export const WordLanguagePanel = ({
   }
 
   return (
-    <div
-      data-testid="word-language-panel"
-      aria-hidden={!isOpen}
-      className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out z-50 shadow-lg ${
-        isOpen ? 'translate-x-0' : 'translate-x-full'
-      } bg-background text-foreground`}
-    >
-      <PanelHeader title={t('word_by_word_panel_title')} onClose={onClose} />
+    <SlideOverPanel isOpen={isOpen} testId="word-language-panel">
+      <SettingsPanelHeader
+        title={t('word_by_word_panel_title')}
+        onClose={onClose}
+        {...(onCloseSidebar ? { onCloseSidebar } : {})}
+        backIconClassName="h-6 w-6 text-foreground"
+      />
       <div className="flex-1 flex flex-col min-h-0">
         <div className="flex-1 overflow-y-auto">
           <div className="px-4 pb-4 pt-4">
@@ -45,6 +47,6 @@ export const WordLanguagePanel = ({
           </div>
         </div>
       </div>
-    </div>
+    </SlideOverPanel>
   );
 };

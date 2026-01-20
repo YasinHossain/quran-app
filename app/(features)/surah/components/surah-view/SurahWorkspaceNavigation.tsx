@@ -17,7 +17,7 @@ export function SurahWorkspaceNavigation({
   const { chapters } = useSurahNavigationData({ initialChapters });
 
   return (
-    <div className="flex h-full flex-col bg-background text-foreground">
+    <div className="flex flex-1 flex-col bg-background text-foreground h-full">
       <SurahListContent chapters={chapters} />
     </div>
   );

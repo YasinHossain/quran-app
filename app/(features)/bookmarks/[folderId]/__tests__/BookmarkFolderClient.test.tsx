@@ -1,6 +1,5 @@
-import { render } from '@testing-library/react';
-
 import { BookmarkFolderClient } from '@/app/(features)/bookmarks/[folderId]/BookmarkFolderClient';
+import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import type { BookmarkFolderControllerReturn } from '@/app/(features)/bookmarks/[folderId]/hooks/useBookmarkFolderController';
@@ -44,7 +43,7 @@ describe('BookmarkFolderClient', () => {
   it('logs render with folderId', () => {
     const debugSpy = jest.spyOn(logger, 'debug').mockImplementation(() => {});
 
-    render(<BookmarkFolderClient folderId="1" />);
+    renderWithProviders(<BookmarkFolderClient folderId="1" />);
 
     expect(debugSpy).toHaveBeenCalledWith('BookmarkFolderClient rendering', {
       folderId: '1',
@@ -53,7 +52,7 @@ describe('BookmarkFolderClient', () => {
   });
 
   it('forwards controller props to the view without layout flag', () => {
-    render(<BookmarkFolderClient folderId="123" />);
+    renderWithProviders(<BookmarkFolderClient folderId="123" />);
 
     const props = bookmarkFolderViewSpy.mock.calls[0][0] as Record<string, unknown>;
 

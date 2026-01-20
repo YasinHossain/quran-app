@@ -15,16 +15,25 @@ export type UseTafsirTabsStateReturn = {
   loading: Record<number, boolean>;
 };
 
+// Global variable to persist selection across navigation/remounts
+let globalLastActiveTafsirId: number | undefined;
+
+// Module-level singleton for stable SWR fetching (avoids stale closure issues)
+const fetchTafsirResources = async (): Promise<{ id: number; name: string; lang: string }[]> => {
+  const repository = container.getTafsirRepository();
+  const useCase = new GetTafsirResourcesUseCase(repository);
+  const result = await useCase.execute();
+  return result.tafsirs.map((t) => ({ id: t.id, name: t.displayName, lang: t.language }));
+};
+
 export function useTafsirTabsState(
   verseKey: string,
   tafsirIds: number[]
 ): UseTafsirTabsStateReturn {
-  const repository = container.getTafsirRepository();
-  const resourcesUseCase = new GetTafsirResourcesUseCase(repository);
-
-  const { data } = useSWR('tafsir:resources:all', async () => {
-    const result = await resourcesUseCase.execute();
-    return result.tafsirs.map((t) => ({ id: t.id, name: t.displayName, lang: t.language }));
+  // Use stable fetcher reference for SWR deduplication
+  const { data } = useSWR('tafsir:resources:all', fetchTafsirResources, {
+    revalidateOnFocus: false,
+    dedupingInterval: 60000, // 1 minute deduplication
   });
 
   const tabs: TafsirTab[] = useMemo(() => {
@@ -36,12 +45,34 @@ export function useTafsirTabsState(
   }, [tafsirIds, data]);
 
   const [activeId, setActiveId] = useState<number | undefined>(() => {
+    // Try to restore previous selection if valid
+    if (globalLastActiveTafsirId && tabs.find((t) => t.id === globalLastActiveTafsirId)) {
+      return globalLastActiveTafsirId;
+    }
     return tabs.length > 0 ? tabs[0]?.id : undefined;
   });
 
+  // Keep global state in sync
   useEffect(() => {
-    if (tabs.length > 0 && !tabs.find((t) => t.id === activeId)) {
-      setActiveId(tabs[0]!.id);
+    if (activeId) {
+      globalLastActiveTafsirId = activeId;
+    }
+  }, [activeId]);
+
+  // Handle updates to tabs (e.g. initial load)
+  useEffect(() => {
+    if (tabs.length === 0) return;
+
+    const isActiveValid = activeId && tabs.find((t) => t.id === activeId);
+
+    if (!isActiveValid) {
+      // Try to restore from global last active
+      if (globalLastActiveTafsirId && tabs.find((t) => t.id === globalLastActiveTafsirId)) {
+        setActiveId(globalLastActiveTafsirId);
+      } else {
+        // Default to first
+        setActiveId(tabs[0]!.id);
+      }
     }
   }, [tabs, activeId]);
 

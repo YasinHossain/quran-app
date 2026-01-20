@@ -9,6 +9,7 @@ import type { Chapter } from '@/types';
 
 interface BaseProps {
   rememberScroll: (tab: TabKey) => void;
+  onClose?: (() => void) | undefined;
 }
 
 interface SurahProps extends BaseProps {
@@ -31,6 +32,7 @@ export function SurahTabContent(props: SurahProps): React.JSX.Element {
     rememberScroll,
     isTafsirPath,
     isMushafMode,
+    onClose,
   } = props;
   return (
     <Surah
@@ -42,6 +44,7 @@ export function SurahTabContent(props: SurahProps): React.JSX.Element {
       rememberScroll={() => rememberScroll('Surah')}
       isTafsirPath={isTafsirPath}
       isMushafMode={isMushafMode}
+      onClose={onClose}
     />
   );
 }
@@ -65,6 +68,7 @@ export function JuzTabContent(props: JuzProps): React.JSX.Element {
     setSelectedPageId,
     setSelectedSurahId,
     rememberScroll,
+    onClose,
   } = props;
   return (
     <Juz
@@ -75,6 +79,7 @@ export function JuzTabContent(props: JuzProps): React.JSX.Element {
       setSelectedPageId={setSelectedPageId}
       setSelectedSurahId={setSelectedSurahId}
       rememberScroll={() => rememberScroll('Juz')}
+      onClose={onClose}
     />
   );
 }
@@ -98,6 +103,7 @@ export function PageTabContent(props: PageProps): React.JSX.Element {
     setSelectedJuzId,
     setSelectedSurahId,
     rememberScroll,
+    onClose,
   } = props;
   return (
     <Page
@@ -108,6 +114,7 @@ export function PageTabContent(props: PageProps): React.JSX.Element {
       setSelectedJuzId={setSelectedJuzId}
       setSelectedSurahId={setSelectedSurahId}
       rememberScroll={() => rememberScroll('Page')}
+      onClose={onClose}
     />
   );
 }

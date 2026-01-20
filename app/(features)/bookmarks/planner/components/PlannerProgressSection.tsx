@@ -25,7 +25,7 @@ export const PlannerProgressSection = ({
       : `${surahLabel} ${surahId}:${progress.currentVerse}`;
 
   return (
-    <div className="rounded-2xl border border-border/60 bg-background/60 px-4 py-4">
+    <div className="rounded-lg border border-border/60 bg-background/60 px-4 py-4">
       <PlannerProgressHeader percent={progress.percent} />
       <PlannerVerseDetails verseLine={verseLine} secondaryText={progress.currentSecondaryText} />
       <PlannerProgressBar percent={progress.percent} />
@@ -86,7 +86,7 @@ const PlannerContinueButton = ({
   <button
     type="button"
     onClick={onContinue}
-    className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-on-accent shadow-sm transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+    className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent shadow-sm transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
   >
     Continue reading
   </button>

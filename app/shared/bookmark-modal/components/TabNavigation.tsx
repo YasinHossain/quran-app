@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { memo } from 'react';
 
 import { CloseIcon } from '@/app/shared/icons';
@@ -21,53 +20,43 @@ export const TabNavigation = memo(function TabNavigation({
   onClose,
 }: TabNavigationProps): React.JSX.Element {
   const tabs = [
-    { id: 'pin' as const, label: 'Pin Verse', description: 'Quick access' },
-    { id: 'bookmark' as const, label: 'Add to Folder', description: 'Organize & save' },
+    { id: 'pin' as const, label: 'Pin Verse' },
+    { id: 'bookmark' as const, label: 'Add to Folder' },
   ];
 
   return (
-    <div className="px-6 py-4">
-      <div className="relative flex w-full items-start justify-center">
+    <div className="px-3 py-4 relative">
+      <div className="flex w-full items-start justify-center">
         <div className="space-y-1 text-center">
           <h2 className="text-xl font-semibold text-foreground">Add to Collections</h2>
-          {verseKey && <p className="text-sm text-muted">Verse {verseKey}</p>}
+          {verseKey && <p className="text-sm text-muted">Surah {verseKey}</p>}
         </div>
         <button
           onClick={onClose}
           className={cn(
-            'absolute right-0 top-0 p-2 rounded-full hover:bg-interactive transition-colors',
-            touchClasses.target,
+            'absolute right-3 top-3 p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center',
             touchClasses.focus
           )}
           aria-label="Close"
         >
-          <CloseIcon size={20} className="text-muted" />
+          <CloseIcon size={18} className="text-muted" />
         </button>
       </div>
 
-      <div className="mt-4 flex bg-surface-secondary rounded-2xl p-1 gap-1">
+      <div className="mt-4 flex items-center p-1 rounded-full bg-interactive border border-border">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
             className={cn(
-              'relative flex-1 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200',
-              activeTab === tab.id ? 'text-accent' : 'text-muted hover:text-foreground',
-              touchClasses.target,
+              'flex-1 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200',
+              activeTab === tab.id
+                ? 'bg-surface shadow text-foreground'
+                : 'text-muted hover:text-foreground hover:bg-surface/30',
               touchClasses.focus
             )}
           >
-            {activeTab === tab.id && (
-              <motion.div
-                layoutId="activeTab"
-                className="absolute inset-0 bg-accent/10 rounded-xl border border-accent/20"
-                transition={{ type: 'spring', stiffness: 500, damping: 40 }}
-              />
-            )}
-            <div className="relative">
-              <div>{tab.label}</div>
-              <div className="text-xs opacity-75">{tab.description}</div>
-            </div>
+            {tab.label}
           </button>
         ))}
       </div>

@@ -59,10 +59,10 @@ describe('SettingsContext settings state', () => {
   it('persists settings changes in localStorage across renders', async () => {
     const { unmount } = renderSettings();
     await clickUpdate();
-    await expectStoredFontSize(30);
+    await expectStoredFontSize(36);
     unmount();
     renderSettings();
-    await expectRenderedFontSize(30);
+    await expectRenderedFontSize(36);
   });
 
   it('saves multiple tafsir selections', async () => {

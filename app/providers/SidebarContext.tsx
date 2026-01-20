@@ -9,19 +9,29 @@ const useSidebarKeyboard = (
   isSurahListOpen: boolean,
   setSurahListOpen: (open: boolean) => void,
   isBookmarkSidebarOpen: boolean,
-  setBookmarkSidebarOpen: (open: boolean) => void
+  setBookmarkSidebarOpen: (open: boolean) => void,
+  isSearchSidebarOpen: boolean,
+  setSearchSidebarOpen: (open: boolean) => void
 ): void => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent): void => {
       if (event.key === 'Escape') {
         if (isSurahListOpen) setSurahListOpen(false);
         if (isBookmarkSidebarOpen) setBookmarkSidebarOpen(false);
+        if (isSearchSidebarOpen) setSearchSidebarOpen(false);
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isSurahListOpen, setSurahListOpen, isBookmarkSidebarOpen, setBookmarkSidebarOpen]);
+  }, [
+    isSurahListOpen,
+    setSurahListOpen,
+    isBookmarkSidebarOpen,
+    setBookmarkSidebarOpen,
+    isSearchSidebarOpen,
+    setSearchSidebarOpen,
+  ]);
 };
 
 interface SidebarContextType {
@@ -29,6 +39,8 @@ interface SidebarContextType {
   setSurahListOpen: (open: boolean) => void;
   isBookmarkSidebarOpen: boolean;
   setBookmarkSidebarOpen: (open: boolean) => void;
+  isSearchSidebarOpen: boolean;
+  setSearchSidebarOpen: (open: boolean) => void;
   surahScrollTop: number;
   setSurahScrollTop: (top: number) => void;
   juzScrollTop: number;
@@ -42,6 +54,8 @@ interface SidebarToggles {
   setSurahListOpen: (open: boolean) => void;
   isBookmarkSidebarOpen: boolean;
   setBookmarkSidebarOpen: (open: boolean) => void;
+  isSearchSidebarOpen: boolean;
+  setSearchSidebarOpen: (open: boolean) => void;
 }
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
@@ -55,6 +69,7 @@ const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 const useSidebarToggles = (): SidebarToggles => {
   const [isSurahListOpen, _setSurahListOpen] = useState(false);
   const [isBookmarkSidebarOpen, _setBookmarkSidebarOpen] = useState(false);
+  const [isSearchSidebarOpen, _setSearchSidebarOpen] = useState(false);
 
   const setSurahListOpen = useCallback((open: boolean): void => {
     _setSurahListOpen(open);
@@ -64,15 +79,28 @@ const useSidebarToggles = (): SidebarToggles => {
     _setBookmarkSidebarOpen(open);
   }, []);
 
-  useBodyScrollLock(isSurahListOpen || isBookmarkSidebarOpen);
+  const setSearchSidebarOpen = useCallback((open: boolean): void => {
+    _setSearchSidebarOpen(open);
+  }, []);
+
+  useBodyScrollLock(isSurahListOpen || isBookmarkSidebarOpen || isSearchSidebarOpen);
   useSidebarKeyboard(
     isSurahListOpen,
     setSurahListOpen,
     isBookmarkSidebarOpen,
-    setBookmarkSidebarOpen
+    setBookmarkSidebarOpen,
+    isSearchSidebarOpen,
+    setSearchSidebarOpen
   );
 
-  return { isSurahListOpen, setSurahListOpen, isBookmarkSidebarOpen, setBookmarkSidebarOpen };
+  return {
+    isSurahListOpen,
+    setSurahListOpen,
+    isBookmarkSidebarOpen,
+    setBookmarkSidebarOpen,
+    isSearchSidebarOpen,
+    setSearchSidebarOpen,
+  };
 };
 
 const useSidebarContextValue = (

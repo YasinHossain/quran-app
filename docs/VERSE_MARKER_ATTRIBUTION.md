@@ -1,13 +1,16 @@
 # Verse Marker Ornament Attribution
 
-## Arabic End of Ayah Symbol (U+06DD)
+## Verse Marker Ornament (KFGQPC)
 
-The verse marker ornament used in this application is the authentic Unicode character U+06DD (ARABIC END OF AYAH) as rendered in the **KFGQPC Uthmanic Script HAFS Regular** font.
+The verse marker ornament used in this application comes from the **KFGQPC Uthmanic Script HAFS Regular** font (loaded as `UthmanicHafs1Ver18`).
+
+In this font, Arabic-Indic digits (٠-٩) are drawn as the end-of-ayah ornament with the number inside (as seen on Quran.com). The font also contains the Unicode character U+06DD (ARABIC END OF AYAH), which renders as an _empty_ ornament and is not used for numbered verse markers.
 
 ### Design Source
 
-- **Unicode Character**: U+06DD (ARABIC END OF AYAH)
-- **Font**: KFGQPC Uthmanic Script HAFS Regular
+- **Primary Rendering**: Arabic-Indic digits (٠-٩) in KFGQPC font (ornament + number)
+- **Empty Ornament (Unicode)**: U+06DD (ARABIC END OF AYAH)
+- **Font**: KFGQPC Uthmanic Script HAFS Regular (`UthmanicHafs1Ver18`)
 - **Designer**: King Fahd Glorious Quran Printing Complex (KFGQPC)
 - **Source File**: Provided by user (extracted from font)
 
@@ -23,8 +26,8 @@ The verse marker ornament used in this application is the authentic Unicode char
 
 #### Component
 
-- **File**: `/app/(features)/surah/components/surah-view/VerseMarker.tsx`
-- **Description**: React component that renders the extracted U+06DD symbol with verse numbers.
+- **File**: `/app/shared/components/verse-marker/VerseMarker.tsx`
+- **Description**: Renders verse markers using Arabic-Indic digits in the KFGQPC font so the ornament behaves like a normal glyph (baseline-aligned and font-size scalable).
 
 #### Features
 

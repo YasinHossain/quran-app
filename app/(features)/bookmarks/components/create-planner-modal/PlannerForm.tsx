@@ -2,13 +2,9 @@
 
 import React from 'react';
 
-import {
-  PlanNameInput,
-  SurahSelectionSection,
-  EstimatedDaysInput,
-  PlanStatistics,
-  FormActions,
-} from './components';
+import { CounterInput } from '@/app/shared/ui/inputs/CounterInput';
+
+import { PlanNameInput, SurahSelectionSection, PlanStatistics, FormActions } from './components';
 
 import type { PlanFormData } from './types';
 import type { Chapter } from '@/types';
@@ -23,6 +19,8 @@ interface PlannerFormProps {
   duplicatePlanName?: string;
   onSubmit: (e: React.FormEvent) => void;
   chapters: Chapter[];
+  formId?: string;
+  showActions?: boolean;
 }
 
 export const PlannerForm = ({
@@ -35,8 +33,10 @@ export const PlannerForm = ({
   duplicatePlanName,
   onSubmit,
   chapters,
+  formId,
+  showActions = true,
 }: PlannerFormProps): React.JSX.Element => (
-  <form onSubmit={onSubmit} className="space-y-6">
+  <form id={formId} onSubmit={onSubmit} className="space-y-6">
     <PlanNameInput
       planName={formData.planName}
       onChange={(planName) => onFormDataChange({ planName })}
@@ -53,10 +53,15 @@ export const PlannerForm = ({
       chapters={chapters}
     />
 
-    <EstimatedDaysInput
-      estimatedDays={formData.estimatedDays}
-      onChange={(estimatedDays) => onFormDataChange({ estimatedDays })}
-    />
+    <div className="space-y-2">
+      <CounterInput
+        label="Estimated Days"
+        value={formData.estimatedDays}
+        onChange={(estimatedDays) => onFormDataChange({ estimatedDays })}
+        min={1}
+        max={365}
+      />
+    </div>
 
     <PlanStatistics
       isValidRange={isValidRange}
@@ -64,6 +69,6 @@ export const PlannerForm = ({
       versesPerDay={versesPerDay}
     />
 
-    <FormActions canSubmit={canSubmit} />
+    {showActions ? <FormActions canSubmit={canSubmit} {...(formId ? { formId } : {})} /> : null}
   </form>
 );

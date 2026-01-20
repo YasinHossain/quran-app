@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+
 
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
@@ -25,26 +25,23 @@ export type BookmarkFolderControllerReturn = {
   handleSectionChange: (section: SectionId) => void;
 };
 
-// Helper function to manage body overflow
-function useBodyOverflow(): void {
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, []);
-}
+
 
 // Helper function to create navigation handler
-function useNavigationHandler(router: ReturnType<typeof useRouter>): {
+function useNavigationHandler(
+  router: ReturnType<typeof useRouter>,
+  setBookmarkSidebarOpen: (open: boolean) => void
+): {
   handleNavigateToBookmarks: () => void;
   handleSectionChange: (section: SectionId) => void;
 } {
   const handleNavigateToBookmarks = (): void => {
-    router.push('/bookmarks');
+    setBookmarkSidebarOpen(false);
+    router.push('/bookmarks/folders');
   };
 
   const handleSectionChange = (section: SectionId): void => {
+    setBookmarkSidebarOpen(false);
     switch (section) {
       case 'pinned':
         router.push('/bookmarks/pinned');
@@ -79,8 +76,11 @@ export function useBookmarkFolderController(folderId: string): BookmarkFolderCon
     selectedWordLanguageName,
   } = useBookmarkFolderPanels();
 
-  useBodyOverflow();
-  const { handleNavigateToBookmarks, handleSectionChange } = useNavigationHandler(router);
+
+  const { handleNavigateToBookmarks, handleSectionChange } = useNavigationHandler(
+    router,
+    setBookmarkSidebarOpen
+  );
 
   return {
     isBookmarkSidebarOpen,

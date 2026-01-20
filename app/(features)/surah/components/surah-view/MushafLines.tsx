@@ -1,8 +1,14 @@
+'use client';
+
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
 import { cn } from '@/lib/utils/cn';
 
 import { MushafLine } from './MushafLine';
+import { MushafReflowContent } from './MushafReflowContent';
 
 import type { ReaderSettings } from './MushafMain.types';
+import type { QcfFontVersion } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import type { MushafLineGroup } from '@/types';
 import type React from 'react';
 
@@ -12,12 +18,161 @@ type MushafLinesProps = {
   isQcfMushaf: boolean;
   isQpcHafsMushaf: boolean;
   isIndopakMushaf: boolean;
-  qcfVersion: 'v1' | 'v2';
-  indopakVersion?: '15' | '16' | null;
+  qcfVersion: QcfFontVersion;
+  indopakVersion?: '15' | '16' | null | undefined;
   fontSize: string | number;
   fontFamily: string;
   lineWidthDesktop: string;
   isFontLoaded: boolean;
+  forceReflow?: boolean;
+};
+
+/**
+ * Parse lineWidthDesktop value to pixels.
+ * Handles px and vh units.
+ */
+const parseLineWidthToPx = (lineWidthDesktop: string): number => {
+  const pxMatch = lineWidthDesktop.match(/^(\d+(?:\.\d+)?)px$/);
+  if (pxMatch?.[1]) {
+    return parseFloat(pxMatch[1]);
+  }
+
+  const vhMatch = lineWidthDesktop.match(/^(\d+(?:\.\d+)?)vh$/);
+  if (vhMatch?.[1] && typeof window !== 'undefined') {
+    return (parseFloat(vhMatch[1]) / 100) * window.innerHeight;
+  }
+
+  return 560; // default fallback
+};
+
+/**
+ * Check if reflow mode should be used based on container width and line width.
+ * @param containerWidth - The actual available width of the content container
+ * @param lineWidthDesktop - The desired line width (in px or vh units)
+ * @returns true if reflow mode should be used (line would overflow container)
+ */
+const checkShouldReflow = (containerWidth: number, lineWidthDesktop: string): boolean => {
+  if (containerWidth <= 0) return false;
+
+  const lineWidthPx = parseLineWidthToPx(lineWidthDesktop);
+  // Allow 5% margin - if line would take more than 95% of container, use reflow
+  const maxAllowedWidth = containerWidth * 0.95;
+
+  return lineWidthPx > maxAllowedWidth;
+};
+
+// Hysteresis threshold to prevent rapid mode switching during scroll
+// Once in a mode, require a larger width change to switch modes
+const REFLOW_HYSTERESIS_PX = 20;
+
+/**
+ * Custom hook that detects when to use reflow mode.
+ * Uses ResizeObserver to measure the actual container width (not window width).
+ * This properly accounts for sidebars and other layout elements.
+ *
+ * Optimized to prevent layout jumps during scroll:
+ * - Only updates state when reflow mode actually needs to change
+ * - Uses RAF to batch updates and avoid layout thrashing
+ * - Debounces rapid resize events
+ * - Uses hysteresis to prevent rapid mode switching at boundary
+ */
+const useReflowMode = (
+  containerRef: React.RefObject<HTMLDivElement | null>,
+  lineWidthDesktop: string
+): boolean => {
+  // Track whether we've done the initial calculation
+  const isInitializedRef = useRef(false);
+  const [shouldReflow, setShouldReflow] = useState(() => {
+    // SSR-safe initial calculation
+    if (typeof window === 'undefined') return false;
+    return false; // Will be set on mount
+  });
+  const rafIdRef = useRef<number | null>(null);
+  const lastContainerWidthRef = useRef<number>(0);
+  // Track the last stable reflow state to apply hysteresis
+  const stableReflowRef = useRef<boolean | null>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Function to check reflow with hysteresis
+    const checkReflowWithHysteresis = (containerWidth: number): boolean => {
+      const baseReflow = checkShouldReflow(containerWidth, lineWidthDesktop);
+
+      // If we have a stable state and the new state differs, apply hysteresis
+      if (stableReflowRef.current !== null && stableReflowRef.current !== baseReflow) {
+        // Recalculate with hysteresis - need a larger margin to switch
+        const lineWidthPx = parseLineWidthToPx(lineWidthDesktop);
+        const threshold = stableReflowRef.current
+          ? containerWidth * 0.95 + REFLOW_HYSTERESIS_PX // Coming out of reflow: need more space
+          : containerWidth * 0.95 - REFLOW_HYSTERESIS_PX; // Going into reflow: need less space
+
+        return lineWidthPx > threshold;
+      }
+
+      return baseReflow;
+    };
+
+    // Function to check and update reflow state (debounced via RAF)
+    const checkReflow = (): void => {
+      // Cancel any pending RAF to debounce rapid updates
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
+      }
+
+      rafIdRef.current = requestAnimationFrame(() => {
+        const containerWidth = container.clientWidth;
+
+        // Skip check if container width hasn't changed significantly (within 10px)
+        // This prevents jumps from minor layout adjustments during virtualization
+        if (Math.abs(containerWidth - lastContainerWidthRef.current) < 10) {
+          rafIdRef.current = null;
+          return;
+        }
+
+        lastContainerWidthRef.current = containerWidth;
+        const newShouldReflow = checkReflowWithHysteresis(containerWidth);
+
+        // Only update state if it actually changed
+        if (newShouldReflow !== shouldReflow) {
+          stableReflowRef.current = newShouldReflow;
+          setShouldReflow(newShouldReflow);
+        }
+
+        rafIdRef.current = null;
+      });
+    };
+
+    // Check immediately on mount (synchronous for initial render)
+    if (!isInitializedRef.current) {
+      const containerWidth = container.clientWidth;
+      lastContainerWidthRef.current = containerWidth;
+      const initialReflow = checkShouldReflow(containerWidth, lineWidthDesktop);
+      stableReflowRef.current = initialReflow;
+      if (initialReflow !== shouldReflow) {
+        setShouldReflow(initialReflow);
+      }
+      isInitializedRef.current = true;
+    }
+
+    // Use ResizeObserver to detect container size changes
+    // This handles: window resize, sidebar open/close, layout changes
+    const resizeObserver = new ResizeObserver(() => {
+      checkReflow();
+    });
+
+    resizeObserver.observe(container);
+
+    return () => {
+      resizeObserver.disconnect();
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
+      }
+    };
+  }, [containerRef, lineWidthDesktop, shouldReflow]);
+
+  return shouldReflow;
 };
 
 export const MushafLines = ({
@@ -32,38 +187,125 @@ export const MushafLines = ({
   fontFamily,
   lineWidthDesktop,
   isFontLoaded,
-}: MushafLinesProps): React.JSX.Element => (
-  <div
-    className={cn(
-      'flex flex-col',
-      isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf
-        ? 'gap-1 sm:gap-1.5 mx-auto'
-        : 'gap-4 sm:gap-5'
-    )}
-    style={
-      {
-        '--mushaf-line-width': lineWidthDesktop,
-        fontFamily,
-        width:
-          isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf
-            ? 'min(var(--mushaf-line-width), 95vw)'
-            : 'auto',
-      } as React.CSSProperties
+  forceReflow = false,
+}: MushafLinesProps): React.JSX.Element => {
+  // Container ref to measure actual available width
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleCopy = useCallback((event: React.ClipboardEvent<HTMLDivElement>): void => {
+    if (typeof window === 'undefined') return;
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+    const container = event.currentTarget;
+    const anchorNode = selection.anchorNode;
+    const focusNode = selection.focusNode;
+    if (!anchorNode || !focusNode) return;
+    if (!container.contains(anchorNode) || !container.contains(focusNode)) {
+      return;
     }
-  >
-    {lines.map((line) => (
-      <MushafLine
-        key={line.key}
-        line={line}
-        settings={settings}
-        isQcfMushaf={isQcfMushaf}
-        isQpcHafsMushaf={isQpcHafsMushaf}
-        isIndopakMushaf={isIndopakMushaf}
-        qcfVersion={qcfVersion}
-        indopakVersion={indopakVersion}
-        fontSize={fontSize}
-        isFontLoaded={isFontLoaded}
-      />
-    ))}
-  </div>
-);
+    const range = selection.getRangeAt(0);
+    const wordNodes = Array.from(
+      container.querySelectorAll<HTMLElement>('[data-mushaf-word="true"]')
+    );
+    const selectedWords = wordNodes
+      .filter((node) => {
+        try {
+          return range.intersectsNode(node);
+        } catch {
+          return false;
+        }
+      })
+      .map((node) => node.dataset['copyText']?.trim())
+      .filter((text): text is string => Boolean(text));
+    const normalized = selectedWords.length
+      ? selectedWords.join(' ')
+      : selection.toString().replace(/\s+/g, ' ').trim();
+    if (!normalized) return;
+    event.preventDefault();
+    event.clipboardData.setData('text/plain', normalized);
+  }, []);
+
+  // Detect reflow mode based on actual container width AND font size (lineWidthDesktop)
+  const isReflowDetected = useReflowMode(containerRef, lineWidthDesktop);
+  const shouldUseReflow = forceReflow || isReflowDetected;
+
+  const scopeId = useMemo(
+    () => `mushaf-layout-${lineWidthDesktop.replace(/[^a-z0-9]/gi, '')}`,
+    [lineWidthDesktop]
+  );
+
+  return (
+    <div
+      ref={containerRef}
+      className={scopeId}
+      onCopy={handleCopy}
+      style={{
+        // Constrain width to parent's available space for proper measurement
+        width: '100%',
+        // Prevent content from expanding container - forces reflow mode instead
+        overflow: 'hidden',
+      }}
+    >
+      {shouldUseReflow ? (
+        // Reflow Layout (Mobile/Overflow mode)
+        <div
+          className={cn(
+            'mushaf-reflow-view',
+            isQcfMushaf && qcfVersion === 'v4' && 'tajweed-palette'
+          )}
+        >
+          <MushafReflowContent
+            lines={lines}
+            settings={settings}
+            isQcfMushaf={isQcfMushaf}
+            isQpcHafsMushaf={isQpcHafsMushaf}
+            isIndopakMushaf={isIndopakMushaf}
+            qcfVersion={qcfVersion}
+            indopakVersion={indopakVersion}
+            fontSize={fontSize}
+            fontFamily={fontFamily}
+            isFontLoaded={isFontLoaded}
+          />
+        </div>
+      ) : (
+        // Standard Lines Layout (Desktop / Wide view)
+        <div
+          className={cn(
+            'mushaf-standard-view flex flex-col',
+            isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf
+              ? 'gap-1 sm:gap-1.5 mx-auto'
+              : 'gap-4 sm:gap-5',
+            isQcfMushaf && qcfVersion === 'v4' && 'tajweed-palette'
+          )}
+          style={
+            {
+              '--mushaf-line-width': lineWidthDesktop,
+              fontFamily,
+              width:
+                isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf
+                  ? 'min(var(--mushaf-line-width), 95vw)'
+                  : 'auto',
+              // CSS containment for improved scroll performance
+              contain: 'layout style',
+            } as React.CSSProperties
+          }
+        >
+          {lines.map((line) => (
+            <MushafLine
+              key={line.key}
+              line={line}
+              settings={settings}
+              isQcfMushaf={isQcfMushaf}
+              isQpcHafsMushaf={isQpcHafsMushaf}
+              isIndopakMushaf={isIndopakMushaf}
+              qcfVersion={qcfVersion}
+              indopakVersion={indopakVersion}
+              fontSize={fontSize}
+              isFontLoaded={isFontLoaded}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};

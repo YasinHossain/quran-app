@@ -82,7 +82,8 @@ export const ResourceTabs = ({
     </NavButton>
     <div
       ref={tabsContainerRef}
-      className="flex flex-1 min-w-0 items-center space-x-2 overflow-hidden"
+      className="flex flex-1 min-w-0 items-center space-x-2 overflow-x-auto [&::-webkit-scrollbar]:hidden"
+      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
     >
       {languages.map((lang) => (
         <Tab key={lang} lang={lang} active={activeFilter === lang} onClick={onTabClick} />

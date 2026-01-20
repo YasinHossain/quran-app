@@ -2,14 +2,12 @@ import { useRouter } from 'next/navigation';
 import { useState, useMemo } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { useBodyScrollLock } from '@/app/providers/hooks/useBodyScrollLock';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 
 export interface UseBookmarksPageReturn {
   folders: ReturnType<typeof useBookmarks>['folders'];
   sortedFolders: ReturnType<typeof useBookmarks>['folders'];
-  handleFolderSelect: (folderId: string) => void;
   handleSectionChange: (section: SectionId) => void;
 }
 
@@ -42,7 +40,7 @@ function sectionToPath(section: SectionId): string {
     case 'planner':
       return '/bookmarks/planner';
     default:
-      return '/bookmarks';
+      return '/bookmarks/folders';
   }
 }
 
@@ -51,17 +49,11 @@ export const useBookmarksPage = (): UseBookmarksPageReturn => {
   const [sortBy] = useState<SortKey>('recent');
   const router = useRouter();
 
-  useBodyScrollLock(true);
-
   const sortedFolders = useMemo(() => sortFolders(folders, sortBy), [folders, sortBy]);
-
-  const handleFolderSelect = (folderId: string): void => {
-    router.push(`/bookmarks/${folderId}`);
-  };
 
   const handleSectionChange = (section: SectionId): void => {
     router.push(sectionToPath(section));
   };
 
-  return { folders, sortedFolders, handleFolderSelect, handleSectionChange };
+  return { folders, sortedFolders, handleSectionChange };
 };

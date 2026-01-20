@@ -22,6 +22,7 @@ export interface BookmarkContextType {
     verseKey?: string,
     globalVerseId?: number
   ) => void;
+  removeLastRead: (surahId: string) => void;
   chapters: Chapter[];
   planner: Record<string, PlannerPlan>;
   addToPlanner: (surahId: number, targetVerses?: number) => void;

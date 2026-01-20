@@ -1,0 +1,1 @@
+export { ComprehensiveSearch } from './ComprehensiveSearch';

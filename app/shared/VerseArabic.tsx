@@ -1,13 +1,61 @@
 'use client';
-import { memo } from 'react';
+import * as Popover from '@radix-ui/react-popover';
+import { Fragment, memo, useContext, useMemo, useState } from 'react';
 
-import { VerseMarker } from '@/app/(features)/surah/components/surah-view/VerseMarker';
+import { useQcfMushafFont } from '@/app/(features)/surah/hooks/useQcfMushafFont';
+import { useDynamicFontLoader } from '@/app/hooks/useDynamicFontLoader';
 import { useSettings } from '@/app/providers/SettingsContext';
+import { HybridVerseMarker } from '@/app/shared/components/verse-marker/VerseMarker';
+import { AudioContext } from '@/app/shared/player/context/AudioContext';
+import { TajweedFontPalettes } from '@/app/shared/TajweedFontPalettes';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
-import { applyTajweed } from '@/lib/text/tajweed';
+import { cn } from '@/lib/utils/cn';
 import { Verse as VerseType, Word } from '@/types';
 
 import type { LanguageCode } from '@/lib/text/languageCodes';
+
+// Helper to determine if a word IS the verse number (and extract it)
+const getVerseNumber = (text: string): number | null => {
+  if (!text) return null;
+  const trimmed = text.trim();
+
+  // 1. Check for pure Arabic-Indic numerals (e.g. "١")
+  if (/^[\u0660-\u0669]+$/.test(trimmed)) {
+    const arabicIndicDigits = '٠١٢٣٤٥٦٧٨٩';
+    const western = trimmed
+      .split('')
+      .map((d) => arabicIndicDigits.indexOf(d))
+      .join('');
+    return parseInt(western, 10);
+  }
+
+  // 2. Check for U+06DD followed by Arabic-Indic numerals (e.g. "۝١")
+  const matchWithMarker = trimmed.match(/\u06DD([\u0660-\u0669]+)/);
+  if (matchWithMarker && matchWithMarker[1]) {
+    const arabicIndicDigits = '٠١٢٣٤٥٦٧٨٩';
+    const western = matchWithMarker[1]
+      .split('')
+      .map((d) => arabicIndicDigits.indexOf(d))
+      .join('');
+    return parseInt(western, 10);
+  }
+
+  return null;
+};
+
+const INDOPAK_FONT_FACES = new Set([
+  '"IndoPak", serif',
+  '"Noor-e-Huda", serif',
+  '"Noor-e-Hidayat", serif',
+  '"Noor-e-Hira", serif',
+  '"Lateef", serif',
+]);
+
+const resolveWordText = (word: Word, isIndopakFont: boolean): string =>
+  isIndopakFont ? (word.indopak ?? word.uthmani) : word.uthmani;
+
+const resolveVerseText = (verse: VerseType, isIndopakFont: boolean): string =>
+  isIndopakFont ? (verse.text_indopak ?? verse.text_uthmani) : verse.text_uthmani;
 
 // Word rendering component
 interface WordDisplayProps {
@@ -15,15 +63,38 @@ interface WordDisplayProps {
   index: number;
   showByWords: boolean;
   wordLang: string;
-  settings: { tajweed?: boolean; arabicFontSize: number };
+  settings: { arabicFontSize: number; arabicFontFace?: string };
   isQpcHafsFont: boolean;
+  /** When true and word.codeV2 is available, render Tajweed glyph code */
+  tajweed?: boolean;
+  /** V4 font family to use for Tajweed rendering */
+  tajweedFontFamily?: string | undefined;
+  /** Verse key for audio word sync highlighting */
+  verseKey: string;
+  /** Word position (1-indexed) for audio word sync highlighting */
+  wordPosition: number;
+  /** Current font family for hybrid verse marker detection */
+  fontFamily?: string;
+  isIndopakFont: boolean;
 }
 
 // QPC Uthmani Hafs font lacks the U+06DF glyph, which shows up as a black circle; strip it when selected.
-const stripUnsupportedQpcGlyphs = (text: string, isQpcHafsFont: boolean): string => {
+// ALSO strip U+06DD from text nodes because we handle the verse marker separately.
+const cleanTextContent = (text: string, isQpcHafsFont: boolean): string => {
   if (!text) return '';
-  return isQpcHafsFont ? text.replace(/\u06DF/g, '') : text;
+  let cleaned = text;
+  // Always strip the verse marker (۝) from text words to prevent duplication/double markers
+  // The marker is only re-added by the HybridVerseMarker for the actual verse number word.
+  cleaned = cleaned.replace(/\u06DD/g, '');
+
+  if (isQpcHafsFont) {
+    cleaned = cleaned.replace(/\u06DF/g, '');
+  }
+  return cleaned;
 };
+
+// Legacy name alias for other components in this file using it
+const stripUnsupportedQpcGlyphs = cleanTextContent;
 
 const WordDisplay = ({
   word,
@@ -32,40 +103,145 @@ const WordDisplay = ({
   wordLang,
   settings,
   isQpcHafsFont,
+  tajweed = false,
+  tajweedFontFamily,
+  verseKey,
+  wordPosition,
+  fontFamily,
+  isIndopakFont,
 }: WordDisplayProps): React.JSX.Element | null => {
-  // Strip verse markers (U+06DD ۝, U+06DE ۞) from the text to avoid duplication with the SVG marker
-  // If the word contains a verse marker, we assume it's the verse ending word and hide it completely
-  // because we are rendering our own custom VerseMarker component.
-  if (/[\u06DD\u06DE\uFD3E\uFD3F]/.test(word.uthmani)) {
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const audioCtx = useContext(AudioContext);
+  const isPlayerVisible = audioCtx?.isPlayerVisible ?? false;
+  const verticalAlignClass = showByWords ? 'align-top' : 'align-baseline';
+  const baseWordText = resolveWordText(word, isIndopakFont);
+
+  // Skip rendering for Rub/Sajdah markers if that's all the word is
+  if (/[\u06DE\uFD3E\uFD3F]/.test(baseWordText) && !/[\u06DD]/.test(baseWordText)) {
     return null;
   }
 
-  const cleanUthmani = stripUnsupportedQpcGlyphs(word.uthmani, isQpcHafsFont);
+  // Check if this word is the verse number
+  const verseNum = getVerseNumber(baseWordText);
+  // Also check if the word is formally typed as an 'end' marker in the API data.
+  // This helps identify standalone markers that might be "empty" of digits.
+  const isEndWord = word.char_type_name === 'end';
 
-  if (!cleanUthmani.trim()) {
+  // Logic: Use HybridVerseMarker if we have a valid number, or if it's explicitly an 'end' word.
+  if (verseNum !== null || isEndWord) {
+    // If we have a valid verse number, render the Unified Verse Marker
+    if (verseNum !== null) {
+      return (
+        <span
+          key={`${word.id}-${index}`}
+          className={`inline-block text-center ${verticalAlignClass} verse-audio-word`}
+          data-verse-word="true"
+          data-verse-key={verseKey}
+          data-word-position={wordPosition}
+        >
+          <HybridVerseMarker verseNumber={verseNum} {...(fontFamily ? { fontFamily } : {})} />
+        </span>
+      );
+    }
+
+    // If it's an 'end' word but NO extracted number (e.g. standalone bubble), HIDE IT.
+    // This solves the "double marker" / "ghost marker" issue where the API sends
+    // a separate word for the marker bubble.
     return null;
   }
+
+  // CASE 2: It is regular text (or a standalone marker that failed num extraction)
+  // Logic: Strip any U+06DD characters so they don't appear as duplicates.
+  // Use codeV2 for Tajweed when available, otherwise fall back to uthmani
+  const useTajweed = tajweed && word.codeV2;
+  const rawText = (useTajweed ? word.codeV2 : baseWordText) || '';
+
+  // Clean the text (removes \u06DD and other unsupported glyphs)
+  const displayText = cleanTextContent(rawText, isQpcHafsFont);
+  const copyText = cleanTextContent(baseWordText, isQpcHafsFont).trim();
+
+  // If text is empty after cleaning (e.g. it was just "۝"), hide it.
+  if (!displayText?.trim()) {
+    return null;
+  }
+
+  const translation = word[wordLang as LanguageCode] as string | undefined;
+  const hasTranslation = Boolean(translation && translation.trim());
+  const showTooltip = !showByWords && hasTranslation;
+
+  // Style for Tajweed words - use V4 font
+  const tajweedStyle =
+    useTajweed && tajweedFontFamily ? { fontFamily: tajweedFontFamily } : undefined;
 
   return (
-    <span key={`${word.id}-${index}`} className="text-center">
-      <span className="relative group cursor-pointer inline-block">
+    <span
+      key={`${word.id}-${index}`}
+      className={`inline-block text-center ${verticalAlignClass} verse-audio-word`}
+      data-verse-word="true"
+      data-verse-key={verseKey}
+      data-word-position={wordPosition}
+      data-copy-text={copyText || undefined}
+    >
+      {showTooltip ? (
+        <Popover.Root open={isPopoverOpen && !isPlayerVisible} onOpenChange={setIsPopoverOpen}>
+          <Popover.Trigger asChild>
+            <span
+              className="relative cursor-pointer inline-block outline-none bg-transparent p-0 text-inherit caret-transparent"
+              style={tajweedStyle}
+              onPointerEnter={(e) => {
+                if (e.pointerType === 'mouse') setIsPopoverOpen(true);
+              }}
+              onPointerLeave={(e) => {
+                if (e.pointerType === 'mouse') setIsPopoverOpen(false);
+              }}
+            >
+              {useTajweed ? (
+                <span>{displayText}</span>
+              ) : (
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: sanitizeHtml(displayText),
+                  }}
+                />
+              )}
+            </span>
+          </Popover.Trigger>
+          <Popover.Portal>
+            <Popover.Content
+              dir="auto"
+              side="top"
+              align="center"
+              sideOffset={10}
+              collisionPadding={12}
+              className="rounded-md bg-accent text-on-accent text-sm px-3 py-2 shadow-lg z-tooltip pointer-events-none max-w-[min(16rem,calc(100vw-1.5rem))] whitespace-normal text-center"
+            >
+              {translation}
+              <Popover.Arrow className="fill-accent" />
+            </Popover.Content>
+          </Popover.Portal>
+        </Popover.Root>
+      ) : (
         <span
-          dangerouslySetInnerHTML={{
-            __html: sanitizeHtml(settings.tajweed ? applyTajweed(cleanUthmani) : cleanUthmani),
-          }}
-        />
-        {!showByWords && (
-          <span className="absolute left-1/2 -translate-x-1/2 -top-7 hidden group-hover:block bg-accent text-on-accent text-xs px-2 py-1 rounded shadow z-10 whitespace-nowrap">
-            {word[wordLang as LanguageCode] as string}
-          </span>
-        )}
-      </span>
+          className={`inline-block ${isPlayerVisible ? 'cursor-pointer caret-transparent' : ''}`}
+          style={tajweedStyle}
+        >
+          {useTajweed ? (
+            <span>{displayText}</span>
+          ) : (
+            <span
+              dangerouslySetInnerHTML={{
+                __html: sanitizeHtml(displayText),
+              }}
+            />
+          )}
+        </span>
+      )}
       {showByWords && (
         <span
           className="mt-0.5 block text-muted mx-1"
           style={{ fontSize: `${settings.arabicFontSize * 0.5}px` }}
         >
-          {word[wordLang as LanguageCode] as string}
+          {translation}
         </span>
       )}
     </span>
@@ -75,92 +251,176 @@ const WordDisplay = ({
 // Verse text component for fallback display
 const VerseText = ({
   verseText,
-  settings,
   isQpcHafsFont,
 }: {
   verseText: string;
-  settings: { tajweed?: boolean };
   isQpcHafsFont: boolean;
 }): React.JSX.Element => {
   // Strip verse markers (U+06DD ۝, U+06DE ۞)
   const normalizedText = stripUnsupportedQpcGlyphs(verseText, isQpcHafsFont);
   const cleanText = normalizedText.replace(/[\u06DD\u06DE]/g, '');
 
-  if (settings.tajweed) {
-    return (
-      <span
-        dangerouslySetInnerHTML={{
-          __html: sanitizeHtml(applyTajweed(cleanText)),
-        }}
-      />
-    );
-  }
   return <>{cleanText}</>;
 };
 
 interface VerseArabicProps {
   verse: VerseType;
+  className?: string | undefined;
 }
 
 export const VerseArabic = memo(function VerseArabic({
   verse,
+  className,
 }: VerseArabicProps): React.JSX.Element {
   const { settings } = useSettings();
+
+  // Dynamically load Arabic font when user changes their selection
+  useDynamicFontLoader(settings.arabicFontFace);
+
   const showByWords = settings.showByWords ?? false;
   const wordLang = settings.wordLang ?? 'en';
   const isQpcHafsFont = settings.arabicFontFace?.includes('UthmanicHafs1Ver18') ?? false;
-  const verseText = verse.text_uthmani;
+  const isIndopakFont = settings.arabicFontFace
+    ? INDOPAK_FONT_FACES.has(settings.arabicFontFace)
+    : false;
+  const verseText = resolveVerseText(verse, isIndopakFont);
+  const tajweed = settings.tajweed ?? false;
 
-  // Extract verse number from verse_key (format: "surah:verse")
-  const verseNumber = verse.verse_key ? parseInt(verse.verse_key.split(':')[1] || '0', 10) : 0;
+  const handleCopy = (event: React.ClipboardEvent<HTMLParagraphElement>): void => {
+    if (typeof window === 'undefined') return;
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+    const container = event.currentTarget;
+    const anchorNode = selection.anchorNode;
+    const focusNode = selection.focusNode;
+    if (!anchorNode || !focusNode) return;
+    if (!container.contains(anchorNode) || !container.contains(focusNode)) {
+      return;
+    }
+    const range = selection.getRangeAt(0);
+    const wordNodes = Array.from(
+      container.querySelectorAll<HTMLElement>('[data-verse-word="true"]')
+    );
+    const selectedWords = wordNodes
+      .filter((node) => {
+        try {
+          return range.intersectsNode(node);
+        } catch {
+          return false;
+        }
+      })
+      .map((node) => node.dataset['copyText']?.trim())
+      .filter((text): text is string => Boolean(text));
+    const normalized = selectedWords.length
+      ? selectedWords.join(' ')
+      : selection.toString().replace(/\s+/g, ' ').trim();
+    if (!normalized) return;
+    event.preventDefault();
+    event.clipboardData.setData('text/plain', normalized);
+  };
+
+  // Get unique page numbers from words for V4 font loading
+  const pageNumbers = useMemo(() => {
+    if (!tajweed || !verse.words) return [];
+    const pages = new Set<number>();
+    verse.words.forEach((word) => {
+      if (word.pageNumber) {
+        pages.add(word.pageNumber);
+      }
+    });
+    return Array.from(pages);
+  }, [tajweed, verse.words]);
+
+  // Load V4 fonts for the pages used by this verse's words
+  const { getPageFontFamily, isPageFontLoaded } = useQcfMushafFont(
+    tajweed ? pageNumbers : [],
+    'v4'
+  );
+
+  // Get the font family for a specific word based on its page
+  const getTajweedFontFamily = (word: Word): string | undefined => {
+    if (!tajweed || !word.pageNumber) return undefined;
+    if (!isPageFontLoaded(word.pageNumber)) return undefined;
+    return getPageFontFamily(word.pageNumber);
+  };
+
+  // Determine the base font - for Tajweed without page info, use first loaded page font
+  const baseFontFamily = useMemo(() => {
+    if (!tajweed) return settings.arabicFontFace;
+    const firstPage = pageNumbers[0];
+    if (typeof firstPage === 'number' && isPageFontLoaded(firstPage)) {
+      return getPageFontFamily(firstPage);
+    }
+    return settings.arabicFontFace;
+  }, [tajweed, pageNumbers, settings.arabicFontFace, getPageFontFamily, isPageFontLoaded]);
 
   return (
-    <p
-      dir="rtl"
-      className="text-right leading-loose text-foreground"
-      style={{
-        fontFamily: settings.arabicFontFace,
-        fontSize: `${settings.arabicFontSize}px`,
-        lineHeight: 2.2,
-      }}
-    >
-      {verse.words && verse.words.length > 0 ? (
-        <span className="flex flex-wrap gap-x-3 gap-y-1 justify-start items-center">
-          {verse.words.map((word: Word, index: number) => {
-            // Heuristic: If the last word contains no Arabic letters (only symbols/numbers),
-            // it is likely a verse marker. Hide it to avoid duplication.
-            // Arabic letters range: \u0621-\u064A (Hamza to Yeh), plus extended characters.
-            const hasArabicLetters = /[\u0621-\u064A\u0671-\u06D3]/.test(word.uthmani);
-            const isLastWord = index === (verse.words?.length ?? 0) - 1;
+    <>
+      <TajweedFontPalettes pageNumbers={pageNumbers} version="v4" />
+      <p
+        dir="rtl"
+        className={cn(
+          'w-full text-right leading-loose text-foreground',
+          tajweed && 'tajweed-palette',
+          className
+        )}
+        style={{
+          fontFamily: baseFontFamily,
+          fontSize: `${settings.arabicFontSize}px`,
+          lineHeight: 2.2,
+        }}
+        onCopy={handleCopy}
+      >
+        {verse.words && verse.words.length > 0 ? (
+          <span>
+            {verse.words
+              .filter((word: Word) => {
+                const displayText =
+                  tajweed && word.codeV2
+                    ? word.codeV2
+                    : stripUnsupportedQpcGlyphs(
+                        resolveWordText(word, isIndopakFont),
+                        isQpcHafsFont
+                      );
 
-            if (isLastWord && !hasArabicLetters) {
-              return null;
-            }
+                // Filter only Sajdah/Rub markers (keep verse end markers)
+                const sourceText = resolveWordText(word, isIndopakFont);
+                if (/[\u06DE\uFD3E\uFD3F]/.test(sourceText) && !/[\u06DD]/.test(sourceText)) {
+                  return false;
+                }
 
-            // Also filter known marker characters anywhere (just in case)
-            if (word.char_type_name === 'end' || /[\u06DD\u06DE\uFD3E\uFD3F]/.test(word.uthmani)) {
-              return null;
-            }
-            return (
-              <WordDisplay
-                key={`${word.id}-${index}`}
-                word={word}
-                index={index}
-                showByWords={showByWords}
-                wordLang={wordLang}
-                settings={settings}
-                isQpcHafsFont={isQpcHafsFont}
-              />
-            );
-          })}
-          {verseNumber > 0 && <VerseMarker number={verseNumber} style={{ marginBottom: 0 }} />}
-        </span>
-      ) : (
-        <span className="inline-flex items-center gap-2">
-          <VerseText verseText={verseText} settings={settings} isQpcHafsFont={isQpcHafsFont} />
-          {verseNumber > 0 && <VerseMarker number={verseNumber} style={{ marginBottom: 0 }} />}
-        </span>
-      )}
-    </p>
+                if (!displayText?.trim()) {
+                  return false;
+                }
+
+                return true;
+              })
+              .map((word: Word, index: number) => (
+                <Fragment key={`${word.id}-${index}`}>
+                  {index > 0 ? ' ' : null}
+                  <WordDisplay
+                    word={word}
+                    index={index}
+                    showByWords={showByWords}
+                    wordLang={wordLang}
+                    settings={settings}
+                    isQpcHafsFont={isQpcHafsFont}
+                    tajweed={tajweed}
+                    tajweedFontFamily={getTajweedFontFamily(word)}
+                    verseKey={verse.verse_key}
+                    wordPosition={word.position ?? index + 1}
+                    fontFamily={settings.arabicFontFace}
+                    isIndopakFont={isIndopakFont}
+                  />
+                </Fragment>
+              ))}
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-2">
+            <VerseText verseText={verseText} isQpcHafsFont={isQpcHafsFont} />
+          </span>
+        )}
+      </p>
+    </>
   );
 });

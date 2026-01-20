@@ -10,6 +10,7 @@ export interface VerseActionsProps {
   onShare?: (() => void) | undefined;
   onAddToPlan?: (() => void) | undefined;
   onNavigateToVerse?: (() => void) | undefined;
+  navigateHref?: string | undefined;
   showRemove?: boolean | undefined;
   className?: string | undefined;
 }

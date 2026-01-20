@@ -10,7 +10,7 @@ interface FolderPreviewProps {
 }
 
 export const FolderPreview = ({ folder }: FolderPreviewProps): React.JSX.Element => (
-  <div className="bg-surface-hover rounded-xl p-4 mb-6">
+  <div className="bg-interactive/60 border border-border/60 rounded-xl p-4 mb-6">
     <div className="flex items-center gap-3 mb-3">
       <div className="w-8 h-8 bg-gradient-to-br from-accent/20 to-accent/10 rounded-lg flex items-center justify-center">
         <FolderIcon size={20} className="text-accent" aria-hidden="true" />

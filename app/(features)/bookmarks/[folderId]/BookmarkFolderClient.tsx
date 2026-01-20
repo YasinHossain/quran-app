@@ -2,6 +2,7 @@
 
 import React from 'react';
 
+import { usePrefetchSingleVerse } from '@/app/shared/hooks/useSingleVerse';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import { BookmarkFolderView } from './components/BookmarkFolderView.client';
@@ -21,6 +22,21 @@ interface BookmarkFolderClientProps {
 export function BookmarkFolderClient({ folderId }: BookmarkFolderClientProps): React.JSX.Element {
   logger.debug('BookmarkFolderClient rendering', { folderId });
   const controller = useBookmarkFolderController(folderId);
+
+  // Prefetch first 20 bookmarks to mitigate waterfall loading
+  const prefetch = usePrefetchSingleVerse();
+
+  React.useEffect(() => {
+    if (!controller.bookmarks) return;
+
+    const targets = controller.bookmarks
+      .slice(0, 20)
+      .map((b) => (b.verseKey ? String(b.verseKey) : b.verseId ? String(b.verseId) : null));
+
+    if (targets.length > 0) {
+      void prefetch(targets);
+    }
+  }, [controller.bookmarks, prefetch]);
 
   if (!controller.folder) {
     return <FolderNotFound />;

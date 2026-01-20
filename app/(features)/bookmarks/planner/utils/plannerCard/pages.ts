@@ -1,3 +1,5 @@
+import { convertActualVerseToPlanProgress } from '@/app/(features)/bookmarks/planner/utils/planRange';
+
 import type { PlannerCardProps } from '@/app/(features)/bookmarks/planner/components/PlannerCard.types';
 import type { PageMetrics } from '@/app/(features)/bookmarks/planner/utils/plannerCard/types';
 
@@ -63,7 +65,9 @@ const createPageResolver = (
     if (plan.targetVerses <= 0) {
       return bounds.startPage as number;
     }
-    const cappedVerse = Math.min(Math.max(1, verseNumber), plan.targetVerses);
+
+    const progressVerse = convertActualVerseToPlanProgress(plan, verseNumber);
+    const cappedVerse = Math.min(Math.max(1, progressVerse), plan.targetVerses);
     const relativeOffset =
       mode === 'start'
         ? Math.floor(((cappedVerse - 1) / plan.targetVerses) * bounds.totalPages!)

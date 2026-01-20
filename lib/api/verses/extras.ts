@@ -58,6 +58,7 @@ export async function getRandomVerse(
       {
         translations: translationId.toString(),
         fields: 'text_uthmani',
+        translation_fields: 'resource_name',
       },
       'Failed to fetch random verse'
     );
@@ -69,14 +70,63 @@ export async function getRandomVerse(
   }
 }
 
+/**
+ * Fetch multiple random verses for the Verse of the Day rotation.
+ * Pre-fetches at build time for instant LCP.
+ *
+ * @param count Number of verses to fetch (default: 5)
+ * @param translationId Translation ID to use
+ * @returns Array of random verses
+ */
+export async function getRandomVerses(
+  count: number = 5,
+  translationId: number = 131
+): Promise<Verse[]> {
+  try {
+    // Use a seeded approach based on current hour to get consistent verses per hour
+    const now = new Date();
+    const hourSeed =
+      now.getFullYear() * 1000000 +
+      (now.getMonth() + 1) * 10000 +
+      now.getDate() * 100 +
+      now.getHours();
+
+    // Simple seeded random generator for reproducible results
+    const seededRng = (seed: number) => {
+      let s = seed;
+      return () => {
+        s = (s * 1103515245 + 12345) & 0x7fffffff;
+        return s / 0x7fffffff;
+      };
+    };
+
+    const rng = seededRng(hourSeed);
+
+    // Fetch verses in parallel
+    const versePromises = Array.from({ length: count }, () => getRandomVerse(translationId, rng));
+
+    const verses = await Promise.all(versePromises);
+    return verses;
+  } catch (error) {
+    logger.warn('Failed to fetch random verses, using fallback:', undefined, error as Error);
+    const { fallbackVerse } = await import('../fallback-verse');
+    return [fallbackVerse];
+  }
+}
+
 export async function getVerseById(
   verseId: string | number,
   translationIds: number | number[],
-  wordLang: LanguageCode = 'en'
+  wordLang: LanguageCode = 'en',
+  tajweed = false
 ): Promise<Verse> {
   const translationsParam = Array.isArray(translationIds)
     ? translationIds.join(',')
     : translationIds.toString();
+
+  // Include code_v2 and page_number when tajweed is enabled for V4 font rendering
+  const wordFields = tajweed ? 'text_uthmani,code_v2,page_number' : 'text_uthmani';
+
   const data = await apiFetch<{ verse: ApiVerse }>(
     `verses/${verseId}`,
     {
@@ -84,7 +134,8 @@ export async function getVerseById(
       fields: 'text_uthmani,audio',
       words: 'true',
       word_translation_language: wordLang,
-      word_fields: 'text_uthmani',
+      word_fields: wordFields,
+      translation_fields: 'resource_name',
     },
     'Failed to fetch verse'
   );
@@ -97,11 +148,16 @@ export async function getVerseById(
 export async function getVerseByKey(
   verseKey: string,
   translationIds: number | number[],
-  wordLang: LanguageCode = 'en'
+  wordLang: LanguageCode = 'en',
+  tajweed = false
 ): Promise<Verse> {
   const translationsParam = Array.isArray(translationIds)
     ? translationIds.join(',')
     : translationIds.toString();
+
+  // Include code_v2 and page_number when tajweed is enabled for V4 font rendering
+  const wordFields = tajweed ? 'text_uthmani,code_v2,page_number' : 'text_uthmani';
+
   const data = await apiFetch<{ verse: ApiVerse }>(
     `verses/by_key/${encodeURIComponent(verseKey)}`,
     {
@@ -109,7 +165,8 @@ export async function getVerseByKey(
       fields: 'text_uthmani,audio',
       words: 'true',
       word_translation_language: wordLang,
-      word_fields: 'text_uthmani',
+      word_fields: wordFields,
+      translation_fields: 'resource_name',
     },
     'Failed to fetch verse by key'
   );

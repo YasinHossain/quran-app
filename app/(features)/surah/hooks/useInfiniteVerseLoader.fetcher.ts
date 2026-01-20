@@ -3,7 +3,7 @@ import { useCallback, useEffect, type MutableRefObject } from 'react';
 import type { LookupFn } from './useVerseListing';
 import type { Key, MutatorCallback, MutatorOptions } from 'swr';
 
-export const VERSES_PER_PAGE = 20;
+export const VERSES_PER_PAGE = 10;
 
 export type SetSize = (size: number | ((size: number) => number)) => Promise<unknown>;
 type Mutate = <Data = unknown>(
@@ -15,13 +15,22 @@ type Mutate = <Data = unknown>(
 export const buildSWRKeyFactory = (
   id?: string,
   stableTranslationIds?: string,
-  wordLang?: string
+  wordLang?: string,
+  tajweed?: boolean
 ) => {
-  return (index: number) => (id ? ['verses', id, stableTranslationIds, wordLang, index + 1] : null);
+  return (index: number) =>
+    id ? ['verses', id, stableTranslationIds, wordLang, index + 1, tajweed] : null;
 };
 
 export const createFetcher = (lookup: LookupFn, setError: (msg: string) => void) => {
-  return ([, pId, translationIdsStr, wl, page]: [string, string, string, string, number]) => {
+  return ([, pId, translationIdsStr, wl, page, tajweed]: [
+    string,
+    string,
+    string,
+    string,
+    number,
+    boolean | undefined,
+  ]) => {
     const translationIds = translationIdsStr.split(',').map(Number);
     return lookup({
       id: pId as string,
@@ -29,6 +38,7 @@ export const createFetcher = (lookup: LookupFn, setError: (msg: string) => void)
       page: page as number,
       perPage: VERSES_PER_PAGE,
       wordLang: wl as string,
+      tajweed: !!tajweed,
     }).catch((err) => {
       setError(`Failed to load content. ${err.message}`);
       return { verses: [], totalPages: 1 };
@@ -66,13 +76,14 @@ interface ParsedNextKey {
   translationIds: number[];
   wordLang: string;
   page: number;
+  tajweed: boolean;
   key: Key;
 }
 
 const parseNextKey = (nextKey: Key): ParsedNextKey | null => {
   if (!nextKey || !Array.isArray(nextKey)) return null;
 
-  const [, chapterId, translationIdsValue, wordLang, page] = nextKey;
+  const [, chapterId, translationIdsValue, wordLang, page, tajweed] = nextKey;
   if (
     typeof chapterId !== 'string' ||
     typeof translationIdsValue !== 'string' ||
@@ -92,6 +103,7 @@ const parseNextKey = (nextKey: Key): ParsedNextKey | null => {
     translationIds,
     wordLang,
     page,
+    tajweed: !!tajweed,
     key: nextKey,
   };
 };
@@ -114,7 +126,7 @@ export const usePrefetchNextPage = ({
     const parsedKey = parseNextKey(keyFactory(nextPageIndex));
     if (!parsedKey) return;
 
-    const { chapterId, translationIds, wordLang, page, key } = parsedKey;
+    const { chapterId, translationIds, wordLang, page, tajweed, key } = parsedKey;
 
     prefetchedPagesRef.current.add(nextPageIndex);
 
@@ -127,6 +139,7 @@ export const usePrefetchNextPage = ({
           page,
           perPage: VERSES_PER_PAGE,
           wordLang,
+          tajweed,
         }).catch((err) => {
           prefetchedPagesRef.current.delete(nextPageIndex);
           throw err;

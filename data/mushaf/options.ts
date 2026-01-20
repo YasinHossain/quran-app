@@ -1,6 +1,7 @@
 import { MushafOption } from '@/types';
 
 export const DEFAULT_MUSHAF_ID = 'qcf-madani-v1';
+export const TAJWEED_MUSHAF_ID = 'qcf-tajweed-v4';
 
 export const MUSHAF_OPTIONS: MushafOption[] = [
   {
@@ -37,6 +38,13 @@ export const MUSHAF_OPTIONS: MushafOption[] = [
     description: 'Standard IndoPak Nastaleeq layout (16 lines per page).',
     script: 'indopak',
     lines: 16,
+  },
+  {
+    id: 'qcf-tajweed-v4',
+    name: 'Tajweed Colors',
+    description: 'King Fahad Complex V4 with Tajweed color-coded glyphs.',
+    script: 'tajweed',
+    lines: 15,
   },
 ];
 

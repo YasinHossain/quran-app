@@ -1,10 +1,12 @@
+import React, { memo } from 'react';
+
 import { cn } from '@/lib/utils/cn';
 
 import { MushafWordText } from './MushafWordText';
 
 import type { ReaderSettings } from './MushafMain.types';
+import type { QcfFontVersion } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import type { MushafLineGroup } from '@/types';
-import type React from 'react';
 
 type MushafLineProps = {
   line: MushafLineGroup;
@@ -12,7 +14,7 @@ type MushafLineProps = {
   isQcfMushaf: boolean;
   isQpcHafsMushaf: boolean;
   isIndopakMushaf: boolean;
-  qcfVersion: 'v1' | 'v2';
+  qcfVersion: QcfFontVersion;
   indopakVersion?: '15' | '16' | null | undefined;
   fontSize: string | number;
   isFontLoaded: boolean;
@@ -26,7 +28,7 @@ const getLineWrapperStyle = (fontSize: string | number): React.CSSProperties => 
 
 const getLineClassName = (
   isQcfMushaf: boolean,
-  qcfVersion: 'v1' | 'v2',
+  qcfVersion: QcfFontVersion,
   isQpcHafsMushaf: boolean,
   isIndopakMushaf: boolean
 ): string =>
@@ -44,12 +46,16 @@ const getLineContentStyle = (isQcfMushaf: boolean): React.CSSProperties =>
     ? ({
         whiteSpace: 'nowrap',
         columnGap: '0',
+        // CSS containment for improved scroll performance
+        contain: 'layout style',
       } as React.CSSProperties)
     : ({
         whiteSpace: 'nowrap',
+        // CSS containment for improved scroll performance
+        contain: 'layout style',
       } as React.CSSProperties);
 
-export const MushafLine = ({
+export const MushafLine = memo(function MushafLine({
   line,
   settings,
   isQcfMushaf,
@@ -59,28 +65,30 @@ export const MushafLine = ({
   indopakVersion,
   fontSize,
   isFontLoaded,
-}: MushafLineProps): React.JSX.Element => (
-  <div dir="rtl" className="mx-auto text-center" style={getLineWrapperStyle(fontSize)}>
-    <div
-      className={getLineClassName(isQcfMushaf, qcfVersion, isQpcHafsMushaf, isIndopakMushaf)}
-      style={getLineContentStyle(isQcfMushaf)}
-      translate="no"
-    >
-      <MushafLineWords
-        line={line}
-        settings={settings}
-        isQcfMushaf={isQcfMushaf}
-        isQpcHafsMushaf={isQpcHafsMushaf}
-        isIndopakMushaf={isIndopakMushaf}
-        qcfVersion={qcfVersion}
-        indopakVersion={indopakVersion}
-        isFontLoaded={isFontLoaded}
-      />
+}: MushafLineProps): React.JSX.Element {
+  return (
+    <div dir="rtl" className="mx-auto text-center" style={getLineWrapperStyle(fontSize)}>
+      <div
+        className={getLineClassName(isQcfMushaf, qcfVersion, isQpcHafsMushaf, isIndopakMushaf)}
+        style={getLineContentStyle(isQcfMushaf)}
+        translate="no"
+      >
+        <MushafLineWords
+          line={line}
+          settings={settings}
+          isQcfMushaf={isQcfMushaf}
+          isQpcHafsMushaf={isQpcHafsMushaf}
+          isIndopakMushaf={isIndopakMushaf}
+          qcfVersion={qcfVersion}
+          indopakVersion={indopakVersion}
+          isFontLoaded={isFontLoaded}
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+});
 
-const MushafLineWords = ({
+const MushafLineWords = memo(function MushafLineWords({
   line,
   settings,
   isQcfMushaf,
@@ -94,22 +102,24 @@ const MushafLineWords = ({
   isQcfMushaf: boolean;
   isQpcHafsMushaf: boolean;
   isIndopakMushaf: boolean;
-  qcfVersion: 'v1' | 'v2';
+  qcfVersion: QcfFontVersion;
   indopakVersion?: '15' | '16' | null | undefined;
   isFontLoaded: boolean;
-}): React.JSX.Element => (
-  <>
-    {line.words.map((word, index) => (
-      <MushafWordText
-        key={word.id ?? `${line.key}-${word.verseKey ?? 'word'}-${word.position}-${index}`}
-        word={word}
-        settings={settings}
-        isQcfMushaf={isQcfMushaf}
-        isQpcHafsMushaf={isQpcHafsMushaf}
-        isIndopakMushaf={isIndopakMushaf}
-        qcfVersion={qcfVersion}
-        isFontLoaded={isFontLoaded}
-      />
-    ))}
-  </>
-);
+}): React.JSX.Element {
+  return (
+    <>
+      {line.words.map((word, index) => (
+        <MushafWordText
+          key={word.id ?? `${line.key}-${word.verseKey ?? 'word'}-${word.position}-${index}`}
+          word={word}
+          settings={settings}
+          isQcfMushaf={isQcfMushaf}
+          isQpcHafsMushaf={isQpcHafsMushaf}
+          isIndopakMushaf={isIndopakMushaf}
+          qcfVersion={qcfVersion}
+          isFontLoaded={isFontLoaded}
+        />
+      ))}
+    </>
+  );
+});

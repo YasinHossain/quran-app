@@ -4,28 +4,23 @@ import { motion } from 'framer-motion';
 import { memo } from 'react';
 
 import { FolderIcon, CheckIcon } from '@/app/shared/icons';
+import { FolderGlyph } from '@/app/shared/ui/cards/FolderGlyph';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 import { Folder, Bookmark } from '@/types';
 
 const getButtonClasses = (isSelected: boolean): string =>
   cn(
-    'w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 text-left',
+    'w-full flex items-center gap-4 p-4 rounded-lg transition-all duration-200 text-left',
     isSelected
-      ? 'bg-accent/10 border border-accent/20'
-      : 'hover:bg-interactive border border-transparent',
+      ? 'bg-accent border border-accent'
+      : 'hover:bg-interactive-hover border border-transparent',
     touchClasses.target,
     touchClasses.focus
   );
 
-const getIconWrapperClasses = (color?: string): string =>
-  cn(
-    'flex-shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center',
-    !color && 'bg-surface-secondary'
-  );
-
 const getTitleClasses = (isSelected: boolean): string =>
-  cn('font-medium truncate', isSelected ? 'text-accent' : 'text-foreground');
+  cn('flex-1 font-medium truncate', isSelected ? 'text-white' : 'text-foreground');
 
 interface FolderListItemProps {
   folder: Folder;
@@ -46,22 +41,16 @@ const FolderListItem = memo(function FolderListItem({
       className={getButtonClasses(isSelected)}
       whileTap={{ scale: 0.98 }}
     >
-      <div
-        className={getIconWrapperClasses(folder.color)}
-        style={folder.color ? { backgroundColor: folder.color } : undefined}
-      >
-        <FolderIcon size={20} className={isSelected ? 'text-accent' : 'text-foreground'} />
-      </div>
+      <FolderGlyph folder={folder} size="md" className={isSelected ? 'border border-white' : ''} />
 
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <h3 className={getTitleClasses(isSelected)}>{folder.name}</h3>
-          {isSelected && <CheckIcon size={16} className="text-accent flex-shrink-0" />}
-        </div>
-        <p className="text-sm text-muted">
+        <h3 className={getTitleClasses(isSelected)}>{folder.name}</h3>
+        <p className={cn('text-sm', isSelected ? 'text-white/80' : 'text-muted')}>
           {bookmarkCount} {bookmarkCount === 1 ? 'verse' : 'verses'}
         </p>
       </div>
+
+      {isSelected && <CheckIcon size={20} className="text-white flex-shrink-0" />}
     </motion.button>
   );
 });
@@ -81,7 +70,6 @@ interface FolderListProps {
   folders: Folder[];
   verseId: string;
   onFolderSelect: (folder: Folder) => void;
-  findBookmark: (verseId: string) => { folder: Folder; bookmark: Bookmark } | null;
   emptyMessage?: string;
 }
 
@@ -89,20 +77,20 @@ export const FolderList = memo(function FolderList({
   folders,
   verseId,
   onFolderSelect,
-  findBookmark,
   emptyMessage = 'No folders found',
 }: FolderListProps): React.JSX.Element {
-  const existingBookmark: { folder: Folder; bookmark: Bookmark } | null = findBookmark(verseId);
   if (!folders.length) return <EmptyState message={emptyMessage} />;
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 w-full mx-auto">
       {folders.map(
         (folder: Folder): React.JSX.Element => (
           <FolderListItem
             key={folder.id}
             folder={folder}
-            isSelected={existingBookmark?.folder.id === folder.id}
+            isSelected={folder.bookmarks.some(
+              (bookmark: Bookmark) => String(bookmark.verseId) === String(verseId)
+            )}
             onSelect={onFolderSelect}
           />
         )

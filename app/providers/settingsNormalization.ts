@@ -31,7 +31,7 @@ const resolveTranslationIds = (
   savedTranslations: string | null,
   defaults: Settings
 ): number[] => {
-  if (settings.translationIds && settings.translationIds.length > 0) {
+  if (Array.isArray(settings.translationIds)) {
     return settings.translationIds;
   }
 

@@ -12,7 +12,7 @@ export const ModalBackdrop = ({ onClick }: ModalBackdropProps): React.JSX.Elemen
     initial="hidden"
     animate="visible"
     exit="hidden"
-    className="fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm z-modal"
+    className="fixed inset-0 bg-background/85 z-modal"
     onClick={onClick}
   />
 );

@@ -52,7 +52,7 @@ describe('Header', () => {
         </HeaderVisibilityProvider>
       </UIStateProvider>
     );
-    expect(screen.getByText('Quran Mazid')).toBeInTheDocument();
+    expect(screen.getByText('Al Quran')).toBeInTheDocument();
   });
 
   it('renders the search placeholder', async () => {

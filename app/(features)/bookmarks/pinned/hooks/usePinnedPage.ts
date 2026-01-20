@@ -29,7 +29,7 @@ export const usePinnedPage = (): UsePinnedPageReturn => {
 
   const handleSectionChange = (section: SectionId): void => {
     if (section === 'bookmarks') {
-      router.push('/bookmarks');
+      router.push('/bookmarks/folders');
     } else if (section === 'last-read') {
       router.push('/bookmarks/last-read');
     } else if (section === 'planner') {

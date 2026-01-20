@@ -11,20 +11,24 @@ import * as chaptersApi from '@/lib/api/chapters';
 import type { Verse } from '@/types';
 // Router mocked via testUtils/mockRouter
 
-jest.mock('@tanstack/react-virtual', () => ({
-  useVirtualizer: ({ count }: { count: number }) => {
-    const items = Array.from({ length: count }, (_, index) => ({
-      key: `virtual-${index}`,
-      index,
-      start: index * 360,
-    }));
-    return {
-      getVirtualItems: () => items,
-      getTotalSize: () => count * 360,
-      measureElement: jest.fn(),
-    };
-  },
-}));
+jest.mock(
+  '@tanstack/react-virtual',
+  () => ({
+    useVirtualizer: ({ count }: { count: number }) => {
+      const items = Array.from({ length: count }, (_, index) => ({
+        key: `virtual-${index}`,
+        index,
+        start: index * 360,
+      }));
+      return {
+        getVirtualItems: () => items,
+        getTotalSize: () => count * 360,
+        measureElement: jest.fn(),
+      };
+    },
+  }),
+  { virtual: true }
+);
 
 jest.mock('@/lib/api/chapters');
 jest.mock('../components/BookmarksSidebar', () => ({
@@ -186,6 +190,6 @@ describe('Pinned Ayah Page', () => {
         'In the name of Allah, the Entirely Merciful, the Especially Merciful.'
       )
     ).toBeInTheDocument();
-    expect(useSingleVerse).toHaveBeenCalledWith({ idOrKey: '1' });
+    expect(useSingleVerse).toHaveBeenCalledWith({ idOrKey: '1:1' });
   });
 });

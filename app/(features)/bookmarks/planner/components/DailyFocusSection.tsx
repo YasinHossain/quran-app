@@ -11,7 +11,7 @@ interface DailyFocusSectionProps {
 const DailyGoalDetails = ({ focus }: DailyFocusSectionProps): React.JSX.Element => (
   <>
     <div className="mt-2 space-y-3">
-      <div className="flex h-full w-full items-center justify-center rounded-xl border border-border/50 bg-surface/80 p-3 text-center [@container(min-width:22rem)]:col-span-3 [@container(min-width:22rem)]:p-4">
+      <div className="flex h-full w-full items-center justify-center rounded-lg border border-border/50 bg-surface/80 p-3 text-center [@container(min-width:22rem)]:col-span-3 [@container(min-width:22rem)]:p-4">
         <p className="text-sm font-semibold text-foreground [@container(min-width:22rem)]:text-base">
           {focus.goalVerseLabel}
         </p>
@@ -21,7 +21,7 @@ const DailyGoalDetails = ({ focus }: DailyFocusSectionProps): React.JSX.Element 
           {focus.dailyHighlights.map((highlight) => (
             <div
               key={highlight.label}
-              className="flex h-full min-w-0 items-center justify-center rounded-xl border border-border/50 bg-surface/80 p-2 text-center [@container(min-width:22rem)]:p-3"
+              className="flex h-full min-w-0 items-center justify-center rounded-lg border border-border/50 bg-surface/80 p-2 text-center [@container(min-width:22rem)]:p-3"
             >
               <p className="text-xs font-semibold text-foreground [@container(min-width:22rem)]:text-sm break-words">
                 {highlight.value}
@@ -47,7 +47,7 @@ const DailyGoalDetails = ({ focus }: DailyFocusSectionProps): React.JSX.Element 
 
 export const DailyFocusSection = ({ focus }: DailyFocusSectionProps): React.JSX.Element => (
   <div className="relative flex w-full min-w-0 flex-col gap-3">
-    <div className="rounded-2xl border border-border/60 bg-background/60 px-4 py-4">
+    <div className="rounded-lg border border-border/60 bg-background/60 px-4 py-4">
       <div className="flex items-center justify-between text-sm font-semibold text-foreground">
         <span className="inline-flex items-center gap-2 text-muted">
           <TargetIcon className="h-4 w-4 shrink-0 text-accent" />
@@ -58,7 +58,7 @@ export const DailyFocusSection = ({ focus }: DailyFocusSectionProps): React.JSX.
       {focus.hasDailyGoal ? (
         <DailyGoalDetails focus={focus} />
       ) : (
-        <div className="mt-2 rounded-xl bg-surface/80 px-3 py-3 text-sm text-muted">
+        <div className="mt-2 rounded-lg bg-surface/80 px-3 py-3 text-sm text-muted">
           {focus.noGoalMessage}
         </div>
       )}

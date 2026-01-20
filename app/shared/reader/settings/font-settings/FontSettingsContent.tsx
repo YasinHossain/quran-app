@@ -6,6 +6,7 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import { FontSettingIcon } from '@/app/shared/icons';
 
 import { ArabicFontFaceSelector } from './ArabicFontFaceSelector';
+import { ArabicVersePreview } from './ArabicVersePreview';
 import { FontSizeSlider } from './FontSizeSlider';
 
 import type { CSSProperties, ReactElement } from 'react';
@@ -52,7 +53,7 @@ export function FontSettingsContent({
       <div className="space-y-4">
         <FontSizeSlider
           label={t('arabic_font_size')}
-          value={settings.arabicFontSize ?? 28}
+          value={settings.arabicFontSize ?? 34}
           min={16}
           max={48}
           onChange={handleArabicFontSizeChange}
@@ -61,7 +62,7 @@ export function FontSettingsContent({
         {showTranslationFont && (
           <FontSizeSlider
             label={t('translation_font_size')}
-            value={settings.translationFontSize ?? 16}
+            value={settings.translationFontSize ?? 18}
             min={12}
             max={28}
             onChange={handleTranslationFontSizeChange}
@@ -76,6 +77,13 @@ export function FontSettingsContent({
             onClick={onArabicFontPanelOpen}
           />
         )}
+      </div>
+      <div className="lg:hidden">
+        <ArabicVersePreview
+          fontFamily={settings.arabicFontFace}
+          fontSize={settings.arabicFontSize}
+          className="mt-6 rounded-lg border border-border bg-surface p-4"
+        />
       </div>
     </CollapsibleSection>
   );

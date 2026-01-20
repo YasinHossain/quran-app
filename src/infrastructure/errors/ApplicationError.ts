@@ -33,24 +33,24 @@ export class ApplicationError extends Error {
     const { message, code, statusCode, isOperational, context, cause } =
       args.length === 1 && typeof args[0] === 'object' && args[0] !== null
         ? (args[0] as {
-            message: string;
-            code: string;
-            statusCode?: number;
-            isOperational?: boolean;
-            context?: Record<string, unknown>;
-            cause?: unknown;
-          })
+          message: string;
+          code: string;
+          statusCode?: number;
+          isOperational?: boolean;
+          context?: Record<string, unknown>;
+          cause?: unknown;
+        })
         : (() => {
-            const [message, code, statusCode, isOperational, context, cause] = args as [
-              string,
-              string,
-              number?,
-              boolean?,
-              Record<string, unknown>?,
-              unknown?,
-            ];
-            return { message, code, statusCode, isOperational, context, cause };
-          })();
+          const [message, code, statusCode, isOperational, context, cause] = args as [
+            string,
+            string,
+            number?,
+            boolean?,
+            Record<string, unknown>?,
+            unknown?,
+          ];
+          return { message, code, statusCode, isOperational, context, cause };
+        })();
     super(message);
 
     if (Error.captureStackTrace) {
@@ -86,5 +86,3 @@ export class ApplicationError extends Error {
     return this.message;
   }
 }
-
-export default ApplicationError;

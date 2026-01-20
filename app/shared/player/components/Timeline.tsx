@@ -40,7 +40,7 @@ function SeekSlider({
   return (
     <Tooltip.Provider delayDuration={150}>
       <Slider.Root
-        className={`relative w-full h-2.5 group flex items-center ${
+        className={`relative w-full h-2.5 group flex items-center touch-none select-none ${
           !interactable ? 'opacity-60 pointer-events-none' : ''
         }`}
         value={[current]}
@@ -51,7 +51,7 @@ function SeekSlider({
         }}
         aria-label="Seek"
       >
-        <Slider.Track className="h-0.5 rounded-full relative w-full grow bg-surface group-hover:bg-interactive-hover">
+        <Slider.Track className="h-0.5 rounded-full relative w-full grow bg-border">
           <Slider.Range className="h-full rounded-full absolute bg-accent" />
         </Slider.Track>
         <SeekSliderThumb tooltipLabel={tooltipLabel} />
@@ -65,7 +65,7 @@ function SeekSliderThumb({ tooltipLabel }: { tooltipLabel: string }): React.JSX.
     <Tooltip.Root>
       <Tooltip.Trigger asChild>
         <Slider.Thumb
-          className="block h-3 w-3 rounded-full shadow-[0_1px_2px_rgba(2,6,23,0.15)] focus:outline-none focus:ring-2 focus:ring-offset-2 bg-background ring-accent focus:ring-accent/35 relative z-[120]"
+          className="block h-3 w-3 rounded-full shadow-[0_1px_2px_rgba(2,6,23,0.15)] focus:outline-none bg-accent relative z-[120] transition-transform active:scale-110 active:ring-2 active:ring-offset-2 cursor-pointer"
           aria-label="Position"
         />
       </Tooltip.Trigger>

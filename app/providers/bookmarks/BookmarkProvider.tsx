@@ -8,10 +8,10 @@ import { findBookmarkInFolders, isVerseBookmarked, getAllBookmarkedVerses } from
 import { BookmarkContext } from './BookmarkContext';
 import { useBookmarkData } from './hooks/useBookmarkData';
 import { useBookmarkMetadata } from './hooks/useBookmarkMetadata';
-import useBookmarkOperations from './hooks/useBookmarkOperations';
-import useFolderOperations from './hooks/useFolderOperations';
+import { useBookmarkOperations } from './hooks/useBookmarkOperations';
+import { useFolderOperations } from './hooks/useFolderOperations';
 import { usePinnedBookmarks } from './hooks/usePinnedBookmarks';
-import usePlannerOperations from './hooks/usePlannerOperations';
+import { usePlannerOperations } from './hooks/usePlannerOperations';
 
 import type { BookmarkContextType } from './types';
 import type { Bookmark, Folder } from '@/types';
@@ -96,6 +96,7 @@ function useBookmarkHelpers(
     verseKey?: string,
     globalVerseId?: number
   ) => void;
+  removeLastRead: (surahId: string) => void;
 } {
   const isBookmarked = useCallback(
     (verseId: string) => isVerseBookmarked(folders, verseId),
@@ -112,16 +113,41 @@ function useBookmarkHelpers(
 
   const setLastRead = useCallback(
     (surahId: string, verseNumber: number, verseKey?: string, globalVerseId?: number) => {
-      setLastReadState((prev) => ({
-        ...prev,
-        [surahId]: {
-          verseNumber,
-          verseId: verseNumber,
-          ...(typeof verseKey === 'string' ? { verseKey } : {}),
-          ...(typeof globalVerseId === 'number' ? { globalVerseId } : {}),
-          updatedAt: Date.now(),
-        },
-      }));
+      setLastReadState((prev) => {
+        const updated = {
+          ...prev,
+          [surahId]: {
+            verseNumber,
+            verseId: verseNumber,
+            ...(typeof verseKey === 'string' ? { verseKey } : {}),
+            ...(typeof globalVerseId === 'number' ? { globalVerseId } : {}),
+            updatedAt: Date.now(),
+          },
+        };
+
+        // Limit to 5 most recent entries
+        const entries = Object.entries(updated);
+        if (entries.length <= 5) {
+          return updated;
+        }
+
+        // Sort by updatedAt (most recent first) and keep only top 5
+        const sorted = entries.sort(([, a], [, b]) => b.updatedAt - a.updatedAt);
+        const limited = sorted.slice(0, 5);
+
+        return Object.fromEntries(limited);
+      });
+    },
+    [setLastReadState]
+  );
+
+  const removeLastRead = useCallback(
+    (surahId: string) => {
+      setLastReadState((prev) => {
+        const next = { ...prev };
+        delete next[surahId];
+        return next;
+      });
     },
     [setLastReadState]
   );
@@ -133,5 +159,6 @@ function useBookmarkHelpers(
     togglePinned,
     isPinned,
     setLastRead,
+    removeLastRead,
   } as const;
 }

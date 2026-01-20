@@ -10,7 +10,6 @@ import {
   CalendarIcon,
   GoToIcon,
 } from '@/app/shared/icons';
-import { Spinner } from '@/app/shared/Spinner';
 import { VerseActionItem } from '@/app/shared/verse-actions/types';
 
 interface CreatePlayPauseActionParams {
@@ -21,14 +20,11 @@ interface CreatePlayPauseActionParams {
 
 export function createPlayPauseAction({
   isPlaying,
-  isLoadingAudio,
   onClick,
 }: CreatePlayPauseActionParams): VerseActionItem {
-  const icon: ReactElement = isLoadingAudio
-    ? createElement(Spinner, { className: 'h-5 w-5 text-accent' })
-    : isPlaying
-      ? createElement(PauseIcon, { size: 20 })
-      : createElement(PlayIcon, { size: 20 });
+  const icon: ReactElement = isPlaying
+    ? createElement(PauseIcon, { size: 20 })
+    : createElement(PlayIcon, { size: 20 });
 
   return {
     label: isPlaying ? 'Pause Audio' : 'Play Audio',
@@ -55,7 +51,7 @@ export function createBookmarkAction({
       : createElement(BookmarkOutlineIcon, { size: 20 });
 
   return {
-    label: showRemove ? 'Remove Bookmark' : isBookmarked ? 'Remove Bookmark' : 'Add Bookmark',
+    label: showRemove ? 'Remove Bookmark' : 'Pin or Bookmark',
     icon,
     onClick,
     active: isBookmarked || showRemove,

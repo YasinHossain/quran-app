@@ -1,4 +1,4 @@
-import { IconBook, IconHash, IconFileText } from '@tabler/icons-react';
+import { BookOpen, Hash, FileText, type LucideIcon } from 'lucide-react';
 import { useState, useMemo, Dispatch, SetStateAction } from 'react';
 
 import { useNavigationDatasets } from '@/app/shared/navigation/hooks/useNavigationDatasets';
@@ -12,7 +12,7 @@ interface QuranNavigationReturn {
   setSearchTerm: Dispatch<SetStateAction<string>>;
   activeTab: 'surah' | 'juz' | 'page';
   setActiveTab: Dispatch<SetStateAction<'surah' | 'juz' | 'page'>>;
-  tabs: { id: 'surah' | 'juz' | 'page'; label: string; icon: typeof IconBook }[];
+  tabs: { id: 'surah' | 'juz' | 'page'; label: string; icon: LucideIcon }[];
   filteredSurahs: Surah[];
   filteredJuzs: JuzSummary[];
   filteredPages: number[];
@@ -24,11 +24,11 @@ export function useQuranNavigation(): QuranNavigationReturn {
   const { juzs, pages } = useNavigationDatasets();
   const { surahs } = useSurahNavigationData();
 
-  const tabs = useMemo<{ id: 'surah' | 'juz' | 'page'; label: string; icon: typeof IconBook }[]>(
+  const tabs = useMemo<{ id: 'surah' | 'juz' | 'page'; label: string; icon: LucideIcon }[]>(
     () => [
-      { id: 'surah', label: 'Surah', icon: IconBook },
-      { id: 'juz', label: 'Juz', icon: IconHash },
-      { id: 'page', label: 'Page', icon: IconFileText },
+      { id: 'surah', label: 'Surah', icon: BookOpen },
+      { id: 'juz', label: 'Juz', icon: Hash },
+      { id: 'page', label: 'Page', icon: FileText },
     ],
     []
   );

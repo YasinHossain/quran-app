@@ -49,6 +49,7 @@ const config = {
         'surface-elevated': 'rgb(var(--color-surface-elevated) / <alpha-value>)',
         'surface-overlay': 'rgb(var(--color-surface-overlay) / <alpha-value>)',
         'surface-glass': 'rgb(var(--color-surface-glass) / <alpha-value>)',
+        'surface-navigation': 'rgb(var(--color-surface-navigation) / <alpha-value>)',
 
         // Semantic button colors
         'button-primary': 'rgb(var(--color-button-primary) / <alpha-value>)',

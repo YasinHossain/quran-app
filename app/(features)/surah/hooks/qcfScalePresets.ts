@@ -58,20 +58,21 @@ export const getQcfV2Preset = (scale: number): QcfScalePreset => {
 };
 
 /**
- * Approximated QPC Uthmani Hafs presets.
- * Based on qpc_uthmani_hafs scales from quran-com-frontend-next.
+ * QPC Uthmani Hafs presets - calibrated to match Quran.com's compact layout.
+ * Ratio: lineWidth / fontSize ≈ 18.37 (matching Quran.com exactly)
+ * This creates tighter word spacing similar to the reference site.
  */
 const QPC_HAFS_PRESETS: Record<number, QcfScalePreset> = {
-  1: { fontSize: '3.2vh', lineWidthDesktop: '60vh' },
-  2: { fontSize: '3.5vh', lineWidthDesktop: '65vh' },
+  1: { fontSize: '3.2vh', lineWidthDesktop: '59vh' },
+  2: { fontSize: '3.5vh', lineWidthDesktop: '64vh' },
   3: { fontSize: '4vh', lineWidthDesktop: '73.5vh' },
-  4: { fontSize: '4vh', lineWidthDesktop: '74vh' },
+  4: { fontSize: '4vh', lineWidthDesktop: '73.5vh' },
   5: { fontSize: '4.4vh', lineWidthDesktop: '81vh' },
-  6: { fontSize: '5.56vh', lineWidthDesktop: '102.8vh' },
-  7: { fontSize: '6.72vh', lineWidthDesktop: '124.6vh' },
-  8: { fontSize: '7.88vh', lineWidthDesktop: '146.4vh' },
-  9: { fontSize: '9.04vh', lineWidthDesktop: '168.2vh' },
-  10: { fontSize: '10.27vh', lineWidthDesktop: '190vh' },
+  6: { fontSize: '5.56vh', lineWidthDesktop: '102vh' },
+  7: { fontSize: '6.72vh', lineWidthDesktop: '123vh' },
+  8: { fontSize: '7.88vh', lineWidthDesktop: '145vh' },
+  9: { fontSize: '9.04vh', lineWidthDesktop: '166vh' },
+  10: { fontSize: '10.27vh', lineWidthDesktop: '189vh' },
 };
 
 export const getQpcHafsPreset = (scale: number): QcfScalePreset => {

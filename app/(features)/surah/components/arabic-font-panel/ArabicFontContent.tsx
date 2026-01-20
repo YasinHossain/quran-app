@@ -1,7 +1,9 @@
 'use client';
 
 import { useArabicFontPanel } from '@/app/(features)/surah/components/panels/arabic-font-panel/useArabicFontPanel';
+import { useSettings } from '@/app/providers/SettingsContext';
 import { AlertIcon } from '@/app/shared/icons';
+import { ArabicVersePreview } from '@/app/shared/reader/settings/font-settings/ArabicVersePreview';
 
 import { ArabicFontList } from './ArabicFontList';
 import { FilterToggle } from './FilterToggle';
@@ -36,6 +38,7 @@ function FontContent({
   handleSelectionToggle,
   listContainerRef,
   listHeight,
+  arabicFontFace,
 }: {
   activeFilter: ArabicFontFilter;
   setActiveFilter: (filter: ArabicFontFilter) => void;
@@ -44,15 +47,19 @@ function FontContent({
   handleSelectionToggle: (id: number) => void;
   listContainerRef: React.RefObject<HTMLDivElement | null>;
   listHeight: number;
+  arabicFontFace: string;
 }): React.JSX.Element {
   return (
     <div className="flex-1 flex flex-col min-h-0">
       <div className="flex-1 overflow-y-auto" ref={listContainerRef}>
-        <div className="px-4 py-4">
+        <div className="px-4 py-4 pb-0 lg:pb-4">
           <FilterToggle
             activeFilter={activeFilter}
             setActiveFilter={(value) => setActiveFilter(value)}
           />
+        </div>
+        <div className="lg:hidden mb-2">
+          <ArabicVersePreview fontFamily={arabicFontFace} className="py-2" />
         </div>
         <ArabicFontList
           resources={resourcesToRender}
@@ -87,6 +94,8 @@ export function ArabicFontContent({
   } = panel;
   const resourcesToRender = groupedFonts[activeFilter] ?? [];
 
+  const { settings } = useSettings();
+
   if (loading) return <LoadingState />;
   if (error) return <ErrorState error={error} />;
 
@@ -99,6 +108,7 @@ export function ArabicFontContent({
       handleSelectionToggle={handleSelectionToggle}
       listContainerRef={listContainerRef}
       listHeight={listHeight}
+      arabicFontFace={settings.arabicFontFace}
     />
   );
 }

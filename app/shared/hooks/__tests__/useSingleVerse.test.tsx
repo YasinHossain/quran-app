@@ -70,7 +70,7 @@ describe('useSingleVerse', () => {
 
     await waitFor(() => expect(result.current.verse).toEqual(verse));
 
-    expect(getVerseById).toHaveBeenCalledWith('262', [20, 22], 'en');
+    expect(getVerseById).toHaveBeenCalledWith('262', [20, 22], 'en', false);
     expect(getVerseByKey).not.toHaveBeenCalled();
     expect(result.current.error).toBeNull();
   });
@@ -92,7 +92,7 @@ describe('useSingleVerse', () => {
 
     await waitFor(() => expect(result.current.verse).toEqual(verse));
 
-    expect(getVerseByKey).toHaveBeenCalledWith('2:255', [30], 'bn');
+    expect(getVerseByKey).toHaveBeenCalledWith('2:255', [30], 'bn', false);
     expect(getVerseById).not.toHaveBeenCalled();
   });
 
@@ -127,7 +127,7 @@ describe('useSingleVerse', () => {
         wrapper: createWrapper(),
       });
 
-      expect(capturedKey).toEqual(['single-verse', '2:255', '20,22', 'en']);
+      expect(capturedKey).toEqual(['single-verse', '2:255', '20,22', 'en', false]);
     } finally {
       useSWRSpy.mockRestore();
     }

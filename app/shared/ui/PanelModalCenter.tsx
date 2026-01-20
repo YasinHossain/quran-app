@@ -5,10 +5,8 @@ import { Portal } from '@/app/shared/components/Portal';
 import { CloseIcon } from '@/app/shared/icons';
 import { cn } from '@/lib/utils/cn';
 
-import { Button } from './Button';
-
 export const PANEL_MODAL_CENTER_CLASS =
-  'relative w-full max-w-md rounded-lg bg-surface shadow-xl max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-4rem)] overflow-visible';
+  'relative w-full max-w-md rounded-lg bg-surface shadow-xl max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-4rem)] overflow-hidden';
 
 export interface PanelModalCenterProps {
   isOpen: boolean;
@@ -35,7 +33,7 @@ const PanelOverlay = memo(function PanelOverlay({
   };
   return (
     <div
-      className="fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm z-[900]"
+      className="fixed inset-0 bg-background/85 z-[900] transition-opacity duration-200 ease-in-out"
       onClick={handleOverlayInteraction}
       onKeyDown={handleKeyDown}
       role="button"
@@ -63,9 +61,13 @@ const PanelHeader = memo(function PanelHeader({
     <header className={cn('flex items-center mb-4', hasTitle ? 'justify-between' : 'justify-end')}>
       {hasTitle && <h2 className="text-lg font-semibold">{title}</h2>}
       {showCloseButton && (
-        <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close panel">
+        <button
+          onClick={onClose}
+          className="p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center"
+          aria-label="Close panel"
+        >
           <CloseIcon size={18} />
-        </Button>
+        </button>
       )}
     </header>
   );
@@ -90,6 +92,7 @@ export const PanelModalCenter = memo(function PanelModalCenter({
           <div
             className={cn(
               'z-[910] text-foreground p-6 flex flex-col',
+              'animate-in fade-in zoom-in-95 duration-200 ease-out',
               PANEL_MODAL_CENTER_CLASS,
               className
             )}
@@ -102,7 +105,9 @@ export const PanelModalCenter = memo(function PanelModalCenter({
               showCloseButton={showCloseButton}
               onClose={onClose}
             />
-            <div className="flex-1 min-h-0 flex flex-col">{children}</div>
+            <div className="flex-1 min-h-0 flex flex-col overflow-y-auto scrollbar-hide">
+              {children}
+            </div>
           </div>
         </div>
       </>

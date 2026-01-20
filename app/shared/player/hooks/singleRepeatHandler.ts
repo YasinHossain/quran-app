@@ -1,7 +1,10 @@
+import { restartVerseWithDelay } from './repeatHelpers';
+
 interface SingleRepeatArgs {
   verseRepeatsLeft: number;
   playRepeatsLeft: number;
   repeatEach: number;
+  delay: number;
   seek: (s: number) => void;
   play: () => void;
   setVerseRepeatsLeft: (n: number) => void;
@@ -12,6 +15,7 @@ export function createSingleRepeatHandler({
   verseRepeatsLeft,
   playRepeatsLeft,
   repeatEach,
+  delay,
   seek,
   play,
   setVerseRepeatsLeft,
@@ -20,15 +24,13 @@ export function createSingleRepeatHandler({
   return () => {
     if (verseRepeatsLeft > 1) {
       setVerseRepeatsLeft(verseRepeatsLeft - 1);
-      seek(0);
-      play();
+      restartVerseWithDelay({ delay, seek, play });
       return true;
     }
     if (playRepeatsLeft > 1) {
       setPlayRepeatsLeft(playRepeatsLeft - 1);
       setVerseRepeatsLeft(repeatEach);
-      seek(0);
-      play();
+      restartVerseWithDelay({ delay, seek, play });
       return true;
     }
     return false;

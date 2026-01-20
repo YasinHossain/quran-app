@@ -1,6 +1,6 @@
 // app/(features)/surah/[surahId]/components/CollapsibleSection.tsx
 'use client';
-import { ChevronDownIcon } from '@/app/shared/icons';
+import { ChevronRightIcon } from '@/app/shared/icons';
 import { cn } from '@/lib/utils/cn';
 
 interface CollapsibleSectionProps {
@@ -29,11 +29,11 @@ export const CollapsibleSection = ({
           {icon}
           <span className="font-semibold text-foreground">{title}</span>
         </div>
-        <ChevronDownIcon
+        <ChevronRightIcon
           size={16}
           className={cn(
             'text-muted-foreground transition-transform duration-300',
-            isOpen && 'rotate-180'
+            isOpen && 'rotate-90'
           )}
         />
       </button>

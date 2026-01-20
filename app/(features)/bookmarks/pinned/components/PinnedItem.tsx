@@ -6,14 +6,20 @@ import React from 'react';
 import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
 import { useVerseCard } from '@/app/(features)/surah/components/verse-card/useVerseCard';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { ReaderVerseCard } from '@/app/shared/reader';
+import { VerseSkeleton } from '@/app/shared/components/VerseSkeleton';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
-import { Spinner } from '@/app/shared/Spinner';
+import { ReaderVerseCard } from '@/app/shared/reader';
 import { parseVerseKey } from '@/lib/utils/verse';
 
 import type { Bookmark, Verse } from '@/types';
 
-export const PinnedVerseListItem = ({ bookmark }: { bookmark: Bookmark }): React.JSX.Element => {
+export const PinnedVerseListItem = ({
+  bookmark,
+  index,
+}: {
+  bookmark: Bookmark;
+  index: number;
+}): React.JSX.Element => {
   const { bookmark: enrichedBookmark, verse, isLoading, error } = useBookmarkVerse(bookmark);
 
   if (error) {
@@ -25,11 +31,7 @@ export const PinnedVerseListItem = ({ bookmark }: { bookmark: Bookmark }): React
   }
 
   if (isLoading || !verse || !enrichedBookmark.verseKey) {
-    return (
-      <div className="flex justify-center py-12">
-        <Spinner className="h-6 w-6 text-accent" />
-      </div>
-    );
+    return <VerseSkeleton index={index} />;
   }
 
   return <LoadedPinnedVerseItem verse={verse} bookmark={enrichedBookmark} />;

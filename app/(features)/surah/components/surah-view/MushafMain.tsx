@@ -1,6 +1,6 @@
 'use client';
 
-import { MushafPageList, LoadMoreSection } from './MushafPageList';
+import { MushafPageList } from './MushafPageList';
 import { SurahCalligraphyIntro } from './SurahCalligraphyIntro';
 import { useMushafMainState } from './useMushafMainState';
 
@@ -8,51 +8,61 @@ import type { MushafMainProps } from './MushafMain.types';
 import type React from 'react';
 
 export function MushafMain({
-  pages,
+  resourceId,
+  resourceKind,
+  initialPageNumber,
+  initialVerseKey,
   chapterId,
-  isLoading,
-  isLoadingMore = false,
-  hasMore = false,
-  onLoadMore,
-  error,
+  juzNumber,
+  mushafId,
+  reciterId,
+  wordByWordLocale,
+  translationIds,
   endLabelKey = 'end_of_surah',
   ...rest
 }: MushafMainProps): React.JSX.Element {
   const state = useMushafMainState({
-    pages,
+    resourceId,
+    resourceKind,
+    initialPageNumber,
+    initialVerseKey,
     chapterId,
-    isLoading,
-    isLoadingMore,
-    hasMore,
-    onLoadMore,
-    error,
+    juzNumber,
+    mushafId,
+    reciterId,
+    wordByWordLocale,
+    translationIds,
     endLabelKey,
     ...rest,
   });
 
   return (
-    <div className="w-full pb-20 pt-2">
+    <div className="w-full pb-20 pt-0">
       <div className="w-full space-y-10">
-        {state.shouldRenderSurahIntro ? <SurahCalligraphyIntro chapterId={chapterId} /> : null}
+        {state.shouldRenderSurahIntro ? (
+          <div className="px-4 sm:px-6 lg:px-8">
+            <SurahCalligraphyIntro chapterId={chapterId} />
+          </div>
+        ) : null}
 
         <MushafPageList
-          pages={pages}
+          resourceId={resourceId}
+          resourceKind={resourceKind}
+          mushafId={mushafId ?? 'qcf-madani-v1'}
+          {...(typeof initialPageNumber === 'number' ? { initialPageNumber } : {})}
+          {...(typeof initialVerseKey === 'string' ? { initialVerseKey } : {})}
+          {...(typeof chapterId === 'number' ? { chapterId } : {})}
+          {...(typeof juzNumber === 'number' ? { juzNumber } : {})}
+          {...(typeof reciterId === 'number' ? { reciterId } : {})}
+          {...(wordByWordLocale ? { wordByWordLocale } : {})}
+          {...(translationIds ? { translationIds } : {})}
           settings={state.settings}
           mushafFlags={state.mushafFlags}
-          getPageFontFamily={state.getPageFontFamily}
-          isPageFontLoaded={state.isPageFontLoaded}
-          isLoading={isLoading}
-          error={error}
+          endLabel={state.endLabel}
+          {...(resourceKind === 'surah' && typeof chapterId === 'number'
+            ? { surahId: chapterId }
+            : {})}
         />
-
-        {state.shouldRenderLoadMore ? (
-          <LoadMoreSection
-            loadMoreRef={state.loadMoreRef}
-            isLoadingMore={isLoadingMore}
-            hasMore={hasMore}
-            endLabel={state.endLabel}
-          />
-        ) : null}
       </div>
     </div>
   );

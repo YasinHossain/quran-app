@@ -19,7 +19,7 @@ const renderTranslationItem = (
     key={item.id}
     item={item}
     isSelected={selectedIds.has(item.id)}
-    onToggle={onToggle}
+    onToggle={(id) => onToggle(id as number)}
   />
 );
 

@@ -20,7 +20,7 @@ export interface PlannerOperations {
   updatePlannerProgress(planId: string, completedVerses: number): void;
   removeFromPlanner(planId: string): void;
 }
-export default function usePlannerOperations(
+export function usePlannerOperations(
   planner: Record<string, PlannerPlan>,
   setPlanner: React.Dispatch<React.SetStateAction<Record<string, PlannerPlan>>>
 ): PlannerOperations {

@@ -15,9 +15,10 @@ import {
   getPlanStartVerse,
 } from '@/app/(features)/bookmarks/planner/utils/planRange';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
+import { ModalFooter } from '@/app/shared/components/modal/ModalFooter';
+import { UnifiedModal } from '@/app/shared/components/modal/UnifiedModal';
 import { CloseIcon } from '@/app/shared/icons';
 import { Button } from '@/app/shared/ui/Button';
-import { PanelModalCenter } from '@/app/shared/ui/PanelModalCenter';
 
 import { PlannerCardsSection } from './components/PlannerCardsSection';
 
@@ -252,56 +253,54 @@ export function AddToPlannerModal({
     onClose,
   ]);
 
-  if (!isOpen) {
-    return null;
-  }
-
   const contentContainerClass = 'mx-auto w-full max-w-lg';
 
   return (
-    <PanelModalCenter
+    <UnifiedModal
       isOpen={isOpen}
       onClose={onClose}
-      className="w-full max-w-xl rounded-xl border border-border/30 bg-background p-3 shadow-modal sm:rounded-2xl sm:p-5"
-      showCloseButton={false}
+      ariaLabel="Add to Planner"
+      contentClassName="w-full max-w-xl mx-auto max-h-[calc(100dvh-2rem)] min-h-0 overflow-hidden flex flex-col px-4 pb-4 pt-8 sm:px-6 sm:pb-6 sm:pt-8"
     >
-      <div className="flex h-full min-h-0 flex-col">
-        <header className="mb-4 shrink-0">
-          <div className={`${contentContainerClass} flex items-start justify-between gap-4`}>
-            <div className="flex min-w-0 flex-1 flex-col gap-1">
-              <h2 className="text-xl font-semibold text-content-primary">{title}</h2>
-              <p className="text-sm text-content-secondary">{subtitle}</p>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              aria-label="Close planner modal"
-              className="shrink-0 text-content-secondary hover:text-content-primary"
-            >
-              <CloseIcon size={18} />
-            </Button>
+      <header className="mb-6 shrink-0">
+        <div className={`${contentContainerClass} flex items-start justify-between gap-4`}>
+          <div className="flex min-w-0 flex-1 flex-col gap-1">
+            <h2 className="text-xl font-semibold text-content-primary">{title}</h2>
+            <p className="text-sm text-content-secondary">{subtitle}</p>
           </div>
-        </header>
-
-        <div className={`${contentContainerClass} flex-1 min-h-0 overflow-y-auto`}>
-          <PlannerCardsSection
-            plannerCards={plannerCards}
-            verseSummary={verseSummary}
-            selectedPlanId={selectedPlanId}
-            onPlanSelect={handlePlanSelect}
-          />
-          {helperMessage ? (
-            <p className="mt-3 text-sm text-content-secondary">{helperMessage}</p>
-          ) : null}
+          <button
+            className="p-1.5 rounded-full hover:bg-interactive-hover transition-colors text-content-secondary hover:text-content-primary shrink-0 flex items-center justify-center"
+            onClick={onClose}
+            aria-label="Close planner modal"
+          >
+            <CloseIcon size={18} />
+          </button>
         </div>
+      </header>
 
-        <div className={`${contentContainerClass} mt-4 flex items-center justify-end shrink-0`}>
-          <Button onClick={handleSave} disabled={!canSave}>
-            Save
-          </Button>
-        </div>
+      <div
+        className={`${contentContainerClass} flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y scrollbar-hide py-4`}
+      >
+        <PlannerCardsSection
+          plannerCards={plannerCards}
+          verseSummary={verseSummary}
+          selectedPlanId={selectedPlanId}
+          onPlanSelect={handlePlanSelect}
+        />
+        {helperMessage ? (
+          <p className="mt-3 text-sm text-content-secondary">{helperMessage}</p>
+        ) : null}
       </div>
-    </PanelModalCenter>
+
+      <div className={`${contentContainerClass} mt-6 shrink-0`}>
+        <ModalFooter
+          right={
+            <Button onClick={handleSave} disabled={!canSave} className="rounded-lg px-5">
+              Save
+            </Button>
+          }
+        />
+      </div>
+    </UnifiedModal>
   );
 }

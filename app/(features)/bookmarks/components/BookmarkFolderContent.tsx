@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 
-import { useFolderNavigation } from '@/app/(features)/bookmarks/hooks/useFolderNavigation';
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { Bookmark, Folder } from '@/types';
 
@@ -20,11 +19,12 @@ export const BookmarkFolderContent = ({
   const { folders } = useBookmarks();
   const [expandedFolderId, setExpandedFolderId] = useState<string | null>(folder.id);
 
-  const { handleFolderSelect } = useFolderNavigation(folder.id);
-
   const toggleFolder = (folderId: string): void => {
     setExpandedFolderId((currentId) => (currentId === folderId ? null : folderId));
   };
+
+  // No-op since FolderItem now uses Link-based navigation with href
+  const handleFolderSelect = (): void => {};
 
   const FolderListItem = ({ folderItem }: { folderItem: Folder }): React.JSX.Element => {
     const isExpanded = expandedFolderId === folderItem.id;
@@ -47,7 +47,7 @@ export const BookmarkFolderContent = ({
   // Match Surah list sidebar: no nested scroll/padding here; outer wrapper handles it
   return (
     <div className="flex-1">
-      <div className="space-y-3">
+      <div className="space-y-1.5">
         {folders.map((folderItem) => (
           <FolderListItem key={folderItem.id} folderItem={folderItem} />
         ))}

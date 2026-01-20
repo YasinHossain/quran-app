@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import { PlaybackOptionsModal } from './components/PlaybackOptionsModal';
 import { useQuranAudioController } from './hooks/useQuranAudioController';
@@ -36,12 +36,33 @@ export function QuranAudioPlayer({
     ...(onNext ? { onNext } : {}),
   });
 
+  const [playbackError, setPlaybackError] = useState(false);
+
+  useEffect(() => {
+    setPlaybackError(false);
+  }, [track?.src]);
+
+  const handleAudioError = useCallback(() => {
+    console.error('Audio playback failed for source:', track?.src);
+    setPlaybackError(true);
+  }, [track?.src]);
+
   if (!isPlayerVisible) return null;
 
   return (
     <div className="relative w-full">
+      {playbackError && (
+        <div className="absolute bottom-full mb-2 left-0 right-0 bg-red-500/20 text-red-600 dark:text-red-400 p-2 text-xs rounded-lg text-center border border-red-500/20">
+          Playback failed. Please check your connection.
+        </div>
+      )}
       <PlayerLayouts {...playerLayoutProps} />
-      <PlayerAudio ref={audioRef} src={track?.src || ''} onEnded={handleEnded} />
+      <PlayerAudio
+        ref={audioRef}
+        src={track?.src || ''}
+        onEnded={handleEnded}
+        onError={handleAudioError}
+      />
       <PlaybackOptionsModal
         open={mobileOptionsOpen}
         onClose={() => setMobileOptionsOpen(false)}
@@ -57,7 +78,7 @@ type PlayerLayoutProps = DesktopPlayerLayoutProps & MobilePlayerLayoutProps;
 const PlayerLayouts = React.memo(function PlayerLayouts(props: PlayerLayoutProps) {
   return (
     <div
-      className="mx-auto w-full rounded-2xl px-3 py-3 sm:px-4 sm:py-4 bg-surface shadow-lg border border-border"
+      className="mx-auto w-full rounded-lg px-3 py-3 sm:px-4 sm:py-4 bg-surface shadow-lg"
       role="region"
       aria-label="Player"
     >
@@ -72,14 +93,13 @@ const PlayerLayouts = React.memo(function PlayerLayouts(props: PlayerLayoutProps
 });
 
 const PlayerAudio = React.memo(
-  React.forwardRef<HTMLAudioElement, { src: string; onEnded: () => void }>(function PlayerAudio(
-    { src, onEnded },
-    ref
-  ) {
-    return (
-      <audio ref={ref} src={src} preload="metadata" onEnded={onEnded}>
-        <track kind="captions" />
-      </audio>
-    );
-  })
+  React.forwardRef<HTMLAudioElement, { src: string; onEnded: () => void; onError: () => void }>(
+    function PlayerAudio({ src, onEnded, onError }, ref) {
+      return (
+        <audio ref={ref} src={src} preload="metadata" onEnded={onEnded} onError={onError}>
+          <track kind="captions" />
+        </audio>
+      );
+    }
+  )
 );

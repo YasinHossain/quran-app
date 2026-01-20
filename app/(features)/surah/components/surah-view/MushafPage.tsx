@@ -1,3 +1,5 @@
+import React, { memo } from 'react';
+
 import {
   fontSizeToMushafScale,
   mushafScaleToFontSize,
@@ -15,8 +17,8 @@ import { getJuzByPage } from '@/lib/utils/surah-navigation';
 import { MushafLines } from './MushafLines';
 
 import type { ReaderSettings } from './MushafMain.types';
+import type { QcfFontVersion } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import type { MushafLineGroup } from '@/types';
-import type React from 'react';
 
 const MIN_LINE_WIDTH_PX = 440;
 const MAX_LINE_WIDTH_PX = 540;
@@ -30,9 +32,11 @@ interface MushafPageProps {
   isQcfMushaf: boolean;
   isQpcHafsMushaf: boolean;
   isIndopakMushaf: boolean;
-  qcfVersion: 'v1' | 'v2';
+  qcfVersion: QcfFontVersion;
   indopakVersion?: '15' | '16' | null;
   isFontLoaded: boolean;
+  className?: string;
+  isMobile?: boolean;
 }
 
 const getMushafFontConfig = ({
@@ -47,12 +51,13 @@ const getMushafFontConfig = ({
   isQcfMushaf: boolean;
   isQpcHafsMushaf: boolean;
   isIndopakMushaf: boolean;
-  qcfVersion: 'v1' | 'v2';
+  qcfVersion: QcfFontVersion;
   indopakVersion?: '15' | '16' | null;
 }): { fontSize: string | number; lineWidthDesktop: string } => {
   const mushafScale = fontSizeToMushafScale(settings.arabicFontSize);
 
   if (isQcfMushaf) {
+    // V4 (Tajweed) uses the same sizing as V1
     const preset = qcfVersion === 'v2' ? getQcfV2Preset(mushafScale) : getQcfV1Preset(mushafScale);
     return {
       fontSize: preset.fontSize,
@@ -89,10 +94,10 @@ const MushafPageFooter = ({
   juzNumber: number;
 }): React.JSX.Element => (
   <div className="mt-6 flex justify-center sm:mt-8">
-    <span className="inline-flex h-8 items-center justify-center rounded-full border border-border/60 bg-surface/80 px-4 text-xs font-medium text-muted shadow-sm backdrop-blur-sm">
-      <span className="tracking-widest">{`صفحة ${toArabicIndicNumber(pageNumber)}`}</span>
+    <span className="inline-flex items-center justify-center rounded-xl bg-surface px-6 py-2 text-xs font-medium text-muted shadow-sm">
+      <span className="tracking-widest">{`Page ${pageNumber}`}</span>
       <span className="mx-2 text-muted-foreground/40">•</span>
-      <span>{`الجزء ${toArabicIndicNumber(juzNumber)}`}</span>
+      <span>{`Juz ${juzNumber}`}</span>
     </span>
   </div>
 );
@@ -109,12 +114,7 @@ const getLineWidth = (fontSize: number): number => {
   return Math.min(clamped, maxViewportWidth);
 };
 
-const toArabicIndicNumber = (num: number): string => {
-  const digits = '٠١٢٣٤٥٦٧٨٩';
-  return `${num}`.replace(/\d/g, (d) => digits[Number(d)] ?? d);
-};
-
-export const MushafPage = ({
+export const MushafPage = memo(function MushafPage({
   pageNumber,
   lines,
   settings,
@@ -125,14 +125,16 @@ export const MushafPage = ({
   qcfVersion,
   indopakVersion,
   isFontLoaded,
-}: MushafPageProps): React.JSX.Element => {
+  className,
+  isMobile = false,
+}: MushafPageProps): React.JSX.Element {
   const { fontSize, lineWidthDesktop } = getMushafFontConfig({
     settings,
     isQcfMushaf,
     isQpcHafsMushaf,
     isIndopakMushaf,
     qcfVersion,
-    indopakVersion,
+    ...(indopakVersion !== undefined ? { indopakVersion } : {}),
   });
 
   const juzNumber = getJuzByPage(pageNumber);
@@ -144,8 +146,15 @@ export const MushafPage = ({
         'mx-auto w-full py-6 sm:py-8',
         isQcfMushaf || isQpcHafsMushaf || isIndopakMushaf
           ? 'max-w-none overflow-x-auto px-8'
-          : undefined
+          : undefined,
+        className
       )}
+      style={{
+        // CSS containment for improved scroll performance
+        contain: 'layout style paint',
+        // Let content determine natural height - don't enforce minHeight
+        // Virtuoso will measure the actual height after render for accurate scrolling
+      }}
     >
       <MushafLines
         lines={lines}
@@ -154,8 +163,10 @@ export const MushafPage = ({
         isQpcHafsMushaf={isQpcHafsMushaf}
         isIndopakMushaf={isIndopakMushaf}
         qcfVersion={qcfVersion}
-        indopakVersion={indopakVersion}
+        {...(indopakVersion !== undefined ? { indopakVersion } : {})}
         fontSize={fontSize}
+        // Force reflow on mobile to prevent layout shift during mount
+        forceReflow={isMobile}
         fontFamily={fontFamily}
         lineWidthDesktop={lineWidthDesktop}
         isFontLoaded={isFontLoaded}
@@ -163,4 +174,4 @@ export const MushafPage = ({
       {pageNumber ? <MushafPageFooter pageNumber={pageNumber} juzNumber={juzNumber} /> : null}
     </article>
   );
-};
+});

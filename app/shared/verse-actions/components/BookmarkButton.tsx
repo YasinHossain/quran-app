@@ -19,14 +19,13 @@ export const BookmarkButton = memo(function BookmarkButton({
 }: BookmarkButtonProps): React.JSX.Element {
   return (
     <button
-      aria-label={
-        showRemove ? 'Remove bookmark' : isBookmarked ? 'Remove bookmark' : 'Add bookmark'
-      }
+      aria-label={showRemove ? 'Remove bookmark' : 'Bookmark'}
       title={showRemove ? 'Remove bookmark' : 'Bookmark'}
       onClick={onClick}
       className={cn(
-        'p-1.5 rounded-full hover:bg-accent/10 transition',
+        'p-1.5 rounded-full hover:bg-interactive-hover transition flex items-center justify-center',
         isBookmarked || showRemove ? 'text-accent' : 'hover:text-accent',
+        touchClasses.target,
         touchClasses.focus
       )}
     >

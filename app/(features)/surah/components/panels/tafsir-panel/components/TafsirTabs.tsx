@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { TafsirTabsHeader } from './TafsirTabsHeader';
+import { ResourceTabsHeader } from '@/app/shared/resource-panel/components/ResourceTabsHeader';
 
 export interface TafsirTabsProps {
   languages: string[];
@@ -25,10 +25,10 @@ export const TafsirTabs = ({
   scrollTabsLeft,
   scrollTabsRight,
 }: TafsirTabsProps): React.JSX.Element => (
-  <TafsirTabsHeader
+  <ResourceTabsHeader
     languages={languages}
     activeFilter={activeFilter}
-    setActiveFilter={setActiveFilter}
+    onTabClick={setActiveFilter}
     tabsContainerRef={tabsContainerRef}
     canScrollLeft={canScrollLeft}
     canScrollRight={canScrollRight}

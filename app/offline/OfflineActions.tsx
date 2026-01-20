@@ -16,7 +16,7 @@ export function OfflineActions(): React.JSX.Element {
       <button
         type="button"
         onClick={goBack}
-        className="w-full rounded-lg border border-border bg-interactive px-6 py-3 font-medium text-foreground transition-colors hover:bg-interactive-hover"
+        className="w-full rounded-lg border border-border bg-surface px-6 py-3 font-medium text-foreground transition-colors hover:bg-interactive-hover"
       >
         Go Back
       </button>

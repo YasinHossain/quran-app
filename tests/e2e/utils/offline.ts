@@ -2,19 +2,44 @@ import { expect } from '@playwright/test';
 
 import type { BrowserContext, Page } from '@playwright/test';
 
+async function ensureServiceWorkerReady(page: Page): Promise<void> {
+  const supported = await page
+    .evaluate(() => 'serviceWorker' in navigator)
+    .catch(() => false as boolean);
+  if (!supported) return;
+
+  // Wait for a registration to appear (PWA plugin may register asynchronously).
+  await page.waitForFunction(
+    async () => {
+      const registration = await navigator.serviceWorker.getRegistration();
+      return Boolean(registration);
+    },
+    undefined,
+    { timeout: 15000 }
+  );
+
+  // Ensure the page is controlled by the service worker (required for offline fallbacks).
+  await page.reload();
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForFunction(() => Boolean(navigator.serviceWorker.controller), undefined, {
+    timeout: 15000,
+  });
+}
+
 export async function cacheInitialContent(page: Page): Promise<void> {
   await page.goto('/');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
+  await ensureServiceWorkerReady(page);
 
-  const pathsToCache = ['/surah/1', '/juz/1'];
+  const pathsToCache = ['/surah/1'];
 
   for (const path of pathsToCache) {
     await page.goto(path);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   }
 
   await page.goto('/');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 export type OfflineVisitOptions = {
@@ -101,7 +126,7 @@ export async function restoreOnline(
   context: BrowserContext,
   {
     tryAgainSelector = 'button:has-text("Try Again")',
-    waitForLoadState = 'networkidle',
+    waitForLoadState = 'domcontentloaded',
   }: RestoreOnlineOptions = {}
 ): Promise<void> {
   await context.setOffline(false);
@@ -128,7 +153,8 @@ export async function attemptOfflineNavigation(
   context: BrowserContext
 ): Promise<OfflineNavigationResult> {
   await page.goto('/');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
+  await ensureServiceWorkerReady(page);
 
   await context.setOffline(true);
 
@@ -137,9 +163,13 @@ export async function attemptOfflineNavigation(
   let destinationTitle: string | null = null;
 
   if (linkCount > 0) {
-    await navLinks.first().click();
-    await page.waitForTimeout(1000);
-    destinationTitle = await page.title();
+    const firstLink = navLinks.first();
+    const isFirstLinkVisible = await firstLink.isVisible().catch(() => false);
+    if (isFirstLinkVisible) {
+      await firstLink.click();
+      await page.waitForTimeout(1000);
+      destinationTitle = await page.title();
+    }
   }
 
   return { linkCount, destinationTitle };

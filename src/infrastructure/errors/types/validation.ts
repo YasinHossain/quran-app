@@ -9,5 +9,3 @@ export class ValidationError extends ApplicationError {
     return 'Please check your input and try again.';
   }
 }
-
-export default ValidationError;

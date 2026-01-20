@@ -28,12 +28,15 @@ export { CloseIcon } from './CloseIcon';
 export { EllipsisHIcon } from './EllipsisHIcon';
 export { FlagIcon } from './FlagIcon';
 export { GripVerticalIcon } from './GripVerticalIcon';
+export { MinusIcon } from './MinusIcon';
 export { PlusIcon } from './PlusIcon';
 export { SearchIcon } from './SearchIcon';
+export { SettingsIcon } from './SettingsIcon';
 
 // Content & Features
 export { BookmarkIcon } from './BookmarkIcon';
 export { BookmarkOutlineIcon } from './BookmarkOutlineIcon';
+export { BookOpenIcon } from './BookOpenIcon';
 export { BookReaderIcon } from './BookReaderIcon';
 export { CalendarIcon } from './CalendarIcon';
 export { BrainIcon } from './BrainIcon';
@@ -41,6 +44,7 @@ export { ClockIcon } from './ClockIcon';
 export { FolderIcon } from './FolderIcon';
 export { FontSettingIcon } from './FontSettingIcon';
 export { GridIcon } from './GridIcon';
+export { HashIcon } from './HashIcon';
 export { HomeIcon } from './HomeIcon';
 export { MoonIcon } from './MoonIcon';
 export { PinIcon } from './PinIcon';

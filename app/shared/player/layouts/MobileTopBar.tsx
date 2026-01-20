@@ -1,14 +1,10 @@
-import Image from 'next/image';
 import React from 'react';
 
 import { CloseIcon, SlidersIcon } from '@/app/shared/icons';
 import { SpeedControl } from '@/app/shared/player/components/SpeedControl';
 import { TransportControls } from '@/app/shared/player/components/TransportControls';
-import { Button } from '@/app/shared/ui/Button';
-import { iconClasses } from '@/lib/responsive';
 
 interface Props {
-  cover: string;
   title: string;
   artist: string;
   isPlaying: boolean;
@@ -20,30 +16,9 @@ interface Props {
   closePlayer: () => void;
 }
 
-function CoverAndText({
-  cover,
-  title,
-  artist,
-}: {
-  cover: string;
-  title: string;
-  artist: string;
-}): React.JSX.Element {
+function CoverAndText({ title, artist }: { title: string; artist: string }): React.JSX.Element {
   return (
-    <div className="flex items-center gap-2 min-w-0">
-      <div className="hidden min-[400px]:block flex-shrink-0">
-        <Image
-          src={cover}
-          alt="cover"
-          width={32}
-          height={32}
-          className="h-8 w-8 rounded-full shadow-sm object-cover"
-          onError={(e) => {
-            e.currentTarget.src =
-              "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><rect width='100%' height='100%' rx='6' ry='6' fill='%23e5e7eb'/></svg>";
-          }}
-        />
-      </div>
+    <div className="flex items-center gap-2 min-w-0 pl-1">
       <div className="min-w-0">
         <div className="text-sm font-semibold tracking-[-0.01em] truncate text-foreground">
           {title}
@@ -57,36 +32,44 @@ function CoverAndText({
 function ActionButtons({
   setMobileOptionsOpen,
   closePlayer,
+  className,
 }: {
   setMobileOptionsOpen: () => void;
   closePlayer: () => void;
+  className?: string; // Allow overriding layout
 }): React.JSX.Element {
   return (
-    <div className="flex items-center gap-1 justify-self-end">
+    <div className={className || 'flex items-center gap-0.5 xs:gap-1 justify-self-end'}>
       <SpeedControl />
-      <Button
-        variant="icon-round"
-        size="icon-round"
-        className="shrink-0"
+      <button
+        className="p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center shrink-0"
         aria-label="Options"
         onClick={setMobileOptionsOpen}
       >
-        <SlidersIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
-      </Button>
-      <Button
-        variant="icon-round"
-        size="icon-round"
+        <SlidersIcon size={18} />
+      </button>
+      <button
         aria-label="Close player"
         onClick={closePlayer}
+        className="p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center hover:text-red-500"
       >
-        <CloseIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
-      </Button>
+        <CloseIcon size={18} />
+      </button>
     </div>
   );
 }
 
+function formatMobileTitle(title: string): string {
+  if (title.toLowerCase().startsWith('verse')) {
+    return title.replace(/^Verse/i, 'Surah');
+  }
+  if (/^\d+:\d+$/.test(title)) {
+    return `Surah ${title}`;
+  }
+  return title;
+}
+
 export function MobileTopBar({
-  cover,
   title,
   artist,
   isPlaying,
@@ -98,28 +81,55 @@ export function MobileTopBar({
   closePlayer,
 }: Props): React.JSX.Element {
   return (
-    <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-      <CoverAndText cover={cover} title={title} artist={artist} />
-      <TransportControls
-        isPlaying={isPlaying}
-        interactable={interactable}
-        {...(onPrev
-          ? {
-              onPrev: () => {
-                void onPrev();
-              },
-            }
-          : {})}
-        {...(onNext
-          ? {
-              onNext: () => {
-                void onNext();
-              },
-            }
-          : {})}
-        togglePlay={togglePlay}
-      />
-      <ActionButtons setMobileOptionsOpen={setMobileOptionsOpen} closePlayer={closePlayer} />
+    <div className="flex flex-col gap-1 w-full min-[450px]:grid min-[450px]:grid-cols-[1fr_auto_1fr] min-[450px]:gap-2 min-[450px]:items-center">
+      {/* Mobile Text Header */}
+      <div className="flex justify-between items-center px-1 mb-1 min-[450px]:hidden order-1">
+        <div className="text-sm font-semibold truncate text-foreground min-w-0">
+          {formatMobileTitle(title)}
+        </div>
+        <div className="text-xs text-muted truncate max-w-[50%] text-right shrink-0">{artist}</div>
+      </div>
+
+      {/* Desktop Text - Hidden on mobile */}
+      <div className="hidden min-[450px]:block min-w-0 justify-self-start order-first">
+        <CoverAndText title={title} artist={artist} />
+      </div>
+
+      {/* Controls Container */}
+      <div className="grid grid-cols-6 items-center justify-items-center w-full min-[450px]:contents order-2">
+        {/* Transport Controls */}
+        <div className="contents min-[450px]:flex min-[450px]:items-center min-[450px]:justify-center">
+          <TransportControls
+            isPlaying={isPlaying}
+            interactable={interactable}
+            {...(onPrev
+              ? {
+                  onPrev: () => {
+                    void onPrev();
+                  },
+                }
+              : {})}
+            {...(onNext
+              ? {
+                  onNext: () => {
+                    void onNext();
+                  },
+                }
+              : {})}
+            togglePlay={togglePlay}
+            className="contents min-[450px]:flex min-[450px]:items-center min-[450px]:gap-2"
+          />
+        </div>
+
+        {/* Action Buttons */}
+        <div className="contents min-[450px]:flex min-[450px]:items-center min-[450px]:justify-end min-[450px]:justify-self-end">
+          <ActionButtons
+            setMobileOptionsOpen={setMobileOptionsOpen}
+            closePlayer={closePlayer}
+            className="contents min-[450px]:flex min-[450px]:items-center min-[450px]:gap-1"
+          />
+        </div>
+      </div>
     </div>
   );
 }

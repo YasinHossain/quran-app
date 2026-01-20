@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test';
 
+import { gotoApp } from './utils';
+
 test.describe('Context - Settings', () => {
   test('updates propagate correctly', async ({ page }) => {
-    await page.goto('/surah/1');
+    await gotoApp(page, '/surah/1');
 
     const settingsButton = page.locator('[data-testid="settings-button"]');
     if (await settingsButton.isVisible()) {
@@ -33,7 +35,7 @@ test.describe('Context - Settings', () => {
 
 test.describe('Context - Audio', () => {
   test('synchronizes across components', async ({ page }) => {
-    await page.goto('/surah/1');
+    await gotoApp(page, '/surah/1');
 
     const playButton = page.locator('[data-testid="play-button"]').first();
     if (await playButton.isVisible()) {
@@ -44,7 +46,7 @@ test.describe('Context - Audio', () => {
       const playingVerse = page.locator('[data-testid="verse-1-1"]');
       await expect(playingVerse).toHaveClass(/playing|active/);
 
-      await page.goto('/surah/2');
+      await gotoApp(page, '/surah/2');
       await expect(page.locator('[data-testid="audio-player"]')).toBeVisible();
 
       const currentTrackInfo = page.locator('[data-testid="current-track-info"]');
@@ -57,14 +59,14 @@ test.describe('Context - Audio', () => {
 
 test.describe('Context - Bookmarks', () => {
   test('remains consistent across navigation', async ({ page }) => {
-    await page.goto('/surah/1');
+    await gotoApp(page, '/surah/1');
 
     const bookmarkButton = page.locator('[data-testid="bookmark-button"]').first();
     if (await bookmarkButton.isVisible()) {
       await bookmarkButton.click();
       await expect(bookmarkButton).toHaveClass(/active|bookmarked/);
 
-      await page.goto('/bookmarks');
+      await gotoApp(page, '/bookmarks');
 
       const bookmarkItem = page.locator('[data-testid="bookmark-item"]').first();
       await expect(bookmarkItem).toBeVisible();

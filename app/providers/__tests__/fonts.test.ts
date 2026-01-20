@@ -4,15 +4,19 @@ describe('ARABIC_FONTS', () => {
   it('contains expected font names', () => {
     const fontNames = ARABIC_FONTS.map((f) => f.name);
     const expectedNames = [
-      'KFGQPC Uthman Taha',
-      'Amiri',
+      'KFGQ',
+      'KFGQ V2',
+      'Me Quran',
+      'Amiri Quran',
+
       'Scheherazade New',
       'Noto Naskh Arabic',
-      'Noto Nastaliq Urdu',
+
       'IndoPak Nastaleeq (Waqf Lazim)',
+      'Noor-e-Huda',
+      'Noor-e-Hidayat',
       'Noor-e-Hira',
       'Lateef',
-      'QPC Uthmani Hafs',
     ];
     expectedNames.forEach((name) => {
       expect(fontNames).toContain(name);
@@ -21,15 +25,19 @@ describe('ARABIC_FONTS', () => {
 
   it('has correct categories for each font', () => {
     const expectedCategories: Record<string, string> = {
-      'KFGQPC Uthman Taha': 'Uthmani',
-      Amiri: 'Uthmani',
+      KFGQ: 'Uthmani',
+      'KFGQ V2': 'Uthmani',
+      'Me Quran': 'Uthmani',
+      'Amiri Quran': 'Uthmani',
+
       'Scheherazade New': 'Uthmani',
       'Noto Naskh Arabic': 'Uthmani',
-      'Noto Nastaliq Urdu': 'IndoPak',
+
       'IndoPak Nastaleeq (Waqf Lazim)': 'IndoPak',
+      'Noor-e-Huda': 'IndoPak',
+      'Noor-e-Hidayat': 'IndoPak',
       'Noor-e-Hira': 'IndoPak',
       Lateef: 'IndoPak',
-      'QPC Uthmani Hafs': 'Uthmani',
     };
 
     ARABIC_FONTS.forEach((font) => {

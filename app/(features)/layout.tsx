@@ -6,6 +6,7 @@ import {
   HeaderVisibilityProvider,
   useHeaderVisibility,
 } from '@/app/(features)/layout/context/HeaderVisibilityContext';
+import { useSidebar } from '@/app/providers/SidebarContext';
 import { Header } from '@/app/shared/Header';
 import { Navigation } from '@/app/shared/IconSidebar';
 import { ModernLayout } from '@/app/shared/navigation/ModernLayout';
@@ -14,12 +15,17 @@ import { ModernLayout } from '@/app/shared/navigation/ModernLayout';
 import type { ReactElement, ReactNode } from 'react';
 
 function LayoutContent({ children }: { children: ReactNode }): ReactElement {
-  useHeaderVisibility();
+  const { isHidden } = useHeaderVisibility();
+  const { isSurahListOpen, isBookmarkSidebarOpen } = useSidebar();
   const pathname = usePathname();
-  const isHomePage = pathname === '/';
+  // During static pre-rendering (home), Next may not provide a pathname on the server.
+  // Treat an empty pathname as home to prevent the header flashing on initial paint.
+  const isHomePage = !pathname || pathname === '/';
+
+  const isNavHidden = isHidden || isSurahListOpen || isBookmarkSidebarOpen;
 
   return (
-    <ModernLayout>
+    <ModernLayout isNavHidden={isNavHidden}>
       {/* Header navigation (keep intact) */}
       {!isHomePage && <Header />}
 
@@ -29,7 +35,7 @@ function LayoutContent({ children }: { children: ReactNode }): ReactElement {
       {/* Sidebars are managed per-feature (ReaderShell/BookmarksLayout) */}
 
       {/* Main content area with proper margins for both sidebars */}
-      <div className={`flex flex-col min-h-[100dvh] ${!isHomePage ? 'lg:pl-16' : ''}`}>
+      <div className={`flex flex-col min-h-[100dvh] ${!isHomePage ? 'xl:pl-16' : ''}`}>
         <div className="flex-grow min-h-0 transition-all duration-300">{children}</div>
       </div>
     </ModernLayout>

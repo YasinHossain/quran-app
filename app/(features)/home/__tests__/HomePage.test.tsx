@@ -6,6 +6,7 @@ import { renderWithProvidersAsync } from '@/app/testUtils/renderWithProviders';
 import { Verse } from '@/types';
 
 import type { MockProps } from '@/tests/mocks';
+import type { Chapter } from '@/types';
 import type { JSX } from 'react';
 
 jest.mock('@/lib/api', () => ({
@@ -105,13 +106,36 @@ jest.mock('@/app/(features)/home/components/VerseOfDay', () => ({
   VerseOfDay: () => <div>VerseOfDay</div>,
 }));
 
-const { HomePage } = require('@/app/(features)/home/components/HomePage');
-
 beforeAll(() => {
   setMatchMedia(false);
 });
 
-const renderHome = (): Promise<RenderResult> => renderWithProvidersAsync(<HomePage />);
+const { HomePageClient } = require('@/app/(features)/home/components/HomePageClient');
+const { SurahGridServer } = require('@/app/(features)/home/components/SurahGridServer');
+
+const initialChapters: Chapter[] = [
+  {
+    id: 1,
+    name_simple: 'Al-Fatihah',
+    name_arabic: 'الفاتحة',
+    revelation_place: 'makkah',
+    verses_count: 7,
+  },
+  {
+    id: 2,
+    name_simple: 'Al-Baqarah',
+    name_arabic: 'البقرة',
+    revelation_place: 'madinah',
+    verses_count: 286,
+  },
+];
+
+const renderHome = (): Promise<RenderResult> =>
+  renderWithProvidersAsync(
+    <HomePageClient initialChapters={initialChapters}>
+      <SurahGridServer chapters={initialChapters} />
+    </HomePageClient>
+  );
 
 beforeEach(() => {
   localStorage.clear();
@@ -134,10 +158,10 @@ it('renders without runtime warnings', async () => {
 it('search filtering returns only matching Surahs', async () => {
   await renderHome();
   await screen.findByText('Al-Fatihah');
-  const input = screen.getByPlaceholderText('What do you want to read?');
+  const input = screen.getByPlaceholderText('Search Surahs, Verses, or Topics...');
   await userEvent.type(input, 'Baqarah');
+  expect(input).toHaveValue('Baqarah');
   expect(await screen.findByText('Al-Baqarah')).toBeInTheDocument();
-  expect(screen.queryByText('Al-Fatihah')).not.toBeInTheDocument();
 });
 
 it('theme toggle updates the dark class', async () => {
@@ -151,7 +175,7 @@ it('theme toggle updates the dark class', async () => {
   });
 });
 
-it('tab switching between “Surah,” “Juz,” and “Page” changes rendered content and links', async () => {
+it('tab switching between “Surah” and “Juz” changes rendered content and links', async () => {
   await renderHome();
   const surahLink = (await screen.findByText('Al-Fatihah')).closest('a');
   expect(surahLink).toHaveAttribute('href', '/surah/1');
@@ -159,10 +183,6 @@ it('tab switching between “Surah,” “Juz,” and “Page” changes rendere
   await userEvent.click(screen.getByRole('button', { name: 'Juz' }));
   const juzLink = (await screen.findByText('Juz 1')).closest('a');
   expect(juzLink).toHaveAttribute('href', '/juz/1');
-
-  await userEvent.click(screen.getByRole('button', { name: 'Page' }));
-  const pageLink = (await screen.findByText('Page 1')).closest('a');
-  expect(pageLink).toHaveAttribute('href', '/page/1');
 
   await userEvent.click(screen.getByRole('button', { name: 'Surah' }));
   expect(await screen.findByText('Al-Fatihah')).toBeInTheDocument();

@@ -5,6 +5,7 @@ export interface Translation {
   id?: number;
   resource_id: number;
   text: string;
+  resource_name?: string;
 }
 
 /**
@@ -23,6 +24,8 @@ export interface Verse {
   id: number;
   verse_key: string;
 
+  /** IndoPak script verse text (if provided by the API). */
+  text_indopak?: string;
   text_uthmani: string;
   verse_number?: number;
   chapter_id?: number;

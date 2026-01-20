@@ -1,10 +1,8 @@
-declare module 'next-pwa' {
+declare module '@ducanh2912/next-pwa' {
   import type { NextConfig } from 'next';
 
-  type WithPwaOptions = Record<string, unknown>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  type PWAConfig = Record<string, any>;
 
-  // next-pwa exports a function that returns a Next.js config enhancer
-  const withPWA: (options?: WithPwaOptions) => (config: NextConfig) => NextConfig;
-
-  export default withPWA;
+  export default function withPWA(config: PWAConfig): (nextConfig: NextConfig) => NextConfig;
 }

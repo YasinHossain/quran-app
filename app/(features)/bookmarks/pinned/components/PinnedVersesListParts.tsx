@@ -1,10 +1,11 @@
 'use client';
 
-import { useVirtualizer } from '@tanstack/react-virtual';
 import React from 'react';
+import { Virtuoso } from 'react-virtuoso';
 
+import { VerseSkeleton } from '@/app/shared/components/VerseSkeleton';
 import { PinIcon } from '@/app/shared/icons';
-import { Spinner } from '@/app/shared/Spinner';
+import { LoadingStatus } from '@/app/shared/LoadingStatus';
 
 import { PinnedVerseListItem } from './PinnedItem';
 
@@ -15,9 +16,11 @@ export const WORKSPACE_SCROLL_SELECTOR =
 
 export function PinnedLoading(): React.JSX.Element {
   return (
-    <div className="flex justify-center py-20">
-      <Spinner className="h-8 w-8 text-accent" />
-    </div>
+    <LoadingStatus>
+      <VerseSkeleton index={0} />
+      <VerseSkeleton index={1} />
+      <VerseSkeleton index={2} />
+    </LoadingStatus>
   );
 }
 
@@ -62,45 +65,18 @@ export function VirtualizedPinnedList({
   scrollElement: HTMLElement | null;
   setRootRef: (node: HTMLDivElement | null) => void;
 }): React.JSX.Element {
-  const rowVirtualizer = useVirtualizer({
-    count: bookmarks.length,
-    getScrollElement: () => scrollElement,
-    estimateSize: () => 360,
-    overscan: 6,
-    getItemKey: (index) => {
-      const bookmark = bookmarks[index];
-      if (!bookmark) return index;
-      return `pinned-${bookmark.verseId}-${bookmark.verseKey ?? index}`;
-    },
-  });
-
   return (
-    <div className="relative w-full" ref={setRootRef}>
-      <div
-        style={{
-          height: `${rowVirtualizer.getTotalSize()}px`,
-          width: '100%',
-          position: 'relative',
-        }}
-      >
-        {rowVirtualizer.getVirtualItems().map((virtualItem) => {
-          const bookmark = bookmarks[virtualItem.index];
-          if (!bookmark) return null;
-          return (
-            <div
-              key={virtualItem.key}
-              ref={rowVirtualizer.measureElement}
-              data-index={virtualItem.index}
-              className="absolute left-0 top-0 w-full"
-              style={{ transform: `translateY(${virtualItem.start}px)` }}
-            >
-              <PinnedVerseListItem bookmark={bookmark} />
-            </div>
-          );
-        })}
-      </div>
+    <div className="relative w-full h-full" ref={setRootRef}>
+      <Virtuoso
+        useWindowScroll={!scrollElement}
+        {...(scrollElement ? { customScrollParent: scrollElement } : {})}
+        data={bookmarks}
+        computeItemKey={(index, bookmark) =>
+          `pinned-${index}-${bookmark.verseId}-${bookmark.createdAt ?? index}`
+        }
+        itemContent={(index, bookmark) => <PinnedVerseListItem bookmark={bookmark} index={index} />}
+        increaseViewportBy={1000}
+      />
     </div>
   );
 }
-
-// end of file

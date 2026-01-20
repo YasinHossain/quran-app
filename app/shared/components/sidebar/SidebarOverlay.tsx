@@ -9,6 +9,7 @@ interface SidebarOverlayProps {
   onClose: () => void;
   position: 'left' | 'right';
   showOverlay: boolean;
+  desktopBreakpoint?: 'lg' | 'xl' | '2xl';
 }
 
 export const SidebarOverlay = ({
@@ -16,16 +17,26 @@ export const SidebarOverlay = ({
   onClose,
   position: _position,
   showOverlay,
+  desktopBreakpoint = 'lg',
 }: SidebarOverlayProps): React.JSX.Element | null => {
   void _position;
-  if (!showOverlay || !isOpen) {
+  if (!showOverlay) {
     return null;
   }
+
+  const hiddenFromBreakpoint =
+    desktopBreakpoint === 'xl'
+      ? 'xl:hidden'
+      : desktopBreakpoint === '2xl'
+        ? '2xl:hidden'
+        : 'lg:hidden';
 
   return (
     <div
       className={cn(
-        'fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden z-40'
+        'fixed inset-0 bg-background/85 transition-opacity duration-300 z-40',
+        hiddenFromBreakpoint,
+        isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
       )}
       onClick={onClose}
       onKeyDown={(e) => {

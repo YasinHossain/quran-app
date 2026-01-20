@@ -18,6 +18,7 @@ interface SearchInputProps {
   onChange: (value: string) => void;
   placeholder: string;
   onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
+  onFocus?: () => void;
   className?: string;
   variant?: SearchVariant;
   size?: SearchSize;
@@ -31,7 +32,7 @@ const getVariantStyles = (variant: SearchVariant): string => {
     case 'panel':
       return 'bg-interactive/60 border border-border text-foreground placeholder:text-muted';
     case 'glass':
-      return 'bg-surface-glass/60 text-lg text-foreground border-none placeholder:text-input-placeholder backdrop-blur-xl shadow-lg hover:shadow-xl';
+      return 'bg-surface-navigation text-lg text-foreground border border-border/30 dark:border-border/20 placeholder:text-input-placeholder shadow-lg hover:shadow-xl';
     default:
       return 'bg-interactive/60 text-foreground border border-border placeholder:text-muted';
   }
@@ -49,9 +50,9 @@ const getSizeStyles = (size: SearchSize): SizeStyles => {
     case 'lg':
       return {
         container: 'text-mobile sm:text-lg',
-        inputBase: 'pl-10 sm:pl-11 py-3 sm:py-3.5 min-h-touch-lg',
+        inputBase: 'pl-11 sm:pl-12 py-3 sm:py-3.5 min-h-touch-lg',
         rightPad: 'pr-4',
-        icon: { size: 18, className: 'left-3 sm:left-3.5' },
+        icon: { size: 20, className: 'left-3.5 sm:left-4' },
       };
     default: // md
       return {
@@ -66,6 +67,7 @@ const getSizeStyles = (size: SearchSize): SizeStyles => {
 const getFocusStyles = (variant: SearchVariant): string => {
   switch (variant) {
     case 'panel':
+    case 'header':
       return 'focus:ring-2 focus:ring-accent focus:border-transparent';
     default:
       return 'focus:ring-1 focus:ring-accent';
@@ -75,6 +77,7 @@ const getFocusStyles = (variant: SearchVariant): string => {
 const getHoverStyles = (variant: SearchVariant): string => {
   switch (variant) {
     case 'panel':
+    case 'header':
       return ''; // No hover effects - only focus ring appears on click
     case 'glass':
       return 'hover:shadow-xl';
@@ -88,6 +91,7 @@ export const SearchInput = ({
   onChange,
   placeholder,
   onKeyDown,
+  onFocus,
   className = '',
   variant = 'default',
   size = 'md',
@@ -114,6 +118,7 @@ export const SearchInput = ({
         onChange={(e): void => onChange(e.target.value)}
         placeholder={placeholder}
         onKeyDown={onKeyDown}
+        onFocus={onFocus}
         className={`w-full ${sizeStyles.inputBase} ${rightPad} rounded-lg outline-none focus:outline-none ${focusStyles} transition-all duration-300 ${hoverStyles} ${variantStyles} touch-manipulation`}
         autoCapitalize="off"
         autoComplete="off"

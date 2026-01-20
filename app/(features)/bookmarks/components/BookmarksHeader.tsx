@@ -31,8 +31,8 @@ export const BookmarksHeader = ({
   const headerTitle = title ?? t('bookmarks');
 
   return (
-    <div className="mb-6 flex flex-col gap-4">
-      <div className="flex items-start justify-between gap-3">
+    <div className="mb-2 flex flex-col gap-4">
+      <div className="flex items-center justify-between gap-3">
         <div className="flex-1">
           <HeaderTitleSection
             title={headerTitle}
@@ -45,7 +45,7 @@ export const BookmarksHeader = ({
             type="button"
             aria-label={t('bookmarks_create_folder')}
             onClick={onNewFolderClick}
-            className="inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-accent font-semibold text-on-accent shadow-sm transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation select-none min-h-touch"
+            className="inline-flex min-h-touch min-w-touch flex-shrink-0 items-center justify-center rounded-xl bg-accent font-semibold text-on-accent shadow-sm transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation select-none"
           >
             <PlusIcon size={20} />
             <span className="sr-only">{t('bookmarks_create_folder')}</span>

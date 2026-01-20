@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, MutableRefObject } from 'react';
+import { useCallback, useEffect, useMemo, useState, MutableRefObject } from 'react';
 
 import { formatTime } from '@/app/shared/player/utils/timeline';
 
@@ -6,24 +6,19 @@ import { useAudioPlayer } from './useAudioPlayer';
 
 import type { Track } from '@/app/shared/player/types';
 
-const DEFAULT_COVER =
-  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96'><rect width='100%' height='100%' rx='12' ry='12' fill='%23e5e7eb'/><text x='50%' y='52%' dominant-baseline='middle' text-anchor='middle' font-family='Inter, system-ui, sans-serif' font-size='12' fill='%239ca3af'>No cover</text></svg>";
-
 interface TrackMeta {
   title: string;
   artist: string;
-  cover: string;
   interactable: boolean;
 }
 
 function getTrackMeta(track?: Track | null): TrackMeta {
   if (!track) {
-    return { title: 'No track selected', artist: '', cover: DEFAULT_COVER, interactable: false };
+    return { title: 'No track selected', artist: '', interactable: false };
   }
   return {
     title: track.title ?? 'No track selected',
     artist: track.artist ?? '',
-    cover: track.coverUrl || DEFAULT_COVER,
     interactable: Boolean(track.src),
   };
 }
@@ -47,7 +42,6 @@ export interface TrackTimingReturn {
   interactable: boolean;
   title: string;
   artist: string;
-  cover: string;
 }
 
 export function useTrackTiming({
@@ -58,33 +52,112 @@ export function useTrackTiming({
 }: Opts): TrackTimingReturn {
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState(track?.durationSec ?? 0);
+
+  const segment = useMemo(() => {
+    const start = track?.segmentStartSec;
+    const end = track?.segmentEndSec;
+    if (typeof start !== 'number' || typeof end !== 'number') return null;
+    if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) return null;
+    return { start, end, duration: end - start };
+  }, [track?.segmentStartSec, track?.segmentEndSec]);
+
+  const handleTimeUpdate = useCallback(
+    (timeSec: number): void => {
+      if (!segment) {
+        setCurrent(timeSec);
+        return;
+      }
+      const relative = timeSec - segment.start;
+      setCurrent(Math.max(0, Math.min(segment.duration, relative)));
+    },
+    [segment]
+  );
+
+  const handleLoadedMetadata = useCallback(
+    (loadedDuration: number): void => {
+      if (segment) {
+        setDuration(segment.duration);
+        return;
+      }
+      setDuration(loadedDuration);
+    },
+    [segment]
+  );
+
   const playerOptions: {
     src?: string;
     defaultDuration?: number;
     onTimeUpdate?: (time: number) => void;
     onLoadedMetadata?: (duration: number) => void;
   } = {
-    onTimeUpdate: setCurrent,
-    onLoadedMetadata: setDuration,
+    onTimeUpdate: handleTimeUpdate,
+    onLoadedMetadata: handleLoadedMetadata,
   };
   if (track?.src !== undefined) playerOptions.src = track.src;
   if (track?.durationSec !== undefined) playerOptions.defaultDuration = track.durationSec;
 
-  const { audioRef, play, pause, seek, setVolume, setPlaybackRate } = useAudioPlayer(playerOptions);
+  const {
+    audioRef,
+    play,
+    pause,
+    seek: rawSeek,
+    setVolume,
+    setPlaybackRate,
+  } = useAudioPlayer(playerOptions);
+
+  const seek = useCallback(
+    (sec: number): void => {
+      if (!segment) {
+        rawSeek(sec);
+        return;
+      }
+      const a = audioRef.current;
+      if (!a) return;
+      const clamped = Math.max(0, Math.min(segment.duration, sec));
+      try {
+        a.currentTime = segment.start + clamped;
+      } catch {
+        // ignore invalid seek states (e.g., before metadata is loaded)
+      }
+      setCurrent(clamped);
+    },
+    [audioRef, rawSeek, segment]
+  );
+
   useEffect(() => {
     contextRef.current = audioRef.current;
   }, [contextRef, audioRef]);
   useEffect(() => {
     setCurrent(0);
-    setDuration(track?.durationSec ?? 0);
-  }, [track?.src, track?.durationSec]);
+    setDuration(segment?.duration ?? track?.durationSec ?? 0);
+  }, [segment?.duration, track?.durationSec, track?.id, track?.src]);
+  useEffect(() => {
+    if (!segment) return;
+    // Seek to start of segment when segment changes
+    const a = audioRef.current;
+    if (!a) return;
+    try {
+      // Check if we're already close to the start time (continuous playback)
+      // If within 0.3s, don't seek to avoid audio hiccups
+      const diff = Math.abs(a.currentTime - segment.start);
+      if (diff > 0.3) {
+        a.currentTime = segment.start;
+        setCurrent(0);
+      } else {
+        // Just sync the internal state
+        setCurrent(Math.max(0, a.currentTime - segment.start));
+      }
+    } catch {
+      // ignore invalid seek states
+    }
+  }, [segment, audioRef]);
   useEffect(() => {
     setVolume(volume);
     setPlaybackRate(playbackRate);
   }, [volume, playbackRate, setVolume, setPlaybackRate]);
   const elapsed = useMemo(() => formatTime(current), [current]);
   const total = useMemo(() => formatTime(duration || 0), [duration]);
-  const { title, artist, cover, interactable } = useMemo(() => getTrackMeta(track), [track]);
+  const { title, artist, interactable } = useMemo(() => getTrackMeta(track), [track]);
   return {
     audioRef,
     play,
@@ -97,6 +170,5 @@ export function useTrackTiming({
     interactable,
     title,
     artist,
-    cover,
   };
 }

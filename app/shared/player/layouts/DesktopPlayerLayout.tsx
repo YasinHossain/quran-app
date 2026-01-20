@@ -5,11 +5,8 @@ import { PlayerOptions } from '@/app/shared/player/components/PlayerOptions';
 import { Timeline } from '@/app/shared/player/components/Timeline';
 import { TrackInfo } from '@/app/shared/player/components/TrackInfo';
 import { TransportControls } from '@/app/shared/player/components/TransportControls';
-import { Button } from '@/app/shared/ui/Button';
-import { iconClasses } from '@/lib/responsive';
 
 interface DesktopPlayerLayoutProps {
-  cover: string;
   title: string;
   artist: string;
   current: number;
@@ -26,7 +23,6 @@ interface DesktopPlayerLayoutProps {
 }
 
 export const DesktopPlayerLayout = React.memo(function DesktopPlayerLayout({
-  cover,
   title,
   artist,
   current,
@@ -43,26 +39,30 @@ export const DesktopPlayerLayout = React.memo(function DesktopPlayerLayout({
 }: DesktopPlayerLayoutProps): React.JSX.Element {
   return (
     <>
-      <TrackInfo cover={cover} title={title} artist={artist} />
-      <TransportControls
-        isPlaying={isPlaying}
-        interactable={interactable}
-        {...(onPrev
-          ? {
-              onPrev: () => {
-                void onPrev();
-              },
-            }
-          : {})}
-        {...(onNext
-          ? {
-              onNext: () => {
-                void onNext();
-              },
-            }
-          : {})}
-        togglePlay={togglePlay}
-      />
+      <div className="flex items-center gap-4 min-w-0">
+        <div className="hidden md:block min-w-0">
+          <TrackInfo title={title} artist={artist} />
+        </div>
+        <TransportControls
+          isPlaying={isPlaying}
+          interactable={interactable}
+          {...(onPrev
+            ? {
+                onPrev: () => {
+                  void onPrev();
+                },
+              }
+            : {})}
+          {...(onNext
+            ? {
+                onNext: () => {
+                  void onNext();
+                },
+              }
+            : {})}
+          togglePlay={togglePlay}
+        />
+      </div>
       <Timeline
         current={current}
         duration={duration}
@@ -80,14 +80,13 @@ function Utilities({ closePlayer }: { closePlayer: () => void }): React.JSX.Elem
   return (
     <div className="flex items-center gap-2">
       <PlayerOptions />
-      <Button
-        variant="icon-round"
-        size="icon-round"
+      <button
         aria-label="Close player"
         onClick={closePlayer}
+        className="p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center hover:text-red-500"
       >
-        <CloseIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
-      </Button>
+        <CloseIcon size={18} />
+      </button>
     </div>
   );
 }

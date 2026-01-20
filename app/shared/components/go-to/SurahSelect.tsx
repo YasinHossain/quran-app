@@ -3,6 +3,7 @@
 import clsx from 'clsx';
 import {
   memo,
+  forwardRef,
   useCallback,
   useEffect,
   useMemo,
@@ -10,13 +11,17 @@ import {
   useState,
   useId,
   useLayoutEffect,
+  useImperativeHandle,
   type ChangeEvent,
   type FocusEvent,
   type KeyboardEvent,
   type ReactElement,
 } from 'react';
+import { createPortal } from 'react-dom';
 
 import { ChevronDownIcon } from '@/app/shared/icons';
+
+const DROPDOWN_MAX_HEIGHT = 28 * 16;
 
 export interface SurahOption {
   value: string;
@@ -33,316 +38,404 @@ interface SurahSelectProps {
   clearable?: boolean;
   clearLabel?: string;
   inputId?: string;
+  onSelectionComplete?: (value: string) => void;
 }
 
 /**
  * Searchable combobox used for Surah and verse selection.
  * Users can type values directly while still getting a styled dropdown list.
  */
-export const SurahSelect = memo(function SurahSelect({
-  value,
-  onChange,
-  options,
-  placeholder = 'Select an option',
-  disabled = false,
-  className,
-  clearable = false,
-  clearLabel = 'Clear selection',
-  inputId: inputIdProp,
-}: SurahSelectProps): ReactElement {
-  const [open, setOpen] = useState(false);
-  const [inputValue, setInputValue] = useState('');
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isTyping, setIsTyping] = useState(false);
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
-  const listboxId = useId();
-  const generatedInputId = useId();
-  const inputId = inputIdProp ?? generatedInputId;
-
-  const DROPDOWN_MAX_HEIGHT = 28 * 16;
-  const [dropdownMetrics, setDropdownMetrics] = useState<{
-    placement: 'top' | 'bottom';
-    maxHeight: number;
-  }>({
-    placement: 'bottom',
-    maxHeight: DROPDOWN_MAX_HEIGHT,
-  });
-
-  const selectedOption = useMemo(
-    () => options.find((option) => option.value === value),
-    [options, value]
-  );
-
-  useEffect(() => {
-    const selectedIdx = options.findIndex((option) => option.value === value);
-    if (selectedIdx >= 0) {
-      setActiveIndex(selectedIdx);
-    } else if (!options.length) {
-      setActiveIndex(-1);
-    }
-  }, [options, value]);
-
-  useEffect(() => {
-    if (!isTyping) {
-      setInputValue(selectedOption?.label ?? '');
-    }
-  }, [isTyping, selectedOption]);
-
-  useEffect(() => {
-    if (!open) return;
-    const handler = (event: MouseEvent): void => {
-      const target = event.target as Node | null;
-      if (containerRef.current?.contains(target)) return;
-      if (isTyping) setIsTyping(false);
-      setInputValue(selectedOption?.label ?? '');
-      setOpen(false);
-    };
-    window.addEventListener('mousedown', handler);
-    return () => window.removeEventListener('mousedown', handler);
-  }, [isTyping, open, selectedOption?.label]);
-
-  const handleContainerBlur = useCallback(
-    (event: FocusEvent<HTMLDivElement>) => {
-      const next = event.relatedTarget as Node | null;
-      if (next && containerRef.current?.contains(next)) return;
-      if (isTyping) setIsTyping(false);
-      setInputValue(selectedOption?.label ?? '');
-      setOpen(false);
+export const SurahSelect = memo(
+  forwardRef<HTMLInputElement, SurahSelectProps>(function SurahSelect(
+    {
+      value,
+      onChange,
+      options,
+      placeholder = 'Select an option',
+      disabled = false,
+      className,
+      clearable = false,
+      clearLabel = 'Clear selection',
+      inputId: inputIdProp,
+      onSelectionComplete,
     },
-    [isTyping, selectedOption?.label]
-  );
+    ref
+  ): ReactElement {
+    const [open, setOpen] = useState(false);
+    const [inputValue, setInputValue] = useState('');
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [isTyping, setIsTyping] = useState(false);
+    // Track if user is interacting with the dropdown list (for mobile scroll)
+    const isInteractingWithListRef = useRef(false);
 
-  const updateDropdownMetrics = useCallback(() => {
-    if (!open || !containerRef.current) return;
+    const containerRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const listRef = useRef<HTMLDivElement>(null);
+    const listboxId = useId();
+    const generatedInputId = useId();
+    const inputId = inputIdProp ?? generatedInputId;
 
-    const rect = containerRef.current.getBoundingClientRect();
-    const spaceBelow = window.innerHeight - rect.bottom;
-    const spaceAbove = rect.top;
-    const needsFlip = spaceBelow < 280 && spaceAbove > spaceBelow;
-    const placement: 'top' | 'bottom' = needsFlip ? 'top' : 'bottom';
-    const available = placement === 'bottom' ? spaceBelow : spaceAbove;
-    const safeSpace = Math.max(150, available - 20);
-    const maxHeight =
-      safeSpace > 0 ? Math.min(DROPDOWN_MAX_HEIGHT, safeSpace) : Math.min(DROPDOWN_MAX_HEIGHT, 320);
+    useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
 
-    setDropdownMetrics((prev) => {
-      if (prev.placement === placement && prev.maxHeight === maxHeight) {
-        return prev;
-      }
-      return { placement, maxHeight };
+    const [dropdownStyle, setDropdownStyle] = useState<{
+      top?: number;
+      bottom?: number;
+      left: number;
+      width: number;
+      maxHeight: number;
+    }>({
+      left: 0,
+      width: 0,
+      maxHeight: DROPDOWN_MAX_HEIGHT,
     });
-  }, [open]);
 
-  useLayoutEffect(() => {
-    if (!open) return;
-    updateDropdownMetrics();
+    const selectedOption = useMemo(
+      () => options.find((option) => option.value === value),
+      [options, value]
+    );
 
-    const handleResize = (): void => updateDropdownMetrics();
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('scroll', handleResize, true);
-    return (): void => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('scroll', handleResize, true);
-    };
-  }, [open, updateDropdownMetrics]);
-
-  const handleInputChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const next = event.target.value;
-      setInputValue(next);
-      setIsTyping(true);
-      if (!open) setOpen(true);
-      if (!next.trim()) {
-        onChange('');
-        setActiveIndex(0);
-        return;
+    useEffect(() => {
+      const selectedIdx = options.findIndex((option) => option.value === value);
+      if (selectedIdx >= 0) {
+        setActiveIndex(selectedIdx);
+      } else if (!options.length) {
+        setActiveIndex(-1);
       }
+    }, [options, value]);
 
-      const query = next.trim().toLowerCase();
-      const matchIndex = options.findIndex(
-        (option) =>
-          option.value.toLowerCase().startsWith(query) || option.label.toLowerCase().includes(query)
-      );
-      if (matchIndex >= 0) {
-        const matchedOption = options[matchIndex];
-        if (matchedOption) {
-          onChange(matchedOption.value);
-          setActiveIndex(matchIndex);
-        }
-      }
-    },
-    [onChange, open, options]
-  );
-
-  const handleOptionSelect = useCallback(
-    (option: SurahOption) => {
-      onChange(option.value);
-      setInputValue(option.label);
-      setIsTyping(false);
-      setOpen(false);
-    },
-    [onChange]
-  );
-
-  const handleInputKeyDown = useCallback(
-    (event: KeyboardEvent<HTMLInputElement>) => {
-      if (disabled) return;
-
-      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-        event.preventDefault();
-        if (!open) setOpen(true);
-        if (!options.length) return;
-        setActiveIndex((prev) => {
-          if (prev < 0) return 0;
-          const delta = event.key === 'ArrowDown' ? 1 : -1;
-          return Math.min(Math.max(prev + delta, 0), options.length - 1);
-        });
-        return;
-      }
-
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        const option = options[activeIndex] ?? options[0];
-        if (option) handleOptionSelect(option);
-        return;
-      }
-
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        setOpen(false);
-        setIsTyping(false);
+    useEffect(() => {
+      if (!isTyping) {
         setInputValue(selectedOption?.label ?? '');
       }
-    },
-    [activeIndex, disabled, handleOptionSelect, open, options, selectedOption?.label]
-  );
+    }, [isTyping, selectedOption]);
 
-  useEffect(() => {
-    if (!open || activeIndex < 0) return;
-    const optionEl = listRef.current?.querySelector<HTMLButtonElement>(
-      `[data-index="${activeIndex}"]`
+    // Close dropdown when clicking outside (desktop only - mobile handled differently)
+    useEffect(() => {
+      if (!open) return;
+      const handler = (event: MouseEvent): void => {
+        const target = event.target as Node | null;
+        if (containerRef.current?.contains(target) || listRef.current?.contains(target)) return;
+        isInteractingWithListRef.current = false;
+        if (isTyping) setIsTyping(false);
+        setInputValue(selectedOption?.label ?? '');
+        setOpen(false);
+      };
+      window.addEventListener('mousedown', handler);
+      return () => window.removeEventListener('mousedown', handler);
+    }, [isTyping, open, selectedOption?.label]);
+
+    const handleContainerBlur = useCallback(
+      (event: FocusEvent<HTMLDivElement>) => {
+        // On mobile, when user touches the list, focus leaves the input
+        // We use a small delay to check if the touch was on the list
+        setTimeout(() => {
+          // If still interacting with list, don't close
+          if (isInteractingWithListRef.current) return;
+
+          const next = event.relatedTarget as Node | null;
+          if (next && (containerRef.current?.contains(next) || listRef.current?.contains(next)))
+            return;
+          if (isTyping) setIsTyping(false);
+          setInputValue(selectedOption?.label ?? '');
+          setOpen(false);
+        }, 50);
+      },
+      [isTyping, selectedOption?.label]
     );
-    optionEl?.scrollIntoView({ block: 'center' });
-  }, [activeIndex, open]);
 
-  const toggleList = useCallback(() => {
-    if (disabled || !options.length) return;
-    setOpen((prev) => !prev);
-    inputRef.current?.focus();
-  }, [disabled, options.length]);
+    const updateDropdownMetrics = useCallback(() => {
+      if (!open || !containerRef.current) return;
 
-  return (
-    <div className={clsx('relative', className)} ref={containerRef} onBlur={handleContainerBlur}>
-      <div
-        className={clsx(
-          'relative rounded-lg border border-border bg-surface transition-colors',
-          disabled ? 'opacity-60 cursor-not-allowed' : 'hover:bg-accent/10'
-        )}
-      >
-        <input
-          ref={inputRef}
-          type="text"
-          role="combobox"
-          aria-expanded={open}
-          aria-controls={listboxId}
-          aria-disabled={disabled}
-          id={inputId}
-          value={inputValue}
-          placeholder={placeholder}
-          disabled={disabled}
-          onChange={handleInputChange}
-          onFocus={(): void => {
-            if (!disabled) setOpen(true);
-          }}
-          onKeyDown={handleInputKeyDown}
+      const rect = containerRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const spaceAbove = rect.top;
+      const needsFlip = spaceBelow < 280 && spaceAbove > spaceBelow;
+
+      const width = rect.width;
+      const left = rect.left;
+
+      if (needsFlip) {
+        // Position above
+        setDropdownStyle({
+          bottom: window.innerHeight - rect.top + 8,
+          left,
+          width,
+          maxHeight: Math.min(DROPDOWN_MAX_HEIGHT, spaceAbove - 20),
+        });
+      } else {
+        // Position below
+        setDropdownStyle({
+          top: rect.bottom + 8,
+          left,
+          width,
+          maxHeight: Math.min(DROPDOWN_MAX_HEIGHT, Math.max(150, spaceBelow - 20)),
+        });
+      }
+    }, [open]);
+
+    useLayoutEffect(() => {
+      if (!open) return;
+      updateDropdownMetrics();
+
+      const handleResize = (event?: Event): void => {
+        if (event?.type === 'scroll' && listRef.current && event.target === listRef.current) {
+          return;
+        }
+        updateDropdownMetrics();
+      };
+
+      window.addEventListener('resize', handleResize);
+      window.addEventListener('scroll', handleResize, true);
+      return (): void => {
+        window.removeEventListener('resize', handleResize);
+        window.removeEventListener('scroll', handleResize, true);
+      };
+    }, [open, updateDropdownMetrics]);
+
+    const handleInputChange = useCallback(
+      (event: ChangeEvent<HTMLInputElement>) => {
+        const next = event.target.value;
+        setInputValue(next);
+        setIsTyping(true);
+        if (!open) setOpen(true);
+        if (!next.trim()) {
+          onChange('');
+          setActiveIndex(0);
+          return;
+        }
+
+        const query = next.trim().toLowerCase();
+        const matchIndex = options.findIndex(
+          (option) =>
+            option.value.toLowerCase().startsWith(query) ||
+            option.label.toLowerCase().includes(query)
+        );
+        if (matchIndex >= 0) {
+          const matchedOption = options[matchIndex];
+          if (matchedOption) {
+            onChange(matchedOption.value);
+            setActiveIndex(matchIndex);
+          }
+        }
+      },
+      [onChange, open, options]
+    );
+
+    const handleOptionSelect = useCallback(
+      (option: SurahOption) => {
+        onChange(option.value);
+        setInputValue(option.label);
+        setIsTyping(false);
+        setOpen(false);
+        onSelectionComplete?.(option.value);
+      },
+      [onChange, onSelectionComplete]
+    );
+
+    const handleInputKeyDown = useCallback(
+      (event: KeyboardEvent<HTMLInputElement>) => {
+        if (disabled) return;
+
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          event.preventDefault();
+          if (!open) setOpen(true);
+          if (!options.length) return;
+          setActiveIndex((prev) => {
+            if (prev < 0) return 0;
+            const delta = event.key === 'ArrowDown' ? 1 : -1;
+            return Math.min(Math.max(prev + delta, 0), options.length - 1);
+          });
+          return;
+        }
+
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          const option = options[activeIndex] ?? options[0];
+          if (option) handleOptionSelect(option);
+          return;
+        }
+
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          setOpen(false);
+          setIsTyping(false);
+          setInputValue(selectedOption?.label ?? '');
+        }
+      },
+      [activeIndex, disabled, handleOptionSelect, open, options, selectedOption?.label]
+    );
+
+    useEffect(() => {
+      if (!open || activeIndex < 0 || !listRef.current) return;
+      const optionEl = listRef.current.querySelector<HTMLButtonElement>(
+        `[data-index="${activeIndex}"]`
+      );
+
+      if (optionEl && listRef.current) {
+        const container = listRef.current;
+        const containerRect = container.getBoundingClientRect();
+        const optionRect = optionEl.getBoundingClientRect();
+        const optionOffset = optionRect.top - containerRect.top + container.scrollTop;
+        const topOffset = 8;
+        const scrollOffset = isTyping
+          ? Math.max(optionOffset - topOffset, 0)
+          : optionOffset - container.clientHeight / 2 + optionEl.clientHeight / 2;
+        container.scrollTo({
+          top: scrollOffset,
+          behavior: 'instant', // Use instant to prevent fighting with user scroll
+        });
+      }
+    }, [activeIndex, isTyping, open]);
+
+    const toggleList = useCallback(() => {
+      if (disabled || !options.length) return;
+      setOpen((prev) => !prev);
+      inputRef.current?.focus();
+    }, [disabled, options.length]);
+
+    return (
+      <div className={clsx('relative', className)} ref={containerRef} onBlur={handleContainerBlur}>
+        <div
           className={clsx(
-            'w-full bg-transparent text-foreground text-sm px-3 py-2.5 pr-16 rounded-lg outline-none placeholder:text-muted'
+            'relative rounded-lg border border-border bg-interactive/60 transition-colors focus-within:border-transparent focus-within:ring-2 focus-within:ring-accent',
+            disabled ? 'opacity-60 cursor-not-allowed' : ''
           )}
-        />
-        <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center gap-2 text-muted">
-          {clearable && !disabled && value ? (
+        >
+          <input
+            ref={inputRef}
+            type="text"
+            role="combobox"
+            aria-expanded={open}
+            aria-controls={listboxId}
+            aria-disabled={disabled}
+            id={inputId}
+            value={inputValue}
+            placeholder={placeholder}
+            disabled={disabled}
+            onChange={handleInputChange}
+            onFocus={(): void => {
+              if (!disabled) setOpen(true);
+            }}
+            onKeyDown={handleInputKeyDown}
+            className={clsx(
+              'w-full bg-transparent text-foreground text-sm px-3 py-3 pr-7 rounded-lg outline-none placeholder:text-muted'
+            )}
+          />
+          <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center gap-2 text-muted">
+            {clearable && !disabled && value ? (
+              <button
+                type="button"
+                aria-label={clearLabel}
+                className="pointer-events-auto hover:text-foreground transition-colors"
+                onClick={(event): void => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  setInputValue('');
+                  setIsTyping(false);
+                  onChange('');
+                  inputRef.current?.focus();
+                }}
+              >
+                ×
+              </button>
+            ) : null}
             <button
               type="button"
-              aria-label={clearLabel}
               className="pointer-events-auto hover:text-foreground transition-colors"
+              aria-label="Toggle options"
+              disabled={disabled}
               onClick={(event): void => {
                 event.preventDefault();
                 event.stopPropagation();
-                setInputValue('');
-                setIsTyping(false);
-                onChange('');
-                inputRef.current?.focus();
+                toggleList();
               }}
             >
-              ×
+              <ChevronDownIcon size={18} />
             </button>
-          ) : null}
-          <button
-            type="button"
-            className="pointer-events-auto hover:text-foreground transition-colors"
-            aria-label="Toggle options"
-            disabled={disabled}
-            onClick={(event): void => {
-              event.preventDefault();
-              event.stopPropagation();
-              toggleList();
-            }}
-          >
-            <ChevronDownIcon size={18} />
-          </button>
-        </div>
-      </div>
-
-      {open ? (
-        <div
-          ref={listRef}
-          id={listboxId}
-          role="listbox"
-          aria-activedescendant={
-            activeIndex >= 0 ? `${listboxId}-option-${activeIndex}` : undefined
-          }
-          tabIndex={-1}
-          className={clsx(
-            'absolute z-dropdown w-full overflow-auto rounded-lg border border-border/40 bg-surface/95 backdrop-blur-md shadow-lg focus:outline-none py-2',
-            dropdownMetrics.placement === 'bottom'
-              ? 'top-full mt-2 origin-top'
-              : 'bottom-full mb-2 origin-bottom'
-          )}
-          style={{ maxHeight: dropdownMetrics.maxHeight }}
-        >
-          <div className="space-y-1 px-1">
-            {options.map((option, index) => {
-              const selected = option.value === value;
-              const isActive = index === activeIndex;
-              const optionId = `${listboxId}-option-${index}`;
-              return (
-                <button
-                  key={option.value}
-                  id={optionId}
-                  type="button"
-                  role="option"
-                  aria-selected={selected}
-                  data-index={index}
-                  onClick={(): void => handleOptionSelect(option)}
-                  className={clsx(
-                    'w-full text-left px-4 py-2.5 rounded-lg text-sm transition-colors',
-                    selected
-                      ? 'bg-interactive-hover text-foreground'
-                      : isActive
-                        ? 'bg-interactive-hover text-foreground'
-                        : 'text-foreground hover:bg-interactive/60'
-                  )}
-                >
-                  <span className="block truncate">{option.label}</span>
-                </button>
-              );
-            })}
           </div>
         </div>
-      ) : null}
-    </div>
-  );
-});
+
+        {open && typeof document !== 'undefined'
+          ? createPortal(
+              <div
+                ref={listRef}
+                id={listboxId}
+                role="listbox"
+                aria-activedescendant={
+                  activeIndex >= 0 ? `${listboxId}-option-${activeIndex}` : undefined
+                }
+                tabIndex={-1}
+                data-surah-select-portal="true"
+                className={clsx(
+                  'fixed z-[9999] overflow-auto rounded-lg border border-border/40 bg-surface shadow-lg focus:outline-none py-2'
+                )}
+                style={{
+                  top: dropdownStyle.top,
+                  bottom: dropdownStyle.bottom,
+                  left: dropdownStyle.left,
+                  width: dropdownStyle.width,
+                  maxHeight: dropdownStyle.maxHeight,
+                }}
+                onPointerDown={() => {
+                  // Mark interaction to prevent close on blur (works for both mouse and touch)
+                  isInteractingWithListRef.current = true;
+                  // On touch, blur input to hide keyboard
+                  inputRef.current?.blur();
+                }}
+                onPointerUp={() => {
+                  setTimeout(() => {
+                    isInteractingWithListRef.current = false;
+                  }, 100);
+                }}
+                onScroll={() => {
+                  // Hide keyboard when scrolling
+                  isInteractingWithListRef.current = true;
+                  inputRef.current?.blur();
+                  setTimeout(() => {
+                    isInteractingWithListRef.current = false;
+                  }, 100);
+                }}
+              >
+                <div className="space-y-1 px-1">
+                  {options.map((option, index) => {
+                    const selected = option.value === value;
+                    const isActive = index === activeIndex;
+                    const optionId = `${listboxId}-option-${index}`;
+                    return (
+                      <button
+                        key={option.value}
+                        id={optionId}
+                        type="button"
+                        role="option"
+                        aria-selected={selected}
+                        data-index={index}
+                        onClick={(): void => handleOptionSelect(option)}
+                        className={clsx(
+                          'w-full text-left px-4 py-2.5 rounded-lg text-sm transition-colors',
+                          selected
+                            ? 'bg-interactive text-foreground'
+                            : isActive
+                              ? 'bg-interactive text-foreground'
+                              : 'text-foreground hover:bg-interactive'
+                        )}
+                      >
+                        <span className="block truncate">{option.label}</span>
+                      </button>
+                    );
+                  })}
+                  {isTyping ? (
+                    <div
+                      aria-hidden="true"
+                      className="pointer-events-none"
+                      style={{ height: dropdownStyle.maxHeight }}
+                    />
+                  ) : null}
+                </div>
+              </div>,
+              document.body
+            )
+          : null}
+      </div>
+    );
+  })
+);

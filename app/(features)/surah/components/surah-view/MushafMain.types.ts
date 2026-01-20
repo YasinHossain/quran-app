@@ -1,16 +1,19 @@
+import type { MushafResourceKind } from '@/app/(features)/surah/hooks/mushafReadingViewTypes';
+import type { QcfFontVersion } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import type { useSettings } from '@/app/providers/SettingsContext';
-import type { MushafPageLines } from '@/types';
 
 export interface MushafMainProps {
   mushafName: string;
   mushafId?: string | undefined;
-  pages: MushafPageLines[];
+  resourceId: string;
+  resourceKind: MushafResourceKind;
+  initialPageNumber?: number | undefined;
+  initialVerseKey?: string | undefined;
   chapterId?: number | null | undefined;
-  isLoading: boolean;
-  isLoadingMore?: boolean;
-  hasMore?: boolean;
-  onLoadMore?: (() => void) | undefined;
-  error: string | null;
+  juzNumber?: number | null | undefined;
+  reciterId?: number | undefined;
+  wordByWordLocale?: string | undefined;
+  translationIds?: string | undefined;
   endLabelKey?: string | undefined;
 }
 
@@ -23,6 +26,7 @@ export type MushafFlags = {
   isQcfMushaf: boolean;
   isQpcHafsMushaf: boolean;
   isIndopakMushaf: boolean;
-  qcfVersion: 'v1' | 'v2';
+  isTajweedMushaf: boolean;
+  qcfVersion: QcfFontVersion;
   indopakVersion?: '15' | '16' | null;
 };

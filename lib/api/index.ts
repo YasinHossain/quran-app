@@ -3,3 +3,4 @@ export * from './chapters';
 export * from './translations';
 export * from './tafsir';
 export * from './verses';
+export * from './search';

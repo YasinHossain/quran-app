@@ -2,7 +2,10 @@
 
 import React from 'react';
 
-import { AlertIcon } from '@/app/shared/icons';
+import {
+  ResourcePanelErrorMessage,
+  ResourcePanelLoadingSpinner,
+} from '@/app/shared/resource-panel/components/ResourcePanelFallbacks';
 
 import { PanelContentBody } from './TranslationPanelContentBody';
 
@@ -16,11 +19,8 @@ interface TranslationPanelContentProps {
   orderedSelection: number[];
   translations: TranslationResource[];
   handleSelectionToggle: (id: number) => void;
-  handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
-  handleDrop: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragEnd: () => void;
-  draggedId: number | null;
+  onReorder: (ids: number[]) => void;
+  onReset: () => void;
   languages: string[];
   activeFilter: string;
   setActiveFilter: (filter: string) => void;
@@ -36,28 +36,9 @@ interface TranslationPanelContentProps {
   listContainerRef: React.RefObject<HTMLDivElement>;
 }
 
-function LoadingView(): React.JSX.Element {
-  return (
-    <div className="flex items-center justify-center p-8">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent" />
-    </div>
-  );
-}
-
-function ErrorView({ message }: { message: string }): React.JSX.Element {
-  return (
-    <div className="mx-4 mt-4 p-4 rounded-lg border bg-error/10 border-error/20 text-error">
-      <div className="flex items-center space-x-2">
-        <AlertIcon className="h-5 w-5 text-error" />
-        <span className="text-sm">{message}</span>
-      </div>
-    </div>
-  );
-}
-
 export const TranslationPanelContent = (props: TranslationPanelContentProps): React.JSX.Element => {
-  if (props.loading) return <LoadingView />;
-  if (props.error) return <ErrorView message={props.error} />;
+  if (props.loading) return <ResourcePanelLoadingSpinner />;
+  if (props.error) return <ResourcePanelErrorMessage error={props.error} />;
   return <TranslationPanelContentBodyWrapper {...props} />;
 };
 
@@ -72,11 +53,8 @@ function TranslationPanelContentBodyWrapper(
       orderedSelection={props.orderedSelection}
       translations={props.translations}
       handleSelection={handleSelection}
-      handleDragStart={props.handleDragStart}
-      handleDragOver={props.handleDragOver}
-      handleDrop={props.handleDrop}
-      handleDragEnd={props.handleDragEnd}
-      draggedId={props.draggedId}
+      onReorder={props.onReorder}
+      onReset={props.onReset}
       languages={props.languages}
       activeFilter={props.activeFilter}
       setActiveFilter={props.setActiveFilter}

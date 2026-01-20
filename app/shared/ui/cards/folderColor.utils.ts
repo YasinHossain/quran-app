@@ -9,6 +9,7 @@ const TOKEN_TO_CSS_VARIABLE: Record<string, string> = {
   'text-accent': '--color-accent',
   'text-primary': '--color-primary',
   'text-interactive': '--color-interactive',
+  'text-content-secondary': '--color-content-secondary',
   'text-status-success': '--color-status-success',
   'text-status-warning': '--color-status-warning',
   'text-status-error': '--color-status-error',

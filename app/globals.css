@@ -20,36 +20,58 @@
     --color-primary: 0 150 136;
 
     /* Content semantic colors */
-    --color-content-primary: 55 65 81; /* slate-700 equivalent */
-    --color-content-secondary: 107 114 128; /* slate-500 equivalent */
-    --color-content-accent: 4 120 87; /* emerald-700 equivalent */
-    --color-content-muted: 156 163 175; /* gray-400 equivalent */
+    --color-content-primary: 55 65 81;
+    /* slate-700 equivalent */
+    --color-content-secondary: 107 114 128;
+    /* slate-500 equivalent */
+    --color-content-accent: 4 120 87;
+    /* emerald-700 equivalent */
+    --color-content-muted: 156 163 175;
+    /* gray-400 equivalent */
 
     /* Status colors */
-    --color-status-error: 220 38 38; /* red-600 */
-    --color-status-success: 34 197 94; /* green-500 */
-    --color-status-warning: 251 191 36; /* amber-400 */
-    --color-status-info: 59 130 246; /* blue-500 */
+    --color-status-error: 220 38 38;
+    /* red-600 */
+    --color-status-success: 34 197 94;
+    /* green-500 */
+    --color-status-warning: 251 191 36;
+    /* amber-400 */
+    --color-status-info: 59 130 246;
+    /* blue-500 */
 
     /* Surface colors */
-    --color-surface-elevated: 255 255 255; /* white */
-    --color-surface-overlay: 255 255 255; /* white with opacity */
-    --color-surface-glass: 255 255 255; /* white with opacity for glass effect */
+    --color-surface-elevated: 255 255 255;
+    /* white */
+    --color-surface-overlay: 255 255 255;
+    /* white with opacity */
+    --color-surface-glass: 255 255 255;
+    /* white with opacity for glass effect */
+    --color-surface-navigation: 255 255 255;
+    /* navigation card surface */
 
     /* Button colors */
-    --color-button-primary: 243 244 246; /* gray-100 */
-    --color-button-primary-hover: 229 231 235; /* gray-200 */
-    --color-button-secondary: 255 255 255; /* white */
-    --color-button-secondary-hover: 249 250 251; /* gray-50 */
+    --color-button-primary: 243 244 246;
+    /* gray-100 */
+    --color-button-primary-hover: 229 231 235;
+    /* gray-200 */
+    --color-button-secondary: 255 255 255;
+    /* white */
+    --color-button-secondary-hover: 249 250 251;
+    /* gray-50 */
 
     /* Input colors */
-    --color-input-background: 255 255 255; /* white */
-    --color-input-border: 209 213 219; /* gray-300 */
-    --color-input-placeholder: 156 163 175; /* gray-400 */
+    --color-input-background: 255 255 255;
+    /* white */
+    --color-input-border: 209 213 219;
+    /* gray-300 */
+    --color-input-placeholder: 156 163 175;
+    /* gray-400 */
 
     /* Tooltip colors */
-    --color-tooltip-background: 55 65 81; /* slate-700 */
-    --color-tooltip-text: 255 255 255; /* white */
+    --color-tooltip-background: 55 65 81;
+    /* slate-700 */
+    --color-tooltip-text: 255 255 255;
+    /* white */
 
     /* Gradient tokens */
     --color-gradient-from: var(--color-accent);
@@ -115,54 +137,111 @@
     --color-on-accent: 255 255 255;
 
     /* Content semantic colors - Dark Mode */
-    --color-content-primary: 241 245 249; /* slate-100 equivalent */
-    --color-content-secondary: 148 163 184; /* slate-400 equivalent */
-    --color-content-accent: 52 211 153; /* emerald-400 equivalent */
-    --color-content-muted: 148 163 184; /* slate-400 equivalent */
+    --color-content-primary: 241 245 249;
+    /* slate-100 equivalent */
+    --color-content-secondary: 148 163 184;
+    /* slate-400 equivalent */
+    --color-content-accent: 52 211 153;
+    /* emerald-400 equivalent */
+    --color-content-muted: 148 163 184;
+    /* slate-400 equivalent */
 
     /* Status colors - Dark Mode */
-    --color-status-error: 248 113 113; /* red-400 */
-    --color-status-success: 52 211 153; /* emerald-400 */
-    --color-status-warning: 251 191 36; /* amber-400 */
-    --color-status-info: 96 165 250; /* blue-400 */
+    --color-status-error: 248 113 113;
+    /* red-400 */
+    --color-status-success: 52 211 153;
+    /* emerald-400 */
+    --color-status-warning: 251 191 36;
+    /* amber-400 */
+    --color-status-info: 96 165 250;
+    /* blue-400 */
 
     /* Surface colors - Dark Mode */
-    --color-surface-elevated: 30 41 59; /* slate-700 */
-    --color-surface-overlay: 30 41 59; /* slate-700 with opacity */
-    --color-surface-glass: 30 41 59; /* slate-700 with opacity for glass effect */
+    --color-surface-elevated: 30 41 59;
+    /* slate-700 */
+    --color-surface-overlay: 30 41 59;
+    /* slate-700 with opacity */
+    --color-surface-glass: 30 41 59;
+    /* slate-700 with opacity for glass effect */
+    --color-surface-navigation: 24 35 51;
+    /* navigation card surface */
 
     /* Button colors - Dark Mode */
-    --color-button-primary: 51 65 85; /* slate-600 */
-    --color-button-primary-hover: 71 85 105; /* slate-500 */
-    --color-button-secondary: 30 41 59; /* slate-700 */
-    --color-button-secondary-hover: 51 65 85; /* slate-600 */
+    --color-button-primary: 51 65 85;
+    /* slate-600 */
+    --color-button-primary-hover: 71 85 105;
+    /* slate-500 */
+    --color-button-secondary: 30 41 59;
+    /* slate-700 */
+    --color-button-secondary-hover: 51 65 85;
+    /* slate-600 */
 
     /* Input colors - Dark Mode */
-    --color-input-background: 30 41 59; /* slate-700 */
-    --color-input-border: 71 85 105; /* slate-500 */
-    --color-input-placeholder: 148 163 184; /* slate-400 */
+    --color-input-background: 30 41 59;
+    /* slate-700 */
+    --color-input-border: 71 85 105;
+    /* slate-500 */
+    --color-input-placeholder: 148 163 184;
+    /* slate-400 */
 
     /* Tooltip colors - Dark Mode */
-    --color-tooltip-background: 55 65 81; /* slate-700 */
-    --color-tooltip-text: 255 255 255; /* white */
+    --color-tooltip-background: 55 65 81;
+    /* slate-700 */
+    --color-tooltip-text: 255 255 255;
+    /* white */
 
     /* Dark mode gradients */
     --gradient-emerald: linear-gradient(135deg, 20 184 166, 13 148 136);
     --gradient-background: linear-gradient(135deg, 15 23 42, 30 41 59, 51 65 85);
   }
 
+  html,
   body {
     background: rgb(var(--color-background));
     color: rgb(var(--color-foreground));
     font-family: Inter, sans-serif;
     margin: 0;
+    padding: 0;
+    width: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Body scrolling everywhere (like Quran.com) - enables Chrome address bar auto-hide on mobile */
+  html {
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    height: auto;
+    min-height: 100%;
+  }
+
+  body {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    height: auto;
+    min-height: 100%;
+  }
+
+  /* Theme toggle icon swap (avoid JS/theme hydration flicker) */
+  .theme-toggle-icon--dark,
+  .theme-toggle-icon--light {
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  html[data-theme='light'] .theme-toggle-icon--light {
+    display: inline-flex;
+  }
+
+  html[data-theme='dark'] .theme-toggle-icon--dark {
+    display: inline-flex;
+  }
+
   /* Focus visible improvements for better keyboard navigation */
   *:focus-visible {
-    outline: 2px solid rgb(var(--color-accent));
+    outline: none !important;
     outline-offset: 2px;
   }
 
@@ -204,6 +283,13 @@
   [lang='bn'] {
     font-family: var(--font-noto-sans-bengali), 'Noto Sans Bengali', sans-serif !important;
   }
+
+  [lang='ur'] {
+    font-family: var(--font-nastaliq), 'Noto Nastaliq Urdu', serif !important;
+    line-height: 2 !important;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
 }
 
 @layer components {
@@ -216,15 +302,38 @@
     background: rgb(var(--color-background));
   }
 
+  /* Workspace main - content flows naturally with body scrolling */
+  .workspace-main-scroll {
+    overflow: visible;
+    /* Body handles scrolling */
+  }
+
+  /* Workspace root height - min-height allows body to grow with content */
+  .workspace-root-height {
+    min-height: 100dvh;
+    height: auto;
+  }
+
   /* Desktop workspace sidebar shadows */
   .workspace-sidebar-left,
   .workspace-sidebar-right {
     box-shadow: none;
   }
 
-  @media (min-width: 1024px) {
+  /* Mobile/tablet sidebar separation shadows (directional) */
+  .mobile-sidebar-shadow-right {
+    box-shadow: 10px 0 28px -18px rgb(var(--color-foreground) / 0.18);
+  }
+
+  .mobile-sidebar-shadow-left {
+    box-shadow: -10px 0 28px -18px rgb(var(--color-foreground) / 0.18);
+  }
+
+  @media (min-width: 1280px) {
     .workspace-sidebar-left {
-      box-shadow: 10px 0 28px -18px rgb(var(--color-foreground) / 0.14);
+      box-shadow:
+        -10px 0 28px -18px rgb(var(--color-foreground) / 0.14),
+        10px 0 28px -18px rgb(var(--color-foreground) / 0.14);
     }
 
     .workspace-sidebar-right {
@@ -244,7 +353,7 @@
 
   /* Drawer and overlay patterns (for mobile sidebars/modals) */
   .drawer-overlay {
-    @apply fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm;
+    @apply fixed inset-0 bg-background/85;
     @apply transition-opacity duration-300;
     /* Ensure overlays sit above header/bottom navigation */
     z-index: var(--z-modal);
@@ -279,10 +388,12 @@
     padding-right: var(--reader-safe-padding-right);
   }
 
-  /* Bottom navigation spacing */
-  .bottom-nav-space {
-    padding-bottom: 3rem;
-    padding-bottom: calc(3rem + var(--reader-safe-area-bottom));
+  /* Bottom navigation spacing - Mobile only */
+  @media (max-width: 1023px) {
+    .bottom-nav-space {
+      padding-bottom: 3rem;
+      padding-bottom: calc(3rem + var(--reader-safe-area-bottom));
+    }
   }
 
   /* Scrollbar hiding for cleaner mobile experience */
@@ -290,6 +401,7 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
@@ -298,22 +410,9 @@
   .touch-pan-y {
     touch-action: pan-y;
   }
+
   .touch-manipulation {
     touch-action: manipulation;
-  }
-  .touch-callout-none {
-    -webkit-touch-callout: none;
-  }
-
-  /* Layout primitives: shared, consistent responsive building blocks */
-  .app-container {
-    /* Standard page container: width bound + unified horizontal padding */
-    @apply mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-8;
-  }
-
-  .content-narrow {
-    /* For text-heavy or focused content sections */
-    @apply mx-auto w-full max-w-3xl;
   }
 
   .stack {
@@ -333,6 +432,14 @@
 }
 
 @layer utilities {
+  .tajweed-palette {
+    font-palette: --tajweed-light;
+  }
+
+  .dark .tajweed-palette {
+    font-palette: --tajweed-dark;
+  }
+
   /* Hero heading text using theme-aware gradient */
   .text-hero {
     background-image: var(--gradient-background);
@@ -375,6 +482,10 @@
     overflow: hidden;
   }
 
+  .sidebar-scroll-lock {
+    overflow: hidden;
+  }
+
   .touch-none {
     touch-action: none;
   }
@@ -397,6 +508,7 @@ input[type='range'] {
   height: 6px;
   border-radius: 5px;
   outline: none;
+  touch-action: none;
   background: linear-gradient(
     to right,
     rgb(var(--color-accent)) var(--value-percent, 0%),
@@ -413,37 +525,56 @@ input[type='range']::-webkit-slider-thumb {
   border: 2px solid rgb(var(--color-border));
   border-radius: 50%;
   cursor: pointer;
-  margin-top: -5px;
+  margin-top: -2px;
   transition:
     background 0.3s,
     box-shadow 0.3s;
 }
 
-input[type='range']::-webkit-slider-thumb:hover {
+@media (hover: hover) {
+  input[type='range']::-webkit-slider-thumb:hover {
+    background: rgb(var(--color-accent));
+    border-color: rgb(var(--color-accent));
+  }
+}
+
+input[type='range']:active::-webkit-slider-thumb,
+input[type='range'].range-slider-active::-webkit-slider-thumb,
+input[type='range']::-webkit-slider-thumb:active {
   background: rgb(var(--color-accent));
   border-color: rgb(var(--color-accent));
 }
 
 /* ===== Custom Scrollbar Styles ===== */
 /* Chrome, Edge, Safari */
-::-webkit-scrollbar {
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
   width: 12px;
 }
 
-::-webkit-scrollbar-track {
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track {
   background: transparent;
 }
 
-::-webkit-scrollbar-thumb {
-  background-color: rgb(var(--color-border)); /* Light grey for default */
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
+  background-color: rgb(var(--color-border));
+  /* Light grey for default */
   border-radius: 10px;
   border: 2px solid transparent;
   background-clip: content-box;
   transition: background-color 0.2s ease-in-out;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(var(--color-accent)); /* Accent on hover */
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(var(--color-accent));
+  /* Accent on hover */
 }
 
 /* Firefox */
@@ -455,12 +586,15 @@ input[type='range']::-webkit-slider-thumb:hover {
 /* Hide scrollbar utility */
 .scrollbar-hide {
   /* WebKit browsers */
-  -ms-overflow-style: none !important; /* IE and Edge */
-  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important;
+  /* IE and Edge */
+  scrollbar-width: none !important;
+  /* Firefox */
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none !important; /* WebKit browsers */
+  display: none !important;
+  /* WebKit browsers */
   width: 0 !important;
   height: 0 !important;
 }
@@ -471,4 +605,52 @@ input[type='range']::-webkit-slider-thumb:hover {
 
 .scrollbar-hide::-webkit-scrollbar-thumb {
   display: none !important;
+}
+
+/* ===== Search Result Highlighting ===== */
+/* Style for highlighted search terms in dropdown and search page results */
+.search-result-text em,
+.search-result-text mark,
+.arabic-text em,
+.arabic-text mark {
+  /* Deep teal color matching the slider accent */
+  color: rgb(6, 128, 117) !important;
+  font-style: normal;
+  font-weight: 600;
+  background: transparent;
+}
+
+.dark .search-result-text em,
+.dark .search-result-text mark,
+.dark .arabic-text em,
+.dark .arabic-text mark {
+  /* Brighter teal for dark mode visibility */
+  color: rgb(20, 184, 166) !important;
+}
+
+/* Subtle background highlight variant */
+.search-result-text-bg em,
+.search-result-text-bg mark {
+  color: rgb(6, 128, 117);
+  font-style: normal;
+  font-weight: 500;
+  background: rgb(6 128 117 / 0.1);
+  padding: 0.1em 0.2em;
+  border-radius: 0.2em;
+}
+
+.dark .search-result-text-bg em,
+.dark .search-result-text-bg mark {
+  color: rgb(20, 184, 166);
+  background: rgb(20 184 166 / 0.15);
+}
+
+/* ===== Mushaf Audio Word Sync ===== */
+.mushaf-audio-highlight {
+  background: rgb(var(--color-accent) / 0.16);
+  border-radius: 0.25rem;
+}
+
+.word-audio-highlight {
+  color: rgb(var(--color-accent)) !important;
 }

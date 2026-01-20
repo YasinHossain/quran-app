@@ -8,8 +8,8 @@ export function usePlaybackOptionsModal(
   open: boolean,
   onClose: () => void
 ): {
-  readonly localReciter: string;
-  readonly setLocalReciter: Dispatch<SetStateAction<string>>;
+  readonly localReciter: number;
+  readonly setLocalReciter: Dispatch<SetStateAction<number>>;
   readonly localRepeat: RepeatOptions;
   readonly setLocalRepeat: Dispatch<SetStateAction<RepeatOptions>>;
   readonly rangeWarning: string | null;
@@ -24,7 +24,7 @@ export function usePlaybackOptionsModal(
     rangeWarning,
     setRangeWarning,
     commit,
-  } = usePlaybackOptions(onClose);
+  } = usePlaybackOptions(open, onClose);
 
   useEffect(() => {
     if (!open) setRangeWarning(null);

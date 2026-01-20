@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { Bookmark, Folder } from '@/types';
@@ -13,10 +13,6 @@ interface UseBookmarkTabParams {
 
 export interface UseBookmarkTabReturn {
   readonly folders: Folder[];
-  readonly filteredFolders: Folder[];
-  readonly findBookmark: (verseId: string) => { folder: Folder; bookmark: Bookmark } | null;
-  readonly searchQuery: string;
-  readonly setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   readonly handleFolderSelect: (folder: Folder) => void;
   readonly handleCreateFolder: () => void;
 }
@@ -28,27 +24,20 @@ export function useBookmarkTab({
   onNewFolderNameChange,
   onToggleCreateFolder,
 }: UseBookmarkTabParams): UseBookmarkTabReturn {
-  const { folders, findBookmark, addBookmark, removeBookmark, createFolder } = useBookmarks();
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const filteredFolders = useMemo<Folder[]>(() => {
-    if (!searchQuery.trim()) return folders;
-    return folders.filter((folder) =>
-      folder.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [folders, searchQuery]);
+  const { folders, addBookmark, removeBookmark, createFolder } = useBookmarks();
 
   const handleFolderSelect = useCallback(
     (folder: Folder): void => {
-      const existingBookmark = findBookmark(verseId);
-      if (existingBookmark?.folder.id === folder.id) {
+      const isAlreadySelected = folder.bookmarks.some(
+        (bookmark: Bookmark) => String(bookmark.verseId) === String(verseId)
+      );
+      if (isAlreadySelected) {
         removeBookmark(verseId, folder.id);
       } else {
-        if (existingBookmark) removeBookmark(verseId, existingBookmark.folder.id);
         addBookmark(verseId, folder.id, verseKey ? { verseKey } : undefined);
       }
     },
-    [verseId, verseKey, findBookmark, removeBookmark, addBookmark]
+    [verseId, verseKey, removeBookmark, addBookmark]
   );
 
   const handleCreateFolder = useCallback((): void => {
@@ -60,10 +49,6 @@ export function useBookmarkTab({
 
   return {
     folders,
-    filteredFolders,
-    findBookmark,
-    searchQuery,
-    setSearchQuery,
     handleFolderSelect,
     handleCreateFolder,
   } as const;

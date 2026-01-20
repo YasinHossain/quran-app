@@ -1,64 +1,51 @@
 'use client';
 
-import { memo, useCallback, useMemo } from 'react';
+import Link from 'next/link';
+import { memo, type ReactElement } from 'react';
 
-import { SearchInput } from '@/app/shared/components/SearchInput';
+import { buildSurahRoute } from '@/app/shared/navigation/routes';
+import { ComprehensiveSearch } from '@/app/shared/search';
 
 interface HomeSearchProps {
-  searchQuery: string;
-  setSearchQuery: (value: string) => void;
+  /** Search query for filtering (passed to parent for tab filtering) */
+  searchQuery?: string;
+  /** Callback when search query changes (for tab filtering) */
+  setSearchQuery?: (value: string) => void;
+  /** Additional CSS class */
   className?: string;
 }
 
+const SHORTCUT_SURAHS = [
+  { name: 'Al-Mulk', id: 67 },
+  { name: 'Al-Kahf', id: 18 },
+  { name: 'Ya-Sin', id: 36 },
+  { name: 'Al-Ikhlas', id: 112 },
+];
+
 /**
- * Home search component with Surah shortcuts.
- * Implements mobile-first responsive design and performance optimization.
- *
- * Features:
- * - Search input with glass effect
- * - Popular Surah shortcuts
- * - Touch-friendly buttons
- * - Mobile-first responsive layout
+ * Home search component with comprehensive search functionality.
+ * Features advanced search with instant results, navigation detection,
+ * and quick Surah shortcuts.
  */
-export const HomeSearch = memo(function HomeSearch({
-  searchQuery,
-  setSearchQuery,
-  className,
-}: HomeSearchProps) {
-  const shortcutSurahs = useMemo(() => ['Al-Mulk', 'Al-Kahf', 'Ya-Sin', 'Al-Ikhlas'], []);
-
-  const handleShortcutClick = useCallback(
-    (surahName: string) => {
-      setSearchQuery(surahName);
-    },
-    [setSearchQuery]
-  );
-
+export const HomeSearch = memo(function HomeSearch({ className }: HomeSearchProps): ReactElement {
   return (
-    <div className={`space-y-4 md:space-y-6 ${className || ''}`}>
-      {/* Mobile-optimized search container */}
-      <div className="w-full max-w-xs md:max-w-lg lg:max-w-2xl mx-auto px-4 md:px-0 content-visibility-auto animate-fade-in-up animation-delay-200">
-        <SearchInput
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder="What do you want to read?"
-          size="lg"
-          variant="glass"
-          className="text-base md:text-lg"
-        />
+    <div className={`w-full space-y-4 md:space-y-5 ${className ?? ''}`}>
+      {/* Comprehensive Search */}
+      <div className="w-full">
+        <ComprehensiveSearch variant="home" placeholder="Search Surahs, Verses, or Topics..." />
       </div>
 
-      {/* Mobile-optimized shortcut buttons */}
-      <div className="px-4 md:px-0 content-visibility-auto animate-fade-in-up animation-delay-200">
-        <div className="flex flex-wrap justify-center gap-2 md:gap-3 max-w-sm md:max-w-lg lg:max-w-2xl mx-auto">
-          {shortcutSurahs.map((name) => (
-            <button
+      {/* Shortcut buttons */}
+      <div className="w-full mx-auto" style={{ maxWidth: 'clamp(14rem, 65vw, 28rem)' }}>
+        <div className="flex flex-nowrap justify-center items-center gap-1 sm:gap-1.5 md:gap-2">
+          {SHORTCUT_SURAHS.map(({ name, id }) => (
+            <Link
               key={name}
-              onClick={() => handleShortcutClick(name)}
-              className="min-h-11 px-3 md:px-4 lg:px-5 py-2 md:py-2.5 rounded-full font-medium text-sm md:text-base shadow-sm transition-all duration-200 bg-button-secondary border border-border text-content-primary hover:bg-button-secondary-hover hover:shadow-md active:scale-95 backdrop-blur-md touch-manipulation"
+              href={buildSurahRoute(id)}
+              className="flex-shrink-0 min-h-[2rem] sm:min-h-[2.25rem] md:min-h-10 px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full font-medium text-[0.65rem] sm:text-xs md:text-sm transition-all duration-200 bg-surface-navigation text-foreground hover:bg-surface-navigation/90 border border-border/30 dark:border-border/20 shadow-sm hover:shadow-md active:scale-95 touch-manipulation flex items-center justify-center"
             >
               {name}
-            </button>
+            </Link>
           ))}
         </div>
       </div>

@@ -21,7 +21,6 @@ export function buildPlayerLayoutProps({
   setMobileOptionsOpen,
   controls,
 }: Options): {
-  cover: ReturnType<typeof useTrackTiming>['cover'];
   title: ReturnType<typeof useTrackTiming>['title'];
   artist: ReturnType<typeof useTrackTiming>['artist'];
   current: ReturnType<typeof useTrackTiming>['current'];
@@ -38,7 +37,6 @@ export function buildPlayerLayoutProps({
   setMobileOptionsOpen: () => void;
 } {
   return {
-    cover: timing.cover,
     title: timing.title,
     artist: timing.artist,
     current: timing.current,

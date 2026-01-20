@@ -78,7 +78,8 @@ const Backdrop = ({ onClose }: { onClose: () => void }): React.ReactElement => (
     initial="hidden"
     animate="visible"
     exit="hidden"
-    className="fixed inset-0 bg-surface-overlay/60 backdrop-blur-sm z-50 touch-none"
+    transition={{ duration: 0.2 }}
+    className="fixed inset-0 bg-surface-overlay/60 z-50 touch-none"
     onClick={onClose}
   />
 );
@@ -89,7 +90,8 @@ const Sheet = ({ children }: { children: React.ReactNode }): React.ReactElement 
     initial="hidden"
     animate="visible"
     exit="exit"
-    transition={{ type: 'spring', stiffness: 500, damping: 40 }}
+    transition={{ type: 'spring', damping: 25, stiffness: 350, mass: 0.8 }}
+    style={{ willChange: 'transform' }}
     className="fixed bottom-0 left-0 right-0 bg-surface rounded-t-3xl shadow-2xl z-50 max-h-[90dvh] flex flex-col pb-safe touch-pan-y"
   >
     {children}

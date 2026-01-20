@@ -5,34 +5,36 @@ import {
   testContextIntegration,
   testPerformanceOptimizations,
   testAccessibility,
+  gotoApp,
 } from './utils';
 
 test.describe('🏗️ Component Architecture', () => {
   test('SurahView component follows architecture patterns', async ({ page }) => {
-    await page.goto('/surah/1');
+    await gotoApp(page, '/surah/1');
 
     // Component should render with proper structure
-    await expect(page.locator('main[role="main"]')).toBeVisible();
+    await expect(page.locator('main')).toBeVisible();
 
     // Shared architecture checks
-    await testResponsiveDesign(page, 'main[role="main"]');
+    await testResponsiveDesign(page, 'main');
     await testContextIntegration(page);
     await testPerformanceOptimizations(page);
     await testAccessibility(page);
   });
 
   test('BookmarkFolderClient component architecture compliance', async ({ page }) => {
-    await page.goto('/bookmarks');
+    // `/bookmarks` redirects to a specific section
+    await gotoApp(page, '/bookmarks/last-read');
 
     // Component should load with proper structure
-    await expect(page.locator('[data-testid="bookmark-folder-client"]')).toBeVisible();
+    await expect(page.locator('main[data-slot="bookmarks-landing-main"]')).toBeVisible();
 
     // Responsive design checks
-    await testResponsiveDesign(page, '[data-testid="bookmark-folder-client"]');
+    await testResponsiveDesign(page, 'main[data-slot="bookmarks-landing-main"]');
   });
 
   test('QuranAudioPlayer component performance and context integration', async ({ page }) => {
-    await page.goto('/surah/1');
+    await gotoApp(page, '/surah/1');
 
     // Start audio playback
     const playButton = page.locator('[data-testid="play-surah-button"]');

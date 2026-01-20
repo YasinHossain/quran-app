@@ -3,7 +3,6 @@
 import { memo } from 'react';
 
 import { PlayIcon, PauseIcon } from '@/app/shared/icons';
-import { Spinner } from '@/app/shared/Spinner';
 import { touchClasses } from '@/lib/responsive';
 import { cn } from '@/lib/utils/cn';
 
@@ -22,20 +21,18 @@ export const PlayPauseButton = memo(function PlayPauseButton({
     <button
       aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
       onClick={onPlayPause}
+      disabled={isLoadingAudio}
+      aria-busy={isLoadingAudio}
       title="Play/Pause"
       className={cn(
-        'p-1.5 rounded-full hover:bg-accent/10 transition',
+        'p-1.5 rounded-full hover:bg-interactive-hover transition flex items-center justify-center',
         isPlaying ? 'text-accent' : 'hover:text-accent',
+        'disabled:opacity-50 disabled:cursor-not-allowed',
+        touchClasses.target,
         touchClasses.focus
       )}
     >
-      {isLoadingAudio ? (
-        <Spinner className="h-4 w-4 text-accent" />
-      ) : isPlaying ? (
-        <PauseIcon size={18} />
-      ) : (
-        <PlayIcon size={18} />
-      )}
+      {isPlaying ? <PauseIcon size={18} /> : <PlayIcon size={18} />}
     </button>
   );
 });

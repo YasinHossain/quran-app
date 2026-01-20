@@ -18,12 +18,32 @@ const isSaheehName = (name: string): boolean => {
 const findSaheehId = (translations: TranslationResource[]): number | undefined =>
   translations.find((t) => isSaheehName(t.name))?.id;
 
+const normalizeSelectionIds = (translations: TranslationResource[], ids: number[]): number[] => {
+  if (ids.length === 0) return [];
+  const validIds = new Set(translations.map((t) => t.id));
+  const seen = new Set<number>();
+  const normalized: number[] = [];
+
+  ids.forEach((id) => {
+    if (!Number.isFinite(id)) return;
+    if (!validIds.has(id)) return;
+    if (seen.has(id)) return;
+    seen.add(id);
+    normalized.push(id);
+  });
+
+  return normalized;
+};
+
 const computeInitialSelectionIds = (
   translations: TranslationResource[],
   settingsIds?: number[]
 ): number[] | null => {
   if (translations.length === 0) return null;
-  if (settingsIds && settingsIds.length > 0) return settingsIds;
+  if (settingsIds) {
+    const normalized = normalizeSelectionIds(translations, settingsIds);
+    if (normalized.length > 0) return normalized;
+  }
   const sahihId = findSaheehId(translations);
   return sahihId !== undefined ? [sahihId] : [DEFAULT_SAHEEH_ID];
 };
@@ -50,11 +70,7 @@ interface UseTranslationSelectionResult {
   selectedIds: Set<number>;
   orderedSelection: number[];
   handleSelectionToggle: (id: number) => boolean;
-  handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
-  handleDrop: (e: React.DragEvent<HTMLDivElement>, targetId: number) => void;
-  handleDragEnd: () => void;
-  draggedId: number | null;
+  setSelections: (ids: number[]) => void;
   handleReset: () => void;
 }
 
@@ -86,16 +102,17 @@ export const useTranslationSelection = (
     if (!hasInitialized.current) return;
 
     const current = [...s.orderedSelection];
-    if (current.length === 0) {
-      return;
-    }
+
     setTranslationIds(current);
   }, [s.orderedSelection, setTranslationIds]);
 
   const handleReset = useCallback((): void => {
     const sahihId = findSaheehId(translations);
-    s.setSelections(sahihId !== undefined ? [sahihId] : []);
-  }, [translations, s]);
+    const resetIds = sahihId !== undefined ? [sahihId] : [];
+    s.setSelections(resetIds);
+    // Directly update settings to ensure immediate sync with verse page
+    setTranslationIds(resetIds);
+  }, [translations, s, setTranslationIds]);
 
   return {
     searchTerm: s.searchTerm,
@@ -107,11 +124,7 @@ export const useTranslationSelection = (
     selectedIds: s.selectedIds,
     orderedSelection: s.orderedSelection,
     handleSelectionToggle: s.handleSelectionToggle,
-    handleDragStart: s.handleDragStart,
-    handleDragOver: s.handleDragOver,
-    handleDrop: s.handleDrop,
-    handleDragEnd: s.handleDragEnd,
-    draggedId: s.draggedId,
+    setSelections: s.setSelections,
     handleReset,
   } as const;
 };

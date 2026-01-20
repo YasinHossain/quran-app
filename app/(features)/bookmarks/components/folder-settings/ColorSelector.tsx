@@ -1,14 +1,14 @@
 import React from 'react';
 
 const FOLDER_COLORS = [
-  { name: 'Accent', value: 'text-accent' },
-  { name: 'Primary', value: 'text-primary' },
-  { name: 'Interactive', value: 'text-interactive' },
-  { name: 'Success', value: 'text-status-success' },
-  { name: 'Warning', value: 'text-status-warning' },
-  { name: 'Error', value: 'text-status-error' },
-  { name: 'Info', value: 'text-status-info' },
-  { name: 'Content Accent', value: 'text-content-accent' },
+  { name: 'Teal', value: 'text-accent' },
+  { name: 'Brand', value: 'text-primary' },
+  { name: 'Slate', value: 'text-content-secondary' },
+  { name: 'Green', value: 'text-status-success' },
+  { name: 'Amber', value: 'text-status-warning' },
+  { name: 'Red', value: 'text-status-error' },
+  { name: 'Blue', value: 'text-status-info' },
+  { name: 'Emerald', value: 'text-content-accent' },
 ];
 
 interface ColorSelectorProps {
@@ -49,10 +49,10 @@ const ColorOption = ({
   <button
     type="button"
     onClick={() => setSelectedColor(color.value)}
-    className={`flex h-12 w-full items-center justify-center rounded-lg border transition-all ${
+    className={`flex h-12 w-full items-center justify-center rounded-lg border transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 ${
       selectedColor === color.value
-        ? 'border-accent bg-accent/10 ring-2 ring-accent/20'
-        : 'border-border hover:border-accent/50 hover:bg-surface-hover'
+        ? 'border-transparent ring-2 ring-accent shadow-sm'
+        : 'border-border hover:border-accent/50'
     }`}
     aria-label={`Select ${color.name} color`}
     title={color.name}

@@ -1,28 +1,13 @@
-import Image from 'next/image';
 import React from 'react';
 
 interface Props {
-  cover: string;
   title: string;
   artist: string;
 }
 
-export function TrackInfo({ cover, title, artist }: Props): React.JSX.Element {
-  const fallback =
-    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96'><rect width='100%' height='100%' rx='12' ry='12' fill='%23e5e7eb'/><text x='50%' y='52%' dominant-baseline='middle' text-anchor='middle' font-family='Inter, system-ui, sans-serif' font-size='12' fill='%239ca3af'>No cover</text></svg>";
+export function TrackInfo({ title, artist }: Props): React.JSX.Element {
   return (
-    <div className="flex items-center gap-3 min-w-0 flex-shrink-0 sm:min-w-[220px]">
-      <Image
-        src={cover || fallback}
-        alt="cover"
-        width={48}
-        height={48}
-        className="h-10 w-10 sm:h-12 sm:w-12 rounded-full shadow-sm object-cover"
-        unoptimized
-        onError={(e) => {
-          e.currentTarget.src = fallback;
-        }}
-      />
+    <div className="flex items-center gap-3 min-w-0 pl-1">
       <div className="min-w-0 flex-1 sm:flex-initial">
         <div
           className="text-sm font-semibold tracking-[-0.01em] truncate text-foreground"

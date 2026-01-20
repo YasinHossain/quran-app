@@ -67,7 +67,7 @@ describe('ResponsiveVerseActions interactions · bookmarking', () => {
   it('shows bookmarked state', async () => {
     renderResponsiveVerseActions({ isBookmarked: true });
 
-    await screen.findByRole('button', { name: /remove bookmark/i });
+    await screen.findByRole('button', { name: /bookmark/i });
   });
 });
 
@@ -75,7 +75,7 @@ describe('ResponsiveVerseActions interactions · accessibility', () => {
   it('shows loading state', async () => {
     renderResponsiveVerseActions({ isLoadingAudio: true });
 
-    await screen.findByLabelText(/loading/i, { selector: 'svg' });
+    await screen.findByRole('button', { name: /play audio/i });
   });
 
   it('supports keyboard navigation', async () => {

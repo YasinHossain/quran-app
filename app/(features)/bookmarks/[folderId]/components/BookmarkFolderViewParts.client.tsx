@@ -2,8 +2,7 @@
 
 import React from 'react';
 
-import { BookmarksSidebar } from '@/app/(features)/bookmarks/components/BookmarksSidebar';
-import { BookmarksMobileSidebarOverlay } from '@/app/(features)/bookmarks/components/shared/layout/BookmarksMobileSidebarOverlay';
+import { BaseSidebar } from '@/app/shared/components/BaseSidebar';
 import { ThreeColumnWorkspace, WorkspaceMain } from '@/app/shared/reader';
 import { SettingsSidebar } from '@/app/shared/reader/settings/SettingsSidebar';
 import { SettingsSidebarContent } from '@/app/shared/reader/settings/SettingsSidebarContent';
@@ -18,7 +17,6 @@ export function BookmarkFolderMobileSidebar({
   isOpen,
   onClose,
   onBack,
-  onSectionChange,
   bookmarks,
   folder,
 }: {
@@ -30,15 +28,13 @@ export function BookmarkFolderMobileSidebar({
   folder: Folder;
 }): React.JSX.Element {
   return (
-    <BookmarksMobileSidebarOverlay
+    <BaseSidebar
       isOpen={isOpen}
       onClose={onClose}
-      activeSection="bookmarks"
-      onSectionChange={onSectionChange}
-      childrenTitle={null}
-      childrenContainerClassName="-mt-2 sm:-mt-3 -mx-2 sm:-mx-3 pt-0 border-t-0"
-      childrenContentClassName="space-y-0 px-2 sm:px-3"
-      showNavigation={false}
+      position="left"
+      desktopBreakpoint="xl"
+      aria-label="Folder details"
+      className="xl:hidden"
     >
       <BookmarkFolderSidebarContent
         bookmarks={bookmarks}
@@ -46,12 +42,11 @@ export function BookmarkFolderMobileSidebar({
         onBack={onBack}
         onClose={onClose}
       />
-    </BookmarksMobileSidebarOverlay>
+    </BaseSidebar>
   );
 }
 
 export function LeftBookmarksSidebar({
-  onSectionChange,
   bookmarks,
   folder,
   onBack,
@@ -61,18 +56,7 @@ export function LeftBookmarksSidebar({
   folder: Folder;
   onBack: () => void;
 }): React.JSX.Element {
-  return (
-    <BookmarksSidebar
-      activeSection="bookmarks"
-      onSectionChange={onSectionChange}
-      childrenTitle={null}
-      childrenContainerClassName="-mt-2 sm:-mt-3 -mx-2 sm:-mx-3 pt-0 border-t-0"
-      childrenContentClassName="space-y-0 px-2 sm:px-3"
-      showNavigation={false}
-    >
-      <BookmarkFolderSidebarContent bookmarks={bookmarks} folder={folder} onBack={onBack} />
-    </BookmarksSidebar>
-  );
+  return <BookmarkFolderSidebarContent bookmarks={bookmarks} folder={folder} onBack={onBack} />;
 }
 
 export function CenterWorkspaceContent({
@@ -151,7 +135,7 @@ export interface DesktopWorkspaceProps extends PanelTogglesProps {
 export function BookmarkFolderDesktopWorkspace(props: DesktopWorkspaceProps): React.JSX.Element {
   return (
     <>
-      <div className="lg:hidden">
+      <div className="2xl:hidden">
         <SettingsSidebar
           pageType="bookmarks"
           readerTabsEnabled={false}
@@ -190,6 +174,7 @@ export function DesktopThreeColumn(props: DesktopWorkspaceProps): React.JSX.Elem
         />
       }
       right={<RightSettingsPanel {...settings} />}
+      leftContainerClassName="lg:pt-2"
     />
   );
 }

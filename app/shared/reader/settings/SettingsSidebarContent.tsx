@@ -42,6 +42,10 @@ interface SettingsSidebarContentProps {
   activeReaderMode?: 'translation' | 'reading';
   readerTabsEnabled?: boolean;
   idPrefix?: string;
+  isArabicFontPanelOpen?: boolean;
+  onArabicFontPanelOpen?: () => void;
+  onArabicFontPanelClose?: () => void;
+  pageType?: 'verse' | 'tafsir' | 'bookmarks';
 }
 
 export function SettingsSidebarContent({
@@ -73,9 +77,18 @@ export function SettingsSidebarContent({
   activeReaderMode,
   readerTabsEnabled = true,
   idPrefix: _idPrefix,
+  isArabicFontPanelOpen: isArabicFontPanelOpenProp,
+  onArabicFontPanelOpen: onArabicFontPanelOpenProp,
+  onArabicFontPanelClose: onArabicFontPanelCloseProp,
+  pageType,
 }: SettingsSidebarContentProps): React.JSX.Element {
   void _idPrefix;
-  const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
+  const [internalArabicFontPanelOpen, setInternalArabicFontPanelOpen] = useState(false);
+  const [internalTajweedRulesPanelOpen, setInternalTajweedRulesPanelOpen] = useState(false);
+
+  const isArabicFontPanelOpen = isArabicFontPanelOpenProp ?? internalArabicFontPanelOpen;
+  const isTajweedRulesPanelOpen = internalTajweedRulesPanelOpen;
+
   const tabsEnabled = readerTabsEnabled;
   const isMushafMode = activeReaderMode === 'reading';
   const hookTabState = useSettingsTabState(
@@ -102,8 +115,30 @@ export function SettingsSidebarContent({
   const { activeTab, handleTabChange, tabOptions } = tabState;
   const { openSections, handleSectionToggle } = useSettingsSections();
 
-  const handleArabicFontPanelOpen = useCallback(() => setIsArabicFontPanelOpen(true), []);
-  const handleArabicFontPanelClose = useCallback(() => setIsArabicFontPanelOpen(false), []);
+  const handleArabicFontPanelOpen = useCallback(() => {
+    onArabicFontPanelOpenProp?.();
+    setInternalArabicFontPanelOpen(true);
+  }, [onArabicFontPanelOpenProp]);
+
+  const handleArabicFontPanelClose = useCallback(() => {
+    onArabicFontPanelCloseProp?.();
+    setInternalArabicFontPanelOpen(false);
+  }, [onArabicFontPanelCloseProp]);
+
+  const handleTajweedRulesPanelOpen = useCallback(() => {
+    setInternalTajweedRulesPanelOpen(true);
+  }, []);
+
+  const handleTajweedRulesPanelClose = useCallback(() => {
+    setInternalTajweedRulesPanelOpen(false);
+  }, []);
+
+  // Wrapped close handler that resets internal panel states
+  const handleSidebarClose = useCallback(() => {
+    setInternalArabicFontPanelOpen(false);
+    setInternalTajweedRulesPanelOpen(false);
+    onClose?.();
+  }, [onClose]);
 
   const contentWrapperProps = buildContentWrapperProps(
     {
@@ -124,6 +159,7 @@ export function SettingsSidebarContent({
       openSections,
       onSectionToggle: handleSectionToggle,
       onArabicFontPanelOpen: handleArabicFontPanelOpen,
+      onTajweedRulesPanelOpen: handleTajweedRulesPanelOpen,
       ...(activeReaderMode ? { activeTabOverride: activeReaderMode } : {}),
       showTabs: tabsEnabled,
       isMushafMode,
@@ -182,27 +218,29 @@ export function SettingsSidebarContent({
   const panelsProps = buildPanelsProps(panelBaseProps, {
     isArabicFontPanelOpen,
     onArabicFontPanelClose: handleArabicFontPanelClose,
+    isTajweedRulesPanelOpen,
+    onTajweedRulesPanelClose: handleTajweedRulesPanelClose,
   });
 
   const shouldShowCloseButton = Boolean(showCloseButton && onClose);
 
   return (
-    <div className="relative flex h-full flex-col bg-background text-foreground overflow-x-hidden">
+    <div className="relative flex h-full flex-col bg-background text-foreground overflow-hidden">
       <SidebarHeader
         title={title}
-        titleAlign="center"
         titleClassName="text-mobile-lg font-semibold text-content-primary"
-        withShadow={false}
-        edgeToEdge
-        contentClassName="h-16 min-h-12 px-3 sm:px-4 py-0 sm:py-0"
-        className="border-b border-border bg-background shadow-none"
+        className="2xl:hidden !z-0"
         showCloseButton={shouldShowCloseButton}
-        {...(shouldShowCloseButton && onClose ? { onClose } : {})}
+        {...(shouldShowCloseButton && onClose ? { onClose: handleSidebarClose } : {})}
+        forceVisible
       />
-      <div className="flex-1 overflow-hidden">
-        <SettingsContentWrapper {...contentWrapperProps} />
+      <div className="flex-1 overflow-hidden flex flex-col">
+        <SettingsContentWrapper {...contentWrapperProps} pageType={pageType} />
       </div>
-      <SettingsPanels {...panelsProps} />
+      <SettingsPanels
+        {...panelsProps}
+        {...(onClose ? { onCloseSidebar: handleSidebarClose } : {})}
+      />
     </div>
   );
 }

@@ -13,11 +13,8 @@ interface SearchPropsArgs {
   orderedSelection: number[];
   tafsirs: TafsirResource[];
   handleSelectionToggle: (id: number) => void;
-  handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
-  handleDrop: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragEnd: () => void;
-  draggedId: number | null;
+  onReorder: (ids: number[]) => void;
+  onReset: () => void;
 }
 
 interface TabsPropsArgs {
@@ -32,6 +29,8 @@ interface TabsPropsArgs {
 }
 
 interface ListPropsArgs {
+  activeFilter: string;
+  sectionsToRender: Array<{ language: string; items: TafsirResource[] }>;
   resources: TafsirResource[];
   selectedIds: Set<number>;
   onToggle: (id: number) => void;
@@ -45,11 +44,8 @@ export const useTafsirSearchProps = ({
   orderedSelection,
   tafsirs,
   handleSelectionToggle,
-  handleDragStart,
-  handleDragOver,
-  handleDrop,
-  handleDragEnd,
-  draggedId,
+  onReorder,
+  onReset,
 }: SearchPropsArgs): TafsirSearchSectionProps =>
   React.useMemo(
     () => ({
@@ -58,11 +54,8 @@ export const useTafsirSearchProps = ({
       orderedSelection,
       tafsirs,
       handleSelectionToggle,
-      handleDragStart,
-      handleDragOver,
-      handleDrop,
-      handleDragEnd,
-      draggedId,
+      onReorder,
+      onReset,
     }),
     [
       searchTerm,
@@ -70,11 +63,8 @@ export const useTafsirSearchProps = ({
       orderedSelection,
       tafsirs,
       handleSelectionToggle,
-      handleDragStart,
-      handleDragOver,
-      handleDrop,
-      handleDragEnd,
-      draggedId,
+      onReorder,
+      onReset,
     ]
   );
 
@@ -112,6 +102,8 @@ export const useTafsirTabsProps = ({
   );
 
 export const useTafsirListProps = ({
+  activeFilter,
+  sectionsToRender,
   resources,
   selectedIds,
   onToggle,
@@ -119,6 +111,6 @@ export const useTafsirListProps = ({
   total,
 }: ListPropsArgs): TafsirListProps =>
   React.useMemo(
-    () => ({ resources, selectedIds, onToggle, height, total }),
-    [resources, selectedIds, onToggle, height, total]
+    () => ({ activeFilter, sectionsToRender, resources, selectedIds, onToggle, height, total }),
+    [activeFilter, sectionsToRender, resources, selectedIds, onToggle, height, total]
   );

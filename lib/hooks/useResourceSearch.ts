@@ -36,11 +36,13 @@ export const useResourceSearch = <T extends Resource>({
   }, [resources, languageSort]);
 
   const filtered = useMemo(() => {
-    if (searchTerm === '') return resources;
-    const lower = searchTerm.toLowerCase();
-    return resources.filter(
-      (r) => r.name.toLowerCase().includes(lower) || r.lang.toLowerCase().includes(lower)
-    );
+    const normalized = searchTerm.trim().toLowerCase();
+    if (normalized === '') return resources;
+    return resources.filter((r) => {
+      const name = r.name.toLowerCase();
+      const lang = r.lang.toLowerCase();
+      return name.includes(normalized) || lang.includes(normalized);
+    });
   }, [resources, searchTerm]);
 
   const groupedResources = useMemo(

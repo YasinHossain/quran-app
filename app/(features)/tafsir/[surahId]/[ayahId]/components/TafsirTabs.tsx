@@ -1,8 +1,10 @@
 'use client';
+import { useEffect, useRef, useState } from 'react';
+
 import { useSettings } from '@/app/providers/SettingsContext';
-import { Spinner } from '@/app/shared/Spinner';
 import { applyArabicFont } from '@/lib/tafsir/applyArabicFont';
 
+import { TafsirSkeleton } from './TafsirSkeleton';
 import { useTafsirTabsState } from './useTafsirTabsState';
 
 interface TafsirTabsProps {
@@ -17,6 +19,26 @@ export function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps): React.JSX.
     tafsirIds
   );
 
+  // Track content container ref for height measurement
+  const contentRef = useRef<HTMLDivElement>(null);
+  // Store the last known content height to prevent layout shift during loading
+  const [stableHeight, setStableHeight] = useState<number>(0);
+
+  // Capture content height when loaded content is rendered
+  useEffect(() => {
+    if (!loading[activeId ?? 0] && contentRef.current && contents[activeId ?? 0]) {
+      // Use requestAnimationFrame to ensure accurate measurement after paint
+      requestAnimationFrame(() => {
+        if (contentRef.current) {
+          const height = contentRef.current.offsetHeight;
+          if (height > 0) {
+            setStableHeight(height);
+          }
+        }
+      });
+    }
+  }, [loading, activeId, contents]);
+
   if (!tabs.length) {
     return (
       <div className="p-4 text-center text-muted">
@@ -30,16 +52,21 @@ export function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps): React.JSX.
   }
 
   const activeTab = tabs.find((t) => t.id === activeId);
+  const isLoading = !!loading[activeId];
 
   return (
     <div>
       <TabsHeader tabs={tabs} activeId={activeId} onSelect={setActiveId} />
-      <TafsirContent
-        title={activeTab?.name || ''}
-        isLoading={!!loading[activeId]}
-        html={applyArabicFont(contents[activeId] || '', settings.arabicFontFace)}
-        fontSizePx={settings.tafsirFontSize}
-      />
+      {/* Wrapper div maintains stable height during loading to prevent layout shift */}
+      <div style={stableHeight > 0 ? { minHeight: `${stableHeight}px` } : undefined}>
+        <TafsirContent
+          ref={contentRef}
+          title={activeTab?.name || ''}
+          isLoading={isLoading}
+          html={applyArabicFont(contents[activeId] || '', settings.arabicFontFace)}
+          fontSizePx={settings.tafsirFontSize}
+        />
+      </div>
     </div>
   );
 }
@@ -54,7 +81,11 @@ function TabsHeader({
   onSelect: (id: number) => void;
 }): React.JSX.Element {
   return (
-    <div className="flex w-full flex-nowrap items-center p-1 rounded-full bg-interactive border border-border mx-0 sm:mx-4 overflow-x-auto scrollbar-hide gap-1">
+    <div
+      onTouchStart={(e) => e.stopPropagation()}
+      onTouchEnd={(e) => e.stopPropagation()}
+      className="flex w-full flex-nowrap items-center p-1 rounded-full bg-interactive border border-border mx-0 sm:mx-4 overflow-x-auto scrollbar-hide gap-1"
+    >
       {tabs.map((t) => (
         <button
           key={t.id}
@@ -72,26 +103,26 @@ function TabsHeader({
   );
 }
 
-function TafsirContent({
-  title,
-  isLoading,
-  html,
-  fontSizePx,
-}: {
+import { forwardRef } from 'react';
+
+interface TafsirContentProps {
   title: string;
   isLoading: boolean;
   html: string;
   fontSizePx: number;
-}): React.JSX.Element {
+}
+
+const TafsirContent = forwardRef<HTMLDivElement, TafsirContentProps>(function TafsirContent(
+  { title, isLoading, html, fontSizePx },
+  ref
+) {
   return (
-    <div className="p-3 sm:p-4 mt-3 sm:mt-4 w-full">
+    <div ref={ref} className="p-3 sm:p-4 mt-3 sm:mt-4 w-full">
       <h2 className="mb-6 sm:mb-8 text-center text-lg sm:text-xl font-bold text-foreground">
         {title}
       </h2>
       {isLoading ? (
-        <div className="flex justify-center py-4">
-          <Spinner className="h-5 w-5 text-accent" />
-        </div>
+        <TafsirSkeleton />
       ) : (
         <div
           className="prose max-w-none tafsir-content break-words"
@@ -101,4 +132,4 @@ function TafsirContent({
       )}
     </div>
   );
-}
+});

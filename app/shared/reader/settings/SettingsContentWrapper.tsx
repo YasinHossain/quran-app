@@ -13,6 +13,7 @@ export const SettingsContentWrapper = ({
   openSections,
   onSectionToggle,
   onArabicFontPanelOpen,
+  onTajweedRulesPanelOpen,
   onTranslationPanelOpen,
   onWordLanguagePanelOpen,
   onTafsirPanelOpen,
@@ -26,6 +27,7 @@ export const SettingsContentWrapper = ({
   showTabs,
   idPrefix,
   isMushafMode,
+  pageType,
 }: SettingsContentWrapperProps): ReactElement => {
   const resolvedTab = activeTabOverride ?? activeTab;
 
@@ -33,18 +35,19 @@ export const SettingsContentWrapper = ({
     <>
       {/* Tabs section with header separation - matches SurahListContent structure */}
       {showTabs && (
-        <div className="p-3 sm:p-4 border-b border-border md:p-3 md:pb-3">
+        <div className="flex flex-col justify-center h-[73px] px-3 sm:px-4 border-b border-border md:px-3">
           <SettingsTabs activeTab={resolvedTab} onTabChange={onTabChange} tabOptions={tabOptions} />
         </div>
       )}
 
       {/* Content section */}
-      <div className="flex-1 min-h-0 overflow-y-auto p-2 sm:p-3 touch-pan-y">
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-2 sm:p-3 touch-pan-y">
         <SettingsContent
           activeTab={resolvedTab}
           openSections={openSections}
           onSectionToggle={onSectionToggle}
           onArabicFontPanelOpen={onArabicFontPanelOpen}
+          onTajweedRulesPanelOpen={onTajweedRulesPanelOpen}
           onTranslationPanelOpen={onTranslationPanelOpen}
           onWordLanguagePanelOpen={onWordLanguagePanelOpen}
           {...(onTafsirPanelOpen !== undefined ? { onTafsirPanelOpen } : {})}
@@ -56,6 +59,7 @@ export const SettingsContentWrapper = ({
           showTafsirSetting={showTafsirSetting}
           {...(idPrefix ? { idPrefix } : {})}
           {...(typeof isMushafMode === 'boolean' ? { isMushafMode } : {})}
+          pageType={pageType}
         />
       </div>
     </>

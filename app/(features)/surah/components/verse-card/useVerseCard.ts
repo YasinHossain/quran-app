@@ -12,6 +12,7 @@ import type { Verse as VerseType } from '@/types';
 interface UseVerseCardReturn {
   verseRef: React.RefObject<HTMLDivElement | null>;
   isPlaying: boolean;
+  isCurrent: boolean;
   isLoadingAudio: boolean;
   isVerseBookmarked: boolean;
   handlePlayPause: () => void;
@@ -24,16 +25,19 @@ export const useVerseCard = (verse: VerseType): UseVerseCardReturn => {
     loadingId,
     setLoadingId,
     setActiveVerse,
+    activeVerse,
     audioRef,
     setIsPlaying,
     openPlayer,
   } = useAudio();
-  const { isBookmarked } = useBookmarks();
+  const { isPinned } = useBookmarks();
 
   const verseRef = useRef<HTMLDivElement | null>(null);
   const isPlaying = playingId === verse.id;
+  const isCurrent = activeVerse?.id === verse.id;
   const isLoadingAudio = loadingId === verse.id;
-  const isVerseBookmarked = isBookmarked(String(verse.id));
+  // Check both numeric ID and verseKey format to find pins regardless of storage format
+  const isVerseBookmarked = isPinned(String(verse.id)) || isPinned(verse.verse_key);
 
   useLastReadObserver(verse, verseRef);
 
@@ -42,7 +46,6 @@ export const useVerseCard = (verse: VerseType): UseVerseCardReturn => {
       audioRef.current?.pause();
       setPlayingId(null);
       setLoadingId(null);
-      setActiveVerse(null);
       setIsPlaying(false);
     } else {
       setActiveVerse(verse);
@@ -62,5 +65,5 @@ export const useVerseCard = (verse: VerseType): UseVerseCardReturn => {
     openPlayer,
   ]);
 
-  return { verseRef, isPlaying, isLoadingAudio, isVerseBookmarked, handlePlayPause };
+  return { verseRef, isPlaying, isCurrent, isLoadingAudio, isVerseBookmarked, handlePlayPause };
 };

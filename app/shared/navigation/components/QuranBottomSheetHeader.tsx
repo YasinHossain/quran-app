@@ -1,7 +1,7 @@
-import { IconX } from '@tabler/icons-react';
 import { memo } from 'react';
 
 import { SearchInput } from '@/app/shared/components/SearchInput';
+import { CloseIcon } from '@/app/shared/icons';
 
 interface QuranBottomSheetHeaderProps {
   onClose: () => void;
@@ -23,9 +23,9 @@ export const QuranBottomSheetHeader = memo(function QuranBottomSheetHeader({
         <h2 className="text-xl font-bold text-foreground">Select Quran</h2>
         <button
           onClick={onClose}
-          className="btn-touch p-2 rounded-full hover:bg-interactive transition-colors"
+          className="btn-touch p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center"
         >
-          <IconX size={20} className="text-muted" />
+          <CloseIcon size={18} className="text-muted" />
         </button>
       </div>
       <div className="px-6 py-4 border-b border-border">

@@ -14,44 +14,39 @@ interface HomeHeaderProps {
  * Implements mobile-first responsive design and performance optimization.
  */
 export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProps) {
-  const { theme, setTheme } = useTheme();
+  const { setTheme } = useTheme();
 
   const toggleTheme = useCallback(() => {
     const html = document.documentElement;
-    if (html.classList.contains('dark')) {
-      html.classList.remove('dark');
-      setTheme('light');
-    } else {
-      html.classList.add('dark');
-      setTheme('dark');
-    }
+    const nextTheme = html.classList.contains('dark') ? 'light' : 'dark';
+    html.classList.toggle('dark', nextTheme === 'dark');
+    html.setAttribute('data-theme', nextTheme);
+    setTheme(nextTheme);
   }, [setTheme]);
 
   return (
-    <header className={`w-full p-4 md:py-4 md:px-0 ${className || ''}`}>
-      <GlassCard
-        variant="surface"
-        size="comfortable"
-        radius="xl"
-        className="max-w-screen-2xl mx-auto"
-      >
-        <nav className="flex justify-between items-center space-y-0">
-          <h1 className="text-xl md:text-2xl font-bold tracking-wider text-content-primary">
-            Al Qur&apos;an
-          </h1>
-          <button
-            onClick={toggleTheme}
-            className="min-h-11 min-w-11 p-2 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent touch-manipulation"
-            aria-label="Toggle Theme"
-          >
-            {theme === 'dark' ? (
-              <SunIcon className="w-5 h-5 text-accent" />
-            ) : (
-              <MoonIcon className="w-5 h-5 text-accent" />
-            )}
-          </button>
-        </nav>
-      </GlassCard>
+    <header className={`w-full py-4 ${className || ''}`}>
+      <div className="mx-auto w-full" style={{ maxWidth: 'clamp(20rem, 98vw, 90rem)' }}>
+        <GlassCard variant="surface" size="comfortable" radius="xl">
+          <nav className="flex justify-between items-center space-y-0">
+            <h1 className="text-2xl sm:text-3xl md:text-3xl font-bold tracking-wider text-content-primary">
+              Al Qur&apos;an
+            </h1>
+            <button
+              onClick={toggleTheme}
+              className="min-h-touch min-w-touch p-1.5 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent touch-manipulation flex items-center justify-center"
+              aria-label="Toggle Theme"
+            >
+              <span className="theme-toggle-icon--dark" aria-hidden="true">
+                <SunIcon className="w-5 h-5 text-foreground" />
+              </span>
+              <span className="theme-toggle-icon--light" aria-hidden="true">
+                <MoonIcon className="w-5 h-5 text-foreground" />
+              </span>
+            </button>
+          </nav>
+        </GlassCard>
+      </div>
     </header>
   );
 });

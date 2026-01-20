@@ -3,7 +3,6 @@
 import React from 'react';
 
 import { BarsIcon, BookmarkIcon } from '@/app/shared/icons';
-import { Button } from '@/app/shared/ui/Button';
 
 export interface HeaderTitleSectionProps {
   title: string;
@@ -18,22 +17,20 @@ export const HeaderTitleSection = ({
 }: HeaderTitleSectionProps): React.JSX.Element => (
   <div className="flex items-center gap-3 min-w-0 flex-1">
     {showMenuButton && onSidebarToggle && (
-      <Button
-        variant="icon-round"
-        size="icon"
+      <button
         onClick={onSidebarToggle}
         aria-label="Toggle sidebar"
-        className="hover:shadow-sm transition-shadow flex-shrink-0"
+        className="p-1.5 rounded-full hover:bg-interactive-hover hover:text-accent transition-colors flex items-center justify-center flex-shrink-0"
       >
         <BarsIcon size={18} />
-      </Button>
+      </button>
     )}
-    <div className="w-9 h-9 bg-accent rounded-xl flex items-center justify-center shadow-sm">
+    <div className="w-9 h-9 bg-accent rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
       <BookmarkIcon size={20} className="text-on-accent" />
     </div>
-    <div className="min-w-0 -mt-1">
-      <h1 className="text-lg font-bold text-foreground leading-tight">{title}</h1>
-      <p className="text-xs text-muted -mt-0.5">Organize your favorite verses</p>
+    <div className="min-w-0">
+      <h1 className="text-lg font-bold text-foreground">{title}</h1>
+      <p className="text-xs text-muted">Save and organize verses</p>
     </div>
   </div>
 );

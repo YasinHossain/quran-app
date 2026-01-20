@@ -38,33 +38,34 @@ export const CARD_VARIANTS: Record<string, CardVariant> = {
     height: 'h-[80px]',
     borderRadius: 'rounded-xl',
     background: {
-      inactive: 'bg-surface-glass/70 backdrop-blur-xl text-content-primary border border-border/20',
-      active: 'bg-accent text-on-accent backdrop-blur-xl border border-accent/30',
+      inactive:
+        'bg-surface-navigation text-content-primary border border-border/30 dark:border-border/20',
+      active: 'bg-accent text-on-accent border border-accent/30',
     },
     hover: {
       effect: 'none',
-      value: 'hover:shadow-xl',
-      duration: 'transition-all duration-300',
+      value: '',
+      duration: '',
     },
     shadow: {
-      inactive: 'shadow-lg',
-      active: 'shadow-xl shadow-accent/40',
+      inactive: 'shadow-md',
+      active: 'shadow-lg',
     },
   },
   folder: {
     padding: 'p-6',
     borderRadius: 'rounded-xl',
     background: {
-      // Align folder cards with the look used in BookmarkFolderCard
-      // Slightly translucent surface with subtle blur and lighter border
-      inactive: 'bg-surface/80 backdrop-blur-sm border border-border/40',
-      active: 'bg-surface/80 backdrop-blur-sm border border-border/40',
+      // Removing glass effect and matching Surah card color (bg-surface-navigation)
+      inactive:
+        'bg-surface-navigation text-content-primary border border-border/30 dark:border-border/20',
+      active:
+        'bg-surface-navigation text-content-primary border border-border/30 dark:border-border/20',
     },
     hover: {
-      effect: 'translate',
-      // Add hover background to better surface elevation changes
-      value: 'hover:-translate-y-1 hover:shadow-lg hover:border-accent/20 hover:bg-surface-hover',
-      duration: 'transition-all duration-300',
+      effect: 'none',
+      value: 'hover:shadow-lg hover:border-accent/20 hover:bg-interactive-hover',
+      duration: '',
     },
     shadow: {
       inactive: 'shadow-sm',
@@ -79,9 +80,9 @@ export const CARD_VARIANTS: Record<string, CardVariant> = {
       active: 'bg-surface border border-border',
     },
     hover: {
-      effect: 'translate',
-      value: 'hover:-translate-y-0.5 hover:shadow-md hover:border-accent/30 hover:bg-surface-hover',
-      duration: 'transition-all duration-200',
+      effect: 'none',
+      value: 'hover:shadow-md hover:border-accent/30 hover:bg-interactive-hover',
+      duration: '',
     },
     shadow: {
       inactive: '',
@@ -94,22 +95,22 @@ export const ANIMATION_CONFIGS: Record<string, AnimationConfig> = {
   navigation: {
     type: 'css',
     css: {
-      transition: 'transition-all duration-300',
-      hover: 'hover:shadow-xl',
+      transition: '',
+      hover: '',
     },
   },
   folder: {
     type: 'css',
     css: {
-      transition: 'transition-transform duration-300 ease-out',
-      hover: 'hover:-translate-y-1',
+      transition: '',
+      hover: '',
     },
   },
   bookmark: {
     type: 'css',
     css: {
-      transition: 'transition-transform duration-200 ease-out',
-      hover: 'hover:-translate-y-0.5',
+      transition: '',
+      hover: '',
     },
   },
 };

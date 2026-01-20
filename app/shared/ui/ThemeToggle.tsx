@@ -5,8 +5,6 @@ import React, { memo } from 'react';
 import { useTheme } from '@/app/providers/ThemeContext';
 import { SunIcon, MoonIcon } from '@/app/shared/icons';
 
-import { Button } from './Button';
-
 interface ThemeToggleProps {
   variant?: 'primary' | 'secondary' | 'ghost' | 'tabs' | string;
   size?: 'sm' | 'md' | 'lg' | 'icon';
@@ -36,7 +34,7 @@ const ThemeTabButton = memo(function ThemeTabButton({
   return (
     <button
       onClick={onClick}
-      className={`flex items-center justify-center px-3 py-2 rounded-full text-sm font-semibold transition-colors ${buttonClass}`}
+      className={`min-h-touch min-w-touch flex items-center justify-center px-3 py-2 rounded-full text-sm font-semibold transition-colors touch-manipulation ${buttonClass}`}
       aria-label={label}
     >
       {icon}
@@ -89,11 +87,9 @@ const ButtonVariant = memo(function ButtonVariant({
   className,
 }: ButtonVariantProps): React.JSX.Element {
   return (
-    <Button
-      variant="icon-round"
-      size="icon"
+    <button
       onClick={onToggle}
-      className={`bg-button-secondary/40 hover:bg-button-secondary-hover/60 ${className || ''}`}
+      className={`min-h-touch min-w-touch p-1.5 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none flex items-center justify-center touch-manipulation ${className || ''}`}
       aria-label="Toggle Theme"
     >
       {currentTheme === 'dark' ? (
@@ -101,7 +97,7 @@ const ButtonVariant = memo(function ButtonVariant({
       ) : (
         <MoonIcon className="w-5 h-5 text-accent" />
       )}
-    </Button>
+    </button>
   );
 });
 

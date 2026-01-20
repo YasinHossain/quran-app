@@ -12,11 +12,12 @@ interface SurahGridProps {
 }
 
 /**
- * Grid component for displaying surah navigation cards using the shared layout.
+ * Grid component for displaying surah navigation cards.
+ * Optimized using memoization on individual cards (SurahCard) instead of virtualization.
  */
 export const SurahGrid = memo(function SurahGrid({ chapters }: SurahGridProps) {
   return (
-    <NavigationCardGrid>
+    <NavigationCardGrid className="pb-4">
       {chapters.map((chapter) => (
         <SurahCard key={chapter.id} chapter={chapter} />
       ))}

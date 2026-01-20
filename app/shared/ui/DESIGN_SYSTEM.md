@@ -29,7 +29,7 @@ text-on-accent      /* Text on accent backgrounds */
 ```css
 /* DON'T use these - they don't adapt to dark mode */
 bg-gray-100         /* Use bg-interactive instead */
-bg-emerald-100      /* Use bg-interactive-hover instead */
+bg-emerald-100      /* Use hover:bg-gray-200 dark:hover:bg-slate-700 instead */
 text-gray-600       /* Use text-muted instead */
 ```
 

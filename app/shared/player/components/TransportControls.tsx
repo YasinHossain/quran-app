@@ -10,6 +10,7 @@ interface Props {
   onPrev?: () => void;
   onNext?: () => void;
   togglePlay: () => void;
+  className?: string; // Allow overriding layout
 }
 
 /**
@@ -21,15 +22,17 @@ export const TransportControls = memo(function TransportControls({
   onPrev,
   onNext,
   togglePlay,
+  className,
 }: Props) {
   return (
-    <div className="flex items-center gap-2">
+    <div className={className || 'flex items-center gap-1 xs:gap-2'}>
       <Button
         variant="icon-round"
         size="icon-round"
         aria-label="Previous track"
         onClick={onPrev}
         disabled={!interactable}
+        className="!h-9 !w-9 !min-h-9 !min-w-9 hover:bg-transparent hover:text-foreground hover:translate-y-0 [@media(hover:hover)]:hover:bg-interactive-hover [@media(hover:hover)]:hover:text-accent [@media(hover:hover)]:hover:-translate-y-px focus:ring-0 transition-none"
       >
         <SkipBackIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
       </Button>
@@ -39,7 +42,7 @@ export const TransportControls = memo(function TransportControls({
         aria-label={isPlaying ? 'Pause' : 'Play'}
         onClick={togglePlay}
         disabled={!interactable}
-        className="h-10 w-10"
+        className="!h-12 !w-12 !min-h-12 !min-w-12 rounded-full hover:bg-accent [@media(hover:hover)]:hover:bg-accent-hover active:ring-2 active:ring-accent/35 transition-none"
       >
         {isPlaying ? (
           <PauseIcon className={iconClasses.touch} />
@@ -53,6 +56,7 @@ export const TransportControls = memo(function TransportControls({
         aria-label="Next track"
         onClick={onNext}
         disabled={!interactable}
+        className="!h-9 !w-9 !min-h-9 !min-w-9 hover:bg-transparent hover:text-foreground hover:translate-y-0 [@media(hover:hover)]:hover:bg-interactive-hover [@media(hover:hover)]:hover:text-accent [@media(hover:hover)]:hover:-translate-y-px focus:ring-0 transition-none"
       >
         <SkipForwardIcon className={`${iconClasses.touch} ${iconClasses.stroke}`} />
       </Button>

@@ -15,6 +15,7 @@ interface TabContentProps {
   newFolderName: string;
   onToggleCreateFolder: (creating: boolean) => void;
   onNewFolderNameChange: (name: string) => void;
+  onClose?: () => void;
 }
 
 export function TabContent({
@@ -25,27 +26,28 @@ export function TabContent({
   newFolderName,
   onToggleCreateFolder,
   onNewFolderNameChange,
+  onClose,
 }: TabContentProps): JSX.Element {
   return (
     <AnimatePresence mode="wait">
       {activeTab === 'pin' ? (
         <motion.div
           key="pin"
-          initial={{ opacity: 0, x: 20 }}
+          initial={{ opacity: 0, x: 10 }}
           animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.2 }}
+          exit={{ opacity: 0, x: -10 }}
+          transition={{ duration: 0.15, ease: 'easeOut' }}
           className="flex-1 overflow-hidden min-h-0"
         >
-          <PinTab verseId={verseId} verseKey={verseKey} />
+          <PinTab verseId={verseId} verseKey={verseKey} onClose={onClose} />
         </motion.div>
       ) : (
         <motion.div
           key="bookmark"
-          initial={{ opacity: 0, x: 20 }}
+          initial={{ opacity: 0, x: 10 }}
           animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.2 }}
+          exit={{ opacity: 0, x: -10 }}
+          transition={{ duration: 0.15, ease: 'easeOut' }}
           className="flex-1 overflow-hidden flex flex-col min-h-0"
         >
           <BookmarkTab

@@ -96,9 +96,9 @@ function renderStandardPanel({
       {showOverlay && <PanelOverlay onClose={onClose} closeOnOverlayClick={closeOnOverlayClick} />}
       <div
         className={cn(
-          'z-50 text-foreground transition-transform duration-300',
+          'z-50 text-foreground transition-transform duration-300 will-change-transform',
           variantClass,
-          isOpen ? 'translate-x-0' : 'translate-x-full',
+          isOpen ? 'translate-x-0 ease-in-out' : 'translate-x-full shadow-none ease-in-out',
           className
         )}
       >

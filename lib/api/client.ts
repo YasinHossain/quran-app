@@ -1,7 +1,7 @@
 import { features } from '@/config';
 
 // Default to the Quran.com QDC API (CORS-enabled); can be overridden via env.
-const API_BASE_URL = process.env['QURAN_API_BASE_URL'] ?? 'https://api.quran.com/api/qdc';
+const API_BASE_URL = process.env['QURAN_API_BASE_URL'] ?? 'https://api.qurancdn.com/api/qdc';
 
 const PROXY_ROUTE_PATH = '/api/quran';
 let memoizedServerProxyBase: string | null | undefined;
@@ -79,6 +79,8 @@ interface FetchWithTimeoutOptions extends RequestInit {
   errorPrefix?: string;
   /** Timeout in milliseconds */
   timeout?: number;
+  /** When true, return the response even if it's not ok */
+  allowNonOk?: boolean;
 }
 
 /**
@@ -89,6 +91,7 @@ async function fetchWithTimeout(
   {
     errorPrefix = 'Request failed',
     timeout = DEFAULT_TIMEOUT_MS,
+    allowNonOk = false,
     ...init
   }: FetchWithTimeoutOptions = {}
 ): Promise<Response> {
@@ -97,7 +100,7 @@ async function fetchWithTimeout(
 
   try {
     const res = await fetch(url, { ...init, signal: controller.signal });
-    if (!res.ok) {
+    if (!res.ok && !allowNonOk) {
       throw new Error(`${errorPrefix}: ${res.status} ${res.statusText}`);
     }
     return res;

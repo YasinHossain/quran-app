@@ -5,16 +5,17 @@ import {
   testContextIntegration,
   testPerformanceOptimizations,
   testAccessibility,
+  gotoApp,
 } from './utils';
 
 test.describe('🚀 End-to-End Integration', () => {
   test('Complete user journey with architecture compliance', async ({ page }) => {
     // 1. Home page load - responsive design
-    await page.goto('/');
+    await gotoApp(page, '/');
     await testResponsiveDesign(page, 'body');
 
     // 2. Navigation to surah - context integration
-    await page.goto('/surah/1');
+    await gotoApp(page, '/surah/1');
     await testContextIntegration(page);
 
     // 3. Reading experience - performance optimization

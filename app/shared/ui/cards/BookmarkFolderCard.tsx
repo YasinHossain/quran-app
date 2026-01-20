@@ -56,9 +56,9 @@ export const BookmarkFolderCard = ({
       customVariant={{
         padding: 'p-0',
         hover: {
-          effect: 'translate',
-          value: 'hover:-translate-y-1 hover:shadow-lg',
-          duration: 'transition-all duration-300',
+          effect: 'none',
+          value: '',
+          duration: '',
         },
       }}
       onClick={handleClick}
@@ -69,25 +69,21 @@ export const BookmarkFolderCard = ({
       aria-label={`Toggle folder ${folder.name}`}
       data-expanded={isExpanded}
       className={cn(
-        'group relative overflow-hidden rounded-2xl border border-border/40 bg-surface/80 backdrop-blur-sm transition-all duration-300',
-        'hover:-translate-y-1 hover:shadow-lg',
-        'data-[expanded=true]:border-accent/40 data-[expanded=true]:shadow-lg data-[expanded=true]:bg-surface/80',
+        'group relative overflow-hidden rounded-2xl border border-border/40 bg-surface transition-all duration-300',
+
+        'data-[expanded=true]:border-accent/40 data-[expanded=true]:shadow-lg data-[expanded=true]:bg-surface',
         className as string
       )}
       {...props}
     >
       {/* Remove accent halo on hover */}
       <div className="relative flex items-start gap-4 p-4 sm:p-5">
-        <FolderGlyph folder={folder}>
-          <span className="absolute -top-1.5 -right-1.5 select-none rounded-full border border-border bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-foreground shadow-sm">
-            {verseCount}
-          </span>
-        </FolderGlyph>
+        <FolderGlyph folder={folder} />
 
         <div className="flex flex-1 flex-col gap-3 min-w-0">
           <div className="flex items-start gap-3">
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-semibold text-foreground line-clamp-1">
+              <div className="text-sm font-semibold text-foreground line-clamp-2">
                 {folder.name}
               </div>
               {verseCount > 0 ? (
@@ -98,10 +94,10 @@ export const BookmarkFolderCard = ({
                 <div className="text-xs text-muted/70">No verses yet</div>
               )}
             </div>
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface hover:bg-surface-hover transition-colors">
+            <div className="p-1.5 flex items-center justify-center rounded-full bg-surface hover:bg-interactive-hover hover:text-accent transition-colors">
               <ChevronDownIcon
                 className={cn(
-                  'h-4 w-4 text-muted transition-transform duration-300',
+                  'h-5 w-5 text-muted transition-transform duration-300',
                   isExpanded && 'rotate-180 text-accent'
                 )}
               />

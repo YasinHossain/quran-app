@@ -15,6 +15,6 @@ describe('SurahView responsive', () => {
 
     const scrollContainer = document.querySelector('main > div.flex') as HTMLElement | null;
     expect(scrollContainer).not.toBeNull();
-    expect(scrollContainer!).toHaveClass('px-4', 'sm:px-6', 'lg:px-8');
+    expect(scrollContainer!).toHaveClass('px-4', 'sm:px-6', 'xl:px-6');
   });
 });

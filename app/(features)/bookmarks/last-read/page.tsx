@@ -8,12 +8,12 @@ import { LastReadHeader, LastReadGrid } from './components';
 import { useLastReadPage } from './hooks/useLastReadPage';
 
 export default function LastReadPage(): React.JSX.Element {
-  const { lastRead, chapters, handleSectionChange } = useLastReadPage();
+  const { lastRead, chapters, handleSectionChange, removeLastRead } = useLastReadPage();
 
   return (
     <BookmarksLayout activeSection="last-read" onSectionChange={handleSectionChange}>
       <LastReadHeader />
-      <LastReadGrid lastRead={lastRead} chapters={chapters} />
+      <LastReadGrid lastRead={lastRead} chapters={chapters} onRemove={removeLastRead} />
     </BookmarksLayout>
   );
 }

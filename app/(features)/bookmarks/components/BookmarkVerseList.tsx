@@ -3,8 +3,8 @@
 import React from 'react';
 
 import { useBookmarkVerse } from '@/app/(features)/bookmarks/hooks/useBookmarkVerse';
+import { VerseSkeleton } from '@/app/shared/components/VerseSkeleton';
 import { ReaderVerseCard } from '@/app/shared/reader';
-import { Spinner } from '@/app/shared/Spinner';
 
 import {
   AnimatedMount,
@@ -31,12 +31,18 @@ export const BookmarkVerseList = ({ bookmarks }: BookmarkVerseListProps): React.
       bookmarks={bookmarks}
       scrollElement={scrollElement}
       setRootRef={setRootRef}
-      renderItem={(bm) => <BookmarkVerseListItem bookmark={bm} />}
+      renderItem={(bm, index) => <BookmarkVerseListItem bookmark={bm} index={index} />}
     />
   );
 };
 
-const BookmarkVerseListItem = ({ bookmark }: { bookmark: Bookmark }): React.JSX.Element => {
+const BookmarkVerseListItem = ({
+  bookmark,
+  index,
+}: {
+  bookmark: Bookmark;
+  index: number;
+}): React.JSX.Element => {
   const { bookmark: enrichedBookmark, verse, isLoading, error } = useBookmarkVerse(bookmark);
 
   if (error) {
@@ -48,11 +54,7 @@ const BookmarkVerseListItem = ({ bookmark }: { bookmark: Bookmark }): React.JSX.
   }
 
   if (isLoading || !verse || !enrichedBookmark.verseKey) {
-    return (
-      <div className="flex justify-center py-12">
-        <Spinner className="h-6 w-6 text-accent" />
-      </div>
-    );
+    return <VerseSkeleton index={index} />;
   }
 
   return <LoadedBookmarkVerseItem verse={verse} bookmark={enrichedBookmark} />;

@@ -18,7 +18,7 @@ const mockApiVerse = (key: string, id = 1, text = 'alpha'): { verse: Verse } => 
 const expectApiCall = (key: string): void => {
   expect(apiFetch).toHaveBeenCalledWith(
     `verses/by_key/${key}`,
-    { translations: '20', fields: 'text_uthmani' },
+    { translations: '20', fields: 'text_uthmani', translation_fields: 'resource_name' },
     'Failed to fetch random verse'
   );
 };

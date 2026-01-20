@@ -2,9 +2,10 @@
 
 import React from 'react';
 
+import { ResourceTabsHeader } from '@/app/shared/resource-panel/components/ResourceTabsHeader';
+
 import { TranslationResultsSection } from './TranslationResultsSection';
 import { TranslationSelectionSection } from './TranslationSelectionSection';
-import { TranslationTabsHeader } from './TranslationTabsHeader';
 
 import type { TranslationResource } from '@/types';
 
@@ -14,11 +15,8 @@ interface TranslationPanelContentBodyProps {
   orderedSelection: number[];
   translations: TranslationResource[];
   handleSelection: (id: number) => void;
-  handleDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
-  handleDrop: (e: React.DragEvent<HTMLDivElement>, id: number) => void;
-  handleDragEnd: () => void;
-  draggedId: number | null;
+  onReorder: (ids: number[]) => void;
+  onReset: () => void;
   languages: string[];
   activeFilter: string;
   setActiveFilter: (filter: string) => void;
@@ -43,17 +41,14 @@ export function PanelContentBody(props: TranslationPanelContentBodyProps): React
         orderedSelection={props.orderedSelection}
         translations={props.translations}
         handleSelection={props.handleSelection}
-        handleDragStart={props.handleDragStart}
-        handleDragOver={props.handleDragOver}
-        handleDrop={props.handleDrop}
-        handleDragEnd={props.handleDragEnd}
-        draggedId={props.draggedId}
+        onReorder={props.onReorder}
+        onReset={props.onReset}
       />
 
-      <TranslationTabsHeader
+      <ResourceTabsHeader
         languages={props.languages}
         activeFilter={props.activeFilter}
-        setActiveFilter={props.setActiveFilter}
+        onTabClick={props.setActiveFilter}
         tabsContainerRef={props.tabsContainerRef}
         canScrollLeft={props.canScrollLeft}
         canScrollRight={props.canScrollRight}

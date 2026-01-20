@@ -12,7 +12,7 @@ export const PlannerGridEmptyState = (): React.JSX.Element => (
     <h3 className="text-lg font-semibold text-foreground mb-2">Create Your First Plan</h3>
     <p className="text-muted max-w-md mx-auto">
       Tap the <span className="font-semibold text-foreground">+</span> button in the top-right
-      corner to build a plan and track your memorization journey.
+      corner to build a plan and track your reading goals.
     </p>
   </div>
 );

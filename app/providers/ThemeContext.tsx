@@ -25,7 +25,9 @@ export const ThemeProvider = ({
   initialTheme?: Theme;
 }): React.JSX.Element => {
   // Initialize theme with a default value or provided value
+
   const [theme, setTheme] = useState<Theme>(initialTheme);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Effect to load theme from localStorage on the client side after initial render
   useEffect(() => {
@@ -39,18 +41,24 @@ export const ThemeProvider = ({
           setTheme('dark');
         }
       }
+      setIsInitialized(true);
     }
   }, []); // Empty dependency array ensures this effect runs only once on mount
 
   // Effect to save theme to localStorage and toggle the dark class whenever theme changes
   useEffect(() => {
+    // Prevent overriding the theme before we've verified the client preference
+    // This allows the synchronous script in layout.tsx to govern the initial paint
+    if (!isInitialized) return;
+
     if (typeof window !== 'undefined') {
       setItem('theme', theme);
       // Ensure the dark class is toggled for Tailwind's class strategy
       document.documentElement.classList.toggle('dark', theme === 'dark');
+      document.documentElement.setAttribute('data-theme', theme);
       document.cookie = `theme=${theme}; path=/; max-age=31536000`;
     }
-  }, [theme]);
+  }, [theme, isInitialized]);
 
   const value = useMemo(() => ({ theme, setTheme }), [theme, setTheme]);
 

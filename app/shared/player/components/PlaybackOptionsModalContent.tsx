@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
-import { createPortal } from 'react-dom';
+
+import { UnifiedModal } from '@/app/shared/components/modal/UnifiedModal';
 
 import { ModalFooter } from './ModalFooter';
 import { ModalHeader } from './ModalHeader';
@@ -10,11 +11,12 @@ import { Tabs } from './Tabs';
 import type { RepeatOptions } from '@/app/shared/player/types';
 
 interface ContentProps {
+  open: boolean;
   onClose: () => void;
   activeTab: 'reciter' | 'repeat';
   setActiveTab: (tab: 'reciter' | 'repeat') => void;
-  localReciter: string;
-  setLocalReciter: (id: string) => void;
+  localReciter: number;
+  setLocalReciter: (id: number) => void;
   localRepeat: RepeatOptions;
   setLocalRepeat: React.Dispatch<React.SetStateAction<RepeatOptions>>;
   rangeWarning: string | null;
@@ -22,32 +24,8 @@ interface ContentProps {
   commit: () => void;
 }
 
-const ModalContainer = memo(function ModalContainer({
-  onClose,
-  children,
-}: {
-  onClose: () => void;
-  children: React.ReactNode;
-}) {
-  return createPortal(
-    <div
-      className="fixed inset-0 z-[120] grid place-items-center bg-surface-overlay/60 p-4"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-      onKeyDown={(e) => {
-        if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) onClose();
-      }}
-      role="button"
-      tabIndex={0}
-    >
-      {children}
-    </div>,
-    document.body
-  );
-});
-
 export const PlaybackOptionsModalContent = memo(function PlaybackOptionsModalContent({
+  open,
   onClose,
   activeTab,
   setActiveTab,
@@ -60,17 +38,21 @@ export const PlaybackOptionsModalContent = memo(function PlaybackOptionsModalCon
   commit,
 }: ContentProps) {
   return (
-    <ModalContainer onClose={onClose}>
-      <div
-        className="w-full max-w-3xl rounded-2xl border border-border bg-surface p-4 md:p-6 shadow-2xl"
-        role="dialog"
-        aria-modal="true"
-        tabIndex={-1}
-      >
+    <UnifiedModal
+      isOpen={open}
+      onClose={onClose}
+      ariaLabel="Playback options"
+      layerClassName="z-[120]"
+      backdropClassName="touch-none"
+      contentClassName="max-w-3xl mx-auto max-h-[85vh] overflow-hidden flex flex-col"
+    >
+      <div className="flex-shrink-0 px-4 pt-4 md:px-6 md:pt-6">
         <ModalHeader onClose={onClose} />
         <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
+      </div>
 
-        <div className="grid md:grid-cols-2 gap-4">
+      <div className="flex-1 overflow-y-auto min-h-0 px-4 md:px-6">
+        <div className="grid md:grid-cols-2 gap-4 pb-1">
           {activeTab === 'reciter' && (
             <ReciterPanel localReciter={localReciter} setLocalReciter={setLocalReciter} />
           )}
@@ -83,9 +65,11 @@ export const PlaybackOptionsModalContent = memo(function PlaybackOptionsModalCon
             />
           )}
         </div>
+      </div>
 
+      <div className="flex-shrink-0 px-4 pb-4 md:px-6 md:pb-6">
         <ModalFooter onClose={onClose} onApply={commit} />
       </div>
-    </ModalContainer>
+    </UnifiedModal>
   );
 });

@@ -1,7 +1,6 @@
 import { useRouter } from 'next/navigation';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
-import { useBodyScrollLock } from '@/app/providers/hooks/useBodyScrollLock';
 import { useModal } from '@/app/shared/hooks/useModal';
 
 import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
@@ -19,11 +18,9 @@ export const usePlannerPage = (): UsePlannerPageResult => {
   const { planner, chapters } = useBookmarks();
   const modal = useModal();
 
-  useBodyScrollLock(true);
-
   const handleSectionChange = (section: SectionId): void => {
     if (section === 'bookmarks') {
-      router.push('/bookmarks');
+      router.push('/bookmarks/folders');
     } else if (section === 'pinned') {
       router.push('/bookmarks/pinned');
     } else if (section === 'last-read') {

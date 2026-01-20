@@ -4,42 +4,42 @@ import React from 'react';
 
 import { SurahVerseList } from '@/app/(features)/surah/components/SurahVerseList';
 
-import type { Verse } from '@/types';
+import { SurahCalligraphyIntro } from './SurahCalligraphyIntro';
+import { useVerseAudioWordSync } from './useVerseAudioWordSync';
+
+import type { UseVerseListingReturn } from '@/app/(features)/surah/hooks/useVerseListing';
 
 interface SurahMainProps {
-  verses: Verse[];
-  isLoading: boolean;
-  error: string | null;
-  loadMoreRef: React.RefObject<HTMLDivElement | null>;
-  isValidating: boolean;
-  isReachingEnd: boolean;
+  surahId?: number | undefined;
+  verseListing: UseVerseListingReturn;
   emptyLabelKey?: string;
   endLabelKey?: string;
   initialVerseKey?: string | undefined;
+  chapterId?: number | undefined;
 }
 
 export function SurahMain({
-  verses,
-  isLoading,
-  error,
-  loadMoreRef,
-  isValidating,
-  isReachingEnd,
+  surahId,
+  verseListing,
   emptyLabelKey,
   endLabelKey,
   initialVerseKey,
+  chapterId,
 }: SurahMainProps): React.JSX.Element {
+  const shouldRenderIntro = typeof chapterId === 'number' && chapterId > 0;
+
+  useVerseAudioWordSync();
+
   return (
-    <SurahVerseList
-      verses={verses}
-      isLoading={isLoading}
-      error={error}
-      loadMoreRef={loadMoreRef}
-      isValidating={isValidating}
-      isReachingEnd={isReachingEnd}
-      {...(emptyLabelKey !== undefined ? { emptyLabelKey } : {})}
-      {...(endLabelKey !== undefined ? { endLabelKey } : {})}
-      {...(initialVerseKey ? { initialVerseKey } : {})}
-    />
+    <div className="w-full space-y-10">
+      {shouldRenderIntro ? <SurahCalligraphyIntro chapterId={chapterId} /> : null}
+      <SurahVerseList
+        surahId={surahId}
+        verseListing={verseListing}
+        {...(emptyLabelKey !== undefined ? { emptyLabelKey } : {})}
+        {...(endLabelKey !== undefined ? { endLabelKey } : {})}
+        {...(initialVerseKey ? { initialVerseKey } : {})}
+      />
+    </div>
   );
 }
