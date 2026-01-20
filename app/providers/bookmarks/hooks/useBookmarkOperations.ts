@@ -27,7 +27,7 @@ export interface UseBookmarkOperationsOptions {
   fetchMetadata: (verseId: string, chaptersList: Chapter[]) => void;
 }
 
-export default function useBookmarkOperations({
+export function useBookmarkOperations({
   folders,
   setFolders,
   pinned: _pinned,

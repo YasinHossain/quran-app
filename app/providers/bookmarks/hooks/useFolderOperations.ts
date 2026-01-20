@@ -42,5 +42,3 @@ export const useFolderOperations = (
 
   return { createFolder, deleteFolder, renameFolder };
 };
-
-export default useFolderOperations;

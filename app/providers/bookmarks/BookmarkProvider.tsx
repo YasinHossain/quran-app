@@ -8,10 +8,10 @@ import { findBookmarkInFolders, isVerseBookmarked, getAllBookmarkedVerses } from
 import { BookmarkContext } from './BookmarkContext';
 import { useBookmarkData } from './hooks/useBookmarkData';
 import { useBookmarkMetadata } from './hooks/useBookmarkMetadata';
-import useBookmarkOperations from './hooks/useBookmarkOperations';
-import useFolderOperations from './hooks/useFolderOperations';
+import { useBookmarkOperations } from './hooks/useBookmarkOperations';
+import { useFolderOperations } from './hooks/useFolderOperations';
 import { usePinnedBookmarks } from './hooks/usePinnedBookmarks';
-import usePlannerOperations from './hooks/usePlannerOperations';
+import { usePlannerOperations } from './hooks/usePlannerOperations';
 
 import type { BookmarkContextType } from './types';
 import type { Bookmark, Folder } from '@/types';

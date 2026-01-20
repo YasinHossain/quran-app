@@ -223,5 +223,3 @@ export const HybridVerseMarker = ({
     />
   );
 };
-
-export default VerseMarker;

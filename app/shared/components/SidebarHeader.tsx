@@ -12,15 +12,10 @@ interface SidebarHeaderProps {
   showCloseButton?: boolean;
   showBackButton?: boolean;
   className?: string;
-  withShadow?: boolean; // Deprecated but kept for compatibility
-  edgeToEdge?: boolean; // Deprecated but kept for compatibility
-  contentClassName?: string; // Deprecated but kept for compatibility
-  containerContentClassName?: string; // Deprecated but kept for compatibility
   children?: React.ReactNode;
   backButtonClassName?: string;
   closeButtonClassName?: string;
   backButtonAriaLabel?: string;
-  titleAlign?: 'auto' | 'left' | 'center'; // Deprecated, forced to center
   titleClassName?: string;
   forceVisible?: boolean;
 }

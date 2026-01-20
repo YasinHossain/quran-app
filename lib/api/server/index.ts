@@ -4,4 +4,4 @@
  */
 
 export { getChaptersServer, getChapterServer } from './chapters';
-export { getVerseOfDayServer, getVersesOfDayServer } from './verses';
+export { getVersesOfDayServer } from './verses';

@@ -54,14 +54,12 @@ export const ErrorFactory = {
     }
     const message =
       typeof error === 'object' &&
-      error !== null &&
-      'message' in error &&
-      typeof (error as { message?: unknown }).message === 'string'
+        error !== null &&
+        'message' in error &&
+        typeof (error as { message?: unknown }).message === 'string'
         ? (error as { message: string }).message
         : 'Unknown error occurred';
     const cause = error instanceof Error ? error : undefined;
     return new ApplicationError(message, 'UNKNOWN_ERROR', 500, false, context, cause);
   },
 };
-
-export default ErrorFactory;

@@ -45,7 +45,7 @@ function useNavigationHandler(
 } {
   const handleNavigateToBookmarks = (): void => {
     setBookmarkSidebarOpen(false);
-    router.push('/bookmarks');
+    router.push('/bookmarks/folders');
   };
 
   const handleSectionChange = (section: SectionId): void => {

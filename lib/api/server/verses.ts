@@ -111,23 +111,6 @@ async function fetchRandomVerses(): Promise<Verse[]> {
 }
 
 /**
- * Get a single random verse for the day (server-side).
- * Cached for 24 hours to serve as a consistent "Verse of the Day".
- * @deprecated Use getVersesOfDayServer for multiple verses
- */
-export const getVerseOfDayServer = unstable_cache(
-  async () => {
-    const verses = await fetchRandomVerses();
-    return verses[0] ?? null;
-  },
-  ['verse-of-day-server-v2'],
-  {
-    revalidate: 3600, // Cache for 1 hour
-    tags: ['verse-of-day'],
-  }
-);
-
-/**
  * Get multiple random verses for the Verse of the Day rotation (server-side).
  * Cached for 1 hour to rotate verses periodically.
  */

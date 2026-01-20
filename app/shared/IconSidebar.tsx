@@ -91,8 +91,8 @@ const MobileNavigation = memo(function MobileNavigation({
                 : item.href === '/bookmarks/last-read'
                   ? pathname.startsWith('/bookmarks')
                   : pathname.startsWith('/surah') ||
-                    pathname.startsWith('/juz') ||
-                    pathname.startsWith('/page');
+                  pathname.startsWith('/juz') ||
+                  pathname.startsWith('/page');
 
             return (
               <Link
@@ -261,7 +261,3 @@ export const Navigation = memo(function Navigation() {
     </>
   );
 });
-
-// Export with legacy names for compatibility
-export const NavigationSidebar = Navigation;
-export const IconSidebar = Navigation;

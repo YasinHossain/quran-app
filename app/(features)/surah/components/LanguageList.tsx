@@ -43,5 +43,3 @@ export function LanguageList({ selectedId, onSelect }: LanguageListProps): React
     </div>
   );
 }
-
-export default LanguageList;

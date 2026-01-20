@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import type useBookmarkOperations from './useBookmarkOperations';
+import type { useBookmarkOperations } from './useBookmarkOperations';
 import type { Bookmark } from '@/types';
 
 /**

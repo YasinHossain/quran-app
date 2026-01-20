@@ -62,3 +62,21 @@ next-env.d.ts
 # generated service worker
 public/sw.js
 claude_desktop_config.json
+
+# IDE and editor history
+.history/
+
+# temporary artifacts/logs
+codex-artifacts/
+.dev.log
+.dev.pid
+
+# generated reports
+lighthouse-report.json
+design-system.json
+
+# temporary scripts
+analyze-chars.js
+
+# MCP config backups
+*.mcp.json.bak
