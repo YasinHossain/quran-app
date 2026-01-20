@@ -1,8 +1,15 @@
 import { test, expect } from '@playwright/test';
 
+import { gotoApp } from './utils';
+
 test.describe('♿ Accessibility Compliance', () => {
   test('Keyboard navigation works throughout application', async ({ page }) => {
-    await page.goto('/surah/1');
+    await gotoApp(page, '/surah/1');
+    // WebKit can ignore keyboard events unless the page has an active focus target.
+    await page
+      .locator('main')
+      .click({ position: { x: 10, y: 10 }, timeout: 1500 })
+      .catch(() => undefined);
 
     // Test tab navigation
     await page.keyboard.press('Tab');
@@ -32,7 +39,7 @@ test.describe('♿ Accessibility Compliance', () => {
   });
 
   test('ARIA attributes and roles are properly implemented', async ({ page }) => {
-    await page.goto('/surah/1');
+    await gotoApp(page, '/surah/1');
 
     // Check main landmarks
     await expect(page.getByRole('main')).toBeVisible();
@@ -59,7 +66,7 @@ test.describe('♿ Accessibility Compliance', () => {
   });
 
   test('Screen reader compatibility', async ({ page }) => {
-    await page.goto('/surah/1');
+    await gotoApp(page, '/surah/1');
 
     // Check that content is properly structured for screen readers
     const verseCards = page.locator('[data-testid="verse-card"]');

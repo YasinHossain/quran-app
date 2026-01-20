@@ -6,6 +6,10 @@ import { test, expect } from '@playwright/test';
  */
 
 test.describe('Performance', () => {
+  // These tests measure timing-sensitive behavior and can become flaky when
+  // run concurrently (both within this file and against other suites).
+  test.describe.configure({ mode: 'serial' });
+
   test('should load surah page within acceptable time', async ({ page }) => {
     const startTime = Date.now();
 

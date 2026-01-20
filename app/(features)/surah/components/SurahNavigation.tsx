@@ -99,7 +99,8 @@ export function SurahNavigation({
         <button
           onClick={() => previousChapter && handleNavigation(previousChapter.id)}
           disabled={!hasPrevious}
-          className="group relative flex h-10 min-w-[130px] items-center justify-center rounded-full bg-surface px-8 text-sm font-medium text-foreground shadow-sm transition-all disabled:cursor-not-allowed disabled:opacity-50"
+          data-testid="previous-surah-button"
+          className="group relative flex h-10 min-h-touch min-w-[130px] items-center justify-center rounded-full bg-surface px-8 text-sm font-medium text-foreground shadow-sm transition-all disabled:cursor-not-allowed disabled:opacity-50"
           aria-label={
             previousChapter ? `${t('previous')}: ${previousChapter.name_simple}` : t('previous')
           }
@@ -114,7 +115,8 @@ export function SurahNavigation({
         <button
           onClick={() => nextChapter && handleNavigation(nextChapter.id)}
           disabled={!hasNext}
-          className="group relative flex h-10 min-w-[130px] items-center justify-center rounded-full bg-surface px-8 text-sm font-medium text-foreground shadow-sm transition-all disabled:cursor-not-allowed disabled:opacity-50"
+          data-testid="next-surah-button"
+          className="group relative flex h-10 min-h-touch min-w-[130px] items-center justify-center rounded-full bg-surface px-8 text-sm font-medium text-foreground shadow-sm transition-all disabled:cursor-not-allowed disabled:opacity-50"
           aria-label={nextChapter ? `${t('next')}: ${nextChapter.name_simple}` : t('next')}
         >
           <span>{t('next')}</span>

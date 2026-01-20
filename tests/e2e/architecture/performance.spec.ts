@@ -1,5 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 
+import { gotoApp } from './utils';
+
 async function getLcp(page: Page): Promise<number> {
   return page.evaluate(() => {
     const bufferedEntries = performance.getEntriesByType(
@@ -56,7 +58,7 @@ async function getCls(page: Page): Promise<number> {
 
 test.describe('⚡ Performance Optimizations', () => {
   test('Virtual scrolling performance with large surahs', async ({ page }) => {
-    await page.goto('/surah/2'); // Al-Baqarah (286 verses)
+    await gotoApp(page, '/surah/2'); // Al-Baqarah (286 verses)
 
     // Measure initial load time
     const startTime = Date.now();
@@ -81,7 +83,7 @@ test.describe('⚡ Performance Optimizations', () => {
   });
 
   test('Memo optimization prevents unnecessary re-renders', async ({ page }) => {
-    await page.goto('/surah/1');
+    await gotoApp(page, '/surah/1');
 
     // Simulate prop changes that shouldn't trigger re-renders and ensure the UI stays responsive.
     const renderTime = await page.evaluate(async () => {
@@ -102,7 +104,7 @@ test.describe('⚡ Performance Optimizations', () => {
   });
 
   test('useCallback and useMemo effectiveness', async ({ page }) => {
-    await page.goto('/surah/1');
+    await gotoApp(page, '/surah/1');
 
     // Test callback stability - rapid interactions shouldn't cause performance issues
     const actionButton = page.locator('[data-testid="verse-action-button"]').first();
@@ -126,7 +128,7 @@ test.describe('⚡ Performance Optimizations', () => {
 
 test.describe('📊 Performance Metrics', () => {
   test('Core Web Vitals meet architecture standards', async ({ page }) => {
-    await page.goto('/surah/1');
+    await gotoApp(page, '/surah/1');
 
     // Measure Largest Contentful Paint
     const lcp = await getLcp(page);

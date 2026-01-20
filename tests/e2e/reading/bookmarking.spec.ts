@@ -14,6 +14,7 @@ test.describe('Bookmarking Functionality', () => {
     });
     await page.goto('/surah/1');
     await page.waitForLoadState('domcontentloaded');
+    await expect(page.locator('[data-verse-key]').first()).toBeVisible({ timeout: 20000 });
   });
 
   test('should display bookmark buttons on verses', async ({ page }) => {
@@ -53,7 +54,8 @@ test.describe('Bookmarking Functionality', () => {
       .locator(
         'button[aria-label*="verse actions" i], ' +
           'button[aria-label*="actions menu" i], ' +
-          'button[aria-label*="Open verse actions" i]'
+          'button[aria-label*="Open verse actions" i], ' +
+          'button[aria-label*="Open verse options" i]'
       )
       .first();
 

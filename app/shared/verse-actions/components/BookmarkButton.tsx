@@ -27,6 +27,7 @@ export const BookmarkButton = memo(function BookmarkButton({
       className={cn(
         'p-1.5 rounded-full hover:bg-interactive-hover transition flex items-center justify-center',
         isBookmarked || showRemove ? 'text-accent' : 'hover:text-accent',
+        touchClasses.target,
         touchClasses.focus
       )}
     >

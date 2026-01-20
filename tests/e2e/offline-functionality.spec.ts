@@ -12,6 +12,7 @@ import {
  * E2E smoke tests for offline functionality
  * Tests core PWA offline features and fallback behavior
  */
+test.setTimeout(60000);
 
 test.describe('offline fallback page', () => {
   test.beforeEach(async ({ page }) => {

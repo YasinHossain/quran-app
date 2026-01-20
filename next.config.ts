@@ -7,6 +7,8 @@ import type { NextConfig } from 'next';
 // Define commonly recommended security headers
 // Note: Avoid HSTS in development (can break Safari by forcing HTTPS on localhost)
 // Content Security Policy for production
+const isE2E = process.env['PLAYWRIGHT_TEST'] === 'true';
+
 const cspHeader = `
   default-src 'self';
   script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net;
@@ -19,7 +21,7 @@ const cspHeader = `
   child-src 'self' blob:;
   form-action 'self';
   frame-ancestors 'none';
-  upgrade-insecure-requests;
+  ${isE2E ? '' : 'upgrade-insecure-requests;'}
 `
   .replace(/\s{2,}/g, ' ')
   .trim();
@@ -52,10 +54,14 @@ const isProd = process.env.NODE_ENV === 'production';
 const securityHeaders = isProd
   ? [
       ...baseSecurityHeaders,
-      {
-        key: 'Strict-Transport-Security',
-        value: 'max-age=63072000; includeSubDomains; preload',
-      },
+      ...(isE2E
+        ? []
+        : [
+            {
+              key: 'Strict-Transport-Security',
+              value: 'max-age=63072000; includeSubDomains; preload',
+            },
+          ]),
       {
         key: 'Content-Security-Policy',
         value: cspHeader,

@@ -37,6 +37,7 @@ export const NavigateToVerseLink = memo(function NavigateToVerseLink({
       title="Go to verse"
       className={cn(
         'p-1.5 rounded-full hover:bg-interactive-hover hover:text-accent transition flex items-center justify-center',
+        touchClasses.target,
         touchClasses.focus
       )}
     >

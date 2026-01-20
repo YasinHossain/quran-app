@@ -5,8 +5,14 @@ import { defineConfig, devices } from '@playwright/test';
  * @description E2E testing setup with cross-browser, device, and offline testing
  * @see https://playwright.dev/docs/test-configuration
  */
-const port = process.env['PLAYWRIGHT_PORT'] ?? process.env['PORT'] ?? '3000';
+// Use a dedicated port by default so local `npm run dev` on 3000 doesn't interfere with E2E.
+const port =
+  process.env['PLAYWRIGHT_PORT'] ?? (process.env['CI'] ? process.env['PORT'] ?? '3000' : '3100');
 const baseURL = `http://127.0.0.1:${port}`;
+
+const webServerEnv: Record<string, string> = Object.fromEntries(
+  Object.entries(process.env).filter((entry): entry is [string, string] => typeof entry[1] === 'string')
+);
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -143,7 +149,14 @@ export default defineConfig({
   webServer: {
     command: 'node tools/scripts/playwright-webserver.mjs',
     url: baseURL,
+    // Offline/PWA tests require a production build with a service worker.
     reuseExistingServer: false,
-    timeout: 120 * 1000, // 2 minutes
+    timeout: 5 * 60 * 1000, // 5 minutes (Next build + start can be slow in CI/containers)
+    env: {
+      ...webServerEnv,
+      PLAYWRIGHT_PORT: String(port),
+      PLAYWRIGHT_HOST: '127.0.0.1',
+      PLAYWRIGHT_TEST: 'true',
+    },
   },
 });

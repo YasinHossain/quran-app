@@ -14,56 +14,31 @@ test.describe('Audio Functionality', () => {
   test('should show play button for verses', async ({ page }) => {
     await expect(page.locator('[data-verse-key]').first()).toBeVisible({ timeout: 10000 });
 
-    // Look for any play button
-    const playButton = page
-      .locator(
-        '[data-testid*="play"], ' +
-          'button[aria-label*="play" i], ' +
-          'button[aria-label*="audio" i], ' +
-          '[role="button"][aria-label*="play" i], ' +
-          '.play-button'
-      )
-      .first();
+    const firstVerseCard = page.locator('[id^="verse-"]').first();
+    await expect(firstVerseCard).toBeVisible({ timeout: 20000 });
 
-    // Either a play button exists or there's an audio player area
-    const hasPlayButton = await playButton.isVisible().catch(() => false);
-    const hasAudioArea = await page
-      .locator(
-        '[data-testid="audio-player"], .audio-player, .player-controls, .z-audio-player, .player-container'
-      )
-      .isVisible()
-      .catch(() => false);
+    // Prefer a visible verse play/pause control within the first verse card.
+    const versePlayButton = firstVerseCard.locator(
+      'button:visible[aria-label="Play audio"], button:visible[aria-label="Pause audio"], button:visible[aria-label*="play audio" i], button:visible[aria-label*="pause audio" i]'
+    );
 
-    if (hasPlayButton || hasAudioArea) {
+    if ((await versePlayButton.count()) > 0) {
       expect(true).toBe(true);
       return;
     }
 
-    // Desktop layouts can hide verse actions until hover.
-    const firstVerseCard = page.locator('[id^="verse-"]').first();
-    if (await firstVerseCard.isVisible().catch(() => false)) {
-      await firstVerseCard.hover().catch(() => {});
-
-      const hoveredPlayButton = firstVerseCard
-        .locator('button[aria-label*="play" i], button[aria-label*="audio" i]')
-        .first();
-
-      if (await hoveredPlayButton.isVisible().catch(() => false)) {
-        expect(true).toBe(true);
-        return;
-      }
+    // Mobile layouts surface verse actions behind a trigger.
+    const verseActionsTrigger = firstVerseCard.locator(
+      'button:visible[aria-label="Open verse actions menu"]'
+    );
+    if ((await verseActionsTrigger.count()) > 0) {
+      expect(true).toBe(true);
+      return;
     }
 
-    // Some layouts hide audio controls behind an overflow menu.
-    const verseActionsMenu = page
-      .locator(
-        'button[aria-label*="verse actions" i], ' +
-          'button[aria-label*="actions menu" i], ' +
-          'button[aria-label*="Open verse actions" i]'
-      )
-      .first();
-
-    await expect(verseActionsMenu).toBeVisible({ timeout: 10000 });
+    // Desktop layouts may include a separate "options" menu button.
+    const verseOptionsButton = firstVerseCard.locator('button:visible[aria-label="Open verse options"]');
+    await expect(verseOptionsButton).toBeVisible({ timeout: 10000 });
   });
 
   test('should display audio player when play is triggered', async ({ page }) => {

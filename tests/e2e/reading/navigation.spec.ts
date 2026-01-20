@@ -34,29 +34,34 @@ test.describe('Navigation and Verse Display', () => {
     await page.goto('/surah/1');
     await page.waitForLoadState('domcontentloaded');
 
-    // Look for next surah navigation
-    const nextButton = page
-      .locator(
-        '[data-testid="next-surah-button"], ' +
-          'a[href*="/surah/2"], ' +
-          'button:has-text("Next"), ' +
-          '[aria-label*="next" i]'
-      )
-      .first();
+    // Prefer the dedicated "next surah" navigation control rendered at the end of the surah.
+    // With virtual scrolling, we may need to scroll to render it.
+    const nextButton = page.locator('[data-testid="next-surah-button"]').first();
 
-    if (await nextButton.isVisible()) {
-      await nextButton.click();
-      await page.waitForURL('**/surah/2', { timeout: 10000 });
+    const isNextButtonVisible = async (): Promise<boolean> =>
+      nextButton.isVisible().catch(() => false);
 
-      // Verify we're on surah 2 (Al-Baqarah)
-      const url = page.url();
-      expect(url).toContain('/surah/2');
-    } else {
-      // Direct navigation test
-      await page.goto('/surah/2');
+    let attempts = 0;
+    while (!(await isNextButtonVisible()) && attempts < 10) {
+      await page.evaluate(() => window.scrollBy(0, 2200));
+      await page.waitForTimeout(150);
+      attempts++;
+    }
+
+    if (await isNextButtonVisible()) {
+      await Promise.all([
+        page.waitForURL('**/surah/2', { timeout: 20000 }),
+        nextButton.click(),
+      ]);
       await page.waitForLoadState('domcontentloaded');
       expect(page.url()).toContain('/surah/2');
+      return;
     }
+
+    // Fallback: direct navigation if the button isn't present in this layout.
+    await page.goto('/surah/2');
+    await page.waitForLoadState('domcontentloaded');
+    expect(page.url()).toContain('/surah/2');
   });
 
   test('should support direct URL navigation to any surah', async ({ page }) => {

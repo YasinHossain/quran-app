@@ -8,17 +8,22 @@ async function ensureServiceWorkerReady(page: Page): Promise<void> {
     .catch(() => false as boolean);
   if (!supported) return;
 
-  await page
-    .waitForFunction(async () => {
+  // Wait for a registration to appear (PWA plugin may register asynchronously).
+  await page.waitForFunction(
+    async () => {
       const registration = await navigator.serviceWorker.getRegistration();
       return Boolean(registration);
-    })
-    .catch(() => {});
+    },
+    undefined,
+    { timeout: 15000 }
+  );
 
   // Ensure the page is controlled by the service worker (required for offline fallbacks).
   await page.reload();
   await page.waitForLoadState('domcontentloaded');
-  await page.waitForFunction(() => Boolean(navigator.serviceWorker.controller)).catch(() => {});
+  await page.waitForFunction(() => Boolean(navigator.serviceWorker.controller), undefined, {
+    timeout: 15000,
+  });
 }
 
 export async function cacheInitialContent(page: Page): Promise<void> {
@@ -26,7 +31,7 @@ export async function cacheInitialContent(page: Page): Promise<void> {
   await page.waitForLoadState('domcontentloaded');
   await ensureServiceWorkerReady(page);
 
-  const pathsToCache = ['/surah/1', '/juz/1'];
+  const pathsToCache = ['/surah/1'];
 
   for (const path of pathsToCache) {
     await page.goto(path);

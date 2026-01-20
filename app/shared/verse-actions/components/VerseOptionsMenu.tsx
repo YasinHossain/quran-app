@@ -74,6 +74,7 @@ export const VerseOptionsMenu = memo(function VerseOptionsMenu({
         onClick={toggleMenu}
         className={cn(
           'p-1.5 rounded-full hover:bg-interactive-hover transition-colors text-muted hover:text-accent flex items-center justify-center',
+          touchClasses.target,
           touchClasses.focus
         )}
       >
