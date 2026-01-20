@@ -59,4 +59,3 @@ describe('Tafsir', () => {
     expect(new Tafsir({ id: 999, name: 'X', lang: 'english' }).equals(tafsir)).toBe(false);
   });
 });
-

@@ -15,7 +15,6 @@ export const VersePreview = memo(function VersePreview({
   translation,
   arabicFontFace,
   arabicFontSize,
-  tajweed = false,
 }: VersePreviewProps) {
   return (
     <div className="space-y-2">

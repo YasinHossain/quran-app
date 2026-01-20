@@ -63,4 +63,3 @@ describe('bookmarkHelpers', () => {
     expect(hasTags(empty)).toBe(false);
   });
 });
-

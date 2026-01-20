@@ -36,8 +36,9 @@ describe('DomainErrors', () => {
     expect(new UnauthorizedBookmarkError('x').message).toBe('Unauthorized: x');
     expect(new InvalidTafsirRequestError().message).toBe('Verse key and tafsir ID are required');
     expect(new InvalidTafsirRequestError('custom').message).toBe('custom');
-    expect(new TafsirContentLoadError().message).toBe('Failed to load tafsir content. Please try again.');
+    expect(new TafsirContentLoadError().message).toBe(
+      'Failed to load tafsir content. Please try again.'
+    );
     expect(new TafsirContentLoadError('custom').message).toBe('custom');
   });
 });
-

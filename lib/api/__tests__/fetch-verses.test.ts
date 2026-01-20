@@ -40,7 +40,10 @@ describe('fetchVerses', () => {
 
     expect(global.fetch).toHaveBeenCalledWith(
       expectedUrl,
-      expect.objectContaining({ headers: { Accept: 'application/json' }, signal: expect.anything() })
+      expect.objectContaining({
+        headers: { Accept: 'application/json' },
+        signal: expect.anything(),
+      })
     );
     expect(result).toEqual({
       totalPages: 2,

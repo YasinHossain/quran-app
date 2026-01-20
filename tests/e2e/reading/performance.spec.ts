@@ -35,7 +35,6 @@ test.describe('Performance', () => {
 
     // Count initially rendered verses
     const initialVerses = page.locator('[data-testid="verse-card"], .verse-card, [data-verse-key]');
-    const initialCount = await initialVerses.count();
 
     // Scroll down
     await page.evaluate(() => window.scrollBy(0, 2000));

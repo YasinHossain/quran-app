@@ -15,10 +15,7 @@ interface ModernLayoutProps {
   isNavHidden?: boolean;
 }
 
-export const ModernLayout = ({
-  children,
-  isNavHidden = false,
-}: ModernLayoutProps): React.JSX.Element => {
+export const ModernLayout = ({ children }: ModernLayoutProps): React.JSX.Element => {
   const { isQuranBottomSheetOpen, setQuranBottomSheetOpen, navigateToSurah } = useNavigation();
 
   // Use selector directly when needed; remove unused helpers to satisfy lint

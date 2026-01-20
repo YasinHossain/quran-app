@@ -25,7 +25,6 @@ interface RangeRepeatArgs {
 export function createRangeRepeatHandler({
   start,
   end,
-  startKey,
   endKey,
   currentAyah,
   currentKey,

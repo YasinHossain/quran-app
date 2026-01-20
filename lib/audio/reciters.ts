@@ -13,5 +13,7 @@ export const RECITERS: Reciter[] = [];
  * @deprecated No longer needed - all audio is served via QDC API
  */
 export function buildAudioUrl(_verseKey: string, _reciterPath: string): string {
+  void _verseKey;
+  void _reciterPath;
   throw new Error('buildAudioUrl is deprecated. Use QDC API instead.');
 }

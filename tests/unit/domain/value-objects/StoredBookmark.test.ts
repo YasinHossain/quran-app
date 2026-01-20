@@ -57,4 +57,3 @@ describe('StoredBookmark type guard', () => {
     ).toBe(true);
   });
 });
-

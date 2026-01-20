@@ -1,10 +1,10 @@
 'use client';
 
-import { Settings } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { memo, type ReactElement, useCallback } from 'react';
 
 import { useUIState } from '@/app/providers/UIStateContext';
+import { SettingsIcon } from '@/app/shared/icons';
 
 export const HeaderActions = memo(function HeaderActions(): ReactElement {
   const { setSettingsOpen } = useUIState();
@@ -42,7 +42,7 @@ export const HeaderActions = memo(function HeaderActions(): ReactElement {
         className="btn-touch p-2.5 rounded-xl hover:bg-interactive-hover hover:text-accent transition-all duration-200 active:scale-95 2xl:hidden flex items-center justify-center"
         aria-label="Open settings"
       >
-        <Settings size={18} className="text-muted" />
+        <SettingsIcon size={18} className="text-muted" />
       </button>
     </div>
   );

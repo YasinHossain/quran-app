@@ -1,7 +1,8 @@
 'use client';
 
-import { Minus, Plus } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
+
+import { MinusIcon, PlusIcon } from '@/app/shared/icons';
 
 interface CounterInputProps {
   label?: string;
@@ -129,7 +130,7 @@ export const CounterInput = ({
           className="p-3 text-muted hover:text-foreground disabled:opacity-30 disabled:hover:text-muted transition-colors focus:outline-none touch-none"
           aria-label="Decrease"
         >
-          <Minus size={16} />
+          <MinusIcon size={16} />
         </button>
         <input
           type="number"
@@ -154,7 +155,7 @@ export const CounterInput = ({
           className="p-3 text-muted hover:text-foreground disabled:opacity-30 disabled:hover:text-muted transition-colors focus:outline-none touch-none"
           aria-label="Increase"
         >
-          <Plus size={16} />
+          <PlusIcon size={16} />
         </button>
       </div>
     </div>

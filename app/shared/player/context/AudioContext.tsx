@@ -76,16 +76,18 @@ function useAudioContextValue(): AudioContextType {
     setActiveVerse: core.setActiveVerse,
   });
 
+  const { isPlaying, activeVerse, setPlayingId } = core;
+
   // Keep the playing id in sync with the active verse while playing.
   useEffect(() => {
-    if (core.isPlaying && core.activeVerse) {
-      core.setPlayingId(core.activeVerse.id);
+    if (isPlaying && activeVerse) {
+      setPlayingId(activeVerse.id);
       return;
     }
-    if (!core.isPlaying) {
-      core.setPlayingId(null);
+    if (!isPlaying) {
+      setPlayingId(null);
     }
-  }, [core.isPlaying, core.activeVerse, core.setPlayingId]);
+  }, [isPlaying, activeVerse, setPlayingId]);
 
   // memoize the full context value including controls
   return useMemo(

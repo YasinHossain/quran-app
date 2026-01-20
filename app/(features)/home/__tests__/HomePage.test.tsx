@@ -6,8 +6,8 @@ import { renderWithProvidersAsync } from '@/app/testUtils/renderWithProviders';
 import { Verse } from '@/types';
 
 import type { MockProps } from '@/tests/mocks';
-import type { JSX } from 'react';
 import type { Chapter } from '@/types';
+import type { JSX } from 'react';
 
 jest.mock('@/lib/api', () => ({
   __esModule: true,

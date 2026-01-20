@@ -17,13 +17,10 @@ export function FontSizeSlider({
   min,
   max,
   onChange,
-  style: _pStyle,
-  // we ignore the passed style for the gradient to ensure it syncs with local value
-  // but we keep the prop in the interface effectively for compatibility
 }: FontSizeSliderProps): ReactElement {
   const [isActive, setIsActive] = useState(false);
   const [internalValue, setInternalValue] = useState(value);
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   // Sync internal value if prop changes externally

@@ -287,7 +287,9 @@ export function AddToPlannerModal({
           selectedPlanId={selectedPlanId}
           onPlanSelect={handlePlanSelect}
         />
-        {helperMessage ? <p className="mt-3 text-sm text-content-secondary">{helperMessage}</p> : null}
+        {helperMessage ? (
+          <p className="mt-3 text-sm text-content-secondary">{helperMessage}</p>
+        ) : null}
       </div>
 
       <div className={`${contentContainerClass} mt-6 shrink-0`}>

@@ -83,15 +83,7 @@ test.describe('Bookmarking Functionality', () => {
     }
   });
 
-  test('should persist bookmarks in localStorage', async ({ page }) => {
-    // Check localStorage for bookmark storage key
-    const bookmarks = await page.evaluate(() => {
-      // The app uses 'quranAppBookmarks_v2' as the storage key
-      const stored =
-        localStorage.getItem('quranAppBookmarks_v2') || localStorage.getItem('quranAppBookmarks');
-      return stored;
-    });
-
+  test('should persist bookmarks in localStorage', async () => {
     // Bookmarks storage should exist (may be empty array but should be initialized)
     // Note: The app initializes bookmark storage on first interaction
     expect(true).toBe(true); // Storage is lazy-initialized
@@ -115,7 +107,9 @@ test.describe('Bookmarking Functionality', () => {
 
       // Should either navigate to bookmarks page or open sidebar/modal
       const sidebarOrPanelVisible = await page
-        .locator('[data-testid="bookmarks-sidebar"], [data-testid="bookmarks-panel"], .bookmarks-list')
+        .locator(
+          '[data-testid="bookmarks-sidebar"], [data-testid="bookmarks-panel"], .bookmarks-list'
+        )
         .isVisible()
         .catch(() => false);
 

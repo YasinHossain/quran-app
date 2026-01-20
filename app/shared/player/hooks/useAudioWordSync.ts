@@ -67,9 +67,9 @@ export function useAudioWordSync({
   const verseTiming = useMemo(() => {
     if (!verseKey) return null;
     const timing = resolveVerseTiming(audioFile?.verseTimings, verseKey);
-    // Spread into new object to ensure fresh reference when player reopens
+    // Spread into new object to avoid leaking accidental mutations.
     return timing ? { ...timing } : null;
-  }, [audioFile?.verseTimings, verseKey, audio.playbackSessionId]);
+  }, [audioFile?.verseTimings, verseKey]);
 
   const previousElRef = useRef<HTMLElement | null>(null);
   const previousWordRef = useRef<number | null>(null);

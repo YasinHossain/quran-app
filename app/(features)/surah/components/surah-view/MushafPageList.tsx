@@ -334,11 +334,15 @@ export const MushafPageList = ({
       `${resourceKind}:${resourceId}:${mushafId}:${initialPageNumber ?? 'none'}:${initialVerseKey ?? 'no-verse'}`,
     [resourceKind, resourceId, mushafId, initialPageNumber, initialVerseKey]
   );
+  const lastInitialScrollTokenRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!lookupData) return;
     if (!firstPageNumber) return;
     if (totalPages <= 0) return;
+
+    if (lastInitialScrollTokenRef.current === initialScrollToken) return;
+    lastInitialScrollTokenRef.current = initialScrollToken;
 
     const maxIndex = totalPages - 1;
     const pageNumberFromVerseKey =
@@ -351,7 +355,14 @@ export const MushafPageList = ({
     const targetIndex = clampIndex(targetPageNumber - firstPageNumber, maxIndex);
 
     virtuosoRef.current?.scrollToIndex({ index: targetIndex, align: 'start', offset: -20 });
-  }, [firstPageNumber, initialPageNumber, initialScrollToken, lookupData, totalPages]);
+  }, [
+    firstPageNumber,
+    initialPageNumber,
+    initialScrollToken,
+    initialVerseKey,
+    lookupData,
+    totalPages,
+  ]);
 
   if (isLoading) {
     return (

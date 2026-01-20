@@ -28,8 +28,10 @@ export { CloseIcon } from './CloseIcon';
 export { EllipsisHIcon } from './EllipsisHIcon';
 export { FlagIcon } from './FlagIcon';
 export { GripVerticalIcon } from './GripVerticalIcon';
+export { MinusIcon } from './MinusIcon';
 export { PlusIcon } from './PlusIcon';
 export { SearchIcon } from './SearchIcon';
+export { SettingsIcon } from './SettingsIcon';
 
 // Content & Features
 export { BookmarkIcon } from './BookmarkIcon';

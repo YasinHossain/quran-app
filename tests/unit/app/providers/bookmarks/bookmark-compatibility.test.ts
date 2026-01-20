@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import { updateBookmarkInFolders } from '@/app/providers/bookmarks/bookmark-utils';
 import { loadBookmarksFromStorage } from '@/app/providers/bookmarks/storage-utils';
 import { getItem } from '@/lib/utils/safeLocalStorage';

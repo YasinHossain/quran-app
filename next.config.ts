@@ -128,7 +128,7 @@ const applyBundleAnalyzer = (config: NextConfig): NextConfig => {
   // (e.g. production installs or CI images). Only require it when needed.
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const withBundleAnalyzer = require('@next/bundle-analyzer')({ enabled: true }) as (
-    nextConfig: NextConfig,
+    nextConfig: NextConfig
   ) => NextConfig;
 
   return withBundleAnalyzer(config);

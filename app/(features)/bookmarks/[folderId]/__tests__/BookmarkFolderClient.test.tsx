@@ -1,6 +1,5 @@
-import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
-
 import { BookmarkFolderClient } from '@/app/(features)/bookmarks/[folderId]/BookmarkFolderClient';
+import { renderWithProviders } from '@/app/testUtils/renderWithProviders';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
 import type { BookmarkFolderControllerReturn } from '@/app/(features)/bookmarks/[folderId]/hooks/useBookmarkFolderController';

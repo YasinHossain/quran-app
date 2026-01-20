@@ -150,7 +150,7 @@ export function useTrackTiming({
     } catch {
       // ignore invalid seek states
     }
-  }, [segment?.start, audioRef]);
+  }, [segment, audioRef]);
   useEffect(() => {
     setVolume(volume);
     setPlaybackRate(playbackRate);

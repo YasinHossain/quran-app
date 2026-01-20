@@ -49,7 +49,6 @@ type WordHtmlArgs = {
   isQcfMushaf: boolean;
   isQpcHafsMushaf: boolean;
   isFontLoaded: boolean;
-  settings: ReaderSettings;
   baseText: string;
   displayText: string;
   glyphCode?: string | undefined;
@@ -59,7 +58,6 @@ const buildWordHtml = ({
   isQcfMushaf,
   isQpcHafsMushaf,
   isFontLoaded,
-  settings,
   baseText,
   displayText,
   glyphCode,
@@ -211,7 +209,6 @@ export const MushafWordText = ({
     isQcfMushaf,
     isQpcHafsMushaf,
     isFontLoaded,
-    settings,
     baseText,
     displayText,
     glyphCode,

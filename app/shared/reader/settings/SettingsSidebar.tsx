@@ -14,21 +14,37 @@ export const SettingsSidebar = (props: SettingsSidebarProps): ReactElement => {
   const { isSettingsOpen, setSettingsOpen } = useUIState();
   const [isArabicFontPanelOpen, setIsArabicFontPanelOpen] = useState(false);
 
-  const { pageType, readerTabsEnabled: readerTabsOverride, ...contentProps } = props;
+  const {
+    pageType,
+    readerTabsEnabled: readerTabsOverride,
+    onTranslationPanelClose,
+    onTafsirPanelClose,
+    onWordLanguagePanelClose,
+    onMushafPanelClose,
+    ...restProps
+  } = props;
+
+  const contentProps = {
+    ...restProps,
+    onTranslationPanelClose,
+    onTafsirPanelClose,
+    onWordLanguagePanelClose,
+    onMushafPanelClose,
+  };
 
   const handleCloseSidebar = useCallback((): void => {
     setSettingsOpen(false);
     setIsArabicFontPanelOpen(false);
-    props.onTranslationPanelClose?.();
-    props.onTafsirPanelClose?.();
-    props.onWordLanguagePanelClose?.();
-    props.onMushafPanelClose?.();
+    onTranslationPanelClose?.();
+    onTafsirPanelClose?.();
+    onWordLanguagePanelClose?.();
+    onMushafPanelClose?.();
   }, [
     setSettingsOpen,
-    props.onTranslationPanelClose,
-    props.onTafsirPanelClose,
-    props.onWordLanguagePanelClose,
-    props.onMushafPanelClose,
+    onTranslationPanelClose,
+    onTafsirPanelClose,
+    onWordLanguagePanelClose,
+    onMushafPanelClose,
   ]);
 
   const handleArabicFontPanelOpen = useCallback(() => setIsArabicFontPanelOpen(true), []);

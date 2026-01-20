@@ -24,9 +24,9 @@ describe('Bookmark', () => {
     expect(() => createBookmark({ id: '' })).toThrow('Bookmark ID cannot be empty');
     expect(() => createBookmark({ userId: '   ' })).toThrow('User ID cannot be empty');
     expect(() => createBookmark({ verseId: '' })).toThrow('Verse ID cannot be empty');
-    expect(() =>
-      createBookmark({ createdAt: null as unknown as Date })
-    ).toThrow('Created date is required');
+    expect(() => createBookmark({ createdAt: null as unknown as Date })).toThrow(
+      'Created date is required'
+    );
   });
 
   it('checks ownership via belongsToUser', () => {

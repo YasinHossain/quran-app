@@ -1,11 +1,11 @@
 'use client';
 
-import { Menu } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { memo, type ReactElement, useCallback } from 'react';
 
 import { useSidebar } from '@/app/providers/SidebarContext';
+import { BarsIcon } from '@/app/shared/icons';
 
 export const HeaderBrand = memo(function HeaderBrand(): ReactElement {
   const { setSurahListOpen, setBookmarkSidebarOpen, setSearchSidebarOpen } = useSidebar();
@@ -50,7 +50,7 @@ export const HeaderBrand = memo(function HeaderBrand(): ReactElement {
           className="btn-touch p-2.5 rounded-xl hover:bg-muted/60 transition-all duration-200 active:scale-95 xl:hidden flex items-center justify-center"
           aria-label="Open navigation"
         >
-          <Menu size={18} className="text-muted" />
+          <BarsIcon size={18} className="text-muted" />
         </button>
       )}
 

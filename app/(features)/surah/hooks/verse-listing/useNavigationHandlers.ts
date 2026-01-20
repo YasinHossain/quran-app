@@ -6,7 +6,6 @@ import type { Verse } from '@/types';
 
 interface UseNavigationHandlersParams {
   verses: Verse[];
-  activeVerse: ReturnType<typeof useAudio>['activeVerse'];
   setActiveVerse: ReturnType<typeof useAudio>['setActiveVerse'];
   openPlayer: ReturnType<typeof useAudio>['openPlayer'];
 }
@@ -18,7 +17,6 @@ interface UseNavigationHandlersReturn {
 
 export function useNavigationHandlers({
   verses,
-  activeVerse,
   setActiveVerse,
   openPlayer,
 }: UseNavigationHandlersParams): UseNavigationHandlersReturn {

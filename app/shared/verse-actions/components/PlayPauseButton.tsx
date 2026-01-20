@@ -21,10 +21,13 @@ export const PlayPauseButton = memo(function PlayPauseButton({
     <button
       aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
       onClick={onPlayPause}
+      disabled={isLoadingAudio}
+      aria-busy={isLoadingAudio}
       title="Play/Pause"
       className={cn(
         'p-1.5 rounded-full hover:bg-interactive-hover transition flex items-center justify-center',
         isPlaying ? 'text-accent' : 'hover:text-accent',
+        'disabled:opacity-50 disabled:cursor-not-allowed',
         touchClasses.target,
         touchClasses.focus
       )}

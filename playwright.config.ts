@@ -7,11 +7,13 @@ import { defineConfig, devices } from '@playwright/test';
  */
 // Use a dedicated port by default so local `npm run dev` on 3000 doesn't interfere with E2E.
 const port =
-  process.env['PLAYWRIGHT_PORT'] ?? (process.env['CI'] ? process.env['PORT'] ?? '3000' : '3100');
+  process.env['PLAYWRIGHT_PORT'] ?? (process.env['CI'] ? (process.env['PORT'] ?? '3000') : '3100');
 const baseURL = `http://127.0.0.1:${port}`;
 
 const webServerEnv: Record<string, string> = Object.fromEntries(
-  Object.entries(process.env).filter((entry): entry is [string, string] => typeof entry[1] === 'string')
+  Object.entries(process.env).filter(
+    (entry): entry is [string, string] => typeof entry[1] === 'string'
+  )
 );
 
 export default defineConfig({

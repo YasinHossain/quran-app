@@ -127,7 +127,10 @@ export function usePlaybackOptions(isOpen: boolean, onClose: () => void): UsePla
         ? {
             ...baseRangeDefaults,
             start:
-              baseRangeDefaults.startVerseNumber ?? repeatOptions.start ?? activeVerseNumberSnapshot ?? 1,
+              baseRangeDefaults.startVerseNumber ??
+              repeatOptions.start ??
+              activeVerseNumberSnapshot ??
+              1,
             end:
               baseRangeDefaults.endVerseNumber ??
               baseRangeDefaults.startVerseNumber ??

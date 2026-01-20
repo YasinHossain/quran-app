@@ -21,7 +21,10 @@ async function getLcp(page: Page): Promise<number> {
       });
 
       // Use buffered entries so we don't miss LCP if it happened before the observer started.
-      observer.observe({ type: 'largest-contentful-paint', buffered: true } as PerformanceObserverInit);
+      observer.observe({
+        type: 'largest-contentful-paint',
+        buffered: true,
+      } as PerformanceObserverInit);
 
       // Resolve even if no LCP is reported (some environments/browsers may not report it reliably).
       setTimeout(() => {

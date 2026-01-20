@@ -77,6 +77,7 @@ export function usePrefetchSingleVerse(): (
     () => ensureLanguageCode(settings.wordLang),
     [settings.wordLang]
   );
+  const tajweed = settings.tajweed ?? false;
 
   return useCallback(
     async (targets: Array<string | null | undefined>) => {
@@ -88,20 +89,16 @@ export function usePrefetchSingleVerse(): (
 
       await Promise.all(
         normalizedTargets.map(async (target) => {
-          const key = createSWRKey(target, translationIdsKey, wordLang, settings.tajweed ?? false);
+          const key = createSWRKey(target, translationIdsKey, wordLang, tajweed);
           if (!key) return;
-          await mutate(
-            key,
-            () => fetchSingleVerse(target, translationIds, wordLang, settings.tajweed ?? false),
-            {
-              populateCache: true,
-              revalidate: false,
-            }
-          ).catch(() => {});
+          await mutate(key, () => fetchSingleVerse(target, translationIds, wordLang, tajweed), {
+            populateCache: true,
+            revalidate: false,
+          }).catch(() => {});
         })
       );
     },
-    [mutate, translationIdsKey, translationIds, wordLang]
+    [mutate, tajweed, translationIdsKey, translationIds, wordLang]
   );
 }
 

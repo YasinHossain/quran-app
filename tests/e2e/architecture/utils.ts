@@ -159,7 +159,6 @@ export async function testPerformanceOptimizations(page: Page): Promise<void> {
   await page.waitForTimeout(150);
   const verseCards = page.locator('[id^="verse-"]');
   await expect(verseCards.first()).toBeVisible({ timeout: 10000 });
-  const initialCount = await verseCards.count();
 
   // Scroll down
   await page.evaluate(() => window.scrollBy(0, 2000));

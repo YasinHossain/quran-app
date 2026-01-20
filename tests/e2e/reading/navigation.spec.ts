@@ -49,10 +49,7 @@ test.describe('Navigation and Verse Display', () => {
     }
 
     if (await isNextButtonVisible()) {
-      await Promise.all([
-        page.waitForURL('**/surah/2', { timeout: 20000 }),
-        nextButton.click(),
-      ]);
+      await Promise.all([page.waitForURL('**/surah/2', { timeout: 20000 }), nextButton.click()]);
       await page.waitForLoadState('domcontentloaded');
       expect(page.url()).toContain('/surah/2');
       return;

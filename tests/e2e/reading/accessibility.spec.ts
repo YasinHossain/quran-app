@@ -135,9 +135,6 @@ test.describe('Accessibility', () => {
       await button.focus();
 
       // Record any navigation or state change
-      const initialUrl = page.url();
-      const initialContent = await page.content();
-
       await page.keyboard.press('Enter');
       await page.waitForTimeout(300);
 

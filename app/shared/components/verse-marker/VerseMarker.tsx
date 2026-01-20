@@ -29,7 +29,7 @@ const DEFAULT_ADJUSTMENT: FontAdjustment = {
   number: { x: 0, y: 0 },
 };
 
-const getFontAdjustment = (fontFamily: string | undefined): FontAdjustment => {
+const getFontAdjustment = (): FontAdjustment => {
   return DEFAULT_ADJUSTMENT;
 };
 
@@ -93,7 +93,7 @@ export const VerseMarker = memo(function VerseMarker({
   const digitCount = String(verseNumber).length;
   const numberScale = digitCount === 1 ? 0.75 : digitCount === 2 ? 0.65 : 0.5;
 
-  const adjustment = getFontAdjustment(fontFamily);
+  const adjustment = getFontAdjustment();
   const ornamentTransform = `translate(${adjustment.ornament.x}em, ${adjustment.ornament.y}em) scale(${adjustment.scale || 1})`;
   const numberTransform = `translate(${adjustment.number.x}em, ${adjustment.number.y}em)`;
 

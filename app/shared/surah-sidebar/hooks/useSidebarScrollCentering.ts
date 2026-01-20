@@ -22,14 +22,7 @@ export const useSidebarScrollCentering = ({
   selectedPageId,
   isEnabled,
 }: Options): ReturnType<typeof useScrollCentering<TabKey>> => {
-  const {
-    surahScrollTop,
-    setSurahScrollTop,
-    juzScrollTop,
-    setJuzScrollTop,
-    pageScrollTop,
-    setPageScrollTop,
-  } = useSidebar();
+  const { surahScrollTop, juzScrollTop, pageScrollTop } = useSidebar();
 
   return useScrollCentering<TabKey>({
     scrollRef,

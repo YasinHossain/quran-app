@@ -157,7 +157,7 @@ export function useVerseListing({
           tajweed,
         });
         setApiPageToVersesMap((prev) => ({ ...prev, [pageNumber]: result.verses }));
-      } catch (error) {
+      } catch {
         prefetchedPagesRef.current.delete(pageNumber);
       }
     },
@@ -213,7 +213,6 @@ export function useVerseListing({
 
   const infiniteNavigation = useNavigationHandlers({
     verses,
-    activeVerse: audio.activeVerse,
     setActiveVerse: audio.setActiveVerse,
     openPlayer: audio.openPlayer,
   });

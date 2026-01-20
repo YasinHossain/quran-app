@@ -14,7 +14,6 @@ interface SlideOverPanelProps {
 
 export const SlideOverPanel = ({
   isOpen,
-  onClose: _onClose, // Unused but kept for interface compatibility if needed in future
   children,
   className,
   testId,

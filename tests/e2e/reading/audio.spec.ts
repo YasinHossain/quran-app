@@ -37,7 +37,9 @@ test.describe('Audio Functionality', () => {
     }
 
     // Desktop layouts may include a separate "options" menu button.
-    const verseOptionsButton = firstVerseCard.locator('button:visible[aria-label="Open verse options"]');
+    const verseOptionsButton = firstVerseCard.locator(
+      'button:visible[aria-label="Open verse options"]'
+    );
     await expect(verseOptionsButton).toBeVisible({ timeout: 10000 });
   });
 

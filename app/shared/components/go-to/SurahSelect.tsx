@@ -21,6 +21,8 @@ import { createPortal } from 'react-dom';
 
 import { ChevronDownIcon } from '@/app/shared/icons';
 
+const DROPDOWN_MAX_HEIGHT = 28 * 16;
+
 export interface SurahOption {
   value: string;
   label: string;
@@ -75,7 +77,6 @@ export const SurahSelect = memo(
 
     useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
 
-    const DROPDOWN_MAX_HEIGHT = 28 * 16;
     const [dropdownStyle, setDropdownStyle] = useState<{
       top?: number;
       bottom?: number;

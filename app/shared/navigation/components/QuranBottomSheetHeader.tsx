@@ -1,7 +1,7 @@
-import { X } from 'lucide-react';
 import { memo } from 'react';
 
 import { SearchInput } from '@/app/shared/components/SearchInput';
+import { CloseIcon } from '@/app/shared/icons';
 
 interface QuranBottomSheetHeaderProps {
   onClose: () => void;
@@ -25,7 +25,7 @@ export const QuranBottomSheetHeader = memo(function QuranBottomSheetHeader({
           onClick={onClose}
           className="btn-touch p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center"
         >
-          <X size={18} className="text-muted" />
+          <CloseIcon size={18} className="text-muted" />
         </button>
       </div>
       <div className="px-6 py-4 border-b border-border">

@@ -319,9 +319,6 @@ export const VerseArabic = memo(function VerseArabic({
     event.clipboardData.setData('text/plain', normalized);
   };
 
-  // Extract verse number from verse_key (format: "surah:verse")
-  const verseNumber = verse.verse_key ? parseInt(verse.verse_key.split(':')[1] || '0', 10) : 0;
-
   // Get unique page numbers from words for V4 font loading
   const pageNumbers = useMemo(() => {
     if (!tajweed || !verse.words) return [];
@@ -377,7 +374,7 @@ export const VerseArabic = memo(function VerseArabic({
         {verse.words && verse.words.length > 0 ? (
           <span>
             {verse.words
-              .filter((word: Word, index: number, words: Word[]) => {
+              .filter((word: Word) => {
                 const displayText =
                   tajweed && word.codeV2
                     ? word.codeV2
