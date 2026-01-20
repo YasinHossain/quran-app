@@ -1006,6 +1006,36 @@ export async function quickSearch(
 }
 
 /**
+ * Safely strip HTML tags from a string using DOM parsing when available.
+ * Falls back to a conservative regex approach for server-side rendering.
+ */
+function stripHtmlTags(html: string): string {
+  // Use DOMParser in browser environments for safe HTML stripping
+  if (typeof DOMParser !== 'undefined') {
+    try {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      return doc.body.textContent || '';
+    } catch {
+      // Fall through to fallback
+    }
+  }
+
+  // Server-side fallback: use a more conservative approach
+  // First decode any HTML entities, then strip tags iteratively
+  // to handle nested/malformed tags
+  let result = html;
+  let prevResult = '';
+
+  // Iterate until no more tags are found (handles nested cases like <<script>script>)
+  while (result !== prevResult) {
+    prevResult = result;
+    result = result.replace(/<[^>]*>/g, '');
+  }
+
+  return result;
+}
+
+/**
  * Enhanced search scoring with multiple relevance signals.
  *
  * QUICK WINS implemented:
@@ -1034,7 +1064,7 @@ function filterAndSortByExactPhrase(
 
   // Score each verse with enhanced algorithm
   const scoredVerses = verses.map((verse) => {
-    const rawText = verse.highlightedTranslation.replace(/<[^>]+>/g, '');
+    const rawText = stripHtmlTags(verse.highlightedTranslation);
     const text = normalizeForSearch(rawText);
     const textWords = text.split(/\s+/);
 

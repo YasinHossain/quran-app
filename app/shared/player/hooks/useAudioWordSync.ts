@@ -17,7 +17,63 @@ function cssEscape(value: string): string {
   if (typeof CSS !== 'undefined' && typeof CSS.escape === 'function') {
     return CSS.escape(value);
   }
-  return value.replace(/"/g, '\\"');
+
+  // Complete CSS.escape polyfill based on the CSSOM spec
+  // https://drafts.csswg.org/cssom/#serialize-an-identifier
+  const string = String(value);
+  const length = string.length;
+  let result = '';
+  let index = -1;
+  const firstCodeUnit = string.charCodeAt(0);
+
+  while (++index < length) {
+    const codeUnit = string.charCodeAt(index);
+
+    // NULL character: replace with U+FFFD REPLACEMENT CHARACTER
+    if (codeUnit === 0x0000) {
+      result += '\uFFFD';
+      continue;
+    }
+
+    // Control characters (U+0001 to U+001F) or DEL (U+007F)
+    // Or: first character is a digit (0-9)
+    // Or: second character is a digit AND first character is a hyphen
+    if (
+      (codeUnit >= 0x0001 && codeUnit <= 0x001f) ||
+      codeUnit === 0x007f ||
+      (index === 0 && codeUnit >= 0x0030 && codeUnit <= 0x0039) ||
+      (index === 1 && codeUnit >= 0x0030 && codeUnit <= 0x0039 && firstCodeUnit === 0x002d)
+    ) {
+      // Escape as \HEX followed by a space
+      result += '\\' + codeUnit.toString(16) + ' ';
+      continue;
+    }
+
+    // Single hyphen at start: escape it
+    if (index === 0 && length === 1 && codeUnit === 0x002d) {
+      result += '\\' + string.charAt(index);
+      continue;
+    }
+
+    // Characters that don't need escaping: alphanumeric, hyphen (not at problematic positions), underscore
+    // Safe ranges: a-z, A-Z, 0-9 (except leading), hyphen, underscore, and non-ASCII
+    if (
+      codeUnit >= 0x0080 || // Non-ASCII characters
+      codeUnit === 0x002d || // Hyphen (handled above for special cases)
+      codeUnit === 0x005f || // Underscore
+      (codeUnit >= 0x0030 && codeUnit <= 0x0039) || // 0-9 (leading digits handled above)
+      (codeUnit >= 0x0041 && codeUnit <= 0x005a) || // A-Z
+      (codeUnit >= 0x0061 && codeUnit <= 0x007a) // a-z
+    ) {
+      result += string.charAt(index);
+      continue;
+    }
+
+    // Everything else needs to be escaped with a backslash
+    result += '\\' + string.charAt(index);
+  }
+
+  return result;
 }
 
 function findActiveWord(segments: QdcAudioSegment[], currentMs: number): number | null {

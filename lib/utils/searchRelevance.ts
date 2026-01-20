@@ -38,6 +38,36 @@ export interface ScoredVerseResult extends SearchVerseResult {
 // ============================================================================
 
 /**
+ * Safely strip HTML tags from a string using DOM parsing when available.
+ * Falls back to a conservative regex approach for server-side rendering.
+ */
+function stripHtmlTags(html: string): string {
+  // Use DOMParser in browser environments for safe HTML stripping
+  if (typeof DOMParser !== 'undefined') {
+    try {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      return doc.body.textContent || '';
+    } catch {
+      // Fall through to fallback
+    }
+  }
+
+  // Server-side fallback: use a more conservative approach
+  // First decode any HTML entities, then strip tags iteratively
+  // to handle nested/malformed tags
+  let result = html;
+  let prevResult = '';
+
+  // Iterate until no more tags are found (handles nested cases like <<script>script>)
+  while (result !== prevResult) {
+    prevResult = result;
+    result = result.replace(/<[^>]*>/g, '');
+  }
+
+  return result;
+}
+
+/**
  * Extract text content from highlighted HTML (removes <em> tags but counts them)
  */
 function extractHighlightInfo(highlightedText: string): {
@@ -53,8 +83,8 @@ function extractHighlightInfo(highlightedText: string): {
     highlightedWords.push(match[1]!.toLowerCase().trim());
   }
 
-  // Remove HTML tags to get plain text
-  const plainText = highlightedText.replace(/<[^>]+>/g, '').toLowerCase();
+  // Remove HTML tags to get plain text using safe DOM-based approach
+  const plainText = stripHtmlTags(highlightedText).toLowerCase();
 
   return { plainText, highlightedWords };
 }
