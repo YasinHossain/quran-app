@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+
 
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
@@ -25,15 +25,7 @@ export type BookmarkFolderControllerReturn = {
   handleSectionChange: (section: SectionId) => void;
 };
 
-// Helper function to manage body overflow
-function useBodyOverflow(): void {
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, []);
-}
+
 
 // Helper function to create navigation handler
 function useNavigationHandler(
@@ -84,7 +76,7 @@ export function useBookmarkFolderController(folderId: string): BookmarkFolderCon
     selectedWordLanguageName,
   } = useBookmarkFolderPanels();
 
-  useBodyOverflow();
+
   const { handleNavigateToBookmarks, handleSectionChange } = useNavigationHandler(
     router,
     setBookmarkSidebarOpen
