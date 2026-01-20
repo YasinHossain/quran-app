@@ -5,6 +5,11 @@ import {
 } from '@/app/(features)/bookmarks/planner/utils/planGrouping';
 import { mapGlobalVerseToPosition } from '@/app/(features)/bookmarks/planner/utils/plannerGroupCard.goal';
 import {
+  convertPlanProgressToActualVerse,
+  getPlanEndVerse,
+  getPlanStartVerse,
+} from '@/app/(features)/bookmarks/planner/utils/planRange';
+import {
   formatPlannerRangeDetails,
   PlannerRangePoint,
 } from '@/app/(features)/bookmarks/planner/utils/planRangeLabel';
@@ -78,8 +83,8 @@ const badgeForStatus = ({ plans, isComplete, chapterLookup }: BadgeParams): stri
     const completedPlan = plans[plans.length - 1]!;
     const chapter = chapterLookup.get(completedPlan.surahId);
     const chapterName = getChapterDisplayName(completedPlan, chapter);
-    const verse = Math.max(1, completedPlan.targetVerses);
-    return `${chapterName} ${completedPlan.surahId}:${verse}`;
+    const verse = getPlanEndVerse(completedPlan);
+    return `${chapterName} ${completedPlan.surahId}:${Math.max(1, verse)}`;
   }
   const recentPlan = plans.reduce(
     (latest, plan) => (plan.lastUpdated > latest.lastUpdated ? plan : latest),
@@ -97,10 +102,11 @@ const badgeForStatus = ({ plans, isComplete, chapterLookup }: BadgeParams): stri
 };
 
 const clampCompletedVerse = (plan: PlannerPlan): number => {
-  if (plan.targetVerses <= 0) return 1;
+  if (plan.targetVerses <= 0) return getPlanStartVerse(plan);
   const safeTarget = Math.max(1, plan.targetVerses);
   const safeCompleted = Math.max(1, plan.completedVerses);
-  return Math.min(safeCompleted, safeTarget);
+  const progressVerse = Math.min(safeCompleted, safeTarget);
+  return convertPlanProgressToActualVerse(plan, progressVerse);
 };
 
 export const getActivePlan = (plans: PlannerPlan[]): PlannerPlan => {

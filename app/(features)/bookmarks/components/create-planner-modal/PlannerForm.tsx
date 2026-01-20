@@ -19,6 +19,8 @@ interface PlannerFormProps {
   duplicatePlanName?: string;
   onSubmit: (e: React.FormEvent) => void;
   chapters: Chapter[];
+  formId?: string;
+  showActions?: boolean;
 }
 
 export const PlannerForm = ({
@@ -31,8 +33,10 @@ export const PlannerForm = ({
   duplicatePlanName,
   onSubmit,
   chapters,
+  formId,
+  showActions = true,
 }: PlannerFormProps): React.JSX.Element => (
-  <form onSubmit={onSubmit} className="space-y-6">
+  <form id={formId} onSubmit={onSubmit} className="space-y-6">
     <PlanNameInput
       planName={formData.planName}
       onChange={(planName) => onFormDataChange({ planName })}
@@ -65,6 +69,6 @@ export const PlannerForm = ({
       versesPerDay={versesPerDay}
     />
 
-    <FormActions canSubmit={canSubmit} />
+    {showActions ? <FormActions canSubmit={canSubmit} {...(formId ? { formId } : {})} /> : null}
   </form>
 );

@@ -24,7 +24,7 @@ export const useSidebarPositioning = ({
   const getPositionClasses = (): string => {
     const baseClasses = cn(
       // Use !fixed to avoid being overridden by any accidental 'relative'
-      '!fixed w-full bg-background transition-transform duration-300 ease-in-out will-change-transform',
+      '!fixed w-full bg-surface transition-transform duration-300 ease-in-out will-change-transform',
       'sm:w-80',
       position === 'left'
         ? [
@@ -49,14 +49,19 @@ export const useSidebarPositioning = ({
               : '2xl:top-reader-header 2xl:h-[calc(100dvh-var(--reader-header-height))]'
         );
 
-    const shadowClasses =
-      position === 'right'
-        ? '' // No shadow for right sidebar to keep it seamless with scrollbar
-        : breakpointClass === 'lg'
-          ? 'shadow-modal lg:shadow-none'
+    const shadowClasses = isOpen
+      ? position === 'left'
+        ? breakpointClass === 'lg'
+          ? 'mobile-sidebar-shadow-right lg:shadow-none'
           : breakpointClass === 'xl'
-            ? 'shadow-modal xl:shadow-none'
-            : 'shadow-modal 2xl:shadow-none';
+            ? 'mobile-sidebar-shadow-right xl:shadow-none'
+            : 'mobile-sidebar-shadow-right 2xl:shadow-none'
+        : breakpointClass === 'lg'
+          ? 'mobile-sidebar-shadow-left lg:shadow-none'
+          : breakpointClass === 'xl'
+            ? 'mobile-sidebar-shadow-left xl:shadow-none'
+            : 'mobile-sidebar-shadow-left 2xl:shadow-none'
+      : '';
     const panelZIndex = 'z-[120]';
     const pinnedTranslateClass = `${breakpointClass}:translate-x-0`;
 

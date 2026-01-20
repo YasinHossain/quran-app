@@ -320,6 +320,15 @@
     box-shadow: none;
   }
 
+  /* Mobile/tablet sidebar separation shadows (directional) */
+  .mobile-sidebar-shadow-right {
+    box-shadow: 10px 0 28px -18px rgb(var(--color-foreground) / 0.18);
+  }
+
+  .mobile-sidebar-shadow-left {
+    box-shadow: -10px 0 28px -18px rgb(var(--color-foreground) / 0.18);
+  }
+
   @media (min-width: 1280px) {
     .workspace-sidebar-left {
       box-shadow:

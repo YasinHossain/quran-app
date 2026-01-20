@@ -67,7 +67,7 @@ describe('ResponsiveVerseActions interactions · bookmarking', () => {
   it('shows bookmarked state', async () => {
     renderResponsiveVerseActions({ isBookmarked: true });
 
-    await screen.findByRole('button', { name: /remove bookmark/i });
+    await screen.findByRole('button', { name: /bookmark/i });
   });
 });
 

@@ -8,14 +8,16 @@ import { Button } from '@/app/shared/ui/Button';
 
 interface FormActionsProps {
   canSubmit: boolean;
+  formId?: string;
 }
 
-export const FormActions = ({ canSubmit }: FormActionsProps): React.JSX.Element => (
+export const FormActions = ({ canSubmit, formId }: FormActionsProps): React.JSX.Element => (
   <ModalFooter
     className="pt-4"
     right={
       <Button
         type="submit"
+        {...(formId ? { form: formId } : {})}
         variant="primary"
         size="md"
         disabled={!canSubmit}

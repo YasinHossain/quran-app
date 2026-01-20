@@ -8,6 +8,7 @@ import { CloseIcon } from '@/app/shared/icons';
 
 import {
   ModalHeader,
+  FormActions,
   PlannerForm,
   usePlannerCalculations,
   useFormState,
@@ -62,22 +63,20 @@ export const CreatePlannerModal = ({
       isOpen={isOpen}
       onClose={handleClose}
       ariaLabel="Create planner"
-      contentClassName="max-w-lg max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-4rem)] overflow-hidden"
+      contentClassName="max-w-lg max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-4rem)] overflow-hidden flex flex-col min-h-0"
     >
-      <div className="max-h-full overflow-y-auto scrollbar-hide">
-        <CreatePlannerForm
-          formData={formData}
-          onFormDataChange={handleFormDataChange}
-          totalVerses={totalVerses}
-          versesPerDay={versesPerDay}
-          isValidRange={isValidRange}
-          canSubmit={canSubmit}
-          duplicatePlanName={duplicatePlanName}
-          onSubmit={handleSubmit}
-          chapters={chapters}
-          onClose={handleClose}
-        />
-      </div>
+      <CreatePlannerForm
+        formData={formData}
+        onFormDataChange={handleFormDataChange}
+        totalVerses={totalVerses}
+        versesPerDay={versesPerDay}
+        isValidRange={isValidRange}
+        canSubmit={canSubmit}
+        duplicatePlanName={duplicatePlanName}
+        onSubmit={handleSubmit}
+        chapters={chapters}
+        onClose={handleClose}
+      />
     </UnifiedModal>
   );
 };
@@ -148,9 +147,10 @@ function CreatePlannerForm({
   chapters: Chapter[];
   onClose: () => void;
 }): React.JSX.Element {
+  const formId = React.useId();
   return (
-    <div className="px-3 sm:px-4 pt-4 pb-4">
-      <div className="flex items-start justify-between gap-4">
+    <div className="flex min-h-0 flex-col px-3 sm:px-4 pt-4 pb-4">
+      <div className="flex items-start justify-between gap-4 shrink-0">
         <ModalHeader />
         <button
           type="button"
@@ -161,17 +161,26 @@ function CreatePlannerForm({
           <CloseIcon size={18} />
         </button>
       </div>
-      <PlannerForm
-        formData={formData}
-        onFormDataChange={onFormDataChange}
-        totalVerses={totalVerses}
-        versesPerDay={versesPerDay}
-        isValidRange={isValidRange}
-        canSubmit={canSubmit}
-        {...(duplicatePlanName ? { duplicatePlanName } : {})}
-        onSubmit={onSubmit}
-        chapters={chapters}
-      />
+
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y scrollbar-hide pr-1">
+        <PlannerForm
+          formData={formData}
+          onFormDataChange={onFormDataChange}
+          totalVerses={totalVerses}
+          versesPerDay={versesPerDay}
+          isValidRange={isValidRange}
+          canSubmit={canSubmit}
+          {...(duplicatePlanName ? { duplicatePlanName } : {})}
+          onSubmit={onSubmit}
+          chapters={chapters}
+          formId={formId}
+          showActions={false}
+        />
+      </div>
+
+      <div className="shrink-0">
+        <FormActions canSubmit={canSubmit} formId={formId} />
+      </div>
     </div>
   );
 }

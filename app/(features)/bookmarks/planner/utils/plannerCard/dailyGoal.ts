@@ -1,3 +1,4 @@
+import { convertPlanProgressToActualVerse } from '@/app/(features)/bookmarks/planner/utils/planRange';
 import { getJuzByPage } from '@/lib/utils/surah-navigation';
 
 import type { PlannerCardProps } from '@/app/(features)/bookmarks/planner/components/PlannerCard.types';
@@ -15,18 +16,18 @@ export interface DailyGoalWindow {
   juzLabel: string | null;
 }
 
-const computeStartVerse = (plan: PlannerCardProps['plan']): number =>
+const computeStartProgressVerse = (plan: PlannerCardProps['plan']): number =>
   Math.min(plan.targetVerses, Math.max(1, plan.completedVerses + 1));
 
-const computeEndVerse = (
+const computeEndProgressVerse = (
   plan: PlannerCardProps['plan'],
-  startVerse: number,
+  startProgressVerse: number,
   versesPerDay: number
 ): number | null => {
   if (versesPerDay <= 0) return null;
   // Fixed session boundary: end at the end of the current session bucket.
   // sessionIndex is 1-based and determined from the start verse.
-  const sessionIndex = Math.ceil(startVerse / versesPerDay);
+  const sessionIndex = Math.ceil(startProgressVerse / versesPerDay);
   const sessionEnd = sessionIndex * versesPerDay;
   return Math.min(plan.targetVerses, sessionEnd);
 };
@@ -90,13 +91,20 @@ export const buildDailyGoalWindow = ({
     };
   }
 
-  const startVerse = computeStartVerse(plan);
-  const endVerse = computeEndVerse(plan, startVerse, versesPerDay);
+  const startProgressVerse = computeStartProgressVerse(plan);
+  const endProgressVerse = computeEndProgressVerse(plan, startProgressVerse, versesPerDay);
+
+  const startVerse = convertPlanProgressToActualVerse(plan, startProgressVerse);
+  const endVerse =
+    typeof endProgressVerse === 'number'
+      ? convertPlanProgressToActualVerse(plan, endProgressVerse)
+      : null;
+
   const hasDailyGoal = typeof endVerse === 'number' && endVerse >= startVerse;
-  const verseCount = getVerseCount(startVerse, typeof endVerse === 'number' ? endVerse : null);
+  const verseCount = getVerseCount(startVerse, endVerse);
   const { startPage, endPage, pageLabel } = getPageRange(
     startVerse,
-    typeof endVerse === 'number' ? endVerse : null,
+    endVerse,
     hasDailyGoal,
     pageMetrics
   );
@@ -105,7 +113,7 @@ export const buildDailyGoalWindow = ({
   return {
     hasDailyGoal,
     startVerse,
-    endVerse: typeof endVerse === 'number' ? endVerse : null,
+    endVerse,
     verseCount,
     pageLabel,
     juzLabel,

@@ -63,7 +63,7 @@ it('toggles play/pause on click', async () => {
 
 it('opens bookmark modal when icon clicked', async () => {
   renderCard();
-  const bookmarkButton = screen.getByRole('button', { name: 'Add bookmark' });
+  const bookmarkButton = screen.getByRole('button', { name: /bookmark/i });
   await userEvent.click(bookmarkButton);
   expect(await screen.findByRole('dialog', { name: 'Bookmark options' })).toBeInTheDocument();
 });

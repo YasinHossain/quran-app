@@ -51,7 +51,7 @@ export function createBookmarkAction({
       : createElement(BookmarkOutlineIcon, { size: 20 });
 
   return {
-    label: showRemove ? 'Remove Bookmark' : isBookmarked ? 'Remove Bookmark' : 'Pin or Bookmark',
+    label: showRemove ? 'Remove Bookmark' : 'Pin or Bookmark',
     icon,
     onClick,
     active: isBookmarked || showRemove,

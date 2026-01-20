@@ -260,48 +260,44 @@ export function AddToPlannerModal({
       isOpen={isOpen}
       onClose={onClose}
       ariaLabel="Add to Planner"
-      contentClassName="w-full max-w-xl mx-auto max-h-[calc(100dvh-2rem)] overflow-hidden px-4 pb-4 pt-8 sm:px-6 sm:pb-6 sm:pt-8"
+      contentClassName="w-full max-w-xl mx-auto max-h-[calc(100dvh-2rem)] min-h-0 overflow-hidden flex flex-col px-4 pb-4 pt-8 sm:px-6 sm:pb-6 sm:pt-8"
     >
-      <div className="flex h-full min-h-0 flex-col">
-        <header className="mb-6 shrink-0">
-          <div className={`${contentContainerClass} flex items-start justify-between gap-4`}>
-            <div className="flex min-w-0 flex-1 flex-col gap-1">
-              <h2 className="text-xl font-semibold text-content-primary">{title}</h2>
-              <p className="text-sm text-content-secondary">{subtitle}</p>
-            </div>
-            <button
-              className="p-1.5 rounded-full hover:bg-interactive-hover transition-colors text-content-secondary hover:text-content-primary shrink-0 flex items-center justify-center"
-              onClick={onClose}
-              aria-label="Close planner modal"
-            >
-              <CloseIcon size={18} />
-            </button>
+      <header className="mb-6 shrink-0">
+        <div className={`${contentContainerClass} flex items-start justify-between gap-4`}>
+          <div className="flex min-w-0 flex-1 flex-col gap-1">
+            <h2 className="text-xl font-semibold text-content-primary">{title}</h2>
+            <p className="text-sm text-content-secondary">{subtitle}</p>
           </div>
-        </header>
-
-        <div
-          className={`${contentContainerClass} flex-1 min-h-0 overflow-y-auto scrollbar-hide py-4`}
-        >
-          <PlannerCardsSection
-            plannerCards={plannerCards}
-            verseSummary={verseSummary}
-            selectedPlanId={selectedPlanId}
-            onPlanSelect={handlePlanSelect}
-          />
-          {helperMessage ? (
-            <p className="mt-3 text-sm text-content-secondary">{helperMessage}</p>
-          ) : null}
+          <button
+            className="p-1.5 rounded-full hover:bg-interactive-hover transition-colors text-content-secondary hover:text-content-primary shrink-0 flex items-center justify-center"
+            onClick={onClose}
+            aria-label="Close planner modal"
+          >
+            <CloseIcon size={18} />
+          </button>
         </div>
+      </header>
 
-        <div className={`${contentContainerClass} mt-6 shrink-0`}>
-          <ModalFooter
-            right={
-              <Button onClick={handleSave} disabled={!canSave} className="rounded-lg px-5">
-                Save
-              </Button>
-            }
-          />
-        </div>
+      <div
+        className={`${contentContainerClass} flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y scrollbar-hide py-4`}
+      >
+        <PlannerCardsSection
+          plannerCards={plannerCards}
+          verseSummary={verseSummary}
+          selectedPlanId={selectedPlanId}
+          onPlanSelect={handlePlanSelect}
+        />
+        {helperMessage ? <p className="mt-3 text-sm text-content-secondary">{helperMessage}</p> : null}
+      </div>
+
+      <div className={`${contentContainerClass} mt-6 shrink-0`}>
+        <ModalFooter
+          right={
+            <Button onClick={handleSave} disabled={!canSave} className="rounded-lg px-5">
+              Save
+            </Button>
+          }
+        />
       </div>
     </UnifiedModal>
   );

@@ -19,9 +19,7 @@ export const BookmarkButton = memo(function BookmarkButton({
 }: BookmarkButtonProps): React.JSX.Element {
   return (
     <button
-      aria-label={
-        showRemove ? 'Remove bookmark' : isBookmarked ? 'Remove bookmark' : 'Add bookmark'
-      }
+      aria-label={showRemove ? 'Remove bookmark' : 'Bookmark'}
       title={showRemove ? 'Remove bookmark' : 'Bookmark'}
       onClick={onClick}
       className={cn(
