@@ -7,6 +7,7 @@
 
 import { memo } from 'react';
 
+import { HomeFooter } from './HomeFooter';
 import { HomeHeader } from './HomeHeader';
 import { HomePageBackground } from './HomePageBackground';
 import { HomeQuickLinks } from './HomeQuickLinks';
@@ -86,6 +87,9 @@ export const HomePageClient = memo(function HomePageClient({
 
         {/* Tabs section with server-rendered grid as children */}
         <HomeTabsClient initialChapters={initialChapters}>{children}</HomeTabsClient>
+
+        {/* Footer with beta notice and legal links */}
+        <HomeFooter />
       </div>
     </div>
   );

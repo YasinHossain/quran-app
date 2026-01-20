@@ -54,7 +54,7 @@ export function HomeTabsClient({
   return (
     <section
       id="surahs"
-      className="pt-4 sm:pt-5 pb-16 sm:pb-20 max-w-screen-2xl mx-auto w-full px-2 sm:px-3"
+      className="pt-4 sm:pt-5 pb-6 sm:pb-8 max-w-screen-2xl mx-auto w-full px-2 sm:px-3"
     >
       <div className="flex justify-between items-center gap-3 sm:gap-4 mb-6 sm:mb-8 content-visibility-auto animate-fade-in-up animation-delay-600">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-content-primary truncate min-w-0 flex-shrink">
