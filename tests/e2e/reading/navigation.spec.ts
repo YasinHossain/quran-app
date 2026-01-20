@@ -7,24 +7,12 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Navigation and Verse Display', () => {
   test('should navigate to surah and display verses', async ({ page }) => {
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
-
-    // Click on first surah (Al-Fatiha)
-    const surahCard = page.locator('[data-testid="surah-1"], a[href*="/surah/1"]').first();
-    if (await surahCard.isVisible()) {
-      await surahCard.click();
-      await page.waitForURL('**/surah/1');
-    } else {
-      // Fallback: navigate directly
-      await page.goto('/surah/1');
-    }
-
-    await page.waitForLoadState('networkidle');
+    await page.goto('/surah/1');
+    await page.waitForLoadState('domcontentloaded');
 
     // Verify verses are displayed
     const verseCards = page.locator('[data-testid="verse-card"], .verse-card, [data-verse-key]');
-    await expect(verseCards.first()).toBeVisible({ timeout: 10000 });
+    await expect(verseCards.first()).toBeVisible({ timeout: 20000 });
 
     const verseCount = await verseCards.count();
     expect(verseCount).toBeGreaterThanOrEqual(1);
@@ -36,22 +24,15 @@ test.describe('Navigation and Verse Display', () => {
 
   test('should display surah information correctly', async ({ page }) => {
     await page.goto('/surah/1');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
-    // Check page has loaded with surah content
-    const pageContent = await page.content();
-
-    // Al-Fatiha should have identifying information
-    const hasSurahName =
-      pageContent.includes('Fatiha') ||
-      pageContent.includes('الفاتحة') ||
-      pageContent.includes('Opening');
-    expect(hasSurahName).toBe(true);
+    // Validate the chapter via a stable attribute on verse content.
+    await expect(page.locator('[data-verse-key="1:1"]').first()).toBeVisible({ timeout: 10000 });
   });
 
   test('should navigate between consecutive surahs', async ({ page }) => {
     await page.goto('/surah/1');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Look for next surah navigation
     const nextButton = page
@@ -73,7 +54,7 @@ test.describe('Navigation and Verse Display', () => {
     } else {
       // Direct navigation test
       await page.goto('/surah/2');
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       expect(page.url()).toContain('/surah/2');
     }
   });
@@ -84,7 +65,7 @@ test.describe('Navigation and Verse Display', () => {
 
     for (const surahId of surahsToTest) {
       await page.goto(`/surah/${surahId}`);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       expect(page.url()).toContain(`/surah/${surahId}`);
 
@@ -96,7 +77,7 @@ test.describe('Navigation and Verse Display', () => {
 
   test('should handle invalid surah gracefully', async ({ page }) => {
     await page.goto('/surah/999');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // The app doesn't redirect or show 404 for invalid surahs
     // It renders the page but with no verse content

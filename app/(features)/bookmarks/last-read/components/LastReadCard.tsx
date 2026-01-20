@@ -52,11 +52,13 @@ export const LastReadCard = ({
     >
       <button
         onClick={handleRemove}
-        className="absolute top-2 right-2 p-1.5 rounded-full text-muted hover:text-red-500 hover:bg-red-500/10 transition-colors opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 focus:outline-none z-10"
+        className="group absolute top-0.5 right-0.5 min-h-touch min-w-touch touch-manipulation grid place-items-center rounded-full opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 focus:outline-none z-10"
         aria-label="Remove from recent"
         title="Remove"
       >
-        <CloseIcon size={16} />
+        <span className="rounded-full p-1.5 text-muted transition-colors group-hover:bg-red-500/10 group-hover:text-red-500 group-focus-visible:bg-red-500/10 group-focus-visible:text-red-500">
+          <CloseIcon size={16} />
+        </span>
       </button>
 
       <div className="flex w-full flex-1 items-center justify-center">

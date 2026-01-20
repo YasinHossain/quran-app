@@ -24,7 +24,7 @@ export const ThemeSelector = ({ className }: ThemeSelectorProps): React.JSX.Elem
   return (
     <button
       onClick={toggleTheme}
-      className={`p-1.5 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent flex items-center justify-center ${className || ''}`}
+      className={`min-h-touch min-w-touch p-1.5 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent touch-manipulation flex items-center justify-center ${className || ''}`}
       aria-label="Toggle Theme"
     >
       {theme === 'dark' ? (

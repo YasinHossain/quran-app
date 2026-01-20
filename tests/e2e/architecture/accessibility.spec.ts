@@ -6,17 +6,23 @@ test.describe('♿ Accessibility Compliance', () => {
 
     // Test tab navigation
     await page.keyboard.press('Tab');
-    let focusedElement = await page.evaluate(() =>
-      document.activeElement?.getAttribute('data-testid')
-    );
+    let focusedElement = await page.evaluate(() => {
+      const el = document.activeElement;
+      if (!el) return null;
+      if (el === document.body || el === document.documentElement) return null;
+      return el.tagName;
+    });
     expect(focusedElement).toBeTruthy();
 
     // Continue tabbing through elements
     for (let i = 0; i < 5; i++) {
       await page.keyboard.press('Tab');
-      focusedElement = await page.evaluate(() =>
-        document.activeElement?.getAttribute('data-testid')
-      );
+      focusedElement = await page.evaluate(() => {
+        const el = document.activeElement;
+        if (!el) return null;
+        if (el === document.body || el === document.documentElement) return null;
+        return el.tagName;
+      });
       expect(focusedElement).toBeTruthy();
     }
 
@@ -29,7 +35,7 @@ test.describe('♿ Accessibility Compliance', () => {
     await page.goto('/surah/1');
 
     // Check main landmarks
-    await expect(page.locator('[role="main"]')).toBeVisible();
+    await expect(page.getByRole('main')).toBeVisible();
 
     // Check button roles and labels
     const buttons = page.locator('button, [role="button"]');

@@ -16,7 +16,7 @@ test.describe('Responsive Design', () => {
     test(`should display correctly on ${name} (${width}x${height})`, async ({ page }) => {
       await page.setViewportSize({ width, height });
       await page.goto('/surah/1');
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Main content should be visible
       const mainContent = page.locator('main, [role="main"], .content').first();
@@ -41,7 +41,7 @@ test.describe('Responsive Design', () => {
   test('should show mobile navigation on small screens', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Look for mobile menu trigger (hamburger icon)
     const mobileMenuTrigger = page
@@ -65,7 +65,7 @@ test.describe('Responsive Design', () => {
   test('should have touch-friendly button sizes on mobile', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/surah/1');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const interactiveElements = page.locator('button, [role="button"], a');
     const count = await interactiveElements.count();
@@ -92,7 +92,7 @@ test.describe('Responsive Design', () => {
   test('should adapt audio player for mobile viewport', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/surah/1');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Trigger audio player
     const playButton = page.locator('[data-testid*="play"], button[aria-label*="play" i]').first();
@@ -119,7 +119,7 @@ test.describe('Responsive Design', () => {
   test('should stack content vertically on narrow screens', async ({ page }) => {
     await page.setViewportSize({ width: 320, height: 568 }); // iPhone SE
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Check that main sections are visible and not cut off
     const mainSections = page.locator('section, .section, [data-section]');

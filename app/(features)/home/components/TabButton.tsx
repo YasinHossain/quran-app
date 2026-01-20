@@ -16,7 +16,7 @@ export const TabButton = memo(function TabButton({ label, isActive, onClick }: T
   return (
     <button
       onClick={onClick}
-      className={`px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors w-16 sm:w-20 md:w-24 ${
+      className={`min-h-touch inline-flex items-center justify-center touch-manipulation px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors w-16 sm:w-20 md:w-24 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
         isActive ? 'bg-surface shadow text-foreground' : 'text-muted hover:text-foreground'
       }`}
     >

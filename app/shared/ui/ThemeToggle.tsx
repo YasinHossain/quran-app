@@ -34,7 +34,7 @@ const ThemeTabButton = memo(function ThemeTabButton({
   return (
     <button
       onClick={onClick}
-      className={`flex items-center justify-center px-3 py-2 rounded-full text-sm font-semibold transition-colors ${buttonClass}`}
+      className={`min-h-touch min-w-touch flex items-center justify-center px-3 py-2 rounded-full text-sm font-semibold transition-colors touch-manipulation ${buttonClass}`}
       aria-label={label}
     >
       {icon}
@@ -89,7 +89,7 @@ const ButtonVariant = memo(function ButtonVariant({
   return (
     <button
       onClick={onToggle}
-      className={`p-1.5 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none flex items-center justify-center ${className || ''}`}
+      className={`min-h-touch min-w-touch p-1.5 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none flex items-center justify-center touch-manipulation ${className || ''}`}
       aria-label="Toggle Theme"
     >
       {currentTheme === 'dark' ? (

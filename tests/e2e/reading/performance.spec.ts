@@ -27,7 +27,7 @@ test.describe('Performance', () => {
   test('should render verses efficiently with virtual scrolling', async ({ page }) => {
     // Go to a long surah (Al-Baqarah has 286 verses)
     await page.goto('/surah/2');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Count initially rendered verses
     const initialVerses = page.locator('[data-testid="verse-card"], .verse-card, [data-verse-key]');
@@ -50,7 +50,7 @@ test.describe('Performance', () => {
 
   test('should handle navigation between surahs quickly', async ({ page }) => {
     await page.goto('/surah/1');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const startTime = Date.now();
 
@@ -67,11 +67,11 @@ test.describe('Performance', () => {
   test('should cache assets for faster subsequent loads', async ({ page }) => {
     // First load
     await page.goto('/surah/1');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Navigate away
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Second load (should use cache)
     const startTime = Date.now();
@@ -101,7 +101,7 @@ test.describe('Performance', () => {
 
   test('should load web fonts efficiently', async ({ page }) => {
     await page.goto('/surah/1');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Check that Arabic text is rendered with correct font
     const arabicText = page.locator('[lang="ar"], .arabic-text').first();

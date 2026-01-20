@@ -1,4 +1,3 @@
-import withBundleAnalyzer from '@next/bundle-analyzer';
 import withPWA from '@ducanh2912/next-pwa';
 
 import pwaConfig from './next-pwa.config.mjs';
@@ -114,8 +113,19 @@ const nextConfig: NextConfig = {
   },
 };
 
-const bundleAnalyzer = withBundleAnalyzer({
-  enabled: process.env['ANALYZE'] === 'true',
-});
+const applyBundleAnalyzer = (config: NextConfig): NextConfig => {
+  if (process.env['ANALYZE'] !== 'true') {
+    return config;
+  }
 
-export default withPWA(pwaConfig)(bundleAnalyzer(nextConfig));
+  // `@next/bundle-analyzer` is a dev dependency and may be omitted in some environments
+  // (e.g. production installs or CI images). Only require it when needed.
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const withBundleAnalyzer = require('@next/bundle-analyzer')({ enabled: true }) as (
+    nextConfig: NextConfig,
+  ) => NextConfig;
+
+  return withBundleAnalyzer(config);
+};
+
+export default withPWA(pwaConfig)(applyBundleAnalyzer(nextConfig));

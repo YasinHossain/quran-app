@@ -5,6 +5,9 @@ import { defineConfig, devices } from '@playwright/test';
  * @description E2E testing setup with cross-browser, device, and offline testing
  * @see https://playwright.dev/docs/test-configuration
  */
+const port = process.env['PLAYWRIGHT_PORT'] ?? process.env['PORT'] ?? '3000';
+const baseURL = `http://127.0.0.1:${port}`;
+
 export default defineConfig({
   testDir: './tests/e2e',
   /* Run tests in files in parallel */
@@ -24,7 +27,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: 'http://localhost:3000',
+    baseURL,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -138,9 +141,9 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'npm run build && npm start',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env['CI'],
+    command: 'node tools/scripts/playwright-webserver.mjs',
+    url: baseURL,
+    reuseExistingServer: false,
     timeout: 120 * 1000, // 2 minutes
   },
 });

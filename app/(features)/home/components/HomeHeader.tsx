@@ -34,7 +34,7 @@ export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProp
             </h1>
             <button
               onClick={toggleTheme}
-              className="p-1.5 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent touch-manipulation flex items-center justify-center"
+              className="min-h-touch min-w-touch p-1.5 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent touch-manipulation flex items-center justify-center"
               aria-label="Toggle Theme"
             >
               <span className="theme-toggle-icon--dark" aria-hidden="true">

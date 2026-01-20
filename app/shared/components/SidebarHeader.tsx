@@ -55,10 +55,12 @@ export const SidebarHeader = ({
         {showBackButton && onBack ? (
           <button
             onClick={onBack}
-            className="p-1.5 -ml-2 rounded-full hover:bg-interactive-hover hover:text-accent transition-colors text-foreground focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none flex items-center justify-center"
+            className="group min-h-touch min-w-touch touch-manipulation -ml-2 rounded-full transition-colors text-foreground focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none flex items-center justify-center"
             aria-label="Go back"
           >
-            <ArrowLeftIcon size={18} />
+            <span className="rounded-full p-1.5 transition-colors group-hover:bg-interactive-hover group-hover:text-accent group-focus-visible:bg-interactive-hover group-focus-visible:text-accent">
+              <ArrowLeftIcon size={18} />
+            </span>
           </button>
         ) : null}
       </div>
@@ -81,10 +83,12 @@ export const SidebarHeader = ({
         {showCloseButton && onClose ? (
           <button
             onClick={onClose}
-            className="p-1.5 -mr-2 rounded-full hover:bg-interactive-hover hover:text-accent transition-colors text-foreground focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none flex items-center justify-center"
+            className="group min-h-touch min-w-touch touch-manipulation -mr-2 rounded-full transition-colors text-foreground focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none flex items-center justify-center"
             aria-label="Close sidebar"
           >
-            <CloseIcon size={18} />
+            <span className="rounded-full p-1.5 transition-colors group-hover:bg-interactive-hover group-hover:text-accent group-focus-visible:bg-interactive-hover group-focus-visible:text-accent">
+              <CloseIcon size={18} />
+            </span>
           </button>
         ) : null}
       </div>

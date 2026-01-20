@@ -60,6 +60,7 @@ export default async function RootLayout({
           Using dangerouslySetInnerHTML ensures it's inline in the HTML, not injected by JS.
         */}
         <script dangerouslySetInnerHTML={{ __html: INLINE_THEME_SCRIPT }} />
+        <meta name="theme-color" content="#0B1220" />
         {/* Preload critical Arabic font to reduce request chain */}
         <link
           rel="preload"

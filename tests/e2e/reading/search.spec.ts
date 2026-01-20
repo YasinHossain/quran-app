@@ -8,7 +8,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Search Functionality', () => {
   test('should display search input', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const searchInput = page
       .locator(
@@ -42,7 +42,7 @@ test.describe('Search Functionality', () => {
 
   test('should navigate to search page', async ({ page }) => {
     await page.goto('/search');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Should be on search page or redirected appropriately
     const isSearchPage =
@@ -57,7 +57,7 @@ test.describe('Search Functionality', () => {
 
   test('should show results when searching for common term', async ({ page }) => {
     await page.goto('/search');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const searchInput = page
       .locator('input[type="search"], ' + 'input[placeholder*="search" i], ' + '[role="searchbox"]')
@@ -102,7 +102,7 @@ test.describe('Search Functionality', () => {
 
   test('should highlight searched term in results', async ({ page }) => {
     await page.goto('/search');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const searchInput = page.locator('input[type="search"], [role="searchbox"]').first();
 
@@ -128,7 +128,7 @@ test.describe('Search Functionality', () => {
 
   test('should navigate to verse when clicking search result', async ({ page }) => {
     await page.goto('/search');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const searchInput = page.locator('input[type="search"], [role="searchbox"]').first();
 
@@ -144,7 +144,7 @@ test.describe('Search Functionality', () => {
 
       if (await firstResult.isVisible()) {
         await firstResult.click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
 
         // Should navigate to a surah page
         expect(page.url()).toMatch(/surah|verse|ayah/i);

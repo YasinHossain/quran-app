@@ -40,6 +40,8 @@
     "test:e2e:pwa": "playwright test --project=pwa-desktop --project=pwa-mobile",
     "test:e2e:reading": "playwright test tests/e2e/reading",
     "test:e2e:report": "playwright show-report",
+    "playwright:install": "playwright install",
+    "playwright:install-deps": "bash tools/scripts/playwright-install-deps.sh",
     "format": "prettier --write .",
     "type-check": "tsc --noEmit",
     "check": "npm run format && npm run lint:ci && npm run type-check && npm run test",

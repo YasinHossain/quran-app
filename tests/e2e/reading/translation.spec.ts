@@ -8,7 +8,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Translation Functionality', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/surah/1');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display translation alongside Arabic text', async ({ page }) => {
@@ -80,22 +80,20 @@ test.describe('Translation Functionality', () => {
       await settingsButton.click();
       await page.waitForTimeout(500);
 
-      // Look for translation options in settings
+      // Settings panel should be visible (mobile uses a dialog-like sidebar).
+      const settingsPanel = page.getByRole('dialog', { name: /settings/i }).first();
+      const isPanelVisible = await settingsPanel.isVisible().catch(() => false);
+
+      // Look for translation-related options if present.
       const translationOptions = page.locator(
         '[data-testid*="translation-option"], ' +
           '.translation-selector, ' +
           'select[name*="translation"], ' +
           '[role="listbox"]'
       );
-
       const hasOptions = (await translationOptions.count()) > 0;
 
-      // Settings panel should be visible
-      const settingsPanel = page
-        .locator('[data-testid*="settings"], .settings-panel, [role="dialog"]')
-        .first();
-
-      expect((await settingsPanel.isVisible()) || hasOptions).toBe(true);
+      expect(isPanelVisible || hasOptions).toBe(true);
     }
   });
 

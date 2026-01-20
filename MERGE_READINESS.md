@@ -51,15 +51,16 @@ Notes:
 ### E2E (Playwright)
 
 - Command: `npm run test:e2e`
-- Result: **FAIL** in this environment
+- Result: **FAIL** in this environment (WebKit deps missing)
 - Notes:
-  - Without `TMPDIR=/tmp`, Playwright fails early trying to create its transform cache under `.../AppData/Local/Temp/...`.
-  - With `TMPDIR=/tmp`, Playwright gets past that but fails because the configured `webServer` cannot start.
-  - Root cause: `next start` cannot bind to port `3000` here (`listen EPERM`).
+  - In Linux/WSL, Playwright gets past the Windows `TMPDIR`/Temp-path issue and the `webServer` starts normally.
+  - This environment is missing native libraries required for Playwright WebKit; WebKit-based projects fail to launch until deps are installed.
+  - Fix (WSL/Ubuntu): `npx playwright install` then `sudo npx playwright install-deps` (or `sudo npx playwright install --with-deps`).
+  - Workaround (no sudo / no WebKit): run Chromium-only projects (e.g. `npm run test:e2e:chromium`).
 - Logs:
-  - `codex-artifacts/playwright-e2e.log` (temp/cache permission error)
-  - `codex-artifacts/playwright-e2e-tmpdir.log` (webServer start failure)
-  - `codex-artifacts/next-start-production.log` (port bind `EPERM`)
+  - `codex-artifacts/playwright-e2e.log` (temp/cache permission error from the older Windows environment)
+  - `codex-artifacts/playwright-e2e-tmpdir.log` (webServer start failure from the older Windows environment)
+  - `codex-artifacts/next-start-production.log` (port bind `EPERM` from the older Windows environment)
 
 ### Storybook
 

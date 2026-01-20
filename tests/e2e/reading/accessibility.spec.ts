@@ -8,7 +8,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Accessibility', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/surah/1');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should support keyboard navigation through verses', async ({ page }) => {
