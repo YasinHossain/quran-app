@@ -1,12 +1,14 @@
 'use client';
 
-import { AnimatePresence } from 'framer-motion';
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 
 import { Portal } from '@/app/shared/components/Portal';
 import { useBodyScrollLock } from '@/app/shared/hooks/useBodyScrollLock';
 
 import { UnifiedModalBackdrop, UnifiedModalFrame, useCloseOnEscape } from './UnifiedModalParts';
+
+// Duration for exit animation (matches CSS)
+const EXIT_ANIMATION_MS = 200;
 
 export interface UnifiedModalProps {
   isOpen: boolean;
@@ -38,38 +40,60 @@ export const UnifiedModal = memo(function UnifiedModal({
   ariaLabelledBy,
   ariaDescribedBy,
   role = 'dialog',
-}: UnifiedModalProps): React.JSX.Element {
+}: UnifiedModalProps): React.JSX.Element | null {
+  // Track whether we should render the modal (for exit animations)
+  const [shouldRender, setShouldRender] = useState(isOpen);
+  const [isExiting, setIsExiting] = useState(false);
+
   useCloseOnEscape(isOpen && closeOnEscape, onClose);
-  useBodyScrollLock(isOpen);
+  useBodyScrollLock(shouldRender);
+
+  // Handle open/close state changes
+  useEffect(() => {
+    if (isOpen) {
+      // Opening - render immediately
+      setShouldRender(true);
+      setIsExiting(false);
+      return undefined;
+    }
+    if (shouldRender) {
+      // Closing - trigger exit animation
+      setIsExiting(true);
+      const timer = setTimeout(() => {
+        setShouldRender(false);
+        setIsExiting(false);
+      }, EXIT_ANIMATION_MS);
+      return () => clearTimeout(timer);
+    }
+    return undefined;
+  }, [isOpen, shouldRender]);
 
   const handleBackdropClick = useCallback((): void => {
     if (closeOnOverlayClick) onClose();
   }, [closeOnOverlayClick, onClose]);
 
+  if (!shouldRender) return null;
+
   return (
     <Portal>
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            <UnifiedModalBackdrop
-              onClick={handleBackdropClick}
-              layerClassName={layerClassName}
-              className={backdropClassName}
-            />
-            <UnifiedModalFrame
-              layerClassName={layerClassName}
-              className={contentClassName}
-              containerClassName={containerClassName}
-              ariaLabel={ariaLabel}
-              ariaLabelledBy={ariaLabelledBy}
-              ariaDescribedBy={ariaDescribedBy}
-              role={role}
-            >
-              {children}
-            </UnifiedModalFrame>
-          </>
-        )}
-      </AnimatePresence>
+      <UnifiedModalBackdrop
+        onClick={handleBackdropClick}
+        layerClassName={layerClassName}
+        className={backdropClassName}
+        isExiting={isExiting}
+      />
+      <UnifiedModalFrame
+        layerClassName={layerClassName}
+        className={contentClassName}
+        containerClassName={containerClassName}
+        ariaLabel={ariaLabel}
+        ariaLabelledBy={ariaLabelledBy}
+        ariaDescribedBy={ariaDescribedBy}
+        role={role}
+        isExiting={isExiting}
+      >
+        {children}
+      </UnifiedModalFrame>
     </Portal>
   );
 });

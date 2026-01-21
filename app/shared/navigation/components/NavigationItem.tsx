@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { memo } from 'react';
 
 interface NavigationItemProps {
@@ -17,10 +16,9 @@ export const NavigationItem = memo(function NavigationItem({
   onClick,
 }: NavigationItemProps): React.JSX.Element {
   return (
-    <motion.button
+    <button
       onClick={onClick}
-      className="flex items-center gap-4 p-4 rounded-2xl hover:bg-interactive-hover transition-all duration-200 text-left group touch-manipulation"
-      whileTap={{ scale: 0.98 }}
+      className="flex items-center gap-4 p-4 rounded-2xl hover:bg-interactive-hover transition-all duration-200 text-left group touch-manipulation tap-scale"
     >
       <div className="flex-shrink-0 w-10 h-10 bg-accent/10 text-accent rounded-xl flex items-center justify-center font-semibold text-sm group-hover:bg-accent group-hover:text-on-accent transition-colors">
         {number}
@@ -38,6 +36,6 @@ export const NavigationItem = memo(function NavigationItem({
           </div>
         )}
       </div>
-    </motion.button>
+    </button>
   );
 });

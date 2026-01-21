@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { memo, useCallback } from 'react';
 
 import { CheckIcon } from '@/app/shared/icons';
@@ -55,12 +54,9 @@ export const CreateFolderForm = memo(function CreateFolderForm({
   );
 
   return (
-    <motion.form
+    <form
       onSubmit={handleSubmit}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="transition-all duration-300"
+      className="transition-all duration-300 animate-fade-in"
     >
       <UnifiedInput
         variant="compact"
@@ -72,6 +68,6 @@ export const CreateFolderForm = memo(function CreateFolderForm({
         wrapperClassName="transition-all duration-300"
         rightSlot={<ActionButtons newFolderName={newFolderName} />}
       />
-    </motion.form>
+    </form>
   );
 });

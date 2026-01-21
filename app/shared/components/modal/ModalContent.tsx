@@ -1,29 +1,19 @@
-import { motion } from 'framer-motion';
-
 interface ModalContentProps {
   title: string;
   description: string;
   children: React.ReactNode;
+  isExiting?: boolean;
 }
-
-const modalVariants = {
-  hidden: { opacity: 0, scale: 0.95, y: -10 },
-  visible: { opacity: 1, scale: 1, y: 0 },
-  exit: { opacity: 0, scale: 0.95, y: -10 },
-};
 
 export const ModalContent = ({
   title,
   description,
   children,
+  isExiting = false,
 }: ModalContentProps): React.JSX.Element => (
-  <motion.div
-    variants={modalVariants}
-    initial="hidden"
-    animate="visible"
-    exit="exit"
-    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-    className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm z-modal"
+  <div
+    className={`fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm z-modal transform-gpu ${isExiting ? 'animate-modal-out' : 'animate-modal-in'}`}
+    style={{ willChange: 'transform, opacity' }}
   >
     <div
       role="dialog"
@@ -34,5 +24,5 @@ export const ModalContent = ({
       <p className="text-foreground mb-6">{description}</p>
       {children}
     </div>
-  </motion.div>
+  </div>
 );

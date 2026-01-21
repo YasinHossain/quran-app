@@ -1,13 +1,15 @@
 'use client';
 
-import { AnimatePresence, motion } from 'framer-motion';
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 import { QuranBottomSheetHeader } from './components/QuranBottomSheetHeader';
 import { QuranTabBar } from './components/QuranTabBar';
 import { TabContent } from './components/TabContent';
 import { useBottomSheetHandlers } from './hooks/useBottomSheetHandlers';
 import { useQuranNavigation } from './hooks/useQuranNavigation';
+
+// Duration for exit animation (matches CSS)
+const EXIT_ANIMATION_MS = 150;
 
 interface QuranBottomSheetProps {
   isOpen: boolean;
@@ -19,7 +21,10 @@ export const QuranBottomSheet = memo(function QuranBottomSheet({
   isOpen,
   onClose,
   onSurahSelect,
-}: QuranBottomSheetProps) {
+}: QuranBottomSheetProps): React.JSX.Element | null {
+  const [shouldRender, setShouldRender] = useState(isOpen);
+  const [isExiting, setIsExiting] = useState(false);
+
   const {
     searchTerm,
     setSearchTerm,
@@ -35,65 +40,76 @@ export const QuranBottomSheet = memo(function QuranBottomSheet({
     onSurahSelect
   );
 
+  // Handle open/close state changes
+  useEffect(() => {
+    if (isOpen) {
+      setShouldRender(true);
+      setIsExiting(false);
+      return undefined;
+    }
+    if (shouldRender) {
+      setIsExiting(true);
+      const timer = setTimeout(() => {
+        setShouldRender(false);
+        setIsExiting(false);
+      }, EXIT_ANIMATION_MS);
+      return () => clearTimeout(timer);
+    }
+    return undefined;
+  }, [isOpen, shouldRender]);
+
+  if (!shouldRender) return null;
+
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          <Backdrop onClose={onClose} />
-          <Sheet>
-            <QuranBottomSheetHeader
-              onClose={onClose}
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-            />
-            <QuranTabBar tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
-            <div className="flex-1 overflow-y-auto">
-              <TabContent
-                activeTab={activeTab}
-                filteredSurahs={filteredSurahs}
-                filteredJuzs={filteredJuzs}
-                filteredPages={filteredPages}
-                onSurahClick={handleSurahClick}
-                onJuzClick={handleJuzClick}
-                onPageClick={handlePageClick}
-              />
-            </div>
-          </Sheet>
-        </>
-      )}
-    </AnimatePresence>
+    <>
+      <Backdrop onClose={onClose} isExiting={isExiting} />
+      <Sheet isExiting={isExiting}>
+        <QuranBottomSheetHeader
+          onClose={onClose}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+        />
+        <QuranTabBar tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
+        <div className="flex-1 overflow-y-auto">
+          <TabContent
+            activeTab={activeTab}
+            filteredSurahs={filteredSurahs}
+            filteredJuzs={filteredJuzs}
+            filteredPages={filteredPages}
+            onSurahClick={handleSurahClick}
+            onJuzClick={handleJuzClick}
+            onPageClick={handlePageClick}
+          />
+        </div>
+      </Sheet>
+    </>
   );
 });
 
-const backdropVariants = { hidden: { opacity: 0 }, visible: { opacity: 1 } };
-const sheetVariants = {
-  hidden: { y: '100%', opacity: 0 },
-  visible: { y: 0, opacity: 1 },
-  exit: { y: '100%', opacity: 0 },
-};
-
-const Backdrop = ({ onClose }: { onClose: () => void }): React.ReactElement => (
-  <motion.div
-    variants={backdropVariants}
-    initial="hidden"
-    animate="visible"
-    exit="hidden"
-    transition={{ duration: 0.2 }}
-    className="fixed inset-0 bg-surface-overlay/60 z-50 touch-none"
+const Backdrop = ({
+  onClose,
+  isExiting,
+}: {
+  onClose: () => void;
+  isExiting: boolean;
+}): React.ReactElement => (
+  <div
+    className={`fixed inset-0 bg-surface-overlay/60 z-50 touch-none ${isExiting ? 'animate-backdrop-out' : 'animate-backdrop-in'}`}
     onClick={onClose}
   />
 );
 
-const Sheet = ({ children }: { children: React.ReactNode }): React.ReactElement => (
-  <motion.div
-    variants={sheetVariants}
-    initial="hidden"
-    animate="visible"
-    exit="exit"
-    transition={{ type: 'spring', damping: 25, stiffness: 350, mass: 0.8 }}
+const Sheet = ({
+  children,
+  isExiting,
+}: {
+  children: React.ReactNode;
+  isExiting: boolean;
+}): React.ReactElement => (
+  <div
+    className={`fixed bottom-0 left-0 right-0 bg-surface rounded-t-3xl shadow-2xl z-50 max-h-[90dvh] flex flex-col pb-safe touch-pan-y transform-gpu ${isExiting ? 'animate-sheet-out' : 'animate-sheet-in'}`}
     style={{ willChange: 'transform' }}
-    className="fixed bottom-0 left-0 right-0 bg-surface rounded-t-3xl shadow-2xl z-50 max-h-[90dvh] flex flex-col pb-safe touch-pan-y"
   >
     {children}
-  </motion.div>
+  </div>
 );

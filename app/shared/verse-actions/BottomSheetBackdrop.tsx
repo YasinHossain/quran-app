@@ -1,28 +1,19 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { memo } from 'react';
 
 interface BottomSheetBackdropProps {
   onClick: () => void;
+  isExiting?: boolean;
 }
-
-const backdropVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 },
-};
 
 export const BottomSheetBackdrop = memo(function BottomSheetBackdrop({
   onClick,
+  isExiting = false,
 }: BottomSheetBackdropProps): React.JSX.Element {
   return (
-    <motion.div
-      variants={backdropVariants}
-      initial="hidden"
-      animate="visible"
-      exit="hidden"
-      transition={{ duration: 0.15, ease: 'linear' }}
-      className="fixed inset-0 bg-surface-overlay/60 z-modal touch-none"
+    <div
+      className={`fixed inset-0 bg-surface-overlay/60 z-modal touch-none ${isExiting ? 'animate-backdrop-out' : 'animate-backdrop-in'}`}
       onClick={onClick}
     />
   );

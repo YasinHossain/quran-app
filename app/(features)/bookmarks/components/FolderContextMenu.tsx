@@ -1,6 +1,5 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
 import React, { useState, useRef, useEffect, useCallback, useId } from 'react';
 
 import { EllipsisHIcon, SlidersIcon } from '@/app/shared/icons';
@@ -9,8 +8,13 @@ import { cn } from '@/lib/utils/cn';
 
 import { DeleteItem } from './DeleteItem';
 
+// Duration for exit animation (matches CSS)
+const EXIT_ANIMATION_MS = 150;
+
 interface UseContextMenuResult {
   isOpen: boolean;
+  shouldRender: boolean;
+  isExiting: boolean;
   menuRef: React.MutableRefObject<HTMLDivElement | null>;
   buttonRef: React.MutableRefObject<HTMLButtonElement | null>;
   handleToggleMenu: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -19,12 +23,21 @@ interface UseContextMenuResult {
 
 const useContextMenu = (): UseContextMenuResult => {
   const [isOpen, setIsOpen] = useState(false);
+  const [shouldRender, setShouldRender] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const handleCloseMenu = useCallback((): void => {
-    setIsOpen(false);
-  }, []);
+    if (shouldRender && !isExiting) {
+      setIsExiting(true);
+      setIsOpen(false);
+      setTimeout(() => {
+        setShouldRender(false);
+        setIsExiting(false);
+      }, EXIT_ANIMATION_MS);
+    }
+  }, [shouldRender, isExiting]);
 
   const handleClickOutside = useCallback(
     (event: MouseEvent): void => {
@@ -40,10 +53,19 @@ const useContextMenu = (): UseContextMenuResult => {
     [handleCloseMenu]
   );
 
-  const handleToggleMenu = useCallback((e: React.MouseEvent<HTMLButtonElement>): void => {
-    e.stopPropagation();
-    setIsOpen((prev) => !prev);
-  }, []);
+  const handleToggleMenu = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>): void => {
+      e.stopPropagation();
+      if (isOpen) {
+        handleCloseMenu();
+      } else {
+        setShouldRender(true);
+        setIsOpen(true);
+        setIsExiting(false);
+      }
+    },
+    [isOpen, handleCloseMenu]
+  );
 
   useEffect(() => {
     if (isOpen) {
@@ -57,6 +79,8 @@ const useContextMenu = (): UseContextMenuResult => {
 
   return {
     isOpen,
+    shouldRender,
+    isExiting,
     menuRef,
     buttonRef,
     handleToggleMenu,
@@ -73,6 +97,7 @@ interface FolderMenuPanelProps extends FolderContextMenuProps {
   menuRef: React.MutableRefObject<HTMLDivElement | null>;
   onClose: () => void;
   menuId: string;
+  isExiting: boolean;
 }
 
 const FolderMenuPanel = ({
@@ -81,17 +106,17 @@ const FolderMenuPanel = ({
   onColorChange,
   onClose,
   menuId,
+  isExiting,
 }: FolderMenuPanelProps): React.JSX.Element => (
-  <motion.div
+  <div
     id={menuId}
     ref={menuRef}
     role="menu"
     aria-label="Folder options"
-    initial={{ opacity: 0, y: -8 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -8 }}
-    transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-    className="absolute right-0 top-full mt-2 min-w-[11rem] rounded-xl border border-border/40 bg-surface shadow-lg z-[200] py-2"
+    className={cn(
+      'absolute right-0 top-full mt-2 min-w-[11rem] rounded-xl border border-border/40 bg-surface shadow-lg z-[200] py-2 transform-gpu',
+      isExiting ? 'animate-menu-out' : 'animate-menu-in'
+    )}
     onClick={(event): void => {
       event.stopPropagation();
     }}
@@ -113,14 +138,15 @@ const FolderMenuPanel = ({
     ) : null}
     {onColorChange ? <div className="my-1 h-px bg-border/40" /> : null}
     <DeleteItem onDelete={onDelete} closeMenu={onClose} />
-  </motion.div>
+  </div>
 );
 
 export const FolderContextMenu = ({
   onDelete,
   onColorChange,
 }: FolderContextMenuProps): React.JSX.Element => {
-  const { isOpen, menuRef, buttonRef, handleToggleMenu, handleCloseMenu } = useContextMenu();
+  const { isOpen, shouldRender, isExiting, menuRef, buttonRef, handleToggleMenu, handleCloseMenu } =
+    useContextMenu();
   const menuId = useId();
 
   return (
@@ -142,17 +168,16 @@ export const FolderContextMenu = ({
         <EllipsisHIcon size={18} />
       </button>
 
-      <AnimatePresence>
-        {isOpen && (
-          <FolderMenuPanel
-            menuId={menuId}
-            menuRef={menuRef}
-            onDelete={onDelete}
-            onClose={handleCloseMenu}
-            {...(onColorChange ? { onColorChange } : {})}
-          />
-        )}
-      </AnimatePresence>
+      {shouldRender && (
+        <FolderMenuPanel
+          menuId={menuId}
+          menuRef={menuRef}
+          onDelete={onDelete}
+          onClose={handleCloseMenu}
+          isExiting={isExiting}
+          {...(onColorChange ? { onColorChange } : {})}
+        />
+      )}
     </div>
   );
 };

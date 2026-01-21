@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { memo } from 'react';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
@@ -37,23 +36,22 @@ export const PinTab = memo(function PinTab({
         </div>
       </div>
 
-      <motion.button
+      <button
         onClick={() => {
           togglePinned(verseId, verseKey ? { verseKey } : undefined);
           onClose?.();
         }}
         className={cn(
-          'px-6 py-3 rounded-lg font-medium transition-colors',
+          'px-6 py-3 rounded-lg font-medium transition-colors tap-scale',
           isVersePinned
             ? 'bg-accent/10 text-accent hover:bg-accent/20'
             : 'bg-accent text-on-accent hover:bg-accent/90',
           touchClasses.target,
           touchClasses.focus
         )}
-        whileTap={{ scale: 0.98 }}
       >
         {isVersePinned ? 'Unpin verse' : 'Pin verse'}
-      </motion.button>
+      </button>
     </div>
   );
 });

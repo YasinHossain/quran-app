@@ -81,6 +81,10 @@ const MobileNavigation = memo(function MobileNavigation({
         isHidden ? 'translate-y-full' : 'translate-y-0'
       )}
       aria-label="Primary navigation"
+      style={{
+        transform: isHidden ? 'translateY(100%) translateZ(0)' : 'translateZ(0)',
+        contain: 'layout style',
+      }}
     >
       <div className="px-2 sm:px-4 py-2 pb-safe">
         <div className="flex items-center w-full">

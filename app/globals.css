@@ -509,11 +509,9 @@ input[type='range'] {
   border-radius: 5px;
   outline: none;
   touch-action: none;
-  background: linear-gradient(
-    to right,
-    rgb(var(--color-accent)) var(--value-percent, 0%),
-    rgb(var(--color-border)) var(--value-percent, 0%)
-  );
+  background: linear-gradient(to right,
+      rgb(var(--color-accent)) var(--value-percent, 0%),
+      rgb(var(--color-border)) var(--value-percent, 0%));
 }
 
 input[type='range']::-webkit-slider-thumb {
@@ -653,4 +651,193 @@ body::-webkit-scrollbar-thumb:hover,
 
 .word-audio-highlight {
   color: rgb(var(--color-accent)) !important;
+}
+
+/* ===== Firefox Performance Optimizations ===== */
+/* Firefox renders backdrop-blur on CPU, causing scroll lag.
+   These rules provide solid backgrounds as fallback for Firefox. */
+@-moz-document url-prefix() {
+
+  /* Header blur fallback - use solid semi-transparent background */
+  header.backdrop-blur-lg,
+  nav.backdrop-blur-lg,
+  .backdrop-blur-lg {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgb(var(--color-surface) / 0.95) !important;
+  }
+
+  .dark header.backdrop-blur-lg,
+  .dark nav.backdrop-blur-lg,
+  .dark .backdrop-blur-lg {
+    background: rgb(var(--color-surface) / 0.92) !important;
+  }
+
+  /* Also disable saturate filter for Firefox */
+  .backdrop-saturate-150 {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+/* Alternative approach using @supports for older Firefox versions */
+@supports (-moz-appearance: none) {
+  .backdrop-blur-lg {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgb(var(--color-surface) / 0.95);
+  }
+
+  .dark .backdrop-blur-lg {
+    background: rgb(var(--color-surface) / 0.92);
+  }
+}
+
+/* ===== CSS Animations (Framer Motion Replacement) ===== */
+/* These CSS animations are GPU-accelerated and perform much better in Firefox */
+
+/* Backdrop fade animation */
+@keyframes backdrop-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes backdrop-fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+/* Modal scale/fade animation */
+@keyframes modal-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes modal-exit {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+}
+
+/* Bottom sheet slide animation */
+@keyframes sheet-slide-up {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes sheet-slide-down {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(100%);
+  }
+}
+
+/* Animation utility classes */
+.animate-backdrop-in {
+  animation: backdrop-fade-in 0.2s ease-out forwards;
+}
+
+.animate-backdrop-out {
+  animation: backdrop-fade-out 0.15s ease-in forwards;
+}
+
+.animate-modal-in {
+  animation: modal-enter 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-modal-out {
+  animation: modal-exit 0.2s ease-in forwards;
+}
+
+.animate-sheet-in {
+  animation: sheet-slide-up 0.18s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+.animate-sheet-out {
+  animation: sheet-slide-down 0.15s ease-in forwards;
+}
+
+/* Active/tap feedback for buttons (replacement for whileTap) */
+.tap-scale:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease-out;
+}
+
+/* Simple fade-in for tab content */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.15s ease-out forwards;
+}
+
+/* Menu dropdown animation */
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes menu-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+.animate-menu-in {
+  animation: menu-in 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-menu-out {
+  animation: menu-out 0.15s ease-in forwards;
 }

@@ -1,20 +1,6 @@
-import { motion } from 'framer-motion';
 import React, { memo, useEffect } from 'react';
 
 import { cn } from '@/lib/utils/cn';
-
-const BACKDROP_VARIANTS = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 },
-};
-
-const MODAL_VARIANTS = {
-  hidden: { opacity: 0, scale: 0.95, y: 10 },
-  visible: { opacity: 1, scale: 1, y: 0 },
-  exit: { opacity: 0, scale: 0.95, y: 10 },
-};
-
-const MODAL_TRANSITION = { type: 'spring', damping: 25, stiffness: 350, mass: 0.8 } as const;
 
 export function useCloseOnEscape(enabled: boolean, onClose: () => void): void {
   useEffect(() => {
@@ -33,21 +19,23 @@ export interface UnifiedModalBackdropProps {
   onClick: () => void;
   layerClassName: string;
   className?: string | undefined;
+  isExiting?: boolean;
 }
 
 export const UnifiedModalBackdrop = memo(function UnifiedModalBackdrop({
   onClick,
   layerClassName,
   className,
+  isExiting = false,
 }: UnifiedModalBackdropProps): React.JSX.Element {
   return (
-    <motion.div
-      variants={BACKDROP_VARIANTS}
-      initial="hidden"
-      animate="visible"
-      exit="hidden"
-      transition={{ duration: 0.2 }}
-      className={cn('fixed inset-0 bg-surface-overlay/60 touch-none', layerClassName, className)}
+    <div
+      className={cn(
+        'fixed inset-0 bg-surface-overlay/60 touch-none',
+        isExiting ? 'animate-backdrop-out' : 'animate-backdrop-in',
+        layerClassName,
+        className
+      )}
       onClick={onClick}
     />
   );
@@ -62,6 +50,7 @@ export interface UnifiedModalFrameProps {
   ariaLabelledBy?: string | undefined;
   ariaDescribedBy?: string | undefined;
   role: 'dialog' | 'alertdialog';
+  isExiting?: boolean;
 }
 
 export const UnifiedModalFrame = memo(function UnifiedModalFrame({
@@ -73,6 +62,7 @@ export const UnifiedModalFrame = memo(function UnifiedModalFrame({
   ariaLabelledBy,
   ariaDescribedBy,
   role,
+  isExiting = false,
 }: UnifiedModalFrameProps): React.JSX.Element {
   return (
     <div
@@ -82,14 +72,12 @@ export const UnifiedModalFrame = memo(function UnifiedModalFrame({
         containerClassName
       )}
     >
-      <motion.div
-        variants={MODAL_VARIANTS}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
-        transition={MODAL_TRANSITION}
+      <div
+        className={cn(
+          'w-full pointer-events-none transform-gpu',
+          isExiting ? 'animate-modal-out' : 'animate-modal-in'
+        )}
         style={{ willChange: 'transform, opacity' }}
-        className="w-full pointer-events-none transform-gpu"
       >
         <div
           role={role}
@@ -104,7 +92,7 @@ export const UnifiedModalFrame = memo(function UnifiedModalFrame({
         >
           {children}
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 });

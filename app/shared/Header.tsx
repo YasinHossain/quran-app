@@ -19,7 +19,11 @@ export const Header = memo(function Header(): React.JSX.Element {
         'flex items-center justify-center',
         isHidden ? '-translate-y-full' : 'translate-y-0'
       )}
-      style={{ paddingTop: 'env(safe-area-inset-top)' }}
+      style={{
+        paddingTop: 'env(safe-area-inset-top)',
+        transform: isHidden ? 'translateY(-100%) translateZ(0)' : 'translateZ(0)',
+        contain: 'layout style',
+      }}
     >
       {/* Content container centered within available height */}
       <div className="flex items-center justify-between gap-2 sm:gap-3 w-full h-14 sm:h-16 px-4 sm:px-6 xl:px-8">

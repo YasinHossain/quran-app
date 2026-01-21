@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { memo } from 'react';
 
 import { FolderIcon, CheckIcon } from '@/app/shared/icons';
@@ -11,7 +10,7 @@ import { Folder, Bookmark } from '@/types';
 
 const getButtonClasses = (isSelected: boolean): string =>
   cn(
-    'w-full flex items-center gap-4 p-4 rounded-lg transition-all duration-200 text-left',
+    'w-full flex items-center gap-4 p-4 rounded-lg transition-all duration-200 text-left tap-scale',
     isSelected
       ? 'bg-accent border border-accent'
       : 'hover:bg-interactive-hover border border-transparent',
@@ -36,10 +35,9 @@ const FolderListItem = memo(function FolderListItem({
   const bookmarkCount: number = folder.bookmarks?.length || 0;
 
   return (
-    <motion.button
+    <button
       onClick={(): void => onSelect(folder)}
       className={getButtonClasses(isSelected)}
-      whileTap={{ scale: 0.98 }}
     >
       <FolderGlyph folder={folder} size="md" className={isSelected ? 'border border-white' : ''} />
 
@@ -51,7 +49,7 @@ const FolderListItem = memo(function FolderListItem({
       </div>
 
       {isSelected && <CheckIcon size={20} className="text-white flex-shrink-0" />}
-    </motion.button>
+    </button>
   );
 });
 

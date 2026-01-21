@@ -1,7 +1,5 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
-
 import { BookmarkTab } from './BookmarkTab';
 import { PinTab } from './PinTab';
 
@@ -29,27 +27,13 @@ export function TabContent({
   onClose,
 }: TabContentProps): JSX.Element {
   return (
-    <AnimatePresence mode="wait">
+    <>
       {activeTab === 'pin' ? (
-        <motion.div
-          key="pin"
-          initial={{ opacity: 0, x: 10 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -10 }}
-          transition={{ duration: 0.15, ease: 'easeOut' }}
-          className="flex-1 overflow-hidden min-h-0"
-        >
+        <div className="flex-1 overflow-hidden min-h-0 animate-fade-in">
           <PinTab verseId={verseId} verseKey={verseKey} onClose={onClose} />
-        </motion.div>
+        </div>
       ) : (
-        <motion.div
-          key="bookmark"
-          initial={{ opacity: 0, x: 10 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -10 }}
-          transition={{ duration: 0.15, ease: 'easeOut' }}
-          className="flex-1 overflow-hidden flex flex-col min-h-0"
-        >
+        <div className="flex-1 overflow-hidden flex flex-col min-h-0 animate-fade-in">
           <BookmarkTab
             verseId={verseId}
             verseKey={verseKey}
@@ -58,8 +42,8 @@ export function TabContent({
             onToggleCreateFolder={onToggleCreateFolder}
             onNewFolderNameChange={onNewFolderNameChange}
           />
-        </motion.div>
+        </div>
       )}
-    </AnimatePresence>
+    </>
   );
 }

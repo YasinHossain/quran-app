@@ -1,18 +1,14 @@
-import { motion } from 'framer-motion';
-
 interface ModalBackdropProps {
   onClick: () => void;
+  isExiting?: boolean;
 }
 
-const backdropVariants = { hidden: { opacity: 0 }, visible: { opacity: 1 } };
-
-export const ModalBackdrop = ({ onClick }: ModalBackdropProps): React.JSX.Element => (
-  <motion.div
-    variants={backdropVariants}
-    initial="hidden"
-    animate="visible"
-    exit="hidden"
-    className="fixed inset-0 bg-background/85 z-modal"
+export const ModalBackdrop = ({
+  onClick,
+  isExiting = false,
+}: ModalBackdropProps): React.JSX.Element => (
+  <div
+    className={`fixed inset-0 bg-background/85 z-modal ${isExiting ? 'animate-backdrop-out' : 'animate-backdrop-in'}`}
     onClick={onClick}
   />
 );
