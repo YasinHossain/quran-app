@@ -39,31 +39,15 @@ const pwaConfig = {
       },
       // Audio caching strategy for Quran recitations
       {
+        // Important: avoid caching audio via the service worker.
+        // Caching + range slicing can cause playback failures on mobile after a few verse segments.
         urlPattern: /^https:\/\/.*\.(?:mp3|ogg|wav|m4a)$/,
-        handler: 'CacheFirst',
-        options: {
-          cacheName: 'audio-cache',
-          expiration: {
-            maxEntries: 50, // Cache up to 50 audio files
-            maxAgeSeconds: 7 * 24 * 60 * 60, // 1 week
-          },
-          cacheableResponse: { statuses: [0, 200] },
-          rangeRequests: true, // Support audio seeking
-        },
+        handler: 'NetworkOnly',
       },
       // Archive.org audio caching (common Quran audio source)
       {
         urlPattern: /^https:\/\/archive\.org\/.*\.mp3$/,
-        handler: 'CacheFirst',
-        options: {
-          cacheName: 'archive-audio-cache',
-          expiration: {
-            maxEntries: 30,
-            maxAgeSeconds: 7 * 24 * 60 * 60, // 1 week
-          },
-          cacheableResponse: { statuses: [0, 200, 206] }, // Include 206 for range requests
-          rangeRequests: true,
-        },
+        handler: 'NetworkOnly',
       },
       // Per-page mushaf fonts (large): cache on-demand, but keep a cap to avoid ballooning storage.
       {
