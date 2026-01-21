@@ -30,9 +30,8 @@ import { WebVitals } from './shared/components/WebVitals';
 /**
  * CRITICAL: Inline theme script to prevent FOUC (Flash of Unstyled Content).
  * This script runs synchronously before any paint occurs to set the correct theme class.
- * Must use dangerouslySetInnerHTML instead of next/Script for truly synchronous execution.
  */
-export const INLINE_THEME_SCRIPT = `(function(){try{var t=null;try{t=localStorage.getItem('theme')}catch(e){}if(!t){try{var m=document.cookie.match(/(?:^|; )theme=([^;]+)/);t=m?m[1]:null}catch(e){}}if(t!=='light'&&t!=='dark'){try{var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');if(mq&&mq.matches)t='dark'}catch(e){} }if(t==='dark'){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark')}else{document.documentElement.classList.remove('dark');document.documentElement.setAttribute('data-theme','light')}}catch(e){}})()`;
+export const INLINE_THEME_SCRIPT = `(function(){try{var t=null;try{t=localStorage.getItem('theme')}catch(e){}if(!t){try{var m=document.cookie.match(/(?:^|; )theme=([^;]+)/);t=m?decodeURIComponent(m[1]):null}catch(e){}}if(t!=='light'&&t!=='dark'){try{var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');if(mq&&mq.matches)t='dark'}catch(e){} }var r=document.documentElement;r.classList.remove('light');r.classList.toggle('dark',t==='dark');r.setAttribute('data-theme',t==='dark'?'dark':'light');try{r.style.colorScheme=t==='dark'?'dark':'light'}catch(e){}}catch(e){}})()`;
 
 export const metadata = {
   title: 'Al Quran',
@@ -52,14 +51,13 @@ export default async function RootLayout({
       : 'light';
 
   return (
-    <html lang="en" data-theme={theme} className={theme} suppressHydrationWarning>
+    <html
+      lang="en"
+      data-theme={theme}
+      className={theme === 'dark' ? 'dark' : ''}
+      suppressHydrationWarning
+    >
       <head>
-        {/* 
-          CRITICAL: Synchronous theme script to prevent FOUC.
-          This MUST run before any content is painted.
-          Using dangerouslySetInnerHTML ensures it's inline in the HTML, not injected by JS.
-        */}
-        <script dangerouslySetInnerHTML={{ __html: INLINE_THEME_SCRIPT }} />
         <meta name="theme-color" content="#0B1220" />
         {/* Preload critical Arabic font to reduce request chain */}
         <link
@@ -79,6 +77,8 @@ export default async function RootLayout({
         />
       </head>
       <body className="font-sans">
+        {/* Must run before any UI renders to prevent theme flash */}
+        <script dangerouslySetInnerHTML={{ __html: INLINE_THEME_SCRIPT }} />
         <WebVitals />
         <ErrorBoundary>
           <TranslationProvider>

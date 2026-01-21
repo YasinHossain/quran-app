@@ -80,3 +80,4 @@ analyze-chars.js
 
 # MCP config backups
 *.mcp.json.bak
+.env*.local

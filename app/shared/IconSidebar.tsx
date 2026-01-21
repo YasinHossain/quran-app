@@ -124,8 +124,13 @@ const MobileNavigation = memo(function MobileNavigation({
   );
 });
 
-export const Navigation = memo(function Navigation() {
-  const pathname = usePathname();
+export const Navigation = memo(function Navigation({
+  pathnameOverride,
+}: {
+  pathnameOverride?: string;
+}) {
+  const rawPathname = usePathname();
+  const pathname = pathnameOverride ?? rawPathname;
   const searchParams = useSearchParams();
   const router = useRouter();
   const { t } = useTranslation();
