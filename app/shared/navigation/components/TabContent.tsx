@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { NavigationItem } from './NavigationItem';
 
@@ -42,6 +43,7 @@ function SurahList({
   filteredSurahs: Surah[];
   onSurahClick: (surahId: number) => void;
 }): React.JSX.Element {
+  const { t } = useTranslation();
   return (
     <div className="p-4">
       <div className="grid gap-2">
@@ -50,7 +52,7 @@ function SurahList({
             key={surah.number}
             number={surah.number}
             title={surah.name}
-            subtitle={`${surah.verses} verses`}
+            subtitle={`${surah.verses} ${t('verses')}`}
             arabicName={surah.arabicName}
             onClick={() => onSurahClick(surah.number)}
           />
@@ -67,6 +69,7 @@ function JuzList({
   filteredJuzs: JuzSummary[];
   onJuzClick: (juzNumber: number) => void;
 }): React.JSX.Element {
+  const { t } = useTranslation();
   return (
     <div className="p-4">
       <div className="grid gap-2">
@@ -74,7 +77,7 @@ function JuzList({
           <NavigationItem
             key={juz.number}
             number={juz.number}
-            title={`Juz ${juz.number}`}
+            title={t('juz_number', { number: juz.number })}
             subtitle={juz.surahRange}
             onClick={() => onJuzClick(juz.number)}
           />
@@ -91,6 +94,7 @@ function PageList({
   filteredPages: number[];
   onPageClick: (page: number) => void;
 }): React.JSX.Element {
+  const { t } = useTranslation();
   return (
     <div className="p-4">
       <div className="grid gap-2">
@@ -98,7 +102,7 @@ function PageList({
           <NavigationItem
             key={page}
             number={page}
-            title={`Page ${page}`}
+            title={t('page_number_label', { number: page })}
             onClick={() => onPageClick(page)}
           />
         ))}

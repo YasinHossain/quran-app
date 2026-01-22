@@ -149,8 +149,8 @@ function CreatePlannerForm({
 }): React.JSX.Element {
   const formId = React.useId();
   return (
-    <div className="flex min-h-0 flex-col px-3 sm:px-4 pt-4 pb-4">
-      <div className="flex items-start justify-between gap-4 shrink-0">
+    <div className="flex min-h-0 flex-col gap-4 py-6">
+      <div className="flex items-start justify-between gap-4 shrink-0 px-5 sm:px-6">
         <ModalHeader />
         <button
           type="button"
@@ -162,7 +162,7 @@ function CreatePlannerForm({
         </button>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y scrollbar-hide pr-1">
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y scrollbar-hide px-5 sm:px-6 pt-2 pb-1">
         <PlannerForm
           formData={formData}
           onFormDataChange={onFormDataChange}
@@ -178,7 +178,7 @@ function CreatePlannerForm({
         />
       </div>
 
-      <div className="shrink-0">
+      <div className="shrink-0 px-5 sm:px-6">
         <FormActions canSubmit={canSubmit} formId={formId} />
       </div>
     </div>

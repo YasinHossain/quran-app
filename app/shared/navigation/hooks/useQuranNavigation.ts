@@ -1,5 +1,6 @@
 import { BookOpen, Hash, FileText, type LucideIcon } from 'lucide-react';
 import { useState, useMemo, Dispatch, SetStateAction } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useNavigationDatasets } from '@/app/shared/navigation/hooks/useNavigationDatasets';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
@@ -23,14 +24,15 @@ export function useQuranNavigation(): QuranNavigationReturn {
   const [activeTab, setActiveTab] = useState<'surah' | 'juz' | 'page'>('surah');
   const { juzs, pages } = useNavigationDatasets();
   const { surahs } = useSurahNavigationData();
+  const { t } = useTranslation();
 
   const tabs = useMemo<{ id: 'surah' | 'juz' | 'page'; label: string; icon: LucideIcon }[]>(
     () => [
-      { id: 'surah', label: 'Surah', icon: BookOpen },
-      { id: 'juz', label: 'Juz', icon: Hash },
-      { id: 'page', label: 'Page', icon: FileText },
+      { id: 'surah', label: t('surah_tab'), icon: BookOpen },
+      { id: 'juz', label: t('juz_tab'), icon: Hash },
+      { id: 'page', label: t('page_tab'), icon: FileText },
     ],
-    []
+    [t]
   );
 
   const term = searchTerm.toLowerCase();

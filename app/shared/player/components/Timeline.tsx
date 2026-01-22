@@ -1,6 +1,7 @@
 import * as Slider from '@radix-ui/react-slider';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { responsiveClasses } from '@/lib/responsive';
 
@@ -14,12 +15,13 @@ interface Props {
 }
 
 function TimeLabels({ elapsed, total }: { elapsed: string; total: string }): React.JSX.Element {
+  const { t } = useTranslation();
   return (
     <div
       className={`flex justify-between ${responsiveClasses.timeDisplay} ${responsiveClasses.timeLabel}`}
     >
-      <span aria-label="elapsed">{elapsed}</span>
-      <span aria-label="duration">{total}</span>
+      <span aria-label={t('elapsed')}>{elapsed}</span>
+      <span aria-label={t('duration')}>{total}</span>
     </div>
   );
 }
@@ -37,6 +39,7 @@ function SeekSlider({
   interactable: boolean;
   tooltipLabel: string;
 }): React.JSX.Element {
+  const { t } = useTranslation();
   return (
     <Tooltip.Provider delayDuration={150}>
       <Slider.Root
@@ -49,7 +52,7 @@ function SeekSlider({
         onValueChange={([v]) => {
           if (typeof v === 'number') setSeek(v);
         }}
-        aria-label="Seek"
+        aria-label={t('seek')}
       >
         <Slider.Track className="h-0.5 rounded-full relative w-full grow bg-border">
           <Slider.Range className="h-full rounded-full absolute bg-accent" />
@@ -61,12 +64,13 @@ function SeekSlider({
 }
 
 function SeekSliderThumb({ tooltipLabel }: { tooltipLabel: string }): React.JSX.Element {
+  const { t } = useTranslation();
   return (
     <Tooltip.Root>
       <Tooltip.Trigger asChild>
         <Slider.Thumb
           className="block h-3 w-3 rounded-full shadow-[0_1px_2px_rgba(2,6,23,0.15)] focus:outline-none bg-accent relative z-[120] transition-transform active:scale-110 active:ring-2 active:ring-offset-2 cursor-pointer"
-          aria-label="Position"
+          aria-label={t('position')}
         />
       </Tooltip.Trigger>
       <Tooltip.Portal>

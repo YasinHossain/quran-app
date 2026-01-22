@@ -180,10 +180,10 @@ it('tab switching between “Surah” and “Juz” changes rendered content and
   const surahLink = (await screen.findByText('Al-Fatihah')).closest('a');
   expect(surahLink).toHaveAttribute('href', '/surah/1');
 
-  await userEvent.click(screen.getByRole('button', { name: 'Juz' }));
+  await userEvent.click(screen.getByRole('button', { name: 'juz_tab' }));
   const juzLink = (await screen.findByText('Juz 1')).closest('a');
   expect(juzLink).toHaveAttribute('href', '/juz/1');
 
-  await userEvent.click(screen.getByRole('button', { name: 'Surah' }));
+  await userEvent.click(screen.getByRole('button', { name: 'surah_tab' }));
   expect(await screen.findByText('Al-Fatihah')).toBeInTheDocument();
 });

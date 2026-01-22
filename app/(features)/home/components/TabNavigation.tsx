@@ -1,6 +1,7 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { TabButton } from './TabButton';
 
@@ -16,11 +17,6 @@ interface TabNavigationProps {
   onTabChange: (tab: TabType) => void;
 }
 
-const TAB_CONFIGS: TabConfig[] = [
-  { id: 'Surah', label: 'Surah' },
-  { id: 'Juz', label: 'Juz' },
-];
-
 /**
  * Tab navigation component with consistent button styling
  * Maps over tab configurations to reduce repetition
@@ -29,9 +25,18 @@ export const TabNavigation = memo(function TabNavigation({
   activeTab,
   onTabChange,
 }: TabNavigationProps) {
+  const { t } = useTranslation();
+  const tabs = useMemo<TabConfig[]>(
+    () => [
+      { id: 'Surah', label: t('surah_tab') },
+      { id: 'Juz', label: t('juz_tab') },
+    ],
+    [t]
+  );
+
   return (
     <div className="flex items-center p-1 sm:p-2 rounded-full bg-interactive flex-shrink-0">
-      {TAB_CONFIGS.map((tab) => (
+      {tabs.map((tab) => (
         <TabButton
           key={tab.id}
           label={tab.label}

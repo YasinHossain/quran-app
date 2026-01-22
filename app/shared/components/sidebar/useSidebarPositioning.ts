@@ -24,7 +24,7 @@ export const useSidebarPositioning = ({
   const getPositionClasses = (): string => {
     const baseClasses = cn(
       // Use !fixed to avoid being overridden by any accidental 'relative'
-      '!fixed w-full bg-surface transition-transform duration-300 ease-in-out will-change-transform',
+      '!fixed w-full bg-surface transition-transform duration-300 ease-in-out will-change-transform transform-gpu',
       'sm:w-80',
       position === 'left'
         ? [

@@ -108,7 +108,7 @@ describe('SettingsSidebar - Translation Panel', () => {
 
     await userEvent.click(screen.getByLabelText(/open settings/i));
     const translationButton = screen.getAllByRole<HTMLButtonElement>('button', {
-      name: 'Translation',
+      name: 'translations',
     })[0]!;
     await userEvent.click(translationButton);
     const panel = screen.getByTestId('translation-panel');

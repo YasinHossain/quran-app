@@ -1,6 +1,7 @@
 'use client';
 
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { EllipsisHIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
@@ -17,6 +18,7 @@ export const VerseActionTrigger = memo(function VerseActionTrigger({
   onOpen,
   className = '',
 }: VerseActionTriggerProps) {
+  const { t } = useTranslation();
   return (
     <div className={cn('flex items-center justify-between', className)}>
       <div className="flex-shrink-0 pl-1">
@@ -30,7 +32,7 @@ export const VerseActionTrigger = memo(function VerseActionTrigger({
           touchClasses.gesture,
           touchClasses.focus
         )}
-        aria-label="Open verse actions menu"
+        aria-label={t('open_verse_actions_menu')}
       >
         <EllipsisHIcon size={18} className="text-muted group-hover:text-accent transition-colors" />
       </button>

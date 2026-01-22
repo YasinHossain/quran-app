@@ -1,6 +1,7 @@
 'use client';
 
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { CloseIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
@@ -19,17 +20,18 @@ export const TabNavigation = memo(function TabNavigation({
   verseKey = '',
   onClose,
 }: TabNavigationProps): React.JSX.Element {
+  const { t } = useTranslation();
   const tabs = [
-    { id: 'pin' as const, label: 'Pin Verse' },
-    { id: 'bookmark' as const, label: 'Add to Folder' },
+    { id: 'pin' as const, label: t('pin_verse') },
+    { id: 'bookmark' as const, label: t('add_to_folder') },
   ];
 
   return (
     <div className="px-3 py-4 relative">
       <div className="flex w-full items-start justify-center">
         <div className="space-y-1 text-center">
-          <h2 className="text-xl font-semibold text-foreground">Add to Collections</h2>
-          {verseKey && <p className="text-sm text-muted">Surah {verseKey}</p>}
+          <h2 className="text-xl font-semibold text-foreground">{t('add_to_collections')}</h2>
+          {verseKey && <p className="text-sm text-muted">{t('surah_verse_key', { verseKey })}</p>}
         </div>
         <button
           onClick={onClose}
@@ -37,7 +39,7 @@ export const TabNavigation = memo(function TabNavigation({
             'absolute right-3 top-3 p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center',
             touchClasses.focus
           )}
-          aria-label="Close"
+          aria-label={t('close')}
         >
           <CloseIcon size={18} className="text-muted" />
         </button>

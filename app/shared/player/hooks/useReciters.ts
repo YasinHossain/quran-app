@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import useSWR from 'swr';
 
+import { i18n } from '@/app/i18n';
 import { getQdcAudioReciters } from '@/lib/audio/qdcAudio';
 
 import type { Reciter } from '@/app/shared/player/types';
@@ -16,7 +17,10 @@ export const DEFAULT_RECITER: Reciter = {
 };
 
 function mapQdcReciterToReciter(reciter: QdcAudioReciterApi): Reciter {
-  const displayName = reciter.translated_name?.name || reciter.name || 'Unknown reciter';
+  const nameOverrideKey = `reciter_names.${reciter.id}`;
+  const localizedName = i18n.exists(nameOverrideKey) ? i18n.t(nameOverrideKey) : undefined;
+  const displayName =
+    localizedName || reciter.translated_name?.name || reciter.name || i18n.t('unknown_reciter');
   const localeParts = [reciter.style?.name].filter((part): part is string => Boolean(part));
   const locale = localeParts.join(' • ');
   return {
@@ -39,7 +43,7 @@ export function useReciters(): UseRecitersReturn {
     const mapped = (data ?? []).map(mapQdcReciterToReciter);
     mapped.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
     return mapped;
-  }, [data]);
+  }, [data, i18n.language]);
 
   return {
     reciters,

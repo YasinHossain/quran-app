@@ -121,10 +121,27 @@ export const TajweedRulesPanel = ({
   onClose,
   onCloseSidebar,
 }: TajweedRulePanelProps): React.JSX.Element => {
+  return (
+    <SlideOverPanel isOpen={isOpen} testId="tajweed-rules-panel">
+      <TajweedRulesPanelBody
+        onClose={onClose}
+        {...(onCloseSidebar ? { onCloseSidebar } : {})}
+      />
+    </SlideOverPanel>
+  );
+};
+
+function TajweedRulesPanelBody({
+  onClose,
+  onCloseSidebar,
+}: {
+  onClose: () => void;
+  onCloseSidebar?: () => void;
+}): React.JSX.Element {
   const { t } = useTranslation();
 
   return (
-    <SlideOverPanel isOpen={isOpen} testId="tajweed-rules-panel">
+    <>
       <SettingsPanelHeader
         title={t('tajweed_rules') === 'tajweed_rules' ? 'Tajweed Rules' : t('tajweed_rules')}
         onClose={onClose}
@@ -162,6 +179,6 @@ export const TajweedRulesPanel = ({
           </div>
         </div>
       </div>
-    </SlideOverPanel>
+    </>
   );
-};
+}

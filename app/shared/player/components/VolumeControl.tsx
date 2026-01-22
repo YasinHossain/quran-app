@@ -1,5 +1,6 @@
 import * as Slider from '@radix-ui/react-slider';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { VolumeIcon, VolumeOffIcon } from '@/app/shared/icons';
 import { useAudio } from '@/app/shared/player/context/AudioContext';
@@ -8,6 +9,7 @@ import { useAudio } from '@/app/shared/player/context/AudioContext';
  * Provides mobile and desktop controls for adjusting audio volume.
  */
 export const VolumeControl = memo(function VolumeControl(): React.JSX.Element {
+  const { t } = useTranslation();
   const { volume, setVolume } = useAudio();
   return (
     <>
@@ -15,7 +17,7 @@ export const VolumeControl = memo(function VolumeControl(): React.JSX.Element {
       <button
         className="h-8 w-8 grid place-items-center rounded-full transition hover:bg-interactive-hover md:hidden"
         onClick={() => setVolume(volume === 0 ? 0.8 : 0)}
-        aria-label={volume === 0 ? 'Unmute' : 'Mute'}
+        aria-label={volume === 0 ? t('unmute') : t('mute')}
       >
         {volume === 0 ? (
           <VolumeOffIcon className="h-4 w-4 opacity-80 text-muted" />
@@ -39,7 +41,7 @@ export const VolumeControl = memo(function VolumeControl(): React.JSX.Element {
           onValueChange={([v]) => {
             if (typeof v === 'number') setVolume(v);
           }}
-          aria-label="Volume"
+          aria-label={t('volume')}
         >
           <Slider.Track className="h-0.5 rounded-full relative w-full grow bg-border">
             <Slider.Range className="h-full rounded-full absolute bg-accent" />

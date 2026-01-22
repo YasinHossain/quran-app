@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useSettingsSections, useSettingsTabState } from '@/app/(features)/surah/hooks';
 import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
@@ -71,7 +72,7 @@ export function SettingsSidebarContent({
   onMushafPanelClose,
   mushafOptions,
   onMushafChange,
-  title = 'Settings',
+  title: titleProp,
   showCloseButton,
   onClose,
   activeReaderMode,
@@ -83,8 +84,10 @@ export function SettingsSidebarContent({
   pageType,
 }: SettingsSidebarContentProps): React.JSX.Element {
   void _idPrefix;
+  const { t } = useTranslation();
   const [internalArabicFontPanelOpen, setInternalArabicFontPanelOpen] = useState(false);
   const [internalTajweedRulesPanelOpen, setInternalTajweedRulesPanelOpen] = useState(false);
+  const title = titleProp ?? t('settings');
 
   const isArabicFontPanelOpen = isArabicFontPanelOpenProp ?? internalArabicFontPanelOpen;
   const isTajweedRulesPanelOpen = internalTajweedRulesPanelOpen;
@@ -106,7 +109,7 @@ export function SettingsSidebarContent({
     : {
         activeTab: 'translation' as const,
         handleTabChange: () => {},
-        tabOptions: [{ value: 'translation', label: 'Translation' }] as Array<{
+        tabOptions: [{ value: 'translation', label: t('translations') }] as Array<{
           value: SettingsTabValue;
           label: string;
         }>,

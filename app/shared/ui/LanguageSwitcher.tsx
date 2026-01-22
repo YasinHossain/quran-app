@@ -3,20 +3,18 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
+import {
+  UI_LANGUAGES,
+  UI_LANGUAGE_STORAGE_KEY,
+  isUiLanguageCode,
+  type UiLanguageCode,
+} from '@/app/shared/i18n/uiLanguages';
 import { cn } from '@/lib/utils/cn';
 
-const LANGUAGES = [
-  { code: 'en', label: 'English', nativeLabel: 'English' },
-  { code: 'bn', label: 'Bangla', nativeLabel: 'বাংলা' },
-] as const;
-
-type LanguageCode = (typeof LANGUAGES)[number]['code'];
-
-const LOCAL_STORAGE_KEY = 'ui-language';
-
 interface LanguageButtonProps {
-  language: (typeof LANGUAGES)[number];
-  currentLanguage: LanguageCode;
+  language: (typeof UI_LANGUAGES)[number];
+  currentLanguage: UiLanguageCode;
   onClick: () => void;
 }
 
@@ -55,31 +53,29 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
   className,
 }: LanguageSwitcherProps): React.JSX.Element {
   const { i18n } = useTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>('en');
+  const [currentLanguage, setCurrentLanguage] = useState<UiLanguageCode>('en');
   const [isClient, setIsClient] = useState(false);
 
   // Initialize language from localStorage on mount
   useEffect(() => {
     setIsClient(true);
-    const savedLanguage = localStorage.getItem(LOCAL_STORAGE_KEY) as LanguageCode | null;
-    if (savedLanguage && LANGUAGES.some((lang) => lang.code === savedLanguage)) {
+    const savedLanguage = localStorage.getItem(UI_LANGUAGE_STORAGE_KEY) as UiLanguageCode | null;
+    if (savedLanguage && UI_LANGUAGES.some((lang) => lang.code === savedLanguage)) {
       setCurrentLanguage(savedLanguage);
-      i18n.changeLanguage(savedLanguage);
+      setUiLanguage(savedLanguage);
     } else {
-      setCurrentLanguage(i18n.language as LanguageCode);
+      const initial =
+        typeof i18n?.language === 'string' && isUiLanguageCode(i18n.language) ? i18n.language : 'en';
+      setCurrentLanguage(initial);
     }
   }, [i18n]);
 
   const handleLanguageChange = useCallback(
-    (languageCode: LanguageCode): void => {
-      i18n.changeLanguage(languageCode);
+    (languageCode: UiLanguageCode): void => {
+      setUiLanguage(languageCode);
       setCurrentLanguage(languageCode);
-      localStorage.setItem(LOCAL_STORAGE_KEY, languageCode);
-
-      // Update document lang attribute for accessibility
-      document.documentElement.lang = languageCode;
     },
-    [i18n]
+    []
   );
 
   // Don't render anything during SSR to prevent hydration mismatch
@@ -104,7 +100,7 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
         role="group"
         aria-label="Language selection"
       >
-        {LANGUAGES.map((language) => (
+        {UI_LANGUAGES.map((language) => (
           <LanguageButton
             key={language.code}
             language={language}
@@ -120,7 +116,12 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
   return (
     <select
       value={currentLanguage}
-      onChange={(e) => handleLanguageChange(e.target.value as LanguageCode)}
+      onChange={(e) => {
+        const next = e.target.value;
+        if (isUiLanguageCode(next)) {
+          handleLanguageChange(next);
+        }
+      }}
       className={cn(
         'min-h-touch px-3 py-2 rounded-lg bg-interactive border border-border text-foreground',
         'focus:outline-none focus:ring-2 focus:ring-accent',
@@ -128,7 +129,7 @@ export const LanguageSwitcher = memo(function LanguageSwitcher({
       )}
       aria-label="Select language"
     >
-      {LANGUAGES.map((language) => (
+      {UI_LANGUAGES.map((language) => (
         <option key={language.code} value={language.code}>
           {language.nativeLabel}
         </option>

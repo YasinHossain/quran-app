@@ -85,7 +85,8 @@ function ChildrenSection({
 }): React.JSX.Element | null {
   if (!children) return null;
 
-  const heading = title === undefined ? 'More' : title;
+  const { t } = useTranslation();
+  const heading = title === undefined ? t('more') : title;
 
   return (
     <div className={cn('pt-1.5 px-2 sm:px-3', containerClassName)}>

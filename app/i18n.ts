@@ -15,7 +15,16 @@ const getSavedLanguage = (): string => {
   return 'en';
 };
 
-i18n.use(initReactI18next).init({
+// Some Jest tests mock `react-i18next` without providing `initReactI18next`.
+// Fall back to a no-op plugin so importing this module never crashes in tests.
+const reactI18nextPlugin =
+  initReactI18next ??
+  ({
+    type: '3rdParty',
+    init: () => {},
+  } as const);
+
+i18n.use(reactI18nextPlugin).init({
   resources: {
     en: { translation: commonEn, player: playerEn },
     bn: { translation: commonBn, player: playerBn },

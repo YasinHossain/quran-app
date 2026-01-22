@@ -502,13 +502,17 @@ export const VerseArabic = memo(function VerseArabic({
             })()}
           </span>
         ) : (
-          <span className="inline-flex items-center gap-2">
+          <span>
             <VerseText verseText={verseText} isQpcHafsFont={isQpcHafsFont} />
             {typeof verse.verse_number === 'number' && Number.isFinite(verse.verse_number) ? (
-              <HybridVerseMarker
-                verseNumber={verse.verse_number}
-                {...(settings.arabicFontFace ? { fontFamily: settings.arabicFontFace } : {})}
-              />
+              <>
+                {'\u00A0'}
+                <HybridVerseMarker
+                  verseNumber={verse.verse_number}
+                  className="inline-block align-middle"
+                  {...(settings.arabicFontFace ? { fontFamily: settings.arabicFontFace } : {})}
+                />
+              </>
             ) : null}
           </span>
         )}

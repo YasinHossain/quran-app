@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { useQdcAudioFile } from '@/app/shared/player/hooks/useQdcAudioFile';
@@ -57,6 +58,7 @@ const createTrack = (
   audioUrl: string,
   startMs: number,
   endMs: number,
+  surahLabel: string,
   segments?: Array<[number, number, number]>
 ): Track => {
   const durationMs = Math.max(0, endMs - startMs);
@@ -69,7 +71,7 @@ const createTrack = (
   }));
   return {
     id: verse.id.toString(),
-    title: `Surah ${verse.verse_key}`,
+    title: `${surahLabel} ${verse.verse_key}`,
     artist: reciter.name,
     durationSec: durationMs / 1000,
     src: audioUrl,
@@ -86,7 +88,9 @@ export const AppAudioPlayer = ({
   onNext,
   onPrev,
 }: AppAudioPlayerProps): React.JSX.Element | null => {
+  const { t } = useTranslation();
   const { isHidden } = useHeaderVisibility();
+  const surahLabel = t('surah_tab');
 
   // All hooks must be called before any conditional returns (React Rules of Hooks)
   const chapterId = useMemo(
@@ -106,9 +110,10 @@ export const AppAudioPlayer = ({
       audioFile.audioUrl,
       timing.timestampFrom,
       timing.timestampTo,
+      surahLabel,
       timing.segments
     );
-  }, [activeVerse, audioFile, reciter]);
+  }, [activeVerse, audioFile, reciter, surahLabel]);
 
   const handleNext = useMemo(() => (): boolean => Boolean(onNext?.()), [onNext]);
   const handlePrev = useMemo(() => (): boolean => Boolean(onPrev?.()), [onPrev]);
@@ -136,7 +141,7 @@ export const AppAudioPlayer = ({
     return (
       <div className={containerClass} style={containerStyle}>
         <div className="rounded-lg border border-border bg-surface p-4 text-sm text-muted">
-          Unable to load audio for this reciter.
+          {t('unable_to_load_audio_for_reciter')}
         </div>
       </div>
     );

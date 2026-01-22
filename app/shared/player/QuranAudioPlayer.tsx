@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useAudio } from '@/app/shared/player/context/AudioContext';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
@@ -24,38 +25,12 @@ type PlaybackError = {
   message: string;
 };
 
-function getMediaErrorMessage(code: number | null): string {
-  switch (code) {
-    case 1:
-      return 'Audio load was interrupted.';
-    case 2:
-      return 'Network error while loading audio.';
-    case 3:
-      return 'Audio decoding failed.';
-    case 4:
-      return 'Audio format is not supported.';
-    default:
-      return 'Audio playback failed.';
-  }
-}
-
-function getMediaErrorHint(code: number | null): string {
-  switch (code) {
-    case 2:
-      return 'Please check your connection and try again.';
-    case 3:
-    case 4:
-      return 'Try switching reciters or using a different browser.';
-    default:
-      return 'Try again in a moment.';
-  }
-}
-
 export function QuranAudioPlayer({
   track,
   onPrev,
   onNext,
 }: QuranAudioPlayerProps): React.JSX.Element | null {
+  const { t } = useTranslation();
   const audioContext = useAudio();
   const {
     isPlayerVisible,
@@ -73,6 +48,39 @@ export function QuranAudioPlayer({
   });
 
   const [playbackError, setPlaybackError] = useState<PlaybackError | null>(null);
+
+  const getMediaErrorMessage = useCallback(
+    (code: number | null): string => {
+      switch (code) {
+        case 1:
+          return t('audio_error_load_interrupted');
+        case 2:
+          return t('audio_error_network');
+        case 3:
+          return t('audio_error_decoding');
+        case 4:
+          return t('audio_error_format_not_supported');
+        default:
+          return t('audio_error_playback_failed');
+      }
+    },
+    [t]
+  );
+
+  const getMediaErrorHint = useCallback(
+    (code: number | null): string => {
+      switch (code) {
+        case 2:
+          return t('audio_error_hint_check_connection');
+        case 3:
+        case 4:
+          return t('audio_error_hint_try_switch_reciter');
+        default:
+          return t('audio_error_hint_try_again');
+      }
+    },
+    [t]
+  );
 
   useEffect(() => {
     setPlaybackError(null);
@@ -95,7 +103,7 @@ export function QuranAudioPlayer({
 
     audioContext.setIsPlaying(false);
     setPlaybackError({ code, message: getMediaErrorMessage(code) });
-  }, [audioContext, audioRef, track?.src]);
+  }, [audioContext, audioRef, getMediaErrorMessage, track?.src]);
 
   const handleAudioReady = useCallback(() => {
     setPlaybackError(null);
@@ -139,7 +147,7 @@ export function QuranAudioPlayer({
             className="mt-2 inline-flex min-h-touch items-center justify-center rounded-md bg-button-secondary px-3 py-1 text-xs text-foreground hover:bg-button-secondary-hover"
             onClick={handleRetry}
           >
-            Retry
+            {t('retry')}
           </button>
         </div>
       )}
@@ -165,11 +173,12 @@ export function QuranAudioPlayer({
 type PlayerLayoutProps = DesktopPlayerLayoutProps & MobilePlayerLayoutProps;
 
 const PlayerLayouts = React.memo(function PlayerLayouts(props: PlayerLayoutProps) {
+  const { t } = useTranslation();
   return (
     <div
       className="mx-auto w-full rounded-lg px-3 py-3 sm:px-4 sm:py-4 bg-surface shadow-lg"
       role="region"
-      aria-label="Player"
+      aria-label={t('audio_player')}
     >
       <div className="flex flex-col gap-3 sm:hidden">
         <MobilePlayerLayout {...props} />

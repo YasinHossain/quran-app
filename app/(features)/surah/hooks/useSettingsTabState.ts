@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface UseSettingsTabStateProps {
   onReadingPanelOpen?: () => void;
@@ -19,6 +20,7 @@ export const useSettingsTabState: (args?: UseSettingsTabStateProps) => ReturnSha
   onTranslationTabOpen,
   activeTabOverride,
 }: UseSettingsTabStateProps = {}) => {
+  const { t } = useTranslation();
   // Initialize with override value directly to prevent flash
   const [activeTab, setActiveTab] = useState<TabValue>(activeTabOverride ?? 'translation');
 
@@ -42,8 +44,8 @@ export const useSettingsTabState: (args?: UseSettingsTabStateProps) => ReturnSha
   }, [activeTabOverride, activeTab]);
 
   const tabOptions: TabOption[] = [
-    { value: 'translation', label: 'Translation' },
-    { value: 'reading', label: 'Mushaf' },
+    { value: 'translation', label: t('translations') },
+    { value: 'reading', label: t('mushaf') },
   ];
 
   return {

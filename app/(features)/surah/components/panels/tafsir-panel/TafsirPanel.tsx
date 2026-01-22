@@ -57,8 +57,22 @@ export const TafsirPanel = ({
   onClose,
   onCloseSidebar,
 }: TafsirPanelProps): React.JSX.Element => {
-  const panelData = useTafsirPanel(isOpen);
-  const { listContainerRef, listHeight } = useListHeight(isOpen);
+  return (
+    <SlideOverPanel isOpen={isOpen} testId="tafsir-panel">
+      <TafsirPanelBody onClose={onClose} {...(onCloseSidebar ? { onCloseSidebar } : {})} />
+    </SlideOverPanel>
+  );
+};
+
+function TafsirPanelBody({
+  onClose,
+  onCloseSidebar,
+}: {
+  onClose: () => void;
+  onCloseSidebar?: () => void;
+}): React.JSX.Element {
+  const panelData = useTafsirPanel(true);
+  const { listContainerRef, listHeight } = useListHeight(true);
   const { resourcesToRender, sectionsToRender } = useTafsirSections(
     panelData.activeFilter,
     panelData.tafsirs,
@@ -75,7 +89,7 @@ export const TafsirPanel = ({
   );
 
   return (
-    <SlideOverPanel isOpen={isOpen} testId="tafsir-panel">
+    <>
       <SettingsPanelHeader
         title="Manage Tafsirs"
         onClose={onClose}
@@ -85,6 +99,6 @@ export const TafsirPanel = ({
       <div className="flex-1 flex flex-col min-h-0">
         <TafsirPanelContent {...contentProps} />
       </div>
-    </SlideOverPanel>
+    </>
   );
-};
+}

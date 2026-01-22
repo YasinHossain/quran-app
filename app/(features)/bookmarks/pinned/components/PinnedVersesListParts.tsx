@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
+import { useTranslation } from 'react-i18next';
 
 import { VerseSkeleton } from '@/app/shared/components/VerseSkeleton';
 import { PinIcon } from '@/app/shared/icons';
@@ -25,14 +26,15 @@ export function PinnedLoading(): React.JSX.Element {
 }
 
 export function PinnedEmptyState(): React.JSX.Element {
+  const { t } = useTranslation();
   return (
     <div className="text-center py-16">
       <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-4">
         <PinIcon size={32} className="text-muted" />
       </div>
-      <h3 className="text-lg font-semibold text-foreground mb-2">No Pinned Verses</h3>
+      <h3 className="text-lg font-semibold text-foreground mb-2">{t('no_pinned_verses')}</h3>
       <p className="text-muted max-w-md mx-auto">
-        Pin your favorite verses while reading to access them quickly from here.
+        {t('no_pinned_verses_description')}
       </p>
     </div>
   );

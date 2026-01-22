@@ -2,6 +2,7 @@
 
 import clsx from 'clsx';
 import { useMemo, useId, useRef, type ReactElement } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { SurahSelect } from '@/app/shared/components/go-to/SurahSelect';
 
@@ -42,14 +43,17 @@ export function SurahVerseSelector({
   onSurahChange,
   onVerseChange,
   onVerseSelectionComplete,
-  surahLabel = 'Surah',
-  verseLabel = 'Verse',
+  surahLabel: surahLabelProp,
+  verseLabel: verseLabelProp,
   className,
   hideVerse = false,
 }: SurahVerseSelectorProps): ReactElement {
+  const { t } = useTranslation();
   const surahInputId = useId();
   const verseInputId = useId();
   const verseInputRef = useRef<HTMLInputElement>(null);
+  const surahLabel = surahLabelProp ?? t('surah_tab');
+  const verseLabel = verseLabelProp ?? t('verse');
 
   // Convert chapters to options
   const surahOptions: SurahOption[] = useMemo(
@@ -104,7 +108,7 @@ export function SurahVerseSelector({
           value={selectedSurah ? String(selectedSurah) : ''}
           onChange={handleSurahChange}
           options={surahOptions}
-          placeholder={isLoading ? 'Loading surahs…' : 'Select Surah'}
+          placeholder={isLoading ? t('loading_surahs') : t('select_surah')}
           disabled={isLoading}
           className="w-full"
           onSelectionComplete={() => {
@@ -129,7 +133,9 @@ export function SurahVerseSelector({
             value={selectedVerse ? String(selectedVerse) : ''}
             onChange={handleVerseChange}
             options={verseOptions}
-            placeholder={!selectedSurah || verseOptions.length ? 'Select Verse' : 'Loading verses…'}
+            placeholder={
+              !selectedSurah || verseOptions.length ? t('select_verse') : t('loading_verses')
+            }
             disabled={!selectedSurah || !verseOptions.length || isLoading}
             className="w-full"
             onSelectionComplete={(val) => {

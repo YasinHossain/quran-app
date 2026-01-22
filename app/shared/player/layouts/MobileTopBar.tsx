@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { CloseIcon, SlidersIcon } from '@/app/shared/icons';
 import { SpeedControl } from '@/app/shared/player/components/SpeedControl';
@@ -38,18 +39,19 @@ function ActionButtons({
   closePlayer: () => void;
   className?: string; // Allow overriding layout
 }): React.JSX.Element {
+  const { t } = useTranslation();
   return (
     <div className={className || 'flex items-center gap-0.5 xs:gap-1 justify-self-end'}>
       <SpeedControl />
       <button
         className="p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center shrink-0"
-        aria-label="Options"
+        aria-label={t('audio_settings')}
         onClick={setMobileOptionsOpen}
       >
         <SlidersIcon size={18} />
       </button>
       <button
-        aria-label="Close player"
+        aria-label={t('close_player')}
         onClick={closePlayer}
         className="p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center hover:text-red-500"
       >
@@ -59,12 +61,12 @@ function ActionButtons({
   );
 }
 
-function formatMobileTitle(title: string): string {
+function formatMobileTitle(title: string, surahLabel: string): string {
   if (title.toLowerCase().startsWith('verse')) {
-    return title.replace(/^Verse/i, 'Surah');
+    return title.replace(/^Verse/i, surahLabel);
   }
   if (/^\d+:\d+$/.test(title)) {
-    return `Surah ${title}`;
+    return `${surahLabel} ${title}`;
   }
   return title;
 }
@@ -80,12 +82,14 @@ export function MobileTopBar({
   setMobileOptionsOpen,
   closePlayer,
 }: Props): React.JSX.Element {
+  const { t } = useTranslation();
+  const surahLabel = t('surah_tab');
   return (
     <div className="flex flex-col gap-1 w-full min-[450px]:grid min-[450px]:grid-cols-[1fr_auto_1fr] min-[450px]:gap-2 min-[450px]:items-center">
       {/* Mobile Text Header */}
       <div className="flex justify-between items-center px-1 mb-1 min-[450px]:hidden order-1">
         <div className="text-sm font-semibold truncate text-foreground min-w-0">
-          {formatMobileTitle(title)}
+          {formatMobileTitle(title, surahLabel)}
         </div>
         <div className="text-xs text-muted truncate max-w-[50%] text-right shrink-0">{artist}</div>
       </div>

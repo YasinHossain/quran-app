@@ -25,6 +25,32 @@ export const MushafPanel = ({
   onSelect,
   onCloseSidebar,
 }: MushafPanelProps): React.JSX.Element => {
+  return (
+    <SlideOverPanel isOpen={isOpen} testId="mushaf-panel">
+      <MushafPanelBody
+        onClose={onClose}
+        options={options}
+        {...(selectedId ? { selectedId } : {})}
+        onSelect={onSelect}
+        {...(onCloseSidebar ? { onCloseSidebar } : {})}
+      />
+    </SlideOverPanel>
+  );
+};
+
+function MushafPanelBody({
+  onClose,
+  options,
+  selectedId,
+  onSelect,
+  onCloseSidebar,
+}: {
+  onClose: () => void;
+  options: MushafOption[];
+  selectedId?: string | undefined;
+  onSelect: (mushafId: string) => void;
+  onCloseSidebar?: () => void;
+}): React.JSX.Element {
   const groupId = useId();
 
   const handleSelect = (id: string): void => {
@@ -33,7 +59,7 @@ export const MushafPanel = ({
   };
 
   return (
-    <SlideOverPanel isOpen={isOpen} testId="mushaf-panel">
+    <>
       <SettingsPanelHeader
         title="Select mushaf"
         onClose={onClose}
@@ -56,6 +82,6 @@ export const MushafPanel = ({
           ))}
         </div>
       </div>
-    </SlideOverPanel>
+    </>
   );
-};
+}

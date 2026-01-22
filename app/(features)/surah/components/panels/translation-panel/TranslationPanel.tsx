@@ -21,8 +21,22 @@ export const TranslationPanel = ({
   onClose,
   onCloseSidebar,
 }: TranslationPanelProps): React.JSX.Element => {
+  return (
+    <SlideOverPanel isOpen={isOpen} testId="translation-panel">
+      <TranslationPanelBody onClose={onClose} {...(onCloseSidebar ? { onCloseSidebar } : {})} />
+    </SlideOverPanel>
+  );
+};
+
+function TranslationPanelBody({
+  onClose,
+  onCloseSidebar,
+}: {
+  onClose: () => void;
+  onCloseSidebar?: () => void;
+}): React.JSX.Element {
   const panelData = useTranslationPanel();
-  const { listContainerRef, listHeight } = useListHeight(isOpen);
+  const { listContainerRef, listHeight } = useListHeight(true);
   const { resourcesToRender, sectionsToRender } = useTranslationSections(
     panelData.activeFilter,
     panelData.translations,
@@ -30,7 +44,7 @@ export const TranslationPanel = ({
   );
 
   return (
-    <SlideOverPanel isOpen={isOpen} testId="translation-panel">
+    <>
       <SettingsPanelHeader
         title="Manage Translations"
         onClose={onClose}
@@ -64,6 +78,6 @@ export const TranslationPanel = ({
           listContainerRef={listContainerRef as React.RefObject<HTMLDivElement>}
         />
       </div>
-    </SlideOverPanel>
+    </>
   );
-};
+}

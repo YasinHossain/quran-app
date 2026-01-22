@@ -21,19 +21,41 @@ export const WordLanguagePanel = ({
   renderMode = 'panel',
   onCloseSidebar,
 }: WordLanguagePanelProps): React.JSX.Element => {
-  const { t } = useTranslation();
-  const { selectedId, handleLanguageSelect } = useWordLanguageSelection();
-
   if (renderMode === 'content') {
     return (
       <div className="flex-grow p-4 space-y-4">
-        <LanguageList selectedId={selectedId} onSelect={handleLanguageSelect} />
+        <WordLanguagePanelContent />
       </div>
     );
   }
 
   return (
     <SlideOverPanel isOpen={isOpen} testId="word-language-panel">
+      <WordLanguagePanelBody
+        onClose={onClose}
+        {...(onCloseSidebar ? { onCloseSidebar } : {})}
+      />
+    </SlideOverPanel>
+  );
+};
+
+function WordLanguagePanelContent(): React.JSX.Element {
+  const { selectedId, handleLanguageSelect } = useWordLanguageSelection();
+  return <LanguageList selectedId={selectedId} onSelect={handleLanguageSelect} />;
+}
+
+function WordLanguagePanelBody({
+  onClose,
+  onCloseSidebar,
+}: {
+  onClose: () => void;
+  onCloseSidebar?: () => void;
+}): React.JSX.Element {
+  const { t } = useTranslation();
+  const { selectedId, handleLanguageSelect } = useWordLanguageSelection();
+
+  return (
+    <>
       <SettingsPanelHeader
         title={t('word_by_word_panel_title')}
         onClose={onClose}
@@ -47,6 +69,6 @@ export const WordLanguagePanel = ({
           </div>
         </div>
       </div>
-    </SlideOverPanel>
+    </>
   );
-};
+}

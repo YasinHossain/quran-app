@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { SlidersIcon } from '@/app/shared/icons';
 
@@ -7,6 +8,7 @@ import { SpeedControl } from './SpeedControl';
 import { VolumeControl } from './VolumeControl';
 
 export function PlayerOptions(): React.JSX.Element {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'reciter' | 'repeat'>('reciter');
   return (
@@ -17,7 +19,7 @@ export function PlayerOptions(): React.JSX.Element {
       </div>
       <button
         className="p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center shrink-0"
-        aria-label="Options"
+        aria-label={t('audio_settings')}
         onClick={() => {
           setActiveTab('reciter');
           setOpen(true);

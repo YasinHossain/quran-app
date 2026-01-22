@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { SurahVerseSelector } from '@/app/shared/components/SurahVerseSelector';
 import { useSurahNavigationData } from '@/app/shared/navigation/hooks/useSurahNavigationData';
@@ -46,13 +47,14 @@ function ModeSelector({
   localRepeat: RepeatOptions;
   setLocalRepeat: React.Dispatch<React.SetStateAction<RepeatOptions>>;
 }): React.JSX.Element {
+  const { t } = useTranslation();
   const options = useMemo(
     () => [
-      { value: 'single', label: 'Single' },
-      { value: 'range', label: 'Range' },
-      { value: 'surah', label: 'Surah' },
+      { value: 'single', label: t('single_verse') },
+      { value: 'range', label: t('verse_range') },
+      { value: 'surah', label: t('full_surah') },
     ],
-    []
+    [t]
   );
 
   return (
@@ -70,6 +72,7 @@ function RepeatFields({
   rangeWarning,
   setRangeWarning,
 }: Props): React.JSX.Element {
+  const { t } = useTranslation();
   const isSingle = localRepeat.mode === 'single';
   const isSurah = localRepeat.mode === 'surah';
   // Include 'off' in showRange for backward compatibility
@@ -111,20 +114,20 @@ function RepeatFields({
       <div className={`grid grid-cols-1 gap-3 ${isSingle ? 'sm:grid-cols-2' : 'sm:grid-cols-3'}`}>
         {!isSingle && (
           <CounterInput
-            label="Play Count"
+            label={t('play_count')}
             value={localRepeat.playCount ?? 1}
             min={1}
             onChange={(v) => setLocalRepeat({ ...localRepeat, playCount: v })}
           />
         )}
         <CounterInput
-          label="Repeat Each"
+          label={t('repeat_each')}
           value={localRepeat.repeatEach ?? 1}
           min={1}
           onChange={(v) => setLocalRepeat({ ...localRepeat, repeatEach: v })}
         />
         <CounterInput
-          label="Delay (s)"
+          label={t('delay_seconds')}
           value={localRepeat.delay ?? 0}
           min={0}
           onChange={(v) => setLocalRepeat({ ...localRepeat, delay: v })}
@@ -242,6 +245,7 @@ function RangeFields({
   chapters: ReturnType<typeof useSurahNavigationData>['chapters'];
   isLoading: boolean;
 }): React.JSX.Element {
+  const { t } = useTranslation();
   const startSurahId = localRepeat.startSurahId ?? localRepeat.surahId;
   const endSurahId = localRepeat.endSurahId ?? startSurahId;
   const selectedStartVerse = localRepeat.startVerseNumber ?? localRepeat.start;
@@ -354,8 +358,8 @@ function RangeFields({
         selectedVerse={selectedStartVerse}
         onSurahChange={handleStartSurahChange}
         onVerseChange={handleStartVerseChange}
-        surahLabel="Start Surah"
-        verseLabel="Start Verse"
+        surahLabel={t('start_surah')}
+        verseLabel={t('start_verse')}
       />
 
       <SurahVerseSelector
@@ -365,8 +369,8 @@ function RangeFields({
         selectedVerse={selectedEndVerse}
         onSurahChange={handleEndSurahChange}
         onVerseChange={handleEndVerseChange}
-        surahLabel="End Surah"
-        verseLabel="End Verse"
+        surahLabel={t('end_surah')}
+        verseLabel={t('end_verse')}
       />
     </>
   );

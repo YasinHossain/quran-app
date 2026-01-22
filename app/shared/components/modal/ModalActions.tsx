@@ -1,4 +1,7 @@
+'use client';
+
 import { forwardRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface ModalActionsProps {
   onCancel: () => void;
@@ -13,12 +16,15 @@ export const ModalActions = forwardRef<HTMLButtonElement, ModalActionsProps>(
     {
       onCancel,
       onConfirm,
-      cancelText = 'Cancel',
-      confirmText = 'Delete',
+      cancelText: cancelTextProp,
+      confirmText: confirmTextProp,
       confirmVariant = 'error',
     },
     ref
   ) => {
+    const { t } = useTranslation();
+    const cancelText = cancelTextProp ?? t('cancel');
+    const confirmText = confirmTextProp ?? t('delete');
     const confirmButtonClasses =
       confirmVariant === 'error'
         ? 'bg-error text-on-error hover:bg-error/90'
@@ -29,14 +35,14 @@ export const ModalActions = forwardRef<HTMLButtonElement, ModalActionsProps>(
         <button
           ref={ref}
           onClick={onCancel}
-          aria-label={`Cancel ${confirmText.toLowerCase()}`}
+          aria-label={cancelText}
           className="px-4 py-2 text-sm font-medium text-muted hover:text-foreground hover:bg-interactive-hover rounded-lg transition-colors"
         >
           {cancelText}
         </button>
         <button
           onClick={onConfirm}
-          aria-label={`Confirm ${confirmText.toLowerCase()}`}
+          aria-label={confirmText}
           className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${confirmButtonClasses}`}
         >
           {confirmText}

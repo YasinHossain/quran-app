@@ -219,7 +219,7 @@ export const Navigation = memo(function Navigation({
   const navItems = useMemo(
     (): NavItem[] => [
       { icon: HomeIcon, label: t('home'), href: '/' },
-      { icon: GridIcon, label: 'Surah', href: readerHref },
+      { icon: GridIcon, label: t('surah_tab'), href: readerHref },
       { icon: BookmarkOutlineIcon, label: t('bookmarks'), href: '/bookmarks/last-read' },
     ],
     [readerHref, t]

@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { UnifiedModal } from '@/app/shared/components/modal/UnifiedModal';
 
@@ -37,11 +38,12 @@ export const PlaybackOptionsModalContent = memo(function PlaybackOptionsModalCon
   setRangeWarning,
   commit,
 }: ContentProps) {
+  const { t } = useTranslation();
   return (
     <UnifiedModal
       isOpen={open}
       onClose={onClose}
-      ariaLabel="Playback options"
+      ariaLabel={t('playback_options')}
       layerClassName="z-[120]"
       backdropClassName="touch-none"
       contentClassName="max-w-3xl mx-auto max-h-[85vh] overflow-hidden flex flex-col"

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { CloseIcon } from '@/app/shared/icons';
 import { PlayerOptions } from '@/app/shared/player/components/PlayerOptions';
@@ -77,11 +78,12 @@ export const DesktopPlayerLayout = React.memo(function DesktopPlayerLayout({
 });
 
 function Utilities({ closePlayer }: { closePlayer: () => void }): React.JSX.Element {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center gap-2">
       <PlayerOptions />
       <button
-        aria-label="Close player"
+        aria-label={t('close_player')}
         onClick={closePlayer}
         className="p-1.5 rounded-full hover:bg-interactive-hover transition-colors flex items-center justify-center hover:text-red-500"
       >

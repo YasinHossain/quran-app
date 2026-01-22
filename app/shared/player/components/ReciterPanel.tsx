@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useReciters } from '@/app/shared/player/hooks/useReciters';
 import { touchClasses } from '@/lib/responsive';
@@ -14,6 +15,7 @@ export const ReciterPanel = memo(function ReciterPanel({
   localReciter,
   setLocalReciter,
 }: Props): React.JSX.Element {
+  const { t } = useTranslation();
   const { reciters, isLoading, error } = useReciters();
 
   return (
@@ -22,7 +24,7 @@ export const ReciterPanel = memo(function ReciterPanel({
         {(isLoading || error) && (
           <div>
             <div className="text-xs text-muted">
-              {isLoading ? 'Loading reciters…' : 'Unable to load reciters.'}
+              {isLoading ? t('loading_reciters') : t('unable_to_load_reciters')}
             </div>
           </div>
         )}

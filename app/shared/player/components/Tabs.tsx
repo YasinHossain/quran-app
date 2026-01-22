@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { MicIcon, RepeatIcon } from '@/app/shared/icons';
 
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export const Tabs = memo(function Tabs({ activeTab, setActiveTab }: Props): React.JSX.Element {
+  const { t } = useTranslation();
   return (
     <div className="mb-4 flex justify-center gap-2">
       <button
@@ -20,7 +22,7 @@ export const Tabs = memo(function Tabs({ activeTab, setActiveTab }: Props): Reac
       >
         <span className="inline-flex items-center gap-2">
           <MicIcon className="h-4 w-4" />
-          Reciter
+          {t('reciter')}
         </span>
       </button>
       <button
@@ -33,7 +35,7 @@ export const Tabs = memo(function Tabs({ activeTab, setActiveTab }: Props): Reac
       >
         <span className="inline-flex items-center gap-2">
           <RepeatIcon className="h-4 w-4" />
-          Verse Repeat
+          {t('verse_repeat')}
         </span>
       </button>
     </div>

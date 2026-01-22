@@ -1,6 +1,7 @@
 'use client';
 
 import { memo, useState, useCallback, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { CalendarIcon, EllipsisHIcon, ShareIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
@@ -17,6 +18,7 @@ export const VerseOptionsMenu = memo(function VerseOptionsMenu({
   onAddToPlan,
   className = '',
 }: VerseOptionsMenuProps): React.JSX.Element {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -68,7 +70,7 @@ export const VerseOptionsMenu = memo(function VerseOptionsMenu({
       <button
         ref={buttonRef}
         type="button"
-        aria-label="Open verse options"
+        aria-label={t('open_verse_options')}
         aria-haspopup="menu"
         aria-expanded={isOpen}
         onClick={toggleMenu}
@@ -85,7 +87,7 @@ export const VerseOptionsMenu = memo(function VerseOptionsMenu({
         <div
           ref={menuRef}
           role="menu"
-          aria-label="Verse options"
+          aria-label={t('verse_options')}
           className="absolute top-full left-full ml-2 mt-2 w-44 rounded-lg border border-border/40 bg-surface shadow-lg z-[200] py-2 animate-in fade-in-0 slide-in-from-top-2 duration-200 ease-out"
         >
           <button
@@ -95,7 +97,7 @@ export const VerseOptionsMenu = memo(function VerseOptionsMenu({
             className="flex w-full items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-surface-hover transition-colors"
           >
             <CalendarIcon size={18} className="text-muted" />
-            <span>Add to Plan</span>
+            <span>{t('add_to_plan')}</span>
           </button>
           <button
             type="button"
@@ -104,7 +106,7 @@ export const VerseOptionsMenu = memo(function VerseOptionsMenu({
             className="flex w-full items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-surface-hover transition-colors"
           >
             <ShareIcon size={18} className="text-muted" />
-            <span>Share</span>
+            <span>{t('share')}</span>
           </button>
         </div>
       ) : null}

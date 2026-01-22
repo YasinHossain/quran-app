@@ -18,11 +18,25 @@ export const ArabicFontPanel = ({
   onClose,
   onCloseSidebar,
 }: ArabicFontPanelProps): React.JSX.Element => {
-  const panel = useArabicFontPanel();
-  const { listContainerRef, listHeight } = useListHeight(isOpen);
-
   return (
     <SlideOverPanel isOpen={isOpen} testId="arabic-font-panel">
+      <ArabicFontPanelBody onClose={onClose} {...(onCloseSidebar ? { onCloseSidebar } : {})} />
+    </SlideOverPanel>
+  );
+};
+
+function ArabicFontPanelBody({
+  onClose,
+  onCloseSidebar,
+}: {
+  onClose: () => void;
+  onCloseSidebar?: () => void;
+}): React.JSX.Element {
+  const panel = useArabicFontPanel();
+  const { listContainerRef, listHeight } = useListHeight(true);
+
+  return (
+    <>
       <SettingsPanelHeader
         title="Arabic Font Selection"
         onClose={onClose}
@@ -34,6 +48,6 @@ export const ArabicFontPanel = ({
         listContainerRef={listContainerRef}
         listHeight={listHeight}
       />
-    </SlideOverPanel>
+    </>
   );
-};
+}

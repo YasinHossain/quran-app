@@ -1,6 +1,7 @@
 'use client';
 
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { PinTabProps } from '@/app/shared/bookmark-modal/types';
@@ -13,9 +14,11 @@ export const PinTab = memo(function PinTab({
   verseKey,
   onClose,
 }: PinTabProps): React.JSX.Element {
+  const { t } = useTranslation();
   const { isPinned, togglePinned } = useBookmarks();
   // Check both verseId and verseKey to find pins regardless of storage format
   const isVersePinned = isPinned(verseId) || (verseKey ? isPinned(verseKey) : false);
+  const verseRef = verseKey || verseId;
 
   return (
     <div className="p-6 flex flex-col items-center justify-center min-h-[200px] space-y-6">
@@ -26,12 +29,12 @@ export const PinTab = memo(function PinTab({
 
         <div className="space-y-2">
           <h3 className="font-medium text-foreground">
-            {isVersePinned ? 'Pinned verse' : 'Pin this verse'}
+            {isVersePinned ? t('pinned_verse_title') : t('pin_this_verse_title')}
           </h3>
           <p className="text-sm text-muted text-center max-w-xs">
             {isVersePinned
-              ? `Verse ${verseKey || verseId} is pinned to your pin verse section.`
-              : `Pin verse ${verseKey || verseId} for quick access from the pin verse section of the bookmark page.`}
+              ? t('pinned_verse_description', { verseRef })
+              : t('pin_this_verse_description', { verseRef })}
           </p>
         </div>
       </div>
@@ -50,7 +53,7 @@ export const PinTab = memo(function PinTab({
           touchClasses.focus
         )}
       >
-        {isVersePinned ? 'Unpin verse' : 'Pin verse'}
+        {isVersePinned ? t('unpin_verse') : t('pin_verse_action')}
       </button>
     </div>
   );
