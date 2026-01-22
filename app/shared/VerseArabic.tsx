@@ -8,6 +8,7 @@ import { useSettings } from '@/app/providers/SettingsContext';
 import { HybridVerseMarker } from '@/app/shared/components/verse-marker/VerseMarker';
 import { AudioContext } from '@/app/shared/player/context/AudioContext';
 import { TajweedFontPalettes } from '@/app/shared/TajweedFontPalettes';
+import { useBreakpoint } from '@/lib/responsive';
 import { sanitizeHtml } from '@/lib/text/sanitizeHtml';
 import { cn } from '@/lib/utils/cn';
 import { Verse as VerseType, Word } from '@/types';
@@ -56,6 +57,27 @@ const resolveWordText = (word: Word, isIndopakFont: boolean): string =>
 
 const resolveVerseText = (verse: VerseType, isIndopakFont: boolean): string =>
   isIndopakFont ? (verse.text_indopak ?? verse.text_uthmani) : verse.text_uthmani;
+
+// Quran annotation / waqf markers (e.g. ۛ ۚ ۖ ۗ) are encoded as standalone characters.
+// Some APIs return them as their own "word", which can cause them to wrap onto a new line
+// and appear detached (e.g. floating at the margin). Detect these "marker-only" words so
+// we can keep them visually attached to the preceding word.
+const isStandaloneQuranMarkerWord = (text: string): boolean => {
+  if (!text) return false;
+  const trimmed = text.trim();
+  if (!trimmed) return false;
+
+  // Strip bidi and formatting controls that some APIs include around Arabic tokens.
+  const normalized = trimmed.replace(/[\u061C\u200C-\u200F\u202A-\u202E\u2066-\u2069]/g, '');
+  if (!normalized) return false;
+
+  // If a token includes digits (e.g. verse marker + number), it's not a waqf marker.
+  if (/[\u0660-\u0669]/.test(normalized)) return false;
+
+  // Quranic annotation marks live mostly in U+06D6..U+06ED (Arabic Extended-A).
+  // Treat tokens consisting solely of these codepoints as markers.
+  return /^[\u06D6-\u06ED]+$/.test(normalized);
+};
 
 // Word rendering component
 interface WordDisplayProps {
@@ -115,6 +137,25 @@ const WordDisplay = ({
   const isPlayerVisible = audioCtx?.isPlayerVisible ?? false;
   const verticalAlignClass = showByWords ? 'align-top' : 'align-baseline';
   const baseWordText = resolveWordText(word, isIndopakFont);
+
+  // Marker-only words (e.g. ۛ) should render without extra inline-block boxing/centering,
+  // and without tooltips/copy metadata, otherwise they can look "detached".
+  if (isStandaloneQuranMarkerWord(baseWordText)) {
+    const useTajweed = tajweed && word.codeV2;
+    const rawText = (useTajweed ? word.codeV2 : baseWordText) || '';
+    const displayText = cleanTextContent(rawText, isQpcHafsFont);
+    if (!displayText?.trim()) return null;
+    return (
+      <span
+        key={`${word.id}-${index}`}
+        className={verticalAlignClass}
+        aria-hidden="true"
+        style={{ position: 'relative', insetInlineStart: '0.12em' }}
+      >
+        {displayText}
+      </span>
+    );
+  }
 
   // Skip rendering for Rub/Sajdah markers if that's all the word is
   if (/[\u06DE\uFD3E\uFD3F]/.test(baseWordText) && !/[\u06DD]/.test(baseWordText)) {
@@ -273,6 +314,7 @@ export const VerseArabic = memo(function VerseArabic({
   className,
 }: VerseArabicProps): React.JSX.Element {
   const { settings } = useSettings();
+  const breakpoint = useBreakpoint();
 
   // Dynamically load Arabic font when user changes their selection
   useDynamicFontLoader(settings.arabicFontFace);
@@ -285,6 +327,9 @@ export const VerseArabic = memo(function VerseArabic({
     : false;
   const verseText = resolveVerseText(verse, isIndopakFont);
   const tajweed = settings.tajweed ?? false;
+  const hasVerseText = Boolean(verseText?.trim());
+  const isDesktopWordTooltipEnabled = breakpoint === 'desktop' || breakpoint === 'wide';
+  const shouldRenderWords = tajweed || showByWords || isDesktopWordTooltipEnabled || !hasVerseText;
 
   const handleCopy = (event: React.ClipboardEvent<HTMLParagraphElement>): void => {
     if (typeof window === 'undefined') return;
@@ -371,10 +416,10 @@ export const VerseArabic = memo(function VerseArabic({
         }}
         onCopy={handleCopy}
       >
-        {verse.words && verse.words.length > 0 ? (
+        {shouldRenderWords && verse.words && verse.words.length > 0 ? (
           <span>
-            {verse.words
-              .filter((word: Word) => {
+            {(() => {
+              const words = verse.words.filter((word: Word) => {
                 const displayText =
                   tajweed && word.codeV2
                     ? word.codeV2
@@ -394,30 +439,77 @@ export const VerseArabic = memo(function VerseArabic({
                 }
 
                 return true;
-              })
-              .map((word: Word, index: number) => (
-                <Fragment key={`${word.id}-${index}`}>
-                  {index > 0 ? ' ' : null}
-                  <WordDisplay
-                    word={word}
-                    index={index}
-                    showByWords={showByWords}
-                    wordLang={wordLang}
-                    settings={settings}
-                    isQpcHafsFont={isQpcHafsFont}
-                    tajweed={tajweed}
-                    tajweedFontFamily={getTajweedFontFamily(word)}
-                    verseKey={verse.verse_key}
-                    wordPosition={word.position ?? index + 1}
-                    fontFamily={settings.arabicFontFace}
-                    isIndopakFont={isIndopakFont}
-                  />
-                </Fragment>
-              ))}
+              });
+
+              // Attach marker-only tokens to their nearest word so they can't wrap alone.
+              // Handles both trailing markers (word + ۛ) and leading markers (ۛ + word).
+              const groups: { word: Word; index: number }[][] = [];
+              let pendingLeadingMarkers: { word: Word; index: number }[] = [];
+
+              for (let index = 0; index < words.length; index += 1) {
+                const current = words[index]!;
+                const currentText = resolveWordText(current, isIndopakFont);
+
+                if (isStandaloneQuranMarkerWord(currentText)) {
+                  if (groups.length > 0) {
+                    groups[groups.length - 1]!.push({ word: current, index });
+                  } else {
+                    pendingLeadingMarkers.push({ word: current, index });
+                  }
+                  continue;
+                }
+
+                groups.push([...pendingLeadingMarkers, { word: current, index }]);
+                pendingLeadingMarkers = [];
+              }
+
+              if (pendingLeadingMarkers.length > 0) {
+                if (groups.length > 0) {
+                  groups[groups.length - 1]!.push(...pendingLeadingMarkers);
+                } else {
+                  groups.push(pendingLeadingMarkers);
+                }
+              }
+
+              return groups.map((group, groupIndex) => {
+                const groupKey = group.map((item) => item.word.id).join('-') || String(groupIndex);
+                return (
+                  <Fragment key={`word-group-${groupKey}-${groupIndex}`}>
+                    {groupIndex > 0 ? ' ' : null}
+                    <span className={group.length > 1 ? 'whitespace-nowrap' : undefined}>
+                      {group.map((item) => (
+                        <Fragment key={`${item.word.id}-${item.index}`}>
+                          <WordDisplay
+                            word={item.word}
+                            index={item.index}
+                            showByWords={showByWords}
+                            wordLang={wordLang}
+                            settings={settings}
+                            isQpcHafsFont={isQpcHafsFont}
+                            tajweed={tajweed}
+                            tajweedFontFamily={getTajweedFontFamily(item.word)}
+                            verseKey={verse.verse_key}
+                            wordPosition={item.word.position ?? item.index + 1}
+                            fontFamily={settings.arabicFontFace}
+                            isIndopakFont={isIndopakFont}
+                          />
+                        </Fragment>
+                      ))}
+                    </span>
+                  </Fragment>
+                );
+              });
+            })()}
           </span>
         ) : (
           <span className="inline-flex items-center gap-2">
             <VerseText verseText={verseText} isQpcHafsFont={isQpcHafsFont} />
+            {typeof verse.verse_number === 'number' && Number.isFinite(verse.verse_number) ? (
+              <HybridVerseMarker
+                verseNumber={verse.verse_number}
+                {...(settings.arabicFontFace ? { fontFamily: settings.arabicFontFace } : {})}
+              />
+            ) : null}
           </span>
         )}
       </p>

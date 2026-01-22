@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { useHeaderVisibility } from '@/app/(features)/layout/context/HeaderVisibilityContext';
 import { cn } from '@/lib/utils/cn';
@@ -36,12 +36,31 @@ export const BaseSidebar = ({
   'aria-label': ariaLabel = 'Sidebar',
 }: BaseSidebarProps): React.JSX.Element => {
   const { isHidden } = useHeaderVisibility();
+  const [isPinnedOpen, setIsPinnedOpen] = useState(false);
   const { getPositionClasses } = useSidebarPositioning({
     position,
     isOpen,
     isHeaderHidden: isHidden,
     desktopBreakpoint,
   });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const minWidth = getDesktopMinWidth(desktopBreakpoint);
+    const mediaQuery = window.matchMedia(`(min-width: ${minWidth}px)`);
+
+    const syncPinned = (): void => {
+      setIsPinnedOpen(mediaQuery.matches);
+    };
+
+    syncPinned();
+    mediaQuery.addEventListener('change', syncPinned);
+
+    return () => {
+      mediaQuery.removeEventListener('change', syncPinned);
+    };
+  }, [desktopBreakpoint]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -80,6 +99,8 @@ export const BaseSidebar = ({
         ? 'xl:overflow-visible xl:pb-0'
         : '2xl:overflow-visible 2xl:pb-0';
 
+  const shouldRenderContent = useMemo(() => isOpen || isPinnedOpen, [isOpen, isPinnedOpen]);
+
   return (
     <>
       <SidebarOverlay
@@ -102,7 +123,7 @@ export const BaseSidebar = ({
         aria-label={ariaLabel}
         aria-modal={isOpen}
       >
-        {children}
+        {shouldRenderContent ? children : null}
       </aside>
     </>
   );

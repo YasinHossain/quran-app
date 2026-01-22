@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useLayoutEffect } from 'react';
+import { RefObject, useCallback, useEffect } from 'react';
 
 interface ScrollPersistenceOptions<T extends string> {
   scrollRef: RefObject<HTMLDivElement | null>;
@@ -25,12 +25,13 @@ export const useScrollPersistence = <T extends string>({
 }: ScrollPersistenceOptions<T>): ScrollPersistenceResult<T> => {
   const enabled = isEnabled;
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!enabled) return;
     const container = scrollRef.current;
     if (!container) return;
     const storageKey = storageKeys[activeTab];
     const top = Number(sessionStorage.getItem(storageKey)) || scrollTops[activeTab];
+    if (container.scrollTop === top) return;
     container.scrollTop = top;
   }, [activeTab, enabled, scrollRef, scrollTops, storageKeys]);
 

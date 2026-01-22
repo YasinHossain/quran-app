@@ -8,9 +8,9 @@
 
 import { getChaptersServer, getVersesOfDayServer } from '@/lib/api/server';
 
-import { HeaderVisibilityProvider } from './(features)/layout/context/HeaderVisibilityContext';
 import { HomePageClient } from './(features)/home/components/HomePageClient';
 import { SurahGridServer } from './(features)/home/components/SurahGridServer';
+import { HeaderVisibilityProvider } from './(features)/layout/context/HeaderVisibilityContext';
 import { Navigation } from './shared/IconSidebar';
 import { ModernLayout } from './shared/navigation/ModernLayout';
 
@@ -32,4 +32,3 @@ export default async function Page(): Promise<React.JSX.Element> {
     </HeaderVisibilityProvider>
   );
 }
-

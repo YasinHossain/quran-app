@@ -55,7 +55,7 @@ export function FontSettingsContent({
           label={t('arabic_font_size')}
           value={settings.arabicFontSize ?? 34}
           min={16}
-          max={48}
+          max={64}
           onChange={handleArabicFontSizeChange}
           style={arabicStyle}
         />
@@ -64,7 +64,7 @@ export function FontSettingsContent({
             label={t('translation_font_size')}
             value={settings.translationFontSize ?? 18}
             min={12}
-            max={28}
+            max={48}
             onChange={handleTranslationFontSizeChange}
             style={translationStyle}
           />

@@ -52,7 +52,6 @@
 @font-face {
   font-family: 'UthmanicHafs1Ver18';
   src:
-    local('KFGQPC HAFS Uthmanic Script'),
     url('/fonts/UthmanicHafs1Ver18.woff2') format('woff2'),
     url('/fonts/UthmanicHafs1Ver18.ttf') format('truetype');
   font-weight: normal;

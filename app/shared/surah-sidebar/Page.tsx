@@ -1,6 +1,7 @@
 'use client';
 
 import React, { memo, useCallback, startTransition } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
 import { PageNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
@@ -36,6 +37,7 @@ const PageItem = memo(function PageItem({
   href,
   onNavigate,
 }: PageItemProps): React.JSX.Element {
+  const { t } = useTranslation();
   return (
     <li style={{ contain: 'layout style' }}>
       <PageNavigationCard
@@ -46,7 +48,7 @@ const PageItem = memo(function PageItem({
         isActive={isActive}
         content={{
           id: page,
-          title: `Page ${page}`,
+          title: t('page_number_label', { number: page }),
         }}
         onNavigate={onNavigate}
       />

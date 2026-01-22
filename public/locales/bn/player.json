@@ -1,0 +1,11 @@
+{
+    "skip_back": "১০ সেকেন্ড পিছনে যান",
+    "skip_forward": "১০ সেকেন্ড সামনে যান",
+    "pause_audio": "অডিও বিরতি দিন",
+    "play_audio": "অডিও চালু করুন",
+    "toggle_repeat": "পুনরাবৃত্তি টগল করুন",
+    "toggle_mute": "নিঃশব্দ টগল করুন",
+    "audio_settings": "অডিও সেটিংস",
+    "microphone": "মাইক্রোফোন",
+    "could_not_play_audio": "অডিও খেলতে পারেনি।"
+}

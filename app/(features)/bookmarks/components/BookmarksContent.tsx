@@ -1,16 +1,14 @@
 'use client';
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { SidebarHeader } from '@/app/shared/components/SidebarHeader';
-import { BookmarkIcon, PinIcon, ClockIcon, CalendarIcon } from '@/app/shared/icons';
-import { BookmarkNavigationCard } from '@/app/shared/ui/cards';
 import { cn } from '@/lib/utils/cn';
 
-import type {
-  BookmarkNavigationContent,
-  SectionId,
-} from '@/app/shared/ui/cards/BookmarkNavigationCard';
+import { NavigationSection } from './NavigationSection';
+
+import type { SectionId } from '@/app/shared/ui/cards/BookmarkNavigationCard';
 
 interface BookmarksContentProps {
   activeSection?: SectionId;
@@ -32,95 +30,49 @@ export const BookmarksContent = ({
   childrenContentClassName,
   showNavigation = true,
   onClose,
-}: BookmarksContentProps): React.JSX.Element => (
-  <div className="relative flex flex-1 min-h-0 flex-col bg-background text-foreground">
-    <SidebarHeader
-      title="Bookmarks"
-      titleClassName="text-mobile-lg font-semibold text-content-primary"
-      className="xl:hidden"
-      showCloseButton
-      {...(onClose ? { onClose } : {})}
-      forceVisible
-    />
+}: BookmarksContentProps): React.JSX.Element => {
+  const { t } = useTranslation();
+  return (
+    <div className="relative flex flex-1 min-h-0 flex-col bg-background text-foreground">
+      <SidebarHeader
+        title={t('bookmarks')}
+        titleClassName="text-mobile-lg font-semibold text-content-primary"
+        className="xl:hidden"
+        showCloseButton
+        {...(onClose ? { onClose } : {})}
+        forceVisible
+      />
 
-    <div className="flex-1 overflow-hidden flex flex-col">
-      {showNavigation ? (
-        <div>
-          <NavigationSection activeSection={activeSection} onSectionChange={onSectionChange} />
-        </div>
-      ) : null}
+      <div className="flex-1 overflow-hidden flex flex-col">
+        {showNavigation ? (
+          <div>
+            <NavigationSection activeSection={activeSection} onSectionChange={onSectionChange} />
+          </div>
+        ) : null}
 
-      <div
-        className="flex-1 min-h-0 overflow-y-auto touch-pan-y"
-        // Reserve scroll gutter so edge-to-edge dividers reach the sidebar edge.
-        style={{ scrollbarGutter: 'stable' }}
-      >
-        <ChildrenSection
-          {...(childrenTitle !== undefined ? { title: childrenTitle } : {})}
-          {...(childrenContainerClassName !== undefined
-            ? { containerClassName: childrenContainerClassName }
-            : {})}
-          {...(childrenContentClassName !== undefined
-            ? { contentClassName: childrenContentClassName }
-            : {})}
+        <div
+          className="flex-1 min-h-0 overflow-y-auto touch-pan-y"
+          // Reserve scroll gutter so edge-to-edge dividers reach the sidebar edge.
+          style={{ scrollbarGutter: 'stable' }}
         >
-          {children}
-        </ChildrenSection>
+          <ChildrenSection
+            {...(childrenTitle !== undefined ? { title: childrenTitle } : {})}
+            {...(childrenContainerClassName !== undefined
+              ? { containerClassName: childrenContainerClassName }
+              : {})}
+            {...(childrenContentClassName !== undefined
+              ? { contentClassName: childrenContentClassName }
+              : {})}
+          >
+            {children}
+          </ChildrenSection>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
-const NAVIGATION_SECTIONS: BookmarkNavigationContent[] = [
-  { id: 'last-read', icon: ClockIcon, label: 'Recent', description: 'Last visited' },
-  { id: 'bookmarks', icon: BookmarkIcon, label: 'All Bookmarks', description: 'Manage folders' },
-  { id: 'pinned', icon: PinIcon, label: 'Pinned Verses', description: 'Quick access' },
-  {
-    id: 'planner',
-    icon: CalendarIcon,
-    label: 'Planner',
-    description: 'Track progress',
-  },
-];
-
-const NavigationSection = ({
-  activeSection,
-  onSectionChange,
-}: {
-  activeSection: SectionId;
-  onSectionChange?: ((section: SectionId) => void) | undefined;
-}): React.JSX.Element => (
-  <nav className="px-2 sm:px-3 pt-2 sm:pt-2.5 pb-1.5">
-    <div className="space-y-1.5">
-      {NAVIGATION_SECTIONS.map((section) => (
-        <NavigationItem
-          key={section.id}
-          section={section}
-          activeSection={activeSection}
-          onSectionChange={onSectionChange}
-        />
-      ))}
-    </div>
-  </nav>
-);
-
-const NavigationItem = ({
-  section,
-  activeSection,
-  onSectionChange,
-}: {
-  section: BookmarkNavigationContent;
-  activeSection: SectionId;
-  onSectionChange?: ((section: SectionId) => void) | undefined;
-}): React.JSX.Element => (
-  <BookmarkNavigationCard
-    content={section}
-    isActive={activeSection === section.id}
-    {...(onSectionChange && { onSectionChange })}
-  />
-);
-
-const ChildrenSection = ({
+function ChildrenSection({
   children,
   title,
   containerClassName,
@@ -130,7 +82,7 @@ const ChildrenSection = ({
   title?: string | null;
   containerClassName?: string;
   contentClassName?: string;
-}): React.JSX.Element | null => {
+}): React.JSX.Element | null {
   if (!children) return null;
 
   const heading = title === undefined ? 'More' : title;
@@ -145,4 +97,4 @@ const ChildrenSection = ({
       <div className={cn('space-y-1', contentClassName)}>{children}</div>
     </div>
   );
-};
+}

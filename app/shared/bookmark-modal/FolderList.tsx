@@ -35,10 +35,7 @@ const FolderListItem = memo(function FolderListItem({
   const bookmarkCount: number = folder.bookmarks?.length || 0;
 
   return (
-    <button
-      onClick={(): void => onSelect(folder)}
-      className={getButtonClasses(isSelected)}
-    >
+    <button onClick={(): void => onSelect(folder)} className={getButtonClasses(isSelected)}>
       <FolderGlyph folder={folder} size="md" className={isSelected ? 'border border-white' : ''} />
 
       <div className="flex-1 min-w-0">

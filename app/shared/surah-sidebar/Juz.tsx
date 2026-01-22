@@ -1,6 +1,7 @@
 'use client';
 
 import React, { memo, useCallback, startTransition } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
 import { JuzNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
@@ -36,6 +37,7 @@ const JuzItem = memo(function JuzItem({
   href,
   onNavigate,
 }: JuzItemProps): React.JSX.Element {
+  const { t } = useTranslation();
   return (
     <li style={{ contain: 'layout style' }}>
       <JuzNavigationCard
@@ -46,7 +48,7 @@ const JuzItem = memo(function JuzItem({
         isActive={isActive}
         content={{
           id: juz.number,
-          title: `Juz ${juz.number}`,
+          title: t('juz_number', { number: juz.number }),
           subtitle: juz.surahRange,
         }}
         onNavigate={onNavigate}

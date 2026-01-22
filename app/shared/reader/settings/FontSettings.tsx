@@ -28,8 +28,8 @@ export const FontSettings = ({
   const { settings, arabicFonts, setArabicFontSize, setTranslationFontSize } = useSettings();
   const { t } = useTranslation();
   const [isClient, setIsClient] = useState(false);
-  const { style: arabicStyle } = useFontSize(settings.arabicFontSize, 16, 48);
-  const { style: translationStyle } = useFontSize(settings.translationFontSize, 12, 28);
+  const { style: arabicStyle } = useFontSize(settings.arabicFontSize, 16, 64);
+  const { style: translationStyle } = useFontSize(settings.translationFontSize, 12, 48);
 
   useEffect(() => {
     setIsClient(true);

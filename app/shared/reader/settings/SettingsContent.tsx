@@ -5,6 +5,7 @@ import React from 'react';
 import { cn } from '@/lib/utils/cn';
 
 import { FontSettings } from './FontSettings';
+import { LanguageSettings } from './LanguageSettings';
 import { MushafSettings } from './MushafSettings';
 import { TafsirSettings } from './TafsirSettings';
 import { TranslationSettings } from './TranslationSettings';
@@ -67,18 +68,27 @@ export const SettingsContent = ({
     />
   );
 
+  const languageSettings = (
+    <LanguageSettings
+      isOpen={openSections.includes('language')}
+      onToggle={() => onSectionToggle('language')}
+      {...(idPrefix ? { idPrefix: `${idPrefix}-language` } : {})}
+    />
+  );
+
+  // In Mushaf mode, font settings are included in MushafSettings, so don't show separate Font Settings section
   const baseSettings =
     pageType === 'tafsir' ? (
       <>
         {tafsirSettings}
         {!isMushafMode && translationSettings}
-        {fontSettings}
+        {!isMushafMode && fontSettings}
       </>
     ) : (
       <>
         {!isMushafMode && translationSettings}
         {tafsirSettings}
-        {fontSettings}
+        {!isMushafMode && fontSettings}
       </>
     );
 
@@ -103,6 +113,7 @@ export const SettingsContent = ({
         />
       </div>
       {baseSettings}
+      {languageSettings}
     </>
   );
 };

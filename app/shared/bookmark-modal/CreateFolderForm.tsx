@@ -54,10 +54,7 @@ export const CreateFolderForm = memo(function CreateFolderForm({
   );
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="transition-all duration-300 animate-fade-in"
-    >
+    <form onSubmit={handleSubmit} className="transition-all duration-300 animate-fade-in">
       <UnifiedInput
         variant="compact"
         type="text"

@@ -26,15 +26,14 @@ export const QuranTabBar = memo(function QuranTabBar({
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id as 'surah' | 'juz' | 'page')}
-            className={`flex-1 flex items-center justify-center gap-2 py-4 px-6 text-sm font-medium transition-all duration-200 relative ${isActive ? 'text-accent' : 'text-muted hover:text-foreground'
-              }`}
+            className={`flex-1 flex items-center justify-center gap-2 py-4 px-6 text-sm font-medium transition-all duration-200 relative ${
+              isActive ? 'text-accent' : 'text-muted hover:text-foreground'
+            }`}
           >
             <Icon size={18} className="stroke-[2]" />
             {tab.label}
             {isActive && (
-              <span
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent transition-all duration-200"
-              />
+              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent transition-all duration-200" />
             )}
           </button>
         );

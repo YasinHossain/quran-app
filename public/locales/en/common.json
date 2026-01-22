@@ -95,5 +95,19 @@
   "repeat_each": "Repeat each",
   "delay_seconds": "Delay (s)",
   "play_entire_surah_continuously": "Play the entire surah continuously.",
-  "search_reciter": "Search reciter"
+  "search_reciter": "Search reciter",
+  "mushaf_settings": "Mushaf Settings",
+  "mushaf": "Mushaf",
+  "mushaf_font_size": "Mushaf Font Size",
+  "language_setting": "Language",
+  "select_language": "Select Language",
+  "page_number_label": "Page {{number}}",
+  "binder_tab_recent": "Recent",
+  "binder_tab_recent_desc": "Last visited",
+  "binder_tab_all": "All Bookmarks",
+  "binder_tab_all_desc": "Manage folders",
+  "binder_tab_pinned": "Pinned Verses",
+  "binder_tab_pinned_desc": "Quick access",
+  "binder_tab_planner": "Planner",
+  "binder_tab_planner_desc": "Track progress"
 }

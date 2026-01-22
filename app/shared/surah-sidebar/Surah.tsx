@@ -1,6 +1,7 @@
 'use client';
 
 import React, { memo, useCallback, startTransition } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
 import { buildTafsirRoute } from '@/app/shared/navigation/routes';
@@ -38,6 +39,7 @@ const SurahItem = memo(function SurahItem({
   href,
   onNavigate,
 }: SurahItemProps): React.JSX.Element {
+  const { t } = useTranslation();
   return (
     <li style={{ contain: 'layout style' }}>
       <SurahNavigationCard
@@ -48,8 +50,8 @@ const SurahItem = memo(function SurahItem({
         isActive={isActive}
         content={{
           id: chapter.id,
-          title: chapter.name_simple,
-          subtitle: `${chapter.verses_count} verses`,
+          title: t(`surah_names.${chapter.id}`, chapter.name_simple),
+          subtitle: `${chapter.verses_count} ${t('verses')}`,
           arabic: chapter.name_arabic,
         }}
         onNavigate={onNavigate}

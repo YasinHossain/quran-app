@@ -51,7 +51,7 @@ export const TafsirSettings = ({
               label={t('tafsir_font_size')}
               value={settings.tafsirFontSize || 18}
               min={12}
-              max={28}
+              max={48}
               onChange={setTafsirFontSize}
               style={{}} // Style is handled internally
             />

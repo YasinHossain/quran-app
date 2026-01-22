@@ -2,7 +2,6 @@
 
 import { useRouter } from 'next/navigation';
 
-
 import { useSidebar } from '@/app/providers/SidebarContext';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
 
@@ -24,8 +23,6 @@ export type BookmarkFolderControllerReturn = {
   handleNavigateToBookmarks: () => void;
   handleSectionChange: (section: SectionId) => void;
 };
-
-
 
 // Helper function to create navigation handler
 function useNavigationHandler(
@@ -75,7 +72,6 @@ export function useBookmarkFolderController(folderId: string): BookmarkFolderCon
     selectedTranslationName,
     selectedWordLanguageName,
   } = useBookmarkFolderPanels();
-
 
   const { handleNavigateToBookmarks, handleSectionChange } = useNavigationHandler(
     router,

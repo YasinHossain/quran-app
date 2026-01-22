@@ -43,6 +43,7 @@ export { BrainIcon } from './BrainIcon';
 export { ClockIcon } from './ClockIcon';
 export { FolderIcon } from './FolderIcon';
 export { FontSettingIcon } from './FontSettingIcon';
+export { GlobeIcon } from './GlobeIcon';
 export { GridIcon } from './GridIcon';
 export { HashIcon } from './HashIcon';
 export { HomeIcon } from './HomeIcon';
