@@ -1,5 +1,3 @@
-'use client';
-
 export const UI_LANGUAGE_STORAGE_KEY = 'ui-language';
 
 export const UI_LANGUAGES = [

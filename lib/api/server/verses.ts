@@ -2,10 +2,14 @@ import { unstable_cache } from 'next/cache';
 
 import { Verse } from '@/types';
 
+import { UI_LANGUAGE_CONTENT_DEFAULTS } from '@/app/providers/uiLanguageContentDefaults';
 import { getChaptersServer } from './chapters';
 
-// Default translation ID (20 - Saheeh/Sahih International)
-const DEFAULT_TRANSLATION = 20;
+const DEFAULT_TRANSLATION_IDS = Array.from(
+  new Set(Object.values(UI_LANGUAGE_CONTENT_DEFAULTS).flatMap((d) => d.translationIds))
+).sort((a, b) => a - b);
+
+const DEFAULT_TRANSLATIONS_PARAM = DEFAULT_TRANSLATION_IDS.join(',');
 
 // Number of verses to pre-fetch for rotation
 const VERSE_COUNT = 5;
@@ -44,7 +48,7 @@ async function fetchRandomVerse(seed: number): Promise<Verse> {
   const randomAyah = Math.floor(rng() * randomChapter.verses_count) + 1;
   const verseKey = `${randomChapter.id}:${randomAyah}`;
 
-  const verseUrl = `https://api.quran.com/api/v4/verses/by_key/${encodeURIComponent(verseKey)}?translations=${DEFAULT_TRANSLATION}&fields=text_uthmani&translation_fields=resource_name`;
+  const verseUrl = `https://api.quran.com/api/v4/verses/by_key/${encodeURIComponent(verseKey)}?translations=${DEFAULT_TRANSLATIONS_PARAM}&fields=text_uthmani&translation_fields=resource_name`;
 
   const response = await fetch(verseUrl, {
     headers: { Accept: 'application/json' },
@@ -114,7 +118,7 @@ async function fetchRandomVerses(): Promise<Verse[]> {
  * Get multiple random verses for the Verse of the Day rotation (server-side).
  * Cached for 1 hour to rotate verses periodically.
  */
-export const getVersesOfDayServer = unstable_cache(fetchRandomVerses, ['verses-of-day-server-v2'], {
+export const getVersesOfDayServer = unstable_cache(fetchRandomVerses, ['verses-of-day-server-v3'], {
   revalidate: 3600, // Cache for 1 hour
   tags: ['verses-of-day'],
 });

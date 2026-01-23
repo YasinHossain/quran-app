@@ -3,8 +3,11 @@
 import { memo, useState, useEffect, useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useSettings } from '@/app/providers/SettingsContext';
 import { cleanTranslationText } from '@/lib/text/cleanTranslationText';
 import { localizeDigits } from '@/lib/text/localizeNumbers';
+
+import { resolveVerseTranslation } from '../utils/resolveVerseTranslation';
 
 import type { Chapter, Verse } from '@/types';
 
@@ -33,6 +36,7 @@ export const VerseOfDay = memo(function VerseOfDay({
   className,
 }: VerseOfDayProps) {
   const { t, i18n } = useTranslation();
+  const { settings } = useSettings();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -76,14 +80,14 @@ export const VerseOfDay = memo(function VerseOfDay({
     if (!verse) return null;
 
     const [surahNum, ayahNum] = verse.verse_key.split(':');
-    const sahihTranslation = verse.translations?.find((t) => t.resource_id === 20)?.text;
+    const translation = resolveVerseTranslation(verse, settings.translationId);
     return {
       text: verse.text_uthmani,
-      translation: sahihTranslation ?? verse.translations?.[0]?.text,
+      translation,
       surahNum,
       ayahNum,
     };
-  }, [hasVerses, verses, currentIndex]);
+  }, [hasVerses, verses, currentIndex, settings.translationId]);
 
   // Don't render if no verses available
   if (!verseData) {

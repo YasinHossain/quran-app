@@ -38,6 +38,7 @@ export const defaultSettings: Settings = {
   showByWords: false,
   tajweed: false,
   mushafId: DEFAULT_MUSHAF_ID,
+  contentLanguage: 'en',
 };
 
 const SETTINGS_KEY = 'quranAppSettings';

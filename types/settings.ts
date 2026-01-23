@@ -14,4 +14,9 @@ export interface Settings {
   showByWords: boolean;
   tajweed: boolean;
   mushafId?: string;
+  /**
+   * The UI language code that was last used to apply language-specific defaults
+   * for translations, tafsir and word-by-word settings.
+   */
+  contentLanguage?: string;
 }
