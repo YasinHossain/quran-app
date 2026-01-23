@@ -109,6 +109,7 @@
   "tafsir_setting": "তাফসির সেটিং",
   "tafsir_panel_title": "তাফসির",
   "select_tafsir": "তাফসির নির্বাচন করুন",
+  "add_tafsir": "তাফসির যোগ করুন",
   "loading": "লোড হচ্ছে ...",
   "failed_to_load_juz_info": "পারা তথ্য লোড করতে ব্যর্থ।",
   "juz_number": "পারা {{number, number}}",

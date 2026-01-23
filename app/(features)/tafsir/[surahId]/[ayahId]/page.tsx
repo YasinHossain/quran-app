@@ -54,6 +54,15 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps): React
   const [isWordPanelOpen, openWordPanel, closeWordPanel] =
     useUIPanelVisibility(WORD_LANGUAGE_PANEL_ID);
 
+  // Get setSettingsOpen to open settings sidebar on mobile
+  const { setSettingsOpen } = useUIState();
+
+  // Handle Add Tafsir click - opens settings sidebar (for mobile) and tafsir panel
+  const handleAddTafsir = React.useCallback(() => {
+    setSettingsOpen(true);
+    openTafsirPanel();
+  }, [setSettingsOpen, openTafsirPanel]);
+
   return (
     <>
       <div className="lg:hidden">
@@ -87,6 +96,7 @@ export default function TafsirVersePage({ params }: TafsirVersePageProps): React
               verse={verse}
               tafsirResource={tafsirResource}
               tafsirHtml={tafsirHtml}
+              onAddTafsir={handleAddTafsir}
             />
           </WorkspaceMain>
         }
@@ -125,6 +135,7 @@ function TafsirContent({
   verse,
   tafsirResource,
   tafsirHtml,
+  onAddTafsir,
 }: {
   surahId: string;
   prev: { surahId: string; ayahId: number } | null;
@@ -134,6 +145,7 @@ function TafsirContent({
   verse: Parameters<typeof TafsirViewer>[0]['verse'];
   tafsirResource: Parameters<typeof TafsirViewer>[0]['tafsirResource'];
   tafsirHtml: Parameters<typeof TafsirViewer>[0]['tafsirHtml'];
+  onAddTafsir: () => void;
 }): React.JSX.Element {
   const router = useRouter();
   const touchStart = React.useRef<{ x: number; y: number } | null>(null);
@@ -188,6 +200,7 @@ function TafsirContent({
         {...(verse !== undefined ? { verse } : {})}
         {...(tafsirResource !== undefined ? { tafsirResource } : {})}
         {...(tafsirHtml !== undefined ? { tafsirHtml } : {})}
+        onAddTafsir={onAddTafsir}
       />
     </div>
   );

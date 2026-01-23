@@ -3,6 +3,7 @@ import React from 'react';
 
 import { SettingsProvider } from '@/app/providers/SettingsContext';
 import { VerseArabic } from '@/app/shared/VerseArabic';
+import { AudioContext } from '@/app/shared/player/context/AudioContext';
 
 import type { Verse } from '@/types';
 
@@ -18,6 +19,18 @@ const createVerse = (overrides: Partial<Verse> = {}): Verse =>
 
 const renderWithSettings = (ui: React.ReactElement): ReturnType<typeof render> =>
   render(<SettingsProvider>{ui}</SettingsProvider>);
+
+const renderWithSettingsAndAudio = (
+  ui: React.ReactElement,
+  audio: Partial<React.ContextType<typeof AudioContext>> = {}
+): ReturnType<typeof render> =>
+  render(
+    <SettingsProvider>
+      <AudioContext.Provider value={{ isPlayerVisible: true, isPlaying: true, ...audio } as any}>
+        {ui}
+      </AudioContext.Provider>
+    </SettingsProvider>
+  );
 
 const getArabicParagraph = (container: HTMLElement): HTMLParagraphElement => {
   const arabicParagraph = container.querySelector<HTMLParagraphElement>('p[dir="rtl"]');
@@ -92,5 +105,24 @@ describe('VerseArabic copy behavior', () => {
 
     expect(event.defaultPrevented).toBe(false);
     expect(clipboardData.setData).not.toHaveBeenCalled();
+  });
+
+  it('disables text selection while audio is playing', () => {
+    const verse = createVerse({
+      words: [
+        {
+          id: 1,
+          position: 1,
+          uthmani: 'السلام',
+          char_type_name: 'word',
+          en: 'Peace',
+        },
+      ] as any,
+    });
+
+    const { container } = renderWithSettingsAndAudio(<VerseArabic verse={verse} />);
+    const arabicParagraph = getArabicParagraph(container);
+
+    expect(arabicParagraph).toHaveClass('select-none');
   });
 });

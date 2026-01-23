@@ -11,9 +11,12 @@ import { useTafsirTabsState } from './useTafsirTabsState';
 interface TafsirTabsProps {
   verseKey: string;
   tafsirIds: number[];
+  onAddTafsir?: (() => void) | undefined;
 }
 
-export function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps): React.JSX.Element {
+const MAX_TAFSIR_TABS = 3;
+
+export function TafsirTabs({ verseKey, tafsirIds, onAddTafsir }: TafsirTabsProps): React.JSX.Element {
   const { t } = useTranslation();
   const { settings } = useSettings();
   const { tabs, activeId, setActiveId, contents, loading } = useTafsirTabsState(
@@ -54,7 +57,7 @@ export function TafsirTabs({ verseKey, tafsirIds }: TafsirTabsProps): React.JSX.
 
   return (
     <div>
-      <TabsHeader tabs={tabs} activeId={activeId} onSelect={setActiveId} />
+      <TabsHeader tabs={tabs} activeId={activeId} onSelect={setActiveId} onAddTafsir={onAddTafsir} />
       {/* Wrapper div maintains stable height during loading to prevent layout shift */}
       <div style={stableHeight > 0 ? { minHeight: `${stableHeight}px` } : undefined}>
         <TafsirContent
@@ -73,28 +76,55 @@ function TabsHeader({
   tabs,
   activeId,
   onSelect,
+  onAddTafsir,
 }: {
   tabs: { id: number; name: string }[];
   activeId: number | undefined;
   onSelect: (id: number) => void;
+  onAddTafsir?: (() => void) | undefined;
 }): React.JSX.Element {
+  const { t } = useTranslation();
+  const addButtonsNeeded = onAddTafsir ? MAX_TAFSIR_TABS - tabs.length : 0;
+
   return (
     <div
       onTouchStart={(e) => e.stopPropagation()}
       onTouchEnd={(e) => e.stopPropagation()}
       className="flex w-full flex-nowrap items-center p-1 rounded-full bg-interactive border border-border mx-0 sm:mx-4 overflow-x-auto scrollbar-hide gap-1"
     >
-      {tabs.map((t) => (
+      {tabs.map((tab) => (
         <button
-          key={t.id}
-          onClick={() => onSelect(t.id)}
-          className={`flex-1 text-center py-2.5 px-4 sm:py-3 sm:px-5 rounded-full text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap ${
-            activeId === t.id
+          key={tab.id}
+          onClick={() => onSelect(tab.id)}
+          className={`flex-1 text-center py-2.5 px-4 sm:py-3 sm:px-5 rounded-full text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap ${activeId === tab.id
               ? 'bg-surface shadow text-foreground'
               : 'text-muted hover:text-foreground hover:bg-surface/30'
-          }`}
+            }`}
         >
-          {t.name}
+          {tab.name}
+        </button>
+      ))}
+      {Array.from({ length: addButtonsNeeded }).map((_, index) => (
+        <button
+          key={`add-tafsir-${index}`}
+          onClick={onAddTafsir}
+          className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-4 sm:py-3 sm:px-5 rounded-full text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap text-muted hover:text-foreground hover:bg-surface/30 border border-dashed border-border/50"
+          aria-label={t('add_tafsir')}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          <span className="hidden sm:inline">{t('add_tafsir')}</span>
         </button>
       ))}
     </div>

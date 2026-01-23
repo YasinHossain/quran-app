@@ -9,23 +9,35 @@ interface TafsirViewerProps {
   verse?: VerseType;
   tafsirResource?: TafsirResource;
   tafsirHtml?: string;
+  onAddTafsir?: (() => void) | undefined;
 }
 
 export const TafsirViewer = ({
   verse,
   tafsirResource,
   tafsirHtml,
+  onAddTafsir,
 }: TafsirViewerProps): React.JSX.Element | null => {
   const { settings } = useSettings();
 
   if (!verse) return null;
 
+  // Show TafsirTabs when we have tafsirs AND (we have multiple OR onAddTafsir is provided)
+  const showTabs =
+    settings.tafsirIds &&
+    settings.tafsirIds.length >= 1 &&
+    (settings.tafsirIds.length > 1 || onAddTafsir);
+
   return (
     <div className="space-y-4 w-full">
       <div className="flex flex-wrap gap-4"></div>
       <VerseComponent verse={verse} />
-      {settings.tafsirIds && settings.tafsirIds.length > 1 ? (
-        <TafsirTabs verseKey={verse.verse_key} tafsirIds={settings.tafsirIds} />
+      {showTabs ? (
+        <TafsirTabs
+          verseKey={verse.verse_key}
+          tafsirIds={settings.tafsirIds}
+          onAddTafsir={onAddTafsir}
+        />
       ) : settings.tafsirIds && settings.tafsirIds.length === 1 ? (
         <div key={verse.verse_key} className="p-3 sm:p-4">
           {tafsirResource && (
