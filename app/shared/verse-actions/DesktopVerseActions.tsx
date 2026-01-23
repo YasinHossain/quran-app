@@ -64,12 +64,14 @@ export const DesktopVerseActions = ({
         <VerseOptionsMenu onShare={handleShare} onAddToPlan={handleAddToPlan} />
       </div>
 
-      <BookmarkModal
-        isOpen={isBookmarkModalOpen}
-        onClose={() => setIsBookmarkModalOpen(false)}
-        verseId={verseId || verseKey}
-        verseKey={verseKey}
-      />
+      {isBookmarkModalOpen ? (
+        <BookmarkModal
+          isOpen
+          onClose={() => setIsBookmarkModalOpen(false)}
+          verseId={verseId || verseKey}
+          verseKey={verseKey}
+        />
+      ) : null}
     </div>
   );
 };

@@ -96,12 +96,14 @@ export function MobileVerseActions({
         className={className}
       />
       <MobileBottomSheet {...sheetProps} />
-      <BookmarkModal
-        isOpen={state.isBookmarkModalOpen}
-        onClose={state.closeBookmarkModal}
-        verseId={verseId || verseKey}
-        verseKey={verseKey}
-      />
+      {state.isBookmarkModalOpen ? (
+        <BookmarkModal
+          isOpen
+          onClose={state.closeBookmarkModal}
+          verseId={verseId || verseKey}
+          verseKey={verseKey}
+        />
+      ) : null}
     </>
   );
 }

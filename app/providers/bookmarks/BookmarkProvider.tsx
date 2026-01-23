@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { useSettings } from '@/app/providers/SettingsContext';
 
@@ -111,34 +111,87 @@ function useBookmarkHelpers(
   const bookmarkedVerses = useMemo(() => getAllBookmarkedVerses(folders), [folders]);
   const { togglePinned, isPinned } = usePinnedBookmarks(pinnedVerses, bookmarkOps);
 
+  const lastReadTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingLastReadRef = useRef<{
+    surahId: string;
+    verseNumber: number;
+    verseKey?: string;
+    globalVerseId?: number;
+  } | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (lastReadTimeoutRef.current) {
+        clearTimeout(lastReadTimeoutRef.current);
+        lastReadTimeoutRef.current = null;
+      }
+      pendingLastReadRef.current = null;
+    };
+  }, []);
+
+  const flushLastRead = useCallback(() => {
+    const pending = pendingLastReadRef.current;
+    if (!pending) return;
+    pendingLastReadRef.current = null;
+
+    setLastReadState((prev) => {
+      const current = prev[pending.surahId];
+      if (
+        current &&
+        current.verseNumber === pending.verseNumber &&
+        current.verseKey === pending.verseKey &&
+        current.globalVerseId === pending.globalVerseId
+      ) {
+        return prev;
+      }
+
+      const updated = {
+        ...prev,
+        [pending.surahId]: {
+          verseNumber: pending.verseNumber,
+          verseId: pending.verseNumber,
+          ...(typeof pending.verseKey === 'string' ? { verseKey: pending.verseKey } : {}),
+          ...(typeof pending.globalVerseId === 'number'
+            ? { globalVerseId: pending.globalVerseId }
+            : {}),
+          updatedAt: Date.now(),
+        },
+      };
+
+      // Limit to 5 most recent entries
+      const entries = Object.entries(updated);
+      if (entries.length <= 5) {
+        return updated;
+      }
+
+      // Sort by updatedAt (most recent first) and keep only top 5
+      const sorted = entries.sort(([, a], [, b]) => b.updatedAt - a.updatedAt);
+      const limited = sorted.slice(0, 5);
+
+      return Object.fromEntries(limited);
+    });
+  }, [setLastReadState]);
+
   const setLastRead = useCallback(
     (surahId: string, verseNumber: number, verseKey?: string, globalVerseId?: number) => {
-      setLastReadState((prev) => {
-        const updated = {
-          ...prev,
-          [surahId]: {
-            verseNumber,
-            verseId: verseNumber,
-            ...(typeof verseKey === 'string' ? { verseKey } : {}),
-            ...(typeof globalVerseId === 'number' ? { globalVerseId } : {}),
-            updatedAt: Date.now(),
-          },
-        };
+      // Debounce last-read writes to avoid scroll jank (IntersectionObserver can fire rapidly).
+      pendingLastReadRef.current = {
+        surahId,
+        verseNumber,
+        ...(typeof verseKey === 'string' ? { verseKey } : {}),
+        ...(typeof globalVerseId === 'number' ? { globalVerseId } : {}),
+      };
 
-        // Limit to 5 most recent entries
-        const entries = Object.entries(updated);
-        if (entries.length <= 5) {
-          return updated;
-        }
+      if (lastReadTimeoutRef.current) {
+        return;
+      }
 
-        // Sort by updatedAt (most recent first) and keep only top 5
-        const sorted = entries.sort(([, a], [, b]) => b.updatedAt - a.updatedAt);
-        const limited = sorted.slice(0, 5);
-
-        return Object.fromEntries(limited);
-      });
+      lastReadTimeoutRef.current = setTimeout(() => {
+        lastReadTimeoutRef.current = null;
+        flushLastRead();
+      }, 200);
     },
-    [setLastReadState]
+    [flushLastRead]
   );
 
   const removeLastRead = useCallback(

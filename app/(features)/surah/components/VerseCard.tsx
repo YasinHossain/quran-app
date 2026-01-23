@@ -52,11 +52,9 @@ export const Verse = memo(function Verse({ verse }: VerseProps): JSX.Element {
         }}
         resourceLanguages={resourceLanguagesMap}
       />
-      <AddToPlannerModal
-        isOpen={isPlannerModalOpen}
-        onClose={handleClosePlannerModal}
-        verseSummary={verseSummary}
-      />
+      {isPlannerModalOpen ? (
+        <AddToPlannerModal isOpen onClose={handleClosePlannerModal} verseSummary={verseSummary} />
+      ) : null}
     </>
   );
 });
