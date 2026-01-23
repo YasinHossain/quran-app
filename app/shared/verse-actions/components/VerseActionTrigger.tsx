@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { EllipsisHIcon } from '@/app/shared/icons';
 import { touchClasses } from '@/lib/responsive';
+import { localizeDigits } from '@/lib/text/localizeNumbers';
 import { cn } from '@/lib/utils/cn';
 
 interface VerseActionTriggerProps {
@@ -18,11 +19,14 @@ export const VerseActionTrigger = memo(function VerseActionTrigger({
   onOpen,
   className = '',
 }: VerseActionTriggerProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const language = i18n?.language ?? 'en';
   return (
     <div className={cn('flex items-center justify-between', className)}>
       <div className="flex-shrink-0 pl-1">
-        <span className="font-semibold text-accent text-sm">{verseKey}</span>
+        <span className="font-semibold text-accent text-sm">
+          {localizeDigits(verseKey, language)}
+        </span>
       </div>
       <button
         onClick={onOpen}

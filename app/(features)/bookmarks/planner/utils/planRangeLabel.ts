@@ -12,11 +12,19 @@ const formatChapterLabel = (
   { chapterName, surahId }: PlannerRangePoint,
   i18n?: PlannerI18nContext
 ): string => {
-  const safeName = chapterName?.trim().length
+  const defaultName = chapterName?.trim().length
     ? chapterName.trim()
     : i18n
       ? i18n.t('surah_tab')
       : 'Surah';
+
+  const numericSurahId =
+    typeof surahId === 'number' ? surahId : Number.isFinite(Number(surahId)) ? Number(surahId) : null;
+
+  const safeName =
+    i18n && typeof numericSurahId === 'number'
+      ? i18n.t(`surah_names.${numericSurahId}`, defaultName)
+      : defaultName;
   const label = `${safeName} ${surahId}`;
   return i18n ? localizeDigits(label, i18n.language) : label;
 };

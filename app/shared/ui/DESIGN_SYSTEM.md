@@ -35,45 +35,15 @@ text-gray-600       /* Use text-muted instead */
 
 ## Components
 
-### GlassCard (NEW)
+### Cards (Lightweight)
 
-Standardized glassmorphism card component for consistent theming and styling.
+Avoid glassmorphism/backdrop blur for performance on lower-end devices. Prefer simple containers using semantic tokens.
 
 ```tsx
-import { GlassCard } from '@/app/shared/ui';
-
-<GlassCard
-  variant="surface" // surface | primary | input
-  size="comfortable" // compact | comfortable | spacious | large
-  radius="xl" // lg | xl | 2xl
-  href="/path" // Optional: renders as Link
-  onClick={handleClick} // Optional: renders as button
->
+<div className="rounded-xl border border-border bg-surface p-4 shadow-sm">
   <div>Content here</div>
-</GlassCard>;
+</div>
 ```
-
-**Features:**
-
-- **Theme-aware backgrounds** with proper opacity
-- **Glassmorphism effects** (backdrop-blur-xl)
-- **Consistent hover states** (shadow-lg → hover:shadow-xl)
-- **Animation support** with fade-in-up by default
-- **Flexible rendering** (div, Link, or button based on props)
-- **Multiple variants** for different contexts
-
-**Variants:**
-
-- `surface`: Uses `bg-surface-glass/60` (most common)
-- `primary`: Uses `bg-surface/60` (primary content areas)
-- `input`: Uses complex input background with glassmorphism
-
-**Sizes:**
-
-- `compact`: `p-3` (dense layouts)
-- `comfortable`: `p-4` (balanced spacing)
-- `spacious`: `p-4 sm:p-5` (responsive generous spacing)
-- `large`: `p-4 sm:p-6 md:p-8` (hero sections)
 
 ### NumberBadge
 
@@ -172,20 +142,16 @@ className = 'group-hover:text-accent';
 </SidebarCard>
 ```
 
-### From Glassmorphism Patterns (NEW)
+### From Glassmorphism Patterns
 
 ```tsx
-// OLD - repeated glassmorphism patterns
-<Link className="group p-4 sm:p-5 rounded-2xl backdrop-blur-xl shadow-lg hover:shadow-xl bg-surface/60">
-<div className="p-3 sm:p-4 rounded-xl backdrop-blur-xl shadow-lg bg-surface-glass/60">
-<nav className="rounded-xl backdrop-blur-xl shadow-lg bg-surface-glass/60">
+// OLD - repeated glassmorphism patterns (avoid for performance)
+<Link className="rounded-2xl backdrop-blur-xl bg-surface/60">
 
-// NEW - unified GlassCard component
-<GlassCard variant="primary" size="spacious" radius="2xl" href="/path">
-<GlassCard variant="surface" size="comfortable">
-<GlassCard variant="surface" size="comfortable" asChild>
+// NEW - simple surface container
+<div className="rounded-xl border border-border bg-surface p-4">
   <nav>...</nav>
-</GlassCard>
+</div>
 ```
 
 ## Future Improvements

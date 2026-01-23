@@ -1,10 +1,12 @@
 'use client';
 
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { BookmarkModal } from '@/app/shared/components/BookmarkModal';
 import { VerseActionsProps } from '@/app/shared/verse-actions/types';
 import { defaultShare } from '@/app/shared/verse-actions/utils';
+import { localizeDigits } from '@/lib/text/localizeNumbers';
 import { cn } from '@/lib/utils/cn';
 
 import { BookmarkButton } from './components/BookmarkButton';
@@ -28,6 +30,8 @@ export const DesktopVerseActions = ({
   showRemove = false,
   className = '',
 }: VerseActionsProps): React.JSX.Element => {
+  const { i18n } = useTranslation();
+  const language = i18n?.language ?? 'en';
   const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
   const handleShare = onShare || defaultShare;
   const handleAddToPlan = useCallback(() => {
@@ -44,7 +48,7 @@ export const DesktopVerseActions = ({
 
   return (
     <div className={cn('text-center space-y-2 flex-shrink-0', className)}>
-      <p className="font-semibold text-accent text-sm">{verseKey}</p>
+      <p className="font-semibold text-accent text-sm">{localizeDigits(verseKey, language)}</p>
       <div className="flex flex-col items-center space-y-1 text-muted">
         <PlayPauseButton
           isPlaying={isPlaying}

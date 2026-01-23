@@ -1,10 +1,17 @@
 'use client';
-import { memo, useCallback } from 'react';
+import * as Popover from '@radix-ui/react-popover';
+import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useTheme } from '@/app/providers/ThemeContext';
-import { SunIcon, MoonIcon } from '@/app/shared/icons';
-import { GlassCard } from '@/app/shared/ui';
+import { setUiLanguage } from '@/app/shared/i18n/setUiLanguage';
+import {
+  getUiLanguageLabel,
+  isUiLanguageCode,
+  UI_LANGUAGES,
+  type UiLanguageCode,
+} from '@/app/shared/i18n/uiLanguages';
+import { CheckIcon, ChevronDownIcon, GlobeIcon, MoonIcon, SunIcon } from '@/app/shared/icons';
 
 interface HomeHeaderProps {
   className?: string;
@@ -16,7 +23,9 @@ interface HomeHeaderProps {
  */
 export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProps) {
   const { theme, setTheme } = useTheme();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
+  const selectedCode: UiLanguageCode = isUiLanguageCode(i18n.language) ? i18n.language : 'en';
 
   const toggleTheme = useCallback(() => {
     const html = document.documentElement;
@@ -29,11 +38,48 @@ export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProp
   return (
     <header className={`w-full py-4 ${className || ''}`}>
       <div className="mx-auto w-full" style={{ maxWidth: 'clamp(20rem, 98vw, 90rem)' }}>
-        <GlassCard variant="surface" size="comfortable" radius="xl">
+        <div className="rounded-xl bg-surface-navigation border border-border/30 dark:border-border/20 shadow-lg hover:shadow-xl transition-all duration-300 px-4 py-3">
           <nav className="flex justify-between items-center space-y-0">
-            <h1 className="text-2xl sm:text-3xl md:text-3xl font-bold tracking-wider text-content-primary">
-              Al Qur&apos;an
-            </h1>
+            <Popover.Root open={languageMenuOpen} onOpenChange={setLanguageMenuOpen}>
+              <Popover.Trigger asChild>
+                <button
+                  type="button"
+                  className="min-h-touch px-3 py-2 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent touch-manipulation flex items-center gap-2"
+                  aria-label={t('language_setting')}
+                >
+                  <GlobeIcon size={20} className="text-foreground" />
+                  <span className="text-base sm:text-lg md:text-lg font-semibold tracking-wide text-content-primary">
+                    {getUiLanguageLabel(selectedCode)}
+                  </span>
+                  <ChevronDownIcon size={16} className="text-muted shrink-0" aria-hidden="true" />
+                </button>
+              </Popover.Trigger>
+              <Popover.Content
+                side="bottom"
+                align="start"
+                sideOffset={8}
+                className="min-w-40 rounded-xl shadow-lg bg-surface-navigation p-1 z-[200] overflow-hidden"
+              >
+                <div className="flex flex-col">
+                  {UI_LANGUAGES.map((language) => (
+                    <button
+                      key={language.code}
+                      type="button"
+                      onClick={() => {
+                        setUiLanguage(language.code);
+                        setLanguageMenuOpen(false);
+                      }}
+                      className="w-full flex items-center justify-between gap-3 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-interactive-hover transition-colors"
+                    >
+                      <span className="truncate">{language.nativeLabel}</span>
+                      {selectedCode === language.code && (
+                        <CheckIcon size={16} className="text-foreground shrink-0" aria-hidden />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </Popover.Content>
+            </Popover.Root>
             <button
               onClick={toggleTheme}
               className="min-h-touch min-w-touch p-1.5 bg-button-secondary/40 rounded-full hover:bg-button-secondary-hover/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent touch-manipulation flex items-center justify-center"
@@ -47,7 +93,7 @@ export const HomeHeader = memo(function HomeHeader({ className }: HomeHeaderProp
               </span>
             </button>
           </nav>
-        </GlassCard>
+        </div>
       </div>
     </header>
   );

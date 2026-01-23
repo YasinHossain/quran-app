@@ -89,7 +89,7 @@ export const SurahSelectionSection = ({
     <div className="space-y-4">
       <RangeBoundarySection
         surahLabel={t('start_surah')}
-        verseLabel={t('start_verse')}
+        verseLabel={t('verse')}
         surahValue={formData.startSurah}
         verseValue={formData.startVerse}
         chapters={chapters}
@@ -99,7 +99,7 @@ export const SurahSelectionSection = ({
 
       <RangeBoundarySection
         surahLabel={t('end_surah')}
-        verseLabel={t('end_verse')}
+        verseLabel={t('verse')}
         surahValue={formData.endSurah}
         verseValue={formData.endVerse}
         chapters={chapters}

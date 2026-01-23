@@ -118,7 +118,7 @@ const FolderMenuPanel = ({
       aria-label={t('folder_options')}
       tabIndex={-1}
       className={cn(
-        'absolute right-0 top-full mt-2 min-w-[11rem] rounded-xl border border-border/40 bg-surface shadow-lg z-[200] py-2 transform-gpu',
+        'absolute right-0 top-full mt-2 min-w-[11rem] rounded-xl bg-surface-navigation shadow-lg z-[200] py-2 overflow-hidden transform-gpu',
         isExiting ? 'animate-menu-out' : 'animate-menu-in'
       )}
     >
@@ -131,13 +131,13 @@ const FolderMenuPanel = ({
             onColorChange();
             onClose();
           }}
-          className="flex w-full items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-surface-hover transition-colors"
+          className="flex w-full items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-interactive-hover transition-colors"
         >
           <SlidersIcon size={18} className="text-muted" aria-hidden="true" />
           <span>{t('edit_folder')}</span>
         </button>
       ) : null}
-      {onColorChange ? <div className="my-1 h-px bg-border/40" /> : null}
+      {onColorChange ? <div className="my-1" aria-hidden="true" /> : null}
       <DeleteItem onDelete={onDelete} closeMenu={onClose} />
     </div>
   );

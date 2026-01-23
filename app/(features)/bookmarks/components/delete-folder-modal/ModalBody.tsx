@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Folder } from '@/types';
 
@@ -21,24 +24,27 @@ export const ModalBody = ({
   onDelete,
   isDeleting,
   error,
-}: ModalBodyProps): React.JSX.Element => (
-  <div>
-    <ModalHeader onClose={onClose} />
+}: ModalBodyProps): React.JSX.Element => {
+  const { t } = useTranslation();
+  return (
+    <div>
+      <ModalHeader onClose={onClose} />
 
-    <div className="px-6 pb-6">
-      <FolderPreview folder={folder} />
+      <div className="px-6 pb-6">
+        <FolderPreview folder={folder} />
 
-      <div className="space-y-4">
-        <p className="text-foreground">Are you sure you want to permanently delete this folder?</p>
-        <WarningMessage folder={folder} />
-        {error && (
-          <p role="alert" className="text-error text-sm">
-            {error}
-          </p>
-        )}
+        <div className="space-y-4">
+          <p className="text-foreground">{t('delete_folder_confirm')}</p>
+          <WarningMessage folder={folder} />
+          {error && (
+            <p role="alert" className="text-error text-sm">
+              {error}
+            </p>
+          )}
+        </div>
+
+        <ModalActions onDelete={onDelete} isDeleting={isDeleting} />
       </div>
-
-      <ModalActions onDelete={onDelete} isDeleting={isDeleting} />
     </div>
-  </div>
-);
+  );
+};

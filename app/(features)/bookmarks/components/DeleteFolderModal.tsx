@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { UnifiedModal } from '@/app/shared/components/modal/UnifiedModal';
 import { Folder } from '@/types';
@@ -18,6 +19,7 @@ export const DeleteFolderModal = ({
   onClose,
   folder,
 }: DeleteFolderModalProps): React.JSX.Element => {
+  const { t } = useTranslation();
   const { handleDelete, isDeleting, error } = useDeleteFolder(folder, onClose);
   const shouldRender = isOpen && Boolean(folder);
 
@@ -25,7 +27,7 @@ export const DeleteFolderModal = ({
     <UnifiedModal
       isOpen={shouldRender}
       onClose={onClose}
-      ariaLabel="Delete folder"
+      ariaLabel={t('delete_folder')}
       contentClassName="max-w-lg mx-auto overflow-hidden"
     >
       {folder && (

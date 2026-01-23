@@ -88,13 +88,13 @@ export const VerseOptionsMenu = memo(function VerseOptionsMenu({
           ref={menuRef}
           role="menu"
           aria-label={t('verse_options')}
-          className="absolute top-full left-full ml-2 mt-2 w-44 rounded-lg border border-border/40 bg-surface shadow-lg z-[200] py-2 animate-in fade-in-0 slide-in-from-top-2 duration-200 ease-out"
+          className="absolute top-full left-full ml-2 mt-2 w-44 rounded-lg bg-surface-navigation shadow-lg z-[200] py-2 overflow-hidden animate-in fade-in-0 slide-in-from-top-2 duration-200 ease-out"
         >
           <button
             type="button"
             role="menuitem"
             onClick={handleAddToPlanClick}
-            className="flex w-full items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-surface-hover transition-colors"
+            className="flex w-full items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-interactive-hover transition-colors"
           >
             <CalendarIcon size={18} className="text-muted" />
             <span>{t('add_to_plan')}</span>
@@ -103,7 +103,7 @@ export const VerseOptionsMenu = memo(function VerseOptionsMenu({
             type="button"
             role="menuitem"
             onClick={handleShareClick}
-            className="flex w-full items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-surface-hover transition-colors"
+            className="flex w-full items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-interactive-hover transition-colors"
           >
             <ShareIcon size={18} className="text-muted" />
             <span>{t('share')}</span>

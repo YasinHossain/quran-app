@@ -359,7 +359,7 @@ function RangeFields({
         onSurahChange={handleStartSurahChange}
         onVerseChange={handleStartVerseChange}
         surahLabel={t('start_surah')}
-        verseLabel={t('start_verse')}
+        verseLabel={t('verse')}
       />
 
       <SurahVerseSelector
@@ -370,7 +370,7 @@ function RangeFields({
         onSurahChange={handleEndSurahChange}
         onVerseChange={handleEndVerseChange}
         surahLabel={t('end_surah')}
-        verseLabel={t('end_verse')}
+        verseLabel={t('verse')}
       />
     </>
   );

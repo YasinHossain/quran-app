@@ -6,13 +6,6 @@ import { Header } from '@/app/shared/Header';
 import { setMatchMedia } from '@/app/testUtils/matchMedia';
 import { renderWithProvidersAsync, screen } from '@/app/testUtils/renderWithProviders';
 
-// Mock the useTranslation hook
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => key, // Returns the key itself for testing purposes
-  }),
-}));
-
 jest.mock('@/app/providers/UIStateContext', () => ({
   UIStateProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   useUIState: () => ({

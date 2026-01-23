@@ -22,7 +22,7 @@ export const DeleteItem = ({ onDelete, closeMenu }: DeleteItemProps): React.JSX.
       type="button"
       role="menuitem"
       onClick={handleClick}
-      className="flex w-full items-center gap-3 px-4 py-2 text-sm text-error hover:bg-surface-hover transition-colors"
+      className="flex w-full items-center gap-3 px-4 py-2 text-sm text-error hover:bg-interactive-hover transition-colors"
     >
       <AlertIcon size={18} className="text-error" aria-hidden="true" />
       <span>{t('delete_folder')}</span>

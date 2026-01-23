@@ -167,7 +167,7 @@ it('search filtering returns only matching Surahs', async () => {
 it('theme toggle updates the dark class', async () => {
   await renderHome();
   const nav = screen.getByRole('navigation');
-  const themeButton = within(nav).getByRole('button');
+  const themeButton = within(nav).getByRole('button', { name: 'switch_to_dark' });
   expect(document.documentElement.classList.contains('dark')).toBe(false);
   await userEvent.click(themeButton);
   await waitFor(() => {

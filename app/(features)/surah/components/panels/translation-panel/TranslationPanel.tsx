@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { SlideOverPanel } from '@/app/shared/components/SlideOverPanel';
 import { SettingsPanelHeader } from '@/app/shared/resource-panel/components/ResourcePanelHeader';
@@ -35,6 +36,7 @@ function TranslationPanelBody({
   onClose: () => void;
   onCloseSidebar?: () => void;
 }): React.JSX.Element {
+  const { t } = useTranslation();
   const panelData = useTranslationPanel();
   const { listContainerRef, listHeight } = useListHeight(true);
   const { resourcesToRender, sectionsToRender } = useTranslationSections(
@@ -46,7 +48,7 @@ function TranslationPanelBody({
   return (
     <>
       <SettingsPanelHeader
-        title="Manage Translations"
+        title={t('manage_translations')}
         onClose={onClose}
         backIconClassName="h-6 w-6 text-foreground"
         {...(onCloseSidebar ? { onCloseSidebar } : {})}

@@ -1,8 +1,10 @@
 'use client';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 
 import { ArrowLeftIcon, ChevronLeftIcon, ChevronRightIcon } from '@/app/shared/icons';
 import { buildSurahRoute } from '@/app/shared/navigation/routes';
+import { formatNumber } from '@/lib/text/localizeNumbers';
 import { Surah } from '@/types';
 
 import type { JSX } from 'react';
@@ -78,21 +80,49 @@ const BackLink = ({ href }: BackLinkProps): JSX.Element => (
 
 const Title = ({
   currentSurah,
+  surahId,
   ayahId,
 }: {
   currentSurah?: Surah | undefined;
+  surahId: string;
   ayahId: string;
-}): JSX.Element => (
-  <div className="flex-1 min-w-0 text-center px-2 text-on-accent font-bold text-sm sm:text-base truncate">
-    {currentSurah ? (
-      <>
-        <span className="font-bold">{currentSurah.name}</span> : {ayahId}
-      </>
-    ) : (
-      ''
-    )}
-  </div>
-);
+}): JSX.Element => {
+  const { t, i18n } = useTranslation();
+  const language = i18n?.language ?? 'en';
+  const surahNumber = Number(surahId);
+  const ayahNumber = Number(ayahId);
+
+  const localizedSurahNumber =
+    Number.isFinite(surahNumber) && surahNumber > 0
+      ? formatNumber(surahNumber, language, { useGrouping: false })
+      : surahId;
+
+  const localizedAyahNumber =
+    Number.isFinite(ayahNumber) && ayahNumber > 0
+      ? formatNumber(ayahNumber, language, { useGrouping: false })
+      : ayahId;
+
+  const fallbackSurahName =
+    currentSurah?.name?.trim() ||
+    (localizedSurahNumber ? `${t('surah_tab')} ${localizedSurahNumber}` : t('surah_tab'));
+
+  const surahName =
+    Number.isFinite(surahNumber) && surahNumber > 0
+      ? t(`surah_names.${surahNumber}`, fallbackSurahName)
+      : fallbackSurahName;
+
+  const reference =
+    localizedSurahNumber && localizedAyahNumber
+      ? `${localizedSurahNumber}:${localizedAyahNumber}`
+      : localizedAyahNumber;
+
+  return (
+    <div className="flex-1 min-w-0 text-center px-2 text-on-accent font-bold text-sm sm:text-base truncate">
+      <span className="font-bold">{surahName}</span>
+      {reference ? ` : ${reference}` : null}
+    </div>
+  );
+};
 
 export const AyahNavigation = ({
   prev,
@@ -106,7 +136,7 @@ export const AyahNavigation = ({
   return (
     <div className="flex w-full items-center justify-between gap-1 sm:gap-3 rounded-full bg-accent text-on-accent p-2 min-w-0 overflow-hidden">
       <BackLink href={backHref} />
-      <Title currentSurah={currentSurah} ayahId={ayahId} />
+      <Title currentSurah={currentSurah} surahId={surahId} ayahId={ayahId} />
       <div className="flex items-center gap-1 sm:gap-3">
         <NavLink label="Previous" target={prev} side="left" />
         <NavLink label="Next" target={next} side="right" />

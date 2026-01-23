@@ -10,10 +10,3 @@ export { ThemeToggle } from './ThemeToggle';
 export { ThemeSelector } from './ThemeSelector';
 export { NumberBadge } from './NumberBadge';
 export { SidebarCard } from './SidebarCard';
-export {
-  GlassCard,
-  GLASS_CARD_VARIANTS,
-  GLASS_CARD_SIZES,
-  GLASS_CARD_RADIUS,
-  type GlassCardProps,
-} from './GlassCard';

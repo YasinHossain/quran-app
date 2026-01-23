@@ -2,151 +2,271 @@
   {
     "number": 1,
     "name": "Juz 1",
-    "surahRange": "Al-Faatiha 1 - Al-Baqara 141"
+    "surahRange": "Al-Faatiha 1 - Al-Baqara 141",
+    "startSurahId": 1,
+    "startAyah": 1,
+    "endSurahId": 2,
+    "endAyah": 141
   },
   {
     "number": 2,
     "name": "Juz 2",
-    "surahRange": "Al-Baqara 142 - Al-Baqara 252"
+    "surahRange": "Al-Baqara 142 - Al-Baqara 252",
+    "startSurahId": 2,
+    "startAyah": 142,
+    "endSurahId": 2,
+    "endAyah": 252
   },
   {
     "number": 3,
     "name": "Juz 3",
-    "surahRange": "Al-Baqara 253 - Aal-i-Imraan 92"
+    "surahRange": "Al-Baqara 253 - Aal-i-Imraan 92",
+    "startSurahId": 2,
+    "startAyah": 253,
+    "endSurahId": 3,
+    "endAyah": 92
   },
   {
     "number": 4,
     "name": "Juz 4",
-    "surahRange": "Aal-i-Imraan 93 - An-Nisaa 23"
+    "surahRange": "Aal-i-Imraan 93 - An-Nisaa 23",
+    "startSurahId": 3,
+    "startAyah": 93,
+    "endSurahId": 4,
+    "endAyah": 23
   },
   {
     "number": 5,
     "name": "Juz 5",
-    "surahRange": "An-Nisaa 24 - An-Nisaa 147"
+    "surahRange": "An-Nisaa 24 - An-Nisaa 147",
+    "startSurahId": 4,
+    "startAyah": 24,
+    "endSurahId": 4,
+    "endAyah": 147
   },
   {
     "number": 6,
     "name": "Juz 6",
-    "surahRange": "An-Nisaa 148 - Al-Maaida 81"
+    "surahRange": "An-Nisaa 148 - Al-Maaida 81",
+    "startSurahId": 4,
+    "startAyah": 148,
+    "endSurahId": 5,
+    "endAyah": 81
   },
   {
     "number": 7,
     "name": "Juz 7",
-    "surahRange": "Al-Maaida 82 - Al-An'aam 110"
+    "surahRange": "Al-Maaida 82 - Al-An'aam 110",
+    "startSurahId": 5,
+    "startAyah": 82,
+    "endSurahId": 6,
+    "endAyah": 110
   },
   {
     "number": 8,
     "name": "Juz 8",
-    "surahRange": "Al-An'aam 111 - Al-A'raaf 87"
+    "surahRange": "Al-An'aam 111 - Al-A'raaf 87",
+    "startSurahId": 6,
+    "startAyah": 111,
+    "endSurahId": 7,
+    "endAyah": 87
   },
   {
     "number": 9,
     "name": "Juz 9",
-    "surahRange": "Al-A'raaf 88 - Al-Anfaal 40"
+    "surahRange": "Al-A'raaf 88 - Al-Anfaal 40",
+    "startSurahId": 7,
+    "startAyah": 88,
+    "endSurahId": 8,
+    "endAyah": 40
   },
   {
     "number": 10,
     "name": "Juz 10",
-    "surahRange": "Al-Anfaal 41 - At-Tawba 92"
+    "surahRange": "Al-Anfaal 41 - At-Tawba 92",
+    "startSurahId": 8,
+    "startAyah": 41,
+    "endSurahId": 9,
+    "endAyah": 92
   },
   {
     "number": 11,
     "name": "Juz 11",
-    "surahRange": "At-Tawba 93 - Hud 5"
+    "surahRange": "At-Tawba 93 - Hud 5",
+    "startSurahId": 9,
+    "startAyah": 93,
+    "endSurahId": 11,
+    "endAyah": 5
   },
   {
     "number": 12,
     "name": "Juz 12",
-    "surahRange": "Hud 6 - Yusuf 52"
+    "surahRange": "Hud 6 - Yusuf 52",
+    "startSurahId": 11,
+    "startAyah": 6,
+    "endSurahId": 12,
+    "endAyah": 52
   },
   {
     "number": 13,
     "name": "Juz 13",
-    "surahRange": "Yusuf 53 - Ibrahim 52"
+    "surahRange": "Yusuf 53 - Ibrahim 52",
+    "startSurahId": 12,
+    "startAyah": 53,
+    "endSurahId": 14,
+    "endAyah": 52
   },
   {
     "number": 14,
     "name": "Juz 14",
-    "surahRange": "Al-Hijr 1 - An-Nahl 128"
+    "surahRange": "Al-Hijr 1 - An-Nahl 128",
+    "startSurahId": 15,
+    "startAyah": 1,
+    "endSurahId": 16,
+    "endAyah": 128
   },
   {
     "number": 15,
     "name": "Juz 15",
-    "surahRange": "Al-Israa 1 - Al-Kahf 74"
+    "surahRange": "Al-Israa 1 - Al-Kahf 74",
+    "startSurahId": 17,
+    "startAyah": 1,
+    "endSurahId": 18,
+    "endAyah": 74
   },
   {
     "number": 16,
     "name": "Juz 16",
-    "surahRange": "Al-Kahf 75 - Taa-Haa 135"
+    "surahRange": "Al-Kahf 75 - Taa-Haa 135",
+    "startSurahId": 18,
+    "startAyah": 75,
+    "endSurahId": 20,
+    "endAyah": 135
   },
   {
     "number": 17,
     "name": "Juz 17",
-    "surahRange": "Al-Anbiyaa 1 - Al-Hajj 78"
+    "surahRange": "Al-Anbiyaa 1 - Al-Hajj 78",
+    "startSurahId": 21,
+    "startAyah": 1,
+    "endSurahId": 22,
+    "endAyah": 78
   },
   {
     "number": 18,
     "name": "Juz 18",
-    "surahRange": "Al-Muminoon 1 - Al-Furqaan 20"
+    "surahRange": "Al-Muminoon 1 - Al-Furqaan 20",
+    "startSurahId": 23,
+    "startAyah": 1,
+    "endSurahId": 25,
+    "endAyah": 20
   },
   {
     "number": 19,
     "name": "Juz 19",
-    "surahRange": "Al-Furqaan 21 - An-Naml 55"
+    "surahRange": "Al-Furqaan 21 - An-Naml 55",
+    "startSurahId": 25,
+    "startAyah": 21,
+    "endSurahId": 27,
+    "endAyah": 55
   },
   {
     "number": 20,
     "name": "Juz 20",
-    "surahRange": "An-Naml 56 - Al-Ankaboot 45"
+    "surahRange": "An-Naml 56 - Al-Ankaboot 45",
+    "startSurahId": 27,
+    "startAyah": 56,
+    "endSurahId": 29,
+    "endAyah": 45
   },
   {
     "number": 21,
     "name": "Juz 21",
-    "surahRange": "Al-Ankaboot 46 - Al-Ahzaab 30"
+    "surahRange": "Al-Ankaboot 46 - Al-Ahzaab 30",
+    "startSurahId": 29,
+    "startAyah": 46,
+    "endSurahId": 33,
+    "endAyah": 30
   },
   {
     "number": 22,
     "name": "Juz 22",
-    "surahRange": "Al-Ahzaab 31 - Yaseen 27"
+    "surahRange": "Al-Ahzaab 31 - Yaseen 27",
+    "startSurahId": 33,
+    "startAyah": 31,
+    "endSurahId": 36,
+    "endAyah": 27
   },
   {
     "number": 23,
     "name": "Juz 23",
-    "surahRange": "Yaseen 28 - Az-Zumar 31"
+    "surahRange": "Yaseen 28 - Az-Zumar 31",
+    "startSurahId": 36,
+    "startAyah": 28,
+    "endSurahId": 39,
+    "endAyah": 31
   },
   {
     "number": 24,
     "name": "Juz 24",
-    "surahRange": "Az-Zumar 32 - Fussilat 46"
+    "surahRange": "Az-Zumar 32 - Fussilat 46",
+    "startSurahId": 39,
+    "startAyah": 32,
+    "endSurahId": 41,
+    "endAyah": 46
   },
   {
     "number": 25,
     "name": "Juz 25",
-    "surahRange": "Fussilat 47 - Al-Jaathiya 37"
+    "surahRange": "Fussilat 47 - Al-Jaathiya 37",
+    "startSurahId": 41,
+    "startAyah": 47,
+    "endSurahId": 45,
+    "endAyah": 37
   },
   {
     "number": 26,
     "name": "Juz 26",
-    "surahRange": "Al-Ahqaf 1 - Adh-Dhaariyat 30"
+    "surahRange": "Al-Ahqaf 1 - Adh-Dhaariyat 30",
+    "startSurahId": 46,
+    "startAyah": 1,
+    "endSurahId": 51,
+    "endAyah": 30
   },
   {
     "number": 27,
     "name": "Juz 27",
-    "surahRange": "Adh-Dhaariyat 31 - Al-Hadid 29"
+    "surahRange": "Adh-Dhaariyat 31 - Al-Hadid 29",
+    "startSurahId": 51,
+    "startAyah": 31,
+    "endSurahId": 57,
+    "endAyah": 29
   },
   {
     "number": 28,
     "name": "Juz 28",
-    "surahRange": "Al-Mujaadila 1 - At-Tahrim 12"
+    "surahRange": "Al-Mujaadila 1 - At-Tahrim 12",
+    "startSurahId": 58,
+    "startAyah": 1,
+    "endSurahId": 66,
+    "endAyah": 12
   },
   {
     "number": 29,
     "name": "Juz 29",
-    "surahRange": "Al-Mulk 1 - Al-Mursalaat 50"
+    "surahRange": "Al-Mulk 1 - Al-Mursalaat 50",
+    "startSurahId": 67,
+    "startAyah": 1,
+    "endSurahId": 77,
+    "endAyah": 50
   },
   {
     "number": 30,
     "name": "Juz 30",
-    "surahRange": "An-Naba 1 - An-Naas 6"
+    "surahRange": "An-Naba 1 - An-Naas 6",
+    "startSurahId": 78,
+    "startAyah": 1,
+    "endSurahId": 114,
+    "endAyah": 6
   }
 ]

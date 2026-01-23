@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useBookmarks } from '@/app/providers/BookmarkContext';
 import { logger } from '@/src/infrastructure/monitoring/Logger';
@@ -12,6 +13,7 @@ interface DeleteFolderState {
 
 export const useDeleteFolder = (folder: Folder | null, onClose: () => void): DeleteFolderState => {
   const { deleteFolder } = useBookmarks();
+  const { t } = useTranslation();
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,11 +27,11 @@ export const useDeleteFolder = (folder: Folder | null, onClose: () => void): Del
       onClose();
     } catch (error) {
       logger.error('Failed to delete folder:', undefined, error as Error);
-      setError('Failed to delete folder. Please try again.');
+      setError(t('delete_folder_failed'));
     } finally {
       setIsDeleting(false);
     }
-  }, [deleteFolder, folder, onClose]);
+  }, [deleteFolder, folder, onClose, t]);
 
   return { handleDelete, isDeleting, error };
 };

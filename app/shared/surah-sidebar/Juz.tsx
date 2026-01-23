@@ -3,6 +3,7 @@
 import React, { memo, useCallback, startTransition } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { formatJuzRange } from '@/app/shared/navigation/formatJuzRange';
 import { useNavigationTargets } from '@/app/shared/navigation/hooks/useNavigationTargets';
 import { JuzNavigationCard } from '@/app/shared/ui/cards/StandardNavigationCard';
 import { getSurahByPage, JUZ_START_PAGES } from '@/lib/utils/surah-navigation';
@@ -37,7 +38,8 @@ const JuzItem = memo(function JuzItem({
   href,
   onNavigate,
 }: JuzItemProps): React.JSX.Element {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const language = i18n?.language ?? 'en';
   return (
     <li style={{ contain: 'layout style' }}>
       <JuzNavigationCard
@@ -49,7 +51,7 @@ const JuzItem = memo(function JuzItem({
         content={{
           id: juz.number,
           title: t('juz_number', { number: juz.number }),
-          subtitle: juz.surahRange,
+          subtitle: formatJuzRange(juz, t, language),
         }}
         onNavigate={onNavigate}
       />

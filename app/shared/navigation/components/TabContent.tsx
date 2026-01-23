@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { formatJuzRange } from '@/app/shared/navigation/formatJuzRange';
 import { NavigationItem } from './NavigationItem';
 
 import type { JuzSummary } from '@/app/shared/navigation/types';
@@ -69,7 +70,8 @@ function JuzList({
   filteredJuzs: JuzSummary[];
   onJuzClick: (juzNumber: number) => void;
 }): React.JSX.Element {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const language = i18n?.language ?? 'en';
   return (
     <div className="p-4">
       <div className="grid gap-2">
@@ -78,7 +80,7 @@ function JuzList({
             key={juz.number}
             number={juz.number}
             title={t('juz_number', { number: juz.number })}
-            subtitle={juz.surahRange}
+            subtitle={formatJuzRange(juz, t, language)}
             onClick={() => onJuzClick(juz.number)}
           />
         ))}

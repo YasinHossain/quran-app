@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { SearchInput } from '@/app/shared/components/SearchInput';
 
@@ -61,9 +62,16 @@ export const FontSearchField = (
 
 export const TranslationSearchField = (
   props: Omit<SearchFieldProps, 'placeholder'>
-): React.JSX.Element => (
-  <SearchField {...props} placeholder="Search translations or languages..." variant="panel" />
-);
+): React.JSX.Element => {
+  const { t } = useTranslation();
+  return (
+    <SearchField
+      {...props}
+      placeholder={t('manage_translations_search_placeholder')}
+      variant="panel"
+    />
+  );
+};
 
 export const TafsirSearchField = (
   props: Omit<SearchFieldProps, 'placeholder'>
