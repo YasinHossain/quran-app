@@ -653,6 +653,41 @@ body::-webkit-scrollbar-thumb:hover,
   color: rgb(var(--color-accent)) !important;
 }
 
+.verse-audio-word {
+  cursor: pointer;
+  border-radius: 0.25rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .verse-audio-word:hover {
+    background: rgb(var(--color-accent) / 0.12);
+  }
+}
+
+.word-tap-highlight {
+  background: rgb(var(--color-accent) / 0.14) !important;
+}
+
+.word-tooltip .word-tooltip-arrow {
+  position: absolute;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+}
+
+.word-tooltip[data-placement='top'] .word-tooltip-arrow {
+  bottom: -7px;
+  border-top: 7px solid rgb(var(--color-accent));
+}
+
+.word-tooltip[data-placement='bottom'] .word-tooltip-arrow {
+  top: -7px;
+  border-bottom: 7px solid rgb(var(--color-accent));
+}
+
 /* ===== Firefox Performance Optimizations ===== */
 /* Firefox renders backdrop-blur on CPU, causing scroll lag.
    These rules provide solid backgrounds as fallback for Firefox. */

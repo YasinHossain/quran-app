@@ -1,6 +1,16 @@
 'use client';
-import * as Popover from '@radix-ui/react-popover';
-import { Fragment, memo, useContext, useMemo, useState } from 'react';
+import {
+  Fragment,
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { useQcfMushafFont } from '@/app/(features)/surah/hooks/useQcfMushafFont';
 import { useDynamicFontLoader } from '@/app/hooks/useDynamicFontLoader';
@@ -51,6 +61,9 @@ const INDOPAK_FONT_FACES = new Set([
   '"Noor-e-Hira", serif',
   '"Lateef", serif',
 ]);
+
+const WORD_TOOLTIP_GAP_PX = 22;
+const WORD_TOOLTIP_OWNER_EVENT = 'quranapp:word-tooltip-owner';
 
 const resolveWordText = (word: Word, isIndopakFont: boolean): string =>
   isIndopakFont ? (word.indopak ?? word.uthmani) : word.uthmani;
@@ -132,9 +145,6 @@ const WordDisplay = ({
   fontFamily,
   isIndopakFont,
 }: WordDisplayProps): React.JSX.Element | null => {
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const audioCtx = useContext(AudioContext);
-  const isPlayerVisible = audioCtx?.isPlayerVisible ?? false;
   const verticalAlignClass = showByWords ? 'align-top' : 'align-baseline';
   const baseWordText = resolveWordText(word, isIndopakFont);
 
@@ -208,7 +218,7 @@ const WordDisplay = ({
 
   const translation = word[wordLang as LanguageCode] as string | undefined;
   const hasTranslation = Boolean(translation && translation.trim());
-  const showTooltip = !showByWords && hasTranslation;
+  const tooltipText = !showByWords && hasTranslation ? translation?.trim() : null;
 
   // Style for Tajweed words - use V4 font
   const tajweedStyle =
@@ -222,61 +232,19 @@ const WordDisplay = ({
       data-verse-key={verseKey}
       data-word-position={wordPosition}
       data-copy-text={copyText || undefined}
+      data-word-translation={tooltipText || undefined}
     >
-      {showTooltip ? (
-        <Popover.Root open={isPopoverOpen && !isPlayerVisible} onOpenChange={setIsPopoverOpen}>
-          <Popover.Trigger asChild>
-            <span
-              className="relative cursor-pointer inline-block outline-none bg-transparent p-0 text-inherit caret-transparent"
-              style={tajweedStyle}
-              onPointerEnter={(e) => {
-                if (e.pointerType === 'mouse') setIsPopoverOpen(true);
-              }}
-              onPointerLeave={(e) => {
-                if (e.pointerType === 'mouse') setIsPopoverOpen(false);
-              }}
-            >
-              {useTajweed ? (
-                <span>{displayText}</span>
-              ) : (
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: sanitizeHtml(displayText),
-                  }}
-                />
-              )}
-            </span>
-          </Popover.Trigger>
-          <Popover.Portal>
-            <Popover.Content
-              dir="auto"
-              side="top"
-              align="center"
-              sideOffset={10}
-              collisionPadding={12}
-              className="rounded-md bg-accent text-on-accent text-sm px-3 py-2 shadow-lg z-tooltip pointer-events-none max-w-[min(16rem,calc(100vw-1.5rem))] whitespace-normal text-center"
-            >
-              {translation}
-              <Popover.Arrow className="fill-accent" />
-            </Popover.Content>
-          </Popover.Portal>
-        </Popover.Root>
-      ) : (
-        <span
-          className={`inline-block ${isPlayerVisible ? 'cursor-pointer caret-transparent' : ''}`}
-          style={tajweedStyle}
-        >
-          {useTajweed ? (
-            <span>{displayText}</span>
-          ) : (
-            <span
-              dangerouslySetInnerHTML={{
-                __html: sanitizeHtml(displayText),
-              }}
-            />
-          )}
-        </span>
-      )}
+      <span className={`inline-block ${tooltipText ? 'cursor-pointer caret-transparent' : ''}`} style={tajweedStyle}>
+        {useTajweed ? (
+          <span>{displayText}</span>
+        ) : (
+          <span
+            dangerouslySetInnerHTML={{
+              __html: sanitizeHtml(displayText),
+            }}
+          />
+        )}
+      </span>
       {showByWords && (
         <span
           className="mt-0.5 block text-muted mx-1"
@@ -315,6 +283,8 @@ export const VerseArabic = memo(function VerseArabic({
 }: VerseArabicProps): React.JSX.Element {
   const { settings } = useSettings();
   const breakpoint = useBreakpoint();
+  const audioCtx = useContext(AudioContext);
+  const isPlayerVisible = audioCtx?.isPlayerVisible ?? false;
 
   // Dynamically load Arabic font when user changes their selection
   useDynamicFontLoader(settings.arabicFontFace);
@@ -328,8 +298,223 @@ export const VerseArabic = memo(function VerseArabic({
   const verseText = resolveVerseText(verse, isIndopakFont);
   const tajweed = settings.tajweed ?? false;
   const hasVerseText = Boolean(verseText?.trim());
-  const isDesktopWordTooltipEnabled = breakpoint === 'desktop' || breakpoint === 'wide';
-  const shouldRenderWords = tajweed || showByWords || isDesktopWordTooltipEnabled || !hasVerseText;
+  const isDesktop = breakpoint === 'desktop' || breakpoint === 'wide';
+  const shouldRenderRichWords =
+    Boolean(verse.words?.length) && (tajweed || showByWords || isDesktop || !hasVerseText);
+  const shouldRenderLightWords = Boolean(verse.words?.length) && !shouldRenderRichWords;
+
+  const selectedWordElRef = useRef<HTMLElement | null>(null);
+  const activeTooltipWordElRef = useRef<HTMLElement | null>(null);
+  const hideTooltipTimeoutIdRef = useRef<number | null>(null);
+  const tooltipRef = useRef<HTMLDivElement | null>(null);
+  const tooltipOwnerId = useId();
+  const [supportsHover, setSupportsHover] = useState(false);
+
+  const [wordTooltip, setWordTooltip] = useState<{
+    text: string;
+    x: number;
+    topY: number;
+    bottomY: number;
+    placement: 'top' | 'bottom';
+  } | null>(null);
+
+  const clearSelectedWordHighlight = useCallback((): void => {
+    if (selectedWordElRef.current) {
+      selectedWordElRef.current.classList.remove('word-tap-highlight');
+      selectedWordElRef.current = null;
+    }
+  }, []);
+
+  const hideWordTooltip = useCallback((): void => {
+    if (hideTooltipTimeoutIdRef.current !== null) {
+      window.clearTimeout(hideTooltipTimeoutIdRef.current);
+      hideTooltipTimeoutIdRef.current = null;
+    }
+    setWordTooltip(null);
+    activeTooltipWordElRef.current = null;
+    clearSelectedWordHighlight();
+  }, [clearSelectedWordHighlight]);
+
+  const showWordTooltipForElement = useCallback(
+    (
+      el: HTMLElement,
+      mode: 'hover' | 'tap'
+    ): void => {
+      if (isPlayerVisible) return;
+      const text = el.getAttribute('data-word-translation')?.trim();
+      if (!text) return;
+      if (activeTooltipWordElRef.current === el && wordTooltip?.text === text) return;
+      window.dispatchEvent(
+        new CustomEvent(WORD_TOOLTIP_OWNER_EVENT, {
+          detail: { owner: tooltipOwnerId },
+        })
+      );
+
+      const rect = el.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const topY = rect.top;
+      const bottomY = rect.bottom;
+
+      if (hideTooltipTimeoutIdRef.current !== null) {
+        window.clearTimeout(hideTooltipTimeoutIdRef.current);
+        hideTooltipTimeoutIdRef.current = null;
+      }
+
+      setWordTooltip({ text, x, topY, bottomY, placement: 'top' });
+      activeTooltipWordElRef.current = el;
+
+      if (mode === 'tap') {
+        clearSelectedWordHighlight();
+        el.classList.add('word-tap-highlight');
+        selectedWordElRef.current = el;
+        hideTooltipTimeoutIdRef.current = window.setTimeout(() => {
+          hideWordTooltip();
+        }, 2500);
+      }
+    },
+    [clearSelectedWordHighlight, hideWordTooltip, isPlayerVisible, tooltipOwnerId, wordTooltip]
+  );
+
+  const handleLightWordsMouseOver = useCallback(
+    (event: React.MouseEvent<HTMLParagraphElement>): void => {
+      if (isPlayerVisible) return;
+      if (!supportsHover) return;
+      const target = event.target as HTMLElement | null;
+      const wordEl = target?.closest<HTMLElement>('[data-verse-word="true"][data-word-translation]');
+      if (!wordEl) return;
+      showWordTooltipForElement(wordEl, 'hover');
+    },
+    [isPlayerVisible, showWordTooltipForElement, supportsHover]
+  );
+
+  const handleLightWordsMouseOut = useCallback(
+    (event: React.MouseEvent<HTMLParagraphElement>): void => {
+      if (isPlayerVisible) return;
+      if (!supportsHover) return;
+      if (!wordTooltip) return;
+
+      const target = event.target as HTMLElement | null;
+      const relatedTarget = event.relatedTarget as HTMLElement | null;
+
+      const fromWordEl = target?.closest<HTMLElement>(
+        '[data-verse-word="true"][data-word-translation]'
+      );
+      if (!fromWordEl) return;
+
+      const toWordEl = relatedTarget?.closest<HTMLElement>(
+        '[data-verse-word="true"][data-word-translation]'
+      );
+      if (toWordEl) return;
+
+      hideWordTooltip();
+    },
+    [hideWordTooltip, isPlayerVisible, supportsHover, wordTooltip]
+  );
+
+  const handleLightWordsClick = useCallback(
+    (event: React.MouseEvent<HTMLParagraphElement>): void => {
+      if (isPlayerVisible) return;
+      const target = event.target as HTMLElement | null;
+      const wordEl = target?.closest<HTMLElement>('[data-verse-word="true"][data-word-translation]');
+      if (!wordEl) return;
+      showWordTooltipForElement(wordEl, supportsHover ? 'hover' : 'tap');
+    },
+    [isPlayerVisible, showWordTooltipForElement, supportsHover]
+  );
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
+
+    const mql = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const update = (): void => setSupportsHover(mql.matches);
+    update();
+
+    if (typeof mql.addEventListener === 'function') {
+      mql.addEventListener('change', update);
+      return () => mql.removeEventListener('change', update);
+    }
+
+    // Safari < 14 fallback
+    mql.addListener(update);
+    return () => mql.removeListener(update);
+  }, []);
+
+  useEffect(() => {
+    if (!wordTooltip) return;
+
+    const handleScroll = (): void => hideWordTooltip();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [hideWordTooltip, wordTooltip]);
+
+  useEffect(() => {
+    const handleOwner = (event: Event): void => {
+      const custom = event as CustomEvent<{ owner?: string }>;
+      const owner = custom.detail?.owner;
+      if (!owner || owner === tooltipOwnerId) return;
+      hideWordTooltip();
+    };
+
+    window.addEventListener(WORD_TOOLTIP_OWNER_EVENT, handleOwner as EventListener);
+    return () =>
+      window.removeEventListener(WORD_TOOLTIP_OWNER_EVENT, handleOwner as EventListener);
+  }, [hideWordTooltip, tooltipOwnerId]);
+
+  useLayoutEffect(() => {
+    if (!wordTooltip) return;
+    const tooltipEl = tooltipRef.current;
+    if (!tooltipEl) return;
+
+    const rect = tooltipEl.getBoundingClientRect();
+    const paddingPx = 12;
+
+    const minX = paddingPx + rect.width / 2;
+    const maxX = window.innerWidth - paddingPx - rect.width / 2;
+    const clampedX = Math.max(minX, Math.min(maxX, wordTooltip.x));
+
+    const fitsAbove = wordTooltip.topY - rect.height - (WORD_TOOLTIP_GAP_PX + 8) > 0;
+    const fitsBelow =
+      wordTooltip.bottomY + rect.height + (WORD_TOOLTIP_GAP_PX + 8) < window.innerHeight;
+    const placement =
+      wordTooltip.placement === 'top'
+        ? fitsAbove
+          ? 'top'
+          : fitsBelow
+            ? 'bottom'
+            : 'top'
+        : fitsBelow
+          ? 'bottom'
+          : fitsAbove
+            ? 'top'
+            : 'bottom';
+
+    if (
+      Math.abs(clampedX - wordTooltip.x) < 1 &&
+      placement === wordTooltip.placement
+    ) {
+      return;
+    }
+
+    setWordTooltip((prev) =>
+      prev
+        ? {
+            ...prev,
+            x: clampedX,
+            placement,
+          }
+        : null
+    );
+  }, [wordTooltip]);
+
+  useEffect(() => {
+    return () => {
+      if (hideTooltipTimeoutIdRef.current !== null) {
+        window.clearTimeout(hideTooltipTimeoutIdRef.current);
+        hideTooltipTimeoutIdRef.current = null;
+      }
+      clearSelectedWordHighlight();
+    };
+  }, [clearSelectedWordHighlight]);
 
   const handleCopy = (event: React.ClipboardEvent<HTMLParagraphElement>): void => {
     if (typeof window === 'undefined') return;
@@ -399,6 +584,88 @@ export const VerseArabic = memo(function VerseArabic({
     return settings.arabicFontFace;
   }, [tajweed, pageNumbers, settings.arabicFontFace, getPageFontFamily, isPageFontLoaded]);
 
+  const resolveLightWordTranslation = useCallback(
+    (word: Word): string | null => {
+      const value = word[wordLang as LanguageCode] as string | undefined;
+      const trimmed = typeof value === 'string' ? value.trim() : '';
+      return trimmed ? trimmed : null;
+    },
+    [wordLang]
+  );
+
+  const renderLightWord = useCallback(
+    (word: Word, index: number): React.JSX.Element | null => {
+      const baseWordText = resolveWordText(word, isIndopakFont);
+
+      if (isStandaloneQuranMarkerWord(baseWordText)) {
+        const rawText = baseWordText || '';
+        const displayText = cleanTextContent(rawText, isQpcHafsFont);
+        if (!displayText?.trim()) return null;
+        return (
+          <span
+            key={`${word.id}-${index}`}
+            aria-hidden="true"
+            style={{ position: 'relative', insetInlineStart: '0.12em' }}
+          >
+            {displayText}
+          </span>
+        );
+      }
+
+      if (/[\u06DE\uFD3E\uFD3F]/.test(baseWordText) && !/[\u06DD]/.test(baseWordText)) {
+        return null;
+      }
+
+      const verseNum = getVerseNumber(baseWordText);
+      const isEndWord = word.char_type_name === 'end';
+
+      if (verseNum !== null || isEndWord) {
+        if (verseNum === null) return null;
+        return (
+          <span
+            key={`${word.id}-${index}`}
+            className="verse-audio-word"
+            data-verse-word="true"
+            data-verse-key={verse.verse_key}
+            data-word-position={word.position ?? index + 1}
+          >
+            <HybridVerseMarker
+              verseNumber={verseNum}
+              {...(settings.arabicFontFace ? { fontFamily: settings.arabicFontFace } : {})}
+            />
+          </span>
+        );
+      }
+
+      const displayText = cleanTextContent(baseWordText, isQpcHafsFont);
+      const copyText = cleanTextContent(baseWordText, isQpcHafsFont).trim();
+      if (!displayText?.trim()) return null;
+
+      const translation = resolveLightWordTranslation(word);
+
+      return (
+        <span
+          key={`${word.id}-${index}`}
+          className="verse-audio-word"
+          data-verse-word="true"
+          data-verse-key={verse.verse_key}
+          data-word-position={word.position ?? index + 1}
+          data-copy-text={copyText || undefined}
+          data-word-translation={translation || undefined}
+        >
+          {displayText}
+        </span>
+      );
+    },
+    [
+      isIndopakFont,
+      isQpcHafsFont,
+      resolveLightWordTranslation,
+      settings.arabicFontFace,
+      verse.verse_key,
+    ]
+  );
+
   return (
     <>
       <TajweedFontPalettes pageNumbers={pageNumbers} version="v4" />
@@ -415,8 +682,15 @@ export const VerseArabic = memo(function VerseArabic({
           lineHeight: 2.2,
         }}
         onCopy={handleCopy}
+        {...(!showByWords
+          ? {
+              onMouseOver: handleLightWordsMouseOver,
+              onMouseOut: handleLightWordsMouseOut,
+              onClick: handleLightWordsClick,
+            }
+          : {})}
       >
-        {shouldRenderWords && verse.words && verse.words.length > 0 ? (
+        {shouldRenderRichWords && verse.words && verse.words.length > 0 ? (
           <span>
             {(() => {
               const words = verse.words.filter((word: Word) => {
@@ -501,6 +775,68 @@ export const VerseArabic = memo(function VerseArabic({
               });
             })()}
           </span>
+        ) : shouldRenderLightWords && verse.words && verse.words.length > 0 ? (
+          <span>
+            {(() => {
+              const words = verse.words.filter((word: Word) => {
+                const displayText = stripUnsupportedQpcGlyphs(
+                  resolveWordText(word, isIndopakFont),
+                  isQpcHafsFont
+                );
+
+                const sourceText = resolveWordText(word, isIndopakFont);
+                if (/[\u06DE\uFD3E\uFD3F]/.test(sourceText) && !/[\u06DD]/.test(sourceText)) {
+                  return false;
+                }
+
+                if (!displayText?.trim()) {
+                  return false;
+                }
+
+                return true;
+              });
+
+              const groups: { word: Word; index: number }[][] = [];
+              let pendingLeadingMarkers: { word: Word; index: number }[] = [];
+
+              for (let index = 0; index < words.length; index += 1) {
+                const current = words[index]!;
+                const currentText = resolveWordText(current, isIndopakFont);
+
+                if (isStandaloneQuranMarkerWord(currentText)) {
+                  if (groups.length > 0) {
+                    groups[groups.length - 1]!.push({ word: current, index });
+                  } else {
+                    pendingLeadingMarkers.push({ word: current, index });
+                  }
+                  continue;
+                }
+
+                groups.push([...pendingLeadingMarkers, { word: current, index }]);
+                pendingLeadingMarkers = [];
+              }
+
+              if (pendingLeadingMarkers.length > 0) {
+                if (groups.length > 0) {
+                  groups[groups.length - 1]!.push(...pendingLeadingMarkers);
+                } else {
+                  groups.push(pendingLeadingMarkers);
+                }
+              }
+
+              return groups.map((group, groupIndex) => {
+                const groupKey = group.map((item) => item.word.id).join('-') || String(groupIndex);
+                return (
+                  <Fragment key={`word-group-${groupKey}-${groupIndex}`}>
+                    {groupIndex > 0 ? ' ' : null}
+                    <span className={group.length > 1 ? 'whitespace-nowrap' : undefined}>
+                      {group.map((item) => renderLightWord(item.word, item.index))}
+                    </span>
+                  </Fragment>
+                );
+              });
+            })()}
+          </span>
         ) : (
           <span>
             <VerseText verseText={verseText} isQpcHafsFont={isQpcHafsFont} />
@@ -517,6 +853,27 @@ export const VerseArabic = memo(function VerseArabic({
           </span>
         )}
       </p>
+      {wordTooltip ? (
+        <div
+          ref={tooltipRef}
+          data-placement={wordTooltip.placement}
+          dir="auto"
+          className="word-tooltip fixed z-tooltip pointer-events-none rounded-md bg-accent text-on-accent text-sm px-3 py-2 shadow-lg max-w-[min(16rem,calc(100vw-1.5rem))] whitespace-normal text-center"
+          style={{
+            left: `${Math.round(wordTooltip.x)}px`,
+            top: `${Math.round(
+              wordTooltip.placement === 'top' ? wordTooltip.topY : wordTooltip.bottomY
+            )}px`,
+            transform:
+              wordTooltip.placement === 'top'
+                ? `translate(-50%, calc(-100% - ${WORD_TOOLTIP_GAP_PX}px))`
+                : `translate(-50%, ${WORD_TOOLTIP_GAP_PX}px)`,
+          }}
+        >
+          {wordTooltip.text}
+          <div className="word-tooltip-arrow" aria-hidden="true" />
+        </div>
+      ) : null}
     </>
   );
 });
